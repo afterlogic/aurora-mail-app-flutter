@@ -20,6 +20,9 @@ abstract class _FoldersState with Store {
   @observable
   LoadingType isFoldersLoading = LoadingType.none;
 
+  @observable
+  Folder selectedFolder;
+
   Future<void> onGetFolders(
       {Function(String) onError,
       LoadingType loading = LoadingType.visible}) async {
@@ -45,6 +48,7 @@ abstract class _FoldersState with Store {
       }
 
       currentFolders = Folder.getFolderObjectsFromDb(localFolders);
+      selectedFolder = currentFolders[0];
     } catch (err, s) {
       print("onGetFolders err: $err");
       print("onGetFolders s: $s");

@@ -38,6 +38,8 @@ class Folders extends Table {
 
   BoolColumn get alwaysRefresh => boolean()();
 
+  TextColumn get messagesInfoInJson => text().nullable()();
+
   static Future<List<LocalFolder>> getFolderObjectsFromServerAsync(
       List<Map<String, dynamic>> rawFolders) {
     return compute(getFolderObjectsFromServer, rawFolders);

@@ -25,4 +25,21 @@ mixin _$FoldersState on _FoldersState, Store {
       _$isFoldersLoadingAtom.reportChanged();
     }, _$isFoldersLoadingAtom, name: '${_$isFoldersLoadingAtom.name}_set');
   }
+
+  final _$selectedFolderAtom = Atom(name: '_FoldersState.selectedFolder');
+
+  @override
+  Folder get selectedFolder {
+    _$selectedFolderAtom.context.enforceReadPolicy(_$selectedFolderAtom);
+    _$selectedFolderAtom.reportObserved();
+    return super.selectedFolder;
+  }
+
+  @override
+  set selectedFolder(Folder value) {
+    _$selectedFolderAtom.context.conditionallyRunInAction(() {
+      super.selectedFolder = value;
+      _$selectedFolderAtom.reportChanged();
+    }, _$selectedFolderAtom, name: '${_$selectedFolderAtom.name}_set');
+  }
 }

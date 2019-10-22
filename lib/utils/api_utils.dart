@@ -8,12 +8,16 @@ Map<String, String> getHeader() {
   return {'Authorization': 'Bearer ${AppStore.authState.authToken}'};
 }
 
-Future sendRequest(ApiBody body) async {
+Future sendRequest(ApiBody body, {decodeJson = true}) async {
   final authState = AppStore.authState;
   final rawResponse = await http.post(authState.apiUrl,
       headers: getHeader(), body: body.toMap());
 
-  return json.decode(rawResponse.body);
+  if (decodeJson = true) {
+    return json.decode(rawResponse.body);
+  } else {
+    return rawResponse.body;
+  }
 }
 
 String getErrMsg(dynamic err) {

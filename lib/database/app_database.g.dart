@@ -9,20 +9,245 @@ part of 'app_database.dart';
 // ignore_for_file: unnecessary_brace_in_string_interps
 class Message extends DataClass implements Insertable<Message> {
   final int localId;
-  Message({@required this.localId});
+  final int uid;
+  final String messageId;
+  final String folder;
+  final String flagsInJson;
+  final String threadInJson;
+  final String subject;
+  final int size;
+  final int textSize;
+  final bool truncated;
+  final int internalTimeStampInUTC;
+  final int receivedOrDateTimeStampInUTC;
+  final int timeStampInUTC;
+  final String toInJson;
+  final String fromInJson;
+  final String cc;
+  final String bcc;
+  final String sender;
+  final String replyTo;
+  final bool isSeen;
+  final bool isFlagged;
+  final bool isAnswered;
+  final bool isForwarded;
+  final bool hasAttachments;
+  final bool hasVcardAttachment;
+  final bool hasIcalAttachment;
+  final int importance;
+  final String draftInfo;
+  final int sensitivity;
+  final String downloadAsEmlUrl;
+  final String hash;
+  final String headers;
+  final String inReplyTo;
+  final String references;
+  final String readingConfirmationAddressee;
+  final String html;
+  final String plain;
+  final String plainRaw;
+  final bool rtl;
+  final String extendInJson;
+  final bool safety;
+  final bool hasExternals;
+  final String foundedCIDsInJson;
+  final String foundedContentLocationUrlsInJson;
+  final String attachmentsInJson;
+  final String customInJson;
+  Message(
+      {@required this.localId,
+      @required this.uid,
+      @required this.messageId,
+      @required this.folder,
+      @required this.flagsInJson,
+      this.threadInJson,
+      @required this.subject,
+      @required this.size,
+      @required this.textSize,
+      @required this.truncated,
+      @required this.internalTimeStampInUTC,
+      @required this.receivedOrDateTimeStampInUTC,
+      @required this.timeStampInUTC,
+      @required this.toInJson,
+      @required this.fromInJson,
+      this.cc,
+      this.bcc,
+      this.sender,
+      this.replyTo,
+      @required this.isSeen,
+      @required this.isFlagged,
+      @required this.isAnswered,
+      @required this.isForwarded,
+      @required this.hasAttachments,
+      @required this.hasVcardAttachment,
+      @required this.hasIcalAttachment,
+      @required this.importance,
+      this.draftInfo,
+      @required this.sensitivity,
+      @required this.downloadAsEmlUrl,
+      @required this.hash,
+      @required this.headers,
+      @required this.inReplyTo,
+      @required this.references,
+      @required this.readingConfirmationAddressee,
+      @required this.html,
+      @required this.plain,
+      @required this.plainRaw,
+      @required this.rtl,
+      @required this.extendInJson,
+      @required this.safety,
+      @required this.hasExternals,
+      @required this.foundedCIDsInJson,
+      @required this.foundedContentLocationUrlsInJson,
+      this.attachmentsInJson,
+      @required this.customInJson});
   factory Message.fromData(Map<String, dynamic> data, GeneratedDatabase db,
       {String prefix}) {
     final effectivePrefix = prefix ?? '';
     final intType = db.typeSystem.forDartType<int>();
+    final stringType = db.typeSystem.forDartType<String>();
+    final boolType = db.typeSystem.forDartType<bool>();
     return Message(
       localId:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}local_id']),
+      uid: intType.mapFromDatabaseResponse(data['${effectivePrefix}uid']),
+      messageId: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}message_id']),
+      folder:
+          stringType.mapFromDatabaseResponse(data['${effectivePrefix}folder']),
+      flagsInJson: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}flags_in_json']),
+      threadInJson: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}thread_in_json']),
+      subject:
+          stringType.mapFromDatabaseResponse(data['${effectivePrefix}subject']),
+      size: intType.mapFromDatabaseResponse(data['${effectivePrefix}size']),
+      textSize:
+          intType.mapFromDatabaseResponse(data['${effectivePrefix}text_size']),
+      truncated:
+          boolType.mapFromDatabaseResponse(data['${effectivePrefix}truncated']),
+      internalTimeStampInUTC: intType.mapFromDatabaseResponse(
+          data['${effectivePrefix}internal_time_stamp_in_u_t_c']),
+      receivedOrDateTimeStampInUTC: intType.mapFromDatabaseResponse(
+          data['${effectivePrefix}received_or_date_time_stamp_in_u_t_c']),
+      timeStampInUTC: intType.mapFromDatabaseResponse(
+          data['${effectivePrefix}time_stamp_in_u_t_c']),
+      toInJson: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}to_in_json']),
+      fromInJson: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}from_in_json']),
+      cc: stringType.mapFromDatabaseResponse(data['${effectivePrefix}cc']),
+      bcc: stringType.mapFromDatabaseResponse(data['${effectivePrefix}bcc']),
+      sender:
+          stringType.mapFromDatabaseResponse(data['${effectivePrefix}sender']),
+      replyTo: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}reply_to']),
+      isSeen:
+          boolType.mapFromDatabaseResponse(data['${effectivePrefix}is_seen']),
+      isFlagged: boolType
+          .mapFromDatabaseResponse(data['${effectivePrefix}is_flagged']),
+      isAnswered: boolType
+          .mapFromDatabaseResponse(data['${effectivePrefix}is_answered']),
+      isForwarded: boolType
+          .mapFromDatabaseResponse(data['${effectivePrefix}is_forwarded']),
+      hasAttachments: boolType
+          .mapFromDatabaseResponse(data['${effectivePrefix}has_attachments']),
+      hasVcardAttachment: boolType.mapFromDatabaseResponse(
+          data['${effectivePrefix}has_vcard_attachment']),
+      hasIcalAttachment: boolType.mapFromDatabaseResponse(
+          data['${effectivePrefix}has_ical_attachment']),
+      importance:
+          intType.mapFromDatabaseResponse(data['${effectivePrefix}importance']),
+      draftInfo: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}draft_info']),
+      sensitivity: intType
+          .mapFromDatabaseResponse(data['${effectivePrefix}sensitivity']),
+      downloadAsEmlUrl: stringType.mapFromDatabaseResponse(
+          data['${effectivePrefix}download_as_eml_url']),
+      hash: stringType.mapFromDatabaseResponse(data['${effectivePrefix}hash']),
+      headers:
+          stringType.mapFromDatabaseResponse(data['${effectivePrefix}headers']),
+      inReplyTo: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}in_reply_to']),
+      references: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}references']),
+      readingConfirmationAddressee: stringType.mapFromDatabaseResponse(
+          data['${effectivePrefix}reading_confirmation_addressee']),
+      html: stringType.mapFromDatabaseResponse(data['${effectivePrefix}html']),
+      plain:
+          stringType.mapFromDatabaseResponse(data['${effectivePrefix}plain']),
+      plainRaw: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}plain_raw']),
+      rtl: boolType.mapFromDatabaseResponse(data['${effectivePrefix}rtl']),
+      extendInJson: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}extend_in_json']),
+      safety:
+          boolType.mapFromDatabaseResponse(data['${effectivePrefix}safety']),
+      hasExternals: boolType
+          .mapFromDatabaseResponse(data['${effectivePrefix}has_externals']),
+      foundedCIDsInJson: stringType.mapFromDatabaseResponse(
+          data['${effectivePrefix}founded_c_i_ds_in_json']),
+      foundedContentLocationUrlsInJson: stringType.mapFromDatabaseResponse(
+          data['${effectivePrefix}founded_content_location_urls_in_json']),
+      attachmentsInJson: stringType.mapFromDatabaseResponse(
+          data['${effectivePrefix}attachments_in_json']),
+      customInJson: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}custom_in_json']),
     );
   }
   factory Message.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return Message(
       localId: serializer.fromJson<int>(json['localId']),
+      uid: serializer.fromJson<int>(json['uid']),
+      messageId: serializer.fromJson<String>(json['messageId']),
+      folder: serializer.fromJson<String>(json['folder']),
+      flagsInJson: serializer.fromJson<String>(json['flagsInJson']),
+      threadInJson: serializer.fromJson<String>(json['threadInJson']),
+      subject: serializer.fromJson<String>(json['subject']),
+      size: serializer.fromJson<int>(json['size']),
+      textSize: serializer.fromJson<int>(json['textSize']),
+      truncated: serializer.fromJson<bool>(json['truncated']),
+      internalTimeStampInUTC:
+          serializer.fromJson<int>(json['internalTimeStampInUTC']),
+      receivedOrDateTimeStampInUTC:
+          serializer.fromJson<int>(json['receivedOrDateTimeStampInUTC']),
+      timeStampInUTC: serializer.fromJson<int>(json['timeStampInUTC']),
+      toInJson: serializer.fromJson<String>(json['toInJson']),
+      fromInJson: serializer.fromJson<String>(json['fromInJson']),
+      cc: serializer.fromJson<String>(json['cc']),
+      bcc: serializer.fromJson<String>(json['bcc']),
+      sender: serializer.fromJson<String>(json['sender']),
+      replyTo: serializer.fromJson<String>(json['replyTo']),
+      isSeen: serializer.fromJson<bool>(json['isSeen']),
+      isFlagged: serializer.fromJson<bool>(json['isFlagged']),
+      isAnswered: serializer.fromJson<bool>(json['isAnswered']),
+      isForwarded: serializer.fromJson<bool>(json['isForwarded']),
+      hasAttachments: serializer.fromJson<bool>(json['hasAttachments']),
+      hasVcardAttachment: serializer.fromJson<bool>(json['hasVcardAttachment']),
+      hasIcalAttachment: serializer.fromJson<bool>(json['hasIcalAttachment']),
+      importance: serializer.fromJson<int>(json['importance']),
+      draftInfo: serializer.fromJson<String>(json['draftInfo']),
+      sensitivity: serializer.fromJson<int>(json['sensitivity']),
+      downloadAsEmlUrl: serializer.fromJson<String>(json['downloadAsEmlUrl']),
+      hash: serializer.fromJson<String>(json['hash']),
+      headers: serializer.fromJson<String>(json['headers']),
+      inReplyTo: serializer.fromJson<String>(json['inReplyTo']),
+      references: serializer.fromJson<String>(json['references']),
+      readingConfirmationAddressee:
+          serializer.fromJson<String>(json['readingConfirmationAddressee']),
+      html: serializer.fromJson<String>(json['html']),
+      plain: serializer.fromJson<String>(json['plain']),
+      plainRaw: serializer.fromJson<String>(json['plainRaw']),
+      rtl: serializer.fromJson<bool>(json['rtl']),
+      extendInJson: serializer.fromJson<String>(json['extendInJson']),
+      safety: serializer.fromJson<bool>(json['safety']),
+      hasExternals: serializer.fromJson<bool>(json['hasExternals']),
+      foundedCIDsInJson: serializer.fromJson<String>(json['foundedCIDsInJson']),
+      foundedContentLocationUrlsInJson:
+          serializer.fromJson<String>(json['foundedContentLocationUrlsInJson']),
+      attachmentsInJson: serializer.fromJson<String>(json['attachmentsInJson']),
+      customInJson: serializer.fromJson<String>(json['customInJson']),
     );
   }
   @override
@@ -30,6 +255,54 @@ class Message extends DataClass implements Insertable<Message> {
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return {
       'localId': serializer.toJson<int>(localId),
+      'uid': serializer.toJson<int>(uid),
+      'messageId': serializer.toJson<String>(messageId),
+      'folder': serializer.toJson<String>(folder),
+      'flagsInJson': serializer.toJson<String>(flagsInJson),
+      'threadInJson': serializer.toJson<String>(threadInJson),
+      'subject': serializer.toJson<String>(subject),
+      'size': serializer.toJson<int>(size),
+      'textSize': serializer.toJson<int>(textSize),
+      'truncated': serializer.toJson<bool>(truncated),
+      'internalTimeStampInUTC': serializer.toJson<int>(internalTimeStampInUTC),
+      'receivedOrDateTimeStampInUTC':
+          serializer.toJson<int>(receivedOrDateTimeStampInUTC),
+      'timeStampInUTC': serializer.toJson<int>(timeStampInUTC),
+      'toInJson': serializer.toJson<String>(toInJson),
+      'fromInJson': serializer.toJson<String>(fromInJson),
+      'cc': serializer.toJson<String>(cc),
+      'bcc': serializer.toJson<String>(bcc),
+      'sender': serializer.toJson<String>(sender),
+      'replyTo': serializer.toJson<String>(replyTo),
+      'isSeen': serializer.toJson<bool>(isSeen),
+      'isFlagged': serializer.toJson<bool>(isFlagged),
+      'isAnswered': serializer.toJson<bool>(isAnswered),
+      'isForwarded': serializer.toJson<bool>(isForwarded),
+      'hasAttachments': serializer.toJson<bool>(hasAttachments),
+      'hasVcardAttachment': serializer.toJson<bool>(hasVcardAttachment),
+      'hasIcalAttachment': serializer.toJson<bool>(hasIcalAttachment),
+      'importance': serializer.toJson<int>(importance),
+      'draftInfo': serializer.toJson<String>(draftInfo),
+      'sensitivity': serializer.toJson<int>(sensitivity),
+      'downloadAsEmlUrl': serializer.toJson<String>(downloadAsEmlUrl),
+      'hash': serializer.toJson<String>(hash),
+      'headers': serializer.toJson<String>(headers),
+      'inReplyTo': serializer.toJson<String>(inReplyTo),
+      'references': serializer.toJson<String>(references),
+      'readingConfirmationAddressee':
+          serializer.toJson<String>(readingConfirmationAddressee),
+      'html': serializer.toJson<String>(html),
+      'plain': serializer.toJson<String>(plain),
+      'plainRaw': serializer.toJson<String>(plainRaw),
+      'rtl': serializer.toJson<bool>(rtl),
+      'extendInJson': serializer.toJson<String>(extendInJson),
+      'safety': serializer.toJson<bool>(safety),
+      'hasExternals': serializer.toJson<bool>(hasExternals),
+      'foundedCIDsInJson': serializer.toJson<String>(foundedCIDsInJson),
+      'foundedContentLocationUrlsInJson':
+          serializer.toJson<String>(foundedContentLocationUrlsInJson),
+      'attachmentsInJson': serializer.toJson<String>(attachmentsInJson),
+      'customInJson': serializer.toJson<String>(customInJson),
     };
   }
 
@@ -39,33 +312,573 @@ class Message extends DataClass implements Insertable<Message> {
       localId: localId == null && nullToAbsent
           ? const Value.absent()
           : Value(localId),
+      uid: uid == null && nullToAbsent ? const Value.absent() : Value(uid),
+      messageId: messageId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(messageId),
+      folder:
+          folder == null && nullToAbsent ? const Value.absent() : Value(folder),
+      flagsInJson: flagsInJson == null && nullToAbsent
+          ? const Value.absent()
+          : Value(flagsInJson),
+      threadInJson: threadInJson == null && nullToAbsent
+          ? const Value.absent()
+          : Value(threadInJson),
+      subject: subject == null && nullToAbsent
+          ? const Value.absent()
+          : Value(subject),
+      size: size == null && nullToAbsent ? const Value.absent() : Value(size),
+      textSize: textSize == null && nullToAbsent
+          ? const Value.absent()
+          : Value(textSize),
+      truncated: truncated == null && nullToAbsent
+          ? const Value.absent()
+          : Value(truncated),
+      internalTimeStampInUTC: internalTimeStampInUTC == null && nullToAbsent
+          ? const Value.absent()
+          : Value(internalTimeStampInUTC),
+      receivedOrDateTimeStampInUTC:
+          receivedOrDateTimeStampInUTC == null && nullToAbsent
+              ? const Value.absent()
+              : Value(receivedOrDateTimeStampInUTC),
+      timeStampInUTC: timeStampInUTC == null && nullToAbsent
+          ? const Value.absent()
+          : Value(timeStampInUTC),
+      toInJson: toInJson == null && nullToAbsent
+          ? const Value.absent()
+          : Value(toInJson),
+      fromInJson: fromInJson == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fromInJson),
+      cc: cc == null && nullToAbsent ? const Value.absent() : Value(cc),
+      bcc: bcc == null && nullToAbsent ? const Value.absent() : Value(bcc),
+      sender:
+          sender == null && nullToAbsent ? const Value.absent() : Value(sender),
+      replyTo: replyTo == null && nullToAbsent
+          ? const Value.absent()
+          : Value(replyTo),
+      isSeen:
+          isSeen == null && nullToAbsent ? const Value.absent() : Value(isSeen),
+      isFlagged: isFlagged == null && nullToAbsent
+          ? const Value.absent()
+          : Value(isFlagged),
+      isAnswered: isAnswered == null && nullToAbsent
+          ? const Value.absent()
+          : Value(isAnswered),
+      isForwarded: isForwarded == null && nullToAbsent
+          ? const Value.absent()
+          : Value(isForwarded),
+      hasAttachments: hasAttachments == null && nullToAbsent
+          ? const Value.absent()
+          : Value(hasAttachments),
+      hasVcardAttachment: hasVcardAttachment == null && nullToAbsent
+          ? const Value.absent()
+          : Value(hasVcardAttachment),
+      hasIcalAttachment: hasIcalAttachment == null && nullToAbsent
+          ? const Value.absent()
+          : Value(hasIcalAttachment),
+      importance: importance == null && nullToAbsent
+          ? const Value.absent()
+          : Value(importance),
+      draftInfo: draftInfo == null && nullToAbsent
+          ? const Value.absent()
+          : Value(draftInfo),
+      sensitivity: sensitivity == null && nullToAbsent
+          ? const Value.absent()
+          : Value(sensitivity),
+      downloadAsEmlUrl: downloadAsEmlUrl == null && nullToAbsent
+          ? const Value.absent()
+          : Value(downloadAsEmlUrl),
+      hash: hash == null && nullToAbsent ? const Value.absent() : Value(hash),
+      headers: headers == null && nullToAbsent
+          ? const Value.absent()
+          : Value(headers),
+      inReplyTo: inReplyTo == null && nullToAbsent
+          ? const Value.absent()
+          : Value(inReplyTo),
+      references: references == null && nullToAbsent
+          ? const Value.absent()
+          : Value(references),
+      readingConfirmationAddressee:
+          readingConfirmationAddressee == null && nullToAbsent
+              ? const Value.absent()
+              : Value(readingConfirmationAddressee),
+      html: html == null && nullToAbsent ? const Value.absent() : Value(html),
+      plain:
+          plain == null && nullToAbsent ? const Value.absent() : Value(plain),
+      plainRaw: plainRaw == null && nullToAbsent
+          ? const Value.absent()
+          : Value(plainRaw),
+      rtl: rtl == null && nullToAbsent ? const Value.absent() : Value(rtl),
+      extendInJson: extendInJson == null && nullToAbsent
+          ? const Value.absent()
+          : Value(extendInJson),
+      safety:
+          safety == null && nullToAbsent ? const Value.absent() : Value(safety),
+      hasExternals: hasExternals == null && nullToAbsent
+          ? const Value.absent()
+          : Value(hasExternals),
+      foundedCIDsInJson: foundedCIDsInJson == null && nullToAbsent
+          ? const Value.absent()
+          : Value(foundedCIDsInJson),
+      foundedContentLocationUrlsInJson:
+          foundedContentLocationUrlsInJson == null && nullToAbsent
+              ? const Value.absent()
+              : Value(foundedContentLocationUrlsInJson),
+      attachmentsInJson: attachmentsInJson == null && nullToAbsent
+          ? const Value.absent()
+          : Value(attachmentsInJson),
+      customInJson: customInJson == null && nullToAbsent
+          ? const Value.absent()
+          : Value(customInJson),
     ) as T;
   }
 
-  Message copyWith({int localId}) => Message(
+  Message copyWith(
+          {int localId,
+          int uid,
+          String messageId,
+          String folder,
+          String flagsInJson,
+          String threadInJson,
+          String subject,
+          int size,
+          int textSize,
+          bool truncated,
+          int internalTimeStampInUTC,
+          int receivedOrDateTimeStampInUTC,
+          int timeStampInUTC,
+          String toInJson,
+          String fromInJson,
+          String cc,
+          String bcc,
+          String sender,
+          String replyTo,
+          bool isSeen,
+          bool isFlagged,
+          bool isAnswered,
+          bool isForwarded,
+          bool hasAttachments,
+          bool hasVcardAttachment,
+          bool hasIcalAttachment,
+          int importance,
+          String draftInfo,
+          int sensitivity,
+          String downloadAsEmlUrl,
+          String hash,
+          String headers,
+          String inReplyTo,
+          String references,
+          String readingConfirmationAddressee,
+          String html,
+          String plain,
+          String plainRaw,
+          bool rtl,
+          String extendInJson,
+          bool safety,
+          bool hasExternals,
+          String foundedCIDsInJson,
+          String foundedContentLocationUrlsInJson,
+          String attachmentsInJson,
+          String customInJson}) =>
+      Message(
         localId: localId ?? this.localId,
+        uid: uid ?? this.uid,
+        messageId: messageId ?? this.messageId,
+        folder: folder ?? this.folder,
+        flagsInJson: flagsInJson ?? this.flagsInJson,
+        threadInJson: threadInJson ?? this.threadInJson,
+        subject: subject ?? this.subject,
+        size: size ?? this.size,
+        textSize: textSize ?? this.textSize,
+        truncated: truncated ?? this.truncated,
+        internalTimeStampInUTC:
+            internalTimeStampInUTC ?? this.internalTimeStampInUTC,
+        receivedOrDateTimeStampInUTC:
+            receivedOrDateTimeStampInUTC ?? this.receivedOrDateTimeStampInUTC,
+        timeStampInUTC: timeStampInUTC ?? this.timeStampInUTC,
+        toInJson: toInJson ?? this.toInJson,
+        fromInJson: fromInJson ?? this.fromInJson,
+        cc: cc ?? this.cc,
+        bcc: bcc ?? this.bcc,
+        sender: sender ?? this.sender,
+        replyTo: replyTo ?? this.replyTo,
+        isSeen: isSeen ?? this.isSeen,
+        isFlagged: isFlagged ?? this.isFlagged,
+        isAnswered: isAnswered ?? this.isAnswered,
+        isForwarded: isForwarded ?? this.isForwarded,
+        hasAttachments: hasAttachments ?? this.hasAttachments,
+        hasVcardAttachment: hasVcardAttachment ?? this.hasVcardAttachment,
+        hasIcalAttachment: hasIcalAttachment ?? this.hasIcalAttachment,
+        importance: importance ?? this.importance,
+        draftInfo: draftInfo ?? this.draftInfo,
+        sensitivity: sensitivity ?? this.sensitivity,
+        downloadAsEmlUrl: downloadAsEmlUrl ?? this.downloadAsEmlUrl,
+        hash: hash ?? this.hash,
+        headers: headers ?? this.headers,
+        inReplyTo: inReplyTo ?? this.inReplyTo,
+        references: references ?? this.references,
+        readingConfirmationAddressee:
+            readingConfirmationAddressee ?? this.readingConfirmationAddressee,
+        html: html ?? this.html,
+        plain: plain ?? this.plain,
+        plainRaw: plainRaw ?? this.plainRaw,
+        rtl: rtl ?? this.rtl,
+        extendInJson: extendInJson ?? this.extendInJson,
+        safety: safety ?? this.safety,
+        hasExternals: hasExternals ?? this.hasExternals,
+        foundedCIDsInJson: foundedCIDsInJson ?? this.foundedCIDsInJson,
+        foundedContentLocationUrlsInJson: foundedContentLocationUrlsInJson ??
+            this.foundedContentLocationUrlsInJson,
+        attachmentsInJson: attachmentsInJson ?? this.attachmentsInJson,
+        customInJson: customInJson ?? this.customInJson,
       );
   @override
   String toString() {
-    return (StringBuffer('Message(')..write('localId: $localId')..write(')'))
+    return (StringBuffer('Message(')
+          ..write('localId: $localId, ')
+          ..write('uid: $uid, ')
+          ..write('messageId: $messageId, ')
+          ..write('folder: $folder, ')
+          ..write('flagsInJson: $flagsInJson, ')
+          ..write('threadInJson: $threadInJson, ')
+          ..write('subject: $subject, ')
+          ..write('size: $size, ')
+          ..write('textSize: $textSize, ')
+          ..write('truncated: $truncated, ')
+          ..write('internalTimeStampInUTC: $internalTimeStampInUTC, ')
+          ..write(
+              'receivedOrDateTimeStampInUTC: $receivedOrDateTimeStampInUTC, ')
+          ..write('timeStampInUTC: $timeStampInUTC, ')
+          ..write('toInJson: $toInJson, ')
+          ..write('fromInJson: $fromInJson, ')
+          ..write('cc: $cc, ')
+          ..write('bcc: $bcc, ')
+          ..write('sender: $sender, ')
+          ..write('replyTo: $replyTo, ')
+          ..write('isSeen: $isSeen, ')
+          ..write('isFlagged: $isFlagged, ')
+          ..write('isAnswered: $isAnswered, ')
+          ..write('isForwarded: $isForwarded, ')
+          ..write('hasAttachments: $hasAttachments, ')
+          ..write('hasVcardAttachment: $hasVcardAttachment, ')
+          ..write('hasIcalAttachment: $hasIcalAttachment, ')
+          ..write('importance: $importance, ')
+          ..write('draftInfo: $draftInfo, ')
+          ..write('sensitivity: $sensitivity, ')
+          ..write('downloadAsEmlUrl: $downloadAsEmlUrl, ')
+          ..write('hash: $hash, ')
+          ..write('headers: $headers, ')
+          ..write('inReplyTo: $inReplyTo, ')
+          ..write('references: $references, ')
+          ..write(
+              'readingConfirmationAddressee: $readingConfirmationAddressee, ')
+          ..write('html: $html, ')
+          ..write('plain: $plain, ')
+          ..write('plainRaw: $plainRaw, ')
+          ..write('rtl: $rtl, ')
+          ..write('extendInJson: $extendInJson, ')
+          ..write('safety: $safety, ')
+          ..write('hasExternals: $hasExternals, ')
+          ..write('foundedCIDsInJson: $foundedCIDsInJson, ')
+          ..write(
+              'foundedContentLocationUrlsInJson: $foundedContentLocationUrlsInJson, ')
+          ..write('attachmentsInJson: $attachmentsInJson, ')
+          ..write('customInJson: $customInJson')
+          ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => $mrjf(localId.hashCode);
+  int get hashCode => $mrjf($mrjc(
+      localId.hashCode,
+      $mrjc(
+          uid.hashCode,
+          $mrjc(
+              messageId.hashCode,
+              $mrjc(
+                  folder.hashCode,
+                  $mrjc(
+                      flagsInJson.hashCode,
+                      $mrjc(
+                          threadInJson.hashCode,
+                          $mrjc(
+                              subject.hashCode,
+                              $mrjc(
+                                  size.hashCode,
+                                  $mrjc(
+                                      textSize.hashCode,
+                                      $mrjc(
+                                          truncated.hashCode,
+                                          $mrjc(
+                                              internalTimeStampInUTC.hashCode,
+                                              $mrjc(
+                                                  receivedOrDateTimeStampInUTC
+                                                      .hashCode,
+                                                  $mrjc(
+                                                      timeStampInUTC.hashCode,
+                                                      $mrjc(
+                                                          toInJson.hashCode,
+                                                          $mrjc(
+                                                              fromInJson
+                                                                  .hashCode,
+                                                              $mrjc(
+                                                                  cc.hashCode,
+                                                                  $mrjc(
+                                                                      bcc
+                                                                          .hashCode,
+                                                                      $mrjc(
+                                                                          sender
+                                                                              .hashCode,
+                                                                          $mrjc(
+                                                                              replyTo.hashCode,
+                                                                              $mrjc(isSeen.hashCode, $mrjc(isFlagged.hashCode, $mrjc(isAnswered.hashCode, $mrjc(isForwarded.hashCode, $mrjc(hasAttachments.hashCode, $mrjc(hasVcardAttachment.hashCode, $mrjc(hasIcalAttachment.hashCode, $mrjc(importance.hashCode, $mrjc(draftInfo.hashCode, $mrjc(sensitivity.hashCode, $mrjc(downloadAsEmlUrl.hashCode, $mrjc(hash.hashCode, $mrjc(headers.hashCode, $mrjc(inReplyTo.hashCode, $mrjc(references.hashCode, $mrjc(readingConfirmationAddressee.hashCode, $mrjc(html.hashCode, $mrjc(plain.hashCode, $mrjc(plainRaw.hashCode, $mrjc(rtl.hashCode, $mrjc(extendInJson.hashCode, $mrjc(safety.hashCode, $mrjc(hasExternals.hashCode, $mrjc(foundedCIDsInJson.hashCode, $mrjc(foundedContentLocationUrlsInJson.hashCode, $mrjc(attachmentsInJson.hashCode, customInJson.hashCode))))))))))))))))))))))))))))))))))))))))))))));
   @override
   bool operator ==(other) =>
-      identical(this, other) || (other is Message && other.localId == localId);
+      identical(this, other) ||
+      (other is Message &&
+          other.localId == localId &&
+          other.uid == uid &&
+          other.messageId == messageId &&
+          other.folder == folder &&
+          other.flagsInJson == flagsInJson &&
+          other.threadInJson == threadInJson &&
+          other.subject == subject &&
+          other.size == size &&
+          other.textSize == textSize &&
+          other.truncated == truncated &&
+          other.internalTimeStampInUTC == internalTimeStampInUTC &&
+          other.receivedOrDateTimeStampInUTC == receivedOrDateTimeStampInUTC &&
+          other.timeStampInUTC == timeStampInUTC &&
+          other.toInJson == toInJson &&
+          other.fromInJson == fromInJson &&
+          other.cc == cc &&
+          other.bcc == bcc &&
+          other.sender == sender &&
+          other.replyTo == replyTo &&
+          other.isSeen == isSeen &&
+          other.isFlagged == isFlagged &&
+          other.isAnswered == isAnswered &&
+          other.isForwarded == isForwarded &&
+          other.hasAttachments == hasAttachments &&
+          other.hasVcardAttachment == hasVcardAttachment &&
+          other.hasIcalAttachment == hasIcalAttachment &&
+          other.importance == importance &&
+          other.draftInfo == draftInfo &&
+          other.sensitivity == sensitivity &&
+          other.downloadAsEmlUrl == downloadAsEmlUrl &&
+          other.hash == hash &&
+          other.headers == headers &&
+          other.inReplyTo == inReplyTo &&
+          other.references == references &&
+          other.readingConfirmationAddressee == readingConfirmationAddressee &&
+          other.html == html &&
+          other.plain == plain &&
+          other.plainRaw == plainRaw &&
+          other.rtl == rtl &&
+          other.extendInJson == extendInJson &&
+          other.safety == safety &&
+          other.hasExternals == hasExternals &&
+          other.foundedCIDsInJson == foundedCIDsInJson &&
+          other.foundedContentLocationUrlsInJson ==
+              foundedContentLocationUrlsInJson &&
+          other.attachmentsInJson == attachmentsInJson &&
+          other.customInJson == customInJson);
 }
 
 class MailCompanion extends UpdateCompanion<Message> {
   final Value<int> localId;
+  final Value<int> uid;
+  final Value<String> messageId;
+  final Value<String> folder;
+  final Value<String> flagsInJson;
+  final Value<String> threadInJson;
+  final Value<String> subject;
+  final Value<int> size;
+  final Value<int> textSize;
+  final Value<bool> truncated;
+  final Value<int> internalTimeStampInUTC;
+  final Value<int> receivedOrDateTimeStampInUTC;
+  final Value<int> timeStampInUTC;
+  final Value<String> toInJson;
+  final Value<String> fromInJson;
+  final Value<String> cc;
+  final Value<String> bcc;
+  final Value<String> sender;
+  final Value<String> replyTo;
+  final Value<bool> isSeen;
+  final Value<bool> isFlagged;
+  final Value<bool> isAnswered;
+  final Value<bool> isForwarded;
+  final Value<bool> hasAttachments;
+  final Value<bool> hasVcardAttachment;
+  final Value<bool> hasIcalAttachment;
+  final Value<int> importance;
+  final Value<String> draftInfo;
+  final Value<int> sensitivity;
+  final Value<String> downloadAsEmlUrl;
+  final Value<String> hash;
+  final Value<String> headers;
+  final Value<String> inReplyTo;
+  final Value<String> references;
+  final Value<String> readingConfirmationAddressee;
+  final Value<String> html;
+  final Value<String> plain;
+  final Value<String> plainRaw;
+  final Value<bool> rtl;
+  final Value<String> extendInJson;
+  final Value<bool> safety;
+  final Value<bool> hasExternals;
+  final Value<String> foundedCIDsInJson;
+  final Value<String> foundedContentLocationUrlsInJson;
+  final Value<String> attachmentsInJson;
+  final Value<String> customInJson;
   const MailCompanion({
     this.localId = const Value.absent(),
+    this.uid = const Value.absent(),
+    this.messageId = const Value.absent(),
+    this.folder = const Value.absent(),
+    this.flagsInJson = const Value.absent(),
+    this.threadInJson = const Value.absent(),
+    this.subject = const Value.absent(),
+    this.size = const Value.absent(),
+    this.textSize = const Value.absent(),
+    this.truncated = const Value.absent(),
+    this.internalTimeStampInUTC = const Value.absent(),
+    this.receivedOrDateTimeStampInUTC = const Value.absent(),
+    this.timeStampInUTC = const Value.absent(),
+    this.toInJson = const Value.absent(),
+    this.fromInJson = const Value.absent(),
+    this.cc = const Value.absent(),
+    this.bcc = const Value.absent(),
+    this.sender = const Value.absent(),
+    this.replyTo = const Value.absent(),
+    this.isSeen = const Value.absent(),
+    this.isFlagged = const Value.absent(),
+    this.isAnswered = const Value.absent(),
+    this.isForwarded = const Value.absent(),
+    this.hasAttachments = const Value.absent(),
+    this.hasVcardAttachment = const Value.absent(),
+    this.hasIcalAttachment = const Value.absent(),
+    this.importance = const Value.absent(),
+    this.draftInfo = const Value.absent(),
+    this.sensitivity = const Value.absent(),
+    this.downloadAsEmlUrl = const Value.absent(),
+    this.hash = const Value.absent(),
+    this.headers = const Value.absent(),
+    this.inReplyTo = const Value.absent(),
+    this.references = const Value.absent(),
+    this.readingConfirmationAddressee = const Value.absent(),
+    this.html = const Value.absent(),
+    this.plain = const Value.absent(),
+    this.plainRaw = const Value.absent(),
+    this.rtl = const Value.absent(),
+    this.extendInJson = const Value.absent(),
+    this.safety = const Value.absent(),
+    this.hasExternals = const Value.absent(),
+    this.foundedCIDsInJson = const Value.absent(),
+    this.foundedContentLocationUrlsInJson = const Value.absent(),
+    this.attachmentsInJson = const Value.absent(),
+    this.customInJson = const Value.absent(),
   });
-  MailCompanion copyWith({Value<int> localId}) {
+  MailCompanion copyWith(
+      {Value<int> localId,
+      Value<int> uid,
+      Value<String> messageId,
+      Value<String> folder,
+      Value<String> flagsInJson,
+      Value<String> threadInJson,
+      Value<String> subject,
+      Value<int> size,
+      Value<int> textSize,
+      Value<bool> truncated,
+      Value<int> internalTimeStampInUTC,
+      Value<int> receivedOrDateTimeStampInUTC,
+      Value<int> timeStampInUTC,
+      Value<String> toInJson,
+      Value<String> fromInJson,
+      Value<String> cc,
+      Value<String> bcc,
+      Value<String> sender,
+      Value<String> replyTo,
+      Value<bool> isSeen,
+      Value<bool> isFlagged,
+      Value<bool> isAnswered,
+      Value<bool> isForwarded,
+      Value<bool> hasAttachments,
+      Value<bool> hasVcardAttachment,
+      Value<bool> hasIcalAttachment,
+      Value<int> importance,
+      Value<String> draftInfo,
+      Value<int> sensitivity,
+      Value<String> downloadAsEmlUrl,
+      Value<String> hash,
+      Value<String> headers,
+      Value<String> inReplyTo,
+      Value<String> references,
+      Value<String> readingConfirmationAddressee,
+      Value<String> html,
+      Value<String> plain,
+      Value<String> plainRaw,
+      Value<bool> rtl,
+      Value<String> extendInJson,
+      Value<bool> safety,
+      Value<bool> hasExternals,
+      Value<String> foundedCIDsInJson,
+      Value<String> foundedContentLocationUrlsInJson,
+      Value<String> attachmentsInJson,
+      Value<String> customInJson}) {
     return MailCompanion(
       localId: localId ?? this.localId,
+      uid: uid ?? this.uid,
+      messageId: messageId ?? this.messageId,
+      folder: folder ?? this.folder,
+      flagsInJson: flagsInJson ?? this.flagsInJson,
+      threadInJson: threadInJson ?? this.threadInJson,
+      subject: subject ?? this.subject,
+      size: size ?? this.size,
+      textSize: textSize ?? this.textSize,
+      truncated: truncated ?? this.truncated,
+      internalTimeStampInUTC:
+          internalTimeStampInUTC ?? this.internalTimeStampInUTC,
+      receivedOrDateTimeStampInUTC:
+          receivedOrDateTimeStampInUTC ?? this.receivedOrDateTimeStampInUTC,
+      timeStampInUTC: timeStampInUTC ?? this.timeStampInUTC,
+      toInJson: toInJson ?? this.toInJson,
+      fromInJson: fromInJson ?? this.fromInJson,
+      cc: cc ?? this.cc,
+      bcc: bcc ?? this.bcc,
+      sender: sender ?? this.sender,
+      replyTo: replyTo ?? this.replyTo,
+      isSeen: isSeen ?? this.isSeen,
+      isFlagged: isFlagged ?? this.isFlagged,
+      isAnswered: isAnswered ?? this.isAnswered,
+      isForwarded: isForwarded ?? this.isForwarded,
+      hasAttachments: hasAttachments ?? this.hasAttachments,
+      hasVcardAttachment: hasVcardAttachment ?? this.hasVcardAttachment,
+      hasIcalAttachment: hasIcalAttachment ?? this.hasIcalAttachment,
+      importance: importance ?? this.importance,
+      draftInfo: draftInfo ?? this.draftInfo,
+      sensitivity: sensitivity ?? this.sensitivity,
+      downloadAsEmlUrl: downloadAsEmlUrl ?? this.downloadAsEmlUrl,
+      hash: hash ?? this.hash,
+      headers: headers ?? this.headers,
+      inReplyTo: inReplyTo ?? this.inReplyTo,
+      references: references ?? this.references,
+      readingConfirmationAddressee:
+          readingConfirmationAddressee ?? this.readingConfirmationAddressee,
+      html: html ?? this.html,
+      plain: plain ?? this.plain,
+      plainRaw: plainRaw ?? this.plainRaw,
+      rtl: rtl ?? this.rtl,
+      extendInJson: extendInJson ?? this.extendInJson,
+      safety: safety ?? this.safety,
+      hasExternals: hasExternals ?? this.hasExternals,
+      foundedCIDsInJson: foundedCIDsInJson ?? this.foundedCIDsInJson,
+      foundedContentLocationUrlsInJson: foundedContentLocationUrlsInJson ??
+          this.foundedContentLocationUrlsInJson,
+      attachmentsInJson: attachmentsInJson ?? this.attachmentsInJson,
+      customInJson: customInJson ?? this.customInJson,
     );
   }
 }
@@ -83,8 +896,634 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
         hasAutoIncrement: true, declaredAsPrimaryKey: true);
   }
 
+  final VerificationMeta _uidMeta = const VerificationMeta('uid');
+  GeneratedIntColumn _uid;
   @override
-  List<GeneratedColumn> get $columns => [localId];
+  GeneratedIntColumn get uid => _uid ??= _constructUid();
+  GeneratedIntColumn _constructUid() {
+    return GeneratedIntColumn(
+      'uid',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _messageIdMeta = const VerificationMeta('messageId');
+  GeneratedTextColumn _messageId;
+  @override
+  GeneratedTextColumn get messageId => _messageId ??= _constructMessageId();
+  GeneratedTextColumn _constructMessageId() {
+    return GeneratedTextColumn(
+      'message_id',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _folderMeta = const VerificationMeta('folder');
+  GeneratedTextColumn _folder;
+  @override
+  GeneratedTextColumn get folder => _folder ??= _constructFolder();
+  GeneratedTextColumn _constructFolder() {
+    return GeneratedTextColumn(
+      'folder',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _flagsInJsonMeta =
+      const VerificationMeta('flagsInJson');
+  GeneratedTextColumn _flagsInJson;
+  @override
+  GeneratedTextColumn get flagsInJson =>
+      _flagsInJson ??= _constructFlagsInJson();
+  GeneratedTextColumn _constructFlagsInJson() {
+    return GeneratedTextColumn(
+      'flags_in_json',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _threadInJsonMeta =
+      const VerificationMeta('threadInJson');
+  GeneratedTextColumn _threadInJson;
+  @override
+  GeneratedTextColumn get threadInJson =>
+      _threadInJson ??= _constructThreadInJson();
+  GeneratedTextColumn _constructThreadInJson() {
+    return GeneratedTextColumn(
+      'thread_in_json',
+      $tableName,
+      true,
+    );
+  }
+
+  final VerificationMeta _subjectMeta = const VerificationMeta('subject');
+  GeneratedTextColumn _subject;
+  @override
+  GeneratedTextColumn get subject => _subject ??= _constructSubject();
+  GeneratedTextColumn _constructSubject() {
+    return GeneratedTextColumn(
+      'subject',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _sizeMeta = const VerificationMeta('size');
+  GeneratedIntColumn _size;
+  @override
+  GeneratedIntColumn get size => _size ??= _constructSize();
+  GeneratedIntColumn _constructSize() {
+    return GeneratedIntColumn(
+      'size',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _textSizeMeta = const VerificationMeta('textSize');
+  GeneratedIntColumn _textSize;
+  @override
+  GeneratedIntColumn get textSize => _textSize ??= _constructTextSize();
+  GeneratedIntColumn _constructTextSize() {
+    return GeneratedIntColumn(
+      'text_size',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _truncatedMeta = const VerificationMeta('truncated');
+  GeneratedBoolColumn _truncated;
+  @override
+  GeneratedBoolColumn get truncated => _truncated ??= _constructTruncated();
+  GeneratedBoolColumn _constructTruncated() {
+    return GeneratedBoolColumn(
+      'truncated',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _internalTimeStampInUTCMeta =
+      const VerificationMeta('internalTimeStampInUTC');
+  GeneratedIntColumn _internalTimeStampInUTC;
+  @override
+  GeneratedIntColumn get internalTimeStampInUTC =>
+      _internalTimeStampInUTC ??= _constructInternalTimeStampInUTC();
+  GeneratedIntColumn _constructInternalTimeStampInUTC() {
+    return GeneratedIntColumn(
+      'internal_time_stamp_in_u_t_c',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _receivedOrDateTimeStampInUTCMeta =
+      const VerificationMeta('receivedOrDateTimeStampInUTC');
+  GeneratedIntColumn _receivedOrDateTimeStampInUTC;
+  @override
+  GeneratedIntColumn get receivedOrDateTimeStampInUTC =>
+      _receivedOrDateTimeStampInUTC ??=
+          _constructReceivedOrDateTimeStampInUTC();
+  GeneratedIntColumn _constructReceivedOrDateTimeStampInUTC() {
+    return GeneratedIntColumn(
+      'received_or_date_time_stamp_in_u_t_c',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _timeStampInUTCMeta =
+      const VerificationMeta('timeStampInUTC');
+  GeneratedIntColumn _timeStampInUTC;
+  @override
+  GeneratedIntColumn get timeStampInUTC =>
+      _timeStampInUTC ??= _constructTimeStampInUTC();
+  GeneratedIntColumn _constructTimeStampInUTC() {
+    return GeneratedIntColumn(
+      'time_stamp_in_u_t_c',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _toInJsonMeta = const VerificationMeta('toInJson');
+  GeneratedTextColumn _toInJson;
+  @override
+  GeneratedTextColumn get toInJson => _toInJson ??= _constructToInJson();
+  GeneratedTextColumn _constructToInJson() {
+    return GeneratedTextColumn(
+      'to_in_json',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _fromInJsonMeta = const VerificationMeta('fromInJson');
+  GeneratedTextColumn _fromInJson;
+  @override
+  GeneratedTextColumn get fromInJson => _fromInJson ??= _constructFromInJson();
+  GeneratedTextColumn _constructFromInJson() {
+    return GeneratedTextColumn(
+      'from_in_json',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _ccMeta = const VerificationMeta('cc');
+  GeneratedTextColumn _cc;
+  @override
+  GeneratedTextColumn get cc => _cc ??= _constructCc();
+  GeneratedTextColumn _constructCc() {
+    return GeneratedTextColumn(
+      'cc',
+      $tableName,
+      true,
+    );
+  }
+
+  final VerificationMeta _bccMeta = const VerificationMeta('bcc');
+  GeneratedTextColumn _bcc;
+  @override
+  GeneratedTextColumn get bcc => _bcc ??= _constructBcc();
+  GeneratedTextColumn _constructBcc() {
+    return GeneratedTextColumn(
+      'bcc',
+      $tableName,
+      true,
+    );
+  }
+
+  final VerificationMeta _senderMeta = const VerificationMeta('sender');
+  GeneratedTextColumn _sender;
+  @override
+  GeneratedTextColumn get sender => _sender ??= _constructSender();
+  GeneratedTextColumn _constructSender() {
+    return GeneratedTextColumn(
+      'sender',
+      $tableName,
+      true,
+    );
+  }
+
+  final VerificationMeta _replyToMeta = const VerificationMeta('replyTo');
+  GeneratedTextColumn _replyTo;
+  @override
+  GeneratedTextColumn get replyTo => _replyTo ??= _constructReplyTo();
+  GeneratedTextColumn _constructReplyTo() {
+    return GeneratedTextColumn(
+      'reply_to',
+      $tableName,
+      true,
+    );
+  }
+
+  final VerificationMeta _isSeenMeta = const VerificationMeta('isSeen');
+  GeneratedBoolColumn _isSeen;
+  @override
+  GeneratedBoolColumn get isSeen => _isSeen ??= _constructIsSeen();
+  GeneratedBoolColumn _constructIsSeen() {
+    return GeneratedBoolColumn(
+      'is_seen',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _isFlaggedMeta = const VerificationMeta('isFlagged');
+  GeneratedBoolColumn _isFlagged;
+  @override
+  GeneratedBoolColumn get isFlagged => _isFlagged ??= _constructIsFlagged();
+  GeneratedBoolColumn _constructIsFlagged() {
+    return GeneratedBoolColumn(
+      'is_flagged',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _isAnsweredMeta = const VerificationMeta('isAnswered');
+  GeneratedBoolColumn _isAnswered;
+  @override
+  GeneratedBoolColumn get isAnswered => _isAnswered ??= _constructIsAnswered();
+  GeneratedBoolColumn _constructIsAnswered() {
+    return GeneratedBoolColumn(
+      'is_answered',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _isForwardedMeta =
+      const VerificationMeta('isForwarded');
+  GeneratedBoolColumn _isForwarded;
+  @override
+  GeneratedBoolColumn get isForwarded =>
+      _isForwarded ??= _constructIsForwarded();
+  GeneratedBoolColumn _constructIsForwarded() {
+    return GeneratedBoolColumn(
+      'is_forwarded',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _hasAttachmentsMeta =
+      const VerificationMeta('hasAttachments');
+  GeneratedBoolColumn _hasAttachments;
+  @override
+  GeneratedBoolColumn get hasAttachments =>
+      _hasAttachments ??= _constructHasAttachments();
+  GeneratedBoolColumn _constructHasAttachments() {
+    return GeneratedBoolColumn(
+      'has_attachments',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _hasVcardAttachmentMeta =
+      const VerificationMeta('hasVcardAttachment');
+  GeneratedBoolColumn _hasVcardAttachment;
+  @override
+  GeneratedBoolColumn get hasVcardAttachment =>
+      _hasVcardAttachment ??= _constructHasVcardAttachment();
+  GeneratedBoolColumn _constructHasVcardAttachment() {
+    return GeneratedBoolColumn(
+      'has_vcard_attachment',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _hasIcalAttachmentMeta =
+      const VerificationMeta('hasIcalAttachment');
+  GeneratedBoolColumn _hasIcalAttachment;
+  @override
+  GeneratedBoolColumn get hasIcalAttachment =>
+      _hasIcalAttachment ??= _constructHasIcalAttachment();
+  GeneratedBoolColumn _constructHasIcalAttachment() {
+    return GeneratedBoolColumn(
+      'has_ical_attachment',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _importanceMeta = const VerificationMeta('importance');
+  GeneratedIntColumn _importance;
+  @override
+  GeneratedIntColumn get importance => _importance ??= _constructImportance();
+  GeneratedIntColumn _constructImportance() {
+    return GeneratedIntColumn(
+      'importance',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _draftInfoMeta = const VerificationMeta('draftInfo');
+  GeneratedTextColumn _draftInfo;
+  @override
+  GeneratedTextColumn get draftInfo => _draftInfo ??= _constructDraftInfo();
+  GeneratedTextColumn _constructDraftInfo() {
+    return GeneratedTextColumn(
+      'draft_info',
+      $tableName,
+      true,
+    );
+  }
+
+  final VerificationMeta _sensitivityMeta =
+      const VerificationMeta('sensitivity');
+  GeneratedIntColumn _sensitivity;
+  @override
+  GeneratedIntColumn get sensitivity =>
+      _sensitivity ??= _constructSensitivity();
+  GeneratedIntColumn _constructSensitivity() {
+    return GeneratedIntColumn(
+      'sensitivity',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _downloadAsEmlUrlMeta =
+      const VerificationMeta('downloadAsEmlUrl');
+  GeneratedTextColumn _downloadAsEmlUrl;
+  @override
+  GeneratedTextColumn get downloadAsEmlUrl =>
+      _downloadAsEmlUrl ??= _constructDownloadAsEmlUrl();
+  GeneratedTextColumn _constructDownloadAsEmlUrl() {
+    return GeneratedTextColumn(
+      'download_as_eml_url',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _hashMeta = const VerificationMeta('hash');
+  GeneratedTextColumn _hash;
+  @override
+  GeneratedTextColumn get hash => _hash ??= _constructHash();
+  GeneratedTextColumn _constructHash() {
+    return GeneratedTextColumn(
+      'hash',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _headersMeta = const VerificationMeta('headers');
+  GeneratedTextColumn _headers;
+  @override
+  GeneratedTextColumn get headers => _headers ??= _constructHeaders();
+  GeneratedTextColumn _constructHeaders() {
+    return GeneratedTextColumn(
+      'headers',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _inReplyToMeta = const VerificationMeta('inReplyTo');
+  GeneratedTextColumn _inReplyTo;
+  @override
+  GeneratedTextColumn get inReplyTo => _inReplyTo ??= _constructInReplyTo();
+  GeneratedTextColumn _constructInReplyTo() {
+    return GeneratedTextColumn(
+      'in_reply_to',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _referencesMeta = const VerificationMeta('references');
+  GeneratedTextColumn _references;
+  @override
+  GeneratedTextColumn get references => _references ??= _constructReferences();
+  GeneratedTextColumn _constructReferences() {
+    return GeneratedTextColumn(
+      'references',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _readingConfirmationAddresseeMeta =
+      const VerificationMeta('readingConfirmationAddressee');
+  GeneratedTextColumn _readingConfirmationAddressee;
+  @override
+  GeneratedTextColumn get readingConfirmationAddressee =>
+      _readingConfirmationAddressee ??=
+          _constructReadingConfirmationAddressee();
+  GeneratedTextColumn _constructReadingConfirmationAddressee() {
+    return GeneratedTextColumn(
+      'reading_confirmation_addressee',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _htmlMeta = const VerificationMeta('html');
+  GeneratedTextColumn _html;
+  @override
+  GeneratedTextColumn get html => _html ??= _constructHtml();
+  GeneratedTextColumn _constructHtml() {
+    return GeneratedTextColumn(
+      'html',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _plainMeta = const VerificationMeta('plain');
+  GeneratedTextColumn _plain;
+  @override
+  GeneratedTextColumn get plain => _plain ??= _constructPlain();
+  GeneratedTextColumn _constructPlain() {
+    return GeneratedTextColumn(
+      'plain',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _plainRawMeta = const VerificationMeta('plainRaw');
+  GeneratedTextColumn _plainRaw;
+  @override
+  GeneratedTextColumn get plainRaw => _plainRaw ??= _constructPlainRaw();
+  GeneratedTextColumn _constructPlainRaw() {
+    return GeneratedTextColumn(
+      'plain_raw',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _rtlMeta = const VerificationMeta('rtl');
+  GeneratedBoolColumn _rtl;
+  @override
+  GeneratedBoolColumn get rtl => _rtl ??= _constructRtl();
+  GeneratedBoolColumn _constructRtl() {
+    return GeneratedBoolColumn(
+      'rtl',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _extendInJsonMeta =
+      const VerificationMeta('extendInJson');
+  GeneratedTextColumn _extendInJson;
+  @override
+  GeneratedTextColumn get extendInJson =>
+      _extendInJson ??= _constructExtendInJson();
+  GeneratedTextColumn _constructExtendInJson() {
+    return GeneratedTextColumn(
+      'extend_in_json',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _safetyMeta = const VerificationMeta('safety');
+  GeneratedBoolColumn _safety;
+  @override
+  GeneratedBoolColumn get safety => _safety ??= _constructSafety();
+  GeneratedBoolColumn _constructSafety() {
+    return GeneratedBoolColumn(
+      'safety',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _hasExternalsMeta =
+      const VerificationMeta('hasExternals');
+  GeneratedBoolColumn _hasExternals;
+  @override
+  GeneratedBoolColumn get hasExternals =>
+      _hasExternals ??= _constructHasExternals();
+  GeneratedBoolColumn _constructHasExternals() {
+    return GeneratedBoolColumn(
+      'has_externals',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _foundedCIDsInJsonMeta =
+      const VerificationMeta('foundedCIDsInJson');
+  GeneratedTextColumn _foundedCIDsInJson;
+  @override
+  GeneratedTextColumn get foundedCIDsInJson =>
+      _foundedCIDsInJson ??= _constructFoundedCIDsInJson();
+  GeneratedTextColumn _constructFoundedCIDsInJson() {
+    return GeneratedTextColumn(
+      'founded_c_i_ds_in_json',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _foundedContentLocationUrlsInJsonMeta =
+      const VerificationMeta('foundedContentLocationUrlsInJson');
+  GeneratedTextColumn _foundedContentLocationUrlsInJson;
+  @override
+  GeneratedTextColumn get foundedContentLocationUrlsInJson =>
+      _foundedContentLocationUrlsInJson ??=
+          _constructFoundedContentLocationUrlsInJson();
+  GeneratedTextColumn _constructFoundedContentLocationUrlsInJson() {
+    return GeneratedTextColumn(
+      'founded_content_location_urls_in_json',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _attachmentsInJsonMeta =
+      const VerificationMeta('attachmentsInJson');
+  GeneratedTextColumn _attachmentsInJson;
+  @override
+  GeneratedTextColumn get attachmentsInJson =>
+      _attachmentsInJson ??= _constructAttachmentsInJson();
+  GeneratedTextColumn _constructAttachmentsInJson() {
+    return GeneratedTextColumn(
+      'attachments_in_json',
+      $tableName,
+      true,
+    );
+  }
+
+  final VerificationMeta _customInJsonMeta =
+      const VerificationMeta('customInJson');
+  GeneratedTextColumn _customInJson;
+  @override
+  GeneratedTextColumn get customInJson =>
+      _customInJson ??= _constructCustomInJson();
+  GeneratedTextColumn _constructCustomInJson() {
+    return GeneratedTextColumn(
+      'custom_in_json',
+      $tableName,
+      false,
+    );
+  }
+
+  @override
+  List<GeneratedColumn> get $columns => [
+        localId,
+        uid,
+        messageId,
+        folder,
+        flagsInJson,
+        threadInJson,
+        subject,
+        size,
+        textSize,
+        truncated,
+        internalTimeStampInUTC,
+        receivedOrDateTimeStampInUTC,
+        timeStampInUTC,
+        toInJson,
+        fromInJson,
+        cc,
+        bcc,
+        sender,
+        replyTo,
+        isSeen,
+        isFlagged,
+        isAnswered,
+        isForwarded,
+        hasAttachments,
+        hasVcardAttachment,
+        hasIcalAttachment,
+        importance,
+        draftInfo,
+        sensitivity,
+        downloadAsEmlUrl,
+        hash,
+        headers,
+        inReplyTo,
+        references,
+        readingConfirmationAddressee,
+        html,
+        plain,
+        plainRaw,
+        rtl,
+        extendInJson,
+        safety,
+        hasExternals,
+        foundedCIDsInJson,
+        foundedContentLocationUrlsInJson,
+        attachmentsInJson,
+        customInJson
+      ];
   @override
   $MailTable get asDslTable => this;
   @override
@@ -100,6 +1539,305 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
           localId.isAcceptableValue(d.localId.value, _localIdMeta));
     } else if (localId.isRequired && isInserting) {
       context.missing(_localIdMeta);
+    }
+    if (d.uid.present) {
+      context.handle(_uidMeta, uid.isAcceptableValue(d.uid.value, _uidMeta));
+    } else if (uid.isRequired && isInserting) {
+      context.missing(_uidMeta);
+    }
+    if (d.messageId.present) {
+      context.handle(_messageIdMeta,
+          messageId.isAcceptableValue(d.messageId.value, _messageIdMeta));
+    } else if (messageId.isRequired && isInserting) {
+      context.missing(_messageIdMeta);
+    }
+    if (d.folder.present) {
+      context.handle(
+          _folderMeta, folder.isAcceptableValue(d.folder.value, _folderMeta));
+    } else if (folder.isRequired && isInserting) {
+      context.missing(_folderMeta);
+    }
+    if (d.flagsInJson.present) {
+      context.handle(_flagsInJsonMeta,
+          flagsInJson.isAcceptableValue(d.flagsInJson.value, _flagsInJsonMeta));
+    } else if (flagsInJson.isRequired && isInserting) {
+      context.missing(_flagsInJsonMeta);
+    }
+    if (d.threadInJson.present) {
+      context.handle(
+          _threadInJsonMeta,
+          threadInJson.isAcceptableValue(
+              d.threadInJson.value, _threadInJsonMeta));
+    } else if (threadInJson.isRequired && isInserting) {
+      context.missing(_threadInJsonMeta);
+    }
+    if (d.subject.present) {
+      context.handle(_subjectMeta,
+          subject.isAcceptableValue(d.subject.value, _subjectMeta));
+    } else if (subject.isRequired && isInserting) {
+      context.missing(_subjectMeta);
+    }
+    if (d.size.present) {
+      context.handle(
+          _sizeMeta, size.isAcceptableValue(d.size.value, _sizeMeta));
+    } else if (size.isRequired && isInserting) {
+      context.missing(_sizeMeta);
+    }
+    if (d.textSize.present) {
+      context.handle(_textSizeMeta,
+          textSize.isAcceptableValue(d.textSize.value, _textSizeMeta));
+    } else if (textSize.isRequired && isInserting) {
+      context.missing(_textSizeMeta);
+    }
+    if (d.truncated.present) {
+      context.handle(_truncatedMeta,
+          truncated.isAcceptableValue(d.truncated.value, _truncatedMeta));
+    } else if (truncated.isRequired && isInserting) {
+      context.missing(_truncatedMeta);
+    }
+    if (d.internalTimeStampInUTC.present) {
+      context.handle(
+          _internalTimeStampInUTCMeta,
+          internalTimeStampInUTC.isAcceptableValue(
+              d.internalTimeStampInUTC.value, _internalTimeStampInUTCMeta));
+    } else if (internalTimeStampInUTC.isRequired && isInserting) {
+      context.missing(_internalTimeStampInUTCMeta);
+    }
+    if (d.receivedOrDateTimeStampInUTC.present) {
+      context.handle(
+          _receivedOrDateTimeStampInUTCMeta,
+          receivedOrDateTimeStampInUTC.isAcceptableValue(
+              d.receivedOrDateTimeStampInUTC.value,
+              _receivedOrDateTimeStampInUTCMeta));
+    } else if (receivedOrDateTimeStampInUTC.isRequired && isInserting) {
+      context.missing(_receivedOrDateTimeStampInUTCMeta);
+    }
+    if (d.timeStampInUTC.present) {
+      context.handle(
+          _timeStampInUTCMeta,
+          timeStampInUTC.isAcceptableValue(
+              d.timeStampInUTC.value, _timeStampInUTCMeta));
+    } else if (timeStampInUTC.isRequired && isInserting) {
+      context.missing(_timeStampInUTCMeta);
+    }
+    if (d.toInJson.present) {
+      context.handle(_toInJsonMeta,
+          toInJson.isAcceptableValue(d.toInJson.value, _toInJsonMeta));
+    } else if (toInJson.isRequired && isInserting) {
+      context.missing(_toInJsonMeta);
+    }
+    if (d.fromInJson.present) {
+      context.handle(_fromInJsonMeta,
+          fromInJson.isAcceptableValue(d.fromInJson.value, _fromInJsonMeta));
+    } else if (fromInJson.isRequired && isInserting) {
+      context.missing(_fromInJsonMeta);
+    }
+    if (d.cc.present) {
+      context.handle(_ccMeta, cc.isAcceptableValue(d.cc.value, _ccMeta));
+    } else if (cc.isRequired && isInserting) {
+      context.missing(_ccMeta);
+    }
+    if (d.bcc.present) {
+      context.handle(_bccMeta, bcc.isAcceptableValue(d.bcc.value, _bccMeta));
+    } else if (bcc.isRequired && isInserting) {
+      context.missing(_bccMeta);
+    }
+    if (d.sender.present) {
+      context.handle(
+          _senderMeta, sender.isAcceptableValue(d.sender.value, _senderMeta));
+    } else if (sender.isRequired && isInserting) {
+      context.missing(_senderMeta);
+    }
+    if (d.replyTo.present) {
+      context.handle(_replyToMeta,
+          replyTo.isAcceptableValue(d.replyTo.value, _replyToMeta));
+    } else if (replyTo.isRequired && isInserting) {
+      context.missing(_replyToMeta);
+    }
+    if (d.isSeen.present) {
+      context.handle(
+          _isSeenMeta, isSeen.isAcceptableValue(d.isSeen.value, _isSeenMeta));
+    } else if (isSeen.isRequired && isInserting) {
+      context.missing(_isSeenMeta);
+    }
+    if (d.isFlagged.present) {
+      context.handle(_isFlaggedMeta,
+          isFlagged.isAcceptableValue(d.isFlagged.value, _isFlaggedMeta));
+    } else if (isFlagged.isRequired && isInserting) {
+      context.missing(_isFlaggedMeta);
+    }
+    if (d.isAnswered.present) {
+      context.handle(_isAnsweredMeta,
+          isAnswered.isAcceptableValue(d.isAnswered.value, _isAnsweredMeta));
+    } else if (isAnswered.isRequired && isInserting) {
+      context.missing(_isAnsweredMeta);
+    }
+    if (d.isForwarded.present) {
+      context.handle(_isForwardedMeta,
+          isForwarded.isAcceptableValue(d.isForwarded.value, _isForwardedMeta));
+    } else if (isForwarded.isRequired && isInserting) {
+      context.missing(_isForwardedMeta);
+    }
+    if (d.hasAttachments.present) {
+      context.handle(
+          _hasAttachmentsMeta,
+          hasAttachments.isAcceptableValue(
+              d.hasAttachments.value, _hasAttachmentsMeta));
+    } else if (hasAttachments.isRequired && isInserting) {
+      context.missing(_hasAttachmentsMeta);
+    }
+    if (d.hasVcardAttachment.present) {
+      context.handle(
+          _hasVcardAttachmentMeta,
+          hasVcardAttachment.isAcceptableValue(
+              d.hasVcardAttachment.value, _hasVcardAttachmentMeta));
+    } else if (hasVcardAttachment.isRequired && isInserting) {
+      context.missing(_hasVcardAttachmentMeta);
+    }
+    if (d.hasIcalAttachment.present) {
+      context.handle(
+          _hasIcalAttachmentMeta,
+          hasIcalAttachment.isAcceptableValue(
+              d.hasIcalAttachment.value, _hasIcalAttachmentMeta));
+    } else if (hasIcalAttachment.isRequired && isInserting) {
+      context.missing(_hasIcalAttachmentMeta);
+    }
+    if (d.importance.present) {
+      context.handle(_importanceMeta,
+          importance.isAcceptableValue(d.importance.value, _importanceMeta));
+    } else if (importance.isRequired && isInserting) {
+      context.missing(_importanceMeta);
+    }
+    if (d.draftInfo.present) {
+      context.handle(_draftInfoMeta,
+          draftInfo.isAcceptableValue(d.draftInfo.value, _draftInfoMeta));
+    } else if (draftInfo.isRequired && isInserting) {
+      context.missing(_draftInfoMeta);
+    }
+    if (d.sensitivity.present) {
+      context.handle(_sensitivityMeta,
+          sensitivity.isAcceptableValue(d.sensitivity.value, _sensitivityMeta));
+    } else if (sensitivity.isRequired && isInserting) {
+      context.missing(_sensitivityMeta);
+    }
+    if (d.downloadAsEmlUrl.present) {
+      context.handle(
+          _downloadAsEmlUrlMeta,
+          downloadAsEmlUrl.isAcceptableValue(
+              d.downloadAsEmlUrl.value, _downloadAsEmlUrlMeta));
+    } else if (downloadAsEmlUrl.isRequired && isInserting) {
+      context.missing(_downloadAsEmlUrlMeta);
+    }
+    if (d.hash.present) {
+      context.handle(
+          _hashMeta, hash.isAcceptableValue(d.hash.value, _hashMeta));
+    } else if (hash.isRequired && isInserting) {
+      context.missing(_hashMeta);
+    }
+    if (d.headers.present) {
+      context.handle(_headersMeta,
+          headers.isAcceptableValue(d.headers.value, _headersMeta));
+    } else if (headers.isRequired && isInserting) {
+      context.missing(_headersMeta);
+    }
+    if (d.inReplyTo.present) {
+      context.handle(_inReplyToMeta,
+          inReplyTo.isAcceptableValue(d.inReplyTo.value, _inReplyToMeta));
+    } else if (inReplyTo.isRequired && isInserting) {
+      context.missing(_inReplyToMeta);
+    }
+    if (d.references.present) {
+      context.handle(_referencesMeta,
+          references.isAcceptableValue(d.references.value, _referencesMeta));
+    } else if (references.isRequired && isInserting) {
+      context.missing(_referencesMeta);
+    }
+    if (d.readingConfirmationAddressee.present) {
+      context.handle(
+          _readingConfirmationAddresseeMeta,
+          readingConfirmationAddressee.isAcceptableValue(
+              d.readingConfirmationAddressee.value,
+              _readingConfirmationAddresseeMeta));
+    } else if (readingConfirmationAddressee.isRequired && isInserting) {
+      context.missing(_readingConfirmationAddresseeMeta);
+    }
+    if (d.html.present) {
+      context.handle(
+          _htmlMeta, html.isAcceptableValue(d.html.value, _htmlMeta));
+    } else if (html.isRequired && isInserting) {
+      context.missing(_htmlMeta);
+    }
+    if (d.plain.present) {
+      context.handle(
+          _plainMeta, plain.isAcceptableValue(d.plain.value, _plainMeta));
+    } else if (plain.isRequired && isInserting) {
+      context.missing(_plainMeta);
+    }
+    if (d.plainRaw.present) {
+      context.handle(_plainRawMeta,
+          plainRaw.isAcceptableValue(d.plainRaw.value, _plainRawMeta));
+    } else if (plainRaw.isRequired && isInserting) {
+      context.missing(_plainRawMeta);
+    }
+    if (d.rtl.present) {
+      context.handle(_rtlMeta, rtl.isAcceptableValue(d.rtl.value, _rtlMeta));
+    } else if (rtl.isRequired && isInserting) {
+      context.missing(_rtlMeta);
+    }
+    if (d.extendInJson.present) {
+      context.handle(
+          _extendInJsonMeta,
+          extendInJson.isAcceptableValue(
+              d.extendInJson.value, _extendInJsonMeta));
+    } else if (extendInJson.isRequired && isInserting) {
+      context.missing(_extendInJsonMeta);
+    }
+    if (d.safety.present) {
+      context.handle(
+          _safetyMeta, safety.isAcceptableValue(d.safety.value, _safetyMeta));
+    } else if (safety.isRequired && isInserting) {
+      context.missing(_safetyMeta);
+    }
+    if (d.hasExternals.present) {
+      context.handle(
+          _hasExternalsMeta,
+          hasExternals.isAcceptableValue(
+              d.hasExternals.value, _hasExternalsMeta));
+    } else if (hasExternals.isRequired && isInserting) {
+      context.missing(_hasExternalsMeta);
+    }
+    if (d.foundedCIDsInJson.present) {
+      context.handle(
+          _foundedCIDsInJsonMeta,
+          foundedCIDsInJson.isAcceptableValue(
+              d.foundedCIDsInJson.value, _foundedCIDsInJsonMeta));
+    } else if (foundedCIDsInJson.isRequired && isInserting) {
+      context.missing(_foundedCIDsInJsonMeta);
+    }
+    if (d.foundedContentLocationUrlsInJson.present) {
+      context.handle(
+          _foundedContentLocationUrlsInJsonMeta,
+          foundedContentLocationUrlsInJson.isAcceptableValue(
+              d.foundedContentLocationUrlsInJson.value,
+              _foundedContentLocationUrlsInJsonMeta));
+    } else if (foundedContentLocationUrlsInJson.isRequired && isInserting) {
+      context.missing(_foundedContentLocationUrlsInJsonMeta);
+    }
+    if (d.attachmentsInJson.present) {
+      context.handle(
+          _attachmentsInJsonMeta,
+          attachmentsInJson.isAcceptableValue(
+              d.attachmentsInJson.value, _attachmentsInJsonMeta));
+    } else if (attachmentsInJson.isRequired && isInserting) {
+      context.missing(_attachmentsInJsonMeta);
+    }
+    if (d.customInJson.present) {
+      context.handle(
+          _customInJsonMeta,
+          customInJson.isAcceptableValue(
+              d.customInJson.value, _customInJsonMeta));
+    } else if (customInJson.isRequired && isInserting) {
+      context.missing(_customInJsonMeta);
     }
     return context;
   }
@@ -117,6 +1855,155 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     final map = <String, Variable>{};
     if (d.localId.present) {
       map['local_id'] = Variable<int, IntType>(d.localId.value);
+    }
+    if (d.uid.present) {
+      map['uid'] = Variable<int, IntType>(d.uid.value);
+    }
+    if (d.messageId.present) {
+      map['message_id'] = Variable<String, StringType>(d.messageId.value);
+    }
+    if (d.folder.present) {
+      map['folder'] = Variable<String, StringType>(d.folder.value);
+    }
+    if (d.flagsInJson.present) {
+      map['flags_in_json'] = Variable<String, StringType>(d.flagsInJson.value);
+    }
+    if (d.threadInJson.present) {
+      map['thread_in_json'] =
+          Variable<String, StringType>(d.threadInJson.value);
+    }
+    if (d.subject.present) {
+      map['subject'] = Variable<String, StringType>(d.subject.value);
+    }
+    if (d.size.present) {
+      map['size'] = Variable<int, IntType>(d.size.value);
+    }
+    if (d.textSize.present) {
+      map['text_size'] = Variable<int, IntType>(d.textSize.value);
+    }
+    if (d.truncated.present) {
+      map['truncated'] = Variable<bool, BoolType>(d.truncated.value);
+    }
+    if (d.internalTimeStampInUTC.present) {
+      map['internal_time_stamp_in_u_t_c'] =
+          Variable<int, IntType>(d.internalTimeStampInUTC.value);
+    }
+    if (d.receivedOrDateTimeStampInUTC.present) {
+      map['received_or_date_time_stamp_in_u_t_c'] =
+          Variable<int, IntType>(d.receivedOrDateTimeStampInUTC.value);
+    }
+    if (d.timeStampInUTC.present) {
+      map['time_stamp_in_u_t_c'] =
+          Variable<int, IntType>(d.timeStampInUTC.value);
+    }
+    if (d.toInJson.present) {
+      map['to_in_json'] = Variable<String, StringType>(d.toInJson.value);
+    }
+    if (d.fromInJson.present) {
+      map['from_in_json'] = Variable<String, StringType>(d.fromInJson.value);
+    }
+    if (d.cc.present) {
+      map['cc'] = Variable<String, StringType>(d.cc.value);
+    }
+    if (d.bcc.present) {
+      map['bcc'] = Variable<String, StringType>(d.bcc.value);
+    }
+    if (d.sender.present) {
+      map['sender'] = Variable<String, StringType>(d.sender.value);
+    }
+    if (d.replyTo.present) {
+      map['reply_to'] = Variable<String, StringType>(d.replyTo.value);
+    }
+    if (d.isSeen.present) {
+      map['is_seen'] = Variable<bool, BoolType>(d.isSeen.value);
+    }
+    if (d.isFlagged.present) {
+      map['is_flagged'] = Variable<bool, BoolType>(d.isFlagged.value);
+    }
+    if (d.isAnswered.present) {
+      map['is_answered'] = Variable<bool, BoolType>(d.isAnswered.value);
+    }
+    if (d.isForwarded.present) {
+      map['is_forwarded'] = Variable<bool, BoolType>(d.isForwarded.value);
+    }
+    if (d.hasAttachments.present) {
+      map['has_attachments'] = Variable<bool, BoolType>(d.hasAttachments.value);
+    }
+    if (d.hasVcardAttachment.present) {
+      map['has_vcard_attachment'] =
+          Variable<bool, BoolType>(d.hasVcardAttachment.value);
+    }
+    if (d.hasIcalAttachment.present) {
+      map['has_ical_attachment'] =
+          Variable<bool, BoolType>(d.hasIcalAttachment.value);
+    }
+    if (d.importance.present) {
+      map['importance'] = Variable<int, IntType>(d.importance.value);
+    }
+    if (d.draftInfo.present) {
+      map['draft_info'] = Variable<String, StringType>(d.draftInfo.value);
+    }
+    if (d.sensitivity.present) {
+      map['sensitivity'] = Variable<int, IntType>(d.sensitivity.value);
+    }
+    if (d.downloadAsEmlUrl.present) {
+      map['download_as_eml_url'] =
+          Variable<String, StringType>(d.downloadAsEmlUrl.value);
+    }
+    if (d.hash.present) {
+      map['hash'] = Variable<String, StringType>(d.hash.value);
+    }
+    if (d.headers.present) {
+      map['headers'] = Variable<String, StringType>(d.headers.value);
+    }
+    if (d.inReplyTo.present) {
+      map['in_reply_to'] = Variable<String, StringType>(d.inReplyTo.value);
+    }
+    if (d.references.present) {
+      map['references'] = Variable<String, StringType>(d.references.value);
+    }
+    if (d.readingConfirmationAddressee.present) {
+      map['reading_confirmation_addressee'] =
+          Variable<String, StringType>(d.readingConfirmationAddressee.value);
+    }
+    if (d.html.present) {
+      map['html'] = Variable<String, StringType>(d.html.value);
+    }
+    if (d.plain.present) {
+      map['plain'] = Variable<String, StringType>(d.plain.value);
+    }
+    if (d.plainRaw.present) {
+      map['plain_raw'] = Variable<String, StringType>(d.plainRaw.value);
+    }
+    if (d.rtl.present) {
+      map['rtl'] = Variable<bool, BoolType>(d.rtl.value);
+    }
+    if (d.extendInJson.present) {
+      map['extend_in_json'] =
+          Variable<String, StringType>(d.extendInJson.value);
+    }
+    if (d.safety.present) {
+      map['safety'] = Variable<bool, BoolType>(d.safety.value);
+    }
+    if (d.hasExternals.present) {
+      map['has_externals'] = Variable<bool, BoolType>(d.hasExternals.value);
+    }
+    if (d.foundedCIDsInJson.present) {
+      map['founded_c_i_ds_in_json'] =
+          Variable<String, StringType>(d.foundedCIDsInJson.value);
+    }
+    if (d.foundedContentLocationUrlsInJson.present) {
+      map['founded_content_location_urls_in_json'] =
+          Variable<String, StringType>(
+              d.foundedContentLocationUrlsInJson.value);
+    }
+    if (d.attachmentsInJson.present) {
+      map['attachments_in_json'] =
+          Variable<String, StringType>(d.attachmentsInJson.value);
+    }
+    if (d.customInJson.present) {
+      map['custom_in_json'] =
+          Variable<String, StringType>(d.customInJson.value);
     }
     return map;
   }
@@ -144,6 +2031,7 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
   final bool folderExists;
   final bool extended;
   final bool alwaysRefresh;
+  final String messagesInfoInJson;
   LocalFolder(
       {@required this.localId,
       @required this.guid,
@@ -160,7 +2048,8 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
       @required this.isSelectable,
       @required this.folderExists,
       this.extended,
-      @required this.alwaysRefresh});
+      @required this.alwaysRefresh,
+      this.messagesInfoInJson});
   factory LocalFolder.fromData(Map<String, dynamic> data, GeneratedDatabase db,
       {String prefix}) {
     final effectivePrefix = prefix ?? '';
@@ -197,6 +2086,8 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
           boolType.mapFromDatabaseResponse(data['${effectivePrefix}extended']),
       alwaysRefresh: boolType
           .mapFromDatabaseResponse(data['${effectivePrefix}always_refresh']),
+      messagesInfoInJson: stringType.mapFromDatabaseResponse(
+          data['${effectivePrefix}messages_info_in_json']),
     );
   }
   factory LocalFolder.fromJson(Map<String, dynamic> json,
@@ -218,6 +2109,8 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
       folderExists: serializer.fromJson<bool>(json['folderExists']),
       extended: serializer.fromJson<bool>(json['extended']),
       alwaysRefresh: serializer.fromJson<bool>(json['alwaysRefresh']),
+      messagesInfoInJson:
+          serializer.fromJson<String>(json['messagesInfoInJson']),
     );
   }
   @override
@@ -240,6 +2133,7 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
       'folderExists': serializer.toJson<bool>(folderExists),
       'extended': serializer.toJson<bool>(extended),
       'alwaysRefresh': serializer.toJson<bool>(alwaysRefresh),
+      'messagesInfoInJson': serializer.toJson<String>(messagesInfoInJson),
     };
   }
 
@@ -288,6 +2182,9 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
       alwaysRefresh: alwaysRefresh == null && nullToAbsent
           ? const Value.absent()
           : Value(alwaysRefresh),
+      messagesInfoInJson: messagesInfoInJson == null && nullToAbsent
+          ? const Value.absent()
+          : Value(messagesInfoInJson),
     ) as T;
   }
 
@@ -307,7 +2204,8 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
           bool isSelectable,
           bool folderExists,
           bool extended,
-          bool alwaysRefresh}) =>
+          bool alwaysRefresh,
+          String messagesInfoInJson}) =>
       LocalFolder(
         localId: localId ?? this.localId,
         guid: guid ?? this.guid,
@@ -325,6 +2223,7 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
         folderExists: folderExists ?? this.folderExists,
         extended: extended ?? this.extended,
         alwaysRefresh: alwaysRefresh ?? this.alwaysRefresh,
+        messagesInfoInJson: messagesInfoInJson ?? this.messagesInfoInJson,
       );
   @override
   String toString() {
@@ -344,7 +2243,8 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
           ..write('isSelectable: $isSelectable, ')
           ..write('folderExists: $folderExists, ')
           ..write('extended: $extended, ')
-          ..write('alwaysRefresh: $alwaysRefresh')
+          ..write('alwaysRefresh: $alwaysRefresh, ')
+          ..write('messagesInfoInJson: $messagesInfoInJson')
           ..write(')'))
         .toString();
   }
@@ -380,8 +2280,11 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
                                                           folderExists.hashCode,
                                                           $mrjc(
                                                               extended.hashCode,
-                                                              alwaysRefresh
-                                                                  .hashCode))))))))))))))));
+                                                              $mrjc(
+                                                                  alwaysRefresh
+                                                                      .hashCode,
+                                                                  messagesInfoInJson
+                                                                      .hashCode)))))))))))))))));
   @override
   bool operator ==(other) =>
       identical(this, other) ||
@@ -401,7 +2304,8 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
           other.isSelectable == isSelectable &&
           other.folderExists == folderExists &&
           other.extended == extended &&
-          other.alwaysRefresh == alwaysRefresh);
+          other.alwaysRefresh == alwaysRefresh &&
+          other.messagesInfoInJson == messagesInfoInJson);
 }
 
 class FoldersCompanion extends UpdateCompanion<LocalFolder> {
@@ -421,6 +2325,7 @@ class FoldersCompanion extends UpdateCompanion<LocalFolder> {
   final Value<bool> folderExists;
   final Value<bool> extended;
   final Value<bool> alwaysRefresh;
+  final Value<String> messagesInfoInJson;
   const FoldersCompanion({
     this.localId = const Value.absent(),
     this.guid = const Value.absent(),
@@ -438,6 +2343,7 @@ class FoldersCompanion extends UpdateCompanion<LocalFolder> {
     this.folderExists = const Value.absent(),
     this.extended = const Value.absent(),
     this.alwaysRefresh = const Value.absent(),
+    this.messagesInfoInJson = const Value.absent(),
   });
   FoldersCompanion copyWith(
       {Value<int> localId,
@@ -455,7 +2361,8 @@ class FoldersCompanion extends UpdateCompanion<LocalFolder> {
       Value<bool> isSelectable,
       Value<bool> folderExists,
       Value<bool> extended,
-      Value<bool> alwaysRefresh}) {
+      Value<bool> alwaysRefresh,
+      Value<String> messagesInfoInJson}) {
     return FoldersCompanion(
       localId: localId ?? this.localId,
       guid: guid ?? this.guid,
@@ -473,6 +2380,7 @@ class FoldersCompanion extends UpdateCompanion<LocalFolder> {
       folderExists: folderExists ?? this.folderExists,
       extended: extended ?? this.extended,
       alwaysRefresh: alwaysRefresh ?? this.alwaysRefresh,
+      messagesInfoInJson: messagesInfoInJson ?? this.messagesInfoInJson,
     );
   }
 }
@@ -684,6 +2592,20 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
     );
   }
 
+  final VerificationMeta _messagesInfoInJsonMeta =
+      const VerificationMeta('messagesInfoInJson');
+  GeneratedTextColumn _messagesInfoInJson;
+  @override
+  GeneratedTextColumn get messagesInfoInJson =>
+      _messagesInfoInJson ??= _constructMessagesInfoInJson();
+  GeneratedTextColumn _constructMessagesInfoInJson() {
+    return GeneratedTextColumn(
+      'messages_info_in_json',
+      $tableName,
+      true,
+    );
+  }
+
   @override
   List<GeneratedColumn> get $columns => [
         localId,
@@ -701,7 +2623,8 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
         isSelectable,
         folderExists,
         extended,
-        alwaysRefresh
+        alwaysRefresh,
+        messagesInfoInJson
       ];
   @override
   $FoldersTable get asDslTable => this;
@@ -819,6 +2742,14 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
     } else if (alwaysRefresh.isRequired && isInserting) {
       context.missing(_alwaysRefreshMeta);
     }
+    if (d.messagesInfoInJson.present) {
+      context.handle(
+          _messagesInfoInJsonMeta,
+          messagesInfoInJson.isAcceptableValue(
+              d.messagesInfoInJson.value, _messagesInfoInJsonMeta));
+    } else if (messagesInfoInJson.isRequired && isInserting) {
+      context.missing(_messagesInfoInJsonMeta);
+    }
     return context;
   }
 
@@ -881,6 +2812,10 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
     }
     if (d.alwaysRefresh.present) {
       map['always_refresh'] = Variable<bool, BoolType>(d.alwaysRefresh.value);
+    }
+    if (d.messagesInfoInJson.present) {
+      map['messages_info_in_json'] =
+          Variable<String, StringType>(d.messagesInfoInJson.value);
     }
     return map;
   }
