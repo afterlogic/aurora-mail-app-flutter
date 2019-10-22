@@ -97,7 +97,6 @@ class Folder {
     }
   }
 
-  // returns tree of folders for displaying in the UI
   static List<Folder> getFolderObjectsFromDb(List<LocalFolder> localFolders,
       [String parentGuid]) {
     try {
@@ -110,7 +109,7 @@ class Folder {
           parentGuid: localFolder.parentGuid,
           type: localFolder.type,
           folderType: _getFolderTypeFromNumber(localFolder.type),
-          order: localFolder.order,
+          order: localFolder.folderOrder,
           name: localFolder.name,
           fullName: localFolder.fullName,
           fullNameRaw: localFolder.fullNameRaw,
@@ -118,7 +117,7 @@ class Folder {
           delimiter: localFolder.delimiter,
           isSubscribed: localFolder.isSubscribed,
           isSelectable: localFolder.isSelectable,
-          exists: localFolder.exists,
+          exists: localFolder.folderExists,
           extended: localFolder.extended,
           alwaysRefresh: localFolder.alwaysRefresh,
           subFolders: getFolderObjectsFromDb(localFolders, localFolder.guid),

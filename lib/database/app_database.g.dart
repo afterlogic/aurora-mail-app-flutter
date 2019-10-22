@@ -133,7 +133,7 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
   final String parentGuid;
   final int accountId;
   final int type;
-  final int order;
+  final int folderOrder;
   final String name;
   final String fullName;
   final String fullNameRaw;
@@ -141,7 +141,7 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
   final String delimiter;
   final bool isSubscribed;
   final bool isSelectable;
-  final bool exists;
+  final bool folderExists;
   final bool extended;
   final bool alwaysRefresh;
   LocalFolder(
@@ -150,7 +150,7 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
       this.parentGuid,
       @required this.accountId,
       @required this.type,
-      @required this.order,
+      @required this.folderOrder,
       @required this.name,
       @required this.fullName,
       @required this.fullNameRaw,
@@ -158,7 +158,7 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
       @required this.delimiter,
       @required this.isSubscribed,
       @required this.isSelectable,
-      @required this.exists,
+      @required this.folderExists,
       this.extended,
       @required this.alwaysRefresh});
   factory LocalFolder.fromData(Map<String, dynamic> data, GeneratedDatabase db,
@@ -176,7 +176,8 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
       accountId:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}account_id']),
       type: intType.mapFromDatabaseResponse(data['${effectivePrefix}type']),
-      order: intType.mapFromDatabaseResponse(data['${effectivePrefix}order']),
+      folderOrder: intType
+          .mapFromDatabaseResponse(data['${effectivePrefix}folder_order']),
       name: stringType.mapFromDatabaseResponse(data['${effectivePrefix}name']),
       fullName: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}full_name']),
@@ -190,8 +191,8 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
           .mapFromDatabaseResponse(data['${effectivePrefix}is_subscribed']),
       isSelectable: boolType
           .mapFromDatabaseResponse(data['${effectivePrefix}is_selectable']),
-      exists:
-          boolType.mapFromDatabaseResponse(data['${effectivePrefix}exists']),
+      folderExists: boolType
+          .mapFromDatabaseResponse(data['${effectivePrefix}folder_exists']),
       extended:
           boolType.mapFromDatabaseResponse(data['${effectivePrefix}extended']),
       alwaysRefresh: boolType
@@ -206,7 +207,7 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
       parentGuid: serializer.fromJson<String>(json['parentGuid']),
       accountId: serializer.fromJson<int>(json['accountId']),
       type: serializer.fromJson<int>(json['type']),
-      order: serializer.fromJson<int>(json['order']),
+      folderOrder: serializer.fromJson<int>(json['folderOrder']),
       name: serializer.fromJson<String>(json['name']),
       fullName: serializer.fromJson<String>(json['fullName']),
       fullNameRaw: serializer.fromJson<String>(json['fullNameRaw']),
@@ -214,7 +215,7 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
       delimiter: serializer.fromJson<String>(json['delimiter']),
       isSubscribed: serializer.fromJson<bool>(json['isSubscribed']),
       isSelectable: serializer.fromJson<bool>(json['isSelectable']),
-      exists: serializer.fromJson<bool>(json['exists']),
+      folderExists: serializer.fromJson<bool>(json['folderExists']),
       extended: serializer.fromJson<bool>(json['extended']),
       alwaysRefresh: serializer.fromJson<bool>(json['alwaysRefresh']),
     );
@@ -228,7 +229,7 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
       'parentGuid': serializer.toJson<String>(parentGuid),
       'accountId': serializer.toJson<int>(accountId),
       'type': serializer.toJson<int>(type),
-      'order': serializer.toJson<int>(order),
+      'folderOrder': serializer.toJson<int>(folderOrder),
       'name': serializer.toJson<String>(name),
       'fullName': serializer.toJson<String>(fullName),
       'fullNameRaw': serializer.toJson<String>(fullNameRaw),
@@ -236,7 +237,7 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
       'delimiter': serializer.toJson<String>(delimiter),
       'isSubscribed': serializer.toJson<bool>(isSubscribed),
       'isSelectable': serializer.toJson<bool>(isSelectable),
-      'exists': serializer.toJson<bool>(exists),
+      'folderExists': serializer.toJson<bool>(folderExists),
       'extended': serializer.toJson<bool>(extended),
       'alwaysRefresh': serializer.toJson<bool>(alwaysRefresh),
     };
@@ -256,8 +257,9 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
           ? const Value.absent()
           : Value(accountId),
       type: type == null && nullToAbsent ? const Value.absent() : Value(type),
-      order:
-          order == null && nullToAbsent ? const Value.absent() : Value(order),
+      folderOrder: folderOrder == null && nullToAbsent
+          ? const Value.absent()
+          : Value(folderOrder),
       name: name == null && nullToAbsent ? const Value.absent() : Value(name),
       fullName: fullName == null && nullToAbsent
           ? const Value.absent()
@@ -277,8 +279,9 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
       isSelectable: isSelectable == null && nullToAbsent
           ? const Value.absent()
           : Value(isSelectable),
-      exists:
-          exists == null && nullToAbsent ? const Value.absent() : Value(exists),
+      folderExists: folderExists == null && nullToAbsent
+          ? const Value.absent()
+          : Value(folderExists),
       extended: extended == null && nullToAbsent
           ? const Value.absent()
           : Value(extended),
@@ -294,7 +297,7 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
           String parentGuid,
           int accountId,
           int type,
-          int order,
+          int folderOrder,
           String name,
           String fullName,
           String fullNameRaw,
@@ -302,7 +305,7 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
           String delimiter,
           bool isSubscribed,
           bool isSelectable,
-          bool exists,
+          bool folderExists,
           bool extended,
           bool alwaysRefresh}) =>
       LocalFolder(
@@ -311,7 +314,7 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
         parentGuid: parentGuid ?? this.parentGuid,
         accountId: accountId ?? this.accountId,
         type: type ?? this.type,
-        order: order ?? this.order,
+        folderOrder: folderOrder ?? this.folderOrder,
         name: name ?? this.name,
         fullName: fullName ?? this.fullName,
         fullNameRaw: fullNameRaw ?? this.fullNameRaw,
@@ -319,7 +322,7 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
         delimiter: delimiter ?? this.delimiter,
         isSubscribed: isSubscribed ?? this.isSubscribed,
         isSelectable: isSelectable ?? this.isSelectable,
-        exists: exists ?? this.exists,
+        folderExists: folderExists ?? this.folderExists,
         extended: extended ?? this.extended,
         alwaysRefresh: alwaysRefresh ?? this.alwaysRefresh,
       );
@@ -331,7 +334,7 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
           ..write('parentGuid: $parentGuid, ')
           ..write('accountId: $accountId, ')
           ..write('type: $type, ')
-          ..write('order: $order, ')
+          ..write('folderOrder: $folderOrder, ')
           ..write('name: $name, ')
           ..write('fullName: $fullName, ')
           ..write('fullNameRaw: $fullNameRaw, ')
@@ -339,7 +342,7 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
           ..write('delimiter: $delimiter, ')
           ..write('isSubscribed: $isSubscribed, ')
           ..write('isSelectable: $isSelectable, ')
-          ..write('exists: $exists, ')
+          ..write('folderExists: $folderExists, ')
           ..write('extended: $extended, ')
           ..write('alwaysRefresh: $alwaysRefresh')
           ..write(')'))
@@ -358,7 +361,7 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
                   $mrjc(
                       type.hashCode,
                       $mrjc(
-                          order.hashCode,
+                          folderOrder.hashCode,
                           $mrjc(
                               name.hashCode,
                               $mrjc(
@@ -374,7 +377,7 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
                                                   $mrjc(
                                                       isSelectable.hashCode,
                                                       $mrjc(
-                                                          exists.hashCode,
+                                                          folderExists.hashCode,
                                                           $mrjc(
                                                               extended.hashCode,
                                                               alwaysRefresh
@@ -388,7 +391,7 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
           other.parentGuid == parentGuid &&
           other.accountId == accountId &&
           other.type == type &&
-          other.order == order &&
+          other.folderOrder == folderOrder &&
           other.name == name &&
           other.fullName == fullName &&
           other.fullNameRaw == fullNameRaw &&
@@ -396,7 +399,7 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
           other.delimiter == delimiter &&
           other.isSubscribed == isSubscribed &&
           other.isSelectable == isSelectable &&
-          other.exists == exists &&
+          other.folderExists == folderExists &&
           other.extended == extended &&
           other.alwaysRefresh == alwaysRefresh);
 }
@@ -407,7 +410,7 @@ class FoldersCompanion extends UpdateCompanion<LocalFolder> {
   final Value<String> parentGuid;
   final Value<int> accountId;
   final Value<int> type;
-  final Value<int> order;
+  final Value<int> folderOrder;
   final Value<String> name;
   final Value<String> fullName;
   final Value<String> fullNameRaw;
@@ -415,7 +418,7 @@ class FoldersCompanion extends UpdateCompanion<LocalFolder> {
   final Value<String> delimiter;
   final Value<bool> isSubscribed;
   final Value<bool> isSelectable;
-  final Value<bool> exists;
+  final Value<bool> folderExists;
   final Value<bool> extended;
   final Value<bool> alwaysRefresh;
   const FoldersCompanion({
@@ -424,7 +427,7 @@ class FoldersCompanion extends UpdateCompanion<LocalFolder> {
     this.parentGuid = const Value.absent(),
     this.accountId = const Value.absent(),
     this.type = const Value.absent(),
-    this.order = const Value.absent(),
+    this.folderOrder = const Value.absent(),
     this.name = const Value.absent(),
     this.fullName = const Value.absent(),
     this.fullNameRaw = const Value.absent(),
@@ -432,7 +435,7 @@ class FoldersCompanion extends UpdateCompanion<LocalFolder> {
     this.delimiter = const Value.absent(),
     this.isSubscribed = const Value.absent(),
     this.isSelectable = const Value.absent(),
-    this.exists = const Value.absent(),
+    this.folderExists = const Value.absent(),
     this.extended = const Value.absent(),
     this.alwaysRefresh = const Value.absent(),
   });
@@ -442,7 +445,7 @@ class FoldersCompanion extends UpdateCompanion<LocalFolder> {
       Value<String> parentGuid,
       Value<int> accountId,
       Value<int> type,
-      Value<int> order,
+      Value<int> folderOrder,
       Value<String> name,
       Value<String> fullName,
       Value<String> fullNameRaw,
@@ -450,7 +453,7 @@ class FoldersCompanion extends UpdateCompanion<LocalFolder> {
       Value<String> delimiter,
       Value<bool> isSubscribed,
       Value<bool> isSelectable,
-      Value<bool> exists,
+      Value<bool> folderExists,
       Value<bool> extended,
       Value<bool> alwaysRefresh}) {
     return FoldersCompanion(
@@ -459,7 +462,7 @@ class FoldersCompanion extends UpdateCompanion<LocalFolder> {
       parentGuid: parentGuid ?? this.parentGuid,
       accountId: accountId ?? this.accountId,
       type: type ?? this.type,
-      order: order ?? this.order,
+      folderOrder: folderOrder ?? this.folderOrder,
       name: name ?? this.name,
       fullName: fullName ?? this.fullName,
       fullNameRaw: fullNameRaw ?? this.fullNameRaw,
@@ -467,7 +470,7 @@ class FoldersCompanion extends UpdateCompanion<LocalFolder> {
       delimiter: delimiter ?? this.delimiter,
       isSubscribed: isSubscribed ?? this.isSubscribed,
       isSelectable: isSelectable ?? this.isSelectable,
-      exists: exists ?? this.exists,
+      folderExists: folderExists ?? this.folderExists,
       extended: extended ?? this.extended,
       alwaysRefresh: alwaysRefresh ?? this.alwaysRefresh,
     );
@@ -535,13 +538,15 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
     );
   }
 
-  final VerificationMeta _orderMeta = const VerificationMeta('order');
-  GeneratedIntColumn _order;
+  final VerificationMeta _folderOrderMeta =
+      const VerificationMeta('folderOrder');
+  GeneratedIntColumn _folderOrder;
   @override
-  GeneratedIntColumn get order => _order ??= _constructOrder();
-  GeneratedIntColumn _constructOrder() {
+  GeneratedIntColumn get folderOrder =>
+      _folderOrder ??= _constructFolderOrder();
+  GeneratedIntColumn _constructFolderOrder() {
     return GeneratedIntColumn(
-      'order',
+      'folder_order',
       $tableName,
       false,
     );
@@ -639,13 +644,15 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
     );
   }
 
-  final VerificationMeta _existsMeta = const VerificationMeta('exists');
-  GeneratedBoolColumn _exists;
+  final VerificationMeta _folderExistsMeta =
+      const VerificationMeta('folderExists');
+  GeneratedBoolColumn _folderExists;
   @override
-  GeneratedBoolColumn get exists => _exists ??= _constructExists();
-  GeneratedBoolColumn _constructExists() {
+  GeneratedBoolColumn get folderExists =>
+      _folderExists ??= _constructFolderExists();
+  GeneratedBoolColumn _constructFolderExists() {
     return GeneratedBoolColumn(
-      'exists',
+      'folder_exists',
       $tableName,
       false,
     );
@@ -684,7 +691,7 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
         parentGuid,
         accountId,
         type,
-        order,
+        folderOrder,
         name,
         fullName,
         fullNameRaw,
@@ -692,7 +699,7 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
         delimiter,
         isSubscribed,
         isSelectable,
-        exists,
+        folderExists,
         extended,
         alwaysRefresh
       ];
@@ -736,11 +743,11 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
     } else if (type.isRequired && isInserting) {
       context.missing(_typeMeta);
     }
-    if (d.order.present) {
-      context.handle(
-          _orderMeta, order.isAcceptableValue(d.order.value, _orderMeta));
-    } else if (order.isRequired && isInserting) {
-      context.missing(_orderMeta);
+    if (d.folderOrder.present) {
+      context.handle(_folderOrderMeta,
+          folderOrder.isAcceptableValue(d.folderOrder.value, _folderOrderMeta));
+    } else if (folderOrder.isRequired && isInserting) {
+      context.missing(_folderOrderMeta);
     }
     if (d.name.present) {
       context.handle(
@@ -790,11 +797,13 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
     } else if (isSelectable.isRequired && isInserting) {
       context.missing(_isSelectableMeta);
     }
-    if (d.exists.present) {
+    if (d.folderExists.present) {
       context.handle(
-          _existsMeta, exists.isAcceptableValue(d.exists.value, _existsMeta));
-    } else if (exists.isRequired && isInserting) {
-      context.missing(_existsMeta);
+          _folderExistsMeta,
+          folderExists.isAcceptableValue(
+              d.folderExists.value, _folderExistsMeta));
+    } else if (folderExists.isRequired && isInserting) {
+      context.missing(_folderExistsMeta);
     }
     if (d.extended.present) {
       context.handle(_extendedMeta,
@@ -839,8 +848,8 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
     if (d.type.present) {
       map['type'] = Variable<int, IntType>(d.type.value);
     }
-    if (d.order.present) {
-      map['order'] = Variable<int, IntType>(d.order.value);
+    if (d.folderOrder.present) {
+      map['folder_order'] = Variable<int, IntType>(d.folderOrder.value);
     }
     if (d.name.present) {
       map['name'] = Variable<String, StringType>(d.name.value);
@@ -864,8 +873,8 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
     if (d.isSelectable.present) {
       map['is_selectable'] = Variable<bool, BoolType>(d.isSelectable.value);
     }
-    if (d.exists.present) {
-      map['exists'] = Variable<bool, BoolType>(d.exists.value);
+    if (d.folderExists.present) {
+      map['folder_exists'] = Variable<bool, BoolType>(d.folderExists.value);
     }
     if (d.extended.present) {
       map['extended'] = Variable<bool, BoolType>(d.extended.value);

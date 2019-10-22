@@ -1,3 +1,4 @@
+import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/folders/folders_dao.dart';
 import 'package:aurora_mail/database/folders/folders_table.dart';
 import 'package:aurora_mail/models/folder.dart';
@@ -25,13 +26,23 @@ abstract class _FoldersState with Store {
     try {
       isFoldersLoading = loading;
       final accountId = AppStore.authState.accountId;
-      final rawFolders = await _foldersApi.getFolders(accountId);
 
-      final newFolders =
-          await Folders.getFolderObjectsFromServerAsync(rawFolders);
-      await _foldersDao.addFolders(newFolders);
+      List<LocalFolder> localFolders =
+          await _foldersDao.getAllFolders(accountId);
 
-      final localFolders = await _foldersDao.getAllFolders(accountId);
+      // if folders or if refreshed
+      if (localFolders == null ||
+          localFolders.isEmpty ||
+          loading == LoadingType.refresh) {
+        final rawFolders = await _foldersApi.getFolders(accountId);
+
+        final newFolders =
+            await Folders.getFolderObjectsFromServerAsync(rawFolders);
+        await _foldersDao.deleteFolders();
+        await _foldersDao.addFolders(newFolders);
+
+        localFolders = await _foldersDao.getAllFolders(accountId);
+      }
 
       currentFolders = Folder.getFolderObjectsFromDb(localFolders);
     } catch (err, s) {

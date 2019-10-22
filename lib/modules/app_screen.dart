@@ -47,14 +47,12 @@ class _AppState extends State<App> {
         builder: (_, AsyncSnapshot<List<bool>> snapshot) {
           if (snapshot.connectionState == ConnectionState.done &&
               snapshot.hasData) {
-            return Observer(
-              builder: (_) => MaterialApp(
+            return MaterialApp(
                 title: "Aurora Mail",
                 onGenerateRoute: AppNavigation.onGenerateRoute,
                 initialRoute: _canEnterMainApp(snapshot.data)
                     ? MailRoute.name
                     : AuthRoute.name,
-              ),
             );
           } else if (snapshot.hasError) {
             final err = snapshot.error.toString();

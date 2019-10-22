@@ -42,7 +42,7 @@ class MailFolder extends StatelessWidget {
 
     if (mailFolder.isSubscribed == true) {
       return Padding(
-        padding: EdgeInsets.only(left: (50 * level).toDouble()),
+        padding: EdgeInsets.only(left: (40 * (level - 1)).toDouble()),
         child: ListTile(
           leading: Icon(_getFolderIcon(mailFolder.folderType)),
           title: Text(mailFolder.name),

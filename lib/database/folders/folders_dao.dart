@@ -20,4 +20,14 @@ class FoldersDao extends DatabaseAccessor<AppDatabase> with _$FoldersDaoMixin {
   Future<void> addFolders(List<LocalFolder> newFolders) async {
     return into(folders).insertAll(newFolders);
   }
+
+  Future<int> deleteFolders([List<LocalFolder> filesToDelete]) async {
+    if (filesToDelete == null) {
+      return delete(folders).go();
+    } else {
+      final List<int> ids = filesToDelete.map((file) => file.localId).toList();
+      return (delete(folders)
+        ..where((file) => isIn(file.localId, ids))).go();
+    }
+  }
 }

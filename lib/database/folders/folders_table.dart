@@ -16,7 +16,7 @@ class Folders extends Table {
 
   IntColumn get type => integer()();
 
-  IntColumn get order => integer()();
+  IntColumn get folderOrder => integer()();
 
   TextColumn get name => text()();
 
@@ -32,7 +32,7 @@ class Folders extends Table {
 
   BoolColumn get isSelectable => boolean()();
 
-  BoolColumn get exists => boolean()();
+  BoolColumn get folderExists => boolean()();
 
   BoolColumn get extended => boolean().nullable()();
 
@@ -59,7 +59,7 @@ class Folders extends Table {
           parentGuid: parentGuid,
           accountId: AppStore.authState.accountId,
           type: rawFolder["Type"],
-          order: rawFolders.indexOf(rawFolder),
+          folderOrder: rawFolders.indexOf(rawFolder),
           name: rawFolder["Name"],
           fullName: rawFolder["FullName"],
           fullNameRaw: rawFolder["FullNameRaw"],
@@ -67,7 +67,7 @@ class Folders extends Table {
           delimiter: rawFolder["Delimiter"],
           isSubscribed: rawFolder["IsSubscribed"],
           isSelectable: rawFolder["IsSelectable"],
-          exists: rawFolder["Exists"],
+          folderExists: rawFolder["Exists"],
           extended: rawFolder["Extended"],
           alwaysRefresh: rawFolder["AlwaysRefresh"],
         ));
