@@ -1,5 +1,6 @@
 import 'package:animated_stream_list/animated_stream_list.dart';
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/models/loading_enum.dart';
 import 'package:aurora_mail/modules/app_store.dart';
 import 'package:aurora_mail/modules/mail/components/mail_app_bar.dart';
@@ -13,6 +14,10 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'state/mail_state.dart';
 
 class MailAndroid extends StatefulWidget {
+  final Folder selectedFolder;
+
+  const MailAndroid(this.selectedFolder);
+
   @override
   _MailAndroidState createState() => _MailAndroidState();
 }
@@ -28,9 +33,16 @@ class _MailAndroidState extends State<MailAndroid> {
   }
 
   Future<void> _initMail() async {
-    await _foldersState.onGetFolders(onError: _showSnack);
-    _mailState.onSetMessagesInfoToFolder(
-        _foldersState.selectedFolder, onError: _showSnack);
+    if (widget.selectedFolder == null) {
+      await _foldersState.onGetFolders(onError: _showSnack);
+      _mailState.onSetMessagesInfoToFolder(
+          _foldersState.selectedFolder, onError: _showSnack);
+    } else {
+      _mailState.onSetMessagesInfoToFolder(
+          widget.selectedFolder, onError: _showSnack);
+      await Future.delayed(Duration(milliseconds: 10));
+      _foldersState.selectedFolder = widget.selectedFolder;
+    }
   }
 
   void _showSnack(err) {
@@ -62,7 +74,7 @@ class _MailAndroidState extends State<MailAndroid> {
       body: Observer(
         builder: (_) {
           if (_foldersState.isFoldersLoading == LoadingType.hidden ||
-              _mailState.isMessagesLoading == LoadingType.hidden) {
+              _mailState.isMessagesLoading == LoadingType.hidden || _foldersState.selectedFolder == null) {
             return Center(child: CircularProgressIndicator());
           } else {
             return AnimatedStreamList(
