@@ -49,12 +49,20 @@ abstract class _FoldersState with Store {
 
       currentFolders = Folder.getFolderObjectsFromDb(localFolders);
       selectedFolder = currentFolders[0];
+      _watchFolders(accountId);
     } catch (err, s) {
       print("onGetFolders err: $err");
       print("onGetFolders s: $s");
       onError(err.toString());
     } finally {
       isFoldersLoading = LoadingType.none;
+    }
+  }
+
+  Future _watchFolders(int accountId) async {
+    await for (final newFolders in _foldersDao.watchAllFolders(accountId)) {
+      currentFolders = Folder.getFolderObjectsFromDb(newFolders);
+      if (selectedFolder == null) selectedFolder = currentFolders[0];
     }
   }
 }

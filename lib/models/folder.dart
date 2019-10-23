@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -48,6 +50,7 @@ class Folder {
 
   final bool alwaysRefresh;
 
+  final List messagesInfo;
   final List<Folder> subFolders;
 
   Folder({
@@ -67,6 +70,7 @@ class Folder {
     @required this.exists,
     @required this.extended,
     @required this.alwaysRefresh,
+    @required this.messagesInfo,
     @required this.subFolders,
   });
 
@@ -120,10 +124,13 @@ class Folder {
           exists: localFolder.folderExists,
           extended: localFolder.extended,
           alwaysRefresh: localFolder.alwaysRefresh,
+          messagesInfo: localFolder.messagesInfoInJson == null
+              ? null
+              : json.decode(localFolder.messagesInfoInJson),
           subFolders: getFolderObjectsFromDb(localFolders, localFolder.guid),
         );
       }).toList();
-    } catch(err, s) {
+    } catch (err, s) {
       print("getFolderObjectsFromDb err: $err");
       print("getFolderObjectsFromDb s: $s");
       return null;

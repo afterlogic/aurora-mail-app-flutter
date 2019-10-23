@@ -17,6 +17,11 @@ class FoldersDao extends DatabaseAccessor<AppDatabase> with _$FoldersDaoMixin {
         .get();
   }
 
+  Future<List<LocalFolder>> getFolder(int localId) {
+    return (select(folders)..where((folder) => folder.localId.equals(localId)))
+        .get();
+  }
+
   Stream<List<LocalFolder>> watchAllFolders(int accountId) {
     return (select(folders)
           ..where((folder) => folder.accountId.equals(accountId)))

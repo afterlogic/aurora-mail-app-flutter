@@ -10,6 +10,7 @@ part of 'app_database.dart';
 class Message extends DataClass implements Insertable<Message> {
   final int localId;
   final int uid;
+  final int parentUid;
   final String messageId;
   final String folder;
   final String flagsInJson;
@@ -23,14 +24,11 @@ class Message extends DataClass implements Insertable<Message> {
   final int timeStampInUTC;
   final String toInJson;
   final String fromInJson;
-  final String cc;
-  final String bcc;
-  final String sender;
+  final String fromToDisplay;
+  final String ccInJson;
+  final String bccInJson;
+  final String senderInJson;
   final String replyTo;
-  final bool isSeen;
-  final bool isFlagged;
-  final bool isAnswered;
-  final bool isForwarded;
   final bool hasAttachments;
   final bool hasVcardAttachment;
   final bool hasIcalAttachment;
@@ -43,6 +41,7 @@ class Message extends DataClass implements Insertable<Message> {
   final String inReplyTo;
   final String references;
   final String readingConfirmationAddressee;
+  final String htmlRaw;
   final String html;
   final String plain;
   final String plainRaw;
@@ -57,6 +56,7 @@ class Message extends DataClass implements Insertable<Message> {
   Message(
       {@required this.localId,
       @required this.uid,
+      this.parentUid,
       @required this.messageId,
       @required this.folder,
       @required this.flagsInJson,
@@ -69,15 +69,12 @@ class Message extends DataClass implements Insertable<Message> {
       @required this.receivedOrDateTimeStampInUTC,
       @required this.timeStampInUTC,
       @required this.toInJson,
-      @required this.fromInJson,
-      this.cc,
-      this.bcc,
-      this.sender,
+      this.fromInJson,
+      @required this.fromToDisplay,
+      this.ccInJson,
+      this.bccInJson,
+      this.senderInJson,
       this.replyTo,
-      @required this.isSeen,
-      @required this.isFlagged,
-      @required this.isAnswered,
-      @required this.isForwarded,
       @required this.hasAttachments,
       @required this.hasVcardAttachment,
       @required this.hasIcalAttachment,
@@ -90,7 +87,8 @@ class Message extends DataClass implements Insertable<Message> {
       @required this.inReplyTo,
       @required this.references,
       @required this.readingConfirmationAddressee,
-      @required this.html,
+      this.htmlRaw,
+      this.html,
       @required this.plain,
       @required this.plainRaw,
       @required this.rtl,
@@ -111,6 +109,8 @@ class Message extends DataClass implements Insertable<Message> {
       localId:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}local_id']),
       uid: intType.mapFromDatabaseResponse(data['${effectivePrefix}uid']),
+      parentUid:
+          intType.mapFromDatabaseResponse(data['${effectivePrefix}parent_uid']),
       messageId: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}message_id']),
       folder:
@@ -136,20 +136,16 @@ class Message extends DataClass implements Insertable<Message> {
           .mapFromDatabaseResponse(data['${effectivePrefix}to_in_json']),
       fromInJson: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}from_in_json']),
-      cc: stringType.mapFromDatabaseResponse(data['${effectivePrefix}cc']),
-      bcc: stringType.mapFromDatabaseResponse(data['${effectivePrefix}bcc']),
-      sender:
-          stringType.mapFromDatabaseResponse(data['${effectivePrefix}sender']),
+      fromToDisplay: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}from_to_display']),
+      ccInJson: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}cc_in_json']),
+      bccInJson: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}bcc_in_json']),
+      senderInJson: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}sender_in_json']),
       replyTo: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}reply_to']),
-      isSeen:
-          boolType.mapFromDatabaseResponse(data['${effectivePrefix}is_seen']),
-      isFlagged: boolType
-          .mapFromDatabaseResponse(data['${effectivePrefix}is_flagged']),
-      isAnswered: boolType
-          .mapFromDatabaseResponse(data['${effectivePrefix}is_answered']),
-      isForwarded: boolType
-          .mapFromDatabaseResponse(data['${effectivePrefix}is_forwarded']),
       hasAttachments: boolType
           .mapFromDatabaseResponse(data['${effectivePrefix}has_attachments']),
       hasVcardAttachment: boolType.mapFromDatabaseResponse(
@@ -169,10 +165,12 @@ class Message extends DataClass implements Insertable<Message> {
           stringType.mapFromDatabaseResponse(data['${effectivePrefix}headers']),
       inReplyTo: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}in_reply_to']),
-      references: stringType
-          .mapFromDatabaseResponse(data['${effectivePrefix}references']),
+      references: stringType.mapFromDatabaseResponse(
+          data['${effectivePrefix}message_references']),
       readingConfirmationAddressee: stringType.mapFromDatabaseResponse(
           data['${effectivePrefix}reading_confirmation_addressee']),
+      htmlRaw: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}html_raw']),
       html: stringType.mapFromDatabaseResponse(data['${effectivePrefix}html']),
       plain:
           stringType.mapFromDatabaseResponse(data['${effectivePrefix}plain']),
@@ -200,6 +198,7 @@ class Message extends DataClass implements Insertable<Message> {
     return Message(
       localId: serializer.fromJson<int>(json['localId']),
       uid: serializer.fromJson<int>(json['uid']),
+      parentUid: serializer.fromJson<int>(json['parentUid']),
       messageId: serializer.fromJson<String>(json['messageId']),
       folder: serializer.fromJson<String>(json['folder']),
       flagsInJson: serializer.fromJson<String>(json['flagsInJson']),
@@ -215,14 +214,11 @@ class Message extends DataClass implements Insertable<Message> {
       timeStampInUTC: serializer.fromJson<int>(json['timeStampInUTC']),
       toInJson: serializer.fromJson<String>(json['toInJson']),
       fromInJson: serializer.fromJson<String>(json['fromInJson']),
-      cc: serializer.fromJson<String>(json['cc']),
-      bcc: serializer.fromJson<String>(json['bcc']),
-      sender: serializer.fromJson<String>(json['sender']),
+      fromToDisplay: serializer.fromJson<String>(json['fromToDisplay']),
+      ccInJson: serializer.fromJson<String>(json['ccInJson']),
+      bccInJson: serializer.fromJson<String>(json['bccInJson']),
+      senderInJson: serializer.fromJson<String>(json['senderInJson']),
       replyTo: serializer.fromJson<String>(json['replyTo']),
-      isSeen: serializer.fromJson<bool>(json['isSeen']),
-      isFlagged: serializer.fromJson<bool>(json['isFlagged']),
-      isAnswered: serializer.fromJson<bool>(json['isAnswered']),
-      isForwarded: serializer.fromJson<bool>(json['isForwarded']),
       hasAttachments: serializer.fromJson<bool>(json['hasAttachments']),
       hasVcardAttachment: serializer.fromJson<bool>(json['hasVcardAttachment']),
       hasIcalAttachment: serializer.fromJson<bool>(json['hasIcalAttachment']),
@@ -236,6 +232,7 @@ class Message extends DataClass implements Insertable<Message> {
       references: serializer.fromJson<String>(json['references']),
       readingConfirmationAddressee:
           serializer.fromJson<String>(json['readingConfirmationAddressee']),
+      htmlRaw: serializer.fromJson<String>(json['htmlRaw']),
       html: serializer.fromJson<String>(json['html']),
       plain: serializer.fromJson<String>(json['plain']),
       plainRaw: serializer.fromJson<String>(json['plainRaw']),
@@ -256,6 +253,7 @@ class Message extends DataClass implements Insertable<Message> {
     return {
       'localId': serializer.toJson<int>(localId),
       'uid': serializer.toJson<int>(uid),
+      'parentUid': serializer.toJson<int>(parentUid),
       'messageId': serializer.toJson<String>(messageId),
       'folder': serializer.toJson<String>(folder),
       'flagsInJson': serializer.toJson<String>(flagsInJson),
@@ -270,14 +268,11 @@ class Message extends DataClass implements Insertable<Message> {
       'timeStampInUTC': serializer.toJson<int>(timeStampInUTC),
       'toInJson': serializer.toJson<String>(toInJson),
       'fromInJson': serializer.toJson<String>(fromInJson),
-      'cc': serializer.toJson<String>(cc),
-      'bcc': serializer.toJson<String>(bcc),
-      'sender': serializer.toJson<String>(sender),
+      'fromToDisplay': serializer.toJson<String>(fromToDisplay),
+      'ccInJson': serializer.toJson<String>(ccInJson),
+      'bccInJson': serializer.toJson<String>(bccInJson),
+      'senderInJson': serializer.toJson<String>(senderInJson),
       'replyTo': serializer.toJson<String>(replyTo),
-      'isSeen': serializer.toJson<bool>(isSeen),
-      'isFlagged': serializer.toJson<bool>(isFlagged),
-      'isAnswered': serializer.toJson<bool>(isAnswered),
-      'isForwarded': serializer.toJson<bool>(isForwarded),
       'hasAttachments': serializer.toJson<bool>(hasAttachments),
       'hasVcardAttachment': serializer.toJson<bool>(hasVcardAttachment),
       'hasIcalAttachment': serializer.toJson<bool>(hasIcalAttachment),
@@ -291,6 +286,7 @@ class Message extends DataClass implements Insertable<Message> {
       'references': serializer.toJson<String>(references),
       'readingConfirmationAddressee':
           serializer.toJson<String>(readingConfirmationAddressee),
+      'htmlRaw': serializer.toJson<String>(htmlRaw),
       'html': serializer.toJson<String>(html),
       'plain': serializer.toJson<String>(plain),
       'plainRaw': serializer.toJson<String>(plainRaw),
@@ -313,6 +309,9 @@ class Message extends DataClass implements Insertable<Message> {
           ? const Value.absent()
           : Value(localId),
       uid: uid == null && nullToAbsent ? const Value.absent() : Value(uid),
+      parentUid: parentUid == null && nullToAbsent
+          ? const Value.absent()
+          : Value(parentUid),
       messageId: messageId == null && nullToAbsent
           ? const Value.absent()
           : Value(messageId),
@@ -350,24 +349,21 @@ class Message extends DataClass implements Insertable<Message> {
       fromInJson: fromInJson == null && nullToAbsent
           ? const Value.absent()
           : Value(fromInJson),
-      cc: cc == null && nullToAbsent ? const Value.absent() : Value(cc),
-      bcc: bcc == null && nullToAbsent ? const Value.absent() : Value(bcc),
-      sender:
-          sender == null && nullToAbsent ? const Value.absent() : Value(sender),
+      fromToDisplay: fromToDisplay == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fromToDisplay),
+      ccInJson: ccInJson == null && nullToAbsent
+          ? const Value.absent()
+          : Value(ccInJson),
+      bccInJson: bccInJson == null && nullToAbsent
+          ? const Value.absent()
+          : Value(bccInJson),
+      senderInJson: senderInJson == null && nullToAbsent
+          ? const Value.absent()
+          : Value(senderInJson),
       replyTo: replyTo == null && nullToAbsent
           ? const Value.absent()
           : Value(replyTo),
-      isSeen:
-          isSeen == null && nullToAbsent ? const Value.absent() : Value(isSeen),
-      isFlagged: isFlagged == null && nullToAbsent
-          ? const Value.absent()
-          : Value(isFlagged),
-      isAnswered: isAnswered == null && nullToAbsent
-          ? const Value.absent()
-          : Value(isAnswered),
-      isForwarded: isForwarded == null && nullToAbsent
-          ? const Value.absent()
-          : Value(isForwarded),
       hasAttachments: hasAttachments == null && nullToAbsent
           ? const Value.absent()
           : Value(hasAttachments),
@@ -403,6 +399,9 @@ class Message extends DataClass implements Insertable<Message> {
           readingConfirmationAddressee == null && nullToAbsent
               ? const Value.absent()
               : Value(readingConfirmationAddressee),
+      htmlRaw: htmlRaw == null && nullToAbsent
+          ? const Value.absent()
+          : Value(htmlRaw),
       html: html == null && nullToAbsent ? const Value.absent() : Value(html),
       plain:
           plain == null && nullToAbsent ? const Value.absent() : Value(plain),
@@ -437,6 +436,7 @@ class Message extends DataClass implements Insertable<Message> {
   Message copyWith(
           {int localId,
           int uid,
+          int parentUid,
           String messageId,
           String folder,
           String flagsInJson,
@@ -450,14 +450,11 @@ class Message extends DataClass implements Insertable<Message> {
           int timeStampInUTC,
           String toInJson,
           String fromInJson,
-          String cc,
-          String bcc,
-          String sender,
+          String fromToDisplay,
+          String ccInJson,
+          String bccInJson,
+          String senderInJson,
           String replyTo,
-          bool isSeen,
-          bool isFlagged,
-          bool isAnswered,
-          bool isForwarded,
           bool hasAttachments,
           bool hasVcardAttachment,
           bool hasIcalAttachment,
@@ -470,6 +467,7 @@ class Message extends DataClass implements Insertable<Message> {
           String inReplyTo,
           String references,
           String readingConfirmationAddressee,
+          String htmlRaw,
           String html,
           String plain,
           String plainRaw,
@@ -484,6 +482,7 @@ class Message extends DataClass implements Insertable<Message> {
       Message(
         localId: localId ?? this.localId,
         uid: uid ?? this.uid,
+        parentUid: parentUid ?? this.parentUid,
         messageId: messageId ?? this.messageId,
         folder: folder ?? this.folder,
         flagsInJson: flagsInJson ?? this.flagsInJson,
@@ -499,14 +498,11 @@ class Message extends DataClass implements Insertable<Message> {
         timeStampInUTC: timeStampInUTC ?? this.timeStampInUTC,
         toInJson: toInJson ?? this.toInJson,
         fromInJson: fromInJson ?? this.fromInJson,
-        cc: cc ?? this.cc,
-        bcc: bcc ?? this.bcc,
-        sender: sender ?? this.sender,
+        fromToDisplay: fromToDisplay ?? this.fromToDisplay,
+        ccInJson: ccInJson ?? this.ccInJson,
+        bccInJson: bccInJson ?? this.bccInJson,
+        senderInJson: senderInJson ?? this.senderInJson,
         replyTo: replyTo ?? this.replyTo,
-        isSeen: isSeen ?? this.isSeen,
-        isFlagged: isFlagged ?? this.isFlagged,
-        isAnswered: isAnswered ?? this.isAnswered,
-        isForwarded: isForwarded ?? this.isForwarded,
         hasAttachments: hasAttachments ?? this.hasAttachments,
         hasVcardAttachment: hasVcardAttachment ?? this.hasVcardAttachment,
         hasIcalAttachment: hasIcalAttachment ?? this.hasIcalAttachment,
@@ -520,6 +516,7 @@ class Message extends DataClass implements Insertable<Message> {
         references: references ?? this.references,
         readingConfirmationAddressee:
             readingConfirmationAddressee ?? this.readingConfirmationAddressee,
+        htmlRaw: htmlRaw ?? this.htmlRaw,
         html: html ?? this.html,
         plain: plain ?? this.plain,
         plainRaw: plainRaw ?? this.plainRaw,
@@ -538,6 +535,7 @@ class Message extends DataClass implements Insertable<Message> {
     return (StringBuffer('Message(')
           ..write('localId: $localId, ')
           ..write('uid: $uid, ')
+          ..write('parentUid: $parentUid, ')
           ..write('messageId: $messageId, ')
           ..write('folder: $folder, ')
           ..write('flagsInJson: $flagsInJson, ')
@@ -552,14 +550,11 @@ class Message extends DataClass implements Insertable<Message> {
           ..write('timeStampInUTC: $timeStampInUTC, ')
           ..write('toInJson: $toInJson, ')
           ..write('fromInJson: $fromInJson, ')
-          ..write('cc: $cc, ')
-          ..write('bcc: $bcc, ')
-          ..write('sender: $sender, ')
+          ..write('fromToDisplay: $fromToDisplay, ')
+          ..write('ccInJson: $ccInJson, ')
+          ..write('bccInJson: $bccInJson, ')
+          ..write('senderInJson: $senderInJson, ')
           ..write('replyTo: $replyTo, ')
-          ..write('isSeen: $isSeen, ')
-          ..write('isFlagged: $isFlagged, ')
-          ..write('isAnswered: $isAnswered, ')
-          ..write('isForwarded: $isForwarded, ')
           ..write('hasAttachments: $hasAttachments, ')
           ..write('hasVcardAttachment: $hasVcardAttachment, ')
           ..write('hasIcalAttachment: $hasIcalAttachment, ')
@@ -573,6 +568,7 @@ class Message extends DataClass implements Insertable<Message> {
           ..write('references: $references, ')
           ..write(
               'readingConfirmationAddressee: $readingConfirmationAddressee, ')
+          ..write('htmlRaw: $htmlRaw, ')
           ..write('html: $html, ')
           ..write('plain: $plain, ')
           ..write('plainRaw: $plainRaw, ')
@@ -595,50 +591,53 @@ class Message extends DataClass implements Insertable<Message> {
       $mrjc(
           uid.hashCode,
           $mrjc(
-              messageId.hashCode,
+              parentUid.hashCode,
               $mrjc(
-                  folder.hashCode,
+                  messageId.hashCode,
                   $mrjc(
-                      flagsInJson.hashCode,
+                      folder.hashCode,
                       $mrjc(
-                          threadInJson.hashCode,
+                          flagsInJson.hashCode,
                           $mrjc(
-                              subject.hashCode,
+                              threadInJson.hashCode,
                               $mrjc(
-                                  size.hashCode,
+                                  subject.hashCode,
                                   $mrjc(
-                                      textSize.hashCode,
+                                      size.hashCode,
                                       $mrjc(
-                                          truncated.hashCode,
+                                          textSize.hashCode,
                                           $mrjc(
-                                              internalTimeStampInUTC.hashCode,
+                                              truncated.hashCode,
                                               $mrjc(
-                                                  receivedOrDateTimeStampInUTC
+                                                  internalTimeStampInUTC
                                                       .hashCode,
                                                   $mrjc(
-                                                      timeStampInUTC.hashCode,
+                                                      receivedOrDateTimeStampInUTC
+                                                          .hashCode,
                                                       $mrjc(
-                                                          toInJson.hashCode,
+                                                          timeStampInUTC
+                                                              .hashCode,
                                                           $mrjc(
-                                                              fromInJson
-                                                                  .hashCode,
+                                                              toInJson.hashCode,
                                                               $mrjc(
-                                                                  cc.hashCode,
+                                                                  fromInJson
+                                                                      .hashCode,
                                                                   $mrjc(
-                                                                      bcc
+                                                                      fromToDisplay
                                                                           .hashCode,
                                                                       $mrjc(
-                                                                          sender
+                                                                          ccInJson
                                                                               .hashCode,
                                                                           $mrjc(
-                                                                              replyTo.hashCode,
-                                                                              $mrjc(isSeen.hashCode, $mrjc(isFlagged.hashCode, $mrjc(isAnswered.hashCode, $mrjc(isForwarded.hashCode, $mrjc(hasAttachments.hashCode, $mrjc(hasVcardAttachment.hashCode, $mrjc(hasIcalAttachment.hashCode, $mrjc(importance.hashCode, $mrjc(draftInfo.hashCode, $mrjc(sensitivity.hashCode, $mrjc(downloadAsEmlUrl.hashCode, $mrjc(hash.hashCode, $mrjc(headers.hashCode, $mrjc(inReplyTo.hashCode, $mrjc(references.hashCode, $mrjc(readingConfirmationAddressee.hashCode, $mrjc(html.hashCode, $mrjc(plain.hashCode, $mrjc(plainRaw.hashCode, $mrjc(rtl.hashCode, $mrjc(extendInJson.hashCode, $mrjc(safety.hashCode, $mrjc(hasExternals.hashCode, $mrjc(foundedCIDsInJson.hashCode, $mrjc(foundedContentLocationUrlsInJson.hashCode, $mrjc(attachmentsInJson.hashCode, customInJson.hashCode))))))))))))))))))))))))))))))))))))))))))))));
+                                                                              bccInJson.hashCode,
+                                                                              $mrjc(senderInJson.hashCode, $mrjc(replyTo.hashCode, $mrjc(hasAttachments.hashCode, $mrjc(hasVcardAttachment.hashCode, $mrjc(hasIcalAttachment.hashCode, $mrjc(importance.hashCode, $mrjc(draftInfo.hashCode, $mrjc(sensitivity.hashCode, $mrjc(downloadAsEmlUrl.hashCode, $mrjc(hash.hashCode, $mrjc(headers.hashCode, $mrjc(inReplyTo.hashCode, $mrjc(references.hashCode, $mrjc(readingConfirmationAddressee.hashCode, $mrjc(htmlRaw.hashCode, $mrjc(html.hashCode, $mrjc(plain.hashCode, $mrjc(plainRaw.hashCode, $mrjc(rtl.hashCode, $mrjc(extendInJson.hashCode, $mrjc(safety.hashCode, $mrjc(hasExternals.hashCode, $mrjc(foundedCIDsInJson.hashCode, $mrjc(foundedContentLocationUrlsInJson.hashCode, $mrjc(attachmentsInJson.hashCode, customInJson.hashCode)))))))))))))))))))))))))))))))))))))))))))));
   @override
   bool operator ==(other) =>
       identical(this, other) ||
       (other is Message &&
           other.localId == localId &&
           other.uid == uid &&
+          other.parentUid == parentUid &&
           other.messageId == messageId &&
           other.folder == folder &&
           other.flagsInJson == flagsInJson &&
@@ -652,14 +651,11 @@ class Message extends DataClass implements Insertable<Message> {
           other.timeStampInUTC == timeStampInUTC &&
           other.toInJson == toInJson &&
           other.fromInJson == fromInJson &&
-          other.cc == cc &&
-          other.bcc == bcc &&
-          other.sender == sender &&
+          other.fromToDisplay == fromToDisplay &&
+          other.ccInJson == ccInJson &&
+          other.bccInJson == bccInJson &&
+          other.senderInJson == senderInJson &&
           other.replyTo == replyTo &&
-          other.isSeen == isSeen &&
-          other.isFlagged == isFlagged &&
-          other.isAnswered == isAnswered &&
-          other.isForwarded == isForwarded &&
           other.hasAttachments == hasAttachments &&
           other.hasVcardAttachment == hasVcardAttachment &&
           other.hasIcalAttachment == hasIcalAttachment &&
@@ -672,6 +668,7 @@ class Message extends DataClass implements Insertable<Message> {
           other.inReplyTo == inReplyTo &&
           other.references == references &&
           other.readingConfirmationAddressee == readingConfirmationAddressee &&
+          other.htmlRaw == htmlRaw &&
           other.html == html &&
           other.plain == plain &&
           other.plainRaw == plainRaw &&
@@ -689,6 +686,7 @@ class Message extends DataClass implements Insertable<Message> {
 class MailCompanion extends UpdateCompanion<Message> {
   final Value<int> localId;
   final Value<int> uid;
+  final Value<int> parentUid;
   final Value<String> messageId;
   final Value<String> folder;
   final Value<String> flagsInJson;
@@ -702,14 +700,11 @@ class MailCompanion extends UpdateCompanion<Message> {
   final Value<int> timeStampInUTC;
   final Value<String> toInJson;
   final Value<String> fromInJson;
-  final Value<String> cc;
-  final Value<String> bcc;
-  final Value<String> sender;
+  final Value<String> fromToDisplay;
+  final Value<String> ccInJson;
+  final Value<String> bccInJson;
+  final Value<String> senderInJson;
   final Value<String> replyTo;
-  final Value<bool> isSeen;
-  final Value<bool> isFlagged;
-  final Value<bool> isAnswered;
-  final Value<bool> isForwarded;
   final Value<bool> hasAttachments;
   final Value<bool> hasVcardAttachment;
   final Value<bool> hasIcalAttachment;
@@ -722,6 +717,7 @@ class MailCompanion extends UpdateCompanion<Message> {
   final Value<String> inReplyTo;
   final Value<String> references;
   final Value<String> readingConfirmationAddressee;
+  final Value<String> htmlRaw;
   final Value<String> html;
   final Value<String> plain;
   final Value<String> plainRaw;
@@ -736,6 +732,7 @@ class MailCompanion extends UpdateCompanion<Message> {
   const MailCompanion({
     this.localId = const Value.absent(),
     this.uid = const Value.absent(),
+    this.parentUid = const Value.absent(),
     this.messageId = const Value.absent(),
     this.folder = const Value.absent(),
     this.flagsInJson = const Value.absent(),
@@ -749,14 +746,11 @@ class MailCompanion extends UpdateCompanion<Message> {
     this.timeStampInUTC = const Value.absent(),
     this.toInJson = const Value.absent(),
     this.fromInJson = const Value.absent(),
-    this.cc = const Value.absent(),
-    this.bcc = const Value.absent(),
-    this.sender = const Value.absent(),
+    this.fromToDisplay = const Value.absent(),
+    this.ccInJson = const Value.absent(),
+    this.bccInJson = const Value.absent(),
+    this.senderInJson = const Value.absent(),
     this.replyTo = const Value.absent(),
-    this.isSeen = const Value.absent(),
-    this.isFlagged = const Value.absent(),
-    this.isAnswered = const Value.absent(),
-    this.isForwarded = const Value.absent(),
     this.hasAttachments = const Value.absent(),
     this.hasVcardAttachment = const Value.absent(),
     this.hasIcalAttachment = const Value.absent(),
@@ -769,6 +763,7 @@ class MailCompanion extends UpdateCompanion<Message> {
     this.inReplyTo = const Value.absent(),
     this.references = const Value.absent(),
     this.readingConfirmationAddressee = const Value.absent(),
+    this.htmlRaw = const Value.absent(),
     this.html = const Value.absent(),
     this.plain = const Value.absent(),
     this.plainRaw = const Value.absent(),
@@ -784,6 +779,7 @@ class MailCompanion extends UpdateCompanion<Message> {
   MailCompanion copyWith(
       {Value<int> localId,
       Value<int> uid,
+      Value<int> parentUid,
       Value<String> messageId,
       Value<String> folder,
       Value<String> flagsInJson,
@@ -797,14 +793,11 @@ class MailCompanion extends UpdateCompanion<Message> {
       Value<int> timeStampInUTC,
       Value<String> toInJson,
       Value<String> fromInJson,
-      Value<String> cc,
-      Value<String> bcc,
-      Value<String> sender,
+      Value<String> fromToDisplay,
+      Value<String> ccInJson,
+      Value<String> bccInJson,
+      Value<String> senderInJson,
       Value<String> replyTo,
-      Value<bool> isSeen,
-      Value<bool> isFlagged,
-      Value<bool> isAnswered,
-      Value<bool> isForwarded,
       Value<bool> hasAttachments,
       Value<bool> hasVcardAttachment,
       Value<bool> hasIcalAttachment,
@@ -817,6 +810,7 @@ class MailCompanion extends UpdateCompanion<Message> {
       Value<String> inReplyTo,
       Value<String> references,
       Value<String> readingConfirmationAddressee,
+      Value<String> htmlRaw,
       Value<String> html,
       Value<String> plain,
       Value<String> plainRaw,
@@ -831,6 +825,7 @@ class MailCompanion extends UpdateCompanion<Message> {
     return MailCompanion(
       localId: localId ?? this.localId,
       uid: uid ?? this.uid,
+      parentUid: parentUid ?? this.parentUid,
       messageId: messageId ?? this.messageId,
       folder: folder ?? this.folder,
       flagsInJson: flagsInJson ?? this.flagsInJson,
@@ -846,14 +841,11 @@ class MailCompanion extends UpdateCompanion<Message> {
       timeStampInUTC: timeStampInUTC ?? this.timeStampInUTC,
       toInJson: toInJson ?? this.toInJson,
       fromInJson: fromInJson ?? this.fromInJson,
-      cc: cc ?? this.cc,
-      bcc: bcc ?? this.bcc,
-      sender: sender ?? this.sender,
+      fromToDisplay: fromToDisplay ?? this.fromToDisplay,
+      ccInJson: ccInJson ?? this.ccInJson,
+      bccInJson: bccInJson ?? this.bccInJson,
+      senderInJson: senderInJson ?? this.senderInJson,
       replyTo: replyTo ?? this.replyTo,
-      isSeen: isSeen ?? this.isSeen,
-      isFlagged: isFlagged ?? this.isFlagged,
-      isAnswered: isAnswered ?? this.isAnswered,
-      isForwarded: isForwarded ?? this.isForwarded,
       hasAttachments: hasAttachments ?? this.hasAttachments,
       hasVcardAttachment: hasVcardAttachment ?? this.hasVcardAttachment,
       hasIcalAttachment: hasIcalAttachment ?? this.hasIcalAttachment,
@@ -867,6 +859,7 @@ class MailCompanion extends UpdateCompanion<Message> {
       references: references ?? this.references,
       readingConfirmationAddressee:
           readingConfirmationAddressee ?? this.readingConfirmationAddressee,
+      htmlRaw: htmlRaw ?? this.htmlRaw,
       html: html ?? this.html,
       plain: plain ?? this.plain,
       plainRaw: plainRaw ?? this.plainRaw,
@@ -905,6 +898,18 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
       'uid',
       $tableName,
       false,
+    );
+  }
+
+  final VerificationMeta _parentUidMeta = const VerificationMeta('parentUid');
+  GeneratedIntColumn _parentUid;
+  @override
+  GeneratedIntColumn get parentUid => _parentUid ??= _constructParentUid();
+  GeneratedIntColumn _constructParentUid() {
+    return GeneratedIntColumn(
+      'parent_uid',
+      $tableName,
+      true,
     );
   }
 
@@ -1071,41 +1076,57 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     return GeneratedTextColumn(
       'from_in_json',
       $tableName,
+      true,
+    );
+  }
+
+  final VerificationMeta _fromToDisplayMeta =
+      const VerificationMeta('fromToDisplay');
+  GeneratedTextColumn _fromToDisplay;
+  @override
+  GeneratedTextColumn get fromToDisplay =>
+      _fromToDisplay ??= _constructFromToDisplay();
+  GeneratedTextColumn _constructFromToDisplay() {
+    return GeneratedTextColumn(
+      'from_to_display',
+      $tableName,
       false,
     );
   }
 
-  final VerificationMeta _ccMeta = const VerificationMeta('cc');
-  GeneratedTextColumn _cc;
+  final VerificationMeta _ccInJsonMeta = const VerificationMeta('ccInJson');
+  GeneratedTextColumn _ccInJson;
   @override
-  GeneratedTextColumn get cc => _cc ??= _constructCc();
-  GeneratedTextColumn _constructCc() {
+  GeneratedTextColumn get ccInJson => _ccInJson ??= _constructCcInJson();
+  GeneratedTextColumn _constructCcInJson() {
     return GeneratedTextColumn(
-      'cc',
+      'cc_in_json',
       $tableName,
       true,
     );
   }
 
-  final VerificationMeta _bccMeta = const VerificationMeta('bcc');
-  GeneratedTextColumn _bcc;
+  final VerificationMeta _bccInJsonMeta = const VerificationMeta('bccInJson');
+  GeneratedTextColumn _bccInJson;
   @override
-  GeneratedTextColumn get bcc => _bcc ??= _constructBcc();
-  GeneratedTextColumn _constructBcc() {
+  GeneratedTextColumn get bccInJson => _bccInJson ??= _constructBccInJson();
+  GeneratedTextColumn _constructBccInJson() {
     return GeneratedTextColumn(
-      'bcc',
+      'bcc_in_json',
       $tableName,
       true,
     );
   }
 
-  final VerificationMeta _senderMeta = const VerificationMeta('sender');
-  GeneratedTextColumn _sender;
+  final VerificationMeta _senderInJsonMeta =
+      const VerificationMeta('senderInJson');
+  GeneratedTextColumn _senderInJson;
   @override
-  GeneratedTextColumn get sender => _sender ??= _constructSender();
-  GeneratedTextColumn _constructSender() {
+  GeneratedTextColumn get senderInJson =>
+      _senderInJson ??= _constructSenderInJson();
+  GeneratedTextColumn _constructSenderInJson() {
     return GeneratedTextColumn(
-      'sender',
+      'sender_in_json',
       $tableName,
       true,
     );
@@ -1120,56 +1141,6 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
       'reply_to',
       $tableName,
       true,
-    );
-  }
-
-  final VerificationMeta _isSeenMeta = const VerificationMeta('isSeen');
-  GeneratedBoolColumn _isSeen;
-  @override
-  GeneratedBoolColumn get isSeen => _isSeen ??= _constructIsSeen();
-  GeneratedBoolColumn _constructIsSeen() {
-    return GeneratedBoolColumn(
-      'is_seen',
-      $tableName,
-      false,
-    );
-  }
-
-  final VerificationMeta _isFlaggedMeta = const VerificationMeta('isFlagged');
-  GeneratedBoolColumn _isFlagged;
-  @override
-  GeneratedBoolColumn get isFlagged => _isFlagged ??= _constructIsFlagged();
-  GeneratedBoolColumn _constructIsFlagged() {
-    return GeneratedBoolColumn(
-      'is_flagged',
-      $tableName,
-      false,
-    );
-  }
-
-  final VerificationMeta _isAnsweredMeta = const VerificationMeta('isAnswered');
-  GeneratedBoolColumn _isAnswered;
-  @override
-  GeneratedBoolColumn get isAnswered => _isAnswered ??= _constructIsAnswered();
-  GeneratedBoolColumn _constructIsAnswered() {
-    return GeneratedBoolColumn(
-      'is_answered',
-      $tableName,
-      false,
-    );
-  }
-
-  final VerificationMeta _isForwardedMeta =
-      const VerificationMeta('isForwarded');
-  GeneratedBoolColumn _isForwarded;
-  @override
-  GeneratedBoolColumn get isForwarded =>
-      _isForwarded ??= _constructIsForwarded();
-  GeneratedBoolColumn _constructIsForwarded() {
-    return GeneratedBoolColumn(
-      'is_forwarded',
-      $tableName,
-      false,
     );
   }
 
@@ -1309,7 +1280,7 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
   GeneratedTextColumn get references => _references ??= _constructReferences();
   GeneratedTextColumn _constructReferences() {
     return GeneratedTextColumn(
-      'references',
+      'message_references',
       $tableName,
       false,
     );
@@ -1330,6 +1301,18 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     );
   }
 
+  final VerificationMeta _htmlRawMeta = const VerificationMeta('htmlRaw');
+  GeneratedTextColumn _htmlRaw;
+  @override
+  GeneratedTextColumn get htmlRaw => _htmlRaw ??= _constructHtmlRaw();
+  GeneratedTextColumn _constructHtmlRaw() {
+    return GeneratedTextColumn(
+      'html_raw',
+      $tableName,
+      true,
+    );
+  }
+
   final VerificationMeta _htmlMeta = const VerificationMeta('html');
   GeneratedTextColumn _html;
   @override
@@ -1338,7 +1321,7 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     return GeneratedTextColumn(
       'html',
       $tableName,
-      false,
+      true,
     );
   }
 
@@ -1479,6 +1462,7 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
   List<GeneratedColumn> get $columns => [
         localId,
         uid,
+        parentUid,
         messageId,
         folder,
         flagsInJson,
@@ -1492,14 +1476,11 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
         timeStampInUTC,
         toInJson,
         fromInJson,
-        cc,
-        bcc,
-        sender,
+        fromToDisplay,
+        ccInJson,
+        bccInJson,
+        senderInJson,
         replyTo,
-        isSeen,
-        isFlagged,
-        isAnswered,
-        isForwarded,
         hasAttachments,
         hasVcardAttachment,
         hasIcalAttachment,
@@ -1512,6 +1493,7 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
         inReplyTo,
         references,
         readingConfirmationAddressee,
+        htmlRaw,
         html,
         plain,
         plainRaw,
@@ -1544,6 +1526,12 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
       context.handle(_uidMeta, uid.isAcceptableValue(d.uid.value, _uidMeta));
     } else if (uid.isRequired && isInserting) {
       context.missing(_uidMeta);
+    }
+    if (d.parentUid.present) {
+      context.handle(_parentUidMeta,
+          parentUid.isAcceptableValue(d.parentUid.value, _parentUidMeta));
+    } else if (parentUid.isRequired && isInserting) {
+      context.missing(_parentUidMeta);
     }
     if (d.messageId.present) {
       context.handle(_messageIdMeta,
@@ -1632,51 +1620,39 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     } else if (fromInJson.isRequired && isInserting) {
       context.missing(_fromInJsonMeta);
     }
-    if (d.cc.present) {
-      context.handle(_ccMeta, cc.isAcceptableValue(d.cc.value, _ccMeta));
-    } else if (cc.isRequired && isInserting) {
-      context.missing(_ccMeta);
-    }
-    if (d.bcc.present) {
-      context.handle(_bccMeta, bcc.isAcceptableValue(d.bcc.value, _bccMeta));
-    } else if (bcc.isRequired && isInserting) {
-      context.missing(_bccMeta);
-    }
-    if (d.sender.present) {
+    if (d.fromToDisplay.present) {
       context.handle(
-          _senderMeta, sender.isAcceptableValue(d.sender.value, _senderMeta));
-    } else if (sender.isRequired && isInserting) {
-      context.missing(_senderMeta);
+          _fromToDisplayMeta,
+          fromToDisplay.isAcceptableValue(
+              d.fromToDisplay.value, _fromToDisplayMeta));
+    } else if (fromToDisplay.isRequired && isInserting) {
+      context.missing(_fromToDisplayMeta);
+    }
+    if (d.ccInJson.present) {
+      context.handle(_ccInJsonMeta,
+          ccInJson.isAcceptableValue(d.ccInJson.value, _ccInJsonMeta));
+    } else if (ccInJson.isRequired && isInserting) {
+      context.missing(_ccInJsonMeta);
+    }
+    if (d.bccInJson.present) {
+      context.handle(_bccInJsonMeta,
+          bccInJson.isAcceptableValue(d.bccInJson.value, _bccInJsonMeta));
+    } else if (bccInJson.isRequired && isInserting) {
+      context.missing(_bccInJsonMeta);
+    }
+    if (d.senderInJson.present) {
+      context.handle(
+          _senderInJsonMeta,
+          senderInJson.isAcceptableValue(
+              d.senderInJson.value, _senderInJsonMeta));
+    } else if (senderInJson.isRequired && isInserting) {
+      context.missing(_senderInJsonMeta);
     }
     if (d.replyTo.present) {
       context.handle(_replyToMeta,
           replyTo.isAcceptableValue(d.replyTo.value, _replyToMeta));
     } else if (replyTo.isRequired && isInserting) {
       context.missing(_replyToMeta);
-    }
-    if (d.isSeen.present) {
-      context.handle(
-          _isSeenMeta, isSeen.isAcceptableValue(d.isSeen.value, _isSeenMeta));
-    } else if (isSeen.isRequired && isInserting) {
-      context.missing(_isSeenMeta);
-    }
-    if (d.isFlagged.present) {
-      context.handle(_isFlaggedMeta,
-          isFlagged.isAcceptableValue(d.isFlagged.value, _isFlaggedMeta));
-    } else if (isFlagged.isRequired && isInserting) {
-      context.missing(_isFlaggedMeta);
-    }
-    if (d.isAnswered.present) {
-      context.handle(_isAnsweredMeta,
-          isAnswered.isAcceptableValue(d.isAnswered.value, _isAnsweredMeta));
-    } else if (isAnswered.isRequired && isInserting) {
-      context.missing(_isAnsweredMeta);
-    }
-    if (d.isForwarded.present) {
-      context.handle(_isForwardedMeta,
-          isForwarded.isAcceptableValue(d.isForwarded.value, _isForwardedMeta));
-    } else if (isForwarded.isRequired && isInserting) {
-      context.missing(_isForwardedMeta);
     }
     if (d.hasAttachments.present) {
       context.handle(
@@ -1760,6 +1736,12 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
               _readingConfirmationAddresseeMeta));
     } else if (readingConfirmationAddressee.isRequired && isInserting) {
       context.missing(_readingConfirmationAddresseeMeta);
+    }
+    if (d.htmlRaw.present) {
+      context.handle(_htmlRawMeta,
+          htmlRaw.isAcceptableValue(d.htmlRaw.value, _htmlRawMeta));
+    } else if (htmlRaw.isRequired && isInserting) {
+      context.missing(_htmlRawMeta);
     }
     if (d.html.present) {
       context.handle(
@@ -1859,6 +1841,9 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     if (d.uid.present) {
       map['uid'] = Variable<int, IntType>(d.uid.value);
     }
+    if (d.parentUid.present) {
+      map['parent_uid'] = Variable<int, IntType>(d.parentUid.value);
+    }
     if (d.messageId.present) {
       map['message_id'] = Variable<String, StringType>(d.messageId.value);
     }
@@ -1902,29 +1887,22 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     if (d.fromInJson.present) {
       map['from_in_json'] = Variable<String, StringType>(d.fromInJson.value);
     }
-    if (d.cc.present) {
-      map['cc'] = Variable<String, StringType>(d.cc.value);
+    if (d.fromToDisplay.present) {
+      map['from_to_display'] =
+          Variable<String, StringType>(d.fromToDisplay.value);
     }
-    if (d.bcc.present) {
-      map['bcc'] = Variable<String, StringType>(d.bcc.value);
+    if (d.ccInJson.present) {
+      map['cc_in_json'] = Variable<String, StringType>(d.ccInJson.value);
     }
-    if (d.sender.present) {
-      map['sender'] = Variable<String, StringType>(d.sender.value);
+    if (d.bccInJson.present) {
+      map['bcc_in_json'] = Variable<String, StringType>(d.bccInJson.value);
+    }
+    if (d.senderInJson.present) {
+      map['sender_in_json'] =
+          Variable<String, StringType>(d.senderInJson.value);
     }
     if (d.replyTo.present) {
       map['reply_to'] = Variable<String, StringType>(d.replyTo.value);
-    }
-    if (d.isSeen.present) {
-      map['is_seen'] = Variable<bool, BoolType>(d.isSeen.value);
-    }
-    if (d.isFlagged.present) {
-      map['is_flagged'] = Variable<bool, BoolType>(d.isFlagged.value);
-    }
-    if (d.isAnswered.present) {
-      map['is_answered'] = Variable<bool, BoolType>(d.isAnswered.value);
-    }
-    if (d.isForwarded.present) {
-      map['is_forwarded'] = Variable<bool, BoolType>(d.isForwarded.value);
     }
     if (d.hasAttachments.present) {
       map['has_attachments'] = Variable<bool, BoolType>(d.hasAttachments.value);
@@ -1960,11 +1938,15 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
       map['in_reply_to'] = Variable<String, StringType>(d.inReplyTo.value);
     }
     if (d.references.present) {
-      map['references'] = Variable<String, StringType>(d.references.value);
+      map['message_references'] =
+          Variable<String, StringType>(d.references.value);
     }
     if (d.readingConfirmationAddressee.present) {
       map['reading_confirmation_addressee'] =
           Variable<String, StringType>(d.readingConfirmationAddressee.value);
+    }
+    if (d.htmlRaw.present) {
+      map['html_raw'] = Variable<String, StringType>(d.htmlRaw.value);
     }
     if (d.html.present) {
       map['html'] = Variable<String, StringType>(d.html.value);

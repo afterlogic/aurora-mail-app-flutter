@@ -1,10 +1,24 @@
+import 'dart:convert';
+
+import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/utils/constants.dart';
+import 'package:aurora_mail/utils/custom_exception.dart';
 import 'package:moor_flutter/moor_flutter.dart';
+
+enum MessageFlags {
+  answered,
+  seen,
+  starred,
+  forwarded,
+}
 
 @DataClassName("Message")
 class Mail extends Table {
   IntColumn get localId => integer().autoIncrement()();
 
   IntColumn get uid => integer()();
+
+  IntColumn get parentUid => integer().nullable()();
 
   TextColumn get messageId => text()();
 
@@ -30,23 +44,25 @@ class Mail extends Table {
 
   TextColumn get toInJson => text()();
 
-  TextColumn get fromInJson => text()();
+  TextColumn get fromInJson => text().nullable()();
 
-  TextColumn get cc => text().nullable()();
+  TextColumn get fromToDisplay => text()();
 
-  TextColumn get bcc => text().nullable()();
+  TextColumn get ccInJson => text().nullable()();
 
-  TextColumn get sender => text().nullable()();
+  TextColumn get bccInJson => text().nullable()();
+
+  TextColumn get senderInJson => text().nullable()();
 
   TextColumn get replyTo => text().nullable()();
 
-  BoolColumn get isSeen => boolean()();
-
-  BoolColumn get isFlagged => boolean()();
-
-  BoolColumn get isAnswered => boolean()();
-
-  BoolColumn get isForwarded => boolean()();
+//  BoolColumn get isSeen => boolean()();
+//
+//  BoolColumn get isFlagged => boolean()();
+//
+//  BoolColumn get isAnswered => boolean()();
+//
+//  BoolColumn get isForwarded => boolean()();
 
   BoolColumn get hasAttachments => boolean()();
 
@@ -68,11 +84,13 @@ class Mail extends Table {
 
   TextColumn get inReplyTo => text()();
 
-  TextColumn get references => text()();
+  TextColumn get references => text().named("message_references")();
 
   TextColumn get readingConfirmationAddressee => text()();
 
-  TextColumn get html => text()();
+  TextColumn get htmlRaw => text().nullable()();
+
+  TextColumn get html => text().nullable()();
 
   TextColumn get plain => text()();
 
@@ -93,4 +111,154 @@ class Mail extends Table {
   TextColumn get attachmentsInJson => text().nullable()();
 
   TextColumn get customInJson => text()();
+
+  static List<MessageFlags> getFlags(String flagsInJson) {
+    final flags = json.decode(flagsInJson);
+    final messageFlags = new List<MessageFlags>();
+    if (flags.contains("\\seen")) messageFlags.add(MessageFlags.seen);
+    if (flags.contains("\\answered")) messageFlags.add(MessageFlags.answered);
+    if (flags.contains("\\flagged")) messageFlags.add(MessageFlags.starred);
+    if (flags.contains("\$forwarded")) messageFlags.add(MessageFlags.forwarded);
+    return messageFlags;
+  }
+
+  static List<Sender> getSenders(String toFrom) {
+    final decoded = json.decode(toFrom);
+    if (decoded is Map && decoded["@Collection"] is List) {
+      return decoded["@Collection"].map((rawSender) {
+        return new Sender(
+          displayName: rawSender["DisplayName"],
+          email: rawSender["Email"],
+        );
+      }).toList();
+    } else {
+      // TODO VO: for debug
+      throw Exception("Could not get sender");
+    }
+  }
+
+  static List<Message> getMessageObjFromServer(List result, List messagesInfo) {
+    assert(result.length <= MESSAGES_PER_CHUNK);
+
+    int prevUid;
+
+    final messagesChunk = new List<Message>();
+
+    result.forEach((rawMessage) {
+      try {
+        final messageInfo = messagesInfo
+                .firstWhere((m) => m["uid"] == rawMessage["Uid"]) ??
+            _findMessageInfoInThread(messagesInfo, rawMessage["Uid"], prevUid);
+
+        final displayName = rawMessage["From"]["@Collection"][0]["DisplayName"];
+
+        final fromToDisplay = displayName is String && displayName.isNotEmpty
+            ? displayName
+            : rawMessage["From"]["@Collection"][0]["Email"];
+
+        prevUid = rawMessage["Uid"];
+        messagesChunk.add(new Message(
+          localId: null,
+          uid: rawMessage["Uid"],
+          parentUid: messageInfo["parentUid"],
+          flagsInJson: messageInfo["flags"] == null
+              ? null
+              : json.encode(messageInfo["flags"]),
+          threadInJson: messageInfo["thread"] == null
+              ? null
+              : json.encode(messageInfo["thread"]),
+          messageId: rawMessage["MessageId"],
+          folder: rawMessage["Folder"],
+          subject: rawMessage["Subject"],
+          size: rawMessage["Size"],
+          textSize: rawMessage["TextSize"],
+          truncated: rawMessage["Truncated"],
+          internalTimeStampInUTC: rawMessage["InternalTimeStampInUTC"],
+          receivedOrDateTimeStampInUTC:
+              rawMessage["ReceivedOrDateTimeStampInUTC"],
+          timeStampInUTC: rawMessage["TimeStampInUTC"],
+          toInJson: rawMessage["From"] == null
+              ? null
+              : json.encode(rawMessage["From"]),
+          fromInJson:
+              rawMessage["To"] == null ? null : json.encode(rawMessage["To"]),
+          fromToDisplay: fromToDisplay,
+          ccInJson:
+              rawMessage["Cc"] == null ? null : json.encode(rawMessage["Cc"]),
+          bccInJson:
+              rawMessage["Bcc"] == null ? null : json.encode(rawMessage["Bcc"]),
+          senderInJson: rawMessage["Sender"] == null
+              ? null
+              : json.encode(rawMessage["Sender"]),
+          replyTo: rawMessage["ReplyTo"],
+//          isSeen: rawMessage["IsSeen"],
+//          isFlagged: rawMessage["IsFlagged"],
+//          isAnswered: rawMessage["IsAnswered"],
+//          isForwarded: rawMessage["IsForwarded"],
+          hasAttachments: rawMessage["HasAttachments"],
+          hasVcardAttachment: rawMessage["HasVcardAttachment"],
+          hasIcalAttachment: rawMessage["HasIcalAttachment"],
+          importance: rawMessage["Importance"],
+          draftInfo: rawMessage["DraftInfo"],
+          sensitivity: rawMessage["Sensitivity"],
+          downloadAsEmlUrl: rawMessage["DownloadAsEmlUrl"],
+          hash: rawMessage["Hash"],
+          headers: rawMessage["Headers"],
+          inReplyTo: rawMessage["InReplyTo"],
+          references: rawMessage["References"],
+          readingConfirmationAddressee:
+              rawMessage["ReadingConfirmationAddressee"],
+          htmlRaw: rawMessage["HtmlRaw"],
+          html: rawMessage["Html"],
+          plain: rawMessage["Plain"],
+          plainRaw: rawMessage["PlainRaw"],
+          rtl: rawMessage["Rtl"],
+          extendInJson: rawMessage["Extend"] == null
+              ? null
+              : json.encode(rawMessage["Extend"]),
+          safety: rawMessage["Safety"],
+          hasExternals: rawMessage["HasExternals"],
+          foundedCIDsInJson: rawMessage["FoundedCIDs"] == null
+              ? null
+              : json.encode(rawMessage["FoundedCIDs"]),
+          foundedContentLocationUrlsInJson:
+              rawMessage["FoundedContentLocationUrls"] == null
+                  ? null
+                  : json.encode(rawMessage["FoundedContentLocationUrls"]),
+          attachmentsInJson: rawMessage["Attachments"] == null
+              ? null
+              : json.encode(rawMessage["Attachments"]),
+          customInJson: rawMessage["Custom"] == null
+              ? null
+              : json.encode(rawMessage["Custom"]),
+        ));
+      } catch (err, s) {}
+    });
+
+    return messagesChunk;
+  }
+
+  // ignore: missing_return
+  static Map _findMessageInfoInThread(List info, int uidToFind, int prevUid) {
+    Map item;
+    try {
+      final messageInfo = info.firstWhere((m) => m["uid"] == prevUid);
+      item = messageInfo["thread"].firstWhere((m) => m["uid"] == uidToFind);
+      return item;
+    } catch (err) {
+      if (prevUid <= 0) {
+        final nextUid = prevUid > 0 ? prevUid - 1 : info[0]["uid"];
+        return _findMessageInfoInThread(info, uidToFind, nextUid);
+      } else {
+        throw CustomException("Couldn't find message: $uidToFind");
+      }
+    }
+  }
+}
+
+class Sender {
+  final String displayName;
+  final String email;
+
+  Sender({@required this.displayName, @required this.email});
 }
