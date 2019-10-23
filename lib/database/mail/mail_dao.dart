@@ -11,25 +11,31 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
   // of this object.
   MailDao(AppDatabase db) : super(db);
 
-  Future<List<Message>> getMessages(String folder) {
-    return (select(mail)
-          ..where((m) => m.folder.equals(folder))
-          ..orderBy([
-            (m) => OrderingTerm(expression: m.receivedOrDateTimeStampInUTC)
-          ]))
-        .get();
-  }
+//  Future<List<Message>> getMessages(String folder) {
+//    return (select(mail)
+//          ..where((m) => m.folder.equals(folder))
+//          ..orderBy([
+//            (m) => OrderingTerm(expression: m.receivedOrDateTimeStampInUTC)
+//          ]))
+//        .get();
+//  }
 
   Stream<List<Message>> watchMessages(String folder) {
     return (select(mail)
           ..where((m) => m.folder.equals(folder))
+          ..limit(50)
           ..orderBy([
-            (m) => OrderingTerm(expression: m.timeStampInUTC, mode: OrderingMode.desc)
+            (m) => OrderingTerm(
+                expression: m.timeStampInUTC, mode: OrderingMode.desc)
           ]))
         .watch();
   }
 
   Future<void> addMessages(List<Message> newMessages) {
     return into(mail).insertAll(newMessages);
+  }
+
+  Future<void> deleteMessages(List<int> uids) {
+    return (delete(mail)..where((m) => isIn(m.uid, uids))).go();
   }
 }

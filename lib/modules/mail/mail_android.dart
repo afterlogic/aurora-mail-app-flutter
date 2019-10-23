@@ -33,16 +33,16 @@ class _MailAndroidState extends State<MailAndroid> {
   }
 
   Future<void> _initMail() async {
-    if (widget.selectedFolder == null) {
-      await _foldersState.onGetFolders(onError: _showSnack);
-      _mailState.onSetMessagesInfoToFolder(
-          _foldersState.selectedFolder, onError: _showSnack);
-    } else {
-      _mailState.onSetMessagesInfoToFolder(
-          widget.selectedFolder, onError: _showSnack);
-      await Future.delayed(Duration(milliseconds: 10));
-      _foldersState.selectedFolder = widget.selectedFolder;
-    }
+//    if (widget.selectedFolder == null) {
+      await _foldersState.onGetFolders(widget.selectedFolder, onError: _showSnack);
+//      _foldersState.onSetMessagesInfoToFolder(_foldersState.selectedFolder,
+//          onError: _showSnack);
+//    } else {
+//      _foldersState.onSetMessagesInfoToFolder(widget.selectedFolder,
+//          onError: _showSnack);
+//      await Future.delayed(Duration(milliseconds: 10));
+//      _foldersState.selectedFolder = widget.selectedFolder;
+//    }
   }
 
   void _showSnack(err) {
@@ -73,14 +73,16 @@ class _MailAndroidState extends State<MailAndroid> {
       drawer: MainDrawer(),
       body: Observer(
         builder: (_) {
+          final folder = widget.selectedFolder ?? _foldersState.selectedFolder;
           if (_foldersState.isFoldersLoading == LoadingType.hidden ||
-              _mailState.isMessagesLoading == LoadingType.hidden || _foldersState.selectedFolder == null) {
+              _foldersState.isMessagesLoading == LoadingType.hidden ||
+              folder == null) {
             return Center(child: CircularProgressIndicator());
           } else {
             return AnimatedStreamList(
               padding: EdgeInsets.only(
                   left: 16.0, right: 16.0, top: 8.0, bottom: 76.0),
-              streamList: _mailState.onWatchMessages(),
+              streamList: _mailState.onWatchMessages(folder),
               itemBuilder: _itemBuilder,
               itemRemovedBuilder: _itemBuilder,
             );

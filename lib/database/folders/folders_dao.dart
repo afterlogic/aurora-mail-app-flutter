@@ -41,12 +41,17 @@ class FoldersDao extends DatabaseAccessor<AppDatabase> with _$FoldersDaoMixin {
     );
   }
 
+  Future<void> updateFolder(FoldersCompanion foldersCompanion, int id) {
+    return (update(folders)..where((f) => f.localId.equals(id)))
+        .write(foldersCompanion);
+  }
+
   Future<int> deleteFolders([List<LocalFolder> filesToDelete]) async {
     if (filesToDelete == null) {
       return delete(folders).go();
     } else {
       final List<int> ids = filesToDelete.map((file) => file.localId).toList();
-      return (delete(folders)..where((file) => isIn(file.localId, ids))).go();
+      return (delete(folders)..where((f) => isIn(f.localId, ids))).go();
     }
   }
 }

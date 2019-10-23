@@ -18,6 +18,10 @@ class Folders extends Table {
 
   IntColumn get folderOrder => integer()();
 
+  IntColumn get count => integer().named("messages_count").nullable()();
+
+  IntColumn get unread => integer().nullable()();
+
   TextColumn get name => text()();
 
   TextColumn get fullName => text()();

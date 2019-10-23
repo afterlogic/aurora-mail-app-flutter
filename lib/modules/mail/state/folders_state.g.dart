@@ -42,4 +42,21 @@ mixin _$FoldersState on _FoldersState, Store {
       _$selectedFolderAtom.reportChanged();
     }, _$selectedFolderAtom, name: '${_$selectedFolderAtom.name}_set');
   }
+
+  final _$isMessagesLoadingAtom = Atom(name: '_FoldersState.isMessagesLoading');
+
+  @override
+  LoadingType get isMessagesLoading {
+    _$isMessagesLoadingAtom.context.enforceReadPolicy(_$isMessagesLoadingAtom);
+    _$isMessagesLoadingAtom.reportObserved();
+    return super.isMessagesLoading;
+  }
+
+  @override
+  set isMessagesLoading(LoadingType value) {
+    _$isMessagesLoadingAtom.context.conditionallyRunInAction(() {
+      super.isMessagesLoading = value;
+      _$isMessagesLoadingAtom.reportChanged();
+    }, _$isMessagesLoadingAtom, name: '${_$isMessagesLoadingAtom.name}_set');
+  }
 }

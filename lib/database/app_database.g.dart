@@ -2003,6 +2003,8 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
   final int accountId;
   final int type;
   final int folderOrder;
+  final int count;
+  final int unread;
   final String name;
   final String fullName;
   final String fullNameRaw;
@@ -2021,6 +2023,8 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
       @required this.accountId,
       @required this.type,
       @required this.folderOrder,
+      this.count,
+      this.unread,
       @required this.name,
       @required this.fullName,
       @required this.fullNameRaw,
@@ -2049,6 +2053,9 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
       type: intType.mapFromDatabaseResponse(data['${effectivePrefix}type']),
       folderOrder: intType
           .mapFromDatabaseResponse(data['${effectivePrefix}folder_order']),
+      count: intType
+          .mapFromDatabaseResponse(data['${effectivePrefix}messages_count']),
+      unread: intType.mapFromDatabaseResponse(data['${effectivePrefix}unread']),
       name: stringType.mapFromDatabaseResponse(data['${effectivePrefix}name']),
       fullName: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}full_name']),
@@ -2081,6 +2088,8 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
       accountId: serializer.fromJson<int>(json['accountId']),
       type: serializer.fromJson<int>(json['type']),
       folderOrder: serializer.fromJson<int>(json['folderOrder']),
+      count: serializer.fromJson<int>(json['count']),
+      unread: serializer.fromJson<int>(json['unread']),
       name: serializer.fromJson<String>(json['name']),
       fullName: serializer.fromJson<String>(json['fullName']),
       fullNameRaw: serializer.fromJson<String>(json['fullNameRaw']),
@@ -2105,6 +2114,8 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
       'accountId': serializer.toJson<int>(accountId),
       'type': serializer.toJson<int>(type),
       'folderOrder': serializer.toJson<int>(folderOrder),
+      'count': serializer.toJson<int>(count),
+      'unread': serializer.toJson<int>(unread),
       'name': serializer.toJson<String>(name),
       'fullName': serializer.toJson<String>(fullName),
       'fullNameRaw': serializer.toJson<String>(fullNameRaw),
@@ -2136,6 +2147,10 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
       folderOrder: folderOrder == null && nullToAbsent
           ? const Value.absent()
           : Value(folderOrder),
+      count:
+          count == null && nullToAbsent ? const Value.absent() : Value(count),
+      unread:
+          unread == null && nullToAbsent ? const Value.absent() : Value(unread),
       name: name == null && nullToAbsent ? const Value.absent() : Value(name),
       fullName: fullName == null && nullToAbsent
           ? const Value.absent()
@@ -2177,6 +2192,8 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
           int accountId,
           int type,
           int folderOrder,
+          int count,
+          int unread,
           String name,
           String fullName,
           String fullNameRaw,
@@ -2195,6 +2212,8 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
         accountId: accountId ?? this.accountId,
         type: type ?? this.type,
         folderOrder: folderOrder ?? this.folderOrder,
+        count: count ?? this.count,
+        unread: unread ?? this.unread,
         name: name ?? this.name,
         fullName: fullName ?? this.fullName,
         fullNameRaw: fullNameRaw ?? this.fullNameRaw,
@@ -2216,6 +2235,8 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
           ..write('accountId: $accountId, ')
           ..write('type: $type, ')
           ..write('folderOrder: $folderOrder, ')
+          ..write('count: $count, ')
+          ..write('unread: $unread, ')
           ..write('name: $name, ')
           ..write('fullName: $fullName, ')
           ..write('fullNameRaw: $fullNameRaw, ')
@@ -2245,28 +2266,35 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
                       $mrjc(
                           folderOrder.hashCode,
                           $mrjc(
-                              name.hashCode,
+                              count.hashCode,
                               $mrjc(
-                                  fullName.hashCode,
+                                  unread.hashCode,
                                   $mrjc(
-                                      fullNameRaw.hashCode,
+                                      name.hashCode,
                                       $mrjc(
-                                          fullNameHash.hashCode,
+                                          fullName.hashCode,
                                           $mrjc(
-                                              delimiter.hashCode,
+                                              fullNameRaw.hashCode,
                                               $mrjc(
-                                                  isSubscribed.hashCode,
+                                                  fullNameHash.hashCode,
                                                   $mrjc(
-                                                      isSelectable.hashCode,
+                                                      delimiter.hashCode,
                                                       $mrjc(
-                                                          folderExists.hashCode,
+                                                          isSubscribed.hashCode,
                                                           $mrjc(
-                                                              extended.hashCode,
+                                                              isSelectable
+                                                                  .hashCode,
                                                               $mrjc(
-                                                                  alwaysRefresh
+                                                                  folderExists
                                                                       .hashCode,
-                                                                  messagesInfoInJson
-                                                                      .hashCode)))))))))))))))));
+                                                                  $mrjc(
+                                                                      extended
+                                                                          .hashCode,
+                                                                      $mrjc(
+                                                                          alwaysRefresh
+                                                                              .hashCode,
+                                                                          messagesInfoInJson
+                                                                              .hashCode)))))))))))))))))));
   @override
   bool operator ==(other) =>
       identical(this, other) ||
@@ -2277,6 +2305,8 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
           other.accountId == accountId &&
           other.type == type &&
           other.folderOrder == folderOrder &&
+          other.count == count &&
+          other.unread == unread &&
           other.name == name &&
           other.fullName == fullName &&
           other.fullNameRaw == fullNameRaw &&
@@ -2297,6 +2327,8 @@ class FoldersCompanion extends UpdateCompanion<LocalFolder> {
   final Value<int> accountId;
   final Value<int> type;
   final Value<int> folderOrder;
+  final Value<int> count;
+  final Value<int> unread;
   final Value<String> name;
   final Value<String> fullName;
   final Value<String> fullNameRaw;
@@ -2315,6 +2347,8 @@ class FoldersCompanion extends UpdateCompanion<LocalFolder> {
     this.accountId = const Value.absent(),
     this.type = const Value.absent(),
     this.folderOrder = const Value.absent(),
+    this.count = const Value.absent(),
+    this.unread = const Value.absent(),
     this.name = const Value.absent(),
     this.fullName = const Value.absent(),
     this.fullNameRaw = const Value.absent(),
@@ -2334,6 +2368,8 @@ class FoldersCompanion extends UpdateCompanion<LocalFolder> {
       Value<int> accountId,
       Value<int> type,
       Value<int> folderOrder,
+      Value<int> count,
+      Value<int> unread,
       Value<String> name,
       Value<String> fullName,
       Value<String> fullNameRaw,
@@ -2352,6 +2388,8 @@ class FoldersCompanion extends UpdateCompanion<LocalFolder> {
       accountId: accountId ?? this.accountId,
       type: type ?? this.type,
       folderOrder: folderOrder ?? this.folderOrder,
+      count: count ?? this.count,
+      unread: unread ?? this.unread,
       name: name ?? this.name,
       fullName: fullName ?? this.fullName,
       fullNameRaw: fullNameRaw ?? this.fullNameRaw,
@@ -2439,6 +2477,30 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
       'folder_order',
       $tableName,
       false,
+    );
+  }
+
+  final VerificationMeta _countMeta = const VerificationMeta('count');
+  GeneratedIntColumn _count;
+  @override
+  GeneratedIntColumn get count => _count ??= _constructCount();
+  GeneratedIntColumn _constructCount() {
+    return GeneratedIntColumn(
+      'messages_count',
+      $tableName,
+      true,
+    );
+  }
+
+  final VerificationMeta _unreadMeta = const VerificationMeta('unread');
+  GeneratedIntColumn _unread;
+  @override
+  GeneratedIntColumn get unread => _unread ??= _constructUnread();
+  GeneratedIntColumn _constructUnread() {
+    return GeneratedIntColumn(
+      'unread',
+      $tableName,
+      true,
     );
   }
 
@@ -2596,6 +2658,8 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
         accountId,
         type,
         folderOrder,
+        count,
+        unread,
         name,
         fullName,
         fullNameRaw,
@@ -2653,6 +2717,18 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
           folderOrder.isAcceptableValue(d.folderOrder.value, _folderOrderMeta));
     } else if (folderOrder.isRequired && isInserting) {
       context.missing(_folderOrderMeta);
+    }
+    if (d.count.present) {
+      context.handle(
+          _countMeta, count.isAcceptableValue(d.count.value, _countMeta));
+    } else if (count.isRequired && isInserting) {
+      context.missing(_countMeta);
+    }
+    if (d.unread.present) {
+      context.handle(
+          _unreadMeta, unread.isAcceptableValue(d.unread.value, _unreadMeta));
+    } else if (unread.isRequired && isInserting) {
+      context.missing(_unreadMeta);
     }
     if (d.name.present) {
       context.handle(
@@ -2763,6 +2839,12 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
     }
     if (d.folderOrder.present) {
       map['folder_order'] = Variable<int, IntType>(d.folderOrder.value);
+    }
+    if (d.count.present) {
+      map['messages_count'] = Variable<int, IntType>(d.count.value);
+    }
+    if (d.unread.present) {
+      map['unread'] = Variable<int, IntType>(d.unread.value);
     }
     if (d.name.present) {
       map['name'] = Variable<String, StringType>(d.name.value);

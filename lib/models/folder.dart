@@ -51,7 +51,12 @@ class Folder {
   final bool alwaysRefresh;
 
   final List messagesInfo;
+
   final List<Folder> subFolders;
+
+  int count;
+
+  int unread;
 
   Folder({
     @required this.localId,

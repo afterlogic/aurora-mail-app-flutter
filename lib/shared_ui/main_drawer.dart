@@ -57,7 +57,7 @@ class _MainDrawerState extends State<MainDrawer> {
             Expanded(
               child: RefreshIndicator(
                 onRefresh: () =>
-                    _state.onGetFolders(loading: LoadingType.refresh),
+                    _state.onGetFolders(null, loading: LoadingType.refresh),
                 child: Observer(builder: (_) {
                   if (_state.isFoldersLoading == LoadingType.hidden) {
                     return Center(child: CircularProgressIndicator());
