@@ -36,31 +36,40 @@ abstract class _FoldersState with Store {
   @observable
   LoadingType isMessagesLoading = LoadingType.none;
 
-  final List<Folder> syncFoldersQueue = new List();
+  Function(String) onError;
 
-  // 1) get folders
+  // ================= STEPS =================
+  // 1a) get folders from sqlite and check if they didn't change
+  // OR
+  // 1b) get folders from server if it's the first app start or the folders are being refreshed
   // 2) set selected folder
-  // 3) check if they didn't change
-  // 4) get new info for changed folders
+  // 3) check which folder needs to be updated first
+  // 4) get new info for this folder
   // 5) get new messages/removed old
+  // if another folder was selected or all the messages were synced go to step 3)
 
-  Future<void> onGetFolders(Folder chosenFolder,
-      {Function(String) onError,
-      LoadingType loading = LoadingType.visible}) async {
+  // step 1
+  Future<void> getFolders(Folder chosenFolder,
+      {LoadingType loading = LoadingType.visible}) async {
     try {
       final accountId = AppStore.authState.accountId;
 
       // if chosenFolder is not null, that means the folder were already loaded
-      // and user has just selected another folder
+      // and user has just selected another folder, no need to load them again
+      // // if chosenFolder IS null the app has just started
       if (chosenFolder == null) {
+        // ================= STEP 1a =================
         isFoldersLoading = loading;
         List<LocalFolder> localFolders =
             await _foldersDao.getAllFolders(accountId);
 
-        // if no folders or if refreshed
-        if (localFolders == null ||
-            localFolders.isEmpty ||
-            loading == LoadingType.refresh) {
+        if (localFolders != null && localFolders.isNotEmpty
+            // TODO VO: find out about refreshing
+            /*&& loading != LoadingType.refresh*/) {
+          currentFolders = Folder.getFolderObjectsFromDb(localFolders);
+          await updateFoldersHash();
+        } else {
+          // ================= STEP 1b =================
           final rawFolders = await _foldersApi.getFolders(accountId);
 
           final newFolders =
@@ -70,79 +79,31 @@ abstract class _FoldersState with Store {
 
           localFolders = await _foldersDao.getAllFolders(accountId);
           currentFolders = Folder.getFolderObjectsFromDb(localFolders);
-
-          // if this is the first time user launches the app, download mail from specified folders
-          if (loading != LoadingType.refresh) {
-            syncFoldersQueue.add(currentFolders[0]);
-            syncFoldersQueue.add(currentFolders[1]);
-            syncFoldersQueue.add(currentFolders[2]);
-          }
-        } else {
-          // else update old folders
-          currentFolders = Folder.getFolderObjectsFromDb(localFolders);
-          await _updateFoldersHash();
         }
 
+        // ================= STEP 2 =================
         selectedFolder = currentFolders[0];
         isFoldersLoading = LoadingType.none;
       } else {
-        // to avoid rebuilding on initState
+        // crutch to avoid rebuilding on initState
         await Future.delayed(Duration(milliseconds: 10));
         selectedFolder = chosenFolder;
       }
-      if (selectedFolder.messagesInfo == null) {
-        syncFoldersQueue.add(selectedFolder);
-      }
-      await _setMessagesInfoToFolder(onError: onError);
+
+      // ================= STEP 3 =================
+      _checkWhichFolderNeedsUpdateNow();
+
       _watchFolders(accountId);
     } catch (err, s) {
       print("onGetFolders err: $err");
       print("onGetFolders s: $s");
-      onError(err.toString());
+      if (onError != null) onError(err.toString());
       isFoldersLoading = LoadingType.none;
     }
   }
 
-  Future<void> _setMessagesInfoToFolder({Function(String) onError}) async {
-    if (syncFoldersQueue.isEmpty) {
-      print("no folders to sync");
-      return;
-    }
-    final folder = syncFoldersQueue[0];
-    print("syncing messages for: ${folder.fullNameRaw}");
-
-    isMessagesLoading =
-        folder.messagesInfo == null ? LoadingType.hidden : LoadingType.visible;
-    try {
-      String rawInfo = await _mailApi.getMessagesInfo(
-        folderName: folder.fullNameRaw,
-        accountId: _authState.accountId,
-      );
-
-      if (folder.messagesInfo != null) {
-        rawInfo = _calculateDiff(folder.messagesInfo, rawInfo);
-      }
-
-      await _foldersDao.setMessagesInfo(folder.fullNameRaw, rawInfo);
-
-      _syncMessagesChunk(folder);
-    } catch (err, s) {
-      print("onSetMessagesInfoToFolder: err: ${err}");
-      print("onSetMessagesInfoToFolder: s: ${s}");
-      onError(err.toString());
-      isMessagesLoading = LoadingType.none;
-    }
-  }
-
-  Future _watchFolders(int accountId) async {
-    await for (final newFolders in _foldersDao.watchAllFolders(accountId)) {
-      currentFolders = Folder.getFolderObjectsFromDb(newFolders);
-      if (selectedFolder == null) selectedFolder = currentFolders[0];
-    }
-  }
-
-  Future<void> _updateFoldersHash() async {
-    // TODO VO: find out how many folders are needed to update hash
+  // step 1a
+  Future<void> updateFoldersHash() async {
     final accountId = AppStore.authState.accountId;
     final folders = await _foldersApi.getRelevantFoldersInformation(
         accountId, currentFolders);
@@ -158,31 +119,77 @@ abstract class _FoldersState with Store {
           count: Value(updatedFolder[0]),
           unread: Value(updatedFolder[1]),
           fullNameHash: Value(updatedFolder[3]),
+          needsInfoUpdate: Value(folder.fullNameHash != updatedFolder[3]),
         ),
         folder.localId,
       ));
-
-      if (folder.fullNameHash != updatedFolder[3] &&
-          !syncFoldersQueue.contains(folder)) {
-        print("folder added into queue: ${folder.fullNameRaw}");
-        syncFoldersQueue.add(folder);
-      }
     });
 
     await Future.wait(futures);
   }
 
-  Future<void> _syncMessagesChunk(Folder selectedFolder) async {
-    if (selectedFolder.fullNameRaw != syncFoldersQueue[0].fullNameRaw) {
-      print("another folder was selected");
-      _setMessagesInfoToFolder();
+  // step 3
+  void _checkWhichFolderNeedsUpdateNow() {
+    // selectedFolder is of the highest priority
+    if (selectedFolder.needsInfoUpdate) {
+      // ================= STEP 4 =================
+      _setMessagesInfoToFolder(selectedFolder);
+    } else {
+      for (final folder in currentFolders) {
+        if (folder.isSystemFolder && folder.needsInfoUpdate) {
+          // ================= STEP 4 =================
+          _setMessagesInfoToFolder(folder);
+          break;
+        }
+      }
+    }
+  }
+
+  // step 4
+  Future<void> _setMessagesInfoToFolder(Folder folder) async {
+    print("getting folder info for: ${folder.fullNameRaw}");
+
+    isMessagesLoading =
+        folder.messagesInfo == null ? LoadingType.hidden : LoadingType.visible;
+    try {
+      String rawInfo = await _mailApi.getMessagesInfo(
+        folderName: folder.fullNameRaw,
+        accountId: _authState.accountId,
+      );
+
+      if (folder.messagesInfo != null) {
+        rawInfo = _calculateDiff(folder.messagesInfo, rawInfo);
+      }
+
+      folder.messagesInfo = json.decode(rawInfo);
+      await _foldersDao.setMessagesInfo(folder.fullNameRaw, rawInfo);
+
+
+      // ================= STEP 5 =================
+      _syncMessagesChunk(folder);
+    } catch (err, s) {
+      print("onSetMessagesInfoToFolder: err: ${err}");
+      print("onSetMessagesInfoToFolder: s: ${s}");
+      if (onError != null) onError(err.toString());
+      isMessagesLoading = LoadingType.none;
+    }
+  }
+
+  // step 5
+  Future<void> _syncMessagesChunk(Folder folderToGetMessageBodies) async {
+    // interrupt syncing if another folder was selected and go to step 3
+    if (selectedFolder.needsInfoUpdate && selectedFolder.fullNameRaw != folderToGetMessageBodies.fullNameRaw) {
+      print("selected folder needs update");
+      _checkWhichFolderNeedsUpdateNow();
       return;
     }
+    print("syncing messages for: ${folderToGetMessageBodies.fullNameRaw}");
 
     try {
-      final folderName = selectedFolder.fullNameRaw;
+      final folderName = folderToGetMessageBodies.fullNameRaw;
 
-      final folder = await _foldersDao.getFolder(selectedFolder.localId);
+      // get the actual folder state every time
+      final folder = await _foldersDao.getFolder(folderToGetMessageBodies.localId);
 
       final String infoInJson = folder[0].messagesInfoInJson;
 
@@ -202,10 +209,19 @@ abstract class _FoldersState with Store {
       await _foldersDao.setMessagesInfo(folderName, encodedInfo);
 
       isMessagesLoading = LoadingType.visible;
-      _syncMessagesChunk(selectedFolder);
+      // check if there are other messages to sync
+      _syncMessagesChunk(folderToGetMessageBodies);
     } catch (err, s) {
-      syncFoldersQueue.removeAt(0);
-      _setMessagesInfoToFolder();
+      print("$err for: ${folderToGetMessageBodies.fullNameRaw}");
+      // all messages are synced! check if other folders need syncing
+      await _foldersDao.updateFolder(
+        new FoldersCompanion(
+          needsInfoUpdate: Value(false),
+        ),
+        folderToGetMessageBodies.localId,
+      );
+      folderToGetMessageBodies.needsInfoUpdate = false;
+      _checkWhichFolderNeedsUpdateNow();
       isMessagesLoading = LoadingType.none;
     }
   }
@@ -236,10 +252,19 @@ abstract class _FoldersState with Store {
     updateInfoObjAndGetUid(info);
     assert(iteration <= MESSAGES_PER_CHUNK);
 
+    if (iteration == 0) throw "All messages have been synced";
+
     return {
       "uids": uids,
       "updatedInfo": info,
     };
+  }
+
+  Future _watchFolders(int accountId) async {
+    await for (final newFolders in _foldersDao.watchAllFolders(accountId)) {
+      currentFolders = Folder.getFolderObjectsFromDb(newFolders);
+      if (selectedFolder == null) selectedFolder = currentFolders[0];
+    }
   }
 
   String _calculateDiff(List oldInfo, String newRawInfo) {
@@ -282,6 +307,7 @@ abstract class _FoldersState with Store {
       }
     }
 
+    // delete removed messages
     if (removedUids.isNotEmpty) _mailDao.deleteMessages(removedUids);
 
     print(

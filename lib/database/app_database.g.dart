@@ -2010,6 +2010,8 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
   final String fullNameRaw;
   final String fullNameHash;
   final String delimiter;
+  final bool needsInfoUpdate;
+  final bool isSystemFolder;
   final bool isSubscribed;
   final bool isSelectable;
   final bool folderExists;
@@ -2030,6 +2032,8 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
       @required this.fullNameRaw,
       @required this.fullNameHash,
       @required this.delimiter,
+      @required this.needsInfoUpdate,
+      @required this.isSystemFolder,
       @required this.isSubscribed,
       @required this.isSelectable,
       @required this.folderExists,
@@ -2065,6 +2069,10 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
           .mapFromDatabaseResponse(data['${effectivePrefix}full_name_hash']),
       delimiter: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}delimiter']),
+      needsInfoUpdate: boolType
+          .mapFromDatabaseResponse(data['${effectivePrefix}needs_info_update']),
+      isSystemFolder: boolType
+          .mapFromDatabaseResponse(data['${effectivePrefix}is_system_folder']),
       isSubscribed: boolType
           .mapFromDatabaseResponse(data['${effectivePrefix}is_subscribed']),
       isSelectable: boolType
@@ -2095,6 +2103,8 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
       fullNameRaw: serializer.fromJson<String>(json['fullNameRaw']),
       fullNameHash: serializer.fromJson<String>(json['fullNameHash']),
       delimiter: serializer.fromJson<String>(json['delimiter']),
+      needsInfoUpdate: serializer.fromJson<bool>(json['needsInfoUpdate']),
+      isSystemFolder: serializer.fromJson<bool>(json['isSystemFolder']),
       isSubscribed: serializer.fromJson<bool>(json['isSubscribed']),
       isSelectable: serializer.fromJson<bool>(json['isSelectable']),
       folderExists: serializer.fromJson<bool>(json['folderExists']),
@@ -2121,6 +2131,8 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
       'fullNameRaw': serializer.toJson<String>(fullNameRaw),
       'fullNameHash': serializer.toJson<String>(fullNameHash),
       'delimiter': serializer.toJson<String>(delimiter),
+      'needsInfoUpdate': serializer.toJson<bool>(needsInfoUpdate),
+      'isSystemFolder': serializer.toJson<bool>(isSystemFolder),
       'isSubscribed': serializer.toJson<bool>(isSubscribed),
       'isSelectable': serializer.toJson<bool>(isSelectable),
       'folderExists': serializer.toJson<bool>(folderExists),
@@ -2164,6 +2176,12 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
       delimiter: delimiter == null && nullToAbsent
           ? const Value.absent()
           : Value(delimiter),
+      needsInfoUpdate: needsInfoUpdate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(needsInfoUpdate),
+      isSystemFolder: isSystemFolder == null && nullToAbsent
+          ? const Value.absent()
+          : Value(isSystemFolder),
       isSubscribed: isSubscribed == null && nullToAbsent
           ? const Value.absent()
           : Value(isSubscribed),
@@ -2199,6 +2217,8 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
           String fullNameRaw,
           String fullNameHash,
           String delimiter,
+          bool needsInfoUpdate,
+          bool isSystemFolder,
           bool isSubscribed,
           bool isSelectable,
           bool folderExists,
@@ -2219,6 +2239,8 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
         fullNameRaw: fullNameRaw ?? this.fullNameRaw,
         fullNameHash: fullNameHash ?? this.fullNameHash,
         delimiter: delimiter ?? this.delimiter,
+        needsInfoUpdate: needsInfoUpdate ?? this.needsInfoUpdate,
+        isSystemFolder: isSystemFolder ?? this.isSystemFolder,
         isSubscribed: isSubscribed ?? this.isSubscribed,
         isSelectable: isSelectable ?? this.isSelectable,
         folderExists: folderExists ?? this.folderExists,
@@ -2242,6 +2264,8 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
           ..write('fullNameRaw: $fullNameRaw, ')
           ..write('fullNameHash: $fullNameHash, ')
           ..write('delimiter: $delimiter, ')
+          ..write('needsInfoUpdate: $needsInfoUpdate, ')
+          ..write('isSystemFolder: $isSystemFolder, ')
           ..write('isSubscribed: $isSubscribed, ')
           ..write('isSelectable: $isSelectable, ')
           ..write('folderExists: $folderExists, ')
@@ -2280,21 +2304,23 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
                                                   $mrjc(
                                                       delimiter.hashCode,
                                                       $mrjc(
-                                                          isSubscribed.hashCode,
+                                                          needsInfoUpdate
+                                                              .hashCode,
                                                           $mrjc(
-                                                              isSelectable
+                                                              isSystemFolder
                                                                   .hashCode,
                                                               $mrjc(
-                                                                  folderExists
+                                                                  isSubscribed
                                                                       .hashCode,
                                                                   $mrjc(
-                                                                      extended
+                                                                      isSelectable
                                                                           .hashCode,
                                                                       $mrjc(
-                                                                          alwaysRefresh
+                                                                          folderExists
                                                                               .hashCode,
-                                                                          messagesInfoInJson
-                                                                              .hashCode)))))))))))))))))));
+                                                                          $mrjc(
+                                                                              extended.hashCode,
+                                                                              $mrjc(alwaysRefresh.hashCode, messagesInfoInJson.hashCode)))))))))))))))))))));
   @override
   bool operator ==(other) =>
       identical(this, other) ||
@@ -2312,6 +2338,8 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
           other.fullNameRaw == fullNameRaw &&
           other.fullNameHash == fullNameHash &&
           other.delimiter == delimiter &&
+          other.needsInfoUpdate == needsInfoUpdate &&
+          other.isSystemFolder == isSystemFolder &&
           other.isSubscribed == isSubscribed &&
           other.isSelectable == isSelectable &&
           other.folderExists == folderExists &&
@@ -2334,6 +2362,8 @@ class FoldersCompanion extends UpdateCompanion<LocalFolder> {
   final Value<String> fullNameRaw;
   final Value<String> fullNameHash;
   final Value<String> delimiter;
+  final Value<bool> needsInfoUpdate;
+  final Value<bool> isSystemFolder;
   final Value<bool> isSubscribed;
   final Value<bool> isSelectable;
   final Value<bool> folderExists;
@@ -2354,6 +2384,8 @@ class FoldersCompanion extends UpdateCompanion<LocalFolder> {
     this.fullNameRaw = const Value.absent(),
     this.fullNameHash = const Value.absent(),
     this.delimiter = const Value.absent(),
+    this.needsInfoUpdate = const Value.absent(),
+    this.isSystemFolder = const Value.absent(),
     this.isSubscribed = const Value.absent(),
     this.isSelectable = const Value.absent(),
     this.folderExists = const Value.absent(),
@@ -2375,6 +2407,8 @@ class FoldersCompanion extends UpdateCompanion<LocalFolder> {
       Value<String> fullNameRaw,
       Value<String> fullNameHash,
       Value<String> delimiter,
+      Value<bool> needsInfoUpdate,
+      Value<bool> isSystemFolder,
       Value<bool> isSubscribed,
       Value<bool> isSelectable,
       Value<bool> folderExists,
@@ -2395,6 +2429,8 @@ class FoldersCompanion extends UpdateCompanion<LocalFolder> {
       fullNameRaw: fullNameRaw ?? this.fullNameRaw,
       fullNameHash: fullNameHash ?? this.fullNameHash,
       delimiter: delimiter ?? this.delimiter,
+      needsInfoUpdate: needsInfoUpdate ?? this.needsInfoUpdate,
+      isSystemFolder: isSystemFolder ?? this.isSystemFolder,
       isSubscribed: isSubscribed ?? this.isSubscribed,
       isSelectable: isSelectable ?? this.isSelectable,
       folderExists: folderExists ?? this.folderExists,
@@ -2568,6 +2604,34 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
     );
   }
 
+  final VerificationMeta _needsInfoUpdateMeta =
+      const VerificationMeta('needsInfoUpdate');
+  GeneratedBoolColumn _needsInfoUpdate;
+  @override
+  GeneratedBoolColumn get needsInfoUpdate =>
+      _needsInfoUpdate ??= _constructNeedsInfoUpdate();
+  GeneratedBoolColumn _constructNeedsInfoUpdate() {
+    return GeneratedBoolColumn(
+      'needs_info_update',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _isSystemFolderMeta =
+      const VerificationMeta('isSystemFolder');
+  GeneratedBoolColumn _isSystemFolder;
+  @override
+  GeneratedBoolColumn get isSystemFolder =>
+      _isSystemFolder ??= _constructIsSystemFolder();
+  GeneratedBoolColumn _constructIsSystemFolder() {
+    return GeneratedBoolColumn(
+      'is_system_folder',
+      $tableName,
+      false,
+    );
+  }
+
   final VerificationMeta _isSubscribedMeta =
       const VerificationMeta('isSubscribed');
   GeneratedBoolColumn _isSubscribed;
@@ -2665,6 +2729,8 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
         fullNameRaw,
         fullNameHash,
         delimiter,
+        needsInfoUpdate,
+        isSystemFolder,
         isSubscribed,
         isSelectable,
         folderExists,
@@ -2761,6 +2827,22 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
           delimiter.isAcceptableValue(d.delimiter.value, _delimiterMeta));
     } else if (delimiter.isRequired && isInserting) {
       context.missing(_delimiterMeta);
+    }
+    if (d.needsInfoUpdate.present) {
+      context.handle(
+          _needsInfoUpdateMeta,
+          needsInfoUpdate.isAcceptableValue(
+              d.needsInfoUpdate.value, _needsInfoUpdateMeta));
+    } else if (needsInfoUpdate.isRequired && isInserting) {
+      context.missing(_needsInfoUpdateMeta);
+    }
+    if (d.isSystemFolder.present) {
+      context.handle(
+          _isSystemFolderMeta,
+          isSystemFolder.isAcceptableValue(
+              d.isSystemFolder.value, _isSystemFolderMeta));
+    } else if (isSystemFolder.isRequired && isInserting) {
+      context.missing(_isSystemFolderMeta);
     }
     if (d.isSubscribed.present) {
       context.handle(
@@ -2861,6 +2943,14 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
     }
     if (d.delimiter.present) {
       map['delimiter'] = Variable<String, StringType>(d.delimiter.value);
+    }
+    if (d.needsInfoUpdate.present) {
+      map['needs_info_update'] =
+          Variable<bool, BoolType>(d.needsInfoUpdate.value);
+    }
+    if (d.isSystemFolder.present) {
+      map['is_system_folder'] =
+          Variable<bool, BoolType>(d.isSystemFolder.value);
     }
     if (d.isSubscribed.present) {
       map['is_subscribed'] = Variable<bool, BoolType>(d.isSubscribed.value);

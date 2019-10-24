@@ -29,28 +29,12 @@ class _MailAndroidState extends State<MailAndroid> {
   @override
   void initState() {
     super.initState();
-    _initMail();
-  }
-
-  Future<void> _initMail() async {
-//    if (widget.selectedFolder == null) {
-      await _foldersState.onGetFolders(widget.selectedFolder, onError: _showSnack);
-//      _foldersState.onSetMessagesInfoToFolder(_foldersState.selectedFolder,
-//          onError: _showSnack);
-//    } else {
-//      _foldersState.onSetMessagesInfoToFolder(widget.selectedFolder,
-//          onError: _showSnack);
-//      await Future.delayed(Duration(milliseconds: 10));
-//      _foldersState.selectedFolder = widget.selectedFolder;
-//    }
-  }
-
-  void _showSnack(err) {
-    showSnack(
-      context: context,
-      scaffoldState: _mailState.scaffoldKey.currentState,
-      msg: err.toString(),
-    );
+    _foldersState.getFolders(widget.selectedFolder);
+    _foldersState.onError = (err) => showSnack(
+          context: context,
+          scaffoldState: _mailState.scaffoldKey.currentState,
+          msg: err.toString(),
+        );
   }
 
   Widget _itemBuilder(Message item, int index, BuildContext context,
@@ -80,6 +64,7 @@ class _MailAndroidState extends State<MailAndroid> {
             return Center(child: CircularProgressIndicator());
           } else {
             return AnimatedStreamList(
+              duration: Duration(milliseconds: 150),
               padding: EdgeInsets.only(
                   left: 16.0, right: 16.0, top: 8.0, bottom: 76.0),
               streamList: _mailState.onWatchMessages(folder),

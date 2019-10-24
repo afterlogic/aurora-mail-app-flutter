@@ -40,6 +40,10 @@ class Folder {
 
   final String delimiter;
 
+  bool needsInfoUpdate;
+  
+  final bool isSystemFolder;
+  
   final bool isSubscribed;
 
   final bool isSelectable;
@@ -50,9 +54,9 @@ class Folder {
 
   final bool alwaysRefresh;
 
-  final List messagesInfo;
-
   final List<Folder> subFolders;
+
+  List messagesInfo;
 
   int count;
 
@@ -70,6 +74,8 @@ class Folder {
     @required this.fullNameRaw,
     @required this.fullNameHash,
     @required this.delimiter,
+    @required this.needsInfoUpdate,
+    @required this.isSystemFolder,
     @required this.isSubscribed,
     @required this.isSelectable,
     @required this.exists,
@@ -124,6 +130,8 @@ class Folder {
           fullNameRaw: localFolder.fullNameRaw,
           fullNameHash: localFolder.fullNameHash,
           delimiter: localFolder.delimiter,
+          needsInfoUpdate: localFolder.needsInfoUpdate,
+          isSystemFolder: localFolder.isSystemFolder,
           isSubscribed: localFolder.isSubscribed,
           isSelectable: localFolder.isSelectable,
           exists: localFolder.folderExists,

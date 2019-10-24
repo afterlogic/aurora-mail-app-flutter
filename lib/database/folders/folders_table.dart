@@ -32,6 +32,10 @@ class Folders extends Table {
 
   TextColumn get delimiter => text()();
 
+  BoolColumn get needsInfoUpdate => boolean()();
+
+  BoolColumn get isSystemFolder => boolean()();
+
   BoolColumn get isSubscribed => boolean()();
 
   BoolColumn get isSelectable => boolean()();
@@ -59,6 +63,7 @@ class Folders extends Table {
     void getObj(List<Map<String, dynamic>> rawFolders, String parentGuid) {
       rawFolders.forEach((rawFolder) {
         final guid = uuid.v4();
+        final t = rawFolder["Type"];
         flattenedFolders.add(LocalFolder(
           localId: null,
           guid: guid,
@@ -71,6 +76,9 @@ class Folders extends Table {
           fullNameRaw: rawFolder["FullNameRaw"],
           fullNameHash: rawFolder["FullNameHash"],
           delimiter: rawFolder["Delimiter"],
+          needsInfoUpdate: true,
+          // the folder is system if it's inbox, sent or drafts
+          isSystemFolder: t == 1 || t == 2 || t == 3,
           isSubscribed: rawFolder["IsSubscribed"],
           isSelectable: rawFolder["IsSelectable"],
           folderExists: rawFolder["Exists"],
