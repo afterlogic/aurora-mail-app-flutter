@@ -1,7 +1,5 @@
-import 'package:animated_stream_list/animated_stream_list.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/models/folder.dart';
-import 'package:aurora_mail/models/loading_enum.dart';
 import 'package:aurora_mail/modules/app_store.dart';
 import 'package:aurora_mail/modules/mail/components/mail_app_bar.dart';
 import 'package:aurora_mail/modules/mail/components/message_item.dart';
@@ -14,10 +12,6 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'state/mail_state.dart';
 
 class MailAndroid extends StatefulWidget {
-  final Folder selectedFolder;
-
-  const MailAndroid(this.selectedFolder);
-
   @override
   _MailAndroidState createState() => _MailAndroidState();
 }
@@ -29,21 +23,12 @@ class _MailAndroidState extends State<MailAndroid> {
   @override
   void initState() {
     super.initState();
-    _foldersState.getFolders(widget.selectedFolder);
+    _foldersState.getFolders();
     _foldersState.onError = (err) => showSnack(
           context: context,
           scaffoldState: _mailState.scaffoldKey.currentState,
           msg: err.toString(),
         );
-  }
-
-  Widget _itemBuilder(Message item, int index, BuildContext context,
-      Animation<double> animation) {
-    return SizeTransition(
-      axis: Axis.vertical,
-      sizeFactor: animation,
-      child: MessageItem(item),
-    );
   }
 
   @override
@@ -57,21 +42,34 @@ class _MailAndroidState extends State<MailAndroid> {
       drawer: MainDrawer(),
       body: Observer(
         builder: (_) {
-          final folder = widget.selectedFolder ?? _foldersState.selectedFolder;
-          if (_foldersState.isFoldersLoading == LoadingType.hidden ||
-              _foldersState.isMessagesLoading == LoadingType.hidden ||
-              folder == null) {
+          if (_foldersState.selectedFolder == null) {
             return Center(child: CircularProgressIndicator());
-          } else {
-            return AnimatedStreamList(
-              duration: Duration(milliseconds: 150),
-              padding: EdgeInsets.only(
-                  left: 16.0, right: 16.0, top: 8.0, bottom: 76.0),
-              streamList: _mailState.onWatchMessages(folder),
-              itemBuilder: _itemBuilder,
-              itemRemovedBuilder: _itemBuilder,
-            );
           }
+          return RefreshIndicator(
+            onRefresh: () => _foldersState.updateFoldersHash([_foldersState.selectedFolder]),
+            child: StreamBuilder(
+                stream: _mailState.onWatchMessages(_foldersState.selectedFolder),
+                builder: (_, AsyncSnapshot<List<Message>> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.active) {
+                    if (snapshot.hasData && snapshot.data.isNotEmpty) {
+                      return ListView.separated(
+                        padding: EdgeInsets.only(
+                            left: 16.0, right: 16.0, top: 8.0, bottom: 76.0),
+                        itemCount: snapshot.data.length,
+                        itemBuilder: (_, i) => MessageItem(snapshot.data[i]),
+                        separatorBuilder: (_, i) => Divider(height: 0.0),
+                      );
+                    } else if (snapshot.hasError) {
+                      return Center(child: Text(snapshot.error.toString()));
+                    } else {
+                      // TODO translate
+                      return Center(child: Text("No messages"));
+                    }
+                  } else {
+                    return Center(child: CircularProgressIndicator());
+                  }
+                }),
+          );
         },
       ),
       floatingActionButton: FloatingActionButton(

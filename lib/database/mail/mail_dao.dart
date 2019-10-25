@@ -23,7 +23,7 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
   Stream<List<Message>> watchMessages(String folder) {
     return (select(mail)
           ..where((m) => m.folder.equals(folder))
-          ..limit(50)
+          ..limit(500)
           ..orderBy([
             (m) => OrderingTerm(
                 expression: m.timeStampInUTC, mode: OrderingMode.desc)

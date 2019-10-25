@@ -25,75 +25,70 @@ class _MessageItemState extends State<MessageItem> {
             ? FontWeight.w400
             : FontWeight.w700);
 
-    return Column(
-      children: <Widget>[
-        ListTile(
-          key: Key(message.uid.toString()),
-          contentPadding: EdgeInsets.zero,
-          title: Text(message.fromToDisplay, style: textStyle),
-          subtitle: Padding(
-            padding: const EdgeInsets.only(top: 6.0),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                if (message.threadInJson != null)
-                  Icon(MdiIcons.forumOutline,
-                      color: Theme.of(context).disabledColor, size: 16.0),
-                if (message.threadInJson != null) SizedBox(width: 6.0),
-                Flexible(
-                  child: Text(
-                    message.subject,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: textStyle,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          trailing: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: <Widget>[
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: <Widget>[
-                  if (message.hasAttachments) Icon(Icons.attachment),
-                  SizedBox(width: 6.0),
-                  Text(
-                    DateFormatting.formatDateFromSeconds(
-                        timestamp: message.timeStampInUTC),
-                    style: textStyle,
-                  ),
-                ],
+    return ListTile(
+      key: Key(message.uid.toString()),
+      contentPadding: EdgeInsets.zero,
+      title: Text(message.fromToDisplay, style: textStyle),
+      subtitle: Padding(
+        padding: const EdgeInsets.only(top: 6.0),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            if (message.threadInJson != null)
+              Icon(MdiIcons.forumOutline,
+                  color: Theme.of(context).disabledColor, size: 16.0),
+            if (message.threadInJson != null) SizedBox(width: 6.0),
+            Flexible(
+              child: Text(
+                message.subject,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: textStyle,
               ),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: <Widget>[
-                  if (flags.contains(MessageFlags.answered))
-                    Padding(
-                      padding: const EdgeInsets.only(left: .0),
-                      child: Icon(Icons.reply),
-                    ),
-                  if (flags.contains(MessageFlags.forwarded))
-                    Padding(
-                      padding: const EdgeInsets.only(left: .0),
-                      child: Icon(MdiIcons.share),
-                    ),
-                  if (flags.contains(MessageFlags.starred))
-                    Padding(
-                      padding: const EdgeInsets.only(left: .0),
-                      child: Icon(Icons.star, color: Colors.amber),
-                    ),
-                ],
+            ),
+          ],
+        ),
+      ),
+      trailing: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: <Widget>[
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              if (message.hasAttachments) Icon(Icons.attachment),
+              SizedBox(width: 6.0),
+              Text(
+                DateFormatting.formatDateFromSeconds(
+                    timestamp: message.timeStampInUTC),
+                style: textStyle,
               ),
             ],
           ),
-        ),
-        Divider(height: 0),
-      ],
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              if (flags.contains(MessageFlags.answered))
+                Padding(
+                  padding: const EdgeInsets.only(left: .0),
+                  child: Icon(Icons.reply),
+                ),
+              if (flags.contains(MessageFlags.forwarded))
+                Padding(
+                  padding: const EdgeInsets.only(left: .0),
+                  child: Icon(MdiIcons.share),
+                ),
+              if (flags.contains(MessageFlags.starred))
+                Padding(
+                  padding: const EdgeInsets.only(left: .0),
+                  child: Icon(Icons.star, color: Colors.amber),
+                ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }

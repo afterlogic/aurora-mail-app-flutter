@@ -49,15 +49,14 @@ abstract class _FoldersState with Store {
   // if another folder was selected or all the messages were synced go to step 3)
 
   // step 1
-  Future<void> getFolders(Folder chosenFolder,
-      {LoadingType loading = LoadingType.visible}) async {
+  Future<void> getFolders({LoadingType loading = LoadingType.visible}) async {
     try {
       final accountId = AppStore.authState.accountId;
 
       // if chosenFolder is not null, that means the folder were already loaded
       // and user has just selected another folder, no need to load them again
       // // if chosenFolder IS null the app has just started
-      if (chosenFolder == null) {
+
         // ================= STEP 1a =================
         isFoldersLoading = loading;
         List<LocalFolder> localFolders =
@@ -67,7 +66,7 @@ abstract class _FoldersState with Store {
             // TODO VO: find out about refreshing
             /*&& loading != LoadingType.refresh*/) {
           currentFolders = Folder.getFolderObjectsFromDb(localFolders);
-          await updateFoldersHash();
+          updateFoldersHash();
         } else {
           // ================= STEP 1b =================
           final rawFolders = await _foldersApi.getFolders(accountId);
@@ -79,19 +78,14 @@ abstract class _FoldersState with Store {
 
           localFolders = await _foldersDao.getAllFolders(accountId);
           currentFolders = Folder.getFolderObjectsFromDb(localFolders);
+          selectedFolder = currentFolders[0];
+          // ================= STEP 3 =================
+          _checkWhichFolderNeedsUpdateNow();
         }
 
         // ================= STEP 2 =================
         selectedFolder = currentFolders[0];
         isFoldersLoading = LoadingType.none;
-      } else {
-        // crutch to avoid rebuilding on initState
-        await Future.delayed(Duration(milliseconds: 10));
-        selectedFolder = chosenFolder;
-      }
-
-      // ================= STEP 3 =================
-      _checkWhichFolderNeedsUpdateNow();
 
       _watchFolders(accountId);
     } catch (err, s) {
@@ -103,29 +97,39 @@ abstract class _FoldersState with Store {
   }
 
   // step 1a
-  Future<void> updateFoldersHash() async {
+  Future<void> updateFoldersHash([List<Folder> foldersToRefresh]) async {
     final accountId = AppStore.authState.accountId;
-    final folders = await _foldersApi.getRelevantFoldersInformation(
-        accountId, currentFolders);
+    try {
+      final folders = await _foldersApi.getRelevantFoldersInformation(
+          accountId, foldersToRefresh ?? currentFolders);
 
-    final futures = new List<Future>();
+      final futures = new List<Future>();
 
-    folders.keys.forEach((fName) {
-      final updatedFolder = folders[fName];
-      final folder = currentFolders.firstWhere((f) => f.fullNameRaw == fName);
+      folders.keys.forEach((fName) {
+        final updatedFolder = folders[fName];
+        final folder = currentFolders.firstWhere((f) => f.fullNameRaw == fName);
 
-      futures.add(_foldersDao.updateFolder(
-        new FoldersCompanion(
-          count: Value(updatedFolder[0]),
-          unread: Value(updatedFolder[1]),
-          fullNameHash: Value(updatedFolder[3]),
-          needsInfoUpdate: Value(folder.fullNameHash != updatedFolder[3]),
-        ),
-        folder.localId,
-      ));
-    });
+        isFoldersLoading = LoadingType.hidden;
+        folder.count = updatedFolder[0];
+        isFoldersLoading = LoadingType.none;
 
-    await Future.wait(futures);
+        futures.add(_foldersDao.updateFolder(
+          new FoldersCompanion(
+            count: Value(updatedFolder[0]),
+            unread: Value(updatedFolder[1]),
+            fullNameHash: Value(updatedFolder[3]),
+            needsInfoUpdate: Value(folder.fullNameHash != updatedFolder[3]),
+          ),
+          folder.localId,
+        ));
+      });
+
+      await Future.wait(futures);
+      // ================= STEP 3 =================
+      _checkWhichFolderNeedsUpdateNow();
+    } catch (err) {
+      onError(err.toString());
+    }
   }
 
   // step 3
@@ -164,7 +168,6 @@ abstract class _FoldersState with Store {
       folder.messagesInfo = json.decode(rawInfo);
       await _foldersDao.setMessagesInfo(folder.fullNameRaw, rawInfo);
 
-
       // ================= STEP 5 =================
       _syncMessagesChunk(folder);
     } catch (err, s) {
@@ -178,7 +181,8 @@ abstract class _FoldersState with Store {
   // step 5
   Future<void> _syncMessagesChunk(Folder folderToGetMessageBodies) async {
     // interrupt syncing if another folder was selected and go to step 3
-    if (selectedFolder.needsInfoUpdate && selectedFolder.fullNameRaw != folderToGetMessageBodies.fullNameRaw) {
+    if (selectedFolder.needsInfoUpdate &&
+        selectedFolder.fullNameRaw != folderToGetMessageBodies.fullNameRaw) {
       print("selected folder needs update");
       _checkWhichFolderNeedsUpdateNow();
       return;
@@ -189,7 +193,8 @@ abstract class _FoldersState with Store {
       final folderName = folderToGetMessageBodies.fullNameRaw;
 
       // get the actual folder state every time
-      final folder = await _foldersDao.getFolder(folderToGetMessageBodies.localId);
+      final folder =
+          await _foldersDao.getFolder(folderToGetMessageBodies.localId);
 
       final String infoInJson = folder[0].messagesInfoInJson;
 

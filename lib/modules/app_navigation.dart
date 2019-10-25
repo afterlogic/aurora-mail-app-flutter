@@ -23,21 +23,19 @@ class AppNavigation {
             builder: (context) => AuthAndroid());
 
       case MailRoute.name:
-        final MailScreenArguments args = settings.arguments;
-
         if (Platform.isIOS) {
           return CupertinoPageRoute(
               settings: RouteSettings(
                 name: settings.name,
               ),
               builder: (context) =>
-                  MailAndroid(args == null ? null : args.folder));
+                  MailAndroid());
         } else {
           return FadeRoute(
               settings: RouteSettings(
                 name: settings.name,
               ),
-              page: MailAndroid(args == null ? null : args.folder));
+              page: MailAndroid());
         }
         break;
 
