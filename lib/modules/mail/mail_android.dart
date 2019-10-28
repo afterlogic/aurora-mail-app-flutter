@@ -70,6 +70,8 @@ class _MailAndroidState extends State<MailAndroid> {
                             return SizedBox();
                         },
                       );
+                    } else if (snapshot.hasData && snapshot.data.isEmpty) {
+                      return Center(child: CircularProgressIndicator());
                     } else if (snapshot.hasError) {
                       return Center(child: Text(snapshot.error.toString()));
                     } else {

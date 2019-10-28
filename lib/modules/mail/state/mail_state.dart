@@ -12,9 +12,14 @@ class MailState = _MailState with _$MailState;
 abstract class _MailState with Store {
   final _mailDao = new MailDao(AppStore.appDb);
 
+  int messagesCount = 0;
+
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
-  Stream<List<Message>> onWatchMessages(Folder folder) {
-    return _mailDao.watchMessages(folder.fullNameRaw);
+  Stream<List<Message>> onWatchMessages(Folder folder) async* {
+    await for (final mail in _mailDao.watchMessages(folder.fullNameRaw)) {
+      messagesCount = mail.length;
+      yield mail;
+    }
   }
 }

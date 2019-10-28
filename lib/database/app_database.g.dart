@@ -68,7 +68,7 @@ class Message extends DataClass implements Insertable<Message> {
       @required this.internalTimeStampInUTC,
       @required this.receivedOrDateTimeStampInUTC,
       @required this.timeStampInUTC,
-      @required this.toInJson,
+      this.toInJson,
       this.fromInJson,
       @required this.fromToDisplay,
       this.ccInJson,
@@ -1059,7 +1059,7 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     return GeneratedTextColumn(
       'to_in_json',
       $tableName,
-      false,
+      true,
     );
   }
 

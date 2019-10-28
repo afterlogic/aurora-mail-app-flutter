@@ -43,7 +43,7 @@ class Mail extends Table {
 
   IntColumn get timeStampInUTC => integer()();
 
-  TextColumn get toInJson => text()();
+  TextColumn get toInJson => text().nullable()();
 
   TextColumn get fromInJson => text().nullable()();
 
@@ -157,7 +157,9 @@ class Mail extends Table {
         throw CustomException("Couldn't find message: ${rawMessage["Uid"]}");
       }
 
-      final displayName = rawMessage["From"]["@Collection"][0]["DisplayName"];
+      final displayName = rawMessage["From"] != null
+          ? rawMessage["From"]["@Collection"][0]["DisplayName"]
+          : "Unknown sender";
 
       final fromToDisplay = displayName is String && displayName.isNotEmpty
           ? displayName
