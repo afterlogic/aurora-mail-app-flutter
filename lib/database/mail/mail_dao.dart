@@ -33,10 +33,16 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
   }
 
   Future<void> addMessages(List<Message> newMessages) {
-    return into(mail).insertAll(newMessages);
+    try {
+      return into(mail).insertAll(newMessages, orReplace: true);
+    } catch(err) {
+      print("VO: err: ${err}");
+      return null;
+    }
+
   }
 
-  Future<void> deleteMessages(List<int> uids) {
+  Future<int> deleteMessages(List<int> uids) {
     return (delete(mail)..where((m) => isIn(m.uid, uids))).go();
   }
 }

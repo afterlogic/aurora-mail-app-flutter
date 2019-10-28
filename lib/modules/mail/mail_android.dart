@@ -1,5 +1,4 @@
 import 'package:aurora_mail/database/app_database.dart';
-import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/app_store.dart';
 import 'package:aurora_mail/modules/mail/components/mail_app_bar.dart';
 import 'package:aurora_mail/modules/mail/components/message_item.dart';
@@ -24,8 +23,7 @@ class _MailAndroidState extends State<MailAndroid> {
   void initState() {
     super.initState();
     _foldersState.getFolders();
-    _foldersState.onError = (err) =>
-        showSnack(
+    _foldersState.onError = (err) => showSnack(
           context: context,
           scaffoldState: _mailState.scaffoldKey.currentState,
           msg: err.toString(),
@@ -47,12 +45,11 @@ class _MailAndroidState extends State<MailAndroid> {
             return Center(child: CircularProgressIndicator());
           }
           return RefreshIndicator(
-            onRefresh: () =>
-                _foldersState.setMessagesInfoToFolder(
-                    _foldersState.selectedFolder),
+            onRefresh: () => _foldersState
+                .setMessagesInfoToFolder(_foldersState.selectedFolder),
             child: StreamBuilder(
-                stream: _mailState.onWatchMessages(
-                    _foldersState.selectedFolder),
+                stream:
+                    _mailState.onWatchMessages(_foldersState.selectedFolder),
                 builder: (_, AsyncSnapshot<List<Message>> snapshot) {
                   if (snapshot.connectionState == ConnectionState.active) {
                     if (snapshot.hasData && snapshot.data.isNotEmpty) {
@@ -77,7 +74,16 @@ class _MailAndroidState extends State<MailAndroid> {
                       return Center(child: Text(snapshot.error.toString()));
                     } else {
                       // TODO translate
-                      return Center(child: Text("No messages"));
+                      return ListView(
+                        physics: AlwaysScrollableScrollPhysics(),
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 68.0, horizontal: 16.0),
+                            child: Center(child: Text("No messages")),
+                          ),
+                        ],
+                      );
                     }
                   } else {
                     return Center(child: CircularProgressIndicator());

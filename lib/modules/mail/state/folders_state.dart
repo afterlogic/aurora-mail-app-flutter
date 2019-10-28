@@ -65,7 +65,8 @@ abstract class _FoldersState with Store {
           // TODO VO: find out about refreshing
           /*&& loading != LoadingType.refresh*/) {
         currentFolders = Folder.getFolderObjectsFromDb(localFolders);
-        _updateFoldersHash();
+        print("VO: currentFolders[0].count: ${currentFolders[0].count}");
+        updateFoldersHash();
       } else {
         // ================= STEP 1b =================
         final rawFolders = await _foldersApi.getFolders(accountId);
@@ -100,7 +101,7 @@ abstract class _FoldersState with Store {
   }
 
   // step 1a
-  Future<void> _updateFoldersHash([List<Folder> foldersToRefresh]) async {
+  Future<void> updateFoldersHash([List<Folder> foldersToRefresh]) async {
     final accountId = AppStore.authState.accountId;
     try {
       final folders = await _foldersApi.getRelevantFoldersInformation(
@@ -110,7 +111,6 @@ abstract class _FoldersState with Store {
         final updatedFolder = folders[fName];
         final folder = currentFolders.firstWhere((f) => f.fullNameRaw == fName);
 
-        isFoldersLoading = LoadingType.hidden;
         folder.count = updatedFolder[0];
         folder.unread = updatedFolder[1];
         folder.fullNameHash = updatedFolder[3];
@@ -122,7 +122,7 @@ abstract class _FoldersState with Store {
           selectedFolder.needsInfoUpdate =
               selectedFolder.needsInfoUpdate != updatedFolder[3];
         }
-        isFoldersLoading = LoadingType.none;
+        currentFolders = currentFolders;
 
         _foldersDao.updateFolder(
           new FoldersCompanion(
@@ -135,7 +135,7 @@ abstract class _FoldersState with Store {
         );
       });
       // ================= STEP 3 =================
-      _checkWhichFolderNeedsUpdateNow();
+      await _checkWhichFolderNeedsUpdateNow();
     } catch (err, s) {
       print("VO: updateFoldersHash: ${err}");
       print("VO: updateFoldersHash: ${s}");
@@ -144,16 +144,16 @@ abstract class _FoldersState with Store {
   }
 
   // step 3
-  void _checkWhichFolderNeedsUpdateNow() {
+  Future<void> _checkWhichFolderNeedsUpdateNow() async {
     // selectedFolder is of the highest priority
     if (selectedFolder.needsInfoUpdate) {
       // ================= STEP 4 =================
-      setMessagesInfoToFolder(selectedFolder);
+      await setMessagesInfoToFolder(selectedFolder);
     } else {
       for (final folder in currentFolders) {
         if (folder.isSystemFolder && folder.needsInfoUpdate) {
           // ================= STEP 4 =================
-          setMessagesInfoToFolder(folder);
+          await setMessagesInfoToFolder(folder);
           break;
         }
       }
@@ -175,14 +175,14 @@ abstract class _FoldersState with Store {
       List<MessageInfo> messagesInfo = MessageInfo.flattenMessagesInfo(rawInfo);
 
       if (folder.messagesInfo != null) {
-        messagesInfo = _calculateDiff(folder.messagesInfo, messagesInfo);
+        messagesInfo = await _calculateDiff(folder.messagesInfo, messagesInfo);
       }
 
       folder.messagesInfo = messagesInfo;
       await _foldersDao.setMessagesInfo(folder.localId, messagesInfo);
 
       // ================= STEP 5 =================
-      _syncMessagesChunk(folder);
+      await _syncMessagesChunk(folder);
     } catch (err, s) {
       print("onSetMessagesInfoToFolder: err: ${err}");
       print("onSetMessagesInfoToFolder: s: ${s}");
@@ -211,6 +211,7 @@ abstract class _FoldersState with Store {
 
       // if all messages are synced
       if (uids.length == 0) {
+        print("messages synced for: ${folderToGetMessageBodies.fullNameRaw}");
         await _foldersDao.updateFolder(
           new FoldersCompanion(
             needsInfoUpdate: Value(false),
@@ -292,51 +293,87 @@ abstract class _FoldersState with Store {
     }
   }
 
-  List<MessageInfo> _calculateDiff(
-      List<MessageInfo> oldInfo, List<MessageInfo> newInfo) {
-    // TODO repair
-    int addedUids = 0;
-    final removedUids = new List<int>();
-    final updatedInfo = new List<MessageInfo>();
+  // you cannot just return newInfo
+  // you have to return oldInfo (because it contains hasBody: true) + addedMessages
+  Future<List<MessageInfo>> _calculateDiff(
+      List<MessageInfo> oldInfo, List<MessageInfo> newInfo) async {
 
-    int i = 0;
-    int j = 0;
+//    final oldInfo = [];
+//    final newInfo = [];
+//    oldInfo.add(new MessageInfo(
+//        uid: 0, parentUid: null, hasThread: false, hasBody: true, flags: []));
+//    oldInfo.add(new MessageInfo(
+//        uid: 1, parentUid: null, hasThread: true, hasBody: true, flags: []));
+//    oldInfo.add(new MessageInfo(
+//        uid: 2, parentUid: 1, hasThread: false, hasBody: true, flags: []));
+//    oldInfo.add(new MessageInfo(
+//        uid: 3, parentUid: 1, hasThread: false, hasBody: true, flags: []));
+//    oldInfo.add(new MessageInfo(
+//        uid: 4, parentUid: 1, hasThread: false, hasBody: true, flags: []));
+//    oldInfo.add(new MessageInfo(
+//        uid: 5, parentUid: null, hasThread: false, hasBody: true, flags: []));
+//    oldInfo.add(new MessageInfo(
+//        uid: 8, parentUid: null, hasThread: false, hasBody: true, flags: []));
+//    oldInfo.add(new MessageInfo(
+//        uid: 9, parentUid: null, hasThread: false, hasBody: true, flags: []));
+//
+//    newInfo.add(new MessageInfo(
+//        uid: 1, parentUid: 6, hasThread: false, hasBody: false, flags: []));
+//    newInfo.add(new MessageInfo(
+//        uid: 2, parentUid: 6, hasThread: false, hasBody: false, flags: []));
+//    newInfo.add(new MessageInfo(
+//        uid: 3, parentUid: 6, hasThread: false, hasBody: false, flags: []));
+//    newInfo.add(new MessageInfo(
+//        uid: 4, parentUid: 6, hasThread: false, hasBody: false, flags: []));
+//    newInfo.add(new MessageInfo(
+//        uid: 6, parentUid: null, hasThread: true, hasBody: false, flags: []));
+//    newInfo.add(new MessageInfo(
+//        uid: 7, parentUid: null, hasThread: false, hasBody: false, flags: []));
+//    newInfo.add(new MessageInfo(
+//        uid: 8, parentUid: null, hasThread: false, hasBody: false, flags: []));
+//    newInfo.add(new MessageInfo(
+//        uid: 9, parentUid: null, hasThread: false, hasBody: false, flags: []));
 
-    while (i < oldInfo.length || j < newInfo.length) {
-      if (i >= oldInfo.length) {
-        for (; j < newInfo.length; j++) {
-          updatedInfo.add(newInfo[j]);
-          addedUids++;
-        }
-        break;
-      }
-      if (j >= newInfo.length) {
-        for (; i < oldInfo.length; i++) {
-          removedUids.add(oldInfo[i].uid);
-        }
-        break;
-      }
+    // removed - 2 added - 2 parent - 4 unchanged - 2
 
-      if (oldInfo[i].uid == newInfo[j].uid) {
-        updatedInfo.add(oldInfo[i]);
-        i++;
-        j++;
-      } else if (j < (newInfo.length - 1) &&
-          oldInfo[i].uid == newInfo[j + 1].uid) {
-        addedUids++;
-        updatedInfo.add(newInfo[j]);
-        j++;
-      } else {
-        removedUids.add(oldInfo[i].uid);
-        i++;
-      }
-    }
+    print("VO: newInfo[0].uid: ${newInfo[0].uid}");
+    print("VO: oldInfo[0].uid: ${oldInfo[0].uid}");
+    final addedMessages = newInfo.where((i) =>
+        oldInfo.firstWhere((j) => j.uid == i.uid, orElse: () => null) == null);
+
+    final removedMessages = oldInfo.where((i) =>
+        newInfo.firstWhere((j) => j.uid == i.uid, orElse: () => null) == null);
+
+    final changedParent = newInfo.where((i) =>
+        oldInfo.firstWhere((j) => j.uid == i.uid && j.parentUid != i.parentUid,
+            orElse: () => null) !=
+        null);
+
+    final unchangedMessages = oldInfo.where((i) =>
+        newInfo.firstWhere((j) => j.uid == i.uid && j.parentUid == i.parentUid,
+            orElse: () => null) !=
+        null);
+
+    print("VO: unchangedMessages.length: ${unchangedMessages.length}");
+    print("VO: changedParent.length: ${changedParent.length}");
+    print("VO: removedMessages.length: ${removedMessages.length}");
+    print("VO: addedMessages.length: ${addedMessages.length}");
+
+    final removedUids = removedMessages.map((m) => m.uid).toList();
+    final changedParentUid = changedParent.map((m) => m.uid).toList();
+
+//    assert(removedUids.length == removedMessages.length);
+
+    final List<MessageInfo> updatedInfo = [
+      ...addedMessages,
+      ...changedParent,
+      ...unchangedMessages
+    ];
 
     // delete removed messages
-    if (removedUids.isNotEmpty) _mailDao.deleteMessages(removedUids);
-
-    print(
-        "Diff calculdation finished:\nAdded: $addedUids\nRemoved: ${removedUids.length}");
+    if (removedUids.isNotEmpty || changedParentUid.isNotEmpty) {
+      await _mailDao.deleteMessages([...removedUids, ...changedParentUid]);
+    }
 
     return updatedInfo;
   }

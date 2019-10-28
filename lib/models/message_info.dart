@@ -4,9 +4,9 @@ import 'package:flutter/cupertino.dart';
 
 class MessageInfo {
   final int uid;
-  final int parentUid;
+  int parentUid;
   final List<String> flags;
-  final bool hasThread;
+  bool hasThread;
   bool hasBody;
 
   MessageInfo({

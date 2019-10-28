@@ -38,20 +38,21 @@ class MailFolder extends StatelessWidget {
   }
 
   Widget _buildMessageCounter(BuildContext context) {
-    if (mailFolder.unread != null && mailFolder.unread > 0) {
+    if (mailFolder.unread != null && mailFolder.unread > 0 ||
+        mailFolder.folderType == FolderTypes.drafts &&
+            mailFolder.count != null &&
+            mailFolder.count > 0) {
       return ClipRRect(
         borderRadius: BorderRadius.all(Radius.circular(50.0)),
         child: Container(
+          padding: EdgeInsets.symmetric(vertical: 6.0, horizontal: 10.0),
           color: Theme.of(context).accentColor,
-          child: Text(mailFolder.unread.toString()),
-        ),
-      );
-    } else if (mailFolder.count != null && mailFolder.count > 0) {
-      return ClipRRect(
-        borderRadius: BorderRadius.all(Radius.circular(50.0)),
-        child: Container(
-          color: Theme.of(context).disabledColor,
-          child: Text(mailFolder.unread.toString()),
+          child: Text(
+            mailFolder.folderType == FolderTypes.drafts
+                ? mailFolder.count.toString()
+                : mailFolder.unread.toString(),
+            style: TextStyle(color: Colors.white),
+          ),
         ),
       );
     } else {

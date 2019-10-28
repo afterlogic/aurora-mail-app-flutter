@@ -83,6 +83,8 @@ class Folder {
     @required this.alwaysRefresh,
     @required this.messagesInfo,
     @required this.subFolders,
+    @required this.count,
+    @required this.unread,
   });
 
   static FolderTypes _getFolderTypeFromNumber(int num) {
@@ -140,6 +142,8 @@ class Folder {
           messagesInfo:
               MessageInfo.fromJsonString(localFolder.messagesInfoInJson),
           subFolders: getFolderObjectsFromDb(localFolders, localFolder.guid),
+          count: localFolder.count,
+          unread: localFolder.unread,
         );
       }).toList();
     } catch (err, s) {
