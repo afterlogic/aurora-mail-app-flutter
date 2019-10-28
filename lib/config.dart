@@ -1,0 +1,1 @@
+const AUTO_DISCOVER_URL = "https://test.afterlogic.com/autodiscover.php";

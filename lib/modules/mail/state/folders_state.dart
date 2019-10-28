@@ -65,7 +65,6 @@ abstract class _FoldersState with Store {
           // TODO VO: find out about refreshing
           /*&& loading != LoadingType.refresh*/) {
         currentFolders = Folder.getFolderObjectsFromDb(localFolders);
-        print("VO: currentFolders[0].count: ${currentFolders[0].count}");
         updateFoldersHash();
       } else {
         // ================= STEP 1b =================

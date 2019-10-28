@@ -14,7 +14,7 @@ abstract class _AuthState with Store {
   final _authApi = AuthApi();
   final _authLocal = AuthLocalStorage();
 
-  final String hostName = "http://test.afterlogic.com";
+  String hostName;
 
   String get apiUrl => '$hostName/?Api/';
 
@@ -40,7 +40,7 @@ abstract class _AuthState with Store {
     userEmail = results[1];
     authToken = results[0];
     userId = results[2];
-//    hostName = results[3];
+    hostName = results[3];
     return hostName is String &&
         authToken is String &&
         userEmail is String &&
@@ -59,7 +59,7 @@ abstract class _AuthState with Store {
       _authLocal.setUserEmailToStorage(email),
       _authLocal.setUserIdToStorage(id),
     ]);
-//    hostName = host;
+    hostName = host;
     authToken = token;
     userEmail = email;
     userId = id;
@@ -67,23 +67,36 @@ abstract class _AuthState with Store {
 
   // returns true the host field needs to be revealed because auto discover was unsuccessful
   Future<bool> onLogin(
-      {bool isFormValid, Function onSuccess, Function onError}) async {
+      {bool isFormValid,
+        Function() onSuccess,
+        Function() onShowUpgrade,
+        Function(String) onError}) async {
     if (isFormValid) {
       SystemChannels.textInput.invokeMethod('TextInput.hide');
       String email = emailCtrl.text;
       String password = passwordCtrl.text;
-//      hostName = hostCtrl.text.startsWith("http")
-//          ? hostCtrl.text
-//          : "https://${hostCtrl.text}";
+      hostName = hostCtrl.text.startsWith("http")
+          ? hostCtrl.text
+          : "https://${hostCtrl.text}";
 
       isLoggingIn = true;
+      // auto discover domain
+      if (hostCtrl.text.isEmpty) {
+        final splitEmail = email.split("@");
+        final domain = splitEmail.last.trim();
+        final autoDiscoveredHost = await _authApi.autoDiscoverHostname(domain);
+        if (autoDiscoveredHost == null || autoDiscoveredHost.isEmpty) {
+          isLoggingIn = false;
+          return true;
+        } else {
+          hostName = autoDiscoveredHost;
+        }
+      }
 
       try {
         final Map<String, dynamic> res = await _authApi.login(email, password);
         final String token = res['Result']['AuthToken'];
         final int id = res['AuthenticatedUserId'];
-        authToken = token;
-        userId = id;
         await _setAuthSharedPrefs(
             host: hostName, token: token, email: email, id: id);
         onSuccess();
@@ -91,6 +104,8 @@ abstract class _AuthState with Store {
         isLoggingIn = false;
         if (err is SocketException && err.osError.errorCode == 7) {
           onError("\"$hostName\" is not a valid hostname");
+        } else if (err == 108) {
+          onShowUpgrade();
         } else {
           onError(err.toString());
         }

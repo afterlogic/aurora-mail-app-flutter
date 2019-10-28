@@ -5,7 +5,6 @@ import 'package:aurora_mail/modules/app_store.dart';
 import 'package:http/http.dart' as http;
 
 Map<String, String> getHeader() {
-  print("VO: AppStore.authState.authToken: ${AppStore.authState.authToken}");
   return {'Authorization': 'Bearer ${AppStore.authState.authToken}'};
 }
 
