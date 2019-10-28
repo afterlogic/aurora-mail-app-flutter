@@ -14,7 +14,7 @@ class Message extends DataClass implements Insertable<Message> {
   final String messageId;
   final String folder;
   final String flagsInJson;
-  final String threadInJson;
+  final bool hasThread;
   final String subject;
   final int size;
   final int textSize;
@@ -28,12 +28,12 @@ class Message extends DataClass implements Insertable<Message> {
   final String ccInJson;
   final String bccInJson;
   final String senderInJson;
-  final String replyTo;
+  final String replyToInJson;
   final bool hasAttachments;
   final bool hasVcardAttachment;
   final bool hasIcalAttachment;
   final int importance;
-  final String draftInfo;
+  final String draftInfoInJson;
   final int sensitivity;
   final String downloadAsEmlUrl;
   final String hash;
@@ -60,7 +60,7 @@ class Message extends DataClass implements Insertable<Message> {
       @required this.messageId,
       @required this.folder,
       @required this.flagsInJson,
-      this.threadInJson,
+      @required this.hasThread,
       @required this.subject,
       @required this.size,
       @required this.textSize,
@@ -74,12 +74,12 @@ class Message extends DataClass implements Insertable<Message> {
       this.ccInJson,
       this.bccInJson,
       this.senderInJson,
-      this.replyTo,
+      this.replyToInJson,
       @required this.hasAttachments,
       @required this.hasVcardAttachment,
       @required this.hasIcalAttachment,
       @required this.importance,
-      this.draftInfo,
+      this.draftInfoInJson,
       @required this.sensitivity,
       @required this.downloadAsEmlUrl,
       @required this.hash,
@@ -117,8 +117,8 @@ class Message extends DataClass implements Insertable<Message> {
           stringType.mapFromDatabaseResponse(data['${effectivePrefix}folder']),
       flagsInJson: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}flags_in_json']),
-      threadInJson: stringType
-          .mapFromDatabaseResponse(data['${effectivePrefix}thread_in_json']),
+      hasThread: boolType
+          .mapFromDatabaseResponse(data['${effectivePrefix}has_thread']),
       subject:
           stringType.mapFromDatabaseResponse(data['${effectivePrefix}subject']),
       size: intType.mapFromDatabaseResponse(data['${effectivePrefix}size']),
@@ -144,8 +144,8 @@ class Message extends DataClass implements Insertable<Message> {
           .mapFromDatabaseResponse(data['${effectivePrefix}bcc_in_json']),
       senderInJson: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}sender_in_json']),
-      replyTo: stringType
-          .mapFromDatabaseResponse(data['${effectivePrefix}reply_to']),
+      replyToInJson: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}reply_to_in_json']),
       hasAttachments: boolType
           .mapFromDatabaseResponse(data['${effectivePrefix}has_attachments']),
       hasVcardAttachment: boolType.mapFromDatabaseResponse(
@@ -154,8 +154,8 @@ class Message extends DataClass implements Insertable<Message> {
           data['${effectivePrefix}has_ical_attachment']),
       importance:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}importance']),
-      draftInfo: stringType
-          .mapFromDatabaseResponse(data['${effectivePrefix}draft_info']),
+      draftInfoInJson: stringType.mapFromDatabaseResponse(
+          data['${effectivePrefix}draft_info_in_json']),
       sensitivity: intType
           .mapFromDatabaseResponse(data['${effectivePrefix}sensitivity']),
       downloadAsEmlUrl: stringType.mapFromDatabaseResponse(
@@ -202,7 +202,7 @@ class Message extends DataClass implements Insertable<Message> {
       messageId: serializer.fromJson<String>(json['messageId']),
       folder: serializer.fromJson<String>(json['folder']),
       flagsInJson: serializer.fromJson<String>(json['flagsInJson']),
-      threadInJson: serializer.fromJson<String>(json['threadInJson']),
+      hasThread: serializer.fromJson<bool>(json['hasThread']),
       subject: serializer.fromJson<String>(json['subject']),
       size: serializer.fromJson<int>(json['size']),
       textSize: serializer.fromJson<int>(json['textSize']),
@@ -218,12 +218,12 @@ class Message extends DataClass implements Insertable<Message> {
       ccInJson: serializer.fromJson<String>(json['ccInJson']),
       bccInJson: serializer.fromJson<String>(json['bccInJson']),
       senderInJson: serializer.fromJson<String>(json['senderInJson']),
-      replyTo: serializer.fromJson<String>(json['replyTo']),
+      replyToInJson: serializer.fromJson<String>(json['replyToInJson']),
       hasAttachments: serializer.fromJson<bool>(json['hasAttachments']),
       hasVcardAttachment: serializer.fromJson<bool>(json['hasVcardAttachment']),
       hasIcalAttachment: serializer.fromJson<bool>(json['hasIcalAttachment']),
       importance: serializer.fromJson<int>(json['importance']),
-      draftInfo: serializer.fromJson<String>(json['draftInfo']),
+      draftInfoInJson: serializer.fromJson<String>(json['draftInfoInJson']),
       sensitivity: serializer.fromJson<int>(json['sensitivity']),
       downloadAsEmlUrl: serializer.fromJson<String>(json['downloadAsEmlUrl']),
       hash: serializer.fromJson<String>(json['hash']),
@@ -257,7 +257,7 @@ class Message extends DataClass implements Insertable<Message> {
       'messageId': serializer.toJson<String>(messageId),
       'folder': serializer.toJson<String>(folder),
       'flagsInJson': serializer.toJson<String>(flagsInJson),
-      'threadInJson': serializer.toJson<String>(threadInJson),
+      'hasThread': serializer.toJson<bool>(hasThread),
       'subject': serializer.toJson<String>(subject),
       'size': serializer.toJson<int>(size),
       'textSize': serializer.toJson<int>(textSize),
@@ -272,12 +272,12 @@ class Message extends DataClass implements Insertable<Message> {
       'ccInJson': serializer.toJson<String>(ccInJson),
       'bccInJson': serializer.toJson<String>(bccInJson),
       'senderInJson': serializer.toJson<String>(senderInJson),
-      'replyTo': serializer.toJson<String>(replyTo),
+      'replyToInJson': serializer.toJson<String>(replyToInJson),
       'hasAttachments': serializer.toJson<bool>(hasAttachments),
       'hasVcardAttachment': serializer.toJson<bool>(hasVcardAttachment),
       'hasIcalAttachment': serializer.toJson<bool>(hasIcalAttachment),
       'importance': serializer.toJson<int>(importance),
-      'draftInfo': serializer.toJson<String>(draftInfo),
+      'draftInfoInJson': serializer.toJson<String>(draftInfoInJson),
       'sensitivity': serializer.toJson<int>(sensitivity),
       'downloadAsEmlUrl': serializer.toJson<String>(downloadAsEmlUrl),
       'hash': serializer.toJson<String>(hash),
@@ -320,9 +320,9 @@ class Message extends DataClass implements Insertable<Message> {
       flagsInJson: flagsInJson == null && nullToAbsent
           ? const Value.absent()
           : Value(flagsInJson),
-      threadInJson: threadInJson == null && nullToAbsent
+      hasThread: hasThread == null && nullToAbsent
           ? const Value.absent()
-          : Value(threadInJson),
+          : Value(hasThread),
       subject: subject == null && nullToAbsent
           ? const Value.absent()
           : Value(subject),
@@ -361,9 +361,9 @@ class Message extends DataClass implements Insertable<Message> {
       senderInJson: senderInJson == null && nullToAbsent
           ? const Value.absent()
           : Value(senderInJson),
-      replyTo: replyTo == null && nullToAbsent
+      replyToInJson: replyToInJson == null && nullToAbsent
           ? const Value.absent()
-          : Value(replyTo),
+          : Value(replyToInJson),
       hasAttachments: hasAttachments == null && nullToAbsent
           ? const Value.absent()
           : Value(hasAttachments),
@@ -376,9 +376,9 @@ class Message extends DataClass implements Insertable<Message> {
       importance: importance == null && nullToAbsent
           ? const Value.absent()
           : Value(importance),
-      draftInfo: draftInfo == null && nullToAbsent
+      draftInfoInJson: draftInfoInJson == null && nullToAbsent
           ? const Value.absent()
-          : Value(draftInfo),
+          : Value(draftInfoInJson),
       sensitivity: sensitivity == null && nullToAbsent
           ? const Value.absent()
           : Value(sensitivity),
@@ -440,7 +440,7 @@ class Message extends DataClass implements Insertable<Message> {
           String messageId,
           String folder,
           String flagsInJson,
-          String threadInJson,
+          bool hasThread,
           String subject,
           int size,
           int textSize,
@@ -454,12 +454,12 @@ class Message extends DataClass implements Insertable<Message> {
           String ccInJson,
           String bccInJson,
           String senderInJson,
-          String replyTo,
+          String replyToInJson,
           bool hasAttachments,
           bool hasVcardAttachment,
           bool hasIcalAttachment,
           int importance,
-          String draftInfo,
+          String draftInfoInJson,
           int sensitivity,
           String downloadAsEmlUrl,
           String hash,
@@ -486,7 +486,7 @@ class Message extends DataClass implements Insertable<Message> {
         messageId: messageId ?? this.messageId,
         folder: folder ?? this.folder,
         flagsInJson: flagsInJson ?? this.flagsInJson,
-        threadInJson: threadInJson ?? this.threadInJson,
+        hasThread: hasThread ?? this.hasThread,
         subject: subject ?? this.subject,
         size: size ?? this.size,
         textSize: textSize ?? this.textSize,
@@ -502,12 +502,12 @@ class Message extends DataClass implements Insertable<Message> {
         ccInJson: ccInJson ?? this.ccInJson,
         bccInJson: bccInJson ?? this.bccInJson,
         senderInJson: senderInJson ?? this.senderInJson,
-        replyTo: replyTo ?? this.replyTo,
+        replyToInJson: replyToInJson ?? this.replyToInJson,
         hasAttachments: hasAttachments ?? this.hasAttachments,
         hasVcardAttachment: hasVcardAttachment ?? this.hasVcardAttachment,
         hasIcalAttachment: hasIcalAttachment ?? this.hasIcalAttachment,
         importance: importance ?? this.importance,
-        draftInfo: draftInfo ?? this.draftInfo,
+        draftInfoInJson: draftInfoInJson ?? this.draftInfoInJson,
         sensitivity: sensitivity ?? this.sensitivity,
         downloadAsEmlUrl: downloadAsEmlUrl ?? this.downloadAsEmlUrl,
         hash: hash ?? this.hash,
@@ -539,7 +539,7 @@ class Message extends DataClass implements Insertable<Message> {
           ..write('messageId: $messageId, ')
           ..write('folder: $folder, ')
           ..write('flagsInJson: $flagsInJson, ')
-          ..write('threadInJson: $threadInJson, ')
+          ..write('hasThread: $hasThread, ')
           ..write('subject: $subject, ')
           ..write('size: $size, ')
           ..write('textSize: $textSize, ')
@@ -554,12 +554,12 @@ class Message extends DataClass implements Insertable<Message> {
           ..write('ccInJson: $ccInJson, ')
           ..write('bccInJson: $bccInJson, ')
           ..write('senderInJson: $senderInJson, ')
-          ..write('replyTo: $replyTo, ')
+          ..write('replyToInJson: $replyToInJson, ')
           ..write('hasAttachments: $hasAttachments, ')
           ..write('hasVcardAttachment: $hasVcardAttachment, ')
           ..write('hasIcalAttachment: $hasIcalAttachment, ')
           ..write('importance: $importance, ')
-          ..write('draftInfo: $draftInfo, ')
+          ..write('draftInfoInJson: $draftInfoInJson, ')
           ..write('sensitivity: $sensitivity, ')
           ..write('downloadAsEmlUrl: $downloadAsEmlUrl, ')
           ..write('hash: $hash, ')
@@ -599,7 +599,7 @@ class Message extends DataClass implements Insertable<Message> {
                       $mrjc(
                           flagsInJson.hashCode,
                           $mrjc(
-                              threadInJson.hashCode,
+                              hasThread.hashCode,
                               $mrjc(
                                   subject.hashCode,
                                   $mrjc(
@@ -630,7 +630,7 @@ class Message extends DataClass implements Insertable<Message> {
                                                                               .hashCode,
                                                                           $mrjc(
                                                                               bccInJson.hashCode,
-                                                                              $mrjc(senderInJson.hashCode, $mrjc(replyTo.hashCode, $mrjc(hasAttachments.hashCode, $mrjc(hasVcardAttachment.hashCode, $mrjc(hasIcalAttachment.hashCode, $mrjc(importance.hashCode, $mrjc(draftInfo.hashCode, $mrjc(sensitivity.hashCode, $mrjc(downloadAsEmlUrl.hashCode, $mrjc(hash.hashCode, $mrjc(headers.hashCode, $mrjc(inReplyTo.hashCode, $mrjc(references.hashCode, $mrjc(readingConfirmationAddressee.hashCode, $mrjc(htmlRaw.hashCode, $mrjc(html.hashCode, $mrjc(plain.hashCode, $mrjc(plainRaw.hashCode, $mrjc(rtl.hashCode, $mrjc(extendInJson.hashCode, $mrjc(safety.hashCode, $mrjc(hasExternals.hashCode, $mrjc(foundedCIDsInJson.hashCode, $mrjc(foundedContentLocationUrlsInJson.hashCode, $mrjc(attachmentsInJson.hashCode, customInJson.hashCode)))))))))))))))))))))))))))))))))))))))))))));
+                                                                              $mrjc(senderInJson.hashCode, $mrjc(replyToInJson.hashCode, $mrjc(hasAttachments.hashCode, $mrjc(hasVcardAttachment.hashCode, $mrjc(hasIcalAttachment.hashCode, $mrjc(importance.hashCode, $mrjc(draftInfoInJson.hashCode, $mrjc(sensitivity.hashCode, $mrjc(downloadAsEmlUrl.hashCode, $mrjc(hash.hashCode, $mrjc(headers.hashCode, $mrjc(inReplyTo.hashCode, $mrjc(references.hashCode, $mrjc(readingConfirmationAddressee.hashCode, $mrjc(htmlRaw.hashCode, $mrjc(html.hashCode, $mrjc(plain.hashCode, $mrjc(plainRaw.hashCode, $mrjc(rtl.hashCode, $mrjc(extendInJson.hashCode, $mrjc(safety.hashCode, $mrjc(hasExternals.hashCode, $mrjc(foundedCIDsInJson.hashCode, $mrjc(foundedContentLocationUrlsInJson.hashCode, $mrjc(attachmentsInJson.hashCode, customInJson.hashCode)))))))))))))))))))))))))))))))))))))))))))));
   @override
   bool operator ==(other) =>
       identical(this, other) ||
@@ -641,7 +641,7 @@ class Message extends DataClass implements Insertable<Message> {
           other.messageId == messageId &&
           other.folder == folder &&
           other.flagsInJson == flagsInJson &&
-          other.threadInJson == threadInJson &&
+          other.hasThread == hasThread &&
           other.subject == subject &&
           other.size == size &&
           other.textSize == textSize &&
@@ -655,12 +655,12 @@ class Message extends DataClass implements Insertable<Message> {
           other.ccInJson == ccInJson &&
           other.bccInJson == bccInJson &&
           other.senderInJson == senderInJson &&
-          other.replyTo == replyTo &&
+          other.replyToInJson == replyToInJson &&
           other.hasAttachments == hasAttachments &&
           other.hasVcardAttachment == hasVcardAttachment &&
           other.hasIcalAttachment == hasIcalAttachment &&
           other.importance == importance &&
-          other.draftInfo == draftInfo &&
+          other.draftInfoInJson == draftInfoInJson &&
           other.sensitivity == sensitivity &&
           other.downloadAsEmlUrl == downloadAsEmlUrl &&
           other.hash == hash &&
@@ -690,7 +690,7 @@ class MailCompanion extends UpdateCompanion<Message> {
   final Value<String> messageId;
   final Value<String> folder;
   final Value<String> flagsInJson;
-  final Value<String> threadInJson;
+  final Value<bool> hasThread;
   final Value<String> subject;
   final Value<int> size;
   final Value<int> textSize;
@@ -704,12 +704,12 @@ class MailCompanion extends UpdateCompanion<Message> {
   final Value<String> ccInJson;
   final Value<String> bccInJson;
   final Value<String> senderInJson;
-  final Value<String> replyTo;
+  final Value<String> replyToInJson;
   final Value<bool> hasAttachments;
   final Value<bool> hasVcardAttachment;
   final Value<bool> hasIcalAttachment;
   final Value<int> importance;
-  final Value<String> draftInfo;
+  final Value<String> draftInfoInJson;
   final Value<int> sensitivity;
   final Value<String> downloadAsEmlUrl;
   final Value<String> hash;
@@ -736,7 +736,7 @@ class MailCompanion extends UpdateCompanion<Message> {
     this.messageId = const Value.absent(),
     this.folder = const Value.absent(),
     this.flagsInJson = const Value.absent(),
-    this.threadInJson = const Value.absent(),
+    this.hasThread = const Value.absent(),
     this.subject = const Value.absent(),
     this.size = const Value.absent(),
     this.textSize = const Value.absent(),
@@ -750,12 +750,12 @@ class MailCompanion extends UpdateCompanion<Message> {
     this.ccInJson = const Value.absent(),
     this.bccInJson = const Value.absent(),
     this.senderInJson = const Value.absent(),
-    this.replyTo = const Value.absent(),
+    this.replyToInJson = const Value.absent(),
     this.hasAttachments = const Value.absent(),
     this.hasVcardAttachment = const Value.absent(),
     this.hasIcalAttachment = const Value.absent(),
     this.importance = const Value.absent(),
-    this.draftInfo = const Value.absent(),
+    this.draftInfoInJson = const Value.absent(),
     this.sensitivity = const Value.absent(),
     this.downloadAsEmlUrl = const Value.absent(),
     this.hash = const Value.absent(),
@@ -783,7 +783,7 @@ class MailCompanion extends UpdateCompanion<Message> {
       Value<String> messageId,
       Value<String> folder,
       Value<String> flagsInJson,
-      Value<String> threadInJson,
+      Value<bool> hasThread,
       Value<String> subject,
       Value<int> size,
       Value<int> textSize,
@@ -797,12 +797,12 @@ class MailCompanion extends UpdateCompanion<Message> {
       Value<String> ccInJson,
       Value<String> bccInJson,
       Value<String> senderInJson,
-      Value<String> replyTo,
+      Value<String> replyToInJson,
       Value<bool> hasAttachments,
       Value<bool> hasVcardAttachment,
       Value<bool> hasIcalAttachment,
       Value<int> importance,
-      Value<String> draftInfo,
+      Value<String> draftInfoInJson,
       Value<int> sensitivity,
       Value<String> downloadAsEmlUrl,
       Value<String> hash,
@@ -829,7 +829,7 @@ class MailCompanion extends UpdateCompanion<Message> {
       messageId: messageId ?? this.messageId,
       folder: folder ?? this.folder,
       flagsInJson: flagsInJson ?? this.flagsInJson,
-      threadInJson: threadInJson ?? this.threadInJson,
+      hasThread: hasThread ?? this.hasThread,
       subject: subject ?? this.subject,
       size: size ?? this.size,
       textSize: textSize ?? this.textSize,
@@ -845,12 +845,12 @@ class MailCompanion extends UpdateCompanion<Message> {
       ccInJson: ccInJson ?? this.ccInJson,
       bccInJson: bccInJson ?? this.bccInJson,
       senderInJson: senderInJson ?? this.senderInJson,
-      replyTo: replyTo ?? this.replyTo,
+      replyToInJson: replyToInJson ?? this.replyToInJson,
       hasAttachments: hasAttachments ?? this.hasAttachments,
       hasVcardAttachment: hasVcardAttachment ?? this.hasVcardAttachment,
       hasIcalAttachment: hasIcalAttachment ?? this.hasIcalAttachment,
       importance: importance ?? this.importance,
-      draftInfo: draftInfo ?? this.draftInfo,
+      draftInfoInJson: draftInfoInJson ?? this.draftInfoInJson,
       sensitivity: sensitivity ?? this.sensitivity,
       downloadAsEmlUrl: downloadAsEmlUrl ?? this.downloadAsEmlUrl,
       hash: hash ?? this.hash,
@@ -894,11 +894,8 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
   @override
   GeneratedIntColumn get uid => _uid ??= _constructUid();
   GeneratedIntColumn _constructUid() {
-    return GeneratedIntColumn(
-      'uid',
-      $tableName,
-      false,
-    );
+    return GeneratedIntColumn('uid', $tableName, false,
+        $customConstraints: 'UNIQUE');
   }
 
   final VerificationMeta _parentUidMeta = const VerificationMeta('parentUid');
@@ -951,17 +948,15 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     );
   }
 
-  final VerificationMeta _threadInJsonMeta =
-      const VerificationMeta('threadInJson');
-  GeneratedTextColumn _threadInJson;
+  final VerificationMeta _hasThreadMeta = const VerificationMeta('hasThread');
+  GeneratedBoolColumn _hasThread;
   @override
-  GeneratedTextColumn get threadInJson =>
-      _threadInJson ??= _constructThreadInJson();
-  GeneratedTextColumn _constructThreadInJson() {
-    return GeneratedTextColumn(
-      'thread_in_json',
+  GeneratedBoolColumn get hasThread => _hasThread ??= _constructHasThread();
+  GeneratedBoolColumn _constructHasThread() {
+    return GeneratedBoolColumn(
+      'has_thread',
       $tableName,
-      true,
+      false,
     );
   }
 
@@ -1132,13 +1127,15 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     );
   }
 
-  final VerificationMeta _replyToMeta = const VerificationMeta('replyTo');
-  GeneratedTextColumn _replyTo;
+  final VerificationMeta _replyToInJsonMeta =
+      const VerificationMeta('replyToInJson');
+  GeneratedTextColumn _replyToInJson;
   @override
-  GeneratedTextColumn get replyTo => _replyTo ??= _constructReplyTo();
-  GeneratedTextColumn _constructReplyTo() {
+  GeneratedTextColumn get replyToInJson =>
+      _replyToInJson ??= _constructReplyToInJson();
+  GeneratedTextColumn _constructReplyToInJson() {
     return GeneratedTextColumn(
-      'reply_to',
+      'reply_to_in_json',
       $tableName,
       true,
     );
@@ -1198,13 +1195,15 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     );
   }
 
-  final VerificationMeta _draftInfoMeta = const VerificationMeta('draftInfo');
-  GeneratedTextColumn _draftInfo;
+  final VerificationMeta _draftInfoInJsonMeta =
+      const VerificationMeta('draftInfoInJson');
+  GeneratedTextColumn _draftInfoInJson;
   @override
-  GeneratedTextColumn get draftInfo => _draftInfo ??= _constructDraftInfo();
-  GeneratedTextColumn _constructDraftInfo() {
+  GeneratedTextColumn get draftInfoInJson =>
+      _draftInfoInJson ??= _constructDraftInfoInJson();
+  GeneratedTextColumn _constructDraftInfoInJson() {
     return GeneratedTextColumn(
-      'draft_info',
+      'draft_info_in_json',
       $tableName,
       true,
     );
@@ -1466,7 +1465,7 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
         messageId,
         folder,
         flagsInJson,
-        threadInJson,
+        hasThread,
         subject,
         size,
         textSize,
@@ -1480,12 +1479,12 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
         ccInJson,
         bccInJson,
         senderInJson,
-        replyTo,
+        replyToInJson,
         hasAttachments,
         hasVcardAttachment,
         hasIcalAttachment,
         importance,
-        draftInfo,
+        draftInfoInJson,
         sensitivity,
         downloadAsEmlUrl,
         hash,
@@ -1551,13 +1550,11 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     } else if (flagsInJson.isRequired && isInserting) {
       context.missing(_flagsInJsonMeta);
     }
-    if (d.threadInJson.present) {
-      context.handle(
-          _threadInJsonMeta,
-          threadInJson.isAcceptableValue(
-              d.threadInJson.value, _threadInJsonMeta));
-    } else if (threadInJson.isRequired && isInserting) {
-      context.missing(_threadInJsonMeta);
+    if (d.hasThread.present) {
+      context.handle(_hasThreadMeta,
+          hasThread.isAcceptableValue(d.hasThread.value, _hasThreadMeta));
+    } else if (hasThread.isRequired && isInserting) {
+      context.missing(_hasThreadMeta);
     }
     if (d.subject.present) {
       context.handle(_subjectMeta,
@@ -1648,11 +1645,13 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     } else if (senderInJson.isRequired && isInserting) {
       context.missing(_senderInJsonMeta);
     }
-    if (d.replyTo.present) {
-      context.handle(_replyToMeta,
-          replyTo.isAcceptableValue(d.replyTo.value, _replyToMeta));
-    } else if (replyTo.isRequired && isInserting) {
-      context.missing(_replyToMeta);
+    if (d.replyToInJson.present) {
+      context.handle(
+          _replyToInJsonMeta,
+          replyToInJson.isAcceptableValue(
+              d.replyToInJson.value, _replyToInJsonMeta));
+    } else if (replyToInJson.isRequired && isInserting) {
+      context.missing(_replyToInJsonMeta);
     }
     if (d.hasAttachments.present) {
       context.handle(
@@ -1684,11 +1683,13 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     } else if (importance.isRequired && isInserting) {
       context.missing(_importanceMeta);
     }
-    if (d.draftInfo.present) {
-      context.handle(_draftInfoMeta,
-          draftInfo.isAcceptableValue(d.draftInfo.value, _draftInfoMeta));
-    } else if (draftInfo.isRequired && isInserting) {
-      context.missing(_draftInfoMeta);
+    if (d.draftInfoInJson.present) {
+      context.handle(
+          _draftInfoInJsonMeta,
+          draftInfoInJson.isAcceptableValue(
+              d.draftInfoInJson.value, _draftInfoInJsonMeta));
+    } else if (draftInfoInJson.isRequired && isInserting) {
+      context.missing(_draftInfoInJsonMeta);
     }
     if (d.sensitivity.present) {
       context.handle(_sensitivityMeta,
@@ -1853,9 +1854,8 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     if (d.flagsInJson.present) {
       map['flags_in_json'] = Variable<String, StringType>(d.flagsInJson.value);
     }
-    if (d.threadInJson.present) {
-      map['thread_in_json'] =
-          Variable<String, StringType>(d.threadInJson.value);
+    if (d.hasThread.present) {
+      map['has_thread'] = Variable<bool, BoolType>(d.hasThread.value);
     }
     if (d.subject.present) {
       map['subject'] = Variable<String, StringType>(d.subject.value);
@@ -1901,8 +1901,9 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
       map['sender_in_json'] =
           Variable<String, StringType>(d.senderInJson.value);
     }
-    if (d.replyTo.present) {
-      map['reply_to'] = Variable<String, StringType>(d.replyTo.value);
+    if (d.replyToInJson.present) {
+      map['reply_to_in_json'] =
+          Variable<String, StringType>(d.replyToInJson.value);
     }
     if (d.hasAttachments.present) {
       map['has_attachments'] = Variable<bool, BoolType>(d.hasAttachments.value);
@@ -1918,8 +1919,9 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     if (d.importance.present) {
       map['importance'] = Variable<int, IntType>(d.importance.value);
     }
-    if (d.draftInfo.present) {
-      map['draft_info'] = Variable<String, StringType>(d.draftInfo.value);
+    if (d.draftInfoInJson.present) {
+      map['draft_info_in_json'] =
+          Variable<String, StringType>(d.draftInfoInJson.value);
     }
     if (d.sensitivity.present) {
       map['sensitivity'] = Variable<int, IntType>(d.sensitivity.value);

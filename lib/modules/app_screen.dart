@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:aurora_mail/modules/app_store.dart';
 import 'package:aurora_mail/modules/auth/state/auth_state.dart';
 import 'package:aurora_mail/modules/mail/mail_route.dart';
+import 'package:aurora_mail/theming/app_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
@@ -50,6 +51,7 @@ class _AppState extends State<App> {
             return MaterialApp(
                 title: "Aurora Mail",
                 onGenerateRoute: AppNavigation.onGenerateRoute,
+                theme: AppTheme.light,
                 initialRoute: _canEnterMainApp(snapshot.data)
                     ? MailRoute.name
                     : AuthRoute.name,

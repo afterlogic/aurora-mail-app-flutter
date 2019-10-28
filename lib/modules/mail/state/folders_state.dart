@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/folders/folders_dao.dart';
 import 'package:aurora_mail/database/folders/folders_table.dart';
@@ -7,6 +5,7 @@ import 'package:aurora_mail/database/mail/mail_dao.dart';
 import 'package:aurora_mail/database/mail/mail_table.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/models/loading_enum.dart';
+import 'package:aurora_mail/models/message_info.dart';
 import 'package:aurora_mail/modules/app_store.dart';
 import 'package:aurora_mail/modules/mail/repository/folders_api.dart';
 import 'package:aurora_mail/modules/mail/repository/mail_api.dart';
@@ -57,36 +56,35 @@ abstract class _FoldersState with Store {
       // and user has just selected another folder, no need to load them again
       // // if chosenFolder IS null the app has just started
 
-        // ================= STEP 1a =================
-        isFoldersLoading = loading;
-        List<LocalFolder> localFolders =
-            await _foldersDao.getAllFolders(accountId);
+      // ================= STEP 1a =================
+      isFoldersLoading = loading;
+      List<LocalFolder> localFolders =
+          await _foldersDao.getAllFolders(accountId);
 
-        if (localFolders != null && localFolders.isNotEmpty
-            // TODO VO: find out about refreshing
-            /*&& loading != LoadingType.refresh*/) {
-          currentFolders = Folder.getFolderObjectsFromDb(localFolders);
-          updateFoldersHash();
-        } else {
-          // ================= STEP 1b =================
-          final rawFolders = await _foldersApi.getFolders(accountId);
+      if (localFolders != null && localFolders.isNotEmpty
+          // TODO VO: find out about refreshing
+          /*&& loading != LoadingType.refresh*/) {
+        currentFolders = Folder.getFolderObjectsFromDb(localFolders);
+        _updateFoldersHash();
+      } else {
+        // ================= STEP 1b =================
+        final rawFolders = await _foldersApi.getFolders(accountId);
 
-          final newFolders =
-              await Folders.getFolderObjectsFromServerAsync(rawFolders);
-          await _foldersDao.deleteFolders();
-          await _foldersDao.addFolders(newFolders);
+        final newFolders =
+            await Folders.getFolderObjectsFromServerAsync(rawFolders);
+        await _foldersDao.deleteFolders();
+        await _foldersDao.addFolders(newFolders);
 
-          localFolders = await _foldersDao.getAllFolders(accountId);
-          currentFolders = Folder.getFolderObjectsFromDb(localFolders);
-          selectedFolder = currentFolders[0];
-          // ================= STEP 3 =================
-          _checkWhichFolderNeedsUpdateNow();
-        }
-
-        // ================= STEP 2 =================
+        localFolders = await _foldersDao.getAllFolders(accountId);
+        currentFolders = Folder.getFolderObjectsFromDb(localFolders);
         selectedFolder = currentFolders[0];
-        isFoldersLoading = LoadingType.none;
+        // ================= STEP 3 =================
+        _checkWhichFolderNeedsUpdateNow();
+      }
 
+      // ================= STEP 2 =================
+      selectedFolder = currentFolders[0];
+      isFoldersLoading = LoadingType.none;
       _watchFolders(accountId);
     } catch (err, s) {
       print("onGetFolders err: $err");
@@ -96,14 +94,17 @@ abstract class _FoldersState with Store {
     }
   }
 
+  void selectFolder(Folder folder) {
+    selectedFolder = folder;
+    _checkWhichFolderNeedsUpdateNow();
+  }
+
   // step 1a
-  Future<void> updateFoldersHash([List<Folder> foldersToRefresh]) async {
+  Future<void> _updateFoldersHash([List<Folder> foldersToRefresh]) async {
     final accountId = AppStore.authState.accountId;
     try {
       final folders = await _foldersApi.getRelevantFoldersInformation(
           accountId, foldersToRefresh ?? currentFolders);
-
-      final futures = new List<Future>();
 
       folders.keys.forEach((fName) {
         final updatedFolder = folders[fName];
@@ -111,9 +112,19 @@ abstract class _FoldersState with Store {
 
         isFoldersLoading = LoadingType.hidden;
         folder.count = updatedFolder[0];
+        folder.unread = updatedFolder[1];
+        folder.fullNameHash = updatedFolder[3];
+        folder.needsInfoUpdate = folder.fullNameHash != updatedFolder[3];
+        if (folder.localId == selectedFolder.localId) {
+          selectedFolder.count = updatedFolder[0];
+          selectedFolder.unread = updatedFolder[1];
+          selectedFolder.fullNameHash = updatedFolder[3];
+          selectedFolder.needsInfoUpdate =
+              selectedFolder.needsInfoUpdate != updatedFolder[3];
+        }
         isFoldersLoading = LoadingType.none;
 
-        futures.add(_foldersDao.updateFolder(
+        _foldersDao.updateFolder(
           new FoldersCompanion(
             count: Value(updatedFolder[0]),
             unread: Value(updatedFolder[1]),
@@ -121,13 +132,13 @@ abstract class _FoldersState with Store {
             needsInfoUpdate: Value(folder.fullNameHash != updatedFolder[3]),
           ),
           folder.localId,
-        ));
+        );
       });
-
-      await Future.wait(futures);
       // ================= STEP 3 =================
       _checkWhichFolderNeedsUpdateNow();
-    } catch (err) {
+    } catch (err, s) {
+      print("VO: updateFoldersHash: ${err}");
+      print("VO: updateFoldersHash: ${s}");
       onError(err.toString());
     }
   }
@@ -137,12 +148,12 @@ abstract class _FoldersState with Store {
     // selectedFolder is of the highest priority
     if (selectedFolder.needsInfoUpdate) {
       // ================= STEP 4 =================
-      _setMessagesInfoToFolder(selectedFolder);
+      setMessagesInfoToFolder(selectedFolder);
     } else {
       for (final folder in currentFolders) {
         if (folder.isSystemFolder && folder.needsInfoUpdate) {
           // ================= STEP 4 =================
-          _setMessagesInfoToFolder(folder);
+          setMessagesInfoToFolder(folder);
           break;
         }
       }
@@ -150,23 +161,25 @@ abstract class _FoldersState with Store {
   }
 
   // step 4
-  Future<void> _setMessagesInfoToFolder(Folder folder) async {
+  Future<void> setMessagesInfoToFolder(Folder folder) async {
     print("getting folder info for: ${folder.fullNameRaw}");
 
     isMessagesLoading =
         folder.messagesInfo == null ? LoadingType.hidden : LoadingType.visible;
     try {
-      String rawInfo = await _mailApi.getMessagesInfo(
+      final rawInfo = await _mailApi.getMessagesInfo(
         folderName: folder.fullNameRaw,
         accountId: _authState.accountId,
       );
 
+      List<MessageInfo> messagesInfo = MessageInfo.flattenMessagesInfo(rawInfo);
+
       if (folder.messagesInfo != null) {
-        rawInfo = _calculateDiff(folder.messagesInfo, rawInfo);
+        messagesInfo = _calculateDiff(folder.messagesInfo, messagesInfo);
       }
 
-      folder.messagesInfo = json.decode(rawInfo);
-      await _foldersDao.setMessagesInfo(folder.fullNameRaw, rawInfo);
+      folder.messagesInfo = messagesInfo;
+      await _foldersDao.setMessagesInfo(folder.localId, messagesInfo);
 
       // ================= STEP 5 =================
       _syncMessagesChunk(folder);
@@ -190,80 +203,87 @@ abstract class _FoldersState with Store {
     print("syncing messages for: ${folderToGetMessageBodies.fullNameRaw}");
 
     try {
-      final folderName = folderToGetMessageBodies.fullNameRaw;
-
       // get the actual folder state every time
       final folder =
           await _foldersDao.getFolder(folderToGetMessageBodies.localId);
 
-      final String infoInJson = folder[0].messagesInfoInJson;
+      final uids = _takeChunk(folder.messagesInfo);
 
-      final uidsAndUpdateInfo = _takeChunk(infoInJson);
-      final uids = uidsAndUpdateInfo["uids"];
-      final updatedInfo = uidsAndUpdateInfo["updatedInfo"];
+      // if all messages are synced
+      if (uids.length == 0) {
+        await _foldersDao.updateFolder(
+          new FoldersCompanion(
+            needsInfoUpdate: Value(false),
+          ),
+          folderToGetMessageBodies.localId,
+        );
+        folderToGetMessageBodies.needsInfoUpdate = false;
+        _checkWhichFolderNeedsUpdateNow();
+        isMessagesLoading = LoadingType.none;
+      } else {
+        final rawBodies = await _mailApi.getMessageBodies(
+            folderName: folderToGetMessageBodies.fullNameRaw,
+            accountId: _authState.accountId,
+            uids: uids);
 
-      final rawBodies = await _mailApi.getMessageBodies(
-          folderName: folderName, accountId: _authState.accountId, uids: uids);
+        final messages = Mail.getMessageObjFromServerAndUpdateInfoHasBody(
+            rawBodies, folderToGetMessageBodies.messagesInfo);
 
-      final messages = Mail.getMessageObjFromServer(rawBodies, updatedInfo);
+        await _mailDao.addMessages(messages);
 
-      _mailDao.addMessages(messages);
+        await _foldersDao.setMessagesInfo(folderToGetMessageBodies.localId,
+            folderToGetMessageBodies.messagesInfo);
 
-      final String encodedInfo = json.encode(updatedInfo);
-
-      await _foldersDao.setMessagesInfo(folderName, encodedInfo);
-
-      isMessagesLoading = LoadingType.visible;
-      // check if there are other messages to sync
-      _syncMessagesChunk(folderToGetMessageBodies);
+        isMessagesLoading = LoadingType.visible;
+        // check if there are other messages to sync
+        _syncMessagesChunk(folderToGetMessageBodies);
+      }
     } catch (err, s) {
-      print("$err for: ${folderToGetMessageBodies.fullNameRaw}");
-      // all messages are synced! check if other folders need syncing
-      await _foldersDao.updateFolder(
-        new FoldersCompanion(
-          needsInfoUpdate: Value(false),
-        ),
-        folderToGetMessageBodies.localId,
-      );
-      folderToGetMessageBodies.needsInfoUpdate = false;
-      _checkWhichFolderNeedsUpdateNow();
-      isMessagesLoading = LoadingType.none;
+      print("VO: _syncMessagesChunk: ${err}");
+      print("VO: _syncMessagesChunk: ${s}");
     }
   }
 
   // returns list of uids to load
-  Map<String, List> _takeChunk(String encodedInfo) {
+  List<int> _takeChunk(List<MessageInfo> messagesInfo) {
     final uids = new List<int>();
-    final List info = json.decode(encodedInfo);
     int iteration = 0;
 
-    void updateInfoObjAndGetUid(List messagesInfo, [int parentUid]) {
-      for (final info in messagesInfo) {
-        if (iteration < MESSAGES_PER_CHUNK) {
-          if (info["hasBody"] != true) {
-            info["hasBody"] = true;
-            info["parentUid"] = parentUid;
-            uids.add(info["uid"]);
-            iteration++;
-          }
-
-          if (info["thread"] is List) {
-            updateInfoObjAndGetUid(info["thread"], info["uid"]);
-          }
+    messagesInfo.forEach((info) {
+      if (iteration < MESSAGES_PER_CHUNK) {
+        if (info.hasBody != true) {
+          uids.add(info.uid);
+          iteration++;
         }
       }
-    }
+    });
 
-    updateInfoObjAndGetUid(info);
     assert(iteration <= MESSAGES_PER_CHUNK);
 
-    if (iteration == 0) throw "All messages have been synced";
-
-    return {
-      "uids": uids,
-      "updatedInfo": info,
-    };
+    return uids;
   }
+
+//
+//  List _updateMessagesInfo(List oldInfo, List<Message> messagesFromServer) {
+//    void updateInfo(List messagesInfo) {
+//      for (final info in messagesInfo) {
+//        try {
+//          final downloadedMessage =
+//              messagesFromServer.firstWhere((m) => m.uid == info["uid"]);
+//          if (downloadedMessage != null) {
+//            info["hasBody"] = true;
+//          }
+//        } catch (err) {}
+//
+//        if (info["thread"] is List) {
+//          updateInfo(info["thread"]);
+//        }
+//      }
+//    }
+//
+//    updateInfo(oldInfo);
+//    return oldInfo;
+//  }
 
   Future _watchFolders(int accountId) async {
     await for (final newFolders in _foldersDao.watchAllFolders(accountId)) {
@@ -272,12 +292,12 @@ abstract class _FoldersState with Store {
     }
   }
 
-  String _calculateDiff(List oldInfo, String newRawInfo) {
-    // TODO VO calculate diff for threads as well
-    final List newInfo = json.decode(newRawInfo);
+  List<MessageInfo> _calculateDiff(
+      List<MessageInfo> oldInfo, List<MessageInfo> newInfo) {
+    // TODO repair
     int addedUids = 0;
     final removedUids = new List<int>();
-    final updatedInfo = new List();
+    final updatedInfo = new List<MessageInfo>();
 
     int i = 0;
     int j = 0;
@@ -292,22 +312,22 @@ abstract class _FoldersState with Store {
       }
       if (j >= newInfo.length) {
         for (; i < oldInfo.length; i++) {
-          removedUids.add(oldInfo[i]["uid"]);
+          removedUids.add(oldInfo[i].uid);
         }
         break;
       }
 
-      if (oldInfo[i]["uid"] == newInfo[j]["uid"]) {
+      if (oldInfo[i].uid == newInfo[j].uid) {
         updatedInfo.add(oldInfo[i]);
         i++;
         j++;
       } else if (j < (newInfo.length - 1) &&
-          oldInfo[i]["uid"] == newInfo[j + 1]["uid"]) {
+          oldInfo[i].uid == newInfo[j + 1].uid) {
         addedUids++;
         updatedInfo.add(newInfo[j]);
         j++;
       } else {
-        removedUids.add(oldInfo[i]["uid"]);
+        removedUids.add(oldInfo[i].uid);
         i++;
       }
     }
@@ -318,6 +338,6 @@ abstract class _FoldersState with Store {
     print(
         "Diff calculdation finished:\nAdded: $addedUids\nRemoved: ${removedUids.length}");
 
-    return json.encode(updatedInfo);
+    return updatedInfo;
   }
 }

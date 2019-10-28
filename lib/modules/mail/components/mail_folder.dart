@@ -38,7 +38,6 @@ class MailFolder extends StatelessWidget {
   }
 
   Widget _buildMessageCounter(BuildContext context) {
-    print("VO: mailFolder.count: ${mailFolder.count}");
     if (mailFolder.unread != null && mailFolder.unread > 0) {
       return ClipRRect(
         borderRadius: BorderRadius.all(Radius.circular(50.0)),
@@ -62,7 +61,7 @@ class MailFolder extends StatelessWidget {
 
   void _selectFolder(BuildContext context) {
     Navigator.pop(context);
-    AppStore.foldersState.selectedFolder = mailFolder;
+    AppStore.foldersState.selectFolder(mailFolder);
   }
 
   @override

@@ -1,3 +1,5 @@
+import 'package:aurora_mail/models/folder.dart';
+import 'package:aurora_mail/models/message_info.dart';
 import 'package:moor_flutter/moor_flutter.dart';
 
 import '../app_database.dart';
@@ -17,9 +19,12 @@ class FoldersDao extends DatabaseAccessor<AppDatabase> with _$FoldersDaoMixin {
         .get();
   }
 
-  Future<List<LocalFolder>> getFolder(int localId) {
-    return (select(folders)..where((folder) => folder.localId.equals(localId)))
+  Future<Folder> getFolder(int localId) async {
+    final foundFolders = await (select(folders)
+          ..where((folder) => folder.localId.equals(localId)))
         .get();
+
+    return Folder.getFolderObjectsFromDb(foundFolders)[0];
   }
 
   Stream<List<LocalFolder>> watchAllFolders(int accountId) {
@@ -32,9 +37,9 @@ class FoldersDao extends DatabaseAccessor<AppDatabase> with _$FoldersDaoMixin {
     return into(folders).insertAll(newFolders);
   }
 
-  Future<int> setMessagesInfo(String rawFolderName, String messagesInfoInJson) {
-    return (update(folders)..where((f) => f.fullNameRaw.equals(rawFolderName)))
-        .write(
+  Future<int> setMessagesInfo(int localId, List<MessageInfo> messagesInfo) {
+    final messagesInfoInJson = MessageInfo.toJsonString(messagesInfo);
+    return (update(folders)..where((f) => f.localId.equals(localId))).write(
       FoldersCompanion(
         messagesInfoInJson: Value(messagesInfoInJson),
       ),

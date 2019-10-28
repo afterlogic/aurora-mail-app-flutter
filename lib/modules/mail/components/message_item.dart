@@ -34,10 +34,10 @@ class _MessageItemState extends State<MessageItem> {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            if (message.threadInJson != null)
+            if (message.hasThread == true)
               Icon(MdiIcons.forumOutline,
                   color: Theme.of(context).disabledColor, size: 16.0),
-            if (message.threadInJson != null) SizedBox(width: 6.0),
+            if (message.hasThread == true) SizedBox(width: 6.0),
             Flexible(
               child: Text(
                 message.subject,
@@ -60,8 +60,9 @@ class _MessageItemState extends State<MessageItem> {
               if (message.hasAttachments) Icon(Icons.attachment),
               SizedBox(width: 6.0),
               Text(
-                DateFormatting.formatDateFromSeconds(
-                    timestamp: message.timeStampInUTC),
+//                DateFormatting.formatDateFromSeconds(
+//                    timestamp: message.timeStampInUTC),
+              message.uid.toString(),
                 style: textStyle,
               ),
             ],

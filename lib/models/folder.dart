@@ -1,7 +1,7 @@
-import 'dart:convert';
-
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:flutter/cupertino.dart';
+
+import 'message_info.dart';
 
 enum FolderTypes {
   inbox,
@@ -36,14 +36,14 @@ class Folder {
 
   final String fullNameRaw;
 
-  final String fullNameHash;
+  String fullNameHash;
 
   final String delimiter;
 
   bool needsInfoUpdate;
-  
+
   final bool isSystemFolder;
-  
+
   final bool isSubscribed;
 
   final bool isSelectable;
@@ -56,7 +56,7 @@ class Folder {
 
   final List<Folder> subFolders;
 
-  List messagesInfo;
+  List<MessageInfo> messagesInfo;
 
   int count;
 
@@ -137,9 +137,8 @@ class Folder {
           exists: localFolder.folderExists,
           extended: localFolder.extended,
           alwaysRefresh: localFolder.alwaysRefresh,
-          messagesInfo: localFolder.messagesInfoInJson == null
-              ? null
-              : json.decode(localFolder.messagesInfoInJson),
+          messagesInfo:
+              MessageInfo.fromJsonString(localFolder.messagesInfoInJson),
           subFolders: getFolderObjectsFromDb(localFolders, localFolder.guid),
         );
       }).toList();

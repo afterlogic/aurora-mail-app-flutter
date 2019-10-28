@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/models/message_info.dart';
 import 'package:aurora_mail/utils/constants.dart';
 import 'package:aurora_mail/utils/custom_exception.dart';
 import 'package:moor_flutter/moor_flutter.dart';
@@ -16,7 +17,7 @@ enum MessageFlags {
 class Mail extends Table {
   IntColumn get localId => integer().autoIncrement()();
 
-  IntColumn get uid => integer()();
+  IntColumn get uid => integer().customConstraint("UNIQUE")();
 
   IntColumn get parentUid => integer().nullable()();
 
@@ -26,7 +27,7 @@ class Mail extends Table {
 
   TextColumn get flagsInJson => text()();
 
-  TextColumn get threadInJson => text().nullable()();
+  BoolColumn get hasThread => boolean()();
 
   TextColumn get subject => text()();
 
@@ -54,7 +55,7 @@ class Mail extends Table {
 
   TextColumn get senderInJson => text().nullable()();
 
-  TextColumn get replyTo => text().nullable()();
+  TextColumn get replyToInJson => text().nullable()();
 
 //  BoolColumn get isSeen => boolean()();
 //
@@ -72,7 +73,7 @@ class Mail extends Table {
 
   IntColumn get importance => integer()();
 
-  TextColumn get draftInfo => text().nullable()();
+  TextColumn get draftInfoInJson => text().nullable()();
 
   IntColumn get sensitivity => integer()();
 
@@ -137,122 +138,112 @@ class Mail extends Table {
     }
   }
 
-  static List<Message> getMessageObjFromServer(List result, List messagesInfo) {
+  static List<Message> getMessageObjFromServerAndUpdateInfoHasBody(
+    List result,
+    List<MessageInfo> messagesInfo,
+  ) {
     assert(result.length <= MESSAGES_PER_CHUNK);
-
-    int prevUid;
+    assert(result.isNotEmpty);
 
     final messagesChunk = new List<Message>();
 
     result.forEach((rawMessage) {
+      MessageInfo messageInfo;
+
       try {
-        final messageInfo = messagesInfo
-                .firstWhere((m) => m["uid"] == rawMessage["Uid"]) ??
-            _findMessageInfoInThread(messagesInfo, rawMessage["Uid"], prevUid);
+        messageInfo =
+            messagesInfo.firstWhere((m) => m.uid == rawMessage["Uid"]);
+      } catch (err) {
+        throw CustomException("Couldn't find message: ${rawMessage["Uid"]}");
+      }
 
-        final displayName = rawMessage["From"]["@Collection"][0]["DisplayName"];
+      final displayName = rawMessage["From"]["@Collection"][0]["DisplayName"];
 
-        final fromToDisplay = displayName is String && displayName.isNotEmpty
-            ? displayName
-            : rawMessage["From"]["@Collection"][0]["Email"];
+      final fromToDisplay = displayName is String && displayName.isNotEmpty
+          ? displayName
+          : rawMessage["From"]["@Collection"][0]["Email"];
 
-        prevUid = rawMessage["Uid"];
-        messagesChunk.add(new Message(
-          localId: null,
-          uid: rawMessage["Uid"],
-          parentUid: messageInfo["parentUid"],
-          flagsInJson: messageInfo["flags"] == null
-              ? null
-              : json.encode(messageInfo["flags"]),
-          threadInJson: messageInfo["thread"] == null
-              ? null
-              : json.encode(messageInfo["thread"]),
-          messageId: rawMessage["MessageId"],
-          folder: rawMessage["Folder"],
-          subject: rawMessage["Subject"],
-          size: rawMessage["Size"],
-          textSize: rawMessage["TextSize"],
-          truncated: rawMessage["Truncated"],
-          internalTimeStampInUTC: rawMessage["InternalTimeStampInUTC"],
-          receivedOrDateTimeStampInUTC:
-              rawMessage["ReceivedOrDateTimeStampInUTC"],
-          timeStampInUTC: rawMessage["TimeStampInUTC"],
-          toInJson: rawMessage["From"] == null
-              ? null
-              : json.encode(rawMessage["From"]),
-          fromInJson:
-              rawMessage["To"] == null ? null : json.encode(rawMessage["To"]),
-          fromToDisplay: fromToDisplay,
-          ccInJson:
-              rawMessage["Cc"] == null ? null : json.encode(rawMessage["Cc"]),
-          bccInJson:
-              rawMessage["Bcc"] == null ? null : json.encode(rawMessage["Bcc"]),
-          senderInJson: rawMessage["Sender"] == null
-              ? null
-              : json.encode(rawMessage["Sender"]),
-          replyTo: rawMessage["ReplyTo"],
+      messageInfo.hasBody = true;
+      messagesChunk.add(new Message(
+        localId: null,
+        uid: rawMessage["Uid"],
+        parentUid: messageInfo.parentUid,
+        flagsInJson:
+            messageInfo.flags == null ? null : json.encode(messageInfo.flags),
+        hasThread: messageInfo.hasThread,
+        messageId: rawMessage["MessageId"],
+        folder: rawMessage["Folder"],
+        subject: rawMessage["Subject"],
+        size: rawMessage["Size"],
+        textSize: rawMessage["TextSize"],
+        truncated: rawMessage["Truncated"],
+        internalTimeStampInUTC: rawMessage["InternalTimeStampInUTC"],
+        receivedOrDateTimeStampInUTC:
+            rawMessage["ReceivedOrDateTimeStampInUTC"],
+        timeStampInUTC: rawMessage["TimeStampInUTC"],
+        toInJson:
+            rawMessage["From"] == null ? null : json.encode(rawMessage["From"]),
+        fromInJson:
+            rawMessage["To"] == null ? null : json.encode(rawMessage["To"]),
+        fromToDisplay: fromToDisplay,
+        ccInJson:
+            rawMessage["Cc"] == null ? null : json.encode(rawMessage["Cc"]),
+        bccInJson:
+            rawMessage["Bcc"] == null ? null : json.encode(rawMessage["Bcc"]),
+        senderInJson: rawMessage["Sender"] == null
+            ? null
+            : json.encode(rawMessage["Sender"]),
+        replyToInJson: rawMessage["ReplyTo"] == null
+            ? null
+            : json.encode(rawMessage["ReplyTo"]),
 //          isSeen: rawMessage["IsSeen"],
 //          isFlagged: rawMessage["IsFlagged"],
 //          isAnswered: rawMessage["IsAnswered"],
 //          isForwarded: rawMessage["IsForwarded"],
-          hasAttachments: rawMessage["HasAttachments"],
-          hasVcardAttachment: rawMessage["HasVcardAttachment"],
-          hasIcalAttachment: rawMessage["HasIcalAttachment"],
-          importance: rawMessage["Importance"],
-          draftInfo: rawMessage["DraftInfo"],
-          sensitivity: rawMessage["Sensitivity"],
-          downloadAsEmlUrl: rawMessage["DownloadAsEmlUrl"],
-          hash: rawMessage["Hash"],
-          headers: rawMessage["Headers"],
-          inReplyTo: rawMessage["InReplyTo"],
-          references: rawMessage["References"],
-          readingConfirmationAddressee:
-              rawMessage["ReadingConfirmationAddressee"],
-          htmlRaw: rawMessage["HtmlRaw"],
-          html: rawMessage["Html"],
-          plain: rawMessage["Plain"],
-          plainRaw: rawMessage["PlainRaw"],
-          rtl: rawMessage["Rtl"],
-          extendInJson: rawMessage["Extend"] == null
-              ? null
-              : json.encode(rawMessage["Extend"]),
-          safety: rawMessage["Safety"],
-          hasExternals: rawMessage["HasExternals"],
-          foundedCIDsInJson: rawMessage["FoundedCIDs"] == null
-              ? null
-              : json.encode(rawMessage["FoundedCIDs"]),
-          foundedContentLocationUrlsInJson:
-              rawMessage["FoundedContentLocationUrls"] == null
-                  ? null
-                  : json.encode(rawMessage["FoundedContentLocationUrls"]),
-          attachmentsInJson: rawMessage["Attachments"] == null
-              ? null
-              : json.encode(rawMessage["Attachments"]),
-          customInJson: rawMessage["Custom"] == null
-              ? null
-              : json.encode(rawMessage["Custom"]),
-        ));
-      } catch (err, s) {}
+        hasAttachments: rawMessage["HasAttachments"],
+        hasVcardAttachment: rawMessage["HasVcardAttachment"],
+        hasIcalAttachment: rawMessage["HasIcalAttachment"],
+        importance: rawMessage["Importance"],
+        draftInfoInJson: rawMessage["DraftInfo"] == null
+            ? null
+            : json.encode(rawMessage["DraftInfo"]),
+        sensitivity: rawMessage["Sensitivity"],
+        downloadAsEmlUrl: rawMessage["DownloadAsEmlUrl"],
+        hash: rawMessage["Hash"],
+        headers: rawMessage["Headers"],
+        inReplyTo: rawMessage["InReplyTo"],
+        references: rawMessage["References"],
+        readingConfirmationAddressee:
+            rawMessage["ReadingConfirmationAddressee"],
+        htmlRaw: rawMessage["HtmlRaw"],
+        html: rawMessage["Html"],
+        plain: rawMessage["Plain"],
+        plainRaw: rawMessage["PlainRaw"],
+        rtl: rawMessage["Rtl"],
+        extendInJson: rawMessage["Extend"] == null
+            ? null
+            : json.encode(rawMessage["Extend"]),
+        safety: rawMessage["Safety"],
+        hasExternals: rawMessage["HasExternals"],
+        foundedCIDsInJson: rawMessage["FoundedCIDs"] == null
+            ? null
+            : json.encode(rawMessage["FoundedCIDs"]),
+        foundedContentLocationUrlsInJson:
+            rawMessage["FoundedContentLocationUrls"] == null
+                ? null
+                : json.encode(rawMessage["FoundedContentLocationUrls"]),
+        attachmentsInJson: rawMessage["Attachments"] == null
+            ? null
+            : json.encode(rawMessage["Attachments"]),
+        customInJson: rawMessage["Custom"] == null
+            ? null
+            : json.encode(rawMessage["Custom"]),
+      ));
     });
 
-    return messagesChunk;
-  }
+    assert(result.length == messagesChunk.length);
 
-  // ignore: missing_return
-  static Map _findMessageInfoInThread(List info, int uidToFind, int prevUid) {
-    Map item;
-    try {
-      final messageInfo = info.firstWhere((m) => m["uid"] == prevUid);
-      item = messageInfo["thread"].firstWhere((m) => m["uid"] == uidToFind);
-      return item;
-    } catch (err) {
-      if (prevUid <= 0) {
-        final nextUid = prevUid > 0 ? prevUid - 1 : info[0]["uid"];
-        return _findMessageInfoInThread(info, uidToFind, nextUid);
-      } else {
-        throw CustomException("Couldn't find message: $uidToFind");
-      }
-    }
+    return messagesChunk;
   }
 }
 

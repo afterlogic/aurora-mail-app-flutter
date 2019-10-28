@@ -24,7 +24,8 @@ class _MailAndroidState extends State<MailAndroid> {
   void initState() {
     super.initState();
     _foldersState.getFolders();
-    _foldersState.onError = (err) => showSnack(
+    _foldersState.onError = (err) =>
+        showSnack(
           context: context,
           scaffoldState: _mailState.scaffoldKey.currentState,
           msg: err.toString(),
@@ -46,9 +47,12 @@ class _MailAndroidState extends State<MailAndroid> {
             return Center(child: CircularProgressIndicator());
           }
           return RefreshIndicator(
-            onRefresh: () => _foldersState.updateFoldersHash([_foldersState.selectedFolder]),
+            onRefresh: () =>
+                _foldersState.setMessagesInfoToFolder(
+                    _foldersState.selectedFolder),
             child: StreamBuilder(
-                stream: _mailState.onWatchMessages(_foldersState.selectedFolder),
+                stream: _mailState.onWatchMessages(
+                    _foldersState.selectedFolder),
                 builder: (_, AsyncSnapshot<List<Message>> snapshot) {
                   if (snapshot.connectionState == ConnectionState.active) {
                     if (snapshot.hasData && snapshot.data.isNotEmpty) {
@@ -56,8 +60,18 @@ class _MailAndroidState extends State<MailAndroid> {
                         padding: EdgeInsets.only(
                             left: 16.0, right: 16.0, top: 8.0, bottom: 76.0),
                         itemCount: snapshot.data.length,
-                        itemBuilder: (_, i) => MessageItem(snapshot.data[i]),
-                        separatorBuilder: (_, i) => Divider(height: 0.0),
+                        itemBuilder: (_, i) {
+                          if (snapshot.data[i].parentUid == null) {
+                            return MessageItem(snapshot.data[i]);
+                          } else
+                            return SizedBox();
+                        },
+                        separatorBuilder: (_, i) {
+                          if (snapshot.data[i].parentUid == null) {
+                            return Divider(height: 0.0);
+                          } else
+                            return SizedBox();
+                        },
                       );
                     } else if (snapshot.hasError) {
                       return Center(child: Text(snapshot.error.toString()));
