@@ -27,7 +27,7 @@ class _MessageItemState extends State<MessageItem> {
 
     return ListTile(
       key: Key(message.uid.toString()),
-      contentPadding: EdgeInsets.zero,
+//      contentPadding: EdgeInsets.zero,
       onTap: () {},
       title: Text(message.fromToDisplay, style: textStyle),
       subtitle: Padding(

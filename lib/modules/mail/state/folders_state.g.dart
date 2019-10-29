@@ -9,21 +9,21 @@ part of 'folders_state.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic
 
 mixin _$FoldersState on _FoldersState, Store {
-  final _$isFoldersLoadingAtom = Atom(name: '_FoldersState.isFoldersLoading');
+  final _$foldersLoadingAtom = Atom(name: '_FoldersState.foldersLoading');
 
   @override
-  LoadingType get isFoldersLoading {
-    _$isFoldersLoadingAtom.context.enforceReadPolicy(_$isFoldersLoadingAtom);
-    _$isFoldersLoadingAtom.reportObserved();
-    return super.isFoldersLoading;
+  LoadingType get foldersLoading {
+    _$foldersLoadingAtom.context.enforceReadPolicy(_$foldersLoadingAtom);
+    _$foldersLoadingAtom.reportObserved();
+    return super.foldersLoading;
   }
 
   @override
-  set isFoldersLoading(LoadingType value) {
-    _$isFoldersLoadingAtom.context.conditionallyRunInAction(() {
-      super.isFoldersLoading = value;
-      _$isFoldersLoadingAtom.reportChanged();
-    }, _$isFoldersLoadingAtom, name: '${_$isFoldersLoadingAtom.name}_set');
+  set foldersLoading(LoadingType value) {
+    _$foldersLoadingAtom.context.conditionallyRunInAction(() {
+      super.foldersLoading = value;
+      _$foldersLoadingAtom.reportChanged();
+    }, _$foldersLoadingAtom, name: '${_$foldersLoadingAtom.name}_set');
   }
 
   final _$selectedFolderAtom = Atom(name: '_FoldersState.selectedFolder');
@@ -43,20 +43,20 @@ mixin _$FoldersState on _FoldersState, Store {
     }, _$selectedFolderAtom, name: '${_$selectedFolderAtom.name}_set');
   }
 
-  final _$isMessagesLoadingAtom = Atom(name: '_FoldersState.isMessagesLoading');
+  final _$messagesLoadingAtom = Atom(name: '_FoldersState.messagesLoading');
 
   @override
-  LoadingType get isMessagesLoading {
-    _$isMessagesLoadingAtom.context.enforceReadPolicy(_$isMessagesLoadingAtom);
-    _$isMessagesLoadingAtom.reportObserved();
-    return super.isMessagesLoading;
+  LoadingType get messagesLoading {
+    _$messagesLoadingAtom.context.enforceReadPolicy(_$messagesLoadingAtom);
+    _$messagesLoadingAtom.reportObserved();
+    return super.messagesLoading;
   }
 
   @override
-  set isMessagesLoading(LoadingType value) {
-    _$isMessagesLoadingAtom.context.conditionallyRunInAction(() {
-      super.isMessagesLoading = value;
-      _$isMessagesLoadingAtom.reportChanged();
-    }, _$isMessagesLoadingAtom, name: '${_$isMessagesLoadingAtom.name}_set');
+  set messagesLoading(LoadingType value) {
+    _$messagesLoadingAtom.context.conditionallyRunInAction(() {
+      super.messagesLoading = value;
+      _$messagesLoadingAtom.reportChanged();
+    }, _$messagesLoadingAtom, name: '${_$messagesLoadingAtom.name}_set');
   }
 }
