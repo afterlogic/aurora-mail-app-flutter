@@ -63,7 +63,8 @@ class _MailAndroidState extends State<MailAndroid> {
             return Center(child: CircularProgressIndicator());
           }
           return RefreshIndicator(
-            onRefresh: () => _foldersState.updateFoldersHash(forceCurrentFolderUpdate: true),
+            onRefresh: () =>
+                _foldersState.updateFoldersHash(forceCurrentFolderUpdate: true),
             child: Stack(children: [
               Observer(
                   builder: (_) => Positioned(
@@ -72,10 +73,11 @@ class _MailAndroidState extends State<MailAndroid> {
                       right: 0.0,
                       child: AnimatedOpacity(
                         duration: Duration(milliseconds: 150),
-                        opacity:
-                            _foldersState.messagesLoading == LoadingType.visible
-                                ? 1.0
-                                : 0.0,
+                        opacity: _foldersState.messagesLoading ==
+                                    LoadingType.visible &&
+                                _mailState.messagesCount > 0
+                            ? 1.0
+                            : 0.0,
                         child: LinearProgressIndicator(
                           backgroundColor:
                               Theme.of(context).disabledColor.withOpacity(0.05),
@@ -93,7 +95,15 @@ class _MailAndroidState extends State<MailAndroid> {
                             itemCount: snapshot.data.length,
                             itemBuilder: (_, i) {
                               if (snapshot.data[i].parentUid == null) {
-                                return MessageItem(snapshot.data[i]);
+                                return Column(
+                                  children: <Widget>[
+                                    MessageItem(snapshot.data[i]),
+//                                    if (i == snapshot.data.length - 1 &&
+//                                        _foldersState.messagesLoading ==
+//                                            LoadingType.visible)
+//                                      CircularProgressIndicator()
+                                  ],
+                                );
                               } else
                                 return SizedBox();
                             },

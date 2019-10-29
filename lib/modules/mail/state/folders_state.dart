@@ -118,8 +118,13 @@ abstract class _FoldersState with Store {
         final updatedFolder = folders[fName];
         final folder = currentFolders.firstWhere((f) => f.fullNameRaw == fName);
 
+        // only current folder can be force updated
+        // the value cannot be set from true to false
+        // because non-system folders update only when they are entered
+        // thus might not have been synced yet
         final shouldUpdate = forceCurrentFolderUpdate == true &&
-            folder.fullName == selectedFolder.fullName;
+                folder.fullName == selectedFolder.fullName ||
+            folder.needsInfoUpdate;
 
         final count = updatedFolder[0];
         final unread = updatedFolder[1];
