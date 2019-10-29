@@ -63,9 +63,7 @@ abstract class _FoldersState with Store {
       List<LocalFolder> localFolders =
           await _foldersDao.getAllFolders(accountId);
 
-      if (localFolders != null && localFolders.isNotEmpty
-          // TODO VO: find out about refreshing
-          /*&& loading != LoadingType.refresh*/) {
+      if (localFolders != null && localFolders.isNotEmpty) {
         currentFolders = Folder.getFolderObjectsFromDb(localFolders);
         updateFoldersHash(forceCurrentFolderUpdate: true);
       } else {
@@ -160,8 +158,8 @@ abstract class _FoldersState with Store {
 //      foldersLoading = LoadingType.none;
       await _checkWhichFolderNeedsUpdateNow();
     } catch (err, s) {
-      print("VO: updateFoldersHash: ${err}");
-      print("VO: updateFoldersHash: ${s}");
+      print("updateFoldersHash err: ${err}");
+      print("updateFoldersHash stack: ${s}");
 //      foldersLoading = LoadingType.none;
       onError(err.toString());
     }
@@ -234,7 +232,7 @@ abstract class _FoldersState with Store {
     }
     // to avoid making multiple instances this function in parallel
     if (messagesLoading != LoadingType.none) {
-      print("VO: queue is blocked");
+      print("queue is blocked");
       await Future.delayed(Duration(milliseconds: 500));
       _checkWhichFolderNeedsUpdateNow();
       return;
@@ -282,8 +280,8 @@ abstract class _FoldersState with Store {
         _syncMessagesChunk(folderToGetMessageBodies);
       }
     } catch (err, s) {
-      print("VO: _syncMessagesChunk: ${err}");
-      print("VO: _syncMessagesChunk: ${s}");
+      print("_syncMessagesChunk err: ${err}");
+      print("_syncMessagesChunk stack: ${s}");
     }
   }
 

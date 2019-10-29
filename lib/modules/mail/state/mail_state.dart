@@ -19,6 +19,7 @@ abstract class _MailState with Store {
   Stream<List<Message>> onWatchMessages(Folder folder) async* {
     await for (final mail in _mailDao.watchMessages(folder.fullNameRaw)) {
       messagesCount = mail.length;
+      print("VO: messagesCount: ${messagesCount}");
       yield mail;
     }
   }

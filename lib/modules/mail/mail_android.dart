@@ -118,22 +118,24 @@ class _MailAndroidState extends State<MailAndroid> {
                                 return SizedBox();
                             },
                           );
-                        } else if (snapshot.hasData && snapshot.data.isEmpty) {
-                          return Center(child: CircularProgressIndicator());
-                        } else if (snapshot.hasError) {
-                          return Center(child: Text(snapshot.error.toString()));
-                        } else {
-                          // TODO translate
+                        } else if (snapshot.hasData &&
+                            snapshot.data.isEmpty &&
+                            _foldersState.messagesLoading == LoadingType.none) {
                           return ListView(
                             physics: AlwaysScrollableScrollPhysics(),
                             children: [
                               Padding(
                                 padding: const EdgeInsets.symmetric(
                                     vertical: 68.0, horizontal: 16.0),
+                                // TODO translate
                                 child: Center(child: Text("No messages")),
                               ),
                             ],
                           );
+                        } else if (snapshot.hasError) {
+                          return Center(child: Text(snapshot.error.toString()));
+                        } else {
+                          return Center(child: CircularProgressIndicator());
                         }
                       } else {
                         return Center(child: CircularProgressIndicator());
