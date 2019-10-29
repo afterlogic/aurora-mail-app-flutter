@@ -165,8 +165,6 @@ abstract class _FoldersState with Store {
   // step 3
   Future<void> _checkWhichFolderNeedsUpdateNow() async {
     // selectedFolder is of the highest priority
-    print(
-        "VO: selectedFolder.needsInfoUpdate: ${selectedFolder.needsInfoUpdate}");
     if (selectedFolder.needsInfoUpdate) {
       // ================= STEP 4 =================
       await _setMessagesInfoToFolder(selectedFolder);
@@ -238,7 +236,6 @@ abstract class _FoldersState with Store {
     }
 
     messagesLoading = LoadingType.visible;
-    print("syncing messages for: ${folderToGetMessageBodies.fullNameRaw}");
 
     try {
       // get the actual folder state every time
@@ -261,6 +258,7 @@ abstract class _FoldersState with Store {
         messagesLoading = LoadingType.none;
         _checkWhichFolderNeedsUpdateNow();
       } else {
+        print("syncing messages for: ${folderToGetMessageBodies.fullNameRaw}");
         final rawBodies = await _mailApi.getMessageBodies(
             folderName: folderToGetMessageBodies.fullNameRaw,
             accountId: _authState.accountId,
@@ -342,7 +340,7 @@ abstract class _FoldersState with Store {
     // no need to calculate difference if all the messages are unchanged
     if (unchangedMessages.length == oldInfo.length &&
         unchangedMessages.length == newInfo.length) {
-      print("VO: No changes");
+      print("Diff calcultaion finished: no changes");
       return oldInfo;
     }
 
@@ -357,10 +355,13 @@ abstract class _FoldersState with Store {
             orElse: () => null) !=
         null);
 
-    print("VO: unchangedMessages.length: ${unchangedMessages.length}");
-    print("VO: changedParent.length: ${changedParent.length}");
-    print("VO: removedMessages.length: ${removedMessages.length}");
-    print("VO: addedMessages.length: ${addedMessages.length}");
+    print("""
+    Diff calcultaion finished:
+      unchanged: ${unchangedMessages.length}
+      changedParent: ${changedParent.length}
+      removed: ${removedMessages.length}
+      added: ${addedMessages.length}
+    """);
 
     final removedUids = removedMessages.map((m) => m.uid).toList();
     final changedParentUid = changedParent.map((m) => m.uid).toList();
