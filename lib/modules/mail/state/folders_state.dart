@@ -98,6 +98,7 @@ abstract class _FoldersState with Store {
   // used in drawer
   void selectFolder(Folder folder) {
     selectedFolder = folder;
+    // TODO VO: make sure syncing isn't started during loading
     _checkWhichFolderNeedsUpdateNow();
   }
 

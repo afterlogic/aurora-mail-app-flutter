@@ -17,7 +17,11 @@ enum MessageFlags {
 class Mail extends Table {
   IntColumn get localId => integer().autoIncrement()();
 
-  IntColumn get uid => integer().customConstraint("UNIQUE")();
+  IntColumn get uid => integer()();
+
+  // in order to prevent inserting duplicate messages in the same folder
+  // since uids are unique only inside a particular folder
+  TextColumn get uniqueUidInFolder => text().customConstraint("UNIQUE")();
 
   IntColumn get parentUid => integer().nullable()();
 
@@ -169,6 +173,7 @@ class Mail extends Table {
       messagesChunk.add(new Message(
         localId: null,
         uid: rawMessage["Uid"],
+        uniqueUidInFolder: rawMessage["Uid"].toString() + rawMessage["Folder"],
         parentUid: messageInfo.parentUid,
         flagsInJson:
             messageInfo.flags == null ? null : json.encode(messageInfo.flags),

@@ -54,8 +54,6 @@ class Folder {
 
   final bool alwaysRefresh;
 
-  final List<Folder> subFolders;
-
   List<MessageInfo> messagesInfo;
 
   int count;
@@ -82,7 +80,6 @@ class Folder {
     @required this.extended,
     @required this.alwaysRefresh,
     @required this.messagesInfo,
-    @required this.subFolders,
     @required this.count,
     @required this.unread,
   });
@@ -117,9 +114,7 @@ class Folder {
   static List<Folder> getFolderObjectsFromDb(List<LocalFolder> localFolders,
       [String parentGuid]) {
     try {
-      return localFolders
-          .where((lFolder) => lFolder.parentGuid == parentGuid)
-          .map((localFolder) {
+      return localFolders.map((localFolder) {
         return Folder(
           localId: localFolder.localId,
           guid: localFolder.guid,
@@ -141,7 +136,6 @@ class Folder {
           alwaysRefresh: localFolder.alwaysRefresh,
           messagesInfo:
               MessageInfo.fromJsonString(localFolder.messagesInfoInJson),
-          subFolders: getFolderObjectsFromDb(localFolders, localFolder.guid),
           count: localFolder.count,
           unread: localFolder.unread,
         );

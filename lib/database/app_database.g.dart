@@ -10,6 +10,7 @@ part of 'app_database.dart';
 class Message extends DataClass implements Insertable<Message> {
   final int localId;
   final int uid;
+  final String uniqueUidInFolder;
   final int parentUid;
   final String messageId;
   final String folder;
@@ -56,6 +57,7 @@ class Message extends DataClass implements Insertable<Message> {
   Message(
       {@required this.localId,
       @required this.uid,
+      @required this.uniqueUidInFolder,
       this.parentUid,
       @required this.messageId,
       @required this.folder,
@@ -109,6 +111,8 @@ class Message extends DataClass implements Insertable<Message> {
       localId:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}local_id']),
       uid: intType.mapFromDatabaseResponse(data['${effectivePrefix}uid']),
+      uniqueUidInFolder: stringType.mapFromDatabaseResponse(
+          data['${effectivePrefix}unique_uid_in_folder']),
       parentUid:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}parent_uid']),
       messageId: stringType
@@ -198,6 +202,7 @@ class Message extends DataClass implements Insertable<Message> {
     return Message(
       localId: serializer.fromJson<int>(json['localId']),
       uid: serializer.fromJson<int>(json['uid']),
+      uniqueUidInFolder: serializer.fromJson<String>(json['uniqueUidInFolder']),
       parentUid: serializer.fromJson<int>(json['parentUid']),
       messageId: serializer.fromJson<String>(json['messageId']),
       folder: serializer.fromJson<String>(json['folder']),
@@ -253,6 +258,7 @@ class Message extends DataClass implements Insertable<Message> {
     return {
       'localId': serializer.toJson<int>(localId),
       'uid': serializer.toJson<int>(uid),
+      'uniqueUidInFolder': serializer.toJson<String>(uniqueUidInFolder),
       'parentUid': serializer.toJson<int>(parentUid),
       'messageId': serializer.toJson<String>(messageId),
       'folder': serializer.toJson<String>(folder),
@@ -309,6 +315,9 @@ class Message extends DataClass implements Insertable<Message> {
           ? const Value.absent()
           : Value(localId),
       uid: uid == null && nullToAbsent ? const Value.absent() : Value(uid),
+      uniqueUidInFolder: uniqueUidInFolder == null && nullToAbsent
+          ? const Value.absent()
+          : Value(uniqueUidInFolder),
       parentUid: parentUid == null && nullToAbsent
           ? const Value.absent()
           : Value(parentUid),
@@ -436,6 +445,7 @@ class Message extends DataClass implements Insertable<Message> {
   Message copyWith(
           {int localId,
           int uid,
+          String uniqueUidInFolder,
           int parentUid,
           String messageId,
           String folder,
@@ -482,6 +492,7 @@ class Message extends DataClass implements Insertable<Message> {
       Message(
         localId: localId ?? this.localId,
         uid: uid ?? this.uid,
+        uniqueUidInFolder: uniqueUidInFolder ?? this.uniqueUidInFolder,
         parentUid: parentUid ?? this.parentUid,
         messageId: messageId ?? this.messageId,
         folder: folder ?? this.folder,
@@ -535,6 +546,7 @@ class Message extends DataClass implements Insertable<Message> {
     return (StringBuffer('Message(')
           ..write('localId: $localId, ')
           ..write('uid: $uid, ')
+          ..write('uniqueUidInFolder: $uniqueUidInFolder, ')
           ..write('parentUid: $parentUid, ')
           ..write('messageId: $messageId, ')
           ..write('folder: $folder, ')
@@ -591,52 +603,53 @@ class Message extends DataClass implements Insertable<Message> {
       $mrjc(
           uid.hashCode,
           $mrjc(
-              parentUid.hashCode,
+              uniqueUidInFolder.hashCode,
               $mrjc(
-                  messageId.hashCode,
+                  parentUid.hashCode,
                   $mrjc(
-                      folder.hashCode,
+                      messageId.hashCode,
                       $mrjc(
-                          flagsInJson.hashCode,
+                          folder.hashCode,
                           $mrjc(
-                              hasThread.hashCode,
+                              flagsInJson.hashCode,
                               $mrjc(
-                                  subject.hashCode,
+                                  hasThread.hashCode,
                                   $mrjc(
-                                      size.hashCode,
+                                      subject.hashCode,
                                       $mrjc(
-                                          textSize.hashCode,
+                                          size.hashCode,
                                           $mrjc(
-                                              truncated.hashCode,
+                                              textSize.hashCode,
                                               $mrjc(
-                                                  internalTimeStampInUTC
-                                                      .hashCode,
+                                                  truncated.hashCode,
                                                   $mrjc(
-                                                      receivedOrDateTimeStampInUTC
+                                                      internalTimeStampInUTC
                                                           .hashCode,
                                                       $mrjc(
-                                                          timeStampInUTC
+                                                          receivedOrDateTimeStampInUTC
                                                               .hashCode,
                                                           $mrjc(
-                                                              toInJson.hashCode,
+                                                              timeStampInUTC
+                                                                  .hashCode,
                                                               $mrjc(
-                                                                  fromInJson
+                                                                  toInJson
                                                                       .hashCode,
                                                                   $mrjc(
-                                                                      fromToDisplay
+                                                                      fromInJson
                                                                           .hashCode,
                                                                       $mrjc(
-                                                                          ccInJson
+                                                                          fromToDisplay
                                                                               .hashCode,
                                                                           $mrjc(
-                                                                              bccInJson.hashCode,
-                                                                              $mrjc(senderInJson.hashCode, $mrjc(replyToInJson.hashCode, $mrjc(hasAttachments.hashCode, $mrjc(hasVcardAttachment.hashCode, $mrjc(hasIcalAttachment.hashCode, $mrjc(importance.hashCode, $mrjc(draftInfoInJson.hashCode, $mrjc(sensitivity.hashCode, $mrjc(downloadAsEmlUrl.hashCode, $mrjc(hash.hashCode, $mrjc(headers.hashCode, $mrjc(inReplyTo.hashCode, $mrjc(references.hashCode, $mrjc(readingConfirmationAddressee.hashCode, $mrjc(htmlRaw.hashCode, $mrjc(html.hashCode, $mrjc(plain.hashCode, $mrjc(plainRaw.hashCode, $mrjc(rtl.hashCode, $mrjc(extendInJson.hashCode, $mrjc(safety.hashCode, $mrjc(hasExternals.hashCode, $mrjc(foundedCIDsInJson.hashCode, $mrjc(foundedContentLocationUrlsInJson.hashCode, $mrjc(attachmentsInJson.hashCode, customInJson.hashCode)))))))))))))))))))))))))))))))))))))))))))));
+                                                                              ccInJson.hashCode,
+                                                                              $mrjc(bccInJson.hashCode, $mrjc(senderInJson.hashCode, $mrjc(replyToInJson.hashCode, $mrjc(hasAttachments.hashCode, $mrjc(hasVcardAttachment.hashCode, $mrjc(hasIcalAttachment.hashCode, $mrjc(importance.hashCode, $mrjc(draftInfoInJson.hashCode, $mrjc(sensitivity.hashCode, $mrjc(downloadAsEmlUrl.hashCode, $mrjc(hash.hashCode, $mrjc(headers.hashCode, $mrjc(inReplyTo.hashCode, $mrjc(references.hashCode, $mrjc(readingConfirmationAddressee.hashCode, $mrjc(htmlRaw.hashCode, $mrjc(html.hashCode, $mrjc(plain.hashCode, $mrjc(plainRaw.hashCode, $mrjc(rtl.hashCode, $mrjc(extendInJson.hashCode, $mrjc(safety.hashCode, $mrjc(hasExternals.hashCode, $mrjc(foundedCIDsInJson.hashCode, $mrjc(foundedContentLocationUrlsInJson.hashCode, $mrjc(attachmentsInJson.hashCode, customInJson.hashCode))))))))))))))))))))))))))))))))))))))))))))));
   @override
   bool operator ==(other) =>
       identical(this, other) ||
       (other is Message &&
           other.localId == localId &&
           other.uid == uid &&
+          other.uniqueUidInFolder == uniqueUidInFolder &&
           other.parentUid == parentUid &&
           other.messageId == messageId &&
           other.folder == folder &&
@@ -686,6 +699,7 @@ class Message extends DataClass implements Insertable<Message> {
 class MailCompanion extends UpdateCompanion<Message> {
   final Value<int> localId;
   final Value<int> uid;
+  final Value<String> uniqueUidInFolder;
   final Value<int> parentUid;
   final Value<String> messageId;
   final Value<String> folder;
@@ -732,6 +746,7 @@ class MailCompanion extends UpdateCompanion<Message> {
   const MailCompanion({
     this.localId = const Value.absent(),
     this.uid = const Value.absent(),
+    this.uniqueUidInFolder = const Value.absent(),
     this.parentUid = const Value.absent(),
     this.messageId = const Value.absent(),
     this.folder = const Value.absent(),
@@ -779,6 +794,7 @@ class MailCompanion extends UpdateCompanion<Message> {
   MailCompanion copyWith(
       {Value<int> localId,
       Value<int> uid,
+      Value<String> uniqueUidInFolder,
       Value<int> parentUid,
       Value<String> messageId,
       Value<String> folder,
@@ -825,6 +841,7 @@ class MailCompanion extends UpdateCompanion<Message> {
     return MailCompanion(
       localId: localId ?? this.localId,
       uid: uid ?? this.uid,
+      uniqueUidInFolder: uniqueUidInFolder ?? this.uniqueUidInFolder,
       parentUid: parentUid ?? this.parentUid,
       messageId: messageId ?? this.messageId,
       folder: folder ?? this.folder,
@@ -894,7 +911,21 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
   @override
   GeneratedIntColumn get uid => _uid ??= _constructUid();
   GeneratedIntColumn _constructUid() {
-    return GeneratedIntColumn('uid', $tableName, false,
+    return GeneratedIntColumn(
+      'uid',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _uniqueUidInFolderMeta =
+      const VerificationMeta('uniqueUidInFolder');
+  GeneratedTextColumn _uniqueUidInFolder;
+  @override
+  GeneratedTextColumn get uniqueUidInFolder =>
+      _uniqueUidInFolder ??= _constructUniqueUidInFolder();
+  GeneratedTextColumn _constructUniqueUidInFolder() {
+    return GeneratedTextColumn('unique_uid_in_folder', $tableName, false,
         $customConstraints: 'UNIQUE');
   }
 
@@ -1461,6 +1492,7 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
   List<GeneratedColumn> get $columns => [
         localId,
         uid,
+        uniqueUidInFolder,
         parentUid,
         messageId,
         folder,
@@ -1525,6 +1557,14 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
       context.handle(_uidMeta, uid.isAcceptableValue(d.uid.value, _uidMeta));
     } else if (uid.isRequired && isInserting) {
       context.missing(_uidMeta);
+    }
+    if (d.uniqueUidInFolder.present) {
+      context.handle(
+          _uniqueUidInFolderMeta,
+          uniqueUidInFolder.isAcceptableValue(
+              d.uniqueUidInFolder.value, _uniqueUidInFolderMeta));
+    } else if (uniqueUidInFolder.isRequired && isInserting) {
+      context.missing(_uniqueUidInFolderMeta);
     }
     if (d.parentUid.present) {
       context.handle(_parentUidMeta,
@@ -1841,6 +1881,10 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     }
     if (d.uid.present) {
       map['uid'] = Variable<int, IntType>(d.uid.value);
+    }
+    if (d.uniqueUidInFolder.present) {
+      map['unique_uid_in_folder'] =
+          Variable<String, StringType>(d.uniqueUidInFolder.value);
     }
     if (d.parentUid.present) {
       map['parent_uid'] = Variable<int, IntType>(d.parentUid.value);

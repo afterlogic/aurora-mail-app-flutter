@@ -13,23 +13,16 @@ class MainDrawer extends StatefulWidget {
 class _MainDrawerState extends State<MainDrawer> {
   final _state = AppStore.foldersState;
 
-  List<MailFolder> _buildFolders() {
-    List<MailFolder> widgets = new List<MailFolder>();
-
-    void getWidgets(List<Folder> mailFolders) {
-      mailFolders.forEach((mailFolder) {
-        widgets.add(MailFolder(
+  List<MailFolder> _buildFolders(List<Folder> mailFolders, [String parentGuid]) {
+      return mailFolders
+          .where((f) => f.parentGuid == parentGuid)
+          .map((mailFolder) {
+        return MailFolder(
           mailFolder: mailFolder,
           key: Key(mailFolder.localId.toString()),
-        ));
-        if (mailFolder.subFolders != null && mailFolder.subFolders.isNotEmpty) {
-          getWidgets(mailFolder.subFolders);
-        }
-      });
-    }
-
-    getWidgets(_state.currentFolders);
-    return widgets;
+          children: _buildFolders(mailFolders, mailFolder.guid),
+        );
+      }).toList();
   }
 
   @override
@@ -62,7 +55,7 @@ class _MainDrawerState extends State<MainDrawer> {
                   if (_state.foldersLoading == LoadingType.hidden) {
                     return Center(child: CircularProgressIndicator());
                   } else {
-                    final items = _buildFolders();
+                    final items = _buildFolders(_state.currentFolders);
                     return ListView.builder(
                       itemCount: items.length,
                       itemBuilder: (_, i) => items[i],

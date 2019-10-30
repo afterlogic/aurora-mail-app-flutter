@@ -34,7 +34,6 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
 
   Future<void> addMessages(List<Message> newMessages) {
     try {
-      print("VO: newMessages[0].folder: ${newMessages[0].folder}");
       return into(mail).insertAll(newMessages);
     } catch(err) {
       print("insertMessages: ${err}");

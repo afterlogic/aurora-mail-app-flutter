@@ -5,8 +5,10 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 
 class MailFolder extends StatelessWidget {
   final Folder mailFolder;
+  final List<MailFolder> children;
 
-  const MailFolder({Key key, @required this.mailFolder}) : super(key: key);
+  const MailFolder({Key key, @required this.mailFolder, this.children})
+      : super(key: key);
 
   IconData _getFolderIcon(FolderTypes type) {
     switch (type) {
@@ -67,19 +69,24 @@ class MailFolder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final level = mailFolder.fullNameRaw.split(mailFolder.delimiter).length;
-
     if (mailFolder.isSubscribed == true) {
-      return Padding(
-        padding: EdgeInsets.only(left: (40 * (level - 1)).toDouble()),
-        child: ListTile(
-          selected: mailFolder.localId ==
-              AppStore.foldersState.selectedFolder.localId,
-          leading: Icon(_getFolderIcon(mailFolder.folderType)),
-          title: Text(mailFolder.name),
-          trailing: _buildMessageCounter(context),
-          onTap: () => _selectFolder(context),
-        ),
+      return Column(
+        children: <Widget>[
+          ListTile(
+            selected: mailFolder.localId ==
+                AppStore.foldersState.selectedFolder.localId,
+            leading: Icon(_getFolderIcon(mailFolder.folderType)),
+            title: Text(mailFolder.name),
+            trailing: _buildMessageCounter(context),
+            onTap: () => _selectFolder(context),
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 40.0),
+            child: Column(
+              children: children,
+            ),
+          )
+        ],
       );
     } else {
       return SizedBox();
