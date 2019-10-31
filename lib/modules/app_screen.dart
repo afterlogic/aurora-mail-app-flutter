@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:aurora_mail/modules/app_store.dart';
 import 'package:aurora_mail/modules/auth/state/auth_state.dart';
-import 'package:aurora_mail/modules/mail/mail_route.dart';
+import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
 import 'package:aurora_mail/theming/app_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -53,7 +53,7 @@ class _AppState extends State<App> {
                 onGenerateRoute: AppNavigation.onGenerateRoute,
                 theme: AppTheme.light,
                 initialRoute: _canEnterMainApp(snapshot.data)
-                    ? MailRoute.name
+                    ? MessagesListRoute.name
                     : AuthRoute.name,
             );
           } else if (snapshot.hasError) {

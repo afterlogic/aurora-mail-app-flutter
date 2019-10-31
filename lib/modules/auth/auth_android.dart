@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:aurora_mail/modules/app_store.dart';
 import 'package:aurora_mail/modules/auth/state/auth_state.dart';
-import 'package:aurora_mail/modules/mail/mail_route.dart';
+import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
 import 'package:aurora_mail/shared_ui/app_button.dart';
 import 'package:aurora_mail/utils/input_validation.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
@@ -66,7 +66,7 @@ class _AuthAndroidState extends State<AuthAndroid> {
       final showHost = await _authState.onLogin(
         isFormValid: AuthAndroid._authFormKey.currentState.validate(),
         onSuccess: () async {
-          Navigator.pushReplacementNamed(context, MailRoute.name);
+          Navigator.pushReplacementNamed(context, MessagesListRoute.name);
         },
         onError: (String err) => showSnack(
           context: context,

@@ -1,6 +1,5 @@
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/mail/mail_table.dart';
-import 'package:aurora_mail/utils/date_formatting.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
@@ -27,7 +26,6 @@ class _MessageItemState extends State<MessageItem> {
 
     return ListTile(
       key: Key(message.uid.toString()),
-      onTap: () {},
       title: Text(message.fromToDisplay, style: textStyle),
       subtitle: Padding(
         padding: const EdgeInsets.only(top: 6.0),
@@ -39,11 +37,15 @@ class _MessageItemState extends State<MessageItem> {
                   color: Theme.of(context).disabledColor, size: 16.0),
             if (message.hasThread == true) SizedBox(width: 6.0),
             Flexible(
-              child: Text(
-                message.subject,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: textStyle,
+              child: Opacity(
+                opacity: message.subject.isEmpty ? 0.44 : 1.0,
+                child: Text(
+                  // TODO translate
+                  message.subject.isNotEmpty ? message.subject : "No subject",
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: textStyle,
+                ),
               ),
             ),
           ],
@@ -62,7 +64,7 @@ class _MessageItemState extends State<MessageItem> {
               Text(
 //                DateFormatting.formatDateFromSeconds(
 //                    timestamp: message.timeStampInUTC),
-              message.uid.toString(),
+                message.uid.toString(),
                 style: textStyle,
               ),
             ],

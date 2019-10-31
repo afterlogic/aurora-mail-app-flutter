@@ -2,22 +2,23 @@ import 'dart:async';
 
 import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
-import 'package:aurora_mail/modules/mail/components/mail_app_bar.dart';
-import 'package:aurora_mail/shared_ui/main_drawer.dart';
+import 'package:aurora_mail/modules/mail/screens/message_view/message_view_route.dart';
+import 'package:aurora_mail/modules/mail/screens/messages_list/components/main_drawer.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
-import '../bloc/bloc.dart';
-import '../components/message_item.dart';
+import '../../bloc/bloc.dart';
+import 'components/mail_app_bar.dart';
+import 'components/message_item.dart';
 
-class MailAndroid extends StatefulWidget {
+class MessagesListAndroid extends StatefulWidget {
   @override
-  _MailAndroidState createState() => _MailAndroidState();
+  _MessagesListAndroidState createState() => _MessagesListAndroidState();
 }
 
-class _MailAndroidState extends State<MailAndroid> {
+class _MessagesListAndroidState extends State<MessagesListAndroid> {
 //  final _scaffoldKey = new GlobalKey<ScaffoldState>();
   final _refreshIndicatorKey = new GlobalKey<RefreshIndicatorState>();
 
@@ -116,28 +117,29 @@ class _MailAndroidState extends State<MailAndroid> {
             _showError(ctx, snap.error.toString());
             return ListView();
           } else if (snap.hasData && snap.data.isNotEmpty) {
+            final messagesWithoutChildren =
+                snap.data.where((m) => m.parentUid == null).toList();
+
             return ListView.separated(
               padding: EdgeInsets.only(top: 6.0, bottom: 76.0),
-              itemCount: snap.data.length,
+              itemCount: messagesWithoutChildren.length,
               itemBuilder: (_, i) {
-                final item = snap.data[i];
-                if (item.parentUid == null) {
-                  return MessageItem(item);
-                } else {
-                  return SizedBox();
-                }
+                final item = messagesWithoutChildren[i];
+                return InkWell(
+                  child: MessageItem(item),
+                  onTap: () => Navigator.pushNamed(
+                    context,
+                    MessageViewRoute.name,
+                    arguments:
+                        MessageViewScreenArgs(messagesWithoutChildren, i),
+                  ),
+                );
               },
-              separatorBuilder: (_, i) {
-                final item = snap.data[i];
-                if (item.parentUid == null) {
-                  return Divider(
-                    height: 0.0,
-                    indent: 16.0,
-                    endIndent: 16.0,
-                  );
-                } else
-                  return SizedBox();
-              },
+              separatorBuilder: (_, i) => Divider(
+                height: 0.0,
+                indent: 16.0,
+                endIndent: 16.0,
+              ),
             );
           } else {
             // build list view to be able to swipe to refresh

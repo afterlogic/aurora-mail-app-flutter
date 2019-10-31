@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/models/message_info.dart';
 import 'package:aurora_mail/utils/constants.dart';
-import 'package:aurora_mail/utils/server_error.dart';
 import 'package:moor_flutter/moor_flutter.dart';
 
 enum MessageFlags {
@@ -117,6 +116,21 @@ class Mail extends Table {
 
   TextColumn get customInJson => text()();
 
+  static List getToForDisplay(String toInJson, String currentUserEmail) {
+    final toDecoded = json.decode(toInJson);
+    if (toDecoded == null) return [];
+    final List collection = toDecoded["@Collection"];
+    if (collection == null || collection.isEmpty) return [];
+    return collection.map((to) {
+      if (to["Email"] == currentUserEmail) {
+        // TODO translate
+        return "To me";
+      } else {
+        return to["DisplayName"].isNotEmpty ? to["DisplayName"] : to["Email"];
+      }
+    }).toList();
+  }
+
   static List<MessageFlags> getFlags(String flagsInJson) {
     final flags = json.decode(flagsInJson);
     final messageFlags = new List<MessageFlags>();
@@ -188,9 +202,9 @@ class Mail extends Table {
             rawMessage["ReceivedOrDateTimeStampInUTC"],
         timeStampInUTC: rawMessage["TimeStampInUTC"],
         toInJson:
-            rawMessage["From"] == null ? null : json.encode(rawMessage["From"]),
+            rawMessage["From"] == null ? null : json.encode(rawMessage["To"]),
         fromInJson:
-            rawMessage["To"] == null ? null : json.encode(rawMessage["To"]),
+            rawMessage["To"] == null ? null : json.encode(rawMessage["From"]),
         fromToDisplay: fromToDisplay,
         ccInJson:
             rawMessage["Cc"] == null ? null : json.encode(rawMessage["Cc"]),

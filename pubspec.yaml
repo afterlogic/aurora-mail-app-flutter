@@ -28,10 +28,12 @@ dependencies:
   cupertino_icons: ^0.1.2
   material_design_icons_flutter: ^3.2.4096
   animated_stream_list: ^1.0.0
+  flutter_html: ^0.11.0
 
   # misc
   uuid: ^2.0.2
   intl: ^0.15.8
+  filesize: ^1.0.4
 
 dev_dependencies:
   flutter_test:
