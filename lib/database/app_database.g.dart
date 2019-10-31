@@ -2055,6 +2055,7 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
   final String fullName;
   final String fullNameRaw;
   final String fullNameHash;
+  final String folderHash;
   final String delimiter;
   final bool needsInfoUpdate;
   final bool isSystemFolder;
@@ -2077,6 +2078,7 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
       @required this.fullName,
       @required this.fullNameRaw,
       @required this.fullNameHash,
+      @required this.folderHash,
       @required this.delimiter,
       @required this.needsInfoUpdate,
       @required this.isSystemFolder,
@@ -2113,6 +2115,8 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
           .mapFromDatabaseResponse(data['${effectivePrefix}full_name_raw']),
       fullNameHash: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}full_name_hash']),
+      folderHash: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}folder_hash']),
       delimiter: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}delimiter']),
       needsInfoUpdate: boolType
@@ -2148,6 +2152,7 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
       fullName: serializer.fromJson<String>(json['fullName']),
       fullNameRaw: serializer.fromJson<String>(json['fullNameRaw']),
       fullNameHash: serializer.fromJson<String>(json['fullNameHash']),
+      folderHash: serializer.fromJson<String>(json['folderHash']),
       delimiter: serializer.fromJson<String>(json['delimiter']),
       needsInfoUpdate: serializer.fromJson<bool>(json['needsInfoUpdate']),
       isSystemFolder: serializer.fromJson<bool>(json['isSystemFolder']),
@@ -2176,6 +2181,7 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
       'fullName': serializer.toJson<String>(fullName),
       'fullNameRaw': serializer.toJson<String>(fullNameRaw),
       'fullNameHash': serializer.toJson<String>(fullNameHash),
+      'folderHash': serializer.toJson<String>(folderHash),
       'delimiter': serializer.toJson<String>(delimiter),
       'needsInfoUpdate': serializer.toJson<bool>(needsInfoUpdate),
       'isSystemFolder': serializer.toJson<bool>(isSystemFolder),
@@ -2219,6 +2225,9 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
       fullNameHash: fullNameHash == null && nullToAbsent
           ? const Value.absent()
           : Value(fullNameHash),
+      folderHash: folderHash == null && nullToAbsent
+          ? const Value.absent()
+          : Value(folderHash),
       delimiter: delimiter == null && nullToAbsent
           ? const Value.absent()
           : Value(delimiter),
@@ -2262,6 +2271,7 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
           String fullName,
           String fullNameRaw,
           String fullNameHash,
+          String folderHash,
           String delimiter,
           bool needsInfoUpdate,
           bool isSystemFolder,
@@ -2284,6 +2294,7 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
         fullName: fullName ?? this.fullName,
         fullNameRaw: fullNameRaw ?? this.fullNameRaw,
         fullNameHash: fullNameHash ?? this.fullNameHash,
+        folderHash: folderHash ?? this.folderHash,
         delimiter: delimiter ?? this.delimiter,
         needsInfoUpdate: needsInfoUpdate ?? this.needsInfoUpdate,
         isSystemFolder: isSystemFolder ?? this.isSystemFolder,
@@ -2309,6 +2320,7 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
           ..write('fullName: $fullName, ')
           ..write('fullNameRaw: $fullNameRaw, ')
           ..write('fullNameHash: $fullNameHash, ')
+          ..write('folderHash: $folderHash, ')
           ..write('delimiter: $delimiter, ')
           ..write('needsInfoUpdate: $needsInfoUpdate, ')
           ..write('isSystemFolder: $isSystemFolder, ')
@@ -2348,25 +2360,24 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
                                               $mrjc(
                                                   fullNameHash.hashCode,
                                                   $mrjc(
-                                                      delimiter.hashCode,
+                                                      folderHash.hashCode,
                                                       $mrjc(
-                                                          needsInfoUpdate
-                                                              .hashCode,
+                                                          delimiter.hashCode,
                                                           $mrjc(
-                                                              isSystemFolder
+                                                              needsInfoUpdate
                                                                   .hashCode,
                                                               $mrjc(
-                                                                  isSubscribed
+                                                                  isSystemFolder
                                                                       .hashCode,
                                                                   $mrjc(
-                                                                      isSelectable
+                                                                      isSubscribed
                                                                           .hashCode,
                                                                       $mrjc(
-                                                                          folderExists
+                                                                          isSelectable
                                                                               .hashCode,
                                                                           $mrjc(
-                                                                              extended.hashCode,
-                                                                              $mrjc(alwaysRefresh.hashCode, messagesInfoInJson.hashCode)))))))))))))))))))));
+                                                                              folderExists.hashCode,
+                                                                              $mrjc(extended.hashCode, $mrjc(alwaysRefresh.hashCode, messagesInfoInJson.hashCode))))))))))))))))))))));
   @override
   bool operator ==(other) =>
       identical(this, other) ||
@@ -2383,6 +2394,7 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
           other.fullName == fullName &&
           other.fullNameRaw == fullNameRaw &&
           other.fullNameHash == fullNameHash &&
+          other.folderHash == folderHash &&
           other.delimiter == delimiter &&
           other.needsInfoUpdate == needsInfoUpdate &&
           other.isSystemFolder == isSystemFolder &&
@@ -2407,6 +2419,7 @@ class FoldersCompanion extends UpdateCompanion<LocalFolder> {
   final Value<String> fullName;
   final Value<String> fullNameRaw;
   final Value<String> fullNameHash;
+  final Value<String> folderHash;
   final Value<String> delimiter;
   final Value<bool> needsInfoUpdate;
   final Value<bool> isSystemFolder;
@@ -2429,6 +2442,7 @@ class FoldersCompanion extends UpdateCompanion<LocalFolder> {
     this.fullName = const Value.absent(),
     this.fullNameRaw = const Value.absent(),
     this.fullNameHash = const Value.absent(),
+    this.folderHash = const Value.absent(),
     this.delimiter = const Value.absent(),
     this.needsInfoUpdate = const Value.absent(),
     this.isSystemFolder = const Value.absent(),
@@ -2452,6 +2466,7 @@ class FoldersCompanion extends UpdateCompanion<LocalFolder> {
       Value<String> fullName,
       Value<String> fullNameRaw,
       Value<String> fullNameHash,
+      Value<String> folderHash,
       Value<String> delimiter,
       Value<bool> needsInfoUpdate,
       Value<bool> isSystemFolder,
@@ -2474,6 +2489,7 @@ class FoldersCompanion extends UpdateCompanion<LocalFolder> {
       fullName: fullName ?? this.fullName,
       fullNameRaw: fullNameRaw ?? this.fullNameRaw,
       fullNameHash: fullNameHash ?? this.fullNameHash,
+      folderHash: folderHash ?? this.folderHash,
       delimiter: delimiter ?? this.delimiter,
       needsInfoUpdate: needsInfoUpdate ?? this.needsInfoUpdate,
       isSystemFolder: isSystemFolder ?? this.isSystemFolder,
@@ -2638,6 +2654,18 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
     );
   }
 
+  final VerificationMeta _folderHashMeta = const VerificationMeta('folderHash');
+  GeneratedTextColumn _folderHash;
+  @override
+  GeneratedTextColumn get folderHash => _folderHash ??= _constructFolderHash();
+  GeneratedTextColumn _constructFolderHash() {
+    return GeneratedTextColumn(
+      'folder_hash',
+      $tableName,
+      false,
+    );
+  }
+
   final VerificationMeta _delimiterMeta = const VerificationMeta('delimiter');
   GeneratedTextColumn _delimiter;
   @override
@@ -2774,6 +2802,7 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
         fullName,
         fullNameRaw,
         fullNameHash,
+        folderHash,
         delimiter,
         needsInfoUpdate,
         isSystemFolder,
@@ -2867,6 +2896,12 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
               d.fullNameHash.value, _fullNameHashMeta));
     } else if (fullNameHash.isRequired && isInserting) {
       context.missing(_fullNameHashMeta);
+    }
+    if (d.folderHash.present) {
+      context.handle(_folderHashMeta,
+          folderHash.isAcceptableValue(d.folderHash.value, _folderHashMeta));
+    } else if (folderHash.isRequired && isInserting) {
+      context.missing(_folderHashMeta);
     }
     if (d.delimiter.present) {
       context.handle(_delimiterMeta,
@@ -2986,6 +3021,9 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
     if (d.fullNameHash.present) {
       map['full_name_hash'] =
           Variable<String, StringType>(d.fullNameHash.value);
+    }
+    if (d.folderHash.present) {
+      map['folder_hash'] = Variable<String, StringType>(d.folderHash.value);
     }
     if (d.delimiter.present) {
       map['delimiter'] = Variable<String, StringType>(d.delimiter.value);

@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/models/message_info.dart';
 import 'package:aurora_mail/utils/constants.dart';
-import 'package:aurora_mail/utils/custom_exception.dart';
+import 'package:aurora_mail/utils/server_error.dart';
 import 'package:moor_flutter/moor_flutter.dart';
 
 enum MessageFlags {
@@ -137,7 +137,6 @@ class Mail extends Table {
         );
       }).toList();
     } else {
-      // TODO VO: for debug
       throw Exception("Could not get sender");
     }
   }
@@ -158,7 +157,7 @@ class Mail extends Table {
         messageInfo =
             messagesInfo.firstWhere((m) => m.uid == rawMessage["Uid"]);
       } catch (err) {
-        throw CustomException("Couldn't find message: ${rawMessage["Uid"]}");
+        throw Exception("Couldn't find message: ${rawMessage["Uid"]}");
       }
 
       final displayName = rawMessage["From"] != null

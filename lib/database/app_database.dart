@@ -4,6 +4,10 @@ import 'package:moor_flutter/moor_flutter.dart';
 
 part 'app_database.g.dart';
 
+class DBInstances {
+  static final appDB = new AppDatabase();
+}
+
 @UseMoor(tables: [Mail, Folders])
 class AppDatabase extends _$AppDatabase {
   AppDatabase()

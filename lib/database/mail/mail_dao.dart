@@ -27,22 +27,31 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
           ..orderBy([
             (m) => OrderingTerm(
                 expression: m.timeStampInUTC, mode: OrderingMode.desc)
-          ])
-    )
+          ]))
         .watch();
   }
 
   Future<void> addMessages(List<Message> newMessages) {
     try {
       return into(mail).insertAll(newMessages);
-    } catch(err) {
+    } catch (err) {
       print("insertMessages: ${err}");
       return null;
     }
-
   }
 
   Future<int> deleteMessages(List<int> uids) {
     return (delete(mail)..where((m) => isIn(m.uid, uids))).go();
+  }
+
+  Future<int> deleteMessagesFromRemovedFolders(
+      List<String> removedFoldersRawNames) async {
+    final deletedMessages = await (delete(mail)
+          ..where((m) => isIn(m.folder, removedFoldersRawNames)))
+        .go();
+
+    print("deleted messages from removed folders: $deletedMessages");
+
+    return deletedMessages;
   }
 }

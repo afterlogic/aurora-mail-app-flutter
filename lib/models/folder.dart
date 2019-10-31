@@ -36,11 +36,13 @@ class Folder {
 
   final String fullNameRaw;
 
-  String fullNameHash;
+  final String fullNameHash;
+
+  final String folderHash;
 
   final String delimiter;
 
-  bool needsInfoUpdate;
+  final bool needsInfoUpdate;
 
   final bool isSystemFolder;
 
@@ -54,11 +56,11 @@ class Folder {
 
   final bool alwaysRefresh;
 
-  List<MessageInfo> messagesInfo;
+  final List<MessageInfo> messagesInfo;
 
-  int count;
+  final int count;
 
-  int unread;
+  final int unread;
 
   Folder({
     @required this.localId,
@@ -71,6 +73,7 @@ class Folder {
     @required this.fullName,
     @required this.fullNameRaw,
     @required this.fullNameHash,
+    @required this.folderHash,
     @required this.delimiter,
     @required this.needsInfoUpdate,
     @required this.isSystemFolder,
@@ -126,6 +129,7 @@ class Folder {
           fullName: localFolder.fullName,
           fullNameRaw: localFolder.fullNameRaw,
           fullNameHash: localFolder.fullNameHash,
+          folderHash: localFolder.folderHash,
           delimiter: localFolder.delimiter,
           needsInfoUpdate: localFolder.needsInfoUpdate,
           isSystemFolder: localFolder.isSystemFolder,

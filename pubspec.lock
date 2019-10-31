@@ -8,6 +8,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.36.4"
+  analyzer_plugin:
+    dependency: transitive
+    description:
+      name: analyzer_plugin
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.1"
   animated_stream_list:
     dependency: "direct main"
     description:
@@ -29,6 +36,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.3.0"
+  bloc:
+    dependency: transitive
+    description:
+      name: bloc
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
   boolean_selector:
     dependency: transitive
     description:
@@ -42,7 +56,7 @@ packages:
       name: build
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.2.0"
+    version: "1.2.1"
   build_config:
     dependency: transitive
     description:
@@ -91,7 +105,14 @@ packages:
       name: built_value
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "6.7.1"
+    version: "6.8.2"
+  built_value_generator:
+    dependency: transitive
+    description:
+      name: built_value_generator
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "6.8.2"
   charcode:
     dependency: transitive
     description:
@@ -155,18 +176,32 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.9"
+  equatable:
+    dependency: "direct main"
+    description:
+      name: equatable
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.6.1"
   fixnum:
     dependency: transitive
     description:
       name: fixnum
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.10.9"
+    version: "0.10.11"
   flutter:
     dependency: "direct main"
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_bloc:
+    dependency: "direct main"
+    description:
+      name: flutter_bloc
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
   flutter_mobx:
     dependency: "direct main"
     description:
@@ -304,7 +339,7 @@ packages:
       name: mobx
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.3.8+1"
+    version: "0.3.9+1"
   mobx_codegen:
     dependency: "direct dev"
     description:
@@ -383,12 +418,12 @@ packages:
     source: hosted
     version: "1.4.0"
   provider:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: provider
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.1+1"
+    version: "3.1.0+1"
   pub_semver:
     dependency: transitive
     description:
@@ -417,13 +452,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.1"
+  rxdart:
+    dependency: transitive
+    description:
+      name: rxdart
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.22.4"
   shared_preferences:
     dependency: "direct main"
     description:
       name: shared_preferences
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.5.4"
+    version: "0.5.4+3"
   shelf:
     dependency: transitive
     description:

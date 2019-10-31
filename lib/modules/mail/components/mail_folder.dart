@@ -1,13 +1,19 @@
 import 'package:aurora_mail/models/folder.dart';
-import 'package:aurora_mail/modules/app_store.dart';
+import 'package:aurora_mail/modules/mail/bloc/bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class MailFolder extends StatelessWidget {
   final Folder mailFolder;
+  final bool isSelected;
   final List<MailFolder> children;
 
-  const MailFolder({Key key, @required this.mailFolder, this.children})
+  const MailFolder(
+      {Key key,
+      @required this.mailFolder,
+      @required this.isSelected,
+      this.children})
       : super(key: key);
 
   IconData _getFolderIcon(FolderTypes type) {
@@ -64,7 +70,7 @@ class MailFolder extends StatelessWidget {
 
   void _selectFolder(BuildContext context) {
     Navigator.pop(context);
-    AppStore.foldersState.selectFolder(mailFolder);
+    BlocProvider.of<MailBloc>(context).add(SelectFolder(mailFolder));
   }
 
   @override
@@ -73,8 +79,7 @@ class MailFolder extends StatelessWidget {
       return Column(
         children: <Widget>[
           ListTile(
-            selected: mailFolder.localId ==
-                AppStore.foldersState.selectedFolder.localId,
+            selected: isSelected,
             leading: Icon(_getFolderIcon(mailFolder.folderType)),
             title: Text(mailFolder.name),
             trailing: _buildMessageCounter(context),

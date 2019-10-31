@@ -7,7 +7,7 @@ import 'package:flutter/widgets.dart';
 
 import 'auth/auth_android.dart';
 import 'auth/auth_route.dart';
-import 'mail/mail_android.dart';
+import 'mail/screens/mail_android.dart';
 import 'mail/mail_route.dart';
 
 class AppNavigation {

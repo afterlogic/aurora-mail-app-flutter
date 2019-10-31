@@ -1,5 +1,6 @@
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/models/message_info.dart';
+import 'package:aurora_mail/modules/app_store.dart';
 import 'package:moor_flutter/moor_flutter.dart';
 
 import '../app_database.dart';
@@ -9,13 +10,14 @@ part 'folders_dao.g.dart';
 
 @UseDao(tables: [Folders])
 class FoldersDao extends DatabaseAccessor<AppDatabase> with _$FoldersDaoMixin {
+  int get _accountId => AppStore.authState.accountId;
   // this constructor is required so that the main database can create an instance
   // of this object.
   FoldersDao(AppDatabase db) : super(db);
 
-  Future<List<LocalFolder>> getAllFolders(int accountId) {
+  Future<List<LocalFolder>> getAllFolders() {
     return (select(folders)
-          ..where((folder) => folder.accountId.equals(accountId)))
+          ..where((folder) => folder.accountId.equals(_accountId)))
         .get();
   }
 
@@ -30,9 +32,9 @@ class FoldersDao extends DatabaseAccessor<AppDatabase> with _$FoldersDaoMixin {
             foundFolders, foundFolders[0].parentGuid)[0];
   }
 
-  Stream<List<LocalFolder>> watchAllFolders(int accountId) {
+  Stream<List<LocalFolder>> watchAllFolders() {
     return (select(folders)
-          ..where((folder) => folder.accountId.equals(accountId)))
+          ..where((folder) => folder.accountId.equals(_accountId)))
         .watch();
   }
 

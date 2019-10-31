@@ -1,4 +1,5 @@
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/models/message_info.dart';
 import 'package:aurora_mail/modules/app_store.dart';
 import 'package:flutter/foundation.dart';
 import 'package:moor_flutter/moor_flutter.dart';
@@ -28,7 +29,11 @@ class Folders extends Table {
 
   TextColumn get fullNameRaw => text()();
 
+  // for name
   TextColumn get fullNameHash => text()();
+
+  // to check if folder contents changed
+  TextColumn get folderHash => text()();
 
   TextColumn get delimiter => text()();
 
@@ -75,6 +80,7 @@ class Folders extends Table {
           fullName: rawFolder["FullName"],
           fullNameRaw: rawFolder["FullNameRaw"],
           fullNameHash: rawFolder["FullNameHash"],
+          folderHash: "",
           delimiter: rawFolder["Delimiter"],
           needsInfoUpdate: true,
           // the folder is system if it's inbox, sent or drafts
@@ -98,4 +104,122 @@ class Folders extends Table {
     getObj(rawFolders, null);
     return flattenedFolders;
   }
+
+  static Future<FoldersDiffCalcResult> calculateFoldersDiffAsync(
+      List<LocalFolder> oldFolders, List<LocalFolder> newFolders) {
+    final Map<String, List<LocalFolder>> args = {
+      "oldItems": oldFolders,
+      "newItems": newFolders,
+    };
+    return compute(_calculateFoldersDiff, args);
+  }
+
+  // TODO VO: folders might change their order
+  static FoldersDiffCalcResult _calculateFoldersDiff(
+      Map<String, List<LocalFolder>> args) {
+    final oldFolders = args["oldItems"];
+    final newFolders = args["newItems"];
+
+    final addedFolders = newFolders.where((i) =>
+        oldFolders.firstWhere((j) => j.fullNameHash == i.fullNameHash,
+            orElse: () => null) ==
+        null);
+
+    final removedFolders = oldFolders.where((i) =>
+        newFolders.firstWhere((j) => j.fullNameHash == i.fullNameHash,
+            orElse: () => null) ==
+        null);
+
+    print("""
+    Folders diff calcultaion finished:
+      removed: ${removedFolders.length}
+      added: ${addedFolders.length}
+    """);
+
+    return new FoldersDiffCalcResult(
+      addedFolders: addedFolders,
+      deletedFolders: removedFolders,
+    );
+  }
+
+  static Future<MessagesInfoDiffCalcResult> calculateMessagesInfoDiffAsync(
+      List<MessageInfo> oldInfo, List<MessageInfo> newInfo) {
+    final Map<String, List<MessageInfo>> args = {
+      "oldItems": oldInfo,
+      "newItems": newInfo,
+    };
+    return compute(_calculateMessagesInfoDiff, args);
+  }
+
+  // you cannot just return newInfo
+  // you have to return oldInfo (because it contains hasBody: true) + addedMessages
+  static MessagesInfoDiffCalcResult _calculateMessagesInfoDiff(
+      Map<String, List<MessageInfo>> args) {
+    final oldInfo = args["oldItems"];
+    final newInfo = args["newItems"];
+
+    final unchangedMessages = oldInfo.where((i) =>
+        newInfo.firstWhere((j) => j.uid == i.uid && j.parentUid == i.parentUid,
+            orElse: () => null) !=
+        null);
+
+    // no need to calculate difference if all the messages are unchanged
+    if (unchangedMessages.length == oldInfo.length &&
+        unchangedMessages.length == newInfo.length) {
+      print("Diff calcultaion finished: no changes");
+      return new MessagesInfoDiffCalcResult(
+          updatedInfo: oldInfo, removedUids: []);
+    }
+
+    final addedMessages = newInfo.where((i) =>
+        oldInfo.firstWhere((j) => j.uid == i.uid, orElse: () => null) == null);
+
+    final removedMessages = oldInfo.where((i) =>
+        newInfo.firstWhere((j) => j.uid == i.uid, orElse: () => null) == null);
+
+    final changedParent = newInfo.where((i) =>
+        oldInfo.firstWhere((j) => j.uid == i.uid && j.parentUid != i.parentUid,
+            orElse: () => null) !=
+        null);
+
+    print("""
+    Messages info diff calcultaion finished:
+      unchanged: ${unchangedMessages.length}
+      changedParent: ${changedParent.length}
+      removed: ${removedMessages.length}
+      added: ${addedMessages.length}
+    """);
+
+    final removedUids = removedMessages.map((m) => m.uid).toList();
+    final changedParentUid = changedParent.map((m) => m.uid).toList();
+
+    final List<MessageInfo> updatedInfo = [
+      ...addedMessages,
+      ...changedParent,
+      ...unchangedMessages
+    ];
+
+    return new MessagesInfoDiffCalcResult(
+      updatedInfo: updatedInfo,
+      removedUids: [...removedUids, ...changedParentUid],
+    );
+  }
+}
+
+class FoldersDiffCalcResult {
+  final List<LocalFolder> addedFolders;
+  final List<LocalFolder> deletedFolders;
+
+  FoldersDiffCalcResult(
+      {@required this.addedFolders, @required this.deletedFolders})
+      : assert(addedFolders != null, deletedFolders != null);
+}
+
+class MessagesInfoDiffCalcResult {
+  final List<MessageInfo> updatedInfo;
+  final List<int> removedUids;
+
+  MessagesInfoDiffCalcResult(
+      {@required this.updatedInfo, @required this.removedUids})
+      : assert(updatedInfo != null, removedUids != null);
 }
