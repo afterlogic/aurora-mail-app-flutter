@@ -3,7 +3,6 @@ import 'package:aurora_mail/modules/app_store.dart';
 import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
-import 'package:flutter_html/image_properties.dart';
 
 class MessageBody extends StatelessWidget {
   final Message message;
@@ -30,7 +29,7 @@ class MessageBody extends StatelessWidget {
     String parsedHtml = html;
     attachments.forEach((attachment) {
       parsedHtml = parsedHtml.replaceFirst("cid:${attachment.cid}",
-          AppStore.authState.hostName + attachment.viewUrl + "&AuthToken=${AppStore.authState.authToken}");
+          AppStore.authState.hostName + attachment.viewUrl);
     });
     return parsedHtml;
   }
@@ -38,17 +37,7 @@ class MessageBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Html(
-        data: data,
-        onImageTap: (String src) {
-          print("VO: src: ${src}");
-        },
-        onImageError: (err, s) {
-          print("VO: err: ${err}");
-          print("VO: s: ${s}");
-        },
-
-      ),
+      child: Html(data: data),
     );
   }
 }

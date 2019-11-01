@@ -116,7 +116,7 @@ class MailMethods {
   }
 
   Future<List<Folder>> updateFoldersHash(Folder selectedFolder,
-      {forceCurrentFolderUpdate = false}) async {
+      {bool forceCurrentFolderUpdate = false}) async {
     assert(selectedFolder != null);
 
     try {
@@ -191,9 +191,10 @@ class MailMethods {
       });
 
       if (_syncQueue.isNotEmpty && queueLengthBeforeInsert == 0) {
-        return _setMessagesInfoToFolder();
+        await _setMessagesInfoToFolder();
       }
     }
+
 
     if (localId != null) {
       // else a folder was selected and it has the highest priority for syncing
@@ -203,7 +204,7 @@ class MailMethods {
       // when the queue gets empty syncing stops
       // this is why it needs to be restarted manually
       if (queueLengthBeforeInsert == 0) {
-        return _setMessagesInfoToFolder();
+        await _setMessagesInfoToFolder();
       }
     }
   }
@@ -280,7 +281,7 @@ class MailMethods {
         );
         assert(_syncQueue.contains(folder.localId));
         _syncQueue.remove(folder.localId);
-        print("VO: _syncQueue: ${_syncQueue}");
+        print("_syncQueue: $_syncQueue");
         if (_syncQueue.isNotEmpty) {
           return _setMessagesInfoToFolder();
         } else {

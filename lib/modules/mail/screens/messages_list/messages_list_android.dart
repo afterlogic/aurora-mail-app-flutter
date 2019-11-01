@@ -19,10 +19,9 @@ class MessagesListAndroid extends StatefulWidget {
 }
 
 class _MessagesListAndroidState extends State<MessagesListAndroid> {
-//  final _scaffoldKey = new GlobalKey<ScaffoldState>();
-  final _refreshIndicatorKey = new GlobalKey<RefreshIndicatorState>();
-
   final _mailBloc = new MailBloc();
+
+  Completer<void> _refreshCompleter;
 
   // cache drawer state because when it's closed, the state is disposed
   FoldersLoaded _drawerInitialState = new FoldersLoaded([], null);
@@ -32,6 +31,7 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
   @override
   void initState() {
     super.initState();
+    _refreshCompleter = Completer<void>();
     _mailBloc.add(FetchFolders());
     _initUpdateTimer();
   }
@@ -47,10 +47,6 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
     showSnack(context: ctx, scaffoldState: Scaffold.of(ctx), msg: err);
   }
 
-  void _showRefresh() => _refreshIndicatorKey.currentState.show();
-
-  void _hideRefresh() => _refreshIndicatorKey.currentState.deactivate();
-
   void _initUpdateTimer() async {
     await Future.delayed(SYNC_PERIOD);
     _timer = Timer.periodic(
@@ -64,7 +60,6 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
     return BlocProvider<MailBloc>(
       builder: (_) => _mailBloc,
       child: Scaffold(
-//        key: _scaffoldKey,
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(APP_BAR_HEIGHT_ANDROID),
           child: MailAppBar(),
@@ -75,25 +70,24 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
           listener: (BuildContext context, state) {
             if (state is FoldersLoaded) {
               setState(() => _drawerInitialState = state);
+              _refreshCompleter?.complete();
+              _refreshCompleter = Completer();
             }
             if (state is MailError) _showError(context, state.error);
-//            if (state is MessagesSyncing) _showRefresh();
-//            if (state is MessagesSynced) _hideRefresh();
           },
           child: RefreshIndicator(
-            key: _refreshIndicatorKey,
-            onRefresh: () async => _mailBloc.add(RefreshMessages()),
+            onRefresh: () {
+              _mailBloc.add(RefreshMessages());
+              return _refreshCompleter.future;
+            },
             child: BlocBuilder<MailBloc, MailState>(
                 bloc: _mailBloc,
-                condition: (prevState, state) =>
-                    state is SubscribedToMessages || state is FoldersLoading,
+                condition: (prevState, state) => state is SubscribedToMessages,
                 builder: (context, state) {
-                  if (state is FoldersLoading) {
-                    return _buildMessagesLoading();
-                  } else if (state is SubscribedToMessages) {
+                  if (state is SubscribedToMessages) {
                     return _buildMessagesStream(state.messagesSub);
                   } else {
-                    return ListView();
+                    return _buildMessagesLoading();
                   }
                 }),
           ),
@@ -125,14 +119,22 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
               itemCount: messagesWithoutChildren.length,
               itemBuilder: (_, i) {
                 final item = messagesWithoutChildren[i];
-                return InkWell(
-                  child: MessageItem(item),
-                  onTap: () => Navigator.pushNamed(
-                    context,
-                    MessageViewRoute.name,
-                    arguments:
-                        MessageViewScreenArgs(messagesWithoutChildren, i),
-                  ),
+                return Column(
+                  children: <Widget>[
+                    InkWell(
+                      child: MessageItem(item),
+                      onTap: () => Navigator.pushNamed(
+                        context,
+                        MessageViewRoute.name,
+                        arguments:
+                            MessageViewScreenArgs(messagesWithoutChildren, i),
+                      ),
+                    ),
+                    if (_drawerInitialState.selectedFolder != null &&
+                        _drawerInitialState.selectedFolder.needsInfoUpdate &&
+                        i == messagesWithoutChildren.length - 1)
+                      CircularProgressIndicator(),
+                  ],
                 );
               },
               separatorBuilder: (_, i) => Divider(
@@ -143,6 +145,10 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
             );
           } else {
             // build list view to be able to swipe to refresh
+            if (_drawerInitialState.selectedFolder != null &&
+                _drawerInitialState.selectedFolder.needsInfoUpdate) {
+              return _buildMessagesLoading();
+            }
             return ListView(
               physics: AlwaysScrollableScrollPhysics(),
               children: [
@@ -162,87 +168,3 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
     );
   }
 }
-
-//            RefreshIndicator(
-//                key: _refreshIndicatorKey,
-//                onRefresh: () =>
-//                    _foldersState.updateFoldersHash(forceCurrentFolderUpdate: true),
-//                child: Stack(children: [
-//                  Observer(
-//                      builder: (_) => Positioned(
-//                          top: 0.0,
-//                          left: 0.0,
-//                          right: 0.0,
-//                          child: AnimatedOpacity(
-//                            duration: Duration(milliseconds: 150),
-//                            opacity: _foldersState.messagesLoading ==
-//                                        LoadingType.visible &&
-//                                    _mailState.messagesCount > 0
-//                                ? 1.0
-//                                : 0.0,
-//                            child: LinearProgressIndicator(
-//                              backgroundColor:
-//                                  Theme.of(context).disabledColor.withOpacity(0.05),
-//                            ),
-//                          ))),
-//                  Positioned.fill(
-//                    child: StreamBuilder(
-//                        stream: _mailState
-//                            .onWatchMessages(_foldersState.selectedFolder),
-//                        builder: (_, AsyncSnapshot<List<Message>> snapshot) {
-//                          if (snapshot.connectionState == ConnectionState.active) {
-//                            if (snapshot.hasData && snapshot.data.isNotEmpty) {
-//                              return ListView.separated(
-//                                padding: EdgeInsets.only(top: 6.0, bottom: 76.0),
-//                                itemCount: snapshot.data.length,
-//                                itemBuilder: (_, i) {
-//                                  if (snapshot.data[i].parentUid == null) {
-//                                    return Column(
-//                                      children: <Widget>[
-//                                        MessageItem(snapshot.data[i]),
-////                                    if (i == snapshot.data.length - 1 &&
-////                                        _foldersState.messagesLoading ==
-////                                            LoadingType.visible)
-////                                      CircularProgressIndicator()
-//                                      ],
-//                                    );
-//                                  } else
-//                                    return SizedBox();
-//                                },
-//                                separatorBuilder: (_, i) {
-//                                  if (snapshot.data[i].parentUid == null) {
-//                                    return Divider(
-//                                      height: 0.0,
-//                                      indent: 16.0,
-//                                      endIndent: 16.0,
-//                                    );
-//                                  } else
-//                                    return SizedBox();
-//                                },
-//                              );
-//                            } else if (snapshot.hasData &&
-//                                snapshot.data.isEmpty &&
-//                                _foldersState.messagesLoading == LoadingType.none) {
-//                              return ListView(
-//                                physics: AlwaysScrollableScrollPhysics(),
-//                                children: [
-//                                  Padding(
-//                                    padding: const EdgeInsets.symmetric(
-//                                        vertical: 68.0, horizontal: 16.0),
-//                                    // TODO translate
-//                                    child: Center(child: Text("No messages")),
-//                                  ),
-//                                ],
-//                              );
-//                            } else if (snapshot.hasError) {
-//                              return Center(child: Text(snapshot.error.toString()));
-//                            } else {
-//                              return Center(child: CircularProgressIndicator());
-//                            }
-//                          } else {
-//                            return Center(child: CircularProgressIndicator());
-//                          }
-//                        }),
-//                  ),
-//                ]),
-//              ),

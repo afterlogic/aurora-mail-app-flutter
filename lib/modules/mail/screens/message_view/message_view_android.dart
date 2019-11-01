@@ -67,7 +67,8 @@ class _MessageViewAndroidState extends State<MessageViewAndroid> {
               padding: EdgeInsets.all(16.0),
               children: <Widget>[
                 Text(
-                  message.subject,
+                  // TODO translate
+                  message.subject.isNotEmpty ? message.subject : "No subject",
                   style: Theme.of(context).textTheme.display1.copyWith(
                         fontSize: 26.0,
                       ),

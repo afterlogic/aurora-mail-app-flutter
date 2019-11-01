@@ -19,6 +19,7 @@ class MailBloc extends Bloc<MailEvent, MailState> {
     MailEvent event,
   ) async* {
     if (event is FetchFolders) yield* _fetchFolders(event);
+    if (event is UpdateFolders) yield* _updateFolders(event);
     if (event is RefreshFolders) yield* _refreshFolders(event);
     if (event is SelectFolder) yield* _selectFolder(event);
     if (event is CheckFoldersUpdateByTimer)
@@ -33,7 +34,13 @@ class MailBloc extends Bloc<MailEvent, MailState> {
       final List<Folder> folders = await _methods.getFolders();
 
       if (folders.isNotEmpty) {
-        _selectedFolder = folders[0];
+        if (_selectedFolder == null) {
+          _selectedFolder = folders[0];
+        } else {
+          _selectedFolder = folders.firstWhere(
+              (f) => f.localId == _selectedFolder.localId,
+              orElse: () => folders[0]);
+        }
         yield FoldersLoaded(folders, _selectedFolder);
         yield SubscribedToMessages(
             _methods.subscribeToMessages(_selectedFolder));
@@ -43,18 +50,26 @@ class MailBloc extends Bloc<MailEvent, MailState> {
 
         yield FoldersLoaded(foldersWithInfo, _selectedFolder);
 
-//        yield MessagesSyncing();
-//        await _methods.syncFolders(
-//            localId: _selectedFolder.localId, syncSystemFolders: true);
-//        yield MessagesSynced();
-        _methods.syncFolders(
-            localId: _selectedFolder.localId, syncSystemFolders: true);
+        final id = _selectedFolder.localId;
+        _methods
+            .syncFolders(localId: id, syncSystemFolders: true)
+            .then((v) => add(UpdateFolders()));
       } else {
         yield FoldersEmpty();
       }
     } catch (err) {
       yield MailError(err.toString());
     }
+  }
+
+  Stream<MailState> _updateFolders(UpdateFolders event) async* {
+    final List<Folder> folders = await _methods.getFolders();
+
+    _selectedFolder = folders.firstWhere(
+        (f) => f.localId == _selectedFolder.localId,
+        orElse: () => folders[0]);
+
+    yield FoldersLoaded(folders, _selectedFolder);
   }
 
   Stream<MailState> _refreshFolders(RefreshFolders event) async* {
@@ -68,12 +83,10 @@ class MailBloc extends Bloc<MailEvent, MailState> {
 
         yield FoldersLoaded(foldersWithInfo, _selectedFolder);
 
-//        yield MessagesSyncing();
-//        await _methods.syncFolders(
-//            localId: _selectedFolder.localId, syncSystemFolders: true);
-//        yield MessagesSynced();
-        _methods.syncFolders(
-            localId: _selectedFolder.localId, syncSystemFolders: true);
+        final id = _selectedFolder.localId;
+        _methods
+            .syncFolders(localId: id, syncSystemFolders: true)
+            .then((v) => add(UpdateFolders()));
       } else {
         yield FoldersEmpty();
       }
@@ -91,10 +104,8 @@ class MailBloc extends Bloc<MailEvent, MailState> {
       yield FoldersLoaded(folders, _selectedFolder);
       yield SubscribedToMessages(_methods.subscribeToMessages(_selectedFolder));
 
-//      yield MessagesSyncing();
-//      await _methods.syncFolders(localId: event.folder.localId);
-//      yield MessagesSynced();
-      _methods.syncFolders(localId: event.folder.localId);
+      final id = event.folder.localId;
+      _methods.syncFolders(localId: id).then((v) => add(UpdateFolders()));
     } catch (err) {
       yield MailError(err.toString());
     }
@@ -104,12 +115,9 @@ class MailBloc extends Bloc<MailEvent, MailState> {
       CheckFoldersUpdateByTimer event) async* {
     try {
       await _methods.updateFoldersHash(_selectedFolder);
-//      yield MessagesSyncing();
-//      await _methods.syncFolders(
-//          localId: _selectedFolder.localId, syncSystemFolders: true);
-//      yield MessagesSynced();
-      _methods.syncFolders(
-          localId: _selectedFolder.localId, syncSystemFolders: true);
+
+      final id = _selectedFolder.localId;
+      _methods.syncFolders(localId: id, syncSystemFolders: true);
     } catch (err) {
       yield MailError(err.toString());
     }
@@ -117,6 +125,7 @@ class MailBloc extends Bloc<MailEvent, MailState> {
 
   Stream<MailState> _refreshMessages(RefreshMessages event) async* {
     try {
+      final id = _selectedFolder.localId;
       final List<Folder> foldersWithInfo = await _methods.updateFoldersHash(
         _selectedFolder,
         forceCurrentFolderUpdate: true,
@@ -124,12 +133,9 @@ class MailBloc extends Bloc<MailEvent, MailState> {
 
       yield FoldersLoaded(foldersWithInfo, _selectedFolder);
 
-//      yield MessagesSyncing();
-//      await _methods.syncFolders(
-//          localId: _selectedFolder.localId, syncSystemFolders: true);
-//      yield MessagesSynced();
-      _methods.syncFolders(
-          localId: _selectedFolder.localId, syncSystemFolders: true);
+      _methods
+          .syncFolders(localId: id, syncSystemFolders: true)
+          .then((v) => add(UpdateFolders()));
     } catch (err) {
       yield MailError(err.toString());
     }

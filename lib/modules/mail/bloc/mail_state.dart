@@ -24,12 +24,6 @@ class FoldersLoaded extends MailState {
   List<Object> get props => [folders];
 }
 
-// used to show unobtrusive loading
-class MessagesSyncing extends MailState {}
-
-// used during message sync
-class MessagesSynced extends MailState {}
-
 class SubscribedToMessages extends MailState {
   final Stream<List<Message>> messagesSub;
 
