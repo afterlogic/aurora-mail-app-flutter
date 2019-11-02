@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
+import 'package:aurora_mail/modules/mail/screens/compose/compose_route.dart';
 import 'package:aurora_mail/modules/mail/screens/message_view/message_view_route.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/main_drawer.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
@@ -9,7 +11,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
-import '../../bloc/bloc.dart';
 import 'components/mail_app_bar.dart';
 import 'components/message_item.dart';
 
@@ -57,8 +58,8 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<MailBloc>(
-      builder: (_) => _mailBloc,
+    return BlocProvider<MailBloc>.value(
+      value: _mailBloc,
       child: Scaffold(
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(APP_BAR_HEIGHT_ANDROID),
@@ -94,7 +95,8 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
         ),
         floatingActionButton: FloatingActionButton(
           child: Icon(MdiIcons.emailPlusOutline),
-          onPressed: () {},
+          onPressed: () => Navigator.pushNamed(context, ComposeRoute.name,
+              arguments: ComposeScreenArgs(_mailBloc)),
         ),
       ),
     );

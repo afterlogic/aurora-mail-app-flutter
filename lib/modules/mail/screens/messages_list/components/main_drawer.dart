@@ -1,5 +1,5 @@
 import 'package:aurora_mail/models/folder.dart';
-import 'package:aurora_mail/modules/mail/bloc/bloc.dart';
+import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -18,6 +18,7 @@ class _MainDrawerState extends State<MainDrawer> {
 //  final _state = AppStore.foldersState;
   final _refreshIndicatorKey = new GlobalKey<RefreshIndicatorState>();
 
+  // TODO VO:
   void _showRefresh() => _refreshIndicatorKey.currentState.show();
 
   void _hideRefresh() => _refreshIndicatorKey.currentState.deactivate();

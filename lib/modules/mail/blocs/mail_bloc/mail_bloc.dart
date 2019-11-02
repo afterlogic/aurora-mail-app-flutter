@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:aurora_mail/models/folder.dart';
-import 'package:aurora_mail/modules/mail/bloc/mail_methods.dart';
 import 'package:bloc/bloc.dart';
 
 import 'bloc.dart';
+import 'mail_methods.dart';
 
 class MailBloc extends Bloc<MailEvent, MailState> {
   final _methods = new MailMethods();

@@ -177,35 +177,27 @@ class MailMethods {
       {@required int localId, bool syncSystemFolders = false}) async {
     // either localId or syncSystemFolders must be provided
     assert(localId != null || syncSystemFolders != null);
-
+    var localFolders = new List<LocalFolder>();
     if (syncSystemFolders == true) {
-      final localFolders = await _foldersDao.getAllFolders();
+      localFolders = await _foldersDao.getAllFolders();
       localFolders.sort((a, b) => a.folderOrder.compareTo(b.folderOrder));
-
-      final queueLengthBeforeInsert = _syncQueue.length;
-
-      localFolders.forEach((f) {
-        if (f.isSystemFolder && !_syncQueue.contains(f.localId)) {
-          _syncQueue.add(f.localId);
-        }
-      });
-
-      if (_syncQueue.isNotEmpty && queueLengthBeforeInsert == 0) {
-        await _setMessagesInfoToFolder();
-      }
     }
 
+    final queueLengthBeforeInsert = _syncQueue.length;
+
+    localFolders.forEach((f) {
+      if (f.isSystemFolder && !_syncQueue.contains(f.localId)) {
+        _syncQueue.add(f.localId);
+      }
+    });
 
     if (localId != null) {
-      // else a folder was selected and it has the highest priority for syncing
-      final queueLengthBeforeInsert = _syncQueue.length;
       if (_syncQueue.contains(localId)) _syncQueue.remove(localId);
       _syncQueue.insert(0, localId);
-      // when the queue gets empty syncing stops
-      // this is why it needs to be restarted manually
-      if (queueLengthBeforeInsert == 0) {
-        await _setMessagesInfoToFolder();
-      }
+    }
+    if (_syncQueue.isNotEmpty && queueLengthBeforeInsert == 0) {
+      // TODO VO: completes earlier
+      await _setMessagesInfoToFolder();
     }
   }
 

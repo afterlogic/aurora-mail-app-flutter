@@ -1,7 +1,8 @@
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
 
 class MessageViewRoute {
-  static const name = "messages_list/message_view";
+  static const name = "${MessagesListRoute.name}/message_view";
 }
 
 class MessageViewScreenArgs {

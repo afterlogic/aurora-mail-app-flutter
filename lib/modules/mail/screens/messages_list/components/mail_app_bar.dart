@@ -1,6 +1,6 @@
 import 'package:aurora_mail/modules/app_store.dart';
 import 'package:aurora_mail/modules/auth/auth_route.dart';
-import 'package:aurora_mail/modules/mail/bloc/bloc.dart';
+import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

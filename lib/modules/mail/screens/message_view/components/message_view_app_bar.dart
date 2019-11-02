@@ -4,8 +4,6 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 enum MailViewAppBarAction { reply, replyToAll, forward, toSpam, delete }
 
 class MailViewAppBar extends StatelessWidget {
-
-
   final Function(MailViewAppBarAction) onAppBarActionSelected;
 
   const MailViewAppBar(this.onAppBarActionSelected, {Key key})
@@ -24,7 +22,8 @@ class MailViewAppBar extends StatelessWidget {
         IconButton(
           icon: Icon(Icons.reply_all),
           tooltip: "Reply to all",
-          onPressed: () => onAppBarActionSelected(MailViewAppBarAction.replyToAll),
+          onPressed: () =>
+              onAppBarActionSelected(MailViewAppBarAction.replyToAll),
         ),
         IconButton(
           icon: Icon(MdiIcons.share),
