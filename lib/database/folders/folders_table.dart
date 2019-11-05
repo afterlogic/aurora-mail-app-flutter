@@ -1,4 +1,5 @@
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/models/message_info.dart';
 import 'package:aurora_mail/modules/app_store.dart';
 import 'package:flutter/foundation.dart';
@@ -202,6 +203,14 @@ class Folders extends Table {
     return new MessagesInfoDiffCalcResult(
       updatedInfo: updatedInfo,
       removedUids: [...removedUids, ...changedParentUid],
+    );
+  }
+
+  static LocalFolder getFolderOfType(
+      List<LocalFolder> folders, FolderType type) {
+    return folders.firstWhere(
+      (f) => Folder.getFolderTypeFromNumber(f.type) == type,
+      orElse: () => null,
     );
   }
 }

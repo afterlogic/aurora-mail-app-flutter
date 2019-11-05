@@ -16,29 +16,29 @@ class MailFolder extends StatelessWidget {
       this.children})
       : super(key: key);
 
-  IconData _getFolderIcon(FolderTypes type) {
+  IconData _getFolderIcon(FolderType type) {
     switch (type) {
-      case FolderTypes.inbox:
+      case FolderType.inbox:
         return Icons.inbox;
-      case FolderTypes.sent:
+      case FolderType.sent:
         return Icons.send;
-      case FolderTypes.drafts:
+      case FolderType.drafts:
         return Icons.drafts;
-      case FolderTypes.spam:
+      case FolderType.spam:
         return MdiIcons.emailAlert;
-      case FolderTypes.trash:
+      case FolderType.trash:
         return MdiIcons.trashCanOutline;
-      case FolderTypes.virus:
+      case FolderType.virus:
         return Icons.bug_report;
-      case FolderTypes.starred:
+      case FolderType.starred:
         return Icons.star;
-      case FolderTypes.template:
+      case FolderType.template:
         return MdiIcons.fileDocumentEditOutline;
-      case FolderTypes.system:
+      case FolderType.system:
         return Icons.devices;
-      case FolderTypes.user:
+      case FolderType.user:
         return Icons.person;
-      case FolderTypes.unknown:
+      case FolderType.unknown:
         return Icons.device_unknown;
       default:
         return null;
@@ -47,7 +47,7 @@ class MailFolder extends StatelessWidget {
 
   Widget _buildMessageCounter(BuildContext context) {
     if (mailFolder.unread != null && mailFolder.unread > 0 ||
-        mailFolder.folderType == FolderTypes.drafts &&
+        mailFolder.folderType == FolderType.drafts &&
             mailFolder.count != null &&
             mailFolder.count > 0) {
       return ClipRRect(
@@ -56,7 +56,7 @@ class MailFolder extends StatelessWidget {
           padding: EdgeInsets.symmetric(vertical: 6.0, horizontal: 10.0),
           color: Theme.of(context).accentColor,
           child: Text(
-            mailFolder.folderType == FolderTypes.drafts
+            mailFolder.folderType == FolderType.drafts
                 ? mailFolder.count.toString()
                 : mailFolder.unread.toString(),
             style: TextStyle(color: Colors.white),

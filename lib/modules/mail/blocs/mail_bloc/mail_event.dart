@@ -17,7 +17,7 @@ class UpdateFolders extends MailEvent {}
 // always from server
 class RefreshFolders extends MailEvent {}
 
-class CheckFoldersUpdateByTimer extends MailEvent {}
+class CheckFoldersMessagesChanges extends MailEvent {}
 
 class SelectFolder extends MailEvent {
   final Folder folder;

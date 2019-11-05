@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 enum ComposeAppBarAction {
   saveToDrafts,
   send,
+  cancel,
 }
 
 class ComposeAppBar extends StatelessWidget {
@@ -14,6 +15,13 @@ class ComposeAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      leading: IconButton(
+        icon: Icon(Icons.close),
+        onPressed: () {
+          onAppBarActionSelected(ComposeAppBarAction.cancel);
+          Navigator.pop(context);
+        },
+      ),
       title: PopupMenuButton(
         child: Row(
           mainAxisSize: MainAxisSize.min,

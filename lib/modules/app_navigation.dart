@@ -45,7 +45,6 @@ class AppNavigation {
 
       case ComposeRoute.name:
         final ComposeScreenArgs args = settings.arguments;
-
         return MaterialPageRoute(
             settings: RouteSettings(
               name: settings.name,

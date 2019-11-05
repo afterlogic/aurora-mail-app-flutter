@@ -52,7 +52,7 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
     await Future.delayed(SYNC_PERIOD);
     _timer = Timer.periodic(
       SYNC_PERIOD,
-      (Timer timer) => _mailBloc.add(CheckFoldersUpdateByTimer()),
+      (Timer timer) => _mailBloc.add(CheckFoldersMessagesChanges()),
     );
   }
 
@@ -70,11 +70,15 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
           bloc: _mailBloc,
           listener: (BuildContext context, state) {
             if (state is FoldersLoaded) {
-              setState(() => _drawerInitialState = state);
               _refreshCompleter?.complete();
               _refreshCompleter = Completer();
+              setState(() => _drawerInitialState = state);
             }
-            if (state is MailError) _showError(context, state.error);
+            if (state is MailError) {
+              _refreshCompleter?.complete();
+              _refreshCompleter = Completer();
+              _showError(context, state.error);
+            }
           },
           child: RefreshIndicator(
             onRefresh: () {

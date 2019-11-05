@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 
 import 'message_info.dart';
 
-enum FolderTypes {
+enum FolderType {
   inbox,
   sent,
   drafts,
@@ -26,7 +26,7 @@ class Folder {
 
   final int type;
 
-  final FolderTypes folderType;
+  final FolderType folderType;
 
   final int order;
 
@@ -87,30 +87,30 @@ class Folder {
     @required this.unread,
   });
 
-  static FolderTypes _getFolderTypeFromNumber(int num) {
+  static FolderType getFolderTypeFromNumber(int num) {
     switch (num) {
       case 1:
-        return FolderTypes.inbox;
+        return FolderType.inbox;
       case 2:
-        return FolderTypes.sent;
+        return FolderType.sent;
       case 3:
-        return FolderTypes.drafts;
+        return FolderType.drafts;
       case 4:
-        return FolderTypes.spam;
+        return FolderType.spam;
       case 5:
-        return FolderTypes.trash;
+        return FolderType.trash;
       case 6:
-        return FolderTypes.virus;
+        return FolderType.virus;
       case 7:
-        return FolderTypes.starred;
+        return FolderType.starred;
       case 8:
-        return FolderTypes.template;
+        return FolderType.template;
       case 9:
-        return FolderTypes.system;
+        return FolderType.system;
       case 10:
-        return FolderTypes.user;
+        return FolderType.user;
       default:
-        return FolderTypes.unknown;
+        return FolderType.unknown;
     }
   }
 
@@ -123,7 +123,7 @@ class Folder {
           guid: localFolder.guid,
           parentGuid: localFolder.parentGuid,
           type: localFolder.type,
-          folderType: _getFolderTypeFromNumber(localFolder.type),
+          folderType: getFolderTypeFromNumber(localFolder.type),
           order: localFolder.folderOrder,
           name: localFolder.name,
           fullName: localFolder.fullName,

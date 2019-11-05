@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:aurora_mail/models/folder.dart';
+import 'package:aurora_mail/utils/error_handling.dart';
 import 'package:bloc/bloc.dart';
 
 import 'bloc.dart';
@@ -22,8 +23,8 @@ class MailBloc extends Bloc<MailEvent, MailState> {
     if (event is UpdateFolders) yield* _updateFolders(event);
     if (event is RefreshFolders) yield* _refreshFolders(event);
     if (event is SelectFolder) yield* _selectFolder(event);
-    if (event is CheckFoldersUpdateByTimer)
-      yield* _checkFoldersUpdateByTimer(event);
+    if (event is CheckFoldersMessagesChanges)
+      yield* _checkFoldersMessagesChanges(event);
     if (event is RefreshMessages) yield* _refreshMessages(event);
   }
 
@@ -57,8 +58,8 @@ class MailBloc extends Bloc<MailEvent, MailState> {
       } else {
         yield FoldersEmpty();
       }
-    } catch (err) {
-      yield MailError(err.toString());
+    } catch (err, s) {
+      yield MailError(formatError(err, s));
     }
   }
 
@@ -92,8 +93,8 @@ class MailBloc extends Bloc<MailEvent, MailState> {
       }
 
       yield FoldersLoaded(newFolders, _selectedFolder);
-    } catch (err) {
-      yield MailError(err.toString());
+    } catch (err, s) {
+      yield MailError(formatError(err, s));
     }
   }
 
@@ -106,20 +107,20 @@ class MailBloc extends Bloc<MailEvent, MailState> {
 
       final id = event.folder.localId;
       _methods.syncFolders(localId: id).then((v) => add(UpdateFolders()));
-    } catch (err) {
-      yield MailError(err.toString());
+    } catch (err, s) {
+      yield MailError(formatError(err, s));
     }
   }
 
-  Stream<MailState> _checkFoldersUpdateByTimer(
-      CheckFoldersUpdateByTimer event) async* {
+  Stream<MailState> _checkFoldersMessagesChanges(
+      CheckFoldersMessagesChanges event) async* {
     try {
       await _methods.updateFoldersHash(_selectedFolder);
 
       final id = _selectedFolder.localId;
       _methods.syncFolders(localId: id, syncSystemFolders: true);
-    } catch (err) {
-      yield MailError(err.toString());
+    } catch (err, s) {
+      yield MailError(formatError(err, s));
     }
   }
 
@@ -136,8 +137,8 @@ class MailBloc extends Bloc<MailEvent, MailState> {
       _methods
           .syncFolders(localId: id, syncSystemFolders: true)
           .then((v) => add(UpdateFolders()));
-    } catch (err) {
-      yield MailError(err.toString());
+    } catch (err, s) {
+      yield MailError(formatError(err, s));
     }
   }
 }
