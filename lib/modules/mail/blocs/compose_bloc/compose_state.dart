@@ -1,3 +1,6 @@
+import 'package:aurora_mail/modules/mail/models/compose_attachment.dart';
+import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
+import 'package:aurora_mail/modules/mail/models/temp_attachment_upload.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class ComposeState extends Equatable {
@@ -8,6 +11,24 @@ abstract class ComposeState extends Equatable {
 }
 
 class InitialComposeState extends ComposeState {}
+
+class UploadStarted extends ComposeState {
+  final TempAttachmentUpload tempAttachment;
+
+  UploadStarted(this.tempAttachment);
+
+  @override
+  List<Object> get props => [tempAttachment];
+}
+
+class AttachmentUploaded extends ComposeState {
+  final ComposeAttachment composeAttachment;
+
+  AttachmentUploaded(this.composeAttachment);
+
+  @override
+  List<Object> get props => [composeAttachment];
+}
 
 class MessageSending extends ComposeState {}
 

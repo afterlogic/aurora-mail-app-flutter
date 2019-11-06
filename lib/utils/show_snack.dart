@@ -34,8 +34,9 @@ void showSnack({
         );
 
   if (msg.isEmpty) {
+    print("VO: Cannot show empty snack");
+  } else {
     scaffoldState.removeCurrentSnackBar();
     scaffoldState.showSnackBar(snack);
-    print("VO: Cannot show empty snack");
   }
 }

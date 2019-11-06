@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/modules/mail/blocs/compose_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
+import 'package:aurora_mail/modules/mail/models/compose_attachment.dart';
+import 'package:aurora_mail/modules/mail/models/temp_attachment_upload.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/compose_route.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
@@ -10,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'components/compose_app_bar.dart';
+import 'components/compose_attachment_item.dart';
 import 'components/compose_body.dart';
 import 'components/compose_section.dart';
 import 'components/compose_subject.dart';
@@ -37,6 +40,7 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
   final _toEmails = new List<String>();
   final _ccEmails = new List<String>();
   final _bccEmails = new List<String>();
+  final _attachments = new List();
   final _toTextCtrl = new TextEditingController();
   final _ccTextCtrl = new TextEditingController();
   final _bccTextCtrl = new TextEditingController();
@@ -75,6 +79,26 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
     }
   }
 
+  void _setUploadProgress(TempAttachmentUpload tempAttachment) {
+    setState(() {
+      _attachments.add(tempAttachment);
+    });
+  }
+
+  void _onAttachmentUploaded(ComposeAttachment attachment) {
+    final i = _attachments.indexWhere((a) => a.guid == attachment.guid);
+    setState(() {
+      _attachments.removeAt(i);
+      _attachments.insert(i, attachment);
+    });
+  }
+
+  void _cancelAttachment(dynamic attachment) {
+    setState(() {
+      _attachments.removeWhere((a) => a.guid == attachment.guid);
+    });
+  }
+
   void _sendMessage() {
     if (_toTextCtrl.text.isNotEmpty) {
       setState(() {
@@ -95,24 +119,40 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
       });
     }
 
+    // TODO translate
     if (_toEmails.isEmpty) return _showError("Please provide receivers");
+    if (_attachments.where((a) => a is TempAttachmentUpload).isNotEmpty) {
+      return showSnack(
+          context: context,
+          scaffoldState: _scaffoldKey.currentState,
+          // TODO translate
+          msg: "Please wait until attachments finish uploading",
+          isError: false);
+    }
 
     return _bloc.add(SendMessage(
       to: _toEmails.join(","),
       cc: _ccEmails.join(","),
       bcc: _bccEmails.join(","),
       subject: _subjectTextCtrl.text,
+      composeAttachments: new List<ComposeAttachment>.from(_attachments),
       messageText: _bodyTextCtrl.text,
       draftUid: _currentDraftUid,
     ));
   }
 
   void _saveToDrafts() {
+    if (_bodyTextCtrl.text.isEmpty) return;
+
+    final attachmentsForSave =
+        _attachments.where((a) => a is ComposeAttachment);
+
     return _bloc.add(SaveToDrafts(
       to: _toEmails.join(","),
       cc: _ccEmails.join(","),
       bcc: _bccEmails.join(","),
       subject: _subjectTextCtrl.text,
+      composeAttachments: new List<ComposeAttachment>.from(attachmentsForSave),
       messageText: _bodyTextCtrl.text,
       draftUid: _currentDraftUid,
     ));
@@ -145,6 +185,7 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
     _currentDraftUid = draftUid;
     BlocProvider.of<MailBloc>(context).add(CheckFoldersMessagesChanges());
 
+    // TODO VO: not working
     showSnack(
       context: context,
       scaffoldState: _scaffoldKey.currentState,
@@ -177,6 +218,10 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
             if (state is MessageSavedInDrafts)
               _onMessageSaved(context, state.draftUid);
             if (state is ComposeError) _showError(state.error);
+            if (state is UploadStarted)
+              _setUploadProgress(state.tempAttachment);
+            if (state is AttachmentUploaded)
+              _onAttachmentUploaded(state.composeAttachment);
           },
           child: ListView(
             padding: EdgeInsets.symmetric(horizontal: 16.0),
@@ -205,7 +250,17 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
                 ),
               if (_showBCC)
                 Divider(height: 0.0),
-              ComposeSubject(textCtrl: _subjectTextCtrl),
+              ComposeSubject(
+                textCtrl: _subjectTextCtrl,
+                onAttach: () => _bloc.add(UploadAttachment()),
+              ),
+              if (_attachments.isNotEmpty)
+                Divider(height: 0.0),
+              Column(
+                children: _attachments
+                    .map((a) => ComposeAttachmentItem(a, _cancelAttachment))
+                    .toList(),
+              ),
               Divider(height: 0.0),
               ComposeBody(textCtrl: _bodyTextCtrl),
             ],

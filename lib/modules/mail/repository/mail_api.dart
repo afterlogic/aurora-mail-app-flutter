@@ -1,10 +1,15 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:aurora_mail/models/api_body.dart';
 import 'package:aurora_mail/modules/app_store.dart';
+import 'package:aurora_mail/modules/mail/models/compose_attachment.dart';
+import 'package:aurora_mail/modules/mail/models/temp_attachment_upload.dart';
 import 'package:aurora_mail/utils/api_utils.dart';
 import 'package:aurora_mail/utils/error_handling.dart';
+import 'package:aurora_mail/utils/file_utils.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_uploader/flutter_uploader.dart';
 
 class MailApi {
   int get _accountId => AppStore.authState.accountId;
@@ -59,11 +64,18 @@ class MailApi {
     String cc = "",
     String bcc = "",
     String subject = "",
+    @required List<ComposeAttachment> composeAttachments,
     @required String messageText,
     @required int draftUid,
     @required String sentFolderName,
     @required String draftsFolderName,
   }) async {
+    final attachments = new Map();
+
+    composeAttachments.forEach((ca) {
+      attachments[ca.tempName] = [ca.fileName,"","0","0",""];
+    });
+
     final parameters = json.encode({
       "AccountID": _accountId,
       "FetcherID": "",
@@ -79,8 +91,7 @@ class MailApi {
       "IsHtml": false,
       "Importance": 3,
       "SendReadingConfirmation": false,
-      // TODO
-      "Attachments": null,
+      "Attachments": attachments,
       "InReplyTo": "",
       "References": "",
       "Sensitivity": 0,
@@ -107,10 +118,16 @@ class MailApi {
     String cc = "",
     String bcc = "",
     String subject = "",
+    @required List<ComposeAttachment> composeAttachments,
     @required String messageText,
     @required int draftUid,
     @required String draftsFolderName,
   }) async {
+    final attachments = new Map();
+
+    composeAttachments.forEach((ca) {
+      attachments[ca.tempName] = [ca.fileName,"","0","0",""];
+    });
     final parameters = json.encode({
       "AccountID": _accountId,
       "FetcherID": "",
@@ -125,7 +142,7 @@ class MailApi {
       "IsHtml": false,
       "Importance": 3,
       "SendReadingConfirmation": false,
-      "Attachments": null, // TODO
+      "Attachments": attachments,
       "InReplyTo": "",
       "References": "",
       "Sensitivity": 0,
@@ -145,5 +162,62 @@ class MailApi {
     } else {
       throw ServerError(getErrMsg(res));
     }
+  }
+
+  Future<void> uploadAttachment(
+    File file, {
+    @required Function(TempAttachmentUpload) onUploadStart,
+    @required Function(ComposeAttachment) onUploadEnd,
+    @required Function(dynamic) onError,
+  }) async {
+    final uploader = FlutterUploader();
+
+    final parameters = json.encode({"AccountID": _accountId});
+
+    final body = new ApiBody(
+        module: "Mail", method: "UploadAttachment", parameters: parameters);
+    final authState = AppStore.authState;
+
+    final fileName = FileUtils.getFileNameFromPath(file.path);
+
+    final taskId = await uploader.enqueue(
+      url: authState.apiUrl,
+      files: [
+        FileItem(
+          filename: fileName,
+          savedDir: file.parent.path,
+          fieldname: "file",
+        )
+      ],
+      method: UploadMethod.POST,
+      headers: getHeader(),
+      data: body.toMap(),
+      showNotification: true,
+      tag: fileName,
+    );
+
+    final tempAttachment = new TempAttachmentUpload(
+      name: fileName,
+      size: file.lengthSync(),
+      taskId: taskId,
+      uploadProgress: uploader.progress,
+      cancel: uploader.cancel,
+    );
+    onUploadStart(tempAttachment);
+
+    uploader.result.listen((result) {
+      final res = json.decode(result.response);
+      if (res["Result"] is Map) {
+        final attachment = res["Result"]["Attachment"];
+        final composeAttachment = ComposeAttachment.fromJsonString(attachment);
+        assert(tempAttachment != null && tempAttachment.guid is String);
+        composeAttachment.guid = tempAttachment.guid;
+        onUploadEnd(composeAttachment);
+      } else {
+        onError(ServerError(getErrMsg(res)));
+      }
+    }, onError: (err) {
+      print("Attachment upload error: $err");
+    });
   }
 }

@@ -98,6 +98,7 @@ class _ComposeSectionState extends State<ComposeSection> {
                   child: TextField(
                     focusNode: _focusNode,
                     controller: widget.textCtrl,
+                    keyboardType: TextInputType.emailAddress,
                     decoration: InputDecoration.collapsed(
                       hintText: null,
                     ),

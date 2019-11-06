@@ -12,19 +12,17 @@ class Attachment extends StatelessWidget {
     return ListTile(
       contentPadding: EdgeInsets.zero,
       dense: true,
-      leading: Icon(Icons.attach_file),
+      leading: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Icon(Icons.attach_file),
+        ],
+      ),
       title: Text(attachment.fileName),
       subtitle: Text(filesize(attachment.size)),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          if (attachment.viewUrl != null)
-            IconButton(
-              icon: Icon(Icons.remove_red_eye),
-              // TODO translate
-              tooltip: "View attachment",
-              onPressed: null,
-            ),
           if (attachment.downloadUrl != null)
             IconButton(
               icon: Icon(Icons.file_download),

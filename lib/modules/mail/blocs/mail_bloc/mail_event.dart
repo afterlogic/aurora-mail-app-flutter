@@ -31,3 +31,12 @@ class SelectFolder extends MailEvent {
 // gets messagesInfo for current folder
 // and relevant folders info for all the folders, including current
 class RefreshMessages extends MailEvent {}
+
+class DownloadAttachment extends MailEvent {
+  final String url;
+
+  const DownloadAttachment(this.url);
+
+  @override
+  List<Object> get props => [url];
+}
