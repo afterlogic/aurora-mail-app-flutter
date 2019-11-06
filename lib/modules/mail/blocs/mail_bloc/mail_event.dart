@@ -1,4 +1,5 @@
 import 'package:aurora_mail/models/folder.dart';
+import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class MailEvent extends Equatable {
@@ -33,10 +34,28 @@ class SelectFolder extends MailEvent {
 class RefreshMessages extends MailEvent {}
 
 class DownloadAttachment extends MailEvent {
-  final String url;
+  final MailAttachment attachment;
 
-  const DownloadAttachment(this.url);
+  const DownloadAttachment(this.attachment);
 
   @override
-  List<Object> get props => [url];
+  List<Object> get props => [attachment];
+}
+
+class StartDownload extends MailEvent {
+  final String fileName;
+
+  const StartDownload(this.fileName);
+
+  @override
+  List<Object> get props => [fileName];
+}
+
+class EndDownload extends MailEvent {
+  final String path;
+
+  const EndDownload(this.path);
+
+  @override
+  List<Object> get props => [path];
 }

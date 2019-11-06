@@ -30,11 +30,11 @@ class MailViewAppBar extends StatelessWidget {
           tooltip: "Forward",
           onPressed: () => onAppBarActionSelected(MailViewAppBarAction.forward),
         ),
-        IconButton(
-          icon: Icon(MdiIcons.bugOutline),
-          tooltip: "To spam",
-          onPressed: () => onAppBarActionSelected(MailViewAppBarAction.toSpam),
-        ),
+//        IconButton(
+//          icon: Icon(MdiIcons.bugOutline),
+//          tooltip: "To spam",
+//          onPressed: () => onAppBarActionSelected(MailViewAppBarAction.toSpam),
+//        ),
         IconButton(
           icon: Icon(Icons.delete_outline),
           tooltip: "Delete",

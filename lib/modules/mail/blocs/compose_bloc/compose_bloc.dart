@@ -4,6 +4,7 @@ import 'package:aurora_mail/modules/mail/blocs/compose_bloc/compose_methods.dart
 import 'package:aurora_mail/modules/mail/models/compose_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/temp_attachment_upload.dart';
 import 'package:aurora_mail/utils/error_handling.dart';
+import 'package:aurora_mail/utils/permissions.dart';
 import 'package:bloc/bloc.dart';
 
 import './bloc.dart';
@@ -66,6 +67,12 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
   }
 
   Stream<ComposeState> _uploadAttachment(UploadAttachment event) async* {
+    try {
+      await getStoragePermissions();
+    } catch(err) {
+      yield ComposeError(err);
+    }
+
     _composeMethods.uploadFile(
         onUploadStart: (TempAttachmentUpload tempAttachment) {
       add(StartUpload(tempAttachment));

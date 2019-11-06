@@ -39,8 +39,10 @@ class AppNavigation {
             settings: RouteSettings(
               name: settings.name,
             ),
-            builder: (context) =>
-                MessageViewAndroid(args.messages, args.initialPage));
+            builder: (_) => BlocProvider<MailBloc>.value(
+                value: args.bloc,
+                child: MessageViewAndroid(args.messages, args.initialPage)));
+
         break;
 
       case ComposeRoute.name:

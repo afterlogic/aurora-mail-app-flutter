@@ -4,11 +4,14 @@ import 'dart:io';
 import 'package:aurora_mail/models/api_body.dart';
 import 'package:aurora_mail/modules/app_store.dart';
 import 'package:aurora_mail/modules/mail/models/compose_attachment.dart';
+import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/temp_attachment_upload.dart';
 import 'package:aurora_mail/utils/api_utils.dart';
 import 'package:aurora_mail/utils/error_handling.dart';
 import 'package:aurora_mail/utils/file_utils.dart';
+import 'package:downloads_path_provider/downloads_path_provider.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_uploader/flutter_uploader.dart';
 
 class MailApi {
@@ -73,7 +76,7 @@ class MailApi {
     final attachments = new Map();
 
     composeAttachments.forEach((ca) {
-      attachments[ca.tempName] = [ca.fileName,"","0","0",""];
+      attachments[ca.tempName] = [ca.fileName, "", "0", "0", ""];
     });
 
     final parameters = json.encode({
@@ -126,7 +129,7 @@ class MailApi {
     final attachments = new Map();
 
     composeAttachments.forEach((ca) {
-      attachments[ca.tempName] = [ca.fileName,"","0","0",""];
+      attachments[ca.tempName] = [ca.fileName, "", "0", "0", ""];
     });
     final parameters = json.encode({
       "AccountID": _accountId,
@@ -219,5 +222,37 @@ class MailApi {
     }, onError: (err) {
       print("Attachment upload error: $err");
     });
+  }
+
+  Future<void> downloadAttachment(
+    MailAttachment attachment, {
+    @required Function() onDownloadStart,
+    @required Function(String) onDownloadEnd,
+  }) async {
+    final authState = AppStore.authState;
+    try {
+      await FlutterDownloader.initialize();
+    } catch (err) {}
+    final downloadsDirectory = await DownloadsPathProvider.downloadsDirectory;
+
+    final taskId = await FlutterDownloader.enqueue(
+      url: authState.hostName + attachment.downloadUrl,
+      savedDir: downloadsDirectory.path,
+      fileName: attachment.fileName,
+      headers: getHeader(),
+    );
+
+    await attachment.startDownload(
+      taskId: taskId,
+      cancel: FlutterDownloader.cancel,
+      onDownloadStart: () async {
+        onDownloadStart();
+        // TODO VO: repair progress updating
+//        FlutterDownloader.registerCallback(MailAttachment.downloadCallback);
+      },
+      onDownloadEnd: () =>
+          onDownloadEnd("${downloadsDirectory.path}/${attachment.fileName}"),
+      onError: () => onDownloadEnd(null),
+    );
   }
 }

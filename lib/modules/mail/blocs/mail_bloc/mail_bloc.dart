@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/utils/error_handling.dart';
+import 'package:aurora_mail/utils/permissions.dart';
 import 'package:bloc/bloc.dart';
 
 import 'bloc.dart';
@@ -26,6 +27,9 @@ class MailBloc extends Bloc<MailEvent, MailState> {
     if (event is CheckFoldersMessagesChanges)
       yield* _checkFoldersMessagesChanges(event);
     if (event is RefreshMessages) yield* _refreshMessages(event);
+    if (event is DownloadAttachment) yield* _downloadAttachment(event);
+    if (event is StartDownload) yield DownloadStarted(event.fileName);
+    if (event is EndDownload) yield DownloadFinished(event.path);
   }
 
   Stream<MailState> _fetchFolders(FetchFolders event) async* {
@@ -140,5 +144,23 @@ class MailBloc extends Bloc<MailEvent, MailState> {
     } catch (err, s) {
       yield MailError(formatError(err, s));
     }
+  }
+
+  Stream<MailState> _downloadAttachment(DownloadAttachment event) async* {
+    try {
+      await getStoragePermissions();
+    } catch (err) {
+      yield MailError(err);
+    }
+
+    _methods.downloadAttachment(
+      event.attachment,
+      onDownloadStart: () {
+//        add(StartDownload(event.attachment.fileName));
+      },
+      onDownloadEnd: (String path) {
+//        add(EndDownload(path));
+      },
+    );
   }
 }

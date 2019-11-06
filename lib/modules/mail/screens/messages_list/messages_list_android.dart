@@ -132,8 +132,8 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
                       onTap: () => Navigator.pushNamed(
                         context,
                         MessageViewRoute.name,
-                        arguments:
-                            MessageViewScreenArgs(messagesWithoutChildren, i),
+                        arguments: MessageViewScreenArgs(
+                            messagesWithoutChildren, i, _mailBloc),
                       ),
                     ),
                     if (_drawerInitialState.selectedFolder != null &&

@@ -42,3 +42,21 @@ class MailError extends MailState {
   @override
   List<Object> get props => [error];
 }
+
+class DownloadStarted extends MailState {
+  final String fileName;
+
+  const DownloadStarted(this.fileName);
+
+  @override
+  List<Object> get props => [fileName];
+}
+
+class DownloadFinished extends MailState {
+  final String path;
+
+  const DownloadFinished(this.path);
+
+  @override
+  List<Object> get props => [path];
+}

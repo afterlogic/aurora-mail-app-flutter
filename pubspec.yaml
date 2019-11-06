@@ -41,6 +41,7 @@ dependencies:
   uuid: ^2.0.2
   intl: ^0.15.8
   filesize: ^1.0.4
+  permission_handler: ^3.2.2
 
 dev_dependencies:
   flutter_test:
