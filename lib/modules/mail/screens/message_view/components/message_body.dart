@@ -1,43 +1,130 @@
+import 'dart:convert';
+
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/app_store.dart';
 import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
+import 'package:aurora_mail/utils/api_utils.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
+import 'package:http/http.dart' as http;
+import 'package:webview_flutter/webview_flutter.dart';
 
-class MessageBody extends StatelessWidget {
+class MessageBody extends StatefulWidget {
   final Message message;
   final List<MailAttachment> attachments;
 
   const MessageBody(this.message, this.attachments, {Key key})
       : super(key: key);
 
-  String get data {
-    if (message.htmlRaw != null && message.htmlRaw.isNotEmpty) {
-      return getHtmlWithImages(message.htmlRaw);
-    } else if (message.html != null && message.html.isNotEmpty) {
-      return getHtmlWithImages(message.html);
-    } else if (message.plainRaw != null && message.plainRaw.isNotEmpty) {
-      return message.plainRaw;
-    } else if (message.plain != null && message.plain.isNotEmpty) {
-      return message.plain;
-    } else {
-      return "";
-    }
+  @override
+  _MessageBodyState createState() => _MessageBodyState();
+}
+
+class _MessageBodyState extends State<MessageBody> {
+  WebViewController _controller;
+  double _webViewHeight = 200.0;
+
+  String _plainData;
+  String _htmlData;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _getHtmlWithImages();
   }
 
-  String getHtmlWithImages(String html) {
-    String parsedHtml = html;
-    attachments.forEach((attachment) {
-      parsedHtml = parsedHtml.replaceFirst("cid:${attachment.cid}",
-          AppStore.authState.hostName + attachment.viewUrl);
-    });
-    return parsedHtml;
+  void _getHtmlWithImages() async {
+    String htmlData;
+    String plainData;
+    if (widget.message.htmlRaw != null && widget.message.htmlRaw.isNotEmpty) {
+      htmlData = widget.message.htmlRaw;
+//      htmlData = htmlData.replaceAll("<body",
+//          '<body style="background-color: ${getWebColor(Theme.of(context).scaffoldBackgroundColor)}; color: ${getWebColor(Theme.of(context).textTheme.body1.color)} ');
+      
+    } else if (widget.message.html != null && widget.message.html.isNotEmpty) {
+      htmlData = widget.message.html;
+//      htmlData = '<body style="background-color: ${getWebColor(Theme.of(context).scaffoldBackgroundColor)}; color: ${getWebColor(Theme.of(context).textTheme.body1.color)}">$htmlData</body>';
+    } else if (widget.message.plainRaw != null &&
+        widget.message.plainRaw.isNotEmpty) {
+      plainData = widget.message.plainRaw;
+    } else if (widget.message.plain != null &&
+        widget.message.plain.isNotEmpty) {
+      plainData = widget.message.plain;
+    }
+
+    if (htmlData == null) {
+      setState(() => _plainData = plainData);
+      return null;
+    }
+
+    for (final attachment in widget.attachments) {
+      try {
+        final res = await http.get(
+            AppStore.authState.hostName + attachment.viewUrl,
+            headers: getHeader());
+
+        htmlData = htmlData.replaceFirst(
+          "cid:${attachment.cid}",
+          "data:image/png;base64," + base64Encode(res.bodyBytes),
+        );
+      } catch (err, s) {
+        print("VO: err: ${err}");
+        print("VO: s: ${s}");
+      }
+    }
+
+    print("VO: htmlData: ${htmlData}");
+
+    setState(() => _htmlData = htmlData);
+  }
+
+  String getWebColor(Color colorObj) {
+    final base = colorObj.toString();
+    final color = base.substring(base.length - 7, base.length - 1);
+    final opacity = base.substring(base.length - 9, base.length - 7);
+    return "#$color$opacity";
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Html(data: data),
-    );
+        height: _htmlData == null ? null : _webViewHeight,
+        child: _buildMessageBody());
+  }
+
+  Widget _buildMessageBody() {
+    if (_htmlData != null) {
+      return WebView(
+        key: Key(widget.message.uid.toString()),
+        initialUrl: Uri.dataFromString(_htmlData,
+                mimeType: 'text/html', encoding: Encoding.getByName('utf-8'))
+            .toString(),
+        javascriptMode: JavascriptMode.unrestricted,
+        onWebViewCreated: (WebViewController c) async {
+          _controller = c;
+//          _controller.evaluateJavascript('document.cookie = "AuthToken=${AppStore.authState.authToken}"');
+//          _controller.evaluateJavascript('console.log("VO: document.cookie", document.cookie)');
+        },
+        onPageFinished: (_) async {
+          final height = await _controller
+              .evaluateJavascript("document.documentElement.offsetHeight");
+          final prevHeight = _webViewHeight;
+          final parsedHeight = double.parse(height);
+          setState(() {
+            print("VO: parsedHeight: ${parsedHeight}");
+            if (height != null && prevHeight != parsedHeight) {
+              _webViewHeight = parsedHeight > 1500.0 ? 1500.0 : parsedHeight;
+            }
+          });
+        },
+        gestureRecognizers: Set()
+          ..add(Factory(() => HorizontalDragGestureRecognizer())),
+      );
+    } else if (_plainData != null) {
+      return Text(_plainData);
+    } else {
+      return Center(child: CircularProgressIndicator());
+    }
   }
 }
