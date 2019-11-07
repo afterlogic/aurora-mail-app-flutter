@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:aurora_mail/models/api_body.dart';
+import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/app_store.dart';
 import 'package:aurora_mail/modules/mail/models/compose_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
@@ -254,5 +255,26 @@ class MailApi {
           onDownloadEnd("${downloadsDirectory.path}/${attachment.fileName}"),
       onError: () => onDownloadEnd(null),
     );
+  }
+
+  Future<void> setMessagesSeen({
+    @required Folder folder,
+    @required List<int> uids,
+  }) async {
+    final parameters = json.encode({
+      "Folder": folder.fullNameRaw,
+      "AccountID": _accountId,
+      "Uids": uids.join(","),
+      "SetAction": true,
+    });
+
+    final body = new ApiBody(
+        module: "Mail", method: "SetMessagesSeen", parameters: parameters);
+
+    final res = await sendRequest(body);
+
+    if (res["Result"] != true) {
+      throw ServerError(getErrMsg(res));
+    }
   }
 }

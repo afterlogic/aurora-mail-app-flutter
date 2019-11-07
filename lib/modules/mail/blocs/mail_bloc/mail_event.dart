@@ -33,6 +33,15 @@ class SelectFolder extends MailEvent {
 // and relevant folders info for all the folders, including current
 class RefreshMessages extends MailEvent {}
 
+class SetSeen extends MailEvent {
+  final List<int> uids;
+
+  const SetSeen(this.uids);
+
+  @override
+  List<Object> get props => [uids];
+}
+
 class DownloadAttachment extends MailEvent {
   final MailAttachment attachment;
 

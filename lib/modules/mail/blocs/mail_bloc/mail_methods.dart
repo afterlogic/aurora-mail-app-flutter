@@ -282,4 +282,11 @@ class MailMethods {
     _mailApi.downloadAttachment(attachment,
         onDownloadEnd: onDownloadEnd, onDownloadStart: onDownloadStart);
   }
+
+  Future<void> setMessagesSeen({
+    @required Folder folder,
+    @required List<int> uids,
+  }) {
+    return _mailApi.setMessagesSeen(folder: folder, uids: uids);
+  }
 }

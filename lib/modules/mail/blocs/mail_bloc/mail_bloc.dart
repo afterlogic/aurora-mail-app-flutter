@@ -27,6 +27,7 @@ class MailBloc extends Bloc<MailEvent, MailState> {
     if (event is CheckFoldersMessagesChanges)
       yield* _checkFoldersMessagesChanges(event);
     if (event is RefreshMessages) yield* _refreshMessages(event);
+    if (event is SetSeen) yield* _setSeen(event);
     if (event is DownloadAttachment) yield* _downloadAttachment(event);
     if (event is StartDownload) yield DownloadStarted(event.fileName);
     if (event is EndDownload) yield DownloadFinished(event.path);
@@ -144,6 +145,11 @@ class MailBloc extends Bloc<MailEvent, MailState> {
     } catch (err, s) {
       yield MailError(formatError(err, s));
     }
+  }
+
+  Stream<MailState> _setSeen(SetSeen event) async* {
+    await _methods.setMessagesSeen(folder: _selectedFolder, uids: event.uids);
+    add(RefreshMessages());
   }
 
   Stream<MailState> _downloadAttachment(DownloadAttachment event) async* {

@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/mail/mail_table.dart';
@@ -26,11 +29,45 @@ class _MessageViewAndroidState extends State<MessageViewAndroid> {
   PageController _pageCtrl;
   int _currentPage;
 
+  Timer _setSeenTimer;
+
   @override
   void initState() {
     super.initState();
-    _currentPage = widget.initialPage;
+    _currentPage = widget.initialPage ?? 0;
     _pageCtrl = new PageController(initialPage: _currentPage, keepPage: false);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _startSetSeenTimer(context);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    if (_setSeenTimer != null) _setSeenTimer.cancel();
+  }
+
+  void _startSetSeenTimer(BuildContext context) {
+    if (_setSeenTimer != null) {
+      _setSeenTimer.cancel();
+      _setSeenTimer = null;
+    }
+
+    final flagsString = widget.messages[_currentPage].flagsInJson;
+    final flags = json.decode(flagsString);
+    if (!flags.contains("\\seen")) {
+      final uids = [widget.messages[_currentPage].uid];
+      _setSeenTimer = new Timer(
+        SET_SEEN_DELAY,
+        () {
+          print("VO: SET_SEEN: ${uids[0]}");
+          BlocProvider.of<MailBloc>(context).add(SetSeen(uids));
+        },
+      );
+    }
   }
 
   void _onAppBarActionSelected(MailViewAppBarAction action) {
@@ -81,7 +118,10 @@ class _MessageViewAndroidState extends State<MessageViewAndroid> {
             }
           },
           child: PageView.builder(
-            onPageChanged: (int i) => _currentPage = i,
+            onPageChanged: (int i) {
+              _currentPage = i;
+              _startSetSeenTimer(context);
+            },
             controller: _pageCtrl,
             itemCount: widget.messages.length,
             itemBuilder: (_, int i) {

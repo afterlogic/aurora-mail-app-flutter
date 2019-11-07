@@ -57,7 +57,7 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
   @override
   void dispose() {
     super.dispose();
-    _timer.cancel();
+    if (_timer != null) _timer.cancel();
     _bloc.close();
   }
 
