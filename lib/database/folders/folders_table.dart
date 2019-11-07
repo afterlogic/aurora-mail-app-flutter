@@ -160,7 +160,11 @@ class Folders extends Table {
     final newInfo = args["newItems"];
 
     final unchangedMessages = oldInfo.where((i) =>
-        newInfo.firstWhere((j) => j.uid == i.uid && j.parentUid == i.parentUid,
+        newInfo.firstWhere(
+            (j) =>
+                j.uid == i.uid &&
+                j.parentUid == i.parentUid &&
+                listEquals(j.flags, i.flags),
             orElse: () => null) !=
         null);
 
@@ -169,7 +173,7 @@ class Folders extends Table {
         unchangedMessages.length == newInfo.length) {
       print("Diff calcultaion finished: no changes");
       return new MessagesInfoDiffCalcResult(
-          updatedInfo: oldInfo, removedUids: []);
+          updatedInfo: oldInfo, removedUids: [], infosToUpdateFlags: []);
     }
 
     final addedMessages = newInfo.where((i) =>
@@ -183,10 +187,17 @@ class Folders extends Table {
             orElse: () => null) !=
         null);
 
+    final changedFlags = newInfo.where((i) =>
+        oldInfo.firstWhere(
+            (j) => j.uid == i.uid && !listEquals(j.flags, i.flags),
+            orElse: () => null) !=
+        null);
+
     print("""
     Messages info diff calcultaion finished:
       unchanged: ${unchangedMessages.length}
       changedParent: ${changedParent.length}
+      changedFlags: ${changedFlags.length}
       removed: ${removedMessages.length}
       added: ${addedMessages.length}
     """);
@@ -194,15 +205,20 @@ class Folders extends Table {
     final removedUids = removedMessages.map((m) => m.uid).toList();
     final changedParentUid = changedParent.map((m) => m.uid).toList();
 
+    // update flags directly without deleting the messages
+    changedFlags.forEach((info) => info.hasBody = true);
+
     final List<MessageInfo> updatedInfo = [
       ...addedMessages,
       ...changedParent,
+      ...changedFlags,
       ...unchangedMessages
     ];
 
     return new MessagesInfoDiffCalcResult(
       updatedInfo: updatedInfo,
       removedUids: [...removedUids, ...changedParentUid],
+      infosToUpdateFlags: changedFlags.toList(),
     );
   }
 
@@ -227,8 +243,13 @@ class FoldersDiffCalcResult {
 class MessagesInfoDiffCalcResult {
   final List<MessageInfo> updatedInfo;
   final List<int> removedUids;
+  final List<MessageInfo> infosToUpdateFlags;
 
   MessagesInfoDiffCalcResult(
-      {@required this.updatedInfo, @required this.removedUids})
-      : assert(updatedInfo != null, removedUids != null);
+      {@required this.updatedInfo,
+      @required this.removedUids,
+      @required this.infosToUpdateFlags})
+      : assert(updatedInfo != null &&
+            removedUids != null &&
+            infosToUpdateFlags != null);
 }

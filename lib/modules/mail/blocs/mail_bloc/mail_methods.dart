@@ -197,6 +197,7 @@ class MailMethods {
           folderToUpdate.messagesInfo, messagesInfo);
       messagesInfo = calcResult.updatedInfo;
       await _mailDao.deleteMessages(calcResult.removedUids);
+      _mailDao.updateMessagesFlags(calcResult.infosToUpdateFlags);
     }
 
     await _foldersDao.setMessagesInfo(folderToUpdate.localId, messagesInfo);
