@@ -8,6 +8,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class MessageBody extends StatefulWidget {
@@ -41,7 +42,7 @@ class _MessageBodyState extends State<MessageBody> {
       htmlData = widget.message.htmlRaw;
 //      htmlData = htmlData.replaceAll("<body",
 //          '<body style="background-color: ${getWebColor(Theme.of(context).scaffoldBackgroundColor)}; color: ${getWebColor(Theme.of(context).textTheme.body1.color)} ');
-      
+
     } else if (widget.message.html != null && widget.message.html.isNotEmpty) {
       htmlData = widget.message.html;
 //      htmlData = '<body style="background-color: ${getWebColor(Theme.of(context).scaffoldBackgroundColor)}; color: ${getWebColor(Theme.of(context).textTheme.body1.color)}">$htmlData</body>';
@@ -74,8 +75,6 @@ class _MessageBodyState extends State<MessageBody> {
       }
     }
 
-    print("VO: htmlData: ${htmlData}");
-
     setState(() => _htmlData = htmlData);
   }
 
@@ -101,10 +100,10 @@ class _MessageBodyState extends State<MessageBody> {
                 mimeType: 'text/html', encoding: Encoding.getByName('utf-8'))
             .toString(),
         javascriptMode: JavascriptMode.unrestricted,
-        onWebViewCreated: (WebViewController c) async {
-          _controller = c;
-//          _controller.evaluateJavascript('document.cookie = "AuthToken=${AppStore.authState.authToken}"');
-//          _controller.evaluateJavascript('console.log("VO: document.cookie", document.cookie)');
+        onWebViewCreated: (WebViewController c) => _controller = c,
+        navigationDelegate: (NavigationRequest request) {
+          launch(request.url);
+          return NavigationDecision.prevent;
         },
         onPageFinished: (_) async {
           final height = await _controller

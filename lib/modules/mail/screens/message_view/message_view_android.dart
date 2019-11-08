@@ -118,6 +118,8 @@ class _MessageViewAndroidState extends State<MessageViewAndroid> {
             }
           },
           child: PageView.builder(
+            // TODO VO: temp disabled pageview
+            physics: new NeverScrollableScrollPhysics(),
             onPageChanged: (int i) {
               _currentPage = i;
               _startSetSeenTimer(context);
