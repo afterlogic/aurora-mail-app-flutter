@@ -3064,12 +3064,927 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
   }
 }
 
+class Account extends DataClass implements Insertable<Account> {
+  final int localId;
+  final int entityId;
+  final int idUser;
+  final String uuid;
+  final String parentUuid;
+  final String moduleName;
+  final bool useToAuthorize;
+  final String email;
+  final String friendlyName;
+  final bool useSignature;
+  final String signature;
+  final int serverId;
+  final String foldersOrderInJson;
+  final bool useThreading;
+  final bool saveRepliesToCurrFolder;
+  final int accountId;
+  final bool allowFilters;
+  final bool allowForward;
+  final bool allowAutoResponder;
+  Account(
+      {@required this.localId,
+      @required this.entityId,
+      @required this.idUser,
+      @required this.uuid,
+      @required this.parentUuid,
+      @required this.moduleName,
+      @required this.useToAuthorize,
+      @required this.email,
+      @required this.friendlyName,
+      @required this.useSignature,
+      @required this.signature,
+      @required this.serverId,
+      @required this.foldersOrderInJson,
+      @required this.useThreading,
+      @required this.saveRepliesToCurrFolder,
+      @required this.accountId,
+      @required this.allowFilters,
+      @required this.allowForward,
+      @required this.allowAutoResponder});
+  factory Account.fromData(Map<String, dynamic> data, GeneratedDatabase db,
+      {String prefix}) {
+    final effectivePrefix = prefix ?? '';
+    final intType = db.typeSystem.forDartType<int>();
+    final stringType = db.typeSystem.forDartType<String>();
+    final boolType = db.typeSystem.forDartType<bool>();
+    return Account(
+      localId:
+          intType.mapFromDatabaseResponse(data['${effectivePrefix}local_id']),
+      entityId:
+          intType.mapFromDatabaseResponse(data['${effectivePrefix}entity_id']),
+      idUser:
+          intType.mapFromDatabaseResponse(data['${effectivePrefix}id_user']),
+      uuid: stringType.mapFromDatabaseResponse(data['${effectivePrefix}uuid']),
+      parentUuid: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}parent_uuid']),
+      moduleName: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}module_name']),
+      useToAuthorize: boolType
+          .mapFromDatabaseResponse(data['${effectivePrefix}use_to_authorize']),
+      email:
+          stringType.mapFromDatabaseResponse(data['${effectivePrefix}email']),
+      friendlyName: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}friendly_name']),
+      useSignature: boolType
+          .mapFromDatabaseResponse(data['${effectivePrefix}use_signature']),
+      signature: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}signature']),
+      serverId:
+          intType.mapFromDatabaseResponse(data['${effectivePrefix}server_id']),
+      foldersOrderInJson: stringType.mapFromDatabaseResponse(
+          data['${effectivePrefix}folders_order_in_json']),
+      useThreading: boolType
+          .mapFromDatabaseResponse(data['${effectivePrefix}use_threading']),
+      saveRepliesToCurrFolder: boolType.mapFromDatabaseResponse(
+          data['${effectivePrefix}save_replies_to_curr_folder']),
+      accountId:
+          intType.mapFromDatabaseResponse(data['${effectivePrefix}account_id']),
+      allowFilters: boolType
+          .mapFromDatabaseResponse(data['${effectivePrefix}allow_filters']),
+      allowForward: boolType
+          .mapFromDatabaseResponse(data['${effectivePrefix}allow_forward']),
+      allowAutoResponder: boolType.mapFromDatabaseResponse(
+          data['${effectivePrefix}allow_auto_responder']),
+    );
+  }
+  factory Account.fromJson(Map<String, dynamic> json,
+      {ValueSerializer serializer = const ValueSerializer.defaults()}) {
+    return Account(
+      localId: serializer.fromJson<int>(json['localId']),
+      entityId: serializer.fromJson<int>(json['entityId']),
+      idUser: serializer.fromJson<int>(json['idUser']),
+      uuid: serializer.fromJson<String>(json['uuid']),
+      parentUuid: serializer.fromJson<String>(json['parentUuid']),
+      moduleName: serializer.fromJson<String>(json['moduleName']),
+      useToAuthorize: serializer.fromJson<bool>(json['useToAuthorize']),
+      email: serializer.fromJson<String>(json['email']),
+      friendlyName: serializer.fromJson<String>(json['friendlyName']),
+      useSignature: serializer.fromJson<bool>(json['useSignature']),
+      signature: serializer.fromJson<String>(json['signature']),
+      serverId: serializer.fromJson<int>(json['serverId']),
+      foldersOrderInJson:
+          serializer.fromJson<String>(json['foldersOrderInJson']),
+      useThreading: serializer.fromJson<bool>(json['useThreading']),
+      saveRepliesToCurrFolder:
+          serializer.fromJson<bool>(json['saveRepliesToCurrFolder']),
+      accountId: serializer.fromJson<int>(json['accountId']),
+      allowFilters: serializer.fromJson<bool>(json['allowFilters']),
+      allowForward: serializer.fromJson<bool>(json['allowForward']),
+      allowAutoResponder: serializer.fromJson<bool>(json['allowAutoResponder']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson(
+      {ValueSerializer serializer = const ValueSerializer.defaults()}) {
+    return {
+      'localId': serializer.toJson<int>(localId),
+      'entityId': serializer.toJson<int>(entityId),
+      'idUser': serializer.toJson<int>(idUser),
+      'uuid': serializer.toJson<String>(uuid),
+      'parentUuid': serializer.toJson<String>(parentUuid),
+      'moduleName': serializer.toJson<String>(moduleName),
+      'useToAuthorize': serializer.toJson<bool>(useToAuthorize),
+      'email': serializer.toJson<String>(email),
+      'friendlyName': serializer.toJson<String>(friendlyName),
+      'useSignature': serializer.toJson<bool>(useSignature),
+      'signature': serializer.toJson<String>(signature),
+      'serverId': serializer.toJson<int>(serverId),
+      'foldersOrderInJson': serializer.toJson<String>(foldersOrderInJson),
+      'useThreading': serializer.toJson<bool>(useThreading),
+      'saveRepliesToCurrFolder':
+          serializer.toJson<bool>(saveRepliesToCurrFolder),
+      'accountId': serializer.toJson<int>(accountId),
+      'allowFilters': serializer.toJson<bool>(allowFilters),
+      'allowForward': serializer.toJson<bool>(allowForward),
+      'allowAutoResponder': serializer.toJson<bool>(allowAutoResponder),
+    };
+  }
+
+  @override
+  T createCompanion<T extends UpdateCompanion<Account>>(bool nullToAbsent) {
+    return AccountsCompanion(
+      localId: localId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(localId),
+      entityId: entityId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(entityId),
+      idUser:
+          idUser == null && nullToAbsent ? const Value.absent() : Value(idUser),
+      uuid: uuid == null && nullToAbsent ? const Value.absent() : Value(uuid),
+      parentUuid: parentUuid == null && nullToAbsent
+          ? const Value.absent()
+          : Value(parentUuid),
+      moduleName: moduleName == null && nullToAbsent
+          ? const Value.absent()
+          : Value(moduleName),
+      useToAuthorize: useToAuthorize == null && nullToAbsent
+          ? const Value.absent()
+          : Value(useToAuthorize),
+      email:
+          email == null && nullToAbsent ? const Value.absent() : Value(email),
+      friendlyName: friendlyName == null && nullToAbsent
+          ? const Value.absent()
+          : Value(friendlyName),
+      useSignature: useSignature == null && nullToAbsent
+          ? const Value.absent()
+          : Value(useSignature),
+      signature: signature == null && nullToAbsent
+          ? const Value.absent()
+          : Value(signature),
+      serverId: serverId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(serverId),
+      foldersOrderInJson: foldersOrderInJson == null && nullToAbsent
+          ? const Value.absent()
+          : Value(foldersOrderInJson),
+      useThreading: useThreading == null && nullToAbsent
+          ? const Value.absent()
+          : Value(useThreading),
+      saveRepliesToCurrFolder: saveRepliesToCurrFolder == null && nullToAbsent
+          ? const Value.absent()
+          : Value(saveRepliesToCurrFolder),
+      accountId: accountId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(accountId),
+      allowFilters: allowFilters == null && nullToAbsent
+          ? const Value.absent()
+          : Value(allowFilters),
+      allowForward: allowForward == null && nullToAbsent
+          ? const Value.absent()
+          : Value(allowForward),
+      allowAutoResponder: allowAutoResponder == null && nullToAbsent
+          ? const Value.absent()
+          : Value(allowAutoResponder),
+    ) as T;
+  }
+
+  Account copyWith(
+          {int localId,
+          int entityId,
+          int idUser,
+          String uuid,
+          String parentUuid,
+          String moduleName,
+          bool useToAuthorize,
+          String email,
+          String friendlyName,
+          bool useSignature,
+          String signature,
+          int serverId,
+          String foldersOrderInJson,
+          bool useThreading,
+          bool saveRepliesToCurrFolder,
+          int accountId,
+          bool allowFilters,
+          bool allowForward,
+          bool allowAutoResponder}) =>
+      Account(
+        localId: localId ?? this.localId,
+        entityId: entityId ?? this.entityId,
+        idUser: idUser ?? this.idUser,
+        uuid: uuid ?? this.uuid,
+        parentUuid: parentUuid ?? this.parentUuid,
+        moduleName: moduleName ?? this.moduleName,
+        useToAuthorize: useToAuthorize ?? this.useToAuthorize,
+        email: email ?? this.email,
+        friendlyName: friendlyName ?? this.friendlyName,
+        useSignature: useSignature ?? this.useSignature,
+        signature: signature ?? this.signature,
+        serverId: serverId ?? this.serverId,
+        foldersOrderInJson: foldersOrderInJson ?? this.foldersOrderInJson,
+        useThreading: useThreading ?? this.useThreading,
+        saveRepliesToCurrFolder:
+            saveRepliesToCurrFolder ?? this.saveRepliesToCurrFolder,
+        accountId: accountId ?? this.accountId,
+        allowFilters: allowFilters ?? this.allowFilters,
+        allowForward: allowForward ?? this.allowForward,
+        allowAutoResponder: allowAutoResponder ?? this.allowAutoResponder,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('Account(')
+          ..write('localId: $localId, ')
+          ..write('entityId: $entityId, ')
+          ..write('idUser: $idUser, ')
+          ..write('uuid: $uuid, ')
+          ..write('parentUuid: $parentUuid, ')
+          ..write('moduleName: $moduleName, ')
+          ..write('useToAuthorize: $useToAuthorize, ')
+          ..write('email: $email, ')
+          ..write('friendlyName: $friendlyName, ')
+          ..write('useSignature: $useSignature, ')
+          ..write('signature: $signature, ')
+          ..write('serverId: $serverId, ')
+          ..write('foldersOrderInJson: $foldersOrderInJson, ')
+          ..write('useThreading: $useThreading, ')
+          ..write('saveRepliesToCurrFolder: $saveRepliesToCurrFolder, ')
+          ..write('accountId: $accountId, ')
+          ..write('allowFilters: $allowFilters, ')
+          ..write('allowForward: $allowForward, ')
+          ..write('allowAutoResponder: $allowAutoResponder')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => $mrjf($mrjc(
+      localId.hashCode,
+      $mrjc(
+          entityId.hashCode,
+          $mrjc(
+              idUser.hashCode,
+              $mrjc(
+                  uuid.hashCode,
+                  $mrjc(
+                      parentUuid.hashCode,
+                      $mrjc(
+                          moduleName.hashCode,
+                          $mrjc(
+                              useToAuthorize.hashCode,
+                              $mrjc(
+                                  email.hashCode,
+                                  $mrjc(
+                                      friendlyName.hashCode,
+                                      $mrjc(
+                                          useSignature.hashCode,
+                                          $mrjc(
+                                              signature.hashCode,
+                                              $mrjc(
+                                                  serverId.hashCode,
+                                                  $mrjc(
+                                                      foldersOrderInJson
+                                                          .hashCode,
+                                                      $mrjc(
+                                                          useThreading.hashCode,
+                                                          $mrjc(
+                                                              saveRepliesToCurrFolder
+                                                                  .hashCode,
+                                                              $mrjc(
+                                                                  accountId
+                                                                      .hashCode,
+                                                                  $mrjc(
+                                                                      allowFilters
+                                                                          .hashCode,
+                                                                      $mrjc(
+                                                                          allowForward
+                                                                              .hashCode,
+                                                                          allowAutoResponder
+                                                                              .hashCode)))))))))))))))))));
+  @override
+  bool operator ==(other) =>
+      identical(this, other) ||
+      (other is Account &&
+          other.localId == localId &&
+          other.entityId == entityId &&
+          other.idUser == idUser &&
+          other.uuid == uuid &&
+          other.parentUuid == parentUuid &&
+          other.moduleName == moduleName &&
+          other.useToAuthorize == useToAuthorize &&
+          other.email == email &&
+          other.friendlyName == friendlyName &&
+          other.useSignature == useSignature &&
+          other.signature == signature &&
+          other.serverId == serverId &&
+          other.foldersOrderInJson == foldersOrderInJson &&
+          other.useThreading == useThreading &&
+          other.saveRepliesToCurrFolder == saveRepliesToCurrFolder &&
+          other.accountId == accountId &&
+          other.allowFilters == allowFilters &&
+          other.allowForward == allowForward &&
+          other.allowAutoResponder == allowAutoResponder);
+}
+
+class AccountsCompanion extends UpdateCompanion<Account> {
+  final Value<int> localId;
+  final Value<int> entityId;
+  final Value<int> idUser;
+  final Value<String> uuid;
+  final Value<String> parentUuid;
+  final Value<String> moduleName;
+  final Value<bool> useToAuthorize;
+  final Value<String> email;
+  final Value<String> friendlyName;
+  final Value<bool> useSignature;
+  final Value<String> signature;
+  final Value<int> serverId;
+  final Value<String> foldersOrderInJson;
+  final Value<bool> useThreading;
+  final Value<bool> saveRepliesToCurrFolder;
+  final Value<int> accountId;
+  final Value<bool> allowFilters;
+  final Value<bool> allowForward;
+  final Value<bool> allowAutoResponder;
+  const AccountsCompanion({
+    this.localId = const Value.absent(),
+    this.entityId = const Value.absent(),
+    this.idUser = const Value.absent(),
+    this.uuid = const Value.absent(),
+    this.parentUuid = const Value.absent(),
+    this.moduleName = const Value.absent(),
+    this.useToAuthorize = const Value.absent(),
+    this.email = const Value.absent(),
+    this.friendlyName = const Value.absent(),
+    this.useSignature = const Value.absent(),
+    this.signature = const Value.absent(),
+    this.serverId = const Value.absent(),
+    this.foldersOrderInJson = const Value.absent(),
+    this.useThreading = const Value.absent(),
+    this.saveRepliesToCurrFolder = const Value.absent(),
+    this.accountId = const Value.absent(),
+    this.allowFilters = const Value.absent(),
+    this.allowForward = const Value.absent(),
+    this.allowAutoResponder = const Value.absent(),
+  });
+  AccountsCompanion copyWith(
+      {Value<int> localId,
+      Value<int> entityId,
+      Value<int> idUser,
+      Value<String> uuid,
+      Value<String> parentUuid,
+      Value<String> moduleName,
+      Value<bool> useToAuthorize,
+      Value<String> email,
+      Value<String> friendlyName,
+      Value<bool> useSignature,
+      Value<String> signature,
+      Value<int> serverId,
+      Value<String> foldersOrderInJson,
+      Value<bool> useThreading,
+      Value<bool> saveRepliesToCurrFolder,
+      Value<int> accountId,
+      Value<bool> allowFilters,
+      Value<bool> allowForward,
+      Value<bool> allowAutoResponder}) {
+    return AccountsCompanion(
+      localId: localId ?? this.localId,
+      entityId: entityId ?? this.entityId,
+      idUser: idUser ?? this.idUser,
+      uuid: uuid ?? this.uuid,
+      parentUuid: parentUuid ?? this.parentUuid,
+      moduleName: moduleName ?? this.moduleName,
+      useToAuthorize: useToAuthorize ?? this.useToAuthorize,
+      email: email ?? this.email,
+      friendlyName: friendlyName ?? this.friendlyName,
+      useSignature: useSignature ?? this.useSignature,
+      signature: signature ?? this.signature,
+      serverId: serverId ?? this.serverId,
+      foldersOrderInJson: foldersOrderInJson ?? this.foldersOrderInJson,
+      useThreading: useThreading ?? this.useThreading,
+      saveRepliesToCurrFolder:
+          saveRepliesToCurrFolder ?? this.saveRepliesToCurrFolder,
+      accountId: accountId ?? this.accountId,
+      allowFilters: allowFilters ?? this.allowFilters,
+      allowForward: allowForward ?? this.allowForward,
+      allowAutoResponder: allowAutoResponder ?? this.allowAutoResponder,
+    );
+  }
+}
+
+class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
+  final GeneratedDatabase _db;
+  final String _alias;
+  $AccountsTable(this._db, [this._alias]);
+  final VerificationMeta _localIdMeta = const VerificationMeta('localId');
+  GeneratedIntColumn _localId;
+  @override
+  GeneratedIntColumn get localId => _localId ??= _constructLocalId();
+  GeneratedIntColumn _constructLocalId() {
+    return GeneratedIntColumn('local_id', $tableName, false,
+        hasAutoIncrement: true, declaredAsPrimaryKey: true);
+  }
+
+  final VerificationMeta _entityIdMeta = const VerificationMeta('entityId');
+  GeneratedIntColumn _entityId;
+  @override
+  GeneratedIntColumn get entityId => _entityId ??= _constructEntityId();
+  GeneratedIntColumn _constructEntityId() {
+    return GeneratedIntColumn('entity_id', $tableName, false,
+        $customConstraints: 'UNIQUE');
+  }
+
+  final VerificationMeta _idUserMeta = const VerificationMeta('idUser');
+  GeneratedIntColumn _idUser;
+  @override
+  GeneratedIntColumn get idUser => _idUser ??= _constructIdUser();
+  GeneratedIntColumn _constructIdUser() {
+    return GeneratedIntColumn(
+      'id_user',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _uuidMeta = const VerificationMeta('uuid');
+  GeneratedTextColumn _uuid;
+  @override
+  GeneratedTextColumn get uuid => _uuid ??= _constructUuid();
+  GeneratedTextColumn _constructUuid() {
+    return GeneratedTextColumn(
+      'uuid',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _parentUuidMeta = const VerificationMeta('parentUuid');
+  GeneratedTextColumn _parentUuid;
+  @override
+  GeneratedTextColumn get parentUuid => _parentUuid ??= _constructParentUuid();
+  GeneratedTextColumn _constructParentUuid() {
+    return GeneratedTextColumn(
+      'parent_uuid',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _moduleNameMeta = const VerificationMeta('moduleName');
+  GeneratedTextColumn _moduleName;
+  @override
+  GeneratedTextColumn get moduleName => _moduleName ??= _constructModuleName();
+  GeneratedTextColumn _constructModuleName() {
+    return GeneratedTextColumn(
+      'module_name',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _useToAuthorizeMeta =
+      const VerificationMeta('useToAuthorize');
+  GeneratedBoolColumn _useToAuthorize;
+  @override
+  GeneratedBoolColumn get useToAuthorize =>
+      _useToAuthorize ??= _constructUseToAuthorize();
+  GeneratedBoolColumn _constructUseToAuthorize() {
+    return GeneratedBoolColumn(
+      'use_to_authorize',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _emailMeta = const VerificationMeta('email');
+  GeneratedTextColumn _email;
+  @override
+  GeneratedTextColumn get email => _email ??= _constructEmail();
+  GeneratedTextColumn _constructEmail() {
+    return GeneratedTextColumn(
+      'email',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _friendlyNameMeta =
+      const VerificationMeta('friendlyName');
+  GeneratedTextColumn _friendlyName;
+  @override
+  GeneratedTextColumn get friendlyName =>
+      _friendlyName ??= _constructFriendlyName();
+  GeneratedTextColumn _constructFriendlyName() {
+    return GeneratedTextColumn(
+      'friendly_name',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _useSignatureMeta =
+      const VerificationMeta('useSignature');
+  GeneratedBoolColumn _useSignature;
+  @override
+  GeneratedBoolColumn get useSignature =>
+      _useSignature ??= _constructUseSignature();
+  GeneratedBoolColumn _constructUseSignature() {
+    return GeneratedBoolColumn(
+      'use_signature',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _signatureMeta = const VerificationMeta('signature');
+  GeneratedTextColumn _signature;
+  @override
+  GeneratedTextColumn get signature => _signature ??= _constructSignature();
+  GeneratedTextColumn _constructSignature() {
+    return GeneratedTextColumn(
+      'signature',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _serverIdMeta = const VerificationMeta('serverId');
+  GeneratedIntColumn _serverId;
+  @override
+  GeneratedIntColumn get serverId => _serverId ??= _constructServerId();
+  GeneratedIntColumn _constructServerId() {
+    return GeneratedIntColumn(
+      'server_id',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _foldersOrderInJsonMeta =
+      const VerificationMeta('foldersOrderInJson');
+  GeneratedTextColumn _foldersOrderInJson;
+  @override
+  GeneratedTextColumn get foldersOrderInJson =>
+      _foldersOrderInJson ??= _constructFoldersOrderInJson();
+  GeneratedTextColumn _constructFoldersOrderInJson() {
+    return GeneratedTextColumn(
+      'folders_order_in_json',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _useThreadingMeta =
+      const VerificationMeta('useThreading');
+  GeneratedBoolColumn _useThreading;
+  @override
+  GeneratedBoolColumn get useThreading =>
+      _useThreading ??= _constructUseThreading();
+  GeneratedBoolColumn _constructUseThreading() {
+    return GeneratedBoolColumn(
+      'use_threading',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _saveRepliesToCurrFolderMeta =
+      const VerificationMeta('saveRepliesToCurrFolder');
+  GeneratedBoolColumn _saveRepliesToCurrFolder;
+  @override
+  GeneratedBoolColumn get saveRepliesToCurrFolder =>
+      _saveRepliesToCurrFolder ??= _constructSaveRepliesToCurrFolder();
+  GeneratedBoolColumn _constructSaveRepliesToCurrFolder() {
+    return GeneratedBoolColumn(
+      'save_replies_to_curr_folder',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _accountIdMeta = const VerificationMeta('accountId');
+  GeneratedIntColumn _accountId;
+  @override
+  GeneratedIntColumn get accountId => _accountId ??= _constructAccountId();
+  GeneratedIntColumn _constructAccountId() {
+    return GeneratedIntColumn(
+      'account_id',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _allowFiltersMeta =
+      const VerificationMeta('allowFilters');
+  GeneratedBoolColumn _allowFilters;
+  @override
+  GeneratedBoolColumn get allowFilters =>
+      _allowFilters ??= _constructAllowFilters();
+  GeneratedBoolColumn _constructAllowFilters() {
+    return GeneratedBoolColumn(
+      'allow_filters',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _allowForwardMeta =
+      const VerificationMeta('allowForward');
+  GeneratedBoolColumn _allowForward;
+  @override
+  GeneratedBoolColumn get allowForward =>
+      _allowForward ??= _constructAllowForward();
+  GeneratedBoolColumn _constructAllowForward() {
+    return GeneratedBoolColumn(
+      'allow_forward',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _allowAutoResponderMeta =
+      const VerificationMeta('allowAutoResponder');
+  GeneratedBoolColumn _allowAutoResponder;
+  @override
+  GeneratedBoolColumn get allowAutoResponder =>
+      _allowAutoResponder ??= _constructAllowAutoResponder();
+  GeneratedBoolColumn _constructAllowAutoResponder() {
+    return GeneratedBoolColumn(
+      'allow_auto_responder',
+      $tableName,
+      false,
+    );
+  }
+
+  @override
+  List<GeneratedColumn> get $columns => [
+        localId,
+        entityId,
+        idUser,
+        uuid,
+        parentUuid,
+        moduleName,
+        useToAuthorize,
+        email,
+        friendlyName,
+        useSignature,
+        signature,
+        serverId,
+        foldersOrderInJson,
+        useThreading,
+        saveRepliesToCurrFolder,
+        accountId,
+        allowFilters,
+        allowForward,
+        allowAutoResponder
+      ];
+  @override
+  $AccountsTable get asDslTable => this;
+  @override
+  String get $tableName => _alias ?? 'accounts';
+  @override
+  final String actualTableName = 'accounts';
+  @override
+  VerificationContext validateIntegrity(AccountsCompanion d,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    if (d.localId.present) {
+      context.handle(_localIdMeta,
+          localId.isAcceptableValue(d.localId.value, _localIdMeta));
+    } else if (localId.isRequired && isInserting) {
+      context.missing(_localIdMeta);
+    }
+    if (d.entityId.present) {
+      context.handle(_entityIdMeta,
+          entityId.isAcceptableValue(d.entityId.value, _entityIdMeta));
+    } else if (entityId.isRequired && isInserting) {
+      context.missing(_entityIdMeta);
+    }
+    if (d.idUser.present) {
+      context.handle(
+          _idUserMeta, idUser.isAcceptableValue(d.idUser.value, _idUserMeta));
+    } else if (idUser.isRequired && isInserting) {
+      context.missing(_idUserMeta);
+    }
+    if (d.uuid.present) {
+      context.handle(
+          _uuidMeta, uuid.isAcceptableValue(d.uuid.value, _uuidMeta));
+    } else if (uuid.isRequired && isInserting) {
+      context.missing(_uuidMeta);
+    }
+    if (d.parentUuid.present) {
+      context.handle(_parentUuidMeta,
+          parentUuid.isAcceptableValue(d.parentUuid.value, _parentUuidMeta));
+    } else if (parentUuid.isRequired && isInserting) {
+      context.missing(_parentUuidMeta);
+    }
+    if (d.moduleName.present) {
+      context.handle(_moduleNameMeta,
+          moduleName.isAcceptableValue(d.moduleName.value, _moduleNameMeta));
+    } else if (moduleName.isRequired && isInserting) {
+      context.missing(_moduleNameMeta);
+    }
+    if (d.useToAuthorize.present) {
+      context.handle(
+          _useToAuthorizeMeta,
+          useToAuthorize.isAcceptableValue(
+              d.useToAuthorize.value, _useToAuthorizeMeta));
+    } else if (useToAuthorize.isRequired && isInserting) {
+      context.missing(_useToAuthorizeMeta);
+    }
+    if (d.email.present) {
+      context.handle(
+          _emailMeta, email.isAcceptableValue(d.email.value, _emailMeta));
+    } else if (email.isRequired && isInserting) {
+      context.missing(_emailMeta);
+    }
+    if (d.friendlyName.present) {
+      context.handle(
+          _friendlyNameMeta,
+          friendlyName.isAcceptableValue(
+              d.friendlyName.value, _friendlyNameMeta));
+    } else if (friendlyName.isRequired && isInserting) {
+      context.missing(_friendlyNameMeta);
+    }
+    if (d.useSignature.present) {
+      context.handle(
+          _useSignatureMeta,
+          useSignature.isAcceptableValue(
+              d.useSignature.value, _useSignatureMeta));
+    } else if (useSignature.isRequired && isInserting) {
+      context.missing(_useSignatureMeta);
+    }
+    if (d.signature.present) {
+      context.handle(_signatureMeta,
+          signature.isAcceptableValue(d.signature.value, _signatureMeta));
+    } else if (signature.isRequired && isInserting) {
+      context.missing(_signatureMeta);
+    }
+    if (d.serverId.present) {
+      context.handle(_serverIdMeta,
+          serverId.isAcceptableValue(d.serverId.value, _serverIdMeta));
+    } else if (serverId.isRequired && isInserting) {
+      context.missing(_serverIdMeta);
+    }
+    if (d.foldersOrderInJson.present) {
+      context.handle(
+          _foldersOrderInJsonMeta,
+          foldersOrderInJson.isAcceptableValue(
+              d.foldersOrderInJson.value, _foldersOrderInJsonMeta));
+    } else if (foldersOrderInJson.isRequired && isInserting) {
+      context.missing(_foldersOrderInJsonMeta);
+    }
+    if (d.useThreading.present) {
+      context.handle(
+          _useThreadingMeta,
+          useThreading.isAcceptableValue(
+              d.useThreading.value, _useThreadingMeta));
+    } else if (useThreading.isRequired && isInserting) {
+      context.missing(_useThreadingMeta);
+    }
+    if (d.saveRepliesToCurrFolder.present) {
+      context.handle(
+          _saveRepliesToCurrFolderMeta,
+          saveRepliesToCurrFolder.isAcceptableValue(
+              d.saveRepliesToCurrFolder.value, _saveRepliesToCurrFolderMeta));
+    } else if (saveRepliesToCurrFolder.isRequired && isInserting) {
+      context.missing(_saveRepliesToCurrFolderMeta);
+    }
+    if (d.accountId.present) {
+      context.handle(_accountIdMeta,
+          accountId.isAcceptableValue(d.accountId.value, _accountIdMeta));
+    } else if (accountId.isRequired && isInserting) {
+      context.missing(_accountIdMeta);
+    }
+    if (d.allowFilters.present) {
+      context.handle(
+          _allowFiltersMeta,
+          allowFilters.isAcceptableValue(
+              d.allowFilters.value, _allowFiltersMeta));
+    } else if (allowFilters.isRequired && isInserting) {
+      context.missing(_allowFiltersMeta);
+    }
+    if (d.allowForward.present) {
+      context.handle(
+          _allowForwardMeta,
+          allowForward.isAcceptableValue(
+              d.allowForward.value, _allowForwardMeta));
+    } else if (allowForward.isRequired && isInserting) {
+      context.missing(_allowForwardMeta);
+    }
+    if (d.allowAutoResponder.present) {
+      context.handle(
+          _allowAutoResponderMeta,
+          allowAutoResponder.isAcceptableValue(
+              d.allowAutoResponder.value, _allowAutoResponderMeta));
+    } else if (allowAutoResponder.isRequired && isInserting) {
+      context.missing(_allowAutoResponderMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {localId};
+  @override
+  Account map(Map<String, dynamic> data, {String tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
+    return Account.fromData(data, _db, prefix: effectivePrefix);
+  }
+
+  @override
+  Map<String, Variable> entityToSql(AccountsCompanion d) {
+    final map = <String, Variable>{};
+    if (d.localId.present) {
+      map['local_id'] = Variable<int, IntType>(d.localId.value);
+    }
+    if (d.entityId.present) {
+      map['entity_id'] = Variable<int, IntType>(d.entityId.value);
+    }
+    if (d.idUser.present) {
+      map['id_user'] = Variable<int, IntType>(d.idUser.value);
+    }
+    if (d.uuid.present) {
+      map['uuid'] = Variable<String, StringType>(d.uuid.value);
+    }
+    if (d.parentUuid.present) {
+      map['parent_uuid'] = Variable<String, StringType>(d.parentUuid.value);
+    }
+    if (d.moduleName.present) {
+      map['module_name'] = Variable<String, StringType>(d.moduleName.value);
+    }
+    if (d.useToAuthorize.present) {
+      map['use_to_authorize'] =
+          Variable<bool, BoolType>(d.useToAuthorize.value);
+    }
+    if (d.email.present) {
+      map['email'] = Variable<String, StringType>(d.email.value);
+    }
+    if (d.friendlyName.present) {
+      map['friendly_name'] = Variable<String, StringType>(d.friendlyName.value);
+    }
+    if (d.useSignature.present) {
+      map['use_signature'] = Variable<bool, BoolType>(d.useSignature.value);
+    }
+    if (d.signature.present) {
+      map['signature'] = Variable<String, StringType>(d.signature.value);
+    }
+    if (d.serverId.present) {
+      map['server_id'] = Variable<int, IntType>(d.serverId.value);
+    }
+    if (d.foldersOrderInJson.present) {
+      map['folders_order_in_json'] =
+          Variable<String, StringType>(d.foldersOrderInJson.value);
+    }
+    if (d.useThreading.present) {
+      map['use_threading'] = Variable<bool, BoolType>(d.useThreading.value);
+    }
+    if (d.saveRepliesToCurrFolder.present) {
+      map['save_replies_to_curr_folder'] =
+          Variable<bool, BoolType>(d.saveRepliesToCurrFolder.value);
+    }
+    if (d.accountId.present) {
+      map['account_id'] = Variable<int, IntType>(d.accountId.value);
+    }
+    if (d.allowFilters.present) {
+      map['allow_filters'] = Variable<bool, BoolType>(d.allowFilters.value);
+    }
+    if (d.allowForward.present) {
+      map['allow_forward'] = Variable<bool, BoolType>(d.allowForward.value);
+    }
+    if (d.allowAutoResponder.present) {
+      map['allow_auto_responder'] =
+          Variable<bool, BoolType>(d.allowAutoResponder.value);
+    }
+    return map;
+  }
+
+  @override
+  $AccountsTable createAlias(String alias) {
+    return $AccountsTable(_db, alias);
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(const SqlTypeSystem.withDefaults(), e);
   $MailTable _mail;
   $MailTable get mail => _mail ??= $MailTable(this);
   $FoldersTable _folders;
   $FoldersTable get folders => _folders ??= $FoldersTable(this);
+  $AccountsTable _accounts;
+  $AccountsTable get accounts => _accounts ??= $AccountsTable(this);
   @override
-  List<TableInfo> get allTables => [mail, folders];
+  List<TableInfo> get allTables => [mail, folders, accounts];
 }

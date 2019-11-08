@@ -2,10 +2,13 @@ import 'dart:async';
 
 import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/modules/app_store.dart';
+import 'package:aurora_mail/modules/auth/auth_route.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/compose_route.dart';
 import 'package:aurora_mail/modules/mail/screens/message_view/message_view_route.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/main_drawer.dart';
+import 'package:aurora_mail/modules/settings/screens/settings_main/settings_main_route.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -56,6 +59,18 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
     );
   }
 
+  void _onAppBarActionSelected(MailListAppBarAction item) {
+    switch (item) {
+      case MailListAppBarAction.logout:
+        AppStore.authState.onLogout();
+        Navigator.pushReplacementNamed(context, AuthRoute.name);
+        break;
+      case MailListAppBarAction.settings:
+        Navigator.pushNamed(context, SettingsMainRoute.name);
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider<MailBloc>.value(
@@ -63,7 +78,7 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
       child: Scaffold(
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(APP_BAR_HEIGHT_ANDROID),
-          child: MailAppBar(),
+          child: MailAppBar(onActionSelected: _onAppBarActionSelected),
         ),
         drawer: MainDrawer(_drawerInitialState),
         body: BlocListener(

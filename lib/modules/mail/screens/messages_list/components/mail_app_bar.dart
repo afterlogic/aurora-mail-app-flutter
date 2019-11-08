@@ -1,27 +1,13 @@
-import 'package:aurora_mail/modules/app_store.dart';
-import 'package:aurora_mail/modules/auth/auth_route.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-enum MailAppBarPopupItems {
-  logout,
-}
+enum MailListAppBarAction { logout, settings }
 
-class MailAppBar extends StatefulWidget {
-  @override
-  _MailAppBarState createState() => _MailAppBarState();
-}
+class MailAppBar extends StatelessWidget {
+  final Function(MailListAppBarAction) onActionSelected;
 
-class _MailAppBarState extends State<MailAppBar> {
-  void _onPopupMenuItemSelected(MailAppBarPopupItems item) {
-    switch (item) {
-      case MailAppBarPopupItems.logout:
-        AppStore.authState.onLogout();
-        Navigator.pushReplacementNamed(context, AuthRoute.name);
-        break;
-    }
-  }
+  const MailAppBar({Key key, this.onActionSelected}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -48,13 +34,18 @@ class _MailAppBarState extends State<MailAppBar> {
       ),
       actions: <Widget>[
         PopupMenuButton(
-          onSelected: _onPopupMenuItemSelected,
+          onSelected: onActionSelected,
           itemBuilder: (_) {
             return [
+              // TODO translate
               PopupMenuItem(
-                value: MailAppBarPopupItems.logout,
+                value: MailListAppBarAction.settings,
+                child: Text("Settings"),
+              ),
+              PopupMenuItem(
+                value: MailListAppBarAction.logout,
                 child: Text("Log out"),
-              )
+              ),
             ];
           },
         )

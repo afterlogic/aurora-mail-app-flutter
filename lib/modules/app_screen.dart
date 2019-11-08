@@ -3,10 +3,12 @@ import 'dart:async';
 import 'package:aurora_mail/modules/app_store.dart';
 import 'package:aurora_mail/modules/auth/state/auth_state.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
+import 'package:aurora_mail/modules/settings/blocs/common_settings/bloc.dart';
+import 'package:aurora_mail/modules/settings/blocs/sync_settings/bloc.dart';
 import 'package:aurora_mail/theming/app_theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'app_navigation.dart';
 import 'auth/auth_route.dart';
@@ -48,13 +50,23 @@ class _AppState extends State<App> {
         builder: (_, AsyncSnapshot<List<bool>> snapshot) {
           if (snapshot.connectionState == ConnectionState.done &&
               snapshot.hasData) {
-            return MaterialApp(
+            return MultiBlocProvider(
+              providers: [
+                BlocProvider<CommonSettingsBloc>(
+                  builder: (_) => CommonSettingsBloc(),
+                ),
+                BlocProvider<SyncSettingsBloc>(
+                  builder: (_) => SyncSettingsBloc(),
+                ),
+              ],
+              child: MaterialApp(
                 title: "Aurora Mail",
                 onGenerateRoute: AppNavigation.onGenerateRoute,
                 theme: AppTheme.light,
                 initialRoute: _canEnterMainApp(snapshot.data)
                     ? MessagesListRoute.name
                     : AuthRoute.name,
+              ),
             );
           } else if (snapshot.hasError) {
             final err = snapshot.error.toString();
