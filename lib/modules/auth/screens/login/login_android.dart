@@ -155,7 +155,7 @@ class _LoginAndroidState extends State<LoginAndroid> {
                       iconForIOS: MdiIcons.web,
                       keyboardType: TextInputType.url,
                       validator: (value) => _showHostField
-                          ? validateInput(value, [ValidationTypes.empty])
+                          ? validateInput(value, [ValidationType.empty])
                           : "",
                       isEnabled: !loading,
                     ),
@@ -167,7 +167,7 @@ class _LoginAndroidState extends State<LoginAndroid> {
                     iconForIOS: Icons.email,
                     keyboardType: TextInputType.emailAddress,
                     validator: (value) => validateInput(
-                        value, [ValidationTypes.empty, ValidationTypes.email]),
+                        value, [ValidationType.empty, ValidationType.email]),
                     isEnabled: !loading,
                   ),
                   SizedBox(height: 10),
@@ -177,7 +177,7 @@ class _LoginAndroidState extends State<LoginAndroid> {
                     label: "Password",
                     iconForIOS: Icons.lock,
                     validator: (value) =>
-                        validateInput(value, [ValidationTypes.empty]),
+                        validateInput(value, [ValidationType.empty]),
                     isPassword: true,
                     isEnabled: !loading,
                   ),

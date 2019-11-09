@@ -1,5 +1,6 @@
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/mail/mail_table.dart';
+import 'package:aurora_mail/utils/date_formatting.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
@@ -62,9 +63,8 @@ class _MessageItemState extends State<MessageItem> {
               if (message.hasAttachments) Icon(Icons.attachment),
               SizedBox(width: 6.0),
               Text(
-//                DateFormatting.formatDateFromSeconds(
-//                    timestamp: message.timeStampInUTC),
-                message.uid.toString(),
+                DateFormatting.formatDateFromSeconds(
+                    timestamp: message.timeStampInUTC),
                 style: textStyle,
               ),
             ],

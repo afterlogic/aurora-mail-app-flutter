@@ -1,3 +1,4 @@
+import 'package:aurora_mail/utils/input_validation.dart';
 import 'package:flutter/material.dart';
 
 class ComposeSection extends StatefulWidget {
@@ -43,8 +44,10 @@ class _ComposeSectionState extends State<ComposeSection> {
   }
 
   Future _addEmail(String email) async {
-    if (email.isNotEmpty) {
-      widget.textCtrl.text = "";
+    widget.textCtrl.text = "";
+    final error = validateInput(
+        email, [ValidationType.email, ValidationType.empty]);
+    if (error == null) {
       setState(() => widget.emails.add(email));
     }
   }
@@ -67,7 +70,10 @@ class _ComposeSectionState extends State<ComposeSection> {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: Text(widget.label,
-                  style: Theme.of(context).textTheme.subhead),
+                  style: Theme
+                      .of(context)
+                      .textTheme
+                      .subhead),
             ),
             SizedBox(width: 8.0),
             Flexible(
@@ -107,7 +113,7 @@ class _ComposeSectionState extends State<ComposeSection> {
                 ),
               ]),
             ),
-            if (_focusNode.hasFocus)
+            if (_focusNode.hasFocus && false)
               SizedBox(
                 height: 24.0,
                 child: IconButton(

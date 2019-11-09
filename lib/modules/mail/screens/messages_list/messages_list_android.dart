@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth/bloc.dart';
 import 'package:aurora_mail/modules/auth/screens/login/login_route.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
@@ -71,6 +72,28 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
     }
   }
 
+  void _onMessageSelected(List<Message> messagesWithoutChildren, int i) {
+    final item = messagesWithoutChildren[i];
+
+    final draftsFolder = _drawerInitialState.folders.firstWhere((f) => f.folderType == FolderType.drafts, orElse: () => null);
+
+    if (draftsFolder != null && item.folder == draftsFolder.fullNameRaw) {
+      print("VO: 123");
+      Navigator.pushNamed(
+        context,
+        ComposeRoute.name,
+        arguments: ComposeScreenArgs(_mailBloc, item),
+      );
+    } else {
+      Navigator.pushNamed(
+        context,
+        MessageViewRoute.name,
+        arguments: MessageViewScreenArgs(
+            messagesWithoutChildren, i, _mailBloc),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider<MailBloc>.value(
@@ -115,7 +138,7 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
         floatingActionButton: FloatingActionButton(
           child: Icon(MdiIcons.emailPlusOutline),
           onPressed: () => Navigator.pushNamed(context, ComposeRoute.name,
-              arguments: ComposeScreenArgs(_mailBloc)),
+              arguments: ComposeScreenArgs(_mailBloc, null)),
         ),
       ),
     );
@@ -144,12 +167,7 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
                   children: <Widget>[
                     InkWell(
                       child: MessageItem(item),
-                      onTap: () => Navigator.pushNamed(
-                        context,
-                        MessageViewRoute.name,
-                        arguments: MessageViewScreenArgs(
-                            messagesWithoutChildren, i, _mailBloc),
-                      ),
+                      onTap: () => _onMessageSelected(messagesWithoutChildren, i),
                     ),
                     if (_drawerInitialState.selectedFolder != null &&
                         _drawerInitialState.selectedFolder.needsInfoUpdate &&

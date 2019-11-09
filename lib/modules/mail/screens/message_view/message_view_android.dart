@@ -8,6 +8,7 @@ import 'package:aurora_mail/modules/auth/blocs/auth/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:aurora_mail/modules/mail/screens/message_view/components/message_view_app_bar.dart';
+import 'package:aurora_mail/utils/date_formatting.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -153,7 +154,8 @@ class _MessageViewAndroidState extends State<MessageViewAndroid> {
                         message.fromToDisplay,
                         style: Theme.of(context).textTheme.subhead,
                       ),
-                      Text(message.uid.toString()),
+                      Text(DateFormatting.formatDateFromSeconds(
+                          timestamp: message.timeStampInUTC)),
                     ],
                   ),
                   SizedBox(height: 10.0),
@@ -168,10 +170,10 @@ class _MessageViewAndroidState extends State<MessageViewAndroid> {
                         style: Theme.of(context).textTheme.caption,
                       ),
                       // TODO translate
-                      Text(
-                        "Show details",
-                        style: TextStyle(decoration: TextDecoration.underline),
-                      ),
+//                      Text(
+//                        "Show details",
+//                        style: TextStyle(decoration: TextDecoration.underline),
+//                      ),
                     ],
                   ),
                   if (attachments.isNotEmpty) Divider(),

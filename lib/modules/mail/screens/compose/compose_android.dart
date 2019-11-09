@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:aurora_mail/config.dart';
+import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/mail/blocs/compose_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/models/compose_attachment.dart';
@@ -18,9 +20,11 @@ import 'components/compose_section.dart';
 import 'components/compose_subject.dart';
 
 class ComposeAndroid extends StatefulWidget {
+  final Message message;
   final int draftUid;
 
-  const ComposeAndroid({Key key, this.draftUid}) : super(key: key);
+  const ComposeAndroid({Key key, this.draftUid, this.message})
+      : super(key: key);
 
   @override
   _ComposeAndroidState createState() => _ComposeAndroidState();
@@ -51,6 +55,7 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
   void initState() {
     super.initState();
     _currentDraftUid = widget.draftUid;
+    _initMessageFromDrafts();
     _initSaveToDraftsTimer();
   }
 
@@ -59,6 +64,23 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
     super.dispose();
     if (_timer != null) _timer.cancel();
     _bloc.close();
+  }
+
+  void _initMessageFromDrafts() async {
+    if (widget.message == null) return;
+    _toEmails.addAll(getEmails(widget.message.toInJson));
+    _ccEmails.addAll(getEmails(widget.message.ccInJson));
+    _bccEmails.addAll(getEmails(widget.message.bccInJson));
+    _subjectTextCtrl.text = widget.message.subject;
+    _bodyTextCtrl.text = widget.message.plainRaw;
+  }
+
+  List<String> getEmails(String emailsInJson) {
+    if (emailsInJson == null) return [];
+    final emails = json.decode(emailsInJson);
+    if (emails == null) return [];
+    final result = emails["@Collection"].map((t) => t["Email"]).toList();
+    return new List<String>.from(result);
   }
 
   void _initSaveToDraftsTimer() async {

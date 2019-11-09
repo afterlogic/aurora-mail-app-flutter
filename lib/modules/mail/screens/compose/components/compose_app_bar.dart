@@ -23,6 +23,7 @@ class ComposeAppBar extends StatelessWidget {
         },
       ),
       title: PopupMenuButton(
+        enabled: false,
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
@@ -31,8 +32,8 @@ class ComposeAppBar extends StatelessWidget {
               AuthBloc.currentAccount.email,
               style: TextStyle(fontSize: 14.0),
             )),
-            SizedBox(width: 4.0),
-            Icon(Icons.keyboard_arrow_down)
+//            SizedBox(width: 4.0),
+//            Icon(Icons.keyboard_arrow_down)
           ],
         ),
         itemBuilder: (_) => [],

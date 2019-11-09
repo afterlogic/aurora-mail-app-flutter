@@ -1,4 +1,4 @@
-enum ValidationTypes {
+enum ValidationType {
   empty,
   email,
   fileName,
@@ -7,24 +7,24 @@ enum ValidationTypes {
 
 String validateInput(
   String value,
-  List<ValidationTypes> types, [
+  List<ValidationType> types, [
   List otherItems,
   String fileExtension,
 ]) {
-  if (types.contains(ValidationTypes.uniqueName) && otherItems is! List) {
+  if (types.contains(ValidationType.uniqueName) && otherItems is! List) {
     throw Exception(
         "In order to check if a name is unique the list must be provided");
   }
-  if (types.contains(ValidationTypes.empty) && value.isEmpty) {
+  if (types.contains(ValidationType.empty) && value.isEmpty) {
     return "This field is required";
   }
-  if (types.contains(ValidationTypes.email) && !_isEmailValid(value)) {
+  if (types.contains(ValidationType.email) && !_isEmailValid(value)) {
     return "The email is not valid";
   }
-  if (types.contains(ValidationTypes.fileName) && !_isFileNameValid(value)) {
+  if (types.contains(ValidationType.fileName) && !_isFileNameValid(value)) {
     return 'Name cannot contain "/\\*?<>|:';
   }
-  if (otherItems is List && types.contains(ValidationTypes.uniqueName)) {
+  if (otherItems is List && types.contains(ValidationType.uniqueName)) {
     bool exists = false;
     final valueToCheck =
         fileExtension != null ? "$value.$fileExtension" : value;
