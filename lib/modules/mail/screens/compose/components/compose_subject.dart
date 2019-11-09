@@ -4,7 +4,9 @@ class ComposeSubject extends StatefulWidget {
   final TextEditingController textCtrl;
   final Function() onAttach;
 
-  const ComposeSubject({Key key, @required this.textCtrl, @required this.onAttach}) : super(key: key);
+  const ComposeSubject(
+      {Key key, @required this.textCtrl, @required this.onAttach})
+      : super(key: key);
 
   @override
   _ComposeSubjectState createState() => _ComposeSubjectState();

@@ -1,4 +1,4 @@
-import 'package:aurora_mail/modules/app_store.dart';
+import 'package:aurora_mail/modules/auth/blocs/auth/bloc.dart';
 import 'package:flutter/material.dart';
 
 enum ComposeAppBarAction {
@@ -28,7 +28,7 @@ class ComposeAppBar extends StatelessWidget {
           children: <Widget>[
             Flexible(
                 child: Text(
-              AppStore.authState.userEmail,
+              AuthBloc.currentAccount.email,
               style: TextStyle(fontSize: 14.0),
             )),
             SizedBox(width: 4.0),

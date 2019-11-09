@@ -69,7 +69,7 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
   Stream<ComposeState> _uploadAttachment(UploadAttachment event) async* {
     try {
       await getStoragePermissions();
-    } catch(err) {
+    } catch (err) {
       yield ComposeError(err);
     }
 

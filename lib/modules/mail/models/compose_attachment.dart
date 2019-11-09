@@ -10,7 +10,8 @@ class ComposeAttachment {
   final String viewUrl;
   final String downloadUrl;
   final String thumbnailUrl;
-  String guid; // to replace temp attachment with progress with the one from server
+  String
+      guid; // to replace temp attachment with progress with the one from server
 
   ComposeAttachment({
     @required this.fileName,

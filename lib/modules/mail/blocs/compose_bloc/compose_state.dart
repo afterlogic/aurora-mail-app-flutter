@@ -1,5 +1,4 @@
 import 'package:aurora_mail/modules/mail/models/compose_attachment.dart';
-import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/temp_attachment_upload.dart';
 import 'package:equatable/equatable.dart';
 

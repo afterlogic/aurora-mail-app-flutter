@@ -2,12 +2,12 @@ import 'dart:convert';
 
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/models/api_body.dart';
-import 'package:aurora_mail/modules/app_store.dart';
+import 'package:aurora_mail/modules/auth/blocs/auth/bloc.dart';
 import 'package:aurora_mail/utils/api_utils.dart';
 import 'package:aurora_mail/utils/error_handling.dart';
 
 class FoldersApi {
-  int get _accountId => AppStore.authState.accountId;
+  int get _accountId => AuthBloc.currentAccount.accountId;
 
   Future<List<Map<String, dynamic>>> getFolders() async {
     final parameters = json.encode({"AccountID": _accountId});

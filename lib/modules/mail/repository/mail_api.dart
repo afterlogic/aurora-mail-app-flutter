@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:aurora_mail/models/api_body.dart';
 import 'package:aurora_mail/models/folder.dart';
-import 'package:aurora_mail/modules/app_store.dart';
+import 'package:aurora_mail/modules/auth/blocs/auth/bloc.dart';
 import 'package:aurora_mail/modules/mail/models/compose_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/temp_attachment_upload.dart';
@@ -16,7 +16,7 @@ import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_uploader/flutter_uploader.dart';
 
 class MailApi {
-  int get _accountId => AppStore.authState.accountId;
+  int get _accountId => AuthBloc.currentAccount.accountId;
 
   Future<String> getMessagesInfo(
       {@required String folderName,
@@ -180,12 +180,11 @@ class MailApi {
 
     final body = new ApiBody(
         module: "Mail", method: "UploadAttachment", parameters: parameters);
-    final authState = AppStore.authState;
 
     final fileName = FileUtils.getFileNameFromPath(file.path);
 
     final taskId = await uploader.enqueue(
-      url: authState.apiUrl,
+      url: AuthBloc.apiUrl,
       files: [
         FileItem(
           filename: fileName,
@@ -194,7 +193,7 @@ class MailApi {
         )
       ],
       method: UploadMethod.POST,
-      headers: getHeader(),
+      headers: getHeaderWithToken(),
       data: body.toMap(),
       showNotification: true,
       tag: fileName,
@@ -230,17 +229,16 @@ class MailApi {
     @required Function() onDownloadStart,
     @required Function(String) onDownloadEnd,
   }) async {
-    final authState = AppStore.authState;
     try {
       await FlutterDownloader.initialize();
     } catch (err) {}
     final downloadsDirectory = await DownloadsPathProvider.downloadsDirectory;
 
     final taskId = await FlutterDownloader.enqueue(
-      url: authState.hostName + attachment.downloadUrl,
+      url: AuthBloc.hostName + attachment.downloadUrl,
       savedDir: downloadsDirectory.path,
       fileName: attachment.fileName,
-      headers: getHeader(),
+      headers: getHeaderWithToken(),
     );
 
     await attachment.startDownload(

@@ -24,8 +24,7 @@ class ConfirmationDialog extends StatelessWidget {
     if (Platform.isIOS) {
       return showCupertinoDialog(
           context: context,
-          builder: (_) =>
-              ConfirmationDialog(
+          builder: (_) => ConfirmationDialog(
                 title: title,
                 description: description,
                 actionText: actionText,
@@ -33,8 +32,7 @@ class ConfirmationDialog extends StatelessWidget {
     } else {
       return showDialog(
           context: context,
-          builder: (_) =>
-              ConfirmationDialog(
+          builder: (_) => ConfirmationDialog(
                 title: title,
                 description: description,
                 actionText: actionText,

@@ -60,7 +60,7 @@ class MailAttachment {
     port.listen((data) {
       final progress = currentlyDownloadingAttachments
           .firstWhere((da) => da.taskId == taskId, orElse: () => null);
-      
+
       if (progress != null) progress.updateProgress(data[2], data[1]);
     }, onDone: () {
       onDownloadEnd();

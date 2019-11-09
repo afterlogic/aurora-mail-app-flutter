@@ -78,7 +78,7 @@ class _AttachmentState extends State<Attachment> {
                       msg: "Downloading ${widget.attachment.fileName}...",
                       isError: false);
                   BlocProvider.of<MailBloc>(context)
-                    .add(DownloadAttachment(widget.attachment));
+                      .add(DownloadAttachment(widget.attachment));
                 },
               ),
             if (_taskProgress != null)

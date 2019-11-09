@@ -1,7 +1,3 @@
-import 'dart:async';
-
-import 'package:aurora_mail/modules/app_store.dart';
-import 'package:aurora_mail/modules/auth/state/auth_state.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
 import 'package:aurora_mail/modules/settings/blocs/common_settings/bloc.dart';
 import 'package:aurora_mail/modules/settings/blocs/sync_settings/bloc.dart';
@@ -11,7 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'app_navigation.dart';
-import 'auth/auth_route.dart';
+import 'auth/blocs/auth/bloc.dart';
+import 'auth/screens/login/login_route.dart';
 
 class App extends StatefulWidget {
   @override
@@ -19,39 +16,32 @@ class App extends StatefulWidget {
 }
 
 class _AppState extends State<App> {
-  AuthState _authState = AppStore.authState;
-  Future<List<bool>> _localStorageInitialization;
+  final _authBloc = new AuthBloc();
 
   @override
   void initState() {
     super.initState();
-    _initLocalStorage();
+    _authBloc.add(InitUserAndAccounts());
   }
 
-  Future _initLocalStorage() async {
-    _localStorageInitialization = Future.wait([
-      _authState.getAuthSharedPrefs(),
-    ]);
-  }
-
-  bool _canEnterMainApp(List<bool> localStorageInitializationResults) {
-    if (localStorageInitializationResults == null) return false;
-    bool canEnterMailApp = true;
-    localStorageInitializationResults.forEach((result) {
-      if (result == null || result == false) canEnterMailApp = false;
-    });
-    return canEnterMailApp;
+  @override
+  void dispose() {
+    super.dispose();
+    _authBloc.close();
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: _localStorageInitialization,
-        builder: (_, AsyncSnapshot<List<bool>> snapshot) {
-          if (snapshot.connectionState == ConnectionState.done &&
-              snapshot.hasData) {
+    return BlocBuilder<AuthBloc, AuthState>(
+        bloc: _authBloc,
+        condition: (_, state) => state is InitializedUserAndAccounts,
+        builder: (_, state) {
+          if (state is InitializedUserAndAccounts) {
             return MultiBlocProvider(
               providers: [
+                BlocProvider<AuthBloc>.value(
+                  value: _authBloc,
+                ),
                 BlocProvider<CommonSettingsBloc>(
                   builder: (_) => CommonSettingsBloc(),
                 ),
@@ -63,17 +53,10 @@ class _AppState extends State<App> {
                 title: "Aurora Mail",
                 onGenerateRoute: AppNavigation.onGenerateRoute,
                 theme: AppTheme.light,
-                initialRoute: _canEnterMainApp(snapshot.data)
-                    ? MessagesListRoute.name
-                    : AuthRoute.name,
+                initialRoute:
+                    state.needsLogin ? LoginRoute.name : MessagesListRoute.name,
               ),
             );
-          } else if (snapshot.hasError) {
-            final err = snapshot.error.toString();
-            return Material(
-                child: Center(
-                    child: SelectableText(
-                        "Could not start the app, please make a screenshot of the error and send it to support@afterlogic.com and we'll fix it!\nERROR: $err")));
           } else {
             return Material();
           }

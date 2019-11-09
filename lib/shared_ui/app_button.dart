@@ -61,9 +61,7 @@ class AppButton extends StatelessWidget {
                         valueColor:
                             AlwaysStoppedAnimation<Color>(Colors.white)),
                   )
-                : child is Widget
-                    ? child
-                    : Text(text.toUpperCase()),
+                : child is Widget ? child : Text(text.toUpperCase()),
           ),
           onPressed: isLoading != null && isLoading ? null : onPressed);
     }

@@ -1,7 +1,7 @@
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/models/message_info.dart';
-import 'package:aurora_mail/modules/app_store.dart';
+import 'package:aurora_mail/modules/auth/blocs/auth/bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:moor_flutter/moor_flutter.dart';
 import 'package:uuid/uuid.dart';
@@ -55,14 +55,19 @@ class Folders extends Table {
   TextColumn get messagesInfoInJson => text().nullable()();
 
   static Future<List<LocalFolder>> getFolderObjectsFromServerAsync(
-      List<Map<String, dynamic>> rawFolders) {
-    return compute(getFolderObjectsFromServer, rawFolders);
+      List<Map<String, dynamic>> rawFolders, int accountId) {
+    final args = {
+      "id": accountId,
+      "folders": rawFolders,
+    };
+    return compute(getFolderObjectsFromServer, args);
   }
 
 // returns flat array of items
-  static List<LocalFolder> getFolderObjectsFromServer(
-      List<Map<String, dynamic>> rawFolders) {
+  static List<LocalFolder> getFolderObjectsFromServer(Map args) {
     final uuid = Uuid();
+    final accountId = args["id"];
+    final rawFolders = args["folders"];
 
     final flattenedFolders = new List<LocalFolder>();
 
@@ -74,7 +79,7 @@ class Folders extends Table {
           localId: null,
           guid: guid,
           parentGuid: parentGuid,
-          accountId: AppStore.authState.accountId,
+          accountId: accountId,
           type: rawFolder["Type"],
           folderOrder: rawFolders.indexOf(rawFolder),
           name: rawFolder["Name"],

@@ -5,6 +5,7 @@ import 'package:aurora_mail/database/mail/mail_dao.dart';
 import 'package:aurora_mail/database/mail/mail_table.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/models/message_info.dart';
+import 'package:aurora_mail/modules/auth/blocs/auth/auth_bloc.dart';
 import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:aurora_mail/modules/mail/repository/folders_api.dart';
 import 'package:aurora_mail/modules/mail/repository/mail_api.dart';
@@ -31,8 +32,8 @@ class MailMethods {
       final rawFolders = await _foldersApi.getFolders();
 
       // first convert rawFolders to the format, which sql will accept and add to DB
-      final newFolders =
-          await Folders.getFolderObjectsFromServerAsync(rawFolders);
+      final newFolders = await Folders.getFolderObjectsFromServerAsync(
+          rawFolders, AuthBloc.currentAccount.accountId);
       await _foldersDao.addFolders(newFolders);
 
       final newFoldersWithIds = await _foldersDao.getAllFolders();
@@ -57,8 +58,8 @@ class MailMethods {
     final oldLocalFolders = futureWaitResult[1];
 
     // convert new folders to db-like format (the format of old folders) for calculating difference
-    final newLocalFolders =
-        await Folders.getFolderObjectsFromServerAsync(rawFolders);
+    final newLocalFolders = await Folders.getFolderObjectsFromServerAsync(
+        rawFolders, AuthBloc.currentAccount.accountId);
 
     // calculate difference
     final calcResult = await Folders.calculateFoldersDiffAsync(

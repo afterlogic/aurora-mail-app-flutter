@@ -9,7 +9,6 @@ class SyncSettingsAndroid extends StatefulWidget {
 }
 
 class _SyncSettingsAndroidState extends State<SyncSettingsAndroid> {
-
   void _onFreqDurationSelected(BuildContext context) {
     FreqSelectionDialog.show(context, (duration) {
       BlocProvider.of<SyncSettingsBloc>(context).add(SetFrequency(duration));

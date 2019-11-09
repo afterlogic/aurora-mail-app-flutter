@@ -15,8 +15,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'auth/auth_android.dart';
-import 'auth/auth_route.dart';
+import 'auth/screens/login/login_android.dart';
+import 'auth/screens/login/login_route.dart';
 import 'mail/blocs/mail_bloc/mail_bloc.dart';
 import 'mail/screens/messages_list/messages_list_android.dart';
 import 'mail/screens/messages_list/messages_list_route.dart';
@@ -26,12 +26,12 @@ class AppNavigation {
     switch (settings.name) {
       // ================= AUTH =================
 
-      case AuthRoute.name:
+      case LoginRoute.name:
         return FadeRoute(
             settings: RouteSettings(
               name: settings.name,
             ),
-            page: AuthAndroid());
+            page: LoginAndroid());
 
       // ================= MAIL =================
 
@@ -96,7 +96,8 @@ class AppNavigation {
       // ==================================
 
       default:
-        return SlideHorizontalRoute(page: Scaffold(
+        return SlideHorizontalRoute(
+            page: Scaffold(
           body: Text('No route defined for ${settings.name}'),
         ));
     }

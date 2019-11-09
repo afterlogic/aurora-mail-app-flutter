@@ -1,5 +1,4 @@
 import 'package:aurora_mail/database/app_database.dart';
-import 'package:aurora_mail/modules/app_store.dart';
 import 'package:moor_flutter/moor_flutter.dart';
 
 import 'accounts_table.dart';
@@ -11,5 +10,17 @@ class AccountsDao extends DatabaseAccessor<AppDatabase>
     with _$AccountsDaoMixin {
   AccountsDao(AppDatabase db) : super(db);
 
-  int get _accountId => AppStore.authState.accountId;
+  Future<void> addAccounts(List<Account> newAccounts) {
+    return into(accounts).insertAll(newAccounts);
+  }
+
+  Future<List<Account>> getAccounts(int userServerId) {
+    return (select(accounts)..where((a) => a.idUser.equals(userServerId)))
+        .get();
+  }
+
+  Future<void> deleteAccountsOfUser(int userServerId) {
+    return (delete(accounts)..where((a) => a.idUser.equals(userServerId)))
+        .go();
+  }
 }

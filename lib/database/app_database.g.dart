@@ -3064,6 +3064,331 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
   }
 }
 
+class User extends DataClass implements Insertable<User> {
+  final int localId;
+  final int serverId;
+  final String hostname;
+  final String token;
+  final int syncFreqInSeconds;
+  final String language;
+  User(
+      {@required this.localId,
+      @required this.serverId,
+      @required this.hostname,
+      @required this.token,
+      this.syncFreqInSeconds,
+      this.language});
+  factory User.fromData(Map<String, dynamic> data, GeneratedDatabase db,
+      {String prefix}) {
+    final effectivePrefix = prefix ?? '';
+    final intType = db.typeSystem.forDartType<int>();
+    final stringType = db.typeSystem.forDartType<String>();
+    return User(
+      localId:
+          intType.mapFromDatabaseResponse(data['${effectivePrefix}local_id']),
+      serverId:
+          intType.mapFromDatabaseResponse(data['${effectivePrefix}server_id']),
+      hostname: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}hostname']),
+      token:
+          stringType.mapFromDatabaseResponse(data['${effectivePrefix}token']),
+      syncFreqInSeconds: intType.mapFromDatabaseResponse(
+          data['${effectivePrefix}sync_freq_in_seconds']),
+      language: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}language']),
+    );
+  }
+  factory User.fromJson(Map<String, dynamic> json,
+      {ValueSerializer serializer = const ValueSerializer.defaults()}) {
+    return User(
+      localId: serializer.fromJson<int>(json['localId']),
+      serverId: serializer.fromJson<int>(json['serverId']),
+      hostname: serializer.fromJson<String>(json['hostname']),
+      token: serializer.fromJson<String>(json['token']),
+      syncFreqInSeconds: serializer.fromJson<int>(json['syncFreqInSeconds']),
+      language: serializer.fromJson<String>(json['language']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson(
+      {ValueSerializer serializer = const ValueSerializer.defaults()}) {
+    return {
+      'localId': serializer.toJson<int>(localId),
+      'serverId': serializer.toJson<int>(serverId),
+      'hostname': serializer.toJson<String>(hostname),
+      'token': serializer.toJson<String>(token),
+      'syncFreqInSeconds': serializer.toJson<int>(syncFreqInSeconds),
+      'language': serializer.toJson<String>(language),
+    };
+  }
+
+  @override
+  T createCompanion<T extends UpdateCompanion<User>>(bool nullToAbsent) {
+    return UsersCompanion(
+      localId: localId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(localId),
+      serverId: serverId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(serverId),
+      hostname: hostname == null && nullToAbsent
+          ? const Value.absent()
+          : Value(hostname),
+      token:
+          token == null && nullToAbsent ? const Value.absent() : Value(token),
+      syncFreqInSeconds: syncFreqInSeconds == null && nullToAbsent
+          ? const Value.absent()
+          : Value(syncFreqInSeconds),
+      language: language == null && nullToAbsent
+          ? const Value.absent()
+          : Value(language),
+    ) as T;
+  }
+
+  User copyWith(
+          {int localId,
+          int serverId,
+          String hostname,
+          String token,
+          int syncFreqInSeconds,
+          String language}) =>
+      User(
+        localId: localId ?? this.localId,
+        serverId: serverId ?? this.serverId,
+        hostname: hostname ?? this.hostname,
+        token: token ?? this.token,
+        syncFreqInSeconds: syncFreqInSeconds ?? this.syncFreqInSeconds,
+        language: language ?? this.language,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('User(')
+          ..write('localId: $localId, ')
+          ..write('serverId: $serverId, ')
+          ..write('hostname: $hostname, ')
+          ..write('token: $token, ')
+          ..write('syncFreqInSeconds: $syncFreqInSeconds, ')
+          ..write('language: $language')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => $mrjf($mrjc(
+      localId.hashCode,
+      $mrjc(
+          serverId.hashCode,
+          $mrjc(
+              hostname.hashCode,
+              $mrjc(token.hashCode,
+                  $mrjc(syncFreqInSeconds.hashCode, language.hashCode))))));
+  @override
+  bool operator ==(other) =>
+      identical(this, other) ||
+      (other is User &&
+          other.localId == localId &&
+          other.serverId == serverId &&
+          other.hostname == hostname &&
+          other.token == token &&
+          other.syncFreqInSeconds == syncFreqInSeconds &&
+          other.language == language);
+}
+
+class UsersCompanion extends UpdateCompanion<User> {
+  final Value<int> localId;
+  final Value<int> serverId;
+  final Value<String> hostname;
+  final Value<String> token;
+  final Value<int> syncFreqInSeconds;
+  final Value<String> language;
+  const UsersCompanion({
+    this.localId = const Value.absent(),
+    this.serverId = const Value.absent(),
+    this.hostname = const Value.absent(),
+    this.token = const Value.absent(),
+    this.syncFreqInSeconds = const Value.absent(),
+    this.language = const Value.absent(),
+  });
+  UsersCompanion copyWith(
+      {Value<int> localId,
+      Value<int> serverId,
+      Value<String> hostname,
+      Value<String> token,
+      Value<int> syncFreqInSeconds,
+      Value<String> language}) {
+    return UsersCompanion(
+      localId: localId ?? this.localId,
+      serverId: serverId ?? this.serverId,
+      hostname: hostname ?? this.hostname,
+      token: token ?? this.token,
+      syncFreqInSeconds: syncFreqInSeconds ?? this.syncFreqInSeconds,
+      language: language ?? this.language,
+    );
+  }
+}
+
+class $UsersTable extends Users with TableInfo<$UsersTable, User> {
+  final GeneratedDatabase _db;
+  final String _alias;
+  $UsersTable(this._db, [this._alias]);
+  final VerificationMeta _localIdMeta = const VerificationMeta('localId');
+  GeneratedIntColumn _localId;
+  @override
+  GeneratedIntColumn get localId => _localId ??= _constructLocalId();
+  GeneratedIntColumn _constructLocalId() {
+    return GeneratedIntColumn('local_id', $tableName, false,
+        hasAutoIncrement: true, declaredAsPrimaryKey: true);
+  }
+
+  final VerificationMeta _serverIdMeta = const VerificationMeta('serverId');
+  GeneratedIntColumn _serverId;
+  @override
+  GeneratedIntColumn get serverId => _serverId ??= _constructServerId();
+  GeneratedIntColumn _constructServerId() {
+    return GeneratedIntColumn('server_id', $tableName, false,
+        $customConstraints: 'UNIQUE');
+  }
+
+  final VerificationMeta _hostnameMeta = const VerificationMeta('hostname');
+  GeneratedTextColumn _hostname;
+  @override
+  GeneratedTextColumn get hostname => _hostname ??= _constructHostname();
+  GeneratedTextColumn _constructHostname() {
+    return GeneratedTextColumn(
+      'hostname',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _tokenMeta = const VerificationMeta('token');
+  GeneratedTextColumn _token;
+  @override
+  GeneratedTextColumn get token => _token ??= _constructToken();
+  GeneratedTextColumn _constructToken() {
+    return GeneratedTextColumn(
+      'token',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _syncFreqInSecondsMeta =
+      const VerificationMeta('syncFreqInSeconds');
+  GeneratedIntColumn _syncFreqInSeconds;
+  @override
+  GeneratedIntColumn get syncFreqInSeconds =>
+      _syncFreqInSeconds ??= _constructSyncFreqInSeconds();
+  GeneratedIntColumn _constructSyncFreqInSeconds() {
+    return GeneratedIntColumn('sync_freq_in_seconds', $tableName, true,
+        defaultValue: Constant(60));
+  }
+
+  final VerificationMeta _languageMeta = const VerificationMeta('language');
+  GeneratedTextColumn _language;
+  @override
+  GeneratedTextColumn get language => _language ??= _constructLanguage();
+  GeneratedTextColumn _constructLanguage() {
+    return GeneratedTextColumn(
+      'language',
+      $tableName,
+      true,
+    );
+  }
+
+  @override
+  List<GeneratedColumn> get $columns =>
+      [localId, serverId, hostname, token, syncFreqInSeconds, language];
+  @override
+  $UsersTable get asDslTable => this;
+  @override
+  String get $tableName => _alias ?? 'users';
+  @override
+  final String actualTableName = 'users';
+  @override
+  VerificationContext validateIntegrity(UsersCompanion d,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    if (d.localId.present) {
+      context.handle(_localIdMeta,
+          localId.isAcceptableValue(d.localId.value, _localIdMeta));
+    } else if (localId.isRequired && isInserting) {
+      context.missing(_localIdMeta);
+    }
+    if (d.serverId.present) {
+      context.handle(_serverIdMeta,
+          serverId.isAcceptableValue(d.serverId.value, _serverIdMeta));
+    } else if (serverId.isRequired && isInserting) {
+      context.missing(_serverIdMeta);
+    }
+    if (d.hostname.present) {
+      context.handle(_hostnameMeta,
+          hostname.isAcceptableValue(d.hostname.value, _hostnameMeta));
+    } else if (hostname.isRequired && isInserting) {
+      context.missing(_hostnameMeta);
+    }
+    if (d.token.present) {
+      context.handle(
+          _tokenMeta, token.isAcceptableValue(d.token.value, _tokenMeta));
+    } else if (token.isRequired && isInserting) {
+      context.missing(_tokenMeta);
+    }
+    if (d.syncFreqInSeconds.present) {
+      context.handle(
+          _syncFreqInSecondsMeta,
+          syncFreqInSeconds.isAcceptableValue(
+              d.syncFreqInSeconds.value, _syncFreqInSecondsMeta));
+    } else if (syncFreqInSeconds.isRequired && isInserting) {
+      context.missing(_syncFreqInSecondsMeta);
+    }
+    if (d.language.present) {
+      context.handle(_languageMeta,
+          language.isAcceptableValue(d.language.value, _languageMeta));
+    } else if (language.isRequired && isInserting) {
+      context.missing(_languageMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {localId};
+  @override
+  User map(Map<String, dynamic> data, {String tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
+    return User.fromData(data, _db, prefix: effectivePrefix);
+  }
+
+  @override
+  Map<String, Variable> entityToSql(UsersCompanion d) {
+    final map = <String, Variable>{};
+    if (d.localId.present) {
+      map['local_id'] = Variable<int, IntType>(d.localId.value);
+    }
+    if (d.serverId.present) {
+      map['server_id'] = Variable<int, IntType>(d.serverId.value);
+    }
+    if (d.hostname.present) {
+      map['hostname'] = Variable<String, StringType>(d.hostname.value);
+    }
+    if (d.token.present) {
+      map['token'] = Variable<String, StringType>(d.token.value);
+    }
+    if (d.syncFreqInSeconds.present) {
+      map['sync_freq_in_seconds'] =
+          Variable<int, IntType>(d.syncFreqInSeconds.value);
+    }
+    if (d.language.present) {
+      map['language'] = Variable<String, StringType>(d.language.value);
+    }
+    return map;
+  }
+
+  @override
+  $UsersTable createAlias(String alias) {
+    return $UsersTable(_db, alias);
+  }
+}
+
 class Account extends DataClass implements Insertable<Account> {
   final int localId;
   final int entityId;
@@ -3983,8 +4308,10 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   $MailTable get mail => _mail ??= $MailTable(this);
   $FoldersTable _folders;
   $FoldersTable get folders => _folders ??= $FoldersTable(this);
+  $UsersTable _users;
+  $UsersTable get users => _users ??= $UsersTable(this);
   $AccountsTable _accounts;
   $AccountsTable get accounts => _accounts ??= $AccountsTable(this);
   @override
-  List<TableInfo> get allTables => [mail, folders, accounts];
+  List<TableInfo> get allTables => [mail, folders, users, accounts];
 }

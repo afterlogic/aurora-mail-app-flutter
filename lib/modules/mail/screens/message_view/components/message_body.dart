@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:aurora_mail/database/app_database.dart';
-import 'package:aurora_mail/modules/app_store.dart';
+import 'package:aurora_mail/modules/auth/blocs/auth/bloc.dart';
 import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:aurora_mail/utils/api_utils.dart';
 import 'package:flutter/foundation.dart';
@@ -62,8 +62,8 @@ class _MessageBodyState extends State<MessageBody> {
     for (final attachment in widget.attachments) {
       try {
         final res = await http.get(
-            AppStore.authState.hostName + attachment.viewUrl,
-            headers: getHeader());
+            AuthBloc.currentUser.hostname + attachment.viewUrl,
+            headers: getHeaderWithToken());
 
         htmlData = htmlData.replaceFirst(
           "cid:${attachment.cid}",

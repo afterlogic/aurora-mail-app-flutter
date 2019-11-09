@@ -48,10 +48,8 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
   Future<void> updateMessagesFlags(List<MessageInfo> infos) async {
     return transaction((QueryEngine engine) async {
       for (final info in infos) {
-        await (update(mail)..where((m) => m.uid.equals(info.uid)))
-            .write(new MailCompanion(
-          flagsInJson: Value(json.encode(info.flags))
-        ));
+        await (update(mail)..where((m) => m.uid.equals(info.uid))).write(
+            new MailCompanion(flagsInJson: Value(json.encode(info.flags))));
       }
     });
   }

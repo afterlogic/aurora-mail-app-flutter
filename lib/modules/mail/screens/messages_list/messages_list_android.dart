@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
-import 'package:aurora_mail/modules/app_store.dart';
-import 'package:aurora_mail/modules/auth/auth_route.dart';
+import 'package:aurora_mail/modules/auth/blocs/auth/bloc.dart';
+import 'package:aurora_mail/modules/auth/screens/login/login_route.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/compose_route.dart';
 import 'package:aurora_mail/modules/mail/screens/message_view/message_view_route.dart';
@@ -62,8 +62,8 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
   void _onAppBarActionSelected(MailListAppBarAction item) {
     switch (item) {
       case MailListAppBarAction.logout:
-        AppStore.authState.onLogout();
-        Navigator.pushReplacementNamed(context, AuthRoute.name);
+        BlocProvider.of<AuthBloc>(context).add(LogOut());
+        Navigator.pushReplacementNamed(context, LoginRoute.name);
         break;
       case MailListAppBarAction.settings:
         Navigator.pushNamed(context, SettingsMainRoute.name);

@@ -1,17 +1,18 @@
 import 'dart:convert';
 
 import 'package:aurora_mail/models/api_body.dart';
-import 'package:aurora_mail/modules/app_store.dart';
+import 'package:aurora_mail/modules/auth/blocs/auth/auth_bloc.dart';
 import 'package:http/http.dart' as http;
 
-Map<String, String> getHeader() {
-  return {'Authorization': 'Bearer ${AppStore.authState.authToken}'};
+Map<String, String> getHeaderWithToken() {
+  return {'Authorization': 'Bearer ${AuthBloc.currentUser.token}'};
 }
 
-Future sendRequest(ApiBody body, {decodeJson = true}) async {
-  final authState = AppStore.authState;
-  final rawResponse = await http.post(authState.apiUrl,
-      headers: getHeader(), body: body.toMap());
+Future sendRequest(ApiBody body, {decodeJson = true, useToken = true}) async {
+  final rawResponse = useToken
+      ? await http.post(AuthBloc.apiUrl,
+          headers: getHeaderWithToken(), body: body.toMap())
+      : await http.post(AuthBloc.apiUrl, body: body.toMap());
 
   if (decodeJson = true) {
     return json.decode(rawResponse.body);

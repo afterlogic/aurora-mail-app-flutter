@@ -11,7 +11,8 @@ class FreqSelectionDialog extends StatelessWidget {
 
   const FreqSelectionDialog(this.onItemSelected);
 
-  static void show(BuildContext context, Function(SyncDuration) onItemSelected) {
+  static void show(
+      BuildContext context, Function(SyncDuration) onItemSelected) {
     if (Platform.isIOS) {
       showCupertinoModalPopup(
           context: context,
@@ -64,19 +65,17 @@ class FreqSelectionDialog extends StatelessWidget {
             height: 310.0,
             width: 400.0,
             child: ListView(
-              children: actions
-                  .map((sync) {
-                    return RadioListTile(
-                        title: Text(sync.title),
-                        value: sync.title,
-                        groupValue: BlocProvider.of<SyncSettingsBloc>(context),
-                        onChanged: (val) {
-                          onItemSelected(sync);
-                          Navigator.pop(context);
-                        },
-                      );
-                  })
-                  .toList(),
+              children: actions.map((sync) {
+                return RadioListTile(
+                  title: Text(sync.title),
+                  value: sync.title,
+                  groupValue: BlocProvider.of<SyncSettingsBloc>(context),
+                  onChanged: (val) {
+                    onItemSelected(sync);
+                    Navigator.pop(context);
+                  },
+                );
+              }).toList(),
             ),
           ));
     }

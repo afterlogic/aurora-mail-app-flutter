@@ -1,6 +1,6 @@
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/models/message_info.dart';
-import 'package:aurora_mail/modules/app_store.dart';
+import 'package:aurora_mail/modules/auth/blocs/auth/auth_bloc.dart';
 import 'package:moor_flutter/moor_flutter.dart';
 
 import '../app_database.dart';
@@ -10,7 +10,8 @@ part 'folders_dao.g.dart';
 
 @UseDao(tables: [Folders])
 class FoldersDao extends DatabaseAccessor<AppDatabase> with _$FoldersDaoMixin {
-  int get _accountId => AppStore.authState.accountId;
+  int get _accountId => AuthBloc.currentAccount.accountId;
+
   // this constructor is required so that the main database can create an instance
   // of this object.
   FoldersDao(AppDatabase db) : super(db);

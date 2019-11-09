@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/mail/mail_table.dart';
-import 'package:aurora_mail/modules/app_store.dart';
+import 'package:aurora_mail/modules/auth/blocs/auth/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:aurora_mail/modules/mail/screens/message_view/components/message_view_app_bar.dart';
@@ -76,7 +76,7 @@ class _MessageViewAndroidState extends State<MessageViewAndroid> {
 
   String _formatTo(Message message) {
     final items =
-        Mail.getToForDisplay(message.toInJson, AppStore.authState.userEmail);
+        Mail.getToForDisplay(message.toInJson, AuthBloc.currentAccount.email);
 
     // TODO translate
     if (items.isEmpty) {

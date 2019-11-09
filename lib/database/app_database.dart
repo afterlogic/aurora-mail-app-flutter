@@ -3,6 +3,7 @@ import 'package:aurora_mail/database/mail/mail_table.dart';
 import 'package:moor_flutter/moor_flutter.dart';
 
 import 'accounts/accounts_table.dart';
+import 'users/users_table.dart';
 
 part 'app_database.g.dart';
 
@@ -10,7 +11,7 @@ class DBInstances {
   static final appDB = new AppDatabase();
 }
 
-@UseMoor(tables: [Mail, Folders, Accounts])
+@UseMoor(tables: [Mail, Folders, Users, Accounts])
 class AppDatabase extends _$AppDatabase {
   AppDatabase()
       : super(FlutterQueryExecutor.inDatabaseFolder(path: 'app_db.sqlite'));
@@ -19,8 +20,7 @@ class AppDatabase extends _$AppDatabase {
   MigrationStrategy get migration => MigrationStrategy(onCreate: (Migrator m) {
         return m.createAllTables();
       }, onUpgrade: (Migrator m, int from, int to) async {
-        if (from == 1) {
-        }
+        if (from == 1) {}
       });
 
   // you should bump this number whenever you change or add a table definition. Migrations
