@@ -17,6 +17,7 @@ class App extends StatefulWidget {
 
 class _AppState extends State<App> {
   final _authBloc = new AuthBloc();
+  final _syncSettingsBloc = new SyncSettingsBloc();
 
   @override
   void initState() {
@@ -28,6 +29,7 @@ class _AppState extends State<App> {
   void dispose() {
     super.dispose();
     _authBloc.close();
+    _syncSettingsBloc.close();
   }
 
   @override
@@ -37,6 +39,9 @@ class _AppState extends State<App> {
         condition: (_, state) => state is InitializedUserAndAccounts,
         builder: (_, state) {
           if (state is InitializedUserAndAccounts) {
+            if (state.user != null) {
+              _syncSettingsBloc.add(InitSyncSettings(state.user));
+            }
             return MultiBlocProvider(
               providers: [
                 BlocProvider<AuthBloc>.value(
@@ -45,8 +50,8 @@ class _AppState extends State<App> {
                 BlocProvider<CommonSettingsBloc>(
                   builder: (_) => CommonSettingsBloc(),
                 ),
-                BlocProvider<SyncSettingsBloc>(
-                  builder: (_) => SyncSettingsBloc(),
+                BlocProvider<SyncSettingsBloc>.value(
+                  value: _syncSettingsBloc,
                 ),
               ],
               child: MaterialApp(

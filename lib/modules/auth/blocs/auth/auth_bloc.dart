@@ -34,6 +34,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     if (event is InitUserAndAccounts) yield* _initUserAndAccounts(event);
     if (event is LogIn) yield* _login(event);
     if (event is LogOut) yield* _logout(event);
+    if (event is UpdateUser) yield* _setUser(event);
   }
 
   Stream<AuthState> _initUserAndAccounts(InitUserAndAccounts event) async* {
@@ -43,14 +44,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       if (result != null) {
         _currentUser = result.user;
         _currentAccount = result.accounts[0];
-        yield InitializedUserAndAccounts(needsLogin: false);
+        yield InitializedUserAndAccounts(result.user, needsLogin: false);
       } else {
-        yield InitializedUserAndAccounts(needsLogin: true);
+        yield InitializedUserAndAccounts(null, needsLogin: true);
       }
     } catch (err, s) {
       print("VO: err: ${err}");
       print("VO: s: ${s}");
-      yield InitializedUserAndAccounts(needsLogin: true);
+      yield InitializedUserAndAccounts(null, needsLogin: true);
     }
   }
 
@@ -74,7 +75,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         if (accounts.isNotEmpty) {
           assert(accounts[0] != null);
           _currentAccount = accounts[0];
-          yield LoggedIn();
+          yield LoggedIn(user);
         } else {
           // TODO translate
           yield AuthError("This user doesn't have mail accounts");
@@ -95,5 +96,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     } catch (err, s) {
       yield AuthError(formatError(err, s));
     }
+  }
+
+  Stream<AuthState> _setUser(UpdateUser event) async* {
+    _currentUser = event.updatedUser;
   }
 }

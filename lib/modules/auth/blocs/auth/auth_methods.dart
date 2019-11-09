@@ -54,16 +54,17 @@ class AuthMethods {
 
     final newUser = await _authApi.login(email, password, hostname);
 
-    final user = await _usersDao.getUserByServerId(newUser.serverId);
+    User userToReturn = await _usersDao.getUserByServerId(newUser.serverId);
 
     int localIdToSaveInSharePrefs;
-    if (user != null) {
-      localIdToSaveInSharePrefs = user.localId;
+    if (userToReturn != null) {
+      localIdToSaveInSharePrefs = userToReturn.localId;
     } else {
       localIdToSaveInSharePrefs = await _usersDao.addUser(newUser);
+      userToReturn = await _usersDao.getUserByServerId(newUser.serverId);
     }
     await _authLocal.setSelectedUserLocalId(localIdToSaveInSharePrefs);
-    return newUser;
+    return userToReturn;
   }
 
   Future<List<Account>> getAccounts(int userId) async {
@@ -83,6 +84,10 @@ class AuthMethods {
     ];
 
     await Future.wait(futures);
+  }
+
+  Future<User> syncUserWithDB(int localId) {
+    return _usersDao.getUserByLocalId(localId);
   }
 }
 

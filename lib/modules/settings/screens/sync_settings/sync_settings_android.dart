@@ -1,4 +1,5 @@
 import 'package:aurora_mail/modules/settings/blocs/sync_settings/bloc.dart';
+import 'package:aurora_mail/modules/settings/models/sync_duration.dart';
 import 'package:aurora_mail/modules/settings/screens/sync_settings/components/freq_selection_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,9 +10,9 @@ class SyncSettingsAndroid extends StatefulWidget {
 }
 
 class _SyncSettingsAndroidState extends State<SyncSettingsAndroid> {
-  void _onFreqDurationSelected(BuildContext context) {
-    FreqSelectionDialog.show(context, (duration) {
-      BlocProvider.of<SyncSettingsBloc>(context).add(SetFrequency(duration));
+  void _onFreqDurationSelected(BuildContext context, Freq selected) {
+    FreqSelectionDialog.show(context, selected, (frequency) {
+      BlocProvider.of<SyncSettingsBloc>(context).add(SetFrequency(frequency));
     });
   }
 
@@ -20,14 +21,31 @@ class _SyncSettingsAndroidState extends State<SyncSettingsAndroid> {
     return Scaffold(
       // TODO translate
       appBar: AppBar(title: Text("Sync")),
-      body: ListView(
-        children: <Widget>[
-          ListTile(
-            leading: Icon(Icons.av_timer),
-            title: Text("Sync frequency"),
-            onTap: () => _onFreqDurationSelected(context),
-          )
-        ],
+      body: BlocBuilder<SyncSettingsBloc, SyncSettingsState>(
+        bloc: BlocProvider.of<SyncSettingsBloc>(context),
+        condition: (_, state) => state is InitialSyncSettingsState,
+        builder: (_, state) {
+          print("VO: $state");
+          if (state is InitialSyncSettingsState) {
+            final freq = SyncFreq.secondsToFreq(state.frequency);
+            return ListView(
+              children: <Widget>[
+                ListTile(
+                  leading: Icon(Icons.av_timer),
+                  // TODO translate
+                  title: Text("Sync frequency"),
+                  trailing: Text(
+                    SyncFreq.freqToString(freq),
+                    style: Theme.of(context).textTheme.caption,
+                  ),
+                  onTap: () => _onFreqDurationSelected(context, freq),
+                )
+              ],
+            );
+          } else {
+            return null;
+          }
+        },
       ),
     );
   }

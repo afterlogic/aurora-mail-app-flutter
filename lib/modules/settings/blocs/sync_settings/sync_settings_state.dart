@@ -5,6 +5,10 @@ abstract class SyncSettingsState extends Equatable {
 }
 
 class InitialSyncSettingsState extends SyncSettingsState {
+  final int frequency;
+
+  const InitialSyncSettingsState(this.frequency);
+
   @override
   List<Object> get props => [];
 }

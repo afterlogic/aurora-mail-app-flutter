@@ -1,3 +1,4 @@
+import 'package:aurora_mail/database/app_database.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -9,6 +10,16 @@ abstract class AuthEvent extends Equatable {
 }
 
 class InitUserAndAccounts extends AuthEvent {}
+
+// usually after settings change
+class UpdateUser extends AuthEvent {
+  final User updatedUser;
+
+  UpdateUser(this.updatedUser);
+
+  @override
+  List<Object> get props => [updatedUser];
+}
 
 class LogIn extends AuthEvent {
   final String email;
