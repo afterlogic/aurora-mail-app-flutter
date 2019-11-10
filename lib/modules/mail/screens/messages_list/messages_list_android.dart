@@ -9,6 +9,8 @@ import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/compose_route.dart';
 import 'package:aurora_mail/modules/mail/screens/message_view/message_view_route.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/main_drawer.dart';
+import 'package:aurora_mail/modules/settings/blocs/sync_settings/bloc.dart';
+import 'package:aurora_mail/modules/settings/models/sync_duration.dart';
 import 'package:aurora_mail/modules/settings/screens/settings_main/settings_main_route.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +28,7 @@ class MessagesListAndroid extends StatefulWidget {
 class _MessagesListAndroidState extends State<MessagesListAndroid> {
   final _mailBloc = new MailBloc();
 
-  Completer<void> _refreshCompleter;
+  var _refreshCompleter = new Completer();
 
   // cache drawer state because when it's closed, the state is disposed
   FoldersLoaded _drawerInitialState = new FoldersLoaded([], null);
@@ -36,9 +38,7 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
   @override
   void initState() {
     super.initState();
-    _refreshCompleter = Completer<void>();
     _mailBloc.add(FetchFolders());
-    _initUpdateTimer();
   }
 
   @override
@@ -52,10 +52,13 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
     showSnack(context: ctx, scaffoldState: Scaffold.of(ctx), msg: err);
   }
 
-  void _initUpdateTimer() async {
-    await Future.delayed(SYNC_PERIOD);
+  void _initUpdateTimer(int frequency) async {
+    final freq = SyncFreq.secondsToFreq(frequency);
+    final syncDuration = SyncFreq.freqToDuration(freq);
+
+    _timer?.cancel();
     _timer = Timer.periodic(
-      SYNC_PERIOD,
+      syncDuration,
       (Timer timer) => _mailBloc.add(CheckFoldersMessagesChanges()),
     );
   }
@@ -75,10 +78,11 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
   void _onMessageSelected(List<Message> messagesWithoutChildren, int i) {
     final item = messagesWithoutChildren[i];
 
-    final draftsFolder = _drawerInitialState.folders.firstWhere((f) => f.folderType == FolderType.drafts, orElse: () => null);
+    final draftsFolder = _drawerInitialState.folders.firstWhere(
+        (f) => f.folderType == FolderType.drafts,
+        orElse: () => null);
 
     if (draftsFolder != null && item.folder == draftsFolder.fullNameRaw) {
-      print("VO: 123");
       Navigator.pushNamed(
         context,
         ComposeRoute.name,
@@ -88,8 +92,7 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
       Navigator.pushNamed(
         context,
         MessageViewRoute.name,
-        arguments: MessageViewScreenArgs(
-            messagesWithoutChildren, i, _mailBloc),
+        arguments: MessageViewScreenArgs(messagesWithoutChildren, i, _mailBloc),
       );
     }
   }
@@ -104,20 +107,30 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
           child: MailAppBar(onActionSelected: _onAppBarActionSelected),
         ),
         drawer: MainDrawer(_drawerInitialState),
-        body: BlocListener(
-          bloc: _mailBloc,
-          listener: (BuildContext context, state) {
-            if (state is FoldersLoaded) {
-              _refreshCompleter?.complete();
-              _refreshCompleter = Completer();
-              setState(() => _drawerInitialState = state);
-            }
-            if (state is MailError) {
-              _refreshCompleter?.complete();
-              _refreshCompleter = Completer();
-              _showError(context, state.error);
-            }
-          },
+        body: MultiBlocListener(
+          listeners: [
+            BlocListener(
+              bloc: _mailBloc,
+              listener: (BuildContext context, state) {
+                if (state is FoldersLoaded) {
+                  setState(() => _drawerInitialState = state);
+                }
+                if (state is MessagesRefreshed || state is MailError) {
+                  _refreshCompleter?.complete();
+                  _refreshCompleter = new Completer();
+                }
+                if (state is MailError) _showError(context, state.error);
+              },
+            ),
+            BlocListener<SyncSettingsBloc, SyncSettingsState>(
+              listener: (BuildContext context, state) {
+                if (state is InitialSyncSettingsState &&
+                    state.frequency != null) {
+                  _initUpdateTimer(state.frequency);
+                }
+              },
+            ),
+          ],
           child: RefreshIndicator(
             onRefresh: () {
               _mailBloc.add(RefreshMessages());
@@ -167,7 +180,8 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
                   children: <Widget>[
                     InkWell(
                       child: MessageItem(item),
-                      onTap: () => _onMessageSelected(messagesWithoutChildren, i),
+                      onTap: () =>
+                          _onMessageSelected(messagesWithoutChildren, i),
                     ),
                     if (_drawerInitialState.selectedFolder != null &&
                         _drawerInitialState.selectedFolder.needsInfoUpdate &&

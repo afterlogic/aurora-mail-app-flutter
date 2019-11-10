@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth/auth_bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
@@ -16,13 +18,7 @@ class MainDrawer extends StatefulWidget {
 }
 
 class _MainDrawerState extends State<MainDrawer> {
-//  final _state = AppStore.foldersState;
-  final _refreshIndicatorKey = new GlobalKey<RefreshIndicatorState>();
-
-  // TODO VO:
-  void _showRefresh() => _refreshIndicatorKey.currentState.show();
-
-  void _hideRefresh() => _refreshIndicatorKey.currentState.deactivate();
+  var _refreshCompleter = new Completer();
 
   @override
   Widget build(BuildContext context) {
@@ -50,13 +46,16 @@ class _MainDrawerState extends State<MainDrawer> {
               child: BlocListener(
                 bloc: BlocProvider.of<MailBloc>(context),
                 listener: (BuildContext context, state) {
-//                  if (state is FoldersLoading) _showRefresh();
-//                  if (state is FoldersLoaded) _hideRefresh();
+                  if (state is FoldersLoaded || state is MailError) {
+                    _refreshCompleter?.complete();
+                    _refreshCompleter = new Completer();
+                  }
                 },
                 child: RefreshIndicator(
-                  key: _refreshIndicatorKey,
-                  onRefresh: () async =>
-                      BlocProvider.of<MailBloc>(context).add(RefreshFolders()),
+                  onRefresh: () {
+                    BlocProvider.of<MailBloc>(context).add(RefreshFolders());
+                    return _refreshCompleter.future;
+                  },
                   child: BlocBuilder<MailBloc, MailState>(
                       bloc: BlocProvider.of<MailBloc>(context),
                       condition: (prevState, state) =>
@@ -115,5 +114,10 @@ class _MainDrawerState extends State<MainDrawer> {
         ),
       ],
     );
+  }
+
+  Widget _buildFoldersLoading() {
+    // build list view to be able to swipe to refresh
+    return Center(child: CircularProgressIndicator());
   }
 }

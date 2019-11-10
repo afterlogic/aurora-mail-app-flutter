@@ -63,10 +63,7 @@ class _MessageViewAndroidState extends State<MessageViewAndroid> {
       final uids = [widget.messages[_currentPage].uid];
       _setSeenTimer = new Timer(
         SET_SEEN_DELAY,
-        () {
-          print("VO: SET_SEEN: ${uids[0]}");
-          BlocProvider.of<MailBloc>(context).add(SetSeen(uids));
-        },
+        () => BlocProvider.of<MailBloc>(context).add(SetSeen(uids)),
       );
     }
   }

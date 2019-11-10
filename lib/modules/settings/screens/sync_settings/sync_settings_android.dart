@@ -25,7 +25,6 @@ class _SyncSettingsAndroidState extends State<SyncSettingsAndroid> {
         bloc: BlocProvider.of<SyncSettingsBloc>(context),
         condition: (_, state) => state is InitialSyncSettingsState,
         builder: (_, state) {
-          print("VO: $state");
           if (state is InitialSyncSettingsState) {
             final freq = SyncFreq.secondsToFreq(state.frequency);
             return ListView(

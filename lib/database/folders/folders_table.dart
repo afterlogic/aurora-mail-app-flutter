@@ -127,12 +127,12 @@ class Folders extends Table {
     final newFolders = args["newItems"];
 
     final addedFolders = newFolders.where((i) =>
-        oldFolders.firstWhere((j) => j.fullNameHash == i.fullNameHash,
+        oldFolders.firstWhere((j) => j.fullNameRaw == i.fullNameRaw,
             orElse: () => null) ==
         null);
 
     final removedFolders = oldFolders.where((i) =>
-        newFolders.firstWhere((j) => j.fullNameHash == i.fullNameHash,
+        newFolders.firstWhere((j) => j.fullNameRaw == i.fullNameRaw,
             orElse: () => null) ==
         null);
 
@@ -143,8 +143,8 @@ class Folders extends Table {
     """);
 
     return new FoldersDiffCalcResult(
-      addedFolders: addedFolders,
-      deletedFolders: removedFolders,
+      addedFolders: addedFolders.toList(),
+      deletedFolders: removedFolders.toList(),
     );
   }
 

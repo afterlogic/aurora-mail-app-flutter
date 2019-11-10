@@ -33,6 +33,8 @@ class SubscribedToMessages extends MailState {
   List<Object> get props => [messagesSub];
 }
 
+class MessagesRefreshed extends MailState {}
+
 // for both folders and messages
 class MailError extends MailState {
   final String error;

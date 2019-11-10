@@ -7,14 +7,10 @@ import 'package:bloc/bloc.dart';
 import './bloc.dart';
 
 class SyncSettingsBloc extends Bloc<SyncSettingsEvent, SyncSettingsState> {
-  SyncFreq syncDuration;
-
   final _methods = new SyncSettingsMethods();
-  
-
 
   @override
-  SyncSettingsState get initialState => InitialSyncSettingsState(300);
+  SyncSettingsState get initialState => InitialSyncSettingsState(null);
 
   @override
   Stream<SyncSettingsState> mapEventToState(
@@ -25,14 +21,12 @@ class SyncSettingsBloc extends Bloc<SyncSettingsEvent, SyncSettingsState> {
   }
 
   Stream<SyncSettingsState> _initSyncSettings(InitSyncSettings event) async* {
-    print("VO: freqInSeconds: ${event.user.syncFreqInSeconds}");
     yield InitialSyncSettingsState(event.user.syncFreqInSeconds);
   }
 
   Stream<SyncSettingsState> _setFrequency(SetFrequency event) async* {
     _methods.setFrequency(event.freq);
     final freqInSeconds = SyncFreq.freqToDuration(event.freq).inSeconds;
-    print("VO: freqInSeconds: ${freqInSeconds}");
 
     yield InitialSyncSettingsState(freqInSeconds);
   }

@@ -12,12 +12,12 @@ class AuthMethods {
   final _accountsDao = new AccountsDao(DBInstances.appDB);
 
   Future<InitializerResponse> getUserAndAccountsFromDB() async {
-    final selectedUserLocalId = await _authLocal.getSelectedUserLocalId();
-    if (selectedUserLocalId == null) return null;
+    final selectedUserServerId = await _authLocal.getSelectedUserServerId();
+    if (selectedUserServerId == null) return null;
 
     final futures = [
-      _usersDao.getUserByLocalId(selectedUserLocalId),
-      _accountsDao.getAccounts(selectedUserLocalId),
+      _usersDao.getUserByServerId(selectedUserServerId),
+      _accountsDao.getAccounts(selectedUserServerId),
     ];
 
     final result = await Future.wait(futures);
@@ -56,14 +56,14 @@ class AuthMethods {
 
     User userToReturn = await _usersDao.getUserByServerId(newUser.serverId);
 
-    int localIdToSaveInSharePrefs;
+    int serverIdToSaveInSharePrefs;
     if (userToReturn != null) {
-      localIdToSaveInSharePrefs = userToReturn.localId;
+      serverIdToSaveInSharePrefs = userToReturn.serverId;
     } else {
-      localIdToSaveInSharePrefs = await _usersDao.addUser(newUser);
+      serverIdToSaveInSharePrefs = await _usersDao.addUser(newUser);
       userToReturn = await _usersDao.getUserByServerId(newUser.serverId);
     }
-    await _authLocal.setSelectedUserLocalId(localIdToSaveInSharePrefs);
+    await _authLocal.setSelectedUserServerId(serverIdToSaveInSharePrefs);
     return userToReturn;
   }
 
@@ -78,7 +78,7 @@ class AuthMethods {
 
   Future<void> logout(User user) async {
     final futures = [
-      _authLocal.deleteSelectedUserLocalId(),
+      _authLocal.deleteSelectedUserServerId(),
 //      _usersDao.deleteUser(user.localId),
       _accountsDao.deleteAccountsOfUser(user.serverId),
     ];

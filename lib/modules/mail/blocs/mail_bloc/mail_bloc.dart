@@ -75,6 +75,7 @@ class MailBloc extends Bloc<MailEvent, MailState> {
         (f) => f.localId == _selectedFolder.localId,
         orElse: () => folders[0]);
 
+    yield MessagesRefreshed();
     yield FoldersLoaded(folders, _selectedFolder);
   }
 

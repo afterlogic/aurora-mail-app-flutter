@@ -43,6 +43,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     try {
       if (result != null) {
         _currentUser = result.user;
+        _hostName = result.user.hostname;
         _currentAccount = result.accounts[0];
         yield InitializedUserAndAccounts(result.user, needsLogin: false);
       } else {

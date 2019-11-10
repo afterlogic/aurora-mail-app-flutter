@@ -75,7 +75,7 @@ class MailMethods {
 
       // delete messages of removed folders
       final List<String> removedFoldersRawNames =
-          removedFolders.map((f) => f.fullNameRaw);
+          removedFolders.map((f) => f.fullNameRaw).toList();
       dbFutures.add(
           _mailDao.deleteMessagesFromRemovedFolders(removedFoldersRawNames));
     }

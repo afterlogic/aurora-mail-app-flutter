@@ -160,7 +160,6 @@ class MailApi {
 
     final res = await sendRequest(body);
 
-    print("VO: res[Result]: ${res}");
     if (res["Result"] is Map) {
       return res["Result"]["NewUid"];
     } else {

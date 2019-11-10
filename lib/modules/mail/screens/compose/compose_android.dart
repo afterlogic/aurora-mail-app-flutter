@@ -84,7 +84,6 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
   }
 
   void _initSaveToDraftsTimer() async {
-    await Future.delayed(SAVE_TO_DRAFTS_PERIOD);
     _timer = Timer.periodic(
       SAVE_TO_DRAFTS_PERIOD,
       (Timer timer) => _saveToDrafts(),
