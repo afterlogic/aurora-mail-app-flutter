@@ -22,6 +22,8 @@ String formatError(dynamic err, StackTrace stack) {
   } else {
     print("Debug error: $err");
     print("Debug stack: $stack");
-    return "Unknown error";
+    return err.toString();
+    // TODO VO set unknown for release
+//    return "Unknown error";
   }
 }

@@ -6,6 +6,7 @@ import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth/bloc.dart';
 import 'package:aurora_mail/modules/auth/screens/login/login_route.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
+import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/compose_route.dart';
 import 'package:aurora_mail/modules/mail/screens/message_view/message_view_route.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/main_drawer.dart';
@@ -26,26 +27,26 @@ class MessagesListAndroid extends StatefulWidget {
 }
 
 class _MessagesListAndroidState extends State<MessagesListAndroid> {
-  final _mailBloc = new MailBloc();
+  final _mailBloc = new MessagesListBloc();
+  final _foldersBloc = new MailBloc();
 
   var _refreshCompleter = new Completer();
-
-  // cache drawer state because when it's closed, the state is disposed
-  FoldersLoaded _drawerInitialState = new FoldersLoaded([], null);
+  Folder _selectedFolder;
 
   Timer _timer;
 
   @override
   void initState() {
     super.initState();
-    _mailBloc.add(FetchFolders());
+    _foldersBloc.add(FetchFolders());
   }
 
   @override
   void dispose() {
     super.dispose();
-    _timer.cancel();
+    _timer?.cancel();
     _mailBloc.close();
+    _foldersBloc.close();
   }
 
   void _showError(BuildContext ctx, String err) {
@@ -59,7 +60,7 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
     _timer?.cancel();
     _timer = Timer.periodic(
       syncDuration,
-      (Timer timer) => _mailBloc.add(CheckFoldersMessagesChanges()),
+      (Timer timer) => _foldersBloc.add(CheckFoldersMessagesChanges()),
     );
   }
 
@@ -78,48 +79,76 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
   void _onMessageSelected(List<Message> messagesWithoutChildren, int i) {
     final item = messagesWithoutChildren[i];
 
-    final draftsFolder = _drawerInitialState.folders.firstWhere(
-        (f) => f.folderType == FolderType.drafts,
-        orElse: () => null);
+    final draftsFolder = (_foldersBloc.state as FoldersLoaded)
+        .folders
+        .firstWhere((f) => f.folderType == FolderType.drafts,
+            orElse: () => null);
 
     if (draftsFolder != null && item.folder == draftsFolder.fullNameRaw) {
       Navigator.pushNamed(
         context,
         ComposeRoute.name,
-        arguments: ComposeScreenArgs(_mailBloc, item),
+        arguments: ComposeScreenArgs(_foldersBloc, item),
       );
     } else {
       Navigator.pushNamed(
         context,
         MessageViewRoute.name,
-        arguments: MessageViewScreenArgs(messagesWithoutChildren, i, _mailBloc),
+        arguments:
+            MessageViewScreenArgs(messagesWithoutChildren, i, _foldersBloc),
       );
+    }
+  }
+
+  void _dispatchPostFoldersLoadedAction(FoldersLoaded state) {
+    switch (state.postAction) {
+      case PostFolderLoadedAction.subscribeToMessages:
+        _mailBloc.add(SubscribeToMessages(state.selectedFolder));
+        break;
+      case PostFolderLoadedAction.stopMessagesRefresh:
+        _mailBloc.add(StopMessagesRefresh());
+        break;
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<MailBloc>.value(
-      value: _mailBloc,
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<MessagesListBloc>.value(
+          value: _mailBloc,
+        ),
+        BlocProvider<MailBloc>.value(
+          value: _foldersBloc,
+        ),
+      ],
       child: Scaffold(
         appBar: PreferredSize(
           preferredSize: Size.fromHeight(APP_BAR_HEIGHT_ANDROID),
           child: MailAppBar(onActionSelected: _onAppBarActionSelected),
         ),
-        drawer: MainDrawer(_drawerInitialState),
+        drawer: MainDrawer(),
         body: MultiBlocListener(
           listeners: [
             BlocListener(
               bloc: _mailBloc,
               listener: (BuildContext context, state) {
-                if (state is FoldersLoaded) {
-                  setState(() => _drawerInitialState = state);
-                }
                 if (state is MessagesRefreshed || state is MailError) {
                   _refreshCompleter?.complete();
                   _refreshCompleter = new Completer();
                 }
-                if (state is MailError) _showError(context, state.error);
+                if (state is MailError) _showError(context, state.errorMsg);
+              },
+            ),
+            BlocListener(
+              bloc: _foldersBloc,
+              listener: (BuildContext context, state) {
+                if (state is FoldersLoaded) {
+                  setState(() => _selectedFolder = state.selectedFolder);
+                  if (state.postAction != null) {
+                    _dispatchPostFoldersLoadedAction(state);
+                  }
+                }
               },
             ),
             BlocListener<SyncSettingsBloc, SyncSettingsState>(
@@ -133,10 +162,10 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
           ],
           child: RefreshIndicator(
             onRefresh: () {
-              _mailBloc.add(RefreshMessages());
+              _foldersBloc.add(RefreshMessages());
               return _refreshCompleter.future;
             },
-            child: BlocBuilder<MailBloc, MailState>(
+            child: BlocBuilder<MessagesListBloc, MessagesListState>(
                 bloc: _mailBloc,
                 condition: (prevState, state) => state is SubscribedToMessages,
                 builder: (context, state) {
@@ -151,7 +180,7 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
         floatingActionButton: FloatingActionButton(
           child: Icon(MdiIcons.emailPlusOutline),
           onPressed: () => Navigator.pushNamed(context, ComposeRoute.name,
-              arguments: ComposeScreenArgs(_mailBloc, null)),
+              arguments: ComposeScreenArgs(_foldersBloc, null)),
         ),
       ),
     );
@@ -183,8 +212,8 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
                       onTap: () =>
                           _onMessageSelected(messagesWithoutChildren, i),
                     ),
-                    if (_drawerInitialState.selectedFolder != null &&
-                        _drawerInitialState.selectedFolder.needsInfoUpdate &&
+                    if (_selectedFolder != null &&
+                        _selectedFolder.needsInfoUpdate &&
                         i == messagesWithoutChildren.length - 1)
                       CircularProgressIndicator(),
                   ],
@@ -198,8 +227,7 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
             );
           } else {
             // build list view to be able to swipe to refresh
-            if (_drawerInitialState.selectedFolder != null &&
-                _drawerInitialState.selectedFolder.needsInfoUpdate) {
+            if (_selectedFolder != null && _selectedFolder.needsInfoUpdate) {
               return _buildMessagesLoading();
             }
             return ListView(

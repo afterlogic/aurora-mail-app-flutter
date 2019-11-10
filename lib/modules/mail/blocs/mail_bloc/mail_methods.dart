@@ -6,7 +6,6 @@ import 'package:aurora_mail/database/mail/mail_table.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/models/message_info.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth/auth_bloc.dart';
-import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:aurora_mail/modules/mail/repository/folders_api.dart';
 import 'package:aurora_mail/modules/mail/repository/mail_api.dart';
 import 'package:aurora_mail/utils/constants.dart';
@@ -136,10 +135,6 @@ class MailMethods {
     await Future.wait(futures);
     final updatedLocalFolders = await _foldersDao.getAllFolders();
     return Folder.getFolderObjectsFromDb(updatedLocalFolders);
-  }
-
-  Stream<List<Message>> subscribeToMessages(Folder folder) {
-    return _mailDao.watchMessages(folder.fullNameRaw);
   }
 
   Future<void> syncFolders(
@@ -273,15 +268,6 @@ class MailMethods {
     assert(iteration <= MESSAGES_PER_CHUNK);
 
     return uids;
-  }
-
-  void downloadAttachment(
-    MailAttachment attachment, {
-    @required Function(String) onDownloadEnd,
-    @required Function() onDownloadStart,
-  }) {
-    _mailApi.downloadAttachment(attachment,
-        onDownloadEnd: onDownloadEnd, onDownloadStart: onDownloadStart);
   }
 
   Future<void> setMessagesSeen({

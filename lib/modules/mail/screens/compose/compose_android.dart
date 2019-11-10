@@ -238,7 +238,7 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
             if (state is MessageSent) _onMessageSent(context);
             if (state is MessageSavedInDrafts)
               _onMessageSaved(context, state.draftUid);
-            if (state is ComposeError) _showError(state.error);
+            if (state is ComposeError) _showError(state.errorMsg);
             if (state is UploadStarted)
               _setUploadProgress(state.tempAttachment);
             if (state is AttachmentUploaded)

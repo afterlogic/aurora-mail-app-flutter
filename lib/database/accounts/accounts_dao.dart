@@ -20,7 +20,6 @@ class AccountsDao extends DatabaseAccessor<AppDatabase>
   }
 
   Future<void> deleteAccountsOfUser(int userServerId) {
-    return (delete(accounts)..where((a) => a.idUser.equals(userServerId)))
-        .go();
+    return (delete(accounts)..where((a) => a.idUser.equals(userServerId))).go();
   }
 }

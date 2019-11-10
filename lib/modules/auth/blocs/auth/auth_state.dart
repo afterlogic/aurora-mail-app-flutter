@@ -38,10 +38,10 @@ class LoggedIn extends AuthState {
 class LoggedOut extends AuthState {}
 
 class AuthError extends AuthState {
-  final String error;
+  final String errorMsg;
 
-  AuthError(this.error);
+  AuthError(this.errorMsg);
 
   @override
-  List<Object> get props => [error];
+  List<Object> get props => [errorMsg];
 }

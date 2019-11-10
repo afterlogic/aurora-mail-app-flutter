@@ -56,14 +56,11 @@ class AuthMethods {
 
     User userToReturn = await _usersDao.getUserByServerId(newUser.serverId);
 
-    int serverIdToSaveInSharePrefs;
-    if (userToReturn != null) {
-      serverIdToSaveInSharePrefs = userToReturn.serverId;
-    } else {
-      serverIdToSaveInSharePrefs = await _usersDao.addUser(newUser);
+    if (userToReturn == null) {
+      await _usersDao.addUser(newUser);
       userToReturn = await _usersDao.getUserByServerId(newUser.serverId);
     }
-    await _authLocal.setSelectedUserServerId(serverIdToSaveInSharePrefs);
+    await _authLocal.setSelectedUserServerId(userToReturn.serverId);
     return userToReturn;
   }
 

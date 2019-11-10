@@ -9,10 +9,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'mail_folder.dart';
 
 class MainDrawer extends StatefulWidget {
-  final FoldersLoaded cachedState;
-
-  const MainDrawer(this.cachedState);
-
   @override
   _MainDrawerState createState() => _MainDrawerState();
 }
@@ -46,7 +42,7 @@ class _MainDrawerState extends State<MainDrawer> {
               child: BlocListener(
                 bloc: BlocProvider.of<MailBloc>(context),
                 listener: (BuildContext context, state) {
-                  if (state is FoldersLoaded || state is MailError) {
+                  if (state is FoldersLoaded || state is FoldersError) {
                     _refreshCompleter?.complete();
                     _refreshCompleter = new Completer();
                   }
@@ -64,9 +60,9 @@ class _MainDrawerState extends State<MainDrawer> {
                         if (state is FoldersLoaded) {
                           return _buildFolders(state);
                         } else if (state is FoldersLoading) {
-                          return _buildFoldersEmpty();
+                          return _buildFoldersLoading();
                         } else {
-                          return _buildFolders(widget.cachedState);
+                          return _buildFoldersEmpty();
                         }
                       }),
                 ),

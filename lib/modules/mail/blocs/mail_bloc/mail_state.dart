@@ -1,64 +1,37 @@
-import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:equatable/equatable.dart';
+
+enum PostFolderLoadedAction { subscribeToMessages, stopMessagesRefresh }
 
 abstract class MailState extends Equatable {
   const MailState();
 
   @override
-  List<Object> get props => null;
+  List<Object> get props => [];
 }
 
 class FoldersEmpty extends MailState {}
 
-// used when there are no folders yet
 class FoldersLoading extends MailState {}
 
 class FoldersLoaded extends MailState {
   final List<Folder> folders;
   final Folder selectedFolder;
 
-  const FoldersLoaded(this.folders, this.selectedFolder);
+  // to fire messages events if needed
+  final PostFolderLoadedAction postAction;
+
+  const FoldersLoaded(this.folders, this.selectedFolder, [this.postAction]);
 
   @override
-  List<Object> get props => [folders];
+  List<Object> get props => [folders, selectedFolder, postAction];
 }
 
-class SubscribedToMessages extends MailState {
-  final Stream<List<Message>> messagesSub;
+class FoldersError extends MailState {
+  final String errorMsg;
 
-  const SubscribedToMessages(this.messagesSub);
-
-  @override
-  List<Object> get props => [messagesSub];
-}
-
-class MessagesRefreshed extends MailState {}
-
-// for both folders and messages
-class MailError extends MailState {
-  final String error;
-
-  const MailError(this.error);
+  FoldersError(this.errorMsg);
 
   @override
-  List<Object> get props => [error];
-}
-
-class DownloadStarted extends MailState {
-  final String fileName;
-
-  const DownloadStarted(this.fileName);
-
-  @override
-  List<Object> get props => [fileName];
-}
-
-class DownloadFinished extends MailState {
-  final String path;
-
-  const DownloadFinished(this.path);
-
-  @override
-  List<Object> get props => [path];
+  List<Object> get props => [errorMsg];
 }

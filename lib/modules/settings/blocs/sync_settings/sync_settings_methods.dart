@@ -9,9 +9,11 @@ class SyncSettingsMethods {
 
   Future<User> setFrequency(Freq freq) async {
     final localId = AuthBloc.currentUser.localId;
-    await _usersDao.updateUser(localId, new UsersCompanion(
-      syncFreqInSeconds: Value(SyncFreq.freqToDuration(freq).inSeconds),
-    ));
+    await _usersDao.updateUser(
+        localId,
+        new UsersCompanion(
+          syncFreqInSeconds: Value(SyncFreq.freqToDuration(freq).inSeconds),
+        ));
 
     return _usersDao.getUserByLocalId(localId);
   }

@@ -1,4 +1,4 @@
-import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
+import 'package:aurora_mail/modules/mail/blocs/message_view_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:filesize/filesize.dart';
@@ -19,8 +19,7 @@ class _AttachmentState extends State<Attachment> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener(
-      bloc: BlocProvider.of<MailBloc>(context),
+    return BlocListener<MessageViewBloc, MessageViewState>(
       listener: (context, state) {
         // TODO VO: repair progress updating
 //        if (state is DownloadStarted) {
@@ -77,7 +76,7 @@ class _AttachmentState extends State<Attachment> {
                       scaffoldState: Scaffold.of(context),
                       msg: "Downloading ${widget.attachment.fileName}...",
                       isError: false);
-                  BlocProvider.of<MailBloc>(context)
+                  BlocProvider.of<MessageViewBloc>(context)
                       .add(DownloadAttachment(widget.attachment));
                 },
               ),

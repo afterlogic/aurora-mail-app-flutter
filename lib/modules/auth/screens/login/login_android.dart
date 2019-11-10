@@ -35,7 +35,7 @@ class _LoginAndroidState extends State<LoginAndroid> {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-    if (!kReleaseMode) {
+    if (kDebugMode) {
 //    hostCtrl.text = "https://mail.privatemail.com";
       emailCtrl.text = "test@afterlogic.com";
       passwordCtrl.text = "p12345q";
@@ -113,7 +113,7 @@ class _LoginAndroidState extends State<LoginAndroid> {
               showSnack(
                   context: context,
                   scaffoldState: Scaffold.of(context),
-                  msg: state.error);
+                  msg: state.errorMsg);
             }
           },
           child: BlocBuilder<AuthBloc, AuthState>(

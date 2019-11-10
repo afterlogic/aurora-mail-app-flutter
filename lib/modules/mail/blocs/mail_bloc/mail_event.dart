@@ -1,12 +1,11 @@
 import 'package:aurora_mail/models/folder.dart';
-import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class MailEvent extends Equatable {
   const MailEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => null;
 }
 
 // try from DB, if empty - fetch from server
@@ -17,6 +16,10 @@ class UpdateFolders extends MailEvent {}
 
 // always from server
 class RefreshFolders extends MailEvent {}
+
+// gets messagesInfo for current folder
+// and relevant folders info for all the folders, including current
+class RefreshMessages extends MailEvent {}
 
 class CheckFoldersMessagesChanges extends MailEvent {}
 
@@ -29,10 +32,6 @@ class SelectFolder extends MailEvent {
   List<Object> get props => [folder];
 }
 
-// gets messagesInfo for current folder
-// and relevant folders info for all the folders, including current
-class RefreshMessages extends MailEvent {}
-
 class SetSeen extends MailEvent {
   final List<int> uids;
 
@@ -40,31 +39,4 @@ class SetSeen extends MailEvent {
 
   @override
   List<Object> get props => [uids];
-}
-
-class DownloadAttachment extends MailEvent {
-  final MailAttachment attachment;
-
-  const DownloadAttachment(this.attachment);
-
-  @override
-  List<Object> get props => [attachment];
-}
-
-class StartDownload extends MailEvent {
-  final String fileName;
-
-  const StartDownload(this.fileName);
-
-  @override
-  List<Object> get props => [fileName];
-}
-
-class EndDownload extends MailEvent {
-  final String path;
-
-  const EndDownload(this.path);
-
-  @override
-  List<Object> get props => [path];
 }

@@ -43,7 +43,10 @@ class MessageSavedInDrafts extends ComposeState {
 }
 
 class ComposeError extends ComposeState {
-  final String error;
+  final String errorMsg;
 
-  ComposeError(this.error);
+  ComposeError(this.errorMsg);
+
+  @override
+  List<Object> get props => [errorMsg];
 }

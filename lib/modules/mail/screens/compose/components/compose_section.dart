@@ -45,8 +45,8 @@ class _ComposeSectionState extends State<ComposeSection> {
 
   Future _addEmail(String email) async {
     widget.textCtrl.text = "";
-    final error = validateInput(
-        email, [ValidationType.email, ValidationType.empty]);
+    final error =
+        validateInput(email, [ValidationType.email, ValidationType.empty]);
     if (error == null) {
       setState(() => widget.emails.add(email));
     }
@@ -70,10 +70,7 @@ class _ComposeSectionState extends State<ComposeSection> {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: Text(widget.label,
-                  style: Theme
-                      .of(context)
-                      .textTheme
-                      .subhead),
+                  style: Theme.of(context).textTheme.subhead),
             ),
             SizedBox(width: 8.0),
             Flexible(

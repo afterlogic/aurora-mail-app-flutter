@@ -25,7 +25,7 @@ class SlideHorizontalRoute extends PageRouteBuilder {
               return SlideTransition(
                 position: animation.drive(
                     Tween(begin: Offset(0.4, 0.0), end: Offset.zero)
-                        .chain(CurveTween(curve: Curves.easeInOutCubic))),
+                        .chain(CurveTween(curve: Curves.easeOutQuart))),
                 child: FadeTransition(
                   opacity: animation,
                   child: child,

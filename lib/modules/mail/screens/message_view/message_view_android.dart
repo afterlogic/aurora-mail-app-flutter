@@ -6,6 +6,7 @@ import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/mail/mail_table.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
+import 'package:aurora_mail/modules/mail/blocs/message_view_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:aurora_mail/modules/mail/screens/message_view/components/message_view_app_bar.dart';
 import 'package:aurora_mail/utils/date_formatting.dart';
@@ -27,6 +28,8 @@ class MessageViewAndroid extends StatefulWidget {
 }
 
 class _MessageViewAndroidState extends State<MessageViewAndroid> {
+  final _messageViewBloc = new MessageViewBloc();
+
   PageController _pageCtrl;
   int _currentPage;
 
@@ -48,14 +51,13 @@ class _MessageViewAndroidState extends State<MessageViewAndroid> {
   @override
   void dispose() {
     super.dispose();
-    if (_setSeenTimer != null) _setSeenTimer.cancel();
+    _messageViewBloc.close();
+    _setSeenTimer?.cancel();
   }
 
   void _startSetSeenTimer(BuildContext context) {
-    if (_setSeenTimer != null) {
-      _setSeenTimer.cancel();
-      _setSeenTimer = null;
-    }
+    _setSeenTimer?.cancel();
+    _setSeenTimer = null;
 
     final flagsString = widget.messages[_currentPage].flagsInJson;
     final flags = json.decode(flagsString);
@@ -94,99 +96,104 @@ class _MessageViewAndroidState extends State<MessageViewAndroid> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(APP_BAR_HEIGHT_ANDROID),
-        child: MailViewAppBar(_onAppBarActionSelected),
-      ),
-      body: BlocListener(
-          bloc: BlocProvider.of<MailBloc>(context),
-          listener: (context, state) {
-            if (state is DownloadStarted) {
-              // TODO translate
-              _showSnack("Downloading ${state.fileName}...", context);
-            }
-            if (state is DownloadFinished) {
-              // TODO translate
-              if (state.path == null) {
-                _showSnack("Download failed", context, isError: true);
-              } else {
-                _showSnack("File downloaded into: ${state.path}", context);
+    return BlocProvider<MessageViewBloc>.value(
+      value: _messageViewBloc,
+      child: Scaffold(
+        appBar: PreferredSize(
+          preferredSize: Size.fromHeight(APP_BAR_HEIGHT_ANDROID),
+          child: MailViewAppBar(_onAppBarActionSelected),
+        ),
+        body: BlocListener(
+            bloc: _messageViewBloc,
+            listener: (context, state) {
+              if (state is DownloadStarted) {
+                // TODO translate
+                _showSnack("Downloading ${state.fileName}...", context);
               }
-            }
-          },
-          child: PageView.builder(
-            // TODO VO: temp disabled pageview
-            physics: new NeverScrollableScrollPhysics(),
-            onPageChanged: (int i) {
-              _currentPage = i;
-              _startSetSeenTimer(context);
+              if (state is DownloadFinished) {
+                // TODO translate
+                if (state.path == null) {
+                  _showSnack("Download failed", context, isError: true);
+                } else {
+                  _showSnack("File downloaded into: ${state.path}", context);
+                }
+              }
             },
-            controller: _pageCtrl,
-            itemCount: widget.messages.length,
-            itemBuilder: (_, int i) {
-              final message = widget.messages[i];
-              final attachments = MailAttachment.fromJsonString(
-                message.attachmentsInJson,
-              );
+            child: PageView.builder(
+              // TODO VO: temp disabled pageview
+              physics: new NeverScrollableScrollPhysics(),
+              onPageChanged: (int i) {
+                _currentPage = i;
+                _startSetSeenTimer(context);
+              },
+              controller: _pageCtrl,
+              itemCount: widget.messages.length,
+              itemBuilder: (_, int i) {
+                final message = widget.messages[i];
+                final attachments = MailAttachment.fromJsonString(
+                  message.attachmentsInJson,
+                );
 
-              return ListView(
-                padding: EdgeInsets.all(16.0),
-                children: <Widget>[
-                  Text(
-                    // TODO translate
-                    message.subject.isNotEmpty ? message.subject : "No subject",
-                    style: Theme.of(context).textTheme.display1.copyWith(
-                          fontSize: 26.0,
+                return ListView(
+                  padding: EdgeInsets.all(16.0),
+                  children: <Widget>[
+                    Text(
+                      // TODO translate
+                      message.subject.isNotEmpty
+                          ? message.subject
+                          : "No subject",
+                      style: Theme.of(context).textTheme.display1.copyWith(
+                            fontSize: 26.0,
+                          ),
+                    ),
+                    SizedBox(height: 12.0),
+                    Divider(height: 20.0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.baseline,
+                      textBaseline: TextBaseline.alphabetic,
+                      children: <Widget>[
+                        Text(
+                          message.fromToDisplay,
+                          style: Theme.of(context).textTheme.subhead,
                         ),
-                  ),
-                  SizedBox(height: 12.0),
-                  Divider(height: 20.0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.baseline,
-                    textBaseline: TextBaseline.alphabetic,
-                    children: <Widget>[
-                      Text(
-                        message.fromToDisplay,
-                        style: Theme.of(context).textTheme.subhead,
-                      ),
-                      Text(DateFormatting.formatDateFromSeconds(
-                          timestamp: message.timeStampInUTC)),
-                    ],
-                  ),
-                  SizedBox(height: 10.0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.baseline,
-                    textBaseline: TextBaseline.alphabetic,
-                    children: <Widget>[
-                      // TODO translate
-                      Text(
-                        _formatTo(message),
-                        style: Theme.of(context).textTheme.caption,
-                      ),
-                      // TODO translate
+                        Text(DateFormatting.formatDateFromSeconds(
+                            timestamp: message.timeStampInUTC)),
+                      ],
+                    ),
+                    SizedBox(height: 10.0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.baseline,
+                      textBaseline: TextBaseline.alphabetic,
+                      children: <Widget>[
+                        // TODO translate
+                        Text(
+                          _formatTo(message),
+                          style: Theme.of(context).textTheme.caption,
+                        ),
+                        // TODO translate
 //                      Text(
 //                        "Show details",
 //                        style: TextStyle(decoration: TextDecoration.underline),
 //                      ),
-                    ],
-                  ),
-                  if (attachments.isNotEmpty) Divider(),
-                  ...attachments.map((attachment) {
-                    if (attachment.isInline) {
-                      return SizedBox();
-                    } else {
-                      return Attachment(attachment);
-                    }
-                  }).toList(),
-                  Divider(height: 24.0),
-                  MessageBody(message, attachments),
-                ],
-              );
-            },
-          )),
+                      ],
+                    ),
+                    if (attachments.isNotEmpty) Divider(),
+                    ...attachments.map((attachment) {
+                      if (attachment.isInline) {
+                        return SizedBox();
+                      } else {
+                        return Attachment(attachment);
+                      }
+                    }).toList(),
+                    Divider(height: 24.0),
+                    MessageBody(message, attachments),
+                  ],
+                );
+              },
+            )),
+      ),
     );
   }
 }

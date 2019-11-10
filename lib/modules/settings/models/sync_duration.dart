@@ -11,7 +11,7 @@ enum Freq {
 // Freq == frequency
 class SyncFreq {
   static const _NEVER_IN_SECONDS = Duration.secondsPerDay * 365 * 1000;
-  
+
   static String freqToString(Freq freq) {
     switch (freq) {
       case Freq.never:
