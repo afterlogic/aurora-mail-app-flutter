@@ -27,8 +27,8 @@ class MessagesListAndroid extends StatefulWidget {
 }
 
 class _MessagesListAndroidState extends State<MessagesListAndroid> {
-  final _mailBloc = new MessagesListBloc();
-  final _foldersBloc = new MailBloc();
+  final _messagesListBloc = new MessagesListBloc();
+  final _mailBloc = new MailBloc();
 
   var _refreshCompleter = new Completer();
   Folder _selectedFolder;
@@ -38,15 +38,15 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
   @override
   void initState() {
     super.initState();
-    _foldersBloc.add(FetchFolders());
+    _mailBloc.add(FetchFolders());
   }
 
   @override
   void dispose() {
     super.dispose();
     _timer?.cancel();
+    _messagesListBloc.close();
     _mailBloc.close();
-    _foldersBloc.close();
   }
 
   void _showError(BuildContext ctx, String err) {
@@ -60,7 +60,7 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
     _timer?.cancel();
     _timer = Timer.periodic(
       syncDuration,
-      (Timer timer) => _foldersBloc.add(CheckFoldersMessagesChanges()),
+      (Timer timer) => _mailBloc.add(CheckFoldersMessagesChanges()),
     );
   }
 
@@ -79,7 +79,7 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
   void _onMessageSelected(List<Message> messagesWithoutChildren, int i) {
     final item = messagesWithoutChildren[i];
 
-    final draftsFolder = (_foldersBloc.state as FoldersLoaded)
+    final draftsFolder = (_mailBloc.state as FoldersLoaded)
         .folders
         .firstWhere((f) => f.folderType == FolderType.drafts,
             orElse: () => null);
@@ -88,14 +88,14 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
       Navigator.pushNamed(
         context,
         ComposeRoute.name,
-        arguments: ComposeScreenArgs(_foldersBloc, item),
+        arguments: ComposeScreenArgs(_mailBloc, item),
       );
     } else {
       Navigator.pushNamed(
         context,
         MessageViewRoute.name,
         arguments:
-            MessageViewScreenArgs(messagesWithoutChildren, i, _foldersBloc),
+            MessageViewScreenArgs(messagesWithoutChildren, i, _mailBloc),
       );
     }
   }
@@ -103,10 +103,10 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
   void _dispatchPostFoldersLoadedAction(FoldersLoaded state) {
     switch (state.postAction) {
       case PostFolderLoadedAction.subscribeToMessages:
-        _mailBloc.add(SubscribeToMessages(state.selectedFolder));
+        _messagesListBloc.add(SubscribeToMessages(state.selectedFolder));
         break;
       case PostFolderLoadedAction.stopMessagesRefresh:
-        _mailBloc.add(StopMessagesRefresh());
+        _messagesListBloc.add(StopMessagesRefresh());
         break;
     }
   }
@@ -116,10 +116,10 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
     return MultiBlocProvider(
       providers: [
         BlocProvider<MessagesListBloc>.value(
-          value: _mailBloc,
+          value: _messagesListBloc,
         ),
         BlocProvider<MailBloc>.value(
-          value: _foldersBloc,
+          value: _mailBloc,
         ),
       ],
       child: Scaffold(
@@ -131,7 +131,7 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
         body: MultiBlocListener(
           listeners: [
             BlocListener(
-              bloc: _mailBloc,
+              bloc: _messagesListBloc,
               listener: (BuildContext context, state) {
                 if (state is MessagesRefreshed || state is MailError) {
                   _refreshCompleter?.complete();
@@ -141,7 +141,7 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
               },
             ),
             BlocListener(
-              bloc: _foldersBloc,
+              bloc: _mailBloc,
               listener: (BuildContext context, state) {
                 if (state is FoldersLoaded) {
                   setState(() => _selectedFolder = state.selectedFolder);
@@ -162,11 +162,11 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
           ],
           child: RefreshIndicator(
             onRefresh: () {
-              _foldersBloc.add(RefreshMessages());
+              _mailBloc.add(RefreshMessages());
               return _refreshCompleter.future;
             },
             child: BlocBuilder<MessagesListBloc, MessagesListState>(
-                bloc: _mailBloc,
+                bloc: _messagesListBloc,
                 condition: (prevState, state) => state is SubscribedToMessages,
                 builder: (context, state) {
                   if (state is SubscribedToMessages) {
@@ -180,7 +180,7 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
         floatingActionButton: FloatingActionButton(
           child: Icon(MdiIcons.emailPlusOutline),
           onPressed: () => Navigator.pushNamed(context, ComposeRoute.name,
-              arguments: ComposeScreenArgs(_foldersBloc, null)),
+              arguments: ComposeScreenArgs(_mailBloc, null)),
         ),
       ),
     );
