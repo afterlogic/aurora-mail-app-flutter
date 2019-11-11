@@ -111,7 +111,7 @@ class _MessageBodyState extends State<MessageBody> {
           final prevHeight = _webViewHeight;
           final parsedHeight = double.parse(height);
           setState(() {
-            print("VO: parsedHeight: ${parsedHeight}");
+//            print("VO: parsedHeight: ${parsedHeight}");
             if (height != null && prevHeight != parsedHeight) {
               _webViewHeight = parsedHeight > 1500.0 ? 1500.0 : parsedHeight;
             }

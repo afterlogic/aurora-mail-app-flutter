@@ -12,6 +12,7 @@ import 'package:aurora_mail/modules/mail/screens/message_view/message_view_route
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/main_drawer.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/modules/settings/models/sync_duration.dart';
+import 'package:aurora_mail/modules/settings/models/sync_period.dart';
 import 'package:aurora_mail/modules/settings/screens/settings_main/settings_main_route.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:flutter/material.dart';
@@ -36,9 +37,9 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
   Timer _timer;
 
   @override
-  void initState() {
-    super.initState();
-    _mailBloc.add(FetchFolders());
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _mailBloc.add(FetchFolders(SettingsBloc.getPeriodFromProvider(context)));
   }
 
   @override
@@ -53,14 +54,15 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
     showSnack(context: ctx, scaffoldState: Scaffold.of(ctx), msg: err);
   }
 
-  void _initUpdateTimer(int frequency) async {
+  void _initUpdateTimer(int frequency, BuildContext context) async {
     final freq = SyncFreq.secondsToFreq(frequency);
     final syncDuration = SyncFreq.freqToDuration(freq);
 
     _timer?.cancel();
     _timer = Timer.periodic(
       syncDuration,
-      (Timer timer) => _mailBloc.add(CheckFoldersMessagesChanges()),
+      (Timer timer) => _mailBloc.add(RefreshMessages(
+          SettingsBloc.getPeriodFromProvider(context))),
     );
   }
 
@@ -152,16 +154,19 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
             BlocListener<SettingsBloc, SettingsState>(
               listener: (BuildContext context, state) {
                 if (state is SettingsLoaded) {
-                  if (state.frequency != null) {
-                    _initUpdateTimer(state.frequency);
+                  if (state.syncFrequency != null) {
+                    _initUpdateTimer(state.syncFrequency, context);
                   }
+                  _mailBloc.add(RefreshMessages(
+                      SyncPeriod.dbStringToPeriod(state.syncPeriod)));
                 }
               },
             ),
           ],
           child: RefreshIndicator(
             onRefresh: () {
-              _mailBloc.add(RefreshMessages());
+              _mailBloc.add(
+                  RefreshMessages(SettingsBloc.getPeriodFromProvider(context)));
               return _refreshCompleter.future;
             },
             child: BlocBuilder<MessagesListBloc, MessagesListState>(

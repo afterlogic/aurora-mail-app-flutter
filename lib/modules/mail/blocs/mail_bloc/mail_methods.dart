@@ -9,6 +9,7 @@ import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/repository/folders_api.dart';
 import 'package:aurora_mail/modules/mail/repository/mail_api.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
+import 'package:aurora_mail/modules/settings/models/sync_period.dart';
 import 'package:aurora_mail/utils/constants.dart';
 import 'package:moor_flutter/moor_flutter.dart';
 
@@ -143,7 +144,7 @@ class MailMethods {
     return Folder.getFolderObjectsFromDb(updatedLocalFolders);
   }
 
-  Future<void> syncFolders(
+  Future<void> syncFolders(Period syncPeriod,
       {@required int localId, bool syncSystemFolders = false}) async {
     if (_isOffline) return null;
 
@@ -169,11 +170,11 @@ class MailMethods {
     }
     if (_syncQueue.isNotEmpty && queueLengthBeforeInsert == 0) {
       // TODO VO: completes earlier
-      await _setMessagesInfoToFolder();
+      await _setMessagesInfoToFolder(syncPeriod);
     }
   }
 
-  Future<void> _setMessagesInfoToFolder() async {
+  Future<void> _setMessagesInfoToFolder(Period syncPeriod) async {
     if (_isOffline) return null;
     assert(_syncQueue.isNotEmpty);
 
@@ -182,7 +183,7 @@ class MailMethods {
     if (!folderToUpdate.needsInfoUpdate) {
       _syncQueue.remove(folderToUpdate.localId);
       if (_syncQueue.isNotEmpty) {
-        return _setMessagesInfoToFolder();
+        return _setMessagesInfoToFolder(syncPeriod);
       } else {
         return null;
       }
@@ -190,8 +191,10 @@ class MailMethods {
 
     print("getting folder info for: ${folderToUpdate.fullNameRaw}");
 
+    final periodStr = SyncPeriod.periodToDate(syncPeriod);
     final rawInfo = await _mailApi.getMessagesInfo(
       folderName: folderToUpdate.fullNameRaw,
+      search: "date:$periodStr/"
     );
 
     List<MessageInfo> messagesInfo = MessageInfo.flattenMessagesInfo(rawInfo);
@@ -207,11 +210,11 @@ class MailMethods {
 
     await _foldersDao.setMessagesInfo(folderToUpdate.localId, messagesInfo);
 
-    return _syncMessagesChunk();
+    return _syncMessagesChunk(syncPeriod);
   }
 
   // step 5
-  Future<void> _syncMessagesChunk() async {
+  Future<void> _syncMessagesChunk(Period syncPeriod) async {
     if (_isOffline) return null;
     assert(_syncQueue.isNotEmpty);
 
@@ -220,7 +223,7 @@ class MailMethods {
     if (folder.messagesInfo == null) {
       print(
           "Attention! messagesInfo is null, perhaps another folder was selected while messages info was being retrieved.");
-      return _setMessagesInfoToFolder();
+      return _setMessagesInfoToFolder(syncPeriod);
     }
 
     // TODO VO: make async
@@ -239,7 +242,7 @@ class MailMethods {
       _syncQueue.remove(folder.localId);
       print("_syncQueue: $_syncQueue");
       if (_syncQueue.isNotEmpty) {
-        return _setMessagesInfoToFolder();
+        return _setMessagesInfoToFolder(syncPeriod);
       } else {
         return null;
       }
@@ -257,7 +260,7 @@ class MailMethods {
       await _foldersDao.setMessagesInfo(folder.localId, folder.messagesInfo);
 
       // check if there are other messages to sync
-      return _syncMessagesChunk();
+      return _syncMessagesChunk(syncPeriod);
     }
   }
 

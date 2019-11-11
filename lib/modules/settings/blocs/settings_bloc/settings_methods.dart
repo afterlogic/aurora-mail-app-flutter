@@ -2,6 +2,7 @@ import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/users/users_dao.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/settings/models/sync_duration.dart';
+import 'package:aurora_mail/modules/settings/models/sync_period.dart';
 import 'package:moor_flutter/moor_flutter.dart';
 
 class SettingsMethods {
@@ -13,6 +14,17 @@ class SettingsMethods {
         localId,
         new UsersCompanion(
           syncFreqInSeconds: Value(SyncFreq.freqToDuration(freq).inSeconds),
+        ));
+
+    return _usersDao.getUserByLocalId(localId);
+  }
+
+  Future<User> setPeriod(Period period) async {
+    final localId = AuthBloc.currentUser.localId;
+    await _usersDao.updateUser(
+        localId,
+        new UsersCompanion(
+          syncPeriod: Value(SyncPeriod.periodToDbString(period)),
         ));
 
     return _usersDao.getUserByLocalId(localId);

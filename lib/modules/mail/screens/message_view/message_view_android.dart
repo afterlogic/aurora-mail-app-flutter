@@ -9,6 +9,7 @@ import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/message_view_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:aurora_mail/modules/mail/screens/message_view/components/message_view_app_bar.dart';
+import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/utils/date_formatting.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:flutter/material.dart';
@@ -65,7 +66,8 @@ class _MessageViewAndroidState extends State<MessageViewAndroid> {
       final uids = [widget.messages[_currentPage].uid];
       _setSeenTimer = new Timer(
         SET_SEEN_DELAY,
-        () => BlocProvider.of<MailBloc>(context).add(SetSeen(uids)),
+        () => BlocProvider.of<MailBloc>(context)
+            .add(SetSeen(uids, SettingsBloc.getPeriodFromProvider(context))),
       );
     }
   }

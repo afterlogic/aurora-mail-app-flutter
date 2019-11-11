@@ -2,8 +2,12 @@ import 'dart:async';
 
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/settings_methods.dart';
 import 'package:aurora_mail/modules/settings/models/sync_duration.dart';
+import 'package:aurora_mail/modules/settings/models/sync_period.dart';
 import 'package:bloc/bloc.dart';
 import 'package:connectivity/connectivity.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:moor_flutter/moor_flutter.dart';
 
 import './bloc.dart';
 
@@ -11,10 +15,18 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   final _methods = new SettingsMethods();
 
   static bool _isOffline = true;
+
   static bool get isOffline => _isOffline;
 
   @override
   SettingsState get initialState => SettingsEmpty();
+
+  static Period getPeriodFromProvider(BuildContext context) {
+    assert(BlocProvider.of<SettingsBloc>(context).state is SettingsLoaded);
+    final settings =
+        BlocProvider.of<SettingsBloc>(context).state as SettingsLoaded;
+    return SyncPeriod.dbStringToPeriod(settings.syncPeriod);
+  }
 
   @override
   Stream<SettingsState> mapEventToState(
@@ -23,16 +35,20 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     if (event is InitSettings) yield* _initSyncSettings(event);
     if (event is UpdateConnectivity) yield* _updateConnectivity(event);
     if (event is SetFrequency) yield* _setFrequency(event);
+    if (event is SetPeriod) yield* _setPeriod(event);
   }
 
   Stream<SettingsState> _initSyncSettings(InitSettings event) async* {
-    yield SettingsLoaded(frequency: event.user.syncFreqInSeconds);
+    yield SettingsLoaded(
+        syncFrequency: event.user.syncFreqInSeconds,
+        syncPeriod: event.user.syncPeriod);
   }
 
   Stream<SettingsState> _updateConnectivity(UpdateConnectivity event) async* {
     _isOffline = event.connection == ConnectivityResult.none;
     if (state is SettingsLoaded) {
-      yield (state as SettingsLoaded).copyWith(connection: event.connection);
+      yield (state as SettingsLoaded)
+          .copyWith(connection: Value(event.connection));
     } else {
       yield SettingsLoaded(connection: event.connection);
     }
@@ -43,9 +59,22 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     final freqInSeconds = SyncFreq.freqToDuration(event.freq).inSeconds;
 
     if (state is SettingsLoaded) {
-      yield (state as SettingsLoaded).copyWith(frequency: freqInSeconds);
+      yield (state as SettingsLoaded)
+          .copyWith(syncFrequency: Value(freqInSeconds));
     } else {
-      yield SettingsLoaded(frequency: freqInSeconds);
+      yield SettingsLoaded(syncFrequency: freqInSeconds);
+    }
+  }
+
+  Stream<SettingsState> _setPeriod(SetPeriod event) async* {
+    _methods.setPeriod(event.period);
+
+    final periodString = SyncPeriod.periodToDbString(event.period);
+
+    if (state is SettingsLoaded) {
+      yield (state as SettingsLoaded).copyWith(syncPeriod: Value(periodString));
+    } else {
+      yield SettingsLoaded(syncPeriod: periodString);
     }
   }
 }

@@ -3070,6 +3070,7 @@ class User extends DataClass implements Insertable<User> {
   final String hostname;
   final String token;
   final int syncFreqInSeconds;
+  final String syncPeriod;
   final String language;
   User(
       {@required this.localId,
@@ -3077,6 +3078,7 @@ class User extends DataClass implements Insertable<User> {
       @required this.hostname,
       @required this.token,
       this.syncFreqInSeconds,
+      this.syncPeriod,
       this.language});
   factory User.fromData(Map<String, dynamic> data, GeneratedDatabase db,
       {String prefix}) {
@@ -3094,6 +3096,8 @@ class User extends DataClass implements Insertable<User> {
           stringType.mapFromDatabaseResponse(data['${effectivePrefix}token']),
       syncFreqInSeconds: intType.mapFromDatabaseResponse(
           data['${effectivePrefix}sync_freq_in_seconds']),
+      syncPeriod: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}sync_period']),
       language: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}language']),
     );
@@ -3106,6 +3110,7 @@ class User extends DataClass implements Insertable<User> {
       hostname: serializer.fromJson<String>(json['hostname']),
       token: serializer.fromJson<String>(json['token']),
       syncFreqInSeconds: serializer.fromJson<int>(json['syncFreqInSeconds']),
+      syncPeriod: serializer.fromJson<String>(json['syncPeriod']),
       language: serializer.fromJson<String>(json['language']),
     );
   }
@@ -3118,6 +3123,7 @@ class User extends DataClass implements Insertable<User> {
       'hostname': serializer.toJson<String>(hostname),
       'token': serializer.toJson<String>(token),
       'syncFreqInSeconds': serializer.toJson<int>(syncFreqInSeconds),
+      'syncPeriod': serializer.toJson<String>(syncPeriod),
       'language': serializer.toJson<String>(language),
     };
   }
@@ -3139,6 +3145,9 @@ class User extends DataClass implements Insertable<User> {
       syncFreqInSeconds: syncFreqInSeconds == null && nullToAbsent
           ? const Value.absent()
           : Value(syncFreqInSeconds),
+      syncPeriod: syncPeriod == null && nullToAbsent
+          ? const Value.absent()
+          : Value(syncPeriod),
       language: language == null && nullToAbsent
           ? const Value.absent()
           : Value(language),
@@ -3151,6 +3160,7 @@ class User extends DataClass implements Insertable<User> {
           String hostname,
           String token,
           int syncFreqInSeconds,
+          String syncPeriod,
           String language}) =>
       User(
         localId: localId ?? this.localId,
@@ -3158,6 +3168,7 @@ class User extends DataClass implements Insertable<User> {
         hostname: hostname ?? this.hostname,
         token: token ?? this.token,
         syncFreqInSeconds: syncFreqInSeconds ?? this.syncFreqInSeconds,
+        syncPeriod: syncPeriod ?? this.syncPeriod,
         language: language ?? this.language,
       );
   @override
@@ -3168,6 +3179,7 @@ class User extends DataClass implements Insertable<User> {
           ..write('hostname: $hostname, ')
           ..write('token: $token, ')
           ..write('syncFreqInSeconds: $syncFreqInSeconds, ')
+          ..write('syncPeriod: $syncPeriod, ')
           ..write('language: $language')
           ..write(')'))
         .toString();
@@ -3180,8 +3192,10 @@ class User extends DataClass implements Insertable<User> {
           serverId.hashCode,
           $mrjc(
               hostname.hashCode,
-              $mrjc(token.hashCode,
-                  $mrjc(syncFreqInSeconds.hashCode, language.hashCode))))));
+              $mrjc(
+                  token.hashCode,
+                  $mrjc(syncFreqInSeconds.hashCode,
+                      $mrjc(syncPeriod.hashCode, language.hashCode)))))));
   @override
   bool operator ==(other) =>
       identical(this, other) ||
@@ -3191,6 +3205,7 @@ class User extends DataClass implements Insertable<User> {
           other.hostname == hostname &&
           other.token == token &&
           other.syncFreqInSeconds == syncFreqInSeconds &&
+          other.syncPeriod == syncPeriod &&
           other.language == language);
 }
 
@@ -3200,6 +3215,7 @@ class UsersCompanion extends UpdateCompanion<User> {
   final Value<String> hostname;
   final Value<String> token;
   final Value<int> syncFreqInSeconds;
+  final Value<String> syncPeriod;
   final Value<String> language;
   const UsersCompanion({
     this.localId = const Value.absent(),
@@ -3207,6 +3223,7 @@ class UsersCompanion extends UpdateCompanion<User> {
     this.hostname = const Value.absent(),
     this.token = const Value.absent(),
     this.syncFreqInSeconds = const Value.absent(),
+    this.syncPeriod = const Value.absent(),
     this.language = const Value.absent(),
   });
   UsersCompanion copyWith(
@@ -3215,6 +3232,7 @@ class UsersCompanion extends UpdateCompanion<User> {
       Value<String> hostname,
       Value<String> token,
       Value<int> syncFreqInSeconds,
+      Value<String> syncPeriod,
       Value<String> language}) {
     return UsersCompanion(
       localId: localId ?? this.localId,
@@ -3222,6 +3240,7 @@ class UsersCompanion extends UpdateCompanion<User> {
       hostname: hostname ?? this.hostname,
       token: token ?? this.token,
       syncFreqInSeconds: syncFreqInSeconds ?? this.syncFreqInSeconds,
+      syncPeriod: syncPeriod ?? this.syncPeriod,
       language: language ?? this.language,
     );
   }
@@ -3284,6 +3303,18 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
         defaultValue: Constant(60));
   }
 
+  final VerificationMeta _syncPeriodMeta = const VerificationMeta('syncPeriod');
+  GeneratedTextColumn _syncPeriod;
+  @override
+  GeneratedTextColumn get syncPeriod => _syncPeriod ??= _constructSyncPeriod();
+  GeneratedTextColumn _constructSyncPeriod() {
+    return GeneratedTextColumn(
+      'sync_period',
+      $tableName,
+      true,
+    );
+  }
+
   final VerificationMeta _languageMeta = const VerificationMeta('language');
   GeneratedTextColumn _language;
   @override
@@ -3297,8 +3328,15 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
   }
 
   @override
-  List<GeneratedColumn> get $columns =>
-      [localId, serverId, hostname, token, syncFreqInSeconds, language];
+  List<GeneratedColumn> get $columns => [
+        localId,
+        serverId,
+        hostname,
+        token,
+        syncFreqInSeconds,
+        syncPeriod,
+        language
+      ];
   @override
   $UsersTable get asDslTable => this;
   @override
@@ -3341,6 +3379,12 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
     } else if (syncFreqInSeconds.isRequired && isInserting) {
       context.missing(_syncFreqInSecondsMeta);
     }
+    if (d.syncPeriod.present) {
+      context.handle(_syncPeriodMeta,
+          syncPeriod.isAcceptableValue(d.syncPeriod.value, _syncPeriodMeta));
+    } else if (syncPeriod.isRequired && isInserting) {
+      context.missing(_syncPeriodMeta);
+    }
     if (d.language.present) {
       context.handle(_languageMeta,
           language.isAcceptableValue(d.language.value, _languageMeta));
@@ -3376,6 +3420,9 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
     if (d.syncFreqInSeconds.present) {
       map['sync_freq_in_seconds'] =
           Variable<int, IntType>(d.syncFreqInSeconds.value);
+    }
+    if (d.syncPeriod.present) {
+      map['sync_period'] = Variable<String, StringType>(d.syncPeriod.value);
     }
     if (d.language.present) {
       map['language'] = Variable<String, StringType>(d.language.value);

@@ -1,5 +1,6 @@
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/settings/models/sync_duration.dart';
+import 'package:aurora_mail/modules/settings/models/sync_period.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:equatable/equatable.dart';
 
@@ -26,6 +27,15 @@ class SetFrequency extends SettingsEvent {
 
   @override
   List<Object> get props => [freq];
+}
+
+class SetPeriod extends SettingsEvent {
+  final Period period;
+
+  SetPeriod(this.period);
+
+  @override
+  List<Object> get props => [period];
 }
 
 class UpdateConnectivity extends SettingsEvent {

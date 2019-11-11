@@ -13,5 +13,7 @@ class Users extends Table {
   IntColumn get syncFreqInSeconds =>
       integer().withDefault(Constant(60)).nullable()();
 
+  TextColumn get syncPeriod => text().nullable()();
+
   TextColumn get language => text().nullable()();
 }
