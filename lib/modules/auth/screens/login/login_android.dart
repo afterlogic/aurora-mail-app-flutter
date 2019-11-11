@@ -1,9 +1,9 @@
 import 'dart:io';
 
-import 'package:aurora_mail/modules/auth/blocs/auth/bloc.dart';
+import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/auth_input.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
-import 'package:aurora_mail/modules/settings/blocs/sync_settings/bloc.dart';
+import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/shared_ui/app_button.dart';
 import 'package:aurora_mail/utils/input_validation.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
@@ -104,8 +104,8 @@ class _LoginAndroidState extends State<LoginAndroid> {
             }
             if (state is LoggedIn) {
               if (state.user != null) {
-                BlocProvider.of<SyncSettingsBloc>(context)
-                    .add(InitSyncSettings(state.user));
+                BlocProvider.of<SettingsBloc>(context)
+                    .add(InitSettings(state.user));
               }
               Navigator.pushReplacementNamed(context, MessagesListRoute.name);
             }

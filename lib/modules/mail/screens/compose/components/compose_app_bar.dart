@@ -1,4 +1,4 @@
-import 'package:aurora_mail/modules/auth/blocs/auth/bloc.dart';
+import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:flutter/material.dart';
 
 enum ComposeAppBarAction {

@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:aurora_mail/models/api_body.dart';
-import 'package:aurora_mail/modules/auth/blocs/auth/auth_bloc.dart';
+import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:http/http.dart' as http;
 
 Map<String, String> getHeaderWithToken() {

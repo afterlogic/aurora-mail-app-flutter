@@ -5,9 +5,10 @@ import 'package:aurora_mail/database/mail/mail_dao.dart';
 import 'package:aurora_mail/database/mail/mail_table.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/models/message_info.dart';
-import 'package:aurora_mail/modules/auth/blocs/auth/auth_bloc.dart';
+import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/repository/folders_api.dart';
 import 'package:aurora_mail/modules/mail/repository/mail_api.dart';
+import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/utils/constants.dart';
 import 'package:moor_flutter/moor_flutter.dart';
 
@@ -19,13 +20,14 @@ class MailMethods {
 
   final _syncQueue = new List<int>();
 
+  bool get _isOffline => SettingsBloc.isOffline;
+
   Future<List<Folder>> getFolders() async {
     // try to get from DB
-    final List<LocalFolder> localFolders = await _foldersDao.getAllFolders();
+    final folders = await _getOfflineFolders();
 
-    // if there folders in DB, return them and check if they need to be updated
-    if (localFolders != null && localFolders.isNotEmpty) {
-      return Folder.getFolderObjectsFromDb(localFolders);
+    if (folders != null && folders.isNotEmpty) {
+      return folders;
     } else {
       // else get from server
       final rawFolders = await _foldersApi.getFolders();
@@ -41,10 +43,12 @@ class MailMethods {
   }
 
   Future<List<Folder>> refreshFolders() async {
-    // fetch new folders
-    final rawFoldersFuture = _foldersApi.getFolders();
+    if (_isOffline) return _getOfflineFolders();
+
     // fetch old folders
     final oldLocalFoldersFuture = _foldersDao.getAllFolders();
+    // fetch new folders
+    final rawFoldersFuture = _foldersApi.getFolders();
 
     // run fetching ops in parallel
     final futureWaitResult = await Future.wait([
@@ -95,6 +99,8 @@ class MailMethods {
 
   Future<List<Folder>> updateFoldersHash(Folder selectedFolder,
       {bool forceCurrentFolderUpdate = false}) async {
+    if (_isOffline) return _getOfflineFolders();
+
     assert(selectedFolder != null);
 
     final localFolders = await _foldersDao.getAllFolders();
@@ -139,6 +145,8 @@ class MailMethods {
 
   Future<void> syncFolders(
       {@required int localId, bool syncSystemFolders = false}) async {
+    if (_isOffline) return null;
+
     // either localId or syncSystemFolders must be provided
     assert(localId != null || syncSystemFolders != null);
     var localFolders = new List<LocalFolder>();
@@ -166,6 +174,7 @@ class MailMethods {
   }
 
   Future<void> _setMessagesInfoToFolder() async {
+    if (_isOffline) return null;
     assert(_syncQueue.isNotEmpty);
 
     final folderToUpdate = await _foldersDao.getFolder(_syncQueue[0]);
@@ -203,6 +212,7 @@ class MailMethods {
 
   // step 5
   Future<void> _syncMessagesChunk() async {
+    if (_isOffline) return null;
     assert(_syncQueue.isNotEmpty);
 
     // get the actual folder state every time
@@ -274,6 +284,12 @@ class MailMethods {
     @required Folder folder,
     @required List<int> uids,
   }) {
+    if (_isOffline) return null;
     return _mailApi.setMessagesSeen(folder: folder, uids: uids);
+  }
+
+  Future<List<Folder>> _getOfflineFolders() async {
+    final List<LocalFolder> localFolders = await _foldersDao.getAllFolders();
+    return Folder.getFolderObjectsFromDb(localFolders);
   }
 }

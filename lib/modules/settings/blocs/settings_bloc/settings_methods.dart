@@ -1,10 +1,10 @@
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/users/users_dao.dart';
-import 'package:aurora_mail/modules/auth/blocs/auth/bloc.dart';
+import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/settings/models/sync_duration.dart';
 import 'package:moor_flutter/moor_flutter.dart';
 
-class SyncSettingsMethods {
+class SettingsMethods {
   final _usersDao = new UsersDao(DBInstances.appDB);
 
   Future<User> setFrequency(Freq freq) async {

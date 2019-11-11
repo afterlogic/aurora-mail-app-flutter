@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:aurora_mail/database/app_database.dart';
-import 'package:aurora_mail/modules/auth/blocs/auth/auth_methods.dart';
+import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_methods.dart';
 import 'package:aurora_mail/utils/error_handling.dart';
 import 'package:bloc/bloc.dart';
 

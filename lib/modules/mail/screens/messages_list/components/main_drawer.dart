@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:aurora_mail/models/folder.dart';
-import 'package:aurora_mail/modules/auth/blocs/auth/auth_bloc.dart';
+import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

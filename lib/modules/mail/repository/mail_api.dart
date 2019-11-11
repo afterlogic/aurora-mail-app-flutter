@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:aurora_mail/models/api_body.dart';
 import 'package:aurora_mail/models/folder.dart';
-import 'package:aurora_mail/modules/auth/blocs/auth/bloc.dart';
+import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/models/compose_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/temp_attachment_upload.dart';
