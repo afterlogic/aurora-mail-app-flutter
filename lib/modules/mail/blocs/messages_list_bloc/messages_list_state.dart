@@ -22,6 +22,8 @@ class SubscribedToMessages extends MessagesListState {
 
 class MessagesRefreshed extends MessagesListState with AlwaysNonEqualObject {}
 
+class MessagesDeleted extends MessagesListState with AlwaysNonEqualObject {}
+
 // for both folders and messages
 class MailError extends MessagesListState {
   final String errorMsg;

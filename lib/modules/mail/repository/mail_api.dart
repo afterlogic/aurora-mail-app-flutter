@@ -254,6 +254,26 @@ class MailApi {
     );
   }
 
+  Future<void> deleteMessages({
+    @required Folder folder,
+    @required List<int> uids,
+  }) async {
+    final parameters = json.encode({
+      "Folder": folder.fullNameRaw,
+      "AccountID": _accountId,
+      "Uids": uids.join(","),
+    });
+
+    final body = new ApiBody(
+        module: "Mail", method: "DeleteMessages", parameters: parameters);
+
+    final res = await sendRequest(body);
+
+    if (res["Result"] != true) {
+      throw ServerError(getErrMsg(res));
+    }
+  }
+
   Future<void> setMessagesSeen({
     @required Folder folder,
     @required List<int> uids,

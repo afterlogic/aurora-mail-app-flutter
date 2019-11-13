@@ -98,6 +98,10 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
     }
   }
 
+  void _deleteMessage(int uid) {
+    _messagesListBloc.add(DeleteMessages([uid], _selectedFolder));
+  }
+
   void _dispatchPostFoldersLoadedAction(FoldersLoaded state) {
     switch (state.postAction) {
       case PostFolderLoadedAction.subscribeToMessages:
@@ -135,6 +139,7 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
                   _refreshCompleter?.complete();
                   _refreshCompleter = new Completer();
                 }
+                if (state is MessagesDeleted) _mailBloc.add(RefreshMessages());
                 if (state is MailError) _showError(context, state.errorMsg);
               },
             ),
@@ -213,6 +218,7 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
                       item,
                       threads,
                       (Message item) => _onMessageSelected(snap.data, item),
+                      _deleteMessage,
                     ),
                     if (_selectedFolder != null &&
                         _selectedFolder.needsInfoUpdate &&

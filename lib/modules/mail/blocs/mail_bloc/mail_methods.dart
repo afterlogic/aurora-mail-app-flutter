@@ -206,7 +206,7 @@ class MailMethods {
       final calcResult = await Folders.calculateMessagesInfoDiffAsync(
           folderToUpdate.messagesInfo, messagesInfo);
       messagesInfo = calcResult.updatedInfo;
-      await _mailDao.deleteMessages(calcResult.removedUids);
+      await _mailDao.deleteMessages(calcResult.removedUids, folderToUpdate);
       _mailDao.updateMessagesFlags(calcResult.infosToUpdateFlags);
     }
 

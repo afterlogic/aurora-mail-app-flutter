@@ -18,3 +18,13 @@ class SubscribeToMessages extends MessagesListEvent {
 }
 
 class StopMessagesRefresh extends MessagesListEvent {}
+
+class DeleteMessages extends MessagesListEvent {
+  final List<int> uids;
+  final Folder folder;
+
+  DeleteMessages(this.uids, this.folder);
+
+  @override
+  List<Object> get props => [uids, folder];
+}

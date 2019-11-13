@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/models/message_info.dart';
 import 'package:moor_flutter/moor_flutter.dart';
 
@@ -40,7 +41,7 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
     try {
       return into(mail).insertAll(newMessages);
     } catch (err) {
-      print("insertMessages: ${err}");
+      print("insertMessages: $err");
       return null;
     }
   }
@@ -54,8 +55,11 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
     });
   }
 
-  Future<int> deleteMessages(List<int> uids) {
-    return (delete(mail)..where((m) => isIn(m.uid, uids))).go();
+  Future<int> deleteMessages(List<int> uids, Folder folder) {
+    return (delete(mail)
+          ..where((m) => isIn(m.uid, uids))
+          ..where((m) => m.folder.equals(folder.fullNameRaw)))
+        .go();
   }
 
   Future<int> deleteMessagesFromRemovedFolders(
