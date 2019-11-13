@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/mail/mail_table.dart';
 import 'package:aurora_mail/utils/date_formatting.dart';
@@ -19,11 +21,15 @@ class MessageItem extends StatefulWidget {
 
 class _MessageItemState extends State<MessageItem> {
   bool _showThreads = false;
+  List<Message> _children;
+  bool _hasUnreadChildren = false;
 
   @override
   void initState() {
     super.initState();
     setState(() => _showThreads = _expandedUids.contains(widget.message.uid));
+    _children = widget.threads.where((t) => t.parentUid == widget.message.uid).toList();
+    _hasUnreadChildren = _children.where((i) => !json.decode(i.flagsInJson).contains("\\seen")).isNotEmpty;
   }
 
   void _toggleThreads() {
@@ -57,14 +63,12 @@ class _MessageItemState extends State<MessageItem> {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   if (widget.message.hasThread == true)
-//              Icon(MdiIcons.forumOutline,
-//                  color: Theme.of(context).disabledColor, size: 16.0),
                     SizedBox(
                       height: 24.0,
                       width: 24.0,
                       child: IconButton(
                         padding: EdgeInsets.zero,
-                        icon: Icon(MdiIcons.arrowDownDropCircle),
+                        icon: Icon(_hasUnreadChildren ? MdiIcons.arrowDownDropCircle : MdiIcons.arrowDownDropCircleOutline),
                         onPressed: _toggleThreads,
                       ),
                     ),
@@ -128,10 +132,8 @@ class _MessageItemState extends State<MessageItem> {
             ),
           ),
         ),
-        if (widget.threads.isNotEmpty && _showThreads)
-          ...widget.threads
-              .where((t) => t.parentUid == widget.message.uid)
-              .map((t) {
+        if (_children.isNotEmpty && _showThreads)
+          ..._children.map((t) {
             return Stack(
               children: <Widget>[
                 Padding(
