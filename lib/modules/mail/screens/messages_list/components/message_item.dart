@@ -21,15 +21,11 @@ class MessageItem extends StatefulWidget {
 
 class _MessageItemState extends State<MessageItem> {
   bool _showThreads = false;
-  List<Message> _children;
-  bool _hasUnreadChildren = false;
 
   @override
   void initState() {
     super.initState();
     setState(() => _showThreads = _expandedUids.contains(widget.message.uid));
-    _children = widget.threads.where((t) => t.parentUid == widget.message.uid).toList();
-    _hasUnreadChildren = _children.where((i) => !json.decode(i.flagsInJson).contains("\\seen")).isNotEmpty;
   }
 
   void _toggleThreads() {
@@ -43,6 +39,9 @@ class _MessageItemState extends State<MessageItem> {
 
   @override
   Widget build(BuildContext context) {
+    final children = widget.threads.where((t) => t.parentUid == widget.message.uid).toList();
+    final hasUnreadChildren = children.where((i) => !json.decode(i.flagsInJson).contains("\\seen")).isNotEmpty;
+
     final flags = Mail.getFlags(widget.message.flagsInJson);
 
     final textStyle = TextStyle(
@@ -68,7 +67,7 @@ class _MessageItemState extends State<MessageItem> {
                       width: 24.0,
                       child: IconButton(
                         padding: EdgeInsets.zero,
-                        icon: Icon(_hasUnreadChildren ? MdiIcons.arrowDownDropCircle : MdiIcons.arrowDownDropCircleOutline),
+                        icon: Icon(hasUnreadChildren ? MdiIcons.arrowDownDropCircle : MdiIcons.arrowDownDropCircleOutline),
                         onPressed: _toggleThreads,
                       ),
                     ),
@@ -132,8 +131,8 @@ class _MessageItemState extends State<MessageItem> {
             ),
           ),
         ),
-        if (_children.isNotEmpty && _showThreads)
-          ..._children.map((t) {
+        if (children.isNotEmpty && _showThreads)
+          ...children.map((t) {
             return Stack(
               children: <Widget>[
                 Padding(
