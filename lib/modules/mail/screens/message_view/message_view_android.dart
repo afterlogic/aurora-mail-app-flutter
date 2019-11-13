@@ -61,6 +61,7 @@ class _MessageViewAndroidState extends State<MessageViewAndroid> {
 
     final flagsString = widget.messages[_currentPage].flagsInJson;
     final flags = json.decode(flagsString);
+    print("VO: flags: ${flags}");
     if (!flags.contains("\\seen")) {
       final uids = [widget.messages[_currentPage].uid];
       _setSeenTimer = new Timer(

@@ -76,8 +76,8 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
     }
   }
 
-  void _onMessageSelected(List<Message> messagesWithoutChildren, int i) {
-    final item = messagesWithoutChildren[i];
+  void _onMessageSelected(List<Message> allMessages, Message item) {
+    final i = allMessages.indexOf(item);
 
     final draftsFolder = (_mailBloc.state as FoldersLoaded).folders.firstWhere(
         (f) => f.folderType == FolderType.drafts,
@@ -93,7 +93,7 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
       Navigator.pushNamed(
         context,
         MessageViewRoute.name,
-        arguments: MessageViewScreenArgs(messagesWithoutChildren, i, _mailBloc),
+        arguments: MessageViewScreenArgs(allMessages, i, _mailBloc),
       );
     }
   }
@@ -199,6 +199,8 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
           } else if (snap.hasData && snap.data.isNotEmpty) {
             final messagesWithoutChildren =
                 snap.data.where((m) => m.parentUid == null).toList();
+            final threads =
+                snap.data.where((m) => m.parentUid != null).toList();
 
             return ListView.separated(
               padding: EdgeInsets.only(top: 6.0, bottom: 76.0),
@@ -207,10 +209,10 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
                 final item = messagesWithoutChildren[i];
                 return Column(
                   children: <Widget>[
-                    InkWell(
-                      child: MessageItem(item),
-                      onTap: () =>
-                          _onMessageSelected(messagesWithoutChildren, i),
+                    MessageItem(
+                      item,
+                      threads,
+                      (Message item) => _onMessageSelected(snap.data, item),
                     ),
                     if (_selectedFolder != null &&
                         _selectedFolder.needsInfoUpdate &&
