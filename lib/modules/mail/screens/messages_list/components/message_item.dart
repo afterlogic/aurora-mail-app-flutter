@@ -13,7 +13,7 @@ class MessageItem extends StatefulWidget {
   final List<Message> threads;
   final Message message;
   final Function(Message) onItemSelected;
-  final Function(int) onDeleteMessage;
+  final Function(Message) onDeleteMessage;
 
   MessageItem(
       this.message, this.threads, this.onItemSelected, this.onDeleteMessage);
@@ -67,7 +67,7 @@ class _MessageItemState extends State<MessageItem> {
                 "Delete message",
                 "Are you sure you want to delete ${widget.message.subject}?",
                 "Delete"),
-            onDismissed: (_) => widget.onDeleteMessage(widget.message.uid),
+            onDismissed: (_) => widget.onDeleteMessage(widget.message),
             background: Container(
               color: Theme.of(context).errorColor,
               child: Stack(

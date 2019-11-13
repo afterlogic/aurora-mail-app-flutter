@@ -93,13 +93,13 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
       Navigator.pushNamed(
         context,
         MessageViewRoute.name,
-        arguments: MessageViewScreenArgs(allMessages, i, _mailBloc),
+        arguments: MessageViewScreenArgs(allMessages, i, _mailBloc, _messagesListBloc),
       );
     }
   }
 
-  void _deleteMessage(int uid) {
-    _messagesListBloc.add(DeleteMessages([uid], _selectedFolder));
+  void _deleteMessage(Message message) {
+    _messagesListBloc.add(DeleteMessages([message]));
   }
 
   void _dispatchPostFoldersLoadedAction(FoldersLoaded state) {

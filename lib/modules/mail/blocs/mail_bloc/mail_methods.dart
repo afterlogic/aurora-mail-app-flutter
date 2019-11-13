@@ -179,7 +179,7 @@ class MailMethods {
     if (_isOffline) return null;
     assert(_syncQueue.isNotEmpty);
 
-    final folderToUpdate = await _foldersDao.getFolder(_syncQueue[0]);
+    final folderToUpdate = await _foldersDao.getFolderByLocalId(_syncQueue[0]);
     // get the actual sync period
     final user = await _usersDao.getUserByLocalId(AuthBloc.currentUser.localId);
 
@@ -221,7 +221,7 @@ class MailMethods {
     assert(_syncQueue.isNotEmpty);
 
     // get the actual folder state every time
-    final folder = await _foldersDao.getFolder(_syncQueue[0]);
+    final folder = await _foldersDao.getFolderByLocalId(_syncQueue[0]);
     // get the actual sync period
     final user = await _usersDao.getUserByLocalId(AuthBloc.currentUser.localId);
     if (folder.messagesInfo == null) {

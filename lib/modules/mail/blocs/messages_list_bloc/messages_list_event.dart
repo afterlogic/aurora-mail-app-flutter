@@ -1,3 +1,4 @@
+import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:equatable/equatable.dart';
 
@@ -20,11 +21,10 @@ class SubscribeToMessages extends MessagesListEvent {
 class StopMessagesRefresh extends MessagesListEvent {}
 
 class DeleteMessages extends MessagesListEvent {
-  final List<int> uids;
-  final Folder folder;
+  final List<Message> messages;
 
-  DeleteMessages(this.uids, this.folder);
+  DeleteMessages(this.messages);
 
   @override
-  List<Object> get props => [uids, folder];
+  List<Object> get props => [messages];
 }

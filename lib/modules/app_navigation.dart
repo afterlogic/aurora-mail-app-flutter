@@ -1,3 +1,4 @@
+import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/compose_android.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/compose_route.dart';
 import 'package:aurora_mail/modules/mail/screens/message_view/message_view_android.dart';
@@ -50,9 +51,14 @@ class AppNavigation {
             settings: RouteSettings(
               name: settings.name,
             ),
-            page: BlocProvider<MailBloc>.value(
-                value: args.bloc,
-                child: MessageViewAndroid(args.messages, args.initialPage)));
+            page: MultiBlocProvider(providers: [
+              BlocProvider<MailBloc>.value(
+                value: args.mailBloc,
+              ),
+              BlocProvider<MessagesListBloc>.value(
+                value: args.messagesListBloc,
+              ),
+            ], child: MessageViewAndroid(args.messages, args.initialPage)));
 
         break;
 

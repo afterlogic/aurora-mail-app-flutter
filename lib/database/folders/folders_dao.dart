@@ -22,9 +22,20 @@ class FoldersDao extends DatabaseAccessor<AppDatabase> with _$FoldersDaoMixin {
         .get();
   }
 
-  Future<Folder> getFolder(int localId) async {
+  Future<Folder> getFolderByLocalId(int localId) async {
     final foundFolders = await (select(folders)
           ..where((folder) => folder.localId.equals(localId)))
+        .get();
+
+    return foundFolders.isEmpty
+        ? null
+        : Folder.getFolderObjectsFromDb(
+            foundFolders, foundFolders[0].parentGuid)[0];
+  }
+
+  Future<Folder> getFolderByRawName(String fullNameRaw) async {
+    final foundFolders = await (select(folders)
+          ..where((folder) => folder.fullNameRaw.equals(fullNameRaw)))
         .get();
 
     return foundFolders.isEmpty

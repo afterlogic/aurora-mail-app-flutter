@@ -7,8 +7,11 @@ import 'package:aurora_mail/database/mail/mail_table.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/message_view_bloc/bloc.dart';
+import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:aurora_mail/modules/mail/screens/message_view/components/message_view_app_bar.dart';
+import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
+import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
 import 'package:aurora_mail/utils/date_formatting.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:flutter/material.dart';
@@ -61,7 +64,6 @@ class _MessageViewAndroidState extends State<MessageViewAndroid> {
 
     final flagsString = widget.messages[_currentPage].flagsInJson;
     final flags = json.decode(flagsString);
-    print("VO: flags: ${flags}");
     if (!flags.contains("\\seen")) {
       final uids = [widget.messages[_currentPage].uid];
       _setSeenTimer = new Timer(
@@ -73,6 +75,31 @@ class _MessageViewAndroidState extends State<MessageViewAndroid> {
 
   void _onAppBarActionSelected(MailViewAppBarAction action) {
     print("VO: _onAppBarActionSelected: $action");
+    switch (action) {
+      case MailViewAppBarAction.reply:
+        // TODO: Handle this case.
+        break;
+      case MailViewAppBarAction.replyToAll:
+        // TODO: Handle this case.
+        break;
+      case MailViewAppBarAction.forward:
+        // TODO: Handle this case.
+        break;
+      case MailViewAppBarAction.toSpam:
+        return null;
+      case MailViewAppBarAction.delete:
+        return _deleteMessage();
+    }
+  }
+
+  void _deleteMessage() async {
+    final message = widget.messages[_currentPage];
+    final delete = await ConfirmationDialog.show(context, "Delete message",
+        "Are you sure you want to delete this message?", "Delete");
+    if (delete == true) {
+      BlocProvider.of<MessagesListBloc>(context).add(DeleteMessages([message]));
+      Navigator.popUntil(context, ModalRoute.withName(MessagesListRoute.name));
+    }
   }
 
   String _formatTo(Message message) {
