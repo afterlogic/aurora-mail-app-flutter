@@ -1,4 +1,3 @@
-import 'package:aurora_mail/modules/settings/models/sync_period.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:equatable/equatable.dart';
 import 'package:moor_flutter/moor_flutter.dart';
@@ -29,7 +28,8 @@ class SettingsLoaded extends SettingsState {
     Value<ConnectivityResult> connection,
   }) {
     return new SettingsLoaded(
-      syncFrequency: syncFrequency != null ? syncFrequency.value : this.syncFrequency,
+      syncFrequency:
+          syncFrequency != null ? syncFrequency.value : this.syncFrequency,
       syncPeriod: syncPeriod != null ? syncPeriod.value : this.syncPeriod,
       connection: connection != null ? connection.value : this.connection,
     );

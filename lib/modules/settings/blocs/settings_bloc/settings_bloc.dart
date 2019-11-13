@@ -5,8 +5,6 @@ import 'package:aurora_mail/modules/settings/models/sync_duration.dart';
 import 'package:aurora_mail/modules/settings/models/sync_period.dart';
 import 'package:bloc/bloc.dart';
 import 'package:connectivity/connectivity.dart';
-import 'package:flutter/widgets.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:moor_flutter/moor_flutter.dart';
 
 import './bloc.dart';
@@ -20,13 +18,6 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
 
   @override
   SettingsState get initialState => SettingsEmpty();
-
-  static Period getPeriodFromProvider(BuildContext context) {
-    assert(BlocProvider.of<SettingsBloc>(context).state is SettingsLoaded);
-    final settings =
-        BlocProvider.of<SettingsBloc>(context).state as SettingsLoaded;
-    return SyncPeriod.dbStringToPeriod(settings.syncPeriod);
-  }
 
   @override
   Stream<SettingsState> mapEventToState(
@@ -55,7 +46,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   }
 
   Stream<SettingsState> _setFrequency(SetFrequency event) async* {
-    _methods.setFrequency(event.freq);
+    await _methods.setFrequency(event.freq);
     final freqInSeconds = SyncFreq.freqToDuration(event.freq).inSeconds;
 
     if (state is SettingsLoaded) {
@@ -67,7 +58,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   }
 
   Stream<SettingsState> _setPeriod(SetPeriod event) async* {
-    _methods.setPeriod(event.period);
+    await _methods.setPeriod(event.period);
 
     final periodString = SyncPeriod.periodToDbString(event.period);
 

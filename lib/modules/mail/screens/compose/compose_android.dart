@@ -9,7 +9,6 @@ import 'package:aurora_mail/modules/mail/models/compose_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/temp_attachment_upload.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/compose_route.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
-import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -198,14 +197,14 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
 
   // to provide mail bloc
   void _onMessageSent(BuildContext context) {
-    BlocProvider.of<MailBloc>(context).add(CheckFoldersMessagesChanges(SettingsBloc.getPeriodFromProvider(context)));
+    BlocProvider.of<MailBloc>(context).add(CheckFoldersMessagesChanges());
     Navigator.popUntil(context, ModalRoute.withName(MessagesListRoute.name));
   }
 
   // to provide mail bloc
   void _onMessageSaved(BuildContext context, int draftUid) {
     _currentDraftUid = draftUid;
-    BlocProvider.of<MailBloc>(context).add(CheckFoldersMessagesChanges(SettingsBloc.getPeriodFromProvider(context)));
+    BlocProvider.of<MailBloc>(context).add(CheckFoldersMessagesChanges());
 
     // TODO VO: not working
     showSnack(

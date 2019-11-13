@@ -10,8 +10,8 @@ class PeriodSelectionDialog extends StatelessWidget {
 
   const PeriodSelectionDialog(this.selectedItem, this.onItemSelected);
 
-  static void show(
-      BuildContext context, Period selectedItem, Function(Period) onItemSelected) {
+  static void show(BuildContext context, Period selectedItem,
+      Function(Period) onItemSelected) {
     if (Platform.isIOS) {
       showCupertinoModalPopup(
           context: context,

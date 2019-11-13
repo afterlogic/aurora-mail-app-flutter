@@ -3,6 +3,7 @@ import 'package:aurora_mail/database/folders/folders_dao.dart';
 import 'package:aurora_mail/database/folders/folders_table.dart';
 import 'package:aurora_mail/database/mail/mail_dao.dart';
 import 'package:aurora_mail/database/mail/mail_table.dart';
+import 'package:aurora_mail/database/users/users_dao.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/models/message_info.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
@@ -15,6 +16,7 @@ import 'package:moor_flutter/moor_flutter.dart';
 
 class MailMethods {
   final _foldersDao = new FoldersDao(DBInstances.appDB);
+  final _usersDao = new UsersDao(DBInstances.appDB);
   final _mailDao = new MailDao(DBInstances.appDB);
   final _foldersApi = new FoldersApi();
   final _mailApi = new MailApi();
@@ -144,7 +146,7 @@ class MailMethods {
     return Folder.getFolderObjectsFromDb(updatedLocalFolders);
   }
 
-  Future<void> syncFolders(Period syncPeriod,
+  Future<void> syncFolders(
       {@required int localId, bool syncSystemFolders = false}) async {
     if (_isOffline) return null;
 
@@ -169,21 +171,22 @@ class MailMethods {
       _syncQueue.insert(0, localId);
     }
     if (_syncQueue.isNotEmpty && queueLengthBeforeInsert == 0) {
-      // TODO VO: completes earlier
-      await _setMessagesInfoToFolder(syncPeriod);
+      await _setMessagesInfoToFolder();
     }
   }
 
-  Future<void> _setMessagesInfoToFolder(Period syncPeriod) async {
+  Future<void> _setMessagesInfoToFolder() async {
     if (_isOffline) return null;
     assert(_syncQueue.isNotEmpty);
 
     final folderToUpdate = await _foldersDao.getFolder(_syncQueue[0]);
+    // get the actual sync period
+    final user = await _usersDao.getUserByLocalId(AuthBloc.currentUser.localId);
 
     if (!folderToUpdate.needsInfoUpdate) {
       _syncQueue.remove(folderToUpdate.localId);
       if (_syncQueue.isNotEmpty) {
-        return _setMessagesInfoToFolder(syncPeriod);
+        return _setMessagesInfoToFolder();
       } else {
         return null;
       }
@@ -191,11 +194,10 @@ class MailMethods {
 
     print("getting folder info for: ${folderToUpdate.fullNameRaw}");
 
+    final syncPeriod = SyncPeriod.dbStringToPeriod(user.syncPeriod);
     final periodStr = SyncPeriod.periodToDate(syncPeriod);
     final rawInfo = await _mailApi.getMessagesInfo(
-      folderName: folderToUpdate.fullNameRaw,
-      search: "date:$periodStr/"
-    );
+        folderName: folderToUpdate.fullNameRaw, search: "date:$periodStr/");
 
     List<MessageInfo> messagesInfo = MessageInfo.flattenMessagesInfo(rawInfo);
 
@@ -220,10 +222,18 @@ class MailMethods {
 
     // get the actual folder state every time
     final folder = await _foldersDao.getFolder(_syncQueue[0]);
+    // get the actual sync period
+    final user = await _usersDao.getUserByLocalId(AuthBloc.currentUser.localId);
     if (folder.messagesInfo == null) {
       print(
           "Attention! messagesInfo is null, perhaps another folder was selected while messages info was being retrieved.");
-      return _setMessagesInfoToFolder(syncPeriod);
+      return _setMessagesInfoToFolder();
+    }
+
+    if (user.syncPeriod != SyncPeriod.periodToDbString(syncPeriod)) {
+      print(
+          "Attention! another sync period was selected, refetching messages info...");
+      return _setMessagesInfoToFolder();
     }
 
     // TODO VO: make async
@@ -242,7 +252,7 @@ class MailMethods {
       _syncQueue.remove(folder.localId);
       print("_syncQueue: $_syncQueue");
       if (_syncQueue.isNotEmpty) {
-        return _setMessagesInfoToFolder(syncPeriod);
+        return _setMessagesInfoToFolder();
       } else {
         return null;
       }

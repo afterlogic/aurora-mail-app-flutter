@@ -12,7 +12,6 @@ import 'package:aurora_mail/modules/mail/screens/message_view/message_view_route
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/main_drawer.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/modules/settings/models/sync_duration.dart';
-import 'package:aurora_mail/modules/settings/models/sync_period.dart';
 import 'package:aurora_mail/modules/settings/screens/settings_main/settings_main_route.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:flutter/material.dart';
@@ -39,7 +38,7 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _mailBloc.add(FetchFolders(SettingsBloc.getPeriodFromProvider(context)));
+    _mailBloc.add(FetchFolders());
   }
 
   @override
@@ -61,8 +60,7 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
     _timer?.cancel();
     _timer = Timer.periodic(
       syncDuration,
-      (Timer timer) => _mailBloc.add(RefreshMessages(
-          SettingsBloc.getPeriodFromProvider(context))),
+      (Timer timer) => _mailBloc.add(RefreshMessages()),
     );
   }
 
@@ -157,16 +155,14 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
                   if (state.syncFrequency != null) {
                     _initUpdateTimer(state.syncFrequency, context);
                   }
-                  _mailBloc.add(RefreshMessages(
-                      SyncPeriod.dbStringToPeriod(state.syncPeriod)));
+                  _mailBloc.add(RefreshMessages());
                 }
               },
             ),
           ],
           child: RefreshIndicator(
             onRefresh: () {
-              _mailBloc.add(
-                  RefreshMessages(SettingsBloc.getPeriodFromProvider(context)));
+              _mailBloc.add(RefreshMessages());
               return _refreshCompleter.future;
             },
             child: BlocBuilder<MessagesListBloc, MessagesListState>(

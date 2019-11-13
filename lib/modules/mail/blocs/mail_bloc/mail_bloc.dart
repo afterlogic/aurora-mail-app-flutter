@@ -56,7 +56,7 @@ class MailBloc extends Bloc<MailEvent, MailState> {
 
         final id = _selectedFolder.localId;
         _methods
-            .syncFolders(event.syncPeriod, localId: id, syncSystemFolders: true)
+            .syncFolders(localId: id, syncSystemFolders: true)
             .then((v) => add(UpdateFolders()));
       } else {
         yield FoldersEmpty();
@@ -93,7 +93,7 @@ class MailBloc extends Bloc<MailEvent, MailState> {
 
         final id = _selectedFolder.localId;
         _methods
-            .syncFolders(event.syncPeriod, localId: id, syncSystemFolders: true)
+            .syncFolders(localId: id, syncSystemFolders: true)
             .then((v) => add(UpdateFolders()));
       } else {
         yield FoldersEmpty();
@@ -116,7 +116,7 @@ class MailBloc extends Bloc<MailEvent, MailState> {
       yield FoldersLoaded(foldersWithInfo, _selectedFolder);
 
       _methods
-          .syncFolders(event.syncPeriod, localId: id, syncSystemFolders: true)
+          .syncFolders(localId: id, syncSystemFolders: true)
           .then((v) => add(UpdateFolders()));
     } catch (err, s) {
       yield FoldersError(formatError(err, s));
@@ -134,7 +134,7 @@ class MailBloc extends Bloc<MailEvent, MailState> {
       );
 
       final id = event.folder.localId;
-      _methods.syncFolders(event.syncPeriod, localId: id).then((v) => add(UpdateFolders()));
+      _methods.syncFolders(localId: id).then((v) => add(UpdateFolders()));
     } catch (err, s) {
       yield FoldersError(formatError(err, s));
     }
@@ -146,7 +146,7 @@ class MailBloc extends Bloc<MailEvent, MailState> {
       await _methods.updateFoldersHash(_selectedFolder);
 
       final id = _selectedFolder.localId;
-      _methods.syncFolders(event.syncPeriod, localId: id, syncSystemFolders: true);
+      _methods.syncFolders(localId: id, syncSystemFolders: true);
     } catch (err, s) {
       yield FoldersError(formatError(err, s));
     }
@@ -154,6 +154,6 @@ class MailBloc extends Bloc<MailEvent, MailState> {
 
   Stream<MailState> _setSeen(SetSeen event) async* {
     await _methods.setMessagesSeen(folder: _selectedFolder, uids: event.uids);
-    add(RefreshMessages(event.syncPeriod));
+    add(RefreshMessages());
   }
 }
