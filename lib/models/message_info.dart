@@ -75,6 +75,7 @@ class MessageInfo {
     }
 
     addItems(messagesInfo);
+    flatList.sort((a, b) => b.uid.compareTo(a.uid));
     return flatList;
   }
 }
