@@ -59,16 +59,17 @@ class MessageInfo {
 
     void addItems(List messagesInfo, [int parentUid]) {
       messagesInfo.forEach((info) {
+        final uid = info["uid"] is String ? int.parse(info["uid"]) : info["uid"];
         flatList.add(new MessageInfo(
-          uid: info["uid"],
+          uid: uid,
           parentUid: parentUid,
-          flags: new List<String>.from(info["flags"]),
+          flags: new List<String>.from(info["flags"] ?? []),
           hasBody: info["hasBody"] ?? false,
           hasThread: info["thread"] != null,
         ));
 
         if (info["thread"] != null) {
-          addItems(info["thread"], info["uid"]);
+          addItems(info["thread"], uid);
         }
       });
     }

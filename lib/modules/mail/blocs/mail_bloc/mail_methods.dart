@@ -263,7 +263,10 @@ class MailMethods {
 
       // TODO VO: make async
       final messages = Mail.getMessageObjFromServerAndUpdateInfoHasBody(
-          rawBodies, folder.messagesInfo);
+        rawBodies,
+        folder.messagesInfo,
+        user.localId,
+      );
 
       await _mailDao.addMessages(messages);
 

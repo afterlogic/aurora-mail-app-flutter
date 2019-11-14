@@ -18,6 +18,8 @@ class Mail extends Table {
 
   IntColumn get uid => integer()();
 
+  IntColumn get userLocalId => integer()();
+
   // in order to prevent inserting duplicate messages in the same folder
   // since uids are unique only inside a particular folder
   TextColumn get uniqueUidInFolder => text().customConstraint("UNIQUE")();
@@ -158,6 +160,7 @@ class Mail extends Table {
   static List<Message> getMessageObjFromServerAndUpdateInfoHasBody(
     List result,
     List<MessageInfo> messagesInfo,
+    int userLocalId,
   ) {
     assert(result.length <= MESSAGES_PER_CHUNK);
     assert(result.isNotEmpty);
@@ -186,6 +189,7 @@ class Mail extends Table {
       messagesChunk.add(new Message(
         localId: null,
         uid: rawMessage["Uid"],
+        userLocalId: userLocalId,
         uniqueUidInFolder: rawMessage["Uid"].toString() + rawMessage["Folder"],
         parentUid: messageInfo.parentUid,
         flagsInJson:

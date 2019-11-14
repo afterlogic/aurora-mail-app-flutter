@@ -26,8 +26,9 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
 //        .get();
 //  }
 
-  Stream<List<Message>> watchMessages(String folder) {
+  Stream<List<Message>> watchMessages(String folder, int userLocalId) {
     return (select(mail)
+          ..where((m) => m.userLocalId.equals(userLocalId))
           ..where((m) => m.folder.equals(folder))
           ..limit(5000)
           ..orderBy([

@@ -1,7 +1,9 @@
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/folders/folders_dao.dart';
 import 'package:aurora_mail/database/mail/mail_dao.dart';
+import 'package:aurora_mail/database/users/users_dao.dart';
 import 'package:aurora_mail/models/folder.dart';
+import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aurora_mail/modules/mail/repository/mail_api.dart';
 
 class MessagesListMethods {
@@ -10,7 +12,8 @@ class MessagesListMethods {
   final _mailApi = new MailApi();
 
   Stream<List<Message>> subscribeToMessages(Folder folder) {
-    return _mailDao.watchMessages(folder.fullNameRaw);
+    return _mailDao.watchMessages(
+        folder.fullNameRaw, AuthBloc.currentUser.localId);
   }
 
   Future<void> deleteMessages(List<Message> messages) async {
