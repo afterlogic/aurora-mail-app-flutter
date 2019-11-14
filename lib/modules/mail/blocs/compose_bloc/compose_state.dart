@@ -50,3 +50,14 @@ class ComposeError extends ComposeState {
   @override
   List<Object> get props => [errorMsg];
 }
+
+class ConvertingAttachments extends ComposeState {}
+
+class ReceivedComposeAttachments extends ComposeState {
+  final List<ComposeAttachment> attachments;
+
+  ReceivedComposeAttachments(this.attachments);
+
+  @override
+  List<Object> get props => [attachments];
+}

@@ -1,4 +1,5 @@
 import 'package:aurora_mail/modules/mail/models/compose_attachment.dart';
+import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/temp_attachment_upload.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
@@ -88,4 +89,13 @@ class ErrorUpload extends ComposeEvent {
 
   @override
   List<Object> get props => [error];
+}
+
+class GetComposeAttachments extends ComposeEvent {
+  final List<MailAttachment> attachments;
+
+  GetComposeAttachments(this.attachments);
+
+  @override
+  List<Object> get props => [attachments];
 }

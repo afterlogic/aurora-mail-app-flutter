@@ -38,17 +38,9 @@ class _MessageBodyState extends State<MessageBody> {
   void _getHtmlWithImages() async {
     String htmlData;
     String plainData;
-    if (widget.message.htmlRaw != null && widget.message.htmlRaw.isNotEmpty) {
-      htmlData = widget.message.htmlRaw;
-//      htmlData = htmlData.replaceAll("<body",
-//          '<body style="background-color: ${getWebColor(Theme.of(context).scaffoldBackgroundColor)}; color: ${getWebColor(Theme.of(context).textTheme.body1.color)} ');
-
-    } else if (widget.message.html != null && widget.message.html.isNotEmpty) {
+    if (widget.message.html != null && widget.message.html.isNotEmpty) {
       htmlData = widget.message.html;
 //      htmlData = '<body style="background-color: ${getWebColor(Theme.of(context).scaffoldBackgroundColor)}; color: ${getWebColor(Theme.of(context).textTheme.body1.color)}">$htmlData</body>';
-    } else if (widget.message.plainRaw != null &&
-        widget.message.plainRaw.isNotEmpty) {
-      plainData = widget.message.plainRaw;
     } else if (widget.message.plain != null &&
         widget.message.plain.isNotEmpty) {
       plainData = widget.message.plain;

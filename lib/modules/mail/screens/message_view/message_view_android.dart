@@ -8,7 +8,9 @@ import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/message_view_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/bloc.dart';
+import 'package:aurora_mail/modules/mail/models/compose_types.dart';
 import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
+import 'package:aurora_mail/modules/mail/screens/compose/compose_route.dart';
 import 'package:aurora_mail/modules/mail/screens/message_view/components/message_view_app_bar.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
@@ -74,16 +76,24 @@ class _MessageViewAndroidState extends State<MessageViewAndroid> {
   }
 
   void _onAppBarActionSelected(MailViewAppBarAction action) {
-    print("VO: _onAppBarActionSelected: $action");
+    // ignore: close_sinks
+    final bloc = BlocProvider.of<MailBloc>(context);
+    final msg = widget.messages[_currentPage];
     switch (action) {
       case MailViewAppBarAction.reply:
-        // TODO: Handle this case.
+        final args = new ComposeScreenArgs(
+            bloc: bloc, message: msg, composeType: ComposeType.reply);
+        Navigator.pushNamed(context, ComposeRoute.name, arguments: args);
         break;
       case MailViewAppBarAction.replyToAll:
-        // TODO: Handle this case.
+        final args = new ComposeScreenArgs(
+            bloc: bloc, message: msg, composeType: ComposeType.replyAll);
+        Navigator.pushNamed(context, ComposeRoute.name, arguments: args);
         break;
       case MailViewAppBarAction.forward:
-        // TODO: Handle this case.
+        final args = new ComposeScreenArgs(
+            bloc: bloc, message: msg, composeType: ComposeType.forward);
+        Navigator.pushNamed(context, ComposeRoute.name, arguments: args);
         break;
       case MailViewAppBarAction.toSpam:
         return null;

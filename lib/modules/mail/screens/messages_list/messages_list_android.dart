@@ -7,6 +7,7 @@ import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/auth/screens/login/login_route.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/bloc.dart';
+import 'package:aurora_mail/modules/mail/models/compose_types.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/compose_route.dart';
 import 'package:aurora_mail/modules/mail/screens/message_view/message_view_route.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/main_drawer.dart';
@@ -87,13 +88,19 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
       Navigator.pushNamed(
         context,
         ComposeRoute.name,
-        arguments: ComposeScreenArgs(_mailBloc, item),
+        arguments: ComposeScreenArgs(
+          bloc: _mailBloc,
+          message: item,
+          draftUid: item.uid,
+          composeType: ComposeType.fromDrafts,
+        ),
       );
     } else {
       Navigator.pushNamed(
         context,
         MessageViewRoute.name,
-        arguments: MessageViewScreenArgs(allMessages, i, _mailBloc, _messagesListBloc),
+        arguments:
+            MessageViewScreenArgs(allMessages, i, _mailBloc, _messagesListBloc),
       );
     }
   }
@@ -185,7 +192,8 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
         floatingActionButton: FloatingActionButton(
           child: Icon(MdiIcons.emailPlusOutline),
           onPressed: () => Navigator.pushNamed(context, ComposeRoute.name,
-              arguments: ComposeScreenArgs(_mailBloc, null)),
+              arguments: ComposeScreenArgs(
+                  bloc: _mailBloc, composeType: ComposeType.none)),
         ),
       ),
     );

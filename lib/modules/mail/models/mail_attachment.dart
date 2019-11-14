@@ -24,6 +24,7 @@ class MailAttachment {
   final String hash;
   final String viewUrl;
   final String downloadUrl;
+  final String thumbnailUrl;
 
   MailAttachment({
     @required this.fileName,
@@ -38,6 +39,7 @@ class MailAttachment {
     @required this.hash,
     @required this.viewUrl,
     @required this.downloadUrl,
+    @required this.thumbnailUrl,
   });
 
   Future<void> startDownload({
@@ -119,6 +121,7 @@ class MailAttachment {
         viewUrl: item["Actions"] is Map ? item["Actions"]["view"]["url"] : null,
         downloadUrl:
             item["Actions"] is Map ? item["Actions"]["download"]["url"] : null,
+        thumbnailUrl: item["ThumbnailUrl"],
       );
     }).toList();
   }

@@ -3,6 +3,7 @@ import 'package:aurora_mail/database/folders/folders_dao.dart';
 import 'package:aurora_mail/database/folders/folders_table.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/mail/models/compose_attachment.dart';
+import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/temp_attachment_upload.dart';
 import 'package:aurora_mail/modules/mail/repository/mail_api.dart';
 import 'package:aurora_mail/modules/mail/repository/mail_local_storage.dart';
@@ -75,5 +76,14 @@ class ComposeMethods {
         onUploadStart: onUploadStart,
         onUploadEnd: onUploadEnd,
         onError: onError);
+  }
+
+  Future<List<ComposeAttachment>> getComposeAttachments(
+    List<MailAttachment> attachments,
+  ) async {
+    // filter out inline attachments
+    final filteredAttachments = attachments.where((a) => !a.isInline).toList();
+    if (filteredAttachments.isEmpty) return new List<ComposeAttachment>();
+    return _mailApi.saveAttachmentsAsTempFiles(filteredAttachments);
   }
 }

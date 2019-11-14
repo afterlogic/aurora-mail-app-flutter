@@ -1,14 +1,16 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/mail/blocs/compose_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/models/compose_attachment.dart';
+import 'package:aurora_mail/modules/mail/models/compose_types.dart';
+import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/temp_attachment_upload.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/compose_route.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
+import 'package:aurora_mail/utils/mail_utils.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,9 +23,10 @@ import 'components/compose_subject.dart';
 
 class ComposeAndroid extends StatefulWidget {
   final Message message;
+  final ComposeType composeType;
   final int draftUid;
 
-  const ComposeAndroid({Key key, this.draftUid, this.message})
+  const ComposeAndroid({Key key, this.draftUid, this.message, this.composeType})
       : super(key: key);
 
   @override
@@ -55,7 +58,7 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
   void initState() {
     super.initState();
     _currentDraftUid = widget.draftUid;
-    _initMessageFromDrafts();
+    _prepareMessage();
     _initSaveToDraftsTimer();
   }
 
@@ -66,21 +69,50 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
     _bloc.close();
   }
 
-  void _initMessageFromDrafts() async {
-    if (widget.message == null) return;
-    _toEmails.addAll(getEmails(widget.message.toInJson));
-    _ccEmails.addAll(getEmails(widget.message.ccInJson));
-    _bccEmails.addAll(getEmails(widget.message.bccInJson));
-    _subjectTextCtrl.text = widget.message.subject;
-    _bodyTextCtrl.text = widget.message.plainRaw;
+  void _prepareMessage() {
+    final str = widget.message.attachmentsInJson;
+    final attachments = MailAttachment.fromJsonString(str);
+    _bloc.add(GetComposeAttachments(attachments));
+
+    switch (widget.composeType) {
+      case ComposeType.none:
+        return null;
+      case ComposeType.fromDrafts:
+        return _initFromDrafts();
+      case ComposeType.reply:
+        return _initReply();
+      case ComposeType.replyAll:
+        return _initReplyAll();
+      case ComposeType.forward:
+        return _initForward();
+    }
   }
 
-  List<String> getEmails(String emailsInJson) {
-    if (emailsInJson == null) return [];
-    final emails = json.decode(emailsInJson);
-    if (emails == null) return [];
-    final result = emails["@Collection"].map((t) => t["Email"]).toList();
-    return new List<String>.from(result);
+  void _initFromDrafts() async {
+    _toEmails.addAll(MailUtils.getEmails(widget.message.toInJson));
+    _ccEmails.addAll(MailUtils.getEmails(widget.message.ccInJson));
+    _bccEmails.addAll(MailUtils.getEmails(widget.message.bccInJson));
+    _subjectTextCtrl.text = widget.message.subject;
+    _bodyTextCtrl.text = MailUtils.htmlToPlain(widget.message.html);
+  }
+
+  void _initForward() async {
+    _subjectTextCtrl.text = MailUtils.getForwardSubject(widget.message);
+    _bodyTextCtrl.text = MailUtils.getForwardBody(widget.message);
+  }
+
+  void _initReply() async {
+    _toEmails.addAll(MailUtils.getEmails(widget.message.fromInJson));
+    _subjectTextCtrl.text = MailUtils.getReplySubject(widget.message);
+    _bodyTextCtrl.text = MailUtils.getReplyBody(widget.message);
+  }
+
+  void _initReplyAll() async {
+    print("VO: widget.message.ccInJson: ${widget.message.ccInJson}");
+    _toEmails.addAll(MailUtils.getEmails(widget.message.fromInJson));
+    _ccEmails.addAll(MailUtils.getEmails(widget.message.ccInJson));
+    _subjectTextCtrl.text = MailUtils.getReplySubject(widget.message);
+    _bodyTextCtrl.text = MailUtils.getReplyBody(widget.message);
   }
 
   void _initSaveToDraftsTimer() async {
@@ -243,6 +275,8 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
               _setUploadProgress(state.tempAttachment);
             if (state is AttachmentUploaded)
               _onAttachmentUploaded(state.composeAttachment);
+            if (state is ReceivedComposeAttachments)
+              setState(() => _attachments.addAll(state.attachments));
           },
           child: ListView(
             padding: EdgeInsets.symmetric(horizontal: 16.0),
@@ -277,11 +311,20 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
               ),
               if (_attachments.isNotEmpty)
                 Divider(height: 0.0),
-              Column(
-                children: _attachments
-                    .map((a) => ComposeAttachmentItem(a, _cancelAttachment))
-                    .toList(),
-              ),
+              BlocBuilder<ComposeBloc, ComposeState>(builder: (_, state) {
+                if (state is ConvertingAttachments) {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Center(child: CircularProgressIndicator()),
+                  );
+                } else {
+                  return Column(
+                    children: _attachments
+                        .map((a) => ComposeAttachmentItem(a, _cancelAttachment))
+                        .toList(),
+                  );
+                }
+              }),
               Divider(height: 0.0),
               ComposeBody(textCtrl: _bodyTextCtrl),
             ],

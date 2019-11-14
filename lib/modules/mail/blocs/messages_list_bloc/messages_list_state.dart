@@ -13,6 +13,7 @@ class MessagesEmpty extends MessagesListState {}
 
 class SubscribedToMessages extends MessagesListState {
   final Stream<List<Message>> messagesSub;
+  // TODO VO: add isStarredMode
 
   const SubscribedToMessages(this.messagesSub);
 

@@ -71,7 +71,11 @@ class AppNavigation {
             fullscreenDialog: true,
             builder: (_) => BlocProvider<MailBloc>.value(
                 value: args.bloc,
-                child: ComposeAndroid(message: args.message)));
+                child: ComposeAndroid(
+                  message: args.message,
+                  draftUid: args.draftUid,
+                  composeType: args.composeType,
+                )));
         break;
 
       // ================= SETTINGS =================

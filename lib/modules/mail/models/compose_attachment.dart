@@ -1,5 +1,7 @@
 import 'package:flutter/widgets.dart';
 
+import 'mail_attachment.dart';
+
 class ComposeAttachment {
   final String fileName;
   final String name;
@@ -38,5 +40,27 @@ class ComposeAttachment {
           item["Actions"] is Map ? item["Actions"]["download"]["url"] : null,
       thumbnailUrl: item["ThumbnailUrl"],
     );
+  }
+
+  // used in forward
+  // { "temp_name_value": "hash_value" }
+  static List<ComposeAttachment> fromMailAttachment(
+      List<MailAttachment> mailAttachments, Map tempValues) {
+    assert(mailAttachments.length == tempValues.keys.length);
+
+    return mailAttachments.map((a) {
+      final i = mailAttachments.indexOf(a);
+      return new ComposeAttachment(
+        fileName: a.fileName,
+        name: a.fileName,
+        tempName: tempValues.keys.toList()[i],
+        mimeType: a.mimeType,
+        size: a.size,
+        hash: tempValues.values.toList()[i],
+        viewUrl: a.viewUrl,
+        downloadUrl: a.downloadUrl,
+        thumbnailUrl: a.thumbnailUrl,
+      );
+    }).toList();
   }
 }

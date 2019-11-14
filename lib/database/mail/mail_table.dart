@@ -94,13 +94,13 @@ class Mail extends Table {
 
   TextColumn get readingConfirmationAddressee => text()();
 
-  TextColumn get htmlRaw => text().nullable()();
+//  TextColumn get htmlRaw => text().nullable()();
 
   TextColumn get html => text().nullable()();
 
   TextColumn get plain => text()();
 
-  TextColumn get plainRaw => text()();
+//  TextColumn get plainRaw => text()();
 
   BoolColumn get rtl => boolean()();
 
@@ -239,10 +239,10 @@ class Mail extends Table {
         references: rawMessage["References"],
         readingConfirmationAddressee:
             rawMessage["ReadingConfirmationAddressee"],
-        htmlRaw: rawMessage["HtmlRaw"],
+//        htmlRaw: rawMessage["HtmlRaw"],
         html: rawMessage["Html"],
         plain: rawMessage["Plain"],
-        plainRaw: rawMessage["PlainRaw"],
+//        plainRaw: rawMessage["PlainRaw"],
         rtl: rawMessage["Rtl"],
         extendInJson: rawMessage["Extend"] == null
             ? null

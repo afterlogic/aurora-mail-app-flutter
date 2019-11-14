@@ -119,7 +119,7 @@ class Folders extends Table {
     return compute(_calculateFoldersDiff, args);
   }
 
-  // TODO VO: folders might change their order
+  // TODO folders might change their order
   static FoldersDiffCalcResult _calculateFoldersDiff(
       Map<String, List<LocalFolder>> args) {
     final oldFolders = args["oldItems"];

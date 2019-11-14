@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/models/message_info.dart';
+import 'package:flutter/foundation.dart';
 import 'package:moor_flutter/moor_flutter.dart';
 
 import '../app_database.dart';
@@ -42,7 +43,7 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
     try {
       return into(mail).insertAll(newMessages);
     } catch (err) {
-      print("insertMessages: $err");
+      debugPrint("insertMessages: $err");
       return null;
     }
   }

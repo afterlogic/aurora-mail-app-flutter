@@ -17,7 +17,7 @@ String formatError(dynamic err, StackTrace stack) {
     if (err.osError.errorCode == 7) {
       return "Could not connect to the server";
     } else {
-      return err.message.isNotEmpty ? err.message : "Unknown error";
+      return err.message.isNotEmpty ? err.message : err;
     }
   } else {
     print("Debug error: $err");

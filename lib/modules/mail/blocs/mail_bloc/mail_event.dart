@@ -1,4 +1,5 @@
 import 'package:aurora_mail/models/folder.dart';
+import 'package:aurora_mail/utils/always_non_equal_object.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class MailEvent extends Equatable {
@@ -19,7 +20,7 @@ class RefreshFolders extends MailEvent {}
 
 // gets messagesInfo for current folder
 // and relevant folders info for all the folders, including current
-class RefreshMessages extends MailEvent {}
+class RefreshMessages extends MailEvent with AlwaysNonEqualObject {}
 
 class CheckFoldersMessagesChanges extends MailEvent {}
 

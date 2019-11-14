@@ -254,6 +254,28 @@ class MailApi {
     );
   }
 
+  Future<List<ComposeAttachment>> saveAttachmentsAsTempFiles(
+      List<MailAttachment> attachments) async {
+    final hashes = attachments.map((a) => a.hash).toList();
+    final parameters = json.encode({
+      "Attachments": hashes,
+      "AccountID": _accountId,
+    });
+
+    final body = new ApiBody(
+        module: "Mail",
+        method: "SaveAttachmentsAsTempFiles",
+        parameters: parameters);
+
+    final res = await sendRequest(body);
+
+    if (res["Result"] is Map) {
+      return ComposeAttachment.fromMailAttachment(attachments, res["Result"]);
+    } else {
+      throw ServerError(getErrMsg(res));
+    }
+  }
+
   Future<void> deleteMessages({
     @required Folder folder,
     @required List<int> uids,
