@@ -121,6 +121,10 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
     }
   }
 
+  void _setStarred(Message message, bool isStarred) {
+    _mailBloc.add(SetStarred([message.uid], isStarred));
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -231,8 +235,11 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
                     MessageItem(
                       item,
                       threads,
-                      (Message item) => _onMessageSelected(snap.data, item),
-                      _deleteMessage,
+                      key: Key(item.localId.toString()),
+                      onItemSelected: (Message item) =>
+                          _onMessageSelected(snap.data, item),
+                      onStarMessage: _setStarred,
+                      onDeleteMessage: _deleteMessage,
                     ),
                     if (_selectedFolder != null &&
                         _selectedFolder.needsInfoUpdate &&

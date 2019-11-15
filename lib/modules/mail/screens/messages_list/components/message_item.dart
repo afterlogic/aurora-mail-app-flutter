@@ -1,10 +1,8 @@
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/mail/mail_table.dart';
-import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
 import 'package:aurora_mail/utils/date_formatting.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 final _expandedUids = new List<int>();
@@ -12,11 +10,19 @@ final _expandedUids = new List<int>();
 class MessageItem extends StatefulWidget {
   final List<Message> threads;
   final Message message;
+  final Key key;
   final Function(Message) onItemSelected;
+  final Function(Message, bool) onStarMessage;
   final Function(Message) onDeleteMessage;
 
   MessageItem(
-      this.message, this.threads, this.onItemSelected, this.onDeleteMessage);
+    this.message,
+    this.threads, {
+    this.key,
+    @required this.onItemSelected,
+    @required this.onDeleteMessage,
+    @required this.onStarMessage,
+  }) : super(key: key);
 
   @override
   _MessageItemState createState() => _MessageItemState();
@@ -32,9 +38,8 @@ class _MessageItemState extends State<MessageItem> {
     super.initState();
     _children =
         widget.threads.where((t) => t.parentUid == widget.message.uid).toList();
+    _isStarred = widget.message.flagsInJson.contains("\\flagged");
     setState(() => _showThreads = _expandedUids.contains(widget.message.uid));
-    setState(
-        () => _isStarred = widget.message.flagsInJson.contains("\\flagged"));
   }
 
   void _toggleThreads() {
@@ -48,8 +53,7 @@ class _MessageItemState extends State<MessageItem> {
 
   void _setStarred(bool isStarred) {
     setState(() => _isStarred = isStarred);
-    BlocProvider.of<MailBloc>(context)
-        .add(SetStarred([widget.message.uid], isStarred));
+    widget.onStarMessage(widget.message, isStarred);
   }
 
   @override
@@ -200,8 +204,10 @@ class _MessageItemState extends State<MessageItem> {
                         indent: 4.0,
                         endIndent: 16.0,
                       ),
-                      MessageItem(
-                          t, [], widget.onItemSelected, widget.onDeleteMessage),
+                      MessageItem(t, [],
+                          onItemSelected: widget.onItemSelected,
+                          onStarMessage: widget.onStarMessage,
+                          onDeleteMessage: widget.onDeleteMessage),
                     ],
                   ),
                 ),
