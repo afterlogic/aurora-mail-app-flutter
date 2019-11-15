@@ -2,13 +2,16 @@ import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/mail/mail_table.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
 import 'package:aurora_mail/utils/date_formatting.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+
+import 'star.dart';
 
 final _expandedUids = new List<int>();
 
 class MessageItem extends StatefulWidget {
-  final List<Message> threads;
+  final List<Message> children;
   final Message message;
   final Key key;
   final Function(Message) onItemSelected;
@@ -17,7 +20,7 @@ class MessageItem extends StatefulWidget {
 
   MessageItem(
     this.message,
-    this.threads, {
+    this.children, {
     this.key,
     @required this.onItemSelected,
     @required this.onDeleteMessage,
@@ -30,15 +33,10 @@ class MessageItem extends StatefulWidget {
 
 class _MessageItemState extends State<MessageItem> {
   bool _showThreads = false;
-  bool _isStarred;
-  List<Message> _children = [];
 
   @override
   void initState() {
     super.initState();
-    _children =
-        widget.threads.where((t) => t.parentUid == widget.message.uid).toList();
-    _isStarred = widget.message.flagsInJson.contains("\\flagged");
     setState(() => _showThreads = _expandedUids.contains(widget.message.uid));
   }
 
@@ -52,14 +50,13 @@ class _MessageItemState extends State<MessageItem> {
   }
 
   void _setStarred(bool isStarred) {
-    setState(() => _isStarred = isStarred);
     widget.onStarMessage(widget.message, isStarred);
   }
 
   @override
   Widget build(BuildContext context) {
     final hasUnreadChildren =
-        _children.where((i) => !i.flagsInJson.contains("\\seen")).isNotEmpty;
+        widget.children.where((i) => !i.flagsInJson.contains("\\seen")).isNotEmpty;
 
     final flags = Mail.getFlags(widget.message.flagsInJson);
 
@@ -103,7 +100,7 @@ class _MessageItemState extends State<MessageItem> {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    if (_children.isNotEmpty)
+                    if (widget.children.isNotEmpty)
                       SizedBox(
                         height: 24.0,
                         width: 24.0,
@@ -115,7 +112,7 @@ class _MessageItemState extends State<MessageItem> {
                           onPressed: _toggleThreads,
                         ),
                       ),
-                    if (_children.isNotEmpty) SizedBox(width: 6.0),
+                    if (widget.children.isNotEmpty) SizedBox(width: 6.0),
                     Flexible(
                       child: Opacity(
                         opacity: widget.message.subject.isEmpty ? 0.44 : 1.0,
@@ -165,25 +162,13 @@ class _MessageItemState extends State<MessageItem> {
                           child: Icon(MdiIcons.share),
                         ),
                       SizedBox(
-                        width: 24.0,
-                        height: 24.0,
-                        child: _isStarred
-                            ? IconButton(
-                                padding: EdgeInsets.zero,
-                                icon: Icon(Icons.star, color: Colors.amber),
-                                onPressed: () => _setStarred(false),
-                              )
-                            : IconButton(
-                                padding: EdgeInsets.zero,
-                                icon: Icon(
-                                  Icons.star_border,
-                                  color: Theme.of(context)
-                                      .disabledColor
-                                      .withOpacity(0.1),
-                                ),
-                                onPressed: () => _setStarred(true),
-                              ),
-                      ),
+                          width: 24.0,
+                          height: 24.0,
+                          child: Star(
+                            value: widget.message.flagsInJson
+                                .contains("\\flagged"),
+                            onPressed: _setStarred,
+                          )),
                     ],
                   ),
                 ],
@@ -191,8 +176,8 @@ class _MessageItemState extends State<MessageItem> {
             ),
           ),
         ),
-        if (_children.isNotEmpty && _showThreads)
-          ..._children.map((t) {
+        if (widget.children.isNotEmpty && _showThreads)
+          ...widget.children.map((t) {
             return Stack(
               children: <Widget>[
                 Padding(
@@ -205,6 +190,7 @@ class _MessageItemState extends State<MessageItem> {
                         endIndent: 16.0,
                       ),
                       MessageItem(t, [],
+                          key: Key(t.localId.toString()),
                           onItemSelected: widget.onItemSelected,
                           onStarMessage: widget.onStarMessage,
                           onDeleteMessage: widget.onDeleteMessage),

@@ -234,7 +234,7 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
                   children: <Widget>[
                     MessageItem(
                       item,
-                      threads,
+                      threads.where((t) => t.parentUid == item.uid).toList(),
                       key: Key(item.localId.toString()),
                       onItemSelected: (Message item) =>
                           _onMessageSelected(snap.data, item),
