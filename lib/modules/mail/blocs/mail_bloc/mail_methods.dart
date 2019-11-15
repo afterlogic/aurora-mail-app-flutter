@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/folders/folders_dao.dart';
 import 'package:aurora_mail/database/folders/folders_table.dart';
@@ -306,15 +308,42 @@ class MailMethods {
 
   Future<void> setMessagesStarred({
     @required Folder folder,
-    @required List<int> uids,
+    @required List<Message> messages,
     @required bool isStarred,
-  }) {
+  }) async {
     if (_isOffline) return null;
-    return _mailApi.setMessagesFlagged(
-      folder: folder,
-      uids: uids,
-      isStarred: isStarred,
-    );
+
+    void updateMessages(bool isStarred) {
+      final infos = messages.map((m) {
+        final flags = json.decode(m.flagsInJson);
+
+        if (isStarred && !flags.contains("\\flagged")) {
+          flags.add("\\flagged");
+        } else if (!isStarred && flags.contains("\\flagged")) {
+          flags.remove("\\flagged");
+        }
+
+        return new MessageInfo(
+          uid: m.uid,
+          parentUid: m.parentUid,
+          flags: new List<String>.from(flags),
+          hasBody: true,
+          hasThread: m.hasThread,
+        );
+      }).toList();
+      _mailDao.updateMessagesFlags(infos);
+    }
+
+    try {
+      updateMessages(isStarred);
+      await _mailApi.setMessagesFlagged(
+        folder: folder,
+        uids: messages.map((m) => m.uid).toList(),
+        isStarred: isStarred,
+      );
+    } catch (err) {
+      updateMessages(!isStarred);
+    }
   }
 
   Future<List<Folder>> _getOfflineFolders() async {

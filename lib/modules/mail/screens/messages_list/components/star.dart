@@ -12,6 +12,7 @@ class Star extends StatefulWidget {
 }
 
 class _StarState extends State<Star> with TickerProviderStateMixin {
+  final _animDuration = new Duration(milliseconds: 130);
   AnimationController _parentCtrl;
   Animation<double> _scaleAnimation;
   bool _isStarred;
@@ -20,8 +21,7 @@ class _StarState extends State<Star> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     _isStarred = widget.value;
-    _parentCtrl = new AnimationController(
-        vsync: this, duration: new Duration(milliseconds: 130));
+    _parentCtrl = new AnimationController(vsync: this, duration: _animDuration);
     _parentCtrl.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         _parentCtrl.reverse();
@@ -37,9 +37,12 @@ class _StarState extends State<Star> with TickerProviderStateMixin {
         new CurvedAnimation(parent: _parentCtrl, curve: Curves.easeInOut));
   }
 
-  void _setStarred(bool isStarred) {
+  Future _setStarred(bool isStarred) async {
     _parentCtrl.forward(from: 0.0);
     setState(() => _isStarred = isStarred);
+    // wait forward and reverse
+    await Future.delayed(_animDuration);
+    await Future.delayed(_animDuration);
     widget.onPressed(isStarred);
   }
 

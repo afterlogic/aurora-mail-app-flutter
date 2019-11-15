@@ -122,7 +122,8 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
   }
 
   void _setStarred(Message message, bool isStarred) {
-    _mailBloc.add(SetStarred([message.uid], isStarred));
+    // TODO VO: add offline check
+    _mailBloc.add(SetStarred([message], isStarred));
   }
 
   @override

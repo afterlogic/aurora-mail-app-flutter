@@ -167,8 +167,10 @@ class MailBloc extends Bloc<MailEvent, MailState> {
   }
 
   Stream<MailState> _setStarred(SetStarred event) async* {
-    await _methods.setMessagesStarred(
-        folder: _selectedFolder, uids: event.uids, isStarred: event.isStarred);
-    add(RefreshMessages());
+    _methods.setMessagesStarred(
+      folder: _selectedFolder,
+      messages: event.messages,
+      isStarred: event.isStarred,
+    );
   }
 }

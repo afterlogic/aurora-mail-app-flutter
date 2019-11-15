@@ -1,3 +1,4 @@
+import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/utils/always_non_equal_object.dart';
 import 'package:equatable/equatable.dart';
@@ -44,11 +45,11 @@ class SetSeen extends MailEvent {
 }
 
 class SetStarred extends MailEvent {
-  final List<int> uids;
+  final List<Message> messages;
   final bool isStarred;
 
-  const SetStarred(this.uids, this.isStarred);
+  const SetStarred(this.messages, this.isStarred);
 
   @override
-  List<Object> get props => [uids, isStarred];
+  List<Object> get props => [messages, isStarred];
 }
