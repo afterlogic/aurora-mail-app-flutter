@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:aurora_mail/generated/i18n.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
@@ -119,13 +120,11 @@ class _MainDrawerState extends State<MainDrawer> {
   Widget _buildFoldersEmpty() {
     // build list view to be able to swipe to refresh
     return ListView(
-      key: PageStorageKey("my_key"),
       physics: AlwaysScrollableScrollPhysics(),
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 68.0, horizontal: 16.0),
-          // TODO translate
-          child: Center(child: Text("No folders")),
+          child: Center(child: Text(S.of(context).folders_empty)),
         ),
       ],
     );

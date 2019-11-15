@@ -2,7 +2,8 @@ import 'dart:async';
 
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_methods.dart';
-import 'package:aurora_mail/utils/error_handling.dart';
+import 'package:aurora_mail/utils/api_utils.dart';
+import 'package:aurora_mail/utils/errors_enum.dart';
 import 'package:bloc/bloc.dart';
 
 import './bloc.dart';
@@ -50,8 +51,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         yield InitializedUserAndAccounts(null, needsLogin: true);
       }
     } catch (err, s) {
-      print("VO: err: ${err}");
-      print("VO: s: ${s}");
+      print("_initUserAndAccounts err: $err");
+      print("_initUserAndAccounts s: $s");
       yield InitializedUserAndAccounts(null, needsLogin: true);
     }
   }
@@ -78,8 +79,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           _currentAccount = accounts[0];
           yield LoggedIn(user);
         } else {
-          // TODO translate
-          yield AuthError("This user doesn't have mail accounts");
+          yield AuthError(ErrorForTranslation.UserHasNoAccounts);
         }
       }
     } catch (err, s) {

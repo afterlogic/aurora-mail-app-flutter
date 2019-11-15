@@ -1,3 +1,4 @@
+import 'package:aurora_mail/generated/i18n.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/theming/app_theme.dart';
@@ -62,6 +63,8 @@ class _AppState extends State<App> {
                         title: "Aurora Mail",
                         onGenerateRoute: AppNavigation.onGenerateRoute,
                         theme: AppTheme.light,
+                        localizationsDelegates: [S.delegate],
+                        supportedLocales: S.delegate.supportedLocales,
                         initialRoute: authState.needsLogin
                             ? LoginRoute.name
                             : MessagesListRoute.name,

@@ -1,3 +1,6 @@
+import 'package:aurora_mail/generated/i18n.dart';
+import 'package:flutter/cupertino.dart';
+
 enum ValidationType {
   empty,
   email,
@@ -6,23 +9,23 @@ enum ValidationType {
 }
 
 String validateInput(
+  BuildContext context,
   String value,
   List<ValidationType> types, [
   List otherItems,
   String fileExtension,
 ]) {
   if (types.contains(ValidationType.uniqueName) && otherItems is! List) {
-    throw Exception(
-        "In order to check if a name is unique the list must be provided");
+    throw "In order to check if a name is unique the list must be provided";
   }
   if (types.contains(ValidationType.empty) && value.isEmpty) {
-    return "This field is required";
+    return S.of(context).error_input_validation_empty;
   }
   if (types.contains(ValidationType.email) && !_isEmailValid(value)) {
-    return "The email is not valid";
+    return S.of(context).error_input_validation_email;
   }
   if (types.contains(ValidationType.fileName) && !_isFileNameValid(value)) {
-    return 'Name cannot contain "/\\*?<>|:';
+    return S.of(context).error_input_validation_name_illegal_symbol;
   }
   if (otherItems is List && types.contains(ValidationType.uniqueName)) {
     bool exists = false;
@@ -32,7 +35,7 @@ String validateInput(
       if (item.name == valueToCheck) exists = true;
     });
 
-    if (exists) return "This name already exists";
+    if (exists) return S.of(context).error_input_validation_unique_name;
   }
 
   // else the field is valid
@@ -40,7 +43,7 @@ String validateInput(
 }
 
 bool _isFileNameValid(String fileName) {
-  final regExp = new RegExp(r'["\/\\*?<>|:]');
+  final regExp = new RegExp(r'["/\\*?<>|:]');
 
   return !regExp.hasMatch(fileName);
 }

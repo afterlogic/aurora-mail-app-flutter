@@ -1,3 +1,4 @@
+import 'package:aurora_mail/generated/i18n.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,18 +21,15 @@ class MailAppBar extends StatelessWidget {
             state is FoldersEmpty,
         builder: (_, state) {
           if (state is FoldersLoaded) {
-            // TODO translate
             return Text(state.isStarredFilterEnabled
-                ? "Starred"
+                ? S.of(context).folders_starred
                 : state.selectedFolder.name);
           } else if (state is FoldersLoading) {
-            // TODO translate
-            return Text("Loading folders...");
+            return Text(S.of(context).messages_list_app_bar_loading_folders);
           } else if (state is FoldersEmpty) {
-            // TODO translate
-            return Text("No folders");
+            return Text(S.of(context).folders_empty);
           } else {
-            return Text("");
+            return SizedBox();
           }
         },
       ),
@@ -40,14 +38,13 @@ class MailAppBar extends StatelessWidget {
           onSelected: onActionSelected,
           itemBuilder: (_) {
             return [
-              // TODO translate
               PopupMenuItem(
                 value: MailListAppBarAction.settings,
-                child: Text("Settings"),
+                child: Text(S.of(context).messages_list_app_bar_settings),
               ),
               PopupMenuItem(
                 value: MailListAppBarAction.logout,
-                child: Text("Log out"),
+                child: Text(S.of(context).messages_list_app_bar_logout),
               ),
             ];
           },

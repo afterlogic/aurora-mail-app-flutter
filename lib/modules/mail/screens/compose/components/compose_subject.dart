@@ -1,3 +1,4 @@
+import 'package:aurora_mail/generated/i18n.dart';
 import 'package:flutter/material.dart';
 
 class ComposeSubject extends StatefulWidget {
@@ -30,9 +31,8 @@ class _ComposeSubjectState extends State<ComposeSubject> {
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
-              // TODO translate
               child:
-                  Text("Subject", style: Theme.of(context).textTheme.subhead),
+                  Text(S.of(context).messages_subject, style: Theme.of(context).textTheme.subhead),
             ),
             SizedBox(width: 8.0),
             Flexible(

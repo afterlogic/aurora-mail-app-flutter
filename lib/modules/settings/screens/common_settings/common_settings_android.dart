@@ -1,3 +1,4 @@
+import 'package:aurora_mail/generated/i18n.dart';
 import 'package:flutter/material.dart';
 
 class CommonSettingsAndroid extends StatefulWidget {
@@ -9,13 +10,12 @@ class _CommonSettingsAndroidState extends State<CommonSettingsAndroid> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // TODO translate
-      appBar: AppBar(title: Text("Common")),
+      appBar: AppBar(title: Text(S.of(context).settings_common)),
       body: ListView(
         children: <Widget>[
           ListTile(
             leading: Icon(Icons.translate),
-            title: Text("Language"),
+            title: Text(S.of(context).settings_language),
           )
         ],
       ),

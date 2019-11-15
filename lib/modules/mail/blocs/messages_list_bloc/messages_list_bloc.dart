@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:aurora_mail/utils/error_handling.dart';
+import 'package:aurora_mail/utils/api_utils.dart';
 import 'package:bloc/bloc.dart';
 
 import 'bloc.dart';

@@ -1,3 +1,4 @@
+import 'package:aurora_mail/generated/i18n.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:flutter/material.dart';
@@ -26,8 +27,7 @@ class StarredFolder extends StatelessWidget {
     return ListTile(
       selected: isSelected,
       leading: Icon(Icons.star_border),
-      // TODO translate
-      title: Text("Starred"),
+      title: Text(S.of(context).folders_starred),
       onTap: () => _selectFolder(context),
     );
   }

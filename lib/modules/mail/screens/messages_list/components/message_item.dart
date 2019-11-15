@@ -1,5 +1,6 @@
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/mail/mail_table.dart';
+import 'package:aurora_mail/generated/i18n.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
 import 'package:aurora_mail/utils/date_formatting.dart';
 import 'package:flutter/cupertino.dart';
@@ -55,8 +56,9 @@ class _MessageItemState extends State<MessageItem> {
 
   @override
   Widget build(BuildContext context) {
-    final hasUnreadChildren =
-        widget.children.where((i) => !i.flagsInJson.contains("\\seen")).isNotEmpty;
+    final hasUnreadChildren = widget.children
+        .where((i) => !i.flagsInJson.contains("\\seen"))
+        .isNotEmpty;
 
     final flags = Mail.getFlags(widget.message.flagsInJson);
 
@@ -71,12 +73,11 @@ class _MessageItemState extends State<MessageItem> {
           child: Dismissible(
             key: Key(widget.message.uid.toString()),
             direction: DismissDirection.endToStart,
-            // TODO translate
             confirmDismiss: (_) => ConfirmationDialog.show(
                 context,
-                "Delete message",
-                "Are you sure you want to delete ${widget.message.subject}?",
-                "Delete"),
+                S.of(context).messages_delete_title,
+                S.of(context).messages_delete_desc_with_subject(widget.message.subject),
+                S.of(context).btn_delete),
             onDismissed: (_) => widget.onDeleteMessage(widget.message),
             background: Container(
               color: Theme.of(context).errorColor,
@@ -117,10 +118,9 @@ class _MessageItemState extends State<MessageItem> {
                       child: Opacity(
                         opacity: widget.message.subject.isEmpty ? 0.44 : 1.0,
                         child: Text(
-                          // TODO translate
                           widget.message.subject.isNotEmpty
                               ? widget.message.subject
-                              : "No subject",
+                              : S.of(context).messages_no_subject,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: textStyle,

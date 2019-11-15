@@ -1,21 +1,23 @@
+import 'package:aurora_mail/utils/errors_enum.dart';
 import 'package:flutter/material.dart';
 
 void showSnack({
   @required BuildContext context,
   @required ScaffoldState scaffoldState,
-  @required String msg,
+  @required dynamic msg,
   Duration duration = const Duration(seconds: 5),
   SnackBarAction action,
   isError = true,
 }) {
   if (Theme == null || scaffoldState == null) return;
+  final errorMessage = msg is ErrorForTranslation ? getErrTranslation(context, msg) : msg.toString();
 
   final theme = Theme.of(context);
   final snack = theme.brightness == Brightness.light
       ? SnackBar(
           duration: duration,
           content: Text(
-            msg,
+            errorMessage,
             style: TextStyle(
                 color: !isError ? theme.scaffoldBackgroundColor : Colors.white),
           ),
@@ -25,7 +27,7 @@ void showSnack({
       : SnackBar(
           duration: duration,
           content: Text(
-            msg,
+            errorMessage,
             style: TextStyle(
                 color: !isError ? theme.scaffoldBackgroundColor : Colors.white),
           ),
@@ -33,7 +35,7 @@ void showSnack({
           action: action,
         );
 
-  if (msg.isEmpty) {
+  if (errorMessage.isEmpty) {
     print("Cannot show empty snack");
   } else {
     scaffoldState.removeCurrentSnackBar();

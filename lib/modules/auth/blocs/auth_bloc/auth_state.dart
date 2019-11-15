@@ -1,4 +1,5 @@
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/utils/errors_enum.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -29,7 +30,7 @@ class NeedsHost extends AuthState {}
 class LoggedIn extends AuthState {
   final User user;
 
-  LoggedIn(this.user);
+  const LoggedIn(this.user);
 
   @override
   List<Object> get props => [user];
@@ -38,9 +39,17 @@ class LoggedIn extends AuthState {
 class LoggedOut extends AuthState {}
 
 class AuthError extends AuthState {
-  final String errorMsg;
+  final dynamic errorMsg;
 
-  AuthError(this.errorMsg);
+  const AuthError(this.errorMsg);
+
+  String getErrorMsgString(BuildContext context) {
+    if (errorMsg is ErrorForTranslation) {
+      return getErrTranslation(context, errorMsg);
+    } else {
+      return errorMsg;
+    }
+  }
 
   @override
   List<Object> get props => [errorMsg];

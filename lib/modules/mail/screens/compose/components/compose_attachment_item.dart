@@ -1,3 +1,4 @@
+import 'package:aurora_mail/generated/i18n.dart';
 import 'package:aurora_mail/modules/mail/models/compose_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/temp_attachment_upload.dart';
 import 'package:filesize/filesize.dart';
@@ -42,8 +43,7 @@ class ComposeAttachmentItem extends StatelessWidget {
         ),
         trailing: IconButton(
           icon: Icon(Icons.cancel),
-          // TODO translate
-          tooltip: "Cancel upload",
+          tooltip: S.of(context).messages_attachment_upload_cancel,
           onPressed: () {
             attachment.cancel(taskId: attachment.taskId);
             onCancel(attachment);
@@ -67,8 +67,7 @@ class ComposeAttachmentItem extends StatelessWidget {
           children: <Widget>[
             IconButton(
               icon: Icon(Icons.cancel),
-              // TODO translate
-              tooltip: "Delete attachment",
+              tooltip: S.of(context).messages_attachment_delete,
               onPressed: () => onCancel(attachment),
             ),
           ],

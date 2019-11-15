@@ -5,7 +5,6 @@ import 'package:aurora_mail/database/accounts/accounts_table.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/models/api_body.dart';
 import 'package:aurora_mail/utils/api_utils.dart';
-import 'package:aurora_mail/utils/error_handling.dart';
 import 'package:http/http.dart' as http;
 
 class AuthApi {

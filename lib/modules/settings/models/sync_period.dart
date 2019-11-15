@@ -11,6 +11,7 @@ enum Period {
 class SyncPeriod {
   static String periodToTitle(Period period) {
     switch (period) {
+      // TODO translate
       case Period.allTime:
         return "all time";
       case Period.months1:

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/generated/i18n.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/auth/screens/login/login_route.dart';
@@ -266,8 +267,7 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
                 Padding(
                   padding: const EdgeInsets.symmetric(
                       vertical: 68.0, horizontal: 16.0),
-                  // TODO translate
-                  child: Center(child: Text("No messages")),
+                  child: Center(child: Text(S.of(context).messages_empty)),
                 ),
               ],
             );

@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:aurora_mail/modules/mail/blocs/compose_bloc/compose_methods.dart';
 import 'package:aurora_mail/modules/mail/models/compose_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/temp_attachment_upload.dart';
-import 'package:aurora_mail/utils/error_handling.dart';
+import 'package:aurora_mail/utils/api_utils.dart';
 import 'package:aurora_mail/utils/permissions.dart';
 import 'package:bloc/bloc.dart';
 

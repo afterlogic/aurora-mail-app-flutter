@@ -1,3 +1,4 @@
+import 'package:aurora_mail/generated/i18n.dart';
 import 'package:aurora_mail/modules/mail/blocs/message_view_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
@@ -68,13 +69,12 @@ class _AttachmentState extends State<Attachment> {
             if (widget.attachment.downloadUrl != null && _taskProgress == null)
               IconButton(
                 icon: Icon(Icons.file_download),
-                // TODO translate
-                tooltip: "Download attachment",
+                tooltip: S.of(context).messages_attachment_download,
                 onPressed: () {
                   showSnack(
                       context: context,
                       scaffoldState: Scaffold.of(context),
-                      msg: "Downloading ${widget.attachment.fileName}...",
+                      msg: S.of(context).messages_attachment_downloading(widget.attachment.fileName),
                       isError: false);
                   BlocProvider.of<MessageViewBloc>(context)
                       .add(DownloadAttachment(widget.attachment));
@@ -83,8 +83,7 @@ class _AttachmentState extends State<Attachment> {
             if (_taskProgress != null)
               IconButton(
                 icon: Icon(Icons.cancel),
-                // TODO translate
-                tooltip: "Cancel download",
+                tooltip: S.of(context).messages_attachment_download_cancel,
                 onPressed: () => setState(() {
                   widget.attachment.endDownloading(_taskProgress.taskId);
                   _taskProgress = null;

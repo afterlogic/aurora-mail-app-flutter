@@ -1,8 +1,11 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:aurora_mail/models/api_body.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:http/http.dart' as http;
+
+import 'errors_enum.dart';
 
 Map<String, String> getHeaderWithToken() {
   return {'Authorization': 'Bearer ${AuthBloc.currentUser.token}'};
@@ -21,121 +24,150 @@ Future sendRequest(ApiBody body, {decodeJson = true, useToken = true}) async {
   }
 }
 
-String getErrMsg(dynamic err) {
+ErrorForTranslation getErrMsg(dynamic err) {
   if (err["ErrorMessage"] is String) {
     return err["ErrorMessage"];
   } else if (err["ErrorCode"] is int) {
     return _getErrMsgFromCode(err["ErrorCode"]);
   } else {
-    return "Unknown error";
+    return ErrorForTranslation.UnknownError;
   }
 }
 
-String _getErrMsgFromCode(int code) {
+class ServerError implements Exception {
+  // either String or ErrorForTranslation
+  final dynamic message;
+
+  ServerError(this.message) : super();
+
+  @override
+  String toString() => message;
+}
+
+dynamic formatError(dynamic err, StackTrace stack) {
+  if (err is ServerError) {
+    return err.toString();
+  } else if (err is SocketException) {
+    if (err.osError.errorCode == 7) {
+      return ErrorForTranslation.ConnectionError;
+    } else {
+      return err.message.isNotEmpty ? err.message : err;
+    }
+  } else {
+    print("Debug error: $err");
+    print("Debug stack: $stack");
+    return err.toString();
+    // TODO set unknown for release
+//    return "Unknown error";
+  }
+}
+
+ErrorForTranslation _getErrMsgFromCode(int code) {
   switch (code) {
     case 101:
-      return "Invalid token";
+      return ErrorForTranslation.InvalidToken;
     case 102:
-      return "Invalid email/password";
+      return ErrorForTranslation.AuthError;
     case 103:
-      return "Invalid input parameter";
+      return ErrorForTranslation.InvalidInputParameter;
     case 104:
-      return "DataBase error";
+      return ErrorForTranslation.DataBaseError;
     case 105:
-      return "License problem";
+      return ErrorForTranslation.LicenseProblem;
     case 106:
-      return "Demo account";
+      return ErrorForTranslation.DemoAccount;
     case 107:
-      return "Captcha error";
+      return ErrorForTranslation.CaptchaError;
     case 108:
-      return "Access denied";
+      return ErrorForTranslation.AccessDenied;
     case 109:
-      return "Unknown email";
+      return ErrorForTranslation.UnknownEmail;
     case 110:
-      return "User is not allowed";
+      return ErrorForTranslation.UserNotAllowed;
     case 111:
-      return "Such user already exists";
+      return ErrorForTranslation.UserAlreadyExists;
     case 112:
-      return "System is not configured";
+      return ErrorForTranslation.SystemNotConfigured;
     case 113:
-      return "Module not found";
+      return ErrorForTranslation.ModuleNotFound;
     case 114:
-      return "Method not found";
+      return ErrorForTranslation.MethodNotFound;
     case 115:
-      return "License limit";
+      return ErrorForTranslation.LicenseLimit;
     case 501:
-      return "Cannot save settings";
+      return ErrorForTranslation.CanNotSaveSettings;
     case 502:
-      return "Cannot change password";
+      return ErrorForTranslation.CanNotChangePassword;
     case 503:
-      return "Account's old password is not correct";
+      return ErrorForTranslation.AccountOldPasswordNotCorrect;
     case 601:
-      return "Cannot create contact";
+      return ErrorForTranslation.CanNotCreateContact;
     case 602:
-      return "Cannot create group";
+      return ErrorForTranslation.CanNotCreateGroup;
     case 603:
-      return "Cannot update contact";
+      return ErrorForTranslation.CanNotUpdateContact;
     case 604:
-      return "Cannot update group";
+      return ErrorForTranslation.CanNotUpdateGroup;
     case 605:
-      return "Contact data has been modified by another application";
+      return ErrorForTranslation.ContactDataHasBeenModifiedByAnotherApplication;
     case 607:
-      return "Cannot get contact";
+      return ErrorForTranslation.CanNotGetContact;
     case 701:
-      return "Cannot create account";
+      return ErrorForTranslation.CanNotCreateAccount;
     case 704:
-      return "Such account already exists";
+      return ErrorForTranslation.AccountExists;
     case 710:
-      return "Rest other error";
+      return ErrorForTranslation.RestOtherError;
     case 711:
-      return "Rest api disabled";
+      return ErrorForTranslation.RestApiDisabled;
     case 712:
-      return "Rest unknown method";
+      return ErrorForTranslation.RestUnknownMethod;
     case 713:
-      return "Rest invalid parameters";
+      return ErrorForTranslation.RestInvalidParameters;
     case 714:
-      return "Rest invalid credentials";
+      return ErrorForTranslation.RestInvalidCredentials;
     case 715:
-      return "Rest invalid token";
+      return ErrorForTranslation.RestInvalidToken;
     case 716:
-      return "Rest token expired";
+      return ErrorForTranslation.RestTokenExpired;
     case 717:
-      return "Rest account find failed";
+      return ErrorForTranslation.RestAccountFindFailed;
     case 719:
-      return "Rest tenant find failed";
+      return ErrorForTranslation.RestTenantFindFailed;
     case 801:
-      return "Calendars not allowed";
+      return ErrorForTranslation.CalendarsNotAllowed;
     case 802:
-      return "Files not allowed";
+      return ErrorForTranslation.FilesNotAllowed;
     case 803:
-      return "Contacts not allowed";
+      return ErrorForTranslation.ContactsNotAllowed;
     case 804:
-      return "Helpdesk user already exists";
+      return ErrorForTranslation.HelpdeskUserAlreadyExists;
     case 805:
-      return "Helpdesk system user already exists";
+      return ErrorForTranslation.HelpdeskSystemUserExists;
     case 806:
-      return "Cannot create helpdesk user";
+      return ErrorForTranslation.CanNotCreateHelpdeskUser;
     case 807:
-      return "Helpdesk unknown user";
+      return ErrorForTranslation.HelpdeskUnknownUser;
     case 808:
-      return "Helpdesk unactivated user";
+      return ErrorForTranslation.HelpdeskUnactivatedUser;
     case 810:
-      return "Voice not allowed";
+      return ErrorForTranslation.VoiceNotAllowed;
     case 811:
-      return "Incorrect file extension";
+      return ErrorForTranslation.IncorrectFileExtension;
     case 812:
-      return "You have reached your cloud storage space limit. Can't upload file.";
+      return ErrorForTranslation.CanNotUploadFileQuota;
     case 813:
-      return "Such file already exists";
+      return ErrorForTranslation.FileAlreadyExists;
     case 814:
-      return "File not found";
+      return ErrorForTranslation.FileNotFound;
     case 815:
-      return "Cannot upload file limit";
+      return ErrorForTranslation.CanNotUploadFileLimit;
     case 901:
-      return "Mail server error";
+      return ErrorForTranslation.MailServerError;
     case 999:
-      return "Unknown error";
+      return ErrorForTranslation.UnknownError;
     default:
-      return code.toString();
+      print("ATTENTION! could not get error message for server code: $code");
+      return ErrorForTranslation.UnknownError;
   }
 }

@@ -1,3 +1,4 @@
+import 'package:aurora_mail/generated/i18n.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/modules/settings/models/sync_duration.dart';
 import 'package:aurora_mail/modules/settings/models/sync_period.dart';
@@ -29,8 +30,7 @@ class _SyncSettingsAndroidState extends State<SyncSettingsAndroid> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // TODO translate
-      appBar: AppBar(title: Text("Sync")),
+      appBar: AppBar(title: Text(S.of(context).settings_sync)),
       body: BlocBuilder<SettingsBloc, SettingsState>(
         bloc: BlocProvider.of<SettingsBloc>(context),
         condition: (_, state) => state is SettingsLoaded,
@@ -42,8 +42,7 @@ class _SyncSettingsAndroidState extends State<SyncSettingsAndroid> {
               children: <Widget>[
                 ListTile(
                   leading: Icon(Icons.av_timer),
-                  // TODO translate
-                  title: Text("Sync frequency"),
+                  title: Text(S.of(context).settings_sync_frequency),
                   trailing: Text(
                     SyncFreq.freqToString(freq),
                     style: Theme.of(context).textTheme.caption,
@@ -52,8 +51,7 @@ class _SyncSettingsAndroidState extends State<SyncSettingsAndroid> {
                 ),
                 ListTile(
                   leading: Icon(MdiIcons.calendarRepeat),
-                  // TODO translate
-                  title: Text("Sync period"),
+                  title: Text(S.of(context).settings_sync_period),
                   trailing: Text(
                     SyncPeriod.periodToTitle(period),
                     style: Theme.of(context).textTheme.caption,

@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/mail/mail_table.dart';
+import 'package:aurora_mail/generated/i18n.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/message_view_bloc/bloc.dart';
@@ -104,8 +105,11 @@ class _MessageViewAndroidState extends State<MessageViewAndroid> {
 
   void _deleteMessage() async {
     final message = widget.messages[_currentPage];
-    final delete = await ConfirmationDialog.show(context, "Delete message",
-        "Are you sure you want to delete this message?", "Delete");
+    final delete = await ConfirmationDialog.show(
+        context,
+        S.of(context).messages_delete_title,
+        S.of(context).messages_delete_desc,
+        S.of(context).btn_delete);
     if (delete == true) {
       BlocProvider.of<MessagesListBloc>(context).add(DeleteMessages([message]));
       Navigator.popUntil(context, ModalRoute.withName(MessagesListRoute.name));
@@ -113,12 +117,11 @@ class _MessageViewAndroidState extends State<MessageViewAndroid> {
   }
 
   String _formatTo(Message message) {
-    final items =
-        Mail.getToForDisplay(message.toInJson, AuthBloc.currentAccount.email);
+    final items = Mail.getToForDisplay(
+        context, message.toInJson, AuthBloc.currentAccount.email);
 
-    // TODO translate
     if (items.isEmpty) {
-      return "No receivers";
+      return S.of(context).messages_no_receivers;
     } else {
       return items.join(" | ");
     }
@@ -145,20 +148,28 @@ class _MessageViewAndroidState extends State<MessageViewAndroid> {
             bloc: _messageViewBloc,
             listener: (context, state) {
               if (state is DownloadStarted) {
-                // TODO translate
-                _showSnack("Downloading ${state.fileName}...", context);
+                _showSnack(
+                    S
+                        .of(context)
+                        .messages_attachment_downloading(state.fileName),
+                    context);
               }
               if (state is DownloadFinished) {
-                // TODO translate
                 if (state.path == null) {
-                  _showSnack("Download failed", context, isError: true);
+                  _showSnack(S.of(context).messages_attachment_download_failed,
+                      context,
+                      isError: true);
                 } else {
-                  _showSnack("File downloaded into: ${state.path}", context);
+                  _showSnack(
+                      S
+                          .of(context)
+                          .messages_attachment_download_success(state.path),
+                      context);
                 }
               }
             },
             child: PageView.builder(
-              // TODO temp disabled pageview
+              // TODO temp disabled page view
               physics: new NeverScrollableScrollPhysics(),
               onPageChanged: (int i) {
                 _currentPage = i;
@@ -176,10 +187,9 @@ class _MessageViewAndroidState extends State<MessageViewAndroid> {
                   padding: EdgeInsets.all(16.0),
                   children: <Widget>[
                     Text(
-                      // TODO translate
                       message.subject.isNotEmpty
                           ? message.subject
-                          : "No subject",
+                          : S.of(context).messages_no_subject,
                       style: Theme.of(context).textTheme.display1.copyWith(
                             fontSize: 26.0,
                           ),
@@ -205,14 +215,13 @@ class _MessageViewAndroidState extends State<MessageViewAndroid> {
                       crossAxisAlignment: CrossAxisAlignment.baseline,
                       textBaseline: TextBaseline.alphabetic,
                       children: <Widget>[
-                        // TODO translate
                         Text(
                           _formatTo(message),
                           style: Theme.of(context).textTheme.caption,
                         ),
-                        // TODO translate
+
 //                      Text(
-//                        "Show details",
+//                        S.of(context).messages_show_details,
 //                        style: TextStyle(decoration: TextDecoration.underline),
 //                      ),
                       ],

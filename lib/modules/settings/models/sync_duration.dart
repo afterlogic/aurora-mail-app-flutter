@@ -14,6 +14,7 @@ class SyncFreq {
 
   static String freqToString(Freq freq) {
     switch (freq) {
+      // TODO translate
       case Freq.never:
         return "never";
       case Freq.minutes1:

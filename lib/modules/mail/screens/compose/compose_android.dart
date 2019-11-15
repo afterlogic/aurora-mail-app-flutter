@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/generated/i18n.dart';
 import 'package:aurora_mail/modules/mail/blocs/compose_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/models/compose_attachment.dart';
@@ -108,7 +109,6 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
   }
 
   void _initReplyAll() async {
-    print("VO: widget.message.ccInJson: ${widget.message.ccInJson}");
     _toEmails.addAll(MailUtils.getEmails(widget.message.fromInJson));
     _ccEmails.addAll(MailUtils.getEmails(widget.message.ccInJson));
     _subjectTextCtrl.text = MailUtils.getReplySubject(widget.message);
@@ -172,14 +172,12 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
       });
     }
 
-    // TODO translate
-    if (_toEmails.isEmpty) return _showError("Please provide receivers");
+    if (_toEmails.isEmpty) return _showError(S.of(context).error_compose_no_receivers);
     if (_attachments.where((a) => a is TempAttachmentUpload).isNotEmpty) {
       return showSnack(
           context: context,
           scaffoldState: _scaffoldKey.currentState,
-          // TODO translate
-          msg: "Please wait until attachments finish uploading",
+          msg: S.of(context).error_compose_wait_attachments,
           isError: false);
     }
 
@@ -220,8 +218,7 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
                 children: <Widget>[
                   CircularProgressIndicator(),
                   SizedBox(width: 16.0),
-                  // TODO translate
-                  Text("Sending message..."),
+                  Text(S.of(context).messages_sending),
                 ],
               ),
             ));
@@ -241,8 +238,7 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
     showSnack(
       context: context,
       scaffoldState: _scaffoldKey.currentState,
-      // TODO translate
-      msg: "Message saved in drafts",
+      msg: S.of(context).messages_saved_in_drafts,
       isError: false,
     );
   }
@@ -280,25 +276,22 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
           child: ListView(
             padding: EdgeInsets.symmetric(horizontal: 16.0),
             children: <Widget>[
-              // TODO translate
               ComposeSection(
-                label: "To",
+                label: S.of(context).messages_to,
                 textCtrl: _toTextCtrl,
                 emails: _toEmails,
               ),
               Divider(height: 0.0),
-              // TODO translate
               ComposeSection(
-                label: "CC",
+                label: S.of(context).messages_cc,
                 textCtrl: _ccTextCtrl,
                 emails: _ccEmails,
                 onCCSelected: () => setState(() => _showBCC = true),
               ),
               Divider(height: 0.0),
               if (_showBCC)
-                // TODO translate
                 ComposeSection(
-                  label: "BCC",
+                  label: S.of(context).messages_bcc,
                   textCtrl: _bccTextCtrl,
                   emails: _bccEmails,
                 ),

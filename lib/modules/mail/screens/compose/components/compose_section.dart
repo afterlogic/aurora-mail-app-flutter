@@ -45,8 +45,8 @@ class _ComposeSectionState extends State<ComposeSection> {
 
   Future _addEmail(String email) async {
     widget.textCtrl.text = "";
-    final error =
-        validateInput(email, [ValidationType.email, ValidationType.empty]);
+    final error = validateInput(
+        context, email, [ValidationType.email, ValidationType.empty]);
     if (error == null) {
       setState(() => widget.emails.add(email));
     }
