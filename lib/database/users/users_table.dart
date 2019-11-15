@@ -7,7 +7,7 @@ class Users extends Table {
 
   TextColumn get hostname => text()();
 
-  // TODO VO: find out
+  // TODO find out
   TextColumn get token => text()();
 
   IntColumn get syncFreqInSeconds =>

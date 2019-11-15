@@ -245,7 +245,7 @@ class MailApi {
       cancel: FlutterDownloader.cancel,
       onDownloadStart: () async {
         onDownloadStart();
-        // TODO VO: repair progress updating
+        // TODO repair progress updating
 //        FlutterDownloader.registerCallback(MailAttachment.downloadCallback);
       },
       onDownloadEnd: () =>
@@ -309,6 +309,28 @@ class MailApi {
 
     final body = new ApiBody(
         module: "Mail", method: "SetMessagesSeen", parameters: parameters);
+
+    final res = await sendRequest(body);
+
+    if (res["Result"] != true) {
+      throw ServerError(getErrMsg(res));
+    }
+  }
+
+  Future<void> setMessagesFlagged({
+    @required Folder folder,
+    @required List<int> uids,
+    @required bool isStarred,
+  }) async {
+    final parameters = json.encode({
+      "Folder": folder.fullNameRaw,
+      "AccountID": _accountId,
+      "Uids": uids.join(","),
+      "SetAction": isStarred,
+    });
+
+    final body = new ApiBody(
+        module: "Mail", method: "SetMessageFlagged", parameters: parameters);
 
     final res = await sendRequest(body);
 

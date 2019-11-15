@@ -17,16 +17,20 @@ class FoldersLoading extends MailState {}
 class FoldersLoaded extends MailState {
   final List<Folder> folders;
   final Folder selectedFolder;
+
   // shows only starred messages from inbox
   final bool isStarredFilterEnabled;
 
   // to fire messages events if needed
   final PostFolderLoadedAction postAction;
 
-  const FoldersLoaded(this.folders, this.selectedFolder, this.isStarredFilterEnabled, [this.postAction]);
+  const FoldersLoaded(
+      this.folders, this.selectedFolder, this.isStarredFilterEnabled,
+      [this.postAction]);
 
   @override
-  List<Object> get props => [folders, selectedFolder, postAction, isStarredFilterEnabled];
+  List<Object> get props =>
+      [folders, selectedFolder, postAction, isStarredFilterEnabled];
 }
 
 class FoldersError extends MailState {

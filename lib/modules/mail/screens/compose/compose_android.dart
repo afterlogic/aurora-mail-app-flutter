@@ -238,7 +238,6 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
     _currentDraftUid = draftUid;
     BlocProvider.of<MailBloc>(context).add(CheckFoldersMessagesChanges());
 
-    // TODO VO: not working
     showSnack(
       context: context,
       scaffoldState: _scaffoldKey.currentState,

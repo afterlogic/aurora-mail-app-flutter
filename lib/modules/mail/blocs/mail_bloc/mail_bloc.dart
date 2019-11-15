@@ -28,6 +28,7 @@ class MailBloc extends Bloc<MailEvent, MailState> {
     if (event is CheckFoldersMessagesChanges)
       yield* _checkFoldersMessagesChanges(event);
     if (event is SetSeen) yield* _setSeen(event);
+    if (event is SetStarred) yield* _setStarred(event);
   }
 
   Stream<MailState> _fetchFolders(FetchFolders event) async* {
@@ -54,7 +55,8 @@ class MailBloc extends Bloc<MailEvent, MailState> {
           _selectedFolder,
         );
 
-        yield FoldersLoaded(foldersWithInfo, _selectedFolder, _isStarredFilterEnabled);
+        yield FoldersLoaded(
+            foldersWithInfo, _selectedFolder, _isStarredFilterEnabled);
 
         final id = _selectedFolder.localId;
         _methods
@@ -92,7 +94,8 @@ class MailBloc extends Bloc<MailEvent, MailState> {
         final List<Folder> foldersWithInfo =
             await _methods.updateFoldersHash(_selectedFolder);
 
-        yield FoldersLoaded(foldersWithInfo, _selectedFolder,_isStarredFilterEnabled);
+        yield FoldersLoaded(
+            foldersWithInfo, _selectedFolder, _isStarredFilterEnabled);
 
         final id = _selectedFolder.localId;
         _methods
@@ -116,7 +119,8 @@ class MailBloc extends Bloc<MailEvent, MailState> {
         forceCurrentFolderUpdate: true,
       );
 
-      yield FoldersLoaded(foldersWithInfo, _selectedFolder, _isStarredFilterEnabled);
+      yield FoldersLoaded(
+          foldersWithInfo, _selectedFolder, _isStarredFilterEnabled);
 
       _methods
           .syncFolders(localId: id, syncSystemFolders: true)
@@ -159,6 +163,12 @@ class MailBloc extends Bloc<MailEvent, MailState> {
 
   Stream<MailState> _setSeen(SetSeen event) async* {
     await _methods.setMessagesSeen(folder: _selectedFolder, uids: event.uids);
+    add(RefreshMessages());
+  }
+
+  Stream<MailState> _setStarred(SetStarred event) async* {
+    await _methods.setMessagesStarred(
+        folder: _selectedFolder, uids: event.uids, isStarred: event.isStarred);
     add(RefreshMessages());
   }
 }

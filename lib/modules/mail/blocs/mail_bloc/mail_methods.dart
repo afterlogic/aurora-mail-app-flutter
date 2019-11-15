@@ -236,7 +236,7 @@ class MailMethods {
       return _setMessagesInfoToFolder();
     }
 
-    // TODO VO: make async
+    // TODO make async
     final uids = _takeChunk(folder.messagesInfo);
 
     // if all messages are synced
@@ -261,7 +261,7 @@ class MailMethods {
       final rawBodies = await _mailApi.getMessageBodies(
           folderName: folder.fullNameRaw, uids: uids);
 
-      // TODO VO: make async
+      // TODO make async
       final messages = Mail.getMessageObjFromServerAndUpdateInfoHasBody(
         rawBodies,
         folder.messagesInfo,
@@ -302,6 +302,19 @@ class MailMethods {
   }) {
     if (_isOffline) return null;
     return _mailApi.setMessagesSeen(folder: folder, uids: uids);
+  }
+
+  Future<void> setMessagesStarred({
+    @required Folder folder,
+    @required List<int> uids,
+    @required bool isStarred,
+  }) {
+    if (_isOffline) return null;
+    return _mailApi.setMessagesFlagged(
+      folder: folder,
+      uids: uids,
+      isStarred: isStarred,
+    );
   }
 
   Future<List<Folder>> _getOfflineFolders() async {

@@ -1,10 +1,10 @@
-import 'dart:convert';
-
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/mail/mail_table.dart';
+import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
 import 'package:aurora_mail/utils/date_formatting.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 final _expandedUids = new List<int>();
@@ -24,6 +24,7 @@ class MessageItem extends StatefulWidget {
 
 class _MessageItemState extends State<MessageItem> {
   bool _showThreads = false;
+  bool _isStarred;
   List<Message> _children = [];
 
   @override
@@ -32,6 +33,8 @@ class _MessageItemState extends State<MessageItem> {
     _children =
         widget.threads.where((t) => t.parentUid == widget.message.uid).toList();
     setState(() => _showThreads = _expandedUids.contains(widget.message.uid));
+    setState(
+        () => _isStarred = widget.message.flagsInJson.contains("\\flagged"));
   }
 
   void _toggleThreads() {
@@ -41,6 +44,12 @@ class _MessageItemState extends State<MessageItem> {
       _expandedUids.add(widget.message.uid);
     }
     setState(() => _showThreads = !_showThreads);
+  }
+
+  void _setStarred(bool isStarred) {
+    setState(() => _isStarred = isStarred);
+    BlocProvider.of<MailBloc>(context)
+        .add(SetStarred([widget.message.uid], isStarred));
   }
 
   @override
@@ -151,11 +160,26 @@ class _MessageItemState extends State<MessageItem> {
                           padding: const EdgeInsets.only(left: .0),
                           child: Icon(MdiIcons.share),
                         ),
-                      if (flags.contains(MessageFlags.starred))
-                        Padding(
-                          padding: const EdgeInsets.only(left: .0),
-                          child: Icon(Icons.star, color: Colors.amber),
-                        ),
+                      SizedBox(
+                        width: 24.0,
+                        height: 24.0,
+                        child: _isStarred
+                            ? IconButton(
+                                padding: EdgeInsets.zero,
+                                icon: Icon(Icons.star, color: Colors.amber),
+                                onPressed: () => _setStarred(false),
+                              )
+                            : IconButton(
+                                padding: EdgeInsets.zero,
+                                icon: Icon(
+                                  Icons.star_border,
+                                  color: Theme.of(context)
+                                      .disabledColor
+                                      .withOpacity(0.1),
+                                ),
+                                onPressed: () => _setStarred(true),
+                              ),
+                      ),
                     ],
                   ),
                 ],

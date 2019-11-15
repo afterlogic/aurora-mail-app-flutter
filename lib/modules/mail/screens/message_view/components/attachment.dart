@@ -21,7 +21,7 @@ class _AttachmentState extends State<Attachment> {
   Widget build(BuildContext context) {
     return BlocListener<MessageViewBloc, MessageViewState>(
       listener: (context, state) {
-        // TODO VO: repair progress updating
+        // TODO repair progress updating
 //        if (state is DownloadStarted) {
 //          setState(() {
 //            _taskProgress = widget.attachment.getDownloadTask();

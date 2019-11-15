@@ -42,3 +42,13 @@ class SetSeen extends MailEvent {
   @override
   List<Object> get props => [uids];
 }
+
+class SetStarred extends MailEvent {
+  final List<int> uids;
+  final bool isStarred;
+
+  const SetStarred(this.uids, this.isStarred);
+
+  @override
+  List<Object> get props => [uids, isStarred];
+}

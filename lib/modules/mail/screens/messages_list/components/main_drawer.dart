@@ -84,7 +84,7 @@ class _MainDrawerState extends State<MainDrawer> {
     final folderWidgets = new List<Widget>.from(items);
 
     final inboxFolder = state.folders.firstWhere(
-            (f) => f.folderType == FolderType.inbox,
+        (f) => f.folderType == FolderType.inbox,
         orElse: () => null);
     if (inboxFolder != null) {
       folderWidgets.insert(
@@ -103,7 +103,9 @@ class _MainDrawerState extends State<MainDrawer> {
   List<MailFolder> _getFolderWidgets(
       List<Folder> mailFolders, int selected, bool isStarredFilterEnabled,
       [String parentGuid]) {
-    return mailFolders.where((f) => f.parentGuid == parentGuid).map((mailFolder) {
+    return mailFolders
+        .where((f) => f.parentGuid == parentGuid)
+        .map((mailFolder) {
       return MailFolder(
         mailFolder: mailFolder,
         isSelected: selected == mailFolder.localId && !isStarredFilterEnabled,
