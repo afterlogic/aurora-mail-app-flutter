@@ -27,11 +27,12 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
 //        .get();
 //  }
 
-  Stream<List<Message>> watchMessages(String folder, int userLocalId) {
+  Stream<List<Message>> watchMessages(String folder, int userLocalId, bool starredOnly) {
     return (select(mail)
           ..where((m) => m.userLocalId.equals(userLocalId))
           ..where((m) => m.folder.equals(folder))
-          ..limit(5000)
+          ..where((m) => starredOnly ? m.flagsInJson.like("%\\flagged%") : Constant(true))
+//          ..limit(500)
           ..orderBy([
             (m) => OrderingTerm(
                 expression: m.timeStampInUTC, mode: OrderingMode.desc)

@@ -11,9 +11,9 @@ class MessagesListMethods {
   final _foldersDao = new FoldersDao(DBInstances.appDB);
   final _mailApi = new MailApi();
 
-  Stream<List<Message>> subscribeToMessages(Folder folder) {
+  Stream<List<Message>> subscribeToMessages(Folder folder, bool isStarred) {
     return _mailDao.watchMessages(
-        folder.fullNameRaw, AuthBloc.currentUser.localId);
+        folder.fullNameRaw, AuthBloc.currentUser.localId, isStarred);
   }
 
   Future<void> deleteMessages(List<Message> messages) async {

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
+import 'package:aurora_mail/modules/mail/screens/messages_list/components/starred_folder.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -75,24 +76,40 @@ class _MainDrawerState extends State<MainDrawer> {
   }
 
   Widget _buildFolders(FoldersLoaded state) {
-    final items =
-        _getFolderWidgets(state.folders, state.selectedFolder?.localId ?? -1);
+    final items = _getFolderWidgets(
+      state.folders,
+      state.selectedFolder?.localId ?? -1,
+      state.isStarredFilterEnabled,
+    );
+    final folderWidgets = new List<Widget>.from(items);
+
+    final inboxFolder = state.folders.firstWhere(
+            (f) => f.folderType == FolderType.inbox,
+        orElse: () => null);
+    if (inboxFolder != null) {
+      folderWidgets.insert(
+          1,
+          StarredFolder(
+            mailFolder: inboxFolder,
+            isSelected: state.isStarredFilterEnabled,
+          ));
+    }
     return ListView.builder(
-      itemCount: items.length,
-      itemBuilder: (_, i) => items[i],
+      itemCount: folderWidgets.length,
+      itemBuilder: (_, i) => folderWidgets[i],
     );
   }
 
-  List<MailFolder> _getFolderWidgets(List<Folder> mailFolders, int selected,
+  List<MailFolder> _getFolderWidgets(
+      List<Folder> mailFolders, int selected, bool isStarredFilterEnabled,
       [String parentGuid]) {
-    return mailFolders
-        .where((f) => f.parentGuid == parentGuid)
-        .map((mailFolder) {
+    return mailFolders.where((f) => f.parentGuid == parentGuid).map((mailFolder) {
       return MailFolder(
         mailFolder: mailFolder,
-        isSelected: selected == mailFolder.localId,
+        isSelected: selected == mailFolder.localId && !isStarredFilterEnabled,
         key: Key(mailFolder.localId.toString()),
-        children: _getFolderWidgets(mailFolders, selected, mailFolder.guid),
+        children: _getFolderWidgets(
+            mailFolders, selected, isStarredFilterEnabled, mailFolder.guid),
       );
     }).toList();
   }

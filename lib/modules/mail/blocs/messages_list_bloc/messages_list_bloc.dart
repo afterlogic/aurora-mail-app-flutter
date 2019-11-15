@@ -23,8 +23,8 @@ class MessagesListBloc extends Bloc<MessagesListEvent, MessagesListState> {
 
   Stream<MessagesListState> _subscribeToMessages(
       SubscribeToMessages event) async* {
-    final stream = _methods.subscribeToMessages(event.currentFolder);
-    yield SubscribedToMessages(stream);
+    final stream = _methods.subscribeToMessages(event.currentFolder, event.isStarred);
+    yield SubscribedToMessages(stream, event.isStarred);
   }
 
   Stream<MessagesListState> _deleteMessage(DeleteMessages event) async* {

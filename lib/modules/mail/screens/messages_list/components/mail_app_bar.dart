@@ -20,7 +20,10 @@ class MailAppBar extends StatelessWidget {
             state is FoldersEmpty,
         builder: (_, state) {
           if (state is FoldersLoaded) {
-            return Text(state.selectedFolder.name);
+            // TODO translate
+            return Text(state.isStarredFilterEnabled
+                ? "Starred"
+                : state.selectedFolder.name);
           } else if (state is FoldersLoading) {
             // TODO translate
             return Text("Loading folders...");

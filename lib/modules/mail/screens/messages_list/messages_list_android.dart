@@ -112,7 +112,8 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
   void _dispatchPostFoldersLoadedAction(FoldersLoaded state) {
     switch (state.postAction) {
       case PostFolderLoadedAction.subscribeToMessages:
-        _messagesListBloc.add(SubscribeToMessages(state.selectedFolder));
+        _messagesListBloc.add(SubscribeToMessages(
+            state.selectedFolder, state.isStarredFilterEnabled));
         break;
       case PostFolderLoadedAction.stopMessagesRefresh:
         _messagesListBloc.add(StopMessagesRefresh());
@@ -182,7 +183,8 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
                 condition: (prevState, state) => state is SubscribedToMessages,
                 builder: (context, state) {
                   if (state is SubscribedToMessages) {
-                    return _buildMessagesStream(state.messagesSub);
+                    return _buildMessagesStream(
+                        state.messagesSub, state.isStarredFilterEnabled);
                   } else {
                     return _buildMessagesLoading();
                   }
@@ -201,7 +203,8 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
 
   Widget _buildMessagesLoading() => Center(child: CircularProgressIndicator());
 
-  Widget _buildMessagesStream(Stream<List<Message>> messagesSub) {
+  Widget _buildMessagesStream(
+      Stream<List<Message>> messagesSub, bool isStarred) {
     return StreamBuilder(
       stream: messagesSub,
       builder: (ctx, AsyncSnapshot<List<Message>> snap) {
@@ -210,16 +213,19 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
             _showError(ctx, snap.error.toString());
             return ListView();
           } else if (snap.hasData && snap.data.isNotEmpty) {
-            final messagesWithoutChildren =
-                snap.data.where((m) => m.parentUid == null).toList();
-            final threads =
-                snap.data.where((m) => m.parentUid != null).toList();
+            // isStared shows FLAT structure
+            List<Message> messages = snap.data;
+            List<Message> threads = [];
 
+            if (!isStarred) {
+              messages = snap.data.where((m) => m.parentUid == null).toList();
+              threads = snap.data.where((m) => m.parentUid != null).toList();
+            }
             return ListView.separated(
               padding: EdgeInsets.only(top: 6.0, bottom: 76.0),
-              itemCount: messagesWithoutChildren.length,
+              itemCount: messages.length,
               itemBuilder: (_, i) {
-                final item = messagesWithoutChildren[i];
+                final item = messages[i];
                 return Column(
                   children: <Widget>[
                     MessageItem(
@@ -230,7 +236,7 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
                     ),
                     if (_selectedFolder != null &&
                         _selectedFolder.needsInfoUpdate &&
-                        i == messagesWithoutChildren.length - 1)
+                        i == messages.length - 1)
                       CircularProgressIndicator(),
                   ],
                 );

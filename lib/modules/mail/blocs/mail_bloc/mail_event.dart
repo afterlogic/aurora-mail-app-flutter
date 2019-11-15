@@ -26,11 +26,12 @@ class CheckFoldersMessagesChanges extends MailEvent {}
 
 class SelectFolder extends MailEvent {
   final Folder folder;
+  final bool isStarredFolder;
 
-  const SelectFolder(this.folder);
+  const SelectFolder(this.folder, {this.isStarredFolder = false});
 
   @override
-  List<Object> get props => [folder];
+  List<Object> get props => [folder, isStarredFolder];
 }
 
 class SetSeen extends MailEvent {

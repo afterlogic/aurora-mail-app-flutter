@@ -7,7 +7,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 class MailFolder extends StatelessWidget {
   final Folder mailFolder;
   final bool isSelected;
-  final List<MailFolder> children;
+  final List<Widget> children;
 
   const MailFolder(
       {Key key,

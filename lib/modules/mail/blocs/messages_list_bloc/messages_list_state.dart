@@ -13,12 +13,12 @@ class MessagesEmpty extends MessagesListState {}
 
 class SubscribedToMessages extends MessagesListState {
   final Stream<List<Message>> messagesSub;
-  // TODO VO: add isStarredMode
+  final bool isStarredFilterEnabled;
 
-  const SubscribedToMessages(this.messagesSub);
+  const SubscribedToMessages(this.messagesSub, this.isStarredFilterEnabled);
 
   @override
-  List<Object> get props => [messagesSub];
+  List<Object> get props => [messagesSub, isStarredFilterEnabled];
 }
 
 class MessagesRefreshed extends MessagesListState with AlwaysNonEqualObject {}

@@ -24,10 +24,13 @@ class MessageItem extends StatefulWidget {
 
 class _MessageItemState extends State<MessageItem> {
   bool _showThreads = false;
+  List<Message> _children = [];
 
   @override
   void initState() {
     super.initState();
+    _children =
+        widget.threads.where((t) => t.parentUid == widget.message.uid).toList();
     setState(() => _showThreads = _expandedUids.contains(widget.message.uid));
   }
 
@@ -42,11 +45,8 @@ class _MessageItemState extends State<MessageItem> {
 
   @override
   Widget build(BuildContext context) {
-    final children =
-        widget.threads.where((t) => t.parentUid == widget.message.uid).toList();
-    final hasUnreadChildren = children
-        .where((i) => !json.decode(i.flagsInJson).contains("\\seen"))
-        .isNotEmpty;
+    final hasUnreadChildren =
+        _children.where((i) => !i.flagsInJson.contains("\\seen")).isNotEmpty;
 
     final flags = Mail.getFlags(widget.message.flagsInJson);
 
@@ -90,7 +90,7 @@ class _MessageItemState extends State<MessageItem> {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
-                    if (widget.message.hasThread == true)
+                    if (_children.isNotEmpty)
                       SizedBox(
                         height: 24.0,
                         width: 24.0,
@@ -102,7 +102,7 @@ class _MessageItemState extends State<MessageItem> {
                           onPressed: _toggleThreads,
                         ),
                       ),
-                    if (widget.message.hasThread == true) SizedBox(width: 6.0),
+                    if (_children.isNotEmpty) SizedBox(width: 6.0),
                     Flexible(
                       child: Opacity(
                         opacity: widget.message.subject.isEmpty ? 0.44 : 1.0,
@@ -163,8 +163,8 @@ class _MessageItemState extends State<MessageItem> {
             ),
           ),
         ),
-        if (children.isNotEmpty && _showThreads)
-          ...children.map((t) {
+        if (_children.isNotEmpty && _showThreads)
+          ..._children.map((t) {
             return Stack(
               children: <Widget>[
                 Padding(

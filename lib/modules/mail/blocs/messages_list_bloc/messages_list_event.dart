@@ -11,11 +11,12 @@ abstract class MessagesListEvent extends Equatable {
 
 class SubscribeToMessages extends MessagesListEvent {
   final Folder currentFolder;
+  final bool isStarred;
 
-  SubscribeToMessages(this.currentFolder);
+  SubscribeToMessages(this.currentFolder, this.isStarred);
 
   @override
-  List<Object> get props => [currentFolder];
+  List<Object> get props => [currentFolder, isStarred];
 }
 
 class StopMessagesRefresh extends MessagesListEvent {}

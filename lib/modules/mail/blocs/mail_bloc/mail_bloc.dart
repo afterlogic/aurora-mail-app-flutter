@@ -11,6 +11,7 @@ class MailBloc extends Bloc<MailEvent, MailState> {
   final _methods = new MailMethods();
 
   Folder _selectedFolder;
+  bool _isStarredFilterEnabled = false;
 
   @override
   MailState get initialState => FoldersEmpty();
@@ -46,13 +47,14 @@ class MailBloc extends Bloc<MailEvent, MailState> {
         yield FoldersLoaded(
           folders,
           _selectedFolder,
+          _isStarredFilterEnabled,
           PostFolderLoadedAction.subscribeToMessages,
         );
         final List<Folder> foldersWithInfo = await _methods.updateFoldersHash(
           _selectedFolder,
         );
 
-        yield FoldersLoaded(foldersWithInfo, _selectedFolder);
+        yield FoldersLoaded(foldersWithInfo, _selectedFolder, _isStarredFilterEnabled);
 
         final id = _selectedFolder.localId;
         _methods
@@ -76,6 +78,7 @@ class MailBloc extends Bloc<MailEvent, MailState> {
     yield FoldersLoaded(
       folders,
       _selectedFolder,
+      _isStarredFilterEnabled,
       PostFolderLoadedAction.stopMessagesRefresh,
     );
   }
@@ -89,7 +92,7 @@ class MailBloc extends Bloc<MailEvent, MailState> {
         final List<Folder> foldersWithInfo =
             await _methods.updateFoldersHash(_selectedFolder);
 
-        yield FoldersLoaded(foldersWithInfo, _selectedFolder);
+        yield FoldersLoaded(foldersWithInfo, _selectedFolder,_isStarredFilterEnabled);
 
         final id = _selectedFolder.localId;
         _methods
@@ -99,7 +102,7 @@ class MailBloc extends Bloc<MailEvent, MailState> {
         yield FoldersEmpty();
       }
 
-      yield FoldersLoaded(newFolders, _selectedFolder);
+      yield FoldersLoaded(newFolders, _selectedFolder, _isStarredFilterEnabled);
     } catch (err, s) {
       yield FoldersError(formatError(err, s));
     }
@@ -113,7 +116,7 @@ class MailBloc extends Bloc<MailEvent, MailState> {
         forceCurrentFolderUpdate: true,
       );
 
-      yield FoldersLoaded(foldersWithInfo, _selectedFolder);
+      yield FoldersLoaded(foldersWithInfo, _selectedFolder, _isStarredFilterEnabled);
 
       _methods
           .syncFolders(localId: id, syncSystemFolders: true)
@@ -127,9 +130,11 @@ class MailBloc extends Bloc<MailEvent, MailState> {
     try {
       final List<Folder> folders = await _methods.getFolders();
       _selectedFolder = event.folder;
+      _isStarredFilterEnabled = event.isStarredFolder;
       yield FoldersLoaded(
         folders,
         _selectedFolder,
+        event.isStarredFolder,
         PostFolderLoadedAction.subscribeToMessages,
       );
 
