@@ -169,6 +169,13 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
               },
             ),
             BlocListener<SettingsBloc, SettingsState>(
+              condition: (prev, next) {
+                if (prev is SettingsLoaded && next is SettingsLoaded && prev.darkThemeEnabled != next.darkThemeEnabled) {
+                  return false;
+                } else {
+                  return true;
+                }
+              },
               listener: (BuildContext context, state) {
                 if (state is SettingsLoaded) {
                   if (state.syncFrequency != null) {
