@@ -59,8 +59,13 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
   void initState() {
     super.initState();
     _currentDraftUid = widget.draftUid;
-    _prepareMessage();
     _initSaveToDraftsTimer();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _prepareMessage();
   }
 
   @override
@@ -71,9 +76,11 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
   }
 
   void _prepareMessage() {
-    final str = widget.message.attachmentsInJson;
-    final attachments = MailAttachment.fromJsonString(str);
-    _bloc.add(GetComposeAttachments(attachments));
+    if (widget.composeType != ComposeType.none) {
+      final str = widget.message.attachmentsInJson;
+      final attachments = MailAttachment.fromJsonString(str);
+      _bloc.add(GetComposeAttachments(attachments));
+    }
 
     switch (widget.composeType) {
       case ComposeType.none:
@@ -99,20 +106,20 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
 
   void _initForward() async {
     _subjectTextCtrl.text = MailUtils.getForwardSubject(widget.message);
-    _bodyTextCtrl.text = MailUtils.getForwardBody(widget.message);
+    _bodyTextCtrl.text = MailUtils.getForwardBody(context, widget.message);
   }
 
   void _initReply() async {
     _toEmails.addAll(MailUtils.getEmails(widget.message.fromInJson));
     _subjectTextCtrl.text = MailUtils.getReplySubject(widget.message);
-    _bodyTextCtrl.text = MailUtils.getReplyBody(widget.message);
+    _bodyTextCtrl.text = MailUtils.getReplyBody(context, widget.message);
   }
 
   void _initReplyAll() async {
     _toEmails.addAll(MailUtils.getEmails(widget.message.fromInJson));
     _ccEmails.addAll(MailUtils.getEmails(widget.message.ccInJson));
     _subjectTextCtrl.text = MailUtils.getReplySubject(widget.message);
-    _bodyTextCtrl.text = MailUtils.getReplyBody(widget.message);
+    _bodyTextCtrl.text = MailUtils.getReplyBody(context, widget.message);
   }
 
   void _initSaveToDraftsTimer() async {
@@ -172,7 +179,8 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
       });
     }
 
-    if (_toEmails.isEmpty) return _showError(S.of(context).error_compose_no_receivers);
+    if (_toEmails.isEmpty)
+      return _showError(S.of(context).error_compose_no_receivers);
     if (_attachments.where((a) => a is TempAttachmentUpload).isNotEmpty) {
       return showSnack(
           context: context,
@@ -295,14 +303,12 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
                   textCtrl: _bccTextCtrl,
                   emails: _bccEmails,
                 ),
-              if (_showBCC)
-                Divider(height: 0.0),
+              if (_showBCC) Divider(height: 0.0),
               ComposeSubject(
                 textCtrl: _subjectTextCtrl,
                 onAttach: () => _bloc.add(UploadAttachment()),
               ),
-              if (_attachments.isNotEmpty)
-                Divider(height: 0.0),
+              if (_attachments.isNotEmpty) Divider(height: 0.0),
               BlocBuilder<ComposeBloc, ComposeState>(builder: (_, state) {
                 if (state is ConvertingAttachments) {
                   return Padding(

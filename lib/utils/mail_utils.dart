@@ -1,7 +1,9 @@
 import 'dart:convert';
 
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/generated/i18n.dart';
 import 'package:aurora_mail/utils/date_formatting.dart';
+import 'package:flutter/widgets.dart';
 import 'package:html/parser.dart';
 
 class MailUtils {
@@ -100,47 +102,48 @@ class MailUtils {
     return reSubject;
   }
 
-  static String getReplyBody(Message message) {
+  static String getReplyBody(BuildContext context, Message message) {
     final baseMessage = htmlToPlain(message.html ?? "");
     final time = DateFormatting.formatDateFromSeconds(
         timestamp: message.timeStampInUTC,
-        format: "EEE, MMM d, yyyy 'at' HH:mm");
+        format: S.of(context).compose_reply_date_format);
 
     final from = getDisplayName(message.fromInJson);
 
-    return "\n\nOn $time, $from wrote:\n$baseMessage";
+    return "\n\n${S.of(context).compose_reply_body_title(time, from)}\n$baseMessage";
   }
 
   static String getForwardSubject(Message message) {
     return "Fwd: ${message.subject}";
   }
 
-  static String getForwardBody(Message message) {
+  static String getForwardBody(BuildContext context, Message message) {
     final baseMessage = htmlToPlain(message.html ?? "");
 
-    // TODO translate
-    String forwardMessage = "\n\n---- Original Message ----\n";
+    String forwardMessage =
+        "\n\n${S.of(context).compose_forward_body_original_message}\n";
 
     final from = MailUtils.getEmails(message.fromInJson).join(", ");
     final to = MailUtils.getEmails(message.toInJson).join(", ");
     final cc = MailUtils.getEmails(message.ccInJson).join(", ");
     final bcc = MailUtils.getEmails(message.bccInJson).join(", ");
 
-    // TODO translate
-    if (from.isNotEmpty) forwardMessage += "From: $from\n";
-    // TODO translate
-    if (to.isNotEmpty) forwardMessage += "To: $to\n";
-    // TODO translate
-    if (cc.isNotEmpty) forwardMessage += "CC: $cc\n";
-    // TODO translate
-    if (bcc.isNotEmpty) forwardMessage += "BCC: $bcc\n";
+    if (from.isNotEmpty)
+      forwardMessage += S.of(context).compose_forward_from(from) + "\n";
+    if (to.isNotEmpty)
+      forwardMessage += S.of(context).compose_forward_to(to) + "\n";
+    if (cc.isNotEmpty)
+      forwardMessage += S.of(context).compose_forward_cc(cc) + "\n";
+    if (bcc.isNotEmpty)
+      forwardMessage += S.of(context).compose_forward_bcc(bcc) + "\n";
 
     final date = DateFormatting.formatDateFromSeconds(
-        timestamp: message.timeStampInUTC, format: "EEE, MMM d, yyyy, HH:mm");
-    // TODO translate
-    forwardMessage += "Sent: $date\n";
+        timestamp: message.timeStampInUTC,
+        format: S.of(context).compose_forward_date_format);
+    forwardMessage += S.of(context).compose_forward_sent(date) + "\n";
 
-    forwardMessage += "Subject: ${message.subject}\n\n";
+    forwardMessage +=
+        S.of(context).compose_forward_subject(message.subject) + "\n\n";
     return forwardMessage + baseMessage;
   }
 }

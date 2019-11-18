@@ -1,3 +1,6 @@
+import 'package:aurora_mail/generated/i18n.dart';
+import 'package:flutter/cupertino.dart';
+
 enum Freq {
   never,
   minutes1,
@@ -12,23 +15,22 @@ enum Freq {
 class SyncFreq {
   static const _NEVER_IN_SECONDS = Duration.secondsPerDay * 365 * 1000;
 
-  static String freqToString(Freq freq) {
+  static String freqToString(BuildContext context, Freq freq) {
     switch (freq) {
-      // TODO translate
       case Freq.never:
-        return "never";
+        return S.of(context).settings_sync_frequency_never;
       case Freq.minutes1:
-        return "1 minute";
+        return S.of(context).settings_sync_frequency_minutes1;
       case Freq.minutes5:
-        return "5 minutes";
+        return S.of(context).settings_sync_frequency_minutes5;
       case Freq.hours1:
-        return "1 hour";
+        return S.of(context).settings_sync_frequency_hours1;
       case Freq.hours2:
-        return "2 hours";
+        return S.of(context).settings_sync_frequency_hours2;
       case Freq.daily:
-        return "daily";
+        return S.of(context).settings_sync_frequency_daily;
       case Freq.monthly:
-        return "monthly";
+        return S.of(context).settings_sync_frequency_monthly;
       default:
         return null;
     }

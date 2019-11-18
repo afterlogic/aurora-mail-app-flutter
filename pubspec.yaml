@@ -13,6 +13,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
 
+  flutter_cupertino_localizations: ^1.0.1
 
   # state management
   flutter_bloc: ^1.0.0

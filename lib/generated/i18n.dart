@@ -22,9 +22,14 @@ class S implements WidgetsLocalizations {
   TextDirection get textDirection => TextDirection.ltr;
 
   String get app_title => "Mail Client";
+  String get btn_cancel => "Cancel";
   String get btn_delete => "Delete";
   String get btn_login => "Login";
   String get btn_to_spam => "To spam";
+  String get compose_body_placeholder => "Message text...";
+  String get compose_forward_body_original_message => "---- Original Message ----";
+  String get compose_forward_date_format => "EEE, MMM d, yyyy, HH:mm";
+  String get compose_reply_date_format => "EEE, MMM d, yyyy 'at' HH:mm";
   String get error_compose_no_receivers => "Please provide receivers";
   String get error_compose_wait_attachments => "Please wait until attachments finish uploading";
   String get error_connection => "Could not connect to the server";
@@ -53,7 +58,7 @@ class S implements WidgetsLocalizations {
   String get error_server_can_not_update_group => "Cannot update group";
   String get error_server_can_not_upload_file_limit => "Cannot upload file limit";
   String get error_server_can_not_upload_file_quota => "You have reached your cloud storage space limit. Can't upload file.";
-  String get error_server_captcha_error => "_captcha error";
+  String get error_server_captcha_error => "Captcha error";
   String get error_server_contact_data_has_been_modified_by_another_application => "Contact data has been modified by another application";
   String get error_server_contacts_not_allowed => "Contacts not allowed";
   String get error_server_data_base_error => "DataBase error";
@@ -138,6 +143,13 @@ class S implements WidgetsLocalizations {
   String get settings_sync_period_months3 => "3 months";
   String get settings_sync_period_months6 => "6 months";
   String get settings_sync_period_years1 => "1 year";
+  String compose_forward_bcc(String emails) => "BCC: $emails";
+  String compose_forward_cc(String emails) => "CC: $emails";
+  String compose_forward_from(String emails) => "From: $emails";
+  String compose_forward_sent(String date) => "Sent: $date";
+  String compose_forward_subject(String subject) => "Subject: $subject";
+  String compose_forward_to(String emails) => "To: $emails";
+  String compose_reply_body_title(String time, String from) => "On $time, $from wrote:";
   String messages_attachment_download_success(String path) => "File downloaded into: $path";
   String messages_attachment_downloading(String fileName) => "Downloading $fileName...";
   String messages_attachment_upload_success(String path) => "File uploaded into: $path";
@@ -145,8 +157,560 @@ class S implements WidgetsLocalizations {
   String messages_delete_desc_with_subject(String subject) => "Are you sure you want to delete $subject?";
 }
 
+class $ru extends S {
+  const $ru();
+
+  @override
+  TextDirection get textDirection => TextDirection.ltr;
+
+  @override
+  String get error_server_rest_invalid_parameters => "Неверные параметры REST";
+  @override
+  String get settings_sync_period_years1 => "1 год";
+  @override
+  String get compose_body_placeholder => "Текст сообщения...";
+  @override
+  String get error_server_file_not_found => "Файл не найден";
+  @override
+  String get error_input_validation_email => "Адрес электронной почты не действителен";
+  @override
+  String get messages_attachment_upload_failed => "Загрузка не удалась";
+  @override
+  String get error_server_voice_not_allowed => "Голос не разрешен";
+  @override
+  String get error_server_data_base_error => "Ошибка базы данных";
+  @override
+  String get error_server_can_not_create_group => "Не удалось создать группу";
+  @override
+  String get settings_sync_frequency_daily => "ежедневно";
+  @override
+  String get error_server_invalid_input_parameter => "Неверный входной параметр";
+  @override
+  String get messages_from => "От кого";
+  @override
+  String get error_server_invalid_token => "Неверный токен";
+  @override
+  String get messages_attachment_upload => "Загрузить файл";
+  @override
+  String get messages_no_receivers => "Нет получателей";
+  @override
+  String get error_server_user_already_exists => "Такой пользователь уже существует";
+  @override
+  String get error_server_can_not_update_contact => "Не удается обновить контакт";
+  @override
+  String get error_server_can_not_get_contact => "Не удалось получить контакт";
+  @override
+  String get settings_common => "Общие";
+  @override
+  String get error_server_contact_data_has_been_modified_by_another_application => "Контактные данные были изменены другим приложением";
+  @override
+  String get messages_cc => "CC";
+  @override
+  String get error_server_method_not_found => "Метод не найден";
+  @override
+  String get settings_sync_frequency_monthly => "ежемесячно";
+  @override
+  String get error_server_module_not_found => "Модуль не найден";
+  @override
+  String get messages_list_app_bar_loading_folders => "Загрузка папок...";
+  @override
+  String get compose_forward_date_format => "EEE, d MMM, yyyy, HH:mm";
+  @override
+  String get error_server_captcha_error => "Ошибка Captcha";
+  @override
+  String get error_server_unknown_email => "Неизвестный адрес электронной почты";
+  @override
+  String get error_server_helpdesk_system_user_exists => "Пользователь системы службы поддержки уже существует";
+  @override
+  String get error_server_rest_unknown_method => "Неизвестный метод REST";
+  @override
+  String get error_server_rest_invalid_token => "Недействительный токен REST";
+  @override
+  String get error_compose_wait_attachments => "Пожалуйста, дождитесь окончания загрузки файлов";
+  @override
+  String get error_server_files_not_allowed => "Файлы не разрешены";
+  @override
+  String get messages_saved_in_drafts => "Сообщение сохранено в черновиках";
+  @override
+  String get error_server_demo_account => "Демо аккаунт";
+  @override
+  String get messages_to => "Кому";
+  @override
+  String get login_input_password => "Пароль";
+  @override
+  String get error_server_user_not_allowed => "Пользователь не допущен";
+  @override
+  String get btn_to_spam => "Спам";
+  @override
+  String get settings_sync_frequency_hours1 => "1 час";
+  @override
+  String get settings_sync_frequency_hours2 => "два часа";
+  @override
+  String get messages_subject => "Тема";
+  @override
+  String get btn_delete => "Удалить";
+  @override
+  String get messages_list_app_bar_logout => "Выйти";
+  @override
+  String get error_server_system_not_configured => "Система не настроена";
+  @override
+  String get error_server_rest_api_disabled => "Остальные API отключены";
+  @override
+  String get app_title => "Mail Client";
+  @override
+  String get error_server_helpdesk_unactivated_user => "Неактивированный пользователь службы поддержки";
+  @override
+  String get messages_attachment_upload_cancel => "Отменить загрузку";
+  @override
+  String get error_server_calendars_not_allowed => "Календари не разрешены";
+  @override
+  String get error_server_can_not_save_settings => "Не удалось сохранить настройки";
+  @override
+  String get btn_cancel => "Отмена";
+  @override
+  String get error_server_contacts_not_allowed => "Контакты не разрешены";
+  @override
+  String get error_server_can_not_change_password => "Не удалось сменить пароль";
+  @override
+  String get error_server_rest_tenant_find_failed => "Не удалось найти тенант REST";
+  @override
+  String get messages_list_app_bar_settings => "Настройки";
+  @override
+  String get messages_attachment_download => "Скачать файл";
+  @override
+  String get error_unknown => "Неизвестная ошибка";
+  @override
+  String get messages_attachment_download_cancel => "Отменить загрузку";
+  @override
+  String get error_server_rest_other_error => "Другая ошибка REST";
+  @override
+  String get messages_reply_all => "Ответить всем";
+  @override
+  String get messages_sending => "Отправка сообщения...";
+  @override
+  String get messages_show_details => "Показать детали";
+  @override
+  String get messages_no_subject => "Без темы";
+  @override
+  String get settings => "Настройки";
+  @override
+  String get settings_sync_frequency => "Обновлять каждые";
+  @override
+  String get messages_attachment_delete => "Удалить файл";
+  @override
+  String get messages_bcc => "BCC";
+  @override
+  String get settings_sync_period => "Синхронизировать письма за";
+  @override
+  String get error_login_input_email => "Пожалуйста, введите адрес электронной почты";
+  @override
+  String get folders_empty => "Нет папок";
+  @override
+  String get btn_login => "Войти";
+  @override
+  String get error_server_license_limit => "Лимит лицензии";
+  @override
+  String get error_server_rest_invalid_credentials => "Неверные учетные данные REST";
+  @override
+  String get compose_reply_date_format => "EEE, d MMM, yyyy 'в' HH:mm";
+  @override
+  String get error_server_access_denied => "Доступ запрещён";
+  @override
+  String get messages_empty => "Нет сообщений";
+  @override
+  String get error_login_auto_discover => "Не удалось обнаружить домен по этому адресу электронной почты, укажите URL-адрес вашего сервера вручную.";
+  @override
+  String get settings_sync_frequency_minutes1 => "1 минута";
+  @override
+  String get settings_sync_period_months1 => "1 месяц";
+  @override
+  String get messages_forward => "Переслать";
+  @override
+  String get settings_sync_period_months3 => "3 месяца";
+  @override
+  String get error_input_validation_empty => "Это поле обязательно к заполнению";
+  @override
+  String get error_login_no_accounts => "У этого пользователя нет почтовых аккаунтов";
+  @override
+  String get settings_sync_period_months6 => "6 месяцев";
+  @override
+  String get error_input_validation_name_illegal_symbol => "Имя не может содержать \"/ \\ *? <> |:\"";
+  @override
+  String get compose_forward_body_original_message => "---- Оригинал сообщения ----";
+  @override
+  String get error_compose_no_receivers => "Пожалуйста, укажите получателей";
+  @override
+  String get messages_delete_title => "Удалить сообщение";
+  @override
+  String get error_server_rest_account_find_failed => "Не удалось найти аккаунт REST";
+  @override
+  String get error_server_file_already_exists => "Такой файл уже существует";
+  @override
+  String get error_server_can_not_update_group => "Не удается обновить группу";
+  @override
+  String get error_server_rest_token_expired => "Срок действия токена REST истек";
+  @override
+  String get error_login_input_hostname => "Пожалуйста, введите имя хоста";
+  @override
+  String get error_login_input_password => "Пожалуйста введите пароль";
+  @override
+  String get settings_sync => "Синхронизация";
+  @override
+  String get settings_sync_frequency_minutes5 => "5 минут";
+  @override
+  String get error_server_account_exists => "Такой аккаунт уже существует";
+  @override
+  String get error_server_can_not_create_account => "Не могу создать аккаунт";
+  @override
+  String get messages_to_me => "Мне";
+  @override
+  String get settings_sync_period_all_time => "все время";
+  @override
+  String get login_input_email => "Почта";
+  @override
+  String get error_input_validation_unique_name => "Это имя уже существует";
+  @override
+  String get messages_delete_desc => "Вы уверены, что хотите удалить это сообщение?";
+  @override
+  String get error_server_license_problem => "Проблема с лицензией";
+  @override
+  String get error_server_auth_error => "Неверный адрес электронной почты / пароль";
+  @override
+  String get settings_language => "Язык";
+  @override
+  String get error_connection => "Не удалось установить соединение с сервером";
+  @override
+  String get settings_sync_frequency_never => "отключено";
+  @override
+  String get login_input_host => "Хост";
+  @override
+  String get error_server_can_not_upload_file_quota => "Вы достигли лимита места в облачном хранилище. Не могу загрузить файл.";
+  @override
+  String get error_server_helpdesk_unknown_user => "Служба поддержки неизвестного пользователя";
+  @override
+  String get messages_reply => "Ответить";
+  @override
+  String get folders_starred => "Отмеченные";
+  @override
+  String get error_server_mail_server_error => "Ошибка почтового сервера";
+  @override
+  String get error_server_can_not_create_helpdesk_user => "Невозможно создать пользователя службы поддержки";
+  @override
+  String get error_server_incorrect_file_extension => "Неверное расширение файла";
+  @override
+  String get error_server_account_old_password_not_correct => "Неправильный старый пароль учетной записи";
+  @override
+  String get error_server_can_not_upload_file_limit => "Превышен лимит загрузки файлов";
+  @override
+  String get messages_attachment_download_failed => "Ошибка загрузки";
+  @override
+  String get error_server_helpdesk_user_already_exists => "Пользователь службы поддержки уже существует";
+  @override
+  String get error_server_can_not_create_contact => "Не удалось создать контакт";
+  @override
+  String messages_attachment_downloading(String fileName) => "Загрузка $fileName...";
+  @override
+  String compose_forward_from(String emails) => "От: $emails";
+  @override
+  String compose_forward_to(String emails) => "Кому: $emails";
+  @override
+  String messages_attachment_download_success(String path) => "Файл загружен в: $path";
+  @override
+  String compose_forward_sent(String date) => "Отправлено: $date";
+  @override
+  String messages_attachment_upload_success(String path) => "Файл загружен в: $path";
+  @override
+  String compose_forward_subject(String subject) => "Тема: $subject";
+  @override
+  String messages_attachment_uploading(String fileName) => "Загрузка $fileName...";
+  @override
+  String compose_forward_bcc(String emails) => "BCC: $emails";
+  @override
+  String compose_forward_cc(String emails) => "CC: $emails";
+  @override
+  String messages_delete_desc_with_subject(String subject) => "Вы уверены, что хотите удалить $subject?";
+  @override
+  String compose_reply_body_title(String time, String from) => "$time, $from написал:";
+}
+
 class $en extends S {
   const $en();
+}
+
+class $tr extends S {
+  const $tr();
+
+  @override
+  TextDirection get textDirection => TextDirection.ltr;
+
+  @override
+  String get error_server_rest_invalid_parameters => "Geçersiz parametreleri dinlendir";
+  @override
+  String get settings_sync_period_years1 => "1 yıl";
+  @override
+  String get compose_body_placeholder => "Mektup metni...";
+  @override
+  String get error_server_file_not_found => "Dosya bulunamadı";
+  @override
+  String get error_input_validation_email => "E-posta geçerli değil";
+  @override
+  String get messages_attachment_upload_failed => "Yükleme başarısız";
+  @override
+  String get error_server_voice_not_allowed => "Sese izin verilmiyor";
+  @override
+  String get error_server_data_base_error => "Veri tabanı hatası";
+  @override
+  String get error_server_can_not_create_group => "Grup oluşturulamıyor";
+  @override
+  String get settings_sync_frequency_daily => "günlük";
+  @override
+  String get error_server_invalid_input_parameter => "Geçersiz giriş parametresi";
+  @override
+  String get messages_from => "Itibaren";
+  @override
+  String get error_server_invalid_token => "Geçersiz belirteç";
+  @override
+  String get messages_attachment_upload => "Ek yükle";
+  @override
+  String get messages_no_receivers => "Alıcı yok";
+  @override
+  String get error_server_user_already_exists => "Böyle bir kullanıcı zaten var";
+  @override
+  String get error_server_can_not_update_contact => "Kişi güncellenemiyor";
+  @override
+  String get error_server_can_not_get_contact => "İletişim kurulamıyor";
+  @override
+  String get settings_common => "Yaygın";
+  @override
+  String get error_server_contact_data_has_been_modified_by_another_application => "Kişi verileri başka bir uygulama tarafından değiştirildi";
+  @override
+  String get messages_cc => "CC";
+  @override
+  String get error_server_method_not_found => "Yöntem bulunamadı";
+  @override
+  String get settings_sync_frequency_monthly => "aylık";
+  @override
+  String get error_server_module_not_found => "Modül bulunamadı";
+  @override
+  String get messages_list_app_bar_loading_folders => "Klasörler yükleniyor ...";
+  @override
+  String get compose_forward_date_format => "EEE, MMM d, yyyy, HH: mm";
+  @override
+  String get error_server_captcha_error => "CAPTCHA hatası";
+  @override
+  String get error_server_unknown_email => "bilinmeyen e-posta";
+  @override
+  String get error_server_helpdesk_system_user_exists => "Yardım masası sistemi kullanıcısı zaten var";
+  @override
+  String get error_server_rest_unknown_method => "Geri kalan bilinmeyen yöntem";
+  @override
+  String get error_server_rest_invalid_token => "Geçersiz belirteci bırak";
+  @override
+  String get error_compose_wait_attachments => "Lütfen eklerin yüklenmesini tamamlayana kadar bekleyin";
+  @override
+  String get error_server_files_not_allowed => "Dosyalara izin verilmiyor";
+  @override
+  String get messages_saved_in_drafts => "Mesaj taslaklara kaydedildi";
+  @override
+  String get error_server_demo_account => "Demo hesabı";
+  @override
+  String get messages_to => "Için";
+  @override
+  String get login_input_password => "Parola";
+  @override
+  String get error_server_user_not_allowed => "Kullanıcıya izin verilmiyor";
+  @override
+  String get btn_to_spam => "Spam yapmak";
+  @override
+  String get settings_sync_frequency_hours1 => "1 saat";
+  @override
+  String get settings_sync_frequency_hours2 => "2 saat";
+  @override
+  String get messages_subject => "Konu, özne";
+  @override
+  String get btn_delete => "Sil";
+  @override
+  String get messages_list_app_bar_logout => "Çıkış Yap";
+  @override
+  String get error_server_system_not_configured => "Sistem yapılandırılmamış";
+  @override
+  String get error_server_rest_api_disabled => "Api dinlenme";
+  @override
+  String get app_title => "Mail Client";
+  @override
+  String get error_server_helpdesk_unactivated_user => "Yardım masası etkin olmayan kullanıcı";
+  @override
+  String get messages_attachment_upload_cancel => "Yüklemeyi iptal et";
+  @override
+  String get error_server_calendars_not_allowed => "Takvime izin verilmiyor";
+  @override
+  String get error_server_can_not_save_settings => "Ayarlar kaydedilemiyor";
+  @override
+  String get btn_cancel => "Iptal";
+  @override
+  String get error_server_contacts_not_allowed => "Kişilere izin verilmiyor";
+  @override
+  String get error_server_can_not_change_password => "Şifre değiştirilemiyor";
+  @override
+  String get error_server_rest_tenant_find_failed => "Dinlenme kiracı bulma başarısız oldu";
+  @override
+  String get messages_list_app_bar_settings => "Ayarlar";
+  @override
+  String get messages_attachment_download => "Eki indir";
+  @override
+  String get error_unknown => "Bilinmeyen hata";
+  @override
+  String get messages_attachment_download_cancel => "İndirmeyi iptal et";
+  @override
+  String get error_server_rest_other_error => "Diğer hatayı dinlendir";
+  @override
+  String get messages_reply_all => "Tümünü yanıtla";
+  @override
+  String get messages_sending => "Mesaj göndermek...";
+  @override
+  String get messages_show_details => "Detayları göster";
+  @override
+  String get messages_no_subject => "Konu yok";
+  @override
+  String get settings => "Ayarlar";
+  @override
+  String get settings_sync_frequency => "Senkronizasyon frekansı";
+  @override
+  String get messages_attachment_delete => "Eki sil";
+  @override
+  String get messages_bcc => "BCC";
+  @override
+  String get settings_sync_period => "Senkronizasyon dönemi";
+  @override
+  String get error_login_input_email => "Lütfen e-posta giriniz";
+  @override
+  String get folders_empty => "Klasör yok";
+  @override
+  String get btn_login => "Oturum aç";
+  @override
+  String get error_server_license_limit => "Lisans sınırı";
+  @override
+  String get error_server_rest_invalid_credentials => "Geçersiz kimlik bilgilerini dinlendir";
+  @override
+  String get compose_reply_date_format => "EEE, MMM d, yyyy, HH: mm";
+  @override
+  String get error_server_access_denied => "Erişim reddedildi";
+  @override
+  String get messages_empty => "Mesaj yok";
+  @override
+  String get error_login_auto_discover => "Bu e-postadaki etki alanı tespit edilemedi, lütfen sunucunuzun URL'sini manuel olarak belirtin.";
+  @override
+  String get settings_sync_frequency_minutes1 => "1 dakika";
+  @override
+  String get settings_sync_period_months1 => "1 ay";
+  @override
+  String get messages_forward => "İleri, ileriye doğru";
+  @override
+  String get settings_sync_period_months3 => "3 ay";
+  @override
+  String get error_input_validation_empty => "Bu alan gereklidir";
+  @override
+  String get error_login_no_accounts => "Bu kullanıcının posta hesabı yok";
+  @override
+  String get settings_sync_period_months6 => "6 ay";
+  @override
+  String get error_input_validation_name_illegal_symbol => "Ad, \"/\\*?<>|:\" İçeremez";
+  @override
+  String get compose_forward_body_original_message => "---- Orijinal mesaj ----";
+  @override
+  String get error_compose_no_receivers => "Lütfen alıcıları sağlayın";
+  @override
+  String get messages_delete_title => "Mesajı sil";
+  @override
+  String get error_server_rest_account_find_failed => "Kalan hesap bulma başarısız";
+  @override
+  String get error_server_file_already_exists => "Böyle bir dosya zaten var";
+  @override
+  String get error_server_can_not_update_group => "Grup güncellenemiyor";
+  @override
+  String get error_server_rest_token_expired => "Kalan simgenin süresi doldu";
+  @override
+  String get error_login_input_hostname => "Lütfen ana bilgisayar adını girin";
+  @override
+  String get error_login_input_password => "Lütfen şifre giriniz";
+  @override
+  String get settings_sync => "Eşitleme";
+  @override
+  String get settings_sync_frequency_minutes5 => "5 dakika";
+  @override
+  String get error_server_account_exists => "Böyle bir hesap zaten var";
+  @override
+  String get error_server_can_not_create_account => "Hesap oluşturulamıyor";
+  @override
+  String get messages_to_me => "Bana göre";
+  @override
+  String get settings_sync_period_all_time => "her zaman";
+  @override
+  String get login_input_email => "E-posta";
+  @override
+  String get error_input_validation_unique_name => "Bu isim zaten var";
+  @override
+  String get messages_delete_desc => "Bu mesajı silmek istediğinden emin misin?";
+  @override
+  String get error_server_license_problem => "Lisans sorunu";
+  @override
+  String get error_server_auth_error => "Geçersiz e-posta / şifre";
+  @override
+  String get settings_language => "Dil";
+  @override
+  String get error_connection => "Sunucuya bağlanılamadı";
+  @override
+  String get settings_sync_frequency_never => "asla";
+  @override
+  String get login_input_host => "Evsahibi";
+  @override
+  String get error_server_can_not_upload_file_quota => "Bulut depolama alanı sınırınıza ulaştınız. Dosya yüklenemiyor.";
+  @override
+  String get error_server_helpdesk_unknown_user => "Yardım masası bilinmeyen kullanıcı";
+  @override
+  String get messages_reply => "Cevap";
+  @override
+  String get folders_starred => "Yıldızlı";
+  @override
+  String get error_server_mail_server_error => "Posta sunucusu hatası";
+  @override
+  String get error_server_can_not_create_helpdesk_user => "Yardım masası kullanıcısı oluşturulamıyor";
+  @override
+  String get error_server_incorrect_file_extension => "Yanlış dosya uzantısı";
+  @override
+  String get error_server_account_old_password_not_correct => "Hesabın eski şifresi doğru değil";
+  @override
+  String get error_server_can_not_upload_file_limit => "Dosya sınırı yüklenemiyor";
+  @override
+  String get messages_attachment_download_failed => "Yükleme başarısız";
+  @override
+  String get error_server_helpdesk_user_already_exists => "Yardım masası kullanıcısı zaten var";
+  @override
+  String get error_server_can_not_create_contact => "Kişi oluşturulamıyor";
+  @override
+  String messages_attachment_downloading(String fileName) => "$fileName indiriliyor ...";
+  @override
+  String compose_forward_from(String emails) => "Gönderen: $emails";
+  @override
+  String compose_forward_to(String emails) => "Kime: $emails";
+  @override
+  String messages_attachment_download_success(String path) => "İndirilen dosya: $path";
+  @override
+  String compose_forward_sent(String date) => "Gönderildi: $date";
+  @override
+  String messages_attachment_upload_success(String path) => "Dosya yüklendi: $path";
+  @override
+  String compose_forward_subject(String subject) => "Konu: $subject";
+  @override
+  String messages_attachment_uploading(String fileName) => "$fileName yükleniyor ...";
+  @override
+  String compose_forward_bcc(String emails) => "BCC: $emails";
+  @override
+  String compose_forward_cc(String emails) => "CC: $emails";
+  @override
+  String messages_delete_desc_with_subject(String subject) => "$subject silmek istediğinize emin misiniz?";
+  @override
+  String compose_reply_body_title(String time, String from) => "$time, $from yazdı:";
 }
 
 class GeneratedLocalizationsDelegate extends LocalizationsDelegate<S> {
@@ -154,7 +718,9 @@ class GeneratedLocalizationsDelegate extends LocalizationsDelegate<S> {
 
   List<Locale> get supportedLocales {
     return const <Locale>[
+      Locale("ru", ""),
       Locale("en", ""),
+      Locale("tr", ""),
     ];
   }
 
@@ -179,8 +745,14 @@ class GeneratedLocalizationsDelegate extends LocalizationsDelegate<S> {
     final String lang = getLang(locale);
     if (lang != null) {
       switch (lang) {
+        case "ru":
+          S.current = const $ru();
+          return SynchronousFuture<S>(S.current);
         case "en":
           S.current = const $en();
+          return SynchronousFuture<S>(S.current);
+        case "tr":
+          S.current = const $tr();
           return SynchronousFuture<S>(S.current);
         default:
           // NO-OP.

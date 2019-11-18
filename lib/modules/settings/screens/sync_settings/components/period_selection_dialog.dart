@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:aurora_mail/generated/i18n.dart';
 import 'package:aurora_mail/modules/settings/models/sync_period.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -27,10 +28,10 @@ class PeriodSelectionDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     if (Platform.isIOS) {
       return CupertinoActionSheet(
-        title: Text("Sync period"),
+        title: Text(S.of(context).settings_sync_period),
         actions: Period.values
             .map((period) => CupertinoButton(
-                  child: Text(SyncPeriod.periodToTitle(period)),
+                  child: Text(SyncPeriod.periodToTitle(context, period)),
                   onPressed: () {
                     onItemSelected(period);
                     Navigator.pop(context);
@@ -38,7 +39,7 @@ class PeriodSelectionDialog extends StatelessWidget {
                 ))
             .toList(),
         cancelButton: CupertinoButton(
-          child: Text("Cancel"),
+          child: Text(S.of(context).btn_cancel),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -48,14 +49,14 @@ class PeriodSelectionDialog extends StatelessWidget {
       return AlertDialog(
           contentPadding: EdgeInsets.zero,
           titlePadding: EdgeInsets.all(24.0),
-          title: Text("Sync period"),
+          title: Text(S.of(context).settings_sync_period),
           content: SizedBox(
             height: 310.0,
             width: 400.0,
             child: ListView(
               children: Period.values.map((period) {
                 return RadioListTile(
-                  title: Text(SyncPeriod.periodToTitle(period)),
+                  title: Text(SyncPeriod.periodToTitle(context, period)),
                   value: period,
                   groupValue: selectedItem,
                   onChanged: (val) {

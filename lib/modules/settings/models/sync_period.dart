@@ -1,3 +1,5 @@
+import 'package:aurora_mail/generated/i18n.dart';
+import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 
 enum Period {
@@ -9,19 +11,18 @@ enum Period {
 }
 
 class SyncPeriod {
-  static String periodToTitle(Period period) {
+  static String periodToTitle(BuildContext context, Period period) {
     switch (period) {
-      // TODO translate
       case Period.allTime:
-        return "all time";
+        return S.of(context).settings_sync_period_all_time;
       case Period.months1:
-        return "1 month";
+        return S.of(context).settings_sync_period_months1;
       case Period.months3:
-        return "3 months";
+        return S.of(context).settings_sync_period_months3;
       case Period.months6:
-        return "6 months";
+        return S.of(context).settings_sync_period_months6;
       case Period.years1:
-        return "1 year";
+        return S.of(context).settings_sync_period_years1;
       default:
         return null;
     }

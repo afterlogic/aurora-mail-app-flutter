@@ -6,6 +6,7 @@ import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'app_navigation.dart';
 import 'auth/blocs/auth_bloc/bloc.dart';
@@ -63,8 +64,14 @@ class _AppState extends State<App> {
                         title: "Aurora Mail",
                         onGenerateRoute: AppNavigation.onGenerateRoute,
                         theme: AppTheme.light,
-                        localizationsDelegates: [S.delegate],
+                        localizationsDelegates: [
+                          GlobalMaterialLocalizations.delegate,
+                          GlobalWidgetsLocalizations.delegate,
+                          GlobalCupertinoLocalizations.delegate,
+                          S.delegate
+                        ],
                         supportedLocales: S.delegate.supportedLocales,
+//                        localeResolutionCallback: S.delegate.resolution(fallback: new Locale("en", "")),
                         initialRoute: authState.needsLogin
                             ? LoginRoute.name
                             : MessagesListRoute.name,

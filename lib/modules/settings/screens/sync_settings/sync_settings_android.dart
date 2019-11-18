@@ -44,7 +44,7 @@ class _SyncSettingsAndroidState extends State<SyncSettingsAndroid> {
                   leading: Icon(Icons.av_timer),
                   title: Text(S.of(context).settings_sync_frequency),
                   trailing: Text(
-                    SyncFreq.freqToString(freq),
+                    SyncFreq.freqToString(context, freq),
                     style: Theme.of(context).textTheme.caption,
                   ),
                   onTap: () => _onFreqDurationSelected(context, freq),
@@ -53,7 +53,7 @@ class _SyncSettingsAndroidState extends State<SyncSettingsAndroid> {
                   leading: Icon(MdiIcons.calendarRepeat),
                   title: Text(S.of(context).settings_sync_period),
                   trailing: Text(
-                    SyncPeriod.periodToTitle(period),
+                    SyncPeriod.periodToTitle(context, period),
                     style: Theme.of(context).textTheme.caption,
                   ),
                   onTap: () => _onPeriodSelected(context, period),
