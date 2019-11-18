@@ -76,7 +76,9 @@ class _MessageItemState extends State<MessageItem> {
             confirmDismiss: (_) => ConfirmationDialog.show(
                 context,
                 S.of(context).messages_delete_title,
-                S.of(context).messages_delete_desc_with_subject(widget.message.subject),
+                S
+                    .of(context)
+                    .messages_delete_desc_with_subject(widget.message.subject),
                 S.of(context).btn_delete),
             onDismissed: (_) => widget.onDeleteMessage(widget.message),
             background: Container(
@@ -142,7 +144,9 @@ class _MessageItemState extends State<MessageItem> {
                       SizedBox(width: 6.0),
                       Text(
                         DateFormatting.formatDateFromSeconds(
-                            timestamp: widget.message.timeStampInUTC),
+                          widget.message.timeStampInUTC,
+                          Localizations.localeOf(context).languageCode,
+                        ),
                         style: textStyle,
                       ),
                     ],
@@ -203,7 +207,7 @@ class _MessageItemState extends State<MessageItem> {
                   bottom: 0,
                   child: Container(
                     width: 4.0,
-                    color: Theme.of(context).primaryColor,
+                    color: Theme.of(context).accentColor,
                   ),
                 ),
               ],

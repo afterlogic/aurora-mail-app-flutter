@@ -54,6 +54,7 @@ class _MainDrawerState extends State<MainDrawer> {
                     BlocProvider.of<MailBloc>(context).add(RefreshFolders());
                     return _refreshCompleter.future;
                   },
+                  backgroundColor: Colors.white,
                   child: BlocBuilder<MailBloc, MailState>(
                       bloc: BlocProvider.of<MailBloc>(context),
                       condition: (prevState, state) =>

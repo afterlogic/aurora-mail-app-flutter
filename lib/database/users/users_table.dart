@@ -15,5 +15,7 @@ class Users extends Table {
 
   TextColumn get syncPeriod => text().nullable()();
 
+  BoolColumn get darkThemeEnabled => boolean().withDefault(Constant(false))();
+
   TextColumn get language => text().nullable()();
 }

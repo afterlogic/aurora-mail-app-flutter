@@ -27,12 +27,15 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     if (event is UpdateConnectivity) yield* _updateConnectivity(event);
     if (event is SetFrequency) yield* _setFrequency(event);
     if (event is SetPeriod) yield* _setPeriod(event);
+    if (event is SetDarkTheme) yield* _setDarkTheme(event);
   }
 
   Stream<SettingsState> _initSyncSettings(InitSettings event) async* {
     yield SettingsLoaded(
-        syncFrequency: event.user.syncFreqInSeconds,
-        syncPeriod: event.user.syncPeriod);
+      syncFrequency: event.user.syncFreqInSeconds,
+      syncPeriod: event.user.syncPeriod,
+      darkThemeEnabled: event.user.darkThemeEnabled,
+    );
   }
 
   Stream<SettingsState> _updateConnectivity(UpdateConnectivity event) async* {
@@ -66,6 +69,17 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       yield (state as SettingsLoaded).copyWith(syncPeriod: Value(periodString));
     } else {
       yield SettingsLoaded(syncPeriod: periodString);
+    }
+  }
+
+  Stream<SettingsState> _setDarkTheme(SetDarkTheme event) async* {
+    await _methods.setDarkTheme(event.darkThemeEnabled);
+
+    if (state is SettingsLoaded) {
+      yield (state as SettingsLoaded)
+          .copyWith(darkThemeEnabled: Value(event.darkThemeEnabled));
+    } else {
+      yield SettingsLoaded(darkThemeEnabled: event.darkThemeEnabled);
     }
   }
 }

@@ -38,6 +38,15 @@ class SetPeriod extends SettingsEvent {
   List<Object> get props => [period];
 }
 
+class SetDarkTheme extends SettingsEvent {
+  final bool darkThemeEnabled;
+
+  SetDarkTheme(this.darkThemeEnabled);
+
+  @override
+  List<Object> get props => [darkThemeEnabled];
+}
+
 class UpdateConnectivity extends SettingsEvent {
   final ConnectivityResult connection;
 

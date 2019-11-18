@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 
 class AppTheme {
   static final light = ThemeData(
-//    brightness: Brightness.dark,
+    brightness: Brightness.light,
     primarySwatch: Colors.blue,
-//    primaryColor: Color(0xFFe95052),
-//    accentColor: Color(0xFF43cebe),
+    splashFactory: InkRipple.splashFactory,
+  );
+  static final dark = ThemeData(
+    brightness: Brightness.dark,
+    accentColor: Colors.blue,
     splashFactory: InkRipple.splashFactory,
   );
 }

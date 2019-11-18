@@ -127,6 +127,7 @@ class S implements WidgetsLocalizations {
   String get messages_to_me => "To me";
   String get settings => "Settings";
   String get settings_common => "Common";
+  String get settings_dark_theme => "Dark theme";
   String get settings_language => "Language";
   String get settings_sync => "Sync";
   String get settings_sync_frequency => "Sync frequency";
@@ -402,6 +403,8 @@ class $ru extends S {
   @override
   String get error_server_can_not_upload_file_limit => "Превышен лимит загрузки файлов";
   @override
+  String get settings_dark_theme => "Тёмная тема";
+  @override
   String get messages_attachment_download_failed => "Ошибка загрузки";
   @override
   String get error_server_helpdesk_user_already_exists => "Пользователь службы поддержки уже существует";
@@ -430,7 +433,7 @@ class $ru extends S {
   @override
   String messages_delete_desc_with_subject(String subject) => "Вы уверены, что хотите удалить $subject?";
   @override
-  String compose_reply_body_title(String time, String from) => "$time, $from написал:";
+  String compose_reply_body_title(String time, String from) => "В $time, $from написал(а):";
 }
 
 class $en extends S {
@@ -526,7 +529,7 @@ class $tr extends S {
   @override
   String get settings_sync_frequency_hours2 => "2 saat";
   @override
-  String get messages_subject => "Konu, özne";
+  String get messages_subject => "Konu";
   @override
   String get btn_delete => "Sil";
   @override
@@ -681,6 +684,8 @@ class $tr extends S {
   String get error_server_account_old_password_not_correct => "Hesabın eski şifresi doğru değil";
   @override
   String get error_server_can_not_upload_file_limit => "Dosya sınırı yüklenemiyor";
+  @override
+  String get settings_dark_theme => "Karanlık Tema";
   @override
   String get messages_attachment_download_failed => "Yükleme başarısız";
   @override

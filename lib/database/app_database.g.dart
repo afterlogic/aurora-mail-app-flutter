@@ -53,7 +53,6 @@ class Message extends DataClass implements Insertable<Message> {
   final String foundedContentLocationUrlsInJson;
   final String attachmentsInJson;
   final String customInJson;
-
   Message(
       {@required this.localId,
       @required this.uid,
@@ -100,7 +99,6 @@ class Message extends DataClass implements Insertable<Message> {
       @required this.foundedContentLocationUrlsInJson,
       this.attachmentsInJson,
       @required this.customInJson});
-
   factory Message.fromData(Map<String, dynamic> data, GeneratedDatabase db,
       {String prefix}) {
     final effectivePrefix = prefix ?? '';
@@ -195,7 +193,6 @@ class Message extends DataClass implements Insertable<Message> {
           .mapFromDatabaseResponse(data['${effectivePrefix}custom_in_json']),
     );
   }
-
   factory Message.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return Message(
@@ -250,7 +247,6 @@ class Message extends DataClass implements Insertable<Message> {
       customInJson: serializer.fromJson<String>(json['customInJson']),
     );
   }
-
   @override
   Map<String, dynamic> toJson(
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
@@ -534,7 +530,6 @@ class Message extends DataClass implements Insertable<Message> {
         attachmentsInJson: attachmentsInJson ?? this.attachmentsInJson,
         customInJson: customInJson ?? this.customInJson,
       );
-
   @override
   String toString() {
     return (StringBuffer('Message(')
@@ -635,7 +630,6 @@ class Message extends DataClass implements Insertable<Message> {
                                                                           $mrjc(
                                                                               fromToDisplay.hashCode,
                                                                               $mrjc(ccInJson.hashCode, $mrjc(bccInJson.hashCode, $mrjc(senderInJson.hashCode, $mrjc(replyToInJson.hashCode, $mrjc(hasAttachments.hashCode, $mrjc(hasVcardAttachment.hashCode, $mrjc(hasIcalAttachment.hashCode, $mrjc(importance.hashCode, $mrjc(draftInfoInJson.hashCode, $mrjc(sensitivity.hashCode, $mrjc(downloadAsEmlUrl.hashCode, $mrjc(hash.hashCode, $mrjc(headers.hashCode, $mrjc(inReplyTo.hashCode, $mrjc(references.hashCode, $mrjc(readingConfirmationAddressee.hashCode, $mrjc(html.hashCode, $mrjc(plain.hashCode, $mrjc(rtl.hashCode, $mrjc(extendInJson.hashCode, $mrjc(safety.hashCode, $mrjc(hasExternals.hashCode, $mrjc(foundedCIDsInJson.hashCode, $mrjc(foundedContentLocationUrlsInJson.hashCode, $mrjc(attachmentsInJson.hashCode, customInJson.hashCode)))))))))))))))))))))))))))))))))))))))))))));
-
   @override
   bool operator ==(other) =>
       identical(this, other) ||
@@ -734,7 +728,6 @@ class MailCompanion extends UpdateCompanion<Message> {
   final Value<String> foundedContentLocationUrlsInJson;
   final Value<String> attachmentsInJson;
   final Value<String> customInJson;
-
   const MailCompanion({
     this.localId = const Value.absent(),
     this.uid = const Value.absent(),
@@ -782,7 +775,6 @@ class MailCompanion extends UpdateCompanion<Message> {
     this.attachmentsInJson = const Value.absent(),
     this.customInJson = const Value.absent(),
   });
-
   MailCompanion copyWith(
       {Value<int> localId,
       Value<int> uid,
@@ -886,15 +878,11 @@ class MailCompanion extends UpdateCompanion<Message> {
 class $MailTable extends Mail with TableInfo<$MailTable, Message> {
   final GeneratedDatabase _db;
   final String _alias;
-
   $MailTable(this._db, [this._alias]);
-
   final VerificationMeta _localIdMeta = const VerificationMeta('localId');
   GeneratedIntColumn _localId;
-
   @override
   GeneratedIntColumn get localId => _localId ??= _constructLocalId();
-
   GeneratedIntColumn _constructLocalId() {
     return GeneratedIntColumn('local_id', $tableName, false,
         hasAutoIncrement: true, declaredAsPrimaryKey: true);
@@ -902,10 +890,8 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
 
   final VerificationMeta _uidMeta = const VerificationMeta('uid');
   GeneratedIntColumn _uid;
-
   @override
   GeneratedIntColumn get uid => _uid ??= _constructUid();
-
   GeneratedIntColumn _constructUid() {
     return GeneratedIntColumn(
       'uid',
@@ -917,11 +903,9 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
   final VerificationMeta _userLocalIdMeta =
       const VerificationMeta('userLocalId');
   GeneratedIntColumn _userLocalId;
-
   @override
   GeneratedIntColumn get userLocalId =>
       _userLocalId ??= _constructUserLocalId();
-
   GeneratedIntColumn _constructUserLocalId() {
     return GeneratedIntColumn(
       'user_local_id',
@@ -933,11 +917,9 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
   final VerificationMeta _uniqueUidInFolderMeta =
       const VerificationMeta('uniqueUidInFolder');
   GeneratedTextColumn _uniqueUidInFolder;
-
   @override
   GeneratedTextColumn get uniqueUidInFolder =>
       _uniqueUidInFolder ??= _constructUniqueUidInFolder();
-
   GeneratedTextColumn _constructUniqueUidInFolder() {
     return GeneratedTextColumn('unique_uid_in_folder', $tableName, false,
         $customConstraints: 'UNIQUE');
@@ -945,10 +927,8 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
 
   final VerificationMeta _parentUidMeta = const VerificationMeta('parentUid');
   GeneratedIntColumn _parentUid;
-
   @override
   GeneratedIntColumn get parentUid => _parentUid ??= _constructParentUid();
-
   GeneratedIntColumn _constructParentUid() {
     return GeneratedIntColumn(
       'parent_uid',
@@ -959,10 +939,8 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
 
   final VerificationMeta _messageIdMeta = const VerificationMeta('messageId');
   GeneratedTextColumn _messageId;
-
   @override
   GeneratedTextColumn get messageId => _messageId ??= _constructMessageId();
-
   GeneratedTextColumn _constructMessageId() {
     return GeneratedTextColumn(
       'message_id',
@@ -973,10 +951,8 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
 
   final VerificationMeta _folderMeta = const VerificationMeta('folder');
   GeneratedTextColumn _folder;
-
   @override
   GeneratedTextColumn get folder => _folder ??= _constructFolder();
-
   GeneratedTextColumn _constructFolder() {
     return GeneratedTextColumn(
       'folder',
@@ -988,11 +964,9 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
   final VerificationMeta _flagsInJsonMeta =
       const VerificationMeta('flagsInJson');
   GeneratedTextColumn _flagsInJson;
-
   @override
   GeneratedTextColumn get flagsInJson =>
       _flagsInJson ??= _constructFlagsInJson();
-
   GeneratedTextColumn _constructFlagsInJson() {
     return GeneratedTextColumn(
       'flags_in_json',
@@ -1003,10 +977,8 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
 
   final VerificationMeta _hasThreadMeta = const VerificationMeta('hasThread');
   GeneratedBoolColumn _hasThread;
-
   @override
   GeneratedBoolColumn get hasThread => _hasThread ??= _constructHasThread();
-
   GeneratedBoolColumn _constructHasThread() {
     return GeneratedBoolColumn(
       'has_thread',
@@ -1017,10 +989,8 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
 
   final VerificationMeta _subjectMeta = const VerificationMeta('subject');
   GeneratedTextColumn _subject;
-
   @override
   GeneratedTextColumn get subject => _subject ??= _constructSubject();
-
   GeneratedTextColumn _constructSubject() {
     return GeneratedTextColumn(
       'subject',
@@ -1031,10 +1001,8 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
 
   final VerificationMeta _sizeMeta = const VerificationMeta('size');
   GeneratedIntColumn _size;
-
   @override
   GeneratedIntColumn get size => _size ??= _constructSize();
-
   GeneratedIntColumn _constructSize() {
     return GeneratedIntColumn(
       'size',
@@ -1045,10 +1013,8 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
 
   final VerificationMeta _textSizeMeta = const VerificationMeta('textSize');
   GeneratedIntColumn _textSize;
-
   @override
   GeneratedIntColumn get textSize => _textSize ??= _constructTextSize();
-
   GeneratedIntColumn _constructTextSize() {
     return GeneratedIntColumn(
       'text_size',
@@ -1059,10 +1025,8 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
 
   final VerificationMeta _truncatedMeta = const VerificationMeta('truncated');
   GeneratedBoolColumn _truncated;
-
   @override
   GeneratedBoolColumn get truncated => _truncated ??= _constructTruncated();
-
   GeneratedBoolColumn _constructTruncated() {
     return GeneratedBoolColumn(
       'truncated',
@@ -1074,11 +1038,9 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
   final VerificationMeta _internalTimeStampInUTCMeta =
       const VerificationMeta('internalTimeStampInUTC');
   GeneratedIntColumn _internalTimeStampInUTC;
-
   @override
   GeneratedIntColumn get internalTimeStampInUTC =>
       _internalTimeStampInUTC ??= _constructInternalTimeStampInUTC();
-
   GeneratedIntColumn _constructInternalTimeStampInUTC() {
     return GeneratedIntColumn(
       'internal_time_stamp_in_u_t_c',
@@ -1090,12 +1052,10 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
   final VerificationMeta _receivedOrDateTimeStampInUTCMeta =
       const VerificationMeta('receivedOrDateTimeStampInUTC');
   GeneratedIntColumn _receivedOrDateTimeStampInUTC;
-
   @override
   GeneratedIntColumn get receivedOrDateTimeStampInUTC =>
       _receivedOrDateTimeStampInUTC ??=
           _constructReceivedOrDateTimeStampInUTC();
-
   GeneratedIntColumn _constructReceivedOrDateTimeStampInUTC() {
     return GeneratedIntColumn(
       'received_or_date_time_stamp_in_u_t_c',
@@ -1107,11 +1067,9 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
   final VerificationMeta _timeStampInUTCMeta =
       const VerificationMeta('timeStampInUTC');
   GeneratedIntColumn _timeStampInUTC;
-
   @override
   GeneratedIntColumn get timeStampInUTC =>
       _timeStampInUTC ??= _constructTimeStampInUTC();
-
   GeneratedIntColumn _constructTimeStampInUTC() {
     return GeneratedIntColumn(
       'time_stamp_in_u_t_c',
@@ -1122,10 +1080,8 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
 
   final VerificationMeta _toInJsonMeta = const VerificationMeta('toInJson');
   GeneratedTextColumn _toInJson;
-
   @override
   GeneratedTextColumn get toInJson => _toInJson ??= _constructToInJson();
-
   GeneratedTextColumn _constructToInJson() {
     return GeneratedTextColumn(
       'to_in_json',
@@ -1136,10 +1092,8 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
 
   final VerificationMeta _fromInJsonMeta = const VerificationMeta('fromInJson');
   GeneratedTextColumn _fromInJson;
-
   @override
   GeneratedTextColumn get fromInJson => _fromInJson ??= _constructFromInJson();
-
   GeneratedTextColumn _constructFromInJson() {
     return GeneratedTextColumn(
       'from_in_json',
@@ -1151,11 +1105,9 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
   final VerificationMeta _fromToDisplayMeta =
       const VerificationMeta('fromToDisplay');
   GeneratedTextColumn _fromToDisplay;
-
   @override
   GeneratedTextColumn get fromToDisplay =>
       _fromToDisplay ??= _constructFromToDisplay();
-
   GeneratedTextColumn _constructFromToDisplay() {
     return GeneratedTextColumn(
       'from_to_display',
@@ -1166,10 +1118,8 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
 
   final VerificationMeta _ccInJsonMeta = const VerificationMeta('ccInJson');
   GeneratedTextColumn _ccInJson;
-
   @override
   GeneratedTextColumn get ccInJson => _ccInJson ??= _constructCcInJson();
-
   GeneratedTextColumn _constructCcInJson() {
     return GeneratedTextColumn(
       'cc_in_json',
@@ -1180,10 +1130,8 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
 
   final VerificationMeta _bccInJsonMeta = const VerificationMeta('bccInJson');
   GeneratedTextColumn _bccInJson;
-
   @override
   GeneratedTextColumn get bccInJson => _bccInJson ??= _constructBccInJson();
-
   GeneratedTextColumn _constructBccInJson() {
     return GeneratedTextColumn(
       'bcc_in_json',
@@ -1195,11 +1143,9 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
   final VerificationMeta _senderInJsonMeta =
       const VerificationMeta('senderInJson');
   GeneratedTextColumn _senderInJson;
-
   @override
   GeneratedTextColumn get senderInJson =>
       _senderInJson ??= _constructSenderInJson();
-
   GeneratedTextColumn _constructSenderInJson() {
     return GeneratedTextColumn(
       'sender_in_json',
@@ -1211,11 +1157,9 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
   final VerificationMeta _replyToInJsonMeta =
       const VerificationMeta('replyToInJson');
   GeneratedTextColumn _replyToInJson;
-
   @override
   GeneratedTextColumn get replyToInJson =>
       _replyToInJson ??= _constructReplyToInJson();
-
   GeneratedTextColumn _constructReplyToInJson() {
     return GeneratedTextColumn(
       'reply_to_in_json',
@@ -1227,11 +1171,9 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
   final VerificationMeta _hasAttachmentsMeta =
       const VerificationMeta('hasAttachments');
   GeneratedBoolColumn _hasAttachments;
-
   @override
   GeneratedBoolColumn get hasAttachments =>
       _hasAttachments ??= _constructHasAttachments();
-
   GeneratedBoolColumn _constructHasAttachments() {
     return GeneratedBoolColumn(
       'has_attachments',
@@ -1243,11 +1185,9 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
   final VerificationMeta _hasVcardAttachmentMeta =
       const VerificationMeta('hasVcardAttachment');
   GeneratedBoolColumn _hasVcardAttachment;
-
   @override
   GeneratedBoolColumn get hasVcardAttachment =>
       _hasVcardAttachment ??= _constructHasVcardAttachment();
-
   GeneratedBoolColumn _constructHasVcardAttachment() {
     return GeneratedBoolColumn(
       'has_vcard_attachment',
@@ -1259,11 +1199,9 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
   final VerificationMeta _hasIcalAttachmentMeta =
       const VerificationMeta('hasIcalAttachment');
   GeneratedBoolColumn _hasIcalAttachment;
-
   @override
   GeneratedBoolColumn get hasIcalAttachment =>
       _hasIcalAttachment ??= _constructHasIcalAttachment();
-
   GeneratedBoolColumn _constructHasIcalAttachment() {
     return GeneratedBoolColumn(
       'has_ical_attachment',
@@ -1274,10 +1212,8 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
 
   final VerificationMeta _importanceMeta = const VerificationMeta('importance');
   GeneratedIntColumn _importance;
-
   @override
   GeneratedIntColumn get importance => _importance ??= _constructImportance();
-
   GeneratedIntColumn _constructImportance() {
     return GeneratedIntColumn(
       'importance',
@@ -1289,11 +1225,9 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
   final VerificationMeta _draftInfoInJsonMeta =
       const VerificationMeta('draftInfoInJson');
   GeneratedTextColumn _draftInfoInJson;
-
   @override
   GeneratedTextColumn get draftInfoInJson =>
       _draftInfoInJson ??= _constructDraftInfoInJson();
-
   GeneratedTextColumn _constructDraftInfoInJson() {
     return GeneratedTextColumn(
       'draft_info_in_json',
@@ -1305,11 +1239,9 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
   final VerificationMeta _sensitivityMeta =
       const VerificationMeta('sensitivity');
   GeneratedIntColumn _sensitivity;
-
   @override
   GeneratedIntColumn get sensitivity =>
       _sensitivity ??= _constructSensitivity();
-
   GeneratedIntColumn _constructSensitivity() {
     return GeneratedIntColumn(
       'sensitivity',
@@ -1321,11 +1253,9 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
   final VerificationMeta _downloadAsEmlUrlMeta =
       const VerificationMeta('downloadAsEmlUrl');
   GeneratedTextColumn _downloadAsEmlUrl;
-
   @override
   GeneratedTextColumn get downloadAsEmlUrl =>
       _downloadAsEmlUrl ??= _constructDownloadAsEmlUrl();
-
   GeneratedTextColumn _constructDownloadAsEmlUrl() {
     return GeneratedTextColumn(
       'download_as_eml_url',
@@ -1336,10 +1266,8 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
 
   final VerificationMeta _hashMeta = const VerificationMeta('hash');
   GeneratedTextColumn _hash;
-
   @override
   GeneratedTextColumn get hash => _hash ??= _constructHash();
-
   GeneratedTextColumn _constructHash() {
     return GeneratedTextColumn(
       'hash',
@@ -1350,10 +1278,8 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
 
   final VerificationMeta _headersMeta = const VerificationMeta('headers');
   GeneratedTextColumn _headers;
-
   @override
   GeneratedTextColumn get headers => _headers ??= _constructHeaders();
-
   GeneratedTextColumn _constructHeaders() {
     return GeneratedTextColumn(
       'headers',
@@ -1364,10 +1290,8 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
 
   final VerificationMeta _inReplyToMeta = const VerificationMeta('inReplyTo');
   GeneratedTextColumn _inReplyTo;
-
   @override
   GeneratedTextColumn get inReplyTo => _inReplyTo ??= _constructInReplyTo();
-
   GeneratedTextColumn _constructInReplyTo() {
     return GeneratedTextColumn(
       'in_reply_to',
@@ -1378,10 +1302,8 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
 
   final VerificationMeta _referencesMeta = const VerificationMeta('references');
   GeneratedTextColumn _references;
-
   @override
   GeneratedTextColumn get references => _references ??= _constructReferences();
-
   GeneratedTextColumn _constructReferences() {
     return GeneratedTextColumn(
       'message_references',
@@ -1393,12 +1315,10 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
   final VerificationMeta _readingConfirmationAddresseeMeta =
       const VerificationMeta('readingConfirmationAddressee');
   GeneratedTextColumn _readingConfirmationAddressee;
-
   @override
   GeneratedTextColumn get readingConfirmationAddressee =>
       _readingConfirmationAddressee ??=
           _constructReadingConfirmationAddressee();
-
   GeneratedTextColumn _constructReadingConfirmationAddressee() {
     return GeneratedTextColumn(
       'reading_confirmation_addressee',
@@ -1409,10 +1329,8 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
 
   final VerificationMeta _htmlMeta = const VerificationMeta('html');
   GeneratedTextColumn _html;
-
   @override
   GeneratedTextColumn get html => _html ??= _constructHtml();
-
   GeneratedTextColumn _constructHtml() {
     return GeneratedTextColumn(
       'html',
@@ -1423,10 +1341,8 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
 
   final VerificationMeta _plainMeta = const VerificationMeta('plain');
   GeneratedTextColumn _plain;
-
   @override
   GeneratedTextColumn get plain => _plain ??= _constructPlain();
-
   GeneratedTextColumn _constructPlain() {
     return GeneratedTextColumn(
       'plain',
@@ -1437,10 +1353,8 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
 
   final VerificationMeta _rtlMeta = const VerificationMeta('rtl');
   GeneratedBoolColumn _rtl;
-
   @override
   GeneratedBoolColumn get rtl => _rtl ??= _constructRtl();
-
   GeneratedBoolColumn _constructRtl() {
     return GeneratedBoolColumn(
       'rtl',
@@ -1452,11 +1366,9 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
   final VerificationMeta _extendInJsonMeta =
       const VerificationMeta('extendInJson');
   GeneratedTextColumn _extendInJson;
-
   @override
   GeneratedTextColumn get extendInJson =>
       _extendInJson ??= _constructExtendInJson();
-
   GeneratedTextColumn _constructExtendInJson() {
     return GeneratedTextColumn(
       'extend_in_json',
@@ -1467,10 +1379,8 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
 
   final VerificationMeta _safetyMeta = const VerificationMeta('safety');
   GeneratedBoolColumn _safety;
-
   @override
   GeneratedBoolColumn get safety => _safety ??= _constructSafety();
-
   GeneratedBoolColumn _constructSafety() {
     return GeneratedBoolColumn(
       'safety',
@@ -1482,11 +1392,9 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
   final VerificationMeta _hasExternalsMeta =
       const VerificationMeta('hasExternals');
   GeneratedBoolColumn _hasExternals;
-
   @override
   GeneratedBoolColumn get hasExternals =>
       _hasExternals ??= _constructHasExternals();
-
   GeneratedBoolColumn _constructHasExternals() {
     return GeneratedBoolColumn(
       'has_externals',
@@ -1498,11 +1406,9 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
   final VerificationMeta _foundedCIDsInJsonMeta =
       const VerificationMeta('foundedCIDsInJson');
   GeneratedTextColumn _foundedCIDsInJson;
-
   @override
   GeneratedTextColumn get foundedCIDsInJson =>
       _foundedCIDsInJson ??= _constructFoundedCIDsInJson();
-
   GeneratedTextColumn _constructFoundedCIDsInJson() {
     return GeneratedTextColumn(
       'founded_c_i_ds_in_json',
@@ -1514,12 +1420,10 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
   final VerificationMeta _foundedContentLocationUrlsInJsonMeta =
       const VerificationMeta('foundedContentLocationUrlsInJson');
   GeneratedTextColumn _foundedContentLocationUrlsInJson;
-
   @override
   GeneratedTextColumn get foundedContentLocationUrlsInJson =>
       _foundedContentLocationUrlsInJson ??=
           _constructFoundedContentLocationUrlsInJson();
-
   GeneratedTextColumn _constructFoundedContentLocationUrlsInJson() {
     return GeneratedTextColumn(
       'founded_content_location_urls_in_json',
@@ -1531,11 +1435,9 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
   final VerificationMeta _attachmentsInJsonMeta =
       const VerificationMeta('attachmentsInJson');
   GeneratedTextColumn _attachmentsInJson;
-
   @override
   GeneratedTextColumn get attachmentsInJson =>
       _attachmentsInJson ??= _constructAttachmentsInJson();
-
   GeneratedTextColumn _constructAttachmentsInJson() {
     return GeneratedTextColumn(
       'attachments_in_json',
@@ -1547,11 +1449,9 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
   final VerificationMeta _customInJsonMeta =
       const VerificationMeta('customInJson');
   GeneratedTextColumn _customInJson;
-
   @override
   GeneratedTextColumn get customInJson =>
       _customInJson ??= _constructCustomInJson();
-
   GeneratedTextColumn _constructCustomInJson() {
     return GeneratedTextColumn(
       'custom_in_json',
@@ -1608,15 +1508,12 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
         attachmentsInJson,
         customInJson
       ];
-
   @override
   $MailTable get asDslTable => this;
-
   @override
   String get $tableName => _alias ?? 'mail';
   @override
   final String actualTableName = 'mail';
-
   @override
   VerificationContext validateIntegrity(MailCompanion d,
       {bool isInserting = false}) {
@@ -1935,7 +1832,6 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
 
   @override
   Set<GeneratedColumn> get $primaryKey => {localId};
-
   @override
   Message map(Map<String, dynamic> data, {String tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
@@ -2131,7 +2027,6 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
   final bool extended;
   final bool alwaysRefresh;
   final String messagesInfoInJson;
-
   LocalFolder(
       {@required this.localId,
       @required this.guid,
@@ -2155,7 +2050,6 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
       this.extended,
       @required this.alwaysRefresh,
       this.messagesInfoInJson});
-
   factory LocalFolder.fromData(Map<String, dynamic> data, GeneratedDatabase db,
       {String prefix}) {
     final effectivePrefix = prefix ?? '';
@@ -2205,7 +2099,6 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
           data['${effectivePrefix}messages_info_in_json']),
     );
   }
-
   factory LocalFolder.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return LocalFolder(
@@ -2234,7 +2127,6 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
           serializer.fromJson<String>(json['messagesInfoInJson']),
     );
   }
-
   @override
   Map<String, dynamic> toJson(
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
@@ -2375,7 +2267,6 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
         alwaysRefresh: alwaysRefresh ?? this.alwaysRefresh,
         messagesInfoInJson: messagesInfoInJson ?? this.messagesInfoInJson,
       );
-
   @override
   String toString() {
     return (StringBuffer('LocalFolder(')
@@ -2449,7 +2340,6 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
                                                                           $mrjc(
                                                                               folderExists.hashCode,
                                                                               $mrjc(extended.hashCode, $mrjc(alwaysRefresh.hashCode, messagesInfoInJson.hashCode))))))))))))))))))))));
-
   @override
   bool operator ==(other) =>
       identical(this, other) ||
@@ -2501,7 +2391,6 @@ class FoldersCompanion extends UpdateCompanion<LocalFolder> {
   final Value<bool> extended;
   final Value<bool> alwaysRefresh;
   final Value<String> messagesInfoInJson;
-
   const FoldersCompanion({
     this.localId = const Value.absent(),
     this.guid = const Value.absent(),
@@ -2526,7 +2415,6 @@ class FoldersCompanion extends UpdateCompanion<LocalFolder> {
     this.alwaysRefresh = const Value.absent(),
     this.messagesInfoInJson = const Value.absent(),
   });
-
   FoldersCompanion copyWith(
       {Value<int> localId,
       Value<String> guid,
@@ -2580,15 +2468,11 @@ class FoldersCompanion extends UpdateCompanion<LocalFolder> {
 class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
   final GeneratedDatabase _db;
   final String _alias;
-
   $FoldersTable(this._db, [this._alias]);
-
   final VerificationMeta _localIdMeta = const VerificationMeta('localId');
   GeneratedIntColumn _localId;
-
   @override
   GeneratedIntColumn get localId => _localId ??= _constructLocalId();
-
   GeneratedIntColumn _constructLocalId() {
     return GeneratedIntColumn('local_id', $tableName, false,
         hasAutoIncrement: true, declaredAsPrimaryKey: true);
@@ -2596,10 +2480,8 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
 
   final VerificationMeta _guidMeta = const VerificationMeta('guid');
   GeneratedTextColumn _guid;
-
   @override
   GeneratedTextColumn get guid => _guid ??= _constructGuid();
-
   GeneratedTextColumn _constructGuid() {
     return GeneratedTextColumn(
       'guid',
@@ -2610,10 +2492,8 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
 
   final VerificationMeta _parentGuidMeta = const VerificationMeta('parentGuid');
   GeneratedTextColumn _parentGuid;
-
   @override
   GeneratedTextColumn get parentGuid => _parentGuid ??= _constructParentGuid();
-
   GeneratedTextColumn _constructParentGuid() {
     return GeneratedTextColumn(
       'parent_guid',
@@ -2624,10 +2504,8 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
 
   final VerificationMeta _accountIdMeta = const VerificationMeta('accountId');
   GeneratedIntColumn _accountId;
-
   @override
   GeneratedIntColumn get accountId => _accountId ??= _constructAccountId();
-
   GeneratedIntColumn _constructAccountId() {
     return GeneratedIntColumn(
       'account_id',
@@ -2638,10 +2516,8 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
 
   final VerificationMeta _typeMeta = const VerificationMeta('type');
   GeneratedIntColumn _type;
-
   @override
   GeneratedIntColumn get type => _type ??= _constructType();
-
   GeneratedIntColumn _constructType() {
     return GeneratedIntColumn(
       'type',
@@ -2653,11 +2529,9 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
   final VerificationMeta _folderOrderMeta =
       const VerificationMeta('folderOrder');
   GeneratedIntColumn _folderOrder;
-
   @override
   GeneratedIntColumn get folderOrder =>
       _folderOrder ??= _constructFolderOrder();
-
   GeneratedIntColumn _constructFolderOrder() {
     return GeneratedIntColumn(
       'folder_order',
@@ -2668,10 +2542,8 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
 
   final VerificationMeta _countMeta = const VerificationMeta('count');
   GeneratedIntColumn _count;
-
   @override
   GeneratedIntColumn get count => _count ??= _constructCount();
-
   GeneratedIntColumn _constructCount() {
     return GeneratedIntColumn(
       'messages_count',
@@ -2682,10 +2554,8 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
 
   final VerificationMeta _unreadMeta = const VerificationMeta('unread');
   GeneratedIntColumn _unread;
-
   @override
   GeneratedIntColumn get unread => _unread ??= _constructUnread();
-
   GeneratedIntColumn _constructUnread() {
     return GeneratedIntColumn(
       'unread',
@@ -2696,10 +2566,8 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
 
   final VerificationMeta _nameMeta = const VerificationMeta('name');
   GeneratedTextColumn _name;
-
   @override
   GeneratedTextColumn get name => _name ??= _constructName();
-
   GeneratedTextColumn _constructName() {
     return GeneratedTextColumn(
       'name',
@@ -2710,10 +2578,8 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
 
   final VerificationMeta _fullNameMeta = const VerificationMeta('fullName');
   GeneratedTextColumn _fullName;
-
   @override
   GeneratedTextColumn get fullName => _fullName ??= _constructFullName();
-
   GeneratedTextColumn _constructFullName() {
     return GeneratedTextColumn(
       'full_name',
@@ -2725,11 +2591,9 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
   final VerificationMeta _fullNameRawMeta =
       const VerificationMeta('fullNameRaw');
   GeneratedTextColumn _fullNameRaw;
-
   @override
   GeneratedTextColumn get fullNameRaw =>
       _fullNameRaw ??= _constructFullNameRaw();
-
   GeneratedTextColumn _constructFullNameRaw() {
     return GeneratedTextColumn(
       'full_name_raw',
@@ -2741,11 +2605,9 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
   final VerificationMeta _fullNameHashMeta =
       const VerificationMeta('fullNameHash');
   GeneratedTextColumn _fullNameHash;
-
   @override
   GeneratedTextColumn get fullNameHash =>
       _fullNameHash ??= _constructFullNameHash();
-
   GeneratedTextColumn _constructFullNameHash() {
     return GeneratedTextColumn(
       'full_name_hash',
@@ -2756,10 +2618,8 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
 
   final VerificationMeta _folderHashMeta = const VerificationMeta('folderHash');
   GeneratedTextColumn _folderHash;
-
   @override
   GeneratedTextColumn get folderHash => _folderHash ??= _constructFolderHash();
-
   GeneratedTextColumn _constructFolderHash() {
     return GeneratedTextColumn(
       'folder_hash',
@@ -2770,10 +2630,8 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
 
   final VerificationMeta _delimiterMeta = const VerificationMeta('delimiter');
   GeneratedTextColumn _delimiter;
-
   @override
   GeneratedTextColumn get delimiter => _delimiter ??= _constructDelimiter();
-
   GeneratedTextColumn _constructDelimiter() {
     return GeneratedTextColumn(
       'delimiter',
@@ -2785,11 +2643,9 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
   final VerificationMeta _needsInfoUpdateMeta =
       const VerificationMeta('needsInfoUpdate');
   GeneratedBoolColumn _needsInfoUpdate;
-
   @override
   GeneratedBoolColumn get needsInfoUpdate =>
       _needsInfoUpdate ??= _constructNeedsInfoUpdate();
-
   GeneratedBoolColumn _constructNeedsInfoUpdate() {
     return GeneratedBoolColumn(
       'needs_info_update',
@@ -2801,11 +2657,9 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
   final VerificationMeta _isSystemFolderMeta =
       const VerificationMeta('isSystemFolder');
   GeneratedBoolColumn _isSystemFolder;
-
   @override
   GeneratedBoolColumn get isSystemFolder =>
       _isSystemFolder ??= _constructIsSystemFolder();
-
   GeneratedBoolColumn _constructIsSystemFolder() {
     return GeneratedBoolColumn(
       'is_system_folder',
@@ -2817,11 +2671,9 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
   final VerificationMeta _isSubscribedMeta =
       const VerificationMeta('isSubscribed');
   GeneratedBoolColumn _isSubscribed;
-
   @override
   GeneratedBoolColumn get isSubscribed =>
       _isSubscribed ??= _constructIsSubscribed();
-
   GeneratedBoolColumn _constructIsSubscribed() {
     return GeneratedBoolColumn(
       'is_subscribed',
@@ -2833,11 +2685,9 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
   final VerificationMeta _isSelectableMeta =
       const VerificationMeta('isSelectable');
   GeneratedBoolColumn _isSelectable;
-
   @override
   GeneratedBoolColumn get isSelectable =>
       _isSelectable ??= _constructIsSelectable();
-
   GeneratedBoolColumn _constructIsSelectable() {
     return GeneratedBoolColumn(
       'is_selectable',
@@ -2849,11 +2699,9 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
   final VerificationMeta _folderExistsMeta =
       const VerificationMeta('folderExists');
   GeneratedBoolColumn _folderExists;
-
   @override
   GeneratedBoolColumn get folderExists =>
       _folderExists ??= _constructFolderExists();
-
   GeneratedBoolColumn _constructFolderExists() {
     return GeneratedBoolColumn(
       'folder_exists',
@@ -2864,10 +2712,8 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
 
   final VerificationMeta _extendedMeta = const VerificationMeta('extended');
   GeneratedBoolColumn _extended;
-
   @override
   GeneratedBoolColumn get extended => _extended ??= _constructExtended();
-
   GeneratedBoolColumn _constructExtended() {
     return GeneratedBoolColumn(
       'extended',
@@ -2879,11 +2725,9 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
   final VerificationMeta _alwaysRefreshMeta =
       const VerificationMeta('alwaysRefresh');
   GeneratedBoolColumn _alwaysRefresh;
-
   @override
   GeneratedBoolColumn get alwaysRefresh =>
       _alwaysRefresh ??= _constructAlwaysRefresh();
-
   GeneratedBoolColumn _constructAlwaysRefresh() {
     return GeneratedBoolColumn(
       'always_refresh',
@@ -2895,11 +2739,9 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
   final VerificationMeta _messagesInfoInJsonMeta =
       const VerificationMeta('messagesInfoInJson');
   GeneratedTextColumn _messagesInfoInJson;
-
   @override
   GeneratedTextColumn get messagesInfoInJson =>
       _messagesInfoInJson ??= _constructMessagesInfoInJson();
-
   GeneratedTextColumn _constructMessagesInfoInJson() {
     return GeneratedTextColumn(
       'messages_info_in_json',
@@ -2933,15 +2775,12 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
         alwaysRefresh,
         messagesInfoInJson
       ];
-
   @override
   $FoldersTable get asDslTable => this;
-
   @override
   String get $tableName => _alias ?? 'folders';
   @override
   final String actualTableName = 'folders';
-
   @override
   VerificationContext validateIntegrity(FoldersCompanion d,
       {bool isInserting = false}) {
@@ -3099,7 +2938,6 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
 
   @override
   Set<GeneratedColumn> get $primaryKey => {localId};
-
   @override
   LocalFolder map(Map<String, dynamic> data, {String tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
@@ -3195,8 +3033,8 @@ class User extends DataClass implements Insertable<User> {
   final String token;
   final int syncFreqInSeconds;
   final String syncPeriod;
+  final bool darkThemeEnabled;
   final String language;
-
   User(
       {@required this.localId,
       @required this.serverId,
@@ -3204,13 +3042,14 @@ class User extends DataClass implements Insertable<User> {
       @required this.token,
       this.syncFreqInSeconds,
       this.syncPeriod,
+      @required this.darkThemeEnabled,
       this.language});
-
   factory User.fromData(Map<String, dynamic> data, GeneratedDatabase db,
       {String prefix}) {
     final effectivePrefix = prefix ?? '';
     final intType = db.typeSystem.forDartType<int>();
     final stringType = db.typeSystem.forDartType<String>();
+    final boolType = db.typeSystem.forDartType<bool>();
     return User(
       localId:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}local_id']),
@@ -3224,11 +3063,12 @@ class User extends DataClass implements Insertable<User> {
           data['${effectivePrefix}sync_freq_in_seconds']),
       syncPeriod: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}sync_period']),
+      darkThemeEnabled: boolType.mapFromDatabaseResponse(
+          data['${effectivePrefix}dark_theme_enabled']),
       language: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}language']),
     );
   }
-
   factory User.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return User(
@@ -3238,10 +3078,10 @@ class User extends DataClass implements Insertable<User> {
       token: serializer.fromJson<String>(json['token']),
       syncFreqInSeconds: serializer.fromJson<int>(json['syncFreqInSeconds']),
       syncPeriod: serializer.fromJson<String>(json['syncPeriod']),
+      darkThemeEnabled: serializer.fromJson<bool>(json['darkThemeEnabled']),
       language: serializer.fromJson<String>(json['language']),
     );
   }
-
   @override
   Map<String, dynamic> toJson(
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
@@ -3252,6 +3092,7 @@ class User extends DataClass implements Insertable<User> {
       'token': serializer.toJson<String>(token),
       'syncFreqInSeconds': serializer.toJson<int>(syncFreqInSeconds),
       'syncPeriod': serializer.toJson<String>(syncPeriod),
+      'darkThemeEnabled': serializer.toJson<bool>(darkThemeEnabled),
       'language': serializer.toJson<String>(language),
     };
   }
@@ -3276,6 +3117,9 @@ class User extends DataClass implements Insertable<User> {
       syncPeriod: syncPeriod == null && nullToAbsent
           ? const Value.absent()
           : Value(syncPeriod),
+      darkThemeEnabled: darkThemeEnabled == null && nullToAbsent
+          ? const Value.absent()
+          : Value(darkThemeEnabled),
       language: language == null && nullToAbsent
           ? const Value.absent()
           : Value(language),
@@ -3289,6 +3133,7 @@ class User extends DataClass implements Insertable<User> {
           String token,
           int syncFreqInSeconds,
           String syncPeriod,
+          bool darkThemeEnabled,
           String language}) =>
       User(
         localId: localId ?? this.localId,
@@ -3297,9 +3142,9 @@ class User extends DataClass implements Insertable<User> {
         token: token ?? this.token,
         syncFreqInSeconds: syncFreqInSeconds ?? this.syncFreqInSeconds,
         syncPeriod: syncPeriod ?? this.syncPeriod,
+        darkThemeEnabled: darkThemeEnabled ?? this.darkThemeEnabled,
         language: language ?? this.language,
       );
-
   @override
   String toString() {
     return (StringBuffer('User(')
@@ -3309,6 +3154,7 @@ class User extends DataClass implements Insertable<User> {
           ..write('token: $token, ')
           ..write('syncFreqInSeconds: $syncFreqInSeconds, ')
           ..write('syncPeriod: $syncPeriod, ')
+          ..write('darkThemeEnabled: $darkThemeEnabled, ')
           ..write('language: $language')
           ..write(')'))
         .toString();
@@ -3323,9 +3169,12 @@ class User extends DataClass implements Insertable<User> {
               hostname.hashCode,
               $mrjc(
                   token.hashCode,
-                  $mrjc(syncFreqInSeconds.hashCode,
-                      $mrjc(syncPeriod.hashCode, language.hashCode)))))));
-
+                  $mrjc(
+                      syncFreqInSeconds.hashCode,
+                      $mrjc(
+                          syncPeriod.hashCode,
+                          $mrjc(darkThemeEnabled.hashCode,
+                              language.hashCode))))))));
   @override
   bool operator ==(other) =>
       identical(this, other) ||
@@ -3336,6 +3185,7 @@ class User extends DataClass implements Insertable<User> {
           other.token == token &&
           other.syncFreqInSeconds == syncFreqInSeconds &&
           other.syncPeriod == syncPeriod &&
+          other.darkThemeEnabled == darkThemeEnabled &&
           other.language == language);
 }
 
@@ -3346,8 +3196,8 @@ class UsersCompanion extends UpdateCompanion<User> {
   final Value<String> token;
   final Value<int> syncFreqInSeconds;
   final Value<String> syncPeriod;
+  final Value<bool> darkThemeEnabled;
   final Value<String> language;
-
   const UsersCompanion({
     this.localId = const Value.absent(),
     this.serverId = const Value.absent(),
@@ -3355,9 +3205,9 @@ class UsersCompanion extends UpdateCompanion<User> {
     this.token = const Value.absent(),
     this.syncFreqInSeconds = const Value.absent(),
     this.syncPeriod = const Value.absent(),
+    this.darkThemeEnabled = const Value.absent(),
     this.language = const Value.absent(),
   });
-
   UsersCompanion copyWith(
       {Value<int> localId,
       Value<int> serverId,
@@ -3365,6 +3215,7 @@ class UsersCompanion extends UpdateCompanion<User> {
       Value<String> token,
       Value<int> syncFreqInSeconds,
       Value<String> syncPeriod,
+      Value<bool> darkThemeEnabled,
       Value<String> language}) {
     return UsersCompanion(
       localId: localId ?? this.localId,
@@ -3373,6 +3224,7 @@ class UsersCompanion extends UpdateCompanion<User> {
       token: token ?? this.token,
       syncFreqInSeconds: syncFreqInSeconds ?? this.syncFreqInSeconds,
       syncPeriod: syncPeriod ?? this.syncPeriod,
+      darkThemeEnabled: darkThemeEnabled ?? this.darkThemeEnabled,
       language: language ?? this.language,
     );
   }
@@ -3381,15 +3233,11 @@ class UsersCompanion extends UpdateCompanion<User> {
 class $UsersTable extends Users with TableInfo<$UsersTable, User> {
   final GeneratedDatabase _db;
   final String _alias;
-
   $UsersTable(this._db, [this._alias]);
-
   final VerificationMeta _localIdMeta = const VerificationMeta('localId');
   GeneratedIntColumn _localId;
-
   @override
   GeneratedIntColumn get localId => _localId ??= _constructLocalId();
-
   GeneratedIntColumn _constructLocalId() {
     return GeneratedIntColumn('local_id', $tableName, false,
         hasAutoIncrement: true, declaredAsPrimaryKey: true);
@@ -3397,10 +3245,8 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
 
   final VerificationMeta _serverIdMeta = const VerificationMeta('serverId');
   GeneratedIntColumn _serverId;
-
   @override
   GeneratedIntColumn get serverId => _serverId ??= _constructServerId();
-
   GeneratedIntColumn _constructServerId() {
     return GeneratedIntColumn('server_id', $tableName, false,
         $customConstraints: 'UNIQUE');
@@ -3408,10 +3254,8 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
 
   final VerificationMeta _hostnameMeta = const VerificationMeta('hostname');
   GeneratedTextColumn _hostname;
-
   @override
   GeneratedTextColumn get hostname => _hostname ??= _constructHostname();
-
   GeneratedTextColumn _constructHostname() {
     return GeneratedTextColumn(
       'hostname',
@@ -3422,10 +3266,8 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
 
   final VerificationMeta _tokenMeta = const VerificationMeta('token');
   GeneratedTextColumn _token;
-
   @override
   GeneratedTextColumn get token => _token ??= _constructToken();
-
   GeneratedTextColumn _constructToken() {
     return GeneratedTextColumn(
       'token',
@@ -3437,11 +3279,9 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
   final VerificationMeta _syncFreqInSecondsMeta =
       const VerificationMeta('syncFreqInSeconds');
   GeneratedIntColumn _syncFreqInSeconds;
-
   @override
   GeneratedIntColumn get syncFreqInSeconds =>
       _syncFreqInSeconds ??= _constructSyncFreqInSeconds();
-
   GeneratedIntColumn _constructSyncFreqInSeconds() {
     return GeneratedIntColumn('sync_freq_in_seconds', $tableName, true,
         defaultValue: Constant(60));
@@ -3449,10 +3289,8 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
 
   final VerificationMeta _syncPeriodMeta = const VerificationMeta('syncPeriod');
   GeneratedTextColumn _syncPeriod;
-
   @override
   GeneratedTextColumn get syncPeriod => _syncPeriod ??= _constructSyncPeriod();
-
   GeneratedTextColumn _constructSyncPeriod() {
     return GeneratedTextColumn(
       'sync_period',
@@ -3461,12 +3299,21 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
     );
   }
 
+  final VerificationMeta _darkThemeEnabledMeta =
+      const VerificationMeta('darkThemeEnabled');
+  GeneratedBoolColumn _darkThemeEnabled;
+  @override
+  GeneratedBoolColumn get darkThemeEnabled =>
+      _darkThemeEnabled ??= _constructDarkThemeEnabled();
+  GeneratedBoolColumn _constructDarkThemeEnabled() {
+    return GeneratedBoolColumn('dark_theme_enabled', $tableName, false,
+        defaultValue: Constant(false));
+  }
+
   final VerificationMeta _languageMeta = const VerificationMeta('language');
   GeneratedTextColumn _language;
-
   @override
   GeneratedTextColumn get language => _language ??= _constructLanguage();
-
   GeneratedTextColumn _constructLanguage() {
     return GeneratedTextColumn(
       'language',
@@ -3483,17 +3330,15 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
         token,
         syncFreqInSeconds,
         syncPeriod,
+        darkThemeEnabled,
         language
       ];
-
   @override
   $UsersTable get asDslTable => this;
-
   @override
   String get $tableName => _alias ?? 'users';
   @override
   final String actualTableName = 'users';
-
   @override
   VerificationContext validateIntegrity(UsersCompanion d,
       {bool isInserting = false}) {
@@ -3536,6 +3381,14 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
     } else if (syncPeriod.isRequired && isInserting) {
       context.missing(_syncPeriodMeta);
     }
+    if (d.darkThemeEnabled.present) {
+      context.handle(
+          _darkThemeEnabledMeta,
+          darkThemeEnabled.isAcceptableValue(
+              d.darkThemeEnabled.value, _darkThemeEnabledMeta));
+    } else if (darkThemeEnabled.isRequired && isInserting) {
+      context.missing(_darkThemeEnabledMeta);
+    }
     if (d.language.present) {
       context.handle(_languageMeta,
           language.isAcceptableValue(d.language.value, _languageMeta));
@@ -3547,7 +3400,6 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
 
   @override
   Set<GeneratedColumn> get $primaryKey => {localId};
-
   @override
   User map(Map<String, dynamic> data, {String tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
@@ -3575,6 +3427,10 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
     }
     if (d.syncPeriod.present) {
       map['sync_period'] = Variable<String, StringType>(d.syncPeriod.value);
+    }
+    if (d.darkThemeEnabled.present) {
+      map['dark_theme_enabled'] =
+          Variable<bool, BoolType>(d.darkThemeEnabled.value);
     }
     if (d.language.present) {
       map['language'] = Variable<String, StringType>(d.language.value);
@@ -3608,7 +3464,6 @@ class Account extends DataClass implements Insertable<Account> {
   final bool allowFilters;
   final bool allowForward;
   final bool allowAutoResponder;
-
   Account(
       {@required this.localId,
       @required this.entityId,
@@ -3629,7 +3484,6 @@ class Account extends DataClass implements Insertable<Account> {
       @required this.allowFilters,
       @required this.allowForward,
       @required this.allowAutoResponder});
-
   factory Account.fromData(Map<String, dynamic> data, GeneratedDatabase db,
       {String prefix}) {
     final effectivePrefix = prefix ?? '';
@@ -3676,7 +3530,6 @@ class Account extends DataClass implements Insertable<Account> {
           data['${effectivePrefix}allow_auto_responder']),
     );
   }
-
   factory Account.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return Account(
@@ -3703,7 +3556,6 @@ class Account extends DataClass implements Insertable<Account> {
       allowAutoResponder: serializer.fromJson<bool>(json['allowAutoResponder']),
     );
   }
-
   @override
   Map<String, dynamic> toJson(
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
@@ -3832,7 +3684,6 @@ class Account extends DataClass implements Insertable<Account> {
         allowForward: allowForward ?? this.allowForward,
         allowAutoResponder: allowAutoResponder ?? this.allowAutoResponder,
       );
-
   @override
   String toString() {
     return (StringBuffer('Account(')
@@ -3903,7 +3754,6 @@ class Account extends DataClass implements Insertable<Account> {
                                                                               .hashCode,
                                                                           allowAutoResponder
                                                                               .hashCode)))))))))))))))))));
-
   @override
   bool operator ==(other) =>
       identical(this, other) ||
@@ -3949,7 +3799,6 @@ class AccountsCompanion extends UpdateCompanion<Account> {
   final Value<bool> allowFilters;
   final Value<bool> allowForward;
   final Value<bool> allowAutoResponder;
-
   const AccountsCompanion({
     this.localId = const Value.absent(),
     this.entityId = const Value.absent(),
@@ -3971,7 +3820,6 @@ class AccountsCompanion extends UpdateCompanion<Account> {
     this.allowForward = const Value.absent(),
     this.allowAutoResponder = const Value.absent(),
   });
-
   AccountsCompanion copyWith(
       {Value<int> localId,
       Value<int> entityId,
@@ -4020,15 +3868,11 @@ class AccountsCompanion extends UpdateCompanion<Account> {
 class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
   final GeneratedDatabase _db;
   final String _alias;
-
   $AccountsTable(this._db, [this._alias]);
-
   final VerificationMeta _localIdMeta = const VerificationMeta('localId');
   GeneratedIntColumn _localId;
-
   @override
   GeneratedIntColumn get localId => _localId ??= _constructLocalId();
-
   GeneratedIntColumn _constructLocalId() {
     return GeneratedIntColumn('local_id', $tableName, false,
         hasAutoIncrement: true, declaredAsPrimaryKey: true);
@@ -4036,10 +3880,8 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
 
   final VerificationMeta _entityIdMeta = const VerificationMeta('entityId');
   GeneratedIntColumn _entityId;
-
   @override
   GeneratedIntColumn get entityId => _entityId ??= _constructEntityId();
-
   GeneratedIntColumn _constructEntityId() {
     return GeneratedIntColumn('entity_id', $tableName, false,
         $customConstraints: 'UNIQUE');
@@ -4047,10 +3889,8 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
 
   final VerificationMeta _idUserMeta = const VerificationMeta('idUser');
   GeneratedIntColumn _idUser;
-
   @override
   GeneratedIntColumn get idUser => _idUser ??= _constructIdUser();
-
   GeneratedIntColumn _constructIdUser() {
     return GeneratedIntColumn(
       'id_user',
@@ -4061,10 +3901,8 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
 
   final VerificationMeta _uuidMeta = const VerificationMeta('uuid');
   GeneratedTextColumn _uuid;
-
   @override
   GeneratedTextColumn get uuid => _uuid ??= _constructUuid();
-
   GeneratedTextColumn _constructUuid() {
     return GeneratedTextColumn(
       'uuid',
@@ -4075,10 +3913,8 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
 
   final VerificationMeta _parentUuidMeta = const VerificationMeta('parentUuid');
   GeneratedTextColumn _parentUuid;
-
   @override
   GeneratedTextColumn get parentUuid => _parentUuid ??= _constructParentUuid();
-
   GeneratedTextColumn _constructParentUuid() {
     return GeneratedTextColumn(
       'parent_uuid',
@@ -4089,10 +3925,8 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
 
   final VerificationMeta _moduleNameMeta = const VerificationMeta('moduleName');
   GeneratedTextColumn _moduleName;
-
   @override
   GeneratedTextColumn get moduleName => _moduleName ??= _constructModuleName();
-
   GeneratedTextColumn _constructModuleName() {
     return GeneratedTextColumn(
       'module_name',
@@ -4104,11 +3938,9 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
   final VerificationMeta _useToAuthorizeMeta =
       const VerificationMeta('useToAuthorize');
   GeneratedBoolColumn _useToAuthorize;
-
   @override
   GeneratedBoolColumn get useToAuthorize =>
       _useToAuthorize ??= _constructUseToAuthorize();
-
   GeneratedBoolColumn _constructUseToAuthorize() {
     return GeneratedBoolColumn(
       'use_to_authorize',
@@ -4119,10 +3951,8 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
 
   final VerificationMeta _emailMeta = const VerificationMeta('email');
   GeneratedTextColumn _email;
-
   @override
   GeneratedTextColumn get email => _email ??= _constructEmail();
-
   GeneratedTextColumn _constructEmail() {
     return GeneratedTextColumn(
       'email',
@@ -4134,11 +3964,9 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
   final VerificationMeta _friendlyNameMeta =
       const VerificationMeta('friendlyName');
   GeneratedTextColumn _friendlyName;
-
   @override
   GeneratedTextColumn get friendlyName =>
       _friendlyName ??= _constructFriendlyName();
-
   GeneratedTextColumn _constructFriendlyName() {
     return GeneratedTextColumn(
       'friendly_name',
@@ -4150,11 +3978,9 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
   final VerificationMeta _useSignatureMeta =
       const VerificationMeta('useSignature');
   GeneratedBoolColumn _useSignature;
-
   @override
   GeneratedBoolColumn get useSignature =>
       _useSignature ??= _constructUseSignature();
-
   GeneratedBoolColumn _constructUseSignature() {
     return GeneratedBoolColumn(
       'use_signature',
@@ -4165,10 +3991,8 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
 
   final VerificationMeta _signatureMeta = const VerificationMeta('signature');
   GeneratedTextColumn _signature;
-
   @override
   GeneratedTextColumn get signature => _signature ??= _constructSignature();
-
   GeneratedTextColumn _constructSignature() {
     return GeneratedTextColumn(
       'signature',
@@ -4179,10 +4003,8 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
 
   final VerificationMeta _serverIdMeta = const VerificationMeta('serverId');
   GeneratedIntColumn _serverId;
-
   @override
   GeneratedIntColumn get serverId => _serverId ??= _constructServerId();
-
   GeneratedIntColumn _constructServerId() {
     return GeneratedIntColumn(
       'server_id',
@@ -4194,11 +4016,9 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
   final VerificationMeta _foldersOrderInJsonMeta =
       const VerificationMeta('foldersOrderInJson');
   GeneratedTextColumn _foldersOrderInJson;
-
   @override
   GeneratedTextColumn get foldersOrderInJson =>
       _foldersOrderInJson ??= _constructFoldersOrderInJson();
-
   GeneratedTextColumn _constructFoldersOrderInJson() {
     return GeneratedTextColumn(
       'folders_order_in_json',
@@ -4210,11 +4030,9 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
   final VerificationMeta _useThreadingMeta =
       const VerificationMeta('useThreading');
   GeneratedBoolColumn _useThreading;
-
   @override
   GeneratedBoolColumn get useThreading =>
       _useThreading ??= _constructUseThreading();
-
   GeneratedBoolColumn _constructUseThreading() {
     return GeneratedBoolColumn(
       'use_threading',
@@ -4226,11 +4044,9 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
   final VerificationMeta _saveRepliesToCurrFolderMeta =
       const VerificationMeta('saveRepliesToCurrFolder');
   GeneratedBoolColumn _saveRepliesToCurrFolder;
-
   @override
   GeneratedBoolColumn get saveRepliesToCurrFolder =>
       _saveRepliesToCurrFolder ??= _constructSaveRepliesToCurrFolder();
-
   GeneratedBoolColumn _constructSaveRepliesToCurrFolder() {
     return GeneratedBoolColumn(
       'save_replies_to_curr_folder',
@@ -4241,10 +4057,8 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
 
   final VerificationMeta _accountIdMeta = const VerificationMeta('accountId');
   GeneratedIntColumn _accountId;
-
   @override
   GeneratedIntColumn get accountId => _accountId ??= _constructAccountId();
-
   GeneratedIntColumn _constructAccountId() {
     return GeneratedIntColumn(
       'account_id',
@@ -4256,11 +4070,9 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
   final VerificationMeta _allowFiltersMeta =
       const VerificationMeta('allowFilters');
   GeneratedBoolColumn _allowFilters;
-
   @override
   GeneratedBoolColumn get allowFilters =>
       _allowFilters ??= _constructAllowFilters();
-
   GeneratedBoolColumn _constructAllowFilters() {
     return GeneratedBoolColumn(
       'allow_filters',
@@ -4272,11 +4084,9 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
   final VerificationMeta _allowForwardMeta =
       const VerificationMeta('allowForward');
   GeneratedBoolColumn _allowForward;
-
   @override
   GeneratedBoolColumn get allowForward =>
       _allowForward ??= _constructAllowForward();
-
   GeneratedBoolColumn _constructAllowForward() {
     return GeneratedBoolColumn(
       'allow_forward',
@@ -4288,11 +4098,9 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
   final VerificationMeta _allowAutoResponderMeta =
       const VerificationMeta('allowAutoResponder');
   GeneratedBoolColumn _allowAutoResponder;
-
   @override
   GeneratedBoolColumn get allowAutoResponder =>
       _allowAutoResponder ??= _constructAllowAutoResponder();
-
   GeneratedBoolColumn _constructAllowAutoResponder() {
     return GeneratedBoolColumn(
       'allow_auto_responder',
@@ -4323,15 +4131,12 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
         allowForward,
         allowAutoResponder
       ];
-
   @override
   $AccountsTable get asDslTable => this;
-
   @override
   String get $tableName => _alias ?? 'accounts';
   @override
   final String actualTableName = 'accounts';
-
   @override
   VerificationContext validateIntegrity(AccountsCompanion d,
       {bool isInserting = false}) {
@@ -4473,7 +4278,6 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
 
   @override
   Set<GeneratedColumn> get $primaryKey => {localId};
-
   @override
   Account map(Map<String, dynamic> data, {String tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
@@ -4556,18 +4360,13 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(const SqlTypeSystem.withDefaults(), e);
   $MailTable _mail;
-
   $MailTable get mail => _mail ??= $MailTable(this);
   $FoldersTable _folders;
-
   $FoldersTable get folders => _folders ??= $FoldersTable(this);
   $UsersTable _users;
-
   $UsersTable get users => _users ??= $UsersTable(this);
   $AccountsTable _accounts;
-
   $AccountsTable get accounts => _accounts ??= $AccountsTable(this);
-
   @override
   List<TableInfo> get allTables => [mail, folders, users, accounts];
 }

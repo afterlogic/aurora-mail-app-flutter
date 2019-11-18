@@ -63,7 +63,9 @@ class _AppState extends State<App> {
                       child: MaterialApp(
                         title: "Aurora Mail",
                         onGenerateRoute: AppNavigation.onGenerateRoute,
-                        theme: AppTheme.light,
+                        theme: settingsState.darkThemeEnabled
+                            ? AppTheme.dark
+                            : AppTheme.light,
                         localizationsDelegates: [
                           GlobalMaterialLocalizations.delegate,
                           GlobalWidgetsLocalizations.delegate,
@@ -71,7 +73,8 @@ class _AppState extends State<App> {
                           S.delegate
                         ],
                         supportedLocales: S.delegate.supportedLocales,
-//                        localeResolutionCallback: S.delegate.resolution(fallback: new Locale("en", "")),
+                        localeResolutionCallback: S.delegate.resolution(
+                            fallback: new Locale("en", ""), withCountry: false),
                         initialRoute: authState.needsLogin
                             ? LoginRoute.name
                             : MessagesListRoute.name,

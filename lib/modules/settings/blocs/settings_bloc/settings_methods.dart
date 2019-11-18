@@ -29,4 +29,14 @@ class SettingsMethods {
 
     return _usersDao.getUserByLocalId(localId);
   }
+
+  Future<User> setDarkTheme(bool darkThemeEnabled) async {
+    final localId = AuthBloc.currentUser.localId;
+    await _usersDao.updateUser(
+      localId,
+      new UsersCompanion(darkThemeEnabled: Value(darkThemeEnabled)),
+    );
+
+    return _usersDao.getUserByLocalId(localId);
+  }
 }

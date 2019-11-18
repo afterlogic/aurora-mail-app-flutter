@@ -49,6 +49,7 @@
   "settings": "Settings",
   "settings_common": "Common",
   "settings_language": "Language",
+  "settings_dark_theme": "Dark theme",
   "settings_sync": "Sync",
   "settings_sync_frequency": "Sync frequency",
   "settings_sync_frequency_never": "never",

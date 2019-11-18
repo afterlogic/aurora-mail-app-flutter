@@ -206,7 +206,9 @@ class _MessageViewAndroidState extends State<MessageViewAndroid> {
                           style: Theme.of(context).textTheme.subhead,
                         ),
                         Text(DateFormatting.formatDateFromSeconds(
-                            timestamp: message.timeStampInUTC)),
+                          message.timeStampInUTC,
+                          Localizations.localeOf(context).languageCode,
+                        )),
                       ],
                     ),
                     SizedBox(height: 10.0),

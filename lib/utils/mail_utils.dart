@@ -105,7 +105,8 @@ class MailUtils {
   static String getReplyBody(BuildContext context, Message message) {
     final baseMessage = htmlToPlain(message.html ?? "");
     final time = DateFormatting.formatDateFromSeconds(
-        timestamp: message.timeStampInUTC,
+        message.timeStampInUTC,
+        Localizations.localeOf(context).languageCode,
         format: S.of(context).compose_reply_date_format);
 
     final from = getDisplayName(message.fromInJson);
@@ -138,7 +139,8 @@ class MailUtils {
       forwardMessage += S.of(context).compose_forward_bcc(bcc) + "\n";
 
     final date = DateFormatting.formatDateFromSeconds(
-        timestamp: message.timeStampInUTC,
+        message.timeStampInUTC,
+        Localizations.localeOf(context).languageCode,
         format: S.of(context).compose_forward_date_format);
     forwardMessage += S.of(context).compose_forward_sent(date) + "\n";
 
