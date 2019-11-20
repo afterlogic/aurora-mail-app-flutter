@@ -150,7 +150,7 @@ class MailMethods {
 
   Future<void> syncFolders(
       {@required int localId, bool syncSystemFolders = false}) async {
-    if (_isOffline) return null;
+    if (_isOffline || AuthBloc.currentUser == null) return null;
 
     // either localId or syncSystemFolders must be provided
     assert(localId != null || syncSystemFolders != null);
@@ -178,7 +178,7 @@ class MailMethods {
   }
 
   Future<void> _setMessagesInfoToFolder() async {
-    if (_isOffline) return null;
+    if (_isOffline || AuthBloc.currentUser == null) return null;
     assert(_syncQueue.isNotEmpty);
 
     final folderToUpdate = await _foldersDao.getFolderByLocalId(_syncQueue[0]);
@@ -219,7 +219,7 @@ class MailMethods {
 
   // step 5
   Future<void> _syncMessagesChunk(Period syncPeriod) async {
-    if (_isOffline) return null;
+    if (_isOffline || AuthBloc.currentUser == null) return null;
     assert(_syncQueue.isNotEmpty);
 
     // get the actual folder state every time

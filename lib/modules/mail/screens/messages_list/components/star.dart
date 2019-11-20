@@ -1,4 +1,10 @@
+import 'package:aurora_mail/generated/i18n.dart';
+import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
+import 'package:aurora_mail/modules/settings/blocs/settings_bloc/settings_bloc.dart';
+import 'package:aurora_mail/utils/show_snack.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class Star extends StatefulWidget {
   final bool value;
@@ -38,6 +44,16 @@ class _StarState extends State<Star> with TickerProviderStateMixin {
   }
 
   Future _setStarred(bool isStarred) async {
+    // ignore: close_sinks
+    final settings = BlocProvider.of<SettingsBloc>(context);
+    if (settings.state is SettingsLoaded &&
+        (settings.state as SettingsLoaded).connection ==
+            ConnectivityResult.none) {
+      return showSnack(
+          context: context,
+          scaffoldState: Scaffold.of(context),
+          msg: S.of(context).error_connection_offline);
+    }
     _parentCtrl.forward(from: 0.0);
     setState(() => _isStarred = isStarred);
     // wait forward and reverse

@@ -33,6 +33,7 @@ class S implements WidgetsLocalizations {
   String get error_compose_no_receivers => "Please provide receivers";
   String get error_compose_wait_attachments => "Please wait until attachments finish uploading";
   String get error_connection => "Could not connect to the server";
+  String get error_connection_offline => "You're offline";
   String get error_input_validation_email => "The email is not valid";
   String get error_input_validation_empty => "This field is required";
   String get error_input_validation_name_illegal_symbol => "The name cannot contain \"/\\*?<>|:\"";

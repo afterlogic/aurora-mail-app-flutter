@@ -16,6 +16,7 @@ import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/modules/settings/models/sync_duration.dart';
 import 'package:aurora_mail/modules/settings/screens/settings_main/settings_main_route.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -123,7 +124,6 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
   }
 
   void _setStarred(Message message, bool isStarred) {
-    // TODO VO: add offline check
     _mailBloc.add(SetStarred([message], isStarred));
   }
 
