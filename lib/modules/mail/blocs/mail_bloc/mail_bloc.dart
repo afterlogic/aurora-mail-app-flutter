@@ -162,8 +162,11 @@ class MailBloc extends Bloc<MailEvent, MailState> {
   }
 
   Stream<MailState> _setSeen(SetSeen event) async* {
-    await _methods.setMessagesSeen(folder: _selectedFolder, uids: event.uids);
-    add(RefreshMessages());
+    _methods.setMessagesSeen(
+      folder: _selectedFolder,
+      messages: event.messages,
+      isSeen: event.isSeen,
+    );
   }
 
   Stream<MailState> _setStarred(SetStarred event) async* {

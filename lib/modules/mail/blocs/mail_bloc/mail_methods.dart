@@ -300,10 +300,41 @@ class MailMethods {
 
   Future<void> setMessagesSeen({
     @required Folder folder,
-    @required List<int> uids,
-  }) {
+    @required List<Message> messages,
+    @required bool isSeen,
+  }) async {
     if (_isOffline) return null;
-    return _mailApi.setMessagesSeen(folder: folder, uids: uids);
+
+    Future updateMessages(bool isStarred) async {
+      final infos = messages.map((m) {
+        final flags = json.decode(m.flagsInJson);
+
+        if (isStarred && !flags.contains("\\seen")) {
+          flags.add("\\seen");
+        } else if (!isStarred && flags.contains("\\seen")) {
+          flags.remove("\\seen");
+        }
+
+        return new MessageInfo(
+          uid: m.uid,
+          parentUid: m.parentUid,
+          flags: new List<String>.from(flags),
+          hasBody: true,
+          hasThread: m.hasThread,
+        );
+      }).toList();
+      _mailDao.updateMessagesFlags(infos);
+    }
+
+    try {
+      updateMessages(isSeen);
+      await _mailApi.setMessagesSeen(
+        folder: folder,
+        uids: messages.map((m) => m.uid).toList(),
+      );
+    } catch (err) {
+      updateMessages(!isSeen);
+    }
   }
 
   Future<void> setMessagesStarred({

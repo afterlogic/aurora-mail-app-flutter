@@ -36,12 +36,13 @@ class SelectFolder extends MailEvent {
 }
 
 class SetSeen extends MailEvent {
-  final List<int> uids;
+  final List<Message> messages;
+  final bool isSeen;
 
-  const SetSeen(this.uids);
+  const SetSeen(this.messages, this.isSeen);
 
   @override
-  List<Object> get props => [uids];
+  List<Object> get props => [messages, isSeen];
 }
 
 class SetStarred extends MailEvent {

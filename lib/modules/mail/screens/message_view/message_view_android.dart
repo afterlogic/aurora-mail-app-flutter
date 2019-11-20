@@ -69,10 +69,10 @@ class _MessageViewAndroidState extends State<MessageViewAndroid> {
     final flagsString = widget.messages[_currentPage].flagsInJson;
     final flags = json.decode(flagsString);
     if (!flags.contains("\\seen")) {
-      final uids = [widget.messages[_currentPage].uid];
       _setSeenTimer = new Timer(
         SET_SEEN_DELAY,
-        () => BlocProvider.of<MailBloc>(context).add(SetSeen(uids)),
+        () => BlocProvider.of<MailBloc>(context)
+            .add(SetSeen([widget.messages[_currentPage]], true)),
       );
     }
   }
