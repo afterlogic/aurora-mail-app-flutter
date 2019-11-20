@@ -37,7 +37,7 @@ class MailFolder extends StatelessWidget {
       case FolderType.system:
         return Icons.devices;
       case FolderType.user:
-        return Icons.person;
+        return Icons.folder;
       case FolderType.unknown:
         return Icons.device_unknown;
       default:
