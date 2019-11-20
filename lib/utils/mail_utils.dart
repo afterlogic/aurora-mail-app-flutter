@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/generated/i18n.dart';
 import 'package:aurora_mail/utils/date_formatting.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:html/parser.dart';
 
@@ -105,8 +106,7 @@ class MailUtils {
   static String getReplyBody(BuildContext context, Message message) {
     final baseMessage = htmlToPlain(message.html ?? "");
     final time = DateFormatting.formatDateFromSeconds(
-        message.timeStampInUTC,
-        Localizations.localeOf(context).languageCode,
+        message.timeStampInUTC, Localizations.localeOf(context).languageCode,
         format: S.of(context).compose_reply_date_format);
 
     final from = getDisplayName(message.fromInJson);
@@ -139,13 +139,44 @@ class MailUtils {
       forwardMessage += S.of(context).compose_forward_bcc(bcc) + "\n";
 
     final date = DateFormatting.formatDateFromSeconds(
-        message.timeStampInUTC,
-        Localizations.localeOf(context).languageCode,
+        message.timeStampInUTC, Localizations.localeOf(context).languageCode,
         format: S.of(context).compose_forward_date_format);
     forwardMessage += S.of(context).compose_forward_sent(date) + "\n";
 
     forwardMessage +=
         S.of(context).compose_forward_subject(message.subject) + "\n\n";
     return forwardMessage + baseMessage;
+  }
+
+  static String wrapInHtml(BuildContext context, String body) {
+    return """
+    <!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+    html{
+      width: 100vw;
+    }
+    body {
+      width: 100vw;
+      overflow-x: hidden;
+      background-color: ${_getWebColor(Colors.grey[50])}
+    }
+    </style>
+  </head>
+  <body>
+    $body
+  </body>
+</html>
+    """;
+  }
+
+  static String _getWebColor(Color colorObj) {
+    final base = colorObj.toString();
+    final color = base.substring(base.length - 7, base.length - 1);
+    final opacity = base.substring(base.length - 9, base.length - 7);
+    return "#$color$opacity";
   }
 }

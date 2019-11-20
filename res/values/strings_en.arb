@@ -16,6 +16,8 @@
   "messages_list_app_bar_logout": "Log out",
   "messages_list_app_bar_loading_folders": "Loading folders...",
   "messages_show_details": "Show details",
+  "messages_show_attachments": "Show attachments",
+  "messages_show_message_body": "Show message body",
   "messages_to": "To",
   "messages_from": "From",
   "messages_cc": "CC",

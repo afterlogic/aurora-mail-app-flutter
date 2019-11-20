@@ -37,6 +37,7 @@ class _MessageViewAndroidState extends State<MessageViewAndroid> {
   final _messageViewBloc = new MessageViewBloc();
 
   PageController _pageCtrl;
+  bool _showAttachments = false;
   int _currentPage;
 
   Timer _setSeenTimer;
@@ -137,6 +138,10 @@ class _MessageViewAndroidState extends State<MessageViewAndroid> {
 
   @override
   Widget build(BuildContext context) {
+    final message = widget.messages[_currentPage];
+    final attachments = MailAttachment.fromJsonString(
+      message.attachmentsInJson,
+    );
     return BlocProvider<MessageViewBloc>.value(
       value: _messageViewBloc,
       child: Scaffold(
@@ -145,103 +150,127 @@ class _MessageViewAndroidState extends State<MessageViewAndroid> {
           child: MailViewAppBar(_onAppBarActionSelected),
         ),
         body: BlocListener(
-            bloc: _messageViewBloc,
-            listener: (context, state) {
-              if (state is DownloadStarted) {
+          bloc: _messageViewBloc,
+          listener: (context, state) {
+            if (state is DownloadStarted) {
+              _showSnack(
+                  S.of(context).messages_attachment_downloading(state.fileName),
+                  context);
+            }
+            if (state is DownloadFinished) {
+              if (state.path == null) {
+                _showSnack(
+                    S.of(context).messages_attachment_download_failed, context,
+                    isError: true);
+              } else {
                 _showSnack(
                     S
                         .of(context)
-                        .messages_attachment_downloading(state.fileName),
+                        .messages_attachment_download_success(state.path),
                     context);
               }
-              if (state is DownloadFinished) {
-                if (state.path == null) {
-                  _showSnack(S.of(context).messages_attachment_download_failed,
-                      context,
-                      isError: true);
-                } else {
-                  _showSnack(
-                      S
-                          .of(context)
-                          .messages_attachment_download_success(state.path),
-                      context);
-                }
-              }
-            },
-            child: PageView.builder(
-              // TODO temp disabled page view
-              physics: new NeverScrollableScrollPhysics(),
-              onPageChanged: (int i) {
-                _currentPage = i;
-                _startSetSeenTimer(context);
-              },
-              controller: _pageCtrl,
-              itemCount: widget.messages.length,
-              itemBuilder: (_, int i) {
-                final message = widget.messages[i];
-                final attachments = MailAttachment.fromJsonString(
-                  message.attachmentsInJson,
-                );
-
-                return ListView(
-                  padding: EdgeInsets.all(16.0),
+            }
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  message.subject.isNotEmpty
+                      ? message.subject
+                      : S.of(context).messages_no_subject,
+                  style: Theme.of(context).textTheme.display1.copyWith(
+                        fontSize: 26.0,
+                      ),
+                ),
+                SizedBox(height: 12.0),
+                Divider(height: 20.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.baseline,
+                  textBaseline: TextBaseline.alphabetic,
                   children: <Widget>[
                     Text(
-                      message.subject.isNotEmpty
-                          ? message.subject
-                          : S.of(context).messages_no_subject,
-                      style: Theme.of(context).textTheme.display1.copyWith(
-                            fontSize: 26.0,
-                          ),
+                      message.fromToDisplay,
+                      style: Theme.of(context).textTheme.subhead,
                     ),
-                    SizedBox(height: 12.0),
-                    Divider(height: 20.0),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.baseline,
-                      textBaseline: TextBaseline.alphabetic,
-                      children: <Widget>[
-                        Text(
-                          message.fromToDisplay,
-                          style: Theme.of(context).textTheme.subhead,
-                        ),
-                        Text(DateFormatting.formatDateFromSeconds(
-                          message.timeStampInUTC,
-                          Localizations.localeOf(context).languageCode,
-                        )),
-                      ],
+                    Text(DateFormatting.formatDateFromSeconds(
+                      message.timeStampInUTC,
+                      Localizations.localeOf(context).languageCode,
+                    )),
+                  ],
+                ),
+                SizedBox(height: 10.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.baseline,
+                  textBaseline: TextBaseline.alphabetic,
+                  children: <Widget>[
+                    Text(
+                      _formatTo(message),
+                      style: Theme.of(context).textTheme.caption,
                     ),
-                    SizedBox(height: 10.0),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.baseline,
-                      textBaseline: TextBaseline.alphabetic,
-                      children: <Widget>[
-                        Text(
-                          _formatTo(message),
-                          style: Theme.of(context).textTheme.caption,
-                        ),
 
 //                      Text(
 //                        S.of(context).messages_show_details,
 //                        style: TextStyle(decoration: TextDecoration.underline),
 //                      ),
-                      ],
-                    ),
-                    if (attachments.isNotEmpty) Divider(),
-                    ...attachments.map((attachment) {
-                      if (attachment.isInline) {
-                        return SizedBox();
-                      } else {
-                        return Attachment(attachment);
-                      }
-                    }).toList(),
-                    Divider(height: 24.0),
-                    MessageBody(message, attachments),
                   ],
-                );
-              },
-            )),
+                ),
+                if (attachments.isNotEmpty) Divider(),
+                GestureDetector(
+                  onTap: () =>
+                      setState(() => _showAttachments = !_showAttachments),
+                  child: Text(
+                    _showAttachments
+                        ? S.of(context).messages_show_message_body
+                        : S.of(context).messages_show_attachments,
+                    style: TextStyle(decoration: TextDecoration.underline),
+                  ),
+                ),
+                if (attachments.isNotEmpty)
+                  Flexible(
+                    flex: _showAttachments ? 1 : 0,
+                    child: Container(
+                      height: _showAttachments ? null : 0,
+                      child: ListView(
+                        children: attachments.map((attachment) {
+                          if (attachment.isInline) {
+                            return SizedBox();
+                          } else {
+                            return Attachment(attachment);
+                          }
+                        }).toList(),
+                      ),
+                    ),
+                  ),
+                Divider(height: 24.0),
+                Flexible(
+                    flex: _showAttachments ? 0 : 1,
+                    child: Container(
+                        height: _showAttachments ? 0 : null,
+                        child: MessageBody(message, attachments))),
+              ],
+            ),
+          ),
+//            PageView.builder(
+//              onPageChanged: (int i) {
+//                _currentPage = i;
+//                _startSetSeenTimer(context);
+//              },
+//              controller: _pageCtrl,
+//              itemCount: widget.messages.length,
+//              itemBuilder: (_, int i) {
+//                final message = widget.messages[i];
+//                final attachments = MailAttachment.fromJsonString(
+//                  message.attachmentsInJson,
+//                );
+//
+//                return
+//              },
+//            )),
+        ),
       ),
     );
   }

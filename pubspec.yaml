@@ -39,6 +39,7 @@ dependencies:
   animated_stream_list: ^1.0.0
   flutter_html: ^0.11.0
   webview_flutter: ^0.3.15+1
+  cookie_jar: ^1.0.0
 
   # misc
   uuid: ^2.0.2

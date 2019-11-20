@@ -121,7 +121,9 @@ class S implements WidgetsLocalizations {
   String get messages_reply_all => "Reply to all";
   String get messages_saved_in_drafts => "Message saved in drafts";
   String get messages_sending => "Sending message...";
+  String get messages_show_attachments => "Show attachments";
   String get messages_show_details => "Show details";
+  String get messages_show_message_body => "Show message body";
   String get messages_subject => "Subject";
   String get messages_to => "To";
   String get messages_to_me => "To me";

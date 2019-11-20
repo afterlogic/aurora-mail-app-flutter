@@ -4,6 +4,7 @@ import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:aurora_mail/utils/api_utils.dart';
+import 'package:aurora_mail/utils/mail_utils.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -28,6 +29,7 @@ class _MessageBodyState extends State<MessageBody> {
 
   String _plainData;
   String _htmlData;
+  bool _pageLoaded = false;
 
   @override
   void didChangeDependencies() {
@@ -51,46 +53,70 @@ class _MessageBodyState extends State<MessageBody> {
       return null;
     }
 
+    setState(() => _htmlData = htmlData);
+
     for (final attachment in widget.attachments) {
       try {
         final res = await http.get(
             AuthBloc.currentUser.hostname + attachment.viewUrl,
             headers: getHeaderWithToken());
+        if (!mounted) break;
 
         htmlData = htmlData.replaceFirst(
-          "cid:${attachment.cid}",
-          "data:image/png;base64," + base64Encode(res.bodyBytes),
+          "data-x-src-cid=\"${attachment.cid}\"",
+          "src=\"data:image/png;base64, ${base64Encode(res.bodyBytes)}\"",
+//          "data:image/png;base64," + base64Encode(res.bodyBytes),
         );
-      } catch (err, s) {
-        print("VO: err: ${err}");
-        print("VO: s: ${s}");
-      }
-    }
+        _controller?.loadUrl(_getHtmlUri(htmlData));
 
-    setState(() => _htmlData = htmlData);
+        setState(() => _htmlData = htmlData);
+      } catch (err, s) {
+        print("err: ${err}");
+        print("s: ${s}");
+      }
+
+//      htmlData = htmlData.replaceFirst(
+//        "cid:${attachment.cid}",
+//        AuthBloc.currentUser.hostname + attachment.viewUrl,
+//      );
+    }
   }
 
-  String getWebColor(Color colorObj) {
-    final base = colorObj.toString();
-    final color = base.substring(base.length - 7, base.length - 1);
-    final opacity = base.substring(base.length - 9, base.length - 7);
-    return "#$color$opacity";
+  String _getHtmlUri(String html) {
+    final wrappedHtml = MailUtils.wrapInHtml(context, html);
+    return Uri.dataFromString(wrappedHtml,
+        mimeType: 'text/html', encoding: Encoding.getByName('utf-8'))
+        .toString();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        height: _htmlData == null ? null : _webViewHeight,
-        child: _buildMessageBody());
+    return Stack(
+      children: [
+        Container(
+//          height: _webViewHeight,
+          child: _buildMessageBody(),
+        ),
+        Positioned.fill(
+          child: IgnorePointer(
+            ignoring: true,
+            child: AnimatedOpacity(
+              opacity: _pageLoaded && _htmlData != null ? 0.0 : 1.0,
+              duration: Duration(milliseconds: 200),
+              child: Container(color: Theme.of(context).scaffoldBackgroundColor),
+//            child: Container(color: Colors.red),
+            ),
+          ),
+        ),
+      ],
+    );
   }
 
   Widget _buildMessageBody() {
     if (_htmlData != null) {
       return WebView(
         key: Key(widget.message.uid.toString()),
-        initialUrl: Uri.dataFromString(_htmlData,
-                mimeType: 'text/html', encoding: Encoding.getByName('utf-8'))
-            .toString(),
+        initialUrl: _getHtmlUri(_htmlData),
         javascriptMode: JavascriptMode.unrestricted,
         onWebViewCreated: (WebViewController c) => _controller = c,
         navigationDelegate: (NavigationRequest request) {
@@ -103,11 +129,11 @@ class _MessageBodyState extends State<MessageBody> {
           final prevHeight = _webViewHeight;
           final parsedHeight = double.parse(height);
           setState(() {
-//            print("VO: parsedHeight: ${parsedHeight}");
             if (height != null && prevHeight != parsedHeight) {
-              _webViewHeight = parsedHeight > 1500.0 ? 1500.0 : parsedHeight;
+              _webViewHeight = parsedHeight > 2000.0 ? 2000.0 : parsedHeight;
             }
           });
+          setState(() => _pageLoaded = true);
         },
         gestureRecognizers: Set()
           ..add(Factory(() => HorizontalDragGestureRecognizer())),
