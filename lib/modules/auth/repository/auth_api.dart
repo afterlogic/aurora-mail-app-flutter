@@ -39,6 +39,7 @@ class AuthApi {
         serverId: id,
         token: token,
         hostname: hostname,
+        darkThemeEnabled: false,
       );
     } else {
       throw ServerError(getErrMsg(resBody));

@@ -41,7 +41,8 @@ class LoggedOut extends AuthState {}
 class AuthError extends AuthState {
   final dynamic errorMsg;
 
-  const AuthError(this.errorMsg);
+  const AuthError(this.errorMsg)
+      : assert(errorMsg is String || errorMsg is ErrorForTranslation);
 
   String getErrorMsgString(BuildContext context) {
     if (errorMsg is ErrorForTranslation) {

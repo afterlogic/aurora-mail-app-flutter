@@ -41,12 +41,12 @@ class ServerError implements Exception {
   ServerError(this.message) : super();
 
   @override
-  String toString() => message;
+  String toString() => message.toString();
 }
 
 dynamic formatError(dynamic err, StackTrace stack) {
   if (err is ServerError) {
-    return err.toString();
+    return err.message;
   } else if (err is SocketException) {
     if (err.osError.errorCode == 7) {
       return ErrorForTranslation.ConnectionError;
@@ -56,7 +56,7 @@ dynamic formatError(dynamic err, StackTrace stack) {
   } else {
     print("Debug error: $err");
     print("Debug stack: $stack");
-    return err.toString();
+    return err;
     // TODO set unknown for release
 //    return "Unknown error";
   }
