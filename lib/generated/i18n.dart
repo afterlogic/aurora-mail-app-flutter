@@ -129,6 +129,9 @@ class S implements WidgetsLocalizations {
   String get messages_to => "To";
   String get messages_to_me => "To me";
   String get settings => "Settings";
+  String get settings_about => "About";
+  String get settings_about_privacy_policy => "Privacy policy";
+  String get settings_about_terms_of_service => "Terms of Service";
   String get settings_common => "Common";
   String get settings_dark_theme => "Dark theme";
   String get settings_language => "Language";
@@ -160,6 +163,7 @@ class S implements WidgetsLocalizations {
   String messages_attachment_upload_success(String path) => "File uploaded into: $path";
   String messages_attachment_uploading(String fileName) => "Uploading $fileName...";
   String messages_delete_desc_with_subject(String subject) => "Are you sure you want to delete $subject?";
+  String settings_about_app_version(String version) => "Version $version";
 }
 
 class $ru extends S {
@@ -180,6 +184,8 @@ class $ru extends S {
   String get error_input_validation_email => "Адрес электронной почты не действителен";
   @override
   String get messages_attachment_upload_failed => "Загрузка не удалась";
+  @override
+  String get settings_about_terms_of_service => "Правила пользования";
   @override
   String get error_server_voice_not_allowed => "Голос не разрешен";
   @override
@@ -262,6 +268,8 @@ class $ru extends S {
   String get error_server_system_not_configured => "Система не настроена";
   @override
   String get error_server_rest_api_disabled => "Остальные API отключены";
+  @override
+  String get settings_about_privacy_policy => "Политика конфиденциальности";
   @override
   String get app_title => "Mail Client";
   @override
@@ -365,6 +373,8 @@ class $ru extends S {
   @override
   String get settings_sync_frequency_minutes5 => "5 минут";
   @override
+  String get settings_about => "О приложении";
+  @override
   String get error_server_account_exists => "Такой аккаунт уже существует";
   @override
   String get error_server_can_not_create_account => "Не могу создать аккаунт";
@@ -431,6 +441,8 @@ class $ru extends S {
   @override
   String compose_forward_subject(String subject) => "Тема: $subject";
   @override
+  String settings_about_app_version(String version) => "Версия $version";
+  @override
   String messages_attachment_uploading(String fileName) => "Загрузка $fileName...";
   @override
   String compose_forward_bcc(String emails) => "BCC: $emails";
@@ -464,6 +476,8 @@ class $tr extends S {
   String get error_input_validation_email => "E-posta geçerli değil";
   @override
   String get messages_attachment_upload_failed => "Yükleme başarısız";
+  @override
+  String get settings_about_terms_of_service => "Kullanım Şartları";
   @override
   String get error_server_voice_not_allowed => "Sese izin verilmiyor";
   @override
@@ -546,6 +560,8 @@ class $tr extends S {
   String get error_server_system_not_configured => "Sistem yapılandırılmamış";
   @override
   String get error_server_rest_api_disabled => "Api dinlenme";
+  @override
+  String get settings_about_privacy_policy => "Gizlilik Politikası";
   @override
   String get app_title => "Mail Client";
   @override
@@ -649,6 +665,8 @@ class $tr extends S {
   @override
   String get settings_sync_frequency_minutes5 => "5 dakika";
   @override
+  String get settings_about => "Uygulama hakkında";
+  @override
   String get error_server_account_exists => "Böyle bir hesap zaten var";
   @override
   String get error_server_can_not_create_account => "Hesap oluşturulamıyor";
@@ -714,6 +732,8 @@ class $tr extends S {
   String messages_attachment_upload_success(String path) => "Dosya yüklendi: $path";
   @override
   String compose_forward_subject(String subject) => "Konu: $subject";
+  @override
+  String settings_about_app_version(String version) => "Versiyon $version";
   @override
   String messages_attachment_uploading(String fileName) => "$fileName yükleniyor ...";
   @override

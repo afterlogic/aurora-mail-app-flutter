@@ -3,6 +3,7 @@ import 'package:aurora_mail/modules/mail/screens/compose/compose_android.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/compose_route.dart';
 import 'package:aurora_mail/modules/mail/screens/message_view/message_view_android.dart';
 import 'package:aurora_mail/modules/mail/screens/message_view/message_view_route.dart';
+import 'package:aurora_mail/modules/settings/screens/about/about_android.dart';
 import 'package:aurora_mail/modules/settings/screens/common_settings/common_settings_android.dart';
 import 'package:aurora_mail/modules/settings/screens/common_settings/common_settings_route.dart';
 import 'package:aurora_mail/modules/settings/screens/settings_main/settings_main_android.dart';
@@ -21,6 +22,7 @@ import 'auth/screens/login/login_route.dart';
 import 'mail/blocs/mail_bloc/mail_bloc.dart';
 import 'mail/screens/messages_list/messages_list_android.dart';
 import 'mail/screens/messages_list/messages_list_route.dart';
+import 'settings/screens/about/about_route.dart';
 
 class AppNavigation {
   static Route onGenerateRoute(RouteSettings settings) {
@@ -102,6 +104,14 @@ class AppNavigation {
               name: settings.name,
             ),
             page: SyncSettingsAndroid());
+        break;
+
+      case AboutRoute.name:
+        return SlideHorizontalRoute(
+            settings: RouteSettings(
+              name: settings.name,
+            ),
+            page: AboutAndroid());
         break;
 
       // ==================================

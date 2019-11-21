@@ -12,7 +12,7 @@
 
     <application
             android:name=".MailApplication"
-            android:label="aurora_mail"
+            android:label="Mail Client"
             android:icon="@mipmap/ic_launcher">
         <activity
                 android:name=".MainActivity"
