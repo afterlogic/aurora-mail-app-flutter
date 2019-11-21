@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:package_info/package_info.dart';
 
 import 'app_navigation.dart';
 import 'auth/blocs/auth_bloc/bloc.dart';
@@ -20,10 +21,16 @@ class App extends StatefulWidget {
 class _AppState extends State<App> {
   final _authBloc = new AuthBloc();
   final _settingsBloc = new SettingsBloc();
+  PackageInfo _appInfo;
 
   @override
   void initState() {
     super.initState();
+    _initApp();
+  }
+
+  void _initApp() async {
+    _appInfo = await PackageInfo.fromPlatform();
     _authBloc.add(InitUserAndAccounts());
     Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
       _settingsBloc.add(UpdateConnectivity(result));
@@ -61,7 +68,7 @@ class _AppState extends State<App> {
                         ),
                       ],
                       child: MaterialApp(
-                        title: "Aurora Mail",
+                        title: _appInfo.appName,
                         onGenerateRoute: AppNavigation.onGenerateRoute,
                         theme: settingsState.darkThemeEnabled
                             ? AppTheme.dark
