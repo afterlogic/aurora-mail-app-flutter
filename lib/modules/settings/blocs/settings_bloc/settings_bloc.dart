@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/settings_methods.dart';
+import 'package:aurora_mail/modules/settings/models/language.dart';
 import 'package:aurora_mail/modules/settings/models/sync_duration.dart';
 import 'package:aurora_mail/modules/settings/models/sync_period.dart';
 import 'package:bloc/bloc.dart';
@@ -28,6 +29,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     if (event is SetFrequency) yield* _setFrequency(event);
     if (event is SetPeriod) yield* _setPeriod(event);
     if (event is SetDarkTheme) yield* _setDarkTheme(event);
+    if (event is SetLanguage) yield* _setLanguage(event);
   }
 
   Stream<SettingsState> _initSyncSettings(InitSettings event) async* {
@@ -35,6 +37,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       syncFrequency: event.user.syncFreqInSeconds,
       syncPeriod: event.user.syncPeriod,
       darkThemeEnabled: event.user.darkThemeEnabled,
+      language: Language.fromJson(event.user.language),
     );
   }
 
@@ -80,6 +83,17 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
           .copyWith(darkThemeEnabled: Value(event.darkThemeEnabled));
     } else {
       yield SettingsLoaded(darkThemeEnabled: event.darkThemeEnabled);
+    }
+  }
+
+  Stream<SettingsState> _setLanguage(SetLanguage event) async* {
+    await _methods.setLanguage(event.language);
+
+    if (state is SettingsLoaded) {
+      yield (state as SettingsLoaded)
+          .copyWith(language: Value(event.language));
+    } else {
+      yield SettingsLoaded(language: event.language);
     }
   }
 }

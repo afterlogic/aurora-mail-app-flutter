@@ -1,3 +1,4 @@
+import 'package:aurora_mail/modules/settings/models/language.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:equatable/equatable.dart';
 import 'package:moor_flutter/moor_flutter.dart';
@@ -15,12 +16,14 @@ class SettingsLoaded extends SettingsState {
   final int syncFrequency;
   final String syncPeriod;
   final bool darkThemeEnabled;
+  final Language language;
   final ConnectivityResult connection;
 
   const SettingsLoaded({
     this.syncFrequency,
     this.syncPeriod,
     this.darkThemeEnabled = false,
+    this.language,
     this.connection = ConnectivityResult.none,
   });
 
@@ -28,6 +31,7 @@ class SettingsLoaded extends SettingsState {
     Value<int> syncFrequency,
     Value<String> syncPeriod,
     Value<bool> darkThemeEnabled,
+    Value<Language> language,
     Value<ConnectivityResult> connection,
   }) {
     return new SettingsLoaded(
@@ -37,6 +41,7 @@ class SettingsLoaded extends SettingsState {
       darkThemeEnabled: darkThemeEnabled != null
           ? darkThemeEnabled.value
           : this.darkThemeEnabled,
+      language: language != null ? language.value : this.language,
       connection: connection != null ? connection.value : this.connection,
     );
   }
@@ -46,6 +51,7 @@ class SettingsLoaded extends SettingsState {
         syncFrequency,
         syncPeriod,
         darkThemeEnabled,
+        language,
         connection,
       ];
 }

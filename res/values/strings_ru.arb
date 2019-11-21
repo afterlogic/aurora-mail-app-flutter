@@ -49,6 +49,7 @@
   "settings": "Настройки",
   "settings_common": "Общие",
   "settings_language": "Язык",
+  "settings_language_system": "Язык системы",
   "settings_dark_theme": "Тёмная тема",
   "settings_sync": "Синхронизация",
   "settings_sync_frequency": "Обновлять каждые",

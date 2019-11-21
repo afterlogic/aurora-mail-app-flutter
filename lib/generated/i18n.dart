@@ -132,6 +132,7 @@ class S implements WidgetsLocalizations {
   String get settings_common => "Common";
   String get settings_dark_theme => "Dark theme";
   String get settings_language => "Language";
+  String get settings_language_system => "System language";
   String get settings_sync => "Sync";
   String get settings_sync_frequency => "Sync frequency";
   String get settings_sync_frequency_daily => "daily";
@@ -241,6 +242,8 @@ class $ru extends S {
   String get messages_to => "Кому";
   @override
   String get login_input_password => "Пароль";
+  @override
+  String get settings_language_system => "Язык системы";
   @override
   String get error_server_user_not_allowed => "Пользователь не допущен";
   @override
@@ -523,6 +526,8 @@ class $tr extends S {
   String get messages_to => "Için";
   @override
   String get login_input_password => "Parola";
+  @override
+  String get settings_language_system => "Sistem dili";
   @override
   String get error_server_user_not_allowed => "Kullanıcıya izin verilmiyor";
   @override

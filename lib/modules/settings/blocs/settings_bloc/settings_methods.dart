@@ -1,6 +1,7 @@
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/users/users_dao.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
+import 'package:aurora_mail/modules/settings/models/language.dart';
 import 'package:aurora_mail/modules/settings/models/sync_duration.dart';
 import 'package:aurora_mail/modules/settings/models/sync_period.dart';
 import 'package:moor_flutter/moor_flutter.dart';
@@ -35,6 +36,16 @@ class SettingsMethods {
     await _usersDao.updateUser(
       localId,
       new UsersCompanion(darkThemeEnabled: Value(darkThemeEnabled)),
+    );
+
+    return _usersDao.getUserByLocalId(localId);
+  }
+
+  Future<User> setLanguage(Language language) async {
+    final localId = AuthBloc.currentUser.localId;
+    await _usersDao.updateUser(
+      localId,
+      new UsersCompanion(language: Value(language?.toNullableJson())),
     );
 
     return _usersDao.getUserByLocalId(localId);

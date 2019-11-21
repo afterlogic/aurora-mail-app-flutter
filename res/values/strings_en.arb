@@ -51,6 +51,7 @@
   "settings": "Settings",
   "settings_common": "Common",
   "settings_language": "Language",
+  "settings_language_system": "System language",
   "settings_dark_theme": "Dark theme",
   "settings_sync": "Sync",
   "settings_sync_frequency": "Sync frequency",

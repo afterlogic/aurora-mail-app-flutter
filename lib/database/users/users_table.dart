@@ -17,5 +17,5 @@ class Users extends Table {
 
   BoolColumn get darkThemeEnabled => boolean().withDefault(Constant(false))();
 
-  TextColumn get language => text().nullable()();
+  TextColumn get languageInNullableJson => text().nullable()();
 }

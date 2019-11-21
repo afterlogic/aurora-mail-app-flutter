@@ -75,6 +75,9 @@ class _AppState extends State<App> {
                         supportedLocales: S.delegate.supportedLocales,
                         localeResolutionCallback: S.delegate.resolution(
                             fallback: new Locale("en", ""), withCountry: false),
+                        locale: settingsState.language != null
+                            ? settingsState.language.toLocale()
+                            : null,
                         initialRoute: authState.needsLogin
                             ? LoginRoute.name
                             : MessagesListRoute.name,

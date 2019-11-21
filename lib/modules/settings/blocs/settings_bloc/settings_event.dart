@@ -1,4 +1,5 @@
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/modules/settings/models/language.dart';
 import 'package:aurora_mail/modules/settings/models/sync_duration.dart';
 import 'package:aurora_mail/modules/settings/models/sync_period.dart';
 import 'package:connectivity/connectivity.dart';
@@ -45,6 +46,15 @@ class SetDarkTheme extends SettingsEvent {
 
   @override
   List<Object> get props => [darkThemeEnabled];
+}
+
+class SetLanguage extends SettingsEvent {
+  final Language language;
+
+  SetLanguage(this.language);
+
+  @override
+  List<Object> get props => [language];
 }
 
 class UpdateConnectivity extends SettingsEvent {
