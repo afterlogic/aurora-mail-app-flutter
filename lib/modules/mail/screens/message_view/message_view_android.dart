@@ -37,7 +37,6 @@ class _MessageViewAndroidState extends State<MessageViewAndroid>
     with TickerProviderStateMixin {
   final _messageViewBloc = new MessageViewBloc();
 
-  PageController _pageCtrl;
   TabController _tabCtrl;
   int _currentPage;
 
@@ -48,7 +47,6 @@ class _MessageViewAndroidState extends State<MessageViewAndroid>
     super.initState();
     _tabCtrl = new TabController(length: 2, vsync: this);
     _currentPage = widget.initialPage ?? 0;
-    _pageCtrl = new PageController(initialPage: _currentPage, keepPage: false);
   }
 
   @override
@@ -144,6 +142,8 @@ class _MessageViewAndroidState extends State<MessageViewAndroid>
     final attachments = MailAttachment.fromJsonString(
       message.attachmentsInJson,
     );
+    final showTabs = attachments.where((a) => !a.isInline).isNotEmpty;
+
     return BlocProvider<MessageViewBloc>.value(
       value: _messageViewBloc,
       child: Scaffold(
@@ -213,80 +213,60 @@ class _MessageViewAndroidState extends State<MessageViewAndroid>
                       _formatTo(message),
                       style: Theme.of(context).textTheme.caption,
                     ),
-
-//                      Text(
-//                        S.of(context).messages_show_details,
-//                        style: TextStyle(decoration: TextDecoration.underline),
-//                      ),
                   ],
                 ),
-                if (attachments.isNotEmpty)
-                  Divider(),
-//                GestureDetector(
-//                  onTap: () =>
-//                      setState(() => _showAttachments = !_showAttachments),
-//                  child: Text(
-//                    _showAttachments
-//                        ?
-//                        : S.of(context).messages_view_tab_attachments,
-//                    style: TextStyle(decoration: TextDecoration.underline),
-//                  ),
-//                ),
-                SizedBox(
-                  height: 35.0,
-                  child: TabBar(
-                    controller: _tabCtrl,
-                    labelColor: Theme.of(context).textTheme.body2.color,
-                    indicatorSize: TabBarIndicatorSize.label,
-                    tabs: <Widget>[
-                      Tab(text: S.of(context).messages_view_tab_message_body),
-                      Tab(text: S.of(context).messages_view_tab_attachments),
-                    ],
-                  ),
-                ),
-                Flexible(
-                  child: TabBarView(
-                    physics: NeverScrollableScrollPhysics(),
-                    controller: _tabCtrl,
-                    children: <Widget>[
-                      MessageBody(message, attachments),
-                      Center(
-                        child: attachments.where((a) => !a.isInline).isEmpty
-                            ? Text(S.of(context).messages_attachments_empty)
-                            : ListView(
-                                children: attachments.map((attachment) {
-                                  if (attachment.isInline) {
-                                    return SizedBox();
-                                  } else {
-                                    return Attachment(attachment);
-                                  }
-                                }).toList(),
-                              ),
-                      ),
-                    ],
-                  ),
-                )
+                Divider(),
+                ...showTabs
+                    ? _buildWithTabs(message, attachments)
+                    : _buildWithoutTabs(message, attachments),
               ],
             ),
           ),
-//            PageView.builder(
-//              onPageChanged: (int i) {
-//                _currentPage = i;
-//                _startSetSeenTimer(context);
-//              },
-//              controller: _pageCtrl,
-//              itemCount: widget.messages.length,
-//              itemBuilder: (_, int i) {
-//                final message = widget.messages[i];
-//                final attachments = MailAttachment.fromJsonString(
-//                  message.attachmentsInJson,
-//                );
-//
-//                return
-//              },
-//            )),
         ),
       ),
     );
+  }
+
+  List<Widget> _buildWithTabs(
+      Message message, List<MailAttachment> attachments) {
+    return [
+      SizedBox(
+        height: 35.0,
+        child: TabBar(
+          controller: _tabCtrl,
+          labelColor: Theme.of(context).textTheme.body2.color,
+          indicatorSize: TabBarIndicatorSize.label,
+          tabs: <Widget>[
+            Tab(text: S.of(context).messages_view_tab_message_body),
+            Tab(text: S.of(context).messages_view_tab_attachments),
+          ],
+        ),
+      ),
+      Flexible(
+        child: TabBarView(
+          physics: NeverScrollableScrollPhysics(),
+          controller: _tabCtrl,
+          children: <Widget>[
+            MessageBody(message, attachments),
+            Center(
+              child: ListView(
+                children: attachments.map((attachment) {
+                  if (attachment.isInline) {
+                    return SizedBox();
+                  } else {
+                    return Attachment(attachment);
+                  }
+                }).toList(),
+              ),
+            ),
+          ],
+        ),
+      )
+    ];
+  }
+
+  List<Widget> _buildWithoutTabs(
+      Message message, List<MailAttachment> attachments) {
+    return [Flexible(child: MessageBody(message, attachments))];
   }
 }
