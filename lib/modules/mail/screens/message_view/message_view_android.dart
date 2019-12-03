@@ -33,11 +33,12 @@ class MessageViewAndroid extends StatefulWidget {
   _MessageViewAndroidState createState() => _MessageViewAndroidState();
 }
 
-class _MessageViewAndroidState extends State<MessageViewAndroid> {
+class _MessageViewAndroidState extends State<MessageViewAndroid>
+    with TickerProviderStateMixin {
   final _messageViewBloc = new MessageViewBloc();
 
   PageController _pageCtrl;
-  bool _showAttachments = false;
+  TabController _tabCtrl;
   int _currentPage;
 
   Timer _setSeenTimer;
@@ -45,6 +46,7 @@ class _MessageViewAndroidState extends State<MessageViewAndroid> {
   @override
   void initState() {
     super.initState();
+    _tabCtrl = new TabController(length: 2, vsync: this);
     _currentPage = widget.initialPage ?? 0;
     _pageCtrl = new PageController(initialPage: _currentPage, keepPage: false);
   }
@@ -218,39 +220,52 @@ class _MessageViewAndroidState extends State<MessageViewAndroid> {
 //                      ),
                   ],
                 ),
-                if (attachments.isNotEmpty) Divider(),
-                GestureDetector(
-                  onTap: () =>
-                      setState(() => _showAttachments = !_showAttachments),
-                  child: Text(
-                    _showAttachments
-                        ? S.of(context).messages_show_message_body
-                        : S.of(context).messages_show_attachments,
-                    style: TextStyle(decoration: TextDecoration.underline),
+                if (attachments.isNotEmpty)
+                  Divider(),
+//                GestureDetector(
+//                  onTap: () =>
+//                      setState(() => _showAttachments = !_showAttachments),
+//                  child: Text(
+//                    _showAttachments
+//                        ?
+//                        : S.of(context).messages_view_tab_attachments,
+//                    style: TextStyle(decoration: TextDecoration.underline),
+//                  ),
+//                ),
+                SizedBox(
+                  height: 35.0,
+                  child: TabBar(
+                    controller: _tabCtrl,
+                    labelColor: Theme.of(context).textTheme.body2.color,
+                    indicatorSize: TabBarIndicatorSize.label,
+                    tabs: <Widget>[
+                      Tab(text: S.of(context).messages_view_tab_message_body),
+                      Tab(text: S.of(context).messages_view_tab_attachments),
+                    ],
                   ),
                 ),
-                if (attachments.isNotEmpty)
-                  Flexible(
-                    flex: _showAttachments ? 1 : 0,
-                    child: Container(
-                      height: _showAttachments ? null : 0,
-                      child: ListView(
-                        children: attachments.map((attachment) {
-                          if (attachment.isInline) {
-                            return SizedBox();
-                          } else {
-                            return Attachment(attachment);
-                          }
-                        }).toList(),
-                      ),
-                    ),
-                  ),
-                Divider(height: 24.0),
                 Flexible(
-                    flex: _showAttachments ? 0 : 1,
-                    child: Container(
-                        height: _showAttachments ? 0 : null,
-                        child: MessageBody(message, attachments))),
+                  child: TabBarView(
+                    physics: NeverScrollableScrollPhysics(),
+                    controller: _tabCtrl,
+                    children: <Widget>[
+                      MessageBody(message, attachments),
+                      Center(
+                        child: attachments.where((a) => !a.isInline).isEmpty
+                            ? Text(S.of(context).messages_attachments_empty)
+                            : ListView(
+                                children: attachments.map((attachment) {
+                                  if (attachment.isInline) {
+                                    return SizedBox();
+                                  } else {
+                                    return Attachment(attachment);
+                                  }
+                                }).toList(),
+                              ),
+                      ),
+                    ],
+                  ),
+                )
               ],
             ),
           ),

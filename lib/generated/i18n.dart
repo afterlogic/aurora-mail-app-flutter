@@ -106,6 +106,7 @@ class S implements WidgetsLocalizations {
   String get messages_attachment_upload => "Upload attachment";
   String get messages_attachment_upload_cancel => "Cancel upload";
   String get messages_attachment_upload_failed => "Upload failed";
+  String get messages_attachments_empty => "No attachments";
   String get messages_bcc => "BCC";
   String get messages_cc => "CC";
   String get messages_delete_desc => "Are you sure you want to delete this message?";
@@ -122,12 +123,12 @@ class S implements WidgetsLocalizations {
   String get messages_reply_all => "Reply to all";
   String get messages_saved_in_drafts => "Message saved in drafts";
   String get messages_sending => "Sending message...";
-  String get messages_show_attachments => "Show attachments";
   String get messages_show_details => "Show details";
-  String get messages_show_message_body => "Show message body";
   String get messages_subject => "Subject";
   String get messages_to => "To";
   String get messages_to_me => "To me";
+  String get messages_view_tab_attachments => "Attachments";
+  String get messages_view_tab_message_body => "Message body";
   String get settings => "Settings";
   String get settings_about => "About";
   String get settings_about_privacy_policy => "Privacy policy";
@@ -172,6 +173,8 @@ class $ru extends S {
   @override
   TextDirection get textDirection => TextDirection.ltr;
 
+  @override
+  String get messages_view_tab_attachments => "Вложения";
   @override
   String get error_server_rest_invalid_parameters => "Неверные параметры REST";
   @override
@@ -236,6 +239,8 @@ class $ru extends S {
   String get error_server_rest_unknown_method => "Неизвестный метод REST";
   @override
   String get error_server_rest_invalid_token => "Недействительный токен REST";
+  @override
+  String get messages_view_tab_message_body => "Тело письма";
   @override
   String get error_compose_wait_attachments => "Пожалуйста, дождитесь окончания загрузки файлов";
   @override
@@ -409,6 +414,8 @@ class $ru extends S {
   @override
   String get folders_starred => "Отмеченные";
   @override
+  String get messages_attachments_empty => "Нет вложений";
+  @override
   String get error_server_mail_server_error => "Ошибка почтового сервера";
   @override
   String get error_server_can_not_create_helpdesk_user => "Невозможно создать пользователя службы поддержки";
@@ -464,6 +471,8 @@ class $tr extends S {
   @override
   TextDirection get textDirection => TextDirection.ltr;
 
+  @override
+  String get messages_view_tab_attachments => "Attachments";
   @override
   String get error_server_rest_invalid_parameters => "REST geçersiz parametre";
   @override
@@ -526,6 +535,8 @@ class $tr extends S {
   String get error_server_rest_unknown_method => "REST bilinmeyen yöntem";
   @override
   String get error_server_rest_invalid_token => "REST geçersiz anahtar";
+  @override
+  String get messages_view_tab_message_body => "Message body";
   @override
   String get error_compose_wait_attachments => "Lütfen eklerin yüklenmesi tamamlanıncaya kadar bekleyin";
   @override
@@ -692,6 +703,8 @@ class $tr extends S {
   String get messages_reply => "Yanıtla";
   @override
   String get folders_starred => "Yıldızlı";
+  @override
+  String get messages_attachments_empty => "No attachments";
   @override
   String get error_server_mail_server_error => "E-posta sunucusu hatası";
   @override
