@@ -465,21 +465,19 @@ class $tr extends S {
   TextDirection get textDirection => TextDirection.ltr;
 
   @override
-  String get error_server_rest_invalid_parameters => "Geçersiz parametreleri dinlendir";
+  String get error_server_rest_invalid_parameters => "REST geçersiz parametre";
   @override
   String get settings_sync_period_years1 => "1 yıl";
   @override
-  String get compose_body_placeholder => "Mektup metni...";
+  String get compose_body_placeholder => "İleti metni...";
   @override
   String get error_server_file_not_found => "Dosya bulunamadı";
   @override
   String get error_input_validation_email => "E-posta geçerli değil";
   @override
-  String get messages_attachment_upload_failed => "Yükleme başarısız";
+  String get messages_attachment_upload_failed => "Yükleme işlemi başarısız";
   @override
-  String get settings_about_terms_of_service => "Kullanım Şartları";
-  @override
-  String get error_server_voice_not_allowed => "Sese izin verilmiyor";
+  String get error_server_voice_not_allowed => "Ses'e izin verilmiyor";
   @override
   String get error_server_data_base_error => "Veri tabanı hatası";
   @override
@@ -489,11 +487,11 @@ class $tr extends S {
   @override
   String get error_server_invalid_input_parameter => "Geçersiz giriş parametresi";
   @override
-  String get messages_from => "Itibaren";
+  String get messages_from => "Gönderen";
   @override
-  String get error_server_invalid_token => "Geçersiz belirteç";
+  String get error_server_invalid_token => "Geçersiz anahtar (token)";
   @override
-  String get messages_attachment_upload => "Ek yükle";
+  String get messages_attachment_upload => "Dosya yükle";
   @override
   String get messages_no_receivers => "Alıcı yok";
   @override
@@ -501,9 +499,9 @@ class $tr extends S {
   @override
   String get error_server_can_not_update_contact => "Kişi güncellenemiyor";
   @override
-  String get error_server_can_not_get_contact => "İletişim kurulamıyor";
+  String get error_server_can_not_get_contact => "Kişi verileri alınamıyor";
   @override
-  String get settings_common => "Yaygın";
+  String get settings_common => "Genel";
   @override
   String get error_server_contact_data_has_been_modified_by_another_application => "Kişi verileri başka bir uygulama tarafından değiştirildi";
   @override
@@ -515,37 +513,35 @@ class $tr extends S {
   @override
   String get error_server_module_not_found => "Modül bulunamadı";
   @override
-  String get messages_list_app_bar_loading_folders => "Klasörler yükleniyor ...";
+  String get messages_list_app_bar_loading_folders => "Klasörler yükleniyor...";
   @override
-  String get compose_forward_date_format => "EEE, MMM d, yyyy, HH: mm";
+  String get compose_forward_date_format => "EEE, MMM d, yyyy, HH:mm";
   @override
   String get error_server_captcha_error => "CAPTCHA hatası";
   @override
-  String get error_server_unknown_email => "bilinmeyen e-posta";
+  String get error_server_unknown_email => "Bilinmeyen e-posta";
   @override
   String get error_server_helpdesk_system_user_exists => "Yardım masası sistemi kullanıcısı zaten var";
   @override
-  String get error_server_rest_unknown_method => "Geri kalan bilinmeyen yöntem";
+  String get error_server_rest_unknown_method => "REST bilinmeyen yöntem";
   @override
-  String get error_server_rest_invalid_token => "Geçersiz belirteci bırak";
+  String get error_server_rest_invalid_token => "REST geçersiz anahtar";
   @override
-  String get error_compose_wait_attachments => "Lütfen eklerin yüklenmesini tamamlayana kadar bekleyin";
+  String get error_compose_wait_attachments => "Lütfen eklerin yüklenmesi tamamlanıncaya kadar bekleyin";
   @override
   String get error_server_files_not_allowed => "Dosyalara izin verilmiyor";
   @override
-  String get messages_saved_in_drafts => "Mesaj taslaklara kaydedildi";
+  String get messages_saved_in_drafts => "İleti taslaklara kaydedildi";
   @override
   String get error_server_demo_account => "Demo hesabı";
   @override
-  String get messages_to => "Için";
+  String get messages_to => "Alıcı";
   @override
-  String get login_input_password => "Parola";
-  @override
-  String get settings_language_system => "Sistem dili";
+  String get login_input_password => "Şifre";
   @override
   String get error_server_user_not_allowed => "Kullanıcıya izin verilmiyor";
   @override
-  String get btn_to_spam => "Spam yapmak";
+  String get btn_to_spam => "Spam'e taşı";
   @override
   String get settings_sync_frequency_hours1 => "1 saat";
   @override
@@ -555,21 +551,19 @@ class $tr extends S {
   @override
   String get btn_delete => "Sil";
   @override
-  String get messages_list_app_bar_logout => "Çıkış Yap";
+  String get messages_list_app_bar_logout => "Oturumu kapat";
   @override
   String get error_server_system_not_configured => "Sistem yapılandırılmamış";
   @override
-  String get error_server_rest_api_disabled => "Api dinlenme";
+  String get error_server_rest_api_disabled => "REST API devre dışı";
   @override
-  String get settings_about_privacy_policy => "Gizlilik Politikası";
+  String get app_title => "E-posta Okuyucu";
   @override
-  String get app_title => "Mail Client";
-  @override
-  String get error_server_helpdesk_unactivated_user => "Yardım masası etkin olmayan kullanıcı";
+  String get error_server_helpdesk_unactivated_user => "Etkin olmayan Yardım masası kullanıcısı";
   @override
   String get messages_attachment_upload_cancel => "Yüklemeyi iptal et";
   @override
-  String get error_server_calendars_not_allowed => "Takvime izin verilmiyor";
+  String get error_server_calendars_not_allowed => "Takvimlere izin verilmiyor";
   @override
   String get error_server_can_not_save_settings => "Ayarlar kaydedilemiyor";
   @override
@@ -579,7 +573,7 @@ class $tr extends S {
   @override
   String get error_server_can_not_change_password => "Şifre değiştirilemiyor";
   @override
-  String get error_server_rest_tenant_find_failed => "Dinlenme kiracı bulma başarısız oldu";
+  String get error_server_rest_tenant_find_failed => "REST kullanıcı bulma başarısız oldu";
   @override
   String get messages_list_app_bar_settings => "Ayarlar";
   @override
@@ -589,11 +583,11 @@ class $tr extends S {
   @override
   String get messages_attachment_download_cancel => "İndirmeyi iptal et";
   @override
-  String get error_server_rest_other_error => "Diğer hatayı dinlendir";
+  String get error_server_rest_other_error => "Diğer REST hatası";
   @override
   String get messages_reply_all => "Tümünü yanıtla";
   @override
-  String get messages_sending => "Mesaj göndermek...";
+  String get messages_sending => "İleti gönderiliyor...";
   @override
   String get messages_show_details => "Detayları göster";
   @override
@@ -601,77 +595,75 @@ class $tr extends S {
   @override
   String get settings => "Ayarlar";
   @override
-  String get settings_sync_frequency => "Senkronizasyon frekansı";
+  String get settings_sync_frequency => "Senkronizasyon sıklığı";
   @override
   String get messages_attachment_delete => "Eki sil";
   @override
   String get messages_bcc => "BCC";
   @override
-  String get settings_sync_period => "Senkronizasyon dönemi";
+  String get settings_sync_period => "Senkronizasyon periyodu";
   @override
-  String get error_login_input_email => "Lütfen e-posta giriniz";
+  String get error_login_input_email => "Lütfen e-posta adresini girin";
   @override
   String get folders_empty => "Klasör yok";
   @override
   String get btn_login => "Oturum aç";
   @override
-  String get error_server_license_limit => "Lisans sınırı";
+  String get error_server_license_limit => "Lisans limiti";
   @override
-  String get error_server_rest_invalid_credentials => "Geçersiz kimlik bilgilerini dinlendir";
+  String get error_server_rest_invalid_credentials => "REST geçersiz kimlik bilgileri";
   @override
-  String get compose_reply_date_format => "EEE, MMM d, yyyy, HH: mm";
+  String get compose_reply_date_format => "EEE, MMM d, yyyy, HH:mm";
   @override
-  String get error_server_access_denied => "Erişim reddedildi";
+  String get error_server_access_denied => "Erişim engellendi";
   @override
-  String get messages_empty => "Mesaj yok";
+  String get messages_empty => "İleti yok";
   @override
-  String get error_login_auto_discover => "Bu e-postadaki etki alanı tespit edilemedi, lütfen sunucunuzun URL'sini manuel olarak belirtin.";
+  String get error_login_auto_discover => "Bu e-postada alan adı tespit edilemedi, lütfen sunucunuzun URL'sini manuel olarak belirtin.";
   @override
   String get settings_sync_frequency_minutes1 => "1 dakika";
   @override
   String get settings_sync_period_months1 => "1 ay";
   @override
-  String get messages_forward => "İleri, ileriye doğru";
+  String get messages_forward => "Yönlendir";
   @override
   String get settings_sync_period_months3 => "3 ay";
   @override
-  String get error_input_validation_empty => "Bu alan gereklidir";
+  String get error_input_validation_empty => "Bu alanı doldurmak zorunludur";
   @override
-  String get error_login_no_accounts => "Bu kullanıcının posta hesabı yok";
+  String get error_login_no_accounts => "Bu kullanıcının e-posta hesabı yok";
   @override
   String get settings_sync_period_months6 => "6 ay";
   @override
-  String get error_input_validation_name_illegal_symbol => "Ad, \"/\\*?<>|:\" İçeremez";
+  String get error_input_validation_name_illegal_symbol => "İsim, \"/\\*?<>|:\" karakterleri içeremez";
   @override
-  String get compose_forward_body_original_message => "---- Orijinal mesaj ----";
+  String get compose_forward_body_original_message => "---- Orijinal İleti ----";
   @override
-  String get error_compose_no_receivers => "Lütfen alıcıları sağlayın";
+  String get error_compose_no_receivers => "Lütfen alıcı ekleyin";
   @override
-  String get messages_delete_title => "Mesajı sil";
+  String get messages_delete_title => "İletiyi sil";
   @override
-  String get error_server_rest_account_find_failed => "Kalan hesap bulma başarısız";
+  String get error_server_rest_account_find_failed => "REST hesap bulma başarısız";
   @override
   String get error_server_file_already_exists => "Böyle bir dosya zaten var";
   @override
   String get error_server_can_not_update_group => "Grup güncellenemiyor";
   @override
-  String get error_server_rest_token_expired => "Kalan simgenin süresi doldu";
+  String get error_server_rest_token_expired => "REST anahtar süresi doldu";
   @override
-  String get error_login_input_hostname => "Lütfen ana bilgisayar adını girin";
+  String get error_login_input_hostname => "Lütfen mobile uygulama sunucu URL sini girin";
   @override
-  String get error_login_input_password => "Lütfen şifre giriniz";
+  String get error_login_input_password => "Lütfen şifrenizi girin";
   @override
-  String get settings_sync => "Eşitleme";
+  String get settings_sync => "Senkronizasyon";
   @override
   String get settings_sync_frequency_minutes5 => "5 dakika";
-  @override
-  String get settings_about => "Uygulama hakkında";
   @override
   String get error_server_account_exists => "Böyle bir hesap zaten var";
   @override
   String get error_server_can_not_create_account => "Hesap oluşturulamıyor";
   @override
-  String get messages_to_me => "Bana göre";
+  String get messages_to_me => "Bana";
   @override
   String get settings_sync_period_all_time => "her zaman";
   @override
@@ -679,29 +671,29 @@ class $tr extends S {
   @override
   String get error_input_validation_unique_name => "Bu isim zaten var";
   @override
-  String get messages_delete_desc => "Bu mesajı silmek istediğinden emin misin?";
+  String get messages_delete_desc => "Bu iletiyi silmek istediğinden emin misin?";
   @override
   String get error_server_license_problem => "Lisans sorunu";
   @override
-  String get error_server_auth_error => "Geçersiz e-posta / şifre";
+  String get error_server_auth_error => "Geçersiz e-posta/şifre";
   @override
   String get settings_language => "Dil";
   @override
   String get error_connection => "Sunucuya bağlanılamadı";
   @override
-  String get settings_sync_frequency_never => "asla";
+  String get settings_sync_frequency_never => "hiçbir zaman";
   @override
-  String get login_input_host => "Evsahibi";
+  String get login_input_host => "Sunucu";
   @override
   String get error_server_can_not_upload_file_quota => "Bulut depolama alanı sınırınıza ulaştınız. Dosya yüklenemiyor.";
   @override
-  String get error_server_helpdesk_unknown_user => "Yardım masası bilinmeyen kullanıcı";
+  String get error_server_helpdesk_unknown_user => "Bilinmeyen yardım masası kullanıcısı";
   @override
-  String get messages_reply => "Cevap";
+  String get messages_reply => "Yanıtla";
   @override
   String get folders_starred => "Yıldızlı";
   @override
-  String get error_server_mail_server_error => "Posta sunucusu hatası";
+  String get error_server_mail_server_error => "E-posta sunucusu hatası";
   @override
   String get error_server_can_not_create_helpdesk_user => "Yardım masası kullanıcısı oluşturulamıyor";
   @override
@@ -709,11 +701,9 @@ class $tr extends S {
   @override
   String get error_server_account_old_password_not_correct => "Hesabın eski şifresi doğru değil";
   @override
-  String get error_server_can_not_upload_file_limit => "Dosya sınırı yüklenemiyor";
+  String get error_server_can_not_upload_file_limit => "Dosya yüklenemiyor: dosya limiti";
   @override
-  String get settings_dark_theme => "Karanlık Tema";
-  @override
-  String get messages_attachment_download_failed => "Yükleme başarısız";
+  String get messages_attachment_download_failed => "İndirme işlemi başarısız";
   @override
   String get error_server_helpdesk_user_already_exists => "Yardım masası kullanıcısı zaten var";
   @override
@@ -723,17 +713,15 @@ class $tr extends S {
   @override
   String compose_forward_from(String emails) => "Gönderen: $emails";
   @override
-  String compose_forward_to(String emails) => "Kime: $emails";
+  String compose_forward_to(String emails) => "Alıcı: $emails";
   @override
-  String messages_attachment_download_success(String path) => "İndirilen dosya: $path";
+  String messages_attachment_download_success(String path) => "Dosya şuraya indirildi: $path";
   @override
   String compose_forward_sent(String date) => "Gönderildi: $date";
   @override
-  String messages_attachment_upload_success(String path) => "Dosya yüklendi: $path";
+  String messages_attachment_upload_success(String path) => "Dosya şuraya yüklendi: $path";
   @override
   String compose_forward_subject(String subject) => "Konu: $subject";
-  @override
-  String settings_about_app_version(String version) => "Versiyon $version";
   @override
   String messages_attachment_uploading(String fileName) => "$fileName yükleniyor ...";
   @override
@@ -743,7 +731,7 @@ class $tr extends S {
   @override
   String messages_delete_desc_with_subject(String subject) => "$subject silmek istediğinize emin misiniz?";
   @override
-  String compose_reply_body_title(String time, String from) => "$time, $from yazdı:";
+  String compose_reply_body_title(String time, String from) => "$time,tarihinde $from yazdı:";
 }
 
 class GeneratedLocalizationsDelegate extends LocalizationsDelegate<S> {
