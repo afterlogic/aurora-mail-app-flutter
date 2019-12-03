@@ -8,9 +8,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class Star extends StatefulWidget {
   final bool value;
+  final bool enabled;
   final Function(bool) onPressed;
 
-  const Star({Key key, @required this.value, @required this.onPressed})
+  const Star({Key key, @required this.value, this.enabled = true, @required this.onPressed})
       : super(key: key);
 
   @override
@@ -44,16 +45,6 @@ class _StarState extends State<Star> with TickerProviderStateMixin {
   }
 
   Future _setStarred(bool isStarred) async {
-    // ignore: close_sinks
-    final settings = BlocProvider.of<SettingsBloc>(context);
-    if (settings.state is SettingsLoaded &&
-        (settings.state as SettingsLoaded).connection ==
-            ConnectivityResult.none) {
-      return showSnack(
-          context: context,
-          scaffoldState: Scaffold.of(context),
-          msg: S.of(context).error_connection_offline);
-    }
     _parentCtrl.forward(from: 0.0);
     setState(() => _isStarred = isStarred);
     // wait forward and reverse
@@ -70,7 +61,7 @@ class _StarState extends State<Star> with TickerProviderStateMixin {
           child: IconButton(
             padding: EdgeInsets.zero,
             icon: Icon(Icons.star, color: Colors.amber),
-            onPressed: () => _setStarred(false),
+            onPressed: widget.enabled ? () => _setStarred(false) : null,
           ));
     } else {
       return Transform.scale(
@@ -79,9 +70,9 @@ class _StarState extends State<Star> with TickerProviderStateMixin {
           padding: EdgeInsets.zero,
           icon: Icon(
             Icons.star_border,
-            color: Theme.of(context).disabledColor.withOpacity(0.1),
+            color: Theme.of(context).disabledColor.withOpacity(widget.enabled ? 0.1 : 0.0),
           ),
-          onPressed: () => _setStarred(true),
+          onPressed: widget.enabled ? () => _setStarred(true) : null,
         ),
       );
     }

@@ -33,12 +33,22 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   }
 
   Stream<SettingsState> _initSyncSettings(InitSettings event) async* {
-    yield SettingsLoaded(
-      syncFrequency: event.user.syncFreqInSeconds,
-      syncPeriod: event.user.syncPeriod,
-      darkThemeEnabled: event.user.darkThemeEnabled,
-      language: Language.fromJson(event.user.language),
-    );
+    if (state is SettingsLoaded) {
+      yield (state as SettingsLoaded).copyWith(
+          syncFrequency: Value(event.user.syncFreqInSeconds),
+          syncPeriod: Value(event.user.syncPeriod),
+          darkThemeEnabled: Value(event.user.darkThemeEnabled),
+          language: Value(
+            Language.fromJson(event.user.language),
+          ));
+    } else {
+      yield SettingsLoaded(
+        syncFrequency: event.user.syncFreqInSeconds,
+        syncPeriod: event.user.syncPeriod,
+        darkThemeEnabled: event.user.darkThemeEnabled,
+        language: Language.fromJson(event.user.language),
+      );
+    }
   }
 
   Stream<SettingsState> _updateConnectivity(UpdateConnectivity event) async* {
@@ -90,8 +100,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     await _methods.setLanguage(event.language);
 
     if (state is SettingsLoaded) {
-      yield (state as SettingsLoaded)
-          .copyWith(language: Value(event.language));
+      yield (state as SettingsLoaded).copyWith(language: Value(event.language));
     } else {
       yield SettingsLoaded(language: event.language);
     }

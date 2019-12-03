@@ -1,10 +1,13 @@
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/mail/mail_table.dart';
 import 'package:aurora_mail/generated/i18n.dart';
+import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
 import 'package:aurora_mail/utils/date_formatting.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import 'star.dart';
@@ -168,10 +171,15 @@ class _MessageItemState extends State<MessageItem> {
                       SizedBox(
                           width: 24.0,
                           height: 24.0,
-                          child: Star(
-                            value: widget.message.flagsInJson
-                                .contains("\\flagged"),
-                            onPressed: _setStarred,
+                          child: BlocBuilder<SettingsBloc, SettingsState>(
+                            builder: (_, state) => Star(
+                                value: widget.message.flagsInJson
+                                    .contains("\\flagged"),
+                                enabled: !(state is SettingsLoaded &&
+                                    state.connection ==
+                                        ConnectivityResult.none),
+                                onPressed: _setStarred,
+                              ),
                           )),
                     ],
                   ),
