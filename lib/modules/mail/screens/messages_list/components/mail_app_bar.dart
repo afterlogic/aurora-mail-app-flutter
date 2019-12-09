@@ -3,7 +3,7 @@ import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-enum MailListAppBarAction { logout, settings }
+enum MailListAppBarAction { logout, settings, contacts }
 
 class MailAppBar extends StatelessWidget {
   final Function(MailListAppBarAction) onActionSelected;
@@ -38,6 +38,10 @@ class MailAppBar extends StatelessWidget {
           onSelected: onActionSelected,
           itemBuilder: (_) {
             return [
+              PopupMenuItem(
+                value: MailListAppBarAction.contacts,
+                child: Text(S.of(context).messages_list_app_bar_contacts),
+              ),
               PopupMenuItem(
                 value: MailListAppBarAction.settings,
                 child: Text(S.of(context).messages_list_app_bar_settings),

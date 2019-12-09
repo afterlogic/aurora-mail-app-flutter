@@ -6,6 +6,7 @@ import 'package:aurora_mail/generated/i18n.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/auth/screens/login/login_route.dart';
+import 'package:aurora_mail/modules/contacts/screens/contacts_list/contacts_list_route.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/models/compose_types.dart';
@@ -75,6 +76,9 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
         break;
       case MailListAppBarAction.settings:
         Navigator.pushNamed(context, SettingsMainRoute.name);
+        break;
+      case MailListAppBarAction.contacts:
+        Navigator.pushReplacementNamed(context, ContactsListRoute.name);
         break;
     }
   }

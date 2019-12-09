@@ -1,3 +1,5 @@
+import 'package:aurora_mail/modules/contacts/screens/contacts_list/contacts_list_android.dart';
+import 'package:aurora_mail/modules/contacts/screens/contacts_list/contacts_list_route.dart';
 import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/compose_android.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/compose_route.dart';
@@ -78,6 +80,16 @@ class AppNavigation {
                   draftUid: args.draftUid,
                   composeType: args.composeType,
                 )));
+        break;
+
+      // ================= CONTACTS =================
+
+      case ContactsListRoute.name:
+        return FadeRoute(
+            settings: RouteSettings(
+              name: settings.name,
+            ),
+            page: ContactsListAndroid());
         break;
 
       // ================= SETTINGS =================

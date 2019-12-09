@@ -22,6 +22,8 @@ dependencies:
 
   # http
   http: ^0.12.0+2
+  webmail_api_client:
+    path: ./core/webmail_api_client
 
   # local storage
   moor_flutter: ^1.6.0

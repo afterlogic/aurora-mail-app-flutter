@@ -30,6 +30,8 @@ class S implements WidgetsLocalizations {
   String get compose_forward_body_original_message => "---- Original Message ----";
   String get compose_forward_date_format => "EEE, MMM d, yyyy, HH:mm";
   String get compose_reply_date_format => "EEE, MMM d, yyyy 'at' HH:mm";
+  String get contacts => "Contacts";
+  String get contacts_list_app_bar_mail => "Mail";
   String get error_compose_no_receivers => "Please provide receivers";
   String get error_compose_wait_attachments => "Please wait until attachments finish uploading";
   String get error_connection => "Could not connect to the server";
@@ -114,6 +116,7 @@ class S implements WidgetsLocalizations {
   String get messages_empty => "No messages";
   String get messages_forward => "Forward";
   String get messages_from => "From";
+  String get messages_list_app_bar_contacts => "Contacts";
   String get messages_list_app_bar_loading_folders => "Loading folders...";
   String get messages_list_app_bar_logout => "Log out";
   String get messages_list_app_bar_settings => "Settings";
@@ -224,6 +227,8 @@ class $ru extends S {
   @override
   String get settings_sync_frequency_monthly => "ежемесячно";
   @override
+  String get messages_list_app_bar_contacts => "Контакты";
+  @override
   String get error_server_module_not_found => "Модуль не найден";
   @override
   String get messages_list_app_bar_loading_folders => "Загрузка папок...";
@@ -292,6 +297,8 @@ class $ru extends S {
   @override
   String get error_server_can_not_change_password => "Не удалось сменить пароль";
   @override
+  String get contacts => "Контакты";
+  @override
   String get error_server_rest_tenant_find_failed => "Не удалось найти тенант REST";
   @override
   String get messages_list_app_bar_settings => "Настройки";
@@ -347,6 +354,8 @@ class $ru extends S {
   String get messages_forward => "Переслать";
   @override
   String get settings_sync_period_months3 => "3 месяца";
+  @override
+  String get contacts_list_app_bar_mail => "Почта";
   @override
   String get error_input_validation_empty => "Это поле обязательно к заполнению";
   @override
@@ -520,6 +529,8 @@ class $tr extends S {
   @override
   String get settings_sync_frequency_monthly => "aylık";
   @override
+  String get messages_list_app_bar_contacts => "Contacts";
+  @override
   String get error_server_module_not_found => "Modül bulunamadı";
   @override
   String get messages_list_app_bar_loading_folders => "Klasörler yükleniyor...";
@@ -584,6 +595,8 @@ class $tr extends S {
   @override
   String get error_server_can_not_change_password => "Şifre değiştirilemiyor";
   @override
+  String get contacts => "Contacts";
+  @override
   String get error_server_rest_tenant_find_failed => "REST kullanıcı bulma başarısız oldu";
   @override
   String get messages_list_app_bar_settings => "Ayarlar";
@@ -639,6 +652,8 @@ class $tr extends S {
   String get messages_forward => "Yönlendir";
   @override
   String get settings_sync_period_months3 => "3 ay";
+  @override
+  String get contacts_list_app_bar_mail => "Mail";
   @override
   String get error_input_validation_empty => "Bu alanı doldurmak zorunludur";
   @override

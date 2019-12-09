@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:aurora_mail/models/api_body.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 
 import 'errors_enum.dart';
@@ -31,34 +32,6 @@ ErrorForTranslation getErrMsg(dynamic err) {
     return _getErrMsgFromCode(err["ErrorCode"]);
   } else {
     return ErrorForTranslation.UnknownError;
-  }
-}
-
-class ServerError implements Exception {
-  // either String or ErrorForTranslation
-  final dynamic message;
-
-  ServerError(this.message) : super();
-
-  @override
-  String toString() => message.toString();
-}
-
-dynamic formatError(dynamic err, StackTrace stack) {
-  if (err is ServerError) {
-    return err.message;
-  } else if (err is SocketException) {
-    if (err.osError.errorCode == 7) {
-      return ErrorForTranslation.ConnectionError;
-    } else {
-      return err.message.isNotEmpty ? err.message : err;
-    }
-  } else {
-    print("Debug error: $err");
-    print("Debug stack: $stack");
-    return err;
-    // TODO set unknown for release
-//    return "Unknown error";
   }
 }
 
@@ -109,7 +82,8 @@ ErrorForTranslation _getErrMsgFromCode(int code) {
     case 604:
       return ErrorForTranslation.CanNotUpdateGroup;
     case 605:
-      return ErrorForTranslation.ContactDataHasBeenModifiedByAnotherApplication;
+      return ErrorForTranslation
+          .ContactDataHasBeenModifiedByAnotherApplication;
     case 607:
       return ErrorForTranslation.CanNotGetContact;
     case 701:
@@ -169,5 +143,33 @@ ErrorForTranslation _getErrMsgFromCode(int code) {
     default:
       print("ATTENTION! could not get error message for server code: $code");
       return ErrorForTranslation.UnknownError;
+  }
+}
+
+class ServerError implements Exception {
+  // either String or ErrorForTranslation
+  final dynamic message;
+
+  ServerError(this.message) : super();
+
+  @override
+  String toString() => message.toString();
+}
+
+dynamic formatError(dynamic err, StackTrace stack) {
+  if (err is ServerError) {
+    return err.message;
+  } else if (err is SocketException) {
+    if (err.osError.errorCode == 7) {
+      return ErrorForTranslation.ConnectionError;
+    } else {
+      return err.message.isNotEmpty ? err.message : err;
+    }
+  } else {
+    print("Debug error: $err");
+    print("Debug stack: $stack");
+    return err;
+    // TODO set unknown for release
+//    return "Unknown error";
   }
 }
