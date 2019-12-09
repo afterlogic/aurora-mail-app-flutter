@@ -29,7 +29,7 @@ class AlarmService {
     return _channel.invokeMethod('isAlarm');
   }
 
-  static Future cancelAlarm(int id) {
+  static Future removeAlarm(int id) {
     _onAlarmMap.remove(id);
     return _channel.invokeMethod('cancelAlarm', [id]);
   }
@@ -39,8 +39,12 @@ class AlarmService {
     int id,
   ) {
     final isEmpty = _onAlarmMap.isEmpty;
-    _onAlarmMap[id] = onAlarm;
-    if (isEmpty) {
+    if (onAlarm == null) {
+      _onAlarmMap.remove(id);
+    } else {
+      _onAlarmMap[id] = onAlarm;
+    }
+    if (isEmpty && onAlarm != null) {
       _doOnAlarm();
     }
   }

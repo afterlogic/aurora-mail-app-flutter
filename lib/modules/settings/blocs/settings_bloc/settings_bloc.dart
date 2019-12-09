@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:aurora_mail/background/alarm/alarm.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/settings_methods.dart';
 import 'package:aurora_mail/modules/settings/models/language.dart';
 import 'package:aurora_mail/modules/settings/models/sync_duration.dart';
@@ -7,7 +8,7 @@ import 'package:aurora_mail/modules/settings/models/sync_period.dart';
 import 'package:bloc/bloc.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:moor_flutter/moor_flutter.dart';
-
+import 'package:aurora_mail/main.dart' as main;
 import './bloc.dart';
 
 class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
@@ -16,6 +17,9 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   static bool _isOffline = true;
 
   static bool get isOffline => _isOffline;
+
+  //todo VO
+  static set isOffline(bool isOffline) => _isOffline = isOffline;
 
   @override
   SettingsState get initialState => SettingsEmpty();
@@ -33,7 +37,11 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   }
 
   Stream<SettingsState> _initSyncSettings(InitSettings event) async* {
+
+    await Alarm.periodic(Duration(seconds: event.user.syncFreqInSeconds), main.onAlarm);
+
     if (state is SettingsLoaded) {
+
       yield (state as SettingsLoaded).copyWith(
           syncFrequency: Value(event.user.syncFreqInSeconds),
           syncPeriod: Value(event.user.syncPeriod),
@@ -42,6 +50,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
             Language.fromJson(event.user.language),
           ));
     } else {
+
       yield SettingsLoaded(
         syncFrequency: event.user.syncFreqInSeconds,
         syncPeriod: event.user.syncPeriod,

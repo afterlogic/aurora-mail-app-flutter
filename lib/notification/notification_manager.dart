@@ -5,6 +5,7 @@ class NotificationManager {
 
   NotificationManager() {
     final initializationSettings = InitializationSettings(
+      //todo VO res/drawable/app_icon.png
       AndroidInitializationSettings('app_icon'),
       IOSInitializationSettings(),
     );
@@ -18,18 +19,18 @@ class NotificationManager {
 
   onSelectNotification() {}
 
-  showNotification() {
+  showNotification(String title, String body) {
     plugin.cancel(_id);
-    plugin.show(_id, "", "", NotificationDetails(_notificationDetails, null));
+    plugin.show(
+        _id, title, body, NotificationDetails(_notificationDetails, null));
   }
 
   static const _id = 341;
   static final _notificationDetails = AndroidNotificationDetails(
     "main",
-    "update mail",
-    "",
+    "New messages",
+    "" /*todo description*/,
     importance: Importance.Max,
     priority: Priority.High,
-    groupKey: "main",
   );
 }

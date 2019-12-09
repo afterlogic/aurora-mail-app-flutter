@@ -3,6 +3,7 @@ package com.afterlogic.alarm_service
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
@@ -29,10 +30,14 @@ class AlarmPlugin(private val applicationContext: Context) : MethodCallHandler {
 
 
     }
+
     private var doOnAlarm: Result? = null
 
     override fun onMethodCall(call: MethodCall, result: Result) {
         val arg = call.arguments as List<*>?
+        Log.v("flutter alarm_plugin", call.method + "($arg)")
+        Thread.sleep(5000)
+        
         when {
             call.method == "setAlarm" -> {
                 val callbackId = arg!![0] as Long

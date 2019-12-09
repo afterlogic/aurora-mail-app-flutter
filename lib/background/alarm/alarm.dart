@@ -10,7 +10,7 @@ class Alarm {
 
   static periodic(Duration duration, Function callback) {
     if (Platform.isIOS) {
-      _iosPeriodic(duration, callback);
+      //todo
     } else {
       AlarmService.setAlarm(callback, _id, duration, true);
     }
@@ -18,15 +18,16 @@ class Alarm {
 
   static cancel() {
     if (Platform.isIOS) {
-      _iosCancel();
+      //todo
     } else {
-      AlarmService.cancelAlarm(_id);
+      AlarmService.removeAlarm(_id);
     }
   }
 
+  //close service in background
   static endAlarm() {
     if (Platform.isIOS) {
-//todo
+      //todo
     } else {
       AlarmService.endAlarm();
     }

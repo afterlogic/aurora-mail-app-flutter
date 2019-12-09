@@ -163,14 +163,14 @@ class Folders extends Table {
     final oldInfo = args["oldItems"];
     final newInfo = args["newItems"];
 
-    final unchangedMessages = oldInfo.where((i) =>
-        newInfo.firstWhere(
-            (j) =>
-                j.uid == i.uid &&
+    final unchangedMessages = oldInfo.where((i) {
+      return newInfo.firstWhere((j) {
+            return j.uid == i.uid &&
                 j.parentUid == i.parentUid &&
-                listEquals(j.flags, i.flags),
-            orElse: () => null) !=
-        null);
+                listEquals(j.flags, i.flags);
+          }, orElse: () => null) !=
+          null;
+    });
 
     // no need to calculate difference if all the messages are unchanged
     if (unchangedMessages.length == oldInfo.length &&
@@ -223,6 +223,7 @@ class Folders extends Table {
       updatedInfo: updatedInfo,
       removedUids: [...removedUids, ...changedParentUid],
       infosToUpdateFlags: changedFlags.toList(),
+      addedMessagesLength: addedMessages.length,
     );
   }
 
@@ -248,11 +249,13 @@ class MessagesInfoDiffCalcResult {
   final List<MessageInfo> updatedInfo;
   final List<int> removedUids;
   final List<MessageInfo> infosToUpdateFlags;
+  final int addedMessagesLength;
 
   MessagesInfoDiffCalcResult(
       {@required this.updatedInfo,
       @required this.removedUids,
-      @required this.infosToUpdateFlags})
+      @required this.infosToUpdateFlags,
+      @required this.addedMessagesLength})
       : assert(updatedInfo != null &&
             removedUids != null &&
             infosToUpdateFlags != null);

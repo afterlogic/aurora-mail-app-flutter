@@ -69,7 +69,7 @@ class _AboutAndroidState extends State<AboutAndroid> {
                   child: SizedBox(
                     width: 120.0,
                     height: 120.0,
-                    child: Image.asset("assets/images/ic_launcher.png"),
+                    child: Image.asset("assets/images/app_icon.png"),
                   ),
                 ),
                 SizedBox(height: 42.0),
