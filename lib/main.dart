@@ -8,8 +8,11 @@ void main() async {
   await Alarm.init();
 
   runApp(App());
-  await Alarm.periodic(Duration, callback)
+
+  await Alarm.periodic(Duration(seconds: 60), onAlarm);
 }
 
 @pragma('vm:entry-point')
-void onAlarm() {}
+void onAlarm() {
+
+}
