@@ -48,7 +48,10 @@ dependencies:
   permission_handler: ^3.2.2
   url_launcher: ^5.2.5
   connectivity: ^0.4.5+3
-  package_info:
+  package_info: ^0.4.0+12
+
+  #background
+  android_alarm_manager: ^0.4.4+3
 
 dev_dependencies:
   flutter_test:
