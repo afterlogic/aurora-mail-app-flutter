@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:android_alarm_manager/android_alarm_manager.dart';
 import 'package:flutter/services.dart';
@@ -30,7 +31,7 @@ class Alarm {
   }
 
   static _iosPeriodic(Duration duration, Function callback) {
-    _channel.invokeMethod("periodic", [duration.inSeconds, callback]);
+    _channel.invokeMethod("periodic", [duration.inSeconds, PluginUtilities.getCallbackHandle(callback).toRawHandle()]);
   }
 
   static _iosCancel() {
