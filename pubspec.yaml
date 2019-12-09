@@ -51,7 +51,13 @@ dependencies:
   package_info: ^0.4.0+12
 
   #background
-  android_alarm_manager: ^0.4.4+3
+#  android_alarm_manager: 0.4.5+1 not working
+  alarm_service:
+    path: alarm_service
+
+
+  #notification
+  flutter_local_notifications: ^0.8.4+3
 
 dev_dependencies:
   flutter_test:

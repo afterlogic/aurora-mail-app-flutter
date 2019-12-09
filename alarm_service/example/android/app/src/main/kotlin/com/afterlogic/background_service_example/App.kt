@@ -1,20 +1,13 @@
-package com.afterlogic.aurora.mail.aurora_mail
+package com.afterlogic.background_service_example
 
-import io.flutter.app.FlutterApplication
-import io.flutter.plugin.common.PluginRegistry
-import io.flutter.plugins.GeneratedPluginRegistrant
-import vn.hunghd.flutterdownloader.FlutterDownloaderPlugin
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.os.Build
 import com.afterlogic.alarm_service.WithAlarm
+import io.flutter.app.FlutterApplication
 
-internal class MailApplication : FlutterApplication(), PluginRegistry.PluginRegistrantCallback, WithAlarm {
+class App : FlutterApplication(), WithAlarm {
     override val clazzService = AppService::class.java
-
-    override fun registerWith(registry: PluginRegistry) {
-        GeneratedPluginRegistrant.registerWith(registry)
-    }
 
     override fun onCreate() {
         super.onCreate()

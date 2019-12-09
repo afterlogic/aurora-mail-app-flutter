@@ -1,24 +1,18 @@
 import 'dart:io';
 import 'dart:ui';
 
-import 'package:android_alarm_manager/android_alarm_manager.dart';
+import 'package:alarm_service/alarm_service.dart';
 import 'package:flutter/services.dart';
 
 class Alarm {
   static const MethodChannel _channel =
       const MethodChannel('ios_alarm_manager');
 
-  static init() {
-    if (Platform.isAndroid) {
-      AndroidAlarmManager.initialize();
-    }
-  }
-
   static periodic(Duration duration, Function callback) {
     if (Platform.isIOS) {
       _iosPeriodic(duration, callback);
     } else {
-      AndroidAlarmManager.periodic(duration, _id, callback);
+      AlarmService.setAlarm(callback, _id, duration, true);
     }
   }
 
@@ -26,12 +20,23 @@ class Alarm {
     if (Platform.isIOS) {
       _iosCancel();
     } else {
-      AndroidAlarmManager.cancel(_id);
+      AlarmService.cancelAlarm(_id);
+    }
+  }
+
+  static endAlarm() {
+    if (Platform.isIOS) {
+//todo
+    } else {
+      AlarmService.endAlarm();
     }
   }
 
   static _iosPeriodic(Duration duration, Function callback) {
-    _channel.invokeMethod("periodic", [duration.inSeconds, PluginUtilities.getCallbackHandle(callback).toRawHandle()]);
+    _channel.invokeMethod("periodic", [
+      duration.inSeconds,
+      PluginUtilities.getCallbackHandle(callback).toRawHandle()
+    ]);
   }
 
   static _iosCancel() {
