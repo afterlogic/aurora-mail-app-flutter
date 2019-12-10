@@ -1,6 +1,4 @@
 import 'package:aurora_mail/generated/i18n.dart';
-import 'package:aurora_mail/generated/i18n.dart';
-import 'package:aurora_mail/generated/i18n.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 

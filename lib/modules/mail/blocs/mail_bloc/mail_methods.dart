@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/folders/folders_dao.dart';
 import 'package:aurora_mail/database/folders/folders_table.dart';
@@ -13,7 +14,6 @@ import 'package:aurora_mail/modules/mail/repository/folders_api.dart';
 import 'package:aurora_mail/modules/mail/repository/mail_api.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/modules/settings/models/sync_period.dart';
-import 'package:aurora_mail/utils/constants.dart';
 import 'package:moor_flutter/moor_flutter.dart';
 
 class MailMethods {

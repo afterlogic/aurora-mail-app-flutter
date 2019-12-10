@@ -10,6 +10,7 @@ import 'webmail_api_error.dart';
 
 export 'webmail_api_body.dart';
 export 'webmail_api_error.dart';
+export 'webmail_api_modules.dart';
 
 class WebMailApi {
   final String moduleName;

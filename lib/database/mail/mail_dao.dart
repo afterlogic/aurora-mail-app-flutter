@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/models/message_info.dart';
-import 'package:flutter/foundation.dart';
 import 'package:moor_flutter/moor_flutter.dart';
 
 import '../app_database.dart';

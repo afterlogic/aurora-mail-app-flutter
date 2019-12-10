@@ -37,6 +37,7 @@ class _LoginAndroidState extends State<LoginAndroid> {
       DeviceOrientation.portraitDown,
     ]);
     if (kDebugMode) {
+      // TODO VO: put in a separate file
       emailCtrl.text = "natro@afterlogic.com";
       passwordCtrl.text = "p1411natro";
     }

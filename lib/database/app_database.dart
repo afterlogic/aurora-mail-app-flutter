@@ -4,6 +4,7 @@ import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/co
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/contacts/converters/list_string_converter.dart';
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/groups/contacts_groups_table.dart';
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/storages/contacts_storages_table.dart';
+import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/storages/converters/contacts_info_converter.dart';
 import 'package:moor_flutter/moor_flutter.dart';
 
 import 'accounts/accounts_table.dart';

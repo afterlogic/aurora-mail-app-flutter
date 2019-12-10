@@ -1,10 +1,4 @@
-import 'package:aurora_mail/generated/i18n.dart';
-import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
-import 'package:aurora_mail/modules/settings/blocs/settings_bloc/settings_bloc.dart';
-import 'package:aurora_mail/utils/show_snack.dart';
-import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class Star extends StatefulWidget {
   final bool value;

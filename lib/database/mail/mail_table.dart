@@ -1,9 +1,9 @@
 import 'dart:convert';
 
+import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/generated/i18n.dart';
 import 'package:aurora_mail/models/message_info.dart';
-import 'package:aurora_mail/utils/constants.dart';
 import 'package:flutter/widgets.dart' as widgets;
 import 'package:moor_flutter/moor_flutter.dart';
 

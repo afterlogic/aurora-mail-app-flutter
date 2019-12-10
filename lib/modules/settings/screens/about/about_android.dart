@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:aurora_mail/generated/i18n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
