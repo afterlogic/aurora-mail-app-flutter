@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:package_info/package_info.dart';
-
+import 'package:aurora_mail/main.dart' as main;
 import 'app_navigation.dart';
 import 'auth/blocs/auth_bloc/bloc.dart';
 import 'auth/screens/login/login_route.dart';
@@ -18,7 +18,7 @@ class App extends StatefulWidget {
   _AppState createState() => _AppState();
 }
 
-class _AppState extends State<App> {
+class _AppState extends State<App> with WidgetsBindingObserver {
   final _authBloc = new AuthBloc();
   final _settingsBloc = new SettingsBloc();
   PackageInfo _appInfo;
@@ -26,7 +26,18 @@ class _AppState extends State<App> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _initApp();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused) {
+      main.isBackground = true;
+    } else if (state == AppLifecycleState.resumed) {
+      main.isBackground = false;
+    }
+    super.didChangeAppLifecycleState(state);
   }
 
   void _initApp() async {

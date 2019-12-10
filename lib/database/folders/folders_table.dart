@@ -163,14 +163,14 @@ class Folders extends Table {
     final oldInfo = args["oldItems"];
     final newInfo = args["newItems"];
 
-    final unchangedMessages = oldInfo.where((i) {
-      return newInfo.firstWhere((j) {
-            return j.uid == i.uid &&
+    final unchangedMessages = oldInfo.where((i) =>
+        newInfo.firstWhere(
+            (j) =>
+                j.uid == i.uid &&
                 j.parentUid == i.parentUid &&
-                listEquals(j.flags, i.flags);
-          }, orElse: () => null) !=
-          null;
-    });
+                listEquals(j.flags, i.flags),
+            orElse: () => null) !=
+        null);
 
     // no need to calculate difference if all the messages are unchanged
     if (unchangedMessages.length == oldInfo.length &&

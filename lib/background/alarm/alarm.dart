@@ -16,6 +16,14 @@ class Alarm {
     }
   }
 
+  static onPeriodic(Function callback) {
+    if (Platform.isIOS) {
+      //todo
+    } else {
+      AlarmService.onAlarm(callback, _id);
+    }
+  }
+
   static cancel() {
     if (Platform.isIOS) {
       //todo

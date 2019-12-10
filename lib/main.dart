@@ -4,14 +4,20 @@ import 'package:flutter/material.dart';
 import 'background/background_sink.dart';
 import 'modules/app_screen.dart';
 
-void main() => runApp(App());
+var isBackground = true;
 
+void main() {
+  runApp(App());
+  Alarm.onPeriodic(onAlarm);
+}
 
 @pragma('vm:entry-point')
 void onAlarm() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  if (isBackground) {
+    WidgetsFlutterBinding.ensureInitialized();
 
-  await BackgroundSync().sync();
+    await BackgroundSync().sync();
 
-  Alarm.endAlarm();
+    Alarm.endAlarm();
+  }
 }
