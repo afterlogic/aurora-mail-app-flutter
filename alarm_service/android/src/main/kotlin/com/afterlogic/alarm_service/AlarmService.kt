@@ -3,6 +3,7 @@ package com.afterlogic.alarm_service
 import android.app.IntentService
 import android.app.Notification
 import android.content.Intent
+import android.os.AsyncTask
 import android.os.Build
 import io.flutter.plugin.common.PluginRegistry
 import io.flutter.view.FlutterNativeView
@@ -40,7 +41,6 @@ abstract class AlarmService : IntentService("Check update mail") {
             stopForeground(true)
         }
         if (isBackground) {
-
             exitProcess(0)
         }
     }
@@ -69,19 +69,20 @@ abstract class AlarmService : IntentService("Check update mail") {
                     args.libraryPath = libraryPath
                     flutter.get()?.apply {
                         runFromBundle(args)
-                        startApp(this.pluginRegistry)
+                        onStartFlutter(this.pluginRegistry)
                     }
                 } catch (e: Throwable) {
-                    Log.e("Test_Flutter", "$e")
+                    Log.e("flutter alarm service", "$e")
                 }
             }
             //todo timeout
+            /** todo service cancel after end [onHandleIntent] **/
             Thread.sleep(2 * 60000)
         }
     }
 
 
-    abstract fun startApp(registry: PluginRegistry)
+    abstract fun onStartFlutter(registry: PluginRegistry)
 
     abstract fun createNotification(): Notification
 

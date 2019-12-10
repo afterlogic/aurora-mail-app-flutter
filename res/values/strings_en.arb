@@ -142,5 +142,8 @@
   "error_server_mail_server_error": "Mail server error",
   "error_unknown": "Unknown error",
   "compose_forward_date_format": "EEE, MMM d, yyyy, HH:mm",
-  "compose_reply_date_format": "EEE, MMM d, yyyy 'at' HH:mm"
+  "compose_reply_date_format": "EEE, MMM d, yyyy 'at' HH:mm",
+  "compose_reply_date_format": "EEE, MMM d, yyyy 'at' HH:mm",
+  "compose_reply_date_format": "EEE, MMM d, yyyy 'at' HH:mm",
+  "compose_reply_date_format": "EEE, MMM d, yyyy 'at' HH:mm",
 }

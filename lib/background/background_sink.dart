@@ -1,8 +1,11 @@
+import 'dart:ui';
+
 import 'package:aurora_mail/database/accounts/accounts_dao.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/folders/folders_dao.dart';
 import 'package:aurora_mail/database/folders/folders_table.dart';
 import 'package:aurora_mail/database/users/users_dao.dart';
+import 'package:aurora_mail/generated/i18n.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/models/message_info.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
@@ -26,7 +29,7 @@ class BackgroundSync {
     try {
       final newMessageCount = await getNewMessageCount();
       if (newMessageCount != 0) {
-        showNewMessage(newMessageCount);
+        await showNewMessage(newMessageCount);
       }
     } catch (e, s) {
       print("sync error:$e,$s");
@@ -94,9 +97,21 @@ class BackgroundSync {
     SettingsBloc.isOffline = false;
   }
 
-  showNewMessage(int newMessageCount) {
+  showNewMessage(int newMessageCount) async {
+    final locale = S.delegate.supportedLocales.firstWhere(
+      (locale) {
+        //todo VO locale
+        return false;
+      },
+      orElse: () => Locale("en", ""),
+    );
+
+    final s = await S.delegate.load(locale);
+
     final manager = NotificationManager();
+
     final countMessage = newMessageCount > 1 ? "new messages" : "new message";
-    manager.showNotification("New messages", "You have $newMessageCount $countMessage");
+    manager.showNotification(
+        "New messages", "You have $newMessageCount $countMessage");
   }
 }

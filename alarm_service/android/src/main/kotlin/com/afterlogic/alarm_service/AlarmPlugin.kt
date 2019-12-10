@@ -35,37 +35,39 @@ class AlarmPlugin(private val applicationContext: Context) : MethodCallHandler {
 
     override fun onMethodCall(call: MethodCall, result: Result) {
         val arg = call.arguments as List<*>?
-        Log.v("flutter alarm_plugin", call.method + "($arg)")
-        Thread.sleep(5000)
-        
-        when {
-            call.method == "setAlarm" -> {
-                val callbackId = arg!![0] as Long
-                val callback = FlutterCallbackInformation.lookupCallbackInformation(callbackId)
-                AlarmBroadcast.setAlarm(applicationContext,
-                        callback.callbackName,
-                        callback.callbackLibraryPath,
-                        arg[1] as Int,
-                        arg[2] as Int,
-                        arg[3] as Boolean)
-                result.success("")
+        try {
+            when {
+                call.method == "setAlarm" -> {
+                    val callbackId = arg!![0] as Long
+                    val callback = FlutterCallbackInformation.lookupCallbackInformation(callbackId)
+                    AlarmBroadcast.setAlarm(applicationContext,
+                            callback.callbackName,
+                            callback.callbackLibraryPath,
+                            arg[1] as Int,
+                            arg[2] as Int,
+                            arg[3] as Boolean)
+                    result.success("")
+                }
+                call.method == "cancelAlarm" -> {
+                    doOnAlarm?.success(null)
+                    AlarmBroadcast.cancelAlarm(applicationContext, arg!![0] as Int)
+                    result.success("")
+                }
+                call.method == "isAlarm" -> {
+                    result.success(isBackground)
+                }
+                call.method == "endAlarm" -> {
+                    onComplete?.invoke()
+                    result.success("")
+                }
+                call.method == "doOnAlarm" -> {
+                    doOnAlarm = result
+                }
+                else -> result.notImplemented()
             }
-            call.method == "cancelAlarm" -> {
-                doOnAlarm?.success(null)
-                AlarmBroadcast.cancelAlarm(applicationContext, arg!![0] as Int)
-                result.success("")
-            }
-            call.method == "isAlarm" -> {
-                result.success(isBackground)
-            }
-            call.method == "endAlarm" -> {
-                onComplete?.invoke()
-                result.success("")
-            }
-            call.method == "doOnAlarm" -> {
-                doOnAlarm = result
-            }
-            else -> result.notImplemented()
+        } catch (e: Throwable) {
+            e.printStackTrace()
+            result.error(e.toString(), e.message, null)
         }
     }
 

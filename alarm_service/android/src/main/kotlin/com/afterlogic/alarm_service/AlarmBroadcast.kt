@@ -25,7 +25,7 @@ class AlarmBroadcast : BroadcastReceiver() {
                 context.startService(serviceIntent)
             }
         } catch (e: Throwable) {
-            Log.e("Flutter plugin", "$e")
+            Log.e("flutter alarm service", "$e")
         }
     }
 

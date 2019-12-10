@@ -15,8 +15,9 @@ class AppService : AlarmService() {
         } else {
             Notification.Builder(this)
         }.apply {
+            //todo VO
             setSmallIcon(R.mipmap.ic_launcher)
-            setContentTitle("Обновление почты")
+            setContentTitle("Update mail")
             setContentText("...")
         }
         return builder.build()

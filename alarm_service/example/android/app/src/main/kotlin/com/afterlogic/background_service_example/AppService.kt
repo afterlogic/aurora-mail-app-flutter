@@ -8,20 +8,20 @@ import io.flutter.plugins.GeneratedPluginRegistrant
 
 class AppService : AlarmService() {
     override fun createNotification(): Notification {
-        @Suppress("DEPRECATION")
         val builder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             Notification.Builder(this, App.NOTIFICATION_CHANNEL_ID)
         } else {
+            @Suppress("DEPRECATION")
             Notification.Builder(this)
         }.apply {
             setSmallIcon(android.R.mipmap.sym_def_app_icon)
-            setContentTitle("Обновление почты")
+            setContentTitle("Update mail")
             setContentText("...")
         }
         return builder.build()
     }
 
-    override fun startApp(registry: PluginRegistry) {
+    override fun onStartFlutter(registry: PluginRegistry) {
         GeneratedPluginRegistrant.registerWith(registry)
     }
 

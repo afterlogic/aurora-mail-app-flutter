@@ -12,13 +12,15 @@ class App : FlutterApplication(), WithAlarm {
     override fun onCreate() {
         super.onCreate()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name = "sample"
-            val descriptionText = "chanel for sample"
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val mChannel = NotificationChannel(NOTIFICATION_CHANNEL_ID, name, importance)
-            mChannel.description = descriptionText
-            val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.createNotificationChannel(mChannel)
+            val notificationManager = getSystemService(NOTIFICATION_SERVICE) as? NotificationManager
+            if (notificationManager?.getNotificationChannel(NOTIFICATION_CHANNEL_ID) == null) {
+                val name = "sample"
+                val descriptionText = "chanel for sample"
+                val importance = NotificationManager.IMPORTANCE_LOW
+                val mChannel = NotificationChannel(NOTIFICATION_CHANNEL_ID, name, importance)
+                mChannel.description = descriptionText
+                notificationManager?.createNotificationChannel(mChannel)
+            }
         }
     }
 
