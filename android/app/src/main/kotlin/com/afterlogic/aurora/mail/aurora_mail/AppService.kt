@@ -16,14 +16,14 @@ class AppService : AlarmService() {
             Notification.Builder(this)
         }.apply {
             //todo VO
-            setSmallIcon(R.mipmap.ic_launcher)
+            setSmallIcon(R.drawable.app_icon)
             setContentTitle("Update mail")
             setContentText("...")
         }
         return builder.build()
     }
 
-    override fun startApp(registry: PluginRegistry) {
+    override fun onStartFlutter(registry: PluginRegistry) {
         GeneratedPluginRegistrant.registerWith(registry)
     }
 

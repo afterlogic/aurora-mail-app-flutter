@@ -14,7 +14,7 @@ class AppService : AlarmService() {
             @Suppress("DEPRECATION")
             Notification.Builder(this)
         }.apply {
-            setSmallIcon(android.R.mipmap.sym_def_app_icon)
+            setSmallIcon(R.drawable.ic_logo)
             setContentTitle("Update mail")
             setContentText("...")
         }
