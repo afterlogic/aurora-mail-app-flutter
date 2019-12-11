@@ -7499,6 +7499,7 @@ class ContactsStoragesTable extends DataClass
   final String serverId;
   final String name;
   final int cTag;
+  final bool display;
   final List contactsInfo;
   ContactsStoragesTable(
       {@required this.sqliteId,
@@ -7506,6 +7507,7 @@ class ContactsStoragesTable extends DataClass
       @required this.serverId,
       @required this.name,
       @required this.cTag,
+      @required this.display,
       @required this.contactsInfo});
   factory ContactsStoragesTable.fromData(
       Map<String, dynamic> data, GeneratedDatabase db,
@@ -7513,6 +7515,7 @@ class ContactsStoragesTable extends DataClass
     final effectivePrefix = prefix ?? '';
     final intType = db.typeSystem.forDartType<int>();
     final stringType = db.typeSystem.forDartType<String>();
+    final boolType = db.typeSystem.forDartType<bool>();
     return ContactsStoragesTable(
       sqliteId:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}sqlite_id']),
@@ -7522,6 +7525,8 @@ class ContactsStoragesTable extends DataClass
           .mapFromDatabaseResponse(data['${effectivePrefix}server_id']),
       name: stringType.mapFromDatabaseResponse(data['${effectivePrefix}name']),
       cTag: intType.mapFromDatabaseResponse(data['${effectivePrefix}c_tag']),
+      display:
+          boolType.mapFromDatabaseResponse(data['${effectivePrefix}display']),
       contactsInfo: $ContactsStoragesTable.$converter0.mapToDart(stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}contacts_info'])),
     );
@@ -7534,6 +7539,7 @@ class ContactsStoragesTable extends DataClass
       serverId: serializer.fromJson<String>(json['serverId']),
       name: serializer.fromJson<String>(json['name']),
       cTag: serializer.fromJson<int>(json['cTag']),
+      display: serializer.fromJson<bool>(json['display']),
       contactsInfo: serializer.fromJson<List>(json['contactsInfo']),
     );
   }
@@ -7546,6 +7552,7 @@ class ContactsStoragesTable extends DataClass
       'serverId': serializer.toJson<String>(serverId),
       'name': serializer.toJson<String>(name),
       'cTag': serializer.toJson<int>(cTag),
+      'display': serializer.toJson<bool>(display),
       'contactsInfo': serializer.toJson<List>(contactsInfo),
     };
   }
@@ -7564,6 +7571,9 @@ class ContactsStoragesTable extends DataClass
           : Value(serverId),
       name: name == null && nullToAbsent ? const Value.absent() : Value(name),
       cTag: cTag == null && nullToAbsent ? const Value.absent() : Value(cTag),
+      display: display == null && nullToAbsent
+          ? const Value.absent()
+          : Value(display),
       contactsInfo: contactsInfo == null && nullToAbsent
           ? const Value.absent()
           : Value(contactsInfo),
@@ -7576,6 +7586,7 @@ class ContactsStoragesTable extends DataClass
           String serverId,
           String name,
           int cTag,
+          bool display,
           List contactsInfo}) =>
       ContactsStoragesTable(
         sqliteId: sqliteId ?? this.sqliteId,
@@ -7583,6 +7594,7 @@ class ContactsStoragesTable extends DataClass
         serverId: serverId ?? this.serverId,
         name: name ?? this.name,
         cTag: cTag ?? this.cTag,
+        display: display ?? this.display,
         contactsInfo: contactsInfo ?? this.contactsInfo,
       );
   @override
@@ -7593,6 +7605,7 @@ class ContactsStoragesTable extends DataClass
           ..write('serverId: $serverId, ')
           ..write('name: $name, ')
           ..write('cTag: $cTag, ')
+          ..write('display: $display, ')
           ..write('contactsInfo: $contactsInfo')
           ..write(')'))
         .toString();
@@ -7605,8 +7618,10 @@ class ContactsStoragesTable extends DataClass
           idUser.hashCode,
           $mrjc(
               serverId.hashCode,
-              $mrjc(name.hashCode,
-                  $mrjc(cTag.hashCode, contactsInfo.hashCode))))));
+              $mrjc(
+                  name.hashCode,
+                  $mrjc(cTag.hashCode,
+                      $mrjc(display.hashCode, contactsInfo.hashCode)))))));
   @override
   bool operator ==(other) =>
       identical(this, other) ||
@@ -7616,6 +7631,7 @@ class ContactsStoragesTable extends DataClass
           other.serverId == serverId &&
           other.name == name &&
           other.cTag == cTag &&
+          other.display == display &&
           other.contactsInfo == contactsInfo);
 }
 
@@ -7625,6 +7641,7 @@ class ContactsStoragesCompanion extends UpdateCompanion<ContactsStoragesTable> {
   final Value<String> serverId;
   final Value<String> name;
   final Value<int> cTag;
+  final Value<bool> display;
   final Value<List> contactsInfo;
   const ContactsStoragesCompanion({
     this.sqliteId = const Value.absent(),
@@ -7632,6 +7649,7 @@ class ContactsStoragesCompanion extends UpdateCompanion<ContactsStoragesTable> {
     this.serverId = const Value.absent(),
     this.name = const Value.absent(),
     this.cTag = const Value.absent(),
+    this.display = const Value.absent(),
     this.contactsInfo = const Value.absent(),
   });
   ContactsStoragesCompanion copyWith(
@@ -7640,6 +7658,7 @@ class ContactsStoragesCompanion extends UpdateCompanion<ContactsStoragesTable> {
       Value<String> serverId,
       Value<String> name,
       Value<int> cTag,
+      Value<bool> display,
       Value<List> contactsInfo}) {
     return ContactsStoragesCompanion(
       sqliteId: sqliteId ?? this.sqliteId,
@@ -7647,6 +7666,7 @@ class ContactsStoragesCompanion extends UpdateCompanion<ContactsStoragesTable> {
       serverId: serverId ?? this.serverId,
       name: name ?? this.name,
       cTag: cTag ?? this.cTag,
+      display: display ?? this.display,
       contactsInfo: contactsInfo ?? this.contactsInfo,
     );
   }
@@ -7714,6 +7734,18 @@ class $ContactsStoragesTable extends ContactsStorages
     );
   }
 
+  final VerificationMeta _displayMeta = const VerificationMeta('display');
+  GeneratedBoolColumn _display;
+  @override
+  GeneratedBoolColumn get display => _display ??= _constructDisplay();
+  GeneratedBoolColumn _constructDisplay() {
+    return GeneratedBoolColumn(
+      'display',
+      $tableName,
+      false,
+    );
+  }
+
   final VerificationMeta _contactsInfoMeta =
       const VerificationMeta('contactsInfo');
   GeneratedTextColumn _contactsInfo;
@@ -7730,7 +7762,7 @@ class $ContactsStoragesTable extends ContactsStorages
 
   @override
   List<GeneratedColumn> get $columns =>
-      [sqliteId, idUser, serverId, name, cTag, contactsInfo];
+      [sqliteId, idUser, serverId, name, cTag, display, contactsInfo];
   @override
   $ContactsStoragesTable get asDslTable => this;
   @override
@@ -7771,6 +7803,12 @@ class $ContactsStoragesTable extends ContactsStorages
     } else if (cTag.isRequired && isInserting) {
       context.missing(_cTagMeta);
     }
+    if (d.display.present) {
+      context.handle(_displayMeta,
+          display.isAcceptableValue(d.display.value, _displayMeta));
+    } else if (display.isRequired && isInserting) {
+      context.missing(_displayMeta);
+    }
     context.handle(_contactsInfoMeta, const VerificationResult.success());
     return context;
   }
@@ -7800,6 +7838,9 @@ class $ContactsStoragesTable extends ContactsStorages
     }
     if (d.cTag.present) {
       map['c_tag'] = Variable<int, IntType>(d.cTag.value);
+    }
+    if (d.display.present) {
+      map['display'] = Variable<bool, BoolType>(d.display.value);
     }
     if (d.contactsInfo.present) {
       final converter = $ContactsStoragesTable.$converter0;

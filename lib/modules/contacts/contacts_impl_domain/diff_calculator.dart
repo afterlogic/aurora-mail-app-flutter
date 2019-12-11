@@ -75,7 +75,9 @@ class ContactsDiffCalculator {
     final updatedStorages = newStorages.where((i) =>
         oldStorages.firstWhere((j) {
           if (j.id == i.id && j.cTag != i.cTag) {
-            i.contactsInfo = new List<ContactInfoItem>.from(j.contactsInfo);
+            if (j.contactsInfo != null) {
+              i.contactsInfo = new List<ContactInfoItem>.from(j.contactsInfo);
+            }
             return true;
           } else {
             return false;
@@ -92,7 +94,7 @@ class ContactsDiffCalculator {
 
     return new StoragesDiffCalcResult(
       addedStorages: addedStorages.toList(),
-      deletedStorages: deletedStorages.map((c) => c.id).toList(),
+      deletedStorages: deletedStorages.toList(),
       updatedStorages: updatedStorages.toList(),
     );
   }
@@ -112,7 +114,7 @@ class ContactInfoDiffCalcResult {
 
 class StoragesDiffCalcResult {
   final List<ContactsStorage> addedStorages;
-  final List<String> deletedStorages;
+  final List<ContactsStorage> deletedStorages;
   final List<ContactsStorage> updatedStorages;
 
   StoragesDiffCalcResult({

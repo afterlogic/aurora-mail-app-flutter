@@ -55,40 +55,39 @@ void main() {
   });
 
   group("Storages", () {
-    Future<StoragesDiffCalcResult> calculate() {
-      final List<ContactsStorage> mockOldStorages = [
-        new ContactsStorage(sqliteId: null, id: "personal", name: "Personal", cTag: 1, contactsInfo: []),
-        new ContactsStorage(sqliteId: null, id: "public", name: "Public", cTag: 1, contactsInfo: [new ContactInfoItem(uuid: "0", eTag: "0")]),
-        new ContactsStorage(sqliteId: null, id: "private", name: "Private", cTag: 1, contactsInfo: [new ContactInfoItem(uuid: "0", eTag: "0")]),
-        new ContactsStorage(sqliteId: null, id: "other", name: "Other", cTag: 1, contactsInfo: [new ContactInfoItem(uuid: "0", eTag: "0")]),
-      ];
+    final List<ContactsStorage> mockOld = [
+      new ContactsStorage(sqliteId: null, id: "personal", name: "Personal", cTag: 1, display: true, contactsInfo: []),
+      new ContactsStorage(sqliteId: null, id: "public", name: "Public", cTag: 1, display: true, contactsInfo: [new ContactInfoItem(uuid: "0", eTag: "0")]),
+      new ContactsStorage(sqliteId: null, id: "private", name: "Private", cTag: 1, display: true, contactsInfo: [new ContactInfoItem(uuid: "0", eTag: "0")]),
+      new ContactsStorage(sqliteId: null, id: "other", name: "Other", cTag: 1, display: true, contactsInfo: [new ContactInfoItem(uuid: "0", eTag: "0")]),
+    ];
 
-      final List<ContactsStorage> mockNewStorages = [
-        new ContactsStorage(sqliteId: null, id: "personal", name: "Personal", cTag: 1, contactsInfo: null),
-        new ContactsStorage(sqliteId: null, id: "public", name: "Public", cTag: 2, contactsInfo: null),
-        new ContactsStorage(sqliteId: null, id: "shared", name: "Private", cTag: 1, contactsInfo: null),
-        new ContactsStorage(sqliteId: null, id: "other", name: "Other", cTag: 1, contactsInfo: null),
-      ];
-
+    final List<ContactsStorage> mockNew = [
+      new ContactsStorage(sqliteId: null, id: "personal", name: "Personal", cTag: 1, display: true, contactsInfo: null),
+      new ContactsStorage(sqliteId: null, id: "public", name: "Public", cTag: 2, display: true, contactsInfo: null),
+      new ContactsStorage(sqliteId: null, id: "shared", name: "Private", cTag: 1, display: true, contactsInfo: null),
+      new ContactsStorage(sqliteId: null, id: "other", name: "Other", cTag: 1, display: true, contactsInfo: null),
+    ];
+    Future<StoragesDiffCalcResult> calculate(List<ContactsStorage> mockOldStorages, List<ContactsStorage> mockNewStorages) {
       return ContactsDiffCalculator.calculateStoragesDiffAsync(mockOldStorages, mockNewStorages);
     }
 
     test('Calculates added storages', () async {
-      final result = await calculate();
+      final result = await calculate(mockOld, mockNew);
 
       expect(result.addedStorages.length, 1);
       expect(result.addedStorages[0].id, "shared");
     });
 
     test('Calculates deleted storages', () async {
-      final result = await calculate();
+      final result = await calculate(mockOld, mockNew);
 
       expect(result.deletedStorages.length, 1);
-      expect(result.deletedStorages[0], "private");
+      expect(result.deletedStorages[0].id, "private");
     });
 
     test('Calculates updated storages', () async {
-      final result = await calculate();
+      final result = await calculate(mockOld, mockNew);
 
       expect(result.updatedStorages.length, 1);
       expect(result.updatedStorages[0].cTag, 2);

@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:aurora_mail/models/api_body.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:http/http.dart' as http;
+import 'package:webmail_api_client/webmail_api_client.dart';
 
 import 'errors_enum.dart';
 
@@ -157,6 +158,8 @@ class ServerError implements Exception {
 
 dynamic formatError(dynamic err, StackTrace stack) {
   if (err is ServerError) {
+    return err.message;
+  } else if (err is WebMailApiError) {
     return err.message;
   } else if (err is SocketException) {
     if (err.osError.errorCode == 7) {

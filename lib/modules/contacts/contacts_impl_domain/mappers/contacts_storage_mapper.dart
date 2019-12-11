@@ -9,6 +9,7 @@ class ContactsStorageMapper {
         id: i.serverId,
         name: i.name,
         cTag: i.cTag,
+        display: i.display,
         contactsInfo: i.contactsInfo,
       );
     });
@@ -23,6 +24,7 @@ class ContactsStorageMapper {
         serverId: i.id,
         name: i.name,
         cTag: i.cTag,
+        display: i.display,
         contactsInfo: i.contactsInfo,
       );
     });
@@ -36,6 +38,7 @@ class ContactsStorageMapper {
         id: i["Id"],
         name: i["Name"],
         cTag: i["CTag"],
+        display: i["Display"],
         contactsInfo: null,
       );
     });

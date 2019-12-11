@@ -16,7 +16,7 @@ abstract class ContactsDbService {
       return ContactsDbServiceImpl(db);
   }
 
-  Future<List<Contact>> getContacts(int userServerId, String storage);
+  Future<List<Contact>> getContacts(int userServerId, ContactsStorage storage);
 
   Future<void> addContacts(List<Contact> newContacts);
 

@@ -13,5 +13,7 @@ class ContactsStorages extends Table {
 
   IntColumn get cTag => integer()();
 
+  BoolColumn get display => boolean()();
+
   TextColumn get contactsInfo => text().map(const ContactsInfoConverter())();
 }

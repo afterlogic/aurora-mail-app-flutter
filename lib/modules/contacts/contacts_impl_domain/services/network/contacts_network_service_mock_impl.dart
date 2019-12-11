@@ -1,72 +1,32 @@
-import 'dart:convert';
-
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_group_model.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_storage_model.dart';
-import 'package:aurora_mail/modules/contacts/contacts_impl_domain/mappers/contact_info_mapper.dart';
-import 'package:aurora_mail/modules/contacts/contacts_impl_domain/mappers/contact_mapper.dart';
-import 'package:aurora_mail/modules/contacts/contacts_impl_domain/mappers/contacts_group_mapper.dart';
-import 'package:aurora_mail/modules/contacts/contacts_impl_domain/mappers/contacts_storage_mapper.dart';
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/network/contacts_network_service.dart';
-import 'package:webmail_api_client/webmail_api_client.dart';
 
 class ContactsNetworkServiceMockImpl implements ContactsNetworkService {
-  final _storages = new List<ContactsStorage>();
+  static var storages = new List<ContactsStorage>();
+  static var groups = new List<ContactsGroup>();
+  static var infos = new List<ContactInfoItem>();
+  static var contacts = new List<Contact>();
 
-  ContactsNetworkServiceMockImpl(this.contactsModule);
+  ContactsNetworkServiceMockImpl();
 
   @override
-  Future<List<ContactsStorage>> getContactStorages() async {
-    final result = [
-      {
-        "Id": "personal",
-        "Name": "Personal",
-        "CTag": 7
-      },
-    ];
-    return ContactsStorageMapper.fromNetwork(result);
-  }
+  Future<List<ContactsStorage>> getContactStorages() async => storages;
 
   @override
   Future<List<Contact>> getContactsByUids(ContactsStorage storage,
       List<String> uids) async {
-    final params = {
-      "Storage": storage.id,
-      "Uids": uids,
-    };
-
-    final body = new WebMailApiBody(
-      method: "GetContactsByUids",
-      parameters: json.encode(params),
-    );
-
-    final result = await contactsModule.post<List<Map<String, dynamic>>>(body);
-    return ContactMapper.fromNetwork(result);
+    return contacts
+      ..where((c) => c.storage == storage.id)
+      ..where((c) => uids.contains(c.uuid))
+          .toList();
   }
 
   @override
-  Future<List<ContactInfoItem>> getContactsInfo(ContactsStorage storage) async {
-    final params = {
-      "Storage": storage,
-    };
-
-    final body = new WebMailApiBody(
-      method: "GetContactsByUids",
-      parameters: json.encode(params),
-    );
-
-    final result = await contactsModule.post<Map<String, dynamic>>(body);
-    return ContactInfoMapper.fromNetwork(result);
-  }
+  Future<List<ContactInfoItem>> getContactsInfo(
+      ContactsStorage storage) async => infos;
 
   @override
-  Future<List<ContactsGroup>> getGroups() async {
-    final body = new WebMailApiBody(
-      method: "GetGroups",
-      parameters: null,
-    );
-
-    final result = await contactsModule.post<List<Map<String, dynamic>>>(body);
-    return ContactsGroupMapper.fromNetwork(result);
-  }
+  Future<List<ContactsGroup>> getGroups() async => groups;
 }

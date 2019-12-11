@@ -24,10 +24,12 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
   }
 
   Future<List<ContactsTable>> getContacts(int userServerId, String storage) {
-    return (select(contacts)
+    return (
+        select(contacts)
           ..where((c) => c.idUser.equals(userServerId))
-          ..where((c) => c.storage.equals(storage)))
-        .get();
+          ..where((c) => c.storage.equals(storage))
+          ..orderBy([(m) => OrderingTerm(expression: m.fullName)])
+    ).get();
   }
 
   Future<void> updateContacts(List<ContactsCompanion> updatedContacts) {

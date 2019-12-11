@@ -5,6 +5,7 @@ class ContactsStorage {
   final String id;
   final String name;
   final int cTag;
+  final bool display;
   List<ContactInfoItem> contactsInfo;
 
   ContactsStorage({
@@ -12,6 +13,7 @@ class ContactsStorage {
     @required this.id,
     @required this.name,
     @required this.cTag,
+    @required this.display,
     @required this.contactsInfo,
   });
 }
