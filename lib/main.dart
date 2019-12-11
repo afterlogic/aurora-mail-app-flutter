@@ -20,11 +20,11 @@ void onAlarm() async {
     if (isBackground) WidgetsFlutterBinding.ensureInitialized();
 
     final hasUpdate = await BackgroundSync()
-        .sync(isBackground)
-        .timeout(Duration(seconds: 60));
+        .sync(isBackground,doOnAlarm != null)
+        .timeout(Duration(seconds: 50));
 
     if (hasUpdate) {
-      doOnAlarm();
+      if (doOnAlarm != null) doOnAlarm();
     }
   } catch (e, s) {
     print(e);

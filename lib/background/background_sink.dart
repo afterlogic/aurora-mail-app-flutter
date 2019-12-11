@@ -29,20 +29,30 @@ class BackgroundSync {
   final _mailApi = MailApi();
   final _notificationStorage = NotificationLocalStorage();
 
-  Future<bool> sync(bool isBackground) async {
+  Future<bool> sync(bool isBackground, bool isRunApp) async {
     try {
       final newMessageCount = await getNewMessageCount();
       if (newMessageCount != 0) {
-        final currentMessageCount =
-            await _notificationStorage.getMessageCount() ?? 0;
-        final messageCount = currentMessageCount + newMessageCount;
+        var messageCount = await _notificationStorage.getMessageCount() ?? 0;
+        var hasNew = false;
+        if (isRunApp) {
+          messageCount += newMessageCount;
+          hasNew=true;
+        } else {
+          hasNew=newMessageCount != messageCount;
+          messageCount = newMessageCount;
+        }
+
         if (isBackground) {
           await _notificationStorage.setMessageCount(messageCount);
         } else {
           await _notificationStorage.clear();
         }
-        await showNewMessage(messageCount);
-        return messageCount != 0;
+
+        if (hasNew) {
+          await showNewMessage(messageCount);
+        }
+        return hasNew;
       }
     } catch (e, s) {
       print("sync error:$e,$s");
