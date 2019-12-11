@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'auth_date.dart';
 
 class LoginAndroid extends StatefulWidget {
   static final _authFormKey = GlobalKey<FormState>();
@@ -37,8 +38,8 @@ class _LoginAndroidState extends State<LoginAndroid> {
       DeviceOrientation.portraitDown,
     ]);
     if (kDebugMode) {
-      emailCtrl.text = "natro@afterlogic.com";
-      passwordCtrl.text = "p1411natro";
+      emailCtrl.text = AuthData.email;
+      passwordCtrl.text = AuthData.password;
     }
   }
 
