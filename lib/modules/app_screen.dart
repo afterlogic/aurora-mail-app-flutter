@@ -1,3 +1,5 @@
+import 'package:aurora_mail/background/alarm/alarm.dart';
+import 'package:aurora_mail/background/notification_local_storage.dart';
 import 'package:aurora_mail/generated/i18n.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
@@ -9,6 +11,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:package_info/package_info.dart';
 import 'package:aurora_mail/main.dart' as main;
+import '../main.dart';
 import 'app_navigation.dart';
 import 'auth/blocs/auth_bloc/bloc.dart';
 import 'auth/screens/login/login_route.dart';
@@ -36,6 +39,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
       main.isBackground = true;
     } else if (state == AppLifecycleState.resumed) {
       main.isBackground = false;
+      _settingsBloc.add(OnResume());
     }
     super.didChangeAppLifecycleState(state);
   }
@@ -58,56 +62,57 @@ class _AppState extends State<App> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AuthBloc, AuthState>(
-        bloc: _authBloc,
-        condition: (_, state) => state is InitializedUserAndAccounts,
-        builder: (_, authState) {
-          if (authState is InitializedUserAndAccounts) {
-            if (authState.user != null) {
-              _settingsBloc.add(InitSettings(authState.user));
-            }
-            return BlocBuilder<SettingsBloc, SettingsState>(
-                bloc: _settingsBloc,
-                builder: (_, settingsState) {
-                  if (settingsState is SettingsLoaded) {
-                    return MultiBlocProvider(
-                      providers: [
-                        BlocProvider<AuthBloc>.value(
-                          value: _authBloc,
-                        ),
-                        BlocProvider<SettingsBloc>.value(
-                          value: _settingsBloc,
-                        ),
-                      ],
-                      child: MaterialApp(
-                        title: _appInfo.appName,
-                        onGenerateRoute: AppNavigation.onGenerateRoute,
-                        theme: settingsState.darkThemeEnabled
-                            ? AppTheme.dark
-                            : AppTheme.light,
-                        localizationsDelegates: [
-                          GlobalMaterialLocalizations.delegate,
-                          GlobalWidgetsLocalizations.delegate,
-                          GlobalCupertinoLocalizations.delegate,
-                          S.delegate
-                        ],
-                        supportedLocales: S.delegate.supportedLocales,
-                        localeResolutionCallback: S.delegate.resolution(
-                            fallback: new Locale("en", ""), withCountry: false),
-                        locale: settingsState.language != null
-                            ? settingsState.language.toLocale()
-                            : null,
-                        initialRoute: authState.needsLogin
-                            ? LoginRoute.name
-                            : MessagesListRoute.name,
-                      ),
-                    );
-                  } else {
-                    return Material();
-                  }
-                });
-          } else {
-            return Material();
+      bloc: _authBloc,
+      condition: (_, state) => state is InitializedUserAndAccounts,
+      builder: (_, authState) {
+        if (authState is InitializedUserAndAccounts) {
+          if (authState.user != null) {
+            _settingsBloc.add(InitSettings(authState.user));
           }
-        });
+          return BlocBuilder<SettingsBloc, SettingsState>(
+              bloc: _settingsBloc,
+              builder: (_, settingsState) {
+                if (settingsState is SettingsLoaded) {
+                  return MultiBlocProvider(
+                    providers: [
+                      BlocProvider<AuthBloc>.value(
+                        value: _authBloc,
+                      ),
+                      BlocProvider<SettingsBloc>.value(
+                        value: _settingsBloc,
+                      ),
+                    ],
+                    child: MaterialApp(
+                      title: _appInfo.appName,
+                      onGenerateRoute: AppNavigation.onGenerateRoute,
+                      theme: settingsState.darkThemeEnabled
+                          ? AppTheme.dark
+                          : AppTheme.light,
+                      localizationsDelegates: [
+                        GlobalMaterialLocalizations.delegate,
+                        GlobalWidgetsLocalizations.delegate,
+                        GlobalCupertinoLocalizations.delegate,
+                        S.delegate
+                      ],
+                      supportedLocales: S.delegate.supportedLocales,
+                      localeResolutionCallback: S.delegate.resolution(
+                          fallback: new Locale("en", ""), withCountry: false),
+                      locale: settingsState.language != null
+                          ? settingsState.language.toLocale()
+                          : null,
+                      initialRoute: authState.needsLogin
+                          ? LoginRoute.name
+                          : MessagesListRoute.name,
+                    ),
+                  );
+                } else {
+                  return Material();
+                }
+              });
+        } else {
+          return Material();
+        }
+      },
+    );
   }
 }

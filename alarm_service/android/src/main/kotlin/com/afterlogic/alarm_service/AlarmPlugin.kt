@@ -73,7 +73,11 @@ class AlarmPlugin(private val applicationContext: Context) : MethodCallHandler {
 
     fun onAlarm(onComplete: () -> Unit, id: Int) {
         Handler(Looper.getMainLooper()).post {
-            doOnAlarm?.success(id)
+            try {
+                doOnAlarm?.success(id)
+            } catch (e: Throwable) {
+                e.printStackTrace()
+            }
         }
         onComplete.invoke()
     }

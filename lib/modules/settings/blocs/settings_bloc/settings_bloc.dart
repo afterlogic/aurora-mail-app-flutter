@@ -28,6 +28,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   Stream<SettingsState> mapEventToState(
     SettingsEvent event,
   ) async* {
+    if (event is OnResume) await onResume();
     if (event is InitSettings) yield* _initSyncSettings(event);
     if (event is UpdateConnectivity) yield* _updateConnectivity(event);
     if (event is SetFrequency) yield* _setFrequency(event);
@@ -37,11 +38,12 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   }
 
   Stream<SettingsState> _initSyncSettings(InitSettings event) async* {
-
-    await Alarm.periodic(Duration(seconds: event.user.syncFreqInSeconds), main.onAlarm);
+    await Alarm.periodic(
+      Duration(seconds: event.user.syncFreqInSeconds),
+      main.onAlarm,
+    );
 
     if (state is SettingsLoaded) {
-
       yield (state as SettingsLoaded).copyWith(
           syncFrequency: Value(event.user.syncFreqInSeconds),
           syncPeriod: Value(event.user.syncPeriod),
@@ -50,7 +52,6 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
             Language.fromJson(event.user.language),
           ));
     } else {
-
       yield SettingsLoaded(
         syncFrequency: event.user.syncFreqInSeconds,
         syncPeriod: event.user.syncPeriod,
@@ -113,5 +114,9 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     } else {
       yield SettingsLoaded(language: event.language);
     }
+  }
+
+  Future onResume() {
+    return _methods.clearNotification();
   }
 }

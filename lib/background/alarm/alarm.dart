@@ -8,6 +8,14 @@ class Alarm {
   static const MethodChannel _channel =
       const MethodChannel('ios_alarm_manager');
 
+  static init() {
+    if (Platform.isIOS) {
+      //todo
+    } else {
+      AlarmService.init();
+    }
+  }
+
   static periodic(Duration duration, Function callback) {
     if (Platform.isIOS) {
       //todo

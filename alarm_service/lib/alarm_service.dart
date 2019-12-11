@@ -6,6 +6,14 @@ import 'package:flutter/services.dart';
 class AlarmService {
   static const MethodChannel _channel = const MethodChannel('alarm_service');
   static final Map<int, Function> _onAlarmMap = {};
+  static bool _isInit = false;
+
+  static init() {
+    if (!_isInit) {
+      _isInit = true;
+      _doOnAlarm();
+    }
+  }
 
   static Future setAlarm(
     Function onAlarm,
@@ -38,19 +46,15 @@ class AlarmService {
     Function onAlarm,
     int id,
   ) {
-    final isEmpty = _onAlarmMap.isEmpty;
     if (onAlarm == null) {
       _onAlarmMap.remove(id);
     } else {
       _onAlarmMap[id] = onAlarm;
     }
-    if (isEmpty && onAlarm != null) {
-      _doOnAlarm();
-    }
   }
 
   static _doOnAlarm() async {
-    while (_onAlarmMap.isNotEmpty) {
+    while (true) {
       final id = await _channel.invokeMethod('doOnAlarm');
       if (id != null) {
         final function = _onAlarmMap[id];

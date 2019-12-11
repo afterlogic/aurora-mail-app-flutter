@@ -11,29 +11,43 @@ import 'package:aurora_mail/models/message_info.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aurora_mail/modules/auth/repository/auth_local_storage.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/mail_methods.dart';
+import 'package:aurora_mail/modules/mail/repository/folders_api.dart';
 import 'package:aurora_mail/modules/mail/repository/mail_api.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/modules/settings/models/sync_period.dart';
 import 'package:aurora_mail/notification/notification_manager.dart';
 
+import 'notification_local_storage.dart';
+
 class BackgroundSync {
   //todo VO
-  final _mailMethods = MailMethods();
   final _foldersDao = FoldersDao(DBInstances.appDB);
   final _usersDao = UsersDao(DBInstances.appDB);
   final _accountsDao = AccountsDao(DBInstances.appDB);
   final _authLocal = AuthLocalStorage();
+  final _foldersApi = FoldersApi();
   final _mailApi = MailApi();
+  final _notificationStorage = NotificationLocalStorage();
 
-  sync() async {
+  Future<bool> sync(bool isBackground) async {
     try {
       final newMessageCount = await getNewMessageCount();
       if (newMessageCount != 0) {
-        await showNewMessage(newMessageCount);
+        final currentMessageCount =
+            await _notificationStorage.getMessageCount() ?? 0;
+        final messageCount = currentMessageCount + newMessageCount;
+        if (isBackground) {
+          await _notificationStorage.setMessageCount(messageCount);
+        } else {
+          await _notificationStorage.clear();
+        }
+        await showNewMessage(messageCount);
+        return messageCount != 0;
       }
     } catch (e, s) {
       print("sync error:$e,$s");
     }
+    return false;
   }
 
   Future<int> getNewMessageCount() async {
@@ -42,13 +56,9 @@ class BackgroundSync {
     }
     await initUser();
     //todo VO
-    final inboxFolder = Folder.getFolderObjectsFromDb(
-        await _foldersDao.getByType(1 /*FolderType.inbox*/));
+    final inboxFolder = await _foldersDao.getByType(1 /*FolderType.inbox*/);
 
-    final foldersToUpdate = (await _mailMethods.updateFoldersHash(
-      inboxFolder.first,
-      forceCurrentFolderUpdate: true,
-    ))
+    final foldersToUpdate = (await updateFolderHash(inboxFolder))
         .where((item) => item.type == 1)
         .toList();
 
@@ -72,11 +82,33 @@ class BackgroundSync {
       final result = await Folders.calculateMessagesInfoDiffAsync(
           folderToUpdate.messagesInfo, messagesInfo);
 
-      await _foldersDao.setMessagesInfo(folderToUpdate.localId, messagesInfo);
-
       newMessageCount += result.addedMessagesLength ?? 0;
     }
     return newMessageCount;
+  }
+
+  Future<List<Folder>> updateFolderHash(List<LocalFolder> folders) async {
+    final newFolders = await _foldersApi.getRelevantFoldersInformation(folders);
+    final outFolder = <LocalFolder>[];
+    newFolders.keys.forEach((fName) {
+      final updatedFolder = newFolders[fName];
+      final folder = folders.firstWhere((f) => f.fullNameRaw == fName);
+
+      final shouldUpdate = folder.needsInfoUpdate;
+
+      final count = updatedFolder[0];
+      final unread = updatedFolder[1];
+      final newHash = updatedFolder[3];
+      final needsInfoUpdate = folder.fullNameHash != newHash || shouldUpdate;
+
+      outFolder.add(folder.copyWith(
+        count: count,
+        unread: unread,
+        fullNameHash: newHash,
+        needsInfoUpdate: needsInfoUpdate,
+      ));
+    });
+    return Folder.getFolderObjectsFromDb(outFolder);
   }
 
   //todo VO init static field
@@ -110,8 +142,8 @@ class BackgroundSync {
 
     final manager = NotificationManager();
 
-    final countMessage = newMessageCount > 1 ? "new messages" : "new message";
-    manager.showNotification(
-        "New messages", "You have $newMessageCount $countMessage");
+    final countMessage = newMessageCount > 1 ? s.new_messages : s.new_message;
+    manager.showNotification(countMessage,
+        s.you_have_new_message(newMessageCount.toString(), countMessage));
   }
 }

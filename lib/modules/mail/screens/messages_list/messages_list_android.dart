@@ -20,7 +20,7 @@ import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-
+import 'package:aurora_mail/main.dart' as main;
 import 'components/mail_app_bar.dart';
 import 'components/message_item.dart';
 
@@ -36,8 +36,6 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
   var _refreshCompleter = new Completer();
   Folder _selectedFolder;
 
-  Timer _timer;
-
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -47,7 +45,7 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
   @override
   void dispose() {
     super.dispose();
-    _timer?.cancel();
+    main.doOnAlarm = null;
     _messagesListBloc.close();
     _mailBloc.close();
   }
@@ -56,15 +54,10 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
     showSnack(context: ctx, scaffoldState: Scaffold.of(ctx), msg: err);
   }
 
-  void _initUpdateTimer(int frequency, BuildContext context) async {
-    final freq = SyncFreq.secondsToFreq(frequency);
-    final syncDuration = SyncFreq.freqToDuration(freq);
-
-    _timer?.cancel();
-    _timer = Timer.periodic(
-      syncDuration,
-      (Timer timer) => _mailBloc.add(RefreshMessages()),
-    );
+  void _initUpdateTimer() async {
+    main.doOnAlarm = () {
+      _mailBloc.add(RefreshMessages());
+    };
   }
 
   void _onAppBarActionSelected(MailListAppBarAction item) {
@@ -170,7 +163,9 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
             ),
             BlocListener<SettingsBloc, SettingsState>(
               condition: (prev, next) {
-                if (prev is SettingsLoaded && next is SettingsLoaded && prev.darkThemeEnabled != next.darkThemeEnabled) {
+                if (prev is SettingsLoaded &&
+                    next is SettingsLoaded &&
+                    prev.darkThemeEnabled != next.darkThemeEnabled) {
                   return false;
                 } else {
                   return true;
@@ -179,7 +174,7 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
               listener: (BuildContext context, state) {
                 if (state is SettingsLoaded) {
                   if (state.syncFrequency != null) {
-                    _initUpdateTimer(state.syncFrequency, context);
+                    _initUpdateTimer();
                   }
                   _mailBloc.add(RefreshMessages());
                 }

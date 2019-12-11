@@ -146,4 +146,7 @@
   "compose_reply_date_format": "EEE, MMM d, yyyy 'at' HH:mm",
   "compose_reply_date_format": "EEE, MMM d, yyyy 'at' HH:mm",
   "compose_reply_date_format": "EEE, MMM d, yyyy 'at' HH:mm",
+  "new_message": "new message",
+  "new_messages": "new messages",
+  "you_have_new_message": "You have $s1 $s2"
 }

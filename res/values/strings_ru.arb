@@ -139,5 +139,5 @@
   "error_server_file_not_found": "Файл не найден",
   "error_server_can_not_upload_file_limit": "Превышен лимит загрузки файлов",
   "error_server_mail_server_error": "Ошибка почтового сервера",
-  "error_unknown": "Неизвестная ошибка",
+  "error_unknown": "Неизвестная ошибка"
 }

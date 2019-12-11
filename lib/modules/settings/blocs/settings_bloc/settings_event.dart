@@ -65,3 +65,8 @@ class UpdateConnectivity extends SettingsEvent {
   @override
   List<Object> get props => [connection];
 }
+
+class OnResume extends SettingsEvent {
+  @override
+  final List<Object> props = [DateTime.now().millisecondsSinceEpoch];
+}

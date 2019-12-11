@@ -5,19 +5,31 @@ import 'background/background_sink.dart';
 import 'modules/app_screen.dart';
 
 var isBackground = true;
+Function doOnAlarm;
 
 void main() {
+  isBackground = false;
   runApp(App());
+  Alarm.init();
   Alarm.onPeriodic(onAlarm);
 }
 
 @pragma('vm:entry-point')
 void onAlarm() async {
-  if (isBackground) {
-    WidgetsFlutterBinding.ensureInitialized();
+  try {
+    if (isBackground) WidgetsFlutterBinding.ensureInitialized();
 
-    await BackgroundSync().sync();
+    final hasUpdate = await BackgroundSync()
+        .sync(isBackground)
+        .timeout(Duration(seconds: 60));
 
-    Alarm.endAlarm();
+    if (hasUpdate) {
+      doOnAlarm();
+    }
+  } catch (e, s) {
+    print(e);
+    print(s);
+  } finally {
+    await Alarm.endAlarm();
   }
 }
