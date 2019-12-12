@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 
 enum ContactsListAppBarAction { logout, settings, mail }
 
-class ContactsAppBar extends StatelessWidget {
+class ContactsAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Function(ContactsListAppBarAction) onActionSelected;
+
+  @override
+  final Size preferredSize = const Size.fromHeight(kToolbarHeight);
 
   const ContactsAppBar({Key key, this.onActionSelected}) : super(key: key);
 

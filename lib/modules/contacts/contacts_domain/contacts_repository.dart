@@ -6,13 +6,14 @@ import 'package:aurora_mail/modules/contacts/contacts_impl_domain/contacts_repos
 import 'package:flutter/widgets.dart';
 
 abstract class ContactsRepository {
-
   factory ContactsRepository({
     @required String apiUrl,
     @required String token,
     @required int userServerId,
     @required AppDatabase appDB,
-  }) => ContactsRepositoryImpl(appDB: appDB,
+  }) =>
+      ContactsRepositoryImpl(
+          appDB: appDB,
           apiUrl: apiUrl,
           userServerId: userServerId,
           token: token);
@@ -24,6 +25,10 @@ abstract class ContactsRepository {
   Stream<List<ContactsStorage>> watchContactsStorages();
 
   Stream<List<ContactsGroup>> watchContactsGroups();
+
+  Future addGroup(ContactsGroup group);
+
+  Future<bool> editGroup(ContactsGroup group);
 
   void dispose();
 }

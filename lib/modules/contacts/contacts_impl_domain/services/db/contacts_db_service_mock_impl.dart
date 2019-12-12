@@ -18,7 +18,8 @@ class ContactsDbServiceMockImpl implements ContactsDbService {
   }
 
   @override
-  Future<void> addStorages(List<ContactsStorage> newStorages, int userId) async {
+  Future<void> addStorages(
+      List<ContactsStorage> newStorages, int userId) async {
     newStorages.forEach((storage) {
       int sqliteId = 0;
       while (storages.where((s) => s.sqliteId == sqliteId).isNotEmpty) {
@@ -35,7 +36,8 @@ class ContactsDbServiceMockImpl implements ContactsDbService {
   }
 
   @override
-  Future<void> updateStorages(List<ContactsStorage> updatedStorages, int userId, {bool nullToAbsent = true}) async {
+  Future<void> updateStorages(List<ContactsStorage> updatedStorages, int userId,
+      {bool nullToAbsent = true}) async {
     for (final storage in updatedStorages) {
       storages.removeWhere((s) => s.sqliteId == storage.sqliteId);
       storages.add(storage);
@@ -43,27 +45,29 @@ class ContactsDbServiceMockImpl implements ContactsDbService {
   }
 
   @override
-  Future<List<Contact>> getContacts(int userServerId, ContactsStorage storage) async {
+  Future<List<Contact>> getContacts(
+      int userServerId, ContactsStorage storage) async {
     return contacts..where((c) => c.storage == storage.id).toList();
   }
 
   @override
   Future<void> addContacts(List<Contact> newContacts) async {
     newContacts.forEach((c) {
-      contacts.add(new Contact(entityId: c.entityId,
-          uuid: c.uuid,
-          idUser: c.idUser,
-          idTenant: c.idTenant,
-          storage: c.storage,
-          fullName: c.fullName,
-          useFriendlyName: c.useFriendlyName,
-          viewEmail: c.viewEmail,
-          eTag: c.eTag,
-          frequency: c.frequency,
-          dateModified: c.dateModified,
-          davContactsUid: c.davContactsUid,
-          davContactsVCardUid: c.davContactsVCardUid,
-          groupUUIDs: c.groupUUIDs,
+      contacts.add(new Contact(
+        entityId: c.entityId,
+        uuid: c.uuid,
+        idUser: c.idUser,
+        idTenant: c.idTenant,
+        storage: c.storage,
+        fullName: c.fullName,
+        useFriendlyName: c.useFriendlyName,
+        viewEmail: c.viewEmail,
+        eTag: c.eTag,
+        frequency: c.frequency,
+        dateModified: c.dateModified,
+        davContactsUid: c.davContactsUid,
+        davContactsVCardUid: c.davContactsVCardUid,
+        groupUUIDs: c.groupUUIDs,
       ));
     });
   }
@@ -83,17 +87,32 @@ class ContactsDbServiceMockImpl implements ContactsDbService {
   }
 
   @override
-  Future<List<ContactsGroup>> getGroups(int userServerId, String storage) async => groups;
+  Future<List<ContactsGroup>> getGroups(
+          int userServerId, String storage) async =>
+      groups;
 
   @override
   Future<void> addGroups(List<ContactsGroup> newGroups) async {
     newGroups.forEach((g) {
-      groups.add(new ContactsGroup(idUser: g.idUser, uuid: g.uuid, name: g.name));
+      groups
+          .add(new ContactsGroup(idUser: g.idUser, uuid: g.uuid, name: g.name));
     });
   }
 
   @override
   Future<void> deleteGroups(List<String> uuids) async {
     groups.removeWhere((c) => uuids.contains(c.uuid));
+  }
+
+  @override
+  Future<void> editGroups(List<ContactsGroup> newGroups) async {
+    groups.removeWhere((oldItem) {
+      return newGroups.firstWhere(
+            (newItem) => newItem.uuid == oldItem,
+            orElse: () => null,
+          ) !=
+          null;
+    });
+    groups.addAll(newGroups);
   }
 }

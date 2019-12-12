@@ -19,6 +19,7 @@ class ContactsListAndroid extends StatefulWidget {
 }
 
 class _ContactsListAndroidState extends State<ContactsListAndroid> {
+//  ContactsBloc bloc = ContactsBloc();
 
   ContactsBloc _contactsBloc;
 

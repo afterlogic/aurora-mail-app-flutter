@@ -8,7 +8,6 @@ import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/co
 import '../../contacts_config.dart';
 
 abstract class ContactsDbService {
-
   factory ContactsDbService(AppDatabase db) {
     if (TEST_MODE)
       return ContactsDbServiceMockImpl();
@@ -35,6 +34,8 @@ abstract class ContactsDbService {
   Future<void> deleteStorages(List<int> sqliteIds);
 
   Future<List<ContactsGroup>> getGroups(int userServerId, String storage);
+
+  Future<void> editGroups(List<ContactsGroup> newGroups);
 
   Future<void> addGroups(List<ContactsGroup> newGroups);
 

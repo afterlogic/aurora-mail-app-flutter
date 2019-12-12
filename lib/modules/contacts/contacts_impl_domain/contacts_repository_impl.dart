@@ -15,7 +15,6 @@ import 'package:moor_flutter/moor_flutter.dart';
 import 'package:webmail_api_client/webmail_api_client.dart';
 
 class ContactsRepositoryImpl implements ContactsRepository {
-
   final int userServerId;
 
   final _syncQueue = new List<int>();
@@ -48,11 +47,13 @@ class ContactsRepositoryImpl implements ContactsRepository {
   }
 
   @override
-  Stream<int> get currentlySyncingStorage => _currentlySyncingStorageCtrl.stream;
+  Stream<int> get currentlySyncingStorage =>
+      _currentlySyncingStorageCtrl.stream;
 
   @override
   Stream<List<Contact>> watchContacts(ContactsStorage storage) {
-    _db.getContacts(userServerId, storage)
+    _db
+        .getContacts(userServerId, storage)
         .then((contacts) => _contactsCtrl.add(contacts))
         .catchError((err) => _contactsCtrl.addError(formatError(err, null)));
     return _contactsCtrl.stream;
@@ -63,8 +64,7 @@ class ContactsRepositoryImpl implements ContactsRepository {
 
   @override
   Stream<List<ContactsStorage>> watchContactsStorages() {
-    _db.getStorages(userServerId)
-        .then((storagesFromDb) async {
+    _db.getStorages(userServerId).then((storagesFromDb) async {
       try {
         List<ContactsStorage> storagesToUpdate;
         if (storagesFromDb.isNotEmpty) {
@@ -82,27 +82,46 @@ class ContactsRepositoryImpl implements ContactsRepository {
 
         _storagesCtrl.add(updatedStorages);
 
-        final storagesIdsToSync = updatedStorages.map((s) => s.sqliteId)
-            .toList();
+        final storagesIdsToSync =
+            updatedStorages.map((s) => s.sqliteId).toList();
         syncContacts(storagesIdsToSync);
       } catch (err, s) {
         _storagesCtrl.addError(formatError(err, s));
       }
-    })
-        .catchError((err) => _storagesCtrl.addError(formatError(err, null)));
+    }).catchError((err) => _storagesCtrl.addError(formatError(err, null)));
 
     return _storagesCtrl.stream;
+  }
+
+  @override
+  Future addGroup(ContactsGroup group) async {
+    final groupWithId = await _network.addGroup(group);
+    await _db.addGroups([groupWithId]);
+    final updatedStorages = await _db.getStorages(userServerId);
+    _storagesCtrl.add(updatedStorages);
+  }
+
+  @override
+  Future<bool> editGroup(ContactsGroup group) async {
+    final success = await _network.editGroup(group);
+    if (!success) {
+      return false;
+    }
+    await _db.editGroups([group]);
+    final updatedStorages = await _db.getStorages(userServerId);
+    _storagesCtrl.add(updatedStorages);
+    return true;
   }
 
   Future<List<ContactsStorage>> getStoragesToUpdate(
       List<ContactsStorage> storagesFromDb) async {
     final storagesFromNetwork = await _network.getContactStorages();
 
-    final calcResult = await ContactsDiffCalculator
-        .calculateStoragesDiffAsync(storagesFromDb, storagesFromNetwork);
+    final calcResult = await ContactsDiffCalculator.calculateStoragesDiffAsync(
+        storagesFromDb, storagesFromNetwork);
 
-    final storageIdsToDelete = calcResult.deletedStorages.map((s) => s.sqliteId)
-        .toList();
+    final storageIdsToDelete =
+        calcResult.deletedStorages.map((s) => s.sqliteId).toList();
 
     await Future.wait([
       _db.addStorages(calcResult.addedStorages, userServerId),
@@ -130,19 +149,19 @@ class ContactsRepositoryImpl implements ContactsRepository {
           sqliteId: s.sqliteId,
           cTag: s.cTag,
           display: s.display,
-          name: s.name
-      );
+          name: s.name);
     } else {
-      final calcResult = await ContactsDiffCalculator
-          .calculateContactsInfoDiffAsync(s.contactsInfo, infos);
+      final calcResult =
+          await ContactsDiffCalculator.calculateContactsInfoDiffAsync(
+              s.contactsInfo, infos);
 
       final infosToUpdate = new List<ContactInfoItem>.from(s.contactsInfo);
 
-      infosToUpdate..removeWhere((i) =>
-          calcResult.deletedContacts.contains(i.uuid))..removeWhere((i) =>
-      calcResult.updatedContacts
-          .where((j) => j.uuid == i.uuid)
-          .isNotEmpty);
+      infosToUpdate
+        ..removeWhere((i) => calcResult.deletedContacts.contains(i.uuid))
+        ..removeWhere((i) => calcResult.updatedContacts
+            .where((j) => j.uuid == i.uuid)
+            .isNotEmpty);
 
       infosToUpdate.addAll(calcResult.addedContacts);
       infosToUpdate.addAll(calcResult.updatedContacts);
@@ -168,8 +187,8 @@ class ContactsRepositoryImpl implements ContactsRepository {
     if (_syncQueue.isEmpty) return;
 
     final storages = await _db.getStorages(userServerId);
-    final storageToSync = storages.firstWhere((i) =>
-    i.sqliteId == _syncQueue[0]);
+    final storageToSync =
+        storages.firstWhere((i) => i.sqliteId == _syncQueue[0]);
 
     final uuidsToFetch = _takeChunk(storageToSync.contactsInfo);
 
@@ -177,13 +196,11 @@ class ContactsRepositoryImpl implements ContactsRepository {
       _syncQueue.removeAt(0);
     } else {
       try {
-        final contacts = await _network.getContactsByUids(
-            storageToSync, uuidsToFetch);
+        final contacts =
+            await _network.getContactsByUids(storageToSync, uuidsToFetch);
         _contactsCtrl.add(contacts);
         storageToSync.contactsInfo.forEach((i) {
-          if (contacts
-              .where((c) => c.uuid == i.uuid)
-              .isNotEmpty) {
+          if (contacts.where((c) => c.uuid == i.uuid).isNotEmpty) {
             i.hasBody = true;
           }
         });

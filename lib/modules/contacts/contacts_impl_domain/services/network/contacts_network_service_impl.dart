@@ -28,8 +28,8 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
   }
 
   @override
-  Future<List<Contact>> getContactsByUids(ContactsStorage storage,
-      List<String> uids) async {
+  Future<List<Contact>> getContactsByUids(
+      ContactsStorage storage, List<String> uids) async {
     final params = {
       "Storage": storage.id,
       "Uids": uids,
@@ -71,5 +71,41 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
     final result = await contactsModule.post(body);
     final typedResult = new List<Map<String, dynamic>>.from(result);
     return ContactsGroupMapper.fromNetwork(typedResult);
+  }
+
+  @override
+  Future<ContactsGroup> addGroup(ContactsGroup group) async {
+    final body = new WebMailApiBody(
+      module: "Contacts",
+      method: "CreateGroup",
+      parameters: json.encode({"Group": ContactsGroupMapper.toNetwork(group)}),
+    );
+
+    final result = await contactsModule.post<Map<String, dynamic>>(body);
+    return ContactsGroupMapper.fromNetwork([result]).first;
+  }
+
+  @override
+  Future<bool> editGroup(ContactsGroup group) async {
+    final body = new WebMailApiBody(
+      module: "Contacts",
+      method: "UpdateGroup",
+      parameters: json.encode({"Group": ContactsGroupMapper.toNetwork(group)}),
+    );
+
+    final result = await contactsModule.post<bool>(body);
+    return result;
+  }
+
+  @override
+  Future<bool> deleteGroup(ContactsGroup group) async {
+    final body = new WebMailApiBody(
+      module: "Contacts",
+      method: "DeleteGroup",
+      parameters: json.encode({"UUID": group.uuid}),
+    );
+
+    final result = await contactsModule.post<bool>(body);
+    return result;
   }
 }
