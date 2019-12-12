@@ -87,8 +87,7 @@ class ContactsDbServiceMockImpl implements ContactsDbService {
   }
 
   @override
-  Future<List<ContactsGroup>> getGroups(
-          int userServerId, String storage) async =>
+  Future<List<ContactsGroup>> getGroups(int userServerId) async =>
       groups;
 
   @override

@@ -24,6 +24,8 @@ class ContactsRepositoryImpl implements ContactsRepository {
 
   final _contactsCtrl = new StreamController<List<Contact>>();
   final _storagesCtrl = new StreamController<List<ContactsStorage>>();
+  final _groupCtrl = new StreamController<List<ContactsGroup>>();
+
   StreamController<int> _currentlySyncingStorageCtrl;
 
   ContactsRepositoryImpl({
@@ -97,8 +99,7 @@ class ContactsRepositoryImpl implements ContactsRepository {
   Future addGroup(ContactsGroup group) async {
     final groupWithId = await _network.addGroup(group);
     await _db.addGroups([groupWithId]);
-    final updatedStorages = await _db.getStorages(userServerId);
-    _storagesCtrl.add(updatedStorages);
+    await _updateGroup();
   }
 
   @override
@@ -108,8 +109,7 @@ class ContactsRepositoryImpl implements ContactsRepository {
       return false;
     }
     await _db.editGroups([group]);
-    final updatedStorages = await _db.getStorages(userServerId);
-    _storagesCtrl.add(updatedStorages);
+    await _updateGroup();
     return true;
   }
 
@@ -120,11 +120,14 @@ class ContactsRepositoryImpl implements ContactsRepository {
       return false;
     }
     await _db.deleteGroups([group.uuid]);
-    final updatedStorages = await _db.getStorages(userServerId);
-    _storagesCtrl.add(updatedStorages);
+    await _updateGroup();
     return true;
   }
 
+  _updateGroup() async {
+    final updatedGroups = await _db.getGroups(userServerId);
+    _groupCtrl.add(updatedGroups);
+  }
   Future<List<ContactsStorage>> getStoragesToUpdate(
       List<ContactsStorage> storagesFromDb) async {
     final storagesFromNetwork = await _network.getContactStorages();

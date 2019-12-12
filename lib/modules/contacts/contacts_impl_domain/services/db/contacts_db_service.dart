@@ -33,7 +33,7 @@ abstract class ContactsDbService {
 
   Future<void> deleteStorages(List<int> sqliteIds);
 
-  Future<List<ContactsGroup>> getGroups(int userServerId, String storage);
+  Future<List<ContactsGroup>> getGroups(int userServerId);
 
   Future<void> editGroups(List<ContactsGroup> newGroups);
 

@@ -65,7 +65,7 @@ class ContactsDbServiceImpl implements ContactsDbService {
 
   @override
   Future<List<ContactsGroup>> getGroups(
-      int userServerId, String storage) async {
+      int userServerId) async {
     final result = await _groupsDao.getGroups(userServerId);
     return ContactsGroupMapper.fromDB(result);
   }
