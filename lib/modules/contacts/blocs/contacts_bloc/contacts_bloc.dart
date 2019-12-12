@@ -40,7 +40,7 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
 
   Stream<ContactsState> _getContacts(GetContacts event) async* {
     _repo.watchContactsStorages().listen((storages) {
-
+      storages;
     }, onError: (err) {
       state.copyWith(error: formatError(err, null));
     });

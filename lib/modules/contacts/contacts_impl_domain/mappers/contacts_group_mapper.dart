@@ -26,6 +26,7 @@ class ContactsGroupMapper {
       );
     });
   }
+
   static List<ContactsGroup> fromDB(List<ContactsGroupsTable> dbItems) {
     return dbItems.map((i) {
       return new ContactsGroup(
@@ -50,6 +51,7 @@ class ContactsGroupMapper {
       );
     });
   }
+
   static List<ContactsGroup> fromNetwork(List<Map<String, dynamic>> rawItems) {
     return rawItems.map((i) {
       return new ContactsGroup(
@@ -73,5 +75,28 @@ class ContactsGroupMapper {
         zip: i["Zip"],
       );
     });
+  }
+
+  static Map<String, dynamic> toNetwork(ContactsGroup group) {
+    return {
+      "UUID": group.uuid,
+      "IdUser": group.idUser,
+      "EntityId": group.entityId,
+      "City": group.city,
+      "Company": group.company,
+      "Country": group.country,
+      "DavContacts::UID": group.davContactsUID,
+      "Email": group.email,
+      "Events": group.events,
+      "Fax": group.fax,
+      "IsOrganization": group.isOrganization,
+      "Name": group.name,
+      "ParentUUID": group.parentUUID,
+      "Phone": group.phone,
+      "State": group.state,
+      "Street": group.street,
+      "Web": group.web,
+      "Zip": group.zip,
+    };
   }
 }

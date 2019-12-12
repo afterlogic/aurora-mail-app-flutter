@@ -1,6 +1,6 @@
-import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/auth/screens/login/login_route.dart';
+import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/screens/contacts_list/components/contacts_app_bar.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
 import 'package:aurora_mail/modules/settings/screens/settings_main/settings_main_route.dart';
@@ -14,6 +14,13 @@ class ContactsListAndroid extends StatefulWidget {
 }
 
 class _ContactsListAndroidState extends State<ContactsListAndroid> {
+//  ContactsBloc bloc = ContactsBloc();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
 
   void _onAppBarActionSelected(ContactsListAppBarAction item) {
     switch (item) {
@@ -29,16 +36,12 @@ class _ContactsListAndroidState extends State<ContactsListAndroid> {
         break;
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(APP_BAR_HEIGHT_ANDROID),
-        child: ContactsAppBar(onActionSelected: _onAppBarActionSelected),
-      ),
-      drawer: Drawer(
-
-      ),
+      appBar: ContactsAppBar(onActionSelected: _onAppBarActionSelected),
+      drawer: Drawer(),
     );
   }
 }
