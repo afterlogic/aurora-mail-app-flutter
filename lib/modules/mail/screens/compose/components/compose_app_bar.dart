@@ -7,7 +7,9 @@ enum ComposeAppBarAction {
   cancel,
 }
 
-class ComposeAppBar extends StatelessWidget {
+class ComposeAppBar extends StatelessWidget implements PreferredSizeWidget {
+  @override
+  final Size preferredSize = const Size.fromHeight(kToolbarHeight);
   final Function(ComposeAppBarAction action) onAppBarActionSelected;
 
   const ComposeAppBar(this.onAppBarActionSelected, {Key key}) : super(key: key);
@@ -51,4 +53,5 @@ class ComposeAppBar extends StatelessWidget {
       ],
     );
   }
+
 }

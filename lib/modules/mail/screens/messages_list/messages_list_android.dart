@@ -142,10 +142,7 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
         ),
       ],
       child: Scaffold(
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(APP_BAR_HEIGHT_ANDROID),
-          child: MailAppBar(onActionSelected: _onAppBarActionSelected),
-        ),
+        appBar: MailAppBar(onActionSelected: _onAppBarActionSelected),
         drawer: MainDrawer(),
         body: MultiBlocListener(
           listeners: [

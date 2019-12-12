@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:aurora_mail/generated/i18n.dart';
+import 'package:aurora_mail/utils/show_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -22,23 +23,13 @@ class ConfirmationDialog extends StatelessWidget {
     String description,
     String actionText,
   ) {
-    if (Platform.isIOS) {
-      return showCupertinoDialog(
+    return dialog(
           context: context,
           builder: (_) => ConfirmationDialog(
                 title: title,
                 description: description,
                 actionText: actionText,
               ));
-    } else {
-      return showDialog(
-          context: context,
-          builder: (_) => ConfirmationDialog(
-                title: title,
-                description: description,
-                actionText: actionText,
-              ));
-    }
   }
 
   @override

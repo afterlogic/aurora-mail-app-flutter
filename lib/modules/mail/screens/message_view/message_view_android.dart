@@ -147,10 +147,7 @@ class _MessageViewAndroidState extends State<MessageViewAndroid>
     return BlocProvider<MessageViewBloc>.value(
       value: _messageViewBloc,
       child: Scaffold(
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(APP_BAR_HEIGHT_ANDROID),
-          child: MailViewAppBar(_onAppBarActionSelected),
-        ),
+        appBar: MailViewAppBar(_onAppBarActionSelected),
         body: BlocListener(
           bloc: _messageViewBloc,
           listener: (context, state) {

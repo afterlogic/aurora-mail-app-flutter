@@ -4,7 +4,9 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 
 enum MailViewAppBarAction { reply, replyToAll, forward, toSpam, delete }
 
-class MailViewAppBar extends StatelessWidget {
+class MailViewAppBar extends StatelessWidget implements PreferredSizeWidget {
+  @override
+  final Size preferredSize = const Size.fromHeight(kToolbarHeight);
   final Function(MailViewAppBarAction) onAppBarActionSelected;
 
   const MailViewAppBar(this.onAppBarActionSelected, {Key key})

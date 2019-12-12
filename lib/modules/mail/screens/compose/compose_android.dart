@@ -261,10 +261,7 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(APP_BAR_HEIGHT_ANDROID),
-        child: ComposeAppBar(_onAppBarActionSelected),
-      ),
+      appBar:  ComposeAppBar(_onAppBarActionSelected),
       body: BlocProvider<ComposeBloc>.value(
         value: _bloc,
         child: BlocListener<ComposeBloc, ComposeState>(

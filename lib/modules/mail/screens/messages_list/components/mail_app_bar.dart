@@ -5,9 +5,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 enum MailListAppBarAction { logout, settings, contacts }
 
-class MailAppBar extends StatelessWidget {
-  final Function(MailListAppBarAction) onActionSelected;
+class MailAppBar extends StatelessWidget implements PreferredSizeWidget {
+  @override
+ final Size  preferredSize = const Size.fromHeight(kToolbarHeight);
 
+  final Function(MailListAppBarAction) onActionSelected;
   const MailAppBar({Key key, this.onActionSelected}) : super(key: key);
 
   @override
