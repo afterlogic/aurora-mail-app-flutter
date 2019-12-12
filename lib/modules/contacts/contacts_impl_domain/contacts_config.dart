@@ -1,3 +1,3 @@
-const TEST_MODE = true;
+const TEST_MODE = false;
 
 const CONTACTS_PER_CHUNK = 50;

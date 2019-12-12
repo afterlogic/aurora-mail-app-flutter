@@ -33,7 +33,7 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
   }
 
   Future<void> updateContacts(List<ContactsCompanion> updatedContacts) {
-    return transaction((QueryEngine engine) async {
+    return transaction(() async {
       for (final contact in updatedContacts) {
         await (update(contacts)
               ..where((c) => c.uuid.equals(contact.uuid.value)))

@@ -6,7 +6,7 @@ part of 'app_database.dart';
 // MoorGenerator
 // **************************************************************************
 
-// ignore_for_file: unnecessary_brace_in_string_interps
+// ignore_for_file: unnecessary_brace_in_string_interps, unnecessary_this
 class Message extends DataClass implements Insertable<Message> {
   final int localId;
   final int uid;
@@ -303,7 +303,7 @@ class Message extends DataClass implements Insertable<Message> {
   }
 
   @override
-  T createCompanion<T extends UpdateCompanion<Message>>(bool nullToAbsent) {
+  MailCompanion createCompanion(bool nullToAbsent) {
     return MailCompanion(
       localId: localId == null && nullToAbsent
           ? const Value.absent()
@@ -430,7 +430,7 @@ class Message extends DataClass implements Insertable<Message> {
       customInJson: customInJson == null && nullToAbsent
           ? const Value.absent()
           : Value(customInJson),
-    ) as T;
+    );
   }
 
   Message copyWith(
@@ -634,52 +634,54 @@ class Message extends DataClass implements Insertable<Message> {
   bool operator ==(other) =>
       identical(this, other) ||
       (other is Message &&
-          other.localId == localId &&
-          other.uid == uid &&
-          other.userLocalId == userLocalId &&
-          other.uniqueUidInFolder == uniqueUidInFolder &&
-          other.parentUid == parentUid &&
-          other.messageId == messageId &&
-          other.folder == folder &&
-          other.flagsInJson == flagsInJson &&
-          other.hasThread == hasThread &&
-          other.subject == subject &&
-          other.size == size &&
-          other.textSize == textSize &&
-          other.truncated == truncated &&
-          other.internalTimeStampInUTC == internalTimeStampInUTC &&
-          other.receivedOrDateTimeStampInUTC == receivedOrDateTimeStampInUTC &&
-          other.timeStampInUTC == timeStampInUTC &&
-          other.toInJson == toInJson &&
-          other.fromInJson == fromInJson &&
-          other.fromToDisplay == fromToDisplay &&
-          other.ccInJson == ccInJson &&
-          other.bccInJson == bccInJson &&
-          other.senderInJson == senderInJson &&
-          other.replyToInJson == replyToInJson &&
-          other.hasAttachments == hasAttachments &&
-          other.hasVcardAttachment == hasVcardAttachment &&
-          other.hasIcalAttachment == hasIcalAttachment &&
-          other.importance == importance &&
-          other.draftInfoInJson == draftInfoInJson &&
-          other.sensitivity == sensitivity &&
-          other.downloadAsEmlUrl == downloadAsEmlUrl &&
-          other.hash == hash &&
-          other.headers == headers &&
-          other.inReplyTo == inReplyTo &&
-          other.references == references &&
-          other.readingConfirmationAddressee == readingConfirmationAddressee &&
-          other.html == html &&
-          other.plain == plain &&
-          other.rtl == rtl &&
-          other.extendInJson == extendInJson &&
-          other.safety == safety &&
-          other.hasExternals == hasExternals &&
-          other.foundedCIDsInJson == foundedCIDsInJson &&
+          other.localId == this.localId &&
+          other.uid == this.uid &&
+          other.userLocalId == this.userLocalId &&
+          other.uniqueUidInFolder == this.uniqueUidInFolder &&
+          other.parentUid == this.parentUid &&
+          other.messageId == this.messageId &&
+          other.folder == this.folder &&
+          other.flagsInJson == this.flagsInJson &&
+          other.hasThread == this.hasThread &&
+          other.subject == this.subject &&
+          other.size == this.size &&
+          other.textSize == this.textSize &&
+          other.truncated == this.truncated &&
+          other.internalTimeStampInUTC == this.internalTimeStampInUTC &&
+          other.receivedOrDateTimeStampInUTC ==
+              this.receivedOrDateTimeStampInUTC &&
+          other.timeStampInUTC == this.timeStampInUTC &&
+          other.toInJson == this.toInJson &&
+          other.fromInJson == this.fromInJson &&
+          other.fromToDisplay == this.fromToDisplay &&
+          other.ccInJson == this.ccInJson &&
+          other.bccInJson == this.bccInJson &&
+          other.senderInJson == this.senderInJson &&
+          other.replyToInJson == this.replyToInJson &&
+          other.hasAttachments == this.hasAttachments &&
+          other.hasVcardAttachment == this.hasVcardAttachment &&
+          other.hasIcalAttachment == this.hasIcalAttachment &&
+          other.importance == this.importance &&
+          other.draftInfoInJson == this.draftInfoInJson &&
+          other.sensitivity == this.sensitivity &&
+          other.downloadAsEmlUrl == this.downloadAsEmlUrl &&
+          other.hash == this.hash &&
+          other.headers == this.headers &&
+          other.inReplyTo == this.inReplyTo &&
+          other.references == this.references &&
+          other.readingConfirmationAddressee ==
+              this.readingConfirmationAddressee &&
+          other.html == this.html &&
+          other.plain == this.plain &&
+          other.rtl == this.rtl &&
+          other.extendInJson == this.extendInJson &&
+          other.safety == this.safety &&
+          other.hasExternals == this.hasExternals &&
+          other.foundedCIDsInJson == this.foundedCIDsInJson &&
           other.foundedContentLocationUrlsInJson ==
-              foundedContentLocationUrlsInJson &&
-          other.attachmentsInJson == attachmentsInJson &&
-          other.customInJson == customInJson);
+              this.foundedContentLocationUrlsInJson &&
+          other.attachmentsInJson == this.attachmentsInJson &&
+          other.customInJson == this.customInJson);
 }
 
 class MailCompanion extends UpdateCompanion<Message> {
@@ -775,6 +777,87 @@ class MailCompanion extends UpdateCompanion<Message> {
     this.attachmentsInJson = const Value.absent(),
     this.customInJson = const Value.absent(),
   });
+  MailCompanion.insert({
+    this.localId = const Value.absent(),
+    @required int uid,
+    @required int userLocalId,
+    @required String uniqueUidInFolder,
+    this.parentUid = const Value.absent(),
+    @required String messageId,
+    @required String folder,
+    @required String flagsInJson,
+    @required bool hasThread,
+    @required String subject,
+    @required int size,
+    @required int textSize,
+    @required bool truncated,
+    @required int internalTimeStampInUTC,
+    @required int receivedOrDateTimeStampInUTC,
+    @required int timeStampInUTC,
+    this.toInJson = const Value.absent(),
+    this.fromInJson = const Value.absent(),
+    @required String fromToDisplay,
+    this.ccInJson = const Value.absent(),
+    this.bccInJson = const Value.absent(),
+    this.senderInJson = const Value.absent(),
+    this.replyToInJson = const Value.absent(),
+    @required bool hasAttachments,
+    @required bool hasVcardAttachment,
+    @required bool hasIcalAttachment,
+    @required int importance,
+    this.draftInfoInJson = const Value.absent(),
+    @required int sensitivity,
+    @required String downloadAsEmlUrl,
+    @required String hash,
+    @required String headers,
+    @required String inReplyTo,
+    @required String references,
+    @required String readingConfirmationAddressee,
+    this.html = const Value.absent(),
+    @required String plain,
+    @required bool rtl,
+    @required String extendInJson,
+    @required bool safety,
+    @required bool hasExternals,
+    @required String foundedCIDsInJson,
+    @required String foundedContentLocationUrlsInJson,
+    this.attachmentsInJson = const Value.absent(),
+    @required String customInJson,
+  })  : uid = Value(uid),
+        userLocalId = Value(userLocalId),
+        uniqueUidInFolder = Value(uniqueUidInFolder),
+        messageId = Value(messageId),
+        folder = Value(folder),
+        flagsInJson = Value(flagsInJson),
+        hasThread = Value(hasThread),
+        subject = Value(subject),
+        size = Value(size),
+        textSize = Value(textSize),
+        truncated = Value(truncated),
+        internalTimeStampInUTC = Value(internalTimeStampInUTC),
+        receivedOrDateTimeStampInUTC = Value(receivedOrDateTimeStampInUTC),
+        timeStampInUTC = Value(timeStampInUTC),
+        fromToDisplay = Value(fromToDisplay),
+        hasAttachments = Value(hasAttachments),
+        hasVcardAttachment = Value(hasVcardAttachment),
+        hasIcalAttachment = Value(hasIcalAttachment),
+        importance = Value(importance),
+        sensitivity = Value(sensitivity),
+        downloadAsEmlUrl = Value(downloadAsEmlUrl),
+        hash = Value(hash),
+        headers = Value(headers),
+        inReplyTo = Value(inReplyTo),
+        references = Value(references),
+        readingConfirmationAddressee = Value(readingConfirmationAddressee),
+        plain = Value(plain),
+        rtl = Value(rtl),
+        extendInJson = Value(extendInJson),
+        safety = Value(safety),
+        hasExternals = Value(hasExternals),
+        foundedCIDsInJson = Value(foundedCIDsInJson),
+        foundedContentLocationUrlsInJson =
+            Value(foundedContentLocationUrlsInJson),
+        customInJson = Value(customInJson);
   MailCompanion copyWith(
       {Value<int> localId,
       Value<int> uid,
@@ -2157,7 +2240,7 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
   }
 
   @override
-  T createCompanion<T extends UpdateCompanion<LocalFolder>>(bool nullToAbsent) {
+  FoldersCompanion createCompanion(bool nullToAbsent) {
     return FoldersCompanion(
       localId: localId == null && nullToAbsent
           ? const Value.absent()
@@ -2217,7 +2300,7 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
       messagesInfoInJson: messagesInfoInJson == null && nullToAbsent
           ? const Value.absent()
           : Value(messagesInfoInJson),
-    ) as T;
+    );
   }
 
   LocalFolder copyWith(
@@ -2344,28 +2427,28 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
   bool operator ==(other) =>
       identical(this, other) ||
       (other is LocalFolder &&
-          other.localId == localId &&
-          other.guid == guid &&
-          other.parentGuid == parentGuid &&
-          other.accountId == accountId &&
-          other.type == type &&
-          other.folderOrder == folderOrder &&
-          other.count == count &&
-          other.unread == unread &&
-          other.name == name &&
-          other.fullName == fullName &&
-          other.fullNameRaw == fullNameRaw &&
-          other.fullNameHash == fullNameHash &&
-          other.folderHash == folderHash &&
-          other.delimiter == delimiter &&
-          other.needsInfoUpdate == needsInfoUpdate &&
-          other.isSystemFolder == isSystemFolder &&
-          other.isSubscribed == isSubscribed &&
-          other.isSelectable == isSelectable &&
-          other.folderExists == folderExists &&
-          other.extended == extended &&
-          other.alwaysRefresh == alwaysRefresh &&
-          other.messagesInfoInJson == messagesInfoInJson);
+          other.localId == this.localId &&
+          other.guid == this.guid &&
+          other.parentGuid == this.parentGuid &&
+          other.accountId == this.accountId &&
+          other.type == this.type &&
+          other.folderOrder == this.folderOrder &&
+          other.count == this.count &&
+          other.unread == this.unread &&
+          other.name == this.name &&
+          other.fullName == this.fullName &&
+          other.fullNameRaw == this.fullNameRaw &&
+          other.fullNameHash == this.fullNameHash &&
+          other.folderHash == this.folderHash &&
+          other.delimiter == this.delimiter &&
+          other.needsInfoUpdate == this.needsInfoUpdate &&
+          other.isSystemFolder == this.isSystemFolder &&
+          other.isSubscribed == this.isSubscribed &&
+          other.isSelectable == this.isSelectable &&
+          other.folderExists == this.folderExists &&
+          other.extended == this.extended &&
+          other.alwaysRefresh == this.alwaysRefresh &&
+          other.messagesInfoInJson == this.messagesInfoInJson);
 }
 
 class FoldersCompanion extends UpdateCompanion<LocalFolder> {
@@ -2415,6 +2498,45 @@ class FoldersCompanion extends UpdateCompanion<LocalFolder> {
     this.alwaysRefresh = const Value.absent(),
     this.messagesInfoInJson = const Value.absent(),
   });
+  FoldersCompanion.insert({
+    this.localId = const Value.absent(),
+    @required String guid,
+    this.parentGuid = const Value.absent(),
+    @required int accountId,
+    @required int type,
+    @required int folderOrder,
+    this.count = const Value.absent(),
+    this.unread = const Value.absent(),
+    @required String name,
+    @required String fullName,
+    @required String fullNameRaw,
+    @required String fullNameHash,
+    @required String folderHash,
+    @required String delimiter,
+    @required bool needsInfoUpdate,
+    @required bool isSystemFolder,
+    @required bool isSubscribed,
+    @required bool isSelectable,
+    @required bool folderExists,
+    this.extended = const Value.absent(),
+    @required bool alwaysRefresh,
+    this.messagesInfoInJson = const Value.absent(),
+  })  : guid = Value(guid),
+        accountId = Value(accountId),
+        type = Value(type),
+        folderOrder = Value(folderOrder),
+        name = Value(name),
+        fullName = Value(fullName),
+        fullNameRaw = Value(fullNameRaw),
+        fullNameHash = Value(fullNameHash),
+        folderHash = Value(folderHash),
+        delimiter = Value(delimiter),
+        needsInfoUpdate = Value(needsInfoUpdate),
+        isSystemFolder = Value(isSystemFolder),
+        isSubscribed = Value(isSubscribed),
+        isSelectable = Value(isSelectable),
+        folderExists = Value(folderExists),
+        alwaysRefresh = Value(alwaysRefresh);
   FoldersCompanion copyWith(
       {Value<int> localId,
       Value<String> guid,
@@ -3098,7 +3220,7 @@ class User extends DataClass implements Insertable<User> {
   }
 
   @override
-  T createCompanion<T extends UpdateCompanion<User>>(bool nullToAbsent) {
+  UsersCompanion createCompanion(bool nullToAbsent) {
     return UsersCompanion(
       localId: localId == null && nullToAbsent
           ? const Value.absent()
@@ -3123,7 +3245,7 @@ class User extends DataClass implements Insertable<User> {
       language: language == null && nullToAbsent
           ? const Value.absent()
           : Value(language),
-    ) as T;
+    );
   }
 
   User copyWith(
@@ -3179,14 +3301,14 @@ class User extends DataClass implements Insertable<User> {
   bool operator ==(other) =>
       identical(this, other) ||
       (other is User &&
-          other.localId == localId &&
-          other.serverId == serverId &&
-          other.hostname == hostname &&
-          other.token == token &&
-          other.syncFreqInSeconds == syncFreqInSeconds &&
-          other.syncPeriod == syncPeriod &&
-          other.darkThemeEnabled == darkThemeEnabled &&
-          other.language == language);
+          other.localId == this.localId &&
+          other.serverId == this.serverId &&
+          other.hostname == this.hostname &&
+          other.token == this.token &&
+          other.syncFreqInSeconds == this.syncFreqInSeconds &&
+          other.syncPeriod == this.syncPeriod &&
+          other.darkThemeEnabled == this.darkThemeEnabled &&
+          other.language == this.language);
 }
 
 class UsersCompanion extends UpdateCompanion<User> {
@@ -3208,6 +3330,18 @@ class UsersCompanion extends UpdateCompanion<User> {
     this.darkThemeEnabled = const Value.absent(),
     this.language = const Value.absent(),
   });
+  UsersCompanion.insert({
+    this.localId = const Value.absent(),
+    @required int serverId,
+    @required String hostname,
+    @required String token,
+    this.syncFreqInSeconds = const Value.absent(),
+    this.syncPeriod = const Value.absent(),
+    this.darkThemeEnabled = const Value.absent(),
+    this.language = const Value.absent(),
+  })  : serverId = Value(serverId),
+        hostname = Value(hostname),
+        token = Value(token);
   UsersCompanion copyWith(
       {Value<int> localId,
       Value<int> serverId,
@@ -3584,7 +3718,7 @@ class Account extends DataClass implements Insertable<Account> {
   }
 
   @override
-  T createCompanion<T extends UpdateCompanion<Account>>(bool nullToAbsent) {
+  AccountsCompanion createCompanion(bool nullToAbsent) {
     return AccountsCompanion(
       localId: localId == null && nullToAbsent
           ? const Value.absent()
@@ -3639,7 +3773,7 @@ class Account extends DataClass implements Insertable<Account> {
       allowAutoResponder: allowAutoResponder == null && nullToAbsent
           ? const Value.absent()
           : Value(allowAutoResponder),
-    ) as T;
+    );
   }
 
   Account copyWith(
@@ -3758,25 +3892,25 @@ class Account extends DataClass implements Insertable<Account> {
   bool operator ==(other) =>
       identical(this, other) ||
       (other is Account &&
-          other.localId == localId &&
-          other.entityId == entityId &&
-          other.idUser == idUser &&
-          other.uuid == uuid &&
-          other.parentUuid == parentUuid &&
-          other.moduleName == moduleName &&
-          other.useToAuthorize == useToAuthorize &&
-          other.email == email &&
-          other.friendlyName == friendlyName &&
-          other.useSignature == useSignature &&
-          other.signature == signature &&
-          other.serverId == serverId &&
-          other.foldersOrderInJson == foldersOrderInJson &&
-          other.useThreading == useThreading &&
-          other.saveRepliesToCurrFolder == saveRepliesToCurrFolder &&
-          other.accountId == accountId &&
-          other.allowFilters == allowFilters &&
-          other.allowForward == allowForward &&
-          other.allowAutoResponder == allowAutoResponder);
+          other.localId == this.localId &&
+          other.entityId == this.entityId &&
+          other.idUser == this.idUser &&
+          other.uuid == this.uuid &&
+          other.parentUuid == this.parentUuid &&
+          other.moduleName == this.moduleName &&
+          other.useToAuthorize == this.useToAuthorize &&
+          other.email == this.email &&
+          other.friendlyName == this.friendlyName &&
+          other.useSignature == this.useSignature &&
+          other.signature == this.signature &&
+          other.serverId == this.serverId &&
+          other.foldersOrderInJson == this.foldersOrderInJson &&
+          other.useThreading == this.useThreading &&
+          other.saveRepliesToCurrFolder == this.saveRepliesToCurrFolder &&
+          other.accountId == this.accountId &&
+          other.allowFilters == this.allowFilters &&
+          other.allowForward == this.allowForward &&
+          other.allowAutoResponder == this.allowAutoResponder);
 }
 
 class AccountsCompanion extends UpdateCompanion<Account> {
@@ -3820,6 +3954,44 @@ class AccountsCompanion extends UpdateCompanion<Account> {
     this.allowForward = const Value.absent(),
     this.allowAutoResponder = const Value.absent(),
   });
+  AccountsCompanion.insert({
+    this.localId = const Value.absent(),
+    @required int entityId,
+    @required int idUser,
+    @required String uuid,
+    @required String parentUuid,
+    @required String moduleName,
+    @required bool useToAuthorize,
+    @required String email,
+    @required String friendlyName,
+    @required bool useSignature,
+    @required String signature,
+    @required int serverId,
+    @required String foldersOrderInJson,
+    @required bool useThreading,
+    @required bool saveRepliesToCurrFolder,
+    @required int accountId,
+    @required bool allowFilters,
+    @required bool allowForward,
+    @required bool allowAutoResponder,
+  })  : entityId = Value(entityId),
+        idUser = Value(idUser),
+        uuid = Value(uuid),
+        parentUuid = Value(parentUuid),
+        moduleName = Value(moduleName),
+        useToAuthorize = Value(useToAuthorize),
+        email = Value(email),
+        friendlyName = Value(friendlyName),
+        useSignature = Value(useSignature),
+        signature = Value(signature),
+        serverId = Value(serverId),
+        foldersOrderInJson = Value(foldersOrderInJson),
+        useThreading = Value(useThreading),
+        saveRepliesToCurrFolder = Value(saveRepliesToCurrFolder),
+        accountId = Value(accountId),
+        allowFilters = Value(allowFilters),
+        allowForward = Value(allowForward),
+        allowAutoResponder = Value(allowAutoResponder);
   AccountsCompanion copyWith(
       {Value<int> localId,
       Value<int> entityId,
@@ -4410,7 +4582,7 @@ class ContactsTable extends DataClass implements Insertable<ContactsTable> {
   final String dateModified;
   final String davContactsUid;
   final String davContactsVCardUid;
-  final List groupUUIDs;
+  final List<String> groupUUIDs;
   ContactsTable(
       {@required this.uuid,
       @required this.entityId,
@@ -4635,7 +4807,7 @@ class ContactsTable extends DataClass implements Insertable<ContactsTable> {
       davContactsUid: serializer.fromJson<String>(json['davContactsUid']),
       davContactsVCardUid:
           serializer.fromJson<String>(json['davContactsVCardUid']),
-      groupUUIDs: serializer.fromJson<List>(json['groupUUIDs']),
+      groupUUIDs: serializer.fromJson<List<String>>(json['groupUUIDs']),
     );
   }
   @override
@@ -4694,13 +4866,12 @@ class ContactsTable extends DataClass implements Insertable<ContactsTable> {
       'dateModified': serializer.toJson<String>(dateModified),
       'davContactsUid': serializer.toJson<String>(davContactsUid),
       'davContactsVCardUid': serializer.toJson<String>(davContactsVCardUid),
-      'groupUUIDs': serializer.toJson<List>(groupUUIDs),
+      'groupUUIDs': serializer.toJson<List<String>>(groupUUIDs),
     };
   }
 
   @override
-  T createCompanion<T extends UpdateCompanion<ContactsTable>>(
-      bool nullToAbsent) {
+  ContactsCompanion createCompanion(bool nullToAbsent) {
     return ContactsCompanion(
       uuid: uuid == null && nullToAbsent ? const Value.absent() : Value(uuid),
       entityId: entityId == null && nullToAbsent
@@ -4851,7 +5022,7 @@ class ContactsTable extends DataClass implements Insertable<ContactsTable> {
       groupUUIDs: groupUUIDs == null && nullToAbsent
           ? const Value.absent()
           : Value(groupUUIDs),
-    ) as T;
+    );
   }
 
   ContactsTable copyWith(
@@ -4907,7 +5078,7 @@ class ContactsTable extends DataClass implements Insertable<ContactsTable> {
           String dateModified,
           String davContactsUid,
           String davContactsVCardUid,
-          List groupUUIDs}) =>
+          List<String> groupUUIDs}) =>
       ContactsTable(
         uuid: uuid ?? this.uuid,
         entityId: entityId ?? this.entityId,
@@ -5071,59 +5242,59 @@ class ContactsTable extends DataClass implements Insertable<ContactsTable> {
   bool operator ==(other) =>
       identical(this, other) ||
       (other is ContactsTable &&
-          other.uuid == uuid &&
-          other.entityId == entityId &&
-          other.parentUuid == parentUuid &&
-          other.eTag == eTag &&
-          other.idUser == idUser &&
-          other.idTenant == idTenant &&
-          other.storage == storage &&
-          other.fullName == fullName &&
-          other.useFriendlyName == useFriendlyName &&
-          other.primaryEmail == primaryEmail &&
-          other.primaryPhone == primaryPhone &&
-          other.primaryAddress == primaryAddress &&
-          other.viewEmail == viewEmail &&
-          other.title == title &&
-          other.firstName == firstName &&
-          other.lastName == lastName &&
-          other.nickName == nickName &&
-          other.skype == skype &&
-          other.facebook == facebook &&
-          other.personalEmail == personalEmail &&
-          other.personalAddress == personalAddress &&
-          other.personalCity == personalCity &&
-          other.personalState == personalState &&
-          other.personalZip == personalZip &&
-          other.personalCountry == personalCountry &&
-          other.personalWeb == personalWeb &&
-          other.personalFax == personalFax &&
-          other.personalPhone == personalPhone &&
-          other.personalMobile == personalMobile &&
-          other.businessEmail == businessEmail &&
-          other.businessCompany == businessCompany &&
-          other.businessAddress == businessAddress &&
-          other.businessCity == businessCity &&
-          other.businessState == businessState &&
-          other.businessZip == businessZip &&
-          other.businessCountry == businessCountry &&
-          other.businessJobTitle == businessJobTitle &&
-          other.businessDepartment == businessDepartment &&
-          other.businessOffice == businessOffice &&
-          other.businessPhone == businessPhone &&
-          other.businessFax == businessFax &&
-          other.businessWeb == businessWeb &&
-          other.otherEmail == otherEmail &&
-          other.notes == notes &&
-          other.birthDay == birthDay &&
-          other.birthMonth == birthMonth &&
-          other.birthYear == birthYear &&
-          other.auto == auto &&
-          other.frequency == frequency &&
-          other.dateModified == dateModified &&
-          other.davContactsUid == davContactsUid &&
-          other.davContactsVCardUid == davContactsVCardUid &&
-          other.groupUUIDs == groupUUIDs);
+          other.uuid == this.uuid &&
+          other.entityId == this.entityId &&
+          other.parentUuid == this.parentUuid &&
+          other.eTag == this.eTag &&
+          other.idUser == this.idUser &&
+          other.idTenant == this.idTenant &&
+          other.storage == this.storage &&
+          other.fullName == this.fullName &&
+          other.useFriendlyName == this.useFriendlyName &&
+          other.primaryEmail == this.primaryEmail &&
+          other.primaryPhone == this.primaryPhone &&
+          other.primaryAddress == this.primaryAddress &&
+          other.viewEmail == this.viewEmail &&
+          other.title == this.title &&
+          other.firstName == this.firstName &&
+          other.lastName == this.lastName &&
+          other.nickName == this.nickName &&
+          other.skype == this.skype &&
+          other.facebook == this.facebook &&
+          other.personalEmail == this.personalEmail &&
+          other.personalAddress == this.personalAddress &&
+          other.personalCity == this.personalCity &&
+          other.personalState == this.personalState &&
+          other.personalZip == this.personalZip &&
+          other.personalCountry == this.personalCountry &&
+          other.personalWeb == this.personalWeb &&
+          other.personalFax == this.personalFax &&
+          other.personalPhone == this.personalPhone &&
+          other.personalMobile == this.personalMobile &&
+          other.businessEmail == this.businessEmail &&
+          other.businessCompany == this.businessCompany &&
+          other.businessAddress == this.businessAddress &&
+          other.businessCity == this.businessCity &&
+          other.businessState == this.businessState &&
+          other.businessZip == this.businessZip &&
+          other.businessCountry == this.businessCountry &&
+          other.businessJobTitle == this.businessJobTitle &&
+          other.businessDepartment == this.businessDepartment &&
+          other.businessOffice == this.businessOffice &&
+          other.businessPhone == this.businessPhone &&
+          other.businessFax == this.businessFax &&
+          other.businessWeb == this.businessWeb &&
+          other.otherEmail == this.otherEmail &&
+          other.notes == this.notes &&
+          other.birthDay == this.birthDay &&
+          other.birthMonth == this.birthMonth &&
+          other.birthYear == this.birthYear &&
+          other.auto == this.auto &&
+          other.frequency == this.frequency &&
+          other.dateModified == this.dateModified &&
+          other.davContactsUid == this.davContactsUid &&
+          other.davContactsVCardUid == this.davContactsVCardUid &&
+          other.groupUUIDs == this.groupUUIDs);
 }
 
 class ContactsCompanion extends UpdateCompanion<ContactsTable> {
@@ -5179,7 +5350,7 @@ class ContactsCompanion extends UpdateCompanion<ContactsTable> {
   final Value<String> dateModified;
   final Value<String> davContactsUid;
   final Value<String> davContactsVCardUid;
-  final Value<List> groupUUIDs;
+  final Value<List<String>> groupUUIDs;
   const ContactsCompanion({
     this.uuid = const Value.absent(),
     this.entityId = const Value.absent(),
@@ -5235,6 +5406,113 @@ class ContactsCompanion extends UpdateCompanion<ContactsTable> {
     this.davContactsVCardUid = const Value.absent(),
     this.groupUUIDs = const Value.absent(),
   });
+  ContactsCompanion.insert({
+    @required String uuid,
+    @required int entityId,
+    @required String parentUuid,
+    @required String eTag,
+    @required int idUser,
+    @required int idTenant,
+    @required String storage,
+    @required String fullName,
+    @required bool useFriendlyName,
+    @required int primaryEmail,
+    @required int primaryPhone,
+    @required int primaryAddress,
+    @required String viewEmail,
+    @required String title,
+    @required String firstName,
+    @required String lastName,
+    @required String nickName,
+    @required String skype,
+    @required String facebook,
+    @required String personalEmail,
+    @required String personalAddress,
+    @required String personalCity,
+    @required String personalState,
+    @required String personalZip,
+    @required String personalCountry,
+    @required String personalWeb,
+    @required String personalFax,
+    @required String personalPhone,
+    @required String personalMobile,
+    @required String businessEmail,
+    @required String businessCompany,
+    @required String businessAddress,
+    @required String businessCity,
+    @required String businessState,
+    @required String businessZip,
+    @required String businessCountry,
+    @required String businessJobTitle,
+    @required String businessDepartment,
+    @required String businessOffice,
+    @required String businessPhone,
+    @required String businessFax,
+    @required String businessWeb,
+    @required String otherEmail,
+    @required String notes,
+    @required int birthDay,
+    @required int birthMonth,
+    @required int birthYear,
+    @required bool auto,
+    @required int frequency,
+    @required String dateModified,
+    @required String davContactsUid,
+    @required String davContactsVCardUid,
+    @required List<String> groupUUIDs,
+  })  : uuid = Value(uuid),
+        entityId = Value(entityId),
+        parentUuid = Value(parentUuid),
+        eTag = Value(eTag),
+        idUser = Value(idUser),
+        idTenant = Value(idTenant),
+        storage = Value(storage),
+        fullName = Value(fullName),
+        useFriendlyName = Value(useFriendlyName),
+        primaryEmail = Value(primaryEmail),
+        primaryPhone = Value(primaryPhone),
+        primaryAddress = Value(primaryAddress),
+        viewEmail = Value(viewEmail),
+        title = Value(title),
+        firstName = Value(firstName),
+        lastName = Value(lastName),
+        nickName = Value(nickName),
+        skype = Value(skype),
+        facebook = Value(facebook),
+        personalEmail = Value(personalEmail),
+        personalAddress = Value(personalAddress),
+        personalCity = Value(personalCity),
+        personalState = Value(personalState),
+        personalZip = Value(personalZip),
+        personalCountry = Value(personalCountry),
+        personalWeb = Value(personalWeb),
+        personalFax = Value(personalFax),
+        personalPhone = Value(personalPhone),
+        personalMobile = Value(personalMobile),
+        businessEmail = Value(businessEmail),
+        businessCompany = Value(businessCompany),
+        businessAddress = Value(businessAddress),
+        businessCity = Value(businessCity),
+        businessState = Value(businessState),
+        businessZip = Value(businessZip),
+        businessCountry = Value(businessCountry),
+        businessJobTitle = Value(businessJobTitle),
+        businessDepartment = Value(businessDepartment),
+        businessOffice = Value(businessOffice),
+        businessPhone = Value(businessPhone),
+        businessFax = Value(businessFax),
+        businessWeb = Value(businessWeb),
+        otherEmail = Value(otherEmail),
+        notes = Value(notes),
+        birthDay = Value(birthDay),
+        birthMonth = Value(birthMonth),
+        birthYear = Value(birthYear),
+        auto = Value(auto),
+        frequency = Value(frequency),
+        dateModified = Value(dateModified),
+        davContactsUid = Value(davContactsUid),
+        davContactsVCardUid = Value(davContactsVCardUid),
+        groupUUIDs = Value(groupUUIDs);
   ContactsCompanion copyWith(
       {Value<String> uuid,
       Value<int> entityId,
@@ -5288,7 +5566,7 @@ class ContactsCompanion extends UpdateCompanion<ContactsTable> {
       Value<String> dateModified,
       Value<String> davContactsUid,
       Value<String> davContactsVCardUid,
-      Value<List> groupUUIDs}) {
+      Value<List<String>> groupUUIDs}) {
     return ContactsCompanion(
       uuid: uuid ?? this.uuid,
       entityId: entityId ?? this.entityId,
@@ -6804,8 +7082,7 @@ class ContactsGroupsTable extends DataClass
   }
 
   @override
-  T createCompanion<T extends UpdateCompanion<ContactsGroupsTable>>(
-      bool nullToAbsent) {
+  ContactsGroupsCompanion createCompanion(bool nullToAbsent) {
     return ContactsGroupsCompanion(
       uuid: uuid == null && nullToAbsent ? const Value.absent() : Value(uuid),
       idUser:
@@ -6843,7 +7120,7 @@ class ContactsGroupsTable extends DataClass
           street == null && nullToAbsent ? const Value.absent() : Value(street),
       web: web == null && nullToAbsent ? const Value.absent() : Value(web),
       zip: zip == null && nullToAbsent ? const Value.absent() : Value(zip),
-    ) as T;
+    );
   }
 
   ContactsGroupsTable copyWith(
@@ -6951,24 +7228,24 @@ class ContactsGroupsTable extends DataClass
   bool operator ==(other) =>
       identical(this, other) ||
       (other is ContactsGroupsTable &&
-          other.uuid == uuid &&
-          other.idUser == idUser &&
-          other.entityId == entityId &&
-          other.city == city &&
-          other.company == company &&
-          other.country == country &&
-          other.davContactsUID == davContactsUID &&
-          other.email == email &&
-          other.events == events &&
-          other.fax == fax &&
-          other.isOrganization == isOrganization &&
-          other.name == name &&
-          other.parentUUID == parentUUID &&
-          other.phone == phone &&
-          other.state == state &&
-          other.street == street &&
-          other.web == web &&
-          other.zip == zip);
+          other.uuid == this.uuid &&
+          other.idUser == this.idUser &&
+          other.entityId == this.entityId &&
+          other.city == this.city &&
+          other.company == this.company &&
+          other.country == this.country &&
+          other.davContactsUID == this.davContactsUID &&
+          other.email == this.email &&
+          other.events == this.events &&
+          other.fax == this.fax &&
+          other.isOrganization == this.isOrganization &&
+          other.name == this.name &&
+          other.parentUUID == this.parentUUID &&
+          other.phone == this.phone &&
+          other.state == this.state &&
+          other.street == this.street &&
+          other.web == this.web &&
+          other.zip == this.zip);
 }
 
 class ContactsGroupsCompanion extends UpdateCompanion<ContactsGroupsTable> {
@@ -7010,6 +7287,43 @@ class ContactsGroupsCompanion extends UpdateCompanion<ContactsGroupsTable> {
     this.web = const Value.absent(),
     this.zip = const Value.absent(),
   });
+  ContactsGroupsCompanion.insert({
+    @required String uuid,
+    @required int idUser,
+    @required int entityId,
+    @required String city,
+    @required String company,
+    @required String country,
+    @required String davContactsUID,
+    @required String email,
+    @required String events,
+    @required String fax,
+    @required bool isOrganization,
+    @required String name,
+    @required String parentUUID,
+    @required String phone,
+    @required String state,
+    @required String street,
+    @required String web,
+    @required String zip,
+  })  : uuid = Value(uuid),
+        idUser = Value(idUser),
+        entityId = Value(entityId),
+        city = Value(city),
+        company = Value(company),
+        country = Value(country),
+        davContactsUID = Value(davContactsUID),
+        email = Value(email),
+        events = Value(events),
+        fax = Value(fax),
+        isOrganization = Value(isOrganization),
+        name = Value(name),
+        parentUUID = Value(parentUUID),
+        phone = Value(phone),
+        state = Value(state),
+        street = Value(street),
+        web = Value(web),
+        zip = Value(zip);
   ContactsGroupsCompanion copyWith(
       {Value<String> uuid,
       Value<int> idUser,
@@ -7500,7 +7814,7 @@ class ContactsStoragesTable extends DataClass
   final String name;
   final int cTag;
   final bool display;
-  final List contactsInfo;
+  final List<ContactInfoItem> contactsInfo;
   ContactsStoragesTable(
       {@required this.sqliteId,
       @required this.idUser,
@@ -7540,7 +7854,8 @@ class ContactsStoragesTable extends DataClass
       name: serializer.fromJson<String>(json['name']),
       cTag: serializer.fromJson<int>(json['cTag']),
       display: serializer.fromJson<bool>(json['display']),
-      contactsInfo: serializer.fromJson<List>(json['contactsInfo']),
+      contactsInfo:
+          serializer.fromJson<List<ContactInfoItem>>(json['contactsInfo']),
     );
   }
   @override
@@ -7553,13 +7868,12 @@ class ContactsStoragesTable extends DataClass
       'name': serializer.toJson<String>(name),
       'cTag': serializer.toJson<int>(cTag),
       'display': serializer.toJson<bool>(display),
-      'contactsInfo': serializer.toJson<List>(contactsInfo),
+      'contactsInfo': serializer.toJson<List<ContactInfoItem>>(contactsInfo),
     };
   }
 
   @override
-  T createCompanion<T extends UpdateCompanion<ContactsStoragesTable>>(
-      bool nullToAbsent) {
+  ContactsStoragesCompanion createCompanion(bool nullToAbsent) {
     return ContactsStoragesCompanion(
       sqliteId: sqliteId == null && nullToAbsent
           ? const Value.absent()
@@ -7577,7 +7891,7 @@ class ContactsStoragesTable extends DataClass
       contactsInfo: contactsInfo == null && nullToAbsent
           ? const Value.absent()
           : Value(contactsInfo),
-    ) as T;
+    );
   }
 
   ContactsStoragesTable copyWith(
@@ -7587,7 +7901,7 @@ class ContactsStoragesTable extends DataClass
           String name,
           int cTag,
           bool display,
-          List contactsInfo}) =>
+          List<ContactInfoItem> contactsInfo}) =>
       ContactsStoragesTable(
         sqliteId: sqliteId ?? this.sqliteId,
         idUser: idUser ?? this.idUser,
@@ -7626,13 +7940,13 @@ class ContactsStoragesTable extends DataClass
   bool operator ==(other) =>
       identical(this, other) ||
       (other is ContactsStoragesTable &&
-          other.sqliteId == sqliteId &&
-          other.idUser == idUser &&
-          other.serverId == serverId &&
-          other.name == name &&
-          other.cTag == cTag &&
-          other.display == display &&
-          other.contactsInfo == contactsInfo);
+          other.sqliteId == this.sqliteId &&
+          other.idUser == this.idUser &&
+          other.serverId == this.serverId &&
+          other.name == this.name &&
+          other.cTag == this.cTag &&
+          other.display == this.display &&
+          other.contactsInfo == this.contactsInfo);
 }
 
 class ContactsStoragesCompanion extends UpdateCompanion<ContactsStoragesTable> {
@@ -7642,7 +7956,7 @@ class ContactsStoragesCompanion extends UpdateCompanion<ContactsStoragesTable> {
   final Value<String> name;
   final Value<int> cTag;
   final Value<bool> display;
-  final Value<List> contactsInfo;
+  final Value<List<ContactInfoItem>> contactsInfo;
   const ContactsStoragesCompanion({
     this.sqliteId = const Value.absent(),
     this.idUser = const Value.absent(),
@@ -7652,6 +7966,20 @@ class ContactsStoragesCompanion extends UpdateCompanion<ContactsStoragesTable> {
     this.display = const Value.absent(),
     this.contactsInfo = const Value.absent(),
   });
+  ContactsStoragesCompanion.insert({
+    this.sqliteId = const Value.absent(),
+    @required int idUser,
+    @required String serverId,
+    @required String name,
+    @required int cTag,
+    @required bool display,
+    @required List<ContactInfoItem> contactsInfo,
+  })  : idUser = Value(idUser),
+        serverId = Value(serverId),
+        name = Value(name),
+        cTag = Value(cTag),
+        display = Value(display),
+        contactsInfo = Value(contactsInfo);
   ContactsStoragesCompanion copyWith(
       {Value<int> sqliteId,
       Value<int> idUser,
@@ -7659,7 +7987,7 @@ class ContactsStoragesCompanion extends UpdateCompanion<ContactsStoragesTable> {
       Value<String> name,
       Value<int> cTag,
       Value<bool> display,
-      Value<List> contactsInfo}) {
+      Value<List<ContactInfoItem>> contactsInfo}) {
     return ContactsStoragesCompanion(
       sqliteId: sqliteId ?? this.sqliteId,
       idUser: idUser ?? this.idUser,
@@ -7859,7 +8187,7 @@ class $ContactsStoragesTable extends ContactsStorages
 }
 
 abstract class _$AppDatabase extends GeneratedDatabase {
-  _$AppDatabase(QueryExecutor e) : super(const SqlTypeSystem.withDefaults(), e);
+  _$AppDatabase(QueryExecutor e) : super(SqlTypeSystem.defaultInstance, e);
   $MailTable _mail;
   $MailTable get mail => _mail ??= $MailTable(this);
   $FoldersTable _folders;

@@ -26,7 +26,7 @@ class ContactsStoragesDao extends DatabaseAccessor<AppDatabase>
   }
 
   Future<void> updateStorages(List<ContactsStoragesCompanion> updatedStorages) {
-    return transaction((QueryEngine engine) async {
+    return transaction(() async {
       for (final storage in updatedStorages) {
         await (update(contactsStorages)
               ..where((s) => s.idUser.equals(storage.idUser.value))

@@ -25,7 +25,7 @@ class ContactsGroupsDao extends DatabaseAccessor<AppDatabase>
   }
 
   Future<void> updateGroups(List<ContactsGroupsCompanion> updatedGroups) {
-    return transaction((QueryEngine engine) async {
+    return transaction(() async {
       for (final group in updatedGroups) {
         await (update(contactsGroups)
               ..where((g) => g.uuid.equals(group.uuid.value)))
