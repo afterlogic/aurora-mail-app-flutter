@@ -30,5 +30,7 @@ abstract class ContactsRepository {
 
   Future<bool> editGroup(ContactsGroup group);
 
+  Future<bool> deleteGroup(ContactsGroup group);
+
   void dispose();
 }

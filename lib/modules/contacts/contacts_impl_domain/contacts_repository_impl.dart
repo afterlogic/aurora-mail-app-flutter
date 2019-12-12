@@ -113,6 +113,18 @@ class ContactsRepositoryImpl implements ContactsRepository {
     return true;
   }
 
+  @override
+  Future<bool> deleteGroup(ContactsGroup group) async {
+    final success = await _network.deleteGroup(group);
+    if (!success) {
+      return false;
+    }
+    await _db.deleteGroups([group.uuid]);
+    final updatedStorages = await _db.getStorages(userServerId);
+    _storagesCtrl.add(updatedStorages);
+    return true;
+  }
+
   Future<List<ContactsStorage>> getStoragesToUpdate(
       List<ContactsStorage> storagesFromDb) async {
     final storagesFromNetwork = await _network.getContactStorages();
