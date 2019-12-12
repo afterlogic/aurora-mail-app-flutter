@@ -30,17 +30,20 @@ class ContactsStorageMapper {
     }).toList();
   }
 
-  static List<ContactsStorage> fromNetwork(
-      List<Map<String, dynamic>> rawItems) {
+  static List<ContactsStorage> allFromNetwork(List rawItems) {
     return rawItems.map((i) {
-      return new ContactsStorage(
-        sqliteId: null,
-        id: i["Id"],
-        name: i["Name"],
-        cTag: i["CTag"],
-        display: i["Display"] ?? true,
-        contactsInfo: null,
-      );
+      return fromNetwork(i);
     }).toList();
+  }
+
+  static ContactsStorage fromNetwork(Map<String, dynamic> rawItems) {
+    return ContactsStorage(
+      sqliteId: null,
+      id: rawItems["Id"],
+      name: rawItems["Name"],
+      cTag: rawItems["CTag"],
+      display: rawItems["Display"] ?? true,
+      contactsInfo: null,
+    );
   }
 }

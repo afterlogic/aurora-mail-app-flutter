@@ -52,29 +52,33 @@ class ContactsGroupMapper {
     }).toList();
   }
 
-  static List<ContactsGroup> fromNetwork(List<Map<String, dynamic>> rawItems) {
+  static List<ContactsGroup> allFromNetwork(List rawItems) {
     return rawItems.map((i) {
-      return new ContactsGroup(
-        uuid: i["UUID"],
-        idUser: i["IdUser"],
-        entityId: i["EntityId"],
-        city: i["City"],
-        company: i["Company"],
-        country: i["Country"],
-        davContactsUID: i["DavContacts::UID"],
-        email: i["Email"],
-        events: i["Events"],
-        fax: i["Fax"],
-        isOrganization: i["IsOrganization"],
-        name: i["Name"],
-        parentUUID: i["ParentUUID"],
-        phone: i["Phone"],
-        state: i["State"],
-        street: i["Street"],
-        web: i["Web"],
-        zip: i["Zip"],
-      );
+      return fromNetwork(i);
     }).toList();
+  }
+
+  static ContactsGroup fromNetwork(Map<String, dynamic> i) {
+    return ContactsGroup(
+      uuid: i["UUID"],
+      idUser: i["IdUser"],
+      entityId: i["EntityId"],
+      city: i["City"],
+      company: i["Company"],
+      country: i["Country"],
+      davContactsUID: i["DavContacts::UID"],
+      email: i["Email"],
+      events: i["Events"],
+      fax: i["Fax"],
+      isOrganization: i["IsOrganization"],
+      name: i["Name"],
+      parentUUID: i["ParentUUID"],
+      phone: i["Phone"],
+      state: i["State"],
+      street: i["Street"],
+      web: i["Web"],
+      zip: i["Zip"],
+    );
   }
 
   static Map<String, dynamic> toNetwork(ContactsGroup group) {

@@ -23,8 +23,7 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
     );
 
     final result = await contactsModule.post(body);
-    final typedResult = new List<Map<String, dynamic>>.from(result);
-    return ContactsStorageMapper.fromNetwork(typedResult);
+    return ContactsStorageMapper.allFromNetwork(result);
   }
 
   @override
@@ -41,8 +40,7 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
     );
 
     final result = await contactsModule.post(body);
-    final typedResult = new List<Map<String, dynamic>>.from(result);
-    return ContactMapper.fromNetwork(typedResult);
+    return ContactMapper.fromNetwork(result);
   }
 
   @override
@@ -57,8 +55,7 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
     );
 
     final result = await contactsModule.post(body);
-    final typedResult = new Map<String, dynamic>.from(result);
-    return ContactInfoMapper.fromNetwork(typedResult);
+    return ContactInfoMapper.allFromNetwork(result);
   }
 
   @override
@@ -69,8 +66,7 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
     );
 
     final result = await contactsModule.post(body);
-    final typedResult = new List<Map<String, dynamic>>.from(result);
-    return ContactsGroupMapper.fromNetwork(typedResult);
+    return ContactsGroupMapper.allFromNetwork(result);
   }
 
   @override
@@ -81,8 +77,8 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
       parameters: json.encode({"Group": ContactsGroupMapper.toNetwork(group)}),
     );
 
-    final result = await contactsModule.post<Map<String, dynamic>>(body);
-    return ContactsGroupMapper.fromNetwork([result]).first;
+    final result = await contactsModule.post(body);
+    return ContactsGroupMapper.fromNetwork(result);
   }
 
   @override
@@ -93,7 +89,7 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
       parameters: json.encode({"Group": ContactsGroupMapper.toNetwork(group)}),
     );
 
-    final result = await contactsModule.post<bool>(body);
+    final result = await contactsModule.post(body);
     return result;
   }
 
@@ -105,7 +101,7 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
       parameters: json.encode({"UUID": group.uuid}),
     );
 
-    final result = await contactsModule.post<bool>(body);
+    final result = await contactsModule.post(body);
     return result;
   }
 }

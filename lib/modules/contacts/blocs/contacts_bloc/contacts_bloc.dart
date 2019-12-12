@@ -43,7 +43,7 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
     if (event is SetCurrentlySyncingStorage) yield* _setCurrentlySyncingStorage(event);
   }
 
-  Stream<ContactsState> _getContacts(GetContacts event) async* {
+  _getContacts(GetContacts event) {
     _repo.watchContactsStorages().listen((storages) {
       if (state.storages == null) {
         add(SelectStorage(storages[0]));
