@@ -18,7 +18,6 @@ class ContactsListAndroid extends StatefulWidget {
 }
 
 class _ContactsListAndroidState extends State<ContactsListAndroid> {
-  ContactsBloc bloc;
 
   ContactsBloc _contactsBloc;
 
@@ -34,6 +33,12 @@ class _ContactsListAndroidState extends State<ContactsListAndroid> {
     );
 
     _contactsBloc.add(GetContacts());
+  }
+
+  @override
+  void dispose() {
+    _contactsBloc.close();
+    super.dispose();
   }
 
   void _onAppBarActionSelected(ContactsListAppBarAction item) {
