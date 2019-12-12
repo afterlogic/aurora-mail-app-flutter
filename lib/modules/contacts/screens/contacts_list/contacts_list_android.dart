@@ -1,4 +1,3 @@
-import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/auth/screens/login/login_route.dart';
@@ -19,7 +18,7 @@ class ContactsListAndroid extends StatefulWidget {
 }
 
 class _ContactsListAndroidState extends State<ContactsListAndroid> {
-//  ContactsBloc bloc = ContactsBloc();
+  ContactsBloc bloc;
 
   ContactsBloc _contactsBloc;
 
@@ -57,15 +56,13 @@ class _ContactsListAndroidState extends State<ContactsListAndroid> {
     return BlocProvider.value(
       value: _contactsBloc,
       child: Scaffold(
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(APP_BAR_HEIGHT_ANDROID),
-          child: ContactsAppBar(onActionSelected: _onAppBarActionSelected),
-        ),
+        appBar: ContactsAppBar(onActionSelected: _onAppBarActionSelected),
         drawer: ContactsDrawer(),
         body: BlocListener<ContactsBloc, ContactsState>(
           listener: (context, state) {
             if (state.error.isNotEmpty) {
-              showSnack(context: context,
+              showSnack(
+                  context: context,
                   scaffoldState: Scaffold.of(context),
                   msg: state.error);
             }
