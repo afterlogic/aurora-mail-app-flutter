@@ -47,4 +47,12 @@ class ContactsNetworkServiceMockImpl implements ContactsNetworkService {
     groups.add(item);
     return true;
   }
+
+  @override
+  Future<bool> deleteGroup(ContactsGroup group) async {
+    final toRemove = groups.firstWhere((item) => group.uuid == item.uuid,
+        orElse: () => null);
+    groups.remove(toRemove);
+    return toRemove != null;
+  }
 }

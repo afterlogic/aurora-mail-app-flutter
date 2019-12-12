@@ -33,4 +33,5 @@ abstract class ContactsNetworkService {
 
   Future<bool> editGroup(ContactsGroup group);
 
+  Future<bool> deleteGroup(ContactsGroup group);
 }

@@ -11,7 +11,8 @@ import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/gr
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/storages/contacts_storages_dao.dart';
 
 class ContactsDbServiceImpl implements ContactsDbService {
-  static final ContactsDbServiceImpl _singleton = ContactsDbServiceImpl._internal();
+  static final ContactsDbServiceImpl _singleton =
+      ContactsDbServiceImpl._internal();
   static AppDatabase _db;
 
   ContactsDbServiceImpl._internal();
@@ -44,22 +45,27 @@ class ContactsDbServiceImpl implements ContactsDbService {
   }
 
   @override
-  Future<void> deleteContacts(List<String> uuids) => _contactsDao.deleteContacts(uuids);
+  Future<void> deleteContacts(List<String> uuids) =>
+      _contactsDao.deleteContacts(uuids);
 
   @override
-  Future<void> deleteGroups(List<String> uuids) => _groupsDao.deleteGroups(uuids);
+  Future<void> deleteGroups(List<String> uuids) =>
+      _groupsDao.deleteGroups(uuids);
 
   @override
-  Future<void> deleteStorages(List<int> sqliteIds) => _storagesDao.deleteStorages(sqliteIds);
+  Future<void> deleteStorages(List<int> sqliteIds) =>
+      _storagesDao.deleteStorages(sqliteIds);
 
   @override
-  Future<List<Contact>> getContacts(int userServerId, ContactsStorage storage) async {
+  Future<List<Contact>> getContacts(
+      int userServerId, ContactsStorage storage) async {
     final result = await _contactsDao.getContacts(userServerId, storage.id);
     return ContactMapper.fromDB(result);
   }
 
   @override
-  Future<List<ContactsGroup>> getGroups(int userServerId, String storage) async {
+  Future<List<ContactsGroup>> getGroups(
+      int userServerId, String storage) async {
     final result = await _groupsDao.getGroups(userServerId);
     return ContactsGroupMapper.fromDB(result);
   }
@@ -71,16 +77,24 @@ class ContactsDbServiceImpl implements ContactsDbService {
   }
 
   @override
-  Future<void> updateContacts(List<Contact> updatedContacts, {bool nullToAbsent = true}) {
+  Future<void> updateContacts(List<Contact> updatedContacts,
+      {bool nullToAbsent = true}) {
     final formatted = ContactMapper.toDB(updatedContacts);
     final companions = formatted.map((c) => c.createCompanion(nullToAbsent));
     return _contactsDao.updateContacts(companions);
   }
 
   @override
-  Future<void> updateStorages(List<ContactsStorage> updatedStorages, int userId, {bool nullToAbsent = true}) {
+  Future<void> updateStorages(List<ContactsStorage> updatedStorages, int userId,
+      {bool nullToAbsent = true}) {
     final formatted = ContactsStorageMapper.toDB(updatedStorages, userId);
     final companions = formatted.map((c) => c.createCompanion(nullToAbsent));
     return _storagesDao.updateStorages(companions);
+  }
+
+  Future<void> editGroups(List<ContactsGroup> newGroups) {
+    final formatted = ContactsGroupMapper.toDB(newGroups);
+    final companions = formatted.map((c) => c.createCompanion(true));
+    return _groupsDao.updateGroups(companions);
   }
 }

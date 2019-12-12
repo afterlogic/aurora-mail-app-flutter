@@ -95,12 +95,22 @@ class ContactsRepositoryImpl implements ContactsRepository {
 
   @override
   Future addGroup(ContactsGroup group) async {
-      _network.addGroup(group);
+    final groupWithId = await _network.addGroup(group);
+    await _db.addGroups([groupWithId]);
+    final updatedStorages = await _db.getStorages(userServerId);
+    _storagesCtrl.add(updatedStorages);
   }
 
   @override
-  Future editGroup(ContactsGroup group) {
-
+  Future<bool> editGroup(ContactsGroup group) async {
+    final success = await _network.editGroup(group);
+    if (!success) {
+      return false;
+    }
+    await _db.editGroups([group]);
+    final updatedStorages = await _db.getStorages(userServerId);
+    _storagesCtrl.add(updatedStorages);
+    return true;
   }
 
   Future<List<ContactsStorage>> getStoragesToUpdate(

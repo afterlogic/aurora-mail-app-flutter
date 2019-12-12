@@ -92,4 +92,16 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
     final result = await contactsModule.post<bool>(body);
     return result;
   }
+
+  @override
+  Future<bool> deleteGroup(ContactsGroup group) async {
+    final body = new WebMailApiBody(
+      module: "Contacts",
+      method: "DeleteGroup",
+      parameters: json.encode({"UUID": group.uuid}),
+    );
+
+    final result = await contactsModule.post<bool>(body);
+    return result;
+  }
 }

@@ -28,7 +28,7 @@ abstract class ContactsRepository {
 
   Future addGroup(ContactsGroup group);
 
-  Future editGroup(ContactsGroup group);
+  Future<bool> editGroup(ContactsGroup group);
 
   void dispose();
 }
