@@ -7,6 +7,6 @@ class ContactInfoMapper {
         uuid: i["UUID"],
         eTag: i["ETag"],
       );
-    });
+    }).toList<ContactInfoItem>();
   }
 }

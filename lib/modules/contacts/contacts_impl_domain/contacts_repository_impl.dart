@@ -43,7 +43,7 @@ class ContactsRepositoryImpl implements ContactsRepository {
     _db = new ContactsDbService(appDB);
 
     _currentlySyncingStorageCtrl = new StreamController<int>(onListen: () {
-      _currentlySyncingStorageCtrl.add(_syncQueue.elementAt(0));
+      _currentlySyncingStorageCtrl.add(_syncQueue.isEmpty ? null : _syncQueue[0]);
     });
   }
 
@@ -163,7 +163,7 @@ class ContactsRepositoryImpl implements ContactsRepository {
     _syncQueue.insertAll(0, storagesSqliteIds);
 
     // return currently syncing storage for updating UI
-    _currentlySyncingStorageCtrl.add(_syncQueue.elementAt(0));
+    _currentlySyncingStorageCtrl.add(_syncQueue.isEmpty ? null : _syncQueue[0]);
 
     if (_syncQueue.isEmpty) return;
 

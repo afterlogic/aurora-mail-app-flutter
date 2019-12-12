@@ -1,4 +1,5 @@
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
+import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_storage_model.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class ContactsEvent extends Equatable {
@@ -10,6 +11,15 @@ abstract class ContactsEvent extends Equatable {
 
 class GetContacts extends ContactsEvent {}
 
+class SelectStorage extends ContactsEvent {
+  final ContactsStorage storage;
+
+  SelectStorage(this.storage);
+
+  @override
+  List<Object> get props => [storage];
+}
+
 class AddContacts extends ContactsEvent {
   final List<Contact> contacts;
 
@@ -20,7 +30,7 @@ class AddContacts extends ContactsEvent {
 }
 
 class AddStorages extends ContactsEvent {
-  final List<Contact> storages;
+  final List<ContactsStorage> storages;
 
   AddStorages(this.storages);
 
@@ -29,7 +39,7 @@ class AddStorages extends ContactsEvent {
 }
 
 class SetCurrentlySyncingStorage extends ContactsEvent {
-  final List<int> storageSqliteId;
+  final int storageSqliteId;
 
   SetCurrentlySyncingStorage(this.storageSqliteId);
 

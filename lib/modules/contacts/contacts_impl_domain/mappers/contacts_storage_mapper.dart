@@ -12,7 +12,7 @@ class ContactsStorageMapper {
         display: i.display,
         contactsInfo: i.contactsInfo,
       );
-    });
+    }).toList();
   }
 
   static List<ContactsStoragesTable> toDB(List<ContactsStorage> items,
@@ -27,7 +27,7 @@ class ContactsStorageMapper {
         display: i.display,
         contactsInfo: i.contactsInfo,
       );
-    });
+    }).toList();
   }
 
   static List<ContactsStorage> fromNetwork(
@@ -38,9 +38,9 @@ class ContactsStorageMapper {
         id: i["Id"],
         name: i["Name"],
         cTag: i["CTag"],
-        display: i["Display"],
+        display: i["Display"] ?? true,
         contactsInfo: null,
       );
-    });
+    }).toList();
   }
 }

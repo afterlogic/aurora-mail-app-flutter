@@ -22,8 +22,9 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
       parameters: null,
     );
 
-    final result = await contactsModule.post<List<Map<String, dynamic>>>(body);
-    return ContactsStorageMapper.fromNetwork(result);
+    final result = await contactsModule.post(body);
+    final typedResult = new List<Map<String, dynamic>>.from(result);
+    return ContactsStorageMapper.fromNetwork(typedResult);
   }
 
   @override
@@ -39,8 +40,9 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
       parameters: json.encode(params),
     );
 
-    final result = await contactsModule.post<List<Map<String, dynamic>>>(body);
-    return ContactMapper.fromNetwork(result);
+    final result = await contactsModule.post(body);
+    final typedResult = new List<Map<String, dynamic>>.from(result);
+    return ContactMapper.fromNetwork(typedResult);
   }
 
   @override
@@ -54,8 +56,9 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
       parameters: json.encode(params),
     );
 
-    final result = await contactsModule.post<Map<String, dynamic>>(body);
-    return ContactInfoMapper.fromNetwork(result);
+    final result = await contactsModule.post(body);
+    final typedResult = new Map<String, dynamic>.from(result);
+    return ContactInfoMapper.fromNetwork(typedResult);
   }
 
   @override
@@ -65,7 +68,8 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
       parameters: null,
     );
 
-    final result = await contactsModule.post<List<Map<String, dynamic>>>(body);
-    return ContactsGroupMapper.fromNetwork(result);
+    final result = await contactsModule.post(body);
+    final typedResult = new List<Map<String, dynamic>>.from(result);
+    return ContactsGroupMapper.fromNetwork(typedResult);
   }
 }

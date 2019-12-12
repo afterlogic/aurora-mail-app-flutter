@@ -7822,7 +7822,7 @@ class ContactsStoragesTable extends DataClass
       @required this.name,
       @required this.cTag,
       @required this.display,
-      @required this.contactsInfo});
+      this.contactsInfo});
   factory ContactsStoragesTable.fromData(
       Map<String, dynamic> data, GeneratedDatabase db,
       {String prefix}) {
@@ -7973,13 +7973,12 @@ class ContactsStoragesCompanion extends UpdateCompanion<ContactsStoragesTable> {
     @required String name,
     @required int cTag,
     @required bool display,
-    @required List<ContactInfoItem> contactsInfo,
+    this.contactsInfo = const Value.absent(),
   })  : idUser = Value(idUser),
         serverId = Value(serverId),
         name = Value(name),
         cTag = Value(cTag),
-        display = Value(display),
-        contactsInfo = Value(contactsInfo);
+        display = Value(display);
   ContactsStoragesCompanion copyWith(
       {Value<int> sqliteId,
       Value<int> idUser,
@@ -8084,7 +8083,7 @@ class $ContactsStoragesTable extends ContactsStorages
     return GeneratedTextColumn(
       'contacts_info',
       $tableName,
-      false,
+      true,
     );
   }
 

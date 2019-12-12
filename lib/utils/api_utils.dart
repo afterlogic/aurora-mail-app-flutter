@@ -170,7 +170,7 @@ dynamic formatError(dynamic err, StackTrace stack) {
   } else {
     print("Debug error: $err");
     print("Debug stack: $stack");
-    return err;
+    return err.toString();
     // TODO set unknown for release
 //    return "Unknown error";
   }

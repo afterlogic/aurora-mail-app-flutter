@@ -24,7 +24,7 @@ class ContactsGroupMapper {
         web: i.web,
         zip: i.zip,
       );
-    });
+    }).toList();
   }
   static List<ContactsGroup> fromDB(List<ContactsGroupsTable> dbItems) {
     return dbItems.map((i) {
@@ -48,7 +48,7 @@ class ContactsGroupMapper {
         web: i.web,
         zip: i.zip,
       );
-    });
+    }).toList();
   }
   static List<ContactsGroup> fromNetwork(List<Map<String, dynamic>> rawItems) {
     return rawItems.map((i) {
@@ -72,6 +72,6 @@ class ContactsGroupMapper {
         web: i["Web"],
         zip: i["Zip"],
       );
-    });
+    }).toList();
   }
 }

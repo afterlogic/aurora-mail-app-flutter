@@ -73,14 +73,14 @@ class ContactsDbServiceImpl implements ContactsDbService {
   @override
   Future<void> updateContacts(List<Contact> updatedContacts, {bool nullToAbsent = true}) {
     final formatted = ContactMapper.toDB(updatedContacts);
-    final companions = formatted.map((c) => c.createCompanion(nullToAbsent));
+    final companions = formatted.map((c) => c.createCompanion(nullToAbsent)).toList();
     return _contactsDao.updateContacts(companions);
   }
 
   @override
   Future<void> updateStorages(List<ContactsStorage> updatedStorages, int userId, {bool nullToAbsent = true}) {
     final formatted = ContactsStorageMapper.toDB(updatedStorages, userId);
-    final companions = formatted.map((c) => c.createCompanion(nullToAbsent));
+    final companions = formatted.map((c) => c.createCompanion(nullToAbsent)).toList();
     return _storagesDao.updateStorages(companions);
   }
 }

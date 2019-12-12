@@ -7,19 +7,15 @@ class ContactsState extends Equatable {
   final List<ContactsStorage> storages;
   final List<Contact> contacts;
   final List<ContactsGroup> groups;
-  final bool storagesLoading;
-  final bool contactsLoading;
-  final bool groupsLoading;
+  final int currentlySyncingStorage;
   final String error;
 
   ContactsState({
     this.storages,
     this.contacts,
     this.groups,
-    this.storagesLoading = true,
-    this.contactsLoading = true,
-    this.groupsLoading = true,
-    this.error,
+    this.currentlySyncingStorage,
+    this.error = "",
   });
 
   @override
@@ -27,9 +23,7 @@ class ContactsState extends Equatable {
         storages,
         contacts,
         groups,
-        storagesLoading,
-        contactsLoading,
-        groupsLoading,
+        currentlySyncingStorage,
         error,
       ];
 
@@ -37,18 +31,14 @@ class ContactsState extends Equatable {
     List<ContactsStorage> storages,
     List<Contact> contacts,
     List<ContactsGroup> groups,
-    bool storagesLoading,
-    bool contactsLoading,
-    bool groupsLoading,
+    int currentlySyncingStorage,
     String error,
   }) {
     return new ContactsState(
       storages: storages ?? this.storages,
       contacts: contacts ?? this.contacts,
       groups: groups ?? this.groups,
-      storagesLoading: storagesLoading ?? this.storagesLoading,
-      contactsLoading: contactsLoading ?? this.contactsLoading,
-      groupsLoading: groupsLoading ?? this.groupsLoading,
+      currentlySyncingStorage: currentlySyncingStorage ?? this.currentlySyncingStorage,
       error: error ?? this.error,
     );
   }

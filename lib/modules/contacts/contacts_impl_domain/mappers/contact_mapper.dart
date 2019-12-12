@@ -60,7 +60,7 @@ class ContactMapper {
         davContactsVCardUid: e.davContactsVCardUid,
         groupUUIDs: e.groupUUIDs,
       );
-    });
+    }).toList();
   }
 
   static List<ContactsTable> toDB(List<Contact> contacts) {
@@ -120,7 +120,7 @@ class ContactMapper {
         davContactsVCardUid: e.davContactsVCardUid,
         groupUUIDs: e.groupUUIDs,
       );
-    });
+    }).toList();
   }
 
   static List<Contact> fromNetwork(List<Map<String, dynamic>> rawItems) {
@@ -180,6 +180,6 @@ class ContactMapper {
         davContactsVCardUid: i["DavContacts::VCardUID"],
         groupUUIDs: i["GroupUUIDs"],
       );
-    });
+    }).toList();
   }
 }
