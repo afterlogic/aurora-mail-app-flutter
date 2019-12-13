@@ -27,8 +27,7 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
   }
 
   @override
-  Future<List<Contact>> getContactsByUids(
-      ContactsStorage storage, List<String> uids) async {
+  Future<List<Contact>> getContactsByUids(ContactsStorage storage, List<String> uids) async {
     final params = {
       "Storage": storage.id,
       "Uids": uids,

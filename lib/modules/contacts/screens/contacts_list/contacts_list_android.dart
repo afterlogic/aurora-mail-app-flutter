@@ -100,7 +100,7 @@ class _ContactsListAndroidState extends State<ContactsListAndroid> {
   Widget _buildContacts(ContactsState state) {
     return ListView.separated(
       itemBuilder: (_, i) => ContactsListTile(state.contacts[i]),
-      separatorBuilder: (_, i) => Divider(),
+      separatorBuilder: (_, i) => Divider(indent: 16.0, endIndent: 16.0),
       itemCount: state.contacts.length,
     );
   }

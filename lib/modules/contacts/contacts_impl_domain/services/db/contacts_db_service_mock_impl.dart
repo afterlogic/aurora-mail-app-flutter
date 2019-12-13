@@ -114,4 +114,10 @@ class ContactsDbServiceMockImpl implements ContactsDbService {
     });
     groups.addAll(newGroups);
   }
+
+  @override
+  Stream<List<Contact>> watchContacts(int userServerId, ContactsStorage storage) {
+    // TODO: implement watchContacts
+    return null;
+  }
 }

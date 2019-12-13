@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/contacts_repository.dart';
-import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_storage_model.dart';
 import 'package:aurora_mail/utils/api_utils.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/widgets.dart';
@@ -38,9 +37,11 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
   Stream<ContactsState> mapEventToState(ContactsEvent event) async* {
     if (event is GetContacts) yield* _getContacts(event);
     if (event is SelectStorage) yield* _selectStorage(event);
-    if (event is AddStorages) yield* _addStorages(event);
-    if (event is AddContacts) yield* _addContacts(event);
-    if (event is SetCurrentlySyncingStorage) yield* _setCurrentlySyncingStorage(event);
+    if (event is AddStorages) yield state.copyWith(storages: event.storages);
+    if (event is AddContacts) yield state.copyWith(contacts: event.contacts);
+    if (event is SetSelectedStorage) yield state.copyWith(selectedStorage: event.storageSqliteId);
+    if (event is SetCurrentlySyncingStorage) yield state.copyWith(currentlySyncingStorage: event.storageSqliteId);
+    if (event is AddError) yield state.copyWith(error: event.error);
   }
 
   Stream<ContactsState> _getContacts(GetContacts event) async* {
@@ -50,7 +51,7 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
       }
       add(AddStorages(storages));
     }, onError: (err) {
-      state.copyWith(error: formatError(err, null));
+      add(AddError(formatError(err, null)));
     });
 
     _repo.currentlySyncingStorage.listen((int id) {
@@ -61,20 +62,9 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
   Stream<ContactsState> _selectStorage(SelectStorage event) async* {
     _repo.watchContacts(event.storage).listen((contacts) {
       add(AddContacts(contacts));
+      add(SetSelectedStorage(event.storage.sqliteId));
     }, onError: (err) {
-      state.copyWith(error: formatError(err, null));
+      add(AddError(formatError(err, null)));
     });
-  }
-
-  Stream<ContactsState> _addStorages(AddStorages event) async* {
-    yield state.copyWith(storages: event.storages);
-  }
-
-  Stream<ContactsState> _addContacts(AddContacts event) async* {
-    yield state.copyWith(contacts: event.contacts);
-  }
-
-  Stream<ContactsState> _setCurrentlySyncingStorage(SetCurrentlySyncingStorage event) async* {
-    yield state.copyWith(currentlySyncingStorage: event.storageSqliteId);
   }
 }

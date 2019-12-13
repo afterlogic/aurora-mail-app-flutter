@@ -64,6 +64,12 @@ class ContactsDbServiceImpl implements ContactsDbService {
   }
 
   @override
+  Stream<List<Contact>> watchContacts(int userServerId, ContactsStorage storage) {
+    final result = _contactsDao.watchContacts(userServerId, storage.id);
+    return result.map((data) => ContactMapper.fromDB(data));
+  }
+
+  @override
   Future<List<ContactsGroup>> getGroups(
       int userServerId) async {
     final result = await _groupsDao.getGroups(userServerId);

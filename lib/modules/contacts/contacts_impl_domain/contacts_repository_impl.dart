@@ -22,7 +22,6 @@ class ContactsRepositoryImpl implements ContactsRepository {
   ContactsNetworkService _network;
   ContactsDbService _db;
 
-  final _contactsCtrl = new StreamController<List<Contact>>();
   final _storagesCtrl = new StreamController<List<ContactsStorage>>();
   final _groupCtrl = new StreamController<List<ContactsGroup>>();
 
@@ -53,13 +52,7 @@ class ContactsRepositoryImpl implements ContactsRepository {
 
   @override
   Stream<List<Contact>> watchContacts(ContactsStorage storage) {
-    _db.getContacts(userServerId, storage)
-        .then((contacts) {
-          print("VO: contacts: ${contacts}");
-          _contactsCtrl.add(contacts);
-        })
-        .catchError((err) => _contactsCtrl.addError(formatError(err, null)));
-    return _contactsCtrl.stream;
+    return _db.watchContacts(userServerId, storage);
   }
 
   @override
@@ -167,8 +160,7 @@ class ContactsRepositoryImpl implements ContactsRepository {
           display: s.display,
           name: s.name);
     } else {
-      final calcResult =
-          await ContactsDiffCalculator.calculateContactsInfoDiffAsync(
+      final calcResult = await ContactsDiffCalculator.calculateContactsInfoDiffAsync(
               s.contactsInfo, infos);
 
       final infosToUpdate = new List<ContactInfoItem>.from(s.contactsInfo);
@@ -181,6 +173,8 @@ class ContactsRepositoryImpl implements ContactsRepository {
 
       infosToUpdate.addAll(calcResult.addedContacts);
       infosToUpdate.addAll(calcResult.updatedContacts);
+
+      await _db.deleteContacts(calcResult.deletedContacts);
 
       return new ContactsStorage(
         id: s.id,
@@ -210,19 +204,15 @@ class ContactsRepositoryImpl implements ContactsRepository {
     if (uuidsToFetch.isEmpty) {
       _syncQueue.removeAt(0);
     } else {
-      try {
-        final contacts = await _network.getContactsByUids(storageToSync, uuidsToFetch);
-        _contactsCtrl.add(contacts);
-        storageToSync.contactsInfo.forEach((i) {
-          if (contacts.where((c) => c.uuid == i.uuid).isNotEmpty) {
-            i.hasBody = true;
-          }
-        });
-        await _db.updateStorages([storageToSync], userServerId);
-        await _db.addContacts(contacts);
-      } catch (err, stack) {
-        _contactsCtrl.addError(formatError(err, stack));
-      }
+      final contacts = await _network.getContactsByUids(storageToSync, uuidsToFetch);
+//    _contactsCtrl.add(contacts);
+      storageToSync.contactsInfo.forEach((i) {
+        if (contacts.where((c) => c.uuid == i.uuid).isNotEmpty) {
+          i.hasBody = true;
+        }
+      });
+      await _db.updateStorages([storageToSync], userServerId);
+      await _db.addContacts(contacts);
     }
 
     syncContacts([]);
@@ -247,7 +237,6 @@ class ContactsRepositoryImpl implements ContactsRepository {
 
   @override
   void dispose() {
-    _contactsCtrl.close();
     _storagesCtrl.close();
   }
 }

@@ -32,6 +32,15 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
     ).get();
   }
 
+  Stream<List<ContactsTable>> watchContacts(int userServerId, String storage) {
+    return (
+        select(contacts)
+          ..where((c) => c.idUser.equals(userServerId))
+          ..where((c) => c.storage.equals(storage))
+          ..orderBy([(m) => OrderingTerm(expression: m.fullName)])
+    ).watch();
+  }
+
   Future<void> updateContacts(List<ContactsCompanion> updatedContacts) {
     return transaction(() async {
       for (final contact in updatedContacts) {

@@ -38,6 +38,15 @@ class AddStorages extends ContactsEvent {
   List<Object> get props => [storages];
 }
 
+class SetSelectedStorage extends ContactsEvent {
+  final int storageSqliteId;
+
+  SetSelectedStorage(this.storageSqliteId);
+
+  @override
+  List<Object> get props => [storageSqliteId];
+}
+
 class SetCurrentlySyncingStorage extends ContactsEvent {
   final int storageSqliteId;
 
@@ -45,4 +54,13 @@ class SetCurrentlySyncingStorage extends ContactsEvent {
 
   @override
   List<Object> get props => [storageSqliteId];
+}
+
+class AddError extends ContactsEvent {
+  final dynamic error;
+
+  AddError(this.error);
+
+  @override
+  List<Object> get props => [error];
 }
