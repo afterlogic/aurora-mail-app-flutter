@@ -52,6 +52,7 @@
   "compose_reply_body_title": "$time,tarihinde $from yazdı:",
   "contacts": "Contacts",
   "contacts_list_app_bar_mail": "Mail",
+  "contacts_empty": "No contacts",
   "settings": "Ayarlar",
   "settings_common": "Genel",
   "settings_language": "Dil",

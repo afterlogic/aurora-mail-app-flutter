@@ -44,7 +44,7 @@ class WebMailApi {
     }
   }
 
-  WebMailError _getErrMsg(dynamic err) {
+  dynamic _getErrMsg(dynamic err) {
     if (err["ErrorMessage"] is String) {
       return err["ErrorMessage"];
     } else if (err["ErrorCode"] is int) {

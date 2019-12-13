@@ -9,6 +9,8 @@ class WebMailApiError implements Exception {
 }
 
 enum WebMailError {
+  UserHasNoAccounts,
+  ConnectionError,
   InvalidToken,
   AuthError,
   InvalidInputParameter,

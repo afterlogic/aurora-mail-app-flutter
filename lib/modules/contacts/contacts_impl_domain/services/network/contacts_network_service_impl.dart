@@ -46,11 +46,11 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
   @override
   Future<List<ContactInfoItem>> getContactsInfo(ContactsStorage storage) async {
     final params = {
-      "Storage": storage,
+      "Storage": storage.id,
     };
 
     final body = new WebMailApiBody(
-      method: "GetContactsByUids",
+      method: "GetContactsInfo",
       parameters: json.encode(params),
     );
 

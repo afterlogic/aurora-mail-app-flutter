@@ -28,7 +28,7 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
         select(contacts)
           ..where((c) => c.idUser.equals(userServerId))
           ..where((c) => c.storage.equals(storage))
-          ..orderBy([(m) => OrderingTerm(expression: m.fullName)])
+//          ..orderBy([(m) => OrderingTerm(expression: m.fullName)])
     ).get();
   }
 

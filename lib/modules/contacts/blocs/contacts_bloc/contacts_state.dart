@@ -8,14 +8,14 @@ class ContactsState extends Equatable {
   final List<Contact> contacts;
   final List<ContactsGroup> groups;
   final int currentlySyncingStorage;
-  final String error;
+  final dynamic error;
 
   ContactsState({
     this.storages,
     this.contacts,
     this.groups,
     this.currentlySyncingStorage,
-    this.error = "",
+    this.error,
   });
 
   @override
@@ -39,7 +39,7 @@ class ContactsState extends Equatable {
       contacts: contacts ?? this.contacts,
       groups: groups ?? this.groups,
       currentlySyncingStorage: currentlySyncingStorage ?? this.currentlySyncingStorage,
-      error: error ?? this.error,
+      error: error,
     );
   }
 }

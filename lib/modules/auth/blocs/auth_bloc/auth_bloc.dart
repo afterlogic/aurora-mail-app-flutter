@@ -5,6 +5,7 @@ import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_methods.dart';
 import 'package:aurora_mail/utils/api_utils.dart';
 import 'package:aurora_mail/utils/errors_enum.dart';
 import 'package:bloc/bloc.dart';
+import 'package:webmail_api_client/webmail_api_client.dart';
 
 import './bloc.dart';
 
@@ -79,7 +80,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           _currentAccount = accounts[0];
           yield LoggedIn(user);
         } else {
-          yield AuthError(ErrorForTranslation.UserHasNoAccounts);
+          yield AuthError(WebMailError.UserHasNoAccounts);
         }
       }
     } catch (err, s) {

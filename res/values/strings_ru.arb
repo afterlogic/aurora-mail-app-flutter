@@ -52,6 +52,7 @@
   "compose_reply_body_title": "В $time, $from написал(а):",
   "contacts": "Контакты",
   "contacts_list_app_bar_mail": "Почта",
+  "contacts_empty": "Контактов нет",
   "settings": "Настройки",
   "settings_common": "Общие",
   "settings_language": "Язык",

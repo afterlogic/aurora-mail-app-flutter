@@ -52,6 +52,7 @@
   "compose_reply_body_title": "On $time, $from wrote:",
   "contacts": "Contacts",
   "contacts_list_app_bar_mail": "Mail",
+  "contacts_empty": "No contacts",
   "settings": "Settings",
   "settings_common": "Common",
   "settings_language": "Language",

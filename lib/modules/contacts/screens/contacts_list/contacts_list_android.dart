@@ -1,4 +1,5 @@
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/generated/i18n.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/auth/screens/login/login_route.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
@@ -11,6 +12,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'components/contacts_drawer.dart';
+import 'components/contacts_list_tile.dart';
 
 class ContactsListAndroid extends StatefulWidget {
   @override
@@ -65,20 +67,44 @@ class _ContactsListAndroidState extends State<ContactsListAndroid> {
         drawer: ContactsDrawer(),
         body: BlocListener<ContactsBloc, ContactsState>(
           listener: (context, state) {
-            if (state.error.isNotEmpty) {
+            print("VO: state.error: ${state.error}");
+            if (state.error != null) {
               showSnack(
                   context: context,
                   scaffoldState: Scaffold.of(context),
                   msg: state.error);
             }
           },
-          child: ListView.separated(
-            itemBuilder: (_, i) => ListTile(),
-            separatorBuilder: (_, i) => Divider(),
-            itemCount: 0,
+          child: BlocBuilder<ContactsBloc, ContactsState>(
+              builder: (_, state) {
+                if (state.contacts == null)
+                  return _buildLoading(state);
+                else if (state.contacts.isEmpty)
+                  return _buildContactsEmpty(state);
+                else
+                  return _buildContacts(state);
+              }
           ),
         ),
       ),
     );
   }
+
+  Widget _buildLoading(ContactsState state) {
+    return Center(child: CircularProgressIndicator());
+  }
+
+  Widget _buildContactsEmpty(ContactsState state) {
+    return Center(child: Text(S.of(context).contacts_empty));
+  }
+
+  Widget _buildContacts(ContactsState state) {
+    return ListView.separated(
+      itemBuilder: (_, i) => ContactsListTile(state.contacts[i]),
+      separatorBuilder: (_, i) => Divider(),
+      itemCount: 0,
+    );
+  }
+
+
 }

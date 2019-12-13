@@ -6,7 +6,7 @@ class WebMailApiBody {
   final String parameters;
 
   WebMailApiBody({
-    @required this.module,
+    this.module,
     @required this.method,
     this.parameters,
   });

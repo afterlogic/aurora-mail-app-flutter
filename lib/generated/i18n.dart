@@ -31,6 +31,7 @@ class S implements WidgetsLocalizations {
   String get compose_forward_date_format => "EEE, MMM d, yyyy, HH:mm";
   String get compose_reply_date_format => "EEE, MMM d, yyyy 'at' HH:mm";
   String get contacts => "Contacts";
+  String get contacts_empty => "No contacts";
   String get contacts_list_app_bar_mail => "Mail";
   String get error_compose_no_receivers => "Please provide receivers";
   String get error_compose_wait_attachments => "Please wait until attachments finish uploading";
@@ -252,6 +253,8 @@ class $ru extends S {
   String get error_server_files_not_allowed => "Файлы не разрешены";
   @override
   String get messages_saved_in_drafts => "Сообщение сохранено в черновиках";
+  @override
+  String get contacts_empty => "Контактов нет";
   @override
   String get error_server_demo_account => "Демо аккаунт";
   @override
@@ -554,6 +557,8 @@ class $tr extends S {
   String get error_server_files_not_allowed => "Dosyalara izin verilmiyor";
   @override
   String get messages_saved_in_drafts => "İleti taslaklara kaydedildi";
+  @override
+  String get contacts_empty => "No contacts";
   @override
   String get error_server_demo_account => "Demo hesabı";
   @override

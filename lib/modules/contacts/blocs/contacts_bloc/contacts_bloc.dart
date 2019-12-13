@@ -43,7 +43,7 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
     if (event is SetCurrentlySyncingStorage) yield* _setCurrentlySyncingStorage(event);
   }
 
-  _getContacts(GetContacts event) {
+  Stream<ContactsState> _getContacts(GetContacts event) async* {
     _repo.watchContactsStorages().listen((storages) {
       if (state.storages == null) {
         add(SelectStorage(storages[0]));
@@ -67,11 +67,11 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
   }
 
   Stream<ContactsState> _addStorages(AddStorages event) async* {
-    yield state.copyWith(storages: event.storages, error: "");
+    yield state.copyWith(storages: event.storages);
   }
 
   Stream<ContactsState> _addContacts(AddContacts event) async* {
-    yield state.copyWith(contacts: event.contacts, error: "");
+    yield state.copyWith(contacts: event.contacts);
   }
 
   Stream<ContactsState> _setCurrentlySyncingStorage(SetCurrentlySyncingStorage event) async* {
