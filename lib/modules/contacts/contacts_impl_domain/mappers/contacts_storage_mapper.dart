@@ -40,7 +40,7 @@ class ContactsStorageMapper {
     return ContactsStorage(
       sqliteId: null,
       id: rawItems["Id"],
-      name: rawItems["Name"],
+      name: rawItems["Name"] ?? rawItems["Id"],
       cTag: rawItems["CTag"],
       display: rawItems["Display"] ?? true,
       contactsInfo: null,

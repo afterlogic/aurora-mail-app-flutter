@@ -49,14 +49,15 @@ class ContactsRepositoryImpl implements ContactsRepository {
   }
 
   @override
-  Stream<int> get currentlySyncingStorage =>
-      _currentlySyncingStorageCtrl.stream;
+  Stream<int> get currentlySyncingStorage => _currentlySyncingStorageCtrl.stream;
 
   @override
   Stream<List<Contact>> watchContacts(ContactsStorage storage) {
-    _db
-        .getContacts(userServerId, storage)
-        .then((contacts) => _contactsCtrl.add(contacts))
+    _db.getContacts(userServerId, storage)
+        .then((contacts) {
+          print("VO: contacts: ${contacts}");
+          _contactsCtrl.add(contacts);
+        })
         .catchError((err) => _contactsCtrl.addError(formatError(err, null)));
     return _contactsCtrl.stream;
   }
@@ -202,8 +203,7 @@ class ContactsRepositoryImpl implements ContactsRepository {
     if (_syncQueue.isEmpty) return;
 
     final storages = await _db.getStorages(userServerId);
-    final storageToSync =
-        storages.firstWhere((i) => i.sqliteId == _syncQueue[0]);
+    final storageToSync = storages.firstWhere((i) => i.sqliteId == _syncQueue[0]);
 
     final uuidsToFetch = _takeChunk(storageToSync.contactsInfo);
 
@@ -211,8 +211,7 @@ class ContactsRepositoryImpl implements ContactsRepository {
       _syncQueue.removeAt(0);
     } else {
       try {
-        final contacts =
-            await _network.getContactsByUids(storageToSync, uuidsToFetch);
+        final contacts = await _network.getContactsByUids(storageToSync, uuidsToFetch);
         _contactsCtrl.add(contacts);
         storageToSync.contactsInfo.forEach((i) {
           if (contacts.where((c) => c.uuid == i.uuid).isNotEmpty) {
@@ -220,6 +219,7 @@ class ContactsRepositoryImpl implements ContactsRepository {
           }
         });
         await _db.updateStorages([storageToSync], userServerId);
+        await _db.addContacts(contacts);
       } catch (err, stack) {
         _contactsCtrl.addError(formatError(err, stack));
       }

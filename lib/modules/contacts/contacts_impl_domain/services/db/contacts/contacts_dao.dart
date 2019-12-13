@@ -12,7 +12,7 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
 
   Future<void> addContacts(List<ContactsTable> newContacts) {
     try {
-      return into(contacts).insertAll(newContacts);
+      return batch((b) => b.insertAll(contacts, newContacts));
     } catch (err) {
       print("insert contacts error: $err");
       return null;
@@ -20,7 +20,7 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
   }
 
   Future<void> deleteContacts(List<String> uuids) {
-    return (delete(contacts)..where((c) => isIn(c.uuid, uuids))).go();
+    return (delete(contacts)..where((c) => c.uuid.isIn(uuids))).go();
   }
 
   Future<List<ContactsTable>> getContacts(int userServerId, String storage) {
@@ -28,7 +28,7 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
         select(contacts)
           ..where((c) => c.idUser.equals(userServerId))
           ..where((c) => c.storage.equals(storage))
-//          ..orderBy([(m) => OrderingTerm(expression: m.fullName)])
+          ..orderBy([(m) => OrderingTerm(expression: m.fullName)])
     ).get();
   }
 

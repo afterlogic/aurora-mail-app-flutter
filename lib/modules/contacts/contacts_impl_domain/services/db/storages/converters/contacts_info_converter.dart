@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_storage_model.dart';
+import 'package:aurora_mail/modules/contacts/contacts_impl_domain/mappers/contact_info_mapper.dart';
 import 'package:moor_flutter/moor_flutter.dart';
 
 class ContactsInfoConverter extends TypeConverter<List<ContactInfoItem>, String> {
@@ -10,7 +11,11 @@ class ContactsInfoConverter extends TypeConverter<List<ContactInfoItem>, String>
     if (fromDb == null) {
       return new List<ContactInfoItem>();
     }
-    return json.decode(fromDb) as List<ContactInfoItem>;
+
+    final items = json.decode(fromDb);
+    final mapped = items.map((i) => ContactInfoItem.fromMap(Map<String, dynamic>.from(i)));
+
+    return new List<ContactInfoItem>.from(mapped);
   }
 
   @override
@@ -19,6 +24,8 @@ class ContactsInfoConverter extends TypeConverter<List<ContactInfoItem>, String>
       return "[]";
     }
 
-    return json.encode(value);
+    final maps = value.map((i) => i.toMap()).toList();
+
+    return json.encode(maps);
   }
 }

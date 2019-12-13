@@ -28,4 +28,20 @@ class ContactInfoItem {
     @required this.eTag,
     this.hasBody = false,
   });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'uuid': this.uuid,
+      'eTag': this.eTag,
+      'hasBody': this.hasBody,
+    };
+  }
+
+  factory ContactInfoItem.fromMap(Map<String, dynamic> map) {
+    return new ContactInfoItem(
+      uuid: map['uuid'] as String,
+      eTag: map['eTag'] as String,
+      hasBody: map['hasBody'] as bool,
+    );
+  }
 }

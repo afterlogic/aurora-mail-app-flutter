@@ -67,7 +67,6 @@ class _ContactsListAndroidState extends State<ContactsListAndroid> {
         drawer: ContactsDrawer(),
         body: BlocListener<ContactsBloc, ContactsState>(
           listener: (context, state) {
-            print("VO: state.error: ${state.error}");
             if (state.error != null) {
               showSnack(
                   context: context,
@@ -102,7 +101,7 @@ class _ContactsListAndroidState extends State<ContactsListAndroid> {
     return ListView.separated(
       itemBuilder: (_, i) => ContactsListTile(state.contacts[i]),
       separatorBuilder: (_, i) => Divider(),
-      itemCount: 0,
+      itemCount: state.contacts.length,
     );
   }
 

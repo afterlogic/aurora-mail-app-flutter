@@ -123,7 +123,7 @@ class ContactMapper {
     }).toList();
   }
 
-  static List<Contact> fromNetwork(List<Map<String, dynamic>> rawItems) {
+  static List<Contact> fromNetwork(List<dynamic> rawItems) {
     return rawItems.map((i) {
       return new Contact(
         entityId: i["EntityId"],
@@ -178,7 +178,7 @@ class ContactMapper {
         dateModified: i["DateModified"],
         davContactsUid: i["DavContacts::UID"],
         davContactsVCardUid: i["DavContacts::VCardUID"],
-        groupUUIDs: i["GroupUUIDs"],
+        groupUUIDs: new List<String>.from(i["GroupUUIDs"]),
       );
     }).toList();
   }

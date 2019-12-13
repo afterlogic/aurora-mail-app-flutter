@@ -16,7 +16,7 @@ class ListStringConverter extends TypeConverter<List<String>, String> {
         return [];
       }
     }
-    return json.decode(fromDb) as List<String>;
+    return List<String>.from(json.decode(fromDb));
   }
 
   @override
