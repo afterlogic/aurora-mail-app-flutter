@@ -1,3 +1,8 @@
+import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
+import 'package:aurora_mail/modules/contacts/screens/contact_edit/contact_edit_android.dart';
+import 'package:aurora_mail/modules/contacts/screens/contact_edit/contact_edit_route.dart';
+import 'package:aurora_mail/modules/contacts/screens/contact_view/contact_view_android.dart';
+import 'package:aurora_mail/modules/contacts/screens/contact_view/contact_view_route.dart';
 import 'package:aurora_mail/modules/contacts/screens/contacts_list/contacts_list_android.dart';
 import 'package:aurora_mail/modules/contacts/screens/contacts_list/contacts_list_route.dart';
 import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/bloc.dart';
@@ -29,7 +34,7 @@ import 'settings/screens/about/about_route.dart';
 class AppNavigation {
   static Route onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
-      // ================= AUTH =================
+    // ================= AUTH =================
 
       case LoginRoute.name:
         return FadeRoute(
@@ -38,7 +43,7 @@ class AppNavigation {
             ),
             page: LoginAndroid());
 
-      // ================= MAIL =================
+    // ================= MAIL =================
 
       case MessagesListRoute.name:
         return FadeRoute(
@@ -82,7 +87,7 @@ class AppNavigation {
                 )));
         break;
 
-      // ================= CONTACTS =================
+    // ================= CONTACTS =================
 
       case ContactsListRoute.name:
         return FadeRoute(
@@ -92,7 +97,28 @@ class AppNavigation {
             page: ContactsListAndroid());
         break;
 
-      // ================= SETTINGS =================
+      case ContactViewRoute.name:
+        final ContactViewScreenArgs args = settings.arguments;
+        return SlideHorizontalRoute(
+            settings: RouteSettings(
+              name: settings.name,
+            ),
+            page: BlocProvider<ContactsBloc>.value(
+                value: args.bloc,
+                child: ContactViewAndroid(args.contact)));
+        break;
+
+      case ContactEditRoute.name:
+        final ContactEditScreenArgs args = settings.arguments;
+        return MaterialPageRoute(
+            settings: RouteSettings(
+              name: settings.name,
+            ),
+            fullscreenDialog: true,
+            builder: (_) => ContactEditAndroid(args.contact));
+        break;
+
+    // ================= SETTINGS =================
 
       case SettingsMainRoute.name:
         return SlideHorizontalRoute(
@@ -126,13 +152,13 @@ class AppNavigation {
             page: AboutAndroid());
         break;
 
-      // ==================================
+    // ==================================
 
       default:
         return SlideHorizontalRoute(
             page: Scaffold(
-          body: Text('No route defined for ${settings.name}'),
-        ));
+              body: Text('No route defined for ${settings.name}'),
+            ));
     }
   }
 }
