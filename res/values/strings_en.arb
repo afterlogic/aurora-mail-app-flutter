@@ -185,6 +185,9 @@
   "error_server_mail_server_error": "Mail server error",
   "error_unknown": "Unknown error",
   "compose_forward_date_format": "EEE, MMM d, yyyy, HH:mm",
+  "new_message": "new message",
+  "new_messages": "new messages",
+  "you_have_new_message": "You have $s1 $s2"
   "compose_reply_date_format": "EEE, MMM d, yyyy 'at' HH:mm",
   "contacts_birth_date_format": "MMM d, yyyy"
 }

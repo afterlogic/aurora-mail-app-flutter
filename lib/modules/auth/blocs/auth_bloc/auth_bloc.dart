@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:aurora_mail/background/alarm/alarm.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_methods.dart';
 import 'package:aurora_mail/utils/api_utils.dart';
@@ -25,6 +26,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   static User _currentUser;
 
   static User get currentUser => _currentUser;
+
+  //todo VO
+  static set currentAccount(Account account) => _currentAccount = account;
+
+  //todo VO
+  static set hostName(String hostName) => _hostName = hostName;
+
+  //todo VO
+  static set currentUser(User user) => _currentUser = user;
 
   @override
   AuthState get initialState => InitialAuthState();
@@ -89,6 +99,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   Stream<AuthState> _logout(LogOut event) async* {
+    await Alarm.cancel();
     try {
       await _methods.logout(_currentUser);
       _currentUser = null;

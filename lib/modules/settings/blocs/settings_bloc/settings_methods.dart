@@ -1,3 +1,4 @@
+import 'package:aurora_mail/background/notification_local_storage.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/users/users_dao.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
@@ -8,6 +9,7 @@ import 'package:moor_flutter/moor_flutter.dart';
 
 class SettingsMethods {
   final _usersDao = new UsersDao(DBInstances.appDB);
+  final _notificationStorage = NotificationLocalStorage();
 
   Future<User> setFrequency(Freq freq) async {
     final localId = AuthBloc.currentUser.localId;
@@ -49,5 +51,9 @@ class SettingsMethods {
     );
 
     return _usersDao.getUserByLocalId(localId);
+  }
+
+  Future clearNotification() async {
+    await _notificationStorage.clear();
   }
 }

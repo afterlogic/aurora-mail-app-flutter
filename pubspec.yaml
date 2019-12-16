@@ -4,7 +4,7 @@ description: Mail client for mobile.
 #version: 1.0.0+1
 
 environment:
-  sdk: ">=2.2.2 <3.0.0"
+  sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -49,6 +49,15 @@ dependencies:
   url_launcher:
   connectivity:
   package_info:
+
+  #background
+#  android_alarm_manager: 0.4.5+1 not working
+  alarm_service:
+    path: alarm_service
+
+
+  #notification
+  flutter_local_notifications: 0.8.4+3
 
 dev_dependencies:
   flutter_test:

@@ -173,6 +173,8 @@ class S implements WidgetsLocalizations {
   String get messages_to_me => "To me";
   String get messages_view_tab_attachments => "Attachments";
   String get messages_view_tab_message_body => "Message body";
+  String get new_message => "new message";
+  String get new_messages => "new messages";
   String get settings => "Settings";
   String get settings_about => "About";
   String get settings_about_privacy_policy => "Privacy policy";
@@ -209,6 +211,7 @@ class S implements WidgetsLocalizations {
   String messages_attachment_uploading(String fileName) => "Uploading $fileName...";
   String messages_delete_desc_with_subject(String subject) => "Are you sure you want to delete $subject?";
   String settings_about_app_version(String version) => "Version $version";
+  String you_have_new_message(String s1, String s2) => "You have $s1 $s2";
 }
 
 class $ru extends S {
@@ -273,8 +276,6 @@ class $ru extends S {
   String get error_server_module_not_found => "Модуль не найден";
   @override
   String get messages_list_app_bar_loading_folders => "Загрузка папок...";
-  @override
-  String get compose_forward_date_format => "EEE, d MMM, yyyy, HH:mm";
   @override
   String get error_server_captcha_error => "Ошибка Captcha";
   @override
@@ -381,8 +382,6 @@ class $ru extends S {
   String get error_server_license_limit => "Лимит лицензии";
   @override
   String get error_server_rest_invalid_credentials => "Неверные учетные данные REST";
-  @override
-  String get compose_reply_date_format => "EEE, d MMM, yyyy 'в' HH:mm";
   @override
   String get error_server_access_denied => "Доступ запрещён";
   @override

@@ -4,24 +4,35 @@ import io.flutter.app.FlutterApplication
 import io.flutter.plugin.common.PluginRegistry
 import io.flutter.plugins.GeneratedPluginRegistrant
 import vn.hunghd.flutterdownloader.FlutterDownloaderPlugin
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.os.Build
+import com.afterlogic.alarm_service.WithAlarm
 
-internal class MailApplication : FlutterApplication(), PluginRegistry.PluginRegistrantCallback {
+internal class MailApplication : FlutterApplication(), PluginRegistry.PluginRegistrantCallback, WithAlarm {
+    override val clazzService = AppService::class.java
+
     override fun registerWith(registry: PluginRegistry) {
-        //
-        // Integration note:
-        //
-        // In Flutter, in order to work in background isolate, plugins need to register with
-        // a special instance of `FlutterEngine` that serves for background execution only.
-        // Hence, all (and only) plugins that require background execution feature need to
-        // call `registerWith` in this method.
-        //
-        // The default `GeneratedPluginRegistrant` will call `registerWith` of all plugins
-        // integrated in your application. Hence, if you are using `FlutterDownloaderPlugin`
-        // along with other plugins that need UI manipulation, you should register
-        // `FlutterDownloaderPlugin` and any 'background' plugins explicitly like this:
-        //
-        // FlutterDownloaderPlugin.registerWith(registry.registrarFor("vn.hunghd.flutterdownloader.FlutterDownloaderPlugin"))
-        //
         GeneratedPluginRegistrant.registerWith(registry)
+    }
+
+    override fun onCreate() {
+        super.onCreate()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
+            if (notificationManager.getNotificationChannel(NOTIFICATION_CHANNEL_ID) == null) {
+                val name = "background"
+                val descriptionText = "background update"
+                val importance = NotificationManager.IMPORTANCE_LOW
+
+                val mChannel = NotificationChannel(NOTIFICATION_CHANNEL_ID, name, importance)
+                mChannel.description = descriptionText
+                notificationManager?.createNotificationChannel(mChannel)
+            }
+        }
+    }
+
+    companion object {
+        const val NOTIFICATION_CHANNEL_ID = "background"
     }
 }

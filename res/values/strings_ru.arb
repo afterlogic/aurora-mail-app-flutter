@@ -143,7 +143,5 @@
   "error_server_file_not_found": "Файл не найден",
   "error_server_can_not_upload_file_limit": "Превышен лимит загрузки файлов",
   "error_server_mail_server_error": "Ошибка почтового сервера",
-  "error_unknown": "Неизвестная ошибка",
-  "compose_forward_date_format": "EEE, d MMM, yyyy, HH:mm",
-  "compose_reply_date_format": "EEE, d MMM, yyyy 'в' HH:mm"
+  "error_unknown": "Неизвестная ошибка"
 }
