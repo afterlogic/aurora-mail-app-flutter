@@ -34,7 +34,7 @@ class AlarmBroadcast : BroadcastReceiver() {
                      dartEntryPoint: String,
                      libraryPath: String,
                      id: Int,
-                     secondDelay: Int,
+                     secondDelay: Long,
                      repeat: Boolean) {
             val intent = Intent(context, AlarmBroadcast::class.java)
 
