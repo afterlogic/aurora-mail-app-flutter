@@ -90,11 +90,14 @@ class AppNavigation {
     // ================= CONTACTS =================
 
       case ContactsListRoute.name:
+        final ContactsListScreenArgs args = settings.arguments;
         return FadeRoute(
             settings: RouteSettings(
               name: settings.name,
             ),
-            page: ContactsListAndroid());
+            page: BlocProvider<ContactsBloc>.value(
+                value: args.bloc,
+                child: ContactsListAndroid()));
         break;
 
       case ContactViewRoute.name:

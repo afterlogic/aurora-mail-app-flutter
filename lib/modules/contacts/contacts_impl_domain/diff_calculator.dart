@@ -29,6 +29,7 @@ class ContactsDiffCalculator {
         oldContacts.firstWhere((j) {
           if (j.uuid == i.uuid && j.eTag != i.eTag) {
             i.hasBody = j.hasBody;
+            i.needsUpdate = true;
             return true;
           } else {
             return false;

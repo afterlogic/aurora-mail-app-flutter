@@ -42,12 +42,16 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
   }
 
   Future<void> updateContacts(List<ContactsCompanion> updatedContacts) {
-    return transaction(() async {
-      for (final contact in updatedContacts) {
-        await (update(contacts)
-              ..where((c) => c.uuid.equals(contact.uuid.value)))
-            .write(contact);
-      }
-    });
+    try {
+      return transaction(() async {
+        for (final contact in updatedContacts) {
+          await (update(contacts)
+            ..where((c) => c.uuid.equals(contact.uuid.value)))
+              .write(contact);
+        }
+      });
+    } catch (err) {
+      return null;
+    }
   }
 }

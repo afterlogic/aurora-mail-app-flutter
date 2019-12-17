@@ -22,11 +22,13 @@ class ContactInfoItem {
   final String uuid;
   String eTag;
   bool hasBody;
+  bool needsUpdate;
 
   ContactInfoItem({
     @required this.uuid,
     @required this.eTag,
     this.hasBody = false,
+    this.needsUpdate = false,
   });
 
   Map<String, dynamic> toMap() {
@@ -34,6 +36,7 @@ class ContactInfoItem {
       'uuid': this.uuid,
       'eTag': this.eTag,
       'hasBody': this.hasBody,
+      'needsUpdate': this.needsUpdate,
     };
   }
 
@@ -42,6 +45,7 @@ class ContactInfoItem {
       uuid: map['uuid'] as String,
       eTag: map['eTag'] as String,
       hasBody: map['hasBody'] as bool,
+      needsUpdate: map['needsUpdate'] as bool,
     );
   }
 }

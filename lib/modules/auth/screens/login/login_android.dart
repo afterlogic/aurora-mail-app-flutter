@@ -102,8 +102,7 @@ class _LoginAndroidState extends State<LoginAndroid> {
             }
             if (state is LoggedIn) {
               if (state.user != null) {
-                BlocProvider.of<SettingsBloc>(context)
-                    .add(InitSettings(state.user));
+                BlocProvider.of<SettingsBloc>(context).add(InitSettings(state.user));
               }
               Navigator.pushReplacementNamed(context, MessagesListRoute.name);
             }

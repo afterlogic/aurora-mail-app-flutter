@@ -25,7 +25,7 @@ class ContactsRepositoryImpl implements ContactsRepository {
   final _storagesCtrl = new StreamController<List<ContactsStorage>>();
   final _groupCtrl = new StreamController<List<ContactsGroup>>();
 
-  StreamController<int> _currentlySyncingStorageCtrl;
+  StreamController<List<int>> _currentlySyncingStorageCtrl;
 
   ContactsRepositoryImpl({
     @required String apiUrl,
@@ -42,13 +42,13 @@ class ContactsRepositoryImpl implements ContactsRepository {
     _network = new ContactsNetworkService(module);
     _db = new ContactsDbService(appDB);
 
-    _currentlySyncingStorageCtrl = new StreamController<int>(onListen: () {
-      _currentlySyncingStorageCtrl.add(_syncQueue.isEmpty ? null : _syncQueue[0]);
+    _currentlySyncingStorageCtrl = new StreamController<List<int>>(onListen: () {
+      _currentlySyncingStorageCtrl.add(_syncQueue.isEmpty ? null : _syncQueue);
     });
   }
 
   @override
-  Stream<int> get currentlySyncingStorage => _currentlySyncingStorageCtrl.stream;
+  Stream<List<int>> get currentlySyncingStorage => _currentlySyncingStorageCtrl.stream;
 
   @override
   Stream<List<Contact>> watchContacts(ContactsStorage storage) {
@@ -72,15 +72,16 @@ class ContactsRepositoryImpl implements ContactsRepository {
           await _db.addStorages(storagesToUpdate, userServerId);
         }
 
+        if (storagesToUpdate.isEmpty) return;
         await updateContactsInfo(storagesToUpdate);
 
         final updatedStorages = await _db.getStorages(userServerId);
 
         _storagesCtrl.add(updatedStorages);
 
-        final storagesIdsToSync =
-            updatedStorages.map((s) => s.sqliteId).toList();
-        syncContacts(storagesIdsToSync);
+        final storagesIdsToSync = updatedStorages.map((s) => s.sqliteId).toList();
+
+        getContactsBodies(storagesIdsToSync);
       } catch (err, s) {
         _storagesCtrl.addError(formatError(err, s));
       }
@@ -118,10 +119,11 @@ class ContactsRepositoryImpl implements ContactsRepository {
     return true;
   }
 
-  _updateGroup() async {
+  void _updateGroup() async {
     final updatedGroups = await _db.getGroups(userServerId);
     _groupCtrl.add(updatedGroups);
   }
+
   Future<List<ContactsStorage>> getStoragesToUpdate(
       List<ContactsStorage> storagesFromDb) async {
     final storagesFromNetwork = await _network.getContactStorages();
@@ -187,43 +189,73 @@ class ContactsRepositoryImpl implements ContactsRepository {
     }
   }
 
-  Future<void> syncContacts(List<int> storagesSqliteIds) async {
+  Future<void> getContactsBodies(List<int> storagesSqliteIds) async {
     _syncQueue.removeWhere((i) => storagesSqliteIds.contains(i));
     _syncQueue.insertAll(0, storagesSqliteIds);
 
     // return currently syncing storage for updating UI
-    _currentlySyncingStorageCtrl.add(_syncQueue.isEmpty ? null : _syncQueue[0]);
+    _currentlySyncingStorageCtrl.add(_syncQueue.isEmpty ? null : _syncQueue);
 
     if (_syncQueue.isEmpty) return;
 
     final storages = await _db.getStorages(userServerId);
     final storageToSync = storages.firstWhere((i) => i.sqliteId == _syncQueue[0]);
 
-    final uuidsToFetch = _takeChunk(storageToSync.contactsInfo);
+    final uuidsToFetch = _takeChunkForAdd(storageToSync.contactsInfo);
+    final uuidsToUpdate = _takeChunkForUpdate(storageToSync.contactsInfo);
 
-    if (uuidsToFetch.isEmpty) {
+    if (uuidsToFetch.isEmpty && uuidsToUpdate.isEmpty) {
       _syncQueue.removeAt(0);
     } else {
-      final contacts = await _network.getContactsByUids(storageToSync, uuidsToFetch);
-//    _contactsCtrl.add(contacts);
+      final result = await Future.wait([
+        _network.getContactsByUids(storageToSync, uuidsToFetch),
+        _network.getContactsByUids(storageToSync, uuidsToUpdate),
+      ]);
+      final newContacts = result[0];
+      final updatedContacts = result[1];
+
       storageToSync.contactsInfo.forEach((i) {
-        if (contacts.where((c) => c.uuid == i.uuid).isNotEmpty) {
+        if (newContacts.where((c) => c.uuid == i.uuid).isNotEmpty) {
           i.hasBody = true;
         }
+        if (updatedContacts.where((c) => c.uuid == i.uuid).isNotEmpty) {
+          i.needsUpdate = false;
+        }
       });
-      await _db.updateStorages([storageToSync], userServerId);
-      await _db.addContacts(contacts);
+
+      await Future.wait([
+        _db.updateStorages([storageToSync], userServerId),
+        _db.addContacts(newContacts),
+        _db.updateContacts(updatedContacts),
+      ]);
     }
 
-    syncContacts([]);
+    getContactsBodies([]);
   }
 
   // returns list of uuids to load
-  List<String> _takeChunk(List<ContactInfoItem> infos) {
+  List<String> _takeChunkForAdd(List<ContactInfoItem> infos) {
     final uids = new List<String>();
     int iteration = 0;
 
-    infos.where((i) => i.hasBody != true).forEach((i) {
+    infos.where((i) => i.hasBody == false).forEach((i) {
+      if (iteration < CONTACTS_PER_CHUNK) {
+        uids.add(i.uuid);
+        iteration++;
+      }
+    });
+
+    assert(iteration <= CONTACTS_PER_CHUNK);
+
+    return uids;
+  }
+
+  // returns list of uuids to load
+  List<String> _takeChunkForUpdate(List<ContactInfoItem> infos) {
+    final uids = new List<String>();
+    int iteration = 0;
+
+    infos.where((i) => i.needsUpdate == true).forEach((i) {
       if (iteration < CONTACTS_PER_CHUNK) {
         uids.add(i.uuid);
         iteration++;

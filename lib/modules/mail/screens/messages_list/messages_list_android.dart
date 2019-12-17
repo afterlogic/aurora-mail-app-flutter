@@ -1,11 +1,12 @@
 import 'dart:async';
 
-import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/generated/i18n.dart';
+import 'package:aurora_mail/main.dart' as main;
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/auth/screens/login/login_route.dart';
+import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/screens/contacts_list/contacts_list_route.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/bloc.dart';
@@ -14,13 +15,12 @@ import 'package:aurora_mail/modules/mail/screens/compose/compose_route.dart';
 import 'package:aurora_mail/modules/mail/screens/message_view/message_view_route.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/main_drawer.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
-import 'package:aurora_mail/modules/settings/models/sync_duration.dart';
 import 'package:aurora_mail/modules/settings/screens/settings_main/settings_main_route.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:aurora_mail/main.dart' as main;
+
 import 'components/mail_app_bar.dart';
 import 'components/message_item.dart';
 
@@ -32,6 +32,7 @@ class MessagesListAndroid extends StatefulWidget {
 class _MessagesListAndroidState extends State<MessagesListAndroid> {
   final _messagesListBloc = new MessagesListBloc();
   final _mailBloc = new MailBloc();
+  ContactsBloc _contactsBloc;
 
   var _refreshCompleter = new Completer();
   Folder _selectedFolder;
@@ -40,6 +41,13 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     _mailBloc.add(FetchFolders());
+    _contactsBloc = new ContactsBloc(
+      apiUrl: AuthBloc.apiUrl,
+      token: AuthBloc.currentUser.token,
+      userId: AuthBloc.currentUser.serverId,
+      appDatabase: DBInstances.appDB,
+    );
+    _contactsBloc.add(GetContacts());
   }
 
   @override
@@ -57,6 +65,7 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
   void _initUpdateTimer() async {
     main.doOnAlarm = () {
       _mailBloc.add(RefreshMessages());
+      _contactsBloc.add(GetContacts());
     };
   }
 
@@ -70,7 +79,11 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
         Navigator.pushNamed(context, SettingsMainRoute.name);
         break;
       case MailListAppBarAction.contacts:
-        Navigator.pushReplacementNamed(context, ContactsListRoute.name);
+        Navigator.pushReplacementNamed(
+          context,
+          ContactsListRoute.name,
+          arguments: ContactsListScreenArgs(_contactsBloc),
+        );
         break;
     }
   }
@@ -212,8 +225,7 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
 
   Widget _buildMessagesLoading() => Center(child: CircularProgressIndicator());
 
-  Widget _buildMessagesStream(
-      Stream<List<Message>> messagesSub, bool isStarred) {
+  Widget _buildMessagesStream(Stream<List<Message>> messagesSub, bool isStarred) {
     return StreamBuilder(
       stream: messagesSub,
       builder: (ctx, AsyncSnapshot<List<Message>> snap) {

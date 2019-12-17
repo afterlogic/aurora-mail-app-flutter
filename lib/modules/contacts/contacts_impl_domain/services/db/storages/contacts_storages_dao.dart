@@ -27,12 +27,14 @@ class ContactsStoragesDao extends DatabaseAccessor<AppDatabase>
 
   Future<void> updateStorages(List<ContactsStoragesCompanion> updatedStorages) {
     return transaction(() async {
-      for (final storage in updatedStorages) {
-        await (update(contactsStorages)
-              ..where((s) => s.idUser.equals(storage.idUser.value))
-              ..where((s) => s.serverId.equals(storage.serverId.value)))
-            .write(storage);
-      }
+      try {
+        for (final storage in updatedStorages) {
+          await (update(contactsStorages)
+            ..where((s) => s.idUser.equals(storage.idUser.value))..where((s) =>
+                s.serverId.equals(storage.serverId.value)))
+              .write(storage);
+        }
+      } catch(err) {}
     });
   }
 

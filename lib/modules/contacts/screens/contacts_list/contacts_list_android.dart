@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:aurora_mail/generated/i18n.dart';
+import 'package:aurora_mail/main.dart' as main;
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/auth/screens/login/login_route.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
@@ -22,6 +25,22 @@ class ContactsListAndroid extends StatefulWidget {
 
 class _ContactsListAndroidState extends State<ContactsListAndroid> {
 
+  StreamSubscription _contactsSync;
+
+  @override
+  void initState() {
+    super.initState();
+    _contactsSync = main.alarmStream.listen((_) {
+      BlocProvider.of<ContactsBloc>(context).add(GetContacts());
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _contactsSync.cancel();
+  }
+
   void _onAppBarActionSelected(ContactsListAppBarAction item) {
     switch (item) {
       case ContactsListAppBarAction.logout:
@@ -39,7 +58,7 @@ class _ContactsListAndroidState extends State<ContactsListAndroid> {
 
   void _onContactSelected(Contact contact) {
     Navigator.pushNamed(context, ContactViewRoute.name,
-      arguments: ContactViewScreenArgs(contact, BlocProvider.of<ContactsBloc>(context)));
+        arguments: ContactViewScreenArgs(contact, BlocProvider.of<ContactsBloc>(context)));
   }
 
   @override
@@ -56,15 +75,19 @@ class _ContactsListAndroidState extends State<ContactsListAndroid> {
                 msg: state.error);
           }
         },
-        child: BlocBuilder<ContactsBloc, ContactsState>(
-            builder: (_, state) {
-              if (state.contacts == null)
-                return _buildLoading(state);
-              else if (state.contacts.isEmpty)
-                return _buildContactsEmpty(state);
-              else
-                return _buildContacts(state);
-            }
+        child: RefreshIndicator(
+          onRefresh: () async =>
+              BlocProvider.of<ContactsBloc>(context).add(GetContacts()),
+          child: BlocBuilder<ContactsBloc, ContactsState>(
+              builder: (_, state) {
+                if (state.contacts == null || state.contacts.isEmpty && state.currentlySyncingStorages.contains(state.selectedStorage))
+                  return _buildLoading(state);
+                else if (state.contacts.isEmpty)
+                  return _buildContactsEmpty(state);
+                else
+                  return _buildContacts(state);
+              }
+          ),
         ),
       ),
     );
@@ -83,7 +106,8 @@ class _ContactsListAndroidState extends State<ContactsListAndroid> {
       children: <Widget>[
         AnimatedOpacity(
           duration: Duration(milliseconds: 200),
-          opacity: state.currentlySyncingStorage == state.selectedStorage
+          opacity: state.currentlySyncingStorages != null &&
+              state.currentlySyncingStorages.contains(state.selectedStorage)
               ? 1.0
               : 0.0,
           child: SizedBox(

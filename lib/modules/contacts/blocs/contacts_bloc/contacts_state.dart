@@ -8,7 +8,7 @@ class ContactsState extends Equatable {
   final int selectedStorage;
   final List<Contact> contacts;
   final List<ContactsGroup> groups;
-  final int currentlySyncingStorage;
+  final List<int> currentlySyncingStorages;
   final dynamic error;
 
   ContactsState({
@@ -16,17 +16,17 @@ class ContactsState extends Equatable {
     this.selectedStorage,
     this.contacts,
     this.groups,
-    this.currentlySyncingStorage,
+    this.currentlySyncingStorages,
     this.error,
   });
 
   @override
   List<Object> get props => [
         storages,
-    selectedStorage,
+        selectedStorage,
         contacts,
         groups,
-        currentlySyncingStorage,
+        currentlySyncingStorages,
         error,
       ];
 
@@ -35,7 +35,7 @@ class ContactsState extends Equatable {
     int selectedStorage,
     List<Contact> contacts,
     List<ContactsGroup> groups,
-    int currentlySyncingStorage,
+    List<int> currentlySyncingStorage,
     String error,
   }) {
     return new ContactsState(
@@ -43,7 +43,7 @@ class ContactsState extends Equatable {
       selectedStorage: selectedStorage ?? this.selectedStorage,
       contacts: contacts ?? this.contacts,
       groups: groups ?? this.groups,
-      currentlySyncingStorage: currentlySyncingStorage ?? this.currentlySyncingStorage,
+      currentlySyncingStorages: currentlySyncingStorage ?? this.currentlySyncingStorages,
       error: error,
     );
   }

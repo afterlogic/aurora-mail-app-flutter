@@ -26,7 +26,6 @@ class _ContactViewAndroidState extends State<ContactViewAndroid> {
   }
 
   void _onMainAppBarActionSelected(ContactViewAppBarAction item) {
-    print("VO: item: ${item}");
     switch (item) {
       case ContactViewAppBarAction.attach:
         // TODO: Handle this case.

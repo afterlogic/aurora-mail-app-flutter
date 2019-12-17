@@ -18,7 +18,7 @@ abstract class ContactsRepository {
           userServerId: userServerId,
           token: token);
 
-  Stream<int> get currentlySyncingStorage;
+  Stream<List<int>> get currentlySyncingStorage;
 
   Stream<List<Contact>> watchContacts(ContactsStorage storage);
 

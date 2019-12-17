@@ -1,4 +1,3 @@
-import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/generated/i18n.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
@@ -13,7 +12,6 @@ import 'package:aurora_mail/main.dart' as main;
 import 'app_navigation.dart';
 import 'auth/blocs/auth_bloc/bloc.dart';
 import 'auth/screens/login/login_route.dart';
-import 'contacts/blocs/contacts_bloc/bloc.dart';
 
 class App extends StatefulWidget {
   @override
@@ -23,7 +21,6 @@ class App extends StatefulWidget {
 class _AppState extends State<App> with WidgetsBindingObserver {
   final _authBloc = new AuthBloc();
   final _settingsBloc = new SettingsBloc();
-  ContactsBloc _contactsBloc;
   PackageInfo _appInfo;
 
   @override
@@ -67,14 +64,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
         builder: (_, authState) {
           if (authState is InitializedUserAndAccounts) {
             if (authState.user != null) {
-              _contactsBloc = new ContactsBloc(
-                apiUrl: AuthBloc.apiUrl,
-                token: AuthBloc.currentUser.token,
-                userId: AuthBloc.currentUser.serverId,
-                appDatabase: DBInstances.appDB,
-              );
               _settingsBloc.add(InitSettings(authState.user));
-              _contactsBloc.add(GetContacts());
             }
             return BlocBuilder<SettingsBloc, SettingsState>(
                 bloc: _settingsBloc,
@@ -87,9 +77,6 @@ class _AppState extends State<App> with WidgetsBindingObserver {
                         ),
                         BlocProvider<SettingsBloc>.value(
                           value: _settingsBloc,
-                        ),
-                        BlocProvider<ContactsBloc>.value(
-                          value: _contactsBloc,
                         ),
                       ],
                       child: MaterialApp(

@@ -48,12 +48,12 @@ class SetSelectedStorage extends ContactsEvent {
 }
 
 class SetCurrentlySyncingStorage extends ContactsEvent {
-  final int storageSqliteId;
+  final List<int> storageSqliteIds;
 
-  SetCurrentlySyncingStorage(this.storageSqliteId);
+  SetCurrentlySyncingStorage(this.storageSqliteIds);
 
   @override
-  List<Object> get props => [storageSqliteId];
+  List<Object> get props => [storageSqliteIds];
 }
 
 class AddError extends ContactsEvent {
