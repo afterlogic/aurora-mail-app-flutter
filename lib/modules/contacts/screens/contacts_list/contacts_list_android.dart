@@ -25,13 +25,17 @@ class ContactsListAndroid extends StatefulWidget {
 
 class _ContactsListAndroidState extends State<ContactsListAndroid> {
 
+  final _refreshKey = GlobalKey<RefreshIndicatorState>();
+
+  var _refreshCompleter = new Completer();
   StreamSubscription _contactsSync;
 
   @override
   void initState() {
     super.initState();
     _contactsSync = main.alarmStream.listen((_) {
-      BlocProvider.of<ContactsBloc>(context).add(GetContacts());
+//      BlocProvider.of<ContactsBloc>(context).add(GetContacts());
+      _refreshKey.currentState.show();
     });
   }
 
@@ -74,10 +78,17 @@ class _ContactsListAndroidState extends State<ContactsListAndroid> {
                 scaffoldState: Scaffold.of(context),
                 msg: state.error);
           }
+          if (state.currentlySyncingStorages != null && !state.currentlySyncingStorages.contains(state.selectedStorage)) {
+            _refreshCompleter?.complete();
+            _refreshCompleter = new Completer();
+          }
         },
         child: RefreshIndicator(
-          onRefresh: () async =>
-              BlocProvider.of<ContactsBloc>(context).add(GetContacts()),
+          key: _refreshKey,
+          onRefresh: () {
+            BlocProvider.of<ContactsBloc>(context).add(GetContacts());
+            return _refreshCompleter.future;
+          },
           child: BlocBuilder<ContactsBloc, ContactsState>(
               builder: (_, state) {
                 if (state.contacts == null || state.contacts.isEmpty && state.currentlySyncingStorages.contains(state.selectedStorage))
@@ -104,17 +115,6 @@ class _ContactsListAndroidState extends State<ContactsListAndroid> {
   Widget _buildContacts(ContactsState state) {
     return Column(
       children: <Widget>[
-        AnimatedOpacity(
-          duration: Duration(milliseconds: 200),
-          opacity: state.currentlySyncingStorages != null &&
-              state.currentlySyncingStorages.contains(state.selectedStorage)
-              ? 1.0
-              : 0.0,
-          child: SizedBox(
-            height: 5.0,
-            child: LinearProgressIndicator(),
-          ),
-        ),
         Flexible(
           child: ListView.separated(
             itemBuilder: (_, i) =>

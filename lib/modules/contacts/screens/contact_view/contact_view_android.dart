@@ -61,6 +61,9 @@ class _ContactViewAndroidState extends State<ContactViewAndroid> {
       _buildInfoItem(icon: MdiIcons.mapMarkerOutline, v: _contactInfo.viewAddress),
       _buildInfoItem(icon: MdiIcons.skype, v: c.skype),
       _buildInfoItem(icon: MdiIcons.facebook, v: c.facebook),
+      _buildInfoItem(label: s.contacts_view_first_name, v: c.firstName),
+      _buildInfoItem(label: s.contacts_view_last_name, v: c.lastName),
+      _buildInfoItem(label: s.contacts_view_nickname, v: c.nickName),
     ]);
 
     final personalInfo = _buildInfos([

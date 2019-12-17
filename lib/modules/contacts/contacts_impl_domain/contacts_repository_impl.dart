@@ -43,7 +43,7 @@ class ContactsRepositoryImpl implements ContactsRepository {
     _db = new ContactsDbService(appDB);
 
     _currentlySyncingStorageCtrl = new StreamController<List<int>>(onListen: () {
-      _currentlySyncingStorageCtrl.add(_syncQueue.isEmpty ? null : _syncQueue);
+      _currentlySyncingStorageCtrl.add(_syncQueue.isEmpty ? [] : _syncQueue);
     });
   }
 
@@ -61,6 +61,9 @@ class ContactsRepositoryImpl implements ContactsRepository {
   @override
   Stream<List<ContactsStorage>> watchContactsStorages() {
     _db.getStorages(userServerId).then((storagesFromDb) async {
+      // return currently syncing storage for updating UI
+      _currentlySyncingStorageCtrl.add(storagesFromDb.map((s) => s.sqliteId).toList());
+
       try {
         List<ContactsStorage> storagesToUpdate;
         if (storagesFromDb.isNotEmpty) {
@@ -72,7 +75,12 @@ class ContactsRepositoryImpl implements ContactsRepository {
           await _db.addStorages(storagesToUpdate, userServerId);
         }
 
-        if (storagesToUpdate.isEmpty) return;
+        if (storagesToUpdate.isEmpty) {
+          // return currently syncing storage for updating UI
+          _currentlySyncingStorageCtrl.add([]);
+          return;
+        };
+
         await updateContactsInfo(storagesToUpdate);
 
         final updatedStorages = await _db.getStorages(userServerId);
@@ -194,7 +202,7 @@ class ContactsRepositoryImpl implements ContactsRepository {
     _syncQueue.insertAll(0, storagesSqliteIds);
 
     // return currently syncing storage for updating UI
-    _currentlySyncingStorageCtrl.add(_syncQueue.isEmpty ? null : _syncQueue);
+    _currentlySyncingStorageCtrl.add(_syncQueue.isEmpty ? [] : _syncQueue);
 
     if (_syncQueue.isEmpty) return;
 
