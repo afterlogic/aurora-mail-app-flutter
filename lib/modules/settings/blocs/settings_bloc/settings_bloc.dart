@@ -74,7 +74,10 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   Stream<SettingsState> _setFrequency(SetFrequency event) async* {
     await _methods.setFrequency(event.freq);
     final freqInSeconds = SyncFreq.freqToDuration(event.freq).inSeconds;
-
+    await Alarm.periodic(
+      Duration(seconds: freqInSeconds),
+      main.onAlarm,
+    );
     if (state is SettingsLoaded) {
       yield (state as SettingsLoaded)
           .copyWith(syncFrequency: Value(freqInSeconds));

@@ -44,7 +44,7 @@ class AlarmPlugin(private val applicationContext: Context) : MethodCallHandler {
                             callback.callbackName,
                             callback.callbackLibraryPath,
                             arg[1] as Int,
-                            arg[2] as Int,
+                            (arg[2] as Number).toLong(),
                             arg[3] as Boolean)
                     result.success("")
                 }
