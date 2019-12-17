@@ -96,7 +96,10 @@
   "settings_common": "Common",
   "settings_language": "Language",
   "settings_language_system": "System language",
-  "settings_dark_theme": "Dark theme",
+  "settings_dark_theme": "App theme",
+  "settings_dark_theme_system": "System theme",
+  "settings_dark_theme_dark": "Dark",
+  "settings_dark_theme_light": "Light",
   "settings_sync": "Sync",
   "settings_sync_frequency": "Sync frequency",
   "settings_sync_frequency_never": "never",
@@ -187,7 +190,7 @@
   "compose_forward_date_format": "EEE, MMM d, yyyy, HH:mm",
   "new_message": "new message",
   "new_messages": "new messages",
-  "you_have_new_message": "You have $s1 $s2"
+  "you_have_new_message": "You have $s1 $s2",
   "compose_reply_date_format": "EEE, MMM d, yyyy 'at' HH:mm",
   "contacts_birth_date_format": "MMM d, yyyy"
 }

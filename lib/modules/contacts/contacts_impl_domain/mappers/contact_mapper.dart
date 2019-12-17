@@ -2,7 +2,6 @@ import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 
 class ContactMapper {
-
   static List<Contact> fromDB(List<ContactsTable> dbEntries) {
     return dbEntries.map((e) {
       return new Contact(

@@ -9,6 +9,7 @@ import 'modules/app_screen.dart';
 var isBackground = true;
 Function doOnAlarm;
 final _streamController = new StreamController<void>.broadcast();
+
 Stream<void> get alarmStream => _streamController.stream.asBroadcastStream();
 
 void main() {
@@ -25,9 +26,8 @@ void onAlarm() async {
     if (isBackground) WidgetsFlutterBinding.ensureInitialized();
 
     final hasUpdate = await BackgroundSync()
-        .sync(isBackground,doOnAlarm != null)
+        .sync(isBackground, doOnAlarm != null)
         .timeout(Duration(seconds: 50));
-
 
     if (hasUpdate) {
       if (doOnAlarm != null) doOnAlarm();

@@ -27,7 +27,8 @@ abstract class ContactsNetworkService {
   Future<List<ContactInfoItem>> getContactsInfo(ContactsStorage storage);
 
   /// Get contacts by their uuids
-  Future<List<Contact>> getContactsByUids(ContactsStorage storage, List<String> uids);
+  Future<List<Contact>> getContactsByUids(
+      ContactsStorage storage, List<String> uids);
 
   Future<ContactsGroup> addGroup(ContactsGroup group);
 

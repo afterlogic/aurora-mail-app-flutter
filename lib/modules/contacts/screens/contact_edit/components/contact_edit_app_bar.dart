@@ -1,4 +1,4 @@
-import 'package:aurora_mail/generated/i18n.dart';
+import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/material.dart';
 
 enum ContactEditAppBarAction { cancel, save }
@@ -16,13 +16,11 @@ class ContactEditAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       leading: IconButton(
         icon: Icon(Icons.close),
-        tooltip: S.of(context).contacts_edit_cancel,
+        tooltip: i18n(context, "contacts_edit_cancel"),
         onPressed: () => onActionSelected(ContactEditAppBarAction.cancel),
       ),
-      title: Text(S.of(context).contacts_edit),
-      actions: <Widget>[
-
-      ],
+      title: Text(i18n(context, "contacts_edit")),
+      actions: <Widget>[],
     );
   }
 }

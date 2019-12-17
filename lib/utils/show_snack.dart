@@ -11,9 +11,8 @@ void showSnack({
   isError = true,
 }) {
   if (Theme == null || scaffoldState == null) return;
-  final errorMessage = msg is WebMailError
-      ? getErrTranslation(context, msg)
-      : msg.toString();
+  final errorMessage =
+      msg is WebMailError ? getErrTranslation(context, msg) : msg.toString();
 
   final theme = Theme.of(context);
   final snack = theme.brightness == Brightness.light

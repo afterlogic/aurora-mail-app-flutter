@@ -24,21 +24,19 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
   }
 
   Future<List<ContactsTable>> getContacts(int userServerId, String storage) {
-    return (
-        select(contacts)
+    return (select(contacts)
           ..where((c) => c.idUser.equals(userServerId))
           ..where((c) => c.storage.equals(storage))
-          ..orderBy([(m) => OrderingTerm(expression: m.fullName)])
-    ).get();
+          ..orderBy([(m) => OrderingTerm(expression: m.fullName)]))
+        .get();
   }
 
   Stream<List<ContactsTable>> watchContacts(int userServerId, String storage) {
-    return (
-        select(contacts)
+    return (select(contacts)
           ..where((c) => c.idUser.equals(userServerId))
           ..where((c) => c.storage.equals(storage))
-          ..orderBy([(m) => OrderingTerm(expression: m.fullName)])
-    ).watch();
+          ..orderBy([(m) => OrderingTerm(expression: m.fullName)]))
+        .watch();
   }
 
   Future<void> updateContacts(List<ContactsCompanion> updatedContacts) {
@@ -46,7 +44,7 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
       return transaction(() async {
         for (final contact in updatedContacts) {
           await (update(contacts)
-            ..where((c) => c.uuid.equals(contact.uuid.value)))
+                ..where((c) => c.uuid.equals(contact.uuid.value)))
               .write(contact);
         }
       });

@@ -30,11 +30,11 @@ class ContactsStoragesDao extends DatabaseAccessor<AppDatabase>
       try {
         for (final storage in updatedStorages) {
           await (update(contactsStorages)
-            ..where((s) => s.idUser.equals(storage.idUser.value))..where((s) =>
-                s.serverId.equals(storage.serverId.value)))
+                ..where((s) => s.idUser.equals(storage.idUser.value))
+                ..where((s) => s.serverId.equals(storage.serverId.value)))
               .write(storage);
         }
-      } catch(err) {}
+      } catch (err) {}
     });
   }
 

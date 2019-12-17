@@ -1,5 +1,5 @@
-import 'package:aurora_mail/generated/i18n.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
+import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -9,7 +9,7 @@ class ContactsDrawer extends StatelessWidget {
     return Drawer(
       child: SafeArea(
         child:
-        BlocBuilder<ContactsBloc, ContactsState>(builder: (context, state) {
+            BlocBuilder<ContactsBloc, ContactsState>(builder: (context, state) {
           return ListView(
             children: <Widget>[
               _buildStorages(context, state),
@@ -26,12 +26,13 @@ class ContactsDrawer extends StatelessWidget {
         children: state.storages
             .where((s) => s.display)
             .map((s) => ListTile(
-              title: Text(s.name),
-              selected: s.sqliteId == state.selectedStorage,
-            )).toList(),
+                  title: Text(s.name),
+                  selected: s.sqliteId == state.selectedStorage,
+                ))
+            .toList(),
       );
     } else if (state.storages.isEmpty) {
-      return Center(child: Text(S.of(context).contacts_empty));
+      return Center(child: Text(i18n(context, "contacts_empty")));
     } else {
       return Padding(
         padding: const EdgeInsets.all(16.0),

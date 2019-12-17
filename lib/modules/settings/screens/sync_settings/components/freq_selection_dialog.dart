@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:aurora_mail/generated/i18n.dart';
 import 'package:aurora_mail/modules/settings/models/sync_duration.dart';
+import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -28,7 +28,7 @@ class FreqSelectionDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     if (Platform.isIOS) {
       return CupertinoActionSheet(
-        title: Text(S.of(context).settings_sync_frequency),
+        title: Text(i18n(context, "settings_sync_frequency")),
         actions: Freq.values
             .map((freq) => CupertinoButton(
                   child: Text(SyncFreq.freqToString(context, freq)),
@@ -39,7 +39,7 @@ class FreqSelectionDialog extends StatelessWidget {
                 ))
             .toList(),
         cancelButton: CupertinoButton(
-          child: Text(S.of(context).btn_cancel),
+          child: Text(i18n(context, "btn_cancel")),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -49,7 +49,7 @@ class FreqSelectionDialog extends StatelessWidget {
       return AlertDialog(
           contentPadding: EdgeInsets.zero,
           titlePadding: EdgeInsets.all(24.0),
-          title: Text(S.of(context).settings_sync_frequency),
+          title: Text(i18n(context, "settings_sync_frequency")),
           content: SizedBox(
             height: 310.0,
             width: 400.0,

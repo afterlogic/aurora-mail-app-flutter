@@ -5,7 +5,8 @@ class ContactsListTile extends StatelessWidget {
   final Contact contact;
   final void Function(Contact) onPressed;
 
-  ContactsListTile({@required this.contact, @required this.onPressed}) : super(key: Key(contact.uuid));
+  ContactsListTile({@required this.contact, @required this.onPressed})
+      : super(key: Key(contact.uuid));
 
   @override
   Widget build(BuildContext context) {

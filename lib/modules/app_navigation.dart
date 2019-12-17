@@ -34,7 +34,7 @@ import 'settings/screens/about/about_route.dart';
 class AppNavigation {
   static Route onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
-    // ================= AUTH =================
+      // ================= AUTH =================
 
       case LoginRoute.name:
         return FadeRoute(
@@ -43,7 +43,7 @@ class AppNavigation {
             ),
             page: LoginAndroid());
 
-    // ================= MAIL =================
+      // ================= MAIL =================
 
       case MessagesListRoute.name:
         return FadeRoute(
@@ -87,7 +87,7 @@ class AppNavigation {
                 )));
         break;
 
-    // ================= CONTACTS =================
+      // ================= CONTACTS =================
 
       case ContactsListRoute.name:
         final ContactsListScreenArgs args = settings.arguments;
@@ -96,8 +96,7 @@ class AppNavigation {
               name: settings.name,
             ),
             page: BlocProvider<ContactsBloc>.value(
-                value: args.bloc,
-                child: ContactsListAndroid()));
+                value: args.bloc, child: ContactsListAndroid()));
         break;
 
       case ContactViewRoute.name:
@@ -107,8 +106,7 @@ class AppNavigation {
               name: settings.name,
             ),
             page: BlocProvider<ContactsBloc>.value(
-                value: args.bloc,
-                child: ContactViewAndroid(args.contact)));
+                value: args.bloc, child: ContactViewAndroid(args.contact)));
         break;
 
       case ContactEditRoute.name:
@@ -121,7 +119,7 @@ class AppNavigation {
             builder: (_) => ContactEditAndroid(args.contact));
         break;
 
-    // ================= SETTINGS =================
+      // ================= SETTINGS =================
 
       case SettingsMainRoute.name:
         return SlideHorizontalRoute(
@@ -155,13 +153,13 @@ class AppNavigation {
             page: AboutAndroid());
         break;
 
-    // ==================================
+      // ==================================
 
       default:
         return SlideHorizontalRoute(
             page: Scaffold(
-              body: Text('No route defined for ${settings.name}'),
-            ));
+          body: Text('No route defined for ${settings.name}'),
+        ));
     }
   }
 }

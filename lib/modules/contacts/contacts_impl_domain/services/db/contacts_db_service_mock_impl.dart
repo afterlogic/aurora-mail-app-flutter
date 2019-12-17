@@ -87,8 +87,7 @@ class ContactsDbServiceMockImpl implements ContactsDbService {
   }
 
   @override
-  Future<List<ContactsGroup>> getGroups(int userServerId) async =>
-      groups;
+  Future<List<ContactsGroup>> getGroups(int userServerId) async => groups;
 
   @override
   Future<void> addGroups(List<ContactsGroup> newGroups) async {
@@ -116,7 +115,8 @@ class ContactsDbServiceMockImpl implements ContactsDbService {
   }
 
   @override
-  Stream<List<Contact>> watchContacts(int userServerId, ContactsStorage storage) {
+  Stream<List<Contact>> watchContacts(
+      int userServerId, ContactsStorage storage) {
     // TODO: implement watchContacts
     return null;
   }

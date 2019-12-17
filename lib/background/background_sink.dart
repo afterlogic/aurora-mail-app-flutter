@@ -5,12 +5,10 @@ import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/folders/folders_dao.dart';
 import 'package:aurora_mail/database/folders/folders_table.dart';
 import 'package:aurora_mail/database/users/users_dao.dart';
-import 'package:aurora_mail/generated/i18n.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/models/message_info.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aurora_mail/modules/auth/repository/auth_local_storage.dart';
-import 'package:aurora_mail/modules/mail/blocs/mail_bloc/mail_methods.dart';
 import 'package:aurora_mail/modules/mail/repository/folders_api.dart';
 import 'package:aurora_mail/modules/mail/repository/mail_api.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
@@ -37,9 +35,9 @@ class BackgroundSync {
         var hasNew = false;
         if (isRunApp) {
           messageCount += newMessageCount;
-          hasNew=true;
+          hasNew = true;
         } else {
-          hasNew=newMessageCount != messageCount;
+          hasNew = newMessageCount != messageCount;
           messageCount = newMessageCount;
         }
 
@@ -140,20 +138,22 @@ class BackgroundSync {
   }
 
   showNewMessage(int newMessageCount) async {
-    final locale = S.delegate.supportedLocales.firstWhere(
-      (locale) {
-        //todo VO locale
-        return false;
-      },
-      orElse: () => Locale("en", ""),
-    );
+//    final locale = S.delegate.supportedLocales.firstWhere(
+//      (locale) {
+//        //todo VO locale
+//        return false;
+//      },
+//      orElse: () => Locale("en", ""),
+//    );
 
-    final s = await S.delegate.load(locale);
+//    final s = await S.delegate.load(locale);
 
     final manager = NotificationManager();
 
-    final countMessage = newMessageCount > 1 ? s.new_messages : s.new_message;
-    manager.showNotification(countMessage,
-        s.you_have_new_message(newMessageCount.toString(), countMessage));
+    // TODO NY: migrate translations
+//    final countMessage = newMessageCount > 1 ? s.new_messages : s.new_message;
+//    manager.showNotification(countMessage,
+//        s.you_have_new_message(newMessageCount.toString(), countMessage));
+    manager.showNotification(newMessageCount.toString(), "new messages");
   }
 }

@@ -1,7 +1,7 @@
 import 'dart:io';
 
-import 'package:aurora_mail/generated/i18n.dart';
 import 'package:aurora_mail/modules/settings/models/language.dart';
+import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -28,7 +28,7 @@ class LanguageSelectionDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     if (Platform.isIOS) {
       return CupertinoActionSheet(
-        title: Text(S.of(context).settings_language),
+        title: Text(i18n(context, "settings_language")),
         actions: Language.availableLanguages
             .map((lang) => CupertinoButton(
                   child: Text(lang.name),
@@ -39,7 +39,7 @@ class LanguageSelectionDialog extends StatelessWidget {
                 ))
             .toList(),
         cancelButton: CupertinoButton(
-          child: Text(S.of(context).btn_cancel),
+          child: Text(i18n(context, "btn_cancel")),
           onPressed: () {
             Navigator.pop(context);
           },
@@ -49,7 +49,7 @@ class LanguageSelectionDialog extends StatelessWidget {
       return AlertDialog(
           contentPadding: EdgeInsets.zero,
           titlePadding: EdgeInsets.all(24.0),
-          title: Text(S.of(context).settings_language),
+          title: Text(i18n(context, "settings_language")),
           content: SizedBox(
             height: 300.0,
             width: 400.0,
@@ -57,7 +57,7 @@ class LanguageSelectionDialog extends StatelessWidget {
                 children: Language.availableLanguages
                     .map((lang) => RadioListTile(
                           title: Text(lang == null
-                              ? S.of(context).settings_language_system
+                              ? i18n(context, "settings_language_system")
                               : lang.name),
                           value: lang?.tag,
                           groupValue: selectedItem?.tag,

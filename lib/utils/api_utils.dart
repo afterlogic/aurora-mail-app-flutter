@@ -80,8 +80,7 @@ WebMailError _getErrMsgFromCode(int code) {
     case 604:
       return WebMailError.CanNotUpdateGroup;
     case 605:
-      return WebMailError
-          .ContactDataHasBeenModifiedByAnotherApplication;
+      return WebMailError.ContactDataHasBeenModifiedByAnotherApplication;
     case 607:
       return WebMailError.CanNotGetContact;
     case 701:

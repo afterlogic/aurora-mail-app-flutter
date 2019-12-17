@@ -13,7 +13,6 @@ part 'mail_dao.g.dart';
 
 @UseDao(tables: [Mail])
 class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
-
   MailDao(AppDatabase db) : super(db);
 
 //  Future<List<Message>> getMessages(String folder) {
@@ -60,7 +59,7 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
 
   Future<int> deleteMessages(List<int> uids, Folder folder) {
     return (delete(mail)
-      ..where((m) => m.uid.isIn(uids))
+          ..where((m) => m.uid.isIn(uids))
           ..where((m) => m.folder.equals(folder.fullNameRaw)))
         .go();
   }

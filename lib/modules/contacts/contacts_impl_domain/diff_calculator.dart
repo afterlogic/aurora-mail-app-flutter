@@ -38,10 +38,10 @@ class ContactsDiffCalculator {
         null);
 
     print("""
-    Contacts diff calcultaion finished:
-      added: ${addedContacts.length}
-      removed: ${deletedContacts.length}
-      updated: ${updatedContacts.length}
+Contacts diff calcultaion finished:
+  added: ${addedContacts.length}
+  removed: ${deletedContacts.length}
+  updated: ${updatedContacts.length}
     """);
 
     return new ContactInfoDiffCalcResult(
@@ -86,12 +86,16 @@ class ContactsDiffCalculator {
         }, orElse: () => null) !=
         null);
 
-    print("""
-    Storages diff calcultaion finished:
-      added: ${addedStorages.length}
-      removed: ${deletedStorages.length}
-      updated: ${updatedStorages.length}
+    if (addedStorages.isNotEmpty ||
+        deletedStorages.isNotEmpty ||
+        updatedStorages.isNotEmpty) {
+      print("""
+Storages diff calcultaion finished:
+  added: ${addedStorages.length}
+  removed: ${deletedStorages.length}
+  updated: ${updatedStorages.length}
     """);
+    }
 
     return new StoragesDiffCalcResult(
       addedStorages: addedStorages.toList(),

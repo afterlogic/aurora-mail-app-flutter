@@ -42,13 +42,15 @@ class ContactsRepositoryImpl implements ContactsRepository {
     _network = new ContactsNetworkService(module);
     _db = new ContactsDbService(appDB);
 
-    _currentlySyncingStorageCtrl = new StreamController<List<int>>(onListen: () {
+    _currentlySyncingStorageCtrl =
+        new StreamController<List<int>>(onListen: () {
       _currentlySyncingStorageCtrl.add(_syncQueue.isEmpty ? [] : _syncQueue);
     });
   }
 
   @override
-  Stream<List<int>> get currentlySyncingStorage => _currentlySyncingStorageCtrl.stream;
+  Stream<List<int>> get currentlySyncingStorage =>
+      _currentlySyncingStorageCtrl.stream;
 
   @override
   Stream<List<Contact>> watchContacts(ContactsStorage storage) {
@@ -62,7 +64,8 @@ class ContactsRepositoryImpl implements ContactsRepository {
   Stream<List<ContactsStorage>> watchContactsStorages() {
     _db.getStorages(userServerId).then((storagesFromDb) async {
       // return currently syncing storage for updating UI
-      _currentlySyncingStorageCtrl.add(storagesFromDb.map((s) => s.sqliteId).toList());
+      _currentlySyncingStorageCtrl
+          .add(storagesFromDb.map((s) => s.sqliteId).toList());
 
       try {
         List<ContactsStorage> storagesToUpdate;
@@ -79,7 +82,8 @@ class ContactsRepositoryImpl implements ContactsRepository {
           // return currently syncing storage for updating UI
           _currentlySyncingStorageCtrl.add([]);
           return;
-        };
+        }
+        ;
 
         await updateContactsInfo(storagesToUpdate);
 
@@ -87,7 +91,8 @@ class ContactsRepositoryImpl implements ContactsRepository {
 
         _storagesCtrl.add(updatedStorages);
 
-        final storagesIdsToSync = updatedStorages.map((s) => s.sqliteId).toList();
+        final storagesIdsToSync =
+            updatedStorages.map((s) => s.sqliteId).toList();
 
         getContactsBodies(storagesIdsToSync);
       } catch (err, s) {
@@ -170,7 +175,8 @@ class ContactsRepositoryImpl implements ContactsRepository {
           display: s.display,
           name: s.name);
     } else {
-      final calcResult = await ContactsDiffCalculator.calculateContactsInfoDiffAsync(
+      final calcResult =
+          await ContactsDiffCalculator.calculateContactsInfoDiffAsync(
               s.contactsInfo, infos);
 
       final infosToUpdate = new List<ContactInfoItem>.from(s.contactsInfo);
@@ -207,7 +213,8 @@ class ContactsRepositoryImpl implements ContactsRepository {
     if (_syncQueue.isEmpty) return;
 
     final storages = await _db.getStorages(userServerId);
-    final storageToSync = storages.firstWhere((i) => i.sqliteId == _syncQueue[0]);
+    final storageToSync =
+        storages.firstWhere((i) => i.sqliteId == _syncQueue[0]);
 
     final uuidsToFetch = _takeChunkForAdd(storageToSync.contactsInfo);
     final uuidsToUpdate = _takeChunkForUpdate(storageToSync.contactsInfo);

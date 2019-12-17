@@ -15,8 +15,8 @@ class ContactsStorageMapper {
     }).toList();
   }
 
-  static List<ContactsStoragesTable> toDB(List<ContactsStorage> items,
-      int userId) {
+  static List<ContactsStoragesTable> toDB(
+      List<ContactsStorage> items, int userId) {
     return items.map((i) {
       return new ContactsStoragesTable(
         sqliteId: i.sqliteId,

@@ -43,7 +43,8 @@ class ContactsState extends Equatable {
       selectedStorage: selectedStorage ?? this.selectedStorage,
       contacts: contacts ?? this.contacts,
       groups: groups ?? this.groups,
-      currentlySyncingStorages: currentlySyncingStorage ?? this.currentlySyncingStorages,
+      currentlySyncingStorages:
+          currentlySyncingStorage ?? this.currentlySyncingStorages,
       error: error,
     );
   }

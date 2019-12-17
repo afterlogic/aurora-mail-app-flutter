@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
-import 'package:aurora_mail/generated/i18n.dart';
 import 'package:aurora_mail/models/message_info.dart';
+import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/widgets.dart' as widgets;
 import 'package:moor_flutter/moor_flutter.dart';
 
@@ -120,14 +120,15 @@ class Mail extends Table {
 
   TextColumn get customInJson => text()();
 
-  static List getToForDisplay(widgets.BuildContext context, String toInJson, String currentUserEmail) {
+  static List getToForDisplay(
+      widgets.BuildContext context, String toInJson, String currentUserEmail) {
     final toDecoded = json.decode(toInJson);
     if (toDecoded == null) return [];
     final List collection = toDecoded["@Collection"];
     if (collection == null || collection.isEmpty) return [];
     return collection.map((to) {
       if (to["Email"] == currentUserEmail) {
-        return S.of(context).messages_to_me;
+        return i18n(context, "messages_to_me");
       } else {
         return to["DisplayName"].isNotEmpty ? to["DisplayName"] : to["Email"];
       }

@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
-import 'package:aurora_mail/generated/i18n.dart';
 import 'package:aurora_mail/modules/mail/blocs/compose_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/models/compose_attachment.dart';
@@ -11,6 +10,7 @@ import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/temp_attachment_upload.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/compose_route.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
+import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/mail_utils.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:flutter/material.dart';
@@ -180,12 +180,12 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
     }
 
     if (_toEmails.isEmpty)
-      return _showError(S.of(context).error_compose_no_receivers);
+      return _showError(i18n(context, "error_compose_no_receivers"));
     if (_attachments.where((a) => a is TempAttachmentUpload).isNotEmpty) {
       return showSnack(
           context: context,
           scaffoldState: _scaffoldKey.currentState,
-          msg: S.of(context).error_compose_wait_attachments,
+          msg: i18n(context, "error_compose_wait_attachments"),
           isError: false);
     }
 
@@ -226,7 +226,7 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
                 children: <Widget>[
                   CircularProgressIndicator(),
                   SizedBox(width: 16.0),
-                  Text(S.of(context).messages_sending),
+                  Text(i18n(context, "messages_sending")),
                 ],
               ),
             ));
@@ -246,7 +246,7 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
     showSnack(
       context: context,
       scaffoldState: _scaffoldKey.currentState,
-      msg: S.of(context).messages_saved_in_drafts,
+      msg: i18n(context, "messages_saved_in_drafts"),
       isError: false,
     );
   }
@@ -261,7 +261,7 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      appBar:  ComposeAppBar(_onAppBarActionSelected),
+      appBar: ComposeAppBar(_onAppBarActionSelected),
       body: BlocProvider<ComposeBloc>.value(
         value: _bloc,
         child: BlocListener<ComposeBloc, ComposeState>(
@@ -282,13 +282,13 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
             padding: EdgeInsets.symmetric(horizontal: 16.0),
             children: <Widget>[
               ComposeSection(
-                label: S.of(context).messages_to,
+                label: i18n(context, "messages_to"),
                 textCtrl: _toTextCtrl,
                 emails: _toEmails,
               ),
               Divider(height: 0.0),
               ComposeSection(
-                label: S.of(context).messages_cc,
+                label: i18n(context, "messages_cc"),
                 textCtrl: _ccTextCtrl,
                 emails: _ccEmails,
                 onCCSelected: () => setState(() => _showBCC = true),
@@ -296,7 +296,7 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
               Divider(height: 0.0),
               if (_showBCC)
                 ComposeSection(
-                  label: S.of(context).messages_bcc,
+                  label: i18n(context, "messages_bcc"),
                   textCtrl: _bccTextCtrl,
                   emails: _bccEmails,
                 ),

@@ -39,8 +39,10 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
     if (event is SelectStorage) yield* _selectStorage(event);
     if (event is AddStorages) yield state.copyWith(storages: event.storages);
     if (event is AddContacts) yield state.copyWith(contacts: event.contacts);
-    if (event is SetSelectedStorage) yield state.copyWith(selectedStorage: event.storageSqliteId);
-    if (event is SetCurrentlySyncingStorage) yield state.copyWith(currentlySyncingStorage: event.storageSqliteIds);
+    if (event is SetSelectedStorage)
+      yield state.copyWith(selectedStorage: event.storageSqliteId);
+    if (event is SetCurrentlySyncingStorage)
+      yield state.copyWith(currentlySyncingStorage: event.storageSqliteIds);
     if (event is AddError) yield state.copyWith(error: event.error);
   }
 
