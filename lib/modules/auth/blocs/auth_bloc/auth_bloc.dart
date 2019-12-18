@@ -5,7 +5,6 @@ import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_methods.dart';
 import 'package:aurora_mail/utils/api_utils.dart';
 import 'package:bloc/bloc.dart';
-import 'package:webmail_api_client/webmail_api_client.dart';
 
 import './bloc.dart';
 

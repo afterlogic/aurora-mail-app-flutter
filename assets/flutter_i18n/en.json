@@ -100,6 +100,7 @@
   "contacts_edit": "Edit contact",
   "contacts_edit_cancel": "Cancel editing contact",
   "contacts_edit_save": "Save changes",
+  "contacts_group_add": "Add group",
   "contacts_group_edit": "Edit group",
   "contacts_group_edit_is_organization": "This group is a Company",
   "contacts_group_edit_cancel": "Cancel editing group",

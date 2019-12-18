@@ -91,7 +91,7 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
   }
 
   Stream<ContactsState> _addGroup(AddGroup event) async* {
-    _repo.deleteGroup(event.group)
+    _repo.addGroup(event.group)
         .catchError((err) => add(AddError(formatError(err, null))));
   }
 
@@ -101,7 +101,7 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
   }
 
   Stream<ContactsState> _updateGroup(UpdateGroup event) async* {
-    _repo.deleteGroup(event.group)
+    _repo.editGroup(event.group)
         .catchError((err) => add(AddError(formatError(err, null))));
   }
 }

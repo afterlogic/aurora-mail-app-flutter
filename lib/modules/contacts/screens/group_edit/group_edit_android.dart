@@ -82,7 +82,7 @@ class _GroupEditAndroidState extends State<GroupEditAndroid> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: GroupEditAppBar(_onAppBarActionSelected),
+      appBar: GroupEditAppBar(_onAppBarActionSelected, widget.group != null),
       body: ListView(
         children: <Widget>[
           _buildInput("contacts_view_section_group_name", _nameCtrl),

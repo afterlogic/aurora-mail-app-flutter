@@ -6911,11 +6911,9 @@ class ContactsGroupsTable extends DataClass
     implements Insertable<ContactsGroupsTable> {
   final String uuid;
   final int idUser;
-  final int entityId;
   final String city;
   final String company;
   final String country;
-  final String davContactsUID;
   final String email;
   final String fax;
   final bool isOrganization;
@@ -6929,11 +6927,9 @@ class ContactsGroupsTable extends DataClass
   ContactsGroupsTable(
       {@required this.uuid,
       @required this.idUser,
-      @required this.entityId,
       @required this.city,
       @required this.company,
       @required this.country,
-      @required this.davContactsUID,
       @required this.email,
       @required this.fax,
       @required this.isOrganization,
@@ -6955,15 +6951,11 @@ class ContactsGroupsTable extends DataClass
       uuid: stringType.mapFromDatabaseResponse(data['${effectivePrefix}uuid']),
       idUser:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}id_user']),
-      entityId:
-          intType.mapFromDatabaseResponse(data['${effectivePrefix}entity_id']),
       city: stringType.mapFromDatabaseResponse(data['${effectivePrefix}city']),
       company:
           stringType.mapFromDatabaseResponse(data['${effectivePrefix}company']),
       country:
           stringType.mapFromDatabaseResponse(data['${effectivePrefix}country']),
-      davContactsUID: stringType.mapFromDatabaseResponse(
-          data['${effectivePrefix}dav_contacts_u_i_d']),
       email:
           stringType.mapFromDatabaseResponse(data['${effectivePrefix}email']),
       fax: stringType.mapFromDatabaseResponse(data['${effectivePrefix}fax']),
@@ -6987,11 +6979,9 @@ class ContactsGroupsTable extends DataClass
     return ContactsGroupsTable(
       uuid: serializer.fromJson<String>(json['uuid']),
       idUser: serializer.fromJson<int>(json['idUser']),
-      entityId: serializer.fromJson<int>(json['entityId']),
       city: serializer.fromJson<String>(json['city']),
       company: serializer.fromJson<String>(json['company']),
       country: serializer.fromJson<String>(json['country']),
-      davContactsUID: serializer.fromJson<String>(json['davContactsUID']),
       email: serializer.fromJson<String>(json['email']),
       fax: serializer.fromJson<String>(json['fax']),
       isOrganization: serializer.fromJson<bool>(json['isOrganization']),
@@ -7010,11 +7000,9 @@ class ContactsGroupsTable extends DataClass
     return {
       'uuid': serializer.toJson<String>(uuid),
       'idUser': serializer.toJson<int>(idUser),
-      'entityId': serializer.toJson<int>(entityId),
       'city': serializer.toJson<String>(city),
       'company': serializer.toJson<String>(company),
       'country': serializer.toJson<String>(country),
-      'davContactsUID': serializer.toJson<String>(davContactsUID),
       'email': serializer.toJson<String>(email),
       'fax': serializer.toJson<String>(fax),
       'isOrganization': serializer.toJson<bool>(isOrganization),
@@ -7034,9 +7022,6 @@ class ContactsGroupsTable extends DataClass
       uuid: uuid == null && nullToAbsent ? const Value.absent() : Value(uuid),
       idUser:
           idUser == null && nullToAbsent ? const Value.absent() : Value(idUser),
-      entityId: entityId == null && nullToAbsent
-          ? const Value.absent()
-          : Value(entityId),
       city: city == null && nullToAbsent ? const Value.absent() : Value(city),
       company: company == null && nullToAbsent
           ? const Value.absent()
@@ -7044,9 +7029,6 @@ class ContactsGroupsTable extends DataClass
       country: country == null && nullToAbsent
           ? const Value.absent()
           : Value(country),
-      davContactsUID: davContactsUID == null && nullToAbsent
-          ? const Value.absent()
-          : Value(davContactsUID),
       email:
           email == null && nullToAbsent ? const Value.absent() : Value(email),
       fax: fax == null && nullToAbsent ? const Value.absent() : Value(fax),
@@ -7071,11 +7053,9 @@ class ContactsGroupsTable extends DataClass
   ContactsGroupsTable copyWith(
           {String uuid,
           int idUser,
-          int entityId,
           String city,
           String company,
           String country,
-          String davContactsUID,
           String email,
           String fax,
           bool isOrganization,
@@ -7089,11 +7069,9 @@ class ContactsGroupsTable extends DataClass
       ContactsGroupsTable(
         uuid: uuid ?? this.uuid,
         idUser: idUser ?? this.idUser,
-        entityId: entityId ?? this.entityId,
         city: city ?? this.city,
         company: company ?? this.company,
         country: country ?? this.country,
-        davContactsUID: davContactsUID ?? this.davContactsUID,
         email: email ?? this.email,
         fax: fax ?? this.fax,
         isOrganization: isOrganization ?? this.isOrganization,
@@ -7110,11 +7088,9 @@ class ContactsGroupsTable extends DataClass
     return (StringBuffer('ContactsGroupsTable(')
           ..write('uuid: $uuid, ')
           ..write('idUser: $idUser, ')
-          ..write('entityId: $entityId, ')
           ..write('city: $city, ')
           ..write('company: $company, ')
           ..write('country: $country, ')
-          ..write('davContactsUID: $davContactsUID, ')
           ..write('email: $email, ')
           ..write('fax: $fax, ')
           ..write('isOrganization: $isOrganization, ')
@@ -7135,45 +7111,38 @@ class ContactsGroupsTable extends DataClass
       $mrjc(
           idUser.hashCode,
           $mrjc(
-              entityId.hashCode,
+              city.hashCode,
               $mrjc(
-                  city.hashCode,
+                  company.hashCode,
                   $mrjc(
-                      company.hashCode,
+                      country.hashCode,
                       $mrjc(
-                          country.hashCode,
+                          email.hashCode,
                           $mrjc(
-                              davContactsUID.hashCode,
+                              fax.hashCode,
                               $mrjc(
-                                  email.hashCode,
+                                  isOrganization.hashCode,
                                   $mrjc(
-                                      fax.hashCode,
+                                      name.hashCode,
                                       $mrjc(
-                                          isOrganization.hashCode,
+                                          parentUUID.hashCode,
                                           $mrjc(
-                                              name.hashCode,
+                                              phone.hashCode,
                                               $mrjc(
-                                                  parentUUID.hashCode,
+                                                  state.hashCode,
                                                   $mrjc(
-                                                      phone.hashCode,
-                                                      $mrjc(
-                                                          state.hashCode,
-                                                          $mrjc(
-                                                              street.hashCode,
-                                                              $mrjc(
-                                                                  web.hashCode,
-                                                                  zip.hashCode)))))))))))))))));
+                                                      street.hashCode,
+                                                      $mrjc(web.hashCode,
+                                                          zip.hashCode)))))))))))))));
   @override
   bool operator ==(other) =>
       identical(this, other) ||
       (other is ContactsGroupsTable &&
           other.uuid == this.uuid &&
           other.idUser == this.idUser &&
-          other.entityId == this.entityId &&
           other.city == this.city &&
           other.company == this.company &&
           other.country == this.country &&
-          other.davContactsUID == this.davContactsUID &&
           other.email == this.email &&
           other.fax == this.fax &&
           other.isOrganization == this.isOrganization &&
@@ -7189,11 +7158,9 @@ class ContactsGroupsTable extends DataClass
 class ContactsGroupsCompanion extends UpdateCompanion<ContactsGroupsTable> {
   final Value<String> uuid;
   final Value<int> idUser;
-  final Value<int> entityId;
   final Value<String> city;
   final Value<String> company;
   final Value<String> country;
-  final Value<String> davContactsUID;
   final Value<String> email;
   final Value<String> fax;
   final Value<bool> isOrganization;
@@ -7207,11 +7174,9 @@ class ContactsGroupsCompanion extends UpdateCompanion<ContactsGroupsTable> {
   const ContactsGroupsCompanion({
     this.uuid = const Value.absent(),
     this.idUser = const Value.absent(),
-    this.entityId = const Value.absent(),
     this.city = const Value.absent(),
     this.company = const Value.absent(),
     this.country = const Value.absent(),
-    this.davContactsUID = const Value.absent(),
     this.email = const Value.absent(),
     this.fax = const Value.absent(),
     this.isOrganization = const Value.absent(),
@@ -7226,11 +7191,9 @@ class ContactsGroupsCompanion extends UpdateCompanion<ContactsGroupsTable> {
   ContactsGroupsCompanion.insert({
     @required String uuid,
     @required int idUser,
-    @required int entityId,
     @required String city,
     @required String company,
     @required String country,
-    @required String davContactsUID,
     @required String email,
     @required String fax,
     @required bool isOrganization,
@@ -7243,11 +7206,9 @@ class ContactsGroupsCompanion extends UpdateCompanion<ContactsGroupsTable> {
     @required String zip,
   })  : uuid = Value(uuid),
         idUser = Value(idUser),
-        entityId = Value(entityId),
         city = Value(city),
         company = Value(company),
         country = Value(country),
-        davContactsUID = Value(davContactsUID),
         email = Value(email),
         fax = Value(fax),
         isOrganization = Value(isOrganization),
@@ -7261,11 +7222,9 @@ class ContactsGroupsCompanion extends UpdateCompanion<ContactsGroupsTable> {
   ContactsGroupsCompanion copyWith(
       {Value<String> uuid,
       Value<int> idUser,
-      Value<int> entityId,
       Value<String> city,
       Value<String> company,
       Value<String> country,
-      Value<String> davContactsUID,
       Value<String> email,
       Value<String> fax,
       Value<bool> isOrganization,
@@ -7279,11 +7238,9 @@ class ContactsGroupsCompanion extends UpdateCompanion<ContactsGroupsTable> {
     return ContactsGroupsCompanion(
       uuid: uuid ?? this.uuid,
       idUser: idUser ?? this.idUser,
-      entityId: entityId ?? this.entityId,
       city: city ?? this.city,
       company: company ?? this.company,
       country: country ?? this.country,
-      davContactsUID: davContactsUID ?? this.davContactsUID,
       email: email ?? this.email,
       fax: fax ?? this.fax,
       isOrganization: isOrganization ?? this.isOrganization,
@@ -7324,18 +7281,6 @@ class $ContactsGroupsTable extends ContactsGroups
     );
   }
 
-  final VerificationMeta _entityIdMeta = const VerificationMeta('entityId');
-  GeneratedIntColumn _entityId;
-  @override
-  GeneratedIntColumn get entityId => _entityId ??= _constructEntityId();
-  GeneratedIntColumn _constructEntityId() {
-    return GeneratedIntColumn(
-      'entity_id',
-      $tableName,
-      false,
-    );
-  }
-
   final VerificationMeta _cityMeta = const VerificationMeta('city');
   GeneratedTextColumn _city;
   @override
@@ -7367,20 +7312,6 @@ class $ContactsGroupsTable extends ContactsGroups
   GeneratedTextColumn _constructCountry() {
     return GeneratedTextColumn(
       'country',
-      $tableName,
-      false,
-    );
-  }
-
-  final VerificationMeta _davContactsUIDMeta =
-      const VerificationMeta('davContactsUID');
-  GeneratedTextColumn _davContactsUID;
-  @override
-  GeneratedTextColumn get davContactsUID =>
-      _davContactsUID ??= _constructDavContactsUID();
-  GeneratedTextColumn _constructDavContactsUID() {
-    return GeneratedTextColumn(
-      'dav_contacts_u_i_d',
       $tableName,
       false,
     );
@@ -7512,11 +7443,9 @@ class $ContactsGroupsTable extends ContactsGroups
   List<GeneratedColumn> get $columns => [
         uuid,
         idUser,
-        entityId,
         city,
         company,
         country,
-        davContactsUID,
         email,
         fax,
         isOrganization,
@@ -7550,12 +7479,6 @@ class $ContactsGroupsTable extends ContactsGroups
     } else if (idUser.isRequired && isInserting) {
       context.missing(_idUserMeta);
     }
-    if (d.entityId.present) {
-      context.handle(_entityIdMeta,
-          entityId.isAcceptableValue(d.entityId.value, _entityIdMeta));
-    } else if (entityId.isRequired && isInserting) {
-      context.missing(_entityIdMeta);
-    }
     if (d.city.present) {
       context.handle(
           _cityMeta, city.isAcceptableValue(d.city.value, _cityMeta));
@@ -7573,14 +7496,6 @@ class $ContactsGroupsTable extends ContactsGroups
           country.isAcceptableValue(d.country.value, _countryMeta));
     } else if (country.isRequired && isInserting) {
       context.missing(_countryMeta);
-    }
-    if (d.davContactsUID.present) {
-      context.handle(
-          _davContactsUIDMeta,
-          davContactsUID.isAcceptableValue(
-              d.davContactsUID.value, _davContactsUIDMeta));
-    } else if (davContactsUID.isRequired && isInserting) {
-      context.missing(_davContactsUIDMeta);
     }
     if (d.email.present) {
       context.handle(
@@ -7661,9 +7576,6 @@ class $ContactsGroupsTable extends ContactsGroups
     if (d.idUser.present) {
       map['id_user'] = Variable<int, IntType>(d.idUser.value);
     }
-    if (d.entityId.present) {
-      map['entity_id'] = Variable<int, IntType>(d.entityId.value);
-    }
     if (d.city.present) {
       map['city'] = Variable<String, StringType>(d.city.value);
     }
@@ -7672,10 +7584,6 @@ class $ContactsGroupsTable extends ContactsGroups
     }
     if (d.country.present) {
       map['country'] = Variable<String, StringType>(d.country.value);
-    }
-    if (d.davContactsUID.present) {
-      map['dav_contacts_u_i_d'] =
-          Variable<String, StringType>(d.davContactsUID.value);
     }
     if (d.email.present) {
       map['email'] = Variable<String, StringType>(d.email.value);

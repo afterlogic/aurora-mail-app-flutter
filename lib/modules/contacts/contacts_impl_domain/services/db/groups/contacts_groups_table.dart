@@ -6,15 +6,11 @@ class ContactsGroups extends Table {
 
   IntColumn get idUser => integer()();
 
-  IntColumn get entityId => integer()();
-
   TextColumn get city => text()();
 
   TextColumn get company => text()();
 
   TextColumn get country => text()();
-
-  TextColumn get davContactsUID => text()();
 
   TextColumn get email => text()();
 

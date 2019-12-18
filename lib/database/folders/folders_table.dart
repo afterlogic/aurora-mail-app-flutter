@@ -177,7 +177,7 @@ class Folders extends Table {
         unchangedMessages.length == newInfo.length) {
       print("Diff calcultaion finished: no changes");
       return new MessagesInfoDiffCalcResult(
-          updatedInfo: oldInfo, removedUids: [], infosToUpdateFlags: []);
+          updatedInfo: oldInfo, removedUids: [], infosToUpdateFlags: [], addedMessagesLength: newInfo.length);
     }
 
     final addedMessages = newInfo.where((i) =>

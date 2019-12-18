@@ -78,7 +78,8 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
     );
 
     final result = await contactsModule.post(body);
-    return ContactsGroupMapper.fromNetwork(result);
+    if (result is! String) throw "addGroup must be a string";
+    return group.copyWith(uuid: result);
   }
 
   @override

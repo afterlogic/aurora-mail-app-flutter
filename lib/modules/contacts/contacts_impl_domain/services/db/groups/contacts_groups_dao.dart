@@ -11,13 +11,12 @@ class ContactsGroupsDao extends DatabaseAccessor<AppDatabase>
   ContactsGroupsDao(AppDatabase db) : super(db);
 
   Future<List<ContactsGroupsTable>> getGroups(int userServerId) {
-    return (select(contactsGroups)..where((c) => c.idUser.equals(userServerId)))
-        .get();
+    return (select(contactsGroups)..where((c) => c.idUser.equals(userServerId))).get();
   }
 
   Future<void> addGroups(List<ContactsGroupsTable> newGroups) {
     try {
-      return into(contactsGroups).insertAll(newGroups);
+      return batch((b) => b.insertAll(contactsGroups, newGroups));
     } catch (err) {
       print("insert contactsGroups error: $err");
       return null;
@@ -34,7 +33,7 @@ class ContactsGroupsDao extends DatabaseAccessor<AppDatabase>
     });
   }
 
-  Future<void> deleteGroups(List<String> uuids) {
-    return (delete(contactsGroups)..where((c) => isIn(c.uuid, uuids))).go();
+  Future<void> deleteGroups(List<String> uuids) async {
+    return (delete(contactsGroups)..where((c) => c.uuid.isIn(uuids))).go();
   }
 }

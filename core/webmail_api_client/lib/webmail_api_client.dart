@@ -23,7 +23,7 @@ class WebMailApi {
     this.token,
   }) : assert(moduleName != null && apiUrl != null);
 
-  Future<T> post<T>(WebMailApiBody body, {bool useToken}) async {
+  Future post(WebMailApiBody body, {bool useToken}) async {
     Map<String, String> headers;
 
     if (useToken == false || token == null) {
@@ -37,8 +37,9 @@ class WebMailApi {
     final res = json.decode(rawResponse.body);
 
     if (res["Result"] != null && res["Result"] != false) {
-      return res["Result"] as T;
+      return res["Result"];
     } else {
+      print("WebMailApiError: ${res}");
       throw WebMailApiError(res);
     }
   }
