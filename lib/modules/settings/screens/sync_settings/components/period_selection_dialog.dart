@@ -47,26 +47,33 @@ class PeriodSelectionDialog extends StatelessWidget {
       );
     } else {
       return AlertDialog(
-          contentPadding: EdgeInsets.zero,
-          titlePadding: EdgeInsets.all(24.0),
-          title: Text(i18n(context, "settings_sync_period")),
-          content: SizedBox(
-            height: 310.0,
-            width: 400.0,
-            child: ListView(
-              children: Period.values.map((period) {
-                return RadioListTile(
-                  title: Text(SyncPeriod.periodToTitle(context, period)),
-                  value: period,
-                  groupValue: selectedItem,
-                  onChanged: (val) {
-                    onItemSelected(period);
-                    Navigator.pop(context);
-                  },
-                );
-              }).toList(),
-            ),
-          ));
+        contentPadding: EdgeInsets.zero,
+        titlePadding: EdgeInsets.all(24.0),
+        title: Text(i18n(context, "settings_sync_period")),
+        content: SizedBox(
+          height: 56.0 * Period.values.length,
+          width: 400.0,
+          child: ListView(
+            children: Period.values.map((period) {
+              return RadioListTile(
+                title: Text(SyncPeriod.periodToTitle(context, period)),
+                value: period,
+                groupValue: selectedItem,
+                onChanged: (val) {
+                  onItemSelected(period);
+                  Navigator.pop(context);
+                },
+              );
+            }).toList(),
+          ),
+        ),
+        actions: <Widget>[
+          FlatButton(
+            child: Text(i18n(context, "btn_cancel").toUpperCase()),
+            onPressed: Navigator.of(context).pop,
+          ),
+        ],
+      );
     }
   }
 }

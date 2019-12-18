@@ -105,17 +105,12 @@ class _AppState extends State<App> with WidgetsBindingObserver {
                           useCountryCode: false,
                           fallbackFile: "en",
                           path: "assets/flutter_i18n",
-                          forcedLocale: settingsState.language != null
-                              ? settingsState.language.toLocale()
-                              : null,
+                          forcedLocale: settingsState.language?.toLocale(),
                         ),
                       ],
                       supportedLocales: supportedLocales,
-//                      localeResolutionCallback: S.delegate.resolution(
-//                          fallback: new Locale("en", ""), withCountry: false),
-                      locale: settingsState.language != null
-                          ? settingsState.language.toLocale()
-                          : null,
+                      localeResolutionCallback: (locale, locales) => Locale("en", ""),
+                      locale: settingsState.language?.toLocale(),
                       initialRoute: authState.needsLogin
                           ? LoginRoute.name
                           : MessagesListRoute.name,

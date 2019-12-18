@@ -60,44 +60,48 @@ class ThemeSelectionDialog extends StatelessWidget {
       );
     } else {
       return AlertDialog(
-          contentPadding: EdgeInsets.zero,
-          titlePadding: EdgeInsets.all(24.0),
-          title: Text(i18n(context, "settings_language")),
-          content: SizedBox(
-            height: 300.0,
-            width: 400.0,
-            child: ListView(
-              children: [
-                RadioListTile<bool>(
-                  title: Text(i18n(context, "settings_dark_theme_system")),
-                  value: null,
-                  groupValue: theme,
-                  onChanged: (val) {
-                    onItemSelected(null);
-                    Navigator.pop(context);
-                  },
-                ),
-                RadioListTile<bool>(
-                  title: Text(i18n(context, "settings_dark_theme_dark")),
-                  value: true,
-                  groupValue: theme,
-                  onChanged: (val) {
-                    onItemSelected(true);
-                    Navigator.pop(context);
-                  },
-                ),
-                RadioListTile<bool>(
-                  title: Text(i18n(context, "settings_dark_theme_light")),
-                  value: false,
-                  groupValue: theme,
-                  onChanged: (val) {
-                    onItemSelected(false);
-                    Navigator.pop(context);
-                  },
-                ),
-              ],
+        contentPadding: EdgeInsets.zero,
+        titlePadding: EdgeInsets.all(24.0),
+        title: Text(i18n(context, "settings_dark_theme")),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            RadioListTile<bool>(
+              title: Text(i18n(context, "settings_dark_theme_system")),
+              value: null,
+              groupValue: theme,
+              onChanged: (val) {
+                onItemSelected(null);
+                Navigator.pop(context);
+              },
             ),
-          ));
+            RadioListTile<bool>(
+              title: Text(i18n(context, "settings_dark_theme_dark")),
+              value: true,
+              groupValue: theme,
+              onChanged: (val) {
+                onItemSelected(true);
+                Navigator.pop(context);
+              },
+            ),
+            RadioListTile<bool>(
+              title: Text(i18n(context, "settings_dark_theme_light")),
+              value: false,
+              groupValue: theme,
+              onChanged: (val) {
+                onItemSelected(false);
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
+        actions: <Widget>[
+          FlatButton(
+            child: Text(i18n(context, "btn_cancel").toUpperCase()),
+            onPressed: Navigator.of(context).pop,
+          ),
+        ],
+      );
     }
   }
 }
