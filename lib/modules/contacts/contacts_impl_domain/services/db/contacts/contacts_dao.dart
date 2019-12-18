@@ -31,10 +31,18 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
         .get();
   }
 
-  Stream<List<ContactsTable>> watchContacts(int userServerId, String storage) {
+  Stream<List<ContactsTable>> watchContactsFromStorage(int userServerId, String storage) {
     return (select(contacts)
           ..where((c) => c.idUser.equals(userServerId))
           ..where((c) => c.storage.equals(storage))
+          ..orderBy([(m) => OrderingTerm(expression: m.fullName)]))
+        .watch();
+  }
+
+  Stream<List<ContactsTable>> watchContactsFromGroup(int userServerId, String groupUuid) {
+    return (select(contacts)
+          ..where((c) => c.idUser.equals(userServerId))
+          ..where((c) => c.groupUUIDs.like("%$groupUuid%"))
           ..orderBy([(m) => OrderingTerm(expression: m.fullName)]))
         .watch();
   }

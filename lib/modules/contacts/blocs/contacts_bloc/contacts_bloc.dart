@@ -36,37 +36,52 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
   @override
   Stream<ContactsState> mapEventToState(ContactsEvent event) async* {
     if (event is GetContacts) yield* _getContacts(event);
-    if (event is SelectStorage) yield* _selectStorage(event);
+    if (event is SelectStorageGroup) yield* _selectStorageGroup(event);
     if (event is AddStorages) yield state.copyWith(storages: event.storages);
+    if (event is AddGroups) yield state.copyWith(groups: event.groups);
     if (event is AddContacts) yield state.copyWith(contacts: event.contacts);
-    if (event is SetSelectedStorage)
-      yield state.copyWith(selectedStorage: event.storageSqliteId);
-    if (event is SetCurrentlySyncingStorage)
-      yield state.copyWith(currentlySyncingStorage: event.storageSqliteIds);
+    if (event is SetSelectedStorage) yield state.copyWith(selectedStorage: event.storageSqliteId, selectedGroup: "");
+    if (event is SetSelectedGroup) yield state.copyWith(selectedStorage: -1, selectedGroup: event.groupUuid);
+    if (event is SetCurrentlySyncingStorages) yield state.copyWith(currentlySyncingStorage: event.storageSqliteIds);
     if (event is AddError) yield state.copyWith(error: event.error);
   }
 
   Stream<ContactsState> _getContacts(GetContacts event) async* {
     _repo.watchContactsStorages().listen((storages) {
       if (state.storages == null) {
-        add(SelectStorage(storages[0]));
+        add(SelectStorageGroup(storage: storages[0]));
       }
       add(AddStorages(storages));
     }, onError: (err) {
       add(AddError(formatError(err, null)));
     });
 
-    _repo.currentlySyncingStorage.listen((List<int> ids) {
-      add(SetCurrentlySyncingStorage(ids));
-    });
-  }
-
-  Stream<ContactsState> _selectStorage(SelectStorage event) async* {
-    _repo.watchContacts(event.storage).listen((contacts) {
-      add(AddContacts(contacts));
-      add(SetSelectedStorage(event.storage.sqliteId));
+    _repo.watchContactsGroups().listen((groups) {
+      add(AddGroups(groups));
     }, onError: (err) {
       add(AddError(formatError(err, null)));
     });
+
+    _repo.currentlySyncingStorage.listen((List<int> ids) {
+      add(SetCurrentlySyncingStorages(ids));
+    });
+  }
+
+  Stream<ContactsState> _selectStorageGroup(SelectStorageGroup event) async* {
+    if (event.storage != null) {
+      _repo.watchContactsFromStorage(event.storage).listen((contacts) {
+        add(AddContacts(contacts));
+        add(SetSelectedStorage(event.storage.sqliteId));
+      }, onError: (err) {
+        add(AddError(formatError(err, null)));
+      });
+    } else {
+      _repo.watchContactsFromGroup(event.group).listen((contacts) {
+        add(AddContacts(contacts));
+        add(SetSelectedGroup(event.group.uuid));
+      }, onError: (err) {
+        add(AddError(formatError(err, null)));
+      });
+    }
   }
 }

@@ -34,16 +34,6 @@ class _CommonSettingsAndroidState extends State<CommonSettingsAndroid> {
           if (state is SettingsLoaded) {
             return ListView(
               children: <Widget>[
-//                SwitchListTile.adaptive(
-//                  value: state.darkThemeEnabled,
-//                  activeColor: Theme.of(context).accentColor,
-//                  onChanged: (bool val) => bloc.add(SetDarkTheme(val)),
-//                  title: ListTile(
-//                    contentPadding: EdgeInsets.zero,
-//                    leading: Icon(MdiIcons.themeLightDark),
-//                    title: Text(i18n(context, "settings_dark_theme")),
-//                  ),
-//                ),
                 ListTile(
                   leading: Icon(Icons.color_lens),
                   title: Text(i18n(context, "settings_dark_theme")),

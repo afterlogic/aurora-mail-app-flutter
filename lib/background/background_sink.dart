@@ -76,8 +76,7 @@ class BackgroundSync {
         continue;
       }
 
-      final user =
-          await _usersDao.getUserByLocalId(AuthBloc.currentUser.localId);
+      final user = await _usersDao.getUserByLocalId(AuthBloc.currentUser.localId);
 
       final syncPeriod = SyncPeriod.dbStringToPeriod(user.syncPeriod);
       final periodStr = SyncPeriod.periodToDate(syncPeriod);

@@ -20,13 +20,15 @@ abstract class ContactsRepository {
 
   Stream<List<int>> get currentlySyncingStorage;
 
-  Stream<List<Contact>> watchContacts(ContactsStorage storage);
+  Stream<List<Contact>> watchContactsFromStorage(ContactsStorage storage);
+
+  Stream<List<Contact>> watchContactsFromGroup(ContactsGroup group);
 
   Stream<List<ContactsStorage>> watchContactsStorages();
 
   Stream<List<ContactsGroup>> watchContactsGroups();
 
-  Future addGroup(ContactsGroup group);
+  Future<void> addGroup(ContactsGroup group);
 
   Future<bool> editGroup(ContactsGroup group);
 

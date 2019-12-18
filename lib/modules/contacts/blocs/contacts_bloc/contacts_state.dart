@@ -6,6 +6,7 @@ import 'package:equatable/equatable.dart';
 class ContactsState extends Equatable {
   final List<ContactsStorage> storages;
   final int selectedStorage;
+  final String selectedGroup;
   final List<Contact> contacts;
   final List<ContactsGroup> groups;
   final List<int> currentlySyncingStorages;
@@ -14,6 +15,7 @@ class ContactsState extends Equatable {
   ContactsState({
     this.storages,
     this.selectedStorage,
+    this.selectedGroup,
     this.contacts,
     this.groups,
     this.currentlySyncingStorages,
@@ -24,6 +26,7 @@ class ContactsState extends Equatable {
   List<Object> get props => [
         storages,
         selectedStorage,
+        selectedGroup,
         contacts,
         groups,
         currentlySyncingStorages,
@@ -33,6 +36,7 @@ class ContactsState extends Equatable {
   ContactsState copyWith({
     List<ContactsStorage> storages,
     int selectedStorage,
+    String selectedGroup,
     List<Contact> contacts,
     List<ContactsGroup> groups,
     List<int> currentlySyncingStorage,
@@ -41,10 +45,10 @@ class ContactsState extends Equatable {
     return new ContactsState(
       storages: storages ?? this.storages,
       selectedStorage: selectedStorage ?? this.selectedStorage,
+      selectedGroup: selectedGroup ?? this.selectedGroup,
       contacts: contacts ?? this.contacts,
       groups: groups ?? this.groups,
-      currentlySyncingStorages:
-          currentlySyncingStorage ?? this.currentlySyncingStorages,
+      currentlySyncingStorages: currentlySyncingStorage ?? this.currentlySyncingStorages,
       error: error,
     );
   }

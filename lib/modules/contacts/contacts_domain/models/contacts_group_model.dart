@@ -9,7 +9,6 @@ class ContactsGroup {
   final String country;
   final String davContactsUID;
   final String email;
-  final String events;
   final String fax;
   final bool isOrganization;
   final String name;
@@ -30,7 +29,6 @@ class ContactsGroup {
     this.davContactsUID,
     this.email = "",
     this.entityId,
-    this.events = "",
     this.fax = "",
     this.isOrganization,
     this.parentUUID = "",

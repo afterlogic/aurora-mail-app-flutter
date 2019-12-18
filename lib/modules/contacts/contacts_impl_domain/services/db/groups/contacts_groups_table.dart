@@ -18,8 +18,6 @@ class ContactsGroups extends Table {
 
   TextColumn get email => text()();
 
-  TextColumn get events => text()();
-
   TextColumn get fax => text()();
 
   BoolColumn get isOrganization => boolean()();

@@ -7,6 +7,7 @@ import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 import 'package:aurora_mail/modules/contacts/screens/contact_view/contact_view_route.dart';
 import 'package:aurora_mail/modules/contacts/screens/contacts_list/components/contacts_app_bar.dart';
+import 'package:aurora_mail/modules/contacts/screens/contacts_list/components/speed_dial.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
 import 'package:aurora_mail/modules/settings/screens/settings_main/settings_main_route.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
@@ -63,6 +64,17 @@ class _ContactsListAndroidState extends State<ContactsListAndroid> {
             contact, BlocProvider.of<ContactsBloc>(context)));
   }
 
+  void _onFabOptionSelected(ContactsFabOption option) {
+    switch (option) {
+      case ContactsFabOption.addContact:
+        // TODO: Handle this case.
+        break;
+      case ContactsFabOption.addGroup:
+        // TODO: Handle this case.
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,9 +84,10 @@ class _ContactsListAndroidState extends State<ContactsListAndroid> {
         listener: (context, state) {
           if (state.error != null) {
             showSnack(
-                context: context,
-                scaffoldState: Scaffold.of(context),
-                msg: state.error);
+              context: context,
+              scaffoldState: Scaffold.of(context),
+              msg: state.error,
+            );
           }
           if (state.currentlySyncingStorages != null &&
               !state.currentlySyncingStorages.contains(state.selectedStorage)) {
@@ -101,6 +114,7 @@ class _ContactsListAndroidState extends State<ContactsListAndroid> {
           }),
         ),
       ),
+      floatingActionButton: ContactsSpeedDial(_onFabOptionSelected),
     );
   }
 

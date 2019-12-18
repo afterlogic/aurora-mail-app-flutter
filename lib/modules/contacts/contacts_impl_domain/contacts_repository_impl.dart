@@ -53,12 +53,27 @@ class ContactsRepositoryImpl implements ContactsRepository {
       _currentlySyncingStorageCtrl.stream;
 
   @override
-  Stream<List<Contact>> watchContacts(ContactsStorage storage) {
-    return _db.watchContacts(userServerId, storage);
+  Stream<List<Contact>> watchContactsFromStorage(ContactsStorage storage) {
+    return _db.watchContactsFromStorage(userServerId, storage);
   }
 
   @override
-  Stream<List<ContactsGroup>> watchContactsGroups() => null;
+  Stream<List<Contact>> watchContactsFromGroup(ContactsGroup group) {
+    return _db.watchContactsFromGroup(userServerId, group);
+  }
+
+  @override
+  Stream<List<ContactsGroup>> watchContactsGroups() {
+    _db.getGroups(userServerId).then((groups) async {
+      if (groups.isNotEmpty) {
+        _groupCtrl.add(groups);
+      }
+
+      final groupsFromServer = await _network.getGroups();
+      _groupCtrl.add(groupsFromServer);
+    });
+    return _groupCtrl.stream;
+  }
 
   @override
   Stream<List<ContactsStorage>> watchContactsStorages() {
@@ -104,7 +119,7 @@ class ContactsRepositoryImpl implements ContactsRepository {
   }
 
   @override
-  Future addGroup(ContactsGroup group) async {
+  Future<void> addGroup(ContactsGroup group) async {
     final groupWithId = await _network.addGroup(group);
     await _db.addGroups([groupWithId]);
     await _updateGroup();
