@@ -54,6 +54,7 @@
   "contacts_list_app_bar_mail": "Mail",
   "contacts_empty": "No contacts",
   "contacts_groups_empty": "No groups",
+  "contacts_drawer_section_storages": "STORAGES",
   "contacts_drawer_section_groups": "GROUPS",
   "contacts_view_app_bar_attach": "Send this contact",
   "contacts_view_app_bar_send_message": "Email to this contact",

@@ -11,6 +11,13 @@ class ContactsDrawer extends StatelessWidget {
         child: BlocBuilder<ContactsBloc, ContactsState>(builder: (context, state) {
           return ListView(
             children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  i18n(context, "contacts_drawer_section_storages"),
+                  style: TextStyle(color: Theme.of(context).disabledColor),
+                ),
+              ),
               _buildStorages(context, state),
               Divider(),
               Padding(
