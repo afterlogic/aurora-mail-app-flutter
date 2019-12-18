@@ -1,8 +1,6 @@
 import 'package:aurora_mail/database/app_database.dart';
-import 'package:aurora_mail/utils/errors_enum.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:webmail_api_client/webmail_api_client.dart';
 
 abstract class AuthState extends Equatable {
   const AuthState();
@@ -40,18 +38,9 @@ class LoggedIn extends AuthState {
 class LoggedOut extends AuthState {}
 
 class AuthError extends AuthState {
-  final dynamic errorMsg;
+  final String errorMsg;
 
-  const AuthError(this.errorMsg)
-      : assert(errorMsg is String || errorMsg is WebMailError);
-
-  String getErrorMsgString(BuildContext context) {
-    if (errorMsg is WebMailError) {
-      return getErrTranslation(context, errorMsg);
-    } else {
-      return errorMsg;
-    }
-  }
+  const AuthError(this.errorMsg);
 
   @override
   List<Object> get props => [errorMsg];

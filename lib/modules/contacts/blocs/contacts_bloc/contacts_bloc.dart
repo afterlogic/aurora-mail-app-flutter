@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/contacts_groups_event.dart';
+import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/contacts_storages_event.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/contacts_repository.dart';
 import 'package:aurora_mail/utils/api_utils.dart';
 import 'package:bloc/bloc.dart';
@@ -39,6 +41,9 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
     if (event is SelectStorageGroup) yield* _selectStorageGroup(event);
     if (event is AddStorages) yield state.copyWith(storages: event.storages);
     if (event is AddGroups) yield state.copyWith(groups: event.groups);
+    if (event is AddGroup) yield* _addGroup(event);
+    if (event is UpdateGroup) yield* _updateGroup(event);
+    if (event is DeleteGroup) yield* _deleteGroup(event);
     if (event is AddContacts) yield state.copyWith(contacts: event.contacts);
     if (event is SetSelectedStorage) yield state.copyWith(selectedStorage: event.storageSqliteId, selectedGroup: "");
     if (event is SetSelectedGroup) yield state.copyWith(selectedStorage: -1, selectedGroup: event.groupUuid);
@@ -83,5 +88,20 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
         add(AddError(formatError(err, null)));
       });
     }
+  }
+
+  Stream<ContactsState> _addGroup(AddGroup event) async* {
+    _repo.deleteGroup(event.group)
+        .catchError((err) => add(AddError(formatError(err, null))));
+  }
+
+  Stream<ContactsState> _deleteGroup(DeleteGroup event) async* {
+    _repo.deleteGroup(event.group)
+        .catchError((err) => add(AddError(formatError(err, null))));
+  }
+
+  Stream<ContactsState> _updateGroup(UpdateGroup event) async* {
+    _repo.deleteGroup(event.group)
+        .catchError((err) => add(AddError(formatError(err, null))));
   }
 }

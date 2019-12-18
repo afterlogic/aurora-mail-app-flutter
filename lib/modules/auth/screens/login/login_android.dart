@@ -109,11 +109,10 @@ class _LoginAndroidState extends State<LoginAndroid> {
               Navigator.pushReplacementNamed(context, MessagesListRoute.name);
             }
             if (state is AuthError) {
-              final error = state.getErrorMsgString(context);
               showSnack(
                 context: context,
                 scaffoldState: Scaffold.of(context),
-                msg: error,
+                msg: state.errorMsg,
               );
             }
           },

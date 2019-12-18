@@ -5,9 +5,12 @@ import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/auth/screens/login/login_route.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
+import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_group_model.dart';
 import 'package:aurora_mail/modules/contacts/screens/contact_view/contact_view_route.dart';
 import 'package:aurora_mail/modules/contacts/screens/contacts_list/components/contacts_app_bar.dart';
 import 'package:aurora_mail/modules/contacts/screens/contacts_list/components/speed_dial.dart';
+import 'package:aurora_mail/modules/contacts/screens/group_edit/group_edit_route.dart';
+import 'package:aurora_mail/modules/contacts/screens/group_view/group_view_route.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
 import 'package:aurora_mail/modules/settings/screens/settings_main/settings_main_route.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
@@ -33,8 +36,7 @@ class _ContactsListAndroidState extends State<ContactsListAndroid> {
   @override
   void initState() {
     super.initState();
-    _contactsSync =
-        main.alarmStream.listen((_) => _refreshKey.currentState.show());
+    _contactsSync = main.alarmStream.listen((_) => _refreshKey.currentState.show());
   }
 
   @override
@@ -43,8 +45,13 @@ class _ContactsListAndroidState extends State<ContactsListAndroid> {
     _contactsSync.cancel();
   }
 
-  void _onAppBarActionSelected(ContactsListAppBarAction item) {
+  void _onAppBarActionSelected(ContactsListAppBarAction item, {ContactsGroup group}) {
     switch (item) {
+      case ContactsListAppBarAction.viewGroup:
+        assert(group != null);
+        final bloc = BlocProvider.of<ContactsBloc>(context);
+        Navigator.pushNamed(context, GroupViewRoute.name, arguments: GroupViewScreenArgs(group, bloc));
+        break;
       case ContactsListAppBarAction.logout:
         BlocProvider.of<AuthBloc>(context).add(LogOut());
         Navigator.pushReplacementNamed(context, LoginRoute.name);
@@ -70,7 +77,11 @@ class _ContactsListAndroidState extends State<ContactsListAndroid> {
         // TODO: Handle this case.
         break;
       case ContactsFabOption.addGroup:
-        // TODO: Handle this case.
+        Navigator.pushNamed(
+          context,
+          GroupEditRoute.name,
+          arguments: GroupEditScreenArgs(bloc: BlocProvider.of<ContactsBloc>(context)),
+        );
         break;
     }
   }
@@ -102,10 +113,7 @@ class _ContactsListAndroidState extends State<ContactsListAndroid> {
             return _refreshCompleter.future;
           },
           child: BlocBuilder<ContactsBloc, ContactsState>(builder: (_, state) {
-            if (state.contacts == null ||
-                state.contacts.isEmpty &&
-                    state.currentlySyncingStorages
-                        .contains(state.selectedStorage))
+            if (state.contacts == null || state.contacts.isEmpty && state.currentlySyncingStorages.contains(state.selectedStorage))
               return _buildLoading(state);
             else if (state.contacts.isEmpty)
               return _buildContactsEmpty(state);

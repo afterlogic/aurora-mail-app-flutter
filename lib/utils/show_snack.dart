@@ -1,6 +1,5 @@
-import 'package:aurora_mail/utils/errors_enum.dart';
+import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/material.dart';
-import 'package:webmail_api_client/webmail_api_client.dart';
 
 void showSnack({
   @required BuildContext context,
@@ -11,8 +10,7 @@ void showSnack({
   isError = true,
 }) {
   if (Theme == null || scaffoldState == null) return;
-  final errorMessage =
-      msg is WebMailError ? getErrTranslation(context, msg) : msg.toString();
+  final errorMessage = i18n(context, msg.toString());
 
   final theme = Theme.of(context);
   final snack = theme.brightness == Brightness.light

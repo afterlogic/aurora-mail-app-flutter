@@ -1,6 +1,7 @@
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 import 'package:aurora_mail/modules/contacts/screens/contact_edit/contact_edit_route.dart';
 import 'package:aurora_mail/modules/contacts/screens/contact_view/components/contact_view_app_bar.dart';
+import 'package:aurora_mail/modules/contacts/screens/contact_view/components/contacts_info_item.dart';
 import 'package:aurora_mail/modules/contacts/utils/contact_info.dart';
 import 'package:aurora_mail/utils/date_formatting.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
@@ -161,26 +162,7 @@ class _ContactViewAndroidState extends State<ContactViewAndroid> {
 
   Widget _buildInfoItem({IconData icon, String label, String v}) {
     if (v.isNotEmpty) {
-      return Column(
-        children: <Widget>[
-          ListTile(
-            leading: icon != null
-                ? Icon(icon)
-                : Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text("$label",
-                          style: TextStyle(
-                              color: Theme.of(context)
-                                  .disabledColor
-                                  .withOpacity(0.5)))
-                    ],
-                  ),
-            title: Text(v),
-          ),
-          Divider(height: 0.0, indent: 16.0, endIndent: 16.0),
-        ],
-      );
+      return ContactsInfoItem(icon: icon, label: label, value: v);
     } else {
       return null;
     }

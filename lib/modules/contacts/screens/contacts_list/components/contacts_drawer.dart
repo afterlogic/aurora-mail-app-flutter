@@ -3,7 +3,18 @@ import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ContactsDrawer extends StatelessWidget {
+class ContactsDrawer extends StatefulWidget {
+  @override
+  _ContactsDrawerState createState() => _ContactsDrawerState();
+}
+
+class _ContactsDrawerState extends State<ContactsDrawer> {
+//  @override
+//  void didChangeDependencies() {
+//    super.didChangeDependencies();
+//    BlocProvider.of<ContactsBloc>(context).add(GetContacts());
+//  }
+
   @override
   Widget build(BuildContext context) {
     return Drawer(

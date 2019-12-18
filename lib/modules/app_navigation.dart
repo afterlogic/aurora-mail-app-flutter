@@ -5,6 +5,10 @@ import 'package:aurora_mail/modules/contacts/screens/contact_view/contact_view_a
 import 'package:aurora_mail/modules/contacts/screens/contact_view/contact_view_route.dart';
 import 'package:aurora_mail/modules/contacts/screens/contacts_list/contacts_list_android.dart';
 import 'package:aurora_mail/modules/contacts/screens/contacts_list/contacts_list_route.dart';
+import 'package:aurora_mail/modules/contacts/screens/group_edit/group_edit_android.dart';
+import 'package:aurora_mail/modules/contacts/screens/group_edit/group_edit_route.dart';
+import 'package:aurora_mail/modules/contacts/screens/group_view/group_view_android.dart';
+import 'package:aurora_mail/modules/contacts/screens/group_view/group_view_route.dart';
 import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/compose_android.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/compose_route.dart';
@@ -117,6 +121,27 @@ class AppNavigation {
             ),
             fullscreenDialog: true,
             builder: (_) => ContactEditAndroid(args.contact));
+        break;
+
+      case GroupViewRoute.name:
+        final GroupViewScreenArgs args = settings.arguments;
+        return SlideHorizontalRoute(
+            settings: RouteSettings(
+              name: settings.name,
+            ),
+            page: BlocProvider<ContactsBloc>.value(
+                value: args.bloc, child: GroupViewAndroid(args.group)));
+        break;
+
+      case GroupEditRoute.name:
+        final GroupEditScreenArgs args = settings.arguments;
+        return MaterialPageRoute(
+            settings: RouteSettings(
+              name: settings.name,
+            ),
+            fullscreenDialog: true,
+            builder: (_) => BlocProvider<ContactsBloc>.value(
+                value: args.bloc, child: GroupEditAndroid(group: args.group)));
         break;
 
       // ================= SETTINGS =================

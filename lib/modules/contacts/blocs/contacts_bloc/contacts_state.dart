@@ -10,7 +10,7 @@ class ContactsState extends Equatable {
   final List<Contact> contacts;
   final List<ContactsGroup> groups;
   final List<int> currentlySyncingStorages;
-  final dynamic error;
+  final String error;
 
   ContactsState({
     this.storages,

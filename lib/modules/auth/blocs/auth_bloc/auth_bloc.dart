@@ -89,7 +89,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           _currentAccount = accounts[0];
           yield LoggedIn(user);
         } else {
-          yield AuthError(WebMailError.UserHasNoAccounts);
+          yield AuthError("error_login_no_accounts");
         }
       }
     } catch (err, s) {
