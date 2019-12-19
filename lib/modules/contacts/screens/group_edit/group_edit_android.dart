@@ -96,7 +96,7 @@ class _GroupEditAndroidState extends State<GroupEditAndroid> {
               children: <Widget>[
                 _buildInput("contacts_view_email", _emailCtrl),
                 _buildInput("contacts_view_company", _companyCtrl),
-                _buildInput("contacts_view_state", _stateCtrl),
+                _buildInput("contacts_view_province", _stateCtrl),
                 _buildInput("contacts_view_city", _cityCtrl),
                 _buildInput("contacts_view_street_address", _streetCtrl),
                 _buildInput("contacts_view_zip", _zipCtrl),
