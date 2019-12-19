@@ -6,6 +6,7 @@ import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/models/api_body.dart';
 import 'package:aurora_mail/utils/api_utils.dart';
 import 'package:http/http.dart' as http;
+import 'package:webmail_api_client/webmail_api_client.dart';
 
 class AuthApi {
   Future<String> autoDiscoverHostname(String domain) async {
@@ -13,7 +14,7 @@ class AuthApi {
       final url = "$AUTO_DISCOVER_URL?domain=$domain";
       final res = await http.get(url);
       final resBody = json.decode(res.body);
-      return resBody["url"];
+      return resBody["url"] as String;
     } catch (err) {
       return null;
     }
@@ -31,18 +32,17 @@ class AuthApi {
 
     final resBody = json.decode(res.body);
     if (resBody['Result'] != null && resBody['Result']['AuthToken'] is String) {
-      final String token = resBody['Result']['AuthToken'];
-      final int id = resBody['AuthenticatedUserId'];
+      final token = resBody['Result']['AuthToken'] as String;
+      final id = resBody['AuthenticatedUserId'] as int;
 
       return new User(
         localId: null,
         serverId: id,
         token: token,
         hostname: hostname,
-        darkThemeEnabled: false,
       );
     } else {
-      throw ServerError(getErrMsg(resBody));
+      throw WebMailApiError(resBody);
     }
   }
 
@@ -55,11 +55,11 @@ class AuthApi {
     final res = await sendRequest(body);
 
     if (res['Result'] is List) {
-      final accounts = Accounts.getAccountsObjFromServer(res['Result']);
+      final accounts = Accounts.getAccountsObjFromServer(res['Result'] as List);
 
       return accounts;
     } else {
-      throw ServerError(getErrMsg(res));
+      throw WebMailApiError(res);
     }
   }
 }

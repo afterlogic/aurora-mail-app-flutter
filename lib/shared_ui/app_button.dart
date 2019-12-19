@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 class AppButton extends StatelessWidget {
   final bool isLoading;
-  final Function onPressed;
+  final void Function() onPressed;
   final Widget child;
   final String text;
   final Color buttonColor;
@@ -58,8 +58,7 @@ class AppButton extends StatelessWidget {
                     width: 24.0,
                     child: CircularProgressIndicator(
                         strokeWidth: 3.0,
-                        valueColor:
-                            AlwaysStoppedAnimation<Color>(Colors.white)),
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white)),
                   )
                 : child is Widget ? child : Text(text.toUpperCase()),
           ),

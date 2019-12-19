@@ -53,5 +53,4 @@ class ComposeAppBar extends StatelessWidget implements PreferredSizeWidget {
       ],
     );
   }
-
 }

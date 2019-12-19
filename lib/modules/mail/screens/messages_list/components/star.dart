@@ -5,7 +5,11 @@ class Star extends StatefulWidget {
   final bool enabled;
   final Function(bool) onPressed;
 
-  const Star({Key key, @required this.value, this.enabled = true, @required this.onPressed})
+  const Star(
+      {Key key,
+      @required this.value,
+      this.enabled = true,
+      @required this.onPressed})
       : super(key: key);
 
   @override
@@ -64,7 +68,9 @@ class _StarState extends State<Star> with TickerProviderStateMixin {
           padding: EdgeInsets.zero,
           icon: Icon(
             Icons.star_border,
-            color: Theme.of(context).disabledColor.withOpacity(widget.enabled ? 0.1 : 0.0),
+            color: Theme.of(context)
+                .disabledColor
+                .withOpacity(widget.enabled ? 0.1 : 0.0),
           ),
           onPressed: widget.enabled ? () => _setStarred(true) : null,
         ),

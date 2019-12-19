@@ -40,6 +40,10 @@ dependencies:
   material_design_icons_flutter:
   animated_stream_list:
   webview_flutter:
+  flutter_speed_dial:
+
+  # i18n
+  flutter_i18n:
 
   # misc
   uuid:
@@ -73,6 +77,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/
+    - assets/flutter_i18n/
 
   # fonts:
   #   - family: Schyler

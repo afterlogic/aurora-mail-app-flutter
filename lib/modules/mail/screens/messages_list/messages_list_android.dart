@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:aurora_mail/database/app_database.dart';
-import 'package:aurora_mail/generated/i18n.dart';
 import 'package:aurora_mail/main.dart' as main;
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
@@ -16,6 +15,7 @@ import 'package:aurora_mail/modules/mail/screens/message_view/message_view_route
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/main_drawer.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/modules/settings/screens/settings_main/settings_main_route.dart';
+import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -225,7 +225,8 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
 
   Widget _buildMessagesLoading() => Center(child: CircularProgressIndicator());
 
-  Widget _buildMessagesStream(Stream<List<Message>> messagesSub, bool isStarred) {
+  Widget _buildMessagesStream(
+      Stream<List<Message>> messagesSub, bool isStarred) {
     return StreamBuilder(
       stream: messagesSub,
       builder: (ctx, AsyncSnapshot<List<Message>> snap) {
@@ -282,7 +283,7 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
                 Padding(
                   padding: const EdgeInsets.symmetric(
                       vertical: 68.0, horizontal: 16.0),
-                  child: Center(child: Text(S.of(context).messages_empty)),
+                  child: Center(child: Text(i18n(context, "messages_empty"))),
                 ),
               ],
             );

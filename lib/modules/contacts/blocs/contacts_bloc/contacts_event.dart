@@ -1,4 +1,5 @@
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
+import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_group_model.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_storage_model.dart';
 import 'package:equatable/equatable.dart';
 
@@ -11,55 +12,29 @@ abstract class ContactsEvent extends Equatable {
 
 class GetContacts extends ContactsEvent {}
 
-class SelectStorage extends ContactsEvent {
+class SelectStorageGroup extends ContactsEvent {
   final ContactsStorage storage;
+  final ContactsGroup group;
 
-  SelectStorage(this.storage);
+  const SelectStorageGroup({this.storage, this.group}) : assert(storage != null || group != null);
 
   @override
-  List<Object> get props => [storage];
+  List<Object> get props => [storage, group];
 }
 
 class AddContacts extends ContactsEvent {
   final List<Contact> contacts;
 
-  AddContacts(this.contacts);
+  const AddContacts(this.contacts);
 
   @override
   List<Object> get props => [contacts];
 }
 
-class AddStorages extends ContactsEvent {
-  final List<ContactsStorage> storages;
-
-  AddStorages(this.storages);
-
-  @override
-  List<Object> get props => [storages];
-}
-
-class SetSelectedStorage extends ContactsEvent {
-  final int storageSqliteId;
-
-  SetSelectedStorage(this.storageSqliteId);
-
-  @override
-  List<Object> get props => [storageSqliteId];
-}
-
-class SetCurrentlySyncingStorage extends ContactsEvent {
-  final List<int> storageSqliteIds;
-
-  SetCurrentlySyncingStorage(this.storageSqliteIds);
-
-  @override
-  List<Object> get props => [storageSqliteIds];
-}
-
 class AddError extends ContactsEvent {
-  final dynamic error;
+  final String error;
 
-  AddError(this.error);
+  const AddError(this.error);
 
   @override
   List<Object> get props => [error];

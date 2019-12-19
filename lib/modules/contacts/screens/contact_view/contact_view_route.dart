@@ -2,7 +2,7 @@ import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 
 class ContactViewRoute {
-  static const name = "contace_view";
+  static const name = "contact_view";
 }
 
 class ContactViewScreenArgs {

@@ -13,6 +13,7 @@ import 'package:downloads_path_provider/downloads_path_provider.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_uploader/flutter_uploader.dart';
+import 'package:webmail_api_client/webmail_api_client.dart';
 
 class MailApi {
   int get _accountId => AuthBloc.currentAccount.accountId;
@@ -38,7 +39,7 @@ class MailApi {
     if (res["Result"] is List) {
       return json.encode(res["Result"]);
     } else {
-      throw ServerError(getErrMsg(res));
+      throw WebMailApiError(res);
     }
   }
 
@@ -56,9 +57,9 @@ class MailApi {
     final res = await sendRequest(body);
 
     if (res["Result"] is List) {
-      return res["Result"];
+      return res["Result"] as List;
     } else {
-      throw ServerError(getErrMsg(res));
+      throw WebMailApiError(res);
     }
   }
 
@@ -112,7 +113,7 @@ class MailApi {
     final res = await sendRequest(body);
 
     if (res["Result"] != true) {
-      throw ServerError(getErrMsg(res));
+      throw WebMailApiError(res);
     }
   }
 
@@ -160,9 +161,9 @@ class MailApi {
     final res = await sendRequest(body);
 
     if (res["Result"] is Map) {
-      return res["Result"]["NewUid"];
+      return res["Result"]["NewUid"] as int;
     } else {
-      throw ServerError(getErrMsg(res));
+      throw WebMailApiError(res);
     }
   }
 
@@ -210,12 +211,12 @@ class MailApi {
       final res = json.decode(result.response);
       if (res["Result"] is Map) {
         final attachment = res["Result"]["Attachment"];
-        final composeAttachment = ComposeAttachment.fromJsonString(attachment);
+        final composeAttachment = ComposeAttachment.fromJsonString(attachment as Map);
         assert(tempAttachment != null && tempAttachment.guid is String);
         composeAttachment.guid = tempAttachment.guid;
         onUploadEnd(composeAttachment);
       } else {
-        onError(ServerError(getErrMsg(res)));
+        onError(WebMailApiError(res));
       }
     }, onError: (err) {
       print("Attachment upload error: $err");
@@ -269,9 +270,9 @@ class MailApi {
     final res = await sendRequest(body);
 
     if (res["Result"] is Map) {
-      return ComposeAttachment.fromMailAttachment(attachments, res["Result"]);
+      return ComposeAttachment.fromMailAttachment(attachments, res["Result"] as Map);
     } else {
-      throw ServerError(getErrMsg(res));
+      throw WebMailApiError(res);
     }
   }
 
@@ -291,7 +292,7 @@ class MailApi {
     final res = await sendRequest(body);
 
     if (res["Result"] != true) {
-      throw ServerError(getErrMsg(res));
+      throw WebMailApiError(res);
     }
   }
 
@@ -312,7 +313,7 @@ class MailApi {
     final res = await sendRequest(body);
 
     if (res["Result"] != true) {
-      throw ServerError(getErrMsg(res));
+      throw WebMailApiError(res);
     }
   }
 
@@ -334,7 +335,7 @@ class MailApi {
     final res = await sendRequest(body);
 
     if (res["Result"] != true) {
-      throw ServerError(getErrMsg(res));
+      throw WebMailApiError(res);
     }
   }
 }

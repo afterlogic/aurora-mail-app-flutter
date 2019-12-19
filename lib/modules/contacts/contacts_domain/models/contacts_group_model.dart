@@ -3,13 +3,10 @@ import 'package:flutter/widgets.dart';
 class ContactsGroup {
   final String uuid;
   final int idUser;
-  final int entityId;
   final String city;
   final String company;
   final String country;
-  final String davContactsUID;
   final String email;
-  final String events;
   final String fax;
   final bool isOrganization;
   final String name;
@@ -27,10 +24,7 @@ class ContactsGroup {
     this.city = "",
     this.company = "",
     this.country = "",
-    this.davContactsUID,
     this.email = "",
-    this.entityId,
-    this.events = "",
     this.fax = "",
     this.isOrganization,
     this.parentUUID = "",
@@ -40,4 +34,42 @@ class ContactsGroup {
     this.web = "",
     this.zip = "",
   });
+
+  ContactsGroup copyWith({
+    String uuid,
+    int idUser,
+    String city,
+    String company,
+    String country,
+    String davContactsUID,
+    String email,
+    String fax,
+    bool isOrganization,
+    String name,
+    String parentUUID,
+    String phone,
+    String state,
+    String street,
+    String web,
+    String zip,
+  }) {
+    return new ContactsGroup(
+      uuid: uuid ?? this.uuid,
+      idUser: idUser ?? this.idUser,
+      city: city ?? this.city,
+      company: company ?? this.company,
+      country: country ?? this.country,
+      email: email ?? this.email,
+      fax: fax ?? this.fax,
+      isOrganization: isOrganization ?? this.isOrganization,
+      name: name ?? this.name,
+      parentUUID: parentUUID ?? this.parentUUID,
+      phone: phone ?? this.phone,
+      state: state ?? this.state,
+      street: street ?? this.street,
+      web: web ?? this.web,
+      zip: zip ?? this.zip,
+    );
+  }
+
 }

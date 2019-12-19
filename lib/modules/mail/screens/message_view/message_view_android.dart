@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/mail/mail_table.dart';
-import 'package:aurora_mail/generated/i18n.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/message_view_bloc/bloc.dart';
@@ -16,6 +15,7 @@ import 'package:aurora_mail/modules/mail/screens/message_view/components/message
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
 import 'package:aurora_mail/utils/date_formatting.dart';
+import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -67,7 +67,7 @@ class _MessageViewAndroidState extends State<MessageViewAndroid>
     _setSeenTimer = null;
 
     final flagsString = widget.messages[_currentPage].flagsInJson;
-    final flags = json.decode(flagsString);
+    final flags = json.decode(flagsString) as List;
     if (!flags.contains("\\seen")) {
       _setSeenTimer = new Timer(
         SET_SEEN_DELAY,
@@ -108,9 +108,9 @@ class _MessageViewAndroidState extends State<MessageViewAndroid>
     final message = widget.messages[_currentPage];
     final delete = await ConfirmationDialog.show(
         context,
-        S.of(context).messages_delete_title,
-        S.of(context).messages_delete_desc,
-        S.of(context).btn_delete);
+        i18n(context, "messages_delete_title"),
+        i18n(context, "messages_delete_desc"),
+        i18n(context, "btn_delete"));
     if (delete == true) {
       BlocProvider.of<MessagesListBloc>(context).add(DeleteMessages([message]));
       Navigator.popUntil(context, ModalRoute.withName(MessagesListRoute.name));
@@ -122,7 +122,7 @@ class _MessageViewAndroidState extends State<MessageViewAndroid>
         context, message.toInJson, AuthBloc.currentAccount.email);
 
     if (items.isEmpty) {
-      return S.of(context).messages_no_receivers;
+      return i18n(context, "messages_no_receivers");
     } else {
       return items.join(" | ");
     }
@@ -153,19 +153,19 @@ class _MessageViewAndroidState extends State<MessageViewAndroid>
           listener: (context, state) {
             if (state is DownloadStarted) {
               _showSnack(
-                  S.of(context).messages_attachment_downloading(state.fileName),
+                  i18n(context, "messages_attachment_downloading",
+                      {"fileName": state.fileName}),
                   context);
             }
             if (state is DownloadFinished) {
               if (state.path == null) {
-                _showSnack(
-                    S.of(context).messages_attachment_download_failed, context,
+                _showSnack(i18n(context, "messages_attachment_download_failed"),
+                    context,
                     isError: true);
               } else {
                 _showSnack(
-                    S
-                        .of(context)
-                        .messages_attachment_download_success(state.path),
+                    i18n(context, "messages_attachment_download_success",
+                        {"path": state.path}),
                     context);
               }
             }
@@ -178,7 +178,7 @@ class _MessageViewAndroidState extends State<MessageViewAndroid>
                 Text(
                   message.subject.isNotEmpty
                       ? message.subject
-                      : S.of(context).messages_no_subject,
+                      : i18n(context, "messages_no_subject"),
                   style: Theme.of(context).textTheme.display1.copyWith(
                         fontSize: 26.0,
                       ),
@@ -234,8 +234,8 @@ class _MessageViewAndroidState extends State<MessageViewAndroid>
           labelColor: Theme.of(context).textTheme.body2.color,
           indicatorSize: TabBarIndicatorSize.label,
           tabs: <Widget>[
-            Tab(text: S.of(context).messages_view_tab_message_body),
-            Tab(text: S.of(context).messages_view_tab_attachments),
+            Tab(text: i18n(context, "messages_view_tab_message_body")),
+            Tab(text: i18n(context, "messages_view_tab_attachments")),
           ],
         ),
       ),

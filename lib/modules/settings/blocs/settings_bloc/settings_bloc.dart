@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:aurora_mail/background/alarm/alarm.dart';
+import 'package:aurora_mail/main.dart' as main;
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/settings_methods.dart';
 import 'package:aurora_mail/modules/settings/models/language.dart';
 import 'package:aurora_mail/modules/settings/models/sync_duration.dart';
@@ -8,7 +9,7 @@ import 'package:aurora_mail/modules/settings/models/sync_period.dart';
 import 'package:bloc/bloc.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:moor_flutter/moor_flutter.dart';
-import 'package:aurora_mail/main.dart' as main;
+
 import './bloc.dart';
 
 class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
@@ -43,11 +44,13 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       main.onAlarm,
     );
 
+    final isDarkTheme = await _methods.getDarkTheme();
+
     if (state is SettingsLoaded) {
       yield (state as SettingsLoaded).copyWith(
           syncFrequency: Value(event.user.syncFreqInSeconds),
           syncPeriod: Value(event.user.syncPeriod),
-          darkThemeEnabled: Value(event.user.darkThemeEnabled),
+          darkThemeEnabled: Value(isDarkTheme),
           language: Value(
             Language.fromJson(event.user.language),
           ));
@@ -55,7 +58,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       yield SettingsLoaded(
         syncFrequency: event.user.syncFreqInSeconds,
         syncPeriod: event.user.syncPeriod,
-        darkThemeEnabled: event.user.darkThemeEnabled,
+        darkThemeEnabled: isDarkTheme,
         language: Language.fromJson(event.user.language),
       );
     }

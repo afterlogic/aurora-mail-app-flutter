@@ -64,14 +64,19 @@ class ContactsDbServiceImpl implements ContactsDbService {
   }
 
   @override
-  Stream<List<Contact>> watchContacts(int userServerId, ContactsStorage storage) {
-    final result = _contactsDao.watchContacts(userServerId, storage.id);
+  Stream<List<Contact>> watchContactsFromStorage(int userServerId, ContactsStorage storage) {
+    final result = _contactsDao.watchContactsFromStorage(userServerId, storage.id);
     return result.map((data) => ContactMapper.fromDB(data));
   }
 
   @override
-  Future<List<ContactsGroup>> getGroups(
-      int userServerId) async {
+  Stream<List<Contact>> watchContactsFromGroup(int userServerId, ContactsGroup group) {
+    final result = _contactsDao.watchContactsFromGroup(userServerId, group.uuid);
+    return result.map((data) => ContactMapper.fromDB(data));
+  }
+
+  @override
+  Future<List<ContactsGroup>> getGroups(int userServerId) async {
     final result = await _groupsDao.getGroups(userServerId);
     return ContactsGroupMapper.fromDB(result);
   }
@@ -86,7 +91,8 @@ class ContactsDbServiceImpl implements ContactsDbService {
   Future<void> updateContacts(List<Contact> updatedContacts,
       {bool nullToAbsent = true}) {
     final formatted = ContactMapper.toDB(updatedContacts);
-    final companions = formatted.map((c) => c.createCompanion(nullToAbsent)).toList();
+    final companions =
+        formatted.map((c) => c.createCompanion(nullToAbsent)).toList();
     return _contactsDao.updateContacts(companions);
   }
 
@@ -94,13 +100,14 @@ class ContactsDbServiceImpl implements ContactsDbService {
   Future<void> updateStorages(List<ContactsStorage> updatedStorages, int userId,
       {bool nullToAbsent = true}) {
     final formatted = ContactsStorageMapper.toDB(updatedStorages, userId);
-    final companions = formatted.map((c) => c.createCompanion(nullToAbsent)).toList();
+    final companions =
+        formatted.map((c) => c.createCompanion(nullToAbsent)).toList();
     return _storagesDao.updateStorages(companions);
   }
 
   Future<void> editGroups(List<ContactsGroup> newGroups) {
     final formatted = ContactsGroupMapper.toDB(newGroups);
-    final companions = formatted.map((c) => c.createCompanion(true));
+    final companions = formatted.map((c) => c.createCompanion(true)).toList();
     return _groupsDao.updateGroups(companions);
   }
 }

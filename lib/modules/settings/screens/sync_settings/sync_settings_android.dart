@@ -1,8 +1,8 @@
-import 'package:aurora_mail/generated/i18n.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/modules/settings/models/sync_duration.dart';
 import 'package:aurora_mail/modules/settings/models/sync_period.dart';
 import 'package:aurora_mail/modules/settings/screens/sync_settings/components/freq_selection_dialog.dart';
+import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -30,7 +30,7 @@ class _SyncSettingsAndroidState extends State<SyncSettingsAndroid> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(S.of(context).settings_sync)),
+      appBar: AppBar(title: Text(i18n(context, "settings_sync"))),
       body: BlocBuilder<SettingsBloc, SettingsState>(
         bloc: BlocProvider.of<SettingsBloc>(context),
         condition: (_, state) => state is SettingsLoaded,
@@ -42,7 +42,7 @@ class _SyncSettingsAndroidState extends State<SyncSettingsAndroid> {
               children: <Widget>[
                 ListTile(
                   leading: Icon(Icons.av_timer),
-                  title: Text(S.of(context).settings_sync_frequency),
+                  title: Text(i18n(context, "settings_sync_frequency")),
                   trailing: Text(
                     SyncFreq.freqToString(context, freq),
                     style: Theme.of(context).textTheme.caption,
@@ -51,7 +51,7 @@ class _SyncSettingsAndroidState extends State<SyncSettingsAndroid> {
                 ),
                 ListTile(
                   leading: Icon(MdiIcons.calendarRepeat),
-                  title: Text(S.of(context).settings_sync_period),
+                  title: Text(i18n(context, "settings_sync_period")),
                   trailing: Text(
                     SyncPeriod.periodToTitle(context, period),
                     style: Theme.of(context).textTheme.caption,

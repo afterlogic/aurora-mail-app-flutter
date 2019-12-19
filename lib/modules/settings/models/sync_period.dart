@@ -1,4 +1,4 @@
-import 'package:aurora_mail/generated/i18n.dart';
+import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 
@@ -14,15 +14,15 @@ class SyncPeriod {
   static String periodToTitle(BuildContext context, Period period) {
     switch (period) {
       case Period.allTime:
-        return S.of(context).settings_sync_period_all_time;
+        return i18n(context, "settings_sync_period_all_time");
       case Period.months1:
-        return S.of(context).settings_sync_period_months1;
+        return i18n(context, "settings_sync_period_months1");
       case Period.months3:
-        return S.of(context).settings_sync_period_months3;
+        return i18n(context, "settings_sync_period_months3");
       case Period.months6:
-        return S.of(context).settings_sync_period_months6;
+        return i18n(context, "settings_sync_period_months6");
       case Period.years1:
-        return S.of(context).settings_sync_period_years1;
+        return i18n(context, "settings_sync_period_years1");
       default:
         return null;
     }

@@ -11,7 +11,7 @@ class AuthInput extends StatefulWidget {
   final bool isEnabled;
   final bool isPassword;
   final Color visibilityToggleColor;
-  final Function(String) validator;
+  final String Function(String) validator;
 
   const AuthInput({
     Key key,

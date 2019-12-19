@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:aurora_mail/generated/i18n.dart';
+import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -24,12 +24,12 @@ class ConfirmationDialog extends StatelessWidget {
     String actionText,
   ) {
     return dialog(
-          context: context,
-          builder: (_) => ConfirmationDialog(
-                title: title,
-                description: description,
-                actionText: actionText,
-              ));
+        context: context,
+        builder: (_) => ConfirmationDialog(
+              title: title,
+              description: description,
+              actionText: actionText,
+            ));
   }
 
   @override
@@ -44,7 +44,7 @@ class ConfirmationDialog extends StatelessWidget {
             onPressed: () => Navigator.pop(context, true),
           ),
           CupertinoButton(
-            child: Text(S.of(context).btn_cancel),
+            child: Text(i18n(context, "btn_cancel")),
             onPressed: () => Navigator.pop(context, false),
           ),
         ],
@@ -55,7 +55,7 @@ class ConfirmationDialog extends StatelessWidget {
         content: Text(description),
         actions: <Widget>[
           FlatButton(
-            child: Text(S.of(context).btn_cancel.toUpperCase()),
+            child: Text(i18n(context, "btn_cancel").toUpperCase()),
             onPressed: () => Navigator.pop(context, false),
           ),
           FlatButton(

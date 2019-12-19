@@ -66,7 +66,7 @@ class Folders extends Table {
   static List<LocalFolder> getFolderObjectsFromServer(Map args) {
     final uuid = Uuid();
     final accountId = args["id"];
-    final rawFolders = args["folders"];
+    final rawFolders = new List<Map<String, dynamic>>.from(args["folders"] as Iterable);
 
     final flattenedFolders = new List<LocalFolder>();
 
@@ -78,29 +78,29 @@ class Folders extends Table {
           localId: null,
           guid: guid,
           parentGuid: parentGuid,
-          accountId: accountId,
-          type: rawFolder["Type"],
+          accountId: accountId as int,
+          type: rawFolder["Type"] as int,
           folderOrder: rawFolders.indexOf(rawFolder),
-          name: rawFolder["Name"],
-          fullName: rawFolder["FullName"],
-          fullNameRaw: rawFolder["FullNameRaw"],
-          fullNameHash: rawFolder["FullNameHash"],
+          name: rawFolder["Name"] as String,
+          fullName: rawFolder["FullName"] as String,
+          fullNameRaw: rawFolder["FullNameRaw"] as String,
+          fullNameHash: rawFolder["FullNameHash"] as String,
           folderHash: "",
-          delimiter: rawFolder["Delimiter"],
+          delimiter: rawFolder["Delimiter"] as String,
           needsInfoUpdate: true,
           // the folder is system if it's inbox, sent or drafts
           isSystemFolder: t == 1 || t == 2 || t == 3,
-          isSubscribed: rawFolder["IsSubscribed"],
-          isSelectable: rawFolder["IsSelectable"],
-          folderExists: rawFolder["Exists"],
-          extended: rawFolder["Extended"],
-          alwaysRefresh: rawFolder["AlwaysRefresh"],
+          isSubscribed: rawFolder["IsSubscribed"] as bool,
+          isSelectable: rawFolder["IsSelectable"] as bool,
+          folderExists: rawFolder["Exists"] as bool,
+          extended: rawFolder["Extended"] as bool,
+          alwaysRefresh: rawFolder["AlwaysRefresh"] as bool,
         ));
 
         if (rawFolder["SubFolders"] != null) {
           getObj(
               new List<Map<String, dynamic>>.from(
-                  rawFolder["SubFolders"]["@Collection"]),
+                  rawFolder["SubFolders"]["@Collection"] as Iterable),
               guid);
         }
       });
@@ -177,7 +177,7 @@ class Folders extends Table {
         unchangedMessages.length == newInfo.length) {
       print("Diff calcultaion finished: no changes");
       return new MessagesInfoDiffCalcResult(
-          updatedInfo: oldInfo, removedUids: [], infosToUpdateFlags: []);
+          updatedInfo: oldInfo, removedUids: [], infosToUpdateFlags: [], addedMessagesLength: newInfo.length);
     }
 
     final addedMessages = newInfo.where((i) =>

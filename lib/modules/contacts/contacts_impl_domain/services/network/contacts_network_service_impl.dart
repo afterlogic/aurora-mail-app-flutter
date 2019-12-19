@@ -22,12 +22,13 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
       parameters: null,
     );
 
-    final result = await contactsModule.post(body);
+    final result = await contactsModule.post(body) as List;
     return ContactsStorageMapper.allFromNetwork(result);
   }
 
   @override
-  Future<List<Contact>> getContactsByUids(ContactsStorage storage, List<String> uids) async {
+  Future<List<Contact>> getContactsByUids(
+      ContactsStorage storage, List<String> uids) async {
     final params = {
       "Storage": storage.id,
       "Uids": uids,
@@ -39,7 +40,7 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
     );
 
     final result = await contactsModule.post(body);
-    return ContactMapper.fromNetwork(result);
+    return ContactMapper.fromNetwork(result as List);
   }
 
   @override
@@ -54,7 +55,7 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
     );
 
     final result = await contactsModule.post(body);
-    return ContactInfoMapper.allFromNetwork(result);
+    return ContactInfoMapper.allFromNetwork(Map<String,dynamic>.from(result as Map));
   }
 
   @override
@@ -65,7 +66,7 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
     );
 
     final result = await contactsModule.post(body);
-    return ContactsGroupMapper.allFromNetwork(result);
+    return ContactsGroupMapper.allFromNetwork(result as List);
   }
 
   @override
@@ -77,7 +78,8 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
     );
 
     final result = await contactsModule.post(body);
-    return ContactsGroupMapper.fromNetwork(result);
+    if (result is! String) throw "addGroup must be a string";
+    return group.copyWith(uuid: result as String);
   }
 
   @override
@@ -89,7 +91,7 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
     );
 
     final result = await contactsModule.post(body);
-    return result;
+    return result as bool;
   }
 
   @override
@@ -101,6 +103,6 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
     );
 
     final result = await contactsModule.post(body);
-    return result;
+    return result as bool;
   }
 }

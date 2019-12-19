@@ -5,6 +5,10 @@ import 'package:aurora_mail/modules/contacts/screens/contact_view/contact_view_a
 import 'package:aurora_mail/modules/contacts/screens/contact_view/contact_view_route.dart';
 import 'package:aurora_mail/modules/contacts/screens/contacts_list/contacts_list_android.dart';
 import 'package:aurora_mail/modules/contacts/screens/contacts_list/contacts_list_route.dart';
+import 'package:aurora_mail/modules/contacts/screens/group_edit/group_edit_android.dart';
+import 'package:aurora_mail/modules/contacts/screens/group_edit/group_edit_route.dart';
+import 'package:aurora_mail/modules/contacts/screens/group_view/group_view_android.dart';
+import 'package:aurora_mail/modules/contacts/screens/group_view/group_view_route.dart';
 import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/compose_android.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/compose_route.dart';
@@ -34,7 +38,7 @@ import 'settings/screens/about/about_route.dart';
 class AppNavigation {
   static Route onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
-    // ================= AUTH =================
+      // ================= AUTH =================
 
       case LoginRoute.name:
         return FadeRoute(
@@ -43,7 +47,7 @@ class AppNavigation {
             ),
             page: LoginAndroid());
 
-    // ================= MAIL =================
+      // ================= MAIL =================
 
       case MessagesListRoute.name:
         return FadeRoute(
@@ -54,7 +58,7 @@ class AppNavigation {
         break;
 
       case MessageViewRoute.name:
-        final MessageViewScreenArgs args = settings.arguments;
+        final args = settings.arguments as MessageViewScreenArgs;
 
         return SlideHorizontalRoute(
             settings: RouteSettings(
@@ -72,7 +76,7 @@ class AppNavigation {
         break;
 
       case ComposeRoute.name:
-        final ComposeScreenArgs args = settings.arguments;
+        final args = settings.arguments as ComposeScreenArgs;
         return MaterialPageRoute(
             settings: RouteSettings(
               name: settings.name,
@@ -87,32 +91,30 @@ class AppNavigation {
                 )));
         break;
 
-    // ================= CONTACTS =================
+      // ================= CONTACTS =================
 
       case ContactsListRoute.name:
-        final ContactsListScreenArgs args = settings.arguments;
+        final args = settings.arguments as ContactsListScreenArgs;
         return FadeRoute(
             settings: RouteSettings(
               name: settings.name,
             ),
             page: BlocProvider<ContactsBloc>.value(
-                value: args.bloc,
-                child: ContactsListAndroid()));
+                value: args.bloc, child: ContactsListAndroid()));
         break;
 
       case ContactViewRoute.name:
-        final ContactViewScreenArgs args = settings.arguments;
+        final args = settings.arguments as ContactViewScreenArgs;
         return SlideHorizontalRoute(
             settings: RouteSettings(
               name: settings.name,
             ),
             page: BlocProvider<ContactsBloc>.value(
-                value: args.bloc,
-                child: ContactViewAndroid(args.contact)));
+                value: args.bloc, child: ContactViewAndroid(args.contact)));
         break;
 
       case ContactEditRoute.name:
-        final ContactEditScreenArgs args = settings.arguments;
+        final args = settings.arguments as ContactEditScreenArgs;
         return MaterialPageRoute(
             settings: RouteSettings(
               name: settings.name,
@@ -121,7 +123,28 @@ class AppNavigation {
             builder: (_) => ContactEditAndroid(args.contact));
         break;
 
-    // ================= SETTINGS =================
+      case GroupViewRoute.name:
+        final args = settings.arguments as GroupViewScreenArgs;
+        return SlideHorizontalRoute(
+            settings: RouteSettings(
+              name: settings.name,
+            ),
+            page: BlocProvider<ContactsBloc>.value(
+                value: args.bloc, child: GroupViewAndroid(args.group)));
+        break;
+
+      case GroupEditRoute.name:
+        final args = settings.arguments as GroupEditScreenArgs;
+        return MaterialPageRoute(
+            settings: RouteSettings(
+              name: settings.name,
+            ),
+            fullscreenDialog: true,
+            builder: (_) => BlocProvider<ContactsBloc>.value(
+                value: args.bloc, child: GroupEditAndroid(group: args.group)));
+        break;
+
+      // ================= SETTINGS =================
 
       case SettingsMainRoute.name:
         return SlideHorizontalRoute(
@@ -155,13 +178,13 @@ class AppNavigation {
             page: AboutAndroid());
         break;
 
-    // ==================================
+      // ==================================
 
       default:
         return SlideHorizontalRoute(
             page: Scaffold(
-              body: Text('No route defined for ${settings.name}'),
-            ));
+          body: Text('No route defined for ${settings.name}'),
+        ));
     }
   }
 }
