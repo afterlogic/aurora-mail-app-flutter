@@ -36,15 +36,15 @@ class MessageInfo {
   // for retrieving from DB
   static List<MessageInfo> fromJsonString(String rawItems) {
     if (rawItems == null) return null;
-    final List items = json.decode(rawItems);
+    final items = List<String>.from(json.decode(rawItems) as Iterable);
     return items.map((rawItem) {
       final item = json.decode(rawItem);
       return new MessageInfo(
-        uid: item["uid"],
-        parentUid: item["parentUid"],
-        flags: new List<String>.from(item["flags"]),
-        hasThread: item["hasThread"],
-        hasBody: item["hasBody"],
+        uid: item["uid"] as int,
+        parentUid: item["parentUid"] as int,
+        flags: new List<String>.from(item["flags"] as Iterable),
+        hasThread: item["hasThread"] as bool,
+        hasBody: item["hasBody"] as bool,
       );
     }).toList();
   }
@@ -53,24 +53,24 @@ class MessageInfo {
   static List<MessageInfo> flattenMessagesInfo(String messagesInfoRaw) {
     if (messagesInfoRaw == null) return null;
 
-    final messagesInfo = json.decode(messagesInfoRaw);
+    final messagesInfo = List.from(json.decode(messagesInfoRaw) as Iterable);
 
     final flatList = new List<MessageInfo>();
 
     void addItems(List messagesInfo, [int parentUid]) {
       messagesInfo.forEach((info) {
-        final uid =
-            info["uid"] is String ? int.parse(info["uid"]) : info["uid"];
+        final uid = info["uid"] is String ? int.parse(info["uid"] as String) : info["uid"];
         flatList.add(new MessageInfo(
-          uid: uid,
+          uid: uid as int,
           parentUid: parentUid,
-          flags: new List<String>.from(info["flags"] ?? []),
-          hasBody: info["hasBody"] ?? false,
+          flags: new List<String>.from(info["flags"] as Iterable ?? []),
+          hasBody: info["hasBody"] as bool ?? false,
           hasThread: info["thread"] != null,
         ));
 
         if (info["thread"] != null) {
-          addItems(info["thread"], uid);
+          final thread = List.from(info["thread"] as Iterable);
+          addItems(thread, uid as int);
         }
       });
     }

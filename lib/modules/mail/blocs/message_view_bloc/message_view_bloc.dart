@@ -26,7 +26,7 @@ class MessageViewBloc extends Bloc<MessageViewEvent, MessageViewState> {
     try {
       await getStoragePermissions();
     } catch (err) {
-      yield MessagesViewError(err);
+      yield MessagesViewError(err.toString());
     }
 
     _methods.downloadAttachment(

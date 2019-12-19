@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-Future dialog({
+Future<T> dialog<T>({
   @required BuildContext context,
   @required WidgetBuilder builder,
 }) {

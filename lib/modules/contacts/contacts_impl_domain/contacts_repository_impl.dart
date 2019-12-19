@@ -70,6 +70,7 @@ class ContactsRepositoryImpl implements ContactsRepository {
       }
 
       final groupsFromServer = await _network.getGroups();
+      _db.addGroups(groupsFromServer);
       _groupCtrl.add(groupsFromServer);
     });
     return _groupCtrl.stream;

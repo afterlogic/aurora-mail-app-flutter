@@ -13,9 +13,10 @@ class ContactsInfoConverter
       return new List<ContactInfoItem>();
     }
 
-    final items = json.decode(fromDb);
-    final mapped =
-        items.map((i) => ContactInfoItem.fromMap(Map<String, dynamic>.from(i)));
+    final items = json.decode(fromDb) as Iterable;
+    final mapped = items.map((i) {
+      return ContactInfoItem.fromMap(Map<String, dynamic>.from(i as Map));
+    });
 
     return new List<ContactInfoItem>.from(mapped);
   }

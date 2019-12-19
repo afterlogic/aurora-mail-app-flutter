@@ -108,7 +108,7 @@ class ContactsDbServiceImpl implements ContactsDbService {
 
   Future<void> editGroups(List<ContactsGroup> newGroups) {
     final formatted = ContactsGroupMapper.toDB(newGroups);
-    final companions = formatted.map((c) => c.createCompanion(true));
+    final companions = formatted.map((c) => c.createCompanion(true)).toList();
     return _groupsDao.updateGroups(companions);
   }
 }

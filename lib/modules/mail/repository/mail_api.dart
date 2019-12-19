@@ -57,7 +57,7 @@ class MailApi {
     final res = await sendRequest(body);
 
     if (res["Result"] is List) {
-      return res["Result"];
+      return res["Result"] as List;
     } else {
       throw WebMailApiError(res);
     }
@@ -161,7 +161,7 @@ class MailApi {
     final res = await sendRequest(body);
 
     if (res["Result"] is Map) {
-      return res["Result"]["NewUid"];
+      return res["Result"]["NewUid"] as int;
     } else {
       throw WebMailApiError(res);
     }
@@ -211,7 +211,7 @@ class MailApi {
       final res = json.decode(result.response);
       if (res["Result"] is Map) {
         final attachment = res["Result"]["Attachment"];
-        final composeAttachment = ComposeAttachment.fromJsonString(attachment);
+        final composeAttachment = ComposeAttachment.fromJsonString(attachment as Map);
         assert(tempAttachment != null && tempAttachment.guid is String);
         composeAttachment.guid = tempAttachment.guid;
         onUploadEnd(composeAttachment);
@@ -270,7 +270,7 @@ class MailApi {
     final res = await sendRequest(body);
 
     if (res["Result"] is Map) {
-      return ComposeAttachment.fromMailAttachment(attachments, res["Result"]);
+      return ComposeAttachment.fromMailAttachment(attachments, res["Result"] as Map);
     } else {
       throw WebMailApiError(res);
     }

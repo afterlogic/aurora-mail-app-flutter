@@ -58,7 +58,7 @@ class AppNavigation {
         break;
 
       case MessageViewRoute.name:
-        final MessageViewScreenArgs args = settings.arguments;
+        final args = settings.arguments as MessageViewScreenArgs;
 
         return SlideHorizontalRoute(
             settings: RouteSettings(
@@ -76,7 +76,7 @@ class AppNavigation {
         break;
 
       case ComposeRoute.name:
-        final ComposeScreenArgs args = settings.arguments;
+        final args = settings.arguments as ComposeScreenArgs;
         return MaterialPageRoute(
             settings: RouteSettings(
               name: settings.name,
@@ -94,7 +94,7 @@ class AppNavigation {
       // ================= CONTACTS =================
 
       case ContactsListRoute.name:
-        final ContactsListScreenArgs args = settings.arguments;
+        final args = settings.arguments as ContactsListScreenArgs;
         return FadeRoute(
             settings: RouteSettings(
               name: settings.name,
@@ -104,7 +104,7 @@ class AppNavigation {
         break;
 
       case ContactViewRoute.name:
-        final ContactViewScreenArgs args = settings.arguments;
+        final args = settings.arguments as ContactViewScreenArgs;
         return SlideHorizontalRoute(
             settings: RouteSettings(
               name: settings.name,
@@ -114,7 +114,7 @@ class AppNavigation {
         break;
 
       case ContactEditRoute.name:
-        final ContactEditScreenArgs args = settings.arguments;
+        final args = settings.arguments as ContactEditScreenArgs;
         return MaterialPageRoute(
             settings: RouteSettings(
               name: settings.name,
@@ -124,7 +124,7 @@ class AppNavigation {
         break;
 
       case GroupViewRoute.name:
-        final GroupViewScreenArgs args = settings.arguments;
+        final args = settings.arguments as GroupViewScreenArgs;
         return SlideHorizontalRoute(
             settings: RouteSettings(
               name: settings.name,
@@ -134,7 +134,7 @@ class AppNavigation {
         break;
 
       case GroupEditRoute.name:
-        final GroupEditScreenArgs args = settings.arguments;
+        final args = settings.arguments as GroupEditScreenArgs;
         return MaterialPageRoute(
             settings: RouteSettings(
               name: settings.name,

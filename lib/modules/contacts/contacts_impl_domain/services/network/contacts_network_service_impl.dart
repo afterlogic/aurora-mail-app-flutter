@@ -22,7 +22,7 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
       parameters: null,
     );
 
-    final result = await contactsModule.post(body);
+    final result = await contactsModule.post(body) as List;
     return ContactsStorageMapper.allFromNetwork(result);
   }
 
@@ -40,7 +40,7 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
     );
 
     final result = await contactsModule.post(body);
-    return ContactMapper.fromNetwork(result);
+    return ContactMapper.fromNetwork(result as List);
   }
 
   @override
@@ -55,7 +55,7 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
     );
 
     final result = await contactsModule.post(body);
-    return ContactInfoMapper.allFromNetwork(result);
+    return ContactInfoMapper.allFromNetwork(Map<String,dynamic>.from(result as Map));
   }
 
   @override
@@ -66,7 +66,7 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
     );
 
     final result = await contactsModule.post(body);
-    return ContactsGroupMapper.allFromNetwork(result);
+    return ContactsGroupMapper.allFromNetwork(result as List);
   }
 
   @override
@@ -79,7 +79,7 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
 
     final result = await contactsModule.post(body);
     if (result is! String) throw "addGroup must be a string";
-    return group.copyWith(uuid: result);
+    return group.copyWith(uuid: result as String);
   }
 
   @override
@@ -91,7 +91,7 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
     );
 
     final result = await contactsModule.post(body);
-    return result;
+    return result as bool;
   }
 
   @override
@@ -103,6 +103,6 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
     );
 
     final result = await contactsModule.post(body);
-    return result;
+    return result as bool;
   }
 }

@@ -24,9 +24,9 @@ class ComposeAttachmentItem extends StatelessWidget {
             Icon(Icons.attach_file),
           ],
         ),
-        title: Text(attachment.name),
+        title: Text(attachment.name as String),
         subtitle: StreamBuilder(
-          stream: attachment.uploadProgress,
+          stream: attachment.uploadProgress as Stream<UploadTaskProgress>,
           builder: (_, AsyncSnapshot<UploadTaskProgress> snapshot) {
             return SizedBox(
               height: 3.0,
@@ -60,7 +60,7 @@ class ComposeAttachmentItem extends StatelessWidget {
             Icon(Icons.attach_file),
           ],
         ),
-        title: Text(attachment.fileName),
+        title: Text(attachment.fileName as String),
         subtitle: Text(filesize(attachment.size)),
         trailing: Row(
           mainAxisSize: MainAxisSize.min,

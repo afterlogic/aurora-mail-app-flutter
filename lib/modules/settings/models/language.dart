@@ -54,8 +54,8 @@ class Language {
     if (lang == null) {
       return null;
     } else {
-      final Map decoded = json.decode(lang);
-      return new Language(decoded["name"], decoded["tag"]);
+      final decoded = json.decode(lang) as Map;
+      return new Language(decoded["name"] as String, decoded["tag"] as String);
     }
   }
 }

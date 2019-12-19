@@ -67,7 +67,7 @@ class _MessageViewAndroidState extends State<MessageViewAndroid>
     _setSeenTimer = null;
 
     final flagsString = widget.messages[_currentPage].flagsInJson;
-    final flags = json.decode(flagsString);
+    final flags = json.decode(flagsString) as List;
     if (!flags.contains("\\seen")) {
       _setSeenTimer = new Timer(
         SET_SEEN_DELAY,

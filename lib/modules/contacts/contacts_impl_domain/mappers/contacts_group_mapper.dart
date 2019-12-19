@@ -48,27 +48,28 @@ class ContactsGroupMapper {
 
   static List<ContactsGroup> allFromNetwork(List rawItems) {
     return rawItems.map((i) {
-      return fromNetwork(i);
+      final item = Map<String, dynamic>.from(i as Map);
+      return fromNetwork(item);
     }).toList();
   }
 
   static ContactsGroup fromNetwork(Map<String, dynamic> i) {
     return ContactsGroup(
-      uuid: i["UUID"],
-      idUser: i["IdUser"],
-      city: i["City"],
-      company: i["Company"],
-      country: i["Country"],
-      email: i["Email"],
-      fax: i["Fax"],
-      isOrganization: i["IsOrganization"],
-      name: i["Name"],
-      parentUUID: i["ParentUUID"],
-      phone: i["Phone"],
-      state: i["State"],
-      street: i["Street"],
-      web: i["Web"],
-      zip: i["Zip"],
+      uuid: i["UUID"] as String,
+      idUser: i["IdUser"] as int,
+      city: i["City"] as String,
+      company: i["Company"] as String,
+      country: i["Country"] as String,
+      email: i["Email"] as String,
+      fax: i["Fax"] as String,
+      isOrganization: i["IsOrganization"] as bool,
+      name: i["Name"] as String,
+      parentUUID: i["ParentUUID"] as String,
+      phone: i["Phone"] as String,
+      state: i["State"] as String,
+      street: i["Street"] as String,
+      web: i["Web"] as String,
+      zip: i["Zip"] as String,
     );
   }
 

@@ -14,7 +14,7 @@ class AuthApi {
       final url = "$AUTO_DISCOVER_URL?domain=$domain";
       final res = await http.get(url);
       final resBody = json.decode(res.body);
-      return resBody["url"];
+      return resBody["url"] as String;
     } catch (err) {
       return null;
     }
@@ -32,8 +32,8 @@ class AuthApi {
 
     final resBody = json.decode(res.body);
     if (resBody['Result'] != null && resBody['Result']['AuthToken'] is String) {
-      final String token = resBody['Result']['AuthToken'];
-      final int id = resBody['AuthenticatedUserId'];
+      final token = resBody['Result']['AuthToken'] as String;
+      final id = resBody['AuthenticatedUserId'] as int;
 
       return new User(
         localId: null,
@@ -55,7 +55,7 @@ class AuthApi {
     final res = await sendRequest(body);
 
     if (res['Result'] is List) {
-      final accounts = Accounts.getAccountsObjFromServer(res['Result']);
+      final accounts = Accounts.getAccountsObjFromServer(res['Result'] as List);
 
       return accounts;
     } else {

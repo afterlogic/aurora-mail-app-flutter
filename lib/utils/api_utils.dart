@@ -10,7 +10,7 @@ Map<String, String> getHeaderWithToken() {
   return {'Authorization': 'Bearer ${AuthBloc.currentUser.token}'};
 }
 
-Future sendRequest(ApiBody body, {decodeJson = true, useToken = true}) async {
+Future sendRequest(ApiBody body, {bool decodeJson = true, bool useToken = true}) async {
   final rawResponse = useToken
       ? await http.post(AuthBloc.apiUrl,
           headers: getHeaderWithToken(), body: body.toMap())
@@ -30,7 +30,7 @@ String formatError(dynamic err, StackTrace stack) {
     if (err.osError.errorCode == 7) {
       return "error_connection";
     } else {
-      return err.message.isNotEmpty ? err.message : err;
+      return err.message.isNotEmpty ? err.message : err.toString();
     }
   } else {
     print("Debug error: $err");

@@ -7,7 +7,7 @@ void showSnack({
   @required dynamic msg,
   Duration duration = const Duration(seconds: 5),
   SnackBarAction action,
-  isError = true,
+  bool isError = true,
 }) {
   if (Theme == null || scaffoldState == null) return;
   final errorMessage = i18n(context, msg.toString());

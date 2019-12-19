@@ -13,16 +13,18 @@ class MailUtils {
     final emails = json.decode(emailsInJson);
     if (emails == null) return [];
     final result = emails["@Collection"].map((t) => t["Email"]).toList();
-    return new List<String>.from(result);
+    return new List<String>.from(result as List);
   }
 
   static String getDisplayName(String senderInJson) {
     if (senderInJson == null) return "";
     final sender = json.decode(senderInJson);
     if (sender == null) return "";
-    final results = sender["@Collection"].map((t) => t["DisplayName"]).toList();
+    final mapped = sender["@Collection"].map((t) => t["DisplayName"]) as Iterable;
+    final results = List<String>.from(mapped);
     if (results.isEmpty || results[0] == null || results[0].isEmpty) {
-      final results = sender["@Collection"].map((t) => t["Email"]).toList();
+      final mapped = sender["@Collection"].map((t) => t["Email"]) as Iterable;
+      final results = List<String>.from(mapped);
       return results[0];
     } else {
       return results[0];
@@ -52,8 +54,7 @@ class MailUtils {
         bool re = rePrefixes.contains(partUpper);
         bool fwd = fwdPrefixes.contains(partUpper);
         int count = 1;
-        final lastResPart =
-            (resParts.length > 0) ? resParts[resParts.length - 1] : null;
+        final lastResPart = (resParts.length > 0) ? resParts[resParts.length - 1] : null;
 
         if (!re && !fwd) {
           final matches = (new RegExp(
@@ -78,7 +79,7 @@ class MailUtils {
             resParts.add({"prefix": rePrefix, "count": count});
           }
         } else if (fwd) {
-          if (lastResPart && lastResPart["prefix"] == fwdPrefix) {
+          if (lastResPart != null && lastResPart["prefix"] == fwdPrefix) {
             lastResPart["count"] += count;
           } else {
             resParts.add({"prefix": fwdPrefix, "count": count});
@@ -93,7 +94,7 @@ class MailUtils {
 
     resParts.forEach((resPart) {
       if (resPart["count"] == 1) {
-        reSubject += resPart["prefix"] + ": ";
+        reSubject += (resPart["prefix"] as String) + ": ";
       } else {
         reSubject += "${resPart["prefix"]}[${resPart["count"].toString()}]: ";
       }

@@ -109,9 +109,9 @@ class BackgroundSync {
       final needsInfoUpdate = folder.fullNameHash != newHash || shouldUpdate;
 
       outFolder.add(folder.copyWith(
-        count: count,
-        unread: unread,
-        fullNameHash: newHash,
+        count: count as int,
+        unread: unread as int,
+        fullNameHash: newHash as String,
         needsInfoUpdate: needsInfoUpdate,
       ));
     });
@@ -128,8 +128,8 @@ class BackgroundSync {
     ];
 
     final result = await Future.wait(futures);
-    final User user = result[0];
-    final List<Account> accounts = result[1];
+    final user = result[0] as User;
+    final accounts = result[1] as List<Account>;
     AuthBloc.currentAccount = accounts[0];
     AuthBloc.hostName = user.hostname;
     AuthBloc.currentUser = user;

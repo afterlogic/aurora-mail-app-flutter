@@ -62,8 +62,8 @@ class MailMethods {
     ]);
 
     // get result
-    final rawFolders = futureWaitResult[0];
-    final oldLocalFolders = futureWaitResult[1];
+    final rawFolders = futureWaitResult[0] as List<Map<String, dynamic>>;
+    final oldLocalFolders = futureWaitResult[1] as List<LocalFolder>;
 
     // convert new folders to db-like format (the format of old folders) for calculating difference
     final newLocalFolders = await Folders.getFolderObjectsFromServerAsync(
@@ -134,9 +134,9 @@ class MailMethods {
 
       futures.add(_foldersDao.updateFolder(
         new FoldersCompanion(
-          count: Value(count),
-          unread: Value(unread),
-          fullNameHash: Value(newHash),
+          count: Value(count as int),
+          unread: Value(unread as int),
+          fullNameHash: Value(newHash as String),
           needsInfoUpdate: Value(needsInfoUpdate),
         ),
         folder.localId,
@@ -307,7 +307,7 @@ class MailMethods {
 
     Future updateMessages(bool isStarred) async {
       final infos = messages.map((m) {
-        final flags = json.decode(m.flagsInJson);
+        final flags = json.decode(m.flagsInJson) as List;
 
         if (isStarred && !flags.contains("\\seen")) {
           flags.add("\\seen");
@@ -346,7 +346,7 @@ class MailMethods {
 
     void updateMessages(bool isStarred) {
       final infos = messages.map((m) {
-        final flags = json.decode(m.flagsInJson);
+        final flags = json.decode(m.flagsInJson) as List;
 
         if (isStarred && !flags.contains("\\flagged")) {
           flags.add("\\flagged");

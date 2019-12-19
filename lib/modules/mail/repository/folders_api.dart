@@ -18,8 +18,7 @@ class FoldersApi {
     final res = await sendRequest(body);
 
     if (res["Result"] is Map) {
-      return new List<Map<String, dynamic>>.from(
-          res["Result"]["Folders"]["@Collection"]);
+      return new List<Map<String, dynamic>>.from(res["Result"]["Folders"]["@Collection"] as List);
     } else {
       throw WebMailApiError(res);
     }
@@ -38,7 +37,7 @@ class FoldersApi {
     final res = await sendRequest(body);
 
     if (res["Result"] is Map) {
-      return res["Result"]["Counts"];
+      return res["Result"]["Counts"] as Map;
     } else {
       throw WebMailApiError(res);
     }

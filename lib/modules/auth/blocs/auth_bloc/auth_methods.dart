@@ -21,8 +21,8 @@ class AuthMethods {
     ];
 
     final result = await Future.wait(futures);
-    final User user = result[0];
-    final List<Account> accounts = result[1];
+    final user = result[0] as User;
+    final accounts = List<Account>.from(result[1] as Iterable);
 
     if (user == null || accounts.isEmpty) return null;
 
