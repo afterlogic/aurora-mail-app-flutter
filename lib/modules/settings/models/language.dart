@@ -23,7 +23,7 @@ class Language {
   static String _getNameFromTag(String tag) {
     switch (tag) {
       case "ru":
-        return "русский";
+        return "Русский";
       case "en":
         return "English";
       case "tr":
