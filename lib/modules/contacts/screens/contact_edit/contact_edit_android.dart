@@ -73,6 +73,7 @@ class _ContactEditAndroidState extends State<ContactEditAndroid> {
     _selectedGroupsUuids = [];
     if (selectedGroup != null) _selectedGroupsUuids.add(selectedGroup);
     if (widget.contact != null) _initContact(widget.contact);
+    _initTextUpdatingCrutch();
     super.didChangeDependencies();
   }
 
@@ -114,6 +115,19 @@ class _ContactEditAndroidState extends State<ContactEditAndroid> {
     _birthDay = c.birthDay;
     _birthMonth = c.birthMonth;
     _birthYear = c.birthYear;
+  }
+
+  void _initTextUpdatingCrutch() {
+    // To update primary values in real time
+
+    _personalEmail.addListener(() => setState(() {}));
+    _businessEmail.addListener(() => setState(() {}));
+    _otherEmail.addListener(() => setState(() {}));
+    _personalMobile.addListener(() => setState(() {}));
+    _personalPhone.addListener(() => setState(() {}));
+    _businessPhone.addListener(() => setState(() {}));
+    _personalAddress.addListener(() => setState(() {}));
+    _businessAddress.addListener(() => setState(() {}));
   }
 
   void _onAppBarActionSelected(BuildContext context, ContactEditAppBarAction item) {
