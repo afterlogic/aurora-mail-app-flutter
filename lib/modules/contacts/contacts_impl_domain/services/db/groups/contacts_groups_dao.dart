@@ -14,13 +14,8 @@ class ContactsGroupsDao extends DatabaseAccessor<AppDatabase>
     return (select(contactsGroups)..where((c) => c.idUser.equals(userServerId))).get();
   }
 
-  Future<void> addGroups(List<ContactsGroupsTable> newGroups) {
-    try {
-      return batch((b) => b.insertAll(contactsGroups, newGroups));
-    } catch (err) {
-      print("insert contactsGroups error: $err");
-      return null;
-    }
+  Future<void> addGroups(List<ContactsGroupsTable> newGroups) async {
+    batch((b) => b.insertAll(contactsGroups, newGroups)).catchError((_) {});
   }
 
   Future<void> updateGroups(List<ContactsGroupsCompanion> updatedGroups) {

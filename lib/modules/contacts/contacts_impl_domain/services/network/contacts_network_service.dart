@@ -30,6 +30,16 @@ abstract class ContactsNetworkService {
   Future<List<Contact>> getContactsByUids(
       ContactsStorage storage, List<String> uids);
 
+  Future<Contact> addContact(Contact contact);
+
+  Future<void> editContact(Contact contact);
+
+  Future<void> deleteContacts(List<String> uuids);
+
+  Future<void> addContactsToGroup(String groupUuid, List<String> uuids);
+
+  Future<void> removeContactsFromGroup(String groupUuid, List<String> uuids);
+
   Future<ContactsGroup> addGroup(ContactsGroup group);
 
   Future<bool> editGroup(ContactsGroup group);

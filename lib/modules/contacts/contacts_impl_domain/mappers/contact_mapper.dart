@@ -181,4 +181,51 @@ class ContactMapper {
       );
     }).toList();
   }
+
+  static Map<String, dynamic> toNetwork(Contact c) {
+    return {
+      "UUID": c.uuid,
+      "Storage": c.storage,
+      "FullName": c.fullName,
+      "UseFriendlyName": c.useFriendlyName,
+      "PrimaryEmail": c.primaryEmail,
+      "PrimaryPhone": c.primaryPhone,
+      "PrimaryAddress": c.primaryAddress,
+      "FirstName": c.firstName,
+      "LastName": c.lastName,
+      "NickName": c.nickName,
+      "Skype": c.skype,
+      "Facebook": c.facebook,
+      "PersonalEmail": c.personalEmail,
+      "PersonalAddress": c.personalAddress,
+      "PersonalCity": c.personalCity,
+      "PersonalState": c.personalState,
+      "PersonalZip": c.personalZip,
+      "PersonalCountry": c.personalCountry,
+      "PersonalWeb": c.personalWeb,
+      "PersonalFax": c.personalFax,
+      "PersonalPhone": c.personalPhone,
+      "PersonalMobile": c.personalMobile,
+      "BusinessEmail": c.businessEmail,
+      "BusinessCompany": c.businessCompany,
+      "BusinessAddress": c.businessAddress,
+      "BusinessCity": c.businessCity,
+      "BusinessState": c.businessState,
+      "BusinessZip": c.businessZip,
+      "BusinessCountry": c.businessCountry,
+      "BusinessJobTitle": c.businessJobTitle,
+      "BusinessDepartment": c.businessDepartment,
+      "BusinessOffice": c.businessOffice,
+      "BusinessPhone": c.businessPhone,
+      "BusinessFax": c.businessFax,
+      "BusinessWeb": c.businessWeb,
+      "OtherEmail": c.otherEmail,
+      "Notes": c.notes,
+      "BirthDay": c.birthDay,
+      "BirthMonth": c.birthMonth,
+      "BirthYear": c.birthYear,
+      "ETag": c.eTag,
+      "GroupUUIDs": c.groupUUIDs,
+    };
+  }
 }

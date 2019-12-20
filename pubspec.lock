@@ -190,6 +190,15 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.0"
+  empty_list:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: HEAD
+      resolved-ref: b458a6788530e585ccba0d3a0a783382977eadbb
+      url: "git://github.com/VadimOsovsky/flutter_empty_list.git"
+    source: git
+    version: "0.0.1"
   equatable:
     dependency: "direct main"
     description:

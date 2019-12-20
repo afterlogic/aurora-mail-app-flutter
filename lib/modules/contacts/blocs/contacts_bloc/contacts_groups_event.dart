@@ -20,10 +20,10 @@ class AddGroups extends ContactsEvent {
   List<Object> get props => [groups];
 }
 
-class AddGroup extends ContactsEvent {
+class CreateGroup extends ContactsEvent {
   final ContactsGroup group;
 
-  const AddGroup(this.group);
+  const CreateGroup(this.group);
 
   @override
   List<Object> get props => [group];

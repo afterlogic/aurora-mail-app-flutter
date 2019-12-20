@@ -6,6 +6,7 @@ import 'package:aurora_mail/modules/auth/screens/login/login_route.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_group_model.dart';
+import 'package:aurora_mail/modules/contacts/screens/contact_edit/contact_edit_route.dart';
 import 'package:aurora_mail/modules/contacts/screens/contact_view/contact_view_route.dart';
 import 'package:aurora_mail/modules/contacts/screens/contacts_list/components/contacts_app_bar.dart';
 import 'package:aurora_mail/modules/contacts/screens/contacts_list/components/speed_dial.dart';
@@ -15,6 +16,7 @@ import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_rou
 import 'package:aurora_mail/modules/settings/screens/settings_main/settings_main_route.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
+import 'package:empty_list/empty_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -66,15 +68,23 @@ class _ContactsListAndroidState extends State<ContactsListAndroid> {
   }
 
   void _onContactSelected(Contact contact) {
-    Navigator.pushNamed(context, ContactViewRoute.name,
-        arguments: ContactViewScreenArgs(
-            contact, BlocProvider.of<ContactsBloc>(context)));
+    Navigator.pushNamed(
+      context,
+      ContactViewRoute.name,
+      arguments: ContactViewScreenArgs(
+          contact, BlocProvider.of<ContactsBloc>(context)),
+    );
   }
 
   void _onFabOptionSelected(ContactsFabOption option) {
     switch (option) {
       case ContactsFabOption.addContact:
-        // TODO: Handle this case.
+        Navigator.pushNamed(
+          context,
+          ContactEditRoute.name,
+          arguments: ContactEditScreenArgs(
+              bloc: BlocProvider.of<ContactsBloc>(context)),
+        );
         break;
       case ContactsFabOption.addGroup:
         Navigator.pushNamed(
@@ -113,12 +123,9 @@ class _ContactsListAndroidState extends State<ContactsListAndroid> {
             return _refreshCompleter.future;
           },
           child: BlocBuilder<ContactsBloc, ContactsState>(builder: (_, state) {
-            if (state.contacts == null || state.contacts.isEmpty && state.currentlySyncingStorages.contains(state.selectedStorage))
-              return _buildLoading(state);
-            else if (state.contacts.isEmpty)
-              return _buildContactsEmpty(state);
-            else
-              return _buildContacts(state);
+            if (state.contacts == null || state.contacts.isEmpty && state.currentlySyncingStorages.contains(state.selectedStorage)) return _buildLoading(state);
+            else if (state.contacts.isEmpty) return _buildContactsEmpty(state);
+            else return _buildContacts(state);
           }),
         ),
       ),
@@ -131,7 +138,7 @@ class _ContactsListAndroidState extends State<ContactsListAndroid> {
   }
 
   Widget _buildContactsEmpty(ContactsState state) {
-    return Center(child: Text(i18n(context, "contacts_empty")));
+    return EmptyList(message: i18n(context, "contacts_empty"));
   }
 
   Widget _buildContacts(ContactsState state) {

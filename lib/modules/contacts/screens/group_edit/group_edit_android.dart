@@ -3,6 +3,7 @@ import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_group_model.dart';
 import 'package:aurora_mail/modules/contacts/screens/contacts_list/contacts_list_route.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -50,11 +51,20 @@ class _GroupEditAndroidState extends State<GroupEditAndroid> {
     _webCtrl.text = g.web;
   }
 
-  void _onAppBarActionSelected(GroupEditAppBarAction item) {
+  void _onAppBarActionSelected(BuildContext context, GroupEditAppBarAction item) {
     switch (item) {
       case GroupEditAppBarAction.save:
+        if (_nameCtrl.text.isEmpty) {
+          return showSnack(
+            context: context,
+            scaffoldState: Scaffold.of(context),
+            msg: "error_contacts_save_name_empty",
+          );
+        }
+        FocusScope.of(context).unfocus();
+
         final group = _getDataFromInputs();
-        final event = widget.group != null ? UpdateGroup(group) : AddGroup(group);
+        final event = widget.group != null ? UpdateGroup(group) : CreateGroup(group);
         BlocProvider.of<ContactsBloc>(context).add(event);
         Navigator.popUntil(context, ModalRoute.withName(ContactsListRoute.name));
         break;

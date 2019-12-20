@@ -37,8 +37,7 @@ class ContactViewAppBar extends StatelessWidget implements PreferredSizeWidget {
         IconButton(
           icon: Icon(Icons.edit),
           tooltip: i18n(context, "contacts_view_app_bar_edit_contact"),
-//          onPressed: () => onActionSelected(ContactViewAppBarAction.edit),
-          onPressed: null,
+          onPressed: () => onActionSelected(ContactViewAppBarAction.edit),
         ),
       ],
     );

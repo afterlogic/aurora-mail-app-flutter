@@ -1,3 +1,4 @@
+import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 import 'package:aurora_mail/modules/contacts/screens/contact_edit/contact_edit_route.dart';
 import 'package:aurora_mail/modules/contacts/screens/contact_view/components/contact_view_app_bar.dart';
@@ -6,6 +7,7 @@ import 'package:aurora_mail/modules/contacts/utils/contact_info.dart';
 import 'package:aurora_mail/utils/date_formatting.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class ContactViewAndroid extends StatefulWidget {
@@ -29,16 +31,23 @@ class _ContactViewAndroidState extends State<ContactViewAndroid> {
   void _onMainAppBarActionSelected(ContactViewAppBarAction item) {
     switch (item) {
       case ContactViewAppBarAction.attach:
-        // TODO: Handle this case.
+      // TODO: Handle this case.
         break;
       case ContactViewAppBarAction.sendMessage:
-        // TODO: Handle this case.
+      // TODO: Handle this case.
         break;
       case ContactViewAppBarAction.searchMessages:
-        // TODO: Handle this case.
+      // TODO: Handle this case.
         break;
       case ContactViewAppBarAction.edit:
-        Navigator.pushNamed(context, ContactEditRoute.name);
+        Navigator.pushNamed(
+          context,
+          ContactEditRoute.name,
+          arguments: ContactEditScreenArgs(
+            bloc: BlocProvider.of<ContactsBloc>(context),
+            contact: widget.contact,
+          ),
+        );
         break;
     }
   }
@@ -58,16 +67,12 @@ class _ContactViewAndroidState extends State<ContactViewAndroid> {
       _buildInfoItem(icon: Icons.person_outline, v: c.fullName),
       _buildInfoItem(icon: MdiIcons.emailOutline, v: _contactInfo.viewEmail),
       _buildInfoItem(icon: MdiIcons.phoneOutline, v: _contactInfo.viewPhone),
-      _buildInfoItem(
-          icon: MdiIcons.mapMarkerOutline, v: _contactInfo.viewAddress),
+      _buildInfoItem(icon: MdiIcons.mapMarkerOutline, v: _contactInfo.viewAddress),
       _buildInfoItem(icon: MdiIcons.skype, v: c.skype),
       _buildInfoItem(icon: MdiIcons.facebook, v: c.facebook),
-      _buildInfoItem(
-          label: i18n(context, "contacts_view_first_name"), v: c.firstName),
-      _buildInfoItem(
-          label: i18n(context, "contacts_view_last_name"), v: c.lastName),
-      _buildInfoItem(
-          label: i18n(context, "contacts_view_nickname"), v: c.nickName),
+      _buildInfoItem(label: i18n(context, "contacts_view_first_name"), v: c.firstName),
+      _buildInfoItem(label: i18n(context, "contacts_view_last_name"), v: c.lastName),
+      _buildInfoItem(label: i18n(context, "contacts_view_nickname"), v: c.nickName),
     ]);
 
     final personalInfo = _buildInfos([

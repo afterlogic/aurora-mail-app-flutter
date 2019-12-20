@@ -17,6 +17,7 @@ import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/modules/settings/screens/settings_main/settings_main_route.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
+import 'package:empty_list/empty_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -277,16 +278,8 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
             if (_selectedFolder != null && _selectedFolder.needsInfoUpdate) {
               return _buildMessagesLoading();
             }
-            return ListView(
-              physics: AlwaysScrollableScrollPhysics(),
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 68.0, horizontal: 16.0),
-                  child: Center(child: Text(i18n(context, "messages_empty"))),
-                ),
-              ],
-            );
+
+            return EmptyList(message: i18n(context, "messages_empty"));
           }
         } else {
           return _buildMessagesLoading();

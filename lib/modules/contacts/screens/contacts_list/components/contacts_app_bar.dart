@@ -77,15 +77,14 @@ class ContactsAppBar extends StatelessWidget implements PreferredSizeWidget {
     } else if (state.selectedGroup != null &&
         state.selectedGroup != "" &&
         state.groups.isNotEmpty) {
-      final selectedGroup =
-      state.groups.firstWhere((g) => g.uuid == state.selectedGroup);
+      final selectedGroup = state.groups.firstWhere((g) => g.uuid == state.selectedGroup);
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(i18n(context, "contacts")),
           SizedBox(height: 3.0),
           Text(
-            selectedGroup.name,
+            "# " + selectedGroup.name,
             style: TextStyle(
                 fontSize: Theme.of(context).textTheme.caption.fontSize,
                 fontWeight: FontWeight.w400),

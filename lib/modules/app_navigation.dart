@@ -120,7 +120,8 @@ class AppNavigation {
               name: settings.name,
             ),
             fullscreenDialog: true,
-            builder: (_) => ContactEditAndroid(args.contact));
+            builder: (_) => BlocProvider<ContactsBloc>.value(
+                value: args.bloc, child: ContactEditAndroid(contact: args?.contact)));
         break;
 
       case GroupViewRoute.name:

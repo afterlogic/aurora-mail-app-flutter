@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 enum GroupEditAppBarAction { save }
 
 class GroupEditAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final Function(GroupEditAppBarAction) onActionSelected;
+  final Function(BuildContext, GroupEditAppBarAction) onActionSelected;
   final bool isEdit;
 
   @override
@@ -20,7 +20,7 @@ class GroupEditAppBar extends StatelessWidget implements PreferredSizeWidget {
         IconButton(
           icon: Icon(Icons.save),
           tooltip: i18n(context, "contacts_edit_save"),
-          onPressed: () => onActionSelected(GroupEditAppBarAction.save),
+          onPressed: () => onActionSelected(context, GroupEditAppBarAction.save),
         ),
       ],
     );

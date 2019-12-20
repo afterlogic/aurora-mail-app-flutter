@@ -41,6 +41,9 @@ dependencies:
   animated_stream_list:
   webview_flutter:
   flutter_speed_dial:
+  empty_list:
+    git:
+      url: git://github.com/VadimOsovsky/flutter_empty_list.git
 
   # i18n
   flutter_i18n:

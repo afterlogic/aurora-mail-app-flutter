@@ -80,7 +80,7 @@ class _ContactsDrawerState extends State<ContactsDrawer> {
       return Column(
         children: state.groups
             .map((g) => ListTile(
-                  title: Text(g.name),
+                  title: Text("# " + g.name),
                   selected: g.uuid == state.selectedGroup,
                   onTap: () {
                     bloc.add(SelectStorageGroup(group: g));

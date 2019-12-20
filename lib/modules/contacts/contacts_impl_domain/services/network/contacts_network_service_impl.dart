@@ -59,10 +59,85 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
   }
 
   @override
+  Future<Contact> addContact(Contact contact) async {
+    final params = {
+      "Contact": ContactMapper.toNetwork(contact),
+    };
+
+    final body = new WebMailApiBody(
+      method: "CreateContact",
+      parameters: json.encode(params),
+    );
+
+    final result = await contactsModule.post(body);
+    return contact.copyWith(
+      uuid: result["UUID"] as String,
+      eTag: result["ETag"] as String,
+    );
+  }
+
+  @override
+  Future<void> editContact(Contact contact) async {
+    final params = {
+      "Contact": ContactMapper.toNetwork(contact),
+    };
+
+    final body = new WebMailApiBody(
+      method: "UpdateContact",
+      parameters: json.encode(params),
+    );
+
+    return contactsModule.post(body);
+  }
+
+  @override
+  Future<void> deleteContacts(List<String> uuids) {
+    final params = {
+      "UUIDs": uuids,
+    };
+
+    final body = new WebMailApiBody(
+      method: "DeleteContacts",
+      parameters: json.encode(params),
+    );
+
+    return contactsModule.post(body);
+  }
+
+  @override
+  Future<void> addContactsToGroup(String groupUuid, List<String> uuids) {
+    final params = {
+      "GroupUUID": groupUuid,
+      "ContactUUIDs": uuids,
+    };
+
+    final body = new WebMailApiBody(
+      method: "AddContactsToGroup",
+      parameters: json.encode(params),
+    );
+
+    return contactsModule.post(body);
+  }
+
+  @override
+  Future<void> removeContactsFromGroup(String groupUuid, List<String> uuids) {
+    final params = {
+      "GroupUUID": groupUuid,
+      "ContactUUIDs": uuids,
+    };
+
+    final body = new WebMailApiBody(
+      method: "RemoveContactsFromGroup",
+      parameters: json.encode(params),
+    );
+
+    return contactsModule.post(body);
+  }
+
+  @override
   Future<List<ContactsGroup>> getGroups() async {
     final body = new WebMailApiBody(
       method: "GetGroups",
-      parameters: null,
     );
 
     final result = await contactsModule.post(body);
@@ -72,7 +147,6 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
   @override
   Future<ContactsGroup> addGroup(ContactsGroup group) async {
     final body = new WebMailApiBody(
-      module: "Contacts",
       method: "CreateGroup",
       parameters: json.encode({"Group": ContactsGroupMapper.toNetwork(group)}),
     );

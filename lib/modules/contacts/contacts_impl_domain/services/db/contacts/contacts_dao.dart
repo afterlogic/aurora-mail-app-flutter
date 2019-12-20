@@ -10,13 +10,8 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
     with _$ContactsDaoMixin {
   ContactsDao(AppDatabase db) : super(db);
 
-  Future<void> addContacts(List<ContactsTable> newContacts) {
-    try {
-      return batch((b) => b.insertAll(contacts, newContacts));
-    } catch (err) {
-      print("insert contacts error: $err");
-      return null;
-    }
+  Future<void> addContacts(List<ContactsTable> newContacts) async {
+    batch((b) => b.insertAll(contacts, newContacts)).catchError((_) {});
   }
 
   Future<void> deleteContacts(List<String> uuids) {

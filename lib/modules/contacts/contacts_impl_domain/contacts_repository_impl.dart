@@ -118,6 +118,46 @@ class ContactsRepositoryImpl implements ContactsRepository {
 
     return _storagesCtrl.stream;
   }
+  @override
+  Future<void> addContact(Contact contact) async {
+    final newContact = await _network.addContact(contact);
+    await _db.addContacts([newContact]);
+  }
+
+  @override
+  Future<void> editContact(Contact contact) async {
+    await _network.editContact(contact);
+    await _db.updateContacts([contact]);
+  }
+
+  @override
+  Future<void> deleteContacts(List<Contact> contacts) async {
+    final uuids = contacts.map((c) => c.uuid).toList();
+    await _network.deleteContacts(uuids);
+    await _db.deleteContacts(uuids);
+  }
+
+  Future<void> addContactsToGroup(ContactsGroup group, List<Contact> contacts) async {
+    final uuids = contacts.map((c) => c.uuid).toList();
+    await _network.addContactsToGroup(group.uuid, uuids);
+
+    final updatedContacts = contacts.map((c) {
+      return c.copyWith(groupUUIDs: [...c.groupUUIDs, group.uuid]);
+    }).toList();
+
+    await _db.updateContacts(updatedContacts);
+  }
+
+  Future<void> removeContactsFromGroup(ContactsGroup group, List<Contact> contacts) async {
+    final uuids = contacts.map((c) => c.uuid).toList();
+    await _network.removeContactsFromGroup(group.uuid, uuids);
+
+    final updatedContacts = contacts.map((c) {
+      return c.copyWith(groupUUIDs: c.groupUUIDs.where((id) => id != group.uuid).toList());
+    }).toList();
+
+    await _db.updateContacts(updatedContacts);
+  }
 
   @override
   Future<void> addGroup(ContactsGroup group) async {

@@ -53,4 +53,34 @@ class ContactsNetworkServiceMockImpl implements ContactsNetworkService {
     groups.remove(toRemove);
     return toRemove != null;
   }
+
+  @override
+  Future<Contact> addContact(Contact contact) {
+    // TODO: implement addContact
+    return null;
+  }
+
+  @override
+  Future<void> editContact(Contact contact) {
+    // TODO: implement editContact
+    return null;
+  }
+
+  @override
+  Future<void> addContactsToGroup(String groupUuid, List<String> uuids) {
+    // TODO: implement addContactsToGroup
+    return null;
+  }
+
+  @override
+  Future<void> deleteContacts(List<String> uuids) {
+    // TODO: implement deleteContacts
+    return null;
+  }
+
+  @override
+  Future<void> removeContactsFromGroup(String groupUuid, List<String> uuids) {
+    // TODO: implement removeContactsFromGroup
+    return null;
+  }
 }

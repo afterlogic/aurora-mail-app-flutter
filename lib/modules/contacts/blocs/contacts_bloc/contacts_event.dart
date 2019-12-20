@@ -31,6 +31,53 @@ class AddContacts extends ContactsEvent {
   List<Object> get props => [contacts];
 }
 
+class CreateContact extends ContactsEvent {
+  final Contact contact;
+
+  const CreateContact(this.contact);
+
+  @override
+  List<Object> get props => [contact];
+}
+
+class UpdateContact extends ContactsEvent {
+  final Contact contact;
+
+  const UpdateContact(this.contact);
+
+  @override
+  List<Object> get props => [contact];
+}
+
+class DeleteContacts extends ContactsEvent {
+  final List<Contact> contacts;
+
+  const DeleteContacts(this.contacts);
+
+  @override
+  List<Object> get props => [contacts];
+}
+
+class AddContactsToGroup extends ContactsEvent {
+  final ContactsGroup group;
+  final List<Contact> contacts;
+
+  const AddContactsToGroup(this.group, this.contacts);
+
+  @override
+  List<Object> get props => [group, contacts];
+}
+
+class RemoveContactsFromGroup extends ContactsEvent {
+  final ContactsGroup group;
+  final List<Contact> contacts;
+
+  const RemoveContactsFromGroup(this.group, this.contacts);
+
+  @override
+  List<Object> get props => [group, contacts];
+}
+
 class AddError extends ContactsEvent {
   final String error;
 
