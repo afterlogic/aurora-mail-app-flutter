@@ -4538,14 +4538,14 @@ class ContactsTable extends DataClass implements Insertable<ContactsTable> {
   final List<String> groupUUIDs;
   ContactsTable(
       {@required this.uuid,
-      @required this.entityId,
-      @required this.parentUuid,
+      this.entityId,
+      this.parentUuid,
       @required this.eTag,
       @required this.idUser,
-      @required this.idTenant,
+      this.idTenant,
       @required this.storage,
       @required this.fullName,
-      @required this.useFriendlyName,
+      this.useFriendlyName,
       @required this.primaryEmail,
       @required this.primaryPhone,
       @required this.primaryAddress,
@@ -4584,11 +4584,11 @@ class ContactsTable extends DataClass implements Insertable<ContactsTable> {
       @required this.birthDay,
       @required this.birthMonth,
       @required this.birthYear,
-      @required this.auto,
-      @required this.frequency,
-      @required this.dateModified,
-      @required this.davContactsUid,
-      @required this.davContactsVCardUid,
+      this.auto,
+      this.frequency,
+      this.dateModified,
+      this.davContactsUid,
+      this.davContactsVCardUid,
       @required this.groupUUIDs});
   factory ContactsTable.fromData(
       Map<String, dynamic> data, GeneratedDatabase db,
@@ -5361,14 +5361,14 @@ class ContactsCompanion extends UpdateCompanion<ContactsTable> {
   });
   ContactsCompanion.insert({
     @required String uuid,
-    @required int entityId,
-    @required String parentUuid,
+    this.entityId = const Value.absent(),
+    this.parentUuid = const Value.absent(),
     @required String eTag,
     @required int idUser,
-    @required int idTenant,
+    this.idTenant = const Value.absent(),
     @required String storage,
     @required String fullName,
-    @required bool useFriendlyName,
+    this.useFriendlyName = const Value.absent(),
     @required int primaryEmail,
     @required int primaryPhone,
     @required int primaryAddress,
@@ -5407,21 +5407,17 @@ class ContactsCompanion extends UpdateCompanion<ContactsTable> {
     @required int birthDay,
     @required int birthMonth,
     @required int birthYear,
-    @required bool auto,
-    @required int frequency,
-    @required String dateModified,
-    @required String davContactsUid,
-    @required String davContactsVCardUid,
+    this.auto = const Value.absent(),
+    this.frequency = const Value.absent(),
+    this.dateModified = const Value.absent(),
+    this.davContactsUid = const Value.absent(),
+    this.davContactsVCardUid = const Value.absent(),
     @required List<String> groupUUIDs,
   })  : uuid = Value(uuid),
-        entityId = Value(entityId),
-        parentUuid = Value(parentUuid),
         eTag = Value(eTag),
         idUser = Value(idUser),
-        idTenant = Value(idTenant),
         storage = Value(storage),
         fullName = Value(fullName),
-        useFriendlyName = Value(useFriendlyName),
         primaryEmail = Value(primaryEmail),
         primaryPhone = Value(primaryPhone),
         primaryAddress = Value(primaryAddress),
@@ -5460,11 +5456,6 @@ class ContactsCompanion extends UpdateCompanion<ContactsTable> {
         birthDay = Value(birthDay),
         birthMonth = Value(birthMonth),
         birthYear = Value(birthYear),
-        auto = Value(auto),
-        frequency = Value(frequency),
-        dateModified = Value(dateModified),
-        davContactsUid = Value(davContactsUid),
-        davContactsVCardUid = Value(davContactsVCardUid),
         groupUUIDs = Value(groupUUIDs);
   ContactsCompanion copyWith(
       {Value<String> uuid,
@@ -5600,7 +5591,7 @@ class $ContactsTable extends Contacts
     return GeneratedIntColumn(
       'entity_id',
       $tableName,
-      false,
+      true,
     );
   }
 
@@ -5612,7 +5603,7 @@ class $ContactsTable extends Contacts
     return GeneratedTextColumn(
       'parent_uuid',
       $tableName,
-      false,
+      true,
     );
   }
 
@@ -5648,7 +5639,7 @@ class $ContactsTable extends Contacts
     return GeneratedIntColumn(
       'id_tenant',
       $tableName,
-      false,
+      true,
     );
   }
 
@@ -5686,7 +5677,7 @@ class $ContactsTable extends Contacts
     return GeneratedBoolColumn(
       'use_friendly_name',
       $tableName,
-      false,
+      true,
     );
   }
 
@@ -6206,7 +6197,7 @@ class $ContactsTable extends Contacts
     return GeneratedBoolColumn(
       'auto',
       $tableName,
-      false,
+      true,
     );
   }
 
@@ -6218,7 +6209,7 @@ class $ContactsTable extends Contacts
     return GeneratedIntColumn(
       'frequency',
       $tableName,
-      false,
+      true,
     );
   }
 
@@ -6232,7 +6223,7 @@ class $ContactsTable extends Contacts
     return GeneratedTextColumn(
       'date_modified',
       $tableName,
-      false,
+      true,
     );
   }
 
@@ -6246,7 +6237,7 @@ class $ContactsTable extends Contacts
     return GeneratedTextColumn(
       'dav_contacts_uid',
       $tableName,
-      false,
+      true,
     );
   }
 
@@ -6260,7 +6251,7 @@ class $ContactsTable extends Contacts
     return GeneratedTextColumn(
       'dav_contacts_v_card_uid',
       $tableName,
-      false,
+      true,
     );
   }
 

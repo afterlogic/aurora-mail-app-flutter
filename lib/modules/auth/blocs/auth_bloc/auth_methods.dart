@@ -39,9 +39,7 @@ class AuthMethods {
     // auto discover domain
     String hostname = host;
     if (hostname.isEmpty) {
-      final splitEmail = email.split("@");
-      final domain = splitEmail.last.trim();
-      final autoDiscoveredHost = await _authApi.autoDiscoverHostname(domain);
+      final autoDiscoveredHost = await _authApi.autoDiscoverHostname(email);
       if (autoDiscoveredHost == null || autoDiscoveredHost.isEmpty) {
         return null;
       } else {

@@ -9,9 +9,9 @@ import 'package:http/http.dart' as http;
 import 'package:webmail_api_client/webmail_api_client.dart';
 
 class AuthApi {
-  Future<String> autoDiscoverHostname(String domain) async {
+  Future<String> autoDiscoverHostname(String email) async {
     try {
-      final url = "$AUTO_DISCOVER_URL?domain=$domain";
+      final url = "$AUTO_DISCOVER_URL?email=$email";
       final res = await http.get(url);
       final resBody = json.decode(res.body);
       return resBody["url"] as String;

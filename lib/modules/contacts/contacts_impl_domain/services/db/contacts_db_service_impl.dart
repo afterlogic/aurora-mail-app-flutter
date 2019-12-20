@@ -11,8 +11,7 @@ import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/gr
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/storages/contacts_storages_dao.dart';
 
 class ContactsDbServiceImpl implements ContactsDbService {
-  static final ContactsDbServiceImpl _singleton =
-      ContactsDbServiceImpl._internal();
+  static final ContactsDbServiceImpl _singleton = ContactsDbServiceImpl._internal();
   static AppDatabase _db;
 
   ContactsDbServiceImpl._internal();
@@ -29,9 +28,7 @@ class ContactsDbServiceImpl implements ContactsDbService {
   @override
   Future<void> addContacts(List<Contact> newContacts) async {
     final formatted = ContactMapper.toDB(newContacts);
-    try {
-      await _contactsDao.addContacts(formatted);
-    } catch(err) {}
+    await _contactsDao.addContacts(formatted);
   }
 
   @override

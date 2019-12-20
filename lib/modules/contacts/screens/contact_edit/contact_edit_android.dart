@@ -1,3 +1,4 @@
+import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 import 'package:aurora_mail/modules/contacts/screens/contact_edit/components/contact_edit_app_bar.dart';
@@ -163,7 +164,7 @@ class _ContactEditAndroidState extends State<ContactEditAndroid> {
         entityId: widget.contact?.entityId ?? null,
         uuid: widget.contact?.uuid ?? null,
         parentUuid: widget.contact?.parentUuid ?? null,
-        idUser: widget.contact?.idUser ?? null,
+        idUser: widget.contact?.idUser ?? AuthBloc.currentAccount.serverId,
         idTenant: widget.contact?.idTenant ?? null,
         storage: widget.contact?.storage ?? "personal",
         fullName: _fullName.text,

@@ -5,21 +5,21 @@ import 'package:moor_flutter/moor_flutter.dart';
 class Contacts extends Table {
   TextColumn get uuid => text().customConstraint("UNIQUE")();
 
-  IntColumn get entityId => integer()();
+  IntColumn get entityId => integer().nullable()();
 
-  TextColumn get parentUuid => text()();
+  TextColumn get parentUuid => text().nullable()();
 
   TextColumn get eTag => text()();
 
   IntColumn get idUser => integer()();
 
-  IntColumn get idTenant => integer()();
+  IntColumn get idTenant => integer().nullable()();
 
   TextColumn get storage => text()();
 
   TextColumn get fullName => text()();
 
-  BoolColumn get useFriendlyName => boolean()();
+  BoolColumn get useFriendlyName => boolean().nullable()();
 
   IntColumn get primaryEmail => integer()();
 
@@ -97,15 +97,15 @@ class Contacts extends Table {
 
   IntColumn get birthYear => integer()();
 
-  BoolColumn get auto => boolean()();
+  BoolColumn get auto => boolean().nullable()();
 
-  IntColumn get frequency => integer()();
+  IntColumn get frequency => integer().nullable()();
 
-  TextColumn get dateModified => text()();
+  TextColumn get dateModified => text().nullable()();
 
-  TextColumn get davContactsUid => text()();
+  TextColumn get davContactsUid => text().nullable()();
 
-  TextColumn get davContactsVCardUid => text()();
+  TextColumn get davContactsVCardUid => text().nullable()();
 
   TextColumn get groupUUIDs => text().map(const ListStringConverter())();
 }
