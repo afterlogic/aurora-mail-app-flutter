@@ -13,9 +13,9 @@ class WebMailApiError implements Exception {
   String _getErrMsg(dynamic err) {
     if (err is Map) {
       if (err["ErrorMessage"] is String) {
-        return err["ErrorMessage"];
+        return err["ErrorMessage"] as String;
       } else if (err["ErrorCode"] is int) {
-        return _getErrMsgFromCode(err["ErrorCode"]);
+        return _getErrMsgFromCode(err["ErrorCode"] as int);
       } else {
         return "error_unknown";
       }

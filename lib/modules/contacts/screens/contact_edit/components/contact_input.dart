@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 class ContactInput extends StatelessWidget {
   final String label;
   final TextEditingController ctrl;
+  final TextInputType keyboardType;
 
-  const ContactInput(this.label, this.ctrl);
+  const ContactInput(this.label, this.ctrl, {this.keyboardType});
 
   @override
   Widget build(BuildContext context) {
@@ -13,6 +14,7 @@ class ContactInput extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: TextField(
         controller: ctrl,
+        keyboardType: keyboardType,
         decoration: InputDecoration(
           labelText: i18n(context, label),
           alignLabelWithHint: true,

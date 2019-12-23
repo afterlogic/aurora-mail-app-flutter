@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:aurora_mail/database/app_database.dart';
-import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/contacts_groups_event.dart';
-import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/contacts_storages_event.dart';
+import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/events/contacts_groups_event.dart';
+import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/events/contacts_storages_event.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/contacts_repository.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_group_model.dart';
@@ -12,6 +12,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/widgets.dart';
 
 import './bloc.dart';
+import 'contacts_state_reducer.dart';
 
 class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
   final String apiUrl;
@@ -61,30 +62,24 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
     if (event is AddContactsToGroup) yield* _addContactsToGroup(event);
     if (event is RemoveContactsFromGroup) yield* _removeContactsFromGroup(event);
     if (event is SelectStorageGroup) yield* _selectStorageGroup(event);
-    if (event is AddStorages) yield state.copyWith(storages: event.storages);
-    if (event is AddGroups) yield state.copyWith(groups: event.groups);
     if (event is CreateGroup) yield* _addGroup(event);
     if (event is UpdateGroup) yield* _updateGroup(event);
     if (event is DeleteGroup) yield* _deleteGroup(event);
-    if (event is AddContacts) yield state.copyWith(contacts: event.contacts);
-    if (event is SetSelectedStorage) yield state.copyWith(selectedStorage: event.storageSqliteId, selectedGroup: "");
-    if (event is SetSelectedGroup) yield state.copyWith(selectedStorage: -1, selectedGroup: event.groupUuid);
-    if (event is SetCurrentlySyncingStorages) yield state.copyWith(currentlySyncingStorage: event.storageSqliteIds);
-    if (event is AddError) yield state.copyWith(error: event.error);
+    yield* reduceState(state, event);
   }
 
   Stream<ContactsState> _getContacts(GetContacts event) async* {
     _storagesSub = _repo.watchContactsStorages().listen((storages) {
       if (state.storages == null) {
-        add(SelectStorageGroup(storage: storages[0]));
+        add(SelectStorageGroup());
       }
-      add(AddStorages(storages));
+      add(ReceivedStorages(storages));
     }, onError: (err) {
       add(AddError(formatError(err, null)));
     });
 
     _groupsSub = _repo.watchContactsGroups().listen((groups) {
-      add(AddGroups(groups));
+      add(ReceivedGroups(groups));
     }, onError: (err) {
       add(AddError(formatError(err, null)));
     });
@@ -96,17 +91,24 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
 
   Stream<ContactsState> _selectStorageGroup(SelectStorageGroup event) async* {
     _contactsSub?.cancel();
-    if (event.storage != null && event.storage != -1) {
+    if (event.storage != null) {
         add(SetSelectedStorage(event.storage.sqliteId));
         _contactsSub = _repo.watchContactsFromStorage(event.storage).listen((contacts) {
-        add(AddContacts(contacts));
+        add(ReceivedContacts(contacts));
+      }, onError: (err) {
+        add(AddError(formatError(err, null)));
+      });
+    } else if (event.group != null) {
+      add(SetGroupSelected(event.group.uuid));
+      _contactsSub = _repo.watchContactsFromGroup(event.group).listen((contacts) {
+        add(ReceivedContacts(contacts));
       }, onError: (err) {
         add(AddError(formatError(err, null)));
       });
     } else {
-      add(SetSelectedGroup(event.group.uuid));
-      _contactsSub = _repo.watchContactsFromGroup(event.group).listen((contacts) {
-        add(AddContacts(contacts));
+      add(SetAllVisibleContactsSelected());
+      _contactsSub = _repo.watchAllContacts().listen((contacts) {
+        add(ReceivedContacts(contacts));
       }, onError: (err) {
         add(AddError(formatError(err, null)));
       });

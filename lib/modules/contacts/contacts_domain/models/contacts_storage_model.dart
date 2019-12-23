@@ -16,6 +16,24 @@ class ContactsStorage {
     @required this.display,
     @required this.contactsInfo,
   });
+
+  ContactsStorage copyWith({
+    int sqliteId,
+    String id,
+    String name,
+    int cTag,
+    bool display,
+    List<ContactInfoItem> contactsInfo,
+  }) {
+    return new ContactsStorage(
+      sqliteId: sqliteId ?? this.sqliteId,
+      id: id ?? this.id,
+      name: name ?? this.name,
+      cTag: cTag ?? this.cTag,
+      display: display ?? this.display,
+      contactsInfo: contactsInfo ?? this.contactsInfo,
+    );
+  }
 }
 
 class ContactInfoItem {

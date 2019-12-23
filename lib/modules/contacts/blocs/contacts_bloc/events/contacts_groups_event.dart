@@ -2,19 +2,19 @@ import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_gro
 
 import 'contacts_event.dart';
 
-class SetSelectedGroup extends ContactsEvent {
+class SetGroupSelected extends ContactsEvent {
   final String groupUuid;
 
-  const SetSelectedGroup(this.groupUuid);
+  const SetGroupSelected(this.groupUuid);
 
   @override
   List<Object> get props => [groupUuid];
 }
 
-class AddGroups extends ContactsEvent {
+class ReceivedGroups extends ContactsEvent {
   final List<ContactsGroup> groups;
 
-  const AddGroups(this.groups);
+  const ReceivedGroups(this.groups);
 
   @override
   List<Object> get props => [groups];

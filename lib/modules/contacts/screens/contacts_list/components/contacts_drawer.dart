@@ -1,7 +1,9 @@
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
+import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_storage_model.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class ContactsDrawer extends StatefulWidget {
   @override
@@ -48,20 +50,34 @@ class _ContactsDrawerState extends State<ContactsDrawer> {
 
   Widget _buildStorages(BuildContext context, ContactsState state) {
     final bloc = BlocProvider.of<ContactsBloc>(context);
+    final visibleStorages = state.storages.where((s) => s.display);
 
-    if (state.storages != null && state.selectedStorage != null) {
+    if (visibleStorages != null && state.selectedStorage != null) {
       return Column(
-        children: state.storages
-            .where((s) => s.display)
-            .map((s) => ListTile(
-                  title: Text(s.name),
-                  selected: s.sqliteId == state.selectedStorage,
-                  onTap: () {
-                    bloc.add(SelectStorageGroup(storage: s));
-                    Navigator.pop(context);
-                  },
-                ))
+        children: [
+          ListTile(
+            leading: Icon(MdiIcons.accountGroup),
+            title: Text(i18n(context, "contacts_drawer_storage_all")),
+            selected: state.showAllVisibleContacts,
+            onTap: () {
+              bloc.add(SelectStorageGroup());
+              Navigator.pop(context);
+            },
+          ),
+          ...visibleStorages
+            .map((s) {
+          if (s.id == "personal") {
+            return _buildStorageTile(name: s.id, icon: MdiIcons.account, s: s, state: state);
+          } else if (s.id == "shared") {
+            return _buildStorageTile(name: s.id, icon: MdiIcons.accountSwitch, s: s, state: state);
+          } else if (s.id == "team") {
+            return _buildStorageTile(name: s.id, icon: MdiIcons.accountSupervisorCircle, s: s, state: state);
+          } else {
+            return _buildStorageTile(icon: MdiIcons.folderAccountOutline, s: s, state: state);
+          }
+        })
             .toList(),
+        ],
       );
     } else if (state.storages != null && state.storages.isEmpty) {
       return Center(child: Text(i18n(context, "contacts_empty")));
@@ -73,14 +89,34 @@ class _ContactsDrawerState extends State<ContactsDrawer> {
     }
   }
 
+  Widget _buildStorageTile({
+    String name,
+    @required ContactsStorage s,
+    @required IconData icon,
+    @required ContactsState state,
+  }) {
+    final bloc = BlocProvider.of<ContactsBloc>(context);
+    return ListTile(
+      leading: Icon(icon),
+      title: Text(name != null ? i18n(context, "contacts_drawer_storage_$name") : s.name),
+      selected: s.sqliteId == state.selectedStorage,
+      onTap: () {
+        bloc.add(SelectStorageGroup(storage: s));
+        Navigator.pop(context);
+      },
+    );
+  }
+
   Widget _buildGroups(BuildContext context, ContactsState state) {
     final bloc = BlocProvider.of<ContactsBloc>(context);
 
     if (state.groups != null && state.selectedGroup != null) {
       return Column(
         children: state.groups
-            .map((g) => ListTile(
-                  title: Text("# " + g.name),
+            .map((g) =>
+            ListTile(
+              leading: Icon(MdiIcons.pound),
+              title: Text(g.name),
                   selected: g.uuid == state.selectedGroup,
                   onTap: () {
                     bloc.add(SelectStorageGroup(group: g));

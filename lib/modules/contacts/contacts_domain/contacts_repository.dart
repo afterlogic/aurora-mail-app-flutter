@@ -20,9 +20,15 @@ abstract class ContactsRepository {
 
   Stream<List<int>> get currentlySyncingStorage;
 
+  Stream<List<Contact>> watchAllContacts();
+
   Stream<List<Contact>> watchContactsFromStorage(ContactsStorage storage);
 
   Stream<List<Contact>> watchContactsFromGroup(ContactsGroup group);
+
+  Stream<List<ContactsStorage>> watchContactsStorages();
+
+  Stream<List<ContactsGroup>> watchContactsGroups();
 
   Future<void> addContact(Contact contact);
 
@@ -33,10 +39,6 @@ abstract class ContactsRepository {
   Future<void> addContactsToGroup(ContactsGroup group, List<Contact> contacts);
 
   Future<void> removeContactsFromGroup(ContactsGroup group, List<Contact> contacts);
-
-  Stream<List<ContactsStorage>> watchContactsStorages();
-
-  Stream<List<ContactsGroup>> watchContactsGroups();
 
   Future<void> addGroup(ContactsGroup group);
 

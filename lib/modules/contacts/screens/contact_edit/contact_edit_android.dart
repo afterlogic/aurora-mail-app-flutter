@@ -164,7 +164,7 @@ class _ContactEditAndroidState extends State<ContactEditAndroid> {
         entityId: widget.contact?.entityId ?? null,
         uuid: widget.contact?.uuid ?? null,
         parentUuid: widget.contact?.parentUuid ?? null,
-        idUser: widget.contact?.idUser ?? AuthBloc.currentAccount.serverId,
+        idUser: widget.contact?.idUser ?? AuthBloc.currentUser.serverId,
         idTenant: widget.contact?.idTenant ?? null,
         storage: widget.contact?.storage ?? "personal",
         fullName: _fullName.text,
@@ -262,18 +262,18 @@ class _ContactEditAndroidState extends State<ContactEditAndroid> {
                 ContactInput("contacts_view_last_name", _lastName),
                 ContactInput("contacts_view_nickname", _nickName),
                 ContactTitle("contacts_view_section_home"),
-                ContactInput("contacts_view_personal_email", _personalEmail),
+                ContactInput("contacts_view_personal_email", _personalEmail, keyboardType: TextInputType.emailAddress),
                 ContactInput("contacts_view_personal_address", _personalAddress),
                 ContactInput("contacts_view_city", _personalCity),
                 ContactInput("contacts_view_province", _personalState),
                 ContactInput("contacts_view_zip", _personalZip),
                 ContactInput("contacts_view_country", _personalCountry),
                 ContactInput("contacts_view_web_page", _personalWeb),
-                ContactInput("contacts_view_fax", _personalFax),
-                ContactInput("contacts_view_phone", _personalPhone),
-                ContactInput("contacts_view_mobile", _personalMobile),
+                ContactInput("contacts_view_fax", _personalFax, keyboardType: TextInputType.phone),
+                ContactInput("contacts_view_phone", _personalPhone, keyboardType: TextInputType.phone),
+                ContactInput("contacts_view_mobile", _personalMobile, keyboardType: TextInputType.phone),
                 ContactTitle("contacts_view_section_business"),
-                ContactInput("contacts_view_business_email", _businessEmail),
+                ContactInput("contacts_view_business_email", _businessEmail, keyboardType: TextInputType.emailAddress),
                 ContactInput("contacts_view_company", _businessCompany),
                 ContactInput("contacts_view_personal_address", _businessAddress),
                 ContactInput("contacts_view_city", _businessCity),
@@ -284,8 +284,8 @@ class _ContactEditAndroidState extends State<ContactEditAndroid> {
                 ContactInput("contacts_view_department", _businessDepartment),
                 ContactInput("contacts_view_office", _businessOffice),
                 ContactInput("contacts_view_web_page", _businessWeb),
-                ContactInput("contacts_view_fax", _businessFax),
-                ContactInput("contacts_view_phone", _businessPhone),
+                ContactInput("contacts_view_fax", _businessFax, keyboardType: TextInputType.phone),
+                ContactInput("contacts_view_phone", _businessPhone, keyboardType: TextInputType.phone),
                 ContactTitle("contacts_view_section_other_info"),
                 ContactBirthDatePicker(
                   birthDay: _birthDay,
@@ -293,7 +293,7 @@ class _ContactEditAndroidState extends State<ContactEditAndroid> {
                   birthYear: _birthYear,
                   onPicked: _onDateSelected,
                 ),
-                ContactInput("contacts_view_other_email", _otherEmail),
+                ContactInput("contacts_view_other_email", _otherEmail, keyboardType: TextInputType.emailAddress),
                 ContactInput("contacts_view_notes", _notes),
                 ContactTitle("contacts_view_section_groups"),
                 ..._bloc.state.groups.map((g) {
@@ -361,7 +361,7 @@ class _ContactEditAndroidState extends State<ContactEditAndroid> {
     final label = "contacts_view_email";
 
     if (!_showAllFields) {
-      return ContactInput(label, _getPrimaryEmailCtrl());
+      return ContactInput(label, _getPrimaryEmailCtrl(), keyboardType: TextInputType.emailAddress);
     } else {
       final options = [
         "${i18n(context, "contacts_view_personal_email")}: ${_personalEmail.text}",
@@ -381,7 +381,7 @@ class _ContactEditAndroidState extends State<ContactEditAndroid> {
     final label = "contacts_view_phone";
 
     if (!_showAllFields) {
-      return ContactInput(label, _getPrimaryPhoneCtrl());
+      return ContactInput(label, _getPrimaryPhoneCtrl(), keyboardType: TextInputType.phone);
     } else {
       final options = [
         "${i18n(context, "contacts_view_mobile")}: ${_personalMobile.text}",

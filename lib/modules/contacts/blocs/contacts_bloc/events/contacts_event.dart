@@ -1,6 +1,7 @@
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_group_model.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_storage_model.dart';
+import 'package:aurora_mail/utils/always_non_equal_object.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class ContactsEvent extends Equatable {
@@ -10,22 +11,25 @@ abstract class ContactsEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class GetContacts extends ContactsEvent {}
+class GetContacts extends ContactsEvent implements AlwaysNonEqualObject {}
 
+// if none is selected returns all contacts
 class SelectStorageGroup extends ContactsEvent {
   final ContactsStorage storage;
   final ContactsGroup group;
 
-  const SelectStorageGroup({this.storage, this.group}) : assert(storage != null || group != null);
+  const SelectStorageGroup({this.storage, this.group});
 
   @override
   List<Object> get props => [storage, group];
 }
 
-class AddContacts extends ContactsEvent {
+class SetAllVisibleContactsSelected extends ContactsEvent implements AlwaysNonEqualObject {}
+
+class ReceivedContacts extends ContactsEvent {
   final List<Contact> contacts;
 
-  const AddContacts(this.contacts);
+  const ReceivedContacts(this.contacts);
 
   @override
   List<Object> get props => [contacts];

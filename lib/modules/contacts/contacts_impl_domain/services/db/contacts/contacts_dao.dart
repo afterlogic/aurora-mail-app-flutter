@@ -11,7 +11,7 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
   ContactsDao(AppDatabase db) : super(db);
 
   Future<void> addContacts(List<ContactsTable> newContacts) async {
-    batch((b) => b.insertAll(contacts, newContacts)).catchError((_) {});
+    batch((b) => b.insertAll(contacts, newContacts));
   }
 
   Future<void> deleteContacts(List<String> uuids) {
@@ -24,6 +24,14 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
           ..where((c) => c.storage.equals(storage))
           ..orderBy([(m) => OrderingTerm(expression: m.fullName)]))
         .get();
+  }
+
+  Stream<List<ContactsTable>> watchAllContacts(int userServerId) {
+    return (select(contacts)
+          ..where((c) => c.idUser.equals(userServerId))
+          ..where((c) => c.storage.isNotIn(["collected"]))
+          ..orderBy([(m) => OrderingTerm(expression: m.fullName)]))
+        .watch();
   }
 
   Stream<List<ContactsTable>> watchContactsFromStorage(int userServerId, String storage) {

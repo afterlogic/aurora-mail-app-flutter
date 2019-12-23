@@ -2,10 +2,10 @@ import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_sto
 
 import 'contacts_event.dart';
 
-class AddStorages extends ContactsEvent {
+class ReceivedStorages extends ContactsEvent {
   final List<ContactsStorage> storages;
 
-  const AddStorages(this.storages);
+  const ReceivedStorages(this.storages);
 
   @override
   List<Object> get props => [storages];

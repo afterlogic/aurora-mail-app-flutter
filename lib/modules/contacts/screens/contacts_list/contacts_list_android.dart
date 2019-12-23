@@ -103,15 +103,22 @@ class _ContactsListAndroidState extends State<ContactsListAndroid> {
       drawer: ContactsDrawer(),
       body: BlocListener<ContactsBloc, ContactsState>(
         listener: (context, state) {
-          if (state.error != null) {
+          if (state.error != null && state.error.isNotEmpty) {
             showSnack(
               context: context,
               scaffoldState: Scaffold.of(context),
               msg: state.error,
             );
           }
-          if (state.currentlySyncingStorages != null &&
-              !state.currentlySyncingStorages.contains(state.selectedStorage)) {
+
+          // if selected storage is not being synced or all storages are selected
+          if (state.currentlySyncingStorages != null && (
+                state.showAllVisibleContacts == true &&
+                state.currentlySyncingStorages.isEmpty ||
+                state.showAllVisibleContacts != true &&
+                !state.currentlySyncingStorages.contains(state.selectedStorage)
+            )
+          ) {
             _refreshCompleter?.complete();
             _refreshCompleter = new Completer();
           }
