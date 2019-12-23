@@ -96,6 +96,11 @@ class _ContactsListAndroidState extends State<ContactsListAndroid> {
     }
   }
 
+  void _completeRefresh() {
+    _refreshCompleter?.complete();
+    _refreshCompleter = new Completer();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -111,16 +116,23 @@ class _ContactsListAndroidState extends State<ContactsListAndroid> {
             );
           }
 
-          // if selected storage is not being synced or all storages are selected
-          if (state.currentlySyncingStorages != null && (
-                state.showAllVisibleContacts == true &&
-                state.currentlySyncingStorages.isEmpty ||
-                state.showAllVisibleContacts != true &&
-                !state.currentlySyncingStorages.contains(state.selectedStorage)
-            )
-          ) {
-            _refreshCompleter?.complete();
-            _refreshCompleter = new Completer();
+          if (state.currentlySyncingStorages != null) {
+            if (state.showAllVisibleContacts == true) {
+              if (state.currentlySyncingStorages.isEmpty) {
+                // for "All" storage
+                _completeRefresh();
+              }
+            } else {
+              if (state.selectedGroup != null && state.selectedGroup.isNotEmpty) {
+                if (state.currentlySyncingStorages.isEmpty) {
+                  // for groups
+                  _completeRefresh();
+                }
+              } else if (state.showAllVisibleContacts != true && !state.currentlySyncingStorages.contains(state.selectedStorage)) {
+                // for storages
+                _completeRefresh();
+              }
+            }
           }
         },
         child: RefreshIndicator(
