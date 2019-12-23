@@ -45,12 +45,6 @@ class ContactsDbServiceMockImpl implements ContactsDbService {
   }
 
   @override
-  Future<List<Contact>> getContacts(
-      int userServerId, ContactsStorage storage) async {
-    return contacts..where((c) => c.storage == storage.id).toList();
-  }
-
-  @override
   Future<void> addContacts(List<Contact> newContacts) async {
     newContacts.forEach((c) {
       contacts.add(new Contact(
@@ -130,6 +124,12 @@ class ContactsDbServiceMockImpl implements ContactsDbService {
   @override
   Stream<List<Contact>> watchAllContacts(int userServerId) {
     // TODO: implement watchAllContacts
+    return null;
+  }
+
+  @override
+  Future<List<Contact>> getContacts(int userServerId, {List<String> storages, int limit, String pattern}) {
+    // TODO: implement getContacts
     return null;
   }
 }

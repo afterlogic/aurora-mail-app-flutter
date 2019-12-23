@@ -1,13 +1,18 @@
+import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
+import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 import 'package:aurora_mail/utils/input_validation.dart';
+import 'package:aurora_mail/utils/mail_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 
-class ComposeSection extends StatefulWidget {
+class ComposeEmails extends StatefulWidget {
   final String label;
   final TextEditingController textCtrl;
   final List<String> emails;
   final Function onCCSelected;
 
-  const ComposeSection({
+  const ComposeEmails({
     Key key,
     @required this.label,
     @required this.emails,
@@ -16,10 +21,10 @@ class ComposeSection extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _ComposeSectionState createState() => _ComposeSectionState();
+  _ComposeEmailsState createState() => _ComposeEmailsState();
 }
 
-class _ComposeSectionState extends State<ComposeSection> {
+class _ComposeEmailsState extends State<ComposeEmails> {
   String _emailToShowDelete;
   var _focusNode = new FocusNode();
 
@@ -56,6 +61,18 @@ class _ComposeSectionState extends State<ComposeSection> {
     setState(() => widget.emails.remove(email));
   }
 
+  Future<List<Contact>> _buildSuggestions(String pattern) async {
+    final bloc = BlocProvider.of<ContactsBloc>(context);
+    final items = await bloc.getTypeAheadContacts(pattern);
+
+    items.removeWhere((i) {
+      final friendlyName = MailUtils.getFriendlyName(i);
+      return widget.emails.contains(friendlyName) || i.viewEmail == null || i.viewEmail.isEmpty;
+    });
+
+    return items;
+  }
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -88,7 +105,7 @@ class _ComposeSectionState extends State<ComposeSection> {
                         }
                       },
                       child: Chip(
-                        label: Text(e),
+                        label: Text(MailUtils.displayNameFromFriendly(e)),
                         onDeleted: e == _emailToShowDelete
                             ? () => _deleteEmail(e)
                             : null,
@@ -98,15 +115,38 @@ class _ComposeSectionState extends State<ComposeSection> {
                 }).toList(),
                 SizedBox(
                   height: !_focusNode.hasFocus ? 0 : null,
-                  child: TextField(
-                    focusNode: _focusNode,
-                    controller: widget.textCtrl,
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: InputDecoration.collapsed(
-                      hintText: null,
+                  child: TypeAheadField<Contact>(
+                    textFieldConfiguration: TextFieldConfiguration(
+                      focusNode: _focusNode,
+                      controller: widget.textCtrl,
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: InputDecoration.collapsed(
+                        hintText: null,
+                      ),
+                      onEditingComplete: _focusNode.unfocus,
                     ),
-                    onEditingComplete: _focusNode.unfocus,
+//                    hideOnEmpty: true,
+                    getImmediateSuggestions: true,
+                    noItemsFoundBuilder: (_) => SizedBox(),
+                    suggestionsCallback: _buildSuggestions,
+                    itemBuilder: (_, c) {
+                      final friendlyName = MailUtils.getFriendlyName(c);
+                      return ListTile(title: Text(friendlyName));
+                    },
+                    onSuggestionSelected: (c) {
+                      final friendlyName = MailUtils.getFriendlyName(c);
+                      return _addEmail(friendlyName);
+                    },
                   ),
+//                  child: TextField(
+//                    focusNode: _focusNode,
+//                    controller: widget.textCtrl,
+//                    keyboardType: TextInputType.emailAddress,
+//                    decoration: InputDecoration.collapsed(
+//                      hintText: null,
+//                    ),
+//                    onEditingComplete: _focusNode.unfocus,
+//                  ),
                 ),
               ]),
             ),

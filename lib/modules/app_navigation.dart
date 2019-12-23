@@ -65,12 +65,9 @@ class AppNavigation {
               name: settings.name,
             ),
             page: MultiBlocProvider(providers: [
-              BlocProvider<MailBloc>.value(
-                value: args.mailBloc,
-              ),
-              BlocProvider<MessagesListBloc>.value(
-                value: args.messagesListBloc,
-              ),
+              BlocProvider<MailBloc>.value(value: args.mailBloc),
+              BlocProvider<MessagesListBloc>.value(value: args.messagesListBloc),
+              BlocProvider<ContactsBloc>.value(value: args.contactsBloc),
             ], child: MessageViewAndroid(args.messages, args.initialPage)));
 
         break;
@@ -82,13 +79,18 @@ class AppNavigation {
               name: settings.name,
             ),
             fullscreenDialog: true,
-            builder: (_) => BlocProvider<MailBloc>.value(
-                value: args.bloc,
-                child: ComposeAndroid(
-                  message: args.message,
-                  draftUid: args.draftUid,
-                  composeType: args.composeType,
-                )));
+            builder: (_) =>
+                MultiBlocProvider(
+                  providers: [
+                    BlocProvider<MailBloc>.value(value: args.mailBloc),
+                    BlocProvider<ContactsBloc>.value(value: args.contactsBloc),
+                  ],
+                  child: ComposeAndroid(
+                    message: args.message,
+                    draftUid: args.draftUid,
+                    composeType: args.composeType,
+                  ),
+                ));
         break;
 
       // ================= CONTACTS =================

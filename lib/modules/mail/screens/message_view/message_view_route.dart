@@ -1,18 +1,25 @@
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/bloc.dart';
-import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
+import 'package:flutter/foundation.dart';
 
 class MessageViewRoute {
-  static const name = "${MessagesListRoute.name}/message_view";
+  static const name = "message_view";
 }
 
 class MessageViewScreenArgs {
   final List<Message> messages;
   final int initialPage;
   final MailBloc mailBloc;
+  final ContactsBloc contactsBloc;
   final MessagesListBloc messagesListBloc;
 
-  const MessageViewScreenArgs(
-      this.messages, this.initialPage, this.mailBloc, this.messagesListBloc);
+  const MessageViewScreenArgs({
+    @required this.messages,
+    @required this.initialPage,
+    @required this.mailBloc,
+    @required this.messagesListBloc,
+    @required this.contactsBloc,
+  });
 }

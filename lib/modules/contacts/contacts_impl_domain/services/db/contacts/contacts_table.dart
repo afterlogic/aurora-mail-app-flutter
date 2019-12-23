@@ -99,7 +99,7 @@ class Contacts extends Table {
 
   BoolColumn get auto => boolean().nullable()();
 
-  IntColumn get frequency => integer().nullable()();
+  IntColumn get frequency => integer().withDefault(Constant(0))();
 
   TextColumn get dateModified => text().nullable()();
 

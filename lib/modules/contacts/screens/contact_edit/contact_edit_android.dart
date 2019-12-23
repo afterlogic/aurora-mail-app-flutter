@@ -1,3 +1,4 @@
+import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
@@ -166,13 +167,13 @@ class _ContactEditAndroidState extends State<ContactEditAndroid> {
         parentUuid: widget.contact?.parentUuid ?? null,
         idUser: widget.contact?.idUser ?? AuthBloc.currentUser.serverId,
         idTenant: widget.contact?.idTenant ?? null,
-        storage: widget.contact?.storage ?? "personal",
+        storage: widget.contact?.storage ?? StorageNames.personal,
         fullName: _fullName.text,
         useFriendlyName: widget.contact?.useFriendlyName ?? null,
         primaryEmail: _primaryEmail,
         primaryPhone: _primaryPhone,
         primaryAddress: _primaryAddress,
-        viewEmail: widget.contact?.viewEmail ?? "",
+        viewEmail: widget.contact?.viewEmail ?? _getPrimaryEmailCtrl().text,
         title: widget.contact?.title ?? "",
         firstName: _firstName.text,
         lastName: _lastName.text,
@@ -209,7 +210,7 @@ class _ContactEditAndroidState extends State<ContactEditAndroid> {
         birthYear: _birthYear,
         eTag: widget.contact?.eTag ?? "",
         auto: widget.contact?.auto ?? null,
-        frequency: widget.contact?.frequency ?? null,
+        frequency: widget.contact?.frequency ?? 0,
         dateModified: widget.contact?.dateModified ?? null,
         davContactsUid: widget.contact?.davContactsUid ?? null,
         davContactsVCardUid: widget.contact?.davContactsVCardUid ?? null,

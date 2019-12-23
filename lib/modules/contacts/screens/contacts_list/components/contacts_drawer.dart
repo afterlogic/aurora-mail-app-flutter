@@ -1,3 +1,4 @@
+import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_storage_model.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
@@ -11,12 +12,6 @@ class ContactsDrawer extends StatefulWidget {
 }
 
 class _ContactsDrawerState extends State<ContactsDrawer> {
-//  @override
-//  void didChangeDependencies() {
-//    super.didChangeDependencies();
-//    BlocProvider.of<ContactsBloc>(context).add(GetContacts());
-//  }
-
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -66,11 +61,11 @@ class _ContactsDrawerState extends State<ContactsDrawer> {
           ),
           ...visibleStorages
             .map((s) {
-          if (s.id == "personal") {
+          if (s.id == StorageNames.personal) {
             return _buildStorageTile(name: s.id, icon: MdiIcons.account, s: s, state: state);
-          } else if (s.id == "shared") {
+          } else if (s.id == StorageNames.shared) {
             return _buildStorageTile(name: s.id, icon: MdiIcons.accountSwitch, s: s, state: state);
-          } else if (s.id == "team") {
+          } else if (s.id == StorageNames.team) {
             return _buildStorageTile(name: s.id, icon: MdiIcons.accountSupervisorCircle, s: s, state: state);
           } else {
             return _buildStorageTile(icon: MdiIcons.folderAccountOutline, s: s, state: state);

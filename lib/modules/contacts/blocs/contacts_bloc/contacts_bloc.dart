@@ -155,4 +155,8 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
     _repo.editGroup(event.group)
         .catchError((err) => add(AddError(formatError(err, null))));
   }
+
+  Future<List<Contact>> getTypeAheadContacts(String pattern) {
+    return _repo.getSuggestionContacts(pattern);
+  }
 }

@@ -101,7 +101,8 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
         context,
         ComposeRoute.name,
         arguments: ComposeScreenArgs(
-          bloc: _mailBloc,
+          mailBloc: _mailBloc,
+          contactsBloc: _contactsBloc,
           message: item,
           draftUid: item.uid,
           composeType: ComposeType.fromDrafts,
@@ -112,7 +113,12 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
         context,
         MessageViewRoute.name,
         arguments:
-            MessageViewScreenArgs(allMessages, i, _mailBloc, _messagesListBloc),
+        MessageViewScreenArgs(messages: allMessages,
+          initialPage: i,
+          mailBloc: _mailBloc,
+          messagesListBloc: _messagesListBloc,
+          contactsBloc: _contactsBloc,
+        ),
       );
     }
   }
@@ -218,7 +224,10 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
           child: Icon(MdiIcons.emailPlusOutline),
           onPressed: () => Navigator.pushNamed(context, ComposeRoute.name,
               arguments: ComposeScreenArgs(
-                  bloc: _mailBloc, composeType: ComposeType.none)),
+                mailBloc: _mailBloc,
+                contactsBloc: _contactsBloc,
+                composeType: ComposeType.none,
+              )),
         ),
       ),
     );

@@ -40,6 +40,8 @@ abstract class ContactsRepository {
 
   Future<void> removeContactsFromGroup(ContactsGroup group, List<Contact> contacts);
 
+  Future<List<Contact>> getSuggestionContacts(String pattern);
+
   Future<void> addGroup(ContactsGroup group);
 
   Future<bool> editGroup(ContactsGroup group);

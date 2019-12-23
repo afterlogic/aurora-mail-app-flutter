@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/contacts_repository.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
@@ -121,6 +122,19 @@ class ContactsRepositoryImpl implements ContactsRepository {
 
     return _storagesCtrl.stream;
   }
+
+  @override
+  Future<List<Contact>> getSuggestionContacts(String pattern) {
+    final storages = [StorageNames.collected, StorageNames.personal];
+
+    return _db.getContacts(
+      userServerId,
+      storages: storages,
+      pattern: pattern,
+      limit: COMPOSE_TYPE_AHEAD_ITEMS_NUMBER,
+    );
+  }
+
   @override
   Future<void> addContact(Contact contact) async {
     final newContact = await _network.addContact(contact);

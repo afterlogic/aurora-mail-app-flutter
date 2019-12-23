@@ -56,9 +56,11 @@ class ContactsDbServiceImpl implements ContactsDbService {
       _storagesDao.deleteStorages(sqliteIds);
 
   @override
-  Future<List<Contact>> getContacts(
-      int userServerId, ContactsStorage storage) async {
-    final result = await _contactsDao.getContacts(userServerId, storage.id);
+  Future<List<Contact>> getContacts(int userServerId,
+      {List<String> storages, int limit, String pattern}) async {
+    final result = await _contactsDao.getContacts(
+      userServerId, storages: storages, limit: limit, pattern: pattern,
+    );
     return ContactMapper.fromDB(result);
   }
 

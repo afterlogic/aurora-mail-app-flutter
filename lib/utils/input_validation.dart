@@ -52,5 +52,6 @@ bool _isEmailValid(String email) {
   final regExp = new RegExp(
       r'^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
 
-  return regExp.hasMatch(email);
+  final friendlyNameRegExp = new RegExp(r'".+" <(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))>');
+  return regExp.hasMatch(email) || friendlyNameRegExp.hasMatch(email);
 }

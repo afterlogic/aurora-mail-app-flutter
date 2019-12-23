@@ -5,6 +5,7 @@ import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/mail/mail_table.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
+import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/message_view_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/bloc.dart';
@@ -79,22 +80,35 @@ class _MessageViewAndroidState extends State<MessageViewAndroid>
 
   void _onAppBarActionSelected(MailViewAppBarAction action) {
     // ignore: close_sinks
-    final bloc = BlocProvider.of<MailBloc>(context);
+    final mailBloc = BlocProvider.of<MailBloc>(context);
+    final contactsBloc = BlocProvider.of<ContactsBloc>(context);
     final msg = widget.messages[_currentPage];
     switch (action) {
       case MailViewAppBarAction.reply:
         final args = new ComposeScreenArgs(
-            bloc: bloc, message: msg, composeType: ComposeType.reply);
+          mailBloc: mailBloc,
+          contactsBloc: contactsBloc,
+          message: msg,
+          composeType: ComposeType.reply,
+        );
         Navigator.pushNamed(context, ComposeRoute.name, arguments: args);
         break;
       case MailViewAppBarAction.replyToAll:
         final args = new ComposeScreenArgs(
-            bloc: bloc, message: msg, composeType: ComposeType.replyAll);
+          mailBloc: mailBloc,
+          contactsBloc: contactsBloc,
+          message: msg,
+          composeType: ComposeType.replyAll,
+        );
         Navigator.pushNamed(context, ComposeRoute.name, arguments: args);
         break;
       case MailViewAppBarAction.forward:
         final args = new ComposeScreenArgs(
-            bloc: bloc, message: msg, composeType: ComposeType.forward);
+          mailBloc: mailBloc,
+          contactsBloc: contactsBloc,
+          message: msg,
+          composeType: ComposeType.forward,
+        );
         Navigator.pushNamed(context, ComposeRoute.name, arguments: args);
         break;
       case MailViewAppBarAction.toSpam:

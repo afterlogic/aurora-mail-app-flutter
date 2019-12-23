@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 import 'package:aurora_mail/utils/date_formatting.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,26 @@ import 'package:flutter/widgets.dart';
 import 'package:html/parser.dart';
 
 class MailUtils {
+
+  static String getFriendlyName(Contact contact) {
+    if (contact.fullName != null && contact.fullName.isNotEmpty) {
+      return '"${contact.fullName}" <${contact.viewEmail}>';
+    } else {
+      return contact.viewEmail;
+    }
+  }
+
+  static String displayNameFromFriendly(String friendlyName) {
+    final regExp = new RegExp(r'"(.+)" <(.+)>');
+    if (regExp.hasMatch(friendlyName)) {
+      final matches = regExp.allMatches(friendlyName);
+      final firstMatch = matches.elementAt(0);
+      return firstMatch.group(1);
+    } else {
+      return friendlyName;
+    }
+  }
+
   static List<String> getEmails(String emailsInJson) {
     if (emailsInJson == null) return [];
     final emails = json.decode(emailsInJson);
@@ -58,8 +79,8 @@ class MailUtils {
 
         if (!re && !fwd) {
           final matches = (new RegExp(
-                  r'^\s?(' + prefixes + r')\s?[\[(]([\d]+)[\])]$',
-                  caseSensitive: false))
+              r'^\s?(' + prefixes + r')\s?[\[(]([\d]+)[\])]$',
+              caseSensitive: false))
               .allMatches(partUpper)
               .toList();
           if (matches != null &&

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/compose_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/models/compose_attachment.dart';
@@ -19,7 +20,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'components/compose_app_bar.dart';
 import 'components/compose_attachment_item.dart';
 import 'components/compose_body.dart';
-import 'components/compose_section.dart';
+import 'components/compose_emails.dart';
 import 'components/compose_subject.dart';
 
 class ComposeAndroid extends StatefulWidget {
@@ -27,8 +28,7 @@ class ComposeAndroid extends StatefulWidget {
   final ComposeType composeType;
   final int draftUid;
 
-  const ComposeAndroid({Key key, this.draftUid, this.message, this.composeType})
-      : super(key: key);
+  const ComposeAndroid({Key key, this.draftUid, this.message, this.composeType}) : super(key: key);
 
   @override
   _ComposeAndroidState createState() => _ComposeAndroidState();
@@ -140,9 +140,7 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
   }
 
   void _setUploadProgress(TempAttachmentUpload tempAttachment) {
-    setState(() {
-      _attachments.add(tempAttachment);
-    });
+    setState(() => _attachments.add(tempAttachment));
   }
 
   void _onAttachmentUploaded(ComposeAttachment attachment) {
@@ -235,6 +233,8 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
   // to provide mail bloc
   void _onMessageSent(BuildContext context) {
     BlocProvider.of<MailBloc>(context).add(CheckFoldersMessagesChanges());
+    // to update frequency
+    BlocProvider.of<ContactsBloc>(context).add(GetContacts());
     Navigator.popUntil(context, ModalRoute.withName(MessagesListRoute.name));
   }
 
@@ -281,13 +281,13 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
           child: ListView(
             padding: EdgeInsets.symmetric(horizontal: 16.0),
             children: <Widget>[
-              ComposeSection(
+              ComposeEmails(
                 label: i18n(context, "messages_to"),
                 textCtrl: _toTextCtrl,
                 emails: _toEmails,
               ),
               Divider(height: 0.0),
-              ComposeSection(
+              ComposeEmails(
                 label: i18n(context, "messages_cc"),
                 textCtrl: _ccTextCtrl,
                 emails: _ccEmails,
@@ -295,7 +295,7 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
               ),
               Divider(height: 0.0),
               if (_showBCC)
-                ComposeSection(
+                ComposeEmails(
                   label: i18n(context, "messages_bcc"),
                   textCtrl: _bccTextCtrl,
                   emails: _bccEmails,

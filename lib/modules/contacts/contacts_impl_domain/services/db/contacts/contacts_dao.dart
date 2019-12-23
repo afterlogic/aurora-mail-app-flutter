@@ -1,3 +1,4 @@
+import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:moor_flutter/moor_flutter.dart';
 
@@ -18,19 +19,27 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
     return (delete(contacts)..where((c) => c.uuid.isIn(uuids))).go();
   }
 
-  Future<List<ContactsTable>> getContacts(int userServerId, String storage) {
+  Future<List<ContactsTable>> getContacts(int userServerId, {List<String> storages, int limit, String pattern}) {
     return (select(contacts)
-          ..where((c) => c.idUser.equals(userServerId))
-          ..where((c) => c.storage.equals(storage))
-          ..orderBy([(m) => OrderingTerm(expression: m.fullName)]))
+//          ..where((c) => c.idUser.equals(userServerId))
+          ..where((c) {
+            if (pattern != null && pattern.isNotEmpty) {
+              return c.fullName.like("%$pattern%") | c.viewEmail.like("%$pattern%");
+            } else {
+              return Constant(true);
+            }
+          })
+          ..where((c) => storages != null ? c.storage.isIn(storages) : Constant(true))
+          ..limit(20)
+          ..orderBy([(c) => OrderingTerm(expression: c.frequency, mode: OrderingMode.desc)]))
         .get();
   }
 
   Stream<List<ContactsTable>> watchAllContacts(int userServerId) {
     return (select(contacts)
           ..where((c) => c.idUser.equals(userServerId))
-          ..where((c) => c.storage.isNotIn(["collected"]))
-          ..orderBy([(m) => OrderingTerm(expression: m.fullName)]))
+          ..where((c) => c.storage.isNotIn([StorageNames.collected]))
+          ..orderBy([(c) => OrderingTerm(expression: c.fullName)]))
         .watch();
   }
 
@@ -38,7 +47,7 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
     return (select(contacts)
           ..where((c) => c.idUser.equals(userServerId))
           ..where((c) => c.storage.equals(storage))
-          ..orderBy([(m) => OrderingTerm(expression: m.fullName)]))
+          ..orderBy([(c) => OrderingTerm(expression: c.fullName)]))
         .watch();
   }
 
@@ -46,7 +55,7 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
     return (select(contacts)
           ..where((c) => c.idUser.equals(userServerId))
           ..where((c) => c.groupUUIDs.like("%$groupUuid%"))
-          ..orderBy([(m) => OrderingTerm(expression: m.fullName)]))
+          ..orderBy([(c) => OrderingTerm(expression: c.fullName)]))
         .watch();
   }
 

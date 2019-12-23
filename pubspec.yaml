@@ -36,6 +36,9 @@ dependencies:
   path_provider:
   downloads_path_provider:
 
+  # type ahead
+  flutter_typeahead:
+
   # ui
   material_design_icons_flutter:
   animated_stream_list:
