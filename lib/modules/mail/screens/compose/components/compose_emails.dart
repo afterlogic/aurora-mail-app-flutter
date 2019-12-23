@@ -26,6 +26,8 @@ class ComposeEmails extends StatefulWidget {
 
 class _ComposeEmailsState extends State<ComposeEmails> {
   String _emailToShowDelete;
+  String _search;
+
   var _focusNode = new FocusNode();
 
   @override
@@ -62,6 +64,7 @@ class _ComposeEmailsState extends State<ComposeEmails> {
   }
 
   Future<List<Contact>> _buildSuggestions(String pattern) async {
+    _search = pattern;
     final bloc = BlocProvider.of<ContactsBloc>(context);
     final items = await bloc.getTypeAheadContacts(pattern);
 
@@ -71,6 +74,58 @@ class _ComposeEmailsState extends State<ComposeEmails> {
     });
 
     return items;
+  }
+
+
+  TextSpan _searchMatch(String match) {
+    final posRes = TextStyle(fontWeight: FontWeight.w700);
+    final negRes = TextStyle(fontWeight: FontWeight.w400);
+
+    if (_search == null || _search == "")
+      return TextSpan(text: match, style: negRes);
+    var refinedMatch = match.toLowerCase();
+    var refinedSearch = _search.toLowerCase();
+    if (refinedMatch.contains(refinedSearch)) {
+      if (refinedMatch.substring(0, refinedSearch.length) == refinedSearch) {
+        return TextSpan(
+          style: posRes,
+          text: match.substring(0, refinedSearch.length),
+          children: [
+            _searchMatch(
+              match.substring(
+                refinedSearch.length,
+              ),
+            ),
+          ],
+        );
+      } else if (refinedMatch.length == refinedSearch.length) {
+        return TextSpan(text: match, style: posRes);
+      } else {
+        return TextSpan(
+          style: negRes,
+          text: match.substring(
+            0,
+            refinedMatch.indexOf(refinedSearch),
+          ),
+          children: [
+            _searchMatch(
+              match.substring(
+                refinedMatch.indexOf(refinedSearch),
+              ),
+            ),
+          ],
+        );
+      }
+    } else if (!refinedMatch.contains(refinedSearch)) {
+      return TextSpan(text: match, style: negRes);
+    }
+    return TextSpan(
+      text: match.substring(0, refinedMatch.indexOf(refinedSearch)),
+      style: negRes,
+      children: [
+        _searchMatch(match.substring(refinedMatch.indexOf(refinedSearch)))
+      ],
+    );
   }
 
   @override
@@ -125,28 +180,20 @@ class _ComposeEmailsState extends State<ComposeEmails> {
                       ),
                       onEditingComplete: _focusNode.unfocus,
                     ),
-//                    hideOnEmpty: true,
+                    animationDuration: Duration.zero,
                     getImmediateSuggestions: true,
                     noItemsFoundBuilder: (_) => SizedBox(),
                     suggestionsCallback: _buildSuggestions,
                     itemBuilder: (_, c) {
                       final friendlyName = MailUtils.getFriendlyName(c);
-                      return ListTile(title: Text(friendlyName));
+                      return ListTile(title: RichText(
+                          text: _searchMatch(friendlyName)));
                     },
                     onSuggestionSelected: (c) {
                       final friendlyName = MailUtils.getFriendlyName(c);
                       return _addEmail(friendlyName);
                     },
                   ),
-//                  child: TextField(
-//                    focusNode: _focusNode,
-//                    controller: widget.textCtrl,
-//                    keyboardType: TextInputType.emailAddress,
-//                    decoration: InputDecoration.collapsed(
-//                      hintText: null,
-//                    ),
-//                    onEditingComplete: _focusNode.unfocus,
-//                  ),
                 ),
               ]),
             ),
