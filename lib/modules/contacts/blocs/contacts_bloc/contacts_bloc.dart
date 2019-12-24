@@ -76,7 +76,6 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
 
       add(ReceivedStorages(storages));
     }, onError: (err) {
-      print("VO: err: ${err}");
       add(AddError(formatError(err, null)));
     });
 
@@ -148,7 +147,7 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
   }
 
   Stream<ContactsState> _deleteGroup(DeleteGroup event) async* {
-    add(SelectStorageGroup(storage: state.storages[0]));
+    add(SelectStorageGroup());
     _repo.deleteGroup(event.group)
         .catchError((err) => add(AddError(formatError(err, null))));
   }

@@ -40,9 +40,9 @@ abstract class ContactsNetworkService {
 
   Future<void> removeContactsFromGroup(String groupUuid, List<String> uuids);
 
-  Future<ContactsGroup> addGroup(ContactsGroup group);
+  Future<ContactsGroup> createGroup(ContactsGroup group);
 
-  Future<bool> editGroup(ContactsGroup group);
+  Future<bool> updateGroup(ContactsGroup group);
 
   Future<bool> deleteGroup(ContactsGroup group);
 }

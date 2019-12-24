@@ -194,7 +194,7 @@ class ContactsRepositoryImpl implements ContactsRepository {
 
   @override
   Future<void> addGroup(ContactsGroup group) async {
-    final groupWithId = await _network.addGroup(group);
+    final groupWithId = await _network.createGroup(group);
 
     await _db.addGroups([groupWithId]);
     await _updateGroup();
@@ -202,7 +202,7 @@ class ContactsRepositoryImpl implements ContactsRepository {
 
   @override
   Future<bool> editGroup(ContactsGroup group) async {
-    final success = await _network.editGroup(group);
+    final success = await _network.updateGroup(group);
     if (!success) {
       return false;
     }

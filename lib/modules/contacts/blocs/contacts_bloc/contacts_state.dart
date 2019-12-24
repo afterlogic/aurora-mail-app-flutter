@@ -35,7 +35,6 @@ class ContactsState with AlwaysNonEqualObject {
     List<int> currentlySyncingStorages,
     String error,
   }) {
-    print("VO: CWVal.get(selectedStorage, this.selectedStorage): ${CWVal.get(selectedStorage, this.selectedStorage)}");
     return new ContactsState(
       storages: storages ?? this.storages,
       selectedStorage: CWVal.get(selectedStorage, this.selectedStorage),

@@ -145,7 +145,7 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
   }
 
   @override
-  Future<ContactsGroup> addGroup(ContactsGroup group) async {
+  Future<ContactsGroup> createGroup(ContactsGroup group) async {
     final body = new WebMailApiBody(
       method: "CreateGroup",
       parameters: json.encode({"Group": ContactsGroupMapper.toNetwork(group)}),
@@ -157,9 +157,8 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
   }
 
   @override
-  Future<bool> editGroup(ContactsGroup group) async {
+  Future<bool> updateGroup(ContactsGroup group) async {
     final body = new WebMailApiBody(
-      module: "Contacts",
       method: "UpdateGroup",
       parameters: json.encode({"Group": ContactsGroupMapper.toNetwork(group)}),
     );
@@ -171,7 +170,6 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
   @override
   Future<bool> deleteGroup(ContactsGroup group) async {
     final body = new WebMailApiBody(
-      module: "Contacts",
       method: "DeleteGroup",
       parameters: json.encode({"UUID": group.uuid}),
     );

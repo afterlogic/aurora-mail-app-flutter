@@ -45,7 +45,6 @@ class _ContactsDrawerState extends State<ContactsDrawer> {
 
   Widget _buildStorages(BuildContext context, ContactsState state) {
     final bloc = BlocProvider.of<ContactsBloc>(context);
-    print("VO: state.storages: ${state.storages}");
     final visibleStorages = state.storages?.where((s) => s.display);
 
     if (visibleStorages != null) {

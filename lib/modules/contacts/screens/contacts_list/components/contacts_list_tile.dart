@@ -16,6 +16,7 @@ class ContactsListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Dismissible(
       key: Key(contact.uuid),
+      direction: DismissDirection.endToStart,
       child: ListTile(
         title: Text(contact.fullName),
         subtitle: Text(contact.viewEmail),

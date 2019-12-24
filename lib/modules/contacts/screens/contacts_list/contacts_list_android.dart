@@ -108,7 +108,8 @@ class _ContactsListAndroidState extends State<ContactsListAndroid> {
       drawer: ContactsDrawer(),
       body: BlocListener<ContactsBloc, ContactsState>(
         listener: (context, state) {
-          if (state.error != null && state.error.isNotEmpty) {
+          if (state.error != null) {
+            _completeRefresh();
             showSnack(
               context: context,
               scaffoldState: Scaffold.of(context),

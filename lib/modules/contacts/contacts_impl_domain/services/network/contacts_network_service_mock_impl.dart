@@ -31,14 +31,14 @@ class ContactsNetworkServiceMockImpl implements ContactsNetworkService {
   Future<List<ContactsGroup>> getGroups() async => groups;
 
   @override
-  Future<ContactsGroup> addGroup(ContactsGroup group) async {
+  Future<ContactsGroup> createGroup(ContactsGroup group) async {
 // todo   group.uuid = Random().nextInt(500).toString();
     groups.add(group);
     return group;
   }
 
   @override
-  Future<bool> editGroup(ContactsGroup group) async {
+  Future<bool> updateGroup(ContactsGroup group) async {
     final item = groups.firstWhere((item) => item.uuid == group.uuid,
         orElse: () => null);
     groups.remove(item);
