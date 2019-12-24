@@ -20,7 +20,6 @@ PODS:
   - FMDB (2.7.5):
     - FMDB/standard (= 2.7.5)
   - FMDB/standard (2.7.5)
-  - NWPusher (0.7.5)
   - package_info (0.0.1):
     - Flutter
   - path_provider (0.0.1):
@@ -55,7 +54,6 @@ DEPENDENCIES:
   - flutter_downloader (from `.symlinks/plugins/flutter_downloader/ios`)
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
   - flutter_uploader (from `.symlinks/plugins/flutter_uploader/ios`)
-  - NWPusher
   - package_info (from `.symlinks/plugins/package_info/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
   - permission_handler (from `.symlinks/plugins/permission_handler/ios`)
@@ -72,7 +70,6 @@ SPEC REPOS:
   trunk:
     - Alamofire
     - FMDB
-    - NWPusher
     - Reachability
 
 EXTERNAL SOURCES:
@@ -126,7 +123,6 @@ SPEC CHECKSUMS:
   flutter_local_notifications: 9e4738ce2471c5af910d961a6b7eadcf57c50186
   flutter_uploader: 7957e1b9d6516b6cccc37e5ffd6c5a0975a7cc4c
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
-  NWPusher: 9b29a44754d88cb02c28a1e9bc8750845506123e
   package_info: 48b108e75b8802c2d5e126f208ef540561c98aef
   path_provider: fb74bd0465e96b594bb3b5088ee4a4e7bb1f2a9d
   permission_handler: 0fb88b8a3c23e31e5de45b8f1bb8b7de28cf8941
@@ -140,6 +136,6 @@ SPEC CHECKSUMS:
   url_launcher_web: e5527357f037c87560776e36436bf2b0288b965c
   webview_flutter: db3aba222b23e4dc432e0c5882834123dc50ff9f
 
-PODFILE CHECKSUM: 72292dd908841e02f2aae15655bcbf7e13032c19
+PODFILE CHECKSUM: d2bb59ea2f8c6e1da04a9ad3e9faba38299b697d
 
 COCOAPODS: 1.8.4

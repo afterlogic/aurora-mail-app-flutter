@@ -18,16 +18,16 @@ void main() {
   Alarm.init();
   Alarm.onPeriodic(onAlarm);
 }
-
 @pragma('vm:entry-point')
 void onAlarm() async {
+  await Alarm.init();
   try {
     if (!isBackground) _streamController.add(null);
     if (isBackground) WidgetsFlutterBinding.ensureInitialized();
 
     final hasUpdate = await BackgroundSync()
         .sync(isBackground, doOnAlarm != null)
-        .timeout(Duration(seconds: 50));
+        .timeout(Duration(seconds: 30));
 
     if (hasUpdate) {
       if (doOnAlarm != null) doOnAlarm();
@@ -35,7 +35,6 @@ void onAlarm() async {
   } catch (e, s) {
     print(e);
     print(s);
-  } finally {
-    await Alarm.endAlarm();
   }
+  await Alarm.endAlarm();
 }

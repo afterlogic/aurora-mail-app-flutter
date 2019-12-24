@@ -30,6 +30,8 @@ class _AppState extends State<App> with WidgetsBindingObserver {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _initApp();
+    //todo VO на ios плагин Connectivity не отрабатывает
+    _settingsBloc.add(UpdateConnectivity(ConnectivityResult.none));
   }
 
   @override
@@ -93,7 +95,8 @@ class _AppState extends State<App> with WidgetsBindingObserver {
                       ),
                     ],
                     child: MaterialApp(
-                      title: _appInfo.appName,
+                      //todo VO appName на ios равен null
+                      title: _appInfo.appName??"",
                       onGenerateRoute: AppNavigation.onGenerateRoute,
                       theme: theme ?? AppTheme.light,
                       darkTheme: theme ?? AppTheme.dark,

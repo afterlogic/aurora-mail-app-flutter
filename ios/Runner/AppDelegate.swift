@@ -5,22 +5,52 @@ import UserNotifications
 import NotificationCenter
 import BackgroundTasks
 import UserNotifications
+import alarm_service
+
 
 @UIApplicationMain
 class AppDelegate: FlutterAppDelegate{
     
-  override func application(
-    _ application: UIApplication,
-    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
-  ) -> Bool {
+    override func application(
+        _ application: UIApplication,
+        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
+    ) -> Bool {
+        initNotification(application: application)
+        serviceObserver()
+      
+        GeneratedPluginRegistrant.register(with: self)
+        
+        return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+    }
+
+    func serviceObserver(){
+        let appNotification = CFNotificationName("com.afterlogic.aurora.mail.auroraMail" as CFString)
+        
+        CFNotificationCenterAddObserver(
+            CFNotificationCenterGetDarwinNotifyCenter(),
+            nil,
+            {(
+                center: CFNotificationCenter?,
+                observer: UnsafeMutableRawPointer?,
+                name: CFNotificationName?,
+                object: UnsafeRawPointer?,
+                userInfo: CFDictionary?
+                ) in
+                SwiftAlarmPlugin.instance?.alarm()
+                
+                let serviceNotification = CFNotificationName("com.afterlogic.aurora.mail.auroraMail.service" as CFString)
+                let notificationCenter = CFNotificationCenterGetDarwinNotifyCenter()
+                CFNotificationCenterPostNotification(notificationCenter, serviceNotification, nil, nil, false)
+        },
+            appNotification.rawValue,
+            nil,
+            CFNotificationSuspensionBehavior.deliverImmediately
+        )
+    }
     
-    initNotification(application: application)
     
-    GeneratedPluginRegistrant.register(with: self)
-    return super.application(application, didFinishLaunchingWithOptions: launchOptions)
-  }
     
-  func initNotification(application: UIApplication){
+    func initNotification(application: UIApplication){
         if #available(iOS 10.0, *) {
             UNUserNotificationCenter.current().delegate = self
             UNUserNotificationCenter.current().requestAuthorization(
@@ -38,16 +68,8 @@ class AppDelegate: FlutterAppDelegate{
             return String(format: "%02.2hhx", data)
         }
         let token = tokenParts.joined()
+        
         print("Device Token: \(token)")
+        UserDefaults.standard.set(token,forKey: "deviceToken")
     }
-
-   override func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
-        // 1. Print out error if PNs registration not successful
-        print("Failed to register for remote notifications with error: \(error)")
-    }
-}
-
-private func registerPlugins(registry: FlutterPluginRegistry) {
-    
-    GeneratedPluginRegistrant.register(with: registry)
 }

@@ -1,15 +1,15 @@
 import Flutter
 import UIKit
 
-public class SwiftAlarmPlugin: NSObject, FlutterPlugin {
+open class SwiftAlarmPlugin: NSObject, FlutterPlugin {
     
- var onAlarm:FlutterResult?=nil
-
-  public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-  
-    let arg = call.arguments as? [Any]
-    do {
-        switch call.method {
+    var onAlarm:FlutterResult?=nil
+    
+    public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+        
+        let arg = call.arguments as? [Any]
+        do {
+            switch call.method {
             case "setAlarm":
                 let callback = FlutterCallbackCache.lookupCallbackInformation((arg![0] as! NSNumber).int64Value)
                 AlarmManager.setAlarm(
@@ -18,19 +18,22 @@ public class SwiftAlarmPlugin: NSObject, FlutterPlugin {
                     arg![1] as! NSNumber,
                     arg![2] as! NSNumber,
                     arg![3] as! Bool
-                    )
+                )
                 result("")
                 return
             case "cancelAlarm":
                 onAlarm?(nil)
+                onAlarm=nil
                 AlarmManager.cancelAlarm( arg![0] as! NSNumber)
                 result("")
                 return
             case "isAlarm":
-                result(SwiftAlarmPlugin.isBackground)
+                result("SwiftAlarmPlugin.isBackground")
                 return
             case "endAlarm":
-                SwiftAlarmPlugin.onCompleteAlarm?()
+                let serviceNotification = CFNotificationName("SwiftAlarmPlugin.endAlarm" as CFString)
+                let notificationCenter = CFNotificationCenterGetDarwinNotifyCenter()
+                CFNotificationCenterPostNotification(notificationCenter, serviceNotification, nil, nil, false)
                 result("")
                 return
             case "doOnAlarm":
@@ -40,26 +43,23 @@ public class SwiftAlarmPlugin: NSObject, FlutterPlugin {
                 result(FlutterMethodNotImplemented)
                 return
             }
-    } catch let e {
-        print(e.localizedDescription)
-        result(FlutterMethodNotImplemented)
+        } catch let e {
+            print(e.localizedDescription)
+            result(FlutterMethodNotImplemented)
+        }
     }
-  }
     
-    func alarm(onComplete: () -> Void, id: Int) {
-        onAlarm?(id)
+    open func alarm() {
+        onAlarm?(752)//from flutter
         onAlarm=nil
-        onComplete()
     }
     
     public static func register(with registrar: FlutterPluginRegistrar) {
-      let channel = FlutterMethodChannel(name: "alarm_service", binaryMessenger: registrar.messenger())
-      let instance = SwiftAlarmPlugin()
-      registrar.addMethodCallDelegate(instance, channel: channel)
-      
+        let channel = FlutterMethodChannel(name: "alarm_service", binaryMessenger: registrar.messenger())
+        let plugin = SwiftAlarmPlugin()
+        registrar.addMethodCallDelegate(plugin, channel: channel)
+        instance = plugin
     }
     
-    static var onCompleteAlarm:(()->Void)?=nil
-    static var instanse:SwiftAlarmPlugin?=nil
-    static var isBackground: Bool = false
+    public static weak var instance:SwiftAlarmPlugin? = nil
 }
