@@ -78,8 +78,9 @@ class _ComposeEmailsState extends State<ComposeEmails> {
 
 
   TextSpan _searchMatch(String match) {
-    final posRes = TextStyle(fontWeight: FontWeight.w700);
-    final negRes = TextStyle(fontWeight: FontWeight.w400);
+    final color = Theme.of(context).textTheme.body1.color;
+    final posRes = TextStyle(fontWeight: FontWeight.w700, color: color);
+    final negRes = TextStyle(fontWeight: FontWeight.w400, color: color);
 
     if (_search == null || _search == "")
       return TextSpan(text: match, style: negRes);
