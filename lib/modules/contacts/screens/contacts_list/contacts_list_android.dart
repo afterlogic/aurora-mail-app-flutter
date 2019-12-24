@@ -123,7 +123,7 @@ class _ContactsListAndroidState extends State<ContactsListAndroid> {
                 _completeRefresh();
               }
             } else {
-              if (state.selectedGroup != null && state.selectedGroup.isNotEmpty) {
+              if (state.selectedGroup != null) {
                 if (state.currentlySyncingStorages.isEmpty) {
                   // for groups
                   _completeRefresh();

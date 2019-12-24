@@ -1,3 +1,5 @@
+import 'package:aurora_mail/utils/copy_with_value.dart';
+
 import 'bloc.dart';
 import 'contacts_state.dart';
 
@@ -19,22 +21,22 @@ Stream<ContactsState> reduceState(ContactsState state, dynamic event) async* {
   }
   if (event is SetSelectedStorage) {
     yield state.copyWith(
-      selectedStorage: event.storageSqliteId,
-      selectedGroup: "",
+      selectedStorage: CWVal(event.storageSqliteId),
+      selectedGroup: CWVal(null),
       showAllVisibleContacts: false,
     );
   }
   if (event is SetGroupSelected) {
     yield state.copyWith(
-      selectedStorage: -1,
-      selectedGroup: event.groupUuid,
+      selectedStorage: CWVal(null),
+      selectedGroup: CWVal(event.groupUuid),
       showAllVisibleContacts: false,
     );
   }
   if (event is SetAllVisibleContactsSelected) {
     yield state.copyWith(
-      selectedStorage: -1,
-      selectedGroup: "",
+      selectedStorage: CWVal(null),
+      selectedGroup: CWVal(null),
       showAllVisibleContacts: true,
     );
   }

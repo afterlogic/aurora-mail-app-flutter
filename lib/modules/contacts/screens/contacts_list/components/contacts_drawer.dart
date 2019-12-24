@@ -45,9 +45,10 @@ class _ContactsDrawerState extends State<ContactsDrawer> {
 
   Widget _buildStorages(BuildContext context, ContactsState state) {
     final bloc = BlocProvider.of<ContactsBloc>(context);
-    final visibleStorages = state.storages.where((s) => s.display);
+    print("VO: state.storages: ${state.storages}");
+    final visibleStorages = state.storages?.where((s) => s.display);
 
-    if (visibleStorages != null && state.selectedStorage != null) {
+    if (visibleStorages != null) {
       return Column(
         children: [
           ListTile(
@@ -70,8 +71,7 @@ class _ContactsDrawerState extends State<ContactsDrawer> {
           } else {
             return _buildStorageTile(icon: MdiIcons.folderAccountOutline, s: s, state: state);
           }
-        })
-            .toList(),
+        }).toList(),
         ],
       );
     } else if (state.storages != null && state.storages.isEmpty) {
@@ -105,7 +105,7 @@ class _ContactsDrawerState extends State<ContactsDrawer> {
   Widget _buildGroups(BuildContext context, ContactsState state) {
     final bloc = BlocProvider.of<ContactsBloc>(context);
 
-    if (state.groups != null && state.selectedGroup != null) {
+    if (state.groups != null) {
       return Column(
         children: state.groups
             .map((g) =>

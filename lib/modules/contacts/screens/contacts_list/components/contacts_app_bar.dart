@@ -21,7 +21,7 @@ class ContactsAppBar extends StatelessWidget implements PreferredSizeWidget {
           AppBar(
             title: _buildTitle(context, state),
             actions: <Widget>[
-              if (state.selectedGroup != null && state.selectedGroup != "")
+              if (state.selectedGroup != null)
                 IconButton(icon: Icon(Icons.remove_red_eye),
                   onPressed: () {
                     final group = state.groups.firstWhere((g) => g.uuid == state.selectedGroup);
@@ -57,7 +57,6 @@ class ContactsAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   Widget _buildTitle(BuildContext context, ContactsState state) {
     if (state.selectedStorage != null &&
-        state.selectedStorage != -1 &&
         state.storages.isNotEmpty) {
       final selectedStorage =
       state.storages.firstWhere((s) => s.sqliteId == state.selectedStorage);
@@ -75,7 +74,6 @@ class ContactsAppBar extends StatelessWidget implements PreferredSizeWidget {
         ],
       );
     } else if (state.selectedGroup != null &&
-        state.selectedGroup != "" &&
         state.groups.isNotEmpty) {
       final selectedGroup = state.groups.firstWhere((g) => g.uuid == state.selectedGroup);
       return Column(

@@ -2,6 +2,7 @@ import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_mode
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_group_model.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_storage_model.dart';
 import 'package:aurora_mail/utils/always_non_equal_object.dart';
+import 'package:aurora_mail/utils/copy_with_value.dart';
 
 class ContactsState with AlwaysNonEqualObject {
   final List<ContactsStorage> storages;
@@ -24,32 +25,21 @@ class ContactsState with AlwaysNonEqualObject {
     this.error,
   });
 
-//  @override
-//  List<Object> get props => [
-//        storages,
-//        selectedStorage,
-//        selectedGroup,
-//        showAllVisibleContacts,
-//        contacts,
-//        groups,
-//        currentlySyncingStorages,
-//        error,
-//      ];
-
   ContactsState copyWith({
     List<ContactsStorage> storages,
-    int selectedStorage,
-    String selectedGroup,
+    CWVal<int> selectedStorage,
+    CWVal<String> selectedGroup,
     bool showAllVisibleContacts,
     List<Contact> contacts,
     List<ContactsGroup> groups,
     List<int> currentlySyncingStorages,
     String error,
   }) {
+    print("VO: CWVal.get(selectedStorage, this.selectedStorage): ${CWVal.get(selectedStorage, this.selectedStorage)}");
     return new ContactsState(
       storages: storages ?? this.storages,
-      selectedStorage: selectedStorage ?? this.selectedStorage,
-      selectedGroup: selectedGroup ?? this.selectedGroup,
+      selectedStorage: CWVal.get(selectedStorage, this.selectedStorage),
+      selectedGroup: CWVal.get(selectedGroup, this.selectedGroup),
       showAllVisibleContacts: showAllVisibleContacts ?? this.showAllVisibleContacts,
       contacts: contacts ?? this.contacts,
       groups: groups ?? this.groups,

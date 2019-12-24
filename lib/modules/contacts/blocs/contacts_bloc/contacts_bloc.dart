@@ -73,8 +73,10 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
       if (state.storages == null) {
         add(SelectStorageGroup());
       }
+
       add(ReceivedStorages(storages));
     }, onError: (err) {
+      print("VO: err: ${err}");
       add(AddError(formatError(err, null)));
     });
 
