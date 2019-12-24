@@ -97,7 +97,9 @@ class _MessageItemState extends State<MessageItem> {
               ),
             ),
             child: ListTile(
-              onTap: () => widget.onItemSelected(widget.message),
+              onTap: widget.children.isNotEmpty && !_showThreads
+                  ? _toggleThreads
+                  : () => widget.onItemSelected(widget.message),
               key: Key(widget.message.uid.toString()),
               title: Text(widget.message.fromToDisplay, style: textStyle),
               subtitle: Padding(
@@ -111,7 +113,9 @@ class _MessageItemState extends State<MessageItem> {
                         width: 24.0,
                         child: IconButton(
                           padding: EdgeInsets.zero,
-                          icon: Icon(hasUnreadChildren
+                          icon: _showThreads ? Icon(hasUnreadChildren
+                              ? MdiIcons.arrowUpDropCircle
+                              : MdiIcons.arrowUpDropCircleOutline) : Icon(hasUnreadChildren
                               ? MdiIcons.arrowDownDropCircle
                               : MdiIcons.arrowDownDropCircleOutline),
                           onPressed: _toggleThreads,
