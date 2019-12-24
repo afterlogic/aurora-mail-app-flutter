@@ -152,6 +152,10 @@ class _ContactsListAndroidState extends State<ContactsListAndroid> {
     );
   }
 
+  void _deleteContact(Contact contact) {
+    BlocProvider.of<ContactsBloc>(context).add(DeleteContacts([contact]));
+  }
+
   Widget _buildLoading(ContactsState state) {
     return Center(child: CircularProgressIndicator());
   }
@@ -168,6 +172,7 @@ class _ContactsListAndroidState extends State<ContactsListAndroid> {
             itemBuilder: (_, i) => ContactsListTile(
               contact: state.contacts[i],
               onPressed: _onContactSelected,
+              onDeleteContact: _deleteContact,
             ),
             separatorBuilder: (_, i) =>
                 Divider(indent: 16.0, endIndent: 16.0, height: 0.0),

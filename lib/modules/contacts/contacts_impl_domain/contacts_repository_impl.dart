@@ -164,8 +164,10 @@ class ContactsRepositoryImpl implements ContactsRepository {
   @override
   Future<void> deleteContacts(List<Contact> contacts) async {
     final uuids = contacts.map((c) => c.uuid).toList();
-    await _network.deleteContacts(uuids);
-    await _db.deleteContacts(uuids);
+    await Future.wait([
+      _network.deleteContacts(uuids),
+      _db.deleteContacts(uuids),
+    ]);
   }
 
   Future<void> addContactsToGroup(ContactsGroup group, List<Contact> contacts) async {
