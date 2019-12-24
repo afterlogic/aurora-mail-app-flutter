@@ -11,28 +11,13 @@ import './bloc.dart';
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final _methods = new AuthMethods();
 
-  static String _hostName;
+  static String hostName;
 
-  static String get hostName => _hostName;
+  static String get apiUrl => "$hostName/?Api/";
 
-  static String get apiUrl => "$_hostName/?Api/";
+  static Account currentAccount;
 
-  static Account _currentAccount;
-
-  static Account get currentAccount => _currentAccount;
-
-  static User _currentUser;
-
-  static User get currentUser => _currentUser;
-
-  //todo VO
-  static set currentAccount(Account account) => _currentAccount = account;
-
-  //todo VO
-  static set hostName(String hostName) => _hostName = hostName;
-
-  //todo VO
-  static set currentUser(User user) => _currentUser = user;
+  static User currentUser;
 
   @override
   AuthState get initialState => InitialAuthState();
@@ -52,9 +37,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     try {
       if (result != null) {
-        _currentUser = result.user;
-        _hostName = result.user.hostname;
-        _currentAccount = result.accounts[0];
+        currentUser = result.user;
+        hostName = result.user.hostname;
+        currentAccount = result.accounts[0];
         yield InitializedUserAndAccounts(result.user, needsLogin: false);
       } else {
         yield InitializedUserAndAccounts(null, needsLogin: true);
@@ -79,13 +64,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       if (user == null) {
         yield NeedsHost();
       } else {
-        _hostName = user.hostname;
-        _currentUser = user;
+        hostName = user.hostname;
+        currentUser = user;
         final accounts = await _methods.getAccounts(user.serverId);
 
         if (accounts.isNotEmpty) {
           assert(accounts[0] != null);
-          _currentAccount = accounts[0];
+          currentAccount = accounts[0];
           yield LoggedIn(user);
         } else {
           yield AuthError("error_login_no_accounts");
@@ -99,9 +84,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   Stream<AuthState> _logout(LogOut event) async* {
     await Alarm.cancel();
     try {
-      await _methods.logout(_currentUser);
-      _currentUser = null;
-      _currentAccount = null;
+      await _methods.logout(currentUser);
+      currentUser = null;
+      currentAccount = null;
 
       yield LoggedOut();
     } catch (err, s) {
@@ -110,6 +95,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   Stream<AuthState> _setUser(UpdateUser event) async* {
-    _currentUser = event.updatedUser;
+    currentUser = event.updatedUser;
   }
 }

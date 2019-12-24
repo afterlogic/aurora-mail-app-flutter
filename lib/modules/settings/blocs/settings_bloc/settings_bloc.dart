@@ -15,12 +15,7 @@ import './bloc.dart';
 class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   final _methods = new SettingsMethods();
 
-  static bool _isOffline = true;
-
-  static bool get isOffline => _isOffline;
-
-  //todo VO
-  static set isOffline(bool isOffline) => _isOffline = isOffline;
+  static bool isOffline = true;
 
   @override
   SettingsState get initialState => SettingsEmpty();
@@ -65,7 +60,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   }
 
   Stream<SettingsState> _updateConnectivity(UpdateConnectivity event) async* {
-    _isOffline = event.connection == ConnectivityResult.none;
+    isOffline = event.connection == ConnectivityResult.none;
     if (state is SettingsLoaded) {
       yield (state as SettingsLoaded)
           .copyWith(connection: Value(event.connection));
