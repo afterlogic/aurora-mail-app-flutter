@@ -124,15 +124,17 @@ class ContactsRepositoryImpl implements ContactsRepository {
   }
 
   @override
-  Future<List<Contact>> getSuggestionContacts(String pattern) {
+  Future<List<Contact>> getSuggestionContacts(String pattern) async {
     final storages = [StorageNames.collected, StorageNames.personal];
 
-    return _db.getContacts(
+    final contacts = await _db.getContacts(
       userServerId,
       storages: storages,
       pattern: pattern,
-      limit: COMPOSE_TYPE_AHEAD_ITEMS_NUMBER,
     );
+
+    contacts.sort((c1, c2) => c2.ageScore.compareTo(c1.ageScore));
+    return contacts.take(COMPOSE_TYPE_AHEAD_ITEMS_NUMBER).toList();
   }
 
   @override

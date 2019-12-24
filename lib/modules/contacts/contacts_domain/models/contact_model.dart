@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/widgets.dart';
 
 class Contact {
@@ -54,6 +55,13 @@ class Contact {
   final String davContactsUid;
   final String davContactsVCardUid;
   final List<String> groupUUIDs;
+
+  int get ageScore {
+    final tomorrow = DateTime.now().add(Duration(days: 1));
+    final modified = DateTime.parse(dateModified);
+    final difference = tomorrow.difference(modified).inDays;
+    return (frequency / (difference / 30)).ceil();
+  }
 
   const Contact({
     @required this.entityId,

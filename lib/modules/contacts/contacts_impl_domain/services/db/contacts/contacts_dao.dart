@@ -19,9 +19,9 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
     return (delete(contacts)..where((c) => c.uuid.isIn(uuids))).go();
   }
 
-  Future<List<ContactsTable>> getContacts(int userServerId, {List<String> storages, int limit, String pattern}) {
+  Future<List<ContactsTable>> getContacts(int userServerId, {List<String> storages, String pattern}) {
     return (select(contacts)
-//          ..where((c) => c.idUser.equals(userServerId))
+          ..where((c) => c.idUser.equals(userServerId))
           ..where((c) {
             if (pattern != null && pattern.isNotEmpty) {
               return c.fullName.like("%$pattern%") | c.viewEmail.like("%$pattern%");
@@ -29,9 +29,7 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
               return Constant(true);
             }
           })
-          ..where((c) => storages != null ? c.storage.isIn(storages) : Constant(true))
-          ..limit(20)
-          ..orderBy([(c) => OrderingTerm(expression: c.frequency, mode: OrderingMode.desc)]))
+          ..where((c) => storages != null ? c.storage.isIn(storages) : Constant(true)))
         .get();
   }
 

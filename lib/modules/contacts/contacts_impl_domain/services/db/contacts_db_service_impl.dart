@@ -57,9 +57,9 @@ class ContactsDbServiceImpl implements ContactsDbService {
 
   @override
   Future<List<Contact>> getContacts(int userServerId,
-      {List<String> storages, int limit, String pattern}) async {
+      {List<String> storages, String pattern}) async {
     final result = await _contactsDao.getContacts(
-      userServerId, storages: storages, limit: limit, pattern: pattern,
+      userServerId, storages: storages, pattern: pattern,
     );
     return ContactMapper.fromDB(result);
   }

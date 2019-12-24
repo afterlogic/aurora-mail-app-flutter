@@ -21,7 +21,7 @@ abstract class ContactsDbService {
 
   Stream<List<Contact>> watchContactsFromGroup(int userServerId, ContactsGroup group);
 
-  Future<List<Contact>> getContacts(int userServerId, {List<String> storages, int limit, String pattern});
+  Future<List<Contact>> getContacts(int userServerId, {List<String> storages, String pattern});
 
   Future<void> addContacts(List<Contact> newContacts);
 
