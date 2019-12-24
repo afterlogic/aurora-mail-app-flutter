@@ -276,8 +276,7 @@ class _MessageViewAndroidState extends State<MessageViewAndroid>
     ];
   }
 
-  List<Widget> _buildWithoutTabs(
-      Message message, List<MailAttachment> attachments) {
+  List<Widget> _buildWithoutTabs(Message message, List<MailAttachment> attachments) {
     return [Flexible(child: MessageBody(message, attachments))];
   }
 }

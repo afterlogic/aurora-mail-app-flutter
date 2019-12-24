@@ -178,21 +178,18 @@ class MailUtils {
   }
 
   static String wrapInHtml(BuildContext context, String body) {
+    final backgroundColor = _getWebColor(Theme.of(context).scaffoldBackgroundColor);
+    final textColor = _getWebColor(Theme.of(context).textTheme.body1.color);
     return """
-    <!doctype html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-    html{
-      width: 100vw;
-    }
-    body {
-      width: 100vw;
-      overflow-x: hidden;
-      background-color: ${_getWebColor(Colors.grey[50])}
-    }
+      body {
+        overflow-x: hidden;
+      }
     </style>
   </head>
   <body>
