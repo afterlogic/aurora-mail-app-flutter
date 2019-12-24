@@ -164,10 +164,19 @@ class ContactsRepositoryImpl implements ContactsRepository {
   @override
   Future<void> deleteContacts(List<Contact> contacts) async {
     final uuids = contacts.map((c) => c.uuid).toList();
-    await Future.wait([
-      _network.deleteContacts(uuids),
-      _db.deleteContacts(uuids),
-    ]);
+    final futures = [_db.deleteContacts(uuids), _network.deleteContacts(uuids)];
+
+    final storages = await _db.getStorages(userServerId);
+    contacts.forEach((c) {
+      final storage = storages.firstWhere((s) => s.id == c.storage);
+      print("VO: storage.contactsInfo.length: ${storage.contactsInfo.length}");
+      final updatedInfo = storage.contactsInfo..removeWhere((i) => i.uuid == c.uuid);
+      print("VO: updatedInfo.length: ${updatedInfo.length}");
+      final storageToUpdate = storage.copyWith(contactsInfo: updatedInfo);
+      futures.add(_db.updateStorages([storageToUpdate], userServerId));
+    });
+
+    await Future.wait(futures);
   }
 
   Future<void> addContactsToGroup(ContactsGroup group, List<Contact> contacts) async {
