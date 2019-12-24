@@ -97,6 +97,7 @@ class _MessageBodyState extends State<MessageBody> {
 //          height: _webViewHeight,
           child: _buildMessageBody(),
         ),
+        if (_plainData == null)
         Positioned.fill(
           child: IgnorePointer(
             ignoring: true,
