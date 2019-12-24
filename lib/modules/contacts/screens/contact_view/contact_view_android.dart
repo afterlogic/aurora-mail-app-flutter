@@ -1,3 +1,5 @@
+import 'package:aurora_mail/config.dart';
+import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 import 'package:aurora_mail/modules/contacts/screens/contact_edit/contact_edit_route.dart';
@@ -128,7 +130,10 @@ class _ContactViewAndroidState extends State<ContactViewAndroid> {
     ]);
 
     return Scaffold(
-      appBar: ContactViewAppBar(onActionSelected: _onMainAppBarActionSelected),
+      appBar: ContactViewAppBar(
+        allowEdit: c.storage == StorageNames.personal || c.viewEmail == AuthBloc.currentAccount.email,
+        onActionSelected: _onMainAppBarActionSelected,
+      ),
       body: ListView(
         children: <Widget>[
           ..._mainInfo,

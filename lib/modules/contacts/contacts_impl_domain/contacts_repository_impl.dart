@@ -169,9 +169,7 @@ class ContactsRepositoryImpl implements ContactsRepository {
     final storages = await _db.getStorages(userServerId);
     contacts.forEach((c) {
       final storage = storages.firstWhere((s) => s.id == c.storage);
-      print("VO: storage.contactsInfo.length: ${storage.contactsInfo.length}");
       final updatedInfo = storage.contactsInfo..removeWhere((i) => i.uuid == c.uuid);
-      print("VO: updatedInfo.length: ${updatedInfo.length}");
       final storageToUpdate = storage.copyWith(contactsInfo: updatedInfo);
       futures.add(_db.updateStorages([storageToUpdate], userServerId));
     });

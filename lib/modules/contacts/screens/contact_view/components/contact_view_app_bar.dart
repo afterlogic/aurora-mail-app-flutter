@@ -5,12 +5,15 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 enum ContactViewAppBarAction { attach, sendMessage, searchMessages, edit }
 
 class ContactViewAppBar extends StatelessWidget implements PreferredSizeWidget {
+  final bool allowEdit;
   final Function(ContactViewAppBarAction) onActionSelected;
 
   @override
   final Size preferredSize = const Size.fromHeight(kToolbarHeight);
 
-  const ContactViewAppBar({Key key, this.onActionSelected}) : super(key: key);
+  const ContactViewAppBar(
+      {Key key, @required this.onActionSelected, @required this.allowEdit})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -34,11 +37,12 @@ class ContactViewAppBar extends StatelessWidget implements PreferredSizeWidget {
 //          onPressed: () => onActionSelected(ContactViewAppBarAction.searchMessages),
           onPressed: null,
         ),
-        IconButton(
-          icon: Icon(Icons.edit),
-          tooltip: i18n(context, "contacts_view_app_bar_edit_contact"),
-          onPressed: () => onActionSelected(ContactViewAppBarAction.edit),
-        ),
+        if (allowEdit)
+          IconButton(
+            icon: Icon(Icons.edit),
+            tooltip: i18n(context, "contacts_view_app_bar_edit_contact"),
+            onPressed: () => onActionSelected(ContactViewAppBarAction.edit),
+          ),
       ],
     );
   }
