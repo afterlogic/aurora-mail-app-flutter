@@ -46,6 +46,7 @@ class _GroupViewAndroidState extends State<GroupViewAndroid> {
       _buildInfoItem(label: i18n(context, "contacts_view_section_group_name"), v: g.name),
       _buildInfoItem(label: i18n(context, "contacts_view_email"), v: g.email),
       _buildInfoItem(label: i18n(context, "contacts_view_company"), v: g.company),
+      _buildInfoItem(label: i18n(context, "contacts_view_country"), v: g.country),
       _buildInfoItem(label: i18n(context, "contacts_view_province"), v: g.state),
       _buildInfoItem(label: i18n(context, "contacts_view_city"), v: g.city),
       _buildInfoItem(label: i18n(context, "contacts_view_street_address"), v: g.street),

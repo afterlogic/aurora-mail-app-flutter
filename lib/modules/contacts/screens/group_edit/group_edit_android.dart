@@ -23,6 +23,7 @@ class _GroupEditAndroidState extends State<GroupEditAndroid> {
   final _nameCtrl = TextEditingController();
   final _emailCtrl = TextEditingController();
   final _companyCtrl = TextEditingController();
+  final _countryCtrl = TextEditingController();
   final _stateCtrl = TextEditingController();
   final _cityCtrl = TextEditingController();
   final _streetCtrl = TextEditingController();
@@ -42,6 +43,7 @@ class _GroupEditAndroidState extends State<GroupEditAndroid> {
     _nameCtrl.text = g.name;
     _emailCtrl.text = g.email;
     _companyCtrl.text = g.company;
+    _countryCtrl.text = g.country;
     _stateCtrl.text = g.state;
     _cityCtrl.text = g.city;
     _streetCtrl.text = g.street;
@@ -78,6 +80,7 @@ class _GroupEditAndroidState extends State<GroupEditAndroid> {
       name: _nameCtrl.text,
       email: _emailCtrl.text,
       company: _companyCtrl.text,
+      country: _countryCtrl.text,
       state: _stateCtrl.text,
       city: _cityCtrl.text,
       street: _streetCtrl.text,
@@ -106,6 +109,7 @@ class _GroupEditAndroidState extends State<GroupEditAndroid> {
               children: <Widget>[
                 _buildInput("contacts_view_email", _emailCtrl),
                 _buildInput("contacts_view_company", _companyCtrl),
+                _buildInput("contacts_view_country", _countryCtrl),
                 _buildInput("contacts_view_province", _stateCtrl),
                 _buildInput("contacts_view_city", _cityCtrl),
                 _buildInput("contacts_view_street_address", _streetCtrl),
