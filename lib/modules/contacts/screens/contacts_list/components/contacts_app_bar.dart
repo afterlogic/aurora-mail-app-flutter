@@ -56,8 +56,7 @@ class ContactsAppBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   Widget _buildTitle(BuildContext context, ContactsState state) {
-    if (state.selectedStorage != null &&
-        state.storages.isNotEmpty) {
+    if (state.selectedStorage != null && state.storages.isNotEmpty) {
       final selectedStorage =
       state.storages.firstWhere((s) => s.sqliteId == state.selectedStorage);
       return Column(
@@ -73,8 +72,7 @@ class ContactsAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
         ],
       );
-    } else if (state.selectedGroup != null &&
-        state.groups.isNotEmpty) {
+    } else if (state.selectedGroup != null && state.groups.isNotEmpty) {
       final selectedGroup = state.groups.firstWhere((g) => g.uuid == state.selectedGroup);
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -83,6 +81,20 @@ class ContactsAppBar extends StatelessWidget implements PreferredSizeWidget {
           SizedBox(height: 3.0),
           Text(
             "# " + selectedGroup.name,
+            style: TextStyle(
+                fontSize: Theme.of(context).textTheme.caption.fontSize,
+                fontWeight: FontWeight.w400),
+          ),
+        ],
+      );
+    } else if (state.showAllVisibleContacts) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(i18n(context, "contacts")),
+          SizedBox(height: 3.0),
+          Text(
+            i18n(context, "contacts_list_app_bar_all_contacts"),
             style: TextStyle(
                 fontSize: Theme.of(context).textTheme.caption.fontSize,
                 fontWeight: FontWeight.w400),

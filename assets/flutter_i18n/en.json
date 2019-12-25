@@ -53,6 +53,8 @@
   "contacts": "Contacts",
   "contacts_list_app_bar_mail": "Mail",
   "contacts_list_app_bar_view_group": "View group",
+  "contacts_list_app_bar_all_contacts": "All contacts",
+  "contacts_list_its_me_flag": "It's me!",
   "contacts_empty": "No contacts",
   "contacts_groups_empty": "No groups",
   "contacts_drawer_section_storages": "STORAGES",
