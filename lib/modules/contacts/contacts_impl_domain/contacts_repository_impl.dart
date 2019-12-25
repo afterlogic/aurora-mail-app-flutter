@@ -103,7 +103,6 @@ class ContactsRepositoryImpl implements ContactsRepository {
           _currentlySyncingStorageCtrl.add([]);
           return;
         }
-        ;
 
         await updateContactsInfo(storagesToUpdate);
 
@@ -263,6 +262,7 @@ class ContactsRepositoryImpl implements ContactsRepository {
 
   Future<ContactsStorage> getStoragesWithUpdatedInfo(ContactsStorage s) async {
     final infos = await _network.getContactsInfo(s);
+
     if (s.contactsInfo == null) {
       return new ContactsStorage(
           id: s.id,
@@ -272,9 +272,7 @@ class ContactsRepositoryImpl implements ContactsRepository {
           display: s.display,
           name: s.name);
     } else {
-      final calcResult =
-          await ContactsDiffCalculator.calculateContactsInfoDiffAsync(
-              s.contactsInfo, infos);
+      final calcResult = await ContactsDiffCalculator.calculateContactsInfoDiffAsync(s.contactsInfo, infos);
 
       final infosToUpdate = new List<ContactInfoItem>.from(s.contactsInfo);
 
