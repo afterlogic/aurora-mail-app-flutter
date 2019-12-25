@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/compose_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
@@ -117,6 +118,7 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
 
   void _initReplyAll() async {
     _toEmails.addAll(MailUtils.getEmails(widget.message.fromInJson));
+    _ccEmails.addAll(MailUtils.getEmails(widget.message.toInJson, exceptEmails: [AuthBloc.currentAccount.email]));
     _ccEmails.addAll(MailUtils.getEmails(widget.message.ccInJson));
     _subjectTextCtrl.text = MailUtils.getReplySubject(widget.message);
     _bodyTextCtrl.text = MailUtils.getReplyBody(context, widget.message);

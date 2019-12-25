@@ -206,7 +206,10 @@ class MailMethods {
     // calculate difference
     if (folderToUpdate.messagesInfo != null) {
       final calcResult = await Folders.calculateMessagesInfoDiffAsync(
-          folderToUpdate.messagesInfo, messagesInfo);
+        folderToUpdate.messagesInfo,
+        messagesInfo,
+      );
+
       messagesInfo = calcResult.updatedInfo;
       await _mailDao.deleteMessages(calcResult.removedUids, folderToUpdate);
       _mailDao.updateMessagesFlags(calcResult.infosToUpdateFlags);
@@ -225,16 +228,15 @@ class MailMethods {
     // get the actual folder state every time
     final folder = await _foldersDao.getFolderByLocalId(_syncQueue[0]);
     // get the actual sync period
-    final user = await _usersDao.getUserByLocalId(AuthBloc.currentUser.localId);
+    final user = await _usersDao.getUserByLocalId(
+        AuthBloc.currentUser.localId);
     if (folder.messagesInfo == null) {
-      print(
-          "Attention! messagesInfo is null, perhaps another folder was selected while messages info was being retrieved.");
+      print("Attention! messagesInfo is null, perhaps another folder was selected while messages info was being retrieved.");
       return _setMessagesInfoToFolder();
     }
 
     if (user.syncPeriod != SyncPeriod.periodToDbString(syncPeriod)) {
-      print(
-          "Attention! another sync period was selected, refetching messages info...");
+      print("Attention! another sync period was selected, refetching messages info...");
       return _setMessagesInfoToFolder();
     }
 

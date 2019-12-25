@@ -29,12 +29,27 @@ class MailUtils {
     }
   }
 
-  static List<String> getEmails(String emailsInJson) {
+  static List<String> getEmails(String emailsInJson, {List<String> exceptEmails}) {
     if (emailsInJson == null) return [];
     final emails = json.decode(emailsInJson);
     if (emails == null) return [];
-    final result = emails["@Collection"].map((t) => t["Email"]).toList();
-    return new List<String>.from(result as List);
+    final result = [];
+    emails["@Collection"].forEach((t) {
+      final display = t["DisplayName"] as String;
+      final email = t["Email"] as String;
+
+      if (exceptEmails != null && exceptEmails.contains(email)) return;
+
+      if (display != null && display.isNotEmpty) {
+        result.add('"$display" <$email>');
+      } else {
+        result.add(email);
+      }
+    }) as Iterable;
+
+    result.toSet();
+
+    return new List<String>.from(result);
   }
 
   static String getDisplayName(String senderInJson) {

@@ -56,6 +56,7 @@ class _MainDrawerState extends State<MainDrawer> {
                     return _refreshCompleter.future;
                   },
                   backgroundColor: Colors.white,
+                  color: Colors.black,
                   child: BlocBuilder<MailBloc, MailState>(
                       bloc: BlocProvider.of<MailBloc>(context),
                       condition: (prevState, state) =>

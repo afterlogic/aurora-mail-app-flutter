@@ -142,6 +142,8 @@ class _ContactsListAndroidState extends State<ContactsListAndroid> {
             BlocProvider.of<ContactsBloc>(context).add(GetContacts());
             return _refreshCompleter.future;
           },
+          backgroundColor: Colors.white,
+          color: Colors.black,
           child: BlocBuilder<ContactsBloc, ContactsState>(builder: (_, state) {
             if (state.contacts == null || state.contacts.isEmpty && state.currentlySyncingStorages.contains(state.selectedStorage)) return _buildLoading(state);
             else if (state.contacts.isEmpty) return _buildContactsEmpty(state);

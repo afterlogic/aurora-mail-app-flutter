@@ -207,6 +207,7 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
               return _refreshCompleter.future;
             },
             backgroundColor: Colors.white,
+            color: Colors.black,
             child: BlocBuilder<MessagesListBloc, MessagesListState>(
                 bloc: _messagesListBloc,
                 condition: (prevState, state) => state is SubscribedToMessages,
