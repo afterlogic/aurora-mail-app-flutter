@@ -3,6 +3,7 @@ import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/contacts_bloc.d
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_group_model.dart';
 import 'package:aurora_mail/modules/contacts/screens/contact_view/components/contacts_info_item.dart';
 import 'package:aurora_mail/modules/contacts/screens/group_edit/group_edit_route.dart';
+import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,14 +20,23 @@ class GroupViewAndroid extends StatefulWidget {
 }
 
 class _GroupViewAndroidState extends State<GroupViewAndroid> {
-  void _onAppBarActionSelected(GroupViewAppBarAction item) {
+  Future<void> _onAppBarActionSelected(GroupViewAppBarAction item) async {
     final bloc = BlocProvider.of<ContactsBloc>(context);
     switch (item) {
       case GroupViewAppBarAction.sendMessage:
         break;
       case GroupViewAppBarAction.delete:
-        bloc.add(DeleteGroup(widget.group));
-        Navigator.pop(context);
+        final delete = await ConfirmationDialog.show(
+          context,
+          i18n(context, "contacts_group_delete_title"),
+          i18n(context, "contacts_group_delete_desc_with_name", {"group": widget.group.name}),
+          i18n(context, "btn_delete"),
+        );
+
+        if (delete == true) {
+          bloc.add(DeleteGroup(widget.group));
+          Navigator.pop(context);
+        }
         break;
       case GroupViewAppBarAction.edit:
         Navigator.pushNamed(
