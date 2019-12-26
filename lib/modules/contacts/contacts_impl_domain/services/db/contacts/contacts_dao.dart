@@ -35,7 +35,7 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
 
   Stream<List<ContactsTable>> watchAllContacts(int userServerId) {
     return (select(contacts)
-          ..where((c) => c.idUser.equals(userServerId))
+//          ..where((c) => c.idUser.equals(userServerId))
           ..where((c) => c.storage.isNotIn([StorageNames.collected]))
           ..orderBy([(c) => OrderingTerm(expression: c.fullName)]))
         .watch();
@@ -43,7 +43,7 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
 
   Stream<List<ContactsTable>> watchContactsFromStorage(int userServerId, String storage) {
     return (select(contacts)
-          ..where((c) => c.idUser.equals(userServerId))
+//          ..where((c) => c.idUser.equals(userServerId))
           ..where((c) => c.storage.equals(storage))
           ..orderBy([(c) => OrderingTerm(expression: c.fullName)]))
         .watch();
@@ -51,7 +51,7 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
 
   Stream<List<ContactsTable>> watchContactsFromGroup(int userServerId, String groupUuid) {
     return (select(contacts)
-          ..where((c) => c.idUser.equals(userServerId))
+//          ..where((c) => c.idUser.equals(userServerId))
           ..where((c) => c.groupUUIDs.like("%$groupUuid%"))
           ..orderBy([(c) => OrderingTerm(expression: c.fullName)]))
         .watch();
