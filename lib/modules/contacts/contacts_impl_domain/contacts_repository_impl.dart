@@ -141,6 +141,7 @@ class ContactsRepositoryImpl implements ContactsRepository {
     final newContact = await _network.addContact(contact);
     final newContactInfo = new ContactInfoItem(
       uuid: newContact.uuid,
+      storage: newContact.storage,
       eTag: newContact.eTag,
       hasBody: true,
       needsUpdate: true,

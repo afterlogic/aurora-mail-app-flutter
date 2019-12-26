@@ -4483,6 +4483,7 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
 }
 
 class ContactsTable extends DataClass implements Insertable<ContactsTable> {
+  final String uuidPlusStorage;
   final String uuid;
   final int entityId;
   final String parentUuid;
@@ -4537,7 +4538,8 @@ class ContactsTable extends DataClass implements Insertable<ContactsTable> {
   final String davContactsVCardUid;
   final List<String> groupUUIDs;
   ContactsTable(
-      {@required this.uuid,
+      {@required this.uuidPlusStorage,
+      @required this.uuid,
       this.entityId,
       this.parentUuid,
       @required this.eTag,
@@ -4585,7 +4587,7 @@ class ContactsTable extends DataClass implements Insertable<ContactsTable> {
       @required this.birthMonth,
       @required this.birthYear,
       this.auto,
-      this.frequency,
+      @required this.frequency,
       this.dateModified,
       this.davContactsUid,
       this.davContactsVCardUid,
@@ -4598,6 +4600,8 @@ class ContactsTable extends DataClass implements Insertable<ContactsTable> {
     final intType = db.typeSystem.forDartType<int>();
     final boolType = db.typeSystem.forDartType<bool>();
     return ContactsTable(
+      uuidPlusStorage: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}uuid_plus_storage']),
       uuid: stringType.mapFromDatabaseResponse(data['${effectivePrefix}uuid']),
       entityId:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}entity_id']),
@@ -4706,6 +4710,7 @@ class ContactsTable extends DataClass implements Insertable<ContactsTable> {
   factory ContactsTable.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return ContactsTable(
+      uuidPlusStorage: serializer.fromJson<String>(json['uuidPlusStorage']),
       uuid: serializer.fromJson<String>(json['uuid']),
       entityId: serializer.fromJson<int>(json['entityId']),
       parentUuid: serializer.fromJson<String>(json['parentUuid']),
@@ -4767,6 +4772,7 @@ class ContactsTable extends DataClass implements Insertable<ContactsTable> {
   Map<String, dynamic> toJson(
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return {
+      'uuidPlusStorage': serializer.toJson<String>(uuidPlusStorage),
       'uuid': serializer.toJson<String>(uuid),
       'entityId': serializer.toJson<int>(entityId),
       'parentUuid': serializer.toJson<String>(parentUuid),
@@ -4826,6 +4832,9 @@ class ContactsTable extends DataClass implements Insertable<ContactsTable> {
   @override
   ContactsCompanion createCompanion(bool nullToAbsent) {
     return ContactsCompanion(
+      uuidPlusStorage: uuidPlusStorage == null && nullToAbsent
+          ? const Value.absent()
+          : Value(uuidPlusStorage),
       uuid: uuid == null && nullToAbsent ? const Value.absent() : Value(uuid),
       entityId: entityId == null && nullToAbsent
           ? const Value.absent()
@@ -4979,7 +4988,8 @@ class ContactsTable extends DataClass implements Insertable<ContactsTable> {
   }
 
   ContactsTable copyWith(
-          {String uuid,
+          {String uuidPlusStorage,
+          String uuid,
           int entityId,
           String parentUuid,
           String eTag,
@@ -5033,6 +5043,7 @@ class ContactsTable extends DataClass implements Insertable<ContactsTable> {
           String davContactsVCardUid,
           List<String> groupUUIDs}) =>
       ContactsTable(
+        uuidPlusStorage: uuidPlusStorage ?? this.uuidPlusStorage,
         uuid: uuid ?? this.uuid,
         entityId: entityId ?? this.entityId,
         parentUuid: parentUuid ?? this.parentUuid,
@@ -5090,6 +5101,7 @@ class ContactsTable extends DataClass implements Insertable<ContactsTable> {
   @override
   String toString() {
     return (StringBuffer('ContactsTable(')
+          ..write('uuidPlusStorage: $uuidPlusStorage, ')
           ..write('uuid: $uuid, ')
           ..write('entityId: $entityId, ')
           ..write('parentUuid: $parentUuid, ')
@@ -5149,52 +5161,52 @@ class ContactsTable extends DataClass implements Insertable<ContactsTable> {
 
   @override
   int get hashCode => $mrjf($mrjc(
-      uuid.hashCode,
+      uuidPlusStorage.hashCode,
       $mrjc(
-          entityId.hashCode,
+          uuid.hashCode,
           $mrjc(
-              parentUuid.hashCode,
+              entityId.hashCode,
               $mrjc(
-                  eTag.hashCode,
+                  parentUuid.hashCode,
                   $mrjc(
-                      idUser.hashCode,
+                      eTag.hashCode,
                       $mrjc(
-                          idTenant.hashCode,
+                          idUser.hashCode,
                           $mrjc(
-                              storage.hashCode,
+                              idTenant.hashCode,
                               $mrjc(
-                                  fullName.hashCode,
+                                  storage.hashCode,
                                   $mrjc(
-                                      useFriendlyName.hashCode,
+                                      fullName.hashCode,
                                       $mrjc(
-                                          primaryEmail.hashCode,
+                                          useFriendlyName.hashCode,
                                           $mrjc(
-                                              primaryPhone.hashCode,
+                                              primaryEmail.hashCode,
                                               $mrjc(
-                                                  primaryAddress.hashCode,
+                                                  primaryPhone.hashCode,
                                                   $mrjc(
-                                                      viewEmail.hashCode,
+                                                      primaryAddress.hashCode,
                                                       $mrjc(
-                                                          title.hashCode,
+                                                          viewEmail.hashCode,
                                                           $mrjc(
-                                                              firstName
-                                                                  .hashCode,
+                                                              title.hashCode,
                                                               $mrjc(
-                                                                  lastName
+                                                                  firstName
                                                                       .hashCode,
                                                                   $mrjc(
-                                                                      nickName
+                                                                      lastName
                                                                           .hashCode,
                                                                       $mrjc(
-                                                                          skype
+                                                                          nickName
                                                                               .hashCode,
                                                                           $mrjc(
-                                                                              facebook.hashCode,
-                                                                              $mrjc(personalEmail.hashCode, $mrjc(personalAddress.hashCode, $mrjc(personalCity.hashCode, $mrjc(personalState.hashCode, $mrjc(personalZip.hashCode, $mrjc(personalCountry.hashCode, $mrjc(personalWeb.hashCode, $mrjc(personalFax.hashCode, $mrjc(personalPhone.hashCode, $mrjc(personalMobile.hashCode, $mrjc(businessEmail.hashCode, $mrjc(businessCompany.hashCode, $mrjc(businessAddress.hashCode, $mrjc(businessCity.hashCode, $mrjc(businessState.hashCode, $mrjc(businessZip.hashCode, $mrjc(businessCountry.hashCode, $mrjc(businessJobTitle.hashCode, $mrjc(businessDepartment.hashCode, $mrjc(businessOffice.hashCode, $mrjc(businessPhone.hashCode, $mrjc(businessFax.hashCode, $mrjc(businessWeb.hashCode, $mrjc(otherEmail.hashCode, $mrjc(notes.hashCode, $mrjc(birthDay.hashCode, $mrjc(birthMonth.hashCode, $mrjc(birthYear.hashCode, $mrjc(auto.hashCode, $mrjc(frequency.hashCode, $mrjc(dateModified.hashCode, $mrjc(davContactsUid.hashCode, $mrjc(davContactsVCardUid.hashCode, groupUUIDs.hashCode)))))))))))))))))))))))))))))))))))))))))))))))))))));
+                                                                              skype.hashCode,
+                                                                              $mrjc(facebook.hashCode, $mrjc(personalEmail.hashCode, $mrjc(personalAddress.hashCode, $mrjc(personalCity.hashCode, $mrjc(personalState.hashCode, $mrjc(personalZip.hashCode, $mrjc(personalCountry.hashCode, $mrjc(personalWeb.hashCode, $mrjc(personalFax.hashCode, $mrjc(personalPhone.hashCode, $mrjc(personalMobile.hashCode, $mrjc(businessEmail.hashCode, $mrjc(businessCompany.hashCode, $mrjc(businessAddress.hashCode, $mrjc(businessCity.hashCode, $mrjc(businessState.hashCode, $mrjc(businessZip.hashCode, $mrjc(businessCountry.hashCode, $mrjc(businessJobTitle.hashCode, $mrjc(businessDepartment.hashCode, $mrjc(businessOffice.hashCode, $mrjc(businessPhone.hashCode, $mrjc(businessFax.hashCode, $mrjc(businessWeb.hashCode, $mrjc(otherEmail.hashCode, $mrjc(notes.hashCode, $mrjc(birthDay.hashCode, $mrjc(birthMonth.hashCode, $mrjc(birthYear.hashCode, $mrjc(auto.hashCode, $mrjc(frequency.hashCode, $mrjc(dateModified.hashCode, $mrjc(davContactsUid.hashCode, $mrjc(davContactsVCardUid.hashCode, groupUUIDs.hashCode))))))))))))))))))))))))))))))))))))))))))))))))))))));
   @override
   bool operator ==(other) =>
       identical(this, other) ||
       (other is ContactsTable &&
+          other.uuidPlusStorage == this.uuidPlusStorage &&
           other.uuid == this.uuid &&
           other.entityId == this.entityId &&
           other.parentUuid == this.parentUuid &&
@@ -5251,6 +5263,7 @@ class ContactsTable extends DataClass implements Insertable<ContactsTable> {
 }
 
 class ContactsCompanion extends UpdateCompanion<ContactsTable> {
+  final Value<String> uuidPlusStorage;
   final Value<String> uuid;
   final Value<int> entityId;
   final Value<String> parentUuid;
@@ -5305,6 +5318,7 @@ class ContactsCompanion extends UpdateCompanion<ContactsTable> {
   final Value<String> davContactsVCardUid;
   final Value<List<String>> groupUUIDs;
   const ContactsCompanion({
+    this.uuidPlusStorage = const Value.absent(),
     this.uuid = const Value.absent(),
     this.entityId = const Value.absent(),
     this.parentUuid = const Value.absent(),
@@ -5360,6 +5374,7 @@ class ContactsCompanion extends UpdateCompanion<ContactsTable> {
     this.groupUUIDs = const Value.absent(),
   });
   ContactsCompanion.insert({
+    @required String uuidPlusStorage,
     @required String uuid,
     this.entityId = const Value.absent(),
     this.parentUuid = const Value.absent(),
@@ -5413,7 +5428,8 @@ class ContactsCompanion extends UpdateCompanion<ContactsTable> {
     this.davContactsUid = const Value.absent(),
     this.davContactsVCardUid = const Value.absent(),
     @required List<String> groupUUIDs,
-  })  : uuid = Value(uuid),
+  })  : uuidPlusStorage = Value(uuidPlusStorage),
+        uuid = Value(uuid),
         eTag = Value(eTag),
         idUser = Value(idUser),
         storage = Value(storage),
@@ -5458,7 +5474,8 @@ class ContactsCompanion extends UpdateCompanion<ContactsTable> {
         birthYear = Value(birthYear),
         groupUUIDs = Value(groupUUIDs);
   ContactsCompanion copyWith(
-      {Value<String> uuid,
+      {Value<String> uuidPlusStorage,
+      Value<String> uuid,
       Value<int> entityId,
       Value<String> parentUuid,
       Value<String> eTag,
@@ -5512,6 +5529,7 @@ class ContactsCompanion extends UpdateCompanion<ContactsTable> {
       Value<String> davContactsVCardUid,
       Value<List<String>> groupUUIDs}) {
     return ContactsCompanion(
+      uuidPlusStorage: uuidPlusStorage ?? this.uuidPlusStorage,
       uuid: uuid ?? this.uuid,
       entityId: entityId ?? this.entityId,
       parentUuid: parentUuid ?? this.parentUuid,
@@ -5574,13 +5592,27 @@ class $ContactsTable extends Contacts
   final GeneratedDatabase _db;
   final String _alias;
   $ContactsTable(this._db, [this._alias]);
+  final VerificationMeta _uuidPlusStorageMeta =
+      const VerificationMeta('uuidPlusStorage');
+  GeneratedTextColumn _uuidPlusStorage;
+  @override
+  GeneratedTextColumn get uuidPlusStorage =>
+      _uuidPlusStorage ??= _constructUuidPlusStorage();
+  GeneratedTextColumn _constructUuidPlusStorage() {
+    return GeneratedTextColumn('uuid_plus_storage', $tableName, false,
+        $customConstraints: 'UNIQUE');
+  }
+
   final VerificationMeta _uuidMeta = const VerificationMeta('uuid');
   GeneratedTextColumn _uuid;
   @override
   GeneratedTextColumn get uuid => _uuid ??= _constructUuid();
   GeneratedTextColumn _constructUuid() {
-    return GeneratedTextColumn('uuid', $tableName, false,
-        $customConstraints: 'UNIQUE');
+    return GeneratedTextColumn(
+      'uuid',
+      $tableName,
+      false,
+    );
   }
 
   final VerificationMeta _entityIdMeta = const VerificationMeta('entityId');
@@ -6206,11 +6238,8 @@ class $ContactsTable extends Contacts
   @override
   GeneratedIntColumn get frequency => _frequency ??= _constructFrequency();
   GeneratedIntColumn _constructFrequency() {
-    return GeneratedIntColumn(
-      'frequency',
-      $tableName,
-      true,
-    );
+    return GeneratedIntColumn('frequency', $tableName, false,
+        defaultValue: Constant(0));
   }
 
   final VerificationMeta _dateModifiedMeta =
@@ -6269,6 +6298,7 @@ class $ContactsTable extends Contacts
 
   @override
   List<GeneratedColumn> get $columns => [
+        uuidPlusStorage,
         uuid,
         entityId,
         parentUuid,
@@ -6333,6 +6363,14 @@ class $ContactsTable extends Contacts
   VerificationContext validateIntegrity(ContactsCompanion d,
       {bool isInserting = false}) {
     final context = VerificationContext();
+    if (d.uuidPlusStorage.present) {
+      context.handle(
+          _uuidPlusStorageMeta,
+          uuidPlusStorage.isAcceptableValue(
+              d.uuidPlusStorage.value, _uuidPlusStorageMeta));
+    } else if (uuidPlusStorage.isRequired && isInserting) {
+      context.missing(_uuidPlusStorageMeta);
+    }
     if (d.uuid.present) {
       context.handle(
           _uuidMeta, uuid.isAcceptableValue(d.uuid.value, _uuidMeta));
@@ -6708,6 +6746,10 @@ class $ContactsTable extends Contacts
   @override
   Map<String, Variable> entityToSql(ContactsCompanion d) {
     final map = <String, Variable>{};
+    if (d.uuidPlusStorage.present) {
+      map['uuid_plus_storage'] =
+          Variable<String, StringType>(d.uuidPlusStorage.value);
+    }
     if (d.uuid.present) {
       map['uuid'] = Variable<String, StringType>(d.uuid.value);
     }

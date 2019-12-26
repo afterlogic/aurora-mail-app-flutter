@@ -164,6 +164,7 @@ class _ContactEditAndroidState extends State<ContactEditAndroid> {
     return Contact(
         entityId: widget.contact?.entityId ?? null,
         uuid: widget.contact?.uuid ?? null,
+        uuidPlusStorage: widget.contact?.uuidPlusStorage ?? null,
         parentUuid: widget.contact?.parentUuid ?? null,
         idUser: widget.contact?.idUser ?? AuthBloc.currentUser.serverId,
         idTenant: widget.contact?.idTenant ?? null,

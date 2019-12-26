@@ -6,6 +6,7 @@ class ContactMapper {
     return dbEntries.map((e) {
       return new Contact(
         entityId: e.entityId,
+        uuidPlusStorage: e.uuidPlusStorage,
         uuid: e.uuid,
         parentUuid: e.parentUuid,
         idUser: e.idUser,
@@ -67,6 +68,7 @@ class ContactMapper {
       return new ContactsTable(
         entityId: e.entityId,
         uuid: e.uuid,
+        uuidPlusStorage: e.uuidPlusStorage,
         parentUuid: e.parentUuid,
         idUser: e.idUser,
         idTenant: e.idTenant,
@@ -127,6 +129,7 @@ class ContactMapper {
       return new Contact(
         entityId: i["EntityId"] as int,
         uuid: i["UUID"] as String,
+        uuidPlusStorage: i["UUID"] + i["Storage"] as String,
         parentUuid: i["ParentUUID"] as String,
         idUser: i["IdUser"] as int,
         idTenant: i["IdTenant"] as int,

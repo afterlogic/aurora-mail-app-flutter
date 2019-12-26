@@ -3,7 +3,9 @@ import 'package:moor_flutter/moor_flutter.dart';
 
 @DataClassName("ContactsTable")
 class Contacts extends Table {
-  TextColumn get uuid => text().customConstraint("UNIQUE")();
+  TextColumn get uuidPlusStorage => text().customConstraint("UNIQUE")();
+
+  TextColumn get uuid => text()();
 
   IntColumn get entityId => integer().nullable()();
 

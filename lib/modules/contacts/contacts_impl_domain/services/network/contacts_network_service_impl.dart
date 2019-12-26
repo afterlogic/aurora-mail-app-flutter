@@ -54,7 +54,7 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
     );
 
     final result = await contactsModule.post(body);
-    return ContactInfoMapper.allFromNetwork(Map<String,dynamic>.from(result as Map));
+    return ContactInfoMapper.allFromNetwork(Map<String,dynamic>.from(result as Map), storage.id);
   }
 
   @override
@@ -71,6 +71,7 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
     final result = await contactsModule.post(body);
     return contact.copyWith(
       uuid: result["UUID"] as String,
+      uuidPlusStorage: result["UUID"] + contact.storage as String,
       eTag: result["ETag"] as String,
     );
   }

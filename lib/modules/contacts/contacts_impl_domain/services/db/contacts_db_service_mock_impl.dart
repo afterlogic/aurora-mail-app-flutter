@@ -50,6 +50,7 @@ class ContactsDbServiceMockImpl implements ContactsDbService {
       contacts.add(new Contact(
         entityId: c.entityId,
         uuid: c.uuid,
+        uuidPlusStorage: c.uuidPlusStorage,
         idUser: c.idUser,
         idTenant: c.idTenant,
         storage: c.storage,

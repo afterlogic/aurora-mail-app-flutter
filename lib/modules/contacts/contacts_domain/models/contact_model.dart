@@ -4,6 +4,7 @@ import 'package:flutter/widgets.dart';
 class Contact {
   final int entityId;
   final String uuid;
+  final String uuidPlusStorage;
   final String parentUuid;
   final int idUser;
   final int idTenant;
@@ -66,6 +67,7 @@ class Contact {
   const Contact({
     @required this.entityId,
     @required this.uuid,
+    @required this.uuidPlusStorage,
     this.parentUuid = "",
     @required this.idUser,
     @required this.idTenant,
@@ -122,6 +124,7 @@ class Contact {
   Contact copyWith({
     int entityId,
     String uuid,
+    String uuidPlusStorage,
     String parentUuid,
     int idUser,
     int idTenant,
@@ -177,6 +180,7 @@ class Contact {
     return new Contact(
       entityId: entityId ?? this.entityId,
       uuid: uuid ?? this.uuid,
+      uuidPlusStorage: uuidPlusStorage ?? this.uuidPlusStorage,
       parentUuid: parentUuid ?? this.parentUuid,
       idUser: idUser ?? this.idUser,
       idTenant: idTenant ?? this.idTenant,

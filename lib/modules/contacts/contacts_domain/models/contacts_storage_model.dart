@@ -38,20 +38,24 @@ class ContactsStorage {
 
 class ContactInfoItem {
   final String uuid;
+  final String storage;
+  String get uuidPlusStorage => uuid + storage;
   String eTag;
   bool hasBody;
   bool needsUpdate;
 
   ContactInfoItem({
     @required this.uuid,
+    @required this.storage,
     @required this.eTag,
     this.hasBody = false,
     this.needsUpdate = false,
-  });
+  }) : assert (storage != null);
 
   Map<String, dynamic> toMap() {
     return {
       'uuid': this.uuid,
+      'storage': this.storage,
       'eTag': this.eTag,
       'hasBody': this.hasBody,
       'needsUpdate': this.needsUpdate,
@@ -61,6 +65,7 @@ class ContactInfoItem {
   factory ContactInfoItem.fromMap(Map<String, dynamic> map) {
     return new ContactInfoItem(
       uuid: map['uuid'] as String,
+      storage: map['storage'] as String,
       eTag: map['eTag'] as String,
       hasBody: map['hasBody'] as bool,
       needsUpdate: map['needsUpdate'] as bool,
