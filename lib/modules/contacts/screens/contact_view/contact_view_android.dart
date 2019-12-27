@@ -8,14 +8,16 @@ import 'package:aurora_mail/modules/contacts/screens/contact_view/components/con
 import 'package:aurora_mail/modules/contacts/utils/contact_info.dart';
 import 'package:aurora_mail/utils/date_formatting.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class ContactViewAndroid extends StatefulWidget {
   final Contact contact;
+  final ScaffoldState contactsListScaffoldState;
 
-  const ContactViewAndroid(this.contact);
+  const ContactViewAndroid(this.contact, this.contactsListScaffoldState);
 
   @override
   _ContactViewAndroidState createState() => _ContactViewAndroidState();
@@ -54,10 +56,30 @@ class _ContactViewAndroidState extends State<ContactViewAndroid> {
         break;
       case ContactViewAppBarAction.share:
         bloc.add(ShareContacts([widget.contact]));
+        showSnack(
+          context: context,
+          scaffoldState: widget.contactsListScaffoldState,
+          isError: false,
+          msg: i18n(
+            context,
+            "contacts_shared_message",
+            {"contact": widget.contact.fullName, "storage": StorageNames.shared},
+          ),
+        );
         Navigator.pop(context);
         break;
       case ContactViewAppBarAction.unshare:
         bloc.add(UnshareContacts([widget.contact]));
+        showSnack(
+          context: context,
+          scaffoldState: widget.contactsListScaffoldState,
+          isError: false,
+          msg: i18n(
+            context,
+            "contacts_shared_message",
+            {"contact": widget.contact.fullName, "storage": StorageNames.personal},
+          ),
+        );
         Navigator.pop(context);
         break;
     }

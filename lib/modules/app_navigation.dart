@@ -112,7 +112,7 @@ class AppNavigation {
               name: settings.name,
             ),
             page: BlocProvider<ContactsBloc>.value(
-                value: args.bloc, child: ContactViewAndroid(args.contact)));
+                value: args.bloc, child: ContactViewAndroid(args.contact, args.scaffoldState)));
         break;
 
       case ContactEditRoute.name:

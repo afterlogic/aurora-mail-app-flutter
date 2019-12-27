@@ -67,12 +67,15 @@ class _ContactsListAndroidState extends State<ContactsListAndroid> {
     }
   }
 
-  void _onContactSelected(Contact contact) {
+  void _onContactSelected(BuildContext context, Contact contact) {
     Navigator.pushNamed(
       context,
       ContactViewRoute.name,
       arguments: ContactViewScreenArgs(
-          contact, BlocProvider.of<ContactsBloc>(context)),
+        contact,
+        BlocProvider.of<ContactsBloc>(context),
+        Scaffold.of(context),
+      ),
     );
   }
 
@@ -144,10 +147,10 @@ class _ContactsListAndroidState extends State<ContactsListAndroid> {
           },
           backgroundColor: Colors.white,
           color: Colors.black,
-          child: BlocBuilder<ContactsBloc, ContactsState>(builder: (_, state) {
+          child: BlocBuilder<ContactsBloc, ContactsState>(builder: (context, state) {
             if (state.contacts == null || state.contacts.isEmpty && state.currentlySyncingStorages.contains(state.selectedStorage)) return _buildLoading(state);
             else if (state.contacts.isEmpty) return _buildContactsEmpty(state);
-            else return _buildContacts(state);
+            else return _buildContacts(context, state);
           }),
         ),
       ),
@@ -167,14 +170,14 @@ class _ContactsListAndroidState extends State<ContactsListAndroid> {
     return EmptyList(message: i18n(context, "contacts_empty"));
   }
 
-  Widget _buildContacts(ContactsState state) {
+  Widget _buildContacts(BuildContext context, ContactsState state) {
     return Column(
       children: <Widget>[
         Flexible(
           child: ListView.separated(
             itemBuilder: (_, i) => ContactsListTile(
               contact: state.contacts[i],
-              onPressed: _onContactSelected,
+              onPressed: (c) => _onContactSelected(context, c),
               onDeleteContact: _deleteContact,
             ),
             separatorBuilder: (_, i) =>
