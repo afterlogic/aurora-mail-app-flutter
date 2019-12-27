@@ -13,6 +13,7 @@ import 'package:downloads_path_provider/downloads_path_provider.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_uploader/flutter_uploader.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:webmail_api_client/webmail_api_client.dart';
 
 class MailApi {
@@ -231,7 +232,9 @@ class MailApi {
     try {
       await FlutterDownloader.initialize();
     } catch (err) {}
-    final downloadsDirectory = await DownloadsPathProvider.downloadsDirectory;
+    final downloadsDirectories = await getExternalStorageDirectories(type: StorageDirectory.downloads);
+    final downloadsDirectory = downloadsDirectories[0];
+
 
     final taskId = await FlutterDownloader.enqueue(
       url: AuthBloc.hostName + attachment.downloadUrl,
