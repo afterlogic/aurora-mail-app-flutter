@@ -59,6 +59,8 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
     if (event is CreateContact) yield* _createContact(event);
     if (event is UpdateContact) yield* _updateContact(event);
     if (event is DeleteContacts) yield* _deleteContacts(event);
+    if (event is ShareContacts) yield* _shareContacts(event);
+    if (event is UnshareContacts) yield* _unshareContacts(event);
     if (event is AddContactsToGroup) yield* _addContactsToGroup(event);
     if (event is RemoveContactsFromGroup) yield* _removeContactsFromGroup(event);
     if (event is SelectStorageGroup) yield* _selectStorageGroup(event);
@@ -67,7 +69,6 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
     if (event is DeleteGroup) yield* _deleteGroup(event);
     yield* reduceState(state, event);
   }
-
   Stream<ContactsState> _getContacts(GetContacts event) async* {
     _storagesSub = _repo.watchContactsStorages().listen((storages) {
       if (state.storages == null) {
@@ -129,6 +130,23 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
   Stream<ContactsState> _deleteContacts(DeleteContacts event) async* {
     _repo.deleteContacts(event.contacts)
         .catchError((err) => add(AddError(formatError(err, null))));
+  }
+
+
+  Stream<ContactsState> _shareContacts(ShareContacts event) async* {
+    _repo.shareContacts(event.contacts)
+        .catchError((err) => add(AddError(formatError(err, null))))
+        .whenComplete(() {
+          add(GetContacts());
+        });
+  }
+
+  Stream<ContactsState> _unshareContacts(UnshareContacts event) async* {
+    _repo.unshareContacts(event.contacts)
+        .catchError((err) => add(AddError(formatError(err, null))))
+        .whenComplete(() {
+          add(GetContacts());
+        });
   }
 
   Stream<ContactsState> _addContactsToGroup(AddContactsToGroup event) async* {

@@ -83,4 +83,10 @@ class ContactsNetworkServiceMockImpl implements ContactsNetworkService {
     // TODO: implement removeContactsFromGroup
     return null;
   }
+
+  @override
+  Future<void> updateSharedContacts(List<String> uuids) {
+    // TODO: implement updateSharedContacts
+    return null;
+  }
 }

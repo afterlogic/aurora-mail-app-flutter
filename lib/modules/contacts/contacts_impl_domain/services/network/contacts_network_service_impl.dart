@@ -91,6 +91,20 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
   }
 
   @override
+  Future<void> updateSharedContacts(List<String> uuids) async {
+    final params = {
+      "UUIDs": uuids,
+    };
+
+    final body = new WebMailApiBody(
+      method: "UpdateSharedContacts",
+      parameters: json.encode(params),
+    );
+
+    return contactsModule.post(body);
+  }
+
+  @override
   Future<void> deleteContacts(List<String> uuids) {
     final params = {
       "UUIDs": uuids,

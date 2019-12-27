@@ -36,6 +36,10 @@ abstract class ContactsRepository {
 
   Future<void> deleteContacts(List<Contact> contact);
 
+  Future<void> shareContacts(List<Contact> contact);
+
+  Future<void> unshareContacts(List<Contact> contact);
+
   Future<void> addContactsToGroup(ContactsGroup group, List<Contact> contacts);
 
   Future<void> removeContactsFromGroup(ContactsGroup group, List<Contact> contacts);

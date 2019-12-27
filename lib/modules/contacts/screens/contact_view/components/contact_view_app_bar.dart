@@ -2,23 +2,37 @@ import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
-enum ContactViewAppBarAction { attach, sendMessage, searchMessages, edit }
+enum ContactViewAppBarAction { attach, sendMessage, searchMessages, edit, share, unshare }
 
 class ContactViewAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool allowEdit;
+  final bool allowShare;
+  final bool allowUnshare;
   final Function(ContactViewAppBarAction) onActionSelected;
 
   @override
   final Size preferredSize = const Size.fromHeight(kToolbarHeight);
 
   const ContactViewAppBar(
-      {Key key, @required this.onActionSelected, @required this.allowEdit})
+      {Key key, @required this.onActionSelected, @required this.allowEdit, @required this.allowShare, @required this.allowUnshare})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
       actions: <Widget>[
+        if (allowShare)
+          IconButton(
+            icon: Icon(MdiIcons.share),
+            tooltip: i18n(context, "contacts_view_app_bar_share"),
+            onPressed: () => onActionSelected(ContactViewAppBarAction.share),
+          ),
+        if (allowUnshare)
+          IconButton(
+            icon: Icon(MdiIcons.shareOff),
+            tooltip: i18n(context, "contacts_view_app_bar_unshare"),
+            onPressed: () => onActionSelected(ContactViewAppBarAction.unshare),
+          ),
         IconButton(
           icon: Icon(Icons.attach_file),
           tooltip: i18n(context, "contacts_view_app_bar_attach"),

@@ -63,6 +63,8 @@
   "contacts_drawer_storage_team": "Team",
   "contacts_drawer_storage_shared": "Shared with all",
   "contacts_drawer_section_groups": "GROUPS",
+  "contacts_view_app_bar_share": "Share this contact",
+  "contacts_view_app_bar_unshare": "Unshare this contact",
   "contacts_view_app_bar_attach": "Send this contact",
   "contacts_view_app_bar_send_message": "Email to this contact",
   "contacts_view_app_bar_search_messages": "Search messages with this contact",

@@ -31,6 +31,7 @@ class _ContactViewAndroidState extends State<ContactViewAndroid> {
   }
 
   void _onMainAppBarActionSelected(ContactViewAppBarAction item) {
+    final bloc = BlocProvider.of<ContactsBloc>(context);
     switch (item) {
       case ContactViewAppBarAction.attach:
       // TODO: Handle this case.
@@ -50,6 +51,14 @@ class _ContactViewAndroidState extends State<ContactViewAndroid> {
             contact: widget.contact,
           ),
         );
+        break;
+      case ContactViewAppBarAction.share:
+        bloc.add(ShareContacts([widget.contact]));
+        Navigator.pop(context);
+        break;
+      case ContactViewAppBarAction.unshare:
+        bloc.add(UnshareContacts([widget.contact]));
+        Navigator.pop(context);
         break;
     }
   }
@@ -131,6 +140,8 @@ class _ContactViewAndroidState extends State<ContactViewAndroid> {
 
     return Scaffold(
       appBar: ContactViewAppBar(
+        allowShare: c.storage == StorageNames.personal,
+        allowUnshare: c.storage == StorageNames.shared,
         allowEdit: c.storage == StorageNames.personal || c.viewEmail == AuthBloc.currentAccount.email,
         onActionSelected: _onMainAppBarActionSelected,
       ),

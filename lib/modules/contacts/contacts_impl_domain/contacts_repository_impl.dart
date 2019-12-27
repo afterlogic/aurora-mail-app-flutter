@@ -177,6 +177,28 @@ class ContactsRepositoryImpl implements ContactsRepository {
     await Future.wait(futures);
   }
 
+  @override
+  Future<void> shareContacts(List<Contact> contact) async {
+    final uuids = contact.map((c) {
+      assert(c.storage == StorageNames.personal);
+      return c.uuid;
+    }).toList();
+
+    _db.deleteContacts(uuids);
+    await _network.updateSharedContacts(uuids);
+  }
+
+  @override
+  Future<void> unshareContacts(List<Contact> contact) async {
+    final uuids = contact.map((c) {
+      assert(c.storage == StorageNames.shared);
+      return c.uuid;
+    }).toList();
+
+    _db.deleteContacts(uuids);
+    await _network.updateSharedContacts(uuids);
+  }
+
   Future<void> addContactsToGroup(ContactsGroup group, List<Contact> contacts) async {
     final uuids = contacts.map((c) => c.uuid).toList();
     await _network.addContactsToGroup(group.uuid, uuids);

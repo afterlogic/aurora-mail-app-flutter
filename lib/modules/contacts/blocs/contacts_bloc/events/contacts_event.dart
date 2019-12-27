@@ -62,6 +62,24 @@ class DeleteContacts extends ContactsEvent {
   List<Object> get props => [contacts];
 }
 
+class ShareContacts extends ContactsEvent {
+  final List<Contact> contacts;
+
+  const ShareContacts(this.contacts);
+
+  @override
+  List<Object> get props => [contacts];
+}
+
+class UnshareContacts extends ContactsEvent {
+  final List<Contact> contacts;
+
+  const UnshareContacts(this.contacts);
+
+  @override
+  List<Object> get props => [contacts];
+}
+
 class AddContactsToGroup extends ContactsEvent {
   final ContactsGroup group;
   final List<Contact> contacts;

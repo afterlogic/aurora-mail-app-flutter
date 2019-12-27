@@ -36,6 +36,8 @@ abstract class ContactsNetworkService {
 
   Future<void> deleteContacts(List<String> uuids);
 
+  Future<void> updateSharedContacts(List<String> uuids);
+
   Future<void> addContactsToGroup(String groupUuid, List<String> uuids);
 
   Future<void> removeContactsFromGroup(String groupUuid, List<String> uuids);
