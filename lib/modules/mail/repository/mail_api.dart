@@ -9,7 +9,6 @@ import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/temp_attachment_upload.dart';
 import 'package:aurora_mail/utils/api_utils.dart';
 import 'package:aurora_mail/utils/file_utils.dart';
-import 'package:downloads_path_provider/downloads_path_provider.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_uploader/flutter_uploader.dart';
