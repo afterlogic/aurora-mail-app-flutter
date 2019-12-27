@@ -27,6 +27,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     AuthEvent event,
   ) async* {
     if (event is InitUserAndAccounts) yield* _initUserAndAccounts(event);
+    if (event is GetLastEmail) yield* _getLastEmail(event);
     if (event is LogIn) yield* _login(event);
     if (event is LogOut) yield* _logout(event);
     if (event is UpdateUser) yield* _setUser(event);
@@ -49,6 +50,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       print("_initUserAndAccounts s: $s");
       yield InitializedUserAndAccounts(null, needsLogin: true);
     }
+  }
+
+  Stream<AuthState> _getLastEmail(GetLastEmail event) async* {
+    final email = await _methods.lastEmail;
+    if (email != null) yield ReceivedLastEmail(email);
   }
 
   Stream<AuthState> _login(LogIn event) async* {

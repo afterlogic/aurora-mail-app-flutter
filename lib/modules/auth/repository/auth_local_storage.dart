@@ -18,4 +18,17 @@ class AuthLocalStorage {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.remove(selectedUserIdKey);
   }
+
+  final lastEmailKey = "lastEmail";
+
+  // User Id
+  Future<String> getLastEmail() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString(lastEmailKey);
+  }
+
+  Future<bool> setLastEmail(String value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.setString(lastEmailKey, value);
+  }
 }

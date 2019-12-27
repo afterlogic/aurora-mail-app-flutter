@@ -58,9 +58,12 @@ class AuthMethods {
       await _usersDao.addUser(newUser);
       userToReturn = await _usersDao.getUserByServerId(newUser.serverId);
     }
-    await _authLocal.setSelectedUserServerId(userToReturn.serverId);
+    _authLocal.setSelectedUserServerId(userToReturn.serverId);
+    _authLocal.setLastEmail(email);
     return userToReturn;
   }
+
+  Future<String> get lastEmail => _authLocal.getLastEmail();
 
   Future<List<Account>> getAccounts(int userId) async {
     final accounts = await _authApi.getAccounts(userId);

@@ -22,6 +22,15 @@ class InitializedUserAndAccounts extends AuthState {
   List<Object> get props => [needsLogin];
 }
 
+class ReceivedLastEmail extends AuthState {
+  final String email;
+
+  const ReceivedLastEmail(this.email);
+
+  @override
+  List<Object> get props => [email];
+}
+
 class LoggingIn extends AuthState {}
 
 class NeedsHost extends AuthState {}

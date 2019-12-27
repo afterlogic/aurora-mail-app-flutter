@@ -45,6 +45,12 @@ class _LoginAndroidState extends State<LoginAndroid> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    BlocProvider.of<AuthBloc>(context).add(GetLastEmail());
+  }
+
+  @override
   void dispose() {
     super.dispose();
     SystemChrome.setPreferredOrientations([
@@ -92,6 +98,10 @@ class _LoginAndroidState extends State<LoginAndroid> {
       body: BlocListener(
           bloc: BlocProvider.of<AuthBloc>(context),
           listener: (context, state) {
+            if (state is ReceivedLastEmail) {
+              emailCtrl.text = state.email;
+            }
+
             if (state is NeedsHost) {
               setState(() => _showHostField = true);
               showSnack(

@@ -10,8 +10,7 @@ class Users extends Table {
   // TODO find out
   TextColumn get token => text()();
 
-  IntColumn get syncFreqInSeconds =>
-      integer().withDefault(Constant(60)).nullable()();
+  IntColumn get syncFreqInSeconds => integer().withDefault(Constant(60)).nullable()();
 
   TextColumn get syncPeriod => text().nullable()();
 
