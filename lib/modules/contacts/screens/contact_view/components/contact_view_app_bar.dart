@@ -1,3 +1,4 @@
+import 'package:aurora_mail/res/icons/webmail_icons.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -36,13 +37,13 @@ class ContactViewAppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: <Widget>[
         if (allowShare)
           IconButton(
-            icon: Icon(MdiIcons.share),
+            icon: Icon(WebMailIcons.shared_with_all),
             tooltip: i18n(context, "contacts_view_app_bar_share"),
             onPressed: () => onActionSelected(ContactViewAppBarAction.share),
           ),
         if (allowUnshare)
           IconButton(
-            icon: Icon(MdiIcons.shareOff),
+            icon: Icon(WebMailIcons.unshare),
             tooltip: i18n(context, "contacts_view_app_bar_unshare"),
             onPressed: () => onActionSelected(ContactViewAppBarAction.unshare),
           ),

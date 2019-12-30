@@ -1,6 +1,7 @@
 import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_storage_model.dart';
+import 'package:aurora_mail/res/icons/webmail_icons.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -62,11 +63,11 @@ class _ContactsDrawerState extends State<ContactsDrawer> {
           ...visibleStorages
             .map((s) {
           if (s.id == StorageNames.personal) {
-            return _buildStorageTile(name: s.id, icon: MdiIcons.account, s: s, state: state);
+            return _buildStorageTile(name: s.id, icon: WebMailIcons.personal, s: s, state: state);
           } else if (s.id == StorageNames.shared) {
-            return _buildStorageTile(name: s.id, icon: MdiIcons.accountSwitch, s: s, state: state);
+            return _buildStorageTile(name: s.id, icon: WebMailIcons.shared_with_all, s: s, state: state);
           } else if (s.id == StorageNames.team) {
-            return _buildStorageTile(name: s.id, icon: MdiIcons.accountSupervisorCircle, s: s, state: state);
+            return _buildStorageTile(name: s.id, icon: Icons.business_center, s: s, state: state);
           } else {
             return _buildStorageTile(icon: MdiIcons.folderAccountOutline, s: s, state: state);
           }

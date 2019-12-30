@@ -46,7 +46,7 @@ dependencies:
       url: git://github.com/VadimOsovsky/flutter_empty_list.git
 
   # i18n
-  flutter_i18n: ^0.8.2
+  flutter_i18n: ^0.8.3
 
   # misc
   uuid: ^2.0.4
@@ -81,12 +81,11 @@ flutter:
     - assets/images/
     - assets/flutter_i18n/
 
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
+  fonts:
+    - family: WebMailIcons
+      fonts:
+        - asset: assets/fonts/WebMailIcons.ttf
+
   #   - family: Trajan Pro
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf

@@ -178,8 +178,7 @@ class _ContactViewAndroidState extends State<ContactViewAndroid> {
         allowShare: c.storage == StorageNames.personal,
         allowUnshare: c.storage == StorageNames.shared,
         allowEdit: c.storage == StorageNames.personal || c.viewEmail == AuthBloc.currentAccount.email,
-        allowDelete: c.storage == StorageNames.personal ||
-            c.storage == StorageNames.shared,
+        allowDelete: c.storage == StorageNames.personal || c.storage == StorageNames.shared,
         onActionSelected: _onMainAppBarActionSelected,
       ),
       body: ListView(

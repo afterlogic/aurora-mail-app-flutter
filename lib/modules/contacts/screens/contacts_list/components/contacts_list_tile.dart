@@ -2,6 +2,7 @@ import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
+import 'package:aurora_mail/res/icons/webmail_icons.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/material.dart';
@@ -21,11 +22,11 @@ class ContactsListTile extends StatelessWidget {
     if (bloc.state.showAllVisibleContacts) {
       switch (contact.storage) {
         case StorageNames.personal:
-          return Icon(MdiIcons.account);
+          return Icon(WebMailIcons.personal);
         case StorageNames.shared:
-          return Icon(MdiIcons.accountSwitch);
+          return Icon(WebMailIcons.shared_with_all);
         case StorageNames.team:
-          return Icon(MdiIcons.accountSupervisorCircle);
+          return Icon(Icons.business_center);
         default:
           return Icon(MdiIcons.folderAccountOutline);
       }
@@ -80,9 +81,10 @@ class ContactsListTile extends StatelessWidget {
       subtitle: name != null && name.isNotEmpty
           ? Text(contact.viewEmail)
           : null,
-      trailing: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.end,
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
           if (contact.viewEmail == AuthBloc.currentAccount.email)
             Container(
@@ -90,7 +92,7 @@ class ContactsListTile extends StatelessWidget {
                 color: theme.disabledColor.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(50.0),
               ),
-              margin: EdgeInsets.only(bottom: 4.0),
+              margin: EdgeInsets.only(right: 4.0),
               padding: EdgeInsets.symmetric(vertical: 3.0, horizontal: 6.0),
               child: Text(
                 i18n(context, "contacts_list_its_me_flag"),
