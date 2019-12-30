@@ -149,9 +149,12 @@ class _MessageItemState extends State<MessageItem> {
                       if (widget.message.hasAttachments) Icon(Icons.attachment),
                       SizedBox(width: 6.0),
                       Text(
-                        DateFormatting.formatDateFromSeconds(
-                          widget.message.timeStampInUTC,
-                          Localizations.localeOf(context).languageCode,
+                        DateFormatting.getShortMessageDate(
+                          timestamp: widget.message.timeStampInUTC,
+                          locale: Localizations.localeOf(context).languageCode,
+                          yesterdayWord: i18n(context, "formatting_yesterday"),
+                          // TODO VO: dehardcode
+                          is24: true,
                         ),
                         style: textStyle,
                       ),

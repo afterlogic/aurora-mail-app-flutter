@@ -211,9 +211,12 @@ class _MessageViewAndroidState extends State<MessageViewAndroid>
                       message.fromToDisplay,
                       style: Theme.of(context).textTheme.subhead,
                     ),
-                    Text(DateFormatting.formatDateFromSeconds(
-                      message.timeStampInUTC,
-                      Localizations.localeOf(context).languageCode,
+                    Text(DateFormatting.getDetailedMessageDate(
+                      timestamp: message.timeStampInUTC,
+                      locale: Localizations.localeOf(context).languageCode,
+                      yesterdayWord: i18n(context, "formatting_yesterday"),
+                      // TODO VO: dehardcode
+                      is24: true,
                     )),
                   ],
                 ),

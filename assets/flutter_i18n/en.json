@@ -229,5 +229,6 @@
   "new_messages": "new messages",
   "you_have_new_message": "You have {s1} {s2}",
   "compose_reply_date_format": "EEE, MMM d, yyyy 'at' HH:mm",
-  "contacts_birth_date_format": "MMM d, yyyy"
+  "contacts_birth_date_format": "MMM d, yyyy",
+  "formatting_yesterday": "Yesterday"
 }
