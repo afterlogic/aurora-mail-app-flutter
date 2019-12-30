@@ -6,6 +6,7 @@ import 'package:aurora_mail/modules/contacts/screens/contact_edit/contact_edit_r
 import 'package:aurora_mail/modules/contacts/screens/contact_view/components/contact_view_app_bar.dart';
 import 'package:aurora_mail/modules/contacts/screens/contact_view/components/contacts_info_item.dart';
 import 'package:aurora_mail/modules/contacts/utils/contact_info.dart';
+import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
 import 'package:aurora_mail/utils/date_formatting.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
@@ -32,7 +33,7 @@ class _ContactViewAndroidState extends State<ContactViewAndroid> {
     _contactInfo = new ContactInfo(widget.contact);
   }
 
-  void _onMainAppBarActionSelected(ContactViewAppBarAction item) {
+  Future<void> _onMainAppBarActionSelected(ContactViewAppBarAction item) async {
     final bloc = BlocProvider.of<ContactsBloc>(context);
     switch (item) {
       case ContactViewAppBarAction.attach:
@@ -81,6 +82,19 @@ class _ContactViewAndroidState extends State<ContactViewAndroid> {
           ),
         );
         Navigator.pop(context);
+        break;
+      case ContactViewAppBarAction.delete:
+        final result = await ConfirmationDialog.show(
+            context,
+            i18n(context, "contacts_delete_title"),
+            i18n(context, "contacts_delete_desc_with_name", {"contact": widget.contact.fullName}),
+            i18n(context, "btn_delete"));
+
+        if (result == true) {
+          bloc.add(DeleteContacts([widget.contact]));
+
+          Navigator.pop(context);
+        }
         break;
     }
   }
@@ -165,6 +179,8 @@ class _ContactViewAndroidState extends State<ContactViewAndroid> {
         allowShare: c.storage == StorageNames.personal,
         allowUnshare: c.storage == StorageNames.shared,
         allowEdit: c.storage == StorageNames.personal || c.viewEmail == AuthBloc.currentAccount.email,
+        allowDelete: c.storage == StorageNames.personal ||
+            c.storage == StorageNames.shared,
         onActionSelected: _onMainAppBarActionSelected,
       ),
       body: ListView(

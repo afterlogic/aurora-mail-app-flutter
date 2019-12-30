@@ -71,6 +71,7 @@
   "contacts_view_app_bar_send_message": "Email to this contact",
   "contacts_view_app_bar_search_messages": "Search messages with this contact",
   "contacts_view_app_bar_edit_contact": "Edit contact",
+  "contacts_view_app_bar_delete_contact": "Delete contact",
   "contacts_shared_message": "{contact} will soon appear in {storage} storage",
   "contacts_group_view_app_bar_send_message": "Email to this contact",
   "contacts_group_view_app_bar_delete": "Delete this group",

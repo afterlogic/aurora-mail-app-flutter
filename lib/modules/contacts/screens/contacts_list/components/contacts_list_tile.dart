@@ -34,39 +34,18 @@ class ContactsListTile extends StatelessWidget {
     }
   }
 
+  bool get allowDeleting {
+    return contact.storage == StorageNames.personal ||
+        contact.storage == StorageNames.shared;
+  }
+
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final name = contact.fullName;
-
+    if (allowDeleting) {
     return Dismissible(
       key: Key(contact.uuid),
       direction: DismissDirection.endToStart,
-      child: ListTile(
-        title: Text(name != null && name.isNotEmpty ? name : contact.viewEmail),
-        subtitle: name != null && name.isNotEmpty ? Text(contact.viewEmail) : null,
-        trailing: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: <Widget>[
-            if (contact.viewEmail == AuthBloc.currentAccount.email)
-              Container(
-                decoration: BoxDecoration(
-                  color: theme.disabledColor.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(50.0),
-                ),
-                margin: EdgeInsets.only(bottom: 4.0),
-                padding: EdgeInsets.symmetric(vertical: 3.0, horizontal: 6.0),
-                child: Text(
-                  i18n(context, "contacts_list_its_me_flag"),
-                  style: theme.textTheme.caption,
-                ),
-              ),
-            _getStorageIcon(context),
-          ],
-        ),
-        onTap: () => onPressed(contact),
-      ),
+      child: _buildTile(context),
       onDismissed: (_) => onDeleteContact(contact),
       confirmDismiss: (_) => ConfirmationDialog.show(
           context,
@@ -86,6 +65,42 @@ class ContactsListTile extends StatelessWidget {
           ],
         ),
       ),
+    );
+    } else {
+      return _buildTile(context);
+    }
+  }
+
+  Widget _buildTile(BuildContext context) {
+    final theme = Theme.of(context);
+    final name = contact.fullName;
+
+    return ListTile(
+      title: Text(name != null && name.isNotEmpty ? name : contact.viewEmail),
+      subtitle: name != null && name.isNotEmpty
+          ? Text(contact.viewEmail)
+          : null,
+      trailing: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: <Widget>[
+          if (contact.viewEmail == AuthBloc.currentAccount.email)
+            Container(
+              decoration: BoxDecoration(
+                color: theme.disabledColor.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(50.0),
+              ),
+              margin: EdgeInsets.only(bottom: 4.0),
+              padding: EdgeInsets.symmetric(vertical: 3.0, horizontal: 6.0),
+              child: Text(
+                i18n(context, "contacts_list_its_me_flag"),
+                style: theme.textTheme.caption,
+              ),
+            ),
+          _getStorageIcon(context),
+        ],
+      ),
+      onTap: () => onPressed(contact),
     );
   }
 }

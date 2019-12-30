@@ -175,6 +175,7 @@ class _ContactsListAndroidState extends State<ContactsListAndroid> {
       children: <Widget>[
         Flexible(
           child: ListView.separated(
+            padding: EdgeInsets.only(bottom: 62.0),
             itemBuilder: (_, i) => ContactsListTile(
               contact: state.contacts[i],
               onPressed: (c) => _onContactSelected(context, c),

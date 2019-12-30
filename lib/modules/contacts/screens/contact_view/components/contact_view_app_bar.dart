@@ -2,20 +2,33 @@ import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
-enum ContactViewAppBarAction { attach, sendMessage, searchMessages, edit, share, unshare }
+enum ContactViewAppBarAction {
+  attach,
+  sendMessage,
+  searchMessages,
+  edit,
+  share,
+  unshare,
+  delete
+}
 
 class ContactViewAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool allowEdit;
   final bool allowShare;
   final bool allowUnshare;
+  final bool allowDelete;
   final Function(ContactViewAppBarAction) onActionSelected;
 
   @override
   final Size preferredSize = const Size.fromHeight(kToolbarHeight);
 
-  const ContactViewAppBar(
-      {Key key, @required this.onActionSelected, @required this.allowEdit, @required this.allowShare, @required this.allowUnshare})
-      : super(key: key);
+  const ContactViewAppBar({Key key,
+    @required this.onActionSelected,
+    @required this.allowEdit,
+    @required this.allowShare,
+    @required this.allowUnshare,
+    @required this.allowDelete,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +69,12 @@ class ContactViewAppBar extends StatelessWidget implements PreferredSizeWidget {
             icon: Icon(Icons.edit),
             tooltip: i18n(context, "contacts_view_app_bar_edit_contact"),
             onPressed: () => onActionSelected(ContactViewAppBarAction.edit),
+          ),
+        if (allowDelete)
+          IconButton(
+            icon: Icon(Icons.delete_outline),
+            tooltip: i18n(context, "contacts_view_app_bar_delete_contact"),
+            onPressed: () => onActionSelected(ContactViewAppBarAction.delete),
           ),
       ],
     );
