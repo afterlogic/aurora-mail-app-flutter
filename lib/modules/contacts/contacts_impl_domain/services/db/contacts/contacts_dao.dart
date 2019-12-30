@@ -21,7 +21,7 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
 
   Future<List<ContactsTable>> getContacts(int userServerId, {List<String> storages, String pattern}) {
     return (select(contacts)
-          ..where((c) => c.idUser.equals(userServerId))
+//          ..where((c) => c.idUser.equals(userServerId))
           ..where((c) {
             if (pattern != null && pattern.isNotEmpty) {
               return c.fullName.like("%$pattern%") | c.viewEmail.like("%$pattern%");

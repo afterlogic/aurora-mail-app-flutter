@@ -92,7 +92,6 @@ class _ContactViewAndroidState extends State<ContactViewAndroid> {
 
         if (result == true) {
           bloc.add(DeleteContacts([widget.contact]));
-
           Navigator.pop(context);
         }
         break;

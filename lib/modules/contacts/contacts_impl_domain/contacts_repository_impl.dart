@@ -124,11 +124,10 @@ class ContactsRepositoryImpl implements ContactsRepository {
 
   @override
   Future<List<Contact>> getSuggestionContacts(String pattern) async {
-    final storages = [StorageNames.collected, StorageNames.personal];
+//    final storages = [StorageNames.collected, StorageNames.personal];
 
     final contacts = await _db.getContacts(
       userServerId,
-      storages: storages,
       pattern: pattern,
     );
 
