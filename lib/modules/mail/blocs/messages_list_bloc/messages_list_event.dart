@@ -1,6 +1,7 @@
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/cupertino.dart';
 
 abstract class MessagesListEvent extends Equatable {
   const MessagesListEvent();
@@ -22,10 +23,11 @@ class SubscribeToMessages extends MessagesListEvent {
 class StopMessagesRefresh extends MessagesListEvent {}
 
 class DeleteMessages extends MessagesListEvent {
-  final List<Message> messages;
+  final List<int> uids;
+  final String folderRawName;
 
-  DeleteMessages(this.messages);
+  const DeleteMessages({@required this.uids, @required this.folderRawName});
 
   @override
-  List<Object> get props => [messages];
+  List<Object> get props => [uids, folderRawName];
 }

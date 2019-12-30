@@ -19,10 +19,7 @@ class ComposeAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       leading: IconButton(
         icon: Icon(Icons.close),
-        onPressed: () {
-          onAppBarActionSelected(ComposeAppBarAction.cancel);
-          Navigator.pop(context);
-        },
+        onPressed: () => onAppBarActionSelected(ComposeAppBarAction.cancel),
       ),
       title: PopupMenuButton(
         enabled: false,
@@ -30,9 +27,7 @@ class ComposeAppBar extends StatelessWidget implements PreferredSizeWidget {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Flexible(
-                child: Text(
-              AuthBloc.currentAccount.email,
-              style: TextStyle(fontSize: 14.0),
+              child: Text(AuthBloc.currentAccount.email, style: TextStyle(fontSize: 14.0),
             )),
 //            SizedBox(width: 4.0),
 //            Icon(Icons.keyboard_arrow_down)
@@ -43,8 +38,7 @@ class ComposeAppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: <Widget>[
         IconButton(
           icon: Icon(Icons.save),
-          onPressed: () =>
-              onAppBarActionSelected(ComposeAppBarAction.saveToDrafts),
+          onPressed: () => onAppBarActionSelected(ComposeAppBarAction.saveToDrafts),
         ),
         IconButton(
           icon: Icon(Icons.send),

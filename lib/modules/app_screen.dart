@@ -113,6 +113,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
                         final supportedLocale = locales.firstWhere((l) {
                           return l.languageCode == locale.languageCode;
                         }, orElse: () => null);
+
                         return supportedLocale ?? Locale("en", "");
                       },
                       locale: settingsState.language?.toLocale(),

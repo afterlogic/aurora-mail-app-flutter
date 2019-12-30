@@ -6,6 +6,7 @@ import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/compose_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
+import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/models/compose_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/compose_types.dart';
 import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
@@ -15,6 +16,7 @@ import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_rou
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/mail_utils.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -23,6 +25,7 @@ import 'components/compose_attachment_item.dart';
 import 'components/compose_body.dart';
 import 'components/compose_emails.dart';
 import 'components/compose_subject.dart';
+import 'components/discard_compose_changes_dialog.dart';
 
 class ComposeAndroid extends StatefulWidget {
   final Message message;
@@ -134,10 +137,15 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
   void _onAppBarActionSelected(ComposeAppBarAction action) {
     switch (action) {
       case ComposeAppBarAction.saveToDrafts:
+        _saveToDrafts();
+        break;
       case ComposeAppBarAction.cancel:
-        return _saveToDrafts();
+        Navigator.pop(context);
+        _saveToDrafts();
+        break;
       case ComposeAppBarAction.send:
-        return _sendMessage();
+        _sendMessage();
+        break;
     }
   }
 
@@ -200,11 +208,28 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
     ));
   }
 
-  void _saveToDrafts() {
-    if (_bodyTextCtrl.text.isEmpty) return;
+  bool get _hasMessageChanged {
+    final m = widget.message;
 
-    final attachmentsForSave =
-        _attachments.where((a) => a is ComposeAttachment);
+    if (m != null) {
+      return _subjectTextCtrl.text != m.subject ||
+          _bodyTextCtrl.text != MailUtils.htmlToPlain(m.html) ||
+          !listEquals<String>(MailUtils.getEmails(m.toInJson), _toEmails) ||
+          !listEquals<String>(MailUtils.getEmails(m.ccInJson), _ccEmails) ||
+          !listEquals<String>(MailUtils.getEmails(m.bccInJson), _bccEmails);
+    } else {
+      return _bodyTextCtrl.text.isNotEmpty ||
+          _subjectTextCtrl.text.isNotEmpty ||
+          _toEmails.isNotEmpty ||
+          _ccEmails.isNotEmpty ||
+          _bccEmails.isNotEmpty;
+    }
+  }
+
+  void _saveToDrafts() {
+    if (!_hasMessageChanged) return;
+
+    final attachmentsForSave = _attachments.where((a) => a is ComposeAttachment);
 
     return _bloc.add(SaveToDrafts(
       to: _toEmails.join(","),
@@ -252,6 +277,27 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
       isError: false,
     );
   }
+
+  // TODO task frozen
+//  Future<void> _onGoBack() async {
+//    final result = await showDialog<DiscardComposeChangesOption>(
+//      context: context,
+//      builder: (_) => DiscardComposeChangesDialog(),
+//    );
+//
+//    switch(result) {
+//      case DiscardComposeChangesOption.discard:
+//        Navigator.pop(context);
+//        if (_currentDraftUid != null && _currentDraftUid != widget.draftUid) {
+//          BlocProvider.of<MessagesListBloc>(context).add(DeleteMessages(uids: [_currentDraftUid], ));
+//        }
+//        break;
+//      case DiscardComposeChangesOption.save:
+//        Navigator.pop(context);
+//        _saveToDrafts();
+//        break;
+//    }
+//  }
 
   void _showError(String err) {
     Navigator.popUntil(context, ModalRoute.withName(ComposeRoute.name));

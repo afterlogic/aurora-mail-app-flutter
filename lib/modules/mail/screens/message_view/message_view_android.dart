@@ -126,7 +126,10 @@ class _MessageViewAndroidState extends State<MessageViewAndroid>
         i18n(context, "messages_delete_desc"),
         i18n(context, "btn_delete"));
     if (delete == true) {
-      BlocProvider.of<MessagesListBloc>(context).add(DeleteMessages([message]));
+      BlocProvider.of<MessagesListBloc>(context).add(DeleteMessages(
+        uids: [message.uid],
+        folderRawName: message.folder,
+      ));
       Navigator.popUntil(context, ModalRoute.withName(MessagesListRoute.name));
     }
   }

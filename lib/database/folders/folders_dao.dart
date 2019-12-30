@@ -40,17 +40,6 @@ class FoldersDao extends DatabaseAccessor<AppDatabase> with _$FoldersDaoMixin {
             foundFolders, foundFolders[0].parentGuid)[0];
   }
 
-  Future<Folder> getFolderByRawName(String fullNameRaw) async {
-    final foundFolders = await (select(folders)
-          ..where((folder) => folder.fullNameRaw.equals(fullNameRaw)))
-        .get();
-
-    return foundFolders.isEmpty
-        ? null
-        : Folder.getFolderObjectsFromDb(
-            foundFolders, foundFolders[0].parentGuid)[0];
-  }
-
   Stream<List<LocalFolder>> watchAllFolders() {
     return (select(folders)
           ..where((folder) => folder.accountId.equals(_accountId)))

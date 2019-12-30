@@ -30,7 +30,7 @@ class MessagesListBloc extends Bloc<MessagesListEvent, MessagesListState> {
 
   Stream<MessagesListState> _deleteMessage(DeleteMessages event) async* {
     try {
-      await _methods.deleteMessages(event.messages);
+      await _methods.deleteMessages(event.uids, event.folderRawName);
       yield MessagesDeleted();
     } catch (err, s) {
       yield MailError(formatError(err, s));

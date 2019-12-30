@@ -279,11 +279,11 @@ class MailApi {
   }
 
   Future<void> deleteMessages({
-    @required Folder folder,
+    @required String folderRawName,
     @required List<int> uids,
   }) async {
     final parameters = json.encode({
-      "Folder": folder.fullNameRaw,
+      "Folder": folderRawName,
       "AccountID": _accountId,
       "Uids": uids.join(","),
     });

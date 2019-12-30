@@ -57,10 +57,10 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
     });
   }
 
-  Future<int> deleteMessages(List<int> uids, Folder folder) {
+  Future<int> deleteMessages(List<int> uids, String folderRawName) {
     return (delete(mail)
           ..where((m) => m.uid.isIn(uids))
-          ..where((m) => m.folder.equals(folder.fullNameRaw)))
+          ..where((m) => m.folder.equals(folderRawName)))
         .go();
   }
 

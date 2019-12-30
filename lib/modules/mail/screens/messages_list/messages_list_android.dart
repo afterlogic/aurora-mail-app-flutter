@@ -124,7 +124,7 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
   }
 
   void _deleteMessage(Message message) {
-    _messagesListBloc.add(DeleteMessages([message]));
+    _messagesListBloc.add(DeleteMessages(uids: [message.uid], folderRawName: message.folder));
   }
 
   void _dispatchPostFoldersLoadedAction(FoldersLoaded state) {

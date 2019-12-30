@@ -41,7 +41,7 @@ class AppButton extends StatelessWidget {
                           text,
                           style: TextStyle(
                               color: textColor == null
-                                  ? Theme.of(context).accentColor
+                                  ? Theme.of(context).textTheme.button.color
                                   : textColor),
                         ),
             ),
