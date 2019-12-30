@@ -109,7 +109,12 @@ class _AppState extends State<App> with WidgetsBindingObserver {
                         ),
                       ],
                       supportedLocales: supportedLocales,
-                      localeResolutionCallback: (locale, locales) => Locale("en", ""),
+                      localeResolutionCallback: (locale, locales) {
+                        final supportedLocale = locales.firstWhere((l) {
+                          return l.languageCode == locale.languageCode;
+                        }, orElse: () => null);
+                        return supportedLocale ?? Locale("en", "");
+                      },
                       locale: settingsState.language?.toLocale(),
                       initialRoute: authState.needsLogin
                           ? LoginRoute.name

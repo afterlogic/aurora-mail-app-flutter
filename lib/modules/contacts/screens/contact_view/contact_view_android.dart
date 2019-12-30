@@ -63,7 +63,7 @@ class _ContactViewAndroidState extends State<ContactViewAndroid> {
           msg: i18n(
             context,
             "contacts_shared_message",
-            {"contact": widget.contact.fullName, "storage": StorageNames.shared},
+            {"contact": widget.contact.fullName, "storage": i18n(context, "contacts_drawer_storage_shared")},
           ),
         );
         Navigator.pop(context);
@@ -77,7 +77,7 @@ class _ContactViewAndroidState extends State<ContactViewAndroid> {
           msg: i18n(
             context,
             "contacts_shared_message",
-            {"contact": widget.contact.fullName, "storage": StorageNames.personal},
+            {"contact": widget.contact.fullName, "storage": i18n(context, "contacts_drawer_storage_personal")},
           ),
         );
         Navigator.pop(context);

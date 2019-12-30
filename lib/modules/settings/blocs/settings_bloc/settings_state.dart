@@ -22,7 +22,7 @@ class SettingsLoaded extends SettingsState {
   const SettingsLoaded({
     this.syncFrequency,
     this.syncPeriod,
-    this.darkThemeEnabled = false,
+    this.darkThemeEnabled,
     this.language,
     this.connection = ConnectivityResult.none,
   });
