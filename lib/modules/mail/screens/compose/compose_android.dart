@@ -368,7 +368,7 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
                   );
                 }
               }),
-              Divider(height: 0.0),
+//              Divider(height: 0.0),
               ComposeBody(textCtrl: _bodyTextCtrl),
             ],
           ),
