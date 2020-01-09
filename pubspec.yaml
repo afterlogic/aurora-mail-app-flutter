@@ -39,7 +39,7 @@ dependencies:
 
   # ui
   material_design_icons_flutter: ^3.4.4795
-  webview_flutter: ^0.3.18+1
+  webview_flutter: ^0.3.19+3
   flutter_speed_dial: ^1.2.5
   empty_list:
     git:
