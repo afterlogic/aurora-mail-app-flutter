@@ -5,12 +5,12 @@ PODS:
   - connectivity (0.0.1):
     - Flutter
     - Reachability
-  - downloads_path_provider (0.0.1):
-    - Flutter
   - file_picker (0.0.1):
     - Flutter
   - Flutter (1.0.0)
   - flutter_downloader (0.0.1):
+    - Flutter
+  - flutter_keyboard_visibility (0.7.0):
     - Flutter
   - flutter_local_notifications (0.0.1):
     - Flutter
@@ -48,10 +48,10 @@ PODS:
 DEPENDENCIES:
   - alarm_service (from `.symlinks/plugins/alarm_service/ios`)
   - connectivity (from `.symlinks/plugins/connectivity/ios`)
-  - downloads_path_provider (from `.symlinks/plugins/downloads_path_provider/ios`)
   - file_picker (from `.symlinks/plugins/file_picker/ios`)
   - Flutter (from `.symlinks/flutter/ios`)
   - flutter_downloader (from `.symlinks/plugins/flutter_downloader/ios`)
+  - flutter_keyboard_visibility (from `.symlinks/plugins/flutter_keyboard_visibility/ios`)
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
   - flutter_uploader (from `.symlinks/plugins/flutter_uploader/ios`)
   - package_info (from `.symlinks/plugins/package_info/ios`)
@@ -77,14 +77,14 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/alarm_service/ios"
   connectivity:
     :path: ".symlinks/plugins/connectivity/ios"
-  downloads_path_provider:
-    :path: ".symlinks/plugins/downloads_path_provider/ios"
   file_picker:
     :path: ".symlinks/plugins/file_picker/ios"
   Flutter:
     :path: ".symlinks/flutter/ios"
   flutter_downloader:
     :path: ".symlinks/plugins/flutter_downloader/ios"
+  flutter_keyboard_visibility:
+    :path: ".symlinks/plugins/flutter_keyboard_visibility/ios"
   flutter_local_notifications:
     :path: ".symlinks/plugins/flutter_local_notifications/ios"
   flutter_uploader:
@@ -116,10 +116,10 @@ SPEC CHECKSUMS:
   Alamofire: 85e8a02c69d6020a0d734f6054870d7ecb75cf18
   alarm_service: 7962c3a75cb3008f1af984351c225f6f1e0e3dfb
   connectivity: 6e94255659cc86dcbef1d452ad3e0491bb1b3e75
-  downloads_path_provider: fe0d06888d4b8c055a59edbc2f51f03e63cb0e28
   file_picker: 408623be2125b79a4539cf703be3d4b3abe5e245
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
   flutter_downloader: 058b9c41564a90500f67f3e432e3524613a7fd83
+  flutter_keyboard_visibility: 6195387fb6d8f46e5cd6dda4a4154e41f800f545
   flutter_local_notifications: 9e4738ce2471c5af910d961a6b7eadcf57c50186
   flutter_uploader: 7957e1b9d6516b6cccc37e5ffd6c5a0975a7cc4c
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
@@ -134,8 +134,8 @@ SPEC CHECKSUMS:
   url_launcher: a1c0cc845906122c4784c542523d8cacbded5626
   url_launcher_macos: fd7894421cd39320dce5f292fc99ea9270b2a313
   url_launcher_web: e5527357f037c87560776e36436bf2b0288b965c
-  webview_flutter: db3aba222b23e4dc432e0c5882834123dc50ff9f
+  webview_flutter: bec7599de6bfbe8008a739aa3ebd7b364ea9d0cd
 
 PODFILE CHECKSUM: d2bb59ea2f8c6e1da04a9ad3e9faba38299b697d
 
-COCOAPODS: 1.8.4
+COCOAPODS: 1.8.3
