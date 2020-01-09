@@ -1,11 +1,12 @@
 import 'dart:async';
 
-import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
-import 'package:aurora_mail/generated/i18n.dart';
+import 'package:aurora_mail/main.dart' as main;
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/auth/screens/login/login_route.dart';
+import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
+import 'package:aurora_mail/modules/contacts/screens/contacts_list/contacts_list_route.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/models/compose_types.dart';
@@ -13,10 +14,10 @@ import 'package:aurora_mail/modules/mail/screens/compose/compose_route.dart';
 import 'package:aurora_mail/modules/mail/screens/message_view/message_view_route.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/main_drawer.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
-import 'package:aurora_mail/modules/settings/models/sync_duration.dart';
 import 'package:aurora_mail/modules/settings/screens/settings_main/settings_main_route.dart';
+import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
-import 'package:connectivity/connectivity.dart';
+import 'package:empty_list/empty_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -32,22 +33,28 @@ class MessagesListAndroid extends StatefulWidget {
 class _MessagesListAndroidState extends State<MessagesListAndroid> {
   final _messagesListBloc = new MessagesListBloc();
   final _mailBloc = new MailBloc();
+  ContactsBloc _contactsBloc;
 
   var _refreshCompleter = new Completer();
   Folder _selectedFolder;
-
-  Timer _timer;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _mailBloc.add(FetchFolders());
+    _contactsBloc = new ContactsBloc(
+      apiUrl: AuthBloc.apiUrl,
+      token: AuthBloc.currentUser.token,
+      userId: AuthBloc.currentUser.serverId,
+      appDatabase: DBInstances.appDB,
+    );
+    _contactsBloc.add(GetContacts());
   }
 
   @override
   void dispose() {
     super.dispose();
-    _timer?.cancel();
+    main.doOnAlarm = null;
     _messagesListBloc.close();
     _mailBloc.close();
   }
@@ -56,15 +63,11 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
     showSnack(context: ctx, scaffoldState: Scaffold.of(ctx), msg: err);
   }
 
-  void _initUpdateTimer(int frequency, BuildContext context) async {
-    final freq = SyncFreq.secondsToFreq(frequency);
-    final syncDuration = SyncFreq.freqToDuration(freq);
-
-    _timer?.cancel();
-    _timer = Timer.periodic(
-      syncDuration,
-      (Timer timer) => _mailBloc.add(RefreshMessages()),
-    );
+  void _initUpdateTimer() async {
+    main.doOnAlarm = () {
+      _mailBloc.add(RefreshMessages());
+      _contactsBloc.add(GetContacts());
+    };
   }
 
   void _onAppBarActionSelected(MailListAppBarAction item) {
@@ -75,6 +78,13 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
         break;
       case MailListAppBarAction.settings:
         Navigator.pushNamed(context, SettingsMainRoute.name);
+        break;
+      case MailListAppBarAction.contacts:
+        Navigator.pushReplacementNamed(
+          context,
+          ContactsListRoute.name,
+          arguments: ContactsListScreenArgs(_contactsBloc),
+        );
         break;
     }
   }
@@ -91,7 +101,8 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
         context,
         ComposeRoute.name,
         arguments: ComposeScreenArgs(
-          bloc: _mailBloc,
+          mailBloc: _mailBloc,
+          contactsBloc: _contactsBloc,
           message: item,
           draftUid: item.uid,
           composeType: ComposeType.fromDrafts,
@@ -102,13 +113,18 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
         context,
         MessageViewRoute.name,
         arguments:
-            MessageViewScreenArgs(allMessages, i, _mailBloc, _messagesListBloc),
+        MessageViewScreenArgs(messages: allMessages,
+          initialPage: i,
+          mailBloc: _mailBloc,
+          messagesListBloc: _messagesListBloc,
+          contactsBloc: _contactsBloc,
+        ),
       );
     }
   }
 
   void _deleteMessage(Message message) {
-    _messagesListBloc.add(DeleteMessages([message]));
+    _messagesListBloc.add(DeleteMessages(uids: [message.uid], folderRawName: message.folder));
   }
 
   void _dispatchPostFoldersLoadedAction(FoldersLoaded state) {
@@ -139,10 +155,7 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
         ),
       ],
       child: Scaffold(
-        appBar: PreferredSize(
-          preferredSize: Size.fromHeight(APP_BAR_HEIGHT_ANDROID),
-          child: MailAppBar(onActionSelected: _onAppBarActionSelected),
-        ),
+        appBar: MailAppBar(onActionSelected: _onAppBarActionSelected),
         drawer: MainDrawer(),
         body: MultiBlocListener(
           listeners: [
@@ -170,7 +183,9 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
             ),
             BlocListener<SettingsBloc, SettingsState>(
               condition: (prev, next) {
-                if (prev is SettingsLoaded && next is SettingsLoaded && prev.darkThemeEnabled != next.darkThemeEnabled) {
+                if (prev is SettingsLoaded &&
+                    next is SettingsLoaded &&
+                    prev.darkThemeEnabled != next.darkThemeEnabled) {
                   return false;
                 } else {
                   return true;
@@ -179,7 +194,7 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
               listener: (BuildContext context, state) {
                 if (state is SettingsLoaded) {
                   if (state.syncFrequency != null) {
-                    _initUpdateTimer(state.syncFrequency, context);
+                    _initUpdateTimer();
                   }
                   _mailBloc.add(RefreshMessages());
                 }
@@ -192,6 +207,7 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
               return _refreshCompleter.future;
             },
             backgroundColor: Colors.white,
+            color: Colors.black,
             child: BlocBuilder<MessagesListBloc, MessagesListState>(
                 bloc: _messagesListBloc,
                 condition: (prevState, state) => state is SubscribedToMessages,
@@ -209,7 +225,10 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
           child: Icon(MdiIcons.emailPlusOutline),
           onPressed: () => Navigator.pushNamed(context, ComposeRoute.name,
               arguments: ComposeScreenArgs(
-                  bloc: _mailBloc, composeType: ComposeType.none)),
+                mailBloc: _mailBloc,
+                contactsBloc: _contactsBloc,
+                composeType: ComposeType.none,
+              )),
         ),
       ),
     );
@@ -269,16 +288,8 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
             if (_selectedFolder != null && _selectedFolder.needsInfoUpdate) {
               return _buildMessagesLoading();
             }
-            return ListView(
-              physics: AlwaysScrollableScrollPhysics(),
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 68.0, horizontal: 16.0),
-                  child: Center(child: Text(S.of(context).messages_empty)),
-                ),
-              ],
-            );
+
+            return EmptyList(message: i18n(context, "messages_empty"));
           }
         } else {
           return _buildMessagesLoading();

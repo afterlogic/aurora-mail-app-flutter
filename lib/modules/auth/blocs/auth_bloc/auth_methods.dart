@@ -21,8 +21,8 @@ class AuthMethods {
     ];
 
     final result = await Future.wait(futures);
-    final User user = result[0];
-    final List<Account> accounts = result[1];
+    final user = result[0] as User;
+    final accounts = List<Account>.from(result[1] as Iterable);
 
     if (user == null || accounts.isEmpty) return null;
 
@@ -39,9 +39,7 @@ class AuthMethods {
     // auto discover domain
     String hostname = host;
     if (hostname.isEmpty) {
-      final splitEmail = email.split("@");
-      final domain = splitEmail.last.trim();
-      final autoDiscoveredHost = await _authApi.autoDiscoverHostname(domain);
+      final autoDiscoveredHost = await _authApi.autoDiscoverHostname(email);
       if (autoDiscoveredHost == null || autoDiscoveredHost.isEmpty) {
         return null;
       } else {
@@ -60,9 +58,12 @@ class AuthMethods {
       await _usersDao.addUser(newUser);
       userToReturn = await _usersDao.getUserByServerId(newUser.serverId);
     }
-    await _authLocal.setSelectedUserServerId(userToReturn.serverId);
+    _authLocal.setSelectedUserServerId(userToReturn.serverId);
+    _authLocal.setLastEmail(email);
     return userToReturn;
   }
+
+  Future<String> get lastEmail => _authLocal.getLastEmail();
 
   Future<List<Account>> getAccounts(int userId) async {
     final accounts = await _authApi.getAccounts(userId);

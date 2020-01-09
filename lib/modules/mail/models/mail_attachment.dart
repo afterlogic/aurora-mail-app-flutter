@@ -63,7 +63,7 @@ class MailAttachment {
       final progress = currentlyDownloadingAttachments
           .firstWhere((da) => da.taskId == taskId, orElse: () => null);
 
-      if (progress != null) progress.updateProgress(data[2], data[1]);
+      if (progress != null) progress.updateProgress(data[2] as int, data[1] as DownloadTaskStatus);
     }, onDone: () {
       onDownloadEnd();
       endDownloading(taskId);
@@ -100,28 +100,27 @@ class MailAttachment {
 
   static List<MailAttachment> fromJsonString(String jsonString) {
     if (jsonString == null) return [];
-    final Map attachments = json.decode(jsonString);
+    final attachments = json.decode(jsonString) as Map;
 
-    final List collection = attachments["@Collection"];
+    final collection = attachments["@Collection"] as List;
 
     if (collection == null || collection.isEmpty) return [];
 
     return collection.map((item) {
       return new MailAttachment(
-        fileName: item["FileName"],
-        mimeType: item["MimeType"],
-        mimePartIndex: item["MimePartIndex"],
-        size: item["EstimatedSize"],
-        cid: item["CID"],
-        contentLocation: item["ContentLocation"],
-        location: item["Content"],
-        isInline: item["IsInline"],
-        isLinked: item["IsLinked"],
-        hash: item["Hash"],
-        viewUrl: item["Actions"] is Map ? item["Actions"]["view"]["url"] : null,
-        downloadUrl:
-            item["Actions"] is Map ? item["Actions"]["download"]["url"] : null,
-        thumbnailUrl: item["ThumbnailUrl"],
+        fileName: item["FileName"] as String,
+        mimeType: item["MimeType"] as String,
+        mimePartIndex: item["MimePartIndex"] as String,
+        size: item["EstimatedSize"] as int,
+        cid: item["CID"] as String,
+        contentLocation: item["ContentLocation"] as String,
+        location: item["Content"] as String,
+        isInline: item["IsInline"] as bool,
+        isLinked: item["IsLinked"] as bool,
+        hash: item["Hash"] as String,
+        viewUrl: item["Actions"] is Map ? item["Actions"]["view"]["url"] as String : null,
+        downloadUrl: item["Actions"] is Map ? item["Actions"]["download"]["url"] as String : null,
+        thumbnailUrl: item["ThumbnailUrl"] as String,
       );
     }).toList();
   }

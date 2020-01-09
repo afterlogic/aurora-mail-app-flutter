@@ -1,4 +1,4 @@
-import 'package:aurora_mail/utils/errors_enum.dart';
+import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/material.dart';
 
 void showSnack({
@@ -7,10 +7,10 @@ void showSnack({
   @required dynamic msg,
   Duration duration = const Duration(seconds: 5),
   SnackBarAction action,
-  isError = true,
+  bool isError = true,
 }) {
   if (Theme == null || scaffoldState == null) return;
-  final errorMessage = msg is ErrorForTranslation ? getErrTranslation(context, msg) : msg.toString();
+  final errorMessage = i18n(context, msg.toString());
 
   final theme = Theme.of(context);
   final snack = theme.brightness == Brightness.light

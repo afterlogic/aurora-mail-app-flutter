@@ -1,11 +1,14 @@
-import 'package:aurora_mail/generated/i18n.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
+import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-enum MailListAppBarAction { logout, settings }
+enum MailListAppBarAction { logout, settings, contacts }
 
-class MailAppBar extends StatelessWidget {
+class MailAppBar extends StatelessWidget implements PreferredSizeWidget {
+  @override
+  final Size preferredSize = const Size.fromHeight(kToolbarHeight);
+
   final Function(MailListAppBarAction) onActionSelected;
 
   const MailAppBar({Key key, this.onActionSelected}) : super(key: key);
@@ -22,12 +25,12 @@ class MailAppBar extends StatelessWidget {
         builder: (_, state) {
           if (state is FoldersLoaded) {
             return Text(state.isStarredFilterEnabled
-                ? S.of(context).folders_starred
+                ? i18n(context, "folders_starred")
                 : state.selectedFolder.name);
           } else if (state is FoldersLoading) {
-            return Text(S.of(context).messages_list_app_bar_loading_folders);
+            return Text(i18n(context, "messages_list_app_bar_loading_folders"));
           } else if (state is FoldersEmpty) {
-            return Text(S.of(context).folders_empty);
+            return Text(i18n(context, "folders_empty"));
           } else {
             return SizedBox();
           }
@@ -39,12 +42,16 @@ class MailAppBar extends StatelessWidget {
           itemBuilder: (_) {
             return [
               PopupMenuItem(
+                value: MailListAppBarAction.contacts,
+                child: Text(i18n(context, "messages_list_app_bar_contacts")),
+              ),
+              PopupMenuItem(
                 value: MailListAppBarAction.settings,
-                child: Text(S.of(context).messages_list_app_bar_settings),
+                child: Text(i18n(context, "messages_list_app_bar_settings")),
               ),
               PopupMenuItem(
                 value: MailListAppBarAction.logout,
-                child: Text(S.of(context).messages_list_app_bar_logout),
+                child: Text(i18n(context, "messages_list_app_bar_logout")),
               ),
             ];
           },

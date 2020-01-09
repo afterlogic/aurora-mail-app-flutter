@@ -6,7 +6,7 @@ part of 'app_database.dart';
 // MoorGenerator
 // **************************************************************************
 
-// ignore_for_file: unnecessary_brace_in_string_interps
+// ignore_for_file: unnecessary_brace_in_string_interps, unnecessary_this
 class Message extends DataClass implements Insertable<Message> {
   final int localId;
   final int uid;
@@ -303,7 +303,7 @@ class Message extends DataClass implements Insertable<Message> {
   }
 
   @override
-  T createCompanion<T extends UpdateCompanion<Message>>(bool nullToAbsent) {
+  MailCompanion createCompanion(bool nullToAbsent) {
     return MailCompanion(
       localId: localId == null && nullToAbsent
           ? const Value.absent()
@@ -430,7 +430,7 @@ class Message extends DataClass implements Insertable<Message> {
       customInJson: customInJson == null && nullToAbsent
           ? const Value.absent()
           : Value(customInJson),
-    ) as T;
+    );
   }
 
   Message copyWith(
@@ -634,52 +634,54 @@ class Message extends DataClass implements Insertable<Message> {
   bool operator ==(other) =>
       identical(this, other) ||
       (other is Message &&
-          other.localId == localId &&
-          other.uid == uid &&
-          other.userLocalId == userLocalId &&
-          other.uniqueUidInFolder == uniqueUidInFolder &&
-          other.parentUid == parentUid &&
-          other.messageId == messageId &&
-          other.folder == folder &&
-          other.flagsInJson == flagsInJson &&
-          other.hasThread == hasThread &&
-          other.subject == subject &&
-          other.size == size &&
-          other.textSize == textSize &&
-          other.truncated == truncated &&
-          other.internalTimeStampInUTC == internalTimeStampInUTC &&
-          other.receivedOrDateTimeStampInUTC == receivedOrDateTimeStampInUTC &&
-          other.timeStampInUTC == timeStampInUTC &&
-          other.toInJson == toInJson &&
-          other.fromInJson == fromInJson &&
-          other.fromToDisplay == fromToDisplay &&
-          other.ccInJson == ccInJson &&
-          other.bccInJson == bccInJson &&
-          other.senderInJson == senderInJson &&
-          other.replyToInJson == replyToInJson &&
-          other.hasAttachments == hasAttachments &&
-          other.hasVcardAttachment == hasVcardAttachment &&
-          other.hasIcalAttachment == hasIcalAttachment &&
-          other.importance == importance &&
-          other.draftInfoInJson == draftInfoInJson &&
-          other.sensitivity == sensitivity &&
-          other.downloadAsEmlUrl == downloadAsEmlUrl &&
-          other.hash == hash &&
-          other.headers == headers &&
-          other.inReplyTo == inReplyTo &&
-          other.references == references &&
-          other.readingConfirmationAddressee == readingConfirmationAddressee &&
-          other.html == html &&
-          other.plain == plain &&
-          other.rtl == rtl &&
-          other.extendInJson == extendInJson &&
-          other.safety == safety &&
-          other.hasExternals == hasExternals &&
-          other.foundedCIDsInJson == foundedCIDsInJson &&
+          other.localId == this.localId &&
+          other.uid == this.uid &&
+          other.userLocalId == this.userLocalId &&
+          other.uniqueUidInFolder == this.uniqueUidInFolder &&
+          other.parentUid == this.parentUid &&
+          other.messageId == this.messageId &&
+          other.folder == this.folder &&
+          other.flagsInJson == this.flagsInJson &&
+          other.hasThread == this.hasThread &&
+          other.subject == this.subject &&
+          other.size == this.size &&
+          other.textSize == this.textSize &&
+          other.truncated == this.truncated &&
+          other.internalTimeStampInUTC == this.internalTimeStampInUTC &&
+          other.receivedOrDateTimeStampInUTC ==
+              this.receivedOrDateTimeStampInUTC &&
+          other.timeStampInUTC == this.timeStampInUTC &&
+          other.toInJson == this.toInJson &&
+          other.fromInJson == this.fromInJson &&
+          other.fromToDisplay == this.fromToDisplay &&
+          other.ccInJson == this.ccInJson &&
+          other.bccInJson == this.bccInJson &&
+          other.senderInJson == this.senderInJson &&
+          other.replyToInJson == this.replyToInJson &&
+          other.hasAttachments == this.hasAttachments &&
+          other.hasVcardAttachment == this.hasVcardAttachment &&
+          other.hasIcalAttachment == this.hasIcalAttachment &&
+          other.importance == this.importance &&
+          other.draftInfoInJson == this.draftInfoInJson &&
+          other.sensitivity == this.sensitivity &&
+          other.downloadAsEmlUrl == this.downloadAsEmlUrl &&
+          other.hash == this.hash &&
+          other.headers == this.headers &&
+          other.inReplyTo == this.inReplyTo &&
+          other.references == this.references &&
+          other.readingConfirmationAddressee ==
+              this.readingConfirmationAddressee &&
+          other.html == this.html &&
+          other.plain == this.plain &&
+          other.rtl == this.rtl &&
+          other.extendInJson == this.extendInJson &&
+          other.safety == this.safety &&
+          other.hasExternals == this.hasExternals &&
+          other.foundedCIDsInJson == this.foundedCIDsInJson &&
           other.foundedContentLocationUrlsInJson ==
-              foundedContentLocationUrlsInJson &&
-          other.attachmentsInJson == attachmentsInJson &&
-          other.customInJson == customInJson);
+              this.foundedContentLocationUrlsInJson &&
+          other.attachmentsInJson == this.attachmentsInJson &&
+          other.customInJson == this.customInJson);
 }
 
 class MailCompanion extends UpdateCompanion<Message> {
@@ -775,6 +777,87 @@ class MailCompanion extends UpdateCompanion<Message> {
     this.attachmentsInJson = const Value.absent(),
     this.customInJson = const Value.absent(),
   });
+  MailCompanion.insert({
+    this.localId = const Value.absent(),
+    @required int uid,
+    @required int userLocalId,
+    @required String uniqueUidInFolder,
+    this.parentUid = const Value.absent(),
+    @required String messageId,
+    @required String folder,
+    @required String flagsInJson,
+    @required bool hasThread,
+    @required String subject,
+    @required int size,
+    @required int textSize,
+    @required bool truncated,
+    @required int internalTimeStampInUTC,
+    @required int receivedOrDateTimeStampInUTC,
+    @required int timeStampInUTC,
+    this.toInJson = const Value.absent(),
+    this.fromInJson = const Value.absent(),
+    @required String fromToDisplay,
+    this.ccInJson = const Value.absent(),
+    this.bccInJson = const Value.absent(),
+    this.senderInJson = const Value.absent(),
+    this.replyToInJson = const Value.absent(),
+    @required bool hasAttachments,
+    @required bool hasVcardAttachment,
+    @required bool hasIcalAttachment,
+    @required int importance,
+    this.draftInfoInJson = const Value.absent(),
+    @required int sensitivity,
+    @required String downloadAsEmlUrl,
+    @required String hash,
+    @required String headers,
+    @required String inReplyTo,
+    @required String references,
+    @required String readingConfirmationAddressee,
+    this.html = const Value.absent(),
+    @required String plain,
+    @required bool rtl,
+    @required String extendInJson,
+    @required bool safety,
+    @required bool hasExternals,
+    @required String foundedCIDsInJson,
+    @required String foundedContentLocationUrlsInJson,
+    this.attachmentsInJson = const Value.absent(),
+    @required String customInJson,
+  })  : uid = Value(uid),
+        userLocalId = Value(userLocalId),
+        uniqueUidInFolder = Value(uniqueUidInFolder),
+        messageId = Value(messageId),
+        folder = Value(folder),
+        flagsInJson = Value(flagsInJson),
+        hasThread = Value(hasThread),
+        subject = Value(subject),
+        size = Value(size),
+        textSize = Value(textSize),
+        truncated = Value(truncated),
+        internalTimeStampInUTC = Value(internalTimeStampInUTC),
+        receivedOrDateTimeStampInUTC = Value(receivedOrDateTimeStampInUTC),
+        timeStampInUTC = Value(timeStampInUTC),
+        fromToDisplay = Value(fromToDisplay),
+        hasAttachments = Value(hasAttachments),
+        hasVcardAttachment = Value(hasVcardAttachment),
+        hasIcalAttachment = Value(hasIcalAttachment),
+        importance = Value(importance),
+        sensitivity = Value(sensitivity),
+        downloadAsEmlUrl = Value(downloadAsEmlUrl),
+        hash = Value(hash),
+        headers = Value(headers),
+        inReplyTo = Value(inReplyTo),
+        references = Value(references),
+        readingConfirmationAddressee = Value(readingConfirmationAddressee),
+        plain = Value(plain),
+        rtl = Value(rtl),
+        extendInJson = Value(extendInJson),
+        safety = Value(safety),
+        hasExternals = Value(hasExternals),
+        foundedCIDsInJson = Value(foundedCIDsInJson),
+        foundedContentLocationUrlsInJson =
+            Value(foundedContentLocationUrlsInJson),
+        customInJson = Value(customInJson);
   MailCompanion copyWith(
       {Value<int> localId,
       Value<int> uid,
@@ -2157,7 +2240,7 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
   }
 
   @override
-  T createCompanion<T extends UpdateCompanion<LocalFolder>>(bool nullToAbsent) {
+  FoldersCompanion createCompanion(bool nullToAbsent) {
     return FoldersCompanion(
       localId: localId == null && nullToAbsent
           ? const Value.absent()
@@ -2217,7 +2300,7 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
       messagesInfoInJson: messagesInfoInJson == null && nullToAbsent
           ? const Value.absent()
           : Value(messagesInfoInJson),
-    ) as T;
+    );
   }
 
   LocalFolder copyWith(
@@ -2344,28 +2427,28 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
   bool operator ==(other) =>
       identical(this, other) ||
       (other is LocalFolder &&
-          other.localId == localId &&
-          other.guid == guid &&
-          other.parentGuid == parentGuid &&
-          other.accountId == accountId &&
-          other.type == type &&
-          other.folderOrder == folderOrder &&
-          other.count == count &&
-          other.unread == unread &&
-          other.name == name &&
-          other.fullName == fullName &&
-          other.fullNameRaw == fullNameRaw &&
-          other.fullNameHash == fullNameHash &&
-          other.folderHash == folderHash &&
-          other.delimiter == delimiter &&
-          other.needsInfoUpdate == needsInfoUpdate &&
-          other.isSystemFolder == isSystemFolder &&
-          other.isSubscribed == isSubscribed &&
-          other.isSelectable == isSelectable &&
-          other.folderExists == folderExists &&
-          other.extended == extended &&
-          other.alwaysRefresh == alwaysRefresh &&
-          other.messagesInfoInJson == messagesInfoInJson);
+          other.localId == this.localId &&
+          other.guid == this.guid &&
+          other.parentGuid == this.parentGuid &&
+          other.accountId == this.accountId &&
+          other.type == this.type &&
+          other.folderOrder == this.folderOrder &&
+          other.count == this.count &&
+          other.unread == this.unread &&
+          other.name == this.name &&
+          other.fullName == this.fullName &&
+          other.fullNameRaw == this.fullNameRaw &&
+          other.fullNameHash == this.fullNameHash &&
+          other.folderHash == this.folderHash &&
+          other.delimiter == this.delimiter &&
+          other.needsInfoUpdate == this.needsInfoUpdate &&
+          other.isSystemFolder == this.isSystemFolder &&
+          other.isSubscribed == this.isSubscribed &&
+          other.isSelectable == this.isSelectable &&
+          other.folderExists == this.folderExists &&
+          other.extended == this.extended &&
+          other.alwaysRefresh == this.alwaysRefresh &&
+          other.messagesInfoInJson == this.messagesInfoInJson);
 }
 
 class FoldersCompanion extends UpdateCompanion<LocalFolder> {
@@ -2415,6 +2498,45 @@ class FoldersCompanion extends UpdateCompanion<LocalFolder> {
     this.alwaysRefresh = const Value.absent(),
     this.messagesInfoInJson = const Value.absent(),
   });
+  FoldersCompanion.insert({
+    this.localId = const Value.absent(),
+    @required String guid,
+    this.parentGuid = const Value.absent(),
+    @required int accountId,
+    @required int type,
+    @required int folderOrder,
+    this.count = const Value.absent(),
+    this.unread = const Value.absent(),
+    @required String name,
+    @required String fullName,
+    @required String fullNameRaw,
+    @required String fullNameHash,
+    @required String folderHash,
+    @required String delimiter,
+    @required bool needsInfoUpdate,
+    @required bool isSystemFolder,
+    @required bool isSubscribed,
+    @required bool isSelectable,
+    @required bool folderExists,
+    this.extended = const Value.absent(),
+    @required bool alwaysRefresh,
+    this.messagesInfoInJson = const Value.absent(),
+  })  : guid = Value(guid),
+        accountId = Value(accountId),
+        type = Value(type),
+        folderOrder = Value(folderOrder),
+        name = Value(name),
+        fullName = Value(fullName),
+        fullNameRaw = Value(fullNameRaw),
+        fullNameHash = Value(fullNameHash),
+        folderHash = Value(folderHash),
+        delimiter = Value(delimiter),
+        needsInfoUpdate = Value(needsInfoUpdate),
+        isSystemFolder = Value(isSystemFolder),
+        isSubscribed = Value(isSubscribed),
+        isSelectable = Value(isSelectable),
+        folderExists = Value(folderExists),
+        alwaysRefresh = Value(alwaysRefresh);
   FoldersCompanion copyWith(
       {Value<int> localId,
       Value<String> guid,
@@ -3033,7 +3155,6 @@ class User extends DataClass implements Insertable<User> {
   final String token;
   final int syncFreqInSeconds;
   final String syncPeriod;
-  final bool darkThemeEnabled;
   final String language;
   User(
       {@required this.localId,
@@ -3042,14 +3163,12 @@ class User extends DataClass implements Insertable<User> {
       @required this.token,
       this.syncFreqInSeconds,
       this.syncPeriod,
-      @required this.darkThemeEnabled,
       this.language});
   factory User.fromData(Map<String, dynamic> data, GeneratedDatabase db,
       {String prefix}) {
     final effectivePrefix = prefix ?? '';
     final intType = db.typeSystem.forDartType<int>();
     final stringType = db.typeSystem.forDartType<String>();
-    final boolType = db.typeSystem.forDartType<bool>();
     return User(
       localId:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}local_id']),
@@ -3063,8 +3182,6 @@ class User extends DataClass implements Insertable<User> {
           data['${effectivePrefix}sync_freq_in_seconds']),
       syncPeriod: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}sync_period']),
-      darkThemeEnabled: boolType.mapFromDatabaseResponse(
-          data['${effectivePrefix}dark_theme_enabled']),
       language: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}language']),
     );
@@ -3078,7 +3195,6 @@ class User extends DataClass implements Insertable<User> {
       token: serializer.fromJson<String>(json['token']),
       syncFreqInSeconds: serializer.fromJson<int>(json['syncFreqInSeconds']),
       syncPeriod: serializer.fromJson<String>(json['syncPeriod']),
-      darkThemeEnabled: serializer.fromJson<bool>(json['darkThemeEnabled']),
       language: serializer.fromJson<String>(json['language']),
     );
   }
@@ -3092,13 +3208,12 @@ class User extends DataClass implements Insertable<User> {
       'token': serializer.toJson<String>(token),
       'syncFreqInSeconds': serializer.toJson<int>(syncFreqInSeconds),
       'syncPeriod': serializer.toJson<String>(syncPeriod),
-      'darkThemeEnabled': serializer.toJson<bool>(darkThemeEnabled),
       'language': serializer.toJson<String>(language),
     };
   }
 
   @override
-  T createCompanion<T extends UpdateCompanion<User>>(bool nullToAbsent) {
+  UsersCompanion createCompanion(bool nullToAbsent) {
     return UsersCompanion(
       localId: localId == null && nullToAbsent
           ? const Value.absent()
@@ -3117,13 +3232,10 @@ class User extends DataClass implements Insertable<User> {
       syncPeriod: syncPeriod == null && nullToAbsent
           ? const Value.absent()
           : Value(syncPeriod),
-      darkThemeEnabled: darkThemeEnabled == null && nullToAbsent
-          ? const Value.absent()
-          : Value(darkThemeEnabled),
       language: language == null && nullToAbsent
           ? const Value.absent()
           : Value(language),
-    ) as T;
+    );
   }
 
   User copyWith(
@@ -3133,7 +3245,6 @@ class User extends DataClass implements Insertable<User> {
           String token,
           int syncFreqInSeconds,
           String syncPeriod,
-          bool darkThemeEnabled,
           String language}) =>
       User(
         localId: localId ?? this.localId,
@@ -3142,7 +3253,6 @@ class User extends DataClass implements Insertable<User> {
         token: token ?? this.token,
         syncFreqInSeconds: syncFreqInSeconds ?? this.syncFreqInSeconds,
         syncPeriod: syncPeriod ?? this.syncPeriod,
-        darkThemeEnabled: darkThemeEnabled ?? this.darkThemeEnabled,
         language: language ?? this.language,
       );
   @override
@@ -3154,7 +3264,6 @@ class User extends DataClass implements Insertable<User> {
           ..write('token: $token, ')
           ..write('syncFreqInSeconds: $syncFreqInSeconds, ')
           ..write('syncPeriod: $syncPeriod, ')
-          ..write('darkThemeEnabled: $darkThemeEnabled, ')
           ..write('language: $language')
           ..write(')'))
         .toString();
@@ -3169,24 +3278,19 @@ class User extends DataClass implements Insertable<User> {
               hostname.hashCode,
               $mrjc(
                   token.hashCode,
-                  $mrjc(
-                      syncFreqInSeconds.hashCode,
-                      $mrjc(
-                          syncPeriod.hashCode,
-                          $mrjc(darkThemeEnabled.hashCode,
-                              language.hashCode))))))));
+                  $mrjc(syncFreqInSeconds.hashCode,
+                      $mrjc(syncPeriod.hashCode, language.hashCode)))))));
   @override
   bool operator ==(other) =>
       identical(this, other) ||
       (other is User &&
-          other.localId == localId &&
-          other.serverId == serverId &&
-          other.hostname == hostname &&
-          other.token == token &&
-          other.syncFreqInSeconds == syncFreqInSeconds &&
-          other.syncPeriod == syncPeriod &&
-          other.darkThemeEnabled == darkThemeEnabled &&
-          other.language == language);
+          other.localId == this.localId &&
+          other.serverId == this.serverId &&
+          other.hostname == this.hostname &&
+          other.token == this.token &&
+          other.syncFreqInSeconds == this.syncFreqInSeconds &&
+          other.syncPeriod == this.syncPeriod &&
+          other.language == this.language);
 }
 
 class UsersCompanion extends UpdateCompanion<User> {
@@ -3196,7 +3300,6 @@ class UsersCompanion extends UpdateCompanion<User> {
   final Value<String> token;
   final Value<int> syncFreqInSeconds;
   final Value<String> syncPeriod;
-  final Value<bool> darkThemeEnabled;
   final Value<String> language;
   const UsersCompanion({
     this.localId = const Value.absent(),
@@ -3205,9 +3308,19 @@ class UsersCompanion extends UpdateCompanion<User> {
     this.token = const Value.absent(),
     this.syncFreqInSeconds = const Value.absent(),
     this.syncPeriod = const Value.absent(),
-    this.darkThemeEnabled = const Value.absent(),
     this.language = const Value.absent(),
   });
+  UsersCompanion.insert({
+    this.localId = const Value.absent(),
+    @required int serverId,
+    @required String hostname,
+    @required String token,
+    this.syncFreqInSeconds = const Value.absent(),
+    this.syncPeriod = const Value.absent(),
+    this.language = const Value.absent(),
+  })  : serverId = Value(serverId),
+        hostname = Value(hostname),
+        token = Value(token);
   UsersCompanion copyWith(
       {Value<int> localId,
       Value<int> serverId,
@@ -3215,7 +3328,6 @@ class UsersCompanion extends UpdateCompanion<User> {
       Value<String> token,
       Value<int> syncFreqInSeconds,
       Value<String> syncPeriod,
-      Value<bool> darkThemeEnabled,
       Value<String> language}) {
     return UsersCompanion(
       localId: localId ?? this.localId,
@@ -3224,7 +3336,6 @@ class UsersCompanion extends UpdateCompanion<User> {
       token: token ?? this.token,
       syncFreqInSeconds: syncFreqInSeconds ?? this.syncFreqInSeconds,
       syncPeriod: syncPeriod ?? this.syncPeriod,
-      darkThemeEnabled: darkThemeEnabled ?? this.darkThemeEnabled,
       language: language ?? this.language,
     );
   }
@@ -3299,17 +3410,6 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
     );
   }
 
-  final VerificationMeta _darkThemeEnabledMeta =
-      const VerificationMeta('darkThemeEnabled');
-  GeneratedBoolColumn _darkThemeEnabled;
-  @override
-  GeneratedBoolColumn get darkThemeEnabled =>
-      _darkThemeEnabled ??= _constructDarkThemeEnabled();
-  GeneratedBoolColumn _constructDarkThemeEnabled() {
-    return GeneratedBoolColumn('dark_theme_enabled', $tableName, false,
-        defaultValue: Constant(false));
-  }
-
   final VerificationMeta _languageMeta = const VerificationMeta('language');
   GeneratedTextColumn _language;
   @override
@@ -3330,7 +3430,6 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
         token,
         syncFreqInSeconds,
         syncPeriod,
-        darkThemeEnabled,
         language
       ];
   @override
@@ -3381,14 +3480,6 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
     } else if (syncPeriod.isRequired && isInserting) {
       context.missing(_syncPeriodMeta);
     }
-    if (d.darkThemeEnabled.present) {
-      context.handle(
-          _darkThemeEnabledMeta,
-          darkThemeEnabled.isAcceptableValue(
-              d.darkThemeEnabled.value, _darkThemeEnabledMeta));
-    } else if (darkThemeEnabled.isRequired && isInserting) {
-      context.missing(_darkThemeEnabledMeta);
-    }
     if (d.language.present) {
       context.handle(_languageMeta,
           language.isAcceptableValue(d.language.value, _languageMeta));
@@ -3427,10 +3518,6 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
     }
     if (d.syncPeriod.present) {
       map['sync_period'] = Variable<String, StringType>(d.syncPeriod.value);
-    }
-    if (d.darkThemeEnabled.present) {
-      map['dark_theme_enabled'] =
-          Variable<bool, BoolType>(d.darkThemeEnabled.value);
     }
     if (d.language.present) {
       map['language'] = Variable<String, StringType>(d.language.value);
@@ -3584,7 +3671,7 @@ class Account extends DataClass implements Insertable<Account> {
   }
 
   @override
-  T createCompanion<T extends UpdateCompanion<Account>>(bool nullToAbsent) {
+  AccountsCompanion createCompanion(bool nullToAbsent) {
     return AccountsCompanion(
       localId: localId == null && nullToAbsent
           ? const Value.absent()
@@ -3639,7 +3726,7 @@ class Account extends DataClass implements Insertable<Account> {
       allowAutoResponder: allowAutoResponder == null && nullToAbsent
           ? const Value.absent()
           : Value(allowAutoResponder),
-    ) as T;
+    );
   }
 
   Account copyWith(
@@ -3758,25 +3845,25 @@ class Account extends DataClass implements Insertable<Account> {
   bool operator ==(other) =>
       identical(this, other) ||
       (other is Account &&
-          other.localId == localId &&
-          other.entityId == entityId &&
-          other.idUser == idUser &&
-          other.uuid == uuid &&
-          other.parentUuid == parentUuid &&
-          other.moduleName == moduleName &&
-          other.useToAuthorize == useToAuthorize &&
-          other.email == email &&
-          other.friendlyName == friendlyName &&
-          other.useSignature == useSignature &&
-          other.signature == signature &&
-          other.serverId == serverId &&
-          other.foldersOrderInJson == foldersOrderInJson &&
-          other.useThreading == useThreading &&
-          other.saveRepliesToCurrFolder == saveRepliesToCurrFolder &&
-          other.accountId == accountId &&
-          other.allowFilters == allowFilters &&
-          other.allowForward == allowForward &&
-          other.allowAutoResponder == allowAutoResponder);
+          other.localId == this.localId &&
+          other.entityId == this.entityId &&
+          other.idUser == this.idUser &&
+          other.uuid == this.uuid &&
+          other.parentUuid == this.parentUuid &&
+          other.moduleName == this.moduleName &&
+          other.useToAuthorize == this.useToAuthorize &&
+          other.email == this.email &&
+          other.friendlyName == this.friendlyName &&
+          other.useSignature == this.useSignature &&
+          other.signature == this.signature &&
+          other.serverId == this.serverId &&
+          other.foldersOrderInJson == this.foldersOrderInJson &&
+          other.useThreading == this.useThreading &&
+          other.saveRepliesToCurrFolder == this.saveRepliesToCurrFolder &&
+          other.accountId == this.accountId &&
+          other.allowFilters == this.allowFilters &&
+          other.allowForward == this.allowForward &&
+          other.allowAutoResponder == this.allowAutoResponder);
 }
 
 class AccountsCompanion extends UpdateCompanion<Account> {
@@ -3820,6 +3907,44 @@ class AccountsCompanion extends UpdateCompanion<Account> {
     this.allowForward = const Value.absent(),
     this.allowAutoResponder = const Value.absent(),
   });
+  AccountsCompanion.insert({
+    this.localId = const Value.absent(),
+    @required int entityId,
+    @required int idUser,
+    @required String uuid,
+    @required String parentUuid,
+    @required String moduleName,
+    @required bool useToAuthorize,
+    @required String email,
+    @required String friendlyName,
+    @required bool useSignature,
+    @required String signature,
+    @required int serverId,
+    @required String foldersOrderInJson,
+    @required bool useThreading,
+    @required bool saveRepliesToCurrFolder,
+    @required int accountId,
+    @required bool allowFilters,
+    @required bool allowForward,
+    @required bool allowAutoResponder,
+  })  : entityId = Value(entityId),
+        idUser = Value(idUser),
+        uuid = Value(uuid),
+        parentUuid = Value(parentUuid),
+        moduleName = Value(moduleName),
+        useToAuthorize = Value(useToAuthorize),
+        email = Value(email),
+        friendlyName = Value(friendlyName),
+        useSignature = Value(useSignature),
+        signature = Value(signature),
+        serverId = Value(serverId),
+        foldersOrderInJson = Value(foldersOrderInJson),
+        useThreading = Value(useThreading),
+        saveRepliesToCurrFolder = Value(saveRepliesToCurrFolder),
+        accountId = Value(accountId),
+        allowFilters = Value(allowFilters),
+        allowForward = Value(allowForward),
+        allowAutoResponder = Value(allowAutoResponder);
   AccountsCompanion copyWith(
       {Value<int> localId,
       Value<int> entityId,
@@ -4357,8 +4482,3562 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
   }
 }
 
+class ContactsTable extends DataClass implements Insertable<ContactsTable> {
+  final String uuidPlusStorage;
+  final String uuid;
+  final int entityId;
+  final String parentUuid;
+  final String eTag;
+  final int idUser;
+  final int idTenant;
+  final String storage;
+  final String fullName;
+  final bool useFriendlyName;
+  final int primaryEmail;
+  final int primaryPhone;
+  final int primaryAddress;
+  final String viewEmail;
+  final String title;
+  final String firstName;
+  final String lastName;
+  final String nickName;
+  final String skype;
+  final String facebook;
+  final String personalEmail;
+  final String personalAddress;
+  final String personalCity;
+  final String personalState;
+  final String personalZip;
+  final String personalCountry;
+  final String personalWeb;
+  final String personalFax;
+  final String personalPhone;
+  final String personalMobile;
+  final String businessEmail;
+  final String businessCompany;
+  final String businessAddress;
+  final String businessCity;
+  final String businessState;
+  final String businessZip;
+  final String businessCountry;
+  final String businessJobTitle;
+  final String businessDepartment;
+  final String businessOffice;
+  final String businessPhone;
+  final String businessFax;
+  final String businessWeb;
+  final String otherEmail;
+  final String notes;
+  final int birthDay;
+  final int birthMonth;
+  final int birthYear;
+  final bool auto;
+  final int frequency;
+  final String dateModified;
+  final String davContactsUid;
+  final String davContactsVCardUid;
+  final List<String> groupUUIDs;
+  ContactsTable(
+      {@required this.uuidPlusStorage,
+      @required this.uuid,
+      this.entityId,
+      this.parentUuid,
+      @required this.eTag,
+      @required this.idUser,
+      this.idTenant,
+      @required this.storage,
+      @required this.fullName,
+      this.useFriendlyName,
+      @required this.primaryEmail,
+      @required this.primaryPhone,
+      @required this.primaryAddress,
+      @required this.viewEmail,
+      @required this.title,
+      @required this.firstName,
+      @required this.lastName,
+      @required this.nickName,
+      @required this.skype,
+      @required this.facebook,
+      @required this.personalEmail,
+      @required this.personalAddress,
+      @required this.personalCity,
+      @required this.personalState,
+      @required this.personalZip,
+      @required this.personalCountry,
+      @required this.personalWeb,
+      @required this.personalFax,
+      @required this.personalPhone,
+      @required this.personalMobile,
+      @required this.businessEmail,
+      @required this.businessCompany,
+      @required this.businessAddress,
+      @required this.businessCity,
+      @required this.businessState,
+      @required this.businessZip,
+      @required this.businessCountry,
+      @required this.businessJobTitle,
+      @required this.businessDepartment,
+      @required this.businessOffice,
+      @required this.businessPhone,
+      @required this.businessFax,
+      @required this.businessWeb,
+      @required this.otherEmail,
+      @required this.notes,
+      @required this.birthDay,
+      @required this.birthMonth,
+      @required this.birthYear,
+      this.auto,
+      @required this.frequency,
+      this.dateModified,
+      this.davContactsUid,
+      this.davContactsVCardUid,
+      @required this.groupUUIDs});
+  factory ContactsTable.fromData(
+      Map<String, dynamic> data, GeneratedDatabase db,
+      {String prefix}) {
+    final effectivePrefix = prefix ?? '';
+    final stringType = db.typeSystem.forDartType<String>();
+    final intType = db.typeSystem.forDartType<int>();
+    final boolType = db.typeSystem.forDartType<bool>();
+    return ContactsTable(
+      uuidPlusStorage: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}uuid_plus_storage']),
+      uuid: stringType.mapFromDatabaseResponse(data['${effectivePrefix}uuid']),
+      entityId:
+          intType.mapFromDatabaseResponse(data['${effectivePrefix}entity_id']),
+      parentUuid: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}parent_uuid']),
+      eTag: stringType.mapFromDatabaseResponse(data['${effectivePrefix}e_tag']),
+      idUser:
+          intType.mapFromDatabaseResponse(data['${effectivePrefix}id_user']),
+      idTenant:
+          intType.mapFromDatabaseResponse(data['${effectivePrefix}id_tenant']),
+      storage:
+          stringType.mapFromDatabaseResponse(data['${effectivePrefix}storage']),
+      fullName: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}full_name']),
+      useFriendlyName: boolType
+          .mapFromDatabaseResponse(data['${effectivePrefix}use_friendly_name']),
+      primaryEmail: intType
+          .mapFromDatabaseResponse(data['${effectivePrefix}primary_email']),
+      primaryPhone: intType
+          .mapFromDatabaseResponse(data['${effectivePrefix}primary_phone']),
+      primaryAddress: intType
+          .mapFromDatabaseResponse(data['${effectivePrefix}primary_address']),
+      viewEmail: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}view_email']),
+      title:
+          stringType.mapFromDatabaseResponse(data['${effectivePrefix}title']),
+      firstName: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}first_name']),
+      lastName: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}last_name']),
+      nickName: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}nick_name']),
+      skype:
+          stringType.mapFromDatabaseResponse(data['${effectivePrefix}skype']),
+      facebook: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}facebook']),
+      personalEmail: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}personal_email']),
+      personalAddress: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}personal_address']),
+      personalCity: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}personal_city']),
+      personalState: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}personal_state']),
+      personalZip: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}personal_zip']),
+      personalCountry: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}personal_country']),
+      personalWeb: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}personal_web']),
+      personalFax: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}personal_fax']),
+      personalPhone: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}personal_phone']),
+      personalMobile: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}personal_mobile']),
+      businessEmail: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}business_email']),
+      businessCompany: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}business_company']),
+      businessAddress: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}business_address']),
+      businessCity: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}business_city']),
+      businessState: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}business_state']),
+      businessZip: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}business_zip']),
+      businessCountry: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}business_country']),
+      businessJobTitle: stringType.mapFromDatabaseResponse(
+          data['${effectivePrefix}business_job_title']),
+      businessDepartment: stringType.mapFromDatabaseResponse(
+          data['${effectivePrefix}business_department']),
+      businessOffice: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}business_office']),
+      businessPhone: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}business_phone']),
+      businessFax: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}business_fax']),
+      businessWeb: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}business_web']),
+      otherEmail: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}other_email']),
+      notes:
+          stringType.mapFromDatabaseResponse(data['${effectivePrefix}notes']),
+      birthDay:
+          intType.mapFromDatabaseResponse(data['${effectivePrefix}birth_day']),
+      birthMonth: intType
+          .mapFromDatabaseResponse(data['${effectivePrefix}birth_month']),
+      birthYear:
+          intType.mapFromDatabaseResponse(data['${effectivePrefix}birth_year']),
+      auto: boolType.mapFromDatabaseResponse(data['${effectivePrefix}auto']),
+      frequency:
+          intType.mapFromDatabaseResponse(data['${effectivePrefix}frequency']),
+      dateModified: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}date_modified']),
+      davContactsUid: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}dav_contacts_uid']),
+      davContactsVCardUid: stringType.mapFromDatabaseResponse(
+          data['${effectivePrefix}dav_contacts_v_card_uid']),
+      groupUUIDs: $ContactsTable.$converter0.mapToDart(stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}group_u_u_i_ds'])),
+    );
+  }
+  factory ContactsTable.fromJson(Map<String, dynamic> json,
+      {ValueSerializer serializer = const ValueSerializer.defaults()}) {
+    return ContactsTable(
+      uuidPlusStorage: serializer.fromJson<String>(json['uuidPlusStorage']),
+      uuid: serializer.fromJson<String>(json['uuid']),
+      entityId: serializer.fromJson<int>(json['entityId']),
+      parentUuid: serializer.fromJson<String>(json['parentUuid']),
+      eTag: serializer.fromJson<String>(json['eTag']),
+      idUser: serializer.fromJson<int>(json['idUser']),
+      idTenant: serializer.fromJson<int>(json['idTenant']),
+      storage: serializer.fromJson<String>(json['storage']),
+      fullName: serializer.fromJson<String>(json['fullName']),
+      useFriendlyName: serializer.fromJson<bool>(json['useFriendlyName']),
+      primaryEmail: serializer.fromJson<int>(json['primaryEmail']),
+      primaryPhone: serializer.fromJson<int>(json['primaryPhone']),
+      primaryAddress: serializer.fromJson<int>(json['primaryAddress']),
+      viewEmail: serializer.fromJson<String>(json['viewEmail']),
+      title: serializer.fromJson<String>(json['title']),
+      firstName: serializer.fromJson<String>(json['firstName']),
+      lastName: serializer.fromJson<String>(json['lastName']),
+      nickName: serializer.fromJson<String>(json['nickName']),
+      skype: serializer.fromJson<String>(json['skype']),
+      facebook: serializer.fromJson<String>(json['facebook']),
+      personalEmail: serializer.fromJson<String>(json['personalEmail']),
+      personalAddress: serializer.fromJson<String>(json['personalAddress']),
+      personalCity: serializer.fromJson<String>(json['personalCity']),
+      personalState: serializer.fromJson<String>(json['personalState']),
+      personalZip: serializer.fromJson<String>(json['personalZip']),
+      personalCountry: serializer.fromJson<String>(json['personalCountry']),
+      personalWeb: serializer.fromJson<String>(json['personalWeb']),
+      personalFax: serializer.fromJson<String>(json['personalFax']),
+      personalPhone: serializer.fromJson<String>(json['personalPhone']),
+      personalMobile: serializer.fromJson<String>(json['personalMobile']),
+      businessEmail: serializer.fromJson<String>(json['businessEmail']),
+      businessCompany: serializer.fromJson<String>(json['businessCompany']),
+      businessAddress: serializer.fromJson<String>(json['businessAddress']),
+      businessCity: serializer.fromJson<String>(json['businessCity']),
+      businessState: serializer.fromJson<String>(json['businessState']),
+      businessZip: serializer.fromJson<String>(json['businessZip']),
+      businessCountry: serializer.fromJson<String>(json['businessCountry']),
+      businessJobTitle: serializer.fromJson<String>(json['businessJobTitle']),
+      businessDepartment:
+          serializer.fromJson<String>(json['businessDepartment']),
+      businessOffice: serializer.fromJson<String>(json['businessOffice']),
+      businessPhone: serializer.fromJson<String>(json['businessPhone']),
+      businessFax: serializer.fromJson<String>(json['businessFax']),
+      businessWeb: serializer.fromJson<String>(json['businessWeb']),
+      otherEmail: serializer.fromJson<String>(json['otherEmail']),
+      notes: serializer.fromJson<String>(json['notes']),
+      birthDay: serializer.fromJson<int>(json['birthDay']),
+      birthMonth: serializer.fromJson<int>(json['birthMonth']),
+      birthYear: serializer.fromJson<int>(json['birthYear']),
+      auto: serializer.fromJson<bool>(json['auto']),
+      frequency: serializer.fromJson<int>(json['frequency']),
+      dateModified: serializer.fromJson<String>(json['dateModified']),
+      davContactsUid: serializer.fromJson<String>(json['davContactsUid']),
+      davContactsVCardUid:
+          serializer.fromJson<String>(json['davContactsVCardUid']),
+      groupUUIDs: serializer.fromJson<List<String>>(json['groupUUIDs']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson(
+      {ValueSerializer serializer = const ValueSerializer.defaults()}) {
+    return {
+      'uuidPlusStorage': serializer.toJson<String>(uuidPlusStorage),
+      'uuid': serializer.toJson<String>(uuid),
+      'entityId': serializer.toJson<int>(entityId),
+      'parentUuid': serializer.toJson<String>(parentUuid),
+      'eTag': serializer.toJson<String>(eTag),
+      'idUser': serializer.toJson<int>(idUser),
+      'idTenant': serializer.toJson<int>(idTenant),
+      'storage': serializer.toJson<String>(storage),
+      'fullName': serializer.toJson<String>(fullName),
+      'useFriendlyName': serializer.toJson<bool>(useFriendlyName),
+      'primaryEmail': serializer.toJson<int>(primaryEmail),
+      'primaryPhone': serializer.toJson<int>(primaryPhone),
+      'primaryAddress': serializer.toJson<int>(primaryAddress),
+      'viewEmail': serializer.toJson<String>(viewEmail),
+      'title': serializer.toJson<String>(title),
+      'firstName': serializer.toJson<String>(firstName),
+      'lastName': serializer.toJson<String>(lastName),
+      'nickName': serializer.toJson<String>(nickName),
+      'skype': serializer.toJson<String>(skype),
+      'facebook': serializer.toJson<String>(facebook),
+      'personalEmail': serializer.toJson<String>(personalEmail),
+      'personalAddress': serializer.toJson<String>(personalAddress),
+      'personalCity': serializer.toJson<String>(personalCity),
+      'personalState': serializer.toJson<String>(personalState),
+      'personalZip': serializer.toJson<String>(personalZip),
+      'personalCountry': serializer.toJson<String>(personalCountry),
+      'personalWeb': serializer.toJson<String>(personalWeb),
+      'personalFax': serializer.toJson<String>(personalFax),
+      'personalPhone': serializer.toJson<String>(personalPhone),
+      'personalMobile': serializer.toJson<String>(personalMobile),
+      'businessEmail': serializer.toJson<String>(businessEmail),
+      'businessCompany': serializer.toJson<String>(businessCompany),
+      'businessAddress': serializer.toJson<String>(businessAddress),
+      'businessCity': serializer.toJson<String>(businessCity),
+      'businessState': serializer.toJson<String>(businessState),
+      'businessZip': serializer.toJson<String>(businessZip),
+      'businessCountry': serializer.toJson<String>(businessCountry),
+      'businessJobTitle': serializer.toJson<String>(businessJobTitle),
+      'businessDepartment': serializer.toJson<String>(businessDepartment),
+      'businessOffice': serializer.toJson<String>(businessOffice),
+      'businessPhone': serializer.toJson<String>(businessPhone),
+      'businessFax': serializer.toJson<String>(businessFax),
+      'businessWeb': serializer.toJson<String>(businessWeb),
+      'otherEmail': serializer.toJson<String>(otherEmail),
+      'notes': serializer.toJson<String>(notes),
+      'birthDay': serializer.toJson<int>(birthDay),
+      'birthMonth': serializer.toJson<int>(birthMonth),
+      'birthYear': serializer.toJson<int>(birthYear),
+      'auto': serializer.toJson<bool>(auto),
+      'frequency': serializer.toJson<int>(frequency),
+      'dateModified': serializer.toJson<String>(dateModified),
+      'davContactsUid': serializer.toJson<String>(davContactsUid),
+      'davContactsVCardUid': serializer.toJson<String>(davContactsVCardUid),
+      'groupUUIDs': serializer.toJson<List<String>>(groupUUIDs),
+    };
+  }
+
+  @override
+  ContactsCompanion createCompanion(bool nullToAbsent) {
+    return ContactsCompanion(
+      uuidPlusStorage: uuidPlusStorage == null && nullToAbsent
+          ? const Value.absent()
+          : Value(uuidPlusStorage),
+      uuid: uuid == null && nullToAbsent ? const Value.absent() : Value(uuid),
+      entityId: entityId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(entityId),
+      parentUuid: parentUuid == null && nullToAbsent
+          ? const Value.absent()
+          : Value(parentUuid),
+      eTag: eTag == null && nullToAbsent ? const Value.absent() : Value(eTag),
+      idUser:
+          idUser == null && nullToAbsent ? const Value.absent() : Value(idUser),
+      idTenant: idTenant == null && nullToAbsent
+          ? const Value.absent()
+          : Value(idTenant),
+      storage: storage == null && nullToAbsent
+          ? const Value.absent()
+          : Value(storage),
+      fullName: fullName == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fullName),
+      useFriendlyName: useFriendlyName == null && nullToAbsent
+          ? const Value.absent()
+          : Value(useFriendlyName),
+      primaryEmail: primaryEmail == null && nullToAbsent
+          ? const Value.absent()
+          : Value(primaryEmail),
+      primaryPhone: primaryPhone == null && nullToAbsent
+          ? const Value.absent()
+          : Value(primaryPhone),
+      primaryAddress: primaryAddress == null && nullToAbsent
+          ? const Value.absent()
+          : Value(primaryAddress),
+      viewEmail: viewEmail == null && nullToAbsent
+          ? const Value.absent()
+          : Value(viewEmail),
+      title:
+          title == null && nullToAbsent ? const Value.absent() : Value(title),
+      firstName: firstName == null && nullToAbsent
+          ? const Value.absent()
+          : Value(firstName),
+      lastName: lastName == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastName),
+      nickName: nickName == null && nullToAbsent
+          ? const Value.absent()
+          : Value(nickName),
+      skype:
+          skype == null && nullToAbsent ? const Value.absent() : Value(skype),
+      facebook: facebook == null && nullToAbsent
+          ? const Value.absent()
+          : Value(facebook),
+      personalEmail: personalEmail == null && nullToAbsent
+          ? const Value.absent()
+          : Value(personalEmail),
+      personalAddress: personalAddress == null && nullToAbsent
+          ? const Value.absent()
+          : Value(personalAddress),
+      personalCity: personalCity == null && nullToAbsent
+          ? const Value.absent()
+          : Value(personalCity),
+      personalState: personalState == null && nullToAbsent
+          ? const Value.absent()
+          : Value(personalState),
+      personalZip: personalZip == null && nullToAbsent
+          ? const Value.absent()
+          : Value(personalZip),
+      personalCountry: personalCountry == null && nullToAbsent
+          ? const Value.absent()
+          : Value(personalCountry),
+      personalWeb: personalWeb == null && nullToAbsent
+          ? const Value.absent()
+          : Value(personalWeb),
+      personalFax: personalFax == null && nullToAbsent
+          ? const Value.absent()
+          : Value(personalFax),
+      personalPhone: personalPhone == null && nullToAbsent
+          ? const Value.absent()
+          : Value(personalPhone),
+      personalMobile: personalMobile == null && nullToAbsent
+          ? const Value.absent()
+          : Value(personalMobile),
+      businessEmail: businessEmail == null && nullToAbsent
+          ? const Value.absent()
+          : Value(businessEmail),
+      businessCompany: businessCompany == null && nullToAbsent
+          ? const Value.absent()
+          : Value(businessCompany),
+      businessAddress: businessAddress == null && nullToAbsent
+          ? const Value.absent()
+          : Value(businessAddress),
+      businessCity: businessCity == null && nullToAbsent
+          ? const Value.absent()
+          : Value(businessCity),
+      businessState: businessState == null && nullToAbsent
+          ? const Value.absent()
+          : Value(businessState),
+      businessZip: businessZip == null && nullToAbsent
+          ? const Value.absent()
+          : Value(businessZip),
+      businessCountry: businessCountry == null && nullToAbsent
+          ? const Value.absent()
+          : Value(businessCountry),
+      businessJobTitle: businessJobTitle == null && nullToAbsent
+          ? const Value.absent()
+          : Value(businessJobTitle),
+      businessDepartment: businessDepartment == null && nullToAbsent
+          ? const Value.absent()
+          : Value(businessDepartment),
+      businessOffice: businessOffice == null && nullToAbsent
+          ? const Value.absent()
+          : Value(businessOffice),
+      businessPhone: businessPhone == null && nullToAbsent
+          ? const Value.absent()
+          : Value(businessPhone),
+      businessFax: businessFax == null && nullToAbsent
+          ? const Value.absent()
+          : Value(businessFax),
+      businessWeb: businessWeb == null && nullToAbsent
+          ? const Value.absent()
+          : Value(businessWeb),
+      otherEmail: otherEmail == null && nullToAbsent
+          ? const Value.absent()
+          : Value(otherEmail),
+      notes:
+          notes == null && nullToAbsent ? const Value.absent() : Value(notes),
+      birthDay: birthDay == null && nullToAbsent
+          ? const Value.absent()
+          : Value(birthDay),
+      birthMonth: birthMonth == null && nullToAbsent
+          ? const Value.absent()
+          : Value(birthMonth),
+      birthYear: birthYear == null && nullToAbsent
+          ? const Value.absent()
+          : Value(birthYear),
+      auto: auto == null && nullToAbsent ? const Value.absent() : Value(auto),
+      frequency: frequency == null && nullToAbsent
+          ? const Value.absent()
+          : Value(frequency),
+      dateModified: dateModified == null && nullToAbsent
+          ? const Value.absent()
+          : Value(dateModified),
+      davContactsUid: davContactsUid == null && nullToAbsent
+          ? const Value.absent()
+          : Value(davContactsUid),
+      davContactsVCardUid: davContactsVCardUid == null && nullToAbsent
+          ? const Value.absent()
+          : Value(davContactsVCardUid),
+      groupUUIDs: groupUUIDs == null && nullToAbsent
+          ? const Value.absent()
+          : Value(groupUUIDs),
+    );
+  }
+
+  ContactsTable copyWith(
+          {String uuidPlusStorage,
+          String uuid,
+          int entityId,
+          String parentUuid,
+          String eTag,
+          int idUser,
+          int idTenant,
+          String storage,
+          String fullName,
+          bool useFriendlyName,
+          int primaryEmail,
+          int primaryPhone,
+          int primaryAddress,
+          String viewEmail,
+          String title,
+          String firstName,
+          String lastName,
+          String nickName,
+          String skype,
+          String facebook,
+          String personalEmail,
+          String personalAddress,
+          String personalCity,
+          String personalState,
+          String personalZip,
+          String personalCountry,
+          String personalWeb,
+          String personalFax,
+          String personalPhone,
+          String personalMobile,
+          String businessEmail,
+          String businessCompany,
+          String businessAddress,
+          String businessCity,
+          String businessState,
+          String businessZip,
+          String businessCountry,
+          String businessJobTitle,
+          String businessDepartment,
+          String businessOffice,
+          String businessPhone,
+          String businessFax,
+          String businessWeb,
+          String otherEmail,
+          String notes,
+          int birthDay,
+          int birthMonth,
+          int birthYear,
+          bool auto,
+          int frequency,
+          String dateModified,
+          String davContactsUid,
+          String davContactsVCardUid,
+          List<String> groupUUIDs}) =>
+      ContactsTable(
+        uuidPlusStorage: uuidPlusStorage ?? this.uuidPlusStorage,
+        uuid: uuid ?? this.uuid,
+        entityId: entityId ?? this.entityId,
+        parentUuid: parentUuid ?? this.parentUuid,
+        eTag: eTag ?? this.eTag,
+        idUser: idUser ?? this.idUser,
+        idTenant: idTenant ?? this.idTenant,
+        storage: storage ?? this.storage,
+        fullName: fullName ?? this.fullName,
+        useFriendlyName: useFriendlyName ?? this.useFriendlyName,
+        primaryEmail: primaryEmail ?? this.primaryEmail,
+        primaryPhone: primaryPhone ?? this.primaryPhone,
+        primaryAddress: primaryAddress ?? this.primaryAddress,
+        viewEmail: viewEmail ?? this.viewEmail,
+        title: title ?? this.title,
+        firstName: firstName ?? this.firstName,
+        lastName: lastName ?? this.lastName,
+        nickName: nickName ?? this.nickName,
+        skype: skype ?? this.skype,
+        facebook: facebook ?? this.facebook,
+        personalEmail: personalEmail ?? this.personalEmail,
+        personalAddress: personalAddress ?? this.personalAddress,
+        personalCity: personalCity ?? this.personalCity,
+        personalState: personalState ?? this.personalState,
+        personalZip: personalZip ?? this.personalZip,
+        personalCountry: personalCountry ?? this.personalCountry,
+        personalWeb: personalWeb ?? this.personalWeb,
+        personalFax: personalFax ?? this.personalFax,
+        personalPhone: personalPhone ?? this.personalPhone,
+        personalMobile: personalMobile ?? this.personalMobile,
+        businessEmail: businessEmail ?? this.businessEmail,
+        businessCompany: businessCompany ?? this.businessCompany,
+        businessAddress: businessAddress ?? this.businessAddress,
+        businessCity: businessCity ?? this.businessCity,
+        businessState: businessState ?? this.businessState,
+        businessZip: businessZip ?? this.businessZip,
+        businessCountry: businessCountry ?? this.businessCountry,
+        businessJobTitle: businessJobTitle ?? this.businessJobTitle,
+        businessDepartment: businessDepartment ?? this.businessDepartment,
+        businessOffice: businessOffice ?? this.businessOffice,
+        businessPhone: businessPhone ?? this.businessPhone,
+        businessFax: businessFax ?? this.businessFax,
+        businessWeb: businessWeb ?? this.businessWeb,
+        otherEmail: otherEmail ?? this.otherEmail,
+        notes: notes ?? this.notes,
+        birthDay: birthDay ?? this.birthDay,
+        birthMonth: birthMonth ?? this.birthMonth,
+        birthYear: birthYear ?? this.birthYear,
+        auto: auto ?? this.auto,
+        frequency: frequency ?? this.frequency,
+        dateModified: dateModified ?? this.dateModified,
+        davContactsUid: davContactsUid ?? this.davContactsUid,
+        davContactsVCardUid: davContactsVCardUid ?? this.davContactsVCardUid,
+        groupUUIDs: groupUUIDs ?? this.groupUUIDs,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('ContactsTable(')
+          ..write('uuidPlusStorage: $uuidPlusStorage, ')
+          ..write('uuid: $uuid, ')
+          ..write('entityId: $entityId, ')
+          ..write('parentUuid: $parentUuid, ')
+          ..write('eTag: $eTag, ')
+          ..write('idUser: $idUser, ')
+          ..write('idTenant: $idTenant, ')
+          ..write('storage: $storage, ')
+          ..write('fullName: $fullName, ')
+          ..write('useFriendlyName: $useFriendlyName, ')
+          ..write('primaryEmail: $primaryEmail, ')
+          ..write('primaryPhone: $primaryPhone, ')
+          ..write('primaryAddress: $primaryAddress, ')
+          ..write('viewEmail: $viewEmail, ')
+          ..write('title: $title, ')
+          ..write('firstName: $firstName, ')
+          ..write('lastName: $lastName, ')
+          ..write('nickName: $nickName, ')
+          ..write('skype: $skype, ')
+          ..write('facebook: $facebook, ')
+          ..write('personalEmail: $personalEmail, ')
+          ..write('personalAddress: $personalAddress, ')
+          ..write('personalCity: $personalCity, ')
+          ..write('personalState: $personalState, ')
+          ..write('personalZip: $personalZip, ')
+          ..write('personalCountry: $personalCountry, ')
+          ..write('personalWeb: $personalWeb, ')
+          ..write('personalFax: $personalFax, ')
+          ..write('personalPhone: $personalPhone, ')
+          ..write('personalMobile: $personalMobile, ')
+          ..write('businessEmail: $businessEmail, ')
+          ..write('businessCompany: $businessCompany, ')
+          ..write('businessAddress: $businessAddress, ')
+          ..write('businessCity: $businessCity, ')
+          ..write('businessState: $businessState, ')
+          ..write('businessZip: $businessZip, ')
+          ..write('businessCountry: $businessCountry, ')
+          ..write('businessJobTitle: $businessJobTitle, ')
+          ..write('businessDepartment: $businessDepartment, ')
+          ..write('businessOffice: $businessOffice, ')
+          ..write('businessPhone: $businessPhone, ')
+          ..write('businessFax: $businessFax, ')
+          ..write('businessWeb: $businessWeb, ')
+          ..write('otherEmail: $otherEmail, ')
+          ..write('notes: $notes, ')
+          ..write('birthDay: $birthDay, ')
+          ..write('birthMonth: $birthMonth, ')
+          ..write('birthYear: $birthYear, ')
+          ..write('auto: $auto, ')
+          ..write('frequency: $frequency, ')
+          ..write('dateModified: $dateModified, ')
+          ..write('davContactsUid: $davContactsUid, ')
+          ..write('davContactsVCardUid: $davContactsVCardUid, ')
+          ..write('groupUUIDs: $groupUUIDs')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => $mrjf($mrjc(
+      uuidPlusStorage.hashCode,
+      $mrjc(
+          uuid.hashCode,
+          $mrjc(
+              entityId.hashCode,
+              $mrjc(
+                  parentUuid.hashCode,
+                  $mrjc(
+                      eTag.hashCode,
+                      $mrjc(
+                          idUser.hashCode,
+                          $mrjc(
+                              idTenant.hashCode,
+                              $mrjc(
+                                  storage.hashCode,
+                                  $mrjc(
+                                      fullName.hashCode,
+                                      $mrjc(
+                                          useFriendlyName.hashCode,
+                                          $mrjc(
+                                              primaryEmail.hashCode,
+                                              $mrjc(
+                                                  primaryPhone.hashCode,
+                                                  $mrjc(
+                                                      primaryAddress.hashCode,
+                                                      $mrjc(
+                                                          viewEmail.hashCode,
+                                                          $mrjc(
+                                                              title.hashCode,
+                                                              $mrjc(
+                                                                  firstName
+                                                                      .hashCode,
+                                                                  $mrjc(
+                                                                      lastName
+                                                                          .hashCode,
+                                                                      $mrjc(
+                                                                          nickName
+                                                                              .hashCode,
+                                                                          $mrjc(
+                                                                              skype.hashCode,
+                                                                              $mrjc(facebook.hashCode, $mrjc(personalEmail.hashCode, $mrjc(personalAddress.hashCode, $mrjc(personalCity.hashCode, $mrjc(personalState.hashCode, $mrjc(personalZip.hashCode, $mrjc(personalCountry.hashCode, $mrjc(personalWeb.hashCode, $mrjc(personalFax.hashCode, $mrjc(personalPhone.hashCode, $mrjc(personalMobile.hashCode, $mrjc(businessEmail.hashCode, $mrjc(businessCompany.hashCode, $mrjc(businessAddress.hashCode, $mrjc(businessCity.hashCode, $mrjc(businessState.hashCode, $mrjc(businessZip.hashCode, $mrjc(businessCountry.hashCode, $mrjc(businessJobTitle.hashCode, $mrjc(businessDepartment.hashCode, $mrjc(businessOffice.hashCode, $mrjc(businessPhone.hashCode, $mrjc(businessFax.hashCode, $mrjc(businessWeb.hashCode, $mrjc(otherEmail.hashCode, $mrjc(notes.hashCode, $mrjc(birthDay.hashCode, $mrjc(birthMonth.hashCode, $mrjc(birthYear.hashCode, $mrjc(auto.hashCode, $mrjc(frequency.hashCode, $mrjc(dateModified.hashCode, $mrjc(davContactsUid.hashCode, $mrjc(davContactsVCardUid.hashCode, groupUUIDs.hashCode))))))))))))))))))))))))))))))))))))))))))))))))))))));
+  @override
+  bool operator ==(other) =>
+      identical(this, other) ||
+      (other is ContactsTable &&
+          other.uuidPlusStorage == this.uuidPlusStorage &&
+          other.uuid == this.uuid &&
+          other.entityId == this.entityId &&
+          other.parentUuid == this.parentUuid &&
+          other.eTag == this.eTag &&
+          other.idUser == this.idUser &&
+          other.idTenant == this.idTenant &&
+          other.storage == this.storage &&
+          other.fullName == this.fullName &&
+          other.useFriendlyName == this.useFriendlyName &&
+          other.primaryEmail == this.primaryEmail &&
+          other.primaryPhone == this.primaryPhone &&
+          other.primaryAddress == this.primaryAddress &&
+          other.viewEmail == this.viewEmail &&
+          other.title == this.title &&
+          other.firstName == this.firstName &&
+          other.lastName == this.lastName &&
+          other.nickName == this.nickName &&
+          other.skype == this.skype &&
+          other.facebook == this.facebook &&
+          other.personalEmail == this.personalEmail &&
+          other.personalAddress == this.personalAddress &&
+          other.personalCity == this.personalCity &&
+          other.personalState == this.personalState &&
+          other.personalZip == this.personalZip &&
+          other.personalCountry == this.personalCountry &&
+          other.personalWeb == this.personalWeb &&
+          other.personalFax == this.personalFax &&
+          other.personalPhone == this.personalPhone &&
+          other.personalMobile == this.personalMobile &&
+          other.businessEmail == this.businessEmail &&
+          other.businessCompany == this.businessCompany &&
+          other.businessAddress == this.businessAddress &&
+          other.businessCity == this.businessCity &&
+          other.businessState == this.businessState &&
+          other.businessZip == this.businessZip &&
+          other.businessCountry == this.businessCountry &&
+          other.businessJobTitle == this.businessJobTitle &&
+          other.businessDepartment == this.businessDepartment &&
+          other.businessOffice == this.businessOffice &&
+          other.businessPhone == this.businessPhone &&
+          other.businessFax == this.businessFax &&
+          other.businessWeb == this.businessWeb &&
+          other.otherEmail == this.otherEmail &&
+          other.notes == this.notes &&
+          other.birthDay == this.birthDay &&
+          other.birthMonth == this.birthMonth &&
+          other.birthYear == this.birthYear &&
+          other.auto == this.auto &&
+          other.frequency == this.frequency &&
+          other.dateModified == this.dateModified &&
+          other.davContactsUid == this.davContactsUid &&
+          other.davContactsVCardUid == this.davContactsVCardUid &&
+          other.groupUUIDs == this.groupUUIDs);
+}
+
+class ContactsCompanion extends UpdateCompanion<ContactsTable> {
+  final Value<String> uuidPlusStorage;
+  final Value<String> uuid;
+  final Value<int> entityId;
+  final Value<String> parentUuid;
+  final Value<String> eTag;
+  final Value<int> idUser;
+  final Value<int> idTenant;
+  final Value<String> storage;
+  final Value<String> fullName;
+  final Value<bool> useFriendlyName;
+  final Value<int> primaryEmail;
+  final Value<int> primaryPhone;
+  final Value<int> primaryAddress;
+  final Value<String> viewEmail;
+  final Value<String> title;
+  final Value<String> firstName;
+  final Value<String> lastName;
+  final Value<String> nickName;
+  final Value<String> skype;
+  final Value<String> facebook;
+  final Value<String> personalEmail;
+  final Value<String> personalAddress;
+  final Value<String> personalCity;
+  final Value<String> personalState;
+  final Value<String> personalZip;
+  final Value<String> personalCountry;
+  final Value<String> personalWeb;
+  final Value<String> personalFax;
+  final Value<String> personalPhone;
+  final Value<String> personalMobile;
+  final Value<String> businessEmail;
+  final Value<String> businessCompany;
+  final Value<String> businessAddress;
+  final Value<String> businessCity;
+  final Value<String> businessState;
+  final Value<String> businessZip;
+  final Value<String> businessCountry;
+  final Value<String> businessJobTitle;
+  final Value<String> businessDepartment;
+  final Value<String> businessOffice;
+  final Value<String> businessPhone;
+  final Value<String> businessFax;
+  final Value<String> businessWeb;
+  final Value<String> otherEmail;
+  final Value<String> notes;
+  final Value<int> birthDay;
+  final Value<int> birthMonth;
+  final Value<int> birthYear;
+  final Value<bool> auto;
+  final Value<int> frequency;
+  final Value<String> dateModified;
+  final Value<String> davContactsUid;
+  final Value<String> davContactsVCardUid;
+  final Value<List<String>> groupUUIDs;
+  const ContactsCompanion({
+    this.uuidPlusStorage = const Value.absent(),
+    this.uuid = const Value.absent(),
+    this.entityId = const Value.absent(),
+    this.parentUuid = const Value.absent(),
+    this.eTag = const Value.absent(),
+    this.idUser = const Value.absent(),
+    this.idTenant = const Value.absent(),
+    this.storage = const Value.absent(),
+    this.fullName = const Value.absent(),
+    this.useFriendlyName = const Value.absent(),
+    this.primaryEmail = const Value.absent(),
+    this.primaryPhone = const Value.absent(),
+    this.primaryAddress = const Value.absent(),
+    this.viewEmail = const Value.absent(),
+    this.title = const Value.absent(),
+    this.firstName = const Value.absent(),
+    this.lastName = const Value.absent(),
+    this.nickName = const Value.absent(),
+    this.skype = const Value.absent(),
+    this.facebook = const Value.absent(),
+    this.personalEmail = const Value.absent(),
+    this.personalAddress = const Value.absent(),
+    this.personalCity = const Value.absent(),
+    this.personalState = const Value.absent(),
+    this.personalZip = const Value.absent(),
+    this.personalCountry = const Value.absent(),
+    this.personalWeb = const Value.absent(),
+    this.personalFax = const Value.absent(),
+    this.personalPhone = const Value.absent(),
+    this.personalMobile = const Value.absent(),
+    this.businessEmail = const Value.absent(),
+    this.businessCompany = const Value.absent(),
+    this.businessAddress = const Value.absent(),
+    this.businessCity = const Value.absent(),
+    this.businessState = const Value.absent(),
+    this.businessZip = const Value.absent(),
+    this.businessCountry = const Value.absent(),
+    this.businessJobTitle = const Value.absent(),
+    this.businessDepartment = const Value.absent(),
+    this.businessOffice = const Value.absent(),
+    this.businessPhone = const Value.absent(),
+    this.businessFax = const Value.absent(),
+    this.businessWeb = const Value.absent(),
+    this.otherEmail = const Value.absent(),
+    this.notes = const Value.absent(),
+    this.birthDay = const Value.absent(),
+    this.birthMonth = const Value.absent(),
+    this.birthYear = const Value.absent(),
+    this.auto = const Value.absent(),
+    this.frequency = const Value.absent(),
+    this.dateModified = const Value.absent(),
+    this.davContactsUid = const Value.absent(),
+    this.davContactsVCardUid = const Value.absent(),
+    this.groupUUIDs = const Value.absent(),
+  });
+  ContactsCompanion.insert({
+    @required String uuidPlusStorage,
+    @required String uuid,
+    this.entityId = const Value.absent(),
+    this.parentUuid = const Value.absent(),
+    @required String eTag,
+    @required int idUser,
+    this.idTenant = const Value.absent(),
+    @required String storage,
+    @required String fullName,
+    this.useFriendlyName = const Value.absent(),
+    @required int primaryEmail,
+    @required int primaryPhone,
+    @required int primaryAddress,
+    @required String viewEmail,
+    @required String title,
+    @required String firstName,
+    @required String lastName,
+    @required String nickName,
+    @required String skype,
+    @required String facebook,
+    @required String personalEmail,
+    @required String personalAddress,
+    @required String personalCity,
+    @required String personalState,
+    @required String personalZip,
+    @required String personalCountry,
+    @required String personalWeb,
+    @required String personalFax,
+    @required String personalPhone,
+    @required String personalMobile,
+    @required String businessEmail,
+    @required String businessCompany,
+    @required String businessAddress,
+    @required String businessCity,
+    @required String businessState,
+    @required String businessZip,
+    @required String businessCountry,
+    @required String businessJobTitle,
+    @required String businessDepartment,
+    @required String businessOffice,
+    @required String businessPhone,
+    @required String businessFax,
+    @required String businessWeb,
+    @required String otherEmail,
+    @required String notes,
+    @required int birthDay,
+    @required int birthMonth,
+    @required int birthYear,
+    this.auto = const Value.absent(),
+    this.frequency = const Value.absent(),
+    this.dateModified = const Value.absent(),
+    this.davContactsUid = const Value.absent(),
+    this.davContactsVCardUid = const Value.absent(),
+    @required List<String> groupUUIDs,
+  })  : uuidPlusStorage = Value(uuidPlusStorage),
+        uuid = Value(uuid),
+        eTag = Value(eTag),
+        idUser = Value(idUser),
+        storage = Value(storage),
+        fullName = Value(fullName),
+        primaryEmail = Value(primaryEmail),
+        primaryPhone = Value(primaryPhone),
+        primaryAddress = Value(primaryAddress),
+        viewEmail = Value(viewEmail),
+        title = Value(title),
+        firstName = Value(firstName),
+        lastName = Value(lastName),
+        nickName = Value(nickName),
+        skype = Value(skype),
+        facebook = Value(facebook),
+        personalEmail = Value(personalEmail),
+        personalAddress = Value(personalAddress),
+        personalCity = Value(personalCity),
+        personalState = Value(personalState),
+        personalZip = Value(personalZip),
+        personalCountry = Value(personalCountry),
+        personalWeb = Value(personalWeb),
+        personalFax = Value(personalFax),
+        personalPhone = Value(personalPhone),
+        personalMobile = Value(personalMobile),
+        businessEmail = Value(businessEmail),
+        businessCompany = Value(businessCompany),
+        businessAddress = Value(businessAddress),
+        businessCity = Value(businessCity),
+        businessState = Value(businessState),
+        businessZip = Value(businessZip),
+        businessCountry = Value(businessCountry),
+        businessJobTitle = Value(businessJobTitle),
+        businessDepartment = Value(businessDepartment),
+        businessOffice = Value(businessOffice),
+        businessPhone = Value(businessPhone),
+        businessFax = Value(businessFax),
+        businessWeb = Value(businessWeb),
+        otherEmail = Value(otherEmail),
+        notes = Value(notes),
+        birthDay = Value(birthDay),
+        birthMonth = Value(birthMonth),
+        birthYear = Value(birthYear),
+        groupUUIDs = Value(groupUUIDs);
+  ContactsCompanion copyWith(
+      {Value<String> uuidPlusStorage,
+      Value<String> uuid,
+      Value<int> entityId,
+      Value<String> parentUuid,
+      Value<String> eTag,
+      Value<int> idUser,
+      Value<int> idTenant,
+      Value<String> storage,
+      Value<String> fullName,
+      Value<bool> useFriendlyName,
+      Value<int> primaryEmail,
+      Value<int> primaryPhone,
+      Value<int> primaryAddress,
+      Value<String> viewEmail,
+      Value<String> title,
+      Value<String> firstName,
+      Value<String> lastName,
+      Value<String> nickName,
+      Value<String> skype,
+      Value<String> facebook,
+      Value<String> personalEmail,
+      Value<String> personalAddress,
+      Value<String> personalCity,
+      Value<String> personalState,
+      Value<String> personalZip,
+      Value<String> personalCountry,
+      Value<String> personalWeb,
+      Value<String> personalFax,
+      Value<String> personalPhone,
+      Value<String> personalMobile,
+      Value<String> businessEmail,
+      Value<String> businessCompany,
+      Value<String> businessAddress,
+      Value<String> businessCity,
+      Value<String> businessState,
+      Value<String> businessZip,
+      Value<String> businessCountry,
+      Value<String> businessJobTitle,
+      Value<String> businessDepartment,
+      Value<String> businessOffice,
+      Value<String> businessPhone,
+      Value<String> businessFax,
+      Value<String> businessWeb,
+      Value<String> otherEmail,
+      Value<String> notes,
+      Value<int> birthDay,
+      Value<int> birthMonth,
+      Value<int> birthYear,
+      Value<bool> auto,
+      Value<int> frequency,
+      Value<String> dateModified,
+      Value<String> davContactsUid,
+      Value<String> davContactsVCardUid,
+      Value<List<String>> groupUUIDs}) {
+    return ContactsCompanion(
+      uuidPlusStorage: uuidPlusStorage ?? this.uuidPlusStorage,
+      uuid: uuid ?? this.uuid,
+      entityId: entityId ?? this.entityId,
+      parentUuid: parentUuid ?? this.parentUuid,
+      eTag: eTag ?? this.eTag,
+      idUser: idUser ?? this.idUser,
+      idTenant: idTenant ?? this.idTenant,
+      storage: storage ?? this.storage,
+      fullName: fullName ?? this.fullName,
+      useFriendlyName: useFriendlyName ?? this.useFriendlyName,
+      primaryEmail: primaryEmail ?? this.primaryEmail,
+      primaryPhone: primaryPhone ?? this.primaryPhone,
+      primaryAddress: primaryAddress ?? this.primaryAddress,
+      viewEmail: viewEmail ?? this.viewEmail,
+      title: title ?? this.title,
+      firstName: firstName ?? this.firstName,
+      lastName: lastName ?? this.lastName,
+      nickName: nickName ?? this.nickName,
+      skype: skype ?? this.skype,
+      facebook: facebook ?? this.facebook,
+      personalEmail: personalEmail ?? this.personalEmail,
+      personalAddress: personalAddress ?? this.personalAddress,
+      personalCity: personalCity ?? this.personalCity,
+      personalState: personalState ?? this.personalState,
+      personalZip: personalZip ?? this.personalZip,
+      personalCountry: personalCountry ?? this.personalCountry,
+      personalWeb: personalWeb ?? this.personalWeb,
+      personalFax: personalFax ?? this.personalFax,
+      personalPhone: personalPhone ?? this.personalPhone,
+      personalMobile: personalMobile ?? this.personalMobile,
+      businessEmail: businessEmail ?? this.businessEmail,
+      businessCompany: businessCompany ?? this.businessCompany,
+      businessAddress: businessAddress ?? this.businessAddress,
+      businessCity: businessCity ?? this.businessCity,
+      businessState: businessState ?? this.businessState,
+      businessZip: businessZip ?? this.businessZip,
+      businessCountry: businessCountry ?? this.businessCountry,
+      businessJobTitle: businessJobTitle ?? this.businessJobTitle,
+      businessDepartment: businessDepartment ?? this.businessDepartment,
+      businessOffice: businessOffice ?? this.businessOffice,
+      businessPhone: businessPhone ?? this.businessPhone,
+      businessFax: businessFax ?? this.businessFax,
+      businessWeb: businessWeb ?? this.businessWeb,
+      otherEmail: otherEmail ?? this.otherEmail,
+      notes: notes ?? this.notes,
+      birthDay: birthDay ?? this.birthDay,
+      birthMonth: birthMonth ?? this.birthMonth,
+      birthYear: birthYear ?? this.birthYear,
+      auto: auto ?? this.auto,
+      frequency: frequency ?? this.frequency,
+      dateModified: dateModified ?? this.dateModified,
+      davContactsUid: davContactsUid ?? this.davContactsUid,
+      davContactsVCardUid: davContactsVCardUid ?? this.davContactsVCardUid,
+      groupUUIDs: groupUUIDs ?? this.groupUUIDs,
+    );
+  }
+}
+
+class $ContactsTable extends Contacts
+    with TableInfo<$ContactsTable, ContactsTable> {
+  final GeneratedDatabase _db;
+  final String _alias;
+  $ContactsTable(this._db, [this._alias]);
+  final VerificationMeta _uuidPlusStorageMeta =
+      const VerificationMeta('uuidPlusStorage');
+  GeneratedTextColumn _uuidPlusStorage;
+  @override
+  GeneratedTextColumn get uuidPlusStorage =>
+      _uuidPlusStorage ??= _constructUuidPlusStorage();
+  GeneratedTextColumn _constructUuidPlusStorage() {
+    return GeneratedTextColumn('uuid_plus_storage', $tableName, false,
+        $customConstraints: 'UNIQUE');
+  }
+
+  final VerificationMeta _uuidMeta = const VerificationMeta('uuid');
+  GeneratedTextColumn _uuid;
+  @override
+  GeneratedTextColumn get uuid => _uuid ??= _constructUuid();
+  GeneratedTextColumn _constructUuid() {
+    return GeneratedTextColumn(
+      'uuid',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _entityIdMeta = const VerificationMeta('entityId');
+  GeneratedIntColumn _entityId;
+  @override
+  GeneratedIntColumn get entityId => _entityId ??= _constructEntityId();
+  GeneratedIntColumn _constructEntityId() {
+    return GeneratedIntColumn(
+      'entity_id',
+      $tableName,
+      true,
+    );
+  }
+
+  final VerificationMeta _parentUuidMeta = const VerificationMeta('parentUuid');
+  GeneratedTextColumn _parentUuid;
+  @override
+  GeneratedTextColumn get parentUuid => _parentUuid ??= _constructParentUuid();
+  GeneratedTextColumn _constructParentUuid() {
+    return GeneratedTextColumn(
+      'parent_uuid',
+      $tableName,
+      true,
+    );
+  }
+
+  final VerificationMeta _eTagMeta = const VerificationMeta('eTag');
+  GeneratedTextColumn _eTag;
+  @override
+  GeneratedTextColumn get eTag => _eTag ??= _constructETag();
+  GeneratedTextColumn _constructETag() {
+    return GeneratedTextColumn(
+      'e_tag',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _idUserMeta = const VerificationMeta('idUser');
+  GeneratedIntColumn _idUser;
+  @override
+  GeneratedIntColumn get idUser => _idUser ??= _constructIdUser();
+  GeneratedIntColumn _constructIdUser() {
+    return GeneratedIntColumn(
+      'id_user',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _idTenantMeta = const VerificationMeta('idTenant');
+  GeneratedIntColumn _idTenant;
+  @override
+  GeneratedIntColumn get idTenant => _idTenant ??= _constructIdTenant();
+  GeneratedIntColumn _constructIdTenant() {
+    return GeneratedIntColumn(
+      'id_tenant',
+      $tableName,
+      true,
+    );
+  }
+
+  final VerificationMeta _storageMeta = const VerificationMeta('storage');
+  GeneratedTextColumn _storage;
+  @override
+  GeneratedTextColumn get storage => _storage ??= _constructStorage();
+  GeneratedTextColumn _constructStorage() {
+    return GeneratedTextColumn(
+      'storage',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _fullNameMeta = const VerificationMeta('fullName');
+  GeneratedTextColumn _fullName;
+  @override
+  GeneratedTextColumn get fullName => _fullName ??= _constructFullName();
+  GeneratedTextColumn _constructFullName() {
+    return GeneratedTextColumn(
+      'full_name',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _useFriendlyNameMeta =
+      const VerificationMeta('useFriendlyName');
+  GeneratedBoolColumn _useFriendlyName;
+  @override
+  GeneratedBoolColumn get useFriendlyName =>
+      _useFriendlyName ??= _constructUseFriendlyName();
+  GeneratedBoolColumn _constructUseFriendlyName() {
+    return GeneratedBoolColumn(
+      'use_friendly_name',
+      $tableName,
+      true,
+    );
+  }
+
+  final VerificationMeta _primaryEmailMeta =
+      const VerificationMeta('primaryEmail');
+  GeneratedIntColumn _primaryEmail;
+  @override
+  GeneratedIntColumn get primaryEmail =>
+      _primaryEmail ??= _constructPrimaryEmail();
+  GeneratedIntColumn _constructPrimaryEmail() {
+    return GeneratedIntColumn(
+      'primary_email',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _primaryPhoneMeta =
+      const VerificationMeta('primaryPhone');
+  GeneratedIntColumn _primaryPhone;
+  @override
+  GeneratedIntColumn get primaryPhone =>
+      _primaryPhone ??= _constructPrimaryPhone();
+  GeneratedIntColumn _constructPrimaryPhone() {
+    return GeneratedIntColumn(
+      'primary_phone',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _primaryAddressMeta =
+      const VerificationMeta('primaryAddress');
+  GeneratedIntColumn _primaryAddress;
+  @override
+  GeneratedIntColumn get primaryAddress =>
+      _primaryAddress ??= _constructPrimaryAddress();
+  GeneratedIntColumn _constructPrimaryAddress() {
+    return GeneratedIntColumn(
+      'primary_address',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _viewEmailMeta = const VerificationMeta('viewEmail');
+  GeneratedTextColumn _viewEmail;
+  @override
+  GeneratedTextColumn get viewEmail => _viewEmail ??= _constructViewEmail();
+  GeneratedTextColumn _constructViewEmail() {
+    return GeneratedTextColumn(
+      'view_email',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _titleMeta = const VerificationMeta('title');
+  GeneratedTextColumn _title;
+  @override
+  GeneratedTextColumn get title => _title ??= _constructTitle();
+  GeneratedTextColumn _constructTitle() {
+    return GeneratedTextColumn(
+      'title',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _firstNameMeta = const VerificationMeta('firstName');
+  GeneratedTextColumn _firstName;
+  @override
+  GeneratedTextColumn get firstName => _firstName ??= _constructFirstName();
+  GeneratedTextColumn _constructFirstName() {
+    return GeneratedTextColumn(
+      'first_name',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _lastNameMeta = const VerificationMeta('lastName');
+  GeneratedTextColumn _lastName;
+  @override
+  GeneratedTextColumn get lastName => _lastName ??= _constructLastName();
+  GeneratedTextColumn _constructLastName() {
+    return GeneratedTextColumn(
+      'last_name',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _nickNameMeta = const VerificationMeta('nickName');
+  GeneratedTextColumn _nickName;
+  @override
+  GeneratedTextColumn get nickName => _nickName ??= _constructNickName();
+  GeneratedTextColumn _constructNickName() {
+    return GeneratedTextColumn(
+      'nick_name',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _skypeMeta = const VerificationMeta('skype');
+  GeneratedTextColumn _skype;
+  @override
+  GeneratedTextColumn get skype => _skype ??= _constructSkype();
+  GeneratedTextColumn _constructSkype() {
+    return GeneratedTextColumn(
+      'skype',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _facebookMeta = const VerificationMeta('facebook');
+  GeneratedTextColumn _facebook;
+  @override
+  GeneratedTextColumn get facebook => _facebook ??= _constructFacebook();
+  GeneratedTextColumn _constructFacebook() {
+    return GeneratedTextColumn(
+      'facebook',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _personalEmailMeta =
+      const VerificationMeta('personalEmail');
+  GeneratedTextColumn _personalEmail;
+  @override
+  GeneratedTextColumn get personalEmail =>
+      _personalEmail ??= _constructPersonalEmail();
+  GeneratedTextColumn _constructPersonalEmail() {
+    return GeneratedTextColumn(
+      'personal_email',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _personalAddressMeta =
+      const VerificationMeta('personalAddress');
+  GeneratedTextColumn _personalAddress;
+  @override
+  GeneratedTextColumn get personalAddress =>
+      _personalAddress ??= _constructPersonalAddress();
+  GeneratedTextColumn _constructPersonalAddress() {
+    return GeneratedTextColumn(
+      'personal_address',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _personalCityMeta =
+      const VerificationMeta('personalCity');
+  GeneratedTextColumn _personalCity;
+  @override
+  GeneratedTextColumn get personalCity =>
+      _personalCity ??= _constructPersonalCity();
+  GeneratedTextColumn _constructPersonalCity() {
+    return GeneratedTextColumn(
+      'personal_city',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _personalStateMeta =
+      const VerificationMeta('personalState');
+  GeneratedTextColumn _personalState;
+  @override
+  GeneratedTextColumn get personalState =>
+      _personalState ??= _constructPersonalState();
+  GeneratedTextColumn _constructPersonalState() {
+    return GeneratedTextColumn(
+      'personal_state',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _personalZipMeta =
+      const VerificationMeta('personalZip');
+  GeneratedTextColumn _personalZip;
+  @override
+  GeneratedTextColumn get personalZip =>
+      _personalZip ??= _constructPersonalZip();
+  GeneratedTextColumn _constructPersonalZip() {
+    return GeneratedTextColumn(
+      'personal_zip',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _personalCountryMeta =
+      const VerificationMeta('personalCountry');
+  GeneratedTextColumn _personalCountry;
+  @override
+  GeneratedTextColumn get personalCountry =>
+      _personalCountry ??= _constructPersonalCountry();
+  GeneratedTextColumn _constructPersonalCountry() {
+    return GeneratedTextColumn(
+      'personal_country',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _personalWebMeta =
+      const VerificationMeta('personalWeb');
+  GeneratedTextColumn _personalWeb;
+  @override
+  GeneratedTextColumn get personalWeb =>
+      _personalWeb ??= _constructPersonalWeb();
+  GeneratedTextColumn _constructPersonalWeb() {
+    return GeneratedTextColumn(
+      'personal_web',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _personalFaxMeta =
+      const VerificationMeta('personalFax');
+  GeneratedTextColumn _personalFax;
+  @override
+  GeneratedTextColumn get personalFax =>
+      _personalFax ??= _constructPersonalFax();
+  GeneratedTextColumn _constructPersonalFax() {
+    return GeneratedTextColumn(
+      'personal_fax',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _personalPhoneMeta =
+      const VerificationMeta('personalPhone');
+  GeneratedTextColumn _personalPhone;
+  @override
+  GeneratedTextColumn get personalPhone =>
+      _personalPhone ??= _constructPersonalPhone();
+  GeneratedTextColumn _constructPersonalPhone() {
+    return GeneratedTextColumn(
+      'personal_phone',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _personalMobileMeta =
+      const VerificationMeta('personalMobile');
+  GeneratedTextColumn _personalMobile;
+  @override
+  GeneratedTextColumn get personalMobile =>
+      _personalMobile ??= _constructPersonalMobile();
+  GeneratedTextColumn _constructPersonalMobile() {
+    return GeneratedTextColumn(
+      'personal_mobile',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _businessEmailMeta =
+      const VerificationMeta('businessEmail');
+  GeneratedTextColumn _businessEmail;
+  @override
+  GeneratedTextColumn get businessEmail =>
+      _businessEmail ??= _constructBusinessEmail();
+  GeneratedTextColumn _constructBusinessEmail() {
+    return GeneratedTextColumn(
+      'business_email',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _businessCompanyMeta =
+      const VerificationMeta('businessCompany');
+  GeneratedTextColumn _businessCompany;
+  @override
+  GeneratedTextColumn get businessCompany =>
+      _businessCompany ??= _constructBusinessCompany();
+  GeneratedTextColumn _constructBusinessCompany() {
+    return GeneratedTextColumn(
+      'business_company',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _businessAddressMeta =
+      const VerificationMeta('businessAddress');
+  GeneratedTextColumn _businessAddress;
+  @override
+  GeneratedTextColumn get businessAddress =>
+      _businessAddress ??= _constructBusinessAddress();
+  GeneratedTextColumn _constructBusinessAddress() {
+    return GeneratedTextColumn(
+      'business_address',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _businessCityMeta =
+      const VerificationMeta('businessCity');
+  GeneratedTextColumn _businessCity;
+  @override
+  GeneratedTextColumn get businessCity =>
+      _businessCity ??= _constructBusinessCity();
+  GeneratedTextColumn _constructBusinessCity() {
+    return GeneratedTextColumn(
+      'business_city',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _businessStateMeta =
+      const VerificationMeta('businessState');
+  GeneratedTextColumn _businessState;
+  @override
+  GeneratedTextColumn get businessState =>
+      _businessState ??= _constructBusinessState();
+  GeneratedTextColumn _constructBusinessState() {
+    return GeneratedTextColumn(
+      'business_state',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _businessZipMeta =
+      const VerificationMeta('businessZip');
+  GeneratedTextColumn _businessZip;
+  @override
+  GeneratedTextColumn get businessZip =>
+      _businessZip ??= _constructBusinessZip();
+  GeneratedTextColumn _constructBusinessZip() {
+    return GeneratedTextColumn(
+      'business_zip',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _businessCountryMeta =
+      const VerificationMeta('businessCountry');
+  GeneratedTextColumn _businessCountry;
+  @override
+  GeneratedTextColumn get businessCountry =>
+      _businessCountry ??= _constructBusinessCountry();
+  GeneratedTextColumn _constructBusinessCountry() {
+    return GeneratedTextColumn(
+      'business_country',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _businessJobTitleMeta =
+      const VerificationMeta('businessJobTitle');
+  GeneratedTextColumn _businessJobTitle;
+  @override
+  GeneratedTextColumn get businessJobTitle =>
+      _businessJobTitle ??= _constructBusinessJobTitle();
+  GeneratedTextColumn _constructBusinessJobTitle() {
+    return GeneratedTextColumn(
+      'business_job_title',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _businessDepartmentMeta =
+      const VerificationMeta('businessDepartment');
+  GeneratedTextColumn _businessDepartment;
+  @override
+  GeneratedTextColumn get businessDepartment =>
+      _businessDepartment ??= _constructBusinessDepartment();
+  GeneratedTextColumn _constructBusinessDepartment() {
+    return GeneratedTextColumn(
+      'business_department',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _businessOfficeMeta =
+      const VerificationMeta('businessOffice');
+  GeneratedTextColumn _businessOffice;
+  @override
+  GeneratedTextColumn get businessOffice =>
+      _businessOffice ??= _constructBusinessOffice();
+  GeneratedTextColumn _constructBusinessOffice() {
+    return GeneratedTextColumn(
+      'business_office',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _businessPhoneMeta =
+      const VerificationMeta('businessPhone');
+  GeneratedTextColumn _businessPhone;
+  @override
+  GeneratedTextColumn get businessPhone =>
+      _businessPhone ??= _constructBusinessPhone();
+  GeneratedTextColumn _constructBusinessPhone() {
+    return GeneratedTextColumn(
+      'business_phone',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _businessFaxMeta =
+      const VerificationMeta('businessFax');
+  GeneratedTextColumn _businessFax;
+  @override
+  GeneratedTextColumn get businessFax =>
+      _businessFax ??= _constructBusinessFax();
+  GeneratedTextColumn _constructBusinessFax() {
+    return GeneratedTextColumn(
+      'business_fax',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _businessWebMeta =
+      const VerificationMeta('businessWeb');
+  GeneratedTextColumn _businessWeb;
+  @override
+  GeneratedTextColumn get businessWeb =>
+      _businessWeb ??= _constructBusinessWeb();
+  GeneratedTextColumn _constructBusinessWeb() {
+    return GeneratedTextColumn(
+      'business_web',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _otherEmailMeta = const VerificationMeta('otherEmail');
+  GeneratedTextColumn _otherEmail;
+  @override
+  GeneratedTextColumn get otherEmail => _otherEmail ??= _constructOtherEmail();
+  GeneratedTextColumn _constructOtherEmail() {
+    return GeneratedTextColumn(
+      'other_email',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _notesMeta = const VerificationMeta('notes');
+  GeneratedTextColumn _notes;
+  @override
+  GeneratedTextColumn get notes => _notes ??= _constructNotes();
+  GeneratedTextColumn _constructNotes() {
+    return GeneratedTextColumn(
+      'notes',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _birthDayMeta = const VerificationMeta('birthDay');
+  GeneratedIntColumn _birthDay;
+  @override
+  GeneratedIntColumn get birthDay => _birthDay ??= _constructBirthDay();
+  GeneratedIntColumn _constructBirthDay() {
+    return GeneratedIntColumn(
+      'birth_day',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _birthMonthMeta = const VerificationMeta('birthMonth');
+  GeneratedIntColumn _birthMonth;
+  @override
+  GeneratedIntColumn get birthMonth => _birthMonth ??= _constructBirthMonth();
+  GeneratedIntColumn _constructBirthMonth() {
+    return GeneratedIntColumn(
+      'birth_month',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _birthYearMeta = const VerificationMeta('birthYear');
+  GeneratedIntColumn _birthYear;
+  @override
+  GeneratedIntColumn get birthYear => _birthYear ??= _constructBirthYear();
+  GeneratedIntColumn _constructBirthYear() {
+    return GeneratedIntColumn(
+      'birth_year',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _autoMeta = const VerificationMeta('auto');
+  GeneratedBoolColumn _auto;
+  @override
+  GeneratedBoolColumn get auto => _auto ??= _constructAuto();
+  GeneratedBoolColumn _constructAuto() {
+    return GeneratedBoolColumn(
+      'auto',
+      $tableName,
+      true,
+    );
+  }
+
+  final VerificationMeta _frequencyMeta = const VerificationMeta('frequency');
+  GeneratedIntColumn _frequency;
+  @override
+  GeneratedIntColumn get frequency => _frequency ??= _constructFrequency();
+  GeneratedIntColumn _constructFrequency() {
+    return GeneratedIntColumn('frequency', $tableName, false,
+        defaultValue: Constant(0));
+  }
+
+  final VerificationMeta _dateModifiedMeta =
+      const VerificationMeta('dateModified');
+  GeneratedTextColumn _dateModified;
+  @override
+  GeneratedTextColumn get dateModified =>
+      _dateModified ??= _constructDateModified();
+  GeneratedTextColumn _constructDateModified() {
+    return GeneratedTextColumn(
+      'date_modified',
+      $tableName,
+      true,
+    );
+  }
+
+  final VerificationMeta _davContactsUidMeta =
+      const VerificationMeta('davContactsUid');
+  GeneratedTextColumn _davContactsUid;
+  @override
+  GeneratedTextColumn get davContactsUid =>
+      _davContactsUid ??= _constructDavContactsUid();
+  GeneratedTextColumn _constructDavContactsUid() {
+    return GeneratedTextColumn(
+      'dav_contacts_uid',
+      $tableName,
+      true,
+    );
+  }
+
+  final VerificationMeta _davContactsVCardUidMeta =
+      const VerificationMeta('davContactsVCardUid');
+  GeneratedTextColumn _davContactsVCardUid;
+  @override
+  GeneratedTextColumn get davContactsVCardUid =>
+      _davContactsVCardUid ??= _constructDavContactsVCardUid();
+  GeneratedTextColumn _constructDavContactsVCardUid() {
+    return GeneratedTextColumn(
+      'dav_contacts_v_card_uid',
+      $tableName,
+      true,
+    );
+  }
+
+  final VerificationMeta _groupUUIDsMeta = const VerificationMeta('groupUUIDs');
+  GeneratedTextColumn _groupUUIDs;
+  @override
+  GeneratedTextColumn get groupUUIDs => _groupUUIDs ??= _constructGroupUUIDs();
+  GeneratedTextColumn _constructGroupUUIDs() {
+    return GeneratedTextColumn(
+      'group_u_u_i_ds',
+      $tableName,
+      false,
+    );
+  }
+
+  @override
+  List<GeneratedColumn> get $columns => [
+        uuidPlusStorage,
+        uuid,
+        entityId,
+        parentUuid,
+        eTag,
+        idUser,
+        idTenant,
+        storage,
+        fullName,
+        useFriendlyName,
+        primaryEmail,
+        primaryPhone,
+        primaryAddress,
+        viewEmail,
+        title,
+        firstName,
+        lastName,
+        nickName,
+        skype,
+        facebook,
+        personalEmail,
+        personalAddress,
+        personalCity,
+        personalState,
+        personalZip,
+        personalCountry,
+        personalWeb,
+        personalFax,
+        personalPhone,
+        personalMobile,
+        businessEmail,
+        businessCompany,
+        businessAddress,
+        businessCity,
+        businessState,
+        businessZip,
+        businessCountry,
+        businessJobTitle,
+        businessDepartment,
+        businessOffice,
+        businessPhone,
+        businessFax,
+        businessWeb,
+        otherEmail,
+        notes,
+        birthDay,
+        birthMonth,
+        birthYear,
+        auto,
+        frequency,
+        dateModified,
+        davContactsUid,
+        davContactsVCardUid,
+        groupUUIDs
+      ];
+  @override
+  $ContactsTable get asDslTable => this;
+  @override
+  String get $tableName => _alias ?? 'contacts';
+  @override
+  final String actualTableName = 'contacts';
+  @override
+  VerificationContext validateIntegrity(ContactsCompanion d,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    if (d.uuidPlusStorage.present) {
+      context.handle(
+          _uuidPlusStorageMeta,
+          uuidPlusStorage.isAcceptableValue(
+              d.uuidPlusStorage.value, _uuidPlusStorageMeta));
+    } else if (uuidPlusStorage.isRequired && isInserting) {
+      context.missing(_uuidPlusStorageMeta);
+    }
+    if (d.uuid.present) {
+      context.handle(
+          _uuidMeta, uuid.isAcceptableValue(d.uuid.value, _uuidMeta));
+    } else if (uuid.isRequired && isInserting) {
+      context.missing(_uuidMeta);
+    }
+    if (d.entityId.present) {
+      context.handle(_entityIdMeta,
+          entityId.isAcceptableValue(d.entityId.value, _entityIdMeta));
+    } else if (entityId.isRequired && isInserting) {
+      context.missing(_entityIdMeta);
+    }
+    if (d.parentUuid.present) {
+      context.handle(_parentUuidMeta,
+          parentUuid.isAcceptableValue(d.parentUuid.value, _parentUuidMeta));
+    } else if (parentUuid.isRequired && isInserting) {
+      context.missing(_parentUuidMeta);
+    }
+    if (d.eTag.present) {
+      context.handle(
+          _eTagMeta, eTag.isAcceptableValue(d.eTag.value, _eTagMeta));
+    } else if (eTag.isRequired && isInserting) {
+      context.missing(_eTagMeta);
+    }
+    if (d.idUser.present) {
+      context.handle(
+          _idUserMeta, idUser.isAcceptableValue(d.idUser.value, _idUserMeta));
+    } else if (idUser.isRequired && isInserting) {
+      context.missing(_idUserMeta);
+    }
+    if (d.idTenant.present) {
+      context.handle(_idTenantMeta,
+          idTenant.isAcceptableValue(d.idTenant.value, _idTenantMeta));
+    } else if (idTenant.isRequired && isInserting) {
+      context.missing(_idTenantMeta);
+    }
+    if (d.storage.present) {
+      context.handle(_storageMeta,
+          storage.isAcceptableValue(d.storage.value, _storageMeta));
+    } else if (storage.isRequired && isInserting) {
+      context.missing(_storageMeta);
+    }
+    if (d.fullName.present) {
+      context.handle(_fullNameMeta,
+          fullName.isAcceptableValue(d.fullName.value, _fullNameMeta));
+    } else if (fullName.isRequired && isInserting) {
+      context.missing(_fullNameMeta);
+    }
+    if (d.useFriendlyName.present) {
+      context.handle(
+          _useFriendlyNameMeta,
+          useFriendlyName.isAcceptableValue(
+              d.useFriendlyName.value, _useFriendlyNameMeta));
+    } else if (useFriendlyName.isRequired && isInserting) {
+      context.missing(_useFriendlyNameMeta);
+    }
+    if (d.primaryEmail.present) {
+      context.handle(
+          _primaryEmailMeta,
+          primaryEmail.isAcceptableValue(
+              d.primaryEmail.value, _primaryEmailMeta));
+    } else if (primaryEmail.isRequired && isInserting) {
+      context.missing(_primaryEmailMeta);
+    }
+    if (d.primaryPhone.present) {
+      context.handle(
+          _primaryPhoneMeta,
+          primaryPhone.isAcceptableValue(
+              d.primaryPhone.value, _primaryPhoneMeta));
+    } else if (primaryPhone.isRequired && isInserting) {
+      context.missing(_primaryPhoneMeta);
+    }
+    if (d.primaryAddress.present) {
+      context.handle(
+          _primaryAddressMeta,
+          primaryAddress.isAcceptableValue(
+              d.primaryAddress.value, _primaryAddressMeta));
+    } else if (primaryAddress.isRequired && isInserting) {
+      context.missing(_primaryAddressMeta);
+    }
+    if (d.viewEmail.present) {
+      context.handle(_viewEmailMeta,
+          viewEmail.isAcceptableValue(d.viewEmail.value, _viewEmailMeta));
+    } else if (viewEmail.isRequired && isInserting) {
+      context.missing(_viewEmailMeta);
+    }
+    if (d.title.present) {
+      context.handle(
+          _titleMeta, title.isAcceptableValue(d.title.value, _titleMeta));
+    } else if (title.isRequired && isInserting) {
+      context.missing(_titleMeta);
+    }
+    if (d.firstName.present) {
+      context.handle(_firstNameMeta,
+          firstName.isAcceptableValue(d.firstName.value, _firstNameMeta));
+    } else if (firstName.isRequired && isInserting) {
+      context.missing(_firstNameMeta);
+    }
+    if (d.lastName.present) {
+      context.handle(_lastNameMeta,
+          lastName.isAcceptableValue(d.lastName.value, _lastNameMeta));
+    } else if (lastName.isRequired && isInserting) {
+      context.missing(_lastNameMeta);
+    }
+    if (d.nickName.present) {
+      context.handle(_nickNameMeta,
+          nickName.isAcceptableValue(d.nickName.value, _nickNameMeta));
+    } else if (nickName.isRequired && isInserting) {
+      context.missing(_nickNameMeta);
+    }
+    if (d.skype.present) {
+      context.handle(
+          _skypeMeta, skype.isAcceptableValue(d.skype.value, _skypeMeta));
+    } else if (skype.isRequired && isInserting) {
+      context.missing(_skypeMeta);
+    }
+    if (d.facebook.present) {
+      context.handle(_facebookMeta,
+          facebook.isAcceptableValue(d.facebook.value, _facebookMeta));
+    } else if (facebook.isRequired && isInserting) {
+      context.missing(_facebookMeta);
+    }
+    if (d.personalEmail.present) {
+      context.handle(
+          _personalEmailMeta,
+          personalEmail.isAcceptableValue(
+              d.personalEmail.value, _personalEmailMeta));
+    } else if (personalEmail.isRequired && isInserting) {
+      context.missing(_personalEmailMeta);
+    }
+    if (d.personalAddress.present) {
+      context.handle(
+          _personalAddressMeta,
+          personalAddress.isAcceptableValue(
+              d.personalAddress.value, _personalAddressMeta));
+    } else if (personalAddress.isRequired && isInserting) {
+      context.missing(_personalAddressMeta);
+    }
+    if (d.personalCity.present) {
+      context.handle(
+          _personalCityMeta,
+          personalCity.isAcceptableValue(
+              d.personalCity.value, _personalCityMeta));
+    } else if (personalCity.isRequired && isInserting) {
+      context.missing(_personalCityMeta);
+    }
+    if (d.personalState.present) {
+      context.handle(
+          _personalStateMeta,
+          personalState.isAcceptableValue(
+              d.personalState.value, _personalStateMeta));
+    } else if (personalState.isRequired && isInserting) {
+      context.missing(_personalStateMeta);
+    }
+    if (d.personalZip.present) {
+      context.handle(_personalZipMeta,
+          personalZip.isAcceptableValue(d.personalZip.value, _personalZipMeta));
+    } else if (personalZip.isRequired && isInserting) {
+      context.missing(_personalZipMeta);
+    }
+    if (d.personalCountry.present) {
+      context.handle(
+          _personalCountryMeta,
+          personalCountry.isAcceptableValue(
+              d.personalCountry.value, _personalCountryMeta));
+    } else if (personalCountry.isRequired && isInserting) {
+      context.missing(_personalCountryMeta);
+    }
+    if (d.personalWeb.present) {
+      context.handle(_personalWebMeta,
+          personalWeb.isAcceptableValue(d.personalWeb.value, _personalWebMeta));
+    } else if (personalWeb.isRequired && isInserting) {
+      context.missing(_personalWebMeta);
+    }
+    if (d.personalFax.present) {
+      context.handle(_personalFaxMeta,
+          personalFax.isAcceptableValue(d.personalFax.value, _personalFaxMeta));
+    } else if (personalFax.isRequired && isInserting) {
+      context.missing(_personalFaxMeta);
+    }
+    if (d.personalPhone.present) {
+      context.handle(
+          _personalPhoneMeta,
+          personalPhone.isAcceptableValue(
+              d.personalPhone.value, _personalPhoneMeta));
+    } else if (personalPhone.isRequired && isInserting) {
+      context.missing(_personalPhoneMeta);
+    }
+    if (d.personalMobile.present) {
+      context.handle(
+          _personalMobileMeta,
+          personalMobile.isAcceptableValue(
+              d.personalMobile.value, _personalMobileMeta));
+    } else if (personalMobile.isRequired && isInserting) {
+      context.missing(_personalMobileMeta);
+    }
+    if (d.businessEmail.present) {
+      context.handle(
+          _businessEmailMeta,
+          businessEmail.isAcceptableValue(
+              d.businessEmail.value, _businessEmailMeta));
+    } else if (businessEmail.isRequired && isInserting) {
+      context.missing(_businessEmailMeta);
+    }
+    if (d.businessCompany.present) {
+      context.handle(
+          _businessCompanyMeta,
+          businessCompany.isAcceptableValue(
+              d.businessCompany.value, _businessCompanyMeta));
+    } else if (businessCompany.isRequired && isInserting) {
+      context.missing(_businessCompanyMeta);
+    }
+    if (d.businessAddress.present) {
+      context.handle(
+          _businessAddressMeta,
+          businessAddress.isAcceptableValue(
+              d.businessAddress.value, _businessAddressMeta));
+    } else if (businessAddress.isRequired && isInserting) {
+      context.missing(_businessAddressMeta);
+    }
+    if (d.businessCity.present) {
+      context.handle(
+          _businessCityMeta,
+          businessCity.isAcceptableValue(
+              d.businessCity.value, _businessCityMeta));
+    } else if (businessCity.isRequired && isInserting) {
+      context.missing(_businessCityMeta);
+    }
+    if (d.businessState.present) {
+      context.handle(
+          _businessStateMeta,
+          businessState.isAcceptableValue(
+              d.businessState.value, _businessStateMeta));
+    } else if (businessState.isRequired && isInserting) {
+      context.missing(_businessStateMeta);
+    }
+    if (d.businessZip.present) {
+      context.handle(_businessZipMeta,
+          businessZip.isAcceptableValue(d.businessZip.value, _businessZipMeta));
+    } else if (businessZip.isRequired && isInserting) {
+      context.missing(_businessZipMeta);
+    }
+    if (d.businessCountry.present) {
+      context.handle(
+          _businessCountryMeta,
+          businessCountry.isAcceptableValue(
+              d.businessCountry.value, _businessCountryMeta));
+    } else if (businessCountry.isRequired && isInserting) {
+      context.missing(_businessCountryMeta);
+    }
+    if (d.businessJobTitle.present) {
+      context.handle(
+          _businessJobTitleMeta,
+          businessJobTitle.isAcceptableValue(
+              d.businessJobTitle.value, _businessJobTitleMeta));
+    } else if (businessJobTitle.isRequired && isInserting) {
+      context.missing(_businessJobTitleMeta);
+    }
+    if (d.businessDepartment.present) {
+      context.handle(
+          _businessDepartmentMeta,
+          businessDepartment.isAcceptableValue(
+              d.businessDepartment.value, _businessDepartmentMeta));
+    } else if (businessDepartment.isRequired && isInserting) {
+      context.missing(_businessDepartmentMeta);
+    }
+    if (d.businessOffice.present) {
+      context.handle(
+          _businessOfficeMeta,
+          businessOffice.isAcceptableValue(
+              d.businessOffice.value, _businessOfficeMeta));
+    } else if (businessOffice.isRequired && isInserting) {
+      context.missing(_businessOfficeMeta);
+    }
+    if (d.businessPhone.present) {
+      context.handle(
+          _businessPhoneMeta,
+          businessPhone.isAcceptableValue(
+              d.businessPhone.value, _businessPhoneMeta));
+    } else if (businessPhone.isRequired && isInserting) {
+      context.missing(_businessPhoneMeta);
+    }
+    if (d.businessFax.present) {
+      context.handle(_businessFaxMeta,
+          businessFax.isAcceptableValue(d.businessFax.value, _businessFaxMeta));
+    } else if (businessFax.isRequired && isInserting) {
+      context.missing(_businessFaxMeta);
+    }
+    if (d.businessWeb.present) {
+      context.handle(_businessWebMeta,
+          businessWeb.isAcceptableValue(d.businessWeb.value, _businessWebMeta));
+    } else if (businessWeb.isRequired && isInserting) {
+      context.missing(_businessWebMeta);
+    }
+    if (d.otherEmail.present) {
+      context.handle(_otherEmailMeta,
+          otherEmail.isAcceptableValue(d.otherEmail.value, _otherEmailMeta));
+    } else if (otherEmail.isRequired && isInserting) {
+      context.missing(_otherEmailMeta);
+    }
+    if (d.notes.present) {
+      context.handle(
+          _notesMeta, notes.isAcceptableValue(d.notes.value, _notesMeta));
+    } else if (notes.isRequired && isInserting) {
+      context.missing(_notesMeta);
+    }
+    if (d.birthDay.present) {
+      context.handle(_birthDayMeta,
+          birthDay.isAcceptableValue(d.birthDay.value, _birthDayMeta));
+    } else if (birthDay.isRequired && isInserting) {
+      context.missing(_birthDayMeta);
+    }
+    if (d.birthMonth.present) {
+      context.handle(_birthMonthMeta,
+          birthMonth.isAcceptableValue(d.birthMonth.value, _birthMonthMeta));
+    } else if (birthMonth.isRequired && isInserting) {
+      context.missing(_birthMonthMeta);
+    }
+    if (d.birthYear.present) {
+      context.handle(_birthYearMeta,
+          birthYear.isAcceptableValue(d.birthYear.value, _birthYearMeta));
+    } else if (birthYear.isRequired && isInserting) {
+      context.missing(_birthYearMeta);
+    }
+    if (d.auto.present) {
+      context.handle(
+          _autoMeta, auto.isAcceptableValue(d.auto.value, _autoMeta));
+    } else if (auto.isRequired && isInserting) {
+      context.missing(_autoMeta);
+    }
+    if (d.frequency.present) {
+      context.handle(_frequencyMeta,
+          frequency.isAcceptableValue(d.frequency.value, _frequencyMeta));
+    } else if (frequency.isRequired && isInserting) {
+      context.missing(_frequencyMeta);
+    }
+    if (d.dateModified.present) {
+      context.handle(
+          _dateModifiedMeta,
+          dateModified.isAcceptableValue(
+              d.dateModified.value, _dateModifiedMeta));
+    } else if (dateModified.isRequired && isInserting) {
+      context.missing(_dateModifiedMeta);
+    }
+    if (d.davContactsUid.present) {
+      context.handle(
+          _davContactsUidMeta,
+          davContactsUid.isAcceptableValue(
+              d.davContactsUid.value, _davContactsUidMeta));
+    } else if (davContactsUid.isRequired && isInserting) {
+      context.missing(_davContactsUidMeta);
+    }
+    if (d.davContactsVCardUid.present) {
+      context.handle(
+          _davContactsVCardUidMeta,
+          davContactsVCardUid.isAcceptableValue(
+              d.davContactsVCardUid.value, _davContactsVCardUidMeta));
+    } else if (davContactsVCardUid.isRequired && isInserting) {
+      context.missing(_davContactsVCardUidMeta);
+    }
+    context.handle(_groupUUIDsMeta, const VerificationResult.success());
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => <GeneratedColumn>{};
+  @override
+  ContactsTable map(Map<String, dynamic> data, {String tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
+    return ContactsTable.fromData(data, _db, prefix: effectivePrefix);
+  }
+
+  @override
+  Map<String, Variable> entityToSql(ContactsCompanion d) {
+    final map = <String, Variable>{};
+    if (d.uuidPlusStorage.present) {
+      map['uuid_plus_storage'] =
+          Variable<String, StringType>(d.uuidPlusStorage.value);
+    }
+    if (d.uuid.present) {
+      map['uuid'] = Variable<String, StringType>(d.uuid.value);
+    }
+    if (d.entityId.present) {
+      map['entity_id'] = Variable<int, IntType>(d.entityId.value);
+    }
+    if (d.parentUuid.present) {
+      map['parent_uuid'] = Variable<String, StringType>(d.parentUuid.value);
+    }
+    if (d.eTag.present) {
+      map['e_tag'] = Variable<String, StringType>(d.eTag.value);
+    }
+    if (d.idUser.present) {
+      map['id_user'] = Variable<int, IntType>(d.idUser.value);
+    }
+    if (d.idTenant.present) {
+      map['id_tenant'] = Variable<int, IntType>(d.idTenant.value);
+    }
+    if (d.storage.present) {
+      map['storage'] = Variable<String, StringType>(d.storage.value);
+    }
+    if (d.fullName.present) {
+      map['full_name'] = Variable<String, StringType>(d.fullName.value);
+    }
+    if (d.useFriendlyName.present) {
+      map['use_friendly_name'] =
+          Variable<bool, BoolType>(d.useFriendlyName.value);
+    }
+    if (d.primaryEmail.present) {
+      map['primary_email'] = Variable<int, IntType>(d.primaryEmail.value);
+    }
+    if (d.primaryPhone.present) {
+      map['primary_phone'] = Variable<int, IntType>(d.primaryPhone.value);
+    }
+    if (d.primaryAddress.present) {
+      map['primary_address'] = Variable<int, IntType>(d.primaryAddress.value);
+    }
+    if (d.viewEmail.present) {
+      map['view_email'] = Variable<String, StringType>(d.viewEmail.value);
+    }
+    if (d.title.present) {
+      map['title'] = Variable<String, StringType>(d.title.value);
+    }
+    if (d.firstName.present) {
+      map['first_name'] = Variable<String, StringType>(d.firstName.value);
+    }
+    if (d.lastName.present) {
+      map['last_name'] = Variable<String, StringType>(d.lastName.value);
+    }
+    if (d.nickName.present) {
+      map['nick_name'] = Variable<String, StringType>(d.nickName.value);
+    }
+    if (d.skype.present) {
+      map['skype'] = Variable<String, StringType>(d.skype.value);
+    }
+    if (d.facebook.present) {
+      map['facebook'] = Variable<String, StringType>(d.facebook.value);
+    }
+    if (d.personalEmail.present) {
+      map['personal_email'] =
+          Variable<String, StringType>(d.personalEmail.value);
+    }
+    if (d.personalAddress.present) {
+      map['personal_address'] =
+          Variable<String, StringType>(d.personalAddress.value);
+    }
+    if (d.personalCity.present) {
+      map['personal_city'] = Variable<String, StringType>(d.personalCity.value);
+    }
+    if (d.personalState.present) {
+      map['personal_state'] =
+          Variable<String, StringType>(d.personalState.value);
+    }
+    if (d.personalZip.present) {
+      map['personal_zip'] = Variable<String, StringType>(d.personalZip.value);
+    }
+    if (d.personalCountry.present) {
+      map['personal_country'] =
+          Variable<String, StringType>(d.personalCountry.value);
+    }
+    if (d.personalWeb.present) {
+      map['personal_web'] = Variable<String, StringType>(d.personalWeb.value);
+    }
+    if (d.personalFax.present) {
+      map['personal_fax'] = Variable<String, StringType>(d.personalFax.value);
+    }
+    if (d.personalPhone.present) {
+      map['personal_phone'] =
+          Variable<String, StringType>(d.personalPhone.value);
+    }
+    if (d.personalMobile.present) {
+      map['personal_mobile'] =
+          Variable<String, StringType>(d.personalMobile.value);
+    }
+    if (d.businessEmail.present) {
+      map['business_email'] =
+          Variable<String, StringType>(d.businessEmail.value);
+    }
+    if (d.businessCompany.present) {
+      map['business_company'] =
+          Variable<String, StringType>(d.businessCompany.value);
+    }
+    if (d.businessAddress.present) {
+      map['business_address'] =
+          Variable<String, StringType>(d.businessAddress.value);
+    }
+    if (d.businessCity.present) {
+      map['business_city'] = Variable<String, StringType>(d.businessCity.value);
+    }
+    if (d.businessState.present) {
+      map['business_state'] =
+          Variable<String, StringType>(d.businessState.value);
+    }
+    if (d.businessZip.present) {
+      map['business_zip'] = Variable<String, StringType>(d.businessZip.value);
+    }
+    if (d.businessCountry.present) {
+      map['business_country'] =
+          Variable<String, StringType>(d.businessCountry.value);
+    }
+    if (d.businessJobTitle.present) {
+      map['business_job_title'] =
+          Variable<String, StringType>(d.businessJobTitle.value);
+    }
+    if (d.businessDepartment.present) {
+      map['business_department'] =
+          Variable<String, StringType>(d.businessDepartment.value);
+    }
+    if (d.businessOffice.present) {
+      map['business_office'] =
+          Variable<String, StringType>(d.businessOffice.value);
+    }
+    if (d.businessPhone.present) {
+      map['business_phone'] =
+          Variable<String, StringType>(d.businessPhone.value);
+    }
+    if (d.businessFax.present) {
+      map['business_fax'] = Variable<String, StringType>(d.businessFax.value);
+    }
+    if (d.businessWeb.present) {
+      map['business_web'] = Variable<String, StringType>(d.businessWeb.value);
+    }
+    if (d.otherEmail.present) {
+      map['other_email'] = Variable<String, StringType>(d.otherEmail.value);
+    }
+    if (d.notes.present) {
+      map['notes'] = Variable<String, StringType>(d.notes.value);
+    }
+    if (d.birthDay.present) {
+      map['birth_day'] = Variable<int, IntType>(d.birthDay.value);
+    }
+    if (d.birthMonth.present) {
+      map['birth_month'] = Variable<int, IntType>(d.birthMonth.value);
+    }
+    if (d.birthYear.present) {
+      map['birth_year'] = Variable<int, IntType>(d.birthYear.value);
+    }
+    if (d.auto.present) {
+      map['auto'] = Variable<bool, BoolType>(d.auto.value);
+    }
+    if (d.frequency.present) {
+      map['frequency'] = Variable<int, IntType>(d.frequency.value);
+    }
+    if (d.dateModified.present) {
+      map['date_modified'] = Variable<String, StringType>(d.dateModified.value);
+    }
+    if (d.davContactsUid.present) {
+      map['dav_contacts_uid'] =
+          Variable<String, StringType>(d.davContactsUid.value);
+    }
+    if (d.davContactsVCardUid.present) {
+      map['dav_contacts_v_card_uid'] =
+          Variable<String, StringType>(d.davContactsVCardUid.value);
+    }
+    if (d.groupUUIDs.present) {
+      final converter = $ContactsTable.$converter0;
+      map['group_u_u_i_ds'] =
+          Variable<String, StringType>(converter.mapToSql(d.groupUUIDs.value));
+    }
+    return map;
+  }
+
+  @override
+  $ContactsTable createAlias(String alias) {
+    return $ContactsTable(_db, alias);
+  }
+
+  static ListStringConverter $converter0 = const ListStringConverter();
+}
+
+class ContactsGroupsTable extends DataClass
+    implements Insertable<ContactsGroupsTable> {
+  final String uuid;
+  final int idUser;
+  final String city;
+  final String company;
+  final String country;
+  final String email;
+  final String fax;
+  final bool isOrganization;
+  final String name;
+  final String parentUUID;
+  final String phone;
+  final String state;
+  final String street;
+  final String web;
+  final String zip;
+  ContactsGroupsTable(
+      {@required this.uuid,
+      @required this.idUser,
+      @required this.city,
+      @required this.company,
+      @required this.country,
+      @required this.email,
+      @required this.fax,
+      @required this.isOrganization,
+      @required this.name,
+      @required this.parentUUID,
+      @required this.phone,
+      @required this.state,
+      @required this.street,
+      @required this.web,
+      @required this.zip});
+  factory ContactsGroupsTable.fromData(
+      Map<String, dynamic> data, GeneratedDatabase db,
+      {String prefix}) {
+    final effectivePrefix = prefix ?? '';
+    final stringType = db.typeSystem.forDartType<String>();
+    final intType = db.typeSystem.forDartType<int>();
+    final boolType = db.typeSystem.forDartType<bool>();
+    return ContactsGroupsTable(
+      uuid: stringType.mapFromDatabaseResponse(data['${effectivePrefix}uuid']),
+      idUser:
+          intType.mapFromDatabaseResponse(data['${effectivePrefix}id_user']),
+      city: stringType.mapFromDatabaseResponse(data['${effectivePrefix}city']),
+      company:
+          stringType.mapFromDatabaseResponse(data['${effectivePrefix}company']),
+      country:
+          stringType.mapFromDatabaseResponse(data['${effectivePrefix}country']),
+      email:
+          stringType.mapFromDatabaseResponse(data['${effectivePrefix}email']),
+      fax: stringType.mapFromDatabaseResponse(data['${effectivePrefix}fax']),
+      isOrganization: boolType
+          .mapFromDatabaseResponse(data['${effectivePrefix}is_organization']),
+      name: stringType.mapFromDatabaseResponse(data['${effectivePrefix}name']),
+      parentUUID: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}parent_u_u_i_d']),
+      phone:
+          stringType.mapFromDatabaseResponse(data['${effectivePrefix}phone']),
+      state:
+          stringType.mapFromDatabaseResponse(data['${effectivePrefix}state']),
+      street:
+          stringType.mapFromDatabaseResponse(data['${effectivePrefix}street']),
+      web: stringType.mapFromDatabaseResponse(data['${effectivePrefix}web']),
+      zip: stringType.mapFromDatabaseResponse(data['${effectivePrefix}zip']),
+    );
+  }
+  factory ContactsGroupsTable.fromJson(Map<String, dynamic> json,
+      {ValueSerializer serializer = const ValueSerializer.defaults()}) {
+    return ContactsGroupsTable(
+      uuid: serializer.fromJson<String>(json['uuid']),
+      idUser: serializer.fromJson<int>(json['idUser']),
+      city: serializer.fromJson<String>(json['city']),
+      company: serializer.fromJson<String>(json['company']),
+      country: serializer.fromJson<String>(json['country']),
+      email: serializer.fromJson<String>(json['email']),
+      fax: serializer.fromJson<String>(json['fax']),
+      isOrganization: serializer.fromJson<bool>(json['isOrganization']),
+      name: serializer.fromJson<String>(json['name']),
+      parentUUID: serializer.fromJson<String>(json['parentUUID']),
+      phone: serializer.fromJson<String>(json['phone']),
+      state: serializer.fromJson<String>(json['state']),
+      street: serializer.fromJson<String>(json['street']),
+      web: serializer.fromJson<String>(json['web']),
+      zip: serializer.fromJson<String>(json['zip']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson(
+      {ValueSerializer serializer = const ValueSerializer.defaults()}) {
+    return {
+      'uuid': serializer.toJson<String>(uuid),
+      'idUser': serializer.toJson<int>(idUser),
+      'city': serializer.toJson<String>(city),
+      'company': serializer.toJson<String>(company),
+      'country': serializer.toJson<String>(country),
+      'email': serializer.toJson<String>(email),
+      'fax': serializer.toJson<String>(fax),
+      'isOrganization': serializer.toJson<bool>(isOrganization),
+      'name': serializer.toJson<String>(name),
+      'parentUUID': serializer.toJson<String>(parentUUID),
+      'phone': serializer.toJson<String>(phone),
+      'state': serializer.toJson<String>(state),
+      'street': serializer.toJson<String>(street),
+      'web': serializer.toJson<String>(web),
+      'zip': serializer.toJson<String>(zip),
+    };
+  }
+
+  @override
+  ContactsGroupsCompanion createCompanion(bool nullToAbsent) {
+    return ContactsGroupsCompanion(
+      uuid: uuid == null && nullToAbsent ? const Value.absent() : Value(uuid),
+      idUser:
+          idUser == null && nullToAbsent ? const Value.absent() : Value(idUser),
+      city: city == null && nullToAbsent ? const Value.absent() : Value(city),
+      company: company == null && nullToAbsent
+          ? const Value.absent()
+          : Value(company),
+      country: country == null && nullToAbsent
+          ? const Value.absent()
+          : Value(country),
+      email:
+          email == null && nullToAbsent ? const Value.absent() : Value(email),
+      fax: fax == null && nullToAbsent ? const Value.absent() : Value(fax),
+      isOrganization: isOrganization == null && nullToAbsent
+          ? const Value.absent()
+          : Value(isOrganization),
+      name: name == null && nullToAbsent ? const Value.absent() : Value(name),
+      parentUUID: parentUUID == null && nullToAbsent
+          ? const Value.absent()
+          : Value(parentUUID),
+      phone:
+          phone == null && nullToAbsent ? const Value.absent() : Value(phone),
+      state:
+          state == null && nullToAbsent ? const Value.absent() : Value(state),
+      street:
+          street == null && nullToAbsent ? const Value.absent() : Value(street),
+      web: web == null && nullToAbsent ? const Value.absent() : Value(web),
+      zip: zip == null && nullToAbsent ? const Value.absent() : Value(zip),
+    );
+  }
+
+  ContactsGroupsTable copyWith(
+          {String uuid,
+          int idUser,
+          String city,
+          String company,
+          String country,
+          String email,
+          String fax,
+          bool isOrganization,
+          String name,
+          String parentUUID,
+          String phone,
+          String state,
+          String street,
+          String web,
+          String zip}) =>
+      ContactsGroupsTable(
+        uuid: uuid ?? this.uuid,
+        idUser: idUser ?? this.idUser,
+        city: city ?? this.city,
+        company: company ?? this.company,
+        country: country ?? this.country,
+        email: email ?? this.email,
+        fax: fax ?? this.fax,
+        isOrganization: isOrganization ?? this.isOrganization,
+        name: name ?? this.name,
+        parentUUID: parentUUID ?? this.parentUUID,
+        phone: phone ?? this.phone,
+        state: state ?? this.state,
+        street: street ?? this.street,
+        web: web ?? this.web,
+        zip: zip ?? this.zip,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('ContactsGroupsTable(')
+          ..write('uuid: $uuid, ')
+          ..write('idUser: $idUser, ')
+          ..write('city: $city, ')
+          ..write('company: $company, ')
+          ..write('country: $country, ')
+          ..write('email: $email, ')
+          ..write('fax: $fax, ')
+          ..write('isOrganization: $isOrganization, ')
+          ..write('name: $name, ')
+          ..write('parentUUID: $parentUUID, ')
+          ..write('phone: $phone, ')
+          ..write('state: $state, ')
+          ..write('street: $street, ')
+          ..write('web: $web, ')
+          ..write('zip: $zip')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => $mrjf($mrjc(
+      uuid.hashCode,
+      $mrjc(
+          idUser.hashCode,
+          $mrjc(
+              city.hashCode,
+              $mrjc(
+                  company.hashCode,
+                  $mrjc(
+                      country.hashCode,
+                      $mrjc(
+                          email.hashCode,
+                          $mrjc(
+                              fax.hashCode,
+                              $mrjc(
+                                  isOrganization.hashCode,
+                                  $mrjc(
+                                      name.hashCode,
+                                      $mrjc(
+                                          parentUUID.hashCode,
+                                          $mrjc(
+                                              phone.hashCode,
+                                              $mrjc(
+                                                  state.hashCode,
+                                                  $mrjc(
+                                                      street.hashCode,
+                                                      $mrjc(web.hashCode,
+                                                          zip.hashCode)))))))))))))));
+  @override
+  bool operator ==(other) =>
+      identical(this, other) ||
+      (other is ContactsGroupsTable &&
+          other.uuid == this.uuid &&
+          other.idUser == this.idUser &&
+          other.city == this.city &&
+          other.company == this.company &&
+          other.country == this.country &&
+          other.email == this.email &&
+          other.fax == this.fax &&
+          other.isOrganization == this.isOrganization &&
+          other.name == this.name &&
+          other.parentUUID == this.parentUUID &&
+          other.phone == this.phone &&
+          other.state == this.state &&
+          other.street == this.street &&
+          other.web == this.web &&
+          other.zip == this.zip);
+}
+
+class ContactsGroupsCompanion extends UpdateCompanion<ContactsGroupsTable> {
+  final Value<String> uuid;
+  final Value<int> idUser;
+  final Value<String> city;
+  final Value<String> company;
+  final Value<String> country;
+  final Value<String> email;
+  final Value<String> fax;
+  final Value<bool> isOrganization;
+  final Value<String> name;
+  final Value<String> parentUUID;
+  final Value<String> phone;
+  final Value<String> state;
+  final Value<String> street;
+  final Value<String> web;
+  final Value<String> zip;
+  const ContactsGroupsCompanion({
+    this.uuid = const Value.absent(),
+    this.idUser = const Value.absent(),
+    this.city = const Value.absent(),
+    this.company = const Value.absent(),
+    this.country = const Value.absent(),
+    this.email = const Value.absent(),
+    this.fax = const Value.absent(),
+    this.isOrganization = const Value.absent(),
+    this.name = const Value.absent(),
+    this.parentUUID = const Value.absent(),
+    this.phone = const Value.absent(),
+    this.state = const Value.absent(),
+    this.street = const Value.absent(),
+    this.web = const Value.absent(),
+    this.zip = const Value.absent(),
+  });
+  ContactsGroupsCompanion.insert({
+    @required String uuid,
+    @required int idUser,
+    @required String city,
+    @required String company,
+    @required String country,
+    @required String email,
+    @required String fax,
+    @required bool isOrganization,
+    @required String name,
+    @required String parentUUID,
+    @required String phone,
+    @required String state,
+    @required String street,
+    @required String web,
+    @required String zip,
+  })  : uuid = Value(uuid),
+        idUser = Value(idUser),
+        city = Value(city),
+        company = Value(company),
+        country = Value(country),
+        email = Value(email),
+        fax = Value(fax),
+        isOrganization = Value(isOrganization),
+        name = Value(name),
+        parentUUID = Value(parentUUID),
+        phone = Value(phone),
+        state = Value(state),
+        street = Value(street),
+        web = Value(web),
+        zip = Value(zip);
+  ContactsGroupsCompanion copyWith(
+      {Value<String> uuid,
+      Value<int> idUser,
+      Value<String> city,
+      Value<String> company,
+      Value<String> country,
+      Value<String> email,
+      Value<String> fax,
+      Value<bool> isOrganization,
+      Value<String> name,
+      Value<String> parentUUID,
+      Value<String> phone,
+      Value<String> state,
+      Value<String> street,
+      Value<String> web,
+      Value<String> zip}) {
+    return ContactsGroupsCompanion(
+      uuid: uuid ?? this.uuid,
+      idUser: idUser ?? this.idUser,
+      city: city ?? this.city,
+      company: company ?? this.company,
+      country: country ?? this.country,
+      email: email ?? this.email,
+      fax: fax ?? this.fax,
+      isOrganization: isOrganization ?? this.isOrganization,
+      name: name ?? this.name,
+      parentUUID: parentUUID ?? this.parentUUID,
+      phone: phone ?? this.phone,
+      state: state ?? this.state,
+      street: street ?? this.street,
+      web: web ?? this.web,
+      zip: zip ?? this.zip,
+    );
+  }
+}
+
+class $ContactsGroupsTable extends ContactsGroups
+    with TableInfo<$ContactsGroupsTable, ContactsGroupsTable> {
+  final GeneratedDatabase _db;
+  final String _alias;
+  $ContactsGroupsTable(this._db, [this._alias]);
+  final VerificationMeta _uuidMeta = const VerificationMeta('uuid');
+  GeneratedTextColumn _uuid;
+  @override
+  GeneratedTextColumn get uuid => _uuid ??= _constructUuid();
+  GeneratedTextColumn _constructUuid() {
+    return GeneratedTextColumn('uuid', $tableName, false,
+        $customConstraints: 'UNIQUE');
+  }
+
+  final VerificationMeta _idUserMeta = const VerificationMeta('idUser');
+  GeneratedIntColumn _idUser;
+  @override
+  GeneratedIntColumn get idUser => _idUser ??= _constructIdUser();
+  GeneratedIntColumn _constructIdUser() {
+    return GeneratedIntColumn(
+      'id_user',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _cityMeta = const VerificationMeta('city');
+  GeneratedTextColumn _city;
+  @override
+  GeneratedTextColumn get city => _city ??= _constructCity();
+  GeneratedTextColumn _constructCity() {
+    return GeneratedTextColumn(
+      'city',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _companyMeta = const VerificationMeta('company');
+  GeneratedTextColumn _company;
+  @override
+  GeneratedTextColumn get company => _company ??= _constructCompany();
+  GeneratedTextColumn _constructCompany() {
+    return GeneratedTextColumn(
+      'company',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _countryMeta = const VerificationMeta('country');
+  GeneratedTextColumn _country;
+  @override
+  GeneratedTextColumn get country => _country ??= _constructCountry();
+  GeneratedTextColumn _constructCountry() {
+    return GeneratedTextColumn(
+      'country',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _emailMeta = const VerificationMeta('email');
+  GeneratedTextColumn _email;
+  @override
+  GeneratedTextColumn get email => _email ??= _constructEmail();
+  GeneratedTextColumn _constructEmail() {
+    return GeneratedTextColumn(
+      'email',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _faxMeta = const VerificationMeta('fax');
+  GeneratedTextColumn _fax;
+  @override
+  GeneratedTextColumn get fax => _fax ??= _constructFax();
+  GeneratedTextColumn _constructFax() {
+    return GeneratedTextColumn(
+      'fax',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _isOrganizationMeta =
+      const VerificationMeta('isOrganization');
+  GeneratedBoolColumn _isOrganization;
+  @override
+  GeneratedBoolColumn get isOrganization =>
+      _isOrganization ??= _constructIsOrganization();
+  GeneratedBoolColumn _constructIsOrganization() {
+    return GeneratedBoolColumn(
+      'is_organization',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _nameMeta = const VerificationMeta('name');
+  GeneratedTextColumn _name;
+  @override
+  GeneratedTextColumn get name => _name ??= _constructName();
+  GeneratedTextColumn _constructName() {
+    return GeneratedTextColumn(
+      'name',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _parentUUIDMeta = const VerificationMeta('parentUUID');
+  GeneratedTextColumn _parentUUID;
+  @override
+  GeneratedTextColumn get parentUUID => _parentUUID ??= _constructParentUUID();
+  GeneratedTextColumn _constructParentUUID() {
+    return GeneratedTextColumn(
+      'parent_u_u_i_d',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _phoneMeta = const VerificationMeta('phone');
+  GeneratedTextColumn _phone;
+  @override
+  GeneratedTextColumn get phone => _phone ??= _constructPhone();
+  GeneratedTextColumn _constructPhone() {
+    return GeneratedTextColumn(
+      'phone',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _stateMeta = const VerificationMeta('state');
+  GeneratedTextColumn _state;
+  @override
+  GeneratedTextColumn get state => _state ??= _constructState();
+  GeneratedTextColumn _constructState() {
+    return GeneratedTextColumn(
+      'state',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _streetMeta = const VerificationMeta('street');
+  GeneratedTextColumn _street;
+  @override
+  GeneratedTextColumn get street => _street ??= _constructStreet();
+  GeneratedTextColumn _constructStreet() {
+    return GeneratedTextColumn(
+      'street',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _webMeta = const VerificationMeta('web');
+  GeneratedTextColumn _web;
+  @override
+  GeneratedTextColumn get web => _web ??= _constructWeb();
+  GeneratedTextColumn _constructWeb() {
+    return GeneratedTextColumn(
+      'web',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _zipMeta = const VerificationMeta('zip');
+  GeneratedTextColumn _zip;
+  @override
+  GeneratedTextColumn get zip => _zip ??= _constructZip();
+  GeneratedTextColumn _constructZip() {
+    return GeneratedTextColumn(
+      'zip',
+      $tableName,
+      false,
+    );
+  }
+
+  @override
+  List<GeneratedColumn> get $columns => [
+        uuid,
+        idUser,
+        city,
+        company,
+        country,
+        email,
+        fax,
+        isOrganization,
+        name,
+        parentUUID,
+        phone,
+        state,
+        street,
+        web,
+        zip
+      ];
+  @override
+  $ContactsGroupsTable get asDslTable => this;
+  @override
+  String get $tableName => _alias ?? 'contacts_groups';
+  @override
+  final String actualTableName = 'contacts_groups';
+  @override
+  VerificationContext validateIntegrity(ContactsGroupsCompanion d,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    if (d.uuid.present) {
+      context.handle(
+          _uuidMeta, uuid.isAcceptableValue(d.uuid.value, _uuidMeta));
+    } else if (uuid.isRequired && isInserting) {
+      context.missing(_uuidMeta);
+    }
+    if (d.idUser.present) {
+      context.handle(
+          _idUserMeta, idUser.isAcceptableValue(d.idUser.value, _idUserMeta));
+    } else if (idUser.isRequired && isInserting) {
+      context.missing(_idUserMeta);
+    }
+    if (d.city.present) {
+      context.handle(
+          _cityMeta, city.isAcceptableValue(d.city.value, _cityMeta));
+    } else if (city.isRequired && isInserting) {
+      context.missing(_cityMeta);
+    }
+    if (d.company.present) {
+      context.handle(_companyMeta,
+          company.isAcceptableValue(d.company.value, _companyMeta));
+    } else if (company.isRequired && isInserting) {
+      context.missing(_companyMeta);
+    }
+    if (d.country.present) {
+      context.handle(_countryMeta,
+          country.isAcceptableValue(d.country.value, _countryMeta));
+    } else if (country.isRequired && isInserting) {
+      context.missing(_countryMeta);
+    }
+    if (d.email.present) {
+      context.handle(
+          _emailMeta, email.isAcceptableValue(d.email.value, _emailMeta));
+    } else if (email.isRequired && isInserting) {
+      context.missing(_emailMeta);
+    }
+    if (d.fax.present) {
+      context.handle(_faxMeta, fax.isAcceptableValue(d.fax.value, _faxMeta));
+    } else if (fax.isRequired && isInserting) {
+      context.missing(_faxMeta);
+    }
+    if (d.isOrganization.present) {
+      context.handle(
+          _isOrganizationMeta,
+          isOrganization.isAcceptableValue(
+              d.isOrganization.value, _isOrganizationMeta));
+    } else if (isOrganization.isRequired && isInserting) {
+      context.missing(_isOrganizationMeta);
+    }
+    if (d.name.present) {
+      context.handle(
+          _nameMeta, name.isAcceptableValue(d.name.value, _nameMeta));
+    } else if (name.isRequired && isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (d.parentUUID.present) {
+      context.handle(_parentUUIDMeta,
+          parentUUID.isAcceptableValue(d.parentUUID.value, _parentUUIDMeta));
+    } else if (parentUUID.isRequired && isInserting) {
+      context.missing(_parentUUIDMeta);
+    }
+    if (d.phone.present) {
+      context.handle(
+          _phoneMeta, phone.isAcceptableValue(d.phone.value, _phoneMeta));
+    } else if (phone.isRequired && isInserting) {
+      context.missing(_phoneMeta);
+    }
+    if (d.state.present) {
+      context.handle(
+          _stateMeta, state.isAcceptableValue(d.state.value, _stateMeta));
+    } else if (state.isRequired && isInserting) {
+      context.missing(_stateMeta);
+    }
+    if (d.street.present) {
+      context.handle(
+          _streetMeta, street.isAcceptableValue(d.street.value, _streetMeta));
+    } else if (street.isRequired && isInserting) {
+      context.missing(_streetMeta);
+    }
+    if (d.web.present) {
+      context.handle(_webMeta, web.isAcceptableValue(d.web.value, _webMeta));
+    } else if (web.isRequired && isInserting) {
+      context.missing(_webMeta);
+    }
+    if (d.zip.present) {
+      context.handle(_zipMeta, zip.isAcceptableValue(d.zip.value, _zipMeta));
+    } else if (zip.isRequired && isInserting) {
+      context.missing(_zipMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => <GeneratedColumn>{};
+  @override
+  ContactsGroupsTable map(Map<String, dynamic> data, {String tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
+    return ContactsGroupsTable.fromData(data, _db, prefix: effectivePrefix);
+  }
+
+  @override
+  Map<String, Variable> entityToSql(ContactsGroupsCompanion d) {
+    final map = <String, Variable>{};
+    if (d.uuid.present) {
+      map['uuid'] = Variable<String, StringType>(d.uuid.value);
+    }
+    if (d.idUser.present) {
+      map['id_user'] = Variable<int, IntType>(d.idUser.value);
+    }
+    if (d.city.present) {
+      map['city'] = Variable<String, StringType>(d.city.value);
+    }
+    if (d.company.present) {
+      map['company'] = Variable<String, StringType>(d.company.value);
+    }
+    if (d.country.present) {
+      map['country'] = Variable<String, StringType>(d.country.value);
+    }
+    if (d.email.present) {
+      map['email'] = Variable<String, StringType>(d.email.value);
+    }
+    if (d.fax.present) {
+      map['fax'] = Variable<String, StringType>(d.fax.value);
+    }
+    if (d.isOrganization.present) {
+      map['is_organization'] = Variable<bool, BoolType>(d.isOrganization.value);
+    }
+    if (d.name.present) {
+      map['name'] = Variable<String, StringType>(d.name.value);
+    }
+    if (d.parentUUID.present) {
+      map['parent_u_u_i_d'] = Variable<String, StringType>(d.parentUUID.value);
+    }
+    if (d.phone.present) {
+      map['phone'] = Variable<String, StringType>(d.phone.value);
+    }
+    if (d.state.present) {
+      map['state'] = Variable<String, StringType>(d.state.value);
+    }
+    if (d.street.present) {
+      map['street'] = Variable<String, StringType>(d.street.value);
+    }
+    if (d.web.present) {
+      map['web'] = Variable<String, StringType>(d.web.value);
+    }
+    if (d.zip.present) {
+      map['zip'] = Variable<String, StringType>(d.zip.value);
+    }
+    return map;
+  }
+
+  @override
+  $ContactsGroupsTable createAlias(String alias) {
+    return $ContactsGroupsTable(_db, alias);
+  }
+}
+
+class ContactsStoragesTable extends DataClass
+    implements Insertable<ContactsStoragesTable> {
+  final int sqliteId;
+  final int idUser;
+  final String serverId;
+  final String name;
+  final int cTag;
+  final bool display;
+  final List<ContactInfoItem> contactsInfo;
+  ContactsStoragesTable(
+      {@required this.sqliteId,
+      @required this.idUser,
+      @required this.serverId,
+      @required this.name,
+      @required this.cTag,
+      @required this.display,
+      this.contactsInfo});
+  factory ContactsStoragesTable.fromData(
+      Map<String, dynamic> data, GeneratedDatabase db,
+      {String prefix}) {
+    final effectivePrefix = prefix ?? '';
+    final intType = db.typeSystem.forDartType<int>();
+    final stringType = db.typeSystem.forDartType<String>();
+    final boolType = db.typeSystem.forDartType<bool>();
+    return ContactsStoragesTable(
+      sqliteId:
+          intType.mapFromDatabaseResponse(data['${effectivePrefix}sqlite_id']),
+      idUser:
+          intType.mapFromDatabaseResponse(data['${effectivePrefix}id_user']),
+      serverId: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}server_id']),
+      name: stringType.mapFromDatabaseResponse(data['${effectivePrefix}name']),
+      cTag: intType.mapFromDatabaseResponse(data['${effectivePrefix}c_tag']),
+      display:
+          boolType.mapFromDatabaseResponse(data['${effectivePrefix}display']),
+      contactsInfo: $ContactsStoragesTable.$converter0.mapToDart(stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}contacts_info'])),
+    );
+  }
+  factory ContactsStoragesTable.fromJson(Map<String, dynamic> json,
+      {ValueSerializer serializer = const ValueSerializer.defaults()}) {
+    return ContactsStoragesTable(
+      sqliteId: serializer.fromJson<int>(json['sqliteId']),
+      idUser: serializer.fromJson<int>(json['idUser']),
+      serverId: serializer.fromJson<String>(json['serverId']),
+      name: serializer.fromJson<String>(json['name']),
+      cTag: serializer.fromJson<int>(json['cTag']),
+      display: serializer.fromJson<bool>(json['display']),
+      contactsInfo:
+          serializer.fromJson<List<ContactInfoItem>>(json['contactsInfo']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson(
+      {ValueSerializer serializer = const ValueSerializer.defaults()}) {
+    return {
+      'sqliteId': serializer.toJson<int>(sqliteId),
+      'idUser': serializer.toJson<int>(idUser),
+      'serverId': serializer.toJson<String>(serverId),
+      'name': serializer.toJson<String>(name),
+      'cTag': serializer.toJson<int>(cTag),
+      'display': serializer.toJson<bool>(display),
+      'contactsInfo': serializer.toJson<List<ContactInfoItem>>(contactsInfo),
+    };
+  }
+
+  @override
+  ContactsStoragesCompanion createCompanion(bool nullToAbsent) {
+    return ContactsStoragesCompanion(
+      sqliteId: sqliteId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(sqliteId),
+      idUser:
+          idUser == null && nullToAbsent ? const Value.absent() : Value(idUser),
+      serverId: serverId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(serverId),
+      name: name == null && nullToAbsent ? const Value.absent() : Value(name),
+      cTag: cTag == null && nullToAbsent ? const Value.absent() : Value(cTag),
+      display: display == null && nullToAbsent
+          ? const Value.absent()
+          : Value(display),
+      contactsInfo: contactsInfo == null && nullToAbsent
+          ? const Value.absent()
+          : Value(contactsInfo),
+    );
+  }
+
+  ContactsStoragesTable copyWith(
+          {int sqliteId,
+          int idUser,
+          String serverId,
+          String name,
+          int cTag,
+          bool display,
+          List<ContactInfoItem> contactsInfo}) =>
+      ContactsStoragesTable(
+        sqliteId: sqliteId ?? this.sqliteId,
+        idUser: idUser ?? this.idUser,
+        serverId: serverId ?? this.serverId,
+        name: name ?? this.name,
+        cTag: cTag ?? this.cTag,
+        display: display ?? this.display,
+        contactsInfo: contactsInfo ?? this.contactsInfo,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('ContactsStoragesTable(')
+          ..write('sqliteId: $sqliteId, ')
+          ..write('idUser: $idUser, ')
+          ..write('serverId: $serverId, ')
+          ..write('name: $name, ')
+          ..write('cTag: $cTag, ')
+          ..write('display: $display, ')
+          ..write('contactsInfo: $contactsInfo')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => $mrjf($mrjc(
+      sqliteId.hashCode,
+      $mrjc(
+          idUser.hashCode,
+          $mrjc(
+              serverId.hashCode,
+              $mrjc(
+                  name.hashCode,
+                  $mrjc(cTag.hashCode,
+                      $mrjc(display.hashCode, contactsInfo.hashCode)))))));
+  @override
+  bool operator ==(other) =>
+      identical(this, other) ||
+      (other is ContactsStoragesTable &&
+          other.sqliteId == this.sqliteId &&
+          other.idUser == this.idUser &&
+          other.serverId == this.serverId &&
+          other.name == this.name &&
+          other.cTag == this.cTag &&
+          other.display == this.display &&
+          other.contactsInfo == this.contactsInfo);
+}
+
+class ContactsStoragesCompanion extends UpdateCompanion<ContactsStoragesTable> {
+  final Value<int> sqliteId;
+  final Value<int> idUser;
+  final Value<String> serverId;
+  final Value<String> name;
+  final Value<int> cTag;
+  final Value<bool> display;
+  final Value<List<ContactInfoItem>> contactsInfo;
+  const ContactsStoragesCompanion({
+    this.sqliteId = const Value.absent(),
+    this.idUser = const Value.absent(),
+    this.serverId = const Value.absent(),
+    this.name = const Value.absent(),
+    this.cTag = const Value.absent(),
+    this.display = const Value.absent(),
+    this.contactsInfo = const Value.absent(),
+  });
+  ContactsStoragesCompanion.insert({
+    this.sqliteId = const Value.absent(),
+    @required int idUser,
+    @required String serverId,
+    @required String name,
+    @required int cTag,
+    @required bool display,
+    this.contactsInfo = const Value.absent(),
+  })  : idUser = Value(idUser),
+        serverId = Value(serverId),
+        name = Value(name),
+        cTag = Value(cTag),
+        display = Value(display);
+  ContactsStoragesCompanion copyWith(
+      {Value<int> sqliteId,
+      Value<int> idUser,
+      Value<String> serverId,
+      Value<String> name,
+      Value<int> cTag,
+      Value<bool> display,
+      Value<List<ContactInfoItem>> contactsInfo}) {
+    return ContactsStoragesCompanion(
+      sqliteId: sqliteId ?? this.sqliteId,
+      idUser: idUser ?? this.idUser,
+      serverId: serverId ?? this.serverId,
+      name: name ?? this.name,
+      cTag: cTag ?? this.cTag,
+      display: display ?? this.display,
+      contactsInfo: contactsInfo ?? this.contactsInfo,
+    );
+  }
+}
+
+class $ContactsStoragesTable extends ContactsStorages
+    with TableInfo<$ContactsStoragesTable, ContactsStoragesTable> {
+  final GeneratedDatabase _db;
+  final String _alias;
+  $ContactsStoragesTable(this._db, [this._alias]);
+  final VerificationMeta _sqliteIdMeta = const VerificationMeta('sqliteId');
+  GeneratedIntColumn _sqliteId;
+  @override
+  GeneratedIntColumn get sqliteId => _sqliteId ??= _constructSqliteId();
+  GeneratedIntColumn _constructSqliteId() {
+    return GeneratedIntColumn('sqlite_id', $tableName, false,
+        hasAutoIncrement: true, declaredAsPrimaryKey: true);
+  }
+
+  final VerificationMeta _idUserMeta = const VerificationMeta('idUser');
+  GeneratedIntColumn _idUser;
+  @override
+  GeneratedIntColumn get idUser => _idUser ??= _constructIdUser();
+  GeneratedIntColumn _constructIdUser() {
+    return GeneratedIntColumn(
+      'id_user',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _serverIdMeta = const VerificationMeta('serverId');
+  GeneratedTextColumn _serverId;
+  @override
+  GeneratedTextColumn get serverId => _serverId ??= _constructServerId();
+  GeneratedTextColumn _constructServerId() {
+    return GeneratedTextColumn(
+      'server_id',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _nameMeta = const VerificationMeta('name');
+  GeneratedTextColumn _name;
+  @override
+  GeneratedTextColumn get name => _name ??= _constructName();
+  GeneratedTextColumn _constructName() {
+    return GeneratedTextColumn(
+      'name',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _cTagMeta = const VerificationMeta('cTag');
+  GeneratedIntColumn _cTag;
+  @override
+  GeneratedIntColumn get cTag => _cTag ??= _constructCTag();
+  GeneratedIntColumn _constructCTag() {
+    return GeneratedIntColumn(
+      'c_tag',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _displayMeta = const VerificationMeta('display');
+  GeneratedBoolColumn _display;
+  @override
+  GeneratedBoolColumn get display => _display ??= _constructDisplay();
+  GeneratedBoolColumn _constructDisplay() {
+    return GeneratedBoolColumn(
+      'display',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _contactsInfoMeta =
+      const VerificationMeta('contactsInfo');
+  GeneratedTextColumn _contactsInfo;
+  @override
+  GeneratedTextColumn get contactsInfo =>
+      _contactsInfo ??= _constructContactsInfo();
+  GeneratedTextColumn _constructContactsInfo() {
+    return GeneratedTextColumn(
+      'contacts_info',
+      $tableName,
+      true,
+    );
+  }
+
+  @override
+  List<GeneratedColumn> get $columns =>
+      [sqliteId, idUser, serverId, name, cTag, display, contactsInfo];
+  @override
+  $ContactsStoragesTable get asDslTable => this;
+  @override
+  String get $tableName => _alias ?? 'contacts_storages';
+  @override
+  final String actualTableName = 'contacts_storages';
+  @override
+  VerificationContext validateIntegrity(ContactsStoragesCompanion d,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    if (d.sqliteId.present) {
+      context.handle(_sqliteIdMeta,
+          sqliteId.isAcceptableValue(d.sqliteId.value, _sqliteIdMeta));
+    } else if (sqliteId.isRequired && isInserting) {
+      context.missing(_sqliteIdMeta);
+    }
+    if (d.idUser.present) {
+      context.handle(
+          _idUserMeta, idUser.isAcceptableValue(d.idUser.value, _idUserMeta));
+    } else if (idUser.isRequired && isInserting) {
+      context.missing(_idUserMeta);
+    }
+    if (d.serverId.present) {
+      context.handle(_serverIdMeta,
+          serverId.isAcceptableValue(d.serverId.value, _serverIdMeta));
+    } else if (serverId.isRequired && isInserting) {
+      context.missing(_serverIdMeta);
+    }
+    if (d.name.present) {
+      context.handle(
+          _nameMeta, name.isAcceptableValue(d.name.value, _nameMeta));
+    } else if (name.isRequired && isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (d.cTag.present) {
+      context.handle(
+          _cTagMeta, cTag.isAcceptableValue(d.cTag.value, _cTagMeta));
+    } else if (cTag.isRequired && isInserting) {
+      context.missing(_cTagMeta);
+    }
+    if (d.display.present) {
+      context.handle(_displayMeta,
+          display.isAcceptableValue(d.display.value, _displayMeta));
+    } else if (display.isRequired && isInserting) {
+      context.missing(_displayMeta);
+    }
+    context.handle(_contactsInfoMeta, const VerificationResult.success());
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {sqliteId};
+  @override
+  ContactsStoragesTable map(Map<String, dynamic> data, {String tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
+    return ContactsStoragesTable.fromData(data, _db, prefix: effectivePrefix);
+  }
+
+  @override
+  Map<String, Variable> entityToSql(ContactsStoragesCompanion d) {
+    final map = <String, Variable>{};
+    if (d.sqliteId.present) {
+      map['sqlite_id'] = Variable<int, IntType>(d.sqliteId.value);
+    }
+    if (d.idUser.present) {
+      map['id_user'] = Variable<int, IntType>(d.idUser.value);
+    }
+    if (d.serverId.present) {
+      map['server_id'] = Variable<String, StringType>(d.serverId.value);
+    }
+    if (d.name.present) {
+      map['name'] = Variable<String, StringType>(d.name.value);
+    }
+    if (d.cTag.present) {
+      map['c_tag'] = Variable<int, IntType>(d.cTag.value);
+    }
+    if (d.display.present) {
+      map['display'] = Variable<bool, BoolType>(d.display.value);
+    }
+    if (d.contactsInfo.present) {
+      final converter = $ContactsStoragesTable.$converter0;
+      map['contacts_info'] = Variable<String, StringType>(
+          converter.mapToSql(d.contactsInfo.value));
+    }
+    return map;
+  }
+
+  @override
+  $ContactsStoragesTable createAlias(String alias) {
+    return $ContactsStoragesTable(_db, alias);
+  }
+
+  static ContactsInfoConverter $converter0 = const ContactsInfoConverter();
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
-  _$AppDatabase(QueryExecutor e) : super(const SqlTypeSystem.withDefaults(), e);
+  _$AppDatabase(QueryExecutor e) : super(SqlTypeSystem.defaultInstance, e);
   $MailTable _mail;
   $MailTable get mail => _mail ??= $MailTable(this);
   $FoldersTable _folders;
@@ -4367,6 +8046,22 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   $UsersTable get users => _users ??= $UsersTable(this);
   $AccountsTable _accounts;
   $AccountsTable get accounts => _accounts ??= $AccountsTable(this);
+  $ContactsTable _contacts;
+  $ContactsTable get contacts => _contacts ??= $ContactsTable(this);
+  $ContactsGroupsTable _contactsGroups;
+  $ContactsGroupsTable get contactsGroups =>
+      _contactsGroups ??= $ContactsGroupsTable(this);
+  $ContactsStoragesTable _contactsStorages;
+  $ContactsStoragesTable get contactsStorages =>
+      _contactsStorages ??= $ContactsStoragesTable(this);
   @override
-  List<TableInfo> get allTables => [mail, folders, users, accounts];
+  List<TableInfo> get allTables => [
+        mail,
+        folders,
+        users,
+        accounts,
+        contacts,
+        contactsGroups,
+        contactsStorages
+      ];
 }

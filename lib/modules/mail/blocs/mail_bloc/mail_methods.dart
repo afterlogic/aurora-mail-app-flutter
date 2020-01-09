@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/folders/folders_dao.dart';
 import 'package:aurora_mail/database/folders/folders_table.dart';
@@ -13,7 +14,6 @@ import 'package:aurora_mail/modules/mail/repository/folders_api.dart';
 import 'package:aurora_mail/modules/mail/repository/mail_api.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/modules/settings/models/sync_period.dart';
-import 'package:aurora_mail/utils/constants.dart';
 import 'package:moor_flutter/moor_flutter.dart';
 
 class MailMethods {
@@ -62,8 +62,8 @@ class MailMethods {
     ]);
 
     // get result
-    final rawFolders = futureWaitResult[0];
-    final oldLocalFolders = futureWaitResult[1];
+    final rawFolders = futureWaitResult[0] as List<Map<String, dynamic>>;
+    final oldLocalFolders = futureWaitResult[1] as List<LocalFolder>;
 
     // convert new folders to db-like format (the format of old folders) for calculating difference
     final newLocalFolders = await Folders.getFolderObjectsFromServerAsync(
@@ -134,9 +134,9 @@ class MailMethods {
 
       futures.add(_foldersDao.updateFolder(
         new FoldersCompanion(
-          count: Value(count),
-          unread: Value(unread),
-          fullNameHash: Value(newHash),
+          count: Value(count as int),
+          unread: Value(unread as int),
+          fullNameHash: Value(newHash as String),
           needsInfoUpdate: Value(needsInfoUpdate),
         ),
         folder.localId,
@@ -206,9 +206,12 @@ class MailMethods {
     // calculate difference
     if (folderToUpdate.messagesInfo != null) {
       final calcResult = await Folders.calculateMessagesInfoDiffAsync(
-          folderToUpdate.messagesInfo, messagesInfo);
+        folderToUpdate.messagesInfo,
+        messagesInfo,
+      );
+
       messagesInfo = calcResult.updatedInfo;
-      await _mailDao.deleteMessages(calcResult.removedUids, folderToUpdate);
+      await _mailDao.deleteMessages(calcResult.removedUids, folderToUpdate.fullNameRaw);
       _mailDao.updateMessagesFlags(calcResult.infosToUpdateFlags);
     }
 
@@ -225,16 +228,15 @@ class MailMethods {
     // get the actual folder state every time
     final folder = await _foldersDao.getFolderByLocalId(_syncQueue[0]);
     // get the actual sync period
-    final user = await _usersDao.getUserByLocalId(AuthBloc.currentUser.localId);
+    final user = await _usersDao.getUserByLocalId(
+        AuthBloc.currentUser.localId);
     if (folder.messagesInfo == null) {
-      print(
-          "Attention! messagesInfo is null, perhaps another folder was selected while messages info was being retrieved.");
+      print("Attention! messagesInfo is null, perhaps another folder was selected while messages info was being retrieved.");
       return _setMessagesInfoToFolder();
     }
 
     if (user.syncPeriod != SyncPeriod.periodToDbString(syncPeriod)) {
-      print(
-          "Attention! another sync period was selected, refetching messages info...");
+      print("Attention! another sync period was selected, refetching messages info...");
       return _setMessagesInfoToFolder();
     }
 
@@ -307,7 +309,7 @@ class MailMethods {
 
     Future updateMessages(bool isStarred) async {
       final infos = messages.map((m) {
-        final flags = json.decode(m.flagsInJson);
+        final flags = json.decode(m.flagsInJson) as List;
 
         if (isStarred && !flags.contains("\\seen")) {
           flags.add("\\seen");
@@ -346,7 +348,7 @@ class MailMethods {
 
     void updateMessages(bool isStarred) {
       final infos = messages.map((m) {
-        final flags = json.decode(m.flagsInJson);
+        final flags = json.decode(m.flagsInJson) as List;
 
         if (isStarred && !flags.contains("\\flagged")) {
           flags.add("\\flagged");

@@ -1,1 +1,0 @@
-const MESSAGES_PER_CHUNK = 50;

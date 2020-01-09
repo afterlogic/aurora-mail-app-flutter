@@ -11,7 +11,9 @@ class AccountsDao extends DatabaseAccessor<AppDatabase>
   AccountsDao(AppDatabase db) : super(db);
 
   Future<void> addAccounts(List<Account> newAccounts) {
-    return into(accounts).insertAll(newAccounts);
+    return batch((b) {
+      return b.insertAll(accounts, newAccounts);
+    });
   }
 
   Future<List<Account>> getAccounts(int userServerId) {

@@ -1,5 +1,41 @@
+import 'dart:async';
+
+import 'package:aurora_mail/background/alarm/alarm.dart';
 import 'package:flutter/material.dart';
 
+import 'background/background_sink.dart';
 import 'modules/app_screen.dart';
 
-void main() => runApp(App());
+var isBackground = true;
+Function doOnAlarm;
+final _streamController = new StreamController<void>.broadcast();
+
+Stream<void> get alarmStream => _streamController.stream.asBroadcastStream();
+
+void main() {
+  isBackground = false;
+  runApp(App());
+  Alarm.init();
+  Alarm.onPeriodic(onAlarm);
+}
+
+@pragma('vm:entry-point')
+void onAlarm() async {
+  try {
+    if (!isBackground) _streamController.add(null);
+    if (isBackground) WidgetsFlutterBinding.ensureInitialized();
+
+    final hasUpdate = await BackgroundSync()
+        .sync(isBackground, doOnAlarm != null)
+        .timeout(Duration(seconds: 50));
+
+    if (hasUpdate) {
+      if (doOnAlarm != null) doOnAlarm();
+    }
+  } catch (e, s) {
+    print(e);
+    print(s);
+  } finally {
+    await Alarm.endAlarm();
+  }
+}

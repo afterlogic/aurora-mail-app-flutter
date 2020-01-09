@@ -22,20 +22,16 @@ class FoldersDao extends DatabaseAccessor<AppDatabase> with _$FoldersDaoMixin {
         .get();
   }
 
+  Future<List<LocalFolder>> getByType(int type) {
+    return (select(folders)
+          ..where((folder) => folder.accountId.equals(_accountId))
+          ..where((folder) => folder.type.equals(type)))
+        .get();
+  }
+
   Future<Folder> getFolderByLocalId(int localId) async {
     final foundFolders = await (select(folders)
           ..where((folder) => folder.localId.equals(localId)))
-        .get();
-
-    return foundFolders.isEmpty
-        ? null
-        : Folder.getFolderObjectsFromDb(
-            foundFolders, foundFolders[0].parentGuid)[0];
-  }
-
-  Future<Folder> getFolderByRawName(String fullNameRaw) async {
-    final foundFolders = await (select(folders)
-          ..where((folder) => folder.fullNameRaw.equals(fullNameRaw)))
         .get();
 
     return foundFolders.isEmpty
@@ -51,7 +47,9 @@ class FoldersDao extends DatabaseAccessor<AppDatabase> with _$FoldersDaoMixin {
   }
 
   Future<void> addFolders(List<LocalFolder> newFolders) async {
-    return into(folders).insertAll(newFolders);
+    return batch((b) {
+      return b.insertAll(folders, newFolders);
+    });
   }
 
   Future<int> setMessagesInfo(int localId, List<MessageInfo> messagesInfo) {
@@ -73,7 +71,7 @@ class FoldersDao extends DatabaseAccessor<AppDatabase> with _$FoldersDaoMixin {
       return delete(folders).go();
     } else {
       final List<int> ids = filesToDelete.map((file) => file.localId).toList();
-      return (delete(folders)..where((f) => isIn(f.localId, ids))).go();
+      return (delete(folders)..where((f) => f.localId.isIn(ids))).go();
     }
   }
 }

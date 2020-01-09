@@ -83,7 +83,7 @@ class EndUpload extends ComposeEvent {
 
 // used inside bloc, thus is not intended to be fired from flutter widgets
 class ErrorUpload extends ComposeEvent {
-  final dynamic error;
+  final String error;
 
   ErrorUpload(this.error);
 

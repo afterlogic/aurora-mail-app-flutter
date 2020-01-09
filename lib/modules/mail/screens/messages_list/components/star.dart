@@ -1,17 +1,15 @@
-import 'package:aurora_mail/generated/i18n.dart';
-import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
-import 'package:aurora_mail/modules/settings/blocs/settings_bloc/settings_bloc.dart';
-import 'package:aurora_mail/utils/show_snack.dart';
-import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class Star extends StatefulWidget {
   final bool value;
   final bool enabled;
   final Function(bool) onPressed;
 
-  const Star({Key key, @required this.value, this.enabled = true, @required this.onPressed})
+  const Star(
+      {Key key,
+      @required this.value,
+      this.enabled = true,
+      @required this.onPressed})
       : super(key: key);
 
   @override
@@ -70,7 +68,9 @@ class _StarState extends State<Star> with TickerProviderStateMixin {
           padding: EdgeInsets.zero,
           icon: Icon(
             Icons.star_border,
-            color: Theme.of(context).disabledColor.withOpacity(widget.enabled ? 0.1 : 0.0),
+            color: Theme.of(context)
+                .disabledColor
+                .withOpacity(widget.enabled ? 0.1 : 0.0),
           ),
           onPressed: widget.enabled ? () => _setStarred(true) : null,
         ),

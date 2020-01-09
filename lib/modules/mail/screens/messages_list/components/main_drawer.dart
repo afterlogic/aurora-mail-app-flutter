@@ -1,10 +1,11 @@
 import 'dart:async';
 
-import 'package:aurora_mail/generated/i18n.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/starred_folder.dart';
+import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:empty_list/empty_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -55,6 +56,7 @@ class _MainDrawerState extends State<MainDrawer> {
                     return _refreshCompleter.future;
                   },
                   backgroundColor: Colors.white,
+                  color: Colors.black,
                   child: BlocBuilder<MailBloc, MailState>(
                       bloc: BlocProvider.of<MailBloc>(context),
                       condition: (prevState, state) =>
@@ -119,16 +121,7 @@ class _MainDrawerState extends State<MainDrawer> {
   }
 
   Widget _buildFoldersEmpty() {
-    // build list view to be able to swipe to refresh
-    return ListView(
-      physics: AlwaysScrollableScrollPhysics(),
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 68.0, horizontal: 16.0),
-          child: Center(child: Text(S.of(context).folders_empty)),
-        ),
-      ],
-    );
+    return EmptyList(message: i18n(context, "folders_empty"));
   }
 
   Widget _buildFoldersLoading() {

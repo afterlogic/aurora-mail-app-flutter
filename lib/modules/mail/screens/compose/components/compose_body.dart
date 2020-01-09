@@ -1,4 +1,4 @@
-import 'package:aurora_mail/generated/i18n.dart';
+import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/material.dart';
 
 class ComposeBody extends StatefulWidget {
@@ -22,12 +22,14 @@ class _ComposeBodyState extends State<ComposeBody> {
   Widget build(BuildContext context) {
     return TextField(
       maxLines: null,
+      minLines: 8,
       focusNode: _focusNode,
-      controller: widget.textCtrl,
       decoration: InputDecoration(
-        contentPadding: const EdgeInsets.symmetric(vertical: 26.0),
-        border: InputBorder.none,
-        hintText: S.of(context).compose_body_placeholder,
+        contentPadding: const EdgeInsets.symmetric(vertical: 26.0, horizontal: 16.0),
+        border: OutlineInputBorder(borderSide: BorderSide.none),
+        filled: true,
+        fillColor: Theme.of(context).cardColor,
+        hintText: i18n(context, "compose_body_placeholder"),
       ),
     );
   }

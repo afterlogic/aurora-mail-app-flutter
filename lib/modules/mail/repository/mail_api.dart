@@ -9,10 +9,11 @@ import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/temp_attachment_upload.dart';
 import 'package:aurora_mail/utils/api_utils.dart';
 import 'package:aurora_mail/utils/file_utils.dart';
-import 'package:downloads_path_provider/downloads_path_provider.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_uploader/flutter_uploader.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:webmail_api_client/webmail_api_client.dart';
 
 class MailApi {
   int get _accountId => AuthBloc.currentAccount.accountId;
@@ -38,7 +39,7 @@ class MailApi {
     if (res["Result"] is List) {
       return json.encode(res["Result"]);
     } else {
-      throw ServerError(getErrMsg(res));
+      throw WebMailApiError(res);
     }
   }
 
@@ -56,9 +57,9 @@ class MailApi {
     final res = await sendRequest(body);
 
     if (res["Result"] is List) {
-      return res["Result"];
+      return res["Result"] as List;
     } else {
-      throw ServerError(getErrMsg(res));
+      throw WebMailApiError(res);
     }
   }
 
@@ -112,7 +113,7 @@ class MailApi {
     final res = await sendRequest(body);
 
     if (res["Result"] != true) {
-      throw ServerError(getErrMsg(res));
+      throw WebMailApiError(res);
     }
   }
 
@@ -160,9 +161,9 @@ class MailApi {
     final res = await sendRequest(body);
 
     if (res["Result"] is Map) {
-      return res["Result"]["NewUid"];
+      return res["Result"]["NewUid"] as int;
     } else {
-      throw ServerError(getErrMsg(res));
+      throw WebMailApiError(res);
     }
   }
 
@@ -210,12 +211,12 @@ class MailApi {
       final res = json.decode(result.response);
       if (res["Result"] is Map) {
         final attachment = res["Result"]["Attachment"];
-        final composeAttachment = ComposeAttachment.fromJsonString(attachment);
+        final composeAttachment = ComposeAttachment.fromJsonString(attachment as Map);
         assert(tempAttachment != null && tempAttachment.guid is String);
         composeAttachment.guid = tempAttachment.guid;
         onUploadEnd(composeAttachment);
       } else {
-        onError(ServerError(getErrMsg(res)));
+        onError(WebMailApiError(res));
       }
     }, onError: (err) {
       print("Attachment upload error: $err");
@@ -230,7 +231,9 @@ class MailApi {
     try {
       await FlutterDownloader.initialize();
     } catch (err) {}
-    final downloadsDirectory = await DownloadsPathProvider.downloadsDirectory;
+    final downloadsDirectories = await getExternalStorageDirectories(type: StorageDirectory.downloads);
+    final downloadsDirectory = downloadsDirectories[0];
+
 
     final taskId = await FlutterDownloader.enqueue(
       url: AuthBloc.hostName + attachment.downloadUrl,
@@ -269,18 +272,18 @@ class MailApi {
     final res = await sendRequest(body);
 
     if (res["Result"] is Map) {
-      return ComposeAttachment.fromMailAttachment(attachments, res["Result"]);
+      return ComposeAttachment.fromMailAttachment(attachments, res["Result"] as Map);
     } else {
-      throw ServerError(getErrMsg(res));
+      throw WebMailApiError(res);
     }
   }
 
   Future<void> deleteMessages({
-    @required Folder folder,
+    @required String folderRawName,
     @required List<int> uids,
   }) async {
     final parameters = json.encode({
-      "Folder": folder.fullNameRaw,
+      "Folder": folderRawName,
       "AccountID": _accountId,
       "Uids": uids.join(","),
     });
@@ -291,7 +294,7 @@ class MailApi {
     final res = await sendRequest(body);
 
     if (res["Result"] != true) {
-      throw ServerError(getErrMsg(res));
+      throw WebMailApiError(res);
     }
   }
 
@@ -312,7 +315,7 @@ class MailApi {
     final res = await sendRequest(body);
 
     if (res["Result"] != true) {
-      throw ServerError(getErrMsg(res));
+      throw WebMailApiError(res);
     }
   }
 
@@ -334,7 +337,7 @@ class MailApi {
     final res = await sendRequest(body);
 
     if (res["Result"] != true) {
-      throw ServerError(getErrMsg(res));
+      throw WebMailApiError(res);
     }
   }
 }

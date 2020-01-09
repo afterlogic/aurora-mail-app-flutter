@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:aurora_mail/background/alarm/alarm.dart';
+import 'package:aurora_mail/main.dart' as main;
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/settings_methods.dart';
 import 'package:aurora_mail/modules/settings/models/language.dart';
 import 'package:aurora_mail/modules/settings/models/sync_duration.dart';
@@ -13,9 +15,7 @@ import './bloc.dart';
 class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   final _methods = new SettingsMethods();
 
-  static bool _isOffline = true;
-
-  static bool get isOffline => _isOffline;
+  static bool isOffline = true;
 
   @override
   SettingsState get initialState => SettingsEmpty();
@@ -24,6 +24,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   Stream<SettingsState> mapEventToState(
     SettingsEvent event,
   ) async* {
+    if (event is OnResume) await onResume();
     if (event is InitSettings) yield* _initSyncSettings(event);
     if (event is UpdateConnectivity) yield* _updateConnectivity(event);
     if (event is SetFrequency) yield* _setFrequency(event);
@@ -33,11 +34,18 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   }
 
   Stream<SettingsState> _initSyncSettings(InitSettings event) async* {
+    await Alarm.periodic(
+      Duration(seconds: event.user.syncFreqInSeconds),
+      main.onAlarm,
+    );
+
+    final isDarkTheme = await _methods.getDarkTheme();
+
     if (state is SettingsLoaded) {
       yield (state as SettingsLoaded).copyWith(
           syncFrequency: Value(event.user.syncFreqInSeconds),
           syncPeriod: Value(event.user.syncPeriod),
-          darkThemeEnabled: Value(event.user.darkThemeEnabled),
+          darkThemeEnabled: Value(isDarkTheme),
           language: Value(
             Language.fromJson(event.user.language),
           ));
@@ -45,14 +53,14 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       yield SettingsLoaded(
         syncFrequency: event.user.syncFreqInSeconds,
         syncPeriod: event.user.syncPeriod,
-        darkThemeEnabled: event.user.darkThemeEnabled,
+        darkThemeEnabled: isDarkTheme,
         language: Language.fromJson(event.user.language),
       );
     }
   }
 
   Stream<SettingsState> _updateConnectivity(UpdateConnectivity event) async* {
-    _isOffline = event.connection == ConnectivityResult.none;
+    isOffline = event.connection == ConnectivityResult.none;
     if (state is SettingsLoaded) {
       yield (state as SettingsLoaded)
           .copyWith(connection: Value(event.connection));
@@ -64,7 +72,10 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   Stream<SettingsState> _setFrequency(SetFrequency event) async* {
     await _methods.setFrequency(event.freq);
     final freqInSeconds = SyncFreq.freqToDuration(event.freq).inSeconds;
-
+    await Alarm.periodic(
+      Duration(seconds: freqInSeconds),
+      main.onAlarm,
+    );
     if (state is SettingsLoaded) {
       yield (state as SettingsLoaded)
           .copyWith(syncFrequency: Value(freqInSeconds));
@@ -104,5 +115,9 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     } else {
       yield SettingsLoaded(language: event.language);
     }
+  }
+
+  Future onResume() {
+    return _methods.clearNotification();
   }
 }

@@ -73,3 +73,5 @@
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
 
 android/key.properties
+
+lib/modules/auth/screens/login/auth_data.dart

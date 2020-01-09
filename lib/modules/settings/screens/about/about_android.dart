@@ -1,6 +1,4 @@
-import 'dart:io';
-
-import 'package:aurora_mail/generated/i18n.dart';
+import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:package_info/package_info.dart';
@@ -48,7 +46,7 @@ class _AboutAndroidState extends State<AboutAndroid> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(S.of(context).settings_about)),
+      appBar: AppBar(title: Text(i18n(context, "settings_about"))),
       body: loading
           ? Center(child: CircularProgressIndicator())
           : Column(
@@ -58,7 +56,8 @@ class _AboutAndroidState extends State<AboutAndroid> {
                 Text(_appName, style: Theme.of(context).textTheme.title),
                 SizedBox(height: 12.0),
                 Text(
-                  S.of(context).settings_about_app_version(_version),
+                  i18n(context, "settings_about_app_version",
+                      {"version": _version}),
                   style: Theme.of(context)
                       .textTheme
                       .caption
@@ -75,19 +74,20 @@ class _AboutAndroidState extends State<AboutAndroid> {
                 SizedBox(height: 42.0),
                 GestureDetector(
                   child: Text(
-                    S.of(context).settings_about_terms_of_service,
+                    i18n(context, "settings_about_terms_of_service"),
                     style: TextStyle(
                       color: Theme.of(context).accentColor,
                       decoration: TextDecoration.underline,
                       fontSize: 18.0,
                     ),
                   ),
-                  onTap: () => launch("https://afterlogic.com/products/webmail-pro-licensing"),
+                  onTap: () => launch(
+                      "https://afterlogic.com/products/webmail-pro-licensing"),
                 ),
                 SizedBox(height: 22.0),
                 GestureDetector(
                   child: Text(
-                    S.of(context).settings_about_privacy_policy,
+                    i18n(context, "settings_about_privacy_policy"),
                     style: TextStyle(
                       color: Theme.of(context).accentColor,
                       decoration: TextDecoration.underline,

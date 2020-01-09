@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/models/message_info.dart';
-import 'package:flutter/foundation.dart';
 import 'package:moor_flutter/moor_flutter.dart';
 
 import '../app_database.dart';
@@ -14,8 +13,6 @@ part 'mail_dao.g.dart';
 
 @UseDao(tables: [Mail])
 class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
-  // this constructor is required so that the main database can create an instance
-  // of this object.
   MailDao(AppDatabase db) : super(db);
 
 //  Future<List<Message>> getMessages(String folder) {
@@ -46,13 +43,13 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
     try {
       return into(mail).insertAll(newMessages);
     } catch (err) {
-      debugPrint("insertMessages: $err");
+      print("insertMessages: $err");
       return null;
     }
   }
 
   Future<void> updateMessagesFlags(List<MessageInfo> infos) async {
-    return transaction((QueryEngine engine) async {
+    return transaction(() async {
       for (final info in infos) {
         await (update(mail)..where((m) => m.uid.equals(info.uid))).write(
             new MailCompanion(flagsInJson: Value(json.encode(info.flags))));
@@ -60,10 +57,10 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
     });
   }
 
-  Future<int> deleteMessages(List<int> uids, Folder folder) {
+  Future<int> deleteMessages(List<int> uids, String folderRawName) {
     return (delete(mail)
-          ..where((m) => isIn(m.uid, uids))
-          ..where((m) => m.folder.equals(folder.fullNameRaw)))
+          ..where((m) => m.uid.isIn(uids))
+          ..where((m) => m.folder.equals(folderRawName)))
         .go();
   }
 

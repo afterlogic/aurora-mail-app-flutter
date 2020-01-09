@@ -1,9 +1,9 @@
 import 'dart:async';
 
+import 'package:aurora_mail/background/alarm/alarm.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_methods.dart';
 import 'package:aurora_mail/utils/api_utils.dart';
-import 'package:aurora_mail/utils/errors_enum.dart';
 import 'package:bloc/bloc.dart';
 
 import './bloc.dart';
@@ -11,19 +11,13 @@ import './bloc.dart';
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final _methods = new AuthMethods();
 
-  static String _hostName;
+  static String hostName;
 
-  static String get hostName => _hostName;
+  static String get apiUrl => "$hostName/?Api/";
 
-  static String get apiUrl => "$_hostName/?Api/";
+  static Account currentAccount;
 
-  static Account _currentAccount;
-
-  static Account get currentAccount => _currentAccount;
-
-  static User _currentUser;
-
-  static User get currentUser => _currentUser;
+  static User currentUser;
 
   @override
   AuthState get initialState => InitialAuthState();
@@ -33,6 +27,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     AuthEvent event,
   ) async* {
     if (event is InitUserAndAccounts) yield* _initUserAndAccounts(event);
+    if (event is GetLastEmail) yield* _getLastEmail(event);
     if (event is LogIn) yield* _login(event);
     if (event is LogOut) yield* _logout(event);
     if (event is UpdateUser) yield* _setUser(event);
@@ -43,9 +38,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     try {
       if (result != null) {
-        _currentUser = result.user;
-        _hostName = result.user.hostname;
-        _currentAccount = result.accounts[0];
+        currentUser = result.user;
+        hostName = result.user.hostname;
+        currentAccount = result.accounts[0];
         yield InitializedUserAndAccounts(result.user, needsLogin: false);
       } else {
         yield InitializedUserAndAccounts(null, needsLogin: true);
@@ -55,6 +50,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       print("_initUserAndAccounts s: $s");
       yield InitializedUserAndAccounts(null, needsLogin: true);
     }
+  }
+
+  Stream<AuthState> _getLastEmail(GetLastEmail event) async* {
+    final email = await _methods.lastEmail;
+    if (email != null) yield ReceivedLastEmail(email);
   }
 
   Stream<AuthState> _login(LogIn event) async* {
@@ -70,16 +70,16 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       if (user == null) {
         yield NeedsHost();
       } else {
-        _hostName = user.hostname;
-        _currentUser = user;
+        hostName = user.hostname;
+        currentUser = user;
         final accounts = await _methods.getAccounts(user.serverId);
 
         if (accounts.isNotEmpty) {
           assert(accounts[0] != null);
-          _currentAccount = accounts[0];
+          currentAccount = accounts[0];
           yield LoggedIn(user);
         } else {
-          yield AuthError(ErrorForTranslation.UserHasNoAccounts);
+          yield AuthError("error_login_no_accounts");
         }
       }
     } catch (err, s) {
@@ -88,10 +88,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   Stream<AuthState> _logout(LogOut event) async* {
+    await Alarm.cancel();
     try {
-      await _methods.logout(_currentUser);
-      _currentUser = null;
-      _currentAccount = null;
+      await _methods.logout(currentUser);
+      currentUser = null;
+      currentAccount = null;
 
       yield LoggedOut();
     } catch (err, s) {
@@ -100,6 +101,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   Stream<AuthState> _setUser(UpdateUser event) async* {
-    _currentUser = event.updatedUser;
+    currentUser = event.updatedUser;
   }
 }

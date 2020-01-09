@@ -1,9 +1,9 @@
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/mail/mail_table.dart';
-import 'package:aurora_mail/generated/i18n.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
 import 'package:aurora_mail/utils/date_formatting.dart';
+import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -78,11 +78,10 @@ class _MessageItemState extends State<MessageItem> {
             direction: DismissDirection.endToStart,
             confirmDismiss: (_) => ConfirmationDialog.show(
                 context,
-                S.of(context).messages_delete_title,
-                S
-                    .of(context)
-                    .messages_delete_desc_with_subject(widget.message.subject),
-                S.of(context).btn_delete),
+                i18n(context, "messages_delete_title"),
+                i18n(context, "messages_delete_desc_with_subject",
+                    {"subject": widget.message.subject}),
+                i18n(context, "btn_delete")),
             onDismissed: (_) => widget.onDeleteMessage(widget.message),
             background: Container(
               color: Theme.of(context).errorColor,
@@ -98,7 +97,9 @@ class _MessageItemState extends State<MessageItem> {
               ),
             ),
             child: ListTile(
-              onTap: () => widget.onItemSelected(widget.message),
+              onTap: widget.children.isNotEmpty && !_showThreads
+                  ? _toggleThreads
+                  : () => widget.onItemSelected(widget.message),
               key: Key(widget.message.uid.toString()),
               title: Text(widget.message.fromToDisplay, style: textStyle),
               subtitle: Padding(
@@ -112,7 +113,9 @@ class _MessageItemState extends State<MessageItem> {
                         width: 24.0,
                         child: IconButton(
                           padding: EdgeInsets.zero,
-                          icon: Icon(hasUnreadChildren
+                          icon: _showThreads ? Icon(hasUnreadChildren
+                              ? MdiIcons.arrowUpDropCircle
+                              : MdiIcons.arrowUpDropCircleOutline) : Icon(hasUnreadChildren
                               ? MdiIcons.arrowDownDropCircle
                               : MdiIcons.arrowDownDropCircleOutline),
                           onPressed: _toggleThreads,
@@ -125,7 +128,7 @@ class _MessageItemState extends State<MessageItem> {
                         child: Text(
                           widget.message.subject.isNotEmpty
                               ? widget.message.subject
-                              : S.of(context).messages_no_subject,
+                              : i18n(context, "messages_no_subject"),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: textStyle,
@@ -146,9 +149,12 @@ class _MessageItemState extends State<MessageItem> {
                       if (widget.message.hasAttachments) Icon(Icons.attachment),
                       SizedBox(width: 6.0),
                       Text(
-                        DateFormatting.formatDateFromSeconds(
-                          widget.message.timeStampInUTC,
-                          Localizations.localeOf(context).languageCode,
+                        DateFormatting.getShortMessageDate(
+                          timestamp: widget.message.timeStampInUTC,
+                          locale: Localizations.localeOf(context).languageCode,
+                          yesterdayWord: i18n(context, "formatting_yesterday"),
+                          // TODO VO: dehardcode
+                          is24: true,
                         ),
                         style: textStyle,
                       ),
@@ -173,13 +179,12 @@ class _MessageItemState extends State<MessageItem> {
                           height: 24.0,
                           child: BlocBuilder<SettingsBloc, SettingsState>(
                             builder: (_, state) => Star(
-                                value: widget.message.flagsInJson
-                                    .contains("\\flagged"),
-                                enabled: !(state is SettingsLoaded &&
-                                    state.connection ==
-                                        ConnectivityResult.none),
-                                onPressed: _setStarred,
-                              ),
+                              value: widget.message.flagsInJson
+                                  .contains("\\flagged"),
+                              enabled: !(state is SettingsLoaded &&
+                                  state.connection == ConnectivityResult.none),
+                              onPressed: _setStarred,
+                            ),
                           )),
                     ],
                   ),

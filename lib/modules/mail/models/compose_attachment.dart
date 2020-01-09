@@ -29,23 +29,21 @@ class ComposeAttachment {
 
   static ComposeAttachment fromJsonString(Map item) {
     return new ComposeAttachment(
-      fileName: item["FileName"],
-      name: item["Name"],
-      tempName: item["TempName"],
-      mimeType: item["MimeType"],
-      size: item["Size"],
-      hash: item["Hash"],
-      viewUrl: item["Actions"] is Map ? item["Actions"]["view"]["url"] : null,
-      downloadUrl:
-          item["Actions"] is Map ? item["Actions"]["download"]["url"] : null,
-      thumbnailUrl: item["ThumbnailUrl"],
+      fileName: item["FileName"] as String,
+      name: item["Name"] as String,
+      tempName: item["TempName"] as String,
+      mimeType: item["MimeType"] as String,
+      size: item["Size"] as int,
+      hash: item["Hash"] as String,
+      viewUrl: item["Actions"] is Map ? item["Actions"]["view"]["url"] as String : null,
+      downloadUrl: item["Actions"] is Map ? item["Actions"]["download"]["url"] as String : null,
+      thumbnailUrl: item["ThumbnailUrl"] as String,
     );
   }
 
   // used in forward
   // { "temp_name_value": "hash_value" }
-  static List<ComposeAttachment> fromMailAttachment(
-      List<MailAttachment> mailAttachments, Map tempValues) {
+  static List<ComposeAttachment> fromMailAttachment(List<MailAttachment> mailAttachments, Map tempValues) {
     assert(mailAttachments.length == tempValues.keys.length);
 
     return mailAttachments.map((a) {
@@ -53,10 +51,10 @@ class ComposeAttachment {
       return new ComposeAttachment(
         fileName: a.fileName,
         name: a.fileName,
-        tempName: tempValues.keys.toList()[i],
+        tempName: tempValues.keys.toList()[i] as String,
         mimeType: a.mimeType,
         size: a.size,
-        hash: tempValues.values.toList()[i],
+        hash: tempValues.values.toList()[i] as String,
         viewUrl: a.viewUrl,
         downloadUrl: a.downloadUrl,
         thumbnailUrl: a.thumbnailUrl,

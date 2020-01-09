@@ -1,9 +1,9 @@
 import 'dart:convert';
 
+import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
-import 'package:aurora_mail/generated/i18n.dart';
 import 'package:aurora_mail/models/message_info.dart';
-import 'package:aurora_mail/utils/constants.dart';
+import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/widgets.dart' as widgets;
 import 'package:moor_flutter/moor_flutter.dart';
 
@@ -120,22 +120,24 @@ class Mail extends Table {
 
   TextColumn get customInJson => text()();
 
-  static List getToForDisplay(widgets.BuildContext context, String toInJson, String currentUserEmail) {
+  static List getToForDisplay(
+      widgets.BuildContext context, String toInJson, String currentUserEmail) {
     final toDecoded = json.decode(toInJson);
     if (toDecoded == null) return [];
-    final List collection = toDecoded["@Collection"];
+    final collection = toDecoded["@Collection"] as List;
     if (collection == null || collection.isEmpty) return [];
     return collection.map((to) {
       if (to["Email"] == currentUserEmail) {
-        return S.of(context).messages_to_me;
+        return i18n(context, "messages_to_me");
       } else {
-        return to["DisplayName"].isNotEmpty ? to["DisplayName"] : to["Email"];
+        final displayName = to["DisplayName"] as String;
+        return displayName.isNotEmpty ? to["DisplayName"] : to["Email"];
       }
     }).toList();
   }
 
   static List<MessageFlags> getFlags(String flagsInJson) {
-    final flags = json.decode(flagsInJson);
+    final flags = json.decode(flagsInJson) as Iterable;
     final messageFlags = new List<MessageFlags>();
     if (flags.contains("\\seen")) messageFlags.add(MessageFlags.seen);
     if (flags.contains("\\answered")) messageFlags.add(MessageFlags.answered);
@@ -147,12 +149,13 @@ class Mail extends Table {
   static List<Sender> getSenders(String toFrom) {
     final decoded = json.decode(toFrom);
     if (decoded is Map && decoded["@Collection"] is List) {
-      return decoded["@Collection"].map((rawSender) {
+      final senders = decoded["@Collection"].map((rawSender) {
         return new Sender(
-          displayName: rawSender["DisplayName"],
-          email: rawSender["Email"],
+          displayName: rawSender["DisplayName"] as String,
+          email: rawSender["Email"] as String,
         );
-      }).toList();
+      }) as Iterable;
+      return List<Sender>.from(senders);
     } else {
       throw Exception("Could not get sender");
     }
@@ -184,28 +187,28 @@ class Mail extends Table {
 
       final fromToDisplay = displayName is String && displayName.isNotEmpty
           ? displayName
-          : rawMessage["From"]["@Collection"][0]["Email"];
+          : rawMessage["From"]["@Collection"][0]["Email"] as String;
 
       messageInfo.hasBody = true;
       messagesChunk.add(new Message(
         localId: null,
-        uid: rawMessage["Uid"],
+        uid: rawMessage["Uid"] as int,
         userLocalId: userLocalId,
-        uniqueUidInFolder: rawMessage["Uid"].toString() + rawMessage["Folder"],
+        uniqueUidInFolder: rawMessage["Uid"].toString() + rawMessage["Folder"].toString(),
         parentUid: messageInfo.parentUid,
         flagsInJson:
             messageInfo.flags == null ? null : json.encode(messageInfo.flags),
         hasThread: messageInfo.hasThread,
-        messageId: rawMessage["MessageId"],
-        folder: rawMessage["Folder"],
-        subject: rawMessage["Subject"],
-        size: rawMessage["Size"],
-        textSize: rawMessage["TextSize"],
-        truncated: rawMessage["Truncated"],
-        internalTimeStampInUTC: rawMessage["InternalTimeStampInUTC"],
+        messageId: rawMessage["MessageId"] as String,
+        folder: rawMessage["Folder"] as String,
+        subject: rawMessage["Subject"] as String,
+        size: rawMessage["Size"] as int,
+        textSize: rawMessage["TextSize"] as int,
+        truncated: rawMessage["Truncated"] as bool,
+        internalTimeStampInUTC: rawMessage["InternalTimeStampInUTC"] as int,
         receivedOrDateTimeStampInUTC:
-            rawMessage["ReceivedOrDateTimeStampInUTC"],
-        timeStampInUTC: rawMessage["TimeStampInUTC"],
+            rawMessage["ReceivedOrDateTimeStampInUTC"] as int,
+        timeStampInUTC: rawMessage["TimeStampInUTC"] as int,
         toInJson:
             rawMessage["From"] == null ? null : json.encode(rawMessage["To"]),
         fromInJson:
@@ -225,31 +228,31 @@ class Mail extends Table {
 //          isFlagged: rawMessage["IsFlagged"],
 //          isAnswered: rawMessage["IsAnswered"],
 //          isForwarded: rawMessage["IsForwarded"],
-        hasAttachments: rawMessage["HasAttachments"],
-        hasVcardAttachment: rawMessage["HasVcardAttachment"],
-        hasIcalAttachment: rawMessage["HasIcalAttachment"],
-        importance: rawMessage["Importance"],
+        hasAttachments: rawMessage["HasAttachments"] as bool,
+        hasVcardAttachment: rawMessage["HasVcardAttachment"] as bool,
+        hasIcalAttachment: rawMessage["HasIcalAttachment"] as bool,
+        importance: rawMessage["Importance"] as int,
         draftInfoInJson: rawMessage["DraftInfo"] == null
             ? null
             : json.encode(rawMessage["DraftInfo"]),
-        sensitivity: rawMessage["Sensitivity"],
-        downloadAsEmlUrl: rawMessage["DownloadAsEmlUrl"],
-        hash: rawMessage["Hash"],
-        headers: rawMessage["Headers"],
-        inReplyTo: rawMessage["InReplyTo"],
-        references: rawMessage["References"],
+        sensitivity: rawMessage["Sensitivity"] as int,
+        downloadAsEmlUrl: rawMessage["DownloadAsEmlUrl"] as String,
+        hash: rawMessage["Hash"] as String,
+        headers: rawMessage["Headers"] as String,
+        inReplyTo: rawMessage["InReplyTo"] as String,
+        references: rawMessage["References"] as String,
         readingConfirmationAddressee:
-            rawMessage["ReadingConfirmationAddressee"],
+            rawMessage["ReadingConfirmationAddressee"] as String,
 //        htmlRaw: rawMessage["HtmlRaw"],
-        html: rawMessage["Html"],
-        plain: rawMessage["Plain"],
+        html: rawMessage["Html"] as String,
+        plain: rawMessage["PlainRaw"] as String,
 //        plainRaw: rawMessage["PlainRaw"],
-        rtl: rawMessage["Rtl"],
+        rtl: rawMessage["Rtl"] as bool,
         extendInJson: rawMessage["Extend"] == null
             ? null
             : json.encode(rawMessage["Extend"]),
-        safety: rawMessage["Safety"],
-        hasExternals: rawMessage["HasExternals"],
+        safety: rawMessage["Safety"] as bool,
+        hasExternals: rawMessage["HasExternals"] as bool,
         foundedCIDsInJson: rawMessage["FoundedCIDs"] == null
             ? null
             : json.encode(rawMessage["FoundedCIDs"]),

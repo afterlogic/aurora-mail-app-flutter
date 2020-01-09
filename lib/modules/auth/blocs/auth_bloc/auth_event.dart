@@ -11,6 +11,8 @@ abstract class AuthEvent extends Equatable {
 
 class InitUserAndAccounts extends AuthEvent {}
 
+class GetLastEmail extends AuthEvent {}
+
 // usually after settings change
 class UpdateUser extends AuthEvent {
   final User updatedUser;
