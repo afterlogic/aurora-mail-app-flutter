@@ -29,8 +29,6 @@ class _AppState extends State<App> with WidgetsBindingObserver {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     _initApp();
-    //todo VO на ios плагин Connectivity не отрабатывает
-    _settingsBloc.add(UpdateConnectivity(ConnectivityResult.none));
   }
 
   @override
@@ -46,8 +44,14 @@ class _AppState extends State<App> with WidgetsBindingObserver {
 
   void _initApp() async {
     _authBloc.add(InitUserAndAccounts());
-    Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
-      print("VO: result: ${result}");
+
+    final connectivity = new Connectivity();
+
+    connectivity.checkConnectivity().then((res) {
+      _settingsBloc.add(UpdateConnectivity(res));
+    });
+
+    connectivity.onConnectivityChanged.listen((result) {
       _settingsBloc.add(UpdateConnectivity(result));
     });
   }
