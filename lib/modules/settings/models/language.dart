@@ -12,6 +12,7 @@ class Language {
   // for language selection modal
   static List<Language> get availableLanguages {
     final languages = new List<Language>();
+    // null sets system default language
     languages.add(null);
     languages.addAll(supportedLocales.map((locale) {
       final tag = locale.toLanguageTag();

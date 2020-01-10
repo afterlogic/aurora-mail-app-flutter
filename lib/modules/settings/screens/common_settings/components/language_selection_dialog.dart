@@ -32,7 +32,9 @@ class LanguageSelectionDialog extends StatelessWidget {
         title: Text(i18n(context, "settings_language")),
         actions: Language.availableLanguages
             .map((lang) => CupertinoButton(
-                  child: Text(lang.name),
+                  child: Text(lang == null
+                      ? i18n(context, "settings_language_system")
+                      : lang.name),
                   onPressed: () {
                     onItemSelected(lang);
                     Navigator.pop(context);
