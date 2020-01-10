@@ -148,8 +148,7 @@ class MailMethods {
     return Folder.getFolderObjectsFromDb(updatedLocalFolders);
   }
 
-  Future<void> syncFolders(
-      {@required int localId, bool syncSystemFolders = false}) async {
+  Future<void> syncFolders({@required int localId, bool syncSystemFolders = false}) async {
     if (_isOffline || AuthBloc.currentUser == null) return null;
 
     // either localId or syncSystemFolders must be provided

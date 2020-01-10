@@ -5,8 +5,7 @@ class SlideHorizontalRoute extends PageRouteBuilder {
   final int duration;
   final RouteSettings settings;
 
-  SlideHorizontalRoute(
-      {this.settings, this.duration = 150, @required this.page})
+  SlideHorizontalRoute({this.settings, this.duration = 150, @required this.page})
       : super(
             settings: settings,
             transitionDuration: Duration(milliseconds: duration),
@@ -14,8 +13,7 @@ class SlideHorizontalRoute extends PageRouteBuilder {
               BuildContext context,
               Animation<double> animation,
               Animation<double> secondaryAnimation,
-            ) =>
-                page,
+            ) => page,
             transitionsBuilder: (
               BuildContext context,
               Animation<double> animation,

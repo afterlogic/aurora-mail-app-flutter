@@ -34,16 +34,6 @@ class _AuthInputState extends State<AuthInput> {
 
   @override
   Widget build(BuildContext context) {
-    Widget toggleButton = SizedBox(
-      height: 50.0,
-      child: IconButton(
-        icon: Icon(
-          _obscureText ? Icons.visibility : Icons.visibility_off,
-          color: widget.visibilityToggleColor,
-        ),
-        onPressed: () => setState(() => _obscureText = !_obscureText),
-      ),
-    );
 
     if (Platform.isIOS) {
       return CupertinoTextField(
@@ -51,19 +41,24 @@ class _AuthInputState extends State<AuthInput> {
         cursorColor: Theme.of(context).accentColor,
         controller: widget.controller,
         keyboardType: widget.keyboardType,
-        decoration: BoxDecoration(
-            border: Border(bottom: BorderSide(color: Colors.white38))),
         placeholder: widget.label,
         obscureText: widget.isPassword && _obscureText,
         autocorrect: false,
         prefix: Opacity(
           opacity: 0.6,
           child: Padding(
-            padding: const EdgeInsets.fromLTRB(0.0, 12.0, 8.0, 12.0),
+            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 12.0),
             child: Icon(widget.iconForIOS),
           ),
         ),
-        suffix: !widget.isPassword ? null : toggleButton,
+        suffix: widget.isPassword ? CupertinoButton(
+          padding: EdgeInsets.zero,
+          child: Icon(
+            _obscureText ? Icons.visibility : Icons.visibility_off,
+            color: widget.visibilityToggleColor ?? Theme.of(context).iconTheme.color,
+          ),
+          onPressed: () => setState(() => _obscureText = !_obscureText),
+        ) : null,
       );
     } else {
       return TextFormField(
@@ -76,7 +71,16 @@ class _AuthInputState extends State<AuthInput> {
         decoration: InputDecoration(
           labelText: widget.label,
           alignLabelWithHint: true,
-          suffixIcon: !widget.isPassword ? null : toggleButton,
+          suffixIcon: widget.isPassword ? SizedBox(
+            height: 50.0,
+            child: IconButton(
+              icon: Icon(
+                _obscureText ? Icons.visibility : Icons.visibility_off,
+                color: widget.visibilityToggleColor ?? Theme.of(context).iconTheme.color,
+              ),
+              onPressed: () => setState(() => _obscureText = !_obscureText),
+            ),
+          ) : null,
         ),
       );
     }
