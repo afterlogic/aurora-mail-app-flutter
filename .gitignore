@@ -75,3 +75,4 @@
 android/key.properties
 
 lib/modules/auth/screens/login/auth_data.dart
+/android/key.jks

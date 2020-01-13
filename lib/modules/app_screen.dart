@@ -23,7 +23,6 @@ class App extends StatefulWidget {
 class _AppState extends State<App> with WidgetsBindingObserver {
   final _authBloc = new AuthBloc();
   final _settingsBloc = new SettingsBloc();
-  PackageInfo _appInfo;
 
   @override
   void initState() {
@@ -44,9 +43,15 @@ class _AppState extends State<App> with WidgetsBindingObserver {
   }
 
   void _initApp() async {
-    _appInfo = await PackageInfo.fromPlatform();
     _authBloc.add(InitUserAndAccounts());
-    Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+
+    final connectivity = new Connectivity();
+
+    connectivity.checkConnectivity().then((res) {
+      _settingsBloc.add(UpdateConnectivity(res));
+    });
+
+    connectivity.onConnectivityChanged.listen((result) {
       _settingsBloc.add(UpdateConnectivity(result));
     });
   }
@@ -93,7 +98,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
                       ),
                     ],
                     child: MaterialApp(
-                      title: _appInfo.appName,
+                      onGenerateTitle: (context) => i18n(context, "app_title"),
                       onGenerateRoute: AppNavigation.onGenerateRoute,
                       theme: theme ?? AppTheme.light,
                       darkTheme: theme ?? AppTheme.dark,
@@ -111,7 +116,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
                       supportedLocales: supportedLocales,
                       localeResolutionCallback: (locale, locales) {
                         final supportedLocale = locales.firstWhere((l) {
-                          return l.languageCode == locale.languageCode;
+                          return locale != null && l.languageCode == locale.languageCode;
                         }, orElse: () => null);
 
                         return supportedLocale ?? Locale("en", "");

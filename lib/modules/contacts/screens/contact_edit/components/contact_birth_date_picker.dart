@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -25,6 +27,15 @@ class ContactBirthDatePicker extends StatefulWidget {
 
 class _ContactBirthDatePickerState extends State<ContactBirthDatePicker> {
   DateTime _selectedDate = DateTime.now();
+
+  void set selectedDate(DateTime date) {
+    if (date != null && date != _selectedDate) {
+      setState(() => _selectedDate = date);
+      _setDate();
+      widget.onPicked([_selectedDate.day, _selectedDate.month, _selectedDate.year]);
+    }
+  }
+
   final _dateText = TextEditingController();
 
   @override
@@ -37,10 +48,11 @@ class _ContactBirthDatePickerState extends State<ContactBirthDatePicker> {
   }
 
   void _setDate() {
-    final language = json.decode(AuthBloc.currentUser.language)["tag"] as String;
+    final decoded = json.decode(AuthBloc.currentUser.language ?? "{}");
+    final language = decoded["tag"] as String;
     _dateText.text = DateFormat(
       i18n(context, "contacts_birth_date_format"),
-      language,
+      language ?? "en",
     ).format(_selectedDate);
   }
 
@@ -49,16 +61,29 @@ class _ContactBirthDatePickerState extends State<ContactBirthDatePicker> {
 
     final now = DateTime.now();
 
-    final picked = await showDatePicker(
-      context: context,
-      initialDate: _selectedDate,
-      firstDate: DateTime(now.year - 100),
-      lastDate: now,
-    );
-    if (picked != null && picked != _selectedDate) {
-      setState(() => _selectedDate = picked);
-      _setDate();
-      widget.onPicked([_selectedDate.day, _selectedDate.month, _selectedDate.year]);
+    if (Platform.isIOS) {
+      DateTime picked;
+      await showCupertinoModalPopup(
+        context: context,
+        builder: (_) => SizedBox(
+          height: 230.0,
+          child: CupertinoDatePicker(
+            mode: CupertinoDatePickerMode.date,
+            maximumDate: now,
+            minimumDate: DateTime(now.year - 100),
+            initialDateTime: _selectedDate,
+            onDateTimeChanged: (dateTime) => picked = dateTime,
+          ),
+        ),
+      );
+      selectedDate = picked;
+    } else {
+      selectedDate = await showDatePicker(
+        context: context,
+        initialDate: _selectedDate,
+        firstDate: DateTime(now.year - 100),
+        lastDate: now,
+      );
     }
   }
 

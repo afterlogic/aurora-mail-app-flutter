@@ -22,7 +22,6 @@ import 'package:aurora_mail/modules/settings/screens/settings_main/settings_main
 import 'package:aurora_mail/modules/settings/screens/sync_settings/sync_settings_android.dart';
 import 'package:aurora_mail/modules/settings/screens/sync_settings/sync_settings_route.dart';
 import 'package:aurora_mail/shared_ui/fade_route.dart';
-import 'package:aurora_mail/shared_ui/slide_horizontal_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -45,7 +44,7 @@ class AppNavigation {
             settings: RouteSettings(
               name: settings.name,
             ),
-            page: LoginAndroid());
+            builder: (_) => LoginAndroid());
 
       // ================= MAIL =================
 
@@ -54,22 +53,21 @@ class AppNavigation {
             settings: RouteSettings(
               name: settings.name,
             ),
-            page: MessagesListAndroid());
+            builder: (_) => MessagesListAndroid());
         break;
 
       case MessageViewRoute.name:
         final args = settings.arguments as MessageViewScreenArgs;
 
-        return SlideHorizontalRoute(
+        return CupertinoPageRoute(
             settings: RouteSettings(
               name: settings.name,
             ),
-            page: MultiBlocProvider(providers: [
+            builder: (_) => MultiBlocProvider(providers: [
               BlocProvider<MailBloc>.value(value: args.mailBloc),
               BlocProvider<MessagesListBloc>.value(value: args.messagesListBloc),
               BlocProvider<ContactsBloc>.value(value: args.contactsBloc),
             ], child: MessageViewAndroid(args.messages, args.initialPage)));
-
         break;
 
       case ComposeRoute.name:
@@ -101,17 +99,17 @@ class AppNavigation {
             settings: RouteSettings(
               name: settings.name,
             ),
-            page: BlocProvider<ContactsBloc>.value(
+            builder: (_) => BlocProvider<ContactsBloc>.value(
                 value: args.bloc, child: ContactsListAndroid()));
         break;
 
       case ContactViewRoute.name:
         final args = settings.arguments as ContactViewScreenArgs;
-        return SlideHorizontalRoute(
+        return CupertinoPageRoute(
             settings: RouteSettings(
               name: settings.name,
             ),
-            page: BlocProvider<ContactsBloc>.value(
+            builder: (_) => BlocProvider<ContactsBloc>.value(
                 value: args.bloc, child: ContactViewAndroid(args.contact, args.scaffoldState)));
         break;
 
@@ -128,11 +126,11 @@ class AppNavigation {
 
       case GroupViewRoute.name:
         final args = settings.arguments as GroupViewScreenArgs;
-        return SlideHorizontalRoute(
+        return CupertinoPageRoute(
             settings: RouteSettings(
               name: settings.name,
             ),
-            page: BlocProvider<ContactsBloc>.value(
+            builder: (_) => BlocProvider<ContactsBloc>.value(
                 value: args.bloc, child: GroupViewAndroid(args.group)));
         break;
 
@@ -150,42 +148,42 @@ class AppNavigation {
       // ================= SETTINGS =================
 
       case SettingsMainRoute.name:
-        return SlideHorizontalRoute(
+        return CupertinoPageRoute(
             settings: RouteSettings(
               name: settings.name,
             ),
-            page: SettingsMainAndroid());
+            builder: (_) => SettingsMainAndroid());
         break;
 
       case CommonSettingsRoute.name:
-        return SlideHorizontalRoute(
+        return CupertinoPageRoute(
             settings: RouteSettings(
               name: settings.name,
             ),
-            page: CommonSettingsAndroid());
+            builder: (_) => CommonSettingsAndroid());
         break;
 
       case SyncSettingsRoute.name:
-        return SlideHorizontalRoute(
+        return CupertinoPageRoute(
             settings: RouteSettings(
               name: settings.name,
             ),
-            page: SyncSettingsAndroid());
+            builder: (_) => SyncSettingsAndroid());
         break;
 
       case AboutRoute.name:
-        return SlideHorizontalRoute(
+        return CupertinoPageRoute(
             settings: RouteSettings(
               name: settings.name,
             ),
-            page: AboutAndroid());
+            builder: (_) => AboutAndroid());
         break;
 
       // ==================================
 
       default:
-        return SlideHorizontalRoute(
-            page: Scaffold(
+        return CupertinoPageRoute(
+            builder: (_) => Scaffold(
           body: Text('No route defined for ${settings.name}'),
         ));
     }

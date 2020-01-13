@@ -2,71 +2,74 @@ import UIKit
 import Flutter
 import CoreData
 import UserNotifications
+import NotificationCenter
+import BackgroundTasks
+import UserNotifications
+import alarm_service
+
 
 @UIApplicationMain
-@objc class AppDelegate: FlutterAppDelegate,FlutterPlugin {
-    var backgroundTask:UIBackgroundTaskIdentifier?=nil
+class AppDelegate: FlutterAppDelegate{
     
-    func register() {
-        let channel = FlutterMethodChannel(name: "ios_alarm_manager", binaryMessenger:self.messenger())
-         registrar.addMethodCallDelegate(self, channel: channel)
-    }
-    
-  override func application(
-    _ application: UIApplication,
-    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
-  ) -> Bool {
-    register()
-    GeneratedPluginRegistrant.register(with: self)
-    FlutterDownloaderPlugin.setPluginRegistrantCallback(registerPlugins)
-    return super.application(application, didFinishLaunchingWithOptions: launchOptions)
-  }
-    
-    public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-        let method=call.method
-        let arg=call.arguments as? [Any]
-        switch method {
-        case "cancel":
-            //todo
-            break
-        case "periodic":
-            let interval = arg![0] as! NSNumber
-            let callbackId = arg![1] as! NSNumber
-        
-            let callback  = FlutterCallbackCache.lookupCallbackInformation(callbackId.int64Value)!;
+    override func application(
+        _ application: UIApplication,
+        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
+    ) -> Bool {
+        initNotification(application: application)
+        serviceObserver()
       
-            //todo
-            break
-        default:
-            result(FlutterMethodNotImplemented)
-        }
-
-    }
-    
-    func onAlarm(entryPoint:String,libraryPath:String){
-        let engine = FlutterEngine.init(name: "alarm", project: nil,allowHeadlessExecution:false)
-        engine?.run(withEntrypoint: entryPoint, libraryURI: libraryPath)
+        GeneratedPluginRegistrant.register(with: self)
         
-        GeneratedPluginRegistrant.register(with: engine)
+        return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+    }
+
+    func serviceObserver(){
+        let appNotification = CFNotificationName("com.afterlogic.aurora.mail.auroraMail" as CFString)
+        
+        CFNotificationCenterAddObserver(
+            CFNotificationCenterGetDarwinNotifyCenter(),
+            nil,
+            {(
+                center: CFNotificationCenter?,
+                observer: UnsafeMutableRawPointer?,
+                name: CFNotificationName?,
+                object: UnsafeRawPointer?,
+                userInfo: CFDictionary?
+                ) in
+                SwiftAlarmPlugin.instance?.alarm()
+                
+                let serviceNotification = CFNotificationName("com.afterlogic.aurora.mail.auroraMail.service" as CFString)
+                let notificationCenter = CFNotificationCenterGetDarwinNotifyCenter()
+                CFNotificationCenterPostNotification(notificationCenter, serviceNotification, nil, nil, false)
+        },
+            appNotification.rawValue,
+            nil,
+            CFNotificationSuspensionBehavior.deliverImmediately
+        )
     }
     
-}
-
-private func registerPlugins(registry: FlutterPluginRegistry) {
-    //
-    // Integration note:
-    //
-    // In Flutter, in order to work in background isolate, plugins need to register with
-    // a special instance of `FlutterEngine` that serves for background execution only.
-    // Hence, all (and only) plugins that require background execution feature need to
-    // call `register` in this function.
-    //
-    // The default `GeneratedPluginRegistrant` will call `register` of all plugins integrated
-    // in your application. Hence, if you are using `FlutterDownloaderPlugin` along with other
-    // plugins that need UI manipulation, you should register `FlutterDownloaderPlugin` and any
-    // 'background' plugins explicitly like this:
-    //
-    // FlutterDownloaderPlugin.register(with: registry.registrar(forPlugin: "vn.hunghd.flutter_downloader"))
-    //
-    GeneratedPluginRegistrant.register(with: registry)
+    
+    
+    func initNotification(application: UIApplication){
+        if #available(iOS 10.0, *) {
+            UNUserNotificationCenter.current().delegate = self
+            UNUserNotificationCenter.current().requestAuthorization(
+                options: [.badge,.alert,.sound])
+            {(granted, error) in
+                DispatchQueue.main.async {
+                    UIApplication.shared.registerForRemoteNotifications()
+                }
+            }
+        }
+    }
+    
+    override func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        let tokenParts = deviceToken.map { data -> String in
+            return String(format: "%02.2hhx", data)
+        }
+        let token = tokenParts.joined()
+        
+        print("Device Token: \(token)")
+        UserDefaults.standard.set(token,forKey: "deviceToken")
+    }
 }

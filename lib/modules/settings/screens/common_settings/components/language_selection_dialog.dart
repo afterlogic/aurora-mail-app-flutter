@@ -5,6 +5,7 @@ import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+// TODO VO: ios
 class LanguageSelectionDialog extends StatelessWidget {
   final Language selectedItem;
   final Function(Language) onItemSelected;
@@ -31,7 +32,9 @@ class LanguageSelectionDialog extends StatelessWidget {
         title: Text(i18n(context, "settings_language")),
         actions: Language.availableLanguages
             .map((lang) => CupertinoButton(
-                  child: Text(lang.name),
+                  child: Text(lang == null
+                      ? i18n(context, "settings_language_system")
+                      : lang.name),
                   onPressed: () {
                     onItemSelected(lang);
                     Navigator.pop(context);

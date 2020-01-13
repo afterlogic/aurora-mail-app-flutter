@@ -11,7 +11,6 @@ class AboutAndroid extends StatefulWidget {
 
 class _AboutAndroidState extends State<AboutAndroid> {
   bool loading = false;
-  String _appName;
   String _version;
 
   @override
@@ -38,7 +37,6 @@ class _AboutAndroidState extends State<AboutAndroid> {
   Future _initAppInfo() async {
     setState(() => loading = true);
     final packageInfo = await PackageInfo.fromPlatform();
-    _appName = packageInfo.appName;
     _version = packageInfo.version;
     setState(() => loading = false);
   }
@@ -53,7 +51,7 @@ class _AboutAndroidState extends State<AboutAndroid> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                Text(_appName, style: Theme.of(context).textTheme.title),
+                Text(i18n(context, "app_title"), style: Theme.of(context).textTheme.title),
                 SizedBox(height: 12.0),
                 Text(
                   i18n(context, "settings_about_app_version",

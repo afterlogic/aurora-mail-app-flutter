@@ -27,7 +27,7 @@ class ThemeSelectionDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     if (Platform.isIOS) {
       return CupertinoActionSheet(
-        title: Text(i18n(context, "settings_language")),
+        title: Text(i18n(context, "settings_dark_theme")),
         actions: [
           CupertinoButton(
             child: Text(i18n(context, "settings_dark_theme_system")),
