@@ -168,6 +168,7 @@
   "error_compose_no_receivers": "Please provide receivers",
   "error_compose_wait_attachments": "Please wait until attachments finish uploading",
   "error_contacts_save_name_empty": "Please specify the name",
+  "error_contacts_email_empty": "Please specify an email",
   "error_connection": "Could not connect to the server",
   "error_connection_offline": "You're offline",
   "error_input_validation_empty": "This field is required",

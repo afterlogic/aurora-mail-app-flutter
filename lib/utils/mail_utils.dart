@@ -19,11 +19,22 @@ class MailUtils {
   }
 
   static String displayNameFromFriendly(String friendlyName) {
-    final regExp = new RegExp(r'"(.+)" <(.+)>');
+    final regExp = new RegExp(r'"(.+)" <(.*)>');
     if (regExp.hasMatch(friendlyName)) {
       final matches = regExp.allMatches(friendlyName);
       final firstMatch = matches.elementAt(0);
       return firstMatch.group(1);
+    } else {
+      return friendlyName;
+    }
+  }
+
+  static String emailFromFriendly(String friendlyName) {
+    final regExp = new RegExp(r'"(.+)" <(.*)>');
+    if (regExp.hasMatch(friendlyName)) {
+      final matches = regExp.allMatches(friendlyName);
+      final firstMatch = matches.elementAt(0);
+      return firstMatch.group(2);
     } else {
       return friendlyName;
     }

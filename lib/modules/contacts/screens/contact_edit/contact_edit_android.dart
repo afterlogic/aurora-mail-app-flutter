@@ -135,11 +135,11 @@ class _ContactEditAndroidState extends State<ContactEditAndroid> {
   void _onAppBarActionSelected(BuildContext context, ContactEditAppBarAction item) {
     switch(item) {
       case ContactEditAppBarAction.save:
-        if (_fullName.text.isEmpty) {
+        if (_getPrimaryEmailCtrl().text.isEmpty) {
           return showSnack(
             context: context,
             scaffoldState: Scaffold.of(context),
-            msg: "error_contacts_save_name_empty",
+            msg: "error_contacts_email_empty",
           );
         }
         FocusScope.of(context).unfocus();
@@ -212,7 +212,7 @@ class _ContactEditAndroidState extends State<ContactEditAndroid> {
         eTag: widget.contact?.eTag ?? "",
         auto: widget.contact?.auto ?? null,
         frequency: widget.contact?.frequency ?? 0,
-        dateModified: widget.contact?.dateModified ?? null,
+        dateModified: widget.contact?.dateModified ?? DateTime.now().toIso8601String(),
         davContactsUid: widget.contact?.davContactsUid ?? null,
         davContactsVCardUid: widget.contact?.davContactsVCardUid ?? null,
         groupUUIDs: _selectedGroupsUuids,
