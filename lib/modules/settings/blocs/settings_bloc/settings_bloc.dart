@@ -30,6 +30,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     if (event is SetFrequency) yield* _setFrequency(event);
     if (event is SetPeriod) yield* _setPeriod(event);
     if (event is SetDarkTheme) yield* _setDarkTheme(event);
+    if (event is SetTimeFormat) yield* _setTimeFormat(event);
     if (event is SetLanguage) yield* _setLanguage(event);
   }
 
@@ -39,13 +40,14 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       main.onAlarm,
     );
 
-    final isDarkTheme = await _methods.getDarkTheme();
+    final appSettings = await _methods.getSettingsSharedPrefs();
 
     if (state is SettingsLoaded) {
       yield (state as SettingsLoaded).copyWith(
           syncFrequency: Value(event.user.syncFreqInSeconds),
           syncPeriod: Value(event.user.syncPeriod),
-          darkThemeEnabled: Value(isDarkTheme),
+          darkThemeEnabled: Value(appSettings.isDarkTheme),
+          is24: Value(appSettings.is24),
           language: Value(
             Language.fromJson(event.user.language),
           ));
@@ -53,7 +55,8 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       yield SettingsLoaded(
         syncFrequency: event.user.syncFreqInSeconds,
         syncPeriod: event.user.syncPeriod,
-        darkThemeEnabled: isDarkTheme,
+        darkThemeEnabled: appSettings.isDarkTheme,
+        is24: appSettings.is24,
         language: Language.fromJson(event.user.language),
       );
     }
@@ -100,10 +103,20 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     await _methods.setDarkTheme(event.darkThemeEnabled);
 
     if (state is SettingsLoaded) {
-      yield (state as SettingsLoaded)
-          .copyWith(darkThemeEnabled: Value(event.darkThemeEnabled));
+      yield (state as SettingsLoaded).copyWith(darkThemeEnabled: Value(event.darkThemeEnabled));
     } else {
       yield SettingsLoaded(darkThemeEnabled: event.darkThemeEnabled);
+    }
+  }
+
+  Stream<SettingsState> _setTimeFormat(SetTimeFormat event) async* {
+    await _methods.setTimeFormat(event.is24);
+
+    print("VO: event.is24: ${event.is24}");
+    if (state is SettingsLoaded) {
+      yield (state as SettingsLoaded).copyWith(is24: Value(event.is24));
+    } else {
+      yield SettingsLoaded(is24: event.is24);
     }
   }
 

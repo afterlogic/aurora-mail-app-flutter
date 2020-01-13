@@ -15,7 +15,7 @@ abstract class SettingsEvent extends Equatable {
 class InitSettings extends SettingsEvent {
   final User user;
 
-  InitSettings(this.user);
+  const InitSettings(this.user);
 
   @override
   List<Object> get props => [user];
@@ -24,7 +24,7 @@ class InitSettings extends SettingsEvent {
 class SetFrequency extends SettingsEvent {
   final Freq freq;
 
-  SetFrequency(this.freq);
+  const SetFrequency(this.freq);
 
   @override
   List<Object> get props => [freq];
@@ -33,7 +33,7 @@ class SetFrequency extends SettingsEvent {
 class SetPeriod extends SettingsEvent {
   final Period period;
 
-  SetPeriod(this.period);
+  const SetPeriod(this.period);
 
   @override
   List<Object> get props => [period];
@@ -42,16 +42,25 @@ class SetPeriod extends SettingsEvent {
 class SetDarkTheme extends SettingsEvent {
   final bool darkThemeEnabled;
 
-  SetDarkTheme(this.darkThemeEnabled);
+  const SetDarkTheme(this.darkThemeEnabled);
 
   @override
   List<Object> get props => [darkThemeEnabled];
 }
 
+class SetTimeFormat extends SettingsEvent {
+  final bool is24;
+
+  const SetTimeFormat(this.is24);
+
+  @override
+  List<Object> get props => [is24];
+}
+
 class SetLanguage extends SettingsEvent {
   final Language language;
 
-  SetLanguage(this.language);
+  const SetLanguage(this.language);
 
   @override
   List<Object> get props => [language];
@@ -60,7 +69,7 @@ class SetLanguage extends SettingsEvent {
 class UpdateConnectivity extends SettingsEvent {
   final ConnectivityResult connection;
 
-  UpdateConnectivity(this.connection);
+  const UpdateConnectivity(this.connection);
 
   @override
   List<Object> get props => [connection];

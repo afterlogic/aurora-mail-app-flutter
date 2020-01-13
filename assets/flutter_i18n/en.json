@@ -128,6 +128,7 @@
   "contacts_group_delete_desc_with_name": "Are you sure you want to delete {group}? The contacts of this group will not be deleted.",
   "settings": "Settings",
   "settings_common": "Common",
+  "settings_24_time_format": "24 hour format",
   "settings_language": "Language",
   "settings_language_system": "System language",
   "settings_dark_theme": "App theme",

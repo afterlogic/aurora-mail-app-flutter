@@ -14,6 +14,7 @@ import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/compose_route.dart';
 import 'package:aurora_mail/modules/mail/screens/message_view/components/message_view_app_bar.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
+import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
 import 'package:aurora_mail/utils/date_formatting.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
@@ -211,13 +212,14 @@ class _MessageViewAndroidState extends State<MessageViewAndroid>
                       message.fromToDisplay,
                       style: Theme.of(context).textTheme.subhead,
                     ),
-                    Text(DateFormatting.getDetailedMessageDate(
-                      timestamp: message.timeStampInUTC,
-                      locale: Localizations.localeOf(context).languageCode,
-                      yesterdayWord: i18n(context, "formatting_yesterday"),
-                      // TODO VO: dehardcode
-                      is24: true,
-                    )),
+                    BlocBuilder<SettingsBloc, SettingsState>(
+                      builder: (_, state) => Text(DateFormatting.getDetailedMessageDate(
+                        timestamp: message.timeStampInUTC,
+                        locale: Localizations.localeOf(context).languageCode,
+                        yesterdayWord: i18n(context, "formatting_yesterday"),
+                        is24: (state as SettingsLoaded).is24 ?? true,
+                      )),
+                    ),
                   ],
                 ),
                 SizedBox(height: 10.0),

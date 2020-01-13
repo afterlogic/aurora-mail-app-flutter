@@ -33,6 +33,17 @@ class _CommonSettingsAndroidState extends State<CommonSettingsAndroid> {
           if (state is SettingsLoaded) {
             return ListView(
               children: <Widget>[
+                SwitchListTile.adaptive(
+                  title: Row(
+                    children: <Widget>[
+                      Icon(Icons.access_time, color: Theme.of(context).disabledColor,),
+                      SizedBox(width: 30.0),
+                      Text(i18n(context, "settings_24_time_format")),
+                    ],
+                  ),
+                  activeColor: Theme.of(context).primaryColor,
+                  value: state.is24,
+                  onChanged: (val) => bloc.add(SetTimeFormat(val))),
                 ListTile(
                   leading: Icon(Icons.color_lens),
                   title: Text(i18n(context, "settings_dark_theme")),

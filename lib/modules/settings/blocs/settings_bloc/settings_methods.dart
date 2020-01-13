@@ -39,7 +39,13 @@ class SettingsMethods {
     return _local.setIsDarkTheme(darkThemeEnabled);
   }
 
-  Future<bool> getDarkTheme() => _local.getIsDarkTheme();
+  Future<void> setTimeFormat(bool is24) {
+    return _local.setTimeFormat(is24);
+  }
+
+  Future<AppSettingsSharedPrefs> getSettingsSharedPrefs() {
+    return _local.getSettingsSharedPrefs();
+  }
 
   Future<User> setLanguage(Language language) async {
     final localId = AuthBloc.currentUser.localId;

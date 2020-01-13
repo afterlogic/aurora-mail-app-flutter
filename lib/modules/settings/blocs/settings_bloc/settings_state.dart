@@ -16,6 +16,7 @@ class SettingsLoaded extends SettingsState {
   final int syncFrequency;
   final String syncPeriod;
   final bool darkThemeEnabled;
+  final bool is24;
   final Language language;
   final ConnectivityResult connection;
 
@@ -23,6 +24,7 @@ class SettingsLoaded extends SettingsState {
     this.syncFrequency,
     this.syncPeriod,
     this.darkThemeEnabled,
+    this.is24,
     this.language,
     this.connection = ConnectivityResult.none,
   });
@@ -31,16 +33,15 @@ class SettingsLoaded extends SettingsState {
     Value<int> syncFrequency,
     Value<String> syncPeriod,
     Value<bool> darkThemeEnabled,
+    Value<bool> is24,
     Value<Language> language,
     Value<ConnectivityResult> connection,
   }) {
     return new SettingsLoaded(
-      syncFrequency:
-          syncFrequency != null ? syncFrequency.value : this.syncFrequency,
+      syncFrequency: syncFrequency != null ? syncFrequency.value : this.syncFrequency,
       syncPeriod: syncPeriod != null ? syncPeriod.value : this.syncPeriod,
-      darkThemeEnabled: darkThemeEnabled != null
-          ? darkThemeEnabled.value
-          : this.darkThemeEnabled,
+      darkThemeEnabled: darkThemeEnabled != null ? darkThemeEnabled.value : this.darkThemeEnabled,
+      is24: is24 != null ? is24.value: this.is24,
       language: language != null ? language.value : this.language,
       connection: connection != null ? connection.value : this.connection,
     );
@@ -51,6 +52,7 @@ class SettingsLoaded extends SettingsState {
         syncFrequency,
         syncPeriod,
         darkThemeEnabled,
+        is24,
         language,
         connection,
       ];

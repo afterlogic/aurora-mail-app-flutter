@@ -90,15 +90,17 @@ class _AppState extends State<App> with WidgetsBindingObserver {
 
                   return MultiBlocProvider(
                     providers: [
-                      BlocProvider<AuthBloc>.value(
-                        value: _authBloc,
-                      ),
-                      BlocProvider<SettingsBloc>.value(
-                        value: _settingsBloc,
-                      ),
+                      BlocProvider<AuthBloc>.value(value: _authBloc),
+                      BlocProvider<SettingsBloc>.value(value: _settingsBloc),
                     ],
                     child: MaterialApp(
-                      onGenerateTitle: (context) => i18n(context, "app_title"),
+                      onGenerateTitle: (context) {
+                        final is24 = MediaQuery.of(context).alwaysUse24HourFormat;
+                        if (settingsState.is24 == null) {
+                          _settingsBloc.add(SetTimeFormat(is24));
+                        }
+                        return i18n(context, "app_title");
+                      },
                       onGenerateRoute: AppNavigation.onGenerateRoute,
                       theme: theme ?? AppTheme.light,
                       darkTheme: theme ?? AppTheme.dark,
