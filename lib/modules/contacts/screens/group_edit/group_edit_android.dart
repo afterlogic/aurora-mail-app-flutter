@@ -102,6 +102,7 @@ class _GroupEditAndroidState extends State<GroupEditAndroid> {
           SwitchListTile.adaptive(
             title: Text(i18n(context, "contacts_group_edit_is_organization")),
             value: _isOrg,
+            activeColor: Theme.of(context).primaryColor,
             onChanged: (v) => setState(() => _isOrg = v),
           ),
           if (_isOrg)
