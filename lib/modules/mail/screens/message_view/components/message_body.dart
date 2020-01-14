@@ -103,7 +103,7 @@ class _MessageBodyState extends State<MessageBody> {
             ignoring: true,
             child: AnimatedOpacity(
               opacity: _pageLoaded && _htmlData != null ? 0.0 : 1.0,
-              duration: Duration(milliseconds: 200),
+              duration: Duration(milliseconds: 100),
               child:
                   Container(color: Theme.of(context).scaffoldBackgroundColor),
 //            child: Container(color: Colors.red),
@@ -122,8 +122,12 @@ class _MessageBodyState extends State<MessageBody> {
         javascriptMode: JavascriptMode.unrestricted,
         onWebViewCreated: (WebViewController c) => _controller = c,
         navigationDelegate: (NavigationRequest request) {
-          launch(request.url);
-          return NavigationDecision.prevent;
+          if (request.url != _getHtmlUri(_htmlData)) {
+            launch(request.url);
+            return NavigationDecision.prevent;
+          } else {
+            return NavigationDecision.navigate;
+          }
         },
         onPageFinished: (_) async {
           final height = await _controller

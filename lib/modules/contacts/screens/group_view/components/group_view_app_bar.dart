@@ -15,12 +15,12 @@ class GroupViewAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       actions: <Widget>[
-        IconButton(
-          icon: Icon(Icons.mail_outline),
-          tooltip: i18n(context, "contacts_group_view_app_bar_send_message"),
-//          onPressed: () => onActionSelected(ContactViewAppBarAction.sendMessage),
-          onPressed: null,
-        ),
+//        IconButton(
+//          icon: Icon(Icons.mail_outline),
+//          tooltip: i18n(context, "contacts_group_view_app_bar_send_message"),
+////          onPressed: () => onActionSelected(ContactViewAppBarAction.sendMessage),
+//          onPressed: null,
+//        ),
         IconButton(
           icon: Icon(Icons.delete_outline),
           tooltip: i18n(context, "contacts_group_view_app_bar_delete"),

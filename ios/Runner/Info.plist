@@ -10,6 +10,10 @@
 	<string>LaunchScreen</string>
 	<key>NSAppleMusicUsageDescription</key>
 	<string>Upload media files</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>Arrange events and send as emails</string>
+	<key>NSMotionUsageDescription</key>
+	<string>Used statically by permission_handler library for Flutter, unused in the app</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleVersion</key>
@@ -22,6 +26,11 @@
 	</array>
 	<key>io.flutter.embedded_views_preview</key>
 	<true/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>UIMainStoryboardFile</key>
@@ -49,23 +58,19 @@
 	<false/>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>NSContactsUsageDescription</key>
+	<string>Access contacts for sending emails to</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Used statically by permission_handler library for Flutter, unused in the app</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Upload photos and videos</string>
-	<key>NSContactsUsageDescription</key>
-	<string>Access contacts for sending emails to</string>
-	<key>NSCalendarsUsageDescription</key>
-	<string>Arrange events and send as emails</string>
-	<key>NSMotionUsageDescription</key>
-	<string>Used statically by permission_handler library for Flutter, unused in the app</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
-	<string>Used statically by permission_handler library for Flutter, unused in the app</string>
-	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Used statically by permission_handler library for Flutter, unused in the app</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Used statically by permission_handler library for Flutter, unused in the app</string>
