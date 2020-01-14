@@ -35,3 +35,9 @@ class EmailToContacts implements ComposeAction {
 
   const EmailToContacts(this.contacts);
 }
+
+class SendContacts implements ComposeAction {
+  final List<Contact> contacts;
+
+  const SendContacts(this.contacts);
+}

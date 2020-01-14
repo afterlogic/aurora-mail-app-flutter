@@ -12,8 +12,7 @@ class ComposeAttachment {
   final String viewUrl;
   final String downloadUrl;
   final String thumbnailUrl;
-  String
-      guid; // to replace temp attachment with progress with the one from server
+  String guid; // to replace temp attachment with progress with the one from server
 
   ComposeAttachment({
     @required this.fileName,
@@ -27,7 +26,7 @@ class ComposeAttachment {
     @required this.thumbnailUrl,
   });
 
-  static ComposeAttachment fromJsonString(Map item) {
+  factory ComposeAttachment.fromNetwork(Map item) {
     return new ComposeAttachment(
       fileName: item["FileName"] as String,
       name: item["Name"] as String,
@@ -61,4 +60,6 @@ class ComposeAttachment {
       );
     }).toList();
   }
+
+
 }

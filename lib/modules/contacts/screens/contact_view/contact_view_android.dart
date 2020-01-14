@@ -40,7 +40,15 @@ class _ContactViewAndroidState extends State<ContactViewAndroid> {
     final bloc = BlocProvider.of<ContactsBloc>(context);
     switch (item) {
       case ContactViewAppBarAction.attach:
-      // TODO: Handle this case.
+        Navigator.pushNamed(
+          context,
+          ComposeRoute.name,
+          arguments: ComposeScreenArgs(
+            mailBloc: BlocProvider.of<MailBloc>(context),
+            contactsBloc: BlocProvider.of<ContactsBloc>(context),
+            composeAction: SendContacts([widget.contact]),
+          ),
+        );
         break;
       case ContactViewAppBarAction.sendMessage:
         Navigator.pushNamed(

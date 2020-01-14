@@ -5,6 +5,7 @@ import 'dart:typed_data';
 import 'package:aurora_mail/models/api_body.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
+import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 import 'package:aurora_mail/modules/mail/models/compose_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/temp_attachment_upload.dart';
@@ -214,7 +215,7 @@ class MailApi {
       final res = json.decode(result.response);
       if (res["Result"] is Map) {
         final attachment = res["Result"]["Attachment"];
-        final composeAttachment = ComposeAttachment.fromJsonString(attachment as Map);
+        final composeAttachment = ComposeAttachment.fromNetwork(attachment as Map);
         assert(tempAttachment != null && tempAttachment.guid is String);
         composeAttachment.guid = tempAttachment.guid;
         onUploadEnd(composeAttachment);
@@ -287,6 +288,26 @@ class MailApi {
 
     if (res["Result"] is Map) {
       return ComposeAttachment.fromMailAttachment(attachments, res["Result"] as Map);
+    } else {
+      throw WebMailApiError(res);
+    }
+  }
+
+  Future<ComposeAttachment> saveContactAsTempFile(Contact contact) async {
+    final parameters = json.encode({
+      "UUID": contact.uuid,
+      "FileName": "contact-${contact.viewEmail}.vcf",
+    });
+
+    final body = new ApiBody(
+        module: "Contacts",
+        method: "SaveContactAsTempFile",
+        parameters: parameters);
+
+    final res = await sendRequest(body);
+
+    if (res["Result"] is Map) {
+      return ComposeAttachment.fromNetwork(res["Result"] as Map);
     } else {
       throw WebMailApiError(res);
     }

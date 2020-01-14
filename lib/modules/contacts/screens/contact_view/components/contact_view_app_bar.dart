@@ -46,12 +46,11 @@ class ContactViewAppBar extends StatelessWidget implements PreferredSizeWidget {
             tooltip: i18n(context, "contacts_view_app_bar_unshare"),
             onPressed: () => onActionSelected(ContactViewAppBarAction.unshare),
           ),
-//        IconButton(
-//          icon: Icon(Icons.attach_file),
-//          tooltip: i18n(context, "contacts_view_app_bar_attach"),
-////          onPressed: () => onActionSelected(ContactViewAppBarAction.attach),
-//          onPressed: null,
-//        ),
+        IconButton(
+          icon: Icon(Icons.attach_file),
+          tooltip: i18n(context, "contacts_view_app_bar_attach"),
+          onPressed: () => onActionSelected(ContactViewAppBarAction.attach),
+        ),
         IconButton(
           icon: Icon(Icons.mail_outline),
           tooltip: i18n(context, "contacts_view_app_bar_send_message"),

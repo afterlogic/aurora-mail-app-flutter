@@ -2,6 +2,7 @@ import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/folders/folders_dao.dart';
 import 'package:aurora_mail/database/folders/folders_table.dart';
 import 'package:aurora_mail/models/folder.dart';
+import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 import 'package:aurora_mail/modules/mail/models/compose_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/temp_attachment_upload.dart';
@@ -85,5 +86,10 @@ class ComposeMethods {
     final filteredAttachments = attachments.where((a) => !a.isInline).toList();
     if (filteredAttachments.isEmpty) return new List<ComposeAttachment>();
     return _mailApi.saveAttachmentsAsTempFiles(filteredAttachments);
+  }
+
+  Future<List<ComposeAttachment>> saveContactsAsTempFiles(List<Contact> contacts) {
+    final futures = contacts.map((c) => _mailApi.saveContactAsTempFile(c));
+    return Future.wait(futures);
   }
 }

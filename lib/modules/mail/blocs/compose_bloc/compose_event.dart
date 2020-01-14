@@ -1,3 +1,4 @@
+import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 import 'package:aurora_mail/modules/mail/models/compose_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/temp_attachment_upload.dart';
@@ -98,4 +99,13 @@ class GetComposeAttachments extends ComposeEvent {
 
   @override
   List<Object> get props => [attachments];
+}
+
+class GetContactsAsAttachments extends ComposeEvent {
+  final List<Contact> contacts;
+
+  GetContactsAsAttachments(this.contacts);
+
+  @override
+  List<Object> get props => [contacts];
 }

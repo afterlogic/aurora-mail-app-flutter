@@ -43,6 +43,8 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
 
   bool _showBCC = false;
 
+  // if compose was opened from screen which does not have MessagesListRoute in stack, just pop
+  bool _returnToMessagesList = true;
   int _currentDraftUid;
   Message _message;
 
@@ -83,6 +85,7 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
     if (action is Reply) _initReply(action);
     if (action is ReplyToAll) _initReplyAll(action);
     if (action is EmailToContacts) _initFromContacts(action);
+    if (action is SendContacts) _initContactsAsAttachments(action);
   }
 
   void _initFromDrafts(OpenFromDrafts action) async {
@@ -126,8 +129,14 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
   }
 
   void _initFromContacts(EmailToContacts action) {
+    _returnToMessagesList = false;
     final toEmails = action.contacts.map((c) => MailUtils.getFriendlyName(c));
     _toEmails.addAll(toEmails);
+  }
+
+  void _initContactsAsAttachments(SendContacts action) {
+    _returnToMessagesList = false;
+    _bloc.add(GetContactsAsAttachments(action.contacts));
   }
 
   void _initSaveToDraftsTimer() async {
@@ -263,7 +272,11 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
     BlocProvider.of<MailBloc>(context).add(CheckFoldersMessagesChanges());
     // to update frequency
     BlocProvider.of<ContactsBloc>(context).add(GetContacts());
-    Navigator.popUntil(context, ModalRoute.withName(MessagesListRoute.name));
+    if (_returnToMessagesList) {
+      Navigator.popUntil(context, ModalRoute.withName(MessagesListRoute.name));
+    } else {
+      Navigator.pop(context);
+    }
   }
 
   // to provide mail bloc
