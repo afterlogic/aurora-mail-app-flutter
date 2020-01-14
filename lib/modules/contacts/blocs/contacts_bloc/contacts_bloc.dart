@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/events/contacts_groups_event.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/events/contacts_storages_event.dart';
@@ -72,7 +73,8 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
   Stream<ContactsState> _getContacts(GetContacts event) async* {
     _storagesSub = _repo.watchContactsStorages().listen((storages) {
       if (state.storages == null) {
-        add(SelectStorageGroup());
+        final storage = storages.firstWhere((s) => s.name == StorageNames.personal, orElse: null);
+        add(SelectStorageGroup(storage: storage));
       }
 
       add(ReceivedStorages(storages));
