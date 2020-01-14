@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:aurora_mail/modules/mail/repository/mail_api.dart';
 import 'package:flutter/widgets.dart';
@@ -10,7 +12,14 @@ class MessageViewMethods {
     @required Function(String) onDownloadEnd,
     @required Function() onDownloadStart,
   }) {
-    _mailApi.downloadAttachment(attachment,
-        onDownloadEnd: onDownloadEnd, onDownloadStart: onDownloadStart);
+    if (Platform.isIOS) {
+      _mailApi.shareAttachment(attachment);
+    } else {
+      _mailApi.downloadAttachment(
+        attachment,
+        onDownloadEnd: onDownloadEnd,
+        onDownloadStart: onDownloadStart,
+      );
+    }
   }
 }

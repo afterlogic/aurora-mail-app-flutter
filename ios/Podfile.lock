@@ -5,6 +5,8 @@ PODS:
   - connectivity (0.0.1):
     - Flutter
     - Reachability
+  - esys_flutter_share (0.0.1):
+    - Flutter
   - file_picker (0.0.1):
     - Flutter
   - Flutter (1.0.0)
@@ -24,7 +26,7 @@ PODS:
     - Flutter
   - path_provider (0.0.1):
     - Flutter
-  - permission_handler (4.0.0):
+  - permission_handler (4.1.0):
     - Flutter
   - Reachability (3.2)
   - shared_preferences (0.0.1):
@@ -48,6 +50,7 @@ PODS:
 DEPENDENCIES:
   - alarm_service (from `.symlinks/plugins/alarm_service/ios`)
   - connectivity (from `.symlinks/plugins/connectivity/ios`)
+  - esys_flutter_share (from `.symlinks/plugins/esys_flutter_share/ios`)
   - file_picker (from `.symlinks/plugins/file_picker/ios`)
   - Flutter (from `.symlinks/flutter/ios-release`)
   - flutter_downloader (from `.symlinks/plugins/flutter_downloader/ios`)
@@ -77,6 +80,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/alarm_service/ios"
   connectivity:
     :path: ".symlinks/plugins/connectivity/ios"
+  esys_flutter_share:
+    :path: ".symlinks/plugins/esys_flutter_share/ios"
   file_picker:
     :path: ".symlinks/plugins/file_picker/ios"
   Flutter:
@@ -116,6 +121,7 @@ SPEC CHECKSUMS:
   Alamofire: 85e8a02c69d6020a0d734f6054870d7ecb75cf18
   alarm_service: 7962c3a75cb3008f1af984351c225f6f1e0e3dfb
   connectivity: 6e94255659cc86dcbef1d452ad3e0491bb1b3e75
+  esys_flutter_share: 403498dab005b36ce1f8d7aff377e81f0621b0b4
   file_picker: 408623be2125b79a4539cf703be3d4b3abe5e245
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
   flutter_downloader: 058b9c41564a90500f67f3e432e3524613a7fd83
@@ -125,7 +131,7 @@ SPEC CHECKSUMS:
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   package_info: 48b108e75b8802c2d5e126f208ef540561c98aef
   path_provider: fb74bd0465e96b594bb3b5088ee4a4e7bb1f2a9d
-  permission_handler: 0fb88b8a3c23e31e5de45b8f1bb8b7de28cf8941
+  permission_handler: b41310bab60fffbf8b5732cd9b4f565671d14762
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   shared_preferences: 430726339841afefe5142b9c1f50cb6bd7793e01
   shared_preferences_macos: f3f29b71ccbb56bf40c9dd6396c9acf15e214087

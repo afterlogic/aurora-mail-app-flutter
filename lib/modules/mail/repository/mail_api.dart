@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:aurora_mail/models/api_body.dart';
 import 'package:aurora_mail/models/folder.dart';
@@ -9,6 +10,8 @@ import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/temp_attachment_upload.dart';
 import 'package:aurora_mail/utils/api_utils.dart';
 import 'package:aurora_mail/utils/file_utils.dart';
+import 'package:esys_flutter_share/esys_flutter_share.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_uploader/flutter_uploader.dart';
@@ -254,6 +257,17 @@ class MailApi {
           onDownloadEnd("${downloadsDirectory.path}/${attachment.fileName}"),
       onError: () => onDownloadEnd(null),
     );
+  }
+
+  Future<void> shareAttachment(MailAttachment attachment) async {
+    final request = await HttpClient().getUrl(Uri.parse(AuthBloc.hostName + attachment.downloadUrl));
+
+    request.headers.add('Authorization', 'Bearer ${AuthBloc.currentUser.token}');
+
+    final response = await request.close();
+    Uint8List bytes = await consolidateHttpClientResponseBytes(response);
+
+    await Share.file(attachment.fileName, attachment.fileName, bytes, 'image/jpg');
   }
 
   Future<List<ComposeAttachment>> saveAttachmentsAsTempFiles(
