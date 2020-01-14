@@ -21,6 +21,7 @@ class _ComposeBodyState extends State<ComposeBody> {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      controller: widget.textCtrl,
       maxLines: null,
       minLines: 8,
       focusNode: _focusNode,

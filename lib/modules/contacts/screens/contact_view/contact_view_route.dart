@@ -1,5 +1,6 @@
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
+import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:flutter/material.dart';
 
 class ContactViewRoute {
@@ -8,8 +9,14 @@ class ContactViewRoute {
 
 class ContactViewScreenArgs {
   final Contact contact;
-  final ContactsBloc bloc;
+  final ContactsBloc contactsBloc;
+  final MailBloc mailBloc;
   final ScaffoldState scaffoldState;
 
-  const ContactViewScreenArgs(this.contact, this.bloc, this.scaffoldState);
+  const ContactViewScreenArgs({
+    @required this.contact,
+    @required this.mailBloc,
+    @required this.contactsBloc,
+    @required this.scaffoldState,
+  });
 }

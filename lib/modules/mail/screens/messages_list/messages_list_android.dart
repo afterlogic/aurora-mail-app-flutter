@@ -9,7 +9,7 @@ import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/screens/contacts_list/contacts_list_route.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/bloc.dart';
-import 'package:aurora_mail/modules/mail/models/compose_types.dart';
+import 'package:aurora_mail/modules/mail/models/compose_actions.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/compose_route.dart';
 import 'package:aurora_mail/modules/mail/screens/message_view/message_view_route.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/main_drawer.dart';
@@ -83,7 +83,7 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
         Navigator.pushReplacementNamed(
           context,
           ContactsListRoute.name,
-          arguments: ContactsListScreenArgs(_contactsBloc),
+          arguments: ContactsListScreenArgs(mailBloc: _mailBloc, contactsBloc: _contactsBloc),
         );
         break;
     }
@@ -103,9 +103,7 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
         arguments: ComposeScreenArgs(
           mailBloc: _mailBloc,
           contactsBloc: _contactsBloc,
-          message: item,
-          draftUid: item.uid,
-          composeType: ComposeType.fromDrafts,
+          composeAction: OpenFromDrafts(item, item.uid),
         ),
       );
     } else {
@@ -227,7 +225,6 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
               arguments: ComposeScreenArgs(
                 mailBloc: _mailBloc,
                 contactsBloc: _contactsBloc,
-                composeType: ComposeType.none,
               )),
         ),
       ),

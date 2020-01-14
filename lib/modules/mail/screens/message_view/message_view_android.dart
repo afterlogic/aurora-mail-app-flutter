@@ -9,7 +9,7 @@ import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/message_view_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/bloc.dart';
-import 'package:aurora_mail/modules/mail/models/compose_types.dart';
+import 'package:aurora_mail/modules/mail/models/compose_actions.dart';
 import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/compose_route.dart';
 import 'package:aurora_mail/modules/mail/screens/message_view/components/message_view_app_bar.dart';
@@ -89,8 +89,7 @@ class _MessageViewAndroidState extends State<MessageViewAndroid>
         final args = new ComposeScreenArgs(
           mailBloc: mailBloc,
           contactsBloc: contactsBloc,
-          message: msg,
-          composeType: ComposeType.reply,
+          composeAction: Reply(msg),
         );
         Navigator.pushNamed(context, ComposeRoute.name, arguments: args);
         break;
@@ -98,8 +97,7 @@ class _MessageViewAndroidState extends State<MessageViewAndroid>
         final args = new ComposeScreenArgs(
           mailBloc: mailBloc,
           contactsBloc: contactsBloc,
-          message: msg,
-          composeType: ComposeType.replyAll,
+          composeAction: ReplyToAll(msg),
         );
         Navigator.pushNamed(context, ComposeRoute.name, arguments: args);
         break;
@@ -107,8 +105,7 @@ class _MessageViewAndroidState extends State<MessageViewAndroid>
         final args = new ComposeScreenArgs(
           mailBloc: mailBloc,
           contactsBloc: contactsBloc,
-          message: msg,
-          composeType: ComposeType.forward,
+          composeAction: Forward(msg),
         );
         Navigator.pushNamed(context, ComposeRoute.name, arguments: args);
         break;

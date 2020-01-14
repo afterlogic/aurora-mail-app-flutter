@@ -1,7 +1,6 @@
 import 'package:aurora_mail/res/icons/webmail_icons.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 enum ContactViewAppBarAction {
   attach,
@@ -47,24 +46,23 @@ class ContactViewAppBar extends StatelessWidget implements PreferredSizeWidget {
             tooltip: i18n(context, "contacts_view_app_bar_unshare"),
             onPressed: () => onActionSelected(ContactViewAppBarAction.unshare),
           ),
-        IconButton(
-          icon: Icon(Icons.attach_file),
-          tooltip: i18n(context, "contacts_view_app_bar_attach"),
-//          onPressed: () => onActionSelected(ContactViewAppBarAction.attach),
-          onPressed: null,
-        ),
+//        IconButton(
+//          icon: Icon(Icons.attach_file),
+//          tooltip: i18n(context, "contacts_view_app_bar_attach"),
+////          onPressed: () => onActionSelected(ContactViewAppBarAction.attach),
+//          onPressed: null,
+//        ),
         IconButton(
           icon: Icon(Icons.mail_outline),
           tooltip: i18n(context, "contacts_view_app_bar_send_message"),
-//          onPressed: () => onActionSelected(ContactViewAppBarAction.sendMessage),
-          onPressed: null,
+          onPressed: () => onActionSelected(ContactViewAppBarAction.sendMessage),
         ),
-        IconButton(
-          icon: Icon(MdiIcons.emailSearchOutline),
-          tooltip: i18n(context, "contacts_view_app_bar_search_messages"),
-//          onPressed: () => onActionSelected(ContactViewAppBarAction.searchMessages),
-          onPressed: null,
-        ),
+//        IconButton(
+//          icon: Icon(MdiIcons.emailSearchOutline),
+//          tooltip: i18n(context, "contacts_view_app_bar_search_messages"),
+////          onPressed: () => onActionSelected(ContactViewAppBarAction.searchMessages),
+//          onPressed: null,
+//        ),
         if (allowEdit)
           IconButton(
             icon: Icon(Icons.edit),

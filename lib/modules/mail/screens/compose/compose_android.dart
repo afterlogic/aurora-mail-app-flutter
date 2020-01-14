@@ -6,9 +6,8 @@ import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/compose_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
-import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/bloc.dart';
+import 'package:aurora_mail/modules/mail/models/compose_actions.dart';
 import 'package:aurora_mail/modules/mail/models/compose_attachment.dart';
-import 'package:aurora_mail/modules/mail/models/compose_types.dart';
 import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/temp_attachment_upload.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/compose_route.dart';
@@ -25,14 +24,11 @@ import 'components/compose_attachment_item.dart';
 import 'components/compose_body.dart';
 import 'components/compose_emails.dart';
 import 'components/compose_subject.dart';
-import 'components/discard_compose_changes_dialog.dart';
 
 class ComposeAndroid extends StatefulWidget {
-  final Message message;
-  final ComposeType composeType;
-  final int draftUid;
+  final ComposeAction composeAction;
 
-  const ComposeAndroid({Key key, this.draftUid, this.message, this.composeType}) : super(key: key);
+  const ComposeAndroid({Key key, this.composeAction}) : super(key: key);
 
   @override
   _ComposeAndroidState createState() => _ComposeAndroidState();
@@ -48,6 +44,7 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
   bool _showBCC = false;
 
   int _currentDraftUid;
+  Message _message;
 
   final _toEmails = new List<String>();
   final _ccEmails = new List<String>();
@@ -62,7 +59,6 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
   @override
   void initState() {
     super.initState();
-    _currentDraftUid = widget.draftUid;
     _initSaveToDraftsTimer();
   }
 
@@ -80,51 +76,58 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
   }
 
   void _prepareMessage() {
-    if (widget.composeType != ComposeType.none) {
-      final str = widget.message.attachmentsInJson;
-      final attachments = MailAttachment.fromJsonString(str);
-      _bloc.add(GetComposeAttachments(attachments));
-    }
+    final action = widget.composeAction;
 
-    switch (widget.composeType) {
-      case ComposeType.none:
-        return null;
-      case ComposeType.fromDrafts:
-        return _initFromDrafts();
-      case ComposeType.reply:
-        return _initReply();
-      case ComposeType.replyAll:
-        return _initReplyAll();
-      case ComposeType.forward:
-        return _initForward();
-    }
+    if (action is OpenFromDrafts) _initFromDrafts(action);
+    if (action is Forward) _initForward(action);
+    if (action is Reply) _initReply(action);
+    if (action is ReplyToAll) _initReplyAll(action);
+    if (action is EmailToContacts) _initFromContacts(action);
   }
 
-  void _initFromDrafts() async {
-    _toEmails.addAll(MailUtils.getEmails(widget.message.toInJson));
-    _ccEmails.addAll(MailUtils.getEmails(widget.message.ccInJson));
-    _bccEmails.addAll(MailUtils.getEmails(widget.message.bccInJson));
-    _subjectTextCtrl.text = widget.message.subject;
-    _bodyTextCtrl.text = MailUtils.htmlToPlain(widget.message.html);
+  void _initFromDrafts(OpenFromDrafts action) async {
+    _currentDraftUid = action.draftUid;
+    _message = action.message;
+
+    final str = action.message.attachmentsInJson;
+    final attachments = MailAttachment.fromJsonString(str);
+    _bloc.add(GetComposeAttachments(attachments));
+
+    _toEmails.addAll(MailUtils.getEmails(_message.toInJson));
+    _ccEmails.addAll(MailUtils.getEmails(_message.ccInJson));
+    _bccEmails.addAll(MailUtils.getEmails(_message.bccInJson));
+    _subjectTextCtrl.text = _message.subject;
+    _bodyTextCtrl.text = MailUtils.htmlToPlain(_message.html);
   }
 
-  void _initForward() async {
-    _subjectTextCtrl.text = MailUtils.getForwardSubject(widget.message);
-    _bodyTextCtrl.text = MailUtils.getForwardBody(context, widget.message);
+  void _initForward(Forward action) async {
+    _message = action.message;
+
+    _subjectTextCtrl.text = MailUtils.getForwardSubject(_message);
+    _bodyTextCtrl.text = MailUtils.getForwardBody(context, _message);
   }
 
-  void _initReply() async {
-    _toEmails.addAll(MailUtils.getEmails(widget.message.fromInJson));
-    _subjectTextCtrl.text = MailUtils.getReplySubject(widget.message);
-    _bodyTextCtrl.text = MailUtils.getReplyBody(context, widget.message);
+  void _initReply(Reply action) async {
+    _message = action.message;
+
+    _toEmails.addAll(MailUtils.getEmails(_message.fromInJson));
+    _subjectTextCtrl.text = MailUtils.getReplySubject(_message);
+    _bodyTextCtrl.text = MailUtils.getReplyBody(context, _message);
   }
 
-  void _initReplyAll() async {
-    _toEmails.addAll(MailUtils.getEmails(widget.message.fromInJson));
-    _ccEmails.addAll(MailUtils.getEmails(widget.message.toInJson, exceptEmails: [AuthBloc.currentAccount.email]));
-    _ccEmails.addAll(MailUtils.getEmails(widget.message.ccInJson));
-    _subjectTextCtrl.text = MailUtils.getReplySubject(widget.message);
-    _bodyTextCtrl.text = MailUtils.getReplyBody(context, widget.message);
+  void _initReplyAll(ReplyToAll action) async {
+    _message = action.message;
+
+    _toEmails.addAll(MailUtils.getEmails(_message.fromInJson));
+    _ccEmails.addAll(MailUtils.getEmails(_message.toInJson, exceptEmails: [AuthBloc.currentAccount.email]));
+    _ccEmails.addAll(MailUtils.getEmails(_message.ccInJson));
+    _subjectTextCtrl.text = MailUtils.getReplySubject(_message);
+    _bodyTextCtrl.text = MailUtils.getReplyBody(context, _message);
+  }
+
+  void _initFromContacts(EmailToContacts action) {
+    final toEmails = action.contacts.map((c) => MailUtils.getFriendlyName(c));
+    _toEmails.addAll(toEmails);
   }
 
   void _initSaveToDraftsTimer() async {
@@ -209,14 +212,12 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
   }
 
   bool get _hasMessageChanged {
-    final m = widget.message;
-
-    if (m != null) {
-      return _subjectTextCtrl.text != m.subject ||
-          _bodyTextCtrl.text != MailUtils.htmlToPlain(m.html) ||
-          !listEquals<String>(MailUtils.getEmails(m.toInJson), _toEmails) ||
-          !listEquals<String>(MailUtils.getEmails(m.ccInJson), _ccEmails) ||
-          !listEquals<String>(MailUtils.getEmails(m.bccInJson), _bccEmails);
+    if (_message != null) {
+      return _subjectTextCtrl.text != _message.subject ||
+          _bodyTextCtrl.text != MailUtils.htmlToPlain(_message.html) ||
+          !listEquals<String>(MailUtils.getEmails(_message.toInJson), _toEmails) ||
+          !listEquals<String>(MailUtils.getEmails(_message.ccInJson), _ccEmails) ||
+          !listEquals<String>(MailUtils.getEmails(_message.bccInJson), _bccEmails);
     } else {
       return _bodyTextCtrl.text.isNotEmpty ||
           _subjectTextCtrl.text.isNotEmpty ||

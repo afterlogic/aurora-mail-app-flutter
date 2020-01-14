@@ -6,6 +6,9 @@ import 'package:aurora_mail/modules/contacts/screens/contact_edit/contact_edit_r
 import 'package:aurora_mail/modules/contacts/screens/contact_view/components/contact_view_app_bar.dart';
 import 'package:aurora_mail/modules/contacts/screens/contact_view/components/contacts_info_item.dart';
 import 'package:aurora_mail/modules/contacts/utils/contact_info.dart';
+import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
+import 'package:aurora_mail/modules/mail/models/compose_actions.dart';
+import 'package:aurora_mail/modules/mail/screens/compose/compose_route.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
 import 'package:aurora_mail/utils/date_formatting.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
@@ -40,7 +43,15 @@ class _ContactViewAndroidState extends State<ContactViewAndroid> {
       // TODO: Handle this case.
         break;
       case ContactViewAppBarAction.sendMessage:
-      // TODO: Handle this case.
+        Navigator.pushNamed(
+          context,
+          ComposeRoute.name,
+          arguments: ComposeScreenArgs(
+            mailBloc: BlocProvider.of<MailBloc>(context),
+            contactsBloc: BlocProvider.of<ContactsBloc>(context),
+            composeAction: EmailToContacts([widget.contact]),
+          ),
+        );
         break;
       case ContactViewAppBarAction.searchMessages:
       // TODO: Handle this case.

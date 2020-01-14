@@ -181,15 +181,13 @@ class MailUtils {
     final bcc = MailUtils.getEmails(message.bccInJson).join(", ");
 
     if (from.isNotEmpty)
-      forwardMessage +=
-          i18n(context, "compose_forward_from", {"from": from}) + "\n";
+      forwardMessage += i18n(context, "compose_forward_from", {"emails": from}) + "\n";
     if (to.isNotEmpty)
-      forwardMessage += i18n(context, "compose_forward_to", {"to": to}) + "\n";
+      forwardMessage += i18n(context, "compose_forward_to", {"emails": to}) + "\n";
     if (cc.isNotEmpty)
-      forwardMessage += i18n(context, "compose_forward_cc", {"cc": cc}) + "\n";
+      forwardMessage += i18n(context, "compose_forward_cc", {"emails": cc}) + "\n";
     if (bcc.isNotEmpty)
-      forwardMessage +=
-          i18n(context, "compose_forward_bcc", {"bcc": bcc}) + "\n";
+      forwardMessage += i18n(context, "compose_forward_bcc", {"emails": bcc}) + "\n";
 
     final date = DateFormatting.formatDateFromSeconds(
         message.timeStampInUTC, Localizations.localeOf(context).languageCode,

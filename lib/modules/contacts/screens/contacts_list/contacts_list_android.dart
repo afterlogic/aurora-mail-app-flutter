@@ -12,6 +12,7 @@ import 'package:aurora_mail/modules/contacts/screens/contacts_list/components/co
 import 'package:aurora_mail/modules/contacts/screens/contacts_list/components/speed_dial.dart';
 import 'package:aurora_mail/modules/contacts/screens/group_edit/group_edit_route.dart';
 import 'package:aurora_mail/modules/contacts/screens/group_view/group_view_route.dart';
+import 'package:aurora_mail/modules/mail/blocs/mail_bloc/mail_bloc.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
 import 'package:aurora_mail/modules/settings/screens/settings_main/settings_main_route.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
@@ -72,9 +73,10 @@ class _ContactsListAndroidState extends State<ContactsListAndroid> {
       context,
       ContactViewRoute.name,
       arguments: ContactViewScreenArgs(
-        contact,
-        BlocProvider.of<ContactsBloc>(context),
-        Scaffold.of(context),
+        contact: contact,
+        mailBloc: BlocProvider.of<MailBloc>(context),
+        contactsBloc: BlocProvider.of<ContactsBloc>(context),
+        scaffoldState: Scaffold.of(context),
       ),
     );
   }
@@ -85,8 +87,7 @@ class _ContactsListAndroidState extends State<ContactsListAndroid> {
         Navigator.pushNamed(
           context,
           ContactEditRoute.name,
-          arguments: ContactEditScreenArgs(
-              bloc: BlocProvider.of<ContactsBloc>(context)),
+          arguments: ContactEditScreenArgs(bloc: BlocProvider.of<ContactsBloc>(context)),
         );
         break;
       case ContactsFabOption.addGroup:

@@ -83,11 +83,7 @@ class AppNavigation {
                     BlocProvider<MailBloc>.value(value: args.mailBloc),
                     BlocProvider<ContactsBloc>.value(value: args.contactsBloc),
                   ],
-                  child: ComposeAndroid(
-                    message: args.message,
-                    draftUid: args.draftUid,
-                    composeType: args.composeType,
-                  ),
+                  child: ComposeAndroid(composeAction: args.composeAction),
                 ));
         break;
 
@@ -99,8 +95,13 @@ class AppNavigation {
             settings: RouteSettings(
               name: settings.name,
             ),
-            builder: (_) => BlocProvider<ContactsBloc>.value(
-                value: args.bloc, child: ContactsListAndroid()));
+            builder: (_) => MultiBlocProvider(
+              providers: [
+                BlocProvider<MailBloc>.value(value: args.mailBloc),
+                BlocProvider<ContactsBloc>.value(value: args.contactsBloc),
+              ],
+              child: ContactsListAndroid(),
+            ));
         break;
 
       case ContactViewRoute.name:
@@ -109,8 +110,13 @@ class AppNavigation {
             settings: RouteSettings(
               name: settings.name,
             ),
-            builder: (_) => BlocProvider<ContactsBloc>.value(
-                value: args.bloc, child: ContactViewAndroid(args.contact, args.scaffoldState)));
+            builder: (_) => MultiBlocProvider(
+              providers: [
+                BlocProvider<MailBloc>.value(value: args.mailBloc),
+                BlocProvider<ContactsBloc>.value(value: args.contactsBloc),
+              ],
+              child: ContactViewAndroid(args.contact, args.scaffoldState),
+            ));
         break;
 
       case ContactEditRoute.name:
