@@ -155,7 +155,10 @@ class _ContactsListAndroidState extends State<ContactsListAndroid> {
           }),
         ),
       ),
-      floatingActionButton: ContactsSpeedDial(_onFabOptionSelected),
+      floatingActionButton: ContactsSpeedDial(
+        bottomMargin: MediaQuery.of(context).padding.bottom,
+        onFabOptionSelected: _onFabOptionSelected,
+      ),
     );
   }
 
@@ -182,8 +185,7 @@ class _ContactsListAndroidState extends State<ContactsListAndroid> {
               onPressed: (c) => _onContactSelected(context, c),
               onDeleteContact: _deleteContact,
             ),
-            separatorBuilder: (_, i) =>
-                Divider(indent: 16.0, endIndent: 16.0, height: 0.0),
+            separatorBuilder: (_, i) => Divider(indent: 16.0, endIndent: 16.0, height: 0.0),
             itemCount: state.contacts.length,
           ),
         ),

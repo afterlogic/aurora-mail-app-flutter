@@ -219,13 +219,16 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
                 }),
           ),
         ),
-        floatingActionButton: FloatingActionButton(
-          child: Icon(MdiIcons.emailPlusOutline),
-          onPressed: () => Navigator.pushNamed(context, ComposeRoute.name,
-              arguments: ComposeScreenArgs(
-                mailBloc: _mailBloc,
-                contactsBloc: _contactsBloc,
-              )),
+        floatingActionButton: Padding(
+          padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
+          child: FloatingActionButton(
+            child: Icon(MdiIcons.emailPlusOutline),
+            onPressed: () => Navigator.pushNamed(context, ComposeRoute.name,
+                arguments: ComposeScreenArgs(
+                  mailBloc: _mailBloc,
+                  contactsBloc: _contactsBloc,
+                )),
+          ),
         ),
       ),
     );

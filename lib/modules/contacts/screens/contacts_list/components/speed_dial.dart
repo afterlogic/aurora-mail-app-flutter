@@ -5,9 +5,10 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 enum ContactsFabOption { addContact, addGroup }
 
 class ContactsSpeedDial extends StatelessWidget {
-  final void Function(ContactsFabOption) onOptionSelected;
+  final double bottomMargin;
+  final void Function(ContactsFabOption) onFabOptionSelected;
 
-  const ContactsSpeedDial(this.onOptionSelected);
+  const ContactsSpeedDial({@required this.bottomMargin, @required this.onFabOptionSelected});
 
   @override
   Widget build(BuildContext context) {
@@ -17,6 +18,7 @@ class ContactsSpeedDial extends StatelessWidget {
       overlayOpacity: 0.5,
       curve: Curves.easeInOutExpo,
       marginRight: 14.0,
+      marginBottom: bottomMargin + 16.0,
 //      animationSpeed: 200,
       children: [
         SpeedDialChild(
@@ -25,7 +27,7 @@ class ContactsSpeedDial extends StatelessWidget {
             color: Theme.of(context).iconTheme.color,
           ),
           backgroundColor: Theme.of(context).cardColor,
-          onTap: () => onOptionSelected(ContactsFabOption.addContact),
+          onTap: () => onFabOptionSelected(ContactsFabOption.addContact),
         ),
         SpeedDialChild(
           child: Icon(
@@ -33,7 +35,7 @@ class ContactsSpeedDial extends StatelessWidget {
             color: Theme.of(context).iconTheme.color,
           ),
           backgroundColor: Theme.of(context).cardColor,
-          onTap: () => onOptionSelected(ContactsFabOption.addGroup),
+          onTap: () => onFabOptionSelected(ContactsFabOption.addGroup),
         ),
       ],
     );
