@@ -117,6 +117,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
                       ],
                       supportedLocales: supportedLocales,
                       localeResolutionCallback: (locale, locales) {
+                        print("VO: locale: ${locale}");
                         final supportedLocale = locales.firstWhere((l) {
                           return locale != null && l.languageCode == locale.languageCode;
                         }, orElse: () => null);
