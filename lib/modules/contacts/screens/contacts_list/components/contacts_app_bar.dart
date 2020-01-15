@@ -59,15 +59,15 @@ class ContactsAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   Widget _buildTitle(BuildContext context, ContactsState state) {
     if (state.selectedStorage != null && state.storages.isNotEmpty) {
-      final selectedStorage =
-      state.storages.firstWhere((s) => s.sqliteId == state.selectedStorage);
+      final selectedStorage = state.storages.firstWhere((s) => s.sqliteId == state.selectedStorage);
+
       return Column(
         crossAxisAlignment: !Platform.isIOS ? CrossAxisAlignment.start : CrossAxisAlignment.center,
         children: <Widget>[
           Text(i18n(context, "contacts")),
           SizedBox(height: 3.0),
           Text(
-            selectedStorage.name,
+            i18n(context, "contacts_drawer_storage_${selectedStorage.name}"),
             style: TextStyle(
                 fontSize: Theme.of(context).textTheme.caption.fontSize,
                 fontWeight: FontWeight.w400),
