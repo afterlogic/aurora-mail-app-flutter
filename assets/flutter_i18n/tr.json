@@ -12,6 +12,7 @@
   "messages_delete_title": "İletiyi sil",
   "messages_delete_desc_with_subject": "{subject} silmek istediğinize emin misiniz?",
   "messages_delete_desc": "Bu iletiyi silmek istediğinden emin misin?",
+  "messages_list_app_bar_Mail": "Mail",
   "messages_list_app_bar_contacts": "Contacts",
   "messages_list_app_bar_settings": "Ayarlar",
   "messages_list_app_bar_logout": "Oturumu kapat",

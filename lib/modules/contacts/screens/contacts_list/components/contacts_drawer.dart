@@ -1,6 +1,7 @@
 import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_storage_model.dart';
+import 'package:aurora_mail/modules/contacts/screens/group_edit/group_edit_route.dart';
 import 'package:aurora_mail/res/icons/webmail_icons.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +14,15 @@ class ContactsDrawer extends StatefulWidget {
 }
 
 class _ContactsDrawerState extends State<ContactsDrawer> {
+
+  void _addGroup() {
+    Navigator.pushNamed(
+      context,
+      GroupEditRoute.name,
+      arguments: GroupEditScreenArgs(bloc: BlocProvider.of<ContactsBloc>(context)),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -30,10 +40,19 @@ class _ContactsDrawerState extends State<ContactsDrawer> {
               _buildStorages(context, state),
               Divider(),
               Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text(
-                  i18n(context, "contacts_drawer_section_groups").toUpperCase(),
-                  style: TextStyle(color: Theme.of(context).disabledColor),
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(
+                      i18n(context, "contacts_drawer_section_groups").toUpperCase(),
+                      style: TextStyle(color: Theme.of(context).disabledColor),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.add),
+                      onPressed: _addGroup,
+                    ),
+                  ],
                 ),
               ),
               _buildGroups(context, state),

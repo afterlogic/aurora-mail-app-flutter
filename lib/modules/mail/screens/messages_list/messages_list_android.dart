@@ -15,6 +15,7 @@ import 'package:aurora_mail/modules/mail/screens/message_view/message_view_route
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/main_drawer.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/modules/settings/screens/settings_main/settings_main_route.dart';
+import 'package:aurora_mail/shared_ui/mail_bottom_app_bar.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:empty_list/empty_list.dart';
@@ -68,25 +69,6 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
       _mailBloc.add(RefreshMessages());
       _contactsBloc.add(GetContacts());
     };
-  }
-
-  void _onAppBarActionSelected(MailListAppBarAction item) {
-    switch (item) {
-      case MailListAppBarAction.logout:
-        BlocProvider.of<AuthBloc>(context).add(LogOut());
-        Navigator.pushReplacementNamed(context, LoginRoute.name);
-        break;
-      case MailListAppBarAction.settings:
-        Navigator.pushNamed(context, SettingsMainRoute.name);
-        break;
-      case MailListAppBarAction.contacts:
-        Navigator.pushReplacementNamed(
-          context,
-          ContactsListRoute.name,
-          arguments: ContactsListScreenArgs(mailBloc: _mailBloc, contactsBloc: _contactsBloc),
-        );
-        break;
-    }
   }
 
   void _onMessageSelected(List<Message> allMessages, Message item) {
@@ -151,9 +133,12 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
         BlocProvider<MailBloc>.value(
           value: _mailBloc,
         ),
+        BlocProvider<ContactsBloc>.value(
+          value: _contactsBloc,
+        ),
       ],
       child: Scaffold(
-        appBar: MailAppBar(onActionSelected: _onAppBarActionSelected),
+        appBar: MailAppBar(),
         drawer: MainDrawer(),
         body: MultiBlocListener(
           listeners: [
@@ -219,16 +204,15 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
                 }),
           ),
         ),
-        floatingActionButton: Padding(
-          padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
-          child: FloatingActionButton(
-            child: Icon(MdiIcons.emailPlusOutline),
-            onPressed: () => Navigator.pushNamed(context, ComposeRoute.name,
-                arguments: ComposeScreenArgs(
-                  mailBloc: _mailBloc,
-                  contactsBloc: _contactsBloc,
-                )),
-          ),
+        bottomNavigationBar: MailBottomAppBar(selectedRoute: MailBottomAppBarRoutes.mail),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+        floatingActionButton: FloatingActionButton(
+          child: Icon(MdiIcons.emailPlusOutline),
+          onPressed: () => Navigator.pushNamed(context, ComposeRoute.name,
+              arguments: ComposeScreenArgs(
+                mailBloc: _mailBloc,
+                contactsBloc: _contactsBloc,
+              )),
         ),
       ),
     );
@@ -255,7 +239,7 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
               threads = snap.data.where((m) => m.parentUid != null).toList();
             }
             return ListView.separated(
-              padding: EdgeInsets.only(top: 6.0, bottom: 76.0 + MediaQuery.of(context).padding.bottom),
+              padding: EdgeInsets.only(top: 6.0, bottom: 32.0),
               itemCount: messages.length,
               itemBuilder: (_, i) {
                 final item = messages[i];

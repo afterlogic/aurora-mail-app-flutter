@@ -2,19 +2,17 @@ import 'dart:io';
 
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_group_model.dart';
+import 'package:aurora_mail/modules/contacts/screens/group_view/group_view_route.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-enum ContactsListAppBarAction { logout, settings, mail, viewGroup }
-
 class ContactsAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final Function(ContactsListAppBarAction, {ContactsGroup group}) onActionSelected;
 
   @override
   final Size preferredSize = const Size.fromHeight(kToolbarHeight);
 
-  const ContactsAppBar({Key key, this.onActionSelected}) : super(key: key);
+  const ContactsAppBar();
 
   @override
   Widget build(BuildContext context) {
@@ -27,31 +25,10 @@ class ContactsAppBar extends StatelessWidget implements PreferredSizeWidget {
                 IconButton(icon: Icon(Icons.remove_red_eye),
                   onPressed: () {
                     final group = state.groups.firstWhere((g) => g.uuid == state.selectedGroup);
-                    return onActionSelected(ContactsListAppBarAction.viewGroup, group: group);
+                    final bloc = BlocProvider.of<ContactsBloc>(context);
+                    Navigator.pushNamed(context, GroupViewRoute.name, arguments: GroupViewScreenArgs(group, bloc));
                   },
                 ),
-              PopupMenuButton(
-                onSelected: onActionSelected,
-                tooltip: i18n(context, "contacts_list_app_bar_view_group"),
-                itemBuilder: (_) {
-                  return [
-                    PopupMenuItem(
-                      value: ContactsListAppBarAction.mail,
-                      child: Text(i18n(context, "contacts_list_app_bar_mail")),
-                    ),
-                    PopupMenuItem(
-                      value: ContactsListAppBarAction.settings,
-                      child: Text(
-                          i18n(context, "messages_list_app_bar_settings")),
-                    ),
-                    PopupMenuItem(
-                      value: ContactsListAppBarAction.logout,
-                      child: Text(
-                          i18n(context, "messages_list_app_bar_logout")),
-                    ),
-                  ];
-                },
-              )
             ],
           ),
     );

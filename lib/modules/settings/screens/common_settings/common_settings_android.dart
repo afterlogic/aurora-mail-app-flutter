@@ -38,7 +38,10 @@ class _CommonSettingsAndroidState extends State<CommonSettingsAndroid> {
                     children: <Widget>[
                       Icon(Icons.access_time, color: Theme.of(context).disabledColor,),
                       SizedBox(width: 30.0),
-                      Text(i18n(context, "settings_24_time_format")),
+                      Expanded(
+                        child: Text(i18n(context, "settings_24_time_format"),
+                        overflow: TextOverflow.ellipsis),
+                      ),
                     ],
                   ),
                   activeColor: Theme.of(context).primaryColor,
