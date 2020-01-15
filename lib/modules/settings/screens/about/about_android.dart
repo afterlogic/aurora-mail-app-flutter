@@ -12,6 +12,7 @@ class AboutAndroid extends StatefulWidget {
 class _AboutAndroidState extends State<AboutAndroid> {
   bool loading = false;
   String _version;
+  String _buildNumber;
 
   @override
   void initState() {
@@ -38,6 +39,7 @@ class _AboutAndroidState extends State<AboutAndroid> {
     setState(() => loading = true);
     final packageInfo = await PackageInfo.fromPlatform();
     _version = packageInfo.version;
+    _buildNumber = packageInfo.buildNumber;
     setState(() => loading = false);
   }
 
@@ -54,8 +56,7 @@ class _AboutAndroidState extends State<AboutAndroid> {
                 Text(i18n(context, "app_title"), style: Theme.of(context).textTheme.title),
                 SizedBox(height: 12.0),
                 Text(
-                  i18n(context, "settings_about_app_version",
-                      {"version": _version}),
+                  i18n(context, "settings_about_app_version", {"version": "$_version+$_buildNumber"}),
                   style: Theme.of(context)
                       .textTheme
                       .caption
