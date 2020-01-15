@@ -255,7 +255,7 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
               threads = snap.data.where((m) => m.parentUid != null).toList();
             }
             return ListView.separated(
-              padding: EdgeInsets.only(top: 6.0, bottom: 76.0),
+              padding: EdgeInsets.only(top: 6.0, bottom: 76.0 + MediaQuery.of(context).padding.bottom),
               itemCount: messages.length,
               itemBuilder: (_, i) {
                 final item = messages[i];
