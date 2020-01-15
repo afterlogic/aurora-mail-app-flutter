@@ -23,7 +23,7 @@ class _ContactsDrawerState extends State<ContactsDrawer> {
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Text(
-                  i18n(context, "contacts_drawer_section_storages"),
+                  i18n(context, "contacts_drawer_section_storages").toUpperCase(),
                   style: TextStyle(color: Theme.of(context).disabledColor),
                 ),
               ),
@@ -32,7 +32,7 @@ class _ContactsDrawerState extends State<ContactsDrawer> {
               Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Text(
-                  i18n(context, "contacts_drawer_section_groups"),
+                  i18n(context, "contacts_drawer_section_groups").toUpperCase(),
                   style: TextStyle(color: Theme.of(context).disabledColor),
                 ),
               ),
