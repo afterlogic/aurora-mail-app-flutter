@@ -5,7 +5,6 @@ import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-// TODO VO: ios
 class LanguageSelectionDialog extends StatelessWidget {
   final Language selectedItem;
   final Function(Language) onItemSelected;

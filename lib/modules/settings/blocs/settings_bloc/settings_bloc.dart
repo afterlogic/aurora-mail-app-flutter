@@ -112,7 +112,6 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   Stream<SettingsState> _setTimeFormat(SetTimeFormat event) async* {
     await _methods.setTimeFormat(event.is24);
 
-    print("VO: event.is24: ${event.is24}");
     if (state is SettingsLoaded) {
       yield (state as SettingsLoaded).copyWith(is24: Value(event.is24));
     } else {
