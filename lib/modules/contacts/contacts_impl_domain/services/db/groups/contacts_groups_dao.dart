@@ -10,8 +10,8 @@ class ContactsGroupsDao extends DatabaseAccessor<AppDatabase>
     with _$ContactsGroupsDaoMixin {
   ContactsGroupsDao(AppDatabase db) : super(db);
 
-  Future<List<ContactsGroupsTable>> getGroups(int userServerId) {
-    return (select(contactsGroups)..where((c) => c.idUser.equals(userServerId))).get();
+  Future<List<ContactsGroupsTable>> getGroups(int userLocalId) {
+    return (select(contactsGroups)..where((c) => c.userLocalId.equals(userLocalId))).get();
   }
 
   Future<void> addGroups(List<ContactsGroupsTable> newGroups) async {
@@ -29,6 +29,10 @@ class ContactsGroupsDao extends DatabaseAccessor<AppDatabase>
   }
 
   Future<void> deleteGroups(List<String> uuids) async {
-    return (delete(contactsGroups)..where((c) => c.uuid.isIn(uuids))).go();
+    return (delete(contactsGroups)..where((g) => g.uuid.isIn(uuids))).go();
+  }
+
+  Future<void> deleteGroupsOfUser(int userLocalId) async {
+    return (delete(contactsGroups)..where((g) => g.userLocalId.equals(userLocalId))).go();
   }
 }

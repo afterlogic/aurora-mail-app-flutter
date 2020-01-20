@@ -7,6 +7,7 @@ class ContactsGroupMapper {
       return new ContactsGroupsTable(
         uuid: i.uuid,
         idUser: i.idUser,
+        userLocalId: i.userLocalId,
         city: i.city,
         company: i.company,
         country: i.country,
@@ -29,6 +30,7 @@ class ContactsGroupMapper {
       return new ContactsGroup(
         uuid: i.uuid,
         idUser: i.idUser,
+        userLocalId: i.userLocalId,
         city: i.city,
         company: i.company,
         country: i.country,
@@ -46,16 +48,17 @@ class ContactsGroupMapper {
     }).toList();
   }
 
-  static List<ContactsGroup> allFromNetwork(List rawItems) {
+  static List<ContactsGroup> allFromNetwork(List rawItems, int userLocalId) {
     return rawItems.map((i) {
       final item = Map<String, dynamic>.from(i as Map);
-      return fromNetwork(item);
+      return fromNetwork(item, userLocalId);
     }).toList();
   }
 
-  static ContactsGroup fromNetwork(Map<String, dynamic> i) {
+  static ContactsGroup fromNetwork(Map<String, dynamic> i, int userLocalId) {
     return ContactsGroup(
       uuid: i["UUID"] as String,
+      userLocalId: userLocalId,
       idUser: i["IdUser"] as int,
       city: i["City"] as String,
       company: i["Company"] as String,

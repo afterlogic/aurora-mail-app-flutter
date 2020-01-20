@@ -35,7 +35,7 @@ class ComposeAndroid extends StatefulWidget {
 }
 
 class _ComposeAndroidState extends State<ComposeAndroid> {
-  final _bloc = new ComposeBloc();
+  ComposeBloc _bloc;
 
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -67,6 +67,12 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    final authBloc = BlocProvider.of<AuthBloc>(context);
+
+    _bloc = ComposeBloc(
+      user: authBloc.currentUser,
+      account: BlocProvider.of<AuthBloc>(context).currentAccount,
+    );
     _prepareMessage();
   }
 
@@ -122,7 +128,7 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
     _message = action.message;
 
     _toEmails.addAll(MailUtils.getEmails(_message.fromInJson));
-    _ccEmails.addAll(MailUtils.getEmails(_message.toInJson, exceptEmails: [AuthBloc.currentAccount.email]));
+    _ccEmails.addAll(MailUtils.getEmails(_message.toInJson, exceptEmails: [BlocProvider.of<AuthBloc>(context).currentAccount.email]));
     _ccEmails.addAll(MailUtils.getEmails(_message.ccInJson));
     _subjectTextCtrl.text = MailUtils.getReplySubject(_message);
     _bodyTextCtrl.text = MailUtils.getReplyBody(context, _message);

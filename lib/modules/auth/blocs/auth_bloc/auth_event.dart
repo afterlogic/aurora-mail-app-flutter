@@ -1,4 +1,5 @@
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/utils/always_non_equal_object.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -7,20 +8,6 @@ abstract class AuthEvent extends Equatable {
 
   @override
   List<Object> get props => null;
-}
-
-class InitUserAndAccounts extends AuthEvent {}
-
-class GetLastEmail extends AuthEvent {}
-
-// usually after settings change
-class UpdateUser extends AuthEvent {
-  final User updatedUser;
-
-  UpdateUser(this.updatedUser);
-
-  @override
-  List<Object> get props => [updatedUser];
 }
 
 class LogIn extends AuthEvent {
@@ -38,4 +25,28 @@ class LogIn extends AuthEvent {
   List<Object> get props => [email, password, hostname];
 }
 
-class LogOut extends AuthEvent {}
+class InitUserAndAccounts extends AuthEvent {}
+
+class GetLastEmail extends AuthEvent {}
+
+class GetUsers extends AuthEvent {}
+
+class SelectUser extends AuthEvent {
+  final int userLocalId;
+
+  const SelectUser(this.userLocalId);
+
+  @override
+  List<Object> get props => [userLocalId];
+}
+
+class DeleteUser extends AuthEvent {
+  final int userLocalId;
+
+  const DeleteUser(this.userLocalId);
+
+  @override
+  List<Object> get props => [userLocalId];
+}
+
+class InvalidateCurrentUserToken extends AuthEvent implements AlwaysNonEqualObject {}

@@ -2,6 +2,7 @@ import 'package:flutter/widgets.dart';
 
 class ContactsGroup {
   final String uuid;
+  final int userLocalId;
   final int idUser;
   final String city;
   final String company;
@@ -18,8 +19,9 @@ class ContactsGroup {
   final String zip;
 
   ContactsGroup({
-    @required this.idUser,
     @required this.uuid,
+    @required this.userLocalId,
+    @required this.idUser,
     @required this.name,
     this.city = "",
     this.company = "",
@@ -37,6 +39,7 @@ class ContactsGroup {
 
   ContactsGroup copyWith({
     String uuid,
+    int userLocalId,
     int idUser,
     String city,
     String company,
@@ -55,6 +58,7 @@ class ContactsGroup {
   }) {
     return new ContactsGroup(
       uuid: uuid ?? this.uuid,
+      userLocalId: userLocalId ?? this.userLocalId,
       idUser: idUser ?? this.idUser,
       city: city ?? this.city,
       company: company ?? this.company,

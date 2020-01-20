@@ -37,7 +37,7 @@ class MessageViewAndroid extends StatefulWidget {
 
 class _MessageViewAndroidState extends State<MessageViewAndroid>
     with TickerProviderStateMixin {
-  final _messageViewBloc = new MessageViewBloc();
+  MessageViewBloc _messageViewBloc;
 
   TabController _tabCtrl;
   int _currentPage;
@@ -54,6 +54,12 @@ class _MessageViewAndroidState extends State<MessageViewAndroid>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    final authBloc = BlocProvider.of<AuthBloc>(context);
+
+    _messageViewBloc = MessageViewBloc(
+      user: authBloc.currentUser,
+      account: BlocProvider.of<AuthBloc>(context).currentAccount,
+    );
     _startSetSeenTimer(context);
   }
 
@@ -119,10 +125,12 @@ class _MessageViewAndroidState extends State<MessageViewAndroid>
   void _deleteMessage() async {
     final message = widget.messages[_currentPage];
     final delete = await ConfirmationDialog.show(
-        context,
-        i18n(context, "messages_delete_title"),
-        i18n(context, "messages_delete_desc"),
-        i18n(context, "btn_delete"));
+      context,
+      i18n(context, "messages_delete_title"),
+      i18n(context, "messages_delete_desc"),
+      i18n(context, "btn_delete"),
+      destructibleAction: true,
+    );
     if (delete == true) {
       BlocProvider.of<MessagesListBloc>(context).add(DeleteMessages(
         uids: [message.uid],
@@ -134,7 +142,7 @@ class _MessageViewAndroidState extends State<MessageViewAndroid>
 
   String _formatTo(Message message) {
     final items = Mail.getToForDisplay(
-        context, message.toInJson, AuthBloc.currentAccount.email);
+        context, message.toInJson, BlocProvider.of<AuthBloc>(context).currentAccount.email);
 
     if (items.isEmpty) {
       return i18n(context, "messages_no_receivers");

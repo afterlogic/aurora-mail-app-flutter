@@ -49,10 +49,12 @@ class ContactsListTile extends StatelessWidget {
       child: _buildTile(context),
       onDismissed: (_) => onDeleteContact(contact),
       confirmDismiss: (_) => ConfirmationDialog.show(
-          context,
-          i18n(context, "contacts_delete_title"),
-          i18n(context, "contacts_delete_desc_with_name", {"contact": contact.fullName}),
-          i18n(context, "btn_delete")),
+        context,
+        i18n(context, "contacts_delete_title"),
+        i18n(context, "contacts_delete_desc_with_name", {"contact": contact.fullName}),
+        i18n(context, "btn_delete"),
+        destructibleAction: true,
+      ),
       background: Container(
         color: Theme.of(context).errorColor,
         child: Stack(
@@ -86,7 +88,7 @@ class ContactsListTile extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
-          if (contact.viewEmail == AuthBloc.currentAccount.email)
+          if (contact.viewEmail == BlocProvider.of<AuthBloc>(context).currentAccount.email)
             Container(
               decoration: BoxDecoration(
                 color: theme.disabledColor.withOpacity(0.1),

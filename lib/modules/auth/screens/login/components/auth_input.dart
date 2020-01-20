@@ -38,18 +38,16 @@ class _AuthInputState extends State<AuthInput> {
     if (Platform.isIOS) {
       return CupertinoTextField(
         enabled: widget.isEnabled,
+        style: TextStyle(color: Theme.of(context).iconTheme.color),
         cursorColor: Theme.of(context).accentColor,
         controller: widget.controller,
         keyboardType: widget.keyboardType,
         placeholder: widget.label,
         obscureText: widget.isPassword && _obscureText,
         autocorrect: false,
-        prefix: Opacity(
-          opacity: 0.6,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 12.0),
-            child: Icon(widget.iconForIOS),
-          ),
+        prefix: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 12.0),
+          child: Icon(widget.iconForIOS, color: Theme.of(context).disabledColor),
         ),
         suffix: widget.isPassword ? CupertinoButton(
           padding: EdgeInsets.zero,

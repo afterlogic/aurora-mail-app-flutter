@@ -1,5 +1,6 @@
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 enum ComposeAppBarAction {
   saveToDrafts,
@@ -27,7 +28,7 @@ class ComposeAppBar extends StatelessWidget implements PreferredSizeWidget {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Flexible(
-              child: Text(AuthBloc.currentAccount.email, style: TextStyle(fontSize: 14.0),
+              child: Text(BlocProvider.of<AuthBloc>(context).currentAccount.email, style: TextStyle(fontSize: 14.0),
             )),
 //            SizedBox(width: 4.0),
 //            Icon(Icons.keyboard_arrow_down)

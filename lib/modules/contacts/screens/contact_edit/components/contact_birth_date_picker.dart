@@ -5,6 +5,7 @@ import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
 class ContactBirthDatePicker extends StatefulWidget {
@@ -48,7 +49,9 @@ class _ContactBirthDatePickerState extends State<ContactBirthDatePicker> {
   }
 
   void _setDate() {
-    final decoded = json.decode(AuthBloc.currentUser.language ?? "{}");
+    final user = BlocProvider.of<AuthBloc>(context).currentUser;
+
+    final decoded = json.decode(user.language ?? "{}");
     final language = decoded["tag"] as String;
     _dateText.text = DateFormat(
       i18n(context, "contacts_birth_date_format"),

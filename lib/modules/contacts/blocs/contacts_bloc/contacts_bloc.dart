@@ -16,9 +16,7 @@ import './bloc.dart';
 import 'contacts_state_reducer.dart';
 
 class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
-  final String apiUrl;
-  final String token;
-  final int userId;
+  final User user;
   final AppDatabase appDatabase;
 
   ContactsRepository _repo;
@@ -29,16 +27,12 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
   StreamSubscription<List<int>> _syncingStoragesSub;
 
   ContactsBloc({
-    @required this.apiUrl,
-    @required this.token,
-    @required this.userId,
+    @required this.user,
     @required this.appDatabase,
   }) {
     _repo = ContactsRepository(
-      token: token,
-      apiUrl: apiUrl,
       appDB: appDatabase,
-      userServerId: userId,
+      user: user,
     );
   }
 

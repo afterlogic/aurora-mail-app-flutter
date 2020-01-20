@@ -250,7 +250,7 @@ class Message extends DataClass implements Insertable<Message> {
   @override
   Map<String, dynamic> toJson(
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
-    return {
+    return <String, dynamic>{
       'localId': serializer.toJson<int>(localId),
       'uid': serializer.toJson<int>(uid),
       'userLocalId': serializer.toJson<int>(userLocalId),
@@ -631,7 +631,7 @@ class Message extends DataClass implements Insertable<Message> {
                                                                               fromToDisplay.hashCode,
                                                                               $mrjc(ccInJson.hashCode, $mrjc(bccInJson.hashCode, $mrjc(senderInJson.hashCode, $mrjc(replyToInJson.hashCode, $mrjc(hasAttachments.hashCode, $mrjc(hasVcardAttachment.hashCode, $mrjc(hasIcalAttachment.hashCode, $mrjc(importance.hashCode, $mrjc(draftInfoInJson.hashCode, $mrjc(sensitivity.hashCode, $mrjc(downloadAsEmlUrl.hashCode, $mrjc(hash.hashCode, $mrjc(headers.hashCode, $mrjc(inReplyTo.hashCode, $mrjc(references.hashCode, $mrjc(readingConfirmationAddressee.hashCode, $mrjc(html.hashCode, $mrjc(plain.hashCode, $mrjc(rtl.hashCode, $mrjc(extendInJson.hashCode, $mrjc(safety.hashCode, $mrjc(hasExternals.hashCode, $mrjc(foundedCIDsInJson.hashCode, $mrjc(foundedContentLocationUrlsInJson.hashCode, $mrjc(attachmentsInJson.hashCode, customInJson.hashCode)))))))))))))))))))))))))))))))))))))))))))));
   @override
-  bool operator ==(other) =>
+  bool operator ==(dynamic other) =>
       identical(this, other) ||
       (other is Message &&
           other.localId == this.localId &&
@@ -2089,6 +2089,8 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
 
 class LocalFolder extends DataClass implements Insertable<LocalFolder> {
   final int localId;
+  final int userLocalId;
+  final int accountLocalId;
   final String guid;
   final String parentGuid;
   final int accountId;
@@ -2112,6 +2114,8 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
   final String messagesInfoInJson;
   LocalFolder(
       {@required this.localId,
+      @required this.userLocalId,
+      @required this.accountLocalId,
       @required this.guid,
       this.parentGuid,
       @required this.accountId,
@@ -2142,6 +2146,10 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
     return LocalFolder(
       localId:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}local_id']),
+      userLocalId: intType
+          .mapFromDatabaseResponse(data['${effectivePrefix}user_local_id']),
+      accountLocalId: intType
+          .mapFromDatabaseResponse(data['${effectivePrefix}account_local_id']),
       guid: stringType.mapFromDatabaseResponse(data['${effectivePrefix}guid']),
       parentGuid: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}parent_guid']),
@@ -2150,8 +2158,7 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
       type: intType.mapFromDatabaseResponse(data['${effectivePrefix}type']),
       folderOrder: intType
           .mapFromDatabaseResponse(data['${effectivePrefix}folder_order']),
-      count: intType
-          .mapFromDatabaseResponse(data['${effectivePrefix}messages_count']),
+      count: intType.mapFromDatabaseResponse(data['${effectivePrefix}count']),
       unread: intType.mapFromDatabaseResponse(data['${effectivePrefix}unread']),
       name: stringType.mapFromDatabaseResponse(data['${effectivePrefix}name']),
       fullName: stringType
@@ -2186,6 +2193,8 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return LocalFolder(
       localId: serializer.fromJson<int>(json['localId']),
+      userLocalId: serializer.fromJson<int>(json['userLocalId']),
+      accountLocalId: serializer.fromJson<int>(json['accountLocalId']),
       guid: serializer.fromJson<String>(json['guid']),
       parentGuid: serializer.fromJson<String>(json['parentGuid']),
       accountId: serializer.fromJson<int>(json['accountId']),
@@ -2213,8 +2222,10 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
   @override
   Map<String, dynamic> toJson(
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
-    return {
+    return <String, dynamic>{
       'localId': serializer.toJson<int>(localId),
+      'userLocalId': serializer.toJson<int>(userLocalId),
+      'accountLocalId': serializer.toJson<int>(accountLocalId),
       'guid': serializer.toJson<String>(guid),
       'parentGuid': serializer.toJson<String>(parentGuid),
       'accountId': serializer.toJson<int>(accountId),
@@ -2245,6 +2256,12 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
       localId: localId == null && nullToAbsent
           ? const Value.absent()
           : Value(localId),
+      userLocalId: userLocalId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(userLocalId),
+      accountLocalId: accountLocalId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(accountLocalId),
       guid: guid == null && nullToAbsent ? const Value.absent() : Value(guid),
       parentGuid: parentGuid == null && nullToAbsent
           ? const Value.absent()
@@ -2305,6 +2322,8 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
 
   LocalFolder copyWith(
           {int localId,
+          int userLocalId,
+          int accountLocalId,
           String guid,
           String parentGuid,
           int accountId,
@@ -2328,6 +2347,8 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
           String messagesInfoInJson}) =>
       LocalFolder(
         localId: localId ?? this.localId,
+        userLocalId: userLocalId ?? this.userLocalId,
+        accountLocalId: accountLocalId ?? this.accountLocalId,
         guid: guid ?? this.guid,
         parentGuid: parentGuid ?? this.parentGuid,
         accountId: accountId ?? this.accountId,
@@ -2354,6 +2375,8 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
   String toString() {
     return (StringBuffer('LocalFolder(')
           ..write('localId: $localId, ')
+          ..write('userLocalId: $userLocalId, ')
+          ..write('accountLocalId: $accountLocalId, ')
           ..write('guid: $guid, ')
           ..write('parentGuid: $parentGuid, ')
           ..write('accountId: $accountId, ')
@@ -2383,51 +2406,53 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
   int get hashCode => $mrjf($mrjc(
       localId.hashCode,
       $mrjc(
-          guid.hashCode,
+          userLocalId.hashCode,
           $mrjc(
-              parentGuid.hashCode,
+              accountLocalId.hashCode,
               $mrjc(
-                  accountId.hashCode,
+                  guid.hashCode,
                   $mrjc(
-                      type.hashCode,
+                      parentGuid.hashCode,
                       $mrjc(
-                          folderOrder.hashCode,
+                          accountId.hashCode,
                           $mrjc(
-                              count.hashCode,
+                              type.hashCode,
                               $mrjc(
-                                  unread.hashCode,
+                                  folderOrder.hashCode,
                                   $mrjc(
-                                      name.hashCode,
+                                      count.hashCode,
                                       $mrjc(
-                                          fullName.hashCode,
+                                          unread.hashCode,
                                           $mrjc(
-                                              fullNameRaw.hashCode,
+                                              name.hashCode,
                                               $mrjc(
-                                                  fullNameHash.hashCode,
+                                                  fullName.hashCode,
                                                   $mrjc(
-                                                      folderHash.hashCode,
+                                                      fullNameRaw.hashCode,
                                                       $mrjc(
-                                                          delimiter.hashCode,
+                                                          fullNameHash.hashCode,
                                                           $mrjc(
-                                                              needsInfoUpdate
+                                                              folderHash
                                                                   .hashCode,
                                                               $mrjc(
-                                                                  isSystemFolder
+                                                                  delimiter
                                                                       .hashCode,
                                                                   $mrjc(
-                                                                      isSubscribed
+                                                                      needsInfoUpdate
                                                                           .hashCode,
                                                                       $mrjc(
-                                                                          isSelectable
+                                                                          isSystemFolder
                                                                               .hashCode,
                                                                           $mrjc(
-                                                                              folderExists.hashCode,
-                                                                              $mrjc(extended.hashCode, $mrjc(alwaysRefresh.hashCode, messagesInfoInJson.hashCode))))))))))))))))))))));
+                                                                              isSubscribed.hashCode,
+                                                                              $mrjc(isSelectable.hashCode, $mrjc(folderExists.hashCode, $mrjc(extended.hashCode, $mrjc(alwaysRefresh.hashCode, messagesInfoInJson.hashCode))))))))))))))))))))))));
   @override
-  bool operator ==(other) =>
+  bool operator ==(dynamic other) =>
       identical(this, other) ||
       (other is LocalFolder &&
           other.localId == this.localId &&
+          other.userLocalId == this.userLocalId &&
+          other.accountLocalId == this.accountLocalId &&
           other.guid == this.guid &&
           other.parentGuid == this.parentGuid &&
           other.accountId == this.accountId &&
@@ -2453,6 +2478,8 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
 
 class FoldersCompanion extends UpdateCompanion<LocalFolder> {
   final Value<int> localId;
+  final Value<int> userLocalId;
+  final Value<int> accountLocalId;
   final Value<String> guid;
   final Value<String> parentGuid;
   final Value<int> accountId;
@@ -2476,6 +2503,8 @@ class FoldersCompanion extends UpdateCompanion<LocalFolder> {
   final Value<String> messagesInfoInJson;
   const FoldersCompanion({
     this.localId = const Value.absent(),
+    this.userLocalId = const Value.absent(),
+    this.accountLocalId = const Value.absent(),
     this.guid = const Value.absent(),
     this.parentGuid = const Value.absent(),
     this.accountId = const Value.absent(),
@@ -2500,6 +2529,8 @@ class FoldersCompanion extends UpdateCompanion<LocalFolder> {
   });
   FoldersCompanion.insert({
     this.localId = const Value.absent(),
+    @required int userLocalId,
+    @required int accountLocalId,
     @required String guid,
     this.parentGuid = const Value.absent(),
     @required int accountId,
@@ -2521,7 +2552,9 @@ class FoldersCompanion extends UpdateCompanion<LocalFolder> {
     this.extended = const Value.absent(),
     @required bool alwaysRefresh,
     this.messagesInfoInJson = const Value.absent(),
-  })  : guid = Value(guid),
+  })  : userLocalId = Value(userLocalId),
+        accountLocalId = Value(accountLocalId),
+        guid = Value(guid),
         accountId = Value(accountId),
         type = Value(type),
         folderOrder = Value(folderOrder),
@@ -2539,6 +2572,8 @@ class FoldersCompanion extends UpdateCompanion<LocalFolder> {
         alwaysRefresh = Value(alwaysRefresh);
   FoldersCompanion copyWith(
       {Value<int> localId,
+      Value<int> userLocalId,
+      Value<int> accountLocalId,
       Value<String> guid,
       Value<String> parentGuid,
       Value<int> accountId,
@@ -2562,6 +2597,8 @@ class FoldersCompanion extends UpdateCompanion<LocalFolder> {
       Value<String> messagesInfoInJson}) {
     return FoldersCompanion(
       localId: localId ?? this.localId,
+      userLocalId: userLocalId ?? this.userLocalId,
+      accountLocalId: accountLocalId ?? this.accountLocalId,
       guid: guid ?? this.guid,
       parentGuid: parentGuid ?? this.parentGuid,
       accountId: accountId ?? this.accountId,
@@ -2598,6 +2635,34 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
   GeneratedIntColumn _constructLocalId() {
     return GeneratedIntColumn('local_id', $tableName, false,
         hasAutoIncrement: true, declaredAsPrimaryKey: true);
+  }
+
+  final VerificationMeta _userLocalIdMeta =
+      const VerificationMeta('userLocalId');
+  GeneratedIntColumn _userLocalId;
+  @override
+  GeneratedIntColumn get userLocalId =>
+      _userLocalId ??= _constructUserLocalId();
+  GeneratedIntColumn _constructUserLocalId() {
+    return GeneratedIntColumn(
+      'user_local_id',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _accountLocalIdMeta =
+      const VerificationMeta('accountLocalId');
+  GeneratedIntColumn _accountLocalId;
+  @override
+  GeneratedIntColumn get accountLocalId =>
+      _accountLocalId ??= _constructAccountLocalId();
+  GeneratedIntColumn _constructAccountLocalId() {
+    return GeneratedIntColumn(
+      'account_local_id',
+      $tableName,
+      false,
+    );
   }
 
   final VerificationMeta _guidMeta = const VerificationMeta('guid');
@@ -2668,7 +2733,7 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
   GeneratedIntColumn get count => _count ??= _constructCount();
   GeneratedIntColumn _constructCount() {
     return GeneratedIntColumn(
-      'messages_count',
+      'count',
       $tableName,
       true,
     );
@@ -2875,6 +2940,8 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
   @override
   List<GeneratedColumn> get $columns => [
         localId,
+        userLocalId,
+        accountLocalId,
         guid,
         parentGuid,
         accountId,
@@ -2912,6 +2979,20 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
           localId.isAcceptableValue(d.localId.value, _localIdMeta));
     } else if (localId.isRequired && isInserting) {
       context.missing(_localIdMeta);
+    }
+    if (d.userLocalId.present) {
+      context.handle(_userLocalIdMeta,
+          userLocalId.isAcceptableValue(d.userLocalId.value, _userLocalIdMeta));
+    } else if (userLocalId.isRequired && isInserting) {
+      context.missing(_userLocalIdMeta);
+    }
+    if (d.accountLocalId.present) {
+      context.handle(
+          _accountLocalIdMeta,
+          accountLocalId.isAcceptableValue(
+              d.accountLocalId.value, _accountLocalIdMeta));
+    } else if (accountLocalId.isRequired && isInserting) {
+      context.missing(_accountLocalIdMeta);
     }
     if (d.guid.present) {
       context.handle(
@@ -3072,6 +3153,12 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
     if (d.localId.present) {
       map['local_id'] = Variable<int, IntType>(d.localId.value);
     }
+    if (d.userLocalId.present) {
+      map['user_local_id'] = Variable<int, IntType>(d.userLocalId.value);
+    }
+    if (d.accountLocalId.present) {
+      map['account_local_id'] = Variable<int, IntType>(d.accountLocalId.value);
+    }
     if (d.guid.present) {
       map['guid'] = Variable<String, StringType>(d.guid.value);
     }
@@ -3088,7 +3175,7 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
       map['folder_order'] = Variable<int, IntType>(d.folderOrder.value);
     }
     if (d.count.present) {
-      map['messages_count'] = Variable<int, IntType>(d.count.value);
+      map['count'] = Variable<int, IntType>(d.count.value);
     }
     if (d.unread.present) {
       map['unread'] = Variable<int, IntType>(d.unread.value);
@@ -3152,6 +3239,7 @@ class User extends DataClass implements Insertable<User> {
   final int localId;
   final int serverId;
   final String hostname;
+  final String emailFromLogin;
   final String token;
   final int syncFreqInSeconds;
   final String syncPeriod;
@@ -3160,6 +3248,7 @@ class User extends DataClass implements Insertable<User> {
       {@required this.localId,
       @required this.serverId,
       @required this.hostname,
+      @required this.emailFromLogin,
       @required this.token,
       this.syncFreqInSeconds,
       this.syncPeriod,
@@ -3176,6 +3265,8 @@ class User extends DataClass implements Insertable<User> {
           intType.mapFromDatabaseResponse(data['${effectivePrefix}server_id']),
       hostname: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}hostname']),
+      emailFromLogin: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}email_from_login']),
       token:
           stringType.mapFromDatabaseResponse(data['${effectivePrefix}token']),
       syncFreqInSeconds: intType.mapFromDatabaseResponse(
@@ -3192,6 +3283,7 @@ class User extends DataClass implements Insertable<User> {
       localId: serializer.fromJson<int>(json['localId']),
       serverId: serializer.fromJson<int>(json['serverId']),
       hostname: serializer.fromJson<String>(json['hostname']),
+      emailFromLogin: serializer.fromJson<String>(json['emailFromLogin']),
       token: serializer.fromJson<String>(json['token']),
       syncFreqInSeconds: serializer.fromJson<int>(json['syncFreqInSeconds']),
       syncPeriod: serializer.fromJson<String>(json['syncPeriod']),
@@ -3201,10 +3293,11 @@ class User extends DataClass implements Insertable<User> {
   @override
   Map<String, dynamic> toJson(
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
-    return {
+    return <String, dynamic>{
       'localId': serializer.toJson<int>(localId),
       'serverId': serializer.toJson<int>(serverId),
       'hostname': serializer.toJson<String>(hostname),
+      'emailFromLogin': serializer.toJson<String>(emailFromLogin),
       'token': serializer.toJson<String>(token),
       'syncFreqInSeconds': serializer.toJson<int>(syncFreqInSeconds),
       'syncPeriod': serializer.toJson<String>(syncPeriod),
@@ -3224,6 +3317,9 @@ class User extends DataClass implements Insertable<User> {
       hostname: hostname == null && nullToAbsent
           ? const Value.absent()
           : Value(hostname),
+      emailFromLogin: emailFromLogin == null && nullToAbsent
+          ? const Value.absent()
+          : Value(emailFromLogin),
       token:
           token == null && nullToAbsent ? const Value.absent() : Value(token),
       syncFreqInSeconds: syncFreqInSeconds == null && nullToAbsent
@@ -3242,6 +3338,7 @@ class User extends DataClass implements Insertable<User> {
           {int localId,
           int serverId,
           String hostname,
+          String emailFromLogin,
           String token,
           int syncFreqInSeconds,
           String syncPeriod,
@@ -3250,6 +3347,7 @@ class User extends DataClass implements Insertable<User> {
         localId: localId ?? this.localId,
         serverId: serverId ?? this.serverId,
         hostname: hostname ?? this.hostname,
+        emailFromLogin: emailFromLogin ?? this.emailFromLogin,
         token: token ?? this.token,
         syncFreqInSeconds: syncFreqInSeconds ?? this.syncFreqInSeconds,
         syncPeriod: syncPeriod ?? this.syncPeriod,
@@ -3261,6 +3359,7 @@ class User extends DataClass implements Insertable<User> {
           ..write('localId: $localId, ')
           ..write('serverId: $serverId, ')
           ..write('hostname: $hostname, ')
+          ..write('emailFromLogin: $emailFromLogin, ')
           ..write('token: $token, ')
           ..write('syncFreqInSeconds: $syncFreqInSeconds, ')
           ..write('syncPeriod: $syncPeriod, ')
@@ -3277,16 +3376,19 @@ class User extends DataClass implements Insertable<User> {
           $mrjc(
               hostname.hashCode,
               $mrjc(
-                  token.hashCode,
-                  $mrjc(syncFreqInSeconds.hashCode,
-                      $mrjc(syncPeriod.hashCode, language.hashCode)))))));
+                  emailFromLogin.hashCode,
+                  $mrjc(
+                      token.hashCode,
+                      $mrjc(syncFreqInSeconds.hashCode,
+                          $mrjc(syncPeriod.hashCode, language.hashCode))))))));
   @override
-  bool operator ==(other) =>
+  bool operator ==(dynamic other) =>
       identical(this, other) ||
       (other is User &&
           other.localId == this.localId &&
           other.serverId == this.serverId &&
           other.hostname == this.hostname &&
+          other.emailFromLogin == this.emailFromLogin &&
           other.token == this.token &&
           other.syncFreqInSeconds == this.syncFreqInSeconds &&
           other.syncPeriod == this.syncPeriod &&
@@ -3297,6 +3399,7 @@ class UsersCompanion extends UpdateCompanion<User> {
   final Value<int> localId;
   final Value<int> serverId;
   final Value<String> hostname;
+  final Value<String> emailFromLogin;
   final Value<String> token;
   final Value<int> syncFreqInSeconds;
   final Value<String> syncPeriod;
@@ -3305,6 +3408,7 @@ class UsersCompanion extends UpdateCompanion<User> {
     this.localId = const Value.absent(),
     this.serverId = const Value.absent(),
     this.hostname = const Value.absent(),
+    this.emailFromLogin = const Value.absent(),
     this.token = const Value.absent(),
     this.syncFreqInSeconds = const Value.absent(),
     this.syncPeriod = const Value.absent(),
@@ -3314,17 +3418,20 @@ class UsersCompanion extends UpdateCompanion<User> {
     this.localId = const Value.absent(),
     @required int serverId,
     @required String hostname,
+    @required String emailFromLogin,
     @required String token,
     this.syncFreqInSeconds = const Value.absent(),
     this.syncPeriod = const Value.absent(),
     this.language = const Value.absent(),
   })  : serverId = Value(serverId),
         hostname = Value(hostname),
+        emailFromLogin = Value(emailFromLogin),
         token = Value(token);
   UsersCompanion copyWith(
       {Value<int> localId,
       Value<int> serverId,
       Value<String> hostname,
+      Value<String> emailFromLogin,
       Value<String> token,
       Value<int> syncFreqInSeconds,
       Value<String> syncPeriod,
@@ -3333,6 +3440,7 @@ class UsersCompanion extends UpdateCompanion<User> {
       localId: localId ?? this.localId,
       serverId: serverId ?? this.serverId,
       hostname: hostname ?? this.hostname,
+      emailFromLogin: emailFromLogin ?? this.emailFromLogin,
       token: token ?? this.token,
       syncFreqInSeconds: syncFreqInSeconds ?? this.syncFreqInSeconds,
       syncPeriod: syncPeriod ?? this.syncPeriod,
@@ -3370,6 +3478,20 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
   GeneratedTextColumn _constructHostname() {
     return GeneratedTextColumn(
       'hostname',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _emailFromLoginMeta =
+      const VerificationMeta('emailFromLogin');
+  GeneratedTextColumn _emailFromLogin;
+  @override
+  GeneratedTextColumn get emailFromLogin =>
+      _emailFromLogin ??= _constructEmailFromLogin();
+  GeneratedTextColumn _constructEmailFromLogin() {
+    return GeneratedTextColumn(
+      'email_from_login',
       $tableName,
       false,
     );
@@ -3427,6 +3549,7 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
         localId,
         serverId,
         hostname,
+        emailFromLogin,
         token,
         syncFreqInSeconds,
         syncPeriod,
@@ -3459,6 +3582,14 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
           hostname.isAcceptableValue(d.hostname.value, _hostnameMeta));
     } else if (hostname.isRequired && isInserting) {
       context.missing(_hostnameMeta);
+    }
+    if (d.emailFromLogin.present) {
+      context.handle(
+          _emailFromLoginMeta,
+          emailFromLogin.isAcceptableValue(
+              d.emailFromLogin.value, _emailFromLoginMeta));
+    } else if (emailFromLogin.isRequired && isInserting) {
+      context.missing(_emailFromLoginMeta);
     }
     if (d.token.present) {
       context.handle(
@@ -3509,6 +3640,10 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
     if (d.hostname.present) {
       map['hostname'] = Variable<String, StringType>(d.hostname.value);
     }
+    if (d.emailFromLogin.present) {
+      map['email_from_login'] =
+          Variable<String, StringType>(d.emailFromLogin.value);
+    }
     if (d.token.present) {
       map['token'] = Variable<String, StringType>(d.token.value);
     }
@@ -3533,6 +3668,7 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
 
 class Account extends DataClass implements Insertable<Account> {
   final int localId;
+  final int userLocalId;
   final int entityId;
   final int idUser;
   final String uuid;
@@ -3553,6 +3689,7 @@ class Account extends DataClass implements Insertable<Account> {
   final bool allowAutoResponder;
   Account(
       {@required this.localId,
+      @required this.userLocalId,
       @required this.entityId,
       @required this.idUser,
       @required this.uuid,
@@ -3580,6 +3717,8 @@ class Account extends DataClass implements Insertable<Account> {
     return Account(
       localId:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}local_id']),
+      userLocalId: intType
+          .mapFromDatabaseResponse(data['${effectivePrefix}user_local_id']),
       entityId:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}entity_id']),
       idUser:
@@ -3621,6 +3760,7 @@ class Account extends DataClass implements Insertable<Account> {
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return Account(
       localId: serializer.fromJson<int>(json['localId']),
+      userLocalId: serializer.fromJson<int>(json['userLocalId']),
       entityId: serializer.fromJson<int>(json['entityId']),
       idUser: serializer.fromJson<int>(json['idUser']),
       uuid: serializer.fromJson<String>(json['uuid']),
@@ -3646,8 +3786,9 @@ class Account extends DataClass implements Insertable<Account> {
   @override
   Map<String, dynamic> toJson(
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
-    return {
+    return <String, dynamic>{
       'localId': serializer.toJson<int>(localId),
+      'userLocalId': serializer.toJson<int>(userLocalId),
       'entityId': serializer.toJson<int>(entityId),
       'idUser': serializer.toJson<int>(idUser),
       'uuid': serializer.toJson<String>(uuid),
@@ -3676,6 +3817,9 @@ class Account extends DataClass implements Insertable<Account> {
       localId: localId == null && nullToAbsent
           ? const Value.absent()
           : Value(localId),
+      userLocalId: userLocalId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(userLocalId),
       entityId: entityId == null && nullToAbsent
           ? const Value.absent()
           : Value(entityId),
@@ -3731,6 +3875,7 @@ class Account extends DataClass implements Insertable<Account> {
 
   Account copyWith(
           {int localId,
+          int userLocalId,
           int entityId,
           int idUser,
           String uuid,
@@ -3751,6 +3896,7 @@ class Account extends DataClass implements Insertable<Account> {
           bool allowAutoResponder}) =>
       Account(
         localId: localId ?? this.localId,
+        userLocalId: userLocalId ?? this.userLocalId,
         entityId: entityId ?? this.entityId,
         idUser: idUser ?? this.idUser,
         uuid: uuid ?? this.uuid,
@@ -3775,6 +3921,7 @@ class Account extends DataClass implements Insertable<Account> {
   String toString() {
     return (StringBuffer('Account(')
           ..write('localId: $localId, ')
+          ..write('userLocalId: $userLocalId, ')
           ..write('entityId: $entityId, ')
           ..write('idUser: $idUser, ')
           ..write('uuid: $uuid, ')
@@ -3801,51 +3948,53 @@ class Account extends DataClass implements Insertable<Account> {
   int get hashCode => $mrjf($mrjc(
       localId.hashCode,
       $mrjc(
-          entityId.hashCode,
+          userLocalId.hashCode,
           $mrjc(
-              idUser.hashCode,
+              entityId.hashCode,
               $mrjc(
-                  uuid.hashCode,
+                  idUser.hashCode,
                   $mrjc(
-                      parentUuid.hashCode,
+                      uuid.hashCode,
                       $mrjc(
-                          moduleName.hashCode,
+                          parentUuid.hashCode,
                           $mrjc(
-                              useToAuthorize.hashCode,
+                              moduleName.hashCode,
                               $mrjc(
-                                  email.hashCode,
+                                  useToAuthorize.hashCode,
                                   $mrjc(
-                                      friendlyName.hashCode,
+                                      email.hashCode,
                                       $mrjc(
-                                          useSignature.hashCode,
+                                          friendlyName.hashCode,
                                           $mrjc(
-                                              signature.hashCode,
+                                              useSignature.hashCode,
                                               $mrjc(
-                                                  serverId.hashCode,
+                                                  signature.hashCode,
                                                   $mrjc(
-                                                      foldersOrderInJson
-                                                          .hashCode,
+                                                      serverId.hashCode,
                                                       $mrjc(
-                                                          useThreading.hashCode,
+                                                          foldersOrderInJson
+                                                              .hashCode,
                                                           $mrjc(
-                                                              saveRepliesToCurrFolder
+                                                              useThreading
                                                                   .hashCode,
                                                               $mrjc(
-                                                                  accountId
+                                                                  saveRepliesToCurrFolder
                                                                       .hashCode,
                                                                   $mrjc(
-                                                                      allowFilters
+                                                                      accountId
                                                                           .hashCode,
                                                                       $mrjc(
-                                                                          allowForward
+                                                                          allowFilters
                                                                               .hashCode,
-                                                                          allowAutoResponder
-                                                                              .hashCode)))))))))))))))))));
+                                                                          $mrjc(
+                                                                              allowForward.hashCode,
+                                                                              allowAutoResponder.hashCode))))))))))))))))))));
   @override
-  bool operator ==(other) =>
+  bool operator ==(dynamic other) =>
       identical(this, other) ||
       (other is Account &&
           other.localId == this.localId &&
+          other.userLocalId == this.userLocalId &&
           other.entityId == this.entityId &&
           other.idUser == this.idUser &&
           other.uuid == this.uuid &&
@@ -3868,6 +4017,7 @@ class Account extends DataClass implements Insertable<Account> {
 
 class AccountsCompanion extends UpdateCompanion<Account> {
   final Value<int> localId;
+  final Value<int> userLocalId;
   final Value<int> entityId;
   final Value<int> idUser;
   final Value<String> uuid;
@@ -3888,6 +4038,7 @@ class AccountsCompanion extends UpdateCompanion<Account> {
   final Value<bool> allowAutoResponder;
   const AccountsCompanion({
     this.localId = const Value.absent(),
+    this.userLocalId = const Value.absent(),
     this.entityId = const Value.absent(),
     this.idUser = const Value.absent(),
     this.uuid = const Value.absent(),
@@ -3909,6 +4060,7 @@ class AccountsCompanion extends UpdateCompanion<Account> {
   });
   AccountsCompanion.insert({
     this.localId = const Value.absent(),
+    @required int userLocalId,
     @required int entityId,
     @required int idUser,
     @required String uuid,
@@ -3927,7 +4079,8 @@ class AccountsCompanion extends UpdateCompanion<Account> {
     @required bool allowFilters,
     @required bool allowForward,
     @required bool allowAutoResponder,
-  })  : entityId = Value(entityId),
+  })  : userLocalId = Value(userLocalId),
+        entityId = Value(entityId),
         idUser = Value(idUser),
         uuid = Value(uuid),
         parentUuid = Value(parentUuid),
@@ -3947,6 +4100,7 @@ class AccountsCompanion extends UpdateCompanion<Account> {
         allowAutoResponder = Value(allowAutoResponder);
   AccountsCompanion copyWith(
       {Value<int> localId,
+      Value<int> userLocalId,
       Value<int> entityId,
       Value<int> idUser,
       Value<String> uuid,
@@ -3967,6 +4121,7 @@ class AccountsCompanion extends UpdateCompanion<Account> {
       Value<bool> allowAutoResponder}) {
     return AccountsCompanion(
       localId: localId ?? this.localId,
+      userLocalId: userLocalId ?? this.userLocalId,
       entityId: entityId ?? this.entityId,
       idUser: idUser ?? this.idUser,
       uuid: uuid ?? this.uuid,
@@ -4001,6 +4156,20 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
   GeneratedIntColumn _constructLocalId() {
     return GeneratedIntColumn('local_id', $tableName, false,
         hasAutoIncrement: true, declaredAsPrimaryKey: true);
+  }
+
+  final VerificationMeta _userLocalIdMeta =
+      const VerificationMeta('userLocalId');
+  GeneratedIntColumn _userLocalId;
+  @override
+  GeneratedIntColumn get userLocalId =>
+      _userLocalId ??= _constructUserLocalId();
+  GeneratedIntColumn _constructUserLocalId() {
+    return GeneratedIntColumn(
+      'user_local_id',
+      $tableName,
+      false,
+    );
   }
 
   final VerificationMeta _entityIdMeta = const VerificationMeta('entityId');
@@ -4237,6 +4406,7 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
   @override
   List<GeneratedColumn> get $columns => [
         localId,
+        userLocalId,
         entityId,
         idUser,
         uuid,
@@ -4271,6 +4441,12 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
           localId.isAcceptableValue(d.localId.value, _localIdMeta));
     } else if (localId.isRequired && isInserting) {
       context.missing(_localIdMeta);
+    }
+    if (d.userLocalId.present) {
+      context.handle(_userLocalIdMeta,
+          userLocalId.isAcceptableValue(d.userLocalId.value, _userLocalIdMeta));
+    } else if (userLocalId.isRequired && isInserting) {
+      context.missing(_userLocalIdMeta);
     }
     if (d.entityId.present) {
       context.handle(_entityIdMeta,
@@ -4415,6 +4591,9 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
     if (d.localId.present) {
       map['local_id'] = Variable<int, IntType>(d.localId.value);
     }
+    if (d.userLocalId.present) {
+      map['user_local_id'] = Variable<int, IntType>(d.userLocalId.value);
+    }
     if (d.entityId.present) {
       map['entity_id'] = Variable<int, IntType>(d.entityId.value);
     }
@@ -4485,6 +4664,7 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
 class ContactsTable extends DataClass implements Insertable<ContactsTable> {
   final String uuidPlusStorage;
   final String uuid;
+  final int userLocalId;
   final int entityId;
   final String parentUuid;
   final String eTag;
@@ -4540,6 +4720,7 @@ class ContactsTable extends DataClass implements Insertable<ContactsTable> {
   ContactsTable(
       {@required this.uuidPlusStorage,
       @required this.uuid,
+      @required this.userLocalId,
       this.entityId,
       this.parentUuid,
       @required this.eTag,
@@ -4603,6 +4784,8 @@ class ContactsTable extends DataClass implements Insertable<ContactsTable> {
       uuidPlusStorage: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}uuid_plus_storage']),
       uuid: stringType.mapFromDatabaseResponse(data['${effectivePrefix}uuid']),
+      userLocalId: intType
+          .mapFromDatabaseResponse(data['${effectivePrefix}user_local_id']),
       entityId:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}entity_id']),
       parentUuid: stringType
@@ -4712,6 +4895,7 @@ class ContactsTable extends DataClass implements Insertable<ContactsTable> {
     return ContactsTable(
       uuidPlusStorage: serializer.fromJson<String>(json['uuidPlusStorage']),
       uuid: serializer.fromJson<String>(json['uuid']),
+      userLocalId: serializer.fromJson<int>(json['userLocalId']),
       entityId: serializer.fromJson<int>(json['entityId']),
       parentUuid: serializer.fromJson<String>(json['parentUuid']),
       eTag: serializer.fromJson<String>(json['eTag']),
@@ -4771,9 +4955,10 @@ class ContactsTable extends DataClass implements Insertable<ContactsTable> {
   @override
   Map<String, dynamic> toJson(
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
-    return {
+    return <String, dynamic>{
       'uuidPlusStorage': serializer.toJson<String>(uuidPlusStorage),
       'uuid': serializer.toJson<String>(uuid),
+      'userLocalId': serializer.toJson<int>(userLocalId),
       'entityId': serializer.toJson<int>(entityId),
       'parentUuid': serializer.toJson<String>(parentUuid),
       'eTag': serializer.toJson<String>(eTag),
@@ -4836,6 +5021,9 @@ class ContactsTable extends DataClass implements Insertable<ContactsTable> {
           ? const Value.absent()
           : Value(uuidPlusStorage),
       uuid: uuid == null && nullToAbsent ? const Value.absent() : Value(uuid),
+      userLocalId: userLocalId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(userLocalId),
       entityId: entityId == null && nullToAbsent
           ? const Value.absent()
           : Value(entityId),
@@ -4990,6 +5178,7 @@ class ContactsTable extends DataClass implements Insertable<ContactsTable> {
   ContactsTable copyWith(
           {String uuidPlusStorage,
           String uuid,
+          int userLocalId,
           int entityId,
           String parentUuid,
           String eTag,
@@ -5045,6 +5234,7 @@ class ContactsTable extends DataClass implements Insertable<ContactsTable> {
       ContactsTable(
         uuidPlusStorage: uuidPlusStorage ?? this.uuidPlusStorage,
         uuid: uuid ?? this.uuid,
+        userLocalId: userLocalId ?? this.userLocalId,
         entityId: entityId ?? this.entityId,
         parentUuid: parentUuid ?? this.parentUuid,
         eTag: eTag ?? this.eTag,
@@ -5103,6 +5293,7 @@ class ContactsTable extends DataClass implements Insertable<ContactsTable> {
     return (StringBuffer('ContactsTable(')
           ..write('uuidPlusStorage: $uuidPlusStorage, ')
           ..write('uuid: $uuid, ')
+          ..write('userLocalId: $userLocalId, ')
           ..write('entityId: $entityId, ')
           ..write('parentUuid: $parentUuid, ')
           ..write('eTag: $eTag, ')
@@ -5165,49 +5356,52 @@ class ContactsTable extends DataClass implements Insertable<ContactsTable> {
       $mrjc(
           uuid.hashCode,
           $mrjc(
-              entityId.hashCode,
+              userLocalId.hashCode,
               $mrjc(
-                  parentUuid.hashCode,
+                  entityId.hashCode,
                   $mrjc(
-                      eTag.hashCode,
+                      parentUuid.hashCode,
                       $mrjc(
-                          idUser.hashCode,
+                          eTag.hashCode,
                           $mrjc(
-                              idTenant.hashCode,
+                              idUser.hashCode,
                               $mrjc(
-                                  storage.hashCode,
+                                  idTenant.hashCode,
                                   $mrjc(
-                                      fullName.hashCode,
+                                      storage.hashCode,
                                       $mrjc(
-                                          useFriendlyName.hashCode,
+                                          fullName.hashCode,
                                           $mrjc(
-                                              primaryEmail.hashCode,
+                                              useFriendlyName.hashCode,
                                               $mrjc(
-                                                  primaryPhone.hashCode,
+                                                  primaryEmail.hashCode,
                                                   $mrjc(
-                                                      primaryAddress.hashCode,
+                                                      primaryPhone.hashCode,
                                                       $mrjc(
-                                                          viewEmail.hashCode,
+                                                          primaryAddress
+                                                              .hashCode,
                                                           $mrjc(
-                                                              title.hashCode,
+                                                              viewEmail
+                                                                  .hashCode,
                                                               $mrjc(
-                                                                  firstName
+                                                                  title
                                                                       .hashCode,
                                                                   $mrjc(
-                                                                      lastName
+                                                                      firstName
                                                                           .hashCode,
                                                                       $mrjc(
-                                                                          nickName
+                                                                          lastName
                                                                               .hashCode,
                                                                           $mrjc(
-                                                                              skype.hashCode,
-                                                                              $mrjc(facebook.hashCode, $mrjc(personalEmail.hashCode, $mrjc(personalAddress.hashCode, $mrjc(personalCity.hashCode, $mrjc(personalState.hashCode, $mrjc(personalZip.hashCode, $mrjc(personalCountry.hashCode, $mrjc(personalWeb.hashCode, $mrjc(personalFax.hashCode, $mrjc(personalPhone.hashCode, $mrjc(personalMobile.hashCode, $mrjc(businessEmail.hashCode, $mrjc(businessCompany.hashCode, $mrjc(businessAddress.hashCode, $mrjc(businessCity.hashCode, $mrjc(businessState.hashCode, $mrjc(businessZip.hashCode, $mrjc(businessCountry.hashCode, $mrjc(businessJobTitle.hashCode, $mrjc(businessDepartment.hashCode, $mrjc(businessOffice.hashCode, $mrjc(businessPhone.hashCode, $mrjc(businessFax.hashCode, $mrjc(businessWeb.hashCode, $mrjc(otherEmail.hashCode, $mrjc(notes.hashCode, $mrjc(birthDay.hashCode, $mrjc(birthMonth.hashCode, $mrjc(birthYear.hashCode, $mrjc(auto.hashCode, $mrjc(frequency.hashCode, $mrjc(dateModified.hashCode, $mrjc(davContactsUid.hashCode, $mrjc(davContactsVCardUid.hashCode, groupUUIDs.hashCode))))))))))))))))))))))))))))))))))))))))))))))))))))));
+                                                                              nickName.hashCode,
+                                                                              $mrjc(skype.hashCode, $mrjc(facebook.hashCode, $mrjc(personalEmail.hashCode, $mrjc(personalAddress.hashCode, $mrjc(personalCity.hashCode, $mrjc(personalState.hashCode, $mrjc(personalZip.hashCode, $mrjc(personalCountry.hashCode, $mrjc(personalWeb.hashCode, $mrjc(personalFax.hashCode, $mrjc(personalPhone.hashCode, $mrjc(personalMobile.hashCode, $mrjc(businessEmail.hashCode, $mrjc(businessCompany.hashCode, $mrjc(businessAddress.hashCode, $mrjc(businessCity.hashCode, $mrjc(businessState.hashCode, $mrjc(businessZip.hashCode, $mrjc(businessCountry.hashCode, $mrjc(businessJobTitle.hashCode, $mrjc(businessDepartment.hashCode, $mrjc(businessOffice.hashCode, $mrjc(businessPhone.hashCode, $mrjc(businessFax.hashCode, $mrjc(businessWeb.hashCode, $mrjc(otherEmail.hashCode, $mrjc(notes.hashCode, $mrjc(birthDay.hashCode, $mrjc(birthMonth.hashCode, $mrjc(birthYear.hashCode, $mrjc(auto.hashCode, $mrjc(frequency.hashCode, $mrjc(dateModified.hashCode, $mrjc(davContactsUid.hashCode, $mrjc(davContactsVCardUid.hashCode, groupUUIDs.hashCode)))))))))))))))))))))))))))))))))))))))))))))))))))))));
   @override
-  bool operator ==(other) =>
+  bool operator ==(dynamic other) =>
       identical(this, other) ||
       (other is ContactsTable &&
           other.uuidPlusStorage == this.uuidPlusStorage &&
           other.uuid == this.uuid &&
+          other.userLocalId == this.userLocalId &&
           other.entityId == this.entityId &&
           other.parentUuid == this.parentUuid &&
           other.eTag == this.eTag &&
@@ -5265,6 +5459,7 @@ class ContactsTable extends DataClass implements Insertable<ContactsTable> {
 class ContactsCompanion extends UpdateCompanion<ContactsTable> {
   final Value<String> uuidPlusStorage;
   final Value<String> uuid;
+  final Value<int> userLocalId;
   final Value<int> entityId;
   final Value<String> parentUuid;
   final Value<String> eTag;
@@ -5320,6 +5515,7 @@ class ContactsCompanion extends UpdateCompanion<ContactsTable> {
   const ContactsCompanion({
     this.uuidPlusStorage = const Value.absent(),
     this.uuid = const Value.absent(),
+    this.userLocalId = const Value.absent(),
     this.entityId = const Value.absent(),
     this.parentUuid = const Value.absent(),
     this.eTag = const Value.absent(),
@@ -5376,6 +5572,7 @@ class ContactsCompanion extends UpdateCompanion<ContactsTable> {
   ContactsCompanion.insert({
     @required String uuidPlusStorage,
     @required String uuid,
+    @required int userLocalId,
     this.entityId = const Value.absent(),
     this.parentUuid = const Value.absent(),
     @required String eTag,
@@ -5430,6 +5627,7 @@ class ContactsCompanion extends UpdateCompanion<ContactsTable> {
     @required List<String> groupUUIDs,
   })  : uuidPlusStorage = Value(uuidPlusStorage),
         uuid = Value(uuid),
+        userLocalId = Value(userLocalId),
         eTag = Value(eTag),
         idUser = Value(idUser),
         storage = Value(storage),
@@ -5476,6 +5674,7 @@ class ContactsCompanion extends UpdateCompanion<ContactsTable> {
   ContactsCompanion copyWith(
       {Value<String> uuidPlusStorage,
       Value<String> uuid,
+      Value<int> userLocalId,
       Value<int> entityId,
       Value<String> parentUuid,
       Value<String> eTag,
@@ -5531,6 +5730,7 @@ class ContactsCompanion extends UpdateCompanion<ContactsTable> {
     return ContactsCompanion(
       uuidPlusStorage: uuidPlusStorage ?? this.uuidPlusStorage,
       uuid: uuid ?? this.uuid,
+      userLocalId: userLocalId ?? this.userLocalId,
       entityId: entityId ?? this.entityId,
       parentUuid: parentUuid ?? this.parentUuid,
       eTag: eTag ?? this.eTag,
@@ -5610,6 +5810,20 @@ class $ContactsTable extends Contacts
   GeneratedTextColumn _constructUuid() {
     return GeneratedTextColumn(
       'uuid',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _userLocalIdMeta =
+      const VerificationMeta('userLocalId');
+  GeneratedIntColumn _userLocalId;
+  @override
+  GeneratedIntColumn get userLocalId =>
+      _userLocalId ??= _constructUserLocalId();
+  GeneratedIntColumn _constructUserLocalId() {
+    return GeneratedIntColumn(
+      'user_local_id',
       $tableName,
       false,
     );
@@ -6300,6 +6514,7 @@ class $ContactsTable extends Contacts
   List<GeneratedColumn> get $columns => [
         uuidPlusStorage,
         uuid,
+        userLocalId,
         entityId,
         parentUuid,
         eTag,
@@ -6376,6 +6591,12 @@ class $ContactsTable extends Contacts
           _uuidMeta, uuid.isAcceptableValue(d.uuid.value, _uuidMeta));
     } else if (uuid.isRequired && isInserting) {
       context.missing(_uuidMeta);
+    }
+    if (d.userLocalId.present) {
+      context.handle(_userLocalIdMeta,
+          userLocalId.isAcceptableValue(d.userLocalId.value, _userLocalIdMeta));
+    } else if (userLocalId.isRequired && isInserting) {
+      context.missing(_userLocalIdMeta);
     }
     if (d.entityId.present) {
       context.handle(_entityIdMeta,
@@ -6753,6 +6974,9 @@ class $ContactsTable extends Contacts
     if (d.uuid.present) {
       map['uuid'] = Variable<String, StringType>(d.uuid.value);
     }
+    if (d.userLocalId.present) {
+      map['user_local_id'] = Variable<int, IntType>(d.userLocalId.value);
+    }
     if (d.entityId.present) {
       map['entity_id'] = Variable<int, IntType>(d.entityId.value);
     }
@@ -6943,6 +7167,7 @@ class $ContactsTable extends Contacts
 class ContactsGroupsTable extends DataClass
     implements Insertable<ContactsGroupsTable> {
   final String uuid;
+  final int userLocalId;
   final int idUser;
   final String city;
   final String company;
@@ -6959,6 +7184,7 @@ class ContactsGroupsTable extends DataClass
   final String zip;
   ContactsGroupsTable(
       {@required this.uuid,
+      @required this.userLocalId,
       @required this.idUser,
       @required this.city,
       @required this.company,
@@ -6982,6 +7208,8 @@ class ContactsGroupsTable extends DataClass
     final boolType = db.typeSystem.forDartType<bool>();
     return ContactsGroupsTable(
       uuid: stringType.mapFromDatabaseResponse(data['${effectivePrefix}uuid']),
+      userLocalId: intType
+          .mapFromDatabaseResponse(data['${effectivePrefix}user_local_id']),
       idUser:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}id_user']),
       city: stringType.mapFromDatabaseResponse(data['${effectivePrefix}city']),
@@ -7011,6 +7239,7 @@ class ContactsGroupsTable extends DataClass
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return ContactsGroupsTable(
       uuid: serializer.fromJson<String>(json['uuid']),
+      userLocalId: serializer.fromJson<int>(json['userLocalId']),
       idUser: serializer.fromJson<int>(json['idUser']),
       city: serializer.fromJson<String>(json['city']),
       company: serializer.fromJson<String>(json['company']),
@@ -7030,8 +7259,9 @@ class ContactsGroupsTable extends DataClass
   @override
   Map<String, dynamic> toJson(
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
-    return {
+    return <String, dynamic>{
       'uuid': serializer.toJson<String>(uuid),
+      'userLocalId': serializer.toJson<int>(userLocalId),
       'idUser': serializer.toJson<int>(idUser),
       'city': serializer.toJson<String>(city),
       'company': serializer.toJson<String>(company),
@@ -7053,6 +7283,9 @@ class ContactsGroupsTable extends DataClass
   ContactsGroupsCompanion createCompanion(bool nullToAbsent) {
     return ContactsGroupsCompanion(
       uuid: uuid == null && nullToAbsent ? const Value.absent() : Value(uuid),
+      userLocalId: userLocalId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(userLocalId),
       idUser:
           idUser == null && nullToAbsent ? const Value.absent() : Value(idUser),
       city: city == null && nullToAbsent ? const Value.absent() : Value(city),
@@ -7085,6 +7318,7 @@ class ContactsGroupsTable extends DataClass
 
   ContactsGroupsTable copyWith(
           {String uuid,
+          int userLocalId,
           int idUser,
           String city,
           String company,
@@ -7101,6 +7335,7 @@ class ContactsGroupsTable extends DataClass
           String zip}) =>
       ContactsGroupsTable(
         uuid: uuid ?? this.uuid,
+        userLocalId: userLocalId ?? this.userLocalId,
         idUser: idUser ?? this.idUser,
         city: city ?? this.city,
         company: company ?? this.company,
@@ -7120,6 +7355,7 @@ class ContactsGroupsTable extends DataClass
   String toString() {
     return (StringBuffer('ContactsGroupsTable(')
           ..write('uuid: $uuid, ')
+          ..write('userLocalId: $userLocalId, ')
           ..write('idUser: $idUser, ')
           ..write('city: $city, ')
           ..write('company: $company, ')
@@ -7142,36 +7378,39 @@ class ContactsGroupsTable extends DataClass
   int get hashCode => $mrjf($mrjc(
       uuid.hashCode,
       $mrjc(
-          idUser.hashCode,
+          userLocalId.hashCode,
           $mrjc(
-              city.hashCode,
+              idUser.hashCode,
               $mrjc(
-                  company.hashCode,
+                  city.hashCode,
                   $mrjc(
-                      country.hashCode,
+                      company.hashCode,
                       $mrjc(
-                          email.hashCode,
+                          country.hashCode,
                           $mrjc(
-                              fax.hashCode,
+                              email.hashCode,
                               $mrjc(
-                                  isOrganization.hashCode,
+                                  fax.hashCode,
                                   $mrjc(
-                                      name.hashCode,
+                                      isOrganization.hashCode,
                                       $mrjc(
-                                          parentUUID.hashCode,
+                                          name.hashCode,
                                           $mrjc(
-                                              phone.hashCode,
+                                              parentUUID.hashCode,
                                               $mrjc(
-                                                  state.hashCode,
+                                                  phone.hashCode,
                                                   $mrjc(
-                                                      street.hashCode,
-                                                      $mrjc(web.hashCode,
-                                                          zip.hashCode)))))))))))))));
+                                                      state.hashCode,
+                                                      $mrjc(
+                                                          street.hashCode,
+                                                          $mrjc(web.hashCode,
+                                                              zip.hashCode))))))))))))))));
   @override
-  bool operator ==(other) =>
+  bool operator ==(dynamic other) =>
       identical(this, other) ||
       (other is ContactsGroupsTable &&
           other.uuid == this.uuid &&
+          other.userLocalId == this.userLocalId &&
           other.idUser == this.idUser &&
           other.city == this.city &&
           other.company == this.company &&
@@ -7190,6 +7429,7 @@ class ContactsGroupsTable extends DataClass
 
 class ContactsGroupsCompanion extends UpdateCompanion<ContactsGroupsTable> {
   final Value<String> uuid;
+  final Value<int> userLocalId;
   final Value<int> idUser;
   final Value<String> city;
   final Value<String> company;
@@ -7206,6 +7446,7 @@ class ContactsGroupsCompanion extends UpdateCompanion<ContactsGroupsTable> {
   final Value<String> zip;
   const ContactsGroupsCompanion({
     this.uuid = const Value.absent(),
+    this.userLocalId = const Value.absent(),
     this.idUser = const Value.absent(),
     this.city = const Value.absent(),
     this.company = const Value.absent(),
@@ -7223,6 +7464,7 @@ class ContactsGroupsCompanion extends UpdateCompanion<ContactsGroupsTable> {
   });
   ContactsGroupsCompanion.insert({
     @required String uuid,
+    @required int userLocalId,
     @required int idUser,
     @required String city,
     @required String company,
@@ -7238,6 +7480,7 @@ class ContactsGroupsCompanion extends UpdateCompanion<ContactsGroupsTable> {
     @required String web,
     @required String zip,
   })  : uuid = Value(uuid),
+        userLocalId = Value(userLocalId),
         idUser = Value(idUser),
         city = Value(city),
         company = Value(company),
@@ -7254,6 +7497,7 @@ class ContactsGroupsCompanion extends UpdateCompanion<ContactsGroupsTable> {
         zip = Value(zip);
   ContactsGroupsCompanion copyWith(
       {Value<String> uuid,
+      Value<int> userLocalId,
       Value<int> idUser,
       Value<String> city,
       Value<String> company,
@@ -7270,6 +7514,7 @@ class ContactsGroupsCompanion extends UpdateCompanion<ContactsGroupsTable> {
       Value<String> zip}) {
     return ContactsGroupsCompanion(
       uuid: uuid ?? this.uuid,
+      userLocalId: userLocalId ?? this.userLocalId,
       idUser: idUser ?? this.idUser,
       city: city ?? this.city,
       company: company ?? this.company,
@@ -7300,6 +7545,20 @@ class $ContactsGroupsTable extends ContactsGroups
   GeneratedTextColumn _constructUuid() {
     return GeneratedTextColumn('uuid', $tableName, false,
         $customConstraints: 'UNIQUE');
+  }
+
+  final VerificationMeta _userLocalIdMeta =
+      const VerificationMeta('userLocalId');
+  GeneratedIntColumn _userLocalId;
+  @override
+  GeneratedIntColumn get userLocalId =>
+      _userLocalId ??= _constructUserLocalId();
+  GeneratedIntColumn _constructUserLocalId() {
+    return GeneratedIntColumn(
+      'user_local_id',
+      $tableName,
+      false,
+    );
   }
 
   final VerificationMeta _idUserMeta = const VerificationMeta('idUser');
@@ -7475,6 +7734,7 @@ class $ContactsGroupsTable extends ContactsGroups
   @override
   List<GeneratedColumn> get $columns => [
         uuid,
+        userLocalId,
         idUser,
         city,
         company,
@@ -7505,6 +7765,12 @@ class $ContactsGroupsTable extends ContactsGroups
           _uuidMeta, uuid.isAcceptableValue(d.uuid.value, _uuidMeta));
     } else if (uuid.isRequired && isInserting) {
       context.missing(_uuidMeta);
+    }
+    if (d.userLocalId.present) {
+      context.handle(_userLocalIdMeta,
+          userLocalId.isAcceptableValue(d.userLocalId.value, _userLocalIdMeta));
+    } else if (userLocalId.isRequired && isInserting) {
+      context.missing(_userLocalIdMeta);
     }
     if (d.idUser.present) {
       context.handle(
@@ -7606,6 +7872,9 @@ class $ContactsGroupsTable extends ContactsGroups
     if (d.uuid.present) {
       map['uuid'] = Variable<String, StringType>(d.uuid.value);
     }
+    if (d.userLocalId.present) {
+      map['user_local_id'] = Variable<int, IntType>(d.userLocalId.value);
+    }
     if (d.idUser.present) {
       map['id_user'] = Variable<int, IntType>(d.idUser.value);
     }
@@ -7660,6 +7929,7 @@ class $ContactsGroupsTable extends ContactsGroups
 class ContactsStoragesTable extends DataClass
     implements Insertable<ContactsStoragesTable> {
   final int sqliteId;
+  final int userLocalId;
   final int idUser;
   final String serverId;
   final String name;
@@ -7668,6 +7938,7 @@ class ContactsStoragesTable extends DataClass
   final List<ContactInfoItem> contactsInfo;
   ContactsStoragesTable(
       {@required this.sqliteId,
+      @required this.userLocalId,
       @required this.idUser,
       @required this.serverId,
       @required this.name,
@@ -7684,6 +7955,8 @@ class ContactsStoragesTable extends DataClass
     return ContactsStoragesTable(
       sqliteId:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}sqlite_id']),
+      userLocalId: intType
+          .mapFromDatabaseResponse(data['${effectivePrefix}user_local_id']),
       idUser:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}id_user']),
       serverId: stringType
@@ -7700,6 +7973,7 @@ class ContactsStoragesTable extends DataClass
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return ContactsStoragesTable(
       sqliteId: serializer.fromJson<int>(json['sqliteId']),
+      userLocalId: serializer.fromJson<int>(json['userLocalId']),
       idUser: serializer.fromJson<int>(json['idUser']),
       serverId: serializer.fromJson<String>(json['serverId']),
       name: serializer.fromJson<String>(json['name']),
@@ -7712,8 +7986,9 @@ class ContactsStoragesTable extends DataClass
   @override
   Map<String, dynamic> toJson(
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
-    return {
+    return <String, dynamic>{
       'sqliteId': serializer.toJson<int>(sqliteId),
+      'userLocalId': serializer.toJson<int>(userLocalId),
       'idUser': serializer.toJson<int>(idUser),
       'serverId': serializer.toJson<String>(serverId),
       'name': serializer.toJson<String>(name),
@@ -7729,6 +8004,9 @@ class ContactsStoragesTable extends DataClass
       sqliteId: sqliteId == null && nullToAbsent
           ? const Value.absent()
           : Value(sqliteId),
+      userLocalId: userLocalId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(userLocalId),
       idUser:
           idUser == null && nullToAbsent ? const Value.absent() : Value(idUser),
       serverId: serverId == null && nullToAbsent
@@ -7747,6 +8025,7 @@ class ContactsStoragesTable extends DataClass
 
   ContactsStoragesTable copyWith(
           {int sqliteId,
+          int userLocalId,
           int idUser,
           String serverId,
           String name,
@@ -7755,6 +8034,7 @@ class ContactsStoragesTable extends DataClass
           List<ContactInfoItem> contactsInfo}) =>
       ContactsStoragesTable(
         sqliteId: sqliteId ?? this.sqliteId,
+        userLocalId: userLocalId ?? this.userLocalId,
         idUser: idUser ?? this.idUser,
         serverId: serverId ?? this.serverId,
         name: name ?? this.name,
@@ -7766,6 +8046,7 @@ class ContactsStoragesTable extends DataClass
   String toString() {
     return (StringBuffer('ContactsStoragesTable(')
           ..write('sqliteId: $sqliteId, ')
+          ..write('userLocalId: $userLocalId, ')
           ..write('idUser: $idUser, ')
           ..write('serverId: $serverId, ')
           ..write('name: $name, ')
@@ -7780,18 +8061,21 @@ class ContactsStoragesTable extends DataClass
   int get hashCode => $mrjf($mrjc(
       sqliteId.hashCode,
       $mrjc(
-          idUser.hashCode,
+          userLocalId.hashCode,
           $mrjc(
-              serverId.hashCode,
+              idUser.hashCode,
               $mrjc(
-                  name.hashCode,
-                  $mrjc(cTag.hashCode,
-                      $mrjc(display.hashCode, contactsInfo.hashCode)))))));
+                  serverId.hashCode,
+                  $mrjc(
+                      name.hashCode,
+                      $mrjc(cTag.hashCode,
+                          $mrjc(display.hashCode, contactsInfo.hashCode))))))));
   @override
-  bool operator ==(other) =>
+  bool operator ==(dynamic other) =>
       identical(this, other) ||
       (other is ContactsStoragesTable &&
           other.sqliteId == this.sqliteId &&
+          other.userLocalId == this.userLocalId &&
           other.idUser == this.idUser &&
           other.serverId == this.serverId &&
           other.name == this.name &&
@@ -7802,6 +8086,7 @@ class ContactsStoragesTable extends DataClass
 
 class ContactsStoragesCompanion extends UpdateCompanion<ContactsStoragesTable> {
   final Value<int> sqliteId;
+  final Value<int> userLocalId;
   final Value<int> idUser;
   final Value<String> serverId;
   final Value<String> name;
@@ -7810,6 +8095,7 @@ class ContactsStoragesCompanion extends UpdateCompanion<ContactsStoragesTable> {
   final Value<List<ContactInfoItem>> contactsInfo;
   const ContactsStoragesCompanion({
     this.sqliteId = const Value.absent(),
+    this.userLocalId = const Value.absent(),
     this.idUser = const Value.absent(),
     this.serverId = const Value.absent(),
     this.name = const Value.absent(),
@@ -7819,19 +8105,22 @@ class ContactsStoragesCompanion extends UpdateCompanion<ContactsStoragesTable> {
   });
   ContactsStoragesCompanion.insert({
     this.sqliteId = const Value.absent(),
+    @required int userLocalId,
     @required int idUser,
     @required String serverId,
     @required String name,
     @required int cTag,
     @required bool display,
     this.contactsInfo = const Value.absent(),
-  })  : idUser = Value(idUser),
+  })  : userLocalId = Value(userLocalId),
+        idUser = Value(idUser),
         serverId = Value(serverId),
         name = Value(name),
         cTag = Value(cTag),
         display = Value(display);
   ContactsStoragesCompanion copyWith(
       {Value<int> sqliteId,
+      Value<int> userLocalId,
       Value<int> idUser,
       Value<String> serverId,
       Value<String> name,
@@ -7840,6 +8129,7 @@ class ContactsStoragesCompanion extends UpdateCompanion<ContactsStoragesTable> {
       Value<List<ContactInfoItem>> contactsInfo}) {
     return ContactsStoragesCompanion(
       sqliteId: sqliteId ?? this.sqliteId,
+      userLocalId: userLocalId ?? this.userLocalId,
       idUser: idUser ?? this.idUser,
       serverId: serverId ?? this.serverId,
       name: name ?? this.name,
@@ -7862,6 +8152,20 @@ class $ContactsStoragesTable extends ContactsStorages
   GeneratedIntColumn _constructSqliteId() {
     return GeneratedIntColumn('sqlite_id', $tableName, false,
         hasAutoIncrement: true, declaredAsPrimaryKey: true);
+  }
+
+  final VerificationMeta _userLocalIdMeta =
+      const VerificationMeta('userLocalId');
+  GeneratedIntColumn _userLocalId;
+  @override
+  GeneratedIntColumn get userLocalId =>
+      _userLocalId ??= _constructUserLocalId();
+  GeneratedIntColumn _constructUserLocalId() {
+    return GeneratedIntColumn(
+      'user_local_id',
+      $tableName,
+      false,
+    );
   }
 
   final VerificationMeta _idUserMeta = const VerificationMeta('idUser');
@@ -7939,8 +8243,16 @@ class $ContactsStoragesTable extends ContactsStorages
   }
 
   @override
-  List<GeneratedColumn> get $columns =>
-      [sqliteId, idUser, serverId, name, cTag, display, contactsInfo];
+  List<GeneratedColumn> get $columns => [
+        sqliteId,
+        userLocalId,
+        idUser,
+        serverId,
+        name,
+        cTag,
+        display,
+        contactsInfo
+      ];
   @override
   $ContactsStoragesTable get asDslTable => this;
   @override
@@ -7956,6 +8268,12 @@ class $ContactsStoragesTable extends ContactsStorages
           sqliteId.isAcceptableValue(d.sqliteId.value, _sqliteIdMeta));
     } else if (sqliteId.isRequired && isInserting) {
       context.missing(_sqliteIdMeta);
+    }
+    if (d.userLocalId.present) {
+      context.handle(_userLocalIdMeta,
+          userLocalId.isAcceptableValue(d.userLocalId.value, _userLocalIdMeta));
+    } else if (userLocalId.isRequired && isInserting) {
+      context.missing(_userLocalIdMeta);
     }
     if (d.idUser.present) {
       context.handle(
@@ -8004,6 +8322,9 @@ class $ContactsStoragesTable extends ContactsStorages
     final map = <String, Variable>{};
     if (d.sqliteId.present) {
       map['sqlite_id'] = Variable<int, IntType>(d.sqliteId.value);
+    }
+    if (d.userLocalId.present) {
+      map['user_local_id'] = Variable<int, IntType>(d.userLocalId.value);
     }
     if (d.idUser.present) {
       map['id_user'] = Variable<int, IntType>(d.idUser.value);

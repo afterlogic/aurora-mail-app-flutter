@@ -1,4 +1,4 @@
-class WebMailModule {
+class WebMailModules {
   static const core = "Core";
   static const mail = "Mail";
   static const contacts = "Contacts";

@@ -6,6 +6,7 @@ class ContactMapper {
     return dbEntries.map((e) {
       return new Contact(
         entityId: e.entityId,
+        userLocalId: e.userLocalId,
         uuidPlusStorage: e.uuidPlusStorage,
         uuid: e.uuid,
         parentUuid: e.parentUuid,
@@ -68,6 +69,7 @@ class ContactMapper {
       return new ContactsTable(
         entityId: e.entityId,
         uuid: e.uuid,
+        userLocalId: e.userLocalId,
         uuidPlusStorage: e.uuidPlusStorage,
         parentUuid: e.parentUuid,
         idUser: e.idUser,
@@ -124,10 +126,11 @@ class ContactMapper {
     }).toList();
   }
 
-  static List<Contact> fromNetwork(List<dynamic> rawItems) {
+  static List<Contact> fromNetwork(List<dynamic> rawItems, int userLocalId) {
     return rawItems.map((i) {
       return new Contact(
         entityId: i["EntityId"] as int,
+        userLocalId: userLocalId,
         uuid: i["UUID"] as String,
         uuidPlusStorage: i["UUID"] + i["Storage"] as String,
         parentUuid: i["ParentUUID"] as String,

@@ -19,9 +19,13 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
     return (delete(contacts)..where((c) => c.uuid.isIn(uuids))).go();
   }
 
-  Future<List<ContactsTable>> getContacts(int userServerId, {List<String> storages, String pattern}) {
+  Future<void> deleteContactsOfUser(int userLocalId) {
+    return (delete(contacts)..where((c) => c.userLocalId.equals(userLocalId))).go();
+  }
+
+  Future<List<ContactsTable>> getContacts(int userLocalId, {List<String> storages, String pattern}) {
     return (select(contacts)
-//          ..where((c) => c.idUser.equals(userServerId))
+          ..where((c) => c.userLocalId.equals(userLocalId))
           ..where((c) {
             if (pattern != null && pattern.isNotEmpty) {
               return c.fullName.like("%$pattern%") | c.viewEmail.like("%$pattern%");
@@ -33,25 +37,25 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
         .get();
   }
 
-  Stream<List<ContactsTable>> watchAllContacts(int userServerId) {
+  Stream<List<ContactsTable>> watchAllContacts(int userLocalId) {
     return (select(contacts)
-//          ..where((c) => c.idUser.equals(userServerId))
+          ..where((c) => c.userLocalId.equals(userLocalId))
           ..where((c) => c.storage.isNotIn([StorageNames.collected]))
           ..orderBy([(c) => OrderingTerm(expression: c.fullName)]))
         .watch();
   }
 
-  Stream<List<ContactsTable>> watchContactsFromStorage(int userServerId, String storage) {
+  Stream<List<ContactsTable>> watchContactsFromStorage(int userLocalId, String storage) {
     return (select(contacts)
-//          ..where((c) => c.idUser.equals(userServerId))
+          ..where((c) => c.userLocalId.equals(userLocalId))
           ..where((c) => c.storage.equals(storage))
           ..orderBy([(c) => OrderingTerm(expression: c.fullName)]))
         .watch();
   }
 
-  Stream<List<ContactsTable>> watchContactsFromGroup(int userServerId, String groupUuid) {
+  Stream<List<ContactsTable>> watchContactsFromGroup(int userLocalId, String groupUuid) {
     return (select(contacts)
-//          ..where((c) => c.idUser.equals(userServerId))
+          ..where((c) => c.userLocalId.equals(userLocalId))
           ..where((c) => c.groupUUIDs.like("%$groupUuid%"))
           ..orderBy([(c) => OrderingTerm(expression: c.fullName)]))
         .watch();

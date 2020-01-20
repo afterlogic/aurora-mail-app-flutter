@@ -17,6 +17,8 @@ import 'package:aurora_mail/modules/mail/screens/message_view/message_view_route
 import 'package:aurora_mail/modules/settings/screens/about/about_android.dart';
 import 'package:aurora_mail/modules/settings/screens/common_settings/common_settings_android.dart';
 import 'package:aurora_mail/modules/settings/screens/common_settings/common_settings_route.dart';
+import 'package:aurora_mail/modules/settings/screens/manage_users/manage_users_android.dart';
+import 'package:aurora_mail/modules/settings/screens/manage_users/manage_users_route.dart';
 import 'package:aurora_mail/modules/settings/screens/settings_main/settings_main_android.dart';
 import 'package:aurora_mail/modules/settings/screens/settings_main/settings_main_route.dart';
 import 'package:aurora_mail/modules/settings/screens/sync_settings/sync_settings_android.dart';
@@ -40,11 +42,25 @@ class AppNavigation {
       // ================= AUTH =================
 
       case LoginRoute.name:
+      final args = settings.arguments as LoginRouteScreenArgs;
+
+      if (args != null && args.isDialog == true) {
+        return CupertinoPageRoute(
+          settings: RouteSettings(
+            name: settings.name,
+          ),
+          fullscreenDialog: true,
+          builder: (_) => LoginAndroid(isDialog: args.isDialog, email: args.email),
+        );
+      } else {
         return FadeRoute(
-            settings: RouteSettings(
-              name: settings.name,
-            ),
-            builder: (_) => LoginAndroid());
+          settings: RouteSettings(
+            name: settings.name,
+          ),
+          builder: (_) => LoginAndroid(),
+        );
+      }
+      break;
 
       // ================= MAIL =================
 
@@ -175,6 +191,14 @@ class AppNavigation {
               name: settings.name,
             ),
             builder: (_) => SyncSettingsAndroid());
+        break;
+
+      case ManageUsersRoute.name:
+        return CupertinoPageRoute(
+            settings: RouteSettings(
+              name: settings.name,
+            ),
+            builder: (_) => ManageUsersAndroid());
         break;
 
       case AboutRoute.name:

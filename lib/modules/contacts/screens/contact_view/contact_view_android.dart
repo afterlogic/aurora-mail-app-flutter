@@ -104,10 +104,12 @@ class _ContactViewAndroidState extends State<ContactViewAndroid> {
         break;
       case ContactViewAppBarAction.delete:
         final result = await ConfirmationDialog.show(
-            context,
-            i18n(context, "contacts_delete_title"),
-            i18n(context, "contacts_delete_desc_with_name", {"contact": widget.contact.fullName}),
-            i18n(context, "btn_delete"));
+          context,
+          i18n(context, "contacts_delete_title"),
+          i18n(context, "contacts_delete_desc_with_name", {"contact": widget.contact.fullName}),
+          i18n(context, "btn_delete"),
+          destructibleAction: true,
+        );
 
         if (result == true) {
           bloc.add(DeleteContacts([widget.contact]));
@@ -196,7 +198,7 @@ class _ContactViewAndroidState extends State<ContactViewAndroid> {
       appBar: ContactViewAppBar(
         allowShare: c.storage == StorageNames.personal,
         allowUnshare: c.storage == StorageNames.shared,
-        allowEdit: c.storage == StorageNames.personal || c.viewEmail == AuthBloc.currentAccount.email,
+        allowEdit: c.storage == StorageNames.personal || c.viewEmail == BlocProvider.of<AuthBloc>(context).currentAccount.email,
         allowDelete: c.storage == StorageNames.personal || c.storage == StorageNames.shared,
         onActionSelected: _onMainAppBarActionSelected,
       ),

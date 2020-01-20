@@ -74,4 +74,8 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
 
     return deletedMessages;
   }
+
+  Future<int> deleteMessagesOfUser(int userLocalId) {
+    return (delete(mail)..where((m) => m.userLocalId.equals(userLocalId))).go();
+  }
 }

@@ -7,16 +7,13 @@ import 'package:flutter/widgets.dart';
 
 abstract class ContactsRepository {
   factory ContactsRepository({
-    @required String apiUrl,
-    @required String token,
-    @required int userServerId,
+    @required User user,
     @required AppDatabase appDB,
   }) =>
       ContactsRepositoryImpl(
-          appDB: appDB,
-          apiUrl: apiUrl,
-          userServerId: userServerId,
-          token: token);
+        appDB: appDB,
+        user: user,
+      );
 
   Stream<List<int>> get currentlySyncingStorage;
 

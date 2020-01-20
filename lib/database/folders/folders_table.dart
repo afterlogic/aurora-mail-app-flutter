@@ -9,6 +9,10 @@ import 'package:uuid/uuid.dart';
 class Folders extends Table {
   IntColumn get localId => integer().autoIncrement()();
 
+  IntColumn get userLocalId => integer()();
+
+  IntColumn get accountLocalId => integer()();
+
   TextColumn get guid => text()();
 
   TextColumn get parentGuid => text().nullable()();
@@ -19,7 +23,7 @@ class Folders extends Table {
 
   IntColumn get folderOrder => integer()();
 
-  IntColumn get count => integer().named("messages_count").nullable()();
+  IntColumn get count => integer().nullable()();
 
   IntColumn get unread => integer().nullable()();
 
@@ -53,10 +57,16 @@ class Folders extends Table {
 
   TextColumn get messagesInfoInJson => text().nullable()();
 
-  static Future<List<LocalFolder>> getFolderObjectsFromServerAsync(
-      List<Map<String, dynamic>> rawFolders, int accountId) {
+  static Future<List<LocalFolder>> getFolderObjectsFromServerAsync({
+    @required List<Map<String, dynamic>> rawFolders,
+    @required int accountId,
+    @required int userLocalId,
+    @required int accountLocalId,
+  }) {
     final args = {
       "id": accountId,
+      "userLocalId": userLocalId,
+      "accountLocalId": accountLocalId,
       "folders": rawFolders,
     };
     return compute(getFolderObjectsFromServer, args);
@@ -65,7 +75,9 @@ class Folders extends Table {
 // returns flat array of items
   static List<LocalFolder> getFolderObjectsFromServer(Map args) {
     final uuid = Uuid();
-    final accountId = args["id"];
+    final accountId = args["id"] as int;
+    final userLocalId = args["userLocalId"] as int;
+    final accountLocalId = args["accountLocalId"] as int;
     final rawFolders = new List<Map<String, dynamic>>.from(args["folders"] as Iterable);
 
     final flattenedFolders = new List<LocalFolder>();
@@ -76,9 +88,11 @@ class Folders extends Table {
         final t = rawFolder["Type"];
         flattenedFolders.add(LocalFolder(
           localId: null,
+          userLocalId: userLocalId,
+          accountLocalId: accountLocalId,
           guid: guid,
           parentGuid: parentGuid,
-          accountId: accountId as int,
+          accountId: accountId,
           type: rawFolder["Type"] as int,
           folderOrder: rawFolders.indexOf(rawFolder),
           name: rawFolder["Name"] as String,

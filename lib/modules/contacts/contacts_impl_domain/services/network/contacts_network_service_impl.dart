@@ -16,21 +16,25 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
   ContactsNetworkServiceImpl(this.contactsModule);
 
   @override
-  Future<List<ContactsStorage>> getContactStorages() async {
+  Future<List<ContactsStorage>> getContactStorages(int userLocalId) async {
     final body = new WebMailApiBody(
       method: "GetContactStorages",
       parameters: null,
     );
 
     final result = await contactsModule.post(body) as List;
-    return ContactsStorageMapper.allFromNetwork(result);
+    return ContactsStorageMapper.allFromNetwork(result, userLocalId);
   }
 
   @override
-  Future<List<Contact>> getContactsByUids(ContactsStorage storage, List<String> uids) async {
+  Future<List<Contact>> getContactsByUids({
+    ContactsStorage storage,
+    List<String> uuids,
+    int userLocalId,
+  }) async {
     final params = {
       "Storage": storage.id,
-      "Uids": uids,
+      "Uids": uuids,
     };
 
     final body = new WebMailApiBody(
@@ -39,7 +43,7 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
     );
 
     final result = await contactsModule.post(body);
-    return ContactMapper.fromNetwork(result as List);
+    return ContactMapper.fromNetwork(result as List, userLocalId);
   }
 
   @override
@@ -149,13 +153,13 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
   }
 
   @override
-  Future<List<ContactsGroup>> getGroups() async {
+  Future<List<ContactsGroup>> getGroups(int userLocalId) async {
     final body = new WebMailApiBody(
       method: "GetGroups",
     );
 
     final result = await contactsModule.post(body);
-    return ContactsGroupMapper.allFromNetwork(result as List);
+    return ContactsGroupMapper.allFromNetwork(result as List, userLocalId);
   }
 
   @override

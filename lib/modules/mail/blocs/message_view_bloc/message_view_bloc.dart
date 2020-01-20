@@ -1,13 +1,19 @@
 import 'dart:async';
 
+import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/mail/blocs/message_view_bloc/message_view_methods.dart';
 import 'package:aurora_mail/utils/permissions.dart';
 import 'package:bloc/bloc.dart';
+import 'package:flutter/foundation.dart';
 
 import './bloc.dart';
 
 class MessageViewBloc extends Bloc<MessageViewEvent, MessageViewState> {
-  final _methods = new MessageViewMethods();
+  MessageViewMethods _methods;
+
+  MessageViewBloc({@required User user, @required Account account}) {
+    _methods = new MessageViewMethods(user: user, account: account);
+  }
 
   @override
   MessageViewState get initialState => InitialMessageViewState();

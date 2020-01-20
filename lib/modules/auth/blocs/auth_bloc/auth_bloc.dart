@@ -11,13 +11,11 @@ import './bloc.dart';
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final _methods = new AuthMethods();
 
-  static String hostName;
+//  static String hostName;
 
-  static String get apiUrl => "$hostName/?Api/";
+  Account currentAccount;
 
-  static Account currentAccount;
-
-  static User currentUser;
+  User currentUser;
 
   @override
   AuthState get initialState => InitialAuthState();
@@ -28,9 +26,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) async* {
     if (event is InitUserAndAccounts) yield* _initUserAndAccounts(event);
     if (event is GetLastEmail) yield* _getLastEmail(event);
+    if (event is GetUsers) yield* _getUsers(event);
     if (event is LogIn) yield* _login(event);
-    if (event is LogOut) yield* _logout(event);
-    if (event is UpdateUser) yield* _setUser(event);
+    if (event is SelectUser) yield* _selectUser(event);
+    if (event is DeleteUser) yield* _deleteUser(event);
+    if (event is InvalidateCurrentUserToken) yield* _invalidateCurrentUserToken(event);
   }
 
   Stream<AuthState> _initUserAndAccounts(InitUserAndAccounts event) async* {
@@ -39,7 +39,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     try {
       if (result != null) {
         currentUser = result.user;
-        hostName = result.user.hostname;
         currentAccount = result.accounts[0];
         yield InitializedUserAndAccounts(result.user, needsLogin: false);
       } else {
@@ -57,50 +56,73 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     if (email != null) yield ReceivedLastEmail(email);
   }
 
+  Stream<AuthState> _getUsers(GetUsers event) async* {
+    final users = await _methods.users;
+    yield ReceivedUsers(users);
+  }
+
+  Stream<AuthState> _selectUser(SelectUser event) async* {
+    await _methods.selectUser(event.userLocalId);
+    add(InitUserAndAccounts());
+  }
+
   Stream<AuthState> _login(LogIn event) async* {
     yield LoggingIn();
+    final users = await _methods.users;
+    final userFromDb = users.firstWhere((u) => u.emailFromLogin == event.email, orElse: () => null);
 
-    try {
-      final user = await _methods.login(
-        email: event.email,
-        password: event.password,
-        host: event.hostname,
-      );
+    if (userFromDb != null) {
+      // TODO VO: not navigating back
+      add(SelectUser(userFromDb.localId));
+    } else {
+      try {
+        final user = await _methods.login(
+          email: event.email,
+          password: event.password,
+          host: event.hostname,
+        );
 
-      if (user == null) {
-        yield NeedsHost();
-      } else {
-        hostName = user.hostname;
-        currentUser = user;
-        final accounts = await _methods.getAccounts(user.serverId);
-
-        if (accounts.isNotEmpty) {
-          assert(accounts[0] != null);
-          currentAccount = accounts[0];
-          yield LoggedIn(user);
+        if (user == null) {
+          yield NeedsHost();
         } else {
-          yield AuthError("error_login_no_accounts");
+          currentUser = user;
+          final accounts = await _methods.getAccounts(user);
+
+          if (accounts.isNotEmpty) {
+            assert(accounts[0] != null);
+            currentAccount = accounts[0];
+            yield LoggedIn(user);
+          } else {
+            yield AuthError("error_login_no_accounts");
+          }
         }
+      } catch (err, s) {
+        yield AuthError(formatError(err, s));
+      }
+    }
+  }
+
+  Stream<AuthState> _deleteUser(DeleteUser event) async* {
+    await Alarm.cancel();
+    try {
+      await _methods.logout(currentUser);
+      final users = await _methods.users;
+
+      if (users.isNotEmpty) {
+        add(SelectUser(users[0].localId));
+      } else {
+        yield LoggedOut();
       }
     } catch (err, s) {
       yield AuthError(formatError(err, s));
     }
   }
 
-  Stream<AuthState> _logout(LogOut event) async* {
-    await Alarm.cancel();
-    try {
-      await _methods.logout(currentUser);
-      currentUser = null;
-      currentAccount = null;
-
-      yield LoggedOut();
-    } catch (err, s) {
-      yield AuthError(formatError(err, s));
+  Stream<AuthState> _invalidateCurrentUserToken(InvalidateCurrentUserToken event) async* {
+    if (currentUser != null) {
+      currentUser = await _methods.invalidateToken(currentUser.localId);
+    } else {
+      print("VO: cannot invalidate token, no currentUser selected");
     }
-  }
-
-  Stream<AuthState> _setUser(UpdateUser event) async* {
-    currentUser = event.updatedUser;
   }
 }

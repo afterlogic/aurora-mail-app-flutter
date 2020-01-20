@@ -3,6 +3,7 @@ import 'package:flutter/widgets.dart';
 class ContactsStorage {
   final int sqliteId;
   final String id;
+  final int userLocalId;
   final String name;
   final int cTag;
   final bool display;
@@ -11,11 +12,12 @@ class ContactsStorage {
   ContactsStorage({
     @required this.sqliteId,
     @required this.id,
+    @required this.userLocalId,
     @required this.name,
     @required this.cTag,
     @required this.display,
     @required this.contactsInfo,
-  });
+  }) : assert(userLocalId != null);
 
   ContactsStorage copyWith({
     int sqliteId,
@@ -28,6 +30,7 @@ class ContactsStorage {
     return new ContactsStorage(
       sqliteId: sqliteId ?? this.sqliteId,
       id: id ?? this.id,
+      userLocalId: userLocalId ?? this.userLocalId,
       name: name ?? this.name,
       cTag: cTag ?? this.cTag,
       display: display ?? this.display,

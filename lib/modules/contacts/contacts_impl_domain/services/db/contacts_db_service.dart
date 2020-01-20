@@ -3,25 +3,19 @@ import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_mode
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_group_model.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_storage_model.dart';
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/contacts_db_service_impl.dart';
-import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/contacts_db_service_mock_impl.dart';
-
-import '../../contacts_config.dart';
 
 abstract class ContactsDbService {
   factory ContactsDbService(AppDatabase db) {
-    if (TEST_MODE)
-      return ContactsDbServiceMockImpl();
-    else
-      return ContactsDbServiceImpl(db);
+    return ContactsDbServiceImpl(db);
   }
 
-  Stream<List<Contact>> watchAllContacts(int userServerId);
+  Stream<List<Contact>> watchAllContacts(int userLocalId);
 
-  Stream<List<Contact>> watchContactsFromStorage(int userServerId, ContactsStorage storage);
+  Stream<List<Contact>> watchContactsFromStorage(int userLocalId, ContactsStorage storage);
 
-  Stream<List<Contact>> watchContactsFromGroup(int userServerId, ContactsGroup group);
+  Stream<List<Contact>> watchContactsFromGroup(int userLocalId, ContactsGroup group);
 
-  Future<List<Contact>> getContacts(int userServerId, {List<String> storages, String pattern});
+  Future<List<Contact>> getContacts(int userLocalId, {List<String> storages, String pattern});
 
   Future<void> addContacts(List<Contact> newContacts);
 
@@ -30,7 +24,7 @@ abstract class ContactsDbService {
   Future<void> updateContacts(List<Contact> updatedContacts,
       {bool nullToAbsent = true});
 
-  Future<List<ContactsStorage>> getStorages(int userServerId);
+  Future<List<ContactsStorage>> getStorages(int userLocalId);
 
   Future<void> addStorages(List<ContactsStorage> newStorages, int userId);
 
@@ -39,7 +33,7 @@ abstract class ContactsDbService {
 
   Future<void> deleteStorages(List<int> sqliteIds);
 
-  Future<List<ContactsGroup>> getGroups(int userServerId);
+  Future<List<ContactsGroup>> getGroups(int userLocalId);
 
   Future<void> editGroups(List<ContactsGroup> newGroups);
 

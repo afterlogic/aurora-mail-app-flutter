@@ -1,8 +1,8 @@
-import 'dart:math';
 import 'package:flutter/widgets.dart';
 
 class Contact {
   final int entityId;
+  final int userLocalId;
   final String uuid;
   final String uuidPlusStorage;
   final String parentUuid;
@@ -67,6 +67,7 @@ class Contact {
   const Contact({
     @required this.entityId,
     @required this.uuid,
+    @required this.userLocalId,
     @required this.uuidPlusStorage,
     this.parentUuid = "",
     @required this.idUser,
@@ -124,6 +125,7 @@ class Contact {
   Contact copyWith({
     int entityId,
     String uuid,
+    int userLocalId,
     String uuidPlusStorage,
     String parentUuid,
     int idUser,
@@ -179,6 +181,7 @@ class Contact {
   }) {
     return new Contact(
       entityId: entityId ?? this.entityId,
+      userLocalId: userLocalId ?? this.userLocalId,
       uuid: uuid ?? this.uuid,
       uuidPlusStorage: uuidPlusStorage ?? this.uuidPlusStorage,
       parentUuid: parentUuid ?? this.parentUuid,

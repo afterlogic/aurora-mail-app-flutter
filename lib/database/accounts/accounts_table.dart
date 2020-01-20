@@ -4,6 +4,8 @@ import 'package:moor_flutter/moor_flutter.dart';
 class Accounts extends Table {
   IntColumn get localId => integer().autoIncrement()();
 
+  IntColumn get userLocalId => integer()();
+
   IntColumn get entityId => integer().customConstraint("UNIQUE")();
 
   IntColumn get idUser => integer()();
@@ -40,10 +42,11 @@ class Accounts extends Table {
 
   BoolColumn get allowAutoResponder => boolean()();
 
-  static List<Account> getAccountsObjFromServer(List result) {
+  static List<Account> getAccountsObjFromServer(List result, int userLocalId) {
     return result.map((item) {
       return new Account(
         localId: null,
+        userLocalId: userLocalId,
         entityId: item["EntityId"] as int,
         idUser: item["IdUser"] as int,
         uuid: item["UUID"] as String,

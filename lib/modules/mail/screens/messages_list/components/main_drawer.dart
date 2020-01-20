@@ -32,11 +32,11 @@ class _MainDrawerState extends State<MainDrawer> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    AuthBloc.currentAccount.friendlyName,
+                    BlocProvider.of<AuthBloc>(context).currentAccount.friendlyName,
                     style: Theme.of(context).textTheme.title,
                   ),
                   SizedBox(height: 8.0),
-                  Text(AuthBloc.currentAccount.email),
+                  Text(BlocProvider.of<AuthBloc>(context).currentAccount.email),
                 ],
               ),
             ),

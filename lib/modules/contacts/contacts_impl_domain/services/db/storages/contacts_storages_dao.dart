@@ -10,9 +10,9 @@ class ContactsStoragesDao extends DatabaseAccessor<AppDatabase>
     with _$ContactsStoragesDaoMixin {
   ContactsStoragesDao(AppDatabase db) : super(db);
 
-  Future<List<ContactsStoragesTable>> getStorages(int userServerId) {
+  Future<List<ContactsStoragesTable>> getStorages(int userLocalId) {
     return (select(contactsStorages)
-          ..where((c) => c.idUser.equals(userServerId)))
+          ..where((c) => c.userLocalId.equals(userLocalId)))
         .get();
   }
 
@@ -39,7 +39,12 @@ class ContactsStoragesDao extends DatabaseAccessor<AppDatabase>
   }
 
   Future<void> deleteStorages(List<int> sqliteIds) {
-    return (delete(contactsStorages)..where((c) => isIn(c.sqliteId, sqliteIds)))
+    return (delete(contactsStorages)..where((c) => c.sqliteId.isIn(sqliteIds)))
+        .go();
+  }
+
+  Future<void> deleteStoragesOfUser(int userLocalId) {
+    return (delete(contactsStorages)..where((c) => c.userLocalId.equals(userLocalId)))
         .go();
   }
 }

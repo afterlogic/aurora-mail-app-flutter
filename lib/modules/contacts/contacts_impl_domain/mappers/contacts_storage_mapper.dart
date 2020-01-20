@@ -7,6 +7,7 @@ class ContactsStorageMapper {
       return new ContactsStorage(
         sqliteId: i.sqliteId,
         id: i.serverId,
+        userLocalId: i.userLocalId,
         name: i.name,
         cTag: i.cTag,
         display: i.display,
@@ -20,6 +21,7 @@ class ContactsStorageMapper {
     return items.map((i) {
       return new ContactsStoragesTable(
         sqliteId: i.sqliteId,
+        userLocalId: i.userLocalId,
         idUser: userId,
         serverId: i.id,
         name: i.name,
@@ -30,17 +32,18 @@ class ContactsStorageMapper {
     }).toList();
   }
 
-  static List<ContactsStorage> allFromNetwork(List rawItems) {
+  static List<ContactsStorage> allFromNetwork(List rawItems, int userLocalId) {
     return rawItems.map((i) {
       final item = Map<String, dynamic>.from(i as Map);
-      return fromNetwork(item);
+      return fromNetwork(item, userLocalId);
     }).toList();
   }
 
-  static ContactsStorage fromNetwork(Map<String, dynamic> rawItems) {
+  static ContactsStorage fromNetwork(Map<String, dynamic> rawItems, int userLocalId) {
     return ContactsStorage(
       sqliteId: null,
       id: rawItems["Id"] as String,
+      userLocalId: userLocalId,
       name: rawItems["Name"] as String ?? rawItems["Id"] as String,
       cTag: rawItems["CTag"] as int,
       display: rawItems["Display"] as bool ?? true,

@@ -161,12 +161,15 @@ class _ContactEditAndroidState extends State<ContactEditAndroid> {
   }
 
   Contact _getDataFromInputs() {
+    final user = BlocProvider.of<AuthBloc>(context).currentUser;
+
     return Contact(
         entityId: widget.contact?.entityId ?? null,
         uuid: widget.contact?.uuid ?? null,
+        userLocalId: widget.contact?.userLocalId ?? user.localId,
         uuidPlusStorage: widget.contact?.uuidPlusStorage ?? null,
         parentUuid: widget.contact?.parentUuid ?? null,
-        idUser: widget.contact?.idUser ?? AuthBloc.currentUser.serverId,
+        idUser: widget.contact?.idUser ?? user.serverId,
         idTenant: widget.contact?.idTenant ?? null,
         storage: widget.contact?.storage ?? StorageNames.personal,
         fullName: _fullName.text,

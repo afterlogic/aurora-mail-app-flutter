@@ -3,8 +3,6 @@ import 'dart:convert';
 import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/accounts/accounts_table.dart';
 import 'package:aurora_mail/database/app_database.dart';
-import 'package:aurora_mail/models/api_body.dart';
-import 'package:aurora_mail/utils/api_utils.dart';
 import 'package:http/http.dart' as http;
 import 'package:webmail_api_client/webmail_api_client.dart';
 
@@ -21,41 +19,62 @@ class AuthApi {
   }
 
   Future<User> login(String email, String password, String hostname) async {
-    final parameters =
-        json.encode({"Login": email, "Password": password, "Pattern": ""});
+    final coreModuleForLogin = WebMailApi(moduleName: WebMailModules.core, hostname: hostname);
 
-    final body =
-        new ApiBody(module: "Core", method: "Login", parameters: parameters)
-            .toMap();
+    final parameters = json.encode({"Login": email, "Password": password, "Pattern": ""});
 
-    final res = await http.post("$hostname/?Api/", body: body);
+    final body = new WebMailApiBody(method: "Login", parameters: parameters);
 
-    final resBody = json.decode(res.body);
-    if (resBody['Result'] != null && resBody['Result']['AuthToken'] is String) {
-      final token = resBody['Result']['AuthToken'] as String;
-      final id = resBody['AuthenticatedUserId'] as int;
+    final response = await coreModuleForLogin.post(body, getRawResponse: true);
+
+    if (response['Result'] != null && response['Result']['AuthToken'] is String) {
+      final token = response['Result']['AuthToken'] as String;
+      final id = response['AuthenticatedUserId'] as int;
 
       return new User(
         localId: null,
         serverId: id,
         token: token,
         hostname: hostname,
+        emailFromLogin: email,
       );
     } else {
-      throw WebMailApiError(resBody);
+      throw WebMailApiError(response);
     }
   }
 
-  Future<List<Account>> getAccounts(int userIdFromServer) async {
-    final parameters = json.encode({"UserId": userIdFromServer});
+  Future<void> logout(User user) async {
+    final coreModuleForLogin = WebMailApi(
+      moduleName: WebMailModules.core,
+      hostname: user.hostname,
+      token: user.token,
+    );
 
-    final body = new ApiBody(
+    final body = new WebMailApiBody(module: "Core", method: "Logout");
+
+    final res = await coreModuleForLogin.post(body);
+
+    if (res != true) {
+      throw WebMailApiError(res);
+    }
+  }
+
+  Future<List<Account>> getAccounts(User user) async {
+    final coreModuleForLogin = WebMailApi(
+      moduleName: WebMailModules.core,
+      hostname: user.hostname,
+      token: user.token,
+    );
+
+    final parameters = json.encode({"UserId": user.serverId});
+
+    final body = new WebMailApiBody(
         module: "Mail", method: "GetAccounts", parameters: parameters);
 
-    final res = await sendRequest(body);
+    final res = await coreModuleForLogin.post(body);
 
-    if (res['Result'] is List) {
-      final accounts = Accounts.getAccountsObjFromServer(res['Result'] as List);
+    if (res is List) {
+      final accounts = Accounts.getAccountsObjFromServer(res, user.localId);
 
       return accounts;
     } else {

@@ -7,7 +7,8 @@ class Users extends Table {
 
   TextColumn get hostname => text()();
 
-  // TODO find out
+  TextColumn get emailFromLogin => text()();
+
   TextColumn get token => text()();
 
   IntColumn get syncFreqInSeconds => integer().withDefault(Constant(60)).nullable()();

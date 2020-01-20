@@ -77,11 +77,13 @@ class _MessageItemState extends State<MessageItem> {
             key: Key(widget.message.uid.toString()),
             direction: DismissDirection.endToStart,
             confirmDismiss: (_) => ConfirmationDialog.show(
-                context,
-                i18n(context, "messages_delete_title"),
-                i18n(context, "messages_delete_desc_with_subject",
-                    {"subject": widget.message.subject}),
-                i18n(context, "btn_delete")),
+              context,
+              i18n(context, "messages_delete_title"),
+              i18n(context, "messages_delete_desc_with_subject",
+                  {"subject": widget.message.subject}),
+              i18n(context, "btn_delete"),
+              destructibleAction: true,
+            ),
             onDismissed: (_) => widget.onDeleteMessage(widget.message),
             background: Container(
               color: Theme.of(context).errorColor,

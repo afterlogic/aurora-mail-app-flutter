@@ -11,9 +11,14 @@ import 'package:aurora_mail/modules/mail/repository/mail_local_storage.dart';
 import 'package:flutter/widgets.dart';
 
 class ComposeMethods {
+  final Account account;
   final _foldersDao = new FoldersDao(DBInstances.appDB);
-  final _mailApi = new MailApi();
+  MailApi _mailApi;
   final _mailLocal = new MailLocalStorage();
+
+  ComposeMethods({@required User user, @required this.account}) {
+    _mailApi = new MailApi(user: user, account: account);
+  }
 
   Future<void> sendMessage({
     @required String to,
@@ -24,7 +29,7 @@ class ComposeMethods {
     @required String messageText,
     @required int draftUid,
   }) async {
-    final folders = await _foldersDao.getAllFolders();
+    final folders = await _foldersDao.getAllFolders(account.localId);
 
     final draftsFolder = Folders.getFolderOfType(folders, FolderType.drafts);
     final sentFolder = Folders.getFolderOfType(folders, FolderType.sent);
@@ -51,7 +56,7 @@ class ComposeMethods {
     @required String messageText,
     @required int draftUid,
   }) async {
-    final folders = await _foldersDao.getAllFolders();
+    final folders = await _foldersDao.getAllFolders(account.localId);
     final draftsFolder = Folders.getFolderOfType(folders, FolderType.drafts);
 
     return _mailApi.saveMessage(

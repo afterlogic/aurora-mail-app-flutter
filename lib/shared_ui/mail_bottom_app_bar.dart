@@ -52,7 +52,7 @@ class MailBottomAppBar extends StatelessWidget {
                   ? Icons.mail
                   : Icons.mail_outline,
               color: selectedRoute == MailBottomAppBarRoutes.mail
-                  ? Theme.of(context).primaryColor
+                  ? Theme.of(context).accentColor
                   : null,
             ),
             tooltip: i18n(context, "messages_list_app_bar_mail"),
@@ -64,7 +64,7 @@ class MailBottomAppBar extends StatelessWidget {
                   ? Icons.people
                   : Icons.people_outline,
               color: selectedRoute == MailBottomAppBarRoutes.contacts
-                  ? Theme.of(context).primaryColor
+                  ? Theme.of(context).accentColor
                   : null,
             ),
             tooltip: i18n(context, "messages_list_app_bar_contacts"),

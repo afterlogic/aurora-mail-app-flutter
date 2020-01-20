@@ -1,14 +1,21 @@
 import 'dart:async';
 
+import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/utils/api_utils.dart';
 import 'package:bloc/bloc.dart';
+import 'package:flutter/foundation.dart';
 
 import './bloc.dart';
 import 'mail_methods.dart';
 
 class MailBloc extends Bloc<MailEvent, MailState> {
-  final _methods = new MailMethods();
+  MailMethods _methods;
+
+  MailBloc({@required User user, @required Account account}) {
+    _methods = new MailMethods(user: user, account: account);
+  }
+
 
   Folder _selectedFolder;
   bool _isStarredFilterEnabled = false;

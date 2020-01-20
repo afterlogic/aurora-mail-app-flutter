@@ -1,5 +1,6 @@
 library webmail_api_client;
 
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/widgets.dart';
@@ -14,16 +15,30 @@ export 'webmail_api_modules.dart';
 
 class WebMailApi {
   final String moduleName;
-  final String apiUrl;
+  final String hostname;
   final String token;
 
-  const WebMailApi({
-    @required this.moduleName,
-    @required this.apiUrl,
-    this.token,
-  }) : assert(moduleName != null && apiUrl != null);
+  String get apiUrl => "$hostname/?Api/";
 
-  Future post(WebMailApiBody body, {bool useToken}) async {
+  Map<String, String> get headerWithToken => {'Authorization': 'Bearer $token'};
+
+  WebMailApi({
+    @required this.moduleName,
+    @required this.hostname,
+    this.token,
+  }) : assert(moduleName != null && hostname != null);
+
+  static final _authErrorStreamCtrl = StreamController<void>.broadcast();
+
+  // fired when token is invalid (e.g. to send user back to login)
+  static Stream<void> get authErrorStream => _authErrorStreamCtrl.stream.asBroadcastStream();
+
+  static Map<String, String> getHeaderWithToken(String token) {
+    return {'Authorization': 'Bearer $token'};
+  }
+
+  // getRawResponse in case AuthenticatedUserId is required, which is outside Result objects
+  Future post(WebMailApiBody body, {bool useToken, bool getRawResponse = false}) async {
     Map<String, String> headers;
 
     if (useToken == false || token == null) {
@@ -37,9 +52,14 @@ class WebMailApi {
     final res = json.decode(rawResponse.body);
 
     if (res["Result"] != null && res["Result"] != false) {
-      return res["Result"];
+      if (getRawResponse) return res;
+      else return res["Result"];
     } else {
-      print("WebMailApiError: ${res}");
+      print("WebMailApiError: $res");
+
+      if (res["ErrorCode"] == 102) {
+        _authErrorStreamCtrl.add(102);
+      }
       throw WebMailApiError(res);
     }
   }

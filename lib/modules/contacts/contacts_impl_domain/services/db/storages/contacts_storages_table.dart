@@ -5,6 +5,8 @@ import 'package:moor_flutter/moor_flutter.dart';
 class ContactsStorages extends Table {
   IntColumn get sqliteId => integer().autoIncrement()();
 
+  IntColumn get userLocalId => integer()();
+
   IntColumn get idUser => integer()();
 
   TextColumn get serverId => text()();
@@ -15,6 +17,5 @@ class ContactsStorages extends Table {
 
   BoolColumn get display => boolean()();
 
-  TextColumn get contactsInfo =>
-      text().map(const ContactsInfoConverter()).nullable()();
+  TextColumn get contactsInfo => text().map(const ContactsInfoConverter()).nullable()();
 }

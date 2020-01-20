@@ -1,34 +1,52 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthLocalStorage {
-  final selectedUserIdKey = "selectedUserId";
+  final _selectedUserIdKey = "selectedUserId";
 
-  // User Id
-  Future<int> getSelectedUserServerId() async {
+  // User local id
+  Future<int> getSelectedUserLocalId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getInt(selectedUserIdKey);
+    return prefs.getInt(_selectedUserIdKey);
   }
 
-  Future<bool> setSelectedUserServerId(int value) async {
+  Future<bool> setSelectedUserLocalId(int value) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.setInt(selectedUserIdKey, value);
+    return prefs.setInt(_selectedUserIdKey, value);
   }
 
-  Future<bool> deleteSelectedUserServerId() async {
+  Future<bool> deleteSelectedUserLocalId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.remove(selectedUserIdKey);
+    return prefs.remove(_selectedUserIdKey);
   }
 
-  final lastEmailKey = "lastEmail";
+  final _selectedAccountIdKey = "selectedAccountId";
+
+  // Account local id
+  Future<int> getSelectedAccountId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getInt(_selectedAccountIdKey);
+  }
+
+  Future<bool> setSelectedAccountId(int value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.setInt(_selectedAccountIdKey, value);
+  }
+
+  Future<bool> deleteSelectedAccountId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.remove(_selectedAccountIdKey);
+  }
+
+  final _lastEmailKey = "lastEmail";
 
   // User Id
   Future<String> getLastEmail() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString(lastEmailKey);
+    return prefs.getString(_lastEmailKey);
   }
 
   Future<bool> setLastEmail(String value) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.setString(lastEmailKey, value);
+    return prefs.setString(_lastEmailKey, value);
   }
 }

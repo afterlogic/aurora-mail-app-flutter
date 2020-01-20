@@ -1,6 +1,5 @@
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/models/message_info.dart';
-import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:moor_flutter/moor_flutter.dart';
 
 import '../app_database.dart';
@@ -10,21 +9,17 @@ part 'folders_dao.g.dart';
 
 @UseDao(tables: [Folders])
 class FoldersDao extends DatabaseAccessor<AppDatabase> with _$FoldersDaoMixin {
-  int get _accountId => AuthBloc.currentAccount.accountId;
-
-  // this constructor is required so that the main database can create an instance
-  // of this object.
   FoldersDao(AppDatabase db) : super(db);
 
-  Future<List<LocalFolder>> getAllFolders() {
+  Future<List<LocalFolder>> getAllFolders(int accountLocalId) {
     return (select(folders)
-          ..where((folder) => folder.accountId.equals(_accountId)))
+          ..where((folder) => folder.accountLocalId.equals(accountLocalId)))
         .get();
   }
 
-  Future<List<LocalFolder>> getByType(int type) {
+  Future<List<LocalFolder>> getByType(int type, int accountLocalId) {
     return (select(folders)
-          ..where((folder) => folder.accountId.equals(_accountId))
+          ..where((folder) => folder.accountLocalId.equals(accountLocalId))
           ..where((folder) => folder.type.equals(type)))
         .get();
   }
@@ -40,11 +35,11 @@ class FoldersDao extends DatabaseAccessor<AppDatabase> with _$FoldersDaoMixin {
             foundFolders, foundFolders[0].parentGuid)[0];
   }
 
-  Stream<List<LocalFolder>> watchAllFolders() {
-    return (select(folders)
-          ..where((folder) => folder.accountId.equals(_accountId)))
-        .watch();
-  }
+//  Stream<List<LocalFolder>> watchAllFolders(int accountLocalId) {
+//    return (select(folders)
+//          ..where((folder) => folder.accountLocalId.equals(accountLocalId)))
+//        .watch();
+//  }
 
   Future<void> addFolders(List<LocalFolder> newFolders) async {
     return batch((b) {
@@ -66,12 +61,16 @@ class FoldersDao extends DatabaseAccessor<AppDatabase> with _$FoldersDaoMixin {
         .write(foldersCompanion);
   }
 
-  Future<int> deleteFolders([List<LocalFolder> filesToDelete]) async {
-    if (filesToDelete == null) {
+  Future<int> deleteFolders([List<LocalFolder> foldersToDelete]) async {
+    if (foldersToDelete == null) {
       return delete(folders).go();
     } else {
-      final List<int> ids = filesToDelete.map((file) => file.localId).toList();
+      final List<int> ids = foldersToDelete.map((file) => file.localId).toList();
       return (delete(folders)..where((f) => f.localId.isIn(ids))).go();
     }
+  }
+
+  Future<int> deleteFoldersOfUser(int userLocalId) async {
+    return (delete(folders)..where((f) => f.userLocalId.equals(userLocalId))).go();
   }
 }

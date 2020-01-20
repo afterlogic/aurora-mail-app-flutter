@@ -1,27 +1,23 @@
-import 'dart:convert';
 import 'dart:io';
 
-import 'package:aurora_mail/models/api_body.dart';
-import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
-import 'package:http/http.dart' as http;
 import 'package:webmail_api_client/webmail_api_client.dart';
 
-Map<String, String> getHeaderWithToken() {
-  return {'Authorization': 'Bearer ${AuthBloc.currentUser.token}'};
-}
+//Map<String, String> getHeaderWithToken() {
+//  return {'Authorization': 'Bearer ${AuthBloc.currentUser.token}'};
+//}
 
-Future sendRequest(ApiBody body, {bool decodeJson = true, bool useToken = true}) async {
-  final rawResponse = useToken
-      ? await http.post(AuthBloc.apiUrl,
-          headers: getHeaderWithToken(), body: body.toMap())
-      : await http.post(AuthBloc.apiUrl, body: body.toMap());
-
-  if (decodeJson = true) {
-    return json.decode(rawResponse.body);
-  } else {
-    return rawResponse.body;
-  }
-}
+//Future sendRequest(ApiBody body, {bool decodeJson = true, bool useToken = true}) async {
+//  final rawResponse = useToken
+//      ? await http.post(AuthBloc.apiUrl,
+//          headers: getHeaderWithToken(), body: body.toMap())
+//      : await http.post(AuthBloc.apiUrl, body: body.toMap());
+//
+//  if (decodeJson = true) {
+//    return json.decode(rawResponse.body);
+//  } else {
+//    return rawResponse.body;
+//  }
+//}
 
 String formatError(dynamic err, StackTrace stack) {
   if (err is WebMailApiError) {

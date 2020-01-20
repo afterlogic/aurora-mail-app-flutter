@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:aurora_mail/database/accounts/accounts_dao.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/folders/folders_dao.dart';
@@ -7,7 +5,6 @@ import 'package:aurora_mail/database/folders/folders_table.dart';
 import 'package:aurora_mail/database/users/users_dao.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/models/message_info.dart';
-import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aurora_mail/modules/auth/repository/auth_local_storage.dart';
 import 'package:aurora_mail/modules/mail/repository/folders_api.dart';
 import 'package:aurora_mail/modules/mail/repository/mail_api.dart';
@@ -18,13 +15,10 @@ import 'package:aurora_mail/notification/notification_manager.dart';
 import 'notification_local_storage.dart';
 
 class BackgroundSync {
-  //todo VO
   final _foldersDao = FoldersDao(DBInstances.appDB);
   final _usersDao = UsersDao(DBInstances.appDB);
   final _accountsDao = AccountsDao(DBInstances.appDB);
   final _authLocal = AuthLocalStorage();
-  final _foldersApi = FoldersApi();
-  final _mailApi = MailApi();
   final _notificationStorage = NotificationLocalStorage();
 
   Future<bool> sync(bool isBackground, bool isRunApp) async {
@@ -59,12 +53,13 @@ class BackgroundSync {
   }
 
   Future<int> getNewMessageCount() async {
-    if ((await _authLocal.getSelectedUserServerId()) == null) {
+    if ((await _authLocal.getSelectedUserLocalId()) == null) {
       return 0;
     }
     await initUser();
-    //todo VO
-    final inboxFolder = await _foldersDao.getByType(1 /*FolderType.inbox*/);
+
+    final accountLocalId = await _authLocal.getSelectedAccountId();
+    final inboxFolder = await _foldersDao.getByType(1 /*FolderType.inbox*/, accountLocalId);
 
     final foldersToUpdate = (await updateFolderHash(inboxFolder))
         .where((item) => item.type == 1)
@@ -76,12 +71,19 @@ class BackgroundSync {
         continue;
       }
 
-      final user = await _usersDao.getUserByLocalId(AuthBloc.currentUser.localId);
+      final userLocalId = await _authLocal.getSelectedUserLocalId();
+      final user = await _usersDao.getUserByLocalId(userLocalId);
+      final account = await _accountsDao.getAccount(accountLocalId);
 
       final syncPeriod = SyncPeriod.dbStringToPeriod(user.syncPeriod);
       final periodStr = SyncPeriod.periodToDate(syncPeriod);
 
-      final rawInfo = await _mailApi.getMessagesInfo(
+      final mailApi = MailApi(
+        user: user,
+        account: account,
+      );
+
+      final rawInfo = await mailApi.getMessagesInfo(
           folderName: folderToUpdate.fullNameRaw, search: "date:$periodStr/");
 
       List<MessageInfo> messagesInfo = MessageInfo.flattenMessagesInfo(rawInfo);
@@ -95,6 +97,16 @@ class BackgroundSync {
   }
 
   Future<List<Folder>> updateFolderHash(List<LocalFolder> folders) async {
+
+    final userLocalId = await _authLocal.getSelectedUserLocalId();
+    final user = await _usersDao.getUserByLocalId(userLocalId);
+    final accountLocalId = await _authLocal.getSelectedAccountId();
+    final account = await _accountsDao.getAccount(accountLocalId);
+
+    final _foldersApi = FoldersApi(
+      user: user,
+      account: account,
+    );
     final newFolders = await _foldersApi.getRelevantFoldersInformation(folders);
     final outFolder = <LocalFolder>[];
     newFolders.keys.forEach((fName) {
@@ -118,21 +130,19 @@ class BackgroundSync {
     return Folder.getFolderObjectsFromDb(outFolder);
   }
 
-  //todo VO init static field
-  initUser() async {
-    final selectedUserServerId = await _authLocal.getSelectedUserServerId();
+  Future<void> initUser() async {
+    final selectedUserId = await _authLocal.getSelectedUserLocalId();
 
     final futures = [
-      _usersDao.getUserByServerId(selectedUserServerId),
-      _accountsDao.getAccounts(selectedUserServerId),
+      _usersDao.getUserByLocalId(selectedUserId),
+      _accountsDao.getAccounts(selectedUserId),
     ];
 
     final result = await Future.wait(futures);
     final user = result[0] as User;
     final accounts = result[1] as List<Account>;
-    AuthBloc.currentAccount = accounts[0];
-    AuthBloc.hostName = user.hostname;
-    AuthBloc.currentUser = user;
+    await _authLocal.setSelectedUserLocalId(user.localId);
+    await _authLocal.setSelectedUserLocalId(accounts[0].localId);
     SettingsBloc.isOffline = false;
   }
 

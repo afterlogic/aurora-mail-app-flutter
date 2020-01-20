@@ -44,54 +44,51 @@ class ContactsDbServiceImpl implements ContactsDbService {
   }
 
   @override
-  Future<void> deleteContacts(List<String> uuids) =>
-      _contactsDao.deleteContacts(uuids);
+  Future<void> deleteContacts(List<String> uuids) => _contactsDao.deleteContacts(uuids);
 
   @override
-  Future<void> deleteGroups(List<String> uuids) =>
-      _groupsDao.deleteGroups(uuids);
+  Future<void> deleteGroups(List<String> uuids) => _groupsDao.deleteGroups(uuids);
 
   @override
-  Future<void> deleteStorages(List<int> sqliteIds) =>
-      _storagesDao.deleteStorages(sqliteIds);
+  Future<void> deleteStorages(List<int> sqliteIds) => _storagesDao.deleteStorages(sqliteIds);
 
   @override
-  Future<List<Contact>> getContacts(int userServerId,
+  Future<List<Contact>> getContacts(int userLocalId,
       {List<String> storages, String pattern}) async {
     final result = await _contactsDao.getContacts(
-      userServerId, storages: storages, pattern: pattern,
+      userLocalId, storages: storages, pattern: pattern,
     );
     return ContactMapper.fromDB(result);
   }
 
   @override
-  Stream<List<Contact>> watchAllContacts(int userServerId) {
-    final result = _contactsDao.watchAllContacts(userServerId);
+  Stream<List<Contact>> watchAllContacts(int userLocalId) {
+    final result = _contactsDao.watchAllContacts(userLocalId);
     return result.map((data) => ContactMapper.fromDB(data));
   }
 
 
   @override
-  Stream<List<Contact>> watchContactsFromStorage(int userServerId, ContactsStorage storage) {
-    final result = _contactsDao.watchContactsFromStorage(userServerId, storage.id);
+  Stream<List<Contact>> watchContactsFromStorage(int userLocalId, ContactsStorage storage) {
+    final result = _contactsDao.watchContactsFromStorage(userLocalId, storage.id);
     return result.map((data) => ContactMapper.fromDB(data));
   }
 
   @override
-  Stream<List<Contact>> watchContactsFromGroup(int userServerId, ContactsGroup group) {
-    final result = _contactsDao.watchContactsFromGroup(userServerId, group.uuid);
+  Stream<List<Contact>> watchContactsFromGroup(int userLocalId, ContactsGroup group) {
+    final result = _contactsDao.watchContactsFromGroup(userLocalId, group.uuid);
     return result.map((data) => ContactMapper.fromDB(data));
   }
 
   @override
-  Future<List<ContactsGroup>> getGroups(int userServerId) async {
-    final result = await _groupsDao.getGroups(userServerId);
+  Future<List<ContactsGroup>> getGroups(int userLocalId) async {
+    final result = await _groupsDao.getGroups(userLocalId);
     return ContactsGroupMapper.fromDB(result);
   }
 
   @override
-  Future<List<ContactsStorage>> getStorages(int userServerId) async {
-    final result = await _storagesDao.getStorages(userServerId);
+  Future<List<ContactsStorage>> getStorages(int userLocalId) async {
+    final result = await _storagesDao.getStorages(userLocalId);
     return ContactsStorageMapper.fromDB(result);
   }
 
@@ -108,8 +105,7 @@ class ContactsDbServiceImpl implements ContactsDbService {
   Future<void> updateStorages(List<ContactsStorage> updatedStorages, int userId,
       {bool nullToAbsent = true}) {
     final formatted = ContactsStorageMapper.toDB(updatedStorages, userId);
-    final companions =
-        formatted.map((c) => c.createCompanion(nullToAbsent)).toList();
+    final companions = formatted.map((c) => c.createCompanion(nullToAbsent)).toList();
     return _storagesDao.updateStorages(companions);
   }
 

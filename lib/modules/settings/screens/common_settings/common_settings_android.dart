@@ -44,7 +44,7 @@ class _CommonSettingsAndroidState extends State<CommonSettingsAndroid> {
                       ),
                     ],
                   ),
-                  activeColor: Theme.of(context).primaryColor,
+                  activeColor: Theme.of(context).accentColor,
                   value: state.is24,
                   onChanged: (val) => bloc.add(SetTimeFormat(val))),
                 ListTile(

@@ -20,6 +20,12 @@ import 'auth_data.dart';
 class LoginAndroid extends StatefulWidget {
   static final _authFormKey = GlobalKey<FormState>();
 
+  final bool isDialog;
+  final String email;
+
+  const LoginAndroid({Key key, this.isDialog = false, this.email})
+      : super(key: key);
+
   @override
   _LoginAndroidState createState() => _LoginAndroidState();
 }
@@ -38,7 +44,7 @@ class _LoginAndroidState extends State<LoginAndroid> {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-    if (kDebugMode) {
+    if (kDebugMode && !widget.isDialog) {
       emailCtrl.text = AuthData.email;
       passwordCtrl.text = AuthData.password;
     }
@@ -47,7 +53,12 @@ class _LoginAndroidState extends State<LoginAndroid> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    BlocProvider.of<AuthBloc>(context).add(GetLastEmail());
+
+    if (widget.isDialog == true) {
+      if (widget.email != null) emailCtrl.text = widget.email;
+    } else {
+      BlocProvider.of<AuthBloc>(context).add(GetLastEmail());
+    }
   }
 
   @override
@@ -95,6 +106,9 @@ class _LoginAndroidState extends State<LoginAndroid> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: widget.isDialog ? AppBar(
+        title: Text(i18n(context, widget.email == null ? "settings_accounts_add" : "settings_accounts_relogin")),
+      ) : null,
       body: BlocListener(
           bloc: BlocProvider.of<AuthBloc>(context),
           listener: (context, state) {
@@ -116,7 +130,12 @@ class _LoginAndroidState extends State<LoginAndroid> {
                 BlocProvider.of<SettingsBloc>(context)
                     .add(InitSettings(state.user));
               }
-              Navigator.pushReplacementNamed(context, MessagesListRoute.name);
+
+              if (widget.isDialog) {
+                Navigator.pop(context);
+              } else {
+                Navigator.pushReplacementNamed(context, MessagesListRoute.name);
+              }
             }
             if (state is AuthError) {
               showSnack(
@@ -153,13 +172,15 @@ class _LoginAndroidState extends State<LoginAndroid> {
               key: LoginAndroid._authFormKey,
               child: Column(
                 children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 32.0),
-                    child: Text(
-                      i18n(context, "app_title"),
-                      style: Theme.of(context).textTheme.display2,
+                  if (!widget.isDialog)
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 32.0),
+                      child: Text(
+                        i18n(context, "app_title"),
+                        style: Theme.of(context).textTheme.display2,
+                      ),
                     ),
-                  ),
+                  if (!widget.isDialog)
                   SizedBox(height: 70.0),
                   if (_showHostField)
                     AuthInput(
@@ -167,10 +188,6 @@ class _LoginAndroidState extends State<LoginAndroid> {
                       label: i18n(context, "login_input_host"),
                       iconForIOS: MdiIcons.web,
                       keyboardType: TextInputType.url,
-                      validator: (value) => _showHostField
-                          ? validateInput(
-                              context, value, [ValidationType.empty])
-                          : "",
                       isEnabled: !loading,
                     ),
                   SizedBox(height: 10),
@@ -179,8 +196,7 @@ class _LoginAndroidState extends State<LoginAndroid> {
                     label: i18n(context, "login_input_email"),
                     iconForIOS: Icons.email,
                     keyboardType: TextInputType.emailAddress,
-                    validator: (value) => validateInput(context, value,
-                        [ValidationType.empty, ValidationType.email]),
+                    validator: (value) => validateInput(context, value, [ValidationType.empty, ValidationType.email]),
                     isEnabled: !loading,
                   ),
                   SizedBox(height: 10),
@@ -188,8 +204,7 @@ class _LoginAndroidState extends State<LoginAndroid> {
                     controller: passwordCtrl,
                     label: i18n(context, "login_input_password"),
                     iconForIOS: Icons.lock,
-                    validator: (value) =>
-                        validateInput(context, value, [ValidationType.empty]),
+                    validator: (value) => validateInput(context, value, [ValidationType.empty]),
                     isPassword: true,
                     isEnabled: !loading,
                   ),
@@ -206,10 +221,10 @@ class _LoginAndroidState extends State<LoginAndroid> {
                   ),
                 ],
               ),
+              ),
             ),
           ),
         ),
-      ),
     );
   }
 }

@@ -1,24 +1,37 @@
 import 'dart:convert';
 
 import 'package:aurora_mail/database/app_database.dart';
-import 'package:aurora_mail/models/api_body.dart';
-import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
-import 'package:aurora_mail/utils/api_utils.dart';
+import 'package:flutter/foundation.dart';
 import 'package:webmail_api_client/webmail_api_client.dart';
 
 class FoldersApi {
-  int get _accountId => AuthBloc.currentAccount.accountId;
+  final Account account;
+  final User user;
+
+  int get _accountId => account.accountId;
+
+  WebMailApi _mailModule;
+
+  FoldersApi({
+    @required this.account,
+    @required this.user,
+  }) {
+    _mailModule = WebMailApi(
+      moduleName: WebMailModules.mail,
+      hostname: user.hostname,
+      token: user.token,
+    );
+  }
 
   Future<List<Map<String, dynamic>>> getFolders() async {
     final parameters = json.encode({"AccountID": _accountId});
 
-    final body = new ApiBody(
-        module: "Mail", method: "GetFolders", parameters: parameters);
+    final body = new WebMailApiBody(method: "GetFolders", parameters: parameters);
 
-    final res = await sendRequest(body);
+    final res = await _mailModule.post(body);
 
-    if (res["Result"] is Map) {
-      return new List<Map<String, dynamic>>.from(res["Result"]["Folders"]["@Collection"] as List);
+    if (res is Map) {
+      return new List<Map<String, dynamic>>.from(res["Folders"]["@Collection"] as List);
     } else {
       throw WebMailApiError(res);
     }
@@ -29,15 +42,12 @@ class FoldersApi {
     final parameters =
         json.encode({"AccountID": _accountId, "Folders": folderNames});
 
-    final body = new ApiBody(
-        module: "Mail",
-        method: "GetRelevantFoldersInformation",
-        parameters: parameters);
+    final body = new WebMailApiBody(method: "GetRelevantFoldersInformation", parameters: parameters);
 
-    final res = await sendRequest(body);
+    final res = await _mailModule.post(body);
 
-    if (res["Result"] is Map) {
-      return res["Result"]["Counts"] as Map;
+    if (res is Map) {
+      return res["Counts"] as Map;
     } else {
       throw WebMailApiError(res);
     }

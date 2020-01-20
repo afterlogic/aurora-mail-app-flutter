@@ -31,6 +31,7 @@ class _GroupViewAndroidState extends State<GroupViewAndroid> {
           i18n(context, "contacts_group_delete_title"),
           i18n(context, "contacts_group_delete_desc_with_name", {"group": widget.group.name}),
           i18n(context, "btn_delete"),
+          destructibleAction: true,
         );
 
         if (delete == true) {

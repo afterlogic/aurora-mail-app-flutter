@@ -14,7 +14,6 @@ import 'package:aurora_mail/modules/mail/screens/compose/compose_route.dart';
 import 'package:aurora_mail/modules/mail/screens/message_view/message_view_route.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/main_drawer.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
-import 'package:aurora_mail/modules/settings/screens/settings_main/settings_main_route.dart';
 import 'package:aurora_mail/shared_ui/mail_bottom_app_bar.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
@@ -32,8 +31,8 @@ class MessagesListAndroid extends StatefulWidget {
 }
 
 class _MessagesListAndroidState extends State<MessagesListAndroid> {
-  final _messagesListBloc = new MessagesListBloc();
-  final _mailBloc = new MailBloc();
+  MessagesListBloc _messagesListBloc;
+  MailBloc _mailBloc;
   ContactsBloc _contactsBloc;
 
   var _refreshCompleter = new Completer();
@@ -42,14 +41,24 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _mailBloc.add(FetchFolders());
+    final authBloc = BlocProvider.of<AuthBloc>(context);
+
+    _messagesListBloc = new MessagesListBloc(
+      user: authBloc.currentUser,
+      account: authBloc.currentAccount,
+    );
+
+    _mailBloc = new MailBloc(
+      user: authBloc.currentUser,
+      account: authBloc.currentAccount,
+    );
+
     _contactsBloc = new ContactsBloc(
-      apiUrl: AuthBloc.apiUrl,
-      token: AuthBloc.currentUser.token,
-      userId: AuthBloc.currentUser.serverId,
+      user: authBloc.currentUser,
       appDatabase: DBInstances.appDB,
     );
     _contactsBloc.add(GetContacts());
+    _mailBloc.add(FetchFolders());
   }
 
   @override

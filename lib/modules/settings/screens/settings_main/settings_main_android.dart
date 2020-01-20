@@ -1,5 +1,6 @@
 import 'package:aurora_mail/modules/settings/screens/about/about_route.dart';
 import 'package:aurora_mail/modules/settings/screens/common_settings/common_settings_route.dart';
+import 'package:aurora_mail/modules/settings/screens/manage_users/manage_users_route.dart';
 import 'package:aurora_mail/modules/settings/screens/sync_settings/sync_settings_route.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +26,11 @@ class _SettingsMainAndroidState extends State<SettingsMainAndroid> {
             leading: Icon(Icons.sync),
             title: Text(i18n(context, "settings_sync")),
             onTap: () => Navigator.pushNamed(context, SyncSettingsRoute.name),
+          ),
+          ListTile(
+            leading: Icon(Icons.account_circle),
+            title: Text(i18n(context, "settings_accounts_manage")),
+            onTap: () => Navigator.pushNamed(context, ManageUsersRoute.name),
           ),
           ListTile(
             leading: Icon(Icons.info_outline),

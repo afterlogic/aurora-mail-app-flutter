@@ -4,6 +4,8 @@ import 'package:moor_flutter/moor_flutter.dart';
 class ContactsGroups extends Table {
   TextColumn get uuid => text().customConstraint("UNIQUE")();
 
+  IntColumn get userLocalId => integer()();
+
   IntColumn get idUser => integer()();
 
   TextColumn get city => text()();

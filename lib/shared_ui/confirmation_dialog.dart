@@ -9,12 +9,14 @@ class ConfirmationDialog extends StatelessWidget {
   final String title;
   final String description;
   final String actionText;
+  final bool destructibleAction;
 
   const ConfirmationDialog({
     Key key,
     @required this.title,
     @required this.description,
     @required this.actionText,
+    this.destructibleAction = false,
   }) : super(key: key);
 
   static Future<bool> show(
@@ -22,6 +24,7 @@ class ConfirmationDialog extends StatelessWidget {
     String title,
     String description,
     String actionText,
+    {bool destructibleAction}
   ) {
     return dialog(
         context: context,
@@ -29,6 +32,7 @@ class ConfirmationDialog extends StatelessWidget {
               title: title,
               description: description,
               actionText: actionText,
+              destructibleAction: destructibleAction,
             ));
   }
 
@@ -40,12 +44,18 @@ class ConfirmationDialog extends StatelessWidget {
         content: Text(description),
         actions: <Widget>[
           CupertinoButton(
-            child: Text(actionText),
-            onPressed: () => Navigator.pop(context, true),
-          ),
-          CupertinoButton(
             child: Text(i18n(context, "btn_cancel")),
             onPressed: () => Navigator.pop(context, false),
+          ),
+          CupertinoButton(
+            child: Text(
+              actionText,
+              style: TextStyle(
+                color: destructibleAction ? Colors.red[400] : null,
+                fontWeight: destructibleAction ? FontWeight.w600 : null,
+              ),
+            ),
+            onPressed: () => Navigator.pop(context, true),
           ),
         ],
       );

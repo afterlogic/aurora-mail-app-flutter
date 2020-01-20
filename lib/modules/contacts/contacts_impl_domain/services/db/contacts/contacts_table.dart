@@ -7,6 +7,8 @@ class Contacts extends Table {
 
   TextColumn get uuid => text()();
 
+  IntColumn get userLocalId => integer()();
+
   IntColumn get entityId => integer().nullable()();
 
   TextColumn get parentUuid => text().nullable()();

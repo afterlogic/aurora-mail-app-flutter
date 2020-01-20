@@ -32,6 +32,15 @@ class ReceivedLastEmail extends AuthState {
   List<Object> get props => [email];
 }
 
+class ReceivedUsers extends AuthState {
+  final List<User> users;
+
+  const ReceivedUsers(this.users);
+
+  @override
+  List<Object> get props => [users];
+}
+
 class LoggingIn extends AuthState {}
 
 class NeedsHost extends AuthState {}

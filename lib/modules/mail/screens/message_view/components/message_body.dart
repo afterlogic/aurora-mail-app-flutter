@@ -7,6 +7,7 @@ import 'package:aurora_mail/utils/mail_utils.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -52,6 +53,7 @@ class _MessageBodyState extends State<MessageBody> {
     }
 
 //    setState(() => _htmlData = htmlData);
+    final user = BlocProvider.of<AuthBloc>(context).currentUser;
 
     for (final attachment in widget.attachments) {
 //      try {
@@ -75,7 +77,7 @@ class _MessageBodyState extends State<MessageBody> {
 
       htmlData = htmlData.replaceFirst(
         "data-x-src-cid=\"${attachment.cid}\"",
-        "src=\"${AuthBloc.currentUser.hostname}${attachment.viewUrl.replaceFirst("mail-attachment/", "mail-attachments-cookieless/")}&AuthToken=${AuthBloc.currentUser.token}\"",
+        "src=\"${user.hostname}${attachment.viewUrl.replaceFirst("mail-attachment/", "mail-attachments-cookieless/")}&AuthToken=${user.token}\"",
       );
     }
 

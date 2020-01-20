@@ -1,13 +1,21 @@
 import 'dart:async';
 
+import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/utils/api_utils.dart';
 import 'package:bloc/bloc.dart';
+import 'package:flutter/foundation.dart';
 
 import 'bloc.dart';
 import 'messages_list_methods.dart';
 
 class MessagesListBloc extends Bloc<MessagesListEvent, MessagesListState> {
-  final _methods = new MessagesListMethods();
+  final User user;
+
+  MessagesListMethods _methods;
+
+  MessagesListBloc({@required this.user, @required Account account}) {
+    _methods = new MessagesListMethods(user: user, account: account);
+  }
 
   @override
   MessagesListState get initialState => MessagesEmpty();
@@ -24,7 +32,7 @@ class MessagesListBloc extends Bloc<MessagesListEvent, MessagesListState> {
   Stream<MessagesListState> _subscribeToMessages(
       SubscribeToMessages event) async* {
     final stream =
-        _methods.subscribeToMessages(event.currentFolder, event.isStarred);
+        _methods.subscribeToMessages(event.currentFolder, event.isStarred, user);
     yield SubscribedToMessages(stream, event.isStarred);
   }
 

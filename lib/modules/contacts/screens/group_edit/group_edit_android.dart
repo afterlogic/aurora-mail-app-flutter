@@ -74,9 +74,12 @@ class _GroupEditAndroidState extends State<GroupEditAndroid> {
   }
 
   ContactsGroup _getDataFromInputs() {
+    final user = BlocProvider.of<AuthBloc>(context).currentUser;
+
     return ContactsGroup(
       uuid: widget.group?.uuid,
-      idUser: widget.group?.idUser ?? AuthBloc.currentUser.serverId,
+      userLocalId: widget.group?.userLocalId ?? user.localId,
+      idUser: widget.group?.idUser ?? user.serverId,
       name: _nameCtrl.text,
       email: _emailCtrl.text,
       company: _companyCtrl.text,
@@ -102,7 +105,7 @@ class _GroupEditAndroidState extends State<GroupEditAndroid> {
           SwitchListTile.adaptive(
             title: Text(i18n(context, "contacts_group_edit_is_organization")),
             value: _isOrg,
-            activeColor: Theme.of(context).primaryColor,
+            activeColor: Theme.of(context).accentColor,
             onChanged: (v) => setState(() => _isOrg = v),
           ),
           if (_isOrg)

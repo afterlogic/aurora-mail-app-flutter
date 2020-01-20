@@ -9,7 +9,6 @@ import 'package:aurora_mail/database/mail/mail_table.dart';
 import 'package:aurora_mail/database/users/users_dao.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/models/message_info.dart';
-import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/repository/folders_api.dart';
 import 'package:aurora_mail/modules/mail/repository/mail_api.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
@@ -20,8 +19,16 @@ class MailMethods {
   final _foldersDao = new FoldersDao(DBInstances.appDB);
   final _usersDao = new UsersDao(DBInstances.appDB);
   final _mailDao = new MailDao(DBInstances.appDB);
-  final _foldersApi = new FoldersApi();
-  final _mailApi = new MailApi();
+  FoldersApi _foldersApi;
+  MailApi _mailApi;
+
+  final User user;
+  final Account account;
+
+  MailMethods({@required this.account, @required this.user}) {
+    _foldersApi = new FoldersApi(user: user, account: account);
+    _mailApi = new MailApi(user: user, account: account);
+  }
 
   final _syncQueue = new List<int>();
 
@@ -39,10 +46,14 @@ class MailMethods {
 
       // first convert rawFolders to the format, which sql will accept and add to DB
       final newFolders = await Folders.getFolderObjectsFromServerAsync(
-          rawFolders, AuthBloc.currentAccount.accountId);
+        rawFolders: rawFolders,
+        accountId: account.accountId,
+        accountLocalId: account.localId,
+        userLocalId: user.localId,
+      );
       await _foldersDao.addFolders(newFolders);
 
-      final newFoldersWithIds = await _foldersDao.getAllFolders();
+      final newFoldersWithIds = await _foldersDao.getAllFolders(account.localId);
       return Folder.getFolderObjectsFromDb(newFoldersWithIds);
     }
   }
@@ -51,7 +62,7 @@ class MailMethods {
     if (_isOffline) return _getOfflineFolders();
 
     // fetch old folders
-    final oldLocalFoldersFuture = _foldersDao.getAllFolders();
+    final oldLocalFoldersFuture = _foldersDao.getAllFolders(account.localId);
     // fetch new folders
     final rawFoldersFuture = _foldersApi.getFolders();
 
@@ -67,7 +78,11 @@ class MailMethods {
 
     // convert new folders to db-like format (the format of old folders) for calculating difference
     final newLocalFolders = await Folders.getFolderObjectsFromServerAsync(
-        rawFolders, AuthBloc.currentAccount.accountId);
+      rawFolders: rawFolders,
+      accountId: account.accountId,
+      accountLocalId: account.localId,
+      userLocalId: user.localId,
+    );
 
     // calculate difference
     final calcResult = await Folders.calculateFoldersDiffAsync(
@@ -95,7 +110,7 @@ class MailMethods {
     if (dbFutures.isNotEmpty) {
       await Future.wait(dbFutures);
 
-      final newFoldersWithIds = await _foldersDao.getAllFolders();
+      final newFoldersWithIds = await _foldersDao.getAllFolders(account.localId);
       return Folder.getFolderObjectsFromDb(newFoldersWithIds);
     } else {
       return Folder.getFolderObjectsFromDb(oldLocalFolders);
@@ -108,7 +123,7 @@ class MailMethods {
 
     assert(selectedFolder != null);
 
-    final localFolders = await _foldersDao.getAllFolders();
+    final localFolders = await _foldersDao.getAllFolders(account.localId);
 
     final folders =
         await _foldersApi.getRelevantFoldersInformation(localFolders);
@@ -144,18 +159,18 @@ class MailMethods {
     });
 
     await Future.wait(futures);
-    final updatedLocalFolders = await _foldersDao.getAllFolders();
+    final updatedLocalFolders = await _foldersDao.getAllFolders(account.localId);
     return Folder.getFolderObjectsFromDb(updatedLocalFolders);
   }
 
   Future<void> syncFolders({@required int localId, bool syncSystemFolders = false}) async {
-    if (_isOffline || AuthBloc.currentUser == null) return null;
+    if (_isOffline || user == null) return null;
 
     // either localId or syncSystemFolders must be provided
     assert(localId != null || syncSystemFolders != null);
     var localFolders = new List<LocalFolder>();
     if (syncSystemFolders == true) {
-      localFolders = await _foldersDao.getAllFolders();
+      localFolders = await _foldersDao.getAllFolders(account.localId);
       localFolders.sort((a, b) => a.folderOrder.compareTo(b.folderOrder));
     }
 
@@ -177,12 +192,12 @@ class MailMethods {
   }
 
   Future<void> _setMessagesInfoToFolder() async {
-    if (_isOffline || AuthBloc.currentUser == null) return null;
+    if (_isOffline || user == null) return null;
     assert(_syncQueue.isNotEmpty);
 
     final folderToUpdate = await _foldersDao.getFolderByLocalId(_syncQueue[0]);
     // get the actual sync period
-    final user = await _usersDao.getUserByLocalId(AuthBloc.currentUser.localId);
+    final updatedUser = await _usersDao.getUserByLocalId(user.localId);
 
     if (!folderToUpdate.needsInfoUpdate) {
       _syncQueue.remove(folderToUpdate.localId);
@@ -195,7 +210,7 @@ class MailMethods {
 
     print("getting folder info for: ${folderToUpdate.fullNameRaw}");
 
-    final syncPeriod = SyncPeriod.dbStringToPeriod(user.syncPeriod);
+    final syncPeriod = SyncPeriod.dbStringToPeriod(updatedUser.syncPeriod);
     final periodStr = SyncPeriod.periodToDate(syncPeriod);
     final rawInfo = await _mailApi.getMessagesInfo(
         folderName: folderToUpdate.fullNameRaw, search: "date:$periodStr/");
@@ -221,20 +236,20 @@ class MailMethods {
 
   // step 5
   Future<void> _syncMessagesChunk(Period syncPeriod) async {
-    if (_isOffline || AuthBloc.currentUser == null) return null;
+    if (_isOffline || user == null) return null;
     assert(_syncQueue.isNotEmpty);
 
     // get the actual folder state every time
     final folder = await _foldersDao.getFolderByLocalId(_syncQueue[0]);
     // get the actual sync period
-    final user = await _usersDao.getUserByLocalId(
-        AuthBloc.currentUser.localId);
+    final updatedUser = await _usersDao.getUserByLocalId(
+        user.localId);
     if (folder.messagesInfo == null) {
       print("Attention! messagesInfo is null, perhaps another folder was selected while messages info was being retrieved.");
       return _setMessagesInfoToFolder();
     }
 
-    if (user.syncPeriod != SyncPeriod.periodToDbString(syncPeriod)) {
+    if (updatedUser.syncPeriod != SyncPeriod.periodToDbString(syncPeriod)) {
       print("Attention! another sync period was selected, refetching messages info...");
       return _setMessagesInfoToFolder();
     }
@@ -268,7 +283,7 @@ class MailMethods {
       final messages = Mail.getMessageObjFromServerAndUpdateInfoHasBody(
         rawBodies,
         folder.messagesInfo,
-        user.localId,
+        updatedUser.localId,
       );
 
       await _mailDao.addMessages(messages);
@@ -379,7 +394,7 @@ class MailMethods {
   }
 
   Future<List<Folder>> _getOfflineFolders() async {
-    final List<LocalFolder> localFolders = await _foldersDao.getAllFolders();
+    final List<LocalFolder> localFolders = await _foldersDao.getAllFolders(account.localId);
     return Folder.getFolderObjectsFromDb(localFolders);
   }
 }
