@@ -1,8 +1,9 @@
 import 'dart:io';
 
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
-import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_group_model.dart';
 import 'package:aurora_mail/modules/contacts/screens/group_view/group_view_route.dart';
+import 'package:aurora_mail/modules/mail/screens/messages_list/components/user_selection_popup.dart';
+import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -29,6 +30,9 @@ class ContactsAppBar extends StatelessWidget implements PreferredSizeWidget {
                     Navigator.pushNamed(context, GroupViewRoute.name, arguments: GroupViewScreenArgs(group, bloc));
                   },
                 ),
+              BlocBuilder<SettingsBloc, SettingsState>(
+                builder: (_, state) => UserSelectionPopup((state as SettingsLoaded).users),
+              ),
             ],
           ),
     );
@@ -66,7 +70,7 @@ class ContactsAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
         ],
       );
-    } else if (state.showAllVisibleContacts) {
+    } else if (state.showAllVisibleContacts == true) {
       return Column(
         crossAxisAlignment: !Platform.isIOS ? CrossAxisAlignment.start : CrossAxisAlignment.center,
         children: <Widget>[

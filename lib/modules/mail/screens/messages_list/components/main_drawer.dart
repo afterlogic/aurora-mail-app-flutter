@@ -20,6 +20,11 @@ class _MainDrawerState extends State<MainDrawer> {
   var _refreshCompleter = new Completer();
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Drawer(
       child: SafeArea(

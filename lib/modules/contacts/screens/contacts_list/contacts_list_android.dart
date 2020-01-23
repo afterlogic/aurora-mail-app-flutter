@@ -6,8 +6,6 @@ import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_mode
 import 'package:aurora_mail/modules/contacts/screens/contact_edit/contact_edit_route.dart';
 import 'package:aurora_mail/modules/contacts/screens/contact_view/contact_view_route.dart';
 import 'package:aurora_mail/modules/contacts/screens/contacts_list/components/contacts_app_bar.dart';
-import 'package:aurora_mail/modules/contacts/screens/contacts_list/components/speed_dial.dart';
-import 'package:aurora_mail/modules/contacts/screens/group_edit/group_edit_route.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/mail_bloc.dart';
 import 'package:aurora_mail/shared_ui/mail_bottom_app_bar.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
@@ -105,7 +103,9 @@ class _ContactsListAndroidState extends State<ContactsListAndroid> {
           },
           backgroundColor: Colors.white,
           color: Colors.black,
-          child: BlocBuilder<ContactsBloc, ContactsState>(builder: (context, state) {
+          child: BlocBuilder<ContactsBloc, ContactsState>(
+              builder: (context, state) {
+                print("VO: state: ${state}");
             if (state.contacts == null || state.contacts.isEmpty && state.currentlySyncingStorages.contains(state.selectedStorage)) return _buildLoading(state);
             else if (state.contacts.isEmpty) return _buildContactsEmpty(state);
             else return _buildContacts(context, state);

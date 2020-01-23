@@ -4,9 +4,7 @@ import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/main.dart' as main;
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
-import 'package:aurora_mail/modules/auth/screens/login/login_route.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
-import 'package:aurora_mail/modules/contacts/screens/contacts_list/contacts_list_route.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/models/compose_actions.dart';
@@ -41,6 +39,25 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    _initBlocs();
+  }
+
+
+  @override
+  void didUpdateWidget(MessagesListAndroid oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _initBlocs();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    main.doOnAlarm = null;
+    _messagesListBloc.close();
+    _mailBloc.close();
+  }
+
+  void _initBlocs() {
     final authBloc = BlocProvider.of<AuthBloc>(context);
 
     _messagesListBloc = new MessagesListBloc(
@@ -52,21 +69,13 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
       user: authBloc.currentUser,
       account: authBloc.currentAccount,
     );
-
     _contactsBloc = new ContactsBloc(
       user: authBloc.currentUser,
       appDatabase: DBInstances.appDB,
     );
+
     _contactsBloc.add(GetContacts());
     _mailBloc.add(FetchFolders());
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    main.doOnAlarm = null;
-    _messagesListBloc.close();
-    _mailBloc.close();
   }
 
   void _showError(BuildContext ctx, String err) {
@@ -136,15 +145,9 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider<MessagesListBloc>.value(
-          value: _messagesListBloc,
-        ),
-        BlocProvider<MailBloc>.value(
-          value: _mailBloc,
-        ),
-        BlocProvider<ContactsBloc>.value(
-          value: _contactsBloc,
-        ),
+        BlocProvider<MessagesListBloc>.value(value: _messagesListBloc),
+        BlocProvider<MailBloc>.value(value: _mailBloc),
+        BlocProvider<ContactsBloc>.value(value: _contactsBloc),
       ],
       child: Scaffold(
         appBar: MailAppBar(),

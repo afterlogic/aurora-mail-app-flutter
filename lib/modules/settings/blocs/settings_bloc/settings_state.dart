@@ -1,3 +1,4 @@
+import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/settings/models/language.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:equatable/equatable.dart';
@@ -13,6 +14,7 @@ abstract class SettingsState extends Equatable {
 class SettingsEmpty extends SettingsState {}
 
 class SettingsLoaded extends SettingsState {
+  final List<User> users;
   final int syncFrequency;
   final String syncPeriod;
   final bool darkThemeEnabled;
@@ -21,6 +23,7 @@ class SettingsLoaded extends SettingsState {
   final ConnectivityResult connection;
 
   const SettingsLoaded({
+    this.users,
     this.syncFrequency,
     this.syncPeriod,
     this.darkThemeEnabled,
@@ -30,6 +33,7 @@ class SettingsLoaded extends SettingsState {
   });
 
   SettingsLoaded copyWith({
+    Value<List<User>> users,
     Value<int> syncFrequency,
     Value<String> syncPeriod,
     Value<bool> darkThemeEnabled,
@@ -38,6 +42,7 @@ class SettingsLoaded extends SettingsState {
     Value<ConnectivityResult> connection,
   }) {
     return new SettingsLoaded(
+      users: users != null ? users.value : this.users,
       syncFrequency: syncFrequency != null ? syncFrequency.value : this.syncFrequency,
       syncPeriod: syncPeriod != null ? syncPeriod.value : this.syncPeriod,
       darkThemeEnabled: darkThemeEnabled != null ? darkThemeEnabled.value : this.darkThemeEnabled,

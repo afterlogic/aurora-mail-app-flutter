@@ -1,22 +1,27 @@
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
+import 'package:aurora_mail/shared_ui/restart_widget.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class AccountTile extends StatefulWidget {
+class UserTile extends StatefulWidget {
   final User user;
+  final bool compact;
 
-  AccountTile({@required this.user}) : super(key: Key(user.localId.toString()));
+  UserTile({@required this.user, this.compact = false})
+      : super(key: Key(user.localId.toString()));
 
   @override
-  _AccountTileState createState() => _AccountTileState();
+  _UserTileState createState() => _UserTileState();
 }
 
-class _AccountTileState extends State<AccountTile> {
+class _UserTileState extends State<UserTile> {
   void _selectUser() {
+    if (widget.compact == true) Navigator.pop(context);
     BlocProvider.of<AuthBloc>(context).add(SelectUser(widget.user.localId));
+    RestartWidget.restartApp(context);
   }
 
   Future<void> _showDeleteDialog() async {
@@ -39,11 +44,9 @@ class _AccountTileState extends State<AccountTile> {
     return ListTile(
       key: widget.key,
       selected: widget.user.localId == currentUser.localId,
-      leading: widget.user.token == null
-          ? Icon(Icons.error, color: Theme.of(context).disabledColor)
-          : Icon(Icons.account_circle),
+      leading: _buildLeading(),
       title: Text(widget.user.emailFromLogin),
-      trailing: IconButton(
+      trailing: widget.compact ? null : IconButton(
         icon: Icon(Icons.delete_outline),
         color: Theme.of(context).iconTheme.color,
         tooltip: i18n(context, "settings_accounts_delete"),
@@ -51,5 +54,17 @@ class _AccountTileState extends State<AccountTile> {
       ),
       onTap: widget.user.localId == currentUser.localId ? null : _selectUser,
     );
+  }
+
+  Widget _buildLeading() {
+    if (!widget.compact) {
+      if (widget.user.token == null) {
+        return Icon(Icons.error, color: Theme.of(context).disabledColor);
+      } else {
+        return Icon(Icons.account_circle);
+      }
+    } else {
+      return null;
+    }
   }
 }

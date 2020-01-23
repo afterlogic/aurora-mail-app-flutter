@@ -97,7 +97,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
         builder: (_, authState) {
           if (authState is InitializedUserAndAccounts) {
             if (authState.user != null) {
-              _settingsBloc.add(InitSettings(authState.user));
+              _settingsBloc.add(InitSettings(authState.user, authState.users));
             }
             return BlocBuilder<SettingsBloc, SettingsState>(
                 bloc: _settingsBloc,

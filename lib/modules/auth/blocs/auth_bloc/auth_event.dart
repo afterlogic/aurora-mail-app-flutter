@@ -29,8 +29,6 @@ class InitUserAndAccounts extends AuthEvent {}
 
 class GetLastEmail extends AuthEvent {}
 
-class GetUsers extends AuthEvent {}
-
 class SelectUser extends AuthEvent {
   final int userLocalId;
 

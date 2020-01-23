@@ -5,6 +5,7 @@ import 'package:aurora_mail/modules/auth/screens/login/components/auth_input.dar
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/shared_ui/app_button.dart';
+import 'package:aurora_mail/shared_ui/restart_widget.dart';
 import 'package:aurora_mail/utils/input_validation.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
@@ -128,11 +129,12 @@ class _LoginAndroidState extends State<LoginAndroid> {
             if (state is LoggedIn) {
               if (state.user != null) {
                 BlocProvider.of<SettingsBloc>(context)
-                    .add(InitSettings(state.user));
+                    .add(InitSettings(state.user, state.users));
               }
 
               if (widget.isDialog) {
-                Navigator.pop(context);
+//                Navigator.pop(context);
+                RestartWidget.restartApp(context);
               } else {
                 Navigator.pushReplacementNamed(context, MessagesListRoute.name);
               }

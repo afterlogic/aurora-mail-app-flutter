@@ -14,8 +14,9 @@ abstract class SettingsEvent extends Equatable {
 
 class InitSettings extends SettingsEvent {
   final User user;
+  final List<User> users;
 
-  const InitSettings(this.user);
+  const InitSettings(this.user, this.users);
 
   @override
   List<Object> get props => [user];

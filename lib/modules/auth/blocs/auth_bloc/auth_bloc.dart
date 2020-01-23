@@ -26,7 +26,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   ) async* {
     if (event is InitUserAndAccounts) yield* _initUserAndAccounts(event);
     if (event is GetLastEmail) yield* _getLastEmail(event);
-    if (event is GetUsers) yield* _getUsers(event);
     if (event is LogIn) yield* _login(event);
     if (event is SelectUser) yield* _selectUser(event);
     if (event is DeleteUser) yield* _deleteUser(event);
@@ -35,30 +34,26 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   Stream<AuthState> _initUserAndAccounts(InitUserAndAccounts event) async* {
     final result = await _methods.getUserAndAccountsFromDB();
+    final users = await _methods.users;
 
     try {
       if (result != null) {
         currentUser = result.user;
         currentAccount = result.accounts[0];
-        yield InitializedUserAndAccounts(result.user, needsLogin: false);
+        yield InitializedUserAndAccounts(user: result.user, users: users, needsLogin: false);
       } else {
-        yield InitializedUserAndAccounts(null, needsLogin: true);
+        yield InitializedUserAndAccounts(user: null, users: null, needsLogin: true);
       }
     } catch (err, s) {
       print("_initUserAndAccounts err: $err");
       print("_initUserAndAccounts s: $s");
-      yield InitializedUserAndAccounts(null, needsLogin: true);
+      yield InitializedUserAndAccounts(user: null, users: null, needsLogin: true);
     }
   }
 
   Stream<AuthState> _getLastEmail(GetLastEmail event) async* {
     final email = await _methods.lastEmail;
     if (email != null) yield ReceivedLastEmail(email);
-  }
-
-  Stream<AuthState> _getUsers(GetUsers event) async* {
-    final users = await _methods.users;
-    yield ReceivedUsers(users);
   }
 
   Stream<AuthState> _selectUser(SelectUser event) async* {
@@ -85,13 +80,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         if (user == null) {
           yield NeedsHost();
         } else {
+          final users = await _methods.users;
           currentUser = user;
           final accounts = await _methods.getAccounts(user);
 
           if (accounts.isNotEmpty) {
             assert(accounts[0] != null);
             currentAccount = accounts[0];
-            yield LoggedIn(user);
+            yield LoggedIn(user, users);
           } else {
             yield AuthError("error_login_no_accounts");
           }
@@ -122,7 +118,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     if (currentUser != null) {
       currentUser = await _methods.invalidateToken(currentUser.localId);
     } else {
-      print("VO: cannot invalidate token, no currentUser selected");
+      print("cannot invalidate token, no currentUser selected");
     }
   }
 }

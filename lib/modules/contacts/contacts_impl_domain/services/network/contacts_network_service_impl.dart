@@ -32,6 +32,11 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
     List<String> uuids,
     int userLocalId,
   }) async {
+    if (uuids == null || uuids.isEmpty) {
+      print("VO: contacts not uuids for ${storage.name}");
+      return new List<Contact>();
+    }
+
     final params = {
       "Storage": storage.id,
       "Uids": uuids,

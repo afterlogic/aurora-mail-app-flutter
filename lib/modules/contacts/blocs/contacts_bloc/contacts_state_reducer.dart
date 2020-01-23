@@ -4,6 +4,8 @@ import 'bloc.dart';
 import 'contacts_state.dart';
 
 Stream<ContactsState> reduceState(ContactsState state, dynamic event) async* {
+  print("VO: event: ${event}");
+  assert(state != null);
   if (event is ReceivedContacts) {
     yield state.copyWith(
       contacts: event.contacts,

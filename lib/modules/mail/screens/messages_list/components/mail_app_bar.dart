@@ -1,4 +1,6 @@
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
+import 'package:aurora_mail/modules/mail/screens/messages_list/components/user_selection_popup.dart';
+import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -33,25 +35,9 @@ class MailAppBar extends StatelessWidget implements PreferredSizeWidget {
         },
       ),
       actions: <Widget>[
-//        PopupMenuButton(
-//          onSelected: onActionSelected,
-//          itemBuilder: (_) {
-//            return [
-//              PopupMenuItem(
-//                value: MailListAppBarAction.contacts,
-//                child: Text(i18n(context, "messages_list_app_bar_contacts")),
-//              ),
-//              PopupMenuItem(
-//                value: MailListAppBarAction.settings,
-//                child: Text(i18n(context, "messages_list_app_bar_settings")),
-//              ),
-//              PopupMenuItem(
-//                value: MailListAppBarAction.logout,
-//                child: Text(i18n(context, "messages_list_app_bar_logout")),
-//              ),
-//            ];
-//          },
-//        )
+        BlocBuilder<SettingsBloc, SettingsState>(
+          builder: (_, state) => UserSelectionPopup((state as SettingsLoaded).users),
+        ),
       ],
     );
   }
