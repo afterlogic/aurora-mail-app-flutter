@@ -165,6 +165,7 @@ class Mail extends Table {
     List result,
     List<MessageInfo> messagesInfo,
     int userLocalId,
+    int accountServerId,
   ) {
     assert(result.length <= MESSAGES_PER_CHUNK);
     assert(result.isNotEmpty);
@@ -194,7 +195,7 @@ class Mail extends Table {
         localId: null,
         uid: rawMessage["Uid"] as int,
         userLocalId: userLocalId,
-        uniqueUidInFolder: rawMessage["Uid"].toString() + rawMessage["Folder"].toString(),
+        uniqueUidInFolder: accountServerId.toString() + rawMessage["Uid"].toString() + rawMessage["Folder"].toString(),
         parentUid: messageInfo.parentUid,
         flagsInJson:
             messageInfo.flags == null ? null : json.encode(messageInfo.flags),

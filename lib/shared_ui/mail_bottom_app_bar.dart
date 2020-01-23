@@ -48,9 +48,7 @@ class MailBottomAppBar extends StatelessWidget {
           ),
           IconButton(
             icon: Icon(
-              selectedRoute == MailBottomAppBarRoutes.mail
-                  ? Icons.mail
-                  : Icons.mail_outline,
+              Icons.email,
               color: selectedRoute == MailBottomAppBarRoutes.mail
                   ? Theme.of(context).accentColor
                   : null,
@@ -60,9 +58,7 @@ class MailBottomAppBar extends StatelessWidget {
           ),
           IconButton(
             icon: Icon(
-              selectedRoute == MailBottomAppBarRoutes.contacts
-                  ? Icons.people
-                  : Icons.people_outline,
+              Icons.contact_mail,
               color: selectedRoute == MailBottomAppBarRoutes.contacts
                   ? Theme.of(context).accentColor
                   : null,

@@ -161,71 +161,62 @@ class _LoginAndroidState extends State<LoginAndroid> {
   }
 
   Widget _buildLoginForm({bool loading = false}) {
-    final mq = MediaQuery.of(context);
-
     return Container(
-      child: SizedBox(
-        height: mq.size.height - mq.viewInsets.bottom,
-        width: mq.size.width,
-        child: Center(
-          child: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(horizontal: 22.0),
-            child: Form(
-              key: LoginAndroid._authFormKey,
-              child: Column(
-                children: <Widget>[
-                  if (!widget.isDialog)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 32.0),
-                      child: Text(
-                        i18n(context, "app_title"),
-                        style: Theme.of(context).textTheme.display2,
-                      ),
-                    ),
-                  if (!widget.isDialog)
-                  SizedBox(height: 70.0),
-                  if (_showHostField)
-                    AuthInput(
-                      controller: hostCtrl,
-                      label: i18n(context, "login_input_host"),
-                      iconForIOS: MdiIcons.web,
-                      keyboardType: TextInputType.url,
-                      isEnabled: !loading,
-                    ),
-                  SizedBox(height: 10),
-                  AuthInput(
-                    controller: emailCtrl,
-                    label: i18n(context, "login_input_email"),
-                    iconForIOS: Icons.email,
-                    keyboardType: TextInputType.emailAddress,
-                    validator: (value) => validateInput(context, value, [ValidationType.empty, ValidationType.email]),
-                    isEnabled: !loading,
-                  ),
-                  SizedBox(height: 10),
-                  AuthInput(
-                    controller: passwordCtrl,
-                    label: i18n(context, "login_input_password"),
-                    iconForIOS: Icons.lock,
-                    validator: (value) => validateInput(context, value, [ValidationType.empty]),
-                    isPassword: true,
-                    isEnabled: !loading,
-                  ),
-                  SizedBox(height: 40.0),
-                  SizedBox(
-                    width: double.infinity,
-                    child: AppButton(
-                      text: i18n(context, "btn_login"),
-                      buttonColor: Theme.of(context).accentColor,
-                      textColor: Colors.white,
-                      isLoading: loading,
-                      onPressed: () => _login(context),
-                    ),
-                  ),
-                ],
+      margin: EdgeInsets.symmetric(horizontal: 22.0),
+      child: Form(
+        key: LoginAndroid._authFormKey,
+        child: Column(
+          mainAxisAlignment: widget.isDialog ? MainAxisAlignment.start : MainAxisAlignment.center,
+          children: <Widget>[
+            if (!widget.isDialog)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 32.0),
+                child: Text(
+                  i18n(context, "app_title"),
+                  style: Theme.of(context).textTheme.display2,
+                ),
               ),
+            if (!widget.isDialog)
+            SizedBox(height: 70.0),
+            if (_showHostField)
+              AuthInput(
+                controller: hostCtrl,
+                label: i18n(context, "login_input_host"),
+                iconForIOS: MdiIcons.web,
+                keyboardType: TextInputType.url,
+                isEnabled: !loading,
+              ),
+            SizedBox(height: 10),
+            AuthInput(
+              controller: emailCtrl,
+              label: i18n(context, "login_input_email"),
+              iconForIOS: Icons.email,
+              keyboardType: TextInputType.emailAddress,
+              validator: (value) => validateInput(context, value, [ValidationType.empty, ValidationType.email]),
+              isEnabled: !loading,
+            ),
+            SizedBox(height: 10),
+            AuthInput(
+              controller: passwordCtrl,
+              label: i18n(context, "login_input_password"),
+              iconForIOS: Icons.lock,
+              validator: (value) => validateInput(context, value, [ValidationType.empty]),
+              isPassword: true,
+              isEnabled: !loading,
+            ),
+            SizedBox(height: 40.0),
+            SizedBox(
+              width: double.infinity,
+              child: AppButton(
+                text: i18n(context, "btn_login"),
+                buttonColor: Theme.of(context).accentColor,
+                textColor: Colors.white,
+                isLoading: loading,
+                onPressed: () => _login(context),
               ),
             ),
-          ),
+          ],
+        ),
         ),
     );
   }

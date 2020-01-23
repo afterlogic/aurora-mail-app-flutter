@@ -284,6 +284,7 @@ class MailMethods {
         rawBodies,
         folder.messagesInfo,
         updatedUser.localId,
+        account.entityId,
       );
 
       await _mailDao.addMessages(messages);

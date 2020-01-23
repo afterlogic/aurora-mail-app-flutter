@@ -38,7 +38,7 @@ class _AuthInputState extends State<AuthInput> {
     if (Platform.isIOS) {
       return CupertinoTextField(
         enabled: widget.isEnabled,
-        style: TextStyle(color: Theme.of(context).iconTheme.color),
+        style: TextStyle(color: Colors.black),
         cursorColor: Theme.of(context).accentColor,
         controller: widget.controller,
         keyboardType: widget.keyboardType,
@@ -47,13 +47,13 @@ class _AuthInputState extends State<AuthInput> {
         autocorrect: false,
         prefix: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 12.0),
-          child: Icon(widget.iconForIOS, color: Theme.of(context).disabledColor),
+          child: Icon(widget.iconForIOS, color: Colors.black38),
         ),
         suffix: widget.isPassword ? CupertinoButton(
           padding: EdgeInsets.zero,
           child: Icon(
             _obscureText ? Icons.visibility : Icons.visibility_off,
-            color: widget.visibilityToggleColor ?? Theme.of(context).iconTheme.color,
+            color: widget.visibilityToggleColor ?? Colors.black38,
           ),
           onPressed: () => setState(() => _obscureText = !_obscureText),
         ) : null,
