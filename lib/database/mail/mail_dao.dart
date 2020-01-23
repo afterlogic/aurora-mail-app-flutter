@@ -40,13 +40,7 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
   }
 
   Future<void> addMessages(List<Message> newMessages) async {
-    print("VO: newMessages[0].userLocalId: ${newMessages[0].userLocalId}");
-    try {
-      await into(mail).insertAll(newMessages);
-    } catch(err, s) {
-      print("VO: err: ${err}");
-      print("VO: s: ${s}");
-    }
+    await into(mail).insertAll(newMessages);
   }
 
   Future<void> updateMessagesFlags(List<MessageInfo> infos) async {

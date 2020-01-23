@@ -67,7 +67,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     final userFromDb = users.firstWhere((u) => u.emailFromLogin == event.email, orElse: () => null);
 
     if (userFromDb != null) {
-      // TODO VO: not navigating back
       add(SelectUser(userFromDb.localId));
     } else {
       try {

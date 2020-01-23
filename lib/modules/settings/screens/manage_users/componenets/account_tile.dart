@@ -34,6 +34,7 @@ class _UserTileState extends State<UserTile> {
     );
     if (result == true) {
       BlocProvider.of<AuthBloc>(context).add(DeleteUser(widget.user.localId));
+      RestartWidget.restartApp(context);
     }
   }
 
