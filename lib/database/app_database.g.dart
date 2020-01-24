@@ -7932,6 +7932,7 @@ class ContactsStoragesTable extends DataClass
   final int userLocalId;
   final int idUser;
   final String serverId;
+  final String uniqueName;
   final String name;
   final int cTag;
   final bool display;
@@ -7941,6 +7942,7 @@ class ContactsStoragesTable extends DataClass
       @required this.userLocalId,
       @required this.idUser,
       @required this.serverId,
+      @required this.uniqueName,
       @required this.name,
       @required this.cTag,
       @required this.display,
@@ -7961,6 +7963,8 @@ class ContactsStoragesTable extends DataClass
           intType.mapFromDatabaseResponse(data['${effectivePrefix}id_user']),
       serverId: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}server_id']),
+      uniqueName: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}unique_name']),
       name: stringType.mapFromDatabaseResponse(data['${effectivePrefix}name']),
       cTag: intType.mapFromDatabaseResponse(data['${effectivePrefix}c_tag']),
       display:
@@ -7976,6 +7980,7 @@ class ContactsStoragesTable extends DataClass
       userLocalId: serializer.fromJson<int>(json['userLocalId']),
       idUser: serializer.fromJson<int>(json['idUser']),
       serverId: serializer.fromJson<String>(json['serverId']),
+      uniqueName: serializer.fromJson<String>(json['uniqueName']),
       name: serializer.fromJson<String>(json['name']),
       cTag: serializer.fromJson<int>(json['cTag']),
       display: serializer.fromJson<bool>(json['display']),
@@ -7991,6 +7996,7 @@ class ContactsStoragesTable extends DataClass
       'userLocalId': serializer.toJson<int>(userLocalId),
       'idUser': serializer.toJson<int>(idUser),
       'serverId': serializer.toJson<String>(serverId),
+      'uniqueName': serializer.toJson<String>(uniqueName),
       'name': serializer.toJson<String>(name),
       'cTag': serializer.toJson<int>(cTag),
       'display': serializer.toJson<bool>(display),
@@ -8012,6 +8018,9 @@ class ContactsStoragesTable extends DataClass
       serverId: serverId == null && nullToAbsent
           ? const Value.absent()
           : Value(serverId),
+      uniqueName: uniqueName == null && nullToAbsent
+          ? const Value.absent()
+          : Value(uniqueName),
       name: name == null && nullToAbsent ? const Value.absent() : Value(name),
       cTag: cTag == null && nullToAbsent ? const Value.absent() : Value(cTag),
       display: display == null && nullToAbsent
@@ -8028,6 +8037,7 @@ class ContactsStoragesTable extends DataClass
           int userLocalId,
           int idUser,
           String serverId,
+          String uniqueName,
           String name,
           int cTag,
           bool display,
@@ -8037,6 +8047,7 @@ class ContactsStoragesTable extends DataClass
         userLocalId: userLocalId ?? this.userLocalId,
         idUser: idUser ?? this.idUser,
         serverId: serverId ?? this.serverId,
+        uniqueName: uniqueName ?? this.uniqueName,
         name: name ?? this.name,
         cTag: cTag ?? this.cTag,
         display: display ?? this.display,
@@ -8049,6 +8060,7 @@ class ContactsStoragesTable extends DataClass
           ..write('userLocalId: $userLocalId, ')
           ..write('idUser: $idUser, ')
           ..write('serverId: $serverId, ')
+          ..write('uniqueName: $uniqueName, ')
           ..write('name: $name, ')
           ..write('cTag: $cTag, ')
           ..write('display: $display, ')
@@ -8067,9 +8079,13 @@ class ContactsStoragesTable extends DataClass
               $mrjc(
                   serverId.hashCode,
                   $mrjc(
-                      name.hashCode,
-                      $mrjc(cTag.hashCode,
-                          $mrjc(display.hashCode, contactsInfo.hashCode))))))));
+                      uniqueName.hashCode,
+                      $mrjc(
+                          name.hashCode,
+                          $mrjc(
+                              cTag.hashCode,
+                              $mrjc(display.hashCode,
+                                  contactsInfo.hashCode)))))))));
   @override
   bool operator ==(dynamic other) =>
       identical(this, other) ||
@@ -8078,6 +8094,7 @@ class ContactsStoragesTable extends DataClass
           other.userLocalId == this.userLocalId &&
           other.idUser == this.idUser &&
           other.serverId == this.serverId &&
+          other.uniqueName == this.uniqueName &&
           other.name == this.name &&
           other.cTag == this.cTag &&
           other.display == this.display &&
@@ -8089,6 +8106,7 @@ class ContactsStoragesCompanion extends UpdateCompanion<ContactsStoragesTable> {
   final Value<int> userLocalId;
   final Value<int> idUser;
   final Value<String> serverId;
+  final Value<String> uniqueName;
   final Value<String> name;
   final Value<int> cTag;
   final Value<bool> display;
@@ -8098,6 +8116,7 @@ class ContactsStoragesCompanion extends UpdateCompanion<ContactsStoragesTable> {
     this.userLocalId = const Value.absent(),
     this.idUser = const Value.absent(),
     this.serverId = const Value.absent(),
+    this.uniqueName = const Value.absent(),
     this.name = const Value.absent(),
     this.cTag = const Value.absent(),
     this.display = const Value.absent(),
@@ -8108,6 +8127,7 @@ class ContactsStoragesCompanion extends UpdateCompanion<ContactsStoragesTable> {
     @required int userLocalId,
     @required int idUser,
     @required String serverId,
+    @required String uniqueName,
     @required String name,
     @required int cTag,
     @required bool display,
@@ -8115,6 +8135,7 @@ class ContactsStoragesCompanion extends UpdateCompanion<ContactsStoragesTable> {
   })  : userLocalId = Value(userLocalId),
         idUser = Value(idUser),
         serverId = Value(serverId),
+        uniqueName = Value(uniqueName),
         name = Value(name),
         cTag = Value(cTag),
         display = Value(display);
@@ -8123,6 +8144,7 @@ class ContactsStoragesCompanion extends UpdateCompanion<ContactsStoragesTable> {
       Value<int> userLocalId,
       Value<int> idUser,
       Value<String> serverId,
+      Value<String> uniqueName,
       Value<String> name,
       Value<int> cTag,
       Value<bool> display,
@@ -8132,6 +8154,7 @@ class ContactsStoragesCompanion extends UpdateCompanion<ContactsStoragesTable> {
       userLocalId: userLocalId ?? this.userLocalId,
       idUser: idUser ?? this.idUser,
       serverId: serverId ?? this.serverId,
+      uniqueName: uniqueName ?? this.uniqueName,
       name: name ?? this.name,
       cTag: cTag ?? this.cTag,
       display: display ?? this.display,
@@ -8192,6 +8215,15 @@ class $ContactsStoragesTable extends ContactsStorages
     );
   }
 
+  final VerificationMeta _uniqueNameMeta = const VerificationMeta('uniqueName');
+  GeneratedTextColumn _uniqueName;
+  @override
+  GeneratedTextColumn get uniqueName => _uniqueName ??= _constructUniqueName();
+  GeneratedTextColumn _constructUniqueName() {
+    return GeneratedTextColumn('unique_name', $tableName, false,
+        $customConstraints: 'UNIQUE');
+  }
+
   final VerificationMeta _nameMeta = const VerificationMeta('name');
   GeneratedTextColumn _name;
   @override
@@ -8248,6 +8280,7 @@ class $ContactsStoragesTable extends ContactsStorages
         userLocalId,
         idUser,
         serverId,
+        uniqueName,
         name,
         cTag,
         display,
@@ -8286,6 +8319,12 @@ class $ContactsStoragesTable extends ContactsStorages
           serverId.isAcceptableValue(d.serverId.value, _serverIdMeta));
     } else if (serverId.isRequired && isInserting) {
       context.missing(_serverIdMeta);
+    }
+    if (d.uniqueName.present) {
+      context.handle(_uniqueNameMeta,
+          uniqueName.isAcceptableValue(d.uniqueName.value, _uniqueNameMeta));
+    } else if (uniqueName.isRequired && isInserting) {
+      context.missing(_uniqueNameMeta);
     }
     if (d.name.present) {
       context.handle(
@@ -8331,6 +8370,9 @@ class $ContactsStoragesTable extends ContactsStorages
     }
     if (d.serverId.present) {
       map['server_id'] = Variable<String, StringType>(d.serverId.value);
+    }
+    if (d.uniqueName.present) {
+      map['unique_name'] = Variable<String, StringType>(d.uniqueName.value);
     }
     if (d.name.present) {
       map['name'] = Variable<String, StringType>(d.name.value);

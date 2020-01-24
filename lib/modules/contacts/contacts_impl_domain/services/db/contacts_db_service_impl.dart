@@ -38,9 +38,11 @@ class ContactsDbServiceImpl implements ContactsDbService {
   }
 
   @override
-  Future<void> addStorages(List<ContactsStorage> newStorages, int userId) {
+  Future<void> addStorages(List<ContactsStorage> newStorages, int userId) async {
     final formatted = ContactsStorageMapper.toDB(newStorages, userId);
-    return _storagesDao.addStorages(formatted);
+    try {
+      await _storagesDao.addStorages(formatted);
+    } catch(err) {}
   }
 
   @override

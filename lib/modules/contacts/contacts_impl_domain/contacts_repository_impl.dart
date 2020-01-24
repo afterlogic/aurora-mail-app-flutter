@@ -287,13 +287,15 @@ class ContactsRepositoryImpl implements ContactsRepository {
 
     if (s.contactsInfo == null) {
       return new ContactsStorage(
-          id: s.id,
-          userLocalId: s.userLocalId,
-          contactsInfo: infos,
-          sqliteId: s.sqliteId,
-          cTag: s.cTag,
-          display: s.display,
-          name: s.name);
+        id: s.id,
+        userLocalId: s.userLocalId,
+        contactsInfo: infos,
+        sqliteId: s.sqliteId,
+        cTag: s.cTag,
+        display: s.display,
+        uniqueName: s.uniqueName,
+        name: s.name,
+      );
     } else {
       final calcResult = await ContactsDiffCalculator.calculateContactsInfoDiffAsync(s.contactsInfo, infos);
 
@@ -318,6 +320,7 @@ class ContactsRepositoryImpl implements ContactsRepository {
         cTag: s.cTag,
         display: s.display,
         name: s.name,
+        uniqueName: s.uniqueName,
       );
     }
   }

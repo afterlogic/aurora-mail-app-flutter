@@ -149,18 +149,18 @@ class _LoginAndroidState extends State<LoginAndroid> {
           },
           child: BlocBuilder<AuthBloc, AuthState>(
             bloc: BlocProvider.of<AuthBloc>(context),
-            builder: (_, state) {
+            builder: (context, state) {
               if (state is LoggingIn) {
-                return _buildLoginForm(loading: true);
+                return _buildLoginForm(context, loading: true);
               } else {
-                return _buildLoginForm();
+                return _buildLoginForm(context);
               }
             },
           )),
     );
   }
 
-  Widget _buildLoginForm({bool loading = false}) {
+  Widget _buildLoginForm(BuildContext context, {bool loading = false}) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 22.0),
       child: Form(
@@ -208,7 +208,7 @@ class _LoginAndroidState extends State<LoginAndroid> {
             SizedBox(
               width: double.infinity,
               child: AppButton(
-                text: i18n(context, "btn_login"),
+                text: i18n(context, widget.isDialog ? "btn_add_account" : "btn_login"),
                 buttonColor: Theme.of(context).accentColor,
                 textColor: Colors.white,
                 isLoading: loading,

@@ -11,6 +11,8 @@ class ContactsStorages extends Table {
 
   TextColumn get serverId => text()();
 
+  TextColumn get uniqueName => text().customConstraint("UNIQUE")();
+
   TextColumn get name => text()();
 
   IntColumn get cTag => integer()();

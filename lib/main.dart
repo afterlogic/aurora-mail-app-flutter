@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:aurora_mail/background/alarm/alarm.dart';
-import 'package:aurora_mail/shared_ui/restart_widget.dart';
 import 'package:flutter/material.dart';
 
 import 'background/background_sink.dart';
@@ -15,7 +14,7 @@ Stream<void> get alarmStream => _streamController.stream.asBroadcastStream();
 
 void main() {
   isBackground = false;
-  runApp(RestartWidget(child: App()));
+  runApp(App());
   Alarm.init();
   Alarm.onPeriodic(onAlarm);
 }

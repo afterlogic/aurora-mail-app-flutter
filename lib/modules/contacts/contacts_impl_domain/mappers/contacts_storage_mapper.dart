@@ -9,6 +9,7 @@ class ContactsStorageMapper {
         id: i.serverId,
         userLocalId: i.userLocalId,
         name: i.name,
+        uniqueName: i.uniqueName,
         cTag: i.cTag,
         display: i.display,
         contactsInfo: i.contactsInfo,
@@ -24,6 +25,7 @@ class ContactsStorageMapper {
         userLocalId: i.userLocalId,
         idUser: userId,
         serverId: i.id,
+        uniqueName: i.uniqueName,
         name: i.name,
         cTag: i.cTag,
         display: i.display,
@@ -43,6 +45,7 @@ class ContactsStorageMapper {
     return ContactsStorage(
       sqliteId: null,
       id: rawItems["Id"] as String,
+      uniqueName: rawItems["Id"].toString() + userLocalId.toString(),
       userLocalId: userLocalId,
       name: rawItems["Name"] as String ?? rawItems["Id"] as String,
       cTag: rawItems["CTag"] as int,

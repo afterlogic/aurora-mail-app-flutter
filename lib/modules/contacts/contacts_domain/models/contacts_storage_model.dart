@@ -5,6 +5,7 @@ class ContactsStorage {
   final String id;
   final int userLocalId;
   final String name;
+  final String uniqueName;
   final int cTag;
   final bool display;
   List<ContactInfoItem> contactsInfo;
@@ -14,6 +15,7 @@ class ContactsStorage {
     @required this.id,
     @required this.userLocalId,
     @required this.name,
+    @required this.uniqueName,
     @required this.cTag,
     @required this.display,
     @required this.contactsInfo,
@@ -23,6 +25,7 @@ class ContactsStorage {
     int sqliteId,
     String id,
     String name,
+    String uniqueName,
     int cTag,
     bool display,
     List<ContactInfoItem> contactsInfo,
@@ -32,6 +35,7 @@ class ContactsStorage {
       id: id ?? this.id,
       userLocalId: userLocalId ?? this.userLocalId,
       name: name ?? this.name,
+      uniqueName: uniqueName ?? this.uniqueName,
       cTag: cTag ?? this.cTag,
       display: display ?? this.display,
       contactsInfo: contactsInfo ?? this.contactsInfo,
