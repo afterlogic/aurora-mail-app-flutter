@@ -22,14 +22,14 @@ class GroupViewAppBar extends StatelessWidget implements PreferredSizeWidget {
 //          onPressed: null,
 //        ),
         IconButton(
-          icon: Icon(Icons.delete_outline),
-          tooltip: i18n(context, "contacts_group_view_app_bar_delete"),
-          onPressed: () => onActionSelected(GroupViewAppBarAction.delete),
-        ),
-        IconButton(
           icon: Icon(Icons.edit),
           tooltip: i18n(context, "contacts_group_view_app_bar_edit"),
           onPressed: () => onActionSelected(GroupViewAppBarAction.edit),
+        ),
+        IconButton(
+          icon: Icon(Icons.delete_outline),
+          tooltip: i18n(context, "contacts_group_view_app_bar_delete"),
+          onPressed: () => onActionSelected(GroupViewAppBarAction.delete),
         ),
       ],
     );

@@ -77,6 +77,9 @@ class ContactsListTile extends StatelessWidget {
   Widget _buildTile(BuildContext context) {
     final theme = Theme.of(context);
     final name = contact.fullName;
+    final authBloc = BlocProvider.of<AuthBloc>(context);
+    final contactsBloc = BlocProvider.of<ContactsBloc>(context);
+    final currentStorage = contactsBloc.state.storages.firstWhere((s) => s.sqliteId == contactsBloc.state.selectedStorage, orElse: () => null);
 
     return ListTile(
       title: Text(name != null && name.isNotEmpty ? name : contact.viewEmail),
@@ -88,7 +91,7 @@ class ContactsListTile extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
-          if (contact.viewEmail == BlocProvider.of<AuthBloc>(context).currentAccount.email)
+          if (currentStorage != null && currentStorage.name == StorageNames.team && contact.viewEmail == authBloc.currentAccount.email)
             Container(
               decoration: BoxDecoration(
                 color: theme.disabledColor.withOpacity(0.1),
