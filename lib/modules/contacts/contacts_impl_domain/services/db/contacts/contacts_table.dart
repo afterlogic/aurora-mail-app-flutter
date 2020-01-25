@@ -3,7 +3,10 @@ import 'package:moor_flutter/moor_flutter.dart';
 
 @DataClassName("ContactsTable")
 class Contacts extends Table {
-  TextColumn get uuidPlusStorage => text().customConstraint("UNIQUE")();
+  IntColumn get localId => integer().autoIncrement()();
+
+  // deprecated
+  TextColumn get uuidPlusStorage => text()();
 
   TextColumn get uuid => text()();
 

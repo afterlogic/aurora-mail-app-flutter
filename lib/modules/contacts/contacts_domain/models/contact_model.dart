@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 
 class Contact {
+  final int localId;
   final int entityId;
   final int userLocalId;
   final String uuid;
@@ -65,6 +66,7 @@ class Contact {
   }
 
   const Contact({
+    @required this.localId,
     @required this.entityId,
     @required this.uuid,
     @required this.userLocalId,
@@ -123,6 +125,7 @@ class Contact {
   });
 
   Contact copyWith({
+    int localId,
     int entityId,
     String uuid,
     int userLocalId,
@@ -180,6 +183,7 @@ class Contact {
     List<String> groupUUIDs,
   }) {
     return new Contact(
+      localId: localId ?? this.localId,
       entityId: entityId ?? this.entityId,
       userLocalId: userLocalId ?? this.userLocalId,
       uuid: uuid ?? this.uuid,

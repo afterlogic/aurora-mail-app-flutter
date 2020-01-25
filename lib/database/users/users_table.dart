@@ -3,7 +3,7 @@ import 'package:moor_flutter/moor_flutter.dart';
 class Users extends Table {
   IntColumn get localId => integer().autoIncrement()();
 
-  IntColumn get serverId => integer().customConstraint("UNIQUE")();
+  IntColumn get serverId => integer()();
 
   TextColumn get hostname => text()();
 

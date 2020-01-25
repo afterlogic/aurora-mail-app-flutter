@@ -164,6 +164,7 @@ class _ContactEditAndroidState extends State<ContactEditAndroid> {
     final user = BlocProvider.of<AuthBloc>(context).currentUser;
 
     return Contact(
+        localId: widget.contact?.localId ?? null,
         entityId: widget.contact?.entityId ?? null,
         uuid: widget.contact?.uuid ?? null,
         userLocalId: widget.contact?.userLocalId ?? user.localId,
@@ -225,7 +226,6 @@ class _ContactEditAndroidState extends State<ContactEditAndroid> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       appBar: ContactEditAppBar(
         _onAppBarActionSelected,
         isEdit: widget.contact != null,

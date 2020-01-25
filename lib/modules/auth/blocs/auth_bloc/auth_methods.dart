@@ -110,7 +110,6 @@ class AuthMethods {
     final contactsStoragesDao = new ContactsStoragesDao(DBInstances.appDB);
     final contactsGroupsDao = new ContactsGroupsDao(DBInstances.appDB);
 
-    // TODO VO: storages are not deleted
     final futures = [
       _accountsDao.deleteAccountsOfUser(user.localId),
       foldersDao.deleteFoldersOfUser(user.localId),

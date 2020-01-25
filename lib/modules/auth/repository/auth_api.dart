@@ -61,7 +61,7 @@ class AuthApi {
 
   Future<List<Account>> getAccounts(User user) async {
     final coreModuleForLogin = WebMailApi(
-      moduleName: WebMailModules.core,
+      moduleName: WebMailModules.mail,
       hostname: user.hostname,
       token: user.token,
     );

@@ -6,7 +6,7 @@ class Accounts extends Table {
 
   IntColumn get userLocalId => integer()();
 
-  IntColumn get entityId => integer().customConstraint("UNIQUE")();
+  IntColumn get entityId => integer()();
 
   IntColumn get idUser => integer()();
 

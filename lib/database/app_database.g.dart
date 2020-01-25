@@ -3467,8 +3467,11 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
   @override
   GeneratedIntColumn get serverId => _serverId ??= _constructServerId();
   GeneratedIntColumn _constructServerId() {
-    return GeneratedIntColumn('server_id', $tableName, false,
-        $customConstraints: 'UNIQUE');
+    return GeneratedIntColumn(
+      'server_id',
+      $tableName,
+      false,
+    );
   }
 
   final VerificationMeta _hostnameMeta = const VerificationMeta('hostname');
@@ -4177,8 +4180,11 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
   @override
   GeneratedIntColumn get entityId => _entityId ??= _constructEntityId();
   GeneratedIntColumn _constructEntityId() {
-    return GeneratedIntColumn('entity_id', $tableName, false,
-        $customConstraints: 'UNIQUE');
+    return GeneratedIntColumn(
+      'entity_id',
+      $tableName,
+      false,
+    );
   }
 
   final VerificationMeta _idUserMeta = const VerificationMeta('idUser');
@@ -4662,6 +4668,7 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
 }
 
 class ContactsTable extends DataClass implements Insertable<ContactsTable> {
+  final int localId;
   final String uuidPlusStorage;
   final String uuid;
   final int userLocalId;
@@ -4718,7 +4725,8 @@ class ContactsTable extends DataClass implements Insertable<ContactsTable> {
   final String davContactsVCardUid;
   final List<String> groupUUIDs;
   ContactsTable(
-      {@required this.uuidPlusStorage,
+      {@required this.localId,
+      @required this.uuidPlusStorage,
       @required this.uuid,
       @required this.userLocalId,
       this.entityId,
@@ -4777,10 +4785,12 @@ class ContactsTable extends DataClass implements Insertable<ContactsTable> {
       Map<String, dynamic> data, GeneratedDatabase db,
       {String prefix}) {
     final effectivePrefix = prefix ?? '';
-    final stringType = db.typeSystem.forDartType<String>();
     final intType = db.typeSystem.forDartType<int>();
+    final stringType = db.typeSystem.forDartType<String>();
     final boolType = db.typeSystem.forDartType<bool>();
     return ContactsTable(
+      localId:
+          intType.mapFromDatabaseResponse(data['${effectivePrefix}local_id']),
       uuidPlusStorage: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}uuid_plus_storage']),
       uuid: stringType.mapFromDatabaseResponse(data['${effectivePrefix}uuid']),
@@ -4893,6 +4903,7 @@ class ContactsTable extends DataClass implements Insertable<ContactsTable> {
   factory ContactsTable.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return ContactsTable(
+      localId: serializer.fromJson<int>(json['localId']),
       uuidPlusStorage: serializer.fromJson<String>(json['uuidPlusStorage']),
       uuid: serializer.fromJson<String>(json['uuid']),
       userLocalId: serializer.fromJson<int>(json['userLocalId']),
@@ -4956,6 +4967,7 @@ class ContactsTable extends DataClass implements Insertable<ContactsTable> {
   Map<String, dynamic> toJson(
       {ValueSerializer serializer = const ValueSerializer.defaults()}) {
     return <String, dynamic>{
+      'localId': serializer.toJson<int>(localId),
       'uuidPlusStorage': serializer.toJson<String>(uuidPlusStorage),
       'uuid': serializer.toJson<String>(uuid),
       'userLocalId': serializer.toJson<int>(userLocalId),
@@ -5017,6 +5029,9 @@ class ContactsTable extends DataClass implements Insertable<ContactsTable> {
   @override
   ContactsCompanion createCompanion(bool nullToAbsent) {
     return ContactsCompanion(
+      localId: localId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(localId),
       uuidPlusStorage: uuidPlusStorage == null && nullToAbsent
           ? const Value.absent()
           : Value(uuidPlusStorage),
@@ -5176,7 +5191,8 @@ class ContactsTable extends DataClass implements Insertable<ContactsTable> {
   }
 
   ContactsTable copyWith(
-          {String uuidPlusStorage,
+          {int localId,
+          String uuidPlusStorage,
           String uuid,
           int userLocalId,
           int entityId,
@@ -5232,6 +5248,7 @@ class ContactsTable extends DataClass implements Insertable<ContactsTable> {
           String davContactsVCardUid,
           List<String> groupUUIDs}) =>
       ContactsTable(
+        localId: localId ?? this.localId,
         uuidPlusStorage: uuidPlusStorage ?? this.uuidPlusStorage,
         uuid: uuid ?? this.uuid,
         userLocalId: userLocalId ?? this.userLocalId,
@@ -5291,6 +5308,7 @@ class ContactsTable extends DataClass implements Insertable<ContactsTable> {
   @override
   String toString() {
     return (StringBuffer('ContactsTable(')
+          ..write('localId: $localId, ')
           ..write('uuidPlusStorage: $uuidPlusStorage, ')
           ..write('uuid: $uuid, ')
           ..write('userLocalId: $userLocalId, ')
@@ -5352,53 +5370,53 @@ class ContactsTable extends DataClass implements Insertable<ContactsTable> {
 
   @override
   int get hashCode => $mrjf($mrjc(
-      uuidPlusStorage.hashCode,
+      localId.hashCode,
       $mrjc(
-          uuid.hashCode,
+          uuidPlusStorage.hashCode,
           $mrjc(
-              userLocalId.hashCode,
+              uuid.hashCode,
               $mrjc(
-                  entityId.hashCode,
+                  userLocalId.hashCode,
                   $mrjc(
-                      parentUuid.hashCode,
+                      entityId.hashCode,
                       $mrjc(
-                          eTag.hashCode,
+                          parentUuid.hashCode,
                           $mrjc(
-                              idUser.hashCode,
+                              eTag.hashCode,
                               $mrjc(
-                                  idTenant.hashCode,
+                                  idUser.hashCode,
                                   $mrjc(
-                                      storage.hashCode,
+                                      idTenant.hashCode,
                                       $mrjc(
-                                          fullName.hashCode,
+                                          storage.hashCode,
                                           $mrjc(
-                                              useFriendlyName.hashCode,
+                                              fullName.hashCode,
                                               $mrjc(
-                                                  primaryEmail.hashCode,
+                                                  useFriendlyName.hashCode,
                                                   $mrjc(
-                                                      primaryPhone.hashCode,
+                                                      primaryEmail.hashCode,
                                                       $mrjc(
-                                                          primaryAddress
-                                                              .hashCode,
+                                                          primaryPhone.hashCode,
                                                           $mrjc(
-                                                              viewEmail
+                                                              primaryAddress
                                                                   .hashCode,
                                                               $mrjc(
-                                                                  title
+                                                                  viewEmail
                                                                       .hashCode,
                                                                   $mrjc(
-                                                                      firstName
+                                                                      title
                                                                           .hashCode,
                                                                       $mrjc(
-                                                                          lastName
+                                                                          firstName
                                                                               .hashCode,
                                                                           $mrjc(
-                                                                              nickName.hashCode,
-                                                                              $mrjc(skype.hashCode, $mrjc(facebook.hashCode, $mrjc(personalEmail.hashCode, $mrjc(personalAddress.hashCode, $mrjc(personalCity.hashCode, $mrjc(personalState.hashCode, $mrjc(personalZip.hashCode, $mrjc(personalCountry.hashCode, $mrjc(personalWeb.hashCode, $mrjc(personalFax.hashCode, $mrjc(personalPhone.hashCode, $mrjc(personalMobile.hashCode, $mrjc(businessEmail.hashCode, $mrjc(businessCompany.hashCode, $mrjc(businessAddress.hashCode, $mrjc(businessCity.hashCode, $mrjc(businessState.hashCode, $mrjc(businessZip.hashCode, $mrjc(businessCountry.hashCode, $mrjc(businessJobTitle.hashCode, $mrjc(businessDepartment.hashCode, $mrjc(businessOffice.hashCode, $mrjc(businessPhone.hashCode, $mrjc(businessFax.hashCode, $mrjc(businessWeb.hashCode, $mrjc(otherEmail.hashCode, $mrjc(notes.hashCode, $mrjc(birthDay.hashCode, $mrjc(birthMonth.hashCode, $mrjc(birthYear.hashCode, $mrjc(auto.hashCode, $mrjc(frequency.hashCode, $mrjc(dateModified.hashCode, $mrjc(davContactsUid.hashCode, $mrjc(davContactsVCardUid.hashCode, groupUUIDs.hashCode)))))))))))))))))))))))))))))))))))))))))))))))))))))));
+                                                                              lastName.hashCode,
+                                                                              $mrjc(nickName.hashCode, $mrjc(skype.hashCode, $mrjc(facebook.hashCode, $mrjc(personalEmail.hashCode, $mrjc(personalAddress.hashCode, $mrjc(personalCity.hashCode, $mrjc(personalState.hashCode, $mrjc(personalZip.hashCode, $mrjc(personalCountry.hashCode, $mrjc(personalWeb.hashCode, $mrjc(personalFax.hashCode, $mrjc(personalPhone.hashCode, $mrjc(personalMobile.hashCode, $mrjc(businessEmail.hashCode, $mrjc(businessCompany.hashCode, $mrjc(businessAddress.hashCode, $mrjc(businessCity.hashCode, $mrjc(businessState.hashCode, $mrjc(businessZip.hashCode, $mrjc(businessCountry.hashCode, $mrjc(businessJobTitle.hashCode, $mrjc(businessDepartment.hashCode, $mrjc(businessOffice.hashCode, $mrjc(businessPhone.hashCode, $mrjc(businessFax.hashCode, $mrjc(businessWeb.hashCode, $mrjc(otherEmail.hashCode, $mrjc(notes.hashCode, $mrjc(birthDay.hashCode, $mrjc(birthMonth.hashCode, $mrjc(birthYear.hashCode, $mrjc(auto.hashCode, $mrjc(frequency.hashCode, $mrjc(dateModified.hashCode, $mrjc(davContactsUid.hashCode, $mrjc(davContactsVCardUid.hashCode, groupUUIDs.hashCode))))))))))))))))))))))))))))))))))))))))))))))))))))))));
   @override
   bool operator ==(dynamic other) =>
       identical(this, other) ||
       (other is ContactsTable &&
+          other.localId == this.localId &&
           other.uuidPlusStorage == this.uuidPlusStorage &&
           other.uuid == this.uuid &&
           other.userLocalId == this.userLocalId &&
@@ -5457,6 +5475,7 @@ class ContactsTable extends DataClass implements Insertable<ContactsTable> {
 }
 
 class ContactsCompanion extends UpdateCompanion<ContactsTable> {
+  final Value<int> localId;
   final Value<String> uuidPlusStorage;
   final Value<String> uuid;
   final Value<int> userLocalId;
@@ -5513,6 +5532,7 @@ class ContactsCompanion extends UpdateCompanion<ContactsTable> {
   final Value<String> davContactsVCardUid;
   final Value<List<String>> groupUUIDs;
   const ContactsCompanion({
+    this.localId = const Value.absent(),
     this.uuidPlusStorage = const Value.absent(),
     this.uuid = const Value.absent(),
     this.userLocalId = const Value.absent(),
@@ -5570,6 +5590,7 @@ class ContactsCompanion extends UpdateCompanion<ContactsTable> {
     this.groupUUIDs = const Value.absent(),
   });
   ContactsCompanion.insert({
+    this.localId = const Value.absent(),
     @required String uuidPlusStorage,
     @required String uuid,
     @required int userLocalId,
@@ -5672,7 +5693,8 @@ class ContactsCompanion extends UpdateCompanion<ContactsTable> {
         birthYear = Value(birthYear),
         groupUUIDs = Value(groupUUIDs);
   ContactsCompanion copyWith(
-      {Value<String> uuidPlusStorage,
+      {Value<int> localId,
+      Value<String> uuidPlusStorage,
       Value<String> uuid,
       Value<int> userLocalId,
       Value<int> entityId,
@@ -5728,6 +5750,7 @@ class ContactsCompanion extends UpdateCompanion<ContactsTable> {
       Value<String> davContactsVCardUid,
       Value<List<String>> groupUUIDs}) {
     return ContactsCompanion(
+      localId: localId ?? this.localId,
       uuidPlusStorage: uuidPlusStorage ?? this.uuidPlusStorage,
       uuid: uuid ?? this.uuid,
       userLocalId: userLocalId ?? this.userLocalId,
@@ -5792,6 +5815,15 @@ class $ContactsTable extends Contacts
   final GeneratedDatabase _db;
   final String _alias;
   $ContactsTable(this._db, [this._alias]);
+  final VerificationMeta _localIdMeta = const VerificationMeta('localId');
+  GeneratedIntColumn _localId;
+  @override
+  GeneratedIntColumn get localId => _localId ??= _constructLocalId();
+  GeneratedIntColumn _constructLocalId() {
+    return GeneratedIntColumn('local_id', $tableName, false,
+        hasAutoIncrement: true, declaredAsPrimaryKey: true);
+  }
+
   final VerificationMeta _uuidPlusStorageMeta =
       const VerificationMeta('uuidPlusStorage');
   GeneratedTextColumn _uuidPlusStorage;
@@ -5799,8 +5831,11 @@ class $ContactsTable extends Contacts
   GeneratedTextColumn get uuidPlusStorage =>
       _uuidPlusStorage ??= _constructUuidPlusStorage();
   GeneratedTextColumn _constructUuidPlusStorage() {
-    return GeneratedTextColumn('uuid_plus_storage', $tableName, false,
-        $customConstraints: 'UNIQUE');
+    return GeneratedTextColumn(
+      'uuid_plus_storage',
+      $tableName,
+      false,
+    );
   }
 
   final VerificationMeta _uuidMeta = const VerificationMeta('uuid');
@@ -6512,6 +6547,7 @@ class $ContactsTable extends Contacts
 
   @override
   List<GeneratedColumn> get $columns => [
+        localId,
         uuidPlusStorage,
         uuid,
         userLocalId,
@@ -6578,6 +6614,12 @@ class $ContactsTable extends Contacts
   VerificationContext validateIntegrity(ContactsCompanion d,
       {bool isInserting = false}) {
     final context = VerificationContext();
+    if (d.localId.present) {
+      context.handle(_localIdMeta,
+          localId.isAcceptableValue(d.localId.value, _localIdMeta));
+    } else if (localId.isRequired && isInserting) {
+      context.missing(_localIdMeta);
+    }
     if (d.uuidPlusStorage.present) {
       context.handle(
           _uuidPlusStorageMeta,
@@ -6957,7 +6999,7 @@ class $ContactsTable extends Contacts
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => <GeneratedColumn>{};
+  Set<GeneratedColumn> get $primaryKey => {localId};
   @override
   ContactsTable map(Map<String, dynamic> data, {String tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
@@ -6967,6 +7009,9 @@ class $ContactsTable extends Contacts
   @override
   Map<String, Variable> entityToSql(ContactsCompanion d) {
     final map = <String, Variable>{};
+    if (d.localId.present) {
+      map['local_id'] = Variable<int, IntType>(d.localId.value);
+    }
     if (d.uuidPlusStorage.present) {
       map['uuid_plus_storage'] =
           Variable<String, StringType>(d.uuidPlusStorage.value);

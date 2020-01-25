@@ -87,79 +87,75 @@ class _AppState extends State<App> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: RestartWidget(
-        child: BlocListener<AuthBloc, AuthState>(
-          bloc: _authBloc,
-          listener: (_, state) {
-            if (state is LoggedOut) _navigateToLogin();
-          },
-          child: BlocBuilder<AuthBloc, AuthState>(
-            bloc: _authBloc,
-            condition: (_, state) => state is InitializedUserAndAccounts,
-            builder: (_, authState) {
-              if (authState is InitializedUserAndAccounts) {
-                if (authState.user != null) {
-                  _settingsBloc.add(InitSettings(authState.user, authState.users));
-                }
-                return BlocBuilder<SettingsBloc, SettingsState>(
-                    bloc: _settingsBloc,
-                    builder: (_, settingsState) {
-                      if (settingsState is SettingsLoaded) {
-                        final theme = _getTheme(settingsState.darkThemeEnabled);
+    return BlocListener<AuthBloc, AuthState>(
+      bloc: _authBloc,
+      listener: (_, state) {
+        if (state is LoggedOut) _navigateToLogin();
+      },
+      child: BlocBuilder<AuthBloc, AuthState>(
+        bloc: _authBloc,
+        condition: (_, state) => state is InitializedUserAndAccounts,
+        builder: (_, authState) {
+          if (authState is InitializedUserAndAccounts) {
+            if (authState.user != null) {
+              _settingsBloc.add(InitSettings(authState.user, authState.users));
+            }
+            return BlocBuilder<SettingsBloc, SettingsState>(
+                bloc: _settingsBloc,
+                builder: (_, settingsState) {
+                  if (settingsState is SettingsLoaded) {
+                    final theme = _getTheme(settingsState.darkThemeEnabled);
 
-                        return MultiBlocProvider(
-                          providers: [
-                            BlocProvider<AuthBloc>.value(value: _authBloc),
-                            BlocProvider<SettingsBloc>.value(value: _settingsBloc),
-                          ],
-                          child: MaterialApp(
-                            navigatorKey: _navKey,
-                            onGenerateTitle: (context) {
-                              final is24 = MediaQuery.of(context).alwaysUse24HourFormat;
-                              if (settingsState.is24 == null) {
-                                _settingsBloc.add(SetTimeFormat(is24));
-                              }
-                              return i18n(context, "app_title");
-                            },
-                            onGenerateRoute: AppNavigation.onGenerateRoute,
-                            theme: theme ?? AppTheme.light,
-                            darkTheme: theme ?? AppTheme.dark,
-                            localizationsDelegates: [
-                              GlobalMaterialLocalizations.delegate,
-                              GlobalWidgetsLocalizations.delegate,
-                              GlobalCupertinoLocalizations.delegate,
-                              FlutterI18nDelegate(
-                                useCountryCode: false,
-                                fallbackFile: "en",
-                                path: "assets/flutter_i18n",
-                                forcedLocale: settingsState.language?.toLocale(),
-                              ),
-                            ],
-                            supportedLocales: supportedLocales,
-                            localeResolutionCallback: (locale, locales) {
-                              final supportedLocale = locales.firstWhere((l) {
-                                return locale != null && l.languageCode == locale.languageCode;
-                              }, orElse: () => null);
-
-                              return supportedLocale ?? Locale("en", "");
-                            },
-                            locale: settingsState.language?.toLocale(),
-                            initialRoute: authState.needsLogin
-                                ? LoginRoute.name
-                                : MessagesListRoute.name,
+                    return MultiBlocProvider(
+                      providers: [
+                        BlocProvider<AuthBloc>.value(value: _authBloc),
+                        BlocProvider<SettingsBloc>.value(value: _settingsBloc),
+                      ],
+                      child: MaterialApp(
+                        navigatorKey: _navKey,
+                        onGenerateTitle: (context) {
+                          final is24 = MediaQuery.of(context).alwaysUse24HourFormat;
+                          if (settingsState.is24 == null) {
+                            _settingsBloc.add(SetTimeFormat(is24));
+                          }
+                          return i18n(context, "app_title");
+                        },
+                        onGenerateRoute: AppNavigation.onGenerateRoute,
+                        theme: theme ?? AppTheme.light,
+                        darkTheme: theme ?? AppTheme.dark,
+                        localizationsDelegates: [
+                          GlobalMaterialLocalizations.delegate,
+                          GlobalWidgetsLocalizations.delegate,
+                          GlobalCupertinoLocalizations.delegate,
+                          FlutterI18nDelegate(
+                            useCountryCode: false,
+                            fallbackFile: "en",
+                            path: "assets/flutter_i18n",
+                            forcedLocale: settingsState.language?.toLocale(),
                           ),
-                        );
-                      } else {
-                        return Material();
-                      }
-                    });
-              } else {
-                return Material();
-              }
-            },
-          ),
-        ),
+                        ],
+                        supportedLocales: supportedLocales,
+                        localeResolutionCallback: (locale, locales) {
+                          final supportedLocale = locales.firstWhere((l) {
+                            return locale != null && l.languageCode == locale.languageCode;
+                          }, orElse: () => null);
+
+                          return supportedLocale ?? Locale("en", "");
+                        },
+                        locale: settingsState.language?.toLocale(),
+                        initialRoute: authState.needsLogin
+                            ? LoginRoute.name
+                            : MessagesListRoute.name,
+                      ),
+                    );
+                  } else {
+                    return Material();
+                  }
+                });
+          } else {
+            return Material();
+          }
+        },
       ),
     );
   }
