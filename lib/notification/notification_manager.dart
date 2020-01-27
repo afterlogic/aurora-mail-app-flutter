@@ -21,9 +21,9 @@ class NotificationManager {
   onSelectNotification() {}
 
   showNotification(Message message) {
-    plugin.cancel(message.localId);
+    plugin.cancel(message.uid);
     plugin.show(
-      message.localId,
+      message.uid,
       message.fromToDisplay,
       message.subject,
       NotificationDetails(_notificationDetails, null),
