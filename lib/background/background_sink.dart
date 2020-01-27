@@ -2,6 +2,7 @@ import 'package:aurora_mail/database/accounts/accounts_dao.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/folders/folders_dao.dart';
 import 'package:aurora_mail/database/folders/folders_table.dart';
+import 'package:aurora_mail/database/mail/mail_table.dart';
 import 'package:aurora_mail/database/users/users_dao.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/models/message_info.dart';
@@ -12,39 +13,23 @@ import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/modules/settings/models/sync_period.dart';
 import 'package:aurora_mail/notification/notification_manager.dart';
 
-import 'notification_local_storage.dart';
-
 class BackgroundSync {
   final _foldersDao = FoldersDao(DBInstances.appDB);
   final _usersDao = UsersDao(DBInstances.appDB);
   final _accountsDao = AccountsDao(DBInstances.appDB);
   final _authLocal = AuthLocalStorage();
-  final _notificationStorage = NotificationLocalStorage();
+//  final _notificationStorage = NotificationLocalStorage();
 
   Future<bool> sync(bool isBackground, bool isRunApp) async {
     try {
-      final newMessageCount = await getNewMessageCount();
-      if (newMessageCount != 0) {
-        var messageCount = await _notificationStorage.getMessageCount() ?? 0;
-        var hasNew = false;
-        if (isRunApp) {
-          messageCount += newMessageCount;
-          hasNew = true;
-        } else {
-          hasNew = newMessageCount != messageCount;
-          messageCount = newMessageCount;
-        }
+      final newMessages = await getNewMessages();
 
-        if (isBackground) {
-          await _notificationStorage.setMessageCount(messageCount);
-        } else {
-          await _notificationStorage.clear();
-        }
+      if (newMessages.isNotEmpty) {
+        newMessages.forEach((message) {
+          showNewMessage(message);
+        });
 
-        if (hasNew) {
-          await showNewMessage(messageCount);
-        }
-        return hasNew;
+        return true;
       }
     } catch (e, s) {
       print("sync error:$e,$s");
@@ -52,9 +37,9 @@ class BackgroundSync {
     return false;
   }
 
-  Future<int> getNewMessageCount() async {
+  Future<List<Message>> getNewMessages() async {
     if ((await _authLocal.getSelectedUserLocalId()) == null) {
-      return 0;
+      return [];
     }
     await initUser();
 
@@ -64,12 +49,12 @@ class BackgroundSync {
     final foldersToUpdate = (await updateFolderHash(inboxFolder))
         .where((item) => item.type == 1)
         .toList();
+    final newMessages = new List<Message>();
 
-    var newMessageCount = 0;
     for (Folder folderToUpdate in foldersToUpdate) {
-      if (!folderToUpdate.needsInfoUpdate) {
-        continue;
-      }
+//      if (!folderToUpdate.needsInfoUpdate) {
+//        continue;
+//      }
 
       final userLocalId = await _authLocal.getSelectedUserLocalId();
       final user = await _usersDao.getUserByLocalId(userLocalId);
@@ -91,9 +76,20 @@ class BackgroundSync {
       final result = await Folders.calculateMessagesInfoDiffAsync(
           folderToUpdate.messagesInfo, messagesInfo);
 
-      newMessageCount += result.addedMessagesLength ?? 0;
+      final uids = result.addedMessages.map((m) => m.uid);
+      final rawBodies = await mailApi.getMessageBodies(
+        folderName: folderToUpdate.fullNameRaw,
+        uids: uids.toList(),
+      );
+      final newMessageBodies = Mail.getMessageObjFromServerAndUpdateInfoHasBody(
+        rawBodies,
+        result.addedMessages,
+        user.localId,
+        account,
+      );
+      newMessages.addAll(newMessageBodies);
     }
-    return newMessageCount;
+    return newMessages;
   }
 
   Future<List<Folder>> updateFolderHash(List<LocalFolder> folders) async {
@@ -146,23 +142,8 @@ class BackgroundSync {
     SettingsBloc.isOffline = false;
   }
 
-  showNewMessage(int newMessageCount) async {
-//    final locale = S.delegate.supportedLocales.firstWhere(
-//      (locale) {
-//        //todo VO locale
-//        return false;
-//      },
-//      orElse: () => Locale("en", ""),
-//    );
-
-//    final s = await S.delegate.load(locale);
-
+  void showNewMessage(Message message) async {
     final manager = NotificationManager();
-
-    // TODO NY: migrate translations
-//    final countMessage = newMessageCount > 1 ? s.new_messages : s.new_message;
-//    manager.showNotification(countMessage,
-//        s.you_have_new_message(newMessageCount.toString(), countMessage));
-    manager.showNotification(newMessageCount.toString(), "new messages");
+    manager.showNotification(message);
   }
 }

@@ -1,4 +1,5 @@
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:aurora_mail/database/app_database.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart' hide Message;
 
 class NotificationManager {
   final plugin = FlutterLocalNotificationsPlugin();
@@ -19,13 +20,16 @@ class NotificationManager {
 
   onSelectNotification() {}
 
-  showNotification(String title, String body) {
-    plugin.cancel(_id);
+  showNotification(Message message) {
+    plugin.cancel(message.localId);
     plugin.show(
-        _id, title, body, NotificationDetails(_notificationDetails, null));
+      message.localId,
+      message.fromToDisplay,
+      message.subject,
+      NotificationDetails(_notificationDetails, null),
+    );
   }
 
-  static const _id = 341;
   static final _notificationDetails = AndroidNotificationDetails(
     "main",
     "New messages",

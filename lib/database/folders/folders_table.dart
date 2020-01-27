@@ -172,8 +172,7 @@ class Folders extends Table {
 
   // you cannot just return newInfo
   // you have to return oldInfo (because it contains hasBody: true) + addedMessages
-  static MessagesInfoDiffCalcResult _calculateMessagesInfoDiff(
-      Map<String, List<MessageInfo>> args) {
+  static MessagesInfoDiffCalcResult _calculateMessagesInfoDiff(Map<String, List<MessageInfo>> args) {
     final oldInfo = args["oldItems"];
     final newInfo = args["newItems"];
 
@@ -191,7 +190,11 @@ class Folders extends Table {
         unchangedMessages.length == newInfo.length) {
       print("Diff calcultaion finished: no changes");
       return new MessagesInfoDiffCalcResult(
-          updatedInfo: oldInfo, removedUids: [], infosToUpdateFlags: [], addedMessagesLength: newInfo.length);
+        updatedInfo: oldInfo,
+        removedUids: [],
+        infosToUpdateFlags: [],
+        addedMessages: [],
+      );
     }
 
     final addedMessages = newInfo.where((i) =>
@@ -237,7 +240,7 @@ class Folders extends Table {
       updatedInfo: updatedInfo,
       removedUids: [...removedUids, ...changedParentUid],
       infosToUpdateFlags: changedFlags.toList(),
-      addedMessagesLength: addedMessages.length,
+      addedMessages: addedMessages.toList(),
     );
   }
 
@@ -263,13 +266,13 @@ class MessagesInfoDiffCalcResult {
   final List<MessageInfo> updatedInfo;
   final List<int> removedUids;
   final List<MessageInfo> infosToUpdateFlags;
-  final int addedMessagesLength;
+  final List<MessageInfo> addedMessages;
 
   MessagesInfoDiffCalcResult(
       {@required this.updatedInfo,
       @required this.removedUids,
       @required this.infosToUpdateFlags,
-      @required this.addedMessagesLength})
+      @required this.addedMessages})
       : assert(updatedInfo != null &&
             removedUids != null &&
             infosToUpdateFlags != null);
