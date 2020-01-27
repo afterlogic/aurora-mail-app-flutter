@@ -75,7 +75,8 @@ class BackgroundSync {
 
       final result = await Folders.calculateMessagesInfoDiffAsync(
           folderToUpdate.messagesInfo, messagesInfo);
-      if (result.addedMessages.isEmpty) return [];
+
+      if (result.addedMessages.isEmpty) break;
 
       final uids = result.addedMessages.map((m) => m.uid);
       final rawBodies = await mailApi.getMessageBodies(
