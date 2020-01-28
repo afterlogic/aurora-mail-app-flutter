@@ -91,6 +91,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
       bloc: _authBloc,
       listener: (_, state) {
         if (state is LoggedOut) _navigateToLogin();
+        if (state is UserSelected) RestartWidget.restartApp(context);
       },
       child: BlocBuilder<AuthBloc, AuthState>(
         bloc: _authBloc,

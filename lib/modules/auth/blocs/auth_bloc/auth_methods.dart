@@ -94,6 +94,7 @@ class AuthMethods {
     _authApi.logout(user);
 
     final futures = [
+      deleteUserRelatedData(user),
       _authLocal.deleteSelectedUserLocalId(),
       _authLocal.deleteSelectedAccountId(),
       _usersDao.deleteUser(user.localId),

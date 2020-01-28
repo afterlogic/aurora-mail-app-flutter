@@ -21,7 +21,7 @@ class _UserTileState extends State<UserTile> {
   void _selectUser() {
     if (widget.compact == true) Navigator.pop(context);
     BlocProvider.of<AuthBloc>(context).add(SelectUser(widget.user.localId));
-    RestartWidget.restartApp(context);
+//    RestartWidget.restartApp(context);
   }
 
   Future<void> _showDeleteDialog() async {
@@ -34,7 +34,7 @@ class _UserTileState extends State<UserTile> {
     );
     if (result == true) {
       BlocProvider.of<AuthBloc>(context).add(DeleteUser(widget.user.localId));
-      RestartWidget.restartApp(context);
+//      RestartWidget.restartApp(context);
     }
   }
 
@@ -53,7 +53,9 @@ class _UserTileState extends State<UserTile> {
         tooltip: i18n(context, "settings_accounts_delete"),
         onPressed: _showDeleteDialog,
       ),
-      onTap: widget.user.localId == currentUser.localId ? null : _selectUser,
+      onTap: widget.user.localId == currentUser.localId || !widget.compact
+          ? null
+          : _selectUser,
     );
   }
 
