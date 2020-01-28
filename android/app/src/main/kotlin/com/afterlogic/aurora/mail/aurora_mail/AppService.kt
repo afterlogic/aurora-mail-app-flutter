@@ -17,7 +17,7 @@ class AppService : AlarmService() {
         }.apply {
             //todo VO
             setSmallIcon(R.drawable.app_icon)
-            setContentTitle("Update mail")
+            setContentTitle("Updating mail")
             setContentText("...")
         }
         return builder.build()

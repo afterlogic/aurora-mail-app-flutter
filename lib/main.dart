@@ -4,7 +4,7 @@ import 'package:aurora_mail/background/alarm/alarm.dart';
 import 'package:aurora_mail/shared_ui/restart_widget.dart';
 import 'package:flutter/material.dart';
 
-import 'background/background_sink.dart';
+import 'background/background_sync.dart';
 import 'modules/app_screen.dart';
 
 var isBackground = true;

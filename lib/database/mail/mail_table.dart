@@ -167,7 +167,6 @@ class Mail extends Table {
     int userLocalId,
     Account account,
   ) {
-    assert(result.length <= MESSAGES_PER_CHUNK);
     assert(result.isNotEmpty);
 
     final messagesChunk = new List<Message>();

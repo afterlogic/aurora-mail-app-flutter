@@ -14,13 +14,13 @@ class NotificationManager {
     plugin.initialize(initializationSettings);
   }
 
-  setOnNotification(Future Function(int, String, String, String) callback) {
+  void setOnNotification(Future Function(int, String, String, String) callback) {
     plugin.didReceiveLocalNotificationCallback = callback;
   }
 
-  onSelectNotification() {}
+  void onSelectNotification() {}
 
-  showNotification(Message message) {
+  void showNotification(Message message) {
     plugin.cancel(message.uid);
     plugin.show(
       message.uid,

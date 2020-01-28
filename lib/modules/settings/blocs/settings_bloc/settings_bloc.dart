@@ -131,7 +131,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     }
   }
 
-  Future onResume() {
-    return _methods.clearNotification();
+  Future onResume() async {
+//    return _methods.clearNotification();
   }
 }
