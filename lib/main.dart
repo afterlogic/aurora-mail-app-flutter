@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'background/background_sync.dart';
 import 'modules/app_screen.dart';
 
-var isBackground = true;
+var isBackground = false;
 Function doOnAlarm;
 final _streamController = new StreamController<void>.broadcast();
 

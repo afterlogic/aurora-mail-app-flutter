@@ -27,7 +27,7 @@ class BackgroundSync {
       final newMessages = await getNewMessages();
 
       if (newMessages.isNotEmpty) {
-        if (isRunApp || isBackground) {
+        if (isBackground != true) {
           newMessages.forEach((message) {
             showNewMessage(message);
           });
