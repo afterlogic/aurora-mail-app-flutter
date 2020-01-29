@@ -13,6 +13,7 @@ import 'package:aurora_mail/modules/mail/repository/mail_api.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/modules/settings/models/sync_period.dart';
 import 'package:aurora_mail/notification/notification_manager.dart';
+import 'package:intl/intl.dart';
 
 class BackgroundSync {
   final _mailDao = MailDao(DBInstances.appDB);
@@ -22,21 +23,27 @@ class BackgroundSync {
   final _authLocal = AuthLocalStorage();
 //  final _notificationStorage = NotificationLocalStorage();
 
-  Future<bool> sync(bool isBackground, bool isRunApp) async {
+  Future<bool> sync(bool isBackground) async {
+    print("MailSync: ${DateFormat('H:m:s').format(DateTime.now())} sync START");
     try {
       final newMessages = await getNewMessages();
-
+      print("MailSync: ${DateFormat('H:m:s').format(DateTime.now())} sync END");
       if (newMessages.isNotEmpty) {
-        if (isBackground != true) {
+        if (isBackground == true) {
+          print("MailSync: ${newMessages.length} new message(s)");
           newMessages.forEach((message) {
             showNewMessage(message);
           });
+        } else {
+          print("MailSync: Foreground mode, cannot send notifications");
         }
 
         return true;
+      } else {
+        print("MailSync: No messages to sync");
       }
     } catch (e, s) {
-      print("sync error:$e,$s");
+      print("MailSync: ERROR:$e,$s");
     }
     return false;
   }

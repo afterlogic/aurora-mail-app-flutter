@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'background/background_sync.dart';
 import 'modules/app_screen.dart';
 
-var isBackground = false;
+var isBackground = true;
 Function doOnAlarm;
 final _streamController = new StreamController<void>.broadcast();
 
@@ -24,10 +24,11 @@ void onAlarm() async {
   await Alarm.init();
   try {
     if (!isBackground) _streamController.add(null);
-    if (isBackground) WidgetsFlutterBinding.ensureInitialized();
+//    if (isBackground) WidgetsFlutterBinding.ensureInitialized();
+    WidgetsFlutterBinding.ensureInitialized();
 
     final hasUpdate = await BackgroundSync()
-        .sync(isBackground, doOnAlarm != null)
+        .sync(isBackground)
         .timeout(Duration(seconds: 30));
 
     if (hasUpdate) {
