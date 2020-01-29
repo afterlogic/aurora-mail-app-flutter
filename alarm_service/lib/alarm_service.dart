@@ -19,27 +19,23 @@ class AlarmService {
     Function onAlarm,
     int id,
     Duration interval,
-    bool repeat,
   ) {
     return _channel.invokeMethod('setAlarm', [
       PluginUtilities.getCallbackHandle(onAlarm).toRawHandle(),
       id,
       interval.inSeconds,
-      repeat,
     ]);
   }
-
-  static Future endAlarm() {
-    return _channel.invokeMethod('endAlarm');
-  }
-
-  static Future<bool> isAlarm() {
-    return _channel.invokeMethod('isAlarm');
+  /***
+   * flag hasNewData only for ios
+   ***/
+  static Future endAlarm(bool hasNewData) {
+    return _channel.invokeMethod('endAlarm',[hasNewData]);
   }
 
   static Future removeAlarm(int id) {
     _onAlarmMap.remove(id);
-    return _channel.invokeMethod('cancelAlarm', [id]);
+    return _channel.invokeMethod('removeAlarm', [id]);
   }
 
   static onAlarm(
@@ -57,7 +53,7 @@ class AlarmService {
     while (true) {
       final id = await _channel.invokeMethod('doOnAlarm');
       if (id != null) {
-        final function = _onAlarmMap[id];
+        final function =id ==-1? _onAlarmMap.values.first: _onAlarmMap[id];
         if (function != null) function();
       }
     }

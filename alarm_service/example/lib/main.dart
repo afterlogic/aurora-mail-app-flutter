@@ -1,17 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:alarm_service/alarm_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 const alarmId = 1;
-
+var withMain=false;
 void main() async {
+  print("-----main");
+  withMain=true;
   runApp(MyApp());
+  AlarmService.init();
   AlarmService.onAlarm(onAlarm, alarmId);
+  final sharedPreference = await SharedPreferences.getInstance();
+  await sharedPreference.setBool(alarmId.toString(),true);
 }
 
 @pragma('vm:entry-point')
 void onAlarm() async {
-  print("alarm is now ${TimeOfDay.now().toString()}");
-  AlarmService.endAlarm();
+  WidgetsFlutterBinding.ensureInitialized();
+  print("-----background withMain:$withMain");
+  bool success;
+  try {
+    final sharedPreference = await SharedPreferences.getInstance();
+    success= sharedPreference.getBool(alarmId.toString());
+  } catch (e) {
+    success=false;
+  }
+  print("-----hasSharedPreferences:$success");
+  AlarmService.endAlarm(success);
 }
 
 class MyApp extends StatefulWidget {
@@ -27,7 +42,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   setAlarm() {
-    AlarmService.setAlarm(onAlarm, alarmId, Duration(seconds: 20), true);
+    AlarmService.setAlarm(onAlarm, alarmId, Duration(seconds: 20));
   }
 
   @override

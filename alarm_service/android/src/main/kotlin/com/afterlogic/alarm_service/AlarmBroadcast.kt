@@ -35,7 +35,7 @@ class AlarmBroadcast : BroadcastReceiver() {
                      libraryPath: String,
                      id: Int,
                      secondDelay: Long,
-                     repeat: Boolean) {
+                     repeat: Boolean = true) {
             val intent = Intent(context, AlarmBroadcast::class.java)
 
             intent.putExtra(DELAY, secondDelay)
