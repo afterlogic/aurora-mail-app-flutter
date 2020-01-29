@@ -27,8 +27,6 @@ class AlarmPlugin(private val applicationContext: Context) : MethodCallHandler {
                 true
             }
         }
-
-
     }
 
     private var doOnAlarm: Result? = null

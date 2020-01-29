@@ -26,11 +26,12 @@ class AlarmService {
       interval.inSeconds,
     ]);
   }
+
   /***
    * flag hasNewData only for ios
    ***/
   static Future endAlarm(bool hasNewData) {
-    return _channel.invokeMethod('endAlarm',[hasNewData]);
+    return _channel.invokeMethod('endAlarm', [hasNewData]);
   }
 
   static Future removeAlarm(int id) {
@@ -53,7 +54,7 @@ class AlarmService {
     while (true) {
       final id = await _channel.invokeMethod('doOnAlarm');
       if (id != null) {
-        final function =id ==-1? _onAlarmMap.values.first: _onAlarmMap[id];
+        final function = id == -1 ? _onAlarmMap.values.first : _onAlarmMap[id];
         if (function != null) function();
       }
     }

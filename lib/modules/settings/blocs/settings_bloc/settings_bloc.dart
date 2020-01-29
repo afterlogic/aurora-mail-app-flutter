@@ -1,6 +1,7 @@
 import 'dart:async';
 
-import 'package:aurora_mail/background/alarm/alarm.dart';
+import 'package:alarm_service/alarm_service.dart';
+import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/main.dart' as main;
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/settings_methods.dart';
 import 'package:aurora_mail/modules/settings/models/language.dart';
@@ -35,9 +36,10 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   }
 
   Stream<SettingsState> _initSyncSettings(InitSettings event) async* {
-    await Alarm.periodic(
-      Duration(seconds: event.user.syncFreqInSeconds),
+    await AlarmService.setAlarm(
       main.onAlarm,
+      ALARM_ID,
+      Duration(seconds: event.user.syncFreqInSeconds),
     );
 
     final appSettings = await _methods.getSettingsSharedPrefs();
@@ -77,9 +79,10 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   Stream<SettingsState> _setFrequency(SetFrequency event) async* {
     await _methods.setFrequency(event.freq);
     final freqInSeconds = SyncFreq.freqToDuration(event.freq).inSeconds;
-    await Alarm.periodic(
-      Duration(seconds: freqInSeconds),
+    await AlarmService.setAlarm(
       main.onAlarm,
+      ALARM_ID,
+      Duration(seconds: freqInSeconds),
     );
     if (state is SettingsLoaded) {
       yield (state as SettingsLoaded)
@@ -105,7 +108,8 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     await _methods.setDarkTheme(event.darkThemeEnabled);
 
     if (state is SettingsLoaded) {
-      yield (state as SettingsLoaded).copyWith(darkThemeEnabled: Value(event.darkThemeEnabled));
+      yield (state as SettingsLoaded)
+          .copyWith(darkThemeEnabled: Value(event.darkThemeEnabled));
     } else {
       yield SettingsLoaded(darkThemeEnabled: event.darkThemeEnabled);
     }
