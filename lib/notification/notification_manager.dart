@@ -20,21 +20,33 @@ class NotificationManager {
 
   void onSelectNotification() {}
 
-  void showNotification(Message message) {
+  void showNotification(Message message, User user) {
+    String groupKey = "com.afterlogic.aurora.mail.${user.emailFromLogin}";
+    String groupChannelId = user.emailFromLogin;
+    String groupChannelName = user.emailFromLogin;
+    String groupChannelDescription = user.emailFromLogin;
+
+    final androidNotificationDetails = AndroidNotificationDetails(
+      groupChannelId,
+      groupChannelName,
+      groupChannelDescription,
+      importance: Importance.Max,
+      priority: Priority.High,
+      style: AndroidNotificationStyle.Inbox,
+      styleInformation: InboxStyleInformation(
+        [message.subject],
+        contentTitle: message.fromToDisplay,
+        summaryText: user.emailFromLogin,
+      ),
+      groupKey: groupKey,
+    );
+
     plugin.cancel(message.uid);
     plugin.show(
       message.uid,
       message.fromToDisplay,
       message.subject,
-      NotificationDetails(_notificationDetails, null),
+      NotificationDetails(androidNotificationDetails, null),
     );
   }
-
-  static final _notificationDetails = AndroidNotificationDetails(
-    "main",
-    "New messages",
-    "" /*todo description*/,
-    importance: Importance.Max,
-    priority: Priority.High,
-  );
 }

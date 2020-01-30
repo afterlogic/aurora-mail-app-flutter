@@ -24,23 +24,27 @@ class BackgroundSync {
 //  final _notificationStorage = NotificationLocalStorage();
 
   Future<bool> sync(bool isBackground) async {
-    print("MailSync: ${DateFormat('H:m:s').format(DateTime.now())} sync START");
+    print("MailSync: sync START");
     try {
-      final newMessages = await getNewMessages();
-      print("MailSync: ${DateFormat('H:m:s').format(DateTime.now())} sync END");
-      if (newMessages.isNotEmpty) {
-        if (isBackground == true) {
-          print("MailSync: ${newMessages.length} new message(s)");
-          newMessages.forEach((message) {
-            showNewMessage(message);
-          });
-        } else {
-          print("MailSync: Foreground mode, cannot send notifications");
-        }
+      final users = await _usersDao.getUsers();
 
-        return true;
-      } else {
-        print("MailSync: No messages to sync");
+      for (final user in users) {
+        final newMessages = await getNewMessages(user);
+        print("MailSync: sync END");
+        if (newMessages.isNotEmpty) {
+          if (isBackground == true) {
+            print("MailSync: ${newMessages.length} new message(s)");
+            newMessages.forEach((message) {
+              showNewMessage(message, user);
+            });
+          } else {
+            print("MailSync: Foreground mode, cannot send notifications");
+          }
+
+          return true;
+        } else {
+          print("MailSync: No messages to sync");
+        }
       }
     } catch (e, s) {
       print("MailSync: ERROR:$e,$s");
@@ -48,33 +52,28 @@ class BackgroundSync {
     return false;
   }
 
-  Future<List<Message>> getNewMessages() async {
+  Future<List<Message>> getNewMessages(User user) async {
     SettingsBloc.isOffline = false;
     if ((await _authLocal.getSelectedUserLocalId()) == null) {
       return [];
     }
 //    await initUser();
     final newMessages = new List<Message>();
-    final users = await _usersDao.getUsers();
 
-    for (final user in users) {
 //      final accountLocalId = await _authLocal.getSelectedAccountId();
       final accounts = await _accountsDao.getAccounts(user.localId);
       final account = accounts[0];
 
-      final inboxFolder = await _foldersDao.getByType(
+      final inboxFolders = await _foldersDao.getByType(
           1 /*FolderType.inbox*/, account.localId);
 
-      final foldersToUpdate = (await updateFolderHash(inboxFolder))
+      final foldersToUpdate = (await updateFolderHash(inboxFolders, user, account))
           .where((item) => item.type == 1)
           .toList();
 
-//      final userLocalId = await _authLocal.getSelectedUserLocalId();
-//      final user = await _usersDao.getUserByLocalId(userLocalId);
       if (account == null) return new List<Message>();
 
       for (Folder folderToUpdate in foldersToUpdate) {
-        // null messagesInfo means that the folder has never been synced before
         if (!folderToUpdate.needsInfoUpdate ||
             folderToUpdate.messagesInfo == null) {
           break;
@@ -118,18 +117,11 @@ class BackgroundSync {
             folderToUpdate.localId, result.updatedInfo);
         newMessages.addAll(newMessageBodies);
       }
-    }
     await _mailDao.addMessages(newMessages);
     return newMessages;
   }
 
-  Future<List<Folder>> updateFolderHash(List<LocalFolder> folders) async {
-
-    final userLocalId = await _authLocal.getSelectedUserLocalId();
-    final user = await _usersDao.getUserByLocalId(userLocalId);
-    final accountLocalId = await _authLocal.getSelectedAccountId();
-    final account = await _accountsDao.getAccount(accountLocalId);
-
+  Future<List<Folder>> updateFolderHash(List<LocalFolder> folders, User user, Account account) async {
     final _foldersApi = FoldersApi(
       user: user,
       account: account,
@@ -173,8 +165,8 @@ class BackgroundSync {
     SettingsBloc.isOffline = false;
   }
 
-  void showNewMessage(Message message) async {
+  void showNewMessage(Message message, User user) async {
     final manager = NotificationManager();
-    manager.showNotification(message);
+    manager.showNotification(message, user);
   }
 }

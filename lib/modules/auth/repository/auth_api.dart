@@ -68,8 +68,7 @@ class AuthApi {
 
     final parameters = json.encode({"UserId": user.serverId});
 
-    final body = new WebMailApiBody(
-        module: "Mail", method: "GetAccounts", parameters: parameters);
+    final body = new WebMailApiBody(method: "GetAccounts", parameters: parameters);
 
     final res = await coreModuleForLogin.post(body);
 

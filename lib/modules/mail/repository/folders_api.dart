@@ -8,7 +8,7 @@ class FoldersApi {
   final Account account;
   final User user;
 
-  int get _accountId => account.accountId;
+  int get _accountId => account.entityId;
 
   WebMailApi _mailModule;
 
