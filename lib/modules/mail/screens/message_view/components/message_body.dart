@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
+import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/mail_utils.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
@@ -29,10 +30,12 @@ class _MessageBodyState extends State<MessageBody> {
   String _plainData;
   String _htmlData;
   bool _pageLoaded = false;
+  bool _showImages = false;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    _showImages = !widget.message.hasExternals || widget.message.safety;
     _getHtmlWithImages();
   }
 
@@ -50,6 +53,13 @@ class _MessageBodyState extends State<MessageBody> {
     if (htmlData == null) {
       setState(() => _plainData = plainData);
       return null;
+    }
+    setState(() => _htmlData = htmlData);
+    if (_showImages) {
+      htmlData = htmlData.replaceAll(
+        "data-x-src=",
+        "src=",
+      );
     }
 
 //    setState(() => _htmlData = htmlData);
@@ -75,12 +85,15 @@ class _MessageBodyState extends State<MessageBody> {
 //        print("s: ${s}");
 //      }
 
-      htmlData = htmlData.replaceFirst(
-        "data-x-src-cid=\"${attachment.cid}\"",
-        "src=\"${user.hostname}${attachment.viewUrl.replaceFirst("mail-attachment/", "mail-attachments-cookieless/")}&AuthToken=${user.token}\"",
-      );
+        htmlData = htmlData.replaceFirst(
+          "data-x-src-cid=\"${attachment.cid}\"",
+          "src=\"${user.hostname}${attachment.viewUrl.replaceFirst("mail-attachment/", "mail-attachments-cookieless/")}&AuthToken=${user.token}\"",
+        );
     }
 
+    if (_htmlData != null) {
+      _controller?.loadUrl(_getHtmlUri(htmlData));
+    }
     setState(() => _htmlData = htmlData);
   }
 
@@ -93,23 +106,41 @@ class _MessageBodyState extends State<MessageBody> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Container(
-//          height: _webViewHeight,
-          child: _buildMessageBody(),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        if (!_showImages)
+        FlatButton.icon(
+          icon: Icon(Icons.image),
+          label: Text(i18n(context, "messages_show_images")),
+          onPressed: () {
+            setState(() => _showImages = true);
+            _getHtmlWithImages();
+          },
         ),
-        if (_plainData == null)
-        Positioned.fill(
-          child: IgnorePointer(
-            ignoring: true,
-            child: AnimatedOpacity(
-              opacity: _pageLoaded && _htmlData != null ? 0.0 : 1.0,
-              duration: Duration(milliseconds: 100),
-              child:
-                  Container(color: Theme.of(context).scaffoldBackgroundColor),
+        Flexible(
+          child: Stack(
+            children: [
+              Container(
+//          height: _webViewHeight,
+                child: _buildMessageBody(),
+              ),
+              if (_plainData == null)
+                Positioned.fill(
+                  child: IgnorePointer(
+                    ignoring: true,
+                    child: AnimatedOpacity(
+                      opacity: _pageLoaded && _htmlData != null ? 0.0 : 1.0,
+                      duration: Duration(milliseconds: 100),
+                      child:
+                      Container(color: Theme
+                          .of(context)
+                          .scaffoldBackgroundColor),
 //            child: Container(color: Colors.red),
-            ),
+                    ),
+                  ),
+                ),
+            ],
           ),
         ),
       ],
