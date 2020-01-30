@@ -147,7 +147,7 @@ class _MessageBodyState extends State<MessageBody> {
           ..add(Factory(() => HorizontalDragGestureRecognizer())),
       );
     } else if (_plainData != null) {
-      return Text(_plainData);
+      return SingleChildScrollView(child: Text(_plainData));
     } else {
       return Center(child: CircularProgressIndicator());
     }
