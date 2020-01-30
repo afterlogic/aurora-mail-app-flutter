@@ -3,8 +3,8 @@ import 'dart:ui';
 class BackgroundHelper {
   static var current = AppLifecycleState.detached;
 
-  static Map<Function, bool> _doOnAlarm;
-  static Map<Function(bool hasUpdate), bool> _doOnEndAlarm;
+  static Map<Function, bool> _doOnAlarm={};
+  static Map<Function(bool hasUpdate), bool> _doOnEndAlarm={};
 
   static bool get isBackground => current != AppLifecycleState.resumed;
 
