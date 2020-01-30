@@ -398,4 +398,8 @@ class MailMethods {
     final List<LocalFolder> localFolders = await _foldersDao.getAllFolders(account.localId);
     return Folder.getFolderObjectsFromDb(localFolders);
   }
+
+  Future<void> setEmailSafety(String senderEmail) async {
+    await _mailApi.setEmailSafety(senderEmail: senderEmail);
+  }
 }

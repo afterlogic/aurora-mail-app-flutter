@@ -199,9 +199,7 @@ class _MessageViewAndroidState extends State<MessageViewAndroid>
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 ConstrainedBox(
-                  constraints: BoxConstraints(
-                    maxHeight: 107.0
-                  ),
+                  constraints: BoxConstraints(maxHeight: 107.0),
                   child: SingleChildScrollView(
                     child: Text(
                       message.subject.isNotEmpty

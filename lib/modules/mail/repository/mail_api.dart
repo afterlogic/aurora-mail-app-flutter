@@ -381,4 +381,21 @@ class MailApi {
       throw WebMailApiError(res);
     }
   }
+
+  Future<void> setEmailSafety({
+    @required String senderEmail,
+  }) async {
+    final parameters = json.encode({
+      "AccountID": _accountId,
+      "Email": senderEmail,
+    });
+
+    final body = new WebMailApiBody(method: "SetEmailSafety", parameters: parameters);
+
+    final res = await _mailModule.post(body);
+
+    if (res != true) {
+      throw WebMailApiError(res);
+    }
+  }
 }
