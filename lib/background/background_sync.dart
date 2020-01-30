@@ -13,7 +13,6 @@ import 'package:aurora_mail/modules/mail/repository/mail_api.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/modules/settings/models/sync_period.dart';
 import 'package:aurora_mail/notification/notification_manager.dart';
-import 'package:intl/intl.dart';
 
 class BackgroundSync {
   final _mailDao = MailDao(DBInstances.appDB);

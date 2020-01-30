@@ -21,10 +21,13 @@ class NotificationManager {
   void onSelectNotification() {}
 
   void showNotification(Message message, User user) {
-    String groupKey = "com.afterlogic.aurora.mail.${user.emailFromLogin}";
-    String groupChannelId = user.emailFromLogin;
-    String groupChannelName = user.emailFromLogin;
-    String groupChannelDescription = user.emailFromLogin;
+    final groupKey = "com.afterlogic.aurora.mail.${user.emailFromLogin}";
+    final groupChannelId = user.emailFromLogin;
+    final groupChannelName = user.emailFromLogin;
+    final groupChannelDescription = user.emailFromLogin;
+    var from = message.fromToDisplay;
+
+    if (from.contains("@")) from = from.split("@")[0];
 
     final androidNotificationDetails = AndroidNotificationDetails(
       groupChannelId,
@@ -35,7 +38,7 @@ class NotificationManager {
       style: AndroidNotificationStyle.Inbox,
       styleInformation: InboxStyleInformation(
         [message.subject],
-        contentTitle: message.fromToDisplay,
+        contentTitle: from,
         summaryText: user.emailFromLogin,
       ),
       groupKey: groupKey,
@@ -44,7 +47,7 @@ class NotificationManager {
     plugin.cancel(message.uid);
     plugin.show(
       message.uid,
-      message.fromToDisplay,
+      from,
       message.subject,
       NotificationDetails(androidNotificationDetails, null),
     );
