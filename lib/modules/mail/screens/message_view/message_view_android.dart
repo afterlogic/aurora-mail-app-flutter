@@ -198,13 +198,20 @@ class _MessageViewAndroidState extends State<MessageViewAndroid>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text(
-                  message.subject.isNotEmpty
-                      ? message.subject
-                      : i18n(context, "messages_no_subject"),
-                  style: Theme.of(context).textTheme.display1.copyWith(
-                        fontSize: 26.0,
-                      ),
+                ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxHeight: 107.0
+                  ),
+                  child: SingleChildScrollView(
+                    child: Text(
+                      message.subject.isNotEmpty
+                          ? message.subject
+                          : i18n(context, "messages_no_subject"),
+                      style: Theme.of(context).textTheme.display1.copyWith(
+                            fontSize: 26.0,
+                          ),
+                    ),
+                  ),
                 ),
                 SizedBox(height: 12.0),
                 Divider(height: 20.0),
