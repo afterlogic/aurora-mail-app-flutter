@@ -5,6 +5,7 @@ public class SwiftAlarmPlugin: NSObject, FlutterPlugin {
     let userDefaults=UserDefaults()
     var onEndAlarm: ((Bool) -> Void)?=nil
     var onAlarm:FlutterResult?=nil
+    var hasAlarm = false
     
     var interval:Double?{
         set { userDefaults.set(newValue, forKey: SwiftAlarmPlugin.interalKey) }
@@ -42,7 +43,13 @@ public class SwiftAlarmPlugin: NSObject, FlutterPlugin {
                 result("")
                 return
             case "doOnAlarm":
-                onAlarm = result
+                if hasAlarm {
+                    hasAlarm=false
+                    result(-1)
+                    onAlarm=nil
+                }else{
+                    onAlarm = result
+                }
                 return
             default:
                 result(FlutterMethodNotImplemented)
@@ -78,16 +85,17 @@ public class SwiftAlarmPlugin: NSObject, FlutterPlugin {
     open func alarm(_ application: UIApplication,_ completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         var timer:Timer?
         onEndAlarm = {(hasData) in
+            self.hasAlarm=false
             timer?.invalidate()
             completionHandler(hasData ? UIBackgroundFetchResult.newData : UIBackgroundFetchResult.noData)
         }
-        if onAlarm == nil {
+        if onAlarm != nil {
             onAlarm?(-1)
             onAlarm=nil
-            timer=Timer.scheduledTimer(timeInterval: 80, target: self, selector: #selector(timeOut), userInfo: nil, repeats: false)
         } else{
-            onEndAlarm?(false)
+            hasAlarm=true
         }
+        timer=Timer.scheduledTimer(timeInterval: 120, target: self, selector: #selector(timeOut), userInfo: nil, repeats: false)
     }
     
     @objc func timeOut() {

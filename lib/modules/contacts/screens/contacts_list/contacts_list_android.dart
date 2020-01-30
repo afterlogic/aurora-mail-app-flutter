@@ -1,6 +1,7 @@
 import 'dart:async';
 
-import 'package:aurora_mail/main.dart' as main;
+import 'package:aurora_mail/background/background_helper.dart';
+
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 import 'package:aurora_mail/modules/contacts/screens/contact_edit/contact_edit_route.dart';
@@ -28,18 +29,21 @@ class _ContactsListAndroidState extends State<ContactsListAndroid> {
   final _refreshKey = GlobalKey<RefreshIndicatorState>();
 
   var _refreshCompleter = new Completer();
-  StreamSubscription _contactsSync;
 
   @override
   void initState() {
     super.initState();
-    _contactsSync = main.alarmStream.listen((_) => _refreshKey.currentState.show());
+     BackgroundHelper.addOnAlarmObserver(false, onAlarm);
   }
 
   @override
   void dispose() {
+    BackgroundHelper.removeOnAlarmObserver(onAlarm);
     super.dispose();
-    _contactsSync.cancel();
+  }
+
+  void onAlarm(){
+    _refreshKey.currentState.show();
   }
 
   void _onContactSelected(BuildContext context, Contact contact) {
