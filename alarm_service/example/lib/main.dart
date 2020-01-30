@@ -17,8 +17,8 @@ void main() async {
 
 @pragma('vm:entry-point')
 void onAlarm() async {
-  WidgetsFlutterBinding.ensureInitialized();
   print("-----background withMain:$withMain");
+  WidgetsFlutterBinding.ensureInitialized();
   bool success;
   try {
     final sharedPreference = await SharedPreferences.getInstance();

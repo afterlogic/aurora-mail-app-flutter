@@ -77,7 +77,7 @@ abstract class AlarmService : IntentService("Check update mail") {
             }
             //todo timeout
             /** todo service cancel after end [onHandleIntent] **/
-            Thread.sleep(2 * 60000)
+            Thread.sleep(120000)
         }
     }
 
