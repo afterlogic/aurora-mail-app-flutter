@@ -1,10 +1,32 @@
+import 'dart:async';
+import 'dart:io';
 import 'dart:ui';
 
-class BackgroundHelper {
-  static var current = AppLifecycleState.detached;
+import 'package:alarm_service/alarm_service.dart';
 
-  static Map<Function, bool> _doOnAlarm={};
-  static Map<Function(bool hasUpdate), bool> _doOnEndAlarm={};
+class BackgroundHelper {
+  static var _current = AppLifecycleState.detached;
+
+  static void set current(AppLifecycleState value) {
+    if (Platform.isIOS) {
+      final nowIsBackground = _current != AppLifecycleState.resumed;
+      final afterIsBackground = current != AppLifecycleState.resumed;
+      if (nowIsBackground != afterIsBackground) {
+        if (afterIsBackground) {
+          AlarmService.stopTimer();
+        } else {
+          AlarmService.startTimer();
+        }
+      }
+    }
+    _current = value;
+  }
+
+  static AppLifecycleState get current => _current;
+
+  static Map<Function, bool> _doOnAlarm = {};
+
+  static Map<Function(bool hasUpdate), bool> _doOnEndAlarm = {};
 
   static bool get isBackground => current != AppLifecycleState.resumed;
 
