@@ -1,6 +1,7 @@
 import 'dart:async';
 
-import 'package:aurora_mail/background/alarm/alarm.dart';
+import 'package:alarm_service/alarm_service.dart';
+import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/shared_ui/restart_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -16,18 +17,21 @@ Stream<void> get alarmStream => _streamController.stream.asBroadcastStream();
 void main() {
   isBackground = false;
   runApp(RestartWidget(child: App()));
-  Alarm.init();
-  Alarm.onPeriodic(onAlarm);
+  AlarmService.init();
+  AlarmService.onAlarm(onAlarm, ALARM_ID);
 }
+
 @pragma('vm:entry-point')
 void onAlarm() async {
-  await Alarm.init();
-  try {
-    if (!isBackground) _streamController.add(null);
-//    if (isBackground) WidgetsFlutterBinding.ensureInitialized();
-    WidgetsFlutterBinding.ensureInitialized();
+  var hasUpdate = false;
 
-    final hasUpdate = await BackgroundSync()
+  try {
+    WidgetsFlutterBinding.ensureInitialized();
+    AlarmService.init();
+
+    if (!isBackground) _streamController.add(null);
+
+    hasUpdate = await BackgroundSync()
         .sync(isBackground)
         .timeout(Duration(seconds: 30));
 
@@ -38,5 +42,5 @@ void onAlarm() async {
     print(e);
     print(s);
   }
-  await Alarm.endAlarm();
+  await AlarmService.endAlarm(hasUpdate);
 }

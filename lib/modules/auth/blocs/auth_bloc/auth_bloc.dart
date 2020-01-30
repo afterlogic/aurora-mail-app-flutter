@@ -1,6 +1,7 @@
 import 'dart:async';
 
-import 'package:aurora_mail/background/alarm/alarm.dart';
+import 'package:alarm_service/alarm_service.dart';
+import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_methods.dart';
 import 'package:aurora_mail/utils/api_utils.dart';
@@ -29,7 +30,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     if (event is LogIn) yield* _login(event);
     if (event is SelectUser) yield* _selectUser(event);
     if (event is DeleteUser) yield* _deleteUser(event);
-    if (event is InvalidateCurrentUserToken) yield* _invalidateCurrentUserToken(event);
+    if (event is InvalidateCurrentUserToken)
+      yield* _invalidateCurrentUserToken(event);
   }
 
   Stream<AuthState> _initUserAndAccounts(InitUserAndAccounts event) async* {
@@ -40,14 +42,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       if (result != null) {
         currentUser = result.user;
         currentAccount = result.accounts[0];
-        yield InitializedUserAndAccounts(user: result.user, users: users, needsLogin: false);
+        yield InitializedUserAndAccounts(
+            user: result.user, users: users, needsLogin: false);
       } else {
-        yield InitializedUserAndAccounts(user: null, users: null, needsLogin: true);
+        yield InitializedUserAndAccounts(
+            user: null, users: null, needsLogin: true);
       }
     } catch (err, s) {
       print("_initUserAndAccounts err: $err");
       print("_initUserAndAccounts s: $s");
-      yield InitializedUserAndAccounts(user: null, users: null, needsLogin: true);
+      yield InitializedUserAndAccounts(
+          user: null, users: null, needsLogin: true);
     }
   }
 
@@ -65,7 +70,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   Stream<AuthState> _login(LogIn event) async* {
     yield LoggingIn();
     final users = await _methods.users;
-    final userFromDb = users.firstWhere((u) => u.emailFromLogin == event.email, orElse: () => null);
+    final userFromDb = users.firstWhere((u) => u.emailFromLogin == event.email,
+        orElse: () => null);
 
     if (userFromDb != null) {
       add(SelectUser(userFromDb.localId));
@@ -99,7 +105,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   Stream<AuthState> _deleteUser(DeleteUser event) async* {
-    await Alarm.cancel();
+    await AlarmService.removeAlarm(ALARM_ID);
     try {
       await _methods.logout(currentUser);
       final users = await _methods.users;
@@ -114,7 +120,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
   }
 
-  Stream<AuthState> _invalidateCurrentUserToken(InvalidateCurrentUserToken event) async* {
+  Stream<AuthState> _invalidateCurrentUserToken(
+      InvalidateCurrentUserToken event) async* {
     if (currentUser != null) {
       currentUser = await _methods.invalidateToken(currentUser.localId);
     } else {

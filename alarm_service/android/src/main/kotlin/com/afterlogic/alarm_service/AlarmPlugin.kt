@@ -27,8 +27,6 @@ class AlarmPlugin(private val applicationContext: Context) : MethodCallHandler {
                 true
             }
         }
-
-
     }
 
     private var doOnAlarm: Result? = null
@@ -44,17 +42,13 @@ class AlarmPlugin(private val applicationContext: Context) : MethodCallHandler {
                             callback.callbackName,
                             callback.callbackLibraryPath,
                             arg[1] as Int,
-                            (arg[2] as Number).toLong(),
-                            arg[3] as Boolean)
+                            (arg[2] as Number).toLong())
                     result.success("")
                 }
-                call.method == "cancelAlarm" -> {
+                call.method == "removeAlarm" -> {
                     doOnAlarm?.success(null)
                     AlarmBroadcast.cancelAlarm(applicationContext, arg!![0] as Int)
                     result.success("")
-                }
-                call.method == "isAlarm" -> {
-                    result.success(isBackground)
                 }
                 call.method == "endAlarm" -> {
                     onComplete?.invoke()
