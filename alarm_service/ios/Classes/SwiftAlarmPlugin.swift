@@ -1,5 +1,6 @@
 import Flutter
 import UIKit
+import BackgroundTasks
 
 public class SwiftAlarmPlugin: NSObject, FlutterPlugin {
     let userDefaults=UserDefaults()
@@ -67,12 +68,12 @@ public class SwiftAlarmPlugin: NSObject, FlutterPlugin {
         self.interval=interval.doubleValue
         self.callbackName=callbackName
         self.callbackLibraryPath=callbackLibraryPath
-        updateFetch()
+        updateAppRefresh()
     }
     
     func removeAlarm(){
         interval=nil
-        updateFetch()
+        updateAppRefresh()
     }
     
     func endAlarm(hasData:Bool){
@@ -82,12 +83,12 @@ public class SwiftAlarmPlugin: NSObject, FlutterPlugin {
         }
     }
     
-    open func alarm(_ application: UIApplication,_ completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+    open func alarm(_ completionHandler: @escaping (Bool) -> Void) {
         var timer:Timer?
         onEndAlarm = {(hasData) in
             self.hasAlarm=false
             timer?.invalidate()
-            completionHandler(hasData ? UIBackgroundFetchResult.newData : UIBackgroundFetchResult.noData)
+            completionHandler(hasData)
         }
         if onAlarm != nil {
             onAlarm?(-1)
@@ -104,29 +105,71 @@ public class SwiftAlarmPlugin: NSObject, FlutterPlugin {
         }
     }
     
-    func updateFetch(){
+    func alarmFromFetch(_ completionHandler: @escaping (UIBackgroundFetchResult) -> Void){
+        alarm{(hasData) in
+            completionHandler(hasData ? UIBackgroundFetchResult.newData : UIBackgroundFetchResult.noData)
+        }
+    }
+    
+    @available(iOS 13.0, *)
+    func alarmFromTask(_ task:BGTask){
+        alarm{(hasData) in
+            task.setTaskCompleted(success: true)
+        }
+        updateAppRefresh()
+    }
+    
+    func updateAppRefresh(){
         var interval = self.interval ?? UIApplicationBackgroundFetchIntervalNever
         if interval != UIApplicationBackgroundFetchIntervalNever && interval < UIApplicationBackgroundFetchIntervalMinimum {
             interval = UIApplicationBackgroundFetchIntervalMinimum
         }
         
-        UIApplication.shared.setMinimumBackgroundFetchInterval(interval)
+        if #available(iOS 13.0, *) {
+            do {
+                if(interval == UIApplicationBackgroundFetchIntervalNever){
+                    BGTaskScheduler.shared.cancel(taskRequestWithIdentifier: SwiftAlarmPlugin.taskId)
+                }else{
+                    let request = BGAppRefreshTaskRequest(identifier: SwiftAlarmPlugin.taskId)
+                    request.earliestBeginDate = Date(timeIntervalSinceNow: interval)
+                    try BGTaskScheduler.shared.submit(request)
+                }
+            } catch {
+                UIApplication.shared.setMinimumBackgroundFetchInterval(interval)
+            }
+        } else {
+            UIApplication.shared.setMinimumBackgroundFetchInterval(interval)
+        }
     }
+    
+    @available(iOS 13.0, *)
+    func registerTask(){
+        BGTaskScheduler.shared.register(
+            forTaskWithIdentifier: SwiftAlarmPlugin.taskId,
+            using: DispatchQueue.global(),
+            launchHandler: {(task) in
+                self.alarmFromTask(task)
+        }
+        )
+    }
+    
     public func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) -> Bool {
-        alarm(application,completionHandler)
+        alarmFromFetch(completionHandler)
         return true
     }
     
     public func application(_ application: UIApplication, performFetchWithCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) -> Bool {
-        alarm(application,completionHandler)
+        alarmFromFetch(completionHandler)
         return true
     }
     
     public func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [AnyHashable : Any] = [:]) -> Bool {
-        updateFetch()
+        if #available(iOS 13.0, *) {
+            registerTask()
+        }
+        updateAppRefresh()
         return true
     }
-    
     
     public static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(name: "alarm_service", binaryMessenger: registrar.messenger())
@@ -134,7 +177,9 @@ public class SwiftAlarmPlugin: NSObject, FlutterPlugin {
         registrar.addApplicationDelegate(plugin)
         registrar.addMethodCallDelegate(plugin, channel: channel)
     }
+    
     static let interalKey = "FetchIntervalKey"
     static let callbackNameKey = "CallbackNameKey"
     static let callbackLibraryPathKey = "CallbackLibraryPathKey"
+    static let taskId="com.afterlogic.background.task"
 }
