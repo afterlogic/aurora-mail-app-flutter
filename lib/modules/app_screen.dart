@@ -1,4 +1,5 @@
-import 'package:aurora_mail/main.dart' as main;
+import 'package:aurora_mail/background/background_helper.dart';
+
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/shared_ui/restart_widget.dart';
@@ -7,6 +8,7 @@ import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_i18n/flutter_i18n_delegate.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -29,9 +31,8 @@ class _AppState extends State<App> with WidgetsBindingObserver {
 
   @override
   void initState() {
-    super.initState();
     WidgetsBinding.instance.addObserver(this);
-
+    super.initState();
     WebMailApi.authErrorStream.listen((_) {
       _authBloc.add(InvalidateCurrentUserToken());
     });
@@ -41,12 +42,12 @@ class _AppState extends State<App> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.paused) {
-      main.isBackground = true;
-    } else if (state == AppLifecycleState.resumed) {
-      main.isBackground = false;
+    BackgroundHelper.current = state;
+
+    if (state == AppLifecycleState.resumed) {
       _settingsBloc.add(OnResume());
     }
+
     super.didChangeAppLifecycleState(state);
   }
 
@@ -83,6 +84,8 @@ class _AppState extends State<App> with WidgetsBindingObserver {
     super.dispose();
     _authBloc.close();
     _settingsBloc.close();
+    BackgroundHelper.current = AppLifecycleState.detached;
+    WidgetsBinding.instance.removeObserver(this);
   }
 
   @override
@@ -144,9 +147,8 @@ class _AppState extends State<App> with WidgetsBindingObserver {
                           return supportedLocale ?? Locale("en", "");
                         },
                         locale: settingsState.language?.toLocale(),
-                        initialRoute: authState.needsLogin
-                            ? LoginRoute.name
-                            : MessagesListRoute.name,
+                        initialRoute:
+                            authState.needsLogin ? LoginRoute.name : MessagesListRoute.name,
                       ),
                     );
                   } else {

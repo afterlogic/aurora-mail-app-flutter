@@ -1,7 +1,8 @@
 import 'dart:async';
 
+import 'package:aurora_mail/background/background_helper.dart';
 import 'package:aurora_mail/database/app_database.dart';
-import 'package:aurora_mail/main.dart' as main;
+
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
@@ -42,7 +43,6 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
     _initBlocs();
   }
 
-
   @override
   void didUpdateWidget(MessagesListAndroid oldWidget) {
     super.didUpdateWidget(oldWidget);
@@ -52,7 +52,7 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
   @override
   void dispose() {
     super.dispose();
-    main.doOnAlarm = null;
+    BackgroundHelper.removeOnEndAlarmObserver(onEndAlarm);
     _messagesListBloc.close();
     _mailBloc.close();
   }
@@ -83,18 +83,20 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
   }
 
   void _initUpdateTimer() async {
-    main.doOnAlarm = () {
-      _mailBloc.add(RefreshMessages());
-      _contactsBloc.add(GetContacts());
-    };
+    BackgroundHelper.addOnEndAlarmObserver(true, onEndAlarm);
+  }
+
+  void onEndAlarm(bool hasUpdate) {
+    _mailBloc.add(RefreshMessages());
+    _contactsBloc.add(GetContacts());
   }
 
   void _onMessageSelected(List<Message> allMessages, Message item) {
     final i = allMessages.indexOf(item);
 
-    final draftsFolder = (_mailBloc.state as FoldersLoaded).folders.firstWhere(
-        (f) => f.folderType == FolderType.drafts,
-        orElse: () => null);
+    final draftsFolder = (_mailBloc.state as FoldersLoaded)
+        .folders
+        .firstWhere((f) => f.folderType == FolderType.drafts, orElse: () => null);
 
     if (draftsFolder != null && item.folder == draftsFolder.fullNameRaw) {
       Navigator.pushNamed(
@@ -110,8 +112,8 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
       Navigator.pushNamed(
         context,
         MessageViewRoute.name,
-        arguments:
-        MessageViewScreenArgs(messages: allMessages,
+        arguments: MessageViewScreenArgs(
+          messages: allMessages,
           initialPage: i,
           mailBloc: _mailBloc,
           messagesListBloc: _messagesListBloc,
@@ -128,8 +130,8 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
   void _dispatchPostFoldersLoadedAction(FoldersLoaded state) {
     switch (state.postAction) {
       case PostFolderLoadedAction.subscribeToMessages:
-        _messagesListBloc.add(SubscribeToMessages(
-            state.selectedFolder, state.isStarredFilterEnabled));
+        _messagesListBloc
+            .add(SubscribeToMessages(state.selectedFolder, state.isStarredFilterEnabled));
         break;
       case PostFolderLoadedAction.stopMessagesRefresh:
         _messagesListBloc.add(StopMessagesRefresh());
@@ -208,8 +210,7 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
                 condition: (prevState, state) => state is SubscribedToMessages,
                 builder: (context, state) {
                   if (state is SubscribedToMessages) {
-                    return _buildMessagesStream(
-                        state.messagesSub, state.isStarredFilterEnabled);
+                    return _buildMessagesStream(state.messagesSub, state.isStarredFilterEnabled);
                   } else {
                     return _buildMessagesLoading();
                   }
@@ -232,8 +233,7 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
 
   Widget _buildMessagesLoading() => Center(child: CircularProgressIndicator());
 
-  Widget _buildMessagesStream(
-      Stream<List<Message>> messagesSub, bool isStarred) {
+  Widget _buildMessagesStream(Stream<List<Message>> messagesSub, bool isStarred) {
     return StreamBuilder(
       stream: messagesSub,
       builder: (ctx, AsyncSnapshot<List<Message>> snap) {
@@ -261,8 +261,7 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
                       item,
                       threads.where((t) => t.parentUid == item.uid).toList(),
                       key: Key(item.localId.toString()),
-                      onItemSelected: (Message item) =>
-                          _onMessageSelected(snap.data, item),
+                      onItemSelected: (Message item) => _onMessageSelected(snap.data, item),
                       onStarMessage: _setStarred,
                       onDeleteMessage: _deleteMessage,
                     ),

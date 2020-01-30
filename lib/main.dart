@@ -5,17 +5,11 @@ import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/shared_ui/restart_widget.dart';
 import 'package:flutter/material.dart';
 
+import 'background/background_helper.dart';
 import 'background/background_sync.dart';
 import 'modules/app_screen.dart';
 
-var isBackground = true;
-Function doOnAlarm;
-final _streamController = new StreamController<void>.broadcast();
-
-Stream<void> get alarmStream => _streamController.stream.asBroadcastStream();
-
 void main() {
-  isBackground = false;
   runApp(RestartWidget(child: App()));
   AlarmService.init();
   AlarmService.onAlarm(onAlarm, ALARM_ID);
@@ -27,17 +21,14 @@ void onAlarm() async {
 
   try {
     WidgetsFlutterBinding.ensureInitialized();
-    AlarmService.init();
 
-    if (!isBackground) _streamController.add(null);
+    BackgroundHelper.onStartAlarm();
 
     hasUpdate = await BackgroundSync()
-        .sync(isBackground)
+        .sync(BackgroundHelper.isBackground)
         .timeout(Duration(seconds: 30));
 
-    if (hasUpdate) {
-      if (doOnAlarm != null) doOnAlarm();
-    }
+    BackgroundHelper.onEndAlarm(hasUpdate);
   } catch (e, s) {
     print(e);
     print(s);
