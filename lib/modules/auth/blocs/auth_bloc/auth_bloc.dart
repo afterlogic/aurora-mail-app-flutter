@@ -110,8 +110,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         yield LoggedOut();
       }
     } catch (err, s) {
-      print("VO: err: ${err}");
-      print("VO: s: ${s}");
       yield AuthError(formatError(err, s));
     }
   }

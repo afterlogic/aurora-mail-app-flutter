@@ -46,7 +46,7 @@ class FoldersApi {
 
     final res = await _mailModule.post(body);
 
-    if (res is Map) {
+    if (res["Counts"] is Map) {
       return res["Counts"] as Map;
     } else {
       throw WebMailApiError(res);
