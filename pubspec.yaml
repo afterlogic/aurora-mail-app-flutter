@@ -63,6 +63,9 @@ dependencies:
   alarm_service:
     path: alarm_service
 
+  notifications_utils:
+    path: core/notifications_utils
+
 
   #notification
   flutter_local_notifications: 0.8.4+3

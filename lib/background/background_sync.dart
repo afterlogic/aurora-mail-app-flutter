@@ -24,6 +24,7 @@ class BackgroundSync {
 
   Future<bool> sync(bool isBackground) async {
     print("MailSync: sync START");
+    var hasUpdate = false;
     try {
       final users = await _usersDao.getUsers();
 
@@ -32,15 +33,17 @@ class BackgroundSync {
         print("MailSync: sync END");
         if (newMessages.isNotEmpty) {
           if (isBackground == true) {
+            newMessages.sort((a, b) => a.timeStampInUTC.compareTo(b.timeStampInUTC));
             print("MailSync: ${newMessages.length} new message(s)");
-            newMessages.forEach((message) {
-              showNewMessage(message, user);
-            });
+
+            for(final message in newMessages) {
+              await showNewMessage(message, user);
+            }
           } else {
             print("MailSync: Foreground mode, cannot send notifications");
           }
 
-          return true;
+          hasUpdate = true;
         } else {
           print("MailSync: No messages to sync");
         }
@@ -48,7 +51,7 @@ class BackgroundSync {
     } catch (e, s) {
       print("MailSync: ERROR:$e,$s");
     }
-    return false;
+    return hasUpdate;
   }
 
   Future<List<Message>> getNewMessages(User user) async {
@@ -104,8 +107,7 @@ class BackgroundSync {
           folderName: folderToUpdate.fullNameRaw,
           uids: uids.toList(),
         );
-        final newMessageBodies = Mail
-            .getMessageObjFromServerAndUpdateInfoHasBody(
+        final newMessageBodies = Mail.getMessageObjFromServerAndUpdateInfoHasBody(
           rawBodies,
           result.addedMessages,
           user.localId,
@@ -148,24 +150,24 @@ class BackgroundSync {
     return Folder.getFolderObjectsFromDb(outFolder);
   }
 
-  Future<void> initUser() async {
-    final selectedUserId = await _authLocal.getSelectedUserLocalId();
+//  Future<void> initUser() async {
+//    final selectedUserId = await _authLocal.getSelectedUserLocalId();
+//
+//    final futures = [
+//      _usersDao.getUserByLocalId(selectedUserId),
+//      _accountsDao.getAccounts(selectedUserId),
+//    ];
+//
+//    final result = await Future.wait(futures);
+//    final user = result[0] as User;
+//    final accounts = result[1] as List<Account>;
+//    await _authLocal.setSelectedUserLocalId(user.localId);
+//    await _authLocal.setSelectedUserLocalId(accounts[0].localId);
+//    SettingsBloc.isOffline = false;
+//  }
 
-    final futures = [
-      _usersDao.getUserByLocalId(selectedUserId),
-      _accountsDao.getAccounts(selectedUserId),
-    ];
-
-    final result = await Future.wait(futures);
-    final user = result[0] as User;
-    final accounts = result[1] as List<Account>;
-    await _authLocal.setSelectedUserLocalId(user.localId);
-    await _authLocal.setSelectedUserLocalId(accounts[0].localId);
-    SettingsBloc.isOffline = false;
-  }
-
-  void showNewMessage(Message message, User user) async {
+  Future<void> showNewMessage(Message message, User user) async {
     final manager = NotificationManager();
-    manager.showNotification(message, user);
+    return manager.showNotification(message, user);
   }
 }
