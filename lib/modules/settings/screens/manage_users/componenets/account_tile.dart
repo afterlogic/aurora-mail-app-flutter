@@ -33,7 +33,7 @@ class _UserTileState extends State<UserTile> {
       destructibleAction: true,
     );
     if (result == true) {
-      BlocProvider.of<AuthBloc>(context).add(DeleteUser(widget.user.localId));
+      BlocProvider.of<AuthBloc>(context).add(DeleteUser(widget.user));
 //      RestartWidget.restartApp(context);
     }
   }

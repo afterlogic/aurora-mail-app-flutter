@@ -107,7 +107,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   Stream<AuthState> _deleteUser(DeleteUser event) async* {
     await AlarmService.removeAlarm(ALARM_ID);
     try {
-      await _methods.logout(currentUser);
+      await _methods.logout(event.user);
       final users = await _methods.users;
 
       if (users.isNotEmpty) {

@@ -39,12 +39,12 @@ class SelectUser extends AuthEvent {
 }
 
 class DeleteUser extends AuthEvent {
-  final int userLocalId;
+  final User user;
 
-  const DeleteUser(this.userLocalId);
+  const DeleteUser(this.user);
 
   @override
-  List<Object> get props => [userLocalId];
+  List<Object> get props => [user];
 }
 
 class InvalidateCurrentUserToken extends AuthEvent implements AlwaysNonEqualObject {}
