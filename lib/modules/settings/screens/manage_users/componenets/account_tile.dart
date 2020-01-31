@@ -44,7 +44,7 @@ class _UserTileState extends State<UserTile> {
 
     return ListTile(
       key: widget.key,
-      selected: widget.user.localId == currentUser.localId,
+      selected: widget.compact && widget.user.localId == currentUser.localId,
       leading: _buildLeading(),
       title: Text(widget.user.emailFromLogin),
       trailing: widget.compact ? null : IconButton(
