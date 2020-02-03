@@ -14,7 +14,7 @@
     <application
         android:name=".MailApplication"
         android:icon="@mipmap/ic_launcher"
-        android:label="Mail Client">
+        android:label="@string/app_name">
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"

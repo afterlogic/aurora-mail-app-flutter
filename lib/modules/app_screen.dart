@@ -3,7 +3,8 @@ import 'package:aurora_mail/background/background_helper.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/shared_ui/restart_widget.dart';
-import 'package:aurora_mail/theming/app_theme.dart';
+import 'package:aurora_mail/build_property.dart';
+import 'package:theme/app_theme.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
@@ -72,9 +73,9 @@ class _AppState extends State<App> with WidgetsBindingObserver {
 
   ThemeData _getTheme(bool isDarkTheme) {
     if (isDarkTheme == false)
-      return AppTheme.light;
+      return AppTheme.theme;
     else if (isDarkTheme == true)
-      return AppTheme.dark;
+      return AppTheme.darkTheme;
     else
       return null;
   }
@@ -122,11 +123,11 @@ class _AppState extends State<App> with WidgetsBindingObserver {
                           if (settingsState.is24 == null) {
                             _settingsBloc.add(SetTimeFormat(is24));
                           }
-                          return i18n(context, "app_title");
+                          return BuildProperty.appName;
                         },
                         onGenerateRoute: AppNavigation.onGenerateRoute,
-                        theme: theme ?? AppTheme.light,
-                        darkTheme: theme ?? AppTheme.dark,
+                        theme: theme ?? AppTheme.theme,
+                        darkTheme: theme ?? AppTheme.darkTheme,
                         localizationsDelegates: [
                           GlobalMaterialLocalizations.delegate,
                           GlobalWidgetsLocalizations.delegate,

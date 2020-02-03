@@ -99,6 +99,15 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.3.0"
+  build_variant:
+    dependency: "direct dev"
+    description:
+      path: "."
+      ref: HEAD
+      resolved-ref: "3cfc7da5861f4355d90e16a51d1dad59c5024ef1"
+      url: "https://github.com/afterlogic/build_variant"
+    source: git
+    version: "0.0.1"
   built_collection:
     dependency: transitive
     description:
@@ -267,6 +276,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.7.0"
+  flutter_launcher_icons:
+    dependency: "direct dev"
+    description:
+      name: flutter_launcher_icons
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.7.4"
   flutter_local_notifications:
     dependency: "direct main"
     description:
@@ -728,6 +744,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.2.11"
+  theme:
+    dependency: "direct main"
+    description:
+      path: "build_res/natro/theme"
+      relative: true
+    source: path
+    version: "0.0.1"
   timing:
     dependency: transitive
     description:

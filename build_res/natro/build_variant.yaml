@@ -1,0 +1,8 @@
+#variables
+appName: "Natro Mail"
+appId: "com.natro.natro_mail"
+
+background_color: "#FFFFFF"
+splashGradientTop: "#75B8F3"
+splashGradientBottom: "#1A7396"
+multiUserEnable: true

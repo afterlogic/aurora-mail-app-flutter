@@ -1,0 +1,23 @@
+#config
+_files:
+  - pubspec.yaml.yaml
+#  - lib/di/di.dart.temp
+  - android/app/src/main/res/values/.build_res.xml.temp
+  - android/build_variable.properties.temp
+_copy:
+  "{{main_logo}}": "android/app/src/main/res/drawable/main_logo.png"
+_buildPropertyPath: lib/build_property.dart
+#default config
+_buildVariant: "build_res/afterlogic/build_variant.yaml"
+#variables
+appName: ""
+appId: ""
+
+icon: "{{_dir}}/icon.png"
+main_logo: "{{_dir}}/main_logo.png"
+foreground_icon: "{{_dir}}/icon_foreground.png"
+background_color: "#3b3b3b"
+_theme_module: "{{_dir}}/theme"
+
+secureSharingEnable: true
+

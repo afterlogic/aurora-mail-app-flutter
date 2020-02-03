@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/screens/group_view/group_view_route.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/user_selection_popup.dart';
@@ -30,9 +31,10 @@ class ContactsAppBar extends StatelessWidget implements PreferredSizeWidget {
                     Navigator.pushNamed(context, GroupViewRoute.name, arguments: GroupViewScreenArgs(group, bloc));
                   },
                 ),
-              BlocBuilder<SettingsBloc, SettingsState>(
-                builder: (_, state) => UserSelectionPopup((state as SettingsLoaded).users),
-              ),
+              if (BuildProperty.multiUserEnable)
+                BlocBuilder<SettingsBloc, SettingsState>(
+                  builder: (_, state) => UserSelectionPopup((state as SettingsLoaded).users),
+                ),
             ],
           ),
     );

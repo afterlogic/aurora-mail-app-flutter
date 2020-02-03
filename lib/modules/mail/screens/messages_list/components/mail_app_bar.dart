@@ -1,3 +1,4 @@
+import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/user_selection_popup.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
@@ -35,9 +36,10 @@ class MailAppBar extends StatelessWidget implements PreferredSizeWidget {
         },
       ),
       actions: <Widget>[
-        BlocBuilder<SettingsBloc, SettingsState>(
-          builder: (_, state) => UserSelectionPopup((state as SettingsLoaded).users),
-        ),
+        if (BuildProperty.multiUserEnable)
+          BlocBuilder<SettingsBloc, SettingsState>(
+            builder: (_, state) => UserSelectionPopup((state as SettingsLoaded).users),
+          ),
       ],
     );
   }

@@ -1,0 +1,8 @@
+#variables
+appName: "Aurora Mail"
+appId: "com.afterlogic.aurora.mail.aurora_mail"
+
+background_color: "#75B8F3"
+splashGradientTop: "#75B8F3"
+splashGradientBottom: "#1A7396"
+multiUserEnable: false

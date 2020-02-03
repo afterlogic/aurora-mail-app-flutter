@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:aurora_mail/build_property.dart';
 
 class AboutAndroid extends StatefulWidget {
   @override
@@ -67,7 +68,7 @@ class _AboutAndroidState extends State<AboutAndroid> {
                   child: SizedBox(
                     width: 120.0,
                     height: 120.0,
-                    child: Image.asset("assets/images/ic_launcher.png"),
+                    child: Image.asset(BuildProperty.icon),
                   ),
                 ),
                 SizedBox(height: 42.0),

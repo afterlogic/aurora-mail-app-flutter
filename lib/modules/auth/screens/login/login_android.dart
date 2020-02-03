@@ -9,6 +9,7 @@ import 'package:aurora_mail/shared_ui/restart_widget.dart';
 import 'package:aurora_mail/utils/input_validation.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
+import 'package:aurora_mail/build_property.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -172,7 +173,7 @@ class _LoginAndroidState extends State<LoginAndroid> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 32.0),
                 child: Text(
-                  i18n(context, "app_title"),
+                  BuildProperty.appName,
                   style: Theme.of(context).textTheme.display2,
                 ),
               ),

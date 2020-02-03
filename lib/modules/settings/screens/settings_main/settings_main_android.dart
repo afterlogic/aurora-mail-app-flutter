@@ -4,6 +4,7 @@ import 'package:aurora_mail/modules/settings/screens/manage_users/manage_users_r
 import 'package:aurora_mail/modules/settings/screens/sync_settings/sync_settings_route.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/material.dart';
+import 'package:aurora_mail/build_property.dart';
 
 class SettingsMainAndroid extends StatefulWidget {
   @override
@@ -27,11 +28,12 @@ class _SettingsMainAndroidState extends State<SettingsMainAndroid> {
             title: Text(i18n(context, "settings_sync")),
             onTap: () => Navigator.pushNamed(context, SyncSettingsRoute.name),
           ),
-          ListTile(
-            leading: Icon(Icons.account_circle),
-            title: Text(i18n(context, "settings_accounts_manage")),
-            onTap: () => Navigator.pushNamed(context, ManageUsersRoute.name),
-          ),
+          if (BuildProperty.multiUserEnable)
+            ListTile(
+              leading: Icon(Icons.account_circle),
+              title: Text(i18n(context, "settings_accounts_manage")),
+              onTap: () => Navigator.pushNamed(context, ManageUsersRoute.name),
+            ),
           ListTile(
             leading: Icon(Icons.info_outline),
             title: Text(i18n(context, "settings_about")),

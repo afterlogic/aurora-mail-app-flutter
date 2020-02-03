@@ -70,12 +70,25 @@ dependencies:
   #notification
   flutter_local_notifications: 0.8.4+3
 
+  theme:
+    path: build_res/natro/theme
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
   build_runner: ^1.7.3
   moor_generator: ^2.3.1
+  build_variant:
+    git: "https://github.com/afterlogic/build_variant"
+  flutter_launcher_icons: ^0.7.4
+
+flutter_icons:
+  ios: true
+  android: true
+  image_path: build_res/natro/icon.png
+  adaptive_icon_background: "#FFFFFF"
+  adaptive_icon_foreground: build_res/natro/icon_foreground.png
 
 flutter:
   uses-material-design: true
@@ -84,6 +97,8 @@ flutter:
   assets:
     - assets/images/
     - assets/flutter_i18n/
+    - build_res/natro/icon.png
+    - build_res/natro/main_logo.png
 
   fonts:
     - family: WebMailIcons
@@ -95,3 +110,4 @@ flutter:
   #       - asset: fonts/TrajanPro.ttf
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
+
