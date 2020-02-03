@@ -1,4 +1,4 @@
-# aurorafiles
+# aurora mail
 
 A new Flutter project.
 
