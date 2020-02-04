@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 
 enum Freq {
   never,
-  minutes1,
+  minutes30,
   minutes5,
   hours1,
   hours2,
@@ -19,10 +19,10 @@ class SyncFreq {
     switch (freq) {
       case Freq.never:
         return i18n(context, "settings_sync_frequency_never");
-      case Freq.minutes1:
-        return i18n(context, "settings_sync_frequency_minutes1");
       case Freq.minutes5:
         return i18n(context, "settings_sync_frequency_minutes5");
+      case Freq.minutes30:
+        return i18n(context, "settings_sync_frequency_minutes30");
       case Freq.hours1:
         return i18n(context, "settings_sync_frequency_hours1");
       case Freq.hours2:
@@ -40,10 +40,10 @@ class SyncFreq {
     switch (freq) {
       case Freq.never:
         return Duration(seconds: _NEVER_IN_SECONDS);
-      case Freq.minutes1:
-        return Duration(minutes: 1);
       case Freq.minutes5:
         return Duration(minutes: 5);
+      case Freq.minutes30:
+        return Duration(minutes: 30);
       case Freq.hours1:
         return Duration(hours: 1);
       case Freq.hours2:
@@ -61,10 +61,10 @@ class SyncFreq {
     switch (seconds) {
       case _NEVER_IN_SECONDS:
         return Freq.never;
-      case Duration.secondsPerMinute:
-        return Freq.minutes1;
       case Duration.secondsPerMinute * 5:
         return Freq.minutes5;
+      case Duration.secondsPerMinute * 30:
+        return Freq.minutes30;
       case Duration.secondsPerHour:
         return Freq.hours1;
       case Duration.secondsPerHour * 2:

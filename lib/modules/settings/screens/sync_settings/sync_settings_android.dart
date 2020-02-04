@@ -1,5 +1,5 @@
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
-import 'package:aurora_mail/modules/settings/models/sync_duration.dart';
+import 'package:aurora_mail/modules/settings/models/sync_freq.dart';
 import 'package:aurora_mail/modules/settings/models/sync_period.dart';
 import 'package:aurora_mail/modules/settings/screens/sync_settings/components/freq_selection_dialog.dart';
 import 'package:aurora_mail/utils/internationalization.dart';

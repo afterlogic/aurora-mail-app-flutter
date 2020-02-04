@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:aurora_mail/modules/settings/models/sync_duration.dart';
+import 'package:aurora_mail/modules/settings/models/sync_freq.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

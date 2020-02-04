@@ -5,7 +5,7 @@ import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/main.dart' as main;
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/settings_methods.dart';
 import 'package:aurora_mail/modules/settings/models/language.dart';
-import 'package:aurora_mail/modules/settings/models/sync_duration.dart';
+import 'package:aurora_mail/modules/settings/models/sync_freq.dart';
 import 'package:aurora_mail/modules/settings/models/sync_period.dart';
 import 'package:bloc/bloc.dart';
 import 'package:connectivity/connectivity.dart';
