@@ -78,3 +78,5 @@ lib/modules/auth/screens/login/auth_data.dart
 /android/key.jks
 
 android/app/google-services.json
+
+ios/Runner/GoogleService-Info.plist
