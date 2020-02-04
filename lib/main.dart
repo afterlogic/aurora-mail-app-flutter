@@ -1,8 +1,7 @@
-import 'dart:async';
-
 import 'package:alarm_service/alarm_service.dart';
 import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/shared_ui/restart_widget.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 
 import 'background/background_helper.dart';
@@ -10,6 +9,9 @@ import 'background/background_sync.dart';
 import 'modules/app_screen.dart';
 
 void main() {
+  Crashlytics.instance.enableInDevMode = false;
+
+  FlutterError.onError = Crashlytics.instance.recordFlutterError;
   runApp(RestartWidget(child: App()));
   AlarmService.init();
   AlarmService.onAlarm(onAlarm, ALARM_ID);

@@ -229,6 +229,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.4"
+  firebase_crashlytics:
+    dependency: "direct main"
+    description:
+      name: firebase_crashlytics
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.2+5"
   fixnum:
     dependency: transitive
     description:
@@ -747,7 +754,7 @@ packages:
   theme:
     dependency: "direct main"
     description:
-      path: "build_res/natro/theme"
+      path: "build_res/afterlogic/theme"
       relative: true
     source: path
     version: "0.0.1"

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:aurora_mail/database/accounts/accounts_dao.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/folders/folders_dao.dart';
@@ -13,6 +15,8 @@ import 'package:aurora_mail/modules/mail/repository/mail_api.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/modules/settings/models/sync_period.dart';
 import 'package:aurora_mail/notification/notification_manager.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/foundation.dart';
 
 class BackgroundSync {
   final _mailDao = MailDao(DBInstances.appDB);
@@ -48,8 +52,14 @@ class BackgroundSync {
           print("MailSync: No messages to sync");
         }
       }
-    } catch (e, s) {
-      print("MailSync: ERROR:$e,$s");
+    }
+//    on SocketException {
+//
+//    }
+    catch (e, s) {
+      Crashlytics.instance.recordFlutterError(
+        FlutterErrorDetails(exception: e, stack: s),
+      );
     }
     return hasUpdate;
   }

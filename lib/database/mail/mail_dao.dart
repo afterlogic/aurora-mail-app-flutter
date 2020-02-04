@@ -43,7 +43,7 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
     try {
       await into(mail).insertAll(newMessages);
     } catch(err) {
-      print("addMessages err: ${err}");
+//      print("addMessages err: ${err}");
     }
   }
 

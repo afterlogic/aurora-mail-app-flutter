@@ -1,6 +1,6 @@
 #variables
-appName: "Aurora Mail"
-appId: "com.afterlogic.aurora.mail.aurora_mail"
+appName: "Afterlogic Aurora Mail"
+appId: "com.afterlogic.aurora.mail"
 
 background_color: "#75B8F3"
 splashGradientTop: "#75B8F3"

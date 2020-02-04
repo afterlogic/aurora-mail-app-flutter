@@ -58,6 +58,9 @@ dependencies:
   connectivity: ^0.4.6+2
   package_info: ^0.4.0+13
 
+  # crashlytics
+  firebase_crashlytics: ^0.1.2+5
+
   #background
 #  android_alarm_manager: 0.4.5+1 not working
   alarm_service:

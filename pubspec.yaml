@@ -58,6 +58,9 @@ dependencies:
   connectivity: ^0.4.6+2
   package_info: ^0.4.0+13
 
+  # crashlytics
+  firebase_crashlytics: ^0.1.2+5
+
   #background
 #  android_alarm_manager: 0.4.5+1 not working
   alarm_service:
@@ -71,7 +74,7 @@ dependencies:
   flutter_local_notifications: 0.8.4+3
 
   theme:
-    path: build_res/natro/theme
+    path: build_res/afterlogic/theme
 
 dev_dependencies:
   flutter_test:
@@ -86,9 +89,9 @@ dev_dependencies:
 flutter_icons:
   ios: true
   android: true
-  image_path: build_res/natro/icon.png
-  adaptive_icon_background: "#FFFFFF"
-  adaptive_icon_foreground: build_res/natro/icon_foreground.png
+  image_path: build_res/afterlogic/icon.png
+  adaptive_icon_background: "#75B8F3"
+  adaptive_icon_foreground: build_res/afterlogic/icon_foreground.png
 
 flutter:
   uses-material-design: true
@@ -97,8 +100,8 @@ flutter:
   assets:
     - assets/images/
     - assets/flutter_i18n/
-    - build_res/natro/icon.png
-    - build_res/natro/main_logo.png
+    - build_res/afterlogic/icon.png
+    - build_res/afterlogic/main_logo.png
 
   fonts:
     - family: WebMailIcons
