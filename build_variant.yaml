@@ -6,6 +6,7 @@ _files:
   - android/build_variable.properties.temp
 _copy:
   "{{main_logo}}": "android/app/src/main/res/drawable/main_logo.png"
+  "{{google_services}}": "android/app/google-services.json"
 _buildPropertyPath: lib/build_property.dart
 #default config
 _buildVariant: "build_res/afterlogic/build_variant.yaml"
@@ -15,6 +16,7 @@ appId: ""
 
 icon: "{{_dir}}/icon.png"
 main_logo: "{{_dir}}/main_logo.png"
+google_services: "{{_dir}}/google-services.json"
 foreground_icon: "{{_dir}}/icon_foreground.png"
 background_color: "#3b3b3b"
 _theme_module: "{{_dir}}/theme"
