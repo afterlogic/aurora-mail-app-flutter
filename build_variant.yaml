@@ -5,9 +5,11 @@ _files:
   - android/app/src/main/res/values/.build_res.xml.temp
   - build_appbundle.sh.temp
   - android/build_variable.properties.temp
+  - ios/BuildVariable.xcconfig.temp
 _copy:
   "{{main_logo}}": "android/app/src/main/res/drawable/main_logo.png"
   "{{google_services}}": "android/app/google-services.json"
+  "{{key_properties}}": "android/key.properties"
 _buildPropertyPath: lib/build_property.dart
 #default config
 _buildVariant: "build_res/afterlogic/build_variant.yaml"
@@ -18,6 +20,7 @@ appId: ""
 icon: "{{_dir}}/icon.png"
 main_logo: "{{_dir}}/main_logo.png"
 google_services: "{{_dir}}/google-services.json"
+key_properties: "{{_dir}}/key.properties"
 foreground_icon: "{{_dir}}/icon_foreground.png"
 background_color: "#3b3b3b"
 _theme_module: "{{_dir}}/theme"

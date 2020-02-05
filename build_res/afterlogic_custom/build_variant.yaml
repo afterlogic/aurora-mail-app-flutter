@@ -1,6 +1,7 @@
 #variables
 appName: "Aurora Mail Custom"
-appId: "com.afterlogic.aurora.mail.custom"
+_appId: "com.afterlogic.aurora.mail.custom"
+#_iosDeveloperId: ""
 version: 1.0.1+29
 
 background_color: "#FFFFFF"

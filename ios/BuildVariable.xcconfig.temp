@@ -1,0 +1,3 @@
+PRODUCT_NAME = {{appName}}
+PRODUCT_ID = {{_appId}}
+DEVELOPMENT_ID = {{_iosDeveloperId}}
