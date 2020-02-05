@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+flutter build appbundle
+mv build/app/outputs/bundle/release/app.aab build/app/outputs/bundle/release/{{appId}}.{{version}}.aab

@@ -3,6 +3,7 @@ _files:
   - pubspec.yaml.yaml
 #  - lib/di/di.dart.temp
   - android/app/src/main/res/values/.build_res.xml.temp
+  - build_appbundle.sh.temp
   - android/build_variable.properties.temp
 _copy:
   "{{main_logo}}": "android/app/src/main/res/drawable/main_logo.png"

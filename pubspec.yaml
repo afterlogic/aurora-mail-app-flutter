@@ -1,7 +1,7 @@
 name: aurora_mail
 description: Mail client for mobile.
 
-version: 1.0.1+25
+version: 1.0.1+29
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -90,7 +90,7 @@ flutter_icons:
   ios: true
   android: true
   image_path: build_res/afterlogic/icon.png
-  adaptive_icon_background: "#75B8F3"
+  adaptive_icon_background: "#FFFFFF"
   adaptive_icon_foreground: build_res/afterlogic/icon_foreground.png
 
 flutter:
