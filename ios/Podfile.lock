@@ -132,7 +132,7 @@ DEPENDENCIES:
   - esys_flutter_share (from `.symlinks/plugins/esys_flutter_share/ios`)
   - file_picker (from `.symlinks/plugins/file_picker/ios`)
   - firebase_crashlytics (from `.symlinks/plugins/firebase_crashlytics/ios`)
-  - Flutter (from `.symlinks/flutter/ios`)
+  - Flutter (from `.symlinks/flutter/ios-release`)
   - flutter_downloader (from `.symlinks/plugins/flutter_downloader/ios`)
   - flutter_keyboard_visibility (from `.symlinks/plugins/flutter_keyboard_visibility/ios`)
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
@@ -183,7 +183,7 @@ EXTERNAL SOURCES:
   firebase_crashlytics:
     :path: ".symlinks/plugins/firebase_crashlytics/ios"
   Flutter:
-    :path: ".symlinks/flutter/ios"
+    :path: ".symlinks/flutter/ios-release"
   flutter_downloader:
     :path: ".symlinks/plugins/flutter_downloader/ios"
   flutter_keyboard_visibility:
