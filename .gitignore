@@ -82,6 +82,7 @@ android/app/google-services.json
 ios/Runner/GoogleService-Info.plist
 
 build_res/**/google-services.json
+build_res/**/GoogleService-Info.plist
 
 build_res/**/key.properties
 
