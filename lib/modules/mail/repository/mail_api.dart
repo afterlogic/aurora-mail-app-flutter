@@ -219,8 +219,8 @@ class MailApi {
 
     uploader.result.listen((result) {
       final res = json.decode(result.response);
-      if (res is Map) {
-        final attachment = res["Attachment"];
+      if (res is Map && res["Result"] is Map && res["Result"]["Attachment"] is Map) {
+        final attachment = res["Result"]["Attachment"];
         final composeAttachment = ComposeAttachment.fromNetwork(attachment as Map);
         assert(tempAttachment != null && tempAttachment.guid is String);
         composeAttachment.guid = tempAttachment.guid;
@@ -229,6 +229,7 @@ class MailApi {
         onError(WebMailApiError(res));
       }
     }, onError: (err) {
+      onError(WebMailApiError(err));
       print("Attachment upload error: $err");
     });
   }
