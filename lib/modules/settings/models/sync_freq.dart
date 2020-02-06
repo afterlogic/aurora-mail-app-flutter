@@ -3,8 +3,8 @@ import 'package:flutter/cupertino.dart';
 
 enum Freq {
   never,
-  minutes30,
   minutes5,
+  minutes30,
   hours1,
   hours2,
   daily,

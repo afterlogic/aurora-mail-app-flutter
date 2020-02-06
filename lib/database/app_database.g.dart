@@ -3520,7 +3520,7 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
       _syncFreqInSeconds ??= _constructSyncFreqInSeconds();
   GeneratedIntColumn _constructSyncFreqInSeconds() {
     return GeneratedIntColumn('sync_freq_in_seconds', $tableName, true,
-        defaultValue: Constant(60));
+        defaultValue: Constant(300));
   }
 
   final VerificationMeta _syncPeriodMeta = const VerificationMeta('syncPeriod');
