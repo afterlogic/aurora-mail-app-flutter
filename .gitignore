@@ -75,10 +75,10 @@
 android/key.properties
 
 lib/modules/auth/screens/login/auth_data.dart
-/android/key.jks
+*.jks
 
 android/app/google-services.json
-
+android/build_variable.properties
 ios/Runner/GoogleService-Info.plist
 
 build_res/**/google-services.json
@@ -109,6 +109,8 @@ android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
 android/app/src/main/res/values/build_res.xml
 
 build_appbundle.sh
+
+ios/BuildVariable.xcconfig
 
 ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-1024x1024\@1x.png
 
