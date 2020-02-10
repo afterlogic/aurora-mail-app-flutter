@@ -54,24 +54,16 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
     super.dispose();
     BackgroundHelper.removeOnEndAlarmObserver(onEndAlarm);
     _messagesListBloc.close();
-    _mailBloc.close();
   }
 
   void _initBlocs() {
     final authBloc = BlocProvider.of<AuthBloc>(context);
+    _mailBloc = BlocProvider.of<MailBloc>(context);
+    _contactsBloc = BlocProvider.of<ContactsBloc>(context);
 
     _messagesListBloc = new MessagesListBloc(
       user: authBloc.currentUser,
       account: authBloc.currentAccount,
-    );
-
-    _mailBloc = new MailBloc(
-      user: authBloc.currentUser,
-      account: authBloc.currentAccount,
-    );
-    _contactsBloc = new ContactsBloc(
-      user: authBloc.currentUser,
-      appDatabase: DBInstances.appDB,
     );
 
     _contactsBloc.add(GetContacts());
@@ -218,9 +210,9 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
           ),
         ),
         bottomNavigationBar: MailBottomAppBar(selectedRoute: MailBottomAppBarRoutes.mail),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         floatingActionButton: FloatingActionButton(
-          child: Icon(MdiIcons.emailPlusOutline),
+          child: Icon(MdiIcons.pen),
           onPressed: () => Navigator.pushNamed(context, ComposeRoute.name,
               arguments: ComposeScreenArgs(
                 mailBloc: _mailBloc,
@@ -273,9 +265,10 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
                 );
               },
               separatorBuilder: (_, i) => Divider(
-                height: 0.0,
+                height: 3.0,
                 indent: 16.0,
                 endIndent: 16.0,
+                color: Colors.transparent,
               ),
             );
           } else {

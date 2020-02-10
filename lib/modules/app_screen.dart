@@ -1,4 +1,7 @@
 import 'package:aurora_mail/background/background_helper.dart';
+import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
+import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
@@ -113,8 +116,16 @@ class _AppState extends State<App> with WidgetsBindingObserver {
 
                     return MultiBlocProvider(
                       providers: [
-                        BlocProvider<AuthBloc>.value(value: _authBloc),
-                        BlocProvider<SettingsBloc>.value(value: _settingsBloc),
+                        BlocProvider.value(value: _authBloc),
+                        BlocProvider.value(value: _settingsBloc),
+                        BlocProvider(create: (_) => new MailBloc(
+                          user: authState.user,
+                          account: _authBloc.currentAccount,
+                        )),
+                        BlocProvider(create: (_) => new ContactsBloc(
+                          user: authState.user,
+                          appDatabase: DBInstances.appDB,
+                        )),
                       ],
                       child: MaterialApp(
                         navigatorKey: _navKey,

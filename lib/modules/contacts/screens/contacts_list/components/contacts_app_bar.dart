@@ -8,6 +8,7 @@ import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class ContactsAppBar extends StatelessWidget implements PreferredSizeWidget {
 
@@ -21,6 +22,10 @@ class ContactsAppBar extends StatelessWidget implements PreferredSizeWidget {
     return BlocBuilder<ContactsBloc, ContactsState>(
       builder: (context, state) =>
           AppBar(
+            leading: IconButton(
+              icon: Icon(MdiIcons.sortVariant),
+              onPressed: Scaffold.of(context).openDrawer,
+            ),
             title: _buildTitle(context, state),
             actions: <Widget>[
               if (state.selectedGroup != null)

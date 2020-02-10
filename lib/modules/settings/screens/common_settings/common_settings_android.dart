@@ -26,6 +26,7 @@ class _CommonSettingsAndroidState extends State<CommonSettingsAndroid> {
   Widget build(BuildContext context) {
     // ignore: close_sinks
     final bloc = BlocProvider.of<SettingsBloc>(context);
+    final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBar(title: Text(i18n(context, "settings_common"))),
       body: BlocBuilder<SettingsBloc, SettingsState>(
@@ -36,7 +37,10 @@ class _CommonSettingsAndroidState extends State<CommonSettingsAndroid> {
                 SwitchListTile.adaptive(
                   title: Row(
                     children: <Widget>[
-                      Icon(Icons.access_time, color: Theme.of(context).disabledColor,),
+                      Icon(
+                        Icons.access_time,
+                        color: theme.brightness == Brightness.light ? Colors.black45 : null,
+                      ),
                       SizedBox(width: 30.0),
                       Expanded(
                         child: Text(i18n(context, "settings_24_time_format"),

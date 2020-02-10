@@ -117,7 +117,7 @@ class _ContactsListAndroidState extends State<ContactsListAndroid> {
       ),
       bottomNavigationBar: MailBottomAppBar(
           selectedRoute: MailBottomAppBarRoutes.contacts),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: FloatingActionButton(
         child: Icon(MdiIcons.accountPlusOutline),
         onPressed: () =>
