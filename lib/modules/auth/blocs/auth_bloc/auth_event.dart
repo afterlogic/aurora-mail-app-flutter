@@ -47,4 +47,10 @@ class DeleteUser extends AuthEvent {
   List<Object> get props => [user];
 }
 
-class InvalidateCurrentUserToken extends AuthEvent implements AlwaysNonEqualObject {}
+class LogOut extends AuthEvent {
+  @override
+  List<Object> get props => [hashCode];
+}
+
+class InvalidateCurrentUserToken extends AuthEvent
+    implements AlwaysNonEqualObject {}
