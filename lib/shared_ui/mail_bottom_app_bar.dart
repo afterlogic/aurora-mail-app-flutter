@@ -6,8 +6,9 @@ import 'package:aurora_mail/modules/settings/screens/settings_main/settings_main
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
-enum MailBottomAppBarRoutes { mail, contacts }
+enum MailBottomAppBarRoutes { mail, contacts, settings }
 
 class MailBottomAppBar extends StatelessWidget {
   final MailBottomAppBarRoutes selectedRoute;
@@ -22,7 +23,8 @@ class MailBottomAppBar extends StatelessWidget {
       context,
       ContactsListRoute.name,
       arguments: ContactsListScreenArgs(
-          mailBloc: mailBloc, contactsBloc: contactsBloc),
+        mailBloc: mailBloc, contactsBloc: contactsBloc,
+      ),
     );
   }
 
@@ -31,40 +33,48 @@ class MailBottomAppBar extends StatelessWidget {
   }
 
   void _openSettings(BuildContext context) {
-    Navigator.pushNamed(context, SettingsMainRoute.name);
+    Navigator.pushReplacementNamed(context, SettingsMainRoute.name);
   }
 
   @override
   Widget build(BuildContext context) {
+    final iconSize = 28.0;
     return BottomAppBar(
-      shape: CircularNotchedRectangle(),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
-          SizedBox(width: 12.0),
-          IconButton(
-            icon: Icon(Icons.settings),
-            tooltip: i18n(context, "messages_list_app_bar_settings"),
-            onPressed: () => _openSettings(context),
-          ),
           IconButton(
             icon: Icon(
-              Icons.email,
+              MdiIcons.emailOutline,
               color: selectedRoute == MailBottomAppBarRoutes.mail
                   ? Theme.of(context).accentColor
                   : null,
             ),
             tooltip: i18n(context, "messages_list_app_bar_mail"),
+            iconSize: iconSize,
             onPressed: () => _openMail(context),
           ),
           IconButton(
             icon: Icon(
-              Icons.contact_mail,
+              MdiIcons.contactMailOutline,
               color: selectedRoute == MailBottomAppBarRoutes.contacts
                   ? Theme.of(context).accentColor
                   : null,
             ),
             tooltip: i18n(context, "messages_list_app_bar_contacts"),
+            iconSize: iconSize,
             onPressed: () => _openContacts(context),
+          ),
+          IconButton(
+            icon: Icon(
+              MdiIcons.settingsOutline,
+              color: selectedRoute == MailBottomAppBarRoutes.settings
+                  ? Theme.of(context).accentColor
+                  : null,
+            ),
+            tooltip: i18n(context, "messages_list_app_bar_settings"),
+            iconSize: iconSize,
+            onPressed: () => _openSettings(context),
           ),
         ],
       ),

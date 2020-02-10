@@ -5,6 +5,7 @@ import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class MailAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
@@ -15,6 +16,11 @@ class MailAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      centerTitle: true,
+      leading: IconButton(
+        icon: Icon(MdiIcons.sortVariant),
+        onPressed: Scaffold.of(context).openDrawer,
+      ),
       title: BlocBuilder<MailBloc, MailState>(
         bloc: BlocProvider.of<MailBloc>(context),
         condition: (_, state) =>

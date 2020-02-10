@@ -58,7 +58,7 @@ class _StarState extends State<Star> with TickerProviderStateMixin {
           scale: 1 + _scaleAnimation.value / 4,
           child: IconButton(
             padding: EdgeInsets.zero,
-            icon: Icon(Icons.star, color: Colors.amber),
+            icon: Icon(Icons.star, color: Color(0xFFFDCC25)),
             onPressed: widget.enabled ? () => _setStarred(false) : null,
           ));
     } else {
