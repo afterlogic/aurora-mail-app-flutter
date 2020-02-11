@@ -20,7 +20,10 @@ class _SettingsMainAndroidState extends State<SettingsMainAndroid> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(i18n(context, "settings"))),
+      appBar: AppBar(
+        title: Text(i18n(context, "settings")),
+        centerTitle: true,
+      ),
       body: ListView(
         children: <Widget>[
           ListTile(

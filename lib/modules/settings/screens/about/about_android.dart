@@ -47,7 +47,7 @@ class _AboutAndroidState extends State<AboutAndroid> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(i18n(context, "settings_about"))),
+      appBar: AppBar(title: Text(i18n(context, "settings_about")), centerTitle: true,),
       body: loading
           ? Center(child: CircularProgressIndicator())
           : Column(

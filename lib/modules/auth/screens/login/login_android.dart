@@ -106,6 +106,7 @@ class _LoginAndroidState extends State<LoginAndroid> {
     return Scaffold(
       appBar: widget.isDialog
           ? AppBar(
+              centerTitle: true,
               title: Text(i18n(
                   context,
                   widget.email == null

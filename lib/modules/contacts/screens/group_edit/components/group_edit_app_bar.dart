@@ -16,6 +16,7 @@ class GroupEditAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       title: Text(i18n(context, isEdit ? "contacts_group_edit" : "contacts_group_add")),
+      centerTitle: true,
       actions: <Widget>[
         IconButton(
           icon: Icon(Icons.save),

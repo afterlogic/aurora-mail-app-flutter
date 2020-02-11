@@ -1,5 +1,6 @@
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
+import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -16,8 +17,8 @@ class MailFolder extends StatelessWidget {
       this.children})
       : super(key: key);
 
-  IconData _getFolderIcon(FolderType type) {
-    switch (type) {
+  IconData get _folderIcon {
+    switch (mailFolder.folderType) {
       case FolderType.inbox:
         return Icons.inbox;
       case FolderType.sent:
@@ -42,6 +43,23 @@ class MailFolder extends StatelessWidget {
         return Icons.device_unknown;
       default:
         return null;
+    }
+  }
+
+  String _getTitle(BuildContext context) {
+    switch (mailFolder.folderType) {
+      case FolderType.inbox:
+        return i18n(context, "folders_inbox");
+      case FolderType.sent:
+        return i18n(context, "folders_sent");
+      case FolderType.drafts:
+        return i18n(context, "folders_drafts");
+      case FolderType.spam:
+        return i18n(context, "folders_spam");
+      case FolderType.trash:
+        return i18n(context, "folders_trash");
+      default:
+        return mailFolder.name;
     }
   }
 
@@ -81,8 +99,8 @@ class MailFolder extends StatelessWidget {
         children: <Widget>[
           ListTile(
             selected: isSelected,
-            leading: Icon(_getFolderIcon(mailFolder.folderType)),
-            title: Text(mailFolder.name),
+            leading: Icon(_folderIcon),
+            title: Text(_getTitle(context)),
             trailing: _buildMessageCounter(context),
             onTap: () => _selectFolder(context),
           ),
