@@ -3,6 +3,7 @@
   "login_input_host": "Sunucu",
   "login_input_email": "E-posta",
   "login_input_password": "Şifre",
+  "login_to_continue": "Log in to continue",
   "folders_empty": "Klasör yok",
   "folders_starred": "Yıldızlı",
   "messages_reply": "Yanıtla",

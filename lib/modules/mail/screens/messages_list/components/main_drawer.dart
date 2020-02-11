@@ -29,9 +29,7 @@ class _MainDrawerState extends State<MainDrawer> {
     return Drawer(
       child: ListTileTheme(
         style: ListTileStyle.drawer,
-        selectedColor: Theme.of(context).iconTheme.color,
-        textColor: Theme.of(context).disabledColor,
-        iconColor: Theme.of(context).disabledColor,
+        selectedColor: Theme.of(context).accentColor,
         child: SafeArea(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

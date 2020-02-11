@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/auth_input.dart';
+import 'package:aurora_mail/modules/auth/screens/login/components/presentation_header.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/shared_ui/app_button.dart';
@@ -18,6 +19,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import 'auth_data.dart';
+import 'components/mail_logo.dart';
 
 class LoginAndroid extends StatefulWidget {
   static final _authFormKey = GlobalKey<FormState>();
@@ -83,18 +85,8 @@ class _LoginAndroidState extends State<LoginAndroid> {
   }
 
   void _login(BuildContext context) {
-    if (Platform.isIOS) {
-      if (_showHostField && hostCtrl.text.isEmpty) {
-        return _showError(context, i18n(context, "error_login_input_hostname"));
-      } else if (emailCtrl.text.isEmpty) {
-        return _showError(context, i18n(context, "error_login_input_email"));
-      } else if (passwordCtrl.text.isEmpty) {
-        return _showError(context, i18n(context, "error_login_input_password"));
-      }
-    } else {
-      final isValid = LoginAndroid._authFormKey.currentState.validate();
-      if (!isValid) return;
-    }
+    final isValid = LoginAndroid._authFormKey.currentState.validate();
+    if (!isValid) return;
 
     // else
     SystemChannels.textInput.invokeMethod('TextInput.hide');
@@ -120,11 +112,7 @@ class _LoginAndroidState extends State<LoginAndroid> {
 
             if (state is NeedsHost) {
               setState(() => _showHostField = true);
-              showSnack(
-                context: context,
-                scaffoldState: Scaffold.of(context),
-                duration: Duration(seconds: 6),
-                msg: i18n(context, "error_login_auto_discover"),
+              _showError(context, i18n(context, "error_login_auto_discover"),
               );
             }
             if (state is LoggedIn) {
@@ -162,63 +150,66 @@ class _LoginAndroidState extends State<LoginAndroid> {
   }
 
   Widget _buildLoginForm(BuildContext context, {bool loading = false}) {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 22.0),
-      child: Form(
-        key: LoginAndroid._authFormKey,
-        child: Column(
-          mainAxisAlignment: widget.isDialog ? MainAxisAlignment.start : MainAxisAlignment.center,
-          children: <Widget>[
-            if (!widget.isDialog)
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 32.0),
-                child: Text(
-                  BuildProperty.appName,
-                  style: Theme.of(context).textTheme.display2,
+    return Stack(
+      children: <Widget>[
+        if (!widget.isDialog)
+          Positioned(
+            top: -70.0,
+            left: -70.0,
+            child: MailLogo(isBackground: true),
+          ),
+        Container(
+          margin: EdgeInsets.symmetric(horizontal: 22.0),
+          child: Form(
+            key: LoginAndroid._authFormKey,
+            child: Column(
+              mainAxisAlignment: widget.isDialog ? MainAxisAlignment.start : MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                if (!widget.isDialog)
+                  PresentationHeader(appName: BuildProperty.appName),
+                Column(
+                  children: <Widget>[
+                    if (_showHostField)
+                      AuthInput(
+                        controller: hostCtrl,
+                        label: i18n(context, "login_input_host"),
+                        keyboardType: TextInputType.url,
+                        isEnabled: !loading,
+                      ),
+                    SizedBox(height: 10),
+                    AuthInput(
+                      controller: emailCtrl,
+                      label: i18n(context, "login_input_email"),
+                      keyboardType: TextInputType.emailAddress,
+                      validator: (value) => validateInput(context, value, [ValidationType.empty, ValidationType.email]),
+                      isEnabled: !loading,
+                    ),
+                    SizedBox(height: 10),
+                    AuthInput(
+                      controller: passwordCtrl,
+                      label: i18n(context, "login_input_password"),
+                      validator: (value) => validateInput(context, value, [ValidationType.empty]),
+                      isPassword: true,
+                      isEnabled: !loading,
+                    ),
+                  ],
                 ),
-              ),
-            if (!widget.isDialog)
-            SizedBox(height: 70.0),
-            if (_showHostField)
-              AuthInput(
-                controller: hostCtrl,
-                label: i18n(context, "login_input_host"),
-                iconForIOS: MdiIcons.web,
-                keyboardType: TextInputType.url,
-                isEnabled: !loading,
-              ),
-            SizedBox(height: 10),
-            AuthInput(
-              controller: emailCtrl,
-              label: i18n(context, "login_input_email"),
-              iconForIOS: Icons.email,
-              keyboardType: TextInputType.emailAddress,
-              validator: (value) => validateInput(context, value, [ValidationType.empty, ValidationType.email]),
-              isEnabled: !loading,
+                if (widget.isDialog)
+                  SizedBox(height: 40.0),
+                SizedBox(
+                  width: double.infinity,
+                  child: AppButton(
+                    text: i18n(context, widget.isDialog ? "btn_add_account" : "btn_login"),
+                    isLoading: loading,
+                    onPressed: () => _login(context),
+                  ),
+                ),
+              ],
             ),
-            SizedBox(height: 10),
-            AuthInput(
-              controller: passwordCtrl,
-              label: i18n(context, "login_input_password"),
-              iconForIOS: Icons.lock,
-              validator: (value) => validateInput(context, value, [ValidationType.empty]),
-              isPassword: true,
-              isEnabled: !loading,
             ),
-            SizedBox(height: 40.0),
-            SizedBox(
-              width: double.infinity,
-              child: AppButton(
-                text: i18n(context, widget.isDialog ? "btn_add_account" : "btn_login"),
-                buttonColor: Theme.of(context).accentColor,
-                textColor: Colors.white,
-                isLoading: loading,
-                onPressed: () => _login(context),
-              ),
-            ),
-          ],
         ),
-        ),
+      ],
     );
   }
 }

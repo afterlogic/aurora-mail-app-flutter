@@ -27,9 +27,7 @@ class _ContactsDrawerState extends State<ContactsDrawer> {
   Widget build(BuildContext context) {
     return Drawer(
       child: ListTileTheme(
-        selectedColor: Theme.of(context).iconTheme.color,
-        textColor: Theme.of(context).disabledColor,
-        iconColor: Theme.of(context).disabledColor,
+        selectedColor: Theme.of(context).accentColor,
         style: ListTileStyle.drawer,
         child: SafeArea(
           child: BlocBuilder<ContactsBloc, ContactsState>(builder: (context, state) {
@@ -54,7 +52,7 @@ class _ContactsDrawerState extends State<ContactsDrawer> {
                         style: TextStyle(color: Theme.of(context).disabledColor),
                       ),
                       IconButton(
-                        icon: Icon(Icons.add),
+                        icon: Icon(Icons.add, color: Theme.of(context).accentColor),
                         onPressed: _addGroup,
                       ),
                     ],
