@@ -9,6 +9,13 @@ class AppTheme {
     accentColor: _appColor,
     disabledColor: Colors.black.withOpacity(0.3),
     scaffoldBackgroundColor: Colors.white,
+    textTheme: TextTheme(
+      display1: TextStyle(
+        color: Colors.black,
+        fontSize: 32.0,
+        fontWeight: FontWeight.w500,
+      ),
+    ),
     appBarTheme: AppBarTheme(
       brightness: Brightness.light,
       color: Colors.white,
@@ -35,6 +42,14 @@ class AppTheme {
       primaryColor: _appColor,
       accentColor: _appColor,
       disabledColor: Colors.white.withOpacity(0.3),
+      scaffoldBackgroundColor: Color(0xFF1A1A1A),
+      textTheme: TextTheme(
+        display1: TextStyle(
+          color: Colors.white,
+          fontSize: 32.0,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
       appBarTheme: AppBarTheme(
         brightness: Brightness.dark,
         color: Colors.black,

@@ -3,6 +3,7 @@
   "login_input_host": "Host",
   "login_input_email": "Email",
   "login_input_password": "Password",
+  "login_to_continue": "Log in to continue",
   "folders_empty": "No folders",
   "folders_starred": "Starred",
   "messages_reply": "Reply",

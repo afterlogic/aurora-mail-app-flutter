@@ -1,7 +1,5 @@
 import 'dart:async';
 
-import 'package:aurora_mail/build_property.dart';
-import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
@@ -36,9 +34,7 @@ class _MainDrawerState extends State<MainDrawer> {
     return Drawer(
       child: ListTileTheme(
         style: ListTileStyle.drawer,
-        selectedColor: theme.iconTheme.color,
-        textColor: theme.disabledColor,
-        iconColor: theme.disabledColor,
+        selectedColor: Theme.of(context).accentColor,
         child: SafeArea(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
