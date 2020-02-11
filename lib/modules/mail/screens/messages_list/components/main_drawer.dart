@@ -52,7 +52,7 @@ class _MainDrawerState extends State<MainDrawer> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       Text(
-                        authBloc.currentAccount.friendlyName + "Petr",
+                        authBloc.currentAccount.friendlyName,
                         style: theme.textTheme.title,
                       ),
                       SizedBox(height: 8.0),
