@@ -242,5 +242,9 @@
   "you_have_new_message": "You have {s1} {s2}",
   "compose_reply_date_format": "EEE, MMM d, yyyy 'at' HH:mm",
   "contacts_birth_date_format": "MMM d, yyyy",
-  "formatting_yesterday": "Yesterday"
+  "formatting_yesterday": "Yesterday",
+  "two_factor_auth": "Your account is protected with\nTwo Factor Authentication.\nPlease provide the PIN code.",
+  "pin": "PIN",
+  "verify_pin": "Verify pin",
+  "invalid_pin": "Invalid PIN"
 }

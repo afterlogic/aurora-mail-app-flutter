@@ -1,3 +1,4 @@
+import 'package:aurora_mail/modules/auth/screens/two_factor_auth/two_factor_auth_widget.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/screens/contact_edit/contact_edit_android.dart';
 import 'package:aurora_mail/modules/contacts/screens/contact_edit/contact_edit_route.dart';
@@ -31,6 +32,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'auth/screens/login/login_android.dart';
 import 'auth/screens/login/login_route.dart';
+import 'auth/screens/two_factor_auth/two_factor_auth_route.dart';
 import 'mail/blocs/mail_bloc/mail_bloc.dart';
 import 'mail/screens/messages_list/messages_list_android.dart';
 import 'mail/screens/messages_list/messages_list_route.dart';
@@ -42,25 +44,39 @@ class AppNavigation {
       // ================= AUTH =================
 
       case LoginRoute.name:
-      final args = settings.arguments as LoginRouteScreenArgs;
+        final args = settings.arguments as LoginRouteScreenArgs;
 
-      if (args != null && args.isDialog == true) {
-        return CupertinoPageRoute(
-          settings: RouteSettings(
-            name: settings.name,
-          ),
-          fullscreenDialog: true,
-          builder: (_) => LoginAndroid(isDialog: args.isDialog, email: args.email),
-        );
-      } else {
+        if (args != null && args.isDialog == true) {
+          return CupertinoPageRoute(
+            settings: RouteSettings(
+              name: settings.name,
+            ),
+            fullscreenDialog: true,
+            builder: (_) =>
+                LoginAndroid(isDialog: args.isDialog, email: args.email),
+          );
+        } else {
+          return FadeRoute(
+            settings: RouteSettings(
+              name: settings.name,
+            ),
+            builder: (_) => LoginAndroid(),
+          );
+        }
+        break;
+      case TwoFactorAuthRoute.name:
+        final args = settings.arguments as TwoFactorAuthRouteArgs;
+
         return FadeRoute(
           settings: RouteSettings(
             name: settings.name,
           ),
-          builder: (_) => LoginAndroid(),
+          builder: (_) => TwoFactorAuthWidget(
+            args: args,
+          ),
         );
-      }
-      break;
+
+        break;
 
       // ================= MAIL =================
 
@@ -76,10 +92,11 @@ class AppNavigation {
         return CupertinoPageRoute(
             settings: RouteSettings(name: settings.name),
             builder: (_) => MultiBlocProvider(providers: [
-              BlocProvider<MailBloc>.value(value: args.mailBloc),
-              BlocProvider<MessagesListBloc>.value(value: args.messagesListBloc),
-              BlocProvider<ContactsBloc>.value(value: args.contactsBloc),
-            ], child: MessageViewAndroid(args.messages, args.initialPage)));
+                  BlocProvider<MailBloc>.value(value: args.mailBloc),
+                  BlocProvider<MessagesListBloc>.value(
+                      value: args.messagesListBloc),
+                  BlocProvider<ContactsBloc>.value(value: args.contactsBloc),
+                ], child: MessageViewAndroid(args.messages, args.initialPage)));
         break;
 
       case ComposeRoute.name:
@@ -87,8 +104,7 @@ class AppNavigation {
         return MaterialPageRoute(
             settings: RouteSettings(name: settings.name),
             fullscreenDialog: true,
-            builder: (_) =>
-                MultiBlocProvider(
+            builder: (_) => MultiBlocProvider(
                   providers: [
                     BlocProvider<MailBloc>.value(value: args.mailBloc),
                     BlocProvider<ContactsBloc>.value(value: args.contactsBloc),
@@ -104,12 +120,12 @@ class AppNavigation {
         return FadeRoute(
             settings: RouteSettings(name: settings.name),
             builder: (_) => MultiBlocProvider(
-              providers: [
-                BlocProvider<MailBloc>.value(value: args.mailBloc),
-                BlocProvider<ContactsBloc>.value(value: args.contactsBloc),
-              ],
-              child: ContactsListAndroid(),
-            ));
+                  providers: [
+                    BlocProvider<MailBloc>.value(value: args.mailBloc),
+                    BlocProvider<ContactsBloc>.value(value: args.contactsBloc),
+                  ],
+                  child: ContactsListAndroid(),
+                ));
         break;
 
       case ContactViewRoute.name:
@@ -117,12 +133,12 @@ class AppNavigation {
         return CupertinoPageRoute(
             settings: RouteSettings(name: settings.name),
             builder: (_) => MultiBlocProvider(
-              providers: [
-                BlocProvider<MailBloc>.value(value: args.mailBloc),
-                BlocProvider<ContactsBloc>.value(value: args.contactsBloc),
-              ],
-              child: ContactViewAndroid(args.contact, args.scaffoldState),
-            ));
+                  providers: [
+                    BlocProvider<MailBloc>.value(value: args.mailBloc),
+                    BlocProvider<ContactsBloc>.value(value: args.contactsBloc),
+                  ],
+                  child: ContactViewAndroid(args.contact, args.scaffoldState),
+                ));
         break;
 
       case ContactEditRoute.name:
@@ -131,7 +147,8 @@ class AppNavigation {
             settings: RouteSettings(name: settings.name),
             fullscreenDialog: true,
             builder: (_) => BlocProvider<ContactsBloc>.value(
-                value: args.bloc, child: ContactEditAndroid(contact: args?.contact)));
+                value: args.bloc,
+                child: ContactEditAndroid(contact: args?.contact)));
         break;
 
       case GroupViewRoute.name:
@@ -188,8 +205,8 @@ class AppNavigation {
       default:
         return CupertinoPageRoute(
             builder: (_) => Scaffold(
-          body: Text('No route defined for ${settings.name}'),
-        ));
+                  body: Text('No route defined for ${settings.name}'),
+                ));
     }
   }
 }

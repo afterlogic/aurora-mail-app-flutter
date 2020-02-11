@@ -51,9 +51,11 @@ class WebMailApi {
 
     final res = json.decode(rawResponse.body);
 
-    if (res["Result"] != null && res["Result"] != false) {
-      if (getRawResponse) return res;
-      else return res["Result"];
+    if (res["Result"] != null && (res["Result"] != false || getRawResponse)) {
+      if (getRawResponse)
+        return res;
+      else
+        return res["Result"];
     } else {
       print("WebMailApiError: $res");
 

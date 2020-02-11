@@ -10,7 +10,7 @@ class AppButton extends StatelessWidget {
     Key key,
     this.isLoading,
     @required this.onPressed,
-    this.text,
+    @required this.text,
   }) : super(key: key);
 
   @override
@@ -23,7 +23,10 @@ class AppButton extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(50.0),
           boxShadow: [
-            BoxShadow(color: Theme.of(context).accentColor.withOpacity(0.8), blurRadius: 8.0, offset: Offset(0.0, 3.0))
+            BoxShadow(
+                color: Theme.of(context).accentColor.withOpacity(0.8),
+                blurRadius: 8.0,
+                offset: Offset(0.0, 3.0))
           ],
         ),
         child: Material(
@@ -36,16 +39,21 @@ class AppButton extends StatelessWidget {
               padding: const EdgeInsets.all(0.0),
               child: AnimatedSwitcher(
                 duration: Duration(milliseconds: 100),
-                child: isLoading == true ? SizedBox(
-                  height: 24.0,
-                  width: 24.0,
-                  child: CircularProgressIndicator(
-                      strokeWidth: 3.0,
-                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white)),
-                )
-                    : Text(text, style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+                child: isLoading == true
+                    ? SizedBox(
+                        height: 24.0,
+                        width: 24.0,
+                        child: CircularProgressIndicator(
+                            strokeWidth: 3.0,
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.white)),
+                      )
+                    : Text(
+                        text,
+                        style: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.w500),
+                      ),
               ),
-            ),
             ),
           ),
         ),

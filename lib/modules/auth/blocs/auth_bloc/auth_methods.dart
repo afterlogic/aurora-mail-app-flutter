@@ -68,14 +68,18 @@ class AuthMethods {
 
     final newUser = await _authApi.login(email, password, hostname);
 
-    User userToReturn = await _usersDao.getUserByEmail(newUser.emailFromLogin);
+    return newUser;
+  }
+
+  Future<User> setUser(User user) async {
+    User userToReturn = await _usersDao.getUserByEmail(user.emailFromLogin);
 
     if (userToReturn == null) {
-      await _usersDao.addUser(newUser);
-      userToReturn = await _usersDao.getUserByEmail(newUser.emailFromLogin);
+      await _usersDao.addUser(user);
+      userToReturn = await _usersDao.getUserByEmail(user.emailFromLogin);
     }
     selectUser(userToReturn.localId);
-    _authLocal.setLastEmail(email);
+    _authLocal.setLastEmail(user.emailFromLogin);
     return userToReturn;
   }
 
@@ -133,7 +137,7 @@ class AuthMethods {
   }
 
   Future selectAccount(Account account) {
-   return _authLocal.setSelectedAccountId(account.localId);
+    return _authLocal.setSelectedAccountId(account.localId);
   }
 }
 
