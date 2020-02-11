@@ -48,7 +48,10 @@ class _SettingsMainAndroidState extends State<SettingsMainAndroid> {
             ListTile(
               leading: Icon(Icons.exit_to_app),
               title: Text(i18n(context, "messages_list_app_bar_logout")),
-              onTap: () => BlocProvider.of<AuthBloc>(context).add(LogOut()),
+              onTap: () {
+                final authBloc = BlocProvider.of<AuthBloc>(context);
+                authBloc.add(DeleteUser(authBloc.currentUser));
+              },
             ),
         ],
       ),

@@ -30,9 +30,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     if (event is LogIn) yield* _login(event);
     if (event is SelectUser) yield* _selectUser(event);
     if (event is DeleteUser) yield* _deleteUser(event);
-    if (event is LogOut) yield* _logOut();
-    if (event is InvalidateCurrentUserToken)
-      yield* _invalidateCurrentUserToken(event);
+    if (event is InvalidateCurrentUserToken) yield* _invalidateCurrentUserToken(event);
   }
 
   Stream<AuthState> _initUserAndAccounts(InitUserAndAccounts event) async* {
@@ -118,13 +116,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       }
     } catch (err, s) {
       yield AuthError(formatError(err, s));
-    }
-  }
-
-  Stream<AuthState> _logOut() async* {
-    final users = await _methods.users;
-    for (var user in users) {
-      yield* await _deleteUser(DeleteUser(user));
     }
   }
 
