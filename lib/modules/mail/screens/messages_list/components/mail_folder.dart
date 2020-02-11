@@ -46,21 +46,22 @@ class MailFolder extends StatelessWidget {
   }
 
   Widget _buildMessageCounter(BuildContext context) {
+    final theme = Theme.of(context);
     if (mailFolder.unread != null && mailFolder.unread > 0 ||
         mailFolder.folderType == FolderType.drafts &&
             mailFolder.count != null &&
             mailFolder.count > 0) {
-      return ClipRRect(
-        borderRadius: BorderRadius.all(Radius.circular(50.0)),
-        child: Container(
-          padding: EdgeInsets.symmetric(vertical: 6.0, horizontal: 10.0),
-          color: Theme.of(context).accentColor,
-          child: Text(
-            mailFolder.folderType == FolderType.drafts
-                ? mailFolder.count.toString()
-                : mailFolder.unread.toString(),
-            style: TextStyle(color: Colors.white),
-          ),
+      return Container(
+        padding: EdgeInsets.symmetric(vertical: 6.0, horizontal: 10.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(50.0)),
+          color: isSelected ? theme.accentColor : theme.disabledColor,
+        ),
+        child: Text(
+          mailFolder.folderType == FolderType.drafts
+              ? mailFolder.count.toString()
+              : mailFolder.unread.toString(),
+          style: TextStyle(color: Colors.white),
         ),
       );
     } else {

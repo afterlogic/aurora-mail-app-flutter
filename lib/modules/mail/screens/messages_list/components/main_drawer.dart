@@ -27,58 +27,64 @@ class _MainDrawerState extends State<MainDrawer> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      child: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    BlocProvider.of<AuthBloc>(context).currentAccount.friendlyName,
-                    style: Theme.of(context).textTheme.title,
-                  ),
-                  SizedBox(height: 8.0),
-                  Text(BlocProvider.of<AuthBloc>(context).currentAccount.email),
-                ],
-              ),
-            ),
-            Divider(height: 0.0),
-            Expanded(
-              child: BlocListener(
-                bloc: BlocProvider.of<MailBloc>(context),
-                listener: (BuildContext context, state) {
-                  if (state is FoldersLoaded || state is FoldersError) {
-                    _refreshCompleter?.complete();
-                    _refreshCompleter = new Completer();
-                  }
-                },
-                child: RefreshIndicator(
-                  onRefresh: () {
-                    BlocProvider.of<MailBloc>(context).add(RefreshFolders());
-                    return _refreshCompleter.future;
-                  },
-                  backgroundColor: Colors.white,
-                  color: Colors.black,
-                  child: BlocBuilder<MailBloc, MailState>(
-                      bloc: BlocProvider.of<MailBloc>(context),
-                      condition: (prevState, state) =>
-                          state is FoldersLoaded || state is FoldersEmpty,
-                      builder: (ctx, state) {
-                        if (state is FoldersLoaded) {
-                          return _buildFolders(state);
-                        } else if (state is FoldersLoading) {
-                          return _buildFoldersLoading();
-                        } else {
-                          return _buildFoldersEmpty();
-                        }
-                      }),
+      child: ListTileTheme(
+        style: ListTileStyle.drawer,
+        selectedColor: Theme.of(context).iconTheme.color,
+        textColor: Theme.of(context).disabledColor,
+        iconColor: Theme.of(context).disabledColor,
+        child: SafeArea(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      BlocProvider.of<AuthBloc>(context).currentAccount.friendlyName,
+                      style: Theme.of(context).textTheme.title,
+                    ),
+                    SizedBox(height: 8.0),
+                    Text(BlocProvider.of<AuthBloc>(context).currentAccount.email),
+                  ],
                 ),
               ),
-            )
-          ],
+              Divider(height: 0.0),
+              Expanded(
+                child: BlocListener(
+                  bloc: BlocProvider.of<MailBloc>(context),
+                  listener: (BuildContext context, state) {
+                    if (state is FoldersLoaded || state is FoldersError) {
+                      _refreshCompleter?.complete();
+                      _refreshCompleter = new Completer();
+                    }
+                  },
+                  child: RefreshIndicator(
+                    onRefresh: () {
+                      BlocProvider.of<MailBloc>(context).add(RefreshFolders());
+                      return _refreshCompleter.future;
+                    },
+                    backgroundColor: Colors.white,
+                    color: Colors.black,
+                    child: BlocBuilder<MailBloc, MailState>(
+                        bloc: BlocProvider.of<MailBloc>(context),
+                        condition: (prevState, state) =>
+                            state is FoldersLoaded || state is FoldersEmpty,
+                        builder: (ctx, state) {
+                          if (state is FoldersLoaded) {
+                            return _buildFolders(state);
+                          } else if (state is FoldersLoading) {
+                            return _buildFoldersLoading();
+                          } else {
+                            return _buildFoldersEmpty();
+                          }
+                        }),
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
