@@ -18,6 +18,7 @@ class ComposeAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      centerTitle: false,
       leading: IconButton(
         icon: Icon(Icons.close),
         onPressed: () => onAppBarActionSelected(ComposeAppBarAction.cancel),

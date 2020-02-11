@@ -28,7 +28,10 @@ class _CommonSettingsAndroidState extends State<CommonSettingsAndroid> {
     final bloc = BlocProvider.of<SettingsBloc>(context);
     final theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(title: Text(i18n(context, "settings_common"))),
+      appBar: AppBar(
+          title: Text(i18n(context, "settings_common")),
+        centerTitle: true,
+      ),
       body: BlocBuilder<SettingsBloc, SettingsState>(
         builder: (_, state) {
           if (state is SettingsLoaded) {

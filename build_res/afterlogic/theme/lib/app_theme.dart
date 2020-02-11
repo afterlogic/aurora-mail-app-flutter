@@ -68,6 +68,7 @@ class AppTheme {
           ),
         ),
       ),
+      bottomAppBarColor: Colors.black,
       splashFactory: InkRipple.splashFactory
   );
 }

@@ -1,4 +1,5 @@
 import 'package:aurora_mail/build_property.dart';
+import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/user_selection_popup.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
@@ -12,6 +13,23 @@ class MailAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Size preferredSize = const Size.fromHeight(kToolbarHeight);
 
   const MailAppBar();
+
+  String _getTitle(BuildContext context, Folder folder) {
+    switch (folder.folderType) {
+      case FolderType.inbox:
+        return i18n(context, "folders_inbox");
+      case FolderType.sent:
+        return i18n(context, "folders_sent");
+      case FolderType.drafts:
+        return i18n(context, "folders_drafts");
+      case FolderType.spam:
+        return i18n(context, "folders_spam");
+      case FolderType.trash:
+        return i18n(context, "folders_trash");
+      default:
+        return folder.name;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +49,7 @@ class MailAppBar extends StatelessWidget implements PreferredSizeWidget {
           if (state is FoldersLoaded) {
             return Text(state.isStarredFilterEnabled
                 ? i18n(context, "folders_starred")
-                : state.selectedFolder.name);
+                : _getTitle(context, state.selectedFolder));
           } else if (state is FoldersLoading) {
             return Text(i18n(context, "messages_list_app_bar_loading_folders"));
           } else if (state is FoldersEmpty) {

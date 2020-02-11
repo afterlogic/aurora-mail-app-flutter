@@ -101,6 +101,7 @@ class _LoginAndroidState extends State<LoginAndroid> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: widget.isDialog ? AppBar(
+        centerTitle: true,
         title: Text(i18n(context, widget.email == null ? "settings_accounts_add" : "settings_accounts_relogin")),
       ) : null,
       body: BlocListener(

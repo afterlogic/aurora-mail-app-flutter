@@ -17,6 +17,7 @@ class ContactEditAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       title: Text(i18n(context, isEdit ? "contacts_edit" : "contacts_add")),
+      centerTitle: true,
       actions: <Widget>[
         IconButton(
           icon: Icon(Icons.save),

@@ -27,6 +27,7 @@ class ContactsAppBar extends StatelessWidget implements PreferredSizeWidget {
               onPressed: Scaffold.of(context).openDrawer,
             ),
             title: _buildTitle(context, state),
+            centerTitle: true,
             actions: <Widget>[
               if (state.selectedGroup != null)
                 IconButton(icon: Icon(Icons.remove_red_eye),
@@ -50,7 +51,7 @@ class ContactsAppBar extends StatelessWidget implements PreferredSizeWidget {
       final selectedStorage = state.storages.firstWhere((s) => s.sqliteId == state.selectedStorage);
 
       return Column(
-        crossAxisAlignment: !Platform.isIOS ? CrossAxisAlignment.start : CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Text(i18n(context, "contacts")),
           SizedBox(height: 3.0),
@@ -65,7 +66,7 @@ class ContactsAppBar extends StatelessWidget implements PreferredSizeWidget {
     } else if (state.selectedGroup != null && state.groups.isNotEmpty) {
       final selectedGroup = state.groups.firstWhere((g) => g.uuid == state.selectedGroup);
       return Column(
-        crossAxisAlignment: !Platform.isIOS ? CrossAxisAlignment.start : CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Text(i18n(context, "contacts")),
           SizedBox(height: 3.0),
@@ -79,7 +80,7 @@ class ContactsAppBar extends StatelessWidget implements PreferredSizeWidget {
       );
     } else if (state.showAllVisibleContacts == true) {
       return Column(
-        crossAxisAlignment: !Platform.isIOS ? CrossAxisAlignment.start : CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Text(i18n(context, "contacts")),
           SizedBox(height: 3.0),

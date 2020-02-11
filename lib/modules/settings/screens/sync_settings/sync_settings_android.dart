@@ -30,7 +30,10 @@ class _SyncSettingsAndroidState extends State<SyncSettingsAndroid> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(i18n(context, "settings_sync"))),
+      appBar: AppBar(
+        title: Text(i18n(context, "settings_sync")),
+        centerTitle: true,
+      ),
       body: BlocBuilder<SettingsBloc, SettingsState>(
         bloc: BlocProvider.of<SettingsBloc>(context),
         condition: (_, state) => state is SettingsLoaded,
