@@ -10,10 +10,10 @@ import 'messages_list_methods.dart';
 
 class MessagesListBloc extends Bloc<MessagesListEvent, MessagesListState> {
   final User user;
-
+  final Account account;
   MessagesListMethods _methods;
 
-  MessagesListBloc({@required this.user, @required Account account}) {
+  MessagesListBloc({@required this.user, @required this.account}) {
     _methods = new MessagesListMethods(user: user, account: account);
   }
 
@@ -31,8 +31,8 @@ class MessagesListBloc extends Bloc<MessagesListEvent, MessagesListState> {
 
   Stream<MessagesListState> _subscribeToMessages(
       SubscribeToMessages event) async* {
-    final stream =
-        _methods.subscribeToMessages(event.currentFolder, event.isStarred, user);
+    final stream = _methods.subscribeToMessages(
+        event.currentFolder, event.isStarred, user, account);
     yield SubscribedToMessages(stream, event.isStarred);
   }
 

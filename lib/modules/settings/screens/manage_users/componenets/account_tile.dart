@@ -28,7 +28,8 @@ class _UserTileState extends State<UserTile> {
     final result = await ConfirmationDialog.show(
       context,
       i18n(context, "settings_accounts_delete"),
-      i18n(context, "settings_accounts_delete_description", {"account": widget.user.emailFromLogin}),
+      i18n(context, "settings_accounts_delete_description",
+          {"account": widget.user.emailFromLogin}),
       i18n(context, "btn_delete"),
       destructibleAction: true,
     );
@@ -47,12 +48,14 @@ class _UserTileState extends State<UserTile> {
       selected: widget.compact && widget.user.localId == currentUser.localId,
       leading: _buildLeading(),
       title: Text(widget.user.emailFromLogin),
-      trailing: widget.compact ? null : IconButton(
-        icon: Icon(Icons.delete_outline),
-        color: Theme.of(context).iconTheme.color,
-        tooltip: i18n(context, "settings_accounts_delete"),
-        onPressed: _showDeleteDialog,
-      ),
+      trailing: widget.compact
+          ? null
+          : IconButton(
+              icon: Icon(Icons.delete_outline),
+              color: Theme.of(context).iconTheme.color,
+              tooltip: i18n(context, "settings_accounts_delete"),
+              onPressed: _showDeleteDialog,
+            ),
       onTap: widget.user.localId == currentUser.localId || !widget.compact
           ? null
           : _selectUser,

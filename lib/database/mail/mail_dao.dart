@@ -25,13 +25,15 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
 //  }
 
   Stream<List<Message>> watchMessages(
-      String folder, int userLocalId, bool starredOnly) {
+      String folder, int userLocalId, int accountEntityId, bool starredOnly) {
     return (select(mail)
-          ..where((m) => m.userLocalId.equals(userLocalId))
+          ..where((m) => m.accountEntityId.equals(accountEntityId))
           ..where((m) => m.folder.equals(folder))
           ..where((m) =>
               starredOnly ? m.flagsInJson.like("%\\flagged%") : Constant(true))
-//          ..limit(500)
+          // todo V.O. im have exception on account with 462 mails.
+          // Pagination?
+          ..limit(400)
           ..orderBy([
             (m) => OrderingTerm(
                 expression: m.timeStampInUTC, mode: OrderingMode.desc)
@@ -42,7 +44,7 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
   Future<void> addMessages(List<Message> newMessages) async {
     try {
       await into(mail).insertAll(newMessages);
-    } catch(err) {
+    } catch (err) {
 //      print("addMessages err: ${err}");
     }
   }

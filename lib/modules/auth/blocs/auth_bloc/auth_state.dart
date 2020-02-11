@@ -17,17 +17,20 @@ class UserSelected extends AuthState implements AlwaysNonEqualObject {}
 class InitializedUserAndAccounts extends AuthState {
   final List<User> users;
   final User user;
+  final List<Account> accounts;
+  final Account account;
   final bool needsLogin;
 
   const InitializedUserAndAccounts({
     @required this.user,
     @required this.users,
     @required this.needsLogin,
-  })
-      : assert(needsLogin != null);
+    @required this.accounts,
+    @required this.account,
+  }) : assert(needsLogin != null);
 
   @override
-  List<Object> get props => [user, needsLogin];
+  List<Object> get props => [user,account, needsLogin];
 }
 
 class ReceivedLastEmail extends AuthState {
