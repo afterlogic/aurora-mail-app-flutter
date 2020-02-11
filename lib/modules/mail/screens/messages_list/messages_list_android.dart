@@ -65,6 +65,10 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
       user: authBloc.currentUser,
       account: authBloc.currentAccount,
     );
+    _mailBloc = new MailBloc(
+      user: authBloc.currentUser,
+      account: authBloc.currentAccount,
+    );
 
     _contactsBloc.add(GetContacts());
     _mailBloc.add(FetchFolders());
@@ -137,7 +141,10 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
 
   @override
   Widget build(BuildContext context) {
+    final authKey =
+        BlocProvider.of<AuthBloc>(context).currentAccount.localId.toString();
     return MultiBlocProvider(
+      key: Key(authKey),
       providers: [
         BlocProvider<MessagesListBloc>.value(value: _messagesListBloc),
         BlocProvider<MailBloc>.value(value: _mailBloc),

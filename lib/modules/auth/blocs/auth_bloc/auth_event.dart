@@ -48,3 +48,12 @@ class DeleteUser extends AuthEvent {
 }
 
 class InvalidateCurrentUserToken extends AuthEvent implements AlwaysNonEqualObject {}
+
+class ChangeAccount extends AuthEvent {
+  final Account account;
+
+  const ChangeAccount(this.account);
+
+  @override
+  List<Object> get props => [account];
+}

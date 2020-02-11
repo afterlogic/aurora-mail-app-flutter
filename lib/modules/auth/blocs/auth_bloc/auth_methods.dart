@@ -19,6 +19,7 @@ class AuthMethods {
 
   Future<InitializerResponse> getUserAndAccountsFromDB() async {
     final selectedUserId = await _authLocal.getSelectedUserLocalId();
+    final selectedAccountId = await _authLocal.getSelectedAccountId();
     if (selectedUserId == null) return null;
 
     final futures = [
@@ -31,11 +32,14 @@ class AuthMethods {
     final result = await Future.wait(futures);
     final user = result[0] as User;
     final accounts = List<Account>.from(result[1] as Iterable);
-
+    final account = accounts.firstWhere(
+      (item) => item.localId == selectedAccountId,
+      orElse: () => accounts.first,
+    );
     if (user == null || accounts.isEmpty) return null;
 
     // else
-    return InitializerResponse(user, accounts);
+    return InitializerResponse(user, account, accounts);
   }
 
   Future<void> selectUser(int userLocalId) async {
@@ -127,11 +131,20 @@ class AuthMethods {
     await _usersDao.updateUser(userLocalId, UsersCompanion(token: Value(null)));
     return _usersDao.getUserByLocalId(userLocalId);
   }
+
+  Future selectAccount(Account account) {
+   return _authLocal.setSelectedAccountId(account.localId);
+  }
 }
 
 class InitializerResponse {
   final User user;
+  final Account account;
   final List<Account> accounts;
 
-  InitializerResponse(this.user, this.accounts);
+  InitializerResponse(
+    this.user,
+    this.account,
+    this.accounts,
+  );
 }

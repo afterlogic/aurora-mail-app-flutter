@@ -20,6 +20,8 @@ class Mail extends Table {
 
   IntColumn get uid => integer()();
 
+  IntColumn get accountEntityId => integer()();
+
   IntColumn get userLocalId => integer()();
 
   // in order to prevent inserting duplicate messages in the same folder
@@ -194,7 +196,11 @@ class Mail extends Table {
         localId: null,
         uid: rawMessage["Uid"] as int,
         userLocalId: userLocalId,
-        uniqueUidInFolder: account.entityId.toString() + account.localId.toString() + rawMessage["Uid"].toString() + rawMessage["Folder"].toString(),
+        accountEntityId: account.entityId,
+        uniqueUidInFolder: account.entityId.toString() +
+            account.localId.toString() +
+            rawMessage["Uid"].toString() +
+            rawMessage["Folder"].toString(),
         parentUid: messageInfo.parentUid,
         flagsInJson:
             messageInfo.flags == null ? null : json.encode(messageInfo.flags),
