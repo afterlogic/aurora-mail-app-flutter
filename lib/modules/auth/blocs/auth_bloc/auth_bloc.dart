@@ -33,6 +33,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     if (event is LogOut) yield* _logOut();
     if (event is InvalidateCurrentUserToken)
       yield* _invalidateCurrentUserToken(event);
+    if (event is ChangeAccount) yield* _changeAccount(event);
   }
 
   Stream<AuthState> _initUserAndAccounts(InitUserAndAccounts event) async* {
@@ -42,18 +43,33 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     try {
       if (result != null) {
         currentUser = result.user;
-        currentAccount = result.accounts[0];
+        currentAccount = result.account;
         yield InitializedUserAndAccounts(
-            user: result.user, users: users, needsLogin: false);
+          user: currentUser,
+          users: users,
+          needsLogin: false,
+          account: currentAccount,
+          accounts: result.accounts,
+        );
       } else {
         yield InitializedUserAndAccounts(
-            user: null, users: null, needsLogin: true);
+          user: null,
+          users: null,
+          needsLogin: true,
+          account: null,
+          accounts: null,
+        );
       }
     } catch (err, s) {
       print("_initUserAndAccounts err: $err");
       print("_initUserAndAccounts s: $s");
       yield InitializedUserAndAccounts(
-          user: null, users: null, needsLogin: true);
+        user: null,
+        users: null,
+        needsLogin: true,
+        account: null,
+        accounts: null,
+      );
     }
   }
 
@@ -135,5 +151,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     } else {
       print("cannot invalidate token, no currentUser selected");
     }
+  }
+
+  Stream<AuthState> _changeAccount(ChangeAccount event) async* {
+    await _methods.selectAccount(event.account);
+    add(InitUserAndAccounts());
   }
 }

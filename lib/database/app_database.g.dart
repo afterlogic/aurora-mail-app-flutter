@@ -10,6 +10,7 @@ part of 'app_database.dart';
 class Message extends DataClass implements Insertable<Message> {
   final int localId;
   final int uid;
+  final int accountEntityId;
   final int userLocalId;
   final String uniqueUidInFolder;
   final int parentUid;
@@ -56,6 +57,7 @@ class Message extends DataClass implements Insertable<Message> {
   Message(
       {@required this.localId,
       @required this.uid,
+      @required this.accountEntityId,
       @required this.userLocalId,
       @required this.uniqueUidInFolder,
       this.parentUid,
@@ -109,6 +111,8 @@ class Message extends DataClass implements Insertable<Message> {
       localId:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}local_id']),
       uid: intType.mapFromDatabaseResponse(data['${effectivePrefix}uid']),
+      accountEntityId: intType
+          .mapFromDatabaseResponse(data['${effectivePrefix}account_entity_id']),
       userLocalId: intType
           .mapFromDatabaseResponse(data['${effectivePrefix}user_local_id']),
       uniqueUidInFolder: stringType.mapFromDatabaseResponse(
@@ -194,10 +198,12 @@ class Message extends DataClass implements Insertable<Message> {
     );
   }
   factory Message.fromJson(Map<String, dynamic> json,
-      {ValueSerializer serializer = const ValueSerializer.defaults()}) {
+      {ValueSerializer serializer}) {
+    serializer ??= moorRuntimeOptions.defaultSerializer;
     return Message(
       localId: serializer.fromJson<int>(json['localId']),
       uid: serializer.fromJson<int>(json['uid']),
+      accountEntityId: serializer.fromJson<int>(json['accountEntityId']),
       userLocalId: serializer.fromJson<int>(json['userLocalId']),
       uniqueUidInFolder: serializer.fromJson<String>(json['uniqueUidInFolder']),
       parentUid: serializer.fromJson<int>(json['parentUid']),
@@ -248,11 +254,12 @@ class Message extends DataClass implements Insertable<Message> {
     );
   }
   @override
-  Map<String, dynamic> toJson(
-      {ValueSerializer serializer = const ValueSerializer.defaults()}) {
+  Map<String, dynamic> toJson({ValueSerializer serializer}) {
+    serializer ??= moorRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'localId': serializer.toJson<int>(localId),
       'uid': serializer.toJson<int>(uid),
+      'accountEntityId': serializer.toJson<int>(accountEntityId),
       'userLocalId': serializer.toJson<int>(userLocalId),
       'uniqueUidInFolder': serializer.toJson<String>(uniqueUidInFolder),
       'parentUid': serializer.toJson<int>(parentUid),
@@ -309,6 +316,9 @@ class Message extends DataClass implements Insertable<Message> {
           ? const Value.absent()
           : Value(localId),
       uid: uid == null && nullToAbsent ? const Value.absent() : Value(uid),
+      accountEntityId: accountEntityId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(accountEntityId),
       userLocalId: userLocalId == null && nullToAbsent
           ? const Value.absent()
           : Value(userLocalId),
@@ -436,6 +446,7 @@ class Message extends DataClass implements Insertable<Message> {
   Message copyWith(
           {int localId,
           int uid,
+          int accountEntityId,
           int userLocalId,
           String uniqueUidInFolder,
           int parentUid,
@@ -482,6 +493,7 @@ class Message extends DataClass implements Insertable<Message> {
       Message(
         localId: localId ?? this.localId,
         uid: uid ?? this.uid,
+        accountEntityId: accountEntityId ?? this.accountEntityId,
         userLocalId: userLocalId ?? this.userLocalId,
         uniqueUidInFolder: uniqueUidInFolder ?? this.uniqueUidInFolder,
         parentUid: parentUid ?? this.parentUid,
@@ -535,6 +547,7 @@ class Message extends DataClass implements Insertable<Message> {
     return (StringBuffer('Message(')
           ..write('localId: $localId, ')
           ..write('uid: $uid, ')
+          ..write('accountEntityId: $accountEntityId, ')
           ..write('userLocalId: $userLocalId, ')
           ..write('uniqueUidInFolder: $uniqueUidInFolder, ')
           ..write('parentUid: $parentUid, ')
@@ -591,51 +604,51 @@ class Message extends DataClass implements Insertable<Message> {
       $mrjc(
           uid.hashCode,
           $mrjc(
-              userLocalId.hashCode,
+              accountEntityId.hashCode,
               $mrjc(
-                  uniqueUidInFolder.hashCode,
+                  userLocalId.hashCode,
                   $mrjc(
-                      parentUid.hashCode,
+                      uniqueUidInFolder.hashCode,
                       $mrjc(
-                          messageId.hashCode,
+                          parentUid.hashCode,
                           $mrjc(
-                              folder.hashCode,
+                              messageId.hashCode,
                               $mrjc(
-                                  flagsInJson.hashCode,
+                                  folder.hashCode,
                                   $mrjc(
-                                      hasThread.hashCode,
+                                      flagsInJson.hashCode,
                                       $mrjc(
-                                          subject.hashCode,
+                                          hasThread.hashCode,
                                           $mrjc(
-                                              size.hashCode,
+                                              subject.hashCode,
                                               $mrjc(
-                                                  textSize.hashCode,
+                                                  size.hashCode,
                                                   $mrjc(
-                                                      truncated.hashCode,
+                                                      textSize.hashCode,
                                                       $mrjc(
-                                                          internalTimeStampInUTC
-                                                              .hashCode,
+                                                          truncated.hashCode,
                                                           $mrjc(
-                                                              receivedOrDateTimeStampInUTC
+                                                              internalTimeStampInUTC
                                                                   .hashCode,
                                                               $mrjc(
-                                                                  timeStampInUTC
+                                                                  receivedOrDateTimeStampInUTC
                                                                       .hashCode,
                                                                   $mrjc(
-                                                                      toInJson
+                                                                      timeStampInUTC
                                                                           .hashCode,
                                                                       $mrjc(
-                                                                          fromInJson
+                                                                          toInJson
                                                                               .hashCode,
                                                                           $mrjc(
-                                                                              fromToDisplay.hashCode,
-                                                                              $mrjc(ccInJson.hashCode, $mrjc(bccInJson.hashCode, $mrjc(senderInJson.hashCode, $mrjc(replyToInJson.hashCode, $mrjc(hasAttachments.hashCode, $mrjc(hasVcardAttachment.hashCode, $mrjc(hasIcalAttachment.hashCode, $mrjc(importance.hashCode, $mrjc(draftInfoInJson.hashCode, $mrjc(sensitivity.hashCode, $mrjc(downloadAsEmlUrl.hashCode, $mrjc(hash.hashCode, $mrjc(headers.hashCode, $mrjc(inReplyTo.hashCode, $mrjc(references.hashCode, $mrjc(readingConfirmationAddressee.hashCode, $mrjc(html.hashCode, $mrjc(plain.hashCode, $mrjc(rtl.hashCode, $mrjc(extendInJson.hashCode, $mrjc(safety.hashCode, $mrjc(hasExternals.hashCode, $mrjc(foundedCIDsInJson.hashCode, $mrjc(foundedContentLocationUrlsInJson.hashCode, $mrjc(attachmentsInJson.hashCode, customInJson.hashCode)))))))))))))))))))))))))))))))))))))))))))));
+                                                                              fromInJson.hashCode,
+                                                                              $mrjc(fromToDisplay.hashCode, $mrjc(ccInJson.hashCode, $mrjc(bccInJson.hashCode, $mrjc(senderInJson.hashCode, $mrjc(replyToInJson.hashCode, $mrjc(hasAttachments.hashCode, $mrjc(hasVcardAttachment.hashCode, $mrjc(hasIcalAttachment.hashCode, $mrjc(importance.hashCode, $mrjc(draftInfoInJson.hashCode, $mrjc(sensitivity.hashCode, $mrjc(downloadAsEmlUrl.hashCode, $mrjc(hash.hashCode, $mrjc(headers.hashCode, $mrjc(inReplyTo.hashCode, $mrjc(references.hashCode, $mrjc(readingConfirmationAddressee.hashCode, $mrjc(html.hashCode, $mrjc(plain.hashCode, $mrjc(rtl.hashCode, $mrjc(extendInJson.hashCode, $mrjc(safety.hashCode, $mrjc(hasExternals.hashCode, $mrjc(foundedCIDsInJson.hashCode, $mrjc(foundedContentLocationUrlsInJson.hashCode, $mrjc(attachmentsInJson.hashCode, customInJson.hashCode))))))))))))))))))))))))))))))))))))))))))))));
   @override
   bool operator ==(dynamic other) =>
       identical(this, other) ||
       (other is Message &&
           other.localId == this.localId &&
           other.uid == this.uid &&
+          other.accountEntityId == this.accountEntityId &&
           other.userLocalId == this.userLocalId &&
           other.uniqueUidInFolder == this.uniqueUidInFolder &&
           other.parentUid == this.parentUid &&
@@ -687,6 +700,7 @@ class Message extends DataClass implements Insertable<Message> {
 class MailCompanion extends UpdateCompanion<Message> {
   final Value<int> localId;
   final Value<int> uid;
+  final Value<int> accountEntityId;
   final Value<int> userLocalId;
   final Value<String> uniqueUidInFolder;
   final Value<int> parentUid;
@@ -733,6 +747,7 @@ class MailCompanion extends UpdateCompanion<Message> {
   const MailCompanion({
     this.localId = const Value.absent(),
     this.uid = const Value.absent(),
+    this.accountEntityId = const Value.absent(),
     this.userLocalId = const Value.absent(),
     this.uniqueUidInFolder = const Value.absent(),
     this.parentUid = const Value.absent(),
@@ -780,6 +795,7 @@ class MailCompanion extends UpdateCompanion<Message> {
   MailCompanion.insert({
     this.localId = const Value.absent(),
     @required int uid,
+    @required int accountEntityId,
     @required int userLocalId,
     @required String uniqueUidInFolder,
     this.parentUid = const Value.absent(),
@@ -824,6 +840,7 @@ class MailCompanion extends UpdateCompanion<Message> {
     this.attachmentsInJson = const Value.absent(),
     @required String customInJson,
   })  : uid = Value(uid),
+        accountEntityId = Value(accountEntityId),
         userLocalId = Value(userLocalId),
         uniqueUidInFolder = Value(uniqueUidInFolder),
         messageId = Value(messageId),
@@ -861,6 +878,7 @@ class MailCompanion extends UpdateCompanion<Message> {
   MailCompanion copyWith(
       {Value<int> localId,
       Value<int> uid,
+      Value<int> accountEntityId,
       Value<int> userLocalId,
       Value<String> uniqueUidInFolder,
       Value<int> parentUid,
@@ -907,6 +925,7 @@ class MailCompanion extends UpdateCompanion<Message> {
     return MailCompanion(
       localId: localId ?? this.localId,
       uid: uid ?? this.uid,
+      accountEntityId: accountEntityId ?? this.accountEntityId,
       userLocalId: userLocalId ?? this.userLocalId,
       uniqueUidInFolder: uniqueUidInFolder ?? this.uniqueUidInFolder,
       parentUid: parentUid ?? this.parentUid,
@@ -978,6 +997,20 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
   GeneratedIntColumn _constructUid() {
     return GeneratedIntColumn(
       'uid',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _accountEntityIdMeta =
+      const VerificationMeta('accountEntityId');
+  GeneratedIntColumn _accountEntityId;
+  @override
+  GeneratedIntColumn get accountEntityId =>
+      _accountEntityId ??= _constructAccountEntityId();
+  GeneratedIntColumn _constructAccountEntityId() {
+    return GeneratedIntColumn(
+      'account_entity_id',
       $tableName,
       false,
     );
@@ -1547,6 +1580,7 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
   List<GeneratedColumn> get $columns => [
         localId,
         uid,
+        accountEntityId,
         userLocalId,
         uniqueUidInFolder,
         parentUid,
@@ -1604,18 +1638,24 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     if (d.localId.present) {
       context.handle(_localIdMeta,
           localId.isAcceptableValue(d.localId.value, _localIdMeta));
-    } else if (localId.isRequired && isInserting) {
-      context.missing(_localIdMeta);
     }
     if (d.uid.present) {
       context.handle(_uidMeta, uid.isAcceptableValue(d.uid.value, _uidMeta));
-    } else if (uid.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_uidMeta);
+    }
+    if (d.accountEntityId.present) {
+      context.handle(
+          _accountEntityIdMeta,
+          accountEntityId.isAcceptableValue(
+              d.accountEntityId.value, _accountEntityIdMeta));
+    } else if (isInserting) {
+      context.missing(_accountEntityIdMeta);
     }
     if (d.userLocalId.present) {
       context.handle(_userLocalIdMeta,
           userLocalId.isAcceptableValue(d.userLocalId.value, _userLocalIdMeta));
-    } else if (userLocalId.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_userLocalIdMeta);
     }
     if (d.uniqueUidInFolder.present) {
@@ -1623,61 +1663,59 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
           _uniqueUidInFolderMeta,
           uniqueUidInFolder.isAcceptableValue(
               d.uniqueUidInFolder.value, _uniqueUidInFolderMeta));
-    } else if (uniqueUidInFolder.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_uniqueUidInFolderMeta);
     }
     if (d.parentUid.present) {
       context.handle(_parentUidMeta,
           parentUid.isAcceptableValue(d.parentUid.value, _parentUidMeta));
-    } else if (parentUid.isRequired && isInserting) {
-      context.missing(_parentUidMeta);
     }
     if (d.messageId.present) {
       context.handle(_messageIdMeta,
           messageId.isAcceptableValue(d.messageId.value, _messageIdMeta));
-    } else if (messageId.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_messageIdMeta);
     }
     if (d.folder.present) {
       context.handle(
           _folderMeta, folder.isAcceptableValue(d.folder.value, _folderMeta));
-    } else if (folder.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_folderMeta);
     }
     if (d.flagsInJson.present) {
       context.handle(_flagsInJsonMeta,
           flagsInJson.isAcceptableValue(d.flagsInJson.value, _flagsInJsonMeta));
-    } else if (flagsInJson.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_flagsInJsonMeta);
     }
     if (d.hasThread.present) {
       context.handle(_hasThreadMeta,
           hasThread.isAcceptableValue(d.hasThread.value, _hasThreadMeta));
-    } else if (hasThread.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_hasThreadMeta);
     }
     if (d.subject.present) {
       context.handle(_subjectMeta,
           subject.isAcceptableValue(d.subject.value, _subjectMeta));
-    } else if (subject.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_subjectMeta);
     }
     if (d.size.present) {
       context.handle(
           _sizeMeta, size.isAcceptableValue(d.size.value, _sizeMeta));
-    } else if (size.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_sizeMeta);
     }
     if (d.textSize.present) {
       context.handle(_textSizeMeta,
           textSize.isAcceptableValue(d.textSize.value, _textSizeMeta));
-    } else if (textSize.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_textSizeMeta);
     }
     if (d.truncated.present) {
       context.handle(_truncatedMeta,
           truncated.isAcceptableValue(d.truncated.value, _truncatedMeta));
-    } else if (truncated.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_truncatedMeta);
     }
     if (d.internalTimeStampInUTC.present) {
@@ -1685,7 +1723,7 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
           _internalTimeStampInUTCMeta,
           internalTimeStampInUTC.isAcceptableValue(
               d.internalTimeStampInUTC.value, _internalTimeStampInUTCMeta));
-    } else if (internalTimeStampInUTC.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_internalTimeStampInUTCMeta);
     }
     if (d.receivedOrDateTimeStampInUTC.present) {
@@ -1694,7 +1732,7 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
           receivedOrDateTimeStampInUTC.isAcceptableValue(
               d.receivedOrDateTimeStampInUTC.value,
               _receivedOrDateTimeStampInUTCMeta));
-    } else if (receivedOrDateTimeStampInUTC.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_receivedOrDateTimeStampInUTCMeta);
     }
     if (d.timeStampInUTC.present) {
@@ -1702,63 +1740,51 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
           _timeStampInUTCMeta,
           timeStampInUTC.isAcceptableValue(
               d.timeStampInUTC.value, _timeStampInUTCMeta));
-    } else if (timeStampInUTC.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_timeStampInUTCMeta);
     }
     if (d.toInJson.present) {
       context.handle(_toInJsonMeta,
           toInJson.isAcceptableValue(d.toInJson.value, _toInJsonMeta));
-    } else if (toInJson.isRequired && isInserting) {
-      context.missing(_toInJsonMeta);
     }
     if (d.fromInJson.present) {
       context.handle(_fromInJsonMeta,
           fromInJson.isAcceptableValue(d.fromInJson.value, _fromInJsonMeta));
-    } else if (fromInJson.isRequired && isInserting) {
-      context.missing(_fromInJsonMeta);
     }
     if (d.fromToDisplay.present) {
       context.handle(
           _fromToDisplayMeta,
           fromToDisplay.isAcceptableValue(
               d.fromToDisplay.value, _fromToDisplayMeta));
-    } else if (fromToDisplay.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_fromToDisplayMeta);
     }
     if (d.ccInJson.present) {
       context.handle(_ccInJsonMeta,
           ccInJson.isAcceptableValue(d.ccInJson.value, _ccInJsonMeta));
-    } else if (ccInJson.isRequired && isInserting) {
-      context.missing(_ccInJsonMeta);
     }
     if (d.bccInJson.present) {
       context.handle(_bccInJsonMeta,
           bccInJson.isAcceptableValue(d.bccInJson.value, _bccInJsonMeta));
-    } else if (bccInJson.isRequired && isInserting) {
-      context.missing(_bccInJsonMeta);
     }
     if (d.senderInJson.present) {
       context.handle(
           _senderInJsonMeta,
           senderInJson.isAcceptableValue(
               d.senderInJson.value, _senderInJsonMeta));
-    } else if (senderInJson.isRequired && isInserting) {
-      context.missing(_senderInJsonMeta);
     }
     if (d.replyToInJson.present) {
       context.handle(
           _replyToInJsonMeta,
           replyToInJson.isAcceptableValue(
               d.replyToInJson.value, _replyToInJsonMeta));
-    } else if (replyToInJson.isRequired && isInserting) {
-      context.missing(_replyToInJsonMeta);
     }
     if (d.hasAttachments.present) {
       context.handle(
           _hasAttachmentsMeta,
           hasAttachments.isAcceptableValue(
               d.hasAttachments.value, _hasAttachmentsMeta));
-    } else if (hasAttachments.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_hasAttachmentsMeta);
     }
     if (d.hasVcardAttachment.present) {
@@ -1766,7 +1792,7 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
           _hasVcardAttachmentMeta,
           hasVcardAttachment.isAcceptableValue(
               d.hasVcardAttachment.value, _hasVcardAttachmentMeta));
-    } else if (hasVcardAttachment.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_hasVcardAttachmentMeta);
     }
     if (d.hasIcalAttachment.present) {
@@ -1774,13 +1800,13 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
           _hasIcalAttachmentMeta,
           hasIcalAttachment.isAcceptableValue(
               d.hasIcalAttachment.value, _hasIcalAttachmentMeta));
-    } else if (hasIcalAttachment.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_hasIcalAttachmentMeta);
     }
     if (d.importance.present) {
       context.handle(_importanceMeta,
           importance.isAcceptableValue(d.importance.value, _importanceMeta));
-    } else if (importance.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_importanceMeta);
     }
     if (d.draftInfoInJson.present) {
@@ -1788,13 +1814,11 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
           _draftInfoInJsonMeta,
           draftInfoInJson.isAcceptableValue(
               d.draftInfoInJson.value, _draftInfoInJsonMeta));
-    } else if (draftInfoInJson.isRequired && isInserting) {
-      context.missing(_draftInfoInJsonMeta);
     }
     if (d.sensitivity.present) {
       context.handle(_sensitivityMeta,
           sensitivity.isAcceptableValue(d.sensitivity.value, _sensitivityMeta));
-    } else if (sensitivity.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_sensitivityMeta);
     }
     if (d.downloadAsEmlUrl.present) {
@@ -1802,31 +1826,31 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
           _downloadAsEmlUrlMeta,
           downloadAsEmlUrl.isAcceptableValue(
               d.downloadAsEmlUrl.value, _downloadAsEmlUrlMeta));
-    } else if (downloadAsEmlUrl.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_downloadAsEmlUrlMeta);
     }
     if (d.hash.present) {
       context.handle(
           _hashMeta, hash.isAcceptableValue(d.hash.value, _hashMeta));
-    } else if (hash.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_hashMeta);
     }
     if (d.headers.present) {
       context.handle(_headersMeta,
           headers.isAcceptableValue(d.headers.value, _headersMeta));
-    } else if (headers.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_headersMeta);
     }
     if (d.inReplyTo.present) {
       context.handle(_inReplyToMeta,
           inReplyTo.isAcceptableValue(d.inReplyTo.value, _inReplyToMeta));
-    } else if (inReplyTo.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_inReplyToMeta);
     }
     if (d.references.present) {
       context.handle(_referencesMeta,
           references.isAcceptableValue(d.references.value, _referencesMeta));
-    } else if (references.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_referencesMeta);
     }
     if (d.readingConfirmationAddressee.present) {
@@ -1835,24 +1859,22 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
           readingConfirmationAddressee.isAcceptableValue(
               d.readingConfirmationAddressee.value,
               _readingConfirmationAddresseeMeta));
-    } else if (readingConfirmationAddressee.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_readingConfirmationAddresseeMeta);
     }
     if (d.html.present) {
       context.handle(
           _htmlMeta, html.isAcceptableValue(d.html.value, _htmlMeta));
-    } else if (html.isRequired && isInserting) {
-      context.missing(_htmlMeta);
     }
     if (d.plain.present) {
       context.handle(
           _plainMeta, plain.isAcceptableValue(d.plain.value, _plainMeta));
-    } else if (plain.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_plainMeta);
     }
     if (d.rtl.present) {
       context.handle(_rtlMeta, rtl.isAcceptableValue(d.rtl.value, _rtlMeta));
-    } else if (rtl.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_rtlMeta);
     }
     if (d.extendInJson.present) {
@@ -1860,13 +1882,13 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
           _extendInJsonMeta,
           extendInJson.isAcceptableValue(
               d.extendInJson.value, _extendInJsonMeta));
-    } else if (extendInJson.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_extendInJsonMeta);
     }
     if (d.safety.present) {
       context.handle(
           _safetyMeta, safety.isAcceptableValue(d.safety.value, _safetyMeta));
-    } else if (safety.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_safetyMeta);
     }
     if (d.hasExternals.present) {
@@ -1874,7 +1896,7 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
           _hasExternalsMeta,
           hasExternals.isAcceptableValue(
               d.hasExternals.value, _hasExternalsMeta));
-    } else if (hasExternals.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_hasExternalsMeta);
     }
     if (d.foundedCIDsInJson.present) {
@@ -1882,7 +1904,7 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
           _foundedCIDsInJsonMeta,
           foundedCIDsInJson.isAcceptableValue(
               d.foundedCIDsInJson.value, _foundedCIDsInJsonMeta));
-    } else if (foundedCIDsInJson.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_foundedCIDsInJsonMeta);
     }
     if (d.foundedContentLocationUrlsInJson.present) {
@@ -1891,7 +1913,7 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
           foundedContentLocationUrlsInJson.isAcceptableValue(
               d.foundedContentLocationUrlsInJson.value,
               _foundedContentLocationUrlsInJsonMeta));
-    } else if (foundedContentLocationUrlsInJson.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_foundedContentLocationUrlsInJsonMeta);
     }
     if (d.attachmentsInJson.present) {
@@ -1899,15 +1921,13 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
           _attachmentsInJsonMeta,
           attachmentsInJson.isAcceptableValue(
               d.attachmentsInJson.value, _attachmentsInJsonMeta));
-    } else if (attachmentsInJson.isRequired && isInserting) {
-      context.missing(_attachmentsInJsonMeta);
     }
     if (d.customInJson.present) {
       context.handle(
           _customInJsonMeta,
           customInJson.isAcceptableValue(
               d.customInJson.value, _customInJsonMeta));
-    } else if (customInJson.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_customInJsonMeta);
     }
     return context;
@@ -1929,6 +1949,10 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     }
     if (d.uid.present) {
       map['uid'] = Variable<int, IntType>(d.uid.value);
+    }
+    if (d.accountEntityId.present) {
+      map['account_entity_id'] =
+          Variable<int, IntType>(d.accountEntityId.value);
     }
     if (d.userLocalId.present) {
       map['user_local_id'] = Variable<int, IntType>(d.userLocalId.value);
@@ -2190,7 +2214,8 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
     );
   }
   factory LocalFolder.fromJson(Map<String, dynamic> json,
-      {ValueSerializer serializer = const ValueSerializer.defaults()}) {
+      {ValueSerializer serializer}) {
+    serializer ??= moorRuntimeOptions.defaultSerializer;
     return LocalFolder(
       localId: serializer.fromJson<int>(json['localId']),
       userLocalId: serializer.fromJson<int>(json['userLocalId']),
@@ -2220,8 +2245,8 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
     );
   }
   @override
-  Map<String, dynamic> toJson(
-      {ValueSerializer serializer = const ValueSerializer.defaults()}) {
+  Map<String, dynamic> toJson({ValueSerializer serializer}) {
+    serializer ??= moorRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'localId': serializer.toJson<int>(localId),
       'userLocalId': serializer.toJson<int>(userLocalId),
@@ -2977,13 +3002,11 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
     if (d.localId.present) {
       context.handle(_localIdMeta,
           localId.isAcceptableValue(d.localId.value, _localIdMeta));
-    } else if (localId.isRequired && isInserting) {
-      context.missing(_localIdMeta);
     }
     if (d.userLocalId.present) {
       context.handle(_userLocalIdMeta,
           userLocalId.isAcceptableValue(d.userLocalId.value, _userLocalIdMeta));
-    } else if (userLocalId.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_userLocalIdMeta);
     }
     if (d.accountLocalId.present) {
@@ -2991,67 +3014,61 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
           _accountLocalIdMeta,
           accountLocalId.isAcceptableValue(
               d.accountLocalId.value, _accountLocalIdMeta));
-    } else if (accountLocalId.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_accountLocalIdMeta);
     }
     if (d.guid.present) {
       context.handle(
           _guidMeta, guid.isAcceptableValue(d.guid.value, _guidMeta));
-    } else if (guid.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_guidMeta);
     }
     if (d.parentGuid.present) {
       context.handle(_parentGuidMeta,
           parentGuid.isAcceptableValue(d.parentGuid.value, _parentGuidMeta));
-    } else if (parentGuid.isRequired && isInserting) {
-      context.missing(_parentGuidMeta);
     }
     if (d.accountId.present) {
       context.handle(_accountIdMeta,
           accountId.isAcceptableValue(d.accountId.value, _accountIdMeta));
-    } else if (accountId.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_accountIdMeta);
     }
     if (d.type.present) {
       context.handle(
           _typeMeta, type.isAcceptableValue(d.type.value, _typeMeta));
-    } else if (type.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_typeMeta);
     }
     if (d.folderOrder.present) {
       context.handle(_folderOrderMeta,
           folderOrder.isAcceptableValue(d.folderOrder.value, _folderOrderMeta));
-    } else if (folderOrder.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_folderOrderMeta);
     }
     if (d.count.present) {
       context.handle(
           _countMeta, count.isAcceptableValue(d.count.value, _countMeta));
-    } else if (count.isRequired && isInserting) {
-      context.missing(_countMeta);
     }
     if (d.unread.present) {
       context.handle(
           _unreadMeta, unread.isAcceptableValue(d.unread.value, _unreadMeta));
-    } else if (unread.isRequired && isInserting) {
-      context.missing(_unreadMeta);
     }
     if (d.name.present) {
       context.handle(
           _nameMeta, name.isAcceptableValue(d.name.value, _nameMeta));
-    } else if (name.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_nameMeta);
     }
     if (d.fullName.present) {
       context.handle(_fullNameMeta,
           fullName.isAcceptableValue(d.fullName.value, _fullNameMeta));
-    } else if (fullName.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_fullNameMeta);
     }
     if (d.fullNameRaw.present) {
       context.handle(_fullNameRawMeta,
           fullNameRaw.isAcceptableValue(d.fullNameRaw.value, _fullNameRawMeta));
-    } else if (fullNameRaw.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_fullNameRawMeta);
     }
     if (d.fullNameHash.present) {
@@ -3059,19 +3076,19 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
           _fullNameHashMeta,
           fullNameHash.isAcceptableValue(
               d.fullNameHash.value, _fullNameHashMeta));
-    } else if (fullNameHash.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_fullNameHashMeta);
     }
     if (d.folderHash.present) {
       context.handle(_folderHashMeta,
           folderHash.isAcceptableValue(d.folderHash.value, _folderHashMeta));
-    } else if (folderHash.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_folderHashMeta);
     }
     if (d.delimiter.present) {
       context.handle(_delimiterMeta,
           delimiter.isAcceptableValue(d.delimiter.value, _delimiterMeta));
-    } else if (delimiter.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_delimiterMeta);
     }
     if (d.needsInfoUpdate.present) {
@@ -3079,7 +3096,7 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
           _needsInfoUpdateMeta,
           needsInfoUpdate.isAcceptableValue(
               d.needsInfoUpdate.value, _needsInfoUpdateMeta));
-    } else if (needsInfoUpdate.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_needsInfoUpdateMeta);
     }
     if (d.isSystemFolder.present) {
@@ -3087,7 +3104,7 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
           _isSystemFolderMeta,
           isSystemFolder.isAcceptableValue(
               d.isSystemFolder.value, _isSystemFolderMeta));
-    } else if (isSystemFolder.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_isSystemFolderMeta);
     }
     if (d.isSubscribed.present) {
@@ -3095,7 +3112,7 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
           _isSubscribedMeta,
           isSubscribed.isAcceptableValue(
               d.isSubscribed.value, _isSubscribedMeta));
-    } else if (isSubscribed.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_isSubscribedMeta);
     }
     if (d.isSelectable.present) {
@@ -3103,7 +3120,7 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
           _isSelectableMeta,
           isSelectable.isAcceptableValue(
               d.isSelectable.value, _isSelectableMeta));
-    } else if (isSelectable.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_isSelectableMeta);
     }
     if (d.folderExists.present) {
@@ -3111,21 +3128,19 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
           _folderExistsMeta,
           folderExists.isAcceptableValue(
               d.folderExists.value, _folderExistsMeta));
-    } else if (folderExists.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_folderExistsMeta);
     }
     if (d.extended.present) {
       context.handle(_extendedMeta,
           extended.isAcceptableValue(d.extended.value, _extendedMeta));
-    } else if (extended.isRequired && isInserting) {
-      context.missing(_extendedMeta);
     }
     if (d.alwaysRefresh.present) {
       context.handle(
           _alwaysRefreshMeta,
           alwaysRefresh.isAcceptableValue(
               d.alwaysRefresh.value, _alwaysRefreshMeta));
-    } else if (alwaysRefresh.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_alwaysRefreshMeta);
     }
     if (d.messagesInfoInJson.present) {
@@ -3133,8 +3148,6 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
           _messagesInfoInJsonMeta,
           messagesInfoInJson.isAcceptableValue(
               d.messagesInfoInJson.value, _messagesInfoInJsonMeta));
-    } else if (messagesInfoInJson.isRequired && isInserting) {
-      context.missing(_messagesInfoInJsonMeta);
     }
     return context;
   }
@@ -3278,7 +3291,8 @@ class User extends DataClass implements Insertable<User> {
     );
   }
   factory User.fromJson(Map<String, dynamic> json,
-      {ValueSerializer serializer = const ValueSerializer.defaults()}) {
+      {ValueSerializer serializer}) {
+    serializer ??= moorRuntimeOptions.defaultSerializer;
     return User(
       localId: serializer.fromJson<int>(json['localId']),
       serverId: serializer.fromJson<int>(json['serverId']),
@@ -3291,8 +3305,8 @@ class User extends DataClass implements Insertable<User> {
     );
   }
   @override
-  Map<String, dynamic> toJson(
-      {ValueSerializer serializer = const ValueSerializer.defaults()}) {
+  Map<String, dynamic> toJson({ValueSerializer serializer}) {
+    serializer ??= moorRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'localId': serializer.toJson<int>(localId),
       'serverId': serializer.toJson<int>(serverId),
@@ -3571,19 +3585,17 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
     if (d.localId.present) {
       context.handle(_localIdMeta,
           localId.isAcceptableValue(d.localId.value, _localIdMeta));
-    } else if (localId.isRequired && isInserting) {
-      context.missing(_localIdMeta);
     }
     if (d.serverId.present) {
       context.handle(_serverIdMeta,
           serverId.isAcceptableValue(d.serverId.value, _serverIdMeta));
-    } else if (serverId.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_serverIdMeta);
     }
     if (d.hostname.present) {
       context.handle(_hostnameMeta,
           hostname.isAcceptableValue(d.hostname.value, _hostnameMeta));
-    } else if (hostname.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_hostnameMeta);
     }
     if (d.emailFromLogin.present) {
@@ -3591,13 +3603,13 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
           _emailFromLoginMeta,
           emailFromLogin.isAcceptableValue(
               d.emailFromLogin.value, _emailFromLoginMeta));
-    } else if (emailFromLogin.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_emailFromLoginMeta);
     }
     if (d.token.present) {
       context.handle(
           _tokenMeta, token.isAcceptableValue(d.token.value, _tokenMeta));
-    } else if (token.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_tokenMeta);
     }
     if (d.syncFreqInSeconds.present) {
@@ -3605,20 +3617,14 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
           _syncFreqInSecondsMeta,
           syncFreqInSeconds.isAcceptableValue(
               d.syncFreqInSeconds.value, _syncFreqInSecondsMeta));
-    } else if (syncFreqInSeconds.isRequired && isInserting) {
-      context.missing(_syncFreqInSecondsMeta);
     }
     if (d.syncPeriod.present) {
       context.handle(_syncPeriodMeta,
           syncPeriod.isAcceptableValue(d.syncPeriod.value, _syncPeriodMeta));
-    } else if (syncPeriod.isRequired && isInserting) {
-      context.missing(_syncPeriodMeta);
     }
     if (d.language.present) {
       context.handle(_languageMeta,
           language.isAcceptableValue(d.language.value, _languageMeta));
-    } else if (language.isRequired && isInserting) {
-      context.missing(_languageMeta);
     }
     return context;
   }
@@ -3760,7 +3766,8 @@ class Account extends DataClass implements Insertable<Account> {
     );
   }
   factory Account.fromJson(Map<String, dynamic> json,
-      {ValueSerializer serializer = const ValueSerializer.defaults()}) {
+      {ValueSerializer serializer}) {
+    serializer ??= moorRuntimeOptions.defaultSerializer;
     return Account(
       localId: serializer.fromJson<int>(json['localId']),
       userLocalId: serializer.fromJson<int>(json['userLocalId']),
@@ -3787,8 +3794,8 @@ class Account extends DataClass implements Insertable<Account> {
     );
   }
   @override
-  Map<String, dynamic> toJson(
-      {ValueSerializer serializer = const ValueSerializer.defaults()}) {
+  Map<String, dynamic> toJson({ValueSerializer serializer}) {
+    serializer ??= moorRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'localId': serializer.toJson<int>(localId),
       'userLocalId': serializer.toJson<int>(userLocalId),
@@ -4445,43 +4452,41 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
     if (d.localId.present) {
       context.handle(_localIdMeta,
           localId.isAcceptableValue(d.localId.value, _localIdMeta));
-    } else if (localId.isRequired && isInserting) {
-      context.missing(_localIdMeta);
     }
     if (d.userLocalId.present) {
       context.handle(_userLocalIdMeta,
           userLocalId.isAcceptableValue(d.userLocalId.value, _userLocalIdMeta));
-    } else if (userLocalId.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_userLocalIdMeta);
     }
     if (d.entityId.present) {
       context.handle(_entityIdMeta,
           entityId.isAcceptableValue(d.entityId.value, _entityIdMeta));
-    } else if (entityId.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_entityIdMeta);
     }
     if (d.idUser.present) {
       context.handle(
           _idUserMeta, idUser.isAcceptableValue(d.idUser.value, _idUserMeta));
-    } else if (idUser.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_idUserMeta);
     }
     if (d.uuid.present) {
       context.handle(
           _uuidMeta, uuid.isAcceptableValue(d.uuid.value, _uuidMeta));
-    } else if (uuid.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_uuidMeta);
     }
     if (d.parentUuid.present) {
       context.handle(_parentUuidMeta,
           parentUuid.isAcceptableValue(d.parentUuid.value, _parentUuidMeta));
-    } else if (parentUuid.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_parentUuidMeta);
     }
     if (d.moduleName.present) {
       context.handle(_moduleNameMeta,
           moduleName.isAcceptableValue(d.moduleName.value, _moduleNameMeta));
-    } else if (moduleName.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_moduleNameMeta);
     }
     if (d.useToAuthorize.present) {
@@ -4489,13 +4494,13 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
           _useToAuthorizeMeta,
           useToAuthorize.isAcceptableValue(
               d.useToAuthorize.value, _useToAuthorizeMeta));
-    } else if (useToAuthorize.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_useToAuthorizeMeta);
     }
     if (d.email.present) {
       context.handle(
           _emailMeta, email.isAcceptableValue(d.email.value, _emailMeta));
-    } else if (email.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_emailMeta);
     }
     if (d.friendlyName.present) {
@@ -4503,7 +4508,7 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
           _friendlyNameMeta,
           friendlyName.isAcceptableValue(
               d.friendlyName.value, _friendlyNameMeta));
-    } else if (friendlyName.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_friendlyNameMeta);
     }
     if (d.useSignature.present) {
@@ -4511,19 +4516,19 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
           _useSignatureMeta,
           useSignature.isAcceptableValue(
               d.useSignature.value, _useSignatureMeta));
-    } else if (useSignature.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_useSignatureMeta);
     }
     if (d.signature.present) {
       context.handle(_signatureMeta,
           signature.isAcceptableValue(d.signature.value, _signatureMeta));
-    } else if (signature.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_signatureMeta);
     }
     if (d.serverId.present) {
       context.handle(_serverIdMeta,
           serverId.isAcceptableValue(d.serverId.value, _serverIdMeta));
-    } else if (serverId.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_serverIdMeta);
     }
     if (d.foldersOrderInJson.present) {
@@ -4531,7 +4536,7 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
           _foldersOrderInJsonMeta,
           foldersOrderInJson.isAcceptableValue(
               d.foldersOrderInJson.value, _foldersOrderInJsonMeta));
-    } else if (foldersOrderInJson.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_foldersOrderInJsonMeta);
     }
     if (d.useThreading.present) {
@@ -4539,7 +4544,7 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
           _useThreadingMeta,
           useThreading.isAcceptableValue(
               d.useThreading.value, _useThreadingMeta));
-    } else if (useThreading.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_useThreadingMeta);
     }
     if (d.saveRepliesToCurrFolder.present) {
@@ -4547,13 +4552,13 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
           _saveRepliesToCurrFolderMeta,
           saveRepliesToCurrFolder.isAcceptableValue(
               d.saveRepliesToCurrFolder.value, _saveRepliesToCurrFolderMeta));
-    } else if (saveRepliesToCurrFolder.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_saveRepliesToCurrFolderMeta);
     }
     if (d.accountId.present) {
       context.handle(_accountIdMeta,
           accountId.isAcceptableValue(d.accountId.value, _accountIdMeta));
-    } else if (accountId.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_accountIdMeta);
     }
     if (d.allowFilters.present) {
@@ -4561,7 +4566,7 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
           _allowFiltersMeta,
           allowFilters.isAcceptableValue(
               d.allowFilters.value, _allowFiltersMeta));
-    } else if (allowFilters.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_allowFiltersMeta);
     }
     if (d.allowForward.present) {
@@ -4569,7 +4574,7 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
           _allowForwardMeta,
           allowForward.isAcceptableValue(
               d.allowForward.value, _allowForwardMeta));
-    } else if (allowForward.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_allowForwardMeta);
     }
     if (d.allowAutoResponder.present) {
@@ -4577,7 +4582,7 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
           _allowAutoResponderMeta,
           allowAutoResponder.isAcceptableValue(
               d.allowAutoResponder.value, _allowAutoResponderMeta));
-    } else if (allowAutoResponder.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_allowAutoResponderMeta);
     }
     return context;
@@ -4901,7 +4906,8 @@ class ContactsTable extends DataClass implements Insertable<ContactsTable> {
     );
   }
   factory ContactsTable.fromJson(Map<String, dynamic> json,
-      {ValueSerializer serializer = const ValueSerializer.defaults()}) {
+      {ValueSerializer serializer}) {
+    serializer ??= moorRuntimeOptions.defaultSerializer;
     return ContactsTable(
       localId: serializer.fromJson<int>(json['localId']),
       uuidPlusStorage: serializer.fromJson<String>(json['uuidPlusStorage']),
@@ -4964,8 +4970,8 @@ class ContactsTable extends DataClass implements Insertable<ContactsTable> {
     );
   }
   @override
-  Map<String, dynamic> toJson(
-      {ValueSerializer serializer = const ValueSerializer.defaults()}) {
+  Map<String, dynamic> toJson({ValueSerializer serializer}) {
+    serializer ??= moorRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'localId': serializer.toJson<int>(localId),
       'uuidPlusStorage': serializer.toJson<String>(uuidPlusStorage),
@@ -6617,69 +6623,61 @@ class $ContactsTable extends Contacts
     if (d.localId.present) {
       context.handle(_localIdMeta,
           localId.isAcceptableValue(d.localId.value, _localIdMeta));
-    } else if (localId.isRequired && isInserting) {
-      context.missing(_localIdMeta);
     }
     if (d.uuidPlusStorage.present) {
       context.handle(
           _uuidPlusStorageMeta,
           uuidPlusStorage.isAcceptableValue(
               d.uuidPlusStorage.value, _uuidPlusStorageMeta));
-    } else if (uuidPlusStorage.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_uuidPlusStorageMeta);
     }
     if (d.uuid.present) {
       context.handle(
           _uuidMeta, uuid.isAcceptableValue(d.uuid.value, _uuidMeta));
-    } else if (uuid.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_uuidMeta);
     }
     if (d.userLocalId.present) {
       context.handle(_userLocalIdMeta,
           userLocalId.isAcceptableValue(d.userLocalId.value, _userLocalIdMeta));
-    } else if (userLocalId.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_userLocalIdMeta);
     }
     if (d.entityId.present) {
       context.handle(_entityIdMeta,
           entityId.isAcceptableValue(d.entityId.value, _entityIdMeta));
-    } else if (entityId.isRequired && isInserting) {
-      context.missing(_entityIdMeta);
     }
     if (d.parentUuid.present) {
       context.handle(_parentUuidMeta,
           parentUuid.isAcceptableValue(d.parentUuid.value, _parentUuidMeta));
-    } else if (parentUuid.isRequired && isInserting) {
-      context.missing(_parentUuidMeta);
     }
     if (d.eTag.present) {
       context.handle(
           _eTagMeta, eTag.isAcceptableValue(d.eTag.value, _eTagMeta));
-    } else if (eTag.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_eTagMeta);
     }
     if (d.idUser.present) {
       context.handle(
           _idUserMeta, idUser.isAcceptableValue(d.idUser.value, _idUserMeta));
-    } else if (idUser.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_idUserMeta);
     }
     if (d.idTenant.present) {
       context.handle(_idTenantMeta,
           idTenant.isAcceptableValue(d.idTenant.value, _idTenantMeta));
-    } else if (idTenant.isRequired && isInserting) {
-      context.missing(_idTenantMeta);
     }
     if (d.storage.present) {
       context.handle(_storageMeta,
           storage.isAcceptableValue(d.storage.value, _storageMeta));
-    } else if (storage.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_storageMeta);
     }
     if (d.fullName.present) {
       context.handle(_fullNameMeta,
           fullName.isAcceptableValue(d.fullName.value, _fullNameMeta));
-    } else if (fullName.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_fullNameMeta);
     }
     if (d.useFriendlyName.present) {
@@ -6687,15 +6685,13 @@ class $ContactsTable extends Contacts
           _useFriendlyNameMeta,
           useFriendlyName.isAcceptableValue(
               d.useFriendlyName.value, _useFriendlyNameMeta));
-    } else if (useFriendlyName.isRequired && isInserting) {
-      context.missing(_useFriendlyNameMeta);
     }
     if (d.primaryEmail.present) {
       context.handle(
           _primaryEmailMeta,
           primaryEmail.isAcceptableValue(
               d.primaryEmail.value, _primaryEmailMeta));
-    } else if (primaryEmail.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_primaryEmailMeta);
     }
     if (d.primaryPhone.present) {
@@ -6703,7 +6699,7 @@ class $ContactsTable extends Contacts
           _primaryPhoneMeta,
           primaryPhone.isAcceptableValue(
               d.primaryPhone.value, _primaryPhoneMeta));
-    } else if (primaryPhone.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_primaryPhoneMeta);
     }
     if (d.primaryAddress.present) {
@@ -6711,49 +6707,49 @@ class $ContactsTable extends Contacts
           _primaryAddressMeta,
           primaryAddress.isAcceptableValue(
               d.primaryAddress.value, _primaryAddressMeta));
-    } else if (primaryAddress.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_primaryAddressMeta);
     }
     if (d.viewEmail.present) {
       context.handle(_viewEmailMeta,
           viewEmail.isAcceptableValue(d.viewEmail.value, _viewEmailMeta));
-    } else if (viewEmail.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_viewEmailMeta);
     }
     if (d.title.present) {
       context.handle(
           _titleMeta, title.isAcceptableValue(d.title.value, _titleMeta));
-    } else if (title.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_titleMeta);
     }
     if (d.firstName.present) {
       context.handle(_firstNameMeta,
           firstName.isAcceptableValue(d.firstName.value, _firstNameMeta));
-    } else if (firstName.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_firstNameMeta);
     }
     if (d.lastName.present) {
       context.handle(_lastNameMeta,
           lastName.isAcceptableValue(d.lastName.value, _lastNameMeta));
-    } else if (lastName.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_lastNameMeta);
     }
     if (d.nickName.present) {
       context.handle(_nickNameMeta,
           nickName.isAcceptableValue(d.nickName.value, _nickNameMeta));
-    } else if (nickName.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_nickNameMeta);
     }
     if (d.skype.present) {
       context.handle(
           _skypeMeta, skype.isAcceptableValue(d.skype.value, _skypeMeta));
-    } else if (skype.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_skypeMeta);
     }
     if (d.facebook.present) {
       context.handle(_facebookMeta,
           facebook.isAcceptableValue(d.facebook.value, _facebookMeta));
-    } else if (facebook.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_facebookMeta);
     }
     if (d.personalEmail.present) {
@@ -6761,7 +6757,7 @@ class $ContactsTable extends Contacts
           _personalEmailMeta,
           personalEmail.isAcceptableValue(
               d.personalEmail.value, _personalEmailMeta));
-    } else if (personalEmail.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_personalEmailMeta);
     }
     if (d.personalAddress.present) {
@@ -6769,7 +6765,7 @@ class $ContactsTable extends Contacts
           _personalAddressMeta,
           personalAddress.isAcceptableValue(
               d.personalAddress.value, _personalAddressMeta));
-    } else if (personalAddress.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_personalAddressMeta);
     }
     if (d.personalCity.present) {
@@ -6777,7 +6773,7 @@ class $ContactsTable extends Contacts
           _personalCityMeta,
           personalCity.isAcceptableValue(
               d.personalCity.value, _personalCityMeta));
-    } else if (personalCity.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_personalCityMeta);
     }
     if (d.personalState.present) {
@@ -6785,13 +6781,13 @@ class $ContactsTable extends Contacts
           _personalStateMeta,
           personalState.isAcceptableValue(
               d.personalState.value, _personalStateMeta));
-    } else if (personalState.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_personalStateMeta);
     }
     if (d.personalZip.present) {
       context.handle(_personalZipMeta,
           personalZip.isAcceptableValue(d.personalZip.value, _personalZipMeta));
-    } else if (personalZip.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_personalZipMeta);
     }
     if (d.personalCountry.present) {
@@ -6799,19 +6795,19 @@ class $ContactsTable extends Contacts
           _personalCountryMeta,
           personalCountry.isAcceptableValue(
               d.personalCountry.value, _personalCountryMeta));
-    } else if (personalCountry.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_personalCountryMeta);
     }
     if (d.personalWeb.present) {
       context.handle(_personalWebMeta,
           personalWeb.isAcceptableValue(d.personalWeb.value, _personalWebMeta));
-    } else if (personalWeb.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_personalWebMeta);
     }
     if (d.personalFax.present) {
       context.handle(_personalFaxMeta,
           personalFax.isAcceptableValue(d.personalFax.value, _personalFaxMeta));
-    } else if (personalFax.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_personalFaxMeta);
     }
     if (d.personalPhone.present) {
@@ -6819,7 +6815,7 @@ class $ContactsTable extends Contacts
           _personalPhoneMeta,
           personalPhone.isAcceptableValue(
               d.personalPhone.value, _personalPhoneMeta));
-    } else if (personalPhone.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_personalPhoneMeta);
     }
     if (d.personalMobile.present) {
@@ -6827,7 +6823,7 @@ class $ContactsTable extends Contacts
           _personalMobileMeta,
           personalMobile.isAcceptableValue(
               d.personalMobile.value, _personalMobileMeta));
-    } else if (personalMobile.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_personalMobileMeta);
     }
     if (d.businessEmail.present) {
@@ -6835,7 +6831,7 @@ class $ContactsTable extends Contacts
           _businessEmailMeta,
           businessEmail.isAcceptableValue(
               d.businessEmail.value, _businessEmailMeta));
-    } else if (businessEmail.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_businessEmailMeta);
     }
     if (d.businessCompany.present) {
@@ -6843,7 +6839,7 @@ class $ContactsTable extends Contacts
           _businessCompanyMeta,
           businessCompany.isAcceptableValue(
               d.businessCompany.value, _businessCompanyMeta));
-    } else if (businessCompany.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_businessCompanyMeta);
     }
     if (d.businessAddress.present) {
@@ -6851,7 +6847,7 @@ class $ContactsTable extends Contacts
           _businessAddressMeta,
           businessAddress.isAcceptableValue(
               d.businessAddress.value, _businessAddressMeta));
-    } else if (businessAddress.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_businessAddressMeta);
     }
     if (d.businessCity.present) {
@@ -6859,7 +6855,7 @@ class $ContactsTable extends Contacts
           _businessCityMeta,
           businessCity.isAcceptableValue(
               d.businessCity.value, _businessCityMeta));
-    } else if (businessCity.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_businessCityMeta);
     }
     if (d.businessState.present) {
@@ -6867,13 +6863,13 @@ class $ContactsTable extends Contacts
           _businessStateMeta,
           businessState.isAcceptableValue(
               d.businessState.value, _businessStateMeta));
-    } else if (businessState.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_businessStateMeta);
     }
     if (d.businessZip.present) {
       context.handle(_businessZipMeta,
           businessZip.isAcceptableValue(d.businessZip.value, _businessZipMeta));
-    } else if (businessZip.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_businessZipMeta);
     }
     if (d.businessCountry.present) {
@@ -6881,7 +6877,7 @@ class $ContactsTable extends Contacts
           _businessCountryMeta,
           businessCountry.isAcceptableValue(
               d.businessCountry.value, _businessCountryMeta));
-    } else if (businessCountry.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_businessCountryMeta);
     }
     if (d.businessJobTitle.present) {
@@ -6889,7 +6885,7 @@ class $ContactsTable extends Contacts
           _businessJobTitleMeta,
           businessJobTitle.isAcceptableValue(
               d.businessJobTitle.value, _businessJobTitleMeta));
-    } else if (businessJobTitle.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_businessJobTitleMeta);
     }
     if (d.businessDepartment.present) {
@@ -6897,7 +6893,7 @@ class $ContactsTable extends Contacts
           _businessDepartmentMeta,
           businessDepartment.isAcceptableValue(
               d.businessDepartment.value, _businessDepartmentMeta));
-    } else if (businessDepartment.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_businessDepartmentMeta);
     }
     if (d.businessOffice.present) {
@@ -6905,7 +6901,7 @@ class $ContactsTable extends Contacts
           _businessOfficeMeta,
           businessOffice.isAcceptableValue(
               d.businessOffice.value, _businessOfficeMeta));
-    } else if (businessOffice.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_businessOfficeMeta);
     }
     if (d.businessPhone.present) {
@@ -6913,86 +6909,76 @@ class $ContactsTable extends Contacts
           _businessPhoneMeta,
           businessPhone.isAcceptableValue(
               d.businessPhone.value, _businessPhoneMeta));
-    } else if (businessPhone.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_businessPhoneMeta);
     }
     if (d.businessFax.present) {
       context.handle(_businessFaxMeta,
           businessFax.isAcceptableValue(d.businessFax.value, _businessFaxMeta));
-    } else if (businessFax.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_businessFaxMeta);
     }
     if (d.businessWeb.present) {
       context.handle(_businessWebMeta,
           businessWeb.isAcceptableValue(d.businessWeb.value, _businessWebMeta));
-    } else if (businessWeb.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_businessWebMeta);
     }
     if (d.otherEmail.present) {
       context.handle(_otherEmailMeta,
           otherEmail.isAcceptableValue(d.otherEmail.value, _otherEmailMeta));
-    } else if (otherEmail.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_otherEmailMeta);
     }
     if (d.notes.present) {
       context.handle(
           _notesMeta, notes.isAcceptableValue(d.notes.value, _notesMeta));
-    } else if (notes.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_notesMeta);
     }
     if (d.birthDay.present) {
       context.handle(_birthDayMeta,
           birthDay.isAcceptableValue(d.birthDay.value, _birthDayMeta));
-    } else if (birthDay.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_birthDayMeta);
     }
     if (d.birthMonth.present) {
       context.handle(_birthMonthMeta,
           birthMonth.isAcceptableValue(d.birthMonth.value, _birthMonthMeta));
-    } else if (birthMonth.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_birthMonthMeta);
     }
     if (d.birthYear.present) {
       context.handle(_birthYearMeta,
           birthYear.isAcceptableValue(d.birthYear.value, _birthYearMeta));
-    } else if (birthYear.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_birthYearMeta);
     }
     if (d.auto.present) {
       context.handle(
           _autoMeta, auto.isAcceptableValue(d.auto.value, _autoMeta));
-    } else if (auto.isRequired && isInserting) {
-      context.missing(_autoMeta);
     }
     if (d.frequency.present) {
       context.handle(_frequencyMeta,
           frequency.isAcceptableValue(d.frequency.value, _frequencyMeta));
-    } else if (frequency.isRequired && isInserting) {
-      context.missing(_frequencyMeta);
     }
     if (d.dateModified.present) {
       context.handle(
           _dateModifiedMeta,
           dateModified.isAcceptableValue(
               d.dateModified.value, _dateModifiedMeta));
-    } else if (dateModified.isRequired && isInserting) {
-      context.missing(_dateModifiedMeta);
     }
     if (d.davContactsUid.present) {
       context.handle(
           _davContactsUidMeta,
           davContactsUid.isAcceptableValue(
               d.davContactsUid.value, _davContactsUidMeta));
-    } else if (davContactsUid.isRequired && isInserting) {
-      context.missing(_davContactsUidMeta);
     }
     if (d.davContactsVCardUid.present) {
       context.handle(
           _davContactsVCardUidMeta,
           davContactsVCardUid.isAcceptableValue(
               d.davContactsVCardUid.value, _davContactsVCardUidMeta));
-    } else if (davContactsVCardUid.isRequired && isInserting) {
-      context.missing(_davContactsVCardUidMeta);
     }
     context.handle(_groupUUIDsMeta, const VerificationResult.success());
     return context;
@@ -7281,7 +7267,8 @@ class ContactsGroupsTable extends DataClass
     );
   }
   factory ContactsGroupsTable.fromJson(Map<String, dynamic> json,
-      {ValueSerializer serializer = const ValueSerializer.defaults()}) {
+      {ValueSerializer serializer}) {
+    serializer ??= moorRuntimeOptions.defaultSerializer;
     return ContactsGroupsTable(
       uuid: serializer.fromJson<String>(json['uuid']),
       userLocalId: serializer.fromJson<int>(json['userLocalId']),
@@ -7302,8 +7289,8 @@ class ContactsGroupsTable extends DataClass
     );
   }
   @override
-  Map<String, dynamic> toJson(
-      {ValueSerializer serializer = const ValueSerializer.defaults()}) {
+  Map<String, dynamic> toJson({ValueSerializer serializer}) {
+    serializer ??= moorRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'uuid': serializer.toJson<String>(uuid),
       'userLocalId': serializer.toJson<int>(userLocalId),
@@ -7808,48 +7795,48 @@ class $ContactsGroupsTable extends ContactsGroups
     if (d.uuid.present) {
       context.handle(
           _uuidMeta, uuid.isAcceptableValue(d.uuid.value, _uuidMeta));
-    } else if (uuid.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_uuidMeta);
     }
     if (d.userLocalId.present) {
       context.handle(_userLocalIdMeta,
           userLocalId.isAcceptableValue(d.userLocalId.value, _userLocalIdMeta));
-    } else if (userLocalId.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_userLocalIdMeta);
     }
     if (d.idUser.present) {
       context.handle(
           _idUserMeta, idUser.isAcceptableValue(d.idUser.value, _idUserMeta));
-    } else if (idUser.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_idUserMeta);
     }
     if (d.city.present) {
       context.handle(
           _cityMeta, city.isAcceptableValue(d.city.value, _cityMeta));
-    } else if (city.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_cityMeta);
     }
     if (d.company.present) {
       context.handle(_companyMeta,
           company.isAcceptableValue(d.company.value, _companyMeta));
-    } else if (company.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_companyMeta);
     }
     if (d.country.present) {
       context.handle(_countryMeta,
           country.isAcceptableValue(d.country.value, _countryMeta));
-    } else if (country.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_countryMeta);
     }
     if (d.email.present) {
       context.handle(
           _emailMeta, email.isAcceptableValue(d.email.value, _emailMeta));
-    } else if (email.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_emailMeta);
     }
     if (d.fax.present) {
       context.handle(_faxMeta, fax.isAcceptableValue(d.fax.value, _faxMeta));
-    } else if (fax.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_faxMeta);
     }
     if (d.isOrganization.present) {
@@ -7857,47 +7844,47 @@ class $ContactsGroupsTable extends ContactsGroups
           _isOrganizationMeta,
           isOrganization.isAcceptableValue(
               d.isOrganization.value, _isOrganizationMeta));
-    } else if (isOrganization.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_isOrganizationMeta);
     }
     if (d.name.present) {
       context.handle(
           _nameMeta, name.isAcceptableValue(d.name.value, _nameMeta));
-    } else if (name.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_nameMeta);
     }
     if (d.parentUUID.present) {
       context.handle(_parentUUIDMeta,
           parentUUID.isAcceptableValue(d.parentUUID.value, _parentUUIDMeta));
-    } else if (parentUUID.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_parentUUIDMeta);
     }
     if (d.phone.present) {
       context.handle(
           _phoneMeta, phone.isAcceptableValue(d.phone.value, _phoneMeta));
-    } else if (phone.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_phoneMeta);
     }
     if (d.state.present) {
       context.handle(
           _stateMeta, state.isAcceptableValue(d.state.value, _stateMeta));
-    } else if (state.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_stateMeta);
     }
     if (d.street.present) {
       context.handle(
           _streetMeta, street.isAcceptableValue(d.street.value, _streetMeta));
-    } else if (street.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_streetMeta);
     }
     if (d.web.present) {
       context.handle(_webMeta, web.isAcceptableValue(d.web.value, _webMeta));
-    } else if (web.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_webMeta);
     }
     if (d.zip.present) {
       context.handle(_zipMeta, zip.isAcceptableValue(d.zip.value, _zipMeta));
-    } else if (zip.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_zipMeta);
     }
     return context;
@@ -8019,7 +8006,8 @@ class ContactsStoragesTable extends DataClass
     );
   }
   factory ContactsStoragesTable.fromJson(Map<String, dynamic> json,
-      {ValueSerializer serializer = const ValueSerializer.defaults()}) {
+      {ValueSerializer serializer}) {
+    serializer ??= moorRuntimeOptions.defaultSerializer;
     return ContactsStoragesTable(
       sqliteId: serializer.fromJson<int>(json['sqliteId']),
       userLocalId: serializer.fromJson<int>(json['userLocalId']),
@@ -8034,8 +8022,8 @@ class ContactsStoragesTable extends DataClass
     );
   }
   @override
-  Map<String, dynamic> toJson(
-      {ValueSerializer serializer = const ValueSerializer.defaults()}) {
+  Map<String, dynamic> toJson({ValueSerializer serializer}) {
+    serializer ??= moorRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'sqliteId': serializer.toJson<int>(sqliteId),
       'userLocalId': serializer.toJson<int>(userLocalId),
@@ -8344,49 +8332,47 @@ class $ContactsStoragesTable extends ContactsStorages
     if (d.sqliteId.present) {
       context.handle(_sqliteIdMeta,
           sqliteId.isAcceptableValue(d.sqliteId.value, _sqliteIdMeta));
-    } else if (sqliteId.isRequired && isInserting) {
-      context.missing(_sqliteIdMeta);
     }
     if (d.userLocalId.present) {
       context.handle(_userLocalIdMeta,
           userLocalId.isAcceptableValue(d.userLocalId.value, _userLocalIdMeta));
-    } else if (userLocalId.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_userLocalIdMeta);
     }
     if (d.idUser.present) {
       context.handle(
           _idUserMeta, idUser.isAcceptableValue(d.idUser.value, _idUserMeta));
-    } else if (idUser.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_idUserMeta);
     }
     if (d.serverId.present) {
       context.handle(_serverIdMeta,
           serverId.isAcceptableValue(d.serverId.value, _serverIdMeta));
-    } else if (serverId.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_serverIdMeta);
     }
     if (d.uniqueName.present) {
       context.handle(_uniqueNameMeta,
           uniqueName.isAcceptableValue(d.uniqueName.value, _uniqueNameMeta));
-    } else if (uniqueName.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_uniqueNameMeta);
     }
     if (d.name.present) {
       context.handle(
           _nameMeta, name.isAcceptableValue(d.name.value, _nameMeta));
-    } else if (name.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_nameMeta);
     }
     if (d.cTag.present) {
       context.handle(
           _cTagMeta, cTag.isAcceptableValue(d.cTag.value, _cTagMeta));
-    } else if (cTag.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_cTagMeta);
     }
     if (d.display.present) {
       context.handle(_displayMeta,
           display.isAcceptableValue(d.display.value, _displayMeta));
-    } else if (display.isRequired && isInserting) {
+    } else if (isInserting) {
       context.missing(_displayMeta);
     }
     context.handle(_contactsInfoMeta, const VerificationResult.success());
@@ -8463,7 +8449,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   $ContactsStoragesTable get contactsStorages =>
       _contactsStorages ??= $ContactsStoragesTable(this);
   @override
-  List<TableInfo> get allTables => [
+  Iterable<TableInfo> get allTables => allSchemaEntities.whereType<TableInfo>();
+  @override
+  List<DatabaseSchemaEntity> get allSchemaEntities => [
         mail,
         folders,
         users,

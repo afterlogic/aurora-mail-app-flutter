@@ -52,5 +52,14 @@ class LogOut extends AuthEvent {
   List<Object> get props => [hashCode];
 }
 
+class ChangeAccount extends AuthEvent {
+  final Account account;
+
+  const ChangeAccount(this.account);
+
+  @override
+  List<Object> get props => [account];
+}
+
 class InvalidateCurrentUserToken extends AuthEvent
     implements AlwaysNonEqualObject {}

@@ -12,8 +12,14 @@ class MessagesListMethods {
     _mailApi = new MailApi(user: user, account: account);
   }
 
-  Stream<List<Message>> subscribeToMessages(Folder folder, bool isStarred, User user) {
-    return _mailDao.watchMessages(folder.fullNameRaw, user.localId, isStarred);
+  Stream<List<Message>> subscribeToMessages(
+      Folder folder, bool isStarred, User user, Account account) {
+    return _mailDao.watchMessages(
+      folder.fullNameRaw,
+      user.localId,
+      account.entityId,
+      isStarred,
+    );
   }
 
   Future<void> deleteMessages(List<int> uids, String folderRawName) async {
