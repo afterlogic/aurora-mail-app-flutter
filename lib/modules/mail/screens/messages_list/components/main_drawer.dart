@@ -36,7 +36,7 @@ class _MainDrawerState extends State<MainDrawer> {
     return Drawer(
       child: ListTileTheme(
         style: ListTileStyle.drawer,
-        selectedColor:theme.iconTheme.color,
+        selectedColor: theme.iconTheme.color,
         textColor: theme.disabledColor,
         iconColor: theme.disabledColor,
         child: SafeArea(
@@ -46,8 +46,8 @@ class _MainDrawerState extends State<MainDrawer> {
               InkWell(
                 onTap: multiAccountEnable
                     ? () {
-                  _changeMode();
-                }
+                        _changeMode();
+                      }
                     : null,
                 child: Padding(
                   padding: EdgeInsets.all(16.0),
@@ -107,7 +107,8 @@ class _MainDrawerState extends State<MainDrawer> {
                     },
                     child: RefreshIndicator(
                       onRefresh: () {
-                        BlocProvider.of<MailBloc>(context).add(RefreshFolders());
+                        BlocProvider.of<MailBloc>(context)
+                            .add(RefreshFolders());
                         return _refreshCompleter.future;
                       },
                       backgroundColor: Colors.white,
@@ -115,7 +116,7 @@ class _MainDrawerState extends State<MainDrawer> {
                       child: BlocBuilder<MailBloc, MailState>(
                           bloc: BlocProvider.of<MailBloc>(context),
                           condition: (prevState, state) =>
-                          state is FoldersLoaded || state is FoldersEmpty,
+                              state is FoldersLoaded || state is FoldersEmpty,
                           builder: (ctx, state) {
                             if (state is FoldersLoaded) {
                               return _buildFolders(state);

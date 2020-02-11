@@ -90,9 +90,9 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
   void _onMessageSelected(List<Message> allMessages, Message item) {
     final i = allMessages.indexOf(item);
 
-    final draftsFolder = (_mailBloc.state as FoldersLoaded)
-        .folders
-        .firstWhere((f) => f.folderType == FolderType.drafts, orElse: () => null);
+    final draftsFolder = (_mailBloc.state as FoldersLoaded).folders.firstWhere(
+        (f) => f.folderType == FolderType.drafts,
+        orElse: () => null);
 
     if (draftsFolder != null && item.folder == draftsFolder.fullNameRaw) {
       Navigator.pushNamed(
@@ -120,14 +120,15 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
   }
 
   void _deleteMessage(Message message) {
-    _messagesListBloc.add(DeleteMessages(uids: [message.uid], folderRawName: message.folder));
+    _messagesListBloc.add(
+        DeleteMessages(uids: [message.uid], folderRawName: message.folder));
   }
 
   void _dispatchPostFoldersLoadedAction(FoldersLoaded state) {
     switch (state.postAction) {
       case PostFolderLoadedAction.subscribeToMessages:
-        _messagesListBloc
-            .add(SubscribeToMessages(state.selectedFolder, state.isStarredFilterEnabled));
+        _messagesListBloc.add(SubscribeToMessages(
+            state.selectedFolder, state.isStarredFilterEnabled));
         break;
       case PostFolderLoadedAction.stopMessagesRefresh:
         _messagesListBloc.add(StopMessagesRefresh());
@@ -150,81 +151,94 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
         BlocProvider<MailBloc>.value(value: _mailBloc),
         BlocProvider<ContactsBloc>.value(value: _contactsBloc),
       ],
-      child: Scaffold(
-        appBar: MailAppBar(),
-        drawer: MainDrawer(),
-        body: MultiBlocListener(
-          listeners: [
-            BlocListener(
-              bloc: _messagesListBloc,
-              listener: (BuildContext context, state) {
-                if (state is MessagesRefreshed || state is MailError) {
-                  _refreshCompleter?.complete();
-                  _refreshCompleter = new Completer();
-                }
-                if (state is MessagesDeleted) _mailBloc.add(RefreshMessages());
-                if (state is MailError) _showError(context, state.errorMsg);
-              },
-            ),
-            BlocListener(
-              bloc: _mailBloc,
-              listener: (BuildContext context, state) {
-                if (state is FoldersLoaded) {
-                  setState(() => _selectedFolder = state.selectedFolder);
-                  if (state.postAction != null) {
-                    _dispatchPostFoldersLoadedAction(state);
-                  }
-                }
-              },
-            ),
-            BlocListener<SettingsBloc, SettingsState>(
-              condition: (prev, next) {
-                if (prev is SettingsLoaded &&
-                    next is SettingsLoaded &&
-                    prev.darkThemeEnabled != next.darkThemeEnabled) {
-                  return false;
-                } else {
-                  return true;
-                }
-              },
-              listener: (BuildContext context, state) {
-                if (state is SettingsLoaded) {
-                  if (state.syncFrequency != null) {
-                    _initUpdateTimer();
-                  }
-                  _mailBloc.add(RefreshMessages());
-                }
-              },
-            ),
-          ],
-          child: RefreshIndicator(
-            onRefresh: () {
-              _mailBloc.add(RefreshMessages());
-              return _refreshCompleter.future;
-            },
-            backgroundColor: Colors.white,
-            color: Colors.black,
-            child: BlocBuilder<MessagesListBloc, MessagesListState>(
+      child: BlocListener<AuthBloc, AuthState>(
+        condition: (prev, next) {
+          return next is InitializedUserAndAccounts;
+        },
+        listener: (BuildContext context, AuthState state) {
+          _initBlocs();
+          setState(() {});
+        },
+        child: Scaffold(
+          appBar: MailAppBar(),
+          drawer: MainDrawer(),
+          body: MultiBlocListener(
+            listeners: [
+              BlocListener(
                 bloc: _messagesListBloc,
-                condition: (prevState, state) => state is SubscribedToMessages,
-                builder: (context, state) {
-                  if (state is SubscribedToMessages) {
-                    return _buildMessagesStream(state.messagesSub, state.isStarredFilterEnabled);
-                  } else {
-                    return _buildMessagesLoading();
+                listener: (BuildContext context, state) {
+                  if (state is MessagesRefreshed || state is MailError) {
+                    _refreshCompleter?.complete();
+                    _refreshCompleter = new Completer();
                   }
-                }),
+                  if (state is MessagesDeleted)
+                    _mailBloc.add(RefreshMessages());
+                  if (state is MailError) _showError(context, state.errorMsg);
+                },
+              ),
+              BlocListener(
+                bloc: _mailBloc,
+                listener: (BuildContext context, state) {
+                  if (state is FoldersLoaded) {
+                    setState(() => _selectedFolder = state.selectedFolder);
+                    if (state.postAction != null) {
+                      _dispatchPostFoldersLoadedAction(state);
+                    }
+                  }
+                },
+              ),
+              BlocListener<SettingsBloc, SettingsState>(
+                condition: (prev, next) {
+                  if (prev is SettingsLoaded &&
+                      next is SettingsLoaded &&
+                      prev.darkThemeEnabled != next.darkThemeEnabled) {
+                    return false;
+                  } else {
+                    return true;
+                  }
+                },
+                listener: (BuildContext context, state) {
+                  if (state is SettingsLoaded) {
+                    if (state.syncFrequency != null) {
+                      _initUpdateTimer();
+                    }
+                    _mailBloc.add(RefreshMessages());
+                  }
+                },
+              ),
+            ],
+            child: RefreshIndicator(
+              onRefresh: () {
+                _mailBloc.add(RefreshMessages());
+                return _refreshCompleter.future;
+              },
+              backgroundColor: Colors.white,
+              color: Colors.black,
+              child: BlocBuilder<MessagesListBloc, MessagesListState>(
+                  bloc: _messagesListBloc,
+                  condition: (prevState, state) =>
+                      state is SubscribedToMessages,
+                  builder: (context, state) {
+                    if (state is SubscribedToMessages) {
+                      return _buildMessagesStream(
+                          state.messagesSub, state.isStarredFilterEnabled);
+                    } else {
+                      return _buildMessagesLoading();
+                    }
+                  }),
+            ),
           ),
-        ),
-        bottomNavigationBar: MailBottomAppBar(selectedRoute: MailBottomAppBarRoutes.mail),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-        floatingActionButton: FloatingActionButton(
-          child: Icon(MdiIcons.pen),
-          onPressed: () => Navigator.pushNamed(context, ComposeRoute.name,
-              arguments: ComposeScreenArgs(
-                mailBloc: _mailBloc,
-                contactsBloc: _contactsBloc,
-              )),
+          bottomNavigationBar:
+              MailBottomAppBar(selectedRoute: MailBottomAppBarRoutes.mail),
+          floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+          floatingActionButton: FloatingActionButton(
+            child: Icon(MdiIcons.pen),
+            onPressed: () => Navigator.pushNamed(context, ComposeRoute.name,
+                arguments: ComposeScreenArgs(
+                  mailBloc: _mailBloc,
+                  contactsBloc: _contactsBloc,
+                )),
+          ),
         ),
       ),
     );
@@ -232,7 +246,8 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
 
   Widget _buildMessagesLoading() => Center(child: CircularProgressIndicator());
 
-  Widget _buildMessagesStream(Stream<List<Message>> messagesSub, bool isStarred) {
+  Widget _buildMessagesStream(
+      Stream<List<Message>> messagesSub, bool isStarred) {
     return StreamBuilder(
       stream: messagesSub,
       builder: (ctx, AsyncSnapshot<List<Message>> snap) {
@@ -260,7 +275,8 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
                       item,
                       threads.where((t) => t.parentUid == item.uid).toList(),
                       key: Key(item.localId.toString()),
-                      onItemSelected: (Message item) => _onMessageSelected(snap.data, item),
+                      onItemSelected: (Message item) =>
+                          _onMessageSelected(snap.data, item),
                       onStarMessage: _setStarred,
                       onDeleteMessage: _deleteMessage,
                     ),
