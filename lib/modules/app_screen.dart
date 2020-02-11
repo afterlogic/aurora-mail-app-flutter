@@ -118,12 +118,16 @@ class _AppState extends State<App> with WidgetsBindingObserver {
                       providers: [
                         BlocProvider.value(value: _authBloc),
                         BlocProvider.value(value: _settingsBloc),
-                        BlocProvider(create: (_) => new MailBloc(
-                          user: authState.user,
+                        BlocProvider(create: (_) {
+                          print("VO: authState.user: ${authState.user}");
+                          print("VO: _authBloc.currentUser: ${_authBloc.currentUser}");
+                          return new MailBloc(
+                          user: _authBloc.currentUser,
                           account: _authBloc.currentAccount,
-                        )),
+                        );
+                        }),
                         BlocProvider(create: (_) => new ContactsBloc(
-                          user: authState.user,
+                          user: _authBloc.currentUser,
                           appDatabase: DBInstances.appDB,
                         )),
                       ],

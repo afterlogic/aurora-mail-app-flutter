@@ -13,6 +13,7 @@ class MailBloc extends Bloc<MailEvent, MailState> {
   MailMethods _methods;
 
   MailBloc({@required User user, @required Account account}) {
+    assert(user != null);
     _methods = new MailMethods(user: user, account: account);
   }
 
