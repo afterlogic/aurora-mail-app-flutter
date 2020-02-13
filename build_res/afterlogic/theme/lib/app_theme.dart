@@ -9,6 +9,9 @@ class AppTheme {
     accentColor: _appColor,
     disabledColor: Colors.black.withOpacity(0.3),
     scaffoldBackgroundColor: Colors.white,
+    dialogTheme: DialogTheme(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+    ),
     textTheme: TextTheme(
       display1: TextStyle(
         color: Colors.black,
@@ -38,37 +41,40 @@ class AppTheme {
   );
 
   static final dark = ThemeData(
+    brightness: Brightness.dark,
+    primaryColor: _appColor,
+    accentColor: _appColor,
+    disabledColor: Colors.white.withOpacity(0.3),
+    scaffoldBackgroundColor: Color(0xFF1A1A1A),
+    textTheme: TextTheme(
+      display1: TextStyle(
+        color: Colors.white,
+        fontSize: 32.0,
+        fontWeight: FontWeight.w500,
+      ),
+    ),
+    appBarTheme: AppBarTheme(
       brightness: Brightness.dark,
-      primaryColor: _appColor,
-      accentColor: _appColor,
-      disabledColor: Colors.white.withOpacity(0.3),
-      scaffoldBackgroundColor: Color(0xFF1A1A1A),
+      color: Colors.black,
+      iconTheme: IconThemeData(color: Colors.white),
+      actionsIconTheme: IconThemeData(color: Colors.white),
       textTheme: TextTheme(
-        display1: TextStyle(
+        title: TextStyle(
           color: Colors.white,
-          fontSize: 32.0,
+          fontSize: 18.0,
           fontWeight: FontWeight.w500,
         ),
-      ),
-      appBarTheme: AppBarTheme(
-        brightness: Brightness.dark,
-        color: Colors.black,
-        iconTheme: IconThemeData(color: Colors.white),
-        actionsIconTheme: IconThemeData(color: Colors.white),
-        textTheme: TextTheme(
-          title: TextStyle(
-            color: Colors.white,
-            fontSize: 18.0,
-            fontWeight: FontWeight.w500,
-          ),
-          subtitle: TextStyle(
-            color: Colors.white,
-            fontSize: 12.0,
-            fontWeight: FontWeight.w400,
-          ),
+        subtitle: TextStyle(
+          color: Colors.white,
+          fontSize: 12.0,
+          fontWeight: FontWeight.w400,
         ),
       ),
-      bottomAppBarColor: Colors.black,
-      splashFactory: InkRipple.splashFactory
+    ),
+    dialogTheme: DialogTheme(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+    ),
+    bottomAppBarColor: Colors.black,
+    splashFactory: InkRipple.splashFactory,
   );
 }

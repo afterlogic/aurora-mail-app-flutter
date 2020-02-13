@@ -38,42 +38,19 @@ class ConfirmationDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (Platform.isIOS) {
-      return CupertinoAlertDialog(
-        title: Text(title),
-        content: Text(description),
-        actions: <Widget>[
-          CupertinoButton(
-            child: Text(i18n(context, "btn_cancel")),
-            onPressed: () => Navigator.pop(context, false),
-          ),
-          CupertinoButton(
-            child: Text(
-              actionText,
-              style: TextStyle(
-                color: destructibleAction ? Colors.red[400] : null,
-                fontWeight: destructibleAction ? FontWeight.w600 : null,
-              ),
-            ),
-            onPressed: () => Navigator.pop(context, true),
-          ),
-        ],
-      );
-    } else {
-      return AlertDialog(
-        title: Text(title),
-        content: Text(description),
-        actions: <Widget>[
-          FlatButton(
-            child: Text(i18n(context, "btn_cancel").toUpperCase()),
-            onPressed: () => Navigator.pop(context, false),
-          ),
-          FlatButton(
-            child: Text(actionText.toUpperCase()),
-            onPressed: () => Navigator.pop(context, true),
-          ),
-        ],
-      );
-    }
+    return AlertDialog(
+      title: Text(title),
+      content: Text(description),
+      actions: <Widget>[
+        FlatButton(
+          child: Text(i18n(context, "btn_cancel")),
+          onPressed: () => Navigator.pop(context, false),
+        ),
+        FlatButton(
+          child: Text(actionText),
+          onPressed: () => Navigator.pop(context, true),
+        ),
+      ],
+    );
   }
 }

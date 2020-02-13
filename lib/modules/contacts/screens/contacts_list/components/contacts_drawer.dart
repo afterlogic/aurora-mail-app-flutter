@@ -36,7 +36,7 @@ class _ContactsDrawerState extends State<ContactsDrawer> {
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Text(
-                    i18n(context, "contacts_drawer_section_storages").toUpperCase(),
+                    i18n(context, "contacts_drawer_section_storages"),
                     style: TextStyle(color: Theme.of(context).disabledColor),
                   ),
                 ),
@@ -48,7 +48,7 @@ class _ContactsDrawerState extends State<ContactsDrawer> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
                       Text(
-                        i18n(context, "contacts_drawer_section_groups").toUpperCase(),
+                        i18n(context, "contacts_drawer_section_groups"),
                         style: TextStyle(color: Theme.of(context).disabledColor),
                       ),
                       IconButton(

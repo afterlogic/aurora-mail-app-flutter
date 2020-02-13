@@ -201,22 +201,64 @@ class MailUtils {
     return forwardMessage + baseMessage;
   }
 
-  static String wrapInHtml(BuildContext context, String body) {
-    final backgroundColor = _getWebColor(Theme.of(context).scaffoldBackgroundColor);
-    final textColor = _getWebColor(Theme.of(context).textTheme.body1.color);
-    return """
-<!doctype html>
+  static String wrapInHtml(BuildContext context, {
+    @required Message message,
+    @required String to,
+    @required String date,
+    @required String body,
+  }) {
+    final subject = message.subject.isNotEmpty ? message.subject : i18n(context, "messages_no_subject");
+    final theme = Theme.of(context);
+
+    final accentColor = _getWebColor(theme.accentColor);
+    final backgroundColor = _getWebColor(theme.scaffoldBackgroundColor);
+    final textColor = _getWebColor(theme.textTheme.body1.color);
+    final disabledColor = _getWebColor(theme.disabledColor);
+    final dividerColor = _getWebColor(theme.disabledColor.withOpacity(0.05));
+    return "<!doctype html>" + """
 <html lang="en">
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
       body {
+        padding: 10px;
         overflow-x: hidden;
+        font-family: sans-serif;
+      }
+      .flex {
+        display: flex;
+        flex-direction: column;
+      }
+      .row {
+        flex-direction: row;
+      }
+      .disabled-text {
+        opacity: 0.3;
+        font-size: 14px; 
+        margin-top: 7px;
+      }
+      .icon-btn {
+        padding: 0 12px 12px;
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        outline: 0;
       }
     </style>
   </head>
   <body>
+    <div class="flex row" style="width: calc(100vw - 12px * 2)">
+      <div class="flex" style="flex: 1">
+        <div style="font-size: 18px">${message.fromToDisplay}</div>
+        <div class="disabled-text">$to</div>
+        <div class="disabled-text">$date</div>
+      </div>
+      <div class="flex" style="flex: 0">
+        <a href='#webmail-message-info' class='icon-btn'>${_getInfoIcon(accentColor)}</a>
+        <a href='#webmail-message-attachments' class='icon-btn'>${_getAttachmentsIcon(accentColor)}</a>
+      </div>
+    </div>
+    <h1 style="font-size: 24px; font-weight: 500; margin-top: 24px">$subject</h1>
+    <div style="height: 1px; background-color: black; opacity: 0.05; margin: 24px 0"></div>
     $body
   </body>
 </html>
@@ -229,4 +271,24 @@ class MailUtils {
     final opacity = base.substring(base.length - 9, base.length - 7);
     return "#$color$opacity";
   }
+
+  static String _getInfoIcon(String color) => """<svg id="information" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+  <g id="Group_32" data-name="Group 32">
+  <g id="Group_31" data-name="Group 31">
+  <path id="Path_53" data-name="Path 53" d="M10,0A10,10,0,1,0,20,10,9.988,9.988,0,0,0,10,0Zm0,18.34A8.34,8.34,0,1,1,18.34,10,8.354,8.354,0,0,1,10,18.34Z" fill="$color"/>
+  </g>
+  </g>
+  <g id="Group_34" data-name="Group 34" transform="translate(9.135 7.761)">
+  <g id="Group_33" data-name="Group 33">
+  <path id="Path_54" data-name="Path 54" d="M231.307,192a.887.887,0,0,0-.907.859v6.961a.91.91,0,0,0,1.814.043v-7A.887.887,0,0,0,231.307,192Z" transform="translate(-230.4 -192)" fill="$color"/>
+  </g>
+  </g>
+  <circle id="Ellipse_17" data-name="Ellipse 17" cx="1" cy="1" r="1" transform="translate(8.989 3.989)" fill="$color"/>
+  </svg>""";
+
+  static String _getAttachmentsIcon(String color) => """
+  <svg id="paperclip" xmlns="http://www.w3.org/2000/svg" width="18.126" height="20" viewBox="0 0 18.126 20">
+  <path id="Path_30" data-name="Path 30" d="M24.4,20a4.129,4.129,0,0,1-2.92-7.049l9.264-9.264a2.8,2.8,0,1,1,3.965,3.965l-6.814,6.814a.693.693,0,0,1-.981-.981l6.814-6.815a1.417,1.417,0,1,0-2-2l-9.264,9.264a2.742,2.742,0,0,0,3.878,3.878l9.482-9.482a4.068,4.068,0,0,0-5.753-5.753L23.032,9.607a.693.693,0,0,1-.981-.981L29.084,1.6A5.454,5.454,0,1,1,36.8,9.309l-9.482,9.482A4.1,4.1,0,0,1,24.4,20Z" transform="translate(-20.269 0)" fill="$color"/>
+</svg>
+  """;
 }
