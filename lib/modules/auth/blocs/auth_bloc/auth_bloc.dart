@@ -104,7 +104,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         if (user == null) {
           yield NeedsHost();
         } else {
-          _userLogIn(UserLogIn(user));
+          yield* _userLogIn(UserLogIn(user));
         }
       } catch (err, s) {
         if (err is RequestTwoFactor) {
