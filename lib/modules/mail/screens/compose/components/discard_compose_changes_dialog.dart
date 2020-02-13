@@ -11,21 +11,21 @@ class DiscardComposeChangesDialog extends StatelessWidget {
       content: Text(i18n(context, "compose_discard_save_dialog_description")),
       actions: <Widget>[
         FlatButton(
-          child: Text(i18n(context, "btn_cancel").toUpperCase()),
+          child: Text(i18n(context, "btn_cancel")),
           onPressed: () {
             Navigator.pop(context);
             return DiscardComposeChangesOption.save;
           },
         ),
         FlatButton(
-          child: Text(i18n(context, "btn_discard").toUpperCase()),
+          child: Text(i18n(context, "btn_discard")),
           onPressed: () {
             Navigator.pop(context);
             return DiscardComposeChangesOption.discard;
           },
         ),
         FlatButton(
-          child: Text(i18n(context, "btn_save").toUpperCase()),
+          child: Text(i18n(context, "btn_save")),
           onPressed: () {
             Navigator.pop(context);
           },

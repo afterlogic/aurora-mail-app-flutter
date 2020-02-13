@@ -156,7 +156,7 @@ class _MainDrawerState extends State<MainDrawer> {
     );
   }
 
-  _changeMode() {
+  void _changeMode() {
     if (mode == _DrawerMode.accounts) {
       mode = _DrawerMode.folders;
     } else if (mode == _DrawerMode.folders) {

@@ -97,7 +97,7 @@ class ThemeSelectionDialog extends StatelessWidget {
         ),
         actions: <Widget>[
           FlatButton(
-            child: Text(i18n(context, "btn_cancel").toUpperCase()),
+            child: Text(i18n(context, "btn_cancel")),
             onPressed: Navigator.of(context).pop,
           ),
         ],

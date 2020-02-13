@@ -7,3 +7,4 @@ background_color: "#FFFFFF"
 splashGradientTop: "#FFFFFF"
 splashGradientBottom: "#FFFFFF"
 multiUserEnable: false
+multiAccountEnable: true
