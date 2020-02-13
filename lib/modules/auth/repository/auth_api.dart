@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:aurora_mail/config.dart';
+import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/database/accounts/accounts_table.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:http/http.dart' as http;
@@ -9,7 +9,7 @@ import 'package:webmail_api_client/webmail_api_client.dart';
 class AuthApi {
   Future<String> autoDiscoverHostname(String email) async {
     try {
-      final url = "$AUTO_DISCOVER_URL?email=$email";
+      final url = "${BuildProperty.autodiscover_url}?email=$email";
       final res = await http.get(url);
       final resBody = json.decode(res.body);
       return resBody["url"] as String;
