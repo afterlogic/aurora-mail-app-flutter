@@ -141,16 +141,16 @@ class _MessageViewAndroidState extends State<MessageViewAndroid>
     }
   }
 
-  String _formatTo(Message message) {
-    final items = Mail.getToForDisplay(
-        context, message.toInJson, BlocProvider.of<AuthBloc>(context).currentAccount.email);
-
-    if (items.isEmpty) {
-      return i18n(context, "messages_no_receivers");
-    } else {
-      return items.join(" | ");
-    }
-  }
+//  String _formatTo(Message message) {
+//    final items = Mail.getToForDisplay(
+//        context, message.toInJson, BlocProvider.of<AuthBloc>(context).currentAccount.email);
+//
+//    if (items.isEmpty) {
+//      return i18n(context, "messages_no_receivers");
+//    } else {
+//      return items.join(" | ");
+//    }
+//  }
 
   void _showSnack(String msg, BuildContext context, {bool isError = false}) {
     showSnack(

@@ -14,6 +14,7 @@ import 'package:aurora_mail/modules/mail/screens/compose/compose_route.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/mail_utils.dart';
+import 'package:aurora_mail/utils/show_dialog.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -259,9 +260,8 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
   }
 
   void _showSending() {
-    showDialog(
+    dialog(
         context: context,
-        barrierDismissible: false,
         builder: (_) => AlertDialog(
               content: Row(
                 children: <Widget>[

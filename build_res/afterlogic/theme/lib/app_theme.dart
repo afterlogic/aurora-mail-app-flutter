@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class AppTheme {
   static const _appColor = const Color(0xFF6064D3);
 
+  // TODO VO: button and radio colors
   static final light = ThemeData(
     brightness: Brightness.light,
     primaryColor: _appColor,
