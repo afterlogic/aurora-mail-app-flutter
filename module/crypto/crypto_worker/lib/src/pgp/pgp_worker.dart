@@ -3,7 +3,6 @@ import 'package:crypto_worker/crypto_worker.dart';
 
 abstract class PgpWorker {
   PgpEncryptDecrypt encryptDecrypt(
-    EncryptType encryptType,
     String sender,
     List<String> recipient,
   );
@@ -18,7 +17,7 @@ abstract class PgpWorker {
       String text,
     );
 
-  EncryptType encryptType(String text);
+  EncryptedType encryptType(String text);
 
   stop();
 }

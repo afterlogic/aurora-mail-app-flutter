@@ -264,6 +264,12 @@
   "all_public_key": "All public keys",
   "download_all": "Download all",
   "send_all": "Send all",
-  "downloading_to": "Downloading to ",
-  "delete_user_key_confirm": "Are you sure you want to delete OpenPGP key for {user}"
+  "downloading_to": "Downloading to {path}",
+  "delete_user_key_confirm": "Are you sure you want to delete OpenPGP key for {user}",
+  "sign_or_encrypt": "Sign/Encrypt",
+  "sign_or_encrypt_tittle": "Open PGP Sign/Encrypt",
+  "sign": "Sign",
+  "encrypt": "Encrypt",
+  "invalid_password": "invalid password",
+  "not_found_keys_for": "Keys not found for user: {users}"
 }

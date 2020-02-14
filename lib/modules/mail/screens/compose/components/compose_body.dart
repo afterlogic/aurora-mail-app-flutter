@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 
 class ComposeBody extends StatefulWidget {
   final TextEditingController textCtrl;
+  final bool enable;
 
-  const ComposeBody({Key key, @required this.textCtrl}) : super(key: key);
+  const ComposeBody({Key key, @required this.textCtrl, this.enable})
+      : super(key: key);
 
   @override
   _ComposeBodyState createState() => _ComposeBodyState();
@@ -21,12 +23,14 @@ class _ComposeBodyState extends State<ComposeBody> {
   @override
   Widget build(BuildContext context) {
     return TextField(
+      enabled: widget.enable,
       controller: widget.textCtrl,
       maxLines: null,
       minLines: 8,
       focusNode: _focusNode,
       decoration: InputDecoration(
-        contentPadding: const EdgeInsets.symmetric(vertical: 26.0, horizontal: 16.0),
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 26.0, horizontal: 16.0),
         border: OutlineInputBorder(borderSide: BorderSide.none),
         filled: true,
         fillColor: Theme.of(context).cardColor,

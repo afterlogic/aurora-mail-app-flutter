@@ -58,7 +58,7 @@ class _PgpSettingsState extends State<PgpSettings> {
               context: context,
               scaffoldState: Scaffold.of(context),
               msg: "downloading_to",
-              suffix: state.filePath,
+              arg: {"path": state.filePath},
             );
             return;
           }

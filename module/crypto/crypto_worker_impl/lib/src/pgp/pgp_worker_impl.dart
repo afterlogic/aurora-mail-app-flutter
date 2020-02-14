@@ -13,15 +13,13 @@ class PgpWorkerImpl extends PgpWorker {
   PgpWorkerImpl(this._pgp, this._storage);
 
   PgpEncryptDecrypt encryptDecrypt(
-    EncryptType encryptType,
     String sender,
     List<String> recipient,
   ) {
-    _pgpEncryptDecrypt.stop();
+    _pgpEncryptDecrypt?.stop();
     _pgpEncryptDecrypt = PgpEncryptDecryptImpl(
       _pgp,
       _storage,
-      encryptType,
       sender,
       recipient,
     );
@@ -77,12 +75,12 @@ class PgpWorkerImpl extends PgpWorker {
     return keys;
   }
 
-  EncryptType encryptType(String text) {
+  EncryptedType encryptType(String text) {
     if (_contains(text, [
       _BEGIN_PGP_MESSAGE,
       _END_PGP_MESSAGE,
     ])) {
-      return EncryptType.Encrypt;
+      return EncryptedType.Encrypt;
     }
 
     if (_contains(text, [
@@ -90,10 +88,10 @@ class PgpWorkerImpl extends PgpWorker {
       _BEGIN_PGP_SIGNATURE,
       _END_PGP_SIGNATURE
     ])) {
-      return EncryptType.Sign;
+      return EncryptedType.Sign;
     }
 
-    return EncryptType.None;
+    return EncryptedType.None;
   }
 
   bool _contains(String text, List<String> patterns) {

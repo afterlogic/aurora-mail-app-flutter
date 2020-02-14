@@ -1,7 +1,7 @@
 abstract class PgpException extends Error {}
 
 class PgpKeyNotFound extends PgpException {
-  final String email;
+  final List<String> email;
 
   PgpKeyNotFound(this.email);
 

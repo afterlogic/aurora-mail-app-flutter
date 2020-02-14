@@ -10,6 +10,7 @@ import 'fit_text_field.dart';
 
 class ComposeEmails extends StatefulWidget {
   final String label;
+  final bool enable;
   final TextEditingController textCtrl;
   final List<String> emails;
   final Function onCCSelected;
@@ -20,6 +21,7 @@ class ComposeEmails extends StatefulWidget {
     @required this.emails,
     @required this.textCtrl,
     this.onCCSelected,
+    this.enable = true,
   }) : super(key: key);
 
   @override
@@ -72,10 +74,7 @@ class _ComposeEmailsState extends State<ComposeEmails> {
     final contacts = await bloc.getTypeAheadContacts(pattern);
 
     final items = contacts.map((c) => MailUtils.getFriendlyName(c)).toList();
-    items.removeWhere((i) =>
-    MailUtils
-        .emailFromFriendly(i)
-        .isEmpty);
+    items.removeWhere((i) => MailUtils.emailFromFriendly(i).isEmpty);
 
     return items.toSet().toList();
   }
@@ -137,13 +136,16 @@ class _ComposeEmailsState extends State<ComposeEmails> {
     final screenWidth = MediaQuery.of(context).size.width;
     final dropDownWidth = screenWidth / 1.25;
     return InkWell(
-      onTap: () {
-        _focusNode.requestFocus();
-        if (widget.onCCSelected != null) widget.onCCSelected();
-      },
+      onTap: widget.enable
+          ? () {
+              _focusNode.requestFocus();
+              if (widget.onCCSelected != null) widget.onCCSelected();
+            }
+          : null,
       child: ComposeTypeAheadField<String>(
         textFieldConfiguration: TextFieldConfiguration(
           focusNode: _focusNode,
+          enabled: widget.enable,
           controller: widget.textCtrl,
         ),
         animationDuration: Duration.zero,
@@ -184,31 +186,34 @@ class _ComposeEmailsState extends State<ComposeEmails> {
               Flexible(
                 flex: 1,
                 child: Wrap(spacing: 8.0, children: [
-                ...widget.emails.map((e) {
-                  final displayName = MailUtils.displayNameFromFriendly(e);
-                  return SizedBox(
-                    height: 43.0,
-                    child: GestureDetector(
-                      onTap: () {
-                        if (_emailToShowDelete == e) {
-                          setState(() => _emailToShowDelete = null);
-                        } else {
-                          setState(() => _emailToShowDelete = e);
-                        }
-                      },
-                      child: Chip(
-                        avatar: CircleAvatar(child: Text(displayName[0])),
-                        label: Text(displayName),
-                        onDeleted: e == _emailToShowDelete
-                            ? () => _deleteEmail(e)
+                  ...widget.emails.map((e) {
+                    final displayName = MailUtils.displayNameFromFriendly(e);
+                    return SizedBox(
+                      height: 43.0,
+                      child: GestureDetector(
+                        onTap: widget.enable
+                            ? () {
+                                if (_emailToShowDelete == e) {
+                                  setState(() => _emailToShowDelete = null);
+                                } else {
+                                  setState(() => _emailToShowDelete = e);
+                                }
+                              }
                             : null,
+                        child: Chip(
+                          avatar: CircleAvatar(child: Text(displayName[0])),
+                          label: Text(displayName),
+                          onDeleted: e == _emailToShowDelete
+                              ? () => _deleteEmail(e)
+                              : null,
+                        ),
                       ),
-                    ),
-                  );
-                }).toList(),
+                    );
+                  }).toList(),
                   FitTextField(
                     controller: widget.textCtrl,
                     child: TextField(
+                      enabled: widget.enable,
                       focusNode: _focusNode,
                       controller: widget.textCtrl,
                       keyboardType: TextInputType.emailAddress,

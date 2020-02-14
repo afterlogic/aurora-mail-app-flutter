@@ -57,7 +57,7 @@ class CryptoStorageImpl extends CryptoStorage {
   }
 
   Future<String> privateKey(String mail) {
-    return _key(mail, false);
+    return _key(mail, true);
   }
 
   Future<String> publicKey(String mail) {

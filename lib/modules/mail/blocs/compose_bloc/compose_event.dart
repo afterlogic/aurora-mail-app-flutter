@@ -2,6 +2,7 @@ import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_mode
 import 'package:aurora_mail/modules/mail/models/compose_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/temp_attachment_upload.dart';
+import 'package:aurora_mail/utils/always_non_equal_object.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
 
@@ -108,4 +109,17 @@ class GetContactsAsAttachments extends ComposeEvent {
 
   @override
   List<Object> get props => [contacts];
+}
+
+class EncryptBody extends ComposeEvent with AlwaysNonEqualObject {
+  final bool encrypt;
+  final bool sign;
+  final String pass;
+  final List<String> contacts;
+  final String body;
+
+  EncryptBody(this.contacts, this.body, this.encrypt, this.sign, this.pass);
+
+  @override
+  List<Object> get props => [contacts, body];
 }

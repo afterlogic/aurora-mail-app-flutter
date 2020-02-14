@@ -9,21 +9,18 @@ import 'package:path_provider/path_provider.dart';
 class PgpEncryptDecryptImpl extends PgpEncryptDecrypt {
   final Pgp _pgp;
   final CryptoStorage _storage;
-  final EncryptType encryptType;
   final String sender;
   final List<String> recipients;
 
   PgpEncryptDecryptImpl(
     this._pgp,
     this._storage,
-    this.encryptType,
     this.sender,
     this.recipients,
   );
 
   @override
   Future<Decrypted> decrypt(String message, String password) async {
-    assert(encryptType == EncryptType.Encrypt);
     assert(recipients.length == 1, "expected single recipient");
 
     final privateKey = await _storage.privateKey(recipients.first);
@@ -31,7 +28,7 @@ class PgpEncryptDecryptImpl extends PgpEncryptDecrypt {
     final tempFile = await _tempFile;
 
     if (privateKey == null) {
-      throw PgpKeyNotFound(sender);
+      throw PgpKeyNotFound([sender]);
     }
 
     await _pgp.stop();
@@ -55,7 +52,6 @@ class PgpEncryptDecryptImpl extends PgpEncryptDecrypt {
   }
 
   Future<Decrypted> verifySign(String message) async {
-    assert(encryptType == EncryptType.Sign);
     final publicKey = await _storage.publicKey(sender);
     final tempFile = await _tempFile;
 
@@ -69,19 +65,50 @@ class PgpEncryptDecryptImpl extends PgpEncryptDecrypt {
     return Decrypted(verified, text);
   }
 
+  Future<String> sign(String message, String password) async {
+    final privateKey = await _storage.privateKey(sender);
+    if (privateKey == null) {
+      throw PgpKeyNotFound([sender]);
+    }
+    final tempFile = await _tempFile;
+
+    await _pgp.stop();
+    await _pgp.setTempFile(tempFile);
+    await _pgp.setPrivateKey(privateKey);
+    await _pgp.setPublicKeys(null);
+
+    try {
+      final result = await _pgp.addSign(
+        message,
+        password,
+      );
+      return result;
+    } catch (e) {
+      if (e is PgpSignError || e is PgpInputError) {
+        throw PgpInvalidSign();
+      }
+      rethrow;
+    }
+  }
+
   @override
   Future<String> encrypt(String message, [String password]) async {
     final privateKey = await _storage.privateKey(sender);
     if (privateKey == null) {
-      throw PgpKeyNotFound(sender);
+      throw PgpKeyNotFound([sender]);
     }
     final publicKeys = <String>[];
+    final withNotKey = <String>[];
     for (var recipient in recipients) {
       final key = await _storage.publicKey(recipient);
       if (key == null) {
-        throw PgpKeyNotFound(recipient);
+        withNotKey.add(recipient);
+      } else {
+        publicKeys.add(key);
       }
-      publicKeys.add(key);
+    }
+    if (withNotKey.isNotEmpty) {
+      throw PgpKeyNotFound(withNotKey);
     }
 
     final tempFile = await _tempFile;
