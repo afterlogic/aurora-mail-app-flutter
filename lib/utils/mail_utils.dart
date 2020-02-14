@@ -213,10 +213,6 @@ class MailUtils {
     final theme = Theme.of(context);
 
     final accentColor = _getWebColor(theme.accentColor);
-    final backgroundColor = _getWebColor(theme.scaffoldBackgroundColor);
-    final textColor = _getWebColor(theme.textTheme.body1.color);
-    final disabledColor = _getWebColor(theme.disabledColor);
-    final dividerColor = _getWebColor(theme.disabledColor.withOpacity(0.05));
     return "<!doctype html>" + """
 <html lang="en">
   <head>
@@ -267,6 +263,23 @@ class MailUtils {
   </body>
 </html>
     """;
+  }
+
+  static String _getDarkStyles(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final backgroundColor = _getWebColor(theme.scaffoldBackgroundColor);
+    final textColor = _getWebColor(theme.textTheme.body1.color);
+
+    if (isDark == true) {
+      return """
+        background: $backgroundColor;
+        background-color: $backgroundColor !important;
+        color: $textColor !important;
+      """;
+    } else {
+      return "";
+    }
   }
 
   static String _getWebColor(Color colorObj) {

@@ -3,17 +3,13 @@ import 'package:flutter/material.dart';
 import 'app_color.dart';
 
 class AppTheme {
-  // TODO VO: button and radio colors
-  static final _baseTheme = ThemeData(
+  static final light = ThemeData(
     primaryColor: AppColor.primary,
     accentColor: AppColor.accent,
     dialogTheme: DialogTheme(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
     ),
     splashFactory: InkRipple.splashFactory,
-  );
-
-  static final light = _baseTheme.copyWith(
     brightness: Brightness.light,
     disabledColor: Colors.black.withOpacity(0.3),
     scaffoldBackgroundColor: Colors.white,
@@ -44,7 +40,13 @@ class AppTheme {
     ),
   );
 
-  static final dark = _baseTheme.copyWith(
+  static final dark = ThemeData(
+    primaryColor: AppColor.primary,
+    accentColor: AppColor.accent,
+    dialogTheme: DialogTheme(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+    ),
+    splashFactory: InkRipple.splashFactory,
     brightness: Brightness.dark,
     disabledColor: Colors.white.withOpacity(0.3),
     scaffoldBackgroundColor: Color(0xFF1A1A1A),
