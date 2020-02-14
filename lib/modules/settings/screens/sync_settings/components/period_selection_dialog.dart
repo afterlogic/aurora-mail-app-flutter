@@ -31,6 +31,7 @@ class PeriodSelectionDialog extends StatelessWidget {
         child: ListView(
           children: Period.values.map((period) {
             return RadioListTile(
+              activeColor: Theme.of(context).accentColor,
               title: Text(SyncPeriod.periodToTitle(context, period)),
               value: period,
               groupValue: selectedItem,
@@ -44,7 +45,7 @@ class PeriodSelectionDialog extends StatelessWidget {
       ),
       actions: <Widget>[
         FlatButton(
-          textColor: Theme.of(context).accentColor,
+          textColor: Theme.of(context).brightness == Brightness.light ? Theme.of(context).accentColor : null,
           child: Text(i18n(context, "btn_cancel")),
           onPressed: Navigator.of(context).pop,
         ),

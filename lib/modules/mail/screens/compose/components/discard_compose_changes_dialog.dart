@@ -11,7 +11,7 @@ class DiscardComposeChangesDialog extends StatelessWidget {
       content: Text(i18n(context, "compose_discard_save_dialog_description")),
       actions: <Widget>[
         FlatButton(
-          textColor: Theme.of(context).accentColor,
+          textColor: Theme.of(context).brightness == Brightness.light ? Theme.of(context).accentColor : null,
           child: Text(i18n(context, "btn_cancel")),
           onPressed: () {
             Navigator.pop(context);
@@ -19,7 +19,7 @@ class DiscardComposeChangesDialog extends StatelessWidget {
           },
         ),
         FlatButton(
-          textColor: Theme.of(context).accentColor,
+          textColor: Theme.of(context).brightness == Brightness.light ? Theme.of(context).accentColor : null,
           child: Text(i18n(context, "btn_discard")),
           onPressed: () {
             Navigator.pop(context);
@@ -27,7 +27,7 @@ class DiscardComposeChangesDialog extends StatelessWidget {
           },
         ),
         FlatButton(
-          textColor: Theme.of(context).accentColor,
+          textColor: Theme.of(context).brightness == Brightness.light ? Theme.of(context).accentColor : null,
           child: Text(i18n(context, "btn_save")),
           onPressed: () {
             Navigator.pop(context);

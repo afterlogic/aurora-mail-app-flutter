@@ -31,6 +31,7 @@ class FreqSelectionDialog extends StatelessWidget {
         child: ListView(
           children: Freq.values.map((freq) {
             return RadioListTile(
+              activeColor: Theme.of(context).accentColor,
               title: Text(SyncFreq.freqToString(context, freq)),
               value: freq,
               groupValue: selectedItem,
@@ -44,7 +45,7 @@ class FreqSelectionDialog extends StatelessWidget {
       ),
       actions: <Widget>[
         FlatButton(
-          textColor: Theme.of(context).accentColor,
+          textColor: Theme.of(context).brightness == Brightness.light ? Theme.of(context).accentColor : null,
           child: Text(i18n(context, "btn_cancel")),
           onPressed: Navigator.of(context).pop,
         ),

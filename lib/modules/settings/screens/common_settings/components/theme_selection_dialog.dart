@@ -28,6 +28,7 @@ class ThemeSelectionDialog extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           RadioListTile<bool>(
+            activeColor: Theme.of(context).accentColor,
             title: Text(i18n(context, "settings_dark_theme_system")),
             value: null,
             groupValue: theme,
@@ -37,6 +38,7 @@ class ThemeSelectionDialog extends StatelessWidget {
             },
           ),
           RadioListTile<bool>(
+            activeColor: Theme.of(context).accentColor,
             title: Text(i18n(context, "settings_dark_theme_dark")),
             value: true,
             groupValue: theme,
@@ -46,6 +48,7 @@ class ThemeSelectionDialog extends StatelessWidget {
             },
           ),
           RadioListTile<bool>(
+            activeColor: Theme.of(context).accentColor,
             title: Text(i18n(context, "settings_dark_theme_light")),
             value: false,
             groupValue: theme,
@@ -58,7 +61,7 @@ class ThemeSelectionDialog extends StatelessWidget {
       ),
       actions: <Widget>[
         FlatButton(
-          textColor: Theme.of(context).accentColor,
+          textColor: Theme.of(context).brightness == Brightness.light ? Theme.of(context).accentColor : null,
           child: Text(i18n(context, "btn_cancel")),
           onPressed: Navigator.of(context).pop,
         ),

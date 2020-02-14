@@ -43,7 +43,7 @@ class _AttachmentsDialogState extends State<AttachmentsDialog> {
       ),
       actions: <Widget>[
         FlatButton(
-          textColor: Theme.of(context).accentColor,
+          textColor: Theme.of(context).brightness == Brightness.light ? Theme.of(context).accentColor : null,
           child: Text(i18n(context, "btn_close")),
           onPressed: () => Navigator.pop(context, false),
         ),
