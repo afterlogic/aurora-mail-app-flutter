@@ -5,6 +5,7 @@ import 'package:aurora_mail/modules/settings/screens/pgp_settings/dialogs/genera
 import 'package:aurora_mail/modules/settings/screens/pgp_settings/dialogs/import_from_text_dialog.dart';
 import 'package:aurora_mail/modules/settings/screens/pgp_settings/dialogs/import_key_dialog.dart';
 import 'package:aurora_mail/modules/settings/screens/pgp_settings/screens/pgp_key_route.dart';
+import 'package:aurora_mail/modules/settings/screens/pgp_settings/screens/pgp_keys_route.dart';
 import 'package:aurora_mail/shared_ui/app_button.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
@@ -51,6 +52,16 @@ class _PgpSettingsState extends State<PgpSettings> {
             );
             return;
           }
+          if (state is CompleteDownload) {
+            showSnack(
+              isError: false,
+              context: context,
+              scaffoldState: Scaffold.of(context),
+              msg: "downloading_to",
+              suffix: state.filePath,
+            );
+            return;
+          }
         },
         child: BlocBuilder<PgpSettingsBloc, PgpSettingsState>(
           bloc: bloc,
@@ -71,7 +82,7 @@ class _PgpSettingsState extends State<PgpSettings> {
                   loadedState.private,
                   loadedState.keyProgress,
                 ),
-                _button(context, loadedState.public.isNotEmpty),
+                _button(context, loadedState.public),
               ],
             );
           },
@@ -125,6 +136,14 @@ class _PgpSettingsState extends State<PgpSettings> {
     bloc.add(ImportFromFile());
   }
 
+  _exportAllPublicKeys(List<PgpKey> keys) {
+    Navigator.pushNamed(
+      context,
+      PgpKeysRoute.name,
+      arguments: PgpKeysRouteArg(keys, bloc),
+    );
+  }
+
   Widget _progress() {
     return Center(
       child: CircularProgressIndicator(),
@@ -143,7 +162,7 @@ class _PgpSettingsState extends State<PgpSettings> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          if (public.isNotEmpty)
+          if (public.isNotEmpty || keyProgress != null)
             Text(
               i18n(context, "public_keys"),
               style: theme.textTheme.title,
@@ -154,7 +173,7 @@ class _PgpSettingsState extends State<PgpSettings> {
             keyProgress,
           ),
           SizedBox(height: 10),
-          if (private.isNotEmpty)
+          if (private.isNotEmpty || keyProgress != null)
             Text(
               i18n(context, "private_keys"),
               style: theme.textTheme.title,
@@ -175,7 +194,7 @@ class _PgpSettingsState extends State<PgpSettings> {
     String keyProgress,
   ) {
     final List<Widget> widgets = keys
-        .map(
+        .map<Widget>(
           (key) => GestureDetector(
             onTap: () => _openKey(context, key),
             child: _key(
@@ -219,17 +238,17 @@ class _PgpSettingsState extends State<PgpSettings> {
     );
   }
 
-  Widget _button(BuildContext context, bool hasPublicKeys) {
+  Widget _button(BuildContext context, List<PgpKey> publicKeys) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Column(
         children: <Widget>[
-          if (hasPublicKeys)
+          if (publicKeys.isNotEmpty)
             SizedBox(
               width: double.infinity,
               child: AppButton(
                 text: i18n(context, "export_all_public_keys"),
-                onPressed: () {},
+                onPressed: () => _exportAllPublicKeys(publicKeys),
               ),
             ),
           SizedBox(

@@ -5,12 +5,13 @@ void showSnack({
   @required BuildContext context,
   @required ScaffoldState scaffoldState,
   @required dynamic msg,
+  String suffix = "",
   Duration duration = const Duration(seconds: 5),
   SnackBarAction action,
   bool isError = true,
 }) {
   if (Theme == null || scaffoldState == null) return;
-  final errorMessage = i18n(context, msg.toString());
+  final errorMessage = i18n(context, msg.toString()) + suffix;
 
   final theme = Theme.of(context);
   final snack = theme.brightness == Brightness.light

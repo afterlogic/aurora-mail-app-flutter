@@ -260,5 +260,10 @@
   "import_key": "Import keys",
   "import_selected_key": "Import selected keys",
   "check_keys": "Check keys",
-  "keys_not_found": "Keys not found"
+  "keys_not_found": "Keys not found",
+  "all_public_key": "All public keys",
+  "download_all": "Download all",
+  "send_all": "Send all",
+  "downloading_to": "Downloading to ",
+  "delete_user_key_confirm": "Are you sure you want to delete OpenPGP key for {user}"
 }

@@ -12,7 +12,7 @@ abstract class AuthState extends Equatable {
 
 class InitialAuthState extends AuthState {}
 
-class UserSelected extends AuthState implements AlwaysNonEqualObject {}
+class UserSelected extends AuthState with AlwaysNonEqualObject {}
 
 class InitializedUserAndAccounts extends AuthState {
   final List<User> users;

@@ -20,12 +20,8 @@ class ConfirmationDialog extends StatelessWidget {
   }) : super(key: key);
 
   static Future<bool> show(
-    BuildContext context,
-    String title,
-    String description,
-    String actionText,
-    {bool destructibleAction}
-  ) {
+      BuildContext context, String title, String description, String actionText,
+      {bool destructibleAction}) {
     return dialog(
         context: context,
         builder: (_) => ConfirmationDialog(
@@ -40,7 +36,7 @@ class ConfirmationDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     if (Platform.isIOS) {
       return CupertinoAlertDialog(
-        title: Text(title),
+        title: title?.isNotEmpty == true ? Text(title) : null,
         content: Text(description),
         actions: <Widget>[
           CupertinoButton(

@@ -40,8 +40,14 @@ class SelectKeyForImport extends PgpSettingsState {
   List<Object> get props => [keys];
 }
 
-class ErrorState extends PgpSettingsState implements AlwaysNonEqualObject {
+class ErrorState extends PgpSettingsState with AlwaysNonEqualObject {
   final String message;
 
   ErrorState(this.message);
+}
+
+class CompleteDownload extends PgpSettingsState with AlwaysNonEqualObject {
+  final String filePath;
+
+  CompleteDownload(this.filePath);
 }

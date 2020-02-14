@@ -9,9 +9,9 @@ abstract class PgpSettingsEvent extends Equatable {
   List<Object> get props => null;
 }
 
-class LoadKeys extends PgpSettingsEvent implements AlwaysNonEqualObject {}
+class LoadKeys extends PgpSettingsEvent with AlwaysNonEqualObject {}
 
-class GenerateKeys extends PgpSettingsEvent implements AlwaysNonEqualObject {
+class GenerateKeys extends PgpSettingsEvent with AlwaysNonEqualObject {
   final String mail;
   final int length;
   final String password;
@@ -31,7 +31,7 @@ class DeleteKey extends PgpSettingsEvent {
   List<Object> get props => [pgpKey];
 }
 
-class ParseKey extends PgpSettingsEvent implements AlwaysNonEqualObject {
+class ParseKey extends PgpSettingsEvent with AlwaysNonEqualObject {
   final String key;
 
   ParseKey(this.key);
@@ -49,4 +49,16 @@ class ImportKey extends PgpSettingsEvent {
   List<Object> get props => [keys];
 }
 
-class ImportFromFile extends PgpSettingsEvent implements AlwaysNonEqualObject {}
+class ImportFromFile extends PgpSettingsEvent with AlwaysNonEqualObject {}
+
+class DownloadKeys extends PgpSettingsEvent with AlwaysNonEqualObject {
+  final List<PgpKey> pgpKeys;
+
+  DownloadKeys(this.pgpKeys);
+}
+
+class ShareKeys extends PgpSettingsEvent with AlwaysNonEqualObject {
+  final List<PgpKey> pgpKeys;
+
+  ShareKeys(this.pgpKeys);
+}

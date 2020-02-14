@@ -23,6 +23,8 @@ import 'package:aurora_mail/modules/settings/screens/pgp_settings/pgp_settings.d
 import 'package:aurora_mail/modules/settings/screens/pgp_settings/pgp_settings_route.dart';
 import 'package:aurora_mail/modules/settings/screens/pgp_settings/screens/pgp_key.dart';
 import 'package:aurora_mail/modules/settings/screens/pgp_settings/screens/pgp_key_route.dart';
+import 'package:aurora_mail/modules/settings/screens/pgp_settings/screens/pgp_keys.dart';
+import 'package:aurora_mail/modules/settings/screens/pgp_settings/screens/pgp_keys_route.dart';
 import 'package:aurora_mail/modules/settings/screens/settings_main/settings_main_android.dart';
 import 'package:aurora_mail/modules/settings/screens/settings_main/settings_main_route.dart';
 import 'package:aurora_mail/modules/settings/screens/sync_settings/sync_settings_android.dart';
@@ -198,6 +200,17 @@ class AppNavigation {
             ),
             builder: (_) => PgpKeyScreen(
                   arg.pgpKey,
+                  arg.bloc,
+                ));
+        break;
+      case PgpKeysRoute.name:
+        final arg = settings.arguments as PgpKeysRouteArg;
+        return CupertinoPageRoute(
+            settings: RouteSettings(
+              name: settings.name,
+            ),
+            builder: (_) => PgpKeysScreen(
+                  arg.pgpKeys,
                   arg.bloc,
                 ));
         break;

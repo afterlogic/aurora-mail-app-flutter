@@ -38,8 +38,8 @@ class PgpWorkerImpl extends PgpWorker {
     final private = PgpKey.fill("", email, true, keyPair.secret, length);
     final public = PgpKey.fill("", email, false, keyPair.public, length);
 
-    _storage.addPgpKey(public);
-    _storage.addPgpKey(private);
+    await _storage.addPgpKey(public);
+    await _storage.addPgpKey(private);
 
     return [private, public];
   }

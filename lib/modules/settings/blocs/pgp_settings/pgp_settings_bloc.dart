@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:crypto_storage/crypto_storage.dart';
 import 'package:crypto_worker/crypto_worker.dart';
@@ -18,10 +19,13 @@ class PgpSettingsBloc extends Bloc<PgpSettingsEvent, PgpSettingsState> {
     PgpSettingsEvent event,
   ) async* {
     if (event is LoadKeys) yield* _loadKeys();
+    if (event is DeleteKey) yield* _deleteKey(event);
     if (event is GenerateKeys) yield* _generateKeys(event);
     if (event is ParseKey) yield* _parseKey(event);
     if (event is ImportKey) yield* _importKey(event);
     if (event is ImportFromFile) yield* _importKeyFromFile();
+    if (event is DownloadKeys) yield* _downloadKeys(event);
+    if (event is ShareKeys) yield* _shareKeys(event);
   }
 
   Stream<PgpSettingsState> _loadKeys() async* {
@@ -34,11 +38,16 @@ class PgpSettingsBloc extends Bloc<PgpSettingsEvent, PgpSettingsState> {
   }
 
   Stream<PgpSettingsState> _generateKeys(GenerateKeys event) async* {
-    final current = state;
-    if (current is LoadedState) {
-      yield current.copyWith(keyProgress: event.mail);
-    }
     await _methods.deleteKey(event.mail);
+
+    yield* _loadKeys().map((item) {
+      if (item is LoadedState) {
+        return item.copyWith(keyProgress: event.mail);
+      } else {
+        return item;
+      }
+    });
+
     await _methods.generateKeys(event.mail, event.length, event.password);
     yield* _loadKeys();
   }
@@ -62,5 +71,28 @@ class PgpSettingsBloc extends Bloc<PgpSettingsEvent, PgpSettingsState> {
     final selected = _methods.filterSelected(event.keys);
     await _methods.addToStorage(selected);
     yield* _loadKeys();
+  }
+
+  Stream<PgpSettingsState> _deleteKey(DeleteKey event) async* {
+    await _methods.deleteKey(event.pgpKey.mail);
+    yield* _loadKeys();
+  }
+
+  Stream<PgpSettingsState> _downloadKeys(DownloadKeys event) async* {
+    File file;
+    if (event.pgpKeys.length == 1) {
+      file = await _methods.downloadKey(event.pgpKeys.first);
+    } else {
+      file = await _methods.downloadKeys(event.pgpKeys);
+    }
+    yield CompleteDownload(file.path);
+  }
+
+  Stream<PgpSettingsState> _shareKeys(ShareKeys event) async* {
+    if (event.pgpKeys.length == 1) {
+      await _methods.shareKey(event.pgpKeys.first);
+    } else {
+      await _methods.shareKeys(event.pgpKeys);
+    }
   }
 }
