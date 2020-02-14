@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 
 enum ContactViewAppBarAction {
   attach,
-  sendMessage,
   searchMessages,
   edit,
   share,
@@ -50,11 +49,6 @@ class ContactViewAppBar extends StatelessWidget implements PreferredSizeWidget {
           icon: Icon(Icons.attach_file),
           tooltip: i18n(context, "contacts_view_app_bar_attach"),
           onPressed: () => onActionSelected(ContactViewAppBarAction.attach),
-        ),
-        IconButton(
-          icon: Icon(Icons.mail_outline),
-          tooltip: i18n(context, "contacts_view_app_bar_send_message"),
-          onPressed: () => onActionSelected(ContactViewAppBarAction.sendMessage),
         ),
 //        IconButton(
 //          icon: Icon(MdiIcons.emailSearchOutline),

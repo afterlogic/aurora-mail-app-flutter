@@ -137,8 +137,9 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
 
   void _initFromContacts(EmailToContacts action) {
     _returnToMessagesList = false;
-    final toEmails = action.contacts.map((c) => MailUtils.getFriendlyName(c));
-    _toEmails.addAll(toEmails);
+    _toEmails.addAll(action.emails);
+//    final toEmails = action.contacts.map((c) => MailUtils.getFriendlyName(c));
+//    _toEmails.addAll(toEmails);
   }
 
   void _initContactsAsAttachments(SendContacts action) {
