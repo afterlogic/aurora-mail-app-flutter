@@ -25,7 +25,7 @@ class InitSettings extends SettingsEvent {
 class SetFrequency extends SettingsEvent {
   final Freq freq;
 
-  const SetFrequency(this.freq);
+  const SetFrequency(this.freq); 
 
   @override
   List<Object> get props => [freq];

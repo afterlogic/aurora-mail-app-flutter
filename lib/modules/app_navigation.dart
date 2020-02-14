@@ -19,6 +19,10 @@ import 'package:aurora_mail/modules/settings/screens/common_settings/common_sett
 import 'package:aurora_mail/modules/settings/screens/common_settings/common_settings_route.dart';
 import 'package:aurora_mail/modules/settings/screens/manage_users/manage_users_android.dart';
 import 'package:aurora_mail/modules/settings/screens/manage_users/manage_users_route.dart';
+import 'package:aurora_mail/modules/settings/screens/pgp_settings/pgp_settings.dart';
+import 'package:aurora_mail/modules/settings/screens/pgp_settings/pgp_settings_route.dart';
+import 'package:aurora_mail/modules/settings/screens/pgp_settings/screens/pgp_key.dart';
+import 'package:aurora_mail/modules/settings/screens/pgp_settings/screens/pgp_key_route.dart';
 import 'package:aurora_mail/modules/settings/screens/settings_main/settings_main_android.dart';
 import 'package:aurora_mail/modules/settings/screens/settings_main/settings_main_route.dart';
 import 'package:aurora_mail/modules/settings/screens/sync_settings/sync_settings_android.dart';
@@ -42,25 +46,26 @@ class AppNavigation {
       // ================= AUTH =================
 
       case LoginRoute.name:
-      final args = settings.arguments as LoginRouteScreenArgs;
+        final args = settings.arguments as LoginRouteScreenArgs;
 
-      if (args != null && args.isDialog == true) {
-        return CupertinoPageRoute(
-          settings: RouteSettings(
-            name: settings.name,
-          ),
-          fullscreenDialog: true,
-          builder: (_) => LoginAndroid(isDialog: args.isDialog, email: args.email),
-        );
-      } else {
-        return FadeRoute(
-          settings: RouteSettings(
-            name: settings.name,
-          ),
-          builder: (_) => LoginAndroid(),
-        );
-      }
-      break;
+        if (args != null && args.isDialog == true) {
+          return CupertinoPageRoute(
+            settings: RouteSettings(
+              name: settings.name,
+            ),
+            fullscreenDialog: true,
+            builder: (_) =>
+                LoginAndroid(isDialog: args.isDialog, email: args.email),
+          );
+        } else {
+          return FadeRoute(
+            settings: RouteSettings(
+              name: settings.name,
+            ),
+            builder: (_) => LoginAndroid(),
+          );
+        }
+        break;
 
       // ================= MAIL =================
 
@@ -80,10 +85,11 @@ class AppNavigation {
               name: settings.name,
             ),
             builder: (_) => MultiBlocProvider(providers: [
-              BlocProvider<MailBloc>.value(value: args.mailBloc),
-              BlocProvider<MessagesListBloc>.value(value: args.messagesListBloc),
-              BlocProvider<ContactsBloc>.value(value: args.contactsBloc),
-            ], child: MessageViewAndroid(args.messages, args.initialPage)));
+                  BlocProvider<MailBloc>.value(value: args.mailBloc),
+                  BlocProvider<MessagesListBloc>.value(
+                      value: args.messagesListBloc),
+                  BlocProvider<ContactsBloc>.value(value: args.contactsBloc),
+                ], child: MessageViewAndroid(args.messages, args.initialPage)));
         break;
 
       case ComposeRoute.name:
@@ -93,8 +99,7 @@ class AppNavigation {
               name: settings.name,
             ),
             fullscreenDialog: true,
-            builder: (_) =>
-                MultiBlocProvider(
+            builder: (_) => MultiBlocProvider(
                   providers: [
                     BlocProvider<MailBloc>.value(value: args.mailBloc),
                     BlocProvider<ContactsBloc>.value(value: args.contactsBloc),
@@ -112,12 +117,12 @@ class AppNavigation {
               name: settings.name,
             ),
             builder: (_) => MultiBlocProvider(
-              providers: [
-                BlocProvider<MailBloc>.value(value: args.mailBloc),
-                BlocProvider<ContactsBloc>.value(value: args.contactsBloc),
-              ],
-              child: ContactsListAndroid(),
-            ));
+                  providers: [
+                    BlocProvider<MailBloc>.value(value: args.mailBloc),
+                    BlocProvider<ContactsBloc>.value(value: args.contactsBloc),
+                  ],
+                  child: ContactsListAndroid(),
+                ));
         break;
 
       case ContactViewRoute.name:
@@ -127,12 +132,12 @@ class AppNavigation {
               name: settings.name,
             ),
             builder: (_) => MultiBlocProvider(
-              providers: [
-                BlocProvider<MailBloc>.value(value: args.mailBloc),
-                BlocProvider<ContactsBloc>.value(value: args.contactsBloc),
-              ],
-              child: ContactViewAndroid(args.contact, args.scaffoldState),
-            ));
+                  providers: [
+                    BlocProvider<MailBloc>.value(value: args.mailBloc),
+                    BlocProvider<ContactsBloc>.value(value: args.contactsBloc),
+                  ],
+                  child: ContactViewAndroid(args.contact, args.scaffoldState),
+                ));
         break;
 
       case ContactEditRoute.name:
@@ -143,7 +148,8 @@ class AppNavigation {
             ),
             fullscreenDialog: true,
             builder: (_) => BlocProvider<ContactsBloc>.value(
-                value: args.bloc, child: ContactEditAndroid(contact: args?.contact)));
+                value: args.bloc,
+                child: ContactEditAndroid(contact: args?.contact)));
         break;
 
       case GroupViewRoute.name:
@@ -177,6 +183,24 @@ class AppNavigation {
             builder: (_) => SettingsMainAndroid());
         break;
 
+      case PgpSettingsRoute.name:
+        return CupertinoPageRoute(
+            settings: RouteSettings(
+              name: settings.name,
+            ),
+            builder: (_) => PgpSettings());
+        break;
+      case PgpKeyRoute.name:
+        final arg = settings.arguments as PgpKeyRouteArg;
+        return CupertinoPageRoute(
+            settings: RouteSettings(
+              name: settings.name,
+            ),
+            builder: (_) => PgpKeyScreen(
+                  arg.pgpKey,
+                  arg.bloc,
+                ));
+        break;
       case CommonSettingsRoute.name:
         return CupertinoPageRoute(
             settings: RouteSettings(
@@ -214,8 +238,8 @@ class AppNavigation {
       default:
         return CupertinoPageRoute(
             builder: (_) => Scaffold(
-          body: Text('No route defined for ${settings.name}'),
-        ));
+                  body: Text('No route defined for ${settings.name}'),
+                ));
     }
   }
 }

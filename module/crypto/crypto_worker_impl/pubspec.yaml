@@ -1,0 +1,25 @@
+name: crypto_worker_impl
+description: A new Flutter package.
+version: 0.0.1
+author:
+homepage:
+
+environment:
+  sdk: ">=2.1.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  crypto_model:
+    path: ../crypto_model
+  crypto_worker:
+    path: ../crypto_worker
+  crypto_storage:
+    path: ../crypto_storage
+  crypto_plugin:
+    path: ../../../../crypto_plugin
+#    git: https://github.com/afterlogic/flutter_crypto_plugin
+  path_provider: ^1.6.0
+dev_dependencies:
+  flutter_test:
+    sdk: flutter

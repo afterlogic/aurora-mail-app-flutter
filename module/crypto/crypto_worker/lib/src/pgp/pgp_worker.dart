@@ -1,0 +1,24 @@
+import 'package:crypto_model/crypto_model.dart';
+import 'package:crypto_worker/crypto_worker.dart';
+
+abstract class PgpWorker {
+  PgpEncryptDecrypt encryptDecrypt(
+    EncryptType encryptType,
+    String sender,
+    List<String> recipient,
+  );
+
+  Future<List<PgpKey>> createKeyPair(
+    int length,
+    String email,
+    String password,
+  );
+
+    Future<List<PgpKey>> parseKey(
+      String text,
+    );
+
+  EncryptType encryptType(String text);
+
+  stop();
+}
