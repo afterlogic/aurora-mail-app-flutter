@@ -74,7 +74,7 @@ dependencies:
   flutter_local_notifications: 0.8.4+3
 
   theme:
-    path: build_res/afterlogic/theme
+    path: build_res/afterlogic_custom/theme
 
 dev_dependencies:
   flutter_test:
@@ -89,9 +89,9 @@ dev_dependencies:
 flutter_icons:
   ios: true
   android: true
-  image_path: build_res/afterlogic/icon.png
+  image_path: build_res/afterlogic_custom/icon.png
   adaptive_icon_background: "#FFFFFF"
-  adaptive_icon_foreground: build_res/afterlogic/icon_foreground.png
+  adaptive_icon_foreground: build_res/afterlogic_custom/icon_foreground.png
 
 flutter:
   uses-material-design: true
@@ -100,8 +100,8 @@ flutter:
   assets:
     - assets/images/
     - assets/flutter_i18n/
-    - build_res/afterlogic/icon.png
-    - build_res/afterlogic/main_logo.png
+    - build_res/afterlogic_custom/icon.png
+    - build_res/afterlogic_custom/main_logo.png
 
   fonts:
     - family: WebMailIcons
