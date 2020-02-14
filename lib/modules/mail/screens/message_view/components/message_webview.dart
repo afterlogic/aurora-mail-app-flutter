@@ -1,8 +1,10 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/mail/mail_table.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
+import 'package:aurora_mail/modules/mail/blocs/message_view_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/utils/date_formatting.dart';
@@ -13,6 +15,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+
+import 'attachments_dialog.dart';
+
+class MessageWebViewActions {
+  static const SHOW_ATTACHMENTS = "SHOW_ATTACHMENTS";
+  static const SHOW_INFO = "SHOW_INFO";
+}
 
 class MessageWebView extends StatefulWidget {
   final Message message;
@@ -43,14 +52,12 @@ class _MessageWebViewState extends State<MessageWebView> {
     String plainData;
     if (widget.message.html != null && widget.message.html.isNotEmpty) {
       htmlData = widget.message.html;
-//      htmlData = '<body style="background-color: ${getWebColor(Theme.of(context).scaffoldBackgroundColor)}; color: ${getWebColor(Theme.of(context).textTheme.body1.color)}">$htmlData</body>';
-    } else if (widget.message.plain != null &&
-        widget.message.plain.isNotEmpty) {
+    } else if (widget.message.plain != null) {
       plainData = widget.message.plain;
     }
 
     if (htmlData == null) {
-      setState(() => _htmlData = plainData);
+      setState(() => _htmlData = plainData ?? "");
       return null;
     }
     setState(() => _htmlData = htmlData);
@@ -96,16 +103,34 @@ class _MessageWebViewState extends State<MessageWebView> {
       yesterdayWord: i18n(context, "formatting_yesterday"),
       is24: (state as SettingsLoaded).is24 ?? true,
     );
+
     final wrappedHtml = MailUtils.wrapInHtml(
       context,
       message: widget.message,
       to: _formatTo(widget.message),
       date: date,
       body: html,
+      showAttachmentsBtn: widget.attachments.where((a) => !a.isInline).isNotEmpty,
     );
     return Uri.dataFromString(wrappedHtml,
             mimeType: 'text/html', encoding: Encoding.getByName('utf-8'))
         .toString();
+  }
+
+  FutureOr<NavigationDecision> _onWebViewNavigateRequest(NavigationRequest request) async {
+    if (request.url.endsWith(MessageWebViewActions.SHOW_INFO)) {
+      // TODO: implement showing message info
+      return NavigationDecision.prevent;
+    } else if (request.url.endsWith(MessageWebViewActions.SHOW_ATTACHMENTS)) {
+      final messageViewBloc = BlocProvider.of<MessageViewBloc>(context);
+      AttachmentsDialog.show(context, widget.attachments, messageViewBloc);
+      return NavigationDecision.prevent;
+    } else if (request.url != _getHtmlUri(_htmlData)) {
+      launch(request.url);
+      return NavigationDecision.prevent;
+    } else {
+      return NavigationDecision.navigate;
+    }
   }
 
   @override
@@ -130,18 +155,7 @@ class _MessageWebViewState extends State<MessageWebView> {
                 initialUrl: _getHtmlUri(_htmlData),
                 javascriptMode: JavascriptMode.unrestricted,
                 onWebViewCreated: (WebViewController c) => _controller = c,
-                navigationDelegate: (NavigationRequest request) {
-                  print(
-                      "VO: request: ${request.url.endsWith("webmail-message-info")}");
-                  print(
-                      "VO: request: ${request.url.endsWith("webmail-message-attachments")}");
-                  if (request.url != _getHtmlUri(_htmlData)) {
-                    launch(request.url);
-                    return NavigationDecision.prevent;
-                  } else {
-                    return NavigationDecision.navigate;
-                  }
-                },
+                navigationDelegate: _onWebViewNavigateRequest,
                 onPageFinished: (_) async => setState(() => _pageLoaded = true),
               ),
               Positioned.fill(

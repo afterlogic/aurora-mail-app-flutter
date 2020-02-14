@@ -251,7 +251,7 @@ class Mail extends Table {
             rawMessage["ReadingConfirmationAddressee"] as String,
 //        htmlRaw: rawMessage["HtmlRaw"],
         html: rawMessage["Html"] as String,
-        plain: rawMessage["PlainRaw"] as String,
+        plain: rawMessage["Plain"] as String,
 //        plainRaw: rawMessage["PlainRaw"],
         rtl: rawMessage["Rtl"] as bool,
         extendInJson: rawMessage["Extend"] == null

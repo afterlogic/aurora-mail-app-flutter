@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
+import 'package:aurora_mail/modules/mail/screens/message_view/components/message_webview.dart';
 import 'package:aurora_mail/utils/date_formatting.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/material.dart';
@@ -206,6 +207,7 @@ class MailUtils {
     @required String to,
     @required String date,
     @required String body,
+    @required bool showAttachmentsBtn,
   }) {
     final subject = message.subject.isNotEmpty ? message.subject : i18n(context, "messages_no_subject");
     final theme = Theme.of(context);
@@ -253,8 +255,10 @@ class MailUtils {
         <div class="disabled-text">$date</div>
       </div>
       <div class="flex" style="flex: 0">
-        <a href='#webmail-message-info' class='icon-btn'>${_getInfoIcon(accentColor)}</a>
-        <a href='#webmail-message-attachments' class='icon-btn'>${_getAttachmentsIcon(accentColor)}</a>
+        <!-- <a href='#${MessageWebViewActions.SHOW_INFO}' class='icon-btn'>${_getInfoIcon(accentColor)}</a> -->
+        <a href='#${MessageWebViewActions.SHOW_ATTACHMENTS}' class='icon-btn' style='${showAttachmentsBtn != true ? "display: none" : ""}'>
+          ${_getAttachmentsIcon(accentColor)}
+        </a>
       </div>
     </div>
     <h1 style="font-size: 24px; font-weight: 500; margin-top: 24px">$subject</h1>

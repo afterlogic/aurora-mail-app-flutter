@@ -172,29 +172,29 @@ class _MessageViewAndroidState extends State<MessageViewAndroid>
       value: _messageViewBloc,
       child: Scaffold(
         appBar: MailViewAppBar(_onAppBarActionSelected),
-        body: MessageWebView(message, attachments),
-//        body: BlocListener(
-//          bloc: _messageViewBloc,
-//          listener: (context, state) {
-//            if (state is DownloadStarted) {
-//              _showSnack(
-//                  i18n(context, "messages_attachment_downloading",
-//                      {"fileName": state.fileName}),
-//                  context);
-//            }
-//            if (state is DownloadFinished) {
-//              if (state.path == null) {
-//                _showSnack(i18n(context, "messages_attachment_download_failed"),
-//                    context,
-//                    isError: true);
-//              } else {
-//                _showSnack(
-//                    i18n(context, "messages_attachment_download_success",
-//                        {"path": state.path}),
-//                    context);
-//              }
-//            }
-//          },
+        body: BlocListener(
+          bloc: _messageViewBloc,
+          listener: (context, state) {
+            if (state is DownloadStarted) {
+              _showSnack(
+                  i18n(context, "messages_attachment_downloading",
+                      {"fileName": state.fileName}),
+                  context);
+            }
+            if (state is DownloadFinished) {
+              if (state.path == null) {
+                _showSnack(i18n(context, "messages_attachment_download_failed"),
+                    context,
+                    isError: true);
+              } else {
+                _showSnack(
+                    i18n(context, "messages_attachment_download_success",
+                        {"path": state.path}),
+                    context);
+              }
+            }
+          },
+          child: MessageWebView(message, attachments),
 //          child: Padding(
 //            padding: const EdgeInsets.all(16.0),
 //            child: Column(
@@ -253,7 +253,7 @@ class _MessageViewAndroidState extends State<MessageViewAndroid>
 //              ],
 //            ),
 //          ),
-//        ),
+        ),
       ),
     );
   }

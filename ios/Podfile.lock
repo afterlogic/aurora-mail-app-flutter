@@ -62,6 +62,8 @@ PODS:
   - flutter_uploader (1.2.0):
     - Alamofire (= 4.9.1)
     - Flutter
+  - fluttertoast (0.0.2):
+    - Flutter
   - FMDB (2.7.5):
     - FMDB/standard (= 2.7.5)
   - FMDB/standard (2.7.5)
@@ -137,6 +139,7 @@ DEPENDENCIES:
   - flutter_keyboard_visibility (from `.symlinks/plugins/flutter_keyboard_visibility/ios`)
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
   - flutter_uploader (from `.symlinks/plugins/flutter_uploader/ios`)
+  - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
   - notifications_utils (from `.symlinks/plugins/notifications_utils/ios`)
   - package_info (from `.symlinks/plugins/package_info/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
@@ -192,6 +195,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_local_notifications/ios"
   flutter_uploader:
     :path: ".symlinks/plugins/flutter_uploader/ios"
+  fluttertoast:
+    :path: ".symlinks/plugins/fluttertoast/ios"
   notifications_utils:
     :path: ".symlinks/plugins/notifications_utils/ios"
   package_info:
@@ -238,6 +243,7 @@ SPEC CHECKSUMS:
   flutter_keyboard_visibility: 6195387fb6d8f46e5cd6dda4a4154e41f800f545
   flutter_local_notifications: 9e4738ce2471c5af910d961a6b7eadcf57c50186
   flutter_uploader: 7957e1b9d6516b6cccc37e5ffd6c5a0975a7cc4c
+  fluttertoast: b644586ef3b16f67fae9a1f8754cef6b2d6b634b
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   GoogleAppMeasurement: d0560d915abf15e692e8538ba1d58442217b6aff
   GoogleDataTransport: 0048df6388dab1c254799f2a30365b1dffe20422

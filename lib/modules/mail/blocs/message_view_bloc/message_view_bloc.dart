@@ -27,8 +27,7 @@ class MessageViewBloc extends Bloc<MessageViewEvent, MessageViewState> {
     if (event is EndDownload) yield DownloadFinished(event.path);
   }
 
-  Stream<MessageViewState> _downloadAttachment(
-      DownloadAttachment event) async* {
+  Stream<MessageViewState> _downloadAttachment(DownloadAttachment event) async* {
     try {
       await getStoragePermissions();
     } catch (err) {
