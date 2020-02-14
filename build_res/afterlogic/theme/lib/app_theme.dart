@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
 
-class AppTheme {
-  static const _appColor = const Color(0xFF6064D3);
+import 'app_color.dart';
 
+class AppTheme {
   // TODO VO: button and radio colors
-  static final light = ThemeData(
-    brightness: Brightness.light,
-    primaryColor: _appColor,
-    accentColor: _appColor,
-    disabledColor: Colors.black.withOpacity(0.3),
-    scaffoldBackgroundColor: Colors.white,
+  static final _baseTheme = ThemeData(
+    primaryColor: AppColor.primary,
+    accentColor: AppColor.accent,
     dialogTheme: DialogTheme(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
     ),
+    splashFactory: InkRipple.splashFactory,
+  );
+
+  static final light = _baseTheme.copyWith(
+    brightness: Brightness.light,
+    disabledColor: Colors.black.withOpacity(0.3),
+    scaffoldBackgroundColor: Colors.white,
     textTheme: TextTheme(
       display1: TextStyle(
         color: Colors.black,
@@ -38,13 +42,10 @@ class AppTheme {
         ),
       ),
     ),
-    splashFactory: InkRipple.splashFactory,
   );
 
-  static final dark = ThemeData(
+  static final dark = _baseTheme.copyWith(
     brightness: Brightness.dark,
-    primaryColor: _appColor,
-    accentColor: _appColor,
     disabledColor: Colors.white.withOpacity(0.3),
     scaffoldBackgroundColor: Color(0xFF1A1A1A),
     textTheme: TextTheme(
@@ -72,10 +73,6 @@ class AppTheme {
         ),
       ),
     ),
-    dialogTheme: DialogTheme(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-    ),
     bottomAppBarColor: Colors.black,
-    splashFactory: InkRipple.splashFactory,
   );
 }

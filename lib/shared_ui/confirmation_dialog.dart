@@ -43,10 +43,12 @@ class ConfirmationDialog extends StatelessWidget {
       content: Text(description),
       actions: <Widget>[
         FlatButton(
+          textColor: Theme.of(context).accentColor,
           child: Text(i18n(context, "btn_cancel")),
           onPressed: () => Navigator.pop(context, false),
         ),
         FlatButton(
+          textColor: Theme.of(context).accentColor,
           child: Text(actionText),
           onPressed: () => Navigator.pop(context, true),
         ),
