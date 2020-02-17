@@ -47,6 +47,10 @@ class AMAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ModalRoute<dynamic> parentRoute = ModalRoute.of(context);
+    final bool canPop = parentRoute?.canPop ?? false;
+    final bool useCloseButton = parentRoute is PageRoute<dynamic> && parentRoute.fullscreenDialog;
+
     return PreferredSize(
       preferredSize: preferredSize,
       child: Container(
@@ -59,10 +63,12 @@ class AMAppBar extends StatelessWidget implements PreferredSizeWidget {
               )
         ]),
         child: AppBar(
+          leading: leading == null && canPop && !useCloseButton ? IconButton(
+            icon: Icon(Icons.arrow_back_ios), onPressed: Navigator.of(context).pop,
+          ) : leading,
           centerTitle: centerTitle,
           title: title,
           actions: actions,
-          leading: leading,
           actionsIconTheme: actionsIconTheme,
           automaticallyImplyLeading: automaticallyImplyLeading,
           backgroundColor: backgroundColor,

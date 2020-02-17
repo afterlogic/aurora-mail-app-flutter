@@ -134,11 +134,11 @@ class _ContactViewAndroidState extends State<ContactViewAndroid> {
     final sectionTitleTheme = Theme.of(context).textTheme.body2;
 
     final _mainInfo = _buildInfos([
-      _buildInfoItem(
-        icon: Icons.person_outline,
-        label: i18n(context, "contacts_view_name"),
-        v: c.fullName,
-      ),
+//      _buildInfoItem(
+//        icon: Icons.person_outline,
+//        label: i18n(context, "contacts_view_name"),
+//        v: c.fullName,
+//      ),
       _buildInfoItem(
         icon: Icons.alternate_email,
         label: i18n(context, "contacts_view_email"),
@@ -146,7 +146,7 @@ class _ContactViewAndroidState extends State<ContactViewAndroid> {
         emailToContact: _emailToContacts,
       ),
       _buildInfoItem(
-        icon: MdiIcons.phoneOutline,
+        icon: MdiIcons.phone,
         label: i18n(context, "contacts_view_phone"),
         v: _contactInfo.viewPhone,
       ),
@@ -225,7 +225,7 @@ class _ContactViewAndroidState extends State<ContactViewAndroid> {
         v: c.personalFax,
       ),
       _buildInfoItem(
-        icon: MdiIcons.phoneOutline,
+        icon: MdiIcons.phone,
         label: i18n(context, "contacts_view_phone"),
         v: c.personalPhone,
       ),
@@ -304,6 +304,7 @@ class _ContactViewAndroidState extends State<ContactViewAndroid> {
 
     return Scaffold(
       appBar: ContactViewAppBar(
+        name: c.fullName,
         allowShare: c.storage == StorageNames.personal,
         allowUnshare: c.storage == StorageNames.shared,
         allowEdit: c.storage == StorageNames.personal || c.viewEmail == BlocProvider.of<AuthBloc>(context).currentAccount.email,
