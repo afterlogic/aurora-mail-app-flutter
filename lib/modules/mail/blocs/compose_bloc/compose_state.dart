@@ -1,6 +1,7 @@
 import 'package:aurora_mail/modules/mail/models/compose_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/temp_attachment_upload.dart';
 import 'package:aurora_mail/utils/always_non_equal_object.dart';
+import 'package:crypto_worker/crypto_worker.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class ComposeState extends Equatable {
@@ -65,9 +66,10 @@ class ReceivedComposeAttachments extends ComposeState {
 }
 
 class EncryptComplete extends ComposeState with AlwaysNonEqualObject {
+  final EncryptType type;
   final String text;
 
-  EncryptComplete(this.text);
+  EncryptComplete(this.text, this.type);
 
   @override
   List<Object> get props => [text];

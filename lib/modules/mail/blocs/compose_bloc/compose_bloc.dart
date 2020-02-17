@@ -134,7 +134,8 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
         event.contacts,
         event.body,
       );
-      yield EncryptComplete(encrypted);
+      final type = event.encrypt ? EncryptType.Encrypt : EncryptType.Sign;
+      yield EncryptComplete(encrypted, type);
     } catch (e) {
       if (e is PgpKeyNotFound) {
         yield ComposeError(

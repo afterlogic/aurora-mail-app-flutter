@@ -700,7 +700,7 @@ packages:
       name: shared_preferences_macos
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.1+4"
+    version: "0.0.1+5"
   shared_preferences_platform_interface:
     dependency: transitive
     description:
@@ -754,7 +754,7 @@ packages:
       name: sqflite
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.2.0"
+    version: "1.2.1"
   sqlparser:
     dependency: transitive
     description:

@@ -23,22 +23,34 @@ class _EncryptDialogState extends State<EncryptDialog> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            CheckboxListTile(
-              title: Text(i18n(context, "sign")),
-              value: _sign,
-              onChanged: (bool value) {
-                _sign = value;
-                setState(() {});
-              },
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(i18n(context, "sign")),
+                Checkbox(
+                  value: _sign,
+                  onChanged: (bool value) {
+                    _sign = value;
+                    setState(() {});
+                  },
+                ),
+              ],
             ),
-            CheckboxListTile(
-              title: Text(i18n(context, "encrypt")),
-              value: _encrypt,
-              onChanged: (bool value) {
-                _encrypt = value;
-                setState(() {});
-              },
+            Divider(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text(i18n(context, "encrypt")),
+                Checkbox(
+                  value: _encrypt,
+                  onChanged: (bool value) {
+                    _encrypt = value;
+                    setState(() {});
+                  },
+                ),
+              ],
             ),
+            Divider(),
             Form(
               key: _formKey,
               child: TextFormField(

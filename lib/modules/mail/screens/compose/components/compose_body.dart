@@ -22,6 +22,7 @@ class _ComposeBodyState extends State<ComposeBody> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return TextField(
       enabled: widget.enable,
       controller: widget.textCtrl,
@@ -33,7 +34,8 @@ class _ComposeBodyState extends State<ComposeBody> {
             const EdgeInsets.symmetric(vertical: 26.0, horizontal: 16.0),
         border: OutlineInputBorder(borderSide: BorderSide.none),
         filled: true,
-        fillColor: Theme.of(context).cardColor,
+        fillColor:
+            widget.enable ?theme.cardColor : theme.disabledColor.withAlpha(20),
         hintText: i18n(context, "compose_body_placeholder"),
       ),
     );

@@ -17,7 +17,7 @@ abstract class PgpWorker {
       String text,
     );
 
-  EncryptedType encryptType(String text);
+  EncryptType encryptType(String text);
 
   stop();
 }

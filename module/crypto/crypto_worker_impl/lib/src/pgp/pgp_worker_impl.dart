@@ -75,34 +75,35 @@ class PgpWorkerImpl extends PgpWorker {
     return keys;
   }
 
-  EncryptedType encryptType(String text) {
-    if (_contains(text, [
+  EncryptType encryptType(String text) {
+
+    bool _contains(List<String> patterns) {
+      var startIndex = 0;
+      for (var pattern in patterns) {
+        startIndex = text.indexOf(pattern, startIndex);
+        if (startIndex == -1) {
+          return false;
+        }
+      }
+      return true;
+    }
+
+    if (_contains([
       _BEGIN_PGP_MESSAGE,
       _END_PGP_MESSAGE,
     ])) {
-      return EncryptedType.Encrypt;
+      return EncryptType.Encrypt;
     }
 
-    if (_contains(text, [
+    if (_contains([
       _BEGIN_PGP_SIGNED_MESSAGE,
       _BEGIN_PGP_SIGNATURE,
       _END_PGP_SIGNATURE
     ])) {
-      return EncryptedType.Sign;
+      return EncryptType.Sign;
     }
 
-    return EncryptedType.None;
-  }
-
-  bool _contains(String text, List<String> patterns) {
-    var startIndex = 0;
-    for (var pattern in patterns) {
-      startIndex = text.indexOf(pattern, startIndex);
-      if (startIndex == -1) {
-        return false;
-      }
-    }
-    return true;
+    return EncryptType.None;
   }
 
   @override

@@ -47,7 +47,11 @@ class PgpEncryptDecryptImpl extends PgpEncryptDecrypt {
 
       return Decrypted(verified, text);
     } catch (e) {
-      throw PgpDecryptError();
+      if (e is PgpSignError || e is PgpInputError) {
+        throw PgpInvalidSign();
+      } else {
+        rethrow;
+      }
     }
   }
 
@@ -84,10 +88,7 @@ class PgpEncryptDecryptImpl extends PgpEncryptDecrypt {
       );
       return result;
     } catch (e) {
-      if (e is PgpSignError || e is PgpInputError) {
-        throw PgpInvalidSign();
-      }
-      rethrow;
+      throw PgpInvalidSign();
     }
   }
 
