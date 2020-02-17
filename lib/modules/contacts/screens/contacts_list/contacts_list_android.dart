@@ -148,14 +148,13 @@ class _ContactsListAndroidState extends State<ContactsListAndroid> {
     return Column(
       children: <Widget>[
         Flexible(
-          child: ListView.separated(
-            padding: EdgeInsets.only(bottom: 62.0 + MediaQuery.of(context).padding.bottom),
+          child: ListView.builder(
+            padding: EdgeInsets.only(bottom: 82.0 + MediaQuery.of(context).padding.bottom),
             itemBuilder: (_, i) => ContactsListTile(
               contact: state.contacts[i],
               onPressed: (c) => _onContactSelected(context, c),
               onDeleteContact: _deleteContact,
             ),
-            separatorBuilder: (_, i) => Divider(color: Colors.transparent, indent: 16.0, endIndent: 16.0, height: 0.0),
             itemCount: state.contacts.length,
           ),
         ),

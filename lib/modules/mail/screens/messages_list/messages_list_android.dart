@@ -265,8 +265,8 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
               messages = snap.data.where((m) => m.parentUid == null).toList();
               threads = snap.data.where((m) => m.parentUid != null).toList();
             }
-            return ListView.separated(
-              padding: EdgeInsets.only(top: 6.0, bottom: 32.0),
+            return ListView.builder(
+              padding: EdgeInsets.only(top: 6.0, bottom: 82.0),
               itemCount: messages.length,
               itemBuilder: (_, i) {
                 final item = messages[i];
@@ -276,8 +276,7 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
                       item,
                       threads.where((t) => t.parentUid == item.uid).toList(),
                       key: Key(item.localId.toString()),
-                      onItemSelected: (Message item) =>
-                          _onMessageSelected(snap.data, item),
+                      onItemSelected: (Message item) => _onMessageSelected(snap.data, item),
                       onStarMessage: _setStarred,
                       onDeleteMessage: _deleteMessage,
                     ),
@@ -288,12 +287,6 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
                   ],
                 );
               },
-              separatorBuilder: (_, i) => Divider(
-                height: 3.0,
-                indent: 16.0,
-                endIndent: 16.0,
-                color: Colors.transparent,
-              ),
             );
           } else {
             // build list view to be able to swipe to refresh

@@ -22,7 +22,7 @@ class MessageItem extends StatefulWidget {
   final Function(Message, bool) onStarMessage;
   final Function(Message) onDeleteMessage;
 
-  MessageItem(
+  const MessageItem(
     this.message,
     this.children, {
     this.key,
@@ -139,7 +139,7 @@ class _MessageItemState extends State<MessageItem> {
                 ),
               ),
               trailing: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: <Widget>[
                   Row(
