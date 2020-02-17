@@ -251,8 +251,8 @@ class MailUtils {
         <div class="disabled-text">$date</div>
       </div>
       <div class="flex" style="flex: 0">
-        <!-- <a href='#${MessageWebViewActions.SHOW_INFO}' class='icon-btn'>${_getInfoIcon(accentColor)}</a> -->
-        <a href='#${MessageWebViewActions.SHOW_ATTACHMENTS}' class='icon-btn' style='${showAttachmentsBtn != true ? "display: none" : ""}'>
+        <!-- <a href='https://dummy-crutch.com/#${MessageWebViewActions.SHOW_INFO}' class='icon-btn'>${_getInfoIcon(accentColor)}</a> -->
+        <a href='https://dummy-crutch.com/#${MessageWebViewActions.SHOW_ATTACHMENTS}' class='icon-btn' style='${showAttachmentsBtn != true ? "display: none" : ""}'>
           ${_getAttachmentsIcon(accentColor)}
         </a>
       </div>
