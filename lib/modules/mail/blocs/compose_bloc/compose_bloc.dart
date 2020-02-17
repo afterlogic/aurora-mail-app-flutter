@@ -127,11 +127,19 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
 
   Stream<ComposeState> _encryptBody(EncryptBody event) async* {
     try {
+      final emails = event.contacts.map((item) {
+        final match = RegExp("<(.*)?>").firstMatch(item);
+        if (match != null && match.groupCount > 0) {
+          return match.group(1);
+        } else {
+          return item;
+        }
+      }).toList();
       final encrypted = await _methods.encrypt(
         event.sign,
         event.encrypt,
         event.pass,
-        event.contacts,
+        emails,
         event.body,
       );
       final type = event.encrypt ? EncryptType.Encrypt : EncryptType.Sign;
