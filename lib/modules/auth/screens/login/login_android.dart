@@ -1,25 +1,21 @@
-import 'dart:io';
-
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/auth_input.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/presentation_header.dart';
 import 'package:aurora_mail/modules/auth/screens/two_factor_auth/two_factor_auth_route.dart';
-import 'package:aurora_mail/modules/auth/screens/two_factor_auth/two_factor_auth_widget.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
-import 'package:aurora_mail/shared_ui/app_button.dart';
+import 'package:aurora_ui_kit/components/am_button.dart';
 import 'package:aurora_mail/shared_ui/restart_widget.dart';
 import 'package:aurora_mail/utils/input_validation.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
-import 'package:aurora_mail/build_property.dart';
+import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import 'auth_data.dart';
 import 'components/mail_logo.dart';
@@ -105,8 +101,7 @@ class _LoginAndroidState extends State<LoginAndroid> {
     final authBloc = BlocProvider.of<AuthBloc>(context);
     return Scaffold(
       appBar: widget.isDialog
-          ? AppBar(
-              centerTitle: true,
+          ? AMAppBar(
               title: Text(i18n(
                   context,
                   widget.email == null
@@ -227,9 +222,8 @@ class _LoginAndroidState extends State<LoginAndroid> {
                 if (widget.isDialog) SizedBox(height: 40.0),
                 SizedBox(
                   width: double.infinity,
-                  child: AppButton(
-                    text: i18n(context,
-                        widget.isDialog ? "btn_add_account" : "btn_login"),
+                  child: AMButton(
+                    child: Text(i18n(context, widget.isDialog ? "btn_add_account" : "btn_login")),
                     isLoading: loading,
                     onPressed: () => _login(context),
                   ),

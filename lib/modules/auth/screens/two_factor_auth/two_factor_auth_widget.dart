@@ -3,7 +3,7 @@ import 'package:aurora_mail/modules/auth/screens/login/components/auth_input.dar
 import 'package:aurora_mail/modules/auth/screens/login/components/mail_logo.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/presentation_header.dart';
 import 'package:aurora_mail/modules/auth/screens/two_factor_auth/two_factor_auth_route.dart';
-import 'package:aurora_mail/shared_ui/app_button.dart';
+import 'package:aurora_ui_kit/components/am_button.dart';
 import 'package:aurora_mail/utils/input_validation.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
@@ -87,8 +87,8 @@ class _TwoFactorAuthWidgetState extends State<TwoFactorAuthWidget> {
                 if (widget.args.isDialog) SizedBox(height: 40.0),
                 SizedBox(
                   width: double.infinity,
-                  child: AppButton(
-                    text: i18n(context, "verify_pin"),
+                  child: AMButton(
+                    child: Text(i18n(context, "verify_pin")),
                     isLoading: loading,
                     onPressed: () => _login(),
                   ),

@@ -70,6 +70,9 @@ dependencies:
   notifications_utils:
     path: core/notifications_utils
 
+  aurora_ui_kit:
+    path: core/aurora_ui_kit
+
 
   #notification
   flutter_local_notifications: 0.8.4+3
