@@ -347,51 +347,53 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
             if (state is ReceivedComposeAttachments)
               setState(() => _attachments.addAll(state.attachments));
           },
-          child: ListView(
+          child: SingleChildScrollView(
             padding: EdgeInsets.symmetric(horizontal: 16.0),
-            children: <Widget>[
-              ComposeEmails(
-                label: i18n(context, "messages_to"),
-                textCtrl: _toTextCtrl,
-                emails: _toEmails,
-              ),
-              Divider(height: 0.0),
-              ComposeEmails(
-                label: i18n(context, "messages_cc"),
-                textCtrl: _ccTextCtrl,
-                emails: _ccEmails,
-                onCCSelected: () => setState(() => _showBCC = true),
-              ),
-              Divider(height: 0.0),
-              if (_showBCC)
+            child: Column(
+              children: <Widget>[
                 ComposeEmails(
-                  label: i18n(context, "messages_bcc"),
-                  textCtrl: _bccTextCtrl,
-                  emails: _bccEmails,
+                  label: i18n(context, "messages_to"),
+                  textCtrl: _toTextCtrl,
+                  emails: _toEmails,
                 ),
-              if (_showBCC) Divider(height: 0.0),
-              ComposeSubject(
-                textCtrl: _subjectTextCtrl,
-                onAttach: () => _bloc.add(UploadAttachment()),
-              ),
-              if (_attachments.isNotEmpty) Divider(height: 0.0),
-              BlocBuilder<ComposeBloc, ComposeState>(builder: (_, state) {
-                if (state is ConvertingAttachments) {
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Center(child: CircularProgressIndicator()),
-                  );
-                } else {
-                  return Column(
-                    children: _attachments
-                        .map((a) => ComposeAttachmentItem(a, _cancelAttachment))
-                        .toList(),
-                  );
-                }
-              }),
-//              Divider(height: 0.0),
-              ComposeBody(textCtrl: _bodyTextCtrl),
-            ],
+                Divider(height: 0.0),
+                ComposeEmails(
+                  label: i18n(context, "messages_cc"),
+                  textCtrl: _ccTextCtrl,
+                  emails: _ccEmails,
+                  onCCSelected: () => setState(() => _showBCC = true),
+                ),
+                Divider(height: 0.0),
+                if (_showBCC)
+                  ComposeEmails(
+                    label: i18n(context, "messages_bcc"),
+                    textCtrl: _bccTextCtrl,
+                    emails: _bccEmails,
+                  ),
+                if (_showBCC) Divider(height: 0.0),
+                ComposeSubject(
+                  textCtrl: _subjectTextCtrl,
+                  onAttach: () => _bloc.add(UploadAttachment()),
+                ),
+                if (_attachments.isNotEmpty) Divider(height: 0.0),
+                BlocBuilder<ComposeBloc, ComposeState>(builder: (_, state) {
+                  if (state is ConvertingAttachments) {
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Center(child: CircularProgressIndicator()),
+                    );
+                  } else {
+                    return Column(
+                      children: _attachments
+                          .map((a) => ComposeAttachmentItem(a, _cancelAttachment))
+                          .toList(),
+                    );
+                  }
+                }),
+                Divider(height: 0.0),
+                ComposeBody(textCtrl: _bodyTextCtrl),
+              ],
+            ),
           ),
         ),
       ),
