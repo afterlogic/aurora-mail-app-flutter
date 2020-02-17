@@ -1,5 +1,6 @@
 import 'package:aurora_mail/res/icons/webmail_icons.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 
 enum ContactViewAppBarAction {
@@ -31,7 +32,7 @@ class ContactViewAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppBar(
+    return AMAppBar(
       actions: <Widget>[
         if (allowShare)
           IconButton(

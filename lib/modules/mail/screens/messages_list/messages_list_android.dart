@@ -16,6 +16,7 @@ import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/shared_ui/mail_bottom_app_bar.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
+import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:empty_list/empty_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -231,7 +232,7 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
           bottomNavigationBar:
               MailBottomAppBar(selectedRoute: MailBottomAppBarRoutes.mail),
           floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-          floatingActionButton: FloatingActionButton(
+          floatingActionButton: AMFloatingActionButton(
             child: Icon(MdiIcons.pen),
             onPressed: () => Navigator.pushNamed(context, ComposeRoute.name,
                 arguments: ComposeScreenArgs(

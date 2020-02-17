@@ -3,6 +3,7 @@ import 'package:aurora_mail/modules/settings/models/sync_freq.dart';
 import 'package:aurora_mail/modules/settings/models/sync_period.dart';
 import 'package:aurora_mail/modules/settings/screens/sync_settings/components/freq_selection_dialog.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -30,9 +31,8 @@ class _SyncSettingsAndroidState extends State<SyncSettingsAndroid> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: AMAppBar(
         title: Text(i18n(context, "settings_sync")),
-        centerTitle: true,
       ),
       body: BlocBuilder<SettingsBloc, SettingsState>(
         bloc: BlocProvider.of<SettingsBloc>(context),

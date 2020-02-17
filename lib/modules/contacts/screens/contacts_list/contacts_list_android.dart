@@ -11,6 +11,7 @@ import 'package:aurora_mail/modules/mail/blocs/mail_bloc/mail_bloc.dart';
 import 'package:aurora_mail/shared_ui/mail_bottom_app_bar.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
+import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:empty_list/empty_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -118,7 +119,7 @@ class _ContactsListAndroidState extends State<ContactsListAndroid> {
       bottomNavigationBar: MailBottomAppBar(
           selectedRoute: MailBottomAppBarRoutes.contacts),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: AMFloatingActionButton(
         child: Icon(MdiIcons.accountPlusOutline),
         onPressed: () =>
             Navigator.pushNamed(

@@ -45,7 +45,7 @@ class MailBottomAppBar extends StatelessWidget {
         children: <Widget>[
           IconButton(
             icon: Icon(
-              MdiIcons.emailOutline,
+              MdiIcons.email,
               color: selectedRoute == MailBottomAppBarRoutes.mail
                   ? Theme.of(context).accentColor
                   : Theme.of(context).disabledColor,
@@ -56,7 +56,7 @@ class MailBottomAppBar extends StatelessWidget {
           ),
           IconButton(
             icon: Icon(
-              MdiIcons.contactMailOutline,
+              MdiIcons.contactMail,
               color: selectedRoute == MailBottomAppBarRoutes.contacts
                   ? Theme.of(context).accentColor
                   : Theme.of(context).disabledColor,
@@ -67,7 +67,7 @@ class MailBottomAppBar extends StatelessWidget {
           ),
           IconButton(
             icon: Icon(
-              MdiIcons.settingsOutline,
+              MdiIcons.settings,
               color: selectedRoute == MailBottomAppBarRoutes.settings
                   ? Theme.of(context).accentColor
                   : Theme.of(context).disabledColor,

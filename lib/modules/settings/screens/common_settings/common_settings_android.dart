@@ -1,6 +1,7 @@
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/modules/settings/screens/common_settings/components/theme_selection_dialog.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -28,9 +29,8 @@ class _CommonSettingsAndroidState extends State<CommonSettingsAndroid> {
     final bloc = BlocProvider.of<SettingsBloc>(context);
     final theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(
-          title: Text(i18n(context, "settings_common")),
-        centerTitle: true,
+      appBar: AMAppBar(
+        title: Text(i18n(context, "settings_common")),
       ),
       body: BlocBuilder<SettingsBloc, SettingsState>(
         builder: (_, state) {

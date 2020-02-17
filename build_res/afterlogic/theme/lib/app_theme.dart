@@ -6,9 +6,8 @@ class AppTheme {
   static final light = ThemeData(
     primaryColor: AppColor.primary,
     accentColor: AppColor.accent,
-    dialogTheme: DialogTheme(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-    ),
+    buttonTheme: _buttonTheme,
+    dialogTheme: _dialogTheme,
     splashFactory: InkRipple.splashFactory,
     brightness: Brightness.light,
     disabledColor: Colors.black.withOpacity(0.3),
@@ -43,9 +42,8 @@ class AppTheme {
   static final dark = ThemeData(
     primaryColor: AppColor.primary,
     accentColor: AppColor.accent,
-    dialogTheme: DialogTheme(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-    ),
+    buttonTheme: _buttonTheme,
+    dialogTheme: _dialogTheme,
     splashFactory: InkRipple.splashFactory,
     brightness: Brightness.dark,
     disabledColor: Colors.white.withOpacity(0.3),
@@ -76,5 +74,14 @@ class AppTheme {
       ),
     ),
     bottomAppBarColor: Colors.black,
+  );
+
+  static final _dialogTheme = DialogTheme(
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+  );
+
+  static final _buttonTheme = ButtonThemeData(
+    buttonColor: AppColor.accent,
+    textTheme: ButtonTextTheme.primary,
   );
 }

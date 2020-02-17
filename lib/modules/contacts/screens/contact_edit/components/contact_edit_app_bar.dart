@@ -1,4 +1,5 @@
 import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 
 enum ContactEditAppBarAction { save }
@@ -15,9 +16,8 @@ class ContactEditAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppBar(
+    return AMAppBar(
       title: Text(i18n(context, isEdit ? "contacts_edit" : "contacts_add")),
-      centerTitle: true,
       actions: <Widget>[
         IconButton(
           icon: Icon(Icons.save),

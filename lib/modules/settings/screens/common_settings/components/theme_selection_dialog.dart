@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_dialog.dart';
+import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -24,8 +25,7 @@ class ThemeSelectionDialog extends StatelessWidget {
       contentPadding: EdgeInsets.zero,
       titlePadding: EdgeInsets.all(24.0),
       title: Text(i18n(context, "settings_dark_theme")),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
+      content: AMDialogList(
         children: [
           RadioListTile<bool>(
             activeColor: Theme.of(context).accentColor,

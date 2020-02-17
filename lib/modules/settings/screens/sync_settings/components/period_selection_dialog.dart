@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:aurora_mail/modules/settings/models/sync_period.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_dialog.dart';
+import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -25,23 +26,19 @@ class PeriodSelectionDialog extends StatelessWidget {
       contentPadding: EdgeInsets.zero,
       titlePadding: EdgeInsets.all(24.0),
       title: Text(i18n(context, "settings_sync_period")),
-      content: SizedBox(
-        height: 56.0 * Period.values.length,
-        width: 400.0,
-        child: ListView(
-          children: Period.values.map((period) {
-            return RadioListTile(
-              activeColor: Theme.of(context).accentColor,
-              title: Text(SyncPeriod.periodToTitle(context, period)),
-              value: period,
-              groupValue: selectedItem,
-              onChanged: (val) {
-                onItemSelected(period);
-                Navigator.pop(context);
-              },
-            );
-          }).toList(),
-        ),
+      content: AMDialogList(
+        children: Period.values.map((period) {
+          return RadioListTile(
+            activeColor: Theme.of(context).accentColor,
+            title: Text(SyncPeriod.periodToTitle(context, period)),
+            value: period,
+            groupValue: selectedItem,
+            onChanged: (val) {
+              onItemSelected(period);
+              Navigator.pop(context);
+            },
+          );
+        }).toList(),
       ),
       actions: <Widget>[
         FlatButton(

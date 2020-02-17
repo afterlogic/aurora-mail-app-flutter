@@ -11,6 +11,7 @@ import 'package:aurora_mail/utils/date_formatting.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/mail_utils.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -139,13 +140,28 @@ class _MessageWebViewState extends State<MessageWebView> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         if (!_showImages)
-          FlatButton.icon(
-            icon: Icon(Icons.image),
-            label: Text(i18n(context, "messages_show_images")),
-            onPressed: () {
+          Container(
+            padding: const EdgeInsets.all(6.0),
+            color: Color(0xFFffffc5),
+            child: RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: i18n(context, "messages_images_security_alert") + " ",
+                    style: TextStyle(color: Colors.black),
+                  ),
+                  TextSpan(
+                    text: i18n(context, "messages_show_images"),
+                    style: TextStyle(color: Colors.blue),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () {
               setState(() => _showImages = true);
               _getHtmlWithImages();
             },
+                  ),
+                ],
+              ),
+            ),
           ),
         Flexible(
           child: Stack(

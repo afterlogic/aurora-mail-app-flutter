@@ -1,4 +1,5 @@
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
+import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -17,7 +18,7 @@ class ComposeAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppBar(
+    return AMAppBar(
       centerTitle: false,
       leading: IconButton(
         icon: Icon(Icons.close),
