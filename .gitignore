@@ -81,10 +81,10 @@ android/app/google-services.json
 android/build_variable.properties
 ios/Runner/GoogleService-Info.plist
 
-build_res/**/google-services.json
-build_res/**/GoogleService-Info.plist
+build_res/aurora_mail/google-services.json
+build_res/aurora_mail/GoogleService-Info.plist
 
-build_res/**/key.properties
+build_res/aurora_mail/key.properties
 
 android/app/src/main/res/drawable-hdpi/ic_launcher_foreground.png
 
