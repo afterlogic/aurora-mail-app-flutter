@@ -63,7 +63,7 @@ class AMButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(50.0),
         boxShadow: isLoading == true ? null : [
           shadow ?? BoxShadow(
-            color: Theme.of(context).buttonColor.withOpacity(isLoading == true ? 0.2 : 0.8),
+            color: Theme.of(context).accentColor.withOpacity(0.8),
             blurRadius: 8.0,
             offset: Offset(0.0, 3.0),
           ),
