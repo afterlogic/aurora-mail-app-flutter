@@ -1,5 +1,6 @@
 #variables
 appName: "Aurora Mail Custom"
+_iosAppName: "Aurora Mail Custom"
 _appId: "com.afterlogic.aurora.mail.aurora_mail"
 _iosAppId: "com.afterlogic.aurora.mail.custom"
 

@@ -16,8 +16,10 @@ _buildPropertyPath: lib/build_property.dart
 _buildVariant: "build_res/afterlogic/build_variant.yaml"
 #variables
 appName: ""
+_iosAppName: "{{appName}}"
 _appId: ""
 _iosAppId: "{{_appId}}"
+
 version: 1.0.1+32
 
 icon: "{{_dir}}/icon.png"
