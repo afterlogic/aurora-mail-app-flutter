@@ -38,6 +38,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'auth/screens/login/login_android.dart';
 import 'auth/screens/login/login_route.dart';
 import 'auth/screens/two_factor_auth/two_factor_auth_route.dart';
+import 'auth/screens/two_factor_auth/two_factor_auth_widget.dart';
 import 'mail/blocs/mail_bloc/mail_bloc.dart';
 import 'mail/screens/messages_list/messages_list_android.dart';
 import 'mail/screens/messages_list/messages_list_route.dart';

@@ -6,7 +6,6 @@ import 'package:aurora_mail/modules/settings/screens/pgp_settings/dialogs/import
 import 'package:aurora_mail/modules/settings/screens/pgp_settings/dialogs/import_key_dialog.dart';
 import 'package:aurora_mail/modules/settings/screens/pgp_settings/screens/pgp_key_route.dart';
 import 'package:aurora_mail/modules/settings/screens/pgp_settings/screens/pgp_keys_route.dart';
-import 'package:aurora_mail/shared_ui/app_button.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:crypto_model/crypto_model.dart';
@@ -198,9 +197,7 @@ class _PgpSettingsState extends State<PgpSettings> {
           (key) => GestureDetector(
             onTap: () => _openKey(context, key),
             child: _key(
-              (key.name ?? "") +
-                  (key.name?.isNotEmpty == true ? " " : "") +
-                  key.mail,
+              (key.name ?? "") + (key.name?.isNotEmpty == true ? " " : "") + key.mail,
               false,
             ),
           ),
@@ -244,33 +241,21 @@ class _PgpSettingsState extends State<PgpSettings> {
       child: Column(
         children: <Widget>[
           if (publicKeys.isNotEmpty)
-            SizedBox(
-              width: double.infinity,
-              child: AppButton(
-                text: i18n(context, "export_all_public_keys"),
-                onPressed: () => _exportAllPublicKeys(publicKeys),
-              ),
+            ListTile(
+              title: Text(i18n(context, "export_all_public_keys")),
+              onTap: () => _exportAllPublicKeys(publicKeys),
             ),
-          SizedBox(
-            width: double.infinity,
-            child: AppButton(
-              text: i18n(context, "import_keys_from_text"),
-              onPressed: _importFromText,
-            ),
+          ListTile(
+            title: Text(i18n(context, "import_keys_from_text")),
+            onTap: _importFromText,
           ),
-          SizedBox(
-            width: double.infinity,
-            child: AppButton(
-              text: i18n(context, "import_keys_from_file"),
-              onPressed: _importFromFile,
-            ),
+          ListTile(
+            title: Text(i18n(context, "import_keys_from_file")),
+            onTap: _importFromFile,
           ),
-          SizedBox(
-            width: double.infinity,
-            child: AppButton(
-              text: i18n(context, "generate_keys"),
-              onPressed: _generateKey,
-            ),
+          ListTile(
+            title: Text(i18n(context, "generate_keys")),
+            onTap: _generateKey,
           )
         ],
       ),

@@ -60,28 +60,30 @@ packages:
   crypto_model:
     dependency: "direct main"
     description:
-      path: "..\\crypto_model"
+      path: "../crypto_model"
       relative: true
     source: path
     version: "0.0.1"
   crypto_plugin:
     dependency: "direct main"
     description:
-      path: "..\\..\\..\\..\\crypto_plugin"
-      relative: true
-    source: path
+      path: "."
+      ref: HEAD
+      resolved-ref: "1d0a3c5b4d69b415db194f6662b06578592b3fa2"
+      url: "https://github.com/afterlogic/flutter_crypto_plugin"
+    source: git
     version: "0.0.1"
   crypto_storage:
     dependency: "direct main"
     description:
-      path: "..\\crypto_storage"
+      path: "../crypto_storage"
       relative: true
     source: path
     version: "0.0.1"
   crypto_worker:
     dependency: "direct main"
     description:
-      path: "..\\crypto_worker"
+      path: "../crypto_worker"
       relative: true
     source: path
     version: "0.0.1"
