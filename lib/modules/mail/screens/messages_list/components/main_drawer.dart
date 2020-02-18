@@ -170,7 +170,7 @@ class _MainDrawerState extends State<MainDrawer> {
   Widget _buildFolders(FoldersLoaded state) {
     final items = _getFolderWidgets(
       state.folders,
-      state.selectedFolder?.localId ?? -1,
+      state.selectedFolder?.guid ?? "",
       state.isStarredFilterEnabled,
     );
     final folderWidgets = new List<Widget>.from(items);
@@ -193,15 +193,15 @@ class _MainDrawerState extends State<MainDrawer> {
   }
 
   List<MailFolder> _getFolderWidgets(
-      List<Folder> mailFolders, int selected, bool isStarredFilterEnabled,
+      List<Folder> mailFolders, String selected, bool isStarredFilterEnabled,
       [String parentGuid]) {
     return mailFolders
         .where((f) => f.parentGuid == parentGuid)
         .map((mailFolder) {
       return MailFolder(
         mailFolder: mailFolder,
-        isSelected: selected == mailFolder.localId && !isStarredFilterEnabled,
-        key: Key(mailFolder.localId.toString()),
+        isSelected: selected == mailFolder.guid && !isStarredFilterEnabled,
+        key: Key(mailFolder.guid),
         children: _getFolderWidgets(
             mailFolders, selected, isStarredFilterEnabled, mailFolder.guid),
       );

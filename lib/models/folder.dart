@@ -18,8 +18,6 @@ enum FolderType {
 }
 
 class Folder {
-  final int localId;
-
   final String guid;
 
   final String parentGuid;
@@ -63,7 +61,6 @@ class Folder {
   final int unread;
 
   Folder({
-    @required this.localId,
     @required this.guid,
     @required this.parentGuid,
     @required this.type,
@@ -119,7 +116,6 @@ class Folder {
     try {
       return localFolders.map((localFolder) {
         return Folder(
-          localId: localFolder.localId,
           guid: localFolder.guid,
           parentGuid: localFolder.parentGuid,
           type: localFolder.type,

@@ -7,11 +7,14 @@ import 'package:uuid/uuid.dart';
 
 @DataClassName("LocalFolder")
 class Folders extends Table {
-  IntColumn get localId => integer().autoIncrement()();
+  @override
+  Set<Column> get primaryKey => {fullName, accountLocalId};
 
-  IntColumn get userLocalId => integer()();
+  TextColumn get fullName => text()();
 
   IntColumn get accountLocalId => integer()();
+
+  IntColumn get userLocalId => integer()();
 
   TextColumn get guid => text()();
 
@@ -28,8 +31,6 @@ class Folders extends Table {
   IntColumn get unread => integer().nullable()();
 
   TextColumn get name => text()();
-
-  TextColumn get fullName => text()();
 
   TextColumn get fullNameRaw => text()();
 
@@ -78,7 +79,8 @@ class Folders extends Table {
     final accountId = args["id"] as int;
     final userLocalId = args["userLocalId"] as int;
     final accountLocalId = args["accountLocalId"] as int;
-    final rawFolders = new List<Map<String, dynamic>>.from(args["folders"] as Iterable);
+    final rawFolders =
+        new List<Map<String, dynamic>>.from(args["folders"] as Iterable);
 
     final flattenedFolders = new List<LocalFolder>();
 
@@ -87,7 +89,6 @@ class Folders extends Table {
         final guid = uuid.v4();
         final t = rawFolder["Type"];
         flattenedFolders.add(LocalFolder(
-          localId: null,
           userLocalId: userLocalId,
           accountLocalId: accountLocalId,
           guid: guid,
@@ -172,7 +173,8 @@ class Folders extends Table {
 
   // you cannot just return newInfo
   // you have to return oldInfo (because it contains hasBody: true) + addedMessages
-  static MessagesInfoDiffCalcResult _calculateMessagesInfoDiff(Map<String, List<MessageInfo>> args) {
+  static MessagesInfoDiffCalcResult _calculateMessagesInfoDiff(
+      Map<String, List<MessageInfo>> args) {
     final oldInfo = args["oldItems"];
     final newInfo = args["newItems"];
 
