@@ -119,7 +119,6 @@ class _MessageWebViewState extends State<MessageWebView> {
   }
 
   FutureOr<NavigationDecision> _onWebViewNavigateRequest(NavigationRequest request) async {
-    print("VO: request: ${request}");
     if (request.url.endsWith(MessageWebViewActions.SHOW_INFO)) {
       // TODO: implement showing message info
       return NavigationDecision.prevent;
