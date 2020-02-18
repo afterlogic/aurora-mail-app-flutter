@@ -12,7 +12,6 @@ import 'package:aurora_mail/shared_ui/mail_bottom_app_bar.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
-import 'package:empty_list/empty_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -141,7 +140,7 @@ class _ContactsListAndroidState extends State<ContactsListAndroid> {
   }
 
   Widget _buildContactsEmpty(ContactsState state) {
-    return EmptyList(message: i18n(context, "contacts_empty"));
+    return AMEmptyList(message: i18n(context, "contacts_empty"));
   }
 
   Widget _buildContacts(BuildContext context, ContactsState state) {
