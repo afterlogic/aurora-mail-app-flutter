@@ -8,6 +8,7 @@ import 'package:aurora_mail/modules/settings/screens/pgp_settings/screens/pgp_ke
 import 'package:aurora_mail/modules/settings/screens/pgp_settings/screens/pgp_keys_route.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
+import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:crypto_model/crypto_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -241,24 +242,45 @@ class _PgpSettingsState extends State<PgpSettings> {
       child: Column(
         children: <Widget>[
           if (publicKeys.isNotEmpty)
-            ListTile(
-              title: Text(i18n(context, "export_all_public_keys")),
-              onTap: () => _exportAllPublicKeys(publicKeys),
+            SizedBox(
+              width: double.infinity,
+              child: AMButton(
+                child: Text(i18n(context, "export_all_public_keys")),
+                onPressed: () => _exportAllPublicKeys(publicKeys),
+              ),
             ),
-          ListTile(
-            title: Text(i18n(context, "import_keys_from_text")),
-            onTap: _importFromText,
+          _space(),
+          SizedBox(
+            width: double.infinity,
+            child: AMButton(
+              child: Text(i18n(context, "import_keys_from_text")),
+              onPressed: _importFromText,
+            ),
           ),
-          ListTile(
-            title: Text(i18n(context, "import_keys_from_file")),
-            onTap: _importFromFile,
+          _space(),
+          SizedBox(
+            width: double.infinity,
+            child: AMButton(
+              child: Text(i18n(context, "import_keys_from_file")),
+              onPressed: _importFromFile,
+            ),
           ),
-          ListTile(
-            title: Text(i18n(context, "generate_keys")),
-            onTap: _generateKey,
+          _space(),
+          SizedBox(
+            width: double.infinity,
+            child: AMButton(
+              child: Text(i18n(context, "generate_keys")),
+              onPressed: _generateKey,
+            ),
           )
         ],
       ),
+    );
+  }
+
+  Widget _space() {
+    return SizedBox(
+      height: 10,
     );
   }
 }

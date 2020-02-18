@@ -127,6 +127,12 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
 
   Stream<ComposeState> _encryptBody(EncryptBody event) async* {
     try {
+      if(event.encrypt && event.contacts.isEmpty){
+        yield ComposeError(
+          "need_contact_for_encrypt",
+        );
+        return;
+      }
       final encrypted = await _methods.encrypt(
         event.sign,
         event.encrypt,

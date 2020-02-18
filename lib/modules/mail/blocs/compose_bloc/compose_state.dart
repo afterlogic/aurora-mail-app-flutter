@@ -44,14 +44,14 @@ class MessageSavedInDrafts extends ComposeState {
   List<Object> get props => [draftUid];
 }
 
-class ComposeError extends ComposeState with AlwaysNonEqualObject {
+class ComposeError extends ComposeState  with AlwaysNonEqualObject{
   final String errorMsg;
   final Map<String, String> arg;
 
   ComposeError(this.errorMsg, [this.arg]);
 
   @override
-  List<Object> get props => [errorMsg];
+  List<Object> get props => [];
 }
 
 class ConvertingAttachments extends ComposeState {}
@@ -65,12 +65,12 @@ class ReceivedComposeAttachments extends ComposeState {
   List<Object> get props => [attachments];
 }
 
-class EncryptComplete extends ComposeState with AlwaysNonEqualObject {
+class EncryptComplete extends ComposeState  {
   final EncryptType type;
   final String text;
 
   EncryptComplete(this.text, this.type);
 
   @override
-  List<Object> get props => [text];
+  List<Object> get props => [hashCode];
 }

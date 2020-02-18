@@ -254,8 +254,7 @@
   "two_factor_auth": "Your account is protected with\nTwo Factor Authentication.\nPlease provide the PIN code.",
   "pin": "PIN",
   "verify_pin": "Verify pin",
-  "invalid_pin": "Invalid PIN"
-  "formatting_yesterday": "Yesterday",
+  "invalid_pin": "Invalid PIN",
   "pgp_settings": "OpenPGP",
   "public_keys": "Public keys",
   "private_keys": "Private keys",
@@ -291,5 +290,6 @@
   "decrypted_and_verified": "Message was successfully decrypted and verified.",
   "decrypted_but_not_verified": "Message was successfully decrypted but wasn't verified.",
   "invalid_key_or_password": "Invalid key or password.",
-  "can_not_decrypt": "Can not decrypt message."
+  "can_not_decrypt": "Can not decrypt message.",
+  "need_contact_for_encrypt": "Need contact for encrypt."
 }

@@ -60,7 +60,7 @@ packages:
   crypto_model:
     dependency: "direct main"
     description:
-      path: "..\\crypto_model"
+      path: "../crypto_model"
       relative: true
     source: path
     version: "0.0.1"

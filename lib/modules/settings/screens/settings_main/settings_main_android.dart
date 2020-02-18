@@ -38,7 +38,7 @@ class _SettingsMainAndroidState extends State<SettingsMainAndroid> {
           ),
           if (BuildProperty.cryptoEnable)
             ListTile(
-              leading: Icon(Icons.vpn_key),
+              leading: AMCircleIcon(Icons.vpn_key),
               title: Text(i18n(context, "pgp_settings")),
               onTap: () => Navigator.pushNamed(context, PgpSettingsRoute.name),
             ),
