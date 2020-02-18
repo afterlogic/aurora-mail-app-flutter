@@ -16,6 +16,7 @@ import 'package:aurora_mail/modules/mail/screens/compose/dialog/encrypt_dialog.d
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/mail_utils.dart';
+import 'package:aurora_mail/utils/show_dialog.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:crypto_worker/crypto_worker.dart';
 import 'package:flutter/foundation.dart';
@@ -141,8 +142,9 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
 
   void _initFromContacts(EmailToContacts action) {
     _returnToMessagesList = false;
-    final toEmails = action.contacts.map((c) => MailUtils.getFriendlyName(c));
-    _toEmails.addAll(toEmails);
+    _toEmails.addAll(action.emails);
+//    final toEmails = action.contacts.map((c) => MailUtils.getFriendlyName(c));
+//    _toEmails.addAll(toEmails);
   }
 
   void _initContactsAsAttachments(SendContacts action) {
@@ -268,9 +270,8 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
   }
 
   void _showSending() {
-    showDialog(
+    dialog(
         context: context,
-        barrierDismissible: false,
         builder: (_) => AlertDialog(
               content: Row(
                 children: <Widget>[

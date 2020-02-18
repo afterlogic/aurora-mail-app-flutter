@@ -37,6 +37,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'auth/screens/login/login_android.dart';
 import 'auth/screens/login/login_route.dart';
+import 'auth/screens/two_factor_auth/two_factor_auth_route.dart';
 import 'mail/blocs/mail_bloc/mail_bloc.dart';
 import 'mail/screens/messages_list/messages_list_android.dart';
 import 'mail/screens/messages_list/messages_list_route.dart';
@@ -68,14 +69,25 @@ class AppNavigation {
           );
         }
         break;
+      case TwoFactorAuthRoute.name:
+        final args = settings.arguments as TwoFactorAuthRouteArgs;
+
+        return FadeRoute(
+          settings: RouteSettings(
+            name: settings.name,
+          ),
+          builder: (_) => TwoFactorAuthWidget(
+            args: args,
+          ),
+        );
+
+        break;
 
       // ================= MAIL =================
 
       case MessagesListRoute.name:
         return FadeRoute(
-            settings: RouteSettings(
-              name: settings.name,
-            ),
+            settings: RouteSettings(name: settings.name),
             builder: (_) => MessagesListAndroid());
         break;
 
@@ -83,9 +95,7 @@ class AppNavigation {
         final args = settings.arguments as MessageViewScreenArgs;
 
         return CupertinoPageRoute(
-            settings: RouteSettings(
-              name: settings.name,
-            ),
+            settings: RouteSettings(name: settings.name),
             builder: (_) => MultiBlocProvider(providers: [
                   BlocProvider<MailBloc>.value(value: args.mailBloc),
                   BlocProvider<MessagesListBloc>.value(
@@ -97,9 +107,7 @@ class AppNavigation {
       case ComposeRoute.name:
         final args = settings.arguments as ComposeScreenArgs;
         return MaterialPageRoute(
-            settings: RouteSettings(
-              name: settings.name,
-            ),
+            settings: RouteSettings(name: settings.name),
             fullscreenDialog: true,
             builder: (_) => MultiBlocProvider(
                   providers: [
@@ -115,9 +123,7 @@ class AppNavigation {
       case ContactsListRoute.name:
         final args = settings.arguments as ContactsListScreenArgs;
         return FadeRoute(
-            settings: RouteSettings(
-              name: settings.name,
-            ),
+            settings: RouteSettings(name: settings.name),
             builder: (_) => MultiBlocProvider(
                   providers: [
                     BlocProvider<MailBloc>.value(value: args.mailBloc),
@@ -130,9 +136,7 @@ class AppNavigation {
       case ContactViewRoute.name:
         final args = settings.arguments as ContactViewScreenArgs;
         return CupertinoPageRoute(
-            settings: RouteSettings(
-              name: settings.name,
-            ),
+            settings: RouteSettings(name: settings.name),
             builder: (_) => MultiBlocProvider(
                   providers: [
                     BlocProvider<MailBloc>.value(value: args.mailBloc),
@@ -145,9 +149,7 @@ class AppNavigation {
       case ContactEditRoute.name:
         final args = settings.arguments as ContactEditScreenArgs;
         return MaterialPageRoute(
-            settings: RouteSettings(
-              name: settings.name,
-            ),
+            settings: RouteSettings(name: settings.name),
             fullscreenDialog: true,
             builder: (_) => BlocProvider<ContactsBloc>.value(
                 value: args.bloc,
@@ -157,9 +159,7 @@ class AppNavigation {
       case GroupViewRoute.name:
         final args = settings.arguments as GroupViewScreenArgs;
         return CupertinoPageRoute(
-            settings: RouteSettings(
-              name: settings.name,
-            ),
+            settings: RouteSettings(name: settings.name),
             builder: (_) => BlocProvider<ContactsBloc>.value(
                 value: args.bloc, child: GroupViewAndroid(args.group)));
         break;
@@ -167,9 +167,7 @@ class AppNavigation {
       case GroupEditRoute.name:
         final args = settings.arguments as GroupEditScreenArgs;
         return MaterialPageRoute(
-            settings: RouteSettings(
-              name: settings.name,
-            ),
+            settings: RouteSettings(name: settings.name),
             fullscreenDialog: true,
             builder: (_) => BlocProvider<ContactsBloc>.value(
                 value: args.bloc, child: GroupEditAndroid(group: args.group)));
@@ -178,10 +176,8 @@ class AppNavigation {
       // ================= SETTINGS =================
 
       case SettingsMainRoute.name:
-        return CupertinoPageRoute(
-            settings: RouteSettings(
-              name: settings.name,
-            ),
+        return FadeRoute(
+            settings: RouteSettings(name: settings.name),
             builder: (_) => SettingsMainAndroid());
         break;
 
@@ -216,33 +212,25 @@ class AppNavigation {
         break;
       case CommonSettingsRoute.name:
         return CupertinoPageRoute(
-            settings: RouteSettings(
-              name: settings.name,
-            ),
+            settings: RouteSettings(name: settings.name),
             builder: (_) => CommonSettingsAndroid());
         break;
 
       case SyncSettingsRoute.name:
         return CupertinoPageRoute(
-            settings: RouteSettings(
-              name: settings.name,
-            ),
+            settings: RouteSettings(name: settings.name),
             builder: (_) => SyncSettingsAndroid());
         break;
 
       case ManageUsersRoute.name:
         return CupertinoPageRoute(
-            settings: RouteSettings(
-              name: settings.name,
-            ),
+            settings: RouteSettings(name: settings.name),
             builder: (_) => ManageUsersAndroid());
         break;
 
       case AboutRoute.name:
         return CupertinoPageRoute(
-            settings: RouteSettings(
-              name: settings.name,
-            ),
+            settings: RouteSettings(name: settings.name),
             builder: (_) => AboutAndroid());
         break;
 

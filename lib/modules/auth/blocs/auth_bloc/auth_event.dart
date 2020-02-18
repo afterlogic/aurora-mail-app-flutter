@@ -25,6 +25,15 @@ class LogIn extends AuthEvent {
   List<Object> get props => [email, password, hostname];
 }
 
+class UserLogIn extends AuthEvent {
+  final User user;
+
+  UserLogIn(this.user);
+
+  @override
+  List<Object> get props => [user];
+}
+
 class InitUserAndAccounts extends AuthEvent {}
 
 class GetLastEmail extends AuthEvent {}
@@ -47,10 +56,8 @@ class DeleteUser extends AuthEvent {
   List<Object> get props => [user];
 }
 
-class LogOut extends AuthEvent {
-  @override
-  List<Object> get props => [hashCode];
-}
+class InvalidateCurrentUserToken extends AuthEvent
+    implements AlwaysNonEqualObject {}
 
 class ChangeAccount extends AuthEvent {
   final Account account;
@@ -60,6 +67,3 @@ class ChangeAccount extends AuthEvent {
   @override
   List<Object> get props => [account];
 }
-
-class InvalidateCurrentUserToken extends AuthEvent
-    implements AlwaysNonEqualObject {}

@@ -7,6 +7,8 @@ class WebMailApiError implements Exception {
     _message = _getErrMsg(error);
   }
 
+  WebMailApiError.code(int code) : _message = _getErrMsgFromCode(code);
+
   @override
   String toString() => message;
 
@@ -24,7 +26,7 @@ class WebMailApiError implements Exception {
     }
   }
 
-  String _getErrMsgFromCode(int code) {
+  static String _getErrMsgFromCode(int code) {
     switch (code) {
       case 101:
         return "error_server_invalid_token";

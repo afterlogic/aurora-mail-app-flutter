@@ -35,8 +35,7 @@ class MessageViewBloc extends Bloc<MessageViewEvent, MessageViewState> {
     if (event is DecryptBody) yield* _decryptBody(event);
   }
 
-  Stream<MessageViewState> _downloadAttachment(
-      DownloadAttachment event) async* {
+  Stream<MessageViewState> _downloadAttachment(DownloadAttachment event) async* {
     try {
       await getStoragePermissions();
     } catch (err) {

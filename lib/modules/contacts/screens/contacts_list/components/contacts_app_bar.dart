@@ -6,8 +6,10 @@ import 'package:aurora_mail/modules/contacts/screens/group_view/group_view_route
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/user_selection_popup.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class ContactsAppBar extends StatelessWidget implements PreferredSizeWidget {
 
@@ -20,7 +22,11 @@ class ContactsAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<ContactsBloc, ContactsState>(
       builder: (context, state) =>
-          AppBar(
+          AMAppBar(
+            leading: IconButton(
+              icon: Icon(MdiIcons.sortVariant),
+              onPressed: Scaffold.of(context).openDrawer,
+            ),
             title: _buildTitle(context, state),
             actions: <Widget>[
               if (state.selectedGroup != null)
@@ -45,7 +51,7 @@ class ContactsAppBar extends StatelessWidget implements PreferredSizeWidget {
       final selectedStorage = state.storages.firstWhere((s) => s.sqliteId == state.selectedStorage);
 
       return Column(
-        crossAxisAlignment: !Platform.isIOS ? CrossAxisAlignment.start : CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Text(i18n(context, "contacts")),
           SizedBox(height: 3.0),
@@ -60,7 +66,7 @@ class ContactsAppBar extends StatelessWidget implements PreferredSizeWidget {
     } else if (state.selectedGroup != null && state.groups.isNotEmpty) {
       final selectedGroup = state.groups.firstWhere((g) => g.uuid == state.selectedGroup);
       return Column(
-        crossAxisAlignment: !Platform.isIOS ? CrossAxisAlignment.start : CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Text(i18n(context, "contacts")),
           SizedBox(height: 3.0),
@@ -74,7 +80,7 @@ class ContactsAppBar extends StatelessWidget implements PreferredSizeWidget {
       );
     } else if (state.showAllVisibleContacts == true) {
       return Column(
-        crossAxisAlignment: !Platform.isIOS ? CrossAxisAlignment.start : CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Text(i18n(context, "contacts")),
           SizedBox(height: 3.0),

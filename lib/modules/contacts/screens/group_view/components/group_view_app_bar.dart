@@ -1,4 +1,5 @@
 import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 
 enum GroupViewAppBarAction { sendMessage, delete, edit }
@@ -13,7 +14,7 @@ class GroupViewAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppBar(
+    return AMAppBar(
       actions: <Widget>[
 //        IconButton(
 //          icon: Icon(Icons.mail_outline),

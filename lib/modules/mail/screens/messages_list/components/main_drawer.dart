@@ -34,96 +34,101 @@ class _MainDrawerState extends State<MainDrawer> {
     final multiAccountEnable = BuildProperty.multiAccountEnable;
 
     return Drawer(
-      child: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            InkWell(
-              onTap: multiAccountEnable
-                  ? () {
-                      _changeMode();
-                    }
-                  : null,
-              child: Padding(
-                padding: EdgeInsets.all(16.0),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text(
-                        authBloc.currentAccount.friendlyName,
-                        style: theme.textTheme.title,
-                      ),
-                      SizedBox(height: 8.0),
-                      Row(
-                        children: <Widget>[
-                          Text(authBloc.currentAccount.email),
-                          if (multiAccountEnable)
-                            Icon(mode == _DrawerMode.folders
-                                ? Icons.arrow_drop_down
-                                : Icons.arrow_drop_up),
-                        ],
-                      ),
-                    ],
+      child: ListTileTheme(
+        style: ListTileStyle.drawer,
+        selectedColor: Theme.of(context).accentColor,
+        child: SafeArea(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              InkWell(
+                onTap: multiAccountEnable
+                    ? () {
+                        _changeMode();
+                      }
+                    : null,
+                child: Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          authBloc.currentAccount.friendlyName,
+                          style: theme.textTheme.title,
+                        ),
+                        SizedBox(height: 8.0),
+                        Row(
+                          children: <Widget>[
+                            Text(authBloc.currentAccount.email),
+                            if (multiAccountEnable)
+                              Icon(mode == _DrawerMode.folders
+                                  ? Icons.arrow_drop_down
+                                  : Icons.arrow_drop_up),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
-            Divider(height: 0.0),
-            if (mode == _DrawerMode.accounts)
-              Expanded(
-                child: BlocBuilder<AuthBloc, AuthState>(
-                  condition: (_, state) {
-                    return state is InitializedUserAndAccounts;
-                  },
-                  builder: (BuildContext context, AuthState state) {
-                    if (state is InitializedUserAndAccounts) {
-                      return _buildAccounts(
-                        state.account,
-                        state.accounts,
-                        authBloc,
-                      );
-                    } else {
-                      return SizedBox.shrink();
-                    }
-                  },
-                ),
-              ),
-            if (mode == _DrawerMode.folders)
-              Expanded(
-                child: BlocListener(
-                  bloc: BlocProvider.of<MailBloc>(context),
-                  listener: (BuildContext context, state) {
-                    if (state is FoldersLoaded || state is FoldersError) {
-                      _refreshCompleter?.complete();
-                      _refreshCompleter = new Completer();
-                    }
-                  },
-                  child: RefreshIndicator(
-                    onRefresh: () {
-                      BlocProvider.of<MailBloc>(context).add(RefreshFolders());
-                      return _refreshCompleter.future;
+              Divider(height: 0.0),
+              if (mode == _DrawerMode.accounts)
+                Expanded(
+                  child: BlocBuilder<AuthBloc, AuthState>(
+                    condition: (_, state) {
+                      return state is InitializedUserAndAccounts;
                     },
-                    backgroundColor: Colors.white,
-                    color: Colors.black,
-                    child: BlocBuilder<MailBloc, MailState>(
-                        bloc: BlocProvider.of<MailBloc>(context),
-                        condition: (prevState, state) =>
-                            state is FoldersLoaded || state is FoldersEmpty,
-                        builder: (ctx, state) {
-                          if (state is FoldersLoaded) {
-                            return _buildFolders(state);
-                          } else if (state is FoldersLoading) {
-                            return _buildFoldersLoading();
-                          } else {
-                            return _buildFoldersEmpty();
-                          }
-                        }),
+                    builder: (BuildContext context, AuthState state) {
+                      if (state is InitializedUserAndAccounts) {
+                        return _buildAccounts(
+                          state.account,
+                          state.accounts,
+                          authBloc,
+                        );
+                      } else {
+                        return SizedBox.shrink();
+                      }
+                    },
                   ),
                 ),
-              )
-          ],
+              if (mode == _DrawerMode.folders)
+                Expanded(
+                  child: BlocListener(
+                    bloc: BlocProvider.of<MailBloc>(context),
+                    listener: (BuildContext context, state) {
+                      if (state is FoldersLoaded || state is FoldersError) {
+                        _refreshCompleter?.complete();
+                        _refreshCompleter = new Completer();
+                      }
+                    },
+                    child: RefreshIndicator(
+                      onRefresh: () {
+                        BlocProvider.of<MailBloc>(context)
+                            .add(RefreshFolders());
+                        return _refreshCompleter.future;
+                      },
+                      backgroundColor: Colors.white,
+                      color: Colors.black,
+                      child: BlocBuilder<MailBloc, MailState>(
+                          bloc: BlocProvider.of<MailBloc>(context),
+                          condition: (prevState, state) =>
+                              state is FoldersLoaded || state is FoldersEmpty,
+                          builder: (ctx, state) {
+                            if (state is FoldersLoaded) {
+                              return _buildFolders(state);
+                            } else if (state is FoldersLoading) {
+                              return _buildFoldersLoading();
+                            } else {
+                              return _buildFoldersEmpty();
+                            }
+                          }),
+                    ),
+                  ),
+                )
+            ],
+          ),
         ),
       ),
     );
@@ -151,7 +156,7 @@ class _MainDrawerState extends State<MainDrawer> {
     );
   }
 
-  _changeMode() {
+  void _changeMode() {
     if (mode == _DrawerMode.accounts) {
       mode = _DrawerMode.folders;
     } else if (mode == _DrawerMode.folders) {

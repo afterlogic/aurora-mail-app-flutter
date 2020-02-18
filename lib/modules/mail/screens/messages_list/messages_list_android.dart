@@ -16,6 +16,7 @@ import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/shared_ui/mail_bottom_app_bar.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
+import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:empty_list/empty_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -54,11 +55,12 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
     super.dispose();
     BackgroundHelper.removeOnEndAlarmObserver(onEndAlarm);
     _messagesListBloc.close();
-    _mailBloc.close();
   }
 
   void _initBlocs() {
     final authBloc = BlocProvider.of<AuthBloc>(context);
+    _mailBloc = BlocProvider.of<MailBloc>(context);
+    _contactsBloc = BlocProvider.of<ContactsBloc>(context);
 
     _messagesListBloc = new MessagesListBloc(
       user: authBloc.currentUser,
@@ -67,10 +69,6 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
     _mailBloc = new MailBloc(
       user: authBloc.currentUser,
       account: authBloc.currentAccount,
-    );
-    _contactsBloc = new ContactsBloc(
-      user: authBloc.currentUser,
-      appDatabase: DBInstances.appDB,
     );
 
     _contactsBloc.add(GetContacts());
@@ -233,9 +231,9 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
           ),
           bottomNavigationBar:
               MailBottomAppBar(selectedRoute: MailBottomAppBarRoutes.mail),
-          floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-          floatingActionButton: FloatingActionButton(
-            child: Icon(MdiIcons.emailPlusOutline),
+          floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+          floatingActionButton: AMFloatingActionButton(
+            child: Icon(MdiIcons.pen),
             onPressed: () => Navigator.pushNamed(context, ComposeRoute.name,
                 arguments: ComposeScreenArgs(
                   mailBloc: _mailBloc,
@@ -291,9 +289,10 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
                 );
               },
               separatorBuilder: (_, i) => Divider(
-                height: 0.0,
+                height: 3.0,
                 indent: 16.0,
                 endIndent: 16.0,
+                color: Colors.transparent,
               ),
             );
           } else {

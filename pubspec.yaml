@@ -1,7 +1,7 @@
 name: aurora_mail
 description: Mail client for mobile.
 
-version: 1.0.1+31
+version: 1.0.1+32
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -42,6 +42,7 @@ dependencies:
   material_design_icons_flutter: ^3.4.4895
   webview_flutter: ^0.3.19+5
   flutter_speed_dial: ^1.2.5
+  fluttertoast: ^3.1.3
   empty_list:
     git:
       url: git://github.com/VadimOsovsky/flutter_empty_list.git
@@ -69,12 +70,15 @@ dependencies:
   notifications_utils:
     path: core/notifications_utils
 
+  aurora_ui_kit:
+    path: core/aurora_ui_kit
+
 
   #notification
   flutter_local_notifications: 0.8.4+3
 
   theme:
-    path: build_res/afterlogic/theme
+    path: ./build_res/afterlogic/theme
 
   flutter_secure_storage: ^3.3.1+1
 
@@ -110,9 +114,9 @@ dev_dependencies:
 flutter_icons:
   ios: true
   android: true
-  image_path: build_res/afterlogic/icon.png
+  image_path: ./build_res/afterlogic/icon.png
   adaptive_icon_background: "#FFFFFF"
-  adaptive_icon_foreground: build_res/afterlogic/icon_foreground.png
+  adaptive_icon_foreground: ./build_res/afterlogic/icon_foreground.png
 
 flutter:
   uses-material-design: true
@@ -121,8 +125,8 @@ flutter:
   assets:
     - assets/images/
     - assets/flutter_i18n/
-    - build_res/afterlogic/icon.png
-    - build_res/afterlogic/main_logo.png
+    - ./build_res/afterlogic/icon.png
+    - ./build_res/afterlogic/main_logo.png
 
   fonts:
     - family: WebMailIcons

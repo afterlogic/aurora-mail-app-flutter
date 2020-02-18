@@ -1,6 +1,6 @@
-# theme
+# aurora_ui_kit
 
-A new Flutter package.
+Components library
 
 ## Getting Started
 

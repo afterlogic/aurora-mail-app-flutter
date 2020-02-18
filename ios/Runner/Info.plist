@@ -4,10 +4,8 @@
 <dict>
 	<key></key>
 	<string></string>
-	<key>CFBundleDisplayName</key>
-	<string>$(PRODUCT_NAME)</string>
 	<key>CFBundleName</key>
-	<string>Aurora Mail</string>
+	<string>$(PRODUCT_NAME)</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>NSAppleMusicUsageDescription</key>
@@ -64,12 +62,14 @@
 	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>CFBundleDisplayName</key>
+	<string>$(PRODUCT_NAME)</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Used statically by permission_handler library for Flutter, unused in the app</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Used statically by permission_handler library for Flutter, unused in the app</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Upload photos and videos</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
