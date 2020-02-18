@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class AMAppBar extends StatelessWidget implements PreferredSizeWidget {
+class AMAppBar extends StatefulWidget implements PreferredSizeWidget {
   final Widget title;
   final List<Widget> actions;
   final Widget leading;
@@ -43,19 +43,34 @@ class AMAppBar extends StatelessWidget implements PreferredSizeWidget {
   }) : super(key: key);
 
   @override
+  _AMAppBarState createState() => _AMAppBarState();
+
+  @override
   Size get preferredSize => Size.fromHeight(kToolbarHeight);
+}
+
+class _AMAppBarState extends State<AMAppBar> {
+
+  void _handleBackButton() {
+    Navigator.maybePop(context);
+  }
+
+  void _handleDrawerButton() {
+    Scaffold.of(context).openDrawer();
+  }
+
+  void _handleDrawerButtonEnd() {
+    Scaffold.of(context).openEndDrawer();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final ModalRoute<dynamic> parentRoute = ModalRoute.of(context);
-    final bool canPop = parentRoute?.canPop ?? false;
-    final bool useCloseButton = parentRoute is PageRoute<dynamic> && parentRoute.fullscreenDialog;
 
     return PreferredSize(
-      preferredSize: preferredSize,
+      preferredSize: widget.preferredSize,
       child: Container(
         decoration: BoxDecoration(boxShadow: [
-          shadow ??
+          widget.shadow ??
               BoxShadow(
                 color: Colors.black.withOpacity(0.08),
                 blurRadius: 12.0,
@@ -63,28 +78,77 @@ class AMAppBar extends StatelessWidget implements PreferredSizeWidget {
               )
         ]),
         child: AppBar(
-          leading: leading == null && canPop && !useCloseButton ? IconButton(
-            icon: Icon(Icons.arrow_back_ios), onPressed: Navigator.of(context).pop,
-          ) : leading,
-          centerTitle: centerTitle,
-          title: title,
-          actions: actions,
-          actionsIconTheme: actionsIconTheme,
-          automaticallyImplyLeading: automaticallyImplyLeading,
-          backgroundColor: backgroundColor,
-          bottom: bottom,
-          bottomOpacity: bottomOpacity,
-          brightness: brightness,
+          leading: _leading,
+          centerTitle: widget.centerTitle,
+          title: widget.title,
+          actions: widget.actions,
+          actionsIconTheme: widget.actionsIconTheme,
+          automaticallyImplyLeading: widget.automaticallyImplyLeading,
+          backgroundColor: widget.backgroundColor,
+          bottom: widget.bottom,
+          bottomOpacity: widget.bottomOpacity,
+          brightness: widget.brightness,
           elevation: 0.0,
-          flexibleSpace: flexibleSpace,
-          iconTheme: iconTheme,
-          primary: primary,
-          shape: shape,
-          textTheme: textTheme,
-          titleSpacing: titleSpacing,
-          toolbarOpacity: toolbarOpacity,
+          flexibleSpace: widget.flexibleSpace,
+          iconTheme: widget.iconTheme,
+          primary: widget.primary,
+          shape: widget.shape,
+          textTheme: widget.textTheme,
+          titleSpacing: widget.titleSpacing,
+          toolbarOpacity: widget.toolbarOpacity,
         ),
       ),
     );
+  }
+
+  Widget get _leading {
+    final ScaffoldState scaffold = Scaffold.of(context, nullOk: true);
+    final ModalRoute<dynamic> parentRoute = ModalRoute.of(context);
+
+    final bool hasDrawer = scaffold?.hasDrawer ?? false;
+    final bool canPop = parentRoute?.canPop ?? false;
+    final bool useCloseButton = parentRoute is PageRoute<dynamic> && parentRoute.fullscreenDialog;
+
+    if (widget.leading == null && widget.automaticallyImplyLeading) {
+      if (hasDrawer) {
+        return IconButton(
+          icon: const Icon(Icons.sort),
+          onPressed: _handleDrawerButton,
+          tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+        );
+      } else {
+        if (canPop) {
+          if (useCloseButton) {
+            return IconButton(
+              icon: const Icon(Icons.close),
+              onPressed: _handleBackButton,
+              tooltip: MaterialLocalizations.of(context).closeButtonTooltip,
+            );
+          } else {
+            return IconButton(
+              icon: const Icon(Icons.arrow_back_ios),
+              onPressed: _handleBackButton,
+              tooltip: MaterialLocalizations.of(context).backButtonTooltip,
+            );
+          }
+        }
+      }
+    }
+    return widget.leading;
+  }
+
+  List<Widget> get actions {
+    final ScaffoldState scaffold = Scaffold.of(context, nullOk: true);
+    final bool hasEndDrawer = scaffold?.hasEndDrawer ?? false;
+
+    if ((widget.actions == null || widget.actions.isEmpty) && hasEndDrawer) {
+      return [IconButton(
+        icon: const Icon(Icons.menu),
+        onPressed: _handleDrawerButtonEnd,
+        tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+      )];
+    } else {
+      return widget.actions;
+    }
   }
 }
