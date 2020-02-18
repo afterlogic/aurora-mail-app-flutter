@@ -1,6 +1,5 @@
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_event.dart';
-import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_state.dart';
 import 'package:aurora_mail/modules/settings/screens/about/about_route.dart';
 import 'package:aurora_mail/modules/settings/screens/common_settings/common_settings_route.dart';
 import 'package:aurora_mail/modules/settings/screens/manage_users/manage_users_route.dart';
@@ -28,12 +27,12 @@ class _SettingsMainAndroidState extends State<SettingsMainAndroid> {
       body: ListView(
         children: <Widget>[
           ListTile(
-            leading: Icon(Icons.tune),
+            leading: AMCircleIcon(Icons.tune),
             title: Text(i18n(context, "settings_common")),
             onTap: () => Navigator.pushNamed(context, CommonSettingsRoute.name),
           ),
           ListTile(
-            leading: Icon(Icons.sync),
+            leading: AMCircleIcon(Icons.sync),
             title: Text(i18n(context, "settings_sync")),
             onTap: () => Navigator.pushNamed(context, SyncSettingsRoute.name),
           ),
@@ -45,18 +44,18 @@ class _SettingsMainAndroidState extends State<SettingsMainAndroid> {
             ),
           if (BuildProperty.multiUserEnable)
             ListTile(
-              leading: Icon(Icons.account_circle),
+              leading: AMCircleIcon(Icons.account_circle),
               title: Text(i18n(context, "settings_accounts_manage")),
               onTap: () => Navigator.pushNamed(context, ManageUsersRoute.name),
             ),
           ListTile(
-            leading: Icon(Icons.info_outline),
+            leading: AMCircleIcon(Icons.info_outline),
             title: Text(i18n(context, "settings_about")),
             onTap: () => Navigator.pushNamed(context, AboutRoute.name),
           ),
           if (!BuildProperty.multiUserEnable)
             ListTile(
-              leading: Icon(Icons.exit_to_app),
+              leading: AMCircleIcon(Icons.exit_to_app),
               title: Text(i18n(context, "messages_list_app_bar_logout")),
               onTap: () {
                 final authBloc = BlocProvider.of<AuthBloc>(context);

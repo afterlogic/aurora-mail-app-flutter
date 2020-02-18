@@ -12,7 +12,6 @@ import 'package:aurora_mail/shared_ui/mail_bottom_app_bar.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
-import 'package:empty_list/empty_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -141,21 +140,20 @@ class _ContactsListAndroidState extends State<ContactsListAndroid> {
   }
 
   Widget _buildContactsEmpty(ContactsState state) {
-    return EmptyList(message: i18n(context, "contacts_empty"));
+    return AMEmptyList(message: i18n(context, "contacts_empty"));
   }
 
   Widget _buildContacts(BuildContext context, ContactsState state) {
     return Column(
       children: <Widget>[
         Flexible(
-          child: ListView.separated(
-            padding: EdgeInsets.only(bottom: 62.0 + MediaQuery.of(context).padding.bottom),
+          child: ListView.builder(
+            padding: EdgeInsets.only(bottom: 82.0 + MediaQuery.of(context).padding.bottom),
             itemBuilder: (_, i) => ContactsListTile(
               contact: state.contacts[i],
               onPressed: (c) => _onContactSelected(context, c),
               onDeleteContact: _deleteContact,
             ),
-            separatorBuilder: (_, i) => Divider(color: Colors.transparent, indent: 16.0, endIndent: 16.0, height: 0.0),
             itemCount: state.contacts.length,
           ),
         ),

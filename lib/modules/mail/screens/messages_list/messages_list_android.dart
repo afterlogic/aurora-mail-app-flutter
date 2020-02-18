@@ -17,7 +17,6 @@ import 'package:aurora_mail/shared_ui/mail_bottom_app_bar.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
-import 'package:empty_list/empty_list.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -220,17 +219,20 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
                   condition: (prevState, state) =>
                       state is SubscribedToMessages,
                   builder: (context, state) {
+                    Widget child;
                     if (state is SubscribedToMessages) {
-                      return _buildMessagesStream(
-                          state.messagesSub, state.isStarredFilterEnabled);
+                      child = _buildMessagesStream(state.messagesSub, state.isStarredFilterEnabled);
                     } else {
-                      return _buildMessagesLoading();
+                      child = _buildMessagesLoading();
                     }
+                    return AnimatedSwitcher(
+                      duration: Duration(milliseconds: 300),
+                      child: child,
+                    );
                   }),
             ),
           ),
-          bottomNavigationBar:
-              MailBottomAppBar(selectedRoute: MailBottomAppBarRoutes.mail),
+          bottomNavigationBar: MailBottomAppBar(selectedRoute: MailBottomAppBarRoutes.mail),
           floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
           floatingActionButton: AMFloatingActionButton(
             child: Icon(MdiIcons.pen),
@@ -246,6 +248,7 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
   }
 
   Widget _buildMessagesLoading() => Center(child: CircularProgressIndicator());
+//  Widget _buildMessagesLoading() => SkeletonLoader();
 
   Widget _buildMessagesStream(
       Stream<List<Message>> messagesSub, bool isStarred) {
@@ -265,8 +268,9 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
               messages = snap.data.where((m) => m.parentUid == null).toList();
               threads = snap.data.where((m) => m.parentUid != null).toList();
             }
-            return ListView.separated(
-              padding: EdgeInsets.only(top: 6.0, bottom: 32.0),
+            return ListView.builder(
+              key: Key("mail"),
+              padding: EdgeInsets.only(top: 6.0, bottom: 82.0),
               itemCount: messages.length,
               itemBuilder: (_, i) {
                 final item = messages[i];
@@ -276,8 +280,7 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
                       item,
                       threads.where((t) => t.parentUid == item.uid).toList(),
                       key: Key(item.localId.toString()),
-                      onItemSelected: (Message item) =>
-                          _onMessageSelected(snap.data, item),
+                      onItemSelected: (Message item) => _onMessageSelected(snap.data, item),
                       onStarMessage: _setStarred,
                       onDeleteMessage: _deleteMessage,
                     ),
@@ -288,12 +291,6 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
                   ],
                 );
               },
-              separatorBuilder: (_, i) => Divider(
-                height: 3.0,
-                indent: 16.0,
-                endIndent: 16.0,
-                color: Colors.transparent,
-              ),
             );
           } else {
             // build list view to be able to swipe to refresh
@@ -301,7 +298,7 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
               return _buildMessagesLoading();
             }
 
-            return EmptyList(message: i18n(context, "messages_empty"));
+            return AMEmptyList(message: i18n(context, "messages_empty"));
           }
         } else {
           return _buildMessagesLoading();

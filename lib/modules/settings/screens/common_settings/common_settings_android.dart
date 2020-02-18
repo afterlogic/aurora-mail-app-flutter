@@ -40,11 +40,8 @@ class _CommonSettingsAndroidState extends State<CommonSettingsAndroid> {
                 SwitchListTile.adaptive(
                   title: Row(
                     children: <Widget>[
-                      Icon(
-                        Icons.access_time,
-                        color: theme.brightness == Brightness.light ? Colors.black45 : null,
-                      ),
-                      SizedBox(width: 30.0),
+                      AMCircleIcon(Icons.access_time),
+                      SizedBox(width: 16.0),
                       Expanded(
                         child: Text(i18n(context, "settings_24_time_format"),
                         overflow: TextOverflow.ellipsis),
@@ -55,7 +52,7 @@ class _CommonSettingsAndroidState extends State<CommonSettingsAndroid> {
                   value: state.is24,
                   onChanged: (val) => bloc.add(SetTimeFormat(val))),
                 ListTile(
-                  leading: Icon(Icons.color_lens),
+                  leading: AMCircleIcon(Icons.color_lens),
                   title: Text(i18n(context, "settings_dark_theme")),
                   onTap: () => ThemeSelectionDialog.show(
                       context,
@@ -66,7 +63,7 @@ class _CommonSettingsAndroidState extends State<CommonSettingsAndroid> {
                   ),
                 ),
                 ListTile(
-                  leading: Icon(Icons.translate),
+                  leading: AMCircleIcon(Icons.translate),
                   title: Text(i18n(context, "settings_language")),
                   onTap: () => LanguageSelectionDialog.show(context,
                       state.language, (lang) => bloc.add(SetLanguage(lang))),

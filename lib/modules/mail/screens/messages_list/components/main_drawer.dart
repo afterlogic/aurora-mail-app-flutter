@@ -7,7 +7,7 @@ import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/starred_folder.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
-import 'package:empty_list/empty_list.dart';
+import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -170,7 +170,7 @@ class _MainDrawerState extends State<MainDrawer> {
   Widget _buildFolders(FoldersLoaded state) {
     final items = _getFolderWidgets(
       state.folders,
-      state.selectedFolder?.localId ?? -1,
+      state.selectedFolder?.guid ?? "",
       state.isStarredFilterEnabled,
     );
     final folderWidgets = new List<Widget>.from(items);
@@ -193,15 +193,15 @@ class _MainDrawerState extends State<MainDrawer> {
   }
 
   List<MailFolder> _getFolderWidgets(
-      List<Folder> mailFolders, int selected, bool isStarredFilterEnabled,
+      List<Folder> mailFolders, String selected, bool isStarredFilterEnabled,
       [String parentGuid]) {
     return mailFolders
         .where((f) => f.parentGuid == parentGuid)
         .map((mailFolder) {
       return MailFolder(
         mailFolder: mailFolder,
-        isSelected: selected == mailFolder.localId && !isStarredFilterEnabled,
-        key: Key(mailFolder.localId.toString()),
+        isSelected: selected == mailFolder.guid && !isStarredFilterEnabled,
+        key: Key(mailFolder.guid),
         children: _getFolderWidgets(
             mailFolders, selected, isStarredFilterEnabled, mailFolder.guid),
       );
@@ -209,7 +209,7 @@ class _MainDrawerState extends State<MainDrawer> {
   }
 
   Widget _buildFoldersEmpty() {
-    return EmptyList(message: i18n(context, "folders_empty"));
+    return AMEmptyList(message: i18n(context, "folders_empty"));
   }
 
   Widget _buildFoldersLoading() {

@@ -388,7 +388,8 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
             if (state is ReceivedComposeAttachments)
               setState(() => _attachments.addAll(state.attachments));
           },
-          child: ListView(
+          child: SingleChildScrollView(
+    child: Column(
             children: <Widget>[
               ComposeEmails(
                 padding: EdgeInsets.symmetric(horizontal: 16.0),
@@ -443,9 +444,10 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
                       },
                     ),
                   ],
+    ),
                 ),
               ),
-//              Divider(height: 0.0),
+              Divider(height: 0.0),
               ComposeBody(
                 enable: _lock == EncryptType.None,
                 textCtrl: _bodyTextCtrl,

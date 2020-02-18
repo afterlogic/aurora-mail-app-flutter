@@ -31,7 +31,7 @@ class _ComposeBodyState extends State<ComposeBody> {
       focusNode: _focusNode,
       decoration: InputDecoration(
         contentPadding:
-            const EdgeInsets.symmetric(vertical: 26.0, horizontal: 16.0),
+            const EdgeInsets.symmetric(vertical: 26.0),
         border: OutlineInputBorder(borderSide: BorderSide.none),
         filled: true,
         fillColor:

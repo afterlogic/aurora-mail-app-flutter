@@ -17,7 +17,6 @@ class MailBloc extends Bloc<MailEvent, MailState> {
     _methods = new MailMethods(user: user, account: account);
   }
 
-
   Folder _selectedFolder;
   bool _isStarredFilterEnabled = false;
 
@@ -50,7 +49,7 @@ class MailBloc extends Bloc<MailEvent, MailState> {
           _selectedFolder = folders[0];
         } else {
           _selectedFolder = folders.firstWhere(
-              (f) => f.localId == _selectedFolder.localId,
+              (f) => f.guid == _selectedFolder.guid,
               orElse: () => folders[0]);
         }
         yield FoldersLoaded(
@@ -66,9 +65,9 @@ class MailBloc extends Bloc<MailEvent, MailState> {
         yield FoldersLoaded(
             foldersWithInfo, _selectedFolder, _isStarredFilterEnabled);
 
-        final id = _selectedFolder.localId;
+        final guid = _selectedFolder.guid;
         _methods
-            .syncFolders(localId: id, syncSystemFolders: true)
+            .syncFolders(guid: guid, syncSystemFolders: true)
             .then((v) => add(UpdateFolders()));
       } else {
         yield FoldersEmpty();
@@ -81,8 +80,7 @@ class MailBloc extends Bloc<MailEvent, MailState> {
   Stream<MailState> _updateFolders(UpdateFolders event) async* {
     final List<Folder> folders = await _methods.getFolders();
 
-    _selectedFolder = folders.firstWhere(
-        (f) => f.localId == _selectedFolder.localId,
+    _selectedFolder = folders.firstWhere((f) => f.guid == _selectedFolder.guid,
         orElse: () => folders[0]);
 
     yield FoldersLoaded(
@@ -105,9 +103,9 @@ class MailBloc extends Bloc<MailEvent, MailState> {
         yield FoldersLoaded(
             foldersWithInfo, _selectedFolder, _isStarredFilterEnabled);
 
-        final id = _selectedFolder.localId;
+        final guid = _selectedFolder.guid;
         _methods
-            .syncFolders(localId: id, syncSystemFolders: true)
+            .syncFolders(guid: guid, syncSystemFolders: true)
             .then((v) => add(UpdateFolders()));
       } else {
         yield FoldersEmpty();
@@ -121,7 +119,7 @@ class MailBloc extends Bloc<MailEvent, MailState> {
 
   Stream<MailState> _refreshMessages(RefreshMessages event) async* {
     try {
-      final id = _selectedFolder.localId;
+      final guid = _selectedFolder.guid;
       final List<Folder> foldersWithInfo = await _methods.updateFoldersHash(
         _selectedFolder,
         forceCurrentFolderUpdate: true,
@@ -131,7 +129,7 @@ class MailBloc extends Bloc<MailEvent, MailState> {
           foldersWithInfo, _selectedFolder, _isStarredFilterEnabled);
 
       _methods
-          .syncFolders(localId: id, syncSystemFolders: true)
+          .syncFolders(guid: guid, syncSystemFolders: true)
           .then((v) => add(UpdateFolders()));
     } catch (err, s) {
       yield FoldersError(formatError(err, s));
@@ -150,8 +148,8 @@ class MailBloc extends Bloc<MailEvent, MailState> {
         PostFolderLoadedAction.subscribeToMessages,
       );
 
-      final id = event.folder.localId;
-      _methods.syncFolders(localId: id).then((v) => add(UpdateFolders()));
+      final guid = event.folder.guid;
+      _methods.syncFolders(guid: guid).then((v) => add(UpdateFolders()));
     } catch (err, s) {
       yield FoldersError(formatError(err, s));
     }
@@ -162,8 +160,8 @@ class MailBloc extends Bloc<MailEvent, MailState> {
     try {
       await _methods.updateFoldersHash(_selectedFolder);
 
-      final id = _selectedFolder.localId;
-      _methods.syncFolders(localId: id, syncSystemFolders: true);
+      final guid = _selectedFolder.guid;
+      _methods.syncFolders(guid: guid, syncSystemFolders: true);
     } catch (err, s) {
       yield FoldersError(formatError(err, s));
     }

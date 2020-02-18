@@ -2112,9 +2112,9 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
 }
 
 class LocalFolder extends DataClass implements Insertable<LocalFolder> {
-  final int localId;
-  final int userLocalId;
+  final String fullName;
   final int accountLocalId;
+  final int userLocalId;
   final String guid;
   final String parentGuid;
   final int accountId;
@@ -2123,7 +2123,6 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
   final int count;
   final int unread;
   final String name;
-  final String fullName;
   final String fullNameRaw;
   final String fullNameHash;
   final String folderHash;
@@ -2137,9 +2136,9 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
   final bool alwaysRefresh;
   final String messagesInfoInJson;
   LocalFolder(
-      {@required this.localId,
-      @required this.userLocalId,
+      {@required this.fullName,
       @required this.accountLocalId,
+      @required this.userLocalId,
       @required this.guid,
       this.parentGuid,
       @required this.accountId,
@@ -2148,7 +2147,6 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
       this.count,
       this.unread,
       @required this.name,
-      @required this.fullName,
       @required this.fullNameRaw,
       @required this.fullNameHash,
       @required this.folderHash,
@@ -2164,16 +2162,16 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
   factory LocalFolder.fromData(Map<String, dynamic> data, GeneratedDatabase db,
       {String prefix}) {
     final effectivePrefix = prefix ?? '';
-    final intType = db.typeSystem.forDartType<int>();
     final stringType = db.typeSystem.forDartType<String>();
+    final intType = db.typeSystem.forDartType<int>();
     final boolType = db.typeSystem.forDartType<bool>();
     return LocalFolder(
-      localId:
-          intType.mapFromDatabaseResponse(data['${effectivePrefix}local_id']),
-      userLocalId: intType
-          .mapFromDatabaseResponse(data['${effectivePrefix}user_local_id']),
+      fullName: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}full_name']),
       accountLocalId: intType
           .mapFromDatabaseResponse(data['${effectivePrefix}account_local_id']),
+      userLocalId: intType
+          .mapFromDatabaseResponse(data['${effectivePrefix}user_local_id']),
       guid: stringType.mapFromDatabaseResponse(data['${effectivePrefix}guid']),
       parentGuid: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}parent_guid']),
@@ -2185,8 +2183,6 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
       count: intType.mapFromDatabaseResponse(data['${effectivePrefix}count']),
       unread: intType.mapFromDatabaseResponse(data['${effectivePrefix}unread']),
       name: stringType.mapFromDatabaseResponse(data['${effectivePrefix}name']),
-      fullName: stringType
-          .mapFromDatabaseResponse(data['${effectivePrefix}full_name']),
       fullNameRaw: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}full_name_raw']),
       fullNameHash: stringType
@@ -2217,9 +2213,9 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
       {ValueSerializer serializer}) {
     serializer ??= moorRuntimeOptions.defaultSerializer;
     return LocalFolder(
-      localId: serializer.fromJson<int>(json['localId']),
-      userLocalId: serializer.fromJson<int>(json['userLocalId']),
+      fullName: serializer.fromJson<String>(json['fullName']),
       accountLocalId: serializer.fromJson<int>(json['accountLocalId']),
+      userLocalId: serializer.fromJson<int>(json['userLocalId']),
       guid: serializer.fromJson<String>(json['guid']),
       parentGuid: serializer.fromJson<String>(json['parentGuid']),
       accountId: serializer.fromJson<int>(json['accountId']),
@@ -2228,7 +2224,6 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
       count: serializer.fromJson<int>(json['count']),
       unread: serializer.fromJson<int>(json['unread']),
       name: serializer.fromJson<String>(json['name']),
-      fullName: serializer.fromJson<String>(json['fullName']),
       fullNameRaw: serializer.fromJson<String>(json['fullNameRaw']),
       fullNameHash: serializer.fromJson<String>(json['fullNameHash']),
       folderHash: serializer.fromJson<String>(json['folderHash']),
@@ -2248,9 +2243,9 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
   Map<String, dynamic> toJson({ValueSerializer serializer}) {
     serializer ??= moorRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'localId': serializer.toJson<int>(localId),
-      'userLocalId': serializer.toJson<int>(userLocalId),
+      'fullName': serializer.toJson<String>(fullName),
       'accountLocalId': serializer.toJson<int>(accountLocalId),
+      'userLocalId': serializer.toJson<int>(userLocalId),
       'guid': serializer.toJson<String>(guid),
       'parentGuid': serializer.toJson<String>(parentGuid),
       'accountId': serializer.toJson<int>(accountId),
@@ -2259,7 +2254,6 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
       'count': serializer.toJson<int>(count),
       'unread': serializer.toJson<int>(unread),
       'name': serializer.toJson<String>(name),
-      'fullName': serializer.toJson<String>(fullName),
       'fullNameRaw': serializer.toJson<String>(fullNameRaw),
       'fullNameHash': serializer.toJson<String>(fullNameHash),
       'folderHash': serializer.toJson<String>(folderHash),
@@ -2278,15 +2272,15 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
   @override
   FoldersCompanion createCompanion(bool nullToAbsent) {
     return FoldersCompanion(
-      localId: localId == null && nullToAbsent
+      fullName: fullName == null && nullToAbsent
           ? const Value.absent()
-          : Value(localId),
-      userLocalId: userLocalId == null && nullToAbsent
-          ? const Value.absent()
-          : Value(userLocalId),
+          : Value(fullName),
       accountLocalId: accountLocalId == null && nullToAbsent
           ? const Value.absent()
           : Value(accountLocalId),
+      userLocalId: userLocalId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(userLocalId),
       guid: guid == null && nullToAbsent ? const Value.absent() : Value(guid),
       parentGuid: parentGuid == null && nullToAbsent
           ? const Value.absent()
@@ -2303,9 +2297,6 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
       unread:
           unread == null && nullToAbsent ? const Value.absent() : Value(unread),
       name: name == null && nullToAbsent ? const Value.absent() : Value(name),
-      fullName: fullName == null && nullToAbsent
-          ? const Value.absent()
-          : Value(fullName),
       fullNameRaw: fullNameRaw == null && nullToAbsent
           ? const Value.absent()
           : Value(fullNameRaw),
@@ -2346,9 +2337,9 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
   }
 
   LocalFolder copyWith(
-          {int localId,
-          int userLocalId,
+          {String fullName,
           int accountLocalId,
+          int userLocalId,
           String guid,
           String parentGuid,
           int accountId,
@@ -2357,7 +2348,6 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
           int count,
           int unread,
           String name,
-          String fullName,
           String fullNameRaw,
           String fullNameHash,
           String folderHash,
@@ -2371,9 +2361,9 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
           bool alwaysRefresh,
           String messagesInfoInJson}) =>
       LocalFolder(
-        localId: localId ?? this.localId,
-        userLocalId: userLocalId ?? this.userLocalId,
+        fullName: fullName ?? this.fullName,
         accountLocalId: accountLocalId ?? this.accountLocalId,
+        userLocalId: userLocalId ?? this.userLocalId,
         guid: guid ?? this.guid,
         parentGuid: parentGuid ?? this.parentGuid,
         accountId: accountId ?? this.accountId,
@@ -2382,7 +2372,6 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
         count: count ?? this.count,
         unread: unread ?? this.unread,
         name: name ?? this.name,
-        fullName: fullName ?? this.fullName,
         fullNameRaw: fullNameRaw ?? this.fullNameRaw,
         fullNameHash: fullNameHash ?? this.fullNameHash,
         folderHash: folderHash ?? this.folderHash,
@@ -2399,9 +2388,9 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
   @override
   String toString() {
     return (StringBuffer('LocalFolder(')
-          ..write('localId: $localId, ')
-          ..write('userLocalId: $userLocalId, ')
+          ..write('fullName: $fullName, ')
           ..write('accountLocalId: $accountLocalId, ')
+          ..write('userLocalId: $userLocalId, ')
           ..write('guid: $guid, ')
           ..write('parentGuid: $parentGuid, ')
           ..write('accountId: $accountId, ')
@@ -2410,7 +2399,6 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
           ..write('count: $count, ')
           ..write('unread: $unread, ')
           ..write('name: $name, ')
-          ..write('fullName: $fullName, ')
           ..write('fullNameRaw: $fullNameRaw, ')
           ..write('fullNameHash: $fullNameHash, ')
           ..write('folderHash: $folderHash, ')
@@ -2429,11 +2417,11 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
 
   @override
   int get hashCode => $mrjf($mrjc(
-      localId.hashCode,
+      fullName.hashCode,
       $mrjc(
-          userLocalId.hashCode,
+          accountLocalId.hashCode,
           $mrjc(
-              accountLocalId.hashCode,
+              userLocalId.hashCode,
               $mrjc(
                   guid.hashCode,
                   $mrjc(
@@ -2451,33 +2439,33 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
                                           $mrjc(
                                               name.hashCode,
                                               $mrjc(
-                                                  fullName.hashCode,
+                                                  fullNameRaw.hashCode,
                                                   $mrjc(
-                                                      fullNameRaw.hashCode,
+                                                      fullNameHash.hashCode,
                                                       $mrjc(
-                                                          fullNameHash.hashCode,
+                                                          folderHash.hashCode,
                                                           $mrjc(
-                                                              folderHash
+                                                              delimiter
                                                                   .hashCode,
                                                               $mrjc(
-                                                                  delimiter
+                                                                  needsInfoUpdate
                                                                       .hashCode,
                                                                   $mrjc(
-                                                                      needsInfoUpdate
+                                                                      isSystemFolder
                                                                           .hashCode,
                                                                       $mrjc(
-                                                                          isSystemFolder
+                                                                          isSubscribed
                                                                               .hashCode,
                                                                           $mrjc(
-                                                                              isSubscribed.hashCode,
-                                                                              $mrjc(isSelectable.hashCode, $mrjc(folderExists.hashCode, $mrjc(extended.hashCode, $mrjc(alwaysRefresh.hashCode, messagesInfoInJson.hashCode))))))))))))))))))))))));
+                                                                              isSelectable.hashCode,
+                                                                              $mrjc(folderExists.hashCode, $mrjc(extended.hashCode, $mrjc(alwaysRefresh.hashCode, messagesInfoInJson.hashCode)))))))))))))))))))))));
   @override
   bool operator ==(dynamic other) =>
       identical(this, other) ||
       (other is LocalFolder &&
-          other.localId == this.localId &&
-          other.userLocalId == this.userLocalId &&
+          other.fullName == this.fullName &&
           other.accountLocalId == this.accountLocalId &&
+          other.userLocalId == this.userLocalId &&
           other.guid == this.guid &&
           other.parentGuid == this.parentGuid &&
           other.accountId == this.accountId &&
@@ -2486,7 +2474,6 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
           other.count == this.count &&
           other.unread == this.unread &&
           other.name == this.name &&
-          other.fullName == this.fullName &&
           other.fullNameRaw == this.fullNameRaw &&
           other.fullNameHash == this.fullNameHash &&
           other.folderHash == this.folderHash &&
@@ -2502,9 +2489,9 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
 }
 
 class FoldersCompanion extends UpdateCompanion<LocalFolder> {
-  final Value<int> localId;
-  final Value<int> userLocalId;
+  final Value<String> fullName;
   final Value<int> accountLocalId;
+  final Value<int> userLocalId;
   final Value<String> guid;
   final Value<String> parentGuid;
   final Value<int> accountId;
@@ -2513,7 +2500,6 @@ class FoldersCompanion extends UpdateCompanion<LocalFolder> {
   final Value<int> count;
   final Value<int> unread;
   final Value<String> name;
-  final Value<String> fullName;
   final Value<String> fullNameRaw;
   final Value<String> fullNameHash;
   final Value<String> folderHash;
@@ -2527,9 +2513,9 @@ class FoldersCompanion extends UpdateCompanion<LocalFolder> {
   final Value<bool> alwaysRefresh;
   final Value<String> messagesInfoInJson;
   const FoldersCompanion({
-    this.localId = const Value.absent(),
-    this.userLocalId = const Value.absent(),
+    this.fullName = const Value.absent(),
     this.accountLocalId = const Value.absent(),
+    this.userLocalId = const Value.absent(),
     this.guid = const Value.absent(),
     this.parentGuid = const Value.absent(),
     this.accountId = const Value.absent(),
@@ -2538,7 +2524,6 @@ class FoldersCompanion extends UpdateCompanion<LocalFolder> {
     this.count = const Value.absent(),
     this.unread = const Value.absent(),
     this.name = const Value.absent(),
-    this.fullName = const Value.absent(),
     this.fullNameRaw = const Value.absent(),
     this.fullNameHash = const Value.absent(),
     this.folderHash = const Value.absent(),
@@ -2553,9 +2538,9 @@ class FoldersCompanion extends UpdateCompanion<LocalFolder> {
     this.messagesInfoInJson = const Value.absent(),
   });
   FoldersCompanion.insert({
-    this.localId = const Value.absent(),
-    @required int userLocalId,
+    @required String fullName,
     @required int accountLocalId,
+    @required int userLocalId,
     @required String guid,
     this.parentGuid = const Value.absent(),
     @required int accountId,
@@ -2564,7 +2549,6 @@ class FoldersCompanion extends UpdateCompanion<LocalFolder> {
     this.count = const Value.absent(),
     this.unread = const Value.absent(),
     @required String name,
-    @required String fullName,
     @required String fullNameRaw,
     @required String fullNameHash,
     @required String folderHash,
@@ -2577,14 +2561,14 @@ class FoldersCompanion extends UpdateCompanion<LocalFolder> {
     this.extended = const Value.absent(),
     @required bool alwaysRefresh,
     this.messagesInfoInJson = const Value.absent(),
-  })  : userLocalId = Value(userLocalId),
+  })  : fullName = Value(fullName),
         accountLocalId = Value(accountLocalId),
+        userLocalId = Value(userLocalId),
         guid = Value(guid),
         accountId = Value(accountId),
         type = Value(type),
         folderOrder = Value(folderOrder),
         name = Value(name),
-        fullName = Value(fullName),
         fullNameRaw = Value(fullNameRaw),
         fullNameHash = Value(fullNameHash),
         folderHash = Value(folderHash),
@@ -2596,9 +2580,9 @@ class FoldersCompanion extends UpdateCompanion<LocalFolder> {
         folderExists = Value(folderExists),
         alwaysRefresh = Value(alwaysRefresh);
   FoldersCompanion copyWith(
-      {Value<int> localId,
-      Value<int> userLocalId,
+      {Value<String> fullName,
       Value<int> accountLocalId,
+      Value<int> userLocalId,
       Value<String> guid,
       Value<String> parentGuid,
       Value<int> accountId,
@@ -2607,7 +2591,6 @@ class FoldersCompanion extends UpdateCompanion<LocalFolder> {
       Value<int> count,
       Value<int> unread,
       Value<String> name,
-      Value<String> fullName,
       Value<String> fullNameRaw,
       Value<String> fullNameHash,
       Value<String> folderHash,
@@ -2621,9 +2604,9 @@ class FoldersCompanion extends UpdateCompanion<LocalFolder> {
       Value<bool> alwaysRefresh,
       Value<String> messagesInfoInJson}) {
     return FoldersCompanion(
-      localId: localId ?? this.localId,
-      userLocalId: userLocalId ?? this.userLocalId,
+      fullName: fullName ?? this.fullName,
       accountLocalId: accountLocalId ?? this.accountLocalId,
+      userLocalId: userLocalId ?? this.userLocalId,
       guid: guid ?? this.guid,
       parentGuid: parentGuid ?? this.parentGuid,
       accountId: accountId ?? this.accountId,
@@ -2632,7 +2615,6 @@ class FoldersCompanion extends UpdateCompanion<LocalFolder> {
       count: count ?? this.count,
       unread: unread ?? this.unread,
       name: name ?? this.name,
-      fullName: fullName ?? this.fullName,
       fullNameRaw: fullNameRaw ?? this.fullNameRaw,
       fullNameHash: fullNameHash ?? this.fullNameHash,
       folderHash: folderHash ?? this.folderHash,
@@ -2653,24 +2635,13 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
   final GeneratedDatabase _db;
   final String _alias;
   $FoldersTable(this._db, [this._alias]);
-  final VerificationMeta _localIdMeta = const VerificationMeta('localId');
-  GeneratedIntColumn _localId;
+  final VerificationMeta _fullNameMeta = const VerificationMeta('fullName');
+  GeneratedTextColumn _fullName;
   @override
-  GeneratedIntColumn get localId => _localId ??= _constructLocalId();
-  GeneratedIntColumn _constructLocalId() {
-    return GeneratedIntColumn('local_id', $tableName, false,
-        hasAutoIncrement: true, declaredAsPrimaryKey: true);
-  }
-
-  final VerificationMeta _userLocalIdMeta =
-      const VerificationMeta('userLocalId');
-  GeneratedIntColumn _userLocalId;
-  @override
-  GeneratedIntColumn get userLocalId =>
-      _userLocalId ??= _constructUserLocalId();
-  GeneratedIntColumn _constructUserLocalId() {
-    return GeneratedIntColumn(
-      'user_local_id',
+  GeneratedTextColumn get fullName => _fullName ??= _constructFullName();
+  GeneratedTextColumn _constructFullName() {
+    return GeneratedTextColumn(
+      'full_name',
       $tableName,
       false,
     );
@@ -2685,6 +2656,20 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
   GeneratedIntColumn _constructAccountLocalId() {
     return GeneratedIntColumn(
       'account_local_id',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _userLocalIdMeta =
+      const VerificationMeta('userLocalId');
+  GeneratedIntColumn _userLocalId;
+  @override
+  GeneratedIntColumn get userLocalId =>
+      _userLocalId ??= _constructUserLocalId();
+  GeneratedIntColumn _constructUserLocalId() {
+    return GeneratedIntColumn(
+      'user_local_id',
       $tableName,
       false,
     );
@@ -2783,18 +2768,6 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
   GeneratedTextColumn _constructName() {
     return GeneratedTextColumn(
       'name',
-      $tableName,
-      false,
-    );
-  }
-
-  final VerificationMeta _fullNameMeta = const VerificationMeta('fullName');
-  GeneratedTextColumn _fullName;
-  @override
-  GeneratedTextColumn get fullName => _fullName ??= _constructFullName();
-  GeneratedTextColumn _constructFullName() {
-    return GeneratedTextColumn(
-      'full_name',
       $tableName,
       false,
     );
@@ -2964,9 +2937,9 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
 
   @override
   List<GeneratedColumn> get $columns => [
-        localId,
-        userLocalId,
+        fullName,
         accountLocalId,
+        userLocalId,
         guid,
         parentGuid,
         accountId,
@@ -2975,7 +2948,6 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
         count,
         unread,
         name,
-        fullName,
         fullNameRaw,
         fullNameHash,
         folderHash,
@@ -2999,15 +2971,11 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
   VerificationContext validateIntegrity(FoldersCompanion d,
       {bool isInserting = false}) {
     final context = VerificationContext();
-    if (d.localId.present) {
-      context.handle(_localIdMeta,
-          localId.isAcceptableValue(d.localId.value, _localIdMeta));
-    }
-    if (d.userLocalId.present) {
-      context.handle(_userLocalIdMeta,
-          userLocalId.isAcceptableValue(d.userLocalId.value, _userLocalIdMeta));
+    if (d.fullName.present) {
+      context.handle(_fullNameMeta,
+          fullName.isAcceptableValue(d.fullName.value, _fullNameMeta));
     } else if (isInserting) {
-      context.missing(_userLocalIdMeta);
+      context.missing(_fullNameMeta);
     }
     if (d.accountLocalId.present) {
       context.handle(
@@ -3016,6 +2984,12 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
               d.accountLocalId.value, _accountLocalIdMeta));
     } else if (isInserting) {
       context.missing(_accountLocalIdMeta);
+    }
+    if (d.userLocalId.present) {
+      context.handle(_userLocalIdMeta,
+          userLocalId.isAcceptableValue(d.userLocalId.value, _userLocalIdMeta));
+    } else if (isInserting) {
+      context.missing(_userLocalIdMeta);
     }
     if (d.guid.present) {
       context.handle(
@@ -3058,12 +3032,6 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
           _nameMeta, name.isAcceptableValue(d.name.value, _nameMeta));
     } else if (isInserting) {
       context.missing(_nameMeta);
-    }
-    if (d.fullName.present) {
-      context.handle(_fullNameMeta,
-          fullName.isAcceptableValue(d.fullName.value, _fullNameMeta));
-    } else if (isInserting) {
-      context.missing(_fullNameMeta);
     }
     if (d.fullNameRaw.present) {
       context.handle(_fullNameRawMeta,
@@ -3153,7 +3121,7 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {localId};
+  Set<GeneratedColumn> get $primaryKey => {fullName, accountLocalId};
   @override
   LocalFolder map(Map<String, dynamic> data, {String tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
@@ -3163,14 +3131,14 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
   @override
   Map<String, Variable> entityToSql(FoldersCompanion d) {
     final map = <String, Variable>{};
-    if (d.localId.present) {
-      map['local_id'] = Variable<int, IntType>(d.localId.value);
-    }
-    if (d.userLocalId.present) {
-      map['user_local_id'] = Variable<int, IntType>(d.userLocalId.value);
+    if (d.fullName.present) {
+      map['full_name'] = Variable<String, StringType>(d.fullName.value);
     }
     if (d.accountLocalId.present) {
       map['account_local_id'] = Variable<int, IntType>(d.accountLocalId.value);
+    }
+    if (d.userLocalId.present) {
+      map['user_local_id'] = Variable<int, IntType>(d.userLocalId.value);
     }
     if (d.guid.present) {
       map['guid'] = Variable<String, StringType>(d.guid.value);
@@ -3195,9 +3163,6 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
     }
     if (d.name.present) {
       map['name'] = Variable<String, StringType>(d.name.value);
-    }
-    if (d.fullName.present) {
-      map['full_name'] = Variable<String, StringType>(d.fullName.value);
     }
     if (d.fullNameRaw.present) {
       map['full_name_raw'] = Variable<String, StringType>(d.fullNameRaw.value);
@@ -8432,285 +8397,6 @@ class $ContactsStoragesTable extends ContactsStorages
       const ContactsInfoConverter();
 }
 
-class LocalPgpKey extends DataClass implements Insertable<LocalPgpKey> {
-  final String id;
-  final String name;
-  final String mail;
-  final bool isPrivate;
-  final int length;
-  LocalPgpKey(
-      {@required this.id,
-      this.name,
-      @required this.mail,
-      @required this.isPrivate,
-      this.length});
-  factory LocalPgpKey.fromData(Map<String, dynamic> data, GeneratedDatabase db,
-      {String prefix}) {
-    final effectivePrefix = prefix ?? '';
-    final stringType = db.typeSystem.forDartType<String>();
-    final boolType = db.typeSystem.forDartType<bool>();
-    final intType = db.typeSystem.forDartType<int>();
-    return LocalPgpKey(
-      id: stringType.mapFromDatabaseResponse(data['${effectivePrefix}id']),
-      name: stringType.mapFromDatabaseResponse(data['${effectivePrefix}name']),
-      mail: stringType.mapFromDatabaseResponse(data['${effectivePrefix}mail']),
-      isPrivate: boolType
-          .mapFromDatabaseResponse(data['${effectivePrefix}is_private']),
-      length: intType.mapFromDatabaseResponse(data['${effectivePrefix}length']),
-    );
-  }
-  factory LocalPgpKey.fromJson(Map<String, dynamic> json,
-      {ValueSerializer serializer}) {
-    serializer ??= moorRuntimeOptions.defaultSerializer;
-    return LocalPgpKey(
-      id: serializer.fromJson<String>(json['id']),
-      name: serializer.fromJson<String>(json['name']),
-      mail: serializer.fromJson<String>(json['mail']),
-      isPrivate: serializer.fromJson<bool>(json['isPrivate']),
-      length: serializer.fromJson<int>(json['length']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer serializer}) {
-    serializer ??= moorRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'id': serializer.toJson<String>(id),
-      'name': serializer.toJson<String>(name),
-      'mail': serializer.toJson<String>(mail),
-      'isPrivate': serializer.toJson<bool>(isPrivate),
-      'length': serializer.toJson<int>(length),
-    };
-  }
-
-  @override
-  PgpKeyModelCompanion createCompanion(bool nullToAbsent) {
-    return PgpKeyModelCompanion(
-      id: id == null && nullToAbsent ? const Value.absent() : Value(id),
-      name: name == null && nullToAbsent ? const Value.absent() : Value(name),
-      mail: mail == null && nullToAbsent ? const Value.absent() : Value(mail),
-      isPrivate: isPrivate == null && nullToAbsent
-          ? const Value.absent()
-          : Value(isPrivate),
-      length:
-          length == null && nullToAbsent ? const Value.absent() : Value(length),
-    );
-  }
-
-  LocalPgpKey copyWith(
-          {String id, String name, String mail, bool isPrivate, int length}) =>
-      LocalPgpKey(
-        id: id ?? this.id,
-        name: name ?? this.name,
-        mail: mail ?? this.mail,
-        isPrivate: isPrivate ?? this.isPrivate,
-        length: length ?? this.length,
-      );
-  @override
-  String toString() {
-    return (StringBuffer('LocalPgpKey(')
-          ..write('id: $id, ')
-          ..write('name: $name, ')
-          ..write('mail: $mail, ')
-          ..write('isPrivate: $isPrivate, ')
-          ..write('length: $length')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => $mrjf($mrjc(
-      id.hashCode,
-      $mrjc(name.hashCode,
-          $mrjc(mail.hashCode, $mrjc(isPrivate.hashCode, length.hashCode)))));
-  @override
-  bool operator ==(dynamic other) =>
-      identical(this, other) ||
-      (other is LocalPgpKey &&
-          other.id == this.id &&
-          other.name == this.name &&
-          other.mail == this.mail &&
-          other.isPrivate == this.isPrivate &&
-          other.length == this.length);
-}
-
-class PgpKeyModelCompanion extends UpdateCompanion<LocalPgpKey> {
-  final Value<String> id;
-  final Value<String> name;
-  final Value<String> mail;
-  final Value<bool> isPrivate;
-  final Value<int> length;
-  const PgpKeyModelCompanion({
-    this.id = const Value.absent(),
-    this.name = const Value.absent(),
-    this.mail = const Value.absent(),
-    this.isPrivate = const Value.absent(),
-    this.length = const Value.absent(),
-  });
-  PgpKeyModelCompanion.insert({
-    @required String id,
-    this.name = const Value.absent(),
-    @required String mail,
-    @required bool isPrivate,
-    this.length = const Value.absent(),
-  })  : id = Value(id),
-        mail = Value(mail),
-        isPrivate = Value(isPrivate);
-  PgpKeyModelCompanion copyWith(
-      {Value<String> id,
-      Value<String> name,
-      Value<String> mail,
-      Value<bool> isPrivate,
-      Value<int> length}) {
-    return PgpKeyModelCompanion(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      mail: mail ?? this.mail,
-      isPrivate: isPrivate ?? this.isPrivate,
-      length: length ?? this.length,
-    );
-  }
-}
-
-class $PgpKeyModelTable extends PgpKeyModel
-    with TableInfo<$PgpKeyModelTable, LocalPgpKey> {
-  final GeneratedDatabase _db;
-  final String _alias;
-  $PgpKeyModelTable(this._db, [this._alias]);
-  final VerificationMeta _idMeta = const VerificationMeta('id');
-  GeneratedTextColumn _id;
-  @override
-  GeneratedTextColumn get id => _id ??= _constructId();
-  GeneratedTextColumn _constructId() {
-    return GeneratedTextColumn(
-      'id',
-      $tableName,
-      false,
-    );
-  }
-
-  final VerificationMeta _nameMeta = const VerificationMeta('name');
-  GeneratedTextColumn _name;
-  @override
-  GeneratedTextColumn get name => _name ??= _constructName();
-  GeneratedTextColumn _constructName() {
-    return GeneratedTextColumn(
-      'name',
-      $tableName,
-      true,
-    );
-  }
-
-  final VerificationMeta _mailMeta = const VerificationMeta('mail');
-  GeneratedTextColumn _mail;
-  @override
-  GeneratedTextColumn get mail => _mail ??= _constructMail();
-  GeneratedTextColumn _constructMail() {
-    return GeneratedTextColumn(
-      'mail',
-      $tableName,
-      false,
-    );
-  }
-
-  final VerificationMeta _isPrivateMeta = const VerificationMeta('isPrivate');
-  GeneratedBoolColumn _isPrivate;
-  @override
-  GeneratedBoolColumn get isPrivate => _isPrivate ??= _constructIsPrivate();
-  GeneratedBoolColumn _constructIsPrivate() {
-    return GeneratedBoolColumn(
-      'is_private',
-      $tableName,
-      false,
-    );
-  }
-
-  final VerificationMeta _lengthMeta = const VerificationMeta('length');
-  GeneratedIntColumn _length;
-  @override
-  GeneratedIntColumn get length => _length ??= _constructLength();
-  GeneratedIntColumn _constructLength() {
-    return GeneratedIntColumn(
-      'length',
-      $tableName,
-      true,
-    );
-  }
-
-  @override
-  List<GeneratedColumn> get $columns => [id, name, mail, isPrivate, length];
-  @override
-  $PgpKeyModelTable get asDslTable => this;
-  @override
-  String get $tableName => _alias ?? 'pgp_key_model';
-  @override
-  final String actualTableName = 'pgp_key_model';
-  @override
-  VerificationContext validateIntegrity(PgpKeyModelCompanion d,
-      {bool isInserting = false}) {
-    final context = VerificationContext();
-    if (d.id.present) {
-      context.handle(_idMeta, id.isAcceptableValue(d.id.value, _idMeta));
-    } else if (isInserting) {
-      context.missing(_idMeta);
-    }
-    if (d.name.present) {
-      context.handle(
-          _nameMeta, name.isAcceptableValue(d.name.value, _nameMeta));
-    }
-    if (d.mail.present) {
-      context.handle(
-          _mailMeta, mail.isAcceptableValue(d.mail.value, _mailMeta));
-    } else if (isInserting) {
-      context.missing(_mailMeta);
-    }
-    if (d.isPrivate.present) {
-      context.handle(_isPrivateMeta,
-          isPrivate.isAcceptableValue(d.isPrivate.value, _isPrivateMeta));
-    } else if (isInserting) {
-      context.missing(_isPrivateMeta);
-    }
-    if (d.length.present) {
-      context.handle(
-          _lengthMeta, length.isAcceptableValue(d.length.value, _lengthMeta));
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {id};
-  @override
-  LocalPgpKey map(Map<String, dynamic> data, {String tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
-    return LocalPgpKey.fromData(data, _db, prefix: effectivePrefix);
-  }
-
-  @override
-  Map<String, Variable> entityToSql(PgpKeyModelCompanion d) {
-    final map = <String, Variable>{};
-    if (d.id.present) {
-      map['id'] = Variable<String, StringType>(d.id.value);
-    }
-    if (d.name.present) {
-      map['name'] = Variable<String, StringType>(d.name.value);
-    }
-    if (d.mail.present) {
-      map['mail'] = Variable<String, StringType>(d.mail.value);
-    }
-    if (d.isPrivate.present) {
-      map['is_private'] = Variable<bool, BoolType>(d.isPrivate.value);
-    }
-    if (d.length.present) {
-      map['length'] = Variable<int, IntType>(d.length.value);
-    }
-    return map;
-  }
-
-  @override
-  $PgpKeyModelTable createAlias(String alias) {
-    return $PgpKeyModelTable(_db, alias);
-  }
-}
-
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(SqlTypeSystem.defaultInstance, e);
   $MailTable _mail;
@@ -8729,8 +8415,6 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   $ContactsStoragesTable _contactsStorages;
   $ContactsStoragesTable get contactsStorages =>
       _contactsStorages ??= $ContactsStoragesTable(this);
-  $PgpKeyModelTable _pgpKeyModel;
-  $PgpKeyModelTable get pgpKeyModel => _pgpKeyModel ??= $PgpKeyModelTable(this);
   @override
   Iterable<TableInfo> get allTables => allSchemaEntities.whereType<TableInfo>();
   @override
@@ -8741,7 +8425,6 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         accounts,
         contacts,
         contactsGroups,
-        contactsStorages,
-        pgpKeyModel
+        contactsStorages
       ];
 }

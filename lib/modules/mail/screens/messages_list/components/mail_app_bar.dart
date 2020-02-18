@@ -35,10 +35,6 @@ class MailAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AMAppBar(
-      leading: IconButton(
-        icon: Icon(MdiIcons.sortVariant),
-        onPressed: Scaffold.of(context).openDrawer,
-      ),
       title: BlocBuilder<MailBloc, MailState>(
         bloc: BlocProvider.of<MailBloc>(context),
         condition: (_, state) =>

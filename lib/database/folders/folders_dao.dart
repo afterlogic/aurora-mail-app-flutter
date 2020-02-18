@@ -24,9 +24,9 @@ class FoldersDao extends DatabaseAccessor<AppDatabase> with _$FoldersDaoMixin {
         .get();
   }
 
-  Future<Folder> getFolderByLocalId(int localId) async {
+  Future<Folder> getFolderByLocalId(String guid) async {
     final foundFolders = await (select(folders)
-          ..where((folder) => folder.localId.equals(localId)))
+          ..where((folder) => folder.guid.equals(guid)))
         .get();
 
     return foundFolders.isEmpty
@@ -43,21 +43,21 @@ class FoldersDao extends DatabaseAccessor<AppDatabase> with _$FoldersDaoMixin {
 
   Future<void> addFolders(List<LocalFolder> newFolders) async {
     return batch((b) {
-      return b.insertAll(folders, newFolders);
+      return b.insertAll(folders, newFolders,mode: InsertMode.insertOrReplace);
     });
   }
 
-  Future<int> setMessagesInfo(int localId, List<MessageInfo> messagesInfo) {
+  Future<int> setMessagesInfo(String guid, List<MessageInfo> messagesInfo) {
     final messagesInfoInJson = MessageInfo.toJsonString(messagesInfo);
-    return (update(folders)..where((f) => f.localId.equals(localId))).write(
+    return (update(folders)..where((f) => f.guid.equals(guid))).write(
       FoldersCompanion(
         messagesInfoInJson: Value(messagesInfoInJson),
       ),
     );
   }
 
-  Future<void> updateFolder(FoldersCompanion foldersCompanion, int id) {
-    return (update(folders)..where((f) => f.localId.equals(id)))
+  Future<void> updateFolder(FoldersCompanion foldersCompanion, String guid) {
+    return (update(folders)..where((f) => f.guid.equals(guid)))
         .write(foldersCompanion);
   }
 
@@ -65,12 +65,14 @@ class FoldersDao extends DatabaseAccessor<AppDatabase> with _$FoldersDaoMixin {
     if (foldersToDelete == null) {
       return delete(folders).go();
     } else {
-      final List<int> ids = foldersToDelete.map((file) => file.localId).toList();
-      return (delete(folders)..where((f) => f.localId.isIn(ids))).go();
+      final List<String> guid =
+          foldersToDelete.map((file) => file.guid).toList();
+      return (delete(folders)..where((f) => f.guid.isIn(guid))).go();
     }
   }
 
   Future<int> deleteFoldersOfUser(int userLocalId) async {
-    return (delete(folders)..where((f) => f.userLocalId.equals(userLocalId))).go();
+    return (delete(folders)..where((f) => f.userLocalId.equals(userLocalId)))
+        .go();
   }
 }

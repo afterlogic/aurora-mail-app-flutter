@@ -23,10 +23,6 @@ class ContactsAppBar extends StatelessWidget implements PreferredSizeWidget {
     return BlocBuilder<ContactsBloc, ContactsState>(
       builder: (context, state) =>
           AMAppBar(
-            leading: IconButton(
-              icon: Icon(MdiIcons.sortVariant),
-              onPressed: Scaffold.of(context).openDrawer,
-            ),
             title: _buildTitle(context, state),
             actions: <Widget>[
               if (state.selectedGroup != null)

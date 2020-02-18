@@ -44,7 +44,7 @@ class _SyncSettingsAndroidState extends State<SyncSettingsAndroid> {
             return ListView(
               children: <Widget>[
                 ListTile(
-                  leading: Icon(Icons.av_timer),
+                  leading: AMCircleIcon(Icons.av_timer),
                   title: Text(i18n(context, "settings_sync_frequency")),
                   trailing: Text(
                     SyncFreq.freqToString(context, freq),
@@ -53,7 +53,7 @@ class _SyncSettingsAndroidState extends State<SyncSettingsAndroid> {
                   onTap: () => _onFreqDurationSelected(context, freq),
                 ),
                 ListTile(
-                  leading: Icon(MdiIcons.calendarRepeat),
+                  leading: AMCircleIcon(MdiIcons.calendarRepeat),
                   title: Text(i18n(context, "settings_sync_period")),
                   trailing: Text(
                     SyncPeriod.periodToTitle(context, period),

@@ -8,6 +8,7 @@ import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:html/parser.dart';
+import 'package:aurora_mail/utils/extensions/string_extensions.dart';
 
 class MailUtils {
 
@@ -80,6 +81,10 @@ class MailUtils {
   }
 
   static String htmlToPlain(String html) {
+    html = html
+        .replaceAll("<br>", "\n")
+        .replaceAll("<br/>", "\n")
+        .replaceAll("<br />", "\n");
     final document = parse(html);
     return parse(document.body.text).documentElement.text;
   }
@@ -153,7 +158,8 @@ class MailUtils {
   }
 
   static String getReplyBody(BuildContext context, Message message) {
-    final baseMessage = htmlToPlain(message.html ?? "");
+    final body = message.html.isNullOrEmpty ? message.plain : message.html;
+    final baseMessage = htmlToPlain(body ?? "");
     final time = DateFormatting.formatDateFromSeconds(
         message.timeStampInUTC, Localizations.localeOf(context).languageCode,
         format: i18n(context, "compose_reply_date_format"));
@@ -171,7 +177,8 @@ class MailUtils {
   }
 
   static String getForwardBody(BuildContext context, Message message) {
-    final baseMessage = htmlToPlain(message.html ?? "");
+    final body = message.html.isNullOrEmpty ? message.plain : message.html;
+    final baseMessage = htmlToPlain(body ?? "");
 
     String forwardMessage =
         "\n\n${i18n(context, "compose_forward_body_original_message")}\n";
@@ -251,8 +258,8 @@ class MailUtils {
         <div class="disabled-text">$date</div>
       </div>
       <div class="flex" style="flex: 0">
-        <!-- <a href='#${MessageWebViewActions.SHOW_INFO}' class='icon-btn'>${_getInfoIcon(accentColor)}</a> -->
-        <a href='#${MessageWebViewActions.SHOW_ATTACHMENTS}' class='icon-btn' style='${showAttachmentsBtn != true ? "display: none" : ""}'>
+        <!-- <a href='https://dummy-crutch.com/#${MessageWebViewActions.SHOW_INFO}' class='icon-btn'>${_getInfoIcon(accentColor)}</a> -->
+        <a href='https://dummy-crutch.com/#${MessageWebViewActions.SHOW_ATTACHMENTS}' class='icon-btn' style='${showAttachmentsBtn != true ? "display: none" : ""}'>
           ${_getAttachmentsIcon(accentColor)}
         </a>
       </div>
