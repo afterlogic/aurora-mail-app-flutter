@@ -2,6 +2,8 @@ import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/utils/input_validation.dart';
 import 'package:aurora_mail/utils/mail_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'compose_type_ahead.dart';
@@ -12,6 +14,7 @@ class ComposeEmails extends StatefulWidget {
   final TextEditingController textCtrl;
   final List<String> emails;
   final Function onCCSelected;
+  final FocusNode focusNode;
 
   const ComposeEmails({
     Key key,
@@ -19,6 +22,7 @@ class ComposeEmails extends StatefulWidget {
     @required this.emails,
     @required this.textCtrl,
     this.onCCSelected,
+    this.focusNode,
   }) : super(key: key);
 
   @override
@@ -26,29 +30,20 @@ class ComposeEmails extends StatefulWidget {
 }
 
 class _ComposeEmailsState extends State<ComposeEmails> {
+  final textFieldKey = GlobalKey();
   String _emailToShowDelete;
   String _search;
-
-  var _focusNode = new FocusNode();
 
   @override
   void initState() {
     super.initState();
-    _focusNode.addListener(() {
-      if (!_focusNode.hasFocus) {
-        _focusNode.unfocus();
+    widget.focusNode.addListener(() {
+      if (!widget.focusNode.hasFocus) {
         _addEmail(widget.textCtrl.text);
       }
-
       if (widget.onCCSelected != null) widget.onCCSelected();
       setState(() => _emailToShowDelete = null);
     });
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _focusNode.dispose();
   }
 
   Future _addEmail(String email) async {
@@ -71,10 +66,7 @@ class _ComposeEmailsState extends State<ComposeEmails> {
     final contacts = await bloc.getTypeAheadContacts(pattern);
 
     final items = contacts.map((c) => MailUtils.getFriendlyName(c)).toList();
-    items.removeWhere((i) =>
-    MailUtils
-        .emailFromFriendly(i)
-        .isEmpty);
+    items.removeWhere((i) => MailUtils.emailFromFriendly(i).isEmpty);
 
     return items.toSet().toList();
   }
@@ -131,18 +123,29 @@ class _ComposeEmailsState extends State<ComposeEmails> {
     );
   }
 
+  _focus() {
+    widget.focusNode.requestFocus();
+    if (widget.onCCSelected != null) widget.onCCSelected();
+  }
+
+  _paste() async {
+    _focus();
+    await Future.delayed(Duration(milliseconds: 100));
+    final gesture = textFieldKey.currentState
+        as TextSelectionGestureDetectorBuilderDelegate;
+    gesture.editableTextKey.currentState.toggleToolbar();
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final dropDownWidth = screenWidth / 1.25;
     return InkWell(
-      onTap: () {
-        _focusNode.requestFocus();
-        if (widget.onCCSelected != null) widget.onCCSelected();
-      },
+      onLongPress: _paste,
+      onTap: _focus,
       child: ComposeTypeAheadField<String>(
         textFieldConfiguration: TextFieldConfiguration(
-          focusNode: _focusNode,
+          focusNode: widget.focusNode,
           controller: widget.textCtrl,
         ),
         animationDuration: Duration.zero,
@@ -183,48 +186,50 @@ class _ComposeEmailsState extends State<ComposeEmails> {
               Flexible(
                 flex: 1,
                 child: Wrap(spacing: 8.0, children: [
-                ...widget.emails.map((e) {
-                  final displayName = MailUtils.displayNameFromFriendly(e);
-                  return SizedBox(
-                    height: 43.0,
-                    child: GestureDetector(
-                      onTap: () {
-                        if (_emailToShowDelete == e) {
-                          setState(() => _emailToShowDelete = null);
-                        } else {
-                          setState(() => _emailToShowDelete = e);
-                        }
-                      },
-                      child: Chip(
-                        avatar: CircleAvatar(
-                          backgroundColor: Theme.of(context).accentColor,
-                          child: Text(displayName[0],
-                            style: TextStyle(color: Colors.white),
+                  ...widget.emails.map((e) {
+                    final displayName = MailUtils.displayNameFromFriendly(e);
+                    return SizedBox(
+                      height: 43.0,
+                      child: GestureDetector(
+                        onTap: () {
+                          if (_emailToShowDelete == e) {
+                            setState(() => _emailToShowDelete = null);
+                          } else {
+                            setState(() => _emailToShowDelete = e);
+                          }
+                        },
+                        child: Chip(
+                          avatar: CircleAvatar(
+                            backgroundColor: Theme.of(context).accentColor,
+                            child: Text(
+                              displayName[0],
+                              style: TextStyle(color: Colors.white),
+                            ),
                           ),
+                          label: Text(displayName),
+                          onDeleted: e == _emailToShowDelete
+                              ? () => _deleteEmail(e)
+                              : null,
                         ),
-                        label: Text(displayName),
-                        onDeleted: e == _emailToShowDelete
-                            ? () => _deleteEmail(e)
-                            : null,
                       ),
-                    ),
-                  );
-                }).toList(),
+                    );
+                  }).toList(),
                   FitTextField(
                     controller: widget.textCtrl,
                     child: TextField(
-                      focusNode: _focusNode,
+                      key: textFieldKey,
+                      focusNode: widget.focusNode,
                       controller: widget.textCtrl,
                       keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration.collapsed(
                         hintText: null,
                       ),
-                      onEditingComplete: _focusNode.unfocus,
+                      onEditingComplete: widget.focusNode.unfocus,
                     ),
                   ),
                 ]),
               ),
-              if (_focusNode.hasFocus && false)
+              if (widget.focusNode.hasFocus && false)
                 SizedBox(
                   height: 24.0,
                   child: IconButton(

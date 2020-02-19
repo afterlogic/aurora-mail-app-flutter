@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
@@ -19,6 +18,8 @@ import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:keyboard_actions/keyboard_action.dart';
+import 'package:keyboard_actions/keyboard_actions.dart';
 
 import 'components/compose_app_bar.dart';
 import 'components/compose_attachment_item.dart';
@@ -37,6 +38,10 @@ class ComposeAndroid extends StatefulWidget {
 
 class _ComposeAndroidState extends State<ComposeAndroid> {
   ComposeBloc _bloc;
+  final toNode = FocusNode();
+  final ccNode = FocusNode();
+  final bccNode = FocusNode();
+  final bodyNode = FocusNode();
 
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -82,6 +87,11 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
     super.dispose();
     if (_timer != null) _timer.cancel();
     _bloc.close();
+
+    ccNode.dispose();
+    toNode.dispose();
+    bccNode.dispose();
+    bodyNode.dispose();
   }
 
   void _prepareMessage() {
@@ -129,7 +139,9 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
     _message = action.message;
 
     _toEmails.addAll(MailUtils.getEmails(_message.fromInJson));
-    _ccEmails.addAll(MailUtils.getEmails(_message.toInJson, exceptEmails: [BlocProvider.of<AuthBloc>(context).currentAccount.email]));
+    _ccEmails.addAll(MailUtils.getEmails(_message.toInJson, exceptEmails: [
+      BlocProvider.of<AuthBloc>(context).currentAccount.email
+    ]));
     _ccEmails.addAll(MailUtils.getEmails(_message.ccInJson));
     _subjectTextCtrl.text = MailUtils.getReplySubject(_message);
     _bodyTextCtrl.text = MailUtils.getReplyBody(context, _message);
@@ -232,9 +244,12 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
     if (_message != null) {
       return _subjectTextCtrl.text != _message.subject ||
           _bodyTextCtrl.text != MailUtils.htmlToPlain(_message.html) ||
-          !listEquals<String>(MailUtils.getEmails(_message.toInJson), _toEmails) ||
-          !listEquals<String>(MailUtils.getEmails(_message.ccInJson), _ccEmails) ||
-          !listEquals<String>(MailUtils.getEmails(_message.bccInJson), _bccEmails);
+          !listEquals<String>(
+              MailUtils.getEmails(_message.toInJson), _toEmails) ||
+          !listEquals<String>(
+              MailUtils.getEmails(_message.ccInJson), _ccEmails) ||
+          !listEquals<String>(
+              MailUtils.getEmails(_message.bccInJson), _bccEmails);
     } else {
       return _bodyTextCtrl.text.isNotEmpty ||
           _subjectTextCtrl.text.isNotEmpty ||
@@ -247,7 +262,8 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
   void _saveToDrafts() {
     if (!_hasMessageChanged) return;
 
-    final attachmentsForSave = _attachments.where((a) => a is ComposeAttachment);
+    final attachmentsForSave =
+        _attachments.where((a) => a is ComposeAttachment);
 
     return _bloc.add(SaveToDrafts(
       to: _toEmails.join(","),
@@ -326,73 +342,121 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
         context: context, scaffoldState: _scaffoldKey.currentState, msg: err);
   }
 
+  Widget _done(FocusNode node) {
+    return FlatButton(
+      child: Text(i18n(context, "done")),
+      onPressed: node.unfocus,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    Widget _keyboardActions(Widget child) {
+      return KeyboardActions(
+        config: KeyboardActionsConfig(
+          keyboardActionsPlatform: kDebugMode
+              ? KeyboardActionsPlatform.ALL
+              : KeyboardActionsPlatform.IOS,
+          keyboardBarColor: theme.appBarTheme.color,
+          actions: [
+            KeyboardAction(
+              focusNode: toNode,
+              toolbarButtons: [_done],
+            ),
+            KeyboardAction(
+              focusNode: ccNode,
+              toolbarButtons: [_done],
+            ),
+            KeyboardAction(
+              focusNode: bccNode,
+              toolbarButtons: [_done],
+            ),
+            KeyboardAction(
+              focusNode: bodyNode,
+              toolbarButtons: [_done],
+            ),
+          ],
+        ),
+        child: child,
+      );
+    }
+
     return Scaffold(
       key: _scaffoldKey,
       appBar: ComposeAppBar(_onAppBarActionSelected),
-      body: BlocProvider<ComposeBloc>.value(
-        value: _bloc,
-        child: BlocListener<ComposeBloc, ComposeState>(
-          listener: (context, state) {
-            if (state is MessageSending) _showSending();
-            if (state is MessageSent) _onMessageSent(context);
-            if (state is MessageSavedInDrafts)
-              _onMessageSaved(context, state.draftUid);
-            if (state is ComposeError) _showError(state.errorMsg);
-            if (state is UploadStarted)
-              _setUploadProgress(state.tempAttachment);
-            if (state is AttachmentUploaded)
-              _onAttachmentUploaded(state.composeAttachment);
-            if (state is ReceivedComposeAttachments)
-              setState(() => _attachments.addAll(state.attachments));
-          },
-          child: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(horizontal: 16.0),
-            child: Column(
-              children: <Widget>[
-                ComposeEmails(
-                  label: i18n(context, "messages_to"),
-                  textCtrl: _toTextCtrl,
-                  emails: _toEmails,
-                ),
-                Divider(height: 0.0),
-                ComposeEmails(
-                  label: i18n(context, "messages_cc"),
-                  textCtrl: _ccTextCtrl,
-                  emails: _ccEmails,
-                  onCCSelected: () => setState(() => _showBCC = true),
-                ),
-                Divider(height: 0.0),
-                if (_showBCC)
+      body: _keyboardActions(
+        BlocProvider<ComposeBloc>.value(
+          value: _bloc,
+          child: BlocListener<ComposeBloc, ComposeState>(
+            listener: (context, state) {
+              if (state is MessageSending) _showSending();
+              if (state is MessageSent) _onMessageSent(context);
+              if (state is MessageSavedInDrafts)
+                _onMessageSaved(context, state.draftUid);
+              if (state is ComposeError) _showError(state.errorMsg);
+              if (state is UploadStarted)
+                _setUploadProgress(state.tempAttachment);
+              if (state is AttachmentUploaded)
+                _onAttachmentUploaded(state.composeAttachment);
+              if (state is ReceivedComposeAttachments)
+                setState(() => _attachments.addAll(state.attachments));
+            },
+            child: SingleChildScrollView(
+              padding: EdgeInsets.symmetric(horizontal: 16.0),
+              child: Column(
+                children: <Widget>[
                   ComposeEmails(
-                    label: i18n(context, "messages_bcc"),
-                    textCtrl: _bccTextCtrl,
-                    emails: _bccEmails,
+                    focusNode: toNode,
+                    label: i18n(context, "messages_to"),
+                    textCtrl: _toTextCtrl,
+                    emails: _toEmails,
                   ),
-                if (_showBCC) Divider(height: 0.0),
-                ComposeSubject(
-                  textCtrl: _subjectTextCtrl,
-                  onAttach: () => _bloc.add(UploadAttachment()),
-                ),
-                if (_attachments.isNotEmpty) Divider(height: 0.0),
-                BlocBuilder<ComposeBloc, ComposeState>(builder: (_, state) {
-                  if (state is ConvertingAttachments) {
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Center(child: CircularProgressIndicator()),
-                    );
-                  } else {
-                    return Column(
-                      children: _attachments
-                          .map((a) => ComposeAttachmentItem(a, _cancelAttachment))
-                          .toList(),
-                    );
-                  }
-                }),
-                Divider(height: 0.0),
-                ComposeBody(textCtrl: _bodyTextCtrl),
-              ],
+                  Divider(height: 0.0),
+                  ComposeEmails(
+                    focusNode: ccNode,
+                    label: i18n(context, "messages_cc"),
+                    textCtrl: _ccTextCtrl,
+                    emails: _ccEmails,
+                    onCCSelected: () => setState(() => _showBCC = true),
+                  ),
+                  Divider(height: 0.0),
+                  if (_showBCC)
+                    ComposeEmails(
+                      focusNode: bccNode,
+                      label: i18n(context, "messages_bcc"),
+                      textCtrl: _bccTextCtrl,
+                      emails: _bccEmails,
+                    ),
+                  if (_showBCC) Divider(height: 0.0),
+                  ComposeSubject(
+                    textCtrl: _subjectTextCtrl,
+                    onAttach: () => _bloc.add(UploadAttachment()),
+                  ),
+                  if (_attachments.isNotEmpty) Divider(height: 0.0),
+                  BlocBuilder<ComposeBloc, ComposeState>(builder: (_, state) {
+                    if (state is ConvertingAttachments) {
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Center(child: CircularProgressIndicator()),
+                      );
+                    } else {
+                      return Column(
+                        children: _attachments
+                            .map((a) =>
+                                ComposeAttachmentItem(a, _cancelAttachment))
+                            .toList(),
+                      );
+                    }
+                  }),
+                  Divider(height: 0.0),
+                  ComposeBody(
+                    textCtrl: _bodyTextCtrl,
+                    focusNode: bodyNode,
+                  ),
+                ],
+              ),
             ),
           ),
         ),

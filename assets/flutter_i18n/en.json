@@ -254,5 +254,6 @@
   "two_factor_auth": "Your account is protected with\nTwo Factor Authentication.\nPlease provide the PIN code.",
   "pin": "PIN",
   "verify_pin": "Verify pin",
-  "invalid_pin": "Invalid PIN"
+  "invalid_pin": "Invalid PIN",
+  "done": "Done"
 }

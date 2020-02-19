@@ -3,16 +3,19 @@ import 'package:flutter/material.dart';
 
 class ComposeBody extends StatefulWidget {
   final TextEditingController textCtrl;
+  final FocusNode focusNode;
 
-  const ComposeBody({Key key, @required this.textCtrl}) : super(key: key);
+  const ComposeBody({
+    Key key,
+    @required this.textCtrl,
+    this.focusNode,
+  }) : super(key: key);
 
   @override
   _ComposeBodyState createState() => _ComposeBodyState();
 }
 
 class _ComposeBodyState extends State<ComposeBody> {
-  var _focusNode = new FocusNode();
-
   @override
   void initState() {
     super.initState();
@@ -24,7 +27,7 @@ class _ComposeBodyState extends State<ComposeBody> {
       controller: widget.textCtrl,
       maxLines: null,
       minLines: 8,
-      focusNode: _focusNode,
+      focusNode: widget.focusNode,
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.symmetric(vertical: 26.0),
         border: OutlineInputBorder(borderSide: BorderSide.none),
