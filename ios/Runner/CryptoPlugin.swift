@@ -97,10 +97,11 @@ public class CryptoPlugin: NSObject, FlutterPlugin {
             case "decryptBytes":
                 let data = arguments[0] as! FlutterStandardTypedData
                 let password = arguments[1] as! String
-                let result = try self.pgp.decryptBytes(Data.init(data.data), password)
-                return   result.withUnsafeBytes {
-                    [UInt8](UnsafeBufferPointer(start: $0, count: result.count))
-                }
+                let result=try self.pgp.decryptBytes(Data.init(data.data), password)
+               return  result.withUnsafeBytes {
+                                  [UInt8](UnsafeBufferPointer(start: $0, count: result.count))
+                              }
+            
             case "decryptFile":
                 let input = arguments[0] as! String
                 let output = arguments[1] as! String
@@ -161,7 +162,7 @@ public class CryptoPlugin: NSObject, FlutterPlugin {
                 
                 return try self.pgp.verifySign(text)
             case "verifyResult":
-                return self.pgp.verifyResult()
+                return [self.pgp.verifyResult()]
             default:
                 break
             }

@@ -84,7 +84,7 @@ class MailUtils {
     html = html
         .replaceAll("<br>", "\n")
         .replaceAll("<br/>", "\n")
-        .replaceAll("<br />", "\n");
+        .replaceAll("<br />", "\r\n");
     final document = parse(html);
     return parse(document.body.text).documentElement.text;
   }

@@ -6,35 +6,36 @@ class  Pgp {
     
     var lastVerifyResult:Bool=false
     
-    func decrypt(_ input:JavaIoInputStream,_ output:JavaIoOutputStream,_ privateKey:String,_ password:String,_ publicKey:String?) throws {
+    func decrypt(_ input:String,_ privateKey:String,_ password:String,_ publicKey:String?) throws->String {
         lastVerifyResult = true
-        let secretKeyRing = try DMSPGPKeyRing.secretKeyRing(from: privateKey, password: password)
-        let privateKey = secretKeyRing.getSecretKey()
-        let decryptor = try ByteDMSPGPDecryptor(input)
-        try decryptor.decrypt( privateKey!,  password,output)
-        input.reset()
-        if(output is JavaIoByteArrayOutputStream && publicKey != nil ){
-            let keyRing = try DMSPGPKeyRing(armoredKey: publicKey!)
-            let message =  (output as! JavaIoByteArrayOutputStream).toByteArray()?.toNSData()?.base64EncodedString()
-            
-            let signatureVerifier = DMSPGPSignatureVerifier(message: message!,
-                                                            onePassSignatureList: decryptor.onePassSignatureList,
-                                                            signatureList: decryptor.signatureList)
-            
-            let result = signatureVerifier.verifySignature(message:message!,use: keyRing.publicKeyRing)
-            switch result {
-            case .invalid:
-                lastVerifyResult = false
-                break
-            default:
-                lastVerifyResult = true
-                break
-            }
-            
-        }else{
-            lastVerifyResult = true
+        let secretKeyRing = try DMSPGPKeyRing(armoredKey: privateKey  );
+        var publicKeyRing:DMSPGPKeyRing?
+        if(publicKey != nil){
+            publicKeyRing =  try? DMSPGPKeyRing(armoredKey:publicKey!  )
+        }
+        let decryptor = try ValidDMSPGPDecryptor(armoredMessage: input)
+        
+        let decryptKey = decryptor.encryptingKeyIDs.compactMap { keyID in
+            return secretKeyRing.secretKeyRing?.getDecryptingSecretKey(keyID: keyID)
+        }.first
+        
+        guard let secretKey = decryptKey else {
+            throw DMSPGPError.invalidPrivateKey
         }
         
+        let message = try decryptor.decrypt(secretKey: secretKey, password: password)
+        let signatureVerifier = DMSPGPSignatureVerifier(message: "", onePassSignatureList: decryptor.onePassSignatureList, signatureList: decryptor.signatureList)
+        let verifyResult = signatureVerifier.verifySignature(message:message,use: publicKeyRing!.publicKeyRing)
+        
+        switch verifyResult {
+        case .invalid:
+            lastVerifyResult = false
+            break
+        default:
+            lastVerifyResult = true
+            break
+        }
+        return message
     }
     
     func encrypt(_ input:JavaIoInputStream,_ input2:JavaIoInputStream,_ output:JavaIoOutputStream,_ publicKey: [String],_ privateKey:String?,_ passwordForSign:String?) throws  {

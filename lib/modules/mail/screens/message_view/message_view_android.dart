@@ -21,11 +21,11 @@ import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
 import 'package:aurora_mail/utils/date_formatting.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_mail/utils/mail_utils.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:crypto_worker/crypto_worker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'components/attachment.dart';
 import 'components/message_body.dart';
 
@@ -139,11 +139,12 @@ class _MessageViewAndroidState extends State<MessageViewAndroid>
         return;
       }
     }
+
     _messageViewBloc.add(DecryptBody(
       type,
       pass,
       jsonDecode(message.fromInJson)["@Collection"][0]["Email"].toString(),
-      message.plain,
+      message.plainRaw,
     ));
   }
 
@@ -234,7 +235,7 @@ class _MessageViewAndroidState extends State<MessageViewAndroid>
               }
             }
           },
-          child: MessageWebView(message, attachments),
+          child: MessageWebView(message, attachments,decryptedText),
 //          child: Padding(
 //            padding: const EdgeInsets.all(16.0),
 //            child: Column(

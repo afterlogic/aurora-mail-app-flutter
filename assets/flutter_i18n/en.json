@@ -291,5 +291,6 @@
   "decrypted_but_not_verified": "Message was successfully decrypted but wasn't verified.",
   "invalid_key_or_password": "Invalid key or password.",
   "can_not_decrypt": "Can not decrypt message.",
-  "need_contact_for_encrypt": "Need contact for encrypt."
+  "need_contact_for_encrypt": "Need contact for encrypt.",
+  "verify_sign": "Verify"
 }

@@ -27,9 +27,9 @@ class MessageWebViewActions {
 class MessageWebView extends StatefulWidget {
   final Message message;
   final List<MailAttachment> attachments;
+  final String decrypted;
 
-  const MessageWebView(this.message, this.attachments, {Key key})
-      : super(key: key);
+  const MessageWebView(this.message, this.attachments, this.decrypted, {Key key}) : super(key: key);
 
   @override
   _MessageWebViewState createState() => _MessageWebViewState();
@@ -47,11 +47,21 @@ class _MessageWebViewState extends State<MessageWebView> {
     _showImages = !widget.message.hasExternals || widget.message.safety;
     _getHtmlWithImages();
   }
+  @override
+  void didUpdateWidget(MessageWebView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if(oldWidget.decrypted!=widget.decrypted){
+      _getHtmlWithImages();
+      setState(() {      });
+    }
+  }
 
   void _getHtmlWithImages() async {
     String htmlData;
     String plainData;
-    if (widget.message.html != null && widget.message.html.isNotEmpty) {
+    if(widget.decrypted!=null){
+      htmlData = widget.decrypted;
+    }else if (widget.message.html != null && widget.message.html.isNotEmpty) {
       htmlData = widget.message.html;
     } else if (widget.message.plain != null) {
       plainData = widget.message.plain;
@@ -85,8 +95,8 @@ class _MessageWebViewState extends State<MessageWebView> {
   }
 
   String _formatTo(Message message) {
-    final items = Mail.getToForDisplay(context, message.toInJson,
-        BlocProvider.of<AuthBloc>(context).currentAccount.email);
+    final items = Mail.getToForDisplay(
+        context, message.toInJson, BlocProvider.of<AuthBloc>(context).currentAccount.email);
 
     if (items.isEmpty) {
       return i18n(context, "messages_no_receivers");
@@ -155,9 +165,9 @@ class _MessageWebViewState extends State<MessageWebView> {
                     style: TextStyle(color: Colors.blue),
                     recognizer: TapGestureRecognizer()
                       ..onTap = () {
-              setState(() => _showImages = true);
-              _getHtmlWithImages();
-            },
+                        setState(() => _showImages = true);
+                        _getHtmlWithImages();
+                      },
                   ),
                 ],
               ),

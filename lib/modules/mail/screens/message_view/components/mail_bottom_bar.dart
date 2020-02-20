@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:aurora_mail/modules/mail/blocs/message_view_bloc/message_view_bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/message_view_bloc/message_view_state.dart';
+import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:crypto_worker/crypto_worker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -32,27 +35,36 @@ class _MailBottomBarState extends State<MailBottomBar> {
           encryptType = state.encryptType;
         }
 
-        return AnimatedContainer(
-          height: (encryptType == EncryptType.None || decrypted)
-              ? 0
-              : kToolbarHeight,
+        return Container(
+          height: (Platform.isIOS ? kToolbarHeight + 15 : kToolbarHeight),
+          padding: EdgeInsets.only(bottom: Platform.isIOS ? 15 : 0),
           width: double.infinity,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              IconButton(
-                onPressed:
-                    decrypted ? null : () => widget.onDecrypt(encryptType),
-                icon: Icon(
-                  encryptType == EncryptType.Sign
-                      ? (decrypted ? Icons.favorite : Icons.favorite_border)
-                      : (decrypted ? Icons.lock_open : Icons.lock_outline),
+              Opacity(
+                opacity: decrypted ? 0.5 : 1,
+                child: InkWell(
+                  onTap: decrypted ? null : () => widget.onDecrypt(encryptType),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Icon(
+                        encryptType == EncryptType.Sign
+                            ? (decrypted ? Icons.favorite : Icons.favorite_border)
+                            : (decrypted ? Icons.lock_open : Icons.lock_outline),
+                      ),
+                      Text(
+                        i18n(context, encryptType == EncryptType.Sign ? "verify_sign" : "decrypt"),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
           ),
-          duration: Duration(milliseconds: 400),
         );
       },
     );

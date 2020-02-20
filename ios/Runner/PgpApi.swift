@@ -27,11 +27,9 @@ class PgpApi{
     }
     
     func decryptBytes(_ data:Data,_ password:String)throws->Data{
-        let byteArray = IOSByteArray(nsData: data)!
-        let input = JavaIoByteArrayInputStream(byteArray: byteArray)
-        let output = JavaIoByteArrayOutputStream()
-        try  decrypt(input,output,password)
-        return output.toByteArray().toNSData()
+        let input = String.init(data: data, encoding: String.Encoding.utf8)
+        
+        return try pgp.decrypt(input!, privateKey!, password,publicKey?.first).data(using: .utf8)!
     }
     
     func decryptFile(_ inputFile:String,_ outputFile:String,_ password:String)throws{
@@ -75,8 +73,8 @@ class PgpApi{
         try pgp.encrypt(input,input2,output,publicKey!,privateKey,passwordForSign)
     }
     func decrypt(_ input:JavaIoInputStream,_ output:JavaIoOutputStream,_ password:String) throws {
-        assert(privateKey != nil)
-        try pgp.decrypt(input,output,privateKey!,password,publicKey?.first!)
+//        assert(privateKey != nil)
+//        try pgp.decrypt(input,output,privateKey!,password,publicKey?.first!)
     }
     func getKeyDescription(_ key:Data) throws->KeyInfo{
         return try pgp.getKeyDescription(key)
@@ -94,7 +92,8 @@ class PgpApi{
         let input = JavaIoByteArrayInputStream(byteArray: byteArray)
         let output = JavaIoByteArrayOutputStream()
         try encryptSymmetric(input,output,password,jlong(data.count))
-        return output.toByteArray().toNSData()
+        let encrypted=output.toByteArray().toNSData()
+        return encrypted!;
     }
     func encryptSymmetricFile(_ inputFile:String,_ outputFile:String,_ password:String) throws {
         let outfile=JavaIoFile(nsString: outputFile)

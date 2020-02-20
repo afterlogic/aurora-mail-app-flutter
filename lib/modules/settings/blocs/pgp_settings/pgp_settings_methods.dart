@@ -62,9 +62,8 @@ class PgpSettingsMethods {
     return dirPath + Platform.pathSeparator + KEY_FOLDER;
   }
 
-  Future deleteKey(String mail) async {
-    await cryptoStorage.deletePgpKey(mail, true);
-    await cryptoStorage.deletePgpKey(mail, false);
+  Future deleteKey(String mail,bool isPrivate) async {
+    await cryptoStorage.deletePgpKey(mail, isPrivate);
   }
 
   Future<List<PgpKey>> parseKey(String key) {

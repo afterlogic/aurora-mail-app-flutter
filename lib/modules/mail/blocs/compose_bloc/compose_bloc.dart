@@ -53,6 +53,7 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
         to: event.to,
         cc: event.cc,
         bcc: event.bcc,
+        usePlain:event.usePlain,
         subject: event.subject,
         composeAttachments: event.composeAttachments,
         messageText: event.messageText,

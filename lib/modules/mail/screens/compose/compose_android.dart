@@ -224,6 +224,7 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
       to: _toEmails.join(","),
       cc: _ccEmails.join(","),
       bcc: _bccEmails.join(","),
+      usePlain: _lock!=EncryptType.None,
       subject: _subjectTextCtrl.text,
       composeAttachments: new List<ComposeAttachment>.from(_attachments),
       messageText: _bodyTextCtrl.text,

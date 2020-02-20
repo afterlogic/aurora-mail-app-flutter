@@ -43,7 +43,6 @@ public class ValidDMSPGPClearTextVerifier {
         repeat {
             lastScanLocation = scanner.scanLocation
             scanner.scanUpToCharacters(from: .newlines, into: &nextLine)
-            scanner.scanString("\r", into: nil)
             scanner.scanString("\n", into: nil)
             guard let hashHeader = nextLine else {
                 throw DMSPGPError.invalidCleartext
@@ -65,7 +64,6 @@ public class ValidDMSPGPClearTextVerifier {
         self.hashHeaders = hashHeaders
 
         // Read one empty line
-        scanner.scanString("\r", into: nil)
         scanner.scanString("\n", into: nil)
 
         // Read cleartext
