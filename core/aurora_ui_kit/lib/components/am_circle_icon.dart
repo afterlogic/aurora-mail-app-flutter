@@ -24,10 +24,11 @@ class AMCircleIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final defaultBG = theme.brightness == Brightness.dark ?  theme.accentColor.withOpacity(0.2) : theme.accentColor.withOpacity(0.06);
     return Container(
       padding: padding,
       decoration: BoxDecoration(
-        color: background ?? theme.primaryColor.withOpacity(0.06),
+        color: background ?? defaultBG,
         borderRadius: radius ?? BorderRadius.circular(100.0),
       ),
       child: Icon(

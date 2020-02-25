@@ -197,6 +197,12 @@ class _MessageItemState extends State<MessageItem> {
             ),
           ),
         ),
+        Divider(
+          indent: 16.0,
+          endIndent: 16.0,
+          height: 0.0,
+          color: Theme.of(context).disabledColor.withOpacity(0.08),
+        ),
         if (widget.children.isNotEmpty && _showThreads)
           ...widget.children.map((t) {
             return Stack(

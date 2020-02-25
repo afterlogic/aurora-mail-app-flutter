@@ -68,6 +68,7 @@
   "contacts_list_its_me_flag": "Это я!",
   "contacts_empty": "Контактов нет",
   "contacts_groups_empty": "Групп нет",
+  "contacts_email_empty": "Нет эл. почты",
   "contacts_drawer_section_storages": "Хранилища",
   "contacts_drawer_storage_all": "Все",
   "contacts_drawer_storage_personal": "Личные",
