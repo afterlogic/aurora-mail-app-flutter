@@ -246,5 +246,10 @@
   "you_have_new_message": "У вас {s1} {s2}",
   "compose_reply_date_format": "EEE, d MMM, yyyy 'at' HH:mm",
   "contacts_birth_date_format": "d MMM, yyyy",
-  "formatting_yesterday": "Вчера"
+  "formatting_yesterday": "Вчера",
+  "two_factor_auth": "Ваш аккаунт защищён\nдвухфакторной аутентификацией.\nУкажите PIN код.",
+  "pin": "PIN",
+  "verify_pin": "Подтвердите PIN",
+  "invalid_pin": "Неверный PIN",
+  "done": "Готово"
 }

@@ -246,5 +246,11 @@
   "error_server_mail_server_error": "E-posta sunucusu hatası",
   "error_unknown": "Bilinmeyen hata",
   "compose_forward_date_format": "EEE, MMM d, yyyy, HH:mm",
-  "compose_reply_date_format": "EEE, MMM d, yyyy, HH:mm"
+  "compose_reply_date_format": "EEE, MMM d, yyyy, HH:mm",
+  "formatting_yesterday": "Yesterday",
+  "two_factor_auth": "Your account is protected with\nTwo Factor Authentication.\nPlease provide the PIN code.",
+  "pin": "PIN",
+  "verify_pin": "Verify pin",
+  "invalid_pin": "Invalid PIN",
+  "done": "Done"
 }
