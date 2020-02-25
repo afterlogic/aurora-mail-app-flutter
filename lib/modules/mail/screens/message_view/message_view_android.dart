@@ -15,16 +15,17 @@ import 'package:aurora_mail/modules/mail/screens/compose/compose_route.dart';
 import 'package:aurora_mail/modules/mail/screens/message_view/components/mail_bottom_bar.dart';
 import 'package:aurora_mail/modules/mail/screens/message_view/components/message_view_app_bar.dart';
 import 'package:aurora_mail/modules/mail/screens/message_view/dialog/request_password_dialog.dart';
+import 'package:aurora_mail/modules/mail/screens/message_view/components/message_webview.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
 import 'package:aurora_mail/utils/date_formatting.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_mail/utils/mail_utils.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:crypto_worker/crypto_worker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'components/attachment.dart';
 import 'components/message_body.dart';
 
@@ -138,11 +139,12 @@ class _MessageViewAndroidState extends State<MessageViewAndroid>
         return;
       }
     }
+
     _messageViewBloc.add(DecryptBody(
       type,
       pass,
       jsonDecode(message.fromInJson)["@Collection"][0]["Email"].toString(),
-      message.plain,
+      message.plainRaw,
     ));
   }
 
@@ -164,16 +166,16 @@ class _MessageViewAndroidState extends State<MessageViewAndroid>
     }
   }
 
-  String _formatTo(Message message) {
-    final items = Mail.getToForDisplay(context, message.toInJson,
-        BlocProvider.of<AuthBloc>(context).currentAccount.email);
-
-    if (items.isEmpty) {
-      return i18n(context, "messages_no_receivers");
-    } else {
-      return items.join(" | ");
-    }
-  }
+//  String _formatTo(Message message) {
+//    final items = Mail.getToForDisplay(
+//        context, message.toInJson, BlocProvider.of<AuthBloc>(context).currentAccount.email);
+//
+//    if (items.isEmpty) {
+//      return i18n(context, "messages_no_receivers");
+//    } else {
+//      return items.join(" | ");
+//    }
+//  }
 
   void _showSnack(String msg, BuildContext context, {bool isError = false}) {
     showSnack(
@@ -233,65 +235,65 @@ class _MessageViewAndroidState extends State<MessageViewAndroid>
               }
             }
           },
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                ConstrainedBox(
-                  constraints: BoxConstraints(maxHeight: 107.0),
-                  child: SingleChildScrollView(
-                    child: Text(
-                      message.subject.isNotEmpty
-                          ? message.subject
-                          : i18n(context, "messages_no_subject"),
-                      style: Theme.of(context).textTheme.display1.copyWith(
-                            fontSize: 26.0,
-                          ),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 12.0),
-                Divider(height: 20.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.baseline,
-                  textBaseline: TextBaseline.alphabetic,
-                  children: <Widget>[
-                    Text(
-                      message.fromToDisplay,
-                      style: Theme.of(context).textTheme.subhead,
-                    ),
-                    BlocBuilder<SettingsBloc, SettingsState>(
-                      builder: (_, state) =>
-                          Text(DateFormatting.getDetailedMessageDate(
-                        timestamp: message.timeStampInUTC,
-                        locale: Localizations.localeOf(context).languageCode,
-                        yesterdayWord: i18n(context, "formatting_yesterday"),
-                        is24: (state as SettingsLoaded).is24 ?? true,
-                      )),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 10.0),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.baseline,
-                  textBaseline: TextBaseline.alphabetic,
-                  children: <Widget>[
-                    Text(
-                      _formatTo(message),
-                      style: Theme.of(context).textTheme.caption,
-                    ),
-                  ],
-                ),
-                Divider(),
-                ...showTabs
-                    ? _buildWithTabs(message, attachments)
-                    : _buildWithoutTabs(message, attachments),
-              ],
-            ),
-          ),
+          child: MessageWebView(message, attachments,decryptedText),
+//          child: Padding(
+//            padding: const EdgeInsets.all(16.0),
+//            child: Column(
+//              crossAxisAlignment: CrossAxisAlignment.start,
+//              children: <Widget>[
+//                ConstrainedBox(
+//                  constraints: BoxConstraints(maxHeight: 107.0),
+//                  child: SingleChildScrollView(
+//                    child: Text(
+//                      message.subject.isNotEmpty
+//                          ? message.subject
+//                          : i18n(context, "messages_no_subject"),
+//                      style: Theme.of(context).textTheme.display1.copyWith(
+//                            fontSize: 26.0,
+//                          ),
+//                    ),
+//                  ),
+//                ),
+//                SizedBox(height: 12.0),
+//                Divider(height: 20.0),
+//                Row(
+//                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                  crossAxisAlignment: CrossAxisAlignment.baseline,
+//                  textBaseline: TextBaseline.alphabetic,
+//                  children: <Widget>[
+//                    Text(
+//                      message.fromToDisplay,
+//                      style: Theme.of(context).textTheme.subhead,
+//                    ),
+//                    BlocBuilder<SettingsBloc, SettingsState>(
+//                      builder: (_, state) => Text(DateFormatting.getDetailedMessageDate(
+//                        timestamp: message.timeStampInUTC,
+//                        locale: Localizations.localeOf(context).languageCode,
+//                        yesterdayWord: i18n(context, "formatting_yesterday"),
+//                        is24: (state as SettingsLoaded).is24 ?? true,
+//                      )),
+//                    ),
+//                  ],
+//                ),
+//                SizedBox(height: 10.0),
+//                Row(
+//                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                  crossAxisAlignment: CrossAxisAlignment.baseline,
+//                  textBaseline: TextBaseline.alphabetic,
+//                  children: <Widget>[
+//                    Text(
+//                      _formatTo(message),
+//                      style: Theme.of(context).textTheme.caption,
+//                    ),
+//                  ],
+//                ),
+//                Divider(),
+//                ...showTabs
+//                    ? _buildWithTabs(message, attachments)
+//                    : _buildWithoutTabs(message, attachments),
+//              ],
+//            ),
+//          ),
         ),
         bottomNavigationBar: MailBottomBar(
           onDecrypt: _decrypt,

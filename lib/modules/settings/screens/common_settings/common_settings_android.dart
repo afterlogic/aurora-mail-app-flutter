@@ -1,6 +1,7 @@
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/modules/settings/screens/common_settings/components/theme_selection_dialog.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -26,8 +27,11 @@ class _CommonSettingsAndroidState extends State<CommonSettingsAndroid> {
   Widget build(BuildContext context) {
     // ignore: close_sinks
     final bloc = BlocProvider.of<SettingsBloc>(context);
+    final theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(title: Text(i18n(context, "settings_common"))),
+      appBar: AMAppBar(
+        title: Text(i18n(context, "settings_common")),
+      ),
       body: BlocBuilder<SettingsBloc, SettingsState>(
         builder: (_, state) {
           if (state is SettingsLoaded) {
@@ -36,8 +40,8 @@ class _CommonSettingsAndroidState extends State<CommonSettingsAndroid> {
                 SwitchListTile.adaptive(
                   title: Row(
                     children: <Widget>[
-                      Icon(Icons.access_time, color: Theme.of(context).disabledColor,),
-                      SizedBox(width: 30.0),
+                      AMCircleIcon(Icons.access_time),
+                      SizedBox(width: 16.0),
                       Expanded(
                         child: Text(i18n(context, "settings_24_time_format"),
                         overflow: TextOverflow.ellipsis),
@@ -48,7 +52,7 @@ class _CommonSettingsAndroidState extends State<CommonSettingsAndroid> {
                   value: state.is24,
                   onChanged: (val) => bloc.add(SetTimeFormat(val))),
                 ListTile(
-                  leading: Icon(Icons.color_lens),
+                  leading: AMCircleIcon(Icons.color_lens),
                   title: Text(i18n(context, "settings_dark_theme")),
                   onTap: () => ThemeSelectionDialog.show(
                       context,
@@ -59,7 +63,7 @@ class _CommonSettingsAndroidState extends State<CommonSettingsAndroid> {
                   ),
                 ),
                 ListTile(
-                  leading: Icon(Icons.translate),
+                  leading: AMCircleIcon(Icons.translate),
                   title: Text(i18n(context, "settings_language")),
                   onTap: () => LanguageSelectionDialog.show(context,
                       state.language, (lang) => bloc.add(SetLanguage(lang))),

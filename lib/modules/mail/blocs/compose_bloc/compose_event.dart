@@ -18,11 +18,13 @@ class SendMessage extends ComposeEvent {
   final String cc;
   final String bcc;
   final String subject;
+  final bool usePlain;
   final List<ComposeAttachment> composeAttachments;
   final String messageText;
   final int draftUid;
 
-  SendMessage({
+  SendMessage( {
+    @required this.usePlain,
     @required this.to,
     @required this.cc,
     @required this.bcc,

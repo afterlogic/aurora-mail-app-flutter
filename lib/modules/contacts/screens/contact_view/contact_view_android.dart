@@ -50,17 +50,6 @@ class _ContactViewAndroidState extends State<ContactViewAndroid> {
           ),
         );
         break;
-      case ContactViewAppBarAction.sendMessage:
-        Navigator.pushNamed(
-          context,
-          ComposeRoute.name,
-          arguments: ComposeScreenArgs(
-            mailBloc: BlocProvider.of<MailBloc>(context),
-            contactsBloc: BlocProvider.of<ContactsBloc>(context),
-            composeAction: EmailToContacts([widget.contact]),
-          ),
-        );
-        break;
       case ContactViewAppBarAction.searchMessages:
       // TODO: Handle this case.
         break;
@@ -119,6 +108,18 @@ class _ContactViewAndroidState extends State<ContactViewAndroid> {
     }
   }
 
+  void _emailToContacts(String email) {
+    Navigator.pushNamed(
+      context,
+      ComposeRoute.name,
+      arguments: ComposeScreenArgs(
+        mailBloc: BlocProvider.of<MailBloc>(context),
+        contactsBloc: BlocProvider.of<ContactsBloc>(context),
+        composeAction: EmailToContacts([email]),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final c = widget.contact;
@@ -130,72 +131,180 @@ class _ContactViewAndroidState extends State<ContactViewAndroid> {
       format: i18n(context, "contacts_birth_date_format"),
     );
 
+    final sectionTitleTheme = Theme.of(context).textTheme.body2;
+
     final _mainInfo = _buildInfos([
-      _buildInfoItem(icon: Icons.person_outline, v: c.fullName),
-      _buildInfoItem(icon: MdiIcons.emailOutline, v: _contactInfo.viewEmail),
-      _buildInfoItem(icon: MdiIcons.phoneOutline, v: _contactInfo.viewPhone),
-      _buildInfoItem(icon: MdiIcons.mapMarkerOutline, v: _contactInfo.viewAddress),
-      _buildInfoItem(icon: MdiIcons.skype, v: c.skype),
-      _buildInfoItem(icon: MdiIcons.facebook, v: c.facebook),
-      _buildInfoItem(label: i18n(context, "contacts_view_first_name"), v: c.firstName),
-      _buildInfoItem(label: i18n(context, "contacts_view_last_name"), v: c.lastName),
-      _buildInfoItem(label: i18n(context, "contacts_view_nickname"), v: c.nickName),
+//      _buildInfoItem(
+//        icon: Icons.person_outline,
+//        label: i18n(context, "contacts_view_name"),
+//        v: c.fullName,
+//      ),
+      _buildInfoItem(
+        icon: Icons.alternate_email,
+        label: i18n(context, "contacts_view_email"),
+        v: _contactInfo.viewEmail,
+        emailToContact: _emailToContacts,
+      ),
+      _buildInfoItem(
+        icon: MdiIcons.phone,
+        label: i18n(context, "contacts_view_phone"),
+        v: _contactInfo.viewPhone,
+      ),
+      _buildInfoItem(
+        icon: MdiIcons.mapMarkerOutline,
+        label: i18n(context, "contacts_view_address"),
+        v: _contactInfo.viewAddress,
+      ),
+      _buildInfoItem(
+        icon: MdiIcons.skype,
+        label: i18n(context, "contacts_view_skype"),
+        v: c.skype,
+      ),
+      _buildInfoItem(
+        icon: MdiIcons.facebook,
+        label: i18n(context, "contacts_view_facebook"),
+        v: c.facebook,
+      ),
+      _buildInfoItem(
+        icon: Icons.person_outline,
+        label: i18n(context, "contacts_view_first_name"),
+        v: c.firstName,
+      ),
+      _buildInfoItem(
+        icon: Icons.person_outline,
+        label: i18n(context, "contacts_view_last_name"),
+        v: c.lastName,
+      ),
+      _buildInfoItem(
+        icon: Icons.person_outline,
+        label: i18n(context, "contacts_view_nickname"),
+        v: c.nickName,
+      ),
     ]);
 
     final personalInfo = _buildInfos([
       _buildInfoItem(
-          label: i18n(context, "contacts_view_email"), v: c.personalEmail),
+        icon: Icons.alternate_email,
+        label: i18n(context, "contacts_view_email"),
+        v: c.personalEmail,
+        emailToContact: _emailToContacts,
+      ),
       _buildInfoItem(
-          label: i18n(context, "contacts_view_address"), v: c.personalAddress),
+        icon: MdiIcons.mapMarkerOutline,
+        label: i18n(context, "contacts_view_address"),
+        v: c.personalAddress,
+      ),
       _buildInfoItem(
-          label: i18n(context, "contacts_view_city"), v: c.personalCity),
+        icon: MdiIcons.homeCityOutline,
+        label: i18n(context, "contacts_view_city"),
+        v: c.personalCity,
+      ),
       _buildInfoItem(
-          label: i18n(context, "contacts_view_province"), v: c.personalState),
+        icon: MdiIcons.map,
+        label: i18n(context, "contacts_view_province"),
+        v: c.personalState,
+      ),
       _buildInfoItem(
-          label: i18n(context, "contacts_view_zip"), v: c.personalZip),
+        icon: MdiIcons.postOutline,
+        label: i18n(context, "contacts_view_zip"),
+        v: c.personalZip,
+      ),
       _buildInfoItem(
-          label: i18n(context, "contacts_view_country"), v: c.personalCountry),
+        icon: MdiIcons.earth,
+        label: i18n(context, "contacts_view_country"),
+        v: c.personalCountry,
+      ),
       _buildInfoItem(
-          label: i18n(context, "contacts_view_web_page"), v: c.personalWeb),
+        icon: Icons.web,
+        label: i18n(context, "contacts_view_web_page"),
+        v: c.personalWeb,
+      ),
       _buildInfoItem(
-          label: i18n(context, "contacts_view_fax"), v: c.personalFax),
+        icon: MdiIcons.fax,
+        label: i18n(context, "contacts_view_fax"),
+        v: c.personalFax,
+      ),
       _buildInfoItem(
-          label: i18n(context, "contacts_view_phone"), v: c.personalPhone),
+        icon: MdiIcons.phone,
+        label: i18n(context, "contacts_view_phone"),
+        v: c.personalPhone,
+      ),
       _buildInfoItem(
-          label: i18n(context, "contacts_view_mobile"), v: c.personalMobile),
+        icon: MdiIcons.cellphone,
+        label: i18n(context, "contacts_view_mobile"),
+        v: c.personalMobile,
+      ),
     ]);
 
     final businessInfo = _buildInfos([
       _buildInfoItem(
-          label: i18n(context, "contacts_view_email"), v: c.businessEmail),
+        icon: Icons.alternate_email,
+        label: i18n(context, "contacts_view_email"),
+        v: c.businessEmail,
+        emailToContact: _emailToContacts,
+      ),
       _buildInfoItem(
-          label: i18n(context, "contacts_view_address"), v: c.businessAddress),
+        icon: MdiIcons.mapMarkerOutline,
+        label: i18n(context, "contacts_view_address"),
+        v: c.businessAddress,
+      ),
       _buildInfoItem(
-          label: i18n(context, "contacts_view_city"), v: c.businessCity),
+        icon: MdiIcons.homeCityOutline,
+        label: i18n(context, "contacts_view_city"),
+        v: c.businessCity,
+      ),
       _buildInfoItem(
-          label: i18n(context, "contacts_view_province"), v: c.businessState),
+        icon: MdiIcons.map,
+        label: i18n(context, "contacts_view_province"),
+        v: c.businessState,
+      ),
       _buildInfoItem(
-          label: i18n(context, "contacts_view_zip"), v: c.businessZip),
+        icon: MdiIcons.postOutline,
+        label: i18n(context, "contacts_view_zip"),
+        v: c.businessZip,
+      ),
       _buildInfoItem(
-          label: i18n(context, "contacts_view_country"), v: c.businessCountry),
+        icon: MdiIcons.earth,
+        label: i18n(context, "contacts_view_country"),
+        v: c.businessCountry,
+      ),
       _buildInfoItem(
-          label: i18n(context, "contacts_view_web_page"), v: c.businessWeb),
+        icon: MdiIcons.web,
+        label: i18n(context, "contacts_view_web_page"),
+        v: c.businessWeb,
+      ),
       _buildInfoItem(
-          label: i18n(context, "contacts_view_fax"), v: c.businessFax),
+        icon: MdiIcons.fax,
+        label: i18n(context, "contacts_view_fax"),
+        v: c.businessFax,
+      ),
       _buildInfoItem(
-          label: i18n(context, "contacts_view_phone"), v: c.businessPhone),
+        icon: MdiIcons.cellphone,
+        label: i18n(context, "contacts_view_phone"),
+        v: c.businessPhone,
+      ),
     ]);
 
     final otherInfo = _buildInfos([
       _buildInfoItem(
-          label: i18n(context, "contacts_view_web_page"), v: c.otherEmail),
+        icon: Icons.web,
+        label: i18n(context, "contacts_view_web_page"),
+        v: c.otherEmail,
+      ),
       _buildInfoItem(
-          label: i18n(context, "contacts_view_birthday"), v: birthDate),
-      _buildInfoItem(label: i18n(context, "contacts_view_notes"), v: c.notes),
+        icon: MdiIcons.calendar,
+        label: i18n(context, "contacts_view_birthday"),
+        v: birthDate,
+      ),
+      _buildInfoItem(
+        icon: MdiIcons.text,
+        label: i18n(context, "contacts_view_notes"),
+        v: c.notes,),
     ]);
 
     return Scaffold(
       appBar: ContactViewAppBar(
+        name: c.fullName,
         allowShare: c.storage == StorageNames.personal,
         allowUnshare: c.storage == StorageNames.shared,
         allowEdit: c.storage == StorageNames.personal || c.viewEmail == BlocProvider.of<AuthBloc>(context).currentAccount.email,
@@ -206,26 +315,32 @@ class _ContactViewAndroidState extends State<ContactViewAndroid> {
         children: <Widget>[
           ..._mainInfo,
           if (personalInfo.isNotEmpty)
+            Divider(indent: 16.0, endIndent: 16.0),
+          if (personalInfo.isNotEmpty)
             ListTile(
               title: Text(
                 i18n(context, "contacts_view_section_home"),
-                style: Theme.of(context).textTheme.title,
+                style: sectionTitleTheme,
               ),
             ),
           ...personalInfo,
           if (businessInfo.isNotEmpty)
+            Divider(indent: 16.0, endIndent: 16.0),
+          if (businessInfo.isNotEmpty)
             ListTile(
               title: Text(
                 i18n(context, "contacts_view_section_business"),
-                style: Theme.of(context).textTheme.title,
+                style: sectionTitleTheme,
               ),
             ),
           ...businessInfo,
           if (otherInfo.isNotEmpty)
+            Divider(indent: 16.0, endIndent: 16.0),
+          if (otherInfo.isNotEmpty)
             ListTile(
               title: Text(
                 i18n(context, "contacts_view_section_other_info"),
-                style: Theme.of(context).textTheme.title,
+                style: sectionTitleTheme,
               ),
             ),
           ...otherInfo,
@@ -238,9 +353,14 @@ class _ContactViewAndroidState extends State<ContactViewAndroid> {
     return nullableWidgets.where((w) => w != null).toList();
   }
 
-  Widget _buildInfoItem({IconData icon, String label, String v}) {
+  Widget _buildInfoItem({
+    @required IconData icon,
+    @required String label,
+    @required String v,
+    void Function(String) emailToContact,
+  }) {
     if (v.isNotEmpty) {
-      return ContactsInfoItem(icon: icon, label: label, value: v);
+      return ContactsInfoItem(icon: icon, label: label, value: v, emailToContact: emailToContact);
     } else {
       return null;
     }

@@ -17,8 +17,7 @@ dependencies:
   crypto_storage:
     path: ../crypto_storage
   crypto_plugin:
-    path: ../../../../crypto_plugin
-#    git: https://github.com/afterlogic/flutter_crypto_plugin
+    git: https://github.com/afterlogic/flutter_crypto_plugin
   path_provider: ^1.6.0
 dev_dependencies:
   flutter_test:

@@ -77,15 +77,48 @@ class ContactsListTile extends StatelessWidget {
   Widget _buildTile(BuildContext context) {
     final theme = Theme.of(context);
     final name = contact.fullName;
+    final title = name != null && name.isNotEmpty ? name : contact.viewEmail;
     final authBloc = BlocProvider.of<AuthBloc>(context);
     final contactsBloc = BlocProvider.of<ContactsBloc>(context);
     final currentStorage = contactsBloc.state.storages.firstWhere((s) => s.sqliteId == contactsBloc.state.selectedStorage, orElse: () => null);
 
     return ListTile(
-      title: Text(name != null && name.isNotEmpty ? name : contact.viewEmail),
-      subtitle: name != null && name.isNotEmpty
-          ? Text(contact.viewEmail)
-          : null,
+      leading: Container(
+        width: 36.0,
+        height: 36.0,
+        decoration: BoxDecoration(
+          color: Theme.of(context).accentColor.withOpacity(0.06),
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        child: Center(
+          child: Text(
+            title[0].toUpperCase() ?? "C",
+            style: TextStyle(
+              fontSize: 18.0,
+              fontWeight: FontWeight.w500,
+              color: Theme.of(context).accentColor,
+            ),
+          ),
+        ),
+      ),
+      title: name != null && name.isNotEmpty ? Text(
+        contact.viewEmail,
+        style: TextStyle(
+          fontSize: 14.0,
+          color: Theme.of(context).disabledColor,
+        ),
+      ) : Text(contact.viewEmail,
+        style: TextStyle(
+          fontSize: 16.0,
+          color: Theme.of(context).textTheme.title.color,
+        ),
+      ),
+      subtitle: name != null && name.isNotEmpty ? Text(name,
+        style: TextStyle(
+          fontSize: 16.0,
+          color: Theme.of(context).textTheme.title.color,
+        ),
+      ) : null,
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,

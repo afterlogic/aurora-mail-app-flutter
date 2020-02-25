@@ -1,4 +1,7 @@
 import 'package:aurora_mail/background/background_helper.dart';
+import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
+import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
@@ -69,13 +72,14 @@ class _AppState extends State<App> with WidgetsBindingObserver {
   void _navigateToLogin() {
     _navKey.currentState.popUntil((r) => r.isFirst);
     _navKey.currentState.pushReplacementNamed(LoginRoute.name);
+    RestartWidget.restartApp(context);
   }
 
   ThemeData _getTheme(bool isDarkTheme) {
     if (isDarkTheme == false)
-      return AppTheme.theme;
+      return AppTheme.light;
     else if (isDarkTheme == true)
-      return AppTheme.darkTheme;
+      return AppTheme.dark;
     else
       return null;
   }
@@ -83,8 +87,8 @@ class _AppState extends State<App> with WidgetsBindingObserver {
   @override
   void dispose() {
     super.dispose();
-    _authBloc.close();
-    _settingsBloc.close();
+//    _authBloc.close();
+//    _settingsBloc.close();
     BackgroundHelper.current = AppLifecycleState.detached;
     WidgetsBinding.instance.removeObserver(this);
   }
@@ -113,8 +117,16 @@ class _AppState extends State<App> with WidgetsBindingObserver {
 
                     return MultiBlocProvider(
                       providers: [
-                        BlocProvider<AuthBloc>.value(value: _authBloc),
-                        BlocProvider<SettingsBloc>.value(value: _settingsBloc),
+                        BlocProvider.value(value: _authBloc),
+                        BlocProvider.value(value: _settingsBloc),
+                        BlocProvider(create: (_) => new MailBloc(
+                          user: _authBloc.currentUser,
+                          account: _authBloc.currentAccount,
+                        )),
+                        BlocProvider(create: (_) => new ContactsBloc(
+                          user: _authBloc.currentUser,
+                          appDatabase: DBInstances.appDB,
+                        )),
                       ],
                       child: MaterialApp(
                         navigatorKey: _navKey,
@@ -126,8 +138,8 @@ class _AppState extends State<App> with WidgetsBindingObserver {
                           return BuildProperty.appName;
                         },
                         onGenerateRoute: AppNavigation.onGenerateRoute,
-                        theme: theme ?? AppTheme.theme,
-                        darkTheme: theme ?? AppTheme.darkTheme,
+                        theme: theme ?? AppTheme.light,
+                        darkTheme: theme ?? AppTheme.dark,
                         localizationsDelegates: [
                           GlobalMaterialLocalizations.delegate,
                           GlobalWidgetsLocalizations.delegate,

@@ -53,6 +53,7 @@ class _ComposeSubjectState extends State<ComposeSubject> {
               child: IconButton(
                 icon: Icon(Icons.attachment),
                 padding: EdgeInsets.zero,
+                color: Theme.of(context).accentColor,
                 onPressed: widget.onAttach,
               ),
             )

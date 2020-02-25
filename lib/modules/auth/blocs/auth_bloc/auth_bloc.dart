@@ -4,6 +4,7 @@ import 'package:alarm_service/alarm_service.dart';
 import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_methods.dart';
+import 'package:aurora_mail/modules/auth/repository/auth_api.dart';
 import 'package:aurora_mail/utils/api_utils.dart';
 import 'package:bloc/bloc.dart';
 
@@ -30,10 +31,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     if (event is LogIn) yield* _login(event);
     if (event is SelectUser) yield* _selectUser(event);
     if (event is DeleteUser) yield* _deleteUser(event);
-    if (event is LogOut) yield* _logOut();
     if (event is InvalidateCurrentUserToken)
       yield* _invalidateCurrentUserToken(event);
     if (event is ChangeAccount) yield* _changeAccount(event);
+    if (event is UserLogIn) yield* _userLogIn(event);
   }
 
   Stream<AuthState> _initUserAndAccounts(InitUserAndAccounts event) async* {
@@ -103,21 +104,34 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         if (user == null) {
           yield NeedsHost();
         } else {
-          final users = await _methods.users;
-          currentUser = user;
-          final accounts = await _methods.getAccounts(user);
-
-          if (accounts.isNotEmpty) {
-            assert(accounts[0] != null);
-            currentAccount = accounts[0];
-            yield LoggedIn(user, users);
-          } else {
-            yield AuthError("error_login_no_accounts");
-          }
+          yield* _userLogIn(UserLogIn(user));
         }
       } catch (err, s) {
-        yield AuthError(formatError(err, s));
+        if (err is RequestTwoFactor) {
+          yield TwoFactor(
+            event.email,
+            event.password,
+            err.host,
+          );
+        } else {
+          yield AuthError(formatError(err, s));
+        }
       }
+    }
+  }
+
+  Stream<AuthState> _userLogIn(UserLogIn event) async* {
+    final user = await _methods.setUser(event.user);
+    final users = await _methods.users;
+    currentUser = user;
+    final accounts = await _methods.getAccounts(user);
+
+    if (accounts.isNotEmpty) {
+      assert(accounts[0] != null);
+      currentAccount = accounts[0];
+      yield LoggedIn(user, users);
+    } else {
+      yield AuthError("error_login_no_accounts");
     }
   }
 
@@ -134,13 +148,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       }
     } catch (err, s) {
       yield AuthError(formatError(err, s));
-    }
-  }
-
-  Stream<AuthState> _logOut() async* {
-    final users = await _methods.users;
-    for (var user in users) {
-      yield* await _deleteUser(DeleteUser(user));
     }
   }
 

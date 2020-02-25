@@ -26,39 +26,43 @@ class _ContactsDrawerState extends State<ContactsDrawer> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      child: SafeArea(
-        child: BlocBuilder<ContactsBloc, ContactsState>(builder: (context, state) {
-          return ListView(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text(
-                  i18n(context, "contacts_drawer_section_storages").toUpperCase(),
-                  style: TextStyle(color: Theme.of(context).disabledColor),
+      child: ListTileTheme(
+        selectedColor: Theme.of(context).accentColor,
+        style: ListTileStyle.drawer,
+        child: SafeArea(
+          child: BlocBuilder<ContactsBloc, ContactsState>(builder: (context, state) {
+            return ListView(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text(
+                    i18n(context, "contacts_drawer_section_storages"),
+                    style: TextStyle(color: Theme.of(context).disabledColor),
+                  ),
                 ),
-              ),
-              _buildStorages(context, state),
-              Divider(),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text(
-                      i18n(context, "contacts_drawer_section_groups").toUpperCase(),
-                      style: TextStyle(color: Theme.of(context).disabledColor),
-                    ),
-                    IconButton(
-                      icon: Icon(Icons.add),
-                      onPressed: _addGroup,
-                    ),
-                  ],
+                _buildStorages(context, state),
+                Divider(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        i18n(context, "contacts_drawer_section_groups"),
+                        style: TextStyle(color: Theme.of(context).disabledColor),
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.add, color: Theme.of(context).accentColor),
+                        onPressed: _addGroup,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              _buildGroups(context, state),
-            ],
-          );
-        }),
+                _buildGroups(context, state),
+              ],
+            );
+          }),
+        ),
       ),
     );
   }

@@ -104,7 +104,7 @@ class Mail extends Table {
 
   TextColumn get plain => text()();
 
-//  TextColumn get plainRaw => text()();
+  TextColumn get plainRaw => text()();
 
   BoolColumn get rtl => boolean()();
 
@@ -251,8 +251,8 @@ class Mail extends Table {
             rawMessage["ReadingConfirmationAddressee"] as String,
 //        htmlRaw: rawMessage["HtmlRaw"],
         html: rawMessage["Html"] as String,
-        plain: rawMessage["PlainRaw"] as String,
-//        plainRaw: rawMessage["PlainRaw"],
+        plain: rawMessage["Plain"] as String,
+        plainRaw: rawMessage["PlainRaw"] as String,
         rtl: rawMessage["Rtl"] as bool,
         extendInJson: rawMessage["Extend"] == null
             ? null

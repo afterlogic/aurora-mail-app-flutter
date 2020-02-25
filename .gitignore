@@ -81,10 +81,6 @@ android/app/google-services.json
 android/build_variable.properties
 ios/Runner/GoogleService-Info.plist
 
-build_res/**/google-services.json
-build_res/**/GoogleService-Info.plist
-
-build_res/**/key.properties
 
 android/app/src/main/res/drawable-hdpi/ic_launcher_foreground.png
 
@@ -155,3 +151,7 @@ ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-76x76\@2x.png
 ios/Runner/Assets.xcassets/AppIcon.appiconset/Icon-App-83.5x83.5\@2x.png
 
 lib/build_property.dart
+
+**/key.properties
+**/GoogleService-Info.plist
+**/google-services.json

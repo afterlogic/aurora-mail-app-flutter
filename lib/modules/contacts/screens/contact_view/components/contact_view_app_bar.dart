@@ -1,10 +1,10 @@
 import 'package:aurora_mail/res/icons/webmail_icons.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 
 enum ContactViewAppBarAction {
   attach,
-  sendMessage,
   searchMessages,
   edit,
   share,
@@ -13,6 +13,7 @@ enum ContactViewAppBarAction {
 }
 
 class ContactViewAppBar extends StatelessWidget implements PreferredSizeWidget {
+  final String name;
   final bool allowEdit;
   final bool allowShare;
   final bool allowUnshare;
@@ -23,6 +24,7 @@ class ContactViewAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Size preferredSize = const Size.fromHeight(kToolbarHeight);
 
   const ContactViewAppBar({Key key,
+    @required this.name,
     @required this.onActionSelected,
     @required this.allowEdit,
     @required this.allowShare,
@@ -32,49 +34,72 @@ class ContactViewAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppBar(
+    return AMAppBar(
+      title: Text(
+        name,
+        style: TextStyle(
+          fontWeight: FontWeight.w700
+        ),
+      ),
       actions: <Widget>[
-        if (allowShare)
-          IconButton(
-            icon: Icon(WebMailIcons.shared_with_all),
-            tooltip: i18n(context, "contacts_view_app_bar_share"),
-            onPressed: () => onActionSelected(ContactViewAppBarAction.share),
-          ),
-        if (allowUnshare)
-          IconButton(
-            icon: Icon(WebMailIcons.unshare),
-            tooltip: i18n(context, "contacts_view_app_bar_unshare"),
-            onPressed: () => onActionSelected(ContactViewAppBarAction.unshare),
-          ),
-        IconButton(
-          icon: Icon(Icons.attach_file),
-          tooltip: i18n(context, "contacts_view_app_bar_attach"),
-          onPressed: () => onActionSelected(ContactViewAppBarAction.attach),
+        PopupMenuButton(
+          onSelected: onActionSelected,
+          itemBuilder: (_) =>
+          [
+            if (allowShare)
+              _buildMenuItem(
+                icon: WebMailIcons.shared_with_all,
+                text: i18n(context, "contacts_view_app_bar_share"),
+                value: ContactViewAppBarAction.share,
+              ),
+            if (allowUnshare)
+              _buildMenuItem(
+                icon: WebMailIcons.unshare,
+                text: i18n(context, "contacts_view_app_bar_unshare"),
+                value: ContactViewAppBarAction.unshare,
+              ),
+            _buildMenuItem(
+              icon: Icons.attach_file,
+              text: i18n(context, "contacts_view_app_bar_attach"),
+              value: ContactViewAppBarAction.attach,
+            ),
+//            _buildMenuItem(
+//              icon: MdiIcons.emailSearchOutline,
+//              text: i18n(context, "contacts_view_app_bar_search_messages"),
+//              value: ContactViewAppBarAction.searchMessages,
+//            ),
+            if (allowEdit)
+              _buildMenuItem(
+                icon: Icons.edit,
+                text: i18n(context, "contacts_view_app_bar_edit_contact"),
+                value: ContactViewAppBarAction.edit,
+              ),
+            if (allowDelete)
+              _buildMenuItem(
+                icon: Icons.delete_outline,
+                text: i18n(context, "contacts_view_app_bar_delete_contact"),
+                value: ContactViewAppBarAction.delete,
+              ),
+          ],
         ),
-        IconButton(
-          icon: Icon(Icons.mail_outline),
-          tooltip: i18n(context, "contacts_view_app_bar_send_message"),
-          onPressed: () => onActionSelected(ContactViewAppBarAction.sendMessage),
-        ),
-//        IconButton(
-//          icon: Icon(MdiIcons.emailSearchOutline),
-//          tooltip: i18n(context, "contacts_view_app_bar_search_messages"),
-////          onPressed: () => onActionSelected(ContactViewAppBarAction.searchMessages),
-//          onPressed: null,
-//        ),
-        if (allowEdit)
-          IconButton(
-            icon: Icon(Icons.edit),
-            tooltip: i18n(context, "contacts_view_app_bar_edit_contact"),
-            onPressed: () => onActionSelected(ContactViewAppBarAction.edit),
-          ),
-        if (allowDelete)
-          IconButton(
-            icon: Icon(Icons.delete_outline),
-            tooltip: i18n(context, "contacts_view_app_bar_delete_contact"),
-            onPressed: () => onActionSelected(ContactViewAppBarAction.delete),
-          ),
       ],
+    );
+  }
+
+  PopupMenuEntry<ContactViewAppBarAction> _buildMenuItem({
+    @required ContactViewAppBarAction value,
+    @required String text,
+    @required IconData icon,
+  }) {
+    return PopupMenuItem(
+      child: Row(
+        children: <Widget>[
+          Icon(icon),
+          SizedBox(width: 12.0),
+          Text(text),
+        ],
+      ),
+      value: value,
     );
   }
 }

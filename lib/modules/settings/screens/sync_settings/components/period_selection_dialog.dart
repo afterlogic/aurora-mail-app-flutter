@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:aurora_mail/modules/settings/models/sync_period.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_mail/utils/show_dialog.dart';
+import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -13,67 +15,38 @@ class PeriodSelectionDialog extends StatelessWidget {
 
   static void show(BuildContext context, Period selectedItem,
       Function(Period) onItemSelected) {
-    if (Platform.isIOS) {
-      showCupertinoModalPopup(
+      dialog(
           context: context,
           builder: (_) => PeriodSelectionDialog(selectedItem, onItemSelected));
-    } else {
-      showDialog(
-          context: context,
-          builder: (_) => PeriodSelectionDialog(selectedItem, onItemSelected));
-    }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (Platform.isIOS) {
-      return CupertinoActionSheet(
-        title: Text(i18n(context, "settings_sync_period")),
-        actions: Period.values
-            .map((period) => CupertinoButton(
-                  child: Text(SyncPeriod.periodToTitle(context, period)),
-                  onPressed: () {
-                    onItemSelected(period);
-                    Navigator.pop(context);
-                  },
-                ))
-            .toList(),
-        cancelButton: CupertinoButton(
+    return AlertDialog(
+      contentPadding: EdgeInsets.zero,
+      titlePadding: EdgeInsets.all(24.0),
+      title: Text(i18n(context, "settings_sync_period")),
+      content: AMDialogList(
+        children: Period.values.map((period) {
+          return RadioListTile(
+            activeColor: Theme.of(context).accentColor,
+            title: Text(SyncPeriod.periodToTitle(context, period)),
+            value: period,
+            groupValue: selectedItem,
+            onChanged: (val) {
+              onItemSelected(period);
+              Navigator.pop(context);
+            },
+          );
+        }).toList(),
+      ),
+      actions: <Widget>[
+        FlatButton(
+          textColor: Theme.of(context).brightness == Brightness.light ? Theme.of(context).accentColor : null,
           child: Text(i18n(context, "btn_cancel")),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+          onPressed: Navigator.of(context).pop,
         ),
-      );
-    } else {
-      return AlertDialog(
-        contentPadding: EdgeInsets.zero,
-        titlePadding: EdgeInsets.all(24.0),
-        title: Text(i18n(context, "settings_sync_period")),
-        content: SizedBox(
-          height: 56.0 * Period.values.length,
-          width: 400.0,
-          child: ListView(
-            children: Period.values.map((period) {
-              return RadioListTile(
-                title: Text(SyncPeriod.periodToTitle(context, period)),
-                value: period,
-                groupValue: selectedItem,
-                onChanged: (val) {
-                  onItemSelected(period);
-                  Navigator.pop(context);
-                },
-              );
-            }).toList(),
-          ),
-        ),
-        actions: <Widget>[
-          FlatButton(
-            child: Text(i18n(context, "btn_cancel").toUpperCase()),
-            onPressed: Navigator.of(context).pop,
-          ),
-        ],
-      );
-    }
+      ],
+    );
   }
 }

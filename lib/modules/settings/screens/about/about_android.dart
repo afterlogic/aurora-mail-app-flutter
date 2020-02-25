@@ -1,4 +1,5 @@
 import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:package_info/package_info.dart';
@@ -47,7 +48,7 @@ class _AboutAndroidState extends State<AboutAndroid> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(i18n(context, "settings_about"))),
+      appBar: AMAppBar(title: Text(i18n(context, "settings_about"))),
       body: loading
           ? Center(child: CircularProgressIndicator())
           : Column(

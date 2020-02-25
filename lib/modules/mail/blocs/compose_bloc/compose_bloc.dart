@@ -53,6 +53,7 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
         to: event.to,
         cc: event.cc,
         bcc: event.bcc,
+        usePlain: event.usePlain,
         subject: event.subject,
         composeAttachments: event.composeAttachments,
         messageText: event.messageText,
@@ -127,6 +128,12 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
 
   Stream<ComposeState> _encryptBody(EncryptBody event) async* {
     try {
+      if (event.encrypt && event.contacts.isEmpty) {
+        yield ComposeError(
+          "need_contact_fo`r_encrypt",
+        );
+        return;
+      }
       final emails = event.contacts.map((item) {
         final match = RegExp("<(.*)?>").firstMatch(item);
         if (match != null && match.groupCount > 0) {

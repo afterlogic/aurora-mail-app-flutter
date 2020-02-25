@@ -7,7 +7,7 @@ Future<T> dialog<T>({
   @required BuildContext context,
   @required WidgetBuilder builder,
 }) {
-  if (Platform.isIOS) {
+  if (Platform.isIOS || true) {
     return showCupertinoDialog(
       context: context,
       builder: builder,

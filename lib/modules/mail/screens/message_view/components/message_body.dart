@@ -103,10 +103,11 @@ class _MessageBodyState extends State<MessageBody> {
   }
 
   String _getHtmlUri(String html) {
-    final wrappedHtml = MailUtils.wrapInHtml(context, html);
-    return Uri.dataFromString(wrappedHtml,
-            mimeType: 'text/html', encoding: Encoding.getByName('utf-8'))
-        .toString();
+//    final wrappedHtml = MailUtils.wrapInHtml(context, widget.message, html);
+//    return Uri.dataFromString(wrappedHtml,
+//            mimeType: 'text/html', encoding: Encoding.getByName('utf-8'))
+//        .toString();
+  return null;
   }
 
   @override

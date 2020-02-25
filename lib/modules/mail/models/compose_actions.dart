@@ -31,9 +31,9 @@ class ReplyToAll implements ComposeAction {
 }
 
 class EmailToContacts implements ComposeAction {
-  final List<Contact> contacts;
+  final List<String> emails;
 
-  const EmailToContacts(this.contacts);
+  const EmailToContacts(this.emails);
 }
 
 class SendContacts implements ComposeAction {

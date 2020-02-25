@@ -22,7 +22,7 @@ class MessageItem extends StatefulWidget {
   final Function(Message, bool) onStarMessage;
   final Function(Message) onDeleteMessage;
 
-  MessageItem(
+  const MessageItem(
     this.message,
     this.children, {
     this.key,
@@ -65,10 +65,9 @@ class _MessageItemState extends State<MessageItem> {
 
     final flags = Mail.getFlags(widget.message.flagsInJson);
 
-    final textStyle = TextStyle(
-        fontWeight: flags.contains(MessageFlags.seen)
+    final fontWeight = flags.contains(MessageFlags.seen)
             ? FontWeight.w400
-            : FontWeight.w700);
+            : FontWeight.w700;
 
     return Column(
       children: <Widget>[
@@ -103,25 +102,20 @@ class _MessageItemState extends State<MessageItem> {
                   ? _toggleThreads
                   : () => widget.onItemSelected(widget.message),
               key: Key(widget.message.uid.toString()),
-              title: Text(widget.message.fromToDisplay, style: textStyle),
+              title: Text(widget.message.fromToDisplay, style: TextStyle(
+                fontWeight: fontWeight,
+                fontSize: 14.0,
+                color: Theme.of(context).disabledColor,
+              )),
               subtitle: Padding(
                 padding: const EdgeInsets.only(top: 6.0),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     if (widget.children.isNotEmpty)
-                      SizedBox(
-                        height: 24.0,
-                        width: 24.0,
-                        child: IconButton(
-                          padding: EdgeInsets.zero,
-                          icon: _showThreads ? Icon(hasUnreadChildren
-                              ? MdiIcons.arrowUpDropCircle
-                              : MdiIcons.arrowUpDropCircleOutline) : Icon(hasUnreadChildren
-                              ? MdiIcons.arrowDownDropCircle
-                              : MdiIcons.arrowDownDropCircleOutline),
-                          onPressed: _toggleThreads,
-                        ),
+                      InkResponse(
+                        child: _buildThreadCounter(context, hasUnreadChildren),
+                        onTap: _toggleThreads,
                       ),
                     if (widget.children.isNotEmpty) SizedBox(width: 6.0),
                     Flexible(
@@ -133,7 +127,11 @@ class _MessageItemState extends State<MessageItem> {
                               : i18n(context, "messages_no_subject"),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: textStyle,
+                          style: TextStyle(
+                            fontWeight: fontWeight,
+                            fontSize: 16.0,
+                            color: Theme.of(context).textTheme.title.color,
+                          ),
                         ),
                       ),
                     ),
@@ -141,7 +139,7 @@ class _MessageItemState extends State<MessageItem> {
                 ),
               ),
               trailing: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: <Widget>[
                   Row(
@@ -158,7 +156,10 @@ class _MessageItemState extends State<MessageItem> {
                             yesterdayWord: i18n(context, "formatting_yesterday"),
                             is24: (state as SettingsLoaded).is24 ?? true,
                           ),
-                          style: textStyle,
+                          style: TextStyle(
+                            fontSize: 14.0,
+                            color: Theme.of(context).disabledColor,
+                          ),
                         ),
                       ),
                     ],
@@ -204,11 +205,11 @@ class _MessageItemState extends State<MessageItem> {
                   padding: const EdgeInsets.only(left: 16.0),
                   child: Column(
                     children: <Widget>[
-                      Divider(
-                        height: 0.0,
-                        indent: 4.0,
-                        endIndent: 16.0,
-                      ),
+//                      Divider(
+//                        height: 0.0,
+//                        indent: 4.0,
+//                        endIndent: 16.0,
+//                      ),
                       MessageItem(t, [],
                           key: Key(t.localId.toString()),
                           onItemSelected: widget.onItemSelected,
@@ -230,6 +231,21 @@ class _MessageItemState extends State<MessageItem> {
             );
           }).toList()
       ],
+    );
+  }
+
+  Widget _buildThreadCounter(BuildContext context, bool hasUnread) {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 10.0),
+      decoration: BoxDecoration(
+        color: hasUnread ? Theme.of(context).accentColor : null,
+        borderRadius: BorderRadius.all(Radius.circular(50.0)),
+        border: Border.all(color: Theme.of(context).accentColor, width: 2.0),
+      ),
+      child: Text(
+        widget.children.length.toString(),
+        style: TextStyle(color: hasUnread ? Colors.white : Theme.of(context).accentColor),
+      ),
     );
   }
 }

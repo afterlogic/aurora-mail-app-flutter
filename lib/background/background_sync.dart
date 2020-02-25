@@ -24,6 +24,7 @@ class BackgroundSync {
   final _usersDao = UsersDao(DBInstances.appDB);
   final _accountsDao = AccountsDao(DBInstances.appDB);
   final _authLocal = AuthLocalStorage();
+
 //  final _notificationStorage = NotificationLocalStorage();
 
   Future<bool> sync(bool isBackground) async {
@@ -37,10 +38,11 @@ class BackgroundSync {
         print("MailSync: sync END");
         if (newMessages.isNotEmpty) {
           if (isBackground == true) {
-            newMessages.sort((a, b) => a.timeStampInUTC.compareTo(b.timeStampInUTC));
+            newMessages
+                .sort((a, b) => a.timeStampInUTC.compareTo(b.timeStampInUTC));
             print("MailSync: ${newMessages.length} new message(s)");
 
-            for(final message in newMessages) {
+            for (final message in newMessages) {
               await showNewMessage(message, user);
             }
           } else {
@@ -73,66 +75,69 @@ class BackgroundSync {
     final newMessages = new List<Message>();
 
 //      final accountLocalId = await _authLocal.getSelectedAccountId();
-      final accounts = await _accountsDao.getAccounts(user.localId);
-      final account = accounts[0];
+    final accounts = await _accountsDao.getAccounts(user.localId);
+    final account = accounts[0];
 
-      final inboxFolders = await _foldersDao.getByType(
-          1 /*FolderType.inbox*/, account.localId);
+    final inboxFolders =
+        await _foldersDao.getByType(1 /*FolderType.inbox*/, account.localId);
 
-      final foldersToUpdate = (await updateFolderHash(inboxFolders, user, account))
-          .where((item) => item.type == 1)
-          .toList();
+    final foldersToUpdate =
+        (await updateFolderHash(inboxFolders, user, account))
+            .where((item) => item.type == 1)
+            .toList();
 
-      if (account == null) return new List<Message>();
+    if (account == null) return new List<Message>();
 
-      for (Folder folderToUpdate in foldersToUpdate) {
-        if (!folderToUpdate.needsInfoUpdate ||
-            folderToUpdate.messagesInfo == null) {
-          break;
-        }
-
-        final syncPeriod = SyncPeriod.dbStringToPeriod(user.syncPeriod);
-        final periodStr = SyncPeriod.periodToDate(syncPeriod);
-
-        final mailApi = MailApi(
-          user: user,
-          account: account,
-        );
-
-        final rawInfo = await mailApi.getMessagesInfo(
-            folderName: folderToUpdate.fullNameRaw, search: "date:$periodStr/");
-
-        List<MessageInfo> messagesInfo = MessageInfo.flattenMessagesInfo(
-            rawInfo);
-
-        final result = await Folders.calculateMessagesInfoDiffAsync(
-            folderToUpdate.messagesInfo, messagesInfo);
-
-        if (result.addedMessages.isEmpty) break;
-
-        result.addedMessages.removeWhere((m) => m.flags.contains("\\seen"));
-
-        final uids = result.addedMessages.map((m) => m.uid);
-        final rawBodies = await mailApi.getMessageBodies(
-          folderName: folderToUpdate.fullNameRaw,
-          uids: uids.toList(),
-        );
-        final newMessageBodies = Mail.getMessageObjFromServerAndUpdateInfoHasBody(
-          rawBodies,
-          result.addedMessages,
-          user.localId,
-          account,
-        );
-
-        await _foldersDao.setMessagesInfo(
-            folderToUpdate.localId, result.updatedInfo);
-        newMessages.addAll(newMessageBodies);
+    for (Folder folderToUpdate in foldersToUpdate) {
+      if (!folderToUpdate.needsInfoUpdate ||
+          folderToUpdate.messagesInfo == null) {
+        break;
       }
+
+      final syncPeriod = SyncPeriod.dbStringToPeriod(user.syncPeriod);
+      final periodStr = SyncPeriod.periodToDate(syncPeriod);
+
+      final mailApi = MailApi(
+        user: user,
+        account: account,
+      );
+
+      final rawInfo = await mailApi.getMessagesInfo(
+          folderName: folderToUpdate.fullNameRaw, search: "date:$periodStr/");
+
+      List<MessageInfo> messagesInfo = MessageInfo.flattenMessagesInfo(rawInfo);
+
+      final result = await Folders.calculateMessagesInfoDiffAsync(
+          folderToUpdate.messagesInfo, messagesInfo);
+
+      if (result.addedMessages.isEmpty) break;
+
+      result.addedMessages.removeWhere((m) => m.flags.contains("\\seen"));
+
+      final uids = result.addedMessages.map((m) => m.uid);
+      final rawBodies = await mailApi.getMessageBodies(
+        folderName: folderToUpdate.fullNameRaw,
+        uids: uids.toList(),
+      );
+      final newMessageBodies = Mail.getMessageObjFromServerAndUpdateInfoHasBody(
+        rawBodies,
+        result.addedMessages,
+        user.localId,
+        account,
+      );
+
+      await _foldersDao.setMessagesInfo(
+        folderToUpdate.guid,
+        result.updatedInfo,
+      );
+      newMessages.addAll(newMessageBodies);
+    }
     await _mailDao.addMessages(newMessages);
     return newMessages;
   }
 
-  Future<List<Folder>> updateFolderHash(List<LocalFolder> folders, User user, Account account) async {
+  Future<List<Folder>> updateFolderHash(
+      List<LocalFolder> folders, User user, Account account) async {
     final _foldersApi = FoldersApi(
       user: user,
       account: account,

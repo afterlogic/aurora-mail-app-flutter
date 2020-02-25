@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 class AuthInput extends StatefulWidget {
   final TextEditingController controller;
   final String label;
-  final IconData iconForIOS;
   final TextInputType keyboardType;
   final bool isEnabled;
   final bool isPassword;
@@ -17,7 +16,6 @@ class AuthInput extends StatefulWidget {
     Key key,
     @required this.controller,
     @required this.label,
-    @required this.iconForIOS,
     this.isEnabled = true,
     this.isPassword = false,
     this.keyboardType,
@@ -34,53 +32,29 @@ class _AuthInputState extends State<AuthInput> {
 
   @override
   Widget build(BuildContext context) {
-
-    if (Platform.isIOS) {
-      return CupertinoTextField(
-        enabled: widget.isEnabled,
-        style: TextStyle(color: Colors.black),
-        cursorColor: Theme.of(context).accentColor,
-        controller: widget.controller,
-        keyboardType: widget.keyboardType,
-        placeholder: widget.label,
-        obscureText: widget.isPassword && _obscureText,
-        autocorrect: false,
-        prefix: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 12.0),
-          child: Icon(widget.iconForIOS, color: Colors.black38),
-        ),
-        suffix: widget.isPassword ? CupertinoButton(
-          padding: EdgeInsets.zero,
-          child: Icon(
-            _obscureText ? Icons.visibility : Icons.visibility_off,
-            color: widget.visibilityToggleColor ?? Colors.black38,
-          ),
-          onPressed: () => setState(() => _obscureText = !_obscureText),
-        ) : null,
-      );
-    } else {
-      return TextFormField(
-        enabled: widget.isEnabled,
-        cursorColor: Theme.of(context).accentColor,
-        controller: widget.controller,
-        keyboardType: widget.keyboardType,
-        validator: widget.validator,
-        obscureText: widget.isPassword && _obscureText,
-        decoration: InputDecoration(
-          labelText: widget.label,
-          alignLabelWithHint: true,
-          suffixIcon: widget.isPassword ? SizedBox(
-            height: 50.0,
-            child: IconButton(
-              icon: Icon(
-                _obscureText ? Icons.visibility : Icons.visibility_off,
-                color: widget.visibilityToggleColor ?? Theme.of(context).iconTheme.color,
-              ),
-              onPressed: () => setState(() => _obscureText = !_obscureText),
+    return TextFormField(
+      enabled: widget.isEnabled,
+      cursorColor: Theme.of(context).accentColor,
+      controller: widget.controller,
+      keyboardType: widget.keyboardType,
+      validator: widget.validator,
+      obscureText: widget.isPassword && _obscureText,
+      decoration: InputDecoration(
+        hasFloatingPlaceholder: false,
+        enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Theme.of(context).disabledColor.withOpacity(0.1))),
+        focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Theme.of(context).accentColor)),
+        hintText: widget.label,
+        suffixIcon: widget.isPassword ? SizedBox(
+          height: 50.0,
+          child: IconButton(
+            icon: Icon(
+              _obscureText ? Icons.visibility : Icons.visibility_off,
+              color: widget.visibilityToggleColor ?? Theme.of(context).iconTheme.color,
             ),
-          ) : null,
-        ),
-      );
-    }
+            onPressed: () => setState(() => _obscureText = !_obscureText),
+          ),
+        ) : null,
+      ),
+    );
   }
 }
