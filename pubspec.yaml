@@ -105,7 +105,8 @@ flutter:
     - assets/images/
     - assets/flutter_i18n/
     - build_res/afterlogic/icon.png
-    - build_res/afterlogic/main_logo.png
+    - build_res/afterlogic/image/main_logo.png
+    - build_res/afterlogic/image/
 
   fonts:
     - family: WebMailIcons

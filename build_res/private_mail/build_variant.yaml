@@ -1,0 +1,13 @@
+#variables
+appName: "PrivateMail"
+_appId: "com.PrivateRouter.PrivateMailApplication"
+_iosAppId: "com.PrivateRouter.PrivateMailApplication"
+_iosDeveloperId: "K6298N65JA"
+
+background_color: "#34113C"
+splashGradientTop: "#420324"
+splashGradientBottom: "#252352"
+
+multiUserEnable: false
+multiAccountEnable: true
+useMainLogo: true

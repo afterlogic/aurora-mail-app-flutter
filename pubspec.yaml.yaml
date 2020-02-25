@@ -106,6 +106,7 @@ flutter:
     - assets/flutter_i18n/
     - {{icon}}
     - {{main_logo}}
+    - {{image_dir}}/
 
   fonts:
     - family: WebMailIcons

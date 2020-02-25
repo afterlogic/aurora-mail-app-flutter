@@ -23,7 +23,9 @@ _iosAppId: "{{_appId}}"
 version: 1.0.1+32
 
 icon: "{{_dir}}/icon.png"
-main_logo: "{{_dir}}/main_logo.png"
+main_logo: "{{image_dir}}/main_logo.png"
+image_dir: "{{_dir}}/image"
+
 _google_services: "{{_dir}}/google-services.json"
 _google_services_ios: "{{_dir}}/GoogleService-Info.plist"
 _key_properties: "{{_dir}}/key.properties"
@@ -35,4 +37,5 @@ _theme_module: "{{_dir}}/theme"
 
 multiUserEnable: false
 multiAccountEnable: false
+useMainLogo: false
 

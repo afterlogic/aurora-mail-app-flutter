@@ -18,21 +18,22 @@ class AMCircleIcon extends StatelessWidget {
     this.padding = const EdgeInsets.all(8.0),
     this.size,
     this.textDirection,
-    this.background, this.radius,
+    this.background,
+    this.radius,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final theme = Theme.of(context).iconTheme;
     return Container(
       padding: padding,
       decoration: BoxDecoration(
-        color: background ?? theme.primaryColor.withOpacity(0.06),
+        color: background ?? theme.color.withOpacity(0.06),
         borderRadius: radius ?? BorderRadius.circular(100.0),
       ),
       child: Icon(
         icon,
-        color: color ?? theme.primaryColor,
+        color: color ?? theme.color,
         semanticLabel: semanticLabel,
         size: size,
         textDirection: textDirection,

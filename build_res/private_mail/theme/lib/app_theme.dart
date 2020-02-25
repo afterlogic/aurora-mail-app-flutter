@@ -12,7 +12,6 @@ class AppTheme {
     brightness: Brightness.light,
     disabledColor: Colors.black.withOpacity(0.3),
     scaffoldBackgroundColor: Colors.white,
-    iconTheme: IconThemeData(color: AppColor.primary),
     textTheme: TextTheme(
       display1: TextStyle(
         color: Colors.black,
@@ -20,19 +19,24 @@ class AppTheme {
         fontWeight: FontWeight.w500,
       ),
     ),
+    iconTheme: IconThemeData(color: AppColor.primary),
     appBarTheme: AppBarTheme(
-      brightness: Brightness.light,
-      color: Colors.white,
-      iconTheme: IconThemeData(color: Colors.black),
-      actionsIconTheme: IconThemeData(color: Colors.black),
+      brightness: Brightness.dark,
+      color: AppColor.primary,
+      iconTheme: IconThemeData(
+        color: Colors.white,
+      ),
+      actionsIconTheme: IconThemeData(
+        color: Colors.white,
+      ),
       textTheme: TextTheme(
         title: TextStyle(
-          color: Colors.black,
+          color: Colors.white,
           fontSize: 18.0,
           fontWeight: FontWeight.w500,
         ),
         subtitle: TextStyle(
-          color: Colors.black,
+          color: Colors.white,
           fontSize: 12.0,
           fontWeight: FontWeight.w400,
         ),
@@ -45,7 +49,6 @@ class AppTheme {
     accentColor: AppColor.accent,
     buttonTheme: _buttonTheme,
     dialogTheme: _dialogTheme,
-    iconTheme: IconThemeData(color: AppColor.primary),
     splashFactory: InkRipple.splashFactory,
     brightness: Brightness.dark,
     disabledColor: Colors.white.withOpacity(0.3),
@@ -57,9 +60,12 @@ class AppTheme {
         fontWeight: FontWeight.w500,
       ),
     ),
+    iconTheme: IconThemeData(
+      color: Colors.white,
+    ),
     appBarTheme: AppBarTheme(
       brightness: Brightness.dark,
-      color: Colors.black,
+      color: AppColor.primary,
       iconTheme: IconThemeData(color: Colors.white),
       actionsIconTheme: IconThemeData(color: Colors.white),
       textTheme: TextTheme(
@@ -78,7 +84,7 @@ class AppTheme {
     bottomAppBarColor: Colors.black,
   );
 
-  static final login = light;
+  static final login = dark;
 
   static final _dialogTheme = DialogTheme(
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
