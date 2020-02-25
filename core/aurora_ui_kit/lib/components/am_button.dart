@@ -57,17 +57,21 @@ class AMButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Container(
       height: 50.0,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(50.0),
-        boxShadow: isLoading == true ? null : [
-          shadow ?? BoxShadow(
-            color: Theme.of(context).accentColor.withOpacity(0.8),
-            blurRadius: 8.0,
-            offset: Offset(0.0, 3.0),
-          ),
-        ],
+        boxShadow: isLoading == true
+            ? null
+            : [
+                shadow ??
+                    BoxShadow(
+                      color: theme.floatingActionButtonTheme.hoverColor,
+                      blurRadius: 8.0,
+                      offset: Offset(0.0, 3.0),
+                    ),
+              ],
       ),
       child: RaisedButton(
         elevation: 0.0,

@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:aurora_mail/background/background_helper.dart';
 import 'package:aurora_mail/database/app_database.dart';
-
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
@@ -221,7 +220,8 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
                   builder: (context, state) {
                     Widget child;
                     if (state is SubscribedToMessages) {
-                      child = _buildMessagesStream(state.messagesSub, state.isStarredFilterEnabled);
+                      child = _buildMessagesStream(
+                          state.messagesSub, state.isStarredFilterEnabled);
                     } else {
                       child = _buildMessagesLoading();
                     }
@@ -232,7 +232,8 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
                   }),
             ),
           ),
-          bottomNavigationBar: MailBottomAppBar(selectedRoute: MailBottomAppBarRoutes.mail),
+          bottomNavigationBar:
+              MailBottomAppBar(selectedRoute: MailBottomAppBarRoutes.mail),
           floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
           floatingActionButton: AMFloatingActionButton(
             child: Icon(MdiIcons.pen),
@@ -248,6 +249,7 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
   }
 
   Widget _buildMessagesLoading() => Center(child: CircularProgressIndicator());
+
 //  Widget _buildMessagesLoading() => SkeletonLoader();
 
   Widget _buildMessagesStream(
@@ -280,7 +282,8 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
                       item,
                       threads.where((t) => t.parentUid == item.uid).toList(),
                       key: Key(item.localId.toString()),
-                      onItemSelected: (Message item) => _onMessageSelected(snap.data, item),
+                      onItemSelected: (Message item) =>
+                          _onMessageSelected(snap.data, item),
                       onStarMessage: _setStarred,
                       onDeleteMessage: _deleteMessage,
                     ),

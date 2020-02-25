@@ -39,8 +39,8 @@ dependencies:
   flutter_typeahead: ^1.7.0
 
   # ui
-  material_design_icons_flutter: ^3.4.4995
-  webview_flutter: ^0.3.19+8
+  material_design_icons_flutter: ^3.4.4895
+  webview_flutter: ^0.3.19+5
   flutter_speed_dial: ^1.2.5
   fluttertoast: ^3.1.3
   shimmer: ^1.0.1
@@ -78,7 +78,7 @@ dependencies:
   keyboard_actions: ^3.2.0
 
   theme:
-    path: build_res/afterlogic/theme
+    path: build_res/private_mail/theme
 
 dev_dependencies:
   flutter_test:
@@ -93,9 +93,9 @@ dev_dependencies:
 flutter_icons:
   ios: true
   android: true
-  image_path: build_res/afterlogic/icon.png
-  adaptive_icon_background: "#FFFFFF"
-  adaptive_icon_foreground: build_res/afterlogic/icon_foreground.png
+  image_path: build_res/private_mail/icon.png
+  adaptive_icon_background: "#34113C"
+  adaptive_icon_foreground: build_res/private_mail/icon_foreground.png
 
 flutter:
   uses-material-design: true
@@ -104,9 +104,9 @@ flutter:
   assets:
     - assets/images/
     - assets/flutter_i18n/
-    - build_res/afterlogic/icon.png
-    - build_res/afterlogic/image/main_logo.png
-    - build_res/afterlogic/image/
+    - build_res/private_mail/icon.png
+    - build_res/private_mail/image/main_logo.png
+    - build_res/private_mail/image/
 
   fonts:
     - family: WebMailIcons

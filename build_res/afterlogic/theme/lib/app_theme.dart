@@ -38,6 +38,7 @@ class AppTheme {
         ),
       ),
     ),
+    floatingActionButtonTheme: _floatTheme,
   );
 
   static final dark = ThemeData(
@@ -75,6 +76,7 @@ class AppTheme {
         ),
       ),
     ),
+    floatingActionButtonTheme: _floatTheme,
     bottomAppBarColor: Colors.black,
   );
 
@@ -87,5 +89,10 @@ class AppTheme {
   static final _buttonTheme = ButtonThemeData(
     buttonColor: AppColor.accent,
     textTheme: ButtonTextTheme.primary,
+  );
+
+  static final _floatTheme = FloatingActionButtonThemeData(
+    hoverColor: AppColor.accent.withOpacity(0.8),
+    backgroundColor: AppColor.accent,
   );
 }

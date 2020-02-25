@@ -10,7 +10,8 @@ class AppTheme {
     dialogTheme: _dialogTheme,
     splashFactory: InkRipple.splashFactory,
     brightness: Brightness.light,
-    disabledColor: Colors.black.withOpacity(0.3),
+    disabledColor: Colors.black.withOpacity(0.6),
+    floatingActionButtonTheme: _floatTheme,
     scaffoldBackgroundColor: Colors.white,
     textTheme: TextTheme(
       display1: TextStyle(
@@ -51,7 +52,8 @@ class AppTheme {
     dialogTheme: _dialogTheme,
     splashFactory: InkRipple.splashFactory,
     brightness: Brightness.dark,
-    disabledColor: Colors.white.withOpacity(0.3),
+    floatingActionButtonTheme: _floatTheme,
+    disabledColor: Colors.white.withOpacity(0.6),
     scaffoldBackgroundColor: Color(0xFF1A1A1A),
     textTheme: TextTheme(
       display1: TextStyle(
@@ -82,6 +84,7 @@ class AppTheme {
       ),
     ),
     bottomAppBarColor: Colors.black,
+
   );
 
   static final login = dark;
@@ -93,5 +96,10 @@ class AppTheme {
   static final _buttonTheme = ButtonThemeData(
     buttonColor: AppColor.accent,
     textTheme: ButtonTextTheme.primary,
+  );
+
+  static final _floatTheme = FloatingActionButtonThemeData(
+    hoverColor: Colors.black26,
+    backgroundColor: AppColor.accent,
   );
 }
