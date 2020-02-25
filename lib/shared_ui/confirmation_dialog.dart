@@ -23,9 +23,9 @@ class ConfirmationDialog extends StatelessWidget {
     BuildContext context,
     String title,
     String description,
-    String actionText,
-    {bool destructibleAction}
-  ) {
+    String actionText, {
+    bool destructibleAction,
+  }) {
     return dialog(
         context: context,
         builder: (_) => ConfirmationDialog(
@@ -39,7 +39,7 @@ class ConfirmationDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(title),
+      title: title?.isNotEmpty == true ? Text(title) : null,
       content: Text(description),
       actions: <Widget>[
         FlatButton(

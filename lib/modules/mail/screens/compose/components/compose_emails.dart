@@ -11,10 +11,12 @@ import 'fit_text_field.dart';
 
 class ComposeEmails extends StatefulWidget {
   final String label;
+  final bool enable;
   final TextEditingController textCtrl;
   final List<String> emails;
   final Function onCCSelected;
   final FocusNode focusNode;
+  final EdgeInsets padding;
 
   const ComposeEmails({
     Key key,
@@ -23,6 +25,8 @@ class ComposeEmails extends StatefulWidget {
     @required this.textCtrl,
     this.onCCSelected,
     this.focusNode,
+    this.enable = true,
+    this.padding,
   }) : super(key: key);
 
   @override
@@ -138,107 +142,119 @@ class _ComposeEmailsState extends State<ComposeEmails> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final screenWidth = MediaQuery.of(context).size.width;
     final dropDownWidth = screenWidth / 1.25;
-    return InkWell(
-      onLongPress: _paste,
-      onTap: _focus,
-      child: ComposeTypeAheadField<String>(
-        textFieldConfiguration: TextFieldConfiguration(
-          focusNode: widget.focusNode,
-          controller: widget.textCtrl,
-        ),
-        animationDuration: Duration.zero,
-        suggestionsBoxDecoration: SuggestionsBoxDecoration(
-          color: Theme.of(context).cardColor,
-          constraints: BoxConstraints(
-            minWidth: dropDownWidth,
-            maxWidth: dropDownWidth,
+    return Container(
+      padding: widget.padding,
+      decoration: BoxDecoration(
+        color: widget.enable ? null : theme.disabledColor.withAlpha(20),
+      ),
+      child: InkWell(
+        onLongPress: _paste,
+        onTap: widget.enable
+            ? _focus
+            : null,
+        child: ComposeTypeAheadField<String>(
+          textFieldConfiguration: TextFieldConfiguration(
+            focusNode: widget.focusNode,
+            enabled: widget.enable,
+            controller: widget.textCtrl,
           ),
-        ),
-        suggestionsBoxVerticalOffset: 0.0,
-        suggestionsBoxHorizontalOffset: screenWidth - dropDownWidth - 16 * 2,
-        autoFlipDirection: true,
-        hideOnLoading: true,
-        keepSuggestionsOnLoading: true,
-        getImmediateSuggestions: true,
-        noItemsFoundBuilder: (_) => SizedBox(),
-        suggestionsCallback: _buildSuggestions,
-        itemBuilder: (_, c) {
-          return Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: RichText(text: _searchMatch(c)),
-          );
-        },
-        onSuggestionSelected: (c) {
-          return _addEmail(c);
-        },
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 4.0),
-          child: Row(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 0.0),
-                child: Text(widget.label,
-                    style: Theme.of(context).textTheme.subhead),
-              ),
-              SizedBox(width: 8.0),
-              Flexible(
-                flex: 1,
-                child: Wrap(spacing: 8.0, children: [
-                  ...widget.emails.map((e) {
-                    final displayName = MailUtils.displayNameFromFriendly(e);
-                    return SizedBox(
-                      height: 43.0,
-                      child: GestureDetector(
-                        onTap: () {
-                          if (_emailToShowDelete == e) {
-                            setState(() => _emailToShowDelete = null);
-                          } else {
-                            setState(() => _emailToShowDelete = e);
-                          }
-                        },
-                        child: Chip(
-                          avatar: CircleAvatar(
-                            backgroundColor: Theme.of(context).accentColor,
-                            child: Text(
-                              displayName[0],
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
-                          label: Text(displayName),
-                          onDeleted: e == _emailToShowDelete
-                              ? () => _deleteEmail(e)
+          animationDuration: Duration.zero,
+          suggestionsBoxDecoration: SuggestionsBoxDecoration(
+            color: Theme.of(context).cardColor,
+            constraints: BoxConstraints(
+              minWidth: dropDownWidth,
+              maxWidth: dropDownWidth,
+            ),
+          ),
+          suggestionsBoxVerticalOffset: 0.0,
+          suggestionsBoxHorizontalOffset: screenWidth - dropDownWidth - 16 * 2,
+          autoFlipDirection: true,
+          hideOnLoading: true,
+          keepSuggestionsOnLoading: true,
+          getImmediateSuggestions: true,
+          noItemsFoundBuilder: (_) => SizedBox(),
+          suggestionsCallback: _buildSuggestions,
+          itemBuilder: (_, c) {
+            return Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: RichText(text: _searchMatch(c)),
+            );
+          },
+          onSuggestionSelected: (c) {
+            return _addEmail(c);
+          },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 4.0),
+            child: Row(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 0.0),
+                  child: Text(widget.label,
+                      style: Theme.of(context).textTheme.subhead),
+                ),
+                SizedBox(width: 8.0),
+                Flexible(
+                  flex: 1,
+                  child: Wrap(spacing: 8.0, children: [
+                    ...widget.emails.map((e) {
+                      final displayName = MailUtils.displayNameFromFriendly(e);
+                      return SizedBox(
+                        height: 43.0,
+                        child: GestureDetector(
+                          onTap: widget.enable
+                              ? () {
+                                  if (_emailToShowDelete == e) {
+                                    setState(() => _emailToShowDelete = null);
+                                  } else {
+                                    setState(() => _emailToShowDelete = e);
+                                  }
+                                }
                               : null,
+                          child: Chip(
+                            avatar: CircleAvatar(
+                              backgroundColor: Theme.of(context).accentColor,
+                              child: Text(displayName[0],
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ),
+                            label: Text(displayName),
+                            onDeleted: e == _emailToShowDelete
+                                ? () => _deleteEmail(e)
+                                : null,
+                          ),
                         ),
-                      ),
-                    );
-                  }).toList(),
-                  FitTextField(
-                    controller: widget.textCtrl,
-                    child: TextField(
-                      key: textFieldKey,
-                      focusNode: widget.focusNode,
+                      );
+                    }).toList(),
+                    FitTextField(
                       controller: widget.textCtrl,
-                      keyboardType: TextInputType.emailAddress,
-                      decoration: InputDecoration.collapsed(
-                        hintText: null,
+                      child: TextField(
+                        key: textFieldKey,
+                        enabled: widget.enable,
+                        focusNode: widget.focusNode,
+                        controller: widget.textCtrl,
+                        keyboardType: TextInputType.emailAddress,
+                        decoration: InputDecoration.collapsed(
+                          hintText: null,
+                        ),
+                        onEditingComplete: widget.focusNode.unfocus,
                       ),
-                      onEditingComplete: widget.focusNode.unfocus,
+                    ),
+                  ]),
+                ),
+                if (widget.focusNode.hasFocus && false)
+                  SizedBox(
+                    height: 24.0,
+                    child: IconButton(
+                      padding: EdgeInsets.zero,
+                      icon: Icon(Icons.add),
+                      onPressed: null,
                     ),
                   ),
-                ]),
-              ),
-              if (widget.focusNode.hasFocus && false)
-                SizedBox(
-                  height: 24.0,
-                  child: IconButton(
-                    padding: EdgeInsets.zero,
-                    icon: Icon(Icons.add),
-                    onPressed: null,
-                  ),
-                ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

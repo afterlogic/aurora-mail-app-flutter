@@ -5,12 +5,22 @@ import 'package:aurora_mail/modules/settings/models/language.dart';
 import 'package:aurora_mail/modules/settings/models/sync_freq.dart';
 import 'package:aurora_mail/modules/settings/models/sync_period.dart';
 import 'package:aurora_mail/modules/settings/repository/settings_local_storage.dart';
+import 'package:crypto_storage/crypto_storage.dart';
 import 'package:moor_flutter/moor_flutter.dart';
 
 class SettingsMethods {
-  final _authLocal = new AuthLocalStorage();
-  final _usersDao = new UsersDao(DBInstances.appDB);
-  final _local = SettingsLocalStorage();
+  final AuthLocalStorage _authLocal;
+
+  final UsersDao _usersDao;
+  final CryptoStorage cryptoStorage;
+  final SettingsLocalStorage _local;
+
+  SettingsMethods(
+    this._authLocal,
+    this._usersDao,
+    this._local,
+    this.cryptoStorage,
+  );
 
   Future<int> get currentUserId {
     return _authLocal.getSelectedUserLocalId();
@@ -58,5 +68,9 @@ class SettingsMethods {
     );
 
     return _usersDao.getUserByLocalId(localId);
+  }
+
+  setUserStorage(User user) {
+    cryptoStorage.setOther(user.emailFromLogin);
   }
 }

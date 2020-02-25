@@ -3,12 +3,21 @@ import 'dart:io';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:aurora_mail/modules/mail/repository/mail_api.dart';
+import 'package:crypto_storage/src/pgp_storage.dart';
+import 'package:crypto_worker/crypto_worker.dart';
+import 'package:crypto_worker/src/pgp/pgp_worker.dart';
 import 'package:flutter/widgets.dart';
 
 class MessageViewMethods {
   MailApi _mailApi;
+  PgpWorker pgpWorker;
+  Account account;
 
-  MessageViewMethods({@required User user, @required Account account}) {
+  MessageViewMethods({
+    @required User user,
+    @required this.account,
+    this.pgpWorker,
+  }) {
     _mailApi = new MailApi(user: user, account: account);
   }
 
@@ -25,6 +34,24 @@ class MessageViewMethods {
         onDownloadEnd: onDownloadEnd,
         onDownloadStart: onDownloadStart,
       );
+    }
+  }
+
+  EncryptType checkEncrypt(String text) {
+    return pgpWorker.encryptType(text);
+  }
+
+  Future<Decrypted> decryptBody(
+    EncryptType type,
+    String password,
+    String sender,
+    String body,
+  ) {
+    final encryptDecrypt = pgpWorker.encryptDecrypt(sender, [account.email]);
+    if (type == EncryptType.Encrypt) {
+      return encryptDecrypt.decrypt(body, password);
+    } else {
+      return encryptDecrypt.verifySign(body);
     }
   }
 }

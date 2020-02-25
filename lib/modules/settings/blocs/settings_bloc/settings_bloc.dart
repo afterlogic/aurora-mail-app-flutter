@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:alarm_service/alarm_service.dart';
 import 'package:aurora_mail/config.dart';
+import 'package:aurora_mail/inject/app_inject.dart';
 import 'package:aurora_mail/main.dart' as main;
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/settings_methods.dart';
 import 'package:aurora_mail/modules/settings/models/language.dart';
@@ -14,7 +15,7 @@ import 'package:moor_flutter/moor_flutter.dart';
 import './bloc.dart';
 
 class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
-  final _methods = new SettingsMethods();
+  final _methods = AppInjector.instance.settingsMethods();
 
   static bool isOffline = true;
 
@@ -43,6 +44,8 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     );
 
     final appSettings = await _methods.getSettingsSharedPrefs();
+
+    _methods.setUserStorage(event.user);
 
     if (state is SettingsLoaded) {
       yield (state as SettingsLoaded).copyWith(

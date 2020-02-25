@@ -36,6 +36,7 @@ background_color: "#3b3b3b"
 _theme_module: "{{_dir}}/theme"
 
 multiUserEnable: false
+cryptoEnable: false
 multiAccountEnable: false
 useMainLogo: false
 

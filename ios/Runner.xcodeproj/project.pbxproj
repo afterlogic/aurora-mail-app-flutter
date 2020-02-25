@@ -18,6 +18,14 @@
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
+		DB03B56C23FBF6690040302B /* Aes.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB03B56B23FBF6690040302B /* Aes.swift */; };
+		DB03B57823FBF6B20040302B /* Pgp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB03B57023FBF6B20040302B /* Pgp.swift */; };
+		DB03B57923FBF6B20040302B /* ValidSignVerify.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB03B57223FBF6B20040302B /* ValidSignVerify.swift */; };
+		DB03B57A23FBF6B20040302B /* SymmetricPgp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB03B57323FBF6B20040302B /* SymmetricPgp.swift */; };
+		DB03B57B23FBF6B20040302B /* PgpApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB03B57423FBF6B20040302B /* PgpApi.swift */; };
+		DB03B57C23FBF6B20040302B /* PgpUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB03B57523FBF6B20040302B /* PgpUtil.swift */; };
+		DB03B57D23FBF6B20040302B /* CryptoPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB03B57623FBF6B20040302B /* CryptoPlugin.swift */; };
+		DB03B57E23FBF6B20040302B /* ValidCreateSign.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB03B57723FBF6B20040302B /* ValidCreateSign.swift */; };
 		DD02366723E9831E00966F98 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = DD02366623E9831E00966F98 /* GoogleService-Info.plist */; };
 		DD3F65C123EADD930073C15B /* BuildVariable.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = DD3F65C023EADD930073C15B /* BuildVariable.xcconfig */; };
 /* End PBXBuildFile section */
@@ -66,6 +74,14 @@
 		97C146FD1CF9000F007C117D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		97C147001CF9000F007C117D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		97C147021CF9000F007C117D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DB03B56B23FBF6690040302B /* Aes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Aes.swift; sourceTree = "<group>"; };
+		DB03B57023FBF6B20040302B /* Pgp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Pgp.swift; sourceTree = "<group>"; };
+		DB03B57223FBF6B20040302B /* ValidSignVerify.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValidSignVerify.swift; sourceTree = "<group>"; };
+		DB03B57323FBF6B20040302B /* SymmetricPgp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymmetricPgp.swift; sourceTree = "<group>"; };
+		DB03B57423FBF6B20040302B /* PgpApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PgpApi.swift; sourceTree = "<group>"; };
+		DB03B57523FBF6B20040302B /* PgpUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PgpUtil.swift; sourceTree = "<group>"; };
+		DB03B57623FBF6B20040302B /* CryptoPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CryptoPlugin.swift; sourceTree = "<group>"; };
+		DB03B57723FBF6B20040302B /* ValidCreateSign.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ValidCreateSign.swift; sourceTree = "<group>"; };
 		DB09008123AA4C3F007A8A73 /* Runner.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Runner.entitlements; sourceTree = "<group>"; };
 		DD02366623E9831E00966F98 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "./GoogleService-Info.plist"; sourceTree = "<group>"; };
 		DD09E58823CF3CE100CDC2B2 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Main.strings; sourceTree = "<group>"; };
@@ -146,6 +162,7 @@
 		97C146F01CF9000F007C117D /* Runner */ = {
 			isa = PBXGroup;
 			children = (
+				DB03B56D23FBF6790040302B /* Crypto */,
 				DD02366623E9831E00966F98 /* GoogleService-Info.plist */,
 				DB09008123AA4C3F007A8A73 /* Runner.entitlements */,
 				97C146FA1CF9000F007C117D /* Main.storyboard */,
@@ -166,6 +183,37 @@
 			children = (
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		DB03B56D23FBF6790040302B /* Crypto */ = {
+			isa = PBXGroup;
+			children = (
+				DB03B57623FBF6B20040302B /* CryptoPlugin.swift */,
+				DB03B56F23FBF68C0040302B /* Aes */,
+				DB03B56E23FBF6850040302B /* Pgp */,
+			);
+			name = Crypto;
+			sourceTree = "<group>";
+		};
+		DB03B56E23FBF6850040302B /* Pgp */ = {
+			isa = PBXGroup;
+			children = (
+				DB03B57023FBF6B20040302B /* Pgp.swift */,
+				DB03B57423FBF6B20040302B /* PgpApi.swift */,
+				DB03B57523FBF6B20040302B /* PgpUtil.swift */,
+				DB03B57323FBF6B20040302B /* SymmetricPgp.swift */,
+				DB03B57723FBF6B20040302B /* ValidCreateSign.swift */,
+				DB03B57223FBF6B20040302B /* ValidSignVerify.swift */,
+			);
+			name = Pgp;
+			sourceTree = "<group>";
+		};
+		DB03B56F23FBF68C0040302B /* Aes */ = {
+			isa = PBXGroup;
+			children = (
+				DB03B56B23FBF6690040302B /* Aes.swift */,
+			);
+			name = Aes;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -338,7 +386,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DB03B57823FBF6B20040302B /* Pgp.swift in Sources */,
 				74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */,
+				DB03B57923FBF6B20040302B /* ValidSignVerify.swift in Sources */,
+				DB03B57A23FBF6B20040302B /* SymmetricPgp.swift in Sources */,
+				DB03B57B23FBF6B20040302B /* PgpApi.swift in Sources */,
+				DB03B57C23FBF6B20040302B /* PgpUtil.swift in Sources */,
+				DB03B57D23FBF6B20040302B /* CryptoPlugin.swift in Sources */,
+				DB03B57E23FBF6B20040302B /* ValidCreateSign.swift in Sources */,
+				DB03B56C23FBF6690040302B /* Aes.swift in Sources */,
 				1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -437,7 +493,7 @@
 					"$(PROJECT_DIR)/Flutter",
 				);
 				INFOPLIST_FILE = Runner/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -581,7 +637,7 @@
 					"$(PROJECT_DIR)/Flutter",
 				);
 				INFOPLIST_FILE = Runner/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
@@ -615,7 +671,7 @@
 					"$(PROJECT_DIR)/Flutter",
 				);
 				INFOPLIST_FILE = Runner/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",

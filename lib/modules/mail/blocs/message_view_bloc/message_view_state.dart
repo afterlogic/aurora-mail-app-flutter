@@ -1,3 +1,4 @@
+import 'package:crypto_worker/crypto_worker.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class MessageViewState extends Equatable {
@@ -34,4 +35,23 @@ class MessagesViewError extends MessageViewState {
 
   @override
   List<Object> get props => [errorMsg];
+}
+
+class MessageIsEncrypt extends MessageViewState {
+  final EncryptType encryptType;
+
+  const MessageIsEncrypt(this.encryptType);
+
+  @override
+  List<Object> get props => [encryptType];
+}
+
+class DecryptComplete extends MessageViewState {
+  final String text;
+  final bool verified;
+
+  const DecryptComplete(this.text, this.verified);
+
+  @override
+  List<Object> get props => [text];
 }

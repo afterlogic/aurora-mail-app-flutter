@@ -1,5 +1,7 @@
 import 'package:aurora_mail/modules/mail/models/compose_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/temp_attachment_upload.dart';
+import 'package:aurora_mail/utils/always_non_equal_object.dart';
+import 'package:crypto_worker/crypto_worker.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class ComposeState extends Equatable {
@@ -42,13 +44,14 @@ class MessageSavedInDrafts extends ComposeState {
   List<Object> get props => [draftUid];
 }
 
-class ComposeError extends ComposeState {
+class ComposeError extends ComposeState  with AlwaysNonEqualObject{
   final String errorMsg;
+  final Map<String, String> arg;
 
-  ComposeError(this.errorMsg);
+  ComposeError(this.errorMsg, [this.arg]);
 
   @override
-  List<Object> get props => [errorMsg];
+  List<Object> get props => [];
 }
 
 class ConvertingAttachments extends ComposeState {}
@@ -60,4 +63,14 @@ class ReceivedComposeAttachments extends ComposeState {
 
   @override
   List<Object> get props => [attachments];
+}
+
+class EncryptComplete extends ComposeState  {
+  final EncryptType type;
+  final String text;
+
+  EncryptComplete(this.text, this.type);
+
+  @override
+  List<Object> get props => [hashCode];
 }

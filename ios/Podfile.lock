@@ -2,11 +2,17 @@ PODS:
   - Alamofire (4.9.1)
   - alarm_service (0.0.1):
     - Flutter
+  - BouncyCastle-ObjC (0.1.1)
   - connectivity (0.0.1):
     - Flutter
     - Reachability
   - Crashlytics (3.14.0):
     - Fabric (~> 1.10.2)
+  - crypto_plugin (0.0.1):
+    - Flutter
+  - DMSOpenPGP (0.1.4):
+    - BouncyCastle-ObjC (~> 0.1.0)
+    - OpenSSL-Universal (~> 1.0.2.17)
   - esys_flutter_share (0.0.1):
     - Flutter
   - Fabric (1.10.2)
@@ -59,6 +65,8 @@ PODS:
     - Flutter
   - flutter_local_notifications (0.0.1):
     - Flutter
+  - flutter_secure_storage (3.3.1):
+    - Flutter
   - flutter_uploader (1.2.0):
     - Alamofire (= 4.9.1)
     - Flutter
@@ -102,6 +110,9 @@ PODS:
   - nanopb/encode (0.3.9011)
   - notifications_utils (0.0.1):
     - Flutter
+  - OpenSSL-Universal (1.0.2.19):
+    - OpenSSL-Universal/Static (= 1.0.2.19)
+  - OpenSSL-Universal/Static (1.0.2.19)
   - package_info (0.0.1):
     - Flutter
   - path_provider (0.0.1):
@@ -110,6 +121,7 @@ PODS:
     - Flutter
   - PromisesObjC (1.2.8)
   - Reachability (3.2)
+  - RxSwift (4.0.0)
   - shared_preferences (0.0.1):
     - Flutter
   - shared_preferences_macos (0.0.1):
@@ -130,7 +142,10 @@ PODS:
 
 DEPENDENCIES:
   - alarm_service (from `.symlinks/plugins/alarm_service/ios`)
+  - BouncyCastle-ObjC (= 0.1.1)
   - connectivity (from `.symlinks/plugins/connectivity/ios`)
+  - crypto_plugin (from `.symlinks/plugins/crypto_plugin/ios`)
+  - DMSOpenPGP (= 0.1.4)
   - esys_flutter_share (from `.symlinks/plugins/esys_flutter_share/ios`)
   - file_picker (from `.symlinks/plugins/file_picker/ios`)
   - firebase_crashlytics (from `.symlinks/plugins/firebase_crashlytics/ios`)
@@ -138,12 +153,14 @@ DEPENDENCIES:
   - flutter_downloader (from `.symlinks/plugins/flutter_downloader/ios`)
   - flutter_keyboard_visibility (from `.symlinks/plugins/flutter_keyboard_visibility/ios`)
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
+  - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
   - flutter_uploader (from `.symlinks/plugins/flutter_uploader/ios`)
   - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
   - notifications_utils (from `.symlinks/plugins/notifications_utils/ios`)
   - package_info (from `.symlinks/plugins/package_info/ios`)
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
   - permission_handler (from `.symlinks/plugins/permission_handler/ios`)
+  - RxSwift (= 4)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
   - shared_preferences_macos (from `.symlinks/plugins/shared_preferences_macos/ios`)
   - shared_preferences_web (from `.symlinks/plugins/shared_preferences_web/ios`)
@@ -156,7 +173,9 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - Alamofire
+    - BouncyCastle-ObjC
     - Crashlytics
+    - DMSOpenPGP
     - Fabric
     - Firebase
     - FirebaseAnalytics
@@ -171,14 +190,18 @@ SPEC REPOS:
     - GoogleDataTransportCCTSupport
     - GoogleUtilities
     - nanopb
+    - OpenSSL-Universal
     - PromisesObjC
     - Reachability
+    - RxSwift
 
 EXTERNAL SOURCES:
   alarm_service:
     :path: ".symlinks/plugins/alarm_service/ios"
   connectivity:
     :path: ".symlinks/plugins/connectivity/ios"
+  crypto_plugin:
+    :path: ".symlinks/plugins/crypto_plugin/ios"
   esys_flutter_share:
     :path: ".symlinks/plugins/esys_flutter_share/ios"
   file_picker:
@@ -193,6 +216,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_keyboard_visibility/ios"
   flutter_local_notifications:
     :path: ".symlinks/plugins/flutter_local_notifications/ios"
+  flutter_secure_storage:
+    :path: ".symlinks/plugins/flutter_secure_storage/ios"
   flutter_uploader:
     :path: ".symlinks/plugins/flutter_uploader/ios"
   fluttertoast:
@@ -225,8 +250,11 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   Alamofire: 85e8a02c69d6020a0d734f6054870d7ecb75cf18
   alarm_service: 7962c3a75cb3008f1af984351c225f6f1e0e3dfb
+  BouncyCastle-ObjC: bf0db0fe9fe11ae5e2515d2e6816ef86454b9cc6
   connectivity: 6e94255659cc86dcbef1d452ad3e0491bb1b3e75
   Crashlytics: 540b7e5f5da5a042647227a5e3ac51d85eed06df
+  crypto_plugin: 628115b4b05d5843f12b3398012e0b53eabcc603
+  DMSOpenPGP: 3c667b775e705abef816582f320bbadb972bd8ce
   esys_flutter_share: 403498dab005b36ce1f8d7aff377e81f0621b0b4
   Fabric: 706c8b8098fff96c33c0db69cbf81f9c551d0d74
   file_picker: 408623be2125b79a4539cf703be3d4b3abe5e245
@@ -242,6 +270,7 @@ SPEC CHECKSUMS:
   flutter_downloader: 058b9c41564a90500f67f3e432e3524613a7fd83
   flutter_keyboard_visibility: 6195387fb6d8f46e5cd6dda4a4154e41f800f545
   flutter_local_notifications: 9e4738ce2471c5af910d961a6b7eadcf57c50186
+  flutter_secure_storage: 7953c38a04c3fdbb00571bcd87d8e3b5ceb9daec
   flutter_uploader: 7957e1b9d6516b6cccc37e5ffd6c5a0975a7cc4c
   fluttertoast: b644586ef3b16f67fae9a1f8754cef6b2d6b634b
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
@@ -251,11 +280,13 @@ SPEC CHECKSUMS:
   GoogleUtilities: 06eb53bb579efe7099152735900dd04bf09e7275
   nanopb: 18003b5e52dab79db540fe93fe9579f399bd1ccd
   notifications_utils: 2689b5cbda5be923ddc3868f5c86c4ab2dc98d5c
+  OpenSSL-Universal: 8b48cc0d10c1b2923617dfe5c178aa9ed2689355
   package_info: 48b108e75b8802c2d5e126f208ef540561c98aef
   path_provider: fb74bd0465e96b594bb3b5088ee4a4e7bb1f2a9d
   permission_handler: 40520ab8ad1bb78a282b832464e995ec87f77ec6
   PromisesObjC: c119f3cd559f50b7ae681fa59dc1acd19173b7e6
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
+  RxSwift: fd680d75283beb5e2559486f3c0ff852f0d35334
   shared_preferences: 430726339841afefe5142b9c1f50cb6bd7793e01
   shared_preferences_macos: f3f29b71ccbb56bf40c9dd6396c9acf15e214087
   shared_preferences_web: 141cce0c3ed1a1c5bf2a0e44f52d31eeb66e5ea9
@@ -265,6 +296,6 @@ SPEC CHECKSUMS:
   url_launcher_web: e5527357f037c87560776e36436bf2b0288b965c
   webview_flutter: bec7599de6bfbe8008a739aa3ebd7b364ea9d0cd
 
-PODFILE CHECKSUM: a13d508871aa1b439c6a7e579b9bb8482f05643d
+PODFILE CHECKSUM: 4d0985e176e4e7372eb0b7f60bfafb79f06c92a3
 
-COCOAPODS: 1.8.3
+COCOAPODS: 1.8.4

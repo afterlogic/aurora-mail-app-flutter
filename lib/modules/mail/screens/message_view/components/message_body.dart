@@ -14,10 +14,15 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 class MessageBody extends StatefulWidget {
   final Message message;
+  final String decryptedText;
   final List<MailAttachment> attachments;
 
-  const MessageBody(this.message, this.attachments, {Key key})
-      : super(key: key);
+  const MessageBody(
+    this.message,
+    this.attachments,
+    this.decryptedText, {
+    Key key,
+  }) : super(key: key);
 
   @override
   _MessageBodyState createState() => _MessageBodyState();
@@ -85,10 +90,10 @@ class _MessageBodyState extends State<MessageBody> {
 //        print("s: ${s}");
 //      }
 
-        htmlData = htmlData.replaceFirst(
-          "data-x-src-cid=\"${attachment.cid}\"",
-          "src=\"${user.hostname}${attachment.viewUrl.replaceFirst("mail-attachment/", "mail-attachments-cookieless/")}&AuthToken=${user.token}\"",
-        );
+      htmlData = htmlData.replaceFirst(
+        "data-x-src-cid=\"${attachment.cid}\"",
+        "src=\"${user.hostname}${attachment.viewUrl.replaceFirst("mail-attachment/", "mail-attachments-cookieless/")}&AuthToken=${user.token}\"",
+      );
     }
 
     if (_htmlData != null) {
@@ -111,14 +116,14 @@ class _MessageBodyState extends State<MessageBody> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         if (!_showImages)
-        FlatButton.icon(
-          icon: Icon(Icons.image),
-          label: Text(i18n(context, "messages_show_images")),
-          onPressed: () {
-            setState(() => _showImages = true);
-            _getHtmlWithImages();
-          },
-        ),
+          FlatButton.icon(
+            icon: Icon(Icons.image),
+            label: Text(i18n(context, "messages_show_images")),
+            onPressed: () {
+              setState(() => _showImages = true);
+              _getHtmlWithImages();
+            },
+          ),
         Flexible(
           child: Stack(
             children: [
@@ -133,10 +138,8 @@ class _MessageBodyState extends State<MessageBody> {
                     child: AnimatedOpacity(
                       opacity: _pageLoaded && _htmlData != null ? 0.0 : 1.0,
                       duration: Duration(milliseconds: 100),
-                      child:
-                      Container(color: Theme
-                          .of(context)
-                          .scaffoldBackgroundColor),
+                      child: Container(
+                          color: Theme.of(context).scaffoldBackgroundColor),
 //            child: Container(color: Colors.red),
                     ),
                   ),
@@ -149,7 +152,8 @@ class _MessageBodyState extends State<MessageBody> {
   }
 
   Widget _buildMessageBody() {
-    if (_htmlData != null) {
+    final plainData = widget.decryptedText ?? _plainData;
+    if (_htmlData != null && plainData == null) {
       return WebView(
         key: Key(widget.message.uid.toString()),
         initialUrl: _getHtmlUri(_htmlData),
@@ -178,8 +182,8 @@ class _MessageBodyState extends State<MessageBody> {
         gestureRecognizers: Set()
           ..add(Factory(() => HorizontalDragGestureRecognizer())),
       );
-    } else if (_plainData != null) {
-      return SingleChildScrollView(child: Text(_plainData));
+    } else if (plainData != null) {
+      return SingleChildScrollView(child: Text(plainData));
     } else {
       return Center(child: CircularProgressIndicator());
     }

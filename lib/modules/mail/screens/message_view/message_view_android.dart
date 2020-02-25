@@ -12,17 +12,20 @@ import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/models/compose_actions.dart';
 import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/compose_route.dart';
+import 'package:aurora_mail/modules/mail/screens/message_view/components/mail_bottom_bar.dart';
 import 'package:aurora_mail/modules/mail/screens/message_view/components/message_view_app_bar.dart';
+import 'package:aurora_mail/modules/mail/screens/message_view/dialog/request_password_dialog.dart';
 import 'package:aurora_mail/modules/mail/screens/message_view/components/message_webview.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
 import 'package:aurora_mail/utils/date_formatting.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_mail/utils/mail_utils.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
+import 'package:crypto_worker/crypto_worker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'components/attachment.dart';
 import 'components/message_body.dart';
 
@@ -39,7 +42,7 @@ class MessageViewAndroid extends StatefulWidget {
 class _MessageViewAndroidState extends State<MessageViewAndroid>
     with TickerProviderStateMixin {
   MessageViewBloc _messageViewBloc;
-
+  String decryptedText;
   TabController _tabCtrl;
   int _currentPage;
 
@@ -61,6 +64,7 @@ class _MessageViewAndroidState extends State<MessageViewAndroid>
       user: authBloc.currentUser,
       account: BlocProvider.of<AuthBloc>(context).currentAccount,
     );
+    _messageViewBloc.add(CheckEncrypt(widget.messages[_currentPage].plain));
     _startSetSeenTimer(context);
   }
 
@@ -123,6 +127,27 @@ class _MessageViewAndroidState extends State<MessageViewAndroid>
     }
   }
 
+  _decrypt(EncryptType type) async {
+    String pass;
+    final message = widget.messages[_currentPage];
+    if (type == EncryptType.Encrypt) {
+      final result = await showDialog(
+          context: context, builder: (_) => RequestPasswordDialog());
+      if (result is RequestPasswordDialogResult) {
+        pass = result.pass;
+      } else {
+        return;
+      }
+    }
+
+    _messageViewBloc.add(DecryptBody(
+      type,
+      pass,
+      jsonDecode(message.fromInJson)["@Collection"][0]["Email"].toString(),
+      message.plainRaw,
+    ));
+  }
+
   void _deleteMessage() async {
     final message = widget.messages[_currentPage];
     final delete = await ConfirmationDialog.show(
@@ -175,11 +200,27 @@ class _MessageViewAndroidState extends State<MessageViewAndroid>
         body: BlocListener(
           bloc: _messageViewBloc,
           listener: (context, state) {
+            if (state is DecryptComplete) {
+              decryptedText = state.text;
+              setState(() {});
+
+              _showSnack(
+                  i18n(
+                    context,
+                    state.verified
+                        ? "decrypted_and_verified"
+                        : "decrypted_but_not_verified",
+                  ),
+                  context);
+            }
             if (state is DownloadStarted) {
               _showSnack(
                   i18n(context, "messages_attachment_downloading",
                       {"fileName": state.fileName}),
                   context);
+            }
+            if (state is MessagesViewError) {
+              _showSnack(state.errorMsg, context, isError: true);
             }
             if (state is DownloadFinished) {
               if (state.path == null) {
@@ -194,7 +235,7 @@ class _MessageViewAndroidState extends State<MessageViewAndroid>
               }
             }
           },
-          child: MessageWebView(message, attachments),
+          child: MessageWebView(message, attachments,decryptedText),
 //          child: Padding(
 //            padding: const EdgeInsets.all(16.0),
 //            child: Column(
@@ -254,6 +295,9 @@ class _MessageViewAndroidState extends State<MessageViewAndroid>
 //            ),
 //          ),
         ),
+        bottomNavigationBar: MailBottomBar(
+          onDecrypt: _decrypt,
+        ),
       ),
     );
   }
@@ -278,7 +322,7 @@ class _MessageViewAndroidState extends State<MessageViewAndroid>
           physics: NeverScrollableScrollPhysics(),
           controller: _tabCtrl,
           children: <Widget>[
-            MessageBody(message, attachments),
+            MessageBody(message, attachments, decryptedText),
             Center(
               child: ListView(
                 children: attachments.map((attachment) {
@@ -296,7 +340,8 @@ class _MessageViewAndroidState extends State<MessageViewAndroid>
     ];
   }
 
-  List<Widget> _buildWithoutTabs(Message message, List<MailAttachment> attachments) {
-    return [Flexible(child: MessageBody(message, attachments))];
+  List<Widget> _buildWithoutTabs(
+      Message message, List<MailAttachment> attachments) {
+    return [Flexible(child: MessageBody(message, attachments, decryptedText))];
   }
 }
