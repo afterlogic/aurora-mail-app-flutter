@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:io';
+
 import 'package:bloc/bloc.dart';
 import 'package:crypto_storage/crypto_storage.dart';
 import 'package:crypto_worker/crypto_worker.dart';
+
 import 'bloc.dart';
 
 class PgpSettingsBloc extends Bloc<PgpSettingsEvent, PgpSettingsState> {
@@ -38,8 +40,8 @@ class PgpSettingsBloc extends Bloc<PgpSettingsEvent, PgpSettingsState> {
   }
 
   Stream<PgpSettingsState> _generateKeys(GenerateKeys event) async* {
-    await _methods.deleteKey(event.mail,true);
-    await _methods.deleteKey(event.mail,false);
+    await _methods.deleteKey(event.mail, true);
+    await _methods.deleteKey(event.mail, false);
     yield* _loadKeys().map((item) {
       if (item is LoadedState) {
         return item.copyWith(keyProgress: event.mail);
@@ -74,7 +76,7 @@ class PgpSettingsBloc extends Bloc<PgpSettingsEvent, PgpSettingsState> {
   }
 
   Stream<PgpSettingsState> _deleteKey(DeleteKey event) async* {
-    await _methods.deleteKey(event.pgpKey.mail,event.pgpKey.isPrivate);
+    await _methods.deleteKey(event.pgpKey.mail, event.pgpKey.isPrivate);
     yield* _loadKeys();
   }
 

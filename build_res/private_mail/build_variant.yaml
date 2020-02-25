@@ -11,3 +11,4 @@ splashGradientBottom: "#252352"
 multiUserEnable: false
 multiAccountEnable: true
 useMainLogo: true
+cryptoEnable: true

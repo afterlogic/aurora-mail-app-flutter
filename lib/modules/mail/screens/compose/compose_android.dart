@@ -143,7 +143,9 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
     _message = action.message;
 
     _toEmails.addAll(MailUtils.getEmails(_message.fromInJson));
-    _ccEmails.addAll(MailUtils.getEmails(_message.toInJson, exceptEmails: [BlocProvider.of<AuthBloc>(context).currentAccount.email]));
+    _ccEmails.addAll(MailUtils.getEmails(_message.toInJson, exceptEmails: [
+      BlocProvider.of<AuthBloc>(context).currentAccount.email
+    ]));
     _ccEmails.addAll(MailUtils.getEmails(_message.ccInJson));
     _subjectTextCtrl.text = MailUtils.getReplySubject(_message);
     _bodyTextCtrl.text = MailUtils.getReplyBody(context, _message);
@@ -235,7 +237,7 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
       to: _toEmails.join(","),
       cc: _ccEmails.join(","),
       bcc: _bccEmails.join(","),
-      usePlain: _lock!=EncryptType.None,
+      usePlain: _lock != EncryptType.None,
       subject: _subjectTextCtrl.text,
       composeAttachments: new List<ComposeAttachment>.from(_attachments),
       messageText: _bodyTextCtrl.text,
@@ -247,9 +249,12 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
     if (_message != null) {
       return _subjectTextCtrl.text != _message.subject ||
           _bodyTextCtrl.text != MailUtils.htmlToPlain(_message.html) ||
-          !listEquals<String>(MailUtils.getEmails(_message.toInJson), _toEmails) ||
-          !listEquals<String>(MailUtils.getEmails(_message.ccInJson), _ccEmails) ||
-          !listEquals<String>(MailUtils.getEmails(_message.bccInJson), _bccEmails);
+          !listEquals<String>(
+              MailUtils.getEmails(_message.toInJson), _toEmails) ||
+          !listEquals<String>(
+              MailUtils.getEmails(_message.ccInJson), _ccEmails) ||
+          !listEquals<String>(
+              MailUtils.getEmails(_message.bccInJson), _bccEmails);
     } else {
       return _bodyTextCtrl.text.isNotEmpty ||
           _subjectTextCtrl.text.isNotEmpty ||
@@ -262,7 +267,8 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
   void _saveToDrafts() {
     if (!_hasMessageChanged) return;
 
-    final attachmentsForSave = _attachments.where((a) => a is ComposeAttachment);
+    final attachmentsForSave =
+        _attachments.where((a) => a is ComposeAttachment);
 
     return _bloc.add(SaveToDrafts(
       to: _toEmails.join(","),
@@ -371,17 +377,20 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
     );
   }
 
-  Widget _done(FocusNode node) {
-    return FlatButton(
-      child: Text(i18n(context, "done")),
-      onPressed: node.unfocus,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final lockUsers = _lock == EncryptType.Encrypt;
+
+    Widget _done(FocusNode node) {
+      return FlatButton(
+        child: Text(
+          i18n(context, "done"),
+          style: theme.textTheme.body1.copyWith(color: Colors.black),
+        ),
+        onPressed: node.unfocus,
+      );
+    }
 
     Widget _keyboardActions(Widget child) {
       return KeyboardActions(
@@ -389,7 +398,7 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
           keyboardActionsPlatform: kDebugMode
               ? KeyboardActionsPlatform.ALL
               : KeyboardActionsPlatform.IOS,
-          keyboardBarColor: theme.appBarTheme.color,
+          keyboardBarColor: Colors.white,
           actions: [
             KeyboardAction(
               focusNode: toNode,
@@ -413,13 +422,13 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
       );
     }
 
-    return Scaffold(
-      key: _scaffoldKey,
-      appBar: ComposeAppBar(_onAppBarActionSelected),
-      body: _keyboardActions(
-        BlocProvider<ComposeBloc>.value(
-          value: _bloc,
-          child: BlocListener<ComposeBloc, ComposeState>(
+    return BlocProvider<ComposeBloc>.value(
+      value: _bloc,
+      child: Scaffold(
+        key: _scaffoldKey,
+        appBar: ComposeAppBar(_onAppBarActionSelected),
+        body: _keyboardActions(
+          BlocListener<ComposeBloc, ComposeState>(
             listener: (context, state) {
               if (state is EncryptComplete) _encryptLock(state);
 
@@ -466,7 +475,6 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
                       textCtrl: _bccTextCtrl,
                       emails: _bccEmails,
                     ),
-
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16.0),
                     child: Column(
@@ -482,12 +490,14 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
                             if (state is ConvertingAttachments) {
                               return Padding(
                                 padding: const EdgeInsets.all(8.0),
-                                child: Center(child: CircularProgressIndicator()),
+                                child:
+                                    Center(child: CircularProgressIndicator()),
                               );
                             } else {
                               return Column(
                                 children: _attachments
-                                    .map((a) => ComposeAttachmentItem(a, _cancelAttachment))
+                                    .map((a) => ComposeAttachmentItem(
+                                        a, _cancelAttachment))
                                     .toList(),
                               );
                             }
