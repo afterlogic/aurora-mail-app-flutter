@@ -41,7 +41,7 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
     return (select(contacts)
           ..where((c) => c.userLocalId.equals(userLocalId))
           ..where((c) => c.storage.isNotIn([StorageNames.collected]))
-          ..orderBy([(c) => OrderingTerm(expression: c.fullName)]))
+          ..orderBy([(c) => OrderingTerm(expression: c.fullName.collate(Collate.noCase))]))
         .watch();
   }
 

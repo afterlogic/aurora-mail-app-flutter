@@ -10,7 +10,7 @@ class AppTheme {
     dialogTheme: _dialogTheme,
     splashFactory: InkRipple.splashFactory,
     brightness: Brightness.light,
-    disabledColor: Colors.black.withOpacity(0.3),
+    disabledColor: Colors.black.withOpacity(0.4),
     scaffoldBackgroundColor: Colors.white,
     iconTheme: IconThemeData(color: AppColor.primary),
     textTheme: TextTheme(
@@ -48,7 +48,7 @@ class AppTheme {
     iconTheme: IconThemeData(color: AppColor.primary),
     splashFactory: InkRipple.splashFactory,
     brightness: Brightness.dark,
-    disabledColor: Colors.white.withOpacity(0.3),
+    disabledColor: Colors.white.withOpacity(0.4),
     scaffoldBackgroundColor: Color(0xFF1A1A1A),
     textTheme: TextTheme(
       display1: TextStyle(
