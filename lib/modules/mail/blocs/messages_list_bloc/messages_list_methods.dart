@@ -13,10 +13,16 @@ class MessagesListMethods {
   }
 
   Stream<List<Message>> subscribeToMessages(
-      Folder folder, bool isStarred, User user, Account account) {
+    Folder folder,
+    bool isStarred,
+    String searchTerm,
+    User user,
+    Account account,
+  ) {
     return _mailDao.watchMessages(
       folder.fullNameRaw,
       user.localId,
+      searchTerm,
       account.entityId,
       isStarred,
     );

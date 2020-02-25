@@ -44,8 +44,8 @@ class Message extends DataClass implements Insertable<Message> {
   final String inReplyTo;
   final String references;
   final String readingConfirmationAddressee;
-  final String html;
-  final String plain;
+  final String htmlBody;
+  final String rawBody;
   final bool rtl;
   final String extendInJson;
   final bool safety;
@@ -91,8 +91,8 @@ class Message extends DataClass implements Insertable<Message> {
       @required this.inReplyTo,
       @required this.references,
       @required this.readingConfirmationAddressee,
-      this.html,
-      @required this.plain,
+      @required this.htmlBody,
+      @required this.rawBody,
       @required this.rtl,
       @required this.extendInJson,
       @required this.safety,
@@ -177,9 +177,10 @@ class Message extends DataClass implements Insertable<Message> {
           data['${effectivePrefix}message_references']),
       readingConfirmationAddressee: stringType.mapFromDatabaseResponse(
           data['${effectivePrefix}reading_confirmation_addressee']),
-      html: stringType.mapFromDatabaseResponse(data['${effectivePrefix}html']),
-      plain:
-          stringType.mapFromDatabaseResponse(data['${effectivePrefix}plain']),
+      htmlBody: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}html_body']),
+      rawBody: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}raw_body']),
       rtl: boolType.mapFromDatabaseResponse(data['${effectivePrefix}rtl']),
       extendInJson: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}extend_in_json']),
@@ -240,8 +241,8 @@ class Message extends DataClass implements Insertable<Message> {
       references: serializer.fromJson<String>(json['references']),
       readingConfirmationAddressee:
           serializer.fromJson<String>(json['readingConfirmationAddressee']),
-      html: serializer.fromJson<String>(json['html']),
-      plain: serializer.fromJson<String>(json['plain']),
+      htmlBody: serializer.fromJson<String>(json['htmlBody']),
+      rawBody: serializer.fromJson<String>(json['rawBody']),
       rtl: serializer.fromJson<bool>(json['rtl']),
       extendInJson: serializer.fromJson<String>(json['extendInJson']),
       safety: serializer.fromJson<bool>(json['safety']),
@@ -295,8 +296,8 @@ class Message extends DataClass implements Insertable<Message> {
       'references': serializer.toJson<String>(references),
       'readingConfirmationAddressee':
           serializer.toJson<String>(readingConfirmationAddressee),
-      'html': serializer.toJson<String>(html),
-      'plain': serializer.toJson<String>(plain),
+      'htmlBody': serializer.toJson<String>(htmlBody),
+      'rawBody': serializer.toJson<String>(rawBody),
       'rtl': serializer.toJson<bool>(rtl),
       'extendInJson': serializer.toJson<String>(extendInJson),
       'safety': serializer.toJson<bool>(safety),
@@ -415,9 +416,12 @@ class Message extends DataClass implements Insertable<Message> {
           readingConfirmationAddressee == null && nullToAbsent
               ? const Value.absent()
               : Value(readingConfirmationAddressee),
-      html: html == null && nullToAbsent ? const Value.absent() : Value(html),
-      plain:
-          plain == null && nullToAbsent ? const Value.absent() : Value(plain),
+      htmlBody: htmlBody == null && nullToAbsent
+          ? const Value.absent()
+          : Value(htmlBody),
+      rawBody: rawBody == null && nullToAbsent
+          ? const Value.absent()
+          : Value(rawBody),
       rtl: rtl == null && nullToAbsent ? const Value.absent() : Value(rtl),
       extendInJson: extendInJson == null && nullToAbsent
           ? const Value.absent()
@@ -480,8 +484,8 @@ class Message extends DataClass implements Insertable<Message> {
           String inReplyTo,
           String references,
           String readingConfirmationAddressee,
-          String html,
-          String plain,
+          String htmlBody,
+          String rawBody,
           bool rtl,
           String extendInJson,
           bool safety,
@@ -530,8 +534,8 @@ class Message extends DataClass implements Insertable<Message> {
         references: references ?? this.references,
         readingConfirmationAddressee:
             readingConfirmationAddressee ?? this.readingConfirmationAddressee,
-        html: html ?? this.html,
-        plain: plain ?? this.plain,
+        htmlBody: htmlBody ?? this.htmlBody,
+        rawBody: rawBody ?? this.rawBody,
         rtl: rtl ?? this.rtl,
         extendInJson: extendInJson ?? this.extendInJson,
         safety: safety ?? this.safety,
@@ -583,8 +587,8 @@ class Message extends DataClass implements Insertable<Message> {
           ..write('references: $references, ')
           ..write(
               'readingConfirmationAddressee: $readingConfirmationAddressee, ')
-          ..write('html: $html, ')
-          ..write('plain: $plain, ')
+          ..write('htmlBody: $htmlBody, ')
+          ..write('rawBody: $rawBody, ')
           ..write('rtl: $rtl, ')
           ..write('extendInJson: $extendInJson, ')
           ..write('safety: $safety, ')
@@ -641,7 +645,7 @@ class Message extends DataClass implements Insertable<Message> {
                                                                               .hashCode,
                                                                           $mrjc(
                                                                               fromInJson.hashCode,
-                                                                              $mrjc(fromToDisplay.hashCode, $mrjc(ccInJson.hashCode, $mrjc(bccInJson.hashCode, $mrjc(senderInJson.hashCode, $mrjc(replyToInJson.hashCode, $mrjc(hasAttachments.hashCode, $mrjc(hasVcardAttachment.hashCode, $mrjc(hasIcalAttachment.hashCode, $mrjc(importance.hashCode, $mrjc(draftInfoInJson.hashCode, $mrjc(sensitivity.hashCode, $mrjc(downloadAsEmlUrl.hashCode, $mrjc(hash.hashCode, $mrjc(headers.hashCode, $mrjc(inReplyTo.hashCode, $mrjc(references.hashCode, $mrjc(readingConfirmationAddressee.hashCode, $mrjc(html.hashCode, $mrjc(plain.hashCode, $mrjc(rtl.hashCode, $mrjc(extendInJson.hashCode, $mrjc(safety.hashCode, $mrjc(hasExternals.hashCode, $mrjc(foundedCIDsInJson.hashCode, $mrjc(foundedContentLocationUrlsInJson.hashCode, $mrjc(attachmentsInJson.hashCode, customInJson.hashCode))))))))))))))))))))))))))))))))))))))))))))));
+                                                                              $mrjc(fromToDisplay.hashCode, $mrjc(ccInJson.hashCode, $mrjc(bccInJson.hashCode, $mrjc(senderInJson.hashCode, $mrjc(replyToInJson.hashCode, $mrjc(hasAttachments.hashCode, $mrjc(hasVcardAttachment.hashCode, $mrjc(hasIcalAttachment.hashCode, $mrjc(importance.hashCode, $mrjc(draftInfoInJson.hashCode, $mrjc(sensitivity.hashCode, $mrjc(downloadAsEmlUrl.hashCode, $mrjc(hash.hashCode, $mrjc(headers.hashCode, $mrjc(inReplyTo.hashCode, $mrjc(references.hashCode, $mrjc(readingConfirmationAddressee.hashCode, $mrjc(htmlBody.hashCode, $mrjc(rawBody.hashCode, $mrjc(rtl.hashCode, $mrjc(extendInJson.hashCode, $mrjc(safety.hashCode, $mrjc(hasExternals.hashCode, $mrjc(foundedCIDsInJson.hashCode, $mrjc(foundedContentLocationUrlsInJson.hashCode, $mrjc(attachmentsInJson.hashCode, customInJson.hashCode))))))))))))))))))))))))))))))))))))))))))))));
   @override
   bool operator ==(dynamic other) =>
       identical(this, other) ||
@@ -684,8 +688,8 @@ class Message extends DataClass implements Insertable<Message> {
           other.references == this.references &&
           other.readingConfirmationAddressee ==
               this.readingConfirmationAddressee &&
-          other.html == this.html &&
-          other.plain == this.plain &&
+          other.htmlBody == this.htmlBody &&
+          other.rawBody == this.rawBody &&
           other.rtl == this.rtl &&
           other.extendInJson == this.extendInJson &&
           other.safety == this.safety &&
@@ -734,8 +738,8 @@ class MailCompanion extends UpdateCompanion<Message> {
   final Value<String> inReplyTo;
   final Value<String> references;
   final Value<String> readingConfirmationAddressee;
-  final Value<String> html;
-  final Value<String> plain;
+  final Value<String> htmlBody;
+  final Value<String> rawBody;
   final Value<bool> rtl;
   final Value<String> extendInJson;
   final Value<bool> safety;
@@ -781,8 +785,8 @@ class MailCompanion extends UpdateCompanion<Message> {
     this.inReplyTo = const Value.absent(),
     this.references = const Value.absent(),
     this.readingConfirmationAddressee = const Value.absent(),
-    this.html = const Value.absent(),
-    this.plain = const Value.absent(),
+    this.htmlBody = const Value.absent(),
+    this.rawBody = const Value.absent(),
     this.rtl = const Value.absent(),
     this.extendInJson = const Value.absent(),
     this.safety = const Value.absent(),
@@ -829,8 +833,8 @@ class MailCompanion extends UpdateCompanion<Message> {
     @required String inReplyTo,
     @required String references,
     @required String readingConfirmationAddressee,
-    this.html = const Value.absent(),
-    @required String plain,
+    this.htmlBody = const Value.absent(),
+    this.rawBody = const Value.absent(),
     @required bool rtl,
     @required String extendInJson,
     @required bool safety,
@@ -866,7 +870,6 @@ class MailCompanion extends UpdateCompanion<Message> {
         inReplyTo = Value(inReplyTo),
         references = Value(references),
         readingConfirmationAddressee = Value(readingConfirmationAddressee),
-        plain = Value(plain),
         rtl = Value(rtl),
         extendInJson = Value(extendInJson),
         safety = Value(safety),
@@ -912,8 +915,8 @@ class MailCompanion extends UpdateCompanion<Message> {
       Value<String> inReplyTo,
       Value<String> references,
       Value<String> readingConfirmationAddressee,
-      Value<String> html,
-      Value<String> plain,
+      Value<String> htmlBody,
+      Value<String> rawBody,
       Value<bool> rtl,
       Value<String> extendInJson,
       Value<bool> safety,
@@ -962,8 +965,8 @@ class MailCompanion extends UpdateCompanion<Message> {
       references: references ?? this.references,
       readingConfirmationAddressee:
           readingConfirmationAddressee ?? this.readingConfirmationAddressee,
-      html: html ?? this.html,
-      plain: plain ?? this.plain,
+      htmlBody: htmlBody ?? this.htmlBody,
+      rawBody: rawBody ?? this.rawBody,
       rtl: rtl ?? this.rtl,
       extendInJson: extendInJson ?? this.extendInJson,
       safety: safety ?? this.safety,
@@ -1443,28 +1446,22 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     );
   }
 
-  final VerificationMeta _htmlMeta = const VerificationMeta('html');
-  GeneratedTextColumn _html;
+  final VerificationMeta _htmlBodyMeta = const VerificationMeta('htmlBody');
+  GeneratedTextColumn _htmlBody;
   @override
-  GeneratedTextColumn get html => _html ??= _constructHtml();
-  GeneratedTextColumn _constructHtml() {
-    return GeneratedTextColumn(
-      'html',
-      $tableName,
-      true,
-    );
+  GeneratedTextColumn get htmlBody => _htmlBody ??= _constructHtmlBody();
+  GeneratedTextColumn _constructHtmlBody() {
+    return GeneratedTextColumn('html_body', $tableName, false,
+        defaultValue: Constant(""));
   }
 
-  final VerificationMeta _plainMeta = const VerificationMeta('plain');
-  GeneratedTextColumn _plain;
+  final VerificationMeta _rawBodyMeta = const VerificationMeta('rawBody');
+  GeneratedTextColumn _rawBody;
   @override
-  GeneratedTextColumn get plain => _plain ??= _constructPlain();
-  GeneratedTextColumn _constructPlain() {
-    return GeneratedTextColumn(
-      'plain',
-      $tableName,
-      false,
-    );
+  GeneratedTextColumn get rawBody => _rawBody ??= _constructRawBody();
+  GeneratedTextColumn _constructRawBody() {
+    return GeneratedTextColumn('raw_body', $tableName, false,
+        defaultValue: Constant(""));
   }
 
   final VerificationMeta _rtlMeta = const VerificationMeta('rtl');
@@ -1614,8 +1611,8 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
         inReplyTo,
         references,
         readingConfirmationAddressee,
-        html,
-        plain,
+        htmlBody,
+        rawBody,
         rtl,
         extendInJson,
         safety,
@@ -1862,15 +1859,13 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     } else if (isInserting) {
       context.missing(_readingConfirmationAddresseeMeta);
     }
-    if (d.html.present) {
-      context.handle(
-          _htmlMeta, html.isAcceptableValue(d.html.value, _htmlMeta));
+    if (d.htmlBody.present) {
+      context.handle(_htmlBodyMeta,
+          htmlBody.isAcceptableValue(d.htmlBody.value, _htmlBodyMeta));
     }
-    if (d.plain.present) {
-      context.handle(
-          _plainMeta, plain.isAcceptableValue(d.plain.value, _plainMeta));
-    } else if (isInserting) {
-      context.missing(_plainMeta);
+    if (d.rawBody.present) {
+      context.handle(_rawBodyMeta,
+          rawBody.isAcceptableValue(d.rawBody.value, _rawBodyMeta));
     }
     if (d.rtl.present) {
       context.handle(_rtlMeta, rtl.isAcceptableValue(d.rtl.value, _rtlMeta));
@@ -2066,11 +2061,11 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
       map['reading_confirmation_addressee'] =
           Variable<String, StringType>(d.readingConfirmationAddressee.value);
     }
-    if (d.html.present) {
-      map['html'] = Variable<String, StringType>(d.html.value);
+    if (d.htmlBody.present) {
+      map['html_body'] = Variable<String, StringType>(d.htmlBody.value);
     }
-    if (d.plain.present) {
-      map['plain'] = Variable<String, StringType>(d.plain.value);
+    if (d.rawBody.present) {
+      map['raw_body'] = Variable<String, StringType>(d.rawBody.value);
     }
     if (d.rtl.present) {
       map['rtl'] = Variable<bool, BoolType>(d.rtl.value);

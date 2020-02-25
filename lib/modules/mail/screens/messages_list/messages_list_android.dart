@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:aurora_mail/background/background_helper.dart';
 import 'package:aurora_mail/database/app_database.dart';
-
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
@@ -128,7 +127,10 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
     switch (state.postAction) {
       case PostFolderLoadedAction.subscribeToMessages:
         _messagesListBloc.add(SubscribeToMessages(
-            state.selectedFolder, state.isStarredFilterEnabled));
+          state.selectedFolder,
+          state.isStarredFilterEnabled,
+          "",
+        ));
         break;
       case PostFolderLoadedAction.stopMessagesRefresh:
         _messagesListBloc.add(StopMessagesRefresh());
@@ -221,7 +223,11 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
                   builder: (context, state) {
                     Widget child;
                     if (state is SubscribedToMessages) {
-                      child = _buildMessagesStream(state.messagesSub, state.isStarredFilterEnabled);
+                      child = _buildMessagesStream(
+                        state.messagesSub,
+                        state.isStarredFilterEnabled,
+                        state.searchTerm.isNotEmpty,
+                      );
                     } else {
                       child = _buildMessagesLoading();
                     }
@@ -250,8 +256,8 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
   Widget _buildMessagesLoading() => Center(child: CircularProgressIndicator());
 //  Widget _buildMessagesLoading() => SkeletonLoader();
 
-  Widget _buildMessagesStream(
-      Stream<List<Message>> messagesSub, bool isStarred) {
+  Widget _buildMessagesStream(Stream<List<Message>> messagesSub, bool isStarred,
+      bool isSearch) {
     return StreamBuilder(
       stream: messagesSub,
       builder: (ctx, AsyncSnapshot<List<Message>> snap) {
@@ -260,11 +266,11 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
             _showError(ctx, snap.error.toString());
             return ListView();
           } else if (snap.hasData && snap.data.isNotEmpty) {
-            // isStared shows FLAT structure
+            // isStarred and isSearch show FLAT structure
             List<Message> messages = snap.data;
             List<Message> threads = [];
 
-            if (!isStarred) {
+            if (!isStarred && !isSearch) {
               messages = snap.data.where((m) => m.parentUid == null).toList();
               threads = snap.data.where((m) => m.parentUid != null).toList();
             }

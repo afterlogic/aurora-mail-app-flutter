@@ -22,6 +22,7 @@
   "messages_list_app_bar_contacts": "Контакты",
   "messages_list_app_bar_settings": "Настройки",
   "messages_list_app_bar_logout": "Выйти",
+  "messages_list_app_bar_search": "Поиск",
   "messages_list_app_bar_loading_folders": "Загрузка папок...",
   "messages_show_details": "Показать детали",
   "messages_images_security_alert": "Из соображений безобазности картинки были заблокированы.",

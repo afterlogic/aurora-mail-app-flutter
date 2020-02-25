@@ -49,18 +49,7 @@ class _MessageWebViewState extends State<MessageWebView> {
   }
 
   void _getHtmlWithImages() async {
-    String htmlData;
-    String plainData;
-    if (widget.message.html != null && widget.message.html.isNotEmpty) {
-      htmlData = widget.message.html;
-    } else if (widget.message.plain != null) {
-      plainData = widget.message.plain;
-    }
-
-    if (htmlData == null) {
-      setState(() => _htmlData = plainData ?? "");
-      return null;
-    }
+    String htmlData = widget.message.htmlBody;
     setState(() => _htmlData = htmlData);
     if (_showImages) {
       htmlData = htmlData.replaceAll(

@@ -1,9 +1,9 @@
 import 'dart:convert';
 
-import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/models/message_info.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_mail/utils/mail_utils.dart';
 import 'package:flutter/widgets.dart' as widgets;
 import 'package:moor_flutter/moor_flutter.dart';
 
@@ -100,11 +100,9 @@ class Mail extends Table {
 
 //  TextColumn get htmlRaw => text().nullable()();
 
-  TextColumn get html => text().nullable()();
+  TextColumn get htmlBody => text().withDefault(Constant(""))();
 
-  TextColumn get plain => text()();
-
-//  TextColumn get plainRaw => text()();
+  TextColumn get rawBody => text().withDefault(Constant(""))();
 
   BoolColumn get rtl => boolean()();
 
@@ -173,105 +171,85 @@ class Mail extends Table {
 
     final messagesChunk = new List<Message>();
 
-    result.forEach((rawMessage) {
+    result.forEach((raw) {
       MessageInfo messageInfo;
 
       try {
         messageInfo =
-            messagesInfo.firstWhere((m) => m.uid == rawMessage["Uid"]);
+            messagesInfo.firstWhere((m) => m.uid == raw["Uid"]);
       } catch (err) {
-        throw Exception("Couldn't find message: ${rawMessage["Uid"]}");
+        throw Exception("Couldn't find message: ${raw["Uid"]}");
       }
 
-      final displayName = rawMessage["From"] != null
-          ? rawMessage["From"]["@Collection"][0]["DisplayName"]
+      final displayName = raw["From"] != null
+          ? raw["From"]["@Collection"][0]["DisplayName"]
           : "Unknown sender";
 
       final fromToDisplay = displayName is String && displayName.isNotEmpty
           ? displayName
-          : rawMessage["From"]["@Collection"][0]["Email"] as String;
+          : raw["From"]["@Collection"][0]["Email"] as String;
 
       messageInfo.hasBody = true;
       messagesChunk.add(new Message(
         localId: null,
-        uid: rawMessage["Uid"] as int,
+        uid: raw["Uid"] as int,
         userLocalId: userLocalId,
         accountEntityId: account.entityId,
         uniqueUidInFolder: account.entityId.toString() +
             account.localId.toString() +
-            rawMessage["Uid"].toString() +
-            rawMessage["Folder"].toString(),
+            raw["Uid"].toString() +
+            raw["Folder"].toString(),
         parentUid: messageInfo.parentUid,
-        flagsInJson:
-            messageInfo.flags == null ? null : json.encode(messageInfo.flags),
+        flagsInJson: messageInfo.flags == null ? null : json.encode(messageInfo.flags),
         hasThread: messageInfo.hasThread,
-        messageId: rawMessage["MessageId"] as String,
-        folder: rawMessage["Folder"] as String,
-        subject: rawMessage["Subject"] as String,
-        size: rawMessage["Size"] as int,
-        textSize: rawMessage["TextSize"] as int,
-        truncated: rawMessage["Truncated"] as bool,
-        internalTimeStampInUTC: rawMessage["InternalTimeStampInUTC"] as int,
-        receivedOrDateTimeStampInUTC:
-            rawMessage["ReceivedOrDateTimeStampInUTC"] as int,
-        timeStampInUTC: rawMessage["TimeStampInUTC"] as int,
-        toInJson:
-            rawMessage["From"] == null ? null : json.encode(rawMessage["To"]),
-        fromInJson:
-            rawMessage["To"] == null ? null : json.encode(rawMessage["From"]),
+        messageId: raw["MessageId"] as String,
+        folder: raw["Folder"] as String,
+        subject: raw["Subject"] as String,
+        size: raw["Size"] as int,
+        textSize: raw["TextSize"] as int,
+        truncated: raw["Truncated"] as bool,
+        internalTimeStampInUTC: raw["InternalTimeStampInUTC"] as int,
+        receivedOrDateTimeStampInUTC: raw["ReceivedOrDateTimeStampInUTC"] as int,
+        timeStampInUTC: raw["TimeStampInUTC"] as int,
+        toInJson: raw["From"] == null ? null : json.encode(raw["To"]),
+        fromInJson: raw["To"] == null ? null : json.encode(raw["From"]),
         fromToDisplay: fromToDisplay,
-        ccInJson:
-            rawMessage["Cc"] == null ? null : json.encode(rawMessage["Cc"]),
-        bccInJson:
-            rawMessage["Bcc"] == null ? null : json.encode(rawMessage["Bcc"]),
-        senderInJson: rawMessage["Sender"] == null
+        ccInJson: raw["Cc"] == null ? null : json.encode(raw["Cc"]),
+        bccInJson: raw["Bcc"] == null ? null : json.encode(raw["Bcc"]),
+        senderInJson: raw["Sender"] == null ? null : json.encode(raw["Sender"]),
+        replyToInJson: raw["ReplyTo"] == null ? null : json.encode(raw["ReplyTo"]),
+        hasAttachments: raw["HasAttachments"] as bool,
+        hasVcardAttachment: raw["HasVcardAttachment"] as bool,
+        hasIcalAttachment: raw["HasIcalAttachment"] as bool,
+        importance: raw["Importance"] as int,
+        draftInfoInJson: raw["DraftInfo"] == null
             ? null
-            : json.encode(rawMessage["Sender"]),
-        replyToInJson: rawMessage["ReplyTo"] == null
-            ? null
-            : json.encode(rawMessage["ReplyTo"]),
-//          isSeen: rawMessage["IsSeen"],
-//          isFlagged: rawMessage["IsFlagged"],
-//          isAnswered: rawMessage["IsAnswered"],
-//          isForwarded: rawMessage["IsForwarded"],
-        hasAttachments: rawMessage["HasAttachments"] as bool,
-        hasVcardAttachment: rawMessage["HasVcardAttachment"] as bool,
-        hasIcalAttachment: rawMessage["HasIcalAttachment"] as bool,
-        importance: rawMessage["Importance"] as int,
-        draftInfoInJson: rawMessage["DraftInfo"] == null
-            ? null
-            : json.encode(rawMessage["DraftInfo"]),
-        sensitivity: rawMessage["Sensitivity"] as int,
-        downloadAsEmlUrl: rawMessage["DownloadAsEmlUrl"] as String,
-        hash: rawMessage["Hash"] as String,
-        headers: rawMessage["Headers"] as String,
-        inReplyTo: rawMessage["InReplyTo"] as String,
-        references: rawMessage["References"] as String,
+            : json.encode(raw["DraftInfo"]),
+        sensitivity: raw["Sensitivity"] as int,
+        downloadAsEmlUrl: raw["DownloadAsEmlUrl"] as String,
+        hash: raw["Hash"] as String,
+        headers: raw["Headers"] as String,
+        inReplyTo: raw["InReplyTo"] as String,
+        references: raw["References"] as String,
         readingConfirmationAddressee:
-            rawMessage["ReadingConfirmationAddressee"] as String,
-//        htmlRaw: rawMessage["HtmlRaw"],
-        html: rawMessage["Html"] as String,
-        plain: rawMessage["Plain"] as String,
-//        plainRaw: rawMessage["PlainRaw"],
-        rtl: rawMessage["Rtl"] as bool,
-        extendInJson: rawMessage["Extend"] == null
+        raw["ReadingConfirmationAddressee"] as String,
+        htmlBody: raw["Html"] != null && (raw["Html"] as String).isNotEmpty
+            ? raw["Html"] as String
+            : raw["Plain"] as String,
+        rawBody: raw["PlainRaw"] != null &&
+            (raw["PlainRaw"] as String).isNotEmpty
+            ? raw["PlainRaw"] as String
+            : MailUtils.htmlToPlain(raw["Html"] as String ?? raw["HtmlRaw"] as String),
+        rtl: raw["Rtl"] as bool,
+        extendInJson: raw["Extend"] == null ? null : json.encode(raw["Extend"]),
+        safety: raw["Safety"] as bool,
+        hasExternals: raw["HasExternals"] as bool,
+        foundedCIDsInJson: raw["FoundedCIDs"] == null
             ? null
-            : json.encode(rawMessage["Extend"]),
-        safety: rawMessage["Safety"] as bool,
-        hasExternals: rawMessage["HasExternals"] as bool,
-        foundedCIDsInJson: rawMessage["FoundedCIDs"] == null
-            ? null
-            : json.encode(rawMessage["FoundedCIDs"]),
-        foundedContentLocationUrlsInJson:
-            rawMessage["FoundedContentLocationUrls"] == null
-                ? null
-                : json.encode(rawMessage["FoundedContentLocationUrls"]),
-        attachmentsInJson: rawMessage["Attachments"] == null
-            ? null
-            : json.encode(rawMessage["Attachments"]),
-        customInJson: rawMessage["Custom"] == null
-            ? null
-            : json.encode(rawMessage["Custom"]),
+            : json.encode(raw["FoundedCIDs"]),
+        foundedContentLocationUrlsInJson: raw["FoundedContentLocationUrls"] == null ? null : json.encode(raw["FoundedContentLocationUrls"]),
+        attachmentsInJson: raw["Attachments"] == null ? null : json.encode(raw["Attachments"]),
+        customInJson: raw["Custom"] == null ? null : json.encode(raw["Custom"]),
       ));
     });
 

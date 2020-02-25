@@ -81,6 +81,7 @@ class MailUtils {
   }
 
   static String htmlToPlain(String html) {
+    if (html == null) return "";
     html = html
         .replaceAll("<br>", "\n")
         .replaceAll("<br/>", "\n")
@@ -158,8 +159,7 @@ class MailUtils {
   }
 
   static String getReplyBody(BuildContext context, Message message) {
-    final body = message.html.isNullOrEmpty ? message.plain : message.html;
-    final baseMessage = htmlToPlain(body ?? "");
+    final baseMessage = htmlToPlain(message.htmlBody ?? "");
     final time = DateFormatting.formatDateFromSeconds(
         message.timeStampInUTC, Localizations.localeOf(context).languageCode,
         format: i18n(context, "compose_reply_date_format"));
@@ -177,8 +177,7 @@ class MailUtils {
   }
 
   static String getForwardBody(BuildContext context, Message message) {
-    final body = message.html.isNullOrEmpty ? message.plain : message.html;
-    final baseMessage = htmlToPlain(body ?? "");
+    final baseMessage = htmlToPlain(message.htmlBody ?? "");
 
     String forwardMessage =
         "\n\n${i18n(context, "compose_forward_body_original_message")}\n";
