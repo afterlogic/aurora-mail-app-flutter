@@ -254,7 +254,7 @@
   "formatting_yesterday": "Yesterday",
   "two_factor_auth": "Your account is protected with\nTwo Factor Authentication.\nPlease provide the PIN code.",
   "pin": "PIN",
-  "verify_pin": "Verify pin",
+  "verify_pin": "Verify PIN",
   "invalid_pin": "Invalid PIN",
   "done": "Done",
   "pgp_settings": "OpenPGP",

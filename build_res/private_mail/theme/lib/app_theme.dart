@@ -103,4 +103,5 @@ class AppTheme {
     hoverColor: Colors.black26,
     backgroundColor: AppColor.accent,
   );
+
 }

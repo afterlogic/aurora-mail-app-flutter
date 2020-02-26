@@ -11,6 +11,10 @@ splashGradientBottom: "#252352"
 privacyPolicy: "https://privatemail.com/privacy.php"
 termsOfService: "https://privatemail.com/terms.php"
 
+
+supportLanguage: "ru,en"
+hasFloatingPlaceholder: true
+
 multiUserEnable: false
 multiAccountEnable: true
 useMainLogo: true

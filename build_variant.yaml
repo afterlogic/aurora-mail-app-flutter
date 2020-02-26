@@ -39,6 +39,9 @@ _theme_module: "{{_dir}}/theme"
 privacyPolicy: ""
 termsOfService: ""
 
+supportLanguage: "ru,en,tr"
+hasFloatingPlaceholder: false
+
 multiUserEnable: false
 cryptoEnable: false
 multiAccountEnable: false
