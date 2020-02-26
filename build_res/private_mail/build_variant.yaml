@@ -8,6 +8,9 @@ background_color: "#34113C"
 splashGradientTop: "#420324"
 splashGradientBottom: "#252352"
 
+privacyPolicy: "https://privatemail.com/privacy.php"
+termsOfService: "https://privatemail.com/terms.php"
+
 multiUserEnable: false
 multiAccountEnable: true
 useMainLogo: true

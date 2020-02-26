@@ -1,10 +1,10 @@
+import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:aurora_mail/build_property.dart';
 
 class AboutAndroid extends StatefulWidget {
   @override
@@ -55,10 +55,12 @@ class _AboutAndroidState extends State<AboutAndroid> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                Text(i18n(context, "app_title"), style: Theme.of(context).textTheme.title),
+                Text(i18n(context, "app_title"),
+                    style: Theme.of(context).textTheme.title),
                 SizedBox(height: 12.0),
                 Text(
-                  i18n(context, "settings_about_app_version", {"version": "$_version+$_buildNumber"}),
+                  i18n(context, "settings_about_app_version",
+                      {"version": "$_version+$_buildNumber"}),
                   style: Theme.of(context)
                       .textTheme
                       .caption
@@ -82,8 +84,7 @@ class _AboutAndroidState extends State<AboutAndroid> {
                       fontSize: 18.0,
                     ),
                   ),
-                  onTap: () => launch(
-                      "https://afterlogic.com/products/webmail-pro-licensing"),
+                  onTap: () => launch(BuildProperty.termsOfService),
                 ),
                 SizedBox(height: 22.0),
                 GestureDetector(
@@ -95,7 +96,7 @@ class _AboutAndroidState extends State<AboutAndroid> {
                       fontSize: 18.0,
                     ),
                   ),
-                  onTap: () => launch("https://afterlogic.com/privacy-policy"),
+                  onTap: () => launch(BuildProperty.privacyPolicy),
                 ),
                 SizedBox(height: 42.0),
               ],

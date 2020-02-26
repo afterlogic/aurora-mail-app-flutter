@@ -1,8 +1,9 @@
 #config
 _files:
   - pubspec.yaml.yaml
-#  - lib/di/di.dart.temp
+  #  - lib/di/di.dart.temp
   - android/app/src/main/res/values/.build_res.xml.temp
+  - build_apk.sh.temp
   - build_appbundle.sh.temp
   - android/build_variable.properties.temp
   - ios/BuildVariable.xcconfig.temp
@@ -20,7 +21,7 @@ _iosAppName: "{{appName}}"
 _appId: ""
 _iosAppId: "{{_appId}}"
 
-version: 1.0.1+32
+version: 1.0.1+33
 
 icon: "{{_dir}}/icon.png"
 main_logo: "{{image_dir}}/main_logo.png"
@@ -34,6 +35,9 @@ autodiscover_url: "https://test.afterlogic.com/autodiscover.php"
 foreground_icon: "{{_dir}}/icon_foreground.png"
 background_color: "#3b3b3b"
 _theme_module: "{{_dir}}/theme"
+
+privacyPolicy: ""
+termsOfService: ""
 
 multiUserEnable: false
 cryptoEnable: false
