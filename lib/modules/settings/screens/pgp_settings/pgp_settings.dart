@@ -92,11 +92,14 @@ class _PgpSettingsState extends State<PgpSettings> {
   }
 
   _generateKey() async {
-    final email = BlocProvider.of<AuthBloc>(context).currentAccount.email;
+    final authBloc = BlocProvider.of<AuthBloc>(context);
+    final accounts = (authBloc.state as InitializedUserAndAccounts);
+    final mails = accounts.accounts.map((item) => item.email).toList();
+    final current = accounts.account.email;
 
     final result = await showDialog(
       context: context,
-      builder: (_) => GenerateKeyDialog(email),
+      builder: (_) => GenerateKeyDialog(mails, current),
     );
     if (result is GenerateKeyDialogResult) {
       bloc.add(GenerateKeys(result.mail, result.length, result.password));
@@ -195,10 +198,12 @@ class _PgpSettingsState extends State<PgpSettings> {
   ) {
     final List<Widget> widgets = keys
         .map<Widget>(
-          (key) => GestureDetector(
+          (key) => InkWell(
             onTap: () => _openKey(context, key),
             child: _key(
-              (key.name ?? "") + (key.name?.isNotEmpty == true ? " " : "") + key.mail,
+              (key.name ?? "") +
+                  (key.name?.isNotEmpty == true ? " " : "") +
+                  key.mail,
               false,
             ),
           ),
@@ -218,19 +223,25 @@ class _PgpSettingsState extends State<PgpSettings> {
   Widget _key(String text, bool isProgress) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
-      child: SizedBox(
-        height: 20,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Text(text),
-            if (isProgress)
-              SizedBox(
-                height: 20,
-                width: 20,
-                child: CircularProgressIndicator(),
-              ),
-          ],
+      child: Center(
+        child: SizedBox(
+          height: 30,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(text),
+              isProgress
+                  ? SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator(),
+                    )
+                  : Icon(
+                      Icons.arrow_forward_ios,
+                      size: 20,
+                    )
+            ],
+          ),
         ),
       ),
     );

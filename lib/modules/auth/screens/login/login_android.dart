@@ -154,7 +154,7 @@ class _LoginAndroidState extends State<LoginAndroid> {
                   i18n(context, "error_login_auto_discover"),
                 );
               }
-              if (state is LoggedIn) {
+              if (state is InitializedUserAndAccounts) {
                 if (state.user != null) {
                   BlocProvider.of<SettingsBloc>(context)
                       .add(InitSettings(state.user, state.users));

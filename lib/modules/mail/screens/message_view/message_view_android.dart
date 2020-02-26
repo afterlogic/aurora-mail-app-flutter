@@ -64,7 +64,7 @@ class _MessageViewAndroidState extends State<MessageViewAndroid>
       user: authBloc.currentUser,
       account: BlocProvider.of<AuthBloc>(context).currentAccount,
     );
-    _messageViewBloc.add(CheckEncrypt(widget.messages[_currentPage].plain));
+    _messageViewBloc.add(CheckEncrypt(widget.messages[_currentPage].plainRaw));
     _startSetSeenTimer(context);
   }
 

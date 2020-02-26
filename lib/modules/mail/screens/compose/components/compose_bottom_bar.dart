@@ -19,6 +19,7 @@ class ComposeBottomBar extends StatefulWidget {
 class _ComposeBottomBarState extends State<ComposeBottomBar> {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final bloc = BlocProvider.of<ComposeBloc>(context);
     return BlocBuilder<ComposeBloc, ComposeState>(
       bloc: bloc,
@@ -28,6 +29,11 @@ class _ComposeBottomBarState extends State<ComposeBottomBar> {
       builder: (context, state) {
         final encrypted = state is EncryptComplete;
         return Container(
+          decoration: BoxDecoration(
+            border: Border(
+              top: BorderSide(color: theme.dividerColor, width: 0),
+            ),
+          ),
           height: (Platform.isIOS ? kToolbarHeight + 15 : kToolbarHeight),
           padding: EdgeInsets.only(bottom: Platform.isIOS ? 15 : 0),
           width: double.infinity,

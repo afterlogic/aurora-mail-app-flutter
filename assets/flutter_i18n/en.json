@@ -294,5 +294,6 @@
   "invalid_key_or_password": "Invalid key or password.",
   "can_not_decrypt": "Can not decrypt message.",
   "need_contact_for_encrypt": "Need contact for encrypt.",
-  "verify_sign": "Verify"
+  "verify_sign": "Verify",
+  "already_have_keys":"Keys which are already in the system are greyed out."
 }

@@ -1,3 +1,4 @@
+import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 import 'package:aurora_mail/modules/mail/models/compose_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
@@ -18,13 +19,14 @@ class SendMessage extends ComposeEvent {
   final String cc;
   final String bcc;
   final String subject;
-  final bool usePlain;
+  final bool isHtml;
   final List<ComposeAttachment> composeAttachments;
   final String messageText;
   final int draftUid;
+  final Account sender;
 
-  SendMessage( {
-    @required this.usePlain,
+  SendMessage({
+    @required this.isHtml,
     @required this.to,
     @required this.cc,
     @required this.bcc,
@@ -32,6 +34,7 @@ class SendMessage extends ComposeEvent {
     @required this.composeAttachments,
     @required this.messageText,
     @required this.draftUid,
+    this.sender,
   });
 
   @override

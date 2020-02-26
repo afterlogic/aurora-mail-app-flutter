@@ -4,6 +4,7 @@ import 'app_color.dart';
 
 class AppTheme {
   static final light = ThemeData(
+    colorScheme: ColorScheme.light(primary: AppColor.primary),
     primaryColor: AppColor.primary,
     accentColor: AppColor.accent,
     buttonTheme: _buttonTheme,
@@ -46,6 +47,7 @@ class AppTheme {
   );
 
   static final dark = ThemeData(
+    colorScheme: ColorScheme.dark(primary: AppColor.primary),
     primaryColor: AppColor.primary,
     accentColor: AppColor.accent,
     buttonTheme: _buttonTheme,
@@ -84,7 +86,6 @@ class AppTheme {
       ),
     ),
     bottomAppBarColor: Colors.black,
-
   );
 
   static final login = dark;

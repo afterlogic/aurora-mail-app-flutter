@@ -13,6 +13,7 @@ class CryptoStorageImpl extends CryptoStorage {
 
   setOther(String id) {
     _other = id;
+    _keyDao.setOther(id);
   }
 
   Future<void> addPgpKey(PgpKey key) async {
@@ -97,6 +98,7 @@ class CryptoStorageImpl extends CryptoStorage {
       mail: pgpKey.mail,
       isPrivate: pgpKey.isPrivate,
       length: pgpKey.length,
+      other: _other,
     );
   }
 

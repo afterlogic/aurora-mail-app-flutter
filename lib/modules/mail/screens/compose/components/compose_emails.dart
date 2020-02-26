@@ -151,10 +151,8 @@ class _ComposeEmailsState extends State<ComposeEmails> {
         color: widget.enable ? null : theme.disabledColor.withAlpha(20),
       ),
       child: InkWell(
-        onLongPress: _paste,
-        onTap: widget.enable
-            ? _focus
-            : null,
+        onLongPress: widget.enable ? _paste : null,
+        onTap: widget.enable ? _focus : null,
         child: ComposeTypeAheadField<String>(
           textFieldConfiguration: TextFieldConfiguration(
             focusNode: widget.focusNode,
@@ -216,7 +214,8 @@ class _ComposeEmailsState extends State<ComposeEmails> {
                           child: Chip(
                             avatar: CircleAvatar(
                               backgroundColor: Theme.of(context).accentColor,
-                              child: Text(displayName[0],
+                              child: Text(
+                                displayName[0],
                                 style: TextStyle(color: Colors.white),
                               ),
                             ),

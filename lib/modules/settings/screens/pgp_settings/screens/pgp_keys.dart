@@ -50,12 +50,15 @@ class PgpKeysScreen extends StatelessWidget {
                 ),
                 _space(),
                 if (!Platform.isIOS) ...[
-                  AMButton(
-                    child: Text(i18n(context, "download_all")),
-                    onPressed: () {
-                      bloc.add(DownloadKeys(pgpKeys));
-                      Navigator.pop(context);
-                    },
+                  SizedBox(
+                    width: double.infinity,
+                    child: AMButton(
+                      child: Text(i18n(context, "download_all")),
+                      onPressed: () {
+                        bloc.add(DownloadKeys(pgpKeys));
+                        Navigator.pop(context);
+                      },
+                    ),
                   ),
                   _space(),
                 ],

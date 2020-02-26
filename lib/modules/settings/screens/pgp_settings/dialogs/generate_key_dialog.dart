@@ -4,9 +4,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class GenerateKeyDialog extends StatefulWidget {
-  final String mail;
+  final List<String> mails;
+  final String current;
 
-  const GenerateKeyDialog(this.mail);
+  const GenerateKeyDialog(this.mails, this.current);
 
   @override
   _GenerateKeyDialogState createState() => _GenerateKeyDialogState();
@@ -15,9 +16,8 @@ class GenerateKeyDialog extends StatefulWidget {
 class _GenerateKeyDialogState extends State<GenerateKeyDialog> {
   static const lengths = [1024, 2048, 3072, 4096, 8192];
   var length = lengths[1];
+  String mail;
   bool _obscure = true;
-
-  TextEditingController _emailController;
 
   final _passwordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
@@ -25,7 +25,7 @@ class _GenerateKeyDialogState extends State<GenerateKeyDialog> {
   @override
   void initState() {
     super.initState();
-    _emailController = TextEditingController(text: widget.mail);
+    mail = widget.mails.first;
   }
 
   @override
@@ -37,14 +37,21 @@ class _GenerateKeyDialogState extends State<GenerateKeyDialog> {
         key: _formKey,
         child: Column(
           children: <Widget>[
-            TextFormField(
-              enabled: false,
+            DropdownButtonFormField(
+              hint: Text(length.toString()),
               decoration: InputDecoration(
                   labelText: i18n(context, "login_input_email")),
-              validator: (v) =>
-                  validateInput(context, v, [ValidationType.email]),
-              controller: _emailController,
-              keyboardType: TextInputType.emailAddress,
+              value: mail,
+              items: widget.mails.map((value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+              onChanged: (String v) {
+                mail = v;
+                setState(() {});
+              },
             ),
             TextFormField(
               decoration: InputDecoration(
@@ -100,7 +107,7 @@ class _GenerateKeyDialogState extends State<GenerateKeyDialog> {
   _generate() {
     if (_formKey.currentState.validate()) {
       final length = this.length;
-      final mail = _emailController.text;
+      final mail = this.mail;
       final pass = _passwordController.text;
       Navigator.pop(context, GenerateKeyDialogResult(length, mail, pass));
     }

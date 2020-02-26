@@ -3,7 +3,7 @@ import 'package:moor_flutter/moor_flutter.dart';
 @DataClassName("LocalPgpKey")
 class PgpKeyModel extends Table {
   @override
-  Set<Column> get primaryKey => {id};
+  Set<Column> get primaryKey => {other, id};
 
   TextColumn get id => text()();
 
@@ -14,4 +14,6 @@ class PgpKeyModel extends Table {
   BoolColumn get isPrivate => boolean()();
 
   IntColumn get length => integer().nullable()();
+
+  TextColumn get other => text()();
 }

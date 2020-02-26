@@ -14,12 +14,21 @@ class ImportKeyDialog extends StatefulWidget {
 }
 
 class _ImportKeyDialogState extends State<ImportKeyDialog> {
-  List<PgpKey> keys;
+  final List<PgpKey> keys = [];
+  bool keyAlreadyExist = false;
 
   @override
   void initState() {
     super.initState();
-    keys = widget.pgpKeys.keys.toList();
+    widget.pgpKeys.forEach((key, value) {
+      keys.add(key);
+      if (!value) {
+        keyAlreadyExist = true;
+      }
+    });
+    if (keyAlreadyExist) {
+      keys.insert(0, null);
+    }
   }
 
   @override
@@ -30,6 +39,9 @@ class _ImportKeyDialogState extends State<ImportKeyDialog> {
         child: ListView.builder(
           itemCount: keys.length,
           itemBuilder: (_, i) {
+            if (keyAlreadyExist && i == 0) {
+              return Text(i18n(context, "already_have_keys"));
+            }
             final key = keys[i];
             return KeyItem(
               key,

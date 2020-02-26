@@ -35,6 +35,9 @@ class _MailBottomBarState extends State<MailBottomBar> {
           encryptType = state.encryptType;
         }
 
+        if (encryptType == EncryptType.None) {
+          return SizedBox.shrink();
+        }
         return Container(
           height: (Platform.isIOS ? kToolbarHeight + 15 : kToolbarHeight),
           padding: EdgeInsets.only(bottom: Platform.isIOS ? 15 : 0),
@@ -53,11 +56,19 @@ class _MailBottomBarState extends State<MailBottomBar> {
                     children: <Widget>[
                       Icon(
                         encryptType == EncryptType.Sign
-                            ? (decrypted ? Icons.favorite : Icons.favorite_border)
-                            : (decrypted ? Icons.lock_open : Icons.lock_outline),
+                            ? (decrypted
+                                ? Icons.favorite
+                                : Icons.favorite_border)
+                            : (decrypted
+                                ? Icons.lock_open
+                                : Icons.lock_outline),
                       ),
                       Text(
-                        i18n(context, encryptType == EncryptType.Sign ? "verify_sign" : "decrypt"),
+                        i18n(
+                            context,
+                            encryptType == EncryptType.Sign
+                                ? "verify_sign"
+                                : "decrypt"),
                       ),
                     ],
                   ),

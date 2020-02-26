@@ -129,7 +129,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     if (accounts.isNotEmpty) {
       assert(accounts[0] != null);
       currentAccount = accounts[0];
-      yield LoggedIn(user, users);
+      yield InitializedUserAndAccounts(
+        users: users,
+        user: currentUser,
+        accounts: accounts,
+        account: currentAccount,
+        needsLogin: false,
+      );
     } else {
       yield AuthError("error_login_no_accounts");
     }
