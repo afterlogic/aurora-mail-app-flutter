@@ -53,7 +53,7 @@ packages:
   aurora_ui_kit:
     dependency: "direct main"
     description:
-      path: "core/aurora_ui_kit"
+      path: "core\\aurora_ui_kit"
       relative: true
     source: path
     version: "0.0.1"
@@ -509,7 +509,7 @@ packages:
   notifications_utils:
     dependency: "direct main"
     description:
-      path: "core/notifications_utils"
+      path: "core\\notifications_utils"
       relative: true
     source: path
     version: "0.0.1"
@@ -766,7 +766,7 @@ packages:
   theme:
     dependency: "direct main"
     description:
-      path: "build_res/afterlogic/theme"
+      path: "build_res\\afterlogic\\theme"
       relative: true
     source: path
     version: "0.0.1"
@@ -843,7 +843,7 @@ packages:
   webmail_api_client:
     dependency: "direct main"
     description:
-      path: "core/webmail_api_client"
+      path: "core\\webmail_api_client"
       relative: true
     source: path
     version: "0.0.1"
