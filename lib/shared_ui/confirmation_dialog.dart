@@ -20,12 +20,8 @@ class ConfirmationDialog extends StatelessWidget {
   }) : super(key: key);
 
   static Future<bool> show(
-    BuildContext context,
-    String title,
-    String description,
-    String actionText,
-    {bool destructibleAction}
-  ) {
+      BuildContext context, String title, String description, String actionText,
+      {bool destructibleAction}) {
     return dialog(
         context: context,
         builder: (_) => ConfirmationDialog(
@@ -39,16 +35,20 @@ class ConfirmationDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(title),
+      title: title == null ? null : Text(title),
       content: Text(description),
       actions: <Widget>[
         FlatButton(
-          textColor: Theme.of(context).brightness == Brightness.light ? Theme.of(context).accentColor : null,
+          textColor: Theme.of(context).brightness == Brightness.light
+              ? Theme.of(context).accentColor
+              : null,
           child: Text(i18n(context, "btn_cancel")),
           onPressed: () => Navigator.pop(context, false),
         ),
         FlatButton(
-          textColor: Theme.of(context).brightness == Brightness.light ? Theme.of(context).accentColor : null,
+          textColor: Theme.of(context).brightness == Brightness.light
+              ? Theme.of(context).accentColor
+              : null,
           child: Text(actionText),
           onPressed: () => Navigator.pop(context, true),
         ),

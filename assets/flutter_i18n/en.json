@@ -257,5 +257,7 @@
   "pin": "PIN",
   "verify_pin": "Verify pin",
   "invalid_pin": "Invalid PIN",
-  "done": "Done"
+  "done": "Done",
+  "confirm_exit": "Are you sure want to exit",
+  "exit": "Exit"
 }
