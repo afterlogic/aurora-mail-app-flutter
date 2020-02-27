@@ -36,7 +36,9 @@ class _PgpSettingsState extends State<PgpSettings> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(i18n(context, "pgp_settings"))),
+      appBar:AMAppBar(
+        title: Text(i18n(context, "pgp_settings")),
+      ),
       body: BlocListener<PgpSettingsBloc, PgpSettingsState>(
         bloc: bloc,
         listener: (context, state) {

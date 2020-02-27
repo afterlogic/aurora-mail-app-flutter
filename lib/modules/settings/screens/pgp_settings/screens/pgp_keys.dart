@@ -16,10 +16,11 @@ class PgpKeysScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          i18n(context, "all_public_key"),
-        ),
+      appBar: AMAppBar(
+        title: Text(i18n(
+          context,
+          "all_public_key",
+        )),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),

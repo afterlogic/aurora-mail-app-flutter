@@ -18,13 +18,11 @@ class PgpKeyScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          i18n(
-            context,
-            pgpKey.isPrivate ? "public_key" : "private_key",
-          ),
-        ),
+      appBar: AMAppBar(
+        title: Text(i18n(
+          context,
+          pgpKey.isPrivate ? "public_key" : "private_key",
+        )),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
@@ -80,7 +78,8 @@ class PgpKeyScreen extends StatelessWidget {
                       final result = await ConfirmationDialog.show(
                           context,
                           "",
-                          i18n(context, "delete_user_key_confirm", {"user": pgpKey.mail}),
+                          i18n(context, "delete_user_key_confirm",
+                              {"user": pgpKey.mail}),
                           "delete");
                       if (result == true) {
                         bloc.add(DeleteKey(pgpKey));

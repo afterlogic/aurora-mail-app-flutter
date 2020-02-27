@@ -50,7 +50,11 @@ class PgpSettingsBloc extends Bloc<PgpSettingsEvent, PgpSettingsState> {
       }
     });
 
-    await _methods.generateKeys(event.mail, event.length, event.password);
+    try {
+      await _methods.generateKeys(event.mail, event.length, event.password);
+    } catch (e) {
+      print(e);
+    }
     yield* _loadKeys();
   }
 

@@ -33,7 +33,6 @@ class _AuthInputState extends State<AuthInput> {
   Widget build(BuildContext context) {
     return TextFormField(
       enabled: widget.isEnabled,
-      cursorColor: Theme.of(context).accentColor,
       controller: widget.controller,
       keyboardType: widget.keyboardType,
       validator: widget.validator,

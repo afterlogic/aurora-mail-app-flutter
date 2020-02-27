@@ -4,6 +4,9 @@ import 'app_color.dart';
 
 class AppTheme {
   static final light = ThemeData(
+    textSelectionColor: AppColor.accent,
+    textSelectionHandleColor: AppColor.accent,
+    cursorColor: AppColor.accent,
     colorScheme: ColorScheme.light(primary: AppColor.primary),
     primaryColor: AppColor.primary,
     accentColor: AppColor.accent,
@@ -47,6 +50,9 @@ class AppTheme {
   );
 
   static final dark = ThemeData(
+    textSelectionColor: AppColor.accent,
+    textSelectionHandleColor: AppColor.accent,
+    cursorColor: AppColor.accent,
     colorScheme: ColorScheme.dark(primary: AppColor.primary),
     primaryColor: AppColor.primary,
     accentColor: AppColor.accent,
@@ -103,5 +109,4 @@ class AppTheme {
     hoverColor: Colors.black26,
     backgroundColor: AppColor.accent,
   );
-
 }
