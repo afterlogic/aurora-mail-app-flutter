@@ -128,14 +128,14 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
 
   void _initForward(Forward action) async {
     _message = action.message;
-    isHtml = _message.html?.isNotEmpty == true;
+    isHtml = _message.htmlBody?.isNotEmpty == true;
     _subjectTextCtrl.text = MailUtils.getForwardSubject(_message);
     _bodyTextCtrl.text = MailUtils.getForwardBody(context, _message);
   }
 
   void _initReply(Reply action) async {
     _message = action.message;
-    isHtml = _message.html?.isNotEmpty == true;
+    isHtml = _message.htmlBody?.isNotEmpty == true;
     _toEmails.addAll(MailUtils.getEmails(_message.fromInJson));
     _subjectTextCtrl.text = MailUtils.getReplySubject(_message);
     _bodyTextCtrl.text = MailUtils.getReplyBody(context, _message);
@@ -143,7 +143,7 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
 
   void _initReplyAll(ReplyToAll action) async {
     _message = action.message;
-    isHtml = _message.html?.isNotEmpty == true;
+    isHtml = _message.htmlBody?.isNotEmpty == true;
     _toEmails.addAll(MailUtils.getEmails(_message.fromInJson));
     _ccEmails.addAll(MailUtils.getEmails(_message.toInJson, exceptEmails: [
       BlocProvider.of<AuthBloc>(context).currentAccount.email
@@ -444,7 +444,7 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
               if (state is MessageSent) _onMessageSent(context);
               if (state is MessageSavedInDrafts)
                 _onMessageSaved(context, state.draftUid);
-              if (state is ComposeError) _showError(state.errorMsg);
+              if (state is ComposeError) _showError(state.errorMsg, state.arg);
               if (state is UploadStarted)
                 _setUploadProgress(state.tempAttachment);
               if (state is AttachmentUploaded)

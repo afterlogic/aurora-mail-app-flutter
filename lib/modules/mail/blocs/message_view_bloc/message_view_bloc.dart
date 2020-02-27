@@ -35,7 +35,8 @@ class MessageViewBloc extends Bloc<MessageViewEvent, MessageViewState> {
     if (event is DecryptBody) yield* _decryptBody(event);
   }
 
-  Stream<MessageViewState> _downloadAttachment(DownloadAttachment event) async* {
+  Stream<MessageViewState> _downloadAttachment(
+      DownloadAttachment event) async* {
     try {
       await getStoragePermissions();
     } catch (err) {
@@ -69,6 +70,10 @@ class MessageViewBloc extends Bloc<MessageViewEvent, MessageViewState> {
       yield DecryptComplete(decrypted.text, decrypted.verified);
     } catch (e) {
       if (e is PgpKeyNotFound) {
+        yield MessagesViewError(
+          "not_found_keys_for",
+          {"users": e.email.join(" , ")},
+        );
       } else if (e is PgpInvalidSign) {
         yield MessagesViewError("invalid_key_or_password");
       } else {

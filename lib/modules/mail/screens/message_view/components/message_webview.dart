@@ -30,7 +30,8 @@ class MessageWebView extends StatefulWidget {
   final String decrypted;
 
   const MessageWebView(this.message, this.attachments, this.decrypted,
-      {Key key}) : super(key: key);
+      {Key key})
+      : super(key: key);
 
   @override
   _MessageWebViewState createState() => _MessageWebViewState();
@@ -59,7 +60,7 @@ class _MessageWebViewState extends State<MessageWebView> {
   }
 
   void _getHtmlWithImages() async {
-    String htmlData
+    String htmlData;
     if (widget.decrypted != null) {
       htmlData = widget.decrypted;
     } else {
@@ -73,16 +74,12 @@ class _MessageWebViewState extends State<MessageWebView> {
       );
     }
 
-    final user = BlocProvider
-        .of<AuthBloc>(context)
-        .currentUser;
+    final user = BlocProvider.of<AuthBloc>(context).currentUser;
 
     for (final attachment in widget.attachments) {
       htmlData = htmlData.replaceFirst(
         "data-x-src-cid=\"${attachment.cid}\"",
-        "src=\"${user.hostname}${attachment.viewUrl.replaceFirst(
-            "mail-attachment/",
-            "mail-attachments-cookieless/")}&AuthToken=${user.token}\"",
+        "src=\"${user.hostname}${attachment.viewUrl.replaceFirst("mail-attachment/", "mail-attachments-cookieless/")}&AuthToken=${user.token}\"",
       );
     }
 
@@ -96,10 +93,8 @@ class _MessageWebViewState extends State<MessageWebView> {
     final items = Mail.getToForDisplay(
       context,
       message.toInJson,
-      BlocProvider
-          .of<AuthBloc>(context)
-          .currentAccount
-          .email,);
+      BlocProvider.of<AuthBloc>(context).currentAccount.email,
+    );
 
     if (items.isEmpty) {
       return i18n(context, "messages_no_receivers");
@@ -109,15 +104,11 @@ class _MessageWebViewState extends State<MessageWebView> {
   }
 
   String _getHtmlUri(String html) {
-    final state = BlocProvider
-        .of<SettingsBloc>(context)
-        .state;
+    final state = BlocProvider.of<SettingsBloc>(context).state;
 
     final date = DateFormatting.getDetailedMessageDate(
       timestamp: widget.message.timeStampInUTC,
-      locale: Localizations
-          .localeOf(context)
-          .languageCode,
+      locale: Localizations.localeOf(context).languageCode,
       yesterdayWord: i18n(context, "formatting_yesterday"),
       is24: (state as SettingsLoaded).is24 ?? true,
     );
@@ -128,12 +119,11 @@ class _MessageWebViewState extends State<MessageWebView> {
       to: _formatTo(widget.message),
       date: date,
       body: html,
-      showAttachmentsBtn: widget.attachments
-          .where((a) => !a.isInline)
-          .isNotEmpty,
+      showAttachmentsBtn:
+          widget.attachments.where((a) => !a.isInline).isNotEmpty,
     );
     return Uri.dataFromString(wrappedHtml,
-        mimeType: 'text/html', encoding: Encoding.getByName('utf-8'))
+            mimeType: 'text/html', encoding: Encoding.getByName('utf-8'))
         .toString();
   }
 
@@ -200,9 +190,8 @@ class _MessageWebViewState extends State<MessageWebView> {
                   child: AnimatedOpacity(
                     opacity: _pageLoaded && _htmlData != null ? 0.0 : 1.0,
                     duration: Duration(milliseconds: 100),
-                    child: Container(color: Theme
-                        .of(context)
-                        .scaffoldBackgroundColor),
+                    child: Container(
+                        color: Theme.of(context).scaffoldBackgroundColor),
                   ),
                 ),
               ),
