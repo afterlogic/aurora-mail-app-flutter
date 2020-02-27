@@ -1,7 +1,7 @@
 name: aurora_mail
 description: Mail client for mobile.
 
-version: 1.0.1+35
+version: 1.0.1+36
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -81,10 +81,8 @@ dependencies:
     path: build_res/private_mail/theme
 
   flutter_secure_storage: ^3.3.1+1
-
   crypto_plugin:
     git: https://github.com/afterlogic/flutter_crypto_plugin
-
   crypto_model:
     path: module/crypto/crypto_model
   crypto_storage:
@@ -95,7 +93,6 @@ dependencies:
     path: module/crypto/crypto_worker
   crypto_worker_impl:
     path: module/crypto/crypto_worker_impl
-
   inject:
     git: "https://github.com/afterlogic/dart_inject"
 
