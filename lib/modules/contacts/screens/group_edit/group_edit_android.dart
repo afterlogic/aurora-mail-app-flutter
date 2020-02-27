@@ -53,7 +53,8 @@ class _GroupEditAndroidState extends State<GroupEditAndroid> {
     _webCtrl.text = g.web;
   }
 
-  void _onAppBarActionSelected(BuildContext context, GroupEditAppBarAction item) {
+  void _onAppBarActionSelected(
+      BuildContext context, GroupEditAppBarAction item) {
     switch (item) {
       case GroupEditAppBarAction.save:
         if (_nameCtrl.text.isEmpty) {
@@ -66,9 +67,11 @@ class _GroupEditAndroidState extends State<GroupEditAndroid> {
         FocusScope.of(context).unfocus();
 
         final group = _getDataFromInputs();
-        final event = widget.group != null ? UpdateGroup(group) : CreateGroup(group);
+        final event =
+            widget.group != null ? UpdateGroup(group) : CreateGroup(group);
         BlocProvider.of<ContactsBloc>(context).add(event);
-        Navigator.popUntil(context, ModalRoute.withName(ContactsListRoute.name));
+        Navigator.popUntil(
+            context, ModalRoute.withName(ContactsListRoute.name));
         break;
     }
   }
@@ -111,16 +114,16 @@ class _GroupEditAndroidState extends State<GroupEditAndroid> {
           if (_isOrg)
             Column(
               children: <Widget>[
-                _buildInput("contacts_view_email", _emailCtrl),
+                _buildInput("contacts_view_email", _emailCtrl,TextInputType.emailAddress),
                 _buildInput("contacts_view_company", _companyCtrl),
                 _buildInput("contacts_view_country", _countryCtrl),
                 _buildInput("contacts_view_province", _stateCtrl),
                 _buildInput("contacts_view_city", _cityCtrl),
                 _buildInput("contacts_view_street_address", _streetCtrl),
                 _buildInput("contacts_view_zip", _zipCtrl),
-                _buildInput("contacts_view_phone", _phoneCtrl),
+                _buildInput("contacts_view_phone", _phoneCtrl,TextInputType.phone),
                 _buildInput("contacts_view_fax", _faxCtrl),
-                _buildInput("contacts_view_web_page", _webCtrl),
+                _buildInput("contacts_view_web_page", _webCtrl,TextInputType.url),
               ],
             ),
         ],
@@ -128,11 +131,16 @@ class _GroupEditAndroidState extends State<GroupEditAndroid> {
     );
   }
 
-  Widget _buildInput(String label, TextEditingController ctrl) {
+  Widget _buildInput(
+    String label,
+    TextEditingController ctrl, [
+    TextInputType type,
+  ]) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.0),
       child: TextField(
         controller: ctrl,
+        keyboardType: type,
         decoration: InputDecoration(
           labelText: i18n(context, label),
           alignLabelWithHint: true,
