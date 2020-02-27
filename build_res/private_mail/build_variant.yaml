@@ -10,7 +10,7 @@ splashGradientBottom: "#252352"
 
 privacyPolicy: "https://privatemail.com/privacy.php"
 termsOfService: "https://privatemail.com/terms.php"
-autodiscover_url: "https://torguard.tv/pm/autodiscover.php?email=test@dev.privatemail.com"
+autodiscover_url: "https://torguard.tv/pm/autodiscover.php"
 
 supportLanguage: "ru,en"
 hasFloatingPlaceholder: true
