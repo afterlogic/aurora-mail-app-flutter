@@ -24,13 +24,29 @@ class FoldersLoaded extends MailState {
   // to fire messages events if needed
   final PostFolderLoadedAction postAction;
 
+  final isProgress;
+
   const FoldersLoaded(
       this.folders, this.selectedFolder, this.isStarredFilterEnabled,
-      [this.postAction]);
+      [this.postAction, this.isProgress = false]);
 
   @override
   List<Object> get props =>
-      [folders, selectedFolder, postAction, isStarredFilterEnabled];
+      [folders, selectedFolder, postAction, isStarredFilterEnabled, isProgress];
+
+  FoldersLoaded copyWith(
+          {List<Folder> folders,
+          Folder selectedFolder,
+          bool isStarredFilterEnabled,
+          PostFolderLoadedAction postAction,
+          bool isProgress = false}) =>
+      FoldersLoaded(
+        folders ?? this.folders,
+        selectedFolder ?? this.selectedFolder,
+        isStarredFilterEnabled ?? this.isStarredFilterEnabled,
+        postAction ?? this.postAction,
+        isProgress ?? this.isProgress,
+      );
 }
 
 class FoldersError extends MailState {

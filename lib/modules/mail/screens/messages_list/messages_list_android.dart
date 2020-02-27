@@ -33,8 +33,10 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
   MailBloc _mailBloc;
   ContactsBloc _contactsBloc;
 
-  var _refreshCompleter = new Completer();
+  Completer _refreshCompleter;
   Folder _selectedFolder;
+
+  final _refreshKey = GlobalKey<RefreshIndicatorState>();
 
   @override
   void didChangeDependencies() {
@@ -170,8 +172,7 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
                 bloc: _messagesListBloc,
                 listener: (BuildContext context, state) {
                   if (state is MessagesRefreshed || state is MailError) {
-                    _refreshCompleter?.complete();
-                    _refreshCompleter = new Completer();
+                    _endRefresh();
                   }
                   if (state is MessagesDeleted)
                     _mailBloc.add(RefreshMessages());
@@ -182,6 +183,11 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
                 bloc: _mailBloc,
                 listener: (BuildContext context, state) {
                   if (state is FoldersLoaded) {
+                    if (state.isProgress == true) {
+                      _startRefresh();
+                    } else {
+                      _endRefresh();
+                    }
                     setState(() => _selectedFolder = state.selectedFolder);
                     if (state.postAction != null) {
                       _dispatchPostFoldersLoadedAction(state);
@@ -210,8 +216,12 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
               ),
             ],
             child: RefreshIndicator(
+              key: _refreshKey,
               onRefresh: () {
-                _mailBloc.add(RefreshMessages());
+                if (_refreshCompleter == null) {
+                  _mailBloc.add(RefreshMessages());
+                  _refreshCompleter = Completer();
+                }
                 return _refreshCompleter.future;
               },
               backgroundColor: Colors.white,
@@ -238,7 +248,8 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
                   }),
             ),
           ),
-          bottomNavigationBar: MailBottomAppBar(selectedRoute: MailBottomAppBarRoutes.mail),
+          bottomNavigationBar:
+              MailBottomAppBar(selectedRoute: MailBottomAppBarRoutes.mail),
           floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
           floatingActionButton: AMFloatingActionButton(
             child: Icon(MdiIcons.pen),
@@ -254,10 +265,11 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
   }
 
   Widget _buildMessagesLoading() => Center(child: CircularProgressIndicator());
+
 //  Widget _buildMessagesLoading() => SkeletonLoader();
 
-  Widget _buildMessagesStream(Stream<List<Message>> messagesSub, bool isStarred,
-      bool isSearch) {
+  Widget _buildMessagesStream(
+      Stream<List<Message>> messagesSub, bool isStarred, bool isSearch) {
     return StreamBuilder(
       stream: messagesSub,
       builder: (ctx, AsyncSnapshot<List<Message>> snap) {
@@ -286,7 +298,8 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
                       item,
                       threads.where((t) => t.parentUid == item.uid).toList(),
                       key: Key(item.localId.toString()),
-                      onItemSelected: (Message item) => _onMessageSelected(snap.data, item),
+                      onItemSelected: (Message item) =>
+                          _onMessageSelected(snap.data, item),
                       onStarMessage: _setStarred,
                       onDeleteMessage: _deleteMessage,
                     ),
@@ -311,5 +324,15 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
         }
       },
     );
+  }
+
+  _startRefresh() {
+    _refreshCompleter = Completer();
+    _refreshKey.currentState.show();
+  }
+
+  _endRefresh() {
+    _refreshCompleter?.complete();
+    _refreshCompleter = null;
   }
 }
