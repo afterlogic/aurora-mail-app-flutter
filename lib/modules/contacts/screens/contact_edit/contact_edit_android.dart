@@ -24,7 +24,6 @@ class ContactEditAndroid extends StatefulWidget {
 }
 
 class _ContactEditAndroidState extends State<ContactEditAndroid> {
-
   ContactsBloc _bloc;
 
   bool _showAllFields = false;
@@ -73,8 +72,13 @@ class _ContactEditAndroidState extends State<ContactEditAndroid> {
     final selectedGroup = _bloc.state.selectedGroup;
 
     _selectedGroupsUuids = [];
-    if (selectedGroup != null) _selectedGroupsUuids.add(selectedGroup);
-    if (widget.contact != null) _initContact(widget.contact);
+
+    if (widget.contact != null) {
+      _initContact(widget.contact);
+      _selectedGroupsUuids = widget.contact.groupUUIDs.toList();
+    } else {
+      if (selectedGroup != null) _selectedGroupsUuids.add(selectedGroup);
+    }
     _initTextUpdatingCrutch();
     super.didChangeDependencies();
   }
@@ -132,8 +136,9 @@ class _ContactEditAndroidState extends State<ContactEditAndroid> {
     _businessAddress.addListener(() => setState(() {}));
   }
 
-  void _onAppBarActionSelected(BuildContext context, ContactEditAppBarAction item) {
-    switch(item) {
+  void _onAppBarActionSelected(
+      BuildContext context, ContactEditAppBarAction item) {
+    switch (item) {
       case ContactEditAppBarAction.save:
         if (_getPrimaryEmailCtrl().text.isEmpty) {
           return showSnack(
@@ -145,9 +150,12 @@ class _ContactEditAndroidState extends State<ContactEditAndroid> {
         FocusScope.of(context).unfocus();
 
         final contact = _getDataFromInputs();
-        final event = widget.contact != null ? UpdateContact(contact) : CreateContact(contact);
+        final event = widget.contact != null
+            ? UpdateContact(contact)
+            : CreateContact(contact);
         _bloc.add(event);
-        Navigator.popUntil(context, ModalRoute.withName(ContactsListRoute.name));
+        Navigator.popUntil(
+            context, ModalRoute.withName(ContactsListRoute.name));
         break;
     }
   }
@@ -164,62 +172,63 @@ class _ContactEditAndroidState extends State<ContactEditAndroid> {
     final user = BlocProvider.of<AuthBloc>(context).currentUser;
 
     return Contact(
-        localId: widget.contact?.localId ?? null,
-        entityId: widget.contact?.entityId ?? null,
-        uuid: widget.contact?.uuid ?? null,
-        userLocalId: widget.contact?.userLocalId ?? user.localId,
-        uuidPlusStorage: widget.contact?.uuidPlusStorage ?? null,
-        parentUuid: widget.contact?.parentUuid ?? null,
-        idUser: widget.contact?.idUser ?? user.serverId,
-        idTenant: widget.contact?.idTenant ?? null,
-        storage: widget.contact?.storage ?? StorageNames.personal,
-        fullName: _fullName.text,
-        useFriendlyName: widget.contact?.useFriendlyName ?? null,
-        primaryEmail: _primaryEmail,
-        primaryPhone: _primaryPhone,
-        primaryAddress: _primaryAddress,
-        viewEmail: widget.contact?.viewEmail ?? _getPrimaryEmailCtrl().text,
-        title: widget.contact?.title ?? "",
-        firstName: _firstName.text,
-        lastName: _lastName.text,
-        nickName: _nickName.text,
-        skype: _skype.text,
-        facebook: _facebook.text,
-        personalEmail: _personalEmail.text,
-        personalAddress: _personalAddress.text,
-        personalCity: _personalCity.text,
-        personalState: _personalState.text,
-        personalZip: _personalZip.text,
-        personalCountry: _personalCountry.text,
-        personalWeb: _personalWeb.text,
-        personalFax: _personalFax.text,
-        personalPhone: _personalPhone.text,
-        personalMobile: _personalMobile.text,
-        businessEmail: _businessEmail.text,
-        businessCompany: _businessCompany.text,
-        businessAddress: _businessAddress.text,
-        businessCity: _businessCity.text,
-        businessState: _businessState.text,
-        businessZip: _businessZip.text,
-        businessCountry: _businessCountry.text,
-        businessJobTitle: _businessJobTitle.text,
-        businessDepartment: _businessDepartment.text,
-        businessOffice: _businessOffice.text,
-        businessPhone: _businessPhone.text,
-        businessFax: _businessFax.text,
-        businessWeb: _businessWeb.text,
-        otherEmail: _otherEmail.text,
-        notes: _notes.text,
-        birthDay: _birthDay,
-        birthMonth: _birthMonth,
-        birthYear: _birthYear,
-        eTag: widget.contact?.eTag ?? "",
-        auto: widget.contact?.auto ?? null,
-        frequency: widget.contact?.frequency ?? 0,
-        dateModified: widget.contact?.dateModified ?? DateTime.now().toIso8601String(),
-        davContactsUid: widget.contact?.davContactsUid ?? null,
-        davContactsVCardUid: widget.contact?.davContactsVCardUid ?? null,
-        groupUUIDs: _selectedGroupsUuids,
+      localId: widget.contact?.localId ?? null,
+      entityId: widget.contact?.entityId ?? null,
+      uuid: widget.contact?.uuid ?? null,
+      userLocalId: widget.contact?.userLocalId ?? user.localId,
+      uuidPlusStorage: widget.contact?.uuidPlusStorage ?? null,
+      parentUuid: widget.contact?.parentUuid ?? null,
+      idUser: widget.contact?.idUser ?? user.serverId,
+      idTenant: widget.contact?.idTenant ?? null,
+      storage: widget.contact?.storage ?? StorageNames.personal,
+      fullName: _fullName.text,
+      useFriendlyName: widget.contact?.useFriendlyName ?? null,
+      primaryEmail: _primaryEmail,
+      primaryPhone: _primaryPhone,
+      primaryAddress: _primaryAddress,
+      viewEmail: widget.contact?.viewEmail ?? _getPrimaryEmailCtrl().text,
+      title: widget.contact?.title ?? "",
+      firstName: _firstName.text,
+      lastName: _lastName.text,
+      nickName: _nickName.text,
+      skype: _skype.text,
+      facebook: _facebook.text,
+      personalEmail: _personalEmail.text,
+      personalAddress: _personalAddress.text,
+      personalCity: _personalCity.text,
+      personalState: _personalState.text,
+      personalZip: _personalZip.text,
+      personalCountry: _personalCountry.text,
+      personalWeb: _personalWeb.text,
+      personalFax: _personalFax.text,
+      personalPhone: _personalPhone.text,
+      personalMobile: _personalMobile.text,
+      businessEmail: _businessEmail.text,
+      businessCompany: _businessCompany.text,
+      businessAddress: _businessAddress.text,
+      businessCity: _businessCity.text,
+      businessState: _businessState.text,
+      businessZip: _businessZip.text,
+      businessCountry: _businessCountry.text,
+      businessJobTitle: _businessJobTitle.text,
+      businessDepartment: _businessDepartment.text,
+      businessOffice: _businessOffice.text,
+      businessPhone: _businessPhone.text,
+      businessFax: _businessFax.text,
+      businessWeb: _businessWeb.text,
+      otherEmail: _otherEmail.text,
+      notes: _notes.text,
+      birthDay: _birthDay,
+      birthMonth: _birthMonth,
+      birthYear: _birthYear,
+      eTag: widget.contact?.eTag ?? "",
+      auto: widget.contact?.auto ?? null,
+      frequency: widget.contact?.frequency ?? 0,
+      dateModified:
+          widget.contact?.dateModified ?? DateTime.now().toIso8601String(),
+      davContactsUid: widget.contact?.davContactsUid ?? null,
+      davContactsVCardUid: widget.contact?.davContactsVCardUid ?? null,
+      groupUUIDs: _selectedGroupsUuids,
     );
   }
 
@@ -243,9 +252,11 @@ class _ContactEditAndroidState extends State<ContactEditAndroid> {
               padding: const EdgeInsets.all(16.0),
               child: Center(
                 child: GestureDetector(
-                  child: Text(i18n(context, _showAllFields
-                      ? "contacts_view_hide_additional_fields"
-                      : "contacts_view_show_additional_fields")),
+                  child: Text(i18n(
+                      context,
+                      _showAllFields
+                          ? "contacts_view_hide_additional_fields"
+                          : "contacts_view_show_additional_fields")),
                   onTap: () {
                     setState(() => _showAllFields = !_showAllFields);
                     // crutch
@@ -268,20 +279,27 @@ class _ContactEditAndroidState extends State<ContactEditAndroid> {
                   ContactInput("contacts_view_last_name", _lastName),
                   ContactInput("contacts_view_nickname", _nickName),
                   ContactTitle("contacts_view_section_home"),
-                  ContactInput("contacts_view_personal_email", _personalEmail, keyboardType: TextInputType.emailAddress),
-                  ContactInput("contacts_view_personal_address", _personalAddress),
+                  ContactInput("contacts_view_personal_email", _personalEmail,
+                      keyboardType: TextInputType.emailAddress),
+                  ContactInput(
+                      "contacts_view_personal_address", _personalAddress),
                   ContactInput("contacts_view_city", _personalCity),
                   ContactInput("contacts_view_province", _personalState),
                   ContactInput("contacts_view_zip", _personalZip),
                   ContactInput("contacts_view_country", _personalCountry),
                   ContactInput("contacts_view_web_page", _personalWeb),
-                  ContactInput("contacts_view_fax", _personalFax, keyboardType: TextInputType.phone),
-                  ContactInput("contacts_view_phone", _personalPhone, keyboardType: TextInputType.phone),
-                  ContactInput("contacts_view_mobile", _personalMobile, keyboardType: TextInputType.phone),
+                  ContactInput("contacts_view_fax", _personalFax,
+                      keyboardType: TextInputType.phone),
+                  ContactInput("contacts_view_phone", _personalPhone,
+                      keyboardType: TextInputType.phone),
+                  ContactInput("contacts_view_mobile", _personalMobile,
+                      keyboardType: TextInputType.phone),
                   ContactTitle("contacts_view_section_business"),
-                  ContactInput("contacts_view_business_email", _businessEmail, keyboardType: TextInputType.emailAddress),
+                  ContactInput("contacts_view_business_email", _businessEmail,
+                      keyboardType: TextInputType.emailAddress),
                   ContactInput("contacts_view_company", _businessCompany),
-                  ContactInput("contacts_view_personal_address", _businessAddress),
+                  ContactInput(
+                      "contacts_view_personal_address", _businessAddress),
                   ContactInput("contacts_view_city", _businessCity),
                   ContactInput("contacts_view_province", _businessState),
                   ContactInput("contacts_view_zip", _businessZip),
@@ -290,8 +308,10 @@ class _ContactEditAndroidState extends State<ContactEditAndroid> {
                   ContactInput("contacts_view_department", _businessDepartment),
                   ContactInput("contacts_view_office", _businessOffice),
                   ContactInput("contacts_view_web_page", _businessWeb),
-                  ContactInput("contacts_view_fax", _businessFax, keyboardType: TextInputType.phone),
-                  ContactInput("contacts_view_phone", _businessPhone, keyboardType: TextInputType.phone),
+                  ContactInput("contacts_view_fax", _businessFax,
+                      keyboardType: TextInputType.phone),
+                  ContactInput("contacts_view_phone", _businessPhone,
+                      keyboardType: TextInputType.phone),
                   ContactTitle("contacts_view_section_other_info"),
                   ContactBirthDatePicker(
                     birthDay: _birthDay,
@@ -299,7 +319,8 @@ class _ContactEditAndroidState extends State<ContactEditAndroid> {
                     birthYear: _birthYear,
                     onPicked: _onDateSelected,
                   ),
-                  ContactInput("contacts_view_other_email", _otherEmail, keyboardType: TextInputType.emailAddress),
+                  ContactInput("contacts_view_other_email", _otherEmail,
+                      keyboardType: TextInputType.emailAddress),
                   ContactInput("contacts_view_notes", _notes),
                   ContactTitle("contacts_view_section_groups"),
                   ..._bloc.state.groups.map((g) {
@@ -308,8 +329,11 @@ class _ContactEditAndroidState extends State<ContactEditAndroid> {
                       value: _selectedGroupsUuids.contains(g.uuid),
                       onChanged: (v) {
                         setState(() {
-                          if (v) _selectedGroupsUuids.add(g.uuid);
-                          else _selectedGroupsUuids.removeWhere((id) => id == g.uuid);
+                          if (v)
+                            _selectedGroupsUuids.add(g.uuid);
+                          else
+                            _selectedGroupsUuids
+                                .removeWhere((id) => id == g.uuid);
                         });
                       },
                     );
@@ -328,7 +352,7 @@ class _ContactEditAndroidState extends State<ContactEditAndroid> {
   /// PrimaryAddress: {'Personal': 0, 'Business': 1},
 
   TextEditingController _getPrimaryEmailCtrl() {
-    switch(_primaryEmail) {
+    switch (_primaryEmail) {
       case 0:
         return _personalEmail;
       case 1:
@@ -341,7 +365,7 @@ class _ContactEditAndroidState extends State<ContactEditAndroid> {
   }
 
   TextEditingController _getPrimaryPhoneCtrl() {
-    switch(_primaryPhone) {
+    switch (_primaryPhone) {
       case 0:
         return _personalMobile;
       case 1:
@@ -354,7 +378,7 @@ class _ContactEditAndroidState extends State<ContactEditAndroid> {
   }
 
   TextEditingController _getPrimaryAddressCtrl() {
-    switch(_primaryAddress) {
+    switch (_primaryAddress) {
       case 0:
         return _personalAddress;
       case 1:
@@ -368,7 +392,8 @@ class _ContactEditAndroidState extends State<ContactEditAndroid> {
     final label = "contacts_view_email";
 
     if (!_showAllFields) {
-      return ContactInput(label, _getPrimaryEmailCtrl(), keyboardType: TextInputType.emailAddress);
+      return ContactInput(label, _getPrimaryEmailCtrl(),
+          keyboardType: TextInputType.emailAddress);
     } else {
       final options = [
         "${i18n(context, "contacts_view_personal_email")}: ${_personalEmail.text}",
@@ -388,7 +413,8 @@ class _ContactEditAndroidState extends State<ContactEditAndroid> {
     final label = "contacts_view_phone";
 
     if (!_showAllFields) {
-      return ContactInput(label, _getPrimaryPhoneCtrl(), keyboardType: TextInputType.phone);
+      return ContactInput(label, _getPrimaryPhoneCtrl(),
+          keyboardType: TextInputType.phone);
     } else {
       final options = [
         "${i18n(context, "contacts_view_mobile")}: ${_personalMobile.text}",
@@ -397,9 +423,9 @@ class _ContactEditAndroidState extends State<ContactEditAndroid> {
       ];
 
       return ContactDropdown(
-          options: options,
-          primaryValue: _primaryPhone,
-          onSelected: (int value) => setState(() => _primaryPhone = value),
+        options: options,
+        primaryValue: _primaryPhone,
+        onSelected: (int value) => setState(() => _primaryPhone = value),
       );
     }
   }
