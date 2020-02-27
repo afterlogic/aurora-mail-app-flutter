@@ -25,13 +25,26 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
 //  }
 
   Stream<List<Message>> watchMessages(
-      String folder, int userLocalId, int accountEntityId, bool starredOnly) {
+    String folder,
+    int userLocalId,
+    String searchTerm,
+    int accountEntityId,
+    bool starredOnly,
+  ) {
     return (select(mail)
           ..where((m) => m.accountEntityId.equals(accountEntityId))
           ..where((m) => m.folder.equals(folder))
+          ..where((m) => searchTerm != null && searchTerm.isNotEmpty ?
+              m.subject.like("%$searchTerm%")
+              | m.toInJson.like("%$searchTerm%")
+              | m.fromInJson.like("%$searchTerm%")
+              | m.ccInJson.like("%$searchTerm%")
+              | m.bccInJson.like("%$searchTerm%")
+              | m.rawBody.like("%$searchTerm%")
+              : Constant(true))
           ..where((m) =>
               starredOnly ? m.flagsInJson.like("%\\flagged%") : Constant(true))
-          // todo V.O. im have exception on account with 462 mails.
+          // todo VO: im have exception on account with 462 mails.
           // Pagination?
           ..limit(400)
           ..orderBy([

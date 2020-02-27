@@ -1,4 +1,3 @@
-import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
@@ -13,11 +12,12 @@ abstract class MessagesListEvent extends Equatable {
 class SubscribeToMessages extends MessagesListEvent {
   final Folder currentFolder;
   final bool isStarred;
+  final String searchTerm;
 
-  SubscribeToMessages(this.currentFolder, this.isStarred);
+  const SubscribeToMessages(this.currentFolder, this.isStarred, this.searchTerm);
 
   @override
-  List<Object> get props => [currentFolder, isStarred];
+  List<Object> get props => [currentFolder, isStarred, searchTerm];
 }
 
 class StopMessagesRefresh extends MessagesListEvent {}

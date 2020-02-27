@@ -14,7 +14,10 @@ class ContactsListTile extends StatelessWidget {
   final void Function(Contact) onPressed;
   final void Function(Contact) onDeleteContact;
 
-  ContactsListTile({@required this.contact, @required this.onPressed, @required this.onDeleteContact})
+  ContactsListTile(
+      {@required this.contact,
+      @required this.onPressed,
+      @required this.onDeleteContact})
       : super(key: Key(contact.uuid));
 
   Widget _getStorageIcon(BuildContext context) {
@@ -43,32 +46,34 @@ class ContactsListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (allowDeleting) {
-    return Dismissible(
-      key: Key(contact.uuid),
-      direction: DismissDirection.endToStart,
-      child: _buildTile(context),
-      onDismissed: (_) => onDeleteContact(contact),
-      confirmDismiss: (_) => ConfirmationDialog.show(
-        context,
-        i18n(context, "contacts_delete_title"),
-        i18n(context, "contacts_delete_desc_with_name", {"contact": contact.fullName}),
-        i18n(context, "btn_delete"),
-        destructibleAction: true,
-      ),
-      background: Container(
-        color: Theme.of(context).errorColor,
-        child: Stack(
-          children: <Widget>[
-            Positioned(
-              right: 16.0,
-              top: 0.0,
-              bottom: 0.0,
-              child: Icon(Icons.delete_outline, color: Colors.white, size: 36.0),
-            ),
-          ],
+      return Dismissible(
+        key: Key(contact.uuid),
+        direction: DismissDirection.endToStart,
+        child: _buildTile(context),
+        onDismissed: (_) => onDeleteContact(contact),
+        confirmDismiss: (_) => ConfirmationDialog.show(
+          context,
+          i18n(context, "contacts_delete_title"),
+          i18n(context, "contacts_delete_desc_with_name",
+              {"contact": contact.fullName}),
+          i18n(context, "btn_delete"),
+          destructibleAction: true,
         ),
-      ),
-    );
+        background: Container(
+          color: Theme.of(context).errorColor,
+          child: Stack(
+            children: <Widget>[
+              Positioned(
+                right: 16.0,
+                top: 0.0,
+                bottom: 0.0,
+                child:
+                    Icon(Icons.delete_outline, color: Colors.white, size: 36.0),
+              ),
+            ],
+          ),
+        ),
+      );
     } else {
       return _buildTile(context);
     }
@@ -80,7 +85,9 @@ class ContactsListTile extends StatelessWidget {
     final title = name != null && name.isNotEmpty ? name : contact.viewEmail;
     final authBloc = BlocProvider.of<AuthBloc>(context);
     final contactsBloc = BlocProvider.of<ContactsBloc>(context);
-    final currentStorage = contactsBloc.state.storages.firstWhere((s) => s.sqliteId == contactsBloc.state.selectedStorage, orElse: () => null);
+    final currentStorage = contactsBloc.state.storages.firstWhere(
+        (s) => s.sqliteId == contactsBloc.state.selectedStorage,
+        orElse: () => null);
 
     return ListTile(
       leading: Column(
@@ -90,8 +97,9 @@ class ContactsListTile extends StatelessWidget {
             width: 36.0,
             height: 36.0,
             decoration: BoxDecoration(
-              color: theme.brightness == Brightness.dark ? theme.accentColor
-                  .withOpacity(0.2) : theme.accentColor.withOpacity(0.06),
+              color: theme.brightness == Brightness.dark
+                  ? theme.accentColor.withOpacity(0.2)
+                  : theme.accentColor.withOpacity(0.06),
               borderRadius: BorderRadius.circular(10.0),
             ),
             child: Center(
@@ -107,21 +115,29 @@ class ContactsListTile extends StatelessWidget {
           ),
         ],
       ),
-      title: Text(title),
-      subtitle: name != null && name.isNotEmpty ? Text(
-        contact.viewEmail != null && contact.viewEmail.isNotEmpty
-            ? contact.viewEmail
-            : i18n(context, "contacts_email_empty"),
-        style: TextStyle(
-          color: Theme.of(context).disabledColor,
-        ),
-      ) : null,
+      title: Text(
+        title,
+        maxLines: 1,
+      ),
+      subtitle: name != null && name.isNotEmpty
+          ? Text(
+              contact.viewEmail != null && contact.viewEmail.isNotEmpty
+                  ? contact.viewEmail
+                  : i18n(context, "contacts_email_empty"),
+              style: TextStyle(
+                color: Theme.of(context).disabledColor,
+              ),
+              maxLines: 1,
+            )
+          : null,
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
-          if (currentStorage != null && currentStorage.name == StorageNames.team && contact.viewEmail == authBloc.currentAccount.email)
+          if (currentStorage != null &&
+              currentStorage.name == StorageNames.team &&
+              contact.viewEmail == authBloc.currentAccount.email)
             Container(
               decoration: BoxDecoration(
                 color: theme.disabledColor.withOpacity(0.1),

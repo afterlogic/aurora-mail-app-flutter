@@ -44,9 +44,8 @@ class Message extends DataClass implements Insertable<Message> {
   final String inReplyTo;
   final String references;
   final String readingConfirmationAddressee;
-  final String html;
-  final String plain;
-  final String plainRaw;
+  final String htmlBody;
+  final String rawBody;
   final bool rtl;
   final String extendInJson;
   final bool safety;
@@ -92,9 +91,8 @@ class Message extends DataClass implements Insertable<Message> {
       @required this.inReplyTo,
       @required this.references,
       @required this.readingConfirmationAddressee,
-      this.html,
-      @required this.plain,
-      @required this.plainRaw,
+      @required this.htmlBody,
+      @required this.rawBody,
       @required this.rtl,
       @required this.extendInJson,
       @required this.safety,
@@ -179,11 +177,10 @@ class Message extends DataClass implements Insertable<Message> {
           data['${effectivePrefix}message_references']),
       readingConfirmationAddressee: stringType.mapFromDatabaseResponse(
           data['${effectivePrefix}reading_confirmation_addressee']),
-      html: stringType.mapFromDatabaseResponse(data['${effectivePrefix}html']),
-      plain:
-          stringType.mapFromDatabaseResponse(data['${effectivePrefix}plain']),
-      plainRaw: stringType
-          .mapFromDatabaseResponse(data['${effectivePrefix}plain_raw']),
+      htmlBody: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}html_body']),
+      rawBody: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}raw_body']),
       rtl: boolType.mapFromDatabaseResponse(data['${effectivePrefix}rtl']),
       extendInJson: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}extend_in_json']),
@@ -244,9 +241,8 @@ class Message extends DataClass implements Insertable<Message> {
       references: serializer.fromJson<String>(json['references']),
       readingConfirmationAddressee:
           serializer.fromJson<String>(json['readingConfirmationAddressee']),
-      html: serializer.fromJson<String>(json['html']),
-      plain: serializer.fromJson<String>(json['plain']),
-      plainRaw: serializer.fromJson<String>(json['plainRaw']),
+      htmlBody: serializer.fromJson<String>(json['htmlBody']),
+      rawBody: serializer.fromJson<String>(json['rawBody']),
       rtl: serializer.fromJson<bool>(json['rtl']),
       extendInJson: serializer.fromJson<String>(json['extendInJson']),
       safety: serializer.fromJson<bool>(json['safety']),
@@ -300,9 +296,8 @@ class Message extends DataClass implements Insertable<Message> {
       'references': serializer.toJson<String>(references),
       'readingConfirmationAddressee':
           serializer.toJson<String>(readingConfirmationAddressee),
-      'html': serializer.toJson<String>(html),
-      'plain': serializer.toJson<String>(plain),
-      'plainRaw': serializer.toJson<String>(plainRaw),
+      'htmlBody': serializer.toJson<String>(htmlBody),
+      'rawBody': serializer.toJson<String>(rawBody),
       'rtl': serializer.toJson<bool>(rtl),
       'extendInJson': serializer.toJson<String>(extendInJson),
       'safety': serializer.toJson<bool>(safety),
@@ -421,12 +416,12 @@ class Message extends DataClass implements Insertable<Message> {
           readingConfirmationAddressee == null && nullToAbsent
               ? const Value.absent()
               : Value(readingConfirmationAddressee),
-      html: html == null && nullToAbsent ? const Value.absent() : Value(html),
-      plain:
-          plain == null && nullToAbsent ? const Value.absent() : Value(plain),
-      plainRaw: plainRaw == null && nullToAbsent
+      htmlBody: htmlBody == null && nullToAbsent
           ? const Value.absent()
-          : Value(plainRaw),
+          : Value(htmlBody),
+      rawBody: rawBody == null && nullToAbsent
+          ? const Value.absent()
+          : Value(rawBody),
       rtl: rtl == null && nullToAbsent ? const Value.absent() : Value(rtl),
       extendInJson: extendInJson == null && nullToAbsent
           ? const Value.absent()
@@ -489,9 +484,8 @@ class Message extends DataClass implements Insertable<Message> {
           String inReplyTo,
           String references,
           String readingConfirmationAddressee,
-          String html,
-          String plain,
-          String plainRaw,
+          String htmlBody,
+          String rawBody,
           bool rtl,
           String extendInJson,
           bool safety,
@@ -540,9 +534,8 @@ class Message extends DataClass implements Insertable<Message> {
         references: references ?? this.references,
         readingConfirmationAddressee:
             readingConfirmationAddressee ?? this.readingConfirmationAddressee,
-        html: html ?? this.html,
-        plain: plain ?? this.plain,
-        plainRaw: plainRaw ?? this.plainRaw,
+        htmlBody: htmlBody ?? this.htmlBody,
+        rawBody: rawBody ?? this.rawBody,
         rtl: rtl ?? this.rtl,
         extendInJson: extendInJson ?? this.extendInJson,
         safety: safety ?? this.safety,
@@ -594,9 +587,8 @@ class Message extends DataClass implements Insertable<Message> {
           ..write('references: $references, ')
           ..write(
               'readingConfirmationAddressee: $readingConfirmationAddressee, ')
-          ..write('html: $html, ')
-          ..write('plain: $plain, ')
-          ..write('plainRaw: $plainRaw, ')
+          ..write('htmlBody: $htmlBody, ')
+          ..write('rawBody: $rawBody, ')
           ..write('rtl: $rtl, ')
           ..write('extendInJson: $extendInJson, ')
           ..write('safety: $safety, ')
@@ -653,7 +645,7 @@ class Message extends DataClass implements Insertable<Message> {
                                                                               .hashCode,
                                                                           $mrjc(
                                                                               fromInJson.hashCode,
-                                                                              $mrjc(fromToDisplay.hashCode, $mrjc(ccInJson.hashCode, $mrjc(bccInJson.hashCode, $mrjc(senderInJson.hashCode, $mrjc(replyToInJson.hashCode, $mrjc(hasAttachments.hashCode, $mrjc(hasVcardAttachment.hashCode, $mrjc(hasIcalAttachment.hashCode, $mrjc(importance.hashCode, $mrjc(draftInfoInJson.hashCode, $mrjc(sensitivity.hashCode, $mrjc(downloadAsEmlUrl.hashCode, $mrjc(hash.hashCode, $mrjc(headers.hashCode, $mrjc(inReplyTo.hashCode, $mrjc(references.hashCode, $mrjc(readingConfirmationAddressee.hashCode, $mrjc(html.hashCode, $mrjc(plain.hashCode, $mrjc(plainRaw.hashCode, $mrjc(rtl.hashCode, $mrjc(extendInJson.hashCode, $mrjc(safety.hashCode, $mrjc(hasExternals.hashCode, $mrjc(foundedCIDsInJson.hashCode, $mrjc(foundedContentLocationUrlsInJson.hashCode, $mrjc(attachmentsInJson.hashCode, customInJson.hashCode)))))))))))))))))))))))))))))))))))))))))))))));
+                                                                              $mrjc(fromToDisplay.hashCode, $mrjc(ccInJson.hashCode, $mrjc(bccInJson.hashCode, $mrjc(senderInJson.hashCode, $mrjc(replyToInJson.hashCode, $mrjc(hasAttachments.hashCode, $mrjc(hasVcardAttachment.hashCode, $mrjc(hasIcalAttachment.hashCode, $mrjc(importance.hashCode, $mrjc(draftInfoInJson.hashCode, $mrjc(sensitivity.hashCode, $mrjc(downloadAsEmlUrl.hashCode, $mrjc(hash.hashCode, $mrjc(headers.hashCode, $mrjc(inReplyTo.hashCode, $mrjc(references.hashCode, $mrjc(readingConfirmationAddressee.hashCode, $mrjc(htmlBody.hashCode, $mrjc(rawBody.hashCode, $mrjc(rtl.hashCode, $mrjc(extendInJson.hashCode, $mrjc(safety.hashCode, $mrjc(hasExternals.hashCode, $mrjc(foundedCIDsInJson.hashCode, $mrjc(foundedContentLocationUrlsInJson.hashCode, $mrjc(attachmentsInJson.hashCode, customInJson.hashCode))))))))))))))))))))))))))))))))))))))))))))));
   @override
   bool operator ==(dynamic other) =>
       identical(this, other) ||
@@ -696,9 +688,8 @@ class Message extends DataClass implements Insertable<Message> {
           other.references == this.references &&
           other.readingConfirmationAddressee ==
               this.readingConfirmationAddressee &&
-          other.html == this.html &&
-          other.plain == this.plain &&
-          other.plainRaw == this.plainRaw &&
+          other.htmlBody == this.htmlBody &&
+          other.rawBody == this.rawBody &&
           other.rtl == this.rtl &&
           other.extendInJson == this.extendInJson &&
           other.safety == this.safety &&
@@ -747,9 +738,8 @@ class MailCompanion extends UpdateCompanion<Message> {
   final Value<String> inReplyTo;
   final Value<String> references;
   final Value<String> readingConfirmationAddressee;
-  final Value<String> html;
-  final Value<String> plain;
-  final Value<String> plainRaw;
+  final Value<String> htmlBody;
+  final Value<String> rawBody;
   final Value<bool> rtl;
   final Value<String> extendInJson;
   final Value<bool> safety;
@@ -795,9 +785,8 @@ class MailCompanion extends UpdateCompanion<Message> {
     this.inReplyTo = const Value.absent(),
     this.references = const Value.absent(),
     this.readingConfirmationAddressee = const Value.absent(),
-    this.html = const Value.absent(),
-    this.plain = const Value.absent(),
-    this.plainRaw = const Value.absent(),
+    this.htmlBody = const Value.absent(),
+    this.rawBody = const Value.absent(),
     this.rtl = const Value.absent(),
     this.extendInJson = const Value.absent(),
     this.safety = const Value.absent(),
@@ -844,9 +833,8 @@ class MailCompanion extends UpdateCompanion<Message> {
     @required String inReplyTo,
     @required String references,
     @required String readingConfirmationAddressee,
-    this.html = const Value.absent(),
-    @required String plain,
-    @required String plainRaw,
+    this.htmlBody = const Value.absent(),
+    this.rawBody = const Value.absent(),
     @required bool rtl,
     @required String extendInJson,
     @required bool safety,
@@ -882,8 +870,6 @@ class MailCompanion extends UpdateCompanion<Message> {
         inReplyTo = Value(inReplyTo),
         references = Value(references),
         readingConfirmationAddressee = Value(readingConfirmationAddressee),
-        plain = Value(plain),
-        plainRaw = Value(plainRaw),
         rtl = Value(rtl),
         extendInJson = Value(extendInJson),
         safety = Value(safety),
@@ -929,9 +915,8 @@ class MailCompanion extends UpdateCompanion<Message> {
       Value<String> inReplyTo,
       Value<String> references,
       Value<String> readingConfirmationAddressee,
-      Value<String> html,
-      Value<String> plain,
-      Value<String> plainRaw,
+      Value<String> htmlBody,
+      Value<String> rawBody,
       Value<bool> rtl,
       Value<String> extendInJson,
       Value<bool> safety,
@@ -980,9 +965,8 @@ class MailCompanion extends UpdateCompanion<Message> {
       references: references ?? this.references,
       readingConfirmationAddressee:
           readingConfirmationAddressee ?? this.readingConfirmationAddressee,
-      html: html ?? this.html,
-      plain: plain ?? this.plain,
-      plainRaw: plainRaw ?? this.plainRaw,
+      htmlBody: htmlBody ?? this.htmlBody,
+      rawBody: rawBody ?? this.rawBody,
       rtl: rtl ?? this.rtl,
       extendInJson: extendInJson ?? this.extendInJson,
       safety: safety ?? this.safety,
@@ -1462,40 +1446,22 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     );
   }
 
-  final VerificationMeta _htmlMeta = const VerificationMeta('html');
-  GeneratedTextColumn _html;
+  final VerificationMeta _htmlBodyMeta = const VerificationMeta('htmlBody');
+  GeneratedTextColumn _htmlBody;
   @override
-  GeneratedTextColumn get html => _html ??= _constructHtml();
-  GeneratedTextColumn _constructHtml() {
-    return GeneratedTextColumn(
-      'html',
-      $tableName,
-      true,
-    );
+  GeneratedTextColumn get htmlBody => _htmlBody ??= _constructHtmlBody();
+  GeneratedTextColumn _constructHtmlBody() {
+    return GeneratedTextColumn('html_body', $tableName, false,
+        defaultValue: Constant(""));
   }
 
-  final VerificationMeta _plainMeta = const VerificationMeta('plain');
-  GeneratedTextColumn _plain;
+  final VerificationMeta _rawBodyMeta = const VerificationMeta('rawBody');
+  GeneratedTextColumn _rawBody;
   @override
-  GeneratedTextColumn get plain => _plain ??= _constructPlain();
-  GeneratedTextColumn _constructPlain() {
-    return GeneratedTextColumn(
-      'plain',
-      $tableName,
-      false,
-    );
-  }
-
-  final VerificationMeta _plainRawMeta = const VerificationMeta('plainRaw');
-  GeneratedTextColumn _plainRaw;
-  @override
-  GeneratedTextColumn get plainRaw => _plainRaw ??= _constructPlainRaw();
-  GeneratedTextColumn _constructPlainRaw() {
-    return GeneratedTextColumn(
-      'plain_raw',
-      $tableName,
-      false,
-    );
+  GeneratedTextColumn get rawBody => _rawBody ??= _constructRawBody();
+  GeneratedTextColumn _constructRawBody() {
+    return GeneratedTextColumn('raw_body', $tableName, false,
+        defaultValue: Constant(""));
   }
 
   final VerificationMeta _rtlMeta = const VerificationMeta('rtl');
@@ -1645,9 +1611,8 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
         inReplyTo,
         references,
         readingConfirmationAddressee,
-        html,
-        plain,
-        plainRaw,
+        htmlBody,
+        rawBody,
         rtl,
         extendInJson,
         safety,
@@ -1894,21 +1859,13 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     } else if (isInserting) {
       context.missing(_readingConfirmationAddresseeMeta);
     }
-    if (d.html.present) {
-      context.handle(
-          _htmlMeta, html.isAcceptableValue(d.html.value, _htmlMeta));
+    if (d.htmlBody.present) {
+      context.handle(_htmlBodyMeta,
+          htmlBody.isAcceptableValue(d.htmlBody.value, _htmlBodyMeta));
     }
-    if (d.plain.present) {
-      context.handle(
-          _plainMeta, plain.isAcceptableValue(d.plain.value, _plainMeta));
-    } else if (isInserting) {
-      context.missing(_plainMeta);
-    }
-    if (d.plainRaw.present) {
-      context.handle(_plainRawMeta,
-          plainRaw.isAcceptableValue(d.plainRaw.value, _plainRawMeta));
-    } else if (isInserting) {
-      context.missing(_plainRawMeta);
+    if (d.rawBody.present) {
+      context.handle(_rawBodyMeta,
+          rawBody.isAcceptableValue(d.rawBody.value, _rawBodyMeta));
     }
     if (d.rtl.present) {
       context.handle(_rtlMeta, rtl.isAcceptableValue(d.rtl.value, _rtlMeta));
@@ -2104,14 +2061,11 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
       map['reading_confirmation_addressee'] =
           Variable<String, StringType>(d.readingConfirmationAddressee.value);
     }
-    if (d.html.present) {
-      map['html'] = Variable<String, StringType>(d.html.value);
+    if (d.htmlBody.present) {
+      map['html_body'] = Variable<String, StringType>(d.htmlBody.value);
     }
-    if (d.plain.present) {
-      map['plain'] = Variable<String, StringType>(d.plain.value);
-    }
-    if (d.plainRaw.present) {
-      map['plain_raw'] = Variable<String, StringType>(d.plainRaw.value);
+    if (d.rawBody.present) {
+      map['raw_body'] = Variable<String, StringType>(d.rawBody.value);
     }
     if (d.rtl.present) {
       map['rtl'] = Variable<bool, BoolType>(d.rtl.value);
@@ -8438,333 +8392,6 @@ class $ContactsStoragesTable extends ContactsStorages
       const ContactsInfoConverter();
 }
 
-class LocalPgpKey extends DataClass implements Insertable<LocalPgpKey> {
-  final String id;
-  final String name;
-  final String mail;
-  final bool isPrivate;
-  final int length;
-  final String other;
-  LocalPgpKey(
-      {@required this.id,
-      this.name,
-      @required this.mail,
-      @required this.isPrivate,
-      this.length,
-      @required this.other});
-  factory LocalPgpKey.fromData(Map<String, dynamic> data, GeneratedDatabase db,
-      {String prefix}) {
-    final effectivePrefix = prefix ?? '';
-    final stringType = db.typeSystem.forDartType<String>();
-    final boolType = db.typeSystem.forDartType<bool>();
-    final intType = db.typeSystem.forDartType<int>();
-    return LocalPgpKey(
-      id: stringType.mapFromDatabaseResponse(data['${effectivePrefix}id']),
-      name: stringType.mapFromDatabaseResponse(data['${effectivePrefix}name']),
-      mail: stringType.mapFromDatabaseResponse(data['${effectivePrefix}mail']),
-      isPrivate: boolType
-          .mapFromDatabaseResponse(data['${effectivePrefix}is_private']),
-      length: intType.mapFromDatabaseResponse(data['${effectivePrefix}length']),
-      other:
-          stringType.mapFromDatabaseResponse(data['${effectivePrefix}other']),
-    );
-  }
-  factory LocalPgpKey.fromJson(Map<String, dynamic> json,
-      {ValueSerializer serializer}) {
-    serializer ??= moorRuntimeOptions.defaultSerializer;
-    return LocalPgpKey(
-      id: serializer.fromJson<String>(json['id']),
-      name: serializer.fromJson<String>(json['name']),
-      mail: serializer.fromJson<String>(json['mail']),
-      isPrivate: serializer.fromJson<bool>(json['isPrivate']),
-      length: serializer.fromJson<int>(json['length']),
-      other: serializer.fromJson<String>(json['other']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer serializer}) {
-    serializer ??= moorRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'id': serializer.toJson<String>(id),
-      'name': serializer.toJson<String>(name),
-      'mail': serializer.toJson<String>(mail),
-      'isPrivate': serializer.toJson<bool>(isPrivate),
-      'length': serializer.toJson<int>(length),
-      'other': serializer.toJson<String>(other),
-    };
-  }
-
-  @override
-  PgpKeyModelCompanion createCompanion(bool nullToAbsent) {
-    return PgpKeyModelCompanion(
-      id: id == null && nullToAbsent ? const Value.absent() : Value(id),
-      name: name == null && nullToAbsent ? const Value.absent() : Value(name),
-      mail: mail == null && nullToAbsent ? const Value.absent() : Value(mail),
-      isPrivate: isPrivate == null && nullToAbsent
-          ? const Value.absent()
-          : Value(isPrivate),
-      length:
-          length == null && nullToAbsent ? const Value.absent() : Value(length),
-      other:
-          other == null && nullToAbsent ? const Value.absent() : Value(other),
-    );
-  }
-
-  LocalPgpKey copyWith(
-          {String id,
-          String name,
-          String mail,
-          bool isPrivate,
-          int length,
-          String other}) =>
-      LocalPgpKey(
-        id: id ?? this.id,
-        name: name ?? this.name,
-        mail: mail ?? this.mail,
-        isPrivate: isPrivate ?? this.isPrivate,
-        length: length ?? this.length,
-        other: other ?? this.other,
-      );
-  @override
-  String toString() {
-    return (StringBuffer('LocalPgpKey(')
-          ..write('id: $id, ')
-          ..write('name: $name, ')
-          ..write('mail: $mail, ')
-          ..write('isPrivate: $isPrivate, ')
-          ..write('length: $length, ')
-          ..write('other: $other')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => $mrjf($mrjc(
-      id.hashCode,
-      $mrjc(
-          name.hashCode,
-          $mrjc(
-              mail.hashCode,
-              $mrjc(isPrivate.hashCode,
-                  $mrjc(length.hashCode, other.hashCode))))));
-  @override
-  bool operator ==(dynamic other) =>
-      identical(this, other) ||
-      (other is LocalPgpKey &&
-          other.id == this.id &&
-          other.name == this.name &&
-          other.mail == this.mail &&
-          other.isPrivate == this.isPrivate &&
-          other.length == this.length &&
-          other.other == this.other);
-}
-
-class PgpKeyModelCompanion extends UpdateCompanion<LocalPgpKey> {
-  final Value<String> id;
-  final Value<String> name;
-  final Value<String> mail;
-  final Value<bool> isPrivate;
-  final Value<int> length;
-  final Value<String> other;
-  const PgpKeyModelCompanion({
-    this.id = const Value.absent(),
-    this.name = const Value.absent(),
-    this.mail = const Value.absent(),
-    this.isPrivate = const Value.absent(),
-    this.length = const Value.absent(),
-    this.other = const Value.absent(),
-  });
-  PgpKeyModelCompanion.insert({
-    @required String id,
-    this.name = const Value.absent(),
-    @required String mail,
-    @required bool isPrivate,
-    this.length = const Value.absent(),
-    @required String other,
-  })  : id = Value(id),
-        mail = Value(mail),
-        isPrivate = Value(isPrivate),
-        other = Value(other);
-  PgpKeyModelCompanion copyWith(
-      {Value<String> id,
-      Value<String> name,
-      Value<String> mail,
-      Value<bool> isPrivate,
-      Value<int> length,
-      Value<String> other}) {
-    return PgpKeyModelCompanion(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      mail: mail ?? this.mail,
-      isPrivate: isPrivate ?? this.isPrivate,
-      length: length ?? this.length,
-      other: other ?? this.other,
-    );
-  }
-}
-
-class $PgpKeyModelTable extends PgpKeyModel
-    with TableInfo<$PgpKeyModelTable, LocalPgpKey> {
-  final GeneratedDatabase _db;
-  final String _alias;
-  $PgpKeyModelTable(this._db, [this._alias]);
-  final VerificationMeta _idMeta = const VerificationMeta('id');
-  GeneratedTextColumn _id;
-  @override
-  GeneratedTextColumn get id => _id ??= _constructId();
-  GeneratedTextColumn _constructId() {
-    return GeneratedTextColumn(
-      'id',
-      $tableName,
-      false,
-    );
-  }
-
-  final VerificationMeta _nameMeta = const VerificationMeta('name');
-  GeneratedTextColumn _name;
-  @override
-  GeneratedTextColumn get name => _name ??= _constructName();
-  GeneratedTextColumn _constructName() {
-    return GeneratedTextColumn(
-      'name',
-      $tableName,
-      true,
-    );
-  }
-
-  final VerificationMeta _mailMeta = const VerificationMeta('mail');
-  GeneratedTextColumn _mail;
-  @override
-  GeneratedTextColumn get mail => _mail ??= _constructMail();
-  GeneratedTextColumn _constructMail() {
-    return GeneratedTextColumn(
-      'mail',
-      $tableName,
-      false,
-    );
-  }
-
-  final VerificationMeta _isPrivateMeta = const VerificationMeta('isPrivate');
-  GeneratedBoolColumn _isPrivate;
-  @override
-  GeneratedBoolColumn get isPrivate => _isPrivate ??= _constructIsPrivate();
-  GeneratedBoolColumn _constructIsPrivate() {
-    return GeneratedBoolColumn(
-      'is_private',
-      $tableName,
-      false,
-    );
-  }
-
-  final VerificationMeta _lengthMeta = const VerificationMeta('length');
-  GeneratedIntColumn _length;
-  @override
-  GeneratedIntColumn get length => _length ??= _constructLength();
-  GeneratedIntColumn _constructLength() {
-    return GeneratedIntColumn(
-      'length',
-      $tableName,
-      true,
-    );
-  }
-
-  final VerificationMeta _otherMeta = const VerificationMeta('other');
-  GeneratedTextColumn _other;
-  @override
-  GeneratedTextColumn get other => _other ??= _constructOther();
-  GeneratedTextColumn _constructOther() {
-    return GeneratedTextColumn(
-      'other',
-      $tableName,
-      false,
-    );
-  }
-
-  @override
-  List<GeneratedColumn> get $columns =>
-      [id, name, mail, isPrivate, length, other];
-  @override
-  $PgpKeyModelTable get asDslTable => this;
-  @override
-  String get $tableName => _alias ?? 'pgp_key_model';
-  @override
-  final String actualTableName = 'pgp_key_model';
-  @override
-  VerificationContext validateIntegrity(PgpKeyModelCompanion d,
-      {bool isInserting = false}) {
-    final context = VerificationContext();
-    if (d.id.present) {
-      context.handle(_idMeta, id.isAcceptableValue(d.id.value, _idMeta));
-    } else if (isInserting) {
-      context.missing(_idMeta);
-    }
-    if (d.name.present) {
-      context.handle(
-          _nameMeta, name.isAcceptableValue(d.name.value, _nameMeta));
-    }
-    if (d.mail.present) {
-      context.handle(
-          _mailMeta, mail.isAcceptableValue(d.mail.value, _mailMeta));
-    } else if (isInserting) {
-      context.missing(_mailMeta);
-    }
-    if (d.isPrivate.present) {
-      context.handle(_isPrivateMeta,
-          isPrivate.isAcceptableValue(d.isPrivate.value, _isPrivateMeta));
-    } else if (isInserting) {
-      context.missing(_isPrivateMeta);
-    }
-    if (d.length.present) {
-      context.handle(
-          _lengthMeta, length.isAcceptableValue(d.length.value, _lengthMeta));
-    }
-    if (d.other.present) {
-      context.handle(
-          _otherMeta, other.isAcceptableValue(d.other.value, _otherMeta));
-    } else if (isInserting) {
-      context.missing(_otherMeta);
-    }
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {other, id};
-  @override
-  LocalPgpKey map(Map<String, dynamic> data, {String tablePrefix}) {
-    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
-    return LocalPgpKey.fromData(data, _db, prefix: effectivePrefix);
-  }
-
-  @override
-  Map<String, Variable> entityToSql(PgpKeyModelCompanion d) {
-    final map = <String, Variable>{};
-    if (d.id.present) {
-      map['id'] = Variable<String, StringType>(d.id.value);
-    }
-    if (d.name.present) {
-      map['name'] = Variable<String, StringType>(d.name.value);
-    }
-    if (d.mail.present) {
-      map['mail'] = Variable<String, StringType>(d.mail.value);
-    }
-    if (d.isPrivate.present) {
-      map['is_private'] = Variable<bool, BoolType>(d.isPrivate.value);
-    }
-    if (d.length.present) {
-      map['length'] = Variable<int, IntType>(d.length.value);
-    }
-    if (d.other.present) {
-      map['other'] = Variable<String, StringType>(d.other.value);
-    }
-    return map;
-  }
-
-  @override
-  $PgpKeyModelTable createAlias(String alias) {
-    return $PgpKeyModelTable(_db, alias);
-  }
-}
-
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(SqlTypeSystem.defaultInstance, e);
   $MailTable _mail;
@@ -8783,8 +8410,6 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   $ContactsStoragesTable _contactsStorages;
   $ContactsStoragesTable get contactsStorages =>
       _contactsStorages ??= $ContactsStoragesTable(this);
-  $PgpKeyModelTable _pgpKeyModel;
-  $PgpKeyModelTable get pgpKeyModel => _pgpKeyModel ??= $PgpKeyModelTable(this);
   @override
   Iterable<TableInfo> get allTables => allSchemaEntities.whereType<TableInfo>();
   @override
@@ -8795,7 +8420,6 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         accounts,
         contacts,
         contactsGroups,
-        contactsStorages,
-        pgpKeyModel
+        contactsStorages
       ];
 }

@@ -33,8 +33,10 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
   MailBloc _mailBloc;
   ContactsBloc _contactsBloc;
 
-  var _refreshCompleter = new Completer();
+  Completer _refreshCompleter;
   Folder _selectedFolder;
+
+  final _refreshKey = GlobalKey<RefreshIndicatorState>();
 
   @override
   void didChangeDependencies() {
@@ -127,7 +129,10 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
     switch (state.postAction) {
       case PostFolderLoadedAction.subscribeToMessages:
         _messagesListBloc.add(SubscribeToMessages(
-            state.selectedFolder, state.isStarredFilterEnabled));
+          state.selectedFolder,
+          state.isStarredFilterEnabled,
+          "",
+        ));
         break;
       case PostFolderLoadedAction.stopMessagesRefresh:
         _messagesListBloc.add(StopMessagesRefresh());
@@ -167,8 +172,7 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
                 bloc: _messagesListBloc,
                 listener: (BuildContext context, state) {
                   if (state is MessagesRefreshed || state is MailError) {
-                    _refreshCompleter?.complete();
-                    _refreshCompleter = new Completer();
+                    _endRefresh();
                   }
                   if (state is MessagesDeleted)
                     _mailBloc.add(RefreshMessages());
@@ -179,6 +183,11 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
                 bloc: _mailBloc,
                 listener: (BuildContext context, state) {
                   if (state is FoldersLoaded) {
+                    if (state.isProgress == true) {
+                      _startRefresh();
+                    } else {
+                      _endRefresh();
+                    }
                     setState(() => _selectedFolder = state.selectedFolder);
                     if (state.postAction != null) {
                       _dispatchPostFoldersLoadedAction(state);
@@ -207,8 +216,12 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
               ),
             ],
             child: RefreshIndicator(
+              key: _refreshKey,
               onRefresh: () {
-                _mailBloc.add(RefreshMessages());
+                if (_refreshCompleter == null) {
+                  _mailBloc.add(RefreshMessages());
+                  _refreshCompleter = Completer();
+                }
                 return _refreshCompleter.future;
               },
               backgroundColor: Colors.white,
@@ -221,7 +234,10 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
                     Widget child;
                     if (state is SubscribedToMessages) {
                       child = _buildMessagesStream(
-                          state.messagesSub, state.isStarredFilterEnabled);
+                        state.messagesSub,
+                        state.isStarredFilterEnabled,
+                        state.searchTerm.isNotEmpty,
+                      );
                     } else {
                       child = _buildMessagesLoading();
                     }
@@ -253,7 +269,7 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
 //  Widget _buildMessagesLoading() => SkeletonLoader();
 
   Widget _buildMessagesStream(
-      Stream<List<Message>> messagesSub, bool isStarred) {
+      Stream<List<Message>> messagesSub, bool isStarred, bool isSearch) {
     return StreamBuilder(
       stream: messagesSub,
       builder: (ctx, AsyncSnapshot<List<Message>> snap) {
@@ -262,11 +278,11 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
             _showError(ctx, snap.error.toString());
             return ListView();
           } else if (snap.hasData && snap.data.isNotEmpty) {
-            // isStared shows FLAT structure
+            // isStarred and isSearch show FLAT structure
             List<Message> messages = snap.data;
             List<Message> threads = [];
 
-            if (!isStarred) {
+            if (!isStarred && !isSearch) {
               messages = snap.data.where((m) => m.parentUid == null).toList();
               threads = snap.data.where((m) => m.parentUid != null).toList();
             }
@@ -308,5 +324,15 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
         }
       },
     );
+  }
+
+  _startRefresh() {
+    _refreshCompleter = Completer();
+    _refreshKey.currentState.show();
+  }
+
+  _endRefresh() {
+    _refreshCompleter?.complete();
+    _refreshCompleter = null;
   }
 }

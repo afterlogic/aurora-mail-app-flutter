@@ -22,6 +22,7 @@
   "messages_list_app_bar_contacts": "Контакты",
   "messages_list_app_bar_settings": "Настройки",
   "messages_list_app_bar_logout": "Выйти",
+  "messages_list_app_bar_search": "Поиск",
   "messages_list_app_bar_loading_folders": "Загрузка папок...",
   "messages_show_details": "Показать детали",
   "messages_images_security_alert": "Из соображений безобазности картинки были заблокированы.",
@@ -293,7 +294,9 @@
   "error_input_validation_name_illegal_symbol": "Имя не может содержать \"/\\*?<>|:\"",
   "error_input_validation_unique_name": "Такое имя уже записано",
   "pin": "PIN",
-  "verify_pin": "Проверить PIN",
+  "verify_pin": "Подтвердите PIN",
   "invalid_pin": "Неверный PIN",
-  "done": "Сделано"
+  "done": "Готово",
+  "confirm_exit": "Вы уверены что хотите выйти",
+  "exit": "Выйти"
 }

@@ -3,7 +3,6 @@ import 'dart:convert';
 
 import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
-import 'package:aurora_mail/database/mail/mail_table.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
@@ -17,9 +16,7 @@ import 'package:aurora_mail/modules/mail/screens/message_view/components/message
 import 'package:aurora_mail/modules/mail/screens/message_view/dialog/request_password_dialog.dart';
 import 'package:aurora_mail/modules/mail/screens/message_view/components/message_webview.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
-import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
-import 'package:aurora_mail/utils/date_formatting.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/mail_utils.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
@@ -28,6 +25,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'components/attachment.dart';
 import 'components/message_body.dart';
+
 
 class MessageViewAndroid extends StatefulWidget {
   final List<Message> messages;
@@ -236,112 +234,11 @@ class _MessageViewAndroidState extends State<MessageViewAndroid>
             }
           },
           child: MessageWebView(message, attachments,decryptedText),
-//          child: Padding(
-//            padding: const EdgeInsets.all(16.0),
-//            child: Column(
-//              crossAxisAlignment: CrossAxisAlignment.start,
-//              children: <Widget>[
-//                ConstrainedBox(
-//                  constraints: BoxConstraints(maxHeight: 107.0),
-//                  child: SingleChildScrollView(
-//                    child: Text(
-//                      message.subject.isNotEmpty
-//                          ? message.subject
-//                          : i18n(context, "messages_no_subject"),
-//                      style: Theme.of(context).textTheme.display1.copyWith(
-//                            fontSize: 26.0,
-//                          ),
-//                    ),
-//                  ),
-//                ),
-//                SizedBox(height: 12.0),
-//                Divider(height: 20.0),
-//                Row(
-//                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                  crossAxisAlignment: CrossAxisAlignment.baseline,
-//                  textBaseline: TextBaseline.alphabetic,
-//                  children: <Widget>[
-//                    Text(
-//                      message.fromToDisplay,
-//                      style: Theme.of(context).textTheme.subhead,
-//                    ),
-//                    BlocBuilder<SettingsBloc, SettingsState>(
-//                      builder: (_, state) => Text(DateFormatting.getDetailedMessageDate(
-//                        timestamp: message.timeStampInUTC,
-//                        locale: Localizations.localeOf(context).languageCode,
-//                        yesterdayWord: i18n(context, "formatting_yesterday"),
-//                        is24: (state as SettingsLoaded).is24 ?? true,
-//                      )),
-//                    ),
-//                  ],
-//                ),
-//                SizedBox(height: 10.0),
-//                Row(
-//                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                  crossAxisAlignment: CrossAxisAlignment.baseline,
-//                  textBaseline: TextBaseline.alphabetic,
-//                  children: <Widget>[
-//                    Text(
-//                      _formatTo(message),
-//                      style: Theme.of(context).textTheme.caption,
-//                    ),
-//                  ],
-//                ),
-//                Divider(),
-//                ...showTabs
-//                    ? _buildWithTabs(message, attachments)
-//                    : _buildWithoutTabs(message, attachments),
-//              ],
-//            ),
-//          ),
         ),
         bottomNavigationBar: MailBottomBar(
           onDecrypt: _decrypt,
         ),
       ),
     );
-  }
-
-  List<Widget> _buildWithTabs(
-      Message message, List<MailAttachment> attachments) {
-    return [
-      SizedBox(
-        height: 35.0,
-        child: TabBar(
-          controller: _tabCtrl,
-          labelColor: Theme.of(context).textTheme.body2.color,
-          indicatorSize: TabBarIndicatorSize.label,
-          tabs: <Widget>[
-            Tab(text: i18n(context, "messages_view_tab_message_body")),
-            Tab(text: i18n(context, "messages_view_tab_attachments")),
-          ],
-        ),
-      ),
-      Flexible(
-        child: TabBarView(
-          physics: NeverScrollableScrollPhysics(),
-          controller: _tabCtrl,
-          children: <Widget>[
-            MessageBody(message, attachments, decryptedText),
-            Center(
-              child: ListView(
-                children: attachments.map((attachment) {
-                  if (attachment.isInline) {
-                    return SizedBox();
-                  } else {
-                    return Attachment(attachment);
-                  }
-                }).toList(),
-              ),
-            ),
-          ],
-        ),
-      )
-    ];
-  }
-
-  List<Widget> _buildWithoutTabs(
-      Message message, List<MailAttachment> attachments) {
-    return [Flexible(child: MessageBody(message, attachments, decryptedText))];
   }
 }

@@ -158,10 +158,22 @@ class MailBloc extends Bloc<MailEvent, MailState> {
   Stream<MailState> _checkFoldersMessagesChanges(
       CheckFoldersMessagesChanges event) async* {
     try {
-      await _methods.updateFoldersHash(_selectedFolder);
+      final state = this.state;
+      if (state is FoldersLoaded) {
+        yield state.copyWith(isProgress: true);
+      } else {
+        yield FoldersLoading();
+      }
+      final folders = await _methods.updateFoldersHash(_selectedFolder);
 
       final guid = _selectedFolder.guid;
-      _methods.syncFolders(guid: guid, syncSystemFolders: true);
+      await _methods.syncFolders(guid: guid, syncSystemFolders: true);
+
+      yield FoldersLoaded(
+        folders,
+        _selectedFolder,
+        _isStarredFilterEnabled,
+      );
     } catch (err, s) {
       yield FoldersError(formatError(err, s));
     }

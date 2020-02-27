@@ -29,7 +29,8 @@ class MessageWebView extends StatefulWidget {
   final List<MailAttachment> attachments;
   final String decrypted;
 
-  const MessageWebView(this.message, this.attachments, this.decrypted, {Key key}) : super(key: key);
+  const MessageWebView(this.message, this.attachments, this.decrypted,
+      {Key key}) : super(key: key);
 
   @override
   _MessageWebViewState createState() => _MessageWebViewState();
@@ -47,29 +48,22 @@ class _MessageWebViewState extends State<MessageWebView> {
     _showImages = !widget.message.hasExternals || widget.message.safety;
     _getHtmlWithImages();
   }
+
   @override
   void didUpdateWidget(MessageWebView oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if(oldWidget.decrypted!=widget.decrypted){
+    if (oldWidget.decrypted != widget.decrypted) {
       _getHtmlWithImages();
-      setState(() {      });
+      setState(() {});
     }
   }
 
   void _getHtmlWithImages() async {
-    String htmlData;
-    String plainData;
-    if(widget.decrypted!=null){
+    String htmlData
+    if (widget.decrypted != null) {
       htmlData = widget.decrypted;
-    }else if (widget.message.html != null && widget.message.html.isNotEmpty) {
-      htmlData = widget.message.html;
-    } else if (widget.message.plain != null) {
-      plainData = widget.message.plain;
-    }
-
-    if (htmlData == null) {
-      setState(() => _htmlData = plainData ?? "");
-      return null;
+    } else {
+      htmlData = widget.message.htmlBody;
     }
     setState(() => _htmlData = htmlData);
     if (_showImages) {
@@ -79,12 +73,16 @@ class _MessageWebViewState extends State<MessageWebView> {
       );
     }
 
-    final user = BlocProvider.of<AuthBloc>(context).currentUser;
+    final user = BlocProvider
+        .of<AuthBloc>(context)
+        .currentUser;
 
     for (final attachment in widget.attachments) {
       htmlData = htmlData.replaceFirst(
         "data-x-src-cid=\"${attachment.cid}\"",
-        "src=\"${user.hostname}${attachment.viewUrl.replaceFirst("mail-attachment/", "mail-attachments-cookieless/")}&AuthToken=${user.token}\"",
+        "src=\"${user.hostname}${attachment.viewUrl.replaceFirst(
+            "mail-attachment/",
+            "mail-attachments-cookieless/")}&AuthToken=${user.token}\"",
       );
     }
 
@@ -96,7 +94,12 @@ class _MessageWebViewState extends State<MessageWebView> {
 
   String _formatTo(Message message) {
     final items = Mail.getToForDisplay(
-        context, message.toInJson, BlocProvider.of<AuthBloc>(context).currentAccount.email);
+      context,
+      message.toInJson,
+      BlocProvider
+          .of<AuthBloc>(context)
+          .currentAccount
+          .email,);
 
     if (items.isEmpty) {
       return i18n(context, "messages_no_receivers");
@@ -106,11 +109,15 @@ class _MessageWebViewState extends State<MessageWebView> {
   }
 
   String _getHtmlUri(String html) {
-    final state = BlocProvider.of<SettingsBloc>(context).state;
+    final state = BlocProvider
+        .of<SettingsBloc>(context)
+        .state;
 
     final date = DateFormatting.getDetailedMessageDate(
       timestamp: widget.message.timeStampInUTC,
-      locale: Localizations.localeOf(context).languageCode,
+      locale: Localizations
+          .localeOf(context)
+          .languageCode,
       yesterdayWord: i18n(context, "formatting_yesterday"),
       is24: (state as SettingsLoaded).is24 ?? true,
     );
@@ -121,14 +128,17 @@ class _MessageWebViewState extends State<MessageWebView> {
       to: _formatTo(widget.message),
       date: date,
       body: html,
-      showAttachmentsBtn: widget.attachments.where((a) => !a.isInline).isNotEmpty,
+      showAttachmentsBtn: widget.attachments
+          .where((a) => !a.isInline)
+          .isNotEmpty,
     );
     return Uri.dataFromString(wrappedHtml,
-            mimeType: 'text/html', encoding: Encoding.getByName('utf-8'))
+        mimeType: 'text/html', encoding: Encoding.getByName('utf-8'))
         .toString();
   }
 
-  FutureOr<NavigationDecision> _onWebViewNavigateRequest(NavigationRequest request) async {
+  FutureOr<NavigationDecision> _onWebViewNavigateRequest(
+      NavigationRequest request) async {
     if (request.url.endsWith(MessageWebViewActions.SHOW_INFO)) {
       // TODO: implement showing message info
       return NavigationDecision.prevent;
@@ -190,7 +200,9 @@ class _MessageWebViewState extends State<MessageWebView> {
                   child: AnimatedOpacity(
                     opacity: _pageLoaded && _htmlData != null ? 0.0 : 1.0,
                     duration: Duration(milliseconds: 100),
-                    child: Container(color: Theme.of(context).scaffoldBackgroundColor),
+                    child: Container(color: Theme
+                        .of(context)
+                        .scaffoldBackgroundColor),
                   ),
                 ),
               ),

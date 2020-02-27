@@ -123,7 +123,7 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
     _ccEmails.addAll(MailUtils.getEmails(_message.ccInJson));
     _bccEmails.addAll(MailUtils.getEmails(_message.bccInJson));
     _subjectTextCtrl.text = _message.subject;
-    _bodyTextCtrl.text = MailUtils.htmlToPlain(_message.html);
+    _bodyTextCtrl.text = _message.rawBody;
   }
 
   void _initForward(Forward action) async {
@@ -251,7 +251,7 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
   bool get _hasMessageChanged {
     if (_message != null) {
       return _subjectTextCtrl.text != _message.subject ||
-          _bodyTextCtrl.text != MailUtils.htmlToPlain(_message.html) ||
+          _bodyTextCtrl.text != _message.rawBody ||
           !listEquals<String>(
               MailUtils.getEmails(_message.toInJson), _toEmails) ||
           !listEquals<String>(
