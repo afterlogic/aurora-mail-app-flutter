@@ -26,11 +26,11 @@ class _EncryptDialogState extends State<EncryptDialog> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Text(i18n(context, "sign")),
+                Text(i18n(context, "encrypt")),
                 Checkbox(
-                  value: _sign,
+                  value: _encrypt,
                   onChanged: (bool value) {
-                    _sign = value;
+                    _encrypt = value;
                     setState(() {});
                   },
                 ),
@@ -40,11 +40,11 @@ class _EncryptDialogState extends State<EncryptDialog> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Text(i18n(context, "encrypt")),
+                Text(i18n(context, "sign")),
                 Checkbox(
-                  value: _encrypt,
+                  value: _sign,
                   onChanged: (bool value) {
-                    _encrypt = value;
+                    _sign = value;
                     setState(() {});
                   },
                 ),
