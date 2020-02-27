@@ -766,7 +766,7 @@ packages:
   theme:
     dependency: "direct main"
     description:
-      path: "build_res\\natro\\theme"
+      path: "build_res\\afterlogic\\theme"
       relative: true
     source: path
     version: "0.0.1"
