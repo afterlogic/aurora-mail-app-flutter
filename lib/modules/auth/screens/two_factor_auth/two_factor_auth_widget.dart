@@ -1,12 +1,13 @@
+import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/auth/blocs/two_factor_auth/bloc.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/auth_input.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/mail_logo.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/presentation_header.dart';
 import 'package:aurora_mail/modules/auth/screens/two_factor_auth/two_factor_auth_route.dart';
-import 'package:aurora_ui_kit/components/am_button.dart';
 import 'package:aurora_mail/utils/input_validation.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
+import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -24,6 +25,8 @@ class _TwoFactorAuthWidgetState extends State<TwoFactorAuthWidget> {
   final formKey = GlobalKey<FormState>();
   final bloc = TwoFactorBloc();
 
+  get value => null;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,7 +39,7 @@ class _TwoFactorAuthWidgetState extends State<TwoFactorAuthWidget> {
               i18n(context, state.errorMsg),
             );
           } else if (state is CompleteState) {
-            Navigator.pop(context, state.user);
+            widget.args.authBloc.add(UserLogIn(state.user));
           }
         },
         child: BlocBuilder<TwoFactorBloc, TwoFactorState>(
@@ -48,7 +51,7 @@ class _TwoFactorAuthWidgetState extends State<TwoFactorAuthWidget> {
   }
 
   Widget _buildPinForm(BuildContext context, TwoFactorState state) {
-    final loading = state is ProgressState;
+    final loading = state is ProgressState || state is CompleteState;
 
     return Stack(
       children: <Widget>[
@@ -112,12 +115,14 @@ class _TwoFactorAuthWidgetState extends State<TwoFactorAuthWidget> {
   _login() {
     if (formKey.currentState.validate()) {
       final args = widget.args;
-      bloc.add(LogIn(
-        pinCtrl.text,
-        args.host,
-        args.login,
-        args.password,
-      ));
+      bloc.add(
+        Verify(
+          pinCtrl.text,
+          args.host,
+          args.login,
+          args.password,
+        ),
+      );
     }
   }
 }

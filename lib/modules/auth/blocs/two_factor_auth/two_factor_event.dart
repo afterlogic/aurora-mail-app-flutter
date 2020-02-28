@@ -8,13 +8,13 @@ abstract class TwoFactorEvent extends Equatable {
   List<Object> get props => null;
 }
 
-class LogIn extends TwoFactorEvent implements AlwaysNonEqualObject {
+class Verify extends TwoFactorEvent implements AlwaysNonEqualObject {
   final String pin;
   final String host;
   final String login;
   final String pass;
 
-  LogIn(this.pin, this.host, this.login, this.pass);
+  Verify(this.pin, this.host, this.login, this.pass);
 
   @override
   List<Object> get props => [pin];
