@@ -23,7 +23,7 @@ class _KeyItemState extends State<KeyItem> {
     final description =
         "$length ${widget.pgpKey.isPrivate ? "private" : "public"})";
 
-    if (!widget.selected) {
+    if (widget.selected != true) {
       textTheme = textTheme.apply(
         bodyColor: Colors.grey,
         displayColor: Colors.grey,
@@ -39,25 +39,29 @@ class _KeyItemState extends State<KeyItem> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  widget.pgpKey.mail,
-                  style: textTheme.body1,
-                ),
-                Text(
-                  description,
-                  style: textTheme.caption,
-                ),
-              ],
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    widget.pgpKey.mail,
+                    style: textTheme.body1,
+                  ),
+                  Text(
+                    description,
+                    style: textTheme.caption,
+                  ),
+                ],
+              ),
             ),
-            Checkbox(
-              value: widget.selected,
-              onChanged: (isSelected) {
-                widget.onSelect(isSelected);
-              },
-            )
+            if (widget.selected != null)
+              Checkbox(
+                value: widget.selected,
+                onChanged: (isSelected) {
+                  widget.onSelect(isSelected);
+                },
+              )
           ],
         ),
         Divider(

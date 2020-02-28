@@ -94,7 +94,7 @@ class AppTheme {
 
   static final _buttonTheme = ButtonThemeData(
     buttonColor: AppColor.accent,
-    textTheme: ButtonTextTheme.primary,
+    textTheme: ButtonTextTheme.accent,
   );
 
   static final _floatTheme = FloatingActionButtonThemeData(

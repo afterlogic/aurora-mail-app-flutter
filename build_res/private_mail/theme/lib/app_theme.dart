@@ -45,6 +45,12 @@ class AppTheme {
           fontSize: 12.0,
           fontWeight: FontWeight.w400,
         ),
+        body1: TextStyle(
+          color: Colors.white,
+        ),
+        display1: TextStyle(
+          color: Colors.white54,
+        ),
       ),
     ),
   );
@@ -88,6 +94,12 @@ class AppTheme {
           color: Colors.white,
           fontSize: 12.0,
           fontWeight: FontWeight.w400,
+        ),
+        body1: TextStyle(
+          color: Colors.white,
+        ),
+        display1: TextStyle(
+          color: Colors.white54,
         ),
       ),
     ),

@@ -36,7 +36,7 @@ class _PgpSettingsState extends State<PgpSettings> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:AMAppBar(
+      appBar: AMAppBar(
         title: Text(i18n(context, "pgp_settings")),
       ),
       body: BlocListener<PgpSettingsBloc, PgpSettingsState>(
@@ -104,7 +104,14 @@ class _PgpSettingsState extends State<PgpSettings> {
       builder: (_) => GenerateKeyDialog(mails, current),
     );
     if (result is GenerateKeyDialogResult) {
-      bloc.add(GenerateKeys(result.mail, result.length, result.password));
+      final name = accounts.accounts
+              .firstWhere(
+                (account) => account.email == result.mail,
+                orElse: () => null,
+              )
+              ?.friendlyName ??
+          "";
+      bloc.add(GenerateKeys(name, result.mail, result.length, result.password));
     }
   }
 
@@ -203,9 +210,8 @@ class _PgpSettingsState extends State<PgpSettings> {
           (key) => InkWell(
             onTap: () => _openKey(context, key),
             child: _key(
-              (key.name ?? "") +
-                  (key.name?.isNotEmpty == true ? " " : "") +
-                  key.mail,
+              (key.name?.isNotEmpty == true ? "${key.name} " : "") +
+                  "<${key.mail}>",
               false,
             ),
           ),

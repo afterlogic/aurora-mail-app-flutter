@@ -1,7 +1,7 @@
 import 'package:crypto_model/crypto_model.dart';
+import 'package:crypto_plugin/crypto_plugin.dart';
 import 'package:crypto_storage/crypto_storage.dart';
 import 'package:crypto_worker/crypto_worker.dart';
-import 'package:crypto_plugin/crypto_plugin.dart';
 
 import 'pgp_encrypt_decrypt_impl.dart';
 
@@ -27,14 +27,16 @@ class PgpWorkerImpl extends PgpWorker {
   }
 
   Future<List<PgpKey>> createKeyPair(
+    String name,
     int length,
     String email,
     String password,
   ) async {
-    final keyPair = await _pgp.createKeys(length, email, password);
+    final keyPair = await _pgp.createKeys(
+        length, name.isEmpty ? "$email" : "$name <$email>", password);
 
-    final private = PgpKey.fill("", email, true, keyPair.secret, length);
-    final public = PgpKey.fill("", email, false, keyPair.public, length);
+    final private = PgpKey.fill(name, email, true, keyPair.secret, length);
+    final public = PgpKey.fill(name, email, false, keyPair.public, length);
 
     await _storage.addPgpKey(public);
     await _storage.addPgpKey(private);
@@ -76,7 +78,6 @@ class PgpWorkerImpl extends PgpWorker {
   }
 
   EncryptType encryptType(String text) {
-
     bool _contains(List<String> patterns) {
       var startIndex = 0;
       for (var pattern in patterns) {

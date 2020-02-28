@@ -8,6 +8,7 @@ abstract class PgpWorker {
   );
 
   Future<List<PgpKey>> createKeyPair(
+      String name,
     int length,
     String email,
     String password,

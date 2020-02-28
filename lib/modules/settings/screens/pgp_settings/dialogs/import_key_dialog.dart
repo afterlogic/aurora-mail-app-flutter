@@ -22,7 +22,7 @@ class _ImportKeyDialogState extends State<ImportKeyDialog> {
     super.initState();
     widget.pgpKeys.forEach((key, value) {
       keys.add(key);
-      if (!value) {
+      if (value == null) {
         keyAlreadyExist = true;
       }
     });

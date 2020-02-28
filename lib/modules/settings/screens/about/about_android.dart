@@ -15,6 +15,7 @@ class _AboutAndroidState extends State<AboutAndroid> {
   bool loading = false;
   String _version;
   String _buildNumber;
+  String _appName;
 
   @override
   void initState() {
@@ -42,6 +43,7 @@ class _AboutAndroidState extends State<AboutAndroid> {
     final packageInfo = await PackageInfo.fromPlatform();
     _version = packageInfo.version;
     _buildNumber = packageInfo.buildNumber;
+    _appName = packageInfo.appName;
     setState(() => loading = false);
   }
 
@@ -55,8 +57,7 @@ class _AboutAndroidState extends State<AboutAndroid> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                Text(i18n(context, "app_title"),
-                    style: Theme.of(context).textTheme.title),
+                Text(_appName, style: Theme.of(context).textTheme.title),
                 SizedBox(height: 12.0),
                 Text(
                   i18n(context, "settings_about_app_version",

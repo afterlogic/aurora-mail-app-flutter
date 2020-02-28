@@ -12,11 +12,12 @@ abstract class PgpSettingsEvent extends Equatable {
 class LoadKeys extends PgpSettingsEvent with AlwaysNonEqualObject {}
 
 class GenerateKeys extends PgpSettingsEvent with AlwaysNonEqualObject {
+  final String name;
   final String mail;
   final int length;
   final String password;
 
-  GenerateKeys(this.mail, this.length, this.password);
+  GenerateKeys(this.name, this.mail, this.length, this.password);
 
   @override
   List<Object> get props => [mail, length, password];

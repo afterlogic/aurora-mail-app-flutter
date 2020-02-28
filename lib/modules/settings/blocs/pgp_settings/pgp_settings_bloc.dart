@@ -44,14 +44,19 @@ class PgpSettingsBloc extends Bloc<PgpSettingsEvent, PgpSettingsState> {
     await _methods.deleteKey(event.mail, false);
     yield* _loadKeys().map((item) {
       if (item is LoadedState) {
-        return item.copyWith(keyProgress: event.mail);
+        return item.copyWith(
+          keyProgress: event.name.isEmpty
+              ? "<${event.mail}>"
+              : "${event.name} <${event.mail}>",
+        );
       } else {
         return item;
       }
     });
 
     try {
-      await _methods.generateKeys(event.mail, event.length, event.password);
+      await _methods.generateKeys(
+          event.name, event.mail, event.length, event.password);
     } catch (e) {
       print(e);
     }

@@ -4,11 +4,9 @@ import 'package:aurora_mail/utils/download_directory.dart';
 import 'package:aurora_mail/utils/permissions.dart';
 import 'package:crypto_model/crypto_model.dart';
 import 'package:crypto_storage/src/pgp_storage.dart';
-
 import 'package:crypto_worker/src/pgp/pgp_worker.dart';
 import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 class PgpSettingsMethods {
   final CryptoStorage cryptoStorage;
@@ -20,8 +18,13 @@ class PgpSettingsMethods {
     return cryptoStorage.getPgpKeys(isPrivate);
   }
 
-  Future generateKeys(String mail, int length, String password) async {
-    await cryptoWorker.createKeyPair(length, mail, password);
+  Future generateKeys(
+    String name,
+    String mail,
+    int length,
+    String password,
+  ) async {
+    await cryptoWorker.createKeyPair(name,length, mail, password);
   }
 
   Future<File> downloadKey(PgpKey key) async {
@@ -62,7 +65,7 @@ class PgpSettingsMethods {
     return dirPath + Platform.pathSeparator + KEY_FOLDER;
   }
 
-  Future deleteKey(String mail,bool isPrivate) async {
+  Future deleteKey(String mail, bool isPrivate) async {
     await cryptoStorage.deletePgpKey(mail, isPrivate);
   }
 
@@ -74,7 +77,7 @@ class PgpSettingsMethods {
     final map = <PgpKey, bool>{};
     for (var key in keys) {
       final existKey = await cryptoStorage.getPgpKey(key.mail, key.isPrivate);
-      map[key] = existKey == null;
+      map[key] = existKey == null ? true : null;
     }
     return map;
   }
