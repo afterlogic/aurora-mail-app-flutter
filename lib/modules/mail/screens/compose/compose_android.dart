@@ -64,6 +64,7 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
   final _ccEmails = new List<String>();
   final _bccEmails = new List<String>();
   final _attachments = new List();
+  List _savedAttachments;
   final _toTextCtrl = new TextEditingController();
   final _ccTextCtrl = new TextEditingController();
   final _bccTextCtrl = new TextEditingController();
@@ -250,20 +251,26 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
 
   bool get _hasMessageChanged {
     if (_message != null) {
-      return _subjectTextCtrl.text != _message.subject ||
+      final result = _subjectTextCtrl.text != _message.subject ||
           _bodyTextCtrl.text != _message.rawBody ||
           !listEquals<String>(
               MailUtils.getEmails(_message.toInJson), _toEmails) ||
           !listEquals<String>(
               MailUtils.getEmails(_message.ccInJson), _ccEmails) ||
           !listEquals<String>(
-              MailUtils.getEmails(_message.bccInJson), _bccEmails);
+              MailUtils.getEmails(_message.bccInJson), _bccEmails) ||
+          !listEquals(_savedAttachments, _attachments);
+      if (result) {
+        _savedAttachments = _attachments.toList();
+      }
+      return result;
     } else {
       return _bodyTextCtrl.text.isNotEmpty ||
           _subjectTextCtrl.text.isNotEmpty ||
           _toEmails.isNotEmpty ||
           _ccEmails.isNotEmpty ||
-          _bccEmails.isNotEmpty;
+          _bccEmails.isNotEmpty ||
+          _attachments.isNotEmpty;
     }
   }
 
@@ -318,7 +325,7 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
     showSnack(
       context: context,
       scaffoldState: _scaffoldKey.currentState,
-      msg: i18n(context, "messages_saved_in_drafts"),
+      msg: "messages_saved_in_drafts",
       isError: false,
     );
   }

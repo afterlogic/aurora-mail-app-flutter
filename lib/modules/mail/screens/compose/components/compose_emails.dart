@@ -63,16 +63,34 @@ class _ComposeEmailsState extends State<ComposeEmails> {
     setState(() => widget.emails.remove(email));
   }
 
-  Future<List<String>> _buildSuggestions(String pattern) async {
+  Future<List<Contact>> _buildSuggestions(String pattern) async {
     _search = pattern;
 
     final bloc = BlocProvider.of<ContactsBloc>(context);
     final contacts = await bloc.getTypeAheadContacts(pattern);
 
-    final items = contacts.map((c) => MailUtils.getFriendlyName(c)).toList();
-    items.removeWhere((i) => MailUtils.emailFromFriendly(i).isEmpty);
+    contacts.removeWhere((i) => i.viewEmail.isEmpty);
 
-    return items.toSet().toList();
+    return contacts;
+  }
+
+  Widget _searchContact(Contact contact) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (contact.fullName.isNotEmpty)
+          RichText(
+            text: _searchMatch(contact.fullName),
+            maxLines: 1,
+          ),
+        if (contact.viewEmail.isNotEmpty)
+          RichText(
+            text: _searchMatch(contact.viewEmail),
+            maxLines: 1,
+          ),
+      ],
+    );
   }
 
   TextSpan _searchMatch(String match) {
@@ -153,7 +171,7 @@ class _ComposeEmailsState extends State<ComposeEmails> {
       child: InkWell(
         onLongPress: widget.enable ? _paste : null,
         onTap: widget.enable ? _focus : null,
-        child: ComposeTypeAheadField<String>(
+        child: ComposeTypeAheadField<Contact>(
           textFieldConfiguration: TextFieldConfiguration(
             focusNode: widget.focusNode,
             enabled: widget.enable,
@@ -178,11 +196,11 @@ class _ComposeEmailsState extends State<ComposeEmails> {
           itemBuilder: (_, c) {
             return Padding(
               padding: const EdgeInsets.all(16.0),
-              child: RichText(text: _searchMatch(c)),
+              child: _searchContact(c),
             );
           },
           onSuggestionSelected: (c) {
-            return _addEmail(c);
+            return _addEmail(MailUtils.getFriendlyName(c));
           },
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 4.0),
