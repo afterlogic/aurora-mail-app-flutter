@@ -1,8 +1,10 @@
 import 'package:alarm_service/alarm_service.dart';
+import 'package:aurora_mail/bloc_logger.dart';
 import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/shared_ui/restart_widget.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'background/background_helper.dart';
 import 'background/background_sync.dart';
@@ -15,6 +17,7 @@ void main() {
   runApp(RestartWidget(child: App()));
   AlarmService.init();
   AlarmService.onAlarm(onAlarm, ALARM_ID);
+  BlocSupervisor.delegate = BlocLogger();
 }
 
 @pragma('vm:entry-point')
