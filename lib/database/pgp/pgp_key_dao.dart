@@ -22,7 +22,11 @@ class PgpKeyDao extends DatabaseAccessor<AppDatabase> with _$PgpKeyDaoMixin {
           ..where((pgpKey) => pgpKey.isPrivate.equals(isPrivate)))
         .get()
         .then((item) {
-      return item[0];
+      if (item.isEmpty) {
+        return null;
+      } else {
+        return item[0];
+      }
     });
   }
 
