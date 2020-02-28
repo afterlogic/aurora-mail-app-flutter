@@ -50,6 +50,7 @@ class SaveToDrafts extends ComposeEvent {
   final List<ComposeAttachment> composeAttachments;
   final String messageText;
   final int draftUid;
+  final bool isHtml;
 
   SaveToDrafts({
     @required this.to,
@@ -59,6 +60,7 @@ class SaveToDrafts extends ComposeEvent {
     @required this.composeAttachments,
     @required this.messageText,
     @required this.draftUid,
+    @required this.isHtml,
   });
 
   @override

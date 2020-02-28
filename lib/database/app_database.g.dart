@@ -54,6 +54,7 @@ class Message extends DataClass implements Insertable<Message> {
   final String foundedContentLocationUrlsInJson;
   final String attachmentsInJson;
   final String customInJson;
+  final bool isHtml;
   Message(
       {@required this.localId,
       @required this.uid,
@@ -100,7 +101,8 @@ class Message extends DataClass implements Insertable<Message> {
       @required this.foundedCIDsInJson,
       @required this.foundedContentLocationUrlsInJson,
       this.attachmentsInJson,
-      @required this.customInJson});
+      @required this.customInJson,
+      @required this.isHtml});
   factory Message.fromData(Map<String, dynamic> data, GeneratedDatabase db,
       {String prefix}) {
     final effectivePrefix = prefix ?? '';
@@ -196,6 +198,8 @@ class Message extends DataClass implements Insertable<Message> {
           data['${effectivePrefix}attachments_in_json']),
       customInJson: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}custom_in_json']),
+      isHtml:
+          boolType.mapFromDatabaseResponse(data['${effectivePrefix}is_html']),
     );
   }
   factory Message.fromJson(Map<String, dynamic> json,
@@ -252,6 +256,7 @@ class Message extends DataClass implements Insertable<Message> {
           serializer.fromJson<String>(json['foundedContentLocationUrlsInJson']),
       attachmentsInJson: serializer.fromJson<String>(json['attachmentsInJson']),
       customInJson: serializer.fromJson<String>(json['customInJson']),
+      isHtml: serializer.fromJson<bool>(json['isHtml']),
     );
   }
   @override
@@ -307,6 +312,7 @@ class Message extends DataClass implements Insertable<Message> {
           serializer.toJson<String>(foundedContentLocationUrlsInJson),
       'attachmentsInJson': serializer.toJson<String>(attachmentsInJson),
       'customInJson': serializer.toJson<String>(customInJson),
+      'isHtml': serializer.toJson<bool>(isHtml),
     };
   }
 
@@ -444,6 +450,8 @@ class Message extends DataClass implements Insertable<Message> {
       customInJson: customInJson == null && nullToAbsent
           ? const Value.absent()
           : Value(customInJson),
+      isHtml:
+          isHtml == null && nullToAbsent ? const Value.absent() : Value(isHtml),
     );
   }
 
@@ -493,7 +501,8 @@ class Message extends DataClass implements Insertable<Message> {
           String foundedCIDsInJson,
           String foundedContentLocationUrlsInJson,
           String attachmentsInJson,
-          String customInJson}) =>
+          String customInJson,
+          bool isHtml}) =>
       Message(
         localId: localId ?? this.localId,
         uid: uid ?? this.uid,
@@ -545,6 +554,7 @@ class Message extends DataClass implements Insertable<Message> {
             this.foundedContentLocationUrlsInJson,
         attachmentsInJson: attachmentsInJson ?? this.attachmentsInJson,
         customInJson: customInJson ?? this.customInJson,
+        isHtml: isHtml ?? this.isHtml,
       );
   @override
   String toString() {
@@ -597,7 +607,8 @@ class Message extends DataClass implements Insertable<Message> {
           ..write(
               'foundedContentLocationUrlsInJson: $foundedContentLocationUrlsInJson, ')
           ..write('attachmentsInJson: $attachmentsInJson, ')
-          ..write('customInJson: $customInJson')
+          ..write('customInJson: $customInJson, ')
+          ..write('isHtml: $isHtml')
           ..write(')'))
         .toString();
   }
@@ -645,7 +656,7 @@ class Message extends DataClass implements Insertable<Message> {
                                                                               .hashCode,
                                                                           $mrjc(
                                                                               fromInJson.hashCode,
-                                                                              $mrjc(fromToDisplay.hashCode, $mrjc(ccInJson.hashCode, $mrjc(bccInJson.hashCode, $mrjc(senderInJson.hashCode, $mrjc(replyToInJson.hashCode, $mrjc(hasAttachments.hashCode, $mrjc(hasVcardAttachment.hashCode, $mrjc(hasIcalAttachment.hashCode, $mrjc(importance.hashCode, $mrjc(draftInfoInJson.hashCode, $mrjc(sensitivity.hashCode, $mrjc(downloadAsEmlUrl.hashCode, $mrjc(hash.hashCode, $mrjc(headers.hashCode, $mrjc(inReplyTo.hashCode, $mrjc(references.hashCode, $mrjc(readingConfirmationAddressee.hashCode, $mrjc(htmlBody.hashCode, $mrjc(rawBody.hashCode, $mrjc(rtl.hashCode, $mrjc(extendInJson.hashCode, $mrjc(safety.hashCode, $mrjc(hasExternals.hashCode, $mrjc(foundedCIDsInJson.hashCode, $mrjc(foundedContentLocationUrlsInJson.hashCode, $mrjc(attachmentsInJson.hashCode, customInJson.hashCode))))))))))))))))))))))))))))))))))))))))))))));
+                                                                              $mrjc(fromToDisplay.hashCode, $mrjc(ccInJson.hashCode, $mrjc(bccInJson.hashCode, $mrjc(senderInJson.hashCode, $mrjc(replyToInJson.hashCode, $mrjc(hasAttachments.hashCode, $mrjc(hasVcardAttachment.hashCode, $mrjc(hasIcalAttachment.hashCode, $mrjc(importance.hashCode, $mrjc(draftInfoInJson.hashCode, $mrjc(sensitivity.hashCode, $mrjc(downloadAsEmlUrl.hashCode, $mrjc(hash.hashCode, $mrjc(headers.hashCode, $mrjc(inReplyTo.hashCode, $mrjc(references.hashCode, $mrjc(readingConfirmationAddressee.hashCode, $mrjc(htmlBody.hashCode, $mrjc(rawBody.hashCode, $mrjc(rtl.hashCode, $mrjc(extendInJson.hashCode, $mrjc(safety.hashCode, $mrjc(hasExternals.hashCode, $mrjc(foundedCIDsInJson.hashCode, $mrjc(foundedContentLocationUrlsInJson.hashCode, $mrjc(attachmentsInJson.hashCode, $mrjc(customInJson.hashCode, isHtml.hashCode)))))))))))))))))))))))))))))))))))))))))))))));
   @override
   bool operator ==(dynamic other) =>
       identical(this, other) ||
@@ -698,7 +709,8 @@ class Message extends DataClass implements Insertable<Message> {
           other.foundedContentLocationUrlsInJson ==
               this.foundedContentLocationUrlsInJson &&
           other.attachmentsInJson == this.attachmentsInJson &&
-          other.customInJson == this.customInJson);
+          other.customInJson == this.customInJson &&
+          other.isHtml == this.isHtml);
 }
 
 class MailCompanion extends UpdateCompanion<Message> {
@@ -748,6 +760,7 @@ class MailCompanion extends UpdateCompanion<Message> {
   final Value<String> foundedContentLocationUrlsInJson;
   final Value<String> attachmentsInJson;
   final Value<String> customInJson;
+  final Value<bool> isHtml;
   const MailCompanion({
     this.localId = const Value.absent(),
     this.uid = const Value.absent(),
@@ -795,6 +808,7 @@ class MailCompanion extends UpdateCompanion<Message> {
     this.foundedContentLocationUrlsInJson = const Value.absent(),
     this.attachmentsInJson = const Value.absent(),
     this.customInJson = const Value.absent(),
+    this.isHtml = const Value.absent(),
   });
   MailCompanion.insert({
     this.localId = const Value.absent(),
@@ -843,6 +857,7 @@ class MailCompanion extends UpdateCompanion<Message> {
     @required String foundedContentLocationUrlsInJson,
     this.attachmentsInJson = const Value.absent(),
     @required String customInJson,
+    @required bool isHtml,
   })  : uid = Value(uid),
         accountEntityId = Value(accountEntityId),
         userLocalId = Value(userLocalId),
@@ -877,7 +892,8 @@ class MailCompanion extends UpdateCompanion<Message> {
         foundedCIDsInJson = Value(foundedCIDsInJson),
         foundedContentLocationUrlsInJson =
             Value(foundedContentLocationUrlsInJson),
-        customInJson = Value(customInJson);
+        customInJson = Value(customInJson),
+        isHtml = Value(isHtml);
   MailCompanion copyWith(
       {Value<int> localId,
       Value<int> uid,
@@ -924,7 +940,8 @@ class MailCompanion extends UpdateCompanion<Message> {
       Value<String> foundedCIDsInJson,
       Value<String> foundedContentLocationUrlsInJson,
       Value<String> attachmentsInJson,
-      Value<String> customInJson}) {
+      Value<String> customInJson,
+      Value<bool> isHtml}) {
     return MailCompanion(
       localId: localId ?? this.localId,
       uid: uid ?? this.uid,
@@ -976,6 +993,7 @@ class MailCompanion extends UpdateCompanion<Message> {
           this.foundedContentLocationUrlsInJson,
       attachmentsInJson: attachmentsInJson ?? this.attachmentsInJson,
       customInJson: customInJson ?? this.customInJson,
+      isHtml: isHtml ?? this.isHtml,
     );
   }
 }
@@ -1573,6 +1591,18 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     );
   }
 
+  final VerificationMeta _isHtmlMeta = const VerificationMeta('isHtml');
+  GeneratedBoolColumn _isHtml;
+  @override
+  GeneratedBoolColumn get isHtml => _isHtml ??= _constructIsHtml();
+  GeneratedBoolColumn _constructIsHtml() {
+    return GeneratedBoolColumn(
+      'is_html',
+      $tableName,
+      false,
+    );
+  }
+
   @override
   List<GeneratedColumn> get $columns => [
         localId,
@@ -1620,7 +1650,8 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
         foundedCIDsInJson,
         foundedContentLocationUrlsInJson,
         attachmentsInJson,
-        customInJson
+        customInJson,
+        isHtml
       ];
   @override
   $MailTable get asDslTable => this;
@@ -1925,6 +1956,12 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     } else if (isInserting) {
       context.missing(_customInJsonMeta);
     }
+    if (d.isHtml.present) {
+      context.handle(
+          _isHtmlMeta, isHtml.isAcceptableValue(d.isHtml.value, _isHtmlMeta));
+    } else if (isInserting) {
+      context.missing(_isHtmlMeta);
+    }
     return context;
   }
 
@@ -2096,6 +2133,9 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     if (d.customInJson.present) {
       map['custom_in_json'] =
           Variable<String, StringType>(d.customInJson.value);
+    }
+    if (d.isHtml.present) {
+      map['is_html'] = Variable<bool, BoolType>(d.isHtml.value);
     }
     return map;
   }

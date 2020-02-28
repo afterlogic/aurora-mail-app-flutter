@@ -53,7 +53,6 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
   Timer _timer;
   EncryptType _lock = EncryptType.None;
   bool _showBCC = false;
-  bool isHtml = true;
 
   // if compose was opened from screen which does not have MessagesListRoute in stack, just pop
   bool _returnToMessagesList = true;
@@ -129,14 +128,14 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
 
   void _initForward(Forward action) async {
     _message = action.message;
-    isHtml = _message.htmlBody?.isNotEmpty == true;
+
     _subjectTextCtrl.text = MailUtils.getForwardSubject(_message);
     _bodyTextCtrl.text = MailUtils.getForwardBody(context, _message);
   }
 
   void _initReply(Reply action) async {
     _message = action.message;
-    isHtml = _message.htmlBody?.isNotEmpty == true;
+
     _toEmails.addAll(MailUtils.getEmails(_message.fromInJson));
     _subjectTextCtrl.text = MailUtils.getReplySubject(_message);
     _bodyTextCtrl.text = MailUtils.getReplyBody(context, _message);
@@ -144,7 +143,7 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
 
   void _initReplyAll(ReplyToAll action) async {
     _message = action.message;
-    isHtml = _message.htmlBody?.isNotEmpty == true;
+
     _toEmails.addAll(MailUtils.getEmails(_message.fromInJson));
     _ccEmails.addAll(MailUtils.getEmails(_message.toInJson, exceptEmails: [
       BlocProvider.of<AuthBloc>(context).currentAccount.email
@@ -240,7 +239,7 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
       to: _toEmails.join(","),
       cc: _ccEmails.join(","),
       bcc: _bccEmails.join(","),
-      isHtml: isHtml,
+      isHtml: false,
       subject: _subjectTextCtrl.text,
       composeAttachments: new List<ComposeAttachment>.from(_attachments),
       messageText: _bodyTextCtrl.text,
@@ -284,6 +283,7 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
       to: _toEmails.join(","),
       cc: _ccEmails.join(","),
       bcc: _bccEmails.join(","),
+      isHtml:false,
       subject: _subjectTextCtrl.text,
       composeAttachments: new List<ComposeAttachment>.from(attachmentsForSave),
       messageText: _bodyTextCtrl.text,
@@ -333,7 +333,7 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
   _encryptLock(EncryptComplete state) {
     _bodyTextCtrl.text = state.text;
     _lock = state.type;
-    isHtml = false;
+
     setState(() {});
   }
 

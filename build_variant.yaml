@@ -3,8 +3,8 @@ _files:
   - pubspec.yaml.yaml
   #  - lib/di/di.dart.temp
   - android/app/src/main/res/values/.build_res.xml.temp
-  - build_apk.sh.temp
-  - build_appbundle.sh.temp
+  - sh/build_apk.sh.temp
+  - sh/build_appbundle.sh.temp
   - android/build_variable.properties.temp
   - ios/BuildVariable.xcconfig.temp
 _copy:

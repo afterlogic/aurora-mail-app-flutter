@@ -69,6 +69,7 @@ class ComposeMethods {
     @required List<ComposeAttachment> composeAttachments,
     @required String messageText,
     @required int draftUid,
+    bool isHtml,
   }) async {
     final folders = await _foldersDao.getAllFolders(account.localId);
     final draftsFolder = Folders.getFolderOfType(folders, FolderType.drafts);
@@ -78,6 +79,7 @@ class ComposeMethods {
       cc: cc,
       bcc: bcc,
       subject: subject,
+      isHtml: isHtml,
       composeAttachments: composeAttachments,
       messageText: messageText,
       draftUid: draftUid,

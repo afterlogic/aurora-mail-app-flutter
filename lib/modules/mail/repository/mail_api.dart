@@ -142,6 +142,7 @@ class MailApi {
     @required String messageText,
     @required int draftUid,
     @required String draftsFolderName,
+    bool isHtml,
   }) async {
     final attachments = new Map();
 
@@ -159,7 +160,7 @@ class MailApi {
       "Bcc": bcc,
       "Subject": subject,
       "Text": messageText,
-      "IsHtml": false,
+      "IsHtml": isHtml,
       "Importance": 3,
       "SendReadingConfirmation": false,
       "Attachments": attachments,
