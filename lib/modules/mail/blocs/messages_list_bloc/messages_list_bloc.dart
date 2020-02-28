@@ -31,18 +31,25 @@ class MessagesListBloc extends Bloc<MessagesListEvent, MessagesListState> {
     if (event is DeleteMessages) yield* _deleteMessage(event);
   }
 
-  Stream<MessagesListState> _subscribeToMessages(SubscribeToMessages event) async* {
+  Stream<MessagesListState> _subscribeToMessages(
+      SubscribeToMessages event) async* {
     searchTerm = event.searchTerm ?? "";
 
     print("VO: searchTerm: ${searchTerm}");
-    final stream = _methods.subscribeToMessages(
-      event.currentFolder,
-      event.isStarred,
-      searchTerm,
-      user,
-      account,
-    );
-    yield SubscribedToMessages(stream, event.isStarred, searchTerm);
+    try {
+      final stream = _methods.subscribeToMessages(
+        event.currentFolder,
+        event.isStarred,
+        searchTerm,
+        user,
+        account,
+      );
+      yield SubscribedToMessages(stream, event.isStarred, searchTerm);
+    } catch (e,s) {
+      print(e);
+      print(s);
+      yield SubscribedToMessages(Stream.empty(), event.isStarred, searchTerm);
+    }
   }
 
   Stream<MessagesListState> _deleteMessage(DeleteMessages event) async* {
