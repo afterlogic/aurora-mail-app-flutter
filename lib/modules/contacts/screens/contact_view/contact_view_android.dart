@@ -51,7 +51,7 @@ class _ContactViewAndroidState extends State<ContactViewAndroid> {
         );
         break;
       case ContactViewAppBarAction.searchMessages:
-      // TODO: Handle this case.
+        // TODO: Handle this case.
         break;
       case ContactViewAppBarAction.edit:
         Navigator.pushNamed(
@@ -72,7 +72,10 @@ class _ContactViewAndroidState extends State<ContactViewAndroid> {
           msg: i18n(
             context,
             "contacts_shared_message",
-            {"contact": widget.contact.fullName, "storage": i18n(context, "contacts_drawer_storage_shared")},
+            {
+              "contact": widget.contact.fullName,
+              "storage": i18n(context, "contacts_drawer_storage_shared")
+            },
           ),
         );
         Navigator.pop(context);
@@ -86,7 +89,10 @@ class _ContactViewAndroidState extends State<ContactViewAndroid> {
           msg: i18n(
             context,
             "contacts_shared_message",
-            {"contact": widget.contact.fullName, "storage": i18n(context, "contacts_drawer_storage_personal")},
+            {
+              "contact": widget.contact.fullName,
+              "storage": i18n(context, "contacts_drawer_storage_personal")
+            },
           ),
         );
         Navigator.pop(context);
@@ -95,7 +101,8 @@ class _ContactViewAndroidState extends State<ContactViewAndroid> {
         final result = await ConfirmationDialog.show(
           context,
           i18n(context, "contacts_delete_title"),
-          i18n(context, "contacts_delete_desc_with_name", {"contact": widget.contact.fullName}),
+          i18n(context, "contacts_delete_desc_with_name",
+              {"contact": widget.contact.fullName}),
           i18n(context, "btn_delete"),
           destructibleAction: true,
         );
@@ -299,23 +306,45 @@ class _ContactViewAndroidState extends State<ContactViewAndroid> {
       _buildInfoItem(
         icon: MdiIcons.text,
         label: i18n(context, "contacts_view_notes"),
-        v: c.notes,),
+        v: c.notes,
+      ),
     ]);
+
+    List<Widget> _buildGroups(List<String> groupUUIDs) {
+      final widgets = <Widget>[];
+      final bloc = BlocProvider.of<ContactsBloc>(context);
+
+      for (var group in bloc.state.groups) {
+        if (groupUUIDs.contains(group.uuid)) {
+          widgets.add(SizedBox(
+            height: 43,
+            child: Chip(
+              label: Text(group.name),
+            ),
+          ));
+        }
+      }
+      return widgets;
+    }
+
+    final groupInfo = _buildGroups(c.groupUUIDs);
 
     return Scaffold(
       appBar: ContactViewAppBar(
         name: c.fullName,
         allowShare: c.storage == StorageNames.personal,
         allowUnshare: c.storage == StorageNames.shared,
-        allowEdit: c.storage == StorageNames.personal || c.viewEmail == BlocProvider.of<AuthBloc>(context).currentAccount.email,
-        allowDelete: c.storage == StorageNames.personal || c.storage == StorageNames.shared,
+        allowEdit: c.storage == StorageNames.personal ||
+            c.viewEmail ==
+                BlocProvider.of<AuthBloc>(context).currentAccount.email,
+        allowDelete: c.storage == StorageNames.personal ||
+            c.storage == StorageNames.shared,
         onActionSelected: _onMainAppBarActionSelected,
       ),
       body: ListView(
         children: <Widget>[
           ..._mainInfo,
-          if (personalInfo.isNotEmpty)
-            Divider(indent: 16.0, endIndent: 16.0),
+          if (personalInfo.isNotEmpty) Divider(indent: 16.0, endIndent: 16.0),
           if (personalInfo.isNotEmpty)
             ListTile(
               title: Text(
@@ -324,8 +353,7 @@ class _ContactViewAndroidState extends State<ContactViewAndroid> {
               ),
             ),
           ...personalInfo,
-          if (businessInfo.isNotEmpty)
-            Divider(indent: 16.0, endIndent: 16.0),
+          if (businessInfo.isNotEmpty) Divider(indent: 16.0, endIndent: 16.0),
           if (businessInfo.isNotEmpty)
             ListTile(
               title: Text(
@@ -334,8 +362,7 @@ class _ContactViewAndroidState extends State<ContactViewAndroid> {
               ),
             ),
           ...businessInfo,
-          if (otherInfo.isNotEmpty)
-            Divider(indent: 16.0, endIndent: 16.0),
+          if (otherInfo.isNotEmpty) Divider(indent: 16.0, endIndent: 16.0),
           if (otherInfo.isNotEmpty)
             ListTile(
               title: Text(
@@ -344,6 +371,22 @@ class _ContactViewAndroidState extends State<ContactViewAndroid> {
               ),
             ),
           ...otherInfo,
+          if (groupInfo.isNotEmpty) Divider(indent: 16.0, endIndent: 16.0),
+          if (groupInfo.isNotEmpty)
+            ListTile(
+              title: Text(
+                i18n(context, "contacts_view_section_groups"),
+                style: sectionTitleTheme,
+              ),
+            ),
+          if (groupInfo.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Wrap(
+                spacing: 16,
+                children: groupInfo,
+              ),
+            ),
         ],
       ),
     );
@@ -360,7 +403,8 @@ class _ContactViewAndroidState extends State<ContactViewAndroid> {
     void Function(String) emailToContact,
   }) {
     if (v.isNotEmpty) {
-      return ContactsInfoItem(icon: icon, label: label, value: v, emailToContact: emailToContact);
+      return ContactsInfoItem(
+          icon: icon, label: label, value: v, emailToContact: emailToContact);
     } else {
       return null;
     }

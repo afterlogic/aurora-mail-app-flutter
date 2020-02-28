@@ -255,5 +255,6 @@
   "invalid_pin": "Неверный PIN",
   "done": "Готово",
   "confirm_exit": "Вы уверены что хотите выйти",
-  "exit": "Выйти"
+  "exit": "Выйти",
+  "contacts_view_section_groups": "Группы"
 }
