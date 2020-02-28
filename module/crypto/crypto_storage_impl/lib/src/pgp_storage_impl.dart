@@ -44,9 +44,9 @@ class CryptoStorageImpl extends CryptoStorage {
     });
   }
 
-  Future<int> deletePgpKey(String email, bool isPrivate) async {
-    await _delete(email, isPrivate);
-    return _keyDao.deletePgpKey(email, isPrivate);
+  Future<int> deletePgpKey(String name, String email, bool isPrivate) async {
+    await _delete(name, email, isPrivate);
+    return _keyDao.deletePgpKey(_id(name, email, isPrivate));
   }
 
   Future<int> deleteAll() async {
@@ -57,21 +57,13 @@ class CryptoStorageImpl extends CryptoStorage {
     return _keyDao.deleteAll();
   }
 
-  Future<String> privateKey(String mail) {
-    return _key(mail, true);
-  }
-
-  Future<String> publicKey(String mail) {
-    return _key(mail, false);
-  }
-
 //----------------------------------private--------------------------------------
 
   Future<PgpKey> _fromDb(LocalPgpKey pgpKey) async {
     if (pgpKey == null) {
       return null;
     }
-    final id = _id(pgpKey.mail, pgpKey.isPrivate);
+    final id = _id(pgpKey.name, pgpKey.mail, pgpKey.isPrivate);
 
     final key = await _secureStorage.read(key: id);
 
@@ -88,7 +80,7 @@ class CryptoStorageImpl extends CryptoStorage {
     if (pgpKey == null) {
       return null;
     }
-    final id = _id(pgpKey.mail, pgpKey.isPrivate);
+    final id = _id(pgpKey.name, pgpKey.mail, pgpKey.isPrivate);
 
     await _secureStorage.write(key: id, value: pgpKey.key);
 
@@ -102,26 +94,26 @@ class CryptoStorageImpl extends CryptoStorage {
     );
   }
 
-  String _id(String mail, bool isPrivate) {
+  String _id(String name, String mail, bool isPrivate) {
     assert(_other.isNotEmpty, "other required");
-    return _other + mail + isPrivate.toString();
+    return _other + name + mail + isPrivate.toString();
   }
 
-  Future<String> _key(String mail, bool isPrivate) async {
-    final id = _id(mail, isPrivate);
+  Future<String> _key(String name, String mail, bool isPrivate) async {
+    final id = _id(name, mail, isPrivate);
 
     return await _secureStorage.read(key: id);
   }
 
-  _delete(String email, bool isPrivate) async {
-    final id = _id(email, isPrivate);
+  _delete(String name, String email, bool isPrivate) async {
+    final id = _id(name, email, isPrivate);
 
     await _secureStorage.delete(key: id);
   }
 
   _deleteAll(List<LocalPgpKey> pgpKeys) async {
     for (var item in pgpKeys) {
-      final id = _id(item.mail, item.isPrivate);
+      final id = _id(item.name, item.mail, item.isPrivate);
 
       await _secureStorage.delete(key: id);
     }

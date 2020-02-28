@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:crypto_plugin/crypto_plugin.dart';
 import 'package:crypto_storage/crypto_storage.dart';
 import 'package:crypto_worker/crypto_worker.dart';
-import 'package:crypto_plugin/crypto_plugin.dart';
 import 'package:path_provider/path_provider.dart';
 
 class PgpEncryptDecryptImpl extends PgpEncryptDecrypt {
@@ -23,8 +23,8 @@ class PgpEncryptDecryptImpl extends PgpEncryptDecrypt {
   Future<Decrypted> decrypt(String message, String password) async {
     assert(recipients.length == 1, "expected single recipient");
 
-    final privateKey = await _storage.privateKey(recipients.first);
-    final publicKey = await _storage.publicKey(sender);
+    final privateKey = await _storage.getPgpKey(recipients.first, true);
+    final publicKey = await _storage.getPgpKey(sender, false);
     final tempFile = await _tempFile;
 
     if (privateKey == null) {
@@ -33,9 +33,9 @@ class PgpEncryptDecryptImpl extends PgpEncryptDecrypt {
 
     await _pgp.stop();
     await _pgp.setTempFile(tempFile);
-    await _pgp.setPrivateKey(privateKey);
+    await _pgp.setPrivateKey(privateKey?.key);
 
-    await _pgp.setPublicKeys([publicKey]);
+    await _pgp.setPublicKeys(publicKey == null ? null : [publicKey.key]);
 
     try {
       final result = await _pgp.decryptBytes(
@@ -56,11 +56,11 @@ class PgpEncryptDecryptImpl extends PgpEncryptDecrypt {
   }
 
   Future<Decrypted> verifySign(String message) async {
-    final publicKey = await _storage.publicKey(sender);
+    final publicKey = await _storage.getPgpKey(sender, false);
     final tempFile = await _tempFile;
 
     await _pgp.stop();
-    await _pgp.setPublicKeys([publicKey]);
+    await _pgp.setPublicKeys(publicKey == null ? null : [publicKey.key]);
     await _pgp.setTempFile(tempFile);
 
     final text = await _pgp.verifySign(message);
@@ -70,7 +70,7 @@ class PgpEncryptDecryptImpl extends PgpEncryptDecrypt {
   }
 
   Future<String> sign(String message, String password) async {
-    final privateKey = await _storage.privateKey(sender);
+    final privateKey = await _storage.getPgpKey(sender, true);
     if (privateKey == null) {
       throw PgpKeyNotFound([sender]);
     }
@@ -78,7 +78,7 @@ class PgpEncryptDecryptImpl extends PgpEncryptDecrypt {
 
     await _pgp.stop();
     await _pgp.setTempFile(tempFile);
-    await _pgp.setPrivateKey(privateKey);
+    await _pgp.setPrivateKey(privateKey.key);
     await _pgp.setPublicKeys(null);
 
     try {
@@ -94,18 +94,18 @@ class PgpEncryptDecryptImpl extends PgpEncryptDecrypt {
 
   @override
   Future<String> encrypt(String message, [String password]) async {
-    final privateKey = await _storage.privateKey(sender);
+    final privateKey = await _storage.getPgpKey(sender, true);
     if (privateKey == null) {
       throw PgpKeyNotFound([sender]);
     }
     final publicKeys = <String>[];
     final withNotKey = <String>[];
     for (var recipient in recipients) {
-      final key = await _storage.publicKey(recipient);
+      final key = await _storage.getPgpKey(recipient, false);
       if (key == null) {
         withNotKey.add(recipient);
       } else {
-        publicKeys.add(key);
+        publicKeys.add(key.key);
       }
     }
     if (withNotKey.isNotEmpty) {
@@ -116,7 +116,7 @@ class PgpEncryptDecryptImpl extends PgpEncryptDecrypt {
 
     await _pgp.stop();
     await _pgp.setTempFile(tempFile);
-    await _pgp.setPrivateKey(privateKey);
+    await _pgp.setPrivateKey(privateKey.key);
     await _pgp.setPublicKeys(publicKeys);
 
     try {

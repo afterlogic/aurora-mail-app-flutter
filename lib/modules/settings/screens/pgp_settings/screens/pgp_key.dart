@@ -33,7 +33,8 @@ class PgpKeyScreen extends StatelessWidget {
               child: ListView(
                 children: <Widget>[
                   Text(
-                    pgpKey.mail,
+                    (pgpKey.name?.isNotEmpty == true ? "${pgpKey.name} " : "") +
+                        "<${pgpKey.mail}>",
                     style: theme.textTheme.title,
                   ),
                   SizedBox(

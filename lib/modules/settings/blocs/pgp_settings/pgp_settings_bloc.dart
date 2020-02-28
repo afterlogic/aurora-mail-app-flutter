@@ -40,14 +40,12 @@ class PgpSettingsBloc extends Bloc<PgpSettingsEvent, PgpSettingsState> {
   }
 
   Stream<PgpSettingsState> _generateKeys(GenerateKeys event) async* {
-    await _methods.deleteKey(event.mail, true);
-    await _methods.deleteKey(event.mail, false);
+
     yield* _loadKeys().map((item) {
       if (item is LoadedState) {
         return item.copyWith(
-          keyProgress: event.name.isEmpty
-              ? "<${event.mail}>"
-              : "${event.name} <${event.mail}>",
+          keyProgress: (event.name.isNotEmpty ? "${event.name} " : "") +
+              "<${event.mail}>",
         );
       } else {
         return item;
@@ -85,7 +83,11 @@ class PgpSettingsBloc extends Bloc<PgpSettingsEvent, PgpSettingsState> {
   }
 
   Stream<PgpSettingsState> _deleteKey(DeleteKey event) async* {
-    await _methods.deleteKey(event.pgpKey.mail, event.pgpKey.isPrivate);
+    await _methods.deleteKey(
+      event.pgpKey.name,
+      event.pgpKey.mail,
+      event.pgpKey.isPrivate,
+    );
     yield* _loadKeys();
   }
 

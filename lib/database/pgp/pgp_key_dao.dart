@@ -20,7 +20,10 @@ class PgpKeyDao extends DatabaseAccessor<AppDatabase> with _$PgpKeyDaoMixin {
     return _forOther(select(pgpKeyModel)
           ..where((pgpKey) => pgpKey.mail.equals(email))
           ..where((pgpKey) => pgpKey.isPrivate.equals(isPrivate)))
-        .getSingle();
+        .get()
+        .then((item) {
+      return item[0];
+    });
   }
 
   Future<void> addPgpKey(LocalPgpKey key) {
@@ -29,10 +32,9 @@ class PgpKeyDao extends DatabaseAccessor<AppDatabase> with _$PgpKeyDaoMixin {
     });
   }
 
-  Future<int> deletePgpKey(String email, bool isPrivate) {
-    return _forOther(delete(pgpKeyModel)
-          ..where((pgpKey) => pgpKey.mail.equals(email))
-          ..where((pgpKey) => pgpKey.isPrivate.equals(isPrivate)))
+  Future<int> deletePgpKey(String id) {
+    return _forOther(
+            delete(pgpKeyModel)..where((ppgKey) => ppgKey.id.equals(id)))
         .go();
   }
 
