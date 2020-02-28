@@ -5,7 +5,6 @@ class ContactMapper {
   static List<Contact> fromDB(List<ContactsTable> dbEntries) {
     return dbEntries.map((e) {
       return new Contact(
-        localId: e.localId,
         entityId: e.entityId,
         userLocalId: e.userLocalId,
         uuidPlusStorage: e.uuidPlusStorage,
@@ -68,7 +67,6 @@ class ContactMapper {
   static List<ContactsTable> toDB(List<Contact> contacts) {
     return contacts.map((e) {
       return new ContactsTable(
-        localId: e.localId,
         entityId: e.entityId,
         uuid: e.uuid,
         userLocalId: e.userLocalId,
@@ -131,7 +129,6 @@ class ContactMapper {
   static List<Contact> fromNetwork(List<dynamic> rawItems, int userLocalId) {
     return rawItems.map((i) {
       return new Contact(
-        localId: null,
         entityId: i["EntityId"] as int,
         userLocalId: userLocalId,
         uuid: i["UUID"] as String,
