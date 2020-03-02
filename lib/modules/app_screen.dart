@@ -1,13 +1,11 @@
 import 'package:aurora_mail/background/background_helper.dart';
+import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
-
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/shared_ui/restart_widget.dart';
-import 'package:aurora_mail/build_property.dart';
-import 'package:theme/app_theme.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
@@ -16,6 +14,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_i18n/flutter_i18n_delegate.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:theme/app_theme.dart';
 import 'package:webmail_api_client/webmail_api_client.dart';
 
 import 'app_navigation.dart';
@@ -40,7 +39,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
     WebMailApi.authErrorStream.listen((_) {
       _authBloc.add(InvalidateCurrentUserToken());
     });
-
+    BackgroundHelper.current = AppLifecycleState.resumed;
     _initApp();
   }
 
@@ -119,19 +118,24 @@ class _AppState extends State<App> with WidgetsBindingObserver {
                       providers: [
                         BlocProvider.value(value: _authBloc),
                         BlocProvider.value(value: _settingsBloc),
-                        BlocProvider(create: (_) => new MailBloc(
-                          user: _authBloc.currentUser,
-                          account: _authBloc.currentAccount,
-                        )),
-                        BlocProvider(create: (_) => new ContactsBloc(
-                          user: _authBloc.currentUser,
-                          appDatabase: DBInstances.appDB,
-                        )),
+                        BlocProvider(
+                          create: (_) => new MailBloc(
+                            user: _authBloc.currentUser,
+                            account: _authBloc.currentAccount,
+                          ),
+                        ),
+                        BlocProvider(
+                          create: (_) => new ContactsBloc(
+                            user: _authBloc.currentUser,
+                            appDatabase: DBInstances.appDB,
+                          ),
+                        ),
                       ],
                       child: MaterialApp(
                         navigatorKey: _navKey,
                         onGenerateTitle: (context) {
-                          final is24 = MediaQuery.of(context).alwaysUse24HourFormat;
+                          final is24 =
+                              MediaQuery.of(context).alwaysUse24HourFormat;
                           if (settingsState.is24 == null) {
                             _settingsBloc.add(SetTimeFormat(is24));
                           }
@@ -154,14 +158,16 @@ class _AppState extends State<App> with WidgetsBindingObserver {
                         supportedLocales: supportedLocales,
                         localeResolutionCallback: (locale, locales) {
                           final supportedLocale = locales.firstWhere((l) {
-                            return locale != null && l.languageCode == locale.languageCode;
+                            return locale != null &&
+                                l.languageCode == locale.languageCode;
                           }, orElse: () => null);
 
                           return supportedLocale ?? Locale("en", "");
                         },
                         locale: settingsState.language?.toLocale(),
-                        initialRoute:
-                            authState.needsLogin ? LoginRoute.name : MessagesListRoute.name,
+                        initialRoute: authState.needsLogin
+                            ? LoginRoute.name
+                            : MessagesListRoute.name,
                       ),
                     );
                   } else {

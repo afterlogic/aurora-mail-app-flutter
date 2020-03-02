@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:aurora_mail/background/background_helper.dart';
 import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/events/contacts_groups_event.dart';
@@ -34,10 +35,12 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
       appDB: appDatabase,
       user: user,
     );
+    BackgroundHelper.addOnEndAlarmObserver(false, _doOnAlarm);
   }
 
   @override
   Future<void> close() async {
+    BackgroundHelper.removeOnEndAlarmObserver(_doOnAlarm);
     _contactsSub?.cancel();
     _storagesSub?.cancel();
     _groupsSub?.cancel();
@@ -66,6 +69,10 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
     yield* reduceState(state, event);
   }
 
+  _doOnAlarm(bool hasUpdate) {
+    add(GetContacts());
+  }
+
   Stream<ContactsState> _getContacts(GetContacts event) async* {
     try {
       _storagesSub = _repo.watchContactsStorages().listen((storages) {
@@ -80,7 +87,6 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
         add(AddError(formatError(err, null)));
       });
     } catch (e) {
-      //todo V.O. bloc extension for catch error
       print(e);
     }
     try {
@@ -153,8 +159,8 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
         .shareContacts(event.contacts)
         .catchError((err) => add(AddError(formatError(err, null))))
         .whenComplete(() {
-          add(GetContacts());
-        });
+      add(GetContacts());
+    });
   }
 
   Stream<ContactsState> _unshareContacts(UnshareContacts event) async* {
@@ -162,8 +168,8 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
         .unshareContacts(event.contacts)
         .catchError((err) => add(AddError(formatError(err, null))))
         .whenComplete(() {
-          add(GetContacts());
-        });
+      add(GetContacts());
+    });
   }
 
   Stream<ContactsState> _addContactsToGroup(AddContactsToGroup event) async* {
