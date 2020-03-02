@@ -53,7 +53,6 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
   @override
   void dispose() {
     super.dispose();
-    BackgroundHelper.removeOnEndAlarmObserver(onEndAlarm);
     _messagesListBloc.close();
   }
 
@@ -79,13 +78,7 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
     showSnack(context: ctx, scaffoldState: Scaffold.of(ctx), msg: err);
   }
 
-  void _initUpdateTimer() async {
-    BackgroundHelper.addOnEndAlarmObserver(true, onEndAlarm);
-  }
 
-  void onEndAlarm(bool hasUpdate) {
-    _contactsBloc.add(GetContacts());
-  }
 
   void _onMessageSelected(List<Message> allMessages, Message item) {
     final i = allMessages.indexOf(item);
@@ -206,9 +199,6 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
                 },
                 listener: (BuildContext context, state) {
                   if (state is SettingsLoaded) {
-                    if (state.syncFrequency != null) {
-                      _initUpdateTimer();
-                    }
                     _mailBloc.add(RefreshMessages());
                   }
                 },
@@ -218,7 +208,7 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
               key: _refreshKey,
               onRefresh: () {
                 if (_refreshCompleter == null) {
-                  _mailBloc.add(RefreshMessages());
+                  _mailBloc.add(RefreshMessages(true));
                   _refreshCompleter = Completer();
                 }
                 return _refreshCompleter.future;
