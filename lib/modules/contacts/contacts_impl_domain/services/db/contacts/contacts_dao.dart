@@ -12,7 +12,7 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
   ContactsDao(AppDatabase db) : super(db);
 
   Future<void> addContacts(List<ContactsTable> newContacts) async {
-    await batch((b) => b.insertAll(contacts, newContacts));
+    await batch((b) => b.insertAll(contacts, newContacts,mode: InsertMode.insertOrReplace));
   }
 
   Future<void> deleteContacts(List<String> uuids) {

@@ -84,7 +84,6 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
   }
 
   void onEndAlarm(bool hasUpdate) {
-    _mailBloc.add(RefreshMessages());
     _contactsBloc.add(GetContacts());
   }
 
