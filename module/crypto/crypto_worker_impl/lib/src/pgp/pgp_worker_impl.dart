@@ -53,7 +53,7 @@ class PgpWorkerImpl extends PgpWorker {
     for (String key in keysText) {
       final description = await _pgp.getKeyDescription(key);
       for (String email in description.email) {
-        final groups = RegExp("(\\D|\\d)*<((?:\\D|\\d)*)>").firstMatch(email);
+        final groups = RegExp("([\\D|\\d]*)?<((?:\\D|\\d)*)>").firstMatch(email);
         String validEmail = "";
         String name = "";
         if (groups?.groupCount == 2) {

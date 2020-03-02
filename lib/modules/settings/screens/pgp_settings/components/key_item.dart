@@ -1,6 +1,6 @@
 import 'package:crypto_model/crypto_model.dart';
 import 'package:flutter/material.dart';
-
+import 'package:aurora_mail/utils/pgp_key_util.dart';
 class KeyItem extends StatefulWidget {
   final PgpKey pgpKey;
   final bool selected;
@@ -39,20 +39,24 @@ class _KeyItemState extends State<KeyItem> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    widget.pgpKey.mail,
-                    style: textTheme.body1,
-                  ),
-                  Text(
-                    description,
-                    style: textTheme.caption,
-                  ),
-                ],
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      widget.pgpKey.formatName(),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                      style: textTheme.body1,
+                    ),
+                    Text(
+                      description,
+                      style: textTheme.caption,
+                    ),
+                  ],
+                ),
               ),
             ),
             if (widget.selected != null)

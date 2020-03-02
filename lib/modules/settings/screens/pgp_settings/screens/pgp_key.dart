@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:aurora_mail/modules/settings/blocs/pgp_settings/bloc.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_mail/utils/pgp_key_util.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:crypto_model/crypto_model.dart';
 import 'package:flutter/cupertino.dart';
@@ -21,7 +22,7 @@ class PgpKeyScreen extends StatelessWidget {
       appBar: AMAppBar(
         title: Text(i18n(
           context,
-          pgpKey.isPrivate ? "public_key" : "private_key",
+          pgpKey.isPrivate ? "private_key" : "public_key",
         )),
       ),
       body: Padding(
@@ -33,8 +34,7 @@ class PgpKeyScreen extends StatelessWidget {
               child: ListView(
                 children: <Widget>[
                   Text(
-                    (pgpKey.name?.isNotEmpty == true ? "${pgpKey.name} " : "") +
-                        "<${pgpKey.mail}>",
+                    pgpKey.formatName(),
                     style: theme.textTheme.title,
                   ),
                   SizedBox(

@@ -7,6 +7,7 @@ import 'package:aurora_mail/modules/settings/screens/pgp_settings/dialogs/import
 import 'package:aurora_mail/modules/settings/screens/pgp_settings/screens/pgp_key_route.dart';
 import 'package:aurora_mail/modules/settings/screens/pgp_settings/screens/pgp_keys_route.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_mail/utils/pgp_key_util.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:crypto_model/crypto_model.dart';
@@ -210,8 +211,7 @@ class _PgpSettingsState extends State<PgpSettings> {
           (key) => InkWell(
             onTap: () => _openKey(context, key),
             child: _key(
-              (key.name?.isNotEmpty == true ? "${key.name} " : "") +
-                  "<${key.mail}>",
+              key.formatName(),
               false,
             ),
           ),
