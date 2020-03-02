@@ -14,12 +14,12 @@ class ContactsDrawer extends StatefulWidget {
 }
 
 class _ContactsDrawerState extends State<ContactsDrawer> {
-
   void _addGroup() {
     Navigator.pushNamed(
       context,
       GroupEditRoute.name,
-      arguments: GroupEditScreenArgs(bloc: BlocProvider.of<ContactsBloc>(context)),
+      arguments:
+          GroupEditScreenArgs(bloc: BlocProvider.of<ContactsBloc>(context)),
     );
   }
 
@@ -30,7 +30,8 @@ class _ContactsDrawerState extends State<ContactsDrawer> {
         selectedColor: Theme.of(context).accentColor,
         style: ListTileStyle.drawer,
         child: SafeArea(
-          child: BlocBuilder<ContactsBloc, ContactsState>(builder: (context, state) {
+          child: BlocBuilder<ContactsBloc, ContactsState>(
+              builder: (context, state) {
             return ListView(
               children: <Widget>[
                 Padding(
@@ -49,10 +50,12 @@ class _ContactsDrawerState extends State<ContactsDrawer> {
                     children: <Widget>[
                       Text(
                         i18n(context, "contacts_drawer_section_groups"),
-                        style: TextStyle(color: Theme.of(context).disabledColor),
+                        style:
+                            TextStyle(color: Theme.of(context).disabledColor),
                       ),
                       IconButton(
-                        icon: Icon(Icons.add, color: Theme.of(context).accentColor),
+                        icon: Icon(Icons.add,
+                            color: Theme.of(context).accentColor),
                         onPressed: _addGroup,
                       ),
                     ],
@@ -71,30 +74,38 @@ class _ContactsDrawerState extends State<ContactsDrawer> {
     final bloc = BlocProvider.of<ContactsBloc>(context);
     final visibleStorages = state.storages?.where((s) => s.display);
 
+    final isAllVisible = visibleStorages != null && visibleStorages.length > 1;
     if (visibleStorages != null) {
       return Column(
         children: [
-          ListTile(
-            leading: Icon(MdiIcons.accountGroup),
-            title: Text(i18n(context, "contacts_drawer_storage_all")),
-            selected: state.showAllVisibleContacts,
-            onTap: () {
-              bloc.add(SelectStorageGroup());
-              Navigator.pop(context);
-            },
-          ),
-          ...visibleStorages
-            .map((s) {
-          if (s.id == StorageNames.personal) {
-            return _buildStorageTile(name: s.id, icon: WebMailIcons.personal, s: s, state: state);
-          } else if (s.id == StorageNames.shared) {
-            return _buildStorageTile(name: s.id, icon: WebMailIcons.shared_with_all, s: s, state: state);
-          } else if (s.id == StorageNames.team) {
-            return _buildStorageTile(name: s.id, icon: Icons.business_center, s: s, state: state);
-          } else {
-            return _buildStorageTile(icon: MdiIcons.folderAccountOutline, s: s, state: state);
-          }
-        }).toList(),
+          if (isAllVisible)
+            ListTile(
+              leading: Icon(MdiIcons.accountGroup),
+              title: Text(i18n(context, "contacts_drawer_storage_all")),
+              selected: state.showAllVisibleContacts,
+              onTap: () {
+                bloc.add(SelectStorageGroup());
+                Navigator.pop(context);
+              },
+            ),
+          ...visibleStorages.map((s) {
+            if (s.id == StorageNames.personal) {
+              return _buildStorageTile(
+                  name: s.id, icon: WebMailIcons.personal, s: s, state: state);
+            } else if (s.id == StorageNames.shared) {
+              return _buildStorageTile(
+                  name: s.id,
+                  icon: WebMailIcons.shared_with_all,
+                  s: s,
+                  state: state);
+            } else if (s.id == StorageNames.team) {
+              return _buildStorageTile(
+                  name: s.id, icon: Icons.business_center, s: s, state: state);
+            } else {
+              return _buildStorageTile(
+                  icon: MdiIcons.folderAccountOutline, s: s, state: state);
+            }
+          }).toList(),
         ],
       );
     } else if (state.storages != null && state.storages.isEmpty) {
@@ -116,7 +127,9 @@ class _ContactsDrawerState extends State<ContactsDrawer> {
     final bloc = BlocProvider.of<ContactsBloc>(context);
     return ListTile(
       leading: Icon(icon),
-      title: Text(name != null ? i18n(context, "contacts_drawer_storage_$name") : s.name),
+      title: Text(name != null
+          ? i18n(context, "contacts_drawer_storage_$name")
+          : s.name),
       selected: s.sqliteId == state.selectedStorage,
       onTap: () {
         bloc.add(SelectStorageGroup(storage: s));
@@ -131,10 +144,9 @@ class _ContactsDrawerState extends State<ContactsDrawer> {
     if (state.groups != null) {
       return Column(
         children: state.groups
-            .map((g) =>
-            ListTile(
-              leading: Icon(MdiIcons.pound),
-              title: Text(g.name),
+            .map((g) => ListTile(
+                  leading: Icon(MdiIcons.pound),
+                  title: Text(g.name),
                   selected: g.uuid == state.selectedGroup,
                   onTap: () {
                     bloc.add(SelectStorageGroup(group: g));

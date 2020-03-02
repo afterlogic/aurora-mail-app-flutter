@@ -14,7 +14,7 @@ class LogIn extends TwoFactorEvent with AlwaysNonEqualObject {
   final String login;
   final String pass;
 
-  LogIn(this.pin, this.host, this.login, this.pass);
+  Verify(this.pin, this.host, this.login, this.pass);
 
   @override
   List<Object> get props => [pin];

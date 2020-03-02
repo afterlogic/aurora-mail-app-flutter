@@ -120,15 +120,17 @@ class _AppState extends State<App> with WidgetsBindingObserver {
                         BlocProvider.value(value: _authBloc),
                         BlocProvider.value(value: _settingsBloc),
                         BlocProvider(
-                            create: (_) => new MailBloc(
-                                  user: _authBloc.currentUser,
-                                  account: _authBloc.currentAccount,
-                                )),
+                          create: (_) => new MailBloc(
+                            user: _authBloc.currentUser,
+                            account: _authBloc.currentAccount,
+                          ),
+                        ),
                         BlocProvider(
-                            create: (_) => new ContactsBloc(
-                                  user: _authBloc.currentUser,
-                                  appDatabase: DBInstances.appDB,
-                                )),
+                          create: (_) => new ContactsBloc(
+                            user: _authBloc.currentUser,
+                            appDatabase: DBInstances.appDB,
+                          ),
+                        ),
                       ],
                       child: MaterialApp(
                         navigatorKey: _navKey,

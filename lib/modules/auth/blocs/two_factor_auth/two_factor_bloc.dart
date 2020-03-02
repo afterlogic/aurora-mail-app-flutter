@@ -16,10 +16,10 @@ class TwoFactorBloc extends Bloc<TwoFactorEvent, TwoFactorState> {
   Stream<TwoFactorState> mapEventToState(
     TwoFactorEvent event,
   ) async* {
-    if (event is LogIn) yield* _logIn(event);
+    if (event is Verify) yield* _logIn(event);
   }
 
-  Stream<TwoFactorState> _logIn(LogIn state) async* {
+  Stream<TwoFactorState> _logIn(Verify state) async* {
     yield ProgressState();
 
     try {

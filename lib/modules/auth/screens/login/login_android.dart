@@ -1,9 +1,9 @@
-import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/auth_input.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/login_gradient.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/presentation_header.dart';
+import 'package:aurora_mail/modules/auth/screens/login/login_route.dart';
 import 'package:aurora_mail/modules/auth/screens/two_factor_auth/two_factor_auth_route.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
@@ -12,6 +12,7 @@ import 'package:aurora_mail/utils/input_validation.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
+import 'package:aurora_ui_kit/components/am_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -134,7 +135,7 @@ class _LoginAndroidState extends State<LoginAndroid> {
                   context,
                   TwoFactorAuthRoute.name,
                   arguments: TwoFactorAuthRouteArgs(state.hostname, state.email,
-                      state.password, widget.isDialog),
+                      state.password, widget.isDialog,),
                 ).then((value) {
                   if (value is User) {
                     authBloc.add(UserLogIn(value));
@@ -160,32 +161,32 @@ class _LoginAndroidState extends State<LoginAndroid> {
                       .add(InitSettings(state.user, state.users));
                 }
 
-                if (widget.isDialog) {
-                  RestartWidget.restartApp(context);
-                } else {
-                  Navigator.pushReplacementNamed(
-                      context, MessagesListRoute.name);
-                }
+              if (widget.isDialog) {
+                RestartWidget.restartApp(context);
+              } else {
+    Navigator.popUntil(
+    context, ModalRoute.withName(LoginRoute.name));
+    Navigator.pushReplacementNamed(context, MessagesListRoute.name);
               }
-              if (state is AuthError) {
-                showSnack(
-                  context: context,
-                  scaffoldState: Scaffold.of(context),
-                  msg: state.errorMsg,
-                );
+            }
+            if (state is AuthError) {
+              showSnack(
+                context: context,
+                scaffoldState: Scaffold.of(context),
+                msg: state.errorMsg,
+              );
+            }
+          },
+          child: BlocBuilder<AuthBloc, AuthState>(
+            bloc: BlocProvider.of<AuthBloc>(context),
+            builder: (context, state) {
+              if (state is LoggingIn) {
+                return _buildLoginForm(context, loading: true);
+              } else {
+                return _buildLoginForm(context);
               }
             },
-            child: BlocBuilder<AuthBloc, AuthState>(
-              bloc: BlocProvider.of<AuthBloc>(context),
-              builder: (context, state) {
-                if (state is LoggingIn) {
-                  return _buildLoginForm(context, loading: true);
-                } else {
-                  return _buildLoginForm(context);
-                }
-              },
-            )),
-      ),
+          )),
     );
   }
 
