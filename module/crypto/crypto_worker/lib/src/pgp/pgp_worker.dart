@@ -8,15 +8,15 @@ abstract class PgpWorker {
   );
 
   Future<List<PgpKey>> createKeyPair(
-      String name,
+    String name,
     int length,
     String email,
     String password,
   );
 
-    Future<List<PgpKey>> parseKey(
-      String text,
-    );
+  Future<List<PgpKey>> parseKey(
+    String text,
+  );
 
   EncryptType encryptType(String text);
 

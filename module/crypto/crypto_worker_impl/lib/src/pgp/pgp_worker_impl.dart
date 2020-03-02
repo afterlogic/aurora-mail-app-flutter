@@ -65,8 +65,8 @@ class PgpWorkerImpl extends PgpWorker {
 
         keys.add(
           PgpKey.fill(
-            name,
-            validEmail,
+            name ?? "",
+            validEmail ?? "",
             description.isPrivate,
             key,
             description.length,

@@ -96,7 +96,7 @@ class CryptoStorageImpl extends CryptoStorage {
 
   String _id(String name, String mail, bool isPrivate) {
     assert(_other.isNotEmpty, "other required");
-    return _other + name + mail + isPrivate.toString();
+    return "$_other$name$mail$isPrivate";
   }
 
   Future<String> _key(String name, String mail, bool isPrivate) async {
