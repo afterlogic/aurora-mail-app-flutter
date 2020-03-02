@@ -114,6 +114,9 @@ class _MessageViewAndroidState extends State<MessageViewAndroid>
         break;
       case MailViewAppBarAction.toSpam:
         return null;
+      case MailViewAppBarAction.showLightEmail:
+        // TODO VO:
+        return null;
       case MailViewAppBarAction.delete:
         return _deleteMessage();
     }

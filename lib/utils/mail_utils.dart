@@ -214,6 +214,7 @@ class MailUtils {
     @required String date,
     @required String body,
     @required bool showAttachmentsBtn,
+    @required bool showLightEmail,
   }) {
     final subject = message.subject.isNotEmpty ? message.subject : i18n(context, "messages_no_subject");
     final theme = Theme.of(context);
@@ -225,8 +226,15 @@ class MailUtils {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+      }
+      .email-head {
+        ${_getDarkStyles(context, showLightEmail)}
+        padding: 18px;
+      }
       body {
-        padding: 10px;
         overflow-x: hidden;
         font-family: sans-serif;
       }
@@ -247,41 +255,48 @@ class MailUtils {
         -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
         outline: 0;
       }
+      .email-content {
+        padding: 18px;
+        word-break: break-all;
+        overflow-x: scroll;
+      }
     </style>
   </head>
   <body>
-    <div class="flex row" style="width: calc(100vw - 12px * 2)">
-      <div class="flex" style="flex: 1">
-        <div style="font-size: 18px">${message.fromToDisplay}</div>
-        <div class="disabled-text">$to</div>
-        <div class="disabled-text">$date</div>
+    <div class='email-head'>
+      <div class="flex row" style="width: calc(100vw - 12px * 2)">
+        <div class="flex" style="flex: 1">
+          <div style="font-size: 18px">${message.fromToDisplay}</div>
+          <div class="disabled-text">$to</div>
+          <div class="disabled-text">$date</div>
+        </div>
+        <div class="flex" style="flex: 0">
+          <!-- <a href='https://dummy-crutch.com/#${MessageWebViewActions.SHOW_INFO}' class='icon-btn'>${_getInfoIcon(accentColor)}</a> -->
+          <a href='https://dummy-crutch.com/#${MessageWebViewActions.SHOW_ATTACHMENTS}' class='icon-btn' style='${showAttachmentsBtn != true ? "display: none" : ""}'>
+            ${_getAttachmentsIcon(accentColor)}
+          </a>
+        </div>
       </div>
-      <div class="flex" style="flex: 0">
-        <!-- <a href='https://dummy-crutch.com/#${MessageWebViewActions.SHOW_INFO}' class='icon-btn'>${_getInfoIcon(accentColor)}</a> -->
-        <a href='https://dummy-crutch.com/#${MessageWebViewActions.SHOW_ATTACHMENTS}' class='icon-btn' style='${showAttachmentsBtn != true ? "display: none" : ""}'>
-          ${_getAttachmentsIcon(accentColor)}
-        </a>
-      </div>
+      <h1 style="font-size: 24px; font-weight: 500; margin-top: 24px">$subject</h1>
+      <div style="height: 1px; background-color: black; opacity: 0.05; margin: 24px 0"></div>
     </div>
-    <h1 style="font-size: 24px; font-weight: 500; margin-top: 24px">$subject</h1>
-    <div style="height: 1px; background-color: black; opacity: 0.05; margin: 24px 0"></div>
-    $body
+    <div class='email-content'>$body</div>
   </body>
 </html>
     """;
   }
 
-  static String _getDarkStyles(BuildContext context) {
+  static String _getDarkStyles(BuildContext context, bool showLightEmail) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final backgroundColor = _getWebColor(theme.scaffoldBackgroundColor);
     final textColor = _getWebColor(theme.textTheme.body1.color);
 
-    if (isDark == true) {
+    if (isDark == true && showLightEmail == false) {
       return """
         background: $backgroundColor;
-        background-color: $backgroundColor !important;
-        color: $textColor !important;
+        background-color: $backgroundColor;
+        color: $textColor;
       """;
     } else {
       return "";

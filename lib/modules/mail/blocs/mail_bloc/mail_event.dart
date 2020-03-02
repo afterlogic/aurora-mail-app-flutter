@@ -17,11 +17,19 @@ class FetchFolders extends MailEvent with AlwaysNonEqualObject {}
 class UpdateFolders extends MailEvent {}
 
 // always from server
-class RefreshFolders extends MailEvent {}
+class RefreshFolders extends MailEvent with AlwaysNonEqualObject {
+  final bool updateOther;
+
+  RefreshFolders([this.updateOther = false]);
+}
 
 // gets messagesInfo for current folder
 // and relevant folders info for all the folders, including current
-class RefreshMessages extends MailEvent with AlwaysNonEqualObject {}
+class RefreshMessages extends MailEvent with AlwaysNonEqualObject {
+  final bool updateOther;
+
+  RefreshMessages([this.updateOther = false]);
+}
 
 class CheckFoldersMessagesChanges extends MailEvent {}
 

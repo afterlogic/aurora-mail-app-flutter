@@ -33,11 +33,12 @@ void onAlarm() async {
     hasUpdate = await BackgroundSync()
         .sync(BackgroundHelper.isBackground)
         .timeout(Duration(seconds: 30));
-
-    BackgroundHelper.onEndAlarm(hasUpdate);
   } catch (e, s) {
     print(e);
     print(s);
   }
+
+  BackgroundHelper.onEndAlarm(hasUpdate);
+
   await AlarmService.endAlarm(hasUpdate);
 }

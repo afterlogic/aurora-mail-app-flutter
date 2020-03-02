@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:aurora_mail/background/background_helper.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/utils/api_utils.dart';
@@ -15,6 +16,7 @@ class MailBloc extends Bloc<MailEvent, MailState> {
   MailBloc({@required User user, @required Account account}) {
     assert(user != null);
     _methods = new MailMethods(user: user, account: account);
+    BackgroundHelper.addOnEndAlarmObserver(true, onEndAlarm);
   }
 
   Folder _selectedFolder;
@@ -22,6 +24,12 @@ class MailBloc extends Bloc<MailEvent, MailState> {
 
   @override
   MailState get initialState => FoldersEmpty();
+
+  @override
+  Future<void> close() async {
+    BackgroundHelper.removeOnEndAlarmObserver(onEndAlarm);
+    super.close();
+  }
 
   @override
   Stream<MailState> mapEventToState(
@@ -36,6 +44,13 @@ class MailBloc extends Bloc<MailEvent, MailState> {
       yield* _checkFoldersMessagesChanges(event);
     if (event is SetSeen) yield* _setSeen(event);
     if (event is SetStarred) yield* _setStarred(event);
+  }
+
+  onEndAlarm(bool hasUpdate) async {
+    if(hasUpdate) {
+      add(RefreshMessages());
+    }
+    add(RefreshFolders());
   }
 
   Stream<MailState> _fetchFolders(FetchFolders event) async* {
@@ -92,6 +107,9 @@ class MailBloc extends Bloc<MailEvent, MailState> {
   }
 
   Stream<MailState> _refreshFolders(RefreshFolders event) async* {
+    if (event.updateOther) {
+      BackgroundHelper.onStartAlarm();
+    }
     try {
       yield FoldersLoading();
 
@@ -115,9 +133,15 @@ class MailBloc extends Bloc<MailEvent, MailState> {
     } catch (err, s) {
       yield FoldersError(formatError(err, s));
     }
+    if (event.updateOther) {
+      BackgroundHelper.onEndAlarm(false);
+    }
   }
 
   Stream<MailState> _refreshMessages(RefreshMessages event) async* {
+    if (event.updateOther) {
+      BackgroundHelper.onStartAlarm();
+    }
     try {
       final guid = _selectedFolder.guid;
       final List<Folder> foldersWithInfo = await _methods.updateFoldersHash(
@@ -133,6 +157,9 @@ class MailBloc extends Bloc<MailEvent, MailState> {
           .then((v) => add(UpdateFolders()));
     } catch (err, s) {
       yield FoldersError(formatError(err, s));
+    }
+    if (event.updateOther) {
+      BackgroundHelper.onEndAlarm(false);
     }
   }
 

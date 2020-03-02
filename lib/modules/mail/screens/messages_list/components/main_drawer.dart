@@ -106,7 +106,7 @@ class _MainDrawerState extends State<MainDrawer> {
                     child: RefreshIndicator(
                       onRefresh: () {
                         BlocProvider.of<MailBloc>(context)
-                            .add(RefreshFolders());
+                            .add(RefreshFolders(true));
                         return _refreshCompleter.future;
                       },
                       backgroundColor: Colors.white,

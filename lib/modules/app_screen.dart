@@ -40,7 +40,7 @@ class _AppState extends State<App> with WidgetsBindingObserver {
     WebMailApi.authErrorStream.listen((_) {
       _authBloc.add(InvalidateCurrentUserToken());
     });
-
+    BackgroundHelper.current = AppLifecycleState.resumed;
     _initApp();
   }
 
