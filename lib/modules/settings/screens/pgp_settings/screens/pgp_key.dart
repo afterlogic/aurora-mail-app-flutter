@@ -77,11 +77,12 @@ class PgpKeyScreen extends StatelessWidget {
                     child: Text(i18n(context, "delete")),
                     onPressed: () async {
                       final result = await ConfirmationDialog.show(
-                          context,
-                          "",
-                          i18n(context, "delete_user_key_confirm",
-                              {"user": pgpKey.mail}),
-                          "delete");
+                        context,
+                        "",
+                        i18n(context, "delete_user_key_confirm",
+                            {"user": pgpKey.mail}),
+                        i18n(context, "btn_delete"),
+                      );
                       if (result == true) {
                         bloc.add(DeleteKey(pgpKey));
                         Navigator.pop(context);

@@ -1,3 +1,4 @@
+import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/auth_input.dart';
@@ -134,8 +135,13 @@ class _LoginAndroidState extends State<LoginAndroid> {
                 Navigator.pushNamed(
                   context,
                   TwoFactorAuthRoute.name,
-                  arguments: TwoFactorAuthRouteArgs(state.hostname, state.email,
-                      state.password, widget.isDialog,),
+                  arguments: TwoFactorAuthRouteArgs(
+                    state.hostname,
+                    state.email,
+                    state.password,
+                    widget.isDialog,
+                    authBloc,
+                  ),
                 ).then((value) {
                   if (value is User) {
                     authBloc.add(UserLogIn(value));
@@ -161,32 +167,34 @@ class _LoginAndroidState extends State<LoginAndroid> {
                       .add(InitSettings(state.user, state.users));
                 }
 
-              if (widget.isDialog) {
-                RestartWidget.restartApp(context);
-              } else {
-    Navigator.popUntil(
-    context, ModalRoute.withName(LoginRoute.name));
-    Navigator.pushReplacementNamed(context, MessagesListRoute.name);
+                if (widget.isDialog) {
+                  RestartWidget.restartApp(context);
+                } else {
+                  Navigator.popUntil(
+                      context, ModalRoute.withName(LoginRoute.name));
+                  Navigator.pushReplacementNamed(
+                      context, MessagesListRoute.name);
+                }
               }
-            }
-            if (state is AuthError) {
-              showSnack(
-                context: context,
-                scaffoldState: Scaffold.of(context),
-                msg: state.errorMsg,
-              );
-            }
-          },
-          child: BlocBuilder<AuthBloc, AuthState>(
-            bloc: BlocProvider.of<AuthBloc>(context),
-            builder: (context, state) {
-              if (state is LoggingIn) {
-                return _buildLoginForm(context, loading: true);
-              } else {
-                return _buildLoginForm(context);
+              if (state is AuthError) {
+                showSnack(
+                  context: context,
+                  scaffoldState: Scaffold.of(context),
+                  msg: state.errorMsg,
+                );
               }
             },
-          )),
+            child: BlocBuilder<AuthBloc, AuthState>(
+              bloc: BlocProvider.of<AuthBloc>(context),
+              builder: (context, state) {
+                if (state is LoggingIn) {
+                  return _buildLoginForm(context, loading: true);
+                } else {
+                  return _buildLoginForm(context);
+                }
+              },
+            )),
+      ),
     );
   }
 
@@ -265,7 +273,13 @@ class _LoginAndroidState extends State<LoginAndroid> {
         onDoubleTap: () => Navigator.pushNamed(
           context,
           TwoFactorAuthRoute.name,
-          arguments: TwoFactorAuthRouteArgs("", "", "", false),
+          arguments: TwoFactorAuthRouteArgs(
+            "",
+            "",
+            "",
+            false,
+            BlocProvider.of<AuthBloc>(context),
+          ),
         ),
         child: child,
       );
