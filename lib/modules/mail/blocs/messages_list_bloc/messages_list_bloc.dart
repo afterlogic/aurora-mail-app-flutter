@@ -35,7 +35,6 @@ class MessagesListBloc extends Bloc<MessagesListEvent, MessagesListState> {
       SubscribeToMessages event) async* {
     searchTerm = event.searchTerm ?? "";
 
-    print("VO: searchTerm: ${searchTerm}");
     try {
       final stream = _methods.subscribeToMessages(
         event.currentFolder,

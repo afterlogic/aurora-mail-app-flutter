@@ -1,17 +1,20 @@
 import 'dart:convert';
 
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
+import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
+import 'package:aurora_mail/modules/mail/screens/message_view/components/attachment.dart';
 import 'package:aurora_mail/modules/mail/screens/message_view/components/message_webview.dart';
 import 'package:aurora_mail/utils/date_formatting.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:html/parser.dart';
-import 'package:aurora_mail/utils/extensions/string_extensions.dart';
 
 class MailUtils {
-
   static String getFriendlyName(Contact contact) {
     if (contact.fullName != null && contact.fullName.isNotEmpty) {
       return '"${contact.fullName}" <${contact.viewEmail}>';
@@ -42,7 +45,8 @@ class MailUtils {
     }
   }
 
-  static List<String> getEmails(String emailsInJson, {List<String> exceptEmails}) {
+  static List<String> getEmails(String emailsInJson,
+      {List<String> exceptEmails}) {
     if (emailsInJson == null) return [];
     final emails = json.decode(emailsInJson);
     if (emails == null) return [];
@@ -69,7 +73,8 @@ class MailUtils {
     if (senderInJson == null) return "";
     final sender = json.decode(senderInJson);
     if (sender == null) return "";
-    final mapped = sender["@Collection"].map((t) => t["DisplayName"]) as Iterable;
+    final mapped =
+        sender["@Collection"].map((t) => t["DisplayName"]) as Iterable;
     final results = List<String>.from(mapped);
     if (results.isEmpty || results[0] == null || results[0].isEmpty) {
       final mapped = sender["@Collection"].map((t) => t["Email"]) as Iterable;
@@ -108,12 +113,13 @@ class MailUtils {
         bool re = rePrefixes.contains(partUpper);
         bool fwd = fwdPrefixes.contains(partUpper);
         int count = 1;
-        final lastResPart = (resParts.length > 0) ? resParts[resParts.length - 1] : null;
+        final lastResPart =
+            (resParts.length > 0) ? resParts[resParts.length - 1] : null;
 
         if (!re && !fwd) {
           final matches = (new RegExp(
-              r'^\s?(' + prefixes + r')\s?[\[(]([\d]+)[\])]$',
-              caseSensitive: false))
+                  r'^\s?(' + prefixes + r')\s?[\[(]([\d]+)[\])]$',
+                  caseSensitive: false))
               .allMatches(partUpper)
               .toList();
           if (matches != null &&
@@ -188,13 +194,17 @@ class MailUtils {
     final bcc = MailUtils.getEmails(message.bccInJson).join(", ");
 
     if (from.isNotEmpty)
-      forwardMessage += i18n(context, "compose_forward_from", {"emails": from}) + "\n";
+      forwardMessage +=
+          i18n(context, "compose_forward_from", {"emails": from}) + "\n";
     if (to.isNotEmpty)
-      forwardMessage += i18n(context, "compose_forward_to", {"emails": to}) + "\n";
+      forwardMessage +=
+          i18n(context, "compose_forward_to", {"emails": to}) + "\n";
     if (cc.isNotEmpty)
-      forwardMessage += i18n(context, "compose_forward_cc", {"emails": cc}) + "\n";
+      forwardMessage +=
+          i18n(context, "compose_forward_cc", {"emails": cc}) + "\n";
     if (bcc.isNotEmpty)
-      forwardMessage += i18n(context, "compose_forward_bcc", {"emails": bcc}) + "\n";
+      forwardMessage +=
+          i18n(context, "compose_forward_bcc", {"emails": bcc}) + "\n";
 
     final date = DateFormatting.formatDateFromSeconds(
         message.timeStampInUTC, Localizations.localeOf(context).languageCode,
@@ -208,19 +218,24 @@ class MailUtils {
     return forwardMessage + baseMessage;
   }
 
-  static String wrapInHtml(BuildContext context, {
+  static String wrapInHtml(
+    BuildContext context, {
     @required Message message,
     @required String to,
     @required String date,
     @required String body,
-    @required bool showAttachmentsBtn,
+    @required List<MailAttachment> attachments,
     @required bool showLightEmail,
   }) {
-    final subject = message.subject.isNotEmpty ? message.subject : i18n(context, "messages_no_subject");
+    final subject = message.subject.isNotEmpty
+        ? message.subject
+        : i18n(context, "messages_no_subject");
     final theme = Theme.of(context);
+    final paddingBottom = MediaQuery.of(context).padding.bottom;
 
     final accentColor = _getWebColor(theme.accentColor);
-    return "<!doctype html>" + """
+    return "<!doctype html>" +
+        """
 <html lang="en">
   <head>
     <meta charset="UTF-8">
@@ -230,9 +245,11 @@ class MailUtils {
         margin: 0;
         padding: 0;
       }
-      .email-head {
-        ${_getDarkStyles(context, showLightEmail)}
+      .attachments, .email-head, .email-content {
         padding: 18px;
+      }
+      .email-head, .attachments {
+        ${_getDarkStyles(context, showLightEmail)}
       }
       body {
         overflow-x: hidden;
@@ -251,14 +268,34 @@ class MailUtils {
         margin-top: 7px;
       }
       .icon-btn {
-        padding: 0 12px 12px;
         -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
         outline: 0;
       }
       .email-content {
-        padding: 18px;
         word-break: break-all;
         overflow-x: scroll;
+      }
+      .attachments {
+        margin-top: 20px;
+        padding-bottom: ${paddingBottom}px;
+      }
+      .attachment {
+        display: flex;
+        align-items: center;
+        margin-bottom: 22px;
+      }
+      .attachment .leading, .attachment .leading img {
+        height: 50px;
+        width: 50px;
+      }
+      .attachment .leading {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        margin-right: 16px;
+        object-fit: cover;
+        border-radius: 10px;
       }
     </style>
   </head>
@@ -271,16 +308,16 @@ class MailUtils {
           <div class="disabled-text">$date</div>
         </div>
         <div class="flex" style="flex: 0">
-          <!-- <a href='https://dummy-crutch.com/#${MessageWebViewActions.SHOW_INFO}' class='icon-btn'>${_getInfoIcon(accentColor)}</a> -->
-          <a href='https://dummy-crutch.com/#${MessageWebViewActions.SHOW_ATTACHMENTS}' class='icon-btn' style='${showAttachmentsBtn != true ? "display: none" : ""}'>
-            ${_getAttachmentsIcon(accentColor)}
-          </a>
+          <!-- <a href='https://dummy-crutch.com/#${MessageWebViewActions.SHOW_INFO}' class='icon-btn' style="padding: 0 12px 12px;">${_getInfoIcon(accentColor)}</a> -->
         </div>
       </div>
       <h1 style="font-size: 24px; font-weight: 500; margin-top: 24px">$subject</h1>
       <div style="height: 1px; background-color: black; opacity: 0.05; margin: 24px 0"></div>
     </div>
     <div class='email-content'>$body</div>
+    <div class='attachments'>
+      ${attachments.map((a) => _getAttachment(context, a)).toList().join()}
+    </div>
   </body>
 </html>
     """;
@@ -310,7 +347,30 @@ class MailUtils {
     return "#$color$opacity";
   }
 
-  static String _getInfoIcon(String color) => """<svg id="information" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+  static String _getAttachment(BuildContext context, MailAttachment attachment) {
+    final iconColor = _getWebColor(Theme.of(context).iconTheme.color);
+    final authBloc = BlocProvider.of<AuthBloc>(context);
+    String leading;
+    if (attachment.thumbnailUrl == null || attachment.thumbnailUrl.isEmpty) {
+      leading = "<div class='leading'>${_getAttachmentsIcon(iconColor)}</div>";
+    } else {
+      final thumbUrl = attachment.thumbnailUrl.replaceFirst("mail-attachment/", "mail-attachments-cookieless/");
+      leading = "<div class='leading'><img src='${"${authBloc.currentUser.hostname}$thumbUrl&AuthToken=${authBloc.currentUser.token}"}' alt=''></div>";
+    }
+    return """
+    <div class='attachment'>
+      $leading
+      <div class='flex' style='flex: 1'>
+        <span>${attachment.fileName}</span>
+        <span class='disabled-text'>${filesize(attachment.size)}</span>
+      </div>
+      <a class='icon-btn' href='https://dummy-crutch.com/#${MessageWebViewActions.DOWNLOAD_ATTACHMENT + attachment.downloadUrl + MessageWebViewActions.DOWNLOAD_ATTACHMENT}'>${_getDownloadIcon(iconColor)}</a>
+    </div>
+    """;
+  }
+
+  static String _getInfoIcon(String color) =>
+      """<svg id="information" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
   <g id="Group_32" data-name="Group 32">
   <g id="Group_31" data-name="Group 31">
   <path id="Path_53" data-name="Path 53" d="M10,0A10,10,0,1,0,20,10,9.988,9.988,0,0,0,10,0Zm0,18.34A8.34,8.34,0,1,1,18.34,10,8.354,8.354,0,0,1,10,18.34Z" fill="$color"/>
@@ -325,8 +385,12 @@ class MailUtils {
   </svg>""";
 
   static String _getAttachmentsIcon(String color) => """
-  <svg id="paperclip" xmlns="http://www.w3.org/2000/svg" width="18.126" height="20" viewBox="0 0 18.126 20">
-  <path id="Path_30" data-name="Path 30" d="M24.4,20a4.129,4.129,0,0,1-2.92-7.049l9.264-9.264a2.8,2.8,0,1,1,3.965,3.965l-6.814,6.814a.693.693,0,0,1-.981-.981l6.814-6.815a1.417,1.417,0,1,0-2-2l-9.264,9.264a2.742,2.742,0,0,0,3.878,3.878l9.482-9.482a4.068,4.068,0,0,0-5.753-5.753L23.032,9.607a.693.693,0,0,1-.981-.981L29.084,1.6A5.454,5.454,0,1,1,36.8,9.309l-9.482,9.482A4.1,4.1,0,0,1,24.4,20Z" transform="translate(-20.269 0)" fill="$color"/>
+<svg style="width:24px;height:24px" viewBox="0 0 24 24">
+    <path fill="$color" d="M16.5,6V17.5A4,4 0 0,1 12.5,21.5A4,4 0 0,1 8.5,17.5V5A2.5,2.5 0 0,1 11,2.5A2.5,2.5 0 0,1 13.5,5V15.5A1,1 0 0,1 12.5,16.5A1,1 0 0,1 11.5,15.5V6H10V15.5A2.5,2.5 0 0,0 12.5,18A2.5,2.5 0 0,0 15,15.5V5A4,4 0 0,0 11,1A4,4 0 0,0 7,5V17.5A5.5,5.5 0 0,0 12.5,23A5.5,5.5 0 0,0 18,17.5V6H16.5Z" />
 </svg>
   """;
+
+  static String _getDownloadIcon(String color) => """<svg style="width:24px;height:24px" viewBox="0 0 24 24">
+    <path fill="$color" d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z" />
+</svg>""";
 }
