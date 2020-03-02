@@ -1,3 +1,4 @@
+import 'package:aurora_mail/database/account_identity/accounts_identity_dao.dart';
 import 'package:aurora_mail/database/accounts/accounts_dao.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/folders/folders_dao.dart';
@@ -15,6 +16,7 @@ class AuthMethods {
   final _authApi = new AuthApi();
   final _authLocal = new AuthLocalStorage();
   final _usersDao = new UsersDao(DBInstances.appDB);
+  final _accountIdentityDao = new AccountIdentityDao(DBInstances.appDB);
   final _accountsDao = new AccountsDao(DBInstances.appDB);
 
   Future<InitializerResponse> getUserAndAccountsFromDB() async {
@@ -80,6 +82,7 @@ class AuthMethods {
     }
     selectUser(userToReturn.localId);
     _authLocal.setLastEmail(user.emailFromLogin);
+    updateIdentity(userToReturn);
     return userToReturn;
   }
 
@@ -138,6 +141,17 @@ class AuthMethods {
 
   Future selectAccount(Account account) {
     return _authLocal.setSelectedAccountId(account.localId);
+  }
+
+  Future updateIdentity(User user) async {
+    try {
+      final identity = await _authApi.getIdentity(user);
+      await _accountIdentityDao.deleteIdentityByAccount(user.serverId);
+      await _accountIdentityDao.setIdentity(identity);
+    } catch (e, s) {
+      print(s);
+      print(e);
+    }
   }
 }
 

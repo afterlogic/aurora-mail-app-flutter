@@ -8725,6 +8725,409 @@ class $PgpKeyModelTable extends PgpKeyModel
   }
 }
 
+class AccountIdentityDb extends DataClass
+    implements Insertable<AccountIdentityDb> {
+  final int entityId;
+  final String email;
+  final String friendlyName;
+  final String signature;
+  final int idUser;
+  final bool isDefault;
+  final bool useSignature;
+  AccountIdentityDb(
+      {@required this.entityId,
+      @required this.email,
+      @required this.friendlyName,
+      @required this.signature,
+      @required this.idUser,
+      @required this.isDefault,
+      @required this.useSignature});
+  factory AccountIdentityDb.fromData(
+      Map<String, dynamic> data, GeneratedDatabase db,
+      {String prefix}) {
+    final effectivePrefix = prefix ?? '';
+    final intType = db.typeSystem.forDartType<int>();
+    final stringType = db.typeSystem.forDartType<String>();
+    final boolType = db.typeSystem.forDartType<bool>();
+    return AccountIdentityDb(
+      entityId:
+          intType.mapFromDatabaseResponse(data['${effectivePrefix}entity_id']),
+      email:
+          stringType.mapFromDatabaseResponse(data['${effectivePrefix}email']),
+      friendlyName: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}friendly_name']),
+      signature: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}signature']),
+      idUser:
+          intType.mapFromDatabaseResponse(data['${effectivePrefix}id_user']),
+      isDefault: boolType
+          .mapFromDatabaseResponse(data['${effectivePrefix}is_default']),
+      useSignature: boolType
+          .mapFromDatabaseResponse(data['${effectivePrefix}use_signature']),
+    );
+  }
+  factory AccountIdentityDb.fromJson(Map<String, dynamic> json,
+      {ValueSerializer serializer}) {
+    serializer ??= moorRuntimeOptions.defaultSerializer;
+    return AccountIdentityDb(
+      entityId: serializer.fromJson<int>(json['entityId']),
+      email: serializer.fromJson<String>(json['email']),
+      friendlyName: serializer.fromJson<String>(json['friendlyName']),
+      signature: serializer.fromJson<String>(json['signature']),
+      idUser: serializer.fromJson<int>(json['idUser']),
+      isDefault: serializer.fromJson<bool>(json['isDefault']),
+      useSignature: serializer.fromJson<bool>(json['useSignature']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer serializer}) {
+    serializer ??= moorRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'entityId': serializer.toJson<int>(entityId),
+      'email': serializer.toJson<String>(email),
+      'friendlyName': serializer.toJson<String>(friendlyName),
+      'signature': serializer.toJson<String>(signature),
+      'idUser': serializer.toJson<int>(idUser),
+      'isDefault': serializer.toJson<bool>(isDefault),
+      'useSignature': serializer.toJson<bool>(useSignature),
+    };
+  }
+
+  @override
+  AccountIdentityCompanion createCompanion(bool nullToAbsent) {
+    return AccountIdentityCompanion(
+      entityId: entityId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(entityId),
+      email:
+          email == null && nullToAbsent ? const Value.absent() : Value(email),
+      friendlyName: friendlyName == null && nullToAbsent
+          ? const Value.absent()
+          : Value(friendlyName),
+      signature: signature == null && nullToAbsent
+          ? const Value.absent()
+          : Value(signature),
+      idUser:
+          idUser == null && nullToAbsent ? const Value.absent() : Value(idUser),
+      isDefault: isDefault == null && nullToAbsent
+          ? const Value.absent()
+          : Value(isDefault),
+      useSignature: useSignature == null && nullToAbsent
+          ? const Value.absent()
+          : Value(useSignature),
+    );
+  }
+
+  AccountIdentityDb copyWith(
+          {int entityId,
+          String email,
+          String friendlyName,
+          String signature,
+          int idUser,
+          bool isDefault,
+          bool useSignature}) =>
+      AccountIdentityDb(
+        entityId: entityId ?? this.entityId,
+        email: email ?? this.email,
+        friendlyName: friendlyName ?? this.friendlyName,
+        signature: signature ?? this.signature,
+        idUser: idUser ?? this.idUser,
+        isDefault: isDefault ?? this.isDefault,
+        useSignature: useSignature ?? this.useSignature,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('AccountIdentityDb(')
+          ..write('entityId: $entityId, ')
+          ..write('email: $email, ')
+          ..write('friendlyName: $friendlyName, ')
+          ..write('signature: $signature, ')
+          ..write('idUser: $idUser, ')
+          ..write('isDefault: $isDefault, ')
+          ..write('useSignature: $useSignature')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => $mrjf($mrjc(
+      entityId.hashCode,
+      $mrjc(
+          email.hashCode,
+          $mrjc(
+              friendlyName.hashCode,
+              $mrjc(
+                  signature.hashCode,
+                  $mrjc(idUser.hashCode,
+                      $mrjc(isDefault.hashCode, useSignature.hashCode)))))));
+  @override
+  bool operator ==(dynamic other) =>
+      identical(this, other) ||
+      (other is AccountIdentityDb &&
+          other.entityId == this.entityId &&
+          other.email == this.email &&
+          other.friendlyName == this.friendlyName &&
+          other.signature == this.signature &&
+          other.idUser == this.idUser &&
+          other.isDefault == this.isDefault &&
+          other.useSignature == this.useSignature);
+}
+
+class AccountIdentityCompanion extends UpdateCompanion<AccountIdentityDb> {
+  final Value<int> entityId;
+  final Value<String> email;
+  final Value<String> friendlyName;
+  final Value<String> signature;
+  final Value<int> idUser;
+  final Value<bool> isDefault;
+  final Value<bool> useSignature;
+  const AccountIdentityCompanion({
+    this.entityId = const Value.absent(),
+    this.email = const Value.absent(),
+    this.friendlyName = const Value.absent(),
+    this.signature = const Value.absent(),
+    this.idUser = const Value.absent(),
+    this.isDefault = const Value.absent(),
+    this.useSignature = const Value.absent(),
+  });
+  AccountIdentityCompanion.insert({
+    @required int entityId,
+    @required String email,
+    @required String friendlyName,
+    @required String signature,
+    @required int idUser,
+    @required bool isDefault,
+    @required bool useSignature,
+  })  : entityId = Value(entityId),
+        email = Value(email),
+        friendlyName = Value(friendlyName),
+        signature = Value(signature),
+        idUser = Value(idUser),
+        isDefault = Value(isDefault),
+        useSignature = Value(useSignature);
+  AccountIdentityCompanion copyWith(
+      {Value<int> entityId,
+      Value<String> email,
+      Value<String> friendlyName,
+      Value<String> signature,
+      Value<int> idUser,
+      Value<bool> isDefault,
+      Value<bool> useSignature}) {
+    return AccountIdentityCompanion(
+      entityId: entityId ?? this.entityId,
+      email: email ?? this.email,
+      friendlyName: friendlyName ?? this.friendlyName,
+      signature: signature ?? this.signature,
+      idUser: idUser ?? this.idUser,
+      isDefault: isDefault ?? this.isDefault,
+      useSignature: useSignature ?? this.useSignature,
+    );
+  }
+}
+
+class $AccountIdentityTable extends AccountIdentity
+    with TableInfo<$AccountIdentityTable, AccountIdentityDb> {
+  final GeneratedDatabase _db;
+  final String _alias;
+  $AccountIdentityTable(this._db, [this._alias]);
+  final VerificationMeta _entityIdMeta = const VerificationMeta('entityId');
+  GeneratedIntColumn _entityId;
+  @override
+  GeneratedIntColumn get entityId => _entityId ??= _constructEntityId();
+  GeneratedIntColumn _constructEntityId() {
+    return GeneratedIntColumn(
+      'entity_id',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _emailMeta = const VerificationMeta('email');
+  GeneratedTextColumn _email;
+  @override
+  GeneratedTextColumn get email => _email ??= _constructEmail();
+  GeneratedTextColumn _constructEmail() {
+    return GeneratedTextColumn(
+      'email',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _friendlyNameMeta =
+      const VerificationMeta('friendlyName');
+  GeneratedTextColumn _friendlyName;
+  @override
+  GeneratedTextColumn get friendlyName =>
+      _friendlyName ??= _constructFriendlyName();
+  GeneratedTextColumn _constructFriendlyName() {
+    return GeneratedTextColumn(
+      'friendly_name',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _signatureMeta = const VerificationMeta('signature');
+  GeneratedTextColumn _signature;
+  @override
+  GeneratedTextColumn get signature => _signature ??= _constructSignature();
+  GeneratedTextColumn _constructSignature() {
+    return GeneratedTextColumn(
+      'signature',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _idUserMeta = const VerificationMeta('idUser');
+  GeneratedIntColumn _idUser;
+  @override
+  GeneratedIntColumn get idUser => _idUser ??= _constructIdUser();
+  GeneratedIntColumn _constructIdUser() {
+    return GeneratedIntColumn(
+      'id_user',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _isDefaultMeta = const VerificationMeta('isDefault');
+  GeneratedBoolColumn _isDefault;
+  @override
+  GeneratedBoolColumn get isDefault => _isDefault ??= _constructIsDefault();
+  GeneratedBoolColumn _constructIsDefault() {
+    return GeneratedBoolColumn(
+      'is_default',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _useSignatureMeta =
+      const VerificationMeta('useSignature');
+  GeneratedBoolColumn _useSignature;
+  @override
+  GeneratedBoolColumn get useSignature =>
+      _useSignature ??= _constructUseSignature();
+  GeneratedBoolColumn _constructUseSignature() {
+    return GeneratedBoolColumn(
+      'use_signature',
+      $tableName,
+      false,
+    );
+  }
+
+  @override
+  List<GeneratedColumn> get $columns => [
+        entityId,
+        email,
+        friendlyName,
+        signature,
+        idUser,
+        isDefault,
+        useSignature
+      ];
+  @override
+  $AccountIdentityTable get asDslTable => this;
+  @override
+  String get $tableName => _alias ?? 'account_identity';
+  @override
+  final String actualTableName = 'account_identity';
+  @override
+  VerificationContext validateIntegrity(AccountIdentityCompanion d,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    if (d.entityId.present) {
+      context.handle(_entityIdMeta,
+          entityId.isAcceptableValue(d.entityId.value, _entityIdMeta));
+    } else if (isInserting) {
+      context.missing(_entityIdMeta);
+    }
+    if (d.email.present) {
+      context.handle(
+          _emailMeta, email.isAcceptableValue(d.email.value, _emailMeta));
+    } else if (isInserting) {
+      context.missing(_emailMeta);
+    }
+    if (d.friendlyName.present) {
+      context.handle(
+          _friendlyNameMeta,
+          friendlyName.isAcceptableValue(
+              d.friendlyName.value, _friendlyNameMeta));
+    } else if (isInserting) {
+      context.missing(_friendlyNameMeta);
+    }
+    if (d.signature.present) {
+      context.handle(_signatureMeta,
+          signature.isAcceptableValue(d.signature.value, _signatureMeta));
+    } else if (isInserting) {
+      context.missing(_signatureMeta);
+    }
+    if (d.idUser.present) {
+      context.handle(
+          _idUserMeta, idUser.isAcceptableValue(d.idUser.value, _idUserMeta));
+    } else if (isInserting) {
+      context.missing(_idUserMeta);
+    }
+    if (d.isDefault.present) {
+      context.handle(_isDefaultMeta,
+          isDefault.isAcceptableValue(d.isDefault.value, _isDefaultMeta));
+    } else if (isInserting) {
+      context.missing(_isDefaultMeta);
+    }
+    if (d.useSignature.present) {
+      context.handle(
+          _useSignatureMeta,
+          useSignature.isAcceptableValue(
+              d.useSignature.value, _useSignatureMeta));
+    } else if (isInserting) {
+      context.missing(_useSignatureMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {entityId, idUser};
+  @override
+  AccountIdentityDb map(Map<String, dynamic> data, {String tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
+    return AccountIdentityDb.fromData(data, _db, prefix: effectivePrefix);
+  }
+
+  @override
+  Map<String, Variable> entityToSql(AccountIdentityCompanion d) {
+    final map = <String, Variable>{};
+    if (d.entityId.present) {
+      map['entity_id'] = Variable<int, IntType>(d.entityId.value);
+    }
+    if (d.email.present) {
+      map['email'] = Variable<String, StringType>(d.email.value);
+    }
+    if (d.friendlyName.present) {
+      map['friendly_name'] = Variable<String, StringType>(d.friendlyName.value);
+    }
+    if (d.signature.present) {
+      map['signature'] = Variable<String, StringType>(d.signature.value);
+    }
+    if (d.idUser.present) {
+      map['id_user'] = Variable<int, IntType>(d.idUser.value);
+    }
+    if (d.isDefault.present) {
+      map['is_default'] = Variable<bool, BoolType>(d.isDefault.value);
+    }
+    if (d.useSignature.present) {
+      map['use_signature'] = Variable<bool, BoolType>(d.useSignature.value);
+    }
+    return map;
+  }
+
+  @override
+  $AccountIdentityTable createAlias(String alias) {
+    return $AccountIdentityTable(_db, alias);
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(SqlTypeSystem.defaultInstance, e);
   $MailTable _mail;
@@ -8745,6 +9148,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
       _contactsStorages ??= $ContactsStoragesTable(this);
   $PgpKeyModelTable _pgpKeyModel;
   $PgpKeyModelTable get pgpKeyModel => _pgpKeyModel ??= $PgpKeyModelTable(this);
+  $AccountIdentityTable _accountIdentity;
+  $AccountIdentityTable get accountIdentity =>
+      _accountIdentity ??= $AccountIdentityTable(this);
   @override
   Iterable<TableInfo> get allTables => allSchemaEntities.whereType<TableInfo>();
   @override
@@ -8756,6 +9162,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         contacts,
         contactsGroups,
         contactsStorages,
-        pgpKeyModel
+        pgpKeyModel,
+        accountIdentity
       ];
 }

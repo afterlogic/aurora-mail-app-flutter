@@ -1,3 +1,4 @@
+import 'package:aurora_mail/database/account_identity/account_identity_table.dart';
 import 'package:aurora_mail/database/folders/folders_table.dart';
 import 'package:aurora_mail/database/mail/mail_table.dart';
 import 'package:aurora_mail/database/pgp/pgp_key_model.dart';
@@ -28,7 +29,8 @@ class DBInstances {
   Contacts,
   ContactsGroups,
   ContactsStorages,
-  PgpKeyModel
+  PgpKeyModel,
+  AccountIdentity
 ])
 class AppDatabase extends _$AppDatabase {
   AppDatabase()

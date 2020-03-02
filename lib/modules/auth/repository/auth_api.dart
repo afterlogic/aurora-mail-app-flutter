@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:aurora_mail/build_property.dart';
+import 'package:aurora_mail/database/account_identity/account_identity_table.dart';
 import 'package:aurora_mail/database/accounts/accounts_table.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:http/http.dart' as http;
@@ -122,6 +123,28 @@ class AuthApi {
       hostname: hostname,
       emailFromLogin: login,
     );
+  }
+
+  Future<List<AccountIdentityDb>> getIdentity(User user) async {
+    final mailModule = WebMailApi(
+      moduleName: WebMailModules.mail,
+      hostname: user.hostname,
+      token: user.token,
+    );
+
+    final request = new WebMailApiBody(method: "GetIdentities");
+    final res = await mailModule.post(request);
+
+    if (res is List) {
+      return res
+          .map(
+            (map) =>
+                AccountIdentityDbMap.fromNetwork(map as Map<String, dynamic>),
+          )
+          .toList();
+    } else {
+      throw WebMailApiError(res);
+    }
   }
 }
 
