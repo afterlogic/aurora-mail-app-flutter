@@ -101,6 +101,7 @@ class _MessageWebViewState extends State<MessageWebView> {
       date: date,
       body: html,
       showAttachmentsBtn: widget.attachments.where((a) => !a.isInline).isNotEmpty,
+      showLightEmail: false,
     );
     return Uri.dataFromString(wrappedHtml,
             mimeType: 'text/html', encoding: Encoding.getByName('utf-8'))
