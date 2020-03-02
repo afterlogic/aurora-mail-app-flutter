@@ -9,6 +9,7 @@ enum Freq {
   hours2,
   daily,
   monthly,
+  minute,
 }
 
 // Freq == frequency
@@ -31,6 +32,8 @@ class SyncFreq {
         return i18n(context, "settings_sync_frequency_daily");
       case Freq.monthly:
         return i18n(context, "settings_sync_frequency_monthly");
+      case Freq.minute:
+        return "minute";
       default:
         return null;
     }
@@ -52,6 +55,8 @@ class SyncFreq {
         return Duration(days: 1);
       case Freq.monthly:
         return Duration(days: 30);
+      case Freq.minute:
+        return Duration(minutes: 1);
       default:
         return null;
     }
@@ -73,6 +78,8 @@ class SyncFreq {
         return Freq.daily;
       case Duration.secondsPerDay * 30:
         return Freq.monthly;
+      case Duration.secondsPerMinute:
+        return Freq.minute;
       default:
         throw "Provided seconds value ($seconds) is not equal to either of the current Freq options";
     }
