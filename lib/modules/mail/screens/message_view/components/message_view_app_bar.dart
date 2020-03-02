@@ -3,7 +3,7 @@ import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
-enum MailViewAppBarAction { reply, replyToAll, forward, toSpam, delete }
+enum MailViewAppBarAction { reply, replyToAll, forward, toSpam, showLightEmail, delete }
 
 class MailViewAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
@@ -37,6 +37,11 @@ class MailViewAppBar extends StatelessWidget implements PreferredSizeWidget {
 //          icon: Icon(MdiIcons.bugOutline),
 //          tooltip: i18n(context, "btn_to_spam"),
 //          onPressed: () => onAppBarActionSelected(MailViewAppBarAction.toSpam),
+//        ),
+//        IconButton(
+//          icon: Icon(MdiIcons.themeLightDark),
+//          tooltip: i18n(context, "btn_show_email_in_light_theme"),
+//          onPressed: () => onAppBarActionSelected(MailViewAppBarAction.showLightEmail),
 //        ),
         IconButton(
           icon: Icon(Icons.delete_outline),

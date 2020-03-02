@@ -1,11 +1,9 @@
 #variables
-appName: "Aurora Mail Custom"
-_appId: "com.afterlogic.aurora.mail.custom"
-_iosDeveloperId: ""
+#appName: "Aurora Mail Custom"
+#_appId: "com.afterlogic.aurora.mail.custom"
+#_iosDeveloperId: ""
 
 background_color: "#FFFFFF"
 splashGradientTop: "#FFFFFF"
 splashGradientBottom: "#FFFFFF"
 multiUserEnable: true
-
-autodiscover_url: "https://cloudpanel.natro.com/PublicApi/AuroraAutoDiscover"
