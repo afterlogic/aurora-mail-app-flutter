@@ -51,6 +51,8 @@ class AppInjector$Injector implements _i1.AppInjector {
     return injector;
   }
 
+  _i8.PgpWorker _createPgpWorker() =>
+      _singletonPgpWorker ??= _cryptoModule.pgpWorker(_createCryptoStorage());
   _i7.CryptoStorage _createCryptoStorage() =>
       _singletonCryptoStorage ??= _cryptoModule.cryptoStorage(
           _createFlutterSecureStorage(), _createPgpKeyDao());
@@ -58,8 +60,6 @@ class AppInjector$Injector implements _i1.AppInjector {
       _singletonFlutterSecureStorage ??= _storageModule.flutterSecureStorage();
   _i6.PgpKeyDao _createPgpKeyDao() =>
       _singletonPgpKeyDao ??= _daoModule.pgpKeyDao();
-  _i8.PgpWorker _createPgpWorker() =>
-      _singletonPgpWorker ??= _cryptoModule.pgpWorker(_createCryptoStorage());
   _i14.PgpSettingsBloc _createPgpSettingsBloc() =>
       _logicModule.pgpSettingsBloc(_createCryptoStorage(), _createPgpWorker());
   _i15.SettingsMethods _createSettingsMethods() => _logicModule.settingsMethods(
@@ -73,8 +73,6 @@ class AppInjector$Injector implements _i1.AppInjector {
       _singletonUsersDao ??= _daoModule.userDao();
   _i12.SettingsLocalStorage _createSettingsLocalStorage() =>
       _singletonSettingsLocalStorage ??= _storageModule.settingsLocalStorage();
-  @override
-  _i7.CryptoStorage cryptoStorage() => _createCryptoStorage();
   @override
   _i8.PgpWorker pgpWorker() => _createPgpWorker();
   @override

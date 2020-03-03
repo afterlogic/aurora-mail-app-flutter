@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/mail/mail_table.dart';
@@ -14,14 +15,16 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 import 'attachments_dialog.dart';
 
 class MessageWebViewActions {
-  static const SHOW_ATTACHMENTS = "SHOW_ATTACHMENTS";
-  static const SHOW_INFO = "SHOW_INFO";
+  static const SHOW_ATTACHMENTS = "MessageWebViewActions.SHOW_ATTACHMENTS";
+  static const SHOW_INFO = "MessageWebViewActions.SHOW_INFO";
+  static const DOWNLOAD_ATTACHMENT = "MessageWebViewActions.DOWNLOAD_ATTACHMENT";
 }
 
 class MessageWebView extends StatefulWidget {
@@ -119,7 +122,7 @@ class _MessageWebViewState extends State<MessageWebView> {
       to: _formatTo(widget.message),
       date: date,
       body: html,
-      showAttachmentsBtn: widget.attachments.where((a) => !a.isInline).isNotEmpty,
+      attachments: widget.attachments.where((a) => !a.isInline).toList(),
       showLightEmail: false,
     );
     return Uri.dataFromString(wrappedHtml,
@@ -127,18 +130,37 @@ class _MessageWebViewState extends State<MessageWebView> {
         .toString();
   }
 
-  FutureOr<NavigationDecision> _onWebViewNavigateRequest(
-      NavigationRequest request) async {
+  void _startDownload(String downloadUrl) {
+    final attachment = widget.attachments.firstWhere((a) => !a.isInline && a.downloadUrl == downloadUrl);
+    BlocProvider.of<MessageViewBloc>(context).add(DownloadAttachment(attachment));
+    final msg = i18n(context, "messages_attachment_downloading", {"fileName": attachment.fileName});
+    Fluttertoast.showToast(
+      msg: msg,
+      timeInSecForIos: 2,
+      backgroundColor: Platform.isIOS ? Theme.of(context).disabledColor.withOpacity(0.5) : null,
+    );
+  }
+
+  FutureOr<NavigationDecision> _onWebViewNavigateRequest(NavigationRequest request) async {
     if (request.url.endsWith(MessageWebViewActions.SHOW_INFO)) {
       // TODO: implement showing message info
       return NavigationDecision.prevent;
+
     } else if (request.url.endsWith(MessageWebViewActions.SHOW_ATTACHMENTS)) {
       final messageViewBloc = BlocProvider.of<MessageViewBloc>(context);
       AttachmentsDialog.show(context, widget.attachments, messageViewBloc);
       return NavigationDecision.prevent;
+
+    } else if (request.url.endsWith(MessageWebViewActions.DOWNLOAD_ATTACHMENT)) {
+      final parts = request.url.split(MessageWebViewActions.DOWNLOAD_ATTACHMENT);
+      final downloadUrl = parts[parts.length - 2];
+      _startDownload(downloadUrl);
+      return NavigationDecision.prevent;
+
     } else if (request.url != _getHtmlUri(_htmlData)) {
       launch(request.url);
       return NavigationDecision.prevent;
+
     } else {
       return NavigationDecision.navigate;
     }

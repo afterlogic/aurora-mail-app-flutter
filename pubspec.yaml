@@ -87,6 +87,12 @@ dependencies:
   crypto_worker:
     path: module/crypto/crypto_worker
   flutter_secure_storage: ^3.3.1+1
+  crypto_plugin:
+    git: https://github.com/afterlogic/flutter_crypto_plugin
+  crypto_storage_impl:
+    path: module/crypto/crypto_storage_impl
+  crypto_worker_impl:
+    path: module/crypto/crypto_worker_impl
 
   inject:
     git: "https://github.com/afterlogic/dart_inject"

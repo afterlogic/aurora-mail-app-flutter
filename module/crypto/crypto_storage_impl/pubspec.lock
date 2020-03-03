@@ -35,7 +35,7 @@ packages:
       path: "../../.."
       relative: true
     source: path
-    version: "1.0.1+32"
+    version: "1.0.1+41"
   aurora_ui_kit:
     dependency: transitive
     description:
@@ -298,6 +298,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.16.0"
+  keyboard_actions:
+    dependency: transitive
+    description:
+      name: keyboard_actions
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.2.0"
   matcher:
     dependency: transitive
     description:

@@ -7,6 +7,7 @@ import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import 'components/group_view_app_bar.dart';
 
@@ -54,17 +55,61 @@ class _GroupViewAndroidState extends State<GroupViewAndroid> {
     final g = widget.group;
 
     final _mainInfo = _buildInfos([
-      _buildInfoItem(label: i18n(context, "contacts_view_section_group_name"), v: g.name),
-      _buildInfoItem(label: i18n(context, "contacts_view_email"), v: g.email),
-      _buildInfoItem(label: i18n(context, "contacts_view_company"), v: g.company),
-      _buildInfoItem(label: i18n(context, "contacts_view_country"), v: g.country),
-      _buildInfoItem(label: i18n(context, "contacts_view_province"), v: g.state),
-      _buildInfoItem(label: i18n(context, "contacts_view_city"), v: g.city),
-      _buildInfoItem(label: i18n(context, "contacts_view_street_address"), v: g.street),
-      _buildInfoItem(label: i18n(context, "contacts_view_zip"), v: g.zip),
-      _buildInfoItem(label: i18n(context, "contacts_view_phone"), v: g.phone),
-      _buildInfoItem(label: i18n(context, "contacts_view_fax"), v: g.fax),
-      _buildInfoItem(label: i18n(context, "contacts_view_web_page"), v: g.web),
+      _buildInfoItem(
+        icon: MdiIcons.accountGroup,
+        label: i18n(context, "contacts_view_section_group_name"),
+        v: g.name,
+      ),
+      _buildInfoItem(
+        icon: Icons.alternate_email,
+        label: i18n(context, "contacts_view_email"),
+        v: g.email,
+      ),
+      _buildInfoItem(
+        icon: MdiIcons.domain,
+        label: i18n(context, "contacts_view_company"),
+        v: g.company,
+      ),
+      _buildInfoItem(
+        icon: MdiIcons.earth,
+        label: i18n(context, "contacts_view_country"),
+        v: g.country,
+      ),
+      _buildInfoItem(
+        icon: MdiIcons.map,
+        label: i18n(context, "contacts_view_province"),
+        v: g.state,
+      ),
+      _buildInfoItem(
+        icon: MdiIcons.homeCityOutline,
+        label: i18n(context, "contacts_view_city"),
+        v: g.city,
+      ),
+      _buildInfoItem(
+        icon: MdiIcons.mapMarkerOutline,
+        label: i18n(context, "contacts_view_street_address"),
+        v: g.street,
+      ),
+      _buildInfoItem(
+        icon: MdiIcons.postOutline,
+        label: i18n(context, "contacts_view_zip"),
+        v: g.zip,
+      ),
+      _buildInfoItem(
+        icon: MdiIcons.phone,
+        label: i18n(context, "contacts_view_phone"),
+        v: g.phone,
+      ),
+      _buildInfoItem(
+        icon: MdiIcons.fax,
+        label: i18n(context, "contacts_view_fax"),
+        v: g.fax,
+      ),
+      _buildInfoItem(
+        icon: MdiIcons.web,
+        label: i18n(context, "contacts_view_web_page"),
+        v: g.web,
+      ),
     ]);
 
     return Scaffold(
@@ -77,7 +122,7 @@ class _GroupViewAndroidState extends State<GroupViewAndroid> {
     return nullableWidgets.where((w) => w != null).toList();
   }
 
-  Widget _buildInfoItem({IconData icon, String label, String v}) {
+  Widget _buildInfoItem({@required IconData icon, @required String label, @required String v}) {
     if (v.isNotEmpty) {
       return ContactsInfoItem(icon: icon, label: label, value: v);
     } else {

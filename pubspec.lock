@@ -53,7 +53,7 @@ packages:
   aurora_ui_kit:
     dependency: "direct main"
     description:
-      path: "core\\aurora_ui_kit"
+      path: "core/aurora_ui_kit"
       relative: true
     source: path
     version: "0.0.1"
@@ -195,21 +195,44 @@ packages:
   crypto_model:
     dependency: "direct main"
     description:
-      path: "module\\crypto\\crypto_model"
+      path: "module/crypto/crypto_model"
       relative: true
     source: path
+    version: "0.0.1"
+  crypto_plugin:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: HEAD
+      resolved-ref: a1dd639682d33a65c05202952b56e8595dbfc80c
+      url: "https://github.com/afterlogic/flutter_crypto_plugin"
+    source: git
     version: "0.0.1"
   crypto_storage:
     dependency: "direct main"
     description:
-      path: "module\\crypto\\crypto_storage"
+      path: "module/crypto/crypto_storage"
+      relative: true
+    source: path
+    version: "0.0.1"
+  crypto_storage_impl:
+    dependency: "direct main"
+    description:
+      path: "module/crypto/crypto_storage_impl"
       relative: true
     source: path
     version: "0.0.1"
   crypto_worker:
     dependency: "direct main"
     description:
-      path: "module\\crypto\\crypto_worker"
+      path: "module/crypto/crypto_worker"
+      relative: true
+    source: path
+    version: "0.0.1"
+  crypto_worker_impl:
+    dependency: "direct main"
+    description:
+      path: "module/crypto/crypto_worker_impl"
       relative: true
     source: path
     version: "0.0.1"
@@ -555,7 +578,7 @@ packages:
   notifications_utils:
     dependency: "direct main"
     description:
-      path: "core\\notifications_utils"
+      path: "core/notifications_utils"
       relative: true
     source: path
     version: "0.0.1"
@@ -812,7 +835,7 @@ packages:
   theme:
     dependency: "direct main"
     description:
-      path: "build_res\\afterlogic\\theme"
+      path: "build_res/afterlogic/theme"
       relative: true
     source: path
     version: "0.0.1"
@@ -889,7 +912,7 @@ packages:
   webmail_api_client:
     dependency: "direct main"
     description:
-      path: "core\\webmail_api_client"
+      path: "core/webmail_api_client"
       relative: true
     source: path
     version: "0.0.1"
