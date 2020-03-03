@@ -10,7 +10,7 @@ class BackgroundHelper {
   static void set current(AppLifecycleState value) {
     if (Platform.isIOS) {
       final nowIsBackground = _current != AppLifecycleState.resumed;
-      final afterIsBackground = current != AppLifecycleState.resumed;
+      final afterIsBackground = value != AppLifecycleState.resumed;
       if (nowIsBackground != afterIsBackground) {
         if (afterIsBackground) {
           AlarmService.stopTimer();

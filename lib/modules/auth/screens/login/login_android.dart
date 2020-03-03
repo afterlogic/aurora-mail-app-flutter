@@ -1,5 +1,8 @@
+import 'package:aurora_mail/build_property.dart';
+import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/auth_input.dart';
+import 'package:aurora_mail/modules/auth/screens/login/components/login_gradient.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/presentation_header.dart';
 import 'package:aurora_mail/modules/auth/screens/login/login_route.dart';
 import 'package:aurora_mail/modules/auth/screens/two_factor_auth/two_factor_auth_route.dart';
@@ -16,6 +19,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:theme/app_theme.dart';
 
 import 'auth_data.dart';
 import 'components/mail_logo.dart';
@@ -96,9 +100,23 @@ class _LoginAndroidState extends State<LoginAndroid> {
     ));
   }
 
+  Widget _gradientWrap(Widget child) {
+    if (widget.isDialog) {
+      return child;
+    } else {
+      return Theme(
+        data: AppTheme.login,
+        child: LoginGradient(
+          child: child,
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final authBloc = BlocProvider.of<AuthBloc>(context);
+
     return Scaffold(
       appBar: widget.isDialog
           ? AMAppBar(
@@ -109,74 +127,81 @@ class _LoginAndroidState extends State<LoginAndroid> {
                       : "settings_accounts_relogin")),
             )
           : null,
-      body: BlocListener(
-          bloc: authBloc,
-          listener: (context, state) {
-            if (state is TwoFactor) {
-              Navigator.pushNamed(
-                context,
-                TwoFactorAuthRoute.name,
-                arguments: TwoFactorAuthRouteArgs(
-                  state.hostname,
-                  state.email,
-                  state.password,
-                  widget.isDialog,
-                  authBloc,
-                ),
-              );
-              return;
-            }
-
-            if (state is ReceivedLastEmail) {
-              emailCtrl.text = state.email;
-            }
-
-            if (state is NeedsHost) {
-              setState(() => _showHostField = true);
-              _showError(
-                context,
-                i18n(context, "error_login_auto_discover"),
-              );
-            }
-            if (state is LoggedIn) {
-              if (state.user != null) {
-                BlocProvider.of<SettingsBloc>(context)
-                    .add(InitSettings(state.user, state.users));
+      body: _gradientWrap(
+        BlocListener(
+            bloc: authBloc,
+            listener: (context, state) {
+              if (state is TwoFactor) {
+                Navigator.pushNamed(
+                  context,
+                  TwoFactorAuthRoute.name,
+                  arguments: TwoFactorAuthRouteArgs(
+                    state.hostname,
+                    state.email,
+                    state.password,
+                    widget.isDialog,
+                    authBloc,
+                  ),
+                ).then((value) {
+                  if (value is User) {
+                    authBloc.add(UserLogIn(value));
+                  }
+                });
+                return;
               }
 
-              if (widget.isDialog) {
-                RestartWidget.restartApp(context);
-              } else {
-                Navigator.popUntil(
-                    context, ModalRoute.withName(LoginRoute.name));
-                Navigator.pushReplacementNamed(context, MessagesListRoute.name);
+              if (state is ReceivedLastEmail) {
+                emailCtrl.text = state.email;
               }
-            }
-            if (state is AuthError) {
-              showSnack(
-                context: context,
-                scaffoldState: Scaffold.of(context),
-                msg: state.errorMsg,
-              );
-            }
-          },
-          child: BlocBuilder<AuthBloc, AuthState>(
-            bloc: BlocProvider.of<AuthBloc>(context),
-            builder: (context, state) {
-              if (state is LoggingIn) {
-                return _buildLoginForm(context, loading: true);
-              } else {
-                return _buildLoginForm(context);
+
+              if (state is NeedsHost) {
+                setState(() => _showHostField = true);
+                _showError(
+                  context,
+                  i18n(context, "error_login_auto_discover"),
+                );
+              }
+              if (state is InitializedUserAndAccounts) {
+                if (state.user != null) {
+                  BlocProvider.of<SettingsBloc>(context)
+                      .add(InitSettings(state.user, state.users));
+                }
+
+                if (widget.isDialog) {
+                  RestartWidget.restartApp(context);
+                } else {
+                  Navigator.popUntil(
+                      context, ModalRoute.withName(LoginRoute.name));
+                  Navigator.pushReplacementNamed(
+                      context, MessagesListRoute.name);
+                }
+              }
+              if (state is AuthError) {
+                showSnack(
+                  context: context,
+                  scaffoldState: Scaffold.of(context),
+                  msg: state.errorMsg,
+                );
               }
             },
-          )),
+            child: BlocBuilder<AuthBloc, AuthState>(
+              bloc: BlocProvider.of<AuthBloc>(context),
+              builder: (context, state) {
+                if (state is LoggingIn) {
+                  return _buildLoginForm(context, loading: true);
+                } else {
+                  return _buildLoginForm(context);
+                }
+              },
+            )),
+      ),
     );
   }
 
   Widget _buildLoginForm(BuildContext context, {bool loading = false}) {
     return Stack(
       children: <Widget>[
-        if (!widget.isDialog)
+        if (!widget.isDialog && !BuildProperty.useMainLogo)
           Positioned(
             top: -70.0,
             left: -70.0,
@@ -225,11 +250,13 @@ class _LoginAndroidState extends State<LoginAndroid> {
                 if (widget.isDialog) SizedBox(height: 40.0),
                 SizedBox(
                   width: double.infinity,
-                  child: AMButton(
-                    child: Text(i18n(context,
-                        widget.isDialog ? "btn_add_account" : "btn_login")),
-                    isLoading: loading,
-                    onPressed: () => _login(context),
+                  child: _debugRouteToTwoFactor(
+                    AMButton(
+                      child: Text(i18n(context,
+                          widget.isDialog ? "btn_add_account" : "btn_login")),
+                      isLoading: loading,
+                      onPressed: () => _login(context),
+                    ),
                   ),
                 ),
               ],
@@ -238,5 +265,26 @@ class _LoginAndroidState extends State<LoginAndroid> {
         ),
       ],
     );
+  }
+
+  Widget _debugRouteToTwoFactor(Widget child) {
+    if (kDebugMode) {
+      return GestureDetector(
+        onDoubleTap: () => Navigator.pushNamed(
+          context,
+          TwoFactorAuthRoute.name,
+          arguments: TwoFactorAuthRouteArgs(
+            "",
+            "",
+            "",
+            false,
+            BlocProvider.of<AuthBloc>(context),
+          ),
+        ),
+        child: child,
+      );
+    } else {
+      return child;
+    }
   }
 }

@@ -68,9 +68,7 @@ class _StarState extends State<Star> with TickerProviderStateMixin {
           padding: EdgeInsets.zero,
           icon: Icon(
             Icons.star_border,
-            color: Theme.of(context)
-                .disabledColor
-                .withOpacity(widget.enabled ? 0.1 : 0.0),
+            color: widget.enabled ? Theme.of(context).disabledColor : null,
           ),
           onPressed: widget.enabled ? () => _setStarred(true) : null,
         ),

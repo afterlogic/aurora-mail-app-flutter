@@ -1,9 +1,10 @@
 #config
 _files:
   - pubspec.yaml.yaml
-#  - lib/di/di.dart.temp
+  #  - lib/di/di.dart.temp
   - android/app/src/main/res/values/.build_res.xml.temp
-  - build_appbundle.sh.temp
+  - sh/build_apk.sh.temp
+  - sh/build_appbundle.sh.temp
   - android/build_variable.properties.temp
   - ios/BuildVariable.xcconfig.temp
 _copy:
@@ -20,10 +21,12 @@ _iosAppName: "{{appName}}"
 _appId: ""
 _iosAppId: "{{_appId}}"
 
-version: 1.0.1+32
+version: 1.0.1+41
 
 icon: "{{_dir}}/icon.png"
-main_logo: "{{_dir}}/main_logo.png"
+main_logo: "{{image_dir}}/main_logo.png"
+image_dir: "{{_dir}}/image"
+
 _google_services: "{{_dir}}/google-services.json"
 _google_services_ios: "{{_dir}}/GoogleService-Info.plist"
 _key_properties: "{{_dir}}/key.properties"
@@ -33,6 +36,14 @@ foreground_icon: "{{_dir}}/icon_foreground.png"
 background_color: "#3b3b3b"
 _theme_module: "{{_dir}}/theme"
 
+privacyPolicy: ""
+termsOfService: ""
+
+supportLanguage: "ru,en,tr"
+hasFloatingPlaceholder: false
+
 multiUserEnable: false
+cryptoEnable: false
 multiAccountEnable: false
+useMainLogo: false
 

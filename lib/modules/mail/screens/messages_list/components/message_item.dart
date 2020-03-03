@@ -59,15 +59,30 @@ class _MessageItemState extends State<MessageItem> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final hasUnreadChildren = widget.children
         .where((i) => !i.flagsInJson.contains("\\seen"))
         .isNotEmpty;
 
     final flags = Mail.getFlags(widget.message.flagsInJson);
 
-    final fontWeight = flags.contains(MessageFlags.seen)
-            ? FontWeight.w400
-            : FontWeight.w700;
+    final fontWeight =
+        flags.contains(MessageFlags.seen) ? FontWeight.w400 : FontWeight.w700;
+
+    Widget _buildThreadCounter(BuildContext context, bool hasUnread) {
+      return Container(
+        padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 10.0),
+        decoration: BoxDecoration(
+          color: hasUnread ? theme.accentColor : null,
+          borderRadius: BorderRadius.all(Radius.circular(50.0)),
+          border: Border.all(color: theme.accentColor, width: 2.0),
+        ),
+        child: Text(
+          widget.children.length.toString(),
+          style: TextStyle(color: hasUnread ? Colors.white : theme.accentColor),
+        ),
+      );
+    }
 
     return Column(
       children: <Widget>[
@@ -85,7 +100,7 @@ class _MessageItemState extends State<MessageItem> {
             ),
             onDismissed: (_) => widget.onDeleteMessage(widget.message),
             background: Container(
-              color: Theme.of(context).errorColor,
+              color: theme.errorColor,
               child: Stack(
                 children: <Widget>[
                   Positioned(
@@ -102,11 +117,12 @@ class _MessageItemState extends State<MessageItem> {
                   ? _toggleThreads
                   : () => widget.onItemSelected(widget.message),
               key: Key(widget.message.uid.toString()),
-              title: Text(widget.message.fromToDisplay, style: TextStyle(
-                fontWeight: fontWeight,
-                fontSize: 14.0,
-                color: Theme.of(context).disabledColor,
-              )),
+              title: Text(widget.message.fromToDisplay,
+                  style: TextStyle(
+                    fontWeight: fontWeight,
+                    fontSize: 14.0,
+                    color: theme.disabledColor,
+                  )),
               subtitle: Padding(
                 padding: const EdgeInsets.only(top: 6.0),
                 child: Row(
@@ -130,7 +146,7 @@ class _MessageItemState extends State<MessageItem> {
                           style: TextStyle(
                             fontWeight: fontWeight,
                             fontSize: 16.0,
-                            color: Theme.of(context).textTheme.title.color,
+                            color: theme.textTheme.title.color,
                           ),
                         ),
                       ),
@@ -152,13 +168,16 @@ class _MessageItemState extends State<MessageItem> {
                         builder: (_, state) => Text(
                           DateFormatting.getShortMessageDate(
                             timestamp: widget.message.timeStampInUTC,
-                            locale: Localizations.localeOf(context).languageCode,
-                            yesterdayWord: i18n(context, "formatting_yesterday"),
+                            locale:
+                                Localizations.localeOf(context).languageCode,
+                            yesterdayWord:
+                                i18n(context, "formatting_yesterday"),
                             is24: (state as SettingsLoaded).is24 ?? true,
                           ),
                           style: TextStyle(
                             fontSize: 14.0,
-                            color: Theme.of(context).disabledColor,
+                            color: theme.disabledColor.withAlpha(
+                                theme.disabledColor.alpha ~/ 2),
                           ),
                         ),
                       ),
@@ -201,7 +220,7 @@ class _MessageItemState extends State<MessageItem> {
           indent: 16.0,
           endIndent: 16.0,
           height: 0.0,
-          color: Theme.of(context).disabledColor.withOpacity(0.08),
+          color: theme.disabledColor.withOpacity(0.08),
         ),
         if (widget.children.isNotEmpty && _showThreads)
           ...widget.children.map((t) {
@@ -230,28 +249,13 @@ class _MessageItemState extends State<MessageItem> {
                   bottom: 0,
                   child: Container(
                     width: 4.0,
-                    color: Theme.of(context).accentColor,
+                    color: theme.accentColor,
                   ),
                 ),
               ],
             );
           }).toList()
       ],
-    );
-  }
-
-  Widget _buildThreadCounter(BuildContext context, bool hasUnread) {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 10.0),
-      decoration: BoxDecoration(
-        color: hasUnread ? Theme.of(context).accentColor : null,
-        borderRadius: BorderRadius.all(Radius.circular(50.0)),
-        border: Border.all(color: Theme.of(context).accentColor, width: 2.0),
-      ),
-      child: Text(
-        widget.children.length.toString(),
-        style: TextStyle(color: hasUnread ? Colors.white : Theme.of(context).accentColor),
-      ),
     );
   }
 }

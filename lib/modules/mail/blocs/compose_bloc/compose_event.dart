@@ -1,7 +1,9 @@
+import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 import 'package:aurora_mail/modules/mail/models/compose_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/temp_attachment_upload.dart';
+import 'package:aurora_mail/utils/always_non_equal_object.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/widgets.dart';
 
@@ -17,11 +19,14 @@ class SendMessage extends ComposeEvent {
   final String cc;
   final String bcc;
   final String subject;
+  final bool isHtml;
   final List<ComposeAttachment> composeAttachments;
   final String messageText;
   final int draftUid;
+  final Account sender;
 
   SendMessage({
+    @required this.isHtml,
     @required this.to,
     @required this.cc,
     @required this.bcc,
@@ -29,6 +34,7 @@ class SendMessage extends ComposeEvent {
     @required this.composeAttachments,
     @required this.messageText,
     @required this.draftUid,
+    this.sender,
   });
 
   @override
@@ -44,6 +50,7 @@ class SaveToDrafts extends ComposeEvent {
   final List<ComposeAttachment> composeAttachments;
   final String messageText;
   final int draftUid;
+  final bool isHtml;
 
   SaveToDrafts({
     @required this.to,
@@ -53,6 +60,7 @@ class SaveToDrafts extends ComposeEvent {
     @required this.composeAttachments,
     @required this.messageText,
     @required this.draftUid,
+    @required this.isHtml,
   });
 
   @override
@@ -108,4 +116,17 @@ class GetContactsAsAttachments extends ComposeEvent {
 
   @override
   List<Object> get props => [contacts];
+}
+
+class EncryptBody extends ComposeEvent with AlwaysNonEqualObject {
+  final bool encrypt;
+  final bool sign;
+  final String pass;
+  final List<String> contacts;
+  final String body;
+
+  EncryptBody(this.contacts, this.body, this.encrypt, this.sign, this.pass);
+
+  @override
+  List<Object> get props => [contacts, body];
 }

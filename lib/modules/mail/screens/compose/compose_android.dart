@@ -10,12 +10,15 @@ import 'package:aurora_mail/modules/mail/models/compose_actions.dart';
 import 'package:aurora_mail/modules/mail/models/compose_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/temp_attachment_upload.dart';
+import 'package:aurora_mail/modules/mail/screens/compose/components/compose_bottom_bar.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/compose_route.dart';
+import 'package:aurora_mail/modules/mail/screens/compose/dialog/encrypt_dialog.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/mail_utils.dart';
 import 'package:aurora_mail/utils/show_dialog.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
+import 'package:crypto_worker/crypto_worker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -39,6 +42,7 @@ class ComposeAndroid extends StatefulWidget {
 
 class _ComposeAndroidState extends State<ComposeAndroid> {
   ComposeBloc _bloc;
+  Account sender;
   final toNode = FocusNode();
   final ccNode = FocusNode();
   final bccNode = FocusNode();
@@ -47,7 +51,7 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   Timer _timer;
-
+  EncryptType _lock = EncryptType.None;
   bool _showBCC = false;
 
   // if compose was opened from screen which does not have MessagesListRoute in stack, just pop
@@ -235,10 +239,12 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
       to: _toEmails.join(","),
       cc: _ccEmails.join(","),
       bcc: _bccEmails.join(","),
+      isHtml: false,
       subject: _subjectTextCtrl.text,
       composeAttachments: new List<ComposeAttachment>.from(_attachments),
       messageText: _bodyTextCtrl.text,
       draftUid: _currentDraftUid,
+      sender: sender,
     ));
   }
 
@@ -277,6 +283,7 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
       to: _toEmails.join(","),
       cc: _ccEmails.join(","),
       bcc: _bccEmails.join(","),
+      isHtml:false,
       subject: _subjectTextCtrl.text,
       composeAttachments: new List<ComposeAttachment>.from(attachmentsForSave),
       messageText: _bodyTextCtrl.text,
@@ -323,6 +330,33 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
     );
   }
 
+  _encryptLock(EncryptComplete state) {
+    _bodyTextCtrl.text = state.text;
+    _lock = state.type;
+
+    setState(() {});
+  }
+
+  void _encryptDialog() async {
+    final result = await showDialog(
+      context: context,
+      builder: (_) => EncryptDialog(),
+    );
+
+    if (result is EncryptDialogResult) {
+      if (!result.sign && !result.encrypt) {
+        return;
+      }
+      _bloc.add(EncryptBody(
+        _toEmails,
+        _bodyTextCtrl.text,
+        result.encrypt,
+        result.sign,
+        result.pass,
+      ));
+    }
+  }
+
   // TODO task frozen
 //  Future<void> _onGoBack() async {
 //    final result = await showDialog<DiscardComposeChangesOption>(
@@ -344,22 +378,34 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
 //    }
 //  }
 
-  void _showError(String err) {
-    Navigator.popUntil(context, ModalRoute.withName(ComposeRoute.name));
-    showSnack(
-        context: context, scaffoldState: _scaffoldKey.currentState, msg: err);
+  _onAccountChange(Account sender) {
+    this.sender = sender;
   }
 
-  Widget _done(FocusNode node) {
-    return FlatButton(
-      child: Text(i18n(context, "done")),
-      onPressed: node.unfocus,
+  void _showError(String err, [Map<String, String> arg]) {
+    Navigator.popUntil(context, ModalRoute.withName(ComposeRoute.name));
+    showSnack(
+      context: context,
+      scaffoldState: _scaffoldKey.currentState,
+      msg: err,
+      arg: arg,
     );
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final lockUsers = _lock == EncryptType.Encrypt;
+
+    Widget _done(FocusNode node) {
+      return FlatButton(
+        child: Text(
+          i18n(context, "done"),
+          style: theme.textTheme.body1.copyWith(color: Colors.black),
+        ),
+        onPressed: node.unfocus,
+      );
+    }
 
     Widget _keyboardActions(Widget child) {
       return KeyboardActions(
@@ -367,7 +413,7 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
           keyboardActionsPlatform: kDebugMode
               ? KeyboardActionsPlatform.ALL
               : KeyboardActionsPlatform.IOS,
-          keyboardBarColor: theme.appBarTheme.color,
+          keyboardBarColor: Colors.white,
           actions: [
             KeyboardAction(
               focusNode: toNode,
@@ -391,19 +437,21 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
       );
     }
 
-    return Scaffold(
-      key: _scaffoldKey,
-      appBar: ComposeAppBar(_onAppBarActionSelected),
-      body: _keyboardActions(
-        BlocProvider<ComposeBloc>.value(
-          value: _bloc,
-          child: BlocListener<ComposeBloc, ComposeState>(
+    return BlocProvider<ComposeBloc>.value(
+      value: _bloc,
+      child: Scaffold(
+        key: _scaffoldKey,
+        appBar: ComposeAppBar(_onAppBarActionSelected, _onAccountChange),
+        body: _keyboardActions(
+          BlocListener<ComposeBloc, ComposeState>(
             listener: (context, state) {
+              if (state is EncryptComplete) _encryptLock(state);
+
               if (state is MessageSending) _showSending();
               if (state is MessageSent) _onMessageSent(context);
               if (state is MessageSavedInDrafts)
                 _onMessageSaved(context, state.draftUid);
-              if (state is ComposeError) _showError(state.errorMsg);
+              if (state is ComposeError) _showError(state.errorMsg, state.arg);
               if (state is UploadStarted)
                 _setUploadProgress(state.tempAttachment);
               if (state is AttachmentUploaded)
@@ -412,10 +460,11 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
                 setState(() => _attachments.addAll(state.attachments));
             },
             child: SingleChildScrollView(
-              padding: EdgeInsets.symmetric(horizontal: 16.0),
               child: Column(
                 children: <Widget>[
                   ComposeEmails(
+                    padding: EdgeInsets.symmetric(horizontal: 16.0),
+                    enable: !lockUsers,
                     focusNode: toNode,
                     label: i18n(context, "messages_to"),
                     textCtrl: _toTextCtrl,
@@ -423,6 +472,8 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
                   ),
                   Divider(height: 0.0),
                   ComposeEmails(
+                    padding: EdgeInsets.symmetric(horizontal: 16.0),
+                    enable: !lockUsers,
                     focusNode: ccNode,
                     label: i18n(context, "messages_cc"),
                     textCtrl: _ccTextCtrl,
@@ -432,34 +483,47 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
                   Divider(height: 0.0),
                   if (_showBCC)
                     ComposeEmails(
+                      padding: EdgeInsets.symmetric(horizontal: 16.0),
+                      enable: !lockUsers,
                       focusNode: bccNode,
                       label: i18n(context, "messages_bcc"),
                       textCtrl: _bccTextCtrl,
                       emails: _bccEmails,
                     ),
-                  if (_showBCC) Divider(height: 0.0),
-                  ComposeSubject(
-                    textCtrl: _subjectTextCtrl,
-                    onAttach: () => _bloc.add(UploadAttachment()),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Column(
+                      children: <Widget>[
+                        if (_showBCC) Divider(height: 0.0),
+                        ComposeSubject(
+                          textCtrl: _subjectTextCtrl,
+                          onAttach: () => _bloc.add(UploadAttachment()),
+                        ),
+                        if (_attachments.isNotEmpty) Divider(height: 0.0),
+                        BlocBuilder<ComposeBloc, ComposeState>(
+                          builder: (_, state) {
+                            if (state is ConvertingAttachments) {
+                              return Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child:
+                                    Center(child: CircularProgressIndicator()),
+                              );
+                            } else {
+                              return Column(
+                                children: _attachments
+                                    .map((a) => ComposeAttachmentItem(
+                                        a, _cancelAttachment))
+                                    .toList(),
+                              );
+                            }
+                          },
+                        ),
+                      ],
+                    ),
                   ),
-                  if (_attachments.isNotEmpty) Divider(height: 0.0),
-                  BlocBuilder<ComposeBloc, ComposeState>(builder: (_, state) {
-                    if (state is ConvertingAttachments) {
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Center(child: CircularProgressIndicator()),
-                      );
-                    } else {
-                      return Column(
-                        children: _attachments
-                            .map((a) =>
-                                ComposeAttachmentItem(a, _cancelAttachment))
-                            .toList(),
-                      );
-                    }
-                  }),
                   Divider(height: 0.0),
                   ComposeBody(
+                    enable: _lock == EncryptType.None,
                     textCtrl: _bodyTextCtrl,
                     focusNode: bodyNode,
                   ),
@@ -467,6 +531,9 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
               ),
             ),
           ),
+        ),
+        bottomNavigationBar: ComposeBottomBar(
+          onEncrypt: _encryptDialog,
         ),
       ),
     );

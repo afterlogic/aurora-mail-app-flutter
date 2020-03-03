@@ -1,6 +1,8 @@
+import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/auth/blocs/two_factor_auth/bloc.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/auth_input.dart';
+import 'package:aurora_mail/modules/auth/screens/login/components/login_gradient.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/mail_logo.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/presentation_header.dart';
 import 'package:aurora_mail/modules/auth/screens/two_factor_auth/two_factor_auth_route.dart';
@@ -8,8 +10,10 @@ import 'package:aurora_mail/utils/input_validation.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
+import 'package:aurora_ui_kit/components/am_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:theme/app_theme.dart';
 
 class TwoFactorAuthWidget extends StatefulWidget {
   final TwoFactorAuthRouteArgs args;
@@ -25,26 +29,39 @@ class _TwoFactorAuthWidgetState extends State<TwoFactorAuthWidget> {
   final formKey = GlobalKey<FormState>();
   final bloc = TwoFactorBloc();
 
-  get value => null;
+  Widget _gradientWrap(Widget child) {
+    if (widget.args.isDialog) {
+      return child;
+    } else {
+      return Theme(
+        data: AppTheme.login,
+        child: LoginGradient(
+          child: child,
+        ),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocListener<TwoFactorBloc, TwoFactorState>(
-        bloc: bloc,
-        listener: (BuildContext context, state) {
-          if (state is ErrorState) {
-            _showError(
-              context,
-              i18n(context, state.errorMsg),
-            );
-          } else if (state is CompleteState) {
-            widget.args.authBloc.add(UserLogIn(state.user));
-          }
-        },
-        child: BlocBuilder<TwoFactorBloc, TwoFactorState>(
+      body: _gradientWrap(
+        BlocListener<TwoFactorBloc, TwoFactorState>(
           bloc: bloc,
-          builder: (_, state) => _buildPinForm(context, state),
+          listener: (BuildContext context, state) {
+            if (state is ErrorState) {
+              _showError(
+                context,
+                i18n(context, state.errorMsg),
+              );
+            } else if (state is CompleteState) {
+              widget.args.authBloc.add(UserLogIn(state.user));
+            }
+          },
+          child: BlocBuilder<TwoFactorBloc, TwoFactorState>(
+            bloc: bloc,
+            builder: (_, state) => _buildPinForm(context, state),
+          ),
         ),
       ),
     );
@@ -55,7 +72,7 @@ class _TwoFactorAuthWidgetState extends State<TwoFactorAuthWidget> {
 
     return Stack(
       children: <Widget>[
-        if (!widget.args.isDialog)
+        if (!widget.args.isDialog && !BuildProperty.useMainLogo)
           Positioned(
             top: -70.0,
             left: -70.0,

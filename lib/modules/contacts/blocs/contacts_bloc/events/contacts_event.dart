@@ -11,7 +11,7 @@ abstract class ContactsEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class GetContacts extends ContactsEvent implements AlwaysNonEqualObject {
+class GetContacts extends ContactsEvent with AlwaysNonEqualObject {
   final bool updateOther;
 
   GetContacts([this.updateOther = false]);
@@ -29,7 +29,7 @@ class SelectStorageGroup extends ContactsEvent {
 }
 
 class SetAllVisibleContactsSelected extends ContactsEvent
-    implements AlwaysNonEqualObject {}
+    with AlwaysNonEqualObject {}
 
 class ReceivedContacts extends ContactsEvent {
   final List<Contact> contacts;

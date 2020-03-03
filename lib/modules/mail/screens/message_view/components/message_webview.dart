@@ -27,8 +27,10 @@ class MessageWebViewActions {
 class MessageWebView extends StatefulWidget {
   final Message message;
   final List<MailAttachment> attachments;
+  final String decrypted;
 
-  const MessageWebView(this.message, this.attachments, {Key key})
+  const MessageWebView(this.message, this.attachments, this.decrypted,
+      {Key key})
       : super(key: key);
 
   @override
@@ -48,8 +50,22 @@ class _MessageWebViewState extends State<MessageWebView> {
     _getHtmlWithImages();
   }
 
+  @override
+  void didUpdateWidget(MessageWebView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.decrypted != widget.decrypted) {
+      _getHtmlWithImages();
+      setState(() {});
+    }
+  }
+
   void _getHtmlWithImages() async {
-    String htmlData = widget.message.htmlBody;
+    String htmlData;
+    if (widget.decrypted != null) {
+      htmlData = widget.decrypted;
+    } else {
+      htmlData = widget.message.htmlBody;
+    }
     setState(() => _htmlData = htmlData);
     if (_showImages) {
       htmlData = htmlData.replaceAll(
@@ -74,8 +90,11 @@ class _MessageWebViewState extends State<MessageWebView> {
   }
 
   String _formatTo(Message message) {
-    final items = Mail.getToForDisplay(context, message.toInJson,
-        BlocProvider.of<AuthBloc>(context).currentAccount.email);
+    final items = Mail.getToForDisplay(
+      context,
+      message.toInJson,
+      BlocProvider.of<AuthBloc>(context).currentAccount.email,
+    );
 
     if (items.isEmpty) {
       return i18n(context, "messages_no_receivers");
@@ -108,7 +127,8 @@ class _MessageWebViewState extends State<MessageWebView> {
         .toString();
   }
 
-  FutureOr<NavigationDecision> _onWebViewNavigateRequest(NavigationRequest request) async {
+  FutureOr<NavigationDecision> _onWebViewNavigateRequest(
+      NavigationRequest request) async {
     if (request.url.endsWith(MessageWebViewActions.SHOW_INFO)) {
       // TODO: implement showing message info
       return NavigationDecision.prevent;
@@ -145,9 +165,9 @@ class _MessageWebViewState extends State<MessageWebView> {
                     style: TextStyle(color: Colors.blue),
                     recognizer: TapGestureRecognizer()
                       ..onTap = () {
-              setState(() => _showImages = true);
-              _getHtmlWithImages();
-            },
+                        setState(() => _showImages = true);
+                        _getHtmlWithImages();
+                      },
                   ),
                 ],
               ),
@@ -170,7 +190,8 @@ class _MessageWebViewState extends State<MessageWebView> {
                   child: AnimatedOpacity(
                     opacity: _pageLoaded && _htmlData != null ? 0.0 : 1.0,
                     duration: Duration(milliseconds: 100),
-                    child: Container(color: Theme.of(context).scaffoldBackgroundColor),
+                    child: Container(
+                        color: Theme.of(context).scaffoldBackgroundColor),
                   ),
                 ),
               ),

@@ -43,16 +43,20 @@ class AMFloatingActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(50.0),
-        boxShadow: onPressed == null ? null : [
-          shadow ?? BoxShadow(
-            color: Theme.of(context).accentColor.withOpacity(0.8),
-            blurRadius: 8.0,
-            offset: Offset(0.0, 3.0),
-          ),
-        ],
+        boxShadow: onPressed == null
+            ? null
+            : [
+                shadow ??
+                    BoxShadow(
+                      color: theme.floatingActionButtonTheme.hoverColor,
+                      blurRadius: 8.0,
+                      offset: Offset(0.0, 3.0),
+                    ),
+              ],
       ),
       child: FloatingActionButton(
         key: key,
@@ -83,6 +87,7 @@ class AMFloatingActionButton extends StatelessWidget {
 
 class _DefaultHeroTag {
   const _DefaultHeroTag();
+
   @override
   String toString() => '<default FloatingActionButton tag>';
 }

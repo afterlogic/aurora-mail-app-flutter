@@ -1,5 +1,6 @@
 import 'package:aurora_mail/database/folders/folders_table.dart';
 import 'package:aurora_mail/database/mail/mail_table.dart';
+import 'package:aurora_mail/database/pgp/pgp_key_model.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_storage_model.dart';
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/contacts/contacts_table.dart';
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/contacts/converters/list_string_converter.dart';
@@ -13,6 +14,8 @@ import 'users/users_table.dart';
 
 part 'app_database.g.dart';
 
+typedef _Migration = Future Function(Migrator migrator);
+
 class DBInstances {
   static final appDB = new AppDatabase();
 }
@@ -25,17 +28,26 @@ class DBInstances {
   Contacts,
   ContactsGroups,
   ContactsStorages,
+  PgpKeyModel
 ])
 class AppDatabase extends _$AppDatabase {
   AppDatabase()
       : super(FlutterQueryExecutor.inDatabaseFolder(path: 'app_db.sqlite'));
 
+  Map<int, _Migration> get _migrationMap => {};
+
   @override
-  MigrationStrategy get migration => MigrationStrategy(onCreate: (Migrator m) {
-        return m.createAll();
-      }, onUpgrade: (Migrator m, int from, int to) async {
-        if (from == 1) {}
-      });
+  MigrationStrategy get migration => MigrationStrategy(
+        onCreate: (Migrator m) {
+          return m.createAll();
+        },
+        onUpgrade: (Migrator m, int from, int to) async {
+          final migrationMap = _migrationMap;
+          for (var i = from; i < to; i++) {
+            await migrationMap[i](m);
+          }
+        },
+      );
 
   // you should bump this number whenever you change or add a table definition. Migrations
   // are covered later in this readme.
