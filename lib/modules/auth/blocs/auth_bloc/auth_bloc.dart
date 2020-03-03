@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:alarm_service/alarm_service.dart';
 import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/models/alias_or_identity.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_methods.dart';
 import 'package:aurora_mail/modules/auth/repository/auth_api.dart';
 import 'package:aurora_mail/utils/api_utils.dart';
@@ -191,11 +192,24 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     add(InitUserAndAccounts());
   }
 
-  Future<List<AccountIdentity>> getAccountIdentities() {
+  Future<List<AccountIdentity>> getIdentities() {
     return _methods.getAccountIdentities(currentUser, currentAccount);
   }
 
-  Future<List<Aliases>> getAccountAliases() {
+  Future<List<Aliases>> getAliases() {
     return _methods.getAccountAliases(currentUser, currentAccount);
+  }
+
+  Future<List<AliasOrIdentity>> getAliasAndIdentities() async {
+    final identities = await getIdentities();
+    final aliases = await getAliases();
+    final items = <AliasOrIdentity>[];
+    for (var value in identities) {
+      items.add(AliasOrIdentity(null, value));
+    }
+    for (var value in aliases) {
+      items.add(AliasOrIdentity(value, null));
+    }
+    return items;
   }
 }

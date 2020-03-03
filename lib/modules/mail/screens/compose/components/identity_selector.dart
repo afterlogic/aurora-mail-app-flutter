@@ -1,24 +1,23 @@
-import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/models/alias_or_identity.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/components/compose_type_ahead.dart';
-import 'package:aurora_mail/utils/identity_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class IdentitySelector extends StatefulWidget {
   final String label;
-  final String email;
+  final TextEditingController textCtrl;
   final bool enable;
   final EdgeInsets padding;
-  final Function(IdentitySelectorItem identity) onIdentity;
+  final Function(AliasOrIdentity identity) onIdentity;
 
   const IdentitySelector({
     Key key,
     this.label,
-    this.email,
     this.enable,
     this.padding,
     this.onIdentity,
+    this.textCtrl,
   }) : super(key: key);
 
   @override
@@ -26,40 +25,15 @@ class IdentitySelector extends StatefulWidget {
 }
 
 class _IdentitySelectorState extends State<IdentitySelector> {
-  final textCtrl = TextEditingController();
   final focusNode = FocusNode();
 
-  @override
-  initState() {
-    super.initState();
-    if (widget.email != null) {
-      textCtrl.text = widget.email;
-    } else {
-      _setIdentity(
-        IdentitySelectorItem(
-          null,
-          BlocProvider.of<AuthBloc>(context).currentIdentity,
-        ),
-      );
-    }
-  }
-
-  Future<List<IdentitySelectorItem>> _buildSuggestions(String _) async {
+  Future<List<AliasOrIdentity>> _buildSuggestions(String _) async {
     final bloc = BlocProvider.of<AuthBloc>(context);
 
-    final identities = await bloc.getAccountIdentities();
-    final aliases = await bloc.getAccountAliases();
-    final item = <IdentitySelectorItem>[];
-    for (var value in identities) {
-      item.add(IdentitySelectorItem(null, value));
-    }
-    for (var value in aliases) {
-      item.add(IdentitySelectorItem(value, null));
-    }
-    return item;
+    return await bloc.getAliasAndIdentities();
   }
 
-  Widget _identityItem(IdentitySelectorItem entity) {
+  Widget _identityItem(AliasOrIdentity entity) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
@@ -78,11 +52,6 @@ class _IdentitySelectorState extends State<IdentitySelector> {
     );
   }
 
-  _setIdentity(IdentitySelectorItem identity) {
-    textCtrl.text = identityViewName(identity.name, identity.mail);
-    widget.onIdentity(identity);
-  }
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -95,11 +64,11 @@ class _IdentitySelectorState extends State<IdentitySelector> {
       ),
       child: InkWell(
         onTap: widget.enable ? focusNode.requestFocus : null,
-        child: ComposeTypeAheadField<IdentitySelectorItem>(
+        child: ComposeTypeAheadField<AliasOrIdentity>(
           textFieldConfiguration: TextFieldConfiguration(
             focusNode: focusNode,
             enabled: widget.enable,
-            controller: textCtrl,
+            controller: widget.textCtrl,
           ),
           animationDuration: Duration.zero,
           suggestionsBoxDecoration: SuggestionsBoxDecoration(
@@ -124,7 +93,7 @@ class _IdentitySelectorState extends State<IdentitySelector> {
             );
           },
           onSuggestionSelected: (item) {
-            return _setIdentity(item);
+            return widget.onIdentity(item);
           },
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 4.0),
@@ -142,7 +111,7 @@ class _IdentitySelectorState extends State<IdentitySelector> {
                   child: TextField(
                     readOnly: true,
                     focusNode: focusNode,
-                    controller: textCtrl,
+                    controller: widget.textCtrl,
                     decoration: InputDecoration.collapsed(
                       hintText: null,
                     ),
@@ -156,15 +125,4 @@ class _IdentitySelectorState extends State<IdentitySelector> {
       ),
     );
   }
-}
-
-class IdentitySelectorItem {
-  final Aliases alias;
-  final AccountIdentity identity;
-
-  IdentitySelectorItem(this.alias, this.identity);
-
-  String get name => identity?.friendlyName ?? alias?.friendlyName;
-
-  String get mail => identity?.email ?? alias?.email;
 }

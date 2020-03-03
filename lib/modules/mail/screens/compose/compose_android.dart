@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/models/alias_or_identity.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/compose_bloc/bloc.dart';
@@ -15,6 +16,7 @@ import 'package:aurora_mail/modules/mail/screens/compose/components/identity_sel
 import 'package:aurora_mail/modules/mail/screens/compose/compose_route.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/dialog/encrypt_dialog.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
+import 'package:aurora_mail/utils/identity_util.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/mail_utils.dart';
 import 'package:aurora_mail/utils/show_dialog.dart';
@@ -71,6 +73,7 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
   final _bccTextCtrl = new TextEditingController();
   final _subjectTextCtrl = new TextEditingController();
   final _bodyTextCtrl = new TextEditingController();
+  final _fromCtrl = TextEditingController();
 
   @override
   void initState() {
@@ -87,6 +90,7 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
       user: authBloc.currentUser,
       account: BlocProvider.of<AuthBloc>(context).currentAccount,
     );
+    setIdentityOrSender(AliasOrIdentity(null, authBloc.currentIdentity));
     _prepareMessage();
   }
 
@@ -102,15 +106,18 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
     bodyNode.dispose();
   }
 
-  void _prepareMessage() {
+  void _prepareMessage() async {
     final action = widget.composeAction;
 
-    if (action is OpenFromDrafts) _initFromDrafts(action);
-    if (action is Forward) _initForward(action);
-    if (action is Reply) _initReply(action);
-    if (action is ReplyToAll) _initReplyAll(action);
-    if (action is EmailToContacts) _initFromContacts(action);
-    if (action is SendContacts) _initContactsAsAttachments(action);
+    if (action is OpenFromDrafts) await _initFromDrafts(action);
+    if (action is Forward) await _initForward(action);
+    if (action is Reply) await _initReply(action);
+    if (action is ReplyToAll) await _initReplyAll(action);
+    if (action is EmailToContacts) await _initFromContacts(action);
+    if (action is SendContacts) await _initContactsAsAttachments(action);
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   void _initFromDrafts(OpenFromDrafts action) async {
@@ -137,7 +144,7 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
 
   void _initReply(Reply action) async {
     _message = action.message;
-
+    await _initSender(_message);
     _toEmails.addAll(MailUtils.getEmails(_message.fromInJson));
     _subjectTextCtrl.text = MailUtils.getReplySubject(_message);
     _bodyTextCtrl.text = MailUtils.getReplyBody(context, _message);
@@ -145,10 +152,10 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
 
   void _initReplyAll(ReplyToAll action) async {
     _message = action.message;
-
+    await _initSender(_message);
     _toEmails.addAll(MailUtils.getEmails(_message.fromInJson));
     _ccEmails.addAll(MailUtils.getEmails(_message.toInJson, exceptEmails: [
-      BlocProvider.of<AuthBloc>(context).currentAccount.email
+      AliasOrIdentity(alias, identity).mail,
     ]));
     _ccEmails.addAll(MailUtils.getEmails(_message.ccInJson));
     _subjectTextCtrl.text = MailUtils.getReplySubject(_message);
@@ -172,6 +179,15 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
       SAVE_TO_DRAFTS_PERIOD,
       (Timer timer) => _saveToDrafts(),
     );
+  }
+
+  Future _initSender(Message message) async {
+    final authBloc = BlocProvider.of<AuthBloc>(context);
+    final items = await authBloc.getAliasAndIdentities();
+
+    final identity = MailUtils.findIdentity(message.toInJson, items);
+    setIdentityOrSender(
+        identity ?? AliasOrIdentity(null, authBloc.currentIdentity));
   }
 
   void _onAppBarActionSelected(ComposeAppBarAction action) {
@@ -382,6 +398,12 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
 //        break;
 //    }
 //  }
+  void setIdentityOrSender(AliasOrIdentity aliasOrIdentity) {
+    this.alias = aliasOrIdentity.alias;
+    this.identity = aliasOrIdentity.identity;
+    _fromCtrl.text =
+        identityViewName(aliasOrIdentity.name, aliasOrIdentity.mail);
+  }
 
   void _showError(String err, [Map<String, String> arg]) {
     Navigator.popUntil(context, ModalRoute.withName(ComposeRoute.name));
@@ -438,11 +460,6 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
       );
     }
 
-    void setIdentityOrSender(IdentitySelectorItem identityOrSender) {
-      this.alias = identityOrSender.alias;
-      this.identity = identityOrSender.identity;
-    }
-
     return BlocProvider<ComposeBloc>.value(
       value: _bloc,
       child: Scaffold(
@@ -473,6 +490,7 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
                     enable: !lockUsers,
                     label: i18n(context, "messages_from"),
                     onIdentity: setIdentityOrSender,
+                    textCtrl: _fromCtrl,
                   ),
                   ComposeEmails(
                     padding: EdgeInsets.symmetric(horizontal: 16.0),

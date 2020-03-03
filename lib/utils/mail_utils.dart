@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/models/alias_or_identity.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 import 'package:aurora_mail/modules/mail/screens/message_view/components/message_webview.dart';
 import 'package:aurora_mail/utils/date_formatting.dart';
@@ -8,9 +9,9 @@ import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:html/parser.dart';
-import 'package:aurora_mail/utils/extensions/string_extensions.dart';
 
 class MailUtils {
+  MailUtils._();
 
   static String getFriendlyName(Contact contact) {
     if (contact.fullName != null && contact.fullName.isNotEmpty) {
@@ -42,7 +43,32 @@ class MailUtils {
     }
   }
 
-  static List<String> getEmails(String emailsInJson, {List<String> exceptEmails}) {
+  static AliasOrIdentity findIdentity(
+    String infoInJson,
+    List<AliasOrIdentity> aliasOrIdentity,
+  ) {
+    final users = json.decode(infoInJson)["@Collection"] as List;
+    for (var user in users) {
+      final name = user["DisplayName"] as String;
+      final mail = user["Email"] as String;
+      final identities = aliasOrIdentity.where((item) {
+        return item.mail == mail;
+      }).toList().reversed;
+      if (identities.isNotEmpty) {
+        final identity = identities.firstWhere(
+          (item) {
+            return item.name == name;
+          },
+          orElse: () => null,
+        );
+        return identity ?? identities.first;
+      }
+    }
+    return null;
+  }
+
+  static List<String> getEmails(String emailsInJson,
+      {List<String> exceptEmails}) {
     if (emailsInJson == null) return [];
     final emails = json.decode(emailsInJson);
     if (emails == null) return [];
@@ -69,7 +95,8 @@ class MailUtils {
     if (senderInJson == null) return "";
     final sender = json.decode(senderInJson);
     if (sender == null) return "";
-    final mapped = sender["@Collection"].map((t) => t["DisplayName"]) as Iterable;
+    final mapped =
+        sender["@Collection"].map((t) => t["DisplayName"]) as Iterable;
     final results = List<String>.from(mapped);
     if (results.isEmpty || results[0] == null || results[0].isEmpty) {
       final mapped = sender["@Collection"].map((t) => t["Email"]) as Iterable;
@@ -108,12 +135,13 @@ class MailUtils {
         bool re = rePrefixes.contains(partUpper);
         bool fwd = fwdPrefixes.contains(partUpper);
         int count = 1;
-        final lastResPart = (resParts.length > 0) ? resParts[resParts.length - 1] : null;
+        final lastResPart =
+            (resParts.length > 0) ? resParts[resParts.length - 1] : null;
 
         if (!re && !fwd) {
           final matches = (new RegExp(
-              r'^\s?(' + prefixes + r')\s?[\[(]([\d]+)[\])]$',
-              caseSensitive: false))
+                  r'^\s?(' + prefixes + r')\s?[\[(]([\d]+)[\])]$',
+                  caseSensitive: false))
               .allMatches(partUpper)
               .toList();
           if (matches != null &&
@@ -188,13 +216,17 @@ class MailUtils {
     final bcc = MailUtils.getEmails(message.bccInJson).join(", ");
 
     if (from.isNotEmpty)
-      forwardMessage += i18n(context, "compose_forward_from", {"emails": from}) + "\n";
+      forwardMessage +=
+          i18n(context, "compose_forward_from", {"emails": from}) + "\n";
     if (to.isNotEmpty)
-      forwardMessage += i18n(context, "compose_forward_to", {"emails": to}) + "\n";
+      forwardMessage +=
+          i18n(context, "compose_forward_to", {"emails": to}) + "\n";
     if (cc.isNotEmpty)
-      forwardMessage += i18n(context, "compose_forward_cc", {"emails": cc}) + "\n";
+      forwardMessage +=
+          i18n(context, "compose_forward_cc", {"emails": cc}) + "\n";
     if (bcc.isNotEmpty)
-      forwardMessage += i18n(context, "compose_forward_bcc", {"emails": bcc}) + "\n";
+      forwardMessage +=
+          i18n(context, "compose_forward_bcc", {"emails": bcc}) + "\n";
 
     final date = DateFormatting.formatDateFromSeconds(
         message.timeStampInUTC, Localizations.localeOf(context).languageCode,
@@ -208,7 +240,8 @@ class MailUtils {
     return forwardMessage + baseMessage;
   }
 
-  static String wrapInHtml(BuildContext context, {
+  static String wrapInHtml(
+    BuildContext context, {
     @required Message message,
     @required String to,
     @required String date,
@@ -216,11 +249,14 @@ class MailUtils {
     @required bool showAttachmentsBtn,
     @required bool showLightEmail,
   }) {
-    final subject = message.subject.isNotEmpty ? message.subject : i18n(context, "messages_no_subject");
+    final subject = message.subject.isNotEmpty
+        ? message.subject
+        : i18n(context, "messages_no_subject");
     final theme = Theme.of(context);
 
     final accentColor = _getWebColor(theme.accentColor);
-    return "<!doctype html>" + """
+    return "<!doctype html>" +
+        """
 <html lang="en">
   <head>
     <meta charset="UTF-8">
@@ -310,7 +346,8 @@ class MailUtils {
     return "#$color$opacity";
   }
 
-  static String _getInfoIcon(String color) => """<svg id="information" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
+  static String _getInfoIcon(String color) =>
+      """<svg id="information" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
   <g id="Group_32" data-name="Group 32">
   <g id="Group_31" data-name="Group 31">
   <path id="Path_53" data-name="Path 53" d="M10,0A10,10,0,1,0,20,10,9.988,9.988,0,0,0,10,0Zm0,18.34A8.34,8.34,0,1,1,18.34,10,8.354,8.354,0,0,1,10,18.34Z" fill="$color"/>
