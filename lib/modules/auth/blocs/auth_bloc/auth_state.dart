@@ -20,6 +20,7 @@ class InitializedUserAndAccounts extends AuthState {
   final List<Account> accounts;
   final Account account;
   final bool needsLogin;
+  final AccountIdentity identity;
 
   const InitializedUserAndAccounts({
     @required this.user,
@@ -27,6 +28,7 @@ class InitializedUserAndAccounts extends AuthState {
     @required this.needsLogin,
     @required this.accounts,
     @required this.account,
+    this.identity,
   }) : assert(needsLogin != null);
 
   @override

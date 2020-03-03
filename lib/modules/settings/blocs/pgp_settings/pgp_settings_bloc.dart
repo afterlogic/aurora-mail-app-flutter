@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
-
-import 'package:aurora_mail/utils/pgp_key_util.dart';
+import 'package:aurora_mail/utils/identity_util.dart';
 import 'package:bloc/bloc.dart';
 import 'package:crypto_storage/crypto_storage.dart';
 import 'package:crypto_worker/crypto_worker.dart';
@@ -44,7 +43,7 @@ class PgpSettingsBloc extends Bloc<PgpSettingsEvent, PgpSettingsState> {
     yield* _loadKeys().map((item) {
       if (item is LoadedState) {
         return item.copyWith(
-          keyProgress: formatPgpKeyName(event.name, event.mail),
+          keyProgress: identityViewName(event.name, event.mail),
         );
       } else {
         return item;

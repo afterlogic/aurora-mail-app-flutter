@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:aurora_mail/modules/settings/blocs/pgp_settings/bloc.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
-import 'package:aurora_mail/utils/pgp_key_util.dart';
+import 'package:aurora_mail/utils/identity_util.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:crypto_model/crypto_model.dart';
 import 'package:flutter/cupertino.dart';

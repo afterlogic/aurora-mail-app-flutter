@@ -88,7 +88,8 @@ class MailApi {
     @required int draftUid,
     @required String sentFolderName,
     @required String draftsFolderName,
-    Account sender,
+    AccountIdentity identity,
+    Aliases alias,
   }) async {
     final attachments = new Map();
 
@@ -97,9 +98,10 @@ class MailApi {
     });
 
     final parameters = json.encode({
-      "AccountID": account?.accountId ?? _accountId,
+      "AccountID":  _accountId,
+      "IdentityID": identity?.entityId ?? "",
+      "AliasID": alias?.entityId ?? "",
       "FetcherID": "",
-      "IdentityID": "",
       "DraftInfo": [],
       // pass in case it was saved in drafts
       "DraftUid": draftUid,
@@ -143,6 +145,8 @@ class MailApi {
     @required int draftUid,
     @required String draftsFolderName,
     bool isHtml,
+    AccountIdentity identity,
+    Aliases alias,
   }) async {
     final attachments = new Map();
 
@@ -151,8 +155,9 @@ class MailApi {
     });
     final parameters = json.encode({
       "AccountID": _accountId,
+      "IdentityID": identity?.entityId ?? "",
+      "AliasID": alias?.entityId ?? "",
       "FetcherID": "",
-      "IdentityID": "",
       "DraftInfo": [],
       "DraftUid": draftUid,
       "To": to,

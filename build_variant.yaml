@@ -22,7 +22,7 @@ _iosAppName: "{{appName}}"
 _appId: ""
 _iosAppId: "{{_appId}}"
 
-version: 1.0.1+41
+version: 1.0.1+42
 
 icon: "{{_dir}}/icon.png"
 main_logo: "{{image_dir}}/main_logo.png"

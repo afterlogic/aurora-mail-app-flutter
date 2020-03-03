@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
+import 'package:aurora_mail/models/alias_or_identity.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:aurora_mail/modules/mail/screens/message_view/components/attachment.dart';
@@ -15,6 +16,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:html/parser.dart';
 
 class MailUtils {
+  MailUtils._();
+
   static String getFriendlyName(Contact contact) {
     if (contact.fullName != null && contact.fullName.isNotEmpty) {
       return '"${contact.fullName}" <${contact.viewEmail}>';
@@ -43,6 +46,54 @@ class MailUtils {
     } else {
       return friendlyName;
     }
+  }
+
+  static AliasOrIdentity findIdentity(
+      String infoInJson,
+      List<AliasOrIdentity> aliasOrIdentity,
+      ) {
+    final users = json.decode(infoInJson)["@Collection"] as List;
+    for (var user in users) {
+      final name = user["DisplayName"] as String;
+      final mail = user["Email"] as String;
+      final identities = aliasOrIdentity.where((item) {
+        return item.mail == mail;
+      }).toList().reversed;
+      if (identities.isNotEmpty) {
+        final identity = identities.firstWhere(
+              (item) {
+            return item.name == name;
+          },
+          orElse: () => null,
+        );
+        return identity ?? identities.first;
+      }
+    }
+    return null;
+  }
+
+  static AliasOrIdentity findIdentity(
+    String infoInJson,
+    List<AliasOrIdentity> aliasOrIdentity,
+  ) {
+    final users = json.decode(infoInJson)["@Collection"] as List;
+    for (var user in users) {
+      final name = user["DisplayName"] as String;
+      final mail = user["Email"] as String;
+      final identities = aliasOrIdentity.where((item) {
+        return item.mail == mail;
+      }).toList().reversed;
+      if (identities.isNotEmpty) {
+        final identity = identities.firstWhere(
+          (item) {
+            return item.name == name;
+          },
+          orElse: () => null,
+        );
+        return identity ?? identities.first;
+      }
+    }
+    return null;
   }
 
   static List<String> getEmails(String emailsInJson,

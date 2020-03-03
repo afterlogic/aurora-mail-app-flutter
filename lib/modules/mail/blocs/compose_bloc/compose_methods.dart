@@ -38,6 +38,8 @@ class ComposeMethods {
     @required String messageText,
     @required int draftUid,
     Account sender,
+    AccountIdentity identity,
+    Aliases alias,
   }) async {
     final folders = await _foldersDao.getAllFolders(account.localId);
 
@@ -55,7 +57,8 @@ class ComposeMethods {
       draftUid: draftUid,
       sentFolderName: sentFolder != null ? sentFolder.fullNameRaw : null,
       draftsFolderName: draftsFolder != null ? draftsFolder.fullNameRaw : null,
-      sender:sender,
+      identity: identity,
+      alias: alias
     );
   }
 
@@ -68,6 +71,8 @@ class ComposeMethods {
     @required String messageText,
     @required int draftUid,
     bool isHtml,
+    AccountIdentity identity,
+    Aliases alias,
   }) async {
     final folders = await _foldersDao.getAllFolders(account.localId);
     final draftsFolder = Folders.getFolderOfType(folders, FolderType.drafts);
@@ -82,6 +87,8 @@ class ComposeMethods {
       messageText: messageText,
       draftUid: draftUid,
       draftsFolderName: draftsFolder != null ? draftsFolder.fullNameRaw : null,
+      identity: identity,
+      alias: alias,
     );
   }
 

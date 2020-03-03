@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:alarm_service/alarm_service.dart';
 import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/models/alias_or_identity.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_methods.dart';
 import 'package:aurora_mail/modules/auth/repository/auth_api.dart';
 import 'package:aurora_mail/utils/api_utils.dart';
@@ -16,7 +17,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 //  static String hostName;
 
   Account currentAccount;
-
+  AccountIdentity currentIdentity;
   User currentUser;
 
   @override
@@ -45,12 +46,29 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       if (result != null) {
         currentUser = result.user;
         currentAccount = result.account;
+
+        final identities =
+            await _methods.getAccountIdentities(currentUser, currentAccount);
+        currentIdentity = identities.firstWhere((item) => item.isDefault,
+                orElse: () => null) ??
+            AccountIdentity(
+              email: currentAccount.email,
+              useSignature: currentAccount.useSignature,
+              idUser: currentAccount.idUser,
+              isDefault: true,
+              idAccount: currentAccount.accountId,
+              friendlyName: currentAccount.friendlyName,
+              signature: currentAccount.signature,
+              entityId: currentAccount.serverId,
+            );
+
         yield InitializedUserAndAccounts(
           user: currentUser,
           users: users,
           needsLogin: false,
           account: currentAccount,
           accounts: result.accounts,
+          identity: currentIdentity,
         );
       } else {
         yield InitializedUserAndAccounts(
@@ -129,6 +147,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     if (accounts.isNotEmpty) {
       assert(accounts[0] != null);
       currentAccount = accounts[0];
+      await _methods.updateAliases(currentUser, currentAccount);
+      currentIdentity =
+          await _methods.updateIdentity(currentUser, currentAccount);
       yield InitializedUserAndAccounts(
         users: users,
         user: currentUser,
@@ -169,5 +190,26 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   Stream<AuthState> _changeAccount(ChangeAccount event) async* {
     await _methods.selectAccount(event.account);
     add(InitUserAndAccounts());
+  }
+
+  Future<List<AccountIdentity>> getIdentities() {
+    return _methods.getAccountIdentities(currentUser, currentAccount);
+  }
+
+  Future<List<Aliases>> getAliases() {
+    return _methods.getAccountAliases(currentUser, currentAccount);
+  }
+
+  Future<List<AliasOrIdentity>> getAliasAndIdentities() async {
+    final identities = await getIdentities();
+    final aliases = await getAliases();
+    final items = <AliasOrIdentity>[];
+    for (var value in identities) {
+      items.add(AliasOrIdentity(null, value));
+    }
+    for (var value in aliases) {
+      items.add(AliasOrIdentity(value, null));
+    }
+    return items;
   }
 }

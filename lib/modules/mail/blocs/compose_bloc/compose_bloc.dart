@@ -58,6 +58,8 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
         messageText: event.messageText,
         draftUid: event.draftUid,
         sender: event.sender,
+        identity: event.identity,
+        alias: event.alias,
       );
 
       yield MessageSent();
@@ -77,6 +79,8 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
         composeAttachments: event.composeAttachments,
         messageText: event.messageText,
         draftUid: event.draftUid,
+        identity: event.identity,
+        alias: event.alias,
       );
 
       yield MessageSavedInDrafts(draftUid);

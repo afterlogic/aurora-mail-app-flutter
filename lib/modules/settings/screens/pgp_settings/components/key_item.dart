@@ -1,6 +1,7 @@
+import 'package:aurora_mail/utils/identity_util.dart';
 import 'package:crypto_model/crypto_model.dart';
 import 'package:flutter/material.dart';
-import 'package:aurora_mail/utils/pgp_key_util.dart';
+
 class KeyItem extends StatefulWidget {
   final PgpKey pgpKey;
   final bool selected;
