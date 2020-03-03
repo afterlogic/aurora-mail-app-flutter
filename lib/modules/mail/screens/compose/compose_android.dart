@@ -306,6 +306,8 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
     if (_returnToMessagesList) {
       Navigator.popUntil(context, ModalRoute.withName(MessagesListRoute.name));
     } else {
+      // one closes message sending popup, the other closes compose
+      Navigator.pop(context);
       Navigator.pop(context);
     }
   }
