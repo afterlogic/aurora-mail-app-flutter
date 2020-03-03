@@ -21,7 +21,6 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
       user: user,
       account: account,
       pgpWorker: AppInjector.instance.pgpWorker(),
-      cryptoStorage: AppInjector.instance.cryptoStorage(),
     );
   }
 

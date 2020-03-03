@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
@@ -56,7 +57,9 @@ class _MessageViewAndroidState extends State<MessageViewAndroid>
       user: authBloc.currentUser,
       account: BlocProvider.of<AuthBloc>(context).currentAccount,
     );
-    _messageViewBloc.add(CheckEncrypt(widget.messages[_currentPage].rawBody));
+    if (BuildProperty.cryptoEnable) {
+      _messageViewBloc.add(CheckEncrypt(widget.messages[_currentPage].rawBody));
+    }
     _startSetSeenTimer(context);
   }
 
@@ -238,9 +241,11 @@ class _MessageViewAndroidState extends State<MessageViewAndroid>
           },
           child: MessageWebView(message, attachments, decryptedText),
         ),
-        bottomNavigationBar: MailBottomBar(
-          onDecrypt: _decrypt,
-        ),
+        bottomNavigationBar: BuildProperty.cryptoEnable
+            ? MailBottomBar(
+                onDecrypt: _decrypt,
+              )
+            : null,
       ),
     );
   }

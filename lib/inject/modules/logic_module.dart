@@ -8,7 +8,6 @@ import 'package:crypto_worker/crypto_worker.dart';
 import 'package:inject/inject.dart';
 
 @module
-//todo create this module automatically
 class LogicModule {
   @provide
   PgpSettingsBloc pgpSettingsBloc(CryptoStorage storage, PgpWorker pgpWorker) =>

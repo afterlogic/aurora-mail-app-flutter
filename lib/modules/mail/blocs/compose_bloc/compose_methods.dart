@@ -15,7 +15,6 @@ import 'package:flutter/widgets.dart';
 class ComposeMethods {
   final Account account;
   final PgpWorker pgpWorker;
-  final CryptoStorage cryptoStorage;
 
   final _foldersDao = new FoldersDao(DBInstances.appDB);
   MailApi _mailApi;
@@ -24,7 +23,6 @@ class ComposeMethods {
   ComposeMethods({
     @required User user,
     @required this.account,
-    @required this.cryptoStorage,
     @required this.pgpWorker,
   }) {
     _mailApi = new MailApi(user: user, account: account);

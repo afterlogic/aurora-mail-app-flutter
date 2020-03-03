@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
@@ -283,7 +284,7 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
       to: _toEmails.join(","),
       cc: _ccEmails.join(","),
       bcc: _bccEmails.join(","),
-      isHtml:false,
+      isHtml: false,
       subject: _subjectTextCtrl.text,
       composeAttachments: new List<ComposeAttachment>.from(attachmentsForSave),
       messageText: _bodyTextCtrl.text,
@@ -532,9 +533,11 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
             ),
           ),
         ),
-        bottomNavigationBar: ComposeBottomBar(
-          onEncrypt: _encryptDialog,
-        ),
+        bottomNavigationBar: BuildProperty.cryptoEnable
+            ? ComposeBottomBar(
+                onEncrypt: _encryptDialog,
+              )
+            : null,
       ),
     );
   }

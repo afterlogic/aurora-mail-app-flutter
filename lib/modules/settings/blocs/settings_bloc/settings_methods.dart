@@ -71,6 +71,6 @@ class SettingsMethods {
   }
 
   setUserStorage(User user) {
-    cryptoStorage.setOther(user.emailFromLogin);
+    cryptoStorage?.setOther(user.emailFromLogin);
   }
 }

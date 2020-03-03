@@ -115,7 +115,7 @@ class AMButton extends StatelessWidget {
         padding: padding,
         splashColor: splashColor,
         textColor: textColor,
-        textTheme: textTheme,
+        textTheme: textTheme ?? theme.buttonTheme.textTheme,
       ),
     );
   }

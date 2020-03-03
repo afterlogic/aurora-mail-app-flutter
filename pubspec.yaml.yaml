@@ -80,21 +80,22 @@ dependencies:
   theme:
     path: {{_theme_module}}
 
-  flutter_secure_storage: ^3.3.1+1
-  # if: cryptoEnable
-  crypto_plugin:
-    git: https://github.com/afterlogic/flutter_crypto_plugin
   crypto_model:
     path: module/crypto/crypto_model
   crypto_storage:
     path: module/crypto/crypto_storage
-  crypto_storage_impl:
-    path: module/crypto/crypto_storage_impl
   crypto_worker:
     path: module/crypto/crypto_worker
+  flutter_secure_storage: ^3.3.1+1
+  # if: cryptoEnable
+  crypto_plugin:
+    git: https://github.com/afterlogic/flutter_crypto_plugin
+  crypto_storage_impl:
+    path: module/crypto/crypto_storage_impl
   crypto_worker_impl:
     path: module/crypto/crypto_worker_impl
   # end: if
+
   inject:
     git: "https://github.com/afterlogic/dart_inject"
 
