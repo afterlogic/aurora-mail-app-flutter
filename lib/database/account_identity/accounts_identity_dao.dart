@@ -20,9 +20,19 @@ class AccountIdentityDao extends DatabaseAccessor<AppDatabase>
     });
   }
 
-  Future<void> deleteIdentityByAccount(int idUser) {
+  Future<void> deleteIdentityByUser(int idUser) {
     return (delete(accountIdentity)
           ..where((item) => item.idUser.equals(idUser)))
         .go();
+  }
+
+  Future<List<AccountIdentityDb>> getAccountByUserAndAccount(
+    int idUser,
+    int idAccount,
+  ) {
+    return (select(accountIdentity)
+          ..where((item) => item.idUser.equals(idUser))
+          ..where((item) => item.idAccount.equals(idAccount)))
+        .get();
   }
 }

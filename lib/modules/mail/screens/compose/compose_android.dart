@@ -11,6 +11,7 @@ import 'package:aurora_mail/modules/mail/models/compose_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/temp_attachment_upload.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/components/compose_bottom_bar.dart';
+import 'package:aurora_mail/modules/mail/screens/compose/components/entity_selector.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/compose_route.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/dialog/encrypt_dialog.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
@@ -43,6 +44,7 @@ class ComposeAndroid extends StatefulWidget {
 class _ComposeAndroidState extends State<ComposeAndroid> {
   ComposeBloc _bloc;
   Account sender;
+  AccountIdentityDb identity;
   final toNode = FocusNode();
   final ccNode = FocusNode();
   final bccNode = FocusNode();
@@ -245,6 +247,7 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
       messageText: _bodyTextCtrl.text,
       draftUid: _currentDraftUid,
       sender: sender,
+      identity: identity,
     ));
   }
 
@@ -283,11 +286,12 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
       to: _toEmails.join(","),
       cc: _ccEmails.join(","),
       bcc: _bccEmails.join(","),
-      isHtml:false,
+      isHtml: false,
       subject: _subjectTextCtrl.text,
       composeAttachments: new List<ComposeAttachment>.from(attachmentsForSave),
       messageText: _bodyTextCtrl.text,
       draftUid: _currentDraftUid,
+      identity: identity,
     ));
   }
 
@@ -437,11 +441,15 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
       );
     }
 
+    void setIdentity(AccountIdentityDb identity) {
+      this.identity = identity;
+    }
+
     return BlocProvider<ComposeBloc>.value(
       value: _bloc,
       child: Scaffold(
         key: _scaffoldKey,
-        appBar: ComposeAppBar(_onAppBarActionSelected, _onAccountChange),
+        appBar: ComposeAppBar(_onAppBarActionSelected),
         body: _keyboardActions(
           BlocListener<ComposeBloc, ComposeState>(
             listener: (context, state) {
@@ -462,6 +470,12 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
             child: SingleChildScrollView(
               child: Column(
                 children: <Widget>[
+                  IdentitySelector(
+                    padding: EdgeInsets.symmetric(horizontal: 16.0),
+                    enable: !lockUsers,
+                    label: i18n(context, "messages_from"),
+                    onIdentity: setIdentity,
+                  ),
                   ComposeEmails(
                     padding: EdgeInsets.symmetric(horizontal: 16.0),
                     enable: !lockUsers,

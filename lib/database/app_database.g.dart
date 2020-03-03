@@ -8732,6 +8732,7 @@ class AccountIdentityDb extends DataClass
   final String friendlyName;
   final String signature;
   final int idUser;
+  final int idAccount;
   final bool isDefault;
   final bool useSignature;
   AccountIdentityDb(
@@ -8740,6 +8741,7 @@ class AccountIdentityDb extends DataClass
       @required this.friendlyName,
       @required this.signature,
       @required this.idUser,
+      @required this.idAccount,
       @required this.isDefault,
       @required this.useSignature});
   factory AccountIdentityDb.fromData(
@@ -8760,6 +8762,8 @@ class AccountIdentityDb extends DataClass
           .mapFromDatabaseResponse(data['${effectivePrefix}signature']),
       idUser:
           intType.mapFromDatabaseResponse(data['${effectivePrefix}id_user']),
+      idAccount:
+          intType.mapFromDatabaseResponse(data['${effectivePrefix}id_account']),
       isDefault: boolType
           .mapFromDatabaseResponse(data['${effectivePrefix}is_default']),
       useSignature: boolType
@@ -8775,6 +8779,7 @@ class AccountIdentityDb extends DataClass
       friendlyName: serializer.fromJson<String>(json['friendlyName']),
       signature: serializer.fromJson<String>(json['signature']),
       idUser: serializer.fromJson<int>(json['idUser']),
+      idAccount: serializer.fromJson<int>(json['idAccount']),
       isDefault: serializer.fromJson<bool>(json['isDefault']),
       useSignature: serializer.fromJson<bool>(json['useSignature']),
     );
@@ -8788,6 +8793,7 @@ class AccountIdentityDb extends DataClass
       'friendlyName': serializer.toJson<String>(friendlyName),
       'signature': serializer.toJson<String>(signature),
       'idUser': serializer.toJson<int>(idUser),
+      'idAccount': serializer.toJson<int>(idAccount),
       'isDefault': serializer.toJson<bool>(isDefault),
       'useSignature': serializer.toJson<bool>(useSignature),
     };
@@ -8809,6 +8815,9 @@ class AccountIdentityDb extends DataClass
           : Value(signature),
       idUser:
           idUser == null && nullToAbsent ? const Value.absent() : Value(idUser),
+      idAccount: idAccount == null && nullToAbsent
+          ? const Value.absent()
+          : Value(idAccount),
       isDefault: isDefault == null && nullToAbsent
           ? const Value.absent()
           : Value(isDefault),
@@ -8824,6 +8833,7 @@ class AccountIdentityDb extends DataClass
           String friendlyName,
           String signature,
           int idUser,
+          int idAccount,
           bool isDefault,
           bool useSignature}) =>
       AccountIdentityDb(
@@ -8832,6 +8842,7 @@ class AccountIdentityDb extends DataClass
         friendlyName: friendlyName ?? this.friendlyName,
         signature: signature ?? this.signature,
         idUser: idUser ?? this.idUser,
+        idAccount: idAccount ?? this.idAccount,
         isDefault: isDefault ?? this.isDefault,
         useSignature: useSignature ?? this.useSignature,
       );
@@ -8843,6 +8854,7 @@ class AccountIdentityDb extends DataClass
           ..write('friendlyName: $friendlyName, ')
           ..write('signature: $signature, ')
           ..write('idUser: $idUser, ')
+          ..write('idAccount: $idAccount, ')
           ..write('isDefault: $isDefault, ')
           ..write('useSignature: $useSignature')
           ..write(')'))
@@ -8858,8 +8870,12 @@ class AccountIdentityDb extends DataClass
               friendlyName.hashCode,
               $mrjc(
                   signature.hashCode,
-                  $mrjc(idUser.hashCode,
-                      $mrjc(isDefault.hashCode, useSignature.hashCode)))))));
+                  $mrjc(
+                      idUser.hashCode,
+                      $mrjc(
+                          idAccount.hashCode,
+                          $mrjc(
+                              isDefault.hashCode, useSignature.hashCode))))))));
   @override
   bool operator ==(dynamic other) =>
       identical(this, other) ||
@@ -8869,6 +8885,7 @@ class AccountIdentityDb extends DataClass
           other.friendlyName == this.friendlyName &&
           other.signature == this.signature &&
           other.idUser == this.idUser &&
+          other.idAccount == this.idAccount &&
           other.isDefault == this.isDefault &&
           other.useSignature == this.useSignature);
 }
@@ -8879,6 +8896,7 @@ class AccountIdentityCompanion extends UpdateCompanion<AccountIdentityDb> {
   final Value<String> friendlyName;
   final Value<String> signature;
   final Value<int> idUser;
+  final Value<int> idAccount;
   final Value<bool> isDefault;
   final Value<bool> useSignature;
   const AccountIdentityCompanion({
@@ -8887,6 +8905,7 @@ class AccountIdentityCompanion extends UpdateCompanion<AccountIdentityDb> {
     this.friendlyName = const Value.absent(),
     this.signature = const Value.absent(),
     this.idUser = const Value.absent(),
+    this.idAccount = const Value.absent(),
     this.isDefault = const Value.absent(),
     this.useSignature = const Value.absent(),
   });
@@ -8896,6 +8915,7 @@ class AccountIdentityCompanion extends UpdateCompanion<AccountIdentityDb> {
     @required String friendlyName,
     @required String signature,
     @required int idUser,
+    @required int idAccount,
     @required bool isDefault,
     @required bool useSignature,
   })  : entityId = Value(entityId),
@@ -8903,6 +8923,7 @@ class AccountIdentityCompanion extends UpdateCompanion<AccountIdentityDb> {
         friendlyName = Value(friendlyName),
         signature = Value(signature),
         idUser = Value(idUser),
+        idAccount = Value(idAccount),
         isDefault = Value(isDefault),
         useSignature = Value(useSignature);
   AccountIdentityCompanion copyWith(
@@ -8911,6 +8932,7 @@ class AccountIdentityCompanion extends UpdateCompanion<AccountIdentityDb> {
       Value<String> friendlyName,
       Value<String> signature,
       Value<int> idUser,
+      Value<int> idAccount,
       Value<bool> isDefault,
       Value<bool> useSignature}) {
     return AccountIdentityCompanion(
@@ -8919,6 +8941,7 @@ class AccountIdentityCompanion extends UpdateCompanion<AccountIdentityDb> {
       friendlyName: friendlyName ?? this.friendlyName,
       signature: signature ?? this.signature,
       idUser: idUser ?? this.idUser,
+      idAccount: idAccount ?? this.idAccount,
       isDefault: isDefault ?? this.isDefault,
       useSignature: useSignature ?? this.useSignature,
     );
@@ -8992,6 +9015,18 @@ class $AccountIdentityTable extends AccountIdentity
     );
   }
 
+  final VerificationMeta _idAccountMeta = const VerificationMeta('idAccount');
+  GeneratedIntColumn _idAccount;
+  @override
+  GeneratedIntColumn get idAccount => _idAccount ??= _constructIdAccount();
+  GeneratedIntColumn _constructIdAccount() {
+    return GeneratedIntColumn(
+      'id_account',
+      $tableName,
+      false,
+    );
+  }
+
   final VerificationMeta _isDefaultMeta = const VerificationMeta('isDefault');
   GeneratedBoolColumn _isDefault;
   @override
@@ -9025,6 +9060,7 @@ class $AccountIdentityTable extends AccountIdentity
         friendlyName,
         signature,
         idUser,
+        idAccount,
         isDefault,
         useSignature
       ];
@@ -9070,6 +9106,12 @@ class $AccountIdentityTable extends AccountIdentity
     } else if (isInserting) {
       context.missing(_idUserMeta);
     }
+    if (d.idAccount.present) {
+      context.handle(_idAccountMeta,
+          idAccount.isAcceptableValue(d.idAccount.value, _idAccountMeta));
+    } else if (isInserting) {
+      context.missing(_idAccountMeta);
+    }
     if (d.isDefault.present) {
       context.handle(_isDefaultMeta,
           isDefault.isAcceptableValue(d.isDefault.value, _isDefaultMeta));
@@ -9112,6 +9154,9 @@ class $AccountIdentityTable extends AccountIdentity
     }
     if (d.idUser.present) {
       map['id_user'] = Variable<int, IntType>(d.idUser.value);
+    }
+    if (d.idAccount.present) {
+      map['id_account'] = Variable<int, IntType>(d.idAccount.value);
     }
     if (d.isDefault.present) {
       map['is_default'] = Variable<bool, BoolType>(d.isDefault.value);

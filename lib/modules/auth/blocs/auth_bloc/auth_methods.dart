@@ -82,7 +82,6 @@ class AuthMethods {
     }
     selectUser(userToReturn.localId);
     _authLocal.setLastEmail(user.emailFromLogin);
-    updateIdentity(userToReturn);
     return userToReturn;
   }
 
@@ -143,15 +142,56 @@ class AuthMethods {
     return _authLocal.setSelectedAccountId(account.localId);
   }
 
-  Future updateIdentity(User user) async {
+  Future<AccountIdentityDb> updateIdentity(User user, Account account) async {
     try {
-      final identity = await _authApi.getIdentity(user);
-      await _accountIdentityDao.deleteIdentityByAccount(user.serverId);
-      await _accountIdentityDao.setIdentity(identity);
+      final identities = await _authApi.getIdentity(user);
+      await _accountIdentityDao.deleteIdentityByUser(user.serverId);
+      var currentIdentity =
+          identities.firstWhere((item) => item.isDefault, orElse: () => null);
+      if (currentIdentity == null) {
+        currentIdentity = AccountIdentityDb(
+          email: account.email,
+          useSignature: account.useSignature,
+          idUser: account.idUser,
+          isDefault: true,
+          idAccount: account.accountId,
+          friendlyName: account.friendlyName,
+          signature: account.signature,
+          entityId: account.serverId,
+        );
+        identities.add(currentIdentity);
+      }
+      await _accountIdentityDao.setIdentity(identities);
+      return currentIdentity;
     } catch (e, s) {
       print(s);
       print(e);
+      final identities = await getAccountIdentities(user, account);
+      return identities.firstWhere(
+            (item) => item.isDefault,
+            orElse: () => null,
+          ) ??
+          AccountIdentityDb(
+            email: account.email,
+            useSignature: account.useSignature,
+            idUser: account.idUser,
+            isDefault: true,
+            idAccount: account.accountId,
+            friendlyName: account.friendlyName,
+            signature: account.signature,
+            entityId: account.serverId,
+          );
     }
+  }
+
+  Future<List<AccountIdentityDb>> getAccountIdentities(
+    User currentUser,
+    Account currentAccount,
+  ) {
+    return _accountIdentityDao.getAccountByUserAndAccount(
+      currentUser.serverId,
+      currentAccount.entityId,
+    );
   }
 }
 

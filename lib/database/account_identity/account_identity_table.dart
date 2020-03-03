@@ -16,6 +16,8 @@ class AccountIdentity extends Table {
 
   IntColumn get idUser => integer()();
 
+  IntColumn get idAccount => integer()();
+
   BoolColumn get isDefault => boolean()();
 
   BoolColumn get useSignature => boolean()();
@@ -31,6 +33,7 @@ class AccountIdentityDbMap {
       friendlyName: map["FriendlyName"] as String,
       signature: map["Signature"] as String,
       idUser: map["IdUser"] as int,
+      idAccount: map["IdAccount"] as int,
       isDefault: map["Default"] as bool,
       useSignature: map["UseSignature"] as bool,
     );

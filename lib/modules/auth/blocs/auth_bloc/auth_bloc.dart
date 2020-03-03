@@ -16,7 +16,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 //  static String hostName;
 
   Account currentAccount;
-
+  AccountIdentityDb currentIdentity;
   User currentUser;
 
   @override
@@ -45,12 +45,29 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       if (result != null) {
         currentUser = result.user;
         currentAccount = result.account;
+
+        final identities =
+            await _methods.getAccountIdentities(currentUser, currentAccount);
+        currentIdentity = identities.firstWhere((item) => item.isDefault,
+                orElse: () => null) ??
+            AccountIdentityDb(
+              email: currentAccount.email,
+              useSignature: currentAccount.useSignature,
+              idUser: currentAccount.idUser,
+              isDefault: true,
+              idAccount: currentAccount.accountId,
+              friendlyName: currentAccount.friendlyName,
+              signature: currentAccount.signature,
+              entityId: currentAccount.serverId,
+            );
+
         yield InitializedUserAndAccounts(
           user: currentUser,
           users: users,
           needsLogin: false,
           account: currentAccount,
           accounts: result.accounts,
+          identity: currentIdentity,
         );
       } else {
         yield InitializedUserAndAccounts(
@@ -129,6 +146,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     if (accounts.isNotEmpty) {
       assert(accounts[0] != null);
       currentAccount = accounts[0];
+      currentIdentity =
+          await _methods.updateIdentity(currentUser, currentAccount);
       yield InitializedUserAndAccounts(
         users: users,
         user: currentUser,
@@ -169,5 +188,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   Stream<AuthState> _changeAccount(ChangeAccount event) async* {
     await _methods.selectAccount(event.account);
     add(InitUserAndAccounts());
+  }
+
+  Future<List<AccountIdentityDb>> getAccountIdentities() {
+    return _methods.getAccountIdentities(currentUser, currentAccount);
   }
 }

@@ -24,6 +24,7 @@ class SendMessage extends ComposeEvent {
   final String messageText;
   final int draftUid;
   final Account sender;
+  final AccountIdentityDb identity;
 
   SendMessage({
     @required this.isHtml,
@@ -35,6 +36,7 @@ class SendMessage extends ComposeEvent {
     @required this.messageText,
     @required this.draftUid,
     this.sender,
+    this.identity,
   });
 
   @override
@@ -51,6 +53,7 @@ class SaveToDrafts extends ComposeEvent {
   final String messageText;
   final int draftUid;
   final bool isHtml;
+  final AccountIdentityDb identity;
 
   SaveToDrafts({
     @required this.to,
@@ -61,6 +64,7 @@ class SaveToDrafts extends ComposeEvent {
     @required this.messageText,
     @required this.draftUid,
     @required this.isHtml,
+    this.identity,
   });
 
   @override
