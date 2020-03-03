@@ -9,7 +9,7 @@ import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/gr
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/storages/contacts_storages_table.dart';
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/storages/converters/contacts_info_converter.dart';
 import 'package:moor_flutter/moor_flutter.dart';
-
+import 'package:aurora_mail/database/aliases/aliases_table.dart';
 import 'accounts/accounts_table.dart';
 import 'users/users_table.dart';
 
@@ -30,7 +30,8 @@ class DBInstances {
   ContactsGroups,
   ContactsStorages,
   PgpKeyModel,
-  AccountIdentity
+  AccountIdentityTable,
+  AliasesTable
 ])
 class AppDatabase extends _$AppDatabase {
   AppDatabase()

@@ -10,7 +10,7 @@ class IdentitySelector extends StatefulWidget {
   final String email;
   final bool enable;
   final EdgeInsets padding;
-  final Function(AccountIdentityDb identity) onIdentity;
+  final Function(IdentitySelectorItem identity) onIdentity;
 
   const IdentitySelector({
     Key key,
@@ -35,38 +35,51 @@ class _IdentitySelectorState extends State<IdentitySelector> {
     if (widget.email != null) {
       textCtrl.text = widget.email;
     } else {
-      _setIdentity(BlocProvider.of<AuthBloc>(context).currentIdentity);
+      _setIdentity(
+        IdentitySelectorItem(
+          null,
+          BlocProvider.of<AuthBloc>(context).currentIdentity,
+        ),
+      );
     }
   }
 
-  Future<List<AccountIdentityDb>> _buildSuggestions(String _) async {
+  Future<List<IdentitySelectorItem>> _buildSuggestions(String _) async {
     final bloc = BlocProvider.of<AuthBloc>(context);
-    final contacts = await bloc.getAccountIdentities();
 
-    return contacts;
+    final identities = await bloc.getAccountIdentities();
+    final aliases = await bloc.getAccountAliases();
+    final item = <IdentitySelectorItem>[];
+    for (var value in identities) {
+      item.add(IdentitySelectorItem(null, value));
+    }
+    for (var value in aliases) {
+      item.add(IdentitySelectorItem(value, null));
+    }
+    return item;
   }
 
-  Widget _identityItem(AccountIdentityDb entity) {
+  Widget _identityItem(IdentitySelectorItem entity) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (entity.friendlyName.isNotEmpty)
+        if (entity.name.isNotEmpty)
           Text(
-            entity.friendlyName,
+            entity.name,
             maxLines: 1,
           ),
-        if (entity.email.isNotEmpty)
+        if (entity.mail.isNotEmpty)
           Text(
-            entity.email,
+            entity.mail,
             maxLines: 1,
           ),
       ],
     );
   }
 
-  _setIdentity(AccountIdentityDb identity) {
-    textCtrl.text = identityViewName(identity.friendlyName, identity.email);
+  _setIdentity(IdentitySelectorItem identity) {
+    textCtrl.text = identityViewName(identity.name, identity.mail);
     widget.onIdentity(identity);
   }
 
@@ -82,7 +95,7 @@ class _IdentitySelectorState extends State<IdentitySelector> {
       ),
       child: InkWell(
         onTap: widget.enable ? focusNode.requestFocus : null,
-        child: ComposeTypeAheadField<AccountIdentityDb>(
+        child: ComposeTypeAheadField<IdentitySelectorItem>(
           textFieldConfiguration: TextFieldConfiguration(
             focusNode: focusNode,
             enabled: widget.enable,
@@ -143,4 +156,15 @@ class _IdentitySelectorState extends State<IdentitySelector> {
       ),
     );
   }
+}
+
+class IdentitySelectorItem {
+  final Aliases alias;
+  final AccountIdentity identity;
+
+  IdentitySelectorItem(this.alias, this.identity);
+
+  String get name => identity?.friendlyName ?? alias?.friendlyName;
+
+  String get mail => identity?.email ?? alias?.email;
 }

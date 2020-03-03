@@ -16,7 +16,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 //  static String hostName;
 
   Account currentAccount;
-  AccountIdentityDb currentIdentity;
+  AccountIdentity currentIdentity;
   User currentUser;
 
   @override
@@ -50,7 +50,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             await _methods.getAccountIdentities(currentUser, currentAccount);
         currentIdentity = identities.firstWhere((item) => item.isDefault,
                 orElse: () => null) ??
-            AccountIdentityDb(
+            AccountIdentity(
               email: currentAccount.email,
               useSignature: currentAccount.useSignature,
               idUser: currentAccount.idUser,
@@ -146,6 +146,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     if (accounts.isNotEmpty) {
       assert(accounts[0] != null);
       currentAccount = accounts[0];
+      await _methods.updateAliases(currentUser, currentAccount);
       currentIdentity =
           await _methods.updateIdentity(currentUser, currentAccount);
       yield InitializedUserAndAccounts(
@@ -190,7 +191,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     add(InitUserAndAccounts());
   }
 
-  Future<List<AccountIdentityDb>> getAccountIdentities() {
+  Future<List<AccountIdentity>> getAccountIdentities() {
     return _methods.getAccountIdentities(currentUser, currentAccount);
+  }
+
+  Future<List<Aliases>> getAccountAliases() {
+    return _methods.getAccountAliases(currentUser, currentAccount);
   }
 }

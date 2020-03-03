@@ -1,36 +1,33 @@
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:moor_flutter/moor_flutter.dart';
+import 'aliases_table.dart';
+part 'aliases_dao.g.dart';
 
-import 'account_identity_table.dart';
+@UseDao(tables: [AliasesTable])
+class AliasesDao extends DatabaseAccessor<AppDatabase> with _$AliasesDaoMixin {
+  AliasesDao(AppDatabase db) : super(db);
 
-part 'accounts_identity_dao.g.dart';
-
-@UseDao(tables: [AccountIdentityTable])
-class AccountIdentityDao extends DatabaseAccessor<AppDatabase>
-    with _$AccountIdentityDaoMixin {
-  AccountIdentityDao(AppDatabase db) : super(db);
-
-  Future<void> set(List<AccountIdentity> newIdentity) {
+  Future<void> set(List<Aliases> newAliases) {
     return batch((b) {
       return b.insertAll(
-        accountIdentityTable,
-        newIdentity,
+        aliasesTable,
+        newAliases,
         mode: InsertMode.insertOrReplace,
       );
     });
   }
 
   Future<void> deleteByUser(int idUser) {
-    return (delete(accountIdentityTable)
+    return (delete(aliasesTable)
           ..where((item) => item.idUser.equals(idUser)))
         .go();
   }
 
-  Future<List<AccountIdentity>> getByUserAndAccount(
+  Future<List<Aliases>> getByUserAndAccount(
     int idUser,
     int idAccount,
   ) {
-    return (select(accountIdentityTable)
+    return (select(aliasesTable)
           ..where((item) => item.idUser.equals(idUser))
           ..where((item) => item.idAccount.equals(idAccount)))
         .get();

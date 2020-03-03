@@ -1,5 +1,6 @@
 import 'package:aurora_mail/database/account_identity/accounts_identity_dao.dart';
 import 'package:aurora_mail/database/accounts/accounts_dao.dart';
+import 'package:aurora_mail/database/aliases/aliases_dao.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/folders/folders_dao.dart';
 import 'package:aurora_mail/database/mail/mail_dao.dart';
@@ -17,6 +18,7 @@ class AuthMethods {
   final _authLocal = new AuthLocalStorage();
   final _usersDao = new UsersDao(DBInstances.appDB);
   final _accountIdentityDao = new AccountIdentityDao(DBInstances.appDB);
+  final _aliasesDao = new AliasesDao(DBInstances.appDB);
   final _accountsDao = new AccountsDao(DBInstances.appDB);
 
   Future<InitializerResponse> getUserAndAccountsFromDB() async {
@@ -142,14 +144,24 @@ class AuthMethods {
     return _authLocal.setSelectedAccountId(account.localId);
   }
 
-  Future<AccountIdentityDb> updateIdentity(User user, Account account) async {
+  Future<void> updateAliases(User user, Account account) async {
+    try {
+      final identities = await _authApi.getAliases(user);
+      await _aliasesDao.deleteByUser(user.serverId);
+      await _aliasesDao.set(identities);
+    } catch (e, s) {
+      print(e);
+    }
+  }
+
+  Future<AccountIdentity> updateIdentity(User user, Account account) async {
     try {
       final identities = await _authApi.getIdentity(user);
-      await _accountIdentityDao.deleteIdentityByUser(user.serverId);
+      await _accountIdentityDao.deleteByUser(user.serverId);
       var currentIdentity =
           identities.firstWhere((item) => item.isDefault, orElse: () => null);
       if (currentIdentity == null) {
-        currentIdentity = AccountIdentityDb(
+        currentIdentity = AccountIdentity(
           email: account.email,
           useSignature: account.useSignature,
           idUser: account.idUser,
@@ -161,7 +173,7 @@ class AuthMethods {
         );
         identities.add(currentIdentity);
       }
-      await _accountIdentityDao.setIdentity(identities);
+      await _accountIdentityDao.set(identities);
       return currentIdentity;
     } catch (e, s) {
       print(s);
@@ -171,7 +183,7 @@ class AuthMethods {
             (item) => item.isDefault,
             orElse: () => null,
           ) ??
-          AccountIdentityDb(
+          AccountIdentity(
             email: account.email,
             useSignature: account.useSignature,
             idUser: account.idUser,
@@ -184,11 +196,21 @@ class AuthMethods {
     }
   }
 
-  Future<List<AccountIdentityDb>> getAccountIdentities(
+  Future<List<AccountIdentity>> getAccountIdentities(
     User currentUser,
     Account currentAccount,
   ) {
-    return _accountIdentityDao.getAccountByUserAndAccount(
+    return _accountIdentityDao.getByUserAndAccount(
+      currentUser.serverId,
+      currentAccount.entityId,
+    );
+  }
+
+  Future<List<Aliases>> getAccountAliases(
+    User currentUser,
+    Account currentAccount,
+  ) {
+    return _aliasesDao.getByUserAndAccount(
       currentUser.serverId,
       currentAccount.entityId,
     );

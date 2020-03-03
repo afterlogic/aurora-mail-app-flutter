@@ -11,7 +11,7 @@ import 'package:aurora_mail/modules/mail/models/compose_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/temp_attachment_upload.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/components/compose_bottom_bar.dart';
-import 'package:aurora_mail/modules/mail/screens/compose/components/entity_selector.dart';
+import 'package:aurora_mail/modules/mail/screens/compose/components/identity_selector.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/compose_route.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/dialog/encrypt_dialog.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
@@ -43,8 +43,8 @@ class ComposeAndroid extends StatefulWidget {
 
 class _ComposeAndroidState extends State<ComposeAndroid> {
   ComposeBloc _bloc;
-  Account sender;
-  AccountIdentityDb identity;
+  Aliases alias;
+  AccountIdentity identity;
   final toNode = FocusNode();
   final ccNode = FocusNode();
   final bccNode = FocusNode();
@@ -246,8 +246,8 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
       composeAttachments: new List<ComposeAttachment>.from(_attachments),
       messageText: _bodyTextCtrl.text,
       draftUid: _currentDraftUid,
-      sender: sender,
       identity: identity,
+      alias: alias,
     ));
   }
 
@@ -292,6 +292,7 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
       messageText: _bodyTextCtrl.text,
       draftUid: _currentDraftUid,
       identity: identity,
+      alias: alias,
     ));
   }
 
@@ -382,10 +383,6 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
 //    }
 //  }
 
-  _onAccountChange(Account sender) {
-    this.sender = sender;
-  }
-
   void _showError(String err, [Map<String, String> arg]) {
     Navigator.popUntil(context, ModalRoute.withName(ComposeRoute.name));
     showSnack(
@@ -441,8 +438,9 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
       );
     }
 
-    void setIdentity(AccountIdentityDb identity) {
-      this.identity = identity;
+    void setIdentityOrSender(IdentitySelectorItem identityOrSender) {
+      this.alias = identityOrSender.alias;
+      this.identity = identityOrSender.identity;
     }
 
     return BlocProvider<ComposeBloc>.value(
@@ -474,7 +472,7 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
                     padding: EdgeInsets.symmetric(horizontal: 16.0),
                     enable: !lockUsers,
                     label: i18n(context, "messages_from"),
-                    onIdentity: setIdentity,
+                    onIdentity: setIdentityOrSender,
                   ),
                   ComposeEmails(
                     padding: EdgeInsets.symmetric(horizontal: 16.0),

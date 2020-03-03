@@ -20,7 +20,7 @@ class InitializedUserAndAccounts extends AuthState {
   final List<Account> accounts;
   final Account account;
   final bool needsLogin;
-  final AccountIdentityDb identity;
+  final AccountIdentity identity;
 
   const InitializedUserAndAccounts({
     @required this.user,
