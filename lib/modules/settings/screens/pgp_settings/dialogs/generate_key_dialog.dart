@@ -1,13 +1,15 @@
+import 'package:aurora_mail/models/alias_or_identity.dart';
+import 'package:aurora_mail/utils/identity_util.dart';
 import 'package:aurora_mail/utils/input_validation.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class GenerateKeyDialog extends StatefulWidget {
-  final List<String> mails;
-  final String current;
+  final List<AliasOrIdentity> identities;
+  final AliasOrIdentity current;
 
-  const GenerateKeyDialog(this.mails, this.current);
+  const GenerateKeyDialog(this.identities, this.current);
 
   @override
   _GenerateKeyDialogState createState() => _GenerateKeyDialogState();
@@ -16,7 +18,7 @@ class GenerateKeyDialog extends StatefulWidget {
 class _GenerateKeyDialogState extends State<GenerateKeyDialog> {
   static const lengths = [1024, 2048, 3072, 4096, 8192];
   var length = lengths[1];
-  String mail;
+  AliasOrIdentity current;
   bool _obscure = true;
 
   final _passwordController = TextEditingController();
@@ -25,7 +27,7 @@ class _GenerateKeyDialogState extends State<GenerateKeyDialog> {
   @override
   void initState() {
     super.initState();
-    mail = widget.mails.first;
+    current = widget.current;
   }
 
   @override
@@ -38,18 +40,26 @@ class _GenerateKeyDialogState extends State<GenerateKeyDialog> {
         child: Column(
           children: <Widget>[
             DropdownButtonFormField(
-              hint: Text(length.toString()),
               decoration: InputDecoration(
                   labelText: i18n(context, "login_input_email")),
-              value: mail,
-              items: widget.mails.map((value) {
-                return DropdownMenuItem<String>(
+              value: current,
+              items: widget.identities.map((value) {
+                return DropdownMenuItem<AliasOrIdentity>(
                   value: value,
-                  child: Text(value),
+                  child: Text(identityViewName(value.name, value.mail)),
                 );
               }).toList(),
-              onChanged: (String v) {
-                mail = v;
+              isExpanded: true,
+              selectedItemBuilder: (_) {
+                return widget.identities.map((value) {
+                  return Text(
+                    identityViewName(value.name, value.mail),
+                    maxLines: 2,
+                  );
+                }).toList();
+              },
+              onChanged: (AliasOrIdentity v) {
+                current = v;
                 setState(() {});
               },
             ),
@@ -72,7 +82,6 @@ class _GenerateKeyDialogState extends State<GenerateKeyDialog> {
               obscureText: _obscure,
             ),
             DropdownButtonFormField(
-              hint: Text(length.toString()),
               decoration: InputDecoration(labelText: i18n(context, "length")),
               value: length,
               items: lengths.map((value) {
@@ -105,19 +114,18 @@ class _GenerateKeyDialogState extends State<GenerateKeyDialog> {
   }
 
   _generate() {
-    if (_formKey.currentState.validate()) {
-      final length = this.length;
-      final mail = this.mail;
+    if (_formKey.currentState.validate() && current != null) {
       final pass = _passwordController.text;
-      Navigator.pop(context, GenerateKeyDialogResult(length, mail, pass));
+
+      Navigator.pop(context, GenerateKeyDialogResult(length, current, pass));
     }
   }
 }
 
 class GenerateKeyDialogResult {
   final int length;
-  final String mail;
+  final AliasOrIdentity alias;
   final String password;
 
-  GenerateKeyDialogResult(this.length, this.mail, this.password);
+  GenerateKeyDialogResult(this.length, this.alias, this.password);
 }

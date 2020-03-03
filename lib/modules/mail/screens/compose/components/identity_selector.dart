@@ -30,7 +30,7 @@ class _IdentitySelectorState extends State<IdentitySelector> {
   Future<List<AliasOrIdentity>> _buildSuggestions(String _) async {
     final bloc = BlocProvider.of<AuthBloc>(context);
 
-    return await bloc.getAliasAndIdentities();
+    return await bloc.getAliasesAndIdentities();
   }
 
   Widget _identityItem(AliasOrIdentity entity) {

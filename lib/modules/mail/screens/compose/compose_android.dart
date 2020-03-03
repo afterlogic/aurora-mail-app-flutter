@@ -184,7 +184,7 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
 
   Future _initSender(Message message) async {
     final authBloc = BlocProvider.of<AuthBloc>(context);
-    final items = await authBloc.getAliasAndIdentities();
+    final items = await authBloc.getAliasesAndIdentities();
 
     final identity = MailUtils.findIdentity(message.toInJson, items);
     setIdentityOrSender(

@@ -200,7 +200,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     return _methods.getAccountAliases(currentUser, currentAccount);
   }
 
-  Future<List<AliasOrIdentity>> getAliasAndIdentities() async {
+  Future<List<AliasOrIdentity>> getAliasesAndIdentities() async {
     final identities = await getIdentities();
     final aliases = await getAliases();
     final items = <AliasOrIdentity>[];

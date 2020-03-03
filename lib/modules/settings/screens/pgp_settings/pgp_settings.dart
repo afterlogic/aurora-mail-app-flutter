@@ -1,4 +1,5 @@
 import 'package:aurora_mail/inject/app_inject.dart';
+import 'package:aurora_mail/models/alias_or_identity.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/settings/blocs/pgp_settings/bloc.dart';
 import 'package:aurora_mail/modules/settings/screens/pgp_settings/dialogs/generate_key_dialog.dart';
@@ -85,7 +86,7 @@ class _PgpSettingsState extends State<PgpSettings> {
                   loadedState.private,
                   loadedState.keyProgress,
                 ),
-                _button(context, loadedState.public),
+                _button(context, loadedState),
               ],
             );
           },
@@ -94,25 +95,37 @@ class _PgpSettingsState extends State<PgpSettings> {
     );
   }
 
-  _generateKey() async {
+  _generateKey(LoadedState state) async {
+    final exist = <String>{};
+    exist.addAll(state.private.map((item) => item.mail));
+    exist.addAll(state.public.map((item) => item.mail));
+
     final authBloc = BlocProvider.of<AuthBloc>(context);
-    final accounts = (authBloc.state as InitializedUserAndAccounts);
-    final mails = accounts.accounts.map((item) => item.email).toList();
-    final current = accounts.account.email;
+    var aliasOrIdentity = await authBloc.getAliasesAndIdentities();
+    var current = AliasOrIdentity(null, authBloc.currentIdentity);
+
+    var notExist = aliasOrIdentity.where((item) {
+      return !exist.contains(item.mail);
+    }).toList();
+    if (exist.contains(current.mail)) {
+      if (notExist.isEmpty) {
+        current = null;
+      } else {
+        current = notExist.first;
+      }
+    }
 
     final result = await showDialog(
       context: context,
-      builder: (_) => GenerateKeyDialog(mails, current),
+      builder: (_) => GenerateKeyDialog(notExist, current),
     );
     if (result is GenerateKeyDialogResult) {
-      final name = accounts.accounts
-              .firstWhere(
-                (account) => account.email == result.mail,
-                orElse: () => null,
-              )
-              ?.friendlyName ??
-          "";
-      bloc.add(GenerateKeys(name, result.mail, result.length, result.password));
+      bloc.add(GenerateKeys(
+        result.alias.name,
+        result.alias.mail,
+        result.length,
+        result.password,
+      ));
     }
   }
 
@@ -255,17 +268,17 @@ class _PgpSettingsState extends State<PgpSettings> {
     );
   }
 
-  Widget _button(BuildContext context, List<PgpKey> publicKeys) {
+  Widget _button(BuildContext context, LoadedState state) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Column(
         children: <Widget>[
-          if (publicKeys.isNotEmpty)
+          if (state.public.isNotEmpty)
             SizedBox(
               width: double.infinity,
               child: AMButton(
                 child: Text(i18n(context, "export_all_public_keys")),
-                onPressed: () => _exportAllPublicKeys(publicKeys),
+                onPressed: () => _exportAllPublicKeys(state.public),
               ),
             ),
           _space(),
@@ -289,7 +302,7 @@ class _PgpSettingsState extends State<PgpSettings> {
             width: double.infinity,
             child: AMButton(
               child: Text(i18n(context, "generate_keys")),
-              onPressed: _generateKey,
+              onPressed: () => _generateKey(state),
             ),
           )
         ],
