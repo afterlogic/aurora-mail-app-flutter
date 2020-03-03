@@ -118,6 +118,8 @@ class Mail extends Table {
 
   TextColumn get attachmentsInJson => text().nullable()();
 
+  TextColumn get attachmentsForSearch => text()();
+
   TextColumn get customInJson => text()();
 
   static List getToForDisplay(
@@ -189,6 +191,13 @@ class Mail extends Table {
           ? displayName
           : raw["From"]["@Collection"][0]["Email"] as String;
 
+      final attachments = raw["Attachments"];
+      String attachmentsForSearch;
+      if (attachments != null) {
+        final names = (attachments["@Collection"] as List).map((a) => a["FileName"]);
+        attachmentsForSearch = names.join("/");
+      }
+
       messageInfo.hasBody = true;
       messagesChunk.add(new Message(
         localId: null,
@@ -248,7 +257,8 @@ class Mail extends Table {
             ? null
             : json.encode(raw["FoundedCIDs"]),
         foundedContentLocationUrlsInJson: raw["FoundedContentLocationUrls"] == null ? null : json.encode(raw["FoundedContentLocationUrls"]),
-        attachmentsInJson: raw["Attachments"] == null ? null : json.encode(raw["Attachments"]),
+        attachmentsInJson: attachments == null ? null : json.encode(attachments),
+        attachmentsForSearch: attachmentsForSearch ?? "",
         customInJson: raw["Custom"] == null ? null : json.encode(raw["Custom"]),
       ));
     });
