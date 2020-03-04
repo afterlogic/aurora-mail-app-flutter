@@ -13,8 +13,11 @@ class AliasOrIdentity {
   @override
   int get hashCode => (alias?.hashCode ?? 0) + (identity.hashCode ?? 0);
 
+  int get entityId => alias?.entityId ?? identity?.entityId;
+
   bool get isEmpty => alias == null && identity == null;
 
   @override
-  bool operator ==(Object other) => other.hashCode == this.hashCode;
+  bool operator ==(Object other) =>
+      other is AliasOrIdentity && other.entityId == this.entityId;
 }

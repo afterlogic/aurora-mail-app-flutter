@@ -192,17 +192,24 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     add(InitUserAndAccounts());
   }
 
-  Future<List<AccountIdentity>> getIdentities() {
-    return _methods.getAccountIdentities(currentUser, currentAccount);
+  Future<List<AccountIdentity>> getIdentities([bool forAllAccount]) {
+    return _methods.getAccountIdentities(
+      currentUser,
+      forAllAccount == true ? null : currentAccount,
+    );
   }
 
-  Future<List<Aliases>> getAliases() {
-    return _methods.getAccountAliases(currentUser, currentAccount);
+  Future<List<Aliases>> getAliases([bool forAllAccount]) {
+    return _methods.getAccountAliases(
+      currentUser,
+      forAllAccount == true ? null : currentAccount,
+    );
   }
 
-  Future<List<AliasOrIdentity>> getAliasesAndIdentities() async {
-    final identities = await getIdentities();
-    final aliases = await getAliases();
+  Future<List<AliasOrIdentity>> getAliasesAndIdentities(
+      [bool forAllAccount]) async {
+    final identities = await getIdentities(forAllAccount);
+    final aliases = await getAliases(forAllAccount);
     final items = <AliasOrIdentity>[];
     for (var value in identities) {
       items.add(AliasOrIdentity(null, value));

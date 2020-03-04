@@ -101,7 +101,7 @@ class _PgpSettingsState extends State<PgpSettings> {
     exist.addAll(state.public.map((item) => item.mail));
 
     final authBloc = BlocProvider.of<AuthBloc>(context);
-    var aliasOrIdentity = await authBloc.getAliasesAndIdentities();
+    var aliasOrIdentity = await authBloc.getAliasesAndIdentities(true);
     var current = AliasOrIdentity(null, authBloc.currentIdentity);
 
     var notExist = aliasOrIdentity.where((item) {

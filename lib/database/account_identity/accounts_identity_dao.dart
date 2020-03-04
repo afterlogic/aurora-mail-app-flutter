@@ -30,9 +30,11 @@ class AccountIdentityDao extends DatabaseAccessor<AppDatabase>
     int idUser,
     int idAccount,
   ) {
-    return (select(accountIdentityTable)
-          ..where((item) => item.idUser.equals(idUser))
-          ..where((item) => item.idAccount.equals(idAccount)))
-        .get();
+    final statement = select(accountIdentityTable);
+    statement.where((item) => item.idUser.equals(idUser));
+    if (idAccount != null) {
+      statement.where((item) => item.idAccount.equals(idAccount));
+    }
+    return statement.get();
   }
 }

@@ -95,6 +95,7 @@ class AuthMethods {
     final accounts = await _authApi.getAccounts(user);
     // ignore unique constraint errors from the db
     try {
+      await _accountsDao.deleteAccountsOfUser(user.localId);
       await _accountsDao.addAccounts(accounts);
       final accountsWithLocalIds = await _accountsDao.getAccounts(user.localId);
       await _authLocal.setSelectedAccountId(accountsWithLocalIds[0].localId);
@@ -160,19 +161,24 @@ class AuthMethods {
       await _accountIdentityDao.deleteByUser(user.serverId);
       var currentIdentity =
           identities.firstWhere((item) => item.isDefault, orElse: () => null);
-      if (currentIdentity == null) {
-        currentIdentity = AccountIdentity(
-          email: account.email,
-          useSignature: account.useSignature,
-          idUser: account.idUser,
+      final accounts = await getAccounts(user);
+      final accountsIdentity = accounts.map((item) {
+        final identity = AccountIdentity(
+          email: item.email,
+          useSignature: item.useSignature,
+          idUser: item.idUser,
           isDefault: true,
-          idAccount: account.accountId,
-          friendlyName: account.friendlyName,
-          signature: account.signature,
-          entityId: account.serverId,
+          idAccount: item.accountId,
+          friendlyName: item.friendlyName,
+          signature: item.signature,
+          entityId: item.entityId,
         );
-        identities.add(currentIdentity);
-      }
+        if (identity.isDefault && item.entityId == account.entityId) {
+          currentIdentity = identity;
+        }
+        return identity;
+      });
+      identities.addAll(accountsIdentity);
       await _accountIdentityDao.set(identities);
       return currentIdentity;
     } catch (e, s) {
@@ -202,7 +208,7 @@ class AuthMethods {
   ) {
     return _accountIdentityDao.getByUserAndAccount(
       currentUser.serverId,
-      currentAccount.entityId,
+      currentAccount?.entityId,
     );
   }
 
@@ -212,7 +218,7 @@ class AuthMethods {
   ) {
     return _aliasesDao.getByUserAndAccount(
       currentUser.serverId,
-      currentAccount.entityId,
+      currentAccount?.entityId,
     );
   }
 }
