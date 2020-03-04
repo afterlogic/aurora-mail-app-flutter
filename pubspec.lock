@@ -213,15 +213,6 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
-  crypto_plugin:
-    dependency: "direct main"
-    description:
-      path: "."
-      ref: HEAD
-      resolved-ref: a606fc7096e5a26ad4f9902d9c4a45c438b26c88
-      url: "https://github.com/afterlogic/flutter_crypto_plugin"
-    source: git
-    version: "0.0.1"
   crypto_storage:
     dependency: "direct main"
     description:
@@ -229,24 +220,10 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
-  crypto_storage_impl:
-    dependency: "direct main"
-    description:
-      path: "module\\crypto\\crypto_storage_impl"
-      relative: true
-    source: path
-    version: "0.0.1"
   crypto_worker:
     dependency: "direct main"
     description:
       path: "module\\crypto\\crypto_worker"
-      relative: true
-    source: path
-    version: "0.0.1"
-  crypto_worker_impl:
-    dependency: "direct main"
-    description:
-      path: "module\\crypto\\crypto_worker_impl"
       relative: true
     source: path
     version: "0.0.1"
@@ -863,7 +840,7 @@ packages:
   theme:
     dependency: "direct main"
     description:
-      path: "build_res\\private_mail\\theme"
+      path: "build_res\\natro\\theme"
       relative: true
     source: path
     version: "0.0.1"
