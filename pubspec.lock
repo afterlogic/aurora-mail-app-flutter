@@ -218,7 +218,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: a1dd639682d33a65c05202952b56e8595dbfc80c
+      resolved-ref: a606fc7096e5a26ad4f9902d9c4a45c438b26c88
       url: "https://github.com/afterlogic/flutter_crypto_plugin"
     source: git
     version: "0.0.1"
@@ -270,7 +270,7 @@ packages:
       name: equatable
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.0"
+    version: "1.1.1"
   esys_flutter_share:
     dependency: "direct main"
     description:
@@ -630,7 +630,21 @@ packages:
       name: path_provider
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.6.1"
+    version: "1.6.5"
+  path_provider_macos:
+    dependency: transitive
+    description:
+      name: path_provider_macos
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.4"
+  path_provider_platform_interface:
+    dependency: transitive
+    description:
+      name: path_provider_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1"
   pedantic:
     dependency: transitive
     description:
