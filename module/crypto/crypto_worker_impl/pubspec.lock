@@ -60,7 +60,7 @@ packages:
   crypto_model:
     dependency: "direct main"
     description:
-      path: "../crypto_model"
+      path: "..\\crypto_model"
       relative: true
     source: path
     version: "0.0.1"
@@ -69,21 +69,21 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "1d0a3c5b4d69b415db194f6662b06578592b3fa2"
+      resolved-ref: a606fc7096e5a26ad4f9902d9c4a45c438b26c88
       url: "https://github.com/afterlogic/flutter_crypto_plugin"
     source: git
     version: "0.0.1"
   crypto_storage:
     dependency: "direct main"
     description:
-      path: "../crypto_storage"
+      path: "..\\crypto_storage"
       relative: true
     source: path
     version: "0.0.1"
   crypto_worker:
     dependency: "direct main"
     description:
-      path: "../crypto_worker"
+      path: "..\\crypto_worker"
       relative: true
     source: path
     version: "0.0.1"
@@ -131,7 +131,21 @@ packages:
       name: path_provider
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.6.0"
+    version: "1.6.5"
+  path_provider_macos:
+    dependency: transitive
+    description:
+      name: path_provider_macos
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.4"
+  path_provider_platform_interface:
+    dependency: transitive
+    description:
+      name: path_provider_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1"
   pedantic:
     dependency: transitive
     description:
@@ -153,6 +167,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.2.1"
+  plugin_platform_interface:
+    dependency: transitive
+    description:
+      name: plugin_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.2"
   quiver:
     dependency: transitive
     description:
