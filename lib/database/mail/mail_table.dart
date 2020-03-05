@@ -118,7 +118,11 @@ class Mail extends Table {
 
   TextColumn get attachmentsInJson => text().nullable()();
 
+  TextColumn get attachmentsForSearch => text()();
+
   TextColumn get customInJson => text()();
+
+  BoolColumn get isHtml => boolean()();
 
   static List getToForDisplay(
       widgets.BuildContext context, String toInJson, String currentUserEmail) {
@@ -175,8 +179,7 @@ class Mail extends Table {
       MessageInfo messageInfo;
 
       try {
-        messageInfo =
-            messagesInfo.firstWhere((m) => m.uid == raw["Uid"]);
+        messageInfo = messagesInfo.firstWhere((m) => m.uid == raw["Uid"]);
       } catch (err) {
         throw Exception("Couldn't find message: ${raw["Uid"]}");
       }
@@ -188,6 +191,13 @@ class Mail extends Table {
       final fromToDisplay = displayName is String && displayName.isNotEmpty
           ? displayName
           : raw["From"]["@Collection"][0]["Email"] as String;
+
+      final attachments = raw["Attachments"];
+      String attachmentsForSearch;
+      if (attachments != null) {
+        final names = (attachments["@Collection"] as List).map((a) => a["FileName"]);
+        attachmentsForSearch = names.join("/");
+      }
 
       messageInfo.hasBody = true;
       messagesChunk.add(new Message(
@@ -248,8 +258,10 @@ class Mail extends Table {
             ? null
             : json.encode(raw["FoundedCIDs"]),
         foundedContentLocationUrlsInJson: raw["FoundedContentLocationUrls"] == null ? null : json.encode(raw["FoundedContentLocationUrls"]),
-        attachmentsInJson: raw["Attachments"] == null ? null : json.encode(raw["Attachments"]),
+        attachmentsInJson: attachments == null ? null : json.encode(attachments),
+        attachmentsForSearch: attachmentsForSearch ?? "",
         customInJson: raw["Custom"] == null ? null : json.encode(raw["Custom"]),
+        isHtml: (raw["Html"] as String)?.isNotEmpty == true,
       ));
     });
 

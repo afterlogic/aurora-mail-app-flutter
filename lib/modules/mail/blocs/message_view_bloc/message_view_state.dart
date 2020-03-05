@@ -1,3 +1,5 @@
+import 'package:aurora_mail/utils/always_non_equal_object.dart';
+import 'package:crypto_worker/crypto_worker.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class MessageViewState extends Equatable {
@@ -27,11 +29,31 @@ class DownloadFinished extends MessageViewState {
   List<Object> get props => [path];
 }
 
-class MessagesViewError extends MessageViewState {
+class MessagesViewError extends MessageViewState with AlwaysNonEqualObject {
   final String errorMsg;
+  final Map<String, String> arg;
 
-  const MessagesViewError(this.errorMsg);
+  MessagesViewError(this.errorMsg, [this.arg]);
 
   @override
   List<Object> get props => [errorMsg];
+}
+
+class MessageIsEncrypt extends MessageViewState {
+  final EncryptType encryptType;
+
+  const MessageIsEncrypt(this.encryptType);
+
+  @override
+  List<Object> get props => [encryptType];
+}
+
+class DecryptComplete extends MessageViewState {
+  final String text;
+  final bool verified;
+
+  const DecryptComplete(this.text, this.verified);
+
+  @override
+  List<Object> get props => [text];
 }

@@ -369,10 +369,9 @@ class ContactsRepositoryImpl implements ContactsRepository {
     _currentlySyncingStorageCtrl.add(_syncQueue);
 
     if (_syncQueue.isEmpty) return;
-
+    final id = _syncQueue[0];
     final storages = await _db.getStorages(_userLocalId);
-    final storageToSync =
-        storages.firstWhere((i) => i.sqliteId == _syncQueue[0]);
+    final storageToSync = storages.firstWhere((i) => i.sqliteId == id);
 
     final uuidsToFetch = _takeChunkForAdd(storageToSync.contactsInfo);
     final uuidsToUpdate = _takeChunkForUpdate(storageToSync.contactsInfo);

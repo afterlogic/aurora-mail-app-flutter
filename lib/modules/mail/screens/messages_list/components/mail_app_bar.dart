@@ -10,10 +10,8 @@ import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class MailAppBar extends StatefulWidget implements PreferredSizeWidget {
-
   const MailAppBar();
 
   @override
@@ -32,10 +30,10 @@ class _MailAppBarState extends State<MailAppBar> {
     _debounce = Timer(Duration(milliseconds: val == null ? 0 : 500), () {
       final mailBloc = context.bloc<MailBloc>().state as FoldersLoaded;
       context.bloc<MessagesListBloc>().add(SubscribeToMessages(
-        mailBloc.selectedFolder,
-        mailBloc.isStarredFilterEnabled,
-        val,
-      ));
+            mailBloc.selectedFolder,
+            mailBloc.isStarredFilterEnabled,
+            val,
+          ));
     });
   }
 
@@ -63,14 +61,14 @@ class _MailAppBarState extends State<MailAppBar> {
       child: isSearchMode ? _buildSearchAppBar() : _buildDefaultAppBar(),
     );
   }
-  
+
   Widget _buildDefaultAppBar() {
     return AMAppBar(
       key: Key("default_mail_app_bar"),
       title: BlocBuilder<MailBloc, MailState>(
         bloc: BlocProvider.of<MailBloc>(context),
         condition: (_, state) =>
-        state is FoldersLoaded ||
+            state is FoldersLoaded ||
             state is FoldersLoading ||
             state is FoldersEmpty,
         builder: (_, state) {
@@ -100,14 +98,19 @@ class _MailAppBarState extends State<MailAppBar> {
       ],
     );
   }
-  
+
   Widget _buildSearchAppBar() {
+    final theme = Theme.of(context).appBarTheme;
     return AMAppBar(
       key: Key("search_mail_app_bar"),
-      leading: Icon(Icons.search, color: Theme.of(context).disabledColor),
+      leading: Icon(Icons.search),
       title: TextField(
+        style: theme.textTheme.body1,
         autofocus: true,
-        decoration: InputDecoration.collapsed(hintText: i18n(context, "messages_list_app_bar_search")),
+        decoration: InputDecoration.collapsed(
+          hintText: i18n(context, "messages_list_app_bar_search"),
+          hintStyle: theme.textTheme.display1,
+        ),
         onChanged: _getMessages,
       ),
       actions: <Widget>[

@@ -1,0 +1,21 @@
+#variables
+appName: "PrivateMail"
+_appId: "com.PrivateRouter.PrivateMailApplication"
+_iosAppId: "com.PrivateRouter.PrivateMailApplication"
+_iosDeveloperId: "K6298N65JA"
+
+background_color: "#34113C"
+splashGradientTop: "#420324"
+splashGradientBottom: "#252352"
+
+privacyPolicy: "https://privatemail.com/privacy.php"
+termsOfService: "https://privatemail.com/terms.php"
+autodiscover_url: "https://torguard.tv/pm/autodiscover.php"
+
+supportLanguage: "ru,en"
+hasFloatingPlaceholder: true
+
+multiUserEnable: false
+multiAccountEnable: true
+useMainLogo: true
+cryptoEnable: true

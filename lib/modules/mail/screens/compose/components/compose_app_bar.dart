@@ -1,7 +1,5 @@
-import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 enum ComposeAppBarAction {
   saveToDrafts,
@@ -9,12 +7,20 @@ enum ComposeAppBarAction {
   cancel,
 }
 
-class ComposeAppBar extends StatelessWidget implements PreferredSizeWidget {
-  @override
-  final Size preferredSize = const Size.fromHeight(kToolbarHeight);
+class ComposeAppBar extends StatefulWidget implements PreferredSizeWidget {
   final Function(ComposeAppBarAction action) onAppBarActionSelected;
 
-  const ComposeAppBar(this.onAppBarActionSelected, {Key key}) : super(key: key);
+  const ComposeAppBar(this.onAppBarActionSelected);
+
+  @override
+  _ComposeAppBarState createState() => _ComposeAppBarState();
+
+  @override
+  final Size preferredSize = const Size.fromHeight(kToolbarHeight);
+}
+
+class _ComposeAppBarState extends State<ComposeAppBar> {
+  String selectedEmail;
 
   @override
   Widget build(BuildContext context) {
@@ -22,30 +28,19 @@ class ComposeAppBar extends StatelessWidget implements PreferredSizeWidget {
       centerTitle: false,
       leading: IconButton(
         icon: Icon(Icons.close),
-        onPressed: () => onAppBarActionSelected(ComposeAppBarAction.cancel),
-      ),
-      title: PopupMenuButton(
-        enabled: false,
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Flexible(
-              child: Text(BlocProvider.of<AuthBloc>(context).currentAccount.email, style: TextStyle(fontSize: 14.0),
-            )),
-//            SizedBox(width: 4.0),
-//            Icon(Icons.keyboard_arrow_down)
-          ],
-        ),
-        itemBuilder: (_) => [],
+        onPressed: () =>
+            widget.onAppBarActionSelected(ComposeAppBarAction.cancel),
       ),
       actions: <Widget>[
         IconButton(
           icon: Icon(Icons.save),
-          onPressed: () => onAppBarActionSelected(ComposeAppBarAction.saveToDrafts),
+          onPressed: () =>
+              widget.onAppBarActionSelected(ComposeAppBarAction.saveToDrafts),
         ),
         IconButton(
           icon: Icon(Icons.send),
-          onPressed: () => onAppBarActionSelected(ComposeAppBarAction.send),
+          onPressed: () =>
+              widget.onAppBarActionSelected(ComposeAppBarAction.send),
         ),
       ],
     );

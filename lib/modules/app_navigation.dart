@@ -1,4 +1,3 @@
-import 'package:aurora_mail/modules/auth/screens/two_factor_auth/two_factor_auth_widget.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/screens/contact_edit/contact_edit_android.dart';
 import 'package:aurora_mail/modules/contacts/screens/contact_edit/contact_edit_route.dart';
@@ -20,6 +19,12 @@ import 'package:aurora_mail/modules/settings/screens/common_settings/common_sett
 import 'package:aurora_mail/modules/settings/screens/common_settings/common_settings_route.dart';
 import 'package:aurora_mail/modules/settings/screens/manage_users/manage_users_android.dart';
 import 'package:aurora_mail/modules/settings/screens/manage_users/manage_users_route.dart';
+import 'package:aurora_mail/modules/settings/screens/pgp_settings/pgp_settings.dart';
+import 'package:aurora_mail/modules/settings/screens/pgp_settings/pgp_settings_route.dart';
+import 'package:aurora_mail/modules/settings/screens/pgp_settings/screens/pgp_key.dart';
+import 'package:aurora_mail/modules/settings/screens/pgp_settings/screens/pgp_key_route.dart';
+import 'package:aurora_mail/modules/settings/screens/pgp_settings/screens/pgp_keys.dart';
+import 'package:aurora_mail/modules/settings/screens/pgp_settings/screens/pgp_keys_route.dart';
 import 'package:aurora_mail/modules/settings/screens/settings_main/settings_main_android.dart';
 import 'package:aurora_mail/modules/settings/screens/settings_main/settings_main_route.dart';
 import 'package:aurora_mail/modules/settings/screens/sync_settings/sync_settings_android.dart';
@@ -33,6 +38,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'auth/screens/login/login_android.dart';
 import 'auth/screens/login/login_route.dart';
 import 'auth/screens/two_factor_auth/two_factor_auth_route.dart';
+import 'auth/screens/two_factor_auth/two_factor_auth_widget.dart';
 import 'mail/blocs/mail_bloc/mail_bloc.dart';
 import 'mail/screens/messages_list/messages_list_android.dart';
 import 'mail/screens/messages_list/messages_list_route.dart';
@@ -176,6 +182,35 @@ class AppNavigation {
             builder: (_) => SettingsMainAndroid());
         break;
 
+      case PgpSettingsRoute.name:
+        return CupertinoPageRoute(
+            settings: RouteSettings(
+              name: settings.name,
+            ),
+            builder: (_) => PgpSettings());
+        break;
+      case PgpKeyRoute.name:
+        final arg = settings.arguments as PgpKeyRouteArg;
+        return CupertinoPageRoute(
+            settings: RouteSettings(
+              name: settings.name,
+            ),
+            builder: (_) => PgpKeyScreen(
+                  arg.pgpKey,
+                  arg.bloc,
+                ));
+        break;
+      case PgpKeysRoute.name:
+        final arg = settings.arguments as PgpKeysRouteArg;
+        return CupertinoPageRoute(
+            settings: RouteSettings(
+              name: settings.name,
+            ),
+            builder: (_) => PgpKeysScreen(
+                  arg.pgpKeys,
+                  arg.bloc,
+                ));
+        break;
       case CommonSettingsRoute.name:
         return CupertinoPageRoute(
             settings: RouteSettings(name: settings.name),

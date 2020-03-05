@@ -1,4 +1,6 @@
+import 'package:aurora_mail/database/account_identity/accounts_identity_dao.dart';
 import 'package:aurora_mail/database/accounts/accounts_dao.dart';
+import 'package:aurora_mail/database/aliases/aliases_dao.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/folders/folders_dao.dart';
 import 'package:aurora_mail/database/mail/mail_dao.dart';
@@ -15,6 +17,8 @@ class AuthMethods {
   final _authApi = new AuthApi();
   final _authLocal = new AuthLocalStorage();
   final _usersDao = new UsersDao(DBInstances.appDB);
+  final _accountIdentityDao = new AccountIdentityDao(DBInstances.appDB);
+  final _aliasesDao = new AliasesDao(DBInstances.appDB);
   final _accountsDao = new AccountsDao(DBInstances.appDB);
 
   Future<InitializerResponse> getUserAndAccountsFromDB() async {
@@ -91,6 +95,7 @@ class AuthMethods {
     final accounts = await _authApi.getAccounts(user);
     // ignore unique constraint errors from the db
     try {
+      await _accountsDao.deleteAccountsOfUser(user.localId);
       await _accountsDao.addAccounts(accounts);
       final accountsWithLocalIds = await _accountsDao.getAccounts(user.localId);
       await _authLocal.setSelectedAccountId(accountsWithLocalIds[0].localId);
@@ -138,6 +143,83 @@ class AuthMethods {
 
   Future selectAccount(Account account) {
     return _authLocal.setSelectedAccountId(account.localId);
+  }
+
+  Future<void> updateAliases(User user, Account account) async {
+    try {
+      final identities = await _authApi.getAliases(user);
+      await _aliasesDao.deleteByUser(user.serverId);
+      await _aliasesDao.set(identities);
+    } catch (e, s) {
+      print(e);
+    }
+  }
+
+  Future<AccountIdentity> updateIdentity(User user, Account account) async {
+    try {
+      final identities = await _authApi.getIdentity(user);
+      await _accountIdentityDao.deleteByUser(user.serverId);
+      var currentIdentity =
+          identities.firstWhere((item) => item.isDefault, orElse: () => null);
+      final accounts = await getAccounts(user);
+      final accountsIdentity = accounts.map((item) {
+        final identity = AccountIdentity(
+          email: item.email,
+          useSignature: item.useSignature,
+          idUser: item.idUser,
+          isDefault: true,
+          idAccount: item.accountId,
+          friendlyName: item.friendlyName,
+          signature: item.signature,
+          entityId: item.entityId,
+        );
+        if (identity.isDefault && item.entityId == account.entityId) {
+          currentIdentity = identity;
+        }
+        return identity;
+      });
+      identities.addAll(accountsIdentity);
+      await _accountIdentityDao.set(identities);
+      return currentIdentity;
+    } catch (e, s) {
+      print(s);
+      print(e);
+      final identities = await getAccountIdentities(user, account);
+      return identities.firstWhere(
+            (item) => item.isDefault,
+            orElse: () => null,
+          ) ??
+          AccountIdentity(
+            email: account.email,
+            useSignature: account.useSignature,
+            idUser: account.idUser,
+            isDefault: true,
+            idAccount: account.accountId,
+            friendlyName: account.friendlyName,
+            signature: account.signature,
+            entityId: account.serverId,
+          );
+    }
+  }
+
+  Future<List<AccountIdentity>> getAccountIdentities(
+    User currentUser,
+    Account currentAccount,
+  ) {
+    return _accountIdentityDao.getByUserAndAccount(
+      currentUser.serverId,
+      currentAccount?.entityId,
+    );
+  }
+
+  Future<List<Aliases>> getAccountAliases(
+    User currentUser,
+    Account currentAccount,
+  ) {
+    return _aliasesDao.getByUserAndAccount(
+      currentUser.serverId,
+      currentAccount?.entityId,
+    );
   }
 }
 

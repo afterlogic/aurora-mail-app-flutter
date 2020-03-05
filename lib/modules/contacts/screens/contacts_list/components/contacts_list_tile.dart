@@ -104,7 +104,7 @@ class ContactsListTile extends StatelessWidget {
             ),
             child: Center(
               child: Text(
-                title[0].toUpperCase() ?? "C",
+                title?.isNotEmpty == true ? title[0].toUpperCase() : "C",
                 style: TextStyle(
                   fontSize: 18.0,
                   fontWeight: FontWeight.w500,

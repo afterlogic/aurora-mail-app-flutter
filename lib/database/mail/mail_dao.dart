@@ -41,6 +41,7 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
               | m.ccInJson.like("%$searchTerm%")
               | m.bccInJson.like("%$searchTerm%")
               | m.rawBody.like("%$searchTerm%")
+              | m.attachmentsForSearch.like("%$searchTerm%")
               : Constant(true))
           ..where((m) =>
               starredOnly ? m.flagsInJson.like("%\\flagged%") : Constant(true))

@@ -12,7 +12,7 @@ abstract class AuthState extends Equatable {
 
 class InitialAuthState extends AuthState {}
 
-class UserSelected extends AuthState implements AlwaysNonEqualObject {}
+class UserSelected extends AuthState with AlwaysNonEqualObject {}
 
 class InitializedUserAndAccounts extends AuthState {
   final List<User> users;
@@ -20,6 +20,7 @@ class InitializedUserAndAccounts extends AuthState {
   final List<Account> accounts;
   final Account account;
   final bool needsLogin;
+  final AccountIdentity identity;
 
   const InitializedUserAndAccounts({
     @required this.user,
@@ -27,6 +28,7 @@ class InitializedUserAndAccounts extends AuthState {
     @required this.needsLogin,
     @required this.accounts,
     @required this.account,
+    this.identity,
   }) : assert(needsLogin != null);
 
   @override

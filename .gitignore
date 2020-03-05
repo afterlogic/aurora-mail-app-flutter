@@ -156,3 +156,5 @@ lib/build_property.dart
 **/GoogleService-Info.plist
 **/google-services.json
 build_apk.sh
+lib/inject/modules/crypto_module.dart
+android/app/src/main/res/drawable/main_logo.png

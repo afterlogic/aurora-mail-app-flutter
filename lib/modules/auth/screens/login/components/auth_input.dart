@@ -1,5 +1,4 @@
-import 'dart:io';
-
+import 'package:aurora_mail/build_property.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -34,26 +33,32 @@ class _AuthInputState extends State<AuthInput> {
   Widget build(BuildContext context) {
     return TextFormField(
       enabled: widget.isEnabled,
-      cursorColor: Theme.of(context).accentColor,
       controller: widget.controller,
       keyboardType: widget.keyboardType,
       validator: widget.validator,
       obscureText: widget.isPassword && _obscureText,
       decoration: InputDecoration(
-        hasFloatingPlaceholder: false,
-        enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Theme.of(context).disabledColor.withOpacity(0.1))),
-        focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Theme.of(context).accentColor)),
-        hintText: widget.label,
-        suffixIcon: widget.isPassword ? SizedBox(
-          height: 50.0,
-          child: IconButton(
-            icon: Icon(
-              _obscureText ? Icons.visibility : Icons.visibility_off,
-              color: widget.visibilityToggleColor ?? Theme.of(context).iconTheme.color,
-            ),
-            onPressed: () => setState(() => _obscureText = !_obscureText),
-          ),
-        ) : null,
+        hasFloatingPlaceholder: BuildProperty.hasFloatingPlaceholder,
+        enabledBorder: UnderlineInputBorder(
+            borderSide: BorderSide(
+                color: Theme.of(context).disabledColor.withOpacity(0.1))),
+        focusedBorder: UnderlineInputBorder(
+            borderSide: BorderSide(color: Theme.of(context).accentColor)),
+        hintText: BuildProperty.hasFloatingPlaceholder ? null : widget.label,
+        labelText: BuildProperty.hasFloatingPlaceholder ? widget.label : null,
+        suffixIcon: widget.isPassword
+            ? SizedBox(
+                height: 50.0,
+                child: IconButton(
+                  icon: Icon(
+                    _obscureText ? Icons.visibility : Icons.visibility_off,
+                    color: widget.visibilityToggleColor ??
+                        Theme.of(context).iconTheme.color,
+                  ),
+                  onPressed: () => setState(() => _obscureText = !_obscureText),
+                ),
+              )
+            : null,
       ),
     );
   }

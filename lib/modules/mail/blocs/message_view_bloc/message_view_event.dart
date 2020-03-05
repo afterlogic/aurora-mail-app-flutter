@@ -1,4 +1,6 @@
 import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
+import 'package:aurora_mail/utils/always_non_equal_object.dart';
+import 'package:crypto_worker/crypto_worker.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class MessageViewEvent extends Equatable {
@@ -30,4 +32,25 @@ class EndDownload extends MessageViewEvent {
 
   @override
   List<Object> get props => [path];
+}
+
+class CheckEncrypt extends MessageViewEvent with AlwaysNonEqualObject {
+  final String message;
+
+  CheckEncrypt(this.message);
+
+  @override
+  List<Object> get props => [message];
+}
+
+class DecryptBody extends MessageViewEvent with AlwaysNonEqualObject {
+  final EncryptType type;
+  final String pass;
+  final String sender;
+  final String body;
+
+  DecryptBody(this.type, this.pass, this.sender, this.body);
+
+  @override
+  List<Object> get props => [sender, body];
 }

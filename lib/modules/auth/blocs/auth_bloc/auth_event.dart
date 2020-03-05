@@ -57,7 +57,7 @@ class DeleteUser extends AuthEvent {
 }
 
 class InvalidateCurrentUserToken extends AuthEvent
-    implements AlwaysNonEqualObject {}
+    with AlwaysNonEqualObject {}
 
 class ChangeAccount extends AuthEvent {
   final Account account;
