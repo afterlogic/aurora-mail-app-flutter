@@ -95,7 +95,7 @@ class MailFolder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double padding = 40;
-    if (mailFolder.nameSpace.startsWith(mailFolder.fullName)) {
+    if (mailFolder.nameSpace != null && mailFolder.nameSpace.startsWith(mailFolder.fullName)) {
       padding = 0;
     }
     if (mailFolder.isSubscribed == true) {

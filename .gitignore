@@ -158,4 +158,5 @@ lib/build_property.dart
 build_apk.sh
 lib/inject/modules/crypto_module.dart
 android/app/src/main/res/drawable/main_logo.png
-ios/export_build_variable.sh
+
+core/aurora_ui_kit
