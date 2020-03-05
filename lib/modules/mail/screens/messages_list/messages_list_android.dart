@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:aurora_mail/background/background_helper.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
@@ -24,6 +23,10 @@ import 'components/mail_app_bar.dart';
 import 'components/message_item.dart';
 
 class MessagesListAndroid extends StatefulWidget {
+  final String initSearch;
+
+  const MessagesListAndroid({this.initSearch});
+
   @override
   _MessagesListAndroidState createState() => _MessagesListAndroidState();
 }
@@ -78,8 +81,6 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
     showSnack(context: ctx, scaffoldState: Scaffold.of(ctx), msg: err);
   }
 
-
-
   void _onMessageSelected(List<Message> allMessages, Message item) {
     final i = allMessages.indexOf(item);
 
@@ -123,7 +124,6 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
         _messagesListBloc.add(SubscribeToMessages(
           state.selectedFolder,
           state.isStarredFilterEnabled,
-          "",
         ));
         break;
       case PostFolderLoadedAction.stopMessagesRefresh:
@@ -156,7 +156,7 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
           setState(() {});
         },
         child: Scaffold(
-          appBar: MailAppBar(),
+          appBar: MailAppBar(initSearch:widget.initSearch),
           drawer: MainDrawer(),
           body: MultiBlocListener(
             listeners: [

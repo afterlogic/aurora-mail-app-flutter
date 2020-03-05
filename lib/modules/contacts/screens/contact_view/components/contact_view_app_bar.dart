@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 enum ContactViewAppBarAction {
   attach,
+  find_in_email,
   searchMessages,
   edit,
   share,
@@ -18,18 +19,21 @@ class ContactViewAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool allowShare;
   final bool allowUnshare;
   final bool allowDelete;
+  final bool hasEmail;
   final Function(ContactViewAppBarAction) onActionSelected;
 
   @override
   final Size preferredSize = const Size.fromHeight(kToolbarHeight);
 
-  const ContactViewAppBar({Key key,
+  const ContactViewAppBar({
+    Key key,
     @required this.name,
     @required this.onActionSelected,
     @required this.allowEdit,
     @required this.allowShare,
     @required this.allowUnshare,
     @required this.allowDelete,
+    this.hasEmail,
   }) : super(key: key);
 
   @override
@@ -37,15 +41,18 @@ class ContactViewAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AMAppBar(
       title: Text(
         name,
-        style: TextStyle(
-          fontWeight: FontWeight.w700
-        ),
+        style: TextStyle(fontWeight: FontWeight.w700),
       ),
       actions: <Widget>[
         PopupMenuButton(
           onSelected: onActionSelected,
-          itemBuilder: (_) =>
-          [
+          itemBuilder: (_) => [
+            if (hasEmail)
+              _buildMenuItem(
+                value: ContactViewAppBarAction.find_in_email,
+                text: i18n(context, "find_in_email"),
+                icon: Icons.search,
+              ),
             if (allowShare)
               _buildMenuItem(
                 icon: WebMailIcons.shared_with_all,

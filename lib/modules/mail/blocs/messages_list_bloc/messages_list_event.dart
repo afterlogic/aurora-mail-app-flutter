@@ -1,4 +1,5 @@
 import 'package:aurora_mail/models/folder.dart';
+import 'package:aurora_mail/modules/mail/repository/search_util.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -13,8 +14,10 @@ class SubscribeToMessages extends MessagesListEvent {
   final Folder currentFolder;
   final bool isStarred;
   final String searchTerm;
+  final SearchPattern pattern;
 
-  const SubscribeToMessages(this.currentFolder, this.isStarred, this.searchTerm);
+  const SubscribeToMessages(this.currentFolder, this.isStarred,
+      [this.searchTerm, this.pattern]);
 
   @override
   List<Object> get props => [currentFolder, isStarred, searchTerm];

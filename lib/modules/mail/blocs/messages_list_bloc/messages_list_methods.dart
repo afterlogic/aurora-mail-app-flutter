@@ -2,6 +2,7 @@ import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/mail/mail_dao.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/mail/repository/mail_api.dart';
+import 'package:aurora_mail/modules/mail/repository/search_util.dart';
 import 'package:flutter/foundation.dart';
 
 class MessagesListMethods {
@@ -16,6 +17,7 @@ class MessagesListMethods {
     Folder folder,
     bool isStarred,
     String searchTerm,
+    SearchPattern searchPattern,
     User user,
     Account account,
   ) {
@@ -23,6 +25,7 @@ class MessagesListMethods {
       folder.fullNameRaw,
       user.localId,
       searchTerm,
+      searchPattern,
       account.entityId,
       isStarred,
     );

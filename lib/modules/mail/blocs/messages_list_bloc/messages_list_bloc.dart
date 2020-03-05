@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/modules/mail/repository/search_util.dart';
 import 'package:aurora_mail/utils/api_utils.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
@@ -14,6 +15,7 @@ class MessagesListBloc extends Bloc<MessagesListEvent, MessagesListState> {
   MessagesListMethods _methods;
 
   String searchTerm = "";
+  SearchPattern searchPattern = SearchPattern.Default;
 
   MessagesListBloc({@required this.user, @required this.account}) {
     _methods = new MessagesListMethods(user: user, account: account);
@@ -34,17 +36,18 @@ class MessagesListBloc extends Bloc<MessagesListEvent, MessagesListState> {
   Stream<MessagesListState> _subscribeToMessages(
       SubscribeToMessages event) async* {
     searchTerm = event.searchTerm ?? "";
-
+    searchPattern = event.pattern ?? SearchPattern.Default;
     try {
       final stream = _methods.subscribeToMessages(
         event.currentFolder,
         event.isStarred,
         searchTerm,
+        searchPattern,
         user,
         account,
       );
       yield SubscribedToMessages(stream, event.isStarred, searchTerm);
-    } catch (e,s) {
+    } catch (e, s) {
       print(e);
       print(s);
       yield SubscribedToMessages(Stream.empty(), event.isStarred, searchTerm);

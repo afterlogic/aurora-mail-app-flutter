@@ -87,9 +87,10 @@ class AppNavigation {
       // ================= MAIL =================
 
       case MessagesListRoute.name:
+        final args = settings.arguments as MessagesListRouteArg;
         return FadeRoute(
             settings: RouteSettings(name: settings.name),
-            builder: (_) => MessagesListAndroid());
+            builder: (_) => MessagesListAndroid(initSearch: args?.search));
         break;
 
       case MessageViewRoute.name:

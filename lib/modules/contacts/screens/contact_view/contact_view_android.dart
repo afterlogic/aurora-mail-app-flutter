@@ -8,7 +8,9 @@ import 'package:aurora_mail/modules/contacts/screens/contact_view/components/con
 import 'package:aurora_mail/modules/contacts/utils/contact_info.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/models/compose_actions.dart';
+import 'package:aurora_mail/modules/mail/repository/search_util.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/compose_route.dart';
+import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
 import 'package:aurora_mail/utils/date_formatting.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
@@ -39,6 +41,15 @@ class _ContactViewAndroidState extends State<ContactViewAndroid> {
   Future<void> _onMainAppBarActionSelected(ContactViewAppBarAction item) async {
     final bloc = BlocProvider.of<ContactsBloc>(context);
     switch (item) {
+      case ContactViewAppBarAction.find_in_email:
+        Navigator.pushReplacementNamed(
+          context,
+          MessagesListRoute.name,
+          arguments: MessagesListRouteArg(
+            search: searchUtil.searchByEmail(_contactInfo.viewEmail),
+          ),
+        );
+        break;
       case ContactViewAppBarAction.attach:
         Navigator.pushNamed(
           context,
@@ -340,6 +351,7 @@ class _ContactViewAndroidState extends State<ContactViewAndroid> {
         allowDelete: c.storage == StorageNames.personal ||
             c.storage == StorageNames.shared,
         onActionSelected: _onMainAppBarActionSelected,
+        hasEmail: _contactInfo.viewEmail?.isNotEmpty == true,
       ),
       body: ListView(
         children: <Widget>[

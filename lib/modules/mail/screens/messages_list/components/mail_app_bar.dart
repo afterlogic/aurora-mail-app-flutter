@@ -1,9 +1,7 @@
-import 'dart:async';
-
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
-import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/bloc.dart';
+import 'package:aurora_mail/modules/mail/screens/messages_list/components/search_bar.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/user_selection_popup.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
@@ -12,7 +10,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MailAppBar extends StatefulWidget implements PreferredSizeWidget {
-  const MailAppBar();
+  final String initSearch;
+
+  const MailAppBar({this.initSearch});
 
   @override
   _MailAppBarState createState() => _MailAppBarState();
@@ -23,18 +23,15 @@ class MailAppBar extends StatefulWidget implements PreferredSizeWidget {
 
 class _MailAppBarState extends State<MailAppBar> {
   bool isSearchMode = false;
-  Timer _debounce;
+  String initSearch;
 
-  void _getMessages(String val) {
-    if (_debounce?.isActive ?? false) _debounce.cancel();
-    _debounce = Timer(Duration(milliseconds: val == null ? 0 : 500), () {
-      final mailBloc = context.bloc<MailBloc>().state as FoldersLoaded;
-      context.bloc<MessagesListBloc>().add(SubscribeToMessages(
-            mailBloc.selectedFolder,
-            mailBloc.isStarredFilterEnabled,
-            val,
-          ));
-    });
+  @override
+  void initState() {
+    initSearch = widget.initSearch;
+    if (initSearch != null) {
+      isSearchMode = true;
+    }
+    super.initState();
   }
 
   String _getTitle(BuildContext context, Folder folder) {
@@ -58,8 +55,15 @@ class _MailAppBarState extends State<MailAppBar> {
   Widget build(BuildContext context) {
     return AnimatedSwitcher(
       duration: Duration(milliseconds: 250),
-      child: isSearchMode ? _buildSearchAppBar() : _buildDefaultAppBar(),
+      child: isSearchMode
+          ? SearchBar(initSearch, changeMode)
+          : _buildDefaultAppBar(),
     );
+  }
+
+  changeMode() {
+    initSearch = null;
+    setState(() => isSearchMode = !isSearchMode);
   }
 
   Widget _buildDefaultAppBar() {
@@ -88,39 +92,13 @@ class _MailAppBarState extends State<MailAppBar> {
       actions: <Widget>[
         IconButton(
           icon: Icon(Icons.search),
-          onPressed: () => setState(() => isSearchMode = true),
+          onPressed: changeMode,
         ),
         if (BuildProperty.multiUserEnable)
           BlocBuilder<SettingsBloc, SettingsState>(
             builder: (_, state) =>
                 UserSelectionPopup((state as SettingsLoaded).users),
           ),
-      ],
-    );
-  }
-
-  Widget _buildSearchAppBar() {
-    final theme = Theme.of(context).appBarTheme;
-    return AMAppBar(
-      key: Key("search_mail_app_bar"),
-      leading: Icon(Icons.search),
-      title: TextField(
-        style: theme.textTheme.body1,
-        autofocus: true,
-        decoration: InputDecoration.collapsed(
-          hintText: i18n(context, "messages_list_app_bar_search"),
-          hintStyle: theme.textTheme.display1,
-        ),
-        onChanged: _getMessages,
-      ),
-      actions: <Widget>[
-        IconButton(
-          icon: Icon(Icons.close),
-          onPressed: () {
-            setState(() => isSearchMode = false);
-            _getMessages(null);
-          },
-        ),
       ],
     );
   }
