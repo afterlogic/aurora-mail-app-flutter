@@ -78,7 +78,7 @@ dependencies:
   keyboard_actions: ^3.2.0
 
   theme:
-    path: build_res/private_mail/theme
+    path: build_res/afterlogic/theme
 
   crypto_model:
     path: module/crypto/crypto_model
@@ -111,9 +111,9 @@ dev_dependencies:
 flutter_icons:
   ios: true
   android: true
-  image_path: build_res/private_mail/icon.png
-  adaptive_icon_background: "#34113C"
-  adaptive_icon_foreground: build_res/private_mail/icon_foreground.png
+  image_path: build_res/afterlogic/icon.png
+  adaptive_icon_background: "#FFFFFF"
+  adaptive_icon_foreground: build_res/afterlogic/icon_foreground.png
 
 flutter:
   uses-material-design: true
@@ -122,9 +122,9 @@ flutter:
   assets:
     - assets/images/
     - assets/flutter_i18n/
-    - build_res/private_mail/icon.png
-    - build_res/private_mail/image/main_logo.png
-    - build_res/private_mail/image/
+    - build_res/afterlogic/icon.png
+    - build_res/afterlogic/image/main_logo.png
+    - build_res/afterlogic/image/
 
   fonts:
     - family: WebMailIcons

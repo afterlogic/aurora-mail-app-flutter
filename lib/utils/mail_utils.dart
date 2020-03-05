@@ -273,6 +273,7 @@ class MailUtils {
       html, body {
         margin: 0;
         padding: 0;
+        height: 100%;
         background: ${_getWebColor(theme.scaffoldBackgroundColor)};
       }
       .attachments, .email-head, .email-content {
@@ -304,7 +305,7 @@ class MailUtils {
       .email-content {
         background-color: white;
         word-break: break-all;
-        overflow-x: scroll;
+        flex: 1;
       }
       .attachments {
         margin-top: 20px;
@@ -331,23 +332,26 @@ class MailUtils {
     </style>
   </head>
   <body>
-    <div class='email-head'>
-      <div class="flex row" style="width: calc(100vw - 12px * 2)">
-        <div class="flex" style="flex: 1">
-          <div style="font-size: 18px">${message.fromToDisplay}</div>
-          <div class="disabled-text">$to</div>
-          <div class="disabled-text">$date</div>
+    <div class='flex' style='height: 100%; overflow: scroll'>
+      <div class='email-head'>
+        <div class="flex row" style="width: calc(100vw - 12px * 2)">
+          <div class="flex" style="flex: 1">
+            <div style="font-size: 18px">${message.fromToDisplay}</div>
+            <div class="disabled-text">$to</div>
+            <div class="disabled-text">$date</div>
+          </div>
+          <div class="flex" style="flex: 0">
+            <!-- <a href='https://dummy-crutch.com/#${MessageWebViewActions.SHOW_INFO}' class='icon-btn' style="padding: 0 12px 12px;">${_getInfoIcon(accentColor)}</a> -->
+          </div>
         </div>
-        <div class="flex" style="flex: 0">
-          <!-- <a href='https://dummy-crutch.com/#${MessageWebViewActions.SHOW_INFO}' class='icon-btn' style="padding: 0 12px 12px;">${_getInfoIcon(accentColor)}</a> -->
-        </div>
+        <h1 style="font-size: 24px; font-weight: 500; margin-top: 24px">$subject</h1>
+        <div style="height: 1px; background-color: black; opacity: 0.05; margin: 24px 0 0"></div>
       </div>
-      <h1 style="font-size: 24px; font-weight: 500; margin-top: 24px">$subject</h1>
-      <div style="height: 1px; background-color: black; opacity: 0.05; margin: 24px 0 0"></div>
-    </div>
-    <div class='email-content'>$body</div>
-    <div class='attachments'>
-      ${attachments.map((a) => _getAttachment(context, a)).toList().join()}
+      <div class='email-content'>$body</div>
+      ${attachments.isNotEmpty ? '<div style="height: 1px; background-color: black; opacity: 0.05; margin: 24px 0 0"></div>' : ""}
+      <div class='attachments'>
+        ${attachments.map((a) => _getAttachment(context, a)).toList().join()}
+      </div>
     </div>
   </body>
 </html>
