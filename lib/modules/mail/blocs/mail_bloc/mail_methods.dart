@@ -75,7 +75,7 @@ class MailMethods {
     ]);
 
     // get result
-    final rawFolders = futureWaitResult[0] as List<Map<String, dynamic>>;
+    final rawFolders = futureWaitResult[0] as Map<String, dynamic>;
     final oldLocalFolders = futureWaitResult[1] as List<LocalFolder>;
 
     // convert new folders to db-like format (the format of old folders) for calculating difference

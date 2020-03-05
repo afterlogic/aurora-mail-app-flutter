@@ -2217,6 +2217,7 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
   final bool extended;
   final bool alwaysRefresh;
   final String messagesInfoInJson;
+  final String namespace;
   LocalFolder(
       {@required this.fullName,
       @required this.accountLocalId,
@@ -2240,7 +2241,8 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
       @required this.folderExists,
       this.extended,
       @required this.alwaysRefresh,
-      this.messagesInfoInJson});
+      this.messagesInfoInJson,
+      @required this.namespace});
   factory LocalFolder.fromData(Map<String, dynamic> data, GeneratedDatabase db,
       {String prefix}) {
     final effectivePrefix = prefix ?? '';
@@ -2289,6 +2291,8 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
           .mapFromDatabaseResponse(data['${effectivePrefix}always_refresh']),
       messagesInfoInJson: stringType.mapFromDatabaseResponse(
           data['${effectivePrefix}messages_info_in_json']),
+      namespace: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}namespace']),
     );
   }
   factory LocalFolder.fromJson(Map<String, dynamic> json,
@@ -2319,6 +2323,7 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
       alwaysRefresh: serializer.fromJson<bool>(json['alwaysRefresh']),
       messagesInfoInJson:
           serializer.fromJson<String>(json['messagesInfoInJson']),
+      namespace: serializer.fromJson<String>(json['namespace']),
     );
   }
   @override
@@ -2348,6 +2353,7 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
       'extended': serializer.toJson<bool>(extended),
       'alwaysRefresh': serializer.toJson<bool>(alwaysRefresh),
       'messagesInfoInJson': serializer.toJson<String>(messagesInfoInJson),
+      'namespace': serializer.toJson<String>(namespace),
     };
   }
 
@@ -2415,6 +2421,9 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
       messagesInfoInJson: messagesInfoInJson == null && nullToAbsent
           ? const Value.absent()
           : Value(messagesInfoInJson),
+      namespace: namespace == null && nullToAbsent
+          ? const Value.absent()
+          : Value(namespace),
     );
   }
 
@@ -2441,7 +2450,8 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
           bool folderExists,
           bool extended,
           bool alwaysRefresh,
-          String messagesInfoInJson}) =>
+          String messagesInfoInJson,
+          String namespace}) =>
       LocalFolder(
         fullName: fullName ?? this.fullName,
         accountLocalId: accountLocalId ?? this.accountLocalId,
@@ -2466,6 +2476,7 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
         extended: extended ?? this.extended,
         alwaysRefresh: alwaysRefresh ?? this.alwaysRefresh,
         messagesInfoInJson: messagesInfoInJson ?? this.messagesInfoInJson,
+        namespace: namespace ?? this.namespace,
       );
   @override
   String toString() {
@@ -2492,7 +2503,8 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
           ..write('folderExists: $folderExists, ')
           ..write('extended: $extended, ')
           ..write('alwaysRefresh: $alwaysRefresh, ')
-          ..write('messagesInfoInJson: $messagesInfoInJson')
+          ..write('messagesInfoInJson: $messagesInfoInJson, ')
+          ..write('namespace: $namespace')
           ..write(')'))
         .toString();
   }
@@ -2540,7 +2552,7 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
                                                                               .hashCode,
                                                                           $mrjc(
                                                                               isSelectable.hashCode,
-                                                                              $mrjc(folderExists.hashCode, $mrjc(extended.hashCode, $mrjc(alwaysRefresh.hashCode, messagesInfoInJson.hashCode)))))))))))))))))))))));
+                                                                              $mrjc(folderExists.hashCode, $mrjc(extended.hashCode, $mrjc(alwaysRefresh.hashCode, $mrjc(messagesInfoInJson.hashCode, namespace.hashCode))))))))))))))))))))))));
   @override
   bool operator ==(dynamic other) =>
       identical(this, other) ||
@@ -2567,7 +2579,8 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
           other.folderExists == this.folderExists &&
           other.extended == this.extended &&
           other.alwaysRefresh == this.alwaysRefresh &&
-          other.messagesInfoInJson == this.messagesInfoInJson);
+          other.messagesInfoInJson == this.messagesInfoInJson &&
+          other.namespace == this.namespace);
 }
 
 class FoldersCompanion extends UpdateCompanion<LocalFolder> {
@@ -2594,6 +2607,7 @@ class FoldersCompanion extends UpdateCompanion<LocalFolder> {
   final Value<bool> extended;
   final Value<bool> alwaysRefresh;
   final Value<String> messagesInfoInJson;
+  final Value<String> namespace;
   const FoldersCompanion({
     this.fullName = const Value.absent(),
     this.accountLocalId = const Value.absent(),
@@ -2618,6 +2632,7 @@ class FoldersCompanion extends UpdateCompanion<LocalFolder> {
     this.extended = const Value.absent(),
     this.alwaysRefresh = const Value.absent(),
     this.messagesInfoInJson = const Value.absent(),
+    this.namespace = const Value.absent(),
   });
   FoldersCompanion.insert({
     @required String fullName,
@@ -2643,6 +2658,7 @@ class FoldersCompanion extends UpdateCompanion<LocalFolder> {
     this.extended = const Value.absent(),
     @required bool alwaysRefresh,
     this.messagesInfoInJson = const Value.absent(),
+    @required String namespace,
   })  : fullName = Value(fullName),
         accountLocalId = Value(accountLocalId),
         userLocalId = Value(userLocalId),
@@ -2660,7 +2676,8 @@ class FoldersCompanion extends UpdateCompanion<LocalFolder> {
         isSubscribed = Value(isSubscribed),
         isSelectable = Value(isSelectable),
         folderExists = Value(folderExists),
-        alwaysRefresh = Value(alwaysRefresh);
+        alwaysRefresh = Value(alwaysRefresh),
+        namespace = Value(namespace);
   FoldersCompanion copyWith(
       {Value<String> fullName,
       Value<int> accountLocalId,
@@ -2684,7 +2701,8 @@ class FoldersCompanion extends UpdateCompanion<LocalFolder> {
       Value<bool> folderExists,
       Value<bool> extended,
       Value<bool> alwaysRefresh,
-      Value<String> messagesInfoInJson}) {
+      Value<String> messagesInfoInJson,
+      Value<String> namespace}) {
     return FoldersCompanion(
       fullName: fullName ?? this.fullName,
       accountLocalId: accountLocalId ?? this.accountLocalId,
@@ -2709,6 +2727,7 @@ class FoldersCompanion extends UpdateCompanion<LocalFolder> {
       extended: extended ?? this.extended,
       alwaysRefresh: alwaysRefresh ?? this.alwaysRefresh,
       messagesInfoInJson: messagesInfoInJson ?? this.messagesInfoInJson,
+      namespace: namespace ?? this.namespace,
     );
   }
 }
@@ -3017,6 +3036,18 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
     );
   }
 
+  final VerificationMeta _namespaceMeta = const VerificationMeta('namespace');
+  GeneratedTextColumn _namespace;
+  @override
+  GeneratedTextColumn get namespace => _namespace ??= _constructNamespace();
+  GeneratedTextColumn _constructNamespace() {
+    return GeneratedTextColumn(
+      'namespace',
+      $tableName,
+      false,
+    );
+  }
+
   @override
   List<GeneratedColumn> get $columns => [
         fullName,
@@ -3041,7 +3072,8 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
         folderExists,
         extended,
         alwaysRefresh,
-        messagesInfoInJson
+        messagesInfoInJson,
+        namespace
       ];
   @override
   $FoldersTable get asDslTable => this;
@@ -3199,6 +3231,12 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
           messagesInfoInJson.isAcceptableValue(
               d.messagesInfoInJson.value, _messagesInfoInJsonMeta));
     }
+    if (d.namespace.present) {
+      context.handle(_namespaceMeta,
+          namespace.isAcceptableValue(d.namespace.value, _namespaceMeta));
+    } else if (isInserting) {
+      context.missing(_namespaceMeta);
+    }
     return context;
   }
 
@@ -3285,6 +3323,9 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
     if (d.messagesInfoInJson.present) {
       map['messages_info_in_json'] =
           Variable<String, StringType>(d.messagesInfoInJson.value);
+    }
+    if (d.namespace.present) {
+      map['namespace'] = Variable<String, StringType>(d.namespace.value);
     }
     return map;
   }

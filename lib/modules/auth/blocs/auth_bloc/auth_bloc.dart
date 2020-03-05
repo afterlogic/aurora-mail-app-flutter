@@ -149,7 +149,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       currentAccount = accounts[0];
       await _methods.updateAliases(currentUser, currentAccount);
       currentIdentity =
-          await _methods.updateIdentity(currentUser, currentAccount);
+          await _methods.updateIdentity(currentUser, currentAccount, accounts);
       yield InitializedUserAndAccounts(
         users: users,
         user: currentUser,

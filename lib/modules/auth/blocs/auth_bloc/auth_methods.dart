@@ -155,13 +155,13 @@ class AuthMethods {
     }
   }
 
-  Future<AccountIdentity> updateIdentity(User user, Account account) async {
+  Future<AccountIdentity> updateIdentity(User user, Account account,List<Account> accounts) async {
     try {
       final identities = await _authApi.getIdentity(user);
       await _accountIdentityDao.deleteByUser(user.serverId);
       var currentIdentity =
           identities.firstWhere((item) => item.isDefault, orElse: () => null);
-      final accounts = await getAccounts(user);
+
       final accountsIdentity = accounts.map((item) {
         final identity = AccountIdentity(
           email: item.email,

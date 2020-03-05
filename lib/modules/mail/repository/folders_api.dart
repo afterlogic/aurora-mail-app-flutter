@@ -23,15 +23,16 @@ class FoldersApi {
     );
   }
 
-  Future<List<Map<String, dynamic>>> getFolders() async {
+  Future<Map<String, dynamic>> getFolders() async {
     final parameters = json.encode({"AccountID": _accountId});
 
-    final body = new WebMailApiBody(method: "GetFolders", parameters: parameters);
+    final body =
+        new WebMailApiBody(method: "GetFolders", parameters: parameters);
 
     final res = await _mailModule.post(body);
 
     if (res is Map) {
-      return new List<Map<String, dynamic>>.from(res["Folders"]["@Collection"] as List);
+      return res as Map<String, dynamic>;
     } else {
       throw WebMailApiError(res);
     }
@@ -42,7 +43,8 @@ class FoldersApi {
     final parameters =
         json.encode({"AccountID": _accountId, "Folders": folderNames});
 
-    final body = new WebMailApiBody(method: "GetRelevantFoldersInformation", parameters: parameters);
+    final body = new WebMailApiBody(
+        method: "GetRelevantFoldersInformation", parameters: parameters);
 
     final res = await _mailModule.post(body);
 

@@ -94,6 +94,10 @@ class MailFolder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double padding = 40;
+    if (mailFolder.nameSpace.startsWith(mailFolder.fullName)) {
+      padding = 0;
+    }
     if (mailFolder.isSubscribed == true) {
       return Column(
         children: <Widget>[
@@ -105,7 +109,7 @@ class MailFolder extends StatelessWidget {
             onTap: () => _selectFolder(context),
           ),
           Padding(
-            padding: EdgeInsets.only(left: 40.0),
+            padding: EdgeInsets.only(left: padding),
             child: Column(
               children: children,
             ),

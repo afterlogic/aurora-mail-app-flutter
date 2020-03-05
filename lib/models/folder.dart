@@ -59,6 +59,7 @@ class Folder {
   final int count;
 
   final int unread;
+  final String nameSpace;
 
   Folder({
     @required this.guid,
@@ -82,7 +83,16 @@ class Folder {
     @required this.messagesInfo,
     @required this.count,
     @required this.unread,
+    @required this.nameSpace,
   });
+
+  String get viewName {
+    if (fullName.startsWith(nameSpace)) {
+      return fullName.substring(nameSpace.length);
+    } else {
+      return fullName;
+    }
+  }
 
   static FolderType getFolderTypeFromNumber(int num) {
     switch (num) {
@@ -116,6 +126,7 @@ class Folder {
     try {
       return localFolders.map((localFolder) {
         return Folder(
+          nameSpace: localFolder.namespace,
           guid: localFolder.guid,
           parentGuid: localFolder.parentGuid,
           type: localFolder.type,

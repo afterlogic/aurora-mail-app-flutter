@@ -58,8 +58,10 @@ class Folders extends Table {
 
   TextColumn get messagesInfoInJson => text().nullable()();
 
+  TextColumn get namespace => text()();
+
   static Future<List<LocalFolder>> getFolderObjectsFromServerAsync({
-    @required List<Map<String, dynamic>> rawFolders,
+    @required Map<String, dynamic> rawFolders,
     @required int accountId,
     @required int userLocalId,
     @required int accountLocalId,
@@ -68,8 +70,10 @@ class Folders extends Table {
       "id": accountId,
       "userLocalId": userLocalId,
       "accountLocalId": accountLocalId,
-      "folders": rawFolders,
+      "folders": rawFolders["Folders"]["@Collection"],
+      "namespace": rawFolders["Namespace"],
     };
+
     return compute(getFolderObjectsFromServer, args);
   }
 
@@ -79,6 +83,7 @@ class Folders extends Table {
     final accountId = args["id"] as int;
     final userLocalId = args["userLocalId"] as int;
     final accountLocalId = args["accountLocalId"] as int;
+    final namespace = (args["namespace"] as String) ?? "";
     final rawFolders =
         new List<Map<String, dynamic>>.from(args["folders"] as Iterable);
 
@@ -89,6 +94,7 @@ class Folders extends Table {
         final guid = uuid.v4();
         final t = rawFolder["Type"];
         flattenedFolders.add(LocalFolder(
+          namespace: namespace,
           userLocalId: userLocalId,
           accountLocalId: accountLocalId,
           guid: guid,
