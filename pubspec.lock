@@ -53,9 +53,11 @@ packages:
   aurora_ui_kit:
     dependency: "direct main"
     description:
-      path: "core/aurora_ui_kit"
-      relative: true
-    source: path
+      path: "."
+      ref: HEAD
+      resolved-ref: ba115277a9526efc174f336c83bf8ce691321781
+      url: "https://github.com/afterlogic/aurora_ui_kit_flutter.git"
+    source: git
     version: "0.0.1"
   bloc:
     dependency: transitive
