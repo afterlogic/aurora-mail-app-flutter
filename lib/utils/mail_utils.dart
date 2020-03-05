@@ -244,6 +244,7 @@ class MailUtils {
       html, body {
         margin: 0;
         padding: 0;
+        background: ${_getWebColor(theme.scaffoldBackgroundColor)};
       }
       .attachments, .email-head, .email-content {
         padding: 18px;
@@ -272,6 +273,7 @@ class MailUtils {
         outline: 0;
       }
       .email-content {
+        background-color: white;
         word-break: break-all;
         overflow-x: scroll;
       }
@@ -312,7 +314,7 @@ class MailUtils {
         </div>
       </div>
       <h1 style="font-size: 24px; font-weight: 500; margin-top: 24px">$subject</h1>
-      <div style="height: 1px; background-color: black; opacity: 0.05; margin: 24px 0"></div>
+      <div style="height: 1px; background-color: black; opacity: 0.05; margin: 24px 0 0"></div>
     </div>
     <div class='email-content'>$body</div>
     <div class='attachments'>
