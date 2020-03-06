@@ -108,7 +108,7 @@ dev_dependencies:
   moor_generator: ^2.3.1
   build_variant:
     git: "https://github.com/afterlogic/build_variant"
-  flutter_launcher_icons: ^0.7.4
+  flutter_launcher_icons: 0.7.4
 
 flutter_icons:
   ios: true
