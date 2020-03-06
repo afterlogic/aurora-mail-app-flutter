@@ -15,7 +15,6 @@ class AppTheme {
     brightness: Brightness.light,
     disabledColor: Colors.black.withOpacity(0.4),
     scaffoldBackgroundColor: Colors.white,
-    iconTheme: IconThemeData(color: AppColor.primary),
     textTheme: TextTheme(
       display1: TextStyle(
         color: Colors.black,
@@ -52,7 +51,6 @@ class AppTheme {
     accentColor: AppColor.colorLight,
     buttonTheme: _buttonTheme,
     dialogTheme: _dialogTheme,
-    iconTheme: IconThemeData(color: AppColor.colorLight),
     splashFactory: InkRipple.splashFactory,
     brightness: Brightness.dark,
     disabledColor: Colors.white.withOpacity(0.4),
