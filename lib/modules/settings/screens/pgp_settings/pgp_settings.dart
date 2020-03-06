@@ -269,50 +269,35 @@ class _PgpSettingsState extends State<PgpSettings> {
   }
 
   Widget _button(BuildContext context, LoadedState state) {
+    final space = SizedBox(height: 10.0);
+
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           if (state.public.isNotEmpty)
-            SizedBox(
-              width: double.infinity,
-              child: AMButton(
-                child: Text(i18n(context, "export_all_public_keys")),
-                onPressed: () => _exportAllPublicKeys(state.public),
-              ),
+            AMButton(
+              child: Text(i18n(context, "export_all_public_keys")),
+              onPressed: () => _exportAllPublicKeys(state.public),
             ),
-          _space(),
-          SizedBox(
-            width: double.infinity,
-            child: AMButton(
-              child: Text(i18n(context, "import_keys_from_text")),
-              onPressed: _importFromText,
-            ),
+          space,
+          AMButton(
+            child: Text(i18n(context, "import_keys_from_text")),
+            onPressed: _importFromText,
           ),
-          _space(),
-          SizedBox(
-            width: double.infinity,
-            child: AMButton(
-              child: Text(i18n(context, "import_keys_from_file")),
-              onPressed: _importFromFile,
-            ),
+          space,
+          AMButton(
+            child: Text(i18n(context, "import_keys_from_file")),
+            onPressed: _importFromFile,
           ),
-          _space(),
-          SizedBox(
-            width: double.infinity,
-            child: AMButton(
-              child: Text(i18n(context, "generate_keys")),
-              onPressed: () => _generateKey(state),
-            ),
-          )
+          space,
+          AMButton(
+            child: Text(i18n(context, "generate_keys")),
+            onPressed: () => _generateKey(state),
+          ),
         ],
       ),
-    );
-  }
-
-  Widget _space() {
-    return SizedBox(
-      height: 10,
     );
   }
 }
