@@ -1,4 +1,6 @@
 class AlwaysNonEqualObject {
+
+
   @override
   bool operator ==(Object other) => false;
 

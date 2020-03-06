@@ -215,6 +215,15 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
+  crypto_plugin:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: HEAD
+      resolved-ref: a606fc7096e5a26ad4f9902d9c4a45c438b26c88
+      url: "https://github.com/afterlogic/flutter_crypto_plugin"
+    source: git
+    version: "0.0.1"
   crypto_storage:
     dependency: "direct main"
     description:

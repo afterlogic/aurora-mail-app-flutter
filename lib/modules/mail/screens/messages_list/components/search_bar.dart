@@ -30,6 +30,9 @@ class _SearchBarState extends State<SearchBar> {
   void initState() {
     super.initState();
     searchCtrl = TextEditingController(text: widget.initSearch ?? "");
+    if (widget.initSearch != null) {
+      _getMessages(widget.initSearch);
+    }
   }
 
   @override
@@ -74,6 +77,7 @@ class _SearchBarState extends State<SearchBar> {
           icon: Icon(Icons.close),
           onPressed: () {
             setState(() {
+              _getMessages(null);
               searchCtrl.clear();
               widget.onCancel();
             });

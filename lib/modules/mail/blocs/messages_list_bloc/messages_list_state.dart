@@ -11,15 +11,13 @@ abstract class MessagesListState extends Equatable {
 
 class MessagesEmpty extends MessagesListState {}
 
-class SubscribedToMessages extends MessagesListState {
+class SubscribedToMessages extends MessagesListState with AlwaysNonEqualObject {
   final Stream<List<Message>> messagesSub;
   final bool isStarredFilterEnabled;
   final String searchTerm;
 
-  const SubscribedToMessages(this.messagesSub, this.isStarredFilterEnabled, this.searchTerm);
-
-  @override
-  List<Object> get props => [messagesSub, isStarredFilterEnabled, searchTerm];
+  SubscribedToMessages(
+      this.messagesSub, this.isStarredFilterEnabled, this.searchTerm);
 }
 
 class MessagesRefreshed extends MessagesListState with AlwaysNonEqualObject {}
