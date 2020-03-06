@@ -195,15 +195,11 @@ class _MainDrawerState extends State<MainDrawer> {
   List<MailFolder> _getFolderWidgets(
       List<Folder> mailFolders, String selected, bool isStarredFilterEnabled,
       [String parentGuid]) {
-    return mailFolders
-        .where((f) => f.parentGuid == parentGuid)
-        .map((mailFolder) {
+    return mailFolders.map((mailFolder) {
       return MailFolder(
         mailFolder: mailFolder,
         isSelected: selected == mailFolder.guid && !isStarredFilterEnabled,
         key: Key(mailFolder.guid),
-        children: _getFolderWidgets(
-            mailFolders, selected, isStarredFilterEnabled, mailFolder.guid),
       );
     }).toList();
   }

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
@@ -8,13 +10,12 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 class MailFolder extends StatelessWidget {
   final Folder mailFolder;
   final bool isSelected;
-  final List<Widget> children;
 
   const MailFolder(
       {Key key,
       @required this.mailFolder,
       @required this.isSelected,
-      this.children})
+      int paddingCount})
       : super(key: key);
 
   IconData get _folderIcon {
@@ -94,27 +95,25 @@ class MailFolder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double padding = 40;
-    if (mailFolder.nameSpace != null && mailFolder.nameSpace.startsWith(mailFolder.fullName)) {
-      padding = 0;
+    final paddingStep = 40.0;
+
+    var paddingCount =
+        mailFolder.delimiter.allMatches(mailFolder.fullName).length;
+    if (mailFolder.nameSpace?.isNotEmpty == true &&
+        mailFolder.fullName.startsWith(mailFolder.nameSpace)) {
+      paddingCount -= 1;
     }
+    paddingCount = max(paddingCount, 0);
     if (mailFolder.isSubscribed == true) {
-      return Column(
-        children: <Widget>[
-          ListTile(
-            selected: isSelected,
-            leading: Icon(_folderIcon),
-            title: Text(_getTitle(context)),
-            trailing: _buildMessageCounter(context),
-            onTap: () => _selectFolder(context),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: padding),
-            child: Column(
-              children: children,
-            ),
-          )
-        ],
+      return Padding(
+        padding: EdgeInsets.only(left: paddingCount * paddingStep),
+        child: ListTile(
+          selected: isSelected,
+          leading: Icon(_folderIcon),
+          title: Text(_getTitle(context)),
+          trailing: _buildMessageCounter(context),
+          onTap: () => _selectFolder(context),
+        ),
       );
     } else {
       return SizedBox();
