@@ -68,9 +68,9 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
       user: authBloc.currentUser,
       account: authBloc.currentAccount,
     );
-    _mailBloc = new MailBloc(
-      user: authBloc.currentUser,
-      account: authBloc.currentAccount,
+    _mailBloc.init(
+      authBloc.currentUser,
+      authBloc.currentAccount,
     );
 
     _contactsBloc.add(GetContacts());
@@ -156,7 +156,7 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
           setState(() {});
         },
         child: Scaffold(
-          appBar: MailAppBar(initSearch:widget.initSearch),
+          appBar: MailAppBar(initSearch: widget.initSearch),
           drawer: MainDrawer(),
           body: MultiBlocListener(
             listeners: [

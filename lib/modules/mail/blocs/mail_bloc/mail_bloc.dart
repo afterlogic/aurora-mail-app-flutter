@@ -19,6 +19,10 @@ class MailBloc extends Bloc<MailEvent, MailState> {
     BackgroundHelper.addOnEndAlarmObserver(true, onEndAlarm);
   }
 
+  init(User user, Account account) {
+    _methods = new MailMethods(user: user, account: account);
+  }
+
   Folder _selectedFolder;
   bool _isStarredFilterEnabled = false;
 
@@ -47,7 +51,7 @@ class MailBloc extends Bloc<MailEvent, MailState> {
   }
 
   onEndAlarm(bool hasUpdate) async {
-    if(hasUpdate) {
+    if (hasUpdate) {
       add(RefreshMessages());
     }
     add(RefreshFolders());
