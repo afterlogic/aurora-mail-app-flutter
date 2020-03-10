@@ -62,7 +62,8 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
     );
 
     final result = await contactsModule.post(body);
-    return ContactInfoMapper.allFromNetwork(Map<String,dynamic>.from(result as Map), storage.id);
+    return ContactInfoMapper.allFromNetwork(
+        Map<String, dynamic>.from(result as Map), storage.id);
   }
 
   @override

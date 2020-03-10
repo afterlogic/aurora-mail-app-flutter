@@ -19,5 +19,6 @@ class ContactsStorages extends Table {
 
   BoolColumn get display => boolean()();
 
-  TextColumn get contactsInfo => text().map(const ContactsInfoConverter()).nullable()();
+  TextColumn get contactsInfo =>
+      text().map(const ContactsInfoConverter()).nullable()();
 }

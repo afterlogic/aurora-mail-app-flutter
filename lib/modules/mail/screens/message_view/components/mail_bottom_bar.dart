@@ -2,10 +2,11 @@ import 'dart:io';
 
 import 'package:aurora_mail/modules/mail/blocs/message_view_bloc/message_view_bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/message_view_bloc/message_view_state.dart';
+import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:crypto_worker/crypto_worker.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MailBottomBar extends StatefulWidget {

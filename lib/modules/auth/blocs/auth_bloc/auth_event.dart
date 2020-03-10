@@ -56,8 +56,7 @@ class DeleteUser extends AuthEvent {
   List<Object> get props => [user];
 }
 
-class InvalidateCurrentUserToken extends AuthEvent
-    with AlwaysNonEqualObject {}
+class InvalidateCurrentUserToken extends AuthEvent with AlwaysNonEqualObject {}
 
 class ChangeAccount extends AuthEvent {
   final Account account;

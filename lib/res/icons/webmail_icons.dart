@@ -11,7 +11,7 @@
 ///      fonts:
 ///       - asset: fonts/WebMailIcons.ttf
 ///
-/// 
+///
 ///
 import 'package:flutter/widgets.dart';
 
@@ -21,6 +21,8 @@ class WebMailIcons {
   static const _kFontFam = 'WebMailIcons';
 
   static const IconData unshare = const IconData(0xe800, fontFamily: _kFontFam);
-  static const IconData personal = const IconData(0xe801, fontFamily: _kFontFam);
-  static const IconData shared_with_all = const IconData(0xe802, fontFamily: _kFontFam);
+  static const IconData personal =
+      const IconData(0xe801, fontFamily: _kFontFam);
+  static const IconData shared_with_all =
+      const IconData(0xe802, fontFamily: _kFontFam);
 }

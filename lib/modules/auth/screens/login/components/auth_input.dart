@@ -1,6 +1,7 @@
 import 'package:aurora_mail/build_property.dart';
+import 'package:aurora_mail/utils/base_state.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
+import 'package:flutter/material.dart';
 
 class AuthInput extends StatefulWidget {
   final TextEditingController controller;
@@ -31,7 +32,7 @@ class _AuthInputState extends BState<AuthInput> {
 
   @override
   Widget build(BuildContext context) {
-    final theme=Theme.of(context);
+    final theme = Theme.of(context);
     return TextFormField(
       enabled: widget.isEnabled,
       controller: widget.controller,
@@ -41,8 +42,8 @@ class _AuthInputState extends BState<AuthInput> {
       decoration: InputDecoration(
         hasFloatingPlaceholder: BuildProperty.hasFloatingPlaceholder,
         enabledBorder: UnderlineInputBorder(
-            borderSide: BorderSide(
-                color: theme.disabledColor.withOpacity(0.1))),
+            borderSide:
+                BorderSide(color: theme.disabledColor.withOpacity(0.1))),
         focusedBorder: UnderlineInputBorder(
             borderSide: BorderSide(color: theme.accentColor)),
         hintText: BuildProperty.hasFloatingPlaceholder ? null : widget.label,
@@ -53,8 +54,8 @@ class _AuthInputState extends BState<AuthInput> {
                 child: IconButton(
                   icon: Icon(
                     _obscureText ? Icons.visibility : Icons.visibility_off,
-                    color: widget.visibilityToggleColor ??
-                        theme.iconTheme.color,
+                    color:
+                        widget.visibilityToggleColor ?? theme.iconTheme.color,
                   ),
                   onPressed: () => setState(() => _obscureText = !_obscureText),
                 ),

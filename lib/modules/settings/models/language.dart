@@ -35,7 +35,8 @@ class Language {
   }
 
   Locale toLocale() {
-    return supportedLocales.firstWhere((l) => l.toLanguageTag() == tag, orElse: () {
+    return supportedLocales.firstWhere((l) => l.toLanguageTag() == tag,
+        orElse: () {
       throw "Language $tag is not supported";
     });
   }

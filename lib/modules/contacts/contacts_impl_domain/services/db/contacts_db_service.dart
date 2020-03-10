@@ -11,11 +11,14 @@ abstract class ContactsDbService {
 
   Stream<List<Contact>> watchAllContacts(int userLocalId);
 
-  Stream<List<Contact>> watchContactsFromStorage(int userLocalId, ContactsStorage storage);
+  Stream<List<Contact>> watchContactsFromStorage(
+      int userLocalId, ContactsStorage storage);
 
-  Stream<List<Contact>> watchContactsFromGroup(int userLocalId, ContactsGroup group);
+  Stream<List<Contact>> watchContactsFromGroup(
+      int userLocalId, ContactsGroup group);
 
-  Future<List<Contact>> getContacts(int userLocalId, {List<String> storages, String pattern});
+  Future<List<Contact>> getContacts(int userLocalId,
+      {List<String> storages, String pattern});
 
   Future<void> addContacts(List<Contact> newContacts);
 

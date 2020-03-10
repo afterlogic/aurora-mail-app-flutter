@@ -32,7 +32,6 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
     int accountEntityId,
     bool starredOnly,
   ) {
-
     final statement = select(mail);
     statement.where((m) => m.accountEntityId.equals(accountEntityId));
     if (searchPattern == SearchPattern.Email) {

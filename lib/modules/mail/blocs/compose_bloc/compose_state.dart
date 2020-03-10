@@ -44,7 +44,7 @@ class MessageSavedInDrafts extends ComposeState {
   List<Object> get props => [draftUid];
 }
 
-class ComposeError extends ComposeState  with AlwaysNonEqualObject{
+class ComposeError extends ComposeState with AlwaysNonEqualObject {
   final String errorMsg;
   final Map<String, String> arg;
 
@@ -65,7 +65,7 @@ class ReceivedComposeAttachments extends ComposeState {
   List<Object> get props => [attachments];
 }
 
-class EncryptComplete extends ComposeState  {
+class EncryptComplete extends ComposeState {
   final EncryptType type;
   final String text;
 

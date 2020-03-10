@@ -46,6 +46,7 @@ class ContactsStorage {
 class ContactInfoItem {
   final String uuid;
   final String storage;
+
   String get uuidPlusStorage => uuid + storage;
   String eTag;
   bool hasBody;
@@ -57,7 +58,7 @@ class ContactInfoItem {
     @required this.eTag,
     this.hasBody = false,
     this.needsUpdate = false,
-  }) : assert (storage != null);
+  }) : assert(storage != null);
 
   Map<String, dynamic> toMap() {
     return {

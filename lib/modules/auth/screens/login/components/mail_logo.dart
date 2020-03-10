@@ -1,5 +1,5 @@
 import 'package:aurora_mail/build_property.dart';
-import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
+import 'package:flutter/material.dart';
 
 class MailLogo extends StatelessWidget {
   final bool isBackground;
@@ -8,7 +8,7 @@ class MailLogo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme=Theme.of(context);
+    final theme = Theme.of(context);
     final size = isBackground ? 350.0 : 52.0;
 
     if (BuildProperty.useMainLogo) {

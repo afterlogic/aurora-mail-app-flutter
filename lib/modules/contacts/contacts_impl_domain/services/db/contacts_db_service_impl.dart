@@ -11,7 +11,8 @@ import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/gr
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/storages/contacts_storages_dao.dart';
 
 class ContactsDbServiceImpl implements ContactsDbService {
-  static final ContactsDbServiceImpl _singleton = ContactsDbServiceImpl._internal();
+  static final ContactsDbServiceImpl _singleton =
+      ContactsDbServiceImpl._internal();
   static AppDatabase _db;
 
   ContactsDbServiceImpl._internal();
@@ -38,27 +39,33 @@ class ContactsDbServiceImpl implements ContactsDbService {
   }
 
   @override
-  Future<void> addStorages(List<ContactsStorage> newStorages, int userId) async {
+  Future<void> addStorages(
+      List<ContactsStorage> newStorages, int userId) async {
     final formatted = ContactsStorageMapper.toDB(newStorages, userId);
     try {
       await _storagesDao.addStorages(formatted);
-    } catch(err) {}
+    } catch (err) {}
   }
 
   @override
-  Future<void> deleteContacts(List<String> uuids) => _contactsDao.deleteContacts(uuids);
+  Future<void> deleteContacts(List<String> uuids) =>
+      _contactsDao.deleteContacts(uuids);
 
   @override
-  Future<void> deleteGroups(List<String> uuids) => _groupsDao.deleteGroups(uuids);
+  Future<void> deleteGroups(List<String> uuids) =>
+      _groupsDao.deleteGroups(uuids);
 
   @override
-  Future<void> deleteStorages(List<int> sqliteIds) => _storagesDao.deleteStorages(sqliteIds);
+  Future<void> deleteStorages(List<int> sqliteIds) =>
+      _storagesDao.deleteStorages(sqliteIds);
 
   @override
   Future<List<Contact>> getContacts(int userLocalId,
       {List<String> storages, String pattern}) async {
     final result = await _contactsDao.getContacts(
-      userLocalId, storages: storages, pattern: pattern,
+      userLocalId,
+      storages: storages,
+      pattern: pattern,
     );
     return ContactMapper.fromDB(result);
   }
@@ -69,15 +76,17 @@ class ContactsDbServiceImpl implements ContactsDbService {
     return result.map((data) => ContactMapper.fromDB(data));
   }
 
-
   @override
-  Stream<List<Contact>> watchContactsFromStorage(int userLocalId, ContactsStorage storage) {
-    final result = _contactsDao.watchContactsFromStorage(userLocalId, storage.id);
+  Stream<List<Contact>> watchContactsFromStorage(
+      int userLocalId, ContactsStorage storage) {
+    final result =
+        _contactsDao.watchContactsFromStorage(userLocalId, storage.id);
     return result.map((data) => ContactMapper.fromDB(data));
   }
 
   @override
-  Stream<List<Contact>> watchContactsFromGroup(int userLocalId, ContactsGroup group) {
+  Stream<List<Contact>> watchContactsFromGroup(
+      int userLocalId, ContactsGroup group) {
     final result = _contactsDao.watchContactsFromGroup(userLocalId, group.uuid);
     return result.map((data) => ContactMapper.fromDB(data));
   }
@@ -107,7 +116,8 @@ class ContactsDbServiceImpl implements ContactsDbService {
   Future<void> updateStorages(List<ContactsStorage> updatedStorages, int userId,
       {bool nullToAbsent = true}) {
     final formatted = ContactsStorageMapper.toDB(updatedStorages, userId);
-    final companions = formatted.map((c) => c.createCompanion(nullToAbsent)).toList();
+    final companions =
+        formatted.map((c) => c.createCompanion(nullToAbsent)).toList();
     return _storagesDao.updateStorages(companions);
   }
 

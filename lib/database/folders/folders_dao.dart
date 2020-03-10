@@ -43,7 +43,7 @@ class FoldersDao extends DatabaseAccessor<AppDatabase> with _$FoldersDaoMixin {
 
   Future<void> addFolders(List<LocalFolder> newFolders) async {
     return batch((b) {
-      return b.insertAll(folders, newFolders,mode: InsertMode.insertOrReplace);
+      return b.insertAll(folders, newFolders, mode: InsertMode.insertOrReplace);
     });
   }
 

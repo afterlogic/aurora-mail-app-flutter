@@ -195,7 +195,8 @@ class Mail extends Table {
       final attachments = raw["Attachments"];
       String attachmentsForSearch;
       if (attachments != null) {
-        final names = (attachments["@Collection"] as List).map((a) => a["FileName"]);
+        final names =
+            (attachments["@Collection"] as List).map((a) => a["FileName"]);
         attachmentsForSearch = names.join("/");
       }
 
@@ -210,7 +211,8 @@ class Mail extends Table {
             raw["Uid"].toString() +
             raw["Folder"].toString(),
         parentUid: messageInfo.parentUid,
-        flagsInJson: messageInfo.flags == null ? null : json.encode(messageInfo.flags),
+        flagsInJson:
+            messageInfo.flags == null ? null : json.encode(messageInfo.flags),
         hasThread: messageInfo.hasThread,
         messageId: raw["MessageId"] as String,
         folder: raw["Folder"] as String,
@@ -219,7 +221,8 @@ class Mail extends Table {
         textSize: raw["TextSize"] as int,
         truncated: raw["Truncated"] as bool,
         internalTimeStampInUTC: raw["InternalTimeStampInUTC"] as int,
-        receivedOrDateTimeStampInUTC: raw["ReceivedOrDateTimeStampInUTC"] as int,
+        receivedOrDateTimeStampInUTC:
+            raw["ReceivedOrDateTimeStampInUTC"] as int,
         timeStampInUTC: raw["TimeStampInUTC"] as int,
         toInJson: raw["From"] == null ? null : json.encode(raw["To"]),
         fromInJson: raw["To"] == null ? null : json.encode(raw["From"]),
@@ -227,14 +230,14 @@ class Mail extends Table {
         ccInJson: raw["Cc"] == null ? null : json.encode(raw["Cc"]),
         bccInJson: raw["Bcc"] == null ? null : json.encode(raw["Bcc"]),
         senderInJson: raw["Sender"] == null ? null : json.encode(raw["Sender"]),
-        replyToInJson: raw["ReplyTo"] == null ? null : json.encode(raw["ReplyTo"]),
+        replyToInJson:
+            raw["ReplyTo"] == null ? null : json.encode(raw["ReplyTo"]),
         hasAttachments: raw["HasAttachments"] as bool,
         hasVcardAttachment: raw["HasVcardAttachment"] as bool,
         hasIcalAttachment: raw["HasIcalAttachment"] as bool,
         importance: raw["Importance"] as int,
-        draftInfoInJson: raw["DraftInfo"] == null
-            ? null
-            : json.encode(raw["DraftInfo"]),
+        draftInfoInJson:
+            raw["DraftInfo"] == null ? null : json.encode(raw["DraftInfo"]),
         sensitivity: raw["Sensitivity"] as int,
         downloadAsEmlUrl: raw["DownloadAsEmlUrl"] as String,
         hash: raw["Hash"] as String,
@@ -242,23 +245,27 @@ class Mail extends Table {
         inReplyTo: raw["InReplyTo"] as String,
         references: raw["References"] as String,
         readingConfirmationAddressee:
-        raw["ReadingConfirmationAddressee"] as String,
+            raw["ReadingConfirmationAddressee"] as String,
         htmlBody: raw["Html"] != null && (raw["Html"] as String).isNotEmpty
             ? raw["Html"] as String
             : raw["Plain"] as String,
-        rawBody: raw["PlainRaw"] != null &&
-            (raw["PlainRaw"] as String).isNotEmpty
-            ? raw["PlainRaw"] as String
-            : MailUtils.htmlToPlain(raw["Html"] as String ?? raw["HtmlRaw"] as String),
+        rawBody:
+            raw["PlainRaw"] != null && (raw["PlainRaw"] as String).isNotEmpty
+                ? raw["PlainRaw"] as String
+                : MailUtils.htmlToPlain(
+                    raw["Html"] as String ?? raw["HtmlRaw"] as String),
         rtl: raw["Rtl"] as bool,
         extendInJson: raw["Extend"] == null ? null : json.encode(raw["Extend"]),
         safety: raw["Safety"] as bool,
         hasExternals: raw["HasExternals"] as bool,
-        foundedCIDsInJson: raw["FoundedCIDs"] == null
-            ? null
-            : json.encode(raw["FoundedCIDs"]),
-        foundedContentLocationUrlsInJson: raw["FoundedContentLocationUrls"] == null ? null : json.encode(raw["FoundedContentLocationUrls"]),
-        attachmentsInJson: attachments == null ? null : json.encode(attachments),
+        foundedCIDsInJson:
+            raw["FoundedCIDs"] == null ? null : json.encode(raw["FoundedCIDs"]),
+        foundedContentLocationUrlsInJson:
+            raw["FoundedContentLocationUrls"] == null
+                ? null
+                : json.encode(raw["FoundedContentLocationUrls"]),
+        attachmentsInJson:
+            attachments == null ? null : json.encode(attachments),
         attachmentsForSearch: attachmentsForSearch ?? "",
         customInJson: raw["Custom"] == null ? null : json.encode(raw["Custom"]),
         isHtml: (raw["Html"] as String)?.isNotEmpty == true,

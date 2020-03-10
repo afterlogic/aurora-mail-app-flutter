@@ -44,7 +44,8 @@ class ContactsStoragesDao extends DatabaseAccessor<AppDatabase>
   }
 
   Future<void> deleteStoragesOfUser(int userLocalId) {
-    return (delete(contactsStorages)..where((c) => c.userLocalId.equals(userLocalId)))
+    return (delete(contactsStorages)
+          ..where((c) => c.userLocalId.equals(userLocalId)))
         .go();
   }
 }

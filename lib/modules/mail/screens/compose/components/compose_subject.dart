@@ -1,5 +1,6 @@
+import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
-import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
+import 'package:flutter/material.dart';
 
 class ComposeSubject extends StatefulWidget {
   final TextEditingController textCtrl;
@@ -23,7 +24,7 @@ class _ComposeSubjectState extends BState<ComposeSubject> {
 
   @override
   Widget build(BuildContext context) {
-    final theme=Theme.of(context);
+    final theme = Theme.of(context);
     return InkWell(
       onTap: _focusNode.requestFocus,
       child: Padding(

@@ -11,7 +11,8 @@ class Users extends Table {
 
   TextColumn get token => text()();
 
-  IntColumn get syncFreqInSeconds => integer().withDefault(Constant(300)).nullable()();
+  IntColumn get syncFreqInSeconds =>
+      integer().withDefault(Constant(300)).nullable()();
 
   TextColumn get syncPeriod => text().nullable()();
 

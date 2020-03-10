@@ -2,11 +2,12 @@ import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/mail/mail_table.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
+import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/date_formatting.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
@@ -59,7 +60,6 @@ class _MessageItemState extends BState<MessageItem> {
 
   @override
   Widget build(BuildContext context) {
-
     final hasUnreadChildren = widget.children
         .where((i) => !i.flagsInJson.contains("\\seen"))
         .isNotEmpty;
@@ -176,8 +176,8 @@ class _MessageItemState extends BState<MessageItem> {
                           ),
                           style: TextStyle(
                             fontSize: 14.0,
-                            color: theme.disabledColor.withAlpha(
-                                theme.disabledColor.alpha ~/ 2),
+                            color: theme.disabledColor
+                                .withAlpha(theme.disabledColor.alpha ~/ 2),
                           ),
                         ),
                       ),

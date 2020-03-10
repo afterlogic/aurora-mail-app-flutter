@@ -43,10 +43,13 @@ class SettingsLoaded extends SettingsState {
   }) {
     return new SettingsLoaded(
       users: users != null ? users.value : this.users,
-      syncFrequency: syncFrequency != null ? syncFrequency.value : this.syncFrequency,
+      syncFrequency:
+          syncFrequency != null ? syncFrequency.value : this.syncFrequency,
       syncPeriod: syncPeriod != null ? syncPeriod.value : this.syncPeriod,
-      darkThemeEnabled: darkThemeEnabled != null ? darkThemeEnabled.value : this.darkThemeEnabled,
-      is24: is24 != null ? is24.value: this.is24,
+      darkThemeEnabled: darkThemeEnabled != null
+          ? darkThemeEnabled.value
+          : this.darkThemeEnabled,
+      is24: is24 != null ? is24.value : this.is24,
       language: language != null ? language.value : this.language,
       connection: connection != null ? connection.value : this.connection,
     );

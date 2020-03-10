@@ -59,7 +59,9 @@ class MessageInfo {
 
     void addItems(List messagesInfo, [int parentUid]) {
       messagesInfo.forEach((info) {
-        final uid = info["uid"] is String ? int.parse(info["uid"] as String) : info["uid"];
+        final uid = info["uid"] is String
+            ? int.parse(info["uid"] as String)
+            : info["uid"];
         flatList.add(new MessageInfo(
           uid: uid as int,
           parentUid: parentUid,

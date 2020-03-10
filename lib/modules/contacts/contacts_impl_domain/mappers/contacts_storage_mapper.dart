@@ -41,7 +41,8 @@ class ContactsStorageMapper {
     }).toList();
   }
 
-  static ContactsStorage fromNetwork(Map<String, dynamic> rawItems, int userLocalId) {
+  static ContactsStorage fromNetwork(
+      Map<String, dynamic> rawItems, int userLocalId) {
     return ContactsStorage(
       sqliteId: null,
       id: rawItems["Id"] as String,

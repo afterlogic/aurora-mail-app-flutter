@@ -39,10 +39,12 @@ class ContactsState with AlwaysNonEqualObject {
       storages: storages ?? this.storages,
       selectedStorage: CWVal.get(selectedStorage, this.selectedStorage),
       selectedGroup: CWVal.get(selectedGroup, this.selectedGroup),
-      showAllVisibleContacts: showAllVisibleContacts ?? this.showAllVisibleContacts,
+      showAllVisibleContacts:
+          showAllVisibleContacts ?? this.showAllVisibleContacts,
       contacts: contacts ?? this.contacts,
       groups: groups ?? this.groups,
-      currentlySyncingStorages: currentlySyncingStorages ?? this.currentlySyncingStorages,
+      currentlySyncingStorages:
+          currentlySyncingStorages ?? this.currentlySyncingStorages,
       error: error,
     );
   }

@@ -1,11 +1,12 @@
-import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
+import 'package:flutter/material.dart';
 
 class SlideHorizontalRoute extends PageRouteBuilder {
   final Widget Function(BuildContext) builder;
   final int duration;
   final RouteSettings settings;
 
-  SlideHorizontalRoute({this.settings, this.duration = 150, @required this.builder})
+  SlideHorizontalRoute(
+      {this.settings, this.duration = 150, @required this.builder})
       : super(
             settings: settings,
             transitionDuration: Duration(milliseconds: duration),
@@ -13,7 +14,8 @@ class SlideHorizontalRoute extends PageRouteBuilder {
               BuildContext context,
               Animation<double> animation,
               Animation<double> secondaryAnimation,
-            ) => builder(context),
+            ) =>
+                builder(context),
             transitionsBuilder: (
               BuildContext context,
               Animation<double> animation,

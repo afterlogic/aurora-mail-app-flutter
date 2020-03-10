@@ -18,10 +18,14 @@ class ContactsDiffCalculator {
     final newContacts = args["newItems"];
 
     final addedContacts = newContacts.where((i) =>
-        oldContacts.firstWhere((j) => j.uuidPlusStorage == i.uuidPlusStorage, orElse: () => null) == null);
+        oldContacts.firstWhere((j) => j.uuidPlusStorage == i.uuidPlusStorage,
+            orElse: () => null) ==
+        null);
 
     final deletedContacts = oldContacts.where((i) =>
-        newContacts.firstWhere((j) => j.uuidPlusStorage == i.uuidPlusStorage, orElse: () => null) == null);
+        newContacts.firstWhere((j) => j.uuidPlusStorage == i.uuidPlusStorage,
+            orElse: () => null) ==
+        null);
 
     final updatedContacts = newContacts.where((i) =>
         oldContacts.firstWhere((j) {

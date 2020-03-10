@@ -24,7 +24,7 @@ class PgpSettingsMethods {
     int length,
     String password,
   ) async {
-    await cryptoWorker.createKeyPair(name,length, mail, password);
+    await cryptoWorker.createKeyPair(name, length, mail, password);
   }
 
   Future<File> downloadKey(PgpKey key) async {
@@ -65,8 +65,8 @@ class PgpSettingsMethods {
     return dirPath + Platform.pathSeparator + KEY_FOLDER;
   }
 
-  Future deleteKey(String name,String mail, bool isPrivate) async {
-    await cryptoStorage.deletePgpKey(name,mail, isPrivate);
+  Future deleteKey(String name, String mail, bool isPrivate) async {
+    await cryptoStorage.deletePgpKey(name, mail, isPrivate);
   }
 
   Future<List<PgpKey>> parseKey(String key) {

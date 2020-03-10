@@ -1,5 +1,6 @@
 import 'package:aurora_mail/database/app_database.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart' hide Message;
+import 'package:flutter_local_notifications/flutter_local_notifications.dart'
+    hide Message;
 import 'package:notifications_utils/notifications_utils.dart';
 
 class NotificationManager {
@@ -15,16 +16,19 @@ class NotificationManager {
     plugin.initialize(initializationSettings);
   }
 
-  void setOnNotification(Future Function(int, String, String, String) callback) {
+  void setOnNotification(
+      Future Function(int, String, String, String) callback) {
     plugin.didReceiveLocalNotificationCallback = callback;
   }
 
   void onSelectNotification() {}
 
   Future<void> showNotification(Message message, User user) async {
-    final activeNotifications = await NotificationsUtils.getActiveNotifications();
+    final activeNotifications =
+        await NotificationsUtils.getActiveNotifications();
     final isFirstNotification = activeNotifications.where((n) {
-      return n.packageName == "com.afterlogic.aurora.mail.aurora_mail" && n.groupKey.contains(user.emailFromLogin);
+      return n.packageName == "com.afterlogic.aurora.mail.aurora_mail" &&
+          n.groupKey.contains(user.emailFromLogin);
     }).isEmpty;
 
     final groupKey = "com.afterlogic.aurora.mail.${user.emailFromLogin}";
@@ -63,7 +67,8 @@ class NotificationManager {
         message.uid + 999999,
         from,
         message.subject,
-        NotificationDetails(androidNotificationDetails..setAsGroupSummary = false, null),
+        NotificationDetails(
+            androidNotificationDetails..setAsGroupSummary = false, null),
       );
     }
   }

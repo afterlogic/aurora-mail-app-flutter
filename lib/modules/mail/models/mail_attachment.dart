@@ -63,7 +63,8 @@ class MailAttachment {
       final progress = currentlyDownloadingAttachments
           .firstWhere((da) => da.taskId == taskId, orElse: () => null);
 
-      if (progress != null) progress.updateProgress(data[2] as int, data[1] as DownloadTaskStatus);
+      if (progress != null)
+        progress.updateProgress(data[2] as int, data[1] as DownloadTaskStatus);
     }, onDone: () {
       onDownloadEnd();
       endDownloading(taskId);
@@ -118,8 +119,12 @@ class MailAttachment {
         isInline: item["IsInline"] as bool,
         isLinked: item["IsLinked"] as bool,
         hash: item["Hash"] as String,
-        viewUrl: item["Actions"] is Map ? item["Actions"]["view"]["url"] as String : null,
-        downloadUrl: item["Actions"] is Map ? item["Actions"]["download"]["url"] as String : null,
+        viewUrl: item["Actions"] is Map
+            ? item["Actions"]["view"]["url"] as String
+            : null,
+        downloadUrl: item["Actions"] is Map
+            ? item["Actions"]["download"]["url"] as String
+            : null,
         thumbnailUrl: item["ThumbnailUrl"] as String,
       );
     }).toList();

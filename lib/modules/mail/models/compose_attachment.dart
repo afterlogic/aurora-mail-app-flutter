@@ -12,7 +12,8 @@ class ComposeAttachment {
   final String viewUrl;
   final String downloadUrl;
   final String thumbnailUrl;
-  String guid; // to replace temp attachment with progress with the one from server
+  String
+      guid; // to replace temp attachment with progress with the one from server
 
   ComposeAttachment({
     @required this.fileName,
@@ -34,15 +35,20 @@ class ComposeAttachment {
       mimeType: item["MimeType"] as String,
       size: item["Size"] as int,
       hash: item["Hash"] as String,
-      viewUrl: item["Actions"] is Map ? item["Actions"]["view"]["url"] as String : null,
-      downloadUrl: item["Actions"] is Map ? item["Actions"]["download"]["url"] as String : null,
+      viewUrl: item["Actions"] is Map
+          ? item["Actions"]["view"]["url"] as String
+          : null,
+      downloadUrl: item["Actions"] is Map
+          ? item["Actions"]["download"]["url"] as String
+          : null,
       thumbnailUrl: item["ThumbnailUrl"] as String,
     );
   }
 
   // used in forward
   // { "temp_name_value": "hash_value" }
-  static List<ComposeAttachment> fromMailAttachment(List<MailAttachment> mailAttachments, Map tempValues) {
+  static List<ComposeAttachment> fromMailAttachment(
+      List<MailAttachment> mailAttachments, Map tempValues) {
     assert(mailAttachments.length == tempValues.keys.length);
 
     return mailAttachments.map((a) {
@@ -60,6 +66,4 @@ class ComposeAttachment {
       );
     }).toList();
   }
-
-
 }

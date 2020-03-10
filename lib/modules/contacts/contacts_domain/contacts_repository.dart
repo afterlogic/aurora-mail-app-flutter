@@ -39,7 +39,8 @@ abstract class ContactsRepository {
 
   Future<void> addContactsToGroup(ContactsGroup group, List<Contact> contacts);
 
-  Future<void> removeContactsFromGroup(ContactsGroup group, List<Contact> contacts);
+  Future<void> removeContactsFromGroup(
+      ContactsGroup group, List<Contact> contacts);
 
   Future<List<Contact>> getSuggestionContacts(String pattern);
 

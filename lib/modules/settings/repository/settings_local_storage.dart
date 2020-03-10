@@ -35,5 +35,6 @@ class AppSettingsSharedPrefs {
   final bool isDarkTheme;
   final bool is24;
 
-  const AppSettingsSharedPrefs({@required this.isDarkTheme, @required this.is24});
+  const AppSettingsSharedPrefs(
+      {@required this.isDarkTheme, @required this.is24});
 }

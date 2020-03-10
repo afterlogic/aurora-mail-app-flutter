@@ -2,7 +2,7 @@ import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/settings/screens/manage_users/componenets/account_tile.dart';
 import 'package:aurora_mail/modules/settings/screens/manage_users/manage_users_route.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
-import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
+import 'package:flutter/material.dart';
 
 class UserSelectionPopup extends StatelessWidget {
   final List<User> users;
@@ -18,8 +18,7 @@ class UserSelectionPopup extends StatelessWidget {
         if (v == true) Navigator.pushNamed(context, ManageUsersRoute.name);
       },
       icon: Icon(Icons.account_circle),
-      itemBuilder: (_) =>
-      [
+      itemBuilder: (_) => [
         ...users.map((user) {
           return PopupMenuItem(
             child: Column(

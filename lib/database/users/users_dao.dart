@@ -20,8 +20,9 @@ class UsersDao extends DatabaseAccessor<AppDatabase> with _$UsersDaoMixin {
   }
 
   Future<User> getUserByEmail(String emailFromLogin) async {
-    final localUsers =
-        await (select(users)..where((u) => u.emailFromLogin.equals(emailFromLogin))).get();
+    final localUsers = await (select(users)
+          ..where((u) => u.emailFromLogin.equals(emailFromLogin)))
+        .get();
     if (localUsers.isEmpty) return null;
     return localUsers[0];
   }

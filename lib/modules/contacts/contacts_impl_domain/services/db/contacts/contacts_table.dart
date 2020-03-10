@@ -3,8 +3,8 @@ import 'package:moor_flutter/moor_flutter.dart';
 
 @DataClassName("ContactsTable")
 class Contacts extends Table {
-
   Set<Column> get primaryKey => {entityId};
+
   // deprecated
   TextColumn get uuidPlusStorage => text()();
 

@@ -8,7 +8,6 @@ import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/temp_attachment_upload.dart';
 import 'package:aurora_mail/modules/mail/repository/mail_api.dart';
 import 'package:aurora_mail/modules/mail/repository/mail_local_storage.dart';
-import 'package:crypto_storage/crypto_storage.dart';
 import 'package:crypto_worker/crypto_worker.dart';
 import 'package:flutter/widgets.dart';
 
@@ -47,19 +46,19 @@ class ComposeMethods {
     final sentFolder = Folders.getFolderOfType(folders, FolderType.sent);
 
     return _mailApi.sendMessage(
-      to: to,
-      cc: cc,
-      bcc: bcc,
-      subject: subject,
-      isHtml: isHtml,
-      composeAttachments: composeAttachments,
-      messageText: messageText,
-      draftUid: draftUid,
-      sentFolderName: sentFolder != null ? sentFolder.fullNameRaw : null,
-      draftsFolderName: draftsFolder != null ? draftsFolder.fullNameRaw : null,
-      identity: identity,
-      alias: alias
-    );
+        to: to,
+        cc: cc,
+        bcc: bcc,
+        subject: subject,
+        isHtml: isHtml,
+        composeAttachments: composeAttachments,
+        messageText: messageText,
+        draftUid: draftUid,
+        sentFolderName: sentFolder != null ? sentFolder.fullNameRaw : null,
+        draftsFolderName:
+            draftsFolder != null ? draftsFolder.fullNameRaw : null,
+        identity: identity,
+        alias: alias);
   }
 
   Future<int> saveToDrafts({

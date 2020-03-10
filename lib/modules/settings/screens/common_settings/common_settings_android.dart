@@ -1,8 +1,9 @@
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/modules/settings/screens/common_settings/components/theme_selection_dialog.dart';
+import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
-import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'components/language_selection_dialog.dart';
@@ -13,7 +14,6 @@ class CommonSettingsAndroid extends StatefulWidget {
 }
 
 class _CommonSettingsAndroidState extends BState<CommonSettingsAndroid> {
-
   String _getThemeName(bool isDarkTheme) {
     if (isDarkTheme == false)
       return i18n(context, "settings_dark_theme_light");
@@ -38,19 +38,19 @@ class _CommonSettingsAndroidState extends BState<CommonSettingsAndroid> {
             return ListView(
               children: <Widget>[
                 SwitchListTile.adaptive(
-                  title: Row(
-                    children: <Widget>[
-                      AMCircleIcon(Icons.access_time),
-                      SizedBox(width: 16.0),
-                      Expanded(
-                        child: Text(i18n(context, "settings_24_time_format"),
-                        overflow: TextOverflow.ellipsis),
-                      ),
-                    ],
-                  ),
-                  activeColor: theme.accentColor,
-                  value: state.is24,
-                  onChanged: (val) => bloc.add(SetTimeFormat(val))),
+                    title: Row(
+                      children: <Widget>[
+                        AMCircleIcon(Icons.access_time),
+                        SizedBox(width: 16.0),
+                        Expanded(
+                          child: Text(i18n(context, "settings_24_time_format"),
+                              overflow: TextOverflow.ellipsis),
+                        ),
+                      ],
+                    ),
+                    activeColor: theme.accentColor,
+                    value: state.is24,
+                    onChanged: (val) => bloc.add(SetTimeFormat(val))),
                 ListTile(
                   leading: AMCircleIcon(Icons.color_lens),
                   title: Text(i18n(context, "settings_dark_theme")),
@@ -58,7 +58,8 @@ class _CommonSettingsAndroidState extends BState<CommonSettingsAndroid> {
                       context,
                       state.darkThemeEnabled,
                       (val) => bloc.add(SetDarkTheme(val))),
-                  trailing: Text(_getThemeName(state.darkThemeEnabled),
+                  trailing: Text(
+                    _getThemeName(state.darkThemeEnabled),
                     style: theme.textTheme.caption,
                   ),
                 ),

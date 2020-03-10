@@ -4,7 +4,7 @@ import 'package:aurora_mail/utils/show_dialog.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
+import 'package:flutter/material.dart';
 
 class FreqSelectionDialog extends StatelessWidget {
   final Freq selectedItem;
@@ -21,7 +21,7 @@ class FreqSelectionDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme=Theme.of(context);
+    final theme = Theme.of(context);
     final values = Freq.values
         .getRange(0, kDebugMode ? Freq.values.length : Freq.values.length - 1);
     return AlertDialog(
@@ -44,9 +44,8 @@ class FreqSelectionDialog extends StatelessWidget {
       ),
       actions: <Widget>[
         FlatButton(
-          textColor: theme.brightness == Brightness.light
-              ? theme.accentColor
-              : null,
+          textColor:
+              theme.brightness == Brightness.light ? theme.accentColor : null,
           child: Text(i18n(context, "btn_cancel")),
           onPressed: Navigator.of(context).pop,
         ),

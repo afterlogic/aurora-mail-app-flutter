@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
+import 'package:aurora_mail/utils/base_state.dart';
+import 'package:flutter/material.dart';
 
 class Star extends StatefulWidget {
   final bool value;
@@ -53,7 +54,6 @@ class _StarState extends BState<Star> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-
     if (_isStarred) {
       return Transform.scale(
           scale: 1 + _scaleAnimation.value / 4,

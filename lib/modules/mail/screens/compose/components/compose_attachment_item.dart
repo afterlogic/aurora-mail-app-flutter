@@ -1,6 +1,5 @@
 import 'package:aurora_mail/modules/mail/models/compose_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/temp_attachment_upload.dart';
-import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +14,7 @@ class ComposeAttachmentItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme=Theme.of(context);
+    final theme = Theme.of(context);
     if (attachment is TempAttachmentUpload) {
       return ListTile(
         contentPadding: EdgeInsets.zero,

@@ -12,7 +12,8 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
   ContactsDao(AppDatabase db) : super(db);
 
   Future<void> addContacts(List<ContactsTable> newContacts) async {
-    await batch((b) => b.insertAll(contacts, newContacts,mode: InsertMode.insertOrReplace));
+    await batch((b) =>
+        b.insertAll(contacts, newContacts, mode: InsertMode.insertOrReplace));
   }
 
   Future<void> deleteContacts(List<String> uuids) {
@@ -20,20 +21,24 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
   }
 
   Future<void> deleteContactsOfUser(int userLocalId) {
-    return (delete(contacts)..where((c) => c.userLocalId.equals(userLocalId))).go();
+    return (delete(contacts)..where((c) => c.userLocalId.equals(userLocalId)))
+        .go();
   }
 
-  Future<List<ContactsTable>> getContacts(int userLocalId, {List<String> storages, String pattern}) {
+  Future<List<ContactsTable>> getContacts(int userLocalId,
+      {List<String> storages, String pattern}) {
     return (select(contacts)
           ..where((c) => c.userLocalId.equals(userLocalId))
           ..where((c) {
             if (pattern != null && pattern.isNotEmpty) {
-              return c.fullName.like("%$pattern%") | c.viewEmail.like("%$pattern%");
+              return c.fullName.like("%$pattern%") |
+                  c.viewEmail.like("%$pattern%");
             } else {
               return Constant(true);
             }
           })
-          ..where((c) => storages != null ? c.storage.isIn(storages) : Constant(true)))
+          ..where((c) =>
+              storages != null ? c.storage.isIn(storages) : Constant(true)))
         .get();
   }
 
@@ -41,11 +46,14 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
     return (select(contacts)
           ..where((c) => c.userLocalId.equals(userLocalId))
           ..where((c) => c.storage.isNotIn([StorageNames.collected]))
-          ..orderBy([(c) => OrderingTerm(expression: c.fullName.collate(Collate.noCase))]))
+          ..orderBy([
+            (c) => OrderingTerm(expression: c.fullName.collate(Collate.noCase))
+          ]))
         .watch();
   }
 
-  Stream<List<ContactsTable>> watchContactsFromStorage(int userLocalId, String storage) {
+  Stream<List<ContactsTable>> watchContactsFromStorage(
+      int userLocalId, String storage) {
     return (select(contacts)
           ..where((c) => c.userLocalId.equals(userLocalId))
           ..where((c) => c.storage.equals(storage))
@@ -53,7 +61,8 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
         .watch();
   }
 
-  Stream<List<ContactsTable>> watchContactsFromGroup(int userLocalId, String groupUuid) {
+  Stream<List<ContactsTable>> watchContactsFromGroup(
+      int userLocalId, String groupUuid) {
     return (select(contacts)
           ..where((c) => c.userLocalId.equals(userLocalId))
           ..where((c) => c.groupUUIDs.like("%$groupUuid%"))

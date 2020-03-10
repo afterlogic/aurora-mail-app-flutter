@@ -3,7 +3,9 @@ import 'dart:math';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
-import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';import 'package:aurora_mail/utils/base_state.dart';
+import 'package:flutter/material.dart';
+import 'package:aurora_mail/utils/base_state.dart';
+import 'package:aurora_mail/utils/base_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
@@ -64,7 +66,6 @@ class MailFolder extends StatelessWidget {
     }
   }
 
-
   void _selectFolder(BuildContext context) {
     Navigator.pop(context);
     BlocProvider.of<MailBloc>(context).add(SelectFolder(mailFolder));
@@ -74,9 +75,7 @@ class MailFolder extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-
     Widget _buildMessageCounter(BuildContext context) {
-
       if (mailFolder.unread != null && mailFolder.unread > 0 ||
           mailFolder.folderType == FolderType.drafts &&
               mailFolder.count != null &&
@@ -98,7 +97,6 @@ class MailFolder extends StatelessWidget {
         return null;
       }
     }
-
 
     final paddingStep = 40.0;
     var paddingCount =

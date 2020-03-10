@@ -4,7 +4,7 @@ import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
 import 'package:aurora_mail/modules/settings/screens/settings_main/settings_main_route.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
-import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
@@ -23,7 +23,8 @@ class MailBottomAppBar extends StatelessWidget {
       context,
       ContactsListRoute.name,
       arguments: ContactsListScreenArgs(
-        mailBloc: mailBloc, contactsBloc: contactsBloc,
+        mailBloc: mailBloc,
+        contactsBloc: contactsBloc,
       ),
     );
   }

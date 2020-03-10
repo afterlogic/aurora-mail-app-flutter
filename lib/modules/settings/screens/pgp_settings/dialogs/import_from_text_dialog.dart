@@ -1,7 +1,8 @@
 import 'package:aurora_mail/shared_ui/sized_dialog_content.dart';
+import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/input_validation.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
-import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
+import 'package:flutter/material.dart';
 
 class ImportFromTextDialog extends StatefulWidget {
   @override

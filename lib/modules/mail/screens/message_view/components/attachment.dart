@@ -4,7 +4,8 @@ import 'package:aurora_mail/modules/mail/blocs/message_view_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:filesize/filesize.dart';
-import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
+import 'package:flutter/material.dart';
+import 'package:aurora_mail/utils/base_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -22,7 +23,6 @@ class _AttachmentState extends BState<Attachment> {
 
   @override
   Widget build(BuildContext context) {
-
     void _startDownload() {
       BlocProvider.of<MessageViewBloc>(context)
           .add(DownloadAttachment(widget.attachment));

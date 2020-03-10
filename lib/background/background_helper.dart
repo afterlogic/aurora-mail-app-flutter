@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
 
@@ -38,7 +37,8 @@ class BackgroundHelper {
     _doOnAlarm.remove(doOnAlarm);
   }
 
-  static addOnEndAlarmObserver(bool callInBackground, Function(bool hasUpdate) doOnAlarm) {
+  static addOnEndAlarmObserver(
+      bool callInBackground, Function(bool hasUpdate) doOnAlarm) {
     _doOnEndAlarm[doOnAlarm] = callInBackground;
   }
 

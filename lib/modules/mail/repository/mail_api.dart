@@ -98,7 +98,7 @@ class MailApi {
     });
 
     final parameters = json.encode({
-      "AccountID":  _accountId,
+      "AccountID": _accountId,
       "IdentityID": identity?.entityId ?? "",
       "AliasID": alias?.entityId ?? "",
       "FetcherID": "",

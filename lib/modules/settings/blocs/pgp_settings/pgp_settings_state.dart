@@ -28,7 +28,7 @@ class LoadedState extends PgpSettingsState {
   }
 
   @override
-  List<Object> get props => [public, private,keyProgress];
+  List<Object> get props => [public, private, keyProgress];
 }
 
 class SelectKeyForImport extends PgpSettingsState {

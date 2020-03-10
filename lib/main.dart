@@ -4,7 +4,7 @@ import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/inject/app_inject.dart';
 import 'package:aurora_mail/shared_ui/restart_widget.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'background/background_helper.dart';

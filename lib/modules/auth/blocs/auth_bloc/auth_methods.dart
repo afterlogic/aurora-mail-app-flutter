@@ -155,7 +155,8 @@ class AuthMethods {
     }
   }
 
-  Future<AccountIdentity> updateIdentity(User user, Account account,List<Account> accounts) async {
+  Future<AccountIdentity> updateIdentity(
+      User user, Account account, List<Account> accounts) async {
     try {
       final identities = await _authApi.getIdentity(user);
       await _accountIdentityDao.deleteByUser(user.serverId);

@@ -75,5 +75,4 @@ class ContactsGroup {
       zip: zip ?? this.zip,
     );
   }
-
 }

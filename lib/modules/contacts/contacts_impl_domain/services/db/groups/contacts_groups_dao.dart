@@ -11,7 +11,9 @@ class ContactsGroupsDao extends DatabaseAccessor<AppDatabase>
   ContactsGroupsDao(AppDatabase db) : super(db);
 
   Future<List<ContactsGroupsTable>> getGroups(int userLocalId) {
-    return (select(contactsGroups)..where((c) => c.userLocalId.equals(userLocalId))).get();
+    return (select(contactsGroups)
+          ..where((c) => c.userLocalId.equals(userLocalId)))
+        .get();
   }
 
   Future<void> addGroups(List<ContactsGroupsTable> newGroups) async {
@@ -33,6 +35,8 @@ class ContactsGroupsDao extends DatabaseAccessor<AppDatabase>
   }
 
   Future<void> deleteGroupsOfUser(int userLocalId) async {
-    return (delete(contactsGroups)..where((g) => g.userLocalId.equals(userLocalId))).go();
+    return (delete(contactsGroups)
+          ..where((g) => g.userLocalId.equals(userLocalId)))
+        .go();
   }
 }

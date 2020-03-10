@@ -230,7 +230,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:aurora_mail/utils/base_state.dart';
-import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 

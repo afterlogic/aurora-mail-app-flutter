@@ -1,11 +1,9 @@
-import 'dart:io';
-
 import 'package:aurora_mail/modules/settings/models/sync_period.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_dialog.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
+import 'package:flutter/material.dart';
 
 class PeriodSelectionDialog extends StatelessWidget {
   final Period selectedItem;
@@ -15,9 +13,9 @@ class PeriodSelectionDialog extends StatelessWidget {
 
   static void show(BuildContext context, Period selectedItem,
       Function(Period) onItemSelected) {
-      dialog(
-          context: context,
-          builder: (_) => PeriodSelectionDialog(selectedItem, onItemSelected));
+    dialog(
+        context: context,
+        builder: (_) => PeriodSelectionDialog(selectedItem, onItemSelected));
   }
 
   @override
@@ -44,7 +42,8 @@ class PeriodSelectionDialog extends StatelessWidget {
       ),
       actions: <Widget>[
         FlatButton(
-          textColor: theme.brightness == Brightness.light ? theme.accentColor : null,
+          textColor:
+              theme.brightness == Brightness.light ? theme.accentColor : null,
           child: Text(i18n(context, "btn_cancel")),
           onPressed: Navigator.of(context).pop,
         ),

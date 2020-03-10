@@ -1,5 +1,6 @@
+import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
-import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
+import 'package:flutter/material.dart';
 
 class ComposeBody extends StatefulWidget {
   final TextEditingController textCtrl;
@@ -22,8 +23,6 @@ class _ComposeBodyState extends BState<ComposeBody> {
 
   @override
   Widget build(BuildContext context) {
-
-
     return TextField(
       enabled: widget.enable,
       controller: widget.textCtrl,
@@ -32,12 +31,11 @@ class _ComposeBodyState extends BState<ComposeBody> {
       focusNode: widget.focusNode,
       decoration: InputDecoration(
         contentPadding:
-        const EdgeInsets.symmetric(vertical: 26.0,horizontal: 16),
+            const EdgeInsets.symmetric(vertical: 26.0, horizontal: 16),
         border: OutlineInputBorder(borderSide: BorderSide.none),
         filled: true,
         fillColor:
-        widget.enable ?theme.cardColor : theme.disabledColor.withAlpha(20),
-
+            widget.enable ? theme.cardColor : theme.disabledColor.withAlpha(20),
         hintText: i18n(context, "compose_body_placeholder"),
       ),
     );

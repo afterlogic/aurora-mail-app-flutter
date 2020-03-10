@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
+import 'package:flutter/material.dart';
 
 class FadeRoute extends PageRouteBuilder {
   final Widget Function(BuildContext) builder;
@@ -6,7 +6,11 @@ class FadeRoute extends PageRouteBuilder {
   final bool fullscreenDialog;
   final RouteSettings settings;
 
-  FadeRoute({this.settings, this.duration = 200, @required this.builder, this.fullscreenDialog = false})
+  FadeRoute(
+      {this.settings,
+      this.duration = 200,
+      @required this.builder,
+      this.fullscreenDialog = false})
       : super(
             settings: settings,
             transitionDuration: Duration(milliseconds: duration),
@@ -15,7 +19,8 @@ class FadeRoute extends PageRouteBuilder {
               BuildContext context,
               Animation<double> animation,
               Animation<double> secondaryAnimation,
-            ) => builder(context),
+            ) =>
+                builder(context),
             transitionsBuilder: (
               BuildContext context,
               Animation<double> animation,

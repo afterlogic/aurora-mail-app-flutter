@@ -20,7 +20,7 @@ class _ContactsDrawerState extends BState<ContactsDrawer> {
       context,
       GroupEditRoute.name,
       arguments:
-          GroupEditScreenArgs(bloc: BlocProvider.of<ContactsBloc>(context)),
+      GroupEditScreenArgs(bloc: BlocProvider.of<ContactsBloc>(context)),
     );
   }
 
@@ -33,37 +33,37 @@ class _ContactsDrawerState extends BState<ContactsDrawer> {
         child: SafeArea(
           child: BlocBuilder<ContactsBloc, ContactsState>(
               builder: (context, state) {
-            return ListView(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text(
-                    i18n(context, "contacts_drawer_section_storages"),
-                    style: TextStyle(color: theme.disabledColor),
-                  ),
-                ),
-                _buildStorages(context, state),
-                Divider(),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text(
-                        i18n(context, "contacts_drawer_section_groups"),
+                return ListView(
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Text(
+                        i18n(context, "contacts_drawer_section_storages"),
                         style: TextStyle(color: theme.disabledColor),
                       ),
-                      IconButton(
-                        icon: Icon(Icons.add, color: theme.accentColor),
-                        onPressed: _addGroup,
+                    ),
+                    _buildStorages(context, state),
+                    Divider(),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Text(
+                            i18n(context, "contacts_drawer_section_groups"),
+                            style: TextStyle(color: theme.disabledColor),
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.add, color: theme.accentColor),
+                            onPressed: _addGroup,
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                ),
-                _buildGroups(context, state),
-              ],
-            );
-          }),
+                    ),
+                    _buildGroups(context, state),
+                  ],
+                );
+              }),
         ),
       ),
     );
@@ -143,15 +143,16 @@ class _ContactsDrawerState extends BState<ContactsDrawer> {
     if (state.groups != null) {
       return Column(
         children: state.groups
-            .map((g) => ListTile(
-                  leading: Icon(MdiIcons.pound),
-                  title: Text(g.name),
-                  selected: g.uuid == state.selectedGroup,
-                  onTap: () {
-                    bloc.add(SelectStorageGroup(group: g));
-                    Navigator.pop(context);
-                  },
-                ))
+            .map((g) =>
+            ListTile(
+              leading: Icon(MdiIcons.pound),
+              title: Text(g.name),
+              selected: g.uuid == state.selectedGroup,
+              onTap: () {
+                bloc.add(SelectStorageGroup(group: g));
+                Navigator.pop(context);
+              },
+            ))
             .toList(),
       );
     } else if (state.groups != null && state.groups.isEmpty) {

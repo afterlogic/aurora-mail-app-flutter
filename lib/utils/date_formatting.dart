@@ -2,7 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 
 class DateFormatting {
-  static String formatDateFromSeconds(int timestamp, String locale, {String format = "MMM dd"}) {
+  static String formatDateFromSeconds(int timestamp, String locale,
+      {String format = "MMM dd"}) {
     final date = DateTime.fromMillisecondsSinceEpoch((timestamp * 1000));
     return DateFormat(format, locale).format(date);
   }
@@ -16,13 +17,17 @@ class DateFormatting {
     final date = DateTime.fromMillisecondsSinceEpoch((timestamp * 1000));
     final now = DateTime.now();
 
-    if (now.day == date.day && now.month == date.month && now.year == date.year) {
+    if (now.day == date.day &&
+        now.month == date.month &&
+        now.year == date.year) {
       if (is24) {
         return DateFormat("HH:mm", locale).format(date);
       } else {
         return DateFormat("h:mm aaa", locale).format(date);
       }
-    } else if (now.day - 1 == date.day && now.month == date.month && now.year == date.year) {
+    } else if (now.day - 1 == date.day &&
+        now.month == date.month &&
+        now.year == date.year) {
       if (is24) {
         return DateFormat("'$yesterdayWord' HH:mm", locale).format(date);
       } else {
