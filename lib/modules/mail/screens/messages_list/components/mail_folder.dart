@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';import 'package:aurora_mail/utils/base_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
@@ -64,29 +64,6 @@ class MailFolder extends StatelessWidget {
     }
   }
 
-  Widget _buildMessageCounter(BuildContext context) {
-    final theme = Theme.of(context);
-    if (mailFolder.unread != null && mailFolder.unread > 0 ||
-        mailFolder.folderType == FolderType.drafts &&
-            mailFolder.count != null &&
-            mailFolder.count > 0) {
-      return Container(
-        padding: EdgeInsets.symmetric(vertical: 6.0, horizontal: 10.0),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(50.0)),
-          color: isSelected ? theme.accentColor : theme.disabledColor,
-        ),
-        child: Text(
-          mailFolder.folderType == FolderType.drafts
-              ? mailFolder.count.toString()
-              : mailFolder.unread.toString(),
-          style: TextStyle(color: Colors.white),
-        ),
-      );
-    } else {
-      return null;
-    }
-  }
 
   void _selectFolder(BuildContext context) {
     Navigator.pop(context);
@@ -95,8 +72,35 @@ class MailFolder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final paddingStep = 40.0;
+    final theme = Theme.of(context);
 
+
+    Widget _buildMessageCounter(BuildContext context) {
+
+      if (mailFolder.unread != null && mailFolder.unread > 0 ||
+          mailFolder.folderType == FolderType.drafts &&
+              mailFolder.count != null &&
+              mailFolder.count > 0) {
+        return Container(
+          padding: EdgeInsets.symmetric(vertical: 6.0, horizontal: 10.0),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.all(Radius.circular(50.0)),
+            color: isSelected ? theme.accentColor : theme.disabledColor,
+          ),
+          child: Text(
+            mailFolder.folderType == FolderType.drafts
+                ? mailFolder.count.toString()
+                : mailFolder.unread.toString(),
+            style: TextStyle(color: Colors.white),
+          ),
+        );
+      } else {
+        return null;
+      }
+    }
+
+
+    final paddingStep = 40.0;
     var paddingCount =
         mailFolder.delimiter.allMatches(mailFolder.fullName).length;
     if (mailFolder.nameSpace?.isNotEmpty == true &&

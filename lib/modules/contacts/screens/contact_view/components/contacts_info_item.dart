@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class ContactsInfoItem extends StatelessWidget {
@@ -16,13 +16,14 @@ class ContactsInfoItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme=Theme.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           SizedBox(width: 16.0),
-          Icon(icon, color: Theme.of(context).accentColor),
+          Icon(icon, color: theme.accentColor),
           SizedBox(width: 22.0),
           Expanded(
             child: Column(
@@ -32,7 +33,7 @@ class ContactsInfoItem extends StatelessWidget {
                 SizedBox(height: 5.0),
                 Text(
                   label,
-                  style: TextStyle(fontSize: 12.0, color: Theme.of(context).disabledColor),
+                  style: TextStyle(fontSize: 12.0, color: theme.disabledColor),
                 ),
               ],
             ),
@@ -41,7 +42,7 @@ class ContactsInfoItem extends StatelessWidget {
             InkWell(
               child: Container(
                 padding: EdgeInsets.symmetric(vertical: 6.0, horizontal: 10.0),
-                color: Theme.of(context).accentColor,
+                color: theme.accentColor,
                 child: Icon(MdiIcons.emailOutline, color: Colors.white,),
               ),
               onTap: () => emailToContact(value),
@@ -54,7 +55,7 @@ class ContactsInfoItem extends StatelessWidget {
 //      leading: Column(
 //        mainAxisAlignment: MainAxisAlignment.center,
 //        children: <Widget>[
-//          Icon(icon, color: Theme.of(context).accentColor),
+//          Icon(icon, color: theme.accentColor),
 //        ],
 //      ),
 //      title: Text(value, style: TextStyle(fontWeight: FontWeight.w500)),
@@ -64,7 +65,7 @@ class ContactsInfoItem extends StatelessWidget {
 //      ),
 //      trailing: Container(
 //        padding: EdgeInsets.all(6.0),
-//        color: Theme.of(context).accentColor,
+//        color: theme.accentColor,
 //        child: Icon(MdiIcons.emailOutline, color: Colors.white,),
 //      ),
 //    );

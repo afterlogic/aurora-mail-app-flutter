@@ -45,6 +45,84 @@ class ContactsListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    Widget _buildTile(BuildContext context) {
+      final name = contact.fullName;
+      final title = name != null && name.isNotEmpty ? name : contact.viewEmail;
+      final authBloc = BlocProvider.of<AuthBloc>(context);
+      final contactsBloc = BlocProvider.of<ContactsBloc>(context);
+      final currentStorage = contactsBloc.state.storages.firstWhere(
+          (s) => s.sqliteId == contactsBloc.state.selectedStorage,
+          orElse: () => null);
+
+      return ListTile(
+        leading: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Container(
+              width: 36.0,
+              height: 36.0,
+              decoration: BoxDecoration(
+                color: theme.brightness == Brightness.dark
+                    ? theme.accentColor.withOpacity(0.2)
+                    : theme.accentColor.withOpacity(0.06),
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              child: Center(
+                child: Text(
+                  title?.isNotEmpty == true ? title[0].toUpperCase() : "C",
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.w500,
+                    color: theme.accentColor,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+        title: Text(
+          title,
+          maxLines: 1,
+        ),
+        subtitle: name != null && name.isNotEmpty
+            ? Text(
+                contact.viewEmail != null && contact.viewEmail.isNotEmpty
+                    ? contact.viewEmail
+                    : i18n(context, "contacts_email_empty"),
+                style: TextStyle(
+                  color: theme.disabledColor,
+                ),
+                maxLines: 1,
+              )
+            : null,
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            if (currentStorage != null &&
+                currentStorage.name == StorageNames.team &&
+                contact.viewEmail == authBloc.currentAccount.email)
+              Container(
+                decoration: BoxDecoration(
+                  color: theme.disabledColor.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(50.0),
+                ),
+                margin: EdgeInsets.only(right: 4.0),
+                padding: EdgeInsets.symmetric(vertical: 3.0, horizontal: 6.0),
+                child: Text(
+                  i18n(context, "contacts_list_its_me_flag"),
+                  style: theme.textTheme.caption,
+                ),
+              ),
+            _getStorageIcon(context),
+          ],
+        ),
+        onTap: () => onPressed(contact),
+      );
+    }
+
     if (allowDeleting) {
       return Dismissible(
         key: Key(contact.uuid),
@@ -60,7 +138,7 @@ class ContactsListTile extends StatelessWidget {
           destructibleAction: true,
         ),
         background: Container(
-          color: Theme.of(context).errorColor,
+          color: theme.errorColor,
           child: Stack(
             children: <Widget>[
               Positioned(
@@ -77,83 +155,5 @@ class ContactsListTile extends StatelessWidget {
     } else {
       return _buildTile(context);
     }
-  }
-
-  Widget _buildTile(BuildContext context) {
-    final theme = Theme.of(context);
-    final name = contact.fullName;
-    final title = name != null && name.isNotEmpty ? name : contact.viewEmail;
-    final authBloc = BlocProvider.of<AuthBloc>(context);
-    final contactsBloc = BlocProvider.of<ContactsBloc>(context);
-    final currentStorage = contactsBloc.state.storages.firstWhere(
-        (s) => s.sqliteId == contactsBloc.state.selectedStorage,
-        orElse: () => null);
-
-    return ListTile(
-      leading: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Container(
-            width: 36.0,
-            height: 36.0,
-            decoration: BoxDecoration(
-              color: theme.brightness == Brightness.dark
-                  ? theme.accentColor.withOpacity(0.2)
-                  : theme.accentColor.withOpacity(0.06),
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            child: Center(
-              child: Text(
-                title?.isNotEmpty == true ? title[0].toUpperCase() : "C",
-                style: TextStyle(
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.w500,
-                  color: Theme.of(context).accentColor,
-                ),
-              ),
-            ),
-          ),
-        ],
-      ),
-      title: Text(
-        title,
-        maxLines: 1,
-      ),
-      subtitle: name != null && name.isNotEmpty
-          ? Text(
-              contact.viewEmail != null && contact.viewEmail.isNotEmpty
-                  ? contact.viewEmail
-                  : i18n(context, "contacts_email_empty"),
-              style: TextStyle(
-                color: Theme.of(context).disabledColor,
-              ),
-              maxLines: 1,
-            )
-          : null,
-      trailing: Row(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: <Widget>[
-          if (currentStorage != null &&
-              currentStorage.name == StorageNames.team &&
-              contact.viewEmail == authBloc.currentAccount.email)
-            Container(
-              decoration: BoxDecoration(
-                color: theme.disabledColor.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(50.0),
-              ),
-              margin: EdgeInsets.only(right: 4.0),
-              padding: EdgeInsets.symmetric(vertical: 3.0, horizontal: 6.0),
-              child: Text(
-                i18n(context, "contacts_list_its_me_flag"),
-                style: theme.textTheme.caption,
-              ),
-            ),
-          _getStorageIcon(context),
-        ],
-      ),
-      onTap: () => onPressed(contact),
-    );
   }
 }

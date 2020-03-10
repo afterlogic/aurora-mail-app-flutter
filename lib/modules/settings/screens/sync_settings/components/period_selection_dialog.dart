@@ -5,7 +5,7 @@ import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_dialog.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
 
 class PeriodSelectionDialog extends StatelessWidget {
   final Period selectedItem;
@@ -22,6 +22,8 @@ class PeriodSelectionDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return AlertDialog(
       contentPadding: EdgeInsets.zero,
       titlePadding: EdgeInsets.all(24.0),
@@ -29,7 +31,7 @@ class PeriodSelectionDialog extends StatelessWidget {
       content: AMDialogList(
         children: Period.values.map((period) {
           return RadioListTile(
-            activeColor: Theme.of(context).accentColor,
+            activeColor: theme.accentColor,
             title: Text(SyncPeriod.periodToTitle(context, period)),
             value: period,
             groupValue: selectedItem,
@@ -42,7 +44,7 @@ class PeriodSelectionDialog extends StatelessWidget {
       ),
       actions: <Widget>[
         FlatButton(
-          textColor: Theme.of(context).brightness == Brightness.light ? Theme.of(context).accentColor : null,
+          textColor: theme.brightness == Brightness.light ? theme.accentColor : null,
           child: Text(i18n(context, "btn_cancel")),
           onPressed: Navigator.of(context).pop,
         ),

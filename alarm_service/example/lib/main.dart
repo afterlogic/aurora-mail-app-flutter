@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
 import 'package:alarm_service/alarm_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -35,7 +35,7 @@ class MyApp extends StatefulWidget {
   _MyAppState createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
+class _MyAppState extends BState<MyApp> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();

@@ -15,7 +15,7 @@ import 'package:aurora_mail/shared_ui/mail_bottom_app_bar.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
@@ -31,7 +31,7 @@ class MessagesListAndroid extends StatefulWidget {
   _MessagesListAndroidState createState() => _MessagesListAndroidState();
 }
 
-class _MessagesListAndroidState extends State<MessagesListAndroid> {
+class _MessagesListAndroidState extends BState<MessagesListAndroid> {
   MessagesListBloc _messagesListBloc;
   MailBloc _mailBloc;
   ContactsBloc _contactsBloc;
@@ -275,10 +275,12 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
               messages = snap.data.where((m) => m.parentUid == null).toList();
               threads = snap.data.where((m) => m.parentUid != null).toList();
             }
+            final showProgress =
+                _selectedFolder != null && _selectedFolder.needsInfoUpdate;
             return ListView.builder(
               key: Key("mail"),
               padding: EdgeInsets.only(top: 6.0, bottom: 82.0),
-              itemCount: messages.length,
+              itemCount: showProgress ? messages.length + 1 : messages.length,
               itemBuilder: (_, i) {
                 final item = messages[i];
                 return Column(
@@ -292,9 +294,7 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
                       onStarMessage: _setStarred,
                       onDeleteMessage: _deleteMessage,
                     ),
-                    if (_selectedFolder != null &&
-                        _selectedFolder.needsInfoUpdate &&
-                        i == messages.length - 1)
+                    if (showProgress && i == messages.length - 1)
                       CircularProgressIndicator(),
                   ],
                 );

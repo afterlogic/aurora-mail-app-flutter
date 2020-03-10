@@ -15,7 +15,7 @@ import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
 import 'package:aurora_mail/utils/date_formatting.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
@@ -29,7 +29,7 @@ class ContactViewAndroid extends StatefulWidget {
   _ContactViewAndroidState createState() => _ContactViewAndroidState();
 }
 
-class _ContactViewAndroidState extends State<ContactViewAndroid> {
+class _ContactViewAndroidState extends BState<ContactViewAndroid> {
   ContactInfo _contactInfo;
 
   @override
@@ -140,6 +140,7 @@ class _ContactViewAndroidState extends State<ContactViewAndroid> {
 
   @override
   Widget build(BuildContext context) {
+
     final c = widget.contact;
     final birthDate = DateFormatting.formatBirthday(
       day: c.birthDay,
@@ -149,7 +150,7 @@ class _ContactViewAndroidState extends State<ContactViewAndroid> {
       format: i18n(context, "contacts_birth_date_format"),
     );
 
-    final sectionTitleTheme = Theme.of(context).textTheme.body2;
+    final sectionTitleTheme = theme.textTheme.body2;
 
     final _mainInfo = _buildInfos([
 //      _buildInfoItem(

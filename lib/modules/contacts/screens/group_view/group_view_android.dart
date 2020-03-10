@@ -5,7 +5,7 @@ import 'package:aurora_mail/modules/contacts/screens/contact_view/components/con
 import 'package:aurora_mail/modules/contacts/screens/group_edit/group_edit_route.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
@@ -20,7 +20,7 @@ class GroupViewAndroid extends StatefulWidget {
   _GroupViewAndroidState createState() => _GroupViewAndroidState();
 }
 
-class _GroupViewAndroidState extends State<GroupViewAndroid> {
+class _GroupViewAndroidState extends BState<GroupViewAndroid> {
   Future<void> _onAppBarActionSelected(GroupViewAppBarAction item) async {
     final bloc = BlocProvider.of<ContactsBloc>(context);
     switch (item) {

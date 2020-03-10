@@ -1,5 +1,6 @@
 import 'package:aurora_mail/modules/mail/models/compose_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/temp_attachment_upload.dart';
+import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,7 @@ class ComposeAttachmentItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme=Theme.of(context);
     if (attachment is TempAttachmentUpload) {
       return ListTile(
         contentPadding: EdgeInsets.zero,
@@ -31,8 +33,7 @@ class ComposeAttachmentItem extends StatelessWidget {
             return SizedBox(
               height: 3.0,
               child: LinearProgressIndicator(
-                backgroundColor:
-                    Theme.of(context).disabledColor.withOpacity(0.1),
+                backgroundColor: theme.disabledColor.withOpacity(0.1),
                 value: snapshot.connectionState == ConnectionState.active &&
                         snapshot.hasData
                     ? snapshot.data.progress / 100

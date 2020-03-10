@@ -12,7 +12,7 @@ import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:crypto_model/crypto_model.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PgpSettings extends StatefulWidget {
@@ -20,7 +20,7 @@ class PgpSettings extends StatefulWidget {
   _PgpSettingsState createState() => _PgpSettingsState();
 }
 
-class _PgpSettingsState extends State<PgpSettings> {
+class _PgpSettingsState extends BState<PgpSettings> {
   PgpSettingsBloc bloc = AppInjector.instance.pgpSettingsBloc();
 
   @override
@@ -182,7 +182,7 @@ class _PgpSettingsState extends State<PgpSettings> {
     List<PgpKey> private,
     String keyProgress,
   ) {
-    final theme = Theme.of(context);
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Column(

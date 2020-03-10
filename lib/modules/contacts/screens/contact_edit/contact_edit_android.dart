@@ -6,7 +6,7 @@ import 'package:aurora_mail/modules/contacts/screens/contact_edit/components/con
 import 'package:aurora_mail/modules/contacts/screens/contacts_list/contacts_list_route.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'components/contact_birth_date_picker.dart';
@@ -23,7 +23,7 @@ class ContactEditAndroid extends StatefulWidget {
   _ContactEditAndroidState createState() => _ContactEditAndroidState();
 }
 
-class _ContactEditAndroidState extends State<ContactEditAndroid> {
+class _ContactEditAndroidState extends BState<ContactEditAndroid> {
   ContactsBloc _bloc;
 
   bool _showAllFields = false;

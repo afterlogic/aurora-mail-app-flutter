@@ -1,5 +1,5 @@
 import 'package:aurora_mail/utils/internationalization.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
 
 class ComposeSubject extends StatefulWidget {
   final TextEditingController textCtrl;
@@ -13,7 +13,7 @@ class ComposeSubject extends StatefulWidget {
   _ComposeSubjectState createState() => _ComposeSubjectState();
 }
 
-class _ComposeSubjectState extends State<ComposeSubject> {
+class _ComposeSubjectState extends BState<ComposeSubject> {
   var _focusNode = new FocusNode();
 
   @override
@@ -23,6 +23,7 @@ class _ComposeSubjectState extends State<ComposeSubject> {
 
   @override
   Widget build(BuildContext context) {
+    final theme=Theme.of(context);
     return InkWell(
       onTap: _focusNode.requestFocus,
       child: Padding(
@@ -32,7 +33,7 @@ class _ComposeSubjectState extends State<ComposeSubject> {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: Text(i18n(context, "messages_subject"),
-                  style: Theme.of(context).textTheme.subhead),
+                  style: theme.textTheme.subhead),
             ),
             SizedBox(width: 8.0),
             Flexible(
@@ -53,7 +54,7 @@ class _ComposeSubjectState extends State<ComposeSubject> {
               child: IconButton(
                 icon: Icon(Icons.attachment),
                 padding: EdgeInsets.zero,
-                color: Theme.of(context).accentColor,
+                color: theme.accentColor,
                 onPressed: widget.onAttach,
               ),
             )

@@ -4,7 +4,7 @@ import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_sto
 import 'package:aurora_mail/modules/contacts/screens/group_edit/group_edit_route.dart';
 import 'package:aurora_mail/res/icons/webmail_icons.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
@@ -13,7 +13,7 @@ class ContactsDrawer extends StatefulWidget {
   _ContactsDrawerState createState() => _ContactsDrawerState();
 }
 
-class _ContactsDrawerState extends State<ContactsDrawer> {
+class _ContactsDrawerState extends BState<ContactsDrawer> {
   void _addGroup() {
     Navigator.pushNamed(
       context,
@@ -25,9 +25,12 @@ class _ContactsDrawerState extends State<ContactsDrawer> {
 
   @override
   Widget build(BuildContext context) {
+
+
+
     return Drawer(
       child: ListTileTheme(
-        selectedColor: Theme.of(context).accentColor,
+        selectedColor: theme.accentColor,
         style: ListTileStyle.drawer,
         child: SafeArea(
           child: BlocBuilder<ContactsBloc, ContactsState>(
@@ -38,7 +41,7 @@ class _ContactsDrawerState extends State<ContactsDrawer> {
                   padding: const EdgeInsets.all(16.0),
                   child: Text(
                     i18n(context, "contacts_drawer_section_storages"),
-                    style: TextStyle(color: Theme.of(context).disabledColor),
+                    style: TextStyle(color: theme.disabledColor),
                   ),
                 ),
                 _buildStorages(context, state),
@@ -51,11 +54,11 @@ class _ContactsDrawerState extends State<ContactsDrawer> {
                       Text(
                         i18n(context, "contacts_drawer_section_groups"),
                         style:
-                            TextStyle(color: Theme.of(context).disabledColor),
+                            TextStyle(color: theme.disabledColor),
                       ),
                       IconButton(
                         icon: Icon(Icons.add,
-                            color: Theme.of(context).accentColor),
+                            color: theme.accentColor),
                         onPressed: _addGroup,
                       ),
                     ],

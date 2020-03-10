@@ -1,16 +1,18 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
 import 'package:shimmer/shimmer.dart';
 
 class SkeletonLoader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return ListView.builder(
       key: Key("skeleton"),
       padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 22.0),
       itemCount: 6,
       itemBuilder: (_, i) => Shimmer.fromColors(
-        baseColor: Theme.of(context).iconTheme.color.withOpacity(0.15),
-        highlightColor: Theme.of(context).iconTheme.color.withOpacity(0.1),
+        baseColor: theme.iconTheme.color.withOpacity(0.15),
+        highlightColor: theme.iconTheme.color.withOpacity(0.1),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[

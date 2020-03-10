@@ -4,7 +4,7 @@ import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_gro
 import 'package:aurora_mail/modules/contacts/screens/contacts_list/contacts_list_route.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'components/group_edit_app_bar.dart';
@@ -18,7 +18,7 @@ class GroupEditAndroid extends StatefulWidget {
   _GroupEditAndroidState createState() => _GroupEditAndroidState();
 }
 
-class _GroupEditAndroidState extends State<GroupEditAndroid> {
+class _GroupEditAndroidState extends BState<GroupEditAndroid> {
   bool _isOrg = false;
   final _nameCtrl = TextEditingController();
   final _emailCtrl = TextEditingController();
@@ -100,6 +100,8 @@ class _GroupEditAndroidState extends State<GroupEditAndroid> {
 
   @override
   Widget build(BuildContext context) {
+
+
     return Scaffold(
       appBar: GroupEditAppBar(_onAppBarActionSelected, widget.group != null),
       body: ListView(
@@ -108,7 +110,7 @@ class _GroupEditAndroidState extends State<GroupEditAndroid> {
           SwitchListTile.adaptive(
             title: Text(i18n(context, "contacts_group_edit_is_organization")),
             value: _isOrg,
-            activeColor: Theme.of(context).accentColor,
+            activeColor: theme.accentColor,
             onChanged: (v) => setState(() => _isOrg = v),
           ),
           if (_isOrg)

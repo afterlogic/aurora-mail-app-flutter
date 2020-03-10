@@ -13,7 +13,7 @@ import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/mail_utils.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -24,7 +24,8 @@ import 'attachments_dialog.dart';
 class MessageWebViewActions {
   static const SHOW_ATTACHMENTS = "MessageWebViewActions.SHOW_ATTACHMENTS";
   static const SHOW_INFO = "MessageWebViewActions.SHOW_INFO";
-  static const DOWNLOAD_ATTACHMENT = "MessageWebViewActions.DOWNLOAD_ATTACHMENT";
+  static const DOWNLOAD_ATTACHMENT =
+      "MessageWebViewActions.DOWNLOAD_ATTACHMENT";
 }
 
 class MessageWebView extends StatefulWidget {
@@ -40,16 +41,18 @@ class MessageWebView extends StatefulWidget {
   _MessageWebViewState createState() => _MessageWebViewState();
 }
 
-class _MessageWebViewState extends State<MessageWebView> {
+class _MessageWebViewState extends BState<MessageWebView> {
   WebViewController _controller;
   String _htmlData;
   bool _pageLoaded = false;
   bool _showImages = false;
+  ThemeData theme;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     _showImages = !widget.message.hasExternals || widget.message.safety;
+    theme = Theme.of(context);
     _getHtmlWithImages();
   }
 
@@ -131,36 +134,39 @@ class _MessageWebViewState extends State<MessageWebView> {
   }
 
   void _startDownload(String downloadUrl) {
-    final attachment = widget.attachments.firstWhere((a) => !a.isInline && a.downloadUrl == downloadUrl);
-    BlocProvider.of<MessageViewBloc>(context).add(DownloadAttachment(attachment));
-    final msg = i18n(context, "messages_attachment_downloading", {"fileName": attachment.fileName});
+    final attachment = widget.attachments
+        .firstWhere((a) => !a.isInline && a.downloadUrl == downloadUrl);
+    BlocProvider.of<MessageViewBloc>(context)
+        .add(DownloadAttachment(attachment));
+    final msg = i18n(context, "messages_attachment_downloading",
+        {"fileName": attachment.fileName});
     Fluttertoast.showToast(
       msg: msg,
       timeInSecForIos: 2,
-      backgroundColor: Platform.isIOS ? Theme.of(context).disabledColor.withOpacity(0.5) : null,
+      backgroundColor:
+          Platform.isIOS ? theme.disabledColor.withOpacity(0.5) : null,
     );
   }
 
-  FutureOr<NavigationDecision> _onWebViewNavigateRequest(NavigationRequest request) async {
+  FutureOr<NavigationDecision> _onWebViewNavigateRequest(
+      NavigationRequest request) async {
     if (request.url.endsWith(MessageWebViewActions.SHOW_INFO)) {
       // TODO: implement showing message info
       return NavigationDecision.prevent;
-
     } else if (request.url.endsWith(MessageWebViewActions.SHOW_ATTACHMENTS)) {
       final messageViewBloc = BlocProvider.of<MessageViewBloc>(context);
       AttachmentsDialog.show(context, widget.attachments, messageViewBloc);
       return NavigationDecision.prevent;
-
-    } else if (request.url.endsWith(MessageWebViewActions.DOWNLOAD_ATTACHMENT)) {
-      final parts = request.url.split(MessageWebViewActions.DOWNLOAD_ATTACHMENT);
+    } else if (request.url
+        .endsWith(MessageWebViewActions.DOWNLOAD_ATTACHMENT)) {
+      final parts =
+          request.url.split(MessageWebViewActions.DOWNLOAD_ATTACHMENT);
       final downloadUrl = parts[parts.length - 2];
       _startDownload(downloadUrl);
       return NavigationDecision.prevent;
-
     } else if (request.url != _getHtmlUri(_htmlData)) {
       launch(request.url);
       return NavigationDecision.prevent;
-
     } else {
       return NavigationDecision.navigate;
     }
@@ -212,8 +218,7 @@ class _MessageWebViewState extends State<MessageWebView> {
                   child: AnimatedOpacity(
                     opacity: _pageLoaded && _htmlData != null ? 0.0 : 1.0,
                     duration: Duration(milliseconds: 100),
-                    child: Container(
-                        color: Theme.of(context).scaffoldBackgroundColor),
+                    child: Container(color: theme.scaffoldBackgroundColor),
                   ),
                 ),
               ),

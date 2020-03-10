@@ -1,6 +1,6 @@
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
 
 import 'mail_logo.dart';
 
@@ -11,6 +11,7 @@ class PresentationHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme=Theme.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
@@ -19,12 +20,12 @@ class PresentationHeader extends StatelessWidget {
           SizedBox(height: 26.0),
           Text(
             BuildProperty.appName,
-            style: Theme.of(context).textTheme.display1,
+            style: theme.textTheme.display1,
           ),
           SizedBox(height: 12.0),
           Text(
             message ?? i18n(context, "login_to_continue"),
-            style: TextStyle(color: Theme.of(context).disabledColor),
+            style: TextStyle(color: theme.disabledColor),
           ),
         ]
       ],

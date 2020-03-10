@@ -2,7 +2,7 @@ import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 import 'package:aurora_mail/utils/input_validation.dart';
 import 'package:aurora_mail/utils/mail_utils.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -34,7 +34,7 @@ class ComposeEmails extends StatefulWidget {
   _ComposeEmailsState createState() => _ComposeEmailsState();
 }
 
-class _ComposeEmailsState extends State<ComposeEmails> {
+class _ComposeEmailsState extends BState<ComposeEmails> {
   final textFieldKey = GlobalKey();
   String _emailToShowDelete;
   String _search;
@@ -75,77 +75,6 @@ class _ComposeEmailsState extends State<ComposeEmails> {
     return contacts;
   }
 
-  Widget _searchContact(Contact contact) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        if (contact.fullName.isNotEmpty)
-          RichText(
-            text: _searchMatch(contact.fullName),
-            maxLines: 1,
-          ),
-        if (contact.viewEmail.isNotEmpty)
-          RichText(
-            text: _searchMatch(contact.viewEmail),
-            maxLines: 1,
-          ),
-      ],
-    );
-  }
-
-  TextSpan _searchMatch(String match) {
-    final color = Theme.of(context).textTheme.body1.color;
-    final posRes = TextStyle(fontWeight: FontWeight.w700, color: color);
-    final negRes = TextStyle(fontWeight: FontWeight.w400, color: color);
-
-    if (_search == null || _search == "")
-      return TextSpan(text: match, style: negRes);
-    var refinedMatch = match.toLowerCase();
-    var refinedSearch = _search.toLowerCase();
-    if (refinedMatch.contains(refinedSearch)) {
-      if (refinedMatch.substring(0, refinedSearch.length) == refinedSearch) {
-        return TextSpan(
-          style: posRes,
-          text: match.substring(0, refinedSearch.length),
-          children: [
-            _searchMatch(
-              match.substring(
-                refinedSearch.length,
-              ),
-            ),
-          ],
-        );
-      } else if (refinedMatch.length == refinedSearch.length) {
-        return TextSpan(text: match, style: posRes);
-      } else {
-        return TextSpan(
-          style: negRes,
-          text: match.substring(
-            0,
-            refinedMatch.indexOf(refinedSearch),
-          ),
-          children: [
-            _searchMatch(
-              match.substring(
-                refinedMatch.indexOf(refinedSearch),
-              ),
-            ),
-          ],
-        );
-      }
-    } else if (!refinedMatch.contains(refinedSearch)) {
-      return TextSpan(text: match, style: negRes);
-    }
-    return TextSpan(
-      text: match.substring(0, refinedMatch.indexOf(refinedSearch)),
-      style: negRes,
-      children: [
-        _searchMatch(match.substring(refinedMatch.indexOf(refinedSearch)))
-      ],
-    );
-  }
-
   _focus() {
     widget.focusNode.requestFocus();
     if (widget.onCCSelected != null) widget.onCCSelected();
@@ -161,9 +90,81 @@ class _ComposeEmailsState extends State<ComposeEmails> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+
     final screenWidth = MediaQuery.of(context).size.width;
     final dropDownWidth = screenWidth / 1.25;
+
+    TextSpan _searchMatch(String match) {
+      final color = theme.textTheme.body1.color;
+      final posRes = TextStyle(fontWeight: FontWeight.w700, color: color);
+      final negRes = TextStyle(fontWeight: FontWeight.w400, color: color);
+
+      if (_search == null || _search == "")
+        return TextSpan(text: match, style: negRes);
+      var refinedMatch = match.toLowerCase();
+      var refinedSearch = _search.toLowerCase();
+      if (refinedMatch.contains(refinedSearch)) {
+        if (refinedMatch.substring(0, refinedSearch.length) == refinedSearch) {
+          return TextSpan(
+            style: posRes,
+            text: match.substring(0, refinedSearch.length),
+            children: [
+              _searchMatch(
+                match.substring(
+                  refinedSearch.length,
+                ),
+              ),
+            ],
+          );
+        } else if (refinedMatch.length == refinedSearch.length) {
+          return TextSpan(text: match, style: posRes);
+        } else {
+          return TextSpan(
+            style: negRes,
+            text: match.substring(
+              0,
+              refinedMatch.indexOf(refinedSearch),
+            ),
+            children: [
+              _searchMatch(
+                match.substring(
+                  refinedMatch.indexOf(refinedSearch),
+                ),
+              ),
+            ],
+          );
+        }
+      } else if (!refinedMatch.contains(refinedSearch)) {
+        return TextSpan(text: match, style: negRes);
+      }
+      return TextSpan(
+        text: match.substring(0, refinedMatch.indexOf(refinedSearch)),
+        style: negRes,
+        children: [
+          _searchMatch(match.substring(refinedMatch.indexOf(refinedSearch)))
+        ],
+      );
+    }
+
+    Widget _searchContact(Contact contact) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (contact.fullName.isNotEmpty)
+            RichText(
+              text: _searchMatch(contact.fullName),
+              maxLines: 1,
+            ),
+          if (contact.viewEmail.isNotEmpty)
+            RichText(
+              text: _searchMatch(contact.viewEmail),
+              maxLines: 1,
+            ),
+        ],
+      );
+    }
+
     return Container(
       padding: widget.padding,
       decoration: BoxDecoration(
@@ -180,7 +181,7 @@ class _ComposeEmailsState extends State<ComposeEmails> {
           ),
           animationDuration: Duration.zero,
           suggestionsBoxDecoration: SuggestionsBoxDecoration(
-            color: Theme.of(context).cardColor,
+            color: theme.cardColor,
             constraints: BoxConstraints(
               minWidth: dropDownWidth,
               maxWidth: dropDownWidth,
@@ -209,8 +210,7 @@ class _ComposeEmailsState extends State<ComposeEmails> {
               children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 0.0),
-                  child: Text(widget.label,
-                      style: Theme.of(context).textTheme.subhead),
+                  child: Text(widget.label, style: theme.textTheme.subhead),
                 ),
                 SizedBox(width: 8.0),
                 Flexible(
@@ -232,7 +232,7 @@ class _ComposeEmailsState extends State<ComposeEmails> {
                               : null,
                           child: Chip(
                             avatar: CircleAvatar(
-                              backgroundColor: Theme.of(context).accentColor,
+                              backgroundColor: theme.accentColor,
                               child: Text(
                                 displayName[0],
                                 style: TextStyle(color: Colors.white),

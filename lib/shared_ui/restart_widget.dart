@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
 
 // quick temp solution for updating data after selecting another user
 class RestartWidget extends StatefulWidget {
@@ -14,7 +14,7 @@ class RestartWidget extends StatefulWidget {
   _RestartWidgetState createState() => _RestartWidgetState();
 }
 
-class _RestartWidgetState extends State<RestartWidget> {
+class _RestartWidgetState extends BState<RestartWidget> {
   Key key = UniqueKey();
 
   void restartApp() {

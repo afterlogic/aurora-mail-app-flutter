@@ -11,6 +11,8 @@ class ContactsSpeedDial extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return SpeedDial(
       child: Icon(Icons.add),
       overlayColor: Colors.black,
@@ -23,17 +25,17 @@ class ContactsSpeedDial extends StatelessWidget {
         SpeedDialChild(
           child: Icon(
             MdiIcons.accountPlusOutline,
-            color: Theme.of(context).iconTheme.color,
+            color: theme.iconTheme.color,
           ),
-          backgroundColor: Theme.of(context).cardColor,
+          backgroundColor: theme.cardColor,
           onTap: () => onFabOptionSelected(ContactsFabOption.addContact),
         ),
         SpeedDialChild(
           child: Icon(
             MdiIcons.accountMultiplePlusOutline,
-            color: Theme.of(context).iconTheme.color,
+            color: theme.iconTheme.color,
           ),
-          backgroundColor: Theme.of(context).cardColor,
+          backgroundColor: theme.cardColor,
           onTap: () => onFabOptionSelected(ContactsFabOption.addGroup),
         ),
       ],
