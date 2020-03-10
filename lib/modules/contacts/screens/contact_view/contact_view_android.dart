@@ -12,10 +12,11 @@ import 'package:aurora_mail/modules/mail/repository/search_util.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/compose_route.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
+import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/date_formatting.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
-import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
@@ -140,7 +141,6 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
 
   @override
   Widget build(BuildContext context) {
-
     final c = widget.contact;
     final birthDate = DateFormatting.formatBirthday(
       day: c.birthDay,

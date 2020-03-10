@@ -3,8 +3,9 @@ import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_storage_model.dart';
 import 'package:aurora_mail/modules/contacts/screens/group_edit/group_edit_route.dart';
 import 'package:aurora_mail/res/icons/webmail_icons.dart';
+import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
-import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
@@ -25,9 +26,6 @@ class _ContactsDrawerState extends BState<ContactsDrawer> {
 
   @override
   Widget build(BuildContext context) {
-
-
-
     return Drawer(
       child: ListTileTheme(
         selectedColor: theme.accentColor,
@@ -53,12 +51,10 @@ class _ContactsDrawerState extends BState<ContactsDrawer> {
                     children: <Widget>[
                       Text(
                         i18n(context, "contacts_drawer_section_groups"),
-                        style:
-                            TextStyle(color: theme.disabledColor),
+                        style: TextStyle(color: theme.disabledColor),
                       ),
                       IconButton(
-                        icon: Icon(Icons.add,
-                            color: theme.accentColor),
+                        icon: Icon(Icons.add, color: theme.accentColor),
                         onPressed: _addGroup,
                       ),
                     ],

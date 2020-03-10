@@ -5,7 +5,8 @@ import 'package:aurora_mail/modules/mail/screens/messages_list/components/user_s
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
-import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
+import 'package:flutter/material.dart';
+import 'package:aurora_mail/utils/base_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ContactsAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -16,7 +17,7 @@ class ContactsAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme=Theme.of(context);
+    final theme = Theme.of(context);
 
     Widget _buildTitle(BuildContext context, ContactsState state) {
       if (state.selectedStorage != null && state.storages.isNotEmpty) {

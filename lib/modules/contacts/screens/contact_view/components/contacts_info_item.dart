@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
+import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class ContactsInfoItem extends StatelessWidget {
@@ -16,7 +16,7 @@ class ContactsInfoItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme=Theme.of(context);
+    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12.0),
       child: Row(
@@ -29,7 +29,9 @@ class ContactsInfoItem extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text(value, style: TextStyle(fontWeight: FontWeight.w500, fontSize: 16.0)),
+                Text(value,
+                    style:
+                        TextStyle(fontWeight: FontWeight.w500, fontSize: 16.0)),
                 SizedBox(height: 5.0),
                 Text(
                   label,
@@ -38,16 +40,20 @@ class ContactsInfoItem extends StatelessWidget {
               ],
             ),
           ),
-          emailToContact != null ?
-            InkWell(
-              child: Container(
-                padding: EdgeInsets.symmetric(vertical: 6.0, horizontal: 10.0),
-                color: theme.accentColor,
-                child: Icon(MdiIcons.emailOutline, color: Colors.white,),
-              ),
-              onTap: () => emailToContact(value),
-            )
-            : SizedBox(),
+          emailToContact != null
+              ? InkWell(
+                  child: Container(
+                    padding:
+                        EdgeInsets.symmetric(vertical: 6.0, horizontal: 10.0),
+                    color: theme.accentColor,
+                    child: Icon(
+                      MdiIcons.emailOutline,
+                      color: Colors.white,
+                    ),
+                  ),
+                  onTap: () => emailToContact(value),
+                )
+              : SizedBox(),
         ],
       ),
     );

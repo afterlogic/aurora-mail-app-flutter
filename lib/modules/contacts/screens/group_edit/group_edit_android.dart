@@ -2,9 +2,10 @@ import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_group_model.dart';
 import 'package:aurora_mail/modules/contacts/screens/contacts_list/contacts_list_route.dart';
+import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
-import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'components/group_edit_app_bar.dart';
@@ -100,8 +101,6 @@ class _GroupEditAndroidState extends BState<GroupEditAndroid> {
 
   @override
   Widget build(BuildContext context) {
-
-
     return Scaffold(
       appBar: GroupEditAppBar(_onAppBarActionSelected, widget.group != null),
       body: ListView(
@@ -116,16 +115,19 @@ class _GroupEditAndroidState extends BState<GroupEditAndroid> {
           if (_isOrg)
             Column(
               children: <Widget>[
-                _buildInput("contacts_view_email", _emailCtrl,TextInputType.emailAddress),
+                _buildInput("contacts_view_email", _emailCtrl,
+                    TextInputType.emailAddress),
                 _buildInput("contacts_view_company", _companyCtrl),
                 _buildInput("contacts_view_country", _countryCtrl),
                 _buildInput("contacts_view_province", _stateCtrl),
                 _buildInput("contacts_view_city", _cityCtrl),
                 _buildInput("contacts_view_street_address", _streetCtrl),
                 _buildInput("contacts_view_zip", _zipCtrl),
-                _buildInput("contacts_view_phone", _phoneCtrl,TextInputType.phone),
+                _buildInput(
+                    "contacts_view_phone", _phoneCtrl, TextInputType.phone),
                 _buildInput("contacts_view_fax", _faxCtrl),
-                _buildInput("contacts_view_web_page", _webCtrl,TextInputType.url),
+                _buildInput(
+                    "contacts_view_web_page", _webCtrl, TextInputType.url),
               ],
             ),
         ],

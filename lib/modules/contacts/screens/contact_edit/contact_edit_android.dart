@@ -4,9 +4,10 @@ import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 import 'package:aurora_mail/modules/contacts/screens/contact_edit/components/contact_edit_app_bar.dart';
 import 'package:aurora_mail/modules/contacts/screens/contacts_list/contacts_list_route.dart';
+import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
-import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'components/contact_birth_date_picker.dart';

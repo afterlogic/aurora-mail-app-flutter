@@ -4,7 +4,8 @@ import 'dart:io';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
+import 'package:flutter/material.dart';
+import 'package:aurora_mail/utils/base_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
@@ -33,7 +34,8 @@ class _ContactBirthDatePickerState extends BState<ContactBirthDatePicker> {
     if (date != null && date != _selectedDate) {
       setState(() => _selectedDate = date);
       _setDate();
-      widget.onPicked([_selectedDate.day, _selectedDate.month, _selectedDate.year]);
+      widget.onPicked(
+          [_selectedDate.day, _selectedDate.month, _selectedDate.year]);
     }
   }
 
@@ -43,7 +45,8 @@ class _ContactBirthDatePickerState extends BState<ContactBirthDatePicker> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     if (widget.birthDay != 0) {
-      _selectedDate = DateTime(widget.birthYear, widget.birthMonth, widget.birthDay);
+      _selectedDate =
+          DateTime(widget.birthYear, widget.birthMonth, widget.birthDay);
       _setDate();
     }
   }

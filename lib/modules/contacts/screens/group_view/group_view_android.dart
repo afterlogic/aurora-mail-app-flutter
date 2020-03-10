@@ -4,8 +4,9 @@ import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_gro
 import 'package:aurora_mail/modules/contacts/screens/contact_view/components/contacts_info_item.dart';
 import 'package:aurora_mail/modules/contacts/screens/group_edit/group_edit_route.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
+import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
-import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
@@ -30,7 +31,8 @@ class _GroupViewAndroidState extends BState<GroupViewAndroid> {
         final delete = await ConfirmationDialog.show(
           context,
           i18n(context, "contacts_group_delete_title"),
-          i18n(context, "contacts_group_delete_desc_with_name", {"group": widget.group.name}),
+          i18n(context, "contacts_group_delete_desc_with_name",
+              {"group": widget.group.name}),
           i18n(context, "btn_delete"),
           destructibleAction: true,
         );
@@ -122,7 +124,8 @@ class _GroupViewAndroidState extends BState<GroupViewAndroid> {
     return nullableWidgets.where((w) => w != null).toList();
   }
 
-  Widget _buildInfoItem({@required IconData icon, @required String label, @required String v}) {
+  Widget _buildInfoItem(
+      {@required IconData icon, @required String label, @required String v}) {
     if (v.isNotEmpty) {
       return ContactsInfoItem(icon: icon, label: label, value: v);
     } else {

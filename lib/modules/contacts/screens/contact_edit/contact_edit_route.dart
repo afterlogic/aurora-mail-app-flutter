@@ -10,5 +10,6 @@ class ContactEditScreenArgs {
   final Contact contact;
   final ContactsBloc bloc;
 
-  const ContactEditScreenArgs({this.contact, @required this.bloc}) : assert(bloc != null);
+  const ContactEditScreenArgs({this.contact, @required this.bloc})
+      : assert(bloc != null);
 }

@@ -1,6 +1,6 @@
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
-import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
+import 'package:flutter/material.dart';
 
 enum GroupEditAppBarAction { save }
 
@@ -16,12 +16,14 @@ class GroupEditAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AMAppBar(
-      title: Text(i18n(context, isEdit ? "contacts_group_edit" : "contacts_group_add")),
+      title: Text(
+          i18n(context, isEdit ? "contacts_group_edit" : "contacts_group_add")),
       actions: <Widget>[
         IconButton(
           icon: Icon(Icons.save),
           tooltip: i18n(context, "contacts_edit_save"),
-          onPressed: () => onActionSelected(context, GroupEditAppBarAction.save),
+          onPressed: () =>
+              onActionSelected(context, GroupEditAppBarAction.save),
         ),
       ],
     );
