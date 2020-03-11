@@ -1,4 +1,5 @@
 import 'package:aurora_mail/models/folder.dart';
+import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
 enum PostFolderLoadedAction { subscribeToMessages, stopMessagesRefresh }
@@ -19,31 +20,30 @@ class FoldersLoaded extends MailState {
   final Folder selectedFolder;
 
   // shows only starred messages from inbox
-  final bool isStarredFilterEnabled;
+  final MessagesFilter filter;
 
   // to fire messages events if needed
   final PostFolderLoadedAction postAction;
 
   final isProgress;
 
-  const FoldersLoaded(
-      this.folders, this.selectedFolder, this.isStarredFilterEnabled,
+  const FoldersLoaded(this.folders, this.selectedFolder, this.filter,
       [this.postAction, this.isProgress = false]);
 
   @override
   List<Object> get props =>
-      [folders, selectedFolder, postAction, isStarredFilterEnabled, isProgress];
+      [folders, selectedFolder, postAction, filter, isProgress];
 
   FoldersLoaded copyWith(
           {List<Folder> folders,
           Folder selectedFolder,
-          bool isStarredFilterEnabled,
+          MessagesFilter filter,
           PostFolderLoadedAction postAction,
           bool isProgress = false}) =>
       FoldersLoaded(
         folders ?? this.folders,
         selectedFolder ?? this.selectedFolder,
-        isStarredFilterEnabled ?? this.isStarredFilterEnabled,
+        filter ?? this.filter,
         postAction ?? this.postAction,
         isProgress ?? this.isProgress,
       );

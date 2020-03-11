@@ -55,10 +55,10 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: ba115277a9526efc174f336c83bf8ce691321781
+      resolved-ref: "72c20fb40aed3fb04d4d1c852845895e34e4225d"
       url: "https://github.com/afterlogic/aurora_ui_kit_flutter.git"
     source: git
-    version: "0.0.1"
+    version: "0.0.3"
   bloc:
     dependency: transitive
     description:

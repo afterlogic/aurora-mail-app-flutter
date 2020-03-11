@@ -39,18 +39,19 @@ class MessagesListBloc extends Bloc<MessagesListEvent, MessagesListState> {
     searchPattern = event.pattern ?? SearchPattern.Default;
     try {
       final stream = _methods.subscribeToMessages(
-        event.currentFolder,
-        event.isStarred,
-        searchTerm,
-        searchPattern,
-        user,
-        account,
+        folder: event.currentFolder,
+        isStarred: event.filter == MessagesFilter.starred,
+        isUnread: event.filter == MessagesFilter.unread,
+        searchTerm: searchTerm,
+        searchPattern: searchPattern,
+        user: user,
+        account: account,
       );
-      yield SubscribedToMessages(stream, event.isStarred, searchTerm);
+      yield SubscribedToMessages(stream, event.filter, searchTerm);
     } catch (e, s) {
       print(e);
       print(s);
-      yield SubscribedToMessages(Stream.empty(), event.isStarred, searchTerm);
+      yield SubscribedToMessages(Stream.empty(), event.filter, searchTerm);
     }
   }
 

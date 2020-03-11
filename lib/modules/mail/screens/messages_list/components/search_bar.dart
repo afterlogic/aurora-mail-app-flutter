@@ -46,7 +46,7 @@ class _SearchBarState extends State<SearchBar> {
       final params = searchUtil.searchParams(val);
       messagesListBloc.add(SubscribeToMessages(
         mailState.selectedFolder,
-        mailState.isStarredFilterEnabled,
+        mailState.filter,
         params.value,
         params.pattern,
       ));

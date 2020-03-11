@@ -11,6 +11,7 @@ class AppTheme {
     colorScheme: ColorScheme.light(primary: AppColor.primary),
     primaryColor: AppColor.primary,
     accentColor: AppColor.accent,
+    buttonColor: Colors.black26,
     buttonTheme: _buttonTheme,
     dialogTheme: _dialogTheme,
     splashFactory: InkRipple.splashFactory,
@@ -64,6 +65,7 @@ class AppTheme {
     colorScheme: ColorScheme.dark(primary: AppColor.primary),
     primaryColor: AppColor.primary,
     accentColor: AppColor.accent,
+    buttonColor: Colors.black26,
     buttonTheme: _buttonTheme,
     dialogTheme: _dialogTheme,
     splashFactory: InkRipple.splashFactory,
@@ -116,6 +118,7 @@ class AppTheme {
 
   static final _buttonTheme = ButtonThemeData(
     buttonColor: AppColor.accent,
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50.0)),
     textTheme: ButtonTextTheme.primary,
   );
 

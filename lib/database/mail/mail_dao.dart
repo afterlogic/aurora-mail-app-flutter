@@ -24,14 +24,15 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
 //        .get();
 //  }
 
-  Stream<List<Message>> watchMessages(
-    String folder,
-    int userLocalId,
-    String searchTerm,
-    SearchPattern searchPattern,
-    int accountEntityId,
-    bool starredOnly,
-  ) {
+  Stream<List<Message>> watchMessages({
+    @required String folder,
+    @required int userLocalId,
+    @required String searchTerm,
+    @required SearchPattern searchPattern,
+    @required int accountEntityId,
+    @required bool starredOnly,
+    @required bool unreadOnly,
+  }) {
     final statement = select(mail);
     statement.where((m) => m.accountEntityId.equals(accountEntityId));
     if (searchPattern == SearchPattern.Email) {
@@ -59,6 +60,8 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
     }
     statement.where((m) =>
         starredOnly ? m.flagsInJson.like("%\\flagged%") : Constant(true));
+    statement.where((m) =>
+      unreadOnly ? m.flagsInJson.like("%\\seen%").not() : Constant(true));
     // todo VO: im have exception on account with 462 mails.
     // Pagination?
     statement.limit(400);

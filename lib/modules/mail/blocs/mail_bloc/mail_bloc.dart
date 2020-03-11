@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:aurora_mail/background/background_helper.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/models/folder.dart';
+import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/bloc.dart';
 import 'package:aurora_mail/utils/api_utils.dart';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
@@ -20,7 +21,7 @@ class MailBloc extends Bloc<MailEvent, MailState> {
   }
 
   Folder _selectedFolder;
-  bool _isStarredFilterEnabled = false;
+  MessagesFilter _filter = MessagesFilter.none;
 
   @override
   MailState get initialState => FoldersEmpty();
@@ -70,7 +71,7 @@ class MailBloc extends Bloc<MailEvent, MailState> {
         yield FoldersLoaded(
           folders,
           _selectedFolder,
-          _isStarredFilterEnabled,
+          _filter,
           PostFolderLoadedAction.subscribeToMessages,
         );
         final List<Folder> foldersWithInfo = await _methods.updateFoldersHash(
@@ -78,7 +79,7 @@ class MailBloc extends Bloc<MailEvent, MailState> {
         );
 
         yield FoldersLoaded(
-            foldersWithInfo, _selectedFolder, _isStarredFilterEnabled);
+            foldersWithInfo, _selectedFolder, _filter);
 
         final guid = _selectedFolder.guid;
         _methods
@@ -101,7 +102,7 @@ class MailBloc extends Bloc<MailEvent, MailState> {
     yield FoldersLoaded(
       folders,
       _selectedFolder,
-      _isStarredFilterEnabled,
+      _filter,
       PostFolderLoadedAction.stopMessagesRefresh,
     );
   }
@@ -119,7 +120,7 @@ class MailBloc extends Bloc<MailEvent, MailState> {
             await _methods.updateFoldersHash(_selectedFolder);
 
         yield FoldersLoaded(
-            foldersWithInfo, _selectedFolder, _isStarredFilterEnabled);
+            foldersWithInfo, _selectedFolder, _filter);
 
         final guid = _selectedFolder.guid;
         _methods
@@ -129,7 +130,7 @@ class MailBloc extends Bloc<MailEvent, MailState> {
         yield FoldersEmpty();
       }
 
-      yield FoldersLoaded(newFolders, _selectedFolder, _isStarredFilterEnabled);
+      yield FoldersLoaded(newFolders, _selectedFolder, _filter);
     } catch (err, s) {
       yield FoldersError(formatError(err, s));
     }
@@ -150,7 +151,7 @@ class MailBloc extends Bloc<MailEvent, MailState> {
       );
 
       yield FoldersLoaded(
-          foldersWithInfo, _selectedFolder, _isStarredFilterEnabled);
+          foldersWithInfo, _selectedFolder, _filter);
 
       _methods
           .syncFolders(guid: guid, syncSystemFolders: true)
@@ -167,11 +168,11 @@ class MailBloc extends Bloc<MailEvent, MailState> {
     try {
       final List<Folder> folders = await _methods.getFolders();
       _selectedFolder = event.folder;
-      _isStarredFilterEnabled = event.isStarredFolder;
+      _filter = event.filter;
       yield FoldersLoaded(
         folders,
         _selectedFolder,
-        event.isStarredFolder,
+        event.filter,
         PostFolderLoadedAction.subscribeToMessages,
       );
 
@@ -199,7 +200,7 @@ class MailBloc extends Bloc<MailEvent, MailState> {
       yield FoldersLoaded(
         folders,
         _selectedFolder,
-        _isStarredFilterEnabled,
+        _filter,
       );
     } catch (err, s) {
       yield FoldersError(formatError(err, s));

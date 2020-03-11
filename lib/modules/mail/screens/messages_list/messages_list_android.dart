@@ -123,7 +123,7 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
       case PostFolderLoadedAction.subscribeToMessages:
         _messagesListBloc.add(SubscribeToMessages(
           state.selectedFolder,
-          state.isStarredFilterEnabled,
+          state.filter,
         ));
         break;
       case PostFolderLoadedAction.stopMessagesRefresh:
@@ -134,6 +134,10 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
 
   void _setStarred(Message message, bool isStarred) {
     _mailBloc.add(SetStarred([message], isStarred));
+  }
+
+  void _showAllMessages(BuildContext context) {
+    _mailBloc.add(SelectFolder(_selectedFolder));
   }
 
   @override
@@ -156,7 +160,7 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
           setState(() {});
         },
         child: Scaffold(
-          appBar: MailAppBar(initSearch:widget.initSearch),
+          appBar: MailAppBar(initSearch: widget.initSearch),
           drawer: MainDrawer(),
           body: MultiBlocListener(
             listeners: [
@@ -224,7 +228,7 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
                     if (state is SubscribedToMessages) {
                       child = _buildMessagesStream(
                         state.messagesSub,
-                        state.isStarredFilterEnabled,
+                        state.filter,
                         state.searchTerm.isNotEmpty,
                       );
                     } else {
@@ -258,7 +262,7 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
 //  Widget _buildMessagesLoading() => SkeletonLoader();
 
   Widget _buildMessagesStream(
-      Stream<List<Message>> messagesSub, bool isStarred, bool isSearch) {
+      Stream<List<Message>> messagesSub, MessagesFilter filter, bool isSearch) {
     return StreamBuilder(
       stream: messagesSub,
       builder: (ctx, AsyncSnapshot<List<Message>> snap) {
@@ -271,34 +275,53 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
             List<Message> messages = snap.data;
             List<Message> threads = [];
 
-            if (!isStarred && !isSearch) {
+            if (filter == MessagesFilter.none && !isSearch) {
               messages = snap.data.where((m) => m.parentUid == null).toList();
               threads = snap.data.where((m) => m.parentUid != null).toList();
             }
-            return ListView.builder(
-              key: Key("mail"),
-              padding: EdgeInsets.only(top: 6.0, bottom: 82.0),
-              itemCount: messages.length,
-              itemBuilder: (_, i) {
-                final item = messages[i];
-                return Column(
-                  children: <Widget>[
-                    MessageItem(
-                      item,
-                      threads.where((t) => t.parentUid == item.uid).toList(),
-                      key: Key(item.localId.toString()),
-                      onItemSelected: (Message item) =>
-                          _onMessageSelected(snap.data, item),
-                      onStarMessage: _setStarred,
-                      onDeleteMessage: _deleteMessage,
-                    ),
-                    if (_selectedFolder != null &&
-                        _selectedFolder.needsInfoUpdate &&
-                        i == messages.length - 1)
-                      CircularProgressIndicator(),
-                  ],
-                );
-              },
+            return Column(
+              children: <Widget>[
+                if (filter == MessagesFilter.unread)
+                  Column(
+                    children: <Widget>[
+                      SizedBox(height: 12.0),
+                      Text(i18n(context, "messages_filter_unread")),
+                      FlatButton(
+                        child: Text(i18n(context, "btn_show_all")),
+                        onPressed: () => _showAllMessages(context),
+                      )
+                    ],
+                  ),
+                Flexible(
+                  child: ListView.builder(
+                    key: Key("mail"),
+                    padding: EdgeInsets.only(top: 6.0, bottom: 82.0),
+                    itemCount: messages.length,
+                    itemBuilder: (_, i) {
+                      final item = messages[i];
+                      return Column(
+                        children: <Widget>[
+                          MessageItem(
+                            item,
+                            threads
+                                .where((t) => t.parentUid == item.uid)
+                                .toList(),
+                            key: Key(item.localId.toString()),
+                            onItemSelected: (Message item) =>
+                                _onMessageSelected(snap.data, item),
+                            onStarMessage: _setStarred,
+                            onDeleteMessage: _deleteMessage,
+                          ),
+                          if (_selectedFolder != null &&
+                              _selectedFolder.needsInfoUpdate &&
+                              i == messages.length - 1)
+                            CircularProgressIndicator(),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+              ],
             );
           } else {
             // build list view to be able to swipe to refresh

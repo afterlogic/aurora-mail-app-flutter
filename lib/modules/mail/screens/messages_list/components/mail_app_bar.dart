@@ -1,6 +1,7 @@
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
+import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/search_bar.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/user_selection_popup.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
@@ -77,7 +78,7 @@ class _MailAppBarState extends State<MailAppBar> {
             state is FoldersEmpty,
         builder: (_, state) {
           if (state is FoldersLoaded) {
-            return Text(state.isStarredFilterEnabled
+            return Text(state.filter == MessagesFilter.starred
                 ? i18n(context, "folders_starred")
                 : _getTitle(context, state.selectedFolder));
           } else if (state is FoldersLoading) {

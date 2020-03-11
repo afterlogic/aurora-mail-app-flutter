@@ -1,5 +1,6 @@
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/models/folder.dart';
+import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/bloc.dart';
 import 'package:aurora_mail/utils/always_non_equal_object.dart';
 import 'package:equatable/equatable.dart';
 
@@ -35,12 +36,12 @@ class CheckFoldersMessagesChanges extends MailEvent {}
 
 class SelectFolder extends MailEvent {
   final Folder folder;
-  final bool isStarredFolder;
+  final MessagesFilter filter;
 
-  const SelectFolder(this.folder, {this.isStarredFolder = false});
+  const SelectFolder(this.folder, {this.filter = MessagesFilter.none});
 
   @override
-  List<Object> get props => [folder, isStarredFolder];
+  List<Object> get props => [folder, filter];
 }
 
 class SetSeen extends MailEvent {
