@@ -23,51 +23,79 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
 //          ]))
 //        .get();
 //  }
-
-  Stream<List<Message>> watchMessages(
+  Future<List<Message>> getMessages(
     String folder,
     int userLocalId,
     String searchTerm,
     SearchPattern searchPattern,
     int accountEntityId,
     bool starredOnly,
+    int limit,
+    int offset,
   ) {
-    final statement = select(mail);
-    statement.where((m) => m.accountEntityId.equals(accountEntityId));
+    List<Variable> params = [];
+    final fields = <GeneratedColumn>{};
+    fields.add(mail.uid);
+    fields.add(mail.localId);
+    fields.add(mail.parentUid);
+    fields.add(mail.flagsInJson);
+    fields.add(mail.subject);
+    fields.add(mail.fromToDisplay);
+    fields.add(mail.toInJson);
+    fields.add(mail.hasAttachments);
+    fields.add(mail.timeStampInUTC);
+    var query =
+        "SELECT ${fields.map((item) => item.$name).join(",")} FROM ${mail.actualTableName} WHERE ";
+
+    query += "account_entity_id = ? ";
+    params.add(Variable.withInt(accountEntityId));
+
     if (searchPattern == SearchPattern.Email) {
-      statement.where(
-        (m) => searchTerm != null && searchTerm.isNotEmpty
-            ? m.toInJson.like("%$searchTerm%") |
-                m.fromInJson.like("%$searchTerm%") |
-                m.ccInJson.like("%$searchTerm%") |
-                m.bccInJson.like("%$searchTerm%")
-            : Constant(true),
-      );
+      query +=
+          "AND (to_in_json LIKE ? OR from_in_json LIKE ? OR cc_in_json LIKE ? OR bcc_in_json LIKE ?) ";
+      params.add(Variable.withString("%$searchTerm%"));
+      params.add(Variable.withString("%$searchTerm%"));
+      params.add(Variable.withString("%$searchTerm%"));
+      params.add(Variable.withString("%$searchTerm%"));
     } else {
-      statement.where((m) => m.folder.equals(folder));
-      statement.where(
-        (m) => searchTerm != null && searchTerm.isNotEmpty
-            ? m.subject.like("%$searchTerm%") |
-                m.toInJson.like("%$searchTerm%") |
-                m.fromInJson.like("%$searchTerm%") |
-                m.ccInJson.like("%$searchTerm%") |
-                m.bccInJson.like("%$searchTerm%") |
-                m.rawBody.like("%$searchTerm%") |
-                m.attachmentsForSearch.like("%$searchTerm%")
-            : Constant(true),
-      );
+      query += "AND folder = ? ";
+      params.add(Variable.withString(folder));
+
+      if (searchTerm != null && searchTerm.isNotEmpty) {
+        query +=
+            "AND (subject LIKE ? OR to_in_json LIKE ? OR from_in_json LIKE ? OR cc_in_json LIKE ? OR bcc_in_json LIKE ? OR raw_body LIKE ? OR attachments_for_search LIKE ?) ";
+        params.add(Variable.withString("%$searchTerm%"));
+        params.add(Variable.withString("%$searchTerm%"));
+        params.add(Variable.withString("%$searchTerm%"));
+        params.add(Variable.withString("%$searchTerm%"));
+        params.add(Variable.withString("%$searchTerm%"));
+        params.add(Variable.withString("%$searchTerm%"));
+        params.add(Variable.withString("%$searchTerm%"));
+      }
     }
-    statement.where((m) =>
-        starredOnly ? m.flagsInJson.like("%\\flagged%") : Constant(true));
-    // todo VO: im have exception on account with 462 mails.
-    // Pagination?
-    statement.limit(400);
-    statement.orderBy([
-      (m) => OrderingTerm(expression: m.timeStampInUTC, mode: OrderingMode.desc)
-    ]);
-    return statement.watch();
+    if (starredOnly) {
+      query += "AND flags_in_json LIKE ? ";
+      params.add(Variable.withString("%\\flagged%"));
+    }
+
+    query += "ORDER BY time_stamp_in_u_t_c ";
+    query += "DESC LIMIT ? OFFSET ? ";
+
+    params.add(Variable.withInt(limit));
+    params.add(Variable.withInt(offset));
+
+    return customSelectQuery(query, variables: params).get().then((list) {
+      return list.map((item) {
+        return Message.fromData(item.data, db);
+      }).toList();
+    });
   }
 
+  Future<Message> getMessage(int uid) {
+    return (select(mail)..where((item) => item.uid.equals(uid))).getSingle();
+  }
+
+  @UseMoor()
   Future<void> addMessages(List<Message> newMessages) async {
     try {
       await into(mail).insertAll(newMessages);

@@ -26,10 +26,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MessageViewAndroid extends StatefulWidget {
-  final List<Message> messages;
-  final int initialPage;
+  final Message message;
 
-  const MessageViewAndroid(this.messages, this.initialPage);
+  const MessageViewAndroid(this.message);
 
   @override
   _MessageViewAndroidState createState() => _MessageViewAndroidState();
@@ -39,15 +38,14 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
     with TickerProviderStateMixin {
   MessageViewBloc _messageViewBloc;
   String decryptedText;
-  int _currentPage;
 
   Timer _setSeenTimer;
 
   @override
   void initState() {
     super.initState();
-    _currentPage = widget.initialPage ?? 0;
   }
+
 
   @override
   void didChangeDependencies() {
@@ -59,7 +57,7 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
       account: BlocProvider.of<AuthBloc>(context).currentAccount,
     );
     if (BuildProperty.cryptoEnable) {
-      _messageViewBloc.add(CheckEncrypt(widget.messages[_currentPage].rawBody));
+      _messageViewBloc.add(CheckEncrypt(widget.message.rawBody));
     }
     _startSetSeenTimer(context);
   }
@@ -75,13 +73,13 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
     _setSeenTimer?.cancel();
     _setSeenTimer = null;
 
-    final flagsString = widget.messages[_currentPage].flagsInJson;
+    final flagsString = widget.message.flagsInJson;
     final flags = json.decode(flagsString) as List;
     if (!flags.contains("\\seen")) {
       _setSeenTimer = new Timer(
         SET_SEEN_DELAY,
         () => BlocProvider.of<MailBloc>(context)
-            .add(SetSeen([widget.messages[_currentPage]], true)),
+            .add(SetSeen([widget.message], true)),
       );
     }
   }
@@ -90,7 +88,7 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
     // ignore: close_sinks
     final mailBloc = BlocProvider.of<MailBloc>(context);
     final contactsBloc = BlocProvider.of<ContactsBloc>(context);
-    final msg = widget.messages[_currentPage];
+    final msg = widget.message;
     switch (action) {
       case MailViewAppBarAction.reply:
         final args = new ComposeScreenArgs(
@@ -127,7 +125,7 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
 
   _decrypt(EncryptType type) async {
     String pass;
-    final message = widget.messages[_currentPage];
+    final message = widget.message;
     if (type == EncryptType.Encrypt) {
       final result = await showDialog(
           context: context, builder: (_) => RequestPasswordDialog());
@@ -147,7 +145,7 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
   }
 
   void _deleteMessage() async {
-    final message = widget.messages[_currentPage];
+    final message = widget.message;
     final delete = await ConfirmationDialog.show(
       context,
       i18n(context, "messages_delete_title"),
@@ -187,7 +185,7 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
 
   @override
   Widget build(BuildContext context) {
-    final message = widget.messages[_currentPage];
+    final message = widget.message;
     final attachments = MailAttachment.fromJsonString(
       message.attachmentsInJson,
     );

@@ -410,4 +410,8 @@ class MailMethods {
   Future<void> setEmailSafety(String senderEmail) async {
     await _mailApi.setEmailSafety(senderEmail: senderEmail);
   }
+
+  Future<Message> getMessage(Message item) {
+    return _mailDao.getMessage(item.uid);
+  }
 }

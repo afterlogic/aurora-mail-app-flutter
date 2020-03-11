@@ -103,7 +103,7 @@ class AppNavigation {
                   BlocProvider<MessagesListBloc>.value(
                       value: args.messagesListBloc),
                   BlocProvider<ContactsBloc>.value(value: args.contactsBloc),
-                ], child: MessageViewAndroid(args.messages, args.initialPage)));
+                ], child: MessageViewAndroid(args.message)));
         break;
 
       case ComposeRoute.name:

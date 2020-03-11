@@ -9,15 +9,13 @@ class MessageViewRoute {
 }
 
 class MessageViewScreenArgs {
-  final List<Message> messages;
-  final int initialPage;
+  final Message message;
   final MailBloc mailBloc;
   final ContactsBloc contactsBloc;
   final MessagesListBloc messagesListBloc;
 
   const MessageViewScreenArgs({
-    @required this.messages,
-    @required this.initialPage,
+    @required this.message,
     @required this.mailBloc,
     @required this.messagesListBloc,
     @required this.contactsBloc,

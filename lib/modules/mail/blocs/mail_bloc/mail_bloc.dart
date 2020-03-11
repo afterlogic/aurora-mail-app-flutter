@@ -225,4 +225,8 @@ class MailBloc extends Bloc<MailEvent, MailState> {
       isStarred: event.isStarred,
     );
   }
+
+  Future<Message> getFullMessage(Message item) {
+    return _methods.getMessage(item);
+  }
 }

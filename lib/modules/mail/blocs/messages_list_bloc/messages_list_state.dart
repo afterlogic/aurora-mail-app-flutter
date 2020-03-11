@@ -12,12 +12,15 @@ abstract class MessagesListState extends Equatable {
 class MessagesEmpty extends MessagesListState {}
 
 class SubscribedToMessages extends MessagesListState with AlwaysNonEqualObject {
-  final Stream<List<Message>> messagesSub;
+  final Future<List<Message>> Function(int offset) fetch;
   final bool isStarredFilterEnabled;
   final String searchTerm;
 
   SubscribedToMessages(
-      this.messagesSub, this.isStarredFilterEnabled, this.searchTerm);
+    this.fetch,
+    this.isStarredFilterEnabled,
+    this.searchTerm,
+  );
 }
 
 class MessagesRefreshed extends MessagesListState with AlwaysNonEqualObject {}

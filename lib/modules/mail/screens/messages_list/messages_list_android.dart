@@ -13,7 +13,6 @@ import 'package:aurora_mail/modules/mail/screens/messages_list/components/main_d
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/shared_ui/mail_bottom_app_bar.dart';
 import 'package:aurora_mail/utils/base_state.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +21,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 
 import 'components/mail_app_bar.dart';
 import 'components/message_item.dart';
+import 'components/message_list_widget.dart';
 
 class MessagesListAndroid extends StatefulWidget {
   final String initSearch;
@@ -82,21 +82,20 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
     showSnack(context: ctx, scaffoldState: Scaffold.of(ctx), msg: err);
   }
 
-  void _onMessageSelected(List<Message> allMessages, Message item) {
-    final i = allMessages.indexOf(item);
-
+  void _onMessageSelected(Message item) async {
+    final message = await _mailBloc.getFullMessage(item);
     final draftsFolder = (_mailBloc.state as FoldersLoaded).folders.firstWhere(
         (f) => f.folderType == FolderType.drafts,
         orElse: () => null);
 
-    if (draftsFolder != null && item.folder == draftsFolder.fullNameRaw) {
+    if (draftsFolder != null && message.folder == draftsFolder.fullNameRaw) {
       Navigator.pushNamed(
         context,
         ComposeRoute.name,
         arguments: ComposeScreenArgs(
           mailBloc: _mailBloc,
           contactsBloc: _contactsBloc,
-          composeAction: OpenFromDrafts(item, item.uid),
+          composeAction: OpenFromDrafts(message, message.uid),
         ),
       );
     } else {
@@ -104,8 +103,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
         context,
         MessageViewRoute.name,
         arguments: MessageViewScreenArgs(
-          messages: allMessages,
-          initialPage: i,
+          message: message,
           mailBloc: _mailBloc,
           messagesListBloc: _messagesListBloc,
           contactsBloc: _contactsBloc,
@@ -224,7 +222,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
                     Widget child;
                     if (state is SubscribedToMessages) {
                       child = _buildMessagesStream(
-                        state.messagesSub,
+                        state.fetch,
                         state.isStarredFilterEnabled,
                         state.searchTerm.isNotEmpty,
                       );
@@ -258,60 +256,21 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
 
 //  Widget _buildMessagesLoading() => SkeletonLoader();
 
-  Widget _buildMessagesStream(
-      Stream<List<Message>> messagesSub, bool isStarred, bool isSearch) {
-    return StreamBuilder(
-      stream: messagesSub,
-      builder: (ctx, AsyncSnapshot<List<Message>> snap) {
-        if (snap.connectionState == ConnectionState.active) {
-          if (snap.hasError) {
-            _showError(ctx, snap.error.toString());
-            return ListView();
-          } else if (snap.hasData && snap.data.isNotEmpty) {
-            // isStarred and isSearch show FLAT structure
-            List<Message> messages = snap.data;
-            List<Message> threads = [];
-
-            if (!isStarred && !isSearch) {
-              messages = snap.data.where((m) => m.parentUid == null).toList();
-              threads = snap.data.where((m) => m.parentUid != null).toList();
-            }
-            final showProgress =
-                _selectedFolder != null && _selectedFolder.needsInfoUpdate;
-            return ListView.builder(
-              key: Key("mail"),
-              padding: EdgeInsets.only(top: 6.0, bottom: 82.0),
-              itemCount: showProgress ? messages.length + 1 : messages.length,
-              itemBuilder: (_, i) {
-                final item = messages[i];
-                return Column(
-                  children: <Widget>[
-                    MessageItem(
-                      item,
-                      threads.where((t) => t.parentUid == item.uid).toList(),
-                      key: Key(item.localId.toString()),
-                      onItemSelected: (Message item) =>
-                          _onMessageSelected(snap.data, item),
-                      onStarMessage: _setStarred,
-                      onDeleteMessage: _deleteMessage,
-                    ),
-                    if (showProgress && i == messages.length - 1)
-                      CircularProgressIndicator(),
-                  ],
-                );
-              },
-            );
-          } else {
-            // build list view to be able to swipe to refresh
-            if (_selectedFolder != null && _selectedFolder.needsInfoUpdate) {
-              return _buildMessagesLoading();
-            }
-
-            return AMEmptyList(message: i18n(context, "messages_empty"));
-          }
-        } else {
-          return _buildMessagesLoading();
-        }
+  Widget _buildMessagesStream(Future<List<Message>> Function(int offset) fetch,
+      bool isStarred, bool isSearch) {
+    return MessageListWidget(
+      isSearch: isSearch,
+      isStarred: isStarred,
+      fetch: fetch,
+      builder: (item, thread) {
+        return MessageItem(
+          item,
+          thread,
+          key: Key(item.localId.toString()),
+          onItemSelected: (Message item) => _onMessageSelected(item),
+          onStarMessage: _setStarred,
+          onDeleteMessage: _deleteMessage,
+        );
       },
     );
   }
