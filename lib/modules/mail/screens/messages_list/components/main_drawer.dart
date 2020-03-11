@@ -201,8 +201,8 @@ class _MainDrawerState extends BState<MainDrawer> {
         mailFolder: mailFolder,
         isSelected: selected == mailFolder.guid && filter != MessagesFilter.starred,
         key: Key(mailFolder.guid),
-        children: _getFolderWidgets(
-            mailFolders, selected, filter, mailFolder.guid),
+//        children: _getFolderWidgets(
+//            mailFolders, selected, filter, mailFolder.guid),
       );
     }).toList();
   }

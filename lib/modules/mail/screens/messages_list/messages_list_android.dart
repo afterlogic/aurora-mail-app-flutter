@@ -288,6 +288,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
                       Text(i18n(context, "messages_filter_unread")),
                       FlatButton(
                         child: Text(i18n(context, "btn_show_all")),
+                        textColor: theme.accentColor,
                         onPressed: () => _showAllMessages(context),
                       )
                     ],
