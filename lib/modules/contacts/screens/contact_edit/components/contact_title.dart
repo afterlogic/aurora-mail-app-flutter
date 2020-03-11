@@ -8,10 +8,11 @@ class ContactTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return ListTile(
       title: Text(
         i18n(context, title),
-        style: Theme.of(context).textTheme.title,
+        style: theme.textTheme.title,
       ),
     );
   }

@@ -9,7 +9,7 @@ import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/starred_folder.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';import 'package:aurora_mail/utils/base_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'mail_folder.dart';
@@ -19,7 +19,7 @@ class MainDrawer extends StatefulWidget {
   _MainDrawerState createState() => _MainDrawerState();
 }
 
-class _MainDrawerState extends State<MainDrawer> {
+class _MainDrawerState extends BState<MainDrawer> {
   var _refreshCompleter = new Completer();
   _DrawerMode mode = _DrawerMode.folders;
 
@@ -31,13 +31,13 @@ class _MainDrawerState extends State<MainDrawer> {
   @override
   Widget build(BuildContext context) {
     final authBloc = BlocProvider.of<AuthBloc>(context);
-    final theme = Theme.of(context);
+
     final multiAccountEnable = BuildProperty.multiAccountEnable;
 
     return Drawer(
       child: ListTileTheme(
         style: ListTileStyle.drawer,
-        selectedColor: Theme.of(context).accentColor,
+        selectedColor: theme.accentColor,
         child: SafeArea(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -196,9 +196,7 @@ class _MainDrawerState extends State<MainDrawer> {
   List<MailFolder> _getFolderWidgets(
       List<Folder> mailFolders, String selected, MessagesFilter filter,
       [String parentGuid]) {
-    return mailFolders
-        .where((f) => f.parentGuid == parentGuid)
-        .map((mailFolder) {
+    return mailFolders.map((mailFolder) {
       return MailFolder(
         mailFolder: mailFolder,
         isSelected: selected == mailFolder.guid && filter != MessagesFilter.starred,

@@ -13,7 +13,7 @@ abstract class MessagesListState extends Equatable {
 
 class MessagesEmpty extends MessagesListState {}
 
-class SubscribedToMessages extends MessagesListState {
+class SubscribedToMessages extends MessagesListState with AlwaysNonEqualObject {
   final Stream<List<Message>> messagesSub;
   final MessagesFilter filter;
   final String searchTerm;

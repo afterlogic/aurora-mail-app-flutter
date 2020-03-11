@@ -1,3 +1,4 @@
+import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 
@@ -19,7 +20,7 @@ class ComposeAppBar extends StatefulWidget implements PreferredSizeWidget {
   final Size preferredSize = const Size.fromHeight(kToolbarHeight);
 }
 
-class _ComposeAppBarState extends State<ComposeAppBar> {
+class _ComposeAppBarState extends BState<ComposeAppBar> {
   String selectedEmail;
 
   @override

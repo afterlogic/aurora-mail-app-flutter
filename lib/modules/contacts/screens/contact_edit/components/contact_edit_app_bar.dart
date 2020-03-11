@@ -13,7 +13,6 @@ class ContactEditAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   final Size preferredSize = const Size.fromHeight(kToolbarHeight);
 
-
   @override
   Widget build(BuildContext context) {
     return AMAppBar(
@@ -22,7 +21,8 @@ class ContactEditAppBar extends StatelessWidget implements PreferredSizeWidget {
         IconButton(
           icon: Icon(Icons.save),
           tooltip: i18n(context, "contacts_edit_save"),
-          onPressed:() => onActionSelected(context, ContactEditAppBarAction.save),
+          onPressed: () =>
+              onActionSelected(context, ContactEditAppBarAction.save),
         ),
       ],
     );

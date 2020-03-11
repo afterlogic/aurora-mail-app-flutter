@@ -3,7 +3,7 @@ import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
 import 'package:aurora_mail/shared_ui/restart_widget.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class UserTile extends StatefulWidget {
@@ -17,7 +17,7 @@ class UserTile extends StatefulWidget {
   _UserTileState createState() => _UserTileState();
 }
 
-class _UserTileState extends State<UserTile> {
+class _UserTileState extends BState<UserTile> {
   void _selectUser() {
     if (widget.compact == true) Navigator.pop(context);
     BlocProvider.of<AuthBloc>(context).add(SelectUser(widget.user.localId));
@@ -52,7 +52,7 @@ class _UserTileState extends State<UserTile> {
           ? null
           : IconButton(
               icon: Icon(Icons.delete_outline),
-              color: Theme.of(context).iconTheme.color,
+              color: theme.iconTheme.color,
               tooltip: i18n(context, "settings_accounts_delete"),
               onPressed: _showDeleteDialog,
             ),
@@ -65,7 +65,7 @@ class _UserTileState extends State<UserTile> {
   Widget _buildLeading() {
     if (!widget.compact) {
       if (widget.user.token == null) {
-        return Icon(Icons.error, color: Theme.of(context).disabledColor);
+        return Icon(Icons.error, color: theme.disabledColor);
       } else {
         return Icon(Icons.account_circle);
       }

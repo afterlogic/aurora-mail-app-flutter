@@ -15,7 +15,7 @@ import 'package:aurora_mail/shared_ui/mail_bottom_app_bar.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
@@ -31,7 +31,7 @@ class MessagesListAndroid extends StatefulWidget {
   _MessagesListAndroidState createState() => _MessagesListAndroidState();
 }
 
-class _MessagesListAndroidState extends State<MessagesListAndroid> {
+class _MessagesListAndroidState extends BState<MessagesListAndroid> {
   MessagesListBloc _messagesListBloc;
   MailBloc _mailBloc;
   ContactsBloc _contactsBloc;
@@ -68,9 +68,9 @@ class _MessagesListAndroidState extends State<MessagesListAndroid> {
       user: authBloc.currentUser,
       account: authBloc.currentAccount,
     );
-    _mailBloc = new MailBloc(
-      user: authBloc.currentUser,
-      account: authBloc.currentAccount,
+    _mailBloc.init(
+      authBloc.currentUser,
+      authBloc.currentAccount,
     );
 
     _contactsBloc.add(GetContacts());

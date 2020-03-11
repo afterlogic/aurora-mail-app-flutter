@@ -4,7 +4,7 @@ class _SearchUtil {
   const _SearchUtil();
 
   SearchParams searchParams(String text) {
-    if (text.startsWith(_emailCase)) {
+    if (text?.startsWith(_emailCase) == true) {
       return SearchParams(
         text.substring(_emailCase.length),
         SearchPattern.Email,

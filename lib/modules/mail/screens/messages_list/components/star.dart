@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
 
 class Star extends StatefulWidget {
   final bool value;
@@ -16,7 +16,7 @@ class Star extends StatefulWidget {
   _StarState createState() => _StarState();
 }
 
-class _StarState extends State<Star> with TickerProviderStateMixin {
+class _StarState extends BState<Star> with TickerProviderStateMixin {
   final _animDuration = new Duration(milliseconds: 130);
   AnimationController _parentCtrl;
   Animation<double> _scaleAnimation;
@@ -53,6 +53,7 @@ class _StarState extends State<Star> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+
     if (_isStarred) {
       return Transform.scale(
           scale: 1 + _scaleAnimation.value / 4,
@@ -68,7 +69,7 @@ class _StarState extends State<Star> with TickerProviderStateMixin {
           padding: EdgeInsets.zero,
           icon: Icon(
             Icons.star_border,
-            color: widget.enabled ? Theme.of(context).disabledColor : null,
+            color: widget.enabled ? theme.disabledColor : null,
           ),
           onPressed: widget.enabled ? () => _setStarred(true) : null,
         ),

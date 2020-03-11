@@ -3,7 +3,7 @@ import 'package:aurora_mail/utils/identity_util.dart';
 import 'package:aurora_mail/utils/input_validation.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
 
 class GenerateKeyDialog extends StatefulWidget {
   final List<AliasOrIdentity> identities;
@@ -15,7 +15,7 @@ class GenerateKeyDialog extends StatefulWidget {
   _GenerateKeyDialogState createState() => _GenerateKeyDialogState();
 }
 
-class _GenerateKeyDialogState extends State<GenerateKeyDialog> {
+class _GenerateKeyDialogState extends BState<GenerateKeyDialog> {
   static const lengths = [1024, 2048, 3072, 4096, 8192];
   var length = lengths[1];
   AliasOrIdentity current;

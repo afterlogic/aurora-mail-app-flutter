@@ -7,7 +7,7 @@ import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/messages_list_
 import 'package:aurora_mail/modules/mail/repository/search_util.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SearchBar extends StatefulWidget {
@@ -20,7 +20,7 @@ class SearchBar extends StatefulWidget {
   _SearchBarState createState() => _SearchBarState();
 }
 
-class _SearchBarState extends State<SearchBar> {
+class _SearchBarState extends BState<SearchBar> {
   MailBloc mailBloc;
   MessagesListBloc messagesListBloc;
   Timer debounce;
@@ -30,6 +30,9 @@ class _SearchBarState extends State<SearchBar> {
   void initState() {
     super.initState();
     searchCtrl = TextEditingController(text: widget.initSearch ?? "");
+    if (widget.initSearch != null) {
+      _getMessages(widget.initSearch);
+    }
   }
 
   @override
@@ -74,6 +77,7 @@ class _SearchBarState extends State<SearchBar> {
           icon: Icon(Icons.close),
           onPressed: () {
             setState(() {
+              _getMessages(null);
               searchCtrl.clear();
               widget.onCancel();
             });

@@ -11,7 +11,7 @@ import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:aurora_ui_kit/components/am_button.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:theme/app_theme.dart';
 
@@ -24,7 +24,7 @@ class TwoFactorAuthWidget extends StatefulWidget {
   _TwoFactorAuthWidgetState createState() => _TwoFactorAuthWidgetState();
 }
 
-class _TwoFactorAuthWidgetState extends State<TwoFactorAuthWidget> {
+class _TwoFactorAuthWidgetState extends BState<TwoFactorAuthWidget> {
   final pinCtrl = TextEditingController();
   final formKey = GlobalKey<FormState>();
   final bloc = TwoFactorBloc();

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
 
 class SlideHorizontalRoute extends PageRouteBuilder {
   final Widget Function(BuildContext) builder;

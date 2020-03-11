@@ -24,7 +24,7 @@ import 'package:aurora_mail/utils/show_dialog.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:crypto_worker/crypto_worker.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:keyboard_actions/keyboard_action.dart';
 import 'package:keyboard_actions/keyboard_actions.dart';
@@ -44,7 +44,7 @@ class ComposeAndroid extends StatefulWidget {
   _ComposeAndroidState createState() => _ComposeAndroidState();
 }
 
-class _ComposeAndroidState extends State<ComposeAndroid> {
+class _ComposeAndroidState extends BState<ComposeAndroid> {
   ComposeBloc _bloc;
   Aliases alias;
   AccountIdentity identity;
@@ -420,7 +420,7 @@ class _ComposeAndroidState extends State<ComposeAndroid> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+
     final lockUsers = _lock == EncryptType.Encrypt;
 
     Widget _done(FocusNode node) {

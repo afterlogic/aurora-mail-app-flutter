@@ -4,7 +4,7 @@ import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
 import 'package:aurora_mail/modules/settings/screens/settings_main/settings_main_route.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
@@ -38,6 +38,8 @@ class MailBottomAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     final iconSize = 28.0;
     return BottomAppBar(
       child: Row(
@@ -47,8 +49,8 @@ class MailBottomAppBar extends StatelessWidget {
             icon: Icon(
               MdiIcons.email,
               color: selectedRoute == MailBottomAppBarRoutes.mail
-                  ? Theme.of(context).accentColor
-                  : Theme.of(context).disabledColor,
+                  ? theme.accentColor
+                  : theme.disabledColor,
             ),
             tooltip: i18n(context, "messages_list_app_bar_mail"),
             iconSize: iconSize,
@@ -58,8 +60,8 @@ class MailBottomAppBar extends StatelessWidget {
             icon: Icon(
               MdiIcons.contactMail,
               color: selectedRoute == MailBottomAppBarRoutes.contacts
-                  ? Theme.of(context).accentColor
-                  : Theme.of(context).disabledColor,
+                  ? theme.accentColor
+                  : theme.disabledColor,
             ),
             tooltip: i18n(context, "messages_list_app_bar_contacts"),
             iconSize: iconSize,
@@ -69,8 +71,8 @@ class MailBottomAppBar extends StatelessWidget {
             icon: Icon(
               MdiIcons.settings,
               color: selectedRoute == MailBottomAppBarRoutes.settings
-                  ? Theme.of(context).accentColor
-                  : Theme.of(context).disabledColor,
+                  ? theme.accentColor
+                  : theme.disabledColor,
             ),
             tooltip: i18n(context, "messages_list_app_bar_settings"),
             iconSize: iconSize,

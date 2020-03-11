@@ -9,7 +9,7 @@ import 'package:aurora_mail/modules/mail/screens/message_view/components/message
 import 'package:aurora_mail/utils/date_formatting.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:filesize/filesize.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:html/parser.dart';
@@ -256,10 +256,12 @@ class MailUtils {
     @required List<MailAttachment> attachments,
     @required bool showLightEmail,
   }) {
+    final theme = Theme.of(context);
+
     final subject = message.subject.isNotEmpty
         ? message.subject
         : i18n(context, "messages_no_subject");
-    final theme = Theme.of(context);
+
     final paddingBottom = MediaQuery.of(context).padding.bottom;
 
     final accentColor = _getWebColor(theme.accentColor);
@@ -360,6 +362,7 @@ class MailUtils {
 
   static String _getDarkStyles(BuildContext context, bool showLightEmail) {
     final theme = Theme.of(context);
+
     final isDark = theme.brightness == Brightness.dark;
     final backgroundColor = _getWebColor(theme.scaffoldBackgroundColor);
     final textColor = _getWebColor(theme.textTheme.body1.color);
@@ -384,7 +387,9 @@ class MailUtils {
 
   static String _getAttachment(
       BuildContext context, MailAttachment attachment) {
-    final iconColor = _getWebColor(Theme.of(context).iconTheme.color);
+    final theme = Theme.of(context);
+
+    final iconColor = _getWebColor(theme.iconTheme.color);
     final authBloc = BlocProvider.of<AuthBloc>(context);
     String leading;
     if (attachment.thumbnailUrl == null || attachment.thumbnailUrl.isEmpty) {

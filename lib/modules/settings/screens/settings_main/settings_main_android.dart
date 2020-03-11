@@ -10,7 +10,7 @@ import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
 import 'package:aurora_mail/shared_ui/mail_bottom_app_bar.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SettingsMainAndroid extends StatefulWidget {
@@ -18,7 +18,7 @@ class SettingsMainAndroid extends StatefulWidget {
   _SettingsMainAndroidState createState() => _SettingsMainAndroidState();
 }
 
-class _SettingsMainAndroidState extends State<SettingsMainAndroid> {
+class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

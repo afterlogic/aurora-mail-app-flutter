@@ -4,7 +4,7 @@ import 'package:aurora_mail/modules/mail/blocs/compose_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/compose_bloc/compose_bloc.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ComposeBottomBar extends StatefulWidget {
@@ -16,10 +16,10 @@ class ComposeBottomBar extends StatefulWidget {
   _ComposeBottomBarState createState() => _ComposeBottomBarState();
 }
 
-class _ComposeBottomBarState extends State<ComposeBottomBar> {
+class _ComposeBottomBarState extends BState<ComposeBottomBar> {
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+
     final bloc = BlocProvider.of<ComposeBloc>(context);
     return BlocBuilder<ComposeBloc, ComposeState>(
       bloc: bloc,

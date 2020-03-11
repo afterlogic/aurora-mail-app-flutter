@@ -5,7 +5,7 @@ import 'package:aurora_mail/modules/mail/blocs/message_view_bloc/message_view_st
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:crypto_worker/crypto_worker.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MailBottomBar extends StatefulWidget {
@@ -17,7 +17,7 @@ class MailBottomBar extends StatefulWidget {
   _MailBottomBarState createState() => _MailBottomBarState();
 }
 
-class _MailBottomBarState extends State<MailBottomBar> {
+class _MailBottomBarState extends BState<MailBottomBar> {
   EncryptType encryptType = EncryptType.None;
   bool decrypted = false;
 

@@ -1,6 +1,6 @@
 import 'package:aurora_mail/utils/identity_util.dart';
 import 'package:crypto_model/crypto_model.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
 
 class KeyItem extends StatefulWidget {
   final PgpKey pgpKey;
@@ -13,10 +13,10 @@ class KeyItem extends StatefulWidget {
   _KeyItemState createState() => _KeyItemState();
 }
 
-class _KeyItemState extends State<KeyItem> {
+class _KeyItemState extends BState<KeyItem> {
   @override
   Widget build(BuildContext context) {
-    var textTheme = Theme.of(context).textTheme;
+    var textTheme = theme.textTheme;
 
     final length = widget.pgpKey.key.length != null
         ? "(${widget.pgpKey.length}-bit,"

@@ -1,7 +1,7 @@
 import 'package:aurora_mail/models/alias_or_identity.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/components/compose_type_ahead.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class IdentitySelector extends StatefulWidget {
@@ -24,7 +24,7 @@ class IdentitySelector extends StatefulWidget {
   _IdentitySelectorState createState() => _IdentitySelectorState();
 }
 
-class _IdentitySelectorState extends State<IdentitySelector> {
+class _IdentitySelectorState extends BState<IdentitySelector> {
   final focusNode = FocusNode();
 
   Future<List<AliasOrIdentity>> _buildSuggestions(String _) async {
@@ -54,7 +54,7 @@ class _IdentitySelectorState extends State<IdentitySelector> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+
     final screenWidth = MediaQuery.of(context).size.width;
     final dropDownWidth = screenWidth / 1.25;
     return Container(
@@ -72,7 +72,7 @@ class _IdentitySelectorState extends State<IdentitySelector> {
           ),
           animationDuration: Duration.zero,
           suggestionsBoxDecoration: SuggestionsBoxDecoration(
-            color: Theme.of(context).cardColor,
+            color: theme.cardColor,
             constraints: BoxConstraints(
               minWidth: dropDownWidth,
               maxWidth: dropDownWidth,
@@ -103,7 +103,7 @@ class _IdentitySelectorState extends State<IdentitySelector> {
                   padding: const EdgeInsets.symmetric(vertical: 0.0),
                   child: Text(
                     widget.label,
-                    style: Theme.of(context).textTheme.subhead,
+                    style: theme.textTheme.subhead,
                   ),
                 ),
                 SizedBox(width: 8.0),

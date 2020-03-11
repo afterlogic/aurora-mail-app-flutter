@@ -1,14 +1,14 @@
 import 'package:aurora_mail/utils/input_validation.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
 
 class EncryptDialog extends StatefulWidget {
   @override
   _EncryptDialogState createState() => _EncryptDialogState();
 }
 
-class _EncryptDialogState extends State<EncryptDialog> {
+class _EncryptDialogState extends BState<EncryptDialog> {
   final _passCtrl = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   var _sign = false;

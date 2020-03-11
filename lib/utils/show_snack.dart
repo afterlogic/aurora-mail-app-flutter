@@ -1,5 +1,5 @@
 import 'package:aurora_mail/utils/internationalization.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
 
 void showSnack({
   @required BuildContext context,
@@ -11,9 +11,9 @@ void showSnack({
   bool isError = true,
 }) {
   if (Theme == null || scaffoldState == null) return;
+  final theme = Theme.of(context);
   final errorMessage = i18n(context, msg.toString(), arg);
 
-  final theme = Theme.of(context);
   final snack = theme.brightness == Brightness.light
       ? SnackBar(
           duration: duration,

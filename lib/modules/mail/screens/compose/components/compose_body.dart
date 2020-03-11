@@ -1,5 +1,5 @@
 import 'package:aurora_mail/utils/internationalization.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
 
 class ComposeBody extends StatefulWidget {
   final TextEditingController textCtrl;
@@ -14,7 +14,7 @@ class ComposeBody extends StatefulWidget {
   _ComposeBodyState createState() => _ComposeBodyState();
 }
 
-class _ComposeBodyState extends State<ComposeBody> {
+class _ComposeBodyState extends BState<ComposeBody> {
   @override
   void initState() {
     super.initState();
@@ -22,7 +22,7 @@ class _ComposeBodyState extends State<ComposeBody> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+
 
     return TextField(
       enabled: widget.enable,

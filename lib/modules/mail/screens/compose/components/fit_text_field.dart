@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
 
 class FitTextField extends StatefulWidget {
   final Widget child;
@@ -16,7 +16,7 @@ class FitTextField extends StatefulWidget {
   State<StatefulWidget> createState() => new FitTextFieldState();
 }
 
-class FitTextFieldState extends State<FitTextField> {
+class FitTextFieldState extends BState<FitTextField> {
   TextStyle textStyle = TextStyle(color: Colors.grey[600]);
 
   @override

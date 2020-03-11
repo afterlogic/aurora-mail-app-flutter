@@ -16,7 +16,7 @@ import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:aurora_ui_kit/components/am_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:theme/app_theme.dart';
@@ -37,7 +37,7 @@ class LoginAndroid extends StatefulWidget {
   _LoginAndroidState createState() => _LoginAndroidState();
 }
 
-class _LoginAndroidState extends State<LoginAndroid> {
+class _LoginAndroidState extends BState<LoginAndroid> {
   final hostCtrl = TextEditingController();
   final emailCtrl = TextEditingController();
   final passwordCtrl = TextEditingController();

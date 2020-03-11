@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:aurora_mail/background/background_helper.dart';
-
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 import 'package:aurora_mail/modules/contacts/screens/contact_edit/contact_edit_route.dart';
@@ -9,6 +8,7 @@ import 'package:aurora_mail/modules/contacts/screens/contact_view/contact_view_r
 import 'package:aurora_mail/modules/contacts/screens/contacts_list/components/contacts_app_bar.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/mail_bloc.dart';
 import 'package:aurora_mail/shared_ui/mail_bottom_app_bar.dart';
+import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
@@ -25,7 +25,7 @@ class ContactsListAndroid extends StatefulWidget {
   _ContactsListAndroidState createState() => _ContactsListAndroidState();
 }
 
-class _ContactsListAndroidState extends State<ContactsListAndroid> {
+class _ContactsListAndroidState extends BState<ContactsListAndroid> {
   final _refreshKey = GlobalKey<RefreshIndicatorState>();
 
   var _refreshCompleter = new Completer();
@@ -33,7 +33,7 @@ class _ContactsListAndroidState extends State<ContactsListAndroid> {
   @override
   void initState() {
     super.initState();
-     BackgroundHelper.addOnAlarmObserver(false, onAlarm);
+    BackgroundHelper.addOnAlarmObserver(false, onAlarm);
   }
 
   @override
@@ -42,7 +42,7 @@ class _ContactsListAndroidState extends State<ContactsListAndroid> {
     super.dispose();
   }
 
-  void onAlarm(){
+  void onAlarm() {
     _refreshKey.currentState.show();
   }
 
@@ -92,7 +92,9 @@ class _ContactsListAndroidState extends State<ContactsListAndroid> {
                   // for groups
                   _completeRefresh();
                 }
-              } else if (state.showAllVisibleContacts != true && !state.currentlySyncingStorages.contains(state.selectedStorage)) {
+              } else if (state.showAllVisibleContacts != true &&
+                  !state.currentlySyncingStorages
+                      .contains(state.selectedStorage)) {
                 // for storages
                 _completeRefresh();
               }
@@ -109,24 +111,29 @@ class _ContactsListAndroidState extends State<ContactsListAndroid> {
           color: Colors.black,
           child: BlocBuilder<ContactsBloc, ContactsState>(
               builder: (context, state) {
-            if (state.contacts == null || state.contacts.isEmpty && state.currentlySyncingStorages.contains(state.selectedStorage)) return _buildLoading(state);
-            else if (state.contacts.isEmpty) return _buildContactsEmpty(state);
-            else return _buildContacts(context, state);
+            if (state.contacts == null ||
+                state.contacts.isEmpty &&
+                    state.currentlySyncingStorages
+                        .contains(state.selectedStorage))
+              return _buildLoading(state);
+            else if (state.contacts.isEmpty)
+              return _buildContactsEmpty(state);
+            else
+              return _buildContacts(context, state);
           }),
         ),
       ),
-      bottomNavigationBar: MailBottomAppBar(
-          selectedRoute: MailBottomAppBarRoutes.contacts),
+      bottomNavigationBar:
+          MailBottomAppBar(selectedRoute: MailBottomAppBarRoutes.contacts),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: AMFloatingActionButton(
         child: Icon(MdiIcons.accountPlusOutline),
-        onPressed: () =>
-            Navigator.pushNamed(
-              context,
-              ContactEditRoute.name,
-              arguments: ContactEditScreenArgs(
-                  bloc: BlocProvider.of<ContactsBloc>(context)),
-            ),
+        onPressed: () => Navigator.pushNamed(
+          context,
+          ContactEditRoute.name,
+          arguments: ContactEditScreenArgs(
+              bloc: BlocProvider.of<ContactsBloc>(context)),
+        ),
       ),
     );
   }
@@ -148,7 +155,8 @@ class _ContactsListAndroidState extends State<ContactsListAndroid> {
       children: <Widget>[
         Flexible(
           child: ListView.builder(
-            padding: EdgeInsets.only(bottom: 82.0 + MediaQuery.of(context).padding.bottom),
+            padding: EdgeInsets.only(
+                bottom: 82.0 + MediaQuery.of(context).padding.bottom),
             itemBuilder: (_, i) => ContactsListTile(
               contact: state.contacts[i],
               onPressed: (c) => _onContactSelected(context, c),

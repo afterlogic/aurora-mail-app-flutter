@@ -4,6 +4,7 @@ import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_gro
 import 'package:aurora_mail/modules/contacts/screens/contact_view/components/contacts_info_item.dart';
 import 'package:aurora_mail/modules/contacts/screens/group_edit/group_edit_route.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
+import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,7 +21,7 @@ class GroupViewAndroid extends StatefulWidget {
   _GroupViewAndroidState createState() => _GroupViewAndroidState();
 }
 
-class _GroupViewAndroidState extends State<GroupViewAndroid> {
+class _GroupViewAndroidState extends BState<GroupViewAndroid> {
   Future<void> _onAppBarActionSelected(GroupViewAppBarAction item) async {
     final bloc = BlocProvider.of<ContactsBloc>(context);
     switch (item) {
@@ -30,7 +31,8 @@ class _GroupViewAndroidState extends State<GroupViewAndroid> {
         final delete = await ConfirmationDialog.show(
           context,
           i18n(context, "contacts_group_delete_title"),
-          i18n(context, "contacts_group_delete_desc_with_name", {"group": widget.group.name}),
+          i18n(context, "contacts_group_delete_desc_with_name",
+              {"group": widget.group.name}),
           i18n(context, "btn_delete"),
           destructibleAction: true,
         );
@@ -122,7 +124,8 @@ class _GroupViewAndroidState extends State<GroupViewAndroid> {
     return nullableWidgets.where((w) => w != null).toList();
   }
 
-  Widget _buildInfoItem({@required IconData icon, @required String label, @required String v}) {
+  Widget _buildInfoItem(
+      {@required IconData icon, @required String label, @required String v}) {
     if (v.isNotEmpty) {
       return ContactsInfoItem(icon: icon, label: label, value: v);
     } else {

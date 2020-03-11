@@ -5,17 +5,24 @@ class ContactDropdown extends StatelessWidget {
   final int primaryValue;
   final void Function(int) onSelected;
 
-  const ContactDropdown({Key key, @required this.options, @required this.primaryValue, @required this.onSelected}) : super(key: key);
+  const ContactDropdown(
+      {Key key,
+      @required this.options,
+      @required this.primaryValue,
+      @required this.onSelected})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
       child: DropdownButton<int>(
-        items: options.map((o) => DropdownMenuItem(
-          value: options.indexOf(o),
-          child: Text(o),
-        )).toList(),
+        items: options
+            .map((o) => DropdownMenuItem(
+                  value: options.indexOf(o),
+                  child: Text(o),
+                ))
+            .toList(),
         value: primaryValue,
         onChanged: onSelected,
       ),

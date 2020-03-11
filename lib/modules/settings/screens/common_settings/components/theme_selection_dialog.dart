@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_dialog.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
@@ -7,10 +5,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ThemeSelectionDialog extends StatelessWidget {
-  final bool theme;
+  final bool isTheme;
   final Function(bool) onItemSelected;
 
-  const ThemeSelectionDialog(this.onItemSelected, this.theme);
+  const ThemeSelectionDialog(this.onItemSelected, this.isTheme);
 
   static void show(
       BuildContext context, bool selected, Function(bool) onItemSelected) {
@@ -21,6 +19,8 @@ class ThemeSelectionDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return AlertDialog(
       contentPadding: EdgeInsets.zero,
       titlePadding: EdgeInsets.all(24.0),
@@ -28,30 +28,30 @@ class ThemeSelectionDialog extends StatelessWidget {
       content: AMDialogList(
         children: [
           RadioListTile<bool>(
-            activeColor: Theme.of(context).accentColor,
+            activeColor: theme.accentColor,
             title: Text(i18n(context, "settings_dark_theme_system")),
             value: null,
-            groupValue: theme,
+            groupValue: isTheme,
             onChanged: (val) {
               onItemSelected(null);
               Navigator.pop(context);
             },
           ),
           RadioListTile<bool>(
-            activeColor: Theme.of(context).accentColor,
+            activeColor: theme.accentColor,
             title: Text(i18n(context, "settings_dark_theme_dark")),
             value: true,
-            groupValue: theme,
+            groupValue: isTheme,
             onChanged: (val) {
               onItemSelected(true);
               Navigator.pop(context);
             },
           ),
           RadioListTile<bool>(
-            activeColor: Theme.of(context).accentColor,
+            activeColor: theme.accentColor,
             title: Text(i18n(context, "settings_dark_theme_light")),
             value: false,
-            groupValue: theme,
+            groupValue: isTheme,
             onChanged: (val) {
               onItemSelected(false);
               Navigator.pop(context);
@@ -61,7 +61,8 @@ class ThemeSelectionDialog extends StatelessWidget {
       ),
       actions: <Widget>[
         FlatButton(
-          textColor: Theme.of(context).brightness == Brightness.light ? Theme.of(context).accentColor : null,
+          textColor:
+              theme.brightness == Brightness.light ? theme.accentColor : null,
           child: Text(i18n(context, "btn_cancel")),
           onPressed: Navigator.of(context).pop,
         ),

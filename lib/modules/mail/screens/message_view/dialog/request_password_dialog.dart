@@ -1,13 +1,13 @@
 import 'package:aurora_mail/utils/input_validation.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
 
 class RequestPasswordDialog extends StatefulWidget {
   @override
   _RequestPasswordDialogState createState() => _RequestPasswordDialogState();
 }
 
-class _RequestPasswordDialogState extends State<RequestPasswordDialog> {
+class _RequestPasswordDialogState extends BState<RequestPasswordDialog> {
   final _passCtrl = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   var _obscurePass = true;

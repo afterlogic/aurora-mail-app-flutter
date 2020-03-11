@@ -12,6 +12,7 @@ import 'package:aurora_mail/modules/mail/repository/search_util.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/compose_route.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
+import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/date_formatting.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
@@ -29,7 +30,7 @@ class ContactViewAndroid extends StatefulWidget {
   _ContactViewAndroidState createState() => _ContactViewAndroidState();
 }
 
-class _ContactViewAndroidState extends State<ContactViewAndroid> {
+class _ContactViewAndroidState extends BState<ContactViewAndroid> {
   ContactInfo _contactInfo;
 
   @override
@@ -149,7 +150,7 @@ class _ContactViewAndroidState extends State<ContactViewAndroid> {
       format: i18n(context, "contacts_birth_date_format"),
     );
 
-    final sectionTitleTheme = Theme.of(context).textTheme.body2;
+    final sectionTitleTheme = theme.textTheme.body2;
 
     final _mainInfo = _buildInfos([
 //      _buildInfoItem(

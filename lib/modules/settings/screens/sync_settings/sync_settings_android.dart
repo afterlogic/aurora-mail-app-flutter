@@ -4,7 +4,7 @@ import 'package:aurora_mail/modules/settings/models/sync_period.dart';
 import 'package:aurora_mail/modules/settings/screens/sync_settings/components/freq_selection_dialog.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
@@ -15,7 +15,7 @@ class SyncSettingsAndroid extends StatefulWidget {
   _SyncSettingsAndroidState createState() => _SyncSettingsAndroidState();
 }
 
-class _SyncSettingsAndroidState extends State<SyncSettingsAndroid> {
+class _SyncSettingsAndroidState extends BState<SyncSettingsAndroid> {
   void _onFreqDurationSelected(BuildContext context, Freq selected) {
     FreqSelectionDialog.show(context, selected, (frequency) {
       BlocProvider.of<SettingsBloc>(context).add(SetFrequency(frequency));
@@ -48,7 +48,7 @@ class _SyncSettingsAndroidState extends State<SyncSettingsAndroid> {
                   title: Text(i18n(context, "settings_sync_frequency")),
                   trailing: Text(
                     SyncFreq.freqToString(context, freq),
-                    style: Theme.of(context).textTheme.caption,
+                    style: theme.textTheme.caption,
                   ),
                   onTap: () => _onFreqDurationSelected(context, freq),
                 ),
@@ -57,7 +57,7 @@ class _SyncSettingsAndroidState extends State<SyncSettingsAndroid> {
                   title: Text(i18n(context, "settings_sync_period")),
                   trailing: Text(
                     SyncPeriod.periodToTitle(context, period),
-                    style: Theme.of(context).textTheme.caption,
+                    style: theme.textTheme.caption,
                   ),
                   onTap: () => _onPeriodSelected(context, period),
                 ),
