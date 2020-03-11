@@ -42,19 +42,18 @@ class MessagesListBloc extends Bloc<MessagesListEvent, MessagesListState> {
       final type = Folder.getFolderTypeFromNumber(event.currentFolder.type);
       final isSent = type == FolderType.sent || type == FolderType.drafts;
 
-      final fetch = (int offset) => _methods.getMessages(
-            event.currentFolder,
-            event.filter == MessagesFilter.starred,
-            event.filter == MessagesFilter.unread,
-            searchTerm,
-            searchPattern,
-            user,
-            account,
-            offset,
-          );
+      final stream = _methods.getMessages(
+        event.currentFolder,
+        event.filter == MessagesFilter.starred,
+        event.filter == MessagesFilter.unread,
+        searchTerm,
+        searchPattern,
+        user,
+        account,
+      );
 
       yield SubscribedToMessages(
-        fetch,
+        stream,
         searchTerm,
         isSent,
         event.props.toString(),

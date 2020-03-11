@@ -23,7 +23,7 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
 //          ]))
 //        .get();
 //  }
-  Future<List<Message>> getMessages(
+  Stream<List<Message>> getMessages(
     String folder,
     int userLocalId,
     String searchTerm,
@@ -31,8 +31,6 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
     int accountEntityId,
     bool starredOnly,
     bool unreadOnly,
-    int limit,
-    int offset,
   ) {
     List<Variable> params = [];
     final fields = <GeneratedColumn>{};
@@ -85,12 +83,12 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
     }
 
     query += "ORDER BY time_stamp_in_u_t_c DESC ";
-    query += "LIMIT ? OFFSET ? ";
+//    query += "LIMIT ? OFFSET ? ";
+//
+//    params.add(Variable.withInt(limit));
+//    params.add(Variable.withInt(offset));
 
-    params.add(Variable.withInt(limit));
-    params.add(Variable.withInt(offset));
-
-    return customSelectQuery(query, variables: params).get().then((list) {
+    return customSelectQuery(query, variables: params,readsFrom: {mail}).watch().map((list) {
       return list.map((item) {
         return Message.fromData(item.data, db);
       }).toList();
@@ -106,9 +104,6 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
       await into(mail).insertAll(newMessages);
     } catch (err) {
 //      print("addMessages err: ${err}");
-    }
-    if (notifyUpdate != null) {
-      notifyUpdate();
     }
   }
 
@@ -142,6 +137,4 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
   Future<int> deleteMessagesOfUser(int userLocalId) {
     return (delete(mail)..where((m) => m.userLocalId.equals(userLocalId))).go();
   }
-
-  static Function notifyUpdate;
 }

@@ -22,7 +22,6 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 
 import 'components/mail_app_bar.dart';
 import 'components/message_item.dart';
-import 'components/message_list_widget.dart';
 
 class MessagesListAndroid extends StatefulWidget {
   final String initSearch;
@@ -226,11 +225,10 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
                   builder: (context, state) {
                     Widget child;
                     if (state is SubscribedToMessages) {
-                      child = _buildMessagesStream(
-                        state.key.toString(),
-                        state.fetch,
-                        state.isSent,
+                      child =   _buildMessagesStream(
+                        state.stream,
                         state.filter,
+                        state.isSent,
                       );
                     } else {
                       child = _buildMessagesLoading();
@@ -263,47 +261,85 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
 //  Widget _buildMessagesLoading() => SkeletonLoader();
 
   Widget _buildMessagesStream(
-    String key,
-    Future<List<Message>> Function(int offset) fetch,
-    bool isSent,
+    Stream<List<Message>> messagesSub,
     MessagesFilter filter,
+    bool isSent,
   ) {
-    final loadingProgress = _selectedFolder?.needsInfoUpdate == true;
-    final isSearch = filter != MessagesFilter.none;
+    return StreamBuilder(
+      stream: messagesSub,
+      builder: (ctx, AsyncSnapshot<List<Message>> snap) {
+        if (snap.connectionState == ConnectionState.active) {
+          if (snap.hasError) {
+            _showError(ctx, snap.error.toString());
+            return ListView();
+          } else if (snap.hasData && snap.data.isNotEmpty) {
+            // isStarred and isSearch show FLAT structure
+            List<Message> messages = snap.data;
+            List<Message> threads = [];
 
-    return Column(children: <Widget>[
-      if (filter == MessagesFilter.unread)
-        Column(
-          children: <Widget>[
-            SizedBox(height: 12.0),
-            Text(i18n(context, "messages_filter_unread")),
-            FlatButton(
-              child: Text(i18n(context, "btn_show_all")),
-              textColor: theme.accentColor,
-              onPressed: () => _showAllMessages(context),
-            )
-          ],
-        ),
-      Flexible(
-        child: MessageListWidget(
-          key: Key(key),
-          isLoading: loadingProgress,
-          showThread: !isSearch && filter == MessagesFilter.none,
-          fetch: fetch,
-          builder: (item, thread) {
-            return MessageItem(
-              isSent,
-              item,
-              thread,
-              key: Key(item.localId.toString()),
-              onItemSelected: (Message item) => _onMessageSelected(item),
-              onStarMessage: _setStarred,
-              onDeleteMessage: _deleteMessage,
+            if (filter == MessagesFilter.none) {
+              messages = snap.data.where((m) => m.parentUid == null).toList();
+              threads = snap.data.where((m) => m.parentUid != null).toList();
+            }
+            return Column(
+              children: <Widget>[
+                if (filter == MessagesFilter.unread)
+                  Column(
+                    children: <Widget>[
+                      SizedBox(height: 12.0),
+                      Text(i18n(context, "messages_filter_unread")),
+                      FlatButton(
+                        child: Text(i18n(context, "btn_show_all")),
+                        textColor: theme.accentColor,
+                        onPressed: () => _showAllMessages(context),
+                      )
+                    ],
+                  ),
+                Flexible(
+                  child: ListView.builder(
+                    key: Key("mail"),
+                    padding: EdgeInsets.only(top: 6.0, bottom: 82.0),
+                    itemCount: messages.length,
+                    itemBuilder: (_, i) {
+                      final item = messages[i];
+                      return Column(
+                        children: <Widget>[
+                          MessageItem(
+                            isSent,
+                            item,
+                            threads
+                                .where((t) => t.parentUid == item.uid)
+                                .toList(),
+                            key: Key(item.localId.toString()),
+                            onItemSelected: (Message item) =>
+                                _onMessageSelected(item),
+                            onStarMessage: _setStarred,
+                            onDeleteMessage: _deleteMessage,
+                          ),
+                          if (_selectedFolder != null &&
+                              _selectedFolder.needsInfoUpdate &&
+                              i == messages.length - 1)
+                            CircularProgressIndicator(),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+              ],
             );
-          },
-        ),
-      ),
-    ]);
+          } else {
+            // build list view to be able to swipe to refresh
+            if (_selectedFolder != null && _selectedFolder.needsInfoUpdate) {
+              return _buildMessagesLoading();
+            }
+
+            return AMEmptyList(message: i18n(context, "messages_empty"));
+          }
+        } else {
+          return _buildMessagesLoading();
+        }
+      },
+    );
   }
 
   _startRefresh() {

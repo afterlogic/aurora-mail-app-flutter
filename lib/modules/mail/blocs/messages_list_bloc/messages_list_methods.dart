@@ -13,7 +13,7 @@ class MessagesListMethods {
     _mailApi = new MailApi(user: user, account: account);
   }
 
-  Future<List<Message>> getMessages(
+  Stream<List<Message>> getMessages(
     Folder folder,
     bool isStarred,
     bool unreadOnly,
@@ -21,7 +21,6 @@ class MessagesListMethods {
     SearchPattern searchPattern,
     User user,
     Account account,
-    int offset,
   ) {
     return _mailDao.getMessages(
       folder.fullNameRaw,
@@ -31,8 +30,6 @@ class MessagesListMethods {
       account.entityId,
       isStarred,
       unreadOnly,
-      _limit,
-      offset,
     );
   }
 
