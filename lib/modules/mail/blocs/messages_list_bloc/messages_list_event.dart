@@ -21,7 +21,7 @@ class SubscribeToMessages extends MessagesListEvent {
       [this.searchTerm, this.pattern]);
 
   @override
-  List<Object> get props => [currentFolder, filter, searchTerm];
+  List<Object> get props => [currentFolder.fullNameRaw, filter, searchTerm,pattern];
 }
 
 class StopMessagesRefresh extends MessagesListEvent {}

@@ -65,13 +65,6 @@ class _MessageListWidgetState extends State<MessageListWidget> {
     _load();
   }
 
-  @override
-  void didUpdateWidget(MessageListWidget oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    isEnd = false;
-    setState(() {});
-  }
-
   _load() async {
     if (isProgress) return;
     isProgress = true;
@@ -99,7 +92,7 @@ class _MessageListWidgetState extends State<MessageListWidget> {
 
   @override
   Widget build(BuildContext context) {
-    if (firstProgress) {
+    if (firstProgress || (widget.isLoading && messages.isEmpty)) {
       return Center(
         child: CircularProgressIndicator(),
       );
