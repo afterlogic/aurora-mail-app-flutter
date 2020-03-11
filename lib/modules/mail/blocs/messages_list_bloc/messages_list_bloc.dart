@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/mail/repository/search_util.dart';
 import 'package:aurora_mail/utils/api_utils.dart';
 import 'package:bloc/bloc.dart';
@@ -13,7 +14,7 @@ class MessagesListBloc extends Bloc<MessagesListEvent, MessagesListState> {
   final User user;
   final Account account;
   MessagesListMethods _methods;
-
+  MessagesListEvent lastEvent;
   String searchTerm = "";
   SearchPattern searchPattern = SearchPattern.Default;
 
@@ -28,6 +29,7 @@ class MessagesListBloc extends Bloc<MessagesListEvent, MessagesListState> {
   Stream<MessagesListState> mapEventToState(
     MessagesListEvent event,
   ) async* {
+    lastEvent = event;
     if (event is SubscribeToMessages) yield* _subscribeToMessages(event);
     if (event is StopMessagesRefresh) yield MessagesRefreshed();
     if (event is DeleteMessages) yield* _deleteMessage(event);
@@ -38,6 +40,9 @@ class MessagesListBloc extends Bloc<MessagesListEvent, MessagesListState> {
     searchTerm = event.searchTerm ?? "";
     searchPattern = event.pattern ?? SearchPattern.Default;
     try {
+      final type = Folder.getFolderTypeFromNumber(event.currentFolder.type);
+      final isSent = type == FolderType.sent || type == FolderType.drafts;
+
       final fetch = (int offset) => _methods.getMessages(
             event.currentFolder,
             event.isStarred,
@@ -47,11 +52,24 @@ class MessagesListBloc extends Bloc<MessagesListEvent, MessagesListState> {
             account,
             offset,
           );
-      yield SubscribedToMessages(fetch, event.isStarred, searchTerm);
+
+      yield SubscribedToMessages(
+        fetch,
+        event.isStarred,
+        searchTerm,
+        isSent,
+        event.props.toString(),
+      );
     } catch (e, s) {
       print(e);
       print(s);
-      yield SubscribedToMessages(null, event.isStarred, searchTerm);
+      yield SubscribedToMessages(
+        null,
+        event.isStarred,
+        searchTerm,
+        false,
+        event.props.toString(),
+      );
     }
   }
 

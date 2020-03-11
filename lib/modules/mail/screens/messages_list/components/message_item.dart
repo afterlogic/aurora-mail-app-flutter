@@ -19,11 +19,13 @@ class MessageItem extends StatefulWidget {
   final List<Message> children;
   final Message message;
   final Key key;
+  final bool isSent;
   final Function(Message) onItemSelected;
   final Function(Message, bool) onStarMessage;
   final Function(Message) onDeleteMessage;
 
   const MessageItem(
+    this.isSent,
     this.message,
     this.children, {
     this.key,
@@ -117,7 +119,10 @@ class _MessageItemState extends BState<MessageItem> {
                   ? _toggleThreads
                   : () => widget.onItemSelected(widget.message),
               key: Key(widget.message.uid.toString()),
-              title: Text(widget.message.fromToDisplay,
+              title: Text(
+                  widget.isSent
+                      ? widget.message.toToDisplay
+                      : widget.message.fromToDisplay,
                   style: TextStyle(
                     fontWeight: fontWeight,
                     fontSize: 14.0,
@@ -235,7 +240,7 @@ class _MessageItemState extends BState<MessageItem> {
 //                        indent: 4.0,
 //                        endIndent: 16.0,
 //                      ),
-                      MessageItem(t, [],
+                      MessageItem(widget.isSent, t, [],
                           key: Key(t.localId.toString()),
                           onItemSelected: widget.onItemSelected,
                           onStarMessage: widget.onStarMessage,

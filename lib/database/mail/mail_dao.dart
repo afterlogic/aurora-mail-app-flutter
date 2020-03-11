@@ -41,7 +41,7 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
     fields.add(mail.flagsInJson);
     fields.add(mail.subject);
     fields.add(mail.fromToDisplay);
-    fields.add(mail.toInJson);
+    fields.add(mail.toToDisplay);
     fields.add(mail.hasAttachments);
     fields.add(mail.timeStampInUTC);
     var query =
@@ -102,6 +102,9 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
     } catch (err) {
 //      print("addMessages err: ${err}");
     }
+    if (notifyUpdate != null) {
+      notifyUpdate();
+    }
   }
 
   Future<void> updateMessagesFlags(List<MessageInfo> infos) async {
@@ -134,4 +137,6 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
   Future<int> deleteMessagesOfUser(int userLocalId) {
     return (delete(mail)..where((m) => m.userLocalId.equals(userLocalId))).go();
   }
+
+  static Function notifyUpdate;
 }

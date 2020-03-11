@@ -222,9 +222,11 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
                     Widget child;
                     if (state is SubscribedToMessages) {
                       child = _buildMessagesStream(
+                        state.key.toString(),
                         state.fetch,
                         state.isStarredFilterEnabled,
                         state.searchTerm.isNotEmpty,
+                        state.isSent,
                       );
                     } else {
                       child = _buildMessagesLoading();
@@ -256,14 +258,24 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
 
 //  Widget _buildMessagesLoading() => SkeletonLoader();
 
-  Widget _buildMessagesStream(Future<List<Message>> Function(int offset) fetch,
-      bool isStarred, bool isSearch) {
+  Widget _buildMessagesStream(
+    String key,
+    Future<List<Message>> Function(int offset) fetch,
+    bool isStarred,
+    bool isSearch,
+    bool isSent,
+  ) {
+    final loadingProgress = _selectedFolder?.needsInfoUpdate == true;
+
     return MessageListWidget(
+      key: Key(key),
+      isLoading: loadingProgress,
       isSearch: isSearch,
       isStarred: isStarred,
       fetch: fetch,
       builder: (item, thread) {
         return MessageItem(
+          isSent,
           item,
           thread,
           key: Key(item.localId.toString()),

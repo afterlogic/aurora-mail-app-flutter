@@ -3,5 +3,5 @@ class AlwaysNonEqualObject {
   bool operator ==(Object other) => false;
 
   @override
-  int get hashCode => hashCode;
+  int get hashCode => super.hashCode;
 }

@@ -52,6 +52,8 @@ class Mail extends Table {
 
   IntColumn get timeStampInUTC => integer()();
 
+  TextColumn get toToDisplay => text()();
+
   TextColumn get toInJson => text().nullable()();
 
   TextColumn get fromInJson => text().nullable()();
@@ -183,7 +185,27 @@ class Mail extends Table {
       } catch (err) {
         throw Exception("Couldn't find message: ${raw["Uid"]}");
       }
-
+      if (raw["CC"] != null) {
+        print(raw["CC"]);
+      }
+      final toToDisplay = (raw["To"] != null &&
+              raw["To"]["@Collection"]?.isNotEmpty == true)
+          ? raw["To"]["@Collection"]
+              ?.map(
+                (item) => item["DisplayName"]?.isNotEmpty == true
+                    ? item["DisplayName"]
+                    : item["Email"],
+              )
+              ?.join(", ") as String
+          : (raw["CC"] != null && raw["CC"]["@Collection"]?.isNotEmpty == true)
+              ? raw["CC"]["@Collection"]
+                  ?.map(
+                    (item) => item["DisplayName"]?.isNotEmpty == true
+                        ? item["DisplayName"]
+                        : item["Email"],
+                  )
+                  ?.join(", ") as String
+              : "Unknown sender";
       final displayName = raw["From"] != null
           ? raw["From"]["@Collection"][0]["DisplayName"]
           : "Unknown sender";
@@ -202,6 +224,7 @@ class Mail extends Table {
 
       messageInfo.hasBody = true;
       messagesChunk.add(new Message(
+        toToDisplay: toToDisplay,
         localId: null,
         uid: raw["Uid"] as int,
         userLocalId: userLocalId,

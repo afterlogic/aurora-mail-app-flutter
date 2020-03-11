@@ -15,11 +15,15 @@ class SubscribedToMessages extends MessagesListState with AlwaysNonEqualObject {
   final Future<List<Message>> Function(int offset) fetch;
   final bool isStarredFilterEnabled;
   final String searchTerm;
+  final bool isSent;
+  final String key;
 
   SubscribedToMessages(
     this.fetch,
     this.isStarredFilterEnabled,
     this.searchTerm,
+    this.isSent,
+    this.key,
   );
 }
 

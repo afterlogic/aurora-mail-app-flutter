@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/database/mail/mail_dao.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_ui_kit/components/am_empty_list.dart';
 import 'package:flutter/material.dart';
@@ -10,13 +11,16 @@ class MessageListWidget extends StatefulWidget {
   final Future<List<Message>> Function(int offset) fetch;
   final bool isStarred;
   final bool isSearch;
+  final bool isLoading;
 
   const MessageListWidget({
+    Key key,
     this.fetch,
     this.isStarred,
     this.isSearch,
     this.builder,
-  });
+    this.isLoading,
+  }) : super(key: key);
 
   @override
   _MessageListWidgetState createState() => _MessageListWidgetState();
@@ -33,6 +37,33 @@ class _MessageListWidgetState extends State<MessageListWidget> {
   @override
   void initState() {
     super.initState();
+    //todo it is hot fix
+    MailDao.notifyUpdate = checkUpdate;
+    init();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    MailDao.notifyUpdate = null;
+  }
+
+  checkUpdate() {
+    if (isEnd) {
+      isEnd = false;
+      isProgress = false;
+      _load();
+    }
+  }
+
+  init() {
+    threads = {};
+    messages = [];
+    currentOffset = 0;
+    isProgress = false;
+    firstProgress = true;
+    isEnd = false;
+    if (mounted) setState(() {});
     _load();
   }
 
@@ -80,10 +111,12 @@ class _MessageListWidgetState extends State<MessageListWidget> {
     }
     return ListView.builder(
       padding: EdgeInsets.only(top: 6.0, bottom: 82.0),
-      itemCount: messages.length + (isEnd ? 0 : 1),
+      itemCount: messages.length + (isEnd && !widget.isLoading ? 0 : 1),
       itemBuilder: (context, i) {
         if (i >= messages.length) {
-          _load();
+          if (!isEnd) {
+            _load();
+          }
           return Center(child: CircularProgressIndicator());
         }
         final message = messages[i];
