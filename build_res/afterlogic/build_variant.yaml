@@ -7,8 +7,7 @@ background_color: "#FFFFFF"
 splashGradientTop: "#FFFFFF"
 splashGradientBottom: "#FFFFFF"
 
-privacyPolicy: "https://afterlogic.com/products/webmail-pro-licensing"
-termsOfService: "https://afterlogic.com/privacy-policy"
+privacyPolicy: "https://afterlogic.com/privacy-policy"
 
 multiUserEnable: false
 multiAccountEnable: true

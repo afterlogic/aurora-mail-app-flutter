@@ -1,7 +1,8 @@
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
-import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
+import 'package:flutter/material.dart';
+import 'package:aurora_mail/utils/base_state.dart';
 import 'package:flutter/services.dart';
 import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -49,7 +50,7 @@ class _AboutAndroidState extends BState<AboutAndroid> {
 
   @override
   Widget build(BuildContext context) {
-    final theme=Theme.of(context);
+    final theme = Theme.of(context);
     return Scaffold(
       appBar: AMAppBar(title: Text(i18n(context, "settings_about"))),
       body: loading
@@ -63,10 +64,7 @@ class _AboutAndroidState extends BState<AboutAndroid> {
                 Text(
                   i18n(context, "settings_about_app_version",
                       {"version": "$_version+$_buildNumber"}),
-                  style: theme
-                      .textTheme
-                      .caption
-                      .copyWith(fontSize: 14.0),
+                  style: theme.textTheme.caption.copyWith(fontSize: 14.0),
                 ),
                 SizedBox(height: 22.0),
                 Center(
@@ -77,30 +75,34 @@ class _AboutAndroidState extends BState<AboutAndroid> {
                   ),
                 ),
                 SizedBox(height: 42.0),
-                GestureDetector(
-                  child: Text(
-                    i18n(context, "settings_about_terms_of_service"),
-                    style: TextStyle(
-                      color: theme.accentColor,
-                      decoration: TextDecoration.underline,
-                      fontSize: 18.0,
+                if (BuildProperty.termsOfService.isNotEmpty)
+                  GestureDetector(
+                    child: Text(
+                      i18n(context, "settings_about_terms_of_service"),
+                      style: TextStyle(
+                        color: theme.accentColor,
+                        decoration: TextDecoration.underline,
+                        fontSize: 18.0,
+                      ),
                     ),
+                    onTap: () => launch(BuildProperty.termsOfService),
                   ),
-                  onTap: () => launch(BuildProperty.termsOfService),
-                ),
-                SizedBox(height: 22.0),
-                GestureDetector(
-                  child: Text(
-                    i18n(context, "settings_about_privacy_policy"),
-                    style: TextStyle(
-                      color: theme.accentColor,
-                      decoration: TextDecoration.underline,
-                      fontSize: 18.0,
+                if (BuildProperty.termsOfService.isNotEmpty)
+                  SizedBox(height: 22.0),
+                if (BuildProperty.privacyPolicy.isNotEmpty)
+                  GestureDetector(
+                    child: Text(
+                      i18n(context, "settings_about_privacy_policy"),
+                      style: TextStyle(
+                        color: theme.accentColor,
+                        decoration: TextDecoration.underline,
+                        fontSize: 18.0,
+                      ),
                     ),
+                    onTap: () => launch(BuildProperty.privacyPolicy),
                   ),
-                  onTap: () => launch(BuildProperty.privacyPolicy),
-                ),
-                SizedBox(height: 42.0),
+                if (BuildProperty.privacyPolicy.isNotEmpty)
+                  SizedBox(height: 42.0),
               ],
             ),
     );
