@@ -9,15 +9,13 @@ import 'package:flutter/material.dart';
 class MessageListWidget extends StatefulWidget {
   final Widget Function(Message, List<Message>) builder;
   final Future<List<Message>> Function(int offset) fetch;
-  final bool isStarred;
-  final bool isSearch;
+  final bool showThread;
   final bool isLoading;
 
   const MessageListWidget({
     Key key,
     this.fetch,
-    this.isStarred,
-    this.isSearch,
+    this.showThread,
     this.builder,
     this.isLoading,
   }) : super(key: key);
@@ -81,7 +79,7 @@ class _MessageListWidgetState extends State<MessageListWidget> {
       final items = await widget.fetch(currentOffset);
       currentOffset += items.length;
       isEnd = items.isEmpty;
-      final threadEnable = !widget.isStarred && !widget.isSearch;
+      final threadEnable = widget.showThread;
       for (var item in items) {
         if (threadEnable && item.parentUid != null) {
           final thread = threads[item.parentUid] ?? [];

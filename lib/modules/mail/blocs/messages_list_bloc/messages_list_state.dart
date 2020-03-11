@@ -15,7 +15,6 @@ class MessagesEmpty extends MessagesListState {}
 
 class SubscribedToMessages extends MessagesListState with AlwaysNonEqualObject {
   final Future<List<Message>> Function(int offset) fetch;
-  final bool isStarredFilterEnabled;
   final MessagesFilter filter;
   final String searchTerm;
   final bool isSent;
@@ -23,14 +22,14 @@ class SubscribedToMessages extends MessagesListState with AlwaysNonEqualObject {
 
   SubscribedToMessages(
     this.fetch,
-    this.isStarredFilterEnabled,
     this.searchTerm,
     this.isSent,
     this.key,
+    this.filter,
   );
 
   @override
-  List<Object> get props => [messagesSub, filter, searchTerm];
+  List<Object> get props => [filter, isSent, searchTerm, key];
 }
 
 class MessagesRefreshed extends MessagesListState with AlwaysNonEqualObject {}

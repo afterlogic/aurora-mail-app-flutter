@@ -13,21 +13,26 @@ class MessagesListMethods {
     _mailApi = new MailApi(user: user, account: account);
   }
 
-  Stream<List<Message>> subscribeToMessages(
+  Future<List<Message>> getMessages(
     Folder folder,
     bool isStarred,
+    bool unreadOnly,
     String searchTerm,
     SearchPattern searchPattern,
     User user,
     Account account,
+    int offset,
   ) {
-    return _mailDao.watchMessages(
+    return _mailDao.getMessages(
       folder.fullNameRaw,
       user.localId,
       searchTerm,
       searchPattern,
       account.entityId,
       isStarred,
+      unreadOnly,
+      _limit,
+      offset,
     );
   }
 

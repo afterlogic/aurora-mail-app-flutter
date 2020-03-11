@@ -12,15 +12,17 @@ import 'package:aurora_mail/modules/mail/screens/message_view/message_view_route
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/main_drawer.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/shared_ui/mail_bottom_app_bar.dart';
+import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
-import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import 'components/mail_app_bar.dart';
 import 'components/message_item.dart';
+import 'components/message_list_widget.dart';
 
 class MessagesListAndroid extends StatefulWidget {
   final String initSearch;
@@ -227,8 +229,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
                       child = _buildMessagesStream(
                         state.key.toString(),
                         state.fetch,
-                        state.isStarredFilterEnabled,
-                        state.isSent
+                        state.isSent,
                         state.filter,
                       );
                     } else {
@@ -264,47 +265,45 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
   Widget _buildMessagesStream(
     String key,
     Future<List<Message>> Function(int offset) fetch,
-    bool isStarred,
     bool isSent,
-      MessagesFilter filter,
+    MessagesFilter filter,
   ) {
     final loadingProgress = _selectedFolder?.needsInfoUpdate == true;
-    final isSearch=filter != MessagesFilter.none;
+    final isSearch = filter != MessagesFilter.none;
 
-    return
-      Column(
-          children: <Widget>[
+    return Column(children: <Widget>[
       if (filter == MessagesFilter.unread)
-    Column(
-      children: <Widget>[
-        SizedBox(height: 12.0),
-        Text(i18n(context, "messages_filter_unread")),
-        FlatButton(
-          child: Text(i18n(context, "btn_show_all")),
-          textColor: theme.accentColor,
-          onPressed: () => _showAllMessages(context),
-        )
-      ],
-    ),
-    Flexible(
-    child: MessageListWidget(
-      key: Key(key),
-      isLoading: loadingProgress,
-      isSearch: isSearch,
-      isStarred: isStarred,
-      fetch: fetch,
-      builder: (item, thread) {
-        return MessageItem(
-          isSent,
-          item,
-          thread,
-          key: Key(item.localId.toString()),
-          onItemSelected: (Message item) => _onMessageSelected(item),
-          onStarMessage: _setStarred,
-          onDeleteMessage: _deleteMessage,
-        );
-      },
-    ),),]),]);
+        Column(
+          children: <Widget>[
+            SizedBox(height: 12.0),
+            Text(i18n(context, "messages_filter_unread")),
+            FlatButton(
+              child: Text(i18n(context, "btn_show_all")),
+              textColor: theme.accentColor,
+              onPressed: () => _showAllMessages(context),
+            )
+          ],
+        ),
+      Flexible(
+        child: MessageListWidget(
+          key: Key(key),
+          isLoading: loadingProgress,
+          showThread: !isSearch && filter == MessagesFilter.none,
+          fetch: fetch,
+          builder: (item, thread) {
+            return MessageItem(
+              isSent,
+              item,
+              thread,
+              key: Key(item.localId.toString()),
+              onItemSelected: (Message item) => _onMessageSelected(item),
+              onStarMessage: _setStarred,
+              onDeleteMessage: _deleteMessage,
+            );
+          },
+        ),
+      ),
+    ]);
   }
 
   _startRefresh() {

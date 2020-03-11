@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
+import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/messages_list_state.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/internationalization.dart';

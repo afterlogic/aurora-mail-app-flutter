@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/mail/repository/search_util.dart';
 import 'package:aurora_mail/utils/api_utils.dart';
 import 'package:bloc/bloc.dart';
@@ -28,7 +29,6 @@ class MessagesListBloc extends Bloc<MessagesListEvent, MessagesListState> {
   Stream<MessagesListState> mapEventToState(
     MessagesListEvent event,
   ) async* {
-
     if (event is SubscribeToMessages) yield* _subscribeToMessages(event);
     if (event is StopMessagesRefresh) yield MessagesRefreshed();
     if (event is DeleteMessages) yield* _deleteMessage(event);
@@ -44,38 +44,31 @@ class MessagesListBloc extends Bloc<MessagesListEvent, MessagesListState> {
 
       final fetch = (int offset) => _methods.getMessages(
             event.currentFolder,
-            event.isStarred,
+            event.filter == MessagesFilter.starred,
+            event.filter == MessagesFilter.unread,
             searchTerm,
             searchPattern,
             user,
             account,
             offset,
           );
-//_methods.subscribeToMessages(
-//        folder: event.currentFolder,
-//        isStarred: event.filter == MessagesFilter.starred,
-//        isUnread: event.filter == MessagesFilter.unread,
-//        searchTerm: searchTerm,
-//        searchPattern: searchPattern,
-//        user: user,
-//        account: account,
-//      );
+
       yield SubscribedToMessages(
         fetch,
-        event.isStarred,
         searchTerm,
         isSent,
         event.props.toString(),
+        event.filter,
       );
     } catch (e, s) {
       print(e);
       print(s);
       yield SubscribedToMessages(
         null,
-        event.isStarred,
         searchTerm,
         false,
         event.props.toString(),
+        event.filter,
       );
     }
   }

@@ -30,9 +30,9 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
     SearchPattern searchPattern,
     int accountEntityId,
     bool starredOnly,
+    bool unreadOnly,
     int limit,
     int offset,
-      bool unreadOnly,
   ) {
     List<Variable> params = [];
     final fields = <GeneratedColumn>{};
@@ -79,8 +79,10 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
       params.add(Variable.withString("%\\flagged%"));
     }
     //todo
-    statement.where((m) =>
-    unreadOnly ? m.flagsInJson.like("%\\seen%").not() : Constant(true));
+    if (unreadOnly) {
+      query += "AND flags_in_json NOT LIKE ? ";
+      params.add(Variable.withString("%\\seen%"));
+    }
 
     query += "ORDER BY time_stamp_in_u_t_c DESC ";
     query += "LIMIT ? OFFSET ? ";
