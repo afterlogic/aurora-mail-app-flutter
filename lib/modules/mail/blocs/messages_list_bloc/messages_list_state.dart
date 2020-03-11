@@ -2,6 +2,8 @@ import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/utils/always_non_equal_object.dart';
 import 'package:equatable/equatable.dart';
 
+enum MessagesFilter { starred, unread, none }
+
 abstract class MessagesListState extends Equatable {
   const MessagesListState();
 
@@ -14,6 +16,7 @@ class MessagesEmpty extends MessagesListState {}
 class SubscribedToMessages extends MessagesListState with AlwaysNonEqualObject {
   final Future<List<Message>> Function(int offset) fetch;
   final bool isStarredFilterEnabled;
+  final MessagesFilter filter;
   final String searchTerm;
   final bool isSent;
   final String key;
@@ -25,6 +28,9 @@ class SubscribedToMessages extends MessagesListState with AlwaysNonEqualObject {
     this.isSent,
     this.key,
   );
+
+  @override
+  List<Object> get props => [messagesSub, filter, searchTerm];
 }
 
 class MessagesRefreshed extends MessagesListState with AlwaysNonEqualObject {}

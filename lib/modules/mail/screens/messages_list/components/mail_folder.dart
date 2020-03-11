@@ -2,10 +2,10 @@ import 'dart:math';
 
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
+import 'package:aurora_mail/utils/base_state.dart';
+import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/material.dart';
-import 'package:aurora_mail/utils/base_state.dart';
-import 'package:aurora_mail/utils/base_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
@@ -71,6 +71,12 @@ class MailFolder extends StatelessWidget {
     BlocProvider.of<MailBloc>(context).add(SelectFolder(mailFolder));
   }
 
+  void _selectUnreadOnly(BuildContext context) {
+    Navigator.pop(context);
+    BlocProvider.of<MailBloc>(context)
+        .add(SelectFolder(mailFolder, filter: MessagesFilter.unread));
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -80,17 +86,22 @@ class MailFolder extends StatelessWidget {
           mailFolder.folderType == FolderType.drafts &&
               mailFolder.count != null &&
               mailFolder.count > 0) {
-        return Container(
-          padding: EdgeInsets.symmetric(vertical: 6.0, horizontal: 10.0),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(50.0)),
-            color: isSelected ? theme.accentColor : theme.disabledColor,
-          ),
-          child: Text(
-            mailFolder.folderType == FolderType.drafts
-                ? mailFolder.count.toString()
-                : mailFolder.unread.toString(),
-            style: TextStyle(color: Colors.white),
+        return InkWell(
+          onTap: mailFolder.folderType != FolderType.drafts
+              ? () => _selectUnreadOnly(context)
+              : null,
+          child: Container(
+            padding: EdgeInsets.symmetric(vertical: 6.0, horizontal: 10.0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(50.0)),
+              color: isSelected ? theme.accentColor : theme.disabledColor,
+            ),
+            child: Text(
+              mailFolder.folderType == FolderType.drafts
+                  ? mailFolder.count.toString()
+                  : mailFolder.unread.toString(),
+              style: TextStyle(color: Colors.white),
+            ),
           ),
         );
       } else {

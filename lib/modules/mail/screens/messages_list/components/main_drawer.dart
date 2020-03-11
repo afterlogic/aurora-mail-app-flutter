@@ -5,6 +5,7 @@ import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
+import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/starred_folder.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
@@ -172,7 +173,7 @@ class _MainDrawerState extends BState<MainDrawer> {
     final items = _getFolderWidgets(
       state.folders,
       state.selectedFolder?.guid ?? "",
-      state.isStarredFilterEnabled,
+      state.filter,
     );
     final folderWidgets = new List<Widget>.from(items);
 
@@ -184,7 +185,7 @@ class _MainDrawerState extends BState<MainDrawer> {
           1,
           StarredFolder(
             mailFolder: inboxFolder,
-            isSelected: state.isStarredFilterEnabled,
+            isSelected: state.filter == MessagesFilter.starred,
           ));
     }
     return ListView.builder(
@@ -194,13 +195,15 @@ class _MainDrawerState extends BState<MainDrawer> {
   }
 
   List<MailFolder> _getFolderWidgets(
-      List<Folder> mailFolders, String selected, bool isStarredFilterEnabled,
+      List<Folder> mailFolders, String selected, MessagesFilter filter,
       [String parentGuid]) {
     return mailFolders.map((mailFolder) {
       return MailFolder(
         mailFolder: mailFolder,
-        isSelected: selected == mailFolder.guid && !isStarredFilterEnabled,
+        isSelected: selected == mailFolder.guid && filter != MessagesFilter.starred,
         key: Key(mailFolder.guid),
+//        children: _getFolderWidgets(
+//            mailFolders, selected, filter, mailFolder.guid),
       );
     }).toList();
   }

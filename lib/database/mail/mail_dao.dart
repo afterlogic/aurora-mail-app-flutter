@@ -32,6 +32,7 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
     bool starredOnly,
     int limit,
     int offset,
+      bool unreadOnly,
   ) {
     List<Variable> params = [];
     final fields = <GeneratedColumn>{};
@@ -77,9 +78,12 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
       query += "AND flags_in_json LIKE ? ";
       params.add(Variable.withString("%\\flagged%"));
     }
+    //todo
+    statement.where((m) =>
+    unreadOnly ? m.flagsInJson.like("%\\seen%").not() : Constant(true));
 
-    query += "ORDER BY time_stamp_in_u_t_c ";
-    query += "DESC LIMIT ? OFFSET ? ";
+    query += "ORDER BY time_stamp_in_u_t_c DESC ";
+    query += "LIMIT ? OFFSET ? ";
 
     params.add(Variable.withInt(limit));
     params.add(Variable.withInt(offset));
@@ -95,7 +99,6 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
     return (select(mail)..where((item) => item.uid.equals(uid))).getSingle();
   }
 
-  @UseMoor()
   Future<void> addMessages(List<Message> newMessages) async {
     try {
       await into(mail).insertAll(newMessages);

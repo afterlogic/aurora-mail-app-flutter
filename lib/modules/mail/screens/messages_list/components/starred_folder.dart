@@ -1,5 +1,6 @@
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
+import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/bloc.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/material.dart';
 import 'package:aurora_mail/utils/base_state.dart';
@@ -18,7 +19,7 @@ class StarredFolder extends StatelessWidget {
   void _selectFolder(BuildContext context) {
     Navigator.pop(context);
     BlocProvider.of<MailBloc>(context)
-        .add(SelectFolder(mailFolder, isStarredFolder: true));
+        .add(SelectFolder(mailFolder, filter: MessagesFilter.starred));
   }
 
   @override
