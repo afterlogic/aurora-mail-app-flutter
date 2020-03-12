@@ -19,6 +19,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:html/parser.dart' as html;
 
 import 'attachments_dialog.dart';
 
@@ -74,11 +75,36 @@ class _MessageWebViewState extends BState<MessageWebView> {
       htmlData = widget.message.htmlBody;
     }
     setState(() => _htmlData = htmlData);
+    print("VO: _showImages: ${_showImages}");
     if (_showImages) {
-      htmlData = htmlData.replaceAll(
-        "data-x-src=",
-        "src=",
-      );
+      htmlData = htmlData
+          .replaceAll("data-x-src=", "src=")
+          .replaceAll("src=\"http:", "src=\"https:");
+
+
+      final document = html.parse(htmlData);
+
+      void getAllChildren(nodes) {
+        nodes.forEach((c) {
+          c.nodes.forEach((node) {
+            if (node.attributes.containsKey("data-x-style-url") as bool) {
+              var backgroundImageUrl = node.attributes["data-x-style-url"] as String;
+              backgroundImageUrl = backgroundImageUrl.replaceAll("http://", "https://");
+              node.attributes.remove("data-x-style-url");
+
+              String style = node.attributes["style"] as String;
+              style = style.endsWith(";") ? style : style + "; ";
+              style += backgroundImageUrl;
+              node.attributes["style"] = style;
+              print("VO: node.attributes[style]: ${node.attributes["style"]}");
+            }
+          });
+
+          getAllChildren(c.nodes);
+        });
+      }
+      getAllChildren(document.nodes.toList());
+      htmlData = document.outerHtml;
     }
 
     final user = BlocProvider.of<AuthBloc>(context).currentUser;
