@@ -75,7 +75,6 @@ class _MessageWebViewState extends BState<MessageWebView> {
       htmlData = widget.message.htmlBody;
     }
     setState(() => _htmlData = htmlData);
-    print("VO: _showImages: ${_showImages}");
     if (_showImages) {
       htmlData = htmlData
           .replaceAll("data-x-src=", "src=")
@@ -96,7 +95,6 @@ class _MessageWebViewState extends BState<MessageWebView> {
               style = style.endsWith(";") ? style : style + "; ";
               style += backgroundImageUrl;
               node.attributes["style"] = style;
-              print("VO: node.attributes[style]: ${node.attributes["style"]}");
             }
           });
 
