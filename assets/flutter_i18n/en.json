@@ -298,8 +298,8 @@
   "decrypted_and_verified": "Message was successfully decrypted and verified.",
   "decrypted_but_not_verified": "Message was successfully decrypted but wasn't verified.",
   "invalid_key_or_password": "Invalid key or password.",
-  "can_not_decrypt": "Can not decrypt message.",
-  "need_contact_for_encrypt": "Need contact for encrypt.",
+  "can_not_decrypt": "Cannot decrypt message.",
+  "need_contact_for_encrypt": "Contact is required for encryption.",
   "verify_sign": "Verify",
   "already_have_keys":"Keys which are already in the system are greyed out.",
   "find_in_email": "Find in email"

@@ -135,7 +135,7 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
     try {
       if (event.encrypt && event.contacts.isEmpty) {
         yield ComposeError(
-          "need_contact_fo`r_encrypt",
+          "need_contact_for_encrypt",
         );
         return;
       }
