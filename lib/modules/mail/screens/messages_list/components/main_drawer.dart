@@ -178,8 +178,9 @@ class _MainDrawerState extends BState<MainDrawer> {
     final folderWidgets = new List<Widget>.from(items);
 
     final inboxFolder = state.folders.firstWhere(
-        (f) => f.folderType == FolderType.inbox,
-        orElse: () => null);
+      (f) => f.folderType == FolderType.inbox,
+      orElse: () => null,
+    );
     if (inboxFolder != null) {
       folderWidgets.insert(
           1,
@@ -195,15 +196,21 @@ class _MainDrawerState extends BState<MainDrawer> {
   }
 
   List<MailFolder> _getFolderWidgets(
-      List<Folder> mailFolders, String selected, MessagesFilter filter,
-      [String parentGuid]) {
-    return mailFolders.map((mailFolder) {
+    List<Folder> mailFolders,
+    String selected,
+    MessagesFilter filter, [
+    String parentGuid,
+  ]) {
+    return mailFolders
+        .where((item) => item.parentGuid == parentGuid)
+        .map((mailFolder) {
       return MailFolder(
         mailFolder: mailFolder,
-        isSelected: selected == mailFolder.guid && filter != MessagesFilter.starred,
+        isSelected:
+            selected == mailFolder.guid && filter != MessagesFilter.starred,
         key: Key(mailFolder.guid),
-//        children: _getFolderWidgets(
-//            mailFolders, selected, filter, mailFolder.guid),
+        children:
+            _getFolderWidgets(mailFolders, selected, filter, mailFolder.guid),
       );
     }).toList();
   }

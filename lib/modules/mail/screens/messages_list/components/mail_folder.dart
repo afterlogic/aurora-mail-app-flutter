@@ -3,8 +3,6 @@ import 'dart:math';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/messages_list_state.dart';
-import 'package:aurora_mail/utils/base_state.dart';
-import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,12 +11,14 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 class MailFolder extends StatelessWidget {
   final Folder mailFolder;
   final bool isSelected;
+  final List<Widget> children;
 
   const MailFolder(
       {Key key,
       @required this.mailFolder,
       @required this.isSelected,
-      int paddingCount})
+      int paddingCount,
+      this.children})
       : super(key: key);
 
   IconData get _folderIcon {
@@ -119,15 +119,22 @@ class MailFolder extends StatelessWidget {
     }
     paddingCount = max(paddingCount, 0);
     if (mailFolder.isSubscribed == true) {
-      return Padding(
-        padding: EdgeInsets.only(left: paddingCount * paddingStep),
-        child: ListTile(
-          selected: isSelected,
-          leading: Icon(_folderIcon),
-          title: Text(_getTitle(context)),
-          trailing: _buildMessageCounter(context),
-          onTap: () => _selectFolder(context),
-        ),
+      return Column(
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.only(left: paddingCount * paddingStep),
+            child: ListTile(
+              selected: isSelected,
+              leading: Icon(_folderIcon),
+              title: Text(_getTitle(context)),
+              trailing: _buildMessageCounter(context),
+              onTap: () => _selectFolder(context),
+            ),
+          ),
+          Column(
+            children: children,
+          ),
+        ],
       );
     } else {
       return SizedBox();
