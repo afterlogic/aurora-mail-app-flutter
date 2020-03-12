@@ -9,10 +9,13 @@ class ContactTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return ListTile(
-      title: Text(
-        i18n(context, title),
-        style: theme.textTheme.title,
+    return Padding(
+      padding: const EdgeInsets.only(top: 32.0),
+      child: ListTile(
+        title: Text(
+          i18n(context, title),
+          style: theme.textTheme.title,
+        ),
       ),
     );
   }
