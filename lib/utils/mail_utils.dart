@@ -274,8 +274,9 @@ class MailUtils {
     <style>
       html, body {
         margin: 0;
+        overflow-x: hidden;
         padding: 0;
-        height: 100%;
+       
         background: ${_getWebColor(theme.scaffoldBackgroundColor)};
       }
       .attachments, .email-head, .email-content {
@@ -285,12 +286,18 @@ class MailUtils {
         ${_getDarkStyles(context, showLightEmail)}
       }
       body {
-        overflow-x: hidden;
         font-family: sans-serif;
+        min-height: 100vh;
+      }
+      .container {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
       }
       .flex {
         display: flex;
         flex-direction: column;
+        height: 100%;
       }
       .row {
         flex-direction: row;
@@ -307,6 +314,7 @@ class MailUtils {
       .email-content {
         background-color: white;
         word-break: break-all;
+        overflow-x: scroll;
         flex: 1;
       }
       .attachments {
@@ -334,7 +342,7 @@ class MailUtils {
     </style>
   </head>
   <body>
-    <div class='flex' style='height: 100%; overflow: scroll'>
+    <div class='container'>
       <div class='email-head'>
         <div class="flex row" style="width: calc(100vw - 12px * 2)">
           <div class="flex" style="flex: 1">
