@@ -167,7 +167,7 @@ class Folders extends Table {
   }
 
   static Future<MessagesInfoDiffCalcResult> calculateMessagesInfoDiffAsync(
-      List<MessageInfoDb> oldInfo, List<MessageInfo> newInfo) {
+      List<MessageInfo> oldInfo, List<MessageInfo> newInfo) {
     final Map<String, List<MessageInfo>> args = {
       "oldItems": oldInfo,
       "newItems": newInfo,

@@ -9672,7 +9672,7 @@ class MessageInfoDb extends DataClass implements Insertable<MessageInfoDb> {
       {@required this.folder,
       @required this.accountLocalId,
       @required this.uid,
-      @required this.parentUid,
+      this.parentUid,
       @required this.flags,
       @required this.hasThread,
       @required this.hasBody});
@@ -9825,14 +9825,13 @@ class MessageInfoTableCompanion extends UpdateCompanion<MessageInfoDb> {
     @required String folder,
     @required int accountLocalId,
     @required int uid,
-    @required int parentUid,
+    this.parentUid = const Value.absent(),
     @required String flags,
     @required bool hasThread,
     @required bool hasBody,
   })  : folder = Value(folder),
         accountLocalId = Value(accountLocalId),
         uid = Value(uid),
-        parentUid = Value(parentUid),
         flags = Value(flags),
         hasThread = Value(hasThread),
         hasBody = Value(hasBody);
@@ -9907,7 +9906,7 @@ class $MessageInfoTableTable extends MessageInfoTable
     return GeneratedIntColumn(
       'parent_uid',
       $tableName,
-      false,
+      true,
     );
   }
 
@@ -9982,8 +9981,6 @@ class $MessageInfoTableTable extends MessageInfoTable
     if (d.parentUid.present) {
       context.handle(_parentUidMeta,
           parentUid.isAcceptableValue(d.parentUid.value, _parentUidMeta));
-    } else if (isInserting) {
-      context.missing(_parentUidMeta);
     }
     if (d.flags.present) {
       context.handle(

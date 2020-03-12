@@ -1,4 +1,5 @@
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/models/message_info.dart';
 import 'package:moor_flutter/moor_flutter.dart';
 
@@ -13,7 +14,7 @@ class MessageInfoTable extends Table {
 
   IntColumn get uid => integer()();
 
-  IntColumn get parentUid => integer()();
+  IntColumn get parentUid => integer().nullable()();
 
   TextColumn get flags => text()();
 
@@ -37,10 +38,10 @@ extension MapMessageInfoDb on MessageInfoDb {
 }
 
 extension MapMessageInfo on MessageInfo {
-  MessageInfoDb toMessageInfoDb({int accountLocalId, String folder}) {
+  MessageInfoDb toMessageInfoDb({Account account, Folder folder}) {
     return MessageInfoDb(
-      accountLocalId: accountLocalId ?? this.accountLocalId,
-      folder: folder ?? this.folder,
+      accountLocalId: account?.localId ?? this.accountLocalId,
+      folder: folder?.fullName ?? this.folder,
       uid: uid,
       parentUid: parentUid,
       flags: flags.join(','),

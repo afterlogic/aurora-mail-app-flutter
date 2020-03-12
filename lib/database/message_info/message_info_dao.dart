@@ -28,6 +28,7 @@ class MessageInfoDao extends DatabaseAccessor<AppDatabase>
       final list = await getList(accountLocalId, folder, current * step, step);
       isEnd = list.length != step;
       items.addAll(list);
+      current++;
     } while (!isEnd);
     return items;
   }
@@ -38,5 +39,20 @@ class MessageInfoDao extends DatabaseAccessor<AppDatabase>
           ..where((item) => item.folder.equals(folder))
           ..where((item) => item.uid.isIn(uid)))
         .go();
+  }
+
+  Future set(int accountLocalId, String folder,
+      List<MessageInfoDb> messagesInfo) async {
+    await (delete(messageInfoTable)
+          ..where((item) => item.accountLocalId.equals(accountLocalId))
+          ..where((item) => item.folder.equals(folder)))
+        .go();
+
+    return batch((b) {
+      return b.insertAll(
+        messageInfoTable,
+        messagesInfo,
+      );
+    });
   }
 }

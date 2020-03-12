@@ -82,8 +82,7 @@ class MailBloc extends Bloc<MailEvent, MailState> {
           _selectedFolder,
         );
 
-        yield FoldersLoaded(
-            foldersWithInfo, _selectedFolder, _filter);
+        yield FoldersLoaded(foldersWithInfo, _selectedFolder, _filter);
 
         final guid = _selectedFolder.guid;
         _methods
@@ -123,8 +122,7 @@ class MailBloc extends Bloc<MailEvent, MailState> {
         final List<Folder> foldersWithInfo =
             await _methods.updateFoldersHash(_selectedFolder);
 
-        yield FoldersLoaded(
-            foldersWithInfo, _selectedFolder, _filter);
+        yield FoldersLoaded(foldersWithInfo, _selectedFolder, _filter);
 
         final guid = _selectedFolder.guid;
         _methods
@@ -154,8 +152,7 @@ class MailBloc extends Bloc<MailEvent, MailState> {
         forceCurrentFolderUpdate: true,
       );
 
-      yield FoldersLoaded(
-          foldersWithInfo, _selectedFolder, _filter);
+      yield FoldersLoaded(foldersWithInfo, _selectedFolder, _filter);
 
       _methods
           .syncFolders(guid: guid, syncSystemFolders: true)
@@ -229,5 +226,9 @@ class MailBloc extends Bloc<MailEvent, MailState> {
 
   Future<Message> getFullMessage(Message item) {
     return _methods.getMessage(item);
+  }
+
+  Future<Folder> updateFolder(Folder selectedFolder) {
+    return _methods.getFolder(selectedFolder.guid);
   }
 }
