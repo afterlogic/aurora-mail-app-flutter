@@ -66,7 +66,7 @@ class _SearchBarState extends BState<SearchBar> {
       title: TextField(
         style: theme.textTheme.body1,
         autofocus: true,
-        decoration: InputDecoration(
+        decoration: InputDecoration.collapsed(
           hintText: i18n(context, "messages_list_app_bar_search"),
           hintStyle: theme.textTheme.display1,
         ),
