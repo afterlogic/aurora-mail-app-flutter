@@ -249,7 +249,7 @@ class MailMethods {
     final folder = await _foldersDao.getFolderByLocalId(_syncQueue[0]);
     // get the actual sync period
     final updatedUser = await _usersDao.getUserByLocalId(user.localId);
-    if (folder.messagesInfo == null) {
+    if (folder?.messagesInfo == null) {
       print(
           "Attention! messagesInfo is null, perhaps another folder was selected while messages info was being retrieved.");
       return _setMessagesInfoToFolder();
@@ -412,6 +412,6 @@ class MailMethods {
   }
 
   Future<Message> getMessage(Message item) {
-    return _mailDao.getMessage(item.uid);
+    return _mailDao.getMessage(item.localId);
   }
 }
