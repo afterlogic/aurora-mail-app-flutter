@@ -19,6 +19,7 @@ import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ContactViewAndroid extends StatefulWidget {
   final Contact contact;
@@ -139,6 +140,10 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
     );
   }
 
+  void _callContact(String phone) => launch("tel://$phone");
+
+  void _visitWebsite(String site) => launch(site);
+
   @override
   Widget build(BuildContext context) {
     final c = widget.contact;
@@ -162,12 +167,15 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
         icon: Icons.alternate_email,
         label: i18n(context, "contacts_view_email"),
         v: _contactInfo.viewEmail,
-        emailToContact: _emailToContacts,
+        action: InfoAction.email,
+        cb: () => _emailToContacts(_contactInfo.viewEmail),
       ),
       _buildInfoItem(
         icon: MdiIcons.phone,
         label: i18n(context, "contacts_view_phone"),
         v: _contactInfo.viewPhone,
+        action: InfoAction.call,
+        cb: () => _callContact(_contactInfo.viewPhone),
       ),
       _buildInfoItem(
         icon: MdiIcons.mapMarkerOutline,
@@ -202,17 +210,20 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
     ]);
 
     final personalInfo = _buildInfos([
-      _buildInfoItem(
-        icon: Icons.alternate_email,
-        label: i18n(context, "contacts_view_email"),
-        v: c.personalEmail,
-        emailToContact: _emailToContacts,
-      ),
-      _buildInfoItem(
-        icon: MdiIcons.mapMarkerOutline,
-        label: i18n(context, "contacts_view_address"),
-        v: c.personalAddress,
-      ),
+      if (_contactInfo.viewEmail != c.personalEmail)
+        _buildInfoItem(
+          icon: Icons.alternate_email,
+          label: i18n(context, "contacts_view_email"),
+          v: c.personalEmail,
+          action: InfoAction.email,
+          cb: () => _emailToContacts(c.personalEmail),
+        ),
+      if (_contactInfo.viewAddress != c.personalAddress)
+        _buildInfoItem(
+          icon: MdiIcons.mapMarkerOutline,
+          label: i18n(context, "contacts_view_address"),
+          v: c.personalAddress,
+        ),
       _buildInfoItem(
         icon: MdiIcons.homeCityOutline,
         label: i18n(context, "contacts_view_city"),
@@ -237,36 +248,47 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
         icon: Icons.web,
         label: i18n(context, "contacts_view_web_page"),
         v: c.personalWeb,
+        action: InfoAction.visitWebsite,
+        cb: () => _visitWebsite(c.personalWeb),
       ),
       _buildInfoItem(
         icon: MdiIcons.fax,
         label: i18n(context, "contacts_view_fax"),
         v: c.personalFax,
       ),
-      _buildInfoItem(
-        icon: MdiIcons.phone,
-        label: i18n(context, "contacts_view_phone"),
-        v: c.personalPhone,
-      ),
-      _buildInfoItem(
-        icon: MdiIcons.cellphone,
-        label: i18n(context, "contacts_view_mobile"),
-        v: c.personalMobile,
-      ),
+      if (_contactInfo.viewPhone != c.personalPhone)
+        _buildInfoItem(
+          icon: MdiIcons.phone,
+          label: i18n(context, "contacts_view_phone"),
+          v: c.personalPhone,
+          action: InfoAction.call,
+          cb: () => _callContact(c.personalPhone),
+        ),
+      if (_contactInfo.viewPhone != c.personalMobile)
+        _buildInfoItem(
+          icon: MdiIcons.cellphone,
+          label: i18n(context, "contacts_view_mobile"),
+          v: c.personalMobile,
+          action: InfoAction.call,
+          cb: () => _callContact(c.personalMobile),
+        ),
     ]);
 
     final businessInfo = _buildInfos([
-      _buildInfoItem(
-        icon: Icons.alternate_email,
-        label: i18n(context, "contacts_view_email"),
-        v: c.businessEmail,
-        emailToContact: _emailToContacts,
-      ),
-      _buildInfoItem(
-        icon: MdiIcons.mapMarkerOutline,
-        label: i18n(context, "contacts_view_address"),
-        v: c.businessAddress,
-      ),
+      if (_contactInfo.viewEmail != c.businessEmail)
+        _buildInfoItem(
+          icon: Icons.alternate_email,
+          label: i18n(context, "contacts_view_email"),
+          v: c.businessEmail,
+          action: InfoAction.email,
+          cb: () => _emailToContacts(c.businessEmail),
+        ),
+      if (_contactInfo.viewAddress != c.businessAddress)
+        _buildInfoItem(
+          icon: MdiIcons.mapMarkerOutline,
+          label: i18n(context, "contacts_view_address"),
+          v: c.businessAddress,
+        ),
       _buildInfoItem(
         icon: MdiIcons.homeCityOutline,
         label: i18n(context, "contacts_view_city"),
@@ -291,25 +313,33 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
         icon: MdiIcons.web,
         label: i18n(context, "contacts_view_web_page"),
         v: c.businessWeb,
+        action: InfoAction.visitWebsite,
+        cb: () => _visitWebsite(c.businessWeb),
       ),
       _buildInfoItem(
         icon: MdiIcons.fax,
         label: i18n(context, "contacts_view_fax"),
         v: c.businessFax,
       ),
-      _buildInfoItem(
-        icon: MdiIcons.cellphone,
-        label: i18n(context, "contacts_view_phone"),
-        v: c.businessPhone,
-      ),
+      if (_contactInfo.viewPhone != c.businessPhone)
+        _buildInfoItem(
+          icon: MdiIcons.cellphone,
+          label: i18n(context, "contacts_view_phone"),
+          v: c.businessPhone,
+          action: InfoAction.call,
+          cb: () => _callContact(c.businessPhone),
+        ),
     ]);
 
     final otherInfo = _buildInfos([
-      _buildInfoItem(
-        icon: Icons.web,
-        label: i18n(context, "contacts_view_web_page"),
-        v: c.otherEmail,
-      ),
+      if (_contactInfo.viewEmail != c.otherEmail)
+        _buildInfoItem(
+          icon: Icons.alternate_email,
+          label: i18n(context, "contacts_view_other_email"),
+          v: c.otherEmail,
+          action: InfoAction.email,
+          cb: () => _emailToContacts(c.otherEmail),
+        ),
       _buildInfoItem(
         icon: MdiIcons.calendar,
         label: i18n(context, "contacts_view_birthday"),
@@ -413,11 +443,17 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
     @required IconData icon,
     @required String label,
     @required String v,
-    void Function(String) emailToContact,
+    InfoAction action = InfoAction.none,
+    void Function() cb,
   }) {
     if (v.isNotEmpty) {
       return ContactsInfoItem(
-          icon: icon, label: label, value: v, emailToContact: emailToContact);
+        icon: icon,
+        label: label,
+        value: v,
+        cb: cb,
+        action: action,
+      );
     } else {
       return null;
     }
