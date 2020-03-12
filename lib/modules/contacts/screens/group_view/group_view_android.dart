@@ -3,12 +3,16 @@ import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/contacts_bloc.d
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_group_model.dart';
 import 'package:aurora_mail/modules/contacts/screens/contact_view/components/contacts_info_item.dart';
 import 'package:aurora_mail/modules/contacts/screens/group_edit/group_edit_route.dart';
+import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
+import 'package:aurora_mail/modules/mail/models/compose_actions.dart';
+import 'package:aurora_mail/modules/mail/screens/compose/compose_route.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'components/group_view_app_bar.dart';
 
@@ -52,6 +56,22 @@ class _GroupViewAndroidState extends BState<GroupViewAndroid> {
     }
   }
 
+  void _emailToGroupEmail(String email) {
+    Navigator.pushNamed(
+      context,
+      ComposeRoute.name,
+      arguments: ComposeScreenArgs(
+        mailBloc: BlocProvider.of<MailBloc>(context),
+        contactsBloc: BlocProvider.of<ContactsBloc>(context),
+        composeAction: EmailToContacts([email]),
+      ),
+    );
+  }
+
+  void _callGroupPhone(String phone) => launch("tel://$phone");
+
+  void _visitWebsite(String site) => launch(site);
+
   @override
   Widget build(BuildContext context) {
     final g = widget.group;
@@ -66,6 +86,8 @@ class _GroupViewAndroidState extends BState<GroupViewAndroid> {
         icon: Icons.alternate_email,
         label: i18n(context, "contacts_view_email"),
         v: g.email,
+        action: InfoAction.email,
+        cb: () => _emailToGroupEmail(g.email),
       ),
       _buildInfoItem(
         icon: MdiIcons.domain,
@@ -101,6 +123,8 @@ class _GroupViewAndroidState extends BState<GroupViewAndroid> {
         icon: MdiIcons.phone,
         label: i18n(context, "contacts_view_phone"),
         v: g.phone,
+        action: InfoAction.call,
+        cb: () => _callGroupPhone(g.phone),
       ),
       _buildInfoItem(
         icon: MdiIcons.fax,
@@ -111,6 +135,8 @@ class _GroupViewAndroidState extends BState<GroupViewAndroid> {
         icon: MdiIcons.web,
         label: i18n(context, "contacts_view_web_page"),
         v: g.web,
+        action: InfoAction.visitWebsite,
+        cb: () => _visitWebsite(g.web),
       ),
     ]);
 
@@ -124,10 +150,21 @@ class _GroupViewAndroidState extends BState<GroupViewAndroid> {
     return nullableWidgets.where((w) => w != null).toList();
   }
 
-  Widget _buildInfoItem(
-      {@required IconData icon, @required String label, @required String v}) {
+  Widget _buildInfoItem({
+    @required IconData icon,
+    @required String label,
+    @required String v,
+    InfoAction action = InfoAction.none,
+    void Function() cb,
+  }) {
     if (v.isNotEmpty) {
-      return ContactsInfoItem(icon: icon, label: label, value: v);
+      return ContactsInfoItem(
+        icon: icon,
+        label: label,
+        value: v,
+        cb: cb,
+        action: action,
+      );
     } else {
       return null;
     }
