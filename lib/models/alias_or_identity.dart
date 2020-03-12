@@ -10,6 +10,8 @@ class AliasOrIdentity {
 
   String get mail => identity?.email ?? alias?.email;
 
+  String get signature => identity?.signature ?? alias?.signature;
+
   @override
   int get hashCode => (alias?.hashCode ?? 0) + (identity.hashCode ?? 0);
 

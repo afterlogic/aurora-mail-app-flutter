@@ -403,10 +403,41 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
 //    }
 //  }
   void setIdentityOrSender(AliasOrIdentity aliasOrIdentity) {
+    changeSignature(
+      MailUtils.htmlToPlain(AliasOrIdentity(alias, identity).signature),
+      MailUtils.htmlToPlain(aliasOrIdentity.signature ?? ""),
+    );
     this.alias = aliasOrIdentity.alias;
     this.identity = aliasOrIdentity.identity;
     _fromCtrl.text =
         identityViewName(aliasOrIdentity.name, aliasOrIdentity.mail);
+  }
+
+  void changeSignature(String oldSignature, String newSignature) {
+    if (oldSignature.isEmpty && newSignature.isEmpty) {
+      return;
+    }
+    var text = _bodyTextCtrl.text;
+    if (text.isEmpty) {
+      _bodyTextCtrl.text = text = "\n$newSignature";
+      return;
+    }
+    int startIndex;
+    int endIndex;
+    if (oldSignature.isEmpty) {
+      startIndex = -1;
+    } else {
+      startIndex = text.lastIndexOf(oldSignature);
+    }
+    if (startIndex == -1) {
+      startIndex = text.length;
+      endIndex = startIndex;
+    } else {
+      endIndex = startIndex + oldSignature.length;
+    }
+    var signature = newSignature;
+
+    _bodyTextCtrl.text = text.replaceRange(startIndex, endIndex, signature);
   }
 
   void _showError(String err, [Map<String, String> arg]) {
