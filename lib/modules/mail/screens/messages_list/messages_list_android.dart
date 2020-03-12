@@ -225,7 +225,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
                   builder: (context, state) {
                     Widget child;
                     if (state is SubscribedToMessages) {
-                      child =   _buildMessagesStream(
+                      child = _buildMessagesStream(
                         state.stream,
                         state.filter,
                         state.isSent,
@@ -281,6 +281,8 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
               messages = snap.data.where((m) => m.parentUid == null).toList();
               threads = snap.data.where((m) => m.parentUid != null).toList();
             }
+            final needsInfoUpdate =
+                _selectedFolder != null && _selectedFolder.needsInfoUpdate;
             return Column(
               children: <Widget>[
                 if (filter == MessagesFilter.unread)
@@ -299,28 +301,21 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
                   child: ListView.builder(
                     key: Key("mail"),
                     padding: EdgeInsets.only(top: 6.0, bottom: 82.0),
-                    itemCount: messages.length,
+                    itemCount: messages.length + (needsInfoUpdate ? 1 : 0),
                     itemBuilder: (_, i) {
+                      if (i >= messages.length) {
+                        return Center(child: CircularProgressIndicator());
+                      }
                       final item = messages[i];
-                      return Column(
-                        children: <Widget>[
-                          MessageItem(
-                            isSent,
-                            item,
-                            threads
-                                .where((t) => t.parentUid == item.uid)
-                                .toList(),
-                            key: Key(item.localId.toString()),
-                            onItemSelected: (Message item) =>
-                                _onMessageSelected(item),
-                            onStarMessage: _setStarred,
-                            onDeleteMessage: _deleteMessage,
-                          ),
-                          if (_selectedFolder != null &&
-                              _selectedFolder.needsInfoUpdate &&
-                              i == messages.length - 1)
-                            CircularProgressIndicator(),
-                        ],
+                      return MessageItem(
+                        isSent,
+                        item,
+                        threads.where((t) => t.parentUid == item.uid).toList(),
+                        key: Key(item.localId.toString()),
+                        onItemSelected: (Message item) =>
+                            _onMessageSelected(item),
+                        onStarMessage: _setStarred,
+                        onDeleteMessage: _deleteMessage,
                       );
                     },
                   ),
