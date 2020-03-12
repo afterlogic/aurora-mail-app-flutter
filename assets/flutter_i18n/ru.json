@@ -39,6 +39,8 @@
   "messages_no_subject": "Без темы",
   "messages_to_me": "Мне",
   "messages_no_receivers": "Нет получателей",
+  "messages_unknown_sender": "Неизвестный отправитель",
+  "messages_unknown_recipient": "Неизвестный получатель",
   "messages_sending": "Отправка сообщения...",
   "messages_saved_in_drafts": "Сообщение сохранено в черновиках",
   "messages_attachments_empty": "Нет вложений",

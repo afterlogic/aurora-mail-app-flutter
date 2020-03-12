@@ -60,13 +60,31 @@ class _MessageItemState extends BState<MessageItem> {
     widget.onStarMessage(widget.message, isStarred);
   }
 
+  String _getEmailTitle() {
+    final m = widget.message;
+    if (widget.isSent) {
+      if (m.toToDisplay == "messages_unknown_recipient") {
+        return i18n(context, "messages_unknown_recipient");
+      } else {
+        return m.toToDisplay;
+      }
+    } else {
+      if (m.fromToDisplay == "messages_unknown_sender") {
+        return i18n(context, "messages_unknown_sender");
+      } else {
+        return m.fromToDisplay;
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final m = widget.message;
     final hasUnreadChildren = widget.children
         .where((i) => !i.flagsInJson.contains("\\seen"))
         .isNotEmpty;
 
-    final flags = Mail.getFlags(widget.message.flagsInJson);
+    final flags = Mail.getFlags(m.flagsInJson);
 
     final fontWeight =
         flags.contains(MessageFlags.seen) ? FontWeight.w400 : FontWeight.w700;
@@ -90,17 +108,17 @@ class _MessageItemState extends BState<MessageItem> {
       children: <Widget>[
         InkWell(
           child: Dismissible(
-            key: Key(widget.message.uid.toString()),
+            key: Key(m.uid.toString()),
             direction: DismissDirection.endToStart,
             confirmDismiss: (_) => ConfirmationDialog.show(
               context,
               i18n(context, "messages_delete_title"),
               i18n(context, "messages_delete_desc_with_subject",
-                  {"subject": widget.message.subject}),
+                  {"subject": m.subject}),
               i18n(context, "btn_delete"),
               destructibleAction: true,
             ),
-            onDismissed: (_) => widget.onDeleteMessage(widget.message),
+            onDismissed: (_) => widget.onDeleteMessage(m),
             background: Container(
               color: theme.errorColor,
               child: Stack(
@@ -117,12 +135,9 @@ class _MessageItemState extends BState<MessageItem> {
             child: ListTile(
               onTap: widget.children.isNotEmpty && !_showThreads
                   ? _toggleThreads
-                  : () => widget.onItemSelected(widget.message),
-              key: Key(widget.message.uid.toString()),
-              title: Text(
-                  widget.isSent
-                      ? widget.message.toToDisplay
-                      : widget.message.fromToDisplay,
+                  : () => widget.onItemSelected(m),
+              key: Key(m.uid.toString()),
+              title: Text(_getEmailTitle(),
                   style: TextStyle(
                     fontWeight: fontWeight,
                     fontSize: 14.0,
@@ -141,10 +156,10 @@ class _MessageItemState extends BState<MessageItem> {
                     if (widget.children.isNotEmpty) SizedBox(width: 6.0),
                     Flexible(
                       child: Opacity(
-                        opacity: widget.message.subject.isEmpty ? 0.44 : 1.0,
+                        opacity: m.subject.isEmpty ? 0.44 : 1.0,
                         child: Text(
-                          widget.message.subject.isNotEmpty
-                              ? widget.message.subject
+                          m.subject.isNotEmpty
+                              ? m.subject
                               : i18n(context, "messages_no_subject"),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -167,12 +182,12 @@ class _MessageItemState extends BState<MessageItem> {
                     mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
-                      if (widget.message.hasAttachments) Icon(Icons.attachment),
+                      if (m.hasAttachments) Icon(Icons.attachment),
                       SizedBox(width: 6.0),
                       BlocBuilder<SettingsBloc, SettingsState>(
                         builder: (_, state) => Text(
                           DateFormatting.getShortMessageDate(
-                            timestamp: widget.message.timeStampInUTC,
+                            timestamp: m.timeStampInUTC,
                             locale:
                                 Localizations.localeOf(context).languageCode,
                             yesterdayWord:
@@ -207,8 +222,7 @@ class _MessageItemState extends BState<MessageItem> {
                           height: 24.0,
                           child: BlocBuilder<SettingsBloc, SettingsState>(
                             builder: (_, state) => Star(
-                              value: widget.message.flagsInJson
-                                  .contains("\\flagged"),
+                              value: m.flagsInJson.contains("\\flagged"),
                               enabled: !(state is SettingsLoaded &&
                                   state.connection == ConnectivityResult.none),
                               onPressed: _setStarred,

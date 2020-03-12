@@ -205,10 +205,10 @@ class Mail extends Table {
                         : item["Email"],
                   )
                   ?.join(", ") as String
-              : "Unknown sender";
+              : "messages_unknown_recipient";
       final displayName = raw["From"] != null
           ? raw["From"]["@Collection"][0]["DisplayName"]
-          : "Unknown sender";
+          : "messages_unknown_sender";
 
       final fromToDisplay = displayName is String && displayName.isNotEmpty
           ? displayName
