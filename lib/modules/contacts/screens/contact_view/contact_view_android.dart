@@ -202,17 +202,19 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
     ]);
 
     final personalInfo = _buildInfos([
-      _buildInfoItem(
-        icon: Icons.alternate_email,
-        label: i18n(context, "contacts_view_email"),
-        v: c.personalEmail,
-        emailToContact: _emailToContacts,
-      ),
-      _buildInfoItem(
-        icon: MdiIcons.mapMarkerOutline,
-        label: i18n(context, "contacts_view_address"),
-        v: c.personalAddress,
-      ),
+      if (_contactInfo.viewEmail != c.personalEmail)
+        _buildInfoItem(
+          icon: Icons.alternate_email,
+          label: i18n(context, "contacts_view_email"),
+          v: c.personalEmail,
+          emailToContact: _emailToContacts,
+        ),
+      if (_contactInfo.viewAddress != c.personalAddress)
+        _buildInfoItem(
+          icon: MdiIcons.mapMarkerOutline,
+          label: i18n(context, "contacts_view_address"),
+          v: c.personalAddress,
+        ),
       _buildInfoItem(
         icon: MdiIcons.homeCityOutline,
         label: i18n(context, "contacts_view_city"),
@@ -243,30 +245,34 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
         label: i18n(context, "contacts_view_fax"),
         v: c.personalFax,
       ),
-      _buildInfoItem(
-        icon: MdiIcons.phone,
-        label: i18n(context, "contacts_view_phone"),
-        v: c.personalPhone,
-      ),
-      _buildInfoItem(
-        icon: MdiIcons.cellphone,
-        label: i18n(context, "contacts_view_mobile"),
-        v: c.personalMobile,
-      ),
+      if (_contactInfo.viewPhone != c.personalPhone)
+        _buildInfoItem(
+          icon: MdiIcons.phone,
+          label: i18n(context, "contacts_view_phone"),
+          v: c.personalPhone,
+        ),
+      if (_contactInfo.viewPhone != c.personalMobile)
+        _buildInfoItem(
+          icon: MdiIcons.cellphone,
+          label: i18n(context, "contacts_view_mobile"),
+          v: c.personalMobile,
+        ),
     ]);
 
     final businessInfo = _buildInfos([
-      _buildInfoItem(
-        icon: Icons.alternate_email,
-        label: i18n(context, "contacts_view_email"),
-        v: c.businessEmail,
-        emailToContact: _emailToContacts,
-      ),
-      _buildInfoItem(
-        icon: MdiIcons.mapMarkerOutline,
-        label: i18n(context, "contacts_view_address"),
-        v: c.businessAddress,
-      ),
+      if (_contactInfo.viewEmail != c.businessEmail)
+        _buildInfoItem(
+          icon: Icons.alternate_email,
+          label: i18n(context, "contacts_view_email"),
+          v: c.businessEmail,
+          emailToContact: _emailToContacts,
+        ),
+      if (_contactInfo.viewAddress != c.businessAddress)
+        _buildInfoItem(
+          icon: MdiIcons.mapMarkerOutline,
+          label: i18n(context, "contacts_view_address"),
+          v: c.businessAddress,
+        ),
       _buildInfoItem(
         icon: MdiIcons.homeCityOutline,
         label: i18n(context, "contacts_view_city"),
@@ -297,19 +303,21 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
         label: i18n(context, "contacts_view_fax"),
         v: c.businessFax,
       ),
-      _buildInfoItem(
-        icon: MdiIcons.cellphone,
-        label: i18n(context, "contacts_view_phone"),
-        v: c.businessPhone,
-      ),
+      if (_contactInfo.viewPhone != c.businessPhone)
+        _buildInfoItem(
+          icon: MdiIcons.cellphone,
+          label: i18n(context, "contacts_view_phone"),
+          v: c.businessPhone,
+        ),
     ]);
 
     final otherInfo = _buildInfos([
-      _buildInfoItem(
-        icon: Icons.web,
-        label: i18n(context, "contacts_view_web_page"),
-        v: c.otherEmail,
-      ),
+      if (_contactInfo.viewEmail != c.otherEmail)
+        _buildInfoItem(
+          icon: Icons.web,
+          label: i18n(context, "contacts_view_web_page"),
+          v: c.otherEmail,
+        ),
       _buildInfoItem(
         icon: MdiIcons.calendar,
         label: i18n(context, "contacts_view_birthday"),
