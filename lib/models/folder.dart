@@ -54,7 +54,7 @@ class Folder {
 
   final bool alwaysRefresh;
 
-  final List<MessageInfo> messagesInfo;
+
 
   final int count;
 
@@ -80,7 +80,6 @@ class Folder {
     @required this.exists,
     @required this.extended,
     @required this.alwaysRefresh,
-    @required this.messagesInfo,
     @required this.count,
     @required this.unread,
     @required this.nameSpace,
@@ -145,8 +144,6 @@ class Folder {
           exists: localFolder.folderExists,
           extended: localFolder.extended,
           alwaysRefresh: localFolder.alwaysRefresh,
-          messagesInfo:
-              MessageInfo.fromJsonString(localFolder.messagesInfoInJson),
           count: localFolder.count,
           unread: localFolder.unread,
         );

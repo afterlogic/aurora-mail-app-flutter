@@ -1,5 +1,4 @@
 import 'package:aurora_mail/models/folder.dart';
-import 'package:aurora_mail/models/message_info.dart';
 import 'package:moor_flutter/moor_flutter.dart';
 
 import '../app_database.dart';
@@ -45,15 +44,6 @@ class FoldersDao extends DatabaseAccessor<AppDatabase> with _$FoldersDaoMixin {
     return batch((b) {
       return b.insertAll(folders, newFolders, mode: InsertMode.insertOrReplace);
     });
-  }
-
-  Future<int> setMessagesInfo(String guid, List<MessageInfo> messagesInfo) {
-    final messagesInfoInJson = MessageInfo.toJsonString(messagesInfo);
-    return (update(folders)..where((f) => f.guid.equals(guid))).write(
-      FoldersCompanion(
-        messagesInfoInJson: Value(messagesInfoInJson),
-      ),
-    );
   }
 
   Future<void> updateFolder(FoldersCompanion foldersCompanion, String guid) {

@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 
 class MessageInfo {
+  final String folder;
+  final int accountLocalId;
   final int uid;
   int parentUid;
   final List<String> flags;
@@ -10,6 +12,8 @@ class MessageInfo {
   bool hasBody;
 
   MessageInfo({
+    this.folder,
+    this.accountLocalId,
     @required this.uid,
     this.parentUid,
     @required this.flags,
@@ -17,37 +21,6 @@ class MessageInfo {
     @required this.hasThread,
   });
 
-  // for writing to DB
-  static String toJsonString(List<MessageInfo> items) {
-    if (items == null) return null;
-    final List mappedItems = items.map((item) {
-      return json.encode({
-        "uid": item.uid,
-        "parentUid": item.parentUid,
-        "flags": item.flags,
-        "hasThread": item.hasThread,
-        "hasBody": item.hasBody,
-      });
-    }).toList();
-    assert(mappedItems.length == items.length);
-    return json.encode(mappedItems);
-  }
-
-  // for retrieving from DB
-  static List<MessageInfo> fromJsonString(String rawItems) {
-    if (rawItems == null) return null;
-    final items = List<String>.from(json.decode(rawItems) as Iterable);
-    return items.map((rawItem) {
-      final item = json.decode(rawItem);
-      return new MessageInfo(
-        uid: item["uid"] as int,
-        parentUid: item["parentUid"] as int,
-        flags: new List<String>.from(item["flags"] as Iterable),
-        hasThread: item["hasThread"] as bool,
-        hasBody: item["hasBody"] as bool,
-      );
-    }).toList();
-  }
 
   // for flattening nested array from server
   static List<MessageInfo> flattenMessagesInfo(String messagesInfoRaw) {

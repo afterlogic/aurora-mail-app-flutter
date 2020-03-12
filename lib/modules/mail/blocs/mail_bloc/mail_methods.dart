@@ -6,6 +6,7 @@ import 'package:aurora_mail/database/folders/folders_dao.dart';
 import 'package:aurora_mail/database/folders/folders_table.dart';
 import 'package:aurora_mail/database/mail/mail_dao.dart';
 import 'package:aurora_mail/database/mail/mail_table.dart';
+import 'package:aurora_mail/database/message_info/message_info_dao.dart';
 import 'package:aurora_mail/database/users/users_dao.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/models/message_info.dart';
@@ -19,6 +20,7 @@ class MailMethods {
   final _foldersDao = new FoldersDao(DBInstances.appDB);
   final _usersDao = new UsersDao(DBInstances.appDB);
   final _mailDao = new MailDao(DBInstances.appDB);
+  final _messageInfoDao = new MessageInfoDao(DBInstances.appDB);
   FoldersApi _foldersApi;
   MailApi _mailApi;
 
@@ -223,9 +225,14 @@ class MailMethods {
     List<MessageInfo> messagesInfo = MessageInfo.flattenMessagesInfo(rawInfo);
 
     // calculate difference
-    if (folderToUpdate.messagesInfo != null) {
+    final messageInfo = await _messageInfoDao.getAll(
+      account.localId,
+      folderToUpdate.fullName,
+    );
+
+    if (messageInfo != null) {
       final calcResult = await Folders.calculateMessagesInfoDiffAsync(
-        folderToUpdate.messagesInfo,
+        messageInfo,
         messagesInfo,
       );
 
@@ -235,7 +242,7 @@ class MailMethods {
       _mailDao.updateMessagesFlags(calcResult.infosToUpdateFlags);
     }
 
-    await _foldersDao.setMessagesInfo(folderToUpdate.guid, messagesInfo);
+    await _messageInfoDao.setMessagesInfo(folderToUpdate.guid, messagesInfo);
 
     return _syncMessagesChunk(syncPeriod);
   }

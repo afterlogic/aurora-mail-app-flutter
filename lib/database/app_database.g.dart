@@ -2259,7 +2259,6 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
   final bool folderExists;
   final bool extended;
   final bool alwaysRefresh;
-  final String messagesInfoInJson;
   final String namespace;
   LocalFolder(
       {@required this.fullName,
@@ -2284,7 +2283,6 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
       @required this.folderExists,
       this.extended,
       @required this.alwaysRefresh,
-      this.messagesInfoInJson,
       @required this.namespace});
   factory LocalFolder.fromData(Map<String, dynamic> data, GeneratedDatabase db,
       {String prefix}) {
@@ -2332,8 +2330,6 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
           boolType.mapFromDatabaseResponse(data['${effectivePrefix}extended']),
       alwaysRefresh: boolType
           .mapFromDatabaseResponse(data['${effectivePrefix}always_refresh']),
-      messagesInfoInJson: stringType.mapFromDatabaseResponse(
-          data['${effectivePrefix}messages_info_in_json']),
       namespace: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}namespace']),
     );
@@ -2364,8 +2360,6 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
       folderExists: serializer.fromJson<bool>(json['folderExists']),
       extended: serializer.fromJson<bool>(json['extended']),
       alwaysRefresh: serializer.fromJson<bool>(json['alwaysRefresh']),
-      messagesInfoInJson:
-          serializer.fromJson<String>(json['messagesInfoInJson']),
       namespace: serializer.fromJson<String>(json['namespace']),
     );
   }
@@ -2395,7 +2389,6 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
       'folderExists': serializer.toJson<bool>(folderExists),
       'extended': serializer.toJson<bool>(extended),
       'alwaysRefresh': serializer.toJson<bool>(alwaysRefresh),
-      'messagesInfoInJson': serializer.toJson<String>(messagesInfoInJson),
       'namespace': serializer.toJson<String>(namespace),
     };
   }
@@ -2461,9 +2454,6 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
       alwaysRefresh: alwaysRefresh == null && nullToAbsent
           ? const Value.absent()
           : Value(alwaysRefresh),
-      messagesInfoInJson: messagesInfoInJson == null && nullToAbsent
-          ? const Value.absent()
-          : Value(messagesInfoInJson),
       namespace: namespace == null && nullToAbsent
           ? const Value.absent()
           : Value(namespace),
@@ -2493,7 +2483,6 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
           bool folderExists,
           bool extended,
           bool alwaysRefresh,
-          String messagesInfoInJson,
           String namespace}) =>
       LocalFolder(
         fullName: fullName ?? this.fullName,
@@ -2518,7 +2507,6 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
         folderExists: folderExists ?? this.folderExists,
         extended: extended ?? this.extended,
         alwaysRefresh: alwaysRefresh ?? this.alwaysRefresh,
-        messagesInfoInJson: messagesInfoInJson ?? this.messagesInfoInJson,
         namespace: namespace ?? this.namespace,
       );
   @override
@@ -2546,7 +2534,6 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
           ..write('folderExists: $folderExists, ')
           ..write('extended: $extended, ')
           ..write('alwaysRefresh: $alwaysRefresh, ')
-          ..write('messagesInfoInJson: $messagesInfoInJson, ')
           ..write('namespace: $namespace')
           ..write(')'))
         .toString();
@@ -2595,7 +2582,7 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
                                                                               .hashCode,
                                                                           $mrjc(
                                                                               isSelectable.hashCode,
-                                                                              $mrjc(folderExists.hashCode, $mrjc(extended.hashCode, $mrjc(alwaysRefresh.hashCode, $mrjc(messagesInfoInJson.hashCode, namespace.hashCode))))))))))))))))))))))));
+                                                                              $mrjc(folderExists.hashCode, $mrjc(extended.hashCode, $mrjc(alwaysRefresh.hashCode, namespace.hashCode)))))))))))))))))))))));
   @override
   bool operator ==(dynamic other) =>
       identical(this, other) ||
@@ -2622,7 +2609,6 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
           other.folderExists == this.folderExists &&
           other.extended == this.extended &&
           other.alwaysRefresh == this.alwaysRefresh &&
-          other.messagesInfoInJson == this.messagesInfoInJson &&
           other.namespace == this.namespace);
 }
 
@@ -2649,7 +2635,6 @@ class FoldersCompanion extends UpdateCompanion<LocalFolder> {
   final Value<bool> folderExists;
   final Value<bool> extended;
   final Value<bool> alwaysRefresh;
-  final Value<String> messagesInfoInJson;
   final Value<String> namespace;
   const FoldersCompanion({
     this.fullName = const Value.absent(),
@@ -2674,7 +2659,6 @@ class FoldersCompanion extends UpdateCompanion<LocalFolder> {
     this.folderExists = const Value.absent(),
     this.extended = const Value.absent(),
     this.alwaysRefresh = const Value.absent(),
-    this.messagesInfoInJson = const Value.absent(),
     this.namespace = const Value.absent(),
   });
   FoldersCompanion.insert({
@@ -2700,7 +2684,6 @@ class FoldersCompanion extends UpdateCompanion<LocalFolder> {
     @required bool folderExists,
     this.extended = const Value.absent(),
     @required bool alwaysRefresh,
-    this.messagesInfoInJson = const Value.absent(),
     @required String namespace,
   })  : fullName = Value(fullName),
         accountLocalId = Value(accountLocalId),
@@ -2744,7 +2727,6 @@ class FoldersCompanion extends UpdateCompanion<LocalFolder> {
       Value<bool> folderExists,
       Value<bool> extended,
       Value<bool> alwaysRefresh,
-      Value<String> messagesInfoInJson,
       Value<String> namespace}) {
     return FoldersCompanion(
       fullName: fullName ?? this.fullName,
@@ -2769,7 +2751,6 @@ class FoldersCompanion extends UpdateCompanion<LocalFolder> {
       folderExists: folderExists ?? this.folderExists,
       extended: extended ?? this.extended,
       alwaysRefresh: alwaysRefresh ?? this.alwaysRefresh,
-      messagesInfoInJson: messagesInfoInJson ?? this.messagesInfoInJson,
       namespace: namespace ?? this.namespace,
     );
   }
@@ -3065,20 +3046,6 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
     );
   }
 
-  final VerificationMeta _messagesInfoInJsonMeta =
-      const VerificationMeta('messagesInfoInJson');
-  GeneratedTextColumn _messagesInfoInJson;
-  @override
-  GeneratedTextColumn get messagesInfoInJson =>
-      _messagesInfoInJson ??= _constructMessagesInfoInJson();
-  GeneratedTextColumn _constructMessagesInfoInJson() {
-    return GeneratedTextColumn(
-      'messages_info_in_json',
-      $tableName,
-      true,
-    );
-  }
-
   final VerificationMeta _namespaceMeta = const VerificationMeta('namespace');
   GeneratedTextColumn _namespace;
   @override
@@ -3115,7 +3082,6 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
         folderExists,
         extended,
         alwaysRefresh,
-        messagesInfoInJson,
         namespace
       ];
   @override
@@ -3268,12 +3234,6 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
     } else if (isInserting) {
       context.missing(_alwaysRefreshMeta);
     }
-    if (d.messagesInfoInJson.present) {
-      context.handle(
-          _messagesInfoInJsonMeta,
-          messagesInfoInJson.isAcceptableValue(
-              d.messagesInfoInJson.value, _messagesInfoInJsonMeta));
-    }
     if (d.namespace.present) {
       context.handle(_namespaceMeta,
           namespace.isAcceptableValue(d.namespace.value, _namespaceMeta));
@@ -3362,10 +3322,6 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
     }
     if (d.alwaysRefresh.present) {
       map['always_refresh'] = Variable<bool, BoolType>(d.alwaysRefresh.value);
-    }
-    if (d.messagesInfoInJson.present) {
-      map['messages_info_in_json'] =
-          Variable<String, StringType>(d.messagesInfoInJson.value);
     }
     if (d.namespace.present) {
       map['namespace'] = Variable<String, StringType>(d.namespace.value);
@@ -9704,6 +9660,393 @@ class $AliasesTableTable extends AliasesTable
   }
 }
 
+class MessageInfoDb extends DataClass implements Insertable<MessageInfoDb> {
+  final String folder;
+  final int accountLocalId;
+  final int uid;
+  final int parentUid;
+  final String flags;
+  final bool hasThread;
+  final bool hasBody;
+  MessageInfoDb(
+      {@required this.folder,
+      @required this.accountLocalId,
+      @required this.uid,
+      @required this.parentUid,
+      @required this.flags,
+      @required this.hasThread,
+      @required this.hasBody});
+  factory MessageInfoDb.fromData(
+      Map<String, dynamic> data, GeneratedDatabase db,
+      {String prefix}) {
+    final effectivePrefix = prefix ?? '';
+    final stringType = db.typeSystem.forDartType<String>();
+    final intType = db.typeSystem.forDartType<int>();
+    final boolType = db.typeSystem.forDartType<bool>();
+    return MessageInfoDb(
+      folder:
+          stringType.mapFromDatabaseResponse(data['${effectivePrefix}folder']),
+      accountLocalId: intType
+          .mapFromDatabaseResponse(data['${effectivePrefix}account_local_id']),
+      uid: intType.mapFromDatabaseResponse(data['${effectivePrefix}uid']),
+      parentUid:
+          intType.mapFromDatabaseResponse(data['${effectivePrefix}parent_uid']),
+      flags:
+          stringType.mapFromDatabaseResponse(data['${effectivePrefix}flags']),
+      hasThread: boolType
+          .mapFromDatabaseResponse(data['${effectivePrefix}has_thread']),
+      hasBody:
+          boolType.mapFromDatabaseResponse(data['${effectivePrefix}has_body']),
+    );
+  }
+  factory MessageInfoDb.fromJson(Map<String, dynamic> json,
+      {ValueSerializer serializer}) {
+    serializer ??= moorRuntimeOptions.defaultSerializer;
+    return MessageInfoDb(
+      folder: serializer.fromJson<String>(json['folder']),
+      accountLocalId: serializer.fromJson<int>(json['accountLocalId']),
+      uid: serializer.fromJson<int>(json['uid']),
+      parentUid: serializer.fromJson<int>(json['parentUid']),
+      flags: serializer.fromJson<String>(json['flags']),
+      hasThread: serializer.fromJson<bool>(json['hasThread']),
+      hasBody: serializer.fromJson<bool>(json['hasBody']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer serializer}) {
+    serializer ??= moorRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'folder': serializer.toJson<String>(folder),
+      'accountLocalId': serializer.toJson<int>(accountLocalId),
+      'uid': serializer.toJson<int>(uid),
+      'parentUid': serializer.toJson<int>(parentUid),
+      'flags': serializer.toJson<String>(flags),
+      'hasThread': serializer.toJson<bool>(hasThread),
+      'hasBody': serializer.toJson<bool>(hasBody),
+    };
+  }
+
+  @override
+  MessageInfoTableCompanion createCompanion(bool nullToAbsent) {
+    return MessageInfoTableCompanion(
+      folder:
+          folder == null && nullToAbsent ? const Value.absent() : Value(folder),
+      accountLocalId: accountLocalId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(accountLocalId),
+      uid: uid == null && nullToAbsent ? const Value.absent() : Value(uid),
+      parentUid: parentUid == null && nullToAbsent
+          ? const Value.absent()
+          : Value(parentUid),
+      flags:
+          flags == null && nullToAbsent ? const Value.absent() : Value(flags),
+      hasThread: hasThread == null && nullToAbsent
+          ? const Value.absent()
+          : Value(hasThread),
+      hasBody: hasBody == null && nullToAbsent
+          ? const Value.absent()
+          : Value(hasBody),
+    );
+  }
+
+  MessageInfoDb copyWith(
+          {String folder,
+          int accountLocalId,
+          int uid,
+          int parentUid,
+          String flags,
+          bool hasThread,
+          bool hasBody}) =>
+      MessageInfoDb(
+        folder: folder ?? this.folder,
+        accountLocalId: accountLocalId ?? this.accountLocalId,
+        uid: uid ?? this.uid,
+        parentUid: parentUid ?? this.parentUid,
+        flags: flags ?? this.flags,
+        hasThread: hasThread ?? this.hasThread,
+        hasBody: hasBody ?? this.hasBody,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('MessageInfoDb(')
+          ..write('folder: $folder, ')
+          ..write('accountLocalId: $accountLocalId, ')
+          ..write('uid: $uid, ')
+          ..write('parentUid: $parentUid, ')
+          ..write('flags: $flags, ')
+          ..write('hasThread: $hasThread, ')
+          ..write('hasBody: $hasBody')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => $mrjf($mrjc(
+      folder.hashCode,
+      $mrjc(
+          accountLocalId.hashCode,
+          $mrjc(
+              uid.hashCode,
+              $mrjc(
+                  parentUid.hashCode,
+                  $mrjc(flags.hashCode,
+                      $mrjc(hasThread.hashCode, hasBody.hashCode)))))));
+  @override
+  bool operator ==(dynamic other) =>
+      identical(this, other) ||
+      (other is MessageInfoDb &&
+          other.folder == this.folder &&
+          other.accountLocalId == this.accountLocalId &&
+          other.uid == this.uid &&
+          other.parentUid == this.parentUid &&
+          other.flags == this.flags &&
+          other.hasThread == this.hasThread &&
+          other.hasBody == this.hasBody);
+}
+
+class MessageInfoTableCompanion extends UpdateCompanion<MessageInfoDb> {
+  final Value<String> folder;
+  final Value<int> accountLocalId;
+  final Value<int> uid;
+  final Value<int> parentUid;
+  final Value<String> flags;
+  final Value<bool> hasThread;
+  final Value<bool> hasBody;
+  const MessageInfoTableCompanion({
+    this.folder = const Value.absent(),
+    this.accountLocalId = const Value.absent(),
+    this.uid = const Value.absent(),
+    this.parentUid = const Value.absent(),
+    this.flags = const Value.absent(),
+    this.hasThread = const Value.absent(),
+    this.hasBody = const Value.absent(),
+  });
+  MessageInfoTableCompanion.insert({
+    @required String folder,
+    @required int accountLocalId,
+    @required int uid,
+    @required int parentUid,
+    @required String flags,
+    @required bool hasThread,
+    @required bool hasBody,
+  })  : folder = Value(folder),
+        accountLocalId = Value(accountLocalId),
+        uid = Value(uid),
+        parentUid = Value(parentUid),
+        flags = Value(flags),
+        hasThread = Value(hasThread),
+        hasBody = Value(hasBody);
+  MessageInfoTableCompanion copyWith(
+      {Value<String> folder,
+      Value<int> accountLocalId,
+      Value<int> uid,
+      Value<int> parentUid,
+      Value<String> flags,
+      Value<bool> hasThread,
+      Value<bool> hasBody}) {
+    return MessageInfoTableCompanion(
+      folder: folder ?? this.folder,
+      accountLocalId: accountLocalId ?? this.accountLocalId,
+      uid: uid ?? this.uid,
+      parentUid: parentUid ?? this.parentUid,
+      flags: flags ?? this.flags,
+      hasThread: hasThread ?? this.hasThread,
+      hasBody: hasBody ?? this.hasBody,
+    );
+  }
+}
+
+class $MessageInfoTableTable extends MessageInfoTable
+    with TableInfo<$MessageInfoTableTable, MessageInfoDb> {
+  final GeneratedDatabase _db;
+  final String _alias;
+  $MessageInfoTableTable(this._db, [this._alias]);
+  final VerificationMeta _folderMeta = const VerificationMeta('folder');
+  GeneratedTextColumn _folder;
+  @override
+  GeneratedTextColumn get folder => _folder ??= _constructFolder();
+  GeneratedTextColumn _constructFolder() {
+    return GeneratedTextColumn(
+      'folder',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _accountLocalIdMeta =
+      const VerificationMeta('accountLocalId');
+  GeneratedIntColumn _accountLocalId;
+  @override
+  GeneratedIntColumn get accountLocalId =>
+      _accountLocalId ??= _constructAccountLocalId();
+  GeneratedIntColumn _constructAccountLocalId() {
+    return GeneratedIntColumn(
+      'account_local_id',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _uidMeta = const VerificationMeta('uid');
+  GeneratedIntColumn _uid;
+  @override
+  GeneratedIntColumn get uid => _uid ??= _constructUid();
+  GeneratedIntColumn _constructUid() {
+    return GeneratedIntColumn(
+      'uid',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _parentUidMeta = const VerificationMeta('parentUid');
+  GeneratedIntColumn _parentUid;
+  @override
+  GeneratedIntColumn get parentUid => _parentUid ??= _constructParentUid();
+  GeneratedIntColumn _constructParentUid() {
+    return GeneratedIntColumn(
+      'parent_uid',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _flagsMeta = const VerificationMeta('flags');
+  GeneratedTextColumn _flags;
+  @override
+  GeneratedTextColumn get flags => _flags ??= _constructFlags();
+  GeneratedTextColumn _constructFlags() {
+    return GeneratedTextColumn(
+      'flags',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _hasThreadMeta = const VerificationMeta('hasThread');
+  GeneratedBoolColumn _hasThread;
+  @override
+  GeneratedBoolColumn get hasThread => _hasThread ??= _constructHasThread();
+  GeneratedBoolColumn _constructHasThread() {
+    return GeneratedBoolColumn(
+      'has_thread',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _hasBodyMeta = const VerificationMeta('hasBody');
+  GeneratedBoolColumn _hasBody;
+  @override
+  GeneratedBoolColumn get hasBody => _hasBody ??= _constructHasBody();
+  GeneratedBoolColumn _constructHasBody() {
+    return GeneratedBoolColumn(
+      'has_body',
+      $tableName,
+      false,
+    );
+  }
+
+  @override
+  List<GeneratedColumn> get $columns =>
+      [folder, accountLocalId, uid, parentUid, flags, hasThread, hasBody];
+  @override
+  $MessageInfoTableTable get asDslTable => this;
+  @override
+  String get $tableName => _alias ?? 'message_info_table';
+  @override
+  final String actualTableName = 'message_info_table';
+  @override
+  VerificationContext validateIntegrity(MessageInfoTableCompanion d,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    if (d.folder.present) {
+      context.handle(
+          _folderMeta, folder.isAcceptableValue(d.folder.value, _folderMeta));
+    } else if (isInserting) {
+      context.missing(_folderMeta);
+    }
+    if (d.accountLocalId.present) {
+      context.handle(
+          _accountLocalIdMeta,
+          accountLocalId.isAcceptableValue(
+              d.accountLocalId.value, _accountLocalIdMeta));
+    } else if (isInserting) {
+      context.missing(_accountLocalIdMeta);
+    }
+    if (d.uid.present) {
+      context.handle(_uidMeta, uid.isAcceptableValue(d.uid.value, _uidMeta));
+    } else if (isInserting) {
+      context.missing(_uidMeta);
+    }
+    if (d.parentUid.present) {
+      context.handle(_parentUidMeta,
+          parentUid.isAcceptableValue(d.parentUid.value, _parentUidMeta));
+    } else if (isInserting) {
+      context.missing(_parentUidMeta);
+    }
+    if (d.flags.present) {
+      context.handle(
+          _flagsMeta, flags.isAcceptableValue(d.flags.value, _flagsMeta));
+    } else if (isInserting) {
+      context.missing(_flagsMeta);
+    }
+    if (d.hasThread.present) {
+      context.handle(_hasThreadMeta,
+          hasThread.isAcceptableValue(d.hasThread.value, _hasThreadMeta));
+    } else if (isInserting) {
+      context.missing(_hasThreadMeta);
+    }
+    if (d.hasBody.present) {
+      context.handle(_hasBodyMeta,
+          hasBody.isAcceptableValue(d.hasBody.value, _hasBodyMeta));
+    } else if (isInserting) {
+      context.missing(_hasBodyMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {uid, folder, accountLocalId};
+  @override
+  MessageInfoDb map(Map<String, dynamic> data, {String tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
+    return MessageInfoDb.fromData(data, _db, prefix: effectivePrefix);
+  }
+
+  @override
+  Map<String, Variable> entityToSql(MessageInfoTableCompanion d) {
+    final map = <String, Variable>{};
+    if (d.folder.present) {
+      map['folder'] = Variable<String, StringType>(d.folder.value);
+    }
+    if (d.accountLocalId.present) {
+      map['account_local_id'] = Variable<int, IntType>(d.accountLocalId.value);
+    }
+    if (d.uid.present) {
+      map['uid'] = Variable<int, IntType>(d.uid.value);
+    }
+    if (d.parentUid.present) {
+      map['parent_uid'] = Variable<int, IntType>(d.parentUid.value);
+    }
+    if (d.flags.present) {
+      map['flags'] = Variable<String, StringType>(d.flags.value);
+    }
+    if (d.hasThread.present) {
+      map['has_thread'] = Variable<bool, BoolType>(d.hasThread.value);
+    }
+    if (d.hasBody.present) {
+      map['has_body'] = Variable<bool, BoolType>(d.hasBody.value);
+    }
+    return map;
+  }
+
+  @override
+  $MessageInfoTableTable createAlias(String alias) {
+    return $MessageInfoTableTable(_db, alias);
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(SqlTypeSystem.defaultInstance, e);
   $MailTable _mail;
@@ -9730,6 +10073,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   $AliasesTableTable _aliasesTable;
   $AliasesTableTable get aliasesTable =>
       _aliasesTable ??= $AliasesTableTable(this);
+  $MessageInfoTableTable _messageInfoTable;
+  $MessageInfoTableTable get messageInfoTable =>
+      _messageInfoTable ??= $MessageInfoTableTable(this);
   @override
   Iterable<TableInfo> get allTables => allSchemaEntities.whereType<TableInfo>();
   @override
@@ -9743,6 +10089,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         contactsStorages,
         pgpKeyModel,
         accountIdentityTable,
-        aliasesTable
+        aliasesTable,
+        messageInfoTable
       ];
 }
