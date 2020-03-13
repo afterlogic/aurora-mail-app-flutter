@@ -17,7 +17,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   Account currentAccount;
 
 //  static String hostName;
-  List<Account> accounts=[];
+  List<Account> accounts = [];
   AccountIdentity currentIdentity;
   User currentUser;
 
@@ -25,7 +25,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthState get initialState => InitialAuthState();
 
   @override
-  Stream<AuthState> mapEventToState(AuthEvent event,) async* {
+  Stream<AuthState> mapEventToState(
+    AuthEvent event,
+  ) async* {
     if (event is InitUserAndAccounts) yield* _initUserAndAccounts(event);
     if (event is GetLastEmail) yield* _getLastEmail(event);
     if (event is LogIn) yield* _login(event);
@@ -48,9 +50,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         currentAccount = result.account;
 
         final identities =
-        await _methods.getAccountIdentities(currentUser, currentAccount);
+            await _methods.getAccountIdentities(currentUser, currentAccount);
         currentIdentity = identities.firstWhere((item) => item.isDefault,
-            orElse: () => null) ??
+                orElse: () => null) ??
             AccountIdentity(
               email: currentAccount.email,
               useSignature: currentAccount.useSignature,
@@ -146,10 +148,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     if (accounts.isNotEmpty) {
       assert(accounts[0] != null);
+      this.accounts = accounts;
       currentAccount = accounts[0];
       await _methods.updateAliases(currentUser, currentAccount);
       currentIdentity =
-      await _methods.updateIdentity(currentUser, currentAccount, accounts);
+          await _methods.updateIdentity(currentUser, currentAccount, accounts);
       yield InitializedUserAndAccounts(
         users: users,
         user: currentUser,

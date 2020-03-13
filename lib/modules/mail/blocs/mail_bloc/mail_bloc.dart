@@ -37,7 +37,9 @@ class MailBloc extends Bloc<MailEvent, MailState> {
   }
 
   @override
-  Stream<MailState> mapEventToState(MailEvent event,) async* {
+  Stream<MailState> mapEventToState(
+    MailEvent event,
+  ) async* {
     if (event is FetchFolders) yield* _fetchFolders(event);
     if (event is UpdateFolders) yield* _updateFolders(event);
     if (event is RefreshFolders) yield* _refreshFolders(event);
@@ -67,7 +69,7 @@ class MailBloc extends Bloc<MailEvent, MailState> {
           _selectedFolder = folders[0];
         } else {
           _selectedFolder = folders.firstWhere(
-                  (f) => f.guid == _selectedFolder.guid,
+              (f) => f.guid == _selectedFolder.guid,
               orElse: () => folders[0]);
         }
         yield FoldersLoaded(
@@ -80,7 +82,11 @@ class MailBloc extends Bloc<MailEvent, MailState> {
           _selectedFolder,
         );
 
-        yield FoldersLoaded(foldersWithInfo, _selectedFolder, _filter,);
+        yield FoldersLoaded(
+          foldersWithInfo,
+          _selectedFolder,
+          _filter,
+        );
 
         final guid = _selectedFolder.guid;
         _methods
@@ -117,13 +123,14 @@ class MailBloc extends Bloc<MailEvent, MailState> {
 
       final newFolders = await _methods.refreshFolders();
       final List<Folder> foldersWithInfo =
-      await _methods.updateFoldersHash(_selectedFolder)
-
-      final List<Folder> foldersWithInfo =
-      await _methods.updateFoldersHash(_selectedFolder);
+          await _methods.updateFoldersHash(_selectedFolder);
 
       if (_selectedFolder == null && newFolders.isNotEmpty) {
-        yield FoldersLoaded(foldersWithInfo, _selectedFolder, _filter,);
+        yield FoldersLoaded(
+          foldersWithInfo,
+          _selectedFolder,
+          _filter,
+        );
 
         final guid = _selectedFolder.guid;
         _methods
@@ -153,7 +160,11 @@ class MailBloc extends Bloc<MailEvent, MailState> {
         forceCurrentFolderUpdate: true,
       );
 
-      yield FoldersLoaded(foldersWithInfo, _selectedFolder, _filter,);
+      yield FoldersLoaded(
+        foldersWithInfo,
+        _selectedFolder,
+        _filter,
+      );
 
       _methods
           .syncFolders(guid: guid, syncSystemFolders: true)

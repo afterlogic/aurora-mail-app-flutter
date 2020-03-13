@@ -266,10 +266,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
     bool isSent,
   ) {
     return StreamBuilder(
-      stream: messagesSub.asyncMap((item) async {
-        _selectedFolder = await _mailBloc.updateFolder(_selectedFolder);
-        return item;
-      }),
+      stream: messagesSub,
       builder: (ctx, AsyncSnapshot<List<Message>> snap) {
         if (snap.connectionState == ConnectionState.active) {
           if (snap.hasError) {
@@ -302,7 +299,6 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
                   ),
                 Flexible(
                   child: ListView.builder(
-                    key: Key("mail"),
                     padding: EdgeInsets.only(top: 6.0, bottom: 82.0),
                     itemCount: messages.length + (needsInfoUpdate ? 1 : 0),
                     itemBuilder: (_, i) {
