@@ -4,8 +4,6 @@ import 'package:aurora_mail/database/folders/folders_dao.dart';
 import 'package:aurora_mail/database/folders/folders_table.dart';
 import 'package:aurora_mail/database/mail/mail_dao.dart';
 import 'package:aurora_mail/database/mail/mail_table.dart';
-import 'package:aurora_mail/database/message_info/message_info_dao.dart';
-import 'package:aurora_mail/database/message_info/message_info_table.dart';
 import 'package:aurora_mail/database/users/users_dao.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/models/message_info.dart';
@@ -23,7 +21,6 @@ class BackgroundSync {
   final _foldersDao = FoldersDao(DBInstances.appDB);
   final _usersDao = UsersDao(DBInstances.appDB);
   final _accountsDao = AccountsDao(DBInstances.appDB);
-  final _messageInfoDao = MessageInfoDao(DBInstances.appDB);
   final _authLocal = AuthLocalStorage();
 
 //  final _notificationStorage = NotificationLocalStorage();
@@ -90,10 +87,10 @@ class BackgroundSync {
     if (account == null) return new List<Message>();
 
     for (Folder folderToUpdate in foldersToUpdate) {
-      final messagesInfo = (await _messageInfoDao.getAll(
-              account.localId, folderToUpdate.fullName))
-          .map((item) => item.toMessageInfo())
-          .toList();
+      final messagesInfo = await FolderMessageInfo.getMessageInfo(
+        folderToUpdate.fullName,
+        account.localId,
+      );
 
       if (!folderToUpdate.needsInfoUpdate || messagesInfo == null) {
         break;
@@ -131,17 +128,12 @@ class BackgroundSync {
         user.localId,
         account,
       );
-
-      await _messageInfoDao.set(
-         account.localId,
+      await FolderMessageInfo.setMessageInfo(
         folderToUpdate.fullName,
-        result.updatedInfo
-            .map((item) => item.toMessageInfoDb(
-                  account: account,
-                  folder: folderToUpdate,
-                ))
-            .toList(),
+        account.localId,
+        result.updatedInfo,
       );
+
       newMessages.addAll(newMessageBodies);
     }
     await _mailDao.addMessages(newMessages);

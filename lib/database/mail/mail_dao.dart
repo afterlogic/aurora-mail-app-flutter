@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:aurora_mail/models/message_info.dart';
 import 'package:aurora_mail/modules/mail/repository/search_util.dart';
@@ -88,7 +89,9 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
 //    params.add(Variable.withInt(limit));
 //    params.add(Variable.withInt(offset));
 
-    return customSelectQuery(query, variables: params,readsFrom: {mail}).watch().map((list) {
+    return customSelectQuery(query, variables: params, readsFrom: {mail})
+        .watch()
+        .map((list) {
       return list.map((item) {
         return Message.fromData(item.data, db);
       }).toList();
@@ -96,7 +99,8 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
   }
 
   Future<Message> getMessage(int localId) {
-    return (select(mail)..where((item) => item.localId.equals(localId))).getSingle();
+    return (select(mail)..where((item) => item.localId.equals(localId)))
+        .getSingle();
   }
 
   Future<void> addMessages(List<Message> newMessages) async {
@@ -116,11 +120,16 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
     });
   }
 
-  Future<int> deleteMessages(List<int> uids, String folderRawName) {
-    return (delete(mail)
-          ..where((m) => m.uid.isIn(uids))
-          ..where((m) => m.folder.equals(folderRawName)))
-        .go();
+  Future deleteMessages(List<int> uids, String folderRawName) async {
+    final step = 100;
+    for (int i = 0; i <= uids.length ~/ step; i++) {
+      final start = i * step;
+      final end = min(start + step, uids.length);
+      await (delete(mail)
+            ..where((m) => m.uid.isIn(uids.getRange(start, end)))
+            ..where((m) => m.folder.equals(folderRawName)))
+          .go();
+    }
   }
 
   Future<int> deleteMessagesFromRemovedFolders(

@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/models/message_info.dart';
 import 'package:flutter/foundation.dart';
 import 'package:moor_flutter/moor_flutter.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 
 @DataClassName("LocalFolder")
@@ -12,7 +15,7 @@ class Folders extends Table {
 
   TextColumn get fullName => text()();
 
-    IntColumn get accountLocalId => integer()();
+  IntColumn get accountLocalId => integer()();
 
   IntColumn get userLocalId => integer()();
 
@@ -282,4 +285,37 @@ class MessagesInfoDiffCalcResult {
       : assert(updatedInfo != null &&
             removedUids != null &&
             infosToUpdateFlags != null);
+}
+
+class FolderMessageInfo {
+  static Future<List<MessageInfo>> getMessageInfo(
+    String fullName,
+    int accountLocalId,
+  ) async {
+    final id = "$fullName.$accountLocalId";
+    final dir = await getApplicationSupportDirectory();
+    final file = File(dir.path + Platform.pathSeparator + id);
+    if (await file.exists()) {
+      return MessageInfo.fromJsonString(await file.readAsString());
+    } else {
+      return null;
+    }
+  }
+
+  static Future setMessageInfo(
+    String fullName,
+    int accountLocalId,
+    List<MessageInfo> items,
+  ) async {
+    final id = "$fullName.$accountLocalId";
+    final dir = await getApplicationSupportDirectory();
+    final file = File(dir.path + Platform.pathSeparator + id);
+    if (await file.exists()) {
+      await file.delete();
+    }
+    await file.create(recursive: true);
+    return file.writeAsString(MessageInfo.toJsonString(items));
+  }
+
+  static final folder = "messageInfo";
 }

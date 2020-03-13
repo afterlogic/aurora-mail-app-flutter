@@ -1,8 +1,6 @@
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:flutter/cupertino.dart';
 
-import 'message_info.dart';
-
 enum FolderType {
   inbox,
   sent,
@@ -21,6 +19,8 @@ class Folder {
   final String guid;
 
   final String parentGuid;
+
+  final int accountLocalId;
 
   final int type;
 
@@ -54,8 +54,6 @@ class Folder {
 
   final bool alwaysRefresh;
 
-
-
   final int count;
 
   final int unread;
@@ -83,6 +81,7 @@ class Folder {
     @required this.count,
     @required this.unread,
     @required this.nameSpace,
+    @required this.accountLocalId,
   });
 
   String get viewName {
@@ -125,6 +124,7 @@ class Folder {
     try {
       return localFolders.map((localFolder) {
         return Folder(
+          accountLocalId: localFolder.accountLocalId,
           nameSpace: localFolder.namespace,
           guid: localFolder.guid,
           parentGuid: localFolder.parentGuid,

@@ -11,7 +11,6 @@ import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/st
 import 'package:moor_flutter/moor_flutter.dart';
 import 'package:aurora_mail/database/aliases/aliases_table.dart';
 import 'accounts/accounts_table.dart';
-import 'message_info/message_info_table.dart';
 import 'users/users_table.dart';
 
 part 'app_database.g.dart';
@@ -33,7 +32,6 @@ class DBInstances {
   PgpKeyModel,
   AccountIdentityTable,
   AliasesTable,
-  MessageInfoTable
 ])
 class AppDatabase extends _$AppDatabase {
   AppDatabase()

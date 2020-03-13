@@ -6,8 +6,6 @@ import 'package:aurora_mail/database/folders/folders_dao.dart';
 import 'package:aurora_mail/database/folders/folders_table.dart';
 import 'package:aurora_mail/database/mail/mail_dao.dart';
 import 'package:aurora_mail/database/mail/mail_table.dart';
-import 'package:aurora_mail/database/message_info/message_info_dao.dart';
-import 'package:aurora_mail/database/message_info/message_info_table.dart';
 import 'package:aurora_mail/database/users/users_dao.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/models/message_info.dart';
@@ -15,13 +13,13 @@ import 'package:aurora_mail/modules/mail/repository/folders_api.dart';
 import 'package:aurora_mail/modules/mail/repository/mail_api.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/modules/settings/models/sync_period.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:moor_flutter/moor_flutter.dart';
 
 class MailMethods {
   final _foldersDao = new FoldersDao(DBInstances.appDB);
   final _usersDao = new UsersDao(DBInstances.appDB);
   final _mailDao = new MailDao(DBInstances.appDB);
-  final _messageInfoDao = new MessageInfoDao(DBInstances.appDB);
   FoldersApi _foldersApi;
   MailApi _mailApi;
 
@@ -196,10 +194,12 @@ class MailMethods {
     }
     if (_syncQueue.isNotEmpty && queueLengthBeforeInsert == 0) {
       await _setMessagesInfoToFolder();
+    } else {
+      _setMessagesInfoToFolder(true);
     }
   }
 
-  Future<void> _setMessagesInfoToFolder() async {
+  Future<void> _setMessagesInfoToFolder([bool onlyUpdateInfo]) async {
     if (_isOffline || user == null) return null;
     assert(_syncQueue.isNotEmpty);
 
@@ -223,44 +223,40 @@ class MailMethods {
     final rawInfo = await _mailApi.getMessagesInfo(
         folderName: folderToUpdate.fullNameRaw, search: "date:$periodStr/");
 
-    List<MessageInfo> messagesInfo = MessageInfo.flattenMessagesInfo(rawInfo);
+    List<MessageInfo> newMessagesInfo =
+        MessageInfo.flattenMessagesInfo(rawInfo);
 
     // calculate difference
-    final messageInfo = (await _messageInfoDao.getAll(
-      account.localId,
+    final oldMessagesInfo = await FolderMessageInfo.getMessageInfo(
       folderToUpdate.fullName,
-    ))
-        .map((item) => item.toMessageInfo())
-        .toList();
+      account.localId,
+    );
 
-    if (messageInfo != null) {
+    if (oldMessagesInfo != null) {
       final calcResult = await Folders.calculateMessagesInfoDiffAsync(
-        messageInfo,
-        messagesInfo,
+        oldMessagesInfo,
+        newMessagesInfo,
       );
 
-      messagesInfo = calcResult.updatedInfo;
+      newMessagesInfo = calcResult.updatedInfo;
       await _mailDao.deleteMessages(
           calcResult.removedUids, folderToUpdate.fullNameRaw);
       _mailDao.updateMessagesFlags(calcResult.infosToUpdateFlags);
     }
 
-    await _messageInfoDao.set(
-      account.localId,
+    await FolderMessageInfo.setMessageInfo(
       folderToUpdate.fullName,
-      messagesInfo
-          .map((item) => item.toMessageInfoDb(
-                account: account,
-                folder: folderToUpdate,
-              ))
-          .toList(),
+      account.localId,
+      newMessagesInfo,
     );
 
-    await _syncMessagesChunk(syncPeriod);
-    await _foldersDao.updateFolder(
-      FoldersCompanion(needsInfoUpdate: Value(false)),
-      folderToUpdate.guid,
-    );
+    if (onlyUpdateInfo == true) {
+      await _syncMessagesChunk(syncPeriod);
+      await _foldersDao.updateFolder(
+        FoldersCompanion(needsInfoUpdate: Value(false)),
+        folderToUpdate.guid,
+      );
+    }
   }
 
   // step 5
@@ -283,12 +279,11 @@ class MailMethods {
           "Attention! another sync period was selected, refetching messages info...");
       return _setMessagesInfoToFolder();
     }
-    final messageInfo = (await _messageInfoDao.getAll(
-      account.localId,
+
+    final messageInfo = await FolderMessageInfo.getMessageInfo(
       folder.fullName,
-    ))
-        .map((item) => item.toMessageInfo())
-        .toList();
+      account.localId,
+    );
 
     // TODO make async
     final uids = _takeChunk(messageInfo);
@@ -313,7 +308,9 @@ class MailMethods {
     } else {
       print("syncing messages for: ${folder.fullNameRaw}");
       final rawBodies = await _mailApi.getMessageBodies(
-          folderName: folder.fullNameRaw, uids: uids);
+        folderName: folder.fullNameRaw,
+        uids: uids,
+      );
 
       // TODO make async
       final messages = Mail.getMessageObjFromServerAndUpdateInfoHasBody(
@@ -325,15 +322,10 @@ class MailMethods {
 
       await _mailDao.addMessages(messages);
 
-      await _messageInfoDao.set(
-        account.localId,
+      await FolderMessageInfo.setMessageInfo(
         folder.fullName,
-        messageInfo
-            .map((item) => item.toMessageInfoDb(
-                  account: account,
-                  folder: folder,
-                ))
-            .toList(),
+        account.localId,
+        messageInfo,
       );
 
       // check if there are other messages to sync
@@ -345,16 +337,18 @@ class MailMethods {
   List<int> _takeChunk(List<MessageInfo> messagesInfo) {
     final uids = new List<int>();
     int iteration = 0;
-
+    int offset = 0;
     messagesInfo.forEach((info) {
       if (iteration < MESSAGES_PER_CHUNK) {
         if (info.hasBody != true) {
           uids.add(info.uid);
           iteration++;
+        } else {
+          offset++;
         }
       }
     });
-
+    print("uids offset $offset/${messagesInfo.length}");
     assert(iteration <= MESSAGES_PER_CHUNK);
 
     return uids;
