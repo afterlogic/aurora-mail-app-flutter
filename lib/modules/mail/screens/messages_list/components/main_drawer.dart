@@ -78,22 +78,7 @@ class _MainDrawerState extends BState<MainDrawer> {
               Divider(height: 0.0),
               if (mode == _DrawerMode.accounts)
                 Expanded(
-                  child: BlocBuilder<AuthBloc, AuthState>(
-                    condition: (_, state) {
-                      return state is InitializedUserAndAccounts;
-                    },
-                    builder: (BuildContext context, AuthState state) {
-                      if (state is InitializedUserAndAccounts) {
-                        return _buildAccounts(
-                          state.account,
-                          state.accounts,
-                          authBloc,
-                        );
-                      } else {
-                        return SizedBox.shrink();
-                      }
-                    },
-                  ),
+                  child: _buildAccounts(authBloc),
                 ),
               if (mode == _DrawerMode.folders)
                 Expanded(
@@ -136,8 +121,10 @@ class _MainDrawerState extends BState<MainDrawer> {
     );
   }
 
-  Widget _buildAccounts(
-      Account current, List<Account> accounts, AuthBloc authBloc) {
+  Widget _buildAccounts(AuthBloc authBloc) {
+    Account current = authBloc.currentAccount;
+    List<Account> accounts = authBloc.accounts;
+
     final _accounts =
         accounts.where((item) => item.email != current.email).toList();
     return ListView.builder(

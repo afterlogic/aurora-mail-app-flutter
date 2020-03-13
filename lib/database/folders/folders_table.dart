@@ -12,7 +12,7 @@ class Folders extends Table {
 
   TextColumn get fullName => text()();
 
-  IntColumn get accountLocalId => integer()();
+    IntColumn get accountLocalId => integer()();
 
   IntColumn get userLocalId => integer()();
 
@@ -55,8 +55,6 @@ class Folders extends Table {
   BoolColumn get extended => boolean().nullable()();
 
   BoolColumn get alwaysRefresh => boolean()();
-
-  TextColumn get messagesInfoInJson => text().nullable()();
 
   TextColumn get namespace => text()();
 

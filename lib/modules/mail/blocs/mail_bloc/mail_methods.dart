@@ -6,6 +6,8 @@ import 'package:aurora_mail/database/folders/folders_dao.dart';
 import 'package:aurora_mail/database/folders/folders_table.dart';
 import 'package:aurora_mail/database/mail/mail_dao.dart';
 import 'package:aurora_mail/database/mail/mail_table.dart';
+import 'package:aurora_mail/database/message_info/message_info_dao.dart';
+import 'package:aurora_mail/database/message_info/message_info_table.dart';
 import 'package:aurora_mail/database/users/users_dao.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/models/message_info.dart';
@@ -19,6 +21,7 @@ class MailMethods {
   final _foldersDao = new FoldersDao(DBInstances.appDB);
   final _usersDao = new UsersDao(DBInstances.appDB);
   final _mailDao = new MailDao(DBInstances.appDB);
+  final _messageInfoDao = new MessageInfoDao(DBInstances.appDB);
   FoldersApi _foldersApi;
   MailApi _mailApi;
 
@@ -223,9 +226,16 @@ class MailMethods {
     List<MessageInfo> messagesInfo = MessageInfo.flattenMessagesInfo(rawInfo);
 
     // calculate difference
-    if (folderToUpdate.messagesInfo != null) {
+    final messageInfo = (await _messageInfoDao.getAll(
+      account.localId,
+      folderToUpdate.fullName,
+    ))
+        .map((item) => item.toMessageInfo())
+        .toList();
+
+    if (messageInfo != null) {
       final calcResult = await Folders.calculateMessagesInfoDiffAsync(
-        folderToUpdate.messagesInfo,
+        messageInfo,
         messagesInfo,
       );
 
@@ -235,9 +245,22 @@ class MailMethods {
       _mailDao.updateMessagesFlags(calcResult.infosToUpdateFlags);
     }
 
-    await _foldersDao.setMessagesInfo(folderToUpdate.guid, messagesInfo);
+    await _messageInfoDao.set(
+      account.localId,
+      folderToUpdate.fullName,
+      messagesInfo
+          .map((item) => item.toMessageInfoDb(
+                account: account,
+                folder: folderToUpdate,
+              ))
+          .toList(),
+    );
 
-    return _syncMessagesChunk(syncPeriod);
+    await _syncMessagesChunk(syncPeriod);
+    await _foldersDao.updateFolder(
+      FoldersCompanion(needsInfoUpdate: Value(false)),
+      folderToUpdate.guid,
+    );
   }
 
   // step 5
@@ -249,20 +272,26 @@ class MailMethods {
     final folder = await _foldersDao.getFolderByLocalId(_syncQueue[0]);
     // get the actual sync period
     final updatedUser = await _usersDao.getUserByLocalId(user.localId);
-    if (folder?.messagesInfo == null) {
-      print(
-          "Attention! messagesInfo is null, perhaps another folder was selected while messages info was being retrieved.");
-      return _setMessagesInfoToFolder();
-    }
+//    if (folder?.messagesInfo == null) {
+//      print(
+//          "Attention! messagesInfo is null, perhaps another folder was selected while messages info was being retrieved.");
+//      return _setMessagesInfoToFolder();
+//    }
 
     if (updatedUser.syncPeriod != SyncPeriod.periodToDbString(syncPeriod)) {
       print(
           "Attention! another sync period was selected, refetching messages info...");
       return _setMessagesInfoToFolder();
     }
+    final messageInfo = (await _messageInfoDao.getAll(
+      account.localId,
+      folder.fullName,
+    ))
+        .map((item) => item.toMessageInfo())
+        .toList();
 
     // TODO make async
-    final uids = _takeChunk(folder.messagesInfo);
+    final uids = _takeChunk(messageInfo);
 
     // if all messages are synced
     if (uids.length == 0) {
@@ -289,14 +318,23 @@ class MailMethods {
       // TODO make async
       final messages = Mail.getMessageObjFromServerAndUpdateInfoHasBody(
         rawBodies,
-        folder.messagesInfo,
+        messageInfo,
         updatedUser.localId,
         account,
       );
 
       await _mailDao.addMessages(messages);
 
-      await _foldersDao.setMessagesInfo(folder.guid, folder.messagesInfo);
+      await _messageInfoDao.set(
+        account.localId,
+        folder.fullName,
+        messageInfo
+            .map((item) => item.toMessageInfoDb(
+                  account: account,
+                  folder: folder,
+                ))
+            .toList(),
+      );
 
       // check if there are other messages to sync
       return _syncMessagesChunk(syncPeriod);
@@ -413,5 +451,9 @@ class MailMethods {
 
   Future<Message> getMessage(Message item) {
     return _mailDao.getMessage(item.localId);
+  }
+
+  Future<Folder> getFolder(String guid) {
+    return _foldersDao.getFolderByLocalId(guid);
   }
 }
