@@ -61,23 +61,23 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
       await updateVirtualTable();
     }
     query += "${mail.actualTableName} WHERE ";
-    query += "account_entity_id = ? ";
+    query += "${mail.accountEntityId.escapedName} = ? ";
     params.add(Variable.withInt(accountEntityId));
 
     if (searchPattern == SearchPattern.Email) {
       query +=
-          "AND (to_in_json LIKE ? OR from_in_json LIKE ? OR cc_in_json LIKE ? OR bcc_in_json LIKE ?) ";
+          "AND (${mail.toInJson.escapedName} LIKE ? OR ${mail.fromInJson.escapedName} LIKE ? OR ${mail.ccInJson.escapedName} LIKE ? OR ${mail.bccInJson.escapedName} LIKE ?) ";
       params.add(Variable.withString("%$searchTerm%"));
       params.add(Variable.withString("%$searchTerm%"));
       params.add(Variable.withString("%$searchTerm%"));
       params.add(Variable.withString("%$searchTerm%"));
     } else {
-      query += "AND folder = ? ";
+      query += "AND ${mail.folder.escapedName} = ? ";
       params.add(Variable.withString(folder));
 
       if (searchTerm != null && searchTerm.isNotEmpty) {
         query +=
-            "AND (subject LIKE ? OR to_in_json LIKE ? OR from_in_json LIKE ? OR cc_in_json LIKE ? OR bcc_in_json LIKE ? OR raw_body LIKE ? OR attachments_for_search LIKE ?) ";
+            "AND (${mail.subject.escapedName} LIKE ? OR ${mail.toInJson.escapedName} LIKE ? OR ${mail.fromInJson.escapedName} LIKE ? OR ${mail.ccInJson.escapedName} LIKE ? OR ${mail.bccInJson.escapedName} LIKE ? OR ${mail.rawBody.escapedName} LIKE ? OR ${mail.attachmentsForSearch.escapedName} LIKE ?) ";
         params.add(Variable.withString("%$searchTerm%"));
         params.add(Variable.withString("%$searchTerm%"));
         params.add(Variable.withString("%$searchTerm%"));
@@ -88,16 +88,16 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
       }
     }
     if (starredOnly) {
-      query += "AND flags_in_json LIKE ? ";
+      query += "AND ${mail.flagsInJson.escapedName} LIKE ? ";
       params.add(Variable.withString("%\\flagged%"));
     }
     //todo
     if (unreadOnly) {
-      query += "AND flags_in_json NOT LIKE ? ";
+      query += "AND ${mail.flagsInJson.escapedName} NOT LIKE ? ";
       params.add(Variable.withString("%\\seen%"));
     }
 
-    query += "ORDER BY time_stamp_in_u_t_c DESC ";
+    query += "ORDER BY ${mail.timeStampInUTC.escapedName} DESC ";
 //    query += "LIMIT ? OFFSET ? ";
 //
 //    params.add(Variable.withInt(limit));
