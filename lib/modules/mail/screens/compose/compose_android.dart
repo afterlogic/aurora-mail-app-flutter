@@ -117,9 +117,6 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
     if (action is ReplyToAll) await _initReplyAll(action);
     if (action is EmailToContacts) await _initFromContacts(action);
     if (action is SendContacts) await _initContactsAsAttachments(action);
-    if (mounted) {
-      setState(() {});
-    }
   }
 
   void _initFromDrafts(OpenFromDrafts action) async {
@@ -129,10 +126,21 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
     final str = action.message.attachmentsInJson;
     final attachments = MailAttachment.fromJsonString(str);
     _bloc.add(GetComposeAttachments(attachments));
-
-    _toEmails.addAll(MailUtils.getEmails(_message.toInJson));
-    _ccEmails.addAll(MailUtils.getEmails(_message.ccInJson));
-    _bccEmails.addAll(MailUtils.getEmails(_message.bccInJson));
+    if (_toEmails.isEmpty) {
+      setState(() {
+        _toEmails.addAll(MailUtils.getEmails(_message.toInJson));
+      });
+    }
+    if (_ccEmails.isEmpty) {
+      setState(() {
+        _ccEmails.addAll(MailUtils.getEmails(_message.ccInJson));
+      });
+    }
+    if (_bccEmails.isEmpty) {
+      setState(() {
+        _bccEmails.addAll(MailUtils.getEmails(_message.bccInJson));
+      });
+    }
     _subjectTextCtrl.text = _message.subject;
     _bodyTextCtrl.text = _message.rawBody;
   }
@@ -147,7 +155,11 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
   void _initReply(Reply action) async {
     _message = action.message;
     await _initSender(_message);
-    _toEmails.addAll(MailUtils.getEmails(_message.fromInJson));
+    if (_toEmails.isEmpty) {
+      setState(() {
+        _toEmails.addAll(MailUtils.getEmails(_message.fromInJson));
+      });
+    }
     _subjectTextCtrl.text = MailUtils.getReplySubject(_message);
     _bodyTextCtrl.text = MailUtils.getReplyBody(context, _message);
   }
@@ -155,20 +167,30 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
   void _initReplyAll(ReplyToAll action) async {
     _message = action.message;
     await _initSender(_message);
-    _toEmails.addAll(MailUtils.getEmails(_message.fromInJson));
-    _ccEmails.addAll(MailUtils.getEmails(_message.toInJson, exceptEmails: [
-      AliasOrIdentity(alias, identity).mail,
-    ]));
-    _ccEmails.addAll(MailUtils.getEmails(_message.ccInJson));
+    if (_toEmails.isEmpty) {
+      setState(() {
+        _toEmails.addAll(MailUtils.getEmails(_message.fromInJson));
+      });
+    }
+    if (_ccEmails.isEmpty) {
+      setState(() {
+        _ccEmails.addAll(MailUtils.getEmails(_message.toInJson, exceptEmails: [
+          AliasOrIdentity(alias, identity).mail,
+        ]));
+        _ccEmails.addAll(MailUtils.getEmails(_message.ccInJson));
+      });
+    }
     _subjectTextCtrl.text = MailUtils.getReplySubject(_message);
     _bodyTextCtrl.text = MailUtils.getReplyBody(context, _message);
   }
 
   void _initFromContacts(EmailToContacts action) {
     _returnToMessagesList = false;
-    _toEmails.addAll(action.emails);
-//    final toEmails = action.contacts.map((c) => MailUtils.getFriendlyName(c));
-//    _toEmails.addAll(toEmails);
+    if (_toEmails.isEmpty) {
+      setState(() {
+        _toEmails.addAll(action.emails);
+      });
+    }
   }
 
   void _initContactsAsAttachments(SendContacts action) {
@@ -226,6 +248,8 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
   }
 
   void _sendMessage() {
+    print("VO: _toEmails: ${_toEmails}");
+    print("VO: _toTextCtrl.text: ${_toTextCtrl.text}");
     if (_toTextCtrl.text.isNotEmpty) {
       setState(() {
         _toEmails.add(_toTextCtrl.text);
@@ -244,6 +268,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
         _bccTextCtrl.clear();
       });
     }
+    print("VO: _toEmails2: ${_toEmails}");
 
     if (_toEmails.isEmpty)
       return _showError(i18n(context, "error_compose_no_receivers"));
@@ -255,6 +280,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
           isError: false);
     }
 
+    print("VO: _toEmails3: ${_toEmails}");
     return _bloc.add(SendMessage(
       to: _toEmails.join(","),
       cc: _ccEmails.join(","),
