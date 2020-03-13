@@ -155,6 +155,7 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
       children: <Widget>[
         Flexible(
           child: ListView.builder(
+            key: ObjectKey(state.contacts[0]),
             padding: EdgeInsets.only(
                 bottom: 82.0 + MediaQuery.of(context).padding.bottom),
             itemBuilder: (_, i) => ContactsListTile(
