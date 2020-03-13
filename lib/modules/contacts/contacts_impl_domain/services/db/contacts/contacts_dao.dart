@@ -40,7 +40,9 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
           ..where((c) =>
               storages != null ? c.storage.isIn(storages) : Constant(true))
           ..orderBy([
-                (c) => OrderingTerm(expression: c.fullName.collate(Collate.noCase))
+            (c) => OrderingTerm(expression: c.fullName.collate(Collate.noCase)),
+            (c) =>
+                OrderingTerm(expression: c.viewEmail.collate(Collate.noCase)),
           ]))
         .get();
   }
@@ -50,7 +52,9 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
           ..where((c) => c.userLocalId.equals(userLocalId))
           ..where((c) => c.storage.isNotIn([StorageNames.collected]))
           ..orderBy([
-            (c) => OrderingTerm(expression: c.fullName.collate(Collate.noCase))
+            (c) => OrderingTerm(expression: c.fullName.collate(Collate.noCase)),
+            (c) =>
+                OrderingTerm(expression: c.viewEmail.collate(Collate.noCase)),
           ]))
         .watch();
   }
@@ -60,7 +64,11 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
     return (select(contacts)
           ..where((c) => c.userLocalId.equals(userLocalId))
           ..where((c) => c.storage.equals(storage))
-          ..orderBy([(c) => OrderingTerm(expression: c.fullName.collate(Collate.noCase))]))
+          ..orderBy([
+            (c) => OrderingTerm(expression: c.fullName.collate(Collate.noCase)),
+            (c) =>
+                OrderingTerm(expression: c.viewEmail.collate(Collate.noCase)),
+          ]))
         .watch();
   }
 
@@ -69,7 +77,11 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
     return (select(contacts)
           ..where((c) => c.userLocalId.equals(userLocalId))
           ..where((c) => c.groupUUIDs.like("%$groupUuid%"))
-          ..orderBy([(c) => OrderingTerm(expression: c.fullName.collate(Collate.noCase))]))
+          ..orderBy([
+            (c) => OrderingTerm(expression: c.fullName.collate(Collate.noCase)),
+            (c) =>
+                OrderingTerm(expression: c.viewEmail.collate(Collate.noCase)),
+          ]))
         .watch();
   }
 
