@@ -1,4 +1,5 @@
 import 'package:aurora_mail/database/account_identity/account_identity_table.dart';
+import 'package:aurora_mail/database/aliases/aliases_table.dart';
 import 'package:aurora_mail/database/folders/folders_table.dart';
 import 'package:aurora_mail/database/mail/mail_table.dart';
 import 'package:aurora_mail/database/pgp/pgp_key_model.dart';
@@ -9,7 +10,7 @@ import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/gr
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/storages/contacts_storages_table.dart';
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/storages/converters/contacts_info_converter.dart';
 import 'package:moor_flutter/moor_flutter.dart';
-import 'package:aurora_mail/database/aliases/aliases_table.dart';
+
 import 'accounts/accounts_table.dart';
 import 'users/users_table.dart';
 
@@ -41,8 +42,11 @@ class AppDatabase extends _$AppDatabase {
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
-        onCreate: (Migrator m) {
-          return m.createAll();
+        onCreate: (Migrator m) async {
+          await m.createAll();
+          final columns = mail.$columns.map((item) => item.escapedName).join(",");
+          await m.issueCustomQuery(
+              "CREATE VIRTUAL TABLE fts_${mail.actualTableName} USING fts3 (content='${mail.actualTableName}', $columns)");
         },
         onUpgrade: (Migrator m, int from, int to) async {
           final migrationMap = _migrationMap;

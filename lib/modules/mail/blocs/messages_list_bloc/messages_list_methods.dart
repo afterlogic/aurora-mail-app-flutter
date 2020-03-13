@@ -13,7 +13,7 @@ class MessagesListMethods {
     _mailApi = new MailApi(user: user, account: account);
   }
 
-  Stream<List<Message>> getMessages(
+  Future<Stream<List<Message>>> getMessages(
     Folder folder,
     bool isStarred,
     bool unreadOnly,

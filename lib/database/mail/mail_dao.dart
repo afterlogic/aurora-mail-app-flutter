@@ -24,7 +24,17 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
 //          ]))
 //        .get();
 //  }
-  Stream<List<Message>> getMessages(
+
+  Future updateVirtualTable() async {
+    final columns = mail.$columns.map((item) => item.escapedName).join(",");
+    final delete = "DELETE FROM fts_${mail.actualTableName}";
+    await customInsert(delete);
+    var insert =
+        "INSERT INTO fts_${mail.actualTableName} ($columns) SELECT $columns FROM ${mail.actualTableName}";
+    await customInsert(insert);
+  }
+
+  Future<Stream<List<Message>>> getMessages(
     String folder,
     int userLocalId,
     String searchTerm,
@@ -32,7 +42,7 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
     int accountEntityId,
     bool starredOnly,
     bool unreadOnly,
-  ) {
+  ) async {
     List<Variable> params = [];
     final fields = <GeneratedColumn>{};
     fields.add(mail.uid);
@@ -44,9 +54,13 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
     fields.add(mail.toToDisplay);
     fields.add(mail.hasAttachments);
     fields.add(mail.timeStampInUTC);
-    var query =
-        "SELECT ${fields.map((item) => item.$name).join(",")} FROM ${mail.actualTableName} WHERE ";
-
+    var query = "SELECT ${fields.map((item) => item.$name).join(",")} FROM ";
+    if (searchPattern != SearchPattern.Default ||
+        searchTerm?.isNotEmpty == true) {
+      query += "fts_";
+      await updateVirtualTable();
+    }
+    query += "${mail.actualTableName} WHERE ";
     query += "account_entity_id = ? ";
     params.add(Variable.withInt(accountEntityId));
 

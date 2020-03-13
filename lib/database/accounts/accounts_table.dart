@@ -1,7 +1,7 @@
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:moor_flutter/moor_flutter.dart';
 
-class Accounts extends Table {
+class Accounts extends Table  {
   IntColumn get localId => integer().autoIncrement()();
 
   IntColumn get userLocalId => integer()();

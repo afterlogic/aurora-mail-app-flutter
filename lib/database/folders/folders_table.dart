@@ -169,14 +169,14 @@ class Folders extends Table {
     );
   }
 
-    static Future<MessagesInfoDiffCalcResult> calculateMessagesInfoDiffAsync(
-        List<MessageInfo> oldInfo, List<MessageInfo> newInfo) {
-      final Map<String, List<MessageInfo>> args = {
-        "oldItems": oldInfo,
-        "newItems": newInfo,
-      };
-      return compute(_calculateMessagesInfoDiff, args);
-    }
+  static Future<MessagesInfoDiffCalcResult> calculateMessagesInfoDiffAsync(
+      List<MessageInfo> oldInfo, List<MessageInfo> newInfo) {
+    final Map<String, List<MessageInfo>> args = {
+      "oldItems": oldInfo,
+      "newItems": newInfo,
+    };
+    return compute(_calculateMessagesInfoDiff, args);
+  }
 
   // you cannot just return newInfo
   // you have to return oldInfo (because it contains hasBody: true) + addedMessages
@@ -296,7 +296,11 @@ class FolderMessageInfo {
     final dir = await getApplicationSupportDirectory();
     final file = File(dir.path + Platform.pathSeparator + id);
     if (await file.exists()) {
-      return MessageInfo.fromJsonString(await file.readAsString());
+      try {
+        return MessageInfo.fromJsonString(await file.readAsString());
+      } catch (e) {
+        return null;
+      }
     } else {
       return null;
     }
@@ -314,7 +318,11 @@ class FolderMessageInfo {
       await file.delete();
     }
     await file.create(recursive: true);
-    return file.writeAsString(MessageInfo.toJsonString(items));
+    try {
+      await file.writeAsString(MessageInfo.toJsonString(items));
+    } catch (e) {
+      return null;
+    }
   }
 
   static final folder = "messageInfo";
