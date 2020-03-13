@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:flutter/foundation.dart';
 import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/folders/folders_dao.dart';
@@ -251,16 +251,17 @@ class MailMethods {
     );
 
     if (onlyUpdateInfo == true) {
-      await _syncMessagesChunk(syncPeriod);
-      await _foldersDao.updateFolder(
-        FoldersCompanion(needsInfoUpdate: Value(false)),
-        folderToUpdate.guid,
-      );
+      return;
     }
+    await _syncMessagesChunk(SyncPeriod.periodToDbString(syncPeriod));
+    await _foldersDao.updateFolder(
+      FoldersCompanion(needsInfoUpdate: Value(false)),
+      folderToUpdate.guid,
+    );
   }
 
   // step 5
-  Future<void> _syncMessagesChunk(Period syncPeriod) async {
+  Future<void> _syncMessagesChunk(String syncPeriod) async {
     if (_isOffline || user == null) return null;
     assert(_syncQueue.isNotEmpty);
 
@@ -274,7 +275,7 @@ class MailMethods {
 //      return _setMessagesInfoToFolder();
 //    }
 
-    if (updatedUser.syncPeriod != SyncPeriod.periodToDbString(syncPeriod)) {
+    if (updatedUser.syncPeriod != syncPeriod) {
       print(
           "Attention! another sync period was selected, refetching messages info...");
       return _setMessagesInfoToFolder();
@@ -284,7 +285,11 @@ class MailMethods {
       folder.fullName,
       account.localId,
     );
-
+    if (messageInfo == null) {
+      print(
+          "Attention! messagesInfo is null, perhaps another folder was selected while messages info was being retrieved.");
+      return _setMessagesInfoToFolder();
+    }
     // TODO make async
     final uids = _takeChunk(messageInfo);
 

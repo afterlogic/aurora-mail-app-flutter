@@ -169,14 +169,14 @@ class Folders extends Table {
     );
   }
 
-  static Future<MessagesInfoDiffCalcResult> calculateMessagesInfoDiffAsync(
-      List<MessageInfo> oldInfo, List<MessageInfo> newInfo) {
-    final Map<String, List<MessageInfo>> args = {
-      "oldItems": oldInfo,
-      "newItems": newInfo,
-    };
-    return compute(_calculateMessagesInfoDiff, args);
-  }
+    static Future<MessagesInfoDiffCalcResult> calculateMessagesInfoDiffAsync(
+        List<MessageInfo> oldInfo, List<MessageInfo> newInfo) {
+      final Map<String, List<MessageInfo>> args = {
+        "oldItems": oldInfo,
+        "newItems": newInfo,
+      };
+      return compute(_calculateMessagesInfoDiff, args);
+    }
 
   // you cannot just return newInfo
   // you have to return oldInfo (because it contains hasBody: true) + addedMessages

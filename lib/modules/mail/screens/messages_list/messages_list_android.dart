@@ -265,24 +265,29 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
     MessagesFilter filter,
     bool isSent,
   ) {
+    int lastItemsCount = null;
     return StreamBuilder(
       stream: messagesSub,
       builder: (ctx, AsyncSnapshot<List<Message>> snap) {
         if (snap.connectionState == ConnectionState.active) {
           if (snap.hasError) {
+            lastItemsCount=null;
             _showError(ctx, snap.error.toString());
             return ListView();
           } else if (snap.hasData && snap.data.isNotEmpty) {
+            final needsInfoUpdate = _selectedFolder != null &&
+                _selectedFolder.needsInfoUpdate &&
+                lastItemsCount != snap.data.length;
+
             // isStarred and isSearch show FLAT structure
             List<Message> messages = snap.data;
+            lastItemsCount = messages.length;
             List<Message> threads = [];
 
             if (filter == MessagesFilter.none) {
               messages = snap.data.where((m) => m.parentUid == null).toList();
               threads = snap.data.where((m) => m.parentUid != null).toList();
             }
-            final needsInfoUpdate =
-                _selectedFolder != null && _selectedFolder.needsInfoUpdate;
             return Column(
               children: <Widget>[
                 if (filter == MessagesFilter.unread)
@@ -322,6 +327,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
               ],
             );
           } else {
+            lastItemsCount=null;
             // build list view to be able to swipe to refresh
             if (_selectedFolder != null && _selectedFolder.needsInfoUpdate) {
               return _buildMessagesLoading();
@@ -330,6 +336,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
             return AMEmptyList(message: i18n(context, "messages_empty"));
           }
         } else {
+          lastItemsCount=null;
           return _buildMessagesLoading();
         }
       },
