@@ -47,7 +47,8 @@ class _GenerateKeyDialogState extends BState<GenerateKeyDialog> {
               items: widget.identities.map((value) {
                 return DropdownMenuItem<AliasOrIdentity>(
                   value: value,
-                  child: Text(identityViewName(value.name, value.mail)),
+//                  child: Text(identityViewName(value.name, value.mail)),
+                  child: _buildEmails(value),
                 );
               }).toList(),
               isExpanded: true,
@@ -110,6 +111,20 @@ class _GenerateKeyDialogState extends BState<GenerateKeyDialog> {
           child: Text(i18n(context, "generate")),
           onPressed: _generate,
         )
+      ],
+    );
+  }
+
+  Widget _buildEmails(AliasOrIdentity value) {
+    final padding = widget.identities.last == value ? 0.0 : 20.0;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (value.name != null && value.name.isNotEmpty) Text(value.name),
+        if (value.mail != null && value.mail.isNotEmpty) Text(value.mail),
+        SizedBox(height: padding),
       ],
     );
   }
