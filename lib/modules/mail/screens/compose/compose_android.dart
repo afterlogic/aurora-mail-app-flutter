@@ -248,8 +248,6 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
   }
 
   void _sendMessage() {
-    print("VO: _toEmails: ${_toEmails}");
-    print("VO: _toTextCtrl.text: ${_toTextCtrl.text}");
     if (_toTextCtrl.text.isNotEmpty) {
       setState(() {
         _toEmails.add(_toTextCtrl.text);
@@ -268,7 +266,6 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
         _bccTextCtrl.clear();
       });
     }
-    print("VO: _toEmails2: ${_toEmails}");
 
     if (_toEmails.isEmpty)
       return _showError(i18n(context, "error_compose_no_receivers"));
@@ -280,7 +277,6 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
           isError: false);
     }
 
-    print("VO: _toEmails3: ${_toEmails}");
     return _bloc.add(SendMessage(
       to: _toEmails.join(","),
       cc: _ccEmails.join(","),
