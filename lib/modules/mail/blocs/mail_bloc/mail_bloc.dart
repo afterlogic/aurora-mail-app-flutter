@@ -116,11 +116,9 @@ class MailBloc extends Bloc<MailEvent, MailState> {
       yield FoldersLoading();
 
       final newFolders = await _methods.refreshFolders();
-      final List<Folder> foldersWithInfo =
-      await _methods.updateFoldersHash(_selectedFolder)
 
       final List<Folder> foldersWithInfo =
-      await _methods.updateFoldersHash(_selectedFolder);
+          await _methods.updateFoldersHash(_selectedFolder);
 
       if (_selectedFolder == null && newFolders.isNotEmpty) {
         yield FoldersLoaded(foldersWithInfo, _selectedFolder, _filter,);
