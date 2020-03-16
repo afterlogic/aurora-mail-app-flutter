@@ -42,6 +42,8 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
     int accountEntityId,
     bool starredOnly,
     bool unreadOnly,
+    int limit,
+    int offset,
   ) async {
     List<Variable> params = [];
     final fields = <GeneratedColumn>{};
@@ -56,11 +58,14 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
     fields.add(mail.timeStampInUTC);
     fields.add(mail.folder);
 
-    var query = "SELECT ${fields.map((item) => item.escapedName).join(",")} FROM ";
+    var query =
+        "SELECT ${fields.map((item) => item.escapedName).join(",")} FROM ";
     if (searchPattern != SearchPattern.Default ||
         searchTerm?.isNotEmpty == true) {
       query += "fts_";
-      await _updateVirtualTable();
+      if (offset == 0) {
+        await _updateVirtualTable();
+      }
     }
     query += "${mail.actualTableName} WHERE ";
     query += "${mail.accountEntityId.escapedName} = ? ";
@@ -100,10 +105,10 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
     }
 
     query += "ORDER BY ${mail.timeStampInUTC.escapedName} DESC ";
-//    query += "LIMIT ? OFFSET ? ";
-//
-//    params.add(Variable.withInt(limit));
-//    params.add(Variable.withInt(offset));
+    query += "LIMIT ? OFFSET ? ";
+
+    params.add(Variable.withInt(limit));
+    params.add(Variable.withInt(offset));
 
     return customSelectQuery(query, variables: params, readsFrom: {mail})
         .watch()

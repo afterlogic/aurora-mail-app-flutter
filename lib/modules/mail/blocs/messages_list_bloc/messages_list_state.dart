@@ -14,7 +14,7 @@ abstract class MessagesListState extends Equatable {
 class MessagesEmpty extends MessagesListState {}
 
 class SubscribedToMessages extends MessagesListState with AlwaysNonEqualObject {
-  final Stream<List<Message>> stream;
+  final  Stream<List<Message>> Function(int page) stream;
   final MessagesFilter filter;
   final String searchTerm;
   final bool isSent;

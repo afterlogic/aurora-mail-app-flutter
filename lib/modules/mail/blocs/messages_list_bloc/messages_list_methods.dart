@@ -24,6 +24,7 @@ class MessagesListMethods {
     SearchPattern searchPattern,
     User user,
     Account account,
+    int page,
   ) {
     return _mailDao.getMessages(
       folder.fullNameRaw,
@@ -33,6 +34,8 @@ class MessagesListMethods {
       account.entityId,
       isStarred,
       unreadOnly,
+      _limit,
+      page * _limit,
     );
   }
 

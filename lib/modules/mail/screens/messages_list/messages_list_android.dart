@@ -10,6 +10,7 @@ import 'package:aurora_mail/modules/mail/models/compose_actions.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/compose_route.dart';
 import 'package:aurora_mail/modules/mail/screens/message_view/message_view_route.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/main_drawer.dart';
+import 'package:aurora_mail/modules/mail/screens/messages_list/components/stream_pagination_list.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/shared_ui/mail_bottom_app_bar.dart';
 import 'package:aurora_mail/utils/base_state.dart';
@@ -228,6 +229,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
                         state.stream,
                         state.filter,
                         state.isSent,
+                        state.key,
                       );
                     } else {
                       child = _buildMessagesLoading();
@@ -260,85 +262,55 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
 //  Widget _buildMessagesLoading() => SkeletonLoader();
 
   Widget _buildMessagesStream(
-    Stream<List<Message>> messagesSub,
+    Stream<List<Message>> Function(int page) stream,
     MessagesFilter filter,
     bool isSent,
+    String key,
   ) {
     int lastItemsCount = null;
-    return StreamBuilder(
-      stream: messagesSub,
-      builder: (ctx, AsyncSnapshot<List<Message>> snap) {
-        if (snap.connectionState == ConnectionState.active) {
-          if (snap.hasError) {
-            lastItemsCount = null;
-            _showError(ctx, snap.error.toString());
-            return ListView();
-          } else if (snap.hasData && snap.data.isNotEmpty) {
-            final needsInfoUpdate = _selectedFolder != null &&
-                _selectedFolder.needsInfoUpdate &&
-                lastItemsCount != snap.data.length;
-
-            // isStarred and isSearch show FLAT structure
-            List<Message> messages = snap.data;
-            lastItemsCount = messages.length;
-            List<Message> threads = [];
-
-            if (filter == MessagesFilter.none) {
-              messages = snap.data.where((m) => m.parentUid == null).toList();
-              threads = snap.data.where((m) => m.parentUid != null).toList();
-            }
-            return Column(
-              children: <Widget>[
-                if (filter == MessagesFilter.unread)
-                  Column(
-                    children: <Widget>[
-                      SizedBox(height: 12.0),
-                      Text(i18n(context, "messages_filter_unread")),
-                      FlatButton(
-                        child: Text(i18n(context, "btn_show_all")),
-                        textColor: theme.accentColor,
-                        onPressed: () => _showAllMessages(context),
-                      )
-                    ],
-                  ),
-                Flexible(
-                  child: ListView.builder(
-                    padding: EdgeInsets.only(top: 6.0, bottom: 82.0),
-                    itemCount: messages.length + (needsInfoUpdate ? 1 : 0),
-                    itemBuilder: (_, i) {
-                      if (i >= messages.length) {
-                        return Center(child: CircularProgressIndicator());
-                      }
-                      final item = messages[i];
-                      return MessageItem(
-                        isSent,
-                        item,
-                        threads.where((t) => t.parentUid == item.uid).toList(),
-                        key: Key(item.localId.toString()),
-                        onItemSelected: (Message item) =>
-                            _onMessageSelected(item),
-                        onStarMessage: _setStarred,
-                        onDeleteMessage: _deleteMessage,
-                      );
-                    },
-                  ),
-                ),
-              ],
-            );
-          } else {
-            lastItemsCount = null;
-            // build list view to be able to swipe to refresh
-            if (_selectedFolder != null && _selectedFolder.needsInfoUpdate) {
-              return _buildMessagesLoading();
-            }
-
-            return AMEmptyList(message: i18n(context, "messages_empty"));
-          }
-        } else {
-          lastItemsCount = null;
-          return _buildMessagesLoading();
-        }
-      },
+    return Column(
+      children: <Widget>[
+        if (filter == MessagesFilter.unread)
+          Column(
+            children: <Widget>[
+              SizedBox(height: 12.0),
+              Text(i18n(context, "messages_filter_unread")),
+              FlatButton(
+                child: Text(i18n(context, "btn_show_all")),
+                textColor: theme.accentColor,
+                onPressed: () => _showAllMessages(context),
+              )
+            ],
+          ),
+        Flexible(
+          child: StreamPaginationList(
+            key:Key(key),
+            builder: (context, item, threads) {
+              return MessageItem(
+                isSent,
+                item,
+                threads.where((t) => t.parentUid == item.uid).toList(),
+                key: Key(item.localId.toString()),
+                onItemSelected: (Message item) => _onMessageSelected(item),
+                onStarMessage: _setStarred,
+                onDeleteMessage: _deleteMessage,
+              );
+            },
+            progress: Center(child: CircularProgressIndicator()),
+            onError: (context, e) {
+              _showError(context, e.toString());
+              return SizedBox.shrink();
+            },
+            empty: (context) {
+              if (_selectedFolder != null && _selectedFolder.needsInfoUpdate) {
+                return _buildMessagesLoading();
+              }
+              return AMEmptyList(message: i18n(context, "messages_empty"));
+            },
+            fetch: stream,
+          ),
+        ),
+      ],
     );
   }
 
