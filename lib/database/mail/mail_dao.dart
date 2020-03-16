@@ -25,7 +25,7 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
 //        .get();
 //  }
 
-  Future updateVirtualTable() async {
+  Future _updateVirtualTable() async {
     final columns = mail.$columns.map((item) => item.escapedName).join(",");
     final delete = "DELETE FROM fts_${mail.actualTableName}";
     await customInsert(delete);
@@ -54,11 +54,13 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
     fields.add(mail.toToDisplay);
     fields.add(mail.hasAttachments);
     fields.add(mail.timeStampInUTC);
-    var query = "SELECT ${fields.map((item) => item.$name).join(",")} FROM ";
+    fields.add(mail.folder);
+
+    var query = "SELECT ${fields.map((item) => item.escapedName).join(",")} FROM ";
     if (searchPattern != SearchPattern.Default ||
         searchTerm?.isNotEmpty == true) {
       query += "fts_";
-      await updateVirtualTable();
+      await _updateVirtualTable();
     }
     query += "${mail.actualTableName} WHERE ";
     query += "${mail.accountEntityId.escapedName} = ? ";

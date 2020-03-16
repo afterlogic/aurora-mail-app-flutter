@@ -119,6 +119,33 @@ class Folder {
     }
   }
 
+  static int getNumberFromFolderType(FolderType num) {
+    switch (num) {
+      case FolderType.inbox:
+        return 1;
+      case FolderType.sent:
+        return 2;
+      case FolderType.drafts:
+        return 3;
+      case FolderType.spam:
+        return 4;
+      case FolderType.trash:
+        return 5;
+      case FolderType.virus:
+        return 6;
+      case FolderType.starred:
+        return 7;
+      case FolderType.template:
+        return 8;
+      case FolderType.system:
+        return 9;
+      case FolderType.user:
+        return 10;
+      default:
+        return -1;
+    }
+  }
+
   static List<Folder> getFolderObjectsFromDb(List<LocalFolder> localFolders,
       [String parentGuid]) {
     try {

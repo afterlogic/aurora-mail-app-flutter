@@ -340,6 +340,28 @@ class MailApi {
     }
   }
 
+  Future<void> moveToTrash({
+    @required String folderRawName,
+    @required String trashRawName,
+    @required List<int> uids,
+  }) async {
+    final parameters = json.encode({
+      "Folder": folderRawName,
+      "ToFolder": trashRawName,
+      "AccountID": _accountId,
+      "Uids": uids.join(","),
+    });
+
+    final body =
+        new WebMailApiBody(method: "MoveMessages", parameters: parameters);
+
+    final res = await _mailModule.post(body);
+
+    if (res != true) {
+      throw WebMailApiError(res);
+    }
+  }
+
   Future<void> deleteMessages({
     @required String folderRawName,
     @required List<int> uids,

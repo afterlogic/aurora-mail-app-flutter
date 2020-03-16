@@ -1,3 +1,4 @@
+import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/repository/search_util.dart';
@@ -21,17 +22,17 @@ class SubscribeToMessages extends MessagesListEvent {
       [this.searchTerm, this.pattern]);
 
   @override
-  List<Object> get props => [currentFolder.fullNameRaw, filter, searchTerm,pattern];
+  List<Object> get props =>
+      [currentFolder.fullNameRaw, filter, searchTerm, pattern];
 }
 
 class StopMessagesRefresh extends MessagesListEvent {}
 
 class DeleteMessages extends MessagesListEvent {
-  final List<int> uids;
-  final String folderRawName;
+  final List<Message> messages;
 
-  const DeleteMessages({@required this.uids, @required this.folderRawName});
+  const DeleteMessages({@required this.messages});
 
   @override
-  List<Object> get props => [uids, folderRawName];
+  List<Object> get props => [messages];
 }

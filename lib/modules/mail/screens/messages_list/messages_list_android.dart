@@ -113,8 +113,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
   }
 
   void _deleteMessage(Message message) {
-    _messagesListBloc.add(
-        DeleteMessages(uids: [message.uid], folderRawName: message.folder));
+    _messagesListBloc.add(DeleteMessages(messages: [message]));
   }
 
   void _dispatchPostFoldersLoadedAction(FoldersLoaded state) {
@@ -271,7 +270,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
       builder: (ctx, AsyncSnapshot<List<Message>> snap) {
         if (snap.connectionState == ConnectionState.active) {
           if (snap.hasError) {
-            lastItemsCount=null;
+            lastItemsCount = null;
             _showError(ctx, snap.error.toString());
             return ListView();
           } else if (snap.hasData && snap.data.isNotEmpty) {
@@ -327,7 +326,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
               ],
             );
           } else {
-            lastItemsCount=null;
+            lastItemsCount = null;
             // build list view to be able to swipe to refresh
             if (_selectedFolder != null && _selectedFolder.needsInfoUpdate) {
               return _buildMessagesLoading();
@@ -336,7 +335,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
             return AMEmptyList(message: i18n(context, "messages_empty"));
           }
         } else {
-          lastItemsCount=null;
+          lastItemsCount = null;
           return _buildMessagesLoading();
         }
       },

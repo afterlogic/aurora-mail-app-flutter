@@ -297,7 +297,7 @@ class FolderMessageInfo {
     final file = File(dir.path + Platform.pathSeparator + id);
     if (await file.exists()) {
       try {
-        return MessageInfo.fromJsonString(await file.readAsString());
+        return MessageInfo.fromJsonString(file.readAsStringSync());
       } catch (e) {
         return null;
       }
@@ -319,7 +319,7 @@ class FolderMessageInfo {
     }
     await file.create(recursive: true);
     try {
-      await file.writeAsString(MessageInfo.toJsonString(items));
+      return file.writeAsStringSync(MessageInfo.toJsonString(items));
     } catch (e) {
       return null;
     }

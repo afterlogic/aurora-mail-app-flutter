@@ -46,7 +46,6 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
     super.initState();
   }
 
-
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -155,8 +154,7 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
     );
     if (delete == true) {
       BlocProvider.of<MessagesListBloc>(context).add(DeleteMessages(
-        uids: [message.uid],
-        folderRawName: message.folder,
+        messages: [message],
       ));
       Navigator.popUntil(context, ModalRoute.withName(MessagesListRoute.name));
     }

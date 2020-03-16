@@ -37,10 +37,10 @@ class MessagesRefreshed extends MessagesListState with AlwaysNonEqualObject {}
 class MessagesDeleted extends MessagesListState with AlwaysNonEqualObject {}
 
 // for both folders and messages
-class MailError extends MessagesListState {
+class MailError extends MessagesListState with AlwaysNonEqualObject {
   final String errorMsg;
 
-  const MailError(this.errorMsg);
+   MailError(this.errorMsg);
 
   @override
   List<Object> get props => [errorMsg];
