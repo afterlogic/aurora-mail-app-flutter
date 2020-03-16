@@ -2,6 +2,7 @@ import 'package:aurora_mail/database/app_database.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
     hide Message;
 import 'package:notifications_utils/notifications_utils.dart';
+import 'package:package_info/package_info.dart';
 
 class NotificationManager {
   final plugin = FlutterLocalNotificationsPlugin();
@@ -26,12 +27,15 @@ class NotificationManager {
   Future<void> showNotification(Message message, User user) async {
     final activeNotifications =
         await NotificationsUtils.getActiveNotifications();
+
+    final packageName = (await PackageInfo.fromPlatform()).packageName;
+
     final isFirstNotification = activeNotifications.where((n) {
-      return n.packageName == "com.afterlogic.aurora.mail.aurora_mail" &&
+      return n.packageName == packageName &&
           n.groupKey.contains(user.emailFromLogin);
     }).isEmpty;
 
-    final groupKey = "com.afterlogic.aurora.mail.${user.emailFromLogin}";
+    final groupKey = "$packageName.${user.emailFromLogin}";
     final groupChannelId = user.emailFromLogin;
     final groupChannelName = user.emailFromLogin;
     final groupChannelDescription = user.emailFromLogin;
