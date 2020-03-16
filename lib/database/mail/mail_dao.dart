@@ -68,7 +68,7 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
 
     if (searchPattern == SearchPattern.Email) {
       query +=
-          "AND (${mail.toInJson.escapedName} LIKE ? OR ${mail.fromInJson.escapedName} LIKE ? OR ${mail.ccInJson.escapedName} LIKE ? OR ${mail.bccInJson.escapedName} LIKE ?) ";
+          "AND (${mail.toForSearch.escapedName} LIKE ? OR ${mail.fromForSearch.escapedName} LIKE ? OR ${mail.ccForSearch.escapedName} LIKE ? OR ${mail.bccForSearch.escapedName} LIKE ?) ";
       params.add(Variable.withString("%$searchTerm%"));
       params.add(Variable.withString("%$searchTerm%"));
       params.add(Variable.withString("%$searchTerm%"));
@@ -79,7 +79,7 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
 
       if (searchTerm != null && searchTerm.isNotEmpty) {
         query +=
-            "AND (${mail.subject.escapedName} LIKE ? OR ${mail.toInJson.escapedName} LIKE ? OR ${mail.fromInJson.escapedName} LIKE ? OR ${mail.ccInJson.escapedName} LIKE ? OR ${mail.bccInJson.escapedName} LIKE ? OR ${mail.rawBody.escapedName} LIKE ? OR ${mail.attachmentsForSearch.escapedName} LIKE ?) ";
+            "AND (${mail.subject.escapedName} LIKE ? OR ${mail.toForSearch.escapedName} LIKE ? OR ${mail.fromForSearch.escapedName} LIKE ? OR ${mail.ccForSearch.escapedName} LIKE ? OR ${mail.bccForSearch.escapedName} LIKE ? OR ${mail.rawBody.escapedName} LIKE ? OR ${mail.attachmentsForSearch.escapedName} LIKE ?) ";
         params.add(Variable.withString("%$searchTerm%"));
         params.add(Variable.withString("%$searchTerm%"));
         params.add(Variable.withString("%$searchTerm%"));
