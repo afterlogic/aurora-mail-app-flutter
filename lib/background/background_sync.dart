@@ -133,10 +133,9 @@ class BackgroundSync {
         account.localId,
         result.updatedInfo,
       );
-
+      await _mailDao.addMessages(newMessageBodies);
       newMessages.addAll(newMessageBodies);
     }
-    await _mailDao.addMessages(newMessages);
     return newMessages;
   }
 

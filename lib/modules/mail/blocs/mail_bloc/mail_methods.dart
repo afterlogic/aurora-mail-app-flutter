@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:flutter/foundation.dart';
+
 import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/folders/folders_dao.dart';
@@ -14,12 +14,14 @@ import 'package:aurora_mail/modules/mail/repository/mail_api.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/modules/settings/models/sync_period.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:moor_flutter/moor_flutter.dart';
 
 class MailMethods {
   final _foldersDao = new FoldersDao(DBInstances.appDB);
   final _usersDao = new UsersDao(DBInstances.appDB);
   final _mailDao = new MailDao(DBInstances.appDB);
+  var needUpdateInfo = false;
   FoldersApi _foldersApi;
   MailApi _mailApi;
 
@@ -194,14 +196,16 @@ class MailMethods {
     }
     if (_syncQueue.isNotEmpty && queueLengthBeforeInsert == 0) {
       await _setMessagesInfoToFolder();
-    } else {
-      _setMessagesInfoToFolder(true);
+    } else if (_syncQueue.isNotEmpty) {
+      needUpdateInfo = true;
     }
   }
 
-  Future<void> _setMessagesInfoToFolder([bool onlyUpdateInfo]) async {
+  Future<void> _setMessagesInfoToFolder() async {
     if (_isOffline || user == null) return null;
-    assert(_syncQueue.isNotEmpty);
+    if (_syncQueue.isEmpty) {
+      return;
+    }
 
     final folderToUpdate = await _foldersDao.getFolderByLocalId(_syncQueue[0]);
     // get the actual sync period
@@ -241,7 +245,7 @@ class MailMethods {
       newMessagesInfo = calcResult.updatedInfo;
       await _mailDao.deleteMessages(
           calcResult.removedUids, folderToUpdate.fullNameRaw);
-      _mailDao.updateMessagesFlags(calcResult.infosToUpdateFlags);
+      await _mailDao.updateMessagesFlags(calcResult.infosToUpdateFlags);
     }
 
     await FolderMessageInfo.setMessageInfo(
@@ -250,9 +254,6 @@ class MailMethods {
       newMessagesInfo,
     );
 
-    if (onlyUpdateInfo == true) {
-      return;
-    }
     await _syncMessagesChunk(SyncPeriod.periodToDbString(syncPeriod));
     await _foldersDao.updateFolder(
       FoldersCompanion(needsInfoUpdate: Value(false)),
@@ -280,8 +281,12 @@ class MailMethods {
           "Attention! another sync period was selected, refetching messages info...");
       return _setMessagesInfoToFolder();
     }
+    if (needUpdateInfo == true) {
+      needUpdateInfo = false;
+      return _setMessagesInfoToFolder();
+    }
 
-    final messageInfo = await FolderMessageInfo.getMessageInfo(
+    var messageInfo = await FolderMessageInfo.getMessageInfo(
       folder.fullName,
       account.localId,
     );
@@ -316,7 +321,6 @@ class MailMethods {
         folderName: folder.fullNameRaw,
         uids: uids,
       );
-
       // TODO make async
       final messages = Mail.getMessageObjFromServerAndUpdateInfoHasBody(
         rawBodies,

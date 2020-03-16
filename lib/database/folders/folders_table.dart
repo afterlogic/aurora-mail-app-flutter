@@ -297,7 +297,7 @@ class FolderMessageInfo {
     final file = File(dir.path + Platform.pathSeparator + id);
     if (await file.exists()) {
       try {
-        return MessageInfo.fromJsonString(file.readAsStringSync());
+        return MessageInfo.fromJsonString(await file.readAsString());
       } catch (e) {
         return null;
       }
@@ -314,12 +314,11 @@ class FolderMessageInfo {
     final id = "$fullName.$accountLocalId";
     final dir = await getApplicationSupportDirectory();
     final file = File(dir.path + Platform.pathSeparator + id);
-    if (await file.exists()) {
-      await file.delete();
+    if (!await file.exists()) {
+      await file.create(recursive: true);
     }
-    await file.create(recursive: true);
     try {
-      return file.writeAsStringSync(MessageInfo.toJsonString(items));
+      return file.writeAsString(MessageInfo.toJsonString(items));
     } catch (e) {
       return null;
     }
