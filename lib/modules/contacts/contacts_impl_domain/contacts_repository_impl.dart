@@ -376,7 +376,9 @@ class ContactsRepositoryImpl implements ContactsRepository {
     final uuidsToFetch = _takeChunkForAdd(storageToSync.contactsInfo);
     final uuidsToUpdate = _takeChunkForUpdate(storageToSync.contactsInfo);
 
-    if (uuidsToFetch.isEmpty && uuidsToUpdate.isEmpty) {
+    if (_syncQueue.isNotEmpty &&
+        uuidsToFetch.isEmpty &&
+        uuidsToUpdate.isEmpty) {
       _syncQueue.removeAt(0);
     } else {
       final result = await Future.wait([
