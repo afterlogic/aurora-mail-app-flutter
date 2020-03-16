@@ -55,7 +55,6 @@ class MailBloc extends Bloc<MailEvent, MailState> {
     if (hasUpdate) {
       add(RefreshMessages());
     }
-    add(RefreshFolders());
   }
 
   Stream<MailState> _fetchFolders(FetchFolders event) async* {
@@ -115,9 +114,6 @@ class MailBloc extends Bloc<MailEvent, MailState> {
   }
 
   Stream<MailState> _refreshFolders(RefreshFolders event) async* {
-    if (event.updateOther) {
-      BackgroundHelper.onStartAlarm();
-    }
     try {
       yield FoldersLoading();
 
@@ -144,9 +140,6 @@ class MailBloc extends Bloc<MailEvent, MailState> {
       yield FoldersLoaded(newFolders, _selectedFolder, _filter);
     } catch (err, s) {
       yield FoldersError(formatError(err, s));
-    }
-    if (event.updateOther) {
-      BackgroundHelper.onEndAlarm(false);
     }
   }
 
