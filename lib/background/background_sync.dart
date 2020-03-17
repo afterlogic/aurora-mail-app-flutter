@@ -116,6 +116,8 @@ class BackgroundSync {
       if (result.addedMessages.isEmpty) break;
 
       result.addedMessages.removeWhere((m) => m.flags.contains("\\seen"));
+      await _mailDao.addEmptyMessage(
+          result.addedMessages, account, user, folderToUpdate.fullNameRaw);
 
       final uids = result.addedMessages.map((m) => m.uid);
       final rawBodies = await mailApi.getMessageBodies(
@@ -128,11 +130,7 @@ class BackgroundSync {
         user.localId,
         account,
       );
-      await FolderMessageInfo.setMessageInfo(
-        folderToUpdate.fullNameRaw,
-        account.localId,
-        result.updatedInfo,
-      );
+
       await _mailDao.fillMessage(newMessageBodies);
       newMessages.addAll(newMessageBodies);
     }
