@@ -235,9 +235,6 @@ class Folders extends Table {
     final removedUids = removedMessages.map((m) => m.uid).toList();
     final changedParentUid = changedParent.map((m) => m.uid).toList();
 
-    // update flags directly without deleting the messages
-    changedFlags.forEach((info) => info.hasBody = true);
-
     final List<MessageInfo> updatedInfo = [
       ...addedMessages,
       ...changedParent,

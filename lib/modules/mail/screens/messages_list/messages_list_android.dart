@@ -267,7 +267,6 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
     bool isSent,
     String key,
   ) {
-    int lastItemsCount = null;
     return Column(
       children: <Widget>[
         if (filter == MessagesFilter.unread)
@@ -284,7 +283,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
           ),
         Flexible(
           child: StreamPaginationList(
-            key:Key(key),
+            key: Key(key),
             builder: (context, item, threads) {
               return MessageItem(
                 isSent,
@@ -296,16 +295,25 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
                 onDeleteMessage: _deleteMessage,
               );
             },
-            progress: Center(child: CircularProgressIndicator()),
+            progress: Padding(
+              padding: EdgeInsets.all(20),
+              child: Center(child: CircularProgressIndicator()),
+            ),
             onError: (context, e) {
               _showError(context, e.toString());
               return SizedBox.shrink();
             },
             empty: (context) {
               if (_selectedFolder != null && _selectedFolder.needsInfoUpdate) {
-                return _buildMessagesLoading();
+                return Padding(
+                  padding: EdgeInsets.all(20),
+                  child: _buildMessagesLoading(),
+                );
               }
-              return AMEmptyList(message: i18n(context, "messages_empty"));
+              return Padding(
+                padding: const EdgeInsets.only(top: 100.0),
+                child: Center(child: Text(i18n(context, "messages_empty"))),
+              );
             },
             fetch: stream,
           ),

@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:aurora_mail/database/app_database.dart';
-import 'package:aurora_mail/models/message_info.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/mail_utils.dart';
 import 'package:flutter/widgets.dart' as widgets;
@@ -32,7 +31,7 @@ class Mail extends Table {
 
   IntColumn get parentUid => integer().nullable()();
 
-  TextColumn get messageId => text()();
+  TextColumn get messageId => text().nullable()();
 
   TextColumn get folder => text()();
 
@@ -40,27 +39,27 @@ class Mail extends Table {
 
   BoolColumn get hasThread => boolean()();
 
-  TextColumn get subject => text()();
+  TextColumn get subject => text().nullable()();
 
-  IntColumn get size => integer()();
+  IntColumn get size => integer().nullable()();
 
-  IntColumn get textSize => integer()();
+  IntColumn get textSize => integer().nullable()();
 
-  BoolColumn get truncated => boolean()();
+  BoolColumn get truncated => boolean().nullable()();
 
-  IntColumn get internalTimeStampInUTC => integer()();
+  IntColumn get internalTimeStampInUTC => integer().nullable()();
 
-  IntColumn get receivedOrDateTimeStampInUTC => integer()();
+  IntColumn get receivedOrDateTimeStampInUTC => integer().nullable()();
 
-  IntColumn get timeStampInUTC => integer()();
+  IntColumn get timeStampInUTC => integer().nullable()();
 
-  TextColumn get toToDisplay => text()();
+  TextColumn get toToDisplay => text().nullable()();
 
   TextColumn get toInJson => text().nullable()();
 
   TextColumn get fromInJson => text().nullable()();
 
-  TextColumn get fromToDisplay => text()();
+  TextColumn get fromToDisplay => text().nullable()();
 
   TextColumn get ccInJson => text().nullable()();
 
@@ -78,29 +77,29 @@ class Mail extends Table {
 //
 //  BoolColumn get isForwarded => boolean()();
 
-  BoolColumn get hasAttachments => boolean()();
+  BoolColumn get hasAttachments => boolean().nullable()();
 
-  BoolColumn get hasVcardAttachment => boolean()();
+  BoolColumn get hasVcardAttachment => boolean().nullable()();
 
-  BoolColumn get hasIcalAttachment => boolean()();
+  BoolColumn get hasIcalAttachment => boolean().nullable()();
 
-  IntColumn get importance => integer()();
+  IntColumn get importance => integer().nullable()();
 
   TextColumn get draftInfoInJson => text().nullable()();
 
-  IntColumn get sensitivity => integer()();
+  IntColumn get sensitivity => integer().nullable()();
 
-  TextColumn get downloadAsEmlUrl => text()();
+  TextColumn get downloadAsEmlUrl => text().nullable()();
 
-  TextColumn get hash => text()();
+  TextColumn get hash => text().nullable()();
 
-  TextColumn get headers => text()();
+  TextColumn get headers => text().nullable()();
 
-  TextColumn get inReplyTo => text()();
+  TextColumn get inReplyTo => text().nullable()();
 
-  TextColumn get references => text().named("message_references")();
+  TextColumn get references => text().nullable().named("message_references")();
 
-  TextColumn get readingConfirmationAddressee => text()();
+  TextColumn get readingConfirmationAddressee => text().nullable()();
 
 //  TextColumn get htmlRaw => text().nullable()();
 
@@ -108,33 +107,35 @@ class Mail extends Table {
 
   TextColumn get rawBody => text().withDefault(Constant(""))();
 
-  BoolColumn get rtl => boolean()();
+  BoolColumn get rtl => boolean().nullable()();
 
-  TextColumn get extendInJson => text()();
+  TextColumn get extendInJson => text().nullable()();
 
-  BoolColumn get safety => boolean()();
+  BoolColumn get safety => boolean().nullable()();
 
-  BoolColumn get hasExternals => boolean()();
+  BoolColumn get hasExternals => boolean().nullable()();
 
-  TextColumn get foundedCIDsInJson => text()();
+  TextColumn get foundedCIDsInJson => text().nullable()();
 
-  TextColumn get foundedContentLocationUrlsInJson => text()();
+  TextColumn get foundedContentLocationUrlsInJson => text().nullable()();
 
   TextColumn get attachmentsInJson => text().nullable()();
 
-  TextColumn get toForSearch => text()();
+  TextColumn get toForSearch => text().nullable()();
 
-  TextColumn get fromForSearch => text()();
+  TextColumn get fromForSearch => text().nullable()();
 
-  TextColumn get ccForSearch => text()();
+  TextColumn get ccForSearch => text().nullable()();
 
-  TextColumn get bccForSearch => text()();
+  TextColumn get bccForSearch => text().nullable()();
 
-  TextColumn get attachmentsForSearch => text()();
+  TextColumn get attachmentsForSearch => text().nullable()();
 
-  TextColumn get customInJson => text()();
+  TextColumn get customInJson => text().nullable()();
 
-  BoolColumn get isHtml => boolean()();
+  BoolColumn get isHtml => boolean().nullable()();
+
+  BoolColumn get hasBody => boolean()();
 
   static List getToForDisplay(
       widgets.BuildContext context, String toInJson, String currentUserEmail) {
@@ -179,19 +180,20 @@ class Mail extends Table {
 
   static List<Message> getMessageObjFromServerAndUpdateInfoHasBody(
     List result,
-    List<MessageInfo> messagesInfo,
+    List<Message> messagesInfo,
     int userLocalId,
     Account account,
   ) {
     assert(result.isNotEmpty);
 
     final messagesChunk = new List<Message>();
-
+    final messageInfoMap =
+        Map.fromEntries(messagesInfo.map((item) => MapEntry(item.uid, item)));
     result.forEach((raw) {
-      MessageInfo messageInfo;
+      Message messageInfo;
 
       try {
-        messageInfo = messagesInfo.firstWhere((m) => m.uid == raw["Uid"]);
+        messageInfo = messageInfoMap[raw["Uid"]];
       } catch (err) {
         throw Exception("Couldn't find message: ${raw["Uid"]}");
       }
@@ -224,18 +226,14 @@ class Mail extends Table {
           ? displayName
           : raw["From"]["@Collection"][0]["Email"] as String;
 
-      messageInfo.hasBody = true;
       messagesChunk.add(new Message(
-        localId: null,
-        uid: raw["Uid"] as int,
+        localId: messageInfo.localId,
+        uid: messageInfo.uid,
         userLocalId: userLocalId,
         accountEntityId: account.entityId,
-        uniqueUidInFolder: account.entityId.toString() +
-            account.localId.toString() +
-            raw["Uid"].toString() +
-            raw["Folder"].toString(),
+        uniqueUidInFolder: messageInfo.uniqueUidInFolder,
         parentUid: messageInfo.parentUid,
-        flagsInJson: _encode(messageInfo.flags),
+        flagsInJson: messageInfo.flagsInJson,
         hasThread: messageInfo.hasThread,
         messageId: raw["MessageId"] as String,
         folder: raw["Folder"] as String,
@@ -292,6 +290,7 @@ class Mail extends Table {
             _getAttachmentsForSearch(raw["Attachments"] as Map),
         customInJson: _encode(raw["Custom"]),
         isHtml: (raw["Html"] as String)?.isNotEmpty == true,
+        hasBody: true,
       ));
     });
 

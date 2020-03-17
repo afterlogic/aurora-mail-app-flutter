@@ -4,19 +4,16 @@ import 'package:flutter/cupertino.dart';
 
 class MessageInfo {
   final int uid;
-  int parentUid;
+  final int parentUid;
   final List<String> flags;
-  bool hasThread;
-  bool hasBody;
+  final bool hasThread;
 
   MessageInfo({
     @required this.uid,
     this.parentUid,
     @required this.flags,
-    this.hasBody = false,
     @required this.hasThread,
   });
-
 
   // for writing to DB
   static String toJsonString(List<MessageInfo> items) {
@@ -27,7 +24,6 @@ class MessageInfo {
         "parentUid": item.parentUid,
         "flags": item.flags,
         "hasThread": item.hasThread,
-        "hasBody": item.hasBody,
       });
     }).toList();
     assert(mappedItems.length == items.length);
@@ -45,11 +41,9 @@ class MessageInfo {
         parentUid: item["parentUid"] as int,
         flags: new List<String>.from(item["flags"] as Iterable),
         hasThread: item["hasThread"] as bool,
-        hasBody: item["hasBody"] as bool,
       );
     }).toList();
   }
-
 
   // for flattening nested array from server
   static List<MessageInfo> flattenMessagesInfo(String messagesInfoRaw) {
@@ -68,7 +62,6 @@ class MessageInfo {
           uid: uid as int,
           parentUid: parentUid,
           flags: new List<String>.from(info["flags"] as Iterable ?? []),
-          hasBody: info["hasBody"] as bool ?? false,
           hasThread: info["thread"] != null,
         ));
 
@@ -83,5 +76,4 @@ class MessageInfo {
     flatList.sort((a, b) => b.uid.compareTo(a.uid));
     return flatList;
   }
-
 }

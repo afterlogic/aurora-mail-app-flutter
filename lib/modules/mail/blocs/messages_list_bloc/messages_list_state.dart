@@ -14,11 +14,12 @@ abstract class MessagesListState extends Equatable {
 class MessagesEmpty extends MessagesListState {}
 
 class SubscribedToMessages extends MessagesListState with AlwaysNonEqualObject {
-  final  Stream<List<Message>> Function(int page) stream;
+  final Stream<List<Message>> Function(int page) stream;
   final MessagesFilter filter;
   final String searchTerm;
   final bool isSent;
   final String key;
+  final String folder;
 
   SubscribedToMessages(
     this.stream,
@@ -26,6 +27,7 @@ class SubscribedToMessages extends MessagesListState with AlwaysNonEqualObject {
     this.isSent,
     this.key,
     this.filter,
+    this.folder,
   );
 
   @override
@@ -40,7 +42,7 @@ class MessagesDeleted extends MessagesListState with AlwaysNonEqualObject {}
 class MailError extends MessagesListState with AlwaysNonEqualObject {
   final String errorMsg;
 
-   MailError(this.errorMsg);
+  MailError(this.errorMsg);
 
   @override
   List<Object> get props => [errorMsg];

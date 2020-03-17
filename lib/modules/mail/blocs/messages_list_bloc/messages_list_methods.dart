@@ -74,5 +74,5 @@ class MessagesListMethods {
     }
   }
 
-  static const _limit = 100;
+  static const _limit = 30;
 }

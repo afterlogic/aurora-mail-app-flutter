@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/modules/mail/blocs/mail_bloc/mail_methods.dart';
 import 'package:flutter/material.dart';
 
 class StreamPaginationList extends StatefulWidget {
@@ -9,6 +10,7 @@ class StreamPaginationList extends StatefulWidget {
   final Stream<List<Message>> Function(int) fetch;
   final Widget Function(BuildContext) empty;
   final Widget progress;
+  final String folder;
 
   const StreamPaginationList({
     this.builder,
@@ -17,6 +19,7 @@ class StreamPaginationList extends StatefulWidget {
     this.onError,
     this.empty,
     Key key,
+    this.folder,
   }) : super(key: key);
 
   @override
@@ -28,10 +31,6 @@ class _StreamPaginationListState extends State<StreamPaginationList> {
 
   @override
   Widget build(BuildContext context) {
-    if (parts[0].items?.isEmpty == true) {
-      return widget.empty(context);
-    }
-
     final threads = <Message>[];
     for (var part in parts.values) {
       if (part?.items != null) {
@@ -39,7 +38,8 @@ class _StreamPaginationListState extends State<StreamPaginationList> {
       }
     }
 
-    return ListView.builder(
+    final list = ListView.builder(
+      padding: EdgeInsets.only(top: 6.0, bottom: 82.0),
       itemCount: parts.length,
       itemBuilder: (context, id) {
         return _ListPartWidget(
@@ -50,9 +50,13 @@ class _StreamPaginationListState extends State<StreamPaginationList> {
           onInit,
           widget.progress,
           widget.onError,
+          widget.empty,
+          widget.folder,
+          parts.length - 1 == id,
         );
       },
     );
+    return list;
   }
 
   onInit(int id, bool hasMore) {
@@ -71,8 +75,11 @@ class _ListPartWidget extends StatefulWidget {
   final Stream<List<Message>> Function(int) fetch;
   final Widget Function(BuildContext, Message) builder;
   final Widget Function(BuildContext, dynamic e) onError;
+  final Widget Function(BuildContext) empty;
   final Function(int, bool) onInit;
   final Widget progress;
+  final String folder;
+  final bool isEnd;
 
   _ListPartWidget(
     this.id,
@@ -82,6 +89,9 @@ class _ListPartWidget extends StatefulWidget {
     this.onInit,
     this.progress,
     this.onError,
+    this.empty,
+    this.folder,
+    this.isEnd,
   );
 
   @override
@@ -101,7 +111,16 @@ class _ListPartWidgetState extends State<_ListPartWidget> {
     }
     if (widget.part.items != null) {
       final messages = widget.part.messages;
-
+      if (messages.isEmpty == true) {
+        if (widget.id == 0) {
+          return widget.empty(context);
+        } else if (widget.isEnd &&
+            widget.folder == MailMethods.currentFolderUpdate) {
+          return widget.progress;
+        } else {
+          return SizedBox.shrink();
+        }
+      }
       return Column(
         mainAxisSize: MainAxisSize.min,
         children:
@@ -112,12 +131,6 @@ class _ListPartWidgetState extends State<_ListPartWidget> {
     } else {
       return SizedBox(
         height: MediaQuery.of(context).size.height,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            widget.progress,
-          ],
-        ),
       );
     }
   }

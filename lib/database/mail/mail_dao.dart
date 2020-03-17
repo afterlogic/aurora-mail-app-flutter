@@ -57,6 +57,7 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
     fields.add(mail.hasAttachments);
     fields.add(mail.timeStampInUTC);
     fields.add(mail.folder);
+    fields.add(mail.hasBody);
 
     var query =
         "SELECT ${fields.map((item) => item.escapedName).join(",")} FROM ";
@@ -67,8 +68,10 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
         await _updateVirtualTable();
       }
     }
+
     query += "${mail.actualTableName} WHERE ";
     query += "${mail.accountEntityId.escapedName} = ? ";
+    query += "AND ${mail.hasBody.escapedName} = 1 ";
     params.add(Variable.withInt(accountEntityId));
 
     if (searchPattern == SearchPattern.Email) {
@@ -109,7 +112,6 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
 
     params.add(Variable.withInt(limit));
     params.add(Variable.withInt(offset));
-
     return customSelectQuery(query, variables: params, readsFrom: {mail})
         .watch()
         .map((list) {
@@ -124,9 +126,11 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
         .getSingle();
   }
 
-  Future<void> addMessages(List<Message> newMessages) async {
+  Future<void> fillMessage(List<Message> newMessages) async {
     try {
-      await into(mail).insertAll(newMessages);
+      await batch((batch) {
+        batch.insertAll(mail, newMessages, mode: InsertMode.replace);
+      });
     } catch (err) {
 //      print("addMessages err: ${err}");
     }
@@ -166,5 +170,50 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
 
   Future<int> deleteMessagesOfUser(int userLocalId) {
     return (delete(mail)..where((m) => m.userLocalId.equals(userLocalId))).go();
+  }
+
+  Future<List<Message>> getMessageWithNotBody(List<int> uids) {
+    var query = "SELECT * FROM ${mail.actualTableName} WHERE ";
+
+    query += "${mail.uid.escapedName} IN ";
+    query += "(${uids.join(", ")}) ";
+    query += "AND ${mail.hasBody.escapedName} = 0 ";
+
+    return customSelectQuery(query, readsFrom: {mail}).get().then((response) {
+      return response.map((item) => Message.fromData(item.data, db)).toList();
+    });
+  }
+
+  Future addEmptyMessage(
+    List<MessageInfo> messagesInfo,
+    Account account,
+    User user,
+    String folder,
+  ) {
+    final uniqueUidInFolder = "${account.entityId}${account.localId}$folder";
+
+    return batch((bath) {
+      final messages = messagesInfo.map((messageInfo) {
+        return Message(
+          folder: folder,
+          localId: null,
+          accountEntityId: account.entityId,
+          userLocalId: user.localId,
+          uniqueUidInFolder: "$uniqueUidInFolder${messageInfo.uid}",
+          uid: messageInfo.uid,
+          parentUid: messageInfo.parentUid,
+          hasThread: messageInfo.hasThread,
+          flagsInJson: json.encode(messageInfo.flags),
+          hasBody: false,
+          htmlBody: null,
+          rawBody: null,
+        );
+      }).toList();
+      bath.insertAll(
+        mail,
+        messages,
+        mode: InsertMode.insertOrReplace,
+      );
+    });
   }
 }

@@ -61,6 +61,7 @@ class MessagesListBloc extends Bloc<MessagesListEvent, MessagesListState> {
         isSent,
         event.props.toString(),
         event.filter,
+        event.currentFolder.fullNameRaw,
       );
     } catch (e, s) {
       print(e);
@@ -71,6 +72,7 @@ class MessagesListBloc extends Bloc<MessagesListEvent, MessagesListState> {
         false,
         event.props.toString(),
         event.filter,
+        event.currentFolder.fullNameRaw,
       );
     }
   }

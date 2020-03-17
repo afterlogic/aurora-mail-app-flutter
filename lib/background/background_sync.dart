@@ -88,7 +88,7 @@ class BackgroundSync {
 
     for (Folder folderToUpdate in foldersToUpdate) {
       final messagesInfo = await FolderMessageInfo.getMessageInfo(
-        folderToUpdate.fullName,
+        folderToUpdate.fullNameRaw,
         account.localId,
       );
 
@@ -124,16 +124,16 @@ class BackgroundSync {
       );
       final newMessageBodies = Mail.getMessageObjFromServerAndUpdateInfoHasBody(
         rawBodies,
-        result.addedMessages,
+        null,
         user.localId,
         account,
       );
       await FolderMessageInfo.setMessageInfo(
-        folderToUpdate.fullName,
+        folderToUpdate.fullNameRaw,
         account.localId,
         result.updatedInfo,
       );
-      await _mailDao.addMessages(newMessageBodies);
+      await _mailDao.fillMessage(newMessageBodies);
       newMessages.addAll(newMessageBodies);
     }
     return newMessages;
