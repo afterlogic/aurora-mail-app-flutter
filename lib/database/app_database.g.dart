@@ -47,6 +47,7 @@ class Message extends DataClass implements Insertable<Message> {
   final String readingConfirmationAddressee;
   final String htmlBody;
   final String rawBody;
+  final String bodyForSearch;
   final bool rtl;
   final String extendInJson;
   final bool safety;
@@ -101,6 +102,7 @@ class Message extends DataClass implements Insertable<Message> {
       @required this.readingConfirmationAddressee,
       @required this.htmlBody,
       @required this.rawBody,
+      this.bodyForSearch,
       @required this.rtl,
       @required this.extendInJson,
       @required this.safety,
@@ -197,6 +199,8 @@ class Message extends DataClass implements Insertable<Message> {
           .mapFromDatabaseResponse(data['${effectivePrefix}html_body']),
       rawBody: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}raw_body']),
+      bodyForSearch: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}body_for_search']),
       rtl: boolType.mapFromDatabaseResponse(data['${effectivePrefix}rtl']),
       extendInJson: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}extend_in_json']),
@@ -272,6 +276,7 @@ class Message extends DataClass implements Insertable<Message> {
           serializer.fromJson<String>(json['readingConfirmationAddressee']),
       htmlBody: serializer.fromJson<String>(json['htmlBody']),
       rawBody: serializer.fromJson<String>(json['rawBody']),
+      bodyForSearch: serializer.fromJson<String>(json['bodyForSearch']),
       rtl: serializer.fromJson<bool>(json['rtl']),
       extendInJson: serializer.fromJson<String>(json['extendInJson']),
       safety: serializer.fromJson<bool>(json['safety']),
@@ -335,6 +340,7 @@ class Message extends DataClass implements Insertable<Message> {
           serializer.toJson<String>(readingConfirmationAddressee),
       'htmlBody': serializer.toJson<String>(htmlBody),
       'rawBody': serializer.toJson<String>(rawBody),
+      'bodyForSearch': serializer.toJson<String>(bodyForSearch),
       'rtl': serializer.toJson<bool>(rtl),
       'extendInJson': serializer.toJson<String>(extendInJson),
       'safety': serializer.toJson<bool>(safety),
@@ -468,6 +474,9 @@ class Message extends DataClass implements Insertable<Message> {
       rawBody: rawBody == null && nullToAbsent
           ? const Value.absent()
           : Value(rawBody),
+      bodyForSearch: bodyForSearch == null && nullToAbsent
+          ? const Value.absent()
+          : Value(bodyForSearch),
       rtl: rtl == null && nullToAbsent ? const Value.absent() : Value(rtl),
       extendInJson: extendInJson == null && nullToAbsent
           ? const Value.absent()
@@ -550,6 +559,7 @@ class Message extends DataClass implements Insertable<Message> {
           String readingConfirmationAddressee,
           String htmlBody,
           String rawBody,
+          String bodyForSearch,
           bool rtl,
           String extendInJson,
           bool safety,
@@ -607,6 +617,7 @@ class Message extends DataClass implements Insertable<Message> {
             readingConfirmationAddressee ?? this.readingConfirmationAddressee,
         htmlBody: htmlBody ?? this.htmlBody,
         rawBody: rawBody ?? this.rawBody,
+        bodyForSearch: bodyForSearch ?? this.bodyForSearch,
         rtl: rtl ?? this.rtl,
         extendInJson: extendInJson ?? this.extendInJson,
         safety: safety ?? this.safety,
@@ -667,6 +678,7 @@ class Message extends DataClass implements Insertable<Message> {
               'readingConfirmationAddressee: $readingConfirmationAddressee, ')
           ..write('htmlBody: $htmlBody, ')
           ..write('rawBody: $rawBody, ')
+          ..write('bodyForSearch: $bodyForSearch, ')
           ..write('rtl: $rtl, ')
           ..write('extendInJson: $extendInJson, ')
           ..write('safety: $safety, ')
@@ -729,7 +741,7 @@ class Message extends DataClass implements Insertable<Message> {
                                                                               .hashCode,
                                                                           $mrjc(
                                                                               toInJson.hashCode,
-                                                                              $mrjc(fromInJson.hashCode, $mrjc(fromToDisplay.hashCode, $mrjc(ccInJson.hashCode, $mrjc(bccInJson.hashCode, $mrjc(senderInJson.hashCode, $mrjc(replyToInJson.hashCode, $mrjc(hasAttachments.hashCode, $mrjc(hasVcardAttachment.hashCode, $mrjc(hasIcalAttachment.hashCode, $mrjc(importance.hashCode, $mrjc(draftInfoInJson.hashCode, $mrjc(sensitivity.hashCode, $mrjc(downloadAsEmlUrl.hashCode, $mrjc(hash.hashCode, $mrjc(headers.hashCode, $mrjc(inReplyTo.hashCode, $mrjc(references.hashCode, $mrjc(readingConfirmationAddressee.hashCode, $mrjc(htmlBody.hashCode, $mrjc(rawBody.hashCode, $mrjc(rtl.hashCode, $mrjc(extendInJson.hashCode, $mrjc(safety.hashCode, $mrjc(hasExternals.hashCode, $mrjc(foundedCIDsInJson.hashCode, $mrjc(foundedContentLocationUrlsInJson.hashCode, $mrjc(attachmentsInJson.hashCode, $mrjc(toForSearch.hashCode, $mrjc(fromForSearch.hashCode, $mrjc(ccForSearch.hashCode, $mrjc(bccForSearch.hashCode, $mrjc(attachmentsForSearch.hashCode, $mrjc(customInJson.hashCode, isHtml.hashCode)))))))))))))))))))))))))))))))))))))))))))))))))))));
+                                                                              $mrjc(fromInJson.hashCode, $mrjc(fromToDisplay.hashCode, $mrjc(ccInJson.hashCode, $mrjc(bccInJson.hashCode, $mrjc(senderInJson.hashCode, $mrjc(replyToInJson.hashCode, $mrjc(hasAttachments.hashCode, $mrjc(hasVcardAttachment.hashCode, $mrjc(hasIcalAttachment.hashCode, $mrjc(importance.hashCode, $mrjc(draftInfoInJson.hashCode, $mrjc(sensitivity.hashCode, $mrjc(downloadAsEmlUrl.hashCode, $mrjc(hash.hashCode, $mrjc(headers.hashCode, $mrjc(inReplyTo.hashCode, $mrjc(references.hashCode, $mrjc(readingConfirmationAddressee.hashCode, $mrjc(htmlBody.hashCode, $mrjc(rawBody.hashCode, $mrjc(bodyForSearch.hashCode, $mrjc(rtl.hashCode, $mrjc(extendInJson.hashCode, $mrjc(safety.hashCode, $mrjc(hasExternals.hashCode, $mrjc(foundedCIDsInJson.hashCode, $mrjc(foundedContentLocationUrlsInJson.hashCode, $mrjc(attachmentsInJson.hashCode, $mrjc(toForSearch.hashCode, $mrjc(fromForSearch.hashCode, $mrjc(ccForSearch.hashCode, $mrjc(bccForSearch.hashCode, $mrjc(attachmentsForSearch.hashCode, $mrjc(customInJson.hashCode, isHtml.hashCode))))))))))))))))))))))))))))))))))))))))))))))))))))));
   @override
   bool operator ==(dynamic other) =>
       identical(this, other) ||
@@ -775,6 +787,7 @@ class Message extends DataClass implements Insertable<Message> {
               this.readingConfirmationAddressee &&
           other.htmlBody == this.htmlBody &&
           other.rawBody == this.rawBody &&
+          other.bodyForSearch == this.bodyForSearch &&
           other.rtl == this.rtl &&
           other.extendInJson == this.extendInJson &&
           other.safety == this.safety &&
@@ -832,6 +845,7 @@ class MailCompanion extends UpdateCompanion<Message> {
   final Value<String> readingConfirmationAddressee;
   final Value<String> htmlBody;
   final Value<String> rawBody;
+  final Value<String> bodyForSearch;
   final Value<bool> rtl;
   final Value<String> extendInJson;
   final Value<bool> safety;
@@ -886,6 +900,7 @@ class MailCompanion extends UpdateCompanion<Message> {
     this.readingConfirmationAddressee = const Value.absent(),
     this.htmlBody = const Value.absent(),
     this.rawBody = const Value.absent(),
+    this.bodyForSearch = const Value.absent(),
     this.rtl = const Value.absent(),
     this.extendInJson = const Value.absent(),
     this.safety = const Value.absent(),
@@ -941,6 +956,7 @@ class MailCompanion extends UpdateCompanion<Message> {
     @required String readingConfirmationAddressee,
     this.htmlBody = const Value.absent(),
     this.rawBody = const Value.absent(),
+    this.bodyForSearch = const Value.absent(),
     @required bool rtl,
     @required String extendInJson,
     @required bool safety,
@@ -1037,6 +1053,7 @@ class MailCompanion extends UpdateCompanion<Message> {
       Value<String> readingConfirmationAddressee,
       Value<String> htmlBody,
       Value<String> rawBody,
+      Value<String> bodyForSearch,
       Value<bool> rtl,
       Value<String> extendInJson,
       Value<bool> safety,
@@ -1094,6 +1111,7 @@ class MailCompanion extends UpdateCompanion<Message> {
           readingConfirmationAddressee ?? this.readingConfirmationAddressee,
       htmlBody: htmlBody ?? this.htmlBody,
       rawBody: rawBody ?? this.rawBody,
+      bodyForSearch: bodyForSearch ?? this.bodyForSearch,
       rtl: rtl ?? this.rtl,
       extendInJson: extendInJson ?? this.extendInJson,
       safety: safety ?? this.safety,
@@ -1611,6 +1629,17 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
         defaultValue: Constant(""));
   }
 
+  final VerificationMeta _bodyForSearchMeta =
+      const VerificationMeta('bodyForSearch');
+  GeneratedTextColumn _bodyForSearch;
+  @override
+  GeneratedTextColumn get bodyForSearch =>
+      _bodyForSearch ??= _constructBodyForSearch();
+  GeneratedTextColumn _constructBodyForSearch() {
+    return GeneratedTextColumn('body_for_search', $tableName, true,
+        defaultValue: Constant(""));
+  }
+
   final VerificationMeta _rtlMeta = const VerificationMeta('rtl');
   GeneratedBoolColumn _rtl;
   @override
@@ -1843,6 +1872,7 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
         readingConfirmationAddressee,
         htmlBody,
         rawBody,
+        bodyForSearch,
         rtl,
         extendInJson,
         safety,
@@ -2109,6 +2139,12 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
       context.handle(_rawBodyMeta,
           rawBody.isAcceptableValue(d.rawBody.value, _rawBodyMeta));
     }
+    if (d.bodyForSearch.present) {
+      context.handle(
+          _bodyForSearchMeta,
+          bodyForSearch.isAcceptableValue(
+              d.bodyForSearch.value, _bodyForSearchMeta));
+    }
     if (d.rtl.present) {
       context.handle(_rtlMeta, rtl.isAcceptableValue(d.rtl.value, _rtlMeta));
     } else if (isInserting) {
@@ -2353,6 +2389,10 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     }
     if (d.rawBody.present) {
       map['raw_body'] = Variable<String, StringType>(d.rawBody.value);
+    }
+    if (d.bodyForSearch.present) {
+      map['body_for_search'] =
+          Variable<String, StringType>(d.bodyForSearch.value);
     }
     if (d.rtl.present) {
       map['rtl'] = Variable<bool, BoolType>(d.rtl.value);

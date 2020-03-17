@@ -108,6 +108,8 @@ class Mail extends Table {
 
   TextColumn get rawBody => text().withDefault(Constant(""))();
 
+  TextColumn get bodyForSearch => text().nullable().withDefault(Constant(""))();
+
   BoolColumn get rtl => boolean()();
 
   TextColumn get extendInJson => text()();
@@ -279,7 +281,12 @@ class Mail extends Table {
             raw["PlainRaw"] != null && (raw["PlainRaw"] as String).isNotEmpty
                 ? raw["PlainRaw"] as String
                 : MailUtils.htmlToPlain(
-                    raw["Html"] as String ?? raw["HtmlRaw"] as String),
+                    (raw["HtmlRaw"] ?? raw["Html"] ?? "") as String),
+        bodyForSearch: _htmlToTextSearch((raw["HtmlRaw"] ??
+            ((raw["Html"] as String)?.isNotEmpty == true
+                ? raw["Html"]
+                : raw["PlainRaw"]) ??
+            "") as String),
         rtl: raw["Rtl"] as bool,
         extendInJson: _encode(raw["Extend"]),
         safety: raw["Safety"] as bool,
@@ -298,6 +305,24 @@ class Mail extends Table {
     assert(result.length == messagesChunk.length);
 
     return messagesChunk;
+  }
+
+  static String _htmlToTextSearch(String html) {
+    return html
+        .replaceAll(RegExp("/([^>]{1})<div>/gi"), '\$1 ')
+        .replaceAll(RegExp("/<style[^>]*>[^<]*<\\/style>/gi"), " ")
+        .replaceAll(RegExp("/<br *\\/{0,1}>/gi"), '\n')
+        .replaceAll(RegExp("/<\\/p>/gi"), ' ')
+        .replaceAll(RegExp("/<\\/div>/gi"), ' ')
+        .replaceAll(RegExp("/<a [^>]*href=\"([^\"]*?)\"[^>]*>(.*?)<\\/a>/gi"),
+            '\$2 (\$1)')
+        .replaceAll(RegExp("/<[^>]*>/g"), '')
+        .replaceAll(RegExp("/&nbsp;/g"), ' ')
+        .replaceAll(RegExp("/&lt;/g"), '<')
+        .replaceAll(RegExp("/&gt;/g"), '>')
+        .replaceAll(RegExp("/&amp;/g"), '&')
+        .replaceAll(RegExp("/&quot;/g"), '"')
+        .replaceAll(RegExp("/\s+/g"), ' '); //
   }
 
   static String _encode(dynamic raw) {

@@ -44,9 +44,6 @@ class AppDatabase extends _$AppDatabase {
   MigrationStrategy get migration => MigrationStrategy(
         onCreate: (Migrator m) async {
           await m.createAll();
-          final columns = mail.$columns.map((item) => item.escapedName).join(",");
-          await m.issueCustomQuery(
-              "CREATE VIRTUAL TABLE fts_${mail.actualTableName} USING fts3 (content='${mail.actualTableName}', $columns)");
         },
         onUpgrade: (Migrator m, int from, int to) async {
           final migrationMap = _migrationMap;

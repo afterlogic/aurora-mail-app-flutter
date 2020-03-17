@@ -16,7 +16,7 @@ class MessagesListMethods {
     _mailApi = new MailApi(user: user, account: account);
   }
 
-  Future<Stream<List<Message>>> getMessages(
+  Stream<List<Message>> getMessages(
     Folder folder,
     bool isStarred,
     bool unreadOnly,

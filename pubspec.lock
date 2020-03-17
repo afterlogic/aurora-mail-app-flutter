@@ -211,7 +211,7 @@ packages:
   crypto_model:
     dependency: "direct main"
     description:
-      path: "module/crypto/crypto_model"
+      path: "module\\crypto\\crypto_model"
       relative: true
     source: path
     version: "0.0.1"
@@ -227,28 +227,28 @@ packages:
   crypto_storage:
     dependency: "direct main"
     description:
-      path: "module/crypto/crypto_storage"
+      path: "module\\crypto\\crypto_storage"
       relative: true
     source: path
     version: "0.0.1"
   crypto_storage_impl:
     dependency: "direct main"
     description:
-      path: "module/crypto/crypto_storage_impl"
+      path: "module\\crypto\\crypto_storage_impl"
       relative: true
     source: path
     version: "0.0.1"
   crypto_worker:
     dependency: "direct main"
     description:
-      path: "module/crypto/crypto_worker"
+      path: "module\\crypto\\crypto_worker"
       relative: true
     source: path
     version: "0.0.1"
   crypto_worker_impl:
     dependency: "direct main"
     description:
-      path: "module/crypto/crypto_worker_impl"
+      path: "module\\crypto\\crypto_worker_impl"
       relative: true
     source: path
     version: "0.0.1"
@@ -594,7 +594,7 @@ packages:
   notifications_utils:
     dependency: "direct main"
     description:
-      path: "core/notifications_utils"
+      path: "core\\notifications_utils"
       relative: true
     source: path
     version: "0.0.1"
@@ -865,7 +865,7 @@ packages:
   theme:
     dependency: "direct main"
     description:
-      path: "build_res/private_mail/theme"
+      path: "build_res\\private_mail\\theme"
       relative: true
     source: path
     version: "0.0.1"
@@ -942,7 +942,7 @@ packages:
   webmail_api_client:
     dependency: "direct main"
     description:
-      path: "core/webmail_api_client"
+      path: "core\\webmail_api_client"
       relative: true
     source: path
     version: "0.0.1"
