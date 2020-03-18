@@ -62,6 +62,7 @@ class Message extends DataClass implements Insertable<Message> {
   final String attachmentsForSearch;
   final String customInJson;
   final bool isHtml;
+  final bool hasBody;
   Message(
       {@required this.localId,
       @required this.uid,
@@ -69,54 +70,55 @@ class Message extends DataClass implements Insertable<Message> {
       @required this.userLocalId,
       @required this.uniqueUidInFolder,
       this.parentUid,
-      @required this.messageId,
+      this.messageId,
       @required this.folder,
       @required this.flagsInJson,
       @required this.hasThread,
-      @required this.subject,
-      @required this.size,
-      @required this.textSize,
-      @required this.truncated,
-      @required this.internalTimeStampInUTC,
-      @required this.receivedOrDateTimeStampInUTC,
-      @required this.timeStampInUTC,
-      @required this.toToDisplay,
+      this.subject,
+      this.size,
+      this.textSize,
+      this.truncated,
+      this.internalTimeStampInUTC,
+      this.receivedOrDateTimeStampInUTC,
+      this.timeStampInUTC,
+      this.toToDisplay,
       this.toInJson,
       this.fromInJson,
-      @required this.fromToDisplay,
+      this.fromToDisplay,
       this.ccInJson,
       this.bccInJson,
       this.senderInJson,
       this.replyToInJson,
-      @required this.hasAttachments,
-      @required this.hasVcardAttachment,
-      @required this.hasIcalAttachment,
-      @required this.importance,
+      this.hasAttachments,
+      this.hasVcardAttachment,
+      this.hasIcalAttachment,
+      this.importance,
       this.draftInfoInJson,
-      @required this.sensitivity,
-      @required this.downloadAsEmlUrl,
-      @required this.hash,
-      @required this.headers,
-      @required this.inReplyTo,
-      @required this.references,
-      @required this.readingConfirmationAddressee,
+      this.sensitivity,
+      this.downloadAsEmlUrl,
+      this.hash,
+      this.headers,
+      this.inReplyTo,
+      this.references,
+      this.readingConfirmationAddressee,
       @required this.htmlBody,
       @required this.rawBody,
       this.bodyForSearch,
-      @required this.rtl,
-      @required this.extendInJson,
-      @required this.safety,
-      @required this.hasExternals,
-      @required this.foundedCIDsInJson,
-      @required this.foundedContentLocationUrlsInJson,
+      this.rtl,
+      this.extendInJson,
+      this.safety,
+      this.hasExternals,
+      this.foundedCIDsInJson,
+      this.foundedContentLocationUrlsInJson,
       this.attachmentsInJson,
-      @required this.toForSearch,
-      @required this.fromForSearch,
-      @required this.ccForSearch,
-      @required this.bccForSearch,
-      @required this.attachmentsForSearch,
-      @required this.customInJson,
-      @required this.isHtml});
+      this.toForSearch,
+      this.fromForSearch,
+      this.ccForSearch,
+      this.bccForSearch,
+      this.attachmentsForSearch,
+      this.customInJson,
+      this.isHtml,
+      @required this.hasBody});
   factory Message.fromData(Map<String, dynamic> data, GeneratedDatabase db,
       {String prefix}) {
     final effectivePrefix = prefix ?? '';
@@ -228,6 +230,8 @@ class Message extends DataClass implements Insertable<Message> {
           .mapFromDatabaseResponse(data['${effectivePrefix}custom_in_json']),
       isHtml:
           boolType.mapFromDatabaseResponse(data['${effectivePrefix}is_html']),
+      hasBody:
+          boolType.mapFromDatabaseResponse(data['${effectivePrefix}has_body']),
     );
   }
   factory Message.fromJson(Map<String, dynamic> json,
@@ -293,6 +297,7 @@ class Message extends DataClass implements Insertable<Message> {
           serializer.fromJson<String>(json['attachmentsForSearch']),
       customInJson: serializer.fromJson<String>(json['customInJson']),
       isHtml: serializer.fromJson<bool>(json['isHtml']),
+      hasBody: serializer.fromJson<bool>(json['hasBody']),
     );
   }
   @override
@@ -356,6 +361,7 @@ class Message extends DataClass implements Insertable<Message> {
       'attachmentsForSearch': serializer.toJson<String>(attachmentsForSearch),
       'customInJson': serializer.toJson<String>(customInJson),
       'isHtml': serializer.toJson<bool>(isHtml),
+      'hasBody': serializer.toJson<bool>(hasBody),
     };
   }
 
@@ -516,6 +522,9 @@ class Message extends DataClass implements Insertable<Message> {
           : Value(customInJson),
       isHtml:
           isHtml == null && nullToAbsent ? const Value.absent() : Value(isHtml),
+      hasBody: hasBody == null && nullToAbsent
+          ? const Value.absent()
+          : Value(hasBody),
     );
   }
 
@@ -573,7 +582,8 @@ class Message extends DataClass implements Insertable<Message> {
           String bccForSearch,
           String attachmentsForSearch,
           String customInJson,
-          bool isHtml}) =>
+          bool isHtml,
+          bool hasBody}) =>
       Message(
         localId: localId ?? this.localId,
         uid: uid ?? this.uid,
@@ -633,6 +643,7 @@ class Message extends DataClass implements Insertable<Message> {
         attachmentsForSearch: attachmentsForSearch ?? this.attachmentsForSearch,
         customInJson: customInJson ?? this.customInJson,
         isHtml: isHtml ?? this.isHtml,
+        hasBody: hasBody ?? this.hasBody,
       );
   @override
   String toString() {
@@ -693,7 +704,8 @@ class Message extends DataClass implements Insertable<Message> {
           ..write('bccForSearch: $bccForSearch, ')
           ..write('attachmentsForSearch: $attachmentsForSearch, ')
           ..write('customInJson: $customInJson, ')
-          ..write('isHtml: $isHtml')
+          ..write('isHtml: $isHtml, ')
+          ..write('hasBody: $hasBody')
           ..write(')'))
         .toString();
   }
@@ -741,7 +753,7 @@ class Message extends DataClass implements Insertable<Message> {
                                                                               .hashCode,
                                                                           $mrjc(
                                                                               toInJson.hashCode,
-                                                                              $mrjc(fromInJson.hashCode, $mrjc(fromToDisplay.hashCode, $mrjc(ccInJson.hashCode, $mrjc(bccInJson.hashCode, $mrjc(senderInJson.hashCode, $mrjc(replyToInJson.hashCode, $mrjc(hasAttachments.hashCode, $mrjc(hasVcardAttachment.hashCode, $mrjc(hasIcalAttachment.hashCode, $mrjc(importance.hashCode, $mrjc(draftInfoInJson.hashCode, $mrjc(sensitivity.hashCode, $mrjc(downloadAsEmlUrl.hashCode, $mrjc(hash.hashCode, $mrjc(headers.hashCode, $mrjc(inReplyTo.hashCode, $mrjc(references.hashCode, $mrjc(readingConfirmationAddressee.hashCode, $mrjc(htmlBody.hashCode, $mrjc(rawBody.hashCode, $mrjc(bodyForSearch.hashCode, $mrjc(rtl.hashCode, $mrjc(extendInJson.hashCode, $mrjc(safety.hashCode, $mrjc(hasExternals.hashCode, $mrjc(foundedCIDsInJson.hashCode, $mrjc(foundedContentLocationUrlsInJson.hashCode, $mrjc(attachmentsInJson.hashCode, $mrjc(toForSearch.hashCode, $mrjc(fromForSearch.hashCode, $mrjc(ccForSearch.hashCode, $mrjc(bccForSearch.hashCode, $mrjc(attachmentsForSearch.hashCode, $mrjc(customInJson.hashCode, isHtml.hashCode))))))))))))))))))))))))))))))))))))))))))))))))))))));
+                                                                              $mrjc(fromInJson.hashCode, $mrjc(fromToDisplay.hashCode, $mrjc(ccInJson.hashCode, $mrjc(bccInJson.hashCode, $mrjc(senderInJson.hashCode, $mrjc(replyToInJson.hashCode, $mrjc(hasAttachments.hashCode, $mrjc(hasVcardAttachment.hashCode, $mrjc(hasIcalAttachment.hashCode, $mrjc(importance.hashCode, $mrjc(draftInfoInJson.hashCode, $mrjc(sensitivity.hashCode, $mrjc(downloadAsEmlUrl.hashCode, $mrjc(hash.hashCode, $mrjc(headers.hashCode, $mrjc(inReplyTo.hashCode, $mrjc(references.hashCode, $mrjc(readingConfirmationAddressee.hashCode, $mrjc(htmlBody.hashCode, $mrjc(rawBody.hashCode, $mrjc(bodyForSearch.hashCode, $mrjc(rtl.hashCode, $mrjc(extendInJson.hashCode, $mrjc(safety.hashCode, $mrjc(hasExternals.hashCode, $mrjc(foundedCIDsInJson.hashCode, $mrjc(foundedContentLocationUrlsInJson.hashCode, $mrjc(attachmentsInJson.hashCode, $mrjc(toForSearch.hashCode, $mrjc(fromForSearch.hashCode, $mrjc(ccForSearch.hashCode, $mrjc(bccForSearch.hashCode, $mrjc(attachmentsForSearch.hashCode, $mrjc(customInJson.hashCode, $mrjc(isHtml.hashCode, hasBody.hashCode)))))))))))))))))))))))))))))))))))))))))))))))))))))));
   @override
   bool operator ==(dynamic other) =>
       identical(this, other) ||
@@ -802,7 +814,8 @@ class Message extends DataClass implements Insertable<Message> {
           other.bccForSearch == this.bccForSearch &&
           other.attachmentsForSearch == this.attachmentsForSearch &&
           other.customInJson == this.customInJson &&
-          other.isHtml == this.isHtml);
+          other.isHtml == this.isHtml &&
+          other.hasBody == this.hasBody);
 }
 
 class MailCompanion extends UpdateCompanion<Message> {
@@ -860,6 +873,7 @@ class MailCompanion extends UpdateCompanion<Message> {
   final Value<String> attachmentsForSearch;
   final Value<String> customInJson;
   final Value<bool> isHtml;
+  final Value<bool> hasBody;
   const MailCompanion({
     this.localId = const Value.absent(),
     this.uid = const Value.absent(),
@@ -915,6 +929,7 @@ class MailCompanion extends UpdateCompanion<Message> {
     this.attachmentsForSearch = const Value.absent(),
     this.customInJson = const Value.absent(),
     this.isHtml = const Value.absent(),
+    this.hasBody = const Value.absent(),
   });
   MailCompanion.insert({
     this.localId = const Value.absent(),
@@ -923,96 +938,63 @@ class MailCompanion extends UpdateCompanion<Message> {
     @required int userLocalId,
     @required String uniqueUidInFolder,
     this.parentUid = const Value.absent(),
-    @required String messageId,
+    this.messageId = const Value.absent(),
     @required String folder,
     @required String flagsInJson,
     @required bool hasThread,
-    @required String subject,
-    @required int size,
-    @required int textSize,
-    @required bool truncated,
-    @required int internalTimeStampInUTC,
-    @required int receivedOrDateTimeStampInUTC,
-    @required int timeStampInUTC,
-    @required String toToDisplay,
+    this.subject = const Value.absent(),
+    this.size = const Value.absent(),
+    this.textSize = const Value.absent(),
+    this.truncated = const Value.absent(),
+    this.internalTimeStampInUTC = const Value.absent(),
+    this.receivedOrDateTimeStampInUTC = const Value.absent(),
+    this.timeStampInUTC = const Value.absent(),
+    this.toToDisplay = const Value.absent(),
     this.toInJson = const Value.absent(),
     this.fromInJson = const Value.absent(),
-    @required String fromToDisplay,
+    this.fromToDisplay = const Value.absent(),
     this.ccInJson = const Value.absent(),
     this.bccInJson = const Value.absent(),
     this.senderInJson = const Value.absent(),
     this.replyToInJson = const Value.absent(),
-    @required bool hasAttachments,
-    @required bool hasVcardAttachment,
-    @required bool hasIcalAttachment,
-    @required int importance,
+    this.hasAttachments = const Value.absent(),
+    this.hasVcardAttachment = const Value.absent(),
+    this.hasIcalAttachment = const Value.absent(),
+    this.importance = const Value.absent(),
     this.draftInfoInJson = const Value.absent(),
-    @required int sensitivity,
-    @required String downloadAsEmlUrl,
-    @required String hash,
-    @required String headers,
-    @required String inReplyTo,
-    @required String references,
-    @required String readingConfirmationAddressee,
+    this.sensitivity = const Value.absent(),
+    this.downloadAsEmlUrl = const Value.absent(),
+    this.hash = const Value.absent(),
+    this.headers = const Value.absent(),
+    this.inReplyTo = const Value.absent(),
+    this.references = const Value.absent(),
+    this.readingConfirmationAddressee = const Value.absent(),
     this.htmlBody = const Value.absent(),
     this.rawBody = const Value.absent(),
     this.bodyForSearch = const Value.absent(),
-    @required bool rtl,
-    @required String extendInJson,
-    @required bool safety,
-    @required bool hasExternals,
-    @required String foundedCIDsInJson,
-    @required String foundedContentLocationUrlsInJson,
+    this.rtl = const Value.absent(),
+    this.extendInJson = const Value.absent(),
+    this.safety = const Value.absent(),
+    this.hasExternals = const Value.absent(),
+    this.foundedCIDsInJson = const Value.absent(),
+    this.foundedContentLocationUrlsInJson = const Value.absent(),
     this.attachmentsInJson = const Value.absent(),
-    @required String toForSearch,
-    @required String fromForSearch,
-    @required String ccForSearch,
-    @required String bccForSearch,
-    @required String attachmentsForSearch,
-    @required String customInJson,
-    @required bool isHtml,
+    this.toForSearch = const Value.absent(),
+    this.fromForSearch = const Value.absent(),
+    this.ccForSearch = const Value.absent(),
+    this.bccForSearch = const Value.absent(),
+    this.attachmentsForSearch = const Value.absent(),
+    this.customInJson = const Value.absent(),
+    this.isHtml = const Value.absent(),
+    @required bool hasBody,
   })  : uid = Value(uid),
         accountEntityId = Value(accountEntityId),
         userLocalId = Value(userLocalId),
         uniqueUidInFolder = Value(uniqueUidInFolder),
-        messageId = Value(messageId),
         folder = Value(folder),
         flagsInJson = Value(flagsInJson),
         hasThread = Value(hasThread),
-        subject = Value(subject),
-        size = Value(size),
-        textSize = Value(textSize),
-        truncated = Value(truncated),
-        internalTimeStampInUTC = Value(internalTimeStampInUTC),
-        receivedOrDateTimeStampInUTC = Value(receivedOrDateTimeStampInUTC),
-        timeStampInUTC = Value(timeStampInUTC),
-        toToDisplay = Value(toToDisplay),
-        fromToDisplay = Value(fromToDisplay),
-        hasAttachments = Value(hasAttachments),
-        hasVcardAttachment = Value(hasVcardAttachment),
-        hasIcalAttachment = Value(hasIcalAttachment),
-        importance = Value(importance),
-        sensitivity = Value(sensitivity),
-        downloadAsEmlUrl = Value(downloadAsEmlUrl),
-        hash = Value(hash),
-        headers = Value(headers),
-        inReplyTo = Value(inReplyTo),
-        references = Value(references),
-        readingConfirmationAddressee = Value(readingConfirmationAddressee),
-        rtl = Value(rtl),
-        extendInJson = Value(extendInJson),
-        safety = Value(safety),
-        hasExternals = Value(hasExternals),
-        foundedCIDsInJson = Value(foundedCIDsInJson),
-        foundedContentLocationUrlsInJson =
-            Value(foundedContentLocationUrlsInJson),
-        toForSearch = Value(toForSearch),
-        fromForSearch = Value(fromForSearch),
-        ccForSearch = Value(ccForSearch),
-        bccForSearch = Value(bccForSearch),
-        attachmentsForSearch = Value(attachmentsForSearch),
-        customInJson = Value(customInJson),
-        isHtml = Value(isHtml);
+        hasBody = Value(hasBody);
   MailCompanion copyWith(
       {Value<int> localId,
       Value<int> uid,
@@ -1067,7 +1049,8 @@ class MailCompanion extends UpdateCompanion<Message> {
       Value<String> bccForSearch,
       Value<String> attachmentsForSearch,
       Value<String> customInJson,
-      Value<bool> isHtml}) {
+      Value<bool> isHtml,
+      Value<bool> hasBody}) {
     return MailCompanion(
       localId: localId ?? this.localId,
       uid: uid ?? this.uid,
@@ -1127,6 +1110,7 @@ class MailCompanion extends UpdateCompanion<Message> {
       attachmentsForSearch: attachmentsForSearch ?? this.attachmentsForSearch,
       customInJson: customInJson ?? this.customInJson,
       isHtml: isHtml ?? this.isHtml,
+      hasBody: hasBody ?? this.hasBody,
     );
   }
 }
@@ -1215,7 +1199,7 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     return GeneratedTextColumn(
       'message_id',
       $tableName,
-      false,
+      true,
     );
   }
 
@@ -1265,7 +1249,7 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     return GeneratedTextColumn(
       'subject',
       $tableName,
-      false,
+      true,
     );
   }
 
@@ -1277,7 +1261,7 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     return GeneratedIntColumn(
       'size',
       $tableName,
-      false,
+      true,
     );
   }
 
@@ -1289,7 +1273,7 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     return GeneratedIntColumn(
       'text_size',
       $tableName,
-      false,
+      true,
     );
   }
 
@@ -1301,7 +1285,7 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     return GeneratedBoolColumn(
       'truncated',
       $tableName,
-      false,
+      true,
     );
   }
 
@@ -1315,7 +1299,7 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     return GeneratedIntColumn(
       'internal_time_stamp_in_u_t_c',
       $tableName,
-      false,
+      true,
     );
   }
 
@@ -1330,7 +1314,7 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     return GeneratedIntColumn(
       'received_or_date_time_stamp_in_u_t_c',
       $tableName,
-      false,
+      true,
     );
   }
 
@@ -1344,7 +1328,7 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     return GeneratedIntColumn(
       'time_stamp_in_u_t_c',
       $tableName,
-      false,
+      true,
     );
   }
 
@@ -1358,7 +1342,7 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     return GeneratedTextColumn(
       'to_to_display',
       $tableName,
-      false,
+      true,
     );
   }
 
@@ -1396,7 +1380,7 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     return GeneratedTextColumn(
       'from_to_display',
       $tableName,
-      false,
+      true,
     );
   }
 
@@ -1462,7 +1446,7 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     return GeneratedBoolColumn(
       'has_attachments',
       $tableName,
-      false,
+      true,
     );
   }
 
@@ -1476,7 +1460,7 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     return GeneratedBoolColumn(
       'has_vcard_attachment',
       $tableName,
-      false,
+      true,
     );
   }
 
@@ -1490,7 +1474,7 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     return GeneratedBoolColumn(
       'has_ical_attachment',
       $tableName,
-      false,
+      true,
     );
   }
 
@@ -1502,7 +1486,7 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     return GeneratedIntColumn(
       'importance',
       $tableName,
-      false,
+      true,
     );
   }
 
@@ -1530,7 +1514,7 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     return GeneratedIntColumn(
       'sensitivity',
       $tableName,
-      false,
+      true,
     );
   }
 
@@ -1544,7 +1528,7 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     return GeneratedTextColumn(
       'download_as_eml_url',
       $tableName,
-      false,
+      true,
     );
   }
 
@@ -1556,7 +1540,7 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     return GeneratedTextColumn(
       'hash',
       $tableName,
-      false,
+      true,
     );
   }
 
@@ -1568,7 +1552,7 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     return GeneratedTextColumn(
       'headers',
       $tableName,
-      false,
+      true,
     );
   }
 
@@ -1580,7 +1564,7 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     return GeneratedTextColumn(
       'in_reply_to',
       $tableName,
-      false,
+      true,
     );
   }
 
@@ -1592,7 +1576,7 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     return GeneratedTextColumn(
       'message_references',
       $tableName,
-      false,
+      true,
     );
   }
 
@@ -1607,7 +1591,7 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     return GeneratedTextColumn(
       'reading_confirmation_addressee',
       $tableName,
-      false,
+      true,
     );
   }
 
@@ -1648,7 +1632,7 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     return GeneratedBoolColumn(
       'rtl',
       $tableName,
-      false,
+      true,
     );
   }
 
@@ -1662,7 +1646,7 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     return GeneratedTextColumn(
       'extend_in_json',
       $tableName,
-      false,
+      true,
     );
   }
 
@@ -1674,7 +1658,7 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     return GeneratedBoolColumn(
       'safety',
       $tableName,
-      false,
+      true,
     );
   }
 
@@ -1688,7 +1672,7 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     return GeneratedBoolColumn(
       'has_externals',
       $tableName,
-      false,
+      true,
     );
   }
 
@@ -1702,7 +1686,7 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     return GeneratedTextColumn(
       'founded_c_i_ds_in_json',
       $tableName,
-      false,
+      true,
     );
   }
 
@@ -1717,7 +1701,7 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     return GeneratedTextColumn(
       'founded_content_location_urls_in_json',
       $tableName,
-      false,
+      true,
     );
   }
 
@@ -1745,7 +1729,7 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     return GeneratedTextColumn(
       'to_for_search',
       $tableName,
-      false,
+      true,
     );
   }
 
@@ -1759,7 +1743,7 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     return GeneratedTextColumn(
       'from_for_search',
       $tableName,
-      false,
+      true,
     );
   }
 
@@ -1773,7 +1757,7 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     return GeneratedTextColumn(
       'cc_for_search',
       $tableName,
-      false,
+      true,
     );
   }
 
@@ -1787,7 +1771,7 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     return GeneratedTextColumn(
       'bcc_for_search',
       $tableName,
-      false,
+      true,
     );
   }
 
@@ -1801,7 +1785,7 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     return GeneratedTextColumn(
       'attachments_for_search',
       $tableName,
-      false,
+      true,
     );
   }
 
@@ -1815,7 +1799,7 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     return GeneratedTextColumn(
       'custom_in_json',
       $tableName,
-      false,
+      true,
     );
   }
 
@@ -1826,6 +1810,18 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
   GeneratedBoolColumn _constructIsHtml() {
     return GeneratedBoolColumn(
       'is_html',
+      $tableName,
+      true,
+    );
+  }
+
+  final VerificationMeta _hasBodyMeta = const VerificationMeta('hasBody');
+  GeneratedBoolColumn _hasBody;
+  @override
+  GeneratedBoolColumn get hasBody => _hasBody ??= _constructHasBody();
+  GeneratedBoolColumn _constructHasBody() {
+    return GeneratedBoolColumn(
+      'has_body',
       $tableName,
       false,
     );
@@ -1886,7 +1882,8 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
         bccForSearch,
         attachmentsForSearch,
         customInJson,
-        isHtml
+        isHtml,
+        hasBody
       ];
   @override
   $MailTable get asDslTable => this;
@@ -1936,8 +1933,6 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     if (d.messageId.present) {
       context.handle(_messageIdMeta,
           messageId.isAcceptableValue(d.messageId.value, _messageIdMeta));
-    } else if (isInserting) {
-      context.missing(_messageIdMeta);
     }
     if (d.folder.present) {
       context.handle(
@@ -1960,34 +1955,24 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     if (d.subject.present) {
       context.handle(_subjectMeta,
           subject.isAcceptableValue(d.subject.value, _subjectMeta));
-    } else if (isInserting) {
-      context.missing(_subjectMeta);
     }
     if (d.size.present) {
       context.handle(
           _sizeMeta, size.isAcceptableValue(d.size.value, _sizeMeta));
-    } else if (isInserting) {
-      context.missing(_sizeMeta);
     }
     if (d.textSize.present) {
       context.handle(_textSizeMeta,
           textSize.isAcceptableValue(d.textSize.value, _textSizeMeta));
-    } else if (isInserting) {
-      context.missing(_textSizeMeta);
     }
     if (d.truncated.present) {
       context.handle(_truncatedMeta,
           truncated.isAcceptableValue(d.truncated.value, _truncatedMeta));
-    } else if (isInserting) {
-      context.missing(_truncatedMeta);
     }
     if (d.internalTimeStampInUTC.present) {
       context.handle(
           _internalTimeStampInUTCMeta,
           internalTimeStampInUTC.isAcceptableValue(
               d.internalTimeStampInUTC.value, _internalTimeStampInUTCMeta));
-    } else if (isInserting) {
-      context.missing(_internalTimeStampInUTCMeta);
     }
     if (d.receivedOrDateTimeStampInUTC.present) {
       context.handle(
@@ -1995,22 +1980,16 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
           receivedOrDateTimeStampInUTC.isAcceptableValue(
               d.receivedOrDateTimeStampInUTC.value,
               _receivedOrDateTimeStampInUTCMeta));
-    } else if (isInserting) {
-      context.missing(_receivedOrDateTimeStampInUTCMeta);
     }
     if (d.timeStampInUTC.present) {
       context.handle(
           _timeStampInUTCMeta,
           timeStampInUTC.isAcceptableValue(
               d.timeStampInUTC.value, _timeStampInUTCMeta));
-    } else if (isInserting) {
-      context.missing(_timeStampInUTCMeta);
     }
     if (d.toToDisplay.present) {
       context.handle(_toToDisplayMeta,
           toToDisplay.isAcceptableValue(d.toToDisplay.value, _toToDisplayMeta));
-    } else if (isInserting) {
-      context.missing(_toToDisplayMeta);
     }
     if (d.toInJson.present) {
       context.handle(_toInJsonMeta,
@@ -2025,8 +2004,6 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
           _fromToDisplayMeta,
           fromToDisplay.isAcceptableValue(
               d.fromToDisplay.value, _fromToDisplayMeta));
-    } else if (isInserting) {
-      context.missing(_fromToDisplayMeta);
     }
     if (d.ccInJson.present) {
       context.handle(_ccInJsonMeta,
@@ -2053,30 +2030,22 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
           _hasAttachmentsMeta,
           hasAttachments.isAcceptableValue(
               d.hasAttachments.value, _hasAttachmentsMeta));
-    } else if (isInserting) {
-      context.missing(_hasAttachmentsMeta);
     }
     if (d.hasVcardAttachment.present) {
       context.handle(
           _hasVcardAttachmentMeta,
           hasVcardAttachment.isAcceptableValue(
               d.hasVcardAttachment.value, _hasVcardAttachmentMeta));
-    } else if (isInserting) {
-      context.missing(_hasVcardAttachmentMeta);
     }
     if (d.hasIcalAttachment.present) {
       context.handle(
           _hasIcalAttachmentMeta,
           hasIcalAttachment.isAcceptableValue(
               d.hasIcalAttachment.value, _hasIcalAttachmentMeta));
-    } else if (isInserting) {
-      context.missing(_hasIcalAttachmentMeta);
     }
     if (d.importance.present) {
       context.handle(_importanceMeta,
           importance.isAcceptableValue(d.importance.value, _importanceMeta));
-    } else if (isInserting) {
-      context.missing(_importanceMeta);
     }
     if (d.draftInfoInJson.present) {
       context.handle(
@@ -2087,40 +2056,28 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     if (d.sensitivity.present) {
       context.handle(_sensitivityMeta,
           sensitivity.isAcceptableValue(d.sensitivity.value, _sensitivityMeta));
-    } else if (isInserting) {
-      context.missing(_sensitivityMeta);
     }
     if (d.downloadAsEmlUrl.present) {
       context.handle(
           _downloadAsEmlUrlMeta,
           downloadAsEmlUrl.isAcceptableValue(
               d.downloadAsEmlUrl.value, _downloadAsEmlUrlMeta));
-    } else if (isInserting) {
-      context.missing(_downloadAsEmlUrlMeta);
     }
     if (d.hash.present) {
       context.handle(
           _hashMeta, hash.isAcceptableValue(d.hash.value, _hashMeta));
-    } else if (isInserting) {
-      context.missing(_hashMeta);
     }
     if (d.headers.present) {
       context.handle(_headersMeta,
           headers.isAcceptableValue(d.headers.value, _headersMeta));
-    } else if (isInserting) {
-      context.missing(_headersMeta);
     }
     if (d.inReplyTo.present) {
       context.handle(_inReplyToMeta,
           inReplyTo.isAcceptableValue(d.inReplyTo.value, _inReplyToMeta));
-    } else if (isInserting) {
-      context.missing(_inReplyToMeta);
     }
     if (d.references.present) {
       context.handle(_referencesMeta,
           references.isAcceptableValue(d.references.value, _referencesMeta));
-    } else if (isInserting) {
-      context.missing(_referencesMeta);
     }
     if (d.readingConfirmationAddressee.present) {
       context.handle(
@@ -2128,8 +2085,6 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
           readingConfirmationAddressee.isAcceptableValue(
               d.readingConfirmationAddressee.value,
               _readingConfirmationAddresseeMeta));
-    } else if (isInserting) {
-      context.missing(_readingConfirmationAddresseeMeta);
     }
     if (d.htmlBody.present) {
       context.handle(_htmlBodyMeta,
@@ -2147,38 +2102,28 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     }
     if (d.rtl.present) {
       context.handle(_rtlMeta, rtl.isAcceptableValue(d.rtl.value, _rtlMeta));
-    } else if (isInserting) {
-      context.missing(_rtlMeta);
     }
     if (d.extendInJson.present) {
       context.handle(
           _extendInJsonMeta,
           extendInJson.isAcceptableValue(
               d.extendInJson.value, _extendInJsonMeta));
-    } else if (isInserting) {
-      context.missing(_extendInJsonMeta);
     }
     if (d.safety.present) {
       context.handle(
           _safetyMeta, safety.isAcceptableValue(d.safety.value, _safetyMeta));
-    } else if (isInserting) {
-      context.missing(_safetyMeta);
     }
     if (d.hasExternals.present) {
       context.handle(
           _hasExternalsMeta,
           hasExternals.isAcceptableValue(
               d.hasExternals.value, _hasExternalsMeta));
-    } else if (isInserting) {
-      context.missing(_hasExternalsMeta);
     }
     if (d.foundedCIDsInJson.present) {
       context.handle(
           _foundedCIDsInJsonMeta,
           foundedCIDsInJson.isAcceptableValue(
               d.foundedCIDsInJson.value, _foundedCIDsInJsonMeta));
-    } else if (isInserting) {
-      context.missing(_foundedCIDsInJsonMeta);
     }
     if (d.foundedContentLocationUrlsInJson.present) {
       context.handle(
@@ -2186,8 +2131,6 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
           foundedContentLocationUrlsInJson.isAcceptableValue(
               d.foundedContentLocationUrlsInJson.value,
               _foundedContentLocationUrlsInJsonMeta));
-    } else if (isInserting) {
-      context.missing(_foundedContentLocationUrlsInJsonMeta);
     }
     if (d.attachmentsInJson.present) {
       context.handle(
@@ -2198,52 +2141,44 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     if (d.toForSearch.present) {
       context.handle(_toForSearchMeta,
           toForSearch.isAcceptableValue(d.toForSearch.value, _toForSearchMeta));
-    } else if (isInserting) {
-      context.missing(_toForSearchMeta);
     }
     if (d.fromForSearch.present) {
       context.handle(
           _fromForSearchMeta,
           fromForSearch.isAcceptableValue(
               d.fromForSearch.value, _fromForSearchMeta));
-    } else if (isInserting) {
-      context.missing(_fromForSearchMeta);
     }
     if (d.ccForSearch.present) {
       context.handle(_ccForSearchMeta,
           ccForSearch.isAcceptableValue(d.ccForSearch.value, _ccForSearchMeta));
-    } else if (isInserting) {
-      context.missing(_ccForSearchMeta);
     }
     if (d.bccForSearch.present) {
       context.handle(
           _bccForSearchMeta,
           bccForSearch.isAcceptableValue(
               d.bccForSearch.value, _bccForSearchMeta));
-    } else if (isInserting) {
-      context.missing(_bccForSearchMeta);
     }
     if (d.attachmentsForSearch.present) {
       context.handle(
           _attachmentsForSearchMeta,
           attachmentsForSearch.isAcceptableValue(
               d.attachmentsForSearch.value, _attachmentsForSearchMeta));
-    } else if (isInserting) {
-      context.missing(_attachmentsForSearchMeta);
     }
     if (d.customInJson.present) {
       context.handle(
           _customInJsonMeta,
           customInJson.isAcceptableValue(
               d.customInJson.value, _customInJsonMeta));
-    } else if (isInserting) {
-      context.missing(_customInJsonMeta);
     }
     if (d.isHtml.present) {
       context.handle(
           _isHtmlMeta, isHtml.isAcceptableValue(d.isHtml.value, _isHtmlMeta));
+    }
+    if (d.hasBody.present) {
+      context.handle(_hasBodyMeta,
+          hasBody.isAcceptableValue(d.hasBody.value, _hasBodyMeta));
     } else if (isInserting) {
-      context.missing(_isHtmlMeta);
+      context.missing(_hasBodyMeta);
     }
     return context;
   }
@@ -2444,6 +2379,9 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     }
     if (d.isHtml.present) {
       map['is_html'] = Variable<bool, BoolType>(d.isHtml.value);
+    }
+    if (d.hasBody.present) {
+      map['has_body'] = Variable<bool, BoolType>(d.hasBody.value);
     }
     return map;
   }

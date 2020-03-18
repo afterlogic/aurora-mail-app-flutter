@@ -115,6 +115,7 @@ class _ListPartWidgetState extends State<_ListPartWidget> {
         if (widget.id == 0) {
           return widget.empty(context);
         } else if (widget.isEnd &&
+            MailMethods.currentFolderUpdate != null &&
             widget.folder == MailMethods.currentFolderUpdate) {
           return widget.progress;
         } else {

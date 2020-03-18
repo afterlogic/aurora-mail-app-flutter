@@ -25,7 +25,6 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
 //        .get();
 //  }
 
-
   Stream<List<Message>> getMessages(
     String folder,
     int userLocalId,
@@ -34,7 +33,9 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
     int accountEntityId,
     bool starredOnly,
     bool unreadOnly,
-  )  {
+    int limit,
+    int offset,
+  ) {
     List<Variable> params = [];
     final fields = <GeneratedColumn>{};
     fields.add(mail.uid);
@@ -48,7 +49,8 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
     fields.add(mail.timeStampInUTC);
     fields.add(mail.folder);
 
-    var query = "SELECT ${fields.map((item) => item.escapedName).join(",")} FROM ";
+    var query =
+        "SELECT ${fields.map((item) => item.escapedName).join(",")} FROM ";
 
     query += "${mail.actualTableName} WHERE ";
     query += "${mail.accountEntityId.escapedName} = ? ";
