@@ -95,7 +95,7 @@ class MailMethods {
 
     final removedFolders = calcResult.deletedFolders;
     final addedFolders = calcResult.addedFolders;
-
+    final updatedFolders = calcResult.updatedFolders;
     final dbFutures = new List<Future>();
 
     if (removedFolders.isNotEmpty) {
@@ -107,6 +107,10 @@ class MailMethods {
       dbFutures.add(
           _mailDao.deleteMessagesFromRemovedFolders(removedFoldersRawNames));
     }
+    if (updatedFolders.isNotEmpty) {
+      dbFutures.add(_foldersDao.updateFolders(updatedFolders));
+    }
+
     if (addedFolders.isNotEmpty) {
       dbFutures.add(_foldersDao.addFolders(addedFolders));
     }

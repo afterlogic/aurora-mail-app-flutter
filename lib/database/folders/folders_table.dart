@@ -152,10 +152,20 @@ class Folders extends Table {
             orElse: () => null) ==
         null);
 
-    final removedFolders = oldFolders.where((i) =>
-        newFolders.firstWhere((j) => j.fullNameRaw == i.fullNameRaw,
-            orElse: () => null) ==
-        null);
+    final removedFolders = <LocalFolder>[];
+    final updatedFolders = <LocalFolder>[];
+    for (var oldFolder in oldFolders) {
+      final newFolder = newFolders.firstWhere(
+          (j) => j.fullNameRaw == oldFolder.fullNameRaw,
+          orElse: () => null);
+      if (newFolder == null) {
+        removedFolders.add(oldFolder);
+      } else {
+        updatedFolders.add(
+          newFolder.copyWith(guid: oldFolder.guid),
+        );
+      }
+    }
 
     print("""
     Folders diff calcultaion finished:
@@ -166,6 +176,7 @@ class Folders extends Table {
     return new FoldersDiffCalcResult(
       addedFolders: addedFolders.toList(),
       deletedFolders: removedFolders.toList(),
+      updatedFolders: updatedFolders,
     );
   }
 
@@ -265,9 +276,12 @@ class Folders extends Table {
 class FoldersDiffCalcResult {
   final List<LocalFolder> addedFolders;
   final List<LocalFolder> deletedFolders;
+  final List<LocalFolder> updatedFolders;
 
   FoldersDiffCalcResult(
-      {@required this.addedFolders, @required this.deletedFolders})
+      {@required this.updatedFolders,
+      @required this.addedFolders,
+      @required this.deletedFolders})
       : assert(addedFolders != null, deletedFolders != null);
 }
 

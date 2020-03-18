@@ -188,6 +188,7 @@ class _MainDrawerState extends BState<MainDrawer> {
     MessagesFilter filter, [
     String parentGuid,
   ]) {
+    mailFolders.sort((a, b) => a.order - b.order);
     return mailFolders
         .where((item) => item.parentGuid == parentGuid)
         .map((mailFolder) {
