@@ -42,8 +42,8 @@ class MessagesListBloc extends Bloc<MessagesListEvent, MessagesListState> {
       final type = Folder.getFolderTypeFromNumber(event.currentFolder.type);
       final isSent = type == FolderType.sent || type == FolderType.drafts;
 
-      final stream = (int page) async* {
-        yield* await _methods.getMessages(
+      final stream = (int page)=>
+        _methods.getMessages(
           event.currentFolder,
           event.filter == MessagesFilter.starred,
           event.filter == MessagesFilter.unread,
@@ -53,7 +53,6 @@ class MessagesListBloc extends Bloc<MessagesListEvent, MessagesListState> {
           account,
           page,
         );
-      };
 
       yield SubscribedToMessages(
         stream,

@@ -25,16 +25,8 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
 //        .get();
 //  }
 
-  Future _updateVirtualTable() async {
-    final columns = mail.$columns.map((item) => item.escapedName).join(",");
-    final delete = "DELETE FROM fts_${mail.actualTableName}";
-    await customInsert(delete);
-    var insert =
-        "INSERT INTO fts_${mail.actualTableName} ($columns) SELECT $columns FROM ${mail.actualTableName}";
-    await customInsert(insert);
-  }
 
-  Future<Stream<List<Message>>> getMessages(
+  Stream<List<Message>> getMessages(
     String folder,
     int userLocalId,
     String searchTerm,
@@ -42,9 +34,7 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
     int accountEntityId,
     bool starredOnly,
     bool unreadOnly,
-    int limit,
-    int offset,
-  ) async {
+  )  {
     List<Variable> params = [];
     final fields = <GeneratedColumn>{};
     fields.add(mail.uid);
@@ -57,17 +47,8 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
     fields.add(mail.hasAttachments);
     fields.add(mail.timeStampInUTC);
     fields.add(mail.folder);
-    fields.add(mail.hasBody);
 
-    var query =
-        "SELECT ${fields.map((item) => item.escapedName).join(",")} FROM ";
-    if (searchPattern != SearchPattern.Default ||
-        searchTerm?.isNotEmpty == true) {
-      query += "fts_";
-      if (offset == 0) {
-        await _updateVirtualTable();
-      }
-    }
+    var query = "SELECT ${fields.map((item) => item.escapedName).join(",")} FROM ";
 
     query += "${mail.actualTableName} WHERE ";
     query += "${mail.accountEntityId.escapedName} = ? ";
@@ -87,7 +68,7 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
 
       if (searchTerm != null && searchTerm.isNotEmpty) {
         query +=
-            "AND (${mail.subject.escapedName} LIKE ? OR ${mail.toForSearch.escapedName} LIKE ? OR ${mail.fromForSearch.escapedName} LIKE ? OR ${mail.ccForSearch.escapedName} LIKE ? OR ${mail.bccForSearch.escapedName} LIKE ? OR ${mail.rawBody.escapedName} LIKE ? OR ${mail.attachmentsForSearch.escapedName} LIKE ?) ";
+            "AND (${mail.subject.escapedName} LIKE ? OR ${mail.toForSearch.escapedName} LIKE ? OR ${mail.fromForSearch.escapedName} LIKE ? OR ${mail.ccForSearch.escapedName} LIKE ? OR ${mail.bccForSearch.escapedName} LIKE ? OR ${mail.bodyForSearch.escapedName} LIKE ? OR ${mail.attachmentsForSearch.escapedName} LIKE ?) ";
         params.add(Variable.withString("%$searchTerm%"));
         params.add(Variable.withString("%$searchTerm%"));
         params.add(Variable.withString("%$searchTerm%"));

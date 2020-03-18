@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/models/message_info.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/mail_utils.dart';
 import 'package:flutter/widgets.dart' as widgets;
@@ -106,6 +107,8 @@ class Mail extends Table {
   TextColumn get htmlBody => text().withDefault(Constant(""))();
 
   TextColumn get rawBody => text().withDefault(Constant(""))();
+
+  TextColumn get bodyForSearch => text().nullable().withDefault(Constant(""))();
 
   BoolColumn get rtl => boolean().nullable()();
 
@@ -277,7 +280,12 @@ class Mail extends Table {
             raw["PlainRaw"] != null && (raw["PlainRaw"] as String).isNotEmpty
                 ? raw["PlainRaw"] as String
                 : MailUtils.htmlToPlain(
-                    raw["Html"] as String ?? raw["HtmlRaw"] as String),
+                    (raw["HtmlRaw"] ?? raw["Html"] ?? "") as String),
+        bodyForSearch: _htmlToTextSearch(
+            ((((raw["HtmlRaw"] ?? raw["Html"]) as String)?.isNotEmpty == true
+                    ? raw["Html"]
+                    : raw["PlainRaw"]) ??
+                "") as String),
         rtl: raw["Rtl"] as bool,
         extendInJson: _encode(raw["Extend"]),
         safety: raw["Safety"] as bool,
@@ -297,6 +305,24 @@ class Mail extends Table {
     assert(result.length == messagesChunk.length);
 
     return messagesChunk;
+  }
+
+  static String _htmlToTextSearch(String html) {
+    return html
+        .replaceAllMapped(RegExp("(([^>]{1})<div>)"), (math) => '${math.group(2)} ')
+        .replaceAllMapped(RegExp('(<a [^>]*href="([^"]*?)"[^>]*>(.*?)<\/a>)'),
+            (math) => '${math.group(1)} (${math.group(2)})')
+        .replaceAll(RegExp("(<style[^>]*>[^<]*<\/style>)"), ' ')
+        .replaceAll(RegExp("<br *\/{0,1}>"), '\n')
+        .replaceAll(RegExp("<[^>]*>"), '')
+        .replaceAll("<\/p>", ' ')
+        .replaceAll("<\/div>", ' ')
+        .replaceAll("&nbsp;", ' ')
+        .replaceAll("&lt;", '<')
+        .replaceAll("&gt;", '>')
+        .replaceAll("&amp;", '&')
+        .replaceAll("&quot;", '"')
+        .replaceAll("\s+", ' ');
   }
 
   static String _encode(dynamic raw) {
