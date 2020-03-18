@@ -282,11 +282,11 @@ class Mail extends Table {
                 ? raw["PlainRaw"] as String
                 : MailUtils.htmlToPlain(
                     (raw["HtmlRaw"] ?? raw["Html"] ?? "") as String),
-        bodyForSearch: _htmlToTextSearch((raw["HtmlRaw"] ??
-            ((raw["Html"] as String)?.isNotEmpty == true
-                ? raw["Html"]
-                : raw["PlainRaw"]) ??
-            "") as String),
+        bodyForSearch: _htmlToTextSearch(
+            ((((raw["HtmlRaw"] ?? raw["Html"]) as String)?.isNotEmpty == true
+                    ? raw["Html"]
+                    : raw["PlainRaw"]) ??
+                "") as String),
         rtl: raw["Rtl"] as bool,
         extendInJson: _encode(raw["Extend"]),
         safety: raw["Safety"] as bool,
@@ -309,20 +309,20 @@ class Mail extends Table {
 
   static String _htmlToTextSearch(String html) {
     return html
-        .replaceAll(RegExp("/([^>]{1})<div>/gi"), '\$1 ')
-        .replaceAll(RegExp("/<style[^>]*>[^<]*<\\/style>/gi"), " ")
-        .replaceAll(RegExp("/<br *\\/{0,1}>/gi"), '\n')
-        .replaceAll(RegExp("/<\\/p>/gi"), ' ')
-        .replaceAll(RegExp("/<\\/div>/gi"), ' ')
-        .replaceAll(RegExp("/<a [^>]*href=\"([^\"]*?)\"[^>]*>(.*?)<\\/a>/gi"),
-            '\$2 (\$1)')
-        .replaceAll(RegExp("/<[^>]*>/g"), '')
-        .replaceAll(RegExp("/&nbsp;/g"), ' ')
-        .replaceAll(RegExp("/&lt;/g"), '<')
-        .replaceAll(RegExp("/&gt;/g"), '>')
-        .replaceAll(RegExp("/&amp;/g"), '&')
-        .replaceAll(RegExp("/&quot;/g"), '"')
-        .replaceAll(RegExp("/\s+/g"), ' '); //
+        .replaceAllMapped(RegExp("(([^>]{1})<div>)"), (math) => '${math.group(2)} ')
+        .replaceAllMapped(RegExp('(<a [^>]*href="([^"]*?)"[^>]*>(.*?)<\/a>)'),
+            (math) => '${math.group(1)} (${math.group(2)})')
+        .replaceAll(RegExp("(<style[^>]*>[^<]*<\/style>)"), ' ')
+        .replaceAll(RegExp("<br *\/{0,1}>"), '\n')
+        .replaceAll(RegExp("<[^>]*>"), '')
+        .replaceAll("<\/p>", ' ')
+        .replaceAll("<\/div>", ' ')
+        .replaceAll("&nbsp;", ' ')
+        .replaceAll("&lt;", '<')
+        .replaceAll("&gt;", '>')
+        .replaceAll("&amp;", '&')
+        .replaceAll("&quot;", '"')
+        .replaceAll("\s+", ' ');
   }
 
   static String _encode(dynamic raw) {
