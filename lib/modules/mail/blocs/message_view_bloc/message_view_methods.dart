@@ -1,6 +1,8 @@
 import 'dart:io';
 
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/database/folders/folders_dao.dart';
+import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:aurora_mail/modules/mail/repository/mail_api.dart';
 import 'package:crypto_worker/crypto_worker.dart';
@@ -11,6 +13,7 @@ class MessageViewMethods {
   MailApi _mailApi;
   PgpWorker pgpWorker;
   Account account;
+  final _foldersDao = FoldersDao(DBInstances.appDB);
 
   MessageViewMethods({
     @required User user,
@@ -52,5 +55,10 @@ class MessageViewMethods {
     } else {
       return encryptDecrypt.verifySign(body);
     }
+  }
+
+  Future<FolderType> getFolderType(String folder) async {
+    return Folder.getFolderTypeFromNumber(
+        (await _foldersDao.getByName(folder)).type);
   }
 }

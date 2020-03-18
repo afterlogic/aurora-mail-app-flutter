@@ -74,5 +74,36 @@ class MessagesListMethods {
     }
   }
 
+  Future moveMessages(List<Message> messages, FolderType toFolder) async {
+    final splitToFolder = <String, List<int>>{};
+    final toFolderName = (await _folderDao.getByType(
+      Folder.getNumberFromFolderType(toFolder),
+      account.localId,
+    ))
+        .first
+        .fullNameRaw;
+
+    for (var message in messages) {
+      final uids = splitToFolder[message.folder] ?? [];
+      uids.add(message.uid);
+      splitToFolder[message.folder] = uids;
+    }
+
+    for (var folder in splitToFolder.keys) {
+      final uids = splitToFolder[folder];
+      final futures = [
+        _mailDao.deleteMessages(uids, folder),
+      ];
+
+      futures.add(_mailApi.moveMessage(
+        uids: uids,
+        folderRawName: folder,
+        toFolder: toFolderName,
+      ));
+
+      await Future.wait(futures);
+    }
+  }
+
   static const _limit = 30;
 }

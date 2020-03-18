@@ -65,4 +65,21 @@ class FoldersDao extends DatabaseAccessor<AppDatabase> with _$FoldersDaoMixin {
     return (delete(folders)..where((f) => f.userLocalId.equals(userLocalId)))
         .go();
   }
+
+  Future<LocalFolder> getByName(String name) async {
+    return (select(folders)..where((folder) => folder.fullNameRaw.equals(name)))
+        .getSingle();
+  }
+
+  Future updateFolders(List<LocalFolder> updatedFolders) async {
+    for (var folder in updatedFolders) {
+      await updateFolder(
+        FoldersCompanion(
+          type: Value(folder.type),
+          folderOrder: Value(folder.folderOrder),
+        ),
+        folder.guid,
+      );
+    }
+  }
 }

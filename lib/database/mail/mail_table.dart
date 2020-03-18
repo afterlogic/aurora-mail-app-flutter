@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/models/message_info.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/mail_utils.dart';
@@ -186,6 +187,7 @@ class Mail extends Table {
     List<Message> messagesInfo,
     int userLocalId,
     Account account,
+    Folder folder,
   ) {
     assert(result.isNotEmpty);
 
@@ -309,7 +311,8 @@ class Mail extends Table {
 
   static String _htmlToTextSearch(String html) {
     return html
-        .replaceAllMapped(RegExp("(([^>]{1})<div>)"), (math) => '${math.group(2)} ')
+        .replaceAllMapped(
+            RegExp("(([^>]{1})<div>)"), (math) => '${math.group(2)} ')
         .replaceAllMapped(RegExp('(<a [^>]*href="([^"]*?)"[^>]*>(.*?)<\/a>)'),
             (math) => '${math.group(1)} (${math.group(2)})')
         .replaceAll(RegExp("(<style[^>]*>[^<]*<\/style>)"), ' ')

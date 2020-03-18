@@ -129,6 +129,7 @@ class BackgroundSync {
         null,
         user.localId,
         account,
+        folderToUpdate,
       );
 
       await _mailDao.fillMessage(newMessageBodies);

@@ -1,3 +1,4 @@
+import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/utils/always_non_equal_object.dart';
 import 'package:crypto_worker/crypto_worker.dart';
 import 'package:equatable/equatable.dart';
@@ -56,4 +57,13 @@ class DecryptComplete extends MessageViewState {
 
   @override
   List<Object> get props => [text];
+}
+
+class FolderTypeState extends MessageViewState {
+  final FolderType type;
+
+  FolderTypeState(this.type);
+
+  @override
+  List<Object> get props => [type];
 }

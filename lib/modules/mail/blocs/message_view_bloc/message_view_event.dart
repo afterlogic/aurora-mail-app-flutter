@@ -43,6 +43,15 @@ class CheckEncrypt extends MessageViewEvent with AlwaysNonEqualObject {
   List<Object> get props => [message];
 }
 
+class GetFolderType extends MessageViewEvent with AlwaysNonEqualObject {
+  final String folder;
+
+  GetFolderType(this.folder);
+
+  @override
+  List<Object> get props => [folder];
+}
+
 class DecryptBody extends MessageViewEvent with AlwaysNonEqualObject {
   final EncryptType type;
   final String pass;
