@@ -93,6 +93,9 @@ class Folder {
   }
 
   static FolderType getFolderTypeFromNumber(int num) {
+    if (num == null) {
+      return null;
+    }
     switch (num) {
       case 1:
         return FolderType.inbox;
@@ -120,6 +123,9 @@ class Folder {
   }
 
   static int getNumberFromFolderType(FolderType num) {
+    if (num == null) {
+      return null;
+    }
     switch (num) {
       case FolderType.inbox:
         return 1;

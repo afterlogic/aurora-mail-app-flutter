@@ -117,6 +117,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
     if (action is ReplyToAll) await _initReplyAll(action);
     if (action is EmailToContacts) await _initFromContacts(action);
     if (action is SendContacts) await _initContactsAsAttachments(action);
+    if (action is Resend) await _initResend(action);
   }
 
   void _initFromDrafts(OpenFromDrafts action) async {
@@ -162,6 +163,20 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
     }
     _subjectTextCtrl.text = MailUtils.getReplySubject(_message);
     _bodyTextCtrl.text = MailUtils.getReplyBody(context, _message);
+  }
+
+  void _initResend(Resend action) async {
+    _message = action.message;
+    await _initSender(_message);
+    if (_toEmails.isEmpty) {
+      setState(() {
+        _toEmails.addAll(MailUtils.getEmails(_message.toInJson));
+      });
+    }
+    _subjectTextCtrl.text = MailUtils.htmlToPlain(_message.subject);
+    _bodyTextCtrl.text = MailUtils.htmlToPlain(
+      _message.isHtml ? _message.htmlBody : _message.rawBody,
+    );
   }
 
   void _initReplyAll(ReplyToAll action) async {

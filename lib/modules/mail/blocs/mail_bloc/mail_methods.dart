@@ -327,6 +327,7 @@ class MailMethods {
         messageInfo,
         updatedUser.localId,
         account,
+        folder,
       );
 
       await _mailDao.addMessages(messages);

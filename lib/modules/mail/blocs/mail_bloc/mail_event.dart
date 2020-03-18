@@ -41,7 +41,7 @@ class SelectFolder extends MailEvent {
   const SelectFolder(this.folder, {this.filter = MessagesFilter.none});
 
   @override
-  List<Object> get props => [folder, filter];
+  List<Object> get props => [folder.fullNameRaw, filter];
 }
 
 class SetSeen extends MailEvent {

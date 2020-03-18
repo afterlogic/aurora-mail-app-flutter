@@ -18,6 +18,12 @@ class Forward implements ComposeAction {
   const Forward(this.message);
 }
 
+class Resend implements ComposeAction {
+  final Message message;
+
+  const Resend(this.message);
+}
+
 class Reply implements ComposeAction {
   final Message message;
 

@@ -442,4 +442,23 @@ class MailApi {
       throw WebMailApiError(res);
     }
   }
+
+  Future moveMessage(
+      {List<int> uids, String folderRawName, String toFolder}) async {
+    final parameters = json.encode({
+      "Folder": folderRawName,
+      "ToFolder": toFolder,
+      "AccountID": _accountId,
+      "Uids": uids.join(","),
+    });
+
+    final body =
+        new WebMailApiBody(method: "MoveMessages", parameters: parameters);
+
+    final res = await _mailModule.post(body);
+
+    if (res != true) {
+      throw WebMailApiError(res);
+    }
+  }
 }

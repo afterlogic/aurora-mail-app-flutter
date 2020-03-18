@@ -36,3 +36,13 @@ class DeleteMessages extends MessagesListEvent {
   @override
   List<Object> get props => [messages];
 }
+
+class MoveMessages extends MessagesListEvent {
+  final List<Message> messages;
+  final FolderType toFolder;
+
+  MoveMessages(this.messages, this.toFolder);
+
+  @override
+  List<Object> get props => [messages, toFolder];
+}

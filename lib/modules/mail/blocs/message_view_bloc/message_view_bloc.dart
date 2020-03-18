@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/inject/app_inject.dart';
+import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/mail/blocs/message_view_bloc/message_view_methods.dart';
 import 'package:aurora_mail/utils/permissions.dart';
 import 'package:bloc/bloc.dart';
@@ -33,6 +34,7 @@ class MessageViewBloc extends Bloc<MessageViewEvent, MessageViewState> {
     if (event is EndDownload) yield DownloadFinished(event.path);
     if (event is CheckEncrypt) yield* _checkEncrypt(event);
     if (event is DecryptBody) yield* _decryptBody(event);
+    if (event is GetFolderType) yield* _getFolderType(event);
   }
 
   Stream<MessageViewState> _downloadAttachment(
@@ -59,6 +61,7 @@ class MessageViewBloc extends Bloc<MessageViewEvent, MessageViewState> {
     yield MessageIsEncrypt(encryptedType);
   }
 
+
   Stream<MessageViewState> _decryptBody(DecryptBody event) async* {
     try {
       final decrypted = await _methods.decryptBody(
@@ -80,5 +83,10 @@ class MessageViewBloc extends Bloc<MessageViewEvent, MessageViewState> {
         yield MessagesViewError("can_not_decrypt");
       }
     }
+  }
+
+  Stream<MessageViewState>  _getFolderType(GetFolderType event) async*{
+    FolderType folderType = await _methods.getFolderType(event.folder);
+    yield FolderTypeState(folderType);
   }
 }

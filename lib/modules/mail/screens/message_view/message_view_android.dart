@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
@@ -65,6 +66,7 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
       _messageViewBloc.add(CheckEncrypt(widget.message.rawBody));
     }
     _startSetSeenTimer(context);
+    _messageViewBloc.add(GetFolderType(widget.message.folder));
   }
 
   @override
@@ -119,8 +121,18 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
         );
         Navigator.pushNamed(context, ComposeRoute.name, arguments: args);
         break;
+      case MailViewAppBarAction.resend:
+        final args = new ComposeScreenArgs(
+          mailBloc: mailBloc,
+          contactsBloc: contactsBloc,
+          composeAction: Resend(msg),
+        );
+        Navigator.pushNamed(context, ComposeRoute.name, arguments: args);
+        break;
       case MailViewAppBarAction.toSpam:
-        return null;
+        return _spam(true);
+      case MailViewAppBarAction.notSpam:
+        return _spam(false);
       case MailViewAppBarAction.showLightEmail:
         return null;
       case MailViewAppBarAction.delete:
@@ -197,7 +209,10 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
     return BlocProvider<MessageViewBloc>.value(
       value: _messageViewBloc,
       child: Scaffold(
-        appBar: MailViewAppBar(_onAppBarActionSelected),
+        appBar: MailViewAppBar(
+          _onAppBarActionSelected,
+          _messageViewBloc,
+        ),
         body: !animationFinished
             ? SizedBox.shrink()
             : BlocListener(
@@ -253,5 +268,14 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
             : null,
       ),
     );
+  }
+
+  void _spam(bool into) {
+    final message = widget.message;
+    BlocProvider.of<MessagesListBloc>(context).add(MoveMessages(
+      [message],
+      into ? FolderType.spam : FolderType.inbox,
+    ));
+    Navigator.popUntil(context, ModalRoute.withName(MessagesListRoute.name));
   }
 }

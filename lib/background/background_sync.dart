@@ -127,6 +127,7 @@ class BackgroundSync {
         result.addedMessages,
         user.localId,
         account,
+        folderToUpdate,
       );
       await FolderMessageInfo.setMessageInfo(
         folderToUpdate.fullName,
