@@ -12,6 +12,7 @@ import 'package:aurora_mail/modules/contacts/screens/group_view/group_view_route
 import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/compose_android.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/compose_route.dart';
+import 'package:aurora_mail/modules/mail/screens/message_view/components/route_with_finish_callback.dart';
 import 'package:aurora_mail/modules/mail/screens/message_view/message_view_android.dart';
 import 'package:aurora_mail/modules/mail/screens/message_view/message_view_route.dart';
 import 'package:aurora_mail/modules/settings/screens/about/about_android.dart';
@@ -95,15 +96,23 @@ class AppNavigation {
 
       case MessageViewRoute.name:
         final args = settings.arguments as MessageViewScreenArgs;
-
-        return CupertinoPageRoute(
-            settings: RouteSettings(name: settings.name),
-            builder: (_) => MultiBlocProvider(providers: [
-                  BlocProvider<MailBloc>.value(value: args.mailBloc),
-                  BlocProvider<MessagesListBloc>.value(
-                      value: args.messagesListBloc),
-                  BlocProvider<ContactsBloc>.value(value: args.contactsBloc),
-                ], child: MessageViewAndroid(args.message)));
+        final routeAnimationListener = RouteAnimationListener();
+        return RouteWithFinishCallback(
+          routeAnimationListener: routeAnimationListener,
+          settings: RouteSettings(name: settings.name),
+          builder: (_) => MultiBlocProvider(
+            providers: [
+              BlocProvider<MailBloc>.value(value: args.mailBloc),
+              BlocProvider<MessagesListBloc>.value(
+                  value: args.messagesListBloc),
+              BlocProvider<ContactsBloc>.value(value: args.contactsBloc),
+            ],
+            child: MessageViewAndroid(
+              args.message,
+              routeAnimationListener,
+            ),
+          ),
+        );
         break;
 
       case ComposeRoute.name:

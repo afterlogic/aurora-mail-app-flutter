@@ -15,6 +15,7 @@ import 'package:aurora_mail/modules/mail/screens/compose/compose_route.dart';
 import 'package:aurora_mail/modules/mail/screens/message_view/components/mail_bottom_bar.dart';
 import 'package:aurora_mail/modules/mail/screens/message_view/components/message_view_app_bar.dart';
 import 'package:aurora_mail/modules/mail/screens/message_view/components/message_webview.dart';
+import 'package:aurora_mail/modules/mail/screens/message_view/components/route_with_finish_callback.dart';
 import 'package:aurora_mail/modules/mail/screens/message_view/dialog/request_password_dialog.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
@@ -27,8 +28,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MessageViewAndroid extends StatefulWidget {
   final Message message;
+  final RouteAnimationListener routeAnimationListener;
 
-  const MessageViewAndroid(this.message);
+  const MessageViewAndroid(this.message, this.routeAnimationListener);
 
   @override
   _MessageViewAndroidState createState() => _MessageViewAndroidState();
@@ -38,12 +40,16 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
     with TickerProviderStateMixin {
   MessageViewBloc _messageViewBloc;
   String decryptedText;
-
+  bool animationFinished = false;
   Timer _setSeenTimer;
 
   @override
   void initState() {
     super.initState();
+    widget.routeAnimationListener.onComplete = () {
+      animationFinished = true;
+      setState(() {});
+    };
   }
 
   @override
@@ -192,51 +198,54 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
       value: _messageViewBloc,
       child: Scaffold(
         appBar: MailViewAppBar(_onAppBarActionSelected),
-        body: BlocListener(
-          bloc: _messageViewBloc,
-          listener: (context, state) {
-            if (state is DecryptComplete) {
-              decryptedText = state.text;
-              setState(() {});
+        body: !animationFinished
+            ? SizedBox.shrink()
+            : BlocListener(
+                bloc: _messageViewBloc,
+                listener: (context, state) {
+                  if (state is DecryptComplete) {
+                    decryptedText = state.text;
+                    setState(() {});
 
-              _showSnack(
-                  i18n(
-                    context,
-                    state.verified
-                        ? "decrypted_and_verified"
-                        : "decrypted_but_not_verified",
-                  ),
-                  context);
-            }
-            if (state is DownloadStarted) {
-              _showSnack(
-                  i18n(context, "messages_attachment_downloading",
-                      {"fileName": state.fileName}),
-                  context);
-            }
-            if (state is MessagesViewError) {
-              _showSnack(
-                state.errorMsg,
-                context,
-                isError: true,
-                arg: state.arg,
-              );
-            }
-            if (state is DownloadFinished) {
-              if (state.path == null) {
-                _showSnack(i18n(context, "messages_attachment_download_failed"),
-                    context,
-                    isError: true);
-              } else {
-                _showSnack(
-                    i18n(context, "messages_attachment_download_success",
-                        {"path": state.path}),
-                    context);
-              }
-            }
-          },
-          child: MessageWebView(message, attachments, decryptedText),
-        ),
+                    _showSnack(
+                        i18n(
+                          context,
+                          state.verified
+                              ? "decrypted_and_verified"
+                              : "decrypted_but_not_verified",
+                        ),
+                        context);
+                  }
+                  if (state is DownloadStarted) {
+                    _showSnack(
+                        i18n(context, "messages_attachment_downloading",
+                            {"fileName": state.fileName}),
+                        context);
+                  }
+                  if (state is MessagesViewError) {
+                    _showSnack(
+                      state.errorMsg,
+                      context,
+                      isError: true,
+                      arg: state.arg,
+                    );
+                  }
+                  if (state is DownloadFinished) {
+                    if (state.path == null) {
+                      _showSnack(
+                          i18n(context, "messages_attachment_download_failed"),
+                          context,
+                          isError: true);
+                    } else {
+                      _showSnack(
+                          i18n(context, "messages_attachment_download_success",
+                              {"path": state.path}),
+                          context);
+                    }
+                  }
+                },
+                child: MessageWebView(message, attachments, decryptedText),
+              ),
         bottomNavigationBar: BuildProperty.cryptoEnable
             ? MailBottomBar(
                 onDecrypt: _decrypt,
