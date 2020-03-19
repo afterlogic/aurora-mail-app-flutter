@@ -133,9 +133,16 @@ class EncryptBody extends ComposeEvent with AlwaysNonEqualObject {
   final String pass;
   final List<String> contacts;
   final String body;
+  final String senderEmail;
 
-  EncryptBody(this.contacts, this.body, this.encrypt, this.sign, this.pass);
+  EncryptBody(this.contacts, this.body, this.encrypt, this.sign, this.pass,
+      this.senderEmail);
 
   @override
-  List<Object> get props => [contacts, body];
+  List<Object> get props => [];
+}
+
+class DecryptEvent extends ComposeEvent {
+  @override
+  List<Object> get props => [];
 }

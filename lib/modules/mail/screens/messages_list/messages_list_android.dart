@@ -338,21 +338,18 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
     if (messageCount == null || messageCount == 0) {
       return SizedBox.shrink();
     }
-
+    final emptyFolder = _selectedFolder.type == FolderType.trash
+        ? "empty_folder_trash"
+        : "empty_folder_spam";
     return ListTile(
       leading: Icon(Icons.delete_forever),
-      title: Text(i18n(context, "empty_folder",
-          {"folder": MailFolder.getTitle(context, _selectedFolder)})),
+      title: Text(i18n(context, emptyFolder)),
       onTap: messageCount == 0
           ? null
           : () async {
               final delete = await ConfirmationDialog.show(
                 context,
-                i18n(
-                  context,
-                  "empty_folder",
-                  {"folder": MailFolder.getTitle(context, _selectedFolder)},
-                ),
+                i18n(context, emptyFolder),
                 i18n(
                   context,
                   "empty_folder_description",

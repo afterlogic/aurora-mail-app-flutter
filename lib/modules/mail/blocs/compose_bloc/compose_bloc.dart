@@ -42,6 +42,7 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
     if (event is ErrorUpload)
       yield ComposeError(formatError(event.error, null));
     if (event is EncryptBody) yield* _encryptBody(event);
+    if (event is DecryptEvent) yield DecryptedState();
   }
 
   Stream<ComposeState> _sendMessage(SendMessage event) async* {
@@ -153,6 +154,7 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
         event.pass,
         emails,
         event.body,
+        event.senderEmail,
       );
       final type = event.encrypt ? EncryptType.Encrypt : EncryptType.Sign;
       yield EncryptComplete(encrypted, type);

@@ -109,6 +109,7 @@ class _IdentitySelectorState extends BState<IdentitySelector> {
                 SizedBox(width: 8.0),
                 Expanded(
                   child: TextField(
+                    enabled: widget.enable,
                     readOnly: true,
                     focusNode: focusNode,
                     controller: widget.textCtrl,

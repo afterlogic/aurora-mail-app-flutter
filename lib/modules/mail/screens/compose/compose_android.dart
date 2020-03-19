@@ -58,6 +58,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
 
   Timer _timer;
   EncryptType _lock = EncryptType.None;
+  String decryptText;
   bool _showBCC = false;
 
   // if compose was opened from screen which does not have MessagesListRoute in stack, just pop
@@ -393,9 +394,18 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
   }
 
   _encryptLock(EncryptComplete state) {
+    decryptText = _bodyTextCtrl.text;
     _bodyTextCtrl.text = state.text;
     _lock = state.type;
 
+    setState(() {});
+  }
+
+  _decrypt() {
+    _bodyTextCtrl.text = decryptText;
+    decryptText = "";
+    _lock = EncryptType.None;
+    _bloc.add(DecryptEvent());
     setState(() {});
   }
 
@@ -409,12 +419,14 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
       if (!result.sign && !result.encrypt) {
         return;
       }
+      final sender = AliasOrIdentity(alias, identity);
       _bloc.add(EncryptBody(
         _toEmails,
         _bodyTextCtrl.text,
         result.encrypt,
         result.sign,
         result.pass,
+        sender.mail,
       ));
     }
   }
@@ -563,6 +575,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
                     onIdentity: setIdentityOrSender,
                     textCtrl: _fromCtrl,
                   ),
+                  Divider(height: 0.0),
                   ComposeEmails(
                     padding: EdgeInsets.symmetric(horizontal: 16.0),
                     enable: !lockUsers,
@@ -636,6 +649,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
         bottomNavigationBar: BuildProperty.cryptoEnable
             ? ComposeBottomBar(
                 onEncrypt: _encryptDialog,
+                onDecrypt: _decrypt,
               )
             : null,
       ),

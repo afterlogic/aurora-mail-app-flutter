@@ -308,6 +308,7 @@
   "already_have_keys": "Keys which are already in the system are greyed out.",
   "find_in_email": "Find in email",
   "btn_resend": "Resend",
-  "empty_folder": "Empty {folder}",
+  "empty_folder_trash": "Empty Trash",
+  "empty_folder_spam": "Empty Spam",
   "empty_folder_description": "Are you sure you want to delete all messages in folder {folder}?"
 }

@@ -125,8 +125,12 @@ class ComposeMethods {
     String pass,
     List<String> contacts,
     String body,
+    String sender,
   ) async {
-    final encryptDecrypt = pgpWorker.encryptDecrypt(account.email, contacts);
+    final encryptDecrypt = pgpWorker.encryptDecrypt(
+      sender,
+      contacts,
+    );
 
     if (encrypt) {
       return await encryptDecrypt.encrypt(body, sign ? pass : null);

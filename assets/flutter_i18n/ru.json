@@ -308,6 +308,7 @@
   "exit": "Выйти",
   "find_in_email": "Искать в письмах",
   "btn_resend": "Повторить",
-  "empty_folder": "Очистить {folder}",
+  "empty_folder_trash": "Очистить Корзину",
+  "empty_folder_spam": "Очистить Спам",
   "empty_folder_description": "Вы уверены, что хотите удалить все сообщение в папке {folder}?"
 }

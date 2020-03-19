@@ -1,9 +1,8 @@
 import 'package:aurora_mail/build_property.dart';
-import 'package:aurora_mail/build_property.dart';
+import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
-import 'package:aurora_mail/utils/base_state.dart';
 import 'package:flutter/services.dart';
 import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -67,7 +66,7 @@ class _AboutAndroidState extends BState<AboutAndroid> {
                 SizedBox(height: 12.0),
                 Text(
                   i18n(context, "settings_about_app_version",
-                      {"version": "$_version+$_buildNumber"}),
+                      {"version": _version}),
                   style: theme.textTheme.caption.copyWith(fontSize: 14.0),
                 ),
                 SizedBox(height: 22.0),
@@ -91,7 +90,8 @@ class _AboutAndroidState extends BState<AboutAndroid> {
                     ),
                     onTap: () => launch(BuildProperty.termsOfService),
                   ),
-                if (BuildProperty.termsOfService.isNotEmpty) SizedBox(height: 22.0),
+                if (BuildProperty.termsOfService.isNotEmpty)
+                  SizedBox(height: 22.0),
                 if (BuildProperty.privacyPolicy.isNotEmpty)
                   GestureDetector(
                     child: Text(
@@ -104,7 +104,8 @@ class _AboutAndroidState extends BState<AboutAndroid> {
                     ),
                     onTap: () => launch(BuildProperty.privacyPolicy),
                   ),
-                if (BuildProperty.privacyPolicy.isNotEmpty) SizedBox(height: 42.0),
+                if (BuildProperty.privacyPolicy.isNotEmpty)
+                  SizedBox(height: 42.0),
               ],
             ),
     );

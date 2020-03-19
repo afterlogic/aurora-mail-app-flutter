@@ -51,7 +51,7 @@ class ComposeError extends ComposeState with AlwaysNonEqualObject {
   ComposeError(this.errorMsg, [this.arg]);
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [errorMsg, arg];
 }
 
 class ConvertingAttachments extends ComposeState {}
@@ -65,12 +65,17 @@ class ReceivedComposeAttachments extends ComposeState {
   List<Object> get props => [attachments];
 }
 
-class EncryptComplete extends ComposeState {
+class EncryptComplete extends ComposeState with AlwaysNonEqualObject {
   final EncryptType type;
   final String text;
 
   EncryptComplete(this.text, this.type);
 
   @override
-  List<Object> get props => [hashCode];
+  List<Object> get props => [text, type];
+}
+
+class DecryptedState extends ComposeState {
+  @override
+  List<Object> get props => [];
 }
