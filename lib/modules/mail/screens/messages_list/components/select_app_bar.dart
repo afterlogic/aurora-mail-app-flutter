@@ -59,13 +59,6 @@ class _SelectAppBarState extends BState<SelectAppBar> {
           actions: folderType == null
               ? []
               : <Widget>[
-                  if ([FolderType.trash, FolderType.spam].contains(folderType))
-                    IconButton(
-                      icon: Icon(MdiIcons.folderRemoveOutline),
-                      onPressed: () => _empty(
-                        (state as FoldersLoaded).selectedFolder.fullNameRaw,
-                      ),
-                    ),
                   if (![FolderType.sent, FolderType.drafts, FolderType.spam]
                       .contains(folderType))
                     IconButton(
@@ -119,12 +112,5 @@ class _SelectAppBarState extends BState<SelectAppBar> {
       ));
       widget.controller.enable = false;
     }
-  }
-
-  void _empty(String folder) {
-    BlocProvider.of<MessagesListBloc>(context).add(
-      EmptyFolder(folder),
-    );
-    widget.controller.enable = false;
   }
 }
