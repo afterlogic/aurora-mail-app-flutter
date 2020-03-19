@@ -16,7 +16,6 @@ class AboutAndroid extends StatefulWidget {
 class _AboutAndroidState extends BState<AboutAndroid> {
   bool loading = false;
   String _version;
-  String _buildNumber;
   String _appName;
 
   @override
@@ -43,9 +42,13 @@ class _AboutAndroidState extends BState<AboutAndroid> {
   Future _initAppInfo() async {
     setState(() => loading = true);
     final packageInfo = await PackageInfo.fromPlatform();
-    _version = packageInfo.version;
-    _buildNumber = packageInfo.buildNumber;
-    _appName = packageInfo.appName;
+    print(packageInfo);
+    if (packageInfo.version != null && packageInfo.buildNumber != null) {
+      _version = "${packageInfo.version}+${packageInfo.buildNumber}";
+    } else {
+      _version = BuildProperty.version;
+    }
+    _appName = packageInfo.appName ?? BuildProperty.appName;
     setState(() => loading = false);
   }
 
@@ -88,8 +91,7 @@ class _AboutAndroidState extends BState<AboutAndroid> {
                     ),
                     onTap: () => launch(BuildProperty.termsOfService),
                   ),
-                if (BuildProperty.termsOfService.isNotEmpty)
-                  SizedBox(height: 22.0),
+                if (BuildProperty.termsOfService.isNotEmpty) SizedBox(height: 22.0),
                 if (BuildProperty.privacyPolicy.isNotEmpty)
                   GestureDetector(
                     child: Text(
@@ -102,8 +104,7 @@ class _AboutAndroidState extends BState<AboutAndroid> {
                     ),
                     onTap: () => launch(BuildProperty.privacyPolicy),
                   ),
-                if (BuildProperty.privacyPolicy.isNotEmpty)
-                  SizedBox(height: 42.0),
+                if (BuildProperty.privacyPolicy.isNotEmpty) SizedBox(height: 42.0),
               ],
             ),
     );
