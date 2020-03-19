@@ -108,6 +108,40 @@ class _MessageItemState extends BState<MessageItem> {
       );
     }
 
+    Widget dismissibleWrap(Widget child) {
+      if (widget.selectionController.enable) {
+        return child;
+      } else {
+        return Dismissible(
+          key: Key(m.uid.toString()),
+          direction: DismissDirection.endToStart,
+          confirmDismiss: (_) => ConfirmationDialog.show(
+            context,
+            i18n(context, "messages_delete_title"),
+            i18n(context, "messages_delete_desc_with_subject",
+                {"subject": m.subject}),
+            i18n(context, "btn_delete"),
+            destructibleAction: true,
+          ),
+          onDismissed: (_) => widget.onDeleteMessage(m),
+          background: Container(
+            color: theme.errorColor,
+            child: Stack(
+              children: <Widget>[
+                Positioned(
+                    right: 16.0,
+                    top: 0.0,
+                    bottom: 0.0,
+                    child: Icon(Icons.delete_outline,
+                        color: Colors.white, size: 36.0)),
+              ],
+            ),
+          ),
+          child: child,
+        );
+      }
+    }
+
     return DecoratedBox(
       decoration: BoxDecoration(
         color: selected
@@ -125,32 +159,8 @@ class _MessageItemState extends BState<MessageItem> {
                 : widget.children.isNotEmpty && !_showThreads
                     ? _toggleThreads
                     : () => widget.onItemSelected(m),
-            child: Dismissible(
-              key: Key(m.uid.toString()),
-              direction: DismissDirection.endToStart,
-              confirmDismiss: (_) => ConfirmationDialog.show(
-                context,
-                i18n(context, "messages_delete_title"),
-                i18n(context, "messages_delete_desc_with_subject",
-                    {"subject": m.subject}),
-                i18n(context, "btn_delete"),
-                destructibleAction: true,
-              ),
-              onDismissed: (_) => widget.onDeleteMessage(m),
-              background: Container(
-                color: theme.errorColor,
-                child: Stack(
-                  children: <Widget>[
-                    Positioned(
-                        right: 16.0,
-                        top: 0.0,
-                        bottom: 0.0,
-                        child: Icon(Icons.delete_outline,
-                            color: Colors.white, size: 36.0)),
-                  ],
-                ),
-              ),
-              child: ListTile(
+            child: dismissibleWrap(
+               ListTile(
                 key: Key(m.uid.toString()),
                 title: Text(_getEmailTitle(),
                     style: TextStyle(

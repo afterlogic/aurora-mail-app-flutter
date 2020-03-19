@@ -55,8 +55,8 @@ class MailFolder extends StatelessWidget {
     }
   }
 
-  String _getTitle(BuildContext context) {
-    switch (mailFolder.folderType) {
+  static String getTitle(BuildContext context, Folder folder) {
+    switch (folder.folderType) {
       case FolderType.inbox:
         return i18n(context, "folders_inbox");
       case FolderType.sent:
@@ -68,7 +68,7 @@ class MailFolder extends StatelessWidget {
       case FolderType.trash:
         return i18n(context, "folders_trash");
       default:
-        return mailFolder.name;
+        return folder.name;
     }
   }
 
@@ -131,7 +131,7 @@ class MailFolder extends StatelessWidget {
             child: ListTile(
               selected: isSelected,
               leading: _folderIcon(theme.appBarTheme.iconTheme.color),
-              title: Text(_getTitle(context)),
+              title: Text(getTitle(context, mailFolder)),
               trailing: _buildMessageCounter(context),
               onTap: () => _selectFolder(context),
             ),

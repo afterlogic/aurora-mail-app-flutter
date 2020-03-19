@@ -12,6 +12,7 @@ class StreamPaginationList extends StatefulWidget {
   final Widget Function(BuildContext) empty;
   final Function(int count) onSelect;
   final Widget progress;
+  final Widget Function(int) header;
   final String folder;
   final SelectionController selectionController;
 
@@ -25,6 +26,7 @@ class StreamPaginationList extends StatefulWidget {
     this.folder,
     this.onSelect,
     this.selectionController,
+    this.header,
   }) : super(key: key);
 
   @override
@@ -65,11 +67,18 @@ class _StreamPaginationListState extends State<StreamPaginationList> {
         threads.addAll(part.threads);
       }
     }
-
+    final existHeader = widget.header != null;
     final list = ListView.builder(
       padding: EdgeInsets.only(top: 6.0, bottom: 82.0),
-      itemCount: parts.length,
-      itemBuilder: (context, id) {
+      itemCount: parts.length + (existHeader ? 1 : 0),
+      itemBuilder: (context, _id) {
+        var id = _id;
+        if (existHeader) {
+          if (id == 0) {
+            return widget.header(parts[0].items?.length);
+          }
+          id--;
+        }
         return _ListPartWidget(
           id,
           parts[id],

@@ -17,6 +17,7 @@
   "messages_empty": "Нет сообщений",
   "messages_filter_unread": "Непрочитаные сообщения:",
   "messages_delete_title": "Удалить сообщение",
+  "messages_delete_title_with_count": "Удалить сообщения",
   "messages_delete_desc_with_subject": "Вы уверены, что хотите удалить {subject}?",
   "messages_delete_desc": "Вы уверены, что хотите удалить это сообщение?",
   "messages_delete_desc_with_count": "Вы уверены, что хотите удалить эти сообщения?",
@@ -306,5 +307,7 @@
   "confirm_exit": "Вы уверены что хотите выйти",
   "exit": "Выйти",
   "find_in_email": "Искать в письмах",
-  "btn_resend": "Повторить"
+  "btn_resend": "Повторить",
+  "empty_folder": "Очистить {folder}",
+  "empty_folder_description": "Вы уверены, что хотите удалить все сообщение в папке {folder}?"
 }

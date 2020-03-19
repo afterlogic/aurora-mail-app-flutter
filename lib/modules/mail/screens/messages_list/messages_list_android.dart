@@ -13,6 +13,7 @@ import 'package:aurora_mail/modules/mail/screens/messages_list/components/main_d
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/selection_controller.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/stream_pagination_list.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
+import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
 import 'package:aurora_mail/shared_ui/mail_bottom_app_bar.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
@@ -23,6 +24,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 import 'components/mail_app_bar.dart';
+import 'components/mail_folder.dart';
 import 'components/message_item.dart';
 
 class MessagesListAndroid extends StatefulWidget {
@@ -289,6 +291,10 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
           child: StreamPaginationList(
             key: Key(key),
             selectionController: selectionController,
+            header: [FolderType.spam, FolderType.trash]
+                    .contains(_selectedFolder.folderType)
+                ? _emptyFolder
+                : null,
             builder: (context, item, threads) {
               return MessageItem(
                 isSent,
@@ -325,6 +331,41 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _emptyFolder(int messageCount) {
+    if (messageCount == null || messageCount == 0) {
+      return SizedBox.shrink();
+    }
+
+    return ListTile(
+      leading: Icon(Icons.delete_forever),
+      title: Text(i18n(context, "empty_folder",
+          {"folder": MailFolder.getTitle(context, _selectedFolder)})),
+      onTap: messageCount == 0
+          ? null
+          : () async {
+              final delete = await ConfirmationDialog.show(
+                context,
+                i18n(
+                  context,
+                  "empty_folder",
+                  {"folder": MailFolder.getTitle(context, _selectedFolder)},
+                ),
+                i18n(
+                  context,
+                  "empty_folder_description",
+                  {"folder": MailFolder.getTitle(context, _selectedFolder)},
+                ),
+                i18n(context, "btn_delete"),
+                destructibleAction: true,
+              );
+              if (delete == true) {
+                _messagesListBloc.add(EmptyFolder(_selectedFolder.fullNameRaw));
+                selectionController.enable = false;
+              }
+            },
     );
   }
 

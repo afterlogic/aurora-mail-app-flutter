@@ -108,7 +108,7 @@ class _SelectAppBarState extends BState<SelectAppBar> {
     final messages = widget.controller.selected.values.toList();
     final delete = await ConfirmationDialog.show(
       context,
-      i18n(context, "messages_delete_title"),
+      i18n(context, "messages_delete_title_with_count"),
       i18n(context, "messages_delete_desc_with_count"),
       i18n(context, "btn_delete"),
       destructibleAction: true,
