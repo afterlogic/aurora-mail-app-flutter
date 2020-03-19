@@ -57,6 +57,9 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
     query += "AND ${mail.hasBody.escapedName} = 1 ";
     params.add(Variable.withInt(accountEntityId));
 
+    query += "AND ${mail.folder.escapedName} = ? ";
+    params.add(Variable.withString(folder));
+
     if (searchPattern == SearchPattern.Email) {
       query +=
           "AND (${mail.toForSearch.escapedName} LIKE ? OR ${mail.fromForSearch.escapedName} LIKE ? OR ${mail.ccForSearch.escapedName} LIKE ? OR ${mail.bccForSearch.escapedName} LIKE ?) ";
@@ -64,21 +67,16 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
       params.add(Variable.withString("%$searchTerm%"));
       params.add(Variable.withString("%$searchTerm%"));
       params.add(Variable.withString("%$searchTerm%"));
-    } else {
-      query += "AND ${mail.folder.escapedName} = ? ";
-      params.add(Variable.withString(folder));
-
-      if (searchTerm != null && searchTerm.isNotEmpty) {
-        query +=
-            "AND (${mail.subject.escapedName} LIKE ? OR ${mail.toForSearch.escapedName} LIKE ? OR ${mail.fromForSearch.escapedName} LIKE ? OR ${mail.ccForSearch.escapedName} LIKE ? OR ${mail.bccForSearch.escapedName} LIKE ? OR ${mail.bodyForSearch.escapedName} LIKE ? OR ${mail.attachmentsForSearch.escapedName} LIKE ?) ";
-        params.add(Variable.withString("%$searchTerm%"));
-        params.add(Variable.withString("%$searchTerm%"));
-        params.add(Variable.withString("%$searchTerm%"));
-        params.add(Variable.withString("%$searchTerm%"));
-        params.add(Variable.withString("%$searchTerm%"));
-        params.add(Variable.withString("%$searchTerm%"));
-        params.add(Variable.withString("%$searchTerm%"));
-      }
+    } else if (searchTerm != null && searchTerm.isNotEmpty) {
+      query +=
+          "AND (${mail.subject.escapedName} LIKE ? OR ${mail.toForSearch.escapedName} LIKE ? OR ${mail.fromForSearch.escapedName} LIKE ? OR ${mail.ccForSearch.escapedName} LIKE ? OR ${mail.bccForSearch.escapedName} LIKE ? OR ${mail.bodyForSearch.escapedName} LIKE ? OR ${mail.attachmentsForSearch.escapedName} LIKE ?) ";
+      params.add(Variable.withString("%$searchTerm%"));
+      params.add(Variable.withString("%$searchTerm%"));
+      params.add(Variable.withString("%$searchTerm%"));
+      params.add(Variable.withString("%$searchTerm%"));
+      params.add(Variable.withString("%$searchTerm%"));
+      params.add(Variable.withString("%$searchTerm%"));
+      params.add(Variable.withString("%$searchTerm%"));
     }
     if (starredOnly) {
       query += "AND ${mail.flagsInJson.escapedName} LIKE ? ";
@@ -138,6 +136,10 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
             ..where((m) => m.folder.equals(folderRawName)))
           .go();
     }
+  }
+
+  Future clearFolder(String folderRawName) {
+    return (delete(mail)..where((m) => m.folder.equals(folderRawName))).go();
   }
 
   Future<int> deleteMessagesFromRemovedFolders(

@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/models/folder.dart';
-import 'package:aurora_mail/models/message_info.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/mail_utils.dart';
 import 'package:flutter/widgets.dart' as widgets;
@@ -143,6 +142,7 @@ class Mail extends Table {
 
   static List getToForDisplay(
       widgets.BuildContext context, String toInJson, String currentUserEmail) {
+    if (toInJson == null) return [];
     final toDecoded = json.decode(toInJson);
     if (toDecoded == null) return [];
     final collection = toDecoded["@Collection"] as List;

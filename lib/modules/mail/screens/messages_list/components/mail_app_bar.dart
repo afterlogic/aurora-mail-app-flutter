@@ -1,8 +1,11 @@
 import 'package:aurora_mail/build_property.dart';
+import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/search_bar.dart';
+import 'package:aurora_mail/modules/mail/screens/messages_list/components/select_app_bar.dart';
+import 'package:aurora_mail/modules/mail/screens/messages_list/components/selection_controller.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/user_selection_popup.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/utils/base_state.dart';
@@ -13,8 +16,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MailAppBar extends StatefulWidget implements PreferredSizeWidget {
   final String initSearch;
+  final SelectionController<int, Message> selectionController;
 
-  const MailAppBar({this.initSearch});
+  const MailAppBar({this.initSearch, this.selectionController});
 
   @override
   _MailAppBarState createState() => _MailAppBarState();
@@ -25,6 +29,7 @@ class MailAppBar extends StatefulWidget implements PreferredSizeWidget {
 
 class _MailAppBarState extends BState<MailAppBar> {
   bool isSearchMode = false;
+  bool isSelectMode = false;
   String initSearch;
 
   @override
@@ -34,6 +39,20 @@ class _MailAppBarState extends BState<MailAppBar> {
       isSearchMode = true;
     }
     super.initState();
+    widget.selectionController.addListener(onSelect);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    widget.selectionController.removeListener(onSelect);
+  }
+
+  onSelect() {
+    if (widget.selectionController.enable != isSelectMode) {
+      isSelectMode = widget.selectionController.enable;
+      setState(() {});
+    }
   }
 
   String _getTitle(BuildContext context, Folder folder) {
@@ -57,9 +76,11 @@ class _MailAppBarState extends BState<MailAppBar> {
   Widget build(BuildContext context) {
     return AnimatedSwitcher(
       duration: Duration(milliseconds: 250),
-      child: isSearchMode
-          ? SearchBar(initSearch, changeMode)
-          : _buildDefaultAppBar(),
+      child: isSelectMode
+          ? SelectAppBar(widget.selectionController)
+          : isSearchMode
+              ? SearchBar(initSearch, changeMode)
+              : _buildDefaultAppBar(),
     );
   }
 

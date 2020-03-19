@@ -19,6 +19,7 @@
   "messages_delete_title": "Удалить сообщение",
   "messages_delete_desc_with_subject": "Вы уверены, что хотите удалить {subject}?",
   "messages_delete_desc": "Вы уверены, что хотите удалить это сообщение?",
+  "messages_delete_desc_with_count": "Вы уверены, что хотите удалить эти сообщения?",
   "messages_list_app_bar_mail": "Почта",
   "messages_list_app_bar_contacts": "Контакты",
   "messages_list_app_bar_settings": "Настройки",

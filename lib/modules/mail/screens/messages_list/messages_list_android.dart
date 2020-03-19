@@ -10,6 +10,7 @@ import 'package:aurora_mail/modules/mail/models/compose_actions.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/compose_route.dart';
 import 'package:aurora_mail/modules/mail/screens/message_view/message_view_route.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/main_drawer.dart';
+import 'package:aurora_mail/modules/mail/screens/messages_list/components/selection_controller.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/stream_pagination_list.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/shared_ui/mail_bottom_app_bar.dart';
@@ -159,7 +160,10 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
           setState(() {});
         },
         child: Scaffold(
-          appBar: MailAppBar(initSearch: widget.initSearch),
+          appBar: MailAppBar(
+            initSearch: widget.initSearch,
+            selectionController: selectionController,
+          ),
           drawer: MainDrawer(),
           body: MultiBlocListener(
             listeners: [
@@ -259,7 +263,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
 
   Widget _buildMessagesLoading() => Center(child: CircularProgressIndicator());
 
-//  Widget _buildMessagesLoading() => SkeletonLoader();
+  final selectionController = SelectionController<int, Message>();
 
   Widget _buildMessagesStream(
     Stream<List<Message>> Function(int page) stream,
@@ -284,11 +288,13 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
         Flexible(
           child: StreamPaginationList(
             key: Key(key),
+            selectionController: selectionController,
             builder: (context, item, threads) {
               return MessageItem(
                 isSent,
                 item,
                 threads.where((t) => t.parentUid == item.uid).toList(),
+                selectionController: selectionController,
                 key: Key(item.localId.toString()),
                 onItemSelected: (Message item) => _onMessageSelected(item),
                 onStarMessage: _setStarred,

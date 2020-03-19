@@ -38,6 +38,8 @@ class MessagesRefreshed extends MessagesListState with AlwaysNonEqualObject {}
 
 class MessagesDeleted extends MessagesListState with AlwaysNonEqualObject {}
 
+class FolderCleared extends MessagesListState with AlwaysNonEqualObject {}
+
 class MessagesMoved extends MessagesListState with AlwaysNonEqualObject {}
 
 // for both folders and messages

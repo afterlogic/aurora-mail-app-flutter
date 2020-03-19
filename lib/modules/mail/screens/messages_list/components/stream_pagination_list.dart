@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/mail_methods.dart';
+import 'package:aurora_mail/modules/mail/screens/messages_list/components/selection_controller.dart';
 import 'package:flutter/material.dart';
 
 class StreamPaginationList extends StatefulWidget {
@@ -9,8 +10,10 @@ class StreamPaginationList extends StatefulWidget {
   final Widget Function(BuildContext, dynamic e) onError;
   final Stream<List<Message>> Function(int) fetch;
   final Widget Function(BuildContext) empty;
+  final Function(int count) onSelect;
   final Widget progress;
   final String folder;
+  final SelectionController selectionController;
 
   const StreamPaginationList({
     this.builder,
@@ -20,6 +23,8 @@ class StreamPaginationList extends StatefulWidget {
     this.empty,
     Key key,
     this.folder,
+    this.onSelect,
+    this.selectionController,
   }) : super(key: key);
 
   @override
@@ -28,6 +33,29 @@ class StreamPaginationList extends StatefulWidget {
 
 class _StreamPaginationListState extends State<StreamPaginationList> {
   Map<int, _ListPart> parts = {0: _ListPart()};
+  bool selectEnable;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.selectionController.addListener(onSelect);
+    widget.selectionController.enable = false;
+    selectEnable = false;
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    widget.selectionController.removeListener(onSelect);
+    widget.selectionController.enable = false;
+  }
+
+  onSelect() {
+    if (widget.selectionController.enable != selectEnable) {
+      selectEnable = widget.selectionController.enable;
+      setState(() {});
+    }
+  }
 
   @override
   Widget build(BuildContext context) {

@@ -1,10 +1,12 @@
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/mail/blocs/message_view_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/message_view_bloc/message_view_bloc.dart';
+import 'package:aurora_mail/res/icons/app_assets.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 enum MailViewAppBarAction {
@@ -29,6 +31,7 @@ class MailViewAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return PreferredSize(
       preferredSize: preferredSize,
       child: BlocBuilder<MessageViewBloc, MessageViewState>(
@@ -40,16 +43,16 @@ class MailViewAppBar extends StatelessWidget implements PreferredSizeWidget {
               actions: folderType == null
                   ? []
                   : [
-                      if (folderType != FolderType.sent &&
-                          folderType != FolderType.drafts)
+                      if (![FolderType.sent, FolderType.drafts]
+                          .contains(folderType))
                         IconButton(
                           icon: Icon(Icons.reply),
                           tooltip: i18n(context, "messages_reply"),
                           onPressed: () => onAppBarActionSelected(
                               MailViewAppBarAction.reply),
                         ),
-                      if (folderType != FolderType.sent &&
-                          folderType != FolderType.drafts)
+                      if (![FolderType.sent, FolderType.drafts]
+                          .contains(folderType))
                         IconButton(
                           icon: Icon(Icons.reply_all),
                           tooltip: i18n(context, "messages_reply_all"),
@@ -74,49 +77,45 @@ class MailViewAppBar extends StatelessWidget implements PreferredSizeWidget {
                         onPressed: () =>
                             onAppBarActionSelected(MailViewAppBarAction.delete),
                       ),
-                      PopupMenuButton(
-                        itemBuilder: (BuildContext context) {
-                          return [
-                            if (folderType != FolderType.sent &&
-                                folderType != FolderType.drafts &&
-                                folderType != FolderType.spam)
-                              PopupMenuItem(
-                                child: InkWell(
-                                  child: Text(i18n(context, "btn_to_spam")),
-                                  onTap: () {
-                                    Navigator.pop(context);
-                                    onAppBarActionSelected(
-                                        MailViewAppBarAction.toSpam);
-                                  },
-                                ),
-                              ),
-                            if (folderType == FolderType.spam)
-                              PopupMenuItem(
-                                child: InkWell(
-                                  child: Text(
-                                    i18n(context, "btn_not_spam"),
-                                  ),
-                                  onTap: () {
-                                    Navigator.pop(context);
-                                    onAppBarActionSelected(
-                                        MailViewAppBarAction.notSpam);
-                                  },
-                                ),
-                              ),
-                            if (folderType == FolderType.sent)
-                              PopupMenuItem(
-                                child: InkWell(
-                                  child: Text(i18n(context, "btn_resend")),
-                                  onTap: () {
-                                    Navigator.pop(context);
-                                    onAppBarActionSelected(
-                                        MailViewAppBarAction.resend);
-                                  },
-                                ),
-                              ),
-                          ];
-                        },
-                      ),
+
+                      if (![FolderType.sent, FolderType.drafts, FolderType.spam]
+                          .contains(folderType))
+                        IconButton(
+                          icon: SvgPicture.asset(
+                            AppAssets.spam,
+                            color: theme.appBarTheme.iconTheme.color,
+                          ),
+                          tooltip: i18n(context, "btn_to_spam"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                            onAppBarActionSelected(MailViewAppBarAction.toSpam);
+                          },
+                        ),
+                      if (folderType == FolderType.spam)
+                        IconButton(
+                          icon: SvgPicture.asset(
+                            AppAssets.not_spam,
+                            color: theme.appBarTheme.iconTheme.color,
+                          ),
+                          tooltip: i18n(context, "btn_not_spam"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                            onAppBarActionSelected(
+                                MailViewAppBarAction.notSpam);
+                          },
+                        ),
+                      if (folderType == FolderType.sent)
+                        IconButton(
+                          icon: SvgPicture.asset(
+                            AppAssets.resend,
+                            color: theme.appBarTheme.iconTheme.color,
+                          ),
+                          tooltip: i18n(context, "btn_resend"),
+                          onPressed: () {
+                            Navigator.pop(context);
+                            onAppBarActionSelected(MailViewAppBarAction.resend);
+                          },
+                        ),
                     ],
             );
           }),

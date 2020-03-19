@@ -19,6 +19,7 @@
   "messages_delete_title": "Delete message",
   "messages_delete_desc_with_subject": "Are you sure you want to delete {subject}?",
   "messages_delete_desc": "Are you sure you want to delete this message?",
+  "messages_delete_desc_with_count": "Are you sure you want to delete this messages?",
   "messages_list_app_bar_mail": "Mail",
   "messages_list_app_bar_contacts": "Contacts",
   "messages_list_app_bar_settings": "Settings",

@@ -1,5 +1,6 @@
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/mail/mail_table.dart';
+import 'package:aurora_mail/modules/mail/screens/messages_list/components/selection_controller.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
 import 'package:aurora_mail/utils/base_state.dart';
@@ -23,6 +24,7 @@ class MessageItem extends StatefulWidget {
   final Function(Message) onItemSelected;
   final Function(Message, bool) onStarMessage;
   final Function(Message) onDeleteMessage;
+  final SelectionController selectionController;
 
   const MessageItem(
     this.isSent,
@@ -32,6 +34,7 @@ class MessageItem extends StatefulWidget {
     @required this.onItemSelected,
     @required this.onDeleteMessage,
     @required this.onStarMessage,
+    this.selectionController,
   }) : super(key: key);
 
   @override
@@ -84,6 +87,7 @@ class _MessageItemState extends BState<MessageItem> {
         .where((i) => !i.flagsInJson.contains("\\seen"))
         .isNotEmpty;
 
+    final selected = widget.selectionController.isSelected(m.localId);
     final flags = Mail.getFlags(m.flagsInJson);
 
     final fontWeight =
@@ -104,177 +108,215 @@ class _MessageItemState extends BState<MessageItem> {
       );
     }
 
-    return Column(
-      children: <Widget>[
-        InkWell(
-          child: Dismissible(
-            key: Key(m.uid.toString()),
-            direction: DismissDirection.endToStart,
-            confirmDismiss: (_) => ConfirmationDialog.show(
-              context,
-              i18n(context, "messages_delete_title"),
-              i18n(context, "messages_delete_desc_with_subject",
-                  {"subject": m.subject}),
-              i18n(context, "btn_delete"),
-              destructibleAction: true,
-            ),
-            onDismissed: (_) => widget.onDeleteMessage(m),
-            background: Container(
-              color: theme.errorColor,
-              child: Stack(
-                children: <Widget>[
-                  Positioned(
-                      right: 16.0,
-                      top: 0.0,
-                      bottom: 0.0,
-                      child: Icon(Icons.delete_outline,
-                          color: Colors.white, size: 36.0)),
-                ],
-              ),
-            ),
-            child: ListTile(
-              onTap: widget.children.isNotEmpty && !_showThreads
-                  ? _toggleThreads
-                  : () => widget.onItemSelected(m),
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: selected ? const Color.fromRGBO(0, 0, 0, 0.05) : null,
+      ),
+      child: Column(
+        children: <Widget>[
+          InkWell(
+            onLongPress: changeEnable,
+            onTap: widget.selectionController.enable
+                ? changeEnable
+                : widget.children.isNotEmpty && !_showThreads
+                    ? _toggleThreads
+                    : () => widget.onItemSelected(m),
+            child: Dismissible(
               key: Key(m.uid.toString()),
-              title: Text(_getEmailTitle(),
-                  style: TextStyle(
-                    fontWeight: fontWeight,
-                    fontSize: 14.0,
-                    color: theme.disabledColor,
-                  )),
-              subtitle: Padding(
-                padding: const EdgeInsets.only(top: 6.0),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
+              direction: DismissDirection.endToStart,
+              confirmDismiss: (_) => ConfirmationDialog.show(
+                context,
+                i18n(context, "messages_delete_title"),
+                i18n(context, "messages_delete_desc_with_subject",
+                    {"subject": m.subject}),
+                i18n(context, "btn_delete"),
+                destructibleAction: true,
+              ),
+              onDismissed: (_) => widget.onDeleteMessage(m),
+              background: Container(
+                color: theme.errorColor,
+                child: Stack(
                   children: <Widget>[
-                    if (widget.children.isNotEmpty)
-                      InkResponse(
-                        child: _buildThreadCounter(context, hasUnreadChildren),
-                        onTap: _toggleThreads,
-                      ),
-                    if (widget.children.isNotEmpty) SizedBox(width: 6.0),
-                    Flexible(
-                      child: Opacity(
-                        opacity: m.subject.isEmpty ? 0.44 : 1.0,
-                        child: Text(
-                          m.subject.isNotEmpty
-                              ? m.subject
-                              : i18n(context, "messages_no_subject"),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                            fontWeight: fontWeight,
-                            fontSize: 16.0,
-                            color: theme.textTheme.title.color,
+                    Positioned(
+                        right: 16.0,
+                        top: 0.0,
+                        bottom: 0.0,
+                        child: Icon(Icons.delete_outline,
+                            color: Colors.white, size: 36.0)),
+                  ],
+                ),
+              ),
+              child: ListTile(
+                key: Key(m.uid.toString()),
+                title: Text(_getEmailTitle(),
+                    style: TextStyle(
+                      fontWeight: fontWeight,
+                      fontSize: 14.0,
+                      color: theme.disabledColor,
+                    )),
+                subtitle: Padding(
+                  padding: const EdgeInsets.only(top: 6.0),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      if (widget.children.isNotEmpty)
+                        InkResponse(
+                          child:
+                              _buildThreadCounter(context, hasUnreadChildren),
+                          onTap: _toggleThreads,
+                        ),
+                      if (widget.children.isNotEmpty) SizedBox(width: 6.0),
+                      Flexible(
+                        child: Opacity(
+                          opacity: m.subject.isEmpty ? 0.44 : 1.0,
+                          child: Text(
+                            m.subject.isNotEmpty
+                                ? m.subject
+                                : i18n(context, "messages_no_subject"),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontWeight: fontWeight,
+                              fontSize: 16.0,
+                              color: theme.textTheme.title.color,
+                            ),
                           ),
                         ),
                       ),
+                    ],
+                  ),
+                ),
+                trailing: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: <Widget>[
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        if (m.hasAttachments) Icon(Icons.attachment),
+                        SizedBox(width: 6.0),
+                        BlocBuilder<SettingsBloc, SettingsState>(
+                          builder: (_, state) => Text(
+                            DateFormatting.getShortMessageDate(
+                              timestamp: m.timeStampInUTC,
+                              locale:
+                                  Localizations.localeOf(context).languageCode,
+                              yesterdayWord:
+                                  i18n(context, "formatting_yesterday"),
+                              is24: (state as SettingsLoaded).is24 ?? true,
+                            ),
+                            style: TextStyle(
+                              fontSize: 14.0,
+                              color: theme.disabledColor
+                                  .withAlpha(theme.disabledColor.alpha ~/ 2),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        if (flags.contains(MessageFlags.answered))
+                          Padding(
+                            padding: const EdgeInsets.only(left: .0),
+                            child: Icon(Icons.reply),
+                          ),
+                        if (flags.contains(MessageFlags.forwarded))
+                          Padding(
+                            padding: const EdgeInsets.only(left: .0),
+                            child: Icon(MdiIcons.share),
+                          ),
+                        if (widget.selectionController.enable)
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: Center(
+                              child: DecoratedBox(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: selected
+                                      ? null
+                                      : Border.all(
+                                          color: theme.primaryColor, width: 2),
+                                  color: selected ? theme.primaryColor : null,
+                                ),
+                                child: SizedBox(
+                                  height: 10,
+                                  width: 10,
+                                ),
+                              ),
+                            ),
+                          ),
+                        SizedBox(
+                            width: 24.0,
+                            height: 24.0,
+                            child: BlocBuilder<SettingsBloc, SettingsState>(
+                              builder: (_, state) => Star(
+                                value: m.flagsInJson.contains("\\flagged"),
+                                enabled: !(state is SettingsLoaded &&
+                                    state.connection ==
+                                        ConnectivityResult.none),
+                                onPressed: _setStarred,
+                              ),
+                            )),
+                      ],
                     ),
                   ],
                 ),
               ),
-              trailing: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: <Widget>[
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[
-                      if (m.hasAttachments) Icon(Icons.attachment),
-                      SizedBox(width: 6.0),
-                      BlocBuilder<SettingsBloc, SettingsState>(
-                        builder: (_, state) => Text(
-                          DateFormatting.getShortMessageDate(
-                            timestamp: m.timeStampInUTC,
-                            locale:
-                                Localizations.localeOf(context).languageCode,
-                            yesterdayWord:
-                                i18n(context, "formatting_yesterday"),
-                            is24: (state as SettingsLoaded).is24 ?? true,
-                          ),
-                          style: TextStyle(
-                            fontSize: 14.0,
-                            color: theme.disabledColor
-                                .withAlpha(theme.disabledColor.alpha ~/ 2),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[
-                      if (flags.contains(MessageFlags.answered))
-                        Padding(
-                          padding: const EdgeInsets.only(left: .0),
-                          child: Icon(Icons.reply),
-                        ),
-                      if (flags.contains(MessageFlags.forwarded))
-                        Padding(
-                          padding: const EdgeInsets.only(left: .0),
-                          child: Icon(MdiIcons.share),
-                        ),
-                      SizedBox(
-                          width: 24.0,
-                          height: 24.0,
-                          child: BlocBuilder<SettingsBloc, SettingsState>(
-                            builder: (_, state) => Star(
-                              value: m.flagsInJson.contains("\\flagged"),
-                              enabled: !(state is SettingsLoaded &&
-                                  state.connection == ConnectivityResult.none),
-                              onPressed: _setStarred,
-                            ),
-                          )),
-                    ],
-                  ),
-                ],
-              ),
             ),
           ),
-        ),
-        Divider(
-          indent: 16.0,
-          endIndent: 16.0,
-          height: 0.0,
-          color: theme.disabledColor.withOpacity(0.08),
-        ),
-        if (widget.children.isNotEmpty && _showThreads)
-          ...widget.children.map((t) {
-            return Stack(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(left: 16.0),
-                  child: Column(
-                    children: <Widget>[
+          Divider(
+            indent: 16.0,
+            endIndent: 16.0,
+            height: 0.0,
+            color: theme.disabledColor.withOpacity(0.08),
+          ),
+          if (widget.children.isNotEmpty && _showThreads)
+            ...widget.children.map((t) {
+              return Stack(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(left: 16.0),
+                    child: Column(
+                      children: <Widget>[
 //                      Divider(
 //                        height: 0.0,
 //                        indent: 4.0,
 //                        endIndent: 16.0,
 //                      ),
-                      MessageItem(widget.isSent, t, [],
-                          key: Key(t.localId.toString()),
-                          onItemSelected: widget.onItemSelected,
-                          onStarMessage: widget.onStarMessage,
-                          onDeleteMessage: widget.onDeleteMessage),
-                    ],
+                        MessageItem(widget.isSent, t, [],
+                            key: Key(t.localId.toString()),
+                            selectionController: widget.selectionController,
+                            onItemSelected: widget.onItemSelected,
+                            onStarMessage: widget.onStarMessage,
+                            onDeleteMessage: widget.onDeleteMessage),
+                      ],
+                    ),
                   ),
-                ),
-                Positioned(
-                  left: 16.0,
-                  top: 0,
-                  bottom: 0,
-                  child: Container(
-                    width: 4.0,
-                    color: theme.accentColor,
+                  Positioned(
+                    left: 16.0,
+                    top: 0,
+                    bottom: 0,
+                    child: Container(
+                      width: 4.0,
+                      color: theme.accentColor,
+                    ),
                   ),
-                ),
-              ],
-            );
-          }).toList()
-      ],
+                ],
+              );
+            }).toList()
+        ],
+      ),
     );
+  }
+
+  changeEnable() {
+    final m = widget.message;
+    widget.selectionController.addOrRemove(m.localId, m);
+    setState(() {});
   }
 }

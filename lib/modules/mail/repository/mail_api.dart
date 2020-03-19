@@ -461,4 +461,20 @@ class MailApi {
       throw WebMailApiError(res);
     }
   }
+
+  Future clearFolder(String folder) async {
+    final parameters = json.encode({
+      "Folder": folder,
+      "AccountID": _accountId,
+    });
+
+    final body =
+        new WebMailApiBody(method: "ClearFolder", parameters: parameters);
+
+    final res = await _mailModule.post(body);
+
+    if (res != true) {
+      throw WebMailApiError(res);
+    }
+  }
 }

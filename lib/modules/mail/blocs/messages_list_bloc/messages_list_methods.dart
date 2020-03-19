@@ -40,12 +40,23 @@ class MessagesListMethods {
   }
 
   Future<void> deleteMessages(List<Message> messages) async {
-    final trashRawName = (await _folderDao.getByType(
-      Folder.getNumberFromFolderType(FolderType.trash),
+    final foldersForPermanentlyDelete = (await _folderDao.getByType(
+      [
+        Folder.getNumberFromFolderType(FolderType.trash),
+        Folder.getNumberFromFolderType(FolderType.spam)
+      ],
       account.localId,
-    ))
-        .first
+    ));
+    final trashFolderName = foldersForPermanentlyDelete
+        .firstWhere(
+          (item) =>
+              item.type == Folder.getNumberFromFolderType(FolderType.trash),
+        )
         .fullNameRaw;
+
+    final foldersForPermanentlyDeleteName =
+        foldersForPermanentlyDelete.map((item) => item.fullNameRaw).toList();
+
     final splitToFolder = <String, List<int>>{};
 
     for (var message in messages) {
@@ -58,7 +69,7 @@ class MessagesListMethods {
       final futures = [
         _mailDao.deleteMessages(uids, folder),
       ];
-      if (folder == trashRawName) {
+      if (foldersForPermanentlyDeleteName.contains(folder)) {
         futures.add(_mailApi.deleteMessages(
           uids: uids,
           folderRawName: folder,
@@ -67,7 +78,7 @@ class MessagesListMethods {
         futures.add(_mailApi.moveToTrash(
           uids: uids,
           folderRawName: folder,
-          trashRawName: trashRawName,
+          trashRawName: trashFolderName,
         ));
       }
       await Future.wait(futures);
@@ -77,7 +88,7 @@ class MessagesListMethods {
   Future moveMessages(List<Message> messages, FolderType toFolder) async {
     final splitToFolder = <String, List<int>>{};
     final toFolderName = (await _folderDao.getByType(
-      Folder.getNumberFromFolderType(toFolder),
+      [Folder.getNumberFromFolderType(toFolder)],
       account.localId,
     ))
         .first
@@ -106,4 +117,9 @@ class MessagesListMethods {
   }
 
   static const _limit = 30;
+
+  Future emptyFolder(String folder) async {
+    await _mailApi.clearFolder(folder);
+    await _mailDao.clearFolder(folder);
+  }
 }

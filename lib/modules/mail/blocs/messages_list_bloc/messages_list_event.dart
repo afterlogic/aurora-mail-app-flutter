@@ -46,3 +46,12 @@ class MoveMessages extends MessagesListEvent {
   @override
   List<Object> get props => [messages, toFolder];
 }
+
+class EmptyFolder extends MessagesListEvent {
+  final String folder;
+
+  EmptyFolder(this.folder);
+
+  @override
+  List<Object> get props => [folder];
+}

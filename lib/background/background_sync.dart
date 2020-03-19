@@ -76,8 +76,8 @@ class BackgroundSync {
     final accounts = await _accountsDao.getAccounts(user.localId);
     final account = accounts[0];
 
-    final inboxFolders =
-        await _foldersDao.getByType(1 /*FolderType.inbox*/, account.localId);
+    final inboxFolders = await _foldersDao.getByType(
+        [Folder.getNumberFromFolderType(FolderType.inbox)], account.localId);
 
     final foldersToUpdate =
         (await updateFolderHash(inboxFolders, user, account))

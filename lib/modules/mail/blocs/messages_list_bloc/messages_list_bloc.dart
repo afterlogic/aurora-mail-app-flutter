@@ -33,6 +33,7 @@ class MessagesListBloc extends Bloc<MessagesListEvent, MessagesListState> {
     if (event is StopMessagesRefresh) yield MessagesRefreshed();
     if (event is DeleteMessages) yield* _deleteMessage(event);
     if (event is MoveMessages) yield* _moveMessages(event);
+    if (event is EmptyFolder) yield* _emptyFolder(event);
   }
 
   Stream<MessagesListState> _subscribeToMessages(
@@ -43,17 +44,16 @@ class MessagesListBloc extends Bloc<MessagesListEvent, MessagesListState> {
       final type = Folder.getFolderTypeFromNumber(event.currentFolder.type);
       final isSent = type == FolderType.sent || type == FolderType.drafts;
 
-      final stream = (int page)=>
-        _methods.getMessages(
-          event.currentFolder,
-          event.filter == MessagesFilter.starred,
-          event.filter == MessagesFilter.unread,
-          searchTerm,
-          searchPattern,
-          user,
-          account,
-          page,
-        );
+      final stream = (int page) => _methods.getMessages(
+            event.currentFolder,
+            event.filter == MessagesFilter.starred,
+            event.filter == MessagesFilter.unread,
+            searchTerm,
+            searchPattern,
+            user,
+            account,
+            page,
+          );
 
       yield SubscribedToMessages(
         stream,
@@ -88,8 +88,17 @@ class MessagesListBloc extends Bloc<MessagesListEvent, MessagesListState> {
 
   Stream<MessagesListState> _moveMessages(MoveMessages event) async* {
     try {
-      await _methods.moveMessages(event.messages,event.toFolder);
+      await _methods.moveMessages(event.messages, event.toFolder);
       yield MessagesMoved();
+    } catch (err, s) {
+      yield MailError(formatError(err, s));
+    }
+  }
+
+  Stream<MessagesListState> _emptyFolder(EmptyFolder event) async* {
+    try {
+      await _methods.emptyFolder(event.folder);
+      yield FolderCleared();
     } catch (err, s) {
       yield MailError(formatError(err, s));
     }
