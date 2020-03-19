@@ -83,15 +83,13 @@ class _MessageItemState extends BState<MessageItem> {
   @override
   Widget build(BuildContext context) {
     final m = widget.message;
-    final hasUnreadChildren = widget.children
-        .where((i) => !i.flagsInJson.contains("\\seen"))
-        .isNotEmpty;
+    final hasUnreadChildren =
+        widget.children.where((i) => !i.flagsInJson.contains("\\seen")).isNotEmpty;
 
     final selected = widget.selectionController.isSelected(m.localId);
     final flags = Mail.getFlags(m.flagsInJson);
 
-    final fontWeight =
-        flags.contains(MessageFlags.seen) ? FontWeight.w400 : FontWeight.w700;
+    final fontWeight = flags.contains(MessageFlags.seen) ? FontWeight.w400 : FontWeight.w700;
 
     Widget _buildThreadCounter(BuildContext context, bool hasUnread) {
       return Container(
@@ -127,8 +125,7 @@ class _MessageItemState extends BState<MessageItem> {
               confirmDismiss: (_) => ConfirmationDialog.show(
                 context,
                 i18n(context, "messages_delete_title"),
-                i18n(context, "messages_delete_desc_with_subject",
-                    {"subject": m.subject}),
+                i18n(context, "messages_delete_desc_with_subject", {"subject": m.subject}),
                 i18n(context, "btn_delete"),
                 destructibleAction: true,
               ),
@@ -141,8 +138,7 @@ class _MessageItemState extends BState<MessageItem> {
                         right: 16.0,
                         top: 0.0,
                         bottom: 0.0,
-                        child: Icon(Icons.delete_outline,
-                            color: Colors.white, size: 36.0)),
+                        child: Icon(Icons.delete_outline, color: Colors.white, size: 36.0)),
                   ],
                 ),
               ),
@@ -161,8 +157,7 @@ class _MessageItemState extends BState<MessageItem> {
                     children: <Widget>[
                       if (widget.children.isNotEmpty)
                         InkResponse(
-                          child:
-                              _buildThreadCounter(context, hasUnreadChildren),
+                          child: _buildThreadCounter(context, hasUnreadChildren),
                           onTap: _toggleThreads,
                         ),
                       if (widget.children.isNotEmpty) SizedBox(width: 6.0),
@@ -170,9 +165,7 @@ class _MessageItemState extends BState<MessageItem> {
                         child: Opacity(
                           opacity: m.subject.isEmpty ? 0.44 : 1.0,
                           child: Text(
-                            m.subject.isNotEmpty
-                                ? m.subject
-                                : i18n(context, "messages_no_subject"),
+                            m.subject.isNotEmpty ? m.subject : i18n(context, "messages_no_subject"),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
@@ -200,16 +193,13 @@ class _MessageItemState extends BState<MessageItem> {
                           builder: (_, state) => Text(
                             DateFormatting.getShortMessageDate(
                               timestamp: m.timeStampInUTC,
-                              locale:
-                                  Localizations.localeOf(context).languageCode,
-                              yesterdayWord:
-                                  i18n(context, "formatting_yesterday"),
+                              locale: Localizations.localeOf(context).languageCode,
+                              yesterdayWord: i18n(context, "formatting_yesterday"),
                               is24: (state as SettingsLoaded).is24 ?? true,
                             ),
                             style: TextStyle(
                               fontSize: 14.0,
-                              color: theme.disabledColor
-                                  .withAlpha(theme.disabledColor.alpha ~/ 2),
+                              color: theme.disabledColor.withAlpha(theme.disabledColor.alpha ~/ 2),
                             ),
                           ),
                         ),
@@ -231,16 +221,14 @@ class _MessageItemState extends BState<MessageItem> {
                           ),
                         if (widget.selectionController.enable)
                           Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 8.0),
+                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
                             child: Center(
                               child: DecoratedBox(
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   border: selected
                                       ? null
-                                      : Border.all(
-                                          color: theme.primaryColor, width: 2),
+                                      : Border.all(color: theme.primaryColor, width: 2),
                                   color: selected ? theme.primaryColor : null,
                                 ),
                                 child: SizedBox(
@@ -257,8 +245,7 @@ class _MessageItemState extends BState<MessageItem> {
                               builder: (_, state) => Star(
                                 value: m.flagsInJson.contains("\\flagged"),
                                 enabled: !(state is SettingsLoaded &&
-                                    state.connection ==
-                                        ConnectivityResult.none),
+                                    state.connection == ConnectivityResult.none),
                                 onPressed: _setStarred,
                               ),
                             )),
@@ -288,12 +275,16 @@ class _MessageItemState extends BState<MessageItem> {
 //                        indent: 4.0,
 //                        endIndent: 16.0,
 //                      ),
-                        MessageItem(widget.isSent, t, [],
-                            key: Key(t.localId.toString()),
-                            selectionController: widget.selectionController,
-                            onItemSelected: widget.onItemSelected,
-                            onStarMessage: widget.onStarMessage,
-                            onDeleteMessage: widget.onDeleteMessage),
+                        MessageItem(
+                          widget.isSent,
+                          t,
+                          [],
+                          key: Key(t.localId.toString()),
+                          selectionController: widget.selectionController,
+                          onItemSelected: widget.onItemSelected,
+                          onStarMessage: widget.onStarMessage,
+                          onDeleteMessage: widget.onDeleteMessage,
+                        ),
                       ],
                     ),
                   ),
