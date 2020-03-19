@@ -3,9 +3,11 @@ import 'dart:math';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/messages_list_state.dart';
+import 'package:aurora_mail/res/icons/app_assets.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class MailFolder extends StatelessWidget {
@@ -21,30 +23,33 @@ class MailFolder extends StatelessWidget {
       this.children})
       : super(key: key);
 
-  IconData get _folderIcon {
+  Widget _folderIcon(Color color) {
     switch (mailFolder.folderType) {
       case FolderType.inbox:
-        return Icons.inbox;
+        return Icon(Icons.inbox);
       case FolderType.sent:
-        return Icons.send;
+        return Icon(Icons.send);
       case FolderType.drafts:
-        return Icons.drafts;
+        return Icon(Icons.drafts);
       case FolderType.spam:
-        return MdiIcons.emailAlert;
+        return SvgPicture.asset(
+          AppAssets.spam,
+          color: color,
+        );
       case FolderType.trash:
-        return MdiIcons.trashCanOutline;
+        return Icon(MdiIcons.trashCanOutline);
       case FolderType.virus:
-        return Icons.bug_report;
+        return Icon(Icons.bug_report);
       case FolderType.starred:
-        return Icons.star;
+        return Icon(Icons.star);
       case FolderType.template:
-        return MdiIcons.fileDocumentEditOutline;
+        return Icon(MdiIcons.fileDocumentEditOutline);
       case FolderType.system:
-        return Icons.devices;
+        return Icon(Icons.devices);
       case FolderType.user:
-        return Icons.folder;
+        return Icon(Icons.folder);
       case FolderType.unknown:
-        return Icons.device_unknown;
+        return Icon(Icons.device_unknown);
       default:
         return null;
     }
@@ -125,7 +130,7 @@ class MailFolder extends StatelessWidget {
             padding: EdgeInsets.only(left: paddingCount * paddingStep),
             child: ListTile(
               selected: isSelected,
-              leading: Icon(_folderIcon),
+              leading: _folderIcon(theme.appBarTheme.iconTheme.color),
               title: Text(_getTitle(context)),
               trailing: _buildMessageCounter(context),
               onTap: () => _selectFolder(context),
