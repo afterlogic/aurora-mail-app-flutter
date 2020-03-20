@@ -13,4 +13,4 @@ multiUserEnable: false
 multiAccountEnable: true
 cryptoEnable: true
 
-version: 1.0.1+54
+version: 1.0.1+55
