@@ -7,12 +7,12 @@ import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/messages_list_
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/selection_controller.dart';
 import 'package:aurora_mail/res/icons/app_assets.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
+import 'package:aurora_mail/shared_ui/svg_icon.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class SelectAppBar extends StatefulWidget {
   final SelectionController<int, Message> controller;
@@ -62,17 +62,15 @@ class _SelectAppBarState extends BState<SelectAppBar> {
                   if (![FolderType.sent, FolderType.drafts, FolderType.spam]
                       .contains(folderType))
                     IconButton(
-                      icon: SvgPicture.asset(
+                      icon: SvgIcon(
                         AppAssets.spam,
-                        color: theme.appBarTheme.iconTheme.color,
                       ),
                       onPressed: () => _spam(true),
                     ),
                   if (FolderType.spam == folderType)
                     IconButton(
-                      icon: SvgPicture.asset(
+                      icon: SvgIcon(
                         AppAssets.not_spam,
-                        color: theme.appBarTheme.iconTheme.color,
                       ),
                       onPressed: () => _spam(false),
                     ),

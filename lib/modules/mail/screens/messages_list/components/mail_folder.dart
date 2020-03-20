@@ -4,10 +4,10 @@ import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/messages_list_state.dart';
 import 'package:aurora_mail/res/icons/app_assets.dart';
+import 'package:aurora_mail/shared_ui/svg_icon.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class MailFolder extends StatelessWidget {
@@ -23,7 +23,7 @@ class MailFolder extends StatelessWidget {
       this.children})
       : super(key: key);
 
-  Widget _folderIcon(Color color) {
+  Widget get _folderIcon {
     switch (mailFolder.folderType) {
       case FolderType.inbox:
         return Icon(Icons.inbox);
@@ -32,10 +32,7 @@ class MailFolder extends StatelessWidget {
       case FolderType.drafts:
         return Icon(Icons.drafts);
       case FolderType.spam:
-        return SvgPicture.asset(
-          AppAssets.spam,
-          color: color,
-        );
+        return SvgIcon(AppAssets.spam);
       case FolderType.trash:
         return Icon(MdiIcons.trashCanOutline);
       case FolderType.virus:
@@ -130,7 +127,7 @@ class MailFolder extends StatelessWidget {
             padding: EdgeInsets.only(left: paddingCount * paddingStep),
             child: ListTile(
               selected: isSelected,
-              leading: _folderIcon(theme.appBarTheme.iconTheme.color),
+              leading: _folderIcon,
               title: Text(getTitle(context, mailFolder)),
               trailing: _buildMessageCounter(context),
               onTap: () => _selectFolder(context),

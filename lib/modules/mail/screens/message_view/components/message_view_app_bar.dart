@@ -2,6 +2,7 @@ import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/mail/blocs/message_view_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/message_view_bloc/message_view_bloc.dart';
 import 'package:aurora_mail/res/icons/app_assets.dart';
+import 'package:aurora_mail/shared_ui/svg_icon.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
@@ -31,7 +32,6 @@ class MailViewAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return PreferredSize(
       preferredSize: preferredSize,
       child: BlocBuilder<MessageViewBloc, MessageViewState>(
@@ -81,9 +81,8 @@ class MailViewAppBar extends StatelessWidget implements PreferredSizeWidget {
                       if (![FolderType.sent, FolderType.drafts, FolderType.spam]
                           .contains(folderType))
                         IconButton(
-                          icon: SvgPicture.asset(
+                          icon: SvgIcon(
                             AppAssets.spam,
-                            color: theme.appBarTheme.iconTheme.color,
                           ),
                           tooltip: i18n(context, "btn_to_spam"),
                           onPressed: () {
@@ -93,9 +92,8 @@ class MailViewAppBar extends StatelessWidget implements PreferredSizeWidget {
                         ),
                       if (folderType == FolderType.spam)
                         IconButton(
-                          icon: SvgPicture.asset(
+                          icon: SvgIcon(
                             AppAssets.not_spam,
-                            color: theme.appBarTheme.iconTheme.color,
                           ),
                           tooltip: i18n(context, "btn_not_spam"),
                           onPressed: () {
@@ -106,9 +104,8 @@ class MailViewAppBar extends StatelessWidget implements PreferredSizeWidget {
                         ),
                       if (folderType == FolderType.sent)
                         IconButton(
-                          icon: SvgPicture.asset(
+                          icon: SvgIcon(
                             AppAssets.resend,
-                            color: theme.appBarTheme.iconTheme.color,
                           ),
                           tooltip: i18n(context, "btn_resend"),
                           onPressed: () {
