@@ -236,6 +236,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
                         state.filter,
                         state.isSent,
                         state.key,
+                        state.folder,
                       );
                     } else {
                       child = _buildMessagesLoading();
@@ -272,6 +273,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
     MessagesFilter filter,
     bool isSent,
     String key,
+    String folder,
   ) {
     return Column(
       children: <Widget>[
@@ -290,6 +292,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
         Flexible(
           child: StreamPaginationList(
             key: Key(key),
+            folder: folder,
             selectionController: selectionController,
             header: [FolderType.spam, FolderType.trash]
                     .contains(_selectedFolder.folderType)

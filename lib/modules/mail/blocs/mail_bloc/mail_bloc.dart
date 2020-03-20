@@ -173,9 +173,13 @@ class MailBloc extends Bloc<MailEvent, MailState> {
 
   Stream<MailState> _selectFolder(SelectFolder event) async* {
     try {
-      final List<Folder> folders = await _methods.getFolders();
+      final List<Folder> folders = state is FoldersLoaded
+          ? (state as FoldersLoaded).folders
+          : await _methods.getFolders();
+
       _selectedFolder = event.folder;
       _filter = event.filter;
+
       yield FoldersLoaded(
         folders,
         _selectedFolder,
