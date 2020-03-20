@@ -11,3 +11,5 @@ background_color: "#FFFFFF"
 splashGradientTop: "#FFFFFF"
 splashGradientBottom: "#FFFFFF"
 multiUserEnable: true
+
+version: 1.0.1+53

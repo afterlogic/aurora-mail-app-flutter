@@ -12,11 +12,12 @@ import 'package:flutter/widgets.dart';
 class MessageViewMethods {
   MailApi _mailApi;
   PgpWorker pgpWorker;
-  Account account;
+  final Account account;
+  final User user;
   final _foldersDao = FoldersDao(DBInstances.appDB);
 
   MessageViewMethods({
-    @required User user,
+    @required this.user,
     @required this.account,
     this.pgpWorker,
   }) {
@@ -59,6 +60,6 @@ class MessageViewMethods {
 
   Future<FolderType> getFolderType(String folder) async {
     return Folder.getFolderTypeFromNumber(
-        (await _foldersDao.getByName(folder)).type);
+        (await _foldersDao.getByName(folder, user.localId)).type);
   }
 }
