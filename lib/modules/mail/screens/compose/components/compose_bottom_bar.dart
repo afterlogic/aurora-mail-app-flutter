@@ -8,12 +8,18 @@ import 'package:crypto_worker/crypto_worker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class ComposeBottomBar extends StatefulWidget {
   final VoidCallback onEncrypt;
-  final VoidCallback onDecrypt;
+  final VoidCallback onCreateSelfDestructingEmail;
+  final VoidCallback onBack;
 
-  ComposeBottomBar({this.onEncrypt, this.onDecrypt});
+  ComposeBottomBar(
+    this.onEncrypt,
+    this.onBack,
+    this.onCreateSelfDestructingEmail,
+  );
 
   @override
   _ComposeBottomBarState createState() => _ComposeBottomBarState();
@@ -41,11 +47,24 @@ class _ComposeBottomBarState extends BState<ComposeBottomBar> {
           padding: EdgeInsets.only(bottom: Platform.isIOS ? 15 : 0),
           width: double.infinity,
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               GestureDetector(
-                onTap: ()=>encrypted ? widget.onDecrypt() : widget.onEncrypt(),
+                onTap: () => encrypted
+                    ? widget.onBack()
+                    : widget.onCreateSelfDestructingEmail(),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    Icon(MdiIcons.clockAlert),
+                    Text("self-destructing"),
+                  ],
+                ),
+              ),
+              GestureDetector(
+                onTap: () => encrypted ? widget.onBack() : widget.onEncrypt(),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   mainAxisSize: MainAxisSize.min,

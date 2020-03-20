@@ -648,11 +648,16 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
         ),
         bottomNavigationBar: BuildProperty.cryptoEnable
             ? ComposeBottomBar(
-                onEncrypt: _encryptDialog,
-                onDecrypt: _decrypt,
+                _encryptDialog,
+                _decrypt,
+                _createSelfDestructingEmail,
               )
             : null,
       ),
     );
+  }
+
+  _createSelfDestructingEmail() {
+    
   }
 }
