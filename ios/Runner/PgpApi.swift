@@ -76,7 +76,7 @@ class PgpApi{
 //        assert(privateKey != nil)
 //        try pgp.decrypt(input,output,privateKey!,password,publicKey?.first!)
     }
-    func getKeyDescription(_ key:Data) throws->KeyInfo{
+    func getKeyDescription(_ key:String) throws->KeyInfo{
         return try pgp.getKeyDescription(key)
     }
     func createKeys(_ length:Int32,_ email:String,_ password:String) throws->[String]{

@@ -61,6 +61,9 @@ dependencies:
   # crashlytics
   firebase_crashlytics: ^0.1.2+5
 
+  # file encryption
+  encrypt:
+
   #background
   #  android_alarm_manager: 0.4.5+1 not working
   alarm_service:

@@ -5,4 +5,5 @@ class WebMailModules {
   static const files = "Files";
   static const dav = "Dav";
   static const twoFactorAuth = "TwoFactorAuth";
+  static const openPgp="OpenPgpFilesWebclient";
 }

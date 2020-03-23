@@ -316,5 +316,6 @@
   "life_time_days_3": "72 hours",
   "life_time_days_7": "7 days",
   "message_lifetime": "Message lifetime",
-  "no_name": "Без имени"
+  "no_name": "Без имени",
+  "select_recipient": "Выберите получателя"
 }

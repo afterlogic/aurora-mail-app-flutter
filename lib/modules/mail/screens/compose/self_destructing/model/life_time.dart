@@ -14,6 +14,18 @@ extension LifeTimeMap on LifeTime {
       case LifeTime.Days7:
         return "life_time_days_7";
     }
-    return "";
+    return null;
+  }
+
+  int toHours() {
+    switch (this) {
+      case LifeTime.Day:
+        return 24;
+      case LifeTime.Days3:
+        return 24 * 3;
+      case LifeTime.Days7:
+        return 24 * 7;
+    }
+    return null;
   }
 }

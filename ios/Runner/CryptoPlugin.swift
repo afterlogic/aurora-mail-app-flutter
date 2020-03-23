@@ -80,7 +80,7 @@ public class CryptoPlugin: NSObject, FlutterPlugin {
             switch method {
             case "getKeyDescription":
                 let data = arguments[0] as! String
-                let info =  try self.pgp.getKeyDescription(  data.data(using: String.Encoding.utf8)!)
+                let info =  try self.pgp.getKeyDescription(  data)
                 return [info.emails,info.length,info.isPrivate]
             case "setTempFile":
                 let data = arguments[0] as? String

@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:crypto_model/crypto_model.dart';
 import 'package:crypto_plugin/crypto_plugin.dart';
 import 'package:crypto_storage/crypto_storage.dart';
@@ -32,8 +34,8 @@ class PgpWorkerImpl extends PgpWorker {
     String email,
     String password,
   ) async {
-    final keyPair = await _pgp.createKeys(
-        length, name.isEmpty ? "$email" : "$name <$email>", password);
+    final keyPair =
+        await _pgp.createKeys(length, name.isEmpty ? "$email" : "$name <$email>", password);
 
     final private = PgpKey.fill(name, email, true, keyPair.secret, length);
     final public = PgpKey.fill(name, email, false, keyPair.public, length);
@@ -77,6 +79,15 @@ class PgpWorkerImpl extends PgpWorker {
     return keys;
   }
 
+  Future<String> encryptSymmetric(String text, String password) async {
+    return String.fromCharCodes(
+      await _pgp.encryptSymmetricBytes(
+        Uint8List.fromList(text.codeUnits),
+        password,
+      ),
+    );
+  }
+
   EncryptType encryptType(String text) {
     bool _contains(List<String> patterns) {
       var startIndex = 0;
@@ -96,11 +107,7 @@ class PgpWorkerImpl extends PgpWorker {
       return EncryptType.Encrypt;
     }
 
-    if (_contains([
-      _BEGIN_PGP_SIGNED_MESSAGE,
-      _BEGIN_PGP_SIGNATURE,
-      _END_PGP_SIGNATURE
-    ])) {
+    if (_contains([_BEGIN_PGP_SIGNED_MESSAGE, _BEGIN_PGP_SIGNATURE, _END_PGP_SIGNATURE])) {
       return EncryptType.Sign;
     }
 

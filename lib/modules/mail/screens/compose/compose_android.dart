@@ -17,6 +17,7 @@ import 'package:aurora_mail/modules/mail/screens/compose/components/identity_sel
 import 'package:aurora_mail/modules/mail/screens/compose/compose_route.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/dialog/encrypt_dialog.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/self_destructing/bloc/self_destructing_bloc.dart';
+import 'package:aurora_mail/modules/mail/screens/compose/self_destructing/bloc/self_destructing_state.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/self_destructing/encrypt_setting.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/self_destructing/model/contact_with_key.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/self_destructing/select_recipient.dart';
@@ -230,8 +231,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
     final items = await authBloc.getAliasesAndIdentities();
 
     final identity = MailUtils.findIdentity(message.toInJson, items);
-    setIdentityOrSender(
-        identity ?? AliasOrIdentity(null, authBloc.currentIdentity));
+    setIdentityOrSender(identity ?? AliasOrIdentity(null, authBloc.currentIdentity));
   }
 
   void _onAppBarActionSelected(ComposeAppBarAction action) {
@@ -287,8 +287,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
       });
     }
 
-    if (_toEmails.isEmpty)
-      return _showError(i18n(context, "error_compose_no_receivers"));
+    if (_toEmails.isEmpty) return _showError(i18n(context, "error_compose_no_receivers"));
     if (_attachments.where((a) => a is TempAttachmentUpload).isNotEmpty) {
       return showSnack(
           context: context,
@@ -315,12 +314,9 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
     if (_message != null) {
       final result = _subjectTextCtrl.text != _message.subject ||
           _bodyTextCtrl.text != _message.rawBody ||
-          !listEquals<String>(
-              MailUtils.getEmails(_message.toInJson), _toEmails) ||
-          !listEquals<String>(
-              MailUtils.getEmails(_message.ccInJson), _ccEmails) ||
-          !listEquals<String>(
-              MailUtils.getEmails(_message.bccInJson), _bccEmails) ||
+          !listEquals<String>(MailUtils.getEmails(_message.toInJson), _toEmails) ||
+          !listEquals<String>(MailUtils.getEmails(_message.ccInJson), _ccEmails) ||
+          !listEquals<String>(MailUtils.getEmails(_message.bccInJson), _bccEmails) ||
           !listEquals(_savedAttachments, _attachments);
       if (result) {
         _savedAttachments = _attachments.toList();
@@ -339,8 +335,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
   void _saveToDrafts() {
     if (!_hasMessageChanged) return;
 
-    final attachmentsForSave =
-        _attachments.where((a) => a is ComposeAttachment);
+    final attachmentsForSave = _attachments.where((a) => a is ComposeAttachment);
 
     return _bloc.add(SaveToDrafts(
       to: _toEmails.join(","),
@@ -462,8 +457,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
     );
     this.alias = aliasOrIdentity.alias;
     this.identity = aliasOrIdentity.identity;
-    _fromCtrl.text =
-        identityViewName(aliasOrIdentity.name, aliasOrIdentity.mail);
+    _fromCtrl.text = identityViewName(aliasOrIdentity.name, aliasOrIdentity.mail);
   }
 
   void changeSignature(String oldSignature, String newSignature) {
@@ -520,9 +514,8 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
     Widget _keyboardActions(Widget child) {
       return KeyboardActions(
         config: KeyboardActionsConfig(
-          keyboardActionsPlatform: kDebugMode
-              ? KeyboardActionsPlatform.ALL
-              : KeyboardActionsPlatform.IOS,
+          keyboardActionsPlatform:
+              kDebugMode ? KeyboardActionsPlatform.ALL : KeyboardActionsPlatform.IOS,
           keyboardBarColor: Colors.white,
           actions: [
             KeyboardAction(
@@ -559,13 +552,10 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
 
               if (state is MessageSending) _showSending();
               if (state is MessageSent) _onMessageSent(context);
-              if (state is MessageSavedInDrafts)
-                _onMessageSaved(context, state.draftUid);
+              if (state is MessageSavedInDrafts) _onMessageSaved(context, state.draftUid);
               if (state is ComposeError) _showError(state.errorMsg, state.arg);
-              if (state is UploadStarted)
-                _setUploadProgress(state.tempAttachment);
-              if (state is AttachmentUploaded)
-                _onAttachmentUploaded(state.composeAttachment);
+              if (state is UploadStarted) _setUploadProgress(state.tempAttachment);
+              if (state is AttachmentUploaded) _onAttachmentUploaded(state.composeAttachment);
               if (state is ReceivedComposeAttachments)
                 setState(() => _attachments.addAll(state.attachments));
             },
@@ -623,14 +613,12 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
                             if (state is ConvertingAttachments) {
                               return Padding(
                                 padding: const EdgeInsets.all(8.0),
-                                child:
-                                    Center(child: CircularProgressIndicator()),
+                                child: Center(child: CircularProgressIndicator()),
                               );
                             } else {
                               return Column(
                                 children: _attachments
-                                    .map((a) => ComposeAttachmentItem(
-                                        a, _cancelAttachment))
+                                    .map((a) => ComposeAttachmentItem(a, _cancelAttachment))
                                     .toList(),
                               );
                             }
@@ -662,30 +650,35 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
   }
 
   _createSelfDestructingEmail() async {
+    final subject = _subjectTextCtrl.text;
+    final body = _bodyTextCtrl.text;
+
+    if (_toEmails.isEmpty) {
+      return showSnack(
+          context: context, scaffoldState: _scaffoldKey.currentState, msg: "select_recipient");
+    }
     final bloc = SelfDestructingBloc(
       _bloc.user,
+      _bloc.account,
       AliasOrIdentity(alias, identity),
+      subject,
+      body,
     );
-    // todo брать получателя из поля to
-    final contact = await dialog(
-      context: context,
-      builder: (context) => BlocProvider.value(
-        value: bloc,
-        child: SelectRecipient(bloc),
-      ),
-    );
-    if (contact is! ContactWithKey) {
-      return;
-    }
-    final setting = await dialog(
+
+    final result = await dialog(
       context: context,
       builder: (context) => BlocProvider.value(
         value: bloc,
         child: EncryptSetting(
           bloc,
-          contact as ContactWithKey,
+          _toEmails.first,
         ),
       ),
     );
+    if (result is Encrypted) {
+
+    } else if (result is ErrorState) {
+
+    }
   }
 }

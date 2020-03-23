@@ -325,5 +325,7 @@
   "key_based_encryption_used": "The Key based encryption will be used.",
   "encrypt_with_key": "Selected recipient has PGP public key. The message can be encrypted using this key.",
   "encrypt_with_not_key": "Selected recipient has no PGP public key. The key based encryption is not allowed",
-  "add_digital_signature": "Add digital signature"
+  "add_digital_signature": "Add digital signature",
+  "select_recipient": "Select recipient",
+  "self_destructing_template": "Hello,\n{email} user sent you a self-destructing secure email.\nYou can read it by the following link: {link}\nThe message will be accessible for {hours} hours starting from {date}"
 }
