@@ -16,6 +16,10 @@ import 'package:aurora_mail/modules/mail/screens/compose/components/compose_bott
 import 'package:aurora_mail/modules/mail/screens/compose/components/identity_selector.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/compose_route.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/dialog/encrypt_dialog.dart';
+import 'package:aurora_mail/modules/mail/screens/compose/self_destructing/bloc/self_destructing_bloc.dart';
+import 'package:aurora_mail/modules/mail/screens/compose/self_destructing/encrypt_setting.dart';
+import 'package:aurora_mail/modules/mail/screens/compose/self_destructing/model/contact_with_key.dart';
+import 'package:aurora_mail/modules/mail/screens/compose/self_destructing/select_recipient.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/identity_util.dart';
@@ -657,7 +661,31 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
     );
   }
 
-  _createSelfDestructingEmail() {
-    
+  _createSelfDestructingEmail() async {
+    final bloc = SelfDestructingBloc(
+      _bloc.user,
+      AliasOrIdentity(alias, identity),
+    );
+    // todo брать получателя из поля to
+    final contact = await dialog(
+      context: context,
+      builder: (context) => BlocProvider.value(
+        value: bloc,
+        child: SelectRecipient(bloc),
+      ),
+    );
+    if (contact is! ContactWithKey) {
+      return;
+    }
+    final setting = await dialog(
+      context: context,
+      builder: (context) => BlocProvider.value(
+        value: bloc,
+        child: EncryptSetting(
+          bloc,
+          contact as ContactWithKey,
+        ),
+      ),
+    );
   }
 }

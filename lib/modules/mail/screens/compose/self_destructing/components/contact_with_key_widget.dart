@@ -1,13 +1,12 @@
+import 'package:aurora_mail/modules/mail/screens/compose/self_destructing/model/contact_with_key.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/material.dart';
 
-import 'model/recipient_with_key.dart';
+class ContactWithKeyWidget extends StatelessWidget {
+  final ContactWithKey model;
+  final Function(ContactWithKey) onTap;
 
-class RecipientWidget extends StatelessWidget {
-  final RecipientWithKey model;
-  final Function(RecipientWithKey) onTap;
-
-  RecipientWidget(this.model, [this.onTap]);
+  ContactWithKeyWidget(this.model, [this.onTap]);
 
   @override
   Widget build(BuildContext context) {

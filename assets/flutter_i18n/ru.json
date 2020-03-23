@@ -310,5 +310,11 @@
   "btn_resend": "Повторить",
   "empty_folder_trash": "Очистить Корзину",
   "empty_folder_spam": "Очистить Спам",
-  "empty_folder_description": "Вы уверены, что хотите удалить все сообщение в папке {folder}?"
+  "empty_folder_description": "Вы уверены, что хотите удалить все сообщение в папке {folder}?",
+  "send_self_destructing_title": "Send a self-destructing secure email",
+  "life_time_day": "24 hours",
+  "life_time_days_3": "72 hours",
+  "life_time_days_7": "7 days",
+  "message_lifetime": "Message lifetime",
+  "no_name": "Без имени"
 }

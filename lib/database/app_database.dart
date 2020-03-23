@@ -27,7 +27,7 @@ class DBInstances {
   Folders,
   Users,
   Accounts,
-  Contacts,
+  ContactsTable,
   ContactsGroups,
   ContactsStorages,
   PgpKeyModel,

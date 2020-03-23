@@ -310,5 +310,20 @@
   "btn_resend": "Resend",
   "empty_folder_trash": "Empty Trash",
   "empty_folder_spam": "Empty Spam",
-  "empty_folder_description": "Are you sure you want to delete all messages in folder {folder}?"
+  "empty_folder_description": "Are you sure you want to delete all messages in folder {folder}?",
+  "send_self_destructing_title": "Send a self-destructing secure email",
+  "life_time_day": "24 hours",
+  "life_time_days_3": "72 hours",
+  "life_time_days_7": "7 days",
+  "message_lifetime": "Message lifetime",
+  "no_name": "No name",
+  "not_sign_data": "Will not sign the data.",
+  "sign_data": "Will sign the data with your private key.",
+  "password_based_encryption": "Password based",
+  "key_based_encryption": "Key based",
+  "password_based_encryption_used": "The Password based encryption will be used.",
+  "key_based_encryption_used": "The Key based encryption will be used.",
+  "encrypt_with_key": "Selected recipient has PGP public key. The message can be encrypted using this key.",
+  "encrypt_with_not_key": "Selected recipient has no PGP public key. The key based encryption is not allowed",
+  "add_digital_signature": "Add digital signature"
 }

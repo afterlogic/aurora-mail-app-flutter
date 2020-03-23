@@ -7,5 +7,5 @@ part of 'contacts_dao.dart';
 // **************************************************************************
 
 mixin _$ContactsDaoMixin on DatabaseAccessor<AppDatabase> {
-  $ContactsTable get contacts => db.contacts;
+  $ContactsTableTable get contactsTable => db.contactsTable;
 }
