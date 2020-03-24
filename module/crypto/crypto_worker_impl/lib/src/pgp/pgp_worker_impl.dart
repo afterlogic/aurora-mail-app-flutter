@@ -1,9 +1,11 @@
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:crypto_model/crypto_model.dart';
 import 'package:crypto_plugin/crypto_plugin.dart';
 import 'package:crypto_storage/crypto_storage.dart';
 import 'package:crypto_worker/crypto_worker.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'pgp_encrypt_decrypt_impl.dart';
 
@@ -80,12 +82,21 @@ class PgpWorkerImpl extends PgpWorker {
   }
 
   Future<String> encryptSymmetric(String text, String password) async {
-    return String.fromCharCodes(
-      await _pgp.encryptSymmetricBytes(
-        Uint8List.fromList(text.codeUnits),
-        password,
-      ),
-    );
+    final tempFile = await PgpWorkerImpl.tempFile;
+    _pgp.setTempFile(tempFile);
+    try {
+      final result = String.fromCharCodes(
+        await _pgp.encryptSymmetricBytes(
+          Uint8List.fromList(text.codeUnits),
+          password,
+        ),
+      );
+      return result;
+    } finally {
+      if (await tempFile.exists()) {
+        tempFile.delete();
+      }
+    }
   }
 
   EncryptType encryptType(String text) {
@@ -118,6 +129,13 @@ class PgpWorkerImpl extends PgpWorker {
   Future stop() async {
     await _pgpEncryptDecrypt?.stop();
     _pgpEncryptDecrypt = null;
+    final file = await tempFile;
+    if (await file.exists()) file.delete();
+  }
+
+  static Future<File> get tempFile async {
+    final dir = await getTemporaryDirectory();
+    return File(dir.path + Platform.pathSeparator + _tempFile);
   }
 
   final _BEGIN_PGP_MESSAGE = "-----BEGIN PGP MESSAGE-----";
@@ -129,4 +147,5 @@ class PgpWorkerImpl extends PgpWorker {
 
   final _PGP_KEY_BEGIN = "-----BEGIN PGP \\w* KEY BLOCK-----";
   final _PGP_KEY_END = "-----END PGP \\w* KEY BLOCK-----";
+  static const _tempFile = "temp.pgp";
 }

@@ -27,7 +27,6 @@ class _EncryptSettingState extends BState<EncryptSetting> {
   final passwordCtrl = TextEditingController();
   final formKey = GlobalKey<FormState>();
   LifeTime lifeTime = LifeTime.values.first;
-  bool hasPrivateKey = false;
   bool useSign = false;
   bool isKeyBased = false;
   bool obscure = false;
@@ -47,12 +46,8 @@ class _EncryptSettingState extends BState<EncryptSetting> {
           builder: (context, state) {
             if (state is LoadedKey) {
               final hasKey = state.key != null;
-              final contacts = state.contacts;
-              final recipientHaveKey = contacts.firstWhere(
-                    (item) => item.key == null,
-                    orElse: () => null,
-                  ) ==
-                  null;
+              final contact = state.contact;
+              final recipientHaveKey = contact.key != null;
               return AlertDialog(
                 title: Text(i18n(context, "send_self_destructing_title")),
                 content: SizedBox(
@@ -65,9 +60,7 @@ class _EncryptSettingState extends BState<EncryptSetting> {
                         style: theme.textTheme.caption,
                       ),
                       SizedBox(height: 20),
-                      Column(
-                        children: contacts.map((item) => ContactWithKeyWidget(item)).toList(),
-                      ),
+                      ContactWithKeyWidget(contact),
                       SizedBox(height: 20),
                       Text(
                         i18n(context,
@@ -126,7 +119,7 @@ class _EncryptSettingState extends BState<EncryptSetting> {
                         contentPadding: EdgeInsets.zero,
                         title: Text(i18n(context, "add_digital_signature")),
                         value: useSign,
-                        onChanged: hasKey && isKeyBased
+                        onChanged: hasKey && recipientHaveKey
                             ? (v) {
                                 useSign = !useSign;
                                 setState(() {});
@@ -172,7 +165,7 @@ class _EncryptSettingState extends BState<EncryptSetting> {
                   ),
                   FlatButton(
                     child: Text(i18n(context, "encrypt")),
-                    onPressed: () => create(contacts),
+                    onPressed: () => create(contact),
                   )
                 ],
               );
@@ -193,8 +186,29 @@ class _EncryptSettingState extends BState<EncryptSetting> {
     );
   }
 
-  void create(List<ContactWithKey> contacts) {
+  void create(ContactWithKey contact) {
     if (!useSign || formKey.currentState.validate()) {
+      final contactName = contact.contact.fullName.isEmpty == true
+          ? contact.contact.fullName
+          : contact.contact.viewEmail;
+
+      final now = DateTime.now().toIso8601String();
+
+      final passwordText =
+          contact.key != null ? i18n(context, "self_destructing_message_password") : "";
+      final lifeTimeText = i18n(context, lifeTime.toText());
+
+      final viewBody = i18n(
+        context,
+        "self_destructing_message_template",
+        {
+          "contactName": contactName,
+          "message_password": passwordText,
+          "lifeTime": lifeTimeText,
+          "now": now
+        },
+      );
+
       final bloc = BlocProvider.of<SelfDestructingBloc>(context);
       bloc.add(
         EncryptEvent(
@@ -202,7 +216,8 @@ class _EncryptSettingState extends BState<EncryptSetting> {
           isKeyBased,
           useSign,
           passwordCtrl.text,
-          contacts.map((item) => item.contact.viewEmail).toList(),
+          contact,
+          viewBody,
         ),
       );
     }

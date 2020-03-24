@@ -20,7 +20,7 @@ import 'package:aurora_mail/modules/mail/screens/compose/self_destructing/bloc/s
 import 'package:aurora_mail/modules/mail/screens/compose/self_destructing/bloc/self_destructing_state.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/self_destructing/encrypt_setting.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/self_destructing/model/contact_with_key.dart';
-import 'package:aurora_mail/modules/mail/screens/compose/self_destructing/select_recipient.dart';
+import 'package:aurora_mail/modules/mail/screens/compose/self_destructing/view_password.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/identity_util.dart';
@@ -676,9 +676,28 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
       ),
     );
     if (result is Encrypted) {
+      if (!result.isKeyBase) {
+        final viewPasswordResult = await dialog(
+          context: context,
+          builder: (context) => BlocProvider.value(
+            value: bloc,
+            child: ViewPassword(
+              [result.contact],
+              result.link,
+            ),
+          ),
+        );
+        if (viewPasswordResult != true) {
+          return;
+        }
+      }
+      _subjectTextCtrl.text = i18n(context, "self_destructing_message_title");
+      _bodyTextCtrl.text = result.body;
 
+      _lock = EncryptType.SelfDestructing;
+      setState(() {});
     } else if (result is ErrorState) {
-
+      _showError(result.message);
     }
   }
 }

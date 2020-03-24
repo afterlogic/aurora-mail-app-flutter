@@ -1,1 +1,1 @@
-enum EncryptType { None, Sign, Encrypt, }
+enum EncryptType { None, Sign, Encrypt,SelfDestructing }

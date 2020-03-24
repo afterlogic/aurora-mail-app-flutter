@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:crypto_plugin/crypto_plugin.dart';
 import 'package:crypto_storage/crypto_storage.dart';
 import 'package:crypto_worker/crypto_worker.dart';
+import 'package:crypto_worker_impl/crypto_worker_impl.dart';
 import 'package:path_provider/path_provider.dart';
 
 class PgpEncryptDecryptImpl extends PgpEncryptDecrypt {
@@ -25,7 +26,7 @@ class PgpEncryptDecryptImpl extends PgpEncryptDecrypt {
 
     final privateKey = await _storage.getPgpKey(recipients.first, true);
     final publicKey = await _storage.getPgpKey(sender, false);
-    final tempFile = await _tempFile;
+    final tempFile = await PgpWorkerImpl.tempFile;
 
     if (privateKey == null) {
       throw PgpKeyNotFound([sender]);
@@ -57,7 +58,7 @@ class PgpEncryptDecryptImpl extends PgpEncryptDecrypt {
 
   Future<Decrypted> verifySign(String message) async {
     final publicKey = await _storage.getPgpKey(sender, false);
-    final tempFile = await _tempFile;
+    final tempFile = await PgpWorkerImpl.tempFile;
 
     await _pgp.stop();
     await _pgp.setPublicKeys(publicKey == null ? null : [publicKey.key]);
@@ -74,7 +75,7 @@ class PgpEncryptDecryptImpl extends PgpEncryptDecrypt {
     if (privateKey == null) {
       throw PgpKeyNotFound([sender]);
     }
-    final tempFile = await _tempFile;
+    final tempFile = await PgpWorkerImpl.tempFile;
 
     await _pgp.stop();
     await _pgp.setTempFile(tempFile);
@@ -112,7 +113,7 @@ class PgpEncryptDecryptImpl extends PgpEncryptDecrypt {
       throw PgpKeyNotFound(withNotKey);
     }
 
-    final tempFile = await _tempFile;
+    final tempFile = await PgpWorkerImpl.tempFile;
 
     await _pgp.stop();
     await _pgp.setTempFile(tempFile);
@@ -133,17 +134,9 @@ class PgpEncryptDecryptImpl extends PgpEncryptDecrypt {
     }
   }
 
-  Future<File> get _tempFile async {
-    final dir = await getTemporaryDirectory();
-    return File(dir.path + Platform.pathSeparator + tempFile);
-  }
 
   @override
   Future stop() async {
-    final file = await _tempFile;
-    if (await file.exists()) file.delete();
     return _pgp.stop();
   }
-
-  static const tempFile = "temp.pgp";
 }

@@ -305,5 +305,6 @@
   "need_contact_for_encrypt": "To encrypt your message you need to specify at least one recipient.",
   "verify_sign": "Verify",
   "already_have_keys":"Keys which are already in the system are greyed out.",
-  "find_in_email": "Find in email"
+  "find_in_email": "Find in email",
+  "ok": "Ok"
 }

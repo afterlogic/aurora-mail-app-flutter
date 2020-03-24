@@ -22,18 +22,18 @@ class EncryptEvent extends SelfDestructingEvent with AlwaysNonEqualObject {
   final bool isKeyBased;
   final bool useSign;
   final String password;
-
-  final List<String> contacts;
+  final String messageTemplate;
+  final ContactWithKey contact;
 
   EncryptEvent(
     this.lifeTime,
     this.isKeyBased,
     this.useSign,
     this.password,
-    this.contacts,
+    this.contact,
+    this.messageTemplate,
   );
 
   @override
   List<Object> get props => [];
 }
-

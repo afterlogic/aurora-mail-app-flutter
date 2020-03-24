@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/inject/app_inject.dart';
 import 'package:aurora_mail/models/alias_or_identity.dart';
+import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/mappers/contact_mapper.dart';
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/contacts/contacts_dao.dart';
 import 'package:aurora_mail/modules/mail/repository/pgp_api.dart';
@@ -44,24 +45,38 @@ class SelfDestructingBloc extends Bloc<SelfDestructingEvent, SelfDestructingStat
     if (event is EncryptEvent) yield* _encrypt(event);
   }
 
-  Future<List<ContactWithKey>> _loadContacts(List<String> emails) async {
-    final contacts =
-        ContactMapper.fromDB(await _contactsDao.getContactsByEmail(user.localId, emails));
-    final recipientWithKey = <ContactWithKey>[];
-    for (var contact in contacts) {
-      recipientWithKey.add(
-        ContactWithKey(
-          contact,
-          await _cryptoStorage.getPgpKey(contact.viewEmail, false),
-        ),
-      );
-    }
+  Future<ContactWithKey> _loadContacts(String email) async {
+    final contact =
+        ContactMapper.fromDB(await _contactsDao.getContactsByEmail(user.localId, [email]))
+            .firstWhere(
+      (item) => true,
+      orElse: () => Contact(
+        viewEmail: null,
+        fullName: "",
+        davContactsVCardUid: null,
+        frequency: null,
+        entityId: null,
+        uuid: null,
+        groupUUIDs: <String>[],
+        eTag: null,
+        useFriendlyName: null,
+        davContactsUid: null,
+        storage: null,
+        uuidPlusStorage: null,
+        dateModified: null,
+        idTenant: null,
+        userLocalId: null,
+        idUser: null,
+      ),
+    );
 
-    return recipientWithKey;
+    final key = await _cryptoStorage.getPgpKey(email, false);
+
+    return ContactWithKey(contact, key);
   }
 
   Stream<SelfDestructingState> _loadKey(LoadKey event) async* {
-    final contacts = await _loadContacts([event.contact]);
+    final contacts = await _loadContacts(event.contact);
     final key = await _cryptoStorage.getPgpKey(aliasOrIdentity.mail, true);
     yield LoadedKey(key, contacts);
   }
@@ -71,28 +86,28 @@ class SelfDestructingBloc extends Bloc<SelfDestructingEvent, SelfDestructingStat
     var encryptBody = body;
     var password = "";
     var link = "";
+    var message = event.messageTemplate;
 
-    try {
-      password = CryptoUtil.createSymmetricKey();
+    if (!event.isKeyBased) {
+      try {
+        password = CryptoUtil.createSymmetricKey();
 
-      encryptSubject = await _encryptSymmetric(subject, password);
-      encryptBody = await _encryptSymmetric(body, password);
-
-    } catch (e) {
-      yield ErrorState("error_unknown");
-      return;
+        encryptSubject = await _encryptSymmetric(subject, password);
+        encryptBody = await _encryptSymmetric(body, password);
+      } catch (e) {
+        yield ErrorState("error_unknown");
+        return;
+      }
     }
 
     try {
-       link = await pgpApi.createSelfDestructLink(
+      link = await pgpApi.createSelfDestructLink(
         encryptSubject,
         encryptBody,
-        event.contacts.first,
+        event.contact.contact.viewEmail,
         event.isKeyBased,
         event.lifeTime.toHours(),
       );
-
-
     } catch (e) {
       if (e is WebMailApiError) {
         yield ErrorState(e.message);
@@ -102,19 +117,27 @@ class SelfDestructingBloc extends Bloc<SelfDestructingEvent, SelfDestructingStat
       return;
     }
 
-    if (event.isKeyBased) {
-      encryptSubject =
-      await _pgpEncrypt(encryptSubject, event.contacts, event.useSign ? event.password : null);
-      encryptBody =
-      await _pgpEncrypt(encryptBody, event.contacts, event.useSign ? event.password : null);
+    message = message.replaceFirst("{link}", link);
+
+    try {
+      if (event.contact.key != null) {
+        message = message.replaceFirst("{password}", password);
+        message = await _pgpEncrypt(
+          message,
+          [event.contact.contact.viewEmail],
+          event.useSign ? event.password : null,
+        );
+      }
+    } catch (e) {
+      if (e is PgpInvalidSign) {
+        yield ErrorState("invalid_password");
+      } else {
+        yield ErrorState("error_unknown");
+      }
+      return;
     }
-    yield Encrypted(
-      encryptSubject,
-      encryptBody,
-      link,
-      event.isKeyBased,
-      password,
-    );
+
+    yield Encrypted(event.isKeyBased, password, message, event.contact, link);
   }
 
   Future<String> _encryptSymmetric(String text, String password) {

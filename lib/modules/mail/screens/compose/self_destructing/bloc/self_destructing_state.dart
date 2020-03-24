@@ -23,9 +23,9 @@ class LoadedContacts extends SelfDestructingState {
 
 class LoadedKey extends SelfDestructingState {
   final PgpKey key;
-  final List<ContactWithKey> contacts;
+  final ContactWithKey contact;
 
-  LoadedKey(this.key, this.contacts);
+  LoadedKey(this.key, this.contact);
 
   @override
   List<Object> get props => [key];
@@ -41,13 +41,13 @@ class ErrorState extends SelfDestructingState with AlwaysNonEqualObject {
 }
 
 class Encrypted extends SelfDestructingState with AlwaysNonEqualObject {
-  final String subject;
-  final String body;
+  final ContactWithKey contact;
   final String link;
   final bool isKeyBase;
   final String password;
+  final String body;
 
-  Encrypted(this.subject, this.body, this.link, this.isKeyBase, this.password);
+  Encrypted(this.isKeyBase, this.password, this.body, this.contact, this.link);
 
   @override
   List<Object> get props => [];
