@@ -24,7 +24,7 @@ class ViewPassword extends StatelessWidget {
       content: SizedBox(
         height: min(size.height / 2, 350),
         width: min(size.width - 40, 300),
-        child: Row(
+        child: Stack(
           children: <Widget>[
             ListView(
               children: <Widget>[
@@ -40,7 +40,7 @@ class ViewPassword extends StatelessWidget {
                 ),
                 SizedBox(height: 20),
                 ClipboardLabel(password, "Encrypted message password.", () {
-              toastKey.currentState.show("link_coppied_to_clipboard");
+              toastKey.currentState.show(i18n(context, "link_coppied_to_clipboard"));
                 }),
                 SizedBox(height: 20),
                 Text(

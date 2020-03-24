@@ -328,7 +328,7 @@
   "add_digital_signature": "Add digital signature",
   "select_recipient": "Select recipient",
   "self_destructing_message_template": "Hello,\n{contactName} user sent you a self-destructing secure email.\nYou can read it by the following link: {link}\n{message_password}The message will be accessible for {lifeTime} starting from {now}",
-  "self_destructing_message_password": "The message is password-protected. The password is: {password}}",
+  "self_destructing_message_password": "The message is password-protected. The password is: {password}\n",
   "self_destructing_message_title": "The secure message was shared with you",
   "ok": "Ok",
   "supports_plain_text_only": "OpenPGP supports plain text only. Click OK to remove all the formatting and continue. Also, attachments cannot be encrypted or signed.",

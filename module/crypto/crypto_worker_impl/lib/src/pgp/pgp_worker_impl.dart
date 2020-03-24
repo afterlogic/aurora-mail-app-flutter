@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -36,8 +37,8 @@ class PgpWorkerImpl extends PgpWorker {
     String email,
     String password,
   ) async {
-    final keyPair =
-        await _pgp.createKeys(length, name.isEmpty ? "$email" : "$name <$email>", password);
+    final keyPair = await _pgp.createKeys(
+        length, name.isEmpty ? "$email" : "$name <$email>", password);
 
     final private = PgpKey.fill(name, email, true, keyPair.secret, length);
     final public = PgpKey.fill(name, email, false, keyPair.public, length);
@@ -57,7 +58,8 @@ class PgpWorkerImpl extends PgpWorker {
     for (String key in keysText) {
       final description = await _pgp.getKeyDescription(key);
       for (String email in description.email) {
-        final groups = RegExp("([\\D|\\d]*)?<((?:\\D|\\d)*)>").firstMatch(email);
+        final groups =
+            RegExp("([\\D|\\d]*)?<((?:\\D|\\d)*)>").firstMatch(email);
         String validEmail = "";
         String name = "";
         if (groups?.groupCount == 2) {
@@ -85,13 +87,11 @@ class PgpWorkerImpl extends PgpWorker {
     final tempFile = await PgpWorkerImpl.tempFile;
     _pgp.setTempFile(tempFile);
     try {
-      final result = String.fromCharCodes(
-        await _pgp.encryptSymmetricBytes(
-          Uint8List.fromList(text.codeUnits),
-          password,
-        ),
+      final result = await _pgp.encryptSymmetricBytes(
+        Uint8List.fromList(text.codeUnits),
+        password,
       );
-      return result;
+      return String.fromCharCodes(result);
     } finally {
       if (await tempFile.exists()) {
         tempFile.delete();
@@ -118,7 +118,11 @@ class PgpWorkerImpl extends PgpWorker {
       return EncryptType.Encrypt;
     }
 
-    if (_contains([_BEGIN_PGP_SIGNED_MESSAGE, _BEGIN_PGP_SIGNATURE, _END_PGP_SIGNATURE])) {
+    if (_contains([
+      _BEGIN_PGP_SIGNED_MESSAGE,
+      _BEGIN_PGP_SIGNATURE,
+      _END_PGP_SIGNATURE
+    ])) {
       return EncryptType.Sign;
     }
 

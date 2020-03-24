@@ -704,7 +704,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
       ),
     );
     if (result is Encrypted) {
-      if (!result.isKeyBase) {
+      if (!result.isKeyBase && result.contact.key == null) {
         final viewPasswordResult = await dialog(
           context: context,
           builder: (context) => BlocProvider.value(

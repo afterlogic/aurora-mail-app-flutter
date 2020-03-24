@@ -94,7 +94,7 @@ class SelfDestructingBloc
       try {
         password = CryptoUtil.createSymmetricKey();
 
-        encryptSubject = await _encryptSymmetric(subject, password);
+        encryptSubject = subject;
         encryptBody = await _encryptSymmetric(body, password);
       } catch (e) {
         yield ErrorState("error_unknown");
@@ -120,23 +120,22 @@ class SelfDestructingBloc
     }
 
     message = message.replaceFirst("{link}", link);
-
-    try {
-      if (event.contact.key != null) {
+    if (event.contact.key != null) {
+      try {
         message = message.replaceFirst("{password}", password);
         message = await _pgpEncrypt(
           message,
           [event.contact.contact.viewEmail],
           event.useSign ? event.password : null,
         );
+      } catch (e) {
+        if (e is PgpInvalidSign) {
+          yield ErrorState("invalid_password");
+        } else {
+          yield ErrorState("error_unknown");
+        }
+        return;
       }
-    } catch (e) {
-      if (e is PgpInvalidSign) {
-        yield ErrorState("invalid_password");
-      } else {
-        yield ErrorState("error_unknown");
-      }
-      return;
     }
 
     yield Encrypted(event.isKeyBased, password, message, event.contact, link);

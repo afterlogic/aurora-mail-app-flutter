@@ -236,7 +236,7 @@ class _EncryptSettingState extends BState<EncryptSetting> {
           dateTime.inZone(DateTimeZone.local).toString('MMM dd, yyyy HH:mm z') +
               DateTimeZone.local.getUtcOffset(dateTime).toString();
 
-      final passwordText = contact.key != null
+      final passwordText = !isKeyBased&&contact.key != null
           ? i18n(context, "self_destructing_message_password")
           : "";
       final lifeTimeText = i18n(context, lifeTime.toText());
