@@ -20,5 +20,7 @@ abstract class PgpWorker {
 
   EncryptType encryptType(String text);
 
+  Future<String> encryptSymmetric(String text, String password);
+
   stop();
 }

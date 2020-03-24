@@ -21,3 +21,4 @@ multiUserEnable: false
 multiAccountEnable: true 
 useMainLogo: true
 cryptoEnable: true
+selfDestructingEmail: true

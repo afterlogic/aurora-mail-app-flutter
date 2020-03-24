@@ -6,91 +6,85 @@ import 'contacts_table.dart';
 
 part 'contacts_dao.g.dart';
 
-@UseDao(tables: [Contacts])
-class ContactsDao extends DatabaseAccessor<AppDatabase>
-    with _$ContactsDaoMixin {
+@UseDao(tables: [ContactsTable])
+class ContactsDao extends DatabaseAccessor<AppDatabase> with _$ContactsDaoMixin {
   ContactsDao(AppDatabase db) : super(db);
 
-  Future<void> addContacts(List<ContactsTable> newContacts) async {
-    await batch((b) =>
-        b.insertAll(contacts, newContacts, mode: InsertMode.insertOrReplace));
+  Future<void> addContacts(List<ContactDb> newContacts) async {
+    await batch((b) => b.insertAll(contactsTable, newContacts, mode: InsertMode.insertOrReplace));
   }
 
   Future<void> deleteContacts(List<String> uuids) {
-    return (delete(contacts)..where((c) => c.uuid.isIn(uuids))).go();
+    return (delete(contactsTable)..where((c) => c.uuid.isIn(uuids))).go();
   }
 
   Future<void> deleteContactsOfUser(int userLocalId) {
-    return (delete(contacts)..where((c) => c.userLocalId.equals(userLocalId)))
-        .go();
+    return (delete(contactsTable)..where((c) => c.userLocalId.equals(userLocalId))).go();
   }
 
-  Future<List<ContactsTable>> getContacts(int userLocalId,
-      {List<String> storages, String pattern}) {
-    return (select(contacts)
+  Future<List<ContactDb>> getContacts(int userLocalId, {List<String> storages, String pattern}) {
+    return (select(contactsTable)
           ..where((c) => c.userLocalId.equals(userLocalId))
           ..where((c) {
             if (pattern != null && pattern.isNotEmpty) {
-              return c.fullName.like("%$pattern%") |
-                  c.viewEmail.like("%$pattern%");
+              return c.fullName.like("%$pattern%") | c.viewEmail.like("%$pattern%");
             } else {
               return Constant(true);
             }
           })
-          ..where((c) =>
-              storages != null ? c.storage.isIn(storages) : Constant(true))
+          ..where((c) => storages != null ? c.storage.isIn(storages) : Constant(true))
           ..orderBy([
             (c) => OrderingTerm(expression: c.fullName.collate(Collate.noCase)),
-            (c) =>
-                OrderingTerm(expression: c.viewEmail.collate(Collate.noCase)),
+            (c) => OrderingTerm(expression: c.viewEmail.collate(Collate.noCase)),
           ]))
         .get();
   }
 
-  Stream<List<ContactsTable>> watchAllContacts(int userLocalId) {
-    return (select(contacts)
+  Future<List<ContactDb>> getContactsByEmail(int userLocalId, List<String> emails) {
+    return (select(contactsTable)
+          ..where((c) => c.userLocalId.equals(userLocalId))
+          ..where((c) => c.viewEmail.isIn(emails)))
+        .get();
+  }
+
+  Stream<List<ContactDb>> watchAllContacts(int userLocalId) {
+    return (select(contactsTable)
           ..where((c) => c.userLocalId.equals(userLocalId))
           ..where((c) => c.storage.isNotIn([StorageNames.collected]))
           ..orderBy([
             (c) => OrderingTerm(expression: c.fullName.collate(Collate.noCase)),
-            (c) =>
-                OrderingTerm(expression: c.viewEmail.collate(Collate.noCase)),
+            (c) => OrderingTerm(expression: c.viewEmail.collate(Collate.noCase)),
           ]))
         .watch();
   }
 
-  Stream<List<ContactsTable>> watchContactsFromStorage(
-      int userLocalId, String storage) {
-    return (select(contacts)
+  Stream<List<ContactDb>> watchContactsFromStorage(int userLocalId, String storage) {
+    return (select(contactsTable)
           ..where((c) => c.userLocalId.equals(userLocalId))
           ..where((c) => c.storage.equals(storage))
           ..orderBy([
             (c) => OrderingTerm(expression: c.fullName.collate(Collate.noCase)),
-            (c) =>
-                OrderingTerm(expression: c.viewEmail.collate(Collate.noCase)),
+            (c) => OrderingTerm(expression: c.viewEmail.collate(Collate.noCase)),
           ]))
         .watch();
   }
 
-  Stream<List<ContactsTable>> watchContactsFromGroup(
-      int userLocalId, String groupUuid) {
-    return (select(contacts)
+  Stream<List<ContactDb>> watchContactsFromGroup(int userLocalId, String groupUuid) {
+    return (select(contactsTable)
           ..where((c) => c.userLocalId.equals(userLocalId))
           ..where((c) => c.groupUUIDs.like("%$groupUuid%"))
           ..orderBy([
             (c) => OrderingTerm(expression: c.fullName.collate(Collate.noCase)),
-            (c) =>
-                OrderingTerm(expression: c.viewEmail.collate(Collate.noCase)),
+            (c) => OrderingTerm(expression: c.viewEmail.collate(Collate.noCase)),
           ]))
         .watch();
   }
 
-  Future<void> updateContacts(List<ContactsCompanion> updatedContacts) {
+  Future<void> updateContacts(List<ContactsTableCompanion> updatedContacts) {
     try {
       return transaction(() async {
         for (final contact in updatedContacts) {
-          await (update(contacts)
-                ..where((c) => c.uuid.equals(contact.uuid.value)))
+          await (update(contactsTable)..where((c) => c.uuid.equals(contact.uuid.value)))
               .write(contact);
         }
       });

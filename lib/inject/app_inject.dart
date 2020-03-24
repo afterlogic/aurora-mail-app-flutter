@@ -4,6 +4,7 @@ import 'package:aurora_mail/inject/modules/logic_module.dart';
 import 'package:aurora_mail/inject/modules/storage_module.dart';
 import 'package:aurora_mail/modules/settings/blocs/pgp_settings/pgp_settings_bloc.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/settings_methods.dart';
+import 'package:crypto_storage/crypto_storage.dart';
 import 'package:crypto_worker/crypto_worker.dart';
 import 'package:inject/inject.dart';
 
@@ -23,6 +24,8 @@ abstract class AppInjector {
   }
 
   PgpWorker pgpWorker();
+
+  CryptoStorage cryptoStorage();
 
   PgpSettingsBloc pgpSettingsBloc();
 

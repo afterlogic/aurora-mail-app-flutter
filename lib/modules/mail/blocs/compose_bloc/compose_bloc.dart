@@ -15,8 +15,10 @@ import './bloc.dart';
 
 class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
   ComposeMethods _methods;
+  final User user;
+  final Account account;
 
-  ComposeBloc({@required User user, @required Account account}) {
+  ComposeBloc({@required this.user, @required this.account}) {
     _methods = new ComposeMethods(
       user: user,
       account: account,

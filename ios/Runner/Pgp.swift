@@ -64,18 +64,19 @@ class  Pgp {
         try encryptor!.encrypt(input,input2,output)
     }
     
-    func getKeyDescription(_ key:Data) throws->KeyInfo {
-        do {
-            let key = try readPublicKey(key)
+    func getKeyDescription(_ key:String) throws->KeyInfo {
+        let keyRing = try DMSPGPKeyRing(armoredKey: key)
+        if let secretKey = keyRing.secretKeyRing {
+            let userIds = secretKey.getSecretKey().userIDs
+            let length = secretKey.getPublicKey().getBitStrength()
+            return KeyInfo(emails:userIds,length: Int(length),isPrivate: true)
+        } else{
+            let key = keyRing.publicKeyRing.getPublicKey()!
             let userIds = key.userIDs
             let length = key.getBitStrength()
             return KeyInfo(emails:userIds,length: Int(length),isPrivate: false)
-        } catch  {
-            let key = try readPrivateKey(key)
-            let userIds = key.userIDs
-            let length = key.getPublicKey().getBitStrength()
-            return KeyInfo(emails:userIds,length: Int(length),isPrivate: true)
         }
+    
     }
     
     func createKeys(_ length:Int32,_ email:String,_ password:String)throws ->[String]{
@@ -89,11 +90,19 @@ class  Pgp {
         let byteArray = IOSByteArray(nsData: key)!
         var input:JavaIoInputStream = JavaIoByteArrayInputStream(byteArray: byteArray)
         input = BCOpenpgpPGPUtil.getDecoderStream(with: input)
-        let ring=BCOpenpgpPGPPublicKeyRingCollection.init(javaIoInputStream: input,with: BCOpenpgpOperatorBcBcKeyFingerprintCalculator())
-        let rIt =  ring.getKeyRings()!
         
-        while ( rIt.hasNext()){
-            let kRing=rIt.next() as! BCOpenpgpPGPPublicKeyRing
+        let ring = try! BCOpenpgpPGPPublicKeyRingCollection.init(
+            javaIoInputStream: input,
+            with: BCOpenpgpOperatorBcBcKeyFingerprintCalculator()
+        )
+        
+        
+        let rIt =  ring.getKeyRings()
+        if(rIt ==  nil){
+            throw DMSPGPError.internal
+        }
+        while ( rIt!.hasNext()){
+            let kRing=rIt!.next() as! BCOpenpgpPGPPublicKeyRing
             let kIt = kRing.getPublicKeys()!
             while( kIt.hasNext()){
                 let k  = kIt.next() as! BCOpenpgpPGPPublicKey
@@ -103,11 +112,12 @@ class  Pgp {
             }
         }
         throw CryptionError();
+        
     }
     func readPrivateKey(_ key:Data)throws->BCOpenpgpPGPSecretKey{
         let byteArray = IOSByteArray(nsData: key)!
         let input:JavaIoInputStream = JavaIoByteArrayInputStream(byteArray: byteArray)
-        
+    
         return BCOpenpgpPGPSecretKeyRing(
             javaIoInputStream:BCOpenpgpPGPUtil.getDecoderStream(with: input),
             with: BCOpenpgpOperatorBcBcKeyFingerprintCalculator()

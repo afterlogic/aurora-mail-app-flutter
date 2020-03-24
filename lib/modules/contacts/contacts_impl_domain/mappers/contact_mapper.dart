@@ -2,7 +2,7 @@ import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 
 class ContactMapper {
-  static List<Contact> fromDB(List<ContactsTable> dbEntries) {
+  static List<Contact> fromDB(List<ContactDb> dbEntries) {
     return dbEntries.map((e) {
       return new Contact(
         entityId: e.entityId,
@@ -64,9 +64,9 @@ class ContactMapper {
     }).toList();
   }
 
-  static List<ContactsTable> toDB(List<Contact> contacts) {
+  static List<ContactDb> toDB(List<Contact> contacts) {
     return contacts.map((e) {
-      return new ContactsTable(
+      return new ContactDb(
         entityId: e.entityId,
         uuid: e.uuid,
         userLocalId: e.userLocalId,

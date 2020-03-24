@@ -48,4 +48,5 @@ multiUserEnable: false
 cryptoEnable: false
 multiAccountEnable: false
 useMainLogo: false
+selfDestructingEmail: false
 

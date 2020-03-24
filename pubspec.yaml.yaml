@@ -57,9 +57,12 @@ dependencies:
   url_launcher: ^5.4.1
   connectivity: ^0.4.6+2
   package_info: ^0.4.0+13
-
+  time_machine: ^0.9.12
   # crashlytics
   firebase_crashlytics: ^0.1.2+5
+
+  # file encryption
+  encrypt:
 
   #background
   #  android_alarm_manager: 0.4.5+1 not working

@@ -16,6 +16,11 @@ import 'package:aurora_mail/modules/mail/screens/compose/components/compose_bott
 import 'package:aurora_mail/modules/mail/screens/compose/components/identity_selector.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/compose_route.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/dialog/encrypt_dialog.dart';
+import 'package:aurora_mail/modules/mail/screens/compose/self_destructing/bloc/self_destructing_bloc.dart';
+import 'package:aurora_mail/modules/mail/screens/compose/self_destructing/bloc/self_destructing_state.dart';
+import 'package:aurora_mail/modules/mail/screens/compose/self_destructing/encrypt_setting.dart';
+import 'package:aurora_mail/modules/mail/screens/compose/self_destructing/model/contact_with_key.dart';
+import 'package:aurora_mail/modules/mail/screens/compose/self_destructing/view_password.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/identity_util.dart';
@@ -57,8 +62,9 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   Timer _timer;
-  EncryptType _lock = EncryptType.None;
-  String decryptText;
+  EncryptType _encryptType = EncryptType.None;
+  String decryptTitle;
+  String decryptBody;
   bool _showBCC = false;
 
   // if compose was opened from screen which does not have MessagesListRoute in stack, just pop
@@ -394,17 +400,23 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
   }
 
   _encryptLock(EncryptComplete state) {
-    decryptText = _bodyTextCtrl.text;
+    decryptBody = _bodyTextCtrl.text;
     _bodyTextCtrl.text = state.text;
-    _lock = state.type;
+    _encryptType = state.type;
 
     setState(() {});
   }
 
   _decrypt() {
-    _bodyTextCtrl.text = decryptText;
-    decryptText = "";
-    _lock = EncryptType.None;
+    if (decryptBody != null) {
+      _bodyTextCtrl.text = decryptBody;
+      decryptBody = null;
+    }
+    if (decryptTitle != null) {
+      _subjectTextCtrl.text = decryptTitle;
+      decryptTitle = null;
+    }
+    _encryptType = EncryptType.None;
     _bloc.add(DecryptEvent());
     setState(() {});
   }
@@ -501,7 +513,8 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
 
   @override
   Widget build(BuildContext context) {
-    final lockUsers = _lock == EncryptType.Encrypt;
+    final lockUsers = [EncryptType.Encrypt, EncryptType.SelfDestructingEncrypt]
+        .contains(_encryptType);
 
     Widget _done(FocusNode node) {
       return FlatButton(
@@ -637,7 +650,11 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
                   ),
                   Divider(height: 0.0),
                   ComposeBody(
-                    enable: _lock == EncryptType.None,
+                    enable: ![
+                      EncryptType.SelfDestructingEncrypt,
+                      EncryptType.Encrypt,
+                      EncryptType.Sign
+                    ].contains(_encryptType),
                     textCtrl: _bodyTextCtrl,
                     focusNode: bodyNode,
                   ),
@@ -648,11 +665,72 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
         ),
         bottomNavigationBar: BuildProperty.cryptoEnable
             ? ComposeBottomBar(
-                onEncrypt: _encryptDialog,
-                onDecrypt: _decrypt,
+                _encryptDialog,
+                _decrypt,
+                _createSelfDestructingEmail,
+                _encryptType,
               )
             : null,
       ),
     );
+  }
+
+  _createSelfDestructingEmail() async {
+    final subject = _subjectTextCtrl.text;
+    final body = _bodyTextCtrl.text;
+
+    if (_toEmails.isEmpty) {
+      return showSnack(
+          context: context,
+          scaffoldState: _scaffoldKey.currentState,
+          msg: "select_recipient");
+    }
+    final bloc = SelfDestructingBloc(
+      _bloc.user,
+      _bloc.account,
+      AliasOrIdentity(alias, identity),
+      subject,
+      body,
+    );
+
+    final result = await dialog(
+      context: context,
+      builder: (context) => BlocProvider.value(
+        value: bloc,
+        child: EncryptSetting(
+          bloc,
+          _toEmails.first,
+        ),
+      ),
+    );
+    if (result is Encrypted) {
+      if (!result.isKeyBase) {
+        final viewPasswordResult = await dialog(
+          context: context,
+          builder: (context) => BlocProvider.value(
+            value: bloc,
+            child: ViewPassword(
+              [result.contact],
+              result.password,
+            ),
+          ),
+        );
+        if (viewPasswordResult != true) {
+          return;
+        }
+      }
+      decryptTitle = _subjectTextCtrl.text;
+      decryptBody = _bodyTextCtrl.text;
+
+      _subjectTextCtrl.text = i18n(context, "self_destructing_message_title");
+      _bodyTextCtrl.text = result.body;
+
+      _encryptType = result.contact.key != null
+          ? EncryptType.SelfDestructingEncrypt
+          : EncryptType.SelfDestructing;
+      setState(() {});
+    } else if (result is ErrorState) {
+      _showError(result.message);
+    }
   }
 }

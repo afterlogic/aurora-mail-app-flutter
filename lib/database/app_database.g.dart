@@ -4915,7 +4915,7 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
   }
 }
 
-class ContactsTable extends DataClass implements Insertable<ContactsTable> {
+class ContactDb extends DataClass implements Insertable<ContactDb> {
   final String uuidPlusStorage;
   final String uuid;
   final int userLocalId;
@@ -4971,7 +4971,7 @@ class ContactsTable extends DataClass implements Insertable<ContactsTable> {
   final String davContactsUid;
   final String davContactsVCardUid;
   final List<String> groupUUIDs;
-  ContactsTable(
+  ContactDb(
       {@required this.uuidPlusStorage,
       @required this.uuid,
       @required this.userLocalId,
@@ -5027,14 +5027,13 @@ class ContactsTable extends DataClass implements Insertable<ContactsTable> {
       this.davContactsUid,
       this.davContactsVCardUid,
       @required this.groupUUIDs});
-  factory ContactsTable.fromData(
-      Map<String, dynamic> data, GeneratedDatabase db,
+  factory ContactDb.fromData(Map<String, dynamic> data, GeneratedDatabase db,
       {String prefix}) {
     final effectivePrefix = prefix ?? '';
     final stringType = db.typeSystem.forDartType<String>();
     final intType = db.typeSystem.forDartType<int>();
     final boolType = db.typeSystem.forDartType<bool>();
-    return ContactsTable(
+    return ContactDb(
       uuidPlusStorage: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}uuid_plus_storage']),
       uuid: stringType.mapFromDatabaseResponse(data['${effectivePrefix}uuid']),
@@ -5140,14 +5139,14 @@ class ContactsTable extends DataClass implements Insertable<ContactsTable> {
           .mapFromDatabaseResponse(data['${effectivePrefix}dav_contacts_uid']),
       davContactsVCardUid: stringType.mapFromDatabaseResponse(
           data['${effectivePrefix}dav_contacts_v_card_uid']),
-      groupUUIDs: $ContactsTable.$converter0.mapToDart(stringType
+      groupUUIDs: $ContactsTableTable.$converter0.mapToDart(stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}group_u_u_i_ds'])),
     );
   }
-  factory ContactsTable.fromJson(Map<String, dynamic> json,
+  factory ContactDb.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer}) {
     serializer ??= moorRuntimeOptions.defaultSerializer;
-    return ContactsTable(
+    return ContactDb(
       uuidPlusStorage: serializer.fromJson<String>(json['uuidPlusStorage']),
       uuid: serializer.fromJson<String>(json['uuid']),
       userLocalId: serializer.fromJson<int>(json['userLocalId']),
@@ -5270,8 +5269,8 @@ class ContactsTable extends DataClass implements Insertable<ContactsTable> {
   }
 
   @override
-  ContactsCompanion createCompanion(bool nullToAbsent) {
-    return ContactsCompanion(
+  ContactsTableCompanion createCompanion(bool nullToAbsent) {
+    return ContactsTableCompanion(
       uuidPlusStorage: uuidPlusStorage == null && nullToAbsent
           ? const Value.absent()
           : Value(uuidPlusStorage),
@@ -5430,7 +5429,7 @@ class ContactsTable extends DataClass implements Insertable<ContactsTable> {
     );
   }
 
-  ContactsTable copyWith(
+  ContactDb copyWith(
           {String uuidPlusStorage,
           String uuid,
           int userLocalId,
@@ -5486,7 +5485,7 @@ class ContactsTable extends DataClass implements Insertable<ContactsTable> {
           String davContactsUid,
           String davContactsVCardUid,
           List<String> groupUUIDs}) =>
-      ContactsTable(
+      ContactDb(
         uuidPlusStorage: uuidPlusStorage ?? this.uuidPlusStorage,
         uuid: uuid ?? this.uuid,
         userLocalId: userLocalId ?? this.userLocalId,
@@ -5545,7 +5544,7 @@ class ContactsTable extends DataClass implements Insertable<ContactsTable> {
       );
   @override
   String toString() {
-    return (StringBuffer('ContactsTable(')
+    return (StringBuffer('ContactDb(')
           ..write('uuidPlusStorage: $uuidPlusStorage, ')
           ..write('uuid: $uuid, ')
           ..write('userLocalId: $userLocalId, ')
@@ -5653,7 +5652,7 @@ class ContactsTable extends DataClass implements Insertable<ContactsTable> {
   @override
   bool operator ==(dynamic other) =>
       identical(this, other) ||
-      (other is ContactsTable &&
+      (other is ContactDb &&
           other.uuidPlusStorage == this.uuidPlusStorage &&
           other.uuid == this.uuid &&
           other.userLocalId == this.userLocalId &&
@@ -5711,7 +5710,7 @@ class ContactsTable extends DataClass implements Insertable<ContactsTable> {
           other.groupUUIDs == this.groupUUIDs);
 }
 
-class ContactsCompanion extends UpdateCompanion<ContactsTable> {
+class ContactsTableCompanion extends UpdateCompanion<ContactDb> {
   final Value<String> uuidPlusStorage;
   final Value<String> uuid;
   final Value<int> userLocalId;
@@ -5767,7 +5766,7 @@ class ContactsCompanion extends UpdateCompanion<ContactsTable> {
   final Value<String> davContactsUid;
   final Value<String> davContactsVCardUid;
   final Value<List<String>> groupUUIDs;
-  const ContactsCompanion({
+  const ContactsTableCompanion({
     this.uuidPlusStorage = const Value.absent(),
     this.uuid = const Value.absent(),
     this.userLocalId = const Value.absent(),
@@ -5824,7 +5823,7 @@ class ContactsCompanion extends UpdateCompanion<ContactsTable> {
     this.davContactsVCardUid = const Value.absent(),
     this.groupUUIDs = const Value.absent(),
   });
-  ContactsCompanion.insert({
+  ContactsTableCompanion.insert({
     @required String uuidPlusStorage,
     @required String uuid,
     @required int userLocalId,
@@ -5926,7 +5925,7 @@ class ContactsCompanion extends UpdateCompanion<ContactsTable> {
         birthMonth = Value(birthMonth),
         birthYear = Value(birthYear),
         groupUUIDs = Value(groupUUIDs);
-  ContactsCompanion copyWith(
+  ContactsTableCompanion copyWith(
       {Value<String> uuidPlusStorage,
       Value<String> uuid,
       Value<int> userLocalId,
@@ -5982,7 +5981,7 @@ class ContactsCompanion extends UpdateCompanion<ContactsTable> {
       Value<String> davContactsUid,
       Value<String> davContactsVCardUid,
       Value<List<String>> groupUUIDs}) {
-    return ContactsCompanion(
+    return ContactsTableCompanion(
       uuidPlusStorage: uuidPlusStorage ?? this.uuidPlusStorage,
       uuid: uuid ?? this.uuid,
       userLocalId: userLocalId ?? this.userLocalId,
@@ -6042,11 +6041,11 @@ class ContactsCompanion extends UpdateCompanion<ContactsTable> {
   }
 }
 
-class $ContactsTable extends Contacts
-    with TableInfo<$ContactsTable, ContactsTable> {
+class $ContactsTableTable extends ContactsTable
+    with TableInfo<$ContactsTableTable, ContactDb> {
   final GeneratedDatabase _db;
   final String _alias;
-  $ContactsTable(this._db, [this._alias]);
+  $ContactsTableTable(this._db, [this._alias]);
   final VerificationMeta _uuidPlusStorageMeta =
       const VerificationMeta('uuidPlusStorage');
   GeneratedTextColumn _uuidPlusStorage;
@@ -6827,13 +6826,13 @@ class $ContactsTable extends Contacts
         groupUUIDs
       ];
   @override
-  $ContactsTable get asDslTable => this;
+  $ContactsTableTable get asDslTable => this;
   @override
-  String get $tableName => _alias ?? 'contacts';
+  String get $tableName => _alias ?? 'contacts_table';
   @override
-  final String actualTableName = 'contacts';
+  final String actualTableName = 'contacts_table';
   @override
-  VerificationContext validateIntegrity(ContactsCompanion d,
+  VerificationContext validateIntegrity(ContactsTableCompanion d,
       {bool isInserting = false}) {
     final context = VerificationContext();
     if (d.uuidPlusStorage.present) {
@@ -7199,13 +7198,13 @@ class $ContactsTable extends Contacts
   @override
   Set<GeneratedColumn> get $primaryKey => {entityId};
   @override
-  ContactsTable map(Map<String, dynamic> data, {String tablePrefix}) {
+  ContactDb map(Map<String, dynamic> data, {String tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
-    return ContactsTable.fromData(data, _db, prefix: effectivePrefix);
+    return ContactDb.fromData(data, _db, prefix: effectivePrefix);
   }
 
   @override
-  Map<String, Variable> entityToSql(ContactsCompanion d) {
+  Map<String, Variable> entityToSql(ContactsTableCompanion d) {
     final map = <String, Variable>{};
     if (d.uuidPlusStorage.present) {
       map['uuid_plus_storage'] =
@@ -7389,7 +7388,7 @@ class $ContactsTable extends Contacts
           Variable<String, StringType>(d.davContactsVCardUid.value);
     }
     if (d.groupUUIDs.present) {
-      final converter = $ContactsTable.$converter0;
+      final converter = $ContactsTableTable.$converter0;
       map['group_u_u_i_ds'] =
           Variable<String, StringType>(converter.mapToSql(d.groupUUIDs.value));
     }
@@ -7397,8 +7396,8 @@ class $ContactsTable extends Contacts
   }
 
   @override
-  $ContactsTable createAlias(String alias) {
-    return $ContactsTable(_db, alias);
+  $ContactsTableTable createAlias(String alias) {
+    return $ContactsTableTable(_db, alias);
   }
 
   static TypeConverter<List<String>, String> $converter0 =
@@ -9826,8 +9825,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   $UsersTable get users => _users ??= $UsersTable(this);
   $AccountsTable _accounts;
   $AccountsTable get accounts => _accounts ??= $AccountsTable(this);
-  $ContactsTable _contacts;
-  $ContactsTable get contacts => _contacts ??= $ContactsTable(this);
+  $ContactsTableTable _contactsTable;
+  $ContactsTableTable get contactsTable =>
+      _contactsTable ??= $ContactsTableTable(this);
   $ContactsGroupsTable _contactsGroups;
   $ContactsGroupsTable get contactsGroups =>
       _contactsGroups ??= $ContactsGroupsTable(this);
@@ -9850,7 +9850,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         folders,
         users,
         accounts,
-        contacts,
+        contactsTable,
         contactsGroups,
         contactsStorages,
         pgpKeyModel,

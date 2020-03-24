@@ -76,6 +76,8 @@ class AppInjector$Injector implements _i1.AppInjector {
   @override
   _i8.PgpWorker pgpWorker() => _createPgpWorker();
   @override
+  _i7.CryptoStorage cryptoStorage() => _createCryptoStorage();
+  @override
   _i14.PgpSettingsBloc pgpSettingsBloc() => _createPgpSettingsBloc();
   @override
   _i15.SettingsMethods settingsMethods() => _createSettingsMethods();

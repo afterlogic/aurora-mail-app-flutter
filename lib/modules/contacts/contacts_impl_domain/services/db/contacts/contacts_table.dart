@@ -1,8 +1,8 @@
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/contacts/converters/list_string_converter.dart';
 import 'package:moor_flutter/moor_flutter.dart';
 
-@DataClassName("ContactsTable")
-class Contacts extends Table {
+@DataClassName("ContactDb")
+class ContactsTable extends Table {
   Set<Column> get primaryKey => {entityId};
 
   // deprecated
