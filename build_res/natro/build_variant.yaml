@@ -10,6 +10,8 @@ autodiscover_url: "https://cloudpanel.natro.com/PublicApi/AuroraAutoDiscover"
 background_color: "#FFFFFF"
 splashGradientTop: "#FFFFFF"
 splashGradientBottom: "#FFFFFF"
+
 multiUserEnable: true
+expandMessageThread: true
 
 version: 1.0.1+53

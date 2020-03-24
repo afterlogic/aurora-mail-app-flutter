@@ -1,3 +1,4 @@
+import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/mail/mail_table.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/selection_controller.dart';
@@ -156,11 +157,13 @@ class _MessageItemState extends BState<MessageItem> {
             onLongPress: changeEnable,
             onTap: widget.selectionController.enable
                 ? changeEnable
-                : widget.children.isNotEmpty && !_showThreads
+                : BuildProperty.expandMessageThread &&
+                        widget.children.isNotEmpty &&
+                        !_showThreads
                     ? _toggleThreads
                     : () => widget.onItemSelected(m),
             child: dismissibleWrap(
-               ListTile(
+              ListTile(
                 key: Key(m.uid.toString()),
                 title: Text(_getEmailTitle(),
                     style: TextStyle(
@@ -177,7 +180,9 @@ class _MessageItemState extends BState<MessageItem> {
                         InkResponse(
                           child:
                               _buildThreadCounter(context, hasUnreadChildren),
-                          onTap: _toggleThreads,
+                          onTap: BuildProperty.expandMessageThread
+                              ? _toggleThreads
+                              : null,
                         ),
                       if (widget.children.isNotEmpty) SizedBox(width: 6.0),
                       Flexible(
