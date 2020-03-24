@@ -7,6 +7,7 @@ background_color: "#FFFFFF"
 splashGradientTop: "#FFFFFF"
 splashGradientBottom: "#FFFFFF"
 
+autodiscover_url: "https://{domain}/aurora-autodiscover.json"
 privacyPolicy: "https://afterlogic.com/privacy-policy"
 
 multiUserEnable: false

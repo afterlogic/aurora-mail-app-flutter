@@ -11,7 +11,14 @@ import 'package:webmail_api_client/webmail_api_client.dart';
 class AuthApi {
   Future<String> autoDiscoverHostname(String email) async {
     try {
-      final url = "${BuildProperty.autodiscover_url}?email=$email";
+      final dogIndex = email.indexOf("@") + 1;
+
+      final domain = email.substring(dogIndex);
+
+      final url = BuildProperty.autodiscover_url
+          .replaceFirst("{domain}", domain)
+          .replaceFirst("{email}", email);
+
       final res = await http.get(url);
       final resBody = json.decode(res.body);
       return resBody["url"] as String;

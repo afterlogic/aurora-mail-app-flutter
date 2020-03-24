@@ -32,7 +32,7 @@ image_dir: "{{_dir}}/image"
 _google_services: "{{_dir}}/google-services.json"
 _google_services_ios: "{{_dir}}/GoogleService-Info.plist"
 
-autodiscover_url: "https://test.afterlogic.com/autodiscover.php"
+autodiscover_url: ""
 
 foreground_icon: "{{_dir}}/icon_foreground.png"
 background_color: "#3b3b3b"
