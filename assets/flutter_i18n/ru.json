@@ -288,7 +288,7 @@
   "encrypt": "Зашифровать",
   "invalid_password": "Неверный пароль",
   "not_found_keys_for": "Ключи для пользователя {users} не найдены",
-  "decrypt": "Расшифровать",
+  "back_encrypt": "Отменить PGP",
   "decrypted_and_verified": "Сообщение успешно расшифровано и проверено.",
   "decrypted_but_not_verified": "Сообщение успешно расшифровано, но не проверено.",
   "invalid_key_or_password": "Неверный ключ либо пароль.",
@@ -318,5 +318,21 @@
   "message_lifetime": "Message lifetime",
   "no_name": "Без имени",
   "select_recipient": "Выберите получателя",
-  "ok": "Ок"
+  "ok": "Ок",
+  "not_sign_data": "Will not sign the data.",
+  "sign_data": "Will sign the data with your private key.",
+  "password_based_encryption": "Password based",
+  "key_based_encryption": "Key based",
+  "password_based_encryption_used": "The Password based encryption will be used.",
+  "key_based_encryption_used": "The Key based encryption will be used.",
+  "encrypt_with_key": "Selected recipient has PGP public key. The message can be encrypted using this key.",
+  "encrypt_with_not_key": "Selected recipient has no PGP public key. The key based encryption is not allowed",
+  "add_digital_signature": "Add digital signature",
+  "self_destructing_message_template": "Hello,\n{contactName} user sent you a self-destructing secure email.\nYou can read it by the following link: {link}\n{message_password}The message will be accessible for {lifeTime} starting from {now}",
+  "self_destructing_message_password": "The message is password-protected. The password is: {password}}",
+  "self_destructing_message_title": "The secure message was shared with you",
+  "supports_plain_text_only": "OpenPGP supports plain text only. Click OK to remove all the formatting and continue. Also, attachments cannot be encrypted or signed.",
+  "sent_password_using_different_channel": "The password must be sent using a different channel.\n  Store the password somewhere. You will not be able to recover it otherwise.",
+  "self_destructing": "Self-destructing",
+  "password_coppied_to_clipboard": "Пароль скопирован"
 }

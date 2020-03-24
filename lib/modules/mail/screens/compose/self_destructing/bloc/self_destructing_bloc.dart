@@ -16,7 +16,8 @@ import '../model/life_time.dart';
 import 'bloc.dart';
 import 'package:aurora_mail/utils/crypto_util.dart';
 
-class SelfDestructingBloc extends Bloc<SelfDestructingEvent, SelfDestructingState> {
+class SelfDestructingBloc
+    extends Bloc<SelfDestructingEvent, SelfDestructingState> {
   final User user;
   final PgpApi pgpApi;
   final AliasOrIdentity aliasOrIdentity;
@@ -35,7 +36,7 @@ class SelfDestructingBloc extends Bloc<SelfDestructingEvent, SelfDestructingStat
   ) : pgpApi = PgpApi(user, account);
 
   @override
-  SelfDestructingState get initialState => ProgressState();
+  SelfDestructingState get initialState => InitState();
 
   @override
   Stream<SelfDestructingState> mapEventToState(
@@ -46,9 +47,9 @@ class SelfDestructingBloc extends Bloc<SelfDestructingEvent, SelfDestructingStat
   }
 
   Future<ContactWithKey> _loadContacts(String email) async {
-    final contact =
-        ContactMapper.fromDB(await _contactsDao.getContactsByEmail(user.localId, [email]))
-            .firstWhere(
+    final contact = ContactMapper.fromDB(
+            await _contactsDao.getContactsByEmail(user.localId, [email]))
+        .firstWhere(
       (item) => true,
       orElse: () => Contact(
         viewEmail: null,
@@ -82,6 +83,7 @@ class SelfDestructingBloc extends Bloc<SelfDestructingEvent, SelfDestructingStat
   }
 
   Stream<SelfDestructingState> _encrypt(EncryptEvent event) async* {
+    yield ProgressState();
     var encryptSubject = subject;
     var encryptBody = body;
     var password = "";
@@ -144,7 +146,10 @@ class SelfDestructingBloc extends Bloc<SelfDestructingEvent, SelfDestructingStat
     return _pgpWorker.encryptSymmetric(text, password);
   }
 
-  Future<String> _pgpEncrypt(String text, List<String> recipients, String password) {
-    return _pgpWorker.encryptDecrypt(aliasOrIdentity.mail, recipients).encrypt(text, password);
+  Future<String> _pgpEncrypt(
+      String text, List<String> recipients, String password) {
+    return _pgpWorker
+        .encryptDecrypt(aliasOrIdentity.mail, recipients)
+        .encrypt(text, password);
   }
 }

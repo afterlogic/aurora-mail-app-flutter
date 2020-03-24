@@ -62,8 +62,9 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   Timer _timer;
-  EncryptType _lock = EncryptType.None;
-  String decryptText;
+  EncryptType _encryptType = EncryptType.None;
+  String decryptTitle;
+  String decryptBody;
   bool _showBCC = false;
 
   // if compose was opened from screen which does not have MessagesListRoute in stack, just pop
@@ -231,7 +232,8 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
     final items = await authBloc.getAliasesAndIdentities();
 
     final identity = MailUtils.findIdentity(message.toInJson, items);
-    setIdentityOrSender(identity ?? AliasOrIdentity(null, authBloc.currentIdentity));
+    setIdentityOrSender(
+        identity ?? AliasOrIdentity(null, authBloc.currentIdentity));
   }
 
   void _onAppBarActionSelected(ComposeAppBarAction action) {
@@ -287,7 +289,8 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
       });
     }
 
-    if (_toEmails.isEmpty) return _showError(i18n(context, "error_compose_no_receivers"));
+    if (_toEmails.isEmpty)
+      return _showError(i18n(context, "error_compose_no_receivers"));
     if (_attachments.where((a) => a is TempAttachmentUpload).isNotEmpty) {
       return showSnack(
           context: context,
@@ -314,9 +317,12 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
     if (_message != null) {
       final result = _subjectTextCtrl.text != _message.subject ||
           _bodyTextCtrl.text != _message.rawBody ||
-          !listEquals<String>(MailUtils.getEmails(_message.toInJson), _toEmails) ||
-          !listEquals<String>(MailUtils.getEmails(_message.ccInJson), _ccEmails) ||
-          !listEquals<String>(MailUtils.getEmails(_message.bccInJson), _bccEmails) ||
+          !listEquals<String>(
+              MailUtils.getEmails(_message.toInJson), _toEmails) ||
+          !listEquals<String>(
+              MailUtils.getEmails(_message.ccInJson), _ccEmails) ||
+          !listEquals<String>(
+              MailUtils.getEmails(_message.bccInJson), _bccEmails) ||
           !listEquals(_savedAttachments, _attachments);
       if (result) {
         _savedAttachments = _attachments.toList();
@@ -335,7 +341,8 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
   void _saveToDrafts() {
     if (!_hasMessageChanged) return;
 
-    final attachmentsForSave = _attachments.where((a) => a is ComposeAttachment);
+    final attachmentsForSave =
+        _attachments.where((a) => a is ComposeAttachment);
 
     return _bloc.add(SaveToDrafts(
       to: _toEmails.join(","),
@@ -393,17 +400,23 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
   }
 
   _encryptLock(EncryptComplete state) {
-    decryptText = _bodyTextCtrl.text;
+    decryptBody = _bodyTextCtrl.text;
     _bodyTextCtrl.text = state.text;
-    _lock = state.type;
+    _encryptType = state.type;
 
     setState(() {});
   }
 
   _decrypt() {
-    _bodyTextCtrl.text = decryptText;
-    decryptText = "";
-    _lock = EncryptType.None;
+    if (decryptBody != null) {
+      _bodyTextCtrl.text = decryptBody;
+      decryptBody = null;
+    }
+    if (decryptTitle != null) {
+      _subjectTextCtrl.text = decryptTitle;
+      decryptTitle = null;
+    }
+    _encryptType = EncryptType.None;
     _bloc.add(DecryptEvent());
     setState(() {});
   }
@@ -457,7 +470,8 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
     );
     this.alias = aliasOrIdentity.alias;
     this.identity = aliasOrIdentity.identity;
-    _fromCtrl.text = identityViewName(aliasOrIdentity.name, aliasOrIdentity.mail);
+    _fromCtrl.text =
+        identityViewName(aliasOrIdentity.name, aliasOrIdentity.mail);
   }
 
   void changeSignature(String oldSignature, String newSignature) {
@@ -499,7 +513,8 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
 
   @override
   Widget build(BuildContext context) {
-    final lockUsers = _lock == EncryptType.Encrypt;
+    final lockUsers = [EncryptType.Encrypt, EncryptType.SelfDestructingEncrypt]
+        .contains(_encryptType);
 
     Widget _done(FocusNode node) {
       return FlatButton(
@@ -514,8 +529,9 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
     Widget _keyboardActions(Widget child) {
       return KeyboardActions(
         config: KeyboardActionsConfig(
-          keyboardActionsPlatform:
-              kDebugMode ? KeyboardActionsPlatform.ALL : KeyboardActionsPlatform.IOS,
+          keyboardActionsPlatform: kDebugMode
+              ? KeyboardActionsPlatform.ALL
+              : KeyboardActionsPlatform.IOS,
           keyboardBarColor: Colors.white,
           actions: [
             KeyboardAction(
@@ -552,10 +568,13 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
 
               if (state is MessageSending) _showSending();
               if (state is MessageSent) _onMessageSent(context);
-              if (state is MessageSavedInDrafts) _onMessageSaved(context, state.draftUid);
+              if (state is MessageSavedInDrafts)
+                _onMessageSaved(context, state.draftUid);
               if (state is ComposeError) _showError(state.errorMsg, state.arg);
-              if (state is UploadStarted) _setUploadProgress(state.tempAttachment);
-              if (state is AttachmentUploaded) _onAttachmentUploaded(state.composeAttachment);
+              if (state is UploadStarted)
+                _setUploadProgress(state.tempAttachment);
+              if (state is AttachmentUploaded)
+                _onAttachmentUploaded(state.composeAttachment);
               if (state is ReceivedComposeAttachments)
                 setState(() => _attachments.addAll(state.attachments));
             },
@@ -613,12 +632,14 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
                             if (state is ConvertingAttachments) {
                               return Padding(
                                 padding: const EdgeInsets.all(8.0),
-                                child: Center(child: CircularProgressIndicator()),
+                                child:
+                                    Center(child: CircularProgressIndicator()),
                               );
                             } else {
                               return Column(
                                 children: _attachments
-                                    .map((a) => ComposeAttachmentItem(a, _cancelAttachment))
+                                    .map((a) => ComposeAttachmentItem(
+                                        a, _cancelAttachment))
                                     .toList(),
                               );
                             }
@@ -629,7 +650,11 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
                   ),
                   Divider(height: 0.0),
                   ComposeBody(
-                    enable: _lock == EncryptType.None,
+                    enable: ![
+                      EncryptType.SelfDestructingEncrypt,
+                      EncryptType.Encrypt,
+                      EncryptType.Sign
+                    ].contains(_encryptType),
                     textCtrl: _bodyTextCtrl,
                     focusNode: bodyNode,
                   ),
@@ -643,6 +668,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
                 _encryptDialog,
                 _decrypt,
                 _createSelfDestructingEmail,
+                _encryptType,
               )
             : null,
       ),
@@ -655,7 +681,9 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
 
     if (_toEmails.isEmpty) {
       return showSnack(
-          context: context, scaffoldState: _scaffoldKey.currentState, msg: "select_recipient");
+          context: context,
+          scaffoldState: _scaffoldKey.currentState,
+          msg: "select_recipient");
     }
     final bloc = SelfDestructingBloc(
       _bloc.user,
@@ -683,7 +711,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
             value: bloc,
             child: ViewPassword(
               [result.contact],
-              result.link,
+              result.password,
             ),
           ),
         );
@@ -691,10 +719,15 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
           return;
         }
       }
+      decryptTitle = _subjectTextCtrl.text;
+      decryptBody = _bodyTextCtrl.text;
+
       _subjectTextCtrl.text = i18n(context, "self_destructing_message_title");
       _bodyTextCtrl.text = result.body;
 
-      _lock = EncryptType.SelfDestructing;
+      _encryptType = result.contact.key != null
+          ? EncryptType.SelfDestructingEncrypt
+          : EncryptType.SelfDestructing;
       setState(() {});
     } else if (result is ErrorState) {
       _showError(result.message);

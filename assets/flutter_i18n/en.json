@@ -298,7 +298,7 @@
   "encrypt": "Encrypt",
   "invalid_password": "invalid password",
   "not_found_keys_for": "No private key found for {users} user.",
-  "decrypt": "Decrypt",
+  "back_encrypt": "Undo PGP",
   "decrypted_and_verified": "Message was successfully decrypted and verified.",
   "decrypted_but_not_verified": "Message was successfully decrypted but wasn't verified.",
   "invalid_key_or_password": "Invalid key or password.",
@@ -330,5 +330,9 @@
   "self_destructing_message_template": "Hello,\n{contactName} user sent you a self-destructing secure email.\nYou can read it by the following link: {link}\n{message_password}The message will be accessible for {lifeTime} starting from {now}",
   "self_destructing_message_password": "The message is password-protected. The password is: {password}}",
   "self_destructing_message_title": "The secure message was shared with you",
-  "ok": "Ok"
+  "ok": "Ok",
+  "supports_plain_text_only": "OpenPGP supports plain text only. Click OK to remove all the formatting and continue. Also, attachments cannot be encrypted or signed.",
+  "sent_password_using_different_channel": "The password must be sent using a different channel.\n  Store the password somewhere. You will not be able to recover it otherwise.",
+  "self_destructing": "Self-destructing",
+  "password_coppied_to_clipboard": "Password coppied to clipboard"
 }

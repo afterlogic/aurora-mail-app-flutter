@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:aurora_mail/shared_ui/toast_widget.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/material.dart';
 
@@ -10,8 +11,9 @@ import 'model/contact_with_key.dart';
 class ViewPassword extends StatelessWidget {
   final List<ContactWithKey> contacts;
   final String password;
+  final toastKey = GlobalKey<ToastWidgetState>();
 
-  const ViewPassword(this.contacts, this.password);
+  ViewPassword(this.contacts, this.password);
 
   @override
   Widget build(BuildContext context) {
@@ -22,24 +24,36 @@ class ViewPassword extends StatelessWidget {
       content: SizedBox(
         height: min(size.height / 2, 350),
         width: min(size.width - 40, 300),
-        child: ListView(
+        child: Row(
           children: <Widget>[
-            Text(
-              "OpenPGP supports plain text only. Click OK to remove all the formatting and continue. Also, attachments cannot be encrypted or signed.",
-              style: theme.textTheme.caption,
+            ListView(
+              children: <Widget>[
+                Text(
+                  i18n(context, "supports_plain_text_only"),
+                  style: theme.textTheme.caption,
+                ),
+                SizedBox(height: 20),
+                Column(
+                  children: contacts
+                      .map((item) => ContactWithKeyWidget(item))
+                      .toList(),
+                ),
+                SizedBox(height: 20),
+                ClipboardLabel(password, "Encrypted message password.", () {
+              toastKey.currentState.show("link_coppied_to_clipboard");
+                }),
+                SizedBox(height: 20),
+                Text(
+                  i18n(context, "sent_password_using_different_channel"),
+                  style: theme.textTheme.caption,
+                ),
+              ],
             ),
-            SizedBox(height: 20),
-            Column(
-              children: contacts.map((item) => ContactWithKeyWidget(item)).toList(),
-            ),
-            ClipboardLabel(password, "Encrypted message password.", () {
-//              toastKey.currentState.show(s.link_coppied_to_clipboard);
-            }),
-            SizedBox(height: 20),
-            Text(
-              "The password must be sent using a different channel.  Store the password somewhere. You will not be able to recover it otherwise.",
-              style: theme.textTheme.caption,
-            ),
+            Center(
+              child: ToastWidget(
+                key: toastKey,
+              ),
+            )
           ],
         ),
       ),

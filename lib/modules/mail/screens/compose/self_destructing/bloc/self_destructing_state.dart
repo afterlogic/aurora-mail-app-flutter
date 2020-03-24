@@ -7,11 +7,14 @@ abstract class SelfDestructingState extends Equatable {
   const SelfDestructingState();
 }
 
+class InitState extends SelfDestructingState {
+  @override
+  List<Object> get props => [];
+}
 class ProgressState extends SelfDestructingState {
   @override
   List<Object> get props => [];
 }
-
 class LoadedContacts extends SelfDestructingState {
   final List<ContactWithKey> contacts;
 
