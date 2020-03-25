@@ -334,5 +334,7 @@
   "supports_plain_text_only": "OpenPGP supports plain text only. Click OK to remove all the formatting and continue. Also, attachments cannot be encrypted or signed.",
   "sent_password_using_different_channel": "The password must be sent using a different channel.\n  Store the password somewhere. You will not be able to recover it otherwise.",
   "self_destructing": "Self-destructing",
-  "password_coppied_to_clipboard": "Password coppied to clipboard"
+  "password_coppied_to_clipboard": "Password coppied to clipboard",
+  "upgrade_your_plan": "Mobile apps are not allowed in your billing plan.",
+  "back_to_login": "Back to login"
 }

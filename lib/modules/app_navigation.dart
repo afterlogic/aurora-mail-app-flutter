@@ -1,3 +1,5 @@
+import 'package:aurora_mail/modules/auth/screens/upgrade_plan/upgrade_plan_route.dart';
+import 'package:aurora_mail/modules/auth/screens/upgrade_plan/upgrade_plan_widget.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/screens/contact_edit/contact_edit_android.dart';
 import 'package:aurora_mail/modules/contacts/screens/contact_edit/contact_edit_route.dart';
@@ -84,7 +86,15 @@ class AppNavigation {
         );
 
         break;
+      case UpgradePlanRoute.name:
+        return FadeRoute(
+          settings: RouteSettings(
+            name: settings.name,
+          ),
+          builder: (_) => UpgradePlanWidget(),
+        );
 
+        break;
       // ================= MAIL =================
 
       case MessagesListRoute.name:

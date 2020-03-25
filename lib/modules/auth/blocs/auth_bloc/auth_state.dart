@@ -56,6 +56,12 @@ class TwoFactor extends AuthState {
 
 class NeedsHost extends AuthState {}
 
+class UpgradePlan extends AuthState {
+  final String err;
+
+  UpgradePlan(this.err);
+}
+
 class LoggedIn extends AuthState {
   final User user;
   final List<User> users;

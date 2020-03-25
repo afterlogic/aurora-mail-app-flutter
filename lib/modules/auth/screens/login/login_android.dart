@@ -6,6 +6,7 @@ import 'package:aurora_mail/modules/auth/screens/login/components/login_gradient
 import 'package:aurora_mail/modules/auth/screens/login/components/presentation_header.dart';
 import 'package:aurora_mail/modules/auth/screens/login/login_route.dart';
 import 'package:aurora_mail/modules/auth/screens/two_factor_auth/two_factor_auth_route.dart';
+import 'package:aurora_mail/modules/auth/screens/upgrade_plan/upgrade_plan_route.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/shared_ui/restart_widget.dart';
@@ -184,6 +185,17 @@ class _LoginAndroidState extends BState<LoginAndroid> {
                   msg: state.errorMsg,
                 );
               }
+              if (state is UpgradePlan) {
+                if (widget.isDialog) {
+                  showSnack(
+                    context: context,
+                    scaffoldState: Scaffold.of(context),
+                    msg: state.err,
+                  );
+                } else {
+                  Navigator.pushNamed(context, UpgradePlanRoute.name);
+                }
+              }
             },
             child: BlocBuilder<AuthBloc, AuthState>(
               bloc: BlocProvider.of<AuthBloc>(context),
@@ -271,6 +283,10 @@ class _LoginAndroidState extends BState<LoginAndroid> {
   Widget _debugRouteToTwoFactor(Widget child) {
     if (kDebugMode) {
       return GestureDetector(
+        onLongPress: () => Navigator.pushNamed(
+          context,
+          UpgradePlanRoute.name,
+        ),
         onDoubleTap: () => Navigator.pushNamed(
           context,
           TwoFactorAuthRoute.name,

@@ -8,6 +8,7 @@ import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_methods.dart';
 import 'package:aurora_mail/modules/auth/repository/auth_api.dart';
 import 'package:aurora_mail/utils/api_utils.dart';
 import 'package:bloc/bloc.dart';
+import 'package:webmail_api_client/webmail_api_error.dart';
 
 import './bloc.dart';
 
@@ -133,6 +134,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             event.password,
             err.host,
           );
+        } else if (err is WebMailApiError &&
+            err.message == "ERROR_USER_MOBILE_ACCESS_LIMIT") {
+          yield UpgradePlan(err.message);
         } else {
           yield AuthError(formatError(err, s));
         }
@@ -141,27 +145,31 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   Stream<AuthState> _userLogIn(UserLogIn event) async* {
-    final user = await _methods.setUser(event.user);
-    final users = await _methods.users;
-    currentUser = user;
-    final accounts = await _methods.getAccounts(user);
+    try {
+      final user = await _methods.setUser(event.user);
+      final users = await _methods.users;
+      currentUser = user;
+      final accounts = await _methods.getAccounts(user);
 
-    if (accounts.isNotEmpty) {
-      assert(accounts[0] != null);
-      this.accounts = accounts;
-      currentAccount = accounts[0];
-      await _methods.updateAliases(currentUser, currentAccount);
-      currentIdentity =
-          await _methods.updateIdentity(currentUser, currentAccount, accounts);
-      yield InitializedUserAndAccounts(
-        users: users,
-        user: currentUser,
-        accounts: accounts,
-        account: currentAccount,
-        needsLogin: false,
-      );
-    } else {
-      yield AuthError("error_login_no_accounts");
+      if (accounts.isNotEmpty) {
+        assert(accounts[0] != null);
+        this.accounts = accounts;
+        currentAccount = accounts[0];
+        await _methods.updateAliases(currentUser, currentAccount);
+        currentIdentity = await _methods.updateIdentity(
+            currentUser, currentAccount, accounts);
+        yield InitializedUserAndAccounts(
+          users: users,
+          user: currentUser,
+          accounts: accounts,
+          account: currentAccount,
+          needsLogin: false,
+        );
+      } else {
+        yield AuthError("error_login_no_accounts");
+      }
+    } catch (e, s) {
+      yield AuthError(formatError(e, s));
     }
   }
 
