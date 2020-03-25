@@ -1,9 +1,8 @@
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/pgp/pgp_key_dao.dart';
 import 'package:aurora_mail/database/users/users_dao.dart';
-import 'package:inject/inject.dart';
+import 'package:dm/dm.dart';
 
-@module
 class DaoModule {
   @provide
   @singleton

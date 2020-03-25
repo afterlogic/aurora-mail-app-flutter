@@ -1,7 +1,7 @@
 name: aurora_mail
 description: Mail client for mobile.
 
-version: 1.0.1+53
+version: 2.0.0+69
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -82,7 +82,7 @@ dependencies:
   keyboard_actions: ^3.2.0
 
   theme:
-    path: build_res/natro/theme
+    path: build_res/private_mail/theme
 
   crypto_model:
     path: module/crypto/crypto_model
@@ -91,15 +91,19 @@ dependencies:
   crypto_worker:
     path: module/crypto/crypto_worker
   flutter_secure_storage: ^3.3.1+1
+  crypto_plugin:
+    git: https://github.com/afterlogic/flutter_crypto_plugin
+  crypto_storage_impl:
+    path: module/crypto/crypto_storage_impl
+  crypto_worker_impl:
+    path: module/crypto/crypto_worker_impl
 
-  inject:
-    git: "https://github.com/afterlogic/dart_inject"
+  dm: ^0.1.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  inject_generator:
-    git: "https://github.com/afterlogic/inject_generator"
+  dm_gen: ^0.1.0
   build_runner: ^1.7.3
   moor_generator: ^2.3.1
   build_variant:
@@ -109,9 +113,9 @@ dev_dependencies:
 flutter_icons:
   ios: true
   android: true
-  image_path: build_res/natro/icon.png
-  adaptive_icon_background: "#FFFFFF"
-  adaptive_icon_foreground: build_res/natro/icon_foreground.png
+  image_path: build_res/private_mail/icon.png
+  adaptive_icon_background: "#34113C"
+  adaptive_icon_foreground: build_res/private_mail/icon_foreground.png
 
 flutter:
   uses-material-design: true
@@ -120,9 +124,9 @@ flutter:
   assets:
     - assets/images/
     - assets/flutter_i18n/
-    - build_res/natro/icon.png
-    - build_res/natro/image/main_logo.png
-    - build_res/natro/image/
+    - build_res/private_mail/icon.png
+    - build_res/private_mail/image/main_logo.png
+    - build_res/private_mail/image/
 
   fonts:
     - family: WebMailIcons
