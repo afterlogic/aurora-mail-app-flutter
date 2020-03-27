@@ -100,14 +100,12 @@ dependencies:
     path: module/crypto/crypto_worker_impl
   # end: if
 
-  inject:
-    git: "https://github.com/afterlogic/dart_inject"
+  dm: ^0.1.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  inject_generator:
-    git: "https://github.com/afterlogic/inject_generator"
+  dm_gen: ^0.1.0
   build_runner: ^1.7.3
   moor_generator: ^2.3.1
   build_variant:
