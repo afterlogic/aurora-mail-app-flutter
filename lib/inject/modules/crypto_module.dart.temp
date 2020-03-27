@@ -2,14 +2,13 @@ import 'package:aurora_mail/database/pgp/pgp_key_dao.dart';
 import 'package:crypto_storage/crypto_storage.dart';
 import 'package:crypto_worker/crypto_worker.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:inject/inject.dart';
+import 'package:dm/dm.dart';
   // if : cryptoEnable
 import 'package:crypto_plugin/crypto_plugin.dart';
 import 'package:crypto_storage_impl/crypto_storage_impl.dart';
 import 'package:crypto_worker_impl/crypto_worker_impl.dart';
 // end : if
 
-@module
 class CryptoModule {
   @provide
   @singleton
