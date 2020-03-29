@@ -6,12 +6,12 @@ import 'package:webmail_api_client/webmail_api_client.dart';
 class PgpApi {
   final Account account;
   final User user;
-  final WebMailApi _mailModule;
+  final WebMailApi _pgpModule;
 
   int get _accountId => account.accountId;
 
   PgpApi(this.user, this.account)
-      : _mailModule = WebMailApi(
+      : _pgpModule = WebMailApi(
           moduleName: WebMailModules.openPgp,
           hostname: user.hostname,
           token: user.token,
@@ -33,9 +33,11 @@ class PgpApi {
     });
 
     final body = new WebMailApiBody(
-        method: "CreateSelfDestrucPublicLink", parameters: parameters);
+      method: "CreateSelfDestrucPublicLink",
+      parameters: parameters,
+    );
 
-    final res = await _mailModule.post(body);
+    final res = await _pgpModule.post(body);
 
     if (res is Map) {
       return user.hostname + "/" + (res["link"] as String) + "#self-destruct";

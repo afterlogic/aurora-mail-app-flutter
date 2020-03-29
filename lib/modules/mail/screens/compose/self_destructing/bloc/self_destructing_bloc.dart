@@ -8,6 +8,7 @@ import 'package:aurora_mail/modules/contacts/contacts_impl_domain/mappers/contac
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/contacts/contacts_dao.dart';
 import 'package:aurora_mail/modules/mail/repository/pgp_api.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/self_destructing/model/contact_with_key.dart';
+import 'package:aurora_mail/utils/identity_util.dart';
 import 'package:bloc/bloc.dart';
 import 'package:crypto_storage/crypto_storage.dart';
 import 'package:crypto_worker/crypto_worker.dart';
@@ -46,29 +47,26 @@ class SelfDestructingBloc
     if (event is EncryptEvent) yield* _encrypt(event);
   }
 
-  Future<ContactWithKey> _loadContacts(String email) async {
-    final contact = ContactMapper.fromDB(
-            await _contactsDao.getContactsByEmail(user.localId, [email]))
-        .firstWhere(
-      (item) => true,
-      orElse: () => Contact(
-        viewEmail: null,
-        fullName: "",
-        davContactsVCardUid: null,
-        frequency: null,
-        entityId: null,
-        uuid: null,
-        groupUUIDs: <String>[],
-        eTag: null,
-        useFriendlyName: null,
-        davContactsUid: null,
-        storage: null,
-        uuidPlusStorage: null,
-        dateModified: null,
-        idTenant: null,
-        userLocalId: null,
-        idUser: null,
-      ),
+  Future<ContactWithKey> _loadContacts(IdentityView identityView) async {
+    final email = identityView.email;
+    final name = identityView.name.replaceAll("\"", "");
+    final contact = Contact(
+      viewEmail: email,
+      fullName: name,
+      davContactsVCardUid: null,
+      frequency: null,
+      entityId: null,
+      uuid: null,
+      groupUUIDs: <String>[],
+      eTag: null,
+      useFriendlyName: null,
+      davContactsUid: null,
+      storage: null,
+      uuidPlusStorage: null,
+      dateModified: null,
+      idTenant: null,
+      userLocalId: null,
+      idUser: null,
     );
 
     final key = await _cryptoStorage.getPgpKey(email, false);
@@ -77,7 +75,8 @@ class SelfDestructingBloc
   }
 
   Stream<SelfDestructingState> _loadKey(LoadKey event) async* {
-    final contacts = await _loadContacts(event.contact);
+    final identityView = IdentityView.fromString(event.contact);
+    final contacts = await _loadContacts(identityView);
     final key = await _cryptoStorage.getPgpKey(aliasOrIdentity.mail, true);
     yield LoadedKey(key, contacts);
   }

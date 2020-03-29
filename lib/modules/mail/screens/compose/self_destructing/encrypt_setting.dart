@@ -18,9 +18,9 @@ import 'model/life_time.dart';
 
 class EncryptSetting extends StatefulWidget {
   final SelfDestructingBloc bloc;
-  final String contacts;
+  final String contact;
 
-  EncryptSetting(this.bloc, this.contacts);
+  EncryptSetting(this.bloc, this.contact);
 
   @override
   _EncryptSettingState createState() => _EncryptSettingState();
@@ -37,7 +37,7 @@ class _EncryptSettingState extends BState<EncryptSetting> {
 
   @override
   void initState() {
-    widget.bloc.add(LoadKey(widget.contacts));
+    widget.bloc.add(LoadKey(widget.contact));
     super.initState();
   }
 

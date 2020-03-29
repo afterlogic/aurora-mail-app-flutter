@@ -40,7 +40,7 @@ class ViewPassword extends StatelessWidget {
                 ),
                 SizedBox(height: 20),
                 ClipboardLabel(password, "Encrypted message password.", () {
-              toastKey.currentState.show(i18n(context, "link_coppied_to_clipboard"));
+              toastKey.currentState.show(i18n(context, "password_coppied_to_clipboard"));
                 }),
                 SizedBox(height: 20),
                 Text(

@@ -471,7 +471,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
     this.alias = aliasOrIdentity.alias;
     this.identity = aliasOrIdentity.identity;
     _fromCtrl.text =
-        identityViewName(aliasOrIdentity.name, aliasOrIdentity.mail);
+        IdentityView.solid(aliasOrIdentity.name, aliasOrIdentity.mail);
   }
 
   void changeSignature(String oldSignature, String newSignature) {

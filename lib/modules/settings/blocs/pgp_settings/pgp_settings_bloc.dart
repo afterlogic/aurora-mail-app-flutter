@@ -44,7 +44,7 @@ class PgpSettingsBloc extends Bloc<PgpSettingsEvent, PgpSettingsState> {
     yield* _loadKeys().map((item) {
       if (item is LoadedState) {
         return item.copyWith(
-          keyProgress: identityViewName(event.name, event.mail),
+          keyProgress: IdentityView.solid(event.name, event.mail),
         );
       } else {
         return item;

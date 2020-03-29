@@ -7,11 +7,13 @@ import 'contacts_table.dart';
 part 'contacts_dao.g.dart';
 
 @UseDao(tables: [ContactsTable])
-class ContactsDao extends DatabaseAccessor<AppDatabase> with _$ContactsDaoMixin {
+class ContactsDao extends DatabaseAccessor<AppDatabase>
+    with _$ContactsDaoMixin {
   ContactsDao(AppDatabase db) : super(db);
 
   Future<void> addContacts(List<ContactDb> newContacts) async {
-    await batch((b) => b.insertAll(contactsTable, newContacts, mode: InsertMode.insertOrReplace));
+    await batch((b) => b.insertAll(contactsTable, newContacts,
+        mode: InsertMode.insertOrReplace));
   }
 
   Future<void> deleteContacts(List<String> uuids) {
@@ -19,31 +21,30 @@ class ContactsDao extends DatabaseAccessor<AppDatabase> with _$ContactsDaoMixin 
   }
 
   Future<void> deleteContactsOfUser(int userLocalId) {
-    return (delete(contactsTable)..where((c) => c.userLocalId.equals(userLocalId))).go();
+    return (delete(contactsTable)
+          ..where((c) => c.userLocalId.equals(userLocalId)))
+        .go();
   }
 
-  Future<List<ContactDb>> getContacts(int userLocalId, {List<String> storages, String pattern}) {
+  Future<List<ContactDb>> getContacts(int userLocalId,
+      {List<String> storages, String pattern}) {
     return (select(contactsTable)
           ..where((c) => c.userLocalId.equals(userLocalId))
           ..where((c) {
             if (pattern != null && pattern.isNotEmpty) {
-              return c.fullName.like("%$pattern%") | c.viewEmail.like("%$pattern%");
+              return c.fullName.like("%$pattern%") |
+                  c.viewEmail.like("%$pattern%");
             } else {
               return Constant(true);
             }
           })
-          ..where((c) => storages != null ? c.storage.isIn(storages) : Constant(true))
+          ..where((c) =>
+              storages != null ? c.storage.isIn(storages) : Constant(true))
           ..orderBy([
             (c) => OrderingTerm(expression: c.fullName.collate(Collate.noCase)),
-            (c) => OrderingTerm(expression: c.viewEmail.collate(Collate.noCase)),
+            (c) =>
+                OrderingTerm(expression: c.viewEmail.collate(Collate.noCase)),
           ]))
-        .get();
-  }
-
-  Future<List<ContactDb>> getContactsByEmail(int userLocalId, List<String> emails) {
-    return (select(contactsTable)
-          ..where((c) => c.userLocalId.equals(userLocalId))
-          ..where((c) => c.viewEmail.isIn(emails)))
         .get();
   }
 
@@ -53,29 +54,34 @@ class ContactsDao extends DatabaseAccessor<AppDatabase> with _$ContactsDaoMixin 
           ..where((c) => c.storage.isNotIn([StorageNames.collected]))
           ..orderBy([
             (c) => OrderingTerm(expression: c.fullName.collate(Collate.noCase)),
-            (c) => OrderingTerm(expression: c.viewEmail.collate(Collate.noCase)),
+            (c) =>
+                OrderingTerm(expression: c.viewEmail.collate(Collate.noCase)),
           ]))
         .watch();
   }
 
-  Stream<List<ContactDb>> watchContactsFromStorage(int userLocalId, String storage) {
+  Stream<List<ContactDb>> watchContactsFromStorage(
+      int userLocalId, String storage) {
     return (select(contactsTable)
           ..where((c) => c.userLocalId.equals(userLocalId))
           ..where((c) => c.storage.equals(storage))
           ..orderBy([
             (c) => OrderingTerm(expression: c.fullName.collate(Collate.noCase)),
-            (c) => OrderingTerm(expression: c.viewEmail.collate(Collate.noCase)),
+            (c) =>
+                OrderingTerm(expression: c.viewEmail.collate(Collate.noCase)),
           ]))
         .watch();
   }
 
-  Stream<List<ContactDb>> watchContactsFromGroup(int userLocalId, String groupUuid) {
+  Stream<List<ContactDb>> watchContactsFromGroup(
+      int userLocalId, String groupUuid) {
     return (select(contactsTable)
           ..where((c) => c.userLocalId.equals(userLocalId))
           ..where((c) => c.groupUUIDs.like("%$groupUuid%"))
           ..orderBy([
             (c) => OrderingTerm(expression: c.fullName.collate(Collate.noCase)),
-            (c) => OrderingTerm(expression: c.viewEmail.collate(Collate.noCase)),
+            (c) =>
+                OrderingTerm(expression: c.viewEmail.collate(Collate.noCase)),
           ]))
         .watch();
   }
@@ -84,7 +90,8 @@ class ContactsDao extends DatabaseAccessor<AppDatabase> with _$ContactsDaoMixin 
     try {
       return transaction(() async {
         for (final contact in updatedContacts) {
-          await (update(contactsTable)..where((c) => c.uuid.equals(contact.uuid.value)))
+          await (update(contactsTable)
+                ..where((c) => c.uuid.equals(contact.uuid.value)))
               .write(contact);
         }
       });

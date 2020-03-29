@@ -55,7 +55,7 @@ class _GenerateKeyDialogState extends BState<GenerateKeyDialog> {
               selectedItemBuilder: (_) {
                 return widget.identities.map((value) {
                   return Text(
-                    identityViewName(value.name, value.mail),
+                    IdentityView.solid(value.name, value.mail),
                     maxLines: 2,
                   );
                 }).toList();
