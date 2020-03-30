@@ -66,14 +66,19 @@ class _ComposeEmailsState extends BState<ComposeEmails> {
   }
 
   Future<List<Contact>> _buildSuggestions(String pattern) async {
-    _search = pattern;
+    try {
+      _search = pattern;
 
-    final bloc = BlocProvider.of<ContactsBloc>(context);
-    final contacts = await bloc.getTypeAheadContacts(pattern);
+      final bloc = BlocProvider.of<ContactsBloc>(context);
+      final contacts = await bloc.getTypeAheadContacts(pattern);
 
-    contacts.removeWhere((i) => i.viewEmail.isEmpty);
+      contacts.removeWhere((i) => i.viewEmail.isEmpty);
 
-    return contacts;
+      return contacts;
+    } catch (e,s) {
+      print(s);
+      return [];
+    }
   }
 
   _focus() {

@@ -14,7 +14,7 @@ abstract class ComposeEvent extends Equatable {
   List<Object> get props => null;
 }
 
-class SendMessage extends ComposeEvent {
+class SendMessage extends ComposeEvent with AlwaysNonEqualObject {
   final String to;
   final String cc;
   final String bcc;

@@ -31,9 +31,9 @@ class AttachmentUploaded extends ComposeState {
   List<Object> get props => [composeAttachment];
 }
 
-class MessageSending extends ComposeState {}
+class MessageSending extends ComposeState with AlwaysNonEqualObject {}
 
-class MessageSent extends ComposeState {}
+class MessageSent extends ComposeState with AlwaysNonEqualObject {}
 
 class MessageSavedInDrafts extends ComposeState {
   final int draftUid;
