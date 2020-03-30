@@ -11,10 +11,12 @@ class InitState extends SelfDestructingState {
   @override
   List<Object> get props => [];
 }
+
 class ProgressState extends SelfDestructingState {
   @override
   List<Object> get props => [];
 }
+
 class LoadedContacts extends SelfDestructingState {
   final List<ContactWithKey> contacts;
 
@@ -25,13 +27,13 @@ class LoadedContacts extends SelfDestructingState {
 }
 
 class LoadedKey extends SelfDestructingState {
-  final PgpKey key;
+  final ContactWithKey sender;
   final ContactWithKey contact;
 
-  LoadedKey(this.key, this.contact);
+  LoadedKey(this.sender, this.contact);
 
   @override
-  List<Object> get props => [key];
+  List<Object> get props => [sender.hashCode, contact.hashCode];
 }
 
 class ErrorState extends SelfDestructingState with AlwaysNonEqualObject {

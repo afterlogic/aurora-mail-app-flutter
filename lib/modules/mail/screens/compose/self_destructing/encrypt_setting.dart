@@ -49,7 +49,8 @@ class _EncryptSettingState extends BState<EncryptSetting> {
           condition: (_, state) => state is LoadedKey,
           builder: (context, state) {
             if (state is LoadedKey) {
-              final hasKey = state.key != null;
+              final sender = state.sender;
+              final hasKey = sender.key != null;
 
               final contact = state.contact;
               final recipientHaveKey = contact.key != null;
@@ -204,7 +205,7 @@ class _EncryptSettingState extends BState<EncryptSetting> {
                           ? Text(i18n(context, "encrypt"))
                           : CircularProgressIndicator(),
                       onPressed: state is! ProgressState
-                          ? () => create(contact)
+                          ? () => create(contact, sender)
                           : null,
                     ),
                   )
@@ -229,11 +230,11 @@ class _EncryptSettingState extends BState<EncryptSetting> {
     );
   }
 
-  void create(ContactWithKey contact) {
+  void create(ContactWithKey contact, ContactWithKey sender) {
     if (!useSign || formKey.currentState.validate()) {
-      final contactName = contact.contact.fullName?.isNotEmpty == true
-          ? contact.contact.fullName
-          : contact.contact.viewEmail;
+      final contactName = sender.contact.fullName?.isNotEmpty == true
+          ? sender.contact.fullName
+          : sender.contact.viewEmail;
       var dateTime = Instant.now();
 
       final now =
@@ -249,7 +250,7 @@ class _EncryptSettingState extends BState<EncryptSetting> {
         context,
         "self_destructing_message_template",
         {
-          "contactName": contactName,
+          "sender": contactName,
           "message_password": passwordText,
           "lifeTime": lifeTimeText,
           "now": now

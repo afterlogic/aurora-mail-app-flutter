@@ -78,7 +78,25 @@ class SelfDestructingBloc
     final identityView = IdentityView.fromString(event.contact);
     final contacts = await _loadContacts(identityView);
     final key = await _cryptoStorage.getPgpKey(aliasOrIdentity.mail, true);
-    yield LoadedKey(key, contacts);
+    final sender = Contact(
+      viewEmail: aliasOrIdentity.mail,
+      fullName: aliasOrIdentity.name,
+      davContactsVCardUid: null,
+      frequency: null,
+      entityId: null,
+      uuid: null,
+      groupUUIDs: <String>[],
+      eTag: null,
+      useFriendlyName: null,
+      davContactsUid: null,
+      storage: null,
+      uuidPlusStorage: null,
+      dateModified: null,
+      idTenant: null,
+      userLocalId: null,
+      idUser: null,
+    );
+    yield LoadedKey(ContactWithKey(sender, key), contacts);
   }
 
   Stream<SelfDestructingState> _encrypt(EncryptEvent event) async* {
