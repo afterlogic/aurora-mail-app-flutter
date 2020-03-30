@@ -63,6 +63,7 @@ class _EncryptSettingState extends BState<EncryptSetting> {
                   child: Stack(
                     children: <Widget>[
                       ListView(
+                        padding: EdgeInsets.all(0),
                         children: <Widget>[
                           Text(
                             i18n(context, "supports_plain_text_only"),
