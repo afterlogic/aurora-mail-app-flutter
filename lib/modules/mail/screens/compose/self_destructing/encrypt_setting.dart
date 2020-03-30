@@ -31,7 +31,7 @@ class _EncryptSettingState extends BState<EncryptSetting> {
   final formKey = GlobalKey<FormState>();
   final toastKey = GlobalKey<ToastWidgetState>();
   LifeTime lifeTime = LifeTime.values.first;
-  bool useSign = true;
+  bool useSign = false;
   bool isKeyBased = false;
   bool obscure = false;
 
@@ -50,9 +50,7 @@ class _EncryptSettingState extends BState<EncryptSetting> {
           builder: (context, state) {
             if (state is LoadedKey) {
               final hasKey = state.key != null;
-              if (!hasKey) {
-                useSign = false;
-              }
+
               final contact = state.contact;
               final recipientHaveKey = contact.key != null;
               return AlertDialog(
@@ -113,6 +111,7 @@ class _EncryptSettingState extends BState<EncryptSetting> {
                             value: false,
                             onChanged: (bool value) {
                               isKeyBased = value;
+                              useSign = false;
                               setState(() {});
                             },
                             groupValue: isKeyBased,
@@ -125,6 +124,7 @@ class _EncryptSettingState extends BState<EncryptSetting> {
                                 ? null
                                 : (bool value) {
                                     isKeyBased = value;
+                                    useSign = value && hasKey;
                                     setState(() {});
                                   },
                           ),
@@ -142,7 +142,7 @@ class _EncryptSettingState extends BState<EncryptSetting> {
                             contentPadding: EdgeInsets.zero,
                             title: Text(i18n(context, "add_digital_signature")),
                             value: useSign,
-                            onChanged: hasKey && recipientHaveKey
+                            onChanged: hasKey && isKeyBased
                                 ? (v) {
                                     useSign = !useSign;
                                     setState(() {});
