@@ -128,7 +128,7 @@ class ComposeMethods {
     String sender,
   ) async {
     final encryptDecrypt = pgpWorker.encryptDecrypt(
-      sender,
+      sign ? sender : null,
       contacts,
     );
 

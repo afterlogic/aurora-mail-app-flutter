@@ -31,7 +31,7 @@ class _EncryptSettingState extends BState<EncryptSetting> {
   final formKey = GlobalKey<FormState>();
   final toastKey = GlobalKey<ToastWidgetState>();
   LifeTime lifeTime = LifeTime.values.first;
-  bool useSign = false;
+  bool useSign = true;
   bool isKeyBased = false;
   bool obscure = false;
 
@@ -50,6 +50,9 @@ class _EncryptSettingState extends BState<EncryptSetting> {
           builder: (context, state) {
             if (state is LoadedKey) {
               final hasKey = state.key != null;
+              if (!hasKey) {
+                useSign = false;
+              }
               final contact = state.contact;
               final recipientHaveKey = contact.key != null;
               return AlertDialog(
@@ -236,7 +239,7 @@ class _EncryptSettingState extends BState<EncryptSetting> {
           dateTime.inZone(DateTimeZone.local).toString('MMM dd, yyyy HH:mm z') +
               DateTimeZone.local.getUtcOffset(dateTime).toString();
 
-      final passwordText = !isKeyBased&&contact.key != null
+      final passwordText = !isKeyBased && contact.key != null
           ? i18n(context, "self_destructing_message_password")
           : "";
       final lifeTimeText = i18n(context, lifeTime.toText());

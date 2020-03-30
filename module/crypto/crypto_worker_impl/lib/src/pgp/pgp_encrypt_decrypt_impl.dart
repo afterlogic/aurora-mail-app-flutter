@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:crypto_model/crypto_model.dart';
 import 'package:crypto_plugin/crypto_plugin.dart';
 import 'package:crypto_storage/crypto_storage.dart';
 import 'package:crypto_worker/crypto_worker.dart';
@@ -58,6 +59,9 @@ class PgpEncryptDecryptImpl extends PgpEncryptDecrypt {
 
   Future<Decrypted> verifySign(String message) async {
     final publicKey = await _storage.getPgpKey(sender, false);
+    if (publicKey == null) {
+      throw PgpKeyNotFound([sender]);
+    }
     final tempFile = await PgpWorkerImpl.tempFile;
 
     await _pgp.stop();
@@ -95,9 +99,12 @@ class PgpEncryptDecryptImpl extends PgpEncryptDecrypt {
 
   @override
   Future<String> encrypt(String message, [String password]) async {
-    final privateKey = await _storage.getPgpKey(sender, true);
-    if (privateKey == null) {
-      throw PgpKeyNotFound([sender]);
+    PgpKey privateKey;
+    if (sender != null && password != null) {
+      privateKey = await _storage.getPgpKey(sender, true);
+      if (privateKey == null) {
+        throw PgpKeyNotFound([sender]);
+      }
     }
     final publicKeys = <String>[];
     final withNotKey = <String>[];
@@ -117,7 +124,7 @@ class PgpEncryptDecryptImpl extends PgpEncryptDecrypt {
 
     await _pgp.stop();
     await _pgp.setTempFile(tempFile);
-    await _pgp.setPrivateKey(privateKey.key);
+    await _pgp.setPrivateKey(privateKey?.key);
     await _pgp.setPublicKeys(publicKeys);
 
     try {
@@ -133,7 +140,6 @@ class PgpEncryptDecryptImpl extends PgpEncryptDecrypt {
       rethrow;
     }
   }
-
 
   @override
   Future stop() async {
