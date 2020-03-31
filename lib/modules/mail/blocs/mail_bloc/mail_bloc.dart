@@ -6,15 +6,16 @@ import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/bloc.dart';
 import 'package:aurora_mail/utils/api_utils.dart';
 import 'package:bloc/bloc.dart';
-import 'package:flutter/foundation.dart';
 
 import './bloc.dart';
 import 'mail_methods.dart';
 
 class MailBloc extends Bloc<MailEvent, MailState> {
   MailMethods _methods;
+  final User user;
+  final Account account;
 
-  MailBloc({@required User user, @required Account account}) {
+  MailBloc({this.user, this.account}) {
     assert(user != null);
     _methods = new MailMethods(user: user, account: account);
     BackgroundHelper.addOnEndAlarmObserver(true, onEndAlarm);

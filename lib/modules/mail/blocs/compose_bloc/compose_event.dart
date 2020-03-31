@@ -77,7 +77,7 @@ class SaveToDrafts extends ComposeEvent {
       [to, cc, bcc, subject, composeAttachments, messageText, draftUid];
 }
 
-class UploadAttachment extends ComposeEvent {}
+class UploadAttachment extends ComposeEvent with AlwaysNonEqualObject {}
 
 // used inside bloc, thus is not intended to be fired from flutter widgets
 class StartUpload extends ComposeEvent {

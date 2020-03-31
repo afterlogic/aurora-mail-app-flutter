@@ -19,7 +19,6 @@ import 'package:aurora_mail/modules/mail/screens/compose/dialog/encrypt_dialog.d
 import 'package:aurora_mail/modules/mail/screens/compose/self_destructing/bloc/self_destructing_bloc.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/self_destructing/bloc/self_destructing_state.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/self_destructing/encrypt_setting.dart';
-import 'package:aurora_mail/modules/mail/screens/compose/self_destructing/model/contact_with_key.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/self_destructing/view_password.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
 import 'package:aurora_mail/utils/base_state.dart';
@@ -43,8 +42,15 @@ import 'components/compose_subject.dart';
 
 class ComposeAndroid extends StatefulWidget {
   final ComposeAction composeAction;
+  final User user;
+  final Account account;
 
-  const ComposeAndroid({Key key, this.composeAction}) : super(key: key);
+  const ComposeAndroid(
+    this.user,
+    this.account, {
+    Key key,
+    this.composeAction,
+  }) : super(key: key);
 
   @override
   _ComposeAndroidState createState() => _ComposeAndroidState();
@@ -88,6 +94,11 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
   void initState() {
     super.initState();
     _initSaveToDraftsTimer();
+
+    _bloc = ComposeBloc(
+      user: widget.user,
+      account: widget.account,
+    );
   }
 
   @override
@@ -95,10 +106,6 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
     super.didChangeDependencies();
     final authBloc = BlocProvider.of<AuthBloc>(context);
 
-    _bloc = ComposeBloc(
-      user: authBloc.currentUser,
-      account: BlocProvider.of<AuthBloc>(context).currentAccount,
-    );
     setIdentityOrSender(AliasOrIdentity(null, authBloc.currentIdentity));
     _prepareMessage();
   }

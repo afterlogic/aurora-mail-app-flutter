@@ -22,6 +22,7 @@ import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_rou
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_mail/utils/mail_utils.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:crypto_worker/crypto_worker.dart';
 import 'package:flutter/material.dart';
@@ -219,7 +220,7 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
                 bloc: _messageViewBloc,
                 listener: (context, state) {
                   if (state is DecryptComplete) {
-                    decryptedText = state.text;
+                    decryptedText = MailUtils.plainToHtml(state.text);
                     setState(() {});
 
                     _showSnack(

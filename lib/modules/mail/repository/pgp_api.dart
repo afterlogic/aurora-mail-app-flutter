@@ -40,7 +40,10 @@ class PgpApi {
     final res = await _pgpModule.post(body);
 
     if (res is Map) {
-      return user.hostname + "/" + (res["link"] as String) + "#self-destruct";
+      return user.hostname +
+          (user.hostname.endsWith("/") ? "" : "/") +
+          (res["link"] as String) +
+          "#self-destruct";
     } else {
       throw WebMailApiError(res);
     }

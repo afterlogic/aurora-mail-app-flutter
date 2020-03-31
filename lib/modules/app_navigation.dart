@@ -135,7 +135,7 @@ class AppNavigation {
                     BlocProvider<MailBloc>.value(value: args.mailBloc),
                     BlocProvider<ContactsBloc>.value(value: args.contactsBloc),
                   ],
-                  child: ComposeAndroid(composeAction: args.composeAction),
+                  child: ComposeAndroid(args.mailBloc.user,args.mailBloc.account,composeAction: args.composeAction),
                 ));
         break;
 

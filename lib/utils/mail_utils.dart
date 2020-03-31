@@ -393,6 +393,10 @@ class MailUtils {
     return "#$color$opacity";
   }
 
+  static String plainToHtml(String text) {
+    return text.replaceAll("\n", "<br>").replaceAll("\r\n", "<br />");
+  }
+
   static String _getAttachment(
       BuildContext context, MailAttachment attachment) {
     final theme = Theme.of(context);
