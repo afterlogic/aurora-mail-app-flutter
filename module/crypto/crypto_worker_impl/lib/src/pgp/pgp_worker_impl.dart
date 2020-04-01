@@ -88,10 +88,10 @@ class PgpWorkerImpl extends PgpWorker {
     _pgp.setTempFile(tempFile);
     try {
       final result = await _pgp.encryptSymmetricBytes(
-        Uint8List.fromList(text.codeUnits),
+        utf8.encode(text),
         password,
       );
-      return String.fromCharCodes(result);
+      return utf8.decode(result);
     } finally {
       if (await tempFile.exists()) {
         tempFile.delete();

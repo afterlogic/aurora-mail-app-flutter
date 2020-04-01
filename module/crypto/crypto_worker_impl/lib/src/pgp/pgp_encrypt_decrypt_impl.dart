@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -41,11 +42,11 @@ class PgpEncryptDecryptImpl extends PgpEncryptDecrypt {
 
     try {
       final result = await _pgp.decryptBytes(
-        Uint8List.fromList(message.codeUnits),
+        utf8.encode(message),
         password,
       );
       final verified = await _pgp.verifyResult();
-      final text = String.fromCharCodes(result);
+      final text = utf8.decode(result);
 
       return Decrypted(verified, text);
     } catch (e) {
@@ -129,10 +130,10 @@ class PgpEncryptDecryptImpl extends PgpEncryptDecrypt {
 
     try {
       final result = await _pgp.encryptBytes(
-        Uint8List.fromList(message.codeUnits),
+        utf8.encode(message),
         password,
       );
-      return String.fromCharCodes(result);
+      return utf8.decode(result);
     } catch (e) {
       if (e is PgpSignError || e is PgpInputError) {
         throw PgpInvalidSign();
