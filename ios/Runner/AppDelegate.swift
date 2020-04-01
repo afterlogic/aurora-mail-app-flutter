@@ -16,7 +16,6 @@ class AppDelegate: FlutterAppDelegate{
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
         FirebaseApp.configure()
-        CryptoPlugin.register(with: self.registrar(forPlugin: "crypto_plugin"))
         GeneratedPluginRegistrant.register(with: self)
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
