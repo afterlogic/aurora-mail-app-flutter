@@ -29,7 +29,7 @@ dependencies:
   shared_preferences: 0.5.6+3
 
   # file downloading/uploading
-  file_picker: 1.5.1
+  file_picker: 1.5.0+2
   flutter_uploader: 1.2.0
   flutter_downloader: 1.4.1
   esys_flutter_share: 1.0.2
@@ -73,13 +73,13 @@ dependencies:
     path: core/notifications_utils
 
   aurora_ui_kit:
-    git: https://github.com/afterlogic/aurora_ui_kit_flutter.git
-
+    git: https://github.com/afterlogic/aur
+ora_ui_kit_flutter.git
 
   #notification
   flutter_local_notifications: 0.8.4+3
 
-  keyboard_actions: 3.2.1
+  keyboard_actions: 3.2.0
 
   theme:
     path: {{_theme_module}}
