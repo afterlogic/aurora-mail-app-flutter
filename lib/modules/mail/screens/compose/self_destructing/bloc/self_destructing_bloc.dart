@@ -117,6 +117,17 @@ class SelfDestructingBloc
         yield ErrorState("error_unknown");
         return;
       }
+    } else {
+      try {
+        encryptBody = await _pgpEncrypt(
+          body,
+          [event.contact.contact.viewEmail],
+          event.useSign ? event.password : null,
+        );
+      } catch (e) {
+        yield ErrorState("error_unknown");
+        return;
+      }
     }
 
     try {
