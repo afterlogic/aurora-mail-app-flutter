@@ -98,7 +98,8 @@ class PgpSettingsMethods {
 
   Future<String> pickFileContent() async {
     var content = "";
-    final files = await FilePicker.getMultiFile(fileExtension: "asc");
+    final files = await FilePicker.getMultiFile(
+        type: FileType.custom, fileExtension: "asc");
     for (var file in files) {
       content += await file.readAsString();
     }

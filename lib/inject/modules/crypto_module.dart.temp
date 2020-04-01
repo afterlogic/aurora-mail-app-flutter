@@ -4,7 +4,7 @@ import 'package:crypto_worker/crypto_worker.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:dm/dm.dart';
   // if : cryptoEnable
-import 'package:crypto_plugin/crypto_plugin.dart';
+import 'package:crypto_stream/crypto_plugin.dart';
 import 'package:crypto_storage_impl/crypto_storage_impl.dart';
 import 'package:crypto_worker_impl/crypto_worker_impl.dart';
 // end : if

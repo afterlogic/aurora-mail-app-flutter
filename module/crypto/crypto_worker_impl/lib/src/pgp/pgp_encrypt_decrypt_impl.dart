@@ -1,13 +1,7 @@
-import 'dart:convert';
-import 'dart:io';
-import 'dart:typed_data';
-
 import 'package:crypto_model/crypto_model.dart';
-import 'package:crypto_plugin/crypto_plugin.dart';
 import 'package:crypto_storage/crypto_storage.dart';
+import 'package:crypto_stream/crypto_plugin.dart';
 import 'package:crypto_worker/crypto_worker.dart';
-import 'package:crypto_worker_impl/crypto_worker_impl.dart';
-import 'package:path_provider/path_provider.dart';
 
 class PgpEncryptDecryptImpl extends PgpEncryptDecrypt {
   final Pgp _pgp;
@@ -28,27 +22,22 @@ class PgpEncryptDecryptImpl extends PgpEncryptDecrypt {
 
     final privateKey = await _storage.getPgpKey(recipients.first, true);
     final publicKey = await _storage.getPgpKey(sender, false);
-    final tempFile = await PgpWorkerImpl.tempFile;
 
     if (privateKey == null) {
       throw PgpKeyNotFound([sender]);
     }
 
-    await _pgp.stop();
-    await _pgp.setTempFile(tempFile);
-    await _pgp.setPrivateKey(privateKey?.key);
-
-    await _pgp.setPublicKeys(publicKey == null ? null : [publicKey.key]);
-
     try {
-      final result = await _pgp.decryptBytes(
-        utf8.encode(message),
-        password,
-      );
-      final verified = await _pgp.verifyResult();
-      final text = utf8.decode(result);
+      final result = await _pgp.bufferPlatformSink(
+          message,
+          _pgp.decrypt(
+            privateKey?.key,
+            publicKey == null ? null : [publicKey.key],
+            password,
+          ));
+      final verified = await _pgp.lastVerifyResult();
 
-      return Decrypted(verified, text);
+      return Decrypted(verified, result);
     } catch (e) {
       if (e is PgpSignError || e is PgpInputError) {
         throw PgpInvalidSign();
@@ -63,14 +52,9 @@ class PgpEncryptDecryptImpl extends PgpEncryptDecrypt {
     if (publicKey == null) {
       throw PgpKeyNotFound([sender]);
     }
-    final tempFile = await PgpWorkerImpl.tempFile;
 
-    await _pgp.stop();
-    await _pgp.setPublicKeys(publicKey == null ? null : [publicKey.key]);
-    await _pgp.setTempFile(tempFile);
-
-    final text = await _pgp.verifySign(message);
-    final verified = await _pgp.verifyResult();
+    final text = await _pgp.verify(message, publicKey?.key);
+    final verified = await _pgp.lastVerifyResult();
 
     return Decrypted(verified, text);
   }
@@ -80,16 +64,11 @@ class PgpEncryptDecryptImpl extends PgpEncryptDecrypt {
     if (privateKey == null) {
       throw PgpKeyNotFound([sender]);
     }
-    final tempFile = await PgpWorkerImpl.tempFile;
-
-    await _pgp.stop();
-    await _pgp.setTempFile(tempFile);
-    await _pgp.setPrivateKey(privateKey.key);
-    await _pgp.setPublicKeys(null);
 
     try {
-      final result = await _pgp.addSign(
+      final result = await _pgp.sign(
         message,
+        privateKey.key,
         password,
       );
       return result;
@@ -121,19 +100,15 @@ class PgpEncryptDecryptImpl extends PgpEncryptDecrypt {
       throw PgpKeyNotFound(withNotKey);
     }
 
-    final tempFile = await PgpWorkerImpl.tempFile;
-
-    await _pgp.stop();
-    await _pgp.setTempFile(tempFile);
-    await _pgp.setPrivateKey(privateKey?.key);
-    await _pgp.setPublicKeys(publicKeys);
-
     try {
-      final result = await _pgp.encryptBytes(
-        utf8.encode(message),
-        password,
-      );
-      return utf8.decode(result);
+      final result = await _pgp.bufferPlatformSink(
+          message,
+          _pgp.encrypt(
+            privateKey?.key,
+            publicKeys,
+            password,
+          ));
+      return result;
     } catch (e) {
       if (e is PgpSignError || e is PgpInputError) {
         throw PgpInvalidSign();
@@ -144,6 +119,6 @@ class PgpEncryptDecryptImpl extends PgpEncryptDecrypt {
 
   @override
   Future stop() async {
-    return _pgp.stop();
+
   }
 }
