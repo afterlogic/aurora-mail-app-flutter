@@ -73,8 +73,8 @@ dependencies:
     path: core/notifications_utils
 
   aurora_ui_kit:
-    git: https://github.com/afterlogic/aur
-ora_ui_kit_flutter.git
+    git: https://github.com/afterlogic/aurora_ui_kit_flutter.git
+
 
   #notification
   flutter_local_notifications: 0.8.4+3

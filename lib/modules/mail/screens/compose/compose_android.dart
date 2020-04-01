@@ -44,20 +44,24 @@ class ComposeAndroid extends StatefulWidget {
   final ComposeAction composeAction;
   final User user;
   final Account account;
+  final ComposeBloc _bloc;
 
-  const ComposeAndroid(
+  ComposeAndroid(
     this.user,
     this.account, {
     Key key,
     this.composeAction,
-  }) : super(key: key);
+  })  : _bloc = ComposeBloc(
+          user: user,
+          account: account,
+        ),
+        super(key: key);
 
   @override
   _ComposeAndroidState createState() => _ComposeAndroidState();
 }
 
 class _ComposeAndroidState extends BState<ComposeAndroid> {
-  ComposeBloc _bloc;
   Aliases alias;
   AccountIdentity identity;
   final toNode = FocusNode();
@@ -94,11 +98,6 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
   void initState() {
     super.initState();
     _initSaveToDraftsTimer();
-
-    _bloc = ComposeBloc(
-      user: widget.user,
-      account: widget.account,
-    );
   }
 
   @override
@@ -114,7 +113,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
   void dispose() {
     super.dispose();
     if (_timer != null) _timer.cancel();
-    _bloc.close();
+    widget._bloc.close();
 
     ccNode.dispose();
     toNode.dispose();
@@ -140,7 +139,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
 
     final str = action.message.attachmentsInJson;
     final attachments = MailAttachment.fromJsonString(str);
-    _bloc.add(GetComposeAttachments(attachments));
+    widget._bloc.add(GetComposeAttachments(attachments));
     if (_toEmails.isEmpty) {
       setState(() {
         _toEmails.addAll(MailUtils.getEmails(_message.toInJson));
@@ -224,7 +223,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
 
   void _initContactsAsAttachments(SendContacts action) {
     _returnToMessagesList = false;
-    _bloc.add(GetContactsAsAttachments(action.contacts));
+    widget._bloc.add(GetContactsAsAttachments(action.contacts));
   }
 
   void _initSaveToDraftsTimer() async {
@@ -306,7 +305,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
           isError: false);
     }
 
-    return _bloc.add(SendMessage(
+    return widget._bloc.add(SendMessage(
       to: _toEmails.join(","),
       cc: _ccEmails.join(","),
       bcc: _bccEmails.join(","),
@@ -351,7 +350,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
     final attachmentsForSave =
         _attachments.where((a) => a is ComposeAttachment);
 
-    return _bloc.add(SaveToDrafts(
+    return widget._bloc.add(SaveToDrafts(
       to: _toEmails.join(","),
       cc: _ccEmails.join(","),
       bcc: _bccEmails.join(","),
@@ -424,7 +423,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
       decryptTitle = null;
     }
     _encryptType = EncryptType.None;
-    _bloc.add(DecryptEvent());
+    widget._bloc.add(DecryptEvent());
     setState(() {});
   }
 
@@ -439,7 +438,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
         return;
       }
       final sender = AliasOrIdentity(alias, identity);
-      _bloc.add(EncryptBody(
+      widget._bloc.add(EncryptBody(
         _toEmails,
         _bodyTextCtrl.text,
         result.encrypt,
@@ -564,7 +563,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
     }
 
     return BlocProvider<ComposeBloc>.value(
-      value: _bloc,
+      value: widget._bloc,
       child: Scaffold(
         key: _scaffoldKey,
         appBar: ComposeAppBar(_onAppBarActionSelected),
@@ -631,7 +630,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
                         if (_showBCC) Divider(height: 0.0),
                         ComposeSubject(
                           textCtrl: _subjectTextCtrl,
-                          onAttach: () => _bloc.add(UploadAttachment()),
+                          onAttach: () => widget._bloc.add(UploadAttachment()),
                         ),
                         if (_attachments.isNotEmpty) Divider(height: 0.0),
                         BlocBuilder<ComposeBloc, ComposeState>(
@@ -693,8 +692,8 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
           msg: "select_recipient");
     }
     final bloc = SelfDestructingBloc(
-      _bloc.user,
-      _bloc.account,
+      widget._bloc.user,
+      widget._bloc.account,
       AliasOrIdentity(alias, identity),
       subject,
       body,
