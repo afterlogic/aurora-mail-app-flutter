@@ -67,6 +67,8 @@ PODS:
     - Flutter
   - flutter_local_notifications (0.0.1):
     - Flutter
+  - flutter_plugin_android_lifecycle (0.0.1):
+    - Flutter
   - flutter_secure_storage (3.3.1):
     - Flutter
   - flutter_uploader (1.2.0):
@@ -121,7 +123,7 @@ PODS:
     - Flutter
   - path_provider_macos (0.0.1):
     - Flutter
-  - permission_handler (4.3.0):
+  - "permission_handler (5.0.0+hotfix.3)":
     - Flutter
   - PromisesObjC (1.2.8)
   - Reachability (3.2)
@@ -158,6 +160,7 @@ DEPENDENCIES:
   - flutter_downloader (from `.symlinks/plugins/flutter_downloader/ios`)
   - flutter_keyboard_visibility (from `.symlinks/plugins/flutter_keyboard_visibility/ios`)
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
+  - flutter_plugin_android_lifecycle (from `.symlinks/plugins/flutter_plugin_android_lifecycle/ios`)
   - flutter_secure_storage (from `.symlinks/plugins/flutter_secure_storage/ios`)
   - flutter_uploader (from `.symlinks/plugins/flutter_uploader/ios`)
   - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
@@ -224,6 +227,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_keyboard_visibility/ios"
   flutter_local_notifications:
     :path: ".symlinks/plugins/flutter_local_notifications/ios"
+  flutter_plugin_android_lifecycle:
+    :path: ".symlinks/plugins/flutter_plugin_android_lifecycle/ios"
   flutter_secure_storage:
     :path: ".symlinks/plugins/flutter_secure_storage/ios"
   flutter_uploader:
@@ -270,7 +275,7 @@ SPEC CHECKSUMS:
   Fabric: 706c8b8098fff96c33c0db69cbf81f9c551d0d74
   file_picker: 408623be2125b79a4539cf703be3d4b3abe5e245
   Firebase: 497158b816d0a86fc31babbd05546fcd7e6083ff
-  firebase_crashlytics: 36c88d34d725558fc09f7bb2610cc13bfa15be37
+  firebase_crashlytics: bd8c58df07f107cb7e1a20cb190b9a468e0a69fd
   FirebaseAnalytics: cf95d3aab897612783020fbd98401d5366f135ee
   FirebaseCore: 85064903ed6c28e47fec9c7bd149d94ba1b6b6e7
   FirebaseCoreDiagnostics: 5e78803ab276bc5b50340e3c539c06c3de35c649
@@ -281,6 +286,7 @@ SPEC CHECKSUMS:
   flutter_downloader: 058b9c41564a90500f67f3e432e3524613a7fd83
   flutter_keyboard_visibility: 6195387fb6d8f46e5cd6dda4a4154e41f800f545
   flutter_local_notifications: 9e4738ce2471c5af910d961a6b7eadcf57c50186
+  flutter_plugin_android_lifecycle: 47de533a02850f070f5696a623995e93eddcdb9b
   flutter_secure_storage: 7953c38a04c3fdbb00571bcd87d8e3b5ceb9daec
   flutter_uploader: 7957e1b9d6516b6cccc37e5ffd6c5a0975a7cc4c
   fluttertoast: b644586ef3b16f67fae9a1f8754cef6b2d6b634b
@@ -295,7 +301,7 @@ SPEC CHECKSUMS:
   package_info: 48b108e75b8802c2d5e126f208ef540561c98aef
   path_provider: fb74bd0465e96b594bb3b5088ee4a4e7bb1f2a9d
   path_provider_macos: f760a3c5b04357c380e2fddb6f9db6f3015897e0
-  permission_handler: 5c75cfde1229eb85f22d367c093900fac03c6c9e
+  permission_handler: 4a985b5448897c27fdeadde84f7452520c0e6c58
   PromisesObjC: c119f3cd559f50b7ae681fa59dc1acd19173b7e6
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   RxSwift: fd680d75283beb5e2559486f3c0ff852f0d35334

@@ -93,6 +93,7 @@ class PgpApi{
         let output = JavaIoByteArrayOutputStream()
         try encryptSymmetric(input,output,password,jlong(data.count))
         let encrypted=output.toByteArray().toNSData()
+        let test = String.init(data: encrypted!, encoding: String.Encoding.utf8)
         return encrypted!;
     }
     func encryptSymmetricFile(_ inputFile:String,_ outputFile:String,_ password:String) throws {

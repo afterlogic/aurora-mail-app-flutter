@@ -7,7 +7,7 @@ class SymmetricPgp {
         _ tempFile:JavaIoFile,
         _ password:String,
         _ length:jlong )  {
-        
+        let armor = BCBcpgArmoredOutputStream(javaIoOutputStream: output)
         compress(input, JavaIoFileOutputStream(javaIoFile: tempFile),length)
         let preparedInput=JavaIoFileInputStream(javaIoFile: tempFile)
 
@@ -25,11 +25,12 @@ class SymmetricPgp {
                 .init(charArray: IOSCharArray.init(nsString:password))
                 .setProviderWith("BC")
         )
-        let encOut=encGen.open(with: output, withLong: tempFile.length())
+        let encOut=encGen.open(with: armor, withLong: tempFile.length())
         BCUtilIoStreams.pipeAll(with: preparedInput, with: encOut)
+    
         tempFile.delete__()
         encOut?.close()
-      
+       armor.close()
     }
     static  func decrypt(
         _ input:JavaIoInputStream,
