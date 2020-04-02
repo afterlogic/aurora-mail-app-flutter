@@ -29,7 +29,7 @@ dependencies:
   shared_preferences: 0.5.6+3
 
   # file downloading/uploading
-  file_picker: 1.5.0+2
+  file_picker: 1.5.1
   flutter_uploader: 1.2.0
   flutter_downloader: 1.4.1
   esys_flutter_share: 1.0.2
@@ -53,7 +53,8 @@ dependencies:
   uuid: 2.0.4
   intl: 0.16.0
   filesize: 1.0.4
-  permission_handler: 4.4.0+hotfix.2
+  permission_handler: 5.0.0+hotfix.3
+
   url_launcher: 5.4.2
   connectivity: 0.4.8+2
   package_info: 0.4.0+16
