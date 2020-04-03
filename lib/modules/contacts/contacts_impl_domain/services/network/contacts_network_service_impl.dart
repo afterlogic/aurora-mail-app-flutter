@@ -12,8 +12,9 @@ import 'package:webmail_api_client/webmail_api_client.dart';
 
 class ContactsNetworkServiceImpl implements ContactsNetworkService {
   final WebMailApi contactsModule;
+  final int userId;
 
-  ContactsNetworkServiceImpl(this.contactsModule);
+  ContactsNetworkServiceImpl(this.contactsModule, this.userId);
 
   @override
   Future<List<ContactsStorage>> getContactStorages(int userLocalId) async {
@@ -195,6 +196,21 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
     final body = new WebMailApiBody(
       method: "DeleteGroup",
       parameters: json.encode({"UUID": group.uuid}),
+    );
+
+    final result = await contactsModule.post(body);
+    return result as bool;
+  }
+
+  Future<void> addKeyToContact(Contact contact) async{
+    final body = new WebMailApiBody(
+      module: "OpenPgpWebclient",
+      method: "AddPublicKeyToContact",
+      parameters: json.encode({
+        "UserId": userId,
+        "Email": contact.viewEmail,
+        "Key": contact.pgpPublicKey,
+      }),
     );
 
     final result = await contactsModule.post(body);

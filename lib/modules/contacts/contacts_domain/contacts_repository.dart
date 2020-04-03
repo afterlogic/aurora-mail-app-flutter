@@ -27,9 +27,11 @@ abstract class ContactsRepository {
 
   Stream<List<ContactsGroup>> watchContactsGroups();
 
-  Future<void> addContact(Contact contact);
+  Future<Contact> addContact(Contact contact);
 
   Future<void> editContact(Contact contact);
+
+  Future<void> addKeyToContact(Contact contact);
 
   Future<void> deleteContacts(List<Contact> contact);
 

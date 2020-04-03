@@ -192,7 +192,7 @@ class ContactMapper {
         davContactsUid: i["DavContacts::UID"] as String,
         davContactsVCardUid: i["DavContacts::VCardUID"] as String,
         groupUUIDs: new List<String>.from(i["GroupUUIDs"] as List),
-        pgpPublicKey: i["OpenPgpWebclient::PgpKey"] as String,
+        pgpPublicKey: i["PublicPgpKey"] as String,
       );
     }).toList();
   }
@@ -241,7 +241,7 @@ class ContactMapper {
       "BirthYear": c.birthYear,
       "ETag": c.eTag,
       "GroupUUIDs": c.groupUUIDs,
-      "OpenPgpWebclient::PgpKey": c.pgpPublicKey,
+      "PublicPgpKey": c.pgpPublicKey,
     };
   }
 }

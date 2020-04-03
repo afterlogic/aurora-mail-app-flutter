@@ -65,15 +65,17 @@ class CryptoStorageImpl extends CryptoStorage {
   }
 
   Future<List<PgpKey>> getContactsPgpKeys() {
-    return _contactsDao.getContactsWithPgpKey().then((items) => items
-        .map((item) => PgpKey.fill(
-              item.fullName,
-              item.viewEmail,
-              false,
-              item.pgpPublicKey,
-              null,
-            ))
-        .toList());
+    return _contactsDao.getContactsWithPgpKey().then((items) {
+      return items
+          .map((item) => PgpKey.fill(
+                item.fullName,
+                item.viewEmail,
+                false,
+                item.pgpPublicKey,
+                null,
+              ))
+          .toList();
+    });
   }
 
   Future<int> deletePgpKey(String name, String email, bool isPrivate) async {

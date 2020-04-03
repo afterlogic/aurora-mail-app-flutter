@@ -160,8 +160,9 @@ class PgpSettingsMethods {
   Future addToContact(List<PgpKeyWithContact> selectedContact) async {
     try {
       for (var value in selectedContact) {
-        if (value.contact == null) {
-          await contactsDao.addContact(Contact(
+        Contact contact = value.contact;
+        if (contact == null) {
+          contact = await contactsDao.addContact(Contact(
             personalEmail: "",
             viewEmail: value.mail ?? "",
             fullName: value.name ?? "",
@@ -182,30 +183,14 @@ class PgpSettingsMethods {
             pgpPublicKey: value.key,
             uuid: "",
           ));
-        } else {
-          await contactsDao.editContact(Contact(
-            entityId: value.contact.entityId,
-            pgpPublicKey: value.key,
-            davContactsVCardUid: null,
-            frequency: null,
-            uuid: null,
-            groupUUIDs: null,
-            eTag: null,
-            useFriendlyName: null,
-            davContactsUid: null,
-            storage: null,
-            uuidPlusStorage: null,
-            dateModified: null,
-            idTenant: null,
-            userLocalId: null,
-            idUser: user.serverId,
-            viewEmail: null,
-            fullName: null,
-          ));
         }
+
+        await contactsDao.addKeyToContact(
+          contact.copyWith(pgpPublicKey: value.key),
+        );
       }
     } catch (e) {
-      e;
+      print(e);
     }
   }
 }

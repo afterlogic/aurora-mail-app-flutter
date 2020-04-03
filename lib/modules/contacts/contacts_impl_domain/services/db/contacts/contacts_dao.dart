@@ -118,7 +118,8 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
 
   Future<List<ContactDb>> getContactsWithPgpKey() {
     return (select(contactsTable)
-          ..where((item) => isNotNull(item.pgpPublicKey)))
+          ..where((item) =>
+              item.pgpPublicKey.like("%-----BEGIN PGP PUBLIC KEY BLOCK-----%")))
         .get();
   }
 }
