@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aurora_mail/utils/identity_util.dart';
 import 'package:bloc/bloc.dart';
+import 'package:crypto_model/crypto_model.dart';
 import 'package:crypto_storage/crypto_storage.dart';
 import 'package:crypto_worker/crypto_worker.dart';
 
@@ -10,9 +12,13 @@ import 'bloc.dart';
 
 class PgpSettingsBloc extends Bloc<PgpSettingsEvent, PgpSettingsState> {
   final PgpSettingsMethods _methods;
+  final AuthBloc authBloc;
 
-  PgpSettingsBloc(CryptoStorage _cryptoStorage, PgpWorker _cryptoWorker)
-      : _methods = PgpSettingsMethods(_cryptoStorage, _cryptoWorker);
+  PgpSettingsBloc(
+    CryptoStorage _cryptoStorage,
+    PgpWorker _cryptoWorker,
+    this.authBloc,
+  ) : _methods = PgpSettingsMethods(_cryptoStorage, _cryptoWorker);
 
   @override
   PgpSettingsState get initialState => ProgressState();
@@ -34,10 +40,11 @@ class PgpSettingsBloc extends Bloc<PgpSettingsEvent, PgpSettingsState> {
   Stream<PgpSettingsState> _loadKeys() async* {
     if (state is! LoadedState) yield ProgressState();
 
-    final privateKeys = await _methods.getKeys(true);
-    final publicKeys = await _methods.getKeys(false);
+    final userPrivateKeys = await _methods.getKeys(true);
+    final userPublicKeys = await _methods.getKeys(false);
+    final contactPublicKeys = await _methods.getContactKeys();
 
-    yield LoadedState(publicKeys, privateKeys);
+    yield LoadedState(userPublicKeys, userPrivateKeys, contactPublicKeys);
   }
 
   Stream<PgpSettingsState> _generateKeys(GenerateKeys event) async* {

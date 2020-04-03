@@ -99,4 +99,23 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
       return null;
     }
   }
+
+  Future<ContactDb> getContactWithPgpKey(String email) {
+    return (select(contactsTable)
+          ..where((item) => isNotNull(item.pgpPublicKey))
+          ..where((item) => item.viewEmail.equals(email)))
+        .get()
+        .then((items) {
+      if (items.isEmpty) {
+        return null;
+      }
+      return items.first;
+    });
+  }
+
+  Future<List<ContactDb>> getContactsWithPgpKey() {
+    return (select(contactsTable)
+          ..where((item) => isNotNull(item.pgpPublicKey)))
+        .get();
+  }
 }

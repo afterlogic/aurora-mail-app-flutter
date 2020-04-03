@@ -19,6 +19,8 @@ dependencies:
   #move all db to module
   aurora_mail:
     path: ../../..
+  crypto_worker:
+    path: ../crypto_worker
 dev_dependencies:
   flutter_test:
     sdk: flutter

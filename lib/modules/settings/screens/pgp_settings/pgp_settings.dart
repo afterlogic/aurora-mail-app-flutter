@@ -22,11 +22,13 @@ class PgpSettings extends StatefulWidget {
 }
 
 class _PgpSettingsState extends BState<PgpSettings> {
-  PgpSettingsBloc bloc = AppInjector.instance.pgpSettingsBloc();
+  PgpSettingsBloc bloc;
 
   @override
   void initState() {
     super.initState();
+    bloc = AppInjector.instance
+        .pgpSettingsBloc(BlocProvider.of<AuthBloc>(context));
     bloc.add(LoadKeys());
   }
 
@@ -79,13 +81,16 @@ class _PgpSettingsState extends BState<PgpSettings> {
             }
             final loadedState = state as LoadedState;
 
-            return ListView(
+            return Column(
               children: <Widget>[
-                _keys(
-                  context,
-                  loadedState.public,
-                  loadedState.private,
-                  loadedState.keyProgress,
+                Expanded(
+                  child: _keys(
+                    context,
+                    loadedState.myPublic,
+                    loadedState.myPrivate,
+                    loadedState.contactPublic,
+                    loadedState.keyProgress,
+                  ),
                 ),
                 _button(context, loadedState),
               ],
@@ -98,8 +103,8 @@ class _PgpSettingsState extends BState<PgpSettings> {
 
   _generateKey(LoadedState state) async {
     final exist = <String>{};
-    exist.addAll(state.private.map((item) => item.mail));
-    exist.addAll(state.public.map((item) => item.mail));
+    exist.addAll(state.myPrivate.map((item) => item.mail));
+    exist.addAll(state.myPublic.map((item) => item.mail));
 
     final authBloc = BlocProvider.of<AuthBloc>(context);
     var aliasOrIdentity = await authBloc.getAliasesAndIdentities(true);
@@ -181,12 +186,12 @@ class _PgpSettingsState extends BState<PgpSettings> {
     BuildContext context,
     List<PgpKey> public,
     List<PgpKey> private,
+    List<PgpKey> contactPublic,
     String keyProgress,
   ) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: ListView(
         children: <Widget>[
           if (public.isNotEmpty || keyProgress != null)
             Text(
@@ -208,6 +213,17 @@ class _PgpSettingsState extends BState<PgpSettings> {
             context,
             private,
             keyProgress,
+          ),
+          SizedBox(height: 10),
+          if (contactPublic.isNotEmpty)
+            Text(
+              i18n(context, "contact_keys"),
+              style: theme.textTheme.title,
+            ),
+          keysGroup(
+            context,
+            contactPublic,
+            null,
           ),
         ],
       ),
@@ -232,7 +248,7 @@ class _PgpSettingsState extends BState<PgpSettings> {
         .toList();
 
     if (keyProgress != null) {
-      widgets.insert(0, _key(keyProgress, true));
+      widgets.add(_key(keyProgress, true));
     }
 
     return Column(
@@ -250,7 +266,9 @@ class _PgpSettingsState extends BState<PgpSettings> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Text(text),
+              Expanded(
+                child: Text(text),
+              ),
               isProgress
                   ? SizedBox(
                       height: 20,
@@ -276,10 +294,10 @@ class _PgpSettingsState extends BState<PgpSettings> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
-          if (state.public.isNotEmpty)
+          if (state.myPublic.isNotEmpty)
             AMButton(
               child: Text(i18n(context, "export_all_public_keys")),
-              onPressed: () => _exportAllPublicKeys(state.public),
+              onPressed: () => _exportAllPublicKeys(state.myPublic),
             ),
           space,
           AMButton(

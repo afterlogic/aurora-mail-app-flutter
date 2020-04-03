@@ -12,23 +12,34 @@ abstract class PgpSettingsState extends Equatable {
 class ProgressState extends PgpSettingsState {}
 
 class LoadedState extends PgpSettingsState {
-  final List<PgpKey> public;
-  final List<PgpKey> private;
+  final List<PgpKey> myPublic;
+  final List<PgpKey> myPrivate;
+  final List<PgpKey> contactPublic;
   final String keyProgress;
 
-  LoadedState(this.public, this.private, [this.keyProgress = null]);
+  LoadedState(
+    this.myPublic,
+    this.myPrivate,
+    this.contactPublic, [
+    this.keyProgress = null,
+  ]);
 
-  LoadedState copyWith(
-      {List<PgpKey> public, List<PgpKey> private, String keyProgress}) {
+  LoadedState copyWith({
+    List<PgpKey> public,
+    List<PgpKey> private,
+    List<PgpKey> contactPublic,
+    String keyProgress,
+  }) {
     return LoadedState(
-      public ?? this.public,
-      private ?? this.private,
+      public ?? this.myPublic,
+      private ?? this.myPrivate,
+      contactPublic ?? this.contactPublic,
       keyProgress ?? this.keyProgress,
     );
   }
 
   @override
-  List<Object> get props => [public, private, keyProgress];
+  List<Object> get props => [myPublic, myPrivate, contactPublic, keyProgress];
 }
 
 class SelectKeyForImport extends PgpSettingsState {

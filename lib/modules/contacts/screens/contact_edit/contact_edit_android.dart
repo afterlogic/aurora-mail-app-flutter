@@ -229,6 +229,7 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid> {
       davContactsUid: widget.contact?.davContactsUid ?? null,
       davContactsVCardUid: widget.contact?.davContactsVCardUid ?? null,
       groupUUIDs: _selectedGroupsUuids,
+      pgpPublicKey: widget.contact.pgpPublicKey, //todo
     );
   }
 

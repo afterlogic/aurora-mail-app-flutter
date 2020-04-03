@@ -1,4 +1,5 @@
 import "package:crypto_model/crypto_model.dart";
+import 'package:crypto_worker/crypto_worker.dart';
 
 abstract class CryptoStorage {
   setOther(String id);
@@ -10,6 +11,8 @@ abstract class CryptoStorage {
   Future<PgpKey> getPgpKey(String email, bool isPrivate);
 
   Future<List<PgpKey>> getPgpKeys(bool isPrivate);
+
+  Future<List<PgpKey>> getContactsPgpKeys();
 
   Future deletePgpKey(String name, String email, bool isPrivate);
 

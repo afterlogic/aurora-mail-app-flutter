@@ -18,6 +18,10 @@ class PgpSettingsMethods {
     return cryptoStorage.getPgpKeys(isPrivate);
   }
 
+  Future<List<PgpKey>> getContactKeys() {
+    return cryptoStorage.getContactsPgpKeys();
+  }
+
   Future generateKeys(
     String name,
     String mail,
@@ -82,7 +86,7 @@ class PgpSettingsMethods {
     return map;
   }
 
-  List<PgpKey> filterSelected(Map<PgpKey, bool> keys) {
+    List<PgpKey> filterSelected(Map<PgpKey, bool> keys) {
     final selected = <PgpKey>[];
     for (var entries in keys.entries) {
       if (entries.value) {
@@ -114,3 +118,4 @@ class PgpSettingsMethods {
 
   static const KEY_FOLDER = "pgp_keys";
 }
+

@@ -15,11 +15,13 @@ class CryptoModule {
   CryptoStorage cryptoStorage(
     FlutterSecureStorage secureStorage,
     PgpKeyDao pgpKeyDao,
+     ContactsDao contactsDao,
   ) =>
    // if : cryptoEnable
       CryptoStorageImpl(
         secureStorage,
         pgpKeyDao,
+        contactsDao,
       );
    // end : if
    // if : !cryptoEnable

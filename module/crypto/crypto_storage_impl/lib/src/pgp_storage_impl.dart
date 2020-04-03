@@ -1,5 +1,6 @@
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/pgp/pgp_key_dao.dart';
+import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/contacts/contacts_dao.dart';
 import "package:crypto_model/crypto_model.dart";
 import 'package:crypto_storage/crypto_storage.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -7,9 +8,10 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 class CryptoStorageImpl extends CryptoStorage {
   final FlutterSecureStorage _secureStorage;
   final PgpKeyDao _keyDao;
+  final ContactsDao _contactsDao;
   String _other;
 
-  CryptoStorageImpl(this._secureStorage, this._keyDao);
+  CryptoStorageImpl(this._secureStorage, this._keyDao, this._contactsDao);
 
   setOther(String id) {
     _other = id;
@@ -31,7 +33,20 @@ class CryptoStorageImpl extends CryptoStorage {
 
   Future<PgpKey> getPgpKey(String email, bool isPrivate) async {
     final localKey = await _keyDao.getPgpKey(email, isPrivate);
-    return _fromDb(localKey);
+    if (localKey != null) {
+      return _fromDb(localKey);
+    } else if (!isPrivate) {
+      final contact = await _contactsDao.getContactWithPgpKey(email);
+      return PgpKey.fill(
+        contact.fullName,
+        contact.viewEmail,
+        false,
+        contact.pgpPublicKey,
+        null,
+      );
+    } else {
+      return null;
+    }
   }
 
   Future<List<PgpKey>> getPgpKeys(bool isPrivate) {
@@ -40,8 +55,21 @@ class CryptoStorageImpl extends CryptoStorage {
       for (var item in list) {
         out.add(await _fromDb(item));
       }
+
       return out;
     });
+  }
+
+  Future<List<PgpKey>> getContactsPgpKeys() {
+    return _contactsDao.getContactsWithPgpKey().then((items) => items
+        .map((item) => PgpKey.fill(
+              item.fullName,
+              item.viewEmail,
+              false,
+              item.pgpPublicKey,
+              null,
+            ))
+        .toList());
   }
 
   Future<int> deletePgpKey(String name, String email, bool isPrivate) async {
