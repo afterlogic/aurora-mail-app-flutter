@@ -43,4 +43,8 @@ abstract class ContactsDbService {
   Future<void> addGroups(List<ContactsGroup> newGroups);
 
   Future<void> deleteGroups(List<String> uuids);
+
+  Future<Contact> getContactWithPgpKey(String email);
+
+  Future<List<Contact>> getContactsWithPgpKey();
 }

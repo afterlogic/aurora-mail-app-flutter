@@ -453,4 +453,9 @@ class ContactsRepositoryImpl implements ContactsRepository {
   void dispose() {
     _storagesCtrl.close();
   }
+
+  @override
+  Future<Contact> getContactWithPgpKey(String mail) {
+    return _db.getContactWithPgpKey(mail);
+  }
 }

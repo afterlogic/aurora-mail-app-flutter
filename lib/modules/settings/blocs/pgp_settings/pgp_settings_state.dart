@@ -1,3 +1,4 @@
+import 'package:aurora_mail/modules/settings/blocs/pgp_settings/pgp_settings_methods.dart';
 import 'package:aurora_mail/utils/always_non_equal_object.dart';
 import 'package:crypto_model/crypto_model.dart';
 import 'package:equatable/equatable.dart';
@@ -42,13 +43,14 @@ class LoadedState extends PgpSettingsState {
   List<Object> get props => [myPublic, myPrivate, contactPublic, keyProgress];
 }
 
-class SelectKeyForImport extends PgpSettingsState {
-  final Map<PgpKey, bool> keys;
+class SelectKeyForImport extends PgpSettingsState with AlwaysNonEqualObject {
+  final Map<PgpKey, bool> userKeys;
+  final Map<PgpKeyWithContact, bool> contactKeys;
 
-  SelectKeyForImport(this.keys);
+  SelectKeyForImport(this.userKeys, this.contactKeys);
 
   @override
-  List<Object> get props => [keys];
+  List<Object> get props => [userKeys, contactKeys];
 }
 
 class ErrorState extends PgpSettingsState with AlwaysNonEqualObject {

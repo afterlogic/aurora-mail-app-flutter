@@ -51,4 +51,6 @@ abstract class ContactsRepository {
   Future<bool> deleteGroup(ContactsGroup group);
 
   void dispose();
+
+  Future<Contact> getContactWithPgpKey(String mail);
 }

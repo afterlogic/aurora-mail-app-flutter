@@ -19,9 +19,10 @@ class _KeyItemState extends BState<KeyItem> {
   Widget build(BuildContext context) {
     var textTheme = theme.textTheme;
 
-    final length = widget.pgpKey.key.length != null
+    final length = widget.pgpKey.key?.length != null
         ? "(${widget.pgpKey.length}-bit,"
         : "(";
+
     final description =
         "$length ${widget.pgpKey.isPrivate ? "private" : "public"})";
 

@@ -48,7 +48,7 @@ class _PgpSettingsState extends BState<PgpSettings> {
         bloc: bloc,
         listener: (context, state) {
           if (state is SelectKeyForImport) {
-            _importKey(state.keys);
+            _importKey(state.userKeys, state.contactKeys);
             return;
           }
           if (state is ErrorState) {
@@ -143,13 +143,14 @@ class _PgpSettingsState extends BState<PgpSettings> {
     );
   }
 
-  _importKey(Map<PgpKey, bool> keys) async {
+  _importKey(Map<PgpKey, bool> userKeys,
+      Map<PgpKeyWithContact, bool> contactKeys) async {
     final result = await showDialog(
       context: context,
-      builder: (_) => ImportKeyDialog(keys),
+      builder: (_) => ImportKeyDialog(userKeys, contactKeys),
     );
 
-    if (result is Map<PgpKey, bool>) {
+    if (result is PgpKeyMap) {
       bloc.add(ImportKey(result));
     }
   }

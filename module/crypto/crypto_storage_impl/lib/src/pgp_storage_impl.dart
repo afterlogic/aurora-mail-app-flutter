@@ -31,12 +31,16 @@ class CryptoStorageImpl extends CryptoStorage {
     return _keyDao.addPgpKeys(localPgpKeys);
   }
 
-  Future<PgpKey> getPgpKey(String email, bool isPrivate) async {
+  Future<PgpKey> getPgpKey(String email, bool isPrivate,
+      [bool fromContact = true]) async {
     final localKey = await _keyDao.getPgpKey(email, isPrivate);
     if (localKey != null) {
       return _fromDb(localKey);
     } else if (!isPrivate) {
       final contact = await _contactsDao.getContactWithPgpKey(email);
+      if (contact == null) {
+        return null;
+      }
       return PgpKey.fill(
         contact.fullName,
         contact.viewEmail,

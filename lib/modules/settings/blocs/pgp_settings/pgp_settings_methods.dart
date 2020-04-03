@@ -1,6 +1,11 @@
 import 'dart:io';
 
+import 'package:aurora_mail/config.dart';
+import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/modules/contacts/contacts_domain/contacts_repository.dart';
+import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 import 'package:aurora_mail/utils/download_directory.dart';
+import 'package:aurora_mail/utils/identity_util.dart';
 import 'package:aurora_mail/utils/permissions.dart';
 import 'package:crypto_model/crypto_model.dart';
 import 'package:crypto_storage/src/pgp_storage.dart';
@@ -11,8 +16,11 @@ import 'package:file_picker/file_picker.dart';
 class PgpSettingsMethods {
   final CryptoStorage cryptoStorage;
   final PgpWorker cryptoWorker;
+  final ContactsRepository contactsDao;
+  final User user;
 
-  PgpSettingsMethods(this.cryptoStorage, this.cryptoWorker);
+  PgpSettingsMethods(
+      this.cryptoStorage, this.cryptoWorker, this.user, this.contactsDao);
 
   Future<List<PgpKey>> getKeys(bool isPrivate) {
     return cryptoStorage.getPgpKeys(isPrivate);
@@ -77,19 +85,31 @@ class PgpSettingsMethods {
     return cryptoWorker.parseKey(key);
   }
 
-  Future<Map<PgpKey, bool>> markIfNotExist(List<PgpKey> keys) async {
+  Future<Map<PgpKey, bool>> userKeyMarkIfNotExist(List<PgpKey> keys) async {
     final map = <PgpKey, bool>{};
     for (var key in keys) {
-      final existKey = await cryptoStorage.getPgpKey(key.mail, key.isPrivate);
+      final existKey =
+          await cryptoStorage.getPgpKey(key.mail, key.isPrivate, false);
       map[key] = existKey == null ? true : null;
     }
     return map;
   }
 
-    List<PgpKey> filterSelected(Map<PgpKey, bool> keys) {
-    final selected = <PgpKey>[];
+  Future<Map<PgpKeyWithContact, bool>> contactKeyMarkIfNotExist(
+      List<PgpKey> keys) async {
+    final map = <PgpKeyWithContact, bool>{};
+    for (var key in keys) {
+      final contact = await contactsDao.getContactWithPgpKey(key.mail);
+      map[PgpKeyWithContact(key, contact)] =
+          contact?.pgpPublicKey == null ? true : null;
+    }
+    return map;
+  }
+
+  List<T> filterSelected<T extends PgpKey>(Map<T, bool> keys) {
+    final selected = <T>[];
     for (var entries in keys.entries) {
-      if (entries.value) {
+      if (entries.value == true) {
         selected.add(entries.key);
       }
     }
@@ -101,6 +121,7 @@ class PgpSettingsMethods {
   }
 
   Future<String> pickFileContent() async {
+    await getStoragePermissions();
     var content = "";
     final files = await FilePicker.getMultiFile(
       type: FileType.custom,
@@ -117,5 +138,98 @@ class PgpSettingsMethods {
   }
 
   static const KEY_FOLDER = "pgp_keys";
+
+  Future<PgpKeyMap> sortKeys(List<PgpKey> keys, Set<String> userEmail) async {
+    final userKeys = <PgpKey>[];
+    final contactKeys = <PgpKey>[];
+
+    for (var key in keys) {
+      if (userEmail.contains(IdentityView.fromString(key.mail).email)) {
+        userKeys.add(key);
+      } else {
+        contactKeys.add(key);
+      }
+    }
+
+    final existUserKeys = await userKeyMarkIfNotExist(userKeys);
+    final existContactKeys = await contactKeyMarkIfNotExist(contactKeys);
+
+    return PgpKeyMap(existUserKeys, existContactKeys);
+  }
+
+  Future addToContact(List<PgpKeyWithContact> selectedContact) async {
+    try {
+      for (var value in selectedContact) {
+        if (value.contact == null) {
+          await contactsDao.addContact(Contact(
+            personalEmail: "",
+            viewEmail: value.mail ?? "",
+            fullName: value.name ?? "",
+            davContactsVCardUid: "",
+            frequency: 0,
+            entityId: null,
+            groupUUIDs: <String>[],
+            eTag: "",
+            useFriendlyName: false,
+            title: "",
+            davContactsUid: "",
+            storage: StorageNames.personal,
+            uuidPlusStorage: "",
+            dateModified: DateTime.now().toIso8601String(),
+            idTenant: 1,
+            userLocalId: user.localId,
+            idUser: user.serverId,
+            pgpPublicKey: value.key,
+            uuid: "",
+          ));
+        } else {
+          await contactsDao.editContact(Contact(
+            entityId: value.contact.entityId,
+            pgpPublicKey: value.key,
+            davContactsVCardUid: null,
+            frequency: null,
+            uuid: null,
+            groupUUIDs: null,
+            eTag: null,
+            useFriendlyName: null,
+            davContactsUid: null,
+            storage: null,
+            uuidPlusStorage: null,
+            dateModified: null,
+            idTenant: null,
+            userLocalId: null,
+            idUser: user.serverId,
+            viewEmail: null,
+            fullName: null,
+          ));
+        }
+      }
+    } catch (e) {
+      e;
+    }
+  }
 }
 
+class PgpKeyWithContact implements PgpKey {
+  final PgpKey pgpKey;
+  final Contact contact;
+
+  PgpKeyWithContact(this.pgpKey, this.contact);
+
+  String get name => pgpKey.name;
+
+  String get mail => pgpKey.mail;
+
+  String get key => pgpKey.key;
+
+  bool get isPrivate => pgpKey.isPrivate;
+
+  int get length => pgpKey.length;
+}
+
+class PgpKeyMap {
+  final Map<PgpKey, bool> userKey;
+  final Map<PgpKeyWithContact, bool> contactKey;
+
+  PgpKeyMap(this.userKey, this.contactKey);
+}

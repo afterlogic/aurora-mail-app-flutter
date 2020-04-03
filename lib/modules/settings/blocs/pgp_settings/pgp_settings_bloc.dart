@@ -1,10 +1,11 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
+import 'package:aurora_mail/modules/contacts/contacts_impl_domain/contacts_repository_impl.dart';
 import 'package:aurora_mail/utils/identity_util.dart';
 import 'package:bloc/bloc.dart';
-import 'package:crypto_model/crypto_model.dart';
 import 'package:crypto_storage/crypto_storage.dart';
 import 'package:crypto_worker/crypto_worker.dart';
 
@@ -18,7 +19,13 @@ class PgpSettingsBloc extends Bloc<PgpSettingsEvent, PgpSettingsState> {
     CryptoStorage _cryptoStorage,
     PgpWorker _cryptoWorker,
     this.authBloc,
-  ) : _methods = PgpSettingsMethods(_cryptoStorage, _cryptoWorker);
+  ) : _methods = PgpSettingsMethods(
+          _cryptoStorage,
+          _cryptoWorker,
+          authBloc.currentUser,
+          ContactsRepositoryImpl(
+              user: authBloc.currentUser, appDB: DBInstances.appDB),
+        );
 
   @override
   PgpSettingsState get initialState => ProgressState();
@@ -73,8 +80,13 @@ class PgpSettingsBloc extends Bloc<PgpSettingsEvent, PgpSettingsState> {
       yield ErrorState("keys_not_found");
       return;
     }
-    final existKeys = await _methods.markIfNotExist(keys);
-    yield SelectKeyForImport(existKeys);
+    final userEmail = await authBloc
+        .getAliasesAndIdentities(true)
+        .then((items) => items.map((item) => item.mail).toSet());
+
+    final sortKey = await _methods.sortKeys(keys, userEmail);
+
+    yield SelectKeyForImport(sortKey.userKey, sortKey.contactKey);
   }
 
   Stream<PgpSettingsState> _importKeyFromFile() async* {
@@ -83,8 +95,12 @@ class PgpSettingsBloc extends Bloc<PgpSettingsEvent, PgpSettingsState> {
   }
 
   Stream<PgpSettingsState> _importKey(ImportKey event) async* {
-    final selected = _methods.filterSelected(event.keys);
-    await _methods.addToStorage(selected);
+    final selectedUser = _methods.filterSelected(event.keys.userKey);
+    await _methods.addToStorage(selectedUser);
+
+    final selectedContact = _methods.filterSelected(event.keys.contactKey);
+    await _methods.addToContact(selectedContact);
+
     yield* _loadKeys();
   }
 

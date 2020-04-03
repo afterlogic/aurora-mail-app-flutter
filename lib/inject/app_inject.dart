@@ -27,4 +27,5 @@ abstract class AppInjector {
   PgpSettingsBloc pgpSettingsBloc(AuthBloc authBloc);
 
   SettingsMethods settingsMethods();
+
 }
