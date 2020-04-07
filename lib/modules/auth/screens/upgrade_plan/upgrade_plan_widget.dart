@@ -5,6 +5,7 @@ import 'package:aurora_mail/modules/auth/screens/login/components/presentation_h
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_ui_kit/components/am_button.dart';
 import 'package:flutter/material.dart';
+import 'package:theme/app_color.dart';
 import 'package:theme/app_theme.dart';
 
 class UpgradePlanWidget extends StatelessWidget {
@@ -52,6 +53,7 @@ class UpgradePlanWidget extends StatelessWidget {
                   SizedBox(
                     width: double.infinity,
                     child: AMButton(
+                      shadow: AppColor.enableShadow ? null : BoxShadow(),
                       child: Text(i18n(context, "back_to_login")),
                       onPressed: () => Navigator.of(context).pop(),
                     ),
