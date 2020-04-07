@@ -11,11 +11,17 @@ import 'package:aurora_mail/modules/mail/models/compose_actions.dart';
 import 'package:aurora_mail/modules/mail/repository/search_util.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/compose_route.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
+import 'package:aurora_mail/modules/settings/blocs/pgp_settings/bloc.dart';
+import 'package:aurora_mail/modules/settings/screens/pgp_settings/dialogs/import_key_dialog.dart';
+import 'package:aurora_mail/modules/settings/screens/pgp_settings/screens/pgp_key_route.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/date_formatting.dart';
+import 'package:aurora_mail/utils/identity_util.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
+import 'package:crypto_model/crypto_model.dart';
+import 'package:crypto_storage_impl/crypto_storage_impl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -24,20 +30,48 @@ import 'package:url_launcher/url_launcher.dart';
 class ContactViewAndroid extends StatefulWidget {
   final Contact contact;
   final ScaffoldState contactsListScaffoldState;
+  final PgpSettingsBloc pgpSettingsBloc;
 
-  const ContactViewAndroid(this.contact, this.contactsListScaffoldState);
+  const ContactViewAndroid(
+      this.contact, this.contactsListScaffoldState, this.pgpSettingsBloc);
 
   @override
   _ContactViewAndroidState createState() => _ContactViewAndroidState();
 }
 
 class _ContactViewAndroidState extends BState<ContactViewAndroid> {
+  Contact contact;
   ContactInfo _contactInfo;
+  PgpKeyWithContact key;
+  PgpSettingsBloc pgpSettingsBloc;
+  ContactsBloc contactsBloc;
 
   @override
   void initState() {
     super.initState();
-    _contactInfo = new ContactInfo(widget.contact);
+
+    pgpSettingsBloc = widget.pgpSettingsBloc;
+    contactsBloc = BlocProvider.of<ContactsBloc>(context);
+    init(widget.contact);
+  }
+
+  init(Contact contact) {
+    this.contact = contact;
+    _contactInfo = new ContactInfo(contact);
+
+    if (contact?.pgpPublicKey != null) {
+      contactsBloc.getKeyInfo(contact.pgpPublicKey).then((key) {
+        if (key == null) {
+          this.key = null;
+        } else {
+          this.key = PgpKeyWithContact(key, contact);
+        }
+        if (mounted) setState(() {});
+      });
+    } else {
+      this.key = null;
+      if (mounted) setState(() {});
+    }
   }
 
   Future<void> _onMainAppBarActionSelected(ContactViewAppBarAction item) async {
@@ -59,7 +93,7 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
           arguments: ComposeScreenArgs(
             mailBloc: BlocProvider.of<MailBloc>(context),
             contactsBloc: BlocProvider.of<ContactsBloc>(context),
-            composeAction: SendContacts([widget.contact]),
+            composeAction: SendContacts([contact]),
           ),
         );
         break;
@@ -71,13 +105,14 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
           context,
           ContactEditRoute.name,
           arguments: ContactEditScreenArgs(
+            pgpSettingsBloc,
             bloc: BlocProvider.of<ContactsBloc>(context),
-            contact: widget.contact,
+            contact: contact,
           ),
         );
         break;
       case ContactViewAppBarAction.share:
-        bloc.add(ShareContacts([widget.contact]));
+        bloc.add(ShareContacts([contact]));
         showSnack(
           context: context,
           scaffoldState: widget.contactsListScaffoldState,
@@ -86,7 +121,7 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
             context,
             "contacts_shared_message",
             {
-              "contact": widget.contact.fullName,
+              "contact": contact.fullName,
               "storage": i18n(context, "contacts_drawer_storage_shared")
             },
           ),
@@ -94,7 +129,7 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
         Navigator.pop(context);
         break;
       case ContactViewAppBarAction.unshare:
-        bloc.add(UnshareContacts([widget.contact]));
+        bloc.add(UnshareContacts([contact]));
         showSnack(
           context: context,
           scaffoldState: widget.contactsListScaffoldState,
@@ -103,7 +138,7 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
             context,
             "contacts_shared_message",
             {
-              "contact": widget.contact.fullName,
+              "contact": contact.fullName,
               "storage": i18n(context, "contacts_drawer_storage_personal")
             },
           ),
@@ -115,13 +150,13 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
           context,
           i18n(context, "contacts_delete_title"),
           i18n(context, "contacts_delete_desc_with_name",
-              {"contact": widget.contact.fullName}),
+              {"contact": contact.fullName}),
           i18n(context, "btn_delete"),
           destructibleAction: true,
         );
 
         if (result == true) {
-          bloc.add(DeleteContacts([widget.contact]));
+          bloc.add(DeleteContacts([contact]));
           Navigator.pop(context);
         }
         break;
@@ -146,7 +181,7 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
 
   @override
   Widget build(BuildContext context) {
-    final c = widget.contact;
+    final c = contact;
     final birthDate = DateFormatting.formatBirthday(
       day: c.birthDay,
       month: c.birthMonth,
@@ -352,6 +387,26 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
       ),
     ]);
 
+    final keyInfo = InkWell(
+      onTap: key == null
+          ? null
+          : () {
+              Navigator.pushNamed(
+                context,
+                PgpKeyRoute.name,
+                arguments: PgpKeyRouteArg(key, pgpSettingsBloc),
+              );
+            },
+      child: _buildInfoItem(
+        icon: MdiIcons.key,
+        label: i18n(context, "public_key"),
+        v: key == null
+            ? ""
+            : key.formatName() +
+                "\n${key.key?.length != null ? "(${key.length}-bit," : "("} ${key.isPrivate ? "private" : "public"})",
+      ),
+    );
+
     List<Widget> _buildGroups(List<String> groupUUIDs) {
       final widgets = <Widget>[];
       final bloc = BlocProvider.of<ContactsBloc>(context);
@@ -384,53 +439,77 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
         onActionSelected: _onMainAppBarActionSelected,
         hasEmail: _contactInfo.viewEmail?.isNotEmpty == true,
       ),
-      body: ListView(
-        children: <Widget>[
-          ..._mainInfo,
-          if (personalInfo.isNotEmpty) Divider(indent: 16.0, endIndent: 16.0),
-          if (personalInfo.isNotEmpty)
-            ListTile(
-              title: Text(
-                i18n(context, "contacts_view_section_home"),
-                style: sectionTitleTheme,
+      body: BlocListener(
+        bloc: pgpSettingsBloc,
+        listener: (BuildContext context, state) async {
+          if (state is LoadedState) {
+            final result = await contactsBloc.getContact(contact.entityId);
+            init(result);
+          }
+          if (state is CompleteDownload) {
+            showSnack(
+              isError: false,
+              context: context,
+              scaffoldState: Scaffold.of(context),
+              msg: "downloading_to",
+              arg: {"path": state.filePath},
+            );
+          }
+          if (state is SelectKeyForImport) {
+            _importKey(state.userKeys, state.contactKeys);
+            return;
+          }
+        },
+        child: ListView(
+          children: <Widget>[
+            ..._mainInfo,
+            if (personalInfo.isNotEmpty) Divider(indent: 16.0, endIndent: 16.0),
+            if (personalInfo.isNotEmpty)
+              ListTile(
+                title: Text(
+                  i18n(context, "contacts_view_section_home"),
+                  style: sectionTitleTheme,
+                ),
               ),
-            ),
-          ...personalInfo,
-          if (businessInfo.isNotEmpty) Divider(indent: 16.0, endIndent: 16.0),
-          if (businessInfo.isNotEmpty)
-            ListTile(
-              title: Text(
-                i18n(context, "contacts_view_section_business"),
-                style: sectionTitleTheme,
+            ...personalInfo,
+            if (businessInfo.isNotEmpty) Divider(indent: 16.0, endIndent: 16.0),
+            if (businessInfo.isNotEmpty)
+              ListTile(
+                title: Text(
+                  i18n(context, "contacts_view_section_business"),
+                  style: sectionTitleTheme,
+                ),
               ),
-            ),
-          ...businessInfo,
-          if (otherInfo.isNotEmpty) Divider(indent: 16.0, endIndent: 16.0),
-          if (otherInfo.isNotEmpty)
-            ListTile(
-              title: Text(
-                i18n(context, "contacts_view_section_other_info"),
-                style: sectionTitleTheme,
+            ...businessInfo,
+            if (otherInfo.isNotEmpty) Divider(indent: 16.0, endIndent: 16.0),
+            if (otherInfo.isNotEmpty)
+              ListTile(
+                title: Text(
+                  i18n(context, "contacts_view_section_other_info"),
+                  style: sectionTitleTheme,
+                ),
               ),
-            ),
-          ...otherInfo,
-          if (groupInfo.isNotEmpty) Divider(indent: 16.0, endIndent: 16.0),
-          if (groupInfo.isNotEmpty)
-            ListTile(
-              title: Text(
-                i18n(context, "contacts_view_section_groups"),
-                style: sectionTitleTheme,
+            ...otherInfo,
+            if (keyInfo != null) Divider(indent: 16.0, endIndent: 16.0),
+            if (keyInfo != null) keyInfo,
+            if (groupInfo.isNotEmpty) Divider(indent: 16.0, endIndent: 16.0),
+            if (groupInfo.isNotEmpty)
+              ListTile(
+                title: Text(
+                  i18n(context, "contacts_view_section_groups"),
+                  style: sectionTitleTheme,
+                ),
               ),
-            ),
-          if (groupInfo.isNotEmpty)
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Wrap(
-                spacing: 16,
-                children: groupInfo,
+            if (groupInfo.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                child: Wrap(
+                  spacing: 16,
+                  children: groupInfo,
+                ),
               ),
-            ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -457,5 +536,13 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
     } else {
       return null;
     }
+  }
+
+  _importKey(Map<PgpKey, bool> userKeys,
+      Map<PgpKeyWithContact, bool> contactKeys) async {
+    await showDialog(
+      context: context,
+      builder: (_) => ImportKeyDialog(userKeys, contactKeys, pgpSettingsBloc),
+    );
   }
 }

@@ -1,17 +1,22 @@
 import 'dart:async';
 
 import 'package:aurora_mail/background/background_helper.dart';
+import 'package:aurora_mail/inject/app_inject.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 import 'package:aurora_mail/modules/contacts/screens/contact_edit/contact_edit_route.dart';
 import 'package:aurora_mail/modules/contacts/screens/contact_view/contact_view_route.dart';
 import 'package:aurora_mail/modules/contacts/screens/contacts_list/components/contacts_app_bar.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/mail_bloc.dart';
+import 'package:aurora_mail/modules/settings/blocs/pgp_settings/bloc.dart';
+import 'package:aurora_mail/modules/settings/screens/pgp_settings/dialogs/import_key_dialog.dart';
 import 'package:aurora_mail/shared_ui/mail_bottom_app_bar.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
+import 'package:crypto_model/crypto_model.dart';
+import 'package:crypto_storage_impl/crypto_storage_impl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -27,12 +32,15 @@ class ContactsListAndroid extends StatefulWidget {
 
 class _ContactsListAndroidState extends BState<ContactsListAndroid> {
   final _refreshKey = GlobalKey<RefreshIndicatorState>();
+  PgpSettingsBloc pgpSettingsBloc;
 
   var _refreshCompleter = new Completer();
 
   @override
   void initState() {
     super.initState();
+    pgpSettingsBloc =
+        AppInjector.instance.pgpSettingsBloc(BlocProvider.of(context));
     BackgroundHelper.addOnAlarmObserver(false, onAlarm);
   }
 
@@ -51,6 +59,7 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
       context,
       ContactViewRoute.name,
       arguments: ContactViewScreenArgs(
+        pgpSettingsBloc,
         contact: contact,
         mailBloc: BlocProvider.of<MailBloc>(context),
         contactsBloc: BlocProvider.of<ContactsBloc>(context),
@@ -64,63 +73,84 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
     _refreshCompleter = new Completer();
   }
 
+  _importKey(Map<PgpKey, bool> userKeys,
+      Map<PgpKeyWithContact, bool> contactKeys) async {
+    await showDialog(
+      context: context,
+      builder: (_) => ImportKeyDialog(userKeys, contactKeys, pgpSettingsBloc),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: ContactsAppBar(),
       drawer: ContactsDrawer(),
-      body: BlocListener<ContactsBloc, ContactsState>(
-        listener: (context, state) {
-          if (state.error != null) {
-            _completeRefresh();
-            showSnack(
-              context: context,
-              scaffoldState: Scaffold.of(context),
-              msg: state.error,
-            );
-          }
-
-          if (state.currentlySyncingStorages != null) {
-            if (state.showAllVisibleContacts == true) {
-              if (state.currentlySyncingStorages.isEmpty) {
-                // for "All" storage
-                _completeRefresh();
-              }
-            } else {
-              if (state.selectedGroup != null) {
-                if (state.currentlySyncingStorages.isEmpty) {
-                  // for groups
-                  _completeRefresh();
-                }
-              } else if (state.showAllVisibleContacts != true &&
-                  !state.currentlySyncingStorages
-                      .contains(state.selectedStorage)) {
-                // for storages
-                _completeRefresh();
-              }
-            }
+      body: BlocListener(
+        bloc: pgpSettingsBloc,
+        listener: (BuildContext context, state) {
+          if (state is SelectKeyForImport) {
+            _importKey(state.userKeys, state.contactKeys);
+            return;
           }
         },
-        child: RefreshIndicator(
-          key: _refreshKey,
-          onRefresh: () {
-            BlocProvider.of<ContactsBloc>(context).add(GetContacts(true));
-            return _refreshCompleter.future;
+        child: BlocListener<ContactsBloc, ContactsState>(
+          listener: (context, state) {
+            if (state.key != null) {
+              pgpSettingsBloc.add(ParseKey(state.key));
+              return;
+            }
+            if (state.error != null) {
+              _completeRefresh();
+              showSnack(
+                context: context,
+                scaffoldState: Scaffold.of(context),
+                msg: state.error,
+              );
+            }
+
+            if (state.currentlySyncingStorages != null) {
+              if (state.showAllVisibleContacts == true) {
+                if (state.currentlySyncingStorages.isEmpty) {
+                  // for "All" storage
+                  _completeRefresh();
+                }
+              } else {
+                if (state.selectedGroup != null) {
+                  if (state.currentlySyncingStorages.isEmpty) {
+                    // for groups
+                    _completeRefresh();
+                  }
+                } else if (state.showAllVisibleContacts != true &&
+                    !state.currentlySyncingStorages
+                        .contains(state.selectedStorage)) {
+                  // for storages
+                  _completeRefresh();
+                }
+              }
+            }
           },
-          backgroundColor: Colors.white,
-          color: Colors.black,
-          child: BlocBuilder<ContactsBloc, ContactsState>(
-              builder: (context, state) {
-            if (state.contacts == null ||
-                state.contacts.isEmpty &&
-                    state.currentlySyncingStorages
-                        .contains(state.selectedStorage))
-              return _buildLoading(state);
-            else if (state.contacts.isEmpty)
-              return _buildContactsEmpty(state);
-            else
-              return _buildContacts(context, state);
-          }),
+          child: RefreshIndicator(
+            key: _refreshKey,
+            onRefresh: () {
+              BlocProvider.of<ContactsBloc>(context).add(GetContacts(true));
+              return _refreshCompleter.future;
+            },
+            backgroundColor: Colors.white,
+            color: Colors.black,
+            child: BlocBuilder<ContactsBloc, ContactsState>(
+                builder: (context, state) {
+              if (state.contacts == null ||
+                  state.contacts.isEmpty &&
+                      state.currentlySyncingStorages
+                          .contains(state.selectedStorage))
+                return _buildLoading(state);
+              else if (state.contacts.isEmpty)
+                return _buildContactsEmpty(state);
+              else
+                return _buildContacts(context, state);
+            }),
+          ),
         ),
       ),
       bottomNavigationBar:
@@ -131,7 +161,7 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
         onPressed: () => Navigator.pushNamed(
           context,
           ContactEditRoute.name,
-          arguments: ContactEditScreenArgs(
+          arguments: ContactEditScreenArgs(pgpSettingsBloc,
               bloc: BlocProvider.of<ContactsBloc>(context)),
         ),
       ),

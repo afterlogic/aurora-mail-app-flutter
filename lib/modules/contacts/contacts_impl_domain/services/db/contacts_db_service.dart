@@ -47,4 +47,12 @@ abstract class ContactsDbService {
   Future<Contact> getContactWithPgpKey(String email);
 
   Future<List<Contact>> getContactsWithPgpKey();
+
+  Future deleteContactKey(String mail);
+
+  Future addKeyToContact(String viewEmail, String pgpPublicKey);
+
+  Future<Contact> getContactByEmail(String mail);
+
+  Future<Contact> getContactById(int entityId);
 }

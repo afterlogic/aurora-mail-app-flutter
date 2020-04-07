@@ -55,4 +55,10 @@ abstract class ContactsRepository {
   void dispose();
 
   Future<Contact> getContactWithPgpKey(String mail);
+
+  Future<Contact> getContactByEmail(String mail);
+
+  Future<Contact> getContactById(int entityId);
+
+  Future deleteContactKey(String mail);
 }

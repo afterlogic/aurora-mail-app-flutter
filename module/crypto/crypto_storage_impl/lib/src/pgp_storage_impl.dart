@@ -1,5 +1,7 @@
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/pgp/pgp_key_dao.dart';
+import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
+import 'package:aurora_mail/modules/contacts/contacts_impl_domain/mappers/contact_mapper.dart';
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/contacts/contacts_dao.dart';
 import "package:crypto_model/crypto_model.dart";
 import 'package:crypto_storage/crypto_storage.dart';
@@ -41,12 +43,16 @@ class CryptoStorageImpl extends CryptoStorage {
       if (contact == null) {
         return null;
       }
-      return PgpKey.fill(
-        contact.fullName,
-        contact.viewEmail,
-        false,
-        contact.pgpPublicKey,
-        null,
+
+      return PgpKeyWithContact(
+        PgpKey.fill(
+          contact.fullName,
+          contact.viewEmail,
+          false,
+          contact.pgpPublicKey,
+          null,
+        ),
+        ContactMapper.fromDB(contact),
       );
     } else {
       return null;
@@ -67,12 +73,15 @@ class CryptoStorageImpl extends CryptoStorage {
   Future<List<PgpKey>> getContactsPgpKeys() {
     return _contactsDao.getContactsWithPgpKey().then((items) {
       return items
-          .map((item) => PgpKey.fill(
-                item.fullName,
-                item.viewEmail,
-                false,
-                item.pgpPublicKey,
-                null,
+          .map((item) => PgpKeyWithContact(
+                PgpKey.fill(
+                  item.fullName,
+                  item.viewEmail,
+                  false,
+                  item.pgpPublicKey,
+                  null,
+                ),
+                ContactMapper.fromDB(item),
               ))
           .toList();
     });
@@ -152,4 +161,21 @@ class CryptoStorageImpl extends CryptoStorage {
       await _secureStorage.delete(key: id);
     }
   }
+}
+
+class PgpKeyWithContact implements PgpKey {
+  final PgpKey pgpKey;
+  final Contact contact;
+
+  PgpKeyWithContact(this.pgpKey, this.contact);
+
+  String get name => pgpKey.name;
+
+  String get mail => pgpKey.mail;
+
+  String get key => pgpKey.key;
+
+  bool get isPrivate => pgpKey.isPrivate;
+
+  int get length => pgpKey.length;
 }

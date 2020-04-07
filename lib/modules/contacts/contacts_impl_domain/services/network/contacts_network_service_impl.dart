@@ -202,7 +202,7 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
     return result as bool;
   }
 
-  Future<void> addKeyToContact(Contact contact) async{
+  Future<void> addKeyToContact(Contact contact) async {
     final body = new WebMailApiBody(
       module: "OpenPgpWebclient",
       method: "AddPublicKeyToContact",
@@ -210,6 +210,21 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
         "UserId": userId,
         "Email": contact.viewEmail,
         "Key": contact.pgpPublicKey,
+      }),
+    );
+
+    final result = await contactsModule.post(body);
+    return result as bool;
+  }
+
+  @override
+  Future deleteContactKey(String mail) async {
+    final body = new WebMailApiBody(
+      module: "OpenPgpWebclient",
+      method: "RemovePublicKeyFromContact",
+      parameters: json.encode({
+        "UserId": userId,
+        "Email": mail,
       }),
     );
 

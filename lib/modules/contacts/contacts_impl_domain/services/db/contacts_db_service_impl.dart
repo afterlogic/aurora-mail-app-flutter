@@ -140,4 +140,26 @@ class ContactsDbServiceImpl implements ContactsDbService {
         .getContactsWithPgpKey()
         .then((items) => ContactMapper.listFromDB(items));
   }
+
+  @override
+  Future deleteContactKey(String mail) {
+    return _contactsDao.deleteContactKey(mail);
+  }
+
+  Future addKeyToContact(String viewEmail, String pgpPublicKey) {
+    return _contactsDao.addKey(viewEmail, pgpPublicKey);
+  }
+
+  @override
+  Future<Contact> getContactByEmail(String mail) {
+    return _contactsDao
+        .getContactByEmail(mail)
+        .then((item) => ContactMapper.fromDB(item));
+  }
+
+  Future<Contact> getContactById(int entityId){
+    return _contactsDao
+        .getContactById(entityId)
+        .then((item) => ContactMapper.fromDB(item));
+  }
 }

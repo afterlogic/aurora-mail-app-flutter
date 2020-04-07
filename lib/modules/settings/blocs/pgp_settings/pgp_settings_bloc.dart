@@ -6,7 +6,9 @@ import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/contacts_repository_impl.dart';
 import 'package:aurora_mail/utils/identity_util.dart';
 import 'package:bloc/bloc.dart';
+import 'package:crypto_model/crypto_model.dart';
 import 'package:crypto_storage/crypto_storage.dart';
+import 'package:crypto_storage_impl/crypto_storage_impl.dart';
 import 'package:crypto_worker/crypto_worker.dart';
 
 import 'bloc.dart';
@@ -67,7 +69,11 @@ class PgpSettingsBloc extends Bloc<PgpSettingsEvent, PgpSettingsState> {
 
     try {
       await _methods.generateKeys(
-          event.name, event.mail, event.length, event.password);
+        event.name,
+        event.mail,
+        event.length,
+        event.password,
+      );
     } catch (e) {
       print(e);
     }
@@ -89,27 +95,42 @@ class PgpSettingsBloc extends Bloc<PgpSettingsEvent, PgpSettingsState> {
     yield SelectKeyForImport(sortKey.userKey, sortKey.contactKey);
   }
 
+  Future<List<PgpKey>> parseKey(String key) {
+    return _methods.parseKey(key);
+  }
+
+  Future<String> getKeyFromFile() async {
+    return _methods.pickFileContent();
+  }
+
   Stream<PgpSettingsState> _importKeyFromFile() async* {
     final file = await _methods.pickFileContent();
     yield* _parseKey(ParseKey(file));
   }
 
   Stream<PgpSettingsState> _importKey(ImportKey event) async* {
-    final selectedUser = _methods.filterSelected(event.keys.userKey);
+    yield ImportProgress();
+    final selectedUser = _methods.filterSelected(event.userKey);
     await _methods.addToStorage(selectedUser);
 
-    final selectedContact = _methods.filterSelected(event.keys.contactKey);
+    final selectedContact = _methods.filterSelected(event.contactKey);
     await _methods.addToContact(selectedContact);
-
+    yield ImportComplete();
     yield* _loadKeys();
   }
 
   Stream<PgpSettingsState> _deleteKey(DeleteKey event) async* {
-    await _methods.deleteKey(
-      event.pgpKey.name,
-      event.pgpKey.mail,
-      event.pgpKey.isPrivate,
-    );
+    if (event.pgpKey is PgpKeyWithContact) {
+      await _methods.deleteContactKey(
+        event.pgpKey.mail,
+      );
+    } else {
+      await _methods.deleteKey(
+        event.pgpKey.name,
+        event.pgpKey.mail,
+        event.pgpKey.isPrivate,
+      );
+    }
     yield* _loadKeys();
   }
 

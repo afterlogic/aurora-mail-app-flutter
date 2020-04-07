@@ -26,7 +26,7 @@ class _KeyItemState extends BState<KeyItem> {
     final description =
         "$length ${widget.pgpKey.isPrivate ? "private" : "public"})";
 
-    if (widget.selected != true) {
+    if (widget.selected != true && widget.onSelect != null) {
       textTheme = textTheme.apply(
         bodyColor: Colors.grey,
         displayColor: Colors.grey,

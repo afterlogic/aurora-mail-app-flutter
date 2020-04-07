@@ -13,6 +13,7 @@ import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:crypto_model/crypto_model.dart';
+import 'package:crypto_storage_impl/crypto_storage_impl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -89,7 +90,6 @@ class _PgpSettingsState extends BState<PgpSettings> {
                     loadedState.myPublic,
                     loadedState.myPrivate,
                     loadedState.contactPublic,
-                    loadedState.keyProgress,
                   ),
                 ),
                 _button(context, loadedState),
@@ -145,14 +145,10 @@ class _PgpSettingsState extends BState<PgpSettings> {
 
   _importKey(Map<PgpKey, bool> userKeys,
       Map<PgpKeyWithContact, bool> contactKeys) async {
-    final result = await showDialog(
+    await showDialog(
       context: context,
-      builder: (_) => ImportKeyDialog(userKeys, contactKeys),
+      builder: (_) => ImportKeyDialog(userKeys, contactKeys, bloc),
     );
-
-    if (result is PgpKeyMap) {
-      bloc.add(ImportKey(result));
-    }
   }
 
   _importFromText() async {
@@ -188,13 +184,12 @@ class _PgpSettingsState extends BState<PgpSettings> {
     List<PgpKey> public,
     List<PgpKey> private,
     List<PgpKey> contactPublic,
-    String keyProgress,
   ) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: ListView(
         children: <Widget>[
-          if (public.isNotEmpty || keyProgress != null)
+          if (public.isNotEmpty )
             Text(
               i18n(context, "public_keys"),
               style: theme.textTheme.title,
@@ -202,10 +197,9 @@ class _PgpSettingsState extends BState<PgpSettings> {
           keysGroup(
             context,
             public,
-            keyProgress,
           ),
           SizedBox(height: 10),
-          if (private.isNotEmpty || keyProgress != null)
+          if (private.isNotEmpty )
             Text(
               i18n(context, "private_keys"),
               style: theme.textTheme.title,
@@ -213,18 +207,16 @@ class _PgpSettingsState extends BState<PgpSettings> {
           keysGroup(
             context,
             private,
-            keyProgress,
           ),
           SizedBox(height: 10),
           if (contactPublic.isNotEmpty)
             Text(
-              i18n(context, "contact_keys"),
+              i18n(context, "contact_public_keys"),
               style: theme.textTheme.title,
             ),
           keysGroup(
             context,
             contactPublic,
-            null,
           ),
         ],
       ),
@@ -234,7 +226,6 @@ class _PgpSettingsState extends BState<PgpSettings> {
   Widget keysGroup(
     BuildContext context,
     List<PgpKey> keys,
-    String keyProgress,
   ) {
     final List<Widget> widgets = keys
         .map<Widget>(
@@ -247,10 +238,6 @@ class _PgpSettingsState extends BState<PgpSettings> {
           ),
         )
         .toList();
-
-    if (keyProgress != null) {
-      widgets.add(_key(keyProgress, true));
-    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

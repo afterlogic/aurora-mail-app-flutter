@@ -9,6 +9,7 @@ import 'package:aurora_mail/utils/identity_util.dart';
 import 'package:aurora_mail/utils/permissions.dart';
 import 'package:crypto_model/crypto_model.dart';
 import 'package:crypto_storage/src/pgp_storage.dart';
+import 'package:crypto_storage_impl/crypto_storage_impl.dart';
 import 'package:crypto_worker/src/pgp/pgp_worker.dart';
 import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:file_picker/file_picker.dart';
@@ -26,8 +27,13 @@ class PgpSettingsMethods {
     return cryptoStorage.getPgpKeys(isPrivate);
   }
 
-  Future<List<PgpKey>> getContactKeys() {
-    return cryptoStorage.getContactsPgpKeys();
+  Future<List<PgpKey>> getContactKeys() async {
+    final keys = await cryptoStorage.getContactsPgpKeys();
+    final map = <String, PgpKey>{};
+    for (var value in keys) {
+      map[value.mail] = value;
+    }
+    return map.values.toList();
   }
 
   Future generateKeys(
@@ -99,9 +105,9 @@ class PgpSettingsMethods {
       List<PgpKey> keys) async {
     final map = <PgpKeyWithContact, bool>{};
     for (var key in keys) {
-      final contact = await contactsDao.getContactWithPgpKey(key.mail);
+      final contact = await contactsDao.getContactByEmail(key.mail);
       map[PgpKeyWithContact(key, contact)] =
-          contact?.pgpPublicKey == null ? true : null;
+          (contact?.pgpPublicKey?.length ?? 0) <= 10 ? true : null;
     }
     return map;
   }
@@ -127,6 +133,7 @@ class PgpSettingsMethods {
       type: FileType.custom,
       fileExtension: "asc",
     );
+    if (files == null) return null;
     for (var file in files) {
       content += await file.readAsString();
     }
@@ -193,23 +200,12 @@ class PgpSettingsMethods {
       print(e);
     }
   }
-}
 
-class PgpKeyWithContact implements PgpKey {
-  final PgpKey pgpKey;
-  final Contact contact;
-
-  PgpKeyWithContact(this.pgpKey, this.contact);
-
-  String get name => pgpKey.name;
-
-  String get mail => pgpKey.mail;
-
-  String get key => pgpKey.key;
-
-  bool get isPrivate => pgpKey.isPrivate;
-
-  int get length => pgpKey.length;
+  Future deleteContactKey(String mail) async {
+    await contactsDao.deleteContactKey(
+      mail,
+    );
+  }
 }
 
 class PgpKeyMap {

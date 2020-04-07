@@ -6,7 +6,7 @@ import 'package:webmail_api_client/webmail_api_client.dart';
 
 abstract class ContactsNetworkService {
   factory ContactsNetworkService(WebMailApi contactsModule, int serverId) {
-    return ContactsNetworkServiceImpl(contactsModule,serverId);
+    return ContactsNetworkServiceImpl(contactsModule, serverId);
   }
 
   /// Returns a list of storages.
@@ -46,4 +46,6 @@ abstract class ContactsNetworkService {
   Future<bool> deleteGroup(ContactsGroup group);
 
   Future<void> addKeyToContact(Contact contact);
+
+  Future deleteContactKey(String mail);
 }
