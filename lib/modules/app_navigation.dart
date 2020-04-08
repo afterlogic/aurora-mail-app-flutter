@@ -42,7 +42,6 @@ import 'auth/screens/login/login_android.dart';
 import 'auth/screens/login/login_route.dart';
 import 'auth/screens/two_factor_auth/two_factor_auth_route.dart';
 import 'auth/screens/two_factor_auth/two_factor_auth_widget.dart';
-import 'mail/blocs/compose_bloc/compose_bloc.dart';
 import 'mail/blocs/mail_bloc/mail_bloc.dart';
 import 'mail/screens/messages_list/messages_list_android.dart';
 import 'mail/screens/messages_list/messages_list_route.dart';
@@ -170,7 +169,7 @@ class AppNavigation {
                     BlocProvider<MailBloc>.value(value: args.mailBloc),
                     BlocProvider<ContactsBloc>.value(value: args.contactsBloc),
                   ],
-                  child: ContactViewAndroid(args.contact, args.scaffoldState),
+                  child: ContactViewAndroid(args.contact, args.scaffoldState,args.pgpSettingBloc),
                 ));
         break;
 
@@ -181,7 +180,10 @@ class AppNavigation {
             fullscreenDialog: true,
             builder: (_) => BlocProvider<ContactsBloc>.value(
                 value: args.bloc,
-                child: ContactEditAndroid(contact: args?.contact)));
+                child: ContactEditAndroid(
+                  args.pgpSettingsBloc,
+                  contact: args?.contact,
+                )));
         break;
 
       case GroupViewRoute.name:

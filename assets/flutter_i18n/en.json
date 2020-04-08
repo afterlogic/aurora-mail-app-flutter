@@ -273,6 +273,8 @@
   "export_all_public_keys": "Export all public keys",
   "import_keys_from_text": "Import keys from text",
   "import_keys_from_file": "Import keys from file",
+  "import_from_text": "Import from text",
+  "import_from_file": "Import from file",
   "generate_keys": "Generate keys",
   "generate": "Generate",
   "close": "Close",
@@ -336,5 +338,13 @@
   "self_destructing": "Self-destructing",
   "password_coppied_to_clipboard": "Password coppied to clipboard",
   "upgrade_your_plan": "Mobile apps are not allowed in your billing plan.",
-  "back_to_login": "Back to login"
+  "back_to_login": "Back to login",
+  "key_will_not_be_valid": "The PGP key will not be valid",
+  "re_import": "Re import",
+  "delete_key": "Delete Key",
+  "select_key": "Select key",
+  "keys_will_be_import_to_contacts": "This keys will be import to contacts",
+  "for_these keys_contacts_will_be_created": "For these keys contacts will be created",
+  "your_keys": "Your keys",
+  "contact_public_keys": "Contact public keys"
 }

@@ -53,7 +53,7 @@ class ContactsInfoItem extends StatelessWidget {
   }
 
   Widget _buildAction() {
-    switch(action) {
+    switch (action) {
       case InfoAction.email:
         assert(cb != null);
         return InfoActionButton(icon: MdiIcons.emailOutline, cb: cb);

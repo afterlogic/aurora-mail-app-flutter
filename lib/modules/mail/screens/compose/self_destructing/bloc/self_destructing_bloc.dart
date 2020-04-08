@@ -28,21 +28,18 @@ class SelfDestructingBloc
   final String subject;
   final String body;
 
-  SelfDestructingBloc(
-    this.user,
-    Account account,
-    this.aliasOrIdentity,
-    this.subject,
-    this.body,
-  ) : pgpApi = PgpApi(user, account);
+  SelfDestructingBloc(this.user,
+      Account account,
+      this.aliasOrIdentity,
+      this.subject,
+      this.body,) : pgpApi = PgpApi(user, account);
 
   @override
   SelfDestructingState get initialState => InitState();
 
   @override
   Stream<SelfDestructingState> mapEventToState(
-    SelfDestructingEvent event,
-  ) async* {
+      SelfDestructingEvent event,) async* {
     if (event is LoadKey) yield* _loadKey(event);
     if (event is EncryptEvent) yield* _encrypt(event);
   }
@@ -51,22 +48,23 @@ class SelfDestructingBloc
     final email = identityView.email;
     final name = identityView.name.replaceAll("\"", "");
     final contact = Contact(
-      viewEmail: email,
-      fullName: name,
-      davContactsVCardUid: null,
-      frequency: null,
-      entityId: null,
-      uuid: null,
-      groupUUIDs: <String>[],
-      eTag: null,
-      useFriendlyName: null,
-      davContactsUid: null,
-      storage: null,
-      uuidPlusStorage: null,
-      dateModified: null,
-      idTenant: null,
-      userLocalId: null,
-      idUser: null,
+        viewEmail: email,
+        fullName: name,
+        davContactsVCardUid: null,
+        frequency: null,
+        entityId: null,
+        uuid: null,
+        groupUUIDs: <String>[],
+        eTag: null,
+        useFriendlyName: null,
+        davContactsUid: null,
+        storage: null,
+        uuidPlusStorage: null,
+        dateModified: null,
+        idTenant: null,
+        userLocalId: null,
+        idUser: null,
+        pgpPublicKey: null,
     );
 
     final key = await _cryptoStorage.getPgpKey(email, false);
@@ -95,6 +93,7 @@ class SelfDestructingBloc
       idTenant: null,
       userLocalId: null,
       idUser: null,
+      pgpPublicKey: null,
     );
     yield LoadedKey(ContactWithKey(sender, key), contacts);
   }
@@ -173,8 +172,8 @@ class SelfDestructingBloc
     return _pgpWorker.encryptSymmetric(text, password);
   }
 
-  Future<String> _pgpEncrypt(
-      String text, List<String> recipients, String password) {
+  Future<String> _pgpEncrypt(String text, List<String> recipients,
+      String password) {
     return _pgpWorker
         .encryptDecrypt(aliasOrIdentity.mail, recipients)
         .encrypt(text, password);

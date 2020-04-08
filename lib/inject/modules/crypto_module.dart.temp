@@ -1,4 +1,5 @@
 import 'package:aurora_mail/database/pgp/pgp_key_dao.dart';
+import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/contacts/contacts_dao.dart';
 import 'package:crypto_storage/crypto_storage.dart';
 import 'package:crypto_worker/crypto_worker.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -15,11 +16,13 @@ class CryptoModule {
   CryptoStorage cryptoStorage(
     FlutterSecureStorage secureStorage,
     PgpKeyDao pgpKeyDao,
+     ContactsDao contactsDao,
   ) =>
    // if : cryptoEnable
       CryptoStorageImpl(
         secureStorage,
         pgpKeyDao,
+        contactsDao,
       );
    // end : if
    // if : !cryptoEnable

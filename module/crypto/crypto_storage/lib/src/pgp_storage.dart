@@ -7,9 +7,15 @@ abstract class CryptoStorage {
 
   Future<void> addPgpKeys(List<PgpKey> keys);
 
-  Future<PgpKey> getPgpKey(String email, bool isPrivate);
+  Future<PgpKey> getPgpKey(
+    String email,
+    bool isPrivate, [
+    bool fromContact = true,
+  ]);
 
   Future<List<PgpKey>> getPgpKeys(bool isPrivate);
+
+  Future<List<PgpKey>> getContactsPgpKeys();
 
   Future deletePgpKey(String name, String email, bool isPrivate);
 

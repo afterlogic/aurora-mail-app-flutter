@@ -13,6 +13,7 @@ class ContactsState with AlwaysNonEqualObject {
   final List<ContactsGroup> groups;
   final List<int> currentlySyncingStorages;
   final String error;
+  final String key;
 
   ContactsState({
     this.storages,
@@ -23,6 +24,7 @@ class ContactsState with AlwaysNonEqualObject {
     this.groups,
     this.currentlySyncingStorages,
     this.error,
+    this.key,
   });
 
   ContactsState copyWith({
@@ -34,6 +36,7 @@ class ContactsState with AlwaysNonEqualObject {
     List<ContactsGroup> groups,
     List<int> currentlySyncingStorages,
     String error,
+    String key,
   }) {
     return new ContactsState(
       storages: storages ?? this.storages,
@@ -46,6 +49,7 @@ class ContactsState with AlwaysNonEqualObject {
       currentlySyncingStorages:
           currentlySyncingStorages ?? this.currentlySyncingStorages,
       error: error,
+      key: key,
     );
   }
 }

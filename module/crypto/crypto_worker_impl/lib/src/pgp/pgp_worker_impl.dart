@@ -38,7 +38,10 @@ class PgpWorkerImpl extends PgpWorker {
     String password,
   ) async {
     final keyPair = await _pgp.createKeys(
-        length, name.isEmpty ? "$email" : "$name <$email>", password);
+      length,
+      name.isEmpty ? "$email" : "$name <$email>",
+      password,
+    );
 
     final private = PgpKey.fill(name, email, true, keyPair.privateKey, length);
     final public = PgpKey.fill(name, email, false, keyPair.publicKey, length);

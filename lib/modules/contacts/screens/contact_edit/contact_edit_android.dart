@@ -4,9 +4,12 @@ import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 import 'package:aurora_mail/modules/contacts/screens/contact_edit/components/contact_edit_app_bar.dart';
 import 'package:aurora_mail/modules/contacts/screens/contacts_list/contacts_list_route.dart';
+import 'package:aurora_mail/modules/settings/blocs/pgp_settings/bloc.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_mail/utils/show_dialog.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
+import 'package:crypto_model/crypto_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -14,11 +17,17 @@ import 'components/contact_birth_date_picker.dart';
 import 'components/contact_dropdown.dart';
 import 'components/contact_input.dart';
 import 'components/contact_title.dart';
+import 'components/key_input.dart';
+import 'dialog/confirm_edit_dialog.dart';
 
 class ContactEditAndroid extends StatefulWidget {
   final Contact contact;
+  final PgpSettingsBloc pgpSettingsBloc;
 
-  ContactEditAndroid({this.contact});
+  ContactEditAndroid(
+    this.pgpSettingsBloc, {
+    this.contact,
+  });
 
   @override
   _ContactEditAndroidState createState() => _ContactEditAndroidState();
@@ -26,11 +35,11 @@ class ContactEditAndroid extends StatefulWidget {
 
 class _ContactEditAndroidState extends BState<ContactEditAndroid> {
   ContactsBloc _bloc;
-
   bool _showAllFields = false;
   int _primaryEmail = 0;
   int _primaryPhone = 0;
   int _primaryAddress = 0;
+  PgpKey pgpKey;
   final _fullName = TextEditingController();
   final _firstName = TextEditingController();
   final _lastName = TextEditingController();
@@ -66,10 +75,23 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid> {
   int _birthMonth = 0;
   int _birthYear = 0;
   List<String> _selectedGroupsUuids;
+  PgpSettingsBloc pgpSettingsBloc;
 
   @override
-  void didChangeDependencies() {
+  void initState() {
+    super.initState();
+    pgpSettingsBloc = widget.pgpSettingsBloc;
     _bloc = BlocProvider.of<ContactsBloc>(context);
+    if (widget.contact?.pgpPublicKey != null) {
+      widget.pgpSettingsBloc
+          .parseKey(widget.contact.pgpPublicKey)
+          .then((value) {
+        if (value.isNotEmpty) {
+          pgpKey = value.first;
+          setState(() {});
+        }
+      });
+    }
     final selectedGroup = _bloc.state.selectedGroup;
 
     _selectedGroupsUuids = [];
@@ -81,7 +103,6 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid> {
       if (selectedGroup != null) _selectedGroupsUuids.add(selectedGroup);
     }
     _initTextUpdatingCrutch();
-    super.didChangeDependencies();
   }
 
   void _initContact(Contact c) {
@@ -138,7 +159,7 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid> {
   }
 
   void _onAppBarActionSelected(
-      BuildContext context, ContactEditAppBarAction item) {
+      BuildContext context, ContactEditAppBarAction item) async {
     switch (item) {
       case ContactEditAppBarAction.save:
         if (_getPrimaryEmailCtrl().text.isEmpty) {
@@ -148,17 +169,53 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid> {
             msg: "error_contacts_email_empty",
           );
         }
+
         FocusScope.of(context).unfocus();
+        FreeKeyAction freeKey;
 
         final contact = _getDataFromInputs();
+        if (widget.contact?.pgpPublicKey == null &&
+            pgpKey != null &&
+            pgpKey.mail != contact.viewEmail) {
+          return showSnack(
+            context: context,
+            scaffoldState: Scaffold.of(context),
+            msg: "key_will_not_be_valid",
+          );
+        } else if (widget.contact != null &&
+            contact.pgpPublicKey != null &&
+            pgpKey.mail != contact.viewEmail) {
+          final confirm = await _confirm();
+
+          if (confirm == null) {
+            return;
+          } else {
+            freeKey = confirm;
+          }
+        }
+
         final event = widget.contact != null
-            ? UpdateContact(contact)
+            ? UpdateContact(
+                contact,
+                freeKey,
+                widget.contact.pgpPublicKey != contact.pgpPublicKey,
+              )
             : CreateContact(contact);
+
         _bloc.add(event);
         Navigator.popUntil(
             context, ModalRoute.withName(ContactsListRoute.name));
         break;
     }
+  }
+
+  Future<FreeKeyAction> _confirm() {
+    return dialog(
+      context: context,
+      builder: (_) {
+        return ConfirmationEditDialog();
+      },
+    );
   }
 
   void _onDateSelected(List<int> time) {
@@ -186,7 +243,7 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid> {
       primaryEmail: _primaryEmail,
       primaryPhone: _primaryPhone,
       primaryAddress: _primaryAddress,
-      viewEmail: widget.contact?.viewEmail ?? _getPrimaryEmailCtrl().text,
+      viewEmail: _getPrimaryEmailCtrl().text,
       title: widget.contact?.title ?? "",
       firstName: _firstName.text,
       lastName: _lastName.text,
@@ -229,6 +286,7 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid> {
       davContactsUid: widget.contact?.davContactsUid ?? null,
       davContactsVCardUid: widget.contact?.davContactsVCardUid ?? null,
       groupUUIDs: _selectedGroupsUuids,
+      pgpPublicKey: pgpKey?.key,
     );
   }
 
@@ -322,6 +380,15 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid> {
                   ContactInput("contacts_view_other_email", _otherEmail,
                       keyboardType: TextInputType.emailAddress),
                   ContactInput("contacts_view_notes", _notes),
+                  ContactTitle("public_key"),
+                  KeyInput(
+                    pgpSettingsBloc,
+                    pgpKey,
+                    (key) {
+                      pgpKey = key;
+                    },
+                    (error) {},
+                  ),
                   ContactTitle("contacts_view_section_groups"),
                   ..._bloc.state.groups.map((g) {
                     return CheckboxListTile(

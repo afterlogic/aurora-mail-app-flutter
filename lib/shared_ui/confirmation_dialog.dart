@@ -7,6 +7,7 @@ class ConfirmationDialog extends StatelessWidget {
   final String title;
   final String description;
   final String actionText;
+  final List<Widget> actions;
   final bool destructibleAction;
 
   const ConfirmationDialog({
@@ -14,6 +15,7 @@ class ConfirmationDialog extends StatelessWidget {
     @required this.title,
     @required this.description,
     @required this.actionText,
+    this.actions,
     this.destructibleAction = false,
   }) : super(key: key);
 
@@ -22,6 +24,7 @@ class ConfirmationDialog extends StatelessWidget {
     String title,
     String description,
     String actionText, {
+    List<Widget> actions,
     bool destructibleAction,
   }) {
     return dialog(
@@ -30,8 +33,9 @@ class ConfirmationDialog extends StatelessWidget {
               title: title,
               description: description,
               actionText: actionText,
+              actions: actions,
               destructibleAction: destructibleAction,
-            ));
+            )).then((value) => (value as bool) ?? false);
   }
 
   @override
@@ -44,6 +48,7 @@ class ConfirmationDialog extends StatelessWidget {
           child: Text(i18n(context, "btn_cancel")),
           onPressed: () => Navigator.pop(context, false),
         ),
+        if (actions != null) ...actions,
         FlatButton(
           child: Text(actionText),
           onPressed: () => Navigator.pop(context, true),

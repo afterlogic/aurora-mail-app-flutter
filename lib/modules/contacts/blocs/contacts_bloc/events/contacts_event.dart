@@ -1,6 +1,7 @@
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_group_model.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_storage_model.dart';
+import 'package:aurora_mail/modules/contacts/screens/contact_edit/dialog/confirm_edit_dialog.dart';
 import 'package:aurora_mail/utils/always_non_equal_object.dart';
 import 'package:equatable/equatable.dart';
 
@@ -51,11 +52,22 @@ class CreateContact extends ContactsEvent {
 
 class UpdateContact extends ContactsEvent {
   final Contact contact;
+  final FreeKeyAction freeKey;
+  final bool updateKey;
 
-  const UpdateContact(this.contact);
+  const UpdateContact(this.contact, this.freeKey, this.updateKey);
 
   @override
-  List<Object> get props => [contact];
+  List<Object> get props => [contact, updateKey, freeKey];
+}
+
+class ReImport extends ContactsEvent {
+  final String key;
+
+  const ReImport(this.key);
+
+  @override
+  List<Object> get props => [key];
 }
 
 class DeleteContacts extends ContactsEvent {

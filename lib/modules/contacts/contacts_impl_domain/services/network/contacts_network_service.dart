@@ -5,8 +5,8 @@ import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/netwo
 import 'package:webmail_api_client/webmail_api_client.dart';
 
 abstract class ContactsNetworkService {
-  factory ContactsNetworkService(WebMailApi contactsModule) {
-    return ContactsNetworkServiceImpl(contactsModule);
+  factory ContactsNetworkService(WebMailApi contactsModule, int serverId) {
+    return ContactsNetworkServiceImpl(contactsModule, serverId);
   }
 
   /// Returns a list of storages.
@@ -44,4 +44,8 @@ abstract class ContactsNetworkService {
   Future<bool> updateGroup(ContactsGroup group);
 
   Future<bool> deleteGroup(ContactsGroup group);
+
+  Future<void> addKeyToContact(Contact contact);
+
+  Future deleteContactKey(String mail);
 }
