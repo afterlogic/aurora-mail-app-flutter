@@ -45,7 +45,7 @@ class ComposeAndroid extends StatefulWidget {
   final User user;
   final Account account;
 
-  const ComposeAndroid(
+  ComposeAndroid(
     this.user,
     this.account, {
     Key key,
@@ -57,9 +57,10 @@ class ComposeAndroid extends StatefulWidget {
 }
 
 class _ComposeAndroidState extends BState<ComposeAndroid> {
-  ComposeBloc _bloc;
   Aliases alias;
   AccountIdentity identity;
+  ComposeBloc _bloc;
+
   final toNode = FocusNode();
   final ccNode = FocusNode();
   final bccNode = FocusNode();
@@ -93,12 +94,11 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
   @override
   void initState() {
     super.initState();
-    _initSaveToDraftsTimer();
-
     _bloc = ComposeBloc(
       user: widget.user,
       account: widget.account,
     );
+    _initSaveToDraftsTimer();
   }
 
   @override

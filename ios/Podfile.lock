@@ -2,6 +2,7 @@ PODS:
   - Alamofire (4.9.1)
   - alarm_service (0.0.1):
     - Flutter
+  - BouncyCastle-ObjC (0.1.1)
   - connectivity (0.0.1):
     - Flutter
     - Reachability
@@ -9,10 +10,11 @@ PODS:
     - Flutter
   - Crashlytics (3.14.0):
     - Fabric (~> 1.10.2)
-  - crypto_stream (0.0.1):
+  - crypto_plugin (0.0.1):
     - Flutter
+  - DMSOpenPGP (0.1.4):
+    - BouncyCastle-ObjC (~> 0.1.0)
     - OpenSSL-Universal (~> 1.0.2.17)
-    - RxSwift (~> 5)
   - esys_flutter_share (0.0.1):
     - Flutter
   - Fabric (1.10.2)
@@ -121,11 +123,11 @@ PODS:
     - Flutter
   - path_provider_macos (0.0.1):
     - Flutter
-  - "permission_handler (4.4.0+hotfix.2)":
+  - "permission_handler (5.0.0+hotfix.3)":
     - Flutter
   - PromisesObjC (1.2.8)
   - Reachability (3.2)
-  - RxSwift (5.0.1)
+  - RxSwift (4.0.0)
   - shared_preferences (0.0.1):
     - Flutter
   - shared_preferences_macos (0.0.1):
@@ -146,9 +148,11 @@ PODS:
 
 DEPENDENCIES:
   - alarm_service (from `.symlinks/plugins/alarm_service/ios`)
+  - BouncyCastle-ObjC (= 0.1.1)
   - connectivity (from `.symlinks/plugins/connectivity/ios`)
   - connectivity_macos (from `.symlinks/plugins/connectivity_macos/ios`)
-  - crypto_stream (from `.symlinks/plugins/crypto_stream/ios`)
+  - crypto_plugin (from `.symlinks/plugins/crypto_plugin/ios`)
+  - DMSOpenPGP (= 0.1.4)
   - esys_flutter_share (from `.symlinks/plugins/esys_flutter_share/ios`)
   - file_picker (from `.symlinks/plugins/file_picker/ios`)
   - firebase_crashlytics (from `.symlinks/plugins/firebase_crashlytics/ios`)
@@ -165,6 +169,7 @@ DEPENDENCIES:
   - path_provider (from `.symlinks/plugins/path_provider/ios`)
   - path_provider_macos (from `.symlinks/plugins/path_provider_macos/ios`)
   - permission_handler (from `.symlinks/plugins/permission_handler/ios`)
+  - RxSwift (= 4)
   - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
   - shared_preferences_macos (from `.symlinks/plugins/shared_preferences_macos/ios`)
   - shared_preferences_web (from `.symlinks/plugins/shared_preferences_web/ios`)
@@ -177,7 +182,9 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - Alamofire
+    - BouncyCastle-ObjC
     - Crashlytics
+    - DMSOpenPGP
     - Fabric
     - Firebase
     - FirebaseAnalytics
@@ -204,8 +211,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/connectivity/ios"
   connectivity_macos:
     :path: ".symlinks/plugins/connectivity_macos/ios"
-  crypto_stream:
-    :path: ".symlinks/plugins/crypto_stream/ios"
+  crypto_plugin:
+    :path: ".symlinks/plugins/crypto_plugin/ios"
   esys_flutter_share:
     :path: ".symlinks/plugins/esys_flutter_share/ios"
   file_picker:
@@ -258,10 +265,12 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   Alamofire: 85e8a02c69d6020a0d734f6054870d7ecb75cf18
   alarm_service: 7962c3a75cb3008f1af984351c225f6f1e0e3dfb
+  BouncyCastle-ObjC: bf0db0fe9fe11ae5e2515d2e6816ef86454b9cc6
   connectivity: 6e94255659cc86dcbef1d452ad3e0491bb1b3e75
   connectivity_macos: e2e9731b6b22dda39eb1b128f6969d574460e191
   Crashlytics: 540b7e5f5da5a042647227a5e3ac51d85eed06df
-  crypto_stream: 2a2fdbfdec937d8779e8e6b14afb3a5e093a61e4
+  crypto_plugin: 628115b4b05d5843f12b3398012e0b53eabcc603
+  DMSOpenPGP: 3c667b775e705abef816582f320bbadb972bd8ce
   esys_flutter_share: 403498dab005b36ce1f8d7aff377e81f0621b0b4
   Fabric: 706c8b8098fff96c33c0db69cbf81f9c551d0d74
   file_picker: 408623be2125b79a4539cf703be3d4b3abe5e245
@@ -292,10 +301,10 @@ SPEC CHECKSUMS:
   package_info: 48b108e75b8802c2d5e126f208ef540561c98aef
   path_provider: fb74bd0465e96b594bb3b5088ee4a4e7bb1f2a9d
   path_provider_macos: f760a3c5b04357c380e2fddb6f9db6f3015897e0
-  permission_handler: d5d46b2ca93671e8dcf870b949e304c7ddb65ad0
+  permission_handler: 4a985b5448897c27fdeadde84f7452520c0e6c58
   PromisesObjC: c119f3cd559f50b7ae681fa59dc1acd19173b7e6
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
-  RxSwift: e2dc62b366a3adf6a0be44ba9f405efd4c94e0c4
+  RxSwift: fd680d75283beb5e2559486f3c0ff852f0d35334
   shared_preferences: 430726339841afefe5142b9c1f50cb6bd7793e01
   shared_preferences_macos: f3f29b71ccbb56bf40c9dd6396c9acf15e214087
   shared_preferences_web: 141cce0c3ed1a1c5bf2a0e44f52d31eeb66e5ea9
@@ -305,6 +314,6 @@ SPEC CHECKSUMS:
   url_launcher_web: e5527357f037c87560776e36436bf2b0288b965c
   webview_flutter: bec7599de6bfbe8008a739aa3ebd7b364ea9d0cd
 
-PODFILE CHECKSUM: 8ce328037588198cf89227d75c8cd180aa726049
+PODFILE CHECKSUM: 4d0985e176e4e7372eb0b7f60bfafb79f06c92a3
 
 COCOAPODS: 1.8.4

@@ -93,11 +93,6 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
   }
 
   Stream<ComposeState> _uploadAttachment(UploadAttachment event) async* {
-    try {
-      await getStoragePermissions();
-    } catch (err) {
-      yield ComposeError(err.toString());
-    }
 
     _methods.uploadFile(onUploadStart: (TempAttachmentUpload tempAttachment) {
       add(StartUpload(tempAttachment));
@@ -105,6 +100,8 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
       add(EndUpload(attachment));
     }, onError: (dynamic err) {
       add(ErrorUpload(err.toString()));
+    }).then((_) {
+      "";
     });
   }
 

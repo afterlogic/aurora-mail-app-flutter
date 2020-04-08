@@ -42,6 +42,7 @@ import 'auth/screens/login/login_android.dart';
 import 'auth/screens/login/login_route.dart';
 import 'auth/screens/two_factor_auth/two_factor_auth_route.dart';
 import 'auth/screens/two_factor_auth/two_factor_auth_widget.dart';
+import 'mail/blocs/compose_bloc/compose_bloc.dart';
 import 'mail/blocs/mail_bloc/mail_bloc.dart';
 import 'mail/screens/messages_list/messages_list_android.dart';
 import 'mail/screens/messages_list/messages_list_route.dart';
@@ -130,13 +131,19 @@ class AppNavigation {
         return MaterialPageRoute(
             settings: RouteSettings(name: settings.name),
             fullscreenDialog: true,
-            builder: (_) => MultiBlocProvider(
-                  providers: [
-                    BlocProvider<MailBloc>.value(value: args.mailBloc),
-                    BlocProvider<ContactsBloc>.value(value: args.contactsBloc),
-                  ],
-                  child: ComposeAndroid(args.mailBloc.user,args.mailBloc.account,composeAction: args.composeAction),
-                ));
+            builder: (_) {
+              return MultiBlocProvider(
+                providers: [
+                  BlocProvider<MailBloc>.value(value: args.mailBloc),
+                  BlocProvider<ContactsBloc>.value(value: args.contactsBloc),
+                ],
+                child: ComposeAndroid(
+                  args.mailBloc.user,
+                  args.mailBloc.account,
+                  composeAction: args.composeAction,
+                ),
+              );
+            });
         break;
 
       // ================= CONTACTS =================

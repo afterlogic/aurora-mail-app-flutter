@@ -23,6 +23,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:theme/app_theme.dart';
 
+import 'package:theme/app_color.dart';
+
 import 'auth_data.dart';
 import 'components/mail_logo.dart';
 
@@ -265,6 +267,7 @@ class _LoginAndroidState extends BState<LoginAndroid> {
                   width: double.infinity,
                   child: _debugRouteToTwoFactor(
                     AMButton(
+                      shadow: AppColor.enableShadow ? null : BoxShadow(),
                       child: Text(i18n(context,
                           widget.isDialog ? "btn_add_account" : "btn_login")),
                       isLoading: loading,

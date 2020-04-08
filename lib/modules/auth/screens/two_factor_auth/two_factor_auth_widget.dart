@@ -14,6 +14,7 @@ import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:aurora_ui_kit/components/am_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:theme/app_color.dart';
 import 'package:theme/app_theme.dart';
 
 class TwoFactorAuthWidget extends StatefulWidget {
@@ -109,6 +110,7 @@ class _TwoFactorAuthWidgetState extends BState<TwoFactorAuthWidget> {
                 SizedBox(
                   width: double.infinity,
                   child: AMButton(
+                    shadow: AppColor.enableShadow ? null : BoxShadow(),
                     child: Text(i18n(context, "verify_pin")),
                     isLoading: loading,
                     onPressed: () => _login(),

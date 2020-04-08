@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 class AppColor {
-
   static const _color = const Color(0xFF004990);
   static const colorLight = const Color(0xFF007af5);
   static const primary = _color;
@@ -16,4 +15,5 @@ class AppColor {
   static const surface = Color(0xFFFFFFFF);
 
   static const warning = Color(0xFFF44336);
+  static const enableShadow = false;
 }

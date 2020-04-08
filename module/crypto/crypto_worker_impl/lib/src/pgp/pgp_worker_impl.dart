@@ -10,6 +10,7 @@ import 'package:path_provider/path_provider.dart';
 import 'pgp_encrypt_decrypt_impl.dart';
 
 class PgpWorkerImpl extends PgpWorker {
+  final utf8 = Utf8Codec(allowMalformed:true);
   final Pgp _pgp;
   final CryptoStorage _storage;
   PgpEncryptDecrypt _pgpEncryptDecrypt;
