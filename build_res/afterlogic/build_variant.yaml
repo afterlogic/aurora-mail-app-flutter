@@ -15,4 +15,4 @@ multiAccountEnable: true
 cryptoEnable: true
 selfDestructingEmail: false
 
-version: 1.0.1+55
+version: 1.0.1+56
