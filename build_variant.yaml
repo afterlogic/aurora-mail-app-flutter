@@ -23,7 +23,10 @@ _iosAppName: "{{appName}}"
 _appId: ""
 _iosAppId: "{{_appId}}"
 
-version: ""
+_build: 81
+_version: ""
+_version_android: "{{_version}}{{_build}}"
+version_ios: "{{_version}}+{{_build}}"
 
 icon: "{{_dir}}/icon.png"
 main_logo: "{{image_dir}}/main_logo.png"

@@ -1,7 +1,7 @@
 name: aurora_mail
 description: Mail client for mobile.
 
-version: {{version}}
+version: {{version_ios}}
 
 environment:
   sdk: ">=2.7.0 <3.0.0"

@@ -1,1 +1,3 @@
 packageName={{_appId}}
+flutter.versionCode={{_build}}
+flutter.versionName={{_version_android}}
