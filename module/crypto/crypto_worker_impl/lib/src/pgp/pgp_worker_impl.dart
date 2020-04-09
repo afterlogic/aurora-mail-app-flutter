@@ -1,10 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:crypto_model/crypto_model.dart';
-import 'package:crypto_plugin/crypto_plugin.dart';
 import 'package:crypto_storage/crypto_storage.dart';
+import 'package:crypto_stream/crypto_plugin.dart';
 import 'package:crypto_worker/crypto_worker.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -44,8 +43,8 @@ class PgpWorkerImpl extends PgpWorker {
       password,
     );
 
-    final private = PgpKey.fill(name, email, true, keyPair.secret, length);
-    final public = PgpKey.fill(name, email, false, keyPair.public, length);
+    final private = PgpKey.fill(name, email, true, keyPair.privateKey, length);
+    final public = PgpKey.fill(name, email, false, keyPair.publicKey, length);
 
     await _storage.addPgpKey(public);
     await _storage.addPgpKey(private);
@@ -61,7 +60,7 @@ class PgpWorkerImpl extends PgpWorker {
     final keys = <PgpKey>[];
     for (String key in keysText) {
       final description = await _pgp.getKeyDescription(key);
-      for (String email in description.email) {
+      for (String email in description.emails) {
         final groups =
             RegExp("([\\D|\\d]*)?<((?:\\D|\\d)*)>").firstMatch(email);
         String validEmail = "";
@@ -89,13 +88,15 @@ class PgpWorkerImpl extends PgpWorker {
 
   Future<String> encryptSymmetric(String text, String password) async {
     final tempFile = await PgpWorkerImpl.tempFile;
-    _pgp.setTempFile(tempFile);
     try {
-      final result = await _pgp.encryptSymmetricBytes(
-        utf8.encode(text),
-        password,
-      );
-      return utf8.decode(result);
+      final length = utf8.encode(text).length;
+      return _pgp.bufferPlatformSink(
+          text,
+          _pgp.symmetricallyEncrypt(
+            tempFile,
+            password,
+            length,
+          ));
     } finally {
       if (await tempFile.exists()) {
         tempFile.delete();

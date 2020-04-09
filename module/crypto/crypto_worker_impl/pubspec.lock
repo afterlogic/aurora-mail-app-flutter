@@ -64,21 +64,21 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
-  crypto_plugin:
-    dependency: "direct main"
-    description:
-      path: "."
-      ref: HEAD
-      resolved-ref: "60688ffe5613428feb30a5991fdc7dfd102168ec"
-      url: "https://github.com/afterlogic/flutter_crypto_plugin"
-    source: git
-    version: "0.0.1"
   crypto_storage:
     dependency: "direct main"
     description:
       path: "..\\crypto_storage"
       relative: true
     source: path
+    version: "0.0.1"
+  crypto_stream:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: HEAD
+      resolved-ref: d3195d2632179ffc5543b55e27e3e445ceb02b24
+      url: "https://github.com/afterlogic/flutter_crypto_stream"
+    source: git
     version: "0.0.1"
   crypto_worker:
     dependency: "direct main"
