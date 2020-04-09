@@ -22,9 +22,9 @@ class ContactsDbServiceImpl implements ContactsDbService {
     return _singleton;
   }
 
-  final _contactsDao = new ContactsDao(_db);
-  final _groupsDao = new ContactsGroupsDao(_db);
-  final _storagesDao = new ContactsStoragesDao(_db);
+  final _contactsDao = ContactsDao(_db);
+  final _groupsDao = ContactsGroupsDao(_db);
+  final _storagesDao = ContactsStoragesDao(_db);
 
   @override
   Future<void> addContacts(List<Contact> newContacts) async {
@@ -67,13 +67,13 @@ class ContactsDbServiceImpl implements ContactsDbService {
       storages: storages,
       pattern: pattern,
     );
-    return ContactMapper.fromDB(result);
+    return ContactMapper.listFromDB(result);
   }
 
   @override
   Stream<List<Contact>> watchAllContacts(int userLocalId) {
     final result = _contactsDao.watchAllContacts(userLocalId);
-    return result.map((data) => ContactMapper.fromDB(data));
+    return result.map((data) => ContactMapper.listFromDB(data));
   }
 
   @override
@@ -81,14 +81,14 @@ class ContactsDbServiceImpl implements ContactsDbService {
       int userLocalId, ContactsStorage storage) {
     final result =
         _contactsDao.watchContactsFromStorage(userLocalId, storage.id);
-    return result.map((data) => ContactMapper.fromDB(data));
+    return result.map((data) => ContactMapper.listFromDB(data));
   }
 
   @override
   Stream<List<Contact>> watchContactsFromGroup(
       int userLocalId, ContactsGroup group) {
     final result = _contactsDao.watchContactsFromGroup(userLocalId, group.uuid);
-    return result.map((data) => ContactMapper.fromDB(data));
+    return result.map((data) => ContactMapper.listFromDB(data));
   }
 
   @override
@@ -125,5 +125,41 @@ class ContactsDbServiceImpl implements ContactsDbService {
     final formatted = ContactsGroupMapper.toDB(newGroups);
     final companions = formatted.map((c) => c.createCompanion(true)).toList();
     return _groupsDao.updateGroups(companions);
+  }
+
+  @override
+  Future<Contact> getContactWithPgpKey(String email) {
+    return _contactsDao
+        .getContactWithPgpKey(email)
+        .then((item) => ContactMapper.fromDB(item));
+  }
+
+  @override
+  Future<List<Contact>> getContactsWithPgpKey() {
+    return _contactsDao
+        .getContactsWithPgpKey()
+        .then((items) => ContactMapper.listFromDB(items));
+  }
+
+  @override
+  Future deleteContactKey(String mail) {
+    return _contactsDao.deleteContactKey(mail);
+  }
+
+  Future addKeyToContact(String viewEmail, String pgpPublicKey) {
+    return _contactsDao.addKey(viewEmail, pgpPublicKey);
+  }
+
+  @override
+  Future<Contact> getContactByEmail(String mail) {
+    return _contactsDao
+        .getContactByEmail(mail)
+        .then((item) => ContactMapper.fromDB(item));
+  }
+
+  Future<Contact> getContactById(int entityId){
+    return _contactsDao
+        .getContactById(entityId)
+        .then((item) => ContactMapper.fromDB(item));
   }
 }

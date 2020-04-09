@@ -56,6 +56,7 @@ class _LoginAndroidState extends BState<LoginAndroid> {
       DeviceOrientation.portraitDown,
     ]);
     if (kDebugMode && !widget.isDialog) {
+      hostCtrl.text = AuthData.host;
       emailCtrl.text = AuthData.email;
       passwordCtrl.text = AuthData.password;
     }

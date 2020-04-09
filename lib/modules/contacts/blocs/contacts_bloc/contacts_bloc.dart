@@ -3,14 +3,18 @@ import 'dart:async';
 import 'package:aurora_mail/background/background_helper.dart';
 import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/inject/app_inject.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/events/contacts_groups_event.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/events/contacts_storages_event.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/contacts_repository.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_group_model.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_storage_model.dart';
+import 'package:aurora_mail/modules/contacts/screens/contact_edit/dialog/confirm_edit_dialog.dart';
 import 'package:aurora_mail/utils/api_utils.dart';
 import 'package:bloc/bloc.dart';
+import 'package:crypto_model/crypto_model.dart';
+import 'package:crypto_worker/crypto_worker.dart';
 import 'package:flutter/widgets.dart';
 
 import './bloc.dart';
@@ -19,7 +23,7 @@ import 'contacts_state_reducer.dart';
 class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
   final User user;
   final AppDatabase appDatabase;
-
+  final PgpWorker pgpWorker;
   ContactsRepository _repo;
 
   StreamSubscription<List<Contact>> _contactsSub;
@@ -30,7 +34,7 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
   ContactsBloc({
     @required this.user,
     @required this.appDatabase,
-  }) {
+  }) : pgpWorker = AppInjector.instance.pgpWorker() {
     _repo = ContactsRepository(
       appDB: appDatabase,
       user: user,
@@ -73,6 +77,9 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
     add(GetContacts());
   }
 
+  Future<Contact> getContact(int id) async {
+    return _repo.getContactById(id);
+  }
   Stream<ContactsState> _getContacts(GetContacts event) async* {
     if (event.updateOther) {
       BackgroundHelper.onStartAlarm();
@@ -149,9 +156,22 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
   }
 
   Stream<ContactsState> _updateContact(UpdateContact event) async* {
-    _repo
-        .editContact(event.contact)
-        .catchError((err) => add(AddError(formatError(err, null))));
+    _repo.editContact(event.contact).then((value) async {
+      if (event.freeKey != null) {
+        await _repo.deleteContactKey(event.contact.viewEmail);
+        if (event.freeKey == FreeKeyAction.Import) {
+          add(ReImport(event.contact.pgpPublicKey));
+        }
+      } else {
+        if (event.updateKey) {
+          if (event.contact.pgpPublicKey == null) {
+            await _repo.deleteContactKey(event.contact.viewEmail);
+          } else {
+            await _repo.addKeyToContact(event.contact);
+          }
+        }
+      }
+    }).catchError((err) => add(AddError(formatError(err, null))));
   }
 
   Stream<ContactsState> _deleteContacts(DeleteContacts event) async* {
@@ -212,5 +232,13 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
 
   Future<List<Contact>> getTypeAheadContacts(String pattern) {
     return _repo.getSuggestionContacts(pattern);
+  }
+
+  Future<PgpKey> getKeyInfo(String key) async {
+    final keyInfo = await pgpWorker.parseKey(key);
+    if (keyInfo.isNotEmpty) {
+      return keyInfo.first;
+    }
+    return null;
   }
 }

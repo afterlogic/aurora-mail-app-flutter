@@ -4,7 +4,7 @@ packages:
   alarm_service:
     dependency: transitive
     description:
-      path: "../../../alarm_service"
+      path: "..\\..\\..\\alarm_service"
       relative: true
     source: path
     version: "0.0.1"
@@ -22,6 +22,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.5.2"
+  asn1lib:
+    dependency: transitive
+    description:
+      name: asn1lib
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.5.15"
   async:
     dependency: transitive
     description:
@@ -32,17 +39,19 @@ packages:
   aurora_mail:
     dependency: "direct main"
     description:
-      path: "../../.."
+      path: "..\\..\\.."
       relative: true
     source: path
-    version: "1.0.1+45"
+    version: "2.0.0+79"
   aurora_ui_kit:
     dependency: transitive
     description:
-      path: "../../../core/aurora_ui_kit"
-      relative: true
-    source: path
-    version: "0.0.1"
+      path: "."
+      ref: HEAD
+      resolved-ref: "72c20fb40aed3fb04d4d1c852845895e34e4225d"
+      url: "https://github.com/afterlogic/aurora_ui_kit_flutter.git"
+    source: git
+    version: "0.0.3"
   bloc:
     dependency: transitive
     description:
@@ -64,6 +73,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.2"
+  clock:
+    dependency: transitive
+    description:
+      name: clock
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1"
   collection:
     dependency: transitive
     description:
@@ -77,7 +93,7 @@ packages:
       name: connectivity
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.8+1"
+    version: "0.4.8+2"
   connectivity_macos:
     dependency: transitive
     description:
@@ -109,7 +125,7 @@ packages:
   crypto_model:
     dependency: "direct main"
     description:
-      path: "../crypto_model"
+      path: "..\\crypto_model"
       relative: true
     source: path
     version: "0.0.1"
@@ -125,24 +141,38 @@ packages:
   crypto_storage:
     dependency: "direct main"
     description:
-      path: "../crypto_storage"
+      path: "..\\crypto_storage"
       relative: true
     source: path
     version: "0.0.1"
   crypto_worker:
-    dependency: transitive
+    dependency: "direct main"
     description:
-      path: "../crypto_worker"
+      path: "..\\crypto_worker"
       relative: true
     source: path
     version: "0.0.1"
   crypto_worker_impl:
     dependency: transitive
     description:
-      path: "../crypto_worker_impl"
+      path: "..\\crypto_worker_impl"
       relative: true
     source: path
     version: "0.0.1"
+  dm:
+    dependency: transitive
+    description:
+      name: dm
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.0"
+  encrypt:
+    dependency: transitive
+    description:
+      name: encrypt
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.0.0"
   equatable:
     dependency: transitive
     description:
@@ -163,7 +193,7 @@ packages:
       name: file_picker
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.4.3+2"
+    version: "1.5.0+2"
   filesize:
     dependency: transitive
     description:
@@ -177,7 +207,7 @@ packages:
       name: firebase_crashlytics
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.3"
+    version: "0.1.3+3"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -230,6 +260,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_plugin_android_lifecycle:
+    dependency: transitive
+    description:
+      name: flutter_plugin_android_lifecycle
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.6"
   flutter_secure_storage:
     dependency: "direct main"
     description:
@@ -244,6 +281,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.2.5"
+  flutter_svg:
+    dependency: transitive
+    description:
+      name: flutter_svg
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.17.3+1"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -296,15 +340,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.4"
-  inject:
-    dependency: transitive
-    description:
-      path: "."
-      ref: HEAD
-      resolved-ref: "4fbf79571c36f3942002ec110558be1c6ab47eb4"
-      url: "https://github.com/afterlogic/dart_inject"
-    source: git
-    version: "0.0.1"
   intl:
     dependency: transitive
     description:
@@ -332,7 +367,7 @@ packages:
       name: material_design_icons_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.4.4995"
+    version: "3.4.5045+1"
   meta:
     dependency: transitive
     description:
@@ -364,7 +399,7 @@ packages:
   notifications_utils:
     dependency: transitive
     description:
-      path: "../../../core/notifications_utils"
+      path: "..\\..\\..\\core\\notifications_utils"
       relative: true
     source: path
     version: "0.0.1"
@@ -374,7 +409,7 @@ packages:
       name: package_info
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.0+14"
+    version: "0.4.0+16"
   path:
     dependency: transitive
     description:
@@ -382,6 +417,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.6.4"
+  path_drawing:
+    dependency: transitive
+    description:
+      name: path_drawing
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.4.1"
+  path_parsing:
+    dependency: transitive
+    description:
+      name: path_parsing
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.4"
   path_provider:
     dependency: transitive
     description:
@@ -416,7 +465,14 @@ packages:
       name: permission_handler
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.3.0"
+    version: "5.0.0+hotfix.3"
+  permission_handler_platform_interface:
+    dependency: transitive
+    description:
+      name: permission_handler_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.0"
   petitparser:
     dependency: transitive
     description:
@@ -438,6 +494,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.2"
+  pointycastle:
+    dependency: transitive
+    description:
+      name: pointycastle
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.2"
   provider:
     dependency: transitive
     description:
@@ -452,6 +515,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.5"
+  resource:
+    dependency: transitive
+    description:
+      name: resource
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.1.6"
   rxdart:
     dependency: transitive
     description:
@@ -465,7 +535,7 @@ packages:
       name: shared_preferences
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.5.6+2"
+    version: "0.5.6+3"
   shared_preferences_macos:
     dependency: transitive
     description:
@@ -558,10 +628,17 @@ packages:
   theme:
     dependency: transitive
     description:
-      path: "../../../build_res/afterlogic/theme"
+      path: "..\\..\\..\\build_res\\private_mail\\theme"
       relative: true
     source: path
     version: "0.0.1"
+  time_machine:
+    dependency: transitive
+    description:
+      name: time_machine
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.9.12"
   typed_data:
     dependency: transitive
     description:
@@ -614,7 +691,7 @@ packages:
   webmail_api_client:
     dependency: transitive
     description:
-      path: "../../../core/webmail_api_client"
+      path: "..\\..\\..\\core\\webmail_api_client"
       relative: true
     source: path
     version: "0.0.1"

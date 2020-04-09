@@ -12,7 +12,8 @@ dependencies:
     sdk: flutter
   crypto_model:
     path: ../crypto_model
-
+  crypto_worker:
+    path: ../crypto_worker
 dev_dependencies:
   flutter_test:
     sdk: flutter

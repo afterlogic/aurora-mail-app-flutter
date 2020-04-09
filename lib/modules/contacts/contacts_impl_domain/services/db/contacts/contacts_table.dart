@@ -114,5 +114,7 @@ class ContactsTable extends Table {
 
   TextColumn get davContactsVCardUid => text().nullable()();
 
+  TextColumn get pgpPublicKey => text().nullable()();
+
   TextColumn get groupUUIDs => text().map(const ListStringConverter())();
 }

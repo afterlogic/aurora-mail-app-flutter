@@ -334,5 +334,17 @@
   "supports_plain_text_only": "The Self-destructing secure messages support plain text only. All the formatting will be removed. Also, attachments cannot be encrypted and will be removed from the message.",
   "sent_password_using_different_channel": "The password must be sent using a different channel.\n  Store the password somewhere. You will not be able to recover it otherwise.",
   "self_destructing": "Self-destructing",
-  "password_coppied_to_clipboard": "Пароль скопирован"
+  "password_coppied_to_clipboard": "Пароль скопирован",
+  "import_from_text": "Импортировать из текста",
+  "import_from_file": "Импортировать из файла",
+  "upgrade_your_plan": "Mobile apps are not allowed in your billing plan.",
+  "back_to_login": "Back to login",
+  "key_will_not_be_valid": "Pgp ключ не будет действительным",
+  "re_import": "Импортировать заного",
+  "delete_key": "Удалить ключ",
+  "select_key": "Выберите ключ",
+  "keys_will_be_import_to_contacts": "Эти ключи будут экспортированны в контакты",
+  "for_these keys_contacts_will_be_created": "Для этих ключей будут созданны контакты",
+  "your_keys": "Ваши ключи",
+  "contact_public_keys": "Публичные ключи контактов"
 }

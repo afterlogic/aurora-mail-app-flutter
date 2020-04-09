@@ -2,65 +2,72 @@ import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 
 class ContactMapper {
-  static List<Contact> fromDB(List<ContactDb> dbEntries) {
+  static Contact fromDB(ContactDb contact) {
+    if (contact == null) {
+      return null;
+    }
+    return Contact(
+        entityId: contact.entityId,
+        userLocalId: contact.userLocalId,
+        uuidPlusStorage: contact.uuidPlusStorage,
+        uuid: contact.uuid,
+        parentUuid: contact.parentUuid,
+        idUser: contact.idUser,
+        idTenant: contact.idTenant,
+        storage: contact.storage,
+        fullName: contact.fullName,
+        useFriendlyName: contact.useFriendlyName,
+        primaryEmail: contact.primaryEmail,
+        primaryPhone: contact.primaryPhone,
+        primaryAddress: contact.primaryAddress,
+        viewEmail: contact.viewEmail,
+        title: contact.title,
+        firstName: contact.firstName,
+        lastName: contact.lastName,
+        nickName: contact.nickName,
+        skype: contact.skype,
+        facebook: contact.facebook,
+        personalEmail: contact.personalEmail,
+        personalAddress: contact.personalAddress,
+        personalCity: contact.personalCity,
+        personalState: contact.personalState,
+        personalZip: contact.personalZip,
+        personalCountry: contact.personalCountry,
+        personalWeb: contact.personalWeb,
+        personalFax: contact.personalFax,
+        personalPhone: contact.personalPhone,
+        personalMobile: contact.personalMobile,
+        businessEmail: contact.businessEmail,
+        businessCompany: contact.businessCompany,
+        businessAddress: contact.businessAddress,
+        businessCity: contact.businessCity,
+        businessState: contact.businessState,
+        businessZip: contact.businessZip,
+        businessCountry: contact.businessCountry,
+        businessJobTitle: contact.businessJobTitle,
+        businessDepartment: contact.businessDepartment,
+        businessOffice: contact.businessOffice,
+        businessPhone: contact.businessPhone,
+        businessFax: contact.businessFax,
+        businessWeb: contact.businessWeb,
+        otherEmail: contact.otherEmail,
+        notes: contact.notes,
+        birthDay: contact.birthDay,
+        birthMonth: contact.birthMonth,
+        birthYear: contact.birthYear,
+        eTag: contact.eTag,
+        auto: contact.auto,
+        frequency: contact.frequency,
+        dateModified: contact.dateModified,
+        davContactsUid: contact.davContactsUid,
+        davContactsVCardUid: contact.davContactsVCardUid,
+        groupUUIDs: contact.groupUUIDs,
+        pgpPublicKey: contact.pgpPublicKey);
+  }
+
+  static List<Contact> listFromDB(List<ContactDb> dbEntries) {
     return dbEntries.map((e) {
-      return new Contact(
-        entityId: e.entityId,
-        userLocalId: e.userLocalId,
-        uuidPlusStorage: e.uuidPlusStorage,
-        uuid: e.uuid,
-        parentUuid: e.parentUuid,
-        idUser: e.idUser,
-        idTenant: e.idTenant,
-        storage: e.storage,
-        fullName: e.fullName,
-        useFriendlyName: e.useFriendlyName,
-        primaryEmail: e.primaryEmail,
-        primaryPhone: e.primaryPhone,
-        primaryAddress: e.primaryAddress,
-        viewEmail: e.viewEmail,
-        title: e.title,
-        firstName: e.firstName,
-        lastName: e.lastName,
-        nickName: e.nickName,
-        skype: e.skype,
-        facebook: e.facebook,
-        personalEmail: e.personalEmail,
-        personalAddress: e.personalAddress,
-        personalCity: e.personalCity,
-        personalState: e.personalState,
-        personalZip: e.personalZip,
-        personalCountry: e.personalCountry,
-        personalWeb: e.personalWeb,
-        personalFax: e.personalFax,
-        personalPhone: e.personalPhone,
-        personalMobile: e.personalMobile,
-        businessEmail: e.businessEmail,
-        businessCompany: e.businessCompany,
-        businessAddress: e.businessAddress,
-        businessCity: e.businessCity,
-        businessState: e.businessState,
-        businessZip: e.businessZip,
-        businessCountry: e.businessCountry,
-        businessJobTitle: e.businessJobTitle,
-        businessDepartment: e.businessDepartment,
-        businessOffice: e.businessOffice,
-        businessPhone: e.businessPhone,
-        businessFax: e.businessFax,
-        businessWeb: e.businessWeb,
-        otherEmail: e.otherEmail,
-        notes: e.notes,
-        birthDay: e.birthDay,
-        birthMonth: e.birthMonth,
-        birthYear: e.birthYear,
-        eTag: e.eTag,
-        auto: e.auto,
-        frequency: e.frequency,
-        dateModified: e.dateModified,
-        davContactsUid: e.davContactsUid,
-        davContactsVCardUid: e.davContactsVCardUid,
-        groupUUIDs: e.groupUUIDs,
-      );
+      return fromDB(e);
     }).toList();
   }
 
@@ -122,6 +129,7 @@ class ContactMapper {
         davContactsUid: e.davContactsUid,
         davContactsVCardUid: e.davContactsVCardUid,
         groupUUIDs: e.groupUUIDs,
+        pgpPublicKey: e.pgpPublicKey,
       );
     }).toList();
   }
@@ -184,6 +192,7 @@ class ContactMapper {
         davContactsUid: i["DavContacts::UID"] as String,
         davContactsVCardUid: i["DavContacts::VCardUID"] as String,
         groupUUIDs: new List<String>.from(i["GroupUUIDs"] as List),
+        pgpPublicKey: i["PublicPgpKey"] as String,
       );
     }).toList();
   }
@@ -232,6 +241,7 @@ class ContactMapper {
       "BirthYear": c.birthYear,
       "ETag": c.eTag,
       "GroupUUIDs": c.groupUUIDs,
+      "PublicPgpKey": c.pgpPublicKey,
     };
   }
 }

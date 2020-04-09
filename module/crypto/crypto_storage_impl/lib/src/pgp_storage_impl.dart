@@ -1,5 +1,8 @@
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/pgp/pgp_key_dao.dart';
+import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
+import 'package:aurora_mail/modules/contacts/contacts_impl_domain/mappers/contact_mapper.dart';
+import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/contacts/contacts_dao.dart';
 import "package:crypto_model/crypto_model.dart";
 import 'package:crypto_storage/crypto_storage.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -7,9 +10,10 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 class CryptoStorageImpl extends CryptoStorage {
   final FlutterSecureStorage _secureStorage;
   final PgpKeyDao _keyDao;
+  final ContactsDao _contactsDao;
   String _other;
 
-  CryptoStorageImpl(this._secureStorage, this._keyDao);
+  CryptoStorageImpl(this._secureStorage, this._keyDao, this._contactsDao);
 
   setOther(String id) {
     _other = id;
@@ -29,9 +33,30 @@ class CryptoStorageImpl extends CryptoStorage {
     return _keyDao.addPgpKeys(localPgpKeys);
   }
 
-  Future<PgpKey> getPgpKey(String email, bool isPrivate) async {
+  Future<PgpKey> getPgpKey(String email, bool isPrivate,
+      [bool fromContact = true]) async {
     final localKey = await _keyDao.getPgpKey(email, isPrivate);
-    return _fromDb(localKey);
+    if (localKey != null) {
+      return _fromDb(localKey);
+    } else if (!isPrivate) {
+      final contact = await _contactsDao.getContactWithPgpKey(email);
+      if (contact == null) {
+        return null;
+      }
+
+      return PgpKeyWithContact(
+        PgpKey.fill(
+          contact.fullName,
+          contact.viewEmail,
+          false,
+          contact.pgpPublicKey,
+          null,
+        ),
+        ContactMapper.fromDB(contact),
+      );
+    } else {
+      return null;
+    }
   }
 
   Future<List<PgpKey>> getPgpKeys(bool isPrivate) {
@@ -40,7 +65,25 @@ class CryptoStorageImpl extends CryptoStorage {
       for (var item in list) {
         out.add(await _fromDb(item));
       }
+
       return out;
+    });
+  }
+
+  Future<List<PgpKey>> getContactsPgpKeys() {
+    return _contactsDao.getContactsWithPgpKey().then((items) {
+      return items
+          .map((item) => PgpKeyWithContact(
+                PgpKey.fill(
+                  item.fullName,
+                  item.viewEmail,
+                  false,
+                  item.pgpPublicKey,
+                  null,
+                ),
+                ContactMapper.fromDB(item),
+              ))
+          .toList();
     });
   }
 
@@ -118,4 +161,21 @@ class CryptoStorageImpl extends CryptoStorage {
       await _secureStorage.delete(key: id);
     }
   }
+}
+
+class PgpKeyWithContact implements PgpKey {
+  final PgpKey pgpKey;
+  final Contact contact;
+
+  PgpKeyWithContact(this.pgpKey, this.contact);
+
+  String get name => pgpKey.name;
+
+  String get mail => pgpKey.mail;
+
+  String get key => pgpKey.key;
+
+  bool get isPrivate => pgpKey.isPrivate;
+
+  int get length => pgpKey.length;
 }

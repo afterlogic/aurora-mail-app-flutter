@@ -4970,6 +4970,7 @@ class ContactDb extends DataClass implements Insertable<ContactDb> {
   final String dateModified;
   final String davContactsUid;
   final String davContactsVCardUid;
+  final String pgpPublicKey;
   final List<String> groupUUIDs;
   ContactDb(
       {@required this.uuidPlusStorage,
@@ -5026,6 +5027,7 @@ class ContactDb extends DataClass implements Insertable<ContactDb> {
       this.dateModified,
       this.davContactsUid,
       this.davContactsVCardUid,
+      this.pgpPublicKey,
       @required this.groupUUIDs});
   factory ContactDb.fromData(Map<String, dynamic> data, GeneratedDatabase db,
       {String prefix}) {
@@ -5139,6 +5141,8 @@ class ContactDb extends DataClass implements Insertable<ContactDb> {
           .mapFromDatabaseResponse(data['${effectivePrefix}dav_contacts_uid']),
       davContactsVCardUid: stringType.mapFromDatabaseResponse(
           data['${effectivePrefix}dav_contacts_v_card_uid']),
+      pgpPublicKey: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}pgp_public_key']),
       groupUUIDs: $ContactsTableTable.$converter0.mapToDart(stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}group_u_u_i_ds'])),
     );
@@ -5203,6 +5207,7 @@ class ContactDb extends DataClass implements Insertable<ContactDb> {
       davContactsUid: serializer.fromJson<String>(json['davContactsUid']),
       davContactsVCardUid:
           serializer.fromJson<String>(json['davContactsVCardUid']),
+      pgpPublicKey: serializer.fromJson<String>(json['pgpPublicKey']),
       groupUUIDs: serializer.fromJson<List<String>>(json['groupUUIDs']),
     );
   }
@@ -5264,6 +5269,7 @@ class ContactDb extends DataClass implements Insertable<ContactDb> {
       'dateModified': serializer.toJson<String>(dateModified),
       'davContactsUid': serializer.toJson<String>(davContactsUid),
       'davContactsVCardUid': serializer.toJson<String>(davContactsVCardUid),
+      'pgpPublicKey': serializer.toJson<String>(pgpPublicKey),
       'groupUUIDs': serializer.toJson<List<String>>(groupUUIDs),
     };
   }
@@ -5423,6 +5429,9 @@ class ContactDb extends DataClass implements Insertable<ContactDb> {
       davContactsVCardUid: davContactsVCardUid == null && nullToAbsent
           ? const Value.absent()
           : Value(davContactsVCardUid),
+      pgpPublicKey: pgpPublicKey == null && nullToAbsent
+          ? const Value.absent()
+          : Value(pgpPublicKey),
       groupUUIDs: groupUUIDs == null && nullToAbsent
           ? const Value.absent()
           : Value(groupUUIDs),
@@ -5484,6 +5493,7 @@ class ContactDb extends DataClass implements Insertable<ContactDb> {
           String dateModified,
           String davContactsUid,
           String davContactsVCardUid,
+          String pgpPublicKey,
           List<String> groupUUIDs}) =>
       ContactDb(
         uuidPlusStorage: uuidPlusStorage ?? this.uuidPlusStorage,
@@ -5540,6 +5550,7 @@ class ContactDb extends DataClass implements Insertable<ContactDb> {
         dateModified: dateModified ?? this.dateModified,
         davContactsUid: davContactsUid ?? this.davContactsUid,
         davContactsVCardUid: davContactsVCardUid ?? this.davContactsVCardUid,
+        pgpPublicKey: pgpPublicKey ?? this.pgpPublicKey,
         groupUUIDs: groupUUIDs ?? this.groupUUIDs,
       );
   @override
@@ -5599,6 +5610,7 @@ class ContactDb extends DataClass implements Insertable<ContactDb> {
           ..write('dateModified: $dateModified, ')
           ..write('davContactsUid: $davContactsUid, ')
           ..write('davContactsVCardUid: $davContactsVCardUid, ')
+          ..write('pgpPublicKey: $pgpPublicKey, ')
           ..write('groupUUIDs: $groupUUIDs')
           ..write(')'))
         .toString();
@@ -5648,7 +5660,7 @@ class ContactDb extends DataClass implements Insertable<ContactDb> {
                                                                               .hashCode,
                                                                           $mrjc(
                                                                               nickName.hashCode,
-                                                                              $mrjc(skype.hashCode, $mrjc(facebook.hashCode, $mrjc(personalEmail.hashCode, $mrjc(personalAddress.hashCode, $mrjc(personalCity.hashCode, $mrjc(personalState.hashCode, $mrjc(personalZip.hashCode, $mrjc(personalCountry.hashCode, $mrjc(personalWeb.hashCode, $mrjc(personalFax.hashCode, $mrjc(personalPhone.hashCode, $mrjc(personalMobile.hashCode, $mrjc(businessEmail.hashCode, $mrjc(businessCompany.hashCode, $mrjc(businessAddress.hashCode, $mrjc(businessCity.hashCode, $mrjc(businessState.hashCode, $mrjc(businessZip.hashCode, $mrjc(businessCountry.hashCode, $mrjc(businessJobTitle.hashCode, $mrjc(businessDepartment.hashCode, $mrjc(businessOffice.hashCode, $mrjc(businessPhone.hashCode, $mrjc(businessFax.hashCode, $mrjc(businessWeb.hashCode, $mrjc(otherEmail.hashCode, $mrjc(notes.hashCode, $mrjc(birthDay.hashCode, $mrjc(birthMonth.hashCode, $mrjc(birthYear.hashCode, $mrjc(auto.hashCode, $mrjc(frequency.hashCode, $mrjc(dateModified.hashCode, $mrjc(davContactsUid.hashCode, $mrjc(davContactsVCardUid.hashCode, groupUUIDs.hashCode)))))))))))))))))))))))))))))))))))))))))))))))))))))));
+                                                                              $mrjc(skype.hashCode, $mrjc(facebook.hashCode, $mrjc(personalEmail.hashCode, $mrjc(personalAddress.hashCode, $mrjc(personalCity.hashCode, $mrjc(personalState.hashCode, $mrjc(personalZip.hashCode, $mrjc(personalCountry.hashCode, $mrjc(personalWeb.hashCode, $mrjc(personalFax.hashCode, $mrjc(personalPhone.hashCode, $mrjc(personalMobile.hashCode, $mrjc(businessEmail.hashCode, $mrjc(businessCompany.hashCode, $mrjc(businessAddress.hashCode, $mrjc(businessCity.hashCode, $mrjc(businessState.hashCode, $mrjc(businessZip.hashCode, $mrjc(businessCountry.hashCode, $mrjc(businessJobTitle.hashCode, $mrjc(businessDepartment.hashCode, $mrjc(businessOffice.hashCode, $mrjc(businessPhone.hashCode, $mrjc(businessFax.hashCode, $mrjc(businessWeb.hashCode, $mrjc(otherEmail.hashCode, $mrjc(notes.hashCode, $mrjc(birthDay.hashCode, $mrjc(birthMonth.hashCode, $mrjc(birthYear.hashCode, $mrjc(auto.hashCode, $mrjc(frequency.hashCode, $mrjc(dateModified.hashCode, $mrjc(davContactsUid.hashCode, $mrjc(davContactsVCardUid.hashCode, $mrjc(pgpPublicKey.hashCode, groupUUIDs.hashCode))))))))))))))))))))))))))))))))))))))))))))))))))))))));
   @override
   bool operator ==(dynamic other) =>
       identical(this, other) ||
@@ -5707,6 +5719,7 @@ class ContactDb extends DataClass implements Insertable<ContactDb> {
           other.dateModified == this.dateModified &&
           other.davContactsUid == this.davContactsUid &&
           other.davContactsVCardUid == this.davContactsVCardUid &&
+          other.pgpPublicKey == this.pgpPublicKey &&
           other.groupUUIDs == this.groupUUIDs);
 }
 
@@ -5765,6 +5778,7 @@ class ContactsTableCompanion extends UpdateCompanion<ContactDb> {
   final Value<String> dateModified;
   final Value<String> davContactsUid;
   final Value<String> davContactsVCardUid;
+  final Value<String> pgpPublicKey;
   final Value<List<String>> groupUUIDs;
   const ContactsTableCompanion({
     this.uuidPlusStorage = const Value.absent(),
@@ -5821,6 +5835,7 @@ class ContactsTableCompanion extends UpdateCompanion<ContactDb> {
     this.dateModified = const Value.absent(),
     this.davContactsUid = const Value.absent(),
     this.davContactsVCardUid = const Value.absent(),
+    this.pgpPublicKey = const Value.absent(),
     this.groupUUIDs = const Value.absent(),
   });
   ContactsTableCompanion.insert({
@@ -5878,6 +5893,7 @@ class ContactsTableCompanion extends UpdateCompanion<ContactDb> {
     this.dateModified = const Value.absent(),
     this.davContactsUid = const Value.absent(),
     this.davContactsVCardUid = const Value.absent(),
+    this.pgpPublicKey = const Value.absent(),
     @required List<String> groupUUIDs,
   })  : uuidPlusStorage = Value(uuidPlusStorage),
         uuid = Value(uuid),
@@ -5980,6 +5996,7 @@ class ContactsTableCompanion extends UpdateCompanion<ContactDb> {
       Value<String> dateModified,
       Value<String> davContactsUid,
       Value<String> davContactsVCardUid,
+      Value<String> pgpPublicKey,
       Value<List<String>> groupUUIDs}) {
     return ContactsTableCompanion(
       uuidPlusStorage: uuidPlusStorage ?? this.uuidPlusStorage,
@@ -6036,6 +6053,7 @@ class ContactsTableCompanion extends UpdateCompanion<ContactDb> {
       dateModified: dateModified ?? this.dateModified,
       davContactsUid: davContactsUid ?? this.davContactsUid,
       davContactsVCardUid: davContactsVCardUid ?? this.davContactsVCardUid,
+      pgpPublicKey: pgpPublicKey ?? this.pgpPublicKey,
       groupUUIDs: groupUUIDs ?? this.groupUUIDs,
     );
   }
@@ -6755,6 +6773,20 @@ class $ContactsTableTable extends ContactsTable
     );
   }
 
+  final VerificationMeta _pgpPublicKeyMeta =
+      const VerificationMeta('pgpPublicKey');
+  GeneratedTextColumn _pgpPublicKey;
+  @override
+  GeneratedTextColumn get pgpPublicKey =>
+      _pgpPublicKey ??= _constructPgpPublicKey();
+  GeneratedTextColumn _constructPgpPublicKey() {
+    return GeneratedTextColumn(
+      'pgp_public_key',
+      $tableName,
+      true,
+    );
+  }
+
   final VerificationMeta _groupUUIDsMeta = const VerificationMeta('groupUUIDs');
   GeneratedTextColumn _groupUUIDs;
   @override
@@ -6823,6 +6855,7 @@ class $ContactsTableTable extends ContactsTable
         dateModified,
         davContactsUid,
         davContactsVCardUid,
+        pgpPublicKey,
         groupUUIDs
       ];
   @override
@@ -7191,6 +7224,12 @@ class $ContactsTableTable extends ContactsTable
           davContactsVCardUid.isAcceptableValue(
               d.davContactsVCardUid.value, _davContactsVCardUidMeta));
     }
+    if (d.pgpPublicKey.present) {
+      context.handle(
+          _pgpPublicKeyMeta,
+          pgpPublicKey.isAcceptableValue(
+              d.pgpPublicKey.value, _pgpPublicKeyMeta));
+    }
     context.handle(_groupUUIDsMeta, const VerificationResult.success());
     return context;
   }
@@ -7386,6 +7425,10 @@ class $ContactsTableTable extends ContactsTable
     if (d.davContactsVCardUid.present) {
       map['dav_contacts_v_card_uid'] =
           Variable<String, StringType>(d.davContactsVCardUid.value);
+    }
+    if (d.pgpPublicKey.present) {
+      map['pgp_public_key'] =
+          Variable<String, StringType>(d.pgpPublicKey.value);
     }
     if (d.groupUUIDs.present) {
       final converter = $ContactsTableTable.$converter0;

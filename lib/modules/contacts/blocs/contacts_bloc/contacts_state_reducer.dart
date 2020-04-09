@@ -51,4 +51,9 @@ Stream<ContactsState> reduceState(ContactsState state, dynamic event) async* {
       error: event.error,
     );
   }
+  if (event is ReImport) {
+    yield state.copyWith(
+      key: event.key,
+    );
+  }
 }

@@ -27,9 +27,11 @@ abstract class ContactsRepository {
 
   Stream<List<ContactsGroup>> watchContactsGroups();
 
-  Future<void> addContact(Contact contact);
+  Future<Contact> addContact(Contact contact);
 
   Future<void> editContact(Contact contact);
+
+  Future<void> addKeyToContact(Contact contact);
 
   Future<void> deleteContacts(List<Contact> contact);
 
@@ -51,4 +53,12 @@ abstract class ContactsRepository {
   Future<bool> deleteGroup(ContactsGroup group);
 
   void dispose();
+
+  Future<Contact> getContactWithPgpKey(String mail);
+
+  Future<Contact> getContactByEmail(String mail);
+
+  Future<Contact> getContactById(int entityId);
+
+  Future deleteContactKey(String mail);
 }

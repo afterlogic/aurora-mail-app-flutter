@@ -1,5 +1,6 @@
 import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 import 'package:moor_flutter/moor_flutter.dart';
 
 import 'contacts_table.dart';
@@ -12,8 +13,11 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
   ContactsDao(AppDatabase db) : super(db);
 
   Future<void> addContacts(List<ContactDb> newContacts) async {
-    await batch((b) => b.insertAll(contactsTable, newContacts,
-        mode: InsertMode.insertOrReplace));
+    await batch((b) => b.insertAll(
+          contactsTable,
+          newContacts,
+          mode: InsertMode.insertOrFail,
+        ));
   }
 
   Future<void> deleteContacts(List<String> uuids) {
@@ -98,5 +102,69 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
     } catch (err) {
       return null;
     }
+  }
+
+  Future<void> addKey(String mail, String key) {
+    try {
+      return transaction(() async {
+        await (update(contactsTable)..where((c) => c.viewEmail.equals(mail)))
+            .write(ContactsTableCompanion(pgpPublicKey: Value(key)));
+      });
+    } catch (err) {
+      return null;
+    }
+  }
+
+  Future<ContactDb> getContactWithPgpKey(String email) {
+    return (select(contactsTable)
+          ..where((item) => isNotNull(item.pgpPublicKey))
+          ..where((item) => item.viewEmail.equals(email)))
+        .get()
+        .then((items) {
+      if (items.isEmpty) {
+        return null;
+      }
+      return items.first;
+    });
+  }
+
+  Future<List<ContactDb>> getContactsWithPgpKey() {
+    return (select(contactsTable)
+          ..where((item) =>
+              item.pgpPublicKey.like("%-----BEGIN PGP PUBLIC KEY BLOCK-----%")))
+        .get();
+  }
+
+  Future deleteContactKey(String mail) {
+    try {
+      return transaction(() async {
+        await (update(contactsTable)..where((c) => c.viewEmail.equals(mail)))
+            .write(
+          ContactsTableCompanion(
+            pgpPublicKey: Value(null),
+          ),
+        );
+      });
+    } catch (err) {
+      return null;
+    }
+  }
+
+  Future<ContactDb> getContactByEmail(String mail) {
+    return (select(contactsTable)..where((item) => item.viewEmail.equals(mail)))
+        .get()
+        .then((item) {
+      if (item.isEmpty) {
+        return null;
+      }
+
+      return item.first;
+    });
+  }
+
+  Future<ContactDb> getContactById(int entityId) {
+    return (select(contactsTable)
+          ..where((item) => item.entityId.equals(entityId)))
+        .getSingle();
   }
 }

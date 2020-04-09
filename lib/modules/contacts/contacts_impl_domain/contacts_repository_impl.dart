@@ -42,7 +42,7 @@ class ContactsRepositoryImpl implements ContactsRepository {
       token: user.token,
     );
 
-    _network = new ContactsNetworkService(module);
+    _network = new ContactsNetworkService(module, user.serverId);
     _db = new ContactsDbService(appDB);
 
     _currentlySyncingStorageCtrl = StreamController<List<int>>(onListen: () {
@@ -157,7 +157,7 @@ class ContactsRepositoryImpl implements ContactsRepository {
   }
 
   @override
-  Future<void> addContact(Contact contact) async {
+  Future<Contact> addContact(Contact contact) async {
     final newContact = await _network.addContact(contact);
     final newContactInfo = new ContactInfoItem(
       uuid: newContact.uuid,
@@ -175,12 +175,25 @@ class ContactsRepositoryImpl implements ContactsRepository {
       _db.updateStorages([storageToUpdate], _userServerId),
       _db.addContacts([newContact]),
     ]);
+    if (contact.pgpPublicKey != null) {
+      final contactWithKey =
+          newContact.copyWith(pgpPublicKey: contact.pgpPublicKey);
+
+      await addKeyToContact(contactWithKey);
+      return contactWithKey;
+    }
+    return newContact;
   }
 
   @override
   Future<void> editContact(Contact contact) async {
     await _network.editContact(contact);
     await _db.updateContacts([contact]);
+  }
+
+  Future<void> addKeyToContact(Contact contact) async {
+    await _network.addKeyToContact(contact);
+    await _db.addKeyToContact(contact.viewEmail, contact.pgpPublicKey);
   }
 
   @override
@@ -453,4 +466,26 @@ class ContactsRepositoryImpl implements ContactsRepository {
   void dispose() {
     _storagesCtrl.close();
   }
+
+  @override
+  Future<Contact> getContactWithPgpKey(String mail) {
+    return _db.getContactWithPgpKey(mail);
+  }
+
+  @override
+  Future<Contact> getContactByEmail(String mail) {
+    return _db.getContactByEmail(mail);
+  }
+
+  @override
+  Future<Contact> getContactById(int entityId) {
+    return _db.getContactById(entityId);
+  }
+
+  @override
+  Future deleteContactKey(String mail) async {
+    await _network.deleteContactKey(mail);
+    await _db.deleteContactKey(mail);
+  }
+
 }
