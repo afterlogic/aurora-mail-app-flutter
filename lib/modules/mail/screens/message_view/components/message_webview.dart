@@ -16,10 +16,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 import 'package:html/parser.dart' as html;
+import 'package:url_launcher/url_launcher.dart';
 
 import 'attachments_dialog.dart';
 
@@ -44,11 +44,19 @@ class MessageWebView extends StatefulWidget {
 }
 
 class _MessageWebViewState extends BState<MessageWebView> {
-  WebViewController _controller;
+  final flutterWebviewPlugin = new FlutterWebviewPlugin();
   String _htmlData;
-  bool _pageLoaded = false;
+  bool _pageLoaded = true;
   bool _showImages = false;
   ThemeData theme;
+  StreamSubscription sub;
+
+  @override
+  void initState() {
+    super.initState();
+    sub = flutterWebviewPlugin.onStateChanged
+        .listen((state) => _onWebViewNavigateRequest(state));
+  }
 
   @override
   void didChangeDependencies() {
@@ -67,6 +75,13 @@ class _MessageWebViewState extends BState<MessageWebView> {
     }
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    sub.cancel();
+    flutterWebviewPlugin.close();
+  }
+
   void _getHtmlWithImages() async {
     String htmlData;
     if (widget.decrypted != null) {
@@ -80,15 +95,16 @@ class _MessageWebViewState extends BState<MessageWebView> {
           .replaceAll("data-x-src=", "src=")
           .replaceAll("src=\"http:", "src=\"https:");
 
-
       final document = html.parse(htmlData);
 
       void getAllChildren(nodes) {
         nodes.forEach((c) {
           c.nodes.forEach((node) {
             if (node.attributes.containsKey("data-x-style-url") as bool) {
-              var backgroundImageUrl = node.attributes["data-x-style-url"] as String;
-              backgroundImageUrl = backgroundImageUrl.replaceAll("http://", "https://");
+              var backgroundImageUrl =
+                  node.attributes["data-x-style-url"] as String;
+              backgroundImageUrl =
+                  backgroundImageUrl.replaceAll("http://", "https://");
               node.attributes.remove("data-x-style-url");
 
               String style = node.attributes["style"] as String;
@@ -101,6 +117,7 @@ class _MessageWebViewState extends BState<MessageWebView> {
           getAllChildren(c.nodes);
         });
       }
+
       getAllChildren(document.nodes.toList());
       htmlData = document.outerHtml;
     }
@@ -115,7 +132,7 @@ class _MessageWebViewState extends BState<MessageWebView> {
     }
 
     if (_htmlData != null) {
-      _controller?.loadUrl(_getHtmlUri(htmlData));
+      flutterWebviewPlugin.reloadUrl(_getHtmlUri(htmlData));
     }
     setState(() => _htmlData = htmlData);
   }
@@ -173,27 +190,27 @@ class _MessageWebViewState extends BState<MessageWebView> {
     );
   }
 
-  FutureOr<NavigationDecision> _onWebViewNavigateRequest(
-      NavigationRequest request) async {
-    if (request.url.endsWith(MessageWebViewActions.SHOW_INFO)) {
-      // TODO: implement showing message info
-      return NavigationDecision.prevent;
-    } else if (request.url.endsWith(MessageWebViewActions.SHOW_ATTACHMENTS)) {
-      final messageViewBloc = BlocProvider.of<MessageViewBloc>(context);
-      AttachmentsDialog.show(context, widget.attachments, messageViewBloc);
-      return NavigationDecision.prevent;
-    } else if (request.url
-        .endsWith(MessageWebViewActions.DOWNLOAD_ATTACHMENT)) {
-      final parts =
-          request.url.split(MessageWebViewActions.DOWNLOAD_ATTACHMENT);
-      final downloadUrl = parts[parts.length - 2];
-      _startDownload(downloadUrl);
-      return NavigationDecision.prevent;
-    } else if (request.url != _getHtmlUri(_htmlData)) {
-      launch(request.url);
-      return NavigationDecision.prevent;
-    } else {
-      return NavigationDecision.navigate;
+  _onWebViewNavigateRequest(WebViewStateChanged state) async {
+    if (state.type == WebViewState.startLoad) {
+      if (state.url.endsWith(MessageWebViewActions.SHOW_INFO)) {
+        flutterWebviewPlugin.stopLoading();
+      } else if (state.url.endsWith(MessageWebViewActions.SHOW_ATTACHMENTS)) {
+        final messageViewBloc = BlocProvider.of<MessageViewBloc>(context);
+        AttachmentsDialog.show(context, widget.attachments, messageViewBloc);
+        flutterWebviewPlugin.stopLoading();
+      } else if (state.url
+          .endsWith(MessageWebViewActions.DOWNLOAD_ATTACHMENT)) {
+        final parts =
+            state.url.split(MessageWebViewActions.DOWNLOAD_ATTACHMENT);
+        final downloadUrl = parts[parts.length - 2];
+        _startDownload(downloadUrl);
+        flutterWebviewPlugin.stopLoading();
+      } else if (state.url != _getHtmlUri(_htmlData)) {
+        launch(state.url);
+        flutterWebviewPlugin.stopLoading();
+      } else {
+//      return NavigationDecision.navigate;
+      }
     }
   }
 
@@ -229,13 +246,11 @@ class _MessageWebViewState extends BState<MessageWebView> {
         Flexible(
           child: Stack(
             children: [
-              WebView(
+              WebviewScaffold(
                 key: Key(widget.message.uid.toString()),
-                initialUrl: _getHtmlUri(_htmlData),
-                javascriptMode: JavascriptMode.unrestricted,
-                onWebViewCreated: (WebViewController c) => _controller = c,
-                navigationDelegate: _onWebViewNavigateRequest,
-                onPageFinished: (_) async => setState(() => _pageLoaded = true),
+                url: _getHtmlUri(_htmlData),
+                withJavascript: true,
+//                onPageFinished: (_) async => setState(() => _pageLoaded = true),
               ),
               Positioned.fill(
                 child: IgnorePointer(

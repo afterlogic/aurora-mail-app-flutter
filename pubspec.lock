@@ -229,6 +229,15 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
+  crypto_plugin:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: HEAD
+      resolved-ref: "60688ffe5613428feb30a5991fdc7dfd102168ec"
+      url: "https://github.com/afterlogic/flutter_crypto_plugin"
+    source: git
+    version: "0.0.1"
   crypto_storage:
     dependency: "direct main"
     description:
@@ -236,10 +245,24 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
+  crypto_storage_impl:
+    dependency: "direct main"
+    description:
+      path: "module\\crypto\\crypto_storage_impl"
+      relative: true
+    source: path
+    version: "0.0.1"
   crypto_worker:
     dependency: "direct main"
     description:
       path: "module\\crypto\\crypto_worker"
+      relative: true
+    source: path
+    version: "0.0.1"
+  crypto_worker_impl:
+    dependency: "direct main"
+    description:
+      path: "module\\crypto\\crypto_worker_impl"
       relative: true
     source: path
     version: "0.0.1"
@@ -431,6 +454,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_webview_plugin:
+    dependency: "direct main"
+    description:
+      name: flutter_webview_plugin
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.11"
   fluttertoast:
     dependency: "direct main"
     description:
@@ -915,7 +945,7 @@ packages:
   theme:
     dependency: "direct main"
     description:
-      path: "build_res\\natro\\theme"
+      path: "build_res\\afterlogic\\theme"
       relative: true
     source: path
     version: "0.0.1"
@@ -1003,13 +1033,6 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
-  webview_flutter:
-    dependency: "direct main"
-    description:
-      name: webview_flutter
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.3.19+9"
   xml:
     dependency: transitive
     description:
