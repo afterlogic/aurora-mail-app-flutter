@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/folders/folders_dao.dart';
 import 'package:aurora_mail/database/folders/folders_table.dart';
@@ -17,7 +19,6 @@ class ComposeMethods {
 
   final _foldersDao = new FoldersDao(DBInstances.appDB);
   MailApi _mailApi;
-  final _mailLocal = new MailLocalStorage();
 
   ComposeMethods({
     @required User user,
@@ -91,12 +92,12 @@ class ComposeMethods {
     );
   }
 
-  Future<void> uploadFile({
+  Future<void> uploadFile(
+    File file, {
     @required Function(TempAttachmentUpload) onUploadStart,
     @required Function(ComposeAttachment) onUploadEnd,
     @required Function(dynamic) onError,
   }) async {
-    final file = await _mailLocal.pickFile();
     if (file == null) return null;
     return _mailApi.uploadAttachment(file,
         onUploadStart: onUploadStart,

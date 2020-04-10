@@ -1,12 +1,13 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/inject/app_inject.dart';
 import 'package:aurora_mail/modules/mail/blocs/compose_bloc/compose_methods.dart';
 import 'package:aurora_mail/modules/mail/models/compose_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/temp_attachment_upload.dart';
+import 'package:aurora_mail/modules/mail/repository/mail_local_storage.dart';
 import 'package:aurora_mail/utils/api_utils.dart';
-import 'package:aurora_mail/utils/permissions.dart';
 import 'package:bloc/bloc.dart';
 import 'package:crypto_worker/crypto_worker.dart';
 import 'package:flutter/foundation.dart';
@@ -17,6 +18,7 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
   ComposeMethods _methods;
   final User user;
   final Account account;
+  final _mailLocal = new MailLocalStorage();
 
   ComposeBloc({@required this.user, @required this.account}) {
     _methods = new ComposeMethods(
@@ -35,7 +37,8 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
   ) async* {
     if (event is SendMessage) yield* _sendMessage(event);
     if (event is SaveToDrafts) yield* _saveToDrafts(event);
-    if (event is UploadAttachment) yield* _uploadAttachment(event);
+    if (event is UploadAttachment) yield* _addAttachment(event);
+    if (event is UploadAttachments) _addAttachments(event);
     if (event is StartUpload) yield UploadStarted(event.tempAttachment);
     if (event is EndUpload) yield AttachmentUploaded(event.composeAttachment);
     if (event is GetComposeAttachments) yield* _getComposeAttachments(event);
@@ -92,9 +95,20 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
     }
   }
 
-  Stream<ComposeState> _uploadAttachment(UploadAttachment event) async* {
+  Stream<ComposeState> _addAttachment(UploadAttachment event) async* {
+    final file = await _mailLocal.pickFile();
+    _uploadAttachment(file);
+  }
 
-    _methods.uploadFile(onUploadStart: (TempAttachmentUpload tempAttachment) {
+  _addAttachments(UploadAttachments event) async {
+    for (var value in event.files) {
+      await _uploadAttachment(value);
+    }
+  }
+
+  Future _uploadAttachment(File file) {
+    return _methods.uploadFile(file,
+        onUploadStart: (TempAttachmentUpload tempAttachment) {
       add(StartUpload(tempAttachment));
     }, onUploadEnd: (ComposeAttachment attachment) {
       add(EndUpload(attachment));

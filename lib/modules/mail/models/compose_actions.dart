@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 
@@ -46,4 +48,11 @@ class SendContacts implements ComposeAction {
   final List<Contact> contacts;
 
   const SendContacts(this.contacts);
+}
+
+class InitWithAttachment implements ComposeAction {
+  final List<File> files;
+  final List<String> message;
+
+  const InitWithAttachment(this.files, this.message);
 }

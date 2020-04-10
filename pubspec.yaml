@@ -76,6 +76,8 @@ dependencies:
   aurora_ui_kit:
     git: https://github.com/afterlogic/aurora_ui_kit_flutter.git
 
+  receive_sharing:
+    git: https://github.com/afterlogic/receive_sharing
 
   #notification
   flutter_local_notifications: 0.8.4+3

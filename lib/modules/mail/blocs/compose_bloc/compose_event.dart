@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 import 'package:aurora_mail/modules/mail/models/compose_attachment.dart';
@@ -78,6 +80,12 @@ class SaveToDrafts extends ComposeEvent {
 }
 
 class UploadAttachment extends ComposeEvent with AlwaysNonEqualObject {}
+
+class UploadAttachments extends ComposeEvent with AlwaysNonEqualObject {
+  final List<File> files;
+
+  UploadAttachments(this.files);
+}
 
 // used inside bloc, thus is not intended to be fired from flutter widgets
 class StartUpload extends ComposeEvent {

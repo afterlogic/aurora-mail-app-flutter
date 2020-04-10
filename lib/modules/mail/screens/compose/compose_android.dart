@@ -132,6 +132,12 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
     if (action is EmailToContacts) await _initFromContacts(action);
     if (action is SendContacts) await _initContactsAsAttachments(action);
     if (action is Resend) await _initResend(action);
+    if (action is InitWithAttachment) await _initWithAttachment(action);
+  }
+
+  void _initWithAttachment(InitWithAttachment action) {
+    _bodyTextCtrl.text = action.message.join("\n\n");
+    _bloc.add(UploadAttachments(action.files));
   }
 
   void _initFromDrafts(OpenFromDrafts action) async {

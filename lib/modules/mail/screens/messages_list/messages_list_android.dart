@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/models/folder.dart';
@@ -22,10 +23,12 @@ import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:receive_sharing/recive_sharing.dart';
 
 import 'components/mail_app_bar.dart';
 import 'components/mail_folder.dart';
 import 'components/message_item.dart';
+import 'messages_list_route.dart';
 
 class MessagesListAndroid extends StatefulWidget {
   final String initSearch;
@@ -49,6 +52,32 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
   @override
   void initState() {
     super.initState();
+    ReceiveSharing.getMediaStream().listen((List<SharedMediaFile> shared) {
+      final texts = <String>[];
+      final files = <File>[];
+      for (var value in shared) {
+        if (value.isText) {
+          texts.add(value.text);
+        } else {
+          files.add(File(value.path));
+        }
+      }
+      if (shared.isNotEmpty) {
+        Navigator.popUntil(
+          context,
+              (item) => item.settings.name == MessagesListRoute.name,
+        );
+        Navigator.pushNamed(
+          context,
+          ComposeRoute.name,
+          arguments: ComposeScreenArgs(
+            mailBloc: _mailBloc,
+            contactsBloc: _contactsBloc,
+            composeAction: InitWithAttachment(files, texts),
+          ),
+        );
+      }
+    });
     _initBlocs();
   }
 
@@ -89,7 +118,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
   void _onMessageSelected(Message item) async {
     final message = await _mailBloc.getFullMessage(item);
     final draftsFolder = (_mailBloc.state as FoldersLoaded).folders.firstWhere(
-        (f) => f.folderType == FolderType.drafts,
+            (f) => f.folderType == FolderType.drafts,
         orElse: () => null);
 
     if (draftsFolder != null && message.folder == draftsFolder.fullNameRaw) {
@@ -145,7 +174,11 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
   @override
   Widget build(BuildContext context) {
     final authKey =
-        BlocProvider.of<AuthBloc>(context).currentAccount.localId.toString();
+    BlocProvider
+        .of<AuthBloc>(context)
+        .currentAccount
+        .localId
+        .toString();
     return MultiBlocProvider(
       key: Key(authKey),
       providers: [
@@ -227,7 +260,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
               child: BlocBuilder<MessagesListBloc, MessagesListState>(
                   bloc: _messagesListBloc,
                   condition: (prevState, state) =>
-                      state is SubscribedToMessages,
+                  state is SubscribedToMessages,
                   builder: (context, state) {
                     Widget child;
                     if (state is SubscribedToMessages) {
@@ -249,15 +282,16 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
             ),
           ),
           bottomNavigationBar:
-              MailBottomAppBar(selectedRoute: MailBottomAppBarRoutes.mail),
+          MailBottomAppBar(selectedRoute: MailBottomAppBarRoutes.mail),
           floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
           floatingActionButton: AMFloatingActionButton(
             child: Icon(MdiIcons.pen),
-            onPressed: () => Navigator.pushNamed(context, ComposeRoute.name,
-                arguments: ComposeScreenArgs(
-                  mailBloc: _mailBloc,
-                  contactsBloc: _contactsBloc,
-                )),
+            onPressed: () =>
+                Navigator.pushNamed(context, ComposeRoute.name,
+                    arguments: ComposeScreenArgs(
+                      mailBloc: _mailBloc,
+                      contactsBloc: _contactsBloc,
+                    )),
           ),
         ),
       ),
@@ -268,13 +302,11 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
 
   final selectionController = SelectionController<int, Message>();
 
-  Widget _buildMessagesStream(
-    Stream<List<Message>> Function(int page) stream,
-    MessagesFilter filter,
-    bool isSent,
-    String key,
-    String folder,
-  ) {
+  Widget _buildMessagesStream(Stream<List<Message>> Function(int page) stream,
+      MessagesFilter filter,
+      bool isSent,
+      String key,
+      String folder,) {
     return Column(
       children: <Widget>[
         if (filter == MessagesFilter.unread)
@@ -295,7 +327,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
             folder: folder,
             selectionController: selectionController,
             header: [FolderType.spam, FolderType.trash]
-                    .contains(_selectedFolder.folderType)
+                .contains(_selectedFolder.folderType)
                 ? _emptyFolder
                 : null,
             builder: (context, item, threads) {
@@ -350,22 +382,22 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
       onTap: messageCount == 0
           ? null
           : () async {
-              final delete = await ConfirmationDialog.show(
-                context,
-                i18n(context, emptyFolder),
-                i18n(
-                  context,
-                  "empty_folder_description",
-                  {"folder": MailFolder.getTitle(context, _selectedFolder)},
-                ),
-                i18n(context, "btn_delete"),
-                destructibleAction: true,
-              );
-              if (delete == true) {
-                _messagesListBloc.add(EmptyFolder(_selectedFolder.fullNameRaw));
-                selectionController.enable = false;
-              }
-            },
+        final delete = await ConfirmationDialog.show(
+          context,
+          i18n(context, emptyFolder),
+          i18n(
+            context,
+            "empty_folder_description",
+            {"folder": MailFolder.getTitle(context, _selectedFolder)},
+          ),
+          i18n(context, "btn_delete"),
+          destructibleAction: true,
+        );
+        if (delete == true) {
+          _messagesListBloc.add(EmptyFolder(_selectedFolder.fullNameRaw));
+          selectionController.enable = false;
+        }
+      },
     );
   }
 
