@@ -7,7 +7,7 @@ import BackgroundTasks
 import UserNotifications
 import alarm_service
 import Firebase
-
+import receive_sharing
 
 @UIApplicationMain
 class AppDelegate: FlutterAppDelegate{
@@ -16,6 +16,8 @@ class AppDelegate: FlutterAppDelegate{
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
         FirebaseApp.configure()
+        UserDefaults().set(Bundle.main.object(forInfoDictionaryKey:"ShareGroup") as! String,forKey: SwiftReceiveSharingPlugin.shareGroupKey)
+
         GeneratedPluginRegistrant.register(with: self)
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }

@@ -2,8 +2,21 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key></key>
-	<string></string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>$(PRODUCT_ID).Share</string>
+			</array>
+		</dict>
+	</array>
+	<key>MAIN_APP_ID</key>
+	<string>$(PRODUCT_ID)</string>
+	<key>ShareGroup</key>
+	<string>${SHARED_GROUP_ID}</string>
 	<key>CFBundleName</key>
 	<string>$(APP_NAME)</string>
 	<key>UILaunchStoryboardName</key>
@@ -28,16 +41,16 @@
 	<true/>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
-	<key>CFBundleShortVersionString</key>
-	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
+	<key>CFBundleShortVersionString</key>
+	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 		<key>NSAllowsArbitraryLoadsInWebContent</key>
-        <true/>
+		<true/>
 	</dict>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
@@ -64,12 +77,12 @@
 	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Used statically by permission_handler library for Flutter, unused in the app</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Used statically by permission_handler library for Flutter, unused in the app</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Upload photos and videos</string>
 	<key>NSSpeechRecognitionUsageDescription</key>

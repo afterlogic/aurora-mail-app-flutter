@@ -1,3 +1,4 @@
 APP_NAME={{_iosAppName}}
 PRODUCT_ID={{_iosAppId}}
 DEVELOPMENT_ID={{_iosDeveloperId}}
+SHARED_GROUP_ID={{_appleGroupId}}

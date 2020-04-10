@@ -160,3 +160,5 @@ lib/inject/modules/crypto_module.dart
 android/app/src/main/res/drawable/main_logo.png
 
 core/aurora_ui_kit
+/ios/AppShareExtension/AppShareExtension.entitlements
+/ios/Runner/Runner.entitlements

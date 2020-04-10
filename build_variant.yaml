@@ -8,6 +8,8 @@ _files:
   - android/build_variable.properties.temp
   - ios/BuildVariable.xcconfig.temp
   - lib/inject/modules/crypto_module.dart.temp
+  - ios/Runner/Runner.entitlements.temp
+  - ios/AppShareExtension/AppShareExtension.entitlements.temp
 _copy:
   "{{main_logo}}": "android/app/src/main/res/drawable/main_logo.png"
   "{{_google_services}}": "android/app/google-services.json"
