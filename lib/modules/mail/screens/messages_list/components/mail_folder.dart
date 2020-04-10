@@ -23,52 +23,6 @@ class MailFolder extends StatelessWidget {
       this.children})
       : super(key: key);
 
-  Widget get _folderIcon {
-    switch (mailFolder.folderType) {
-      case FolderType.inbox:
-        return Icon(Icons.inbox);
-      case FolderType.sent:
-        return Icon(Icons.send);
-      case FolderType.drafts:
-        return Icon(Icons.drafts);
-      case FolderType.spam:
-        return SvgIcon(AppAssets.spam);
-      case FolderType.trash:
-        return Icon(MdiIcons.trashCanOutline);
-      case FolderType.virus:
-        return Icon(Icons.bug_report);
-      case FolderType.starred:
-        return Icon(Icons.star);
-      case FolderType.template:
-        return Icon(MdiIcons.fileDocumentEditOutline);
-      case FolderType.system:
-        return Icon(Icons.devices);
-      case FolderType.user:
-        return Icon(Icons.folder);
-      case FolderType.unknown:
-        return Icon(Icons.device_unknown);
-      default:
-        return null;
-    }
-  }
-
-  static String getTitle(BuildContext context, Folder folder) {
-    switch (folder.folderType) {
-      case FolderType.inbox:
-        return i18n(context, "folders_inbox");
-      case FolderType.sent:
-        return i18n(context, "folders_sent");
-      case FolderType.drafts:
-        return i18n(context, "folders_drafts");
-      case FolderType.spam:
-        return i18n(context, "folders_spam");
-      case FolderType.trash:
-        return i18n(context, "folders_trash");
-      default:
-        return folder.name;
-    }
-  }
-
   void _selectFolder(BuildContext context) {
     Navigator.pop(context);
     BlocProvider.of<MailBloc>(context).add(SelectFolder(mailFolder));
@@ -127,8 +81,8 @@ class MailFolder extends StatelessWidget {
             padding: EdgeInsets.only(left: paddingCount * paddingStep),
             child: ListTile(
               selected: isSelected,
-              leading: _folderIcon,
-              title: Text(getTitle(context, mailFolder)),
+              leading: FolderHelper.getIcon(mailFolder),
+              title: Text(FolderHelper.getTitle(context, mailFolder)),
               trailing: _buildMessageCounter(context),
               onTap: () => _selectFolder(context),
             ),
@@ -140,6 +94,54 @@ class MailFolder extends StatelessWidget {
       );
     } else {
       return SizedBox();
+    }
+  }
+}
+
+class FolderHelper {
+  static String getTitle(BuildContext context, Folder folder) {
+    switch (folder.folderType) {
+      case FolderType.inbox:
+        return i18n(context, "folders_inbox");
+      case FolderType.sent:
+        return i18n(context, "folders_sent");
+      case FolderType.drafts:
+        return i18n(context, "folders_drafts");
+      case FolderType.spam:
+        return i18n(context, "folders_spam");
+      case FolderType.trash:
+        return i18n(context, "folders_trash");
+      default:
+        return folder.name;
+    }
+  }
+
+  static Widget getIcon(Folder folder) {
+    switch (folder.folderType) {
+      case FolderType.inbox:
+        return Icon(Icons.inbox);
+      case FolderType.sent:
+        return Icon(Icons.send);
+      case FolderType.drafts:
+        return Icon(Icons.drafts);
+      case FolderType.spam:
+        return SvgIcon(AppAssets.spam);
+      case FolderType.trash:
+        return Icon(MdiIcons.trashCanOutline);
+      case FolderType.virus:
+        return Icon(Icons.bug_report);
+      case FolderType.starred:
+        return Icon(Icons.star);
+      case FolderType.template:
+        return Icon(MdiIcons.fileDocumentEditOutline);
+      case FolderType.system:
+        return Icon(Icons.devices);
+      case FolderType.user:
+        return Icon(Icons.folder);
+      case FolderType.unknown:
+        return Icon(Icons.device_unknown);
+      default:
+        return null;
     }
   }
 }

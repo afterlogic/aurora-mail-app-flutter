@@ -346,5 +346,8 @@
   "keys_will_be_import_to_contacts": "This keys will be import to contacts",
   "for_these keys_contacts_will_be_created": "For these keys contacts will be created",
   "your_keys": "Your keys",
-  "contact_public_keys": "Contact public keys"
+  "contact_public_keys": "Contact public keys",
+  "move_to": "Move to: ",
+  "paste": "Paste",
+  "move_to_folder": "Move to folder"
 }

@@ -108,7 +108,7 @@ class MessagesListMethods {
 
       futures.add(_mailApi.moveMessage(
         uids: uids,
-        folderRawName: folder,
+        fromFolder: folder,
         toFolder: toFolderName,
       ));
 
@@ -121,5 +121,21 @@ class MessagesListMethods {
   Future emptyFolder(String folder) async {
     await _mailApi.clearFolder(folder);
     await _mailDao.clearFolder(folder);
+  }
+
+  Future moveToFolder(List<Message> messages, Folder folder) async {
+    final splitToFolder = <String, List<int>>{};
+    for (var message in messages) {
+      final uids = splitToFolder[message.folder] ?? [];
+      uids.add(message.uid);
+      splitToFolder[message.folder] = uids;
+    }
+    for (var value in splitToFolder.entries) {
+      await _mailApi.moveMessage(
+        uids: value.value,
+        fromFolder: value.key,
+        toFolder: folder.fullNameRaw,
+      );
+    }
   }
 }

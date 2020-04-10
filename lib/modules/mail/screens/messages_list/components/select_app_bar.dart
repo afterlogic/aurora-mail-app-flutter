@@ -5,6 +5,7 @@ import 'package:aurora_mail/modules/mail/blocs/mail_bloc/mail_state.dart';
 import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/messages_list_bloc.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/selection_controller.dart';
+import 'package:aurora_mail/modules/mail/screens/messages_list/screen/move_message_route.dart';
 import 'package:aurora_mail/res/icons/app_assets.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
 import 'package:aurora_mail/shared_ui/svg_icon.dart';
@@ -12,7 +13,7 @@ import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class SelectAppBar extends StatefulWidget {
   final SelectionController<int, Message> controller;
@@ -75,6 +76,12 @@ class _SelectAppBarState extends BState<SelectAppBar> {
                       onPressed: () => _spam(false),
                     ),
                   IconButton(
+                    icon: Icon(
+                      MdiIcons.fileMove,
+                    ),
+                    onPressed: _move,
+                  ),
+                  IconButton(
                     icon: Icon(Icons.delete_outline),
                     onPressed: _delete,
                   ),
@@ -110,5 +117,18 @@ class _SelectAppBarState extends BState<SelectAppBar> {
       ));
       widget.controller.enable = false;
     }
+  }
+
+  void _move() {
+    final messages = widget.controller.selected.values.toList();
+    widget.controller.enable = false;
+    Navigator.pushNamed(
+      context,
+      MoveMessageRoute.name,
+      arguments: MoveMessageRouteArg(
+        messages,
+        BlocProvider.of<MessagesListBloc>(context),
+      ),
+    );
   }
 }

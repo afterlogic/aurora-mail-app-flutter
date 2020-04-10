@@ -19,6 +19,7 @@ import 'package:aurora_mail/modules/mail/screens/message_view/components/message
 import 'package:aurora_mail/modules/mail/screens/message_view/components/route_with_finish_callback.dart';
 import 'package:aurora_mail/modules/mail/screens/message_view/dialog/request_password_dialog.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
+import 'package:aurora_mail/modules/mail/screens/messages_list/screen/move_message_route.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
@@ -138,6 +139,17 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
         return null;
       case MailViewAppBarAction.delete:
         return _deleteMessage();
+      case MailViewAppBarAction.move:
+        Navigator.pop(context);
+        Navigator.pushNamed(
+          context,
+          MoveMessageRoute.name,
+          arguments: MoveMessageRouteArg(
+            [widget.message],
+            BlocProvider.of<MessagesListBloc>(context),
+          ),
+        );
+        break;
     }
   }
 

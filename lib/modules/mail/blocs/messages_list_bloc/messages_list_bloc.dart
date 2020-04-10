@@ -33,6 +33,7 @@ class MessagesListBloc extends Bloc<MessagesListEvent, MessagesListState> {
     if (event is StopMessagesRefresh) yield MessagesRefreshed();
     if (event is DeleteMessages) yield* _deleteMessage(event);
     if (event is MoveMessages) yield* _moveMessages(event);
+    if (event is MoveToFolderMessages) yield* _moveToFolder(event);
     if (event is EmptyFolder) yield* _emptyFolder(event);
   }
 
@@ -89,6 +90,15 @@ class MessagesListBloc extends Bloc<MessagesListEvent, MessagesListState> {
   Stream<MessagesListState> _moveMessages(MoveMessages event) async* {
     try {
       await _methods.moveMessages(event.messages, event.toFolder);
+      yield MessagesMoved();
+    } catch (err, s) {
+      yield MailError(formatError(err, s));
+    }
+  }
+
+  Stream<MessagesListState> _moveToFolder(MoveToFolderMessages event) async* {
+    try {
+      await _methods.moveToFolder(event.messages, event.folder);
       yield MessagesMoved();
     } catch (err, s) {
       yield MailError(formatError(err, s));

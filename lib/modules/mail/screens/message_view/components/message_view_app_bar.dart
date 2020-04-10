@@ -11,6 +11,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 enum MailViewAppBarAction {
+  move,
   reply,
   replyToAll,
   forward,
@@ -43,6 +44,12 @@ class MailViewAppBar extends StatelessWidget implements PreferredSizeWidget {
               actions: folderType == null
                   ? []
                   : [
+                      IconButton(
+                        icon: Icon(MdiIcons.fileMove),
+                        tooltip: i18n(context, "move_to_folder"),
+                        onPressed: () =>
+                            onAppBarActionSelected(MailViewAppBarAction.move),
+                      ),
                       if (![FolderType.sent, FolderType.drafts]
                           .contains(folderType))
                         IconButton(

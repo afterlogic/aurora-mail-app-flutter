@@ -17,6 +17,7 @@ import 'package:aurora_mail/modules/mail/screens/compose/compose_route.dart';
 import 'package:aurora_mail/modules/mail/screens/message_view/components/route_with_finish_callback.dart';
 import 'package:aurora_mail/modules/mail/screens/message_view/message_view_android.dart';
 import 'package:aurora_mail/modules/mail/screens/message_view/message_view_route.dart';
+import 'package:aurora_mail/modules/mail/screens/messages_list/screen/move_message_route.dart';
 import 'package:aurora_mail/modules/settings/screens/about/about_android.dart';
 import 'package:aurora_mail/modules/settings/screens/common_settings/common_settings_android.dart';
 import 'package:aurora_mail/modules/settings/screens/common_settings/common_settings_route.dart';
@@ -45,6 +46,7 @@ import 'auth/screens/two_factor_auth/two_factor_auth_widget.dart';
 import 'mail/blocs/mail_bloc/mail_bloc.dart';
 import 'mail/screens/messages_list/messages_list_android.dart';
 import 'mail/screens/messages_list/messages_list_route.dart';
+import 'mail/screens/messages_list/screen/move_message.dart';
 import 'settings/screens/about/about_route.dart';
 
 class AppNavigation {
@@ -102,6 +104,12 @@ class AppNavigation {
         return FadeRoute(
             settings: RouteSettings(name: settings.name),
             builder: (_) => MessagesListAndroid(initSearch: args?.search));
+        break;
+      case MoveMessageRoute.name:
+        final args = settings.arguments as MoveMessageRouteArg;
+        return FadeRoute(
+            settings: RouteSettings(name: settings.name),
+            builder: (_) => MoveMessage(args.messages,args.bloc));
         break;
 
       case MessageViewRoute.name:

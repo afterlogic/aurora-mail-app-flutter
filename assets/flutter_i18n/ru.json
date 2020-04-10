@@ -346,5 +346,8 @@
   "keys_will_be_import_to_contacts": "Эти ключи будут экспортированны в контакты",
   "for_these keys_contacts_will_be_created": "Для этих ключей будут созданны контакты",
   "your_keys": "Ваши ключи",
-  "contact_public_keys": "Публичные ключи контактов"
+  "contact_public_keys": "Публичные ключи контактов",
+  "move_to": "Переместить в: ",
+  "paste": "Вставить",
+  "move_to_folder": "Переместить в папку"
 }

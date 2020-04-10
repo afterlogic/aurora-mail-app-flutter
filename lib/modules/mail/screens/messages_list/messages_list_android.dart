@@ -388,7 +388,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
           i18n(
             context,
             "empty_folder_description",
-            {"folder": MailFolder.getTitle(context, _selectedFolder)},
+            {"folder": FolderHelper.getTitle(context, _selectedFolder)},
           ),
           i18n(context, "btn_delete"),
           destructibleAction: true,

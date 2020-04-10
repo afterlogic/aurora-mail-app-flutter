@@ -444,9 +444,9 @@ class MailApi {
   }
 
   Future moveMessage(
-      {List<int> uids, String folderRawName, String toFolder}) async {
+      {List<int> uids, String fromFolder, String toFolder}) async {
     final parameters = json.encode({
-      "Folder": folderRawName,
+      "Folder": fromFolder,
       "ToFolder": toFolder,
       "AccountID": _accountId,
       "Uids": uids.join(","),
@@ -477,4 +477,6 @@ class MailApi {
       throw WebMailApiError(res);
     }
   }
+
+
 }
