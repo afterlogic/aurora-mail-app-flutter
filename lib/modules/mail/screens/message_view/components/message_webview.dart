@@ -193,7 +193,7 @@ class _MessageWebViewState extends BState<MessageWebView> {
   _onWebViewNavigateRequest(WebViewStateChanged state) async {
     if (state.type == WebViewState.startLoad) {
       if (state.url.endsWith(MessageWebViewActions.SHOW_INFO)) {
-        flutterWebviewPlugin.stopLoading();
+        flutterWebviewPlugin.goBack();
       } else if (state.url.endsWith(MessageWebViewActions.SHOW_ATTACHMENTS)) {
         final messageViewBloc = BlocProvider.of<MessageViewBloc>(context);
         AttachmentsDialog.show(context, widget.attachments, messageViewBloc);
@@ -204,10 +204,10 @@ class _MessageWebViewState extends BState<MessageWebView> {
             state.url.split(MessageWebViewActions.DOWNLOAD_ATTACHMENT);
         final downloadUrl = parts[parts.length - 2];
         _startDownload(downloadUrl);
-        flutterWebviewPlugin.stopLoading();
+        flutterWebviewPlugin.goBack();
       } else if (state.url != _getHtmlUri(_htmlData)) {
         launch(state.url);
-        flutterWebviewPlugin.stopLoading();
+        flutterWebviewPlugin.goBack();
       } else {
 //      return NavigationDecision.navigate;
       }
