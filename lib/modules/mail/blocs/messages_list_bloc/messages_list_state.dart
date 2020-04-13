@@ -1,4 +1,5 @@
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/modules/mail/repository/search_util.dart';
 import 'package:aurora_mail/utils/always_non_equal_object.dart';
 import 'package:equatable/equatable.dart';
 
@@ -16,14 +17,14 @@ class MessagesEmpty extends MessagesListState {}
 class SubscribedToMessages extends MessagesListState with AlwaysNonEqualObject {
   final Stream<List<Message>> Function(int page) stream;
   final MessagesFilter filter;
-  final String searchTerm;
+  final List<SearchParams> searchParams;
   final bool isSent;
   final String key;
   final String folder;
 
   SubscribedToMessages(
     this.stream,
-    this.searchTerm,
+    this.searchParams,
     this.isSent,
     this.key,
     this.filter,
@@ -31,7 +32,7 @@ class SubscribedToMessages extends MessagesListState with AlwaysNonEqualObject {
   );
 
   @override
-  List<Object> get props => [filter, isSent, searchTerm, key];
+  List<Object> get props => [filter, isSent, searchParams, key];
 }
 
 class MessagesRefreshed extends MessagesListState with AlwaysNonEqualObject {}

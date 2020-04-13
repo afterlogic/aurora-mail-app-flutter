@@ -17,29 +17,46 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class MailAppBar extends StatefulWidget implements PreferredSizeWidget {
   final String initSearch;
   final SelectionController<int, Message> selectionController;
+  final Function(bool value) onSearch;
 
-  const MailAppBar({this.initSearch, this.selectionController});
+  const MailAppBar({
+    this.initSearch,
+    this.selectionController,
+    Key key,
+    this.onSearch,
+  }) : super(key: key);
 
   @override
-  _MailAppBarState createState() => _MailAppBarState();
+  MailAppBarState createState() => MailAppBarState();
 
   @override
   final Size preferredSize = const Size.fromHeight(kToolbarHeight);
 }
 
-class _MailAppBarState extends BState<MailAppBar> {
-  bool isSearchMode = false;
+class MailAppBarState extends BState<MailAppBar> {
+  final searchKey = GlobalKey<SearchBarState>();
+  TextEditingController searchCtrl;
+  bool _isSearchMode = false;
+
+  bool get isSearchMode => _isSearchMode;
+
+  String get searchText => searchCtrl?.text;
+
+  set isSearchMode(bool value) {
+    _isSearchMode = value;
+    widget.onSearch(value);
+  }
+
   bool isSelectMode = false;
-  String initSearch;
 
   @override
   void initState() {
-    initSearch = widget.initSearch;
-    if (initSearch != null) {
+    searchCtrl = TextEditingController(text: widget.initSearch ?? "");
+    if (widget.initSearch != null) {
       isSearchMode = true;
     }
-    super.initState();
     widget.selectionController.addListener(onSelect);
+    super.initState();
   }
 
   @override
@@ -53,6 +70,13 @@ class _MailAppBarState extends BState<MailAppBar> {
       isSelectMode = widget.selectionController.enable;
       setState(() {});
     }
+  }
+
+  search(String text) {
+    isSearchMode = true;
+    searchCtrl.text = text;
+    searchKey.currentState.search();
+    setState(() {});
   }
 
   String _getTitle(BuildContext context, Folder folder) {
@@ -79,13 +103,13 @@ class _MailAppBarState extends BState<MailAppBar> {
       child: isSelectMode
           ? SelectAppBar(widget.selectionController)
           : isSearchMode
-              ? SearchBar(initSearch, changeMode)
+              ? SearchBar(searchCtrl, changeMode,key: searchKey,)
               : _buildDefaultAppBar(),
     );
   }
 
   changeMode() {
-    initSearch = null;
+    searchCtrl.clear();
     setState(() => isSearchMode = !isSearchMode);
   }
 

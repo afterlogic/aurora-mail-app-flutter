@@ -349,5 +349,9 @@
   "contact_public_keys": "Публичные ключи контактов",
   "move_to": "Переместить в: ",
   "paste": "Вставить",
-  "move_to_folder": "Переместить в папку"
+  "move_to_folder": "Переместить в папку",
+  "advanced_search": "Advanced search",
+  "text": "Text",
+  "since":"Since",
+  "till": "Till"
 }

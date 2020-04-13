@@ -349,5 +349,9 @@
   "contact_public_keys": "Contact public keys",
   "move_to": "Move to: ",
   "paste": "Paste",
-  "move_to_folder": "Move to folder"
+  "move_to_folder": "Move to folder",
+  "advanced_search": "Расширенный поиск",
+  "text": "Текст",
+  "since":"От",
+  "till": "До"
 }

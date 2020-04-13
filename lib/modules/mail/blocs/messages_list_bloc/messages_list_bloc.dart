@@ -15,8 +15,7 @@ class MessagesListBloc extends Bloc<MessagesListEvent, MessagesListState> {
   final Account account;
   MessagesListMethods _methods;
 
-  String searchTerm = "";
-  SearchPattern searchPattern = SearchPattern.Default;
+  List<SearchParams> searchParams = [];
 
   MessagesListBloc({@required this.user, @required this.account}) {
     _methods = new MessagesListMethods(user: user, account: account);
@@ -39,8 +38,7 @@ class MessagesListBloc extends Bloc<MessagesListEvent, MessagesListState> {
 
   Stream<MessagesListState> _subscribeToMessages(
       SubscribeToMessages event) async* {
-    searchTerm = event.searchTerm ?? "";
-    searchPattern = event.pattern ?? SearchPattern.Default;
+    searchParams = event.searchParams ?? [];
     try {
       final type = Folder.getFolderTypeFromNumber(event.currentFolder.type);
       final isSent = type == FolderType.sent || type == FolderType.drafts;
@@ -49,8 +47,7 @@ class MessagesListBloc extends Bloc<MessagesListEvent, MessagesListState> {
             event.currentFolder,
             event.filter == MessagesFilter.starred,
             event.filter == MessagesFilter.unread,
-            searchTerm,
-            searchPattern,
+            searchParams,
             user,
             account,
             page,
@@ -58,7 +55,7 @@ class MessagesListBloc extends Bloc<MessagesListEvent, MessagesListState> {
 
       yield SubscribedToMessages(
         stream,
-        searchTerm,
+        searchParams,
         isSent,
         event.props.toString(),
         event.filter,
@@ -69,7 +66,7 @@ class MessagesListBloc extends Bloc<MessagesListEvent, MessagesListState> {
       print(s);
       yield SubscribedToMessages(
         null,
-        searchTerm,
+        searchParams,
         false,
         event.props.toString(),
         event.filter,

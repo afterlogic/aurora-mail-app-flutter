@@ -13,11 +13,13 @@ import 'package:aurora_mail/modules/mail/screens/message_view/message_view_route
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/main_drawer.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/selection_controller.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/stream_pagination_list.dart';
+import 'package:aurora_mail/modules/mail/screens/messages_list/dialog/advanced_search.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
 import 'package:aurora_mail/shared_ui/mail_bottom_app_bar.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_mail/utils/show_dialog.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
@@ -43,10 +45,10 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
   MessagesListBloc _messagesListBloc;
   MailBloc _mailBloc;
   ContactsBloc _contactsBloc;
-
+  bool isSearch = false;
   Completer _refreshCompleter;
   Folder _selectedFolder;
-
+  final appBarKey = GlobalKey<MailAppBarState>();
   final _refreshKey = GlobalKey<RefreshIndicatorState>();
 
   @override
@@ -65,7 +67,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
       if (shared.isNotEmpty) {
         Navigator.popUntil(
           context,
-              (item) => item.settings.name == MessagesListRoute.name,
+          (item) => item.settings.name == MessagesListRoute.name,
         );
         Navigator.pushNamed(
           context,
@@ -118,7 +120,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
   void _onMessageSelected(Message item) async {
     final message = await _mailBloc.getFullMessage(item);
     final draftsFolder = (_mailBloc.state as FoldersLoaded).folders.firstWhere(
-            (f) => f.folderType == FolderType.drafts,
+        (f) => f.folderType == FolderType.drafts,
         orElse: () => null);
 
     if (draftsFolder != null && message.folder == draftsFolder.fullNameRaw) {
@@ -174,11 +176,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
   @override
   Widget build(BuildContext context) {
     final authKey =
-    BlocProvider
-        .of<AuthBloc>(context)
-        .currentAccount
-        .localId
-        .toString();
+        BlocProvider.of<AuthBloc>(context).currentAccount.localId.toString();
     return MultiBlocProvider(
       key: Key(authKey),
       providers: [
@@ -196,9 +194,13 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
         },
         child: Scaffold(
           appBar: MailAppBar(
-            initSearch: widget.initSearch,
-            selectionController: selectionController,
-          ),
+              key: appBarKey,
+              initSearch: widget.initSearch,
+              selectionController: selectionController,
+              onSearch: (value) {
+                isSearch = value;
+                setState(() {});
+              }),
           drawer: MainDrawer(),
           body: MultiBlocListener(
             listeners: [
@@ -260,7 +262,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
               child: BlocBuilder<MessagesListBloc, MessagesListState>(
                   bloc: _messagesListBloc,
                   condition: (prevState, state) =>
-                  state is SubscribedToMessages,
+                      state is SubscribedToMessages,
                   builder: (context, state) {
                     Widget child;
                     if (state is SubscribedToMessages) {
@@ -282,16 +284,15 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
             ),
           ),
           bottomNavigationBar:
-          MailBottomAppBar(selectedRoute: MailBottomAppBarRoutes.mail),
+              MailBottomAppBar(selectedRoute: MailBottomAppBarRoutes.mail),
           floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
           floatingActionButton: AMFloatingActionButton(
             child: Icon(MdiIcons.pen),
-            onPressed: () =>
-                Navigator.pushNamed(context, ComposeRoute.name,
-                    arguments: ComposeScreenArgs(
-                      mailBloc: _mailBloc,
-                      contactsBloc: _contactsBloc,
-                    )),
+            onPressed: () => Navigator.pushNamed(context, ComposeRoute.name,
+                arguments: ComposeScreenArgs(
+                  mailBloc: _mailBloc,
+                  contactsBloc: _contactsBloc,
+                )),
           ),
         ),
       ),
@@ -302,13 +303,28 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
 
   final selectionController = SelectionController<int, Message>();
 
-  Widget _buildMessagesStream(Stream<List<Message>> Function(int page) stream,
-      MessagesFilter filter,
-      bool isSent,
-      String key,
-      String folder,) {
+  Widget _buildMessagesStream(
+    Stream<List<Message>> Function(int page) stream,
+    MessagesFilter filter,
+    bool isSent,
+    String key,
+    String folder,
+  ) {
     return Column(
       children: <Widget>[
+        if (isSearch)
+          FlatButton(
+            onPressed: () async {
+              final result = await dialog(
+                context: context,
+                builder: (_) => AdvancedSearch(appBarKey.currentState.searchText),
+              );
+              if (result is String && result.isNotEmpty) {
+                appBarKey.currentState.search(result);
+              }
+            },
+            child: Text(i18n(context, "advanced_search")),
+          ),
         if (filter == MessagesFilter.unread)
           Column(
             children: <Widget>[
@@ -327,7 +343,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
             folder: folder,
             selectionController: selectionController,
             header: [FolderType.spam, FolderType.trash]
-                .contains(_selectedFolder.folderType)
+                    .contains(_selectedFolder.folderType)
                 ? _emptyFolder
                 : null,
             builder: (context, item, threads) {
@@ -382,22 +398,22 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
       onTap: messageCount == 0
           ? null
           : () async {
-        final delete = await ConfirmationDialog.show(
-          context,
-          i18n(context, emptyFolder),
-          i18n(
-            context,
-            "empty_folder_description",
-            {"folder": FolderHelper.getTitle(context, _selectedFolder)},
-          ),
-          i18n(context, "btn_delete"),
-          destructibleAction: true,
-        );
-        if (delete == true) {
-          _messagesListBloc.add(EmptyFolder(_selectedFolder.fullNameRaw));
-          selectionController.enable = false;
-        }
-      },
+              final delete = await ConfirmationDialog.show(
+                context,
+                i18n(context, emptyFolder),
+                i18n(
+                  context,
+                  "empty_folder_description",
+                  {"folder": FolderHelper.getTitle(context, _selectedFolder)},
+                ),
+                i18n(context, "btn_delete"),
+                destructibleAction: true,
+              );
+              if (delete == true) {
+                _messagesListBloc.add(EmptyFolder(_selectedFolder.fullNameRaw));
+                selectionController.enable = false;
+              }
+            },
     );
   }
 

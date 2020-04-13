@@ -82,7 +82,8 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
           context,
           MessagesListRoute.name,
           arguments: MessagesListRouteArg(
-            search: searchUtil.searchByEmail(_contactInfo.viewEmail),
+            search:
+                searchUtil.wrap(SearchPattern.Email, _contactInfo.viewEmail),
           ),
         );
         break;

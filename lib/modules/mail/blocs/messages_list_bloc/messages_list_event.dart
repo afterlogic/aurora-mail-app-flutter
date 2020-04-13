@@ -15,15 +15,12 @@ abstract class MessagesListEvent extends Equatable {
 class SubscribeToMessages extends MessagesListEvent {
   final Folder currentFolder;
   final MessagesFilter filter;
-  final String searchTerm;
-  final SearchPattern pattern;
+  final List<SearchParams> searchParams;
 
-  const SubscribeToMessages(this.currentFolder, this.filter,
-      [this.searchTerm, this.pattern]);
+  const SubscribeToMessages(this.currentFolder, this.filter, [this.searchParams]);
 
   @override
-  List<Object> get props =>
-      [currentFolder.fullNameRaw, filter, searchTerm, pattern];
+  List<Object> get props => [currentFolder.fullNameRaw, filter, searchParams.hashCode];
 }
 
 class StopMessagesRefresh extends MessagesListEvent {}

@@ -13,26 +13,25 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SearchBar extends StatefulWidget {
   final Function onCancel;
-  final String initSearch;
+  final TextEditingController searchCtrl;
 
-  const SearchBar(this.initSearch, this.onCancel);
+  const SearchBar(this.searchCtrl, this.onCancel, {Key key}) : super(key: key);
 
   @override
-  _SearchBarState createState() => _SearchBarState();
+  SearchBarState createState() => SearchBarState();
 }
 
-class _SearchBarState extends BState<SearchBar> {
+class SearchBarState extends BState<SearchBar> {
   MailBloc mailBloc;
   MessagesListBloc messagesListBloc;
   Timer debounce;
-  TextEditingController searchCtrl;
 
   @override
   void initState() {
     super.initState();
-    searchCtrl = TextEditingController(text: widget.initSearch ?? "");
-    if (widget.initSearch != null) {
-      _getMessages(widget.initSearch);
+
+    if (widget.searchCtrl.text.isNotEmpty) {
+      _getMessages(widget.searchCtrl.text);
     }
   }
 
@@ -48,12 +47,9 @@ class _SearchBarState extends BState<SearchBar> {
     debounce = Timer(Duration(milliseconds: val == null ? 0 : 500), () {
       final mailState = mailBloc.state as FoldersLoaded;
       final params = searchUtil.searchParams(val);
-      messagesListBloc.add(SubscribeToMessages(
-        mailState.selectedFolder,
-        mailState.filter,
-        params.value,
-        params.pattern,
-      ));
+      messagesListBloc.add(
+        SubscribeToMessages(mailState.selectedFolder, mailState.filter, params),
+      );
     });
   }
 
@@ -71,7 +67,7 @@ class _SearchBarState extends BState<SearchBar> {
           hintStyle: theme.textTheme.display1,
         ),
         onChanged: _getMessages,
-        controller: searchCtrl,
+        controller: widget.searchCtrl,
       ),
       actions: <Widget>[
         IconButton(
@@ -79,7 +75,7 @@ class _SearchBarState extends BState<SearchBar> {
           onPressed: () {
             setState(() {
               _getMessages(null);
-              searchCtrl.clear();
+              widget.searchCtrl.clear();
               widget.onCancel();
             });
             _getMessages(null);
@@ -87,5 +83,9 @@ class _SearchBarState extends BState<SearchBar> {
         ),
       ],
     );
+  }
+
+  search() {
+    _getMessages(widget.searchCtrl.text);
   }
 }
