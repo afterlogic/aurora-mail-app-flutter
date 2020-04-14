@@ -350,8 +350,10 @@
   "move_to": "Переместить в: ",
   "paste": "Вставить",
   "move_to_folder": "Переместить в папку",
-  "advanced_search": "Advanced search",
-  "text": "Text",
-  "since":"Since",
-  "till": "Till"
+  "advanced_search": "Расширенный поиск",
+  "text": "Текст",
+  "since":"От",
+  "till": "До",
+  "warning": "Предупреждение",
+  "share_private_key_warning": "You are going to share you private PGP key. The key must be kept from the 3-thd party. Do you want to continue?"
 }

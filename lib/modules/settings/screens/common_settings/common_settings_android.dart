@@ -1,4 +1,5 @@
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
+import 'package:aurora_mail/modules/settings/models/language.dart';
 import 'package:aurora_mail/modules/settings/screens/common_settings/components/theme_selection_dialog.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
@@ -63,18 +64,19 @@ class _CommonSettingsAndroidState extends BState<CommonSettingsAndroid> {
                     style: theme.textTheme.caption,
                   ),
                 ),
-                ListTile(
-                  leading: AMCircleIcon(Icons.translate),
-                  title: Text(i18n(context, "settings_language")),
-                  onTap: () => LanguageSelectionDialog.show(context,
-                      state.language, (lang) => bloc.add(SetLanguage(lang))),
-                  trailing: Text(
-                    state.language == null
-                        ? i18n(context, "settings_language_system")
-                        : state.language.name,
-                    style: theme.textTheme.caption,
+                if (Language.availableLanguages.length > 2)
+                  ListTile(
+                    leading: AMCircleIcon(Icons.translate),
+                    title: Text(i18n(context, "settings_language")),
+                    onTap: () => LanguageSelectionDialog.show(context,
+                        state.language, (lang) => bloc.add(SetLanguage(lang))),
+                    trailing: Text(
+                      state.language == null
+                          ? i18n(context, "settings_language_system")
+                          : state.language.name,
+                      style: theme.textTheme.caption,
+                    ),
                   ),
-                ),
               ],
             );
           } else {

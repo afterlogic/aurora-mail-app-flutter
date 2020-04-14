@@ -16,3 +16,4 @@ cryptoEnable: true
 selfDestructingEmail: false
 
 _version: 1.0.1
+supportLanguage: "en"

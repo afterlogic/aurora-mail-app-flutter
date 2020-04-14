@@ -52,9 +52,16 @@ class PgpKeyScreen extends StatelessWidget {
                   width: double.infinity,
                   child: AMButton(
                     child: Text(i18n(context, "share")),
-                    onPressed: () {
-                      bloc.add(ShareKeys([pgpKey]));
-                      Navigator.pop(context);
+                    onPressed: () async {
+                      final result = await ConfirmationDialog.show(
+                          context,
+                          i18n(context, "warning"),
+                          i18n(context, "share_private_key_warning"),
+                          i18n(context, "share"));
+                      if (result == true) {
+                        bloc.add(ShareKeys([pgpKey]));
+                        Navigator.pop(context);
+                      }
                     },
                   ),
                 ),
