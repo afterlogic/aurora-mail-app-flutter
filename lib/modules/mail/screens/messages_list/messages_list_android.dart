@@ -25,12 +25,10 @@ import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:receive_sharing/recive_sharing.dart';
 
 import 'components/mail_app_bar.dart';
 import 'components/mail_folder.dart';
 import 'components/message_item.dart';
-import 'messages_list_route.dart';
 
 class MessagesListAndroid extends StatefulWidget {
   final String initSearch;
@@ -39,6 +37,9 @@ class MessagesListAndroid extends StatefulWidget {
 
   @override
   _MessagesListAndroidState createState() => _MessagesListAndroidState();
+
+  static Function(List<File> files, List<String> text) onShare;
+  static List shareHolder;
 }
 
 class _MessagesListAndroidState extends BState<MessagesListAndroid> {
@@ -54,33 +55,28 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
   @override
   void initState() {
     super.initState();
-    ReceiveSharing.getMediaStream().listen((List<SharedMediaFile> shared) {
-      final texts = <String>[];
-      final files = <File>[];
-      for (var value in shared) {
-        if (value.isText) {
-          texts.add(value.text);
-        } else {
-          files.add(File(value.path));
-        }
-      }
-      if (shared.isNotEmpty) {
-        Navigator.popUntil(
-          context,
-          (item) => item.settings.name == MessagesListRoute.name,
-        );
+    MessagesListAndroid.onShare = (files, text) {
+      if (files?.isNotEmpty == true || text?.isNotEmpty == true) {
         Navigator.pushNamed(
           context,
           ComposeRoute.name,
           arguments: ComposeScreenArgs(
             mailBloc: _mailBloc,
             contactsBloc: _contactsBloc,
-            composeAction: InitWithAttachment(files, texts),
+            composeAction: InitWithAttachment(files, text),
           ),
         );
       }
-    });
+    };
     _initBlocs();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (MessagesListAndroid.shareHolder != null) {
+        MessagesListAndroid.onShare(
+            MessagesListAndroid.shareHolder[0] as List<File>,
+            MessagesListAndroid.shareHolder[1] as List<String>);
+        MessagesListAndroid.shareHolder = null;
+      }
+    });
   }
 
   @override
@@ -93,6 +89,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
   void dispose() {
     super.dispose();
     _messagesListBloc.close();
+    MessagesListAndroid.onShare = null;
   }
 
   void _initBlocs() {
@@ -317,7 +314,8 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
             onPressed: () async {
               final result = await dialog(
                 context: context,
-                builder: (_) => AdvancedSearch(appBarKey.currentState.searchText),
+                builder: (_) =>
+                    AdvancedSearch(appBarKey.currentState.searchText),
               );
               if (result is String && result.isNotEmpty) {
                 appBarKey.currentState.search(result);

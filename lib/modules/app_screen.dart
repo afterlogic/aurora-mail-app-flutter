@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:aurora_mail/background/background_helper.dart';
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
+import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_android.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/shared_ui/restart_widget.dart';
@@ -15,6 +18,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_i18n/flutter_i18n_delegate.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:receive_sharing/recive_sharing.dart';
 import 'package:theme/app_theme.dart';
 import 'package:webmail_api_client/webmail_api_client.dart';
 
@@ -43,6 +47,49 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
     });
     BackgroundHelper.current = AppLifecycleState.resumed;
     _initApp();
+    ReceiveSharing.getInitialMedia().then((shared) {
+      final texts = <String>[];
+      final files = <File>[];
+      for (var value in shared) {
+        if (value.isText) {
+          texts.add(value.text);
+        } else {
+          files.add(File(value.path));
+        }
+      }
+      if (texts.isNotEmpty || files.isNotEmpty) {
+        MessagesListAndroid.shareHolder = [files, texts];
+        _navKey.currentState.pushNamedAndRemoveUntil(
+          MessagesListRoute.name,
+          (value) => false,
+        );
+      }
+    });
+    ReceiveSharing.getMediaStream().listen((shared) {
+      final texts = <String>[];
+      final files = <File>[];
+      for (var value in shared) {
+        if (value.isText) {
+          texts.add(value.text);
+        } else {
+          files.add(File(value.path));
+        }
+      }
+      if (texts.isNotEmpty || files.isNotEmpty) {
+        if (MessagesListAndroid.onShare != null) {
+          _navKey.currentState.popUntil(
+            (value) => value.settings.name == MessagesListRoute.name,
+          );
+          MessagesListAndroid.onShare(files, texts);
+        } else {
+          MessagesListAndroid.shareHolder = [files, texts];
+          _navKey.currentState.pushNamedAndRemoveUntil(
+            MessagesListRoute.name,
+            (value) => false,
+          );
+        }
+      }
+    });
   }
 
   @override

@@ -102,14 +102,17 @@ class AppNavigation {
       case MessagesListRoute.name:
         final args = settings.arguments as MessagesListRouteArg;
         return FadeRoute(
-            settings: RouteSettings(name: settings.name),
-            builder: (_) => MessagesListAndroid(initSearch: args?.search));
+          settings: RouteSettings(name: settings.name),
+          builder: (_) => MessagesListAndroid(
+            initSearch: args?.search,
+          ),
+        );
         break;
       case MoveMessageRoute.name:
         final args = settings.arguments as MoveMessageRouteArg;
         return FadeRoute(
             settings: RouteSettings(name: settings.name),
-            builder: (_) => MoveMessage(args.messages,args.bloc));
+            builder: (_) => MoveMessage(args.messages, args.bloc));
         break;
 
       case MessageViewRoute.name:
@@ -177,7 +180,8 @@ class AppNavigation {
                     BlocProvider<MailBloc>.value(value: args.mailBloc),
                     BlocProvider<ContactsBloc>.value(value: args.contactsBloc),
                   ],
-                  child: ContactViewAndroid(args.contact, args.scaffoldState,args.pgpSettingBloc),
+                  child: ContactViewAndroid(
+                      args.contact, args.scaffoldState, args.pgpSettingBloc),
                 ));
         break;
 
