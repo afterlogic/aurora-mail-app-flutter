@@ -41,18 +41,12 @@ class AdvancedSearchState extends State<AdvancedSearch> {
         case SearchPattern.Subject:
           subjectCtrl = TextEditingController(text: item.value);
           break;
-        case SearchPattern.HasAttachment:
-          withAttachment = item.value == "true";
+        case SearchPattern.Has:
+          withAttachment = (item as HasSearchParams).flags?.contains(SearchFlag.Attachment)==true;
           break;
-        case SearchPattern.Since:
-          try {
-            since = dateFormat.parse(item.value);
-          } catch (e) {}
-          break;
-        case SearchPattern.Till:
-          try {
-            till = dateFormat.parse(item.value);
-          } catch (e) {}
+        case SearchPattern.Date:
+            since = (item as DateSearchParams).since;
+            till = (item as DateSearchParams).till;
           break;
         case SearchPattern.Text:
           textCtrl = TextEditingController(text: item.value);
@@ -208,17 +202,11 @@ class AdvancedSearchState extends State<AdvancedSearch> {
       searchString += " ";
     }
     if (withAttachment) {
-      searchString += searchUtil.wrap(SearchPattern.HasAttachment, "true");
+      searchString += searchUtil.wrapFlag([SearchFlag.Attachment]);
       searchString += " ";
     }
-    if (since != null) {
-      searchString +=
-          searchUtil.wrap(SearchPattern.Since, dateFormat.format(since));
-      searchString += " ";
-    }
-    if (till != null) {
-      searchString +=
-          searchUtil.wrap(SearchPattern.Till, dateFormat.format(till));
+    if (since != null || till != null) {
+      searchString += searchUtil.wrapDate(since, till);
       searchString += " ";
     }
     Navigator.pop(context, searchString);

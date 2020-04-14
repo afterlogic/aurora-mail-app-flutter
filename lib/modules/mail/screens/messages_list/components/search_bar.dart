@@ -45,12 +45,16 @@ class SearchBarState extends BState<SearchBar> {
   void _getMessages(String val) {
     if (debounce?.isActive == true) debounce.cancel();
     debounce = Timer(Duration(milliseconds: val == null ? 0 : 500), () {
-      final mailState = mailBloc.state as FoldersLoaded;
-      final params = searchUtil.searchParams(val);
-      messagesListBloc.add(
-        SubscribeToMessages(mailState.selectedFolder, mailState.filter, params),
-      );
+      _search(val);
     });
+  }
+
+  void _search(String val) {
+    final mailState = mailBloc.state as FoldersLoaded;
+    final params = searchUtil.searchParams(val);
+    messagesListBloc.add(
+      SubscribeToMessages(mailState.selectedFolder, mailState.filter, params),
+    );
   }
 
   @override
@@ -74,11 +78,10 @@ class SearchBarState extends BState<SearchBar> {
           icon: Icon(Icons.close),
           onPressed: () {
             setState(() {
-              _getMessages(null);
               widget.searchCtrl.clear();
               widget.onCancel();
             });
-            _getMessages(null);
+            _search(null);
           },
         ),
       ],
@@ -86,6 +89,6 @@ class SearchBarState extends BState<SearchBar> {
   }
 
   search() {
-    _getMessages(widget.searchCtrl.text);
+    _search(widget.searchCtrl.text);
   }
 }

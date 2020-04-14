@@ -25,14 +25,16 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
 //        .get();
 //  }
 
-  Stream<List<Message>> getMessages(String folder,
-      int userLocalId,
-      List<SearchParams> searchParams,
-      int accountEntityId,
-      bool starredOnly,
-      bool unreadOnly,
-      int limit,
-      int offset,) {
+  Stream<List<Message>> getMessages(
+    String folder,
+    int userLocalId,
+    List<SearchParams> searchParams,
+    int accountEntityId,
+    bool starredOnly,
+    bool unreadOnly,
+    int limit,
+    int offset,
+  ) {
     List<Variable> params = [];
     final fields = <GeneratedColumn>{};
     fields.add(mail.uid);
@@ -61,9 +63,7 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
       final searchTerm = item.value;
       if (item.pattern == SearchPattern.Email) {
         query +=
-        "AND (${mail.toForSearch.escapedName} LIKE ? OR ${mail.fromForSearch
-            .escapedName} LIKE ? OR ${mail.ccForSearch
-            .escapedName} LIKE ? OR ${mail.bccForSearch.escapedName} LIKE ?) ";
+            "AND (${mail.toForSearch.escapedName} LIKE ? OR ${mail.fromForSearch.escapedName} LIKE ? OR ${mail.ccForSearch.escapedName} LIKE ? OR ${mail.bccForSearch.escapedName} LIKE ?) ";
         params.add(Variable.withString("%$searchTerm%"));
         params.add(Variable.withString("%$searchTerm%"));
         params.add(Variable.withString("%$searchTerm%"));
@@ -80,44 +80,34 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
       } else if (item.pattern == SearchPattern.Text) {
         query += "AND (${mail.bodyForSearch.escapedName} LIKE ?) ";
         params.add(Variable.withString("%$searchTerm%"));
-      } else if (item.pattern == SearchPattern.Since) {
-        try {
+      } else if (item.pattern == SearchPattern.Date) {
+        final date = item as DateSearchParams;
+        if (date.since != null) {
           params.add(
-            Variable.withInt(
-                dateFormat
-                    .parse(searchTerm)
-                    .millisecondsSinceEpoch ~/ 1000),
+            Variable.withInt(date.since.millisecondsSinceEpoch ~/ 1000),
           );
           query += "AND (${mail.timeStampInUTC.escapedName} > ?) ";
-        } catch (e) {}
-      } else if (item.pattern == SearchPattern.Till) {
-        try {
+        }
+        if (date.till != null) {
           params.add(
-            Variable.withInt(dateFormat
-                    .parse(searchTerm)
-                    .millisecondsSinceEpoch ~/ 1000),
+            Variable.withInt(date.till.millisecondsSinceEpoch ~/ 1000),
           );
-
           query += "AND (${mail.timeStampInUTC.escapedName} < ?) ";
-        } catch (e) {}
-      } else if (item.pattern == SearchPattern.HasAttachment) {
-        if(item.value=="true") {
+        }
+      } else if (item.pattern == SearchPattern.Has) {
+        final flag = item as HasSearchParams;
+        if (flag.flags?.contains(SearchFlag.Attachment) == true) {
           query +=
-          "AND (${mail.attachmentsForSearch.escapedName} IS NOT NULL) ";
-        }else if(item.value=="false"){
-          "AND (${mail.attachmentsForSearch.escapedName} IS NULL) ";
+              "AND (${mail.hasAttachments.escapedName} = ?) ";
+          params.add(
+            Variable.withBool(true),
+          );
         }
       } else if (item.pattern == SearchPattern.Default &&
           searchTerm != null &&
           searchTerm.isNotEmpty) {
         query +=
-        "AND (${mail.subject.escapedName} LIKE ? OR ${mail.toForSearch
-            .escapedName} LIKE ? OR ${mail.fromForSearch
-            .escapedName} LIKE ? OR ${mail.ccForSearch
-            .escapedName} LIKE ? OR ${mail.bccForSearch
-            .escapedName} LIKE ? OR ${mail.bodyForSearch
-            .escapedName} LIKE ? OR ${mail.attachmentsForSearch
-            .escapedName} LIKE ?) ";
+            "AND (${mail.subject.escapedName} LIKE ? OR ${mail.toForSearch.escapedName} LIKE ? OR ${mail.fromForSearch.escapedName} LIKE ? OR ${mail.ccForSearch.escapedName} LIKE ? OR ${mail.bccForSearch.escapedName} LIKE ? OR ${mail.bodyForSearch.escapedName} LIKE ? OR ${mail.attachmentsForSearch.escapedName} LIKE ?) ";
         params.add(Variable.withString("%$searchTerm%"));
         params.add(Variable.withString("%$searchTerm%"));
         params.add(Variable.withString("%$searchTerm%"));
@@ -145,7 +135,6 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
     return customSelectQuery(query, variables: params, readsFrom: {mail})
         .watch()
         .map((list) {
-
       return list.map((item) {
         return Message.fromData(item.data, db);
       }).toList();
@@ -153,8 +142,7 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
   }
 
   Future<Message> getMessage(int localId) {
-    return (select(mail)
-      ..where((item) => item.localId.equals(localId)))
+    return (select(mail)..where((item) => item.localId.equals(localId)))
         .getSingle();
   }
 
@@ -171,8 +159,7 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
   Future<void> updateMessagesFlags(List<MessageInfo> infos) async {
     return transaction(() async {
       for (final info in infos) {
-        await (update(mail)
-          ..where((m) => m.uid.equals(info.uid))).write(
+        await (update(mail)..where((m) => m.uid.equals(info.uid))).write(
             new MailCompanion(flagsInJson: Value(json.encode(info.flags))));
       }
     });
@@ -184,21 +171,20 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
       final start = i * step;
       final end = min(start + step, uids.length);
       await (delete(mail)
-        ..where((m) => m.uid.isIn(uids.getRange(start, end)))..where((m) =>
-            m.folder.equals(folderRawName)))
+            ..where((m) => m.uid.isIn(uids.getRange(start, end)))
+            ..where((m) => m.folder.equals(folderRawName)))
           .go();
     }
   }
 
   Future clearFolder(String folderRawName) {
-    return (delete(mail)
-      ..where((m) => m.folder.equals(folderRawName))).go();
+    return (delete(mail)..where((m) => m.folder.equals(folderRawName))).go();
   }
 
   Future<int> deleteMessagesFromRemovedFolders(
       List<String> removedFoldersRawNames) async {
     final deletedMessages = await (delete(mail)
-      ..where((m) => isIn(m.folder, removedFoldersRawNames)))
+          ..where((m) => isIn(m.folder, removedFoldersRawNames)))
         .go();
 
     print("deleted messages from removed folders: $deletedMessages");
@@ -207,8 +193,7 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
   }
 
   Future<int> deleteMessagesOfUser(int userLocalId) {
-    return (delete(mail)
-      ..where((m) => m.userLocalId.equals(userLocalId))).go();
+    return (delete(mail)..where((m) => m.userLocalId.equals(userLocalId))).go();
   }
 
   Future<List<Message>> getMessageWithNotBody(List<int> uids) {
@@ -223,10 +208,12 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
     });
   }
 
-  Future addEmptyMessage(List<MessageInfo> messagesInfo,
-      Account account,
-      User user,
-      String folder,) {
+  Future addEmptyMessage(
+    List<MessageInfo> messagesInfo,
+    Account account,
+    User user,
+    String folder,
+  ) {
     final uniqueUidInFolder = "${account.entityId}${account.localId}$folder";
 
     return batch((bath) {
