@@ -41,7 +41,8 @@ dependencies:
   # ui
   flutter_svg: 0.17.3+1
   material_design_icons_flutter: 3.4.5045+1
-  #  webview_flutter: 0.3.19+9
+
+  webview_flutter: 0.3.19+9
   flutter_webview_plugin: 0.3.11
   flutter_speed_dial: 1.2.5
   fluttertoast: 3.1.3

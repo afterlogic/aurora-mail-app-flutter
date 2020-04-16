@@ -29,6 +29,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:html/parser.dart' as html;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:vcf/vcf.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 import 'attachments_dialog.dart';
 
@@ -61,6 +62,7 @@ class MessageWebView extends StatefulWidget {
 
 class _MessageWebViewState extends BState<MessageWebView>
     implements RouteAware {
+  WebViewController _controller;
   final flutterWebviewPlugin = new FlutterWebviewPlugin();
   String _htmlData;
   bool _pageLoaded = true;
@@ -154,7 +156,11 @@ class _MessageWebViewState extends BState<MessageWebView>
     }
 
     if (_htmlData != null) {
-      flutterWebviewPlugin.reloadUrl(_getHtmlUri(htmlData));
+      if(Platform.isAndroid) {
+        flutterWebviewPlugin.reloadUrl(_getHtmlUri(htmlData));
+      }else if(Platform.isIOS) {
+        _controller?.loadUrl(_getHtmlUri(htmlData));
+      }
     }
     setState(() => _htmlData = htmlData);
   }
@@ -240,7 +246,30 @@ class _MessageWebViewState extends BState<MessageWebView>
       );
     }
   }
-
+  FutureOr<NavigationDecision> _onWebViewNavigateRequestIos(
+      NavigationRequest request) async {
+    if (request.url.endsWith(MessageWebViewActions.SHOW_INFO)) {
+      // TODO: implement showing message info
+      return NavigationDecision.prevent;
+    } else if (request.url.endsWith(MessageWebViewActions.SHOW_ATTACHMENTS)) {
+      final messageViewBloc = BlocProvider.of<MessageViewBloc>(context);
+      AttachmentsDialog.show(context, widget.attachments, messageViewBloc);
+      return NavigationDecision.prevent;
+    } else if (request.url
+        .endsWith(MessageWebViewActions.DOWNLOAD_ATTACHMENT)) {
+      final parts =
+      request.url.split(MessageWebViewActions.DOWNLOAD_ATTACHMENT);
+      final downloadUrl = parts[parts.length - 2];
+      _startDownload(downloadUrl);
+      return NavigationDecision.prevent;
+    } else if (request.url != _getHtmlUri(_htmlData)) {
+      launch(request.url);
+      return NavigationDecision.prevent;
+    } else {
+      return NavigationDecision.navigate;
+    }
+  }
+  
   _onWebViewNavigateRequest(WebViewStateChanged state) async {
     print(state.type);
     if (state.type == WebViewState.startLoad) {
@@ -304,6 +333,16 @@ class _MessageWebViewState extends BState<MessageWebView>
         Flexible(
           child: Stack(
             children: [
+              if(Platform.isIOS)
+              WebView(
+                key: Key(widget.message.uid.toString()),
+                initialUrl: _getHtmlUri(_htmlData),
+                javascriptMode: JavascriptMode.unrestricted,
+                onWebViewCreated: (WebViewController c) => _controller = c,
+                navigationDelegate: _onWebViewNavigateRequestIos,
+                onPageFinished: (_) async => setState(() => _pageLoaded = true),
+              ),
+              if(Platform.isAndroid)
               WebviewScaffold(
                 key: Key(widget.message.uid.toString()),
                 url: _getHtmlUri(_htmlData),
@@ -412,6 +451,7 @@ var routeCount=0;
   @override
   void didPopNext() {
     routeCount--;
+    if(Platform.isAndroid)
     if(routeCount==0){
       flutterWebviewPlugin.show();
     }
@@ -420,6 +460,7 @@ var routeCount=0;
   @override
   void didPushNext() {
     routeCount++;
+    if(Platform.isAndroid)
     if(routeCount==1){
       flutterWebviewPlugin.hide();
     }
