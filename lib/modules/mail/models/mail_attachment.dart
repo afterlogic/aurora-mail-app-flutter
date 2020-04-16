@@ -42,33 +42,43 @@ class MailAttachment {
     @required this.thumbnailUrl,
   });
 
-  Future<void> startDownload({
-    @required String taskId,
-    @required Function({String taskId}) cancel,
-    @required Function() onDownloadStart,
-    @required Function() onDownloadEnd,
-    @required Function() onError,
-  }) async {
+  add(String taskId, Function({String taskId}) cancel) {
     currentlyDownloadingAttachments.add(new DownloadTaskProgress(
       taskId: taskId,
       attachmentHash: hash,
       cancel: cancel,
     ));
+  }
 
+  Future<void> startDownload({
+    @required Function() onDownloadStart,
+    @required Function() onDownloadEnd,
+    @required Function() onError,
+  }) async {
     final port = ReceivePort();
     IsolateNameServer.registerPortWithName(
-        port.sendPort, _DOWNLOAD_PORT_NAME + taskId);
-
+      port.sendPort,
+      _DOWNLOAD_PORT_NAME,
+    );
     port.listen((data) {
-      final progress = currentlyDownloadingAttachments
-          .firstWhere((da) => da.taskId == taskId, orElse: () => null);
+      String id = data[0] as String;
+      DownloadTaskStatus status = data[1] as DownloadTaskStatus;
+      int progress = data[2] as int;
+      if ([
+        DownloadTaskStatus.complete,
+        DownloadTaskStatus.failed,
+        DownloadTaskStatus.canceled
+      ].contains(status)) {
+        onDownloadEnd();
+        endDownloading(id);
+      } else {
+        final task = currentlyDownloadingAttachments
+            .firstWhere((da) => da.taskId == id, orElse: () => null);
 
-      if (progress != null)
-        progress.updateProgress(data[2] as int, data[1] as DownloadTaskStatus);
-    }, onDone: () {
-      onDownloadEnd();
-      endDownloading(taskId);
-    }, onError: (err) => onError());
+        task?.updateProgress(progress, status);
+      }
+    });
+    FlutterDownloader.registerCallback(downloadCallback);
 
     onDownloadStart();
   }
@@ -80,7 +90,7 @@ class MailAttachment {
       process.endProcess();
       currentlyDownloadingAttachments.removeWhere((da) => da.taskId == taskId);
     }
-    IsolateNameServer.removePortNameMapping(_DOWNLOAD_PORT_NAME + taskId);
+    IsolateNameServer.removePortNameMapping(_DOWNLOAD_PORT_NAME);
   }
 
   static void downloadCallback(
@@ -90,7 +100,7 @@ class MailAttachment {
   ) {
     print("Not called");
     final SendPort send =
-        IsolateNameServer.lookupPortByName(_DOWNLOAD_PORT_NAME + id);
+        IsolateNameServer.lookupPortByName(_DOWNLOAD_PORT_NAME);
     send.send([id, status, progress]);
   }
 

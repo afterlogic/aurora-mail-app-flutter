@@ -15,5 +15,5 @@ multiAccountEnable: true
 cryptoEnable: true
 selfDestructingEmail: false
 
-_version: 1.0.1
+_version: 1.1.0
 supportLanguage: "en"

@@ -4,7 +4,6 @@ import 'package:aurora_mail/shared_ui/sized_dialog_content.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:crypto_model/crypto_model.dart';
-import 'package:crypto_storage_impl/crypto_storage_impl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

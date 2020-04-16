@@ -254,23 +254,11 @@ class MailApi {
     @required Function() onDownloadStart,
     @required Function(String) onDownloadEnd,
   }) async {
-    try {
-      await FlutterDownloader.initialize();
-    } catch (err) {}
     final downloadsDirectories =
         await getExternalStorageDirectories(type: StorageDirectory.downloads);
     final downloadsDirectory = downloadsDirectories[0];
 
-    final taskId = await FlutterDownloader.enqueue(
-      url: _mailModule.hostname + attachment.downloadUrl,
-      savedDir: downloadsDirectory.path,
-      fileName: attachment.fileName,
-      headers: _mailModule.headerWithToken,
-    );
-
     await attachment.startDownload(
-      taskId: taskId,
-      cancel: FlutterDownloader.cancel,
       onDownloadStart: () async {
         onDownloadStart();
         // TODO repair progress updating
@@ -280,6 +268,14 @@ class MailApi {
           onDownloadEnd("${downloadsDirectory.path}/${attachment.fileName}"),
       onError: () => onDownloadEnd(null),
     );
+
+    final taskId = await FlutterDownloader.enqueue(
+      url: _mailModule.hostname + attachment.downloadUrl,
+      savedDir: downloadsDirectory.path,
+      fileName: attachment.fileName,
+      headers: _mailModule.headerWithToken,
+    );
+    attachment.add(taskId, FlutterDownloader.cancel);
   }
 
   Future<void> shareAttachment(MailAttachment attachment) async {
@@ -477,6 +473,4 @@ class MailApi {
       throw WebMailApiError(res);
     }
   }
-
-
 }

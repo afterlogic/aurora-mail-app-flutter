@@ -163,19 +163,3 @@ class CryptoStorageImpl extends CryptoStorage {
   }
 }
 
-class PgpKeyWithContact implements PgpKey {
-  final PgpKey pgpKey;
-  final Contact contact;
-
-  PgpKeyWithContact(this.pgpKey, this.contact);
-
-  String get name => pgpKey.name;
-
-  String get mail => pgpKey.mail;
-
-  String get key => pgpKey.key;
-
-  bool get isPrivate => pgpKey.isPrivate;
-
-  int get length => pgpKey.length;
-}

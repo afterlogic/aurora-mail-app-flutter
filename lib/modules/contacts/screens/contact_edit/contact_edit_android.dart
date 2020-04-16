@@ -19,7 +19,7 @@ import 'components/contact_input.dart';
 import 'components/contact_title.dart';
 import 'components/key_input.dart';
 import 'dialog/confirm_edit_dialog.dart';
-
+import 'package:aurora_mail/build_property.dart';
 class ContactEditAndroid extends StatefulWidget {
   final Contact contact;
   final PgpSettingsBloc pgpSettingsBloc;
@@ -82,15 +82,17 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid> {
     super.initState();
     pgpSettingsBloc = widget.pgpSettingsBloc;
     _bloc = BlocProvider.of<ContactsBloc>(context);
-    if (widget.contact?.pgpPublicKey != null) {
-      widget.pgpSettingsBloc
-          .parseKey(widget.contact.pgpPublicKey)
-          .then((value) {
-        if (value.isNotEmpty) {
-          pgpKey = value.first;
-          setState(() {});
-        }
-      });
+    if (BuildProperty.cryptoEnable) {
+      if (widget.contact?.pgpPublicKey != null) {
+        widget.pgpSettingsBloc
+            .parseKey(widget.contact.pgpPublicKey)
+            .then((value) {
+          if (value.isNotEmpty) {
+            pgpKey = value.first;
+            setState(() {});
+          }
+        });
+      }
     }
     final selectedGroup = _bloc.state.selectedGroup;
 
@@ -380,7 +382,9 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid> {
                   ContactInput("contacts_view_other_email", _otherEmail,
                       keyboardType: TextInputType.emailAddress),
                   ContactInput("contacts_view_notes", _notes),
+                  if (BuildProperty.cryptoEnable)
                   ContactTitle("public_key"),
+                  if (BuildProperty.cryptoEnable)
                   KeyInput(
                     pgpSettingsBloc,
                     pgpKey,

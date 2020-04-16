@@ -26,6 +26,8 @@ import 'app_navigation.dart';
 import 'auth/blocs/auth_bloc/bloc.dart';
 import 'auth/screens/login/login_route.dart';
 
+final routeObserver = RouteObserver();
+
 class App extends StatefulWidget {
   @override
   _AppState createState() => _AppState();
@@ -48,6 +50,7 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
     BackgroundHelper.current = AppLifecycleState.resumed;
     _initApp();
     ReceiveSharing.getInitialMedia().then((shared) {
+      if (shared == null) return;
       final texts = <String>[];
       final files = <File>[];
       for (var value in shared) {
@@ -217,6 +220,7 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
                         initialRoute: authState.needsLogin
                             ? LoginRoute.name
                             : MessagesListRoute.name,
+                        navigatorObservers: [routeObserver],
                       ),
                     );
                   } else {

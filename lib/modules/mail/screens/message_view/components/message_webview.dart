@@ -2,12 +2,20 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/mail/mail_table.dart';
+import 'package:aurora_mail/modules/app_screen.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
+import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
+import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/contacts_bloc.dart';
+import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 import 'package:aurora_mail/modules/mail/blocs/message_view_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
+import 'package:aurora_mail/modules/settings/blocs/pgp_settings/pgp_settings_bloc.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
+import 'package:aurora_mail/modules/settings/screens/pgp_settings/dialogs/import_key_dialog.dart';
+import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/date_formatting.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
@@ -20,6 +28,7 @@ import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:html/parser.dart' as html;
 import 'package:url_launcher/url_launcher.dart';
+import 'package:vcf/vcf.dart';
 
 import 'attachments_dialog.dart';
 
@@ -34,16 +43,24 @@ class MessageWebView extends StatefulWidget {
   final Message message;
   final List<MailAttachment> attachments;
   final String decrypted;
+  final PgpSettingsBloc bloc;
+  final ContactsBloc contactsBloc;
 
-  const MessageWebView(this.message, this.attachments, this.decrypted,
-      {Key key})
-      : super(key: key);
+  const MessageWebView(
+    this.message,
+    this.attachments,
+    this.decrypted,
+    this.bloc,
+    this.contactsBloc, {
+    Key key,
+  }) : super(key: key);
 
   @override
   _MessageWebViewState createState() => _MessageWebViewState();
 }
 
-class _MessageWebViewState extends BState<MessageWebView> {
+class _MessageWebViewState extends BState<MessageWebView>
+    implements RouteAware {
   final flutterWebviewPlugin = new FlutterWebviewPlugin();
   String _htmlData;
   bool _pageLoaded = true;
@@ -54,8 +71,12 @@ class _MessageWebViewState extends BState<MessageWebView> {
   @override
   void initState() {
     super.initState();
+
     sub = flutterWebviewPlugin.onStateChanged
         .listen((state) => _onWebViewNavigateRequest(state));
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      routeObserver.subscribe(this, ModalRoute.of(context));
+    });
   }
 
   @override
@@ -80,6 +101,7 @@ class _MessageWebViewState extends BState<MessageWebView> {
     super.dispose();
     sub.cancel();
     flutterWebviewPlugin.close();
+    routeObserver.unsubscribe(this);
   }
 
   void _getHtmlWithImages() async {
@@ -175,38 +197,74 @@ class _MessageWebViewState extends BState<MessageWebView> {
         .toString();
   }
 
-  void _startDownload(String downloadUrl) {
+  void _startDownload(String downloadUrl) async {
     final attachment = widget.attachments
         .firstWhere((a) => !a.isInline && a.downloadUrl == downloadUrl);
-    BlocProvider.of<MessageViewBloc>(context)
-        .add(DownloadAttachment(attachment));
-    final msg = i18n(context, "messages_attachment_downloading",
-        {"fileName": attachment.fileName});
-    Fluttertoast.showToast(
-      msg: msg,
-      timeInSecForIos: 2,
-      backgroundColor:
-          Platform.isIOS ? theme.disabledColor.withOpacity(0.5) : null,
-    );
+    if (attachment.fileName.endsWith(".asc")) {
+      final keys = await widget.bloc.sortKey(attachment.location);
+      await showDialog(
+        context: context,
+        builder: (_) =>
+            ImportKeyDialog(keys.contactKeys, keys.contactKeys, widget.bloc),
+      );
+
+    } else if (attachment.fileName.endsWith(".vcf")) {
+      final msg = i18n(context, "messages_attachment_downloading",
+          {"fileName": attachment.fileName});
+      Fluttertoast.showToast(
+        msg: msg,
+        timeInSecForIos: 2,
+        backgroundColor:
+            Platform.isIOS ? theme.disabledColor.withOpacity(0.5) : null,
+      );
+      BlocProvider.of<MessageViewBloc>(context).downloadAttachment(
+        attachment,
+        (path) async {
+
+          try {
+            final vcf = Vcf.fromString(await File(path).readAsString());
+            await importContactFromVcf(context, vcf, widget.contactsBloc);
+          } catch (e) {}
+        },
+      );
+    } else {
+      BlocProvider.of<MessageViewBloc>(context)
+          .add(DownloadAttachment(attachment));
+      final msg = i18n(context, "messages_attachment_downloading",
+          {"fileName": attachment.fileName});
+      Fluttertoast.showToast(
+        msg: msg,
+        timeInSecForIos: 2,
+        backgroundColor:
+            Platform.isIOS ? theme.disabledColor.withOpacity(0.5) : null,
+      );
+    }
   }
 
   _onWebViewNavigateRequest(WebViewStateChanged state) async {
+    print(state.type);
     if (state.type == WebViewState.startLoad) {
+      print(state.url);
       if (state.url.endsWith(MessageWebViewActions.SHOW_INFO)) {
+        flutterWebviewPlugin.stopLoading();
         flutterWebviewPlugin.goBack();
       } else if (state.url.endsWith(MessageWebViewActions.SHOW_ATTACHMENTS)) {
         final messageViewBloc = BlocProvider.of<MessageViewBloc>(context);
         AttachmentsDialog.show(context, widget.attachments, messageViewBloc);
         flutterWebviewPlugin.stopLoading();
+        flutterWebviewPlugin.goBack();
       } else if (state.url
           .endsWith(MessageWebViewActions.DOWNLOAD_ATTACHMENT)) {
         final parts =
             state.url.split(MessageWebViewActions.DOWNLOAD_ATTACHMENT);
         final downloadUrl = parts[parts.length - 2];
         _startDownload(downloadUrl);
+
+        flutterWebviewPlugin.stopLoading();
         flutterWebviewPlugin.goBack();
       } else if (state.url != _getHtmlUri(_htmlData)) {
         launch(state.url);
+        flutterWebviewPlugin.stopLoading();
         flutterWebviewPlugin.goBack();
       } else {
 //      return NavigationDecision.navigate;
@@ -268,4 +326,108 @@ class _MessageWebViewState extends BState<MessageWebView> {
       ],
     );
   }
+
+  Future importContactFromVcf(
+    BuildContext context,
+    Vcf vcf,
+    ContactsBloc bloc,
+  ) async {
+    final contact = Contact(
+      entityId: null,
+      uuid: null,
+      userLocalId: bloc.user.localId,
+      uuidPlusStorage: null,
+      parentUuid: null,
+      idUser: bloc.user.serverId,
+      idTenant: null,
+      storage: StorageNames.personal,
+      fullName: vcf.formattedName,
+      useFriendlyName: true,
+      viewEmail: firstOrNull(vcf.email) as String,
+      title: "",
+      firstName: vcf.firstName,
+      lastName: vcf.lastName,
+      nickName: vcf.nickname,
+      skype: vcf.socialUrls == null ? null : vcf.socialUrls["skype"],
+      facebook: vcf.socialUrls == null ? null : vcf.socialUrls["facebook"],
+      personalEmail: firstOrNull(vcf.email) as String,
+      personalAddress: vcf.homeAddress?.format(),
+      personalCity: vcf.homeAddress?.city,
+      personalState: vcf.homeAddress?.stateProvince,
+      personalZip: vcf.homeAddress?.postalCode,
+      personalCountry: vcf.homeAddress?.countryRegion,
+      personalWeb: vcf.url,
+      personalFax: firstOrNull(vcf.homeFax) as String,
+      personalPhone: firstOrNull(vcf.homePhone) as String,
+      personalMobile: null,
+      businessEmail: firstOrNull(vcf.workEmail) as String,
+      businessCompany: null,
+      businessAddress: vcf.workAddress?.format(),
+      businessCity: vcf.workAddress?.city,
+      businessState: vcf.workAddress?.stateProvince,
+      businessZip: vcf.workAddress?.postalCode,
+      businessCountry: vcf.workAddress?.countryRegion,
+      businessJobTitle: null,
+      businessDepartment: null,
+      businessOffice: null,
+      businessPhone: firstOrNull(vcf.workPhone) as String,
+      businessFax: firstOrNull(vcf.workFax) as String,
+      businessWeb: null,
+      otherEmail: firstOrNull(vcf.otherEmail) as String,
+      notes: vcf.note,
+      birthDay: vcf.birthday?.millisecondsSinceEpoch,
+      birthMonth: vcf.birthday?.month,
+      birthYear: vcf.birthday?.year,
+      eTag: "",
+      auto: null,
+      frequency: 0,
+      dateModified: DateTime.now().toIso8601String(),
+      davContactsUid: null,
+      davContactsVCardUid: null,
+      groupUUIDs: [],
+      pgpPublicKey: null,
+    );
+    final result = await ConfirmationDialog.show(
+      context,
+      null,
+      i18n(context, "import_vcf", {
+        "name": contact.fullName ?? contact.nickName ?? contact.viewEmail ?? ""
+      }),
+      i18n(context, "import"),
+    );
+    if (result == true) {
+      bloc.add(CreateContact(contact));
+    }
+  }
+
+  dynamic firstOrNull(dynamic list) {
+    if (list != null && list is List) {
+      if (list.isNotEmpty) {
+        return list.first;
+      }
+    }
+    return null;
+  }
+var routeCount=0;
+  @override
+  void didPopNext() {
+    routeCount--;
+    if(routeCount==0){
+      flutterWebviewPlugin.show();
+    }
+  }
+
+  @override
+  void didPushNext() {
+    routeCount++;
+    if(routeCount==1){
+      flutterWebviewPlugin.hide();
+    }
+  }
+
+  @override
+  void didPop() {}
+
+  @override
+  void didPush() {}
 }

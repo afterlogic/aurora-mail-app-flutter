@@ -1,3 +1,4 @@
+import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
@@ -21,7 +22,6 @@ import 'package:aurora_mail/utils/identity_util.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:crypto_model/crypto_model.dart';
-import 'package:crypto_storage_impl/crypto_storage_impl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -58,19 +58,20 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
   init(Contact contact) {
     this.contact = contact;
     _contactInfo = new ContactInfo(contact);
-
-    if (contact?.pgpPublicKey != null) {
-      contactsBloc.getKeyInfo(contact.pgpPublicKey).then((key) {
-        if (key == null) {
-          this.key = null;
-        } else {
-          this.key = PgpKeyWithContact(key, contact);
-        }
+    if (BuildProperty.cryptoEnable) {
+      if (contact?.pgpPublicKey != null) {
+        contactsBloc.getKeyInfo(contact.pgpPublicKey).then((key) {
+          if (key == null) {
+            this.key = null;
+          } else {
+            this.key = PgpKeyWithContact(key, contact);
+          }
+          if (mounted) setState(() {});
+        });
+      } else {
+        this.key = null;
         if (mounted) setState(() {});
-      });
-    } else {
-      this.key = null;
-      if (mounted) setState(() {});
+      }
     }
   }
 
@@ -491,8 +492,9 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
                 ),
               ),
             ...otherInfo,
-            if (keyInfo != null) Divider(indent: 16.0, endIndent: 16.0),
-            if (keyInfo != null) keyInfo,
+            if (BuildProperty.cryptoEnable && keyInfo != null)
+              Divider(indent: 16.0, endIndent: 16.0),
+            if (BuildProperty.cryptoEnable && keyInfo != null) keyInfo,
             if (groupInfo.isNotEmpty) Divider(indent: 16.0, endIndent: 16.0),
             if (groupInfo.isNotEmpty)
               ListTile(

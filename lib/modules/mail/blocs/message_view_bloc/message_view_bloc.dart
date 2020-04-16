@@ -4,6 +4,8 @@ import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/inject/app_inject.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/mail/blocs/message_view_bloc/message_view_methods.dart';
+import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
+import 'package:aurora_mail/modules/mail/screens/message_view/components/attachment.dart';
 import 'package:aurora_mail/utils/permissions.dart';
 import 'package:bloc/bloc.dart';
 import 'package:crypto_worker/crypto_worker.dart';
@@ -56,11 +58,29 @@ class MessageViewBloc extends Bloc<MessageViewEvent, MessageViewState> {
     );
   }
 
+  downloadAttachment(MailAttachment attachment, Function(String) onEnd) async {
+    try {
+      await getStoragePermissions();
+    } catch (err) {
+      return;
+    }
+
+    _methods.downloadAttachment(
+      attachment,
+      onDownloadStart: () {
+//        add(StartDownload(event.attachment.fileName));
+      },
+      onDownloadEnd: (String path) {
+        onEnd(path);
+//        add(EndDownload(path));
+      },
+    );
+  }
+
   Stream<MessageViewState> _checkEncrypt(CheckEncrypt event) async* {
     EncryptType encryptedType = _methods.checkEncrypt(event.message);
     yield MessageIsEncrypt(encryptedType);
   }
-
 
   Stream<MessageViewState> _decryptBody(DecryptBody event) async* {
     try {
@@ -85,7 +105,7 @@ class MessageViewBloc extends Bloc<MessageViewEvent, MessageViewState> {
     }
   }
 
-  Stream<MessageViewState>  _getFolderType(GetFolderType event) async*{
+  Stream<MessageViewState> _getFolderType(GetFolderType event) async* {
     FolderType folderType = await _methods.getFolderType(event.folder);
     yield FolderTypeState(folderType);
   }

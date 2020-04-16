@@ -104,6 +104,8 @@ dependencies:
   # end: if
 
   dm: 0.1.0
+  vcf:
+    path: core/vcf
 
 dev_dependencies:
   flutter_test:

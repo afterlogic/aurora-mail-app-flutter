@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/inject/app_inject.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
@@ -20,6 +21,7 @@ import 'package:aurora_mail/modules/mail/screens/message_view/components/route_w
 import 'package:aurora_mail/modules/mail/screens/message_view/dialog/request_password_dialog.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/screen/move_message_route.dart';
+import 'package:aurora_mail/modules/settings/blocs/pgp_settings/pgp_settings_bloc.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
@@ -41,6 +43,8 @@ class MessageViewAndroid extends StatefulWidget {
 
 class _MessageViewAndroidState extends BState<MessageViewAndroid>
     with TickerProviderStateMixin {
+  PgpSettingsBloc pgpBloc;
+  ContactsBloc contactsBloc;
   MessageViewBloc _messageViewBloc;
   String decryptedText;
   bool animationFinished = false;
@@ -49,6 +53,12 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
   @override
   void initState() {
     super.initState();
+    final authBloc = BlocProvider.of<AuthBloc>(context);
+    contactsBloc = ContactsBloc(
+      user: authBloc.currentUser,
+      appDatabase: DBInstances.appDB,
+    );
+    pgpBloc = AppInjector.instance.pgpSettingsBloc(authBloc);
     widget.routeAnimationListener.onComplete = () {
       animationFinished = true;
       setState(() {});
@@ -272,7 +282,8 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
                     }
                   }
                 },
-                child: MessageWebView(message, attachments, decryptedText),
+                child: MessageWebView(
+                    message, attachments, decryptedText, pgpBloc, contactsBloc),
               ),
         bottomNavigationBar: BuildProperty.cryptoEnable
             ? MailBottomBar(

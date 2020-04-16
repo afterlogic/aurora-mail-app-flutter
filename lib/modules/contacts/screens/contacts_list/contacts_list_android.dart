@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:aurora_mail/background/background_helper.dart';
+import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/inject/app_inject.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
@@ -16,7 +17,6 @@ import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:crypto_model/crypto_model.dart';
-import 'package:crypto_storage_impl/crypto_storage_impl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -39,8 +39,8 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
   @override
   void initState() {
     super.initState();
-    pgpSettingsBloc =
-        AppInjector.instance.pgpSettingsBloc(BlocProvider.of(context));
+      pgpSettingsBloc =
+          AppInjector.instance.pgpSettingsBloc(BlocProvider.of(context));
     BackgroundHelper.addOnAlarmObserver(false, onAlarm);
   }
 

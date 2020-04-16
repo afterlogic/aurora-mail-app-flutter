@@ -10,7 +10,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
+  aurora_mail:
+    path: ../../..
 dev_dependencies:
   flutter_test:
     sdk: flutter
+

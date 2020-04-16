@@ -344,7 +344,7 @@
   "delete_key": "Delete Key",
   "select_key": "Select key",
   "keys_will_be_import_to_contacts": "This keys will be import to contacts",
-  "for_these keys_contacts_will_be_created": "For these keys contacts will be created",
+  "keys_contacts_will_be_created": "For these keys contacts will be created",
   "your_keys": "Your keys",
   "contact_public_keys": "Contact public keys",
   "move_to": "Move to: ",
@@ -355,5 +355,7 @@
   "since": "Since",
   "till": "Till",
   "warning": "Warning",
-  "share_private_key_warning": "You are going to share you private PGP key. The key must be kept from the 3-thd party. Do you want to continue?"
+  "share_private_key_warning": "You are going to share you private PGP key. The key must be kept from the 3-thd party. Do you want to continue?",
+  "import": "Import",
+  "import_vcf": "Import {name} contact from vcf?"
 }

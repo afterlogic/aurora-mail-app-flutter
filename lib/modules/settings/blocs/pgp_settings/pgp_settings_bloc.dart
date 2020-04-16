@@ -8,7 +8,6 @@ import 'package:aurora_mail/utils/identity_util.dart';
 import 'package:bloc/bloc.dart';
 import 'package:crypto_model/crypto_model.dart';
 import 'package:crypto_storage/crypto_storage.dart';
-import 'package:crypto_storage_impl/crypto_storage_impl.dart';
 import 'package:crypto_worker/crypto_worker.dart';
 
 import 'bloc.dart';
@@ -97,6 +96,18 @@ class PgpSettingsBloc extends Bloc<PgpSettingsEvent, PgpSettingsState> {
 
   Future<List<PgpKey>> parseKey(String key) {
     return _methods.parseKey(key);
+  }
+
+  Future<SelectKeyForImport> sortKey(String key) async {
+    final keys = await _methods.parseKey(key);
+
+    final userEmail = await authBloc
+        .getAliasesAndIdentities(true)
+        .then((items) => items.map((item) => item.mail).toSet());
+
+    final sortKey = await _methods.sortKeys(keys, userEmail);
+
+    return SelectKeyForImport(sortKey.userKey, sortKey.contactKey);
   }
 
   Future<String> getKeyFromFile() async {
