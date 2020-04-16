@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:alarm_service/alarm_service.dart';
 import 'package:aurora_mail/bloc_logger.dart';
 import 'package:aurora_mail/config.dart';
@@ -16,12 +18,14 @@ void main() {
   Crashlytics.instance.enableInDevMode = false;
   AppInjector.create();
   FlutterError.onError = Crashlytics.instance.recordFlutterError;
-  runApp(RestartWidget(child: App()),);
+  runApp(
+    RestartWidget(child: App()),
+  );
   AlarmService.init();
   AlarmService.onAlarm(onAlarm, ALARM_ID);
   BlocSupervisor.delegate = BlocLogger();
   try {
-    FlutterDownloader.initialize();
+    if (Platform.isAndroid) FlutterDownloader.initialize();
   } catch (e) {
     e;
   }
@@ -36,9 +40,8 @@ void onAlarm() async {
 
     BackgroundHelper.onStartAlarm();
 
-    hasUpdate = await BackgroundSync()
-        .sync(BackgroundHelper.isBackground)
-        .timeout(Duration(seconds: 30));
+    hasUpdate =
+        await BackgroundSync().sync(BackgroundHelper.isBackground).timeout(Duration(seconds: 30));
   } catch (e, s) {
     print(e);
     print(s);

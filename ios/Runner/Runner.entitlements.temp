@@ -3,7 +3,8 @@
 <plist version="1.0">
 <dict>
 	<key>com.apple.security.application-groups</key>
-	    <string>{{_appleGroupId}}/string>
-	<array/>
+	<array>
+    		<string>{{_appleGroupId}}</string>
+    </array>
 </dict>
 </plist>

@@ -220,9 +220,9 @@ class _MessageWebViewState extends BState<MessageWebView>
       BlocProvider.of<MessageViewBloc>(context).downloadAttachment(
         attachment,
         (path) async {
-
           try {
-            final vcf = Vcf.fromString(await File(path).readAsString());
+            String content=Platform.isIOS? path :await File(path).readAsString();
+            final vcf = Vcf.fromString(content);
             await importContactFromVcf(context, vcf, widget.contactsBloc);
           } catch (e) {}
         },

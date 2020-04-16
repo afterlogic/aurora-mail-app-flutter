@@ -30,7 +30,7 @@ class MessageViewMethods {
     @required Function() onDownloadStart,
   }) {
     if (Platform.isIOS) {
-      _mailApi.shareAttachment(attachment);
+      _mailApi.shareAttachment(attachment,onDownloadEnd);
     } else {
       _mailApi.downloadAttachment(
         attachment,

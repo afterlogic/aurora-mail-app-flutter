@@ -9,10 +9,6 @@ PODS:
     - Flutter
   - Crashlytics (3.14.0):
     - Fabric (~> 1.10.2)
-  - crypto_stream (0.0.1):
-    - Flutter
-    - OpenSSL-Universal (~> 1.0.2.17)
-    - RxSwift (~> 5)
   - esys_flutter_share (0.0.1):
     - Flutter
   - Fabric (1.10.2)
@@ -114,9 +110,6 @@ PODS:
   - nanopb/encode (0.3.9011)
   - notifications_utils (0.0.1):
     - Flutter
-  - OpenSSL-Universal (1.0.2.19):
-    - OpenSSL-Universal/Static (= 1.0.2.19)
-  - OpenSSL-Universal/Static (1.0.2.19)
   - package_info (0.0.1):
     - Flutter
   - path_provider (0.0.1):
@@ -129,7 +122,6 @@ PODS:
   - Reachability (3.2)
   - receive_sharing (0.0.1):
     - Flutter
-  - RxSwift (5.0.1)
   - shared_preferences (0.0.1):
     - Flutter
   - shared_preferences_macos (0.0.1):
@@ -150,7 +142,6 @@ DEPENDENCIES:
   - alarm_service (from `.symlinks/plugins/alarm_service/ios`)
   - connectivity (from `.symlinks/plugins/connectivity/ios`)
   - connectivity_macos (from `.symlinks/plugins/connectivity_macos/ios`)
-  - crypto_stream (from `.symlinks/plugins/crypto_stream/ios`)
   - esys_flutter_share (from `.symlinks/plugins/esys_flutter_share/ios`)
   - file_picker (from `.symlinks/plugins/file_picker/ios`)
   - firebase_crashlytics (from `.symlinks/plugins/firebase_crashlytics/ios`)
@@ -195,10 +186,8 @@ SPEC REPOS:
     - GoogleDataTransportCCTSupport
     - GoogleUtilities
     - nanopb
-    - OpenSSL-Universal
     - PromisesObjC
     - Reachability
-    - RxSwift
 
 EXTERNAL SOURCES:
   alarm_service:
@@ -207,8 +196,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/connectivity/ios"
   connectivity_macos:
     :path: ".symlinks/plugins/connectivity_macos/ios"
-  crypto_stream:
-    :path: ".symlinks/plugins/crypto_stream/ios"
   esys_flutter_share:
     :path: ".symlinks/plugins/esys_flutter_share/ios"
   file_picker:
@@ -266,7 +253,6 @@ SPEC CHECKSUMS:
   connectivity: 6e94255659cc86dcbef1d452ad3e0491bb1b3e75
   connectivity_macos: e2e9731b6b22dda39eb1b128f6969d574460e191
   Crashlytics: 540b7e5f5da5a042647227a5e3ac51d85eed06df
-  crypto_stream: 2a2fdbfdec937d8779e8e6b14afb3a5e093a61e4
   esys_flutter_share: 403498dab005b36ce1f8d7aff377e81f0621b0b4
   Fabric: 706c8b8098fff96c33c0db69cbf81f9c551d0d74
   file_picker: 408623be2125b79a4539cf703be3d4b3abe5e245
@@ -294,7 +280,6 @@ SPEC CHECKSUMS:
   GoogleUtilities: 06eb53bb579efe7099152735900dd04bf09e7275
   nanopb: 18003b5e52dab79db540fe93fe9579f399bd1ccd
   notifications_utils: 2689b5cbda5be923ddc3868f5c86c4ab2dc98d5c
-  OpenSSL-Universal: 8b48cc0d10c1b2923617dfe5c178aa9ed2689355
   package_info: 48b108e75b8802c2d5e126f208ef540561c98aef
   path_provider: fb74bd0465e96b594bb3b5088ee4a4e7bb1f2a9d
   path_provider_macos: f760a3c5b04357c380e2fddb6f9db6f3015897e0
@@ -302,7 +287,6 @@ SPEC CHECKSUMS:
   PromisesObjC: c119f3cd559f50b7ae681fa59dc1acd19173b7e6
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   receive_sharing: d6db01a09636ce060b2bd1a5ca8a41eea4437a3d
-  RxSwift: e2dc62b366a3adf6a0be44ba9f405efd4c94e0c4
   shared_preferences: 430726339841afefe5142b9c1f50cb6bd7793e01
   shared_preferences_macos: f3f29b71ccbb56bf40c9dd6396c9acf15e214087
   shared_preferences_web: 141cce0c3ed1a1c5bf2a0e44f52d31eeb66e5ea9

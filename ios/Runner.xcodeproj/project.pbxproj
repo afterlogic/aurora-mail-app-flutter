@@ -900,8 +900,6 @@
 					"-l\"ssl\"",
 					"-l\"z\"",
 					"-framework",
-					"\"Alamofire\"",
-					"-framework",
 					"\"Crashlytics\"",
 					"-framework",
 					"\"FBLPromises\"",
@@ -936,8 +934,6 @@
 					"-framework",
 					"\"Reachability\"",
 					"-framework",
-					"\"RxSwift\"",
-					"-framework",
 					"\"Security\"",
 					"-framework",
 					"\"StoreKit\"",
@@ -949,8 +945,6 @@
 					"\"alarm_service\"",
 					"-framework",
 					"\"connectivity\"",
-					"-framework",
-					"\"crypto_stream\"",
 					"-framework",
 					"\"esys_flutter_share\"",
 					"-framework",
@@ -993,7 +987,7 @@
 					"\"url_launcher\"",
 					"$(inherited)",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.afterlogic.aurora.mail.AppShareExtension;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(PRODUCT_ID).AppShareExtension";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
@@ -1034,8 +1028,6 @@
 					"-l\"ssl\"",
 					"-l\"z\"",
 					"-framework",
-					"\"Alamofire\"",
-					"-framework",
 					"\"Crashlytics\"",
 					"-framework",
 					"\"FBLPromises\"",
@@ -1070,8 +1062,6 @@
 					"-framework",
 					"\"Reachability\"",
 					"-framework",
-					"\"RxSwift\"",
-					"-framework",
 					"\"Security\"",
 					"-framework",
 					"\"StoreKit\"",
@@ -1083,8 +1073,6 @@
 					"\"alarm_service\"",
 					"-framework",
 					"\"connectivity\"",
-					"-framework",
-					"\"crypto_stream\"",
 					"-framework",
 					"\"esys_flutter_share\"",
 					"-framework",
@@ -1127,7 +1115,7 @@
 					"\"url_launcher\"",
 					"$(inherited)",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.afterlogic.aurora.mail.AppShareExtension;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(PRODUCT_ID).AppShareExtension";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
@@ -1166,8 +1154,6 @@
 					"-l\"ssl\"",
 					"-l\"z\"",
 					"-framework",
-					"\"Alamofire\"",
-					"-framework",
 					"\"Crashlytics\"",
 					"-framework",
 					"\"FBLPromises\"",
@@ -1202,8 +1188,6 @@
 					"-framework",
 					"\"Reachability\"",
 					"-framework",
-					"\"RxSwift\"",
-					"-framework",
 					"\"Security\"",
 					"-framework",
 					"\"StoreKit\"",
@@ -1215,8 +1199,6 @@
 					"\"alarm_service\"",
 					"-framework",
 					"\"connectivity\"",
-					"-framework",
-					"\"crypto_stream\"",
 					"-framework",
 					"\"esys_flutter_share\"",
 					"-framework",
@@ -1259,7 +1241,7 @@
 					"\"url_launcher\"",
 					"$(inherited)",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.afterlogic.aurora.mail.AppShareExtension;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(PRODUCT_ID).AppShareExtension";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
