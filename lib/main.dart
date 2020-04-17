@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:alarm_service/alarm_service.dart';
 import 'package:aurora_mail/bloc_logger.dart';
 import 'package:aurora_mail/config.dart';
+import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/inject/app_inject.dart';
 import 'package:aurora_mail/shared_ui/restart_widget.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -14,12 +15,22 @@ import 'background/background_helper.dart';
 import 'background/background_sync.dart';
 import 'modules/app_screen.dart';
 
-void main() {
+void main() async {
   Crashlytics.instance.enableInDevMode = false;
   AppInjector.create();
   FlutterError.onError = Crashlytics.instance.recordFlutterError;
+  // ignore: invalid_use_of_protected_member
+  DBInstances.appDB.connection.executor.ensureOpen();
   runApp(
-    RestartWidget(child: App()),
+    FutureBuilder(
+        future: DBInstances.appDB.migrationCompleter.future,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            return RestartWidget(child: App());
+          } else {
+            return Container();
+          }
+        }),
   );
   AlarmService.init();
   AlarmService.onAlarm(onAlarm, ALARM_ID);

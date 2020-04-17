@@ -38,13 +38,13 @@ class MessagesListMethods {
   }
 
   Future<void> deleteMessages(List<Message> messages) async {
-    final foldersForPermanentlyDelete = (await _folderDao.getByType(
+    final foldersForPermanentlyDelete = await _folderDao.getByType(
       [
         Folder.getNumberFromFolderType(FolderType.trash),
         Folder.getNumberFromFolderType(FolderType.spam)
       ],
       account.localId,
-    ));
+    );
     final trashFolderName = foldersForPermanentlyDelete
         .firstWhere(
           (item) =>
@@ -64,22 +64,19 @@ class MessagesListMethods {
     }
     for (var folder in splitToFolder.keys) {
       final uids = splitToFolder[folder];
-      final futures = [
-        _mailDao.deleteMessages(uids, folder),
-      ];
+     await _mailDao.deleteMessages(uids, folder);
       if (foldersForPermanentlyDeleteName.contains(folder)) {
-        futures.add(_mailApi.deleteMessages(
+        await _mailApi.deleteMessages(
           uids: uids,
           folderRawName: folder,
-        ));
+        );
       } else {
-        futures.add(_mailApi.moveToTrash(
+        await _mailApi.moveToTrash(
           uids: uids,
           folderRawName: folder,
           trashRawName: trashFolderName,
-        ));
+        );
       }
-      await Future.wait(futures);
     }
   }
 

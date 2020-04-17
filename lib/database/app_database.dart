@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:aurora_mail/database/account_identity/account_identity_table.dart';
 import 'package:aurora_mail/database/aliases/aliases_table.dart';
 import 'package:aurora_mail/database/folders/folders_table.dart';
@@ -12,11 +14,12 @@ import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/st
 import 'package:moor_flutter/moor_flutter.dart';
 
 import 'accounts/accounts_table.dart';
+import 'migration/drop_all.dart';
 import 'users/users_table.dart';
 
 part 'app_database.g.dart';
 
-typedef _Migration = Future Function(Migrator migrator);
+typedef _Migration = Future Function(AppDatabase, Migrator);
 
 class DBInstances {
   static final appDB = new AppDatabase();
@@ -35,10 +38,13 @@ class DBInstances {
   AliasesTable,
 ])
 class AppDatabase extends _$AppDatabase {
-  AppDatabase()
-      : super(FlutterQueryExecutor.inDatabaseFolder(path: 'app_db.sqlite'));
+  final migrationCompleter = Completer();
 
-  Map<int, _Migration> get _migrationMap => {};
+  AppDatabase() : super(FlutterQueryExecutor.inDatabaseFolder(path: 'app_db.sqlite')) ;
+
+  Map<int, _Migration> get _migrationMap => {
+        1: dropAll,
+      };
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -48,13 +54,19 @@ class AppDatabase extends _$AppDatabase {
         onUpgrade: (Migrator m, int from, int to) async {
           final migrationMap = _migrationMap;
           for (var i = from; i < to; i++) {
-            await migrationMap[i](m);
+            final migration = migrationMap[i];
+            if (migration != null) {
+              await migration(this, m);
+            }
           }
+        },
+        beforeOpen: (OpeningDetails details) async {
+          migrationCompleter.complete();
         },
       );
 
   // you should bump this number whenever you change or add a table definition. Migrations
   // are covered later in this readme.
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
 }

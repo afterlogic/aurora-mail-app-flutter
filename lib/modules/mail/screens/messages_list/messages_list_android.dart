@@ -204,12 +204,12 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
               BlocListener(
                 bloc: _messagesListBloc,
                 listener: (BuildContext context, state) {
+                  if (state is MailError) _showError(context, state.errorMsg);
                   if (state is MessagesRefreshed || state is MailError) {
                     _endRefresh();
                   }
                   if (state is MessagesDeleted)
                     _mailBloc.add(RefreshMessages());
-                  if (state is MailError) _showError(context, state.errorMsg);
                 },
               ),
               BlocListener(
