@@ -31,6 +31,8 @@ import 'package:crypto_worker/crypto_worker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'message_headers.dart';
+
 class MessageViewAndroid extends StatefulWidget {
   final Message message;
   final RouteAnimationListener routeAnimationListener;
@@ -157,6 +159,15 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
           arguments: MoveMessageRouteArg(
             [widget.message],
             BlocProvider.of<MessagesListBloc>(context),
+          ),
+        );
+        break;
+      case MailViewAppBarAction.showHeaders:
+        Navigator.pushNamed(
+          context,
+          MessageHeadersRoute.name,
+          arguments: MessageHeadersRouteArg(
+            widget.message.headers,
           ),
         );
         break;

@@ -44,6 +44,7 @@ import 'auth/screens/login/login_route.dart';
 import 'auth/screens/two_factor_auth/two_factor_auth_route.dart';
 import 'auth/screens/two_factor_auth/two_factor_auth_widget.dart';
 import 'mail/blocs/mail_bloc/mail_bloc.dart';
+import 'mail/screens/message_view/message_headers.dart';
 import 'mail/screens/messages_list/messages_list_android.dart';
 import 'mail/screens/messages_list/messages_list_route.dart';
 import 'mail/screens/messages_list/screen/move_message.dart';
@@ -114,7 +115,12 @@ class AppNavigation {
             settings: RouteSettings(name: settings.name),
             builder: (_) => MoveMessage(args.messages, args.bloc));
         break;
-
+      case MessageHeadersRoute.name:
+        final args = settings.arguments as MessageHeadersRouteArg;
+        return FadeRoute(
+            settings: RouteSettings(name: settings.name),
+            builder: (_) => MessageHeaders(args.text));
+        break;
       case MessageViewRoute.name:
         final args = settings.arguments as MessageViewScreenArgs;
         final routeAnimationListener = RouteAnimationListener();

@@ -7,13 +7,13 @@ import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 enum MailViewAppBarAction {
   move,
   reply,
   replyToAll,
+  showHeaders,
   forward,
   toSpam,
   notSpam,
@@ -44,6 +44,12 @@ class MailViewAppBar extends StatelessWidget implements PreferredSizeWidget {
               actions: folderType == null
                   ? []
                   : [
+                      IconButton(
+                        icon: Icon(Icons.code),
+                        tooltip: i18n(context, "message_headers"),
+                        onPressed: () =>
+                            onAppBarActionSelected(MailViewAppBarAction.showHeaders),
+                      ),
                       IconButton(
                         icon: Icon(MdiIcons.fileMove),
                         tooltip: i18n(context, "move_to_folder"),

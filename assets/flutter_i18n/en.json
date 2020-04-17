@@ -357,5 +357,6 @@
   "warning": "Warning",
   "share_private_key_warning": "You are going to share you private PGP key. The key must be kept from the 3-thd party. Do you want to continue?",
   "import": "Import",
-  "import_vcf": "Import {name} contact from vcf?"
+  "import_vcf": "Import {name} contact from vcf?",
+  "message_headers": "Message headers"
 }

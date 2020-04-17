@@ -355,5 +355,6 @@
   "since":"От",
   "till": "До",
   "warning": "Предупреждение",
-  "share_private_key_warning": "You are going to share you private PGP key. The key must be kept from the 3-thd party. Do you want to continue?"
+  "share_private_key_warning": "You are going to share you private PGP key. The key must be kept from the 3-thd party. Do you want to continue?",
+  "message_headers": "Заголовки письма"
 }
