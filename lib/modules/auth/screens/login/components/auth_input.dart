@@ -11,6 +11,8 @@ class AuthInput extends StatefulWidget {
   final bool isPassword;
   final Color visibilityToggleColor;
   final String Function(String) validator;
+  final bool autocorrect;
+  final bool enableSuggestions;
 
   const AuthInput({
     Key key,
@@ -21,6 +23,8 @@ class AuthInput extends StatefulWidget {
     this.keyboardType,
     this.visibilityToggleColor,
     this.validator,
+    this.autocorrect,
+    this.enableSuggestions,
   }) : super(key: key);
 
   @override
@@ -34,6 +38,8 @@ class _AuthInputState extends BState<AuthInput> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return TextFormField(
+      autocorrect: widget.autocorrect,
+      enableSuggestions: widget.enableSuggestions,
       enabled: widget.isEnabled,
       controller: widget.controller,
       keyboardType: widget.keyboardType,

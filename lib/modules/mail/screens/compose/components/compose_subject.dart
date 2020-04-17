@@ -50,15 +50,12 @@ class _ComposeSubjectState extends BState<ComposeSubject> {
                 ),
               ]),
             ),
-            SizedBox(
-              height: 24.0,
-              child: IconButton(
-                icon: Icon(Icons.attachment),
-                padding: EdgeInsets.zero,
-                color: theme.accentColor,
-                onPressed: widget.onAttach,
-              ),
-            )
+            IconButton(
+              icon: Icon(Icons.attachment),
+              padding: EdgeInsets.zero,
+              color: theme.accentColor,
+              onPressed: widget.onAttach,
+            ),
           ],
         ),
       ),
