@@ -47,6 +47,12 @@ class _TwoFactorAuthWidgetState extends BState<TwoFactorAuthWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: widget.args.isDialog
+          ? AMAppBar(
+        title: Text(i18n(
+            context, "settings_accounts_add")),
+      )
+          : null,
       body: _gradientWrap(
         BlocListener<TwoFactorBloc, TwoFactorState>(
           bloc: bloc,

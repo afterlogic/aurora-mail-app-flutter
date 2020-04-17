@@ -298,7 +298,7 @@ class _LoginAndroidState extends BState<LoginAndroid> {
             "",
             "",
             "",
-            false,
+            widget.isDialog,
             BlocProvider.of<AuthBloc>(context),
           ),
         ),
