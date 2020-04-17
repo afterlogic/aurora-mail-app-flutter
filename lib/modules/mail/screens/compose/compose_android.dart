@@ -79,9 +79,9 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
   int _currentDraftUid;
   Message _message;
 
-  final _toEmails = new List<String>();
-  final _ccEmails = new List<String>();
-  final _bccEmails = new List<String>();
+  final _toEmails = new Set<String>();
+  final _ccEmails = new Set<String>();
+  final _bccEmails = new Set<String>();
   final _attachments = new List();
   List _savedAttachments;
   final _toTextCtrl = new TextEditingController();
@@ -331,11 +331,11 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
       final result = _subjectTextCtrl.text != _message.subject ||
           _bodyTextCtrl.text != _message.rawBody ||
           !listEquals<String>(
-              MailUtils.getEmails(_message.toInJson), _toEmails) ||
+              MailUtils.getEmails(_message.toInJson), _toEmails.toList()) ||
           !listEquals<String>(
-              MailUtils.getEmails(_message.ccInJson), _ccEmails) ||
+              MailUtils.getEmails(_message.ccInJson), _ccEmails.toList()) ||
           !listEquals<String>(
-              MailUtils.getEmails(_message.bccInJson), _bccEmails) ||
+              MailUtils.getEmails(_message.bccInJson), _bccEmails.toList()) ||
           !listEquals(_savedAttachments, _attachments);
       if (result) {
         _savedAttachments = _attachments.toList();

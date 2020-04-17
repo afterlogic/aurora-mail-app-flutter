@@ -1,9 +1,9 @@
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
+import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/input_validation.dart';
 import 'package:aurora_mail/utils/mail_utils.dart';
 import 'package:flutter/material.dart';
-import 'package:aurora_mail/utils/base_state.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,7 +15,7 @@ class ComposeEmails extends StatefulWidget {
   final String label;
   final bool enable;
   final TextEditingController textCtrl;
-  final List<String> emails;
+  final Set<String> emails;
   final Function onCCSelected;
   final FocusNode focusNode;
   final EdgeInsets padding;
@@ -73,9 +73,9 @@ class _ComposeEmailsState extends BState<ComposeEmails> {
       final contacts = await bloc.getTypeAheadContacts(pattern);
 
       contacts.removeWhere((i) => i.viewEmail.isEmpty);
-
+      contacts.removeWhere((i) => widget.emails.contains(MailUtils.getFriendlyName(i)));
       return contacts;
-    } catch (e,s) {
+    } catch (e, s) {
       print(s);
       return [];
     }

@@ -92,6 +92,8 @@ class _SearchUtil {
         return SearchPattern.Date;
       case _text:
         return SearchPattern.Text;
+      case _attachment:
+        return SearchPattern.Attachment;
       default:
         return SearchPattern.Default;
     }
@@ -108,13 +110,15 @@ class _SearchUtil {
       case SearchPattern.To:
         return _to;
       case SearchPattern.Subject:
-        return _to;
+        return _subject;
       case SearchPattern.Has:
         return _has;
       case SearchPattern.Date:
         return _date;
       case SearchPattern.Text:
         return _text;
+      case SearchPattern.Attachment:
+        return _attachment;
     }
     return "invalid";
   }
@@ -151,7 +155,6 @@ class _SearchUtil {
   static const _has = "has";
   static const _date = "date";
   static const _text = "text";
-
   static const _attachment = "attachment";
 }
 
@@ -186,5 +189,6 @@ enum SearchPattern {
   Has,
   Date,
   Text,
+  Attachment,
 }
 enum SearchFlag { Attachment }

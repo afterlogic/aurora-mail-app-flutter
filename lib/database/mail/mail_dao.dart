@@ -77,6 +77,9 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
       } else if (item.pattern == SearchPattern.Subject) {
         query += "AND (${mail.subject.escapedName} LIKE ?) ";
         params.add(Variable.withString("%$searchTerm%"));
+      } else if (item.pattern == SearchPattern.Attachment) {
+        query += "AND (${mail.attachmentsForSearch.escapedName} LIKE ?) ";
+        params.add(Variable.withString("%$searchTerm%"));
       } else if (item.pattern == SearchPattern.Text) {
         query += "AND (${mail.bodyForSearch.escapedName} LIKE ?) ";
         params.add(Variable.withString("%$searchTerm%"));
@@ -89,16 +92,18 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
           query += "AND (${mail.timeStampInUTC.escapedName} > ?) ";
         }
         if (date.till != null) {
+          final till = DateTime(
+              date.till.year, date.till.month, date.till.day, 23, 59, 59);
+
           params.add(
-            Variable.withInt(date.till.millisecondsSinceEpoch ~/ 1000),
+            Variable.withInt(till.millisecondsSinceEpoch ~/ 1000),
           );
           query += "AND (${mail.timeStampInUTC.escapedName} < ?) ";
         }
       } else if (item.pattern == SearchPattern.Has) {
         final flag = item as HasSearchParams;
         if (flag.flags?.contains(SearchFlag.Attachment) == true) {
-          query +=
-              "AND (${mail.hasAttachments.escapedName} = ?) ";
+          query += "AND (${mail.hasAttachments.escapedName} = ?) ";
           params.add(
             Variable.withBool(true),
           );

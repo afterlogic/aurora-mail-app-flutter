@@ -14,13 +14,14 @@ class AdvancedSearch extends StatefulWidget {
 
 class AdvancedSearchState extends State<AdvancedSearch> {
   bool withAttachment = false;
+  var previousText = "";
   TextEditingController fromCtrl;
 
   TextEditingController toCtrl;
   TextEditingController subjectCtrl;
 
   TextEditingController textCtrl;
-
+  TextEditingController attachmentCtrl;
   DateTime since;
   DateTime till;
 
@@ -55,12 +56,16 @@ class AdvancedSearchState extends State<AdvancedSearch> {
         case SearchPattern.Text:
           textCtrl = TextEditingController(text: item.value);
           break;
+        case SearchPattern.Attachment:
+          attachmentCtrl = TextEditingController(text: item.value);
+          break;
       }
     });
     fromCtrl ??= TextEditingController();
     toCtrl ??= TextEditingController();
     subjectCtrl ??= TextEditingController();
     textCtrl ??= TextEditingController();
+    attachmentCtrl ??= TextEditingController();
   }
 
   @override
@@ -154,24 +159,31 @@ class AdvancedSearchState extends State<AdvancedSearch> {
                   ),
                 ],
               ),
-              InputDecorator(
-                decoration: InputDecoration(),
-                child: SizedBox(
-                  height: 40,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text(i18n(context, "messages_view_tab_attachments")),
-                      Checkbox(
-                        value: withAttachment,
-                        onChanged: (bool value) {
-                          withAttachment = value;
-                          setState(() {});
-                        },
-                      ),
-                    ],
+              Stack(
+                alignment: Alignment.centerRight,
+                children: <Widget>[
+                  TextField(
+                    decoration: InputDecoration(
+                      labelText: i18n(context, "messages_view_tab_attachments"),
+                    ),
+                    onChanged: (v) {
+                      if (previousText.isEmpty != v.isEmpty) {
+                        setState(() {});
+                      }
+                      previousText = v;
+                    },
+                    controller: attachmentCtrl,
                   ),
-                ),
+                  Checkbox(
+                    value: withAttachment || attachmentCtrl.text.isNotEmpty,
+                    onChanged: (bool value) {
+                      if (attachmentCtrl.text.isEmpty) {
+                        withAttachment = value;
+                        setState(() {});
+                      }
+                    },
+                  ),
+                ],
               ),
             ],
           ),
@@ -206,6 +218,11 @@ class AdvancedSearchState extends State<AdvancedSearch> {
     }
     if (textCtrl.text.isNotEmpty) {
       searchString += searchUtil.wrap(SearchPattern.Text, textCtrl.text);
+      searchString += " ";
+    }
+    if (attachmentCtrl.text.isNotEmpty) {
+      searchString +=
+          searchUtil.wrap(SearchPattern.Attachment, attachmentCtrl.text);
       searchString += " ";
     }
     if (withAttachment) {

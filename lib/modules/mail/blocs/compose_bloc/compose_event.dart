@@ -139,7 +139,7 @@ class EncryptBody extends ComposeEvent with AlwaysNonEqualObject {
   final bool encrypt;
   final bool sign;
   final String pass;
-  final List<String> contacts;
+  final Set<String> contacts;
   final String body;
   final String senderEmail;
 
