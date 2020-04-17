@@ -1,4 +1,5 @@
 import 'package:aurora_mail/modules/mail/repository/search_util.dart';
+import 'package:aurora_mail/shared_ui/sized_dialog_content.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/material.dart';
 
@@ -42,11 +43,14 @@ class AdvancedSearchState extends State<AdvancedSearch> {
           subjectCtrl = TextEditingController(text: item.value);
           break;
         case SearchPattern.Has:
-          withAttachment = (item as HasSearchParams).flags?.contains(SearchFlag.Attachment)==true;
+          withAttachment = (item as HasSearchParams)
+                  .flags
+                  ?.contains(SearchFlag.Attachment) ==
+              true;
           break;
         case SearchPattern.Date:
-            since = (item as DateSearchParams).since;
-            till = (item as DateSearchParams).till;
+          since = (item as DateSearchParams).since;
+          till = (item as DateSearchParams).till;
           break;
         case SearchPattern.Text:
           textCtrl = TextEditingController(text: item.value);
@@ -63,111 +67,114 @@ class AdvancedSearchState extends State<AdvancedSearch> {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text(i18n(context, "advanced_search")),
-      content: SingleChildScrollView(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            TextField(
-              decoration: InputDecoration(
-                labelText: i18n(context, "messages_from"),
+      content: SizedDialogContent(
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              TextField(
+                decoration: InputDecoration(
+                  labelText: i18n(context, "messages_from"),
+                ),
+                controller: fromCtrl,
               ),
-              controller: fromCtrl,
-            ),
-            TextField(
-              decoration: InputDecoration(
-                labelText: i18n(context, "messages_to"),
+              TextField(
+                decoration: InputDecoration(
+                  labelText: i18n(context, "messages_to"),
+                ),
+                controller: toCtrl,
               ),
-              controller: toCtrl,
-            ),
-            TextField(
-              decoration: InputDecoration(
-                labelText: i18n(context, "messages_subject"),
+              TextField(
+                decoration: InputDecoration(
+                  labelText: i18n(context, "messages_subject"),
+                ),
+                controller: subjectCtrl,
               ),
-              controller: subjectCtrl,
-            ),
-            TextField(
-              decoration: InputDecoration(
-                labelText: i18n(context, "text"),
+              TextField(
+                decoration: InputDecoration(
+                  labelText: i18n(context, "text"),
+                ),
+                controller: textCtrl,
               ),
-              controller: textCtrl,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Flexible(
-                  child: GestureDetector(
-                    onTap: () async {
-                      final date = await showDatePicker(
-                        context: context,
-                        initialDate: DateTime.now(),
-                        firstDate: DateTime.fromMillisecondsSinceEpoch(0),
-                        lastDate: DateTime.now(),
-                      );
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Flexible(
+                    child: GestureDetector(
+                      onTap: () async {
+                        final date = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime.fromMillisecondsSinceEpoch(0),
+                          lastDate: DateTime.now(),
+                        );
 
-                      since = date;
-                      setState(() {});
-                    },
-                    child: InputDecorator(
-                      decoration: InputDecoration(
-                        labelText: i18n(context, "since"),
-                      ),
-                      child: SizedBox(
-                          height: 20,
-                          child: since == null
-                              ? null
-                              : Text(dateFormat.format(since))),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  width: 10,
-                ),
-                Flexible(
-                  child: GestureDetector(
-                    onTap: () async {
-                      final date = await showDatePicker(
-                        context: context,
-                        initialDate: DateTime.now(),
-                        firstDate: DateTime.fromMillisecondsSinceEpoch(0),
-                        lastDate: DateTime.now(),
-                      );
-                      till = date;
-                      setState(() {});
-                    },
-                    child: InputDecorator(
-                      decoration: InputDecoration(
-                        labelText: i18n(context, "till"),
-                      ),
-                      child: SizedBox(
-                        height: 20,
-                        child:
-                            till == null ? null : Text(dateFormat.format(till)),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            InputDecorator(
-              decoration: InputDecoration(),
-              child: SizedBox(
-                height: 40,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text(i18n(context, "messages_view_tab_attachments")),
-                    Checkbox(
-                      value: withAttachment,
-                      onChanged: (bool value) {
-                        withAttachment = value;
+                        since = date;
                         setState(() {});
                       },
+                      child: InputDecorator(
+                        decoration: InputDecoration(
+                          labelText: i18n(context, "since"),
+                        ),
+                        child: SizedBox(
+                            height: 20,
+                            child: since == null
+                                ? null
+                                : Text(dateFormat.format(since))),
+                      ),
                     ),
-                  ],
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Flexible(
+                    child: GestureDetector(
+                      onTap: () async {
+                        final date = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime.fromMillisecondsSinceEpoch(0),
+                          lastDate: DateTime.now(),
+                        );
+                        till = date;
+                        setState(() {});
+                      },
+                      child: InputDecorator(
+                        decoration: InputDecoration(
+                          labelText: i18n(context, "till"),
+                        ),
+                        child: SizedBox(
+                          height: 20,
+                          child: till == null
+                              ? null
+                              : Text(dateFormat.format(till)),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              InputDecorator(
+                decoration: InputDecoration(),
+                child: SizedBox(
+                  height: 40,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(i18n(context, "messages_view_tab_attachments")),
+                      Checkbox(
+                        value: withAttachment,
+                        onChanged: (bool value) {
+                          withAttachment = value;
+                          setState(() {});
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
       actions: <Widget>[

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:aurora_mail/database/app_database.dart';
@@ -9,14 +10,12 @@ import 'package:aurora_mail/modules/mail/models/compose_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/temp_attachment_upload.dart';
 import 'package:aurora_mail/modules/mail/repository/mail_api.dart';
-import 'package:aurora_mail/modules/mail/repository/mail_local_storage.dart';
 import 'package:crypto_worker/crypto_worker.dart';
 import 'package:flutter/widgets.dart';
 
 class ComposeMethods {
   final Account account;
   final PgpWorker pgpWorker;
-
   final _foldersDao = new FoldersDao(DBInstances.appDB);
   MailApi _mailApi;
 
@@ -57,7 +56,7 @@ class ComposeMethods {
         draftUid: draftUid,
         sentFolderName: sentFolder != null ? sentFolder.fullNameRaw : null,
         draftsFolderName:
-            draftsFolder != null ? draftsFolder.fullNameRaw : null,
+        draftsFolder != null ? draftsFolder.fullNameRaw : null,
         identity: identity,
         alias: alias);
   }
@@ -92,22 +91,21 @@ class ComposeMethods {
     );
   }
 
-  Future<void> uploadFile(
-    File file, {
+  Future uploadFile(File file, {
     @required Function(TempAttachmentUpload) onUploadStart,
     @required Function(ComposeAttachment) onUploadEnd,
     @required Function(dynamic) onError,
   }) async {
     if (file == null) return null;
-    return _mailApi.uploadAttachment(file,
+
+    await _mailApi.uploadAttachment(file,
         onUploadStart: onUploadStart,
         onUploadEnd: onUploadEnd,
         onError: onError);
   }
 
   Future<List<ComposeAttachment>> getComposeAttachments(
-    List<MailAttachment> attachments,
-  ) async {
+      List<MailAttachment> attachments,) async {
     // filter out inline attachments
     final filteredAttachments = attachments.where((a) => !a.isInline).toList();
     if (filteredAttachments.isEmpty) return new List<ComposeAttachment>();
@@ -120,14 +118,12 @@ class ComposeMethods {
     return Future.wait(futures);
   }
 
-  Future<String> encrypt(
-    bool sign,
-    bool encrypt,
-    String pass,
-    List<String> contacts,
-    String body,
-    String sender,
-  ) async {
+  Future<String> encrypt(bool sign,
+      bool encrypt,
+      String pass,
+      List<String> contacts,
+      String body,
+      String sender,) async {
     final encryptDecrypt = pgpWorker.encryptDecrypt(
       sign ? sender : null,
       contacts,
