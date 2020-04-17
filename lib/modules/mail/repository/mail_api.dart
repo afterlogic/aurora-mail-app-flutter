@@ -190,6 +190,7 @@ class MailApi {
     @required Function(ComposeAttachment) onUploadEnd,
     @required Function(dynamic) onError,
   }) async {
+    var _onUploadEnd =onUploadEnd;
     final uploader = FlutterUploader();
 
     final parameters = json.encode({"AccountID": _accountId});
@@ -224,15 +225,18 @@ class MailApi {
     onUploadStart(tempAttachment);
 
     uploader.result.listen((result) {
-      final res = json.decode(result.response);
-      if (res is Map && res["Result"] is Map && res["Result"]["Attachment"] is Map) {
-        final attachment = res["Result"]["Attachment"];
-        final composeAttachment = ComposeAttachment.fromNetwork(attachment as Map);
-        assert(tempAttachment != null && tempAttachment.guid is String);
-        composeAttachment.guid = tempAttachment.guid;
-        onUploadEnd(composeAttachment);
-      } else {
-        onError(WebMailApiError(res));
+      if(_onUploadEnd!=null) {
+        final res = json.decode(result.response);
+        if (res is Map && res["Result"] is Map && res["Result"]["Attachment"] is Map) {
+          final attachment = res["Result"]["Attachment"];
+          final composeAttachment = ComposeAttachment.fromNetwork(attachment as Map);
+          assert(tempAttachment != null && tempAttachment.guid is String);
+          composeAttachment.guid = tempAttachment.guid;
+          _onUploadEnd(composeAttachment);
+          _onUploadEnd=null;
+        } else {
+          onError(WebMailApiError(res));
+        }
       }
     }, onError: (err) {
       onError(WebMailApiError(err));

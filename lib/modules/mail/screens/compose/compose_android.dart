@@ -269,10 +269,10 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
   }
 
   void _onAttachmentUploaded(ComposeAttachment attachment) {
-    final i = _attachments.indexWhere((a) => a.guid == attachment.guid);
+  final i =_attachments.indexWhere((a) => a.guid == attachment.guid);
     setState(() {
       _attachments.removeAt(i);
-      _attachments.insert(i, attachment);
+      _attachments.add( attachment);
     });
   }
 
@@ -547,18 +547,6 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
               : KeyboardActionsPlatform.IOS,
           keyboardBarColor: Colors.white,
           actions: [
-            KeyboardAction(
-              focusNode: toNode,
-              toolbarButtons: [_done],
-            ),
-            KeyboardAction(
-              focusNode: ccNode,
-              toolbarButtons: [_done],
-            ),
-            KeyboardAction(
-              focusNode: bccNode,
-              toolbarButtons: [_done],
-            ),
             KeyboardAction(
               focusNode: bodyNode,
               toolbarButtons: [_done],
