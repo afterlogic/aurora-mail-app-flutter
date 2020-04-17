@@ -49,15 +49,15 @@ class _TwoFactorAuthWidgetState extends BState<TwoFactorAuthWidget> {
     return Scaffold(
       appBar: widget.args.isDialog
           ? AMAppBar(
-        title: Text(i18n(
-            context, "settings_accounts_add")),
-      )
+              title: Text(i18n(context, "settings_accounts_add")),
+            )
           : null,
       body: _gradientWrap(
         BlocListener<TwoFactorBloc, TwoFactorState>(
           bloc: bloc,
           listener: (BuildContext context, state) {
             if (state is ErrorState) {
+              pinCtrl.clear();
               _showError(
                 context,
                 i18n(context, state.errorMsg),

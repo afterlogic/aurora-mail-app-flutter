@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
+import 'package:aurora_mail/modules/settings/blocs/settings_bloc/settings_bloc.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/cupertino.dart';
@@ -51,10 +51,11 @@ class _ContactBirthDatePickerState extends BState<ContactBirthDatePicker> {
     }
   }
 
-  void _setDate() {
-    final user = BlocProvider.of<AuthBloc>(context).currentUser;
+  void _setDate() async {
+    final languageString =
+        await BlocProvider.of<SettingsBloc>(context).getLanguage();
 
-    final decoded = json.decode(user.language ?? "{}");
+    final decoded = json.decode(languageString ?? "{}");
     final language = decoded["tag"] as String;
     _dateText.text = DateFormat(
       i18n(context, "contacts_birth_date_format"),

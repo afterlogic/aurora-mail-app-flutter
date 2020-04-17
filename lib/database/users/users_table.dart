@@ -15,6 +15,4 @@ class Users extends Table {
       integer().withDefault(Constant(300)).nullable()();
 
   TextColumn get syncPeriod => text().nullable()();
-
-  TextColumn get language => text().nullable()();
 }

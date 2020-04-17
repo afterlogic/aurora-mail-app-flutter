@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class SettingsLocalStorage {
   final isDarkTheme = "isDarkTheme";
   final is24 = "is24";
+  final language = "language";
 
   Future<AppSettingsSharedPrefs> getSettingsSharedPrefs() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -28,6 +29,16 @@ class SettingsLocalStorage {
   Future<bool> setTimeFormat(bool value) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.setBool(is24, value);
+  }
+
+  void setLanguage(String languageString) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString(language, languageString);
+  }
+
+  Future<String> getLanguage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getString(language);
   }
 }
 

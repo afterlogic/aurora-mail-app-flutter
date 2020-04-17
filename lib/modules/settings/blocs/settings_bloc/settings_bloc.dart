@@ -43,7 +43,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     );
 
     final appSettings = await _methods.getSettingsSharedPrefs();
-
+    final language = await _methods.getLanguage();
     _methods.setUserStorage(event.user);
 
     if (state is SettingsLoaded) {
@@ -54,7 +54,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
           darkThemeEnabled: Value(appSettings.isDarkTheme),
           is24: Value(appSettings.is24),
           language: Value(
-            Language.fromJson(event.user.language),
+            Language.fromJson(language),
           ));
     } else {
       yield SettingsLoaded(
@@ -63,7 +63,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
         syncPeriod: event.user.syncPeriod,
         darkThemeEnabled: appSettings.isDarkTheme,
         is24: appSettings.is24,
-        language: Language.fromJson(event.user.language),
+        language: Language.fromJson(language),
       );
     }
   }
@@ -139,5 +139,9 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
 
   Future onResume() async {
 //    return _methods.clearNotification();
+  }
+
+  Future<String> getLanguage() {
+    return _methods.getLanguage();
   }
 }

@@ -60,14 +60,12 @@ class SettingsMethods {
     return _local.getSettingsSharedPrefs();
   }
 
-  Future<User> setLanguage(Language language) async {
-    final localId = await currentUserId;
-    await _usersDao.updateUser(
-      localId,
-      new UsersCompanion(language: Value(language?.toNullableJson())),
-    );
+  Future setLanguage(Language language) async {
+    await _local.setLanguage(language?.toNullableJson());
+  }
 
-    return _usersDao.getUserByLocalId(localId);
+  Future<String> getLanguage() async {
+    return _local.getLanguage();
   }
 
   setUserStorage(User user) {

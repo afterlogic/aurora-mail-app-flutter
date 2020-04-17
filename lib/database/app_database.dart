@@ -15,6 +15,7 @@ import 'package:moor_flutter/moor_flutter.dart';
 
 import 'accounts/accounts_table.dart';
 import 'migration/drop_all.dart';
+import 'migration/m2to3.dart';
 import 'users/users_table.dart';
 
 part 'app_database.g.dart';
@@ -40,10 +41,12 @@ class DBInstances {
 class AppDatabase extends _$AppDatabase {
   final migrationCompleter = Completer();
 
-  AppDatabase() : super(FlutterQueryExecutor.inDatabaseFolder(path: 'app_db.sqlite')) ;
+  AppDatabase()
+      : super(FlutterQueryExecutor.inDatabaseFolder(path: 'app_db.sqlite'));
 
   Map<int, _Migration> get _migrationMap => {
         1: dropAll,
+        2: m2to3,
       };
 
   @override
