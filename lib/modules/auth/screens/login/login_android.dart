@@ -238,8 +238,7 @@ class _LoginAndroidState extends BState<LoginAndroid> {
                   children: <Widget>[
                     if (_showHostField)
                       AuthInput(
-                        enableSuggestions: false,
-                        autocorrect: false,
+
                         controller: hostCtrl,
                         label: i18n(context, "login_input_host"),
                         keyboardType: TextInputType.url,
@@ -247,6 +246,8 @@ class _LoginAndroidState extends BState<LoginAndroid> {
                       ),
                     SizedBox(height: 10),
                     AuthInput(
+                      enableSuggestions: false,
+                      autocorrect: false,
                       controller: emailCtrl,
                       label: i18n(context, "login_input_email"),
                       keyboardType: TextInputType.emailAddress,

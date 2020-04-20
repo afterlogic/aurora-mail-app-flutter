@@ -23,8 +23,8 @@ class AuthInput extends StatefulWidget {
     this.keyboardType,
     this.visibilityToggleColor,
     this.validator,
-    this.autocorrect,
-    this.enableSuggestions,
+    this.autocorrect= true,
+    this.enableSuggestions= true,
   }) : super(key: key);
 
   @override
