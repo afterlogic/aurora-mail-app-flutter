@@ -46,13 +46,15 @@ class MessageWebView extends StatefulWidget {
   final String decrypted;
   final PgpSettingsBloc bloc;
   final ContactsBloc contactsBloc;
+  final MessageViewBloc messageViewBloc;
 
   const MessageWebView(
     this.message,
     this.attachments,
     this.decrypted,
     this.bloc,
-    this.contactsBloc, {
+    this.contactsBloc,
+    this.messageViewBloc, {
     Key key,
   }) : super(key: key);
 
@@ -67,6 +69,7 @@ class _MessageWebViewState extends BState<MessageWebView>
   String _htmlData;
   bool _pageLoaded = true;
   bool _showImages = false;
+
   ThemeData theme;
   StreamSubscription sub;
 
@@ -86,7 +89,6 @@ class _MessageWebViewState extends BState<MessageWebView>
     super.didChangeDependencies();
     _showImages = !widget.message.hasExternals || widget.message.safety;
     theme = Theme.of(context);
-    _getHtmlWithImages();
   }
 
   @override
@@ -113,7 +115,7 @@ class _MessageWebViewState extends BState<MessageWebView>
     } else {
       htmlData = widget.message.htmlBody;
     }
-    setState(() => _htmlData = htmlData);
+
     if (_showImages) {
       htmlData = htmlData
           .replaceAll("data-x-src=", "src=")
@@ -156,13 +158,13 @@ class _MessageWebViewState extends BState<MessageWebView>
     }
 
     if (_htmlData != null) {
-      if(Platform.isAndroid) {
+      if (Platform.isAndroid) {
         flutterWebviewPlugin.reloadUrl(_getHtmlUri(htmlData));
-      }else if(Platform.isIOS) {
+      } else if (Platform.isIOS) {
         _controller?.loadUrl(_getHtmlUri(htmlData));
       }
     }
-    setState(() => _htmlData = htmlData);
+    if (mounted) setState(() => _htmlData = htmlData);
   }
 
   String _formatTo(Message message) {
@@ -213,7 +215,6 @@ class _MessageWebViewState extends BState<MessageWebView>
         builder: (_) =>
             ImportKeyDialog(keys.contactKeys, keys.contactKeys, widget.bloc),
       );
-
     } else if (attachment.fileName.endsWith(".vcf")) {
       final msg = i18n(context, "messages_attachment_downloading",
           {"fileName": attachment.fileName});
@@ -227,7 +228,8 @@ class _MessageWebViewState extends BState<MessageWebView>
         attachment,
         (path) async {
           try {
-            String content=Platform.isIOS? path :await File(path).readAsString();
+            String content =
+                Platform.isIOS ? path : await File(path).readAsString();
             final vcf = Vcf.fromString(content);
             await importContactFromVcf(context, vcf, widget.contactsBloc);
           } catch (e) {}
@@ -246,6 +248,7 @@ class _MessageWebViewState extends BState<MessageWebView>
       );
     }
   }
+
   FutureOr<NavigationDecision> _onWebViewNavigateRequestIos(
       NavigationRequest request) async {
     if (request.url.endsWith(MessageWebViewActions.SHOW_INFO)) {
@@ -258,7 +261,7 @@ class _MessageWebViewState extends BState<MessageWebView>
     } else if (request.url
         .endsWith(MessageWebViewActions.DOWNLOAD_ATTACHMENT)) {
       final parts =
-      request.url.split(MessageWebViewActions.DOWNLOAD_ATTACHMENT);
+          request.url.split(MessageWebViewActions.DOWNLOAD_ATTACHMENT);
       final downloadUrl = parts[parts.length - 2];
       _startDownload(downloadUrl);
       return NavigationDecision.prevent;
@@ -269,7 +272,7 @@ class _MessageWebViewState extends BState<MessageWebView>
       return NavigationDecision.navigate;
     }
   }
-  
+
   _onWebViewNavigateRequest(WebViewStateChanged state) async {
     print(state.type);
     if (state.type == WebViewState.startLoad) {
@@ -301,68 +304,101 @@ class _MessageWebViewState extends BState<MessageWebView>
     }
   }
 
+  Future loadFuture;
+
+  Future onLoad() {
+    return loadFuture ??=
+        widget.messageViewBloc.checkInWhiteList(widget.message).then((item) {
+      _showImages = item;
+      _getHtmlWithImages();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        if (!_showImages)
-          Container(
-            padding: const EdgeInsets.all(6.0),
-            color: Color(0xFFffffc5),
-            child: RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: i18n(context, "messages_images_security_alert") + " ",
-                    style: TextStyle(color: Colors.black),
+    return FutureBuilder(
+      future: onLoad(),
+      builder: (context, state) {
+        if (state.connectionState != ConnectionState.done) {
+          return SizedBox.shrink();
+        }
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            if (!_showImages)
+              Container(
+                padding: const EdgeInsets.all(6.0),
+                color: Color(0xFFffffc5),
+                child: RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: i18n(context, "messages_images_security_alert") +
+                            " ",
+                        style: TextStyle(color: Colors.black),
+                      ),
+                      TextSpan(
+                        text: i18n(context, "messages_show_images"),
+                        style: TextStyle(color: Colors.blue),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () {
+                            setState(() => _showImages = true);
+                            _getHtmlWithImages();
+                          },
+                      ),
+                      TextSpan(text: "       "),
+                      TextSpan(
+                        text: i18n(context, "messages_always_show_images"),
+                        style: TextStyle(color: Colors.blue),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () {
+                            setState(() => _showImages = true);
+                            widget.messageViewBloc
+                                .add(AddInWhiteList(widget.message));
+                            _getHtmlWithImages();
+                          },
+                      ),
+                    ],
                   ),
-                  TextSpan(
-                    text: i18n(context, "messages_show_images"),
-                    style: TextStyle(color: Colors.blue),
-                    recognizer: TapGestureRecognizer()
-                      ..onTap = () {
-                        setState(() => _showImages = true);
-                        _getHtmlWithImages();
-                      },
+                ),
+              ),
+            Flexible(
+              child: Stack(
+                children: [
+                  if (Platform.isIOS)
+                    WebView(
+                      key: Key(widget.message.uid.toString()),
+                      initialUrl: _getHtmlUri(_htmlData),
+                      javascriptMode: JavascriptMode.unrestricted,
+                      onWebViewCreated: (WebViewController c) =>
+                          _controller = c,
+                      navigationDelegate: _onWebViewNavigateRequestIos,
+                      onPageFinished: (_) async =>
+                          setState(() => _pageLoaded = true),
+                    ),
+                  if (Platform.isAndroid)
+                    WebviewScaffold(
+                      key: Key(widget.message.uid.toString()),
+                      url: _getHtmlUri(_htmlData),
+                      withJavascript: true,
+                    ),
+                  Positioned.fill(
+                    child: IgnorePointer(
+                      ignoring: true,
+                      child: AnimatedOpacity(
+                        opacity: _pageLoaded && _htmlData != null ? 0.0 : 1.0,
+                        duration: Duration(milliseconds: 100),
+                        child: Container(color: theme.scaffoldBackgroundColor),
+                      ),
+                    ),
                   ),
                 ],
               ),
             ),
-          ),
-        Flexible(
-          child: Stack(
-            children: [
-              if(Platform.isIOS)
-              WebView(
-                key: Key(widget.message.uid.toString()),
-                initialUrl: _getHtmlUri(_htmlData),
-                javascriptMode: JavascriptMode.unrestricted,
-                onWebViewCreated: (WebViewController c) => _controller = c,
-                navigationDelegate: _onWebViewNavigateRequestIos,
-                onPageFinished: (_) async => setState(() => _pageLoaded = true),
-              ),
-              if(Platform.isAndroid)
-              WebviewScaffold(
-                key: Key(widget.message.uid.toString()),
-                url: _getHtmlUri(_htmlData),
-                withJavascript: true,
-//                onPageFinished: (_) async => setState(() => _pageLoaded = true),
-              ),
-              Positioned.fill(
-                child: IgnorePointer(
-                  ignoring: true,
-                  child: AnimatedOpacity(
-                    opacity: _pageLoaded && _htmlData != null ? 0.0 : 1.0,
-                    duration: Duration(milliseconds: 100),
-                    child: Container(color: theme.scaffoldBackgroundColor),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
+          ],
+        );
+      },
     );
   }
 
@@ -447,12 +483,13 @@ class _MessageWebViewState extends BState<MessageWebView>
     }
     return null;
   }
-var routeCount=0;
+
+  var routeCount = 0;
+
   @override
   void didPopNext() {
     routeCount--;
-    if(Platform.isAndroid)
-    if(routeCount==0){
+    if (Platform.isAndroid && routeCount == 0) {
       flutterWebviewPlugin.show();
     }
   }
@@ -460,8 +497,7 @@ var routeCount=0;
   @override
   void didPushNext() {
     routeCount++;
-    if(Platform.isAndroid)
-    if(routeCount==1){
+    if (Platform.isAndroid && routeCount == 1) {
       flutterWebviewPlugin.hide();
     }
   }

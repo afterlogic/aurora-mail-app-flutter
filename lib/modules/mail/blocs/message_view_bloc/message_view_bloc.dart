@@ -5,7 +5,6 @@ import 'package:aurora_mail/inject/app_inject.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/mail/blocs/message_view_bloc/message_view_methods.dart';
 import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
-import 'package:aurora_mail/modules/mail/screens/message_view/components/attachment.dart';
 import 'package:aurora_mail/utils/permissions.dart';
 import 'package:bloc/bloc.dart';
 import 'package:crypto_worker/crypto_worker.dart';
@@ -37,6 +36,16 @@ class MessageViewBloc extends Bloc<MessageViewEvent, MessageViewState> {
     if (event is CheckEncrypt) yield* _checkEncrypt(event);
     if (event is DecryptBody) yield* _decryptBody(event);
     if (event is GetFolderType) yield* _getFolderType(event);
+    if (event is AddInWhiteList) yield* _addInWhiteList(event);
+  }
+
+  Stream<MessageViewState> _addInWhiteList(AddInWhiteList state) async* {
+    await _methods.addInWhiteList(state.message);
+  }
+
+  Future<bool> checkInWhiteList(Message message) async {
+    final has = await _methods.checkInWhiteList(message);
+    return has;
   }
 
   Stream<MessageViewState> _downloadAttachment(

@@ -9820,6 +9820,131 @@ class $AliasesTableTable extends AliasesTable
   }
 }
 
+class WhiteMail extends DataClass implements Insertable<WhiteMail> {
+  final String mail;
+  WhiteMail({@required this.mail});
+  factory WhiteMail.fromData(Map<String, dynamic> data, GeneratedDatabase db,
+      {String prefix}) {
+    final effectivePrefix = prefix ?? '';
+    final stringType = db.typeSystem.forDartType<String>();
+    return WhiteMail(
+      mail: stringType.mapFromDatabaseResponse(data['${effectivePrefix}mail']),
+    );
+  }
+  factory WhiteMail.fromJson(Map<String, dynamic> json,
+      {ValueSerializer serializer}) {
+    serializer ??= moorRuntimeOptions.defaultSerializer;
+    return WhiteMail(
+      mail: serializer.fromJson<String>(json['mail']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer serializer}) {
+    serializer ??= moorRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'mail': serializer.toJson<String>(mail),
+    };
+  }
+
+  @override
+  WhiteMailTableCompanion createCompanion(bool nullToAbsent) {
+    return WhiteMailTableCompanion(
+      mail: mail == null && nullToAbsent ? const Value.absent() : Value(mail),
+    );
+  }
+
+  WhiteMail copyWith({String mail}) => WhiteMail(
+        mail: mail ?? this.mail,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('WhiteMail(')..write('mail: $mail')..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => $mrjf(mail.hashCode);
+  @override
+  bool operator ==(dynamic other) =>
+      identical(this, other) || (other is WhiteMail && other.mail == this.mail);
+}
+
+class WhiteMailTableCompanion extends UpdateCompanion<WhiteMail> {
+  final Value<String> mail;
+  const WhiteMailTableCompanion({
+    this.mail = const Value.absent(),
+  });
+  WhiteMailTableCompanion.insert({
+    @required String mail,
+  }) : mail = Value(mail);
+  WhiteMailTableCompanion copyWith({Value<String> mail}) {
+    return WhiteMailTableCompanion(
+      mail: mail ?? this.mail,
+    );
+  }
+}
+
+class $WhiteMailTableTable extends WhiteMailTable
+    with TableInfo<$WhiteMailTableTable, WhiteMail> {
+  final GeneratedDatabase _db;
+  final String _alias;
+  $WhiteMailTableTable(this._db, [this._alias]);
+  final VerificationMeta _mailMeta = const VerificationMeta('mail');
+  GeneratedTextColumn _mail;
+  @override
+  GeneratedTextColumn get mail => _mail ??= _constructMail();
+  GeneratedTextColumn _constructMail() {
+    return GeneratedTextColumn(
+      'mail',
+      $tableName,
+      false,
+    );
+  }
+
+  @override
+  List<GeneratedColumn> get $columns => [mail];
+  @override
+  $WhiteMailTableTable get asDslTable => this;
+  @override
+  String get $tableName => _alias ?? 'white_mail_table';
+  @override
+  final String actualTableName = 'white_mail_table';
+  @override
+  VerificationContext validateIntegrity(WhiteMailTableCompanion d,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    if (d.mail.present) {
+      context.handle(
+          _mailMeta, mail.isAcceptableValue(d.mail.value, _mailMeta));
+    } else if (isInserting) {
+      context.missing(_mailMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {mail};
+  @override
+  WhiteMail map(Map<String, dynamic> data, {String tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
+    return WhiteMail.fromData(data, _db, prefix: effectivePrefix);
+  }
+
+  @override
+  Map<String, Variable> entityToSql(WhiteMailTableCompanion d) {
+    final map = <String, Variable>{};
+    if (d.mail.present) {
+      map['mail'] = Variable<String, StringType>(d.mail.value);
+    }
+    return map;
+  }
+
+  @override
+  $WhiteMailTableTable createAlias(String alias) {
+    return $WhiteMailTableTable(_db, alias);
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(SqlTypeSystem.defaultInstance, e);
   $MailTable _mail;
@@ -9847,6 +9972,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   $AliasesTableTable _aliasesTable;
   $AliasesTableTable get aliasesTable =>
       _aliasesTable ??= $AliasesTableTable(this);
+  $WhiteMailTableTable _whiteMailTable;
+  $WhiteMailTableTable get whiteMailTable =>
+      _whiteMailTable ??= $WhiteMailTableTable(this);
   @override
   Iterable<TableInfo> get allTables => allSchemaEntities.whereType<TableInfo>();
   @override
@@ -9860,6 +9988,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
         contactsStorages,
         pgpKeyModel,
         accountIdentityTable,
-        aliasesTable
+        aliasesTable,
+        whiteMailTable
       ];
 }

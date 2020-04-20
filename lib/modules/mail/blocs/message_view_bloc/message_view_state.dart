@@ -67,3 +67,12 @@ class FolderTypeState extends MessageViewState {
   @override
   List<Object> get props => [type];
 }
+
+class CheckedSafety extends MessageViewState {
+  final bool safety;
+
+  CheckedSafety(this.safety);
+
+  @override
+  List<Object> get props => [safety];
+}

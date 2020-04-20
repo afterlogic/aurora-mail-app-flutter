@@ -294,7 +294,13 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
                   }
                 },
                 child: MessageWebView(
-                    message, attachments, decryptedText, pgpBloc, contactsBloc),
+                  message,
+                  attachments,
+                  decryptedText,
+                  pgpBloc,
+                  contactsBloc,
+                  _messageViewBloc,
+                ),
               ),
         bottomNavigationBar: BuildProperty.cryptoEnable
             ? MailBottomBar(

@@ -1,3 +1,4 @@
+import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:aurora_mail/utils/always_non_equal_object.dart';
 import 'package:crypto_worker/crypto_worker.dart';
@@ -62,4 +63,14 @@ class DecryptBody extends MessageViewEvent with AlwaysNonEqualObject {
 
   @override
   List<Object> get props => [sender, body];
+}
+
+
+class AddInWhiteList extends MessageViewEvent {
+  final Message message;
+
+  AddInWhiteList(this.message);
+
+  @override
+  List<Object> get props => [message];
 }

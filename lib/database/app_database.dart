@@ -5,6 +5,7 @@ import 'package:aurora_mail/database/aliases/aliases_table.dart';
 import 'package:aurora_mail/database/folders/folders_table.dart';
 import 'package:aurora_mail/database/mail/mail_table.dart';
 import 'package:aurora_mail/database/pgp/pgp_key_model.dart';
+import 'package:aurora_mail/database/white_mail/white_mail_model.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_storage_model.dart';
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/contacts/contacts_table.dart';
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/contacts/converters/list_string_converter.dart';
@@ -15,7 +16,8 @@ import 'package:moor_flutter/moor_flutter.dart';
 
 import 'accounts/accounts_table.dart';
 import 'migration/drop_all.dart';
-import 'migration/m2to3.dart';
+import 'migration/m2.dart';
+import 'migration/m3.dart';
 import 'users/users_table.dart';
 
 part 'app_database.g.dart';
@@ -37,6 +39,7 @@ class DBInstances {
   PgpKeyModel,
   AccountIdentityTable,
   AliasesTable,
+  WhiteMailTable,
 ])
 class AppDatabase extends _$AppDatabase {
   final migrationCompleter = Completer();
@@ -46,7 +49,8 @@ class AppDatabase extends _$AppDatabase {
 
   Map<int, _Migration> get _migrationMap => {
         1: dropAll,
-        2: m2to3,
+        2: m2,
+        3: m3,//from 3 to 4
       };
 
   @override
@@ -71,5 +75,5 @@ class AppDatabase extends _$AppDatabase {
   // you should bump this number whenever you change or add a table definition. Migrations
   // are covered later in this readme.
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 4;
 }
