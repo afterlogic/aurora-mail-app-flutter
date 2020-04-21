@@ -8,6 +8,7 @@ import 'package:aurora_mail/database/folders/folders_table.dart';
 import 'package:aurora_mail/database/mail/mail_dao.dart';
 import 'package:aurora_mail/database/mail/mail_table.dart';
 import 'package:aurora_mail/database/users/users_dao.dart';
+import 'package:aurora_mail/logger/logger.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/models/message_info.dart';
 import 'package:aurora_mail/modules/mail/repository/folders_api.dart';
@@ -225,7 +226,7 @@ class MailMethods {
       }
     }
 
-    print("getting folder info for: ${folderToUpdate.fullNameRaw}");
+    logger.log("getting folder info for: ${folderToUpdate.fullNameRaw}");
 
     final syncPeriod = SyncPeriod.dbStringToPeriod(updatedUser.syncPeriod);
     final periodStr = SyncPeriod.periodToDate(syncPeriod);
@@ -273,7 +274,7 @@ class MailMethods {
     );
 
     if (newMessagesInfo == null) {
-      print(
+      logger.log(
           "Attention! messagesInfo is null, perhaps another folder was selected while messages info was being retrieved.");
       return _setMessagesInfoToFolder();
     }
@@ -319,11 +320,11 @@ class MailMethods {
         .getRange(0, min(MESSAGES_PER_CHUNK, messagesForUpdate.length))
         .toList();
 
-    print("${messagesForUpdate.length} messages in queue");
+    logger.log("${messagesForUpdate.length} messages in queue");
 
     // if all messages are synced
     if (uids.length == 0) {
-      print("All the messages have been synced for: ${folder.fullNameRaw}");
+      logger.log("All the messages have been synced for: ${folder.fullNameRaw}");
       await _foldersDao.updateFolder(
         new FoldersCompanion(
           needsInfoUpdate: Value(false),
@@ -332,14 +333,14 @@ class MailMethods {
       );
       assert(_syncQueue.contains(folder.guid));
       _syncQueue.remove(folder.guid);
-      print("_syncQueue: $_syncQueue");
+      logger.log("_syncQueue: $_syncQueue");
       if (_syncQueue.isNotEmpty) {
         return _setMessagesInfoToFolder();
       } else {
         return null;
       }
     } else {
-      print("syncing messages for: ${folder.fullNameRaw}");
+      logger.log("syncing messages for: ${folder.fullNameRaw}");
       final rawBodies = await _mailApi.getMessageBodies(
         folderName: folder.fullNameRaw,
         uids: uids.map((item) => item.uid).toList(),

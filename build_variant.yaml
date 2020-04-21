@@ -55,3 +55,4 @@ multiAccountEnable: false
 useMainLogo: false
 selfDestructingEmail: false
 expandMessageThread: false
+logger: true

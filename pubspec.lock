@@ -225,21 +225,21 @@ packages:
   crypto_model:
     dependency: "direct main"
     description:
-      path: "module/crypto/crypto_model"
+      path: "module\\crypto\\crypto_model"
       relative: true
     source: path
     version: "0.0.1"
   crypto_storage:
     dependency: "direct main"
     description:
-      path: "module/crypto/crypto_storage"
+      path: "module\\crypto\\crypto_storage"
       relative: true
     source: path
     version: "0.0.1"
   crypto_worker:
     dependency: "direct main"
     description:
-      path: "module/crypto/crypto_worker"
+      path: "module\\crypto\\crypto_worker"
       relative: true
     source: path
     version: "0.0.1"
@@ -609,7 +609,7 @@ packages:
   notifications_utils:
     dependency: "direct main"
     description:
-      path: "core/notifications_utils"
+      path: "core\\notifications_utils"
       relative: true
     source: path
     version: "0.0.1"
@@ -924,7 +924,7 @@ packages:
   theme:
     dependency: "direct main"
     description:
-      path: "build_res/natro/theme"
+      path: "build_res\\natro\\theme"
       relative: true
     source: path
     version: "0.0.1"
@@ -994,7 +994,7 @@ packages:
   vcf:
     dependency: "direct main"
     description:
-      path: "core/vcf"
+      path: "core\\vcf"
       relative: true
     source: path
     version: "0.0.1"
@@ -1022,7 +1022,7 @@ packages:
   webmail_api_client:
     dependency: "direct main"
     description:
-      path: "core/webmail_api_client"
+      path: "core\\webmail_api_client"
       relative: true
     source: path
     version: "0.0.1"

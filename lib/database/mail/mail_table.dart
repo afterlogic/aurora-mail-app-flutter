@@ -202,9 +202,6 @@ class Mail extends Table {
       } catch (err) {
         throw Exception("Couldn't find message: ${raw["Uid"]}");
       }
-      if (raw["CC"] != null) {
-        print(raw["CC"]);
-      }
       final toToDisplay = (raw["To"] != null &&
               raw["To"]["@Collection"]?.isNotEmpty == true)
           ? raw["To"]["@Collection"]

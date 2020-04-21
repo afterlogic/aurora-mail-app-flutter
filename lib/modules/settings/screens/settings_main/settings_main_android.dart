@@ -1,4 +1,5 @@
 import 'package:aurora_mail/build_property.dart';
+import 'package:aurora_mail/logger/logger.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_event.dart';
 import 'package:aurora_mail/modules/settings/screens/about/about_route.dart';
@@ -53,6 +54,11 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
           ListTile(
             leading: AMCircleIcon(Icons.info_outline),
             title: Text(i18n(context, "settings_about")),
+            onLongPress: BuildProperty.logger
+                ? () {
+                    logger.enable = !logger.enable;
+                  }
+                : null,
             onTap: () => Navigator.pushNamed(context, AboutRoute.name),
           ),
           if (!BuildProperty.multiUserEnable)

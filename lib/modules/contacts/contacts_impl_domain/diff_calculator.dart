@@ -1,3 +1,4 @@
+import 'package:aurora_mail/logger/logger.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_storage_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
@@ -39,7 +40,7 @@ class ContactsDiffCalculator {
         }, orElse: () => null) !=
         null);
 
-    print("""
+    logger.log("""
 Contacts diff calcultaion finished:
   added: ${addedContacts.length}
   removed: ${deletedContacts.length}
@@ -91,7 +92,7 @@ Contacts diff calcultaion finished:
     if (addedStorages.isNotEmpty ||
         deletedStorages.isNotEmpty ||
         updatedStorages.isNotEmpty) {
-      print("""
+      logger.log("""
 Storages diff calcultaion finished:
   added: ${addedStorages.length}
   removed: ${deletedStorages.length}

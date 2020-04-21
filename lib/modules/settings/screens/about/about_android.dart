@@ -41,7 +41,6 @@ class _AboutAndroidState extends BState<AboutAndroid> {
   Future _initAppInfo() async {
     setState(() => loading = true);
     final packageInfo = await PackageInfo.fromPlatform();
-    print(packageInfo);
     if (packageInfo.version != null && packageInfo.buildNumber != null) {
       _version = "${packageInfo.version}+${packageInfo.buildNumber}";
     } else {

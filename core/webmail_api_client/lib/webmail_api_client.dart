@@ -17,6 +17,8 @@ class WebMailApi {
   final String moduleName;
   final String hostname;
   final String token;
+  static Function(String) onRequest;
+  static Function(String) onError;
 
   String get apiUrl => "$hostname/?Api/";
 
@@ -31,14 +33,16 @@ class WebMailApi {
   static final _authErrorStreamCtrl = StreamController<void>.broadcast();
 
   // fired when token is invalid (e.g. to send user back to login)
-  static Stream<void> get authErrorStream => _authErrorStreamCtrl.stream.asBroadcastStream();
+  static Stream<void> get authErrorStream =>
+      _authErrorStreamCtrl.stream.asBroadcastStream();
 
   static Map<String, String> getHeaderWithToken(String token) {
     return {'Authorization': 'Bearer $token'};
   }
 
   // getRawResponse in case AuthenticatedUserId is required, which is outside Result objects
-  Future post(WebMailApiBody body, {bool useToken, bool getRawResponse = false}) async {
+  Future post(WebMailApiBody body,
+      {bool useToken, bool getRawResponse = false}) async {
     Map<String, String> headers;
 
     if (useToken == false || token == null) {
@@ -46,8 +50,11 @@ class WebMailApi {
     } else {
       headers = {'Authorization': 'Bearer $token'};
     }
+    if (onRequest != null)
+      onRequest("url:$apiUrl\nbody:${body.toMap(moduleName)}");
 
-    final rawResponse = await http.post(apiUrl, headers: headers, body: body.toMap(moduleName));
+    final rawResponse =
+        await http.post(apiUrl, headers: headers, body: body.toMap(moduleName));
 
     final res = json.decode(rawResponse.body);
 
@@ -57,8 +64,7 @@ class WebMailApi {
       else
         return res["Result"];
     } else {
-      print("WebMailApiError: $res");
-
+      if (onError != null) onError("${rawResponse.body}");
       if (res["ErrorCode"] == 102) {
         _authErrorStreamCtrl.add(102);
       }

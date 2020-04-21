@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/logger/logger.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/models/message_info.dart';
 import 'package:flutter/foundation.dart';
@@ -167,7 +168,7 @@ class Folders extends Table {
       }
     }
 
-    print("""
+    logger.log("""
     Folders diff calcultaion finished:
       removed: ${removedFolders.length}
       added: ${addedFolders.length}
@@ -208,7 +209,7 @@ class Folders extends Table {
     // no need to calculate difference if all the messages are unchanged
     if (unchangedMessages.length == oldInfo.length &&
         unchangedMessages.length == newInfo.length) {
-      print("Diff calcultaion finished: no changes");
+      logger.log("Diff calcultaion finished: no changes");
       return new MessagesInfoDiffCalcResult(
         updatedInfo: oldInfo,
         removedUids: [],
@@ -234,7 +235,7 @@ class Folders extends Table {
             orElse: () => null) !=
         null);
 
-    print("""
+    logger.log("""
     Messages info diff calcultaion finished:
       unchanged: ${unchangedMessages.length}
       changedParent: ${changedParent.length}

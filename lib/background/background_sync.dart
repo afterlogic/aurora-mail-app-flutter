@@ -5,6 +5,7 @@ import 'package:aurora_mail/database/folders/folders_table.dart';
 import 'package:aurora_mail/database/mail/mail_dao.dart';
 import 'package:aurora_mail/database/mail/mail_table.dart';
 import 'package:aurora_mail/database/users/users_dao.dart';
+import 'package:aurora_mail/logger/logger.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/models/message_info.dart';
 import 'package:aurora_mail/modules/auth/repository/auth_local_storage.dart';
@@ -26,19 +27,19 @@ class BackgroundSync {
 //  final _notificationStorage = NotificationLocalStorage();
 
   Future<bool> sync(bool isBackground) async {
-    print("MailSync: sync START");
+    logger.log("MailSync: sync START");
     var hasUpdate = false;
     try {
       final users = await _usersDao.getUsers();
 
       for (final user in users) {
         final newMessages = await getNewMessages(user);
-        print("MailSync: sync END");
+        logger.log("MailSync: sync END");
         if (newMessages.isNotEmpty) {
           if (isBackground == true) {
             newMessages
                 .sort((a, b) => a.timeStampInUTC.compareTo(b.timeStampInUTC));
-            print("MailSync: ${newMessages.length} new message(s)");
+            logger.log("MailSync: ${newMessages.length} new message(s)");
 
             for (final message in newMessages) {
               await showNewMessage(message, user);
@@ -49,7 +50,7 @@ class BackgroundSync {
 
           hasUpdate = true;
         } else {
-          print("MailSync: No messages to sync");
+          logger.log("MailSync: No messages to sync");
         }
       }
     }
