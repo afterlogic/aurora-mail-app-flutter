@@ -18,7 +18,7 @@ import 'logger/logger.dart';
 import 'modules/app_screen.dart';
 
 void main() async {
-  Crashlytics.instance.enableInDevMode = false;
+  Crashlytics.instance.enableInDevMode = true;
 
   AppInjector.create();
   FlutterError.onError = Crashlytics.instance.recordFlutterError;
