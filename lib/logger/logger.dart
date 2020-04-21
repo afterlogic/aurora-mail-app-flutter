@@ -30,7 +30,7 @@ class _Logger {
   log(Object text, [bool show = true]) {
     if (show == true) print(text);
     if (isRun) {
-      buffer += "$text";
+      buffer += "$text\n";
       count++;
       if (onEdit != null) onEdit();
     }

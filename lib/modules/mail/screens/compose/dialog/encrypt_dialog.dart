@@ -19,7 +19,7 @@ class _EncryptDialogState extends BState<EncryptDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(i18n(context, "sign_or_encrypt_tittle")),
+      title: Text(i18n(context, "label_pgp_sign_or_encrypt")),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -27,7 +27,7 @@ class _EncryptDialogState extends BState<EncryptDialog> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Text(i18n(context, "encrypt")),
+                Text(i18n(context, "btn_pgp_encrypt")),
                 Checkbox(
                   value: _encrypt,
                   onChanged: (bool value) {
@@ -41,7 +41,7 @@ class _EncryptDialogState extends BState<EncryptDialog> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Text(i18n(context, "sign")),
+                Text(i18n(context, "label_pgp_sign")),
                 Checkbox(
                   value: _sign,
                   onChanged: (bool value) {
@@ -78,7 +78,7 @@ class _EncryptDialogState extends BState<EncryptDialog> {
       ),
       actions: <Widget>[
         FlatButton(
-          child: Text(i18n(context, "close")),
+          child: Text(i18n(context, "btn_close")),
           onPressed: () => Navigator.pop(context),
         ),
         FlatButton(

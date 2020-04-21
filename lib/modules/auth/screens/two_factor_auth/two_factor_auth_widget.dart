@@ -98,13 +98,13 @@ class _TwoFactorAuthWidgetState extends BState<TwoFactorAuthWidget> {
               children: <Widget>[
                 if (!widget.args.isDialog)
                   PresentationHeader(
-                    message: i18n(context, "two_factor_auth"),
+                    message: i18n(context, "hint_2fa"),
                   ),
                 Column(
                   children: <Widget>[
                     AuthInput(
                       controller: pinCtrl,
-                      label: i18n(context, "pin"),
+                      label: i18n(context, "input_2fa_pin"),
                       keyboardType: TextInputType.emailAddress,
                       validator: (value) =>
                           validateInput(context, value, [ValidationType.empty]),
@@ -117,7 +117,7 @@ class _TwoFactorAuthWidgetState extends BState<TwoFactorAuthWidget> {
                   width: double.infinity,
                   child: AMButton(
                     shadow: AppColor.enableShadow ? null : BoxShadow(),
-                    child: Text(i18n(context, "verify_pin")),
+                    child: Text(i18n(context, "btn_verify_pin")),
                     isLoading: loading,
                     onPressed: () => _login(),
                   ),

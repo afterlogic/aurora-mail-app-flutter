@@ -34,7 +34,7 @@ class _GenerateKeyDialogState extends BState<GenerateKeyDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(i18n(context, "generate_keys")),
+      title: Text(i18n(context, "btn_pgp_generate_keys")),
       content: SingleChildScrollView(
           child: Form(
         key: _formKey,
@@ -84,7 +84,7 @@ class _GenerateKeyDialogState extends BState<GenerateKeyDialog> {
               obscureText: _obscure,
             ),
             DropdownButtonFormField(
-              decoration: InputDecoration(labelText: i18n(context, "length")),
+              decoration: InputDecoration(labelText: i18n(context, "label_length")),
               value: length,
               items: lengths.map((value) {
                 return DropdownMenuItem<int>(
@@ -112,11 +112,11 @@ class _GenerateKeyDialogState extends BState<GenerateKeyDialog> {
       )),
       actions: <Widget>[
         FlatButton(
-          child: Text(i18n(context, "close")),
+          child: Text(i18n(context, "btn_close")),
           onPressed: () => Navigator.pop(context),
         ),
         FlatButton(
-          child: Text(i18n(context, "generate")),
+          child: Text(i18n(context, "btn_pgp_generate")),
           onPressed: _generate,
         )
       ],

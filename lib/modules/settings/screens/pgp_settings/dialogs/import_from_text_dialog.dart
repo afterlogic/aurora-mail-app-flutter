@@ -16,7 +16,7 @@ class _ImportFromTextDialogState extends BState<ImportFromTextDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(i18n(context, "import_key")),
+      title: Text(i18n(context, "label_pgp_import_key")),
       content: SizedDialogContent(
         child: DecoratedBox(
           decoration: BoxDecoration(
@@ -42,7 +42,7 @@ class _ImportFromTextDialogState extends BState<ImportFromTextDialog> {
           onPressed: () => Navigator.pop(context),
         ),
         FlatButton(
-          child: Text(i18n(context, "check_keys")),
+          child: Text(i18n(context, "btn_pgp_check_keys")),
           onPressed: () => _checkText(context),
         )
       ],

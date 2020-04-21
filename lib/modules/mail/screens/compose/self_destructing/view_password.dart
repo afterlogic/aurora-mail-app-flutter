@@ -20,7 +20,7 @@ class ViewPassword extends StatelessWidget {
     final theme = Theme.of(context);
     final size = MediaQuery.of(context).size;
     return AlertDialog(
-      title: Text(i18n(context, "send_self_destructing_title")),
+      title: Text(i18n(context, "label_self_destructing")),
       content: SizedBox(
         height: min(size.height / 2, 350),
         width: min(size.width - 40, 300),
@@ -29,7 +29,7 @@ class ViewPassword extends StatelessWidget {
             ListView(
               children: <Widget>[
                 Text(
-                  i18n(context, "supports_plain_text_only"),
+                  i18n(context, "hint_self_destructing_supports_plain_text_only"),
                   style: theme.textTheme.caption,
                 ),
                 SizedBox(height: 20),
@@ -40,11 +40,11 @@ class ViewPassword extends StatelessWidget {
                 ),
                 SizedBox(height: 20),
                 ClipboardLabel(password, "Encrypted message password.", () {
-              toastKey.currentState.show(i18n(context, "password_coppied_to_clipboard"));
+              toastKey.currentState.show(i18n(context, "hint_self_destructing_password_coppied_to_clipboard"));
                 }),
                 SizedBox(height: 20),
                 Text(
-                  i18n(context, "sent_password_using_different_channel"),
+                  i18n(context, "hint_self_destructing_sent_password_using_different_channel"),
                   style: theme.textTheme.caption,
                 ),
               ],
@@ -63,7 +63,7 @@ class ViewPassword extends StatelessWidget {
           onPressed: () => Navigator.pop(context),
         ),
         FlatButton(
-          child: Text(i18n(context, "ok")),
+          child: Text(i18n(context, "btn_ok")),
           onPressed: () => Navigator.pop(context, true),
         )
       ],

@@ -53,7 +53,7 @@ class ComposeBottomBar extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       Icon(Icons.arrow_back),
-                      Text(i18n(context, "back_encrypt")),
+                      Text(i18n(context, "btn_pgp_undo_pgp")),
                     ],
                   ),
                 ),
@@ -74,7 +74,7 @@ class ComposeBottomBar extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
                         Icon(MdiIcons.clockAlertOutline),
-                        Text(i18n(context, "self_destructing")),
+                        Text(i18n(context, "btn_self_destructing")),
                       ],
                     ),
                   ),
@@ -95,7 +95,7 @@ class ComposeBottomBar extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
                         Icon(Icons.lock_outline),
-                        Text(i18n(context, "encrypt")),
+                        Text(i18n(context, "btn_pgp_encrypt")),
                       ],
                     ),
                   ),

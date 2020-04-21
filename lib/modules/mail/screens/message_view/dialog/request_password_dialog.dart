@@ -46,7 +46,7 @@ class _RequestPasswordDialogState extends BState<RequestPasswordDialog> {
       ),
       actions: <Widget>[
         FlatButton(
-          child: Text(i18n(context, "close")),
+          child: Text(i18n(context, "btn_close")),
           onPressed: () => Navigator.pop(context),
         ),
         FlatButton(

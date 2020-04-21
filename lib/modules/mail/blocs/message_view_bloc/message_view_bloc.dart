@@ -103,13 +103,13 @@ class MessageViewBloc extends Bloc<MessageViewEvent, MessageViewState> {
     } catch (e) {
       if (e is PgpKeyNotFound) {
         yield MessagesViewError(
-          "not_found_keys_for",
+          "error_pgp_not_found_keys_for",
           {"users": e.email.join(" , ")},
         );
       } else if (e is PgpInvalidSign) {
-        yield MessagesViewError("invalid_key_or_password");
+        yield MessagesViewError("error_pgp_invalid_key_or_password");
       } else {
-        yield MessagesViewError("can_not_decrypt");
+        yield MessagesViewError("error_pgp_can_not_decrypt");
       }
     }
   }

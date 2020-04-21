@@ -182,7 +182,7 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid> {
           return showSnack(
             context: context,
             scaffoldState: Scaffold.of(context),
-            msg: "key_will_not_be_valid",
+            msg: "error_contact_pgp_key_will_not_be_valid",
           );
         } else if (widget.contact != null &&
             contact.pgpPublicKey != null &&
@@ -383,7 +383,7 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid> {
                       keyboardType: TextInputType.emailAddress),
                   ContactInput("contacts_view_notes", _notes),
                   if (BuildProperty.cryptoEnable)
-                  ContactTitle("public_key"),
+                  ContactTitle("label_pgp_public_key"),
                   if (BuildProperty.cryptoEnable)
                   KeyInput(
                     pgpSettingsBloc,

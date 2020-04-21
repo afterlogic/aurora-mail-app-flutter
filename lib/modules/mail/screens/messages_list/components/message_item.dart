@@ -222,7 +222,7 @@ class _MessageItemState extends BState<MessageItem> {
                               locale:
                                   Localizations.localeOf(context).languageCode,
                               yesterdayWord:
-                                  i18n(context, "formatting_yesterday"),
+                                  i18n(context, "label_message_yesterday"),
                               is24: (state as SettingsLoaded).is24 ?? true,
                             ),
                             style: TextStyle(

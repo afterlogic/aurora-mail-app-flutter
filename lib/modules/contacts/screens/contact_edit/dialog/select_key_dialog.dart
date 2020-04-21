@@ -12,7 +12,7 @@ class SelectKeyDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(i18n(context, "select_key")),
+      title: Text(i18n(context, "label_contact_select_key")),
       content: Column(
         mainAxisSize: MainAxisSize.min,
           children: keys.map((key) {

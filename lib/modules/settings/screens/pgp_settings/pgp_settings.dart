@@ -42,7 +42,7 @@ class _PgpSettingsState extends BState<PgpSettings> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AMAppBar(
-        title: Text(i18n(context, "pgp_settings")),
+        title: Text(i18n(context, "label_pgp_settings")),
       ),
       body: BlocListener<PgpSettingsBloc, PgpSettingsState>(
         bloc: bloc,
@@ -64,7 +64,7 @@ class _PgpSettingsState extends BState<PgpSettings> {
               isError: false,
               context: context,
               scaffoldState: Scaffold.of(context),
-              msg: "downloading_to",
+              msg: "label_pgp_downloading_to",
               arg: {"path": state.filePath},
             );
             return;
@@ -190,7 +190,7 @@ class _PgpSettingsState extends BState<PgpSettings> {
         children: <Widget>[
           if (public.isNotEmpty )
             Text(
-              i18n(context, "public_keys"),
+              i18n(context, "label_pgp_public_keys"),
               style: theme.textTheme.title,
             ),
           keysGroup(
@@ -200,7 +200,7 @@ class _PgpSettingsState extends BState<PgpSettings> {
           SizedBox(height: 10),
           if (private.isNotEmpty )
             Text(
-              i18n(context, "private_keys"),
+              i18n(context, "label_pgp_private_keys"),
               style: theme.textTheme.title,
             ),
           keysGroup(
@@ -210,7 +210,7 @@ class _PgpSettingsState extends BState<PgpSettings> {
           SizedBox(height: 10),
           if (contactPublic.isNotEmpty)
             Text(
-              i18n(context, "contact_public_keys"),
+              i18n(context, "label_pgp_contact_public_keys"),
               style: theme.textTheme.title,
             ),
           keysGroup(
@@ -283,22 +283,22 @@ class _PgpSettingsState extends BState<PgpSettings> {
         children: <Widget>[
           if (state.myPublic.isNotEmpty)
             AMButton(
-              child: Text(i18n(context, "export_all_public_keys")),
+              child: Text(i18n(context, "btn_pgp_export_all_public_keys")),
               onPressed: () => _exportAllPublicKeys(state.myPublic),
             ),
           space,
           AMButton(
-            child: Text(i18n(context, "import_keys_from_text")),
+            child: Text(i18n(context, "btn_pgp_import_keys_from_text")),
             onPressed: _importFromText,
           ),
           space,
           AMButton(
-            child: Text(i18n(context, "import_keys_from_file")),
+            child: Text(i18n(context, "btn_pgp_import_keys_from_file")),
             onPressed: _importFromFile,
           ),
           space,
           AMButton(
-            child: Text(i18n(context, "generate_keys")),
+            child: Text(i18n(context, "btn_pgp_generate_keys")),
             onPressed: () => _generateKey(state),
           ),
         ],

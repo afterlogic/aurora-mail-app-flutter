@@ -46,13 +46,13 @@ class MailViewAppBar extends StatelessWidget implements PreferredSizeWidget {
                   : [
                       IconButton(
                         icon: Icon(Icons.code),
-                        tooltip: i18n(context, "message_headers"),
+                        tooltip: i18n(context, "label_message_headers"),
                         onPressed: () =>
                             onAppBarActionSelected(MailViewAppBarAction.showHeaders),
                       ),
                       IconButton(
                         icon: Icon(MdiIcons.fileMove),
-                        tooltip: i18n(context, "move_to_folder"),
+                        tooltip: i18n(context, "label_message_move_to_folder"),
                         onPressed: () =>
                             onAppBarActionSelected(MailViewAppBarAction.move),
                       ),
@@ -120,7 +120,7 @@ class MailViewAppBar extends StatelessWidget implements PreferredSizeWidget {
                           icon: SvgIcon(
                             AppAssets.resend,
                           ),
-                          tooltip: i18n(context, "btn_resend"),
+                          tooltip: i18n(context, "btn_message_resend"),
                           onPressed: () {
                             Navigator.pop(context);
                             onAppBarActionSelected(MailViewAppBarAction.resend);

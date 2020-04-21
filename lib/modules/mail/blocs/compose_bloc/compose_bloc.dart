@@ -149,7 +149,7 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
     try {
       if (event.encrypt && event.contacts.isEmpty) {
         yield ComposeError(
-          "need_contact_for_encrypt",
+          "error_pgp_need_contact_for_encrypt",
         );
         return;
       }
@@ -174,11 +174,11 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
     } catch (e) {
       if (e is PgpKeyNotFound) {
         yield ComposeError(
-          "not_found_keys_for",
+          "error_pgp_not_found_keys_for",
           {"users": e.email.join(" , ")},
         );
       } else if (e is PgpInvalidSign) {
-        yield ComposeError("invalid_password");
+        yield ComposeError("error_pgp_invalid_password");
       } else {
         yield ComposeError("error_server_unknown_email");
       }

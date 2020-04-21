@@ -11,7 +11,7 @@ class MessageHeaders extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AMAppBar(title: Text(i18n(context, "message_headers")),),
+      appBar: AMAppBar(title: Text(i18n(context, "label_message_headers")),),
       body: Padding(
         child: SelectableText(text),
         padding: EdgeInsets.all(16),

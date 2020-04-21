@@ -52,7 +52,7 @@ class _ImportKeyDialogState extends BState<ImportKeyDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(i18n(context, "import_key")),
+      title: Text(i18n(context, "label_pgp_import_key")),
       content: BlocListener(
         bloc: widget.bloc,
         listener: (BuildContext context, state) {
@@ -66,12 +66,12 @@ class _ImportKeyDialogState extends BState<ImportKeyDialog> {
               if (keyAlreadyExist)
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 8),
-                  child: Text(i18n(context, "already_have_keys")),
+                  child: Text(i18n(context, "hint_pgp_already_have_keys")),
                 ),
               if (userKeys.isNotEmpty)
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 8),
-                  child: Text(i18n(context, "your_keys")),
+                  child: Text(i18n(context, "hint_pgp_your_keys")),
                 ),
               Column(
                 children: userKeys.map((key) {
@@ -84,7 +84,7 @@ class _ImportKeyDialogState extends BState<ImportKeyDialog> {
               if (contactKeys.isNotEmpty)
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 8),
-                  child: Text(i18n(context, "keys_will_be_import_to_contacts")),
+                  child: Text(i18n(context, "hint_pgp_keys_will_be_import_to_contacts")),
                 ),
               Column(
                 children: contactKeys.map((key) {
@@ -97,7 +97,7 @@ class _ImportKeyDialogState extends BState<ImportKeyDialog> {
               if (newContactKeys.isNotEmpty)
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 8),
-                  child: Text(i18n(context, "keys_contacts_will_be_created")),
+                  child: Text(i18n(context, "hint_pgp_keys_contacts_will_be_created")),
                 ),
               Column(
                 children: newContactKeys.map((key) {
@@ -120,7 +120,7 @@ class _ImportKeyDialogState extends BState<ImportKeyDialog> {
           bloc: widget.bloc,
           builder: (context, state) => FlatButton(
             child: state is! ImportProgress
-                ? Text(i18n(context, "import_selected_key"))
+                ? Text(i18n(context, "btn_pgp_import_selected_key"))
                 : CircularProgressIndicator(),
             onPressed: state is! ImportProgress ? _import : null,
           ),

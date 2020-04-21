@@ -260,8 +260,8 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
                         i18n(
                           context,
                           state.verified
-                              ? "decrypted_and_verified"
-                              : "decrypted_but_not_verified",
+                              ? "label_pgp_decrypted_and_verified"
+                              : "label_pgp_decrypted_but_not_verified",
                         ),
                         context);
                   }

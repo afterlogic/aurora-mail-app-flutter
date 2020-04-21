@@ -197,7 +197,7 @@ class MailUtils {
     final baseMessage = htmlToPlain(message.htmlBody ?? "");
     final time = DateFormatting.formatDateFromSeconds(
         message.timeStampInUTC, Localizations.localeOf(context).languageCode,
-        format: i18n(context, "compose_reply_date_format"));
+        format: i18n(context, "format_compose_reply_date"));
 
     final from = getDisplayName(message.fromInJson);
 
@@ -237,7 +237,7 @@ class MailUtils {
 
     final date = DateFormatting.formatDateFromSeconds(
         message.timeStampInUTC, Localizations.localeOf(context).languageCode,
-        format: i18n(context, "compose_forward_date_format"));
+        format: i18n(context, "format_compose_forward_date"));
     forwardMessage +=
         i18n(context, "compose_forward_sent", {"date": date}) + "\n";
 

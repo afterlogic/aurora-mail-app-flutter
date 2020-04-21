@@ -42,7 +42,7 @@ class UpgradePlanWidget extends StatelessWidget {
                   Column(
                     children: <Widget>[
                       Text(
-                        i18n(context, "upgrade_your_plan"),
+                        i18n(context, "hint_login_upgrade_your_plan"),
                         style: AppTheme.login.textTheme.subhead.copyWith(
                           fontSize: 18
                         ),
@@ -54,7 +54,7 @@ class UpgradePlanWidget extends StatelessWidget {
                     width: double.infinity,
                     child: AMButton(
                       shadow: AppColor.enableShadow ? null : BoxShadow(),
-                      child: Text(i18n(context, "back_to_login")),
+                      child: Text(i18n(context, "btn_login_back_to_login")),
                       onPressed: () => Navigator.of(context).pop(),
                     ),
                   ),

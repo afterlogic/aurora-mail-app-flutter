@@ -50,7 +50,7 @@ class ContactViewAppBar extends StatelessWidget implements PreferredSizeWidget {
             if (hasEmail)
               _buildMenuItem(
                 value: ContactViewAppBarAction.find_in_email,
-                text: i18n(context, "find_in_email"),
+                text: i18n(context, "btn_contact_find_in_email"),
                 icon: Icons.search,
               ),
             if (allowShare)

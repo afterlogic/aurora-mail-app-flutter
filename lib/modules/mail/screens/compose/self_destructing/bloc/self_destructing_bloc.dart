@@ -157,7 +157,7 @@ class SelfDestructingBloc
         );
       } catch (e) {
         if (e is PgpInvalidSign) {
-          yield ErrorState("invalid_password");
+          yield ErrorState("error_pgp_invalid_password");
         } else {
           yield ErrorState("error_unknown");
         }

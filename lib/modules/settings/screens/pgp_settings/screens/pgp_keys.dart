@@ -19,7 +19,7 @@ class PgpKeysScreen extends StatelessWidget {
       appBar: AMAppBar(
         title: Text(i18n(
           context,
-          "all_public_key",
+          "label_pgp_all_public_key",
         )),
       ),
       body: Padding(
@@ -43,7 +43,7 @@ class PgpKeysScreen extends StatelessWidget {
                 SizedBox(
                   width: double.infinity,
                   child: AMButton(
-                    child: Text(i18n(context, "send_all")),
+                    child: Text(i18n(context, "btn_php_send_all")),
                     onPressed: () {
                       bloc.add(ShareKeys(pgpKeys));
                     },
@@ -54,7 +54,7 @@ class PgpKeysScreen extends StatelessWidget {
                   SizedBox(
                     width: double.infinity,
                     child: AMButton(
-                      child: Text(i18n(context, "download_all")),
+                      child: Text(i18n(context, "btn_pgp_download_all")),
                       onPressed: () {
                         bloc.add(DownloadKeys(pgpKeys));
                         Navigator.pop(context);

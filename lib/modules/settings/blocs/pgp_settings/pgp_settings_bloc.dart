@@ -82,7 +82,7 @@ class PgpSettingsBloc extends Bloc<PgpSettingsEvent, PgpSettingsState> {
   Stream<PgpSettingsState> _parseKey(ParseKey event) async* {
     final keys = await _methods.parseKey(event.key);
     if (keys.isEmpty) {
-      yield ErrorState("keys_not_found");
+      yield ErrorState("error_pgp_keys_not_found");
       return;
     }
     final userEmail = await authBloc

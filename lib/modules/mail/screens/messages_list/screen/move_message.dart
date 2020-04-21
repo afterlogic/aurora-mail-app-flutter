@@ -43,7 +43,7 @@ class MoveMessageState extends State<MoveMessage> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text(i18n(context, "move_to") +
+          title: Text(i18n(context, "label_message_move_to") +
               (current == null ? "" : FolderHelper.getTitle(context, current))),
         ),
         body: BlocBuilder<MailBloc, MailState>(
@@ -65,7 +65,7 @@ class MoveMessageState extends State<MoveMessage> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 FlatButton(
-                  child: Text(i18n(context, "paste")),
+                  child: Text(i18n(context, "btn_message_paste")),
                   onPressed: current == null ? null : _paste,
                 ),
                 FlatButton(

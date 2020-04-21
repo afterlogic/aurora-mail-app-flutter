@@ -68,7 +68,7 @@ class _MailBottomBarState extends BState<MailBottomBar> {
                         i18n(
                             context,
                             encryptType == EncryptType.Sign
-                                ? "verify_sign"
+                                ? "button_pgp_verify_sign"
                                 : "decrypt"),
                       ),
                     ],

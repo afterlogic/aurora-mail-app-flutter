@@ -55,7 +55,7 @@ class _EncryptSettingState extends BState<EncryptSetting> {
               final contact = state.contact;
               final recipientHaveKey = contact.key != null;
               return AlertDialog(
-                title: Text(i18n(context, "send_self_destructing_title")),
+                title: Text(i18n(context, "label_self_destructing")),
                 content: SizedBox(
                   height: min(size.height / 2, 350),
                   width: min(size.width - 40, 300),
@@ -65,7 +65,7 @@ class _EncryptSettingState extends BState<EncryptSetting> {
                         padding: EdgeInsets.all(0),
                         children: <Widget>[
                           Text(
-                            i18n(context, "supports_plain_text_only"),
+                            i18n(context, "hint_self_destructing_supports_plain_text_only"),
                             style: theme.textTheme.caption,
                           ),
                           SizedBox(height: 20),
@@ -75,8 +75,8 @@ class _EncryptSettingState extends BState<EncryptSetting> {
                             i18n(
                                 context,
                                 recipientHaveKey
-                                    ? "encrypt_with_key"
-                                    : "encrypt_with_not_key"),
+                                    ? "hint_self_destructing_encrypt_with_key"
+                                    : "hint_self_destructing_encrypt_with_not_key"),
                             style: theme.textTheme.caption,
                           ),
                           SizedBox(height: 10),
@@ -108,7 +108,7 @@ class _EncryptSettingState extends BState<EncryptSetting> {
                           ),
                           RadioListTile(
                             title: Text(
-                                i18n(context, "password_based_encryption")),
+                                i18n(context, "input_self_destructing_password_based_encryption")),
                             value: false,
                             onChanged: (bool value) {
                               isKeyBased = value;
@@ -118,7 +118,7 @@ class _EncryptSettingState extends BState<EncryptSetting> {
                             groupValue: isKeyBased,
                           ),
                           RadioListTile(
-                            title: Text(i18n(context, "key_based_encryption")),
+                            title: Text(i18n(context, "input_self_destructing_key_based_encryption")),
                             value: true,
                             groupValue: isKeyBased,
                             onChanged: !recipientHaveKey
@@ -134,14 +134,14 @@ class _EncryptSettingState extends BState<EncryptSetting> {
                             i18n(
                                 context,
                                 isKeyBased
-                                    ? "key_based_encryption_used"
-                                    : "password_based_encryption_used"),
+                                    ? "label_self_destructing_key_based_encryption_used"
+                                    : "label_self_destructing_password_based_encryption_used"),
                             style: theme.textTheme.caption,
                           ),
                           SizedBox(height: 10),
                           SwitchListTile(
                             contentPadding: EdgeInsets.zero,
-                            title: Text(i18n(context, "add_digital_signature")),
+                            title: Text(i18n(context, "input_self_destructing_add_digital_signature")),
                             value: useSign,
                             onChanged: hasKey && isKeyBased
                                 ? (v) {
@@ -179,7 +179,7 @@ class _EncryptSettingState extends BState<EncryptSetting> {
                           SizedBox(height: 20),
                           Text(
                             i18n(context,
-                                useSign ? "sign_data" : "not_sign_data"),
+                                useSign ? "label_self_destructing_sign_data" : "label_self_destructing_not_sign_data"),
                             style: theme.textTheme.caption,
                           ),
                         ],
@@ -202,7 +202,7 @@ class _EncryptSettingState extends BState<EncryptSetting> {
                   BlocBuilder<SelfDestructingBloc, SelfDestructingState>(
                     builder: (context, state) => FlatButton(
                       child: state is! ProgressState
-                          ? Text(i18n(context, "encrypt"))
+                          ? Text(i18n(context, "btn_pgp_encrypt"))
                           : CircularProgressIndicator(),
                       onPressed: state is! ProgressState
                           ? () => create(contact, sender)
@@ -242,13 +242,13 @@ class _EncryptSettingState extends BState<EncryptSetting> {
               DateTimeZone.local.getUtcOffset(dateTime).toString();
 
       final passwordText = !isKeyBased && contact.key != null
-          ? i18n(context, "self_destructing_message_password")
+          ? i18n(context, "template_self_destructing_message_password")
           : "";
       final lifeTimeText = i18n(context, lifeTime.toText());
 
       final viewBody = i18n(
         context,
-        "self_destructing_message_template",
+        "template_self_destructing_message",
         {
           "sender": contactName,
           "message_password": passwordText,

@@ -187,7 +187,7 @@ class _MessageWebViewState extends BState<MessageWebView>
     final date = DateFormatting.getDetailedMessageDate(
       timestamp: widget.message.timeStampInUTC,
       locale: Localizations.localeOf(context).languageCode,
-      yesterdayWord: i18n(context, "formatting_yesterday"),
+      yesterdayWord: i18n(context, "label_message_yesterday"),
       is24: (state as SettingsLoaded).is24 ?? true,
     );
 
@@ -465,10 +465,10 @@ class _MessageWebViewState extends BState<MessageWebView>
     final result = await ConfirmationDialog.show(
       context,
       null,
-      i18n(context, "import_vcf", {
+      i18n(context, "hint_vcf_import", {
         "name": contact.fullName ?? contact.nickName ?? contact.viewEmail ?? ""
       }),
-      i18n(context, "import"),
+      i18n(context, "btn_vcf_import"),
     );
     if (result == true) {
       bloc.add(CreateContact(contact));

@@ -42,7 +42,7 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
           if (BuildProperty.cryptoEnable)
             ListTile(
               leading: AMCircleIcon(Icons.vpn_key),
-              title: Text(i18n(context, "pgp_settings")),
+              title: Text(i18n(context, "label_pgp_settings")),
               onTap: () => Navigator.pushNamed(context, PgpSettingsRoute.name),
             ),
           if (BuildProperty.multiUserEnable)
@@ -79,8 +79,8 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
       context: context,
       builder: (_) => ConfirmationDialog(
         title: null,
-        description: i18n(context, "confirm_exit"),
-        actionText: i18n(context, "exit"),
+        description: i18n(context, "hint_confirm_exit"),
+        actionText: i18n(context, "btn_exit"),
       ),
     );
     if (result == true) {

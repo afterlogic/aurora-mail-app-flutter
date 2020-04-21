@@ -32,7 +32,7 @@ class TwoFactorBloc extends Bloc<TwoFactorEvent, TwoFactorState> {
       yield CompleteState(user);
     } catch (err, s) {
       if (err is InvalidPin) {
-        yield ErrorState("invalid_pin");
+        yield ErrorState("error_invalid_pin");
       } else {
         yield ErrorState(formatError(err, s));
       }

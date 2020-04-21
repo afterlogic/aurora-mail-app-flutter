@@ -71,7 +71,7 @@ class AdvancedSearchState extends State<AdvancedSearch> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(i18n(context, "advanced_search")),
+      title: Text(i18n(context, "label_message_advanced_search")),
       content: SizedDialogContent(
         child: SingleChildScrollView(
           child: Column(
@@ -97,7 +97,7 @@ class AdvancedSearchState extends State<AdvancedSearch> {
               ),
               TextField(
                 decoration: InputDecoration(
-                  labelText: i18n(context, "text"),
+                  labelText: i18n(context, "input_message_search_text"),
                 ),
                 controller: textCtrl,
               ),
@@ -119,7 +119,7 @@ class AdvancedSearchState extends State<AdvancedSearch> {
                       },
                       child: InputDecorator(
                         decoration: InputDecoration(
-                          labelText: i18n(context, "since"),
+                          labelText: i18n(context, "input_message_search_since"),
                         ),
                         child: SizedBox(
                             height: 20,
@@ -146,7 +146,7 @@ class AdvancedSearchState extends State<AdvancedSearch> {
                       },
                       child: InputDecorator(
                         decoration: InputDecoration(
-                          labelText: i18n(context, "till"),
+                          labelText: i18n(context, "input_message_search_till"),
                         ),
                         child: SizedBox(
                           height: 20,

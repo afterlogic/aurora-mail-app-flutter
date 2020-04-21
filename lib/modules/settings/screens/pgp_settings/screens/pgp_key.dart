@@ -23,7 +23,7 @@ class PgpKeyScreen extends StatelessWidget {
       appBar: AMAppBar(
         title: Text(i18n(
           context,
-          pgpKey.isPrivate ? "private_key" : "public_key",
+          pgpKey.isPrivate ? "label_pgp_private_key" : "label_pgp_public_key",
         )),
       ),
       body: Padding(
@@ -51,13 +51,13 @@ class PgpKeyScreen extends StatelessWidget {
                 SizedBox(
                   width: double.infinity,
                   child: AMButton(
-                    child: Text(i18n(context, "share")),
+                    child: Text(i18n(context, "btn_share")),
                     onPressed: () async {
                       final result = await ConfirmationDialog.show(
                           context,
-                          i18n(context, "warning"),
-                          i18n(context, "share_private_key_warning"),
-                          i18n(context, "share"));
+                          i18n(context, "label_pgp_share_warning"),
+                          i18n(context, "hint_pgp_share_warning"),
+                          i18n(context, "btn_share"));
                       if (result == true) {
                         bloc.add(ShareKeys([pgpKey]));
                         Navigator.pop(context);
@@ -70,7 +70,7 @@ class PgpKeyScreen extends StatelessWidget {
                   SizedBox(
                     width: double.infinity,
                     child: AMButton(
-                      child: Text(i18n(context, "download")),
+                      child: Text(i18n(context, "btn_download")),
                       onPressed: () {
                         bloc.add(DownloadKeys([pgpKey]));
                         Navigator.pop(context);
@@ -82,12 +82,12 @@ class PgpKeyScreen extends StatelessWidget {
                 SizedBox(
                   width: double.infinity,
                   child: AMButton(
-                    child: Text(i18n(context, "delete")),
+                    child: Text(i18n(context, "btn_delete")),
                     onPressed: () async {
                       final result = await ConfirmationDialog.show(
                         context,
                         "",
-                        i18n(context, "delete_user_key_confirm",
+                        i18n(context, "hint_pgp_delete_user_key_confirm",
                             {"user": pgpKey.mail}),
                         i18n(context, "btn_delete"),
                       );

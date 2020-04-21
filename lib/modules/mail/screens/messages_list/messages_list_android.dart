@@ -321,7 +321,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
                 appBarKey.currentState.search(result);
               }
             },
-            child: Text(i18n(context, "advanced_search")),
+            child: Text(i18n(context, "btn_message_advanced_search")),
           ),
         if (filter == MessagesFilter.unread)
           Column(
@@ -388,8 +388,8 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
       return SizedBox.shrink();
     }
     final emptyFolder = _selectedFolder.type == FolderType.trash
-        ? "empty_folder_trash"
-        : "empty_folder_spam";
+        ? "btn_message_empty_trash_folder"
+        : "btn_message_empty_spam_folder";
     return ListTile(
       leading: Icon(Icons.delete_forever),
       title: Text(i18n(context, emptyFolder)),
@@ -401,7 +401,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
                 i18n(context, emptyFolder),
                 i18n(
                   context,
-                  "empty_folder_description",
+                  "hint_message_empty_folder",
                   {"folder": FolderHelper.getTitle(context, _selectedFolder)},
                 ),
                 i18n(context, "btn_delete"),

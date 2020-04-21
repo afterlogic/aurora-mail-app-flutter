@@ -189,7 +189,7 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
       month: c.birthMonth,
       year: c.birthYear,
       locale: Localizations.localeOf(context).languageCode,
-      format: i18n(context, "contacts_birth_date_format"),
+      format: i18n(context, "format_contacts_birth_date"),
     );
 
     final sectionTitleTheme = theme.textTheme.body2;
@@ -401,7 +401,7 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
             },
       child: _buildInfoItem(
         icon: MdiIcons.key,
-        label: i18n(context, "public_key"),
+        label: i18n(context, "label_pgp_public_key"),
         v: key == null
             ? ""
             : key.formatName() +
@@ -453,7 +453,7 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
               isError: false,
               context: context,
               scaffoldState: Scaffold.of(context),
-              msg: "downloading_to",
+              msg: "label_pgp_downloading_to",
               arg: {"path": state.filePath},
             );
           }

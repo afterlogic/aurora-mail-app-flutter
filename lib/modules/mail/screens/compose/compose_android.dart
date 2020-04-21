@@ -532,7 +532,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
     Widget _done(FocusNode node) {
       return FlatButton(
         child: Text(
-          i18n(context, "done"),
+          i18n(context, "btn_done"),
           style: theme.textTheme.body1.copyWith(color: Colors.black),
         ),
         onPressed: node.unfocus,
@@ -684,7 +684,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
       return showSnack(
           context: context,
           scaffoldState: _scaffoldKey.currentState,
-          msg: "select_recipient");
+          msg: "error_pgp_select_recipient");
     }
     final bloc = SelfDestructingBloc(
       _bloc.user,
@@ -723,7 +723,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
       decryptTitle = _subjectTextCtrl.text;
       decryptBody = _bodyTextCtrl.text;
 
-      _subjectTextCtrl.text = i18n(context, "self_destructing_message_title");
+      _subjectTextCtrl.text = i18n(context, "template_self_destructing_message_title");
       _bodyTextCtrl.text = result.body;
       _attachments.clear();
 

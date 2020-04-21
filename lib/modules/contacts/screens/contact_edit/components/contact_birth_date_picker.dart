@@ -58,7 +58,7 @@ class _ContactBirthDatePickerState extends BState<ContactBirthDatePicker> {
     final decoded = json.decode(languageString ?? "{}");
     final language = decoded["tag"] as String;
     _dateText.text = DateFormat(
-      i18n(context, "contacts_birth_date_format"),
+      i18n(context, "format_contacts_birth_date"),
       language ?? "en",
     ).format(_selectedDate);
   }

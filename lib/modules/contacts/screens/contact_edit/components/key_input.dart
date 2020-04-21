@@ -61,7 +61,7 @@ class KeyInputState extends State<KeyInput> {
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
           FlatButton(
-            child: Text(i18n(context, "import_from_text")),
+            child: Text(i18n(context, "btn_pgp_import_from_text")),
             onPressed: () async {
               final result = await dialog(
                 context: context,
@@ -73,7 +73,7 @@ class KeyInputState extends State<KeyInput> {
             },
           ),
           FlatButton(
-            child: Text(i18n(context, "import_from_file")),
+            child: Text(i18n(context, "btn_pgp_import_from_file")),
             onPressed: () async {
               final result = await widget.pgpSettingsBloc.getKeyFromFile();
               if (result is String) {

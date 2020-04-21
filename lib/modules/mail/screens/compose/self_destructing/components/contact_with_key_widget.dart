@@ -14,7 +14,7 @@ class ContactWithKeyWidget extends StatelessWidget {
     var name = model.contact?.fullName;
     final hasName = !(name?.isNotEmpty != true);
     if (!hasName) {
-      name = i18n(context, "no_name");
+      name = i18n(context, "label_pgp_key_with_not_name");
     }
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
