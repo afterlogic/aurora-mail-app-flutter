@@ -1,3 +1,4 @@
+import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
@@ -19,7 +20,7 @@ import 'components/contact_input.dart';
 import 'components/contact_title.dart';
 import 'components/key_input.dart';
 import 'dialog/confirm_edit_dialog.dart';
-import 'package:aurora_mail/build_property.dart';
+
 class ContactEditAndroid extends StatefulWidget {
   final Contact contact;
   final PgpSettingsBloc pgpSettingsBloc;
@@ -382,17 +383,17 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid> {
                   ContactInput("contacts_view_other_email", _otherEmail,
                       keyboardType: TextInputType.emailAddress),
                   ContactInput("contacts_view_notes", _notes),
-                  if (BuildProperty.cryptoEnable)
-                  ContactTitle("label_pgp_public_key"),
-                  if (BuildProperty.cryptoEnable)
-                  KeyInput(
-                    pgpSettingsBloc,
-                    pgpKey,
-                    (key) {
-                      pgpKey = key;
-                    },
-                    (error) {},
-                  ),
+                  if (BuildProperty.cryptoEnable && !BuildProperty.legacyPgpKey)
+                    ContactTitle("label_pgp_public_key"),
+                  if (BuildProperty.cryptoEnable && !BuildProperty.legacyPgpKey)
+                    KeyInput(
+                      pgpSettingsBloc,
+                      pgpKey,
+                      (key) {
+                        pgpKey = key;
+                      },
+                      (error) {},
+                    ),
                   ContactTitle("contacts_view_section_groups"),
                   ..._bloc.state.groups.map((g) {
                     return CheckboxListTile(

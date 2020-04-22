@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/contacts_repository.dart';
@@ -149,14 +150,17 @@ class PgpSettingsMethods {
     final userKeys = <PgpKey>[];
     final contactKeys = <PgpKey>[];
 
-    for (var key in keys) {
-      if (userEmail.contains(IdentityView.fromString(key.mail).email)) {
-        userKeys.add(key);
-      } else {
-        contactKeys.add(key);
+    if (BuildProperty.legacyPgpKey) {
+      userKeys.addAll(keys);
+    } else {
+      for (var key in keys) {
+        if (userEmail.contains(IdentityView.fromString(key.mail).email)) {
+          userKeys.add(key);
+        } else {
+          contactKeys.add(key);
+        }
       }
     }
-
     final existUserKeys = await userKeyMarkIfNotExist(userKeys);
     final existContactKeys = await contactKeyMarkIfNotExist(contactKeys);
 

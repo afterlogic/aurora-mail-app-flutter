@@ -24,6 +24,7 @@ appName: ""
 _iosAppName: "{{appName}}"
 _appId: ""
 _iosAppId: "{{_appId}}"
+_appleGroupId: ""
 
 _build: 91
 _version: ""
@@ -55,4 +56,5 @@ multiAccountEnable: false
 useMainLogo: false
 selfDestructingEmail: false
 expandMessageThread: false
+legacyPgpKey: false
 logger: true

@@ -1,3 +1,4 @@
+import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/modules/settings/blocs/pgp_settings/bloc.dart';
 import 'package:aurora_mail/modules/settings/screens/pgp_settings/components/key_item.dart';
 import 'package:aurora_mail/shared_ui/sized_dialog_content.dart';
@@ -68,7 +69,7 @@ class _ImportKeyDialogState extends BState<ImportKeyDialog> {
                   padding: EdgeInsets.symmetric(vertical: 8),
                   child: Text(i18n(context, "hint_pgp_already_have_keys")),
                 ),
-              if (userKeys.isNotEmpty)
+              if (userKeys.isNotEmpty && !BuildProperty.legacyPgpKey)
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 8),
                   child: Text(i18n(context, "hint_pgp_your_keys")),
@@ -81,32 +82,36 @@ class _ImportKeyDialogState extends BState<ImportKeyDialog> {
                   });
                 }).toList(),
               ),
-              if (contactKeys.isNotEmpty)
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: 8),
-                  child: Text(i18n(context, "hint_pgp_keys_will_be_import_to_contacts")),
+              if (!BuildProperty.legacyPgpKey) ...[
+                if (contactKeys.isNotEmpty)
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 8),
+                    child: Text(i18n(
+                        context, "hint_pgp_keys_will_be_import_to_contacts")),
+                  ),
+                Column(
+                  children: contactKeys.map((key) {
+                    return KeyItem(key, widget.contactKeys[key], (select) {
+                      widget.contactKeys[key] = select;
+                      setState(() {});
+                    });
+                  }).toList(),
                 ),
-              Column(
-                children: contactKeys.map((key) {
-                  return KeyItem(key, widget.contactKeys[key], (select) {
-                    widget.contactKeys[key] = select;
-                    setState(() {});
-                  });
-                }).toList(),
-              ),
-              if (newContactKeys.isNotEmpty)
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: 8),
-                  child: Text(i18n(context, "hint_pgp_keys_contacts_will_be_created")),
+                if (newContactKeys.isNotEmpty)
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 8),
+                    child: Text(i18n(
+                        context, "hint_pgp_keys_contacts_will_be_created")),
+                  ),
+                Column(
+                  children: newContactKeys.map((key) {
+                    return KeyItem(key, widget.contactKeys[key], (select) {
+                      widget.contactKeys[key] = select;
+                      setState(() {});
+                    });
+                  }).toList(),
                 ),
-              Column(
-                children: newContactKeys.map((key) {
-                  return KeyItem(key, widget.contactKeys[key], (select) {
-                    widget.contactKeys[key] = select;
-                    setState(() {});
-                  });
-                }).toList(),
-              ),
+              ],
             ],
           ),
         ),

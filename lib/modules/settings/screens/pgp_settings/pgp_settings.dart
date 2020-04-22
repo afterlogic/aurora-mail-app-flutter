@@ -1,3 +1,4 @@
+import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/inject/app_inject.dart';
 import 'package:aurora_mail/models/alias_or_identity.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
@@ -188,7 +189,7 @@ class _PgpSettingsState extends BState<PgpSettings> {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: ListView(
         children: <Widget>[
-          if (public.isNotEmpty )
+          if (public.isNotEmpty)
             Text(
               i18n(context, "label_pgp_public_keys"),
               style: theme.textTheme.title,
@@ -198,7 +199,7 @@ class _PgpSettingsState extends BState<PgpSettings> {
             public,
           ),
           SizedBox(height: 10),
-          if (private.isNotEmpty )
+          if (private.isNotEmpty)
             Text(
               i18n(context, "label_pgp_private_keys"),
               style: theme.textTheme.title,
@@ -207,16 +208,18 @@ class _PgpSettingsState extends BState<PgpSettings> {
             context,
             private,
           ),
-          SizedBox(height: 10),
-          if (contactPublic.isNotEmpty)
-            Text(
-              i18n(context, "label_pgp_contact_public_keys"),
-              style: theme.textTheme.title,
+          if (!BuildProperty.legacyPgpKey) ...[
+            SizedBox(height: 10),
+            if (contactPublic.isNotEmpty)
+              Text(
+                i18n(context, "label_pgp_contact_public_keys"),
+                style: theme.textTheme.title,
+              ),
+            keysGroup(
+              context,
+              contactPublic,
             ),
-          keysGroup(
-            context,
-            contactPublic,
-          ),
+          ]
         ],
       ),
     );

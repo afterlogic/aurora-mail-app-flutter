@@ -3,6 +3,7 @@ appName: "PrivateMail"
 _appId: "com.PrivateRouter.PrivateMailApplication"
 _iosAppId: "com.PrivateRouter.PrivateMailApplication"
 _iosDeveloperId: "K6298N65JA"
+_appleGroupId: ""
 
 background_color: "#34113C"
 splashGradientTop: "#420324"
@@ -22,3 +23,4 @@ multiAccountEnable: true
 useMainLogo: true
 cryptoEnable: true
 selfDestructingEmail: true
+legacyPgpKey: true

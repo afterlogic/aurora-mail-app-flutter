@@ -58,7 +58,7 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
   init(Contact contact) {
     this.contact = contact;
     _contactInfo = new ContactInfo(contact);
-    if (BuildProperty.cryptoEnable) {
+    if (BuildProperty.cryptoEnable && !BuildProperty.legacyPgpKey) {
       if (contact?.pgpPublicKey != null) {
         contactsBloc.getKeyInfo(contact.pgpPublicKey).then((key) {
           if (key == null) {
