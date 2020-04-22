@@ -16,7 +16,7 @@ class _RequestPasswordDialogState extends BState<RequestPasswordDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(i18n(context, "decrypt_title")),
+      title: Text(i18n(context, "label_pgp_decrypt")),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,

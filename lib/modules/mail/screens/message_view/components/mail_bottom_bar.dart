@@ -58,8 +58,8 @@ class _MailBottomBarState extends BState<MailBottomBar> {
                       Icon(
                         encryptType == EncryptType.Sign
                             ? (decrypted
-                                ? Icons.favorite
-                                : Icons.favorite_border)
+                                ? Icons.lock_open
+                                : Icons.lock_outline)
                             : (decrypted
                                 ? Icons.lock_open
                                 : Icons.lock_outline),
