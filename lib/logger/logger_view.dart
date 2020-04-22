@@ -58,7 +58,7 @@ class LoggerViewState extends State<LoggerView> {
                   behavior: HitTestBehavior.opaque,
                   child: Padding(
                     padding: EdgeInsets.all(6),
-                    child: Icon(Icons.clear),
+                    child: Icon(Icons.delete),
                   ),
                   onTap: () {
                     logger.clear();
@@ -69,7 +69,12 @@ class LoggerViewState extends State<LoggerView> {
                   behavior: HitTestBehavior.opaque,
                   child: Padding(
                     padding: EdgeInsets.all(6),
-                    child: Icon(logger.isRun ? Icons.pause : Icons.play_arrow),
+                    child: Icon(
+                      logger.isRun
+                          ? Icons.pause_circle_filled
+                          : Icons.fiber_manual_record,
+                      color: Colors.red,
+                    ),
                   ),
                   onTap: logger.isRun
                       ? () {
@@ -94,7 +99,7 @@ class LoggerViewState extends State<LoggerView> {
               ],
             ),
             Text(
-              "buffer " + logger.count.toString(),
+              "Recorded entries: " + logger.count.toString(),
               style: TextStyle(
                 fontSize: 9,
                 color: Colors.black,

@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:aurora_mail/utils/download_directory.dart';
 import 'package:aurora_mail/utils/permissions.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:intl/intl.dart';
+import 'package:package_info/package_info.dart';
 import 'package:webmail_api_client/webmail_api_client.dart';
 
 final logger = _Logger();
@@ -24,17 +26,18 @@ class _Logger {
 
   _Logger() {
     WebMailApi.onError = (str) {
-      log("Api error: $str", false);
+      log("Api error:\n$str", false);
     };
     WebMailApi.onRequest = (str) {
-      log("Api response: $str", false);
+      log("Api request:\n$str", false);
     };
   }
 
   log(Object text, [bool show = true]) {
     if (show == true) print(text);
     if (isRun) {
-      buffer += "${"$text".replaceAll("\n", newLine)}$newLine";
+
+      buffer += "[${DateFormat("hh:mm:ss.ms").format(DateTime.now())}] ${"$text".replaceAll("\n", newLine)}$newLine$newLine";
       count++;
       if (onEdit != null) onEdit();
     }
@@ -56,11 +59,12 @@ class _Logger {
     await Crashlytics.instance.log(buffer);
     await Crashlytics.instance.recordError("record log", null);
     try {
+      final packageInfo = await PackageInfo.fromPlatform();
       await getStoragePermissions();
       final dir = (await getDownloadDirectory());
       final file = File(dir +
           Platform.pathSeparator +
-          "log" +
+          "Logs_${packageInfo.packageName}" +
           Platform.pathSeparator +
           DateTime.now().toIso8601String() +
           ".log.txt");

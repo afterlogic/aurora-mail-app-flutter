@@ -51,7 +51,7 @@ class WebMailApi {
       headers = {'Authorization': 'Bearer $token'};
     }
     if (onRequest != null)
-      onRequest("url:$apiUrl\nbody:${body.toMap(moduleName)}");
+      onRequest("URL:$apiUrl\nBODY:${body.toMap(moduleName)}");
 
     final rawResponse =
         await http.post(apiUrl, headers: headers, body: body.toMap(moduleName));

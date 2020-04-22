@@ -249,6 +249,7 @@ class MailMethods {
       );
 
       newMessagesInfo = calcResult.updatedInfo;
+      logger.log("new messages: $newMessagesInfo");
       await _mailDao.deleteMessages(
           calcResult.removedUids, folderToUpdate.fullNameRaw);
       await _mailDao.updateMessagesFlags(calcResult.infosToUpdateFlags);
@@ -324,7 +325,8 @@ class MailMethods {
 
     // if all messages are synced
     if (uids.length == 0) {
-      logger.log("All the messages have been synced for: ${folder.fullNameRaw}");
+      logger
+          .log("All the messages have been synced for: ${folder.fullNameRaw}");
       await _foldersDao.updateFolder(
         new FoldersCompanion(
           needsInfoUpdate: Value(false),

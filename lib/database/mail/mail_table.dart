@@ -141,7 +141,10 @@ class Mail extends Table {
   BoolColumn get hasBody => boolean()();
 
   static List getToForDisplay(
-      widgets.BuildContext context, String toInJson, String currentUserEmail) {
+    widgets.BuildContext context,
+    String toInJson,
+    String currentUserEmail,
+  ) {
     if (toInJson == null) return [];
     final toDecoded = json.decode(toInJson);
     if (toDecoded == null) return [];

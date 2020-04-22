@@ -30,7 +30,7 @@
   "messages_show_details": "Показать детали",
   "messages_images_security_alert": "Из соображений безобазности картинки были заблокированы.",
   "messages_show_images": "Показать изображения.",
-  "messages_always_show_images": "Всегда показывать изображения.",
+  "messages_always_show_images": "Всегда показывать изображения в сообщениях от данного отправителя.",
   "messages_view_tab_attachments": "Вложения",
   "messages_view_tab_message_body": "Тело письма",
   "messages_to": "Кому",

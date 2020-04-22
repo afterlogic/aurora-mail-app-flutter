@@ -347,7 +347,7 @@ class _MessageWebViewState extends BState<MessageWebView>
                             _getHtmlWithImages();
                           },
                       ),
-                      TextSpan(text: "       "),
+                      TextSpan(text: "\n"),
                       TextSpan(
                         text: i18n(context, "messages_always_show_images"),
                         style: TextStyle(color: Colors.blue),
