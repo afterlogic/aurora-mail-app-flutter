@@ -82,7 +82,7 @@ class _EncryptDialogState extends BState<EncryptDialog> {
           onPressed: () => Navigator.pop(context),
         ),
         FlatButton(
-          child: Text(i18n(context, "sign_or_encrypt")),
+          child: Text(i18n(context, "btn_pgp_sign_or_encrypt")),
           onPressed: _signOrEncrypt,
         ),
       ],
