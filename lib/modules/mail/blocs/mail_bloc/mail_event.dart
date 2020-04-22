@@ -1,10 +1,10 @@
+import 'dart:async';
+
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/bloc.dart';
 import 'package:aurora_mail/utils/always_non_equal_object.dart';
 import 'package:equatable/equatable.dart';
-
-import 'mail_state.dart';
 
 abstract class MailEvent extends Equatable {
   const MailEvent();
@@ -29,9 +29,9 @@ class RefreshFolders extends MailEvent with AlwaysNonEqualObject {
 // gets messagesInfo for current folder
 // and relevant folders info for all the folders, including current
 class RefreshMessages extends MailEvent with AlwaysNonEqualObject {
-  final bool updateOther;
+  final Completer completer;
 
-  RefreshMessages([this.updateOther = false]);
+  RefreshMessages(this.completer);
 }
 
 class CheckFoldersMessagesChanges extends MailEvent {}
@@ -64,12 +64,4 @@ class SetStarred extends MailEvent {
 
   @override
   List<Object> get props => [messages, isStarred];
-}
-
-class AddState extends MailEvent {
-  final MailState state;
-
-  AddState(this.state);
-
-  List<Object> get props => state.props;
 }

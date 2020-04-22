@@ -57,5 +57,3 @@ class FoldersError extends MailState {
   @override
   List<Object> get props => [errorMsg];
 }
-
-class EndRefreshMessages extends MailState {}

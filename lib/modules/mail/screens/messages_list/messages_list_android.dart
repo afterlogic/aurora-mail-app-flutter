@@ -149,7 +149,6 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
   }
 
   void _dispatchPostFoldersLoadedAction(FoldersLoaded state) {
-
     switch (state.postAction) {
       case PostFolderLoadedAction.subscribeToMessages:
         _messagesListBloc.add(SubscribeToMessages(
@@ -206,16 +205,15 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
                 bloc: _messagesListBloc,
                 listener: (BuildContext context, state) {
                   if (state is MailError) _showError(context, state.errorMsg);
-                  if (state is MessagesDeleted)
-                    _mailBloc.add(RefreshMessages());
+                  if (state is MessagesDeleted) {
+                    _startRefresh();
+                    _mailBloc.add(RefreshMessages(_refreshCompleter));
+                  }
                 },
               ),
               BlocListener(
                 bloc: _mailBloc,
                 listener: (BuildContext context, state) {
-                  if (state is EndRefreshMessages) {
-                    _endRefresh();
-                  }
                   if (state is FoldersLoaded) {
                     if (state.isProgress == true) {
                       _startRefresh();
@@ -239,7 +237,8 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
                 },
                 listener: (BuildContext context, state) {
                   if (state is SettingsLoaded) {
-                    _mailBloc.add(RefreshMessages());
+                    _startRefresh();
+                    _mailBloc.add(RefreshMessages(_refreshCompleter));
                   }
                 },
               ),
@@ -247,9 +246,10 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
             child: RefreshIndicator(
               key: _refreshKey,
               onRefresh: () {
-                if (_refreshCompleter == null) {
-                  _mailBloc.add(RefreshMessages(true));
+                if (_refreshCompleter == null ||
+                    _refreshCompleter.isCompleted) {
                   _refreshCompleter = Completer();
+                  _mailBloc.add(RefreshMessages(_refreshCompleter));
                 }
                 return _refreshCompleter.future;
               },

@@ -52,17 +52,16 @@ class MailBloc extends Bloc<MailEvent, MailState> {
       yield* _checkFoldersMessagesChanges(event);
     if (event is SetSeen) yield* _setSeen(event);
     if (event is SetStarred) yield* _setStarred(event);
-    if (event is AddState) yield event.state;
   }
 
   onEndAlarm(bool hasUpdate) async {
     if (hasUpdate) {
-      add(RefreshMessages());
+      add(RefreshMessages(null));
     }
   }
 
   Stream<MailState> _fetchFolders(FetchFolders event) async* {
-    yield FoldersLoading();
+    if (state is! FoldersLoaded) yield FoldersLoading();
 
     try {
       final List<Folder> folders = await _methods.getFolders();
@@ -119,7 +118,7 @@ class MailBloc extends Bloc<MailEvent, MailState> {
 
   Stream<MailState> _refreshFolders(RefreshFolders event) async* {
     try {
-      yield FoldersLoading();
+      if (state is! FoldersLoaded) yield FoldersLoading();
 
       final newFolders = await _methods.refreshFolders();
 
@@ -161,10 +160,15 @@ class MailBloc extends Bloc<MailEvent, MailState> {
         _filter,
       );
 
-      _methods.syncFolders(guid: guid, syncSystemFolders: true).then((v) {
-        add(UpdateFolders());
-        add(AddState(EndRefreshMessages()));
-      }).catchError((e, s) => logger.log("message update error: $e"));
+      _methods
+          .syncFolders(guid: guid, syncSystemFolders: true)
+          .then((v) {
+            add(UpdateFolders());
+          })
+          .catchError((e, s) => logger.log("message update error: $e"))
+          .whenComplete(() {
+            event.completer?.complete();
+          });
     } catch (err, s) {
       yield FoldersError(formatError(err, s));
     }
@@ -200,7 +204,7 @@ class MailBloc extends Bloc<MailEvent, MailState> {
       if (state is FoldersLoaded) {
         yield state.copyWith(isProgress: true);
       } else {
-        yield FoldersLoading();
+        if (state is! FoldersLoaded) yield FoldersLoading();
       }
       final folders = await _methods.updateFoldersHash(_selectedFolder);
 
