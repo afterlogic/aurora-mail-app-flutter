@@ -50,7 +50,7 @@ class AppDatabase extends _$AppDatabase {
   Map<int, _Migration> get _migrationMap => {
         1: dropAll,
         2: m2,
-        3: m3,//from 3 to 4
+        3: m3, //from 3 to 4
       };
 
   @override
@@ -63,7 +63,11 @@ class AppDatabase extends _$AppDatabase {
           for (var i = from; i < to; i++) {
             final migration = migrationMap[i];
             if (migration != null) {
-              await migration(this, m);
+              try {
+                await migration(this, m);
+              } catch (e) {
+                print(e);
+              }
             }
           }
         },

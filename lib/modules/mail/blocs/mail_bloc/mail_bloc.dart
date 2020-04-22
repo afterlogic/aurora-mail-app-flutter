@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:aurora_mail/background/background_helper.dart';
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/logger/logger.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/bloc.dart';
 import 'package:aurora_mail/utils/api_utils.dart';
@@ -46,10 +47,12 @@ class MailBloc extends Bloc<MailEvent, MailState> {
     if (event is RefreshFolders) yield* _refreshFolders(event);
     if (event is RefreshMessages) yield* _refreshMessages(event);
     if (event is SelectFolder) yield* _selectFolder(event);
+    if (event is SelectFolder) yield* _selectFolder(event);
     if (event is CheckFoldersMessagesChanges)
       yield* _checkFoldersMessagesChanges(event);
     if (event is SetSeen) yield* _setSeen(event);
     if (event is SetStarred) yield* _setStarred(event);
+    if (event is AddState) yield event.state;
   }
 
   onEndAlarm(bool hasUpdate) async {
@@ -145,9 +148,6 @@ class MailBloc extends Bloc<MailEvent, MailState> {
   }
 
   Stream<MailState> _refreshMessages(RefreshMessages event) async* {
-    if (event.updateOther) {
-      BackgroundHelper.onStartAlarm();
-    }
     try {
       final guid = _selectedFolder.guid;
       final List<Folder> foldersWithInfo = await _methods.updateFoldersHash(
@@ -161,14 +161,12 @@ class MailBloc extends Bloc<MailEvent, MailState> {
         _filter,
       );
 
-      _methods
-          .syncFolders(guid: guid, syncSystemFolders: true)
-          .then((v) => add(UpdateFolders()));
+      _methods.syncFolders(guid: guid, syncSystemFolders: true).then((v) {
+        add(UpdateFolders());
+        add(AddState(EndRefreshMessages()));
+      }).catchError((e, s) => logger.log("message update error: $e"));
     } catch (err, s) {
       yield FoldersError(formatError(err, s));
-    }
-    if (event.updateOther) {
-      BackgroundHelper.onEndAlarm(false);
     }
   }
 

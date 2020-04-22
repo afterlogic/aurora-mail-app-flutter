@@ -4,6 +4,8 @@ import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/bloc.dart';
 import 'package:aurora_mail/utils/always_non_equal_object.dart';
 import 'package:equatable/equatable.dart';
 
+import 'mail_state.dart';
+
 abstract class MailEvent extends Equatable {
   const MailEvent();
 
@@ -62,4 +64,12 @@ class SetStarred extends MailEvent {
 
   @override
   List<Object> get props => [messages, isStarred];
+}
+
+class AddState extends MailEvent {
+  final MailState state;
+
+  AddState(this.state);
+
+  List<Object> get props => state.props;
 }

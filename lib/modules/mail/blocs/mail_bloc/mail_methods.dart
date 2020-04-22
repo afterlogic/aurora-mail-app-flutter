@@ -249,7 +249,7 @@ class MailMethods {
       );
 
       newMessagesInfo = calcResult.updatedInfo;
-      logger.log("new messages: $newMessagesInfo");
+      logger.log("new messages: ${newMessagesInfo.length}");
       await _mailDao.deleteMessages(
           calcResult.removedUids, folderToUpdate.fullNameRaw);
       await _mailDao.updateMessagesFlags(calcResult.infosToUpdateFlags);

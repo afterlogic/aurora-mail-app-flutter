@@ -149,6 +149,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
   }
 
   void _dispatchPostFoldersLoadedAction(FoldersLoaded state) {
+
     switch (state.postAction) {
       case PostFolderLoadedAction.subscribeToMessages:
         _messagesListBloc.add(SubscribeToMessages(
@@ -205,9 +206,6 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
                 bloc: _messagesListBloc,
                 listener: (BuildContext context, state) {
                   if (state is MailError) _showError(context, state.errorMsg);
-                  if (state is MessagesRefreshed || state is MailError) {
-                    _endRefresh();
-                  }
                   if (state is MessagesDeleted)
                     _mailBloc.add(RefreshMessages());
                 },
@@ -215,11 +213,12 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
               BlocListener(
                 bloc: _mailBloc,
                 listener: (BuildContext context, state) {
+                  if (state is EndRefreshMessages) {
+                    _endRefresh();
+                  }
                   if (state is FoldersLoaded) {
                     if (state.isProgress == true) {
                       _startRefresh();
-                    } else {
-                      _endRefresh();
                     }
                     setState(() => _selectedFolder = state.selectedFolder);
                     if (state.postAction != null) {

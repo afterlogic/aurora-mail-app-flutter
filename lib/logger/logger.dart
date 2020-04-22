@@ -29,7 +29,7 @@ class _Logger {
       log("Api error:\n$str", false);
     };
     WebMailApi.onRequest = (str) {
-      log("Api request:\n$str", false);
+      log("Api request:\n$str", true);
     };
   }
 

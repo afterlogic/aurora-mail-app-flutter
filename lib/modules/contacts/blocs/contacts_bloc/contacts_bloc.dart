@@ -81,9 +81,6 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
     return _repo.getContactById(id);
   }
   Stream<ContactsState> _getContacts(GetContacts event) async* {
-    if (event.updateOther) {
-      BackgroundHelper.onStartAlarm();
-    }
     try {
       _storagesSub = _repo.watchContactsStorages().listen((storages) {
         if (state.storages == null) {
@@ -115,9 +112,6 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
       });
     } catch (e) {
       print(e);
-    }
-    if (event.updateOther) {
-      BackgroundHelper.onEndAlarm(false);
     }
   }
 
