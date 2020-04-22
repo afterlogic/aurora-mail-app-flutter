@@ -246,11 +246,9 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
             child: RefreshIndicator(
               key: _refreshKey,
               onRefresh: () {
-                if (_refreshCompleter == null ||
-                    _refreshCompleter.isCompleted) {
-                  _refreshCompleter = Completer();
-                  _mailBloc.add(RefreshMessages(_refreshCompleter));
-                }
+                _startRefresh();
+                _mailBloc.add(RefreshMessages(_refreshCompleter));
+
                 return _refreshCompleter.future;
               },
               backgroundColor: Colors.white,
@@ -415,12 +413,8 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
   }
 
   _startRefresh() {
+    if (_refreshCompleter?.isCompleted == false) _refreshCompleter?.complete();
     _refreshCompleter = Completer();
     _refreshKey.currentState.show();
-  }
-
-  _endRefresh() {
-    _refreshCompleter?.complete();
-    _refreshCompleter = null;
   }
 }

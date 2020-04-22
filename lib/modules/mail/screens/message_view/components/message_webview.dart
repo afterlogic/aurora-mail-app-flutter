@@ -93,6 +93,9 @@ class _MessageWebViewState extends BState<MessageWebView> {
     String htmlData;
     if (widget.decrypted != null) {
       htmlData = widget.decrypted;
+      _controller?.loadUrl(_getHtmlUri(htmlData));
+      setState(() {});
+      return;
     } else {
       htmlData = widget.message.htmlBody;
     }
