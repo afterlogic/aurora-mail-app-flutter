@@ -20,6 +20,7 @@ import 'package:aurora_mail/utils/date_formatting.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/mail_utils.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -45,15 +46,14 @@ class MessageWebView extends StatefulWidget {
   final ContactsBloc contactsBloc;
   final MessageViewBloc messageViewBloc;
 
-  const MessageWebView(
-    this.message,
-    this.attachments,
-    this.decrypted,
-    this.bloc,
-    this.contactsBloc,
-    this.messageViewBloc, {
-    Key key,
-  }) : super(key: key);
+  const MessageWebView(this.message,
+      this.attachments,
+      this.decrypted,
+      this.bloc,
+      this.contactsBloc,
+      this.messageViewBloc, {
+        Key key,
+      }) : super(key: key);
 
   @override
   _MessageWebViewState createState() => _MessageWebViewState();
@@ -112,7 +112,7 @@ class _MessageWebViewState extends BState<MessageWebView> {
           c.nodes.forEach((node) {
             if (node.attributes.containsKey("data-x-style-url") as bool) {
               var backgroundImageUrl =
-                  node.attributes["data-x-style-url"] as String;
+              node.attributes["data-x-style-url"] as String;
               backgroundImageUrl =
                   backgroundImageUrl.replaceAll("http://", "https://");
               node.attributes.remove("data-x-style-url");
@@ -132,12 +132,16 @@ class _MessageWebViewState extends BState<MessageWebView> {
       htmlData = document.outerHtml;
     }
 
-    final user = BlocProvider.of<AuthBloc>(context).currentUser;
+    final user = BlocProvider
+        .of<AuthBloc>(context)
+        .currentUser;
 
     for (final attachment in widget.attachments) {
       htmlData = htmlData.replaceFirst(
         "data-x-src-cid=\"${attachment.cid}\"",
-        "src=\"${user.hostname}${attachment.viewUrl.replaceFirst("mail-attachment/", "mail-attachments-cookieless/")}&AuthToken=${user.token}\"",
+        "src=\"${user.hostname}${attachment.viewUrl.replaceFirst(
+            "mail-attachment/",
+            "mail-attachments-cookieless/")}&AuthToken=${user.token}\"",
       );
     }
 
@@ -151,7 +155,10 @@ class _MessageWebViewState extends BState<MessageWebView> {
     final items = Mail.getToForDisplay(
       context,
       message.toInJson,
-      BlocProvider.of<AuthBloc>(context).currentAccount.email,
+      BlocProvider
+          .of<AuthBloc>(context)
+          .currentAccount
+          .email,
     );
 
     if (items.isEmpty) {
@@ -162,11 +169,15 @@ class _MessageWebViewState extends BState<MessageWebView> {
   }
 
   String _getHtmlUri(String html) {
-    final state = BlocProvider.of<SettingsBloc>(context).state;
+    final state = BlocProvider
+        .of<SettingsBloc>(context)
+        .state;
 
     final date = DateFormatting.getDetailedMessageDate(
       timestamp: widget.message.timeStampInUTC,
-      locale: Localizations.localeOf(context).languageCode,
+      locale: Localizations
+          .localeOf(context)
+          .languageCode,
       yesterdayWord: i18n(context, "label_message_yesterday"),
       is24: (state as SettingsLoaded).is24 ?? true,
     );
@@ -181,7 +192,7 @@ class _MessageWebViewState extends BState<MessageWebView> {
       showLightEmail: false,
     );
     return Uri.dataFromString(wrappedHtml,
-            mimeType: 'text/html', encoding: Encoding.getByName('utf-8'))
+        mimeType: 'text/html', encoding: Encoding.getByName('utf-8'))
         .toString();
   }
 
@@ -202,14 +213,14 @@ class _MessageWebViewState extends BState<MessageWebView> {
         msg: msg,
         timeInSecForIos: 2,
         backgroundColor:
-            Platform.isIOS ? theme.disabledColor.withOpacity(0.5) : null,
+        Platform.isIOS ? theme.disabledColor.withOpacity(0.5) : null,
       );
       BlocProvider.of<MessageViewBloc>(context).downloadAttachment(
         attachment,
-        (path) async {
+            (path) async {
           try {
             String content =
-                Platform.isIOS ? path : await File(path).readAsString();
+            Platform.isIOS ? path : await File(path).readAsString();
             final vcf = Vcf.fromString(content);
             await importContactFromVcf(context, vcf, widget.contactsBloc);
           } catch (e) {}
@@ -224,7 +235,7 @@ class _MessageWebViewState extends BState<MessageWebView> {
         msg: msg,
         timeInSecForIos: 2,
         backgroundColor:
-            Platform.isIOS ? theme.disabledColor.withOpacity(0.5) : null,
+        Platform.isIOS ? theme.disabledColor.withOpacity(0.5) : null,
       );
     }
   }
@@ -241,7 +252,7 @@ class _MessageWebViewState extends BState<MessageWebView> {
     } else if (request.url
         .endsWith(MessageWebViewActions.DOWNLOAD_ATTACHMENT)) {
       final parts =
-          request.url.split(MessageWebViewActions.DOWNLOAD_ATTACHMENT);
+      request.url.split(MessageWebViewActions.DOWNLOAD_ATTACHMENT);
       final downloadUrl = parts[parts.length - 2];
       _startDownload(downloadUrl);
       return NavigationDecision.prevent;
@@ -256,7 +267,7 @@ class _MessageWebViewState extends BState<MessageWebView> {
   Future onLoad() async {
     if (widget.message.hasExternals) {
       _showImages =
-          await widget.messageViewBloc.checkInWhiteList(widget.message);
+      await widget.messageViewBloc.checkInWhiteList(widget.message);
       _getHtmlWithImages();
       setState(() {});
     } else {
@@ -321,8 +332,15 @@ class _MessageWebViewState extends BState<MessageWebView> {
                 javascriptMode: JavascriptMode.unrestricted,
                 onWebViewCreated: (WebViewController c) => _controller = c,
                 navigationDelegate: _onWebViewNavigateRequestIos,
-                onPageFinished: (_) async => setState(() => _pageLoaded = true),
+                onPageFinished: (_) async =>
+                    setState(() => _pageLoaded = true),
+                gestureRecognizers: {
+                  Factory(() =>
+                  LongPressGestureRecognizer()
+                    ..onLongPress = () {}),
+                },
               ),
+
               Positioned.fill(
                 child: IgnorePointer(
                   ignoring: true,
@@ -340,11 +358,9 @@ class _MessageWebViewState extends BState<MessageWebView> {
     );
   }
 
-  Future importContactFromVcf(
-    BuildContext context,
-    Vcf vcf,
-    ContactsBloc bloc,
-  ) async {
+  Future importContactFromVcf(BuildContext context,
+      Vcf vcf,
+      ContactsBloc bloc,) async {
     final contact = Contact(
       entityId: null,
       uuid: null,
