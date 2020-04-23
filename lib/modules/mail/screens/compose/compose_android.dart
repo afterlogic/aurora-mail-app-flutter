@@ -732,7 +732,8 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
           i18n(context, "template_self_destructing_message_title");
       _bodyTextCtrl.text = result.body;
       _attachments.clear();
-
+      _ccEmails.clear();
+      _bccEmails.clear();
       _encryptType = result.contact.key != null
           ? EncryptType.SelfDestructingEncrypt
           : EncryptType.SelfDestructing;

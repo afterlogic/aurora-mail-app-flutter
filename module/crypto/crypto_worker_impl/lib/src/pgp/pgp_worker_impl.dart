@@ -10,7 +10,7 @@ import 'package:path_provider/path_provider.dart';
 import 'pgp_encrypt_decrypt_impl.dart';
 
 class PgpWorkerImpl extends PgpWorker {
-  final utf8 = Utf8Codec(allowMalformed:true);
+  final utf8 = Utf8Codec(allowMalformed: true);
   final Pgp _pgp;
   final CryptoStorage _storage;
   PgpEncryptDecrypt _pgpEncryptDecrypt;
@@ -88,20 +88,14 @@ class PgpWorkerImpl extends PgpWorker {
 
   Future<String> encryptSymmetric(String text, String password) async {
     final tempFile = await PgpWorkerImpl.tempFile;
-    try {
-      final length = utf8.encode(text).length;
-      return _pgp.bufferPlatformSink(
-          text,
-          _pgp.symmetricallyEncrypt(
-            tempFile,
-            password,
-            length,
-          ));
-    } finally {
-      if (await tempFile.exists()) {
-        tempFile.delete();
-      }
-    }
+    final length = utf8.encode(text).length;
+    return _pgp.bufferPlatformSink(
+        text,
+        _pgp.symmetricallyEncrypt(
+          tempFile,
+          password,
+          length,
+        ));
   }
 
   EncryptType encryptType(String text) {
@@ -144,7 +138,9 @@ class PgpWorkerImpl extends PgpWorker {
 
   static Future<File> get tempFile async {
     final dir = await getTemporaryDirectory();
-    return File(dir.path + Platform.pathSeparator + _tempFile);
+    final file = File(dir.path + Platform.pathSeparator + _tempFile);
+    if (!(await file.exists())) await file.create();
+    return file;
   }
 
   final _BEGIN_PGP_MESSAGE = "-----BEGIN PGP MESSAGE-----";
