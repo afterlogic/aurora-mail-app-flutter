@@ -229,9 +229,8 @@ class MailApi {
       cancel: uploader.cancel,
     );
     onUploadStart(tempAttachment);
-
     uploader.result.listen((result) {
-      if (taskId == result.taskId) {
+      if (result.taskId == tempAttachment.taskId) {
         final res = json.decode(result.response);
         if (res is Map &&
             res["Result"] is Map &&
@@ -248,6 +247,9 @@ class MailApi {
         }
       }
     }, onError: (err) {
+      if (err is UploadException && err.code == "flutter_upload_cancelled") {
+        return;
+      }
       onError(WebMailApiError(err));
       print("Attachment upload error: $err");
     });
