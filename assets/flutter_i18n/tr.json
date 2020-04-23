@@ -289,6 +289,7 @@
   "label_pgp_decrypt": "Open PGP Decrypt",
   "label_pgp_sign": "Sign",
   "btn_pgp_encrypt": "Encrypt",
+  "btn_pgp_decrypt": "Decrypt",
   "error_pgp_invalid_password": "invalid password",
   "error_pgp_not_found_keys_for": "No private key found for {users} user.",
   "label_pgp_decrypted_and_verified": "Message was successfully decrypted and verified.",

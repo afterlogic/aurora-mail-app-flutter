@@ -50,7 +50,7 @@ class _RequestPasswordDialogState extends BState<RequestPasswordDialog> {
           onPressed: () => Navigator.pop(context),
         ),
         FlatButton(
-          child: Text(i18n(context, "decrypt")),
+          child: Text(i18n(context, "btn_pgp_decrypt")),
           onPressed: _decrypt,
         ),
       ],
