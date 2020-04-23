@@ -43,6 +43,7 @@ class _ComposeEmailsState extends BState<ComposeEmails> {
   @override
   void initState() {
     super.initState();
+
     widget.focusNode.addListener(() {
       if (!widget.focusNode.hasFocus) {
         _addEmail(widget.textCtrl.text);
@@ -73,7 +74,8 @@ class _ComposeEmailsState extends BState<ComposeEmails> {
       final contacts = await bloc.getTypeAheadContacts(pattern);
 
       contacts.removeWhere((i) => i.viewEmail.isEmpty);
-      contacts.removeWhere((i) => widget.emails.contains(MailUtils.getFriendlyName(i)));
+      contacts.removeWhere(
+          (i) => widget.emails.contains(MailUtils.getFriendlyName(i)));
       return contacts;
     } catch (e, s) {
       print(s);
@@ -152,20 +154,28 @@ class _ComposeEmailsState extends BState<ComposeEmails> {
     }
 
     Widget _searchContact(Contact contact) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (contact.fullName.isNotEmpty)
-            RichText(
-              text: _searchMatch(contact.fullName),
-              maxLines: 1,
+      return Row(
+        children: <Widget>[
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (contact.fullName.isNotEmpty)
+                  RichText(
+                    text: _searchMatch(contact.fullName),
+                    maxLines: 1,
+                  ),
+                if (contact.viewEmail.isNotEmpty)
+                  RichText(
+                    text: _searchMatch(contact.viewEmail),
+                    maxLines: 1,
+                  ),
+              ],
             ),
-          if (contact.viewEmail.isNotEmpty)
-            RichText(
-              text: _searchMatch(contact.viewEmail),
-              maxLines: 1,
-            ),
+          ),
+//todo
+//          if ((contact.pgpPublicKey?.length ?? 0) > 5) Icon(Icons.vpn_key),
         ],
       );
     }

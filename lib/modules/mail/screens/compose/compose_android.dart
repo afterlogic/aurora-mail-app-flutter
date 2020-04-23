@@ -269,10 +269,10 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
   }
 
   void _onAttachmentUploaded(ComposeAttachment attachment) {
-  final i =_attachments.indexWhere((a) => a.guid == attachment.guid);
+    final i = _attachments.indexWhere((a) => a.guid == attachment.guid);
     setState(() {
       _attachments.removeAt(i);
-      _attachments.add( attachment);
+      _attachments.add(attachment);
     });
   }
 
@@ -445,8 +445,13 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
         return;
       }
       final sender = AliasOrIdentity(alias, identity);
+      final contact = <String>{};
+      contact.addAll(_ccEmails);
+      contact.addAll(_bccEmails);
+      contact.addAll(_toEmails);
+
       _bloc.add(EncryptBody(
-        _toEmails,
+        contact,
         _bodyTextCtrl.text,
         result.encrypt,
         result.sign,
@@ -723,7 +728,8 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
       decryptTitle = _subjectTextCtrl.text;
       decryptBody = _bodyTextCtrl.text;
 
-      _subjectTextCtrl.text = i18n(context, "template_self_destructing_message_title");
+      _subjectTextCtrl.text =
+          i18n(context, "template_self_destructing_message_title");
       _bodyTextCtrl.text = result.body;
       _attachments.clear();
 
