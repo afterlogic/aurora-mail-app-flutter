@@ -56,8 +56,8 @@ class _Logger {
   }
 
   save() async {
-    await Crashlytics.instance.log(buffer);
-    await Crashlytics.instance.recordError("record log", null);
+//    await Crashlytics.instance.log(buffer);
+//    await Crashlytics.instance.recordError("record log", null);
     try {
       final packageInfo = await PackageInfo.fromPlatform();
       await getStoragePermissions();
