@@ -217,7 +217,7 @@ class MailApi {
       method: UploadMethod.POST,
       headers: _mailModule.headerWithToken,
       data: body.toMap("Mail"),
-      showNotification: true,
+      showNotification: false,
       tag: fileName,
     );
 

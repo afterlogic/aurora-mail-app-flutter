@@ -64,7 +64,8 @@ class _MainDrawerState extends BState<MainDrawer> {
                         Row(
                           children: <Widget>[
                             Text(authBloc.currentAccount.email),
-                            if (multiAccountEnable)
+                            if (multiAccountEnable &&
+                                authBloc.accounts.length > 1)
                               Icon(mode == _DrawerMode.folders
                                   ? Icons.arrow_drop_down
                                   : Icons.arrow_drop_up),
