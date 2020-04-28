@@ -483,4 +483,26 @@ class MailApi {
       throw WebMailApiError(res);
     }
   }
+
+  Future<ComposeAttachment> uploadEmlAttachments(Message message) async {
+    final parameters = json.encode(
+      {
+        "MessageFolder": message.folder,
+        "MessageUid": message.uid,
+        "FileName": "${message.subject}.eml",
+        "AccountID": account.accountId
+      },
+    );
+
+    final body = new WebMailApiBody(
+        method: "SaveMessageAsTempFile", parameters: parameters);
+
+    final res = await _mailModule.post(body);
+
+    if (res is Map) {
+      return ComposeAttachment.fromNetwork(res);
+    } else {
+      throw WebMailApiError(res);
+    }
+  }
 }

@@ -39,6 +39,7 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
     if (event is SaveToDrafts) yield* _saveToDrafts(event);
     if (event is UploadAttachment) yield* _addAttachment(event);
     if (event is UploadAttachments) _addAttachments(event);
+    if (event is UploadEmlAttachments) yield* _uploadEmlAttachments(event);
     if (event is StartUpload) yield UploadStarted(event.tempAttachment);
     if (event is EndUpload) yield AttachmentUploaded(event.composeAttachment);
     if (event is GetComposeAttachments) yield* _getComposeAttachments(event);
@@ -183,5 +184,19 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
         yield ComposeError("error_server_unknown_email");
       }
     }
+  }
+
+  Stream<ComposeState> _uploadEmlAttachments(
+      UploadEmlAttachments event) async* {
+    _methods.uploadEmlAttachments(event.message,
+        onUploadStart: (TempAttachmentUpload tempAttachment) {
+      add(StartUpload(tempAttachment));
+    }, onUploadEnd: (ComposeAttachment attachment) {
+      add(EndUpload(attachment));
+    }, onError: (dynamic err) {
+      add(ErrorUpload(err.toString()));
+    }).then((_) {
+      "";
+    });
   }
 }

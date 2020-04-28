@@ -19,7 +19,8 @@ enum MailViewAppBarAction {
   notSpam,
   resend,
   showLightEmail,
-  delete
+  delete,
+  forwardAsAttachment,
 }
 
 class MailViewAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -44,12 +45,6 @@ class MailViewAppBar extends StatelessWidget implements PreferredSizeWidget {
               actions: folderType == null
                   ? []
                   : [
-                      IconButton(
-                        icon: Icon(Icons.code),
-                        tooltip: i18n(context, "label_message_headers"),
-                        onPressed: () =>
-                            onAppBarActionSelected(MailViewAppBarAction.showHeaders),
-                      ),
                       IconButton(
                         icon: Icon(MdiIcons.fileMove),
                         tooltip: i18n(context, "label_message_move_to_folder"),
@@ -126,6 +121,28 @@ class MailViewAppBar extends StatelessWidget implements PreferredSizeWidget {
                             onAppBarActionSelected(MailViewAppBarAction.resend);
                           },
                         ),
+
+                      PopupMenuButton<MailViewAppBarAction>(
+                        onSelected: onAppBarActionSelected,
+                        itemBuilder: (BuildContext context) => [
+                          PopupMenuItem(
+                            value: MailViewAppBarAction.showHeaders,
+                            child: ListTile(
+                              leading: Icon(Icons.code),
+                              title:
+                                  Text(i18n(context, "label_message_headers")),
+                            ),
+                          ),
+                          PopupMenuItem(
+                            value: MailViewAppBarAction.forwardAsAttachment,
+                            child: ListTile(
+                              leading: Icon(Icons.forward),
+                              title:
+                              Text(i18n(context, "label_forward_as_attachment")),
+                            ),
+                          ),
+                        ],
+                      ),
                     ],
             );
           }),

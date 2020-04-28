@@ -25,6 +25,11 @@ class Resend implements ComposeAction {
 
   const Resend(this.message);
 }
+class ForwardAsAttachment implements ComposeAction {
+  final Message message;
+
+  const ForwardAsAttachment(this.message);
+}
 
 class Reply implements ComposeAction {
   final Message message;

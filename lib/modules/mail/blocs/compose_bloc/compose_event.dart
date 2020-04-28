@@ -87,6 +87,12 @@ class UploadAttachments extends ComposeEvent with AlwaysNonEqualObject {
   UploadAttachments(this.files);
 }
 
+class UploadEmlAttachments extends ComposeEvent with AlwaysNonEqualObject {
+  final Message message;
+
+  UploadEmlAttachments(this.message);
+}
+
 // used inside bloc, thus is not intended to be fired from flutter widgets
 class StartUpload extends ComposeEvent {
   final TempAttachmentUpload tempAttachment;

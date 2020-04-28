@@ -355,5 +355,6 @@
   "hint_pgp_share_warning": "You are going to share you private PGP key. The key must be kept from the 3-thd party. Do you want to continue?",
   "btn_vcf_import": "Import",
   "hint_vcf_import": "Import {name} contact from vcf?",
-  "label_message_headers": "Message headers"
+  "label_message_headers": "View message headers",
+  "label_forward_as_attachment": "Forward as attachment"
 }

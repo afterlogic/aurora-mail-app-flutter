@@ -5,7 +5,7 @@ import 'package:uuid/uuid.dart';
 class TempAttachmentUpload {
   final String guid = new Uuid().v4();
   final String name;
-  final int size;
+  int size;
   final String taskId;
   final Stream<UploadTaskProgress> uploadProgress;
   final Function({String taskId}) cancel;

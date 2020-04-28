@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/folders/folders_dao.dart';
@@ -12,6 +13,9 @@ import 'package:aurora_mail/modules/mail/models/temp_attachment_upload.dart';
 import 'package:aurora_mail/modules/mail/repository/mail_api.dart';
 import 'package:crypto_worker/crypto_worker.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_uploader/flutter_uploader.dart';
+import 'package:uuid/uuid.dart';
+import 'package:uuid/uuid_util.dart';
 
 class ComposeMethods {
   final Account account;
@@ -56,7 +60,7 @@ class ComposeMethods {
         draftUid: draftUid,
         sentFolderName: sentFolder != null ? sentFolder.fullNameRaw : null,
         draftsFolderName:
-        draftsFolder != null ? draftsFolder.fullNameRaw : null,
+            draftsFolder != null ? draftsFolder.fullNameRaw : null,
         identity: identity,
         alias: alias);
   }
@@ -91,7 +95,8 @@ class ComposeMethods {
     );
   }
 
-  Future uploadFile(File file, {
+  Future uploadFile(
+    File file, {
     @required Function(TempAttachmentUpload) onUploadStart,
     @required Function(ComposeAttachment) onUploadEnd,
     @required Function(dynamic) onError,
@@ -105,7 +110,8 @@ class ComposeMethods {
   }
 
   Future<List<ComposeAttachment>> getComposeAttachments(
-      List<MailAttachment> attachments,) async {
+    List<MailAttachment> attachments,
+  ) async {
     // filter out inline attachments
     final filteredAttachments = attachments.where((a) => !a.isInline).toList();
     if (filteredAttachments.isEmpty) return new List<ComposeAttachment>();
@@ -118,12 +124,14 @@ class ComposeMethods {
     return Future.wait(futures);
   }
 
-  Future<String> encrypt(bool sign,
-      bool encrypt,
-      String pass,
-      List<String> contacts,
-      String body,
-      String sender,) async {
+  Future<String> encrypt(
+    bool sign,
+    bool encrypt,
+    String pass,
+    List<String> contacts,
+    String body,
+    String sender,
+  ) async {
     final encryptDecrypt = pgpWorker.encryptDecrypt(
       sign ? sender : null,
       contacts,
@@ -135,5 +143,37 @@ class ComposeMethods {
       return await encryptDecrypt.sign(body, pass);
     }
     return "";
+  }
+
+  uploadEmlAttachments(
+    Message message, {
+    Function(TempAttachmentUpload tempAttachment) onUploadStart,
+    Function(ComposeAttachment attachment) onUploadEnd,
+    Function(dynamic) onError,
+  }) async {
+    final taskId = Random().nextInt(1000).toString();
+    final completer = Completer<UploadTaskProgress>();
+    final tempAttachment = new TempAttachmentUpload(
+      name: message.subject + ".eml",
+      size: 1,
+      taskId: taskId,
+      uploadProgress: completer.future.asStream().asBroadcastStream(),
+      cancel: ({String taskId}) {},
+    );
+    onUploadStart(tempAttachment);
+    try {
+      final attachment = await _mailApi.uploadEmlAttachments(message);
+      attachment.guid = tempAttachment.guid;
+      completer.complete(
+        UploadTaskProgress(taskId, 100, UploadTaskStatus.complete, ""),
+      );
+      tempAttachment.size = attachment.size;
+      onUploadEnd(attachment);
+    } catch (e) {
+      onError(e);
+      completer.complete(
+        UploadTaskProgress(taskId, 0, UploadTaskStatus.failed, ""),
+      );
+    }
   }
 }

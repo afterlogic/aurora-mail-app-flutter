@@ -169,6 +169,14 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
           ),
         );
         break;
+      case MailViewAppBarAction.forwardAsAttachment:
+        final args = new ComposeScreenArgs(
+          mailBloc: mailBloc,
+          contactsBloc: contactsBloc,
+          composeAction: ForwardAsAttachment(msg),
+        );
+        Navigator.pushNamed(context, ComposeRoute.name, arguments: args);
+        break;
     }
   }
 
