@@ -55,6 +55,11 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
   @override
   void initState() {
     super.initState();
+    final authBloc = BlocProvider.of<AuthBloc>(context);
+    _messagesListBloc = new MessagesListBloc(
+      user: authBloc.currentUser,
+      account: authBloc.currentAccount,
+    );
     MessagesListAndroid.onShare = (files, text) {
       if (files?.isNotEmpty == true || text?.isNotEmpty == true) {
         Navigator.pushNamed(
@@ -97,16 +102,11 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
     _mailBloc = BlocProvider.of<MailBloc>(context);
     _contactsBloc = BlocProvider.of<ContactsBloc>(context);
 
-    _messagesListBloc = new MessagesListBloc(
-      user: authBloc.currentUser,
-      account: authBloc.currentAccount,
-    );
     _mailBloc.init(
       authBloc.currentUser,
       authBloc.currentAccount,
     );
 
-    _contactsBloc.add(GetContacts());
     _mailBloc.add(FetchFolders());
   }
 

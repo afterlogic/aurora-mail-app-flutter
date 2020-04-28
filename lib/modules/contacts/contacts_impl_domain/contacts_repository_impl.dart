@@ -71,6 +71,7 @@ class ContactsRepositoryImpl implements ContactsRepository {
 
   @override
   Stream<List<ContactsGroup>> watchContactsGroups() {
+    print("watchContactsGroups");
     _db.getGroups(_userLocalId).then((groups) async {
       if (groups.isNotEmpty) {
         _groupCtrl.add(groups);

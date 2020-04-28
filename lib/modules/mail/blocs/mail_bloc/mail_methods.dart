@@ -35,7 +35,7 @@ class MailMethods {
     _mailApi = new MailApi(user: user, account: account);
   }
 
-  final _syncQueue = new List<String>();
+  static final syncQueue = new List<String>();
 
   bool get _isOffline => SettingsBloc.isOffline;
 
@@ -188,38 +188,38 @@ class MailMethods {
       localFolders.sort((a, b) => a.folderOrder.compareTo(b.folderOrder));
     }
 
-    final queueLengthBeforeInsert = _syncQueue.length;
+    final queueLengthBeforeInsert = syncQueue.length;
 
     localFolders.forEach((f) {
-      if (f.isSystemFolder && !_syncQueue.contains(f.guid)) {
-        _syncQueue.add(f.guid);
+      if (f.isSystemFolder && !syncQueue.contains(f.guid)) {
+        syncQueue.add(f.guid);
       }
     });
 
     if (guid != null) {
-      if (_syncQueue.contains(guid)) _syncQueue.remove(guid);
-      _syncQueue.insert(0, guid);
+      if (syncQueue.contains(guid)) syncQueue.remove(guid);
+      syncQueue.insert(0, guid);
     }
-    if (_syncQueue.isNotEmpty && queueLengthBeforeInsert == 0) {
+    if (syncQueue.isNotEmpty && queueLengthBeforeInsert == 0) {
       await _setMessagesInfoToFolder();
-    } else if (_syncQueue.isNotEmpty) {
+    } else if (syncQueue.isNotEmpty) {
       needUpdateInfo = true;
     }
   }
 
   Future<void> _setMessagesInfoToFolder() async {
     if (_isOffline || user == null) return null;
-    if (_syncQueue.isEmpty) {
+    if (syncQueue.isEmpty) {
       return;
     }
 
-    final folderToUpdate = await _foldersDao.getFolderByLocalId(_syncQueue[0]);
+    final folderToUpdate = await _foldersDao.getFolderByLocalId(syncQueue[0]);
     // get the actual sync period
     final updatedUser = await _usersDao.getUserByLocalId(user.localId);
 
     if (folderToUpdate.needsInfoUpdate == false) {
-      _syncQueue.remove(folderToUpdate.guid);
-      if (_syncQueue.isNotEmpty) {
+      syncQueue.remove(folderToUpdate.guid);
+      if (syncQueue.isNotEmpty) {
         return _setMessagesInfoToFolder();
       } else {
         return null;
@@ -295,10 +295,10 @@ class MailMethods {
     List<Message> messagesForUpdate,
   ) async {
     if (_isOffline || user == null) return null;
-    assert(_syncQueue.isNotEmpty);
+    assert(syncQueue.isNotEmpty);
 
     // get the actual folder state every time
-    final folder = await _foldersDao.getFolderByLocalId(_syncQueue[0]);
+    final folder = await _foldersDao.getFolderByLocalId(syncQueue[0]);
     // get the actual sync period
     final updatedUser = await _usersDao.getUserByLocalId(user.localId);
 //    if (folder?.messagesInfo == null) {
@@ -333,10 +333,10 @@ class MailMethods {
         ),
         folder.guid,
       );
-      assert(_syncQueue.contains(folder.guid));
-      _syncQueue.remove(folder.guid);
-      logger.log("_syncQueue: $_syncQueue");
-      if (_syncQueue.isNotEmpty) {
+      assert(syncQueue.contains(folder.guid));
+      syncQueue.remove(folder.guid);
+      logger.log("_syncQueue: $syncQueue");
+      if (syncQueue.isNotEmpty) {
         return _setMessagesInfoToFolder();
       } else {
         return null;
@@ -360,7 +360,7 @@ class MailMethods {
       await _mailDao.fillMessage(messages);
 
       // check if there are other messages to sync
-      return _syncMessagesChunk(
+      _syncMessagesChunk(
         syncPeriod,
         messagesForUpdate
             .sublist(min(MESSAGES_PER_CHUNK, messagesForUpdate.length)),

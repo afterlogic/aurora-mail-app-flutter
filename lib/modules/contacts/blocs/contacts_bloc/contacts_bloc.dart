@@ -80,7 +80,9 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
   Future<Contact> getContact(int id) async {
     return _repo.getContactById(id);
   }
+
   Stream<ContactsState> _getContacts(GetContacts event) async* {
+    print("_getContacts");
     try {
       _storagesSub = _repo.watchContactsStorages().listen((storages) {
         if (state.storages == null) {

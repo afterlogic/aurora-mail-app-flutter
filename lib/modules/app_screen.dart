@@ -180,7 +180,7 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
                           create: (_) => new ContactsBloc(
                             user: _authBloc.currentUser,
                             appDatabase: DBInstances.appDB,
-                          ),
+                          )..add(GetContacts()),
                         ),
                       ],
                       child: MaterialApp(

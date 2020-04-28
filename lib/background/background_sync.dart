@@ -9,6 +9,7 @@ import 'package:aurora_mail/logger/logger.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/models/message_info.dart';
 import 'package:aurora_mail/modules/auth/repository/auth_local_storage.dart';
+import 'package:aurora_mail/modules/mail/blocs/mail_bloc/mail_methods.dart';
 import 'package:aurora_mail/modules/mail/repository/folders_api.dart';
 import 'package:aurora_mail/modules/mail/repository/mail_api.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
@@ -29,6 +30,9 @@ class BackgroundSync {
   Future<bool> sync(bool isBackground) async {
     logger.log("MailSync: sync START");
     var hasUpdate = false;
+    if (MailMethods.syncQueue.isNotEmpty) {
+      return false;
+    }
     try {
       final users = await _usersDao.getUsers();
 

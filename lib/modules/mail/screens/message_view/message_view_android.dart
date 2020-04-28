@@ -56,10 +56,8 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
   void initState() {
     super.initState();
     final authBloc = BlocProvider.of<AuthBloc>(context);
-    contactsBloc = ContactsBloc(
-      user: authBloc.currentUser,
-      appDatabase: DBInstances.appDB,
-    );
+    contactsBloc = BlocProvider.of<ContactsBloc>(context);
+
     pgpBloc = AppInjector.instance.pgpSettingsBloc(authBloc);
     widget.routeAnimationListener.onComplete = () {
       animationFinished = true;
