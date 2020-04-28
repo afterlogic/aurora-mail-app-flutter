@@ -222,6 +222,7 @@ class MailApi {
     );
 
     final tempAttachment = new TempAttachmentUpload(
+      file,
       name: fileName,
       size: file.lengthSync(),
       taskId: taskId,
@@ -240,6 +241,7 @@ class MailApi {
               ComposeAttachment.fromNetwork(attachment as Map);
           assert(tempAttachment != null && tempAttachment.guid is String);
           composeAttachment.guid = tempAttachment.guid;
+          composeAttachment.file = tempAttachment.file;
           _onUploadEnd(composeAttachment);
           _onUploadEnd = null;
         } else {

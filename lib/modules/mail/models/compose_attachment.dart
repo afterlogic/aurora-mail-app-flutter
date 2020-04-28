@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/widgets.dart';
 
 import 'mail_attachment.dart';
@@ -14,6 +16,7 @@ class ComposeAttachment {
   final String thumbnailUrl;
   String
       guid; // to replace temp attachment with progress with the one from server
+  File file;
 
   ComposeAttachment({
     @required this.fileName,

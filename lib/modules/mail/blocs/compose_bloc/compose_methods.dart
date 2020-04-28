@@ -154,6 +154,7 @@ class ComposeMethods {
     final taskId = Random().nextInt(1000).toString();
     final completer = Completer<UploadTaskProgress>();
     final tempAttachment = new TempAttachmentUpload(
+      null,
       name: message.subject + ".eml",
       size: 1,
       taskId: taskId,
@@ -164,6 +165,7 @@ class ComposeMethods {
     try {
       final attachment = await _mailApi.uploadEmlAttachments(message);
       attachment.guid = tempAttachment.guid;
+      attachment.file = tempAttachment.file;
       completer.complete(
         UploadTaskProgress(taskId, 100, UploadTaskStatus.complete, ""),
       );
