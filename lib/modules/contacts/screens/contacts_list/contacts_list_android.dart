@@ -133,7 +133,7 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
           child: RefreshIndicator(
             key: _refreshKey,
             onRefresh: () {
-              BlocProvider.of<ContactsBloc>(context).add(GetContacts(true));
+              BlocProvider.of<ContactsBloc>(context).add(GetContacts());
               return _refreshCompleter.future;
             },
             backgroundColor: Colors.white,

@@ -52,41 +52,62 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
         .get();
   }
 
-  Stream<List<ContactDb>> watchAllContacts(int userLocalId) {
-    return (select(contactsTable)
-          ..where((c) => c.userLocalId.equals(userLocalId))
-          ..where((c) => c.storage.isNotIn([StorageNames.collected]))
-          ..orderBy([
-            (c) => OrderingTerm(expression: c.fullName.collate(Collate.noCase)),
-            (c) =>
-                OrderingTerm(expression: c.viewEmail.collate(Collate.noCase)),
-          ]))
-        .watch();
+  SimpleSelectStatement<$ContactsTableTable, ContactDb> _search(
+      SimpleSelectStatement<$ContactsTableTable, ContactDb> select,
+      String search) {
+    if (search?.isNotEmpty == true) {
+      return select
+        ..where((c) =>
+            c.viewEmail.like("%$search%") |
+            c.businessEmail.like("%$search%") |
+            c.otherEmail.like("%$search%") |
+            c.personalEmail.like("%$search%") |
+            c.fullName.like("%$search%"));
+    } else {
+      return select;
+    }
+  }
+
+  Stream<List<ContactDb>> watchAllContacts(int userLocalId, String search) {
+    return _search(
+      (select(contactsTable)..where((c) => c.userLocalId.equals(userLocalId))..where((c) => c.storage.isNotIn([StorageNames.collected])))
+        ..orderBy([
+          (c) => OrderingTerm(expression: c.fullName.collate(Collate.noCase)),
+          (c) => OrderingTerm(expression: c.viewEmail.collate(Collate.noCase)),
+        ]),
+      search,
+    ).watch();
   }
 
   Stream<List<ContactDb>> watchContactsFromStorage(
-      int userLocalId, String storage) {
-    return (select(contactsTable)
-          ..where((c) => c.userLocalId.equals(userLocalId))
-          ..where((c) => c.storage.equals(storage))
-          ..orderBy([
-            (c) => OrderingTerm(expression: c.fullName.collate(Collate.noCase)),
-            (c) =>
-                OrderingTerm(expression: c.viewEmail.collate(Collate.noCase)),
-          ]))
+      int userLocalId, String storage, String search) {
+    return _search(
+            select(contactsTable)
+              ..where((c) => c.userLocalId.equals(userLocalId))
+              ..where((c) => c.storage.equals(storage))
+              ..orderBy([
+                (c) => OrderingTerm(
+                    expression: c.fullName.collate(Collate.noCase)),
+                (c) => OrderingTerm(
+                    expression: c.viewEmail.collate(Collate.noCase)),
+              ]),
+            search)
         .watch();
   }
 
   Stream<List<ContactDb>> watchContactsFromGroup(
-      int userLocalId, String groupUuid) {
-    return (select(contactsTable)
-          ..where((c) => c.userLocalId.equals(userLocalId))
-          ..where((c) => c.groupUUIDs.like("%$groupUuid%"))
-          ..orderBy([
-            (c) => OrderingTerm(expression: c.fullName.collate(Collate.noCase)),
-            (c) =>
-                OrderingTerm(expression: c.viewEmail.collate(Collate.noCase)),
-          ]))
+      int userLocalId, String groupUuid, String search) {
+    return _search(
+            select(contactsTable)
+              ..where((c) => c.userLocalId.equals(userLocalId))
+              ..where((c) => c.groupUUIDs.like("%$groupUuid%"))
+              ..orderBy([
+                (c) => OrderingTerm(
+                    expression: c.fullName.collate(Collate.noCase)),
+                (c) => OrderingTerm(
+                    expression: c.viewEmail.collate(Collate.noCase)),
+              ]),
+            search)
         .watch();
   }
 

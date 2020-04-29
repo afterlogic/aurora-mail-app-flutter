@@ -25,7 +25,7 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
   final AppDatabase appDatabase;
   final PgpWorker pgpWorker;
   ContactsRepository _repo;
-
+  String searchPattern;
   StreamSubscription<List<Contact>> _contactsSub;
   StreamSubscription<List<ContactsStorage>> _storagesSub;
   StreamSubscription<List<ContactsGroup>> _groupsSub;
@@ -57,7 +57,8 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
 
   @override
   Stream<ContactsState> mapEventToState(ContactsEvent event) async* {
-    if (event is GetContacts) yield* _getContacts(event);
+    if (event is SearchContacts) yield* _searchContacts(event);
+    if (event is GetContacts) yield* _getContacts();
     if (event is CreateContact) yield* _createContact(event);
     if (event is UpdateContact) yield* _updateContact(event);
     if (event is DeleteContacts) yield* _deleteContacts(event);
@@ -81,7 +82,14 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
     return _repo.getContactById(id);
   }
 
-  Stream<ContactsState> _getContacts(GetContacts event) async* {
+  Stream<ContactsState> _searchContacts(SearchContacts event) async* {
+    searchPattern = event.search;
+
+    yield* _selectStorageGroup(SelectStorageGroup.raw(
+        storageId: state.selectedStorage, groupId: state.selectedGroup));
+  }
+
+  Stream<ContactsState> _getContacts() async* {
     print("_getContacts");
     try {
       _storagesSub = _repo.watchContactsStorages().listen((storages) {
@@ -119,25 +127,27 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
 
   Stream<ContactsState> _selectStorageGroup(SelectStorageGroup event) async* {
     _contactsSub?.cancel();
-    if (event.storage != null) {
-      add(SetSelectedStorage(event.storage.sqliteId));
-      _contactsSub =
-          _repo.watchContactsFromStorage(event.storage).listen((contacts) {
+    if (event.storageId != null) {
+      add(SetSelectedStorage(event.storageId));
+      _contactsSub = _repo
+          .watchContactsFromStorage(event.storageId, searchPattern)
+          .listen((contacts) {
         add(ReceivedContacts(contacts));
       }, onError: (err) {
         add(AddError(formatError(err, null)));
       });
-    } else if (event.group != null) {
-      add(SetGroupSelected(event.group.uuid));
-      _contactsSub =
-          _repo.watchContactsFromGroup(event.group).listen((contacts) {
+    } else if (event.groupId != null) {
+      add(SetGroupSelected(event.groupId));
+      _contactsSub = _repo
+          .watchContactsFromGroup(event.groupId, searchPattern)
+          .listen((contacts) {
         add(ReceivedContacts(contacts));
       }, onError: (err) {
         add(AddError(formatError(err, null)));
       });
     } else {
       add(SetAllVisibleContactsSelected());
-      _contactsSub = _repo.watchAllContacts().listen((contacts) {
+      _contactsSub = _repo.watchAllContacts(searchPattern).listen((contacts) {
         add(ReceivedContacts(contacts));
       }, onError: (err) {
         add(AddError(formatError(err, null)));

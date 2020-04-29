@@ -17,11 +17,11 @@ abstract class ContactsRepository {
 
   Stream<List<int>> get currentlySyncingStorage;
 
-  Stream<List<Contact>> watchAllContacts();
+  Stream<List<Contact>> watchAllContacts(String search);
 
-  Stream<List<Contact>> watchContactsFromStorage(ContactsStorage storage);
+  Stream<List<Contact>> watchContactsFromStorage(String storage,String search);
 
-  Stream<List<Contact>> watchContactsFromGroup(ContactsGroup group);
+  Stream<List<Contact>> watchContactsFromGroup(String group,String search);
 
   Stream<List<ContactsStorage>> watchContactsStorages();
 
