@@ -204,7 +204,10 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
                             useCountryCode: false,
                             fallbackFile: "en",
                             path: "assets/flutter_i18n",
-                            forcedLocale: settingsState.language?.toLocale(),
+                            forcedLocale: supportedLocales.contains(
+                                    settingsState.language?.toLocale())
+                                ? settingsState.language?.toLocale()
+                                : supportedLocales.first,
                           ),
                         ],
                         supportedLocales: supportedLocales,
