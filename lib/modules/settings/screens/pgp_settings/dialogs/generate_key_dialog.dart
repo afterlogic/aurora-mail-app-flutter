@@ -17,8 +17,8 @@ class GenerateKeyDialog extends StatefulWidget {
 }
 
 class _GenerateKeyDialogState extends BState<GenerateKeyDialog> {
-  static const lengths = [1024, 2048, 3072, 4096, 8192];
-  var length = lengths[1];
+  static const lengths = [ 2048,  4096];
+  var length = lengths[0];
   AliasOrIdentity current;
   bool _obscure = true;
 

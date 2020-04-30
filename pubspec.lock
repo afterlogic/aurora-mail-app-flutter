@@ -236,33 +236,10 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
-  crypto_storage_impl:
-    dependency: "direct main"
-    description:
-      path: "module\\crypto\\crypto_storage_impl"
-      relative: true
-    source: path
-    version: "0.0.1"
-  crypto_stream:
-    dependency: "direct main"
-    description:
-      path: "."
-      ref: HEAD
-      resolved-ref: c7bd69243eccc785d115e91cd9f896b8da7f91db
-      url: "https://github.com/afterlogic/flutter_crypto_stream"
-    source: git
-    version: "0.0.1"
   crypto_worker:
     dependency: "direct main"
     description:
       path: "module\\crypto\\crypto_worker"
-      relative: true
-    source: path
-    version: "0.0.1"
-  crypto_worker_impl:
-    dependency: "direct main"
-    description:
-      path: "module\\crypto\\crypto_worker_impl"
       relative: true
     source: path
     version: "0.0.1"
@@ -632,7 +609,7 @@ packages:
   notifications_utils:
     dependency: "direct main"
     description:
-      path: "core\\notifications_utils"
+      path: "core/notifications_utils"
       relative: true
     source: path
     version: "0.0.1"
@@ -947,7 +924,7 @@ packages:
   theme:
     dependency: "direct main"
     description:
-      path: "build_res\\afterlogic\\theme"
+      path: "build_res/afterlogic/theme"
       relative: true
     source: path
     version: "0.0.1"
@@ -1017,7 +994,7 @@ packages:
   vcf:
     dependency: "direct main"
     description:
-      path: "core\\vcf"
+      path: "core/vcf"
       relative: true
     source: path
     version: "0.0.1"
@@ -1052,7 +1029,7 @@ packages:
   webmail_api_client:
     dependency: "direct main"
     description:
-      path: "core\\webmail_api_client"
+      path: "core/webmail_api_client"
       relative: true
     source: path
     version: "0.0.1"

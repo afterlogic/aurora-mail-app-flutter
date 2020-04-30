@@ -52,7 +52,7 @@ class PgpSettingsBloc extends Bloc<PgpSettingsEvent, PgpSettingsState> {
     final userPublicKeys = await _methods.getKeys(false);
     final contactPublicKeys = await _methods.getContactKeys();
 
-    yield LoadedState(userPublicKeys, userPrivateKeys, contactPublicKeys);
+    yield LoadedState(userPublicKeys, userPrivateKeys, contactPublicKeys,null);
   }
 
   Stream<PgpSettingsState> _generateKeys(GenerateKeys event) async* {
