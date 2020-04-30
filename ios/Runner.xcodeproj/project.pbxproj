@@ -586,7 +586,7 @@
 					"$(PROJECT_DIR)/Flutter",
 					dist/lib,
 				);
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = "${PRODUCT_VERSION}";
 				PRODUCT_BUNDLE_IDENTIFIER = "$(PRODUCT_ID)";
 				PRODUCT_NAME = Runner;
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
@@ -779,7 +779,7 @@
 					"$(PROJECT_DIR)/Flutter",
 					dist/lib,
 				);
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = "${PRODUCT_VERSION}";
 				PRODUCT_BUNDLE_IDENTIFIER = "$(PRODUCT_ID)";
 				PRODUCT_NAME = Runner;
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
@@ -860,7 +860,7 @@
 					"$(PROJECT_DIR)/Flutter",
 					dist/lib,
 				);
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = "${PRODUCT_VERSION}";
 				PRODUCT_BUNDLE_IDENTIFIER = "$(PRODUCT_ID)";
 				PRODUCT_NAME = Runner;
 				SWIFT_OBJC_BRIDGING_HEADER = "Runner/Runner-Bridging-Header.h";
