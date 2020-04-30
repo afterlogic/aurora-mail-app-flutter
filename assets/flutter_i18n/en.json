@@ -356,5 +356,6 @@
   "btn_vcf_import": "Import",
   "hint_vcf_import": "Import {name} contact from vcf?",
   "label_message_headers": "View message headers",
-  "label_forward_as_attachment": "Forward as attachment"
+  "label_forward_as_attachment": "Forward as attachment",
+  "label_contact_with_not_name": "No name"
 }

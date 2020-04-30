@@ -47,8 +47,8 @@ class ContactsListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     Widget _buildTile(BuildContext context) {
-      final name = contact.fullName;
-      final title = name != null && name.isNotEmpty ? name : contact.viewEmail;
+      final title = contact.fullName;
+      final subTitle = contact.viewEmail;
       final authBloc = BlocProvider.of<AuthBloc>(context);
       final contactsBloc = BlocProvider.of<ContactsBloc>(context);
       final currentStorage = contactsBloc.state.storages.firstWhere(
@@ -82,20 +82,25 @@ class ContactsListTile extends StatelessWidget {
           ],
         ),
         title: Text(
-          title,
+          title?.isNotEmpty == true
+              ? title
+              : i18n(context, "label_contact_with_not_name"),
+          maxLines: 1,
+          style: title?.isNotEmpty == true
+              ? null
+              : TextStyle(color: theme.disabledColor),
+        ),
+        subtitle: Text(
+          subTitle?.isNotEmpty == true
+              ? subTitle
+              : i18n(context, "contacts_email_empty"),
+          style: TextStyle(
+            color: subTitle?.isNotEmpty == true
+                ? theme.disabledColor
+                : theme.disabledColor.withAlpha(theme.disabledColor.alpha ~/ 2),
+          ),
           maxLines: 1,
         ),
-        subtitle: name != null && name.isNotEmpty
-            ? Text(
-                contact.viewEmail != null && contact.viewEmail.isNotEmpty
-                    ? contact.viewEmail
-                    : i18n(context, "contacts_email_empty"),
-                style: TextStyle(
-                  color: theme.disabledColor,
-                ),
-                maxLines: 1,
-              )
-            : null,
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,

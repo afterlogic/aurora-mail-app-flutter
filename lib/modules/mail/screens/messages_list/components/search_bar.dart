@@ -14,16 +14,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class SearchBar extends StatefulWidget {
   final Function onCancel;
   final TextEditingController searchCtrl;
+  final Function(String) onSearch;
 
-  const SearchBar(this.searchCtrl, this.onCancel, {Key key}) : super(key: key);
+  const SearchBar(this.searchCtrl, this.onCancel, this.onSearch, {Key key})
+      : super(key: key);
 
   @override
   SearchBarState createState() => SearchBarState();
 }
 
 class SearchBarState extends BState<SearchBar> {
-  MailBloc mailBloc;
-  MessagesListBloc messagesListBloc;
   Timer debounce;
 
   @override
@@ -35,26 +35,12 @@ class SearchBarState extends BState<SearchBar> {
     }
   }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    mailBloc = BlocProvider.of<MailBloc>(context);
-    messagesListBloc = BlocProvider.of<MessagesListBloc>(context);
-  }
 
   void _getMessages(String val) {
     if (debounce?.isActive == true) debounce.cancel();
     debounce = Timer(Duration(milliseconds: val == null ? 0 : 500), () {
-      _search(val);
+      widget.onSearch(val);
     });
-  }
-
-  void _search(String val) {
-    final mailState = mailBloc.state as FoldersLoaded;
-    final params = searchUtil.searchParams(val);
-    messagesListBloc.add(
-      SubscribeToMessages(mailState.selectedFolder, mailState.filter, params),
-    );
   }
 
   @override
@@ -81,14 +67,10 @@ class SearchBarState extends BState<SearchBar> {
               widget.searchCtrl.clear();
               widget.onCancel();
             });
-            _search(null);
+            widget.onSearch(null);
           },
         ),
       ],
     );
-  }
-
-  search() {
-    _search(widget.searchCtrl.text);
   }
 }

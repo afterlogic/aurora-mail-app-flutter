@@ -71,23 +71,24 @@ class ContactsDbServiceImpl implements ContactsDbService {
   }
 
   @override
-  Stream<List<Contact>> watchAllContacts(int userLocalId) {
-    final result = _contactsDao.watchAllContacts(userLocalId);
+  Stream<List<Contact>> watchAllContacts(int userLocalId, String search) {
+    final result = _contactsDao.watchAllContacts(userLocalId, search);
     return result.map((data) => ContactMapper.listFromDB(data));
   }
 
   @override
   Stream<List<Contact>> watchContactsFromStorage(
-      int userLocalId, ContactsStorage storage) {
+      int userLocalId, String storage, String search) {
     final result =
-        _contactsDao.watchContactsFromStorage(userLocalId, storage.id);
+        _contactsDao.watchContactsFromStorage(userLocalId, storage, search);
     return result.map((data) => ContactMapper.listFromDB(data));
   }
 
   @override
   Stream<List<Contact>> watchContactsFromGroup(
-      int userLocalId, ContactsGroup group) {
-    final result = _contactsDao.watchContactsFromGroup(userLocalId, group.uuid);
+      int userLocalId, String group, String search) {
+    final result =
+        _contactsDao.watchContactsFromGroup(userLocalId, group, search);
     return result.map((data) => ContactMapper.listFromDB(data));
   }
 
@@ -157,7 +158,7 @@ class ContactsDbServiceImpl implements ContactsDbService {
         .then((item) => ContactMapper.fromDB(item));
   }
 
-  Future<Contact> getContactById(int entityId){
+  Future<Contact> getContactById(int entityId) {
     return _contactsDao
         .getContactById(entityId)
         .then((item) => ContactMapper.fromDB(item));

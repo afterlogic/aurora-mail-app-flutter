@@ -188,7 +188,7 @@ class _MessageWebViewState extends BState<MessageWebView> {
       to: _formatTo(widget.message),
       date: date,
       body: html,
-      attachments: widget.attachments.where((a) => !a.isInline).toList(),
+      attachments: widget.attachments.toList(),
       showLightEmail: false,
     );
     return Uri.dataFromString(wrappedHtml,

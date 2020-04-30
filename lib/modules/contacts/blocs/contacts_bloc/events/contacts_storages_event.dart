@@ -12,7 +12,7 @@ class ReceivedStorages extends ContactsEvent {
 }
 
 class SetSelectedStorage extends ContactsEvent {
-  final int storageSqliteId;
+  final String storageSqliteId;
 
   const SetSelectedStorage(this.storageSqliteId);
 

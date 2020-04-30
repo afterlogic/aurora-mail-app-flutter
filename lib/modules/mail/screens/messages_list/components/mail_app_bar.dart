@@ -3,6 +3,7 @@ import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/bloc.dart';
+import 'package:aurora_mail/modules/mail/repository/search_util.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/search_bar.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/select_app_bar.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/selection_controller.dart';
@@ -75,7 +76,7 @@ class MailAppBarState extends BState<MailAppBar> {
   search(String text) {
     isSearchMode = true;
     searchCtrl.text = text;
-    searchKey.currentState.search();
+    _search(text);
     setState(() {});
   }
 
@@ -103,8 +104,21 @@ class MailAppBarState extends BState<MailAppBar> {
       child: isSelectMode
           ? SelectAppBar(widget.selectionController)
           : isSearchMode
-              ? SearchBar(searchCtrl, changeMode,key: searchKey,)
+              ? SearchBar(
+                  searchCtrl,
+                  changeMode,
+                  _search,
+                  key: searchKey,
+                )
               : _buildDefaultAppBar(),
+    );
+  }
+
+  _search(String val) {
+    final mailState = BlocProvider.of<MailBloc>(context).state as FoldersLoaded;
+    final params = searchUtil.searchParams(val);
+    BlocProvider.of<MessagesListBloc>(context).add(
+      SubscribeToMessages(mailState.selectedFolder, mailState.filter, params),
     );
   }
 

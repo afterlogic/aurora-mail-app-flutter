@@ -55,18 +55,18 @@ class ContactsRepositoryImpl implements ContactsRepository {
       _currentlySyncingStorageCtrl.stream;
 
   @override
-  Stream<List<Contact>> watchContactsFromStorage(ContactsStorage storage) {
-    return _db.watchContactsFromStorage(_userLocalId, storage);
+  Stream<List<Contact>> watchContactsFromStorage(String storage,String search) {
+    return _db.watchContactsFromStorage(_userLocalId, storage,search);
   }
 
   @override
-  Stream<List<Contact>> watchContactsFromGroup(ContactsGroup group) {
-    return _db.watchContactsFromGroup(_userLocalId, group);
+  Stream<List<Contact>> watchContactsFromGroup(String group,String search) {
+    return _db.watchContactsFromGroup(_userLocalId, group,search);
   }
 
   @override
-  Stream<List<Contact>> watchAllContacts() {
-    return _db.watchAllContacts(_userLocalId);
+  Stream<List<Contact>> watchAllContacts(String search) {
+    return _db.watchAllContacts(_userLocalId,search);
   }
 
   @override

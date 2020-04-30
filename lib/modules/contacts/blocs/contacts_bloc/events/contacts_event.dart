@@ -12,21 +12,29 @@ abstract class ContactsEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class GetContacts extends ContactsEvent with AlwaysNonEqualObject {
-  final bool updateOther;
+class SearchContacts extends ContactsEvent with AlwaysNonEqualObject {
+  final String search;
 
-  GetContacts([this.updateOther = false]);
+  SearchContacts([this.search]);
+}
+
+class GetContacts extends ContactsEvent with AlwaysNonEqualObject {
+  GetContacts();
 }
 
 // if none is selected returns all contacts
 class SelectStorageGroup extends ContactsEvent {
-  final ContactsStorage storage;
-  final ContactsGroup group;
+  final String storageId;
+  final String groupId;
 
-  const SelectStorageGroup({this.storage, this.group});
+  SelectStorageGroup({ContactsStorage storage, ContactsGroup group})
+      : storageId = storage?.id,
+        groupId = group?.uuid;
+
+  SelectStorageGroup.raw({this.storageId, this.groupId});
 
   @override
-  List<Object> get props => [storage, group];
+  List<Object> get props => [storageId, groupId];
 }
 
 class SetAllVisibleContactsSelected extends ContactsEvent

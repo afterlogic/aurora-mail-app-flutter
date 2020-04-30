@@ -6,7 +6,7 @@ import 'package:aurora_mail/utils/copy_with_value.dart';
 
 class ContactsState with AlwaysNonEqualObject {
   final List<ContactsStorage> storages;
-  final int selectedStorage;
+  final String selectedStorage;
   final String selectedGroup;
   final bool showAllVisibleContacts;
   final List<Contact> contacts;
@@ -29,7 +29,7 @@ class ContactsState with AlwaysNonEqualObject {
 
   ContactsState copyWith({
     List<ContactsStorage> storages,
-    CWVal<int> selectedStorage,
+    CWVal<String> selectedStorage,
     CWVal<String> selectedGroup,
     bool showAllVisibleContacts,
     List<Contact> contacts,

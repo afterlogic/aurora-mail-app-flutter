@@ -1,6 +1,7 @@
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/screens/group_view/group_view_route.dart';
+import 'package:aurora_mail/modules/mail/screens/messages_list/components/search_bar.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/user_selection_popup.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
@@ -8,20 +9,51 @@ import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ContactsAppBar extends StatelessWidget implements PreferredSizeWidget {
+class ContactsAppBar extends StatefulWidget implements PreferredSizeWidget {
   @override
   final Size preferredSize = const Size.fromHeight(kToolbarHeight);
 
   const ContactsAppBar();
 
   @override
+  _ContactsAppBarState createState() => _ContactsAppBarState();
+}
+
+class _ContactsAppBarState extends State<ContactsAppBar> {
+  ContactAppBarMode mode = ContactAppBarMode.common;
+  final searchCtrl = TextEditingController();
+
+  @override
   Widget build(BuildContext context) {
+    return AnimatedSwitcher(
+      duration: Duration(milliseconds: 250),
+      child: mode == ContactAppBarMode.common
+          ? common(context)
+          : SearchBar(searchCtrl, changeMode, search),
+    );
+  }
+
+  search(String text) {
+    BlocProvider.of<ContactsBloc>(context).add(SearchContacts(text));
+  }
+
+  changeMode() {
+    searchCtrl.clear();
+    if (mode == ContactAppBarMode.common) {
+      mode = ContactAppBarMode.search;
+    } else {
+      mode = ContactAppBarMode.common;
+    }
+    setState(() {});
+  }
+
+  Widget common(BuildContext context) {
     final theme = Theme.of(context);
 
     Widget _buildTitle(BuildContext context, ContactsState state) {
       if (state.selectedStorage != null && state.storages.isNotEmpty) {
         final selectedStorage = state.storages
-            .firstWhere((s) => s.sqliteId == state.selectedStorage);
+            .firstWhere((s) => s.id == state.selectedStorage);
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -91,8 +123,14 @@ class ContactsAppBar extends StatelessWidget implements PreferredSizeWidget {
               builder: (_, state) =>
                   UserSelectionPopup((state as SettingsLoaded).users),
             ),
+          IconButton(
+            icon: Icon(Icons.search),
+            onPressed: changeMode,
+          ),
         ],
       ),
     );
   }
 }
+
+enum ContactAppBarMode { common, search }

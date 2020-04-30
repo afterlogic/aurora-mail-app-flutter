@@ -9,13 +9,13 @@ abstract class ContactsDbService {
     return ContactsDbServiceImpl(db);
   }
 
-  Stream<List<Contact>> watchAllContacts(int userLocalId);
+  Stream<List<Contact>> watchAllContacts(int userLocalId, String search);
 
   Stream<List<Contact>> watchContactsFromStorage(
-      int userLocalId, ContactsStorage storage);
+      int userLocalId, String storage, String search);
 
   Stream<List<Contact>> watchContactsFromGroup(
-      int userLocalId, ContactsGroup group);
+      int userLocalId, String group, String search);
 
   Future<List<Contact>> getContacts(int userLocalId,
       {List<String> storages, String pattern});
