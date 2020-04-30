@@ -20,8 +20,7 @@ class PgpSettingsMethods {
   final ContactsRepository contactsDao;
   final User user;
 
-  PgpSettingsMethods(
-      this.cryptoStorage, this.cryptoWorker, this.user, this.contactsDao);
+  PgpSettingsMethods(this.cryptoStorage, this.cryptoWorker, this.user, this.contactsDao);
 
   Future<List<PgpKey>> getKeys(bool isPrivate) {
     return cryptoStorage.getPgpKeys(isPrivate);
@@ -94,15 +93,13 @@ class PgpSettingsMethods {
   Future<Map<PgpKey, bool>> userKeyMarkIfNotExist(List<PgpKey> keys) async {
     final map = <PgpKey, bool>{};
     for (var key in keys) {
-      final existKey =
-          await cryptoStorage.getPgpKey(key.mail, key.isPrivate, false);
+      final existKey = await cryptoStorage.getPgpKey(key.mail, key.isPrivate, false);
       map[key] = existKey == null ? true : null;
     }
     return map;
   }
 
-  Future<Map<PgpKeyWithContact, bool>> contactKeyMarkIfNotExist(
-      List<PgpKey> keys) async {
+  Future<Map<PgpKeyWithContact, bool>> contactKeyMarkIfNotExist(List<PgpKey> keys) async {
     final map = <PgpKeyWithContact, bool>{};
     for (var key in keys) {
       final contact = await contactsDao.getContactByEmail(key.mail);
@@ -129,13 +126,14 @@ class PgpSettingsMethods {
   Future<String> pickFileContent() async {
     await getStoragePermissions();
     var content = "";
-    final files = await FilePicker.getMultiFile(
-      type: FileType.custom,
-      fileExtension: "asc",
-    );
+    final files = Platform.isIOS
+        ? (await FilePicker.getMultiFile(type: FileType.any))
+        : (await FilePicker.getMultiFile(type: FileType.custom, allowedExtensions: ["asc"]));
     if (files == null) return null;
     for (var file in files) {
-      content += await file.readAsString();
+      if (file.path.endsWith(".asc")) {
+        content += await file.readAsString();
+      }
     }
     return content;
   }

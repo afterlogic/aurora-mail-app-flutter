@@ -2,6 +2,26 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>BGTaskSchedulerPermittedIdentifiers</key>
+	<array>
+		<string>com.afterlogic.background.task</string>
+	</array>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>$(APP_NAME)</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>$(MARKETING_VERSION)</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -13,38 +33,12 @@
 			</array>
 		</dict>
 	</array>
+	<key>CFBundleVersion</key>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
 	<key>MAIN_APP_ID</key>
 	<string>$(PRODUCT_ID)</string>
-	<key>ShareGroup</key>
-	<string>${SHARED_GROUP_ID}</string>
-	<key>CFBundleName</key>
-	<string>$(APP_NAME)</string>
-	<key>UILaunchStoryboardName</key>
-	<string>LaunchScreen</string>
-	<key>NSAppleMusicUsageDescription</key>
-	<string>Upload media files</string>
-	<key>NSCalendarsUsageDescription</key>
-	<string>Arrange events and send as emails</string>
-	<key>NSMotionUsageDescription</key>
-	<string>Used statically by permission_handler library for Flutter, unused in the app</string>
-	<key>CFBundleDevelopmentRegion</key>
-	<string>$(DEVELOPMENT_LANGUAGE)</string>
-	<key>CFBundleVersion</key>
-	<string>$(FLUTTER_BUILD_NUMBER)</string>
-	<key>UIBackgroundModes</key>
-	<array>
-		<string>fetch</string>
-		<string>processing</string>
-		<string>remote-notification</string>
-	</array>
-	<key>io.flutter.embedded_views_preview</key>
-	<true/>
-	<key>CFBundlePackageType</key>
-	<string>APPL</string>
-	<key>UIMainStoryboardFile</key>
-	<string>Main</string>
-	<key>CFBundleShortVersionString</key>
-	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
@@ -52,10 +46,38 @@
 		<key>NSAllowsArbitraryLoadsInWebContent</key>
 		<true/>
 	</dict>
-	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
-	<key>CFBundleExecutable</key>
-	<string>$(EXECUTABLE_NAME)</string>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Upload media files</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>Arrange events and send as emails</string>
+	<key>NSContactsUsageDescription</key>
+	<string>Access contacts for sending emails to</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Used statically by permission_handler library for Flutter, unused in the app</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Used statically by permission_handler library for Flutter, unused in the app</string>
+	<key>NSMotionUsageDescription</key>
+	<string>Used statically by permission_handler library for Flutter, unused in the app</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Upload photos and videos</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Used statically by permission_handler library for Flutter, unused in the app</string>
+	<key>ShareGroup</key>
+	<string>${SHARED_GROUP_ID}</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>processing</string>
+		<string>remote-notification</string>
+	</array>
+	<key>UILaunchStoryboardName</key>
+	<string>LaunchScreen</string>
+	<key>UIMainStoryboardFile</key>
+	<string>Main</string>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+	</array>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
@@ -63,31 +85,9 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-	<key>BGTaskSchedulerPermittedIdentifiers</key>
-	<array>
-		<string>com.afterlogic.background.task</string>
-	</array>
-	<key>CFBundleIdentifier</key>
-	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
-	<key>NSContactsUsageDescription</key>
-	<string>Access contacts for sending emails to</string>
-	<key>CFBundleSignature</key>
-	<string>????</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>LSRequiresIPhoneOS</key>
+	<key>io.flutter.embedded_views_preview</key>
 	<true/>
-	<key>UISupportedInterfaceOrientations</key>
-	<array>
-		<string>UIInterfaceOrientationPortrait</string>
-	</array>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>Used statically by permission_handler library for Flutter, unused in the app</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Upload photos and videos</string>
-	<key>NSSpeechRecognitionUsageDescription</key>
-	<string>Used statically by permission_handler library for Flutter, unused in the app</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>Used statically by permission_handler library for Flutter, unused in the app</string>
 </dict>
 </plist>
