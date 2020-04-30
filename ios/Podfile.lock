@@ -9,6 +9,10 @@ PODS:
     - Flutter
   - Crashlytics (3.14.0):
     - Fabric (~> 1.10.2)
+  - crypto_stream (0.0.1):
+    - Flutter
+    - OpenSSL-Universal (~> 1.0.2.17)
+    - RxSwift (~> 5)
   - esys_flutter_share (0.0.1):
     - Flutter
   - Fabric (1.10.2)
@@ -103,6 +107,15 @@ PODS:
     - GoogleUtilities/Logger
   - GoogleUtilities/UserDefaults (6.5.1):
     - GoogleUtilities/Logger
+  - libwebp (1.1.0):
+    - libwebp/demux (= 1.1.0)
+    - libwebp/mux (= 1.1.0)
+    - libwebp/webp (= 1.1.0)
+  - libwebp/demux (1.1.0):
+    - libwebp/webp
+  - libwebp/mux (1.1.0):
+    - libwebp/demux
+  - libwebp/webp (1.1.0)
   - nanopb (0.3.9011):
     - nanopb/decode (= 0.3.9011)
     - nanopb/encode (= 0.3.9011)
@@ -110,6 +123,9 @@ PODS:
   - nanopb/encode (0.3.9011)
   - notifications_utils (0.0.1):
     - Flutter
+  - OpenSSL-Universal (1.0.2.19):
+    - OpenSSL-Universal/Static (= 1.0.2.19)
+  - OpenSSL-Universal/Static (1.0.2.19)
   - package_info (0.0.1):
     - Flutter
   - path_provider (0.0.1):
@@ -122,6 +138,7 @@ PODS:
   - Reachability (3.2)
   - receive_sharing (0.0.1):
     - Flutter
+  - RxSwift (5.0.1)
   - shared_preferences (0.0.1):
     - Flutter
   - shared_preferences_macos (0.0.1):
@@ -137,6 +154,9 @@ PODS:
     - Flutter
   - url_launcher_web (0.0.1):
     - Flutter
+  - video_thumbnail (0.0.1):
+    - Flutter
+    - libwebp
   - webview_flutter (0.0.1):
     - Flutter
 
@@ -144,6 +164,7 @@ DEPENDENCIES:
   - alarm_service (from `.symlinks/plugins/alarm_service/ios`)
   - connectivity (from `.symlinks/plugins/connectivity/ios`)
   - connectivity_macos (from `.symlinks/plugins/connectivity_macos/ios`)
+  - crypto_stream (from `.symlinks/plugins/crypto_stream/ios`)
   - esys_flutter_share (from `.symlinks/plugins/esys_flutter_share/ios`)
   - file_picker (from `.symlinks/plugins/file_picker/ios`)
   - firebase_crashlytics (from `.symlinks/plugins/firebase_crashlytics/ios`)
@@ -169,6 +190,7 @@ DEPENDENCIES:
   - url_launcher (from `.symlinks/plugins/url_launcher/ios`)
   - url_launcher_macos (from `.symlinks/plugins/url_launcher_macos/ios`)
   - url_launcher_web (from `.symlinks/plugins/url_launcher_web/ios`)
+  - video_thumbnail (from `.symlinks/plugins/video_thumbnail/ios`)
   - webview_flutter (from `.symlinks/plugins/webview_flutter/ios`)
 
 SPEC REPOS:
@@ -188,9 +210,12 @@ SPEC REPOS:
     - GoogleDataTransport
     - GoogleDataTransportCCTSupport
     - GoogleUtilities
+    - libwebp
     - nanopb
+    - OpenSSL-Universal
     - PromisesObjC
     - Reachability
+    - RxSwift
 
 EXTERNAL SOURCES:
   alarm_service:
@@ -199,6 +224,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/connectivity/ios"
   connectivity_macos:
     :path: ".symlinks/plugins/connectivity_macos/ios"
+  crypto_stream:
+    :path: ".symlinks/plugins/crypto_stream/ios"
   esys_flutter_share:
     :path: ".symlinks/plugins/esys_flutter_share/ios"
   file_picker:
@@ -249,6 +276,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/url_launcher_macos/ios"
   url_launcher_web:
     :path: ".symlinks/plugins/url_launcher_web/ios"
+  video_thumbnail:
+    :path: ".symlinks/plugins/video_thumbnail/ios"
   webview_flutter:
     :path: ".symlinks/plugins/webview_flutter/ios"
 
@@ -258,6 +287,7 @@ SPEC CHECKSUMS:
   connectivity: 6e94255659cc86dcbef1d452ad3e0491bb1b3e75
   connectivity_macos: e2e9731b6b22dda39eb1b128f6969d574460e191
   Crashlytics: 540b7e5f5da5a042647227a5e3ac51d85eed06df
+  crypto_stream: 2a2fdbfdec937d8779e8e6b14afb3a5e093a61e4
   esys_flutter_share: 403498dab005b36ce1f8d7aff377e81f0621b0b4
   Fabric: 706c8b8098fff96c33c0db69cbf81f9c551d0d74
   file_picker: 408623be2125b79a4539cf703be3d4b3abe5e245
@@ -273,7 +303,7 @@ SPEC CHECKSUMS:
   flutter_downloader: 058b9c41564a90500f67f3e432e3524613a7fd83
   flutter_keyboard_visibility: 6195387fb6d8f46e5cd6dda4a4154e41f800f545
   flutter_local_notifications: 9e4738ce2471c5af910d961a6b7eadcf57c50186
-  flutter_plugin_android_lifecycle: 47de533a02850f070f5696a623995e93eddcdb9b
+  flutter_plugin_android_lifecycle: dc0b544e129eebb77a6bfb1239d4d1c673a60a35
   flutter_secure_storage: 7953c38a04c3fdbb00571bcd87d8e3b5ceb9daec
   flutter_uploader: 7957e1b9d6516b6cccc37e5ffd6c5a0975a7cc4c
   flutter_webview_plugin: ed9e8a6a96baf0c867e90e1bce2673913eeac694
@@ -283,8 +313,10 @@ SPEC CHECKSUMS:
   GoogleDataTransport: 0048df6388dab1c254799f2a30365b1dffe20422
   GoogleDataTransportCCTSupport: f880d70972efa2ed1be4e9173a0f4c5f3dc2d176
   GoogleUtilities: 06eb53bb579efe7099152735900dd04bf09e7275
+  libwebp: 946cb3063cea9236285f7e9a8505d806d30e07f3
   nanopb: 18003b5e52dab79db540fe93fe9579f399bd1ccd
   notifications_utils: 2689b5cbda5be923ddc3868f5c86c4ab2dc98d5c
+  OpenSSL-Universal: 8b48cc0d10c1b2923617dfe5c178aa9ed2689355
   package_info: 48b108e75b8802c2d5e126f208ef540561c98aef
   path_provider: fb74bd0465e96b594bb3b5088ee4a4e7bb1f2a9d
   path_provider_macos: f760a3c5b04357c380e2fddb6f9db6f3015897e0
@@ -292,6 +324,7 @@ SPEC CHECKSUMS:
   PromisesObjC: c119f3cd559f50b7ae681fa59dc1acd19173b7e6
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   receive_sharing: d6db01a09636ce060b2bd1a5ca8a41eea4437a3d
+  RxSwift: e2dc62b366a3adf6a0be44ba9f405efd4c94e0c4
   shared_preferences: 430726339841afefe5142b9c1f50cb6bd7793e01
   shared_preferences_macos: f3f29b71ccbb56bf40c9dd6396c9acf15e214087
   shared_preferences_web: 141cce0c3ed1a1c5bf2a0e44f52d31eeb66e5ea9
@@ -299,6 +332,7 @@ SPEC CHECKSUMS:
   url_launcher: a1c0cc845906122c4784c542523d8cacbded5626
   url_launcher_macos: fd7894421cd39320dce5f292fc99ea9270b2a313
   url_launcher_web: e5527357f037c87560776e36436bf2b0288b965c
+  video_thumbnail: c4e2a3c539e247d4de13cd545344fd2d26ffafd1
   webview_flutter: bec7599de6bfbe8008a739aa3ebd7b364ea9d0cd
 
 PODFILE CHECKSUM: 8ce328037588198cf89227d75c8cd180aa726049

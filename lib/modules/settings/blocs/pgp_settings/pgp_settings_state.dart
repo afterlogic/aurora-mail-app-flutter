@@ -16,12 +16,14 @@ class LoadedState extends PgpSettingsState {
   final List<PgpKey> myPublic;
   final List<PgpKey> myPrivate;
   final List<PgpKey> contactPublic;
+  final String keyProgress;
 
   LoadedState(
     this.myPublic,
     this.myPrivate,
     this.contactPublic,
-      );
+    this.keyProgress,
+  );
 
   LoadedState copyWith({
     List<PgpKey> public,
@@ -33,11 +35,12 @@ class LoadedState extends PgpSettingsState {
       public ?? this.myPublic,
       private ?? this.myPrivate,
       contactPublic ?? this.contactPublic,
+      keyProgress ?? this.keyProgress,
     );
   }
 
   @override
-  List<Object> get props => [myPublic, myPrivate, contactPublic];
+  List<Object> get props => [myPublic, myPrivate, contactPublic,keyProgress];
 }
 
 class SelectKeyForImport extends PgpSettingsState with AlwaysNonEqualObject {
@@ -61,12 +64,11 @@ class CompleteDownload extends PgpSettingsState with AlwaysNonEqualObject {
 
   CompleteDownload(this.filePath);
 }
-class ImportProgress extends PgpSettingsState  {
 
+class ImportProgress extends PgpSettingsState {
   ImportProgress();
 }
 
-class ImportComplete extends PgpSettingsState  {
-
+class ImportComplete extends PgpSettingsState {
   ImportComplete();
 }

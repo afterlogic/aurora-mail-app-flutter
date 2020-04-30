@@ -28,8 +28,7 @@ class _PgpSettingsState extends BState<PgpSettings> {
   @override
   void initState() {
     super.initState();
-    bloc = AppInjector.instance
-        .pgpSettingsBloc(BlocProvider.of<AuthBloc>(context));
+    bloc = AppInjector.instance.pgpSettingsBloc(BlocProvider.of<AuthBloc>(context));
     bloc.add(LoadKeys());
   }
 
@@ -90,6 +89,7 @@ class _PgpSettingsState extends BState<PgpSettings> {
                     loadedState.myPublic,
                     loadedState.myPrivate,
                     loadedState.contactPublic,
+                    loadedState.keyProgress,
                   ),
                 ),
                 _button(context, loadedState),
@@ -143,8 +143,7 @@ class _PgpSettingsState extends BState<PgpSettings> {
     );
   }
 
-  _importKey(Map<PgpKey, bool> userKeys,
-      Map<PgpKeyWithContact, bool> contactKeys) async {
+  _importKey(Map<PgpKey, bool> userKeys, Map<PgpKeyWithContact, bool> contactKeys) async {
     await showDialog(
       context: context,
       builder: (_) => ImportKeyDialog(userKeys, contactKeys, bloc),
@@ -184,12 +183,13 @@ class _PgpSettingsState extends BState<PgpSettings> {
     List<PgpKey> public,
     List<PgpKey> private,
     List<PgpKey> contactPublic,
+    String keyProgress,
   ) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: ListView(
         children: <Widget>[
-          if (public.isNotEmpty)
+          if (public.isNotEmpty||keyProgress!=null)
             Text(
               i18n(context, "label_pgp_public_keys"),
               style: theme.textTheme.title,
@@ -197,9 +197,10 @@ class _PgpSettingsState extends BState<PgpSettings> {
           keysGroup(
             context,
             public,
+            keyProgress,
           ),
           SizedBox(height: 10),
-          if (private.isNotEmpty)
+          if (private.isNotEmpty||keyProgress!=null)
             Text(
               i18n(context, "label_pgp_private_keys"),
               style: theme.textTheme.title,
@@ -207,6 +208,7 @@ class _PgpSettingsState extends BState<PgpSettings> {
           keysGroup(
             context,
             private,
+            keyProgress,
           ),
           if (!BuildProperty.legacyPgpKey) ...[
             SizedBox(height: 10),
@@ -218,6 +220,7 @@ class _PgpSettingsState extends BState<PgpSettings> {
             keysGroup(
               context,
               contactPublic,
+              null,
             ),
           ]
         ],
@@ -228,6 +231,7 @@ class _PgpSettingsState extends BState<PgpSettings> {
   Widget keysGroup(
     BuildContext context,
     List<PgpKey> keys,
+    String keyProgress,
   ) {
     final List<Widget> widgets = keys
         .map<Widget>(
@@ -240,7 +244,9 @@ class _PgpSettingsState extends BState<PgpSettings> {
           ),
         )
         .toList();
-
+    if (keyProgress != null) {
+      widgets.insert(0,_key(keyProgress, true));
+    }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: widgets,
