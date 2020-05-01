@@ -3,3 +3,4 @@ PRODUCT_ID={{_iosAppId}}
 DEVELOPMENT_ID={{_iosDeveloperId}}
 SHARED_GROUP_ID={{_appleGroupId}}
 PRODUCT_VERSION = {{_version}}
+PRODUCT_BUILD_CODE = {{_build}}
