@@ -26,7 +26,7 @@ _appId: ""
 _iosAppId: "{{_appId}}"
 _appleGroupId: ""
 
-_build: 111
+_build: 112
 _version: ""
 _version_android: "{{_version}}{{_build}}"
 version_ios: "{{_version}}+{{_build}}"

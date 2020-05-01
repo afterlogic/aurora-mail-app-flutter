@@ -13,9 +13,9 @@ privacyPolicy: "https://privatemail.com/privacy.php"
 termsOfService: "https://privatemail.com/terms.php"
 autodiscover_url: "https://torguard.tv/pm/autodiscover.php?email={email}"
 
-_version: 2.2.0
+_version: 2.3.0
 
-supportLanguage: "ru,en"
+supportLanguage: "en"
 hasFloatingPlaceholder: true
 
 multiUserEnable: false
