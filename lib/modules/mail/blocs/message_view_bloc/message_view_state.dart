@@ -52,11 +52,12 @@ class MessageIsEncrypt extends MessageViewState {
 class DecryptComplete extends MessageViewState {
   final String text;
   final bool verified;
+  final EncryptType type;
 
-  const DecryptComplete(this.text, this.verified);
+  const DecryptComplete(this.text, this.verified, this.type);
 
   @override
-  List<Object> get props => [text];
+  List<Object> get props => [text, verified, type.index];
 }
 
 class FolderTypeState extends MessageViewState {

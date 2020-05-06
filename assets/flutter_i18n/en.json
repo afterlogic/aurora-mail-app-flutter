@@ -297,6 +297,8 @@
   "error_pgp_invalid_password": "invalid password",
   "error_pgp_not_found_keys_for": "No private key found for {users} user.",
   "btn_pgp_undo_pgp": "Undo PGP",
+  "label_pgp_verified": "Message was successfully verified.",
+  "label_pgp_not_verified": "Message wasn't verified.",
   "label_pgp_decrypted_and_verified": "Message was successfully decrypted and verified.",
   "label_pgp_decrypted_but_not_verified": "Message was successfully decrypted but wasn't verified.",
   "error_pgp_invalid_key_or_password": "Invalid key or password.",

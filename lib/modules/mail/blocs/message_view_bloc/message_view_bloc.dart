@@ -99,7 +99,7 @@ class MessageViewBloc extends Bloc<MessageViewEvent, MessageViewState> {
         event.sender,
         event.body,
       );
-      yield DecryptComplete(decrypted.text, decrypted.verified);
+      yield DecryptComplete(decrypted.text, decrypted.verified,event.type);
     } catch (e) {
       if (e is PgpKeyNotFound) {
         yield MessagesViewError(

@@ -337,8 +337,9 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
             key: Key(key),
             folder: folder,
             selectionController: selectionController,
-            header: [FolderType.spam, FolderType.trash]
-                    .contains(_selectedFolder.folderType)
+            header: ([FolderType.spam, FolderType.trash]
+                        .contains(_selectedFolder.folderType) &&
+                    !isSearch)
                 ? _emptyFolder
                 : null,
             builder: (context, item, threads) {
@@ -384,9 +385,10 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
     if (messageCount == null || messageCount == 0) {
       return SizedBox.shrink();
     }
-    final emptyFolder = _selectedFolder.type == FolderType.trash
-        ? "btn_message_empty_trash_folder"
-        : "btn_message_empty_spam_folder";
+    final emptyFolder =
+        Folder.getFolderTypeFromNumber(_selectedFolder.type) == FolderType.trash
+            ? "btn_message_empty_trash_folder"
+            : "btn_message_empty_spam_folder";
     return ListTile(
       leading: Icon(Icons.delete_forever),
       title: Text(i18n(context, emptyFolder)),

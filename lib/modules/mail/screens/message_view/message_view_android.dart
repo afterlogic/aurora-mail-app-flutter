@@ -265,9 +265,13 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
                     _showSnack(
                         i18n(
                           context,
-                          state.verified
-                              ? "label_pgp_decrypted_and_verified"
-                              : "label_pgp_decrypted_but_not_verified",
+                          state.type == EncryptType.Sign
+                              ? (state.verified
+                                  ? "label_pgp_verified"
+                                  : "label_pgp_not_verified")
+                              : (state.verified
+                                  ? "label_pgp_decrypted_and_verified"
+                                  : "label_pgp_decrypted_but_not_verified"),
                         ),
                         context);
                   }

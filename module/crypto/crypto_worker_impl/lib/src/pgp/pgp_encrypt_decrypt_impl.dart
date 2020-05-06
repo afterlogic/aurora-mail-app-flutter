@@ -20,8 +20,15 @@ class PgpEncryptDecryptImpl extends PgpEncryptDecrypt {
   Future<Decrypted> decrypt(String message, String password) async {
     assert(recipients.length == 1, "expected single recipient");
 
-    final privateKey = await _storage.getPgpKey(recipients.first, true);
-    final publicKey = await _storage.getPgpKey(sender, false);
+    PgpKey privateKey;
+    final emails = [...recipients, sender];
+    for (var email in emails) {
+      privateKey = await _storage.getPgpKey(email, true);
+      if (privateKey != null) {
+        break;
+      }
+    }
+    PgpKey publicKey = await _storage.getPgpKey(sender, false);
 
     if (privateKey == null) {
       throw PgpKeyNotFound([sender]);
@@ -35,6 +42,7 @@ class PgpEncryptDecryptImpl extends PgpEncryptDecrypt {
             publicKey == null ? null : [publicKey.key],
             password,
           ));
+
       final verified = await _pgp.lastVerifyResult();
 
       return Decrypted(verified, result);
@@ -118,7 +126,5 @@ class PgpEncryptDecryptImpl extends PgpEncryptDecrypt {
   }
 
   @override
-  Future stop() async {
-
-  }
+  Future stop() async {}
 }
