@@ -207,7 +207,7 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
                             forcedLocale: supportedLocales.contains(
                                     settingsState.language?.toLocale())
                                 ? settingsState.language?.toLocale()
-                                : supportedLocales.first,
+                                : null,
                           ),
                         ],
                         supportedLocales: supportedLocales,
