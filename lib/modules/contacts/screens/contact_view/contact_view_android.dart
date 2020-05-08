@@ -3,6 +3,7 @@ import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
+import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_group_model.dart';
 import 'package:aurora_mail/modules/contacts/screens/contact_edit/contact_edit_route.dart';
 import 'package:aurora_mail/modules/contacts/screens/contact_view/components/contact_view_app_bar.dart';
 import 'package:aurora_mail/modules/contacts/screens/contact_view/components/contacts_info_item.dart';
@@ -413,7 +414,7 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
       final widgets = <Widget>[];
       final bloc = BlocProvider.of<ContactsBloc>(context);
 
-      for (var group in bloc.state.groups) {
+      for (ContactsGroup group in bloc.state.groups ?? []) {
         if (groupUUIDs.contains(group.uuid)) {
           widgets.add(SizedBox(
             height: 43,

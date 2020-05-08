@@ -18,6 +18,11 @@ class RestartWidget extends StatefulWidget {
 class _RestartWidgetState extends BState<RestartWidget> {
   Key key = UniqueKey();
 
+  @override
+  initState() {
+    super.initState();
+  }
+
   void restartApp() {
     setState(() {
       key = UniqueKey();

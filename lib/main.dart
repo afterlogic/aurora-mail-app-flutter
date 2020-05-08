@@ -12,10 +12,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 
+
 import 'background/background_helper.dart';
 import 'background/background_sync.dart';
 import 'logger/logger.dart';
 import 'modules/app_screen.dart';
+
 
 void main() async {
   Crashlytics.instance.enableInDevMode = true;
@@ -24,6 +26,7 @@ void main() async {
   FlutterError.onError = Crashlytics.instance.recordFlutterError;
   // ignore: invalid_use_of_protected_member
   DBInstances.appDB.connection.executor.ensureOpen();
+
   runApp(
     LoggerView.wrap(
       FutureBuilder(
@@ -47,6 +50,7 @@ void main() async {
     e;
   }
 }
+
 
 @pragma('vm:entry-point')
 void onAlarm() async {

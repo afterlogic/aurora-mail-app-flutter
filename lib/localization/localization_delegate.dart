@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_i18n/flutter_i18n.dart';
 
+
 class LocalizationI18nDelegate extends LocalizationsDelegate<FlutterI18n> {
   final bool useCountryCode = false;
   final String fallbackFile = "en";
