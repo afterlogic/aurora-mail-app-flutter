@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:aurora_mail/main.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/widgets.dart';
 
@@ -15,7 +18,11 @@ class PushNotificationsManager {
     if (!_initialized) {
       await _firebaseMessaging.requestNotificationPermissions();
       _firebaseMessaging.configure(
-          onMessage: myBackgroundMessageHandler, onBackgroundMessage: myBackgroundMessageHandler);
+        onMessage: foregroundMessageHandler,
+        onBackgroundMessage: Platform.isIOS ? null : backgroundMessageHandler,
+        onLaunch: foregroundMessageHandler,
+        onResume: foregroundMessageHandler,
+      );
       _firebaseMessaging.onIosSettingsRegistered.listen((setting) {
         setting;
       });
@@ -25,10 +32,46 @@ class PushNotificationsManager {
       _initialized = true;
     }
   }
+
+  Future<String> getToken() {
+    return _firebaseMessaging.getToken();
+  }
 }
 
-Future<dynamic> myBackgroundMessageHandler(Map<String, dynamic> message) async {
+Future<dynamic> backgroundMessageHandler(Map<String, dynamic> message) async {
+  final notification = Notification.fromMap(message);
   WidgetsFlutterBinding.ensureInitialized();
+  try {
+    onAlarm(false);
+  } catch (e) {
+    print(e);
+  }
   final manager = NotificationManager();
-  manager.showNotification(message.toString());
+  manager.showNotification(notification.body, notification.title);
+}
+
+Future<dynamic> foregroundMessageHandler(Map<String, dynamic> message) async {
+  final notification = Notification.fromMap(message);
+  WidgetsFlutterBinding.ensureInitialized();
+  try {
+    onAlarm(false);
+  } catch (e) {
+    print(e);
+  }
+  final manager = NotificationManager();
+  manager.showNotification(notification.body, notification.title);
+}
+
+class Notification {
+  final String body;
+  final String title;
+
+  Notification(this.body, this.title);
+
+  static Notification fromMap(Map<String, dynamic> message) {
+    final notification = message["notification"] as Map;
+    final body = notification["body"] as String;
+    final title = notification["title"] as String;
+    return Notification(body, title);
+  }
 }

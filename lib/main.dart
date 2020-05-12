@@ -51,22 +51,27 @@ void main() async {
   }
 }
 
+bool onAlarmIsRun = false;
+
 @pragma('vm:entry-point')
-void onAlarm() async {
+void onAlarm([bool showNotification = true]) async {
   var hasUpdate = false;
+  if (!onAlarmIsRun) {
+    onAlarmIsRun = true;
+    try {
+      WidgetsFlutterBinding.ensureInitialized();
 
-  try {
-    WidgetsFlutterBinding.ensureInitialized();
+      BackgroundHelper.onStartAlarm();
 
-    BackgroundHelper.onStartAlarm();
-
-    hasUpdate =
-        await BackgroundSync().sync(BackgroundHelper.isBackground).timeout(Duration(seconds: 30));
-  } catch (e, s) {
-    logger.log("onAlarm exeption $e");
-    print(s);
+      hasUpdate = await BackgroundSync()
+          .sync(BackgroundHelper.isBackground, showNotification)
+          .timeout(Duration(seconds: 30));
+    } catch (e, s) {
+      logger.log("onAlarm exeption $e");
+      print(s);
+    }
+    onAlarmIsRun = false;
   }
-
   BackgroundHelper.onEndAlarm(hasUpdate);
 
   await AlarmService.endAlarm(hasUpdate);

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart' hide Message;
 import 'package:notifications_utils/notifications_utils.dart';
@@ -22,11 +24,11 @@ class NotificationManager {
 
   void onSelectNotification() {}
 
-  Future<void> showNotification(String message) async {
+  Future<void> showNotification(String body, String title) async {
     await plugin.show(
-      123123414,
-      "Title",
-      message,
+      Random().nextInt(1<<16),
+      title,
+      body,
       NotificationDetails(null, null),
     );
   }

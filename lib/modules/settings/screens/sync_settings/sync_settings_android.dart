@@ -1,11 +1,16 @@
+import 'package:aurora_mail/modules/mail/screens/compose/self_destructing/components/clipboard_label.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/modules/settings/models/sync_freq.dart';
 import 'package:aurora_mail/modules/settings/models/sync_period.dart';
 import 'package:aurora_mail/modules/settings/screens/sync_settings/components/freq_selection_dialog.dart';
+import 'package:aurora_mail/modules/settings/screens/sync_settings/sync_settings_route.dart';
+import 'package:aurora_mail/notification/push_notifications_manager.dart';
+import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
@@ -51,6 +56,19 @@ class _SyncSettingsAndroidState extends BState<SyncSettingsAndroid> {
                     SyncFreq.freqToString(context, freq),
                     style: theme.textTheme.caption,
                   ),
+                  onLongPress: () async {
+                    final token = await PushNotificationsManager.instance.getToken();
+
+                    showDialog(
+                      context: context,
+                      builder: (_) => ConfirmationDialog(
+                        title: "FB token",
+                        description: token,
+                        actionText: "Copy",
+                      ),
+                    );
+                    Clipboard.setData(ClipboardData(text: token));
+                  },
                   onTap: () => _onFreqDurationSelected(context, freq),
                 ),
                 ListTile(

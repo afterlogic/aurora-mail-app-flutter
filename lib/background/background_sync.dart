@@ -27,7 +27,7 @@ class BackgroundSync {
 
 //  final _notificationStorage = NotificationLocalStorage();
 
-  Future<bool> sync(bool isBackground) async {
+  Future<bool> sync(bool isBackground, bool showNotification) async {
     logger.log("MailSync: sync START");
     var hasUpdate = false;
     if (MailMethods.syncQueue.isNotEmpty) {
@@ -40,9 +40,8 @@ class BackgroundSync {
         final newMessages = await _getNewMessages(user);
         logger.log("MailSync: sync END");
         if (newMessages.isNotEmpty) {
-          if (isBackground == true) {
-            newMessages
-                .sort((a, b) => a.timeStampInUTC.compareTo(b.timeStampInUTC));
+          if (isBackground == true && showNotification) {
+            newMessages.sort((a, b) => a.timeStampInUTC.compareTo(b.timeStampInUTC));
             logger.log("MailSync: ${newMessages.length} new message(s)");
 
             for (final message in newMessages) {
@@ -81,13 +80,12 @@ class BackgroundSync {
     final accounts = await _accountsDao.getAccounts(user.localId);
     final account = accounts[0];
 
-    final inboxFolders = await _foldersDao.getByType(
-        [Folder.getNumberFromFolderType(FolderType.inbox)], account.localId);
+    final inboxFolders = await _foldersDao
+        .getByType([Folder.getNumberFromFolderType(FolderType.inbox)], account.localId);
 
-    final foldersToUpdate =
-        (await _updateFolderHash(inboxFolders, user, account))
-            .where((item) => item.type == 1)
-            .toList();
+    final foldersToUpdate = (await _updateFolderHash(inboxFolders, user, account))
+        .where((item) => item.type == 1)
+        .toList();
 
     if (account == null) return new List<Message>();
 
@@ -112,11 +110,9 @@ class BackgroundSync {
       final rawInfo = await mailApi.getMessagesInfo(
           folderName: folderToUpdate.fullNameRaw, search: "date:$periodStr/");
 
-      List<MessageInfo> newMessagesInfo =
-          MessageInfo.flattenMessagesInfo(rawInfo);
+      List<MessageInfo> newMessagesInfo = MessageInfo.flattenMessagesInfo(rawInfo);
 
-      final result = await Folders.calculateMessagesInfoDiffAsync(
-          messagesInfo, newMessagesInfo);
+      final result = await Folders.calculateMessagesInfoDiffAsync(messagesInfo, newMessagesInfo);
 
       if (result.addedMessages.isEmpty) break;
 
