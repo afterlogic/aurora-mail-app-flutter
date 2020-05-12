@@ -9,6 +9,8 @@ PODS:
     - Flutter
   - Crashlytics (3.14.0):
     - Fabric (~> 1.10.2)
+  - device_id (0.0.1):
+    - Flutter
   - DKImagePickerController/Core (4.2.2):
     - DKImagePickerController/ImageDataManager
     - DKImagePickerController/Resource
@@ -213,6 +215,7 @@ DEPENDENCIES:
   - alarm_service (from `.symlinks/plugins/alarm_service/ios`)
   - connectivity (from `.symlinks/plugins/connectivity/ios`)
   - connectivity_macos (from `.symlinks/plugins/connectivity_macos/ios`)
+  - device_id (from `.symlinks/plugins/device_id/ios`)
   - esys_flutter_share (from `.symlinks/plugins/esys_flutter_share/ios`)
   - file_picker (from `.symlinks/plugins/file_picker/ios`)
   - firebase_crashlytics (from `.symlinks/plugins/firebase_crashlytics/ios`)
@@ -279,6 +282,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/connectivity/ios"
   connectivity_macos:
     :path: ".symlinks/plugins/connectivity_macos/ios"
+  device_id:
+    :path: ".symlinks/plugins/device_id/ios"
   esys_flutter_share:
     :path: ".symlinks/plugins/esys_flutter_share/ios"
   file_picker:
@@ -342,6 +347,7 @@ SPEC CHECKSUMS:
   connectivity: 6e94255659cc86dcbef1d452ad3e0491bb1b3e75
   connectivity_macos: e2e9731b6b22dda39eb1b128f6969d574460e191
   Crashlytics: 540b7e5f5da5a042647227a5e3ac51d85eed06df
+  device_id: 4a0bf078741a3eec6ba0e6cc72e786395d5991b0
   DKImagePickerController: 4a3e7948a848c4348e600b3fe5ce41478835fa10
   DKPhotoGallery: 0290d32343574f06eaa4c26f8f2f8a1035e916be
   esys_flutter_share: 403498dab005b36ce1f8d7aff377e81f0621b0b4

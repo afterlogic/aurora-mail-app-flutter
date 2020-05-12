@@ -81,15 +81,7 @@ class Notification {
 }
 
 Future<String> getIMEI() async {
-  try {
-    return await DeviceId.getMEID;
-  } catch (e) {
-    try {
-      return await DeviceId.getIMEI;
-    } catch (e) {
-      return await DeviceId.getID;
-    }
-  }
+  return await DeviceId.getID;
 }
 
 class UpdatedMessageInfo {
