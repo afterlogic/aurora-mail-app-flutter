@@ -25,11 +25,12 @@ class NotificationManager {
   void onSelectNotification() {}
 
   Future<void> showNotification(String body, String title) async {
+
     await plugin.show(
-      Random().nextInt(1<<16),
+      Random().nextInt(1<<8),
       title,
       body,
-      NotificationDetails(null, null),
+      NotificationDetails(AndroidNotificationDetails("test","test","test"), null),
     );
   }
 

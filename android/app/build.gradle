@@ -97,4 +97,5 @@ dependencies {
     implementation "androidx.versionedparcelable:versionedparcelable:1.1.0"
     implementation 'com.google.firebase:firebase-analytics:17.2.2'
     implementation "androidx.core:core:1.2.0-rc01"
+    implementation "com.google.firebase:firebase-messaging:20.1.7"
 }

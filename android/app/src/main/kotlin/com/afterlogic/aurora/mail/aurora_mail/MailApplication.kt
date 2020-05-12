@@ -9,6 +9,8 @@ import android.app.NotificationManager
 import android.os.Build
 import com.afterlogic.alarm_service.WithAlarm
 
+import io.flutter.plugins.firebasemessaging.FlutterFirebaseMessagingService;
+
 internal class MailApplication : FlutterApplication(), PluginRegistry.PluginRegistrantCallback, WithAlarm {
     override val clazzService = AppService::class.java
 
@@ -18,6 +20,7 @@ internal class MailApplication : FlutterApplication(), PluginRegistry.PluginRegi
 
     override fun onCreate() {
         super.onCreate()
+        FlutterFirebaseMessagingService.setPluginRegistrant(this);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
             if (notificationManager.getNotificationChannel(NOTIFICATION_CHANNEL_ID) == null) {

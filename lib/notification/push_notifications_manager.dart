@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/main.dart';
+import 'package:device_id/device_id.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/widgets.dart';
 
@@ -58,7 +60,9 @@ Future<dynamic> foregroundMessageHandler(Map<String, dynamic> message) async {
   } catch (e) {
     print(e);
   }
+
   final manager = NotificationManager();
+
   manager.showNotification(notification.body, notification.title);
 }
 
@@ -74,4 +78,20 @@ class Notification {
     final title = notification["title"] as String;
     return Notification(body, title);
   }
+}
+
+Future<String> getIMEI() async {
+  try {
+    return await DeviceId.getMEID;
+  } catch (e) {
+    try {
+      return await DeviceId.getIMEI;
+    } catch (e) {
+      return await DeviceId.getID;
+    }
+  }
+}
+
+class UpdatedMessageInfo {
+  User user;
 }
