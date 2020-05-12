@@ -1,6 +1,5 @@
 import 'package:aurora_mail/database/app_database.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart'
-    hide Message;
+import 'package:flutter_local_notifications/flutter_local_notifications.dart' hide Message;
 import 'package:notifications_utils/notifications_utils.dart';
 import 'package:package_info/package_info.dart';
 
@@ -17,22 +16,28 @@ class NotificationManager {
     plugin.initialize(initializationSettings);
   }
 
-  void setOnNotification(
-      Future Function(int, String, String, String) callback) {
+  void setOnNotification(Future Function(int, String, String, String) callback) {
     plugin.didReceiveLocalNotificationCallback = callback;
   }
 
   void onSelectNotification() {}
 
-  Future<void> showNotification(Message message, User user) async {
-    final activeNotifications =
-        await NotificationsUtils.getActiveNotifications();
+  Future<void> showNotification(String message) async {
+    await plugin.show(
+      123123414,
+      "Title",
+      message,
+      NotificationDetails(null, null),
+    );
+  }
+
+  Future<void> showMessageNotification(Message message, User user) async {
+    final activeNotifications = await NotificationsUtils.getActiveNotifications();
 
     final packageName = (await PackageInfo.fromPlatform()).packageName;
 
     final isFirstNotification = activeNotifications.where((n) {
-      return n.packageName == packageName &&
-          n.groupKey.contains(user.emailFromLogin);
+      return n.packageName == packageName && n.groupKey.contains(user.emailFromLogin);
     }).isEmpty;
 
     final groupKey = "$packageName.${user.emailFromLogin}";
@@ -71,8 +76,7 @@ class NotificationManager {
         message.uid + 999999,
         from,
         message.subject,
-        NotificationDetails(
-            androidNotificationDetails..setAsGroupSummary = false, null),
+        NotificationDetails(androidNotificationDetails..setAsGroupSummary = false, null),
       );
     }
   }

@@ -120,14 +120,14 @@ public class SwiftAlarmPlugin: NSObject, FlutterPlugin {
     }
     
     func updateAppRefresh(){
-        var interval = self.interval ?? UIApplicationBackgroundFetchIntervalNever
-        if interval != UIApplicationBackgroundFetchIntervalNever && interval < UIApplicationBackgroundFetchIntervalMinimum {
-            interval = UIApplicationBackgroundFetchIntervalMinimum
+        var interval = self.interval ?? UIApplication.backgroundFetchIntervalNever
+        if interval != UIApplication.backgroundFetchIntervalNever && interval < UIApplication.backgroundFetchIntervalMinimum {
+            interval = UIApplication.backgroundFetchIntervalMinimum
         }
         
         if #available(iOS 13.0, *) {
             do {
-                if(interval == UIApplicationBackgroundFetchIntervalNever){
+                if(interval == UIApplication.backgroundFetchIntervalNever){
                     BGTaskScheduler.shared.cancel(taskRequestWithIdentifier: SwiftAlarmPlugin.taskId)
                 }else{
                     let request = BGAppRefreshTaskRequest(identifier: SwiftAlarmPlugin.taskId)
