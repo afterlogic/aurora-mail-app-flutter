@@ -11,6 +11,7 @@ import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/co
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/groups/contacts_groups_dao.dart';
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/storages/contacts_storages_dao.dart';
 import 'package:aurora_mail/modules/settings/models/language.dart';
+import 'package:aurora_mail/notification/push_notifications_manager.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:moor_flutter/moor_flutter.dart';
 
@@ -224,7 +225,15 @@ class AuthMethods {
     );
   }
 
-
+  Future setFbToken(List<User> users) async {
+    try {
+      final uid = await PushNotificationsManager.instance.getIMEI();
+      final fbToken = await PushNotificationsManager.instance.getToken();
+      await _authApi.setPushToken(users, uid, fbToken);
+    } catch (e) {
+      print(e);
+    }
+  }
 }
 
 class InitializerResponse {

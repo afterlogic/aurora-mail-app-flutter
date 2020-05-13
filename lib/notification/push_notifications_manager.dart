@@ -1,7 +1,10 @@
 import 'dart:io';
-
+import 'package:aurora_mail/background/background_helper.dart';
+import 'package:aurora_mail/database/accounts/accounts_dao.dart';
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/database/users/users_dao.dart';
 import 'package:aurora_mail/main.dart';
+import 'package:aurora_mail/modules/auth/repository/auth_local_storage.dart';
 import 'package:device_id/device_id.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/widgets.dart';
@@ -20,17 +23,12 @@ class PushNotificationsManager {
     if (!_initialized) {
       await _firebaseMessaging.requestNotificationPermissions();
       _firebaseMessaging.configure(
-        onMessage: foregroundMessageHandler,
-        onBackgroundMessage: Platform.isIOS ? null : backgroundMessageHandler,
-        onLaunch: foregroundMessageHandler,
-        onResume: foregroundMessageHandler,
+        onMessage: messageHandler,
+        onBackgroundMessage: Platform.isIOS ? null : messageHandler,
       );
       _firebaseMessaging.onIosSettingsRegistered.listen((setting) {
         setting;
       });
-      String token = await _firebaseMessaging.getToken();
-      print("FirebaseMessaging token: $token");
-
       _initialized = true;
     }
   }
@@ -38,52 +36,60 @@ class PushNotificationsManager {
   Future<String> getToken() {
     return _firebaseMessaging.getToken();
   }
+
+  Future<String> getIMEI() async {
+    return await DeviceId.getID;
+  }
 }
 
-Future<dynamic> backgroundMessageHandler(Map<String, dynamic> message) async {
-  final notification = Notification.fromMap(message);
+Future<dynamic> messageHandler(Map<String, dynamic> message) async {
   WidgetsFlutterBinding.ensureInitialized();
-  try {
-    onAlarm(false);
-  } catch (e) {
-    print(e);
-  }
-  final manager = NotificationManager();
-  manager.showNotification(notification.body, notification.title);
-}
+  final localStorage = AuthLocalStorage();
 
-Future<dynamic> foregroundMessageHandler(Map<String, dynamic> message) async {
-  final notification = Notification.fromMap(message);
-  WidgetsFlutterBinding.ensureInitialized();
-  try {
-    onAlarm(false);
-  } catch (e) {
-    print(e);
-  }
+  if ((await localStorage.getSelectedUserLocalId()) != null) {
+    final notification = NotificationData.fromMap(message);
+    try {
+      onAlarm(false, notification);
+    } catch (e) {
+      print(e);
+    }
 
-  final manager = NotificationManager();
-
-  manager.showNotification(notification.body, notification.title);
-}
-
-class Notification {
-  final String body;
-  final String title;
-
-  Notification(this.body, this.title);
-
-  static Notification fromMap(Map<String, dynamic> message) {
-    final notification = message["notification"] as Map;
-    final body = notification["body"] as String;
-    final title = notification["title"] as String;
-    return Notification(body, title);
+    if (BackgroundHelper.isBackground) {
+      final _usersDao = UsersDao(DBInstances.appDB);
+      final _accountsDao = AccountsDao(DBInstances.appDB);
+      final users = await _usersDao.getUsers();
+      for (var user in users) {
+        final accounts = await _accountsDao.getAccounts(user.localId);
+        for (var value in accounts) {
+          if (value.email == notification.to) {
+            final manager = NotificationManager();
+            manager.showNotification(
+              notification.from,
+              notification.subject,
+              user,
+            );
+            return;
+          }
+        }
+      }
+    }
   }
 }
 
-Future<String> getIMEI() async {
-  return await DeviceId.getID;
-}
+class NotificationData {
+  final String subject;
+  final String to;
+  final String from;
 
-class UpdatedMessageInfo {
-  User user;
+  NotificationData(this.subject, this.to, this.from);
+
+  static NotificationData fromMap(Map<String, dynamic> message) {
+    final notification = message["data"] as Map;
+
+    return NotificationData(
+      notification["Subject"] as String,
+      notification["To"] as String,
+      notification["From"] as String,
+    );
+  }
 }

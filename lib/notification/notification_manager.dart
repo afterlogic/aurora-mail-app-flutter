@@ -1,7 +1,8 @@
 import 'dart:math';
 
 import 'package:aurora_mail/database/app_database.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart' hide Message;
+import 'package:flutter_local_notifications/flutter_local_notifications.dart'
+    hide Message;
 import 'package:notifications_utils/notifications_utils.dart';
 import 'package:package_info/package_info.dart';
 
@@ -18,36 +19,32 @@ class NotificationManager {
     plugin.initialize(initializationSettings);
   }
 
-  void setOnNotification(Future Function(int, String, String, String) callback) {
+  void setOnNotification(
+      Future Function(int, String, String, String) callback) {
     plugin.didReceiveLocalNotificationCallback = callback;
   }
 
   void onSelectNotification() {}
 
-  Future<void> showNotification(String body, String title) async {
-
-    await plugin.show(
-      Random().nextInt(1<<8),
-      title,
-      body,
-      NotificationDetails(AndroidNotificationDetails("test","test","test"), null),
-    );
+  Future<void> showMessageNotification(Message message, User user) async {
+    return showNotification(message.fromToDisplay, message.subject, user);
   }
 
-  Future<void> showMessageNotification(Message message, User user) async {
-    final activeNotifications = await NotificationsUtils.getActiveNotifications();
+  Future<void> showNotification(String from, String subject, User user) async {
+    final activeNotifications =
+        await NotificationsUtils.getActiveNotifications();
 
     final packageName = (await PackageInfo.fromPlatform()).packageName;
 
     final isFirstNotification = activeNotifications.where((n) {
-      return n.packageName == packageName && n.groupKey.contains(user.emailFromLogin);
+      return n.packageName == packageName &&
+          n.groupKey.contains(user.emailFromLogin);
     }).isEmpty;
 
     final groupKey = "$packageName.${user.emailFromLogin}";
     final groupChannelId = user.emailFromLogin;
     final groupChannelName = user.emailFromLogin;
     final groupChannelDescription = user.emailFromLogin;
-    var from = message.fromToDisplay;
 
     if (from.contains("@")) from = from.split("@")[0];
 
@@ -59,7 +56,7 @@ class NotificationManager {
       priority: Priority.High,
       style: AndroidNotificationStyle.Inbox,
       styleInformation: InboxStyleInformation(
-        [message.subject],
+        [subject],
         contentTitle: from,
         summaryText: user.emailFromLogin,
       ),
@@ -67,19 +64,21 @@ class NotificationManager {
       setAsGroupSummary: isFirstNotification,
     );
 
+    final id = Random().nextInt(1 << 30);
     await plugin.show(
-      message.uid,
+      id,
       from,
-      message.subject,
+      subject,
       NotificationDetails(androidNotificationDetails, null),
     );
 
     if (isFirstNotification) {
       await plugin.show(
-        message.uid + 999999,
+        id + 999999,
         from,
-        message.subject,
-        NotificationDetails(androidNotificationDetails..setAsGroupSummary = false, null),
+        subject,
+        NotificationDetails(
+            androidNotificationDetails..setAsGroupSummary = false, null),
       );
     }
   }

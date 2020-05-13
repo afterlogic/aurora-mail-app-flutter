@@ -51,26 +51,27 @@ void main() async {
   }
 }
 
-bool onAlarmIsRun = false;
+Set<String> updateForNotification = {};
 
 @pragma('vm:entry-point')
-void onAlarm([bool showNotification = true]) async {
+void onAlarm([bool showNotification = true, NotificationData data]) async {
   var hasUpdate = false;
-  if (!onAlarmIsRun) {
-    onAlarmIsRun = true;
+  if (!updateForNotification.contains(null) &&
+      !updateForNotification.contains(data?.to)) {
+    updateForNotification.add(data?.to);
     try {
       WidgetsFlutterBinding.ensureInitialized();
 
       BackgroundHelper.onStartAlarm();
 
       hasUpdate = await BackgroundSync()
-          .sync(BackgroundHelper.isBackground, showNotification)
+          .sync(BackgroundHelper.isBackground, showNotification, data)
           .timeout(Duration(seconds: 30));
     } catch (e, s) {
       logger.log("onAlarm exeption $e");
       print(s);
     }
-    onAlarmIsRun = false;
+    updateForNotification.remove(data?.to);
   }
   BackgroundHelper.onEndAlarm(hasUpdate);
 

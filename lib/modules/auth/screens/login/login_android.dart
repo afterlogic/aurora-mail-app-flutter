@@ -125,11 +125,14 @@ class _LoginAndroidState extends BState<LoginAndroid> {
     return Scaffold(
       appBar: widget.isDialog
           ? AMAppBar(
-              title: Text(i18n(
+              title: Text(
+                i18n(
                   context,
                   widget.email == null
                       ? "settings_accounts_add"
-                      : "settings_accounts_relogin")),
+                      : "settings_accounts_relogin",
+                ),
+              ),
             )
           : null,
       body: _gradientWrap(
@@ -238,7 +241,6 @@ class _LoginAndroidState extends BState<LoginAndroid> {
                   children: <Widget>[
                     if (_showHostField)
                       AuthInput(
-
                         controller: hostCtrl,
                         label: i18n(context, "login_input_host"),
                         keyboardType: TextInputType.url,

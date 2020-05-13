@@ -175,6 +175,37 @@ class AuthApi {
       throw WebMailApiError(res);
     }
   }
+
+  Future<void> setPushToken(List<User> user, String uid, String fbToken) async {
+    final map = <String, List<User>>{};
+    for (var value in user) {
+      final list = map[value.hostname] ?? (map[value.hostname] = []);
+      list.add(value);
+    }
+    for (var entry in map.entries) {
+      final webMailApi = WebMailApi(
+        moduleName: WebMailModules.core,
+        hostname: entry.value.first.hostname,
+        token: entry.value.first.token,
+      );
+      final parameters = json.encode({
+        "Emails": entry.value.map((item) => item.emailFromLogin).toList(),
+        "Uid": uid,
+        "Token": fbToken,
+      });
+      final body = new WebMailApiBody(
+        module: "PushNotificator",
+        method: "SetPushToken",
+        parameters: parameters,
+      );
+
+      final res = await webMailApi.post(body);
+
+      if (res != true) {
+        throw WebMailApiError(res);
+      }
+    }
+  }
 }
 
 class RequestTwoFactor extends Error {
