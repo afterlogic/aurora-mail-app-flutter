@@ -328,7 +328,6 @@ class _MessageWebViewState extends BState<MessageWebView> {
                   Factory<LongPressGestureRecognizer>(
                       () => LongPressGestureRecognizer()..onLongPress = () {}),
                 },
-                gestureNavigationEnabled: true,
               ),
               Positioned.fill(
                 child: IgnorePointer(
