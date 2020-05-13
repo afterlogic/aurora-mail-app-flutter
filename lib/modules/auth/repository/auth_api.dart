@@ -177,7 +177,7 @@ class AuthApi {
   }
 
   Future<void> setPushToken(List<User> user, String uid, String fbToken) async {
-    final map = <String, List<User>>{};
+    final map = <String, List<User>> {};
     for (var value in user) {
       final list = map[value.hostname] ?? (map[value.hostname] = []);
       list.add(value);
