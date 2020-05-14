@@ -179,7 +179,7 @@ class AuthApi {
   Future<void> setPushToken(List<User> user, String uid, String fbToken) async {
     final map = <String, List<User>> {};
     for (var value in user) {
-      final list = map[value.hostname] ?? (map[value.hostname] = []);
+      final list = map[value.token] ?? (map[value.token] = []);
       list.add(value);
     }
     for (var entry in map.entries) {
@@ -201,9 +201,7 @@ class AuthApi {
 
       final res = await webMailApi.post(body);
 
-      if (res != true) {
-        throw WebMailApiError(res);
-      }
+      print(res);
     }
   }
 }

@@ -38,6 +38,7 @@ class AuthMethods {
     final result = await Future.wait(futures);
     final user = result[0] as User;
     final accounts = List<Account>.from(result[1] as Iterable);
+    if (accounts.isEmpty) return null;
     final account = accounts.firstWhere(
       (item) => item.localId == selectedAccountId,
       orElse: () => accounts.first,

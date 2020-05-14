@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/database/account_identity/account_identity_table.dart';
 import 'package:aurora_mail/database/aliases/aliases_table.dart';
 import 'package:aurora_mail/database/folders/folders_table.dart';
@@ -12,6 +13,7 @@ import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/co
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/groups/contacts_groups_table.dart';
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/storages/contacts_storages_table.dart';
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/storages/converters/contacts_info_converter.dart';
+import 'package:aurora_mail/modules/settings/models/sync_freq.dart';
 import 'package:moor_flutter/moor_flutter.dart';
 
 import 'accounts/accounts_table.dart';

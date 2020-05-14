@@ -14,7 +14,7 @@ enum Freq {
 
 // Freq == frequency
 class SyncFreq {
-  static const _NEVER_IN_SECONDS = Duration.secondsPerDay * 365 * 1000;
+  static const NEVER_IN_SECONDS = Duration.secondsPerDay * 365 * 1000;
 
   static String freqToString(BuildContext context, Freq freq) {
     switch (freq) {
@@ -42,7 +42,7 @@ class SyncFreq {
   static Duration freqToDuration(Freq freq) {
     switch (freq) {
       case Freq.never:
-        return Duration(seconds: _NEVER_IN_SECONDS);
+        return Duration(seconds: NEVER_IN_SECONDS);
       case Freq.minutes5:
         return Duration(minutes: 5);
       case Freq.minutes30:
@@ -64,7 +64,7 @@ class SyncFreq {
 
   static Freq secondsToFreq(int seconds) {
     switch (seconds) {
-      case _NEVER_IN_SECONDS:
+      case NEVER_IN_SECONDS:
         return Freq.never;
       case Duration.secondsPerMinute * 5:
         return Freq.minutes5;
