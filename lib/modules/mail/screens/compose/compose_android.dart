@@ -64,6 +64,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
   final toNode = FocusNode();
   final ccNode = FocusNode();
   final bccNode = FocusNode();
+  final subjectNode = FocusNode();
   final bodyNode = FocusNode();
 
   final _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -84,6 +85,9 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
   final _bccEmails = new Set<String>();
   final _attachments = new List();
   List _savedAttachments;
+  final _toKey = new GlobalKey<ComposeEmailsState>();
+  final _ccKey = new GlobalKey<ComposeEmailsState>();
+  final _bccKey = new GlobalKey<ComposeEmailsState>();
   final _toTextCtrl = new TextEditingController();
   final _ccTextCtrl = new TextEditingController();
   final _bccTextCtrl = new TextEditingController();
@@ -289,22 +293,13 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
 
   void _sendMessage() {
     if (_toTextCtrl.text.isNotEmpty) {
-      setState(() {
-        _toEmails.add(_toTextCtrl.text);
-        _toTextCtrl.clear();
-      });
+      _toKey.currentState.validate();
     }
     if (_ccTextCtrl.text.isNotEmpty) {
-      setState(() {
-        _ccEmails.add(_ccTextCtrl.text);
-        _ccTextCtrl.clear();
-      });
+      _ccKey.currentState.validate();
     }
     if (_bccTextCtrl.text.isNotEmpty) {
-      setState(() {
-        _bccEmails.add(_bccTextCtrl.text);
-        _bccTextCtrl.clear();
-      });
+      _bccKey.currentState?.validate();
     }
 
     if (_toEmails.isEmpty)
@@ -560,6 +555,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
             KeyboardAction(
               focusNode: bodyNode,
               toolbarButtons: [_done],
+              displayArrows: false,
             ),
           ],
         ),
@@ -601,15 +597,20 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
                   ),
                   Divider(height: 0.0),
                   ComposeEmails(
+                    key: _toKey,
                     padding: EdgeInsets.symmetric(horizontal: 16.0),
                     enable: !lockUsers,
                     focusNode: toNode,
                     label: i18n(context, "messages_to"),
                     textCtrl: _toTextCtrl,
                     emails: _toEmails,
+                    onNext: () {
+                      ccNode.requestFocus();
+                    },
                   ),
                   Divider(height: 0.0),
                   ComposeEmails(
+                    key: _ccKey,
                     padding: EdgeInsets.symmetric(horizontal: 16.0),
                     enable: !lockUsers,
                     focusNode: ccNode,
@@ -617,16 +618,27 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
                     textCtrl: _ccTextCtrl,
                     emails: _ccEmails,
                     onCCSelected: () => setState(() => _showBCC = true),
+                    onNext: () {
+                      if (_showBCC) {
+                        bccNode.requestFocus();
+                      } else {
+                        subjectNode.requestFocus();
+                      }
+                    },
                   ),
                   Divider(height: 0.0),
                   if (_showBCC)
                     ComposeEmails(
+                      key: _bccKey,
                       padding: EdgeInsets.symmetric(horizontal: 16.0),
                       enable: !lockUsers,
                       focusNode: bccNode,
                       label: i18n(context, "messages_bcc"),
                       textCtrl: _bccTextCtrl,
                       emails: _bccEmails,
+                      onNext: () {
+                        subjectNode.requestFocus();
+                      },
                     ),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16.0),
@@ -634,8 +646,12 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
                       children: <Widget>[
                         if (_showBCC) Divider(height: 0.0),
                         ComposeSubject(
+                          focusNode: subjectNode,
                           textCtrl: _subjectTextCtrl,
                           onAttach: () => _bloc.add(UploadAttachment()),
+                          onNext: () {
+                            bodyNode.requestFocus();
+                          },
                         ),
                         if (_attachments.isNotEmpty) Divider(height: 0.0),
                         BlocBuilder<ComposeBloc, ComposeState>(
