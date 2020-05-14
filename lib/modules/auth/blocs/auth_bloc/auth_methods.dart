@@ -230,7 +230,23 @@ class AuthMethods {
     try {
       final uid = await PushNotificationsManager.instance.getIMEI();
       final fbToken = await PushNotificationsManager.instance.getToken();
-      await _authApi.setPushToken(users, uid, fbToken);
+      final userWithAccount = <User, List<String>>{};
+      for (var user in users) {
+        final accounts = await _accountsDao.getAccounts(user.localId);
+        final emails = <String>{};
+
+        for (var account in accounts) {
+          final identities = await _accountIdentityDao.getByUserAndAccount(
+              user.localId, account.localId);
+          final aliases = await _aliasesDao.getByUserAndAccount(
+              user.localId, account.localId);
+          emails.add(account.email);
+          emails.addAll(identities.map((item) => item.email));
+          emails.addAll(aliases.map((item) => item.email));
+        }
+        userWithAccount[user] = emails.toList();
+      }
+      await _authApi.setPushToken(userWithAccount, uid, fbToken);
     } catch (e) {
       print(e);
     }

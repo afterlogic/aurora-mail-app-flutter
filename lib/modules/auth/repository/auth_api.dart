@@ -176,20 +176,29 @@ class AuthApi {
     }
   }
 
-  Future<void> setPushToken(List<User> user, String uid, String fbToken) async {
-    final map = <String, List<User>> {};
-    for (var value in user) {
-      final list = map[value.token] ?? (map[value.token] = []);
+  Future<void> setPushToken(Map<User, List<String>> userWithAccount, String uid,
+      String fbToken) async {
+    final map = <String, List<MapEntry<User, List<String>>>>{};
+    for (var value in userWithAccount.entries) {
+      var list = map[value.key.hostname];
+      if (list == null) {
+        list = [];
+        map[value.key.hostname] = list;
+      }
       list.add(value);
     }
     for (var entry in map.entries) {
       final webMailApi = WebMailApi(
         moduleName: WebMailModules.core,
-        hostname: entry.value.first.hostname,
-        token: entry.value.first.token,
+        hostname: entry.key,
       );
       final parameters = json.encode({
-        "Emails": entry.value.map((item) => item.emailFromLogin).toList(),
+        "Users": entry.value
+            .map((item) => {
+                  "AuthToken": item.key.token,
+                  "Emails": item.value,
+                })
+            .toList(),
         "Uid": uid,
         "Token": fbToken,
       });

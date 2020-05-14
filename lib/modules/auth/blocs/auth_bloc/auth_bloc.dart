@@ -189,6 +189,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       if (users.isNotEmpty) {
         add(SelectUser(users[0].localId));
       } else {
+        _methods.setFbToken([]);
         yield LoggedOut();
       }
     } catch (err, s) {
