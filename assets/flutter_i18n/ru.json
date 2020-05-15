@@ -357,5 +357,6 @@
   "label_message_headers": "Заголовки письма",
   "label_message_advanced_search": "Advanced search",
   "btn_vcf_import": "Import",
-  "hint_vcf_import": "Import {name} contact from vcf?"
+  "hint_vcf_import": "Import {name} contact from vcf?",
+  "error_user_already_logged": "Это пользователь уже авторизирован"
 }

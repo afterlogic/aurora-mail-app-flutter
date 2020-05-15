@@ -115,7 +115,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         orElse: () => null);
 
     if (userFromDb != null) {
-      add(SelectUser(userFromDb.localId));
+      yield AuthError("error_user_already_logged");
+      return;
     } else {
       try {
         final user = await _methods.login(

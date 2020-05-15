@@ -41,9 +41,10 @@ class FitTextFieldState extends BState<FitTextField> {
     TextPainter tp =
         new TextPainter(text: ts, textDirection: TextDirection.ltr);
     tp.layout();
+    final testScale = MediaQuery.of(context).textScaleFactor;
     var textWidth = tp.width *
-        1.3; // We will use this width for the container wrapping our TextField
-
+        (testScale +
+            0.3); // We will use this width for the container wrapping our TextField
     // Enforce a minimum width
     if (textWidth < widget.minWidth) {
       textWidth = widget.minWidth;

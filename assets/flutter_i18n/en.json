@@ -359,5 +359,6 @@
   "hint_vcf_import": "Import {name} contact from vcf?",
   "label_message_headers": "View message headers",
   "label_forward_as_attachment": "Forward as attachment",
-  "label_contact_with_not_name": "No name"
+  "label_contact_with_not_name": "No name",
+  "error_user_already_logged": "This user is already logged in"
 }
