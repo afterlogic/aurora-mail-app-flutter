@@ -43,10 +43,8 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
     if (event is StartUpload) yield UploadStarted(event.tempAttachment);
     if (event is EndUpload) yield AttachmentUploaded(event.composeAttachment);
     if (event is GetComposeAttachments) yield* _getComposeAttachments(event);
-    if (event is GetContactsAsAttachments)
-      yield* _getContactsAsAttachment(event);
-    if (event is ErrorUpload)
-      yield ComposeError(formatError(event.error, null));
+    if (event is GetContactsAsAttachments) yield* _getContactsAsAttachment(event);
+    if (event is ErrorUpload) yield ComposeError(formatError(event.error, null));
     if (event is EncryptBody) yield* _encryptBody(event);
     if (event is DecryptEvent) yield DecryptedState();
   }
@@ -97,7 +95,7 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
   }
 
   Stream<ComposeState> _addAttachment(UploadAttachment event) async* {
-    final file = await _mailLocal.pickFile();
+    final file = await _mailLocal.pickFile(type: event.type);
     await _uploadAttachment(file);
   }
 
@@ -108,8 +106,7 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
   }
 
   Future _uploadAttachment(File file) {
-    return _methods.uploadFile(file,
-        onUploadStart: (TempAttachmentUpload tempAttachment) {
+    return _methods.uploadFile(file, onUploadStart: (TempAttachmentUpload tempAttachment) {
       add(StartUpload(tempAttachment));
     }, onUploadEnd: (ComposeAttachment attachment) {
       add(EndUpload(attachment));
@@ -120,12 +117,10 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
     });
   }
 
-  Stream<ComposeState> _getComposeAttachments(
-      GetComposeAttachments event) async* {
+  Stream<ComposeState> _getComposeAttachments(GetComposeAttachments event) async* {
     yield ConvertingAttachments();
     try {
-      final composeAttachments =
-          await _methods.getComposeAttachments(event.attachments);
+      final composeAttachments = await _methods.getComposeAttachments(event.attachments);
 
       yield ReceivedComposeAttachments(composeAttachments);
     } catch (err, s) {
@@ -133,12 +128,10 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
     }
   }
 
-  Stream<ComposeState> _getContactsAsAttachment(
-      GetContactsAsAttachments event) async* {
+  Stream<ComposeState> _getContactsAsAttachment(GetContactsAsAttachments event) async* {
     yield ConvertingAttachments();
     try {
-      final contactsAttachments =
-          await _methods.saveContactsAsTempFiles(event.contacts);
+      final contactsAttachments = await _methods.saveContactsAsTempFiles(event.contacts);
 
       yield ReceivedComposeAttachments(contactsAttachments);
     } catch (err, s) {
@@ -186,8 +179,7 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
     }
   }
 
-  Stream<ComposeState> _uploadEmlAttachments(
-      UploadEmlAttachments event) async* {
+  Stream<ComposeState> _uploadEmlAttachments(UploadEmlAttachments event) async* {
     _methods.uploadEmlAttachments(event.message,
         onUploadStart: (TempAttachmentUpload tempAttachment) {
       add(StartUpload(tempAttachment));
