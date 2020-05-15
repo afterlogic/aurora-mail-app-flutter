@@ -1,13 +1,15 @@
+import 'dart:io';
+
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
 class ComposeSubject extends StatefulWidget {
   final TextEditingController textCtrl;
-  final Function() onAttach;
+  final Function(FileType type) onAttach;
 
-  const ComposeSubject(
-      {Key key, @required this.textCtrl, @required this.onAttach})
+  const ComposeSubject({Key key, @required this.textCtrl, @required this.onAttach})
       : super(key: key);
 
   @override
@@ -33,8 +35,7 @@ class _ComposeSubjectState extends BState<ComposeSubject> {
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: Text(i18n(context, "messages_subject"),
-                  style: theme.textTheme.subhead),
+              child: Text(i18n(context, "messages_subject"), style: theme.textTheme.subhead),
             ),
             SizedBox(width: 8.0),
             Flexible(
@@ -54,8 +55,15 @@ class _ComposeSubjectState extends BState<ComposeSubject> {
               icon: Icon(Icons.attachment),
               padding: EdgeInsets.zero,
               color: theme.accentColor,
-              onPressed: widget.onAttach,
+              onPressed: () => widget.onAttach(FileType.any),
             ),
+            if (Platform.isIOS)
+              IconButton(
+                icon: Icon(Icons.perm_media),
+                padding: EdgeInsets.zero,
+                color: theme.accentColor,
+                onPressed: () => widget.onAttach(FileType.media),
+              ),
           ],
         ),
       ),

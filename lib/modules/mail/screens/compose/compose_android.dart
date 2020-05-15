@@ -28,6 +28,7 @@ import 'package:aurora_mail/utils/mail_utils.dart';
 import 'package:aurora_mail/utils/show_dialog.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:crypto_worker/crypto_worker.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -635,7 +636,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
                         if (_showBCC) Divider(height: 0.0),
                         ComposeSubject(
                           textCtrl: _subjectTextCtrl,
-                          onAttach: () => _bloc.add(UploadAttachment()),
+                          onAttach: (FileType type) => _bloc.add(UploadAttachment(type)),
                         ),
                         if (_attachments.isNotEmpty) Divider(height: 0.0),
                         BlocBuilder<ComposeBloc, ComposeState>(

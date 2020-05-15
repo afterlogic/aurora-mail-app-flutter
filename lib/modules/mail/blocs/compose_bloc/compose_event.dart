@@ -7,6 +7,7 @@ import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/temp_attachment_upload.dart';
 import 'package:aurora_mail/utils/always_non_equal_object.dart';
 import 'package:equatable/equatable.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/widgets.dart';
 
 abstract class ComposeEvent extends Equatable {
@@ -79,7 +80,11 @@ class SaveToDrafts extends ComposeEvent {
       [to, cc, bcc, subject, composeAttachments, messageText, draftUid];
 }
 
-class UploadAttachment extends ComposeEvent with AlwaysNonEqualObject {}
+class UploadAttachment extends ComposeEvent with AlwaysNonEqualObject {
+ final FileType type;
+
+  UploadAttachment(this.type);
+}
 
 class UploadAttachments extends ComposeEvent with AlwaysNonEqualObject {
   final List<File> files;
