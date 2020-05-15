@@ -8,17 +8,21 @@ import 'package:flutter/material.dart';
 class ComposeSubject extends StatefulWidget {
   final TextEditingController textCtrl;
   final Function(FileType type) onAttach;
+  final FocusNode focusNode;
+  final VoidCallback onNext;
 
-  const ComposeSubject({Key key, @required this.textCtrl, @required this.onAttach})
-      : super(key: key);
+  const ComposeSubject({
+    Key key,
+    @required this.textCtrl,
+    @required this.onAttach,
+    this.focusNode, this.onNext,
+  }) : super(key: key);
 
   @override
   _ComposeSubjectState createState() => _ComposeSubjectState();
 }
 
 class _ComposeSubjectState extends BState<ComposeSubject> {
-  var _focusNode = new FocusNode();
-
   @override
   void initState() {
     super.initState();
@@ -28,7 +32,7 @@ class _ComposeSubjectState extends BState<ComposeSubject> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return InkWell(
-      onTap: _focusNode.requestFocus,
+      onTap: widget.focusNode.requestFocus,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: Row(
@@ -43,11 +47,12 @@ class _ComposeSubjectState extends BState<ComposeSubject> {
               child: Wrap(spacing: 8.0, children: [
                 TextField(
                   onTap: null,
-                  focusNode: _focusNode,
+                  focusNode: widget.focusNode,
                   controller: widget.textCtrl,
                   decoration: InputDecoration.collapsed(
                     hintText: null,
                   ),
+                  onEditingComplete: widget.onNext,
                 ),
               ]),
             ),

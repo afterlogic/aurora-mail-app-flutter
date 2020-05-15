@@ -19,6 +19,7 @@ class ComposeEmails extends StatefulWidget {
   final Function onCCSelected;
   final FocusNode focusNode;
   final EdgeInsets padding;
+  final VoidCallback onNext;
 
   const ComposeEmails({
     Key key,
@@ -29,21 +30,23 @@ class ComposeEmails extends StatefulWidget {
     this.focusNode,
     this.enable = true,
     this.padding,
+    this.onNext,
   }) : super(key: key);
 
   @override
-  _ComposeEmailsState createState() => _ComposeEmailsState();
+  ComposeEmailsState createState() => ComposeEmailsState();
 }
 
-class _ComposeEmailsState extends BState<ComposeEmails> {
+class ComposeEmailsState extends BState<ComposeEmails> {
   final textFieldKey = GlobalKey();
+  final composeTypeAheadFieldKey = GlobalKey<ComposeTypeAheadFieldState>();
   String _emailToShowDelete;
+
   String _search;
 
   @override
   void initState() {
     super.initState();
-
     widget.focusNode.addListener(() {
       if (!widget.focusNode.hasFocus) {
         _addEmail(widget.textCtrl.text);
@@ -53,21 +56,41 @@ class _ComposeEmailsState extends BState<ComposeEmails> {
     });
   }
 
-  Future _addEmail(String email) async {
-    widget.textCtrl.text = "";
+  Future _addEmail(String _email) async {
+    final email = _email.startsWith(" ") ? _email.substring(1) : _email;
+    widget.textCtrl.text = " ";
+    widget.textCtrl.selection = TextSelection.collapsed(offset: 1);
+    lastSuggestions = [];
     final error = validateInput(
         context, email, [ValidationType.email, ValidationType.empty]);
     if (error == null) {
       setState(() => widget.emails.add(email));
     }
+    composeTypeAheadFieldKey.currentState.resize();
   }
 
   void _deleteEmail(String email) {
     setState(() => widget.emails.remove(email));
+    composeTypeAheadFieldKey.currentState.resize();
   }
 
-  Future<List<Contact>> _buildSuggestions(String pattern) async {
+  validate() {
+    final text = widget.emails.isEmpty
+        ? widget.textCtrl.text
+        : widget.textCtrl.text.substring(1);
+    if (text.isNotEmpty) {
+      _addEmail(text);
+    }
+  }
+
+  List<Contact> lastSuggestions = [];
+
+  Future<List<Contact>> _buildSuggestions(String _pattern) async {
+    final pattern = _pattern.startsWith(" ") ? _pattern.substring(1) : _pattern;
     try {
+      if (pattern.isEmpty) {
+        return [];
+      }
       _search = pattern;
 
       final bloc = BlocProvider.of<ContactsBloc>(context);
@@ -189,6 +212,7 @@ class _ComposeEmailsState extends BState<ComposeEmails> {
         onLongPress: widget.enable ? _paste : null,
         onTap: widget.enable ? _focus : null,
         child: ComposeTypeAheadField<Contact>(
+          key: composeTypeAheadFieldKey,
           textFieldConfiguration: TextFieldConfiguration(
             focusNode: widget.focusNode,
             enabled: widget.enable,
@@ -209,7 +233,8 @@ class _ComposeEmailsState extends BState<ComposeEmails> {
           keepSuggestionsOnLoading: true,
           getImmediateSuggestions: true,
           noItemsFoundBuilder: (_) => SizedBox(),
-          suggestionsCallback: _buildSuggestions,
+          suggestionsCallback: (pattern) async =>
+              lastSuggestions = await _buildSuggestions(pattern),
           itemBuilder: (_, c) {
             return Padding(
               padding: const EdgeInsets.all(16.0),
@@ -217,6 +242,7 @@ class _ComposeEmailsState extends BState<ComposeEmails> {
             );
           },
           onSuggestionSelected: (c) {
+            widget.focusNode.requestFocus();
             return _addEmail(MailUtils.getFriendlyName(c));
           },
           child: Padding(
@@ -268,11 +294,28 @@ class _ComposeEmailsState extends BState<ComposeEmails> {
                         enabled: widget.enable,
                         focusNode: widget.focusNode,
                         controller: widget.textCtrl,
+                        autofocus: true,
                         keyboardType: TextInputType.emailAddress,
                         decoration: InputDecoration.collapsed(
                           hintText: null,
                         ),
-                        onEditingComplete: widget.focusNode.unfocus,
+                        onChanged: (value) {
+                          if (widget.emails.isNotEmpty && value.isEmpty) {
+                            widget.textCtrl.text = " ";
+                            widget.textCtrl.selection =
+                                TextSelection.collapsed(offset: 1);
+                            _deleteEmail(widget.emails.last);
+                          }
+                        },
+                        onEditingComplete: () {
+                          if (lastSuggestions.isEmpty) {
+                            widget.onNext();
+                          } else {
+                            _addEmail(MailUtils.getFriendlyName(
+                                lastSuggestions.first));
+                            composeTypeAheadFieldKey.currentState.clear();
+                          }
+                        },
                       ),
                     ),
                   ]),

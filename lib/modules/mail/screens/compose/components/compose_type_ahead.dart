@@ -709,11 +709,11 @@ class ComposeTypeAheadField<T> extends StatefulWidget {
         super(key: key);
 
   @override
-  _ComposeTypeAheadFieldState<T> createState() =>
-      _ComposeTypeAheadFieldState<T>();
+  ComposeTypeAheadFieldState<T> createState() =>
+      ComposeTypeAheadFieldState<T>();
 }
 
-class _ComposeTypeAheadFieldState<T> extends BState<ComposeTypeAheadField<T>>
+class ComposeTypeAheadFieldState<T> extends BState<ComposeTypeAheadField<T>>
     with WidgetsBindingObserver {
   FocusNode _focusNode;
   TextEditingController _textEditingController;
@@ -822,6 +822,23 @@ class _ComposeTypeAheadFieldState<T> extends BState<ComposeTypeAheadField<T>>
       _scrollPosition.removeListener(_scrollResizeListener);
       _scrollPosition.isScrollingNotifier.addListener(_scrollResizeListener);
     }
+  }
+
+  resize() {
+    WidgetsBinding.instance.addPostFrameCallback((duration) {
+      this._suggestionsBox.resize();
+    });
+  }
+
+  void clear() {
+    this._suggestionsBox.close();
+
+    WidgetsBinding.instance.addPostFrameCallback((duration) {
+      this._suggestionsBox.resize();
+      if (this._effectiveFocusNode.hasFocus) {
+        this._suggestionsBox.open();
+      }
+    });
   }
 
   void _scrollResizeListener() {
