@@ -25,6 +25,7 @@ class MessageItem extends StatefulWidget {
   final Function(Message) onItemSelected;
   final Function(Message, bool) onStarMessage;
   final Function(Message) onDeleteMessage;
+  final Function(Message, bool) onUnreadMessage;
   final SelectionController selectionController;
 
   const MessageItem(
@@ -36,6 +37,7 @@ class MessageItem extends StatefulWidget {
     @required this.onDeleteMessage,
     @required this.onStarMessage,
     this.selectionController,
+    this.onUnreadMessage,
   }) : super(key: key);
 
   @override
@@ -87,7 +89,7 @@ class _MessageItemState extends BState<MessageItem> {
     final hasUnreadChildren = widget.children
         .where((i) => !i.flagsInJson.contains("\\seen"))
         .isNotEmpty;
-
+    final isUnread = !m.flagsInJson.contains("\\seen");
     final selected = widget.selectionController.isSelected(m.localId);
     final flags = Mail.getFlags(m.flagsInJson);
 
@@ -115,26 +117,77 @@ class _MessageItemState extends BState<MessageItem> {
       } else {
         return Dismissible(
           key: Key(m.uid.toString()),
-          direction: DismissDirection.endToStart,
-          confirmDismiss: (_) => ConfirmationDialog.show(
-            context,
-            i18n(context, "messages_delete_title"),
-            i18n(context, "messages_delete_desc_with_subject",
-                {"subject": m.subject}),
-            i18n(context, "btn_delete"),
-            destructibleAction: true,
-          ),
-          onDismissed: (_) => widget.onDeleteMessage(m),
+          direction: DismissDirection.horizontal,
+          confirmDismiss: (direction) async {
+            if (direction == DismissDirection.endToStart) {
+              return ConfirmationDialog.show(
+                context,
+                i18n(context, "messages_delete_title"),
+                i18n(context, "messages_delete_desc_with_subject",
+                    {"subject": m.subject}),
+                i18n(context, "btn_delete"),
+                destructibleAction: true,
+              );
+            } else if (direction == DismissDirection.startToEnd) {
+              await widget.onUnreadMessage(m,isUnread);
+            }
+            return false;
+          },
+          onDismissed: (direction) {
+            if (direction == DismissDirection.endToStart) {
+              widget.onDeleteMessage(m);
+            }
+          },
           background: Container(
+            color: theme.primaryColor,
+            child: Stack(
+              children: <Widget>[
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 16),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Icon(Icons.mail, color: Colors.white, size: 36.0),
+                        Text(
+                          i18n(context, isUnread ? "btn_read" : "btn_unread"),
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          secondaryBackground: Container(
             color: theme.errorColor,
             child: Stack(
               children: <Widget>[
-                Positioned(
-                    right: 16.0,
-                    top: 0.0,
-                    bottom: 0.0,
-                    child: Icon(Icons.delete_outline,
-                        color: Colors.white, size: 36.0)),
+                Align(
+                    alignment: Alignment.centerRight,
+                    child: Padding(
+                      padding: const EdgeInsets.only(right: 16),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Icon(
+                            Icons.delete_outline,
+                            color: Colors.white,
+                            size: 36.0,
+                          ),
+                          Text(
+                            i18n(context, "btn_delete"),
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                    )),
               ],
             ),
           ),
@@ -316,6 +369,7 @@ class _MessageItemState extends BState<MessageItem> {
                           onItemSelected: widget.onItemSelected,
                           onStarMessage: widget.onStarMessage,
                           onDeleteMessage: widget.onDeleteMessage,
+                          onUnreadMessage: widget.onUnreadMessage,
                         ),
                       ],
                     ),

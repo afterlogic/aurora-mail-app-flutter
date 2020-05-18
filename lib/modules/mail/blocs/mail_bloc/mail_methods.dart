@@ -158,7 +158,9 @@ class MailMethods {
       final unread = updatedFolder[1];
       final newHash = updatedFolder[3];
       final needsInfoUpdate = folder.fullNameHash != newHash || shouldUpdate;
-
+      if (folder.fullNameHash != newHash) {
+        logger.log("folder ${fName} have new hash");
+      }
       futures.add(_foldersDao.updateFolder(
         new FoldersCompanion(
           count: Value(count as int),
@@ -201,7 +203,12 @@ class MailMethods {
       syncQueue.insert(0, guid);
     }
     if (syncQueue.isNotEmpty && queueLengthBeforeInsert == 0) {
-      await _setMessagesInfoToFolder();
+      try {
+        await _setMessagesInfoToFolder();
+      } catch (e) {
+        syncQueue.clear();
+        rethrow;
+      }
     } else if (syncQueue.isNotEmpty) {
       needUpdateInfo = true;
     }
@@ -414,14 +421,15 @@ class MailMethods {
           hasThread: m.hasThread,
         );
       }).toList();
-      _mailDao.updateMessagesFlags(infos);
+      await _mailDao.updateMessagesFlags(infos);
     }
 
     try {
-      updateMessages(isSeen);
+      await updateMessages(isSeen);
       await _mailApi.setMessagesSeen(
         folder: folder,
         uids: messages.map((m) => m.uid).toList(),
+        isSeen: isSeen,
       );
     } catch (err) {
       updateMessages(!isSeen);

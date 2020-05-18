@@ -360,5 +360,7 @@
   "label_message_headers": "View message headers",
   "label_forward_as_attachment": "Forward as attachment",
   "label_contact_with_not_name": "No name",
-  "error_user_already_logged": "This user is already logged in"
+  "error_user_already_logged": "This user is already logged in",
+  "btn_unread": "Unread",
+  "btn_read": "Read"
 }

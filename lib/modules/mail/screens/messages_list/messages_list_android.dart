@@ -148,6 +148,10 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
     _messagesListBloc.add(DeleteMessages(messages: [message]));
   }
 
+  void _unreadMessage(Message message,bool isUnread) {
+    _mailBloc.add(SetSeen([message], isUnread));
+  }
+
   void _dispatchPostFoldersLoadedAction(FoldersLoaded state) {
     switch (state.postAction) {
       case PostFolderLoadedAction.subscribeToMessages:
@@ -352,6 +356,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
                 onItemSelected: (Message item) => _onMessageSelected(item),
                 onStarMessage: _setStarred,
                 onDeleteMessage: _deleteMessage,
+                onUnreadMessage: _unreadMessage,
               );
             },
             progress: Padding(

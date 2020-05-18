@@ -393,12 +393,13 @@ class MailApi {
   Future<void> setMessagesSeen({
     @required Folder folder,
     @required List<int> uids,
+    bool isSeen
   }) async {
     final parameters = json.encode({
       "Folder": folder.fullNameRaw,
       "AccountID": _accountId,
       "Uids": uids.join(","),
-      "SetAction": true,
+      "SetAction": isSeen,
     });
 
     final body =
