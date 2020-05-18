@@ -255,6 +255,7 @@ class MailUtils {
     @required String body,
     @required List<MailAttachment> attachments,
     @required bool showLightEmail,
+    bool isStared,
   }) {
     final theme = Theme.of(context);
 
@@ -339,6 +340,11 @@ class MailUtils {
         object-fit: cover;
         border-radius: 10px;
       }
+      .folder_label {
+       display: flex;
+       border-radius: 15px;
+       background: #609;
+      }
     </style>
   </head>
   <body>
@@ -354,8 +360,11 @@ class MailUtils {
             <!-- <a href='https://dummy-crutch.com/#${MessageWebViewActions.SHOW_INFO}' class='icon-btn' style="padding: 0 12px 12px;">${_getInfoIcon(accentColor)}</a> -->
           </div>
         </div>
-        <h1 style="font-size: 24px; font-weight: 500; margin-top: 24px">$subject</h1>
-        <div style="height: 1px; background-color: black; opacity: 0.05; margin: 24px 0 0"></div>
+        <div style="display: flex; flex-direction: row;justify-content: space-between;">
+          <h1 style="font-size: 24px; font-weight: 500; margin-top: 24px;float: left;">${subject}<p style="font-size: 16px;background: #e2e7ec;padding:1px 10px;float: right; margin: 4px 0px 0px 20px; border-radius:5px;">${message.folder}</p></h1>
+          <a href='${MessageWebViewActions.ACTION + (isStared ? MessageWebViewActions.SET_NOT_STARED : MessageWebViewActions.SET_STARED)}' style='text-decoration: none;align-self: flex-end; font-size: 24px; color: orange'>${isStared ? "&#9733;" : "&#9734;"}</a>
+        </div>
+        <div style="clear: both;height: 1px; background-color: black; opacity: 0.05; margin: 24px 0 0"></div>
       </div>
       <div class='email-content'>$body</div>
       ${attachments.isNotEmpty ? '<div style="height: 1px; background-color: black; opacity: 0.05; margin: 24px 0 0"></div>' : ""}

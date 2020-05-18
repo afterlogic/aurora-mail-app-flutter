@@ -9,6 +9,7 @@ import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/contacts_bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
+import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/message_view_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:aurora_mail/modules/settings/blocs/pgp_settings/pgp_settings_bloc.dart';
@@ -32,6 +33,9 @@ import 'package:webview_flutter/webview_flutter.dart';
 import 'attachments_dialog.dart';
 
 class MessageWebViewActions {
+  static const ACTION = "action:";
+  static const SET_STARED = "MessageWebViewActions.STARED";
+  static const SET_NOT_STARED = "MessageWebViewActions.NOT_STARED";
   static const SHOW_ATTACHMENTS = "MessageWebViewActions.SHOW_ATTACHMENTS";
   static const SHOW_INFO = "MessageWebViewActions.SHOW_INFO";
   static const DOWNLOAD_ATTACHMENT =
@@ -65,12 +69,15 @@ class _MessageWebViewState extends BState<MessageWebView> {
   String _htmlData;
   bool _pageLoaded = false;
   bool _showImages = false;
+  bool _isStared;
   ThemeData theme;
+  MailBloc _mailBloc;
 
   @override
   void initState() {
     super.initState();
     onLoad();
+    _isStared = widget.message.flagsInJson.contains("\\flagged");
   }
 
   @override
@@ -78,13 +85,15 @@ class _MessageWebViewState extends BState<MessageWebView> {
     super.didChangeDependencies();
     _showImages = !widget.message.hasExternals || widget.message.safety;
     theme = Theme.of(context);
+    _mailBloc = BlocProvider.of(context);
     _getHtmlWithImages();
   }
 
   @override
   void didUpdateWidget(MessageWebView oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.decrypted != widget.decrypted) {
+    if (oldWidget.decrypted != widget.decrypted ||
+        oldWidget.message != widget.message) {
       _getHtmlWithImages();
       setState(() {});
     }
@@ -181,6 +190,7 @@ class _MessageWebViewState extends BState<MessageWebView> {
       body: html,
       attachments: widget.attachments.toList(),
       showLightEmail: false,
+      isStared: _isStared,
     );
     return Uri.dataFromString(wrappedHtml,
             mimeType: 'text/html', encoding: Encoding.getByName('utf-8'))
@@ -231,9 +241,24 @@ class _MessageWebViewState extends BState<MessageWebView> {
     }
   }
 
+  setStared(bool isStared) {
+    _isStared = isStared;
+    _mailBloc.add(SetStarred([widget.message], isStared));
+    _getHtmlWithImages();
+  }
+
   FutureOr<NavigationDecision> _onWebViewNavigateRequestIos(
       NavigationRequest request) async {
-    if (request.url.endsWith(MessageWebViewActions.SHOW_INFO)) {
+    if (request.url.startsWith(MessageWebViewActions.ACTION)) {
+      final action = request.url.substring(MessageWebViewActions.ACTION.length);
+      if (action == MessageWebViewActions.SET_STARED) {
+        setStared(true);
+      } else if (action == MessageWebViewActions.SET_NOT_STARED) {
+        setStared(false);
+      }
+      print(action);
+      return NavigationDecision.prevent;
+    } else if (request.url.endsWith(MessageWebViewActions.SHOW_INFO)) {
       // TODO: implement showing message info
       return NavigationDecision.prevent;
     } else if (request.url.endsWith(MessageWebViewActions.SHOW_ATTACHMENTS)) {

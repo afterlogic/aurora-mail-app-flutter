@@ -53,6 +53,12 @@ class _StarState extends BState<Star> with TickerProviderStateMixin {
   }
 
   @override
+  void didUpdateWidget(Star oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _isStarred = widget.value;
+  }
+
+  @override
   Widget build(BuildContext context) {
     if (_isStarred) {
       return Transform.scale(

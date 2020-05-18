@@ -134,6 +134,7 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
         Navigator.pushNamed(context, ComposeRoute.name, arguments: args);
         break;
       case MailViewAppBarAction.resend:
+        Navigator.pop(context);
         final args = new ComposeScreenArgs(
           mailBloc: mailBloc,
           contactsBloc: contactsBloc,
@@ -142,8 +143,10 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
         Navigator.pushNamed(context, ComposeRoute.name, arguments: args);
         break;
       case MailViewAppBarAction.toSpam:
+        Navigator.pop(context);
         return _spam(true);
       case MailViewAppBarAction.notSpam:
+        Navigator.pop(context);
         return _spam(false);
       case MailViewAppBarAction.showLightEmail:
         return null;

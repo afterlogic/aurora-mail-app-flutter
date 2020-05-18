@@ -45,12 +45,6 @@ class MailViewAppBar extends StatelessWidget implements PreferredSizeWidget {
               actions: folderType == null
                   ? []
                   : [
-                      IconButton(
-                        icon: Icon(MdiIcons.fileMove),
-                        tooltip: i18n(context, "label_message_move_to_folder"),
-                        onPressed: () =>
-                            onAppBarActionSelected(MailViewAppBarAction.move),
-                      ),
                       if (![FolderType.sent, FolderType.drafts]
                           .contains(folderType))
                         IconButton(
@@ -59,72 +53,76 @@ class MailViewAppBar extends StatelessWidget implements PreferredSizeWidget {
                           onPressed: () => onAppBarActionSelected(
                               MailViewAppBarAction.reply),
                         ),
-                      if (![FolderType.sent, FolderType.drafts]
-                          .contains(folderType))
-                        IconButton(
-                          icon: Icon(Icons.reply_all),
-                          tooltip: i18n(context, "messages_reply_all"),
-                          onPressed: () => onAppBarActionSelected(
-                              MailViewAppBarAction.replyToAll),
-                        ),
-                      if (folderType != FolderType.drafts)
-                        IconButton(
-                          icon: Icon(MdiIcons.share),
-                          tooltip: i18n(context, "messages_forward"),
-                          onPressed: () => onAppBarActionSelected(
-                              MailViewAppBarAction.forward),
-                        ),
-//        IconButton(
-//          icon: Icon(MdiIcons.themeLightDark),
-//          tooltip: i18n(context, "btn_show_email_in_light_theme"),
-//          onPressed: () => onAppBarActionSelected(MailViewAppBarAction.showLightEmail),
-//        ),
                       IconButton(
                         icon: Icon(Icons.delete_outline),
                         tooltip: i18n(context, "btn_delete"),
                         onPressed: () =>
                             onAppBarActionSelected(MailViewAppBarAction.delete),
                       ),
-
-                      if (![FolderType.sent, FolderType.drafts, FolderType.spam]
-                          .contains(folderType))
-                        IconButton(
-                          icon: SvgIcon(
-                            AppAssets.spam,
-                          ),
-                          tooltip: i18n(context, "btn_to_spam"),
-                          onPressed: () {
-                            Navigator.pop(context);
-                            onAppBarActionSelected(MailViewAppBarAction.toSpam);
-                          },
-                        ),
-                      if (folderType == FolderType.spam)
-                        IconButton(
-                          icon: SvgIcon(
-                            AppAssets.not_spam,
-                          ),
-                          tooltip: i18n(context, "btn_not_spam"),
-                          onPressed: () {
-                            Navigator.pop(context);
-                            onAppBarActionSelected(
-                                MailViewAppBarAction.notSpam);
-                          },
-                        ),
-                      if (folderType == FolderType.sent)
-                        IconButton(
-                          icon: SvgIcon(
-                            AppAssets.resend,
-                          ),
-                          tooltip: i18n(context, "btn_message_resend"),
-                          onPressed: () {
-                            Navigator.pop(context);
-                            onAppBarActionSelected(MailViewAppBarAction.resend);
-                          },
-                        ),
-
                       PopupMenuButton<MailViewAppBarAction>(
                         onSelected: onAppBarActionSelected,
                         itemBuilder: (BuildContext context) => [
+                          if (![FolderType.sent, FolderType.drafts]
+                              .contains(folderType))
+                            PopupMenuItem(
+                              value: MailViewAppBarAction.replyToAll,
+                              child: ListTile(
+                                leading: Icon(Icons.reply_all),
+                                title:
+                                    Text(i18n(context, "messages_reply_all")),
+                              ),
+                            ),
+                          if (folderType != FolderType.drafts)
+                            PopupMenuItem(
+                              value: MailViewAppBarAction.forward,
+                              child: ListTile(
+                                leading: Icon(MdiIcons.share),
+                                title: Text(i18n(context, "messages_forward")),
+                              ),
+                            ),
+                          if (![
+                            FolderType.sent,
+                            FolderType.drafts,
+                            FolderType.spam
+                          ].contains(folderType))
+                            PopupMenuItem(
+                              value: MailViewAppBarAction.toSpam,
+                              child: ListTile(
+                                leading: SvgIcon(
+                                  AppAssets.spam,
+                                ),
+                                title: Text(i18n(context, "btn_to_spam")),
+                              ),
+                            ),
+                          if (folderType == FolderType.spam)
+                            PopupMenuItem(
+                              value: MailViewAppBarAction.notSpam,
+                              child: ListTile(
+                                leading: SvgIcon(
+                                  AppAssets.not_spam,
+                                ),
+                                title: Text(i18n(context, "btn_not_spam")),
+                              ),
+                            ),
+                          if (folderType == FolderType.sent)
+                            PopupMenuItem(
+                              value: MailViewAppBarAction.resend,
+                              child: ListTile(
+                                leading: SvgIcon(
+                                  AppAssets.resend,
+                                ),
+                                title:
+                                    Text(i18n(context, "btn_message_resend")),
+                              ),
+                            ),
+                          PopupMenuItem(
+                            value: MailViewAppBarAction.move,
+                            child: ListTile(
+                              leading: Icon(MdiIcons.fileMove),
+                              title: Text(i18n(
+                                  context, "label_message_move_to_folder")),
+                            ),
+                          ),
                           PopupMenuItem(
                             value: MailViewAppBarAction.showHeaders,
                             child: ListTile(
@@ -137,8 +135,8 @@ class MailViewAppBar extends StatelessWidget implements PreferredSizeWidget {
                             value: MailViewAppBarAction.forwardAsAttachment,
                             child: ListTile(
                               leading: Icon(Icons.forward),
-                              title:
-                              Text(i18n(context, "label_forward_as_attachment")),
+                              title: Text(
+                                  i18n(context, "label_forward_as_attachment")),
                             ),
                           ),
                         ],
