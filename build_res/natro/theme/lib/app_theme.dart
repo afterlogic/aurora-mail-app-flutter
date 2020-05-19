@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
+import 'package:flutter/material.dart';
+import 'package:aurora_mail/utils/base_state.dart';
 
 import 'app_color.dart';
 
@@ -12,6 +13,8 @@ class AppTheme {
     buttonColor: AppColor.accent,
     buttonTheme: _buttonTheme,
     dialogTheme: _dialogTheme,
+    selectedRowColor: Color(0xFFe2e7ec),
+    backgroundColor: Color(0xFFe6ebf0),
     splashFactory: InkRipple.splashFactory,
     brightness: Brightness.light,
     disabledColor: Colors.black.withOpacity(0.4),
@@ -55,6 +58,8 @@ class AppTheme {
     dialogTheme: _dialogTheme,
     splashFactory: InkRipple.splashFactory,
     brightness: Brightness.dark,
+    selectedRowColor: Colors.black,
+    backgroundColor: Color(0xFFe6ebf0),
     disabledColor: Colors.white.withOpacity(0.4),
     scaffoldBackgroundColor: Color(0xFF1A1A1A),
     textTheme: TextTheme(

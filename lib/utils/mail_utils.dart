@@ -293,6 +293,9 @@ class MailUtils {
        
         background: ${_getWebColor(theme.scaffoldBackgroundColor)};
       }
+      .primary-color {
+        color:#224ea1;
+      }
       .attachments, .email-head, .email-content {
         padding: 18px;
       }
@@ -316,6 +319,7 @@ class MailUtils {
       .row {
         display: flex;
         flex-direction: row;
+        padding: 5px 0px;
       }
       .disabled-text {
         opacity: 0.3;
@@ -364,10 +368,11 @@ class MailUtils {
       }
       .toggle-content {
       	display: none;
+
       }
       .toggle-content.is-visible {
         padding: 16px;
-        background: #E6EBF0;
+        background: ${theme.backgroundColor.toHex()};
       	display: block;
       }
       .details-description {
@@ -402,11 +407,11 @@ class MailUtils {
   <body>
     <div class='container'>
       <div class='email-head'>
-        <div class="flex row" style="width: calc(100vw - 12px * 2)">
+        <div class="flex" style="width: calc(100vw - 12px * 2)">
           <div class="flex" style="flex: 1">
             <div style="font-size: 18px">${message.fromToDisplay}</div>
             <div class="disabled-text">$to</div>
-            <a style='margin-top: 7px;' class="toggle" href="#info" id="info-btn">${i18n(context, "btn_show_details")}</a>
+            <a style='margin-top: 7px;' class="toggle primary-color" href="#info" id="info-btn">${i18n(context, "btn_show_details")}</a>
           </div>
           <div class="flex" style="flex: 0">
             <!-- <a href='https://dummy-crutch.com/#${MessageWebViewActions.SHOW_INFO}' class='icon-btn' style="padding: 0 12px 12px;">${_getInfoIcon(accentColor)}</a> -->
@@ -420,9 +425,12 @@ class MailUtils {
         <div class='row'><a style='width: 20%; opacity: 0.3;'>Date</a><a>$date</a></div>
           </div>
         <div class='email-head' style='padding-top: 0px;'>
-        <div style="display: flex; flex-direction: row;justify-content: space-between;">
-          <h1 style="font-size: 24px; font-weight: 500; margin-top: 24px;float: left;">${subject}<p style="font-size: 16px;background: #e2e7ec;padding:1px 10px;float: right; margin: 4px 0px 0px 20px; border-radius:5px;">${message.folder}</p></h1>
-          <a href='${MessageWebViewActions.ACTION + (isStared ? MessageWebViewActions.SET_NOT_STARED : MessageWebViewActions.SET_STARED)}' style='height: 24px;text-decoration: none;align-self: flex-end; font-size: 24px; color: orange'>${isStared ? "&#9733;" : "&#9734;"}</a>
+        <div style="display: flex; flex-direction: row;justify-content: space-between; padding-top: 24px;">
+          <h1 style="font-size: 24px; font-weight: 500; margin-top: 0px;">
+            <span style="margin-right: 10px;">${subject}</span>
+            <span style="display: inline-block; font-size: 14px; background: ${theme.selectedRowColor.toHex()};padding: 3px 8px; border-radius: 3px; margin-top: -2px; vertical-align: middle;">${message.folder}</span>
+          </h1>
+          <a href='${MessageWebViewActions.ACTION + (isStared ? MessageWebViewActions.SET_NOT_STARED : MessageWebViewActions.SET_STARED)}' style='text-decoration: none; font-size: 24px; line-height: 1.2; color: orange'>${isStared ? "&#9733;" : "&#9734;"}</a>
         </div>
         <div style="clear: both;height: 1px; background-color: black; opacity: 0.05; margin: 24px 0 0"></div>
       </div>
@@ -518,4 +526,20 @@ class MailUtils {
       """<svg style="width:24px;height:24px" viewBox="0 0 24 24">
     <path fill="$color" d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z" />
 </svg>""";
+}
+
+extension HexColor on Color {
+
+  static Color fromHex(String hexString) {
+    final buffer = StringBuffer();
+    if (hexString.length == 6 || hexString.length == 7) buffer.write('ff');
+    buffer.write(hexString.replaceFirst('#', ''));
+    return Color(int.parse(buffer.toString(), radix: 16));
+  }
+
+  /// Prefixes a hash sign if [leadingHashSign] is set to `true` (default is `true`).
+  String toHex({bool leadingHashSign = true}) => '${leadingHashSign ? '#' : ''}'
+      '${red.toRadixString(16)}'
+      '${green.toRadixString(16)}'
+      '${blue.toRadixString(16)}';
 }
