@@ -17,6 +17,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'components/contact_birth_date_picker.dart';
 import 'components/contact_dropdown.dart';
 import 'components/contact_input.dart';
+import 'components/contact_primary_input.dart';
 import 'components/contact_title.dart';
 import 'components/key_input.dart';
 import 'dialog/confirm_edit_dialog.dart';
@@ -468,15 +469,18 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid> {
           keyboardType: TextInputType.emailAddress);
     } else {
       final options = [
-        "${i18n(context, "contacts_view_personal_email")}: ${_personalEmail.text}",
-        "${i18n(context, "contacts_view_business_email")}: ${_businessEmail.text}",
-        "${i18n(context, "contacts_view_other_email")}: ${_otherEmail.text}",
+        "${i18n(context, "contacts_view_personal_email")}",
+        "${i18n(context, "contacts_view_business_email")}",
+        "${i18n(context, "contacts_view_other_email")}",
       ];
-
-      return ContactDropdown(
-        options: options,
-        primaryValue: _primaryEmail,
-        onSelected: (int value) => setState(() => _primaryEmail = value),
+      return ContactPrimaryInput<int>(
+        (int value) => setState(() => _primaryEmail = value),
+        _primaryEmail,
+        label,
+        options,
+        (value) => options.indexOf(value),
+        _getPrimaryEmailCtrl(),
+        keyboardType: TextInputType.emailAddress,
       );
     }
   }
@@ -489,15 +493,18 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid> {
           keyboardType: TextInputType.phone);
     } else {
       final options = [
-        "${i18n(context, "contacts_view_mobile")}: ${_personalMobile.text}",
-        "${i18n(context, "contacts_view_personal_phone")}: ${_personalPhone.text}",
-        "${i18n(context, "contacts_view_business_phone")}: ${_businessPhone.text}",
+        "${i18n(context, "contacts_view_mobile")}",
+        "${i18n(context, "contacts_view_personal_phone")}",
+        "${i18n(context, "contacts_view_business_phone")}",
       ];
-
-      return ContactDropdown(
-        options: options,
-        primaryValue: _primaryPhone,
-        onSelected: (int value) => setState(() => _primaryPhone = value),
+      return ContactPrimaryInput<int>(
+        (int value) => setState(() => _primaryPhone = value),
+        _primaryPhone,
+        label,
+        options,
+        (value) => options.indexOf(value),
+        _getPrimaryPhoneCtrl(),
+        keyboardType: TextInputType.phone,
       );
     }
   }
@@ -509,14 +516,16 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid> {
       return ContactInput(label, _getPrimaryAddressCtrl());
     } else {
       final options = [
-        "${i18n(context, "contacts_view_personal_address")}: ${_personalAddress.text}",
-        "${i18n(context, "contacts_view_business_address")}: ${_businessAddress.text}",
+        "${i18n(context, "contacts_view_personal_address")}",
+        "${i18n(context, "contacts_view_business_address")}",
       ];
-
-      return ContactDropdown(
-        options: options,
-        primaryValue: _primaryAddress,
-        onSelected: (int value) => setState(() => _primaryAddress = value),
+      return ContactPrimaryInput<int>(
+        (int value) => setState(() => _primaryAddress = value),
+        _primaryAddress,
+        label,
+        options,
+        (value) => options.indexOf(value),
+        _getPrimaryAddressCtrl(),
       );
     }
   }

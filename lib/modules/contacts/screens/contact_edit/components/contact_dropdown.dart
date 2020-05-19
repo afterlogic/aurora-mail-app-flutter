@@ -14,18 +14,16 @@ class ContactDropdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
-      child: DropdownButton<int>(
-        items: options
-            .map((o) => DropdownMenuItem(
-                  value: options.indexOf(o),
-                  child: Text(o),
-                ))
-            .toList(),
-        value: primaryValue,
-        onChanged: onSelected,
-      ),
+    return DropdownButton<int>(
+      items: options
+          .map((o) => DropdownMenuItem(
+                value: options.indexOf(o),
+                child: Text(o),
+              ))
+          .toList(),
+      underline: SizedBox.shrink(),
+      value: primaryValue,
+      onChanged: onSelected,
     );
   }
 }
