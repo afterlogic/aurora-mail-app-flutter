@@ -363,5 +363,6 @@
   "error_user_already_logged": "This user is already logged in",
   "btn_unread": "Unread",
   "btn_read": "Read",
-  "btn_show_details": "Show details"
+  "btn_show_details": "Show details",
+  "btn_hide_details": "Hide details"
 }

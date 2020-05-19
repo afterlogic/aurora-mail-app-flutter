@@ -190,7 +190,7 @@ class _MessageWebViewState extends BState<MessageWebView> {
       body: html,
       attachments: widget.attachments.toList(),
       showLightEmail: false,
-      isStared: _isStared,
+      isStared:_isStared,
     );
     return Uri.dataFromString(wrappedHtml,
             mimeType: 'text/html', encoding: Encoding.getByName('utf-8'))

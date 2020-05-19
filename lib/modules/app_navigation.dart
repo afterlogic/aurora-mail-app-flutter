@@ -46,7 +46,6 @@ import 'mail/blocs/mail_bloc/mail_bloc.dart';
 import 'mail/screens/message_view/message_headers.dart';
 import 'mail/screens/messages_list/messages_list_android.dart';
 import 'mail/screens/messages_list/messages_list_route.dart';
-import 'mail/screens/messages_list/screen/move_message.dart';
 import 'settings/screens/about/about_route.dart';
 
 class AppNavigation {

@@ -267,7 +267,7 @@ class MailUtils {
     String formatContact(String json) {
       if (json == null) return null;
       return (jsonDecode(json)["@Collection"] as List)
-          .map((item) => item["DisplayName"]?.isNotEmpty ==true
+          .map((item) => item["DisplayName"]?.isNotEmpty == true
               ? (item["DisplayName"] + " (${item["Email"]})")
               : item["Email"])
           .toList()
@@ -370,19 +370,18 @@ class MailUtils {
         background: #E6EBF0;
       	display: block;
       }
+      .details-description {
+        width: 20%; 
+        opacity: 0.3;
+      }
     </style>
-    <script>
-        var show = function (elem) {
-          document.getElementById("info-btn").innerHTML ="Hide details";
-        	elem.classList.add('is-visible');
-        };
-        
-        var hide = function (elem) {
-          document.getElementById("info-btn").innerHTML ="Show details";
-        	elem.classList.remove('is-visible');
-        };
-        
+    <script>      
         var toggle = function (elem) {
+         if(elem.classList.contains("is-visible")){
+              document.getElementById("info-btn").innerHTML ="${i18n(context, "btn_show_details")}";
+         }else{
+           document.getElementById("info-btn").innerHTML ="${i18n(context, "btn_hide_details")}";
+         } 
         	elem.classList.toggle('is-visible');
         };
         
@@ -415,9 +414,9 @@ class MailUtils {
         </div>
         </div>
           <div class="toggle-content flex" id="info">
-              <div class='row'><a style='width: 20%; opacity: 0.3;'>From</a><a>$from</a></div>
-              <div class='row'><a style='width: 20%; opacity: 0.3;'>To</a><a>$to</a></div>        
-              ${cc != null ? "<div class='row'><a style='width: 20%; opacity: 0.3;'>Cc</a><a>$cc</a></div>" : ""}
+              <div class='row'><a class='details-description'>From</a><a>$from</a></div>
+              <div class='row'><a class='details-description'>To</a><a>$to</a></div>        
+              ${cc != null ? "<div class='row'><a class='details-description'>Cc</a><a>$cc</a></div>" : ""}
         <div class='row'><a style='width: 20%; opacity: 0.3;'>Date</a><a>$date</a></div>
           </div>
         <div class='email-head' style='padding-top: 0px;'>
