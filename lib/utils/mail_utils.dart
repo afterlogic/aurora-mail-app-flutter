@@ -262,7 +262,12 @@ class MailUtils {
     final subject = message.subject.isNotEmpty
         ? message.subject
         : i18n(context, "messages_no_subject");
-
+    final shortDate = DateFormatting.getShortMessageDate(
+      timestamp: message.timeStampInUTC,
+      locale: Localizations.localeOf(context).languageCode,
+      yesterdayWord: i18n(context, "label_message_yesterday"),
+      is24: true,
+    );
     final paddingBottom = MediaQuery.of(context).padding.bottom;
     String formatContact(String json) {
       if (json == null) return null;
@@ -411,6 +416,7 @@ class MailUtils {
           <div class="flex" style="flex: 1">
             <div style="font-size: 18px">${message.fromToDisplay}</div>
             <div class="disabled-text">$to</div>
+             <div class="disabled-text">$shortDate</div>
             <a style='margin-top: 7px;' class="toggle primary-color" href="#info" id="info-btn">${i18n(context, "btn_show_details")}</a>
           </div>
           <div class="flex" style="flex: 0">
@@ -442,6 +448,7 @@ class MailUtils {
     </div>
   </body>
 </html>
+    
     """;
   }
 
@@ -529,7 +536,6 @@ class MailUtils {
 }
 
 extension HexColor on Color {
-
   static Color fromHex(String hexString) {
     final buffer = StringBuffer();
     if (hexString.length == 6 || hexString.length == 7) buffer.write('ff');
