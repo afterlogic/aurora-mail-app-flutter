@@ -1,5 +1,6 @@
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/utils/always_non_equal_object.dart';
+import 'package:aurora_mail/utils/input_validation.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -16,13 +17,21 @@ class LogIn extends AuthEvent {
   final String hostname;
 
   LogIn({
-    @required this.email,
+    @required String email,
     @required this.password,
     @required this.hostname,
-  });
+  }) : email = formatEmail(email);
 
   @override
   List<Object> get props => [email, password, hostname];
+
+  static String formatEmail(String email) {
+    if (isEmailValid(email)) {
+      return email.toLowerCase();
+    } else {
+      return email;
+    }
+  }
 }
 
 class UserLogIn extends AuthEvent {

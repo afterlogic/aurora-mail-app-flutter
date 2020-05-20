@@ -21,7 +21,7 @@ String validateInput(
   if (types.contains(ValidationType.empty) && value.isEmpty) {
     return i18n(context, "error_input_validation_empty");
   }
-  if (types.contains(ValidationType.email) && !_isEmailValid(value)) {
+  if (types.contains(ValidationType.email) && !isEmailValid(value)) {
     return i18n(context, "error_input_validation_email");
   }
   if (types.contains(ValidationType.fileName) && !_isFileNameValid(value)) {
@@ -48,7 +48,7 @@ bool _isFileNameValid(String fileName) {
   return !regExp.hasMatch(fileName);
 }
 
-bool _isEmailValid(String email) {
+bool isEmailValid(String email) {
   final regExp = new RegExp(
       r'^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
 

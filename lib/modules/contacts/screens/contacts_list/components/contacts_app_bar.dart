@@ -52,8 +52,8 @@ class _ContactsAppBarState extends State<ContactsAppBar> {
 
     Widget _buildTitle(BuildContext context, ContactsState state) {
       if (state.selectedStorage != null && state.storages.isNotEmpty) {
-        final selectedStorage = state.storages
-            .firstWhere((s) => s.id == state.selectedStorage);
+        final selectedStorage =
+            state.storages.firstWhere((s) => s.id == state.selectedStorage);
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -118,15 +118,15 @@ class _ContactsAppBarState extends State<ContactsAppBar> {
                     arguments: GroupViewScreenArgs(group, bloc));
               },
             ),
+          IconButton(
+            icon: Icon(Icons.search),
+            onPressed: changeMode,
+          ),
           if (BuildProperty.multiUserEnable)
             BlocBuilder<SettingsBloc, SettingsState>(
               builder: (_, state) =>
                   UserSelectionPopup((state as SettingsLoaded).users),
             ),
-          IconButton(
-            icon: Icon(Icons.search),
-            onPressed: changeMode,
-          ),
         ],
       ),
     );
