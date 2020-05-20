@@ -298,9 +298,6 @@ class MailUtils {
        
         background: ${_getWebColor(theme.scaffoldBackgroundColor)};
       }
-      .primary-color {
-        color:#224ea1;
-      }
       .attachments, .email-head, .email-content {
         padding: 18px;
       }
@@ -322,9 +319,7 @@ class MailUtils {
         height: 100%;
       }
       .row {
-        display: flex;
         flex-direction: row;
-        padding: 5px 0px;
       }
       .disabled-text {
         opacity: 0.3;
@@ -363,82 +358,23 @@ class MailUtils {
         object-fit: cover;
         border-radius: 10px;
       }
-      .folder_label {
-       display: flex;
-       border-radius: 15px;
-       background: #609;
-      }
-      .toggle {
-        text-decoration: none;
-      }
-      .toggle-content {
-      	display: none;
-
-      }
-      .toggle-content.is-visible {
-        padding: 16px;
-        background: ${theme.backgroundColor.toHex()};
-      	display: block;
-      }
-      .details-description {
-        width: 20%; 
-        opacity: 0.3;
-      }
     </style>
-    <script>      
-        var toggle = function (elem) {
-         if(elem.classList.contains("is-visible")){
-              document.getElementById("info-btn").innerHTML ="${i18n(context, "btn_show_details")}";
-         }else{
-           document.getElementById("info-btn").innerHTML ="${i18n(context, "btn_hide_details")}";
-         } 
-        	elem.classList.toggle('is-visible');
-        };
-        
-        document.addEventListener('click', function (event) {
-        
-        	if (!event.target.classList.contains('toggle')) return;
-        
-        	event.preventDefault();
-        
-        	var content = document.querySelector(event.target.hash);
-        	if (!content) return;
-        
-        	toggle(content);
-        
-        }, false);
-    </script>
   </head>
   <body>
     <div class='container'>
       <div class='email-head'>
-        <div class="flex" style="width: calc(100vw - 12px * 2)">
+        <div class="flex row" style="width: calc(100vw - 12px * 2)">
           <div class="flex" style="flex: 1">
             <div style="font-size: 18px">${message.fromToDisplay}</div>
             <div class="disabled-text">$to</div>
-             <div class="disabled-text">$shortDate</div>
-            <a style='margin-top: 7px;' class="toggle primary-color" href="#info" id="info-btn">${i18n(context, "btn_show_details")}</a>
+            <div class="disabled-text">$date</div>
           </div>
           <div class="flex" style="flex: 0">
             <!-- <a href='https://dummy-crutch.com/#${MessageWebViewActions.SHOW_INFO}' class='icon-btn' style="padding: 0 12px 12px;">${_getInfoIcon(accentColor)}</a> -->
           </div>
         </div>
-        </div>
-          <div class="toggle-content flex" id="info">
-              <div class='row'><a class='details-description'>From</a><a>$from</a></div>
-              <div class='row'><a class='details-description'>To</a><a>$to</a></div>        
-              ${cc != null ? "<div class='row'><a class='details-description'>Cc</a><a>$cc</a></div>" : ""}
-        <div class='row'><a style='width: 20%; opacity: 0.3;'>Date</a><a>$date</a></div>
-          </div>
-        <div class='email-head' style='padding-top: 0px;'>
-        <div style="display: flex; flex-direction: row;justify-content: space-between; padding-top: 24px;">
-          <h1 style="font-size: 24px; font-weight: 500; margin-top: 0px;">
-            <span style="margin-right: 10px;">${subject}</span>
-            <span style="display: inline-block; font-size: 14px; background: ${theme.selectedRowColor.toHex()};padding: 3px 8px; border-radius: 3px; margin-top: -2px; vertical-align: middle;">${message.folder}</span>
-          </h1>
-          <a href='${MessageWebViewActions.ACTION + (isStared ? MessageWebViewActions.SET_NOT_STARED : MessageWebViewActions.SET_STARED)}' style='text-decoration: none; font-size: 24px; line-height: 1.2; color: orange'>${isStared ? "&#9733;" : "&#9734;"}</a>
-        </div>
-        <div style="clear: both;height: 1px; background-color: black; opacity: 0.05; margin: 24px 0 0"></div>
+        <h1 style="font-size: 24px; font-weight: 500; margin-top: 24px">$subject</h1>
+        <div style="height: 1px; background-color: black; opacity: 0.05; margin: 24px 0 0"></div>
       </div>
       <div class='email-content'>$body</div>
       ${attachments.isNotEmpty ? '<div style="height: 1px; background-color: black; opacity: 0.05; margin: 24px 0 0"></div>' : ""}
@@ -448,7 +384,6 @@ class MailUtils {
     </div>
   </body>
 </html>
-    
     """;
   }
 
