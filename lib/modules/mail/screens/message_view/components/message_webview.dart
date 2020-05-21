@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/mail/mail_table.dart';
@@ -49,6 +50,7 @@ class MessageWebView extends StatefulWidget {
   final PgpSettingsBloc bloc;
   final ContactsBloc contactsBloc;
   final MessageViewBloc messageViewBloc;
+  final Function(MailAttachment) onDownload;
 
   const MessageWebView(
     this.message,
@@ -56,7 +58,8 @@ class MessageWebView extends StatefulWidget {
     this.decrypted,
     this.bloc,
     this.contactsBloc,
-    this.messageViewBloc, {
+    this.messageViewBloc,
+    this.onDownload, {
     Key key,
   }) : super(key: key);
 
@@ -190,7 +193,7 @@ class _MessageWebViewState extends BState<MessageWebView> {
       body: html,
       attachments: widget.attachments.toList(),
       showLightEmail: false,
-      isStared:_isStared,
+      isStared: _isStared,
     );
     return Uri.dataFromString(wrappedHtml,
             mimeType: 'text/html', encoding: Encoding.getByName('utf-8'))
@@ -198,47 +201,9 @@ class _MessageWebViewState extends BState<MessageWebView> {
   }
 
   void _startDownload(String downloadUrl) async {
-    final attachment = widget.attachments
-        .firstWhere((a) => !a.isInline && a.downloadUrl == downloadUrl);
-    if (attachment.fileName.endsWith(".asc")) {
-      final keys = await widget.bloc.sortKey(attachment.location);
-      await showDialog(
-        context: context,
-        builder: (_) =>
-            ImportKeyDialog(keys.contactKeys, keys.contactKeys, widget.bloc),
-      );
-    } else if (attachment.fileName.endsWith(".vcf")) {
-      final msg = i18n(context, "messages_attachment_downloading",
-          {"fileName": attachment.fileName});
-      Fluttertoast.showToast(
-        msg: msg,
-        timeInSecForIos: 2,
-        backgroundColor:
-            Platform.isIOS ? theme.disabledColor.withOpacity(0.5) : null,
-      );
-      BlocProvider.of<MessageViewBloc>(context).downloadAttachment(
-        attachment,
-        (path) async {
-          try {
-            String content =
-                Platform.isIOS ? path : await File(path).readAsString();
-            final vcf = Vcf.fromString(content);
-            await importContactFromVcf(context, vcf, widget.contactsBloc);
-          } catch (e) {}
-        },
-      );
-    } else {
-      BlocProvider.of<MessageViewBloc>(context)
-          .add(DownloadAttachment(attachment));
-      final msg = i18n(context, "messages_attachment_downloading",
-          {"fileName": attachment.fileName});
-      Fluttertoast.showToast(
-        msg: msg,
-        timeInSecForIos: 2,
-        backgroundColor:
-            Platform.isIOS ? theme.disabledColor.withOpacity(0.5) : null,
-      );
-    }
+    final attachment =
+        widget.attachments.firstWhere((a) => a.downloadUrl == downloadUrl);
+    widget.onDownload(attachment);
   }
 
   setStared(bool isStared) {
@@ -371,90 +336,6 @@ class _MessageWebViewState extends BState<MessageWebView> {
     );
   }
 
-  Future importContactFromVcf(
-    BuildContext context,
-    Vcf vcf,
-    ContactsBloc bloc,
-  ) async {
-    final contact = Contact(
-      entityId: null,
-      viewEmail: firstOrNull(vcf.email) as String,
-      frequency: 0,
-      davContactsVCardUid: null,
-      eTag: "",
-      pgpPublicKey: null,
-      davContactsUid: null,
-      useFriendlyName: true,
-      idUser: bloc.user.serverId,
-      groupUUIDs: <String>[],
-      userLocalId: bloc.user.localId,
-      idTenant: null,
-      fullName: vcf.formattedName,
-      dateModified: DateTime.now().toIso8601String(),
-      uuidPlusStorage: null,
-      uuid: null,
-      storage: StorageNames.personal,
-    ).copyWith(
-      entityId: null,
-      parentUuid: null,
-      title: "",
-      firstName: vcf.firstName,
-      lastName: vcf.lastName,
-      nickName: vcf.nickname,
-      skype: (vcf.socialUrls == null ? null : vcf.socialUrls["skype"]) ?? "",
-      facebook:
-          (vcf.socialUrls == null ? null : vcf.socialUrls["facebook"]) ?? "",
-      personalEmail: firstOrNull(vcf.email) as String,
-      personalAddress: vcf.homeAddress?.format(),
-      personalCity: vcf.homeAddress?.city,
-      personalState: vcf.homeAddress?.stateProvince,
-      personalZip: vcf.homeAddress?.postalCode,
-      personalCountry: vcf.homeAddress?.countryRegion,
-      personalWeb: vcf.url ?? "",
-      personalFax: (firstOrNull(vcf.homeFax) as String) ?? "",
-      personalPhone: (firstOrNull(vcf.homePhone) as String) ?? "",
-      personalMobile: "",
-      businessEmail: firstOrNull(vcf.workEmail) as String,
-      businessCompany: "",
-      businessAddress: vcf.workAddress?.format(),
-      businessCity: vcf.workAddress?.city,
-      businessState: vcf.workAddress?.stateProvince,
-      businessZip: vcf.workAddress?.postalCode,
-      businessCountry: vcf.workAddress?.countryRegion,
-      businessJobTitle: "",
-      businessDepartment: "",
-      businessOffice: "",
-      businessPhone: (firstOrNull(vcf.workPhone) as String) ?? "",
-      businessFax: (firstOrNull(vcf.workFax) as String) ?? "",
-      businessWeb: "",
-      otherEmail: firstOrNull(vcf.otherEmail) as String,
-      notes: vcf.note,
-      birthDay: (vcf.birthday?.millisecondsSinceEpoch) ?? 0,
-      birthMonth: (vcf.birthday?.month) ?? 0,
-      birthYear: (vcf.birthday?.year) ?? 0,
-      auto: null,
-    );
-    final result = await ConfirmationDialog.show(
-      context,
-      null,
-      i18n(context, "hint_vcf_import", {
-        "name": contact.fullName ?? contact.nickName ?? contact.viewEmail ?? ""
-      }),
-      i18n(context, "btn_vcf_import"),
-    );
-    if (result == true) {
-      bloc.add(CreateContact(contact));
-    }
-  }
-
-  dynamic firstOrNull(dynamic list) {
-    if (list != null && list is List) {
-      if (list.isNotEmpty) {
-        return list.first;
-      }
-    }
-    return null;
-  }
 
   var routeCount = 0;
 }

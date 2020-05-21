@@ -364,5 +364,9 @@
   "btn_unread": "Unread",
   "btn_read": "Read",
   "btn_show_details": "Show details",
-  "btn_hide_details": "Hide details"
+  "btn_hide_details": "Hide details",
+  "btn_vcf_import_contact": "Import contact from vcf file",
+  "btn_asc_import_key": "Import keys from asc file",
+  "btn_open_file": "Open file",
+  "btn_show_file": "Show file",
 }

@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:aurora_mail/utils/always_non_equal_object.dart';
@@ -10,8 +12,9 @@ abstract class MessageViewEvent extends Equatable {
 
 class DownloadAttachment extends MessageViewEvent {
   final MailAttachment attachment;
+  final Function(String path, Uint8List content) onFinish;
 
-  const DownloadAttachment(this.attachment);
+  const DownloadAttachment(this.attachment, this.onFinish);
 
   @override
   List<Object> get props => [attachment];
@@ -64,7 +67,6 @@ class DecryptBody extends MessageViewEvent with AlwaysNonEqualObject {
   @override
   List<Object> get props => [sender, body];
 }
-
 
 class AddInWhiteList extends MessageViewEvent {
   final Message message;

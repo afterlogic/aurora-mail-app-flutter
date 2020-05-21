@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/config.dart';
@@ -19,19 +21,30 @@ import 'package:aurora_mail/modules/mail/screens/message_view/components/message
 import 'package:aurora_mail/modules/mail/screens/message_view/components/message_webview.dart';
 import 'package:aurora_mail/modules/mail/screens/message_view/components/route_with_finish_callback.dart';
 import 'package:aurora_mail/modules/mail/screens/message_view/dialog/request_password_dialog.dart';
+import 'package:aurora_mail/modules/mail/screens/message_view/screen/file_viewer.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/dialog/move_message.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
 import 'package:aurora_mail/modules/settings/blocs/pgp_settings/pgp_settings_bloc.dart';
+import 'package:aurora_mail/modules/settings/screens/pgp_settings/dialogs/import_key_dialog.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
 import 'package:aurora_mail/utils/base_state.dart';
+import 'package:aurora_mail/utils/download_directory.dart';
+import 'package:aurora_mail/utils/import_vcf.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/mail_utils.dart';
+import 'package:aurora_mail/utils/open_file.dart';
+import 'package:aurora_mail/utils/permissions.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:crypto_worker/crypto_worker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:vcf/vcf.dart';
 
+import 'dialog/download_file_dialog.dart';
 import 'message_headers.dart';
 
 class MessageViewAndroid extends StatefulWidget {
@@ -183,6 +196,74 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
     }
   }
 
+  _onDownload(MailAttachment attachment) async {
+    try {
+      await getStoragePermissions();
+    } catch (err) {
+      return;
+    }
+
+    final result = await AMDialog.show(
+      context: context,
+      builder: (_) => DownloadFileDialog(attachment),
+    );
+    if (result == null) return;
+    if (result is DownloadFileDialogResult) {
+      Function(String path, Uint8List content) onFinish;
+      if (result.onFinish != null) {
+        switch (result.onFinish) {
+          case FinishDownloadFileAction.Asc:
+            onFinish = (String path, Uint8List _content) async {
+              String content = _content != null
+                  ? utf8.decode(_content)
+                  : await File(path).readAsString();
+              final keys = await pgpBloc.sortKey(content);
+              await showDialog(
+                context: context,
+                builder: (_) => ImportKeyDialog(
+                  keys.contactKeys,
+                  keys.contactKeys,
+                  pgpBloc,
+                ),
+              );
+            };
+            break;
+          case FinishDownloadFileAction.Vcf:
+            onFinish = (String path, Uint8List _content) async {
+              try {
+                String content = _content != null
+                    ? utf8.decode(_content)
+                    : await File(path).readAsString();
+                final vcf = Vcf.fromString(content);
+                await importContactFromVcf(context, vcf, contactsBloc);
+              } catch (e) {}
+            };
+            break;
+          case FinishDownloadFileAction.Open:
+            onFinish = (String path, Uint8List _content) async {
+              final success = await OpenFile.openFile(File(path));
+            };
+            break;
+          case FinishDownloadFileAction.Show:
+            await FileViewer.openFile(context, attachment);
+            return;
+        }
+      }
+      if (result.exist) {
+        return onFinish(result.path, null);
+      }
+      _messageViewBloc.add(DownloadAttachment(attachment, onFinish));
+      final msg = i18n(context, "messages_attachment_downloading",
+          {"fileName": attachment.fileName});
+      Fluttertoast.showToast(
+        msg: msg,
+        timeInSecForIos: 2,
+        backgroundColor:
+            Platform.isIOS ? theme.disabledColor.withOpacity(0.5) : null,
+      );
+    }
+  }
+
   _decrypt(EncryptType type) async {
     String pass;
     final message = widget.message;
@@ -313,6 +394,7 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
                   pgpBloc,
                   contactsBloc,
                   _messageViewBloc,
+                  _onDownload,
                 ),
               ),
         bottomNavigationBar: BuildProperty.cryptoEnable

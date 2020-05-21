@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/inject/app_inject.dart';
@@ -61,26 +62,8 @@ class MessageViewBloc extends Bloc<MessageViewEvent, MessageViewState> {
       onDownloadStart: () {
 //        add(StartDownload(event.attachment.fileName));
       },
-      onDownloadEnd: (String path) {
-//        add(EndDownload(path));
-      },
-    );
-  }
-
-  downloadAttachment(MailAttachment attachment, Function(String) onEnd) async {
-    try {
-      await getStoragePermissions();
-    } catch (err) {
-      return;
-    }
-
-    _methods.downloadAttachment(
-      attachment,
-      onDownloadStart: () {
-//        add(StartDownload(event.attachment.fileName));
-      },
-      onDownloadEnd: (String path) {
-        onEnd(path);
+      onDownloadEnd: (String path, Uint8List content) {
+        if (event.onFinish != null) event.onFinish(path, content);
 //        add(EndDownload(path));
       },
     );
@@ -99,7 +82,7 @@ class MessageViewBloc extends Bloc<MessageViewEvent, MessageViewState> {
         event.sender,
         event.body,
       );
-      yield DecryptComplete(decrypted.text, decrypted.verified,event.type);
+      yield DecryptComplete(decrypted.text, decrypted.verified, event.type);
     } catch (e) {
       if (e is PgpKeyNotFound) {
         yield MessagesViewError(

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/folders/folders_dao.dart';
@@ -29,15 +30,16 @@ class MessageViewMethods {
 
   void downloadAttachment(
     MailAttachment attachment, {
-    @required Function(String) onDownloadEnd,
+    @required Function(String path, Uint8List content) onDownloadEnd,
     @required Function() onDownloadStart,
   }) {
     if (Platform.isIOS) {
-      _mailApi.shareAttachment(attachment, onDownloadEnd);
+      _mailApi.shareAttachment(
+          attachment, (content) => onDownloadEnd(null, content));
     } else {
       _mailApi.downloadAttachment(
         attachment,
-        onDownloadEnd: onDownloadEnd,
+        onDownloadEnd: (path) => onDownloadEnd(path, null),
         onDownloadStart: onDownloadStart,
       );
     }

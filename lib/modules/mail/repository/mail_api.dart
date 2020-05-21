@@ -287,7 +287,7 @@ class MailApi {
   }
 
   Future<void> shareAttachment(
-      MailAttachment attachment, Function(String) onIosDownloadEnd) async {
+      MailAttachment attachment, Function(Uint8List) onIosDownloadEnd) async {
     final request = await HttpClient()
         .getUrl(Uri.parse(_mailModule.hostname + attachment.downloadUrl));
 
@@ -299,7 +299,7 @@ class MailApi {
     final response = await request.close();
     Uint8List bytes = await consolidateHttpClientResponseBytes(response);
     if (onIosDownloadEnd != null) {
-      onIosDownloadEnd(utf8.decode(bytes));
+      onIosDownloadEnd(bytes);
     } else {
       await Share.file(
           attachment.fileName, attachment.fileName, bytes, 'image/jpg');
@@ -390,11 +390,8 @@ class MailApi {
     }
   }
 
-  Future<void> setMessagesSeen({
-    @required Folder folder,
-    @required List<int> uids,
-    bool isSeen
-  }) async {
+  Future<void> setMessagesSeen(
+      {@required Folder folder, @required List<int> uids, bool isSeen}) async {
     final parameters = json.encode({
       "Folder": folder.fullNameRaw,
       "AccountID": _accountId,

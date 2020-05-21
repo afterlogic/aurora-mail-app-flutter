@@ -25,7 +25,7 @@ class _AttachmentState extends BState<Attachment> {
   Widget build(BuildContext context) {
     void _startDownload() {
       BlocProvider.of<MessageViewBloc>(context)
-          .add(DownloadAttachment(widget.attachment));
+          .add(DownloadAttachment(widget.attachment, null));
       final msg = i18n(context, "messages_attachment_downloading",
           {"fileName": widget.attachment.fileName});
       Fluttertoast.showToast(

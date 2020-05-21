@@ -1,21 +1,37 @@
 package com.afterlogic.aurora.mail.aurora_mail
 
 import android.Manifest
+import android.content.ActivityNotFoundException
+import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
+import android.os.StrictMode
+import android.webkit.MimeTypeMap
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.FileProvider
+import androidx.core.content.FileProvider.getUriForFile
 import io.flutter.app.FlutterActivity
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugins.GeneratedPluginRegistrant
+import java.io.File
+
 
 class MainActivity : FlutterActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         GeneratedPluginRegistrant.registerWith(this)
+        val builder: StrictMode.VmPolicy.Builder = StrictMode.VmPolicy.Builder()
+        StrictMode.setVmPolicy(builder.build())
+        builder.detectFileUriExposure()
         MethodChannel(flutterView, "DIRECTORY_DOWNLOADS").setMethodCallHandler { call, result ->
             result.success(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).path)
+        }
+        MethodChannel(flutterView, "open_file").setMethodCallHandler { call, result ->
+            result.success(openFile(call.arguments as String))
         }
         //todo fix permission_handler on android 10
         MethodChannel(flutterView, "REQUEST_STORAGE_PERMISSION").setMethodCallHandler { call, result ->
@@ -42,6 +58,40 @@ class MainActivity : FlutterActivity() {
         }
     }
 
+    private fun openFile(filename: String): Boolean {
+        val context: Context = this
+        try {
+            val file = File(filename)
+            val uri = getUriForFile(context, applicationContext.packageName + ".file-provider", file)
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+            intent.setDataAndType(uri, getMimeType(filename))
+            context.startActivity(intent)
+            return true
+        } catch (e: Throwable) {
+            e
+        }
+        val file = File(filename);
+        val uri = Uri.fromFile(file)
+        val intent = Intent(Intent.ACTION_VIEW)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        intent.setDataAndType(uri, getMimeType(filename))
+        return try {
+            context.startActivity(intent)
+            true
+        } catch (e: ActivityNotFoundException) {
+            false
+        }
+    }
+
+    private fun getMimeType(filename: String): String? {
+        val extension = MimeTypeMap.getFileExtensionFromUrl(filename)
+        if (extension != null) {
+            return MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension)
+        }
+        return null
+    }
+
     companion object {
         var awaitResult: MethodChannel.Result? = null
         val permissions = arrayOf(
@@ -51,3 +101,4 @@ class MainActivity : FlutterActivity() {
         const val PERMISSION_GRANTED = 1
     }
 }
+class  MyFileProvider : FileProvider()
