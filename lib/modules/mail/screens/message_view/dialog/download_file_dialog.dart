@@ -9,8 +9,9 @@ import 'package:path_provider/path_provider.dart';
 
 class DownloadFileDialog extends StatefulWidget {
   final MailAttachment attachment;
+  final bool allowVideo;
 
-  const DownloadFileDialog(this.attachment);
+  const DownloadFileDialog(this.attachment, this.allowVideo);
 
   @override
   State<StatefulWidget> createState() => _DownloadFileDialogState();
@@ -38,7 +39,8 @@ class _DownloadFileDialogState extends State<DownloadFileDialog> {
             .path +
         (Platform.pathSeparator + widget.attachment.fileName);
     exist = await File(filePath).exists();
-    viewSupported = FileViewer.isSupported(widget.attachment);
+    viewSupported =
+        FileViewer.isSupported(widget.attachment, widget.allowVideo, exist);
     if (mounted) setState(() {});
   }
 

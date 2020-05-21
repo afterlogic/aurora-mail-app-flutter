@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
@@ -22,7 +23,7 @@ abstract class FileViewer extends StatefulWidget {
   FileViewerState createState();
 
   static Future openFile(
-      BuildContext context, MailAttachment attachment) async {
+      BuildContext context, MailAttachment attachment, String path) async {
     final authBloc = BlocProvider.of<AuthBloc>(context);
     final url = authBloc.currentUser.hostname + "/" + attachment.downloadUrl;
     final header = {'Authorization': 'Bearer ${authBloc.currentUser.token}'};
@@ -31,24 +32,33 @@ abstract class FileViewer extends StatefulWidget {
     final type = attachment.mimeType.split("/").first;
     final format = attachment.mimeType.split("/").last.toLowerCase();
     if (type == "video") {
-      viewer = VideoViewer(
-        url,
-        attachment,
-      );
+      viewer = path != null
+          ? VideoViewer.local(
+              path,
+              attachment,
+            )
+          : VideoViewer.network(
+              "https://afterlogic.com/files/test_video.mp4" /*url*/,
+              attachment,
+            );
     } else if (type == "image" && _supportedImageFormats.contains(format)) {
       viewer = ImageViewer(
         url,
-        get(url, headers: header).then(
-          (response) => response.bodyBytes,
-        ),
+        path != null
+            ? _getFileContent(path)
+            : get(url, headers: header).then(
+                (response) => response.bodyBytes,
+              ),
         attachment,
       );
     } else if (type == "text") {
       viewer = TextViewer(
         url,
-        get(url, headers: header).then(
-          (response) => response.bodyBytes,
-        ),
+        path != null
+            ? _getFileContent(path)
+            : get(url, headers: header).then(
+                (response) => response.bodyBytes,
+              ),
         attachment,
       );
     }
@@ -72,10 +82,15 @@ abstract class FileViewer extends StatefulWidget {
     );
   }
 
-  static bool isSupported(MailAttachment attachment) {
+  static Future<Uint8List> _getFileContent(String path) {
+    return File(path).readAsBytes();
+  }
+
+  static bool isSupported(
+      MailAttachment attachment, bool allowVideo, bool exist) {
     final type = attachment.mimeType.split("/").first;
     final format = attachment.mimeType.split("/").last.toLowerCase();
-    if (type == "video") {
+    if (type == "video" && (allowVideo || exist)) {
       return true;
     } else if (type == "image" && _supportedImageFormats.contains(format)) {
       return true;
@@ -95,7 +110,7 @@ abstract class FileViewer extends StatefulWidget {
   };
 }
 
-abstract class FileViewerState extends State<FileViewer> {
+abstract class FileViewerState<T extends FileViewer> extends State<T> {
   Uint8List content;
   dynamic error;
 
