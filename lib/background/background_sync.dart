@@ -35,7 +35,7 @@ class BackgroundSync {
   ) async {
     logger.log("MailSync: sync START");
     var hasUpdate = false;
-    if (MailMethods.syncQueue.isNotEmpty) {
+    if (notification == null && MailMethods.syncQueue.isNotEmpty) {
       return false;
     }
     try {
@@ -51,7 +51,6 @@ class BackgroundSync {
           continue;
         }
         final newMessages = await _getNewMessages(user, accounts);
-        logger.log("MailSync: sync END");
         if (newMessages.isNotEmpty) {
           if (isBackground == true && showNotification) {
             newMessages
@@ -70,6 +69,7 @@ class BackgroundSync {
           logger.log("MailSync: No messages to sync");
         }
       }
+      logger.log("MailSync: sync END");
     }
 //    on SocketException {
 //

@@ -49,7 +49,7 @@ Future<dynamic> messageHandler(Map<String, dynamic> message) async {
   if ((await localStorage.getSelectedUserLocalId()) != null) {
     final notification = NotificationData.fromMap(message);
     try {
-      onAlarm(false, notification);
+      await onAlarm(false, notification);
     } catch (e) {
       print(e);
     }

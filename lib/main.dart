@@ -9,6 +9,7 @@ import 'package:aurora_mail/logger/logger_view.dart';
 import 'package:aurora_mail/notification/push_notifications_manager.dart';
 import 'package:aurora_mail/shared_ui/restart_widget.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
@@ -66,7 +67,7 @@ void onAlarm([bool showNotification = true, NotificationData data]) async {
 
       hasUpdate = await BackgroundSync()
           .sync(BackgroundHelper.isBackground, showNotification, data)
-          .timeout(Duration(seconds: 30));
+          .timeout(Duration(seconds: kDebugMode ? 360 : 30));
     } catch (e, s) {
       logger.log("onAlarm exeption $e");
       print(s);
