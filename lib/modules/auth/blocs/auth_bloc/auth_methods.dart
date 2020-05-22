@@ -14,6 +14,7 @@ import 'package:aurora_mail/modules/settings/models/language.dart';
 import 'package:aurora_mail/notification/push_notifications_manager.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:moor_flutter/moor_flutter.dart';
+import 'package:aurora_mail/build_property.dart';
 
 class AuthMethods {
   final _authApi = new AuthApi();
@@ -227,6 +228,7 @@ class AuthMethods {
   }
 
   Future setFbToken(List<User> users) async {
+    if (!BuildProperty.pushNotification) return;
     try {
       final uid = await PushNotificationsManager.instance.getIMEI();
       final fbToken = await PushNotificationsManager.instance.getToken();
@@ -244,6 +246,7 @@ class AuthMethods {
           emails.addAll(identities.map((item) => item.email));
           emails.addAll(aliases.map((item) => item.email));
         }
+        emails.add(user.emailFromLogin);
         userWithAccount[user] = emails.toList();
       }
       await _authApi.setPushToken(userWithAccount, uid, fbToken);

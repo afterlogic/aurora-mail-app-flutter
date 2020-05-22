@@ -188,29 +188,31 @@ class AuthApi {
       list.add(value);
     }
     for (var entry in map.entries) {
-      final webMailApi = WebMailApi(
-        moduleName: WebMailModules.core,
-        hostname: entry.key,
-      );
-      final parameters = json.encode({
-        "Users": entry.value
-            .map((item) => {
-                  "AuthToken": item.key.token,
-                  "Emails": item.value,
-                })
-            .toList(),
-        "Uid": uid,
-        "Token": fbToken,
-      });
-      final body = new WebMailApiBody(
-        module: "PushNotificator",
-        method: "SetPushToken",
-        parameters: parameters,
-      );
-
-      final res = await webMailApi.post(body);
-
-      print(res);
+      try {
+        final webMailApi = WebMailApi(
+          moduleName: WebMailModules.core,
+          hostname: entry.key,
+        );
+        final parameters = json.encode({
+          "Users": entry.value
+              .map((item) => {
+                    "AuthToken": item.key.token,
+                    "Emails": item.value,
+                  })
+              .toList(),
+          "Uid": uid,
+          "Token": fbToken,
+        });
+        final body = new WebMailApiBody(
+          module: "PushNotificator",
+          method: "SetPushToken",
+          parameters: parameters,
+        );
+        final res = await webMailApi.post(body);
+        print(res);
+      } catch (e,s) {
+        print(e);
+      }
     }
   }
 }
