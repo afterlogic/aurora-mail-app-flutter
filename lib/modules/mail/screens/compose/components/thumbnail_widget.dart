@@ -1,14 +1,20 @@
 import 'dart:io';
 
+import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
+import 'package:aurora_mail/modules/mail/models/compose_attachment.dart';
+import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mime/mime.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
+import 'package:webmail_api_client/webmail_api_client.dart';
 
 class ThumbnailWidget extends StatefulWidget {
   final File file;
   final double size;
+  final ComposeAttachment attachment;
 
-  const ThumbnailWidget(this.file, this.size);
+  const ThumbnailWidget(this.attachment, this.file, this.size);
 
   @override
   _ThumbnailWidgetState createState() => _ThumbnailWidgetState();
@@ -24,16 +30,25 @@ class _ThumbnailWidgetState extends State<ThumbnailWidget> {
   }
 
   initImage() async {
-    final type = lookupMimeType(widget.file.path).split("/").first;
-    if (type == "image") {
-      provider = FileImage(widget.file, scale: 5);
-    } else if (type == "video") {
-      final data = await VideoThumbnail.thumbnailData(
-        video: widget.file.path,
+    if (widget.file != null) {
+      try {
+        final type = lookupMimeType(widget.file.path).split("/").first;
+        if (type == "image") {
+          provider = FileImage(widget.file, scale: 5);
+        } else if (type == "video") {
+          final data = await VideoThumbnail.thumbnailData(
+            video: widget.file.path,
+          );
+          provider = MemoryImage(data, scale: 5);
+        } else {}
+      } catch (e) {}
+    }
+    if (provider == null && widget.attachment.thumbnailUrl != null) {
+      final user = BlocProvider.of<AuthBloc>(context).currentUser;
+      provider = NetworkImage(
+        user.hostname + widget.attachment.thumbnailUrl,
+        headers: WebMailApi.getHeaderWithToken(user.token),
       );
-      provider = MemoryImage(data, scale: 5);
-    } else {
-      return;
     }
     if (mounted) setState(() {});
   }
