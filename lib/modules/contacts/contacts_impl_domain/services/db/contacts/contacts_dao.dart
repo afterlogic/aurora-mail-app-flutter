@@ -32,7 +32,7 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
 
   Future<List<ContactDb>> getContacts(int userLocalId,
       {List<String> storages, String pattern}) {
-    return (select(contactsTable)
+    final query = (select(contactsTable)
           ..where((c) => c.userLocalId.equals(userLocalId))
           ..where((c) {
             if (pattern != null && pattern.isNotEmpty) {
@@ -49,7 +49,16 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
             (c) =>
                 OrderingTerm(expression: c.viewEmail.collate(Collate.noCase)),
           ]))
-        .get();
+        .constructQuery();
+    return customSelectQuery(query.sql + " COLLATE NOCASE",
+        variables: query.introducedVariables,
+        readsFrom: {contactsTable}).get().then(
+      (list) {
+        return list.map((item) {
+          return ContactDb.fromData(item.data, db);
+        }).toList();
+      },
+    );
   }
 
   SimpleSelectStatement<$ContactsTableTable, ContactDb> _search(

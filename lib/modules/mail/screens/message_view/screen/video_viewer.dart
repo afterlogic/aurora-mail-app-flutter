@@ -13,7 +13,6 @@ import 'package:time_machine/time_machine.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoViewer extends FileViewer {
-  @override
   final String url;
   final bool isLocal;
   final Map<String, String> header;

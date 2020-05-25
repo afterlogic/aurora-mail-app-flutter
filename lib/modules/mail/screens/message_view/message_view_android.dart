@@ -246,7 +246,11 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
             break;
           case FinishDownloadFileAction.Show:
             await FileViewer.openFile(
-                context, attachment, result.exist ? result.path : null);
+              context,
+              attachment,
+              result.exist ? result.path : null,
+              _onDownload,
+            );
             return;
         }
       }

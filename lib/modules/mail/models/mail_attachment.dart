@@ -111,10 +111,11 @@ class MailAttachment {
 
   static List<MailAttachment> fromJsonString(String jsonString) {
     if (jsonString == null) return [];
-    final attachments = json.decode(jsonString) as Map;
+    final collection = json.decode(jsonString) as Map;
+    return fromJson(collection["@Collection"] as List);
+  }
 
-    final collection = attachments["@Collection"] as List;
-
+  static List<MailAttachment> fromJson(List collection) {
     if (collection == null || collection.isEmpty) return [];
 
     return collection.map((item) {

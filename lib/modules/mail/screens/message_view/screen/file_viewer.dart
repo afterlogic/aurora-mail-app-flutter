@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -11,11 +12,11 @@ import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart';
+import 'package:webmail_api_client/webmail_api_client.dart';
+import 'zip_viewer.dart';
 
 abstract class FileViewer extends StatefulWidget {
   MailAttachment get attachment;
-
-  String get url;
 
   Future<Uint8List> get future;
 
@@ -23,7 +24,11 @@ abstract class FileViewer extends StatefulWidget {
   FileViewerState createState();
 
   static Future openFile(
-      BuildContext context, MailAttachment attachment, String path) async {
+    BuildContext context,
+    MailAttachment attachment,
+    String path,
+    Function(MailAttachment) onOpen,
+  ) async {
     final authBloc = BlocProvider.of<AuthBloc>(context);
     final url = authBloc.currentUser.hostname + "/" + attachment.downloadUrl;
     final header = {'Authorization': 'Bearer ${authBloc.currentUser.token}'};
@@ -63,7 +68,20 @@ abstract class FileViewer extends StatefulWidget {
               ),
         attachment,
       );
+    } else if (type == "application" && format == "zip") {
+      final module = WebMailApi(
+        moduleName: "MailZipWebclientPlugin",
+        hostname: authBloc.currentUser.hostname,
+        token: authBloc.currentUser.token,
+      );
+
+      viewer = ZipViewer(
+        module,
+        attachment,
+        onOpen,
+      );
     }
+
     if (viewer == null) {
       return;
     }
@@ -97,6 +115,8 @@ abstract class FileViewer extends StatefulWidget {
     } else if (type == "image" && _supportedImageFormats.contains(format)) {
       return true;
     } else if (type == "text") {
+      return true;
+    } else if (type == "application" && format == "zip") {
       return true;
     }
     return false;
