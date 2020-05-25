@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:aurora_mail/background/background_helper.dart';
+import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/database/accounts/accounts_dao.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/users/users_dao.dart';
@@ -20,7 +21,7 @@ class PushNotificationsManager {
   bool _initialized = false;
 
   init() async {
-    if (!_initialized) {
+    if (!_initialized && BuildProperty.pushNotification) {
       await _firebaseMessaging.requestNotificationPermissions();
       _firebaseMessaging.configure(
         onMessage: messageHandler,

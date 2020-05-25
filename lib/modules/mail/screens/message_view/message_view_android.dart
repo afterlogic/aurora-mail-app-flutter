@@ -202,11 +202,10 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
     } catch (err) {
       return;
     }
-    final allowVideo =
-        widget.message.subject == "afterlogic internal video test";
+    final allowVideo = true;
     final result = await AMDialog.show(
       context: context,
-      builder: (_) => DownloadFileDialog(attachment,allowVideo),
+      builder: (_) => DownloadFileDialog(attachment, allowVideo),
     );
     if (result == null) return;
     if (result is DownloadFileDialogResult) {

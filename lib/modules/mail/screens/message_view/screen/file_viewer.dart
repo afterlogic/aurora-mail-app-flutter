@@ -38,7 +38,9 @@ abstract class FileViewer extends StatefulWidget {
               attachment,
             )
           : VideoViewer.network(
-              "https://afterlogic.com/files/test_video.mp4" /*url*/,
+              url + "/view/get-expired-link" /*url*/,
+              format,
+              header,
               attachment,
             );
     } else if (type == "image" && _supportedImageFormats.contains(format)) {
@@ -114,6 +116,8 @@ abstract class FileViewerState<T extends FileViewer> extends State<T> {
   Uint8List content;
   dynamic error;
 
+  bool get isProgress => content == null;
+
   @override
   void initState() {
     super.initState();
@@ -132,8 +136,15 @@ abstract class FileViewerState<T extends FileViewer> extends State<T> {
 
   @override
   Widget build(BuildContext context) {
-    if (content != null) {
-      return buildContent(context);
+    if (isProgress) {
+      return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Center(
+            child: CircularProgressIndicator(),
+          ),
+        ],
+      );
     } else if (error != null) {
       return Column(
         mainAxisSize: MainAxisSize.min,
@@ -144,14 +155,7 @@ abstract class FileViewerState<T extends FileViewer> extends State<T> {
         ],
       );
     } else {
-      return Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Center(
-            child: CircularProgressIndicator(),
-          ),
-        ],
-      );
+      return buildContent(context);
     }
   }
 
