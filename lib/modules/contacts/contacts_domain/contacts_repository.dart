@@ -31,7 +31,7 @@ abstract class ContactsRepository {
 
   Future<void> editContact(Contact contact);
 
-  Future<void> addKeyToContact(Contact contact);
+  Future<void> addKeyToContacts(List<Contact> contacts);
 
   Future<void> deleteContacts(List<Contact> contact);
 

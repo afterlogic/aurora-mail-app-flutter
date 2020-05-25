@@ -173,6 +173,7 @@ class PgpSettingsMethods {
 
   Future addToContact(List<PgpKeyWithContact> selectedContact) async {
     try {
+      final contacts = <Contact>[];
       for (var value in selectedContact) {
         Contact contact = value.contact;
         if (contact == null) {
@@ -198,11 +199,13 @@ class PgpSettingsMethods {
             uuid: "",
           ));
         }
-
-        await contactsDao.addKeyToContact(
+        contacts.add(
           contact.copyWith(pgpPublicKey: value.key),
         );
       }
+      await contactsDao.addKeyToContacts(
+        contacts,
+      );
     } catch (e) {
       print(e);
     }
