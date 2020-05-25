@@ -36,7 +36,7 @@ dependencies:
   path_provider: 1.6.5
   video_thumbnail: 0.2.1
   mime: 0.9.6+3
-  video_player: 0.10.11
+  video_player: 0.10.5+2
   # type ahead
   flutter_typeahead: 1.8.0
 
