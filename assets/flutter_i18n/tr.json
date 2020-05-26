@@ -358,5 +358,6 @@
   "btn_vcf_import": "Import",
   "hint_vcf_import": "Import {name} contact from vcf?",
   "label_message_headers": "Message headers",
-  "error_user_already_logged": "This user is already logged in"
+  "error_user_already_logged": "This user is already logged in",
+  "btn_expand_zip": "Expand"
 }

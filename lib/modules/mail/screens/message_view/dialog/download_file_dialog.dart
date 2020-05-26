@@ -21,6 +21,7 @@ class _DownloadFileDialogState extends State<DownloadFileDialog> {
   String filePath;
   bool viewSupported;
   bool isAsc;
+  bool isZip;
   bool isVcf;
   bool exist;
 
@@ -34,6 +35,7 @@ class _DownloadFileDialogState extends State<DownloadFileDialog> {
     isAsc = widget.attachment.fileName.endsWith(".asc") &&
         BuildProperty.cryptoEnable;
     isVcf = widget.attachment.fileName.endsWith(".vcf");
+    isZip = widget.attachment.mimeType.endsWith("zip");
     filePath = (await getExternalStorageDirectories(
                 type: StorageDirectory.downloads))[0]
             .path +
@@ -98,7 +100,7 @@ class _DownloadFileDialogState extends State<DownloadFileDialog> {
                     ),
                   if (viewSupported)
                     FlatButton(
-                      child: Text(i18n(context, "btn_show_file")),
+                      child: Text(i18n(context, isZip?"btn_expand_zip":"btn_show_file")),
                       onPressed: () {
                         Navigator.pop(
                           context,
