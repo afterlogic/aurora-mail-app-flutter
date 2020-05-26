@@ -50,10 +50,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         currentUser = result.user;
         currentAccount = result.account;
 
-        _methods.setFbToken(users);
 
         final identities =
             await _methods.getAccountIdentities(currentUser, currentAccount);
+        _methods.setFbToken(users);
         currentIdentity = identities.firstWhere((item) => item.isDefault,
                 orElse: () => null) ??
             AccountIdentity(
@@ -152,9 +152,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final user = await _methods.setUser(event.user);
       final users = await _methods.users;
       currentUser = user;
-      _methods.setFbToken(users);
       final accounts = await _methods.getAccounts(user);
-
+      _methods.setFbToken(users);
       if (accounts.isNotEmpty) {
         assert(accounts[0] != null);
         this.accounts = accounts;

@@ -45,7 +45,7 @@ abstract class ContactsNetworkService {
 
   Future<bool> deleteGroup(ContactsGroup group);
 
-  Future<void> addKeyToContact(Contact contact);
+  Future<void> addKeyToContacts(List<Contact> contacts);
 
   Future deleteContactKey(String mail);
 }

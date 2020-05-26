@@ -173,7 +173,7 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
           if (event.contact.pgpPublicKey == null) {
             await _repo.deleteContactKey(event.contact.viewEmail);
           } else {
-            await _repo.addKeyToContact(event.contact);
+            await _repo.addKeyToContacts([event.contact]);
           }
         }
       }

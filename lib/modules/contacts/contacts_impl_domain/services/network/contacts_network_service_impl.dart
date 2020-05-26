@@ -202,14 +202,21 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
     return result as bool;
   }
 
-  Future<void> addKeyToContact(Contact contact) async {
+  Future<void> addKeyToContacts(List<Contact> contacts) async {
     final body = new WebMailApiBody(
       module: "OpenPgpWebclient",
-      method: "AddPublicKeyToContact",
+      method: "AddPublicKeysToContacts",
       parameters: json.encode({
         "UserId": userId,
-        "Email": contact.viewEmail,
-        "Key": contact.pgpPublicKey,
+        "Keys": contacts
+            .map(
+              (item) => {
+                "Email": item.viewEmail,
+                "Name": item.fullName,
+                "Key": item.pgpPublicKey,
+              },
+            )
+            .toList(),
       }),
     );
 

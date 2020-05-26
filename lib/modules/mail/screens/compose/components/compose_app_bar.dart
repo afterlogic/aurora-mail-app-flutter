@@ -1,4 +1,5 @@
 import 'package:aurora_mail/utils/base_state.dart';
+import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 
@@ -34,14 +35,21 @@ class _ComposeAppBarState extends BState<ComposeAppBar> {
       ),
       actions: <Widget>[
         IconButton(
-          icon: Icon(Icons.save),
-          onPressed: () =>
-              widget.onAppBarActionSelected(ComposeAppBarAction.saveToDrafts),
-        ),
-        IconButton(
           icon: Icon(Icons.send),
           onPressed: () =>
               widget.onAppBarActionSelected(ComposeAppBarAction.send),
+        ),
+        PopupMenuButton<ComposeAppBarAction>(
+          onSelected: widget.onAppBarActionSelected,
+          itemBuilder: (BuildContext context) => [
+            PopupMenuItem(
+              value: ComposeAppBarAction.saveToDrafts,
+              child: ListTile(
+                leading: Icon(Icons.drafts),
+                title: Text(i18n(context, "btn_save")),
+              ),
+            ),
+          ],
         ),
       ],
     );

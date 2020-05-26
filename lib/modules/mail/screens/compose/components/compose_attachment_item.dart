@@ -45,7 +45,7 @@ class ComposeAttachmentItem extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             if (attachment.file != null)
-              ThumbnailWidget(attachment.file as File, 40),
+              ThumbnailWidget(null, attachment.file as File, 40),
             if (attachment.file != null)
               SizedBox(
                 width: 10,
@@ -71,12 +71,11 @@ class ComposeAttachmentItem extends StatelessWidget {
         trailing: Row(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            if (attachment.file != null)
-              ThumbnailWidget(attachment.file as File, 40),
-            if (attachment.file != null)
-              SizedBox(
-                width: 10,
-              ),
+            ThumbnailWidget(
+                attachment as ComposeAttachment, attachment.file as File, 40),
+            SizedBox(
+              width: 10,
+            ),
             IconButton(
               icon: Icon(Icons.cancel),
               tooltip: i18n(context, "messages_attachment_delete"),

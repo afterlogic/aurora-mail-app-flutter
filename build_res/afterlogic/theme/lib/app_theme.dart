@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart';import 'package:aurora_mail/utils/base_state.dart';
+import 'package:flutter/material.dart';
+import 'package:aurora_mail/utils/base_state.dart';
 
 import 'app_color.dart';
 
@@ -45,6 +46,7 @@ class AppTheme {
       ),
     ),
     floatingActionButtonTheme: _floatTheme,
+    toggleableActiveColor: AppColor.primary,
   );
 
   static final dark = ThemeData(
@@ -57,7 +59,7 @@ class AppTheme {
     buttonTheme: _buttonTheme,
     dialogTheme: _dialogTheme,
     selectedRowColor: Colors.black,
-    backgroundColor:Color(0xFFe6ebf0),
+    backgroundColor: Color(0xFFe6ebf0),
 //    iconTheme: IconThemeData(color: AppColor.primary),
     splashFactory: InkRipple.splashFactory,
     brightness: Brightness.dark,
@@ -90,6 +92,7 @@ class AppTheme {
     ),
     floatingActionButtonTheme: _floatTheme,
     bottomAppBarColor: Colors.black,
+    toggleableActiveColor: AppColor.primary,
   );
 
   static final login = light;

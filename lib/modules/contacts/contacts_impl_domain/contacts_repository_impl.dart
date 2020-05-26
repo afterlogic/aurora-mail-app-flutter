@@ -55,18 +55,19 @@ class ContactsRepositoryImpl implements ContactsRepository {
       _currentlySyncingStorageCtrl.stream;
 
   @override
-  Stream<List<Contact>> watchContactsFromStorage(String storage,String search) {
-    return _db.watchContactsFromStorage(_userLocalId, storage,search);
+  Stream<List<Contact>> watchContactsFromStorage(
+      String storage, String search) {
+    return _db.watchContactsFromStorage(_userLocalId, storage, search);
   }
 
   @override
-  Stream<List<Contact>> watchContactsFromGroup(String group,String search) {
-    return _db.watchContactsFromGroup(_userLocalId, group,search);
+  Stream<List<Contact>> watchContactsFromGroup(String group, String search) {
+    return _db.watchContactsFromGroup(_userLocalId, group, search);
   }
 
   @override
   Stream<List<Contact>> watchAllContacts(String search) {
-    return _db.watchAllContacts(_userLocalId,search);
+    return _db.watchAllContacts(_userLocalId, search);
   }
 
   @override
@@ -180,7 +181,7 @@ class ContactsRepositoryImpl implements ContactsRepository {
       final contactWithKey =
           newContact.copyWith(pgpPublicKey: contact.pgpPublicKey);
 
-      await addKeyToContact(contactWithKey);
+      await addKeyToContacts([contactWithKey]);
       return contactWithKey;
     }
     return newContact;
@@ -192,9 +193,11 @@ class ContactsRepositoryImpl implements ContactsRepository {
     await _db.updateContacts([contact]);
   }
 
-  Future<void> addKeyToContact(Contact contact) async {
-    await _network.addKeyToContact(contact);
-    await _db.addKeyToContact(contact.viewEmail, contact.pgpPublicKey);
+  Future<void> addKeyToContacts(List<Contact> contacts) async {
+    await _network.addKeyToContacts(contacts);
+    for (var contact in contacts) {
+      await _db.addKeyToContact(contact.viewEmail, contact.pgpPublicKey);
+    }
   }
 
   @override
@@ -488,5 +491,4 @@ class ContactsRepositoryImpl implements ContactsRepository {
     await _network.deleteContactKey(mail);
     await _db.deleteContactKey(mail);
   }
-
 }

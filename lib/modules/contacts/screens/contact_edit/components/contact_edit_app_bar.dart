@@ -18,9 +18,8 @@ class ContactEditAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AMAppBar(
       title: Text(i18n(context, isEdit ? "contacts_edit" : "contacts_add")),
       actions: <Widget>[
-        IconButton(
-          icon: Icon(Icons.save),
-          tooltip: i18n(context, "contacts_edit_save"),
+        FlatButton(
+          child: Text(i18n(context, "btn_save")),
           onPressed: () =>
               onActionSelected(context, ContactEditAppBarAction.save),
         ),
