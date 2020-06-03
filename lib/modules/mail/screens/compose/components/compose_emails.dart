@@ -86,7 +86,7 @@ class ComposeEmailsState extends BState<ComposeEmails> {
   List<Contact> lastSuggestions = [];
 
   Future<List<Contact>> _buildSuggestions(String _pattern) async {
-    final pattern = _pattern.startsWith(" ") ? _pattern.substring(1) : _pattern;
+    final pattern = _pattern.replaceAll(" ", "");
     try {
       if (pattern.isEmpty) {
         return [];
@@ -305,6 +305,13 @@ class ComposeEmailsState extends BState<ComposeEmails> {
                             widget.textCtrl.selection =
                                 TextSelection.collapsed(offset: 1);
                             _deleteEmail(widget.emails.last);
+                          } else if (value.length > 1 && value.endsWith(" ")) {
+                            if (lastSuggestions.isEmpty) {
+                              widget.onNext();
+                            } else {
+                              _addEmail(MailUtils.getFriendlyName(
+                                  lastSuggestions.first));
+                            }
                           }
                         },
                         onEditingComplete: () {

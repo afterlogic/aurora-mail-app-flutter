@@ -303,7 +303,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
       _bccKey.currentState?.validate();
     }
 
-    if (_toEmails.isEmpty)
+    if (_toEmails.isEmpty && _ccEmails.isEmpty && _bccEmails.isEmpty)
       return _showError(i18n(context, "error_compose_no_receivers"));
     if (_attachments.where((a) => a is TempAttachmentUpload).isNotEmpty) {
       return showSnack(
@@ -649,7 +649,8 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
                         ComposeSubject(
                           focusNode: subjectNode,
                           textCtrl: _subjectTextCtrl,
-                          onAttach: (FileType type) => _bloc.add(UploadAttachment(type)),
+                          onAttach: (FileType type) =>
+                              _bloc.add(UploadAttachment(type)),
                           onNext: () {
                             bodyNode.requestFocus();
                           },

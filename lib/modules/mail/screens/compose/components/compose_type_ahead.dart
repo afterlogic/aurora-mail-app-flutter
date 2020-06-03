@@ -904,7 +904,6 @@ class ComposeTypeAheadFieldState<T> extends BState<ComposeTypeAheadField<T>>
           w = widget.suggestionsBoxDecoration.constraints.maxWidth;
         }
       }
-
       return Positioned(
         width: w,
         child: CompositedTransformFollower(
