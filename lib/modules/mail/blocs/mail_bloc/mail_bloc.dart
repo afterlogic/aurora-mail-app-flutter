@@ -240,7 +240,9 @@ class MailBloc extends Bloc<MailEvent, MailState> {
   Future<Message> getFullMessage(Message item) {
     return _methods.getMessage(item);
   }
-
+  Future<LocalFolder> getFolderByType(FolderType folderType) {
+    return _methods.getFolderByType(folderType);
+  }
   Future<Folder> updateFolder(Folder selectedFolder) {
     return _methods.getFolder(selectedFolder.guid);
   }

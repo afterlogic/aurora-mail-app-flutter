@@ -116,9 +116,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
 
   void _onMessageSelected(Message item) async {
     final message = await _mailBloc.getFullMessage(item);
-    final draftsFolder = (_mailBloc.state as FoldersLoaded).folders.firstWhere(
-        (f) => f.folderType == FolderType.drafts,
-        orElse: () => null);
+    final draftsFolder = await _mailBloc.getFolderByType(FolderType.drafts);
 
     if (draftsFolder != null && message.folder == draftsFolder.fullNameRaw) {
       Navigator.pushNamed(
@@ -148,7 +146,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
     _messagesListBloc.add(DeleteMessages(messages: [message]));
   }
 
-  void _unreadMessage(Message message,bool isUnread) {
+  void _unreadMessage(Message message, bool isUnread) {
     _mailBloc.add(SetSeen([message], isUnread));
   }
 

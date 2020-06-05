@@ -2,9 +2,11 @@ library webmail_api_client;
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
+import 'package:http/io_client.dart';
 
 import 'webmail_api_body.dart';
 import 'webmail_api_error.dart';
@@ -19,6 +21,10 @@ class WebMailApi {
   final String token;
   static Function(String) onRequest;
   static Function(String) onError;
+  static IOClient _client = IOClient(HttpClient()
+    ..badCertificateCallback = ((X509Certificate cert, String host, int port) {
+      return false;
+    }));
 
   String get apiUrl => "$hostname/?Api/";
 
@@ -53,8 +59,8 @@ class WebMailApi {
     if (onRequest != null)
       onRequest("URL:$apiUrl\nBODY:${body.toMap(moduleName)}");
 
-    final rawResponse =
-        await http.post(apiUrl, headers: headers, body: body.toMap(moduleName));
+    final rawResponse = await _client.post(apiUrl,
+        headers: headers, body: body.toMap(moduleName));
 
     final res = json.decode(rawResponse.body);
 

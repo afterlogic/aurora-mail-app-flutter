@@ -494,4 +494,9 @@ class MailMethods {
   }
 
   static String currentFolderUpdate = null;
+
+  Future<LocalFolder> getFolderByType(FolderType folderType) {
+    return _foldersDao.getByType([Folder.getNumberFromFolderType(folderType)],
+        account.localId).then((value) => value.isEmpty ? null : value.first);
+  }
 }
