@@ -59,7 +59,7 @@ class _AuthInputState extends BState<AuthInput> {
                 height: 50.0,
                 child: IconButton(
                   icon: Icon(
-                    _obscureText ? Icons.visibility : Icons.visibility_off,
+                    Icons.info_outline,
                     color:
                         widget.visibilityToggleColor ?? theme.iconTheme.color,
                   ),

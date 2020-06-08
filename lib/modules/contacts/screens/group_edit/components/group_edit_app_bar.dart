@@ -19,9 +19,8 @@ class GroupEditAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: Text(
           i18n(context, isEdit ? "contacts_group_edit" : "contacts_group_add")),
       actions: <Widget>[
-        IconButton(
-          icon: Icon(Icons.save),
-          tooltip: i18n(context, "contacts_edit_save"),
+        FlatButton(
+          child: Text(i18n(context, "contacts_edit_save")),
           onPressed: () =>
               onActionSelected(context, GroupEditAppBarAction.save),
         ),

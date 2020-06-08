@@ -70,7 +70,7 @@ class _GenerateKeyDialogState extends BState<GenerateKeyDialog> {
                 labelText: i18n(context, "login_input_password"),
                 suffix: GestureDetector(
                   child: Icon(
-                    _obscure ? Icons.visibility : Icons.visibility_off,
+                    Icons.info_outline,
                   ),
                   onTap: () {
                     _obscure = !_obscure;

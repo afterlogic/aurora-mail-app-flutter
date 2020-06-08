@@ -63,7 +63,7 @@ class _EncryptDialogState extends BState<EncryptDialog> {
                     labelText: i18n(context, "login_input_password"),
                     suffix: IconButton(
                       icon: Icon(
-                        _obscurePass ? Icons.visibility : Icons.visibility_off,
+                        Icons.info_outline,
                       ),
                       onPressed: () {
                         _obscurePass = !_obscurePass;
