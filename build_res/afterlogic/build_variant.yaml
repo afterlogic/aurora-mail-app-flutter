@@ -14,7 +14,7 @@ multiUserEnable: false
 multiAccountEnable: true
 cryptoEnable: true
 selfDestructingEmail: false
-pushNotification: false
+pushNotification: true
 
 _version: 1.1.0
 supportLanguage: "en"

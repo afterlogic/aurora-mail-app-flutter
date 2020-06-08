@@ -14,6 +14,7 @@ import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:aurora_mail/modules/settings/screens/notifications_settings/notifications_settings_route.dart';
 
 class SettingsMainAndroid extends StatefulWidget {
   @override
@@ -39,6 +40,13 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
             title: Text(i18n(context, "settings_sync")),
             onTap: () => Navigator.pushNamed(context, SyncSettingsRoute.name),
           ),
+          if (BuildProperty.pushNotification)
+            ListTile(
+              leading: AMCircleIcon(Icons.notifications),
+              title: Text(i18n(context, "label_notifications_settings")),
+              onTap: () =>
+                  Navigator.pushNamed(context, NotificationsSettingsRoute.name),
+            ),
           if (BuildProperty.cryptoEnable)
             ListTile(
               leading: AMCircleIcon(Icons.vpn_key),

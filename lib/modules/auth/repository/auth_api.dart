@@ -176,9 +176,10 @@ class AuthApi {
     }
   }
 
-  Future<void> setPushToken(Map<User, List<String>> userWithAccount, String uid,
+  Future<bool> setPushToken(Map<User, List<String>> userWithAccount, String uid,
       String fbToken) async {
     final map = <String, List<MapEntry<User, List<String>>>>{};
+    bool success = true;
     for (var value in userWithAccount.entries) {
       var list = map[value.key.hostname];
       if (list == null) {
@@ -210,10 +211,12 @@ class AuthApi {
         );
         final res = await webMailApi.post(body);
         print(res);
-      } catch (e,s) {
+      } catch (e, s) {
+        success = false;
         print(e);
       }
     }
+    return success;
   }
 }
 

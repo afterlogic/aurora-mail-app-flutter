@@ -230,7 +230,7 @@ class AuthMethods {
   Future setFbToken(List<User> users) async {
     if (!BuildProperty.pushNotification) return;
     try {
-      final uid = await PushNotificationsManager.instance.getIMEI();
+      final uid = await PushNotificationsManager.instance.deviceId;
       final fbToken = await PushNotificationsManager.instance.getToken();
       final userWithAccount = <User, List<String>>{};
       for (var user in users) {
@@ -249,7 +249,10 @@ class AuthMethods {
         emails.add(user.emailFromLogin);
         userWithAccount[user] = emails.toList();
       }
-      await _authApi.setPushToken(userWithAccount, uid, fbToken);
+      final success =
+          await _authApi.setPushToken(userWithAccount, uid, fbToken);
+
+      PushNotificationsManager.instance.setTokenStatus(success);
     } catch (e) {
       print(e);
     }

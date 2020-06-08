@@ -8,12 +8,14 @@ import 'package:aurora_mail/modules/auth/repository/auth_local_storage.dart';
 import 'package:device_id/device_id.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/widgets.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'notification_manager.dart';
 
 class PushNotificationsManager {
   PushNotificationsManager._();
 
+  String deviceId;
   static final PushNotificationsManager instance = PushNotificationsManager._();
 
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
@@ -21,6 +23,7 @@ class PushNotificationsManager {
 
   init() async {
     if (!_initialized) {
+      deviceId = await _getIMEI();
       await _firebaseMessaging.requestNotificationPermissions();
       _firebaseMessaging.configure(
         onMessage: messageHandler,
@@ -37,8 +40,18 @@ class PushNotificationsManager {
     return _firebaseMessaging.getToken();
   }
 
-  Future<String> getIMEI() async {
+  Future<String> _getIMEI() async {
     return await DeviceId.getID;
+  }
+
+  Future setTokenStatus(bool status) async {
+    final preference = await SharedPreferences.getInstance();
+    await preference.setBool("token_status", status);
+  }
+
+  Future<bool> getTokenStatus() async {
+    final preference = await SharedPreferences.getInstance();
+    return preference.getBool("token_status");
   }
 }
 
