@@ -8,6 +8,7 @@ class LoginGradient extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return DecoratedBox(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -15,8 +16,12 @@ class LoginGradient extends StatelessWidget {
           end: Alignment.bottomLeft,
           stops: [0, 1],
           colors: [
-            _fromHex(BuildProperty.splashGradientTop),
-            _fromHex(BuildProperty.splashGradientBottom),
+            _fromHex(isDark
+                ? BuildProperty.splashGradientTopDark
+                : BuildProperty.splashGradientTop),
+            _fromHex(isDark
+                ? BuildProperty.splashGradientBottomDark
+                : BuildProperty.splashGradientBottom),
           ],
         ),
       ),

@@ -74,7 +74,12 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       yield (state as SettingsLoaded)
           .copyWith(connection: Value(event.connection));
     } else {
-      yield SettingsLoaded(connection: event.connection);
+      final appSettings = await _methods.getSettingsSharedPrefs();
+      yield SettingsLoaded(
+        connection: event.connection,
+        darkThemeEnabled: appSettings.isDarkTheme,
+        is24: appSettings.is24,
+      );
     }
   }
 

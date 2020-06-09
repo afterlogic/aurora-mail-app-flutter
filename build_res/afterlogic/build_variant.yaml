@@ -6,6 +6,8 @@ _appleGroupId: "group.com.afterlogic.aurora"
 background_color: "#FFFFFF"
 splashGradientTop: "#FFFFFF"
 splashGradientBottom: "#FFFFFF"
+splashGradientTopDark: "#000000"
+splashGradientBottomDark: "#000000"
 
 autodiscover_url: "https://{domain}/aurora-autodiscover.json"
 privacyPolicy: "https://afterlogic.com/privacy-policy"
