@@ -164,7 +164,9 @@ class _EncryptSettingState extends BState<EncryptSetting> {
                                 suffix: GestureDetector(
                                   child: Padding(
                                     padding: const EdgeInsets.only(right: 8.0),
-                                    child: Icon(Icons.info_outline),
+                                    child: Icon(obscure
+                                        ? Icons.visibility
+                                        : Icons.visibility_off),
                                   ),
                                   onTap: () {
                                     obscure = !obscure;

@@ -17,7 +17,7 @@ class GenerateKeyDialog extends StatefulWidget {
 }
 
 class _GenerateKeyDialogState extends BState<GenerateKeyDialog> {
-  static const lengths = [ 2048,  4096];
+  static const lengths = [2048, 4096];
   var length = lengths[0];
   AliasOrIdentity current;
   bool _obscure = true;
@@ -70,7 +70,7 @@ class _GenerateKeyDialogState extends BState<GenerateKeyDialog> {
                 labelText: i18n(context, "login_input_password"),
                 suffix: GestureDetector(
                   child: Icon(
-                    Icons.info_outline,
+                    _obscure ? Icons.visibility : Icons.visibility_off,
                   ),
                   onTap: () {
                     _obscure = !_obscure;
@@ -84,7 +84,8 @@ class _GenerateKeyDialogState extends BState<GenerateKeyDialog> {
               obscureText: _obscure,
             ),
             DropdownButtonFormField(
-              decoration: InputDecoration(labelText: i18n(context, "label_length")),
+              decoration:
+                  InputDecoration(labelText: i18n(context, "label_length")),
               value: length,
               items: lengths.map((value) {
                 return DropdownMenuItem<int>(

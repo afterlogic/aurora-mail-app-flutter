@@ -23,8 +23,8 @@ class AuthInput extends StatefulWidget {
     this.keyboardType,
     this.visibilityToggleColor,
     this.validator,
-    this.autocorrect= true,
-    this.enableSuggestions= true,
+    this.autocorrect = true,
+    this.enableSuggestions = true,
   }) : super(key: key);
 
   @override
@@ -59,7 +59,7 @@ class _AuthInputState extends BState<AuthInput> {
                 height: 50.0,
                 child: IconButton(
                   icon: Icon(
-                    Icons.info_outline,
+                    _obscureText ? Icons.visibility : Icons.visibility_off,
                     color:
                         widget.visibilityToggleColor ?? theme.iconTheme.color,
                   ),

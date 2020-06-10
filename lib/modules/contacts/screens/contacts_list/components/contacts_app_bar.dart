@@ -109,7 +109,7 @@ class _ContactsAppBarState extends State<ContactsAppBar> {
         actions: <Widget>[
           if (state.selectedGroup != null)
             IconButton(
-              icon: Icon(Icons.remove_red_eye),
+              icon: Icon(Icons.info_outline),
               onPressed: () {
                 final group = state.groups
                     .firstWhere((g) => g.uuid == state.selectedGroup);

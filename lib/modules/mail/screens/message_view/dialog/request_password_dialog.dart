@@ -31,7 +31,7 @@ class _RequestPasswordDialogState extends BState<RequestPasswordDialog> {
                     labelText: i18n(context, "login_input_password"),
                     suffix: IconButton(
                       icon: Icon(
-                        Icons.info_outline,
+                        _obscurePass ? Icons.visibility : Icons.visibility_off,
                       ),
                       onPressed: () {
                         _obscurePass = !_obscurePass;

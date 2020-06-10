@@ -35,13 +35,22 @@ class _TwoFactorAuthWidgetState extends BState<TwoFactorAuthWidget> {
     if (widget.args.isDialog) {
       return child;
     } else {
-      return Theme(
-        data: AppTheme.login,
-        child: LoginGradient(
+      return themeWrap(
+        LoginGradient(
           child: child,
         ),
       );
     }
+  }
+
+  Widget themeWrap(Widget widget) {
+    if (AppTheme.login != null) {
+      return Theme(
+        data: AppTheme.login,
+        child: widget,
+      );
+    }
+    return widget;
   }
 
   @override

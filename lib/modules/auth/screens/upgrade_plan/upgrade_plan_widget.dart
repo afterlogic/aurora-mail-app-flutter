@@ -12,14 +12,21 @@ class UpgradePlanWidget extends StatelessWidget {
   const UpgradePlanWidget();
 
   Widget _gradientWrap(Widget child) {
-    return Theme(
-      data: AppTheme.login,
-      child: LoginGradient(
+    return themeWrap(
+     LoginGradient(
         child: child,
       ),
     );
   }
-
+  Widget themeWrap(Widget widget) {
+    if (AppTheme.login != null) {
+      return Theme(
+        data: AppTheme.login,
+        child: widget,
+      );
+    }
+    return widget;
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,7 +50,7 @@ class UpgradePlanWidget extends StatelessWidget {
                     children: <Widget>[
                       Text(
                         i18n(context, "hint_login_upgrade_your_plan"),
-                        style: AppTheme.login.textTheme.subhead.copyWith(
+                        style: Theme.of(context).textTheme.subhead.copyWith(
                           fontSize: 18
                         ),
                         textAlign: TextAlign.center,
