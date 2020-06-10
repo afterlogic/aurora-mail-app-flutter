@@ -117,7 +117,7 @@ class _MessageItemState extends BState<MessageItem> {
       } else {
         return Dismissible(
           key: Key(m.uid.toString()),
-          direction: DismissDirection.horizontal,
+          direction: DismissDirection.endToStart,
           confirmDismiss: (direction) async {
             if (direction == DismissDirection.endToStart) {
               return ConfirmationDialog.show(
