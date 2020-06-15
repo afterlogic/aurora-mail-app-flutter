@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:aurora_mail/background/background_helper.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
@@ -86,6 +87,8 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
     if (widget.openMessageId != null) {
       openMessage(widget.openMessageId);
     }
+    BackgroundHelper.addOnAlarmObserver(false, onAlarm);
+    BackgroundHelper.addOnEndAlarmObserver(false, onEndAlarm);
   }
 
   openMessage(int uid) async {
@@ -111,6 +114,8 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
     super.dispose();
     _messagesListBloc.close();
     MessagesListAndroid.onShare = null;
+    BackgroundHelper.removeOnAlarmObserver(onAlarm);
+    BackgroundHelper.removeOnAlarmObserver(onEndAlarm);
   }
 
   void _initBlocs() {
@@ -265,8 +270,11 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
               key: _refreshKey,
               onRefresh: () {
                 _startRefresh();
-                _mailBloc.add(RefreshMessages(_refreshCompleter));
-
+                if (isBackgroundRefresh) {
+                  isBackgroundRefresh = false;
+                } else {
+                  _mailBloc.add(RefreshMessages(_refreshCompleter));
+                }
                 return _refreshCompleter.future;
               },
               backgroundColor: Colors.white,
@@ -437,5 +445,16 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
     if (_refreshCompleter?.isCompleted == false) _refreshCompleter?.complete();
     _refreshCompleter = Completer();
     _refreshKey.currentState.show();
+  }
+
+  bool isBackgroundRefresh = false;
+
+  onAlarm() {
+    isBackgroundRefresh = true;
+    _startRefresh();
+  }
+
+  onEndAlarm(bool hasUpdate) {
+    if (_refreshCompleter?.isCompleted == false) _refreshCompleter?.complete();
   }
 }

@@ -58,9 +58,10 @@ class BackgroundSync {
             newMessages
                 .sort((a, b) => a.timeStampInUTC.compareTo(b.timeStampInUTC));
             logger.log("MailSync: ${newMessages.length} new message(s)");
-
-            for (final message in newMessages) {
-              await _showNewMessage(message, user);
+            if (notification == null) {
+              for (final message in newMessages) {
+                await _showNewMessage(message, user);
+              }
             }
           } else {
             print("MailSync: Foreground mode, cannot send notifications");
@@ -94,7 +95,6 @@ class BackgroundSync {
     }
     final newMessages = new List<Message>();
     for (var account in accounts) {
-
       final inboxFolders = await _foldersDao.getByType(
           [Folder.getNumberFromFolderType(FolderType.inbox)], account.localId);
 
@@ -134,7 +134,6 @@ class BackgroundSync {
 
         if (result.addedMessages.isEmpty) break;
 
-        result.addedMessages.removeWhere((m) => m.flags.contains("\\seen"));
         await _mailDao.deleteMessages(
             result.removedUids, folderToUpdate.fullNameRaw);
 
@@ -159,7 +158,13 @@ class BackgroundSync {
         );
 
         await _mailDao.fillMessage(newMessageBodies);
-        newMessages.addAll(newMessageBodies);
+
+        final notSeenMessagesUids = result.addedMessages
+            .where((m) => !m.flags.contains("\\seen"))
+            .map((e) => e.uid)
+            .toSet();
+        newMessages.addAll(newMessageBodies
+            .where((element) => notSeenMessagesUids.contains(element.uid)));
       }
     }
     return newMessages;

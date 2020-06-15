@@ -107,6 +107,6 @@ class NotificationManager {
 
 Future onSelectNotification(String title) async {
   await Future.delayed(Duration(seconds: 1));
-  final localId = int.parse(title);
+  final localId = int.tryParse(title);
   RouteWrap.staticState.showMessage(localId);
 }
