@@ -1,3 +1,4 @@
+import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/self_destructing/components/clipboard_label.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/modules/settings/models/sync_freq.dart';
@@ -49,28 +50,30 @@ class _SyncSettingsAndroidState extends BState<SyncSettingsAndroid> {
             final period = SyncPeriod.dbStringToPeriod(state.syncPeriod);
             return ListView(
               children: <Widget>[
-                ListTile(
-                  leading: AMCircleIcon(Icons.av_timer),
-                  title: Text(i18n(context, "settings_sync_frequency")),
-                  trailing: Text(
-                    SyncFreq.freqToString(context, freq),
-                    style: theme.textTheme.caption,
-                  ),
-                  onLongPress: () async {
-                    final token = await PushNotificationsManager.instance.getToken();
+                if (!BuildProperty.pushNotification)
+                  ListTile(
+                    leading: AMCircleIcon(Icons.av_timer),
+                    title: Text(i18n(context, "settings_sync_frequency")),
+                    trailing: Text(
+                      SyncFreq.freqToString(context, freq),
+                      style: theme.textTheme.caption,
+                    ),
+                    onLongPress: () async {
+                      final token =
+                          await PushNotificationsManager.instance.getToken();
 
-                    showDialog(
-                      context: context,
-                      builder: (_) => ConfirmationDialog(
-                        title: "FB token",
-                        description: token,
-                        actionText: "Copy",
-                      ),
-                    );
-                    Clipboard.setData(ClipboardData(text: token));
-                  },
-                  onTap: () => _onFreqDurationSelected(context, freq),
-                ),
+                      showDialog(
+                        context: context,
+                        builder: (_) => ConfirmationDialog(
+                          title: "FB token",
+                          description: token,
+                          actionText: "Copy",
+                        ),
+                      );
+                      Clipboard.setData(ClipboardData(text: token));
+                    },
+                    onTap: () => _onFreqDurationSelected(context, freq),
+                  ),
                 ListTile(
                   leading: AMCircleIcon(MdiIcons.calendarRepeat),
                   title: Text(i18n(context, "settings_sync_period")),
