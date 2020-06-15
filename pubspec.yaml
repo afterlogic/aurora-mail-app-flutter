@@ -1,7 +1,7 @@
 name: aurora_mail
 description: Mail client for mobile.
 
-version: 1.1.0+126
+version: 1.1.0+127
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -82,7 +82,7 @@ dependencies:
     git: https://github.com/afterlogic/receive_sharing
 
   #notification
-  flutter_local_notifications: 0.8.4+3
+  flutter_local_notifications: 1.4.4+1
 
   keyboard_actions: 3.2.0
 

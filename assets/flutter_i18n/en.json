@@ -368,5 +368,9 @@
   "label_notifications_settings": "Notifications",
   "label_device_identifier": "Device identifier",
   "label_token_storing_status": "Token storing status",
-  "btn_resend_push_token": "Resend Push Token"
+  "btn_resend_push_token": "Resend Push Token",
+  "label_token_successful": "Successful",
+  "label_token_failed": "Failed",
+  "label_device_id_copied_to_clip_board": "Device id copied to clipboard",
+  "label_discard_not_saved_changes": "Discard not saved changes?"
 }

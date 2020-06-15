@@ -1,4 +1,5 @@
 import 'package:aurora_mail/models/alias_or_identity.dart';
+import 'package:aurora_mail/modules/dialog_wrap.dart';
 import 'package:aurora_mail/utils/identity_util.dart';
 import 'package:aurora_mail/utils/input_validation.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
@@ -16,7 +17,7 @@ class GenerateKeyDialog extends StatefulWidget {
   _GenerateKeyDialogState createState() => _GenerateKeyDialogState();
 }
 
-class _GenerateKeyDialogState extends BState<GenerateKeyDialog> {
+class _GenerateKeyDialogState extends BState<GenerateKeyDialog> with NotSavedChangesMixin{
   static const lengths = [2048, 4096];
   var length = lengths[0];
   AliasOrIdentity current;

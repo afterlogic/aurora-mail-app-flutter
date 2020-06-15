@@ -485,8 +485,8 @@ class MailMethods {
     await _mailApi.setEmailSafety(senderEmail: senderEmail);
   }
 
-  Future<Message> getMessage(Message item) {
-    return _mailDao.getMessage(item.localId);
+  Future<Message> getMessage(int localId) {
+    return _mailDao.getMessage(localId);
   }
 
   Future<Folder> getFolder(String guid) {
@@ -499,4 +499,9 @@ class MailMethods {
     return _foldersDao.getByType([Folder.getNumberFromFolderType(folderType)],
         account.localId).then((value) => value.isEmpty ? null : value.first);
   }
+
+  Future<Message> getMessageByUid(int uid) {
+    return _mailDao.getMessageByUid(uid);
+  }
+
 }

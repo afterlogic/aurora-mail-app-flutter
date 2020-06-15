@@ -18,7 +18,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_i18n/flutter_i18n_delegate.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:receive_sharing/recive_sharing.dart';
 import 'package:theme/app_theme.dart';
@@ -27,6 +26,7 @@ import 'package:webmail_api_client/webmail_api_client.dart';
 import 'app_navigation.dart';
 import 'auth/blocs/auth_bloc/bloc.dart';
 import 'auth/screens/login/login_route.dart';
+import 'dialog_wrap.dart';
 
 final routeObserver = RouteObserver();
 
@@ -226,6 +226,12 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
                             ? LoginRoute.name
                             : MessagesListRoute.name,
                         navigatorObservers: [routeObserver],
+                        builder: (context, widget) {
+                          return RouteWrap(
+                            child: widget,
+                            navKey: _navKey,
+                          );
+                        },
                       ),
                     );
                   } else {

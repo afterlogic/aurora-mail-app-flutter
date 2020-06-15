@@ -1,5 +1,6 @@
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/models/folder.dart';
+import 'package:aurora_mail/modules/dialog_wrap.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/mail_bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/mail_state.dart';
 import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/messages_list_bloc.dart';
@@ -18,7 +19,7 @@ class MoveMessageDialog extends StatefulWidget {
   _MoveMessageDialogState createState() => _MoveMessageDialogState();
 }
 
-class _MoveMessageDialogState extends State<MoveMessageDialog> {
+class _MoveMessageDialogState extends State<MoveMessageDialog> with NotSavedChangesMixin{
   List<Folder> stack = [];
 
   Folder get current {

@@ -2,6 +2,7 @@ import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_group_model.dart';
 import 'package:aurora_mail/modules/contacts/screens/contacts_list/contacts_list_route.dart';
+import 'package:aurora_mail/modules/dialog_wrap.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
@@ -19,7 +20,8 @@ class GroupEditAndroid extends StatefulWidget {
   _GroupEditAndroidState createState() => _GroupEditAndroidState();
 }
 
-class _GroupEditAndroidState extends BState<GroupEditAndroid> {
+class _GroupEditAndroidState extends BState<GroupEditAndroid>
+    with NotSavedChangesMixin {
   bool _isOrg = false;
   final _nameCtrl = TextEditingController();
   final _emailCtrl = TextEditingController();

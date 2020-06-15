@@ -82,7 +82,7 @@ dependencies:
     git: https://github.com/afterlogic/receive_sharing
 
   #notification
-  flutter_local_notifications: 0.8.4+3
+  flutter_local_notifications: 1.4.4+1
 
   keyboard_actions: 3.2.0
 

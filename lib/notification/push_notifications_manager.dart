@@ -62,30 +62,35 @@ Future<dynamic> messageHandler(Map<String, dynamic> message) async {
   if ((await localStorage.getSelectedUserLocalId()) != null) {
     final notification = NotificationData.fromMap(message);
     try {
-      await onAlarm(false, notification);
+      await onAlarm(
+        false,
+        notification,
+        (success) async {
+          if (BackgroundHelper.isBackground) {
+            final _usersDao = UsersDao(DBInstances.appDB);
+            final _accountsDao = AccountsDao(DBInstances.appDB);
+            final users = await _usersDao.getUsers();
+            for (var user in users) {
+              final accounts = await _accountsDao.getAccounts(user.localId);
+              for (var value in accounts) {
+                if (value.email == notification.to) {
+                  final manager = NotificationManager.instance;
+                  manager.showNotification(
+                    notification.from,
+                    notification.subject,
+                    user,
+                    1,
+                  );
+                  return;
+                }
+              }
+            }
+          }
+        },
+      );
     } catch (e) {
       print(e);
     }
-
-//    if (BackgroundHelper.isBackground) {
-    final _usersDao = UsersDao(DBInstances.appDB);
-    final _accountsDao = AccountsDao(DBInstances.appDB);
-    final users = await _usersDao.getUsers();
-    for (var user in users) {
-      final accounts = await _accountsDao.getAccounts(user.localId);
-      for (var value in accounts) {
-        if (value.email == notification.to) {
-          final manager = NotificationManager();
-          manager.showNotification(
-            notification.from,
-            notification.subject,
-            user,
-          );
-          return;
-        }
-      }
-    }
-//    }
   }
 }
 

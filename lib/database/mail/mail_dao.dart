@@ -157,7 +157,7 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
         batch.insertAll(mail, newMessages, mode: InsertMode.replace);
       });
     } catch (err) {
-//      print("addMessages err: ${err}");
+      print("addMessages err: ${err}");
     }
   }
 
@@ -244,5 +244,10 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
         mode: InsertMode.insertOrReplace,
       );
     });
+  }
+
+  Future<Message> getMessageByUid(int uid) {
+    return (select(mail)..where((item) => item.uid.equals(uid)))
+        .getSingle();
   }
 }

@@ -18,6 +18,7 @@ import 'background/background_helper.dart';
 import 'background/background_sync.dart';
 import 'logger/logger.dart';
 import 'modules/app_screen.dart';
+import 'notification/notification_manager.dart';
 
 void main() async {
   Crashlytics.instance.enableInDevMode = true;
@@ -42,6 +43,7 @@ void main() async {
       ),
     ),
   );
+  NotificationManager.instance;
   AlarmService.init();
   AlarmService.onAlarm(onAlarm, ALARM_ID);
   BlocSupervisor.delegate = BlocLogger();
@@ -55,7 +57,10 @@ void main() async {
 Set<String> updateForNotification = {};
 
 @pragma('vm:entry-point')
-void onAlarm([bool showNotification = true, NotificationData data]) async {
+void onAlarm(
+    [bool showNotification = true,
+    NotificationData data,
+    Future Function(bool) onSuccess]) async {
   var hasUpdate = false;
   if (!updateForNotification.contains(null) &&
       !updateForNotification.contains(data?.to)) {
@@ -68,9 +73,15 @@ void onAlarm([bool showNotification = true, NotificationData data]) async {
       hasUpdate = await BackgroundSync()
           .sync(BackgroundHelper.isBackground, showNotification, data)
           .timeout(Duration(seconds: kDebugMode ? 360 : 30));
+      if (onSuccess != null) {
+        await onSuccess(true);
+      }
     } catch (e, s) {
       logger.log("onAlarm exeption $e");
       print(s);
+      if (onSuccess != null) {
+        await onSuccess(false);
+      }
     }
     updateForNotification.remove(data?.to);
   }

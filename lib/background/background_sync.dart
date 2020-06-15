@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:aurora_mail/database/accounts/accounts_dao.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/folders/folders_dao.dart';
@@ -52,7 +54,7 @@ class BackgroundSync {
         }
         final newMessages = await _getNewMessages(user, accounts);
         if (newMessages.isNotEmpty) {
-          if (isBackground == true && showNotification) {
+          if (true) {
             newMessages
                 .sort((a, b) => a.timeStampInUTC.compareTo(b.timeStampInUTC));
             logger.log("MailSync: ${newMessages.length} new message(s)");
@@ -92,6 +94,7 @@ class BackgroundSync {
     }
     final newMessages = new List<Message>();
     for (var account in accounts) {
+
       final inboxFolders = await _foldersDao.getByType(
           [Folder.getNumberFromFolderType(FolderType.inbox)], account.localId);
 
@@ -109,7 +112,7 @@ class BackgroundSync {
         );
 
         if (!folderToUpdate.needsInfoUpdate || messagesInfo == null) {
-          break;
+          continue;
         }
 
         final syncPeriod = SyncPeriod.dbStringToPeriod(user.syncPeriod);
@@ -132,6 +135,11 @@ class BackgroundSync {
         if (result.addedMessages.isEmpty) break;
 
         result.addedMessages.removeWhere((m) => m.flags.contains("\\seen"));
+        await _mailDao.deleteMessages(
+            result.removedUids, folderToUpdate.fullNameRaw);
+
+        await _mailDao.updateMessagesFlags(result.infosToUpdateFlags);
+
         await _mailDao.addEmptyMessage(
             result.addedMessages, account, user, folderToUpdate.fullNameRaw);
 
@@ -140,10 +148,11 @@ class BackgroundSync {
           folderName: folderToUpdate.fullNameRaw,
           uids: uids.toList(),
         );
+
         final newMessageBodies =
             Mail.getMessageObjFromServerAndUpdateInfoHasBody(
           rawBodies,
-          null,
+          await _getMessageInfoWithNotBody(result.addedMessages),
           user.localId,
           account,
           folderToUpdate,
@@ -154,6 +163,27 @@ class BackgroundSync {
       }
     }
     return newMessages;
+  }
+
+  Future<List<Message>> _getMessageInfoWithNotBody(
+      List<MessageInfo> messagesInfo) async {
+    final List<Message> messages = [];
+
+    final length = messagesInfo.length;
+    final step = 300;
+    final count = length ~/ step;
+
+    for (var i = 0; i <= count; i++) {
+      final position = step * i;
+      final uids = messagesInfo
+          .sublist(position, min(position + step, messagesInfo.length))
+          .map((item) => item.uid)
+          .toList();
+
+      messages.addAll(await _mailDao.getMessageWithNotBody(uids));
+    }
+
+    return messages;
   }
 
   Future<List<Folder>> _updateFolderHash(
@@ -186,7 +216,7 @@ class BackgroundSync {
   }
 
   Future<void> _showNewMessage(Message message, User user) async {
-    final manager = NotificationManager();
+    final manager = NotificationManager.instance;
     return manager.showMessageNotification(message, user);
   }
 }

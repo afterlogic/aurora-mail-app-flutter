@@ -1,4 +1,5 @@
 import 'package:aurora_mail/build_property.dart';
+import 'package:aurora_mail/modules/dialog_wrap.dart';
 import 'package:aurora_mail/modules/settings/blocs/pgp_settings/bloc.dart';
 import 'package:aurora_mail/modules/settings/screens/pgp_settings/components/key_item.dart';
 import 'package:aurora_mail/shared_ui/sized_dialog_content.dart';
@@ -23,7 +24,7 @@ class ImportKeyDialog extends StatefulWidget {
   _ImportKeyDialogState createState() => _ImportKeyDialogState();
 }
 
-class _ImportKeyDialogState extends BState<ImportKeyDialog> {
+class _ImportKeyDialogState extends BState<ImportKeyDialog> with NotSavedChangesMixin{
   final List<PgpKey> userKeys = [];
   final List<PgpKeyWithContact> contactKeys = [];
   final List<PgpKeyWithContact> newContactKeys = [];

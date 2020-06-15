@@ -5,6 +5,7 @@ import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 import 'package:aurora_mail/modules/contacts/screens/contact_edit/components/contact_edit_app_bar.dart';
 import 'package:aurora_mail/modules/contacts/screens/contacts_list/contacts_list_route.dart';
+import 'package:aurora_mail/modules/dialog_wrap.dart';
 import 'package:aurora_mail/modules/settings/blocs/pgp_settings/bloc.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
@@ -35,7 +36,7 @@ class ContactEditAndroid extends StatefulWidget {
   _ContactEditAndroidState createState() => _ContactEditAndroidState();
 }
 
-class _ContactEditAndroidState extends BState<ContactEditAndroid> {
+class _ContactEditAndroidState extends BState<ContactEditAndroid> with NotSavedChangesMixin{
   ContactsBloc _bloc;
   bool _showAllFields = false;
   int _primaryEmail = 0;

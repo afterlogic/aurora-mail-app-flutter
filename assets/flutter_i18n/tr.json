@@ -358,5 +358,15 @@
   "btn_vcf_import": "Import",
   "hint_vcf_import": "Import {name} contact from vcf?",
   "label_message_headers": "Message headers",
-  "error_user_already_logged": "This user is already logged in"
+  "error_user_already_logged": "This user is already logged in",
+  "btn_unread": "Unread",
+  "btn_read": "Read",
+  "btn_show_details": "Show details",
+  "btn_hide_details": "Hide details",
+  "label_notifications_settings": "Notifications",
+  "label_device_identifier": "Device identifier",
+  "label_token_storing_status": "Token storing status",
+  "btn_resend_push_token": "Resend Push Token",
+  "label_token_successful": "Successful",
+  "label_token_failed": "Failed"
 }

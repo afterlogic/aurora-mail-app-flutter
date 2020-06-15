@@ -1,6 +1,8 @@
 import 'dart:math';
 
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/modules/app_screen.dart';
+import 'package:aurora_mail/modules/dialog_wrap.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
     hide Message;
 import 'package:notifications_utils/notifications_utils.dart';
@@ -8,29 +10,34 @@ import 'package:package_info/package_info.dart';
 
 class NotificationManager {
   final plugin = FlutterLocalNotificationsPlugin();
+  static NotificationManager instance = NotificationManager._();
 
-  NotificationManager() {
+  NotificationManager._() {
     final initializationSettings = InitializationSettings(
       //todo VO res/drawable/app_icon.png
       AndroidInitializationSettings('app_icon'),
       IOSInitializationSettings(),
     );
 
-    plugin.initialize(initializationSettings);
+    plugin.initialize(initializationSettings,
+        onSelectNotification: onSelectNotification);
+    test();
   }
 
-  void setOnNotification(
-      Future Function(int, String, String, String) callback) {
-    plugin.didReceiveLocalNotificationCallback = callback;
+  test() async {
+    final notification = await plugin.getNotificationAppLaunchDetails();
+    if (notification.didNotificationLaunchApp) {
+      onSelectNotification(notification.payload);
+    }
   }
-
-  void onSelectNotification() {}
 
   Future<void> showMessageNotification(Message message, User user) async {
-    return showNotification(message.fromToDisplay, message.subject, user);
+    return showNotification(
+        message.fromToDisplay, message.subject, user, message.uid);
   }
 
-  Future<void> showNotification(String from, String subject, User user) async {
+  Future<void> showNotification(
+      String from, String subject, User user, int localId) async {
     final activeNotifications =
         await NotificationsUtils.getActiveNotifications();
 
@@ -48,13 +55,12 @@ class NotificationManager {
 
     if (from.contains("@")) from = from.split("@")[0];
 
-    final androidNotificationDetails = AndroidNotificationDetails(
+    var androidNotificationDetails = AndroidNotificationDetails(
       groupChannelId,
       groupChannelName,
       groupChannelDescription,
       importance: Importance.Max,
       priority: Priority.High,
-      style: AndroidNotificationStyle.Inbox,
       styleInformation: InboxStyleInformation(
         [subject],
         contentTitle: from,
@@ -70,16 +76,37 @@ class NotificationManager {
       from,
       subject,
       NotificationDetails(androidNotificationDetails, null),
+      payload: "$localId",
     );
 
     if (isFirstNotification) {
+      androidNotificationDetails = AndroidNotificationDetails(
+        groupChannelId,
+        groupChannelName,
+        groupChannelDescription,
+        importance: Importance.Max,
+        priority: Priority.High,
+        styleInformation: InboxStyleInformation(
+          [subject],
+          contentTitle: from,
+          summaryText: user.emailFromLogin,
+        ),
+        groupKey: groupKey,
+        setAsGroupSummary: false,
+      );
       await plugin.show(
         id + 999999,
         from,
         subject,
-        NotificationDetails(
-            androidNotificationDetails..setAsGroupSummary = false, null),
+        NotificationDetails(androidNotificationDetails, null),
+        payload: "$localId",
       );
     }
   }
+}
+
+Future onSelectNotification(String title) async {
+  await Future.delayed(Duration(seconds: 1));
+  final localId = int.parse(title);
+  RouteWrap.staticState.showMessage(localId);
 }

@@ -6,6 +6,7 @@ import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/models/alias_or_identity.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
+import 'package:aurora_mail/modules/dialog_wrap.dart';
 import 'package:aurora_mail/modules/mail/blocs/compose_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/models/compose_actions.dart';
@@ -57,7 +58,7 @@ class ComposeAndroid extends StatefulWidget {
   _ComposeAndroidState createState() => _ComposeAndroidState();
 }
 
-class _ComposeAndroidState extends BState<ComposeAndroid> {
+class _ComposeAndroidState extends BState<ComposeAndroid> with NotSavedChangesMixin {
   Aliases alias;
   AccountIdentity identity;
   ComposeBloc _bloc;

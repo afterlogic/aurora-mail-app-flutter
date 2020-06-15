@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:aurora_mail/modules/dialog_wrap.dart';
 import 'package:aurora_mail/shared_ui/toast_widget.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/material.dart';
@@ -8,12 +9,18 @@ import 'components/clipboard_label.dart';
 import 'components/contact_with_key_widget.dart';
 import 'model/contact_with_key.dart';
 
-class ViewPassword extends StatelessWidget {
+class ViewPassword extends StatefulWidget {
   final List<ContactWithKey> contacts;
   final String password;
-  final toastKey = GlobalKey<ToastWidgetState>();
 
   ViewPassword(this.contacts, this.password);
+
+  @override
+  _ViewPasswordState createState() => _ViewPasswordState();
+}
+
+class _ViewPasswordState extends State<ViewPassword> with NotSavedChangesMixin  {
+  final toastKey = GlobalKey<ToastWidgetState>();
 
   @override
   Widget build(BuildContext context) {
@@ -34,12 +41,12 @@ class ViewPassword extends StatelessWidget {
                 ),
                 SizedBox(height: 20),
                 Column(
-                  children: contacts
+                  children: widget.contacts
                       .map((item) => ContactWithKeyWidget(item))
                       .toList(),
                 ),
                 SizedBox(height: 20),
-                ClipboardLabel(password, "Encrypted message password.", () {
+                ClipboardLabel(widget.password, "Encrypted message password.", () {
               toastKey.currentState.show(i18n(context, "hint_self_destructing_password_coppied_to_clipboard"));
                 }),
                 SizedBox(height: 20),

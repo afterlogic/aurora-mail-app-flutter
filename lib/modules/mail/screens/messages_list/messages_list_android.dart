@@ -32,8 +32,9 @@ import 'components/message_item.dart';
 
 class MessagesListAndroid extends StatefulWidget {
   final String initSearch;
+  final int openMessageId;
 
-  const MessagesListAndroid({this.initSearch});
+  const MessagesListAndroid({this.initSearch, this.openMessageId});
 
   @override
   _MessagesListAndroidState createState() => _MessagesListAndroidState();
@@ -82,6 +83,21 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
         MessagesListAndroid.shareHolder = null;
       }
     });
+    if (widget.openMessageId != null) {
+      openMessage(widget.openMessageId);
+    }
+  }
+
+  openMessage(int uid) async {
+    await Future.delayed(Duration(milliseconds: 1));
+    if (widget.openMessageId != null) {
+      try {
+        final message = await _mailBloc.getMessageByUid(uid);
+        await _onMessageSelected(message);
+      } catch (e) {
+        print(e);
+      }
+    }
   }
 
   @override
@@ -114,10 +130,10 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
     showSnack(context: ctx, scaffoldState: Scaffold.of(ctx), msg: err);
   }
 
-  void _onMessageSelected(Message item) async {
-    final message = await _mailBloc.getFullMessage(item);
+  Future _onMessageSelected(Message _message) async {
+    final message = await _mailBloc.getFullMessage(_message.localId);
     final draftsFolder = await _mailBloc.getFolderByType(FolderType.drafts);
-
+    print(message.localId);
     if (draftsFolder != null && message.folder == draftsFolder.fullNameRaw) {
       Navigator.pushNamed(
         context,

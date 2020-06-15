@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:aurora_mail/modules/dialog_wrap.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/self_destructing/bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/self_destructing/bloc/self_destructing_bloc.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/self_destructing/components/contact_with_key_widget.dart';
@@ -26,7 +27,7 @@ class EncryptSetting extends StatefulWidget {
   _EncryptSettingState createState() => _EncryptSettingState();
 }
 
-class _EncryptSettingState extends BState<EncryptSetting> {
+class _EncryptSettingState extends BState<EncryptSetting> with NotSavedChangesMixin {
   final passwordCtrl = TextEditingController();
   final formKey = GlobalKey<FormState>();
   final toastKey = GlobalKey<ToastWidgetState>();
