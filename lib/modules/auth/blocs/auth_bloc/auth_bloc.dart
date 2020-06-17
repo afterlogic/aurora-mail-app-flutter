@@ -50,7 +50,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         currentUser = result.user;
         currentAccount = result.account;
 
-
         final identities =
             await _methods.getAccountIdentities(currentUser, currentAccount);
         _methods.setFbToken(users);
@@ -137,9 +136,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             event.password,
             err.host,
           );
-        } else if (err is WebMailApiError &&
-            err.message == "ERROR_USER_MOBILE_ACCESS_LIMIT") {
-          yield UpgradePlan(err.message);
+        } else if (err is AllowAccess) {
+          yield UpgradePlan(null);
         } else {
           yield AuthError(formatError(err, s));
         }

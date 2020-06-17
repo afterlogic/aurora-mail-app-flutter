@@ -9,15 +9,18 @@ import 'package:theme/app_color.dart';
 import 'package:theme/app_theme.dart';
 
 class UpgradePlanWidget extends StatelessWidget {
-  const UpgradePlanWidget();
+  final String message;
+
+  const UpgradePlanWidget(this.message);
 
   Widget _gradientWrap(Widget child) {
     return themeWrap(
-     LoginGradient(
+      LoginGradient(
         child: child,
       ),
     );
   }
+
   Widget themeWrap(Widget widget) {
     if (AppTheme.login != null) {
       return Theme(
@@ -27,6 +30,7 @@ class UpgradePlanWidget extends StatelessWidget {
     }
     return widget;
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,10 +53,12 @@ class UpgradePlanWidget extends StatelessWidget {
                   Column(
                     children: <Widget>[
                       Text(
-                        i18n(context, "hint_login_upgrade_your_plan"),
-                        style: Theme.of(context).textTheme.subhead.copyWith(
-                          fontSize: 18
-                        ),
+                        message ??
+                            i18n(context, "hint_login_upgrade_your_plan"),
+                        style: Theme.of(context)
+                            .textTheme
+                            .subhead
+                            .copyWith(fontSize: 18),
                         textAlign: TextAlign.center,
                       ),
                     ],

@@ -9,7 +9,7 @@ splashGradientBottom: "#FFFFFF"
 splashGradientTopDark: "#000000"
 splashGradientBottomDark: "#000000"
 
-autodiscover_url: "https://{domain}/aurora-autodiscover.json"
+autodiscover_url: "https://{domain}/aurora-autodiscover.json?email={email}"
 privacyPolicy: "https://afterlogic.com/privacy-policy"
 
 multiUserEnable: false

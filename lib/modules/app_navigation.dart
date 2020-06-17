@@ -90,11 +90,12 @@ class AppNavigation {
 
         break;
       case UpgradePlanRoute.name:
+        final args = settings.arguments as UpgradePlanArg;
         return FadeRoute(
           settings: RouteSettings(
             name: settings.name,
           ),
-          builder: (_) => UpgradePlanWidget(),
+          builder: (_) => UpgradePlanWidget(args.message),
         );
 
         break;
@@ -106,7 +107,7 @@ class AppNavigation {
           settings: RouteSettings(name: settings.name),
           builder: (_) => MessagesListAndroid(
             initSearch: args?.search,
-            openMessageId:args?.messageLocalId,
+            openMessageId: args?.messageLocalId,
           ),
         );
         break;

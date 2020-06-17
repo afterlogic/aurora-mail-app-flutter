@@ -56,7 +56,7 @@ class TwoFactor extends AuthState {
 
 class NeedsHost extends AuthState {}
 
-class UpgradePlan extends AuthState {
+class UpgradePlan extends AuthState with AlwaysNonEqualObject {
   final String err;
 
   UpgradePlan(this.err);

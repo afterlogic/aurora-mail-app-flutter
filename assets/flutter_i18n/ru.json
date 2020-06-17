@@ -335,7 +335,7 @@
   "hint_self_destructing_password_coppied_to_clipboard": "Пароль скопирован",
   "btn_pgp_import_from_text": "Импортировать из текста",
   "btn_pgp_import_from_file": "Импортировать из файла",
-  "hint_login_upgrade_your_plan": "Mobile apps are not allowed in your billing plan.",
+  "hint_login_upgrade_your_plan": "Mobile apps are not allowed in your account.",
   "btn_login_back_to_login": "Back to login",
   "error_contact_pgp_key_will_not_be_valid": "Pgp ключ не будет действительным",
   "btn_contact_key_re_import": "Импортировать заного",

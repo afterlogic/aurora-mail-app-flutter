@@ -335,7 +335,7 @@
   "hint_self_destructing_sent_password_using_different_channel": "The password must be sent using a different channel.\n  Store the password somewhere. You will not be able to recover it otherwise.",
   "btn_self_destructing": "Self-destructing",
   "hint_self_destructing_password_coppied_to_clipboard": "Password coppied to clipboard",
-  "hint_login_upgrade_your_plan": "Mobile apps are not allowed in your billing plan.",
+  "hint_login_upgrade_your_plan": "Mobile apps are not allowed in your account.",
   "btn_login_back_to_login": "Back to login",
   "error_contact_pgp_key_will_not_be_valid": "The PGP key will not be valid",
   "btn_contact_key_re_import": "Re import",

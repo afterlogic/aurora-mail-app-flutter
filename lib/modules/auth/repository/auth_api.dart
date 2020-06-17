@@ -42,6 +42,9 @@ class AuthApi {
       throw RequestTwoFactor(hostname);
     } else if (response['Result'] != null &&
         response['Result']['AuthToken'] is String) {
+      if (response['Result']["AllowAccess"] != 1) {
+        throw AllowAccess();
+      }
       final token = response['Result']['AuthToken'] as String;
       final id = response['AuthenticatedUserId'] as int;
 
@@ -224,6 +227,10 @@ class RequestTwoFactor extends Error {
   final String host;
 
   RequestTwoFactor(this.host);
+}
+
+class AllowAccess extends Error {
+  AllowAccess();
 }
 
 class InvalidPin extends Error {}

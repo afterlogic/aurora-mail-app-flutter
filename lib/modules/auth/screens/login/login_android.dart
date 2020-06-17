@@ -208,7 +208,11 @@ class _LoginAndroidState extends BState<LoginAndroid> {
                     msg: state.err,
                   );
                 } else {
-                  Navigator.pushNamed(context, UpgradePlanRoute.name);
+                  Navigator.pushNamed(
+                    context,
+                    UpgradePlanRoute.name,
+                    arguments: UpgradePlanArg(null),
+                  );
                 }
               }
             },
