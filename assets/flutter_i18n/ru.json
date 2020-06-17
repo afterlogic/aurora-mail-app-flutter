@@ -368,5 +368,9 @@
   "label_token_storing_status": "Token storing status",
   "btn_resend_push_token": "Resend Push Token",
   "label_token_successful": "Successful",
-  "label_token_failed": "Failed"
+  "label_token_failed": "Failed",
+  "label_forward_as_attachment": "Forward as attachment",
+  "label_contact_with_not_name": "No name",
+  "label_device_id_copied_to_clip_board": "Device id copied to clipboard",
+  "label_discard_not_saved_changes": "Discard not saved changes?"
 }
