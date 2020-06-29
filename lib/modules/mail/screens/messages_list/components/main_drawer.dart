@@ -44,7 +44,7 @@ class _MainDrawerState extends BState<MainDrawer> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               InkWell(
-                onTap: multiAccountEnable
+                onTap: (multiAccountEnable && authBloc.accounts.length>1)
                     ? () {
                         _changeMode();
                       }
