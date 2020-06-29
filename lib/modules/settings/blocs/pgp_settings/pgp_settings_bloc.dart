@@ -52,7 +52,7 @@ class PgpSettingsBloc extends Bloc<PgpSettingsEvent, PgpSettingsState> {
     final userPublicKeys = await _methods.getKeys(false);
     final contactPublicKeys = await _methods.getContactKeys();
 
-    yield LoadedState(userPublicKeys, userPrivateKeys, contactPublicKeys,null);
+    yield LoadedState(userPublicKeys, userPrivateKeys, contactPublicKeys, null);
   }
 
   Stream<PgpSettingsState> _generateKeys(GenerateKeys event) async* {
@@ -146,13 +146,17 @@ class PgpSettingsBloc extends Bloc<PgpSettingsEvent, PgpSettingsState> {
   }
 
   Stream<PgpSettingsState> _downloadKeys(DownloadKeys event) async* {
-    File file;
-    if (event.pgpKeys.length == 1) {
-      file = await _methods.downloadKey(event.pgpKeys.first);
-    } else {
-      file = await _methods.downloadKeys(event.pgpKeys);
+    try {
+      File file;
+      if (event.pgpKeys.length == 1) {
+        file = await _methods.downloadKey(event.pgpKeys.first);
+      } else {
+        file = await _methods.downloadKeys(event.pgpKeys);
+      }
+      yield CompleteDownload(file.path);
+    } catch (e) {
+      print(e);
     }
-    yield CompleteDownload(file.path);
   }
 
   Stream<PgpSettingsState> _shareKeys(ShareKeys event) async* {

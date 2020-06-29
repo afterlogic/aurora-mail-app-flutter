@@ -13,6 +13,7 @@ import 'package:crypto_storage/src/pgp_storage.dart';
 import 'package:crypto_worker/src/pgp/pgp_worker.dart';
 import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:path_provider/path_provider.dart';
 
 class PgpSettingsMethods {
   final CryptoStorage cryptoStorage;
@@ -52,6 +53,7 @@ class PgpSettingsMethods {
     final file = File(
       await _keysFolderPath() + Platform.pathSeparator + fileName,
     );
+
     if (await file.exists()) await file.delete();
     await file.create(recursive: true);
     await file.writeAsString(key.key);
@@ -81,7 +83,7 @@ class PgpSettingsMethods {
 
   Future<String> _keysFolderPath() async {
     await getStoragePermissions();
-    final dirPath = await getDownloadDirectory();
+    final dirPath = (await getDownloadDirectory());
     return dirPath + Platform.pathSeparator + KEY_FOLDER;
   }
 
@@ -176,29 +178,6 @@ class PgpSettingsMethods {
       final contacts = <Contact>[];
       for (var value in selectedContact) {
         Contact contact = value.contact;
-        if (contact == null) {
-          contact = await contactsDao.addContact(Contact(
-            personalEmail: "",
-            viewEmail: value.mail ?? "",
-            fullName: value.name ?? "",
-            davContactsVCardUid: "",
-            frequency: 0,
-            entityId: null,
-            groupUUIDs: <String>[],
-            eTag: "",
-            useFriendlyName: false,
-            title: "",
-            davContactsUid: "",
-            storage: StorageNames.personal,
-            uuidPlusStorage: "",
-            dateModified: DateTime.now().toIso8601String(),
-            idTenant: 1,
-            userLocalId: user.localId,
-            idUser: user.serverId,
-            pgpPublicKey: value.key,
-            uuid: "",
-          ));
-        }
         contacts.add(
           contact.copyWith(pgpPublicKey: value.key),
         );
