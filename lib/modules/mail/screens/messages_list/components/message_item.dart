@@ -129,7 +129,7 @@ class _MessageItemState extends BState<MessageItem> {
                 destructibleAction: true,
               );
             } else if (direction == DismissDirection.startToEnd) {
-              await widget.onUnreadMessage(m,isUnread);
+              await widget.onUnreadMessage(m, isUnread);
             }
             return false;
           },
@@ -233,9 +233,7 @@ class _MessageItemState extends BState<MessageItem> {
                         InkResponse(
                           child:
                               _buildThreadCounter(context, hasUnreadChildren),
-                          onTap: BuildProperty.expandMessageThread
-                              ? _toggleThreads
-                              : null,
+                          onTap: _toggleThreads,
                         ),
                       if (widget.children.isNotEmpty) SizedBox(width: 6.0),
                       Flexible(
