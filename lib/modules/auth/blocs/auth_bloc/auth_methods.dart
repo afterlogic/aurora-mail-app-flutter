@@ -4,7 +4,9 @@ import 'package:aurora_mail/database/aliases/aliases_dao.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/folders/folders_dao.dart';
 import 'package:aurora_mail/database/mail/mail_dao.dart';
+import 'package:aurora_mail/database/pgp/pgp_key_dao.dart';
 import 'package:aurora_mail/database/users/users_dao.dart';
+import 'package:aurora_mail/inject/app_inject.dart';
 import 'package:aurora_mail/modules/auth/repository/auth_api.dart';
 import 'package:aurora_mail/modules/auth/repository/auth_local_storage.dart';
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/contacts/contacts_dao.dart';
@@ -23,6 +25,7 @@ class AuthMethods {
   final _accountIdentityDao = new AccountIdentityDao(DBInstances.appDB);
   final _aliasesDao = new AliasesDao(DBInstances.appDB);
   final _accountsDao = new AccountsDao(DBInstances.appDB);
+  final _cryptoStorage = AppInjector.instance.cryptoStorage();
 
   Future<InitializerResponse> getUserAndAccountsFromDB() async {
     final selectedUserId = await _authLocal.getSelectedUserLocalId();
@@ -112,6 +115,7 @@ class AuthMethods {
 
     final futures = [
       deleteUserRelatedData(user),
+      _cryptoStorage.deleteAll(),
       _authLocal.deleteSelectedUserLocalId(),
       _authLocal.deleteSelectedAccountId(),
       _usersDao.deleteUser(user.localId),

@@ -61,6 +61,7 @@ class MailBloc extends Bloc<MailEvent, MailState> {
   }
 
   Stream<MailState> _fetchFolders(FetchFolders event) async* {
+    final previous = state;
     if (state is! FoldersLoaded) yield FoldersLoading();
 
     try {
@@ -99,6 +100,9 @@ class MailBloc extends Bloc<MailEvent, MailState> {
       }
     } catch (err, s) {
       yield FoldersError(formatError(err, s));
+      if (previous is FoldersLoaded) {
+        yield previous;
+      }
     }
   }
 
@@ -117,6 +121,7 @@ class MailBloc extends Bloc<MailEvent, MailState> {
   }
 
   Stream<MailState> _refreshFolders(RefreshFolders event) async* {
+    final previous = state;
     try {
       if (state is! FoldersLoaded) yield FoldersLoading();
 
@@ -143,10 +148,14 @@ class MailBloc extends Bloc<MailEvent, MailState> {
       yield FoldersLoaded(newFolders, _selectedFolder, _filter);
     } catch (err, s) {
       yield FoldersError(formatError(err, s));
+      if (previous is FoldersLoaded) {
+        yield previous;
+      }
     }
   }
 
   Stream<MailState> _refreshMessages(RefreshMessages event) async* {
+    final previous = state;
     try {
       final guid = _selectedFolder.guid;
       final List<Folder> foldersWithInfo = await _methods.updateFoldersHash(
@@ -171,6 +180,9 @@ class MailBloc extends Bloc<MailEvent, MailState> {
           });
     } catch (err, s) {
       yield FoldersError(formatError(err, s));
+      if (previous is FoldersLoaded) {
+        yield previous;
+      }
     }
   }
 
@@ -240,15 +252,16 @@ class MailBloc extends Bloc<MailEvent, MailState> {
   Future<Message> getFullMessage(int localId) {
     return _methods.getMessage(localId);
   }
+
   Future<LocalFolder> getFolderByType(FolderType folderType) {
     return _methods.getFolderByType(folderType);
   }
+
   Future<Folder> updateFolder(Folder selectedFolder) {
     return _methods.getFolder(selectedFolder.guid);
   }
 
-  Future<Message>  getMessageByUid(int uid) {
+  Future<Message> getMessageByUid(int uid) {
     return _methods.getMessageByUid(uid);
   }
-
 }
