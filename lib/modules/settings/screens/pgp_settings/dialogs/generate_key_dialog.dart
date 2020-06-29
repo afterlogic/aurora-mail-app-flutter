@@ -98,10 +98,7 @@ class _GenerateKeyDialogState extends BState<GenerateKeyDialog> with NotSavedCha
               }).toList(),
               selectedItemBuilder: (context) {
                 return lengths.map((value) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: Text(value.toString()),
-                  );
+                  return Text(value.toString());
                 }).toList();
               },
               onChanged: (int v) {
