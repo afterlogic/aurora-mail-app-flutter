@@ -39,8 +39,8 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
   @override
   void initState() {
     super.initState();
-      pgpSettingsBloc =
-          AppInjector.instance.pgpSettingsBloc(BlocProvider.of(context));
+    pgpSettingsBloc =
+        AppInjector.instance.pgpSettingsBloc(BlocProvider.of(context));
     BackgroundHelper.addOnAlarmObserver(false, onAlarm);
   }
 
@@ -157,7 +157,10 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
           MailBottomAppBar(selectedRoute: MailBottomAppBarRoutes.contacts),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: AMFloatingActionButton(
-        child: Icon(MdiIcons.accountPlusOutline),
+        child: Icon(
+          MdiIcons.accountPlusOutline,
+          color: theme.appBarTheme.iconTheme.color,
+        ),
         onPressed: () => Navigator.pushNamed(
           context,
           ContactEditRoute.name,

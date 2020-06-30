@@ -67,7 +67,7 @@ class AuthMethods {
     String hostname = host;
     if (hostname.isEmpty) {
       if (email == await lastEmail) {
-        hostname = (await lastHost) ?? "";
+          hostname = (await lastHost) ?? "";
       }
     }
     if (hostname.isEmpty) {

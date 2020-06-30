@@ -307,7 +307,10 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
               MailBottomAppBar(selectedRoute: MailBottomAppBarRoutes.mail),
           floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
           floatingActionButton: AMFloatingActionButton(
-            child: Icon(MdiIcons.pen),
+            child: Icon(
+              MdiIcons.pen,
+              color: theme.appBarTheme.iconTheme.color,
+            ),
             onPressed: () => Navigator.pushNamed(context, ComposeRoute.name,
                 arguments: ComposeScreenArgs(
                   mailBloc: _mailBloc,

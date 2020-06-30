@@ -27,8 +27,10 @@ class EncryptSetting extends StatefulWidget {
   _EncryptSettingState createState() => _EncryptSettingState();
 }
 
-class _EncryptSettingState extends BState<EncryptSetting> with NotSavedChangesMixin {
+class _EncryptSettingState extends BState<EncryptSetting>
+    with NotSavedChangesMixin {
   final passwordCtrl = TextEditingController();
+  final scroll = ScrollController();
   final formKey = GlobalKey<FormState>();
   final toastKey = GlobalKey<ToastWidgetState>();
   LifeTime lifeTime = LifeTime.values.first;
@@ -63,10 +65,12 @@ class _EncryptSettingState extends BState<EncryptSetting> with NotSavedChangesMi
                   child: Stack(
                     children: <Widget>[
                       ListView(
+                        controller: scroll,
                         padding: EdgeInsets.all(0),
                         children: <Widget>[
                           Text(
-                            i18n(context, "hint_self_destructing_supports_plain_text_only"),
+                            i18n(context,
+                                "hint_self_destructing_supports_plain_text_only"),
                             style: theme.textTheme.caption,
                           ),
                           SizedBox(height: 20),
@@ -108,8 +112,8 @@ class _EncryptSettingState extends BState<EncryptSetting> with NotSavedChangesMi
                             },
                           ),
                           RadioListTile(
-                            title: Text(
-                                i18n(context, "input_self_destructing_password_based_encryption")),
+                            title: Text(i18n(context,
+                                "input_self_destructing_password_based_encryption")),
                             value: false,
                             onChanged: (bool value) {
                               isKeyBased = value;
@@ -119,7 +123,8 @@ class _EncryptSettingState extends BState<EncryptSetting> with NotSavedChangesMi
                             groupValue: isKeyBased,
                           ),
                           RadioListTile(
-                            title: Text(i18n(context, "input_self_destructing_key_based_encryption")),
+                            title: Text(i18n(context,
+                                "input_self_destructing_key_based_encryption")),
                             value: true,
                             groupValue: isKeyBased,
                             onChanged: !recipientHaveKey
@@ -142,7 +147,8 @@ class _EncryptSettingState extends BState<EncryptSetting> with NotSavedChangesMi
                           SizedBox(height: 10),
                           SwitchListTile(
                             contentPadding: EdgeInsets.zero,
-                            title: Text(i18n(context, "input_self_destructing_add_digital_signature")),
+                            title: Text(i18n(context,
+                                "input_self_destructing_add_digital_signature")),
                             value: useSign,
                             onChanged: hasKey && isKeyBased
                                 ? (v) {
@@ -179,8 +185,11 @@ class _EncryptSettingState extends BState<EncryptSetting> with NotSavedChangesMi
                           ),
                           SizedBox(height: 20),
                           Text(
-                            i18n(context,
-                                useSign ? "label_self_destructing_sign_data" : "label_self_destructing_not_sign_data"),
+                            i18n(
+                                context,
+                                useSign
+                                    ? "label_self_destructing_sign_data"
+                                    : "label_self_destructing_not_sign_data"),
                             style: theme.textTheme.caption,
                           ),
                         ],
@@ -269,6 +278,8 @@ class _EncryptSettingState extends BState<EncryptSetting> with NotSavedChangesMi
           viewBody,
         ),
       );
+    } else {
+      scroll.jumpTo(scroll.position.maxScrollExtent);
     }
   }
 }

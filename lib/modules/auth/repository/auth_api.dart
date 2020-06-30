@@ -5,6 +5,7 @@ import 'package:aurora_mail/database/account_identity/account_identity_table.dar
 import 'package:aurora_mail/database/accounts/accounts_table.dart';
 import 'package:aurora_mail/database/aliases/aliases_table.dart';
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:webmail_api_client/webmail_api_client.dart';
 
@@ -38,11 +39,13 @@ class AuthApi {
 
     final response = await coreModuleForLogin.post(body, getRawResponse: true);
     if (response['Result'] != null &&
-        response['Result']['TwoFactorAuth'] != null) {
+        response['Result']['TwoFactorAuth'] != null &&
+        !kDebugMode /*todo remove*/) {
       throw RequestTwoFactor(hostname);
     } else if (response['Result'] != null &&
         response['Result']['AuthToken'] is String) {
-      if (response['Result']["AllowAccess"] != 1) {
+      if (response['Result']["AllowAccess"] != 1 &&
+          !kDebugMode /*todo remove*/) {
         throw AllowAccess();
       }
       final token = response['Result']['AuthToken'] as String;
