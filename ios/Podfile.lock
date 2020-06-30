@@ -9,6 +9,10 @@ PODS:
     - Flutter
   - Crashlytics (3.14.0):
     - Fabric (~> 1.10.2)
+  - crypto_stream (0.0.1):
+    - Flutter
+    - OpenSSL-Universal (~> 1.0.2.17)
+    - RxSwift (~> 5)
   - device_id (0.0.1):
     - Flutter
   - DKImagePickerController/Core (4.2.2):
@@ -171,6 +175,9 @@ PODS:
   - nanopb/encode (0.3.9011)
   - notifications_utils (0.0.1):
     - Flutter
+  - OpenSSL-Universal (1.0.2.19):
+    - OpenSSL-Universal/Static (= 1.0.2.19)
+  - OpenSSL-Universal/Static (1.0.2.19)
   - package_info (0.0.1):
     - Flutter
   - path_provider (0.0.1):
@@ -184,6 +191,7 @@ PODS:
   - Reachability (3.2)
   - receive_sharing (0.0.1):
     - Flutter
+  - RxSwift (5.0.1)
   - SDWebImage (5.5.2):
     - SDWebImage/Core (= 5.5.2)
   - SDWebImage/Core (5.5.2)
@@ -215,12 +223,13 @@ DEPENDENCIES:
   - alarm_service (from `.symlinks/plugins/alarm_service/ios`)
   - connectivity (from `.symlinks/plugins/connectivity/ios`)
   - connectivity_macos (from `.symlinks/plugins/connectivity_macos/ios`)
+  - crypto_stream (from `.symlinks/plugins/crypto_stream/ios`)
   - device_id (from `.symlinks/plugins/device_id/ios`)
   - esys_flutter_share (from `.symlinks/plugins/esys_flutter_share/ios`)
   - file_picker (from `.symlinks/plugins/file_picker/ios`)
   - firebase_crashlytics (from `.symlinks/plugins/firebase_crashlytics/ios`)
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
-  - Flutter (from `.symlinks/flutter/ios`)
+  - Flutter (from `.symlinks/flutter/ios-release`)
   - flutter_downloader (from `.symlinks/plugins/flutter_downloader/ios`)
   - flutter_keyboard_visibility (from `.symlinks/plugins/flutter_keyboard_visibility/ios`)
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
@@ -269,9 +278,11 @@ SPEC REPOS:
     - GoogleUtilities
     - libwebp
     - nanopb
+    - OpenSSL-Universal
     - PromisesObjC
     - Protobuf
     - Reachability
+    - RxSwift
     - SDWebImage
     - SDWebImageFLPlugin
 
@@ -282,6 +293,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/connectivity/ios"
   connectivity_macos:
     :path: ".symlinks/plugins/connectivity_macos/ios"
+  crypto_stream:
+    :path: ".symlinks/plugins/crypto_stream/ios"
   device_id:
     :path: ".symlinks/plugins/device_id/ios"
   esys_flutter_share:
@@ -293,7 +306,7 @@ EXTERNAL SOURCES:
   firebase_messaging:
     :path: ".symlinks/plugins/firebase_messaging/ios"
   Flutter:
-    :path: ".symlinks/flutter/ios"
+    :path: ".symlinks/flutter/ios-release"
   flutter_downloader:
     :path: ".symlinks/plugins/flutter_downloader/ios"
   flutter_keyboard_visibility:
@@ -347,6 +360,7 @@ SPEC CHECKSUMS:
   connectivity: 6e94255659cc86dcbef1d452ad3e0491bb1b3e75
   connectivity_macos: e2e9731b6b22dda39eb1b128f6969d574460e191
   Crashlytics: 540b7e5f5da5a042647227a5e3ac51d85eed06df
+  crypto_stream: 2a2fdbfdec937d8779e8e6b14afb3a5e093a61e4
   device_id: 4a0bf078741a3eec6ba0e6cc72e786395d5991b0
   DKImagePickerController: 4a3e7948a848c4348e600b3fe5ce41478835fa10
   DKPhotoGallery: 0290d32343574f06eaa4c26f8f2f8a1035e916be
@@ -382,6 +396,7 @@ SPEC CHECKSUMS:
   libwebp: 946cb3063cea9236285f7e9a8505d806d30e07f3
   nanopb: 18003b5e52dab79db540fe93fe9579f399bd1ccd
   notifications_utils: 2689b5cbda5be923ddc3868f5c86c4ab2dc98d5c
+  OpenSSL-Universal: 8b48cc0d10c1b2923617dfe5c178aa9ed2689355
   package_info: 48b108e75b8802c2d5e126f208ef540561c98aef
   path_provider: fb74bd0465e96b594bb3b5088ee4a4e7bb1f2a9d
   path_provider_macos: f760a3c5b04357c380e2fddb6f9db6f3015897e0
@@ -390,6 +405,7 @@ SPEC CHECKSUMS:
   Protobuf: 176220c526ad8bd09ab1fb40a978eac3fef665f7
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   receive_sharing: d6db01a09636ce060b2bd1a5ca8a41eea4437a3d
+  RxSwift: e2dc62b366a3adf6a0be44ba9f405efd4c94e0c4
   SDWebImage: 4d5c027c935438f341ed33dbac53ff9f479922ca
   SDWebImageFLPlugin: cf3f4ae49f249dd785129346fd61bbc8433a88cf
   shared_preferences: 430726339841afefe5142b9c1f50cb6bd7793e01
@@ -404,4 +420,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 8ce328037588198cf89227d75c8cd180aa726049
 
-COCOAPODS: 1.8.4
+COCOAPODS: 1.9.3
