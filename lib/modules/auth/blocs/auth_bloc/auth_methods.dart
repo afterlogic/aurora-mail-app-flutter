@@ -66,6 +66,11 @@ class AuthMethods {
     // auto discover domain
     String hostname = host;
     if (hostname.isEmpty) {
+      if (email == await lastEmail) {
+        hostname = (await lastHost) ?? "";
+      }
+    }
+    if (hostname.isEmpty) {
       final autoDiscoveredHost = await _authApi.autoDiscoverHostname(email);
       if (autoDiscoveredHost == null || autoDiscoveredHost.isEmpty) {
         return null;
@@ -91,10 +96,13 @@ class AuthMethods {
     }
     selectUser(userToReturn.localId);
     _authLocal.setLastEmail(user.emailFromLogin);
+    _authLocal.setLastHost(user.hostname);
     return userToReturn;
   }
 
   Future<String> get lastEmail => _authLocal.getLastEmail();
+
+  Future<String> get lastHost => _authLocal.getLastHost();
 
   Future<List<User>> get users => _usersDao.getUsers();
 
