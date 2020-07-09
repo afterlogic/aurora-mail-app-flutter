@@ -98,11 +98,7 @@ class _EncryptSettingState extends BState<EncryptSetting>
                             }).toList(),
                             selectedItemBuilder: (context) {
                               return LifeTime.values.map((value) {
-                                return Padding(
-                                  padding:
-                                      const EdgeInsets.symmetric(vertical: 8.0),
-                                  child: Text(i18n(context, value.toText())),
-                                );
+                                return Text(i18n(context, value.toText()));
                               }).toList();
                             },
                             isExpanded: true,

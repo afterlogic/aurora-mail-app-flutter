@@ -67,7 +67,7 @@ class AuthMethods {
     String hostname = host;
     if (hostname.isEmpty) {
       if (email == await lastEmail) {
-          hostname = (await lastHost) ?? "";
+        hostname = (await lastHost) ?? "";
       }
     }
     if (hostname.isEmpty) {
@@ -153,7 +153,10 @@ class AuthMethods {
   }
 
   Future<User> invalidateToken(int userLocalId) async {
-    await _usersDao.updateUser(userLocalId, UsersCompanion(token: Value(null)));
+    try {
+      await _usersDao.updateUser(
+          userLocalId, UsersCompanion(token: Value(null)));
+    } catch (e) {}
     return _usersDao.getUserByLocalId(userLocalId);
   }
 
