@@ -17,8 +17,8 @@ class AppService : AlarmService() {
         }.apply {
             //todo VO
             setSmallIcon(R.drawable.app_icon)
-            setContentTitle("Updating mail")
-            setContentText("...")
+            setContentTitle("Mail syncing...")
+            setProgress(0, 0, true);
         }
         return builder.build()
     }

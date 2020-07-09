@@ -15,7 +15,7 @@ privacyPolicy: "https://afterlogic.com/privacy-policy"
 multiUserEnable: false
 multiAccountEnable: true
 cryptoEnable: true
-selfDestructingEmail: false
+selfDestructingEmail: true
 pushNotification: false
 
 _version: 1.2.0
