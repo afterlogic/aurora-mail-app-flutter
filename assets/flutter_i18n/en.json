@@ -344,7 +344,7 @@
   "hint_pgp_keys_will_be_import_to_contacts": "The keys will be imported to contacts",
   "hint_pgp_keys_contacts_will_be_created": "For these keys contacts will be created",
   "hint_pgp_your_keys": "Your keys",
-  "label_pgp_contact_public_keys": "Contact public keys",
+  "label_pgp_contact_public_keys": "External public keys",
   "label_message_move_to": "Move to: ",
   "btn_message_paste": "Paste",
   "label_message_move_to_folder": "Move to folder",
