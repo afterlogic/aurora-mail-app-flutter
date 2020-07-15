@@ -71,13 +71,12 @@ void onAlarm(
     [bool showNotification = true,
     NotificationData data,
     Future Function(bool) onSuccess]) async {
-  if (BackgroundHelper.isBackground) {
-    final isRun = await DebugLocalStorage().getIsRun();
-    if (isRun) {
-      logger.enable = true;
-      logger.start();
-    }
+  final isDebug = await DebugLocalStorage().getDebug();
+  if (BackgroundHelper.isBackground && isDebug) {
+    logger.enable = true;
+    logger.start();
   }
+
   var hasUpdate = false;
   if (!updateForNotification.contains(null) &&
       !updateForNotification.contains(data?.to)) {
@@ -103,7 +102,7 @@ void onAlarm(
     updateForNotification.remove(data?.to);
   }
   BackgroundHelper.onEndAlarm(hasUpdate);
-  if (BackgroundHelper.isBackground) {
+  if (isDebug && BackgroundHelper.isBackground) {
     logger.save();
   }
   await AlarmService.endAlarm(hasUpdate);
