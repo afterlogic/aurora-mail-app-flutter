@@ -18,16 +18,26 @@ import 'background/background_helper.dart';
 import 'background/background_sync.dart';
 import 'logger/logger.dart';
 import 'modules/app_screen.dart';
+import 'modules/settings/screens/debug/debug_local_storage.dart';
 import 'notification/notification_manager.dart';
 
 void main() async {
   Crashlytics.instance.enableInDevMode = true;
-
   AppInjector.create();
   FlutterError.onError = Crashlytics.instance.recordFlutterError;
   // ignore: invalid_use_of_protected_member
   DBInstances.appDB.connection.executor.ensureOpen();
   WidgetsFlutterBinding.ensureInitialized();
+  DebugLocalStorage().getDebug().then((value) {
+    if (value) {
+      logger.enable = true;
+    }
+  });
+  DebugLocalStorage().getIsRun().then((value) {
+    if (value) {
+      logger.start();
+    }
+  });
   PushNotificationsManager.instance.init();
   runApp(
     LoggerView.wrap(
@@ -61,6 +71,13 @@ void onAlarm(
     [bool showNotification = true,
     NotificationData data,
     Future Function(bool) onSuccess]) async {
+  if (BackgroundHelper.isBackground) {
+    final isRun = await DebugLocalStorage().getIsRun();
+    if (isRun) {
+      logger.enable = true;
+      logger.start();
+    }
+  }
   var hasUpdate = false;
   if (!updateForNotification.contains(null) &&
       !updateForNotification.contains(data?.to)) {
@@ -86,6 +103,8 @@ void onAlarm(
     updateForNotification.remove(data?.to);
   }
   BackgroundHelper.onEndAlarm(hasUpdate);
-
+  if (BackgroundHelper.isBackground) {
+    logger.save();
+  }
   await AlarmService.endAlarm(hasUpdate);
 }

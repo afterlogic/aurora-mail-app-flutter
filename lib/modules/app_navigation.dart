@@ -20,6 +20,8 @@ import 'package:aurora_mail/modules/mail/screens/message_view/message_view_route
 import 'package:aurora_mail/modules/settings/screens/about/about_android.dart';
 import 'package:aurora_mail/modules/settings/screens/common_settings/common_settings_android.dart';
 import 'package:aurora_mail/modules/settings/screens/common_settings/common_settings_route.dart';
+import 'package:aurora_mail/modules/settings/screens/debug/debug_route.dart';
+import 'package:aurora_mail/modules/settings/screens/debug/debug_settings.dart';
 import 'package:aurora_mail/modules/settings/screens/manage_users/manage_users_android.dart';
 import 'package:aurora_mail/modules/settings/screens/manage_users/manage_users_route.dart';
 import 'package:aurora_mail/modules/settings/screens/notifications_settings/notifications_settings.dart';
@@ -218,7 +220,11 @@ class AppNavigation {
         break;
 
       // ================= SETTINGS =================
-
+      case DebugRoute.name:
+        return FadeRoute(
+            settings: RouteSettings(name: settings.name),
+            builder: (_) => DebugSetting());
+        break;
       case SettingsMainRoute.name:
         return FadeRoute(
             settings: RouteSettings(name: settings.name),

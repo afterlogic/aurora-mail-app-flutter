@@ -21,6 +21,7 @@ class WebMailApi {
   final String token;
   static Function(String) onRequest;
   static Function(String) onError;
+  static Function(String) onResponse;
   static IOClient _client = IOClient(HttpClient()
     ..badCertificateCallback = ((X509Certificate cert, String host, int port) {
       return false;
@@ -56,6 +57,7 @@ class WebMailApi {
     } else {
       headers = {'Authorization': 'Bearer $token'};
     }
+    final start = DateTime.now().millisecondsSinceEpoch;
     if (onRequest != null)
       onRequest("URL:$apiUrl\nBODY:${body.toMap(moduleName)}");
 
@@ -65,6 +67,9 @@ class WebMailApi {
     final res = json.decode(rawResponse.body);
 
     if (res["Result"] != null && (res["Result"] != false || getRawResponse)) {
+      if (onResponse != null)
+        onResponse(
+            "delay:${DateTime.now().millisecondsSinceEpoch - start} status:${rawResponse.statusCode}");
       if (getRawResponse)
         return res;
       else
