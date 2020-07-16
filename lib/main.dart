@@ -71,9 +71,8 @@ void onAlarm(
     [bool showNotification = true,
     NotificationData data,
     Future Function(bool) onSuccess]) async {
-  final isDebug = await DebugLocalStorage().getDebug();
+  final isDebug = await DebugLocalStorage().getBackgroundRecord();
   if (BackgroundHelper.isBackground && isDebug) {
-    logger.enable = true;
     logger.start();
   }
 

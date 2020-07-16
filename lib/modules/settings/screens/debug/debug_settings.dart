@@ -27,12 +27,14 @@ class DebugSetting extends StatefulWidget {
 class _DebugSettingState extends BState<DebugSetting> {
   final _storage = DebugLocalStorage();
   bool _debug;
+  bool _backgroundRecord;
 
   @override
   void initState() {
     super.initState();
-    _storage.getDebug().then((value) {
-      _debug = value ?? false;
+    Future.wait([_storage.getDebug(),_storage.getBackgroundRecord()]).then((value) {
+      _debug = value[0] ?? false;
+      _backgroundRecord = value[1] ?? false;
       setState(() {});
     });
   }
@@ -47,6 +49,10 @@ class _DebugSettingState extends BState<DebugSetting> {
           ? SizedBox.shrink()
           : ListView(
               children: <Widget>[
+                ListTile(
+                  title: Text("Host: " +
+                      BlocProvider.of<AuthBloc>(context).currentUser.hostname),
+                ),
                 CheckboxListTile(
                   value: _debug,
                   title: Text("Show debug view"),
@@ -55,6 +61,15 @@ class _DebugSettingState extends BState<DebugSetting> {
                     _storage.setDebug(value);
                     setState(() {});
                     logger.enable = value;
+                  },
+                ),
+                CheckboxListTile(
+                  value: _backgroundRecord,
+                  title: Text("Record log in background"),
+                  onChanged: (bool value) {
+                    _backgroundRecord = value;
+                    _storage.setBackgroundRecord(value);
+                    setState(() {});
                   },
                 ),
               ],

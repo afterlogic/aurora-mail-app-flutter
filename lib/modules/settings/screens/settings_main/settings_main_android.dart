@@ -24,6 +24,8 @@ class SettingsMainAndroid extends StatefulWidget {
 }
 
 class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
+  bool showDebug = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,9 +66,12 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
           ListTile(
             leading: AMCircleIcon(Icons.info_outline),
             title: Text(i18n(context, "settings_about")),
+            onLongPress: BuildProperty.logger
+                ? () => setState(() => showDebug = true)
+                : null,
             onTap: () => Navigator.pushNamed(context, AboutRoute.name),
           ),
-          if (BuildProperty.logger)
+          if (showDebug)
             ListTile(
               leading: AMCircleIcon(Icons.perm_device_information),
               title: Text("Debug"),
