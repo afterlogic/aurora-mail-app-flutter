@@ -5,6 +5,7 @@ import 'package:aurora_mail/utils/identity_util.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_dialog.dart';
 import 'package:crypto_model/crypto_model.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class KeyInput extends StatefulWidget {
@@ -38,20 +39,15 @@ class KeyInputState extends State<KeyInput> {
     if (pgpKey != null)
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Expanded(
-              child: Text(pgpKey.formatName() +
-                  "\n${pgpKey.key?.length != null ? "(${pgpKey.length}-bit," : "("} ${pgpKey.isPrivate ? "private" : "public"})"),
-            ),
-            IconButton(
-              icon: Icon(Icons.close),
-              onPressed: () {
-                _setKey(null);
-              },
-            ),
-          ],
+        child: ListTile(
+          title: Text(pgpKey.formatName() +
+              "\n${pgpKey.key?.length != null ? "(${pgpKey.length}-bit," : "("} ${pgpKey.isPrivate ? "private" : "public"})"),
+          trailing: IconButton(
+            icon: Icon(Icons.close),
+            onPressed: () {
+              _setKey(null);
+            },
+          ),
         ),
       );
 

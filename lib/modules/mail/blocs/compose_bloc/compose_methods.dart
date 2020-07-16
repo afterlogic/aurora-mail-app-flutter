@@ -7,6 +7,8 @@ import 'package:aurora_mail/database/folders/folders_dao.dart';
 import 'package:aurora_mail/database/folders/folders_table.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
+import 'package:aurora_mail/modules/contacts/contacts_impl_domain/mappers/contact_mapper.dart';
+import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/contacts/contacts_dao.dart';
 import 'package:aurora_mail/modules/mail/models/compose_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/temp_attachment_upload.dart';
@@ -21,6 +23,7 @@ class ComposeMethods {
   final Account account;
   final PgpWorker pgpWorker;
   final _foldersDao = new FoldersDao(DBInstances.appDB);
+  final _contactsDao = new ContactsDao(DBInstances.appDB);
   MailApi _mailApi;
 
   ComposeMethods({
@@ -132,17 +135,22 @@ class ComposeMethods {
     String body,
     String sender,
   ) async {
-    final encryptDecrypt = pgpWorker.encryptDecrypt(
-      sign ? sender : null,
-      contacts,
-    );
+    try {
+      final encryptDecrypt = pgpWorker.encryptDecrypt(
+        sign ? sender : null,
+        contacts,
+      );
 
-    if (encrypt) {
-      return await encryptDecrypt.encrypt(body, sign ? pass : null);
-    } else if (sign) {
-      return await encryptDecrypt.sign(body, pass);
+      if (encrypt) {
+        return await encryptDecrypt.encrypt(body, sign ? pass : null);
+      } else if (sign) {
+        return await encryptDecrypt.sign(body, pass);
+      }
+      return "";
+    } catch (e) {
+      print(e);
+      rethrow;
     }
-    return "";
   }
 
   uploadEmlAttachments(
@@ -177,5 +185,10 @@ class ComposeMethods {
         UploadTaskProgress(taskId, 0, UploadTaskStatus.failed, ""),
       );
     }
+  }
+
+  Future<List<Contact>> getContacts(String email) async {
+    return ContactMapper.listFromDB(
+        await _contactsDao.getContactsByEmail(email));
   }
 }

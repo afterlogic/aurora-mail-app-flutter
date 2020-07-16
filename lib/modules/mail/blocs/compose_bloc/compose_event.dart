@@ -17,6 +17,12 @@ abstract class ComposeEvent extends Equatable {
   List<Object> get props => null;
 }
 
+class SendMessages extends ComposeEvent with AlwaysNonEqualObject {
+  final List<SendMessage> messages;
+
+  SendMessages(this.messages);
+}
+
 class SendMessage extends ComposeEvent with AlwaysNonEqualObject {
   final String to;
   final String cc;
@@ -81,7 +87,7 @@ class SaveToDrafts extends ComposeEvent {
 }
 
 class UploadAttachment extends ComposeEvent with AlwaysNonEqualObject {
- final FileType type;
+  final FileType type;
 
   UploadAttachment(this.type);
 }

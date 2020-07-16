@@ -372,5 +372,7 @@
   "label_forward_as_attachment": "Forward as attachment",
   "label_contact_with_not_name": "No name",
   "label_device_id_copied_to_clip_board": "Device id copied to clipboard",
-  "label_discard_not_saved_changes": "Discard not saved changes?"
+  "label_discard_not_saved_changes": "Discard not saved changes?",
+  "label_pgp_encrypt": "Encrypt",
+  "hint_auto_encrypt_messages": "If you want messages to this contact to be automatically encrypted and/or signed, check the boxes below. Please note that these messages will be converted to plain text. Attachments will not be encrypted."
 }

@@ -86,6 +86,10 @@ class PgpWorkerImpl extends PgpWorker {
     return keys;
   }
 
+  Future<bool> checkKeyPassword(String key, String password) {
+    return _pgp.checkKeyPassword(key, password);
+  }
+
   Future<String> encryptSymmetric(String text, String password) async {
     final tempFile = await PgpWorkerImpl.tempFile;
     final length = utf8.encode(text).length;

@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/inject/app_inject.dart';
+import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 import 'package:aurora_mail/modules/mail/blocs/compose_bloc/compose_methods.dart';
 import 'package:aurora_mail/modules/mail/models/compose_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/temp_attachment_upload.dart';
@@ -36,6 +37,7 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
     ComposeEvent event,
   ) async* {
     if (event is SendMessage) yield* _sendMessage(event);
+    if (event is SendMessages) yield* _sendMessages(event);
     if (event is SaveToDrafts) yield* _saveToDrafts(event);
     if (event is UploadAttachment) yield* _addAttachment(event);
     if (event is UploadAttachments) _addAttachments(event);
@@ -43,8 +45,10 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
     if (event is StartUpload) yield UploadStarted(event.tempAttachment);
     if (event is EndUpload) yield AttachmentUploaded(event.composeAttachment);
     if (event is GetComposeAttachments) yield* _getComposeAttachments(event);
-    if (event is GetContactsAsAttachments) yield* _getContactsAsAttachment(event);
-    if (event is ErrorUpload) yield ComposeError(formatError(event.error, null));
+    if (event is GetContactsAsAttachments)
+      yield* _getContactsAsAttachment(event);
+    if (event is ErrorUpload)
+      yield ComposeError(formatError(event.error, null));
     if (event is EncryptBody) yield* _encryptBody(event);
     if (event is DecryptEvent) yield DecryptedState();
   }
@@ -67,6 +71,31 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
         alias: event.alias,
       );
 
+      yield MessageSent();
+    } catch (err, s) {
+      yield ComposeError(formatError(err, s));
+    }
+  }
+
+  Stream<ComposeState> _sendMessages(SendMessages events) async* {
+    try {
+      yield MessageSending();
+
+      for (var event in events.messages) {
+        await _methods.sendMessage(
+          to: event.to,
+          cc: event.cc,
+          bcc: event.bcc,
+          isHtml: event.isHtml,
+          subject: event.subject,
+          composeAttachments: event.composeAttachments,
+          messageText: event.messageText,
+          draftUid: event.draftUid,
+          sender: event.sender,
+          identity: event.identity,
+          alias: event.alias,
+        );
+      }
       yield MessageSent();
     } catch (err, s) {
       yield ComposeError(formatError(err, s));
@@ -106,7 +135,8 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
   }
 
   Future _uploadAttachment(File file) {
-    return _methods.uploadFile(file, onUploadStart: (TempAttachmentUpload tempAttachment) {
+    return _methods.uploadFile(file,
+        onUploadStart: (TempAttachmentUpload tempAttachment) {
       add(StartUpload(tempAttachment));
     }, onUploadEnd: (ComposeAttachment attachment) {
       add(EndUpload(attachment));
@@ -117,10 +147,12 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
     });
   }
 
-  Stream<ComposeState> _getComposeAttachments(GetComposeAttachments event) async* {
+  Stream<ComposeState> _getComposeAttachments(
+      GetComposeAttachments event) async* {
     yield ConvertingAttachments();
     try {
-      final composeAttachments = await _methods.getComposeAttachments(event.attachments);
+      final composeAttachments =
+          await _methods.getComposeAttachments(event.attachments);
 
       yield ReceivedComposeAttachments(composeAttachments);
     } catch (err, s) {
@@ -128,10 +160,12 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
     }
   }
 
-  Stream<ComposeState> _getContactsAsAttachment(GetContactsAsAttachments event) async* {
+  Stream<ComposeState> _getContactsAsAttachment(
+      GetContactsAsAttachments event) async* {
     yield ConvertingAttachments();
     try {
-      final contactsAttachments = await _methods.saveContactsAsTempFiles(event.contacts);
+      final contactsAttachments =
+          await _methods.saveContactsAsTempFiles(event.contacts);
 
       yield ReceivedComposeAttachments(contactsAttachments);
     } catch (err, s) {
@@ -147,22 +181,8 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
         );
         return;
       }
-      final emails = event.contacts.map((item) {
-        final match = RegExp("<(.*)?>").firstMatch(item);
-        if (match != null && match.groupCount > 0) {
-          return match.group(1);
-        } else {
-          return item;
-        }
-      }).toList();
-      final encrypted = await _methods.encrypt(
-        event.sign,
-        event.encrypt,
-        event.pass,
-        emails,
-        event.body,
-        event.senderEmail,
-      );
+      final encrypted = await encryptBody(event);
+
       final type = event.encrypt ? EncryptType.Encrypt : EncryptType.Sign;
       yield EncryptComplete(encrypted, type);
     } catch (e) {
@@ -179,7 +199,27 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
     }
   }
 
-  Stream<ComposeState> _uploadEmlAttachments(UploadEmlAttachments event) async* {
+  Future<String> encryptBody(EncryptBody event) {
+    final emails = event.contacts.map((item) {
+      final match = RegExp("<(.*)?>").firstMatch(item);
+      if (match != null && match.groupCount > 0) {
+        return match.group(1);
+      } else {
+        return item;
+      }
+    }).toList();
+    return _methods.encrypt(
+      event.sign,
+      event.encrypt,
+      event.pass,
+      emails,
+      event.body,
+      event.senderEmail,
+    );
+  }
+
+  Stream<ComposeState> _uploadEmlAttachments(
+      UploadEmlAttachments event) async* {
     _methods.uploadEmlAttachments(event.message,
         onUploadStart: (TempAttachmentUpload tempAttachment) {
       add(StartUpload(tempAttachment));
@@ -190,5 +230,9 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
     }).then((_) {
       "";
     });
+  }
+
+  Future<List<Contact>> getContacts(String email) {
+    return _methods.getContacts(email);
   }
 }

@@ -183,6 +183,11 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
     });
   }
 
+    Future<List<ContactDb>> getContactsByEmail(String mail) {
+    return (select(contactsTable)..where((item) => item.viewEmail.equals(mail)))
+        .get();
+  }
+
   Future<ContactDb> getContactById(int entityId) {
     return (select(contactsTable)
           ..where((item) => item.entityId.equals(entityId)))

@@ -117,4 +117,8 @@ class ContactsTable extends Table {
   TextColumn get pgpPublicKey => text().nullable()();
 
   TextColumn get groupUUIDs => text().map(const ListStringConverter())();
+
+  BoolColumn get autoSign => boolean().withDefault(Constant(false))();
+
+  BoolColumn get autoEncrypt => boolean().withDefault(Constant(false))();
 }

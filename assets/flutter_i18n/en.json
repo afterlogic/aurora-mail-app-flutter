@@ -372,5 +372,9 @@
   "label_token_successful": "Successful",
   "label_token_failed": "Failed",
   "label_device_id_copied_to_clip_board": "Device id copied to clipboard",
-  "label_discard_not_saved_changes": "Discard unsaved changes?"
+  "label_discard_not_saved_changes": "Discard unsaved changes?",
+  "label_pgp_encrypt": "Encrypt",
+  "hint_auto_encrypt_messages": "If you want messages to this contact to be automatically encrypted and/or signed, check the boxes below. Please note that these messages will be converted to plain text. Attachments will not be encrypted.",
+  "error_password_is_empty": "password is empty",
+  "label_encryption_password_for_pgp_key": "Required password for PGP key"
 }

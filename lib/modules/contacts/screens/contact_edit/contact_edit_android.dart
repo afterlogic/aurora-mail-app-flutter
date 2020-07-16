@@ -16,6 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'components/contact_birth_date_picker.dart';
+import 'components/contact_check_box.dart';
 import 'components/contact_dropdown.dart';
 import 'components/contact_input.dart';
 import 'components/contact_primary_input.dart';
@@ -36,7 +37,8 @@ class ContactEditAndroid extends StatefulWidget {
   _ContactEditAndroidState createState() => _ContactEditAndroidState();
 }
 
-class _ContactEditAndroidState extends BState<ContactEditAndroid> with NotSavedChangesMixin{
+class _ContactEditAndroidState extends BState<ContactEditAndroid>
+    with NotSavedChangesMixin {
   ContactsBloc _bloc;
   bool _showAllFields = false;
   int _primaryEmail = 0;
@@ -74,6 +76,8 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid> with NotSavedC
   final _businessWeb = TextEditingController();
   final _otherEmail = TextEditingController();
   final _notes = TextEditingController();
+  bool autoSign = false;
+  bool autoEncrypt = false;
   int _birthDay = 0;
   int _birthMonth = 0;
   int _birthYear = 0;
@@ -148,6 +152,8 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid> with NotSavedC
     _birthDay = c.birthDay;
     _birthMonth = c.birthMonth;
     _birthYear = c.birthYear;
+    autoSign = c.autoSign ?? false;
+    autoEncrypt = c.autoEncrypt ?? false;
   }
 
   void _initTextUpdatingCrutch() {
@@ -292,6 +298,8 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid> with NotSavedC
       davContactsVCardUid: widget.contact?.davContactsVCardUid ?? null,
       groupUUIDs: _selectedGroupsUuids,
       pgpPublicKey: pgpKey?.key,
+      autoEncrypt: autoEncrypt,
+      autoSign: autoSign,
     );
   }
 
@@ -321,7 +329,6 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid> with NotSavedC
                           ? "contacts_view_hide_additional_fields"
                           : "contacts_view_show_additional_fields")),
                   onTap: () {
-                    setState(() => _showAllFields = !_showAllFields);
                     // crutch
                     _personalEmail.text = _personalEmail.text;
                     _personalAddress.text = _personalAddress.text;
@@ -331,6 +338,7 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid> with NotSavedC
                     _businessAddress.text = _businessAddress.text;
                     _businessPhone.text = _businessPhone.text;
                     _otherEmail.text = _otherEmail.text;
+                    setState(() => _showAllFields = !_showAllFields);
                   },
                 ),
               ),
@@ -395,6 +403,21 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid> with NotSavedC
                         pgpKey = key;
                       },
                       (error) {},
+                    ),
+                  if (BuildProperty.cryptoEnable && !BuildProperty.legacyPgpKey)
+                    ContactTitle("hint_auto_encrypt_messages",
+                        theme.textTheme.subtitle1),
+                  if (BuildProperty.cryptoEnable && !BuildProperty.legacyPgpKey)
+                    ContactCheckBox(
+                      "label_pgp_sign",
+                      autoSign,
+                      (v) => setState(() => autoSign = v),
+                    ),
+                  if (BuildProperty.cryptoEnable && !BuildProperty.legacyPgpKey)
+                    ContactCheckBox(
+                      "label_pgp_encrypt",
+                      autoEncrypt,
+                      (v) => setState(() => autoEncrypt = v),
                     ),
                   ContactTitle("contacts_view_section_groups"),
                   ..._bloc.state.groups.map((g) {

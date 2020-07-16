@@ -20,6 +20,7 @@ import 'accounts/accounts_table.dart';
 import 'migration/drop_all.dart';
 import 'migration/m2.dart';
 import 'migration/m3.dart';
+import 'migration/m4.dart';
 import 'users/users_table.dart';
 
 part 'app_database.g.dart';
@@ -52,7 +53,8 @@ class AppDatabase extends _$AppDatabase {
   Map<int, _Migration> get _migrationMap => {
         1: dropAll,
         2: m2,
-        3: m3, //from 3 to 4
+        3: m3,
+        4: m4,
       };
 
   @override
@@ -81,5 +83,5 @@ class AppDatabase extends _$AppDatabase {
   // you should bump this number whenever you change or add a table definition. Migrations
   // are covered later in this readme.
   @override
-  int get schemaVersion => 4;
+  int get schemaVersion => 5;
 }

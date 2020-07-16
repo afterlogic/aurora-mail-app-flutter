@@ -1,3 +1,4 @@
+import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 import 'package:aurora_mail/utils/base_state.dart';
@@ -66,12 +67,14 @@ class ComposeEmailsState extends BState<ComposeEmails> {
     if (error == null) {
       setState(() => widget.emails.add(email));
     }
-    composeTypeAheadFieldKey.currentState.resize();
+    composeTypeAheadFieldKey.currentState.reopen();
+
+
   }
 
   void _deleteEmail(String email) {
     setState(() => widget.emails.remove(email));
-    composeTypeAheadFieldKey.currentState.resize();
+    composeTypeAheadFieldKey.currentState.reopen();
   }
 
   validate() {
@@ -197,8 +200,9 @@ class ComposeEmailsState extends BState<ComposeEmails> {
               ],
             ),
           ),
-//todo
-//          if ((contact.pgpPublicKey?.length ?? 0) > 5) Icon(Icons.vpn_key),
+          if (BuildProperty.cryptoEnable &&
+              (contact.pgpPublicKey?.length ?? 0) > 5)
+            Icon(Icons.vpn_key),
         ],
       );
     }

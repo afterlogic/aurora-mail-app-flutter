@@ -10,11 +10,9 @@ class EncryptDialog extends StatefulWidget {
 }
 
 class _EncryptDialogState extends BState<EncryptDialog> {
-  final _passCtrl = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   var _sign = false;
   var _encrypt = true;
-  var _obscurePass = true;
 
   @override
   Widget build(BuildContext context) {
@@ -51,28 +49,6 @@ class _EncryptDialogState extends BState<EncryptDialog> {
                 ),
               ],
             ),
-            Divider(),
-            Form(
-              key: _formKey,
-              child: TextFormField(
-                controller: _passCtrl,
-                validator: (v) => _sign
-                    ? validateInput(context, v, [ValidationType.empty])
-                    : null,
-                decoration: InputDecoration(
-                    labelText: i18n(context, "login_input_password"),
-                    suffix: IconButton(
-                      icon: Icon(
-                        _obscurePass ? Icons.visibility : Icons.visibility_off,
-                      ),
-                      onPressed: () {
-                        _obscurePass = !_obscurePass;
-                        setState(() {});
-                      },
-                    )),
-                obscureText: _obscurePass,
-              ),
-            )
           ],
         ),
       ),
@@ -93,7 +69,7 @@ class _EncryptDialogState extends BState<EncryptDialog> {
     if (_formKey.currentState.validate()) {
       Navigator.pop(
         context,
-        EncryptDialogResult(_sign, _encrypt, _passCtrl.text),
+        EncryptDialogResult(_sign, _encrypt),
       );
     }
   }
@@ -102,11 +78,9 @@ class _EncryptDialogState extends BState<EncryptDialog> {
 class EncryptDialogResult {
   final bool sign;
   final bool encrypt;
-  final String pass;
 
   EncryptDialogResult(
     this.sign,
     this.encrypt,
-    this.pass,
   );
 }

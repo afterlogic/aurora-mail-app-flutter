@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 
 class ContactTitle extends StatelessWidget {
   final String title;
+  final TextStyle textStyle;
 
-  const ContactTitle(this.title);
+  const ContactTitle(this.title, [this.textStyle]);
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +15,7 @@ class ContactTitle extends StatelessWidget {
       child: ListTile(
         title: Text(
           i18n(context, title),
-          style: theme.textTheme.title,
+          style: textStyle ?? theme.textTheme.title,
         ),
       ),
     );

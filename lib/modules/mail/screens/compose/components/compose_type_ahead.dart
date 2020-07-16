@@ -797,7 +797,7 @@ class ComposeTypeAheadFieldState<T> extends BState<ComposeTypeAheadField<T>>
 
     WidgetsBinding.instance.addPostFrameCallback((duration) {
       if (mounted) {
-        this._initOverlayEntry();
+        this.initOverlayEntry();
         // calculate initial suggestions list size
         this._suggestionsBox.resize();
 
@@ -809,6 +809,11 @@ class ComposeTypeAheadFieldState<T> extends BState<ComposeTypeAheadField<T>>
         }
       }
     });
+  }
+
+  reopen() {
+    this._suggestionsBox.close();
+    this._suggestionsBox.open();
   }
 
   @override
@@ -856,7 +861,7 @@ class ComposeTypeAheadFieldState<T> extends BState<ComposeTypeAheadField<T>>
     }
   }
 
-  void _initOverlayEntry() {
+  void initOverlayEntry() {
     this._suggestionsBox._overlayEntry = OverlayEntry(builder: (context) {
       final suggestionsList = _SuggestionsList<T>(
         suggestionsBox: _suggestionsBox,

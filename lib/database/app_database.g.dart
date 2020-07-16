@@ -4935,6 +4935,8 @@ class ContactDb extends DataClass implements Insertable<ContactDb> {
   final String davContactsVCardUid;
   final String pgpPublicKey;
   final List<String> groupUUIDs;
+  final bool autoSign;
+  final bool autoEncrypt;
   ContactDb(
       {@required this.uuidPlusStorage,
       @required this.uuid,
@@ -4991,7 +4993,9 @@ class ContactDb extends DataClass implements Insertable<ContactDb> {
       this.davContactsUid,
       this.davContactsVCardUid,
       this.pgpPublicKey,
-      @required this.groupUUIDs});
+      @required this.groupUUIDs,
+      @required this.autoSign,
+      @required this.autoEncrypt});
   factory ContactDb.fromData(Map<String, dynamic> data, GeneratedDatabase db,
       {String prefix}) {
     final effectivePrefix = prefix ?? '';
@@ -5108,6 +5112,10 @@ class ContactDb extends DataClass implements Insertable<ContactDb> {
           .mapFromDatabaseResponse(data['${effectivePrefix}pgp_public_key']),
       groupUUIDs: $ContactsTableTable.$converter0.mapToDart(stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}group_u_u_i_ds'])),
+      autoSign:
+          boolType.mapFromDatabaseResponse(data['${effectivePrefix}auto_sign']),
+      autoEncrypt: boolType
+          .mapFromDatabaseResponse(data['${effectivePrefix}auto_encrypt']),
     );
   }
   factory ContactDb.fromJson(Map<String, dynamic> json,
@@ -5172,6 +5180,8 @@ class ContactDb extends DataClass implements Insertable<ContactDb> {
           serializer.fromJson<String>(json['davContactsVCardUid']),
       pgpPublicKey: serializer.fromJson<String>(json['pgpPublicKey']),
       groupUUIDs: serializer.fromJson<List<String>>(json['groupUUIDs']),
+      autoSign: serializer.fromJson<bool>(json['autoSign']),
+      autoEncrypt: serializer.fromJson<bool>(json['autoEncrypt']),
     );
   }
   @override
@@ -5234,6 +5244,8 @@ class ContactDb extends DataClass implements Insertable<ContactDb> {
       'davContactsVCardUid': serializer.toJson<String>(davContactsVCardUid),
       'pgpPublicKey': serializer.toJson<String>(pgpPublicKey),
       'groupUUIDs': serializer.toJson<List<String>>(groupUUIDs),
+      'autoSign': serializer.toJson<bool>(autoSign),
+      'autoEncrypt': serializer.toJson<bool>(autoEncrypt),
     };
   }
 
@@ -5398,6 +5410,12 @@ class ContactDb extends DataClass implements Insertable<ContactDb> {
       groupUUIDs: groupUUIDs == null && nullToAbsent
           ? const Value.absent()
           : Value(groupUUIDs),
+      autoSign: autoSign == null && nullToAbsent
+          ? const Value.absent()
+          : Value(autoSign),
+      autoEncrypt: autoEncrypt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(autoEncrypt),
     );
   }
 
@@ -5457,7 +5475,9 @@ class ContactDb extends DataClass implements Insertable<ContactDb> {
           String davContactsUid,
           String davContactsVCardUid,
           String pgpPublicKey,
-          List<String> groupUUIDs}) =>
+          List<String> groupUUIDs,
+          bool autoSign,
+          bool autoEncrypt}) =>
       ContactDb(
         uuidPlusStorage: uuidPlusStorage ?? this.uuidPlusStorage,
         uuid: uuid ?? this.uuid,
@@ -5515,6 +5535,8 @@ class ContactDb extends DataClass implements Insertable<ContactDb> {
         davContactsVCardUid: davContactsVCardUid ?? this.davContactsVCardUid,
         pgpPublicKey: pgpPublicKey ?? this.pgpPublicKey,
         groupUUIDs: groupUUIDs ?? this.groupUUIDs,
+        autoSign: autoSign ?? this.autoSign,
+        autoEncrypt: autoEncrypt ?? this.autoEncrypt,
       );
   @override
   String toString() {
@@ -5574,7 +5596,9 @@ class ContactDb extends DataClass implements Insertable<ContactDb> {
           ..write('davContactsUid: $davContactsUid, ')
           ..write('davContactsVCardUid: $davContactsVCardUid, ')
           ..write('pgpPublicKey: $pgpPublicKey, ')
-          ..write('groupUUIDs: $groupUUIDs')
+          ..write('groupUUIDs: $groupUUIDs, ')
+          ..write('autoSign: $autoSign, ')
+          ..write('autoEncrypt: $autoEncrypt')
           ..write(')'))
         .toString();
   }
@@ -5623,7 +5647,7 @@ class ContactDb extends DataClass implements Insertable<ContactDb> {
                                                                               .hashCode,
                                                                           $mrjc(
                                                                               nickName.hashCode,
-                                                                              $mrjc(skype.hashCode, $mrjc(facebook.hashCode, $mrjc(personalEmail.hashCode, $mrjc(personalAddress.hashCode, $mrjc(personalCity.hashCode, $mrjc(personalState.hashCode, $mrjc(personalZip.hashCode, $mrjc(personalCountry.hashCode, $mrjc(personalWeb.hashCode, $mrjc(personalFax.hashCode, $mrjc(personalPhone.hashCode, $mrjc(personalMobile.hashCode, $mrjc(businessEmail.hashCode, $mrjc(businessCompany.hashCode, $mrjc(businessAddress.hashCode, $mrjc(businessCity.hashCode, $mrjc(businessState.hashCode, $mrjc(businessZip.hashCode, $mrjc(businessCountry.hashCode, $mrjc(businessJobTitle.hashCode, $mrjc(businessDepartment.hashCode, $mrjc(businessOffice.hashCode, $mrjc(businessPhone.hashCode, $mrjc(businessFax.hashCode, $mrjc(businessWeb.hashCode, $mrjc(otherEmail.hashCode, $mrjc(notes.hashCode, $mrjc(birthDay.hashCode, $mrjc(birthMonth.hashCode, $mrjc(birthYear.hashCode, $mrjc(auto.hashCode, $mrjc(frequency.hashCode, $mrjc(dateModified.hashCode, $mrjc(davContactsUid.hashCode, $mrjc(davContactsVCardUid.hashCode, $mrjc(pgpPublicKey.hashCode, groupUUIDs.hashCode))))))))))))))))))))))))))))))))))))))))))))))))))))))));
+                                                                              $mrjc(skype.hashCode, $mrjc(facebook.hashCode, $mrjc(personalEmail.hashCode, $mrjc(personalAddress.hashCode, $mrjc(personalCity.hashCode, $mrjc(personalState.hashCode, $mrjc(personalZip.hashCode, $mrjc(personalCountry.hashCode, $mrjc(personalWeb.hashCode, $mrjc(personalFax.hashCode, $mrjc(personalPhone.hashCode, $mrjc(personalMobile.hashCode, $mrjc(businessEmail.hashCode, $mrjc(businessCompany.hashCode, $mrjc(businessAddress.hashCode, $mrjc(businessCity.hashCode, $mrjc(businessState.hashCode, $mrjc(businessZip.hashCode, $mrjc(businessCountry.hashCode, $mrjc(businessJobTitle.hashCode, $mrjc(businessDepartment.hashCode, $mrjc(businessOffice.hashCode, $mrjc(businessPhone.hashCode, $mrjc(businessFax.hashCode, $mrjc(businessWeb.hashCode, $mrjc(otherEmail.hashCode, $mrjc(notes.hashCode, $mrjc(birthDay.hashCode, $mrjc(birthMonth.hashCode, $mrjc(birthYear.hashCode, $mrjc(auto.hashCode, $mrjc(frequency.hashCode, $mrjc(dateModified.hashCode, $mrjc(davContactsUid.hashCode, $mrjc(davContactsVCardUid.hashCode, $mrjc(pgpPublicKey.hashCode, $mrjc(groupUUIDs.hashCode, $mrjc(autoSign.hashCode, autoEncrypt.hashCode))))))))))))))))))))))))))))))))))))))))))))))))))))))))));
   @override
   bool operator ==(dynamic other) =>
       identical(this, other) ||
@@ -5683,7 +5707,9 @@ class ContactDb extends DataClass implements Insertable<ContactDb> {
           other.davContactsUid == this.davContactsUid &&
           other.davContactsVCardUid == this.davContactsVCardUid &&
           other.pgpPublicKey == this.pgpPublicKey &&
-          other.groupUUIDs == this.groupUUIDs);
+          other.groupUUIDs == this.groupUUIDs &&
+          other.autoSign == this.autoSign &&
+          other.autoEncrypt == this.autoEncrypt);
 }
 
 class ContactsTableCompanion extends UpdateCompanion<ContactDb> {
@@ -5743,6 +5769,8 @@ class ContactsTableCompanion extends UpdateCompanion<ContactDb> {
   final Value<String> davContactsVCardUid;
   final Value<String> pgpPublicKey;
   final Value<List<String>> groupUUIDs;
+  final Value<bool> autoSign;
+  final Value<bool> autoEncrypt;
   const ContactsTableCompanion({
     this.uuidPlusStorage = const Value.absent(),
     this.uuid = const Value.absent(),
@@ -5800,6 +5828,8 @@ class ContactsTableCompanion extends UpdateCompanion<ContactDb> {
     this.davContactsVCardUid = const Value.absent(),
     this.pgpPublicKey = const Value.absent(),
     this.groupUUIDs = const Value.absent(),
+    this.autoSign = const Value.absent(),
+    this.autoEncrypt = const Value.absent(),
   });
   ContactsTableCompanion.insert({
     @required String uuidPlusStorage,
@@ -5858,6 +5888,8 @@ class ContactsTableCompanion extends UpdateCompanion<ContactDb> {
     this.davContactsVCardUid = const Value.absent(),
     this.pgpPublicKey = const Value.absent(),
     @required List<String> groupUUIDs,
+    this.autoSign = const Value.absent(),
+    this.autoEncrypt = const Value.absent(),
   })  : uuidPlusStorage = Value(uuidPlusStorage),
         uuid = Value(uuid),
         userLocalId = Value(userLocalId),
@@ -5960,7 +5992,9 @@ class ContactsTableCompanion extends UpdateCompanion<ContactDb> {
       Value<String> davContactsUid,
       Value<String> davContactsVCardUid,
       Value<String> pgpPublicKey,
-      Value<List<String>> groupUUIDs}) {
+      Value<List<String>> groupUUIDs,
+      Value<bool> autoSign,
+      Value<bool> autoEncrypt}) {
     return ContactsTableCompanion(
       uuidPlusStorage: uuidPlusStorage ?? this.uuidPlusStorage,
       uuid: uuid ?? this.uuid,
@@ -6018,6 +6052,8 @@ class ContactsTableCompanion extends UpdateCompanion<ContactDb> {
       davContactsVCardUid: davContactsVCardUid ?? this.davContactsVCardUid,
       pgpPublicKey: pgpPublicKey ?? this.pgpPublicKey,
       groupUUIDs: groupUUIDs ?? this.groupUUIDs,
+      autoSign: autoSign ?? this.autoSign,
+      autoEncrypt: autoEncrypt ?? this.autoEncrypt,
     );
   }
 }
@@ -6762,6 +6798,26 @@ class $ContactsTableTable extends ContactsTable
     );
   }
 
+  final VerificationMeta _autoSignMeta = const VerificationMeta('autoSign');
+  GeneratedBoolColumn _autoSign;
+  @override
+  GeneratedBoolColumn get autoSign => _autoSign ??= _constructAutoSign();
+  GeneratedBoolColumn _constructAutoSign() {
+    return GeneratedBoolColumn('auto_sign', $tableName, false,
+        defaultValue: Constant(false));
+  }
+
+  final VerificationMeta _autoEncryptMeta =
+      const VerificationMeta('autoEncrypt');
+  GeneratedBoolColumn _autoEncrypt;
+  @override
+  GeneratedBoolColumn get autoEncrypt =>
+      _autoEncrypt ??= _constructAutoEncrypt();
+  GeneratedBoolColumn _constructAutoEncrypt() {
+    return GeneratedBoolColumn('auto_encrypt', $tableName, false,
+        defaultValue: Constant(false));
+  }
+
   @override
   List<GeneratedColumn> get $columns => [
         uuidPlusStorage,
@@ -6819,7 +6875,9 @@ class $ContactsTableTable extends ContactsTable
         davContactsUid,
         davContactsVCardUid,
         pgpPublicKey,
-        groupUUIDs
+        groupUUIDs,
+        autoSign,
+        autoEncrypt
       ];
   @override
   $ContactsTableTable get asDslTable => this;
@@ -7194,6 +7252,14 @@ class $ContactsTableTable extends ContactsTable
               d.pgpPublicKey.value, _pgpPublicKeyMeta));
     }
     context.handle(_groupUUIDsMeta, const VerificationResult.success());
+    if (d.autoSign.present) {
+      context.handle(_autoSignMeta,
+          autoSign.isAcceptableValue(d.autoSign.value, _autoSignMeta));
+    }
+    if (d.autoEncrypt.present) {
+      context.handle(_autoEncryptMeta,
+          autoEncrypt.isAcceptableValue(d.autoEncrypt.value, _autoEncryptMeta));
+    }
     return context;
   }
 
@@ -7397,6 +7463,12 @@ class $ContactsTableTable extends ContactsTable
       final converter = $ContactsTableTable.$converter0;
       map['group_u_u_i_ds'] =
           Variable<String, StringType>(converter.mapToSql(d.groupUUIDs.value));
+    }
+    if (d.autoSign.present) {
+      map['auto_sign'] = Variable<bool, BoolType>(d.autoSign.value);
+    }
+    if (d.autoEncrypt.present) {
+      map['auto_encrypt'] = Variable<bool, BoolType>(d.autoEncrypt.value);
     }
     return map;
   }

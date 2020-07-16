@@ -18,6 +18,8 @@ abstract class PgpWorker {
     String text,
   );
 
+  Future<bool> checkKeyPassword(String key, String password);
+
   EncryptType encryptType(String text);
 
   Future<String> encryptSymmetric(String text, String password);
