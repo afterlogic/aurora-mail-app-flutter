@@ -324,7 +324,7 @@
   "label_self_destructing_password_based_encryption_used": "The Password-based encryption will be used.",
   "label_self_destructing_key_based_encryption_used": "The Key-based encryption will be used.",
   "hint_self_destructing_encrypt_with_key": "Selected recipient has PGP public key. The message can be encrypted using this key.",
-  "hint_self_destructing_encrypt_with_not_key": "Selected recipient has no PGP public key. The - encryption is not allowed",
+  "hint_self_destructing_encrypt_with_not_key": "Selected recipient has no PGP public key. The key-based encryption is not allowed",
   "input_self_destructing_add_digital_signature": "Add digital signature",
   "error_pgp_select_recipient": "Select recipient",
   "template_self_destructing_message": "Hello,\n{sender} user sent you a self-destructing secure email.\nYou can read it using the following link:\n{link}\n{message_password}The message will be accessible for {lifeTime} starting from {now}",
