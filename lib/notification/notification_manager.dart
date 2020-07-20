@@ -81,9 +81,9 @@ class NotificationManager {
 
     if (isFirstNotification) {
       androidNotificationDetails = AndroidNotificationDetails(
-        groupChannelId,
-        groupChannelName,
-        groupChannelDescription,
+        NOTIFICATION_MAIL_CHANNEL_ID,
+        NOTIFICATION_MAIL_CHANNEL_NAME,
+        NOTIFICATION_MAIL_CHANNEL_DESCRIPTION,
         importance: Importance.Max,
         priority: Priority.High,
         styleInformation: InboxStyleInformation(
@@ -110,3 +110,7 @@ Future onSelectNotification(String title) async {
   final localId = int.tryParse(title);
   RouteWrap.staticState.showMessage(localId);
 }
+
+const NOTIFICATION_MAIL_CHANNEL_ID = "new_mail";
+const NOTIFICATION_MAIL_CHANNEL_NAME = "New mail";
+const NOTIFICATION_MAIL_CHANNEL_DESCRIPTION = "";

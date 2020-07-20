@@ -75,16 +75,17 @@ class _Logger {
 //    await Crashlytics.instance.log(buffer);
 //    await Crashlytics.instance.recordError("record log", null);
     try {
-      final packageInfo = await PackageInfo.fromPlatform();
       await getStoragePermissions();
       final dir = (await getDownloadDirectory());
-      final file = File(dir +
-          Platform.pathSeparator +
-          "Logs_${BuildProperty.appName}" +
-          Platform.pathSeparator +
-          (currentTag == null ? "" : "$currentTag${Platform.pathSeparator}") +
-          DateTime.now().toIso8601String() +
-          ".log.txt");
+      final file = File(
+        dir +
+            Platform.pathSeparator +
+            "Logs_${BuildProperty.packageName}" +
+            Platform.pathSeparator +
+            (currentTag == null ? "" : "$currentTag${Platform.pathSeparator}") +
+            DateTime.now().toIso8601String() +
+            ".log.txt",
+      );
       await file.create(recursive: true);
       await file.writeAsString(buffer.replaceAll(newLine, "\n"));
     } catch (e) {
