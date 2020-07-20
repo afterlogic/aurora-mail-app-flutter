@@ -82,8 +82,8 @@ Future<dynamic> messageHandler(Map<String, dynamic> message) async {
       }
 
       await onAlarm(
-        false,
-        notification,
+        showNotification: false,
+        data: notification,
       );
     } catch (e) {
       print(e);

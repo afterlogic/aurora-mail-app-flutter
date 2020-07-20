@@ -24,6 +24,7 @@ abstract class AlarmService : IntentService("Check update mail") {
         super.onCreate()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             startForeground(NOTIFICATION_ID, createNotification())
+            Thread.sleep(5000)
         }
     }
 
@@ -56,6 +57,7 @@ abstract class AlarmService : IntentService("Check update mail") {
         if (AlarmPlugin.instance != null) {
             AlarmPlugin.instance!!.onAlarm(onComplete, id)
         } else {
+
             AlarmPlugin.isBackground = true
             AlarmPlugin.onComplete = onComplete
             Handler(Looper.getMainLooper()).post {
