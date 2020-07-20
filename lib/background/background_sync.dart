@@ -97,6 +97,7 @@ class BackgroundSync {
     for (var account in accounts) {
       final inboxFolders = await _foldersDao.getByType(
           [Folder.getNumberFromFolderType(FolderType.inbox)], account.localId);
+      if (inboxFolders.isEmpty) continue;
 
       final foldersToUpdate =
           (await _updateFolderHash(inboxFolders, user, account))
@@ -128,7 +129,6 @@ class BackgroundSync {
 
         List<MessageInfo> newMessagesInfo =
             MessageInfo.flattenMessagesInfo(rawInfo);
-
         final result = await Folders.calculateMessagesInfoDiffAsync(
             messagesInfo, newMessagesInfo);
 
@@ -158,7 +158,11 @@ class BackgroundSync {
         );
 
         await _mailDao.fillMessage(newMessageBodies);
-
+        await FolderMessageInfo.setMessageInfo(
+          folderToUpdate.fullNameRaw,
+          account.localId,
+          newMessagesInfo,
+        );
         final notSeenMessagesUids = result.addedMessages
             .where((m) => !m.flags.contains("\\seen"))
             .map((e) => e.uid)

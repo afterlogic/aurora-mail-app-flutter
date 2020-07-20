@@ -73,7 +73,7 @@ void onAlarm(
     Future Function(bool) onSuccess]) async {
   final isDebug = await DebugLocalStorage().getBackgroundRecord();
   if (BackgroundHelper.isBackground && isDebug) {
-    logger.start();
+    logger.start("Background_sync");
   }
 
   var hasUpdate = false;

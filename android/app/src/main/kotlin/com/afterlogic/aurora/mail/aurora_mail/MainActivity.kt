@@ -37,6 +37,7 @@ class MainActivity : FlutterActivity() {
         if (requestCode == REQUEST_CODE) {
             val notGranted = grantResults.firstOrNull { it != PackageManager.PERMISSION_GRANTED }
             awaitResult?.success(notGranted == null)
+            awaitResult = null;
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         }

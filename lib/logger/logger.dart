@@ -8,9 +8,12 @@ import 'package:intl/intl.dart';
 import 'package:package_info/package_info.dart';
 import 'package:webmail_api_client/webmail_api_client.dart';
 
+import '../build_property.dart';
+
 final logger = _Logger();
 
 class _Logger {
+  String currentTag;
   final storage = DebugLocalStorage();
   bool _isRun = false;
 
@@ -35,13 +38,13 @@ class _Logger {
 
   _Logger() {
     WebMailApi.onError = (str) {
-      log("Api error:\n$str", false);
+      log("API ERROR:\n$str", true);
     };
     WebMailApi.onRequest = (str) {
-      log("Api request:\n$str", true);
+      log("API REQUEST:\n$str", true);
     };
     WebMailApi.onResponse = (str) {
-      log("Api response:\n$str", true);
+      log("API RESPONSE:\n$str", true);
     };
   }
 
@@ -49,13 +52,14 @@ class _Logger {
     if (show == true) print(text);
     if (isRun) {
       buffer +=
-          "[${DateFormat("hh:mm:ss.ms").format(DateTime.now())}] ${"$text".replaceAll("\n", newLine)}$newLine$newLine";
+          "[${DateFormat("hh:mm:ss.mmm").format(DateTime.now())}] ${"$text".replaceAll("\n", newLine)}$newLine$newLine";
       count++;
       if (onEdit != null) onEdit();
     }
   }
 
-  start() {
+  start([String tag]) {
+    currentTag = tag;
     isRun = true;
     if (onEdit != null) onEdit();
   }
@@ -76,8 +80,9 @@ class _Logger {
       final dir = (await getDownloadDirectory());
       final file = File(dir +
           Platform.pathSeparator +
-          "Logs_${packageInfo.packageName}" +
+          "Logs_${BuildProperty.appName}" +
           Platform.pathSeparator +
+          (currentTag == null ? "" : "$currentTag${Platform.pathSeparator}") +
           DateTime.now().toIso8601String() +
           ".log.txt");
       await file.create(recursive: true);
