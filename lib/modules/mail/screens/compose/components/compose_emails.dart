@@ -306,22 +306,11 @@ class ComposeEmailsState extends BState<ComposeEmails> {
                                 TextSelection.collapsed(offset: 1);
                             _deleteEmail(widget.emails.last);
                           } else if (value.length > 1 && value.endsWith(" ")) {
-                            if (lastSuggestions.isEmpty) {
-                              widget.onNext();
-                            } else {
-                              _addEmail(MailUtils.getFriendlyName(
-                                  lastSuggestions.first));
-                            }
+                            onSubmit();
                           }
                         },
                         onEditingComplete: () {
-                          if (lastSuggestions.isEmpty) {
-                            widget.onNext();
-                          } else {
-                            _addEmail(MailUtils.getFriendlyName(
-                                lastSuggestions.first));
-                            composeTypeAheadFieldKey.currentState.clear();
-                          }
+                          onSubmit();
                         },
                       ),
                     ),
@@ -342,5 +331,19 @@ class ComposeEmailsState extends BState<ComposeEmails> {
         ),
       ),
     );
+  }
+
+  onSubmit() {
+    if (lastSuggestions.isEmpty) {
+      if (isEmailValid(widget.textCtrl.text.replaceAll(" ", ""))) {
+        _addEmail(widget.textCtrl.text.replaceAll(" ", ""));
+        composeTypeAheadFieldKey.currentState.clear();
+      } else {
+        widget.onNext();
+      }
+    } else {
+      _addEmail(MailUtils.getFriendlyName(lastSuggestions.first));
+      composeTypeAheadFieldKey.currentState.clear();
+    }
   }
 }
