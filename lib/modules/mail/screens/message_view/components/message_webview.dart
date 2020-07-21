@@ -12,6 +12,7 @@ import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_mode
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/message_view_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
+import 'package:aurora_mail/modules/mail/screens/message_view/dialog/import_vcf.dart';
 import 'package:aurora_mail/modules/settings/blocs/pgp_settings/pgp_settings_bloc.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/modules/settings/screens/pgp_settings/dialogs/import_key_dialog.dart';
@@ -20,6 +21,7 @@ import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/date_formatting.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/mail_utils.dart';
+import 'package:aurora_mail/utils/show_dialog.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -434,17 +436,13 @@ class _MessageWebViewState extends BState<MessageWebView> {
       birthYear: (vcf.birthday?.year) ?? 0,
       auto: null,
     );
-    final result = await ConfirmationDialog.show(
-      context,
-      null,
-      i18n(context, "hint_vcf_import", {
-        "name": contact.fullName ?? contact.nickName ?? contact.viewEmail ?? ""
-      }),
-      i18n(context, "btn_vcf_import"),
+    dialog(
+      context: context,
+      builder: (_) => ImportVcfDialog(
+        contact: contact,
+        bloc: bloc,
+      ),
     );
-    if (result == true) {
-      bloc.add(CreateContact(contact));
-    }
   }
 
   dynamic firstOrNull(dynamic list) {
