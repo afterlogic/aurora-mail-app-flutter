@@ -246,12 +246,14 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
   }
 
   Future _initSender(Message message) async {
+    if (message.toInJson?.isNotEmpty == true) {
     final authBloc = BlocProvider.of<AuthBloc>(context);
     final items = await authBloc.getAliasesAndIdentities();
-
-    final identity = MailUtils.findIdentity(message.toInJson, items);
-    setIdentityOrSender(
-        identity ?? AliasOrIdentity(null, authBloc.currentIdentity));
+      final identity = MailUtils.findIdentity(message.toInJson, items);
+      setIdentityOrSender(
+        identity ?? AliasOrIdentity(null, authBloc.currentIdentity),
+      );
+    }
   }
 
   void _onAppBarActionSelected(ComposeAppBarAction action) {

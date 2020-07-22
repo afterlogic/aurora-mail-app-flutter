@@ -1,6 +1,7 @@
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class ComposeBody extends StatefulWidget {
   final TextEditingController textCtrl;
