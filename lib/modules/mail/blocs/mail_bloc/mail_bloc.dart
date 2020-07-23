@@ -47,7 +47,6 @@ class MailBloc extends Bloc<MailEvent, MailState> {
     if (event is RefreshFolders) yield* _refreshFolders(event);
     if (event is RefreshMessages) yield* _refreshMessages(event);
     if (event is SelectFolder) yield* _selectFolder(event);
-    if (event is SelectFolder) yield* _selectFolder(event);
     if (event is CheckFoldersMessagesChanges)
       yield* _checkFoldersMessagesChanges(event);
     if (event is SetSeen) yield* _setSeen(event);
