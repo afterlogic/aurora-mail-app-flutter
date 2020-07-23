@@ -1,16 +1,29 @@
 import 'dart:io';
 
+import 'package:aurora_mail/modules/settings/screens/debug/debug_local_storage.dart';
 import 'package:aurora_mail/utils/download_directory.dart';
 import 'package:aurora_mail/utils/permissions.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:intl/intl.dart';
 import 'package:package_info/package_info.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:webmail_api_client/webmail_api_client.dart';
+
+import '../build_property.dart';
 
 final logger = _Logger();
 
 class _Logger {
-  bool isRun = false;
+  String currentTag;
+  final storage = DebugLocalStorage();
+  bool _isRun = false;
+
+  void set isRun(bool val) {
+    storage.setIsRun(val);
+    _isRun = val;
+  }
+
+  bool get isRun => _isRun;
   bool _enable = false;
 
   bool get enable => _enable;
@@ -26,24 +39,28 @@ class _Logger {
 
   _Logger() {
     WebMailApi.onError = (str) {
-      log("Api error:\n$str", false);
+      log("API ERROR:\n$str", true);
     };
     WebMailApi.onRequest = (str) {
-      log("Api request:\n$str", true);
+      log("API REQUEST:\n$str", true);
+    };
+    WebMailApi.onResponse = (str) {
+      log("API RESPONSE:\n$str", true);
     };
   }
 
   log(Object text, [bool show = true]) {
     if (show == true) print(text);
     if (isRun) {
-
-      buffer += "[${DateFormat("hh:mm:ss.ms").format(DateTime.now())}] ${"$text".replaceAll("\n", newLine)}$newLine$newLine";
+      buffer +=
+          "[${DateFormat("hh:mm:ss.mmm").format(DateTime.now())}] ${"$text".replaceAll("\n", newLine)}$newLine$newLine";
       count++;
       if (onEdit != null) onEdit();
     }
   }
 
-  start() {
+  start([String tag]) {
+    currentTag = tag;
     isRun = true;
     if (onEdit != null) onEdit();
   }
@@ -59,15 +76,15 @@ class _Logger {
 //    await Crashlytics.instance.log(buffer);
 //    await Crashlytics.instance.recordError("record log", null);
     try {
-      final packageInfo = await PackageInfo.fromPlatform();
       await getStoragePermissions();
-      final dir = (await getDownloadDirectory());
-      final file = File(dir +
-          Platform.pathSeparator +
-          "Logs_${packageInfo.packageName}" +
-          Platform.pathSeparator +
-          DateTime.now().toIso8601String() +
-          ".log.txt");
+      final dir = await logDir();
+      final file = File(
+        dir +
+            Platform.pathSeparator +
+            (currentTag == null ? "" : "$currentTag${Platform.pathSeparator}") +
+            DateTime.now().toIso8601String() +
+            ".log.txt",
+      );
       await file.create(recursive: true);
       await file.writeAsString(buffer.replaceAll(newLine, "\n"));
     } catch (e) {
@@ -82,6 +99,11 @@ class _Logger {
   pause() {
     isRun = false;
     if (onEdit != null) onEdit();
+  }
+
+  Future<String> logDir() async {
+    return (await getApplicationDocumentsDirectory()).path +  Platform.pathSeparator +
+        "Logs_${BuildProperty.packageName}";
   }
 
   static const newLine = "|/n|";

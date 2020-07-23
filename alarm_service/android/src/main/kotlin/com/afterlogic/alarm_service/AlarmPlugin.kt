@@ -20,7 +20,8 @@ class AlarmPlugin(private val applicationContext: Context) : MethodCallHandler {
         @JvmStatic
         fun registerWith(registrar: Registrar) {
             val channel = MethodChannel(registrar.messenger(), "alarm_service")
-            instance = AlarmPlugin(registrar.context().applicationContext)
+            if (instance == null)
+                instance = AlarmPlugin(registrar.context().applicationContext)
             channel.setMethodCallHandler(instance)
             registrar.addViewDestroyListener {
                 instance = null

@@ -20,6 +20,10 @@ import 'package:aurora_mail/modules/mail/screens/message_view/message_view_route
 import 'package:aurora_mail/modules/settings/screens/about/about_android.dart';
 import 'package:aurora_mail/modules/settings/screens/common_settings/common_settings_android.dart';
 import 'package:aurora_mail/modules/settings/screens/common_settings/common_settings_route.dart';
+import 'package:aurora_mail/modules/settings/screens/debug/debug_route.dart';
+import 'package:aurora_mail/modules/settings/screens/debug/debug_settings.dart';
+import 'package:aurora_mail/modules/settings/screens/debug/log_screen/log_route.dart';
+import 'package:aurora_mail/modules/settings/screens/debug/log_screen/log_screen.dart';
 import 'package:aurora_mail/modules/settings/screens/manage_users/manage_users_android.dart';
 import 'package:aurora_mail/modules/settings/screens/manage_users/manage_users_route.dart';
 import 'package:aurora_mail/modules/settings/screens/notifications_settings/notifications_settings.dart';
@@ -64,8 +68,7 @@ class AppNavigation {
               name: settings.name,
             ),
             fullscreenDialog: true,
-            builder: (_) =>
-                LoginAndroid(isDialog: args.isDialog, email: args.email),
+            builder: (_) => LoginAndroid(isDialog: args.isDialog, email: args.email),
           );
         } else {
           return FadeRoute(
@@ -106,7 +109,7 @@ class AppNavigation {
           settings: RouteSettings(name: settings.name),
           builder: (_) => MessagesListAndroid(
             initSearch: args?.search,
-            openMessageId:args?.messageLocalId,
+            openMessageId: args?.messageLocalId,
           ),
         );
         break;
@@ -125,8 +128,7 @@ class AppNavigation {
           builder: (_) => MultiBlocProvider(
             providers: [
               BlocProvider<MailBloc>.value(value: args.mailBloc),
-              BlocProvider<MessagesListBloc>.value(
-                  value: args.messagesListBloc),
+              BlocProvider<MessagesListBloc>.value(value: args.messagesListBloc),
               BlocProvider<ContactsBloc>.value(value: args.contactsBloc),
             ],
             child: MessageViewAndroid(
@@ -181,8 +183,7 @@ class AppNavigation {
                     BlocProvider<MailBloc>.value(value: args.mailBloc),
                     BlocProvider<ContactsBloc>.value(value: args.contactsBloc),
                   ],
-                  child: ContactViewAndroid(
-                      args.contact, args.scaffoldState, args.pgpSettingBloc),
+                  child: ContactViewAndroid(args.contact, args.scaffoldState, args.pgpSettingBloc),
                 ));
         break;
 
@@ -217,11 +218,22 @@ class AppNavigation {
         break;
 
       // ================= SETTINGS =================
-
-      case SettingsMainRoute.name:
+      case LogRoute.name:
+        final args = settings.arguments as LogRouteArg;
         return FadeRoute(
             settings: RouteSettings(name: settings.name),
-            builder: (_) => SettingsMainAndroid());
+            builder: (_) => LogScreen(
+                  args.file,
+                  args.content,
+                ));
+        break;
+      case DebugRoute.name:
+        return FadeRoute(
+            settings: RouteSettings(name: settings.name), builder: (_) => DebugSetting());
+        break;
+      case SettingsMainRoute.name:
+        return FadeRoute(
+            settings: RouteSettings(name: settings.name), builder: (_) => SettingsMainAndroid());
         break;
       case NotificationsSettingsRoute.name:
         return CupertinoPageRoute(
@@ -261,26 +273,22 @@ class AppNavigation {
         break;
       case CommonSettingsRoute.name:
         return CupertinoPageRoute(
-            settings: RouteSettings(name: settings.name),
-            builder: (_) => CommonSettingsAndroid());
+            settings: RouteSettings(name: settings.name), builder: (_) => CommonSettingsAndroid());
         break;
 
       case SyncSettingsRoute.name:
         return CupertinoPageRoute(
-            settings: RouteSettings(name: settings.name),
-            builder: (_) => SyncSettingsAndroid());
+            settings: RouteSettings(name: settings.name), builder: (_) => SyncSettingsAndroid());
         break;
 
       case ManageUsersRoute.name:
         return CupertinoPageRoute(
-            settings: RouteSettings(name: settings.name),
-            builder: (_) => ManageUsersAndroid());
+            settings: RouteSettings(name: settings.name), builder: (_) => ManageUsersAndroid());
         break;
 
       case AboutRoute.name:
         return CupertinoPageRoute(
-            settings: RouteSettings(name: settings.name),
-            builder: (_) => AboutAndroid());
+            settings: RouteSettings(name: settings.name), builder: (_) => AboutAndroid());
         break;
 
       // ==================================

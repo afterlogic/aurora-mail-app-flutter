@@ -18,16 +18,29 @@ import 'background/background_helper.dart';
 import 'background/background_sync.dart';
 import 'logger/logger.dart';
 import 'modules/app_screen.dart';
+import 'modules/settings/screens/debug/debug_local_storage.dart';
 import 'notification/notification_manager.dart';
 
-void main() async {
+void main(
+    {bool showNotification = true,
+    NotificationData data,
+    Future Function(bool) onSuccess}) async {
   Crashlytics.instance.enableInDevMode = true;
-
   AppInjector.create();
   FlutterError.onError = Crashlytics.instance.recordFlutterError;
   // ignore: invalid_use_of_protected_member
   DBInstances.appDB.connection.executor.ensureOpen();
   WidgetsFlutterBinding.ensureInitialized();
+  DebugLocalStorage().getDebug().then((value) {
+    if (value) {
+      logger.enable = true;
+    }
+  });
+  DebugLocalStorage().getIsRun().then((value) {
+    if (value) {
+      logger.start();
+    }
+  });
   PushNotificationsManager.instance.init();
   runApp(
     LoggerView.wrap(
@@ -57,17 +70,22 @@ void main() async {
 Set<String> updateForNotification = {};
 
 @pragma('vm:entry-point')
-void onAlarm(
-    [bool showNotification = true,
-    NotificationData data,
-    Future Function(bool) onSuccess]) async {
+void onAlarm({
+  bool showNotification = true,
+  NotificationData data,
+  Future Function(bool) onSuccess,
+}) async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final isDebug = await DebugLocalStorage().getBackgroundRecord();
+  if (BackgroundHelper.isBackground && isDebug) {
+    logger.start("Background_sync");
+  }
+
   var hasUpdate = false;
   if (!updateForNotification.contains(null) &&
       !updateForNotification.contains(data?.to)) {
     updateForNotification.add(data?.to);
     try {
-      WidgetsFlutterBinding.ensureInitialized();
-
       BackgroundHelper.onStartAlarm();
 
       hasUpdate = await BackgroundSync()
@@ -86,6 +104,8 @@ void onAlarm(
     updateForNotification.remove(data?.to);
   }
   BackgroundHelper.onEndAlarm(hasUpdate);
-
+  if (isDebug && BackgroundHelper.isBackground) {
+    logger.save();
+  }
   await AlarmService.endAlarm(hasUpdate);
 }

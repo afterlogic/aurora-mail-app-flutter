@@ -4,6 +4,7 @@ import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_event.dart';
 import 'package:aurora_mail/modules/settings/screens/about/about_route.dart';
 import 'package:aurora_mail/modules/settings/screens/common_settings/common_settings_route.dart';
+import 'package:aurora_mail/modules/settings/screens/debug/debug_route.dart';
 import 'package:aurora_mail/modules/settings/screens/manage_users/manage_users_route.dart';
 import 'package:aurora_mail/modules/settings/screens/pgp_settings/pgp_settings_route.dart';
 import 'package:aurora_mail/modules/settings/screens/sync_settings/sync_settings_route.dart';
@@ -22,6 +23,8 @@ class SettingsMainAndroid extends StatefulWidget {
 }
 
 class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
+  bool showDebug = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,12 +66,16 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
             leading: AMCircleIcon(Icons.info_outline),
             title: Text(i18n(context, "settings_about")),
             onLongPress: BuildProperty.logger
-                ? () {
-                    logger.enable = !logger.enable;
-                  }
+                ? () => setState(() => showDebug = true)
                 : null,
             onTap: () => Navigator.pushNamed(context, AboutRoute.name),
           ),
+          if (showDebug)
+            ListTile(
+              leading: AMCircleIcon(Icons.perm_device_information),
+              title: Text("Debug"),
+              onTap: () => Navigator.pushNamed(context, DebugRoute.name),
+            ),
           if (!BuildProperty.multiUserEnable)
             ListTile(
               leading: AMCircleIcon(Icons.exit_to_app),

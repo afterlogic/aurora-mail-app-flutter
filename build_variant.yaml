@@ -25,7 +25,7 @@ _iosAppName: "{{appName}}"
 _appId: ""
 _iosAppId: "{{_appId}}"
 _appleGroupId: ""
-
+packageName: "{{_appId}}"
 _build: 130
 _version: ""
 _version_android: "{{_version}}{{_build}}"
