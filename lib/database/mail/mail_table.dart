@@ -196,7 +196,7 @@ class Mail extends Table {
 
     final messagesChunk = new List<Message>();
     final messageInfoMap =
-        Map.fromEntries(messagesInfo.map((item) => MapEntry(item.uid, item)));
+        Map.fromEntries(messagesInfo.map((item) => MapEntry(item.uid, item)).toList());
     result.forEach((raw) {
       Message messageInfo;
 
