@@ -59,7 +59,8 @@ class _DebugSettingState extends BState<DebugSetting> {
           : Column(
               children: <Widget>[
                 ListTile(
-                  title: Text("Host: " + BlocProvider.of<AuthBloc>(context).currentUser.hostname),
+                  title: Text("Host: " +
+                      BlocProvider.of<AuthBloc>(context).currentUser.hostname),
                 ),
                 CheckboxListTile(
                   value: _debug,
@@ -92,7 +93,10 @@ class _DebugSettingState extends BState<DebugSetting> {
 
   Future<List<Widget>> getLogs(String path) async {
     final dir = Directory(path);
-    final files = await dir.list().toList();
+    if(!await dir.exists()){
+      return [];
+    }
+    final files = await dir.listSync().toList();
     final widgets = <Widget>[];
     for (var value in files) {
       if (value is Directory) {

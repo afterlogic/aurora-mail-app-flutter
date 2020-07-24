@@ -47,7 +47,6 @@ class MailBloc extends Bloc<MailEvent, MailState> {
     if (event is RefreshFolders) yield* _refreshFolders(event);
     if (event is RefreshMessages) yield* _refreshMessages(event);
     if (event is SelectFolder) yield* _selectFolder(event);
-    if (event is SelectFolder) yield* _selectFolder(event);
     if (event is CheckFoldersMessagesChanges)
       yield* _checkFoldersMessagesChanges(event);
     if (event is SetSeen) yield* _setSeen(event);
@@ -240,15 +239,16 @@ class MailBloc extends Bloc<MailEvent, MailState> {
   Future<Message> getFullMessage(int localId) {
     return _methods.getMessage(localId);
   }
+
   Future<LocalFolder> getFolderByType(FolderType folderType) {
     return _methods.getFolderByType(folderType);
   }
+
   Future<Folder> updateFolder(Folder selectedFolder) {
     return _methods.getFolder(selectedFolder.guid);
   }
 
-  Future<Message>  getMessageByUid(int uid) {
+  Future<Message> getMessageByUid(int uid) {
     return _methods.getMessageByUid(uid);
   }
-
 }
