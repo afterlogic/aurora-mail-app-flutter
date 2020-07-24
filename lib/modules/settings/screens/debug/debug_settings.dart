@@ -1,24 +1,10 @@
 import 'dart:io';
-
-import 'package:aurora_mail/build_property.dart';
-import 'package:aurora_mail/inject/app_inject.dart';
 import 'package:aurora_mail/logger/logger.dart';
-import 'package:aurora_mail/models/alias_or_identity.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
-import 'package:aurora_mail/modules/settings/blocs/pgp_settings/bloc.dart';
 import 'package:aurora_mail/modules/settings/screens/debug/debug_local_storage.dart';
 import 'package:aurora_mail/modules/settings/screens/debug/log_screen/log_route.dart';
-import 'package:aurora_mail/modules/settings/screens/pgp_settings/dialogs/generate_key_dialog.dart';
-import 'package:aurora_mail/modules/settings/screens/pgp_settings/dialogs/import_from_text_dialog.dart';
-import 'package:aurora_mail/modules/settings/screens/pgp_settings/dialogs/import_key_dialog.dart';
-import 'package:aurora_mail/modules/settings/screens/pgp_settings/screens/pgp_key_route.dart';
-import 'package:aurora_mail/modules/settings/screens/pgp_settings/screens/pgp_keys_route.dart';
 import 'package:aurora_mail/utils/base_state.dart';
-import 'package:aurora_mail/utils/identity_util.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
-import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
-import 'package:crypto_model/crypto_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -36,6 +22,10 @@ class _DebugSettingState extends BState<DebugSetting> {
   @override
   void initState() {
     super.initState();
+    init();
+  }
+
+  init() {
     Future.wait([
       _storage.getDebug(),
       _storage.getBackgroundRecord(),
@@ -93,7 +83,7 @@ class _DebugSettingState extends BState<DebugSetting> {
 
   Future<List<Widget>> getLogs(String path) async {
     final dir = Directory(path);
-    if(!await dir.exists()){
+    if (!await dir.exists()) {
       return [];
     }
     final files = await dir.listSync().toList();
@@ -103,17 +93,23 @@ class _DebugSettingState extends BState<DebugSetting> {
         final children = await getLogs(value.path);
         widgets.add(FolderLogWidget(value, children));
       } else if (value is File) {
-        widgets.add(FileLogWidget(value));
+        widgets.add(FileLogWidget(value, delete));
       }
     }
     return widgets;
+  }
+
+  delete(File file) async {
+    await file.delete();
+    init();
   }
 }
 
 class FileLogWidget extends StatelessWidget {
   final File value;
+  final Function(File) onDelete;
 
-  FileLogWidget(this.value);
+  FileLogWidget(this.value, this.onDelete);
 
   @override
   Widget build(BuildContext context) {
@@ -129,7 +125,11 @@ class FileLogWidget extends StatelessWidget {
     Navigator.pushNamed(
       context,
       LogRoute.name,
-      arguments: LogRouteArg(value, content),
+      arguments: LogRouteArg(
+        value,
+        content,
+        onDelete,
+      ),
     );
   }
 }

@@ -68,7 +68,8 @@ class AppNavigation {
               name: settings.name,
             ),
             fullscreenDialog: true,
-            builder: (_) => LoginAndroid(isDialog: args.isDialog, email: args.email),
+            builder: (_) =>
+                LoginAndroid(isDialog: args.isDialog, email: args.email),
           );
         } else {
           return FadeRoute(
@@ -128,7 +129,8 @@ class AppNavigation {
           builder: (_) => MultiBlocProvider(
             providers: [
               BlocProvider<MailBloc>.value(value: args.mailBloc),
-              BlocProvider<MessagesListBloc>.value(value: args.messagesListBloc),
+              BlocProvider<MessagesListBloc>.value(
+                  value: args.messagesListBloc),
               BlocProvider<ContactsBloc>.value(value: args.contactsBloc),
             ],
             child: MessageViewAndroid(
@@ -183,7 +185,8 @@ class AppNavigation {
                     BlocProvider<MailBloc>.value(value: args.mailBloc),
                     BlocProvider<ContactsBloc>.value(value: args.contactsBloc),
                   ],
-                  child: ContactViewAndroid(args.contact, args.scaffoldState, args.pgpSettingBloc),
+                  child: ContactViewAndroid(
+                      args.contact, args.scaffoldState, args.pgpSettingBloc),
                 ));
         break;
 
@@ -225,15 +228,18 @@ class AppNavigation {
             builder: (_) => LogScreen(
                   args.file,
                   args.content,
+                  args.onDelete,
                 ));
         break;
       case DebugRoute.name:
         return FadeRoute(
-            settings: RouteSettings(name: settings.name), builder: (_) => DebugSetting());
+            settings: RouteSettings(name: settings.name),
+            builder: (_) => DebugSetting());
         break;
       case SettingsMainRoute.name:
         return FadeRoute(
-            settings: RouteSettings(name: settings.name), builder: (_) => SettingsMainAndroid());
+            settings: RouteSettings(name: settings.name),
+            builder: (_) => SettingsMainAndroid());
         break;
       case NotificationsSettingsRoute.name:
         return CupertinoPageRoute(
@@ -273,22 +279,26 @@ class AppNavigation {
         break;
       case CommonSettingsRoute.name:
         return CupertinoPageRoute(
-            settings: RouteSettings(name: settings.name), builder: (_) => CommonSettingsAndroid());
+            settings: RouteSettings(name: settings.name),
+            builder: (_) => CommonSettingsAndroid());
         break;
 
       case SyncSettingsRoute.name:
         return CupertinoPageRoute(
-            settings: RouteSettings(name: settings.name), builder: (_) => SyncSettingsAndroid());
+            settings: RouteSettings(name: settings.name),
+            builder: (_) => SyncSettingsAndroid());
         break;
 
       case ManageUsersRoute.name:
         return CupertinoPageRoute(
-            settings: RouteSettings(name: settings.name), builder: (_) => ManageUsersAndroid());
+            settings: RouteSettings(name: settings.name),
+            builder: (_) => ManageUsersAndroid());
         break;
 
       case AboutRoute.name:
         return CupertinoPageRoute(
-            settings: RouteSettings(name: settings.name), builder: (_) => AboutAndroid());
+            settings: RouteSettings(name: settings.name),
+            builder: (_) => AboutAndroid());
         break;
 
       // ==================================

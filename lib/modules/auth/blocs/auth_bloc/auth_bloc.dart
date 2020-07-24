@@ -50,7 +50,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         currentUser = result.user;
         currentAccount = result.account;
 
-
         final identities =
             await _methods.getAccountIdentities(currentUser, currentAccount);
         _methods.setFbToken(users);
@@ -114,7 +113,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     final userFromDb = users.firstWhere((u) => u.emailFromLogin == event.email,
         orElse: () => null);
 
-    if (userFromDb != null) {
+    if (!event.firstLogin && userFromDb != null) {
       yield AuthError("error_user_already_logged");
       return;
     } else {

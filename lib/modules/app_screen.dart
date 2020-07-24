@@ -102,6 +102,7 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
     BackgroundHelper.current = state;
 
     if (state == AppLifecycleState.resumed) {
+      DBInstances.appDB.streamQueries.handleTableUpdates({DBInstances.appDB.mail});
       _settingsBloc.add(OnResume());
     }
 
