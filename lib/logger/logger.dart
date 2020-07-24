@@ -76,7 +76,6 @@ class _Logger {
 //    await Crashlytics.instance.log(buffer);
 //    await Crashlytics.instance.recordError("record log", null);
     try {
-      await getStoragePermissions();
       final dir = await logDir();
       final file = File(
         dir +
