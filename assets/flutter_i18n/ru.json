@@ -374,6 +374,9 @@
   "label_device_id_copied_to_clip_board": "Device id copied to clipboard",
   "label_discard_not_saved_changes": "Discard not saved changes?",
   "label_pgp_encrypt": "Encrypt",
-  "hint_auto_encrypt_messages": "If you want messages to this contact to be automatically encrypted and/or signed, check the boxes below. Please note that these messages will be converted to plain text. Attachments will not be encrypted."
-
+  "hint_auto_encrypt_messages": "If you want messages to this contact to be automatically encrypted and/or signed, check the boxes below. Please note that these messages will be converted to plain text. Attachments will not be encrypted.",
+  "btn_log_delete_all": "Delete all",
+  "label_record_log_in_background": "Record log in background",
+  "label_show_debug_view": "Show debug view",
+  "hint_log_delete_all": "Are you sure you want to delete all logs"
 }

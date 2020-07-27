@@ -6,6 +6,7 @@ import 'package:aurora_mail/utils/permissions.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:intl/intl.dart';
 import 'package:package_info/package_info.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:webmail_api_client/webmail_api_client.dart';
 
 import '../build_property.dart';
@@ -51,8 +52,8 @@ class _Logger {
   log(Object text, [bool show = true]) {
     if (show == true) print(text);
     if (isRun) {
-      buffer +=
-          "[${DateFormat("hh:mm:ss.mmm").format(DateTime.now())}] ${"$text".replaceAll("\n", newLine)}$newLine$newLine";
+
+      buffer += "[${DateFormat("hh:mm:ss.ms").format(DateTime.now())}] ${"$text".replaceAll("\n", newLine)}$newLine$newLine";
       count++;
       if (onEdit != null) onEdit();
     }
@@ -75,12 +76,9 @@ class _Logger {
 //    await Crashlytics.instance.log(buffer);
 //    await Crashlytics.instance.recordError("record log", null);
     try {
-      await getStoragePermissions();
-      final dir = (await getDownloadDirectory());
+      final dir = await logDir();
       final file = File(
         dir +
-            Platform.pathSeparator +
-            "Logs_${BuildProperty.packageName}" +
             Platform.pathSeparator +
             (currentTag == null ? "" : "$currentTag${Platform.pathSeparator}") +
             DateTime.now().toIso8601String() +
@@ -100,6 +98,11 @@ class _Logger {
   pause() {
     isRun = false;
     if (onEdit != null) onEdit();
+  }
+
+  Future<String> logDir() async {
+    return (await getApplicationDocumentsDirectory()).path +  Platform.pathSeparator +
+        "Logs_${BuildProperty.packageName}";
   }
 
   static const newLine = "|/n|";

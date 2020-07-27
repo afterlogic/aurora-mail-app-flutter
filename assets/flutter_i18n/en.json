@@ -376,5 +376,10 @@
   "label_pgp_encrypt": "Encrypt",
   "hint_auto_encrypt_messages": "If you want messages to this contact to be automatically encrypted and/or signed, check the boxes below. Please note that these messages will be converted to plain text. Attachments will not be encrypted.",
   "error_password_is_empty": "password is empty",
-  "label_encryption_password_for_pgp_key": "Required password for PGP key"
+  "label_encryption_password_for_pgp_key": "Required password for PGP key",
+  "btn_log_delete_all": "Delete all",
+  "label_record_log_in_background": "Record log in background",
+  "label_show_debug_view": "Show debug view",
+  "hint_log_delete_record": "Are you sure you want to delete file {name}",
+  "hint_log_delete_all": "Are you sure you want to delete all logs"
 }

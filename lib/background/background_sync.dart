@@ -35,7 +35,7 @@ class BackgroundSync {
     bool showNotification,
     NotificationData notification,
   ) async {
-    logger.log("MailSync: sync START");
+    logger.log("MAIL_SYNC: sync start");
     var hasUpdate = false;
     if (notification == null && MailMethods.syncQueue.isNotEmpty) {
       return false;
@@ -72,7 +72,7 @@ class BackgroundSync {
           logger.log("MailSync: No messages to sync");
         }
       }
-      logger.log("MailSync: sync END");
+      logger.log("MailSync: sync start");
     }
 //    on SocketException {
 //

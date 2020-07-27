@@ -22,10 +22,13 @@ class WebMailApi {
   static Function(String) onRequest;
   static Function(String) onError;
   static Function(String) onResponse;
-  static IOClient _client = IOClient(HttpClient()
-    ..badCertificateCallback = ((X509Certificate cert, String host, int port) {
-      return false;
-    }));
+  static IOClient _client = IOClient(
+    HttpClient()
+      ..badCertificateCallback =
+          ((X509Certificate cert, String host, int port) {
+        return false;
+      }),
+  );
 
   String get apiUrl => "$hostname/?Api/";
 
@@ -59,7 +62,7 @@ class WebMailApi {
     }
     final start = DateTime.now().millisecondsSinceEpoch;
     if (onRequest != null)
-      onRequest("$id\nURL:$apiUrl\nPARAMETERS:${body.parameters}");
+      onRequest("$id\nURL: $apiUrl\nPARAMETERS: ${body.parameters}");
 
     final rawResponse = await _client.post(apiUrl,
         headers: headers, body: body.toMap(moduleName));
@@ -69,7 +72,7 @@ class WebMailApi {
     if (res["Result"] != null && (res["Result"] != false || getRawResponse)) {
       if (onResponse != null)
         onResponse(
-            "$id\nDELAY: ${DateTime.now().millisecondsSinceEpoch - start}\nSTATUS:${rawResponse.statusCode}");
+            "$id\nDELAY: ${DateTime.now().millisecondsSinceEpoch - start}\nSTATUS: ${rawResponse.statusCode}");
       if (getRawResponse)
         return res;
       else

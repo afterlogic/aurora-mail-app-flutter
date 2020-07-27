@@ -1,10 +1,10 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/app_screen.dart';
 import 'package:aurora_mail/modules/dialog_wrap.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart'
-    hide Message;
+import 'package:flutter_local_notifications/flutter_local_notifications.dart' hide Message;
 import 'package:notifications_utils/notifications_utils.dart';
 import 'package:package_info/package_info.dart';
 
@@ -36,17 +36,15 @@ class NotificationManager {
         message.fromToDisplay, message.subject, user, message.uid);
   }
 
-  Future<void> showNotification(
-      String from, String subject, User user, int localId) async {
-    final activeNotifications =
-        await NotificationsUtils.getActiveNotifications();
-
+  Future<void> showNotification(String from, String subject, User user, int localId) async {
     final packageName = (await PackageInfo.fromPlatform()).packageName;
-
-    final isFirstNotification = activeNotifications.where((n) {
-      return n.packageName == packageName &&
-          n.groupKey.contains(user.emailFromLogin);
-    }).isEmpty;
+    bool isFirstNotification = false;
+    if (!Platform.isIOS) {
+      final activeNotifications = await NotificationsUtils.getActiveNotifications();
+      isFirstNotification = activeNotifications.where((n) {
+        return n.packageName == packageName && n.groupKey.contains(user.emailFromLogin);
+      }).isEmpty;
+    }
 
     final groupKey = "$packageName.${user.emailFromLogin}";
     final groupChannelId = user.emailFromLogin;

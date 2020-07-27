@@ -41,18 +41,9 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
     super.initState();
     pgpSettingsBloc =
         AppInjector.instance.pgpSettingsBloc(BlocProvider.of(context));
-    BackgroundHelper.addOnAlarmObserver(false, onAlarm);
   }
 
-  @override
-  void dispose() {
-    BackgroundHelper.removeOnAlarmObserver(onAlarm);
-    super.dispose();
-  }
 
-  void onAlarm() {
-    _refreshKey.currentState.show();
-  }
 
   void _onContactSelected(BuildContext context, Contact contact) {
     Navigator.pushNamed(

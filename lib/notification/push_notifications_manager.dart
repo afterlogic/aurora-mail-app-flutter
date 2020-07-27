@@ -99,7 +99,7 @@ class NotificationData {
   NotificationData(this.subject, this.to, this.from);
 
   static NotificationData fromMap(Map<String, dynamic> message) {
-    final notification = message["data"] as Map;
+    final notification = (message["data"]??message) as Map;
 
     return NotificationData(
       notification["Subject"] as String,
