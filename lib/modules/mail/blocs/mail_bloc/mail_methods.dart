@@ -40,6 +40,7 @@ class MailMethods {
   bool get _isOffline => SettingsBloc.isOffline;
 
   Future<List<Folder>> getFolders() async {
+    logger.log("method getFolders");
     // try to get from DB
 
     final folders = await _getOfflineFolders();
@@ -66,6 +67,7 @@ class MailMethods {
   }
 
   Future<List<Folder>> refreshFolders() async {
+    logger.log("method refreshFolders");
     if (_isOffline) return _getOfflineFolders();
 
     // fetch old folders
@@ -131,6 +133,7 @@ class MailMethods {
 
   Future<List<Folder>> updateFoldersHash(Folder selectedFolder,
       {bool forceCurrentFolderUpdate = false}) async {
+    logger.log("method updateFoldersHash");
     if (_isOffline) return _getOfflineFolders();
 
     assert(selectedFolder != null);
@@ -180,6 +183,7 @@ class MailMethods {
 
   Future<void> syncFolders(
       {@required String guid, bool syncSystemFolders = false}) async {
+    logger.log("method syncFolders");
     if (_isOffline || user == null) return null;
 
     // either localId or syncSystemFolders must be provided
@@ -215,6 +219,7 @@ class MailMethods {
   }
 
   Future<void> _setMessagesInfoToFolder() async {
+    logger.log("method _setMessagesInfoToFolder");
     if (_isOffline || user == null) return null;
     if (syncQueue.isEmpty) {
       return;
@@ -301,6 +306,7 @@ class MailMethods {
     String syncPeriod,
     List<Message> messagesForUpdate,
   ) async {
+    logger.log("method _syncMessagesChunk");
     if (_isOffline || user == null) return null;
     assert(syncQueue.isNotEmpty);
 
@@ -378,6 +384,7 @@ class MailMethods {
   // returns list of uids to load
   Future<List<Message>> _getMessageInfoWithNotBody(
       List<MessageInfo> messagesInfo) async {
+    logger.log("method _getMessageInfoWithNotBody");
     final List<Message> messages = [];
 
     final length = messagesInfo.length;
@@ -402,6 +409,7 @@ class MailMethods {
     @required List<Message> messages,
     @required bool isSeen,
   }) async {
+    logger.log("method setMessagesSeen");
     if (_isOffline) return null;
 
     Future updateMessages(bool isStarred) async {
@@ -441,6 +449,7 @@ class MailMethods {
     @required List<Message> messages,
     @required bool isStarred,
   }) async {
+    logger.log("method setMessagesStarred");
     if (_isOffline) return null;
 
     void updateMessages(bool isStarred) {

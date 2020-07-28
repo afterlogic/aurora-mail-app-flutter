@@ -139,10 +139,10 @@ class BackgroundSync {
             result.removedUids, folderToUpdate.fullNameRaw);
 
         await _mailDao.updateMessagesFlags(result.infosToUpdateFlags);
-
+        logger.log("start add empty message");
         await _mailDao.addEmptyMessage(
             result.addedMessages, account, user, folderToUpdate.fullNameRaw);
-
+        logger.log("finish add empty message");
         final uids = result.addedMessages.map((m) => m.uid);
         final rawBodies = await mailApi.getMessageBodies(
           folderName: folderToUpdate.fullNameRaw,
