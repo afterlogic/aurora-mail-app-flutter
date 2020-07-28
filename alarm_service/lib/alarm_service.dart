@@ -46,7 +46,7 @@ class AlarmService {
   static startTimer() {
     stopTimer();
     if (_iosInterval == null) return;
-    _timer = Timer.periodic(_iosInterval, (_) => alarm(-1));
+    _timer = Timer.periodic(_iosInterval, (_) => _alarm(-1));
   }
 
   static stopTimer() {

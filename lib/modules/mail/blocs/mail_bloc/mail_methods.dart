@@ -26,7 +26,7 @@ class MailMethods {
   var needUpdateInfo = false;
   FoldersApi _foldersApi;
   MailApi _mailApi;
-
+  bool _closed = false;
   final User user;
   final Account account;
 
@@ -35,7 +35,7 @@ class MailMethods {
     _mailApi = new MailApi(user: user, account: account);
   }
 
-  static final syncQueue = new List<String>();
+   final syncQueue = new List<String>();
 
   bool get _isOffline => SettingsBloc.isOffline;
 
@@ -307,7 +307,7 @@ class MailMethods {
     List<Message> messagesForUpdate,
   ) async {
     logger.log("method _syncMessagesChunk");
-    if (_isOffline || user == null) return null;
+    if (_closed || _isOffline || user == null) return null;
     assert(syncQueue.isNotEmpty);
 
     // get the actual folder state every time
@@ -513,4 +513,7 @@ class MailMethods {
     return _mailDao.getMessageByUid(uid);
   }
 
+  void close() {
+    _closed = true;
+  }
 }

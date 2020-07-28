@@ -37,7 +37,7 @@ class BackgroundSync {
   ) async {
     logger.log("MAIL_SYNC: sync start");
     var hasUpdate = false;
-    if (notification == null && MailMethods.syncQueue.isNotEmpty) {
+    if (notification == null) {
       return false;
     }
     try {

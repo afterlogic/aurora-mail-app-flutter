@@ -85,7 +85,6 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
     }
     BackgroundHelper.addOnAlarmObserver(false, onAlarm);
     BackgroundHelper.addOnEndAlarmObserver(false, onEndAlarm);
-
   }
 
   openMessage(int uid) async {
@@ -117,7 +116,8 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
 
   void _initBlocs() {
     final authBloc = BlocProvider.of<AuthBloc>(context);
-
+    if (_messagesListBloc != null &&
+        _messagesListBloc.account == authBloc.currentAccount) return;
     _messagesListBloc = new MessagesListBloc(
       user: authBloc.currentUser,
       account: authBloc.currentAccount,
@@ -131,6 +131,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
     );
 
     _mailBloc.add(FetchFolders());
+    _mailBloc.add(RefreshMessages(null));
   }
 
   void _showError(BuildContext ctx, String err) {
@@ -232,7 +233,6 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
                   if (state is MailError) _showError(context, state.errorMsg);
                   if (state is MessagesDeleted) {
                     _startRefresh();
-                    _mailBloc.add(RefreshMessages(_refreshCompleter));
                   }
                 },
               ),
@@ -247,23 +247,6 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
                     if (state.postAction != null) {
                       _dispatchPostFoldersLoadedAction(state);
                     }
-                  }
-                },
-              ),
-              BlocListener<SettingsBloc, SettingsState>(
-                condition: (prev, next) {
-                  if (prev is SettingsLoaded &&
-                      next is SettingsLoaded &&
-                      prev.darkThemeEnabled != next.darkThemeEnabled) {
-                    return false;
-                  } else {
-                    return true;
-                  }
-                },
-                listener: (BuildContext context, state) {
-                  if (state is SettingsLoaded) {
-                    _startRefresh();
-                    _mailBloc.add(RefreshMessages(_refreshCompleter));
                   }
                 },
               ),

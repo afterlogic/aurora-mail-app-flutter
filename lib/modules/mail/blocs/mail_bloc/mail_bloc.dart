@@ -23,6 +23,7 @@ class MailBloc extends Bloc<MailEvent, MailState> {
   }
 
   init(User user, Account account) {
+    _methods.close();
     _methods = new MailMethods(user: user, account: account);
   }
 
