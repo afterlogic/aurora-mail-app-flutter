@@ -46,8 +46,7 @@ class BackgroundSync {
       for (final user in users) {
         var accounts = await _accountsDao.getAccounts(user.localId);
         if (notification != null) {
-          accounts =
-              accounts.where((item) => item.email == notification.to).toList();
+          accounts = accounts.where((item) => item.email == notification.to).toList();
         }
         if (accounts.isEmpty) {
           continue;
@@ -55,10 +54,9 @@ class BackgroundSync {
         final newMessages = await _getNewMessages(user, accounts);
         if (newMessages.isNotEmpty) {
           if (true) {
-            newMessages
-                .sort((a, b) => a.timeStampInUTC.compareTo(b.timeStampInUTC));
+            newMessages.sort((a, b) => a.timeStampInUTC.compareTo(b.timeStampInUTC));
             logger.log("MailSync: ${newMessages.length} new message(s)");
-            if (notification == null) {
+            if (showNotification != false && notification == null) {
               for (final message in newMessages) {
                 await _showNewMessage(message, user);
               }
@@ -95,14 +93,13 @@ class BackgroundSync {
     }
     final newMessages = new List<Message>();
     for (var account in accounts) {
-      final inboxFolders = await _foldersDao.getByType(
-          [Folder.getNumberFromFolderType(FolderType.inbox)], account.localId);
+      final inboxFolders = await _foldersDao
+          .getByType([Folder.getNumberFromFolderType(FolderType.inbox)], account.localId);
       if (inboxFolders.isEmpty) continue;
 
-      final foldersToUpdate =
-          (await _updateFolderHash(inboxFolders, user, account))
-              .where((item) => item.type == 1)
-              .toList();
+      final foldersToUpdate = (await _updateFolderHash(inboxFolders, user, account))
+          .where((item) => item.type == 1)
+          .toList();
 
       if (account == null) return new List<Message>();
 
@@ -127,15 +124,12 @@ class BackgroundSync {
         final rawInfo = await mailApi.getMessagesInfo(
             folderName: folderToUpdate.fullNameRaw, search: "date:$periodStr/");
 
-        List<MessageInfo> newMessagesInfo =
-            MessageInfo.flattenMessagesInfo(rawInfo);
-        final result = await Folders.calculateMessagesInfoDiffAsync(
-            messagesInfo, newMessagesInfo);
+        List<MessageInfo> newMessagesInfo = MessageInfo.flattenMessagesInfo(rawInfo);
+        final result = await Folders.calculateMessagesInfoDiffAsync(messagesInfo, newMessagesInfo);
 
         if (result.addedMessages.isEmpty) break;
 
-        await _mailDao.deleteMessages(
-            result.removedUids, folderToUpdate.fullNameRaw);
+        await _mailDao.deleteMessages(result.removedUids, folderToUpdate.fullNameRaw);
 
         await _mailDao.updateMessagesFlags(result.infosToUpdateFlags);
 
@@ -148,8 +142,7 @@ class BackgroundSync {
           uids: uids.toList(),
         );
 
-        final newMessageBodies =
-            Mail.getMessageObjFromServerAndUpdateInfoHasBody(
+        final newMessageBodies = Mail.getMessageObjFromServerAndUpdateInfoHasBody(
           rawBodies,
           await _getMessageInfoWithNotBody(result.addedMessages),
           user.localId,
@@ -167,15 +160,14 @@ class BackgroundSync {
             .where((m) => !m.flags.contains("\\seen"))
             .map((e) => e.uid)
             .toSet();
-        newMessages.addAll(newMessageBodies
-            .where((element) => notSeenMessagesUids.contains(element.uid)));
+        newMessages
+            .addAll(newMessageBodies.where((element) => notSeenMessagesUids.contains(element.uid)));
       }
     }
     return newMessages;
   }
 
-  Future<List<Message>> _getMessageInfoWithNotBody(
-      List<MessageInfo> messagesInfo) async {
+  Future<List<Message>> _getMessageInfoWithNotBody(List<MessageInfo> messagesInfo) async {
     final List<Message> messages = [];
 
     final length = messagesInfo.length;

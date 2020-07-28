@@ -83,7 +83,7 @@ public class SwiftAlarmPlugin: NSObject, FlutterPlugin {
         }
     }
     
-    open func alarm(_ completionHandler: @escaping (Bool) -> Void) {
+    open func alarm(didReceiveRemoteNotification userInfo: [AnyHashable : Any]?=nil,_ completionHandler: @escaping (Bool) -> Void) {
         var timer:Timer?
         onEndAlarm = {(hasData) in
             self.hasAlarm=false
@@ -91,7 +91,7 @@ public class SwiftAlarmPlugin: NSObject, FlutterPlugin {
             completionHandler(hasData)
         }
         if onAlarm != nil {
-            onAlarm?(-1)
+            onAlarm?(userInfo)
             onAlarm=nil
         } else{
             hasAlarm=true
@@ -105,10 +105,10 @@ public class SwiftAlarmPlugin: NSObject, FlutterPlugin {
         }
     }
     
-    func alarmFromFetch(_ completionHandler: @escaping (UIBackgroundFetchResult) -> Void){
-        alarm{(hasData) in
+    func alarmFromFetch(_ completionHandler: @escaping (UIBackgroundFetchResult) -> Void,didReceiveRemoteNotification userInfo: [AnyHashable : Any]?=nil){
+        alarm(didReceiveRemoteNotification: userInfo,{(hasData) in
             completionHandler(hasData ? UIBackgroundFetchResult.newData : UIBackgroundFetchResult.noData)
-        }
+        })
     }
     
     @available(iOS 13.0, *)
@@ -154,7 +154,7 @@ public class SwiftAlarmPlugin: NSObject, FlutterPlugin {
     }
     
     public func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) -> Bool {
-        alarmFromFetch(completionHandler)
+        alarmFromFetch(completionHandler,didReceiveRemoteNotification: userInfo)
         return true
     }
     

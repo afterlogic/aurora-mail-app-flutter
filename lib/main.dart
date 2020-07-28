@@ -22,9 +22,7 @@ import 'modules/settings/screens/debug/debug_local_storage.dart';
 import 'notification/notification_manager.dart';
 
 void main(
-    {bool showNotification = true,
-    NotificationData data,
-    Future Function(bool) onSuccess}) async {
+    {bool showNotification = true, NotificationData data, Future Function(bool) onSuccess}) async {
   Crashlytics.instance.enableInDevMode = true;
   AppInjector.create();
   FlutterError.onError = Crashlytics.instance.recordFlutterError;
@@ -59,6 +57,7 @@ void main(
   NotificationManager.instance;
   AlarmService.init();
   AlarmService.onAlarm(onAlarm, ALARM_ID);
+  AlarmService.onNotification(messageHandler);
   BlocSupervisor.delegate = BlocLogger();
   try {
     if (Platform.isAndroid) FlutterDownloader.initialize();
@@ -82,8 +81,7 @@ void onAlarm({
   }
 
   var hasUpdate = false;
-  if (!updateForNotification.contains(null) &&
-      !updateForNotification.contains(data?.to)) {
+  if (!updateForNotification.contains(null) && !updateForNotification.contains(data?.to)) {
     updateForNotification.add(data?.to);
     try {
       BackgroundHelper.onStartAlarm();

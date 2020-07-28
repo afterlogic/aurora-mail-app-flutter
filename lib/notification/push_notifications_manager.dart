@@ -55,7 +55,8 @@ class PushNotificationsManager {
   }
 }
 
-Future<dynamic> messageHandler(Map<String, dynamic> message) async {
+Future<dynamic> messageHandler(Map<dynamic, dynamic> message) async {
+  print(message);
   WidgetsFlutterBinding.ensureInitialized();
   final localStorage = AuthLocalStorage();
 
@@ -98,8 +99,8 @@ class NotificationData {
 
   NotificationData(this.subject, this.to, this.from);
 
-  static NotificationData fromMap(Map<String, dynamic> message) {
-    final notification = (message["data"]??message) as Map;
+  static NotificationData fromMap(Map<dynamic, dynamic> message) {
+    final notification = (message["data"] ?? message) as Map;
 
     return NotificationData(
       notification["Subject"] as String,
