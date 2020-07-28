@@ -102,6 +102,7 @@ class _LoginAndroidState extends BState<LoginAndroid> {
       email: emailCtrl.text,
       password: passwordCtrl.text,
       hostname: hostCtrl.text,
+      firstLogin: !widget.isDialog,
     ));
   }
 

@@ -113,7 +113,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     final userFromDb = users.firstWhere((u) => u.emailFromLogin == event.email,
         orElse: () => null);
 
-    if (userFromDb != null) {
+    if (!event.firstLogin && userFromDb != null) {
       yield AuthError("error_user_already_logged");
       return;
     } else {

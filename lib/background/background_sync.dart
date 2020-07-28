@@ -58,7 +58,7 @@ class BackgroundSync {
             newMessages
                 .sort((a, b) => a.timeStampInUTC.compareTo(b.timeStampInUTC));
             logger.log("MailSync: ${newMessages.length} new message(s)");
-            if (notification == null) {
+            if (showNotification != false && notification == null) {
               for (final message in newMessages) {
                 await _showNewMessage(message, user);
               }
@@ -72,7 +72,7 @@ class BackgroundSync {
           logger.log("MailSync: No messages to sync");
         }
       }
-      logger.log("MailSync: sync start");
+      logger.log("MailSync: sync end");
     }
 //    on SocketException {
 //
@@ -95,8 +95,8 @@ class BackgroundSync {
     }
     final newMessages = new List<Message>();
     for (var account in accounts) {
-      final inboxFolders = await _foldersDao.getByType(
-          [Folder.getNumberFromFolderType(FolderType.inbox)], account.localId);
+      final inboxFolders = await _foldersDao
+          .getByType([Folder.getNumberFromFolderType(FolderType.inbox)], account.localId);
       if (inboxFolders.isEmpty) continue;
 
       final foldersToUpdate =
@@ -129,6 +129,7 @@ class BackgroundSync {
 
         List<MessageInfo> newMessagesInfo =
             MessageInfo.flattenMessagesInfo(rawInfo);
+
         final result = await Folders.calculateMessagesInfoDiffAsync(
             messagesInfo, newMessagesInfo);
 

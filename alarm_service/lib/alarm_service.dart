@@ -2,11 +2,13 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:aurora_mail/notification/push_notifications_manager.dart';
 import 'package:flutter/services.dart';
 
 class AlarmService {
   static const MethodChannel _channel = const MethodChannel('alarm_service');
   static final Map<int, Function> _onAlarmMap = {};
+  static Function(Map<dynamic, dynamic> message) _onNotification;
   static bool _isInit = false;
   static Duration _iosInterval;
   static Timer _timer;
@@ -77,16 +79,31 @@ class AlarmService {
   static _doOnAlarm() async {
     while (true) {
       try {
-        final id = (await _channel.invokeMethod('doOnAlarm')) as int;
-        alarm(id);
-      } catch (e) {}
+        final data = (await _channel.invokeMethod('doOnAlarm'));
+        if (data is int) {
+          _alarm(data);
+        } else if (data is Map) {
+          _notification(data);
+        }
+      } catch (e) {
+        print(e);
+      }
     }
   }
 
-  static alarm(int id) {
+  static _alarm(int id) {
     if (id != null) {
       final function = id == -1 ? _onAlarmMap.values.first : _onAlarmMap[id];
       if (function != null) function();
     }
+  }
+
+  static _notification(Map<dynamic, dynamic> message) {
+    _onNotification(message);
+  }
+
+  static void onNotification(
+      void Function(Map<dynamic, dynamic> message) onNotification) {
+    _onNotification = onNotification;
   }
 }

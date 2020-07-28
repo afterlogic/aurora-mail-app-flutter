@@ -19,8 +19,7 @@ class NotificationManager {
       IOSInitializationSettings(),
     );
 
-    plugin.initialize(initializationSettings,
-        onSelectNotification: onSelectNotification);
+    plugin.initialize(initializationSettings, onSelectNotification: onSelectNotification);
     test();
   }
 
@@ -32,8 +31,7 @@ class NotificationManager {
   }
 
   Future<void> showMessageNotification(Message message, User user) async {
-    return showNotification(
-        message.fromToDisplay, message.subject, user, message.uid);
+    return showNotification(message.fromToDisplay, message.subject, user, message.uid);
   }
 
   Future<void> showNotification(String from, String subject, User user, int localId) async {

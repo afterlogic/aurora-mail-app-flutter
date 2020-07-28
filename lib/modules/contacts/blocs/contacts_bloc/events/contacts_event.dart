@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_group_model.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_storage_model.dart';
@@ -19,7 +21,9 @@ class SearchContacts extends ContactsEvent with AlwaysNonEqualObject {
 }
 
 class GetContacts extends ContactsEvent with AlwaysNonEqualObject {
-  GetContacts();
+  final Completer completer;
+
+  GetContacts({this.completer});
 }
 
 // if none is selected returns all contacts
@@ -51,8 +55,9 @@ class ReceivedContacts extends ContactsEvent {
 
 class CreateContact extends ContactsEvent {
   final Contact contact;
+  final Completer completer;
 
-  const CreateContact(this.contact);
+  const CreateContact(this.contact, {this.completer});
 
   @override
   List<Object> get props => [contact];

@@ -85,6 +85,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
     }
     BackgroundHelper.addOnAlarmObserver(false, onAlarm);
     BackgroundHelper.addOnEndAlarmObserver(false, onEndAlarm);
+
   }
 
   openMessage(int uid) async {

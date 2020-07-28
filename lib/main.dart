@@ -21,11 +21,9 @@ import 'modules/app_screen.dart';
 import 'modules/settings/screens/debug/debug_local_storage.dart';
 import 'notification/notification_manager.dart';
 
-void main(
-    {bool showNotification = true,
-    NotificationData data,
-    Future Function(bool) onSuccess}) async {
+void main() async {
   Crashlytics.instance.enableInDevMode = true;
+
   AppInjector.create();
   FlutterError.onError = Crashlytics.instance.recordFlutterError;
   // ignore: invalid_use_of_protected_member
@@ -59,6 +57,7 @@ void main(
   NotificationManager.instance;
   AlarmService.init();
   AlarmService.onAlarm(onAlarm, ALARM_ID);
+  AlarmService.onNotification(messageHandler);
   BlocSupervisor.delegate = BlocLogger();
   try {
     if (Platform.isAndroid) FlutterDownloader.initialize();
@@ -82,8 +81,7 @@ void onAlarm({
   }
 
   var hasUpdate = false;
-  if (!updateForNotification.contains(null) &&
-      !updateForNotification.contains(data?.to)) {
+  if (!updateForNotification.contains(null) && !updateForNotification.contains(data?.to)) {
     updateForNotification.add(data?.to);
     try {
       BackgroundHelper.onStartAlarm();

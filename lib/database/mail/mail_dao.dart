@@ -137,6 +137,7 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
 
     params.add(Variable.withInt(limit));
     params.add(Variable.withInt(offset));
+
     return customSelectQuery(query, variables: params, readsFrom: {mail})
         .watch()
         .map((list) {

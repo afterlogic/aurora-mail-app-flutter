@@ -58,7 +58,7 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
   @override
   Stream<ContactsState> mapEventToState(ContactsEvent event) async* {
     if (event is SearchContacts) yield* _searchContacts(event);
-    if (event is GetContacts) yield* _getContacts();
+    if (event is GetContacts) yield* _getContacts(event);
     if (event is CreateContact) yield* _createContact(event);
     if (event is UpdateContact) yield* _updateContact(event);
     if (event is DeleteContacts) yield* _deleteContacts(event);
@@ -89,7 +89,7 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
         storageId: state.selectedStorage, groupId: state.selectedGroup));
   }
 
-  Stream<ContactsState> _getContacts() async* {
+  Stream<ContactsState> _getContacts(GetContacts event) async* {
     print("_getContacts");
     try {
       _storagesSub = _repo.watchContactsStorages().listen((storages) {
@@ -123,6 +123,7 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
     } catch (e) {
       print(e);
     }
+    event.completer?.complete();
   }
 
   Stream<ContactsState> _selectStorageGroup(SelectStorageGroup event) async* {
@@ -158,7 +159,10 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
   Stream<ContactsState> _createContact(CreateContact event) async* {
     _repo
         .addContact(event.contact)
-        .catchError((err) => add(AddError(formatError(err, null))));
+        .catchError((err) => add(AddError(formatError(err, null))))
+        .whenComplete(() {
+      if (event.completer != null) add(GetContacts(completer: event.completer));
+    });
   }
 
   Stream<ContactsState> _updateContact(UpdateContact event) async* {

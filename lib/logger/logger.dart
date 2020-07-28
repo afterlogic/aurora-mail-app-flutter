@@ -52,8 +52,8 @@ class _Logger {
   log(Object text, [bool show = true]) {
     if (show == true) print(text);
     if (isRun) {
-
-      buffer += "[${DateFormat("hh:mm:ss.ms").format(DateTime.now())}] ${"$text".replaceAll("\n", newLine)}$newLine$newLine";
+      buffer +=
+          "[${DateFormat("hh:mm:ss.mmm").format(DateTime.now())}] ${"$text".replaceAll("\n", newLine)}$newLine$newLine";
       count++;
       if (onEdit != null) onEdit();
     }

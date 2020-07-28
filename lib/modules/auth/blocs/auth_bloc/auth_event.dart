@@ -13,6 +13,7 @@ abstract class AuthEvent extends Equatable {
 
 class LogIn extends AuthEvent {
   final String email;
+  final bool firstLogin;
   final String password;
   final String hostname;
 
@@ -20,6 +21,7 @@ class LogIn extends AuthEvent {
     @required String email,
     @required this.password,
     @required this.hostname,
+    this.firstLogin,
   }) : email = formatEmail(email);
 
   @override
