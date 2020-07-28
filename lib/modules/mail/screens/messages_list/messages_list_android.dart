@@ -57,11 +57,8 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
   @override
   void initState() {
     super.initState();
-    final authBloc = BlocProvider.of<AuthBloc>(context);
-    _messagesListBloc = new MessagesListBloc(
-      user: authBloc.currentUser,
-      account: authBloc.currentAccount,
-    );
+
+    _initBlocs();
     MessagesListAndroid.onShare = (files, text) {
       if (files?.isNotEmpty == true || text?.isNotEmpty == true) {
         Navigator.pushNamed(
@@ -75,7 +72,6 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
         );
       }
     };
-    _initBlocs();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (MessagesListAndroid.shareHolder != null) {
         MessagesListAndroid.onShare(
@@ -120,6 +116,11 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
 
   void _initBlocs() {
     final authBloc = BlocProvider.of<AuthBloc>(context);
+
+    _messagesListBloc = new MessagesListBloc(
+      user: authBloc.currentUser,
+      account: authBloc.currentAccount,
+    );
     _mailBloc = BlocProvider.of<MailBloc>(context);
     _contactsBloc = BlocProvider.of<ContactsBloc>(context);
 
