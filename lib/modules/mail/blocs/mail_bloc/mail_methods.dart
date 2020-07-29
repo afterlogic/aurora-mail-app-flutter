@@ -11,6 +11,7 @@ import 'package:aurora_mail/database/users/users_dao.dart';
 import 'package:aurora_mail/logger/logger.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/models/message_info.dart';
+import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/repository/folders_api.dart';
 import 'package:aurora_mail/modules/mail/repository/mail_api.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
@@ -23,6 +24,7 @@ class MailMethods {
   final _foldersDao = new FoldersDao(DBInstances.appDB);
   final _usersDao = new UsersDao(DBInstances.appDB);
   final _mailDao = new MailDao(DBInstances.appDB);
+  final UpdateMessageCounter updateMessageCounter;
   var needUpdateInfo = false;
   FoldersApi _foldersApi;
   MailApi _mailApi;
@@ -30,12 +32,16 @@ class MailMethods {
   final User user;
   final Account account;
 
-  MailMethods({@required this.account, @required this.user}) {
+  MailMethods({
+    @required this.account,
+    @required this.user,
+    this.updateMessageCounter,
+  }) {
     _foldersApi = new FoldersApi(user: user, account: account);
     _mailApi = new MailApi(user: user, account: account);
   }
 
-   final syncQueue = new List<String>();
+  final syncQueue = new List<String>();
 
   bool get _isOffline => SettingsBloc.isOffline;
 
@@ -281,7 +287,7 @@ class MailMethods {
       );
     }
     await FolderMessageInfo.setMessageInfo(
-      folderToUpdate.fullName,
+      folderToUpdate.fullNameRaw,
       account.localId,
       newMessagesInfo,
     );
@@ -293,7 +299,13 @@ class MailMethods {
     }
     final messages = await _getMessageInfoWithNotBody(newMessagesInfo);
     currentFolderUpdate = folderToUpdate.fullNameRaw;
-    await _syncMessagesChunk(SyncPeriod.periodToDbString(syncPeriod), messages);
+
+    await _syncMessagesChunk(
+      SyncPeriod.periodToDbString(syncPeriod),
+      messages,
+      messages.length,
+      folderToUpdate,
+    );
     await _foldersDao.updateFolder(
       FoldersCompanion(needsInfoUpdate: Value(false)),
       folderToUpdate.guid,
@@ -305,9 +317,19 @@ class MailMethods {
   Future<void> _syncMessagesChunk(
     String syncPeriod,
     List<Message> messagesForUpdate,
+    int folderMessageCount,
+    Folder currentFolder,
   ) async {
     logger.log("method _syncMessagesChunk");
-    if (_closed || _isOffline || user == null) return null;
+    updateMessageCounter.update(
+      currentFolder,
+      folderMessageCount,
+      folderMessageCount - messagesForUpdate.length,
+    );
+    if (_closed || _isOffline || user == null) {
+      updateMessageCounter.empty();
+      return;
+    }
     assert(syncQueue.isNotEmpty);
 
     // get the actual folder state every time
@@ -319,25 +341,25 @@ class MailMethods {
 //          "Attention! messagesInfo is null, perhaps another folder was selected while messages info was being retrieved.");
 //      return _setMessagesInfoToFolder();
 //    }
-
     if (updatedUser.syncPeriod != syncPeriod) {
       print(
           "Attention! another sync period was selected, refetching messages info...");
+      updateMessageCounter.empty();
       return _setMessagesInfoToFolder();
     }
     if (needUpdateInfo == true) {
       needUpdateInfo = false;
+      updateMessageCounter.empty();
       return _setMessagesInfoToFolder();
     }
-
     final uids = messagesForUpdate
         .getRange(0, min(MESSAGES_PER_CHUNK, messagesForUpdate.length))
         .toList();
 
     logger.log("${messagesForUpdate.length} messages in queue");
-
     // if all messages are synced
     if (uids.length == 0) {
+      updateMessageCounter.empty();
       logger
           .log("All the messages have been synced for: ${folder.fullNameRaw}");
       await _foldersDao.updateFolder(
@@ -355,30 +377,40 @@ class MailMethods {
         return null;
       }
     } else {
+
       logger.log("syncing messages for: ${folder.fullNameRaw}");
       final rawBodies = await _mailApi.getMessageBodies(
         folderName: folder.fullNameRaw,
         uids: uids.map((item) => item.uid).toList(),
       );
-
       // TODO make async
-      final messages = Mail.getMessageObjFromServerAndUpdateInfoHasBody(
+      final messages = await fillMessage(_FillMessageArg(
         rawBodies,
         uids,
         updatedUser.localId,
         account,
         folder,
-      );
-
+      ));
       await _mailDao.fillMessage(messages);
-
       // check if there are other messages to sync
       _syncMessagesChunk(
         syncPeriod,
         messagesForUpdate
             .sublist(min(MESSAGES_PER_CHUNK, messagesForUpdate.length)),
+        folderMessageCount,
+        currentFolder,
       );
     }
+  }
+
+  static Future<List<Message>> fillMessage(_FillMessageArg arg) async {
+    return await Mail.getMessageObjFromServerAndUpdateInfoHasBody(
+      arg.result,
+      arg.messagesInfo,
+      arg.userLocalId,
+      arg.account,
+      arg.folder,
+    );
   }
 
   // returns list of uids to load
@@ -516,4 +548,15 @@ class MailMethods {
   void close() {
     _closed = true;
   }
+}
+
+class _FillMessageArg {
+  final List result;
+  final List<Message> messagesInfo;
+  final int userLocalId;
+  final Account account;
+  final Folder folder;
+
+  _FillMessageArg(this.result, this.messagesInfo, this.userLocalId,
+      this.account, this.folder);
 }

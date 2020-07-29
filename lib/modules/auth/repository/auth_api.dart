@@ -39,13 +39,11 @@ class AuthApi {
 
     final response = await coreModuleForLogin.post(body, getRawResponse: true);
     if (response['Result'] != null &&
-        response['Result']['TwoFactorAuth'] != null &&
-        !kDebugMode /*todo remove*/) {
+        response['Result']['TwoFactorAuth'] != null) {
       throw RequestTwoFactor(hostname);
     } else if (response['Result'] != null &&
         response['Result']['AuthToken'] is String) {
-      if (response['Result']["AllowAccess"] != 1 &&
-          !kDebugMode /*todo remove*/) {
+      if (response['Result']["AllowAccess"] != 1) {
         throw AllowAccess();
       }
       final token = response['Result']['AuthToken'] as String;
