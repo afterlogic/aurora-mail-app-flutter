@@ -19,6 +19,7 @@ class WebMailApi {
   final String moduleName;
   final String hostname;
   final String token;
+  final ApiInterceptor interceptor;
   static Function(String) onRequest;
   static Function(String) onError;
   static Function(String) onResponse;
@@ -38,6 +39,7 @@ class WebMailApi {
     @required this.moduleName,
     @required this.hostname,
     this.token,
+    this.interceptor,
   }) : assert(moduleName != null && hostname != null);
 
   static final _authErrorStreamCtrl = StreamController<void>.broadcast();
@@ -48,6 +50,30 @@ class WebMailApi {
 
   static Map<String, String> getHeaderWithToken(String token) {
     return {'Authorization': 'Bearer $token'};
+  }
+
+  _onRequest(String id, String parameters) {
+    if (interceptor?.onRequest != null) {
+      interceptor?.onRequest("$id\nURL: $apiUrl\nPARAMETERS: ${parameters}");
+    } else if (onRequest != null) {
+      onRequest("$id\nURL: $apiUrl\nPARAMETERS: ${parameters}");
+    }
+  }
+
+  _onResponse(String id, int delay, int status) {
+    if (interceptor?.onResponse != null) {
+      interceptor?.onResponse("$id\nDELAY: ${delay}\nSTATUS: ${status}");
+    } else if (onResponse != null) {
+      onResponse("$id\nDELAY: ${delay}\nSTATUS: ${status}");
+    }
+  }
+
+  _onError(String id, String body) {
+    if (interceptor?.onError != null) {
+      interceptor?.onError("$id\n${body}");
+    } else if (onError != null) {
+      onError("$id\n${body}");
+    }
   }
 
   // getRawResponse in case AuthenticatedUserId is required, which is outside Result objects
@@ -61,8 +87,7 @@ class WebMailApi {
       headers = {'Authorization': 'Bearer $token'};
     }
     final start = DateTime.now().millisecondsSinceEpoch;
-    if (onRequest != null)
-      onRequest("$id\nURL: $apiUrl\nPARAMETERS: ${body.parameters}");
+    _onRequest(id, body.parameters);
 
     final rawResponse = await _client.post(apiUrl,
         headers: headers, body: body.toMap(moduleName));
@@ -70,19 +95,24 @@ class WebMailApi {
     final res = json.decode(rawResponse.body);
 
     if (res["Result"] != null && (res["Result"] != false || getRawResponse)) {
-      if (onResponse != null)
-        onResponse(
-            "$id\nDELAY: ${DateTime.now().millisecondsSinceEpoch - start}\nSTATUS: ${rawResponse.statusCode}");
+      _onResponse(id, DateTime.now().millisecondsSinceEpoch - start,
+          rawResponse.statusCode);
       if (getRawResponse)
         return res;
       else
         return res["Result"];
     } else {
-      if (onError != null) onError("$id\n${rawResponse.body}");
+      _onError(id, rawResponse.body);
       if (res["ErrorCode"] == 102) {
         _authErrorStreamCtrl.add(102);
       }
       throw WebMailApiError(res);
     }
   }
+}
+
+class ApiInterceptor {
+  Function(String) onRequest;
+  Function(String) onError;
+  Function(String) onResponse;
 }

@@ -15,11 +15,13 @@ class FoldersApi {
   FoldersApi({
     @required this.account,
     @required this.user,
+    ApiInterceptor interceptor,
   }) {
     _mailModule = WebMailApi(
       moduleName: WebMailModules.mail,
       hostname: user.hostname,
       token: user.token,
+      interceptor: interceptor,
     );
   }
 

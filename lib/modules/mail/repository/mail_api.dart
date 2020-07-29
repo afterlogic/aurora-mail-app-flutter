@@ -22,11 +22,12 @@ class MailApi {
 
   WebMailApi _mailModule;
 
-  MailApi({@required User user, @required this.account}) {
+  MailApi({@required User user, @required this.account,ApiInterceptor interceptor}) {
     _mailModule = WebMailApi(
       moduleName: WebMailModules.mail,
       hostname: user.hostname,
       token: user.token,
+      interceptor: interceptor,
     );
   }
 

@@ -1,19 +1,15 @@
 import 'dart:io';
 
 import 'package:aurora_mail/modules/settings/screens/debug/debug_local_storage.dart';
-import 'package:aurora_mail/utils/download_directory.dart';
-import 'package:aurora_mail/utils/permissions.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:intl/intl.dart';
-import 'package:package_info/package_info.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:webmail_api_client/webmail_api_client.dart';
 
 import '../build_property.dart';
 
-final logger = _Logger();
+final logger = Logger._();
 
-class _Logger {
+class Logger {
   String currentTag;
   final storage = DebugLocalStorage();
   bool _isRun = false;
@@ -37,16 +33,29 @@ class _Logger {
   int count = 0;
   Function onEdit;
 
-  _Logger() {
-    WebMailApi.onError = (str) {
-      log("API ERROR:\n$str", true);
-    };
-    WebMailApi.onRequest = (str) {
-      log("API REQUEST:\n$str", true);
-    };
-    WebMailApi.onResponse = (str) {
-      log("API RESPONSE:\n$str", true);
-    };
+  Logger._([String tag, ApiInterceptor apiInterceptor]) {
+    currentTag = tag;
+    if (apiInterceptor != null) {
+      apiInterceptor.onError = (str) {
+        log("API ERROR:\n$str", true);
+      };
+      apiInterceptor.onRequest = (str) {
+        log("API REQUEST:\n$str", true);
+      };
+      apiInterceptor.onResponse = (str) {
+        log("API RESPONSE:\n$str", true);
+      };
+    } else {
+      WebMailApi.onError = (str) {
+        log("API ERROR:\n$str", true);
+      };
+      WebMailApi.onRequest = (str) {
+        log("API REQUEST:\n$str", true);
+      };
+      WebMailApi.onResponse = (str) {
+        log("API RESPONSE:\n$str", true);
+      };
+    }
   }
 
   log(Object text, [bool show = true]) {
@@ -59,8 +68,11 @@ class _Logger {
     }
   }
 
-  start([String tag]) {
-    currentTag = tag;
+  static Logger isolated(String tag, ApiInterceptor apiInterceptor) {
+    return Logger._(tag, apiInterceptor);
+  }
+
+  start() {
     isRun = true;
     if (onEdit != null) onEdit();
   }
@@ -101,7 +113,8 @@ class _Logger {
   }
 
   Future<String> logDir() async {
-    return (await getApplicationDocumentsDirectory()).path +  Platform.pathSeparator +
+    return (await getApplicationDocumentsDirectory()).path +
+        Platform.pathSeparator +
         "Logs_${BuildProperty.packageName}";
   }
 

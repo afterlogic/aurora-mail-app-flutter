@@ -13,6 +13,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:webmail_api_client/webmail_api_client.dart';
 
 import 'background/background_helper.dart';
 import 'background/background_sync.dart';
@@ -66,7 +67,7 @@ void main() async {
   }
 }
 
-Set<String> updateForNotification = {};
+Set<String> updateFromNotification = {};
 
 @pragma('vm:entry-point')
 void onAlarm({
@@ -76,34 +77,46 @@ void onAlarm({
 }) async {
   WidgetsFlutterBinding.ensureInitialized();
   final isDebug = await DebugLocalStorage().getBackgroundRecord();
+  ApiInterceptor interceptor;
+  Logger isolatedLogger = logger;
+
   if (BackgroundHelper.isBackground && isDebug) {
-    logger.start("Background_sync");
+    interceptor = ApiInterceptor();
+    isolatedLogger = Logger.isolated("Background_sync", interceptor);
+    isolatedLogger.start();
   }
 
   var hasUpdate = false;
-  if (!updateForNotification.contains(null) && !updateForNotification.contains(data?.to)) {
-    updateForNotification.add(data?.to);
+  if (!updateFromNotification.contains(null) &&
+      !updateFromNotification.contains(data?.to)) {
+    updateFromNotification.add(data?.to);
     try {
       BackgroundHelper.onStartAlarm();
 
       hasUpdate = await BackgroundSync()
-          .sync(BackgroundHelper.isBackground, showNotification, data)
+          .sync(
+            BackgroundHelper.isBackground,
+            showNotification,
+            data,
+            isolatedLogger,
+            interceptor,
+          )
           .timeout(Duration(seconds: kDebugMode ? 360 : 30));
       if (onSuccess != null) {
         await onSuccess(true);
       }
     } catch (e, s) {
-      logger.log("onAlarm exeption $e");
+      isolatedLogger?.log("onAlarm exeption $e");
       print(s);
       if (onSuccess != null) {
         await onSuccess(false);
       }
     }
-    updateForNotification.remove(data?.to);
+    updateFromNotification.remove(data?.to);
   }
   BackgroundHelper.onEndAlarm(hasUpdate);
   if (isDebug && BackgroundHelper.isBackground) {
-    logger.save();
+    isolatedLogger?.save();
   }
   await AlarmService.endAlarm(hasUpdate);
 }

@@ -20,6 +20,7 @@ import 'package:aurora_mail/notification/notification_manager.dart';
 import 'package:aurora_mail/notification/push_notifications_manager.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
+import 'package:webmail_api_client/webmail_api_client.dart';
 
 class BackgroundSync {
   final _mailDao = MailDao(DBInstances.appDB);
@@ -34,8 +35,10 @@ class BackgroundSync {
     bool isBackground,
     bool showNotification,
     NotificationData notification,
+    Logger isolatedLogger,
+    ApiInterceptor interceptor,
   ) async {
-    logger.log("MAIL_SYNC: sync start");
+    isolatedLogger.log("MAIL_SYNC: sync start");
     var hasUpdate = false;
     if (notification == null && MailMethods.syncQueue.isNotEmpty) {
       return false;
@@ -52,12 +55,13 @@ class BackgroundSync {
         if (accounts.isEmpty) {
           continue;
         }
-        final newMessages = await _getNewMessages(user, accounts);
+        final newMessages = await _getNewMessages(user, accounts, interceptor);
         if (newMessages.isNotEmpty) {
           if (true) {
             newMessages
                 .sort((a, b) => a.timeStampInUTC.compareTo(b.timeStampInUTC));
-            logger.log("MailSync: ${newMessages.length} new message(s)");
+            isolatedLogger
+                .log("MailSync: ${newMessages.length} new message(s)");
             if (showNotification != false && notification == null) {
               for (final message in newMessages) {
                 await _showNewMessage(message, user);
@@ -69,10 +73,10 @@ class BackgroundSync {
 
           hasUpdate = true;
         } else {
-          logger.log("MailSync: No messages to sync");
+          isolatedLogger.log("MailSync: No messages to sync");
         }
       }
-      logger.log("MailSync: sync end");
+      isolatedLogger.log("MailSync: sync end");
     }
 //    on SocketException {
 //
@@ -88,6 +92,7 @@ class BackgroundSync {
   Future<List<Message>> _getNewMessages(
     User user,
     List<Account> accounts,
+    ApiInterceptor interceptor,
   ) async {
     SettingsBloc.isOffline = false;
     if ((await _authLocal.getSelectedUserLocalId()) == null) {
@@ -95,12 +100,12 @@ class BackgroundSync {
     }
     final newMessages = new List<Message>();
     for (var account in accounts) {
-      final inboxFolders = await _foldersDao
-          .getByType([Folder.getNumberFromFolderType(FolderType.inbox)], account.localId);
+      final inboxFolders = await _foldersDao.getByType(
+          [Folder.getNumberFromFolderType(FolderType.inbox)], account.localId);
       if (inboxFolders.isEmpty) continue;
 
       final foldersToUpdate =
-          (await _updateFolderHash(inboxFolders, user, account))
+          (await _updateFolderHash(inboxFolders, user, account, interceptor))
               .where((item) => item.type == 1)
               .toList();
 
@@ -122,6 +127,7 @@ class BackgroundSync {
         final mailApi = MailApi(
           user: user,
           account: account,
+          interceptor: interceptor,
         );
 
         final rawInfo = await mailApi.getMessagesInfo(
@@ -197,10 +203,15 @@ class BackgroundSync {
   }
 
   Future<List<Folder>> _updateFolderHash(
-      List<LocalFolder> folders, User user, Account account) async {
+    List<LocalFolder> folders,
+    User user,
+    Account account,
+    ApiInterceptor interceptor,
+  ) async {
     final _foldersApi = FoldersApi(
       user: user,
       account: account,
+      interceptor: interceptor,
     );
     final newFolders = await _foldersApi.getRelevantFoldersInformation(folders);
     final outFolder = <LocalFolder>[];
