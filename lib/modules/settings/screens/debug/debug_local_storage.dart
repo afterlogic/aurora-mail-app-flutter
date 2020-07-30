@@ -12,6 +12,17 @@ class DebugLocalStorage {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getBool(_debug) ?? false;
   }
+  static const _enableCounter = "enableCounter";
+
+  Future setEnableCounter(bool enable) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool(_enableCounter, enable);
+  }
+
+  Future<bool> getEnableCounter() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(_enableCounter) ?? false;
+  }
   static const _backgroundRecord = "backgroundRecord";
 
   Future setBackgroundRecord(bool enable) async {

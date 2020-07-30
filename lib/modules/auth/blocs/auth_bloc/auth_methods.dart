@@ -123,7 +123,7 @@ class AuthMethods {
 
     final futures = [
       deleteUserRelatedData(user),
-      _cryptoStorage.deleteAll(),
+      if (_cryptoStorage != null) _cryptoStorage.deleteAll(),
       _authLocal.deleteSelectedUserLocalId(),
       _authLocal.deleteSelectedAccountId(),
       _usersDao.deleteUser(user.localId),

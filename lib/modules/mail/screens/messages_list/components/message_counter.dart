@@ -1,5 +1,6 @@
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
+import 'package:aurora_mail/modules/settings/screens/debug/debug_local_storage.dart';
 import 'package:flutter/material.dart';
 
 class MessageCounterWidget extends StatefulWidget {
@@ -13,14 +14,21 @@ class MessageCounterWidget extends StatefulWidget {
 }
 
 class _MessageCounterWidgetState extends State<MessageCounterWidget> {
+  final _storage = DebugLocalStorage();
+  bool _enableCounter;
+
   @override
   void initState() {
     super.initState();
     widget.messageCounter.onUpdate = onUpdate;
+    _storage.getEnableCounter().then((value) {
+      _enableCounter = value;
+      if (mounted) setState(() {});
+    });
   }
 
   onUpdate() {
-    setState(() {});
+    if (mounted) setState(() {});
   }
 
   @override
@@ -33,10 +41,10 @@ class _MessageCounterWidgetState extends State<MessageCounterWidget> {
   @override
   Widget build(BuildContext context) {
     final messageCounter = widget.messageCounter;
-    if (messageCounter?.folder != null &&
+    if (_enableCounter == true &&
+        messageCounter?.folder != null &&
         messageCounter?.folder?.fullNameHash == widget?.folder?.fullNameHash) {
       return Container(
-        decoration: BoxDecoration(color: Colors.white),
         padding: EdgeInsets.all(5),
         child: Text("${messageCounter.current}/${messageCounter.total}"),
       );

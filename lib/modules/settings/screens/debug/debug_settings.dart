@@ -17,6 +17,7 @@ class DebugSetting extends StatefulWidget {
 class _DebugSettingState extends BState<DebugSetting> {
   final _storage = DebugLocalStorage();
   bool _debug;
+  bool _messageCounter;
   bool _backgroundRecord;
   List<Widget> _logs;
 
@@ -30,11 +31,13 @@ class _DebugSettingState extends BState<DebugSetting> {
     Future.wait([
       _storage.getDebug(),
       _storage.getBackgroundRecord(),
+      _storage.getEnableCounter(),
       logger.logDir().then((value) => getLogs(value))
     ]).then((value) {
       _debug = (value[0] ?? false) as bool;
       _backgroundRecord = (value[1] ?? false) as bool;
-      _logs = (value[2] ?? []) as List<Widget>;
+      _messageCounter = (value[2] ?? false) as bool;
+      _logs = (value[3] ?? []) as List<Widget>;
       setState(() {});
     });
   }
@@ -61,6 +64,16 @@ class _DebugSettingState extends BState<DebugSetting> {
                     _storage.setDebug(value);
                     setState(() {});
                     logger.enable = value;
+                  },
+                ),
+                CheckboxListTile(
+                  value: _messageCounter,
+                  title: Text(
+                      i18n(context, "label_enable_uploaded_message_counter")),
+                  onChanged: (bool value) {
+                    _messageCounter = value;
+                    _storage.setEnableCounter(value);
+                    setState(() {});
                   },
                 ),
                 CheckboxListTile(
