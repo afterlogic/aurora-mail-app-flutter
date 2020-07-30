@@ -83,7 +83,8 @@ dependencies:
 
   #notification
   flutter_local_notifications: 1.4.4+1
-
+  ios_notification_handler:
+    path: core/ios_notification_handler
   keyboard_actions: 3.2.0
 
   theme:

@@ -69,7 +69,7 @@ void main(
 Set<String> updateForNotification = {};
 
 @pragma('vm:entry-point')
-void onAlarm({
+Future<bool> onAlarm({
   bool showNotification = true,
   NotificationData data,
   Future Function(bool) onSuccess,
@@ -106,4 +106,5 @@ void onAlarm({
     logger.save();
   }
   await AlarmService.endAlarm(hasUpdate);
+  return hasUpdate;
 }

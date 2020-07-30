@@ -529,6 +529,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.3.4"
+  ios_notification_handler:
+    dependency: "direct main"
+    description:
+      path: "core/ios_notification_handler"
+      relative: true
+    source: path
+    version: "0.0.1"
   js:
     dependency: transitive
     description:

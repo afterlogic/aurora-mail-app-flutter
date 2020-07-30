@@ -8,6 +8,7 @@ import 'package:aurora_mail/modules/auth/repository/auth_local_storage.dart';
 import 'package:device_id/device_id.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/widgets.dart';
+import 'package:ios_notification_handler/ios_notification_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'notification_manager.dart';
@@ -23,6 +24,9 @@ class PushNotificationsManager {
 
   init() async {
     if (!_initialized) {
+      if (Platform.isIOS) {
+        IosNotificationHandler.onMessage(messageHandler);
+      }
       deviceId = await _getIMEI();
       await _firebaseMessaging.requestNotificationPermissions();
       _firebaseMessaging.configure(
@@ -36,8 +40,10 @@ class PushNotificationsManager {
     }
   }
 
-  Future<String> getToken() {
-    return _firebaseMessaging.getToken();
+  Future<String> getToken() async {
+    final token = await _firebaseMessaging.getToken();
+    print(token);
+    return token;
   }
 
   Future<String> _getIMEI() async {
@@ -55,7 +61,7 @@ class PushNotificationsManager {
   }
 }
 
-Future<dynamic> messageHandler(Map<dynamic, dynamic> message) async {
+Future<bool> messageHandler(Map<dynamic, dynamic> message) async {
   print(message);
   WidgetsFlutterBinding.ensureInitialized();
   final localStorage = AuthLocalStorage();
@@ -82,7 +88,7 @@ Future<dynamic> messageHandler(Map<dynamic, dynamic> message) async {
         }
       }
 
-      await onAlarm(
+      return await onAlarm(
         showNotification: false,
         data: notification,
       );
@@ -90,6 +96,7 @@ Future<dynamic> messageHandler(Map<dynamic, dynamic> message) async {
       print(e);
     }
   }
+  return false;
 }
 
 class NotificationData {

@@ -1,7 +1,7 @@
 name: aurora_mail
 description: Mail client for mobile.
 
-version: 1.2.0+132
+version: 1.2.0+133
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -83,6 +83,8 @@ dependencies:
 
   #notification
   flutter_local_notifications: 1.4.4+1
+  ios_notification_handler:
+    path: core/ios_notification_handler
 
   keyboard_actions: 3.2.0
 

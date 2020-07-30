@@ -96,7 +96,7 @@ public class SwiftAlarmPlugin: NSObject, FlutterPlugin {
         } else{
             hasAlarm=true
         }
-        timer=Timer.scheduledTimer(timeInterval: 120, target: self, selector: #selector(timeOut), userInfo: nil, repeats: false)
+        timer=Timer.scheduledTimer(timeInterval: 30, target: self, selector: #selector(timeOut), userInfo: nil, repeats: false)
     }
     
     @objc func timeOut() {
@@ -153,10 +153,6 @@ public class SwiftAlarmPlugin: NSObject, FlutterPlugin {
         )
     }
     
-    public func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) -> Bool {
-        alarmFromFetch(completionHandler,didReceiveRemoteNotification: userInfo)
-        return true
-    }
     
     public func application(_ application: UIApplication, performFetchWithCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) -> Bool {
         alarmFromFetch(completionHandler)
