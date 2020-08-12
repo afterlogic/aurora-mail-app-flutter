@@ -14,6 +14,7 @@
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
+		DB54FA3F24E43F30005149D6 /* ExtensionRelease.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = DB54FA3E24E43F30005149D6 /* ExtensionRelease.xcconfig */; };
 		DB8E5D522440825400D721A7 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB8E5D512440825400D721A7 /* ShareViewController.swift */; };
 		DB8E5D552440825400D721A7 /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DB8E5D532440825400D721A7 /* MainInterface.storyboard */; };
 		DB8E5D592440825400D721A7 /* AppShareExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = DB8E5D4F2440825400D721A7 /* AppShareExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -77,6 +78,9 @@
 		B68E92A1AB8356A82E3D41C0 /* Pods-AppShareExtension.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AppShareExtension.profile.xcconfig"; path = "Target Support Files/Pods-AppShareExtension/Pods-AppShareExtension.profile.xcconfig"; sourceTree = "<group>"; };
 		BE3CCFAC325675A6D59AA676 /* Pods-AppShareExtension.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AppShareExtension.debug.xcconfig"; path = "Target Support Files/Pods-AppShareExtension/Pods-AppShareExtension.debug.xcconfig"; sourceTree = "<group>"; };
 		DB09008123AA4C3F007A8A73 /* Runner.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Runner.entitlements; sourceTree = "<group>"; };
+		DB54FA3E24E43F30005149D6 /* ExtensionRelease.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = ExtensionRelease.xcconfig; sourceTree = "<group>"; };
+		DB54FA4024E43FFE005149D6 /* ExtensionDebug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = ExtensionDebug.xcconfig; sourceTree = "<group>"; };
+		DB54FA4124E4403E005149D6 /* ExtensionProfile.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = ExtensionProfile.xcconfig; sourceTree = "<group>"; };
 		DB8E5D4F2440825400D721A7 /* AppShareExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = AppShareExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		DB8E5D512440825400D721A7 /* ShareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareViewController.swift; sourceTree = "<group>"; };
 		DB8E5D542440825400D721A7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/MainInterface.storyboard; sourceTree = "<group>"; };
@@ -150,6 +154,7 @@
 		97C146E51CF9000F007C117D = {
 			isa = PBXGroup;
 			children = (
+				DB54FA3D24E43EFA005149D6 /* ExtensionConfig */,
 				DD3F65C023EADD930073C15B /* BuildVariable.xcconfig */,
 				9740EEB11CF90186004384FC /* Flutter */,
 				97C146F01CF9000F007C117D /* Runner */,
@@ -192,6 +197,16 @@
 			children = (
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		DB54FA3D24E43EFA005149D6 /* ExtensionConfig */ = {
+			isa = PBXGroup;
+			children = (
+				DB54FA3E24E43F30005149D6 /* ExtensionRelease.xcconfig */,
+				DB54FA4024E43FFE005149D6 /* ExtensionDebug.xcconfig */,
+				DB54FA4124E4403E005149D6 /* ExtensionProfile.xcconfig */,
+			);
+			path = ExtensionConfig;
 			sourceTree = "<group>";
 		};
 		DB8E5D502440825400D721A7 /* AppShareExtension */ = {
@@ -312,6 +327,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DB54FA3F24E43F30005149D6 /* ExtensionRelease.xcconfig in Resources */,
 				DB8E5D552440825400D721A7 /* MainInterface.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -487,7 +503,6 @@
 /* Begin XCBuildConfiguration section */
 		249021D3217E4FDB00AE95B9 /* Profile */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7AFA3C8E1D35360C0083082E /* Release.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
@@ -620,7 +635,6 @@
 		};
 		97C147031CF9000F007C117D /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 9740EEB21CF90195004384FC /* Debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
@@ -679,7 +693,6 @@
 		};
 		97C147041CF9000F007C117D /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7AFA3C8E1D35360C0083082E /* Release.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
@@ -894,7 +907,7 @@
 		};
 		DB8E5D5A2440825400D721A7 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = BE3CCFAC325675A6D59AA676 /* Pods-AppShareExtension.debug.xcconfig */;
+			baseConfigurationReference = DB54FA4024E43FFE005149D6 /* ExtensionDebug.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -1023,7 +1036,7 @@
 		};
 		DB8E5D5B2440825400D721A7 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = FA54DAD50C343E3CB7B57A85 /* Pods-AppShareExtension.release.xcconfig */;
+			baseConfigurationReference = DB54FA3E24E43F30005149D6 /* ExtensionRelease.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -1149,7 +1162,7 @@
 		};
 		DB8E5D5C2440825400D721A7 /* Profile */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B68E92A1AB8356A82E3D41C0 /* Pods-AppShareExtension.profile.xcconfig */;
+			baseConfigurationReference = DB54FA4124E4403E005149D6 /* ExtensionProfile.xcconfig */;
 			buildSettings = {
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";

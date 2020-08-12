@@ -38,6 +38,7 @@ void main() async {
       logger.start();
     }
   });
+
   PushNotificationsManager.instance.init();
   runApp(
     LoggerView.wrap(

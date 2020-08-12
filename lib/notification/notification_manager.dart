@@ -78,7 +78,7 @@ class NotificationManager {
       from,
       subject,
       NotificationDetails(androidNotificationDetails, null),
-      payload: "$uid",
+      payload: "${user.localId}|$uid",
     );
 
     if (isFirstNotification) {

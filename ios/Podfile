@@ -64,7 +64,7 @@ target 'Runner' do
     pod p[:name], :path => File.join(symlink, 'ios')
   }
   target 'AppShareExtension' do
-      inherit! :search_paths # Because else we get the "conflicting names" error
+      inherit! :search_paths
   end
 end
 
