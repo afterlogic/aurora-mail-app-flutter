@@ -4,7 +4,8 @@ import 'dart:math';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/app_screen.dart';
 import 'package:aurora_mail/modules/dialog_wrap.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart' hide Message;
+import 'package:flutter_local_notifications/flutter_local_notifications.dart'
+    hide Message;
 import 'package:notifications_utils/notifications_utils.dart';
 import 'package:package_info/package_info.dart';
 
@@ -19,7 +20,8 @@ class NotificationManager {
       IOSInitializationSettings(),
     );
 
-    plugin.initialize(initializationSettings, onSelectNotification: onSelectNotification);
+    plugin.initialize(initializationSettings,
+        onSelectNotification: onSelectNotification);
     test();
   }
 
@@ -31,16 +33,20 @@ class NotificationManager {
   }
 
   Future<void> showMessageNotification(Message message, User user) async {
-    return showNotification(message.fromToDisplay, message.subject, user, message.uid);
+    return showNotification(
+        message.fromToDisplay, message.subject, user, message.uid);
   }
 
-  Future<void> showNotification(String from, String subject, User user, int localId) async {
+  Future<void> showNotification(
+      String from, String subject, User user, int uid) async {
     final packageName = (await PackageInfo.fromPlatform()).packageName;
     bool isFirstNotification = false;
     if (!Platform.isIOS) {
-      final activeNotifications = await NotificationsUtils.getActiveNotifications();
+      final activeNotifications =
+          await NotificationsUtils.getActiveNotifications();
       isFirstNotification = activeNotifications.where((n) {
-        return n.packageName == packageName && n.groupKey.contains(user.emailFromLogin);
+        return n.packageName == packageName &&
+            n.groupKey.contains(user.emailFromLogin);
       }).isEmpty;
     }
 
@@ -72,7 +78,7 @@ class NotificationManager {
       from,
       subject,
       NotificationDetails(androidNotificationDetails, null),
-      payload: "$localId",
+      payload: "$uid",
     );
 
     if (isFirstNotification) {
@@ -95,16 +101,18 @@ class NotificationManager {
         from,
         subject,
         NotificationDetails(androidNotificationDetails, null),
-        payload: "$localId",
+        payload: "${user.localId}|$uid",
       );
     }
   }
 }
 
-Future onSelectNotification(String title) async {
+Future onSelectNotification(String payload) async {
   await Future.delayed(Duration(seconds: 1));
-  final localId = int.tryParse(title);
-  RouteWrap.staticState.showMessage(localId);
+  final data=payload.split("|");
+  final userLocalId = int.tryParse(data[0]);
+  final messageUid = int.tryParse(data[1]);
+  RouteWrap.staticState.showMessage(userLocalId,messageUid);
 }
 
 const NOTIFICATION_MAIL_CHANNEL_ID = "new_mail";

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/utils/always_non_equal_object.dart';
 import 'package:aurora_mail/utils/input_validation.dart';
@@ -45,14 +47,21 @@ class UserLogIn extends AuthEvent {
   List<Object> get props => [user];
 }
 
-class InitUserAndAccounts extends AuthEvent {}
+class InitUserAndAccounts extends AuthEvent {
+  final Completer completer;
+
+  InitUserAndAccounts([this.completer]);
+  @override
+  List<Object> get props => [completer];
+}
 
 class GetLastEmail extends AuthEvent {}
 
 class SelectUser extends AuthEvent {
   final int userLocalId;
+  final Completer completer;
 
-  const SelectUser(this.userLocalId);
+  const SelectUser(this.userLocalId, [this.completer]);
 
   @override
   List<Object> get props => [userLocalId];

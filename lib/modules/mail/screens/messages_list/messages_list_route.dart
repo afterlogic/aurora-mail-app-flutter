@@ -4,7 +4,7 @@ class MessagesListRoute {
 
 class MessagesListRouteArg {
   final String search;
-  final int messageLocalId;
+  final int messageUid;
 
-  MessagesListRouteArg({this.messageLocalId, this.search});
+  MessagesListRouteArg({this.messageUid, this.search});
 }

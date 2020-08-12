@@ -69,27 +69,29 @@ Future<bool> messageHandler(Map<dynamic, dynamic> message) async {
   if ((await localStorage.getSelectedUserLocalId()) != null) {
     final notification = NotificationData.fromMap(message);
     try {
-      final _usersDao = UsersDao(DBInstances.appDB);
-      final _accountsDao = AccountsDao(DBInstances.appDB);
-      final users = await _usersDao.getUsers();
-      for (var user in users) {
-        final accounts = await _accountsDao.getAccounts(user.localId);
-        for (var value in accounts) {
-          if (value.email == notification.to) {
-            final manager = NotificationManager.instance;
-            manager.showNotification(
-              notification.from,
-              notification.subject,
-              user,
-              1,
-            );
-            break;
+      final notificationFromPush = false;
+      if (notificationFromPush) {
+        final _usersDao = UsersDao(DBInstances.appDB);
+        final _accountsDao = AccountsDao(DBInstances.appDB);
+        final users = await _usersDao.getUsers();
+        for (var user in users) {
+          final accounts = await _accountsDao.getAccounts(user.localId);
+          for (var value in accounts) {
+            if (value.email == notification.to) {
+              final manager = NotificationManager.instance;
+              manager.showNotification(
+                notification.from,
+                notification.subject,
+                user,
+                1,
+              );
+              break;
+            }
           }
         }
       }
-
       return await onAlarm(
-        showNotification: false,
+        showNotification: !notificationFromPush,
         data: notification,
       );
     } catch (e) {
