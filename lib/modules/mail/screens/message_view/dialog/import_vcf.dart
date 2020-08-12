@@ -9,10 +9,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ImportVcfDialog extends StatefulWidget {
-  final Contact contact;
   final ContactsBloc bloc;
+  final String content;
 
-  const ImportVcfDialog({this.contact, this.bloc});
+  const ImportVcfDialog({this.content, this.bloc});
 
   @override
   _ImportVcfDialogState createState() => _ImportVcfDialogState();
@@ -21,20 +21,10 @@ class ImportVcfDialog extends StatefulWidget {
 class _ImportVcfDialogState extends State<ImportVcfDialog> {
   bool progress = false;
 
-  String getName() {
-    if (widget.contact.fullName?.isNotEmpty == true) {
-      return widget.contact.fullName;
-    }
-    if (widget.contact.nickName?.isNotEmpty == true) {
-      return widget.contact.nickName;
-    }
-    return widget.contact.viewEmail ?? "";
-  }
-
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      content: Text(i18n(context, "hint_vcf_import", {"name": getName()})),
+      content: Text(i18n(context, "hint_vcf_import")),
       actions: <Widget>[
         FlatButton(
           child: Text(i18n(context, "btn_cancel")),
@@ -54,7 +44,7 @@ class _ImportVcfDialogState extends State<ImportVcfDialog> {
 
   importVcf() async {
     final completer = Completer();
-    widget.bloc.add(CreateContact(widget.contact, completer: completer));
+    widget.bloc.add(ImportVcf(widget.content,completer));
     setState(() => progress = true);
     await completer.future;
     setState(() => progress = false);

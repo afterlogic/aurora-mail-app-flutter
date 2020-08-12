@@ -8,6 +8,7 @@ import 'package:aurora_mail/modules/contacts/contacts_impl_domain/mappers/contac
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/mappers/contacts_group_mapper.dart';
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/mappers/contacts_storage_mapper.dart';
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/network/contacts_network_service.dart';
+import 'package:http/http.dart';
 import 'package:webmail_api_client/webmail_api_client.dart';
 
 class ContactsNetworkServiceImpl implements ContactsNetworkService {
@@ -237,5 +238,23 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
 
     final result = await contactsModule.post(body);
     return result as bool;
+  }
+
+  @override
+  Future importFromVcf(String content) async {
+    final file = MultipartFile.fromString(
+      "filename",
+      content,
+      filename: "import.vcf",
+    );
+    final body = new WebMailApiBody(
+      module: "Contacts",
+      method: "Import",
+      parameters: json.encode({
+        "GroupUUID": "",
+        "Storage": "personal",
+      }),
+    );
+    await contactsModule.multiPart(body, file);
   }
 }

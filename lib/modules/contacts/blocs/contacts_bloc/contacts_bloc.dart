@@ -62,6 +62,7 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
     if (event is CreateContact) yield* _createContact(event);
     if (event is UpdateContact) yield* _updateContact(event);
     if (event is DeleteContacts) yield* _deleteContacts(event);
+    if (event is ImportVcf) yield* _importVcf(event);
     if (event is ShareContacts) yield* _shareContacts(event);
     if (event is UnshareContacts) yield* _unshareContacts(event);
     if (event is AddContactsToGroup) yield* _addContactsToGroup(event);
@@ -72,6 +73,10 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
     if (event is UpdateGroup) yield* _updateGroup(event);
     if (event is DeleteGroup) yield* _deleteGroup(event);
     yield* reduceState(state, event);
+  }
+
+  initListener(){
+
   }
 
   _doOnAlarm(bool hasUpdate) {
@@ -250,5 +255,14 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
       return keyInfo.first;
     }
     return null;
+  }
+
+  Stream<ContactsState> _importVcf(ImportVcf event) async* {
+    try {
+      await _repo.importVcf(event.content);
+      event.completer.complete();
+    } catch (e) {
+      event.completer.completeError(e);
+    }
   }
 }

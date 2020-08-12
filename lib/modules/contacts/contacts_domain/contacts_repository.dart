@@ -19,9 +19,9 @@ abstract class ContactsRepository {
 
   Stream<List<Contact>> watchAllContacts(String search);
 
-  Stream<List<Contact>> watchContactsFromStorage(String storage,String search);
+  Stream<List<Contact>> watchContactsFromStorage(String storage, String search);
 
-  Stream<List<Contact>> watchContactsFromGroup(String group,String search);
+  Stream<List<Contact>> watchContactsFromGroup(String group, String search);
 
   Stream<List<ContactsStorage>> watchContactsStorages();
 
@@ -61,4 +61,6 @@ abstract class ContactsRepository {
   Future<Contact> getContactById(int entityId);
 
   Future deleteContactKey(String mail);
+
+  Future importVcf(String content);
 }

@@ -48,4 +48,6 @@ abstract class ContactsNetworkService {
   Future<void> addKeyToContacts(List<Contact> contacts);
 
   Future deleteContactKey(String mail);
+
+  Future importFromVcf(String content);
 }
