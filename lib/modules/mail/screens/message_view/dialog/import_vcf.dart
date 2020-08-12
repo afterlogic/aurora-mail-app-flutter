@@ -44,10 +44,16 @@ class _ImportVcfDialogState extends State<ImportVcfDialog> {
 
   importVcf() async {
     final completer = Completer();
-    widget.bloc.add(ImportVcf(widget.content,completer));
+    widget.bloc.add(ImportVcf(widget.content, completer));
     setState(() => progress = true);
-    await completer.future;
-    setState(() => progress = false);
-    Navigator.pop(context);
+    try {
+      await completer.future;
+      setState(() => progress = false);
+      Navigator.pop(context, "");
+    } catch (e) {
+      final result = e.toString();
+      setState(() => progress = false);
+      Navigator.pop(context, result);
+    }
   }
 }

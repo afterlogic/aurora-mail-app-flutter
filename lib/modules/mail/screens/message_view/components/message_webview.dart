@@ -22,6 +22,7 @@ import 'package:aurora_mail/utils/date_formatting.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/mail_utils.dart';
 import 'package:aurora_mail/utils/show_dialog.dart';
+import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -222,11 +223,20 @@ class _MessageWebViewState extends BState<MessageWebView> {
         (path) async {
           String content =
               Platform.isIOS ? path : await File(path).readAsString();
-          dialog(
+          final result = await dialog(
             context: context,
             builder: (_) =>
                 ImportVcfDialog(bloc: widget.contactsBloc, content: content),
           );
+          if (result is String)
+            showSnack(
+              isError: result.isNotEmpty,
+              context: context,
+              scaffoldState: Scaffold.of(context),
+              msg: result.isEmpty
+                  ? i18n(context, "label_contacts_were_imported_successfully")
+                  : result,
+            );
         },
       );
     } else {

@@ -372,5 +372,6 @@
   "label_token_successful": "Successful",
   "label_token_failed": "Failed",
   "label_device_id_copied_to_clip_board": "Device id copied to clipboard",
-  "label_discard_not_saved_changes": "Discard not saved changes?"
+  "label_discard_not_saved_changes": "Discard not saved changes?",
+  "label_contacts_were_imported_successfully": "Contacts imported successfully"
 }

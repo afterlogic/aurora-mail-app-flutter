@@ -350,7 +350,7 @@
   "label_message_move_to_folder": "Переместить в папку",
   "btn_message_advanced_search": "Расширенный поиск",
   "input_message_search_text": "Текст",
-  "input_message_search_since":"От",
+  "input_message_search_since": "От",
   "input_message_search_till": "До",
   "label_pgp_share_warning": "Предупреждение",
   "hint_pgp_share_warning": "You are going to share you private PGP key. The key must be kept from the 3-thd party. Do you want to continue?",
@@ -368,5 +368,6 @@
   "label_token_storing_status": "Token storing status",
   "btn_resend_push_token": "Resend Push Token",
   "label_token_successful": "Successful",
-  "label_token_failed": "Failed"
+  "label_token_failed": "Failed",
+  "label_contacts_were_imported_successfully": "Contacts imported successfully"
 }
