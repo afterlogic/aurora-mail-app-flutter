@@ -222,7 +222,7 @@ DEPENDENCIES:
   - file_picker (from `.symlinks/plugins/file_picker/ios`)
   - firebase_crashlytics (from `.symlinks/plugins/firebase_crashlytics/ios`)
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
-  - Flutter (from `.symlinks/flutter/ios-release`)
+  - Flutter (from `.symlinks/flutter/ios`)
   - flutter_downloader (from `.symlinks/plugins/flutter_downloader/ios`)
   - flutter_keyboard_visibility (from `.symlinks/plugins/flutter_keyboard_visibility/ios`)
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
@@ -296,7 +296,7 @@ EXTERNAL SOURCES:
   firebase_messaging:
     :path: ".symlinks/plugins/firebase_messaging/ios"
   Flutter:
-    :path: ".symlinks/flutter/ios-release"
+    :path: ".symlinks/flutter/ios"
   flutter_downloader:
     :path: ".symlinks/plugins/flutter_downloader/ios"
   flutter_keyboard_visibility:
@@ -408,6 +408,6 @@ SPEC CHECKSUMS:
   video_thumbnail: c4e2a3c539e247d4de13cd545344fd2d26ffafd1
   webview_flutter: bec7599de6bfbe8008a739aa3ebd7b364ea9d0cd
 
-PODFILE CHECKSUM: 8ce328037588198cf89227d75c8cd180aa726049
+PODFILE CHECKSUM: d37449faa653d61df978d49d3d70146fd09f8049
 
 COCOAPODS: 1.9.3
