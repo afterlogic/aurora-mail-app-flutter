@@ -21,8 +21,7 @@ import 'modules/app_screen.dart';
 import 'modules/settings/screens/debug/debug_local_storage.dart';
 import 'notification/notification_manager.dart';
 
-void main(
-    {bool showNotification = true, NotificationData data, Future Function(bool) onSuccess}) async {
+void main() async {
   Crashlytics.instance.enableInDevMode = true;
   AppInjector.create();
   FlutterError.onError = Crashlytics.instance.recordFlutterError;
@@ -81,7 +80,8 @@ Future<bool> onAlarm({
   }
 
   var hasUpdate = false;
-  if (!updateForNotification.contains(null) && !updateForNotification.contains(data?.to)) {
+  if (!updateForNotification.contains(null) &&
+      !updateForNotification.contains(data?.to)) {
     updateForNotification.add(data?.to);
     try {
       BackgroundHelper.onStartAlarm();
