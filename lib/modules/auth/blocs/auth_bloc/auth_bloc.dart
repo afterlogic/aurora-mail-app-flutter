@@ -94,6 +94,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         accounts: null,
       );
     }
+    event.completer?.complete();
   }
 
   Stream<AuthState> _getLastEmail(GetLastEmail event) async* {
@@ -102,9 +103,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   Stream<AuthState> _selectUser(SelectUser event) async* {
+    if (currentUser.localId == event.userLocalId) {
+      event.completer?.complete();
+      return;
+    }
     await _methods.selectUser(event.userLocalId);
     yield UserSelected();
-    add(InitUserAndAccounts());
+    add(InitUserAndAccounts(event.completer));
   }
 
   Stream<AuthState> _login(LogIn event) async* {
