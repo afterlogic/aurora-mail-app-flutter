@@ -108,11 +108,12 @@ class NotificationManager {
 }
 
 Future onSelectNotification(String payload) async {
+  return;
   await Future.delayed(Duration(seconds: 1));
-  final data=payload.split("|");
+  final data = payload.split("|");
   final userLocalId = int.tryParse(data[0]);
   final messageUid = int.tryParse(data[1]);
-  RouteWrap.staticState.showMessage(userLocalId,messageUid);
+  RouteWrap.staticState.showMessage(userLocalId, messageUid);
 }
 
 const NOTIFICATION_MAIL_CHANNEL_ID = "new_mail";

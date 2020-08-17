@@ -69,7 +69,6 @@ Future<bool> messageHandler(Map<dynamic, dynamic> message) async {
   if ((await localStorage.getSelectedUserLocalId()) != null) {
     final notification = NotificationData.fromMap(message);
     try {
-      final notificationFromPush = false;
       if (notificationFromPush) {
         final _usersDao = UsersDao(DBInstances.appDB);
         final _accountsDao = AccountsDao(DBInstances.appDB);
@@ -100,6 +99,8 @@ Future<bool> messageHandler(Map<dynamic, dynamic> message) async {
   }
   return false;
 }
+
+final notificationFromPush = true;
 
 class NotificationData {
   final String subject;
