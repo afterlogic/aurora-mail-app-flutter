@@ -58,7 +58,7 @@ class BackgroundSync {
             newMessages
                 .sort((a, b) => a.timeStampInUTC.compareTo(b.timeStampInUTC));
             logger.log("MailSync: ${newMessages.length} new message(s)");
-            if (showNotification != false && notification == null) {
+            if (showNotification != false) {
               for (final message in newMessages) {
                 await _showNewMessage(message, user);
               }
