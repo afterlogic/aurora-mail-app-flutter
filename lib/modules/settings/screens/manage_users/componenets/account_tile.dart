@@ -35,7 +35,6 @@ class _UserTileState extends BState<UserTile> {
     );
     if (result == true) {
       BlocProvider.of<AuthBloc>(context).add(DeleteUser(widget.user));
-//      RestartWidget.restartApp(context);
     }
   }
 

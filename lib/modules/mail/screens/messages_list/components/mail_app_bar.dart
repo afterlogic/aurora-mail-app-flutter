@@ -1,6 +1,8 @@
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/models/folder.dart';
+import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
+import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_state.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/repository/search_util.dart';
@@ -156,9 +158,9 @@ class MailAppBarState extends BState<MailAppBar> {
           onPressed: changeMode,
         ),
         if (BuildProperty.multiUserEnable)
-          BlocBuilder<SettingsBloc, SettingsState>(
+          BlocBuilder<AuthBloc, AuthState>(
             builder: (_, state) =>
-                UserSelectionPopup((state as SettingsLoaded).users),
+                UserSelectionPopup(BlocProvider.of<AuthBloc>(context).users),
           ),
       ],
     );

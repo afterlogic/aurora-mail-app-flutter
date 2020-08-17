@@ -16,6 +16,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final _methods = new AuthMethods();
 
   Account currentAccount;
+  List<User> users = [];
 
 //  static String hostName;
   List<Account> accounts = [];
@@ -42,7 +43,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   Stream<AuthState> _initUserAndAccounts(InitUserAndAccounts event) async* {
     final result = await _methods.getUserAndAccountsFromDB();
-    final users = await _methods.users;
+    users = await _methods.users;
 
     try {
       if (result != null) {
@@ -187,10 +188,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   Stream<AuthState> _deleteUser(DeleteUser event) async* {
     await AlarmService.removeAlarm(ALARM_ID);
     try {
-      await _methods.logout(event.user);
-      final users = await _methods.users;
-
-      if (users.isNotEmpty) {
+      await _methods.logout(currentUser.localId,event.user);
+      if (currentUser.localId != event.user.localId) {
+        add(InitUserAndAccounts());
+      } else if (users.isNotEmpty) {
+        final users = await _methods.users;
         add(SelectUser(users[0].localId));
       } else {
         _methods.setFbToken([]);

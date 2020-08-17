@@ -47,10 +47,11 @@ class UserLogIn extends AuthEvent {
   List<Object> get props => [user];
 }
 
-class InitUserAndAccounts extends AuthEvent {
+class InitUserAndAccounts extends AuthEvent with AlwaysNonEqualObject {
   final Completer completer;
 
   InitUserAndAccounts([this.completer]);
+
   @override
   List<Object> get props => [completer];
 }
