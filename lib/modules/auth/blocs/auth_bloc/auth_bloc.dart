@@ -35,8 +35,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     if (event is LogIn) yield* _login(event);
     if (event is SelectUser) yield* _selectUser(event);
     if (event is DeleteUser) yield* _deleteUser(event);
-    if (event is InvalidateCurrentUserToken)
-      yield* _invalidateCurrentUserToken(event);
+    if (event is InvalidateCurrentUserToken) yield* _invalidateCurrentUserToken(event);
     if (event is ChangeAccount) yield* _changeAccount(event);
     if (event is UserLogIn) yield* _userLogIn(event);
   }
@@ -51,11 +50,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         currentUser = result.user;
         currentAccount = result.account;
 
-        final identities =
-            await _methods.getAccountIdentities(currentUser, currentAccount);
+        final identities = await _methods.getAccountIdentities(currentUser, currentAccount);
         _methods.setFbToken(users);
-        currentIdentity = identities.firstWhere((item) => item.isDefault,
-                orElse: () => null) ??
+        currentIdentity = identities.firstWhere((item) => item.isDefault, orElse: () => null) ??
             AccountIdentity(
               email: currentAccount.email,
               useSignature: currentAccount.useSignature,
@@ -115,9 +112,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   Stream<AuthState> _login(LogIn event) async* {
     yield LoggingIn();
-    final users = await _methods.users;
-    final userFromDb = users.firstWhere((u) => u.emailFromLogin == event.email,
-        orElse: () => null);
+    users = await _methods.users;
+    final userFromDb = users.firstWhere((u) => u.emailFromLogin == event.email, orElse: () => null);
 
     if (!event.firstLogin && userFromDb != null) {
       yield AuthError("error_user_already_logged");
@@ -142,8 +138,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             event.password,
             err.host,
           );
-        } else if (err is WebMailApiError &&
-            err.message == "ERROR_USER_MOBILE_ACCESS_LIMIT") {
+        } else if (err is WebMailApiError && err.message == "ERROR_USER_MOBILE_ACCESS_LIMIT") {
           yield UpgradePlan(err.message);
         } else {
           yield AuthError(formatError(err, s));
@@ -155,7 +150,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   Stream<AuthState> _userLogIn(UserLogIn event) async* {
     try {
       final user = await _methods.setUser(event.user);
-      final users = await _methods.users;
+      users = await _methods.users;
       currentUser = user;
       final accounts = await _methods.getAccounts(user);
       _methods.setFbToken(users);
@@ -188,12 +183,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   Stream<AuthState> _deleteUser(DeleteUser event) async* {
     await AlarmService.removeAlarm(ALARM_ID);
     try {
-      await _methods.logout(currentUser.localId,event.user);
-      if (currentUser.localId != event.user.localId) {
-        add(InitUserAndAccounts());
-      } else if (users.isNotEmpty) {
-        final users = await _methods.users;
-        add(SelectUser(users[0].localId));
+      await _methods.logout(currentUser.localId, event.user);
+      users = await _methods.users;
+      if (users.isNotEmpty) {
+        if (currentUser.localId != event.user.localId) {
+          add(InitUserAndAccounts());
+        } else {
+          add(SelectUser(users[0].localId));
+        }
       } else {
         _methods.setFbToken([]);
         yield LoggedOut();
@@ -203,8 +200,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
   }
 
-  Stream<AuthState> _invalidateCurrentUserToken(
-      InvalidateCurrentUserToken event) async* {
+  Stream<AuthState> _invalidateCurrentUserToken(InvalidateCurrentUserToken event) async* {
     if (currentUser != null) {
       currentUser = await _methods.invalidateToken(currentUser.localId);
     } else {
@@ -231,8 +227,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     );
   }
 
-  Future<List<AliasOrIdentity>> getAliasesAndIdentities(
-      [bool forAllAccount]) async {
+  Future<List<AliasOrIdentity>> getAliasesAndIdentities([bool forAllAccount]) async {
     final identities = await getIdentities(forAllAccount);
     final aliases = await getAliases(forAllAccount);
     final items = <AliasOrIdentity>[];
