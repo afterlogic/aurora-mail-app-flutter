@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_event.dart';
+import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_android.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
@@ -13,11 +14,13 @@ class RouteWrap extends StatefulWidget {
   final Widget child;
   final GlobalKey<NavigatorState> navKey;
   static RouteWrapState staticState;
+  final AuthBloc authBloc;
 
   const RouteWrap({
     Key key,
     this.child,
     this.navKey,
+    this.authBloc,
   }) : super(key: key);
 
   @override
@@ -36,19 +39,19 @@ class RouteWrapState extends State<RouteWrap> {
   @override
   void dispose() {
     super.dispose();
-    RouteWrap.staticState = null;
+    if (RouteWrap.staticState == this) RouteWrap.staticState = null;
   }
 
   void showMessage(int userId, int messageUid) async {
     if (await discardNotSavedChanges()) {
       final completer = Completer();
-      BlocProvider.of<AuthBloc>(context).add(SelectUser(userId, completer));
+      widget.authBloc.add(SelectUser(userId, completer));
       await completer.future;
-      Navigator.of(widget.navKey.currentState.overlay.context)
-          .pushNamedAndRemoveUntil(
+      MessagesListAndroid.openMessageId = messageUid;
+      widget.navKey.currentState.pushNamedAndRemoveUntil(
         MessagesListRoute.name,
         (_) => false,
-        arguments: MessagesListRouteArg(messageUid: messageUid),
+        arguments: MessagesListRouteArg(),
       );
     }
   }

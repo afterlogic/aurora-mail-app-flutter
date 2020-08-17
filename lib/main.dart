@@ -101,8 +101,8 @@ Future<bool> onAlarm({
       }
     }
     updateForNotification.remove(data?.to);
+    BackgroundHelper.onEndAlarm(hasUpdate);
   }
-  BackgroundHelper.onEndAlarm(hasUpdate);
   if (isDebug && BackgroundHelper.isBackground) {
     logger.save();
   }

@@ -110,7 +110,6 @@ class AppNavigation {
           settings: RouteSettings(name: settings.name),
           builder: (_) => MessagesListAndroid(
             initSearch: args?.search,
-            openMessageId: args?.messageUid,
           ),
         );
         break;
