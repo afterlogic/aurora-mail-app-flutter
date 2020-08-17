@@ -95,7 +95,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
   openMessage(int uid) async {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       try {
-        final message = await _mailBloc.getMessageByUid(uid);
+        final message = await _mailBloc.getMessageByLocalId(uid);
         await _onMessageSelected(message);
       } catch (e) {
         print(e);

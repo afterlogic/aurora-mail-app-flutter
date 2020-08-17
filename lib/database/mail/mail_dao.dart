@@ -247,8 +247,8 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
     });
   }
 
-  Future<Message> getMessageByUid(int uid) {
-    return (select(mail)..where((item) => item.uid.equals(uid)))
+  Future<Message> getMessageByLocalId(int uid) {
+    return (select(mail)..where((item) => item.localId.equals(uid)))
         .get()
         .then((value) {
       if (value.isNotEmpty) {

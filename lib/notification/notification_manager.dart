@@ -34,11 +34,11 @@ class NotificationManager {
 
   Future<void> showMessageNotification(Message message, User user) async {
     return showNotification(
-        message.fromToDisplay, message.subject, user, message.uid);
+        message.fromToDisplay, message.subject, user, message.localId);
   }
 
   Future<void> showNotification(
-      String from, String subject, User user, int uid) async {
+      String from, String subject, User user, int localId) async {
     final packageName = (await PackageInfo.fromPlatform()).packageName;
     bool isFirstNotification = false;
     if (!Platform.isIOS) {
@@ -78,7 +78,7 @@ class NotificationManager {
       from,
       subject,
       NotificationDetails(androidNotificationDetails, null),
-      payload: "${user.localId}|$uid",
+      payload: "${user.localId}|$localId",
     );
 
     if (isFirstNotification) {
@@ -101,19 +101,18 @@ class NotificationManager {
         from,
         subject,
         NotificationDetails(androidNotificationDetails, null),
-        payload: "${user.localId}|$uid",
+        payload: "${user.localId}|$localId",
       );
     }
   }
 }
 
 Future onSelectNotification(String payload) async {
-  return;
   await Future.delayed(Duration(seconds: 1));
   final data = payload.split("|");
   final userLocalId = int.tryParse(data[0]);
-  final messageUid = int.tryParse(data[1]);
-  RouteWrap.staticState.showMessage(userLocalId, messageUid);
+  final messageLocalId = int.tryParse(data[1]);
+  RouteWrap.staticState.showMessage(userLocalId, messageLocalId);
 }
 
 const NOTIFICATION_MAIL_CHANNEL_ID = "new_mail";

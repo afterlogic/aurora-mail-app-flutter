@@ -100,7 +100,7 @@ Future<bool> messageHandler(Map<dynamic, dynamic> message) async {
   return false;
 }
 
-final notificationFromPush = true;
+final notificationFromPush = false;
 
 class NotificationData {
   final String subject;

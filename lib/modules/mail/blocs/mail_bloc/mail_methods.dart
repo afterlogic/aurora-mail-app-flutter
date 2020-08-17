@@ -500,8 +500,8 @@ class MailMethods {
         account.localId).then((value) => value.isEmpty ? null : value.first);
   }
 
-  Future<Message> getMessageByUid(int uid) {
-    return _mailDao.getMessageByUid(uid);
+  Future<Message> getMessageByLocalId(int uid) {
+    return _mailDao.getMessageByLocalId(uid);
   }
 
 }
