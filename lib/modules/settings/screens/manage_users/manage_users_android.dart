@@ -1,3 +1,4 @@
+import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_event.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_state.dart';
@@ -36,20 +37,23 @@ class _ManageUsersAndroidState extends BState<ManageUsersAndroid> {
           )
         ],
       ),
-      body: BlocBuilder<SettingsBloc, SettingsState>(
-          builder: (_, state) =>
-              _buildUsers(context, (state as SettingsLoaded))),
+      body: BlocBuilder<AuthBloc, AuthState>(
+        builder: (_, state) => _buildUsers(
+          context,
+          BlocProvider.of<AuthBloc>(context).users,
+        ),
+      ),
     );
   }
 
-  Widget _buildUsers(BuildContext context, SettingsLoaded state) {
+  Widget _buildUsers(BuildContext context, List<User> users) {
     return ListView.separated(
       itemBuilder: (_, i) {
-        final user = state.users[i];
+        final user = users[i];
         return UserTile(user: user);
       },
       separatorBuilder: (_, i) => Divider(height: 0, indent: 16.0),
-      itemCount: state.users.length,
+      itemCount: users.length,
     );
   }
 }

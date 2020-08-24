@@ -30,6 +30,7 @@ class ContactsRepositoryImpl implements ContactsRepository {
   final _storagesCtrl = new StreamController<List<ContactsStorage>>();
   final _groupCtrl = new StreamController<List<ContactsGroup>>();
 
+
   StreamController<List<int>> _currentlySyncingStorageCtrl;
 
   ContactsRepositoryImpl({
@@ -490,5 +491,11 @@ class ContactsRepositoryImpl implements ContactsRepository {
   Future deleteContactKey(String mail) async {
     await _network.deleteContactKey(mail);
     await _db.deleteContactKey(mail);
+  }
+
+  @override
+  Future importVcf(String content) async {
+    await _network.importFromVcf(content);
+    watchContactsStorages();
   }
 }

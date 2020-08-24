@@ -8,6 +8,7 @@ import 'package:aurora_mail/modules/auth/repository/auth_local_storage.dart';
 import 'package:device_id/device_id.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/widgets.dart';
+import 'package:ios_notification_handler/ios_notification_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'notification_manager.dart';
@@ -23,6 +24,9 @@ class PushNotificationsManager {
 
   init() async {
     if (!_initialized) {
+      if (Platform.isIOS) {
+        IosNotificationHandler.onMessage(messageHandler);
+      }
       deviceId = await _getIMEI();
       await _firebaseMessaging.requestNotificationPermissions();
       _firebaseMessaging.configure(
@@ -36,8 +40,10 @@ class PushNotificationsManager {
     }
   }
 
-  Future<String> getToken() {
-    return _firebaseMessaging.getToken();
+  Future<String> getToken() async {
+    final token = await _firebaseMessaging.getToken();
+    print(token);
+    return token;
   }
 
   Future<String> _getIMEI() async {
@@ -55,7 +61,7 @@ class PushNotificationsManager {
   }
 }
 
-Future<dynamic> messageHandler(Map<dynamic, dynamic> message) async {
+Future<bool> messageHandler(Map<dynamic, dynamic> message) async {
   print(message);
   WidgetsFlutterBinding.ensureInitialized();
   final localStorage = AuthLocalStorage();
@@ -63,34 +69,38 @@ Future<dynamic> messageHandler(Map<dynamic, dynamic> message) async {
   if ((await localStorage.getSelectedUserLocalId()) != null) {
     final notification = NotificationData.fromMap(message);
     try {
-      final _usersDao = UsersDao(DBInstances.appDB);
-      final _accountsDao = AccountsDao(DBInstances.appDB);
-      final users = await _usersDao.getUsers();
-      for (var user in users) {
-        final accounts = await _accountsDao.getAccounts(user.localId);
-        for (var value in accounts) {
-          if (value.email == notification.to) {
-            final manager = NotificationManager.instance;
-            manager.showNotification(
-              notification.from,
-              notification.subject,
-              user,
-              1,
-            );
-            break;
+      if (notificationFromPush) {
+        final _usersDao = UsersDao(DBInstances.appDB);
+        final _accountsDao = AccountsDao(DBInstances.appDB);
+        final users = await _usersDao.getUsers();
+        for (var user in users) {
+          final accounts = await _accountsDao.getAccounts(user.localId);
+          for (var value in accounts) {
+            if (value.email == notification.to) {
+              final manager = NotificationManager.instance;
+              manager.showNotification(
+                notification.from,
+                notification.subject,
+                user,
+                1,
+              );
+              break;
+            }
           }
         }
       }
-
-      await onAlarm(
-        showNotification: false,
+      return await onAlarm(
+        showNotification: !notificationFromPush,
         data: notification,
       );
     } catch (e) {
       print(e);
     }
   }
+  return false;
 }
+
+final notificationFromPush = false;
 
 class NotificationData {
   final String subject;

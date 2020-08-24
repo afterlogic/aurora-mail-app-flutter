@@ -813,7 +813,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
               child: Column(
                 children: <Widget>[
                   IdentitySelector(
-                    padding: EdgeInsets.symmetric(horizontal: 16.0),
+                    padding: EdgeInsets.all( 16.0),
                     enable: !lockUsers,
                     label: i18n(context, "messages_from"),
                     onIdentity: setIdentityOrSender,
@@ -822,7 +822,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
                   Divider(height: 0.0),
                   ComposeEmails(
                     key: _toKey,
-                    padding: EdgeInsets.symmetric(horizontal: 16.0),
+                    padding: EdgeInsets.all( 16.0),
                     enable: !lockUsers,
                     focusNode: toNode,
                     label: i18n(context, "messages_to"),
@@ -835,7 +835,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
                   Divider(height: 0.0),
                   ComposeEmails(
                     key: _ccKey,
-                    padding: EdgeInsets.symmetric(horizontal: 16.0),
+                    padding: EdgeInsets.all( 16.0),
                     enable: !lockUsers,
                     focusNode: ccNode,
                     label: i18n(context, "messages_cc"),

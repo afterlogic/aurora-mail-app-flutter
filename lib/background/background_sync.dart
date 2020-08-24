@@ -21,6 +21,7 @@ import 'package:aurora_mail/notification/push_notifications_manager.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:webmail_api_client/webmail_api_client.dart';
+import 'package:moor_flutter/moor_flutter.dart';
 
 class BackgroundSync {
   final _mailDao = MailDao(DBInstances.appDB);
@@ -38,11 +39,15 @@ class BackgroundSync {
     Logger isolatedLogger,
     ApiInterceptor interceptor,
   ) async {
-    isolatedLogger.log("MAIL_SYNC: sync start");
-    var hasUpdate = false;
     if (notification == null && MailMethods.syncQueue.isNotEmpty) {
       return false;
     }
+    if ((await _authLocal.getSelectedUserLocalId()) == null) {
+      return false;
+    }
+    isolatedLogger.log("MAIL_SYNC: sync start");
+    var hasUpdate = false;
+
     try {
       final users = await _usersDao.getUsers();
 
@@ -55,20 +60,18 @@ class BackgroundSync {
         if (accounts.isEmpty) {
           continue;
         }
-        final newMessages = await _getNewMessages(user, accounts, interceptor);
+        final newMessages = await (notification != null
+            ? _getNewMessages(user, accounts,interceptor)
+            : _updateAccountMessages(user, accounts,interceptor));
         if (newMessages.isNotEmpty) {
-          if (true) {
+          if (showNotification == true) {
             newMessages
                 .sort((a, b) => a.timeStampInUTC.compareTo(b.timeStampInUTC));
-            isolatedLogger
+            solatedLogger
                 .log("MailSync: ${newMessages.length} new message(s)");
-            if (showNotification != false && notification == null) {
-              for (final message in newMessages) {
-                await _showNewMessage(message, user);
-              }
+            for (final message in newMessages) {
+              await _showNewMessage(message, user);
             }
-          } else {
-            print("MailSync: Foreground mode, cannot send notifications");
           }
 
           hasUpdate = true;
@@ -92,12 +95,8 @@ class BackgroundSync {
   Future<List<Message>> _getNewMessages(
     User user,
     List<Account> accounts,
-    ApiInterceptor interceptor,
+      ApiInterceptor interceptor,
   ) async {
-    SettingsBloc.isOffline = false;
-    if ((await _authLocal.getSelectedUserLocalId()) == null) {
-      return [];
-    }
     final newMessages = new List<Message>();
     for (var account in accounts) {
       final inboxFolders = await _foldersDao.getByType(
@@ -105,9 +104,7 @@ class BackgroundSync {
       if (inboxFolders.isEmpty) continue;
 
       final foldersToUpdate =
-          (await _updateFolderHash(inboxFolders, user, account, interceptor))
-              .where((item) => item.type == 1)
-              .toList();
+          (await _updateFolderHash(inboxFolders, user, account,interceptor)).toList();
 
       if (account == null) return new List<Message>();
 
@@ -161,7 +158,6 @@ class BackgroundSync {
           await _getMessageInfoWithNotBody(result.addedMessages),
           user.localId,
           account,
-          folderToUpdate,
         );
 
         await _mailDao.fillMessage(newMessageBodies);
@@ -169,6 +165,92 @@ class BackgroundSync {
           folderToUpdate.fullNameRaw,
           account.localId,
           newMessagesInfo,
+        );
+        final notSeenMessagesUids = result.addedMessages
+            .where((m) => !m.flags.contains("\\seen"))
+            .map((e) => e.uid)
+            .toSet();
+        newMessages
+            .addAll(newMessageBodies.where((element) => notSeenMessagesUids.contains(element.uid)));
+      }
+    }
+    return newMessages;
+  }
+  Future<List<Message>> _getNewMessages(
+      User user,
+      List<Account> accounts,
+      ApiInterceptor interceptor,
+      ) async {
+    final newMessages = new List<Message>();
+    for (var account in accounts) {
+      if (account == null) continue;
+      final inboxFolders = await _foldersDao.getByType(
+          [Folder.getNumberFromFolderType(FolderType.inbox)], account.localId);
+      if (inboxFolders.isEmpty) continue;
+
+      for (LocalFolder folderToUpdate in inboxFolders) {
+        final messagesInfo = await FolderMessageInfo.getMessageInfo(
+          folderToUpdate.fullNameRaw,
+          account.localId,
+        );
+
+        if (messagesInfo == null) {
+          continue;
+        }
+        final periodStr = SyncPeriod.subtractPeriodFromNow(Duration(days: 2));
+
+        final mailApi = MailApi(
+          user: user,
+          account: account,
+          interceptor: interceptor,
+        );
+
+        final rawInfo = await mailApi.getMessagesInfo(
+          folderName: folderToUpdate.fullNameRaw,
+          search: "date:$periodStr/",
+        );
+
+        List<MessageInfo> newMessagesInfo =
+        MessageInfo.flattenMessagesInfo(rawInfo);
+
+        final result = await Folders.calculateMessagesInfoDiffAsync(
+          messagesInfo,
+          newMessagesInfo,
+        );
+
+        if (result.addedMessages.isEmpty) continue;
+
+        await _mailDao.addEmptyMessage(
+            result.addedMessages, account, user, folderToUpdate.fullNameRaw);
+
+        final uids = result.addedMessages.map((m) => m.uid);
+
+        final rawBodies = await mailApi.getMessageBodies(
+          folderName: folderToUpdate.fullNameRaw,
+          uids: uids.toList(),
+        );
+
+        _foldersDao.updateFolder(
+          FoldersCompanion(needsInfoUpdate: Value(true)),
+          folderToUpdate.guid,
+        );
+        final mergeMessageInfo = mergeNewMessageInfo(
+          messagesInfo,
+          newMessagesInfo,
+        );
+        final newMessageBodies =
+        Mail.getMessageObjFromServerAndUpdateInfoHasBody(
+          rawBodies,
+          await _getMessageInfoWithNotBody(result.addedMessages),
+          user.localId,
+          account,
+        );
+
+        await _mailDao.fillMessage(newMessageBodies);
+        await FolderMessageInfo.setMessageInfo(
+          folderToUpdate.fullNameRaw,
+          account.localId,
+          mergeMessageInfo,
         );
         final notSeenMessagesUids = result.addedMessages
             .where((m) => !m.flags.contains("\\seen"))
@@ -200,6 +282,23 @@ class BackgroundSync {
     }
 
     return messages;
+  }
+
+  List<MessageInfo> mergeNewMessageInfo(
+      List<MessageInfo> messagesInfo, List<MessageInfo> newMessagesInfo) {
+    final mergeMessageInfo = <MessageInfo>[];
+    final notExistMessagesInfo = <int, MessageInfo>{};
+    for (var value in newMessagesInfo) {
+      notExistMessagesInfo[value.uid] = value;
+    }
+    for (var value in messagesInfo) {
+      mergeMessageInfo.add(value);
+      if (notExistMessagesInfo.containsKey(value.uid)) {
+        notExistMessagesInfo.remove(value.uid);
+      }
+    }
+    mergeMessageInfo.addAll(notExistMessagesInfo.values);
+    return mergeMessageInfo;
   }
 
   Future<List<Folder>> _updateFolderHash(

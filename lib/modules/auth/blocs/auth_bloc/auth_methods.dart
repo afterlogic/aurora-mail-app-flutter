@@ -118,13 +118,15 @@ class AuthMethods {
     return _accountsDao.getAccounts(user.localId);
   }
 
-  Future<void> logout(User user) async {
+  Future<void> logout(int currentUserId, User user) async {
     _authApi.logout(user);
 
     final futures = [
       deleteUserRelatedData(user),
+      if(user.localId==currentUserId)
       _cryptoStorage.deleteAll(),
       _authLocal.deleteSelectedUserLocalId(),
+      if(user.localId==currentUserId)
       _authLocal.deleteSelectedAccountId(),
       _usersDao.deleteUser(user.localId),
       _accountsDao.deleteAccountsOfUser(user.localId),

@@ -100,7 +100,7 @@ class _LoginAndroidState extends BState<LoginAndroid> {
     SystemChannels.textInput.invokeMethod('TextInput.hide');
     BlocProvider.of<AuthBloc>(context).add(LogIn(
       email: emailCtrl.text,
-      password: passwordCtrl.text,
+      password: passwordCtrl.text.trim(),
       hostname: hostCtrl.text,
       firstLogin: !widget.isDialog,
     ));
@@ -264,6 +264,7 @@ class _LoginAndroidState extends BState<LoginAndroid> {
                     AuthInput(
                       enableSuggestions: false,
                       autocorrect: false,
+                      inputFormatters: [FilteringTextInputFormatter.deny(" ")],
                       controller: emailCtrl,
                       label: i18n(context, "login_input_email"),
                       keyboardType: TextInputType.emailAddress,

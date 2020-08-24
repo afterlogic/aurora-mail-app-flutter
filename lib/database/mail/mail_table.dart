@@ -190,7 +190,6 @@ class Mail extends Table {
     List<Message> messagesInfo,
     int userLocalId,
     Account account,
-    Folder folder,
   ) {
     assert(result.isNotEmpty);
 

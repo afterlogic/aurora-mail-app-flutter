@@ -24,7 +24,6 @@ import 'notification/notification_manager.dart';
 
 void main() async {
   Crashlytics.instance.enableInDevMode = true;
-
   AppInjector.create();
   FlutterError.onError = Crashlytics.instance.recordFlutterError;
   // ignore: invalid_use_of_protected_member
@@ -70,7 +69,7 @@ void main() async {
 Set<String> updateFromNotification = {};
 
 @pragma('vm:entry-point')
-void onAlarm({
+Future<bool> onAlarm({
   bool showNotification = true,
   NotificationData data,
   Future Function(bool) onSuccess,
@@ -119,4 +118,5 @@ void onAlarm({
     isolatedLogger?.save();
   }
   await AlarmService.endAlarm(hasUpdate);
+  return hasUpdate;
 }

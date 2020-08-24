@@ -8,11 +8,10 @@ import UserNotifications
 import alarm_service
 import Firebase
 import receive_sharing
-
+import ios_notification_handler
 @UIApplicationMain
 class AppDelegate: FlutterAppDelegate{
-    var messageCallback:  FlutterResult?
-    var finishMessageCallback: ((UIBackgroundFetchResult) -> Void)?
+
     
     override func application(
         _ application: UIApplication,
@@ -25,4 +24,7 @@ class AppDelegate: FlutterAppDelegate{
         GeneratedPluginRegistrant.register(with: self)
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
+    override func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+           SwiftIosNotificationHandlerPlugin.reciveNotification(didReceiveRemoteNotification: userInfo,fetchCompletionHandler: completionHandler)
+       }
 }

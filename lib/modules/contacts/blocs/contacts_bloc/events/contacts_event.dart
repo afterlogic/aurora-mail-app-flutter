@@ -83,6 +83,13 @@ class ReImport extends ContactsEvent {
   List<Object> get props => [key];
 }
 
+class ImportVcf extends ContactsEvent with AlwaysNonEqualObject {
+  final String content;
+  final Completer completer;
+
+  const ImportVcf(this.content, this.completer);
+}
+
 class DeleteContacts extends ContactsEvent {
   final List<Contact> contacts;
 

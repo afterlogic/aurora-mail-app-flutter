@@ -33,9 +33,9 @@ import 'components/message_item.dart';
 
 class MessagesListAndroid extends StatefulWidget {
   final String initSearch;
-  final int openMessageId;
+  static int openMessageId = null;
 
-  const MessagesListAndroid({this.initSearch, this.openMessageId});
+  const MessagesListAndroid({this.initSearch});
 
   @override
   _MessagesListAndroidState createState() => _MessagesListAndroidState();
@@ -80,24 +80,23 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
         MessagesListAndroid.shareHolder = null;
       }
     });
-    if (widget.openMessageId != null) {
-      openMessage(widget.openMessageId);
+    if (MessagesListAndroid.openMessageId != null) {
+      openMessage(MessagesListAndroid.openMessageId);
+      MessagesListAndroid.openMessageId = null;
     }
     BackgroundHelper.addOnAlarmObserver(false, onAlarm);
     BackgroundHelper.addOnEndAlarmObserver(false, onEndAlarm);
-
   }
 
   openMessage(int uid) async {
-    await Future.delayed(Duration(milliseconds: 1));
-    if (widget.openMessageId != null) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       try {
-        final message = await _mailBloc.getMessageByUid(uid);
+        final message = await _mailBloc.getMessageByLocalId(uid);
         await _onMessageSelected(message);
       } catch (e) {
         print(e);
       }
-    }
+    });
   }
 
   @override

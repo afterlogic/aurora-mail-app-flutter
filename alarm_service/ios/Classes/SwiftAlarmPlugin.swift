@@ -96,7 +96,7 @@ public class SwiftAlarmPlugin: NSObject, FlutterPlugin {
         } else{
             hasAlarm=true
         }
-        timer=Timer.scheduledTimer(timeInterval: 120, target: self, selector: #selector(timeOut), userInfo: nil, repeats: false)
+        timer=Timer.scheduledTimer(timeInterval: 30, target: self, selector: #selector(timeOut), userInfo: nil, repeats: false)
     }
     
     @objc func timeOut() {
@@ -118,7 +118,7 @@ public class SwiftAlarmPlugin: NSObject, FlutterPlugin {
         }
         updateAppRefresh()
     }
-    
+    var register:(()->())?=nil
     func updateAppRefresh(){
         var interval = self.interval ?? UIApplication.backgroundFetchIntervalNever
         if interval != UIApplication.backgroundFetchIntervalNever && interval < UIApplication.backgroundFetchIntervalMinimum {
@@ -126,7 +126,7 @@ public class SwiftAlarmPlugin: NSObject, FlutterPlugin {
         }
         
         if #available(iOS 13.0, *) {
-            do {
+            register = { do {
                 if(interval == UIApplication.backgroundFetchIntervalNever){
                     BGTaskScheduler.shared.cancel(taskRequestWithIdentifier: SwiftAlarmPlugin.taskId)
                 }else{
@@ -136,7 +136,8 @@ public class SwiftAlarmPlugin: NSObject, FlutterPlugin {
                 }
             } catch {
                 UIApplication.shared.setMinimumBackgroundFetchInterval(interval)
-            }
+                }}
+            
         } else {
             UIApplication.shared.setMinimumBackgroundFetchInterval(interval)
         }
@@ -151,12 +152,9 @@ public class SwiftAlarmPlugin: NSObject, FlutterPlugin {
                 self.alarmFromTask(task)
         }
         )
+            register?()
     }
     
-    public func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) -> Bool {
-        alarmFromFetch(completionHandler,didReceiveRemoteNotification: userInfo)
-        return true
-    }
     
     public func application(_ application: UIApplication, performFetchWithCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) -> Bool {
         alarmFromFetch(completionHandler)

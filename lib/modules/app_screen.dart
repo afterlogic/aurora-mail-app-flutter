@@ -102,7 +102,8 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
     BackgroundHelper.current = state;
 
     if (state == AppLifecycleState.resumed) {
-      DBInstances.appDB.streamQueries.handleTableUpdates({DBInstances.appDB.mail});
+      DBInstances.appDB.streamQueries
+          .handleTableUpdates({DBInstances.appDB.mail});
       _settingsBloc.add(OnResume());
     }
 
@@ -149,100 +150,99 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<AuthBloc, AuthState>(
-      bloc: _authBloc,
-      listener: (_, state) {
-        if (state is LoggedOut) _navigateToLogin();
-        if (state is UserSelected) RestartWidget.restartApp(context);
-      },
-      child: BlocBuilder<AuthBloc, AuthState>(
+    return RouteWrap(
+      authBloc: _authBloc,
+      navKey: _navKey,
+      child: BlocListener<AuthBloc, AuthState>(
         bloc: _authBloc,
-        condition: (_, state) => state is InitializedUserAndAccounts,
-        builder: (_, authState) {
-          if (authState is InitializedUserAndAccounts) {
-            if (authState.user != null) {
-              _settingsBloc.add(InitSettings(authState.user, authState.users));
-            }
-            return BlocBuilder<SettingsBloc, SettingsState>(
-                bloc: _settingsBloc,
-                builder: (_, settingsState) {
-                  if (settingsState is SettingsLoaded) {
-                    final theme = _getTheme(settingsState.darkThemeEnabled);
-
-                    return MultiBlocProvider(
-                      providers: [
-                        BlocProvider.value(value: _authBloc),
-                        BlocProvider.value(value: _settingsBloc),
-                        BlocProvider(
-                          create: (_) => new MailBloc(
-                            user: _authBloc.currentUser,
-                            account: _authBloc.currentAccount,
-                          ),
-                        ),
-                        BlocProvider(
-                          create: (_) => new ContactsBloc(
-                            user: _authBloc.currentUser,
-                            appDatabase: DBInstances.appDB,
-                          )..add(GetContacts()),
-                        ),
-                      ],
-                      child: MaterialApp(
-                        navigatorKey: _navKey,
-                        onGenerateTitle: (context) {
-                          final is24 =
-                              MediaQuery.of(context).alwaysUse24HourFormat;
-                          if (settingsState.is24 == null) {
-                            _settingsBloc.add(SetTimeFormat(is24));
-                          }
-                          return BuildProperty.appName;
-                        },
-                        onGenerateRoute: AppNavigation.onGenerateRoute,
-                        theme: theme ?? AppTheme.light,
-                        darkTheme: theme ?? AppTheme.dark,
-                        localizationsDelegates: [
-                          GlobalMaterialLocalizations.delegate,
-                          GlobalWidgetsLocalizations.delegate,
-                          GlobalCupertinoLocalizations.delegate,
-                          LocalizationI18nDelegate(
-                            forcedLocale: supportedLocales.contains(
-                                    settingsState.language?.toLocale())
-                                ? settingsState.language?.toLocale()
-                                : null,
-                          ),
-                          DataFormatDelegate()
-                        ],
-                        supportedLocales: supportedLocales,
-                        localeResolutionCallback: (locale, locales) {
-                          final supportedLocale = locales.firstWhere((l) {
-                            return locale != null &&
-                                l.languageCode == locale.languageCode;
-                          }, orElse: () => null);
-
-                          return supportedLocale ??
-                              locales.first ??
-                              Locale("en", "");
-                        },
-                        locale: settingsState.language?.toLocale(),
-                        initialRoute: authState.needsLogin
-                            ? LoginRoute.name
-                            : MessagesListRoute.name,
-                        navigatorObservers: [routeObserver],
-                        builder: (context, widget) {
-                          return RouteWrap(
-                            child: widget,
-                            navKey: _navKey,
-                          );
-                        },
-                      ),
-                    );
-                  } else {
-                    return Material();
-                  }
-                });
-          } else {
-            return Material();
-          }
+        listener: (_, state) {
+          if (state is LoggedOut) _navigateToLogin();
+          if (state is UserSelected) RestartWidget.restartApp(context);
         },
+        child: BlocBuilder<AuthBloc, AuthState>(
+          bloc: _authBloc,
+          condition: (_, state) => state is InitializedUserAndAccounts,
+          builder: (_, authState) {
+            if (authState is InitializedUserAndAccounts) {
+              if (authState.user != null) {
+                _settingsBloc
+                    .add(InitSettings(authState.user, authState.users));
+              }
+              return BlocBuilder<SettingsBloc, SettingsState>(
+                  bloc: _settingsBloc,
+                  builder: (_, settingsState) {
+                    if (settingsState is SettingsLoaded) {
+                      final theme = _getTheme(settingsState.darkThemeEnabled);
+
+                      return MultiBlocProvider(
+                        providers: [
+                          BlocProvider.value(value: _authBloc),
+                          BlocProvider.value(value: _settingsBloc),
+                          BlocProvider(
+                            create: (_) => new MailBloc(
+                              user: _authBloc.currentUser,
+                              account: _authBloc.currentAccount,
+                            ),
+                          ),
+                          BlocProvider(
+                            create: (_) => new ContactsBloc(
+                              user: _authBloc.currentUser,
+                              appDatabase: DBInstances.appDB,
+                            )..add(GetContacts()),
+                          ),
+                        ],
+                        child: MaterialApp(
+                          navigatorKey: _navKey,
+                          onGenerateTitle: (context) {
+                            final is24 =
+                                MediaQuery.of(context).alwaysUse24HourFormat;
+                            if (settingsState.is24 == null) {
+                              _settingsBloc.add(SetTimeFormat(is24));
+                            }
+                            return BuildProperty.appName;
+                          },
+                          onGenerateRoute: AppNavigation.onGenerateRoute,
+                          theme: theme ?? AppTheme.light,
+                          darkTheme: theme ?? AppTheme.dark,
+                          localizationsDelegates: [
+                            GlobalMaterialLocalizations.delegate,
+                            GlobalWidgetsLocalizations.delegate,
+                            GlobalCupertinoLocalizations.delegate,
+                            LocalizationI18nDelegate(
+                              forcedLocale: supportedLocales.contains(
+                                      settingsState.language?.toLocale())
+                                  ? settingsState.language?.toLocale()
+                                  : null,
+                            ),
+                            DataFormatDelegate()
+                          ],
+                          supportedLocales: supportedLocales,
+                          localeResolutionCallback: (locale, locales) {
+                            final supportedLocale = locales.firstWhere((l) {
+                              return locale != null &&
+                                  l.languageCode == locale.languageCode;
+                            }, orElse: () => null);
+
+                            return supportedLocale ??
+                                locales.first ??
+                                Locale("en", "");
+                          },
+                          locale: settingsState.language?.toLocale(),
+                          initialRoute: authState.needsLogin
+                              ? LoginRoute.name
+                              : MessagesListRoute.name,
+                          navigatorObservers: [routeObserver],
+                        ),
+                      );
+                    } else {
+                      return Material();
+                    }
+                  });
+            } else {
+              return Material();
+            }
+          },
+        ),
       ),
     );
   }

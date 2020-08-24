@@ -260,7 +260,7 @@ class MailBloc extends Bloc<MailEvent, MailState> {
     return _methods.getFolder(selectedFolder.guid);
   }
 
-  Future<Message> getMessageByUid(int uid) {
-    return _methods.getMessageByUid(uid);
+  Future<Message> getMessageByLocalId(int uid) {
+    return _methods.getMessageByLocalId(uid);
   }
 }

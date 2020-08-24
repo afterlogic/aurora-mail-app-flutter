@@ -2,6 +2,7 @@ import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class AuthInput extends StatefulWidget {
   final TextEditingController controller;
@@ -13,6 +14,7 @@ class AuthInput extends StatefulWidget {
   final String Function(String) validator;
   final bool autocorrect;
   final bool enableSuggestions;
+  final List<TextInputFormatter> inputFormatters;
 
   const AuthInput({
     Key key,
@@ -25,6 +27,7 @@ class AuthInput extends StatefulWidget {
     this.validator,
     this.autocorrect = true,
     this.enableSuggestions = true,
+    this.inputFormatters,
   }) : super(key: key);
 
   @override
@@ -38,6 +41,7 @@ class _AuthInputState extends BState<AuthInput> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return TextFormField(
+      inputFormatters: widget.inputFormatters,
       autocorrect: widget.autocorrect,
       enableSuggestions: widget.enableSuggestions,
       enabled: widget.isEnabled,
