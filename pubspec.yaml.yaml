@@ -40,7 +40,7 @@ dependencies:
   flutter_typeahead: 1.8.0
 
   # ui
-  flutter_svg: 0.17.3+1
+  flutter_svg: 0.18.1
   material_design_icons_flutter: 3.4.5045+1
   webview_flutter: 0.3.19+9
   flutter_webview_plugin: 0.3.11
