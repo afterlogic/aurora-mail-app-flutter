@@ -361,7 +361,6 @@ class MailMethods {
         uids,
         updatedUser.localId,
         account,
-        folder,
       );
 
       await _mailDao.fillMessage(messages);
@@ -503,5 +502,4 @@ class MailMethods {
   Future<Message> getMessageByLocalId(int uid) {
     return _mailDao.getMessageByLocalId(uid);
   }
-
 }

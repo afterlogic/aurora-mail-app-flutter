@@ -35,7 +35,7 @@ class SyncPeriod {
       return period.toString();
   }
 
-  static String _subtractPeriodFromNow(Duration duration) {
+  static String subtractPeriodFromNow(Duration duration) {
     return DateFormat("yyyy.MM.dd").format(DateTime.now().subtract(duration));
   }
 
@@ -44,13 +44,13 @@ class SyncPeriod {
       case Period.allTime:
         return null;
       case Period.months1:
-        return _subtractPeriodFromNow(Duration(days: 31));
+        return subtractPeriodFromNow(Duration(days: 31));
       case Period.months3:
-        return _subtractPeriodFromNow(Duration(days: 31 * 3));
+        return subtractPeriodFromNow(Duration(days: 31 * 3));
       case Period.months6:
-        return _subtractPeriodFromNow(Duration(days: 31 * 6));
+        return subtractPeriodFromNow(Duration(days: 31 * 6));
       case Period.years1:
-        return _subtractPeriodFromNow(Duration(days: 31 * 12));
+        return subtractPeriodFromNow(Duration(days: 31 * 12));
       default:
         return null;
     }

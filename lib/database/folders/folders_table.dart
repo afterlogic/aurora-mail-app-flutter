@@ -182,10 +182,14 @@ class Folders extends Table {
   }
 
   static Future<MessagesInfoDiffCalcResult> calculateMessagesInfoDiffAsync(
-      List<MessageInfo> oldInfo, List<MessageInfo> newInfo) {
-    final Map<String, List<MessageInfo>> args = {
+    List<MessageInfo> oldInfo,
+    List<MessageInfo> newInfo, [
+    bool showLog = true,
+  ]) {
+    final Map<String, dynamic> args = {
       "oldItems": oldInfo,
       "newItems": newInfo,
+      "showLog": showLog,
     };
     return compute(_calculateMessagesInfoDiff, args);
   }
@@ -193,9 +197,10 @@ class Folders extends Table {
   // you cannot just return newInfo
   // you have to return oldInfo (because it contains hasBody: true) + addedMessages
   static MessagesInfoDiffCalcResult _calculateMessagesInfoDiff(
-      Map<String, List<MessageInfo>> args) {
-    final oldInfo = args["oldItems"];
-    final newInfo = args["newItems"];
+      Map<String, dynamic> args) {
+    final oldInfo = args["oldItems"] as List<MessageInfo>;
+    final newInfo = args["newItems"] as List<MessageInfo>;
+    final showLog = args["showLog"] as bool;
 
     final unchangedMessages = oldInfo.where((i) =>
         newInfo.firstWhere(
@@ -209,7 +214,7 @@ class Folders extends Table {
     // no need to calculate difference if all the messages are unchanged
     if (unchangedMessages.length == oldInfo.length &&
         unchangedMessages.length == newInfo.length) {
-      logger.log("Diff calcultaion finished: no changes");
+      if (showLog) logger.log("Diff calcultaion finished: no changes");
       return new MessagesInfoDiffCalcResult(
         updatedInfo: oldInfo,
         removedUids: [],
@@ -235,7 +240,7 @@ class Folders extends Table {
             orElse: () => null) !=
         null);
 
-    logger.log("""
+    if (showLog) logger.log("""
     Messages info diff calcultaion finished:
       unchanged: ${unchangedMessages.length}
       changedParent: ${changedParent.length}

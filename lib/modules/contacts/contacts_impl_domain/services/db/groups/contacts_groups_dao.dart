@@ -17,7 +17,11 @@ class ContactsGroupsDao extends DatabaseAccessor<AppDatabase>
   }
 
   Future<void> addGroups(List<ContactsGroupsTable> newGroups) async {
-    batch((b) => b.insertAll(contactsGroups, newGroups)).catchError((_) {});
+    batch((b) => b.insertAll(
+          contactsGroups,
+          newGroups,
+          mode: InsertMode.insertOrReplace,
+        )).catchError((_) {});
   }
 
   Future<void> updateGroups(List<ContactsGroupsCompanion> updatedGroups) {

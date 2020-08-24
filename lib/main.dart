@@ -85,7 +85,7 @@ Future<bool> onAlarm({
       !updateForNotification.contains(data?.to)) {
     updateForNotification.add(data?.to);
     try {
-      BackgroundHelper.onStartAlarm();
+     BackgroundHelper.onStartAlarm();
 
       hasUpdate = await BackgroundSync()
           .sync(BackgroundHelper.isBackground, showNotification, data)
@@ -101,7 +101,7 @@ Future<bool> onAlarm({
       }
     }
     updateForNotification.remove(data?.to);
-    BackgroundHelper.onEndAlarm(hasUpdate);
+   BackgroundHelper.onEndAlarm(hasUpdate);
   }
   if (isDebug && BackgroundHelper.isBackground) {
     logger.save();
