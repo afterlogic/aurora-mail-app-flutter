@@ -67,7 +67,7 @@ class BackgroundSync {
           if (showNotification == true) {
             newMessages
                 .sort((a, b) => a.timeStampInUTC.compareTo(b.timeStampInUTC));
-            solatedLogger
+            isolatedLogger
                 .log("MailSync: ${newMessages.length} new message(s)");
             for (final message in newMessages) {
               await _showNewMessage(message, user);
@@ -92,7 +92,7 @@ class BackgroundSync {
     return hasUpdate;
   }
 
-  Future<List<Message>> _getNewMessages(
+  Future<List<Message>> _updateAccountMessages(
     User user,
     List<Account> accounts,
       ApiInterceptor interceptor,
