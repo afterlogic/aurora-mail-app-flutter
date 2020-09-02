@@ -21,6 +21,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:theme/app_theme.dart';
 
 import 'components/contacts_drawer.dart';
 import 'components/contacts_list_tile.dart';
@@ -39,8 +40,8 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
   @override
   void initState() {
     super.initState();
-      pgpSettingsBloc =
-          AppInjector.instance.pgpSettingsBloc(BlocProvider.of(context));
+    pgpSettingsBloc =
+        AppInjector.instance.pgpSettingsBloc(BlocProvider.of(context));
     BackgroundHelper.addOnAlarmObserver(false, onAlarm);
   }
 
@@ -157,7 +158,10 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
           MailBottomAppBar(selectedRoute: MailBottomAppBarRoutes.contacts),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: AMFloatingActionButton(
-        child: Icon(MdiIcons.accountPlusOutline),
+        child: IconTheme(
+          data: AppTheme.floatIconTheme,
+          child: Icon(MdiIcons.accountPlusOutline),
+        ),
         onPressed: () => Navigator.pushNamed(
           context,
           ContactEditRoute.name,
