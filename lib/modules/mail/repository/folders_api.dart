@@ -40,10 +40,9 @@ class FoldersApi {
     }
   }
 
-  Future<Map> getRelevantFoldersInformation(List<LocalFolder> folders) async {
-    final List<String> folderNames = folders.map((f) => f.fullNameRaw).toList();
+  Future<Map> getRelevantFoldersInformation(List<String> fullNamesRaw) async {
     final parameters =
-        json.encode({"AccountID": _accountId, "Folders": folderNames});
+        json.encode({"AccountID": _accountId, "Folders": fullNamesRaw});
 
     final body = new WebMailApiBody(
         method: "GetRelevantFoldersInformation", parameters: parameters);

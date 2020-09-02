@@ -317,7 +317,8 @@ class BackgroundSync {
       account: account,
       interceptor: interceptor,
     );
-    final newFolders = await _foldersApi.getRelevantFoldersInformation(folders);
+    final newFolders = await _foldersApi.getRelevantFoldersInformation(
+        folders.map((e) => e.fullNameRaw).toList());
     final outFolder = <LocalFolder>[];
     newFolders.keys.forEach((fName) {
       final updatedFolder = newFolders[fName];

@@ -41,7 +41,7 @@ class MailMethods {
     _mailApi = new MailApi(user: user, account: account);
   }
 
- static final syncQueue = new List<String>();
+  static final syncQueue = new List<String>();
 
   bool get _isOffline => SettingsBloc.isOffline;
 
@@ -146,8 +146,8 @@ class MailMethods {
 
     final localFolders = await _foldersDao.getAllFolders(account.localId);
 
-    final folders =
-        await _foldersApi.getRelevantFoldersInformation(localFolders);
+    final folders = await _foldersApi.getRelevantFoldersInformation(
+        localFolders.map((e) => e.fullNameRaw).toList());
 
     final futures = new List<Future>();
 
@@ -180,6 +180,55 @@ class MailMethods {
         folder.guid,
       ));
     });
+
+    await Future.wait(futures);
+    final updatedLocalFolders =
+        await _foldersDao.getAllFolders(account.localId);
+    return Folder.getFolderObjectsFromDb(updatedLocalFolders);
+  }
+
+  Future updateFolderHash(Folder selectedFolder,
+      {bool forceCurrentFolderUpdate = false}) async {
+    logger.log("method updateFolderHash");
+    if (_isOffline) return;
+
+    assert(selectedFolder != null);
+
+    final folders = await _foldersApi
+        .getRelevantFoldersInformation([selectedFolder.fullNameRaw]);
+
+    final futures = new List<Future>();
+    if (folders.isEmpty) {
+      return;
+    }
+    final fName = folders.keys.first;
+    final updatedFolder = folders.values.first;
+    final folder = selectedFolder;
+
+    // only current folder can be force updated
+    // the value cannot be set from true to false
+    // because non-system folders update only when they are entered
+    // thus might not have been synced yet
+    final shouldUpdate = forceCurrentFolderUpdate == true &&
+            folder.fullName == selectedFolder.fullName ||
+        folder.needsInfoUpdate;
+
+    final count = updatedFolder[0];
+    final unread = updatedFolder[1];
+    final newHash = updatedFolder[3];
+    final needsInfoUpdate = folder.fullNameHash != newHash || shouldUpdate;
+    if (folder.fullNameHash != newHash) {
+      logger.log("folder ${fName} have new hash");
+    }
+    futures.add(_foldersDao.updateFolder(
+      new FoldersCompanion(
+        count: Value(count as int),
+        unread: Value(unread as int),
+        fullNameHash: Value(newHash as String),
+        needsInfoUpdate: Value(needsInfoUpdate),
+      ),
+      folder.guid,
+    ));
 
     await Future.wait(futures);
     final updatedLocalFolders =
@@ -231,7 +280,7 @@ class MailMethods {
       return;
     }
 
-    final folderToUpdate = await _foldersDao.getFolderByLocalId(syncQueue[0]);
+    final folderToUpdate = await _foldersDao.getFolderByGuId(syncQueue[0]);
     // get the actual sync period
     final updatedUser = await _usersDao.getUserByLocalId(user.localId);
 
@@ -333,7 +382,7 @@ class MailMethods {
     assert(syncQueue.isNotEmpty);
 
     // get the actual folder state every time
-    final folder = await _foldersDao.getFolderByLocalId(syncQueue[0]);
+    final folder = await _foldersDao.getFolderByGuId(syncQueue[0]);
     // get the actual sync period
     final updatedUser = await _usersDao.getUserByLocalId(user.localId);
 //    if (folder?.messagesInfo == null) {
@@ -377,7 +426,6 @@ class MailMethods {
         return null;
       }
     } else {
-
       logger.log("syncing messages for: ${folder.fullNameRaw}");
       final rawBodies = await _mailApi.getMessageBodies(
         folderName: folder.fullNameRaw,
@@ -529,7 +577,7 @@ class MailMethods {
   }
 
   Future<Folder> getFolder(String guid) {
-    return _foldersDao.getFolderByLocalId(guid);
+    return _foldersDao.getFolderByGuId(guid);
   }
 
   static String currentFolderUpdate = null;
@@ -555,6 +603,6 @@ class _FillMessageArg {
   final int userLocalId;
   final Account account;
 
-  _FillMessageArg(this.result, this.messagesInfo, this.userLocalId,
-      this.account);
+  _FillMessageArg(
+      this.result, this.messagesInfo, this.userLocalId, this.account);
 }

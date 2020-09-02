@@ -150,7 +150,6 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
       floatingActionButton: AMFloatingActionButton(
         child: Icon(
           MdiIcons.accountPlusOutline,
-          color: theme.appBarTheme.iconTheme.color,
         ),
         onPressed: () => Navigator.pushNamed(
           context,
