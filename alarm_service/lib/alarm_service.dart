@@ -78,15 +78,11 @@ class AlarmService {
 
   static _doOnAlarm() async {
     while (true) {
-      try {
-        final data = (await _channel.invokeMethod('doOnAlarm'));
-        if (data is int) {
-          _alarm(data);
-        } else if (data is Map) {
-          _notification(data);
-        }
-      } catch (e) {
-        print(e);
+      final data = (await _channel.invokeMethod('doOnAlarm'));
+      if (data is int) {
+        _alarm(data);
+      } else if (data is Map) {
+        _notification(data);
       }
     }
   }
@@ -102,8 +98,7 @@ class AlarmService {
     _onNotification(message);
   }
 
-  static void onNotification(
-      void Function(Map<dynamic, dynamic> message) onNotification) {
+  static void onNotification(void Function(Map<dynamic, dynamic> message) onNotification) {
     _onNotification = onNotification;
   }
 }

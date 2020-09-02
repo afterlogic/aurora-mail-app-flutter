@@ -39,6 +39,7 @@ class BackgroundSync {
     Logger isolatedLogger,
     ApiInterceptor interceptor,
   ) async {
+    final start = DateTime.now().millisecondsSinceEpoch;
     if (notification == null && MailMethods.syncQueue.isNotEmpty) {
       return false;
     }
@@ -61,8 +62,8 @@ class BackgroundSync {
           continue;
         }
         final newMessages = await (notification != null
-            ? _getNewMessages(user, accounts,interceptor)
-            : _updateAccountMessages(user, accounts,interceptor));
+            ? _getNewMessages(user, accounts, interceptor)
+            : _updateAccountMessages(user, accounts, interceptor));
         if (newMessages.isNotEmpty) {
           if (showNotification == true) {
             newMessages
@@ -79,7 +80,9 @@ class BackgroundSync {
           isolatedLogger.log("MailSync: No messages to sync");
         }
       }
-      isolatedLogger.log("MailSync: sync end");
+      final now = DateTime.now().millisecondsSinceEpoch;
+      final delay = (now - start) / 1000;
+      isolatedLogger.log("MailSync: sync end in ${delay.toStringAsFixed(1)} s");
     }
 //    on SocketException {
 //
@@ -95,7 +98,7 @@ class BackgroundSync {
   Future<List<Message>> _updateAccountMessages(
     User user,
     List<Account> accounts,
-      ApiInterceptor interceptor,
+    ApiInterceptor interceptor,
   ) async {
     final newMessages = new List<Message>();
     for (var account in accounts) {
@@ -104,7 +107,8 @@ class BackgroundSync {
       if (inboxFolders.isEmpty) continue;
 
       final foldersToUpdate =
-          (await _updateFolderHash(inboxFolders, user, account,interceptor)).toList();
+          (await _updateFolderHash(inboxFolders, user, account, interceptor))
+              .toList();
 
       if (account == null) return new List<Message>();
 
@@ -170,17 +174,18 @@ class BackgroundSync {
             .where((m) => !m.flags.contains("\\seen"))
             .map((e) => e.uid)
             .toSet();
-        newMessages
-            .addAll(newMessageBodies.where((element) => notSeenMessagesUids.contains(element.uid)));
+        newMessages.addAll(newMessageBodies
+            .where((element) => notSeenMessagesUids.contains(element.uid)));
       }
     }
     return newMessages;
   }
+
   Future<List<Message>> _getNewMessages(
-      User user,
-      List<Account> accounts,
-      ApiInterceptor interceptor,
-      ) async {
+    User user,
+    List<Account> accounts,
+    ApiInterceptor interceptor,
+  ) async {
     final newMessages = new List<Message>();
     for (var account in accounts) {
       if (account == null) continue;
@@ -211,7 +216,7 @@ class BackgroundSync {
         );
 
         List<MessageInfo> newMessagesInfo =
-        MessageInfo.flattenMessagesInfo(rawInfo);
+            MessageInfo.flattenMessagesInfo(rawInfo);
 
         final result = await Folders.calculateMessagesInfoDiffAsync(
           messagesInfo,
@@ -239,7 +244,7 @@ class BackgroundSync {
           newMessagesInfo,
         );
         final newMessageBodies =
-        Mail.getMessageObjFromServerAndUpdateInfoHasBody(
+            Mail.getMessageObjFromServerAndUpdateInfoHasBody(
           rawBodies,
           await _getMessageInfoWithNotBody(result.addedMessages),
           user.localId,

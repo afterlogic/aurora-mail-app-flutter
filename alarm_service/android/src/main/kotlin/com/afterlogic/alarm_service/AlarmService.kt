@@ -24,7 +24,6 @@ abstract class AlarmService : IntentService("Check update mail") {
         super.onCreate()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             startForeground(NOTIFICATION_ID, createNotification())
-            Thread.sleep(5000)
         }
     }
 

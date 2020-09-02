@@ -822,7 +822,8 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
                   Divider(height: 0.0),
                   ComposeEmails(
                     key: _toKey,
-                    padding: EdgeInsets.all( 16.0),
+
+                    padding: EdgeInsets.symmetric(horizontal: 16.0,vertical: 8),
                     enable: !lockUsers,
                     focusNode: toNode,
                     label: i18n(context, "messages_to"),
@@ -835,7 +836,8 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
                   Divider(height: 0.0),
                   ComposeEmails(
                     key: _ccKey,
-                    padding: EdgeInsets.all( 16.0),
+
+                    padding: EdgeInsets.symmetric(horizontal: 16.0,vertical: 8),
                     enable: !lockUsers,
                     focusNode: ccNode,
                     label: i18n(context, "messages_cc"),
@@ -854,7 +856,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
                   if (_showBCC)
                     ComposeEmails(
                       key: _bccKey,
-                      padding: EdgeInsets.symmetric(horizontal: 16.0),
+                      padding: EdgeInsets.symmetric(horizontal: 16.0,vertical: 8),
                       enable: !lockUsers,
                       focusNode: bccNode,
                       label: i18n(context, "messages_bcc"),
