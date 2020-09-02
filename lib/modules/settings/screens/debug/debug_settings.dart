@@ -130,8 +130,19 @@ class _DebugSettingState extends BState<DebugSetting> {
 
   deleteAll() async {
     final dir = Directory(await logger.logDir());
-    await dir.delete();
+   await _delete(dir);
     init();
+  }
+
+  Future _delete(FileSystemEntity entity) async {
+    if (entity is Directory) {
+      final children = await entity.list().toList();
+      for (var item in children) {
+        await _delete(item);
+      }
+    } else if (entity is File) {
+      await entity.delete();
+    }
   }
 
   delete(File file) async {
