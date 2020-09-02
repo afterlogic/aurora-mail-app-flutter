@@ -1,0 +1,13 @@
+//
+//  ExtensionDebug.xcconfig
+//  Runner
+//
+//  Created by Alexander Orlov on 12.08.2020.
+//  Copyright © 2020 The Chromium Authors. All rights reserved.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+    
+#include "../BuildVariable.xcconfig"
+#include "../Pods/Target Support Files/Pods-AppShareExtension/Pods-AppShareExtension.debug.xcconfig"

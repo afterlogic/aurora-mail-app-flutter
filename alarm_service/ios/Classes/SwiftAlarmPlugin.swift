@@ -83,7 +83,7 @@ public class SwiftAlarmPlugin: NSObject, FlutterPlugin {
         }
     }
     
-    open func alarm(_ completionHandler: @escaping (Bool) -> Void) {
+    open func alarm(didReceiveRemoteNotification userInfo: [AnyHashable : Any]?=nil,_ completionHandler: @escaping (Bool) -> Void) {
         var timer:Timer?
         onEndAlarm = {(hasData) in
             self.hasAlarm=false
@@ -91,12 +91,12 @@ public class SwiftAlarmPlugin: NSObject, FlutterPlugin {
             completionHandler(hasData)
         }
         if onAlarm != nil {
-            onAlarm?(-1)
+            onAlarm?(userInfo)
             onAlarm=nil
         } else{
             hasAlarm=true
         }
-        timer=Timer.scheduledTimer(timeInterval: 120, target: self, selector: #selector(timeOut), userInfo: nil, repeats: false)
+        timer=Timer.scheduledTimer(timeInterval: 30, target: self, selector: #selector(timeOut), userInfo: nil, repeats: false)
     }
     
     @objc func timeOut() {
@@ -105,10 +105,10 @@ public class SwiftAlarmPlugin: NSObject, FlutterPlugin {
         }
     }
     
-    func alarmFromFetch(_ completionHandler: @escaping (UIBackgroundFetchResult) -> Void){
-        alarm{(hasData) in
+    func alarmFromFetch(_ completionHandler: @escaping (UIBackgroundFetchResult) -> Void,didReceiveRemoteNotification userInfo: [AnyHashable : Any]?=nil){
+        alarm(didReceiveRemoteNotification: userInfo,{(hasData) in
             completionHandler(hasData ? UIBackgroundFetchResult.newData : UIBackgroundFetchResult.noData)
-        }
+        })
     }
     
     @available(iOS 13.0, *)
@@ -118,16 +118,16 @@ public class SwiftAlarmPlugin: NSObject, FlutterPlugin {
         }
         updateAppRefresh()
     }
-    
+    var register:(()->())?=nil
     func updateAppRefresh(){
-        var interval = self.interval ?? UIApplicationBackgroundFetchIntervalNever
-        if interval != UIApplicationBackgroundFetchIntervalNever && interval < UIApplicationBackgroundFetchIntervalMinimum {
-            interval = UIApplicationBackgroundFetchIntervalMinimum
+        var interval = self.interval ?? UIApplication.backgroundFetchIntervalNever
+        if interval != UIApplication.backgroundFetchIntervalNever && interval < UIApplication.backgroundFetchIntervalMinimum {
+            interval = UIApplication.backgroundFetchIntervalMinimum
         }
         
         if #available(iOS 13.0, *) {
-            do {
-                if(interval == UIApplicationBackgroundFetchIntervalNever){
+            register = { do {
+                if(interval == UIApplication.backgroundFetchIntervalNever){
                     BGTaskScheduler.shared.cancel(taskRequestWithIdentifier: SwiftAlarmPlugin.taskId)
                 }else{
                     let request = BGAppRefreshTaskRequest(identifier: SwiftAlarmPlugin.taskId)
@@ -136,7 +136,8 @@ public class SwiftAlarmPlugin: NSObject, FlutterPlugin {
                 }
             } catch {
                 UIApplication.shared.setMinimumBackgroundFetchInterval(interval)
-            }
+                }}
+
         } else {
             UIApplication.shared.setMinimumBackgroundFetchInterval(interval)
         }
@@ -151,12 +152,9 @@ public class SwiftAlarmPlugin: NSObject, FlutterPlugin {
                 self.alarmFromTask(task)
         }
         )
+            register?()
     }
-    
-    public func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) -> Bool {
-        alarmFromFetch(completionHandler)
-        return true
-    }
+
     
     public func application(_ application: UIApplication, performFetchWithCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) -> Bool {
         alarmFromFetch(completionHandler)
