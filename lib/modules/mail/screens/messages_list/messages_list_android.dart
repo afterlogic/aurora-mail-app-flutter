@@ -314,7 +314,6 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
           floatingActionButton: AMFloatingActionButton(
             child: Icon(
               MdiIcons.pen,
-              color: theme.appBarTheme.iconTheme.color,
             ),
             onPressed: () => Navigator.pushNamed(context, ComposeRoute.name,
                 arguments: ComposeScreenArgs(

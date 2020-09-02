@@ -167,7 +167,7 @@ class MailBloc extends Bloc<MailEvent, MailState> {
     final previous = state;
     try {
       final guid = _selectedFolder.guid;
-
+      await _methods.updateFoldersHash(_selectedFolder);
       _methods
           .syncFolders(guid: guid, syncSystemFolders: true)
           .then((v) {
@@ -272,8 +272,8 @@ class UpdateMessageCounter {
   Function onUpdate;
 
   void empty() {
-      folder = null;
-      total = null;
+    folder = null;
+    total = null;
     current = null;
     onUpdate?.call();
   }
