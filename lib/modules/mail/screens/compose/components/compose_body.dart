@@ -29,6 +29,7 @@ class _ComposeBodyState extends BState<ComposeBody> {
       controller: widget.textCtrl,
       maxLines: null,
       minLines: 8,
+      textCapitalization: TextCapitalization.sentences,
       focusNode: widget.focusNode,
       decoration: InputDecoration(
         contentPadding:

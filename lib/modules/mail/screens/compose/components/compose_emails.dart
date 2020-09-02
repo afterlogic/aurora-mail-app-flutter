@@ -261,18 +261,21 @@ class _ComposeEmailsState extends BState<ComposeEmails> {
                         ),
                       );
                     }).toList(),
-                    FitTextField(
-                      controller: widget.textCtrl,
-                      child: TextField(
-                        key: textFieldKey,
-                        enabled: widget.enable,
-                        focusNode: widget.focusNode,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      child: FitTextField(
                         controller: widget.textCtrl,
-                        keyboardType: TextInputType.emailAddress,
-                        decoration: InputDecoration.collapsed(
-                          hintText: null,
+                        child: TextField(
+                          key: textFieldKey,
+                          enabled: widget.enable,
+                          focusNode: widget.focusNode,
+                          controller: widget.textCtrl,
+                          keyboardType: TextInputType.emailAddress,
+                          decoration: InputDecoration.collapsed(
+                            hintText: null,
+                          ),
+                          onEditingComplete: widget.focusNode.unfocus,
                         ),
-                        onEditingComplete: widget.focusNode.unfocus,
                       ),
                     ),
                   ]),

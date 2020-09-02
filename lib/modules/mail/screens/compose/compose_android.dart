@@ -595,7 +595,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
               child: Column(
                 children: <Widget>[
                   IdentitySelector(
-                    padding: EdgeInsets.symmetric(horizontal: 16.0),
+                    padding: EdgeInsets.symmetric(horizontal: 16.0,vertical: 8),
                     enable: !lockUsers,
                     label: i18n(context, "messages_from"),
                     onIdentity: setIdentityOrSender,
@@ -603,7 +603,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
                   ),
                   Divider(height: 0.0),
                   ComposeEmails(
-                    padding: EdgeInsets.symmetric(horizontal: 16.0),
+                    padding: EdgeInsets.symmetric(horizontal: 16.0,vertical: 8),
                     enable: !lockUsers,
                     focusNode: toNode,
                     label: i18n(context, "messages_to"),
@@ -612,7 +612,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
                   ),
                   Divider(height: 0.0),
                   ComposeEmails(
-                    padding: EdgeInsets.symmetric(horizontal: 16.0),
+                    padding: EdgeInsets.symmetric(horizontal: 16.0,vertical: 8),
                     enable: !lockUsers,
                     focusNode: ccNode,
                     label: i18n(context, "messages_cc"),
@@ -623,7 +623,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
                   Divider(height: 0.0),
                   if (_showBCC)
                     ComposeEmails(
-                      padding: EdgeInsets.symmetric(horizontal: 16.0),
+                      padding: EdgeInsets.symmetric(horizontal: 16.0,vertical: 8),
                       enable: !lockUsers,
                       focusNode: bccNode,
                       label: i18n(context, "messages_bcc"),
@@ -631,7 +631,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid> {
                       emails: _bccEmails,
                     ),
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16.0),
+                    padding: EdgeInsets.symmetric(horizontal: 16.0,vertical: 8),
                     child: Column(
                       children: <Widget>[
                         if (_showBCC) Divider(height: 0.0),
