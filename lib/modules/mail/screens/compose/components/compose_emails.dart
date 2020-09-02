@@ -68,8 +68,6 @@ class ComposeEmailsState extends BState<ComposeEmails> {
       setState(() => widget.emails.add(email));
     }
     composeTypeAheadFieldKey.currentState.reopen();
-
-
   }
 
   void _deleteEmail(String email) {
@@ -291,31 +289,35 @@ class ComposeEmailsState extends BState<ComposeEmails> {
                         ),
                       );
                     }).toList(),
-                    FitTextField(
-                      controller: widget.textCtrl,
-                      child: TextField(
-                        key: textFieldKey,
-                        enabled: widget.enable,
-                        focusNode: widget.focusNode,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      child: FitTextField(
                         controller: widget.textCtrl,
-                        autofocus: true,
-                        keyboardType: TextInputType.emailAddress,
-                        decoration: InputDecoration.collapsed(
-                          hintText: null,
-                        ),
-                        onChanged: (value) {
-                          if (widget.emails.isNotEmpty && value.isEmpty) {
-                            widget.textCtrl.text = " ";
-                            widget.textCtrl.selection =
-                                TextSelection.collapsed(offset: 1);
-                            _deleteEmail(widget.emails.last);
-                          } else if (value.length > 1 && value.endsWith(" ")) {
+                        child: TextField(
+                          key: textFieldKey,
+                          enabled: widget.enable,
+                          focusNode: widget.focusNode,
+                          controller: widget.textCtrl,
+                          autofocus: true,
+                          keyboardType: TextInputType.emailAddress,
+                          decoration: InputDecoration.collapsed(
+                            hintText: null,
+                          ),
+                          onChanged: (value) {
+                            if (widget.emails.isNotEmpty && value.isEmpty) {
+                              widget.textCtrl.text = " ";
+                              widget.textCtrl.selection =
+                                  TextSelection.collapsed(offset: 1);
+                              _deleteEmail(widget.emails.last);
+                            } else if (value.length > 1 &&
+                                value.endsWith(" ")) {
+                              onSubmit();
+                            }
+                          },
+                          onEditingComplete: () {
                             onSubmit();
-                          }
-                        },
-                        onEditingComplete: () {
-                          onSubmit();
-                        },
+                          },
+                        ),
                       ),
                     ),
                   ]),
