@@ -27,6 +27,7 @@ import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:theme/app_theme.dart';
 
 import 'components/mail_app_bar.dart';
 import 'components/mail_folder.dart';
@@ -312,8 +313,9 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
               MailBottomAppBar(selectedRoute: MailBottomAppBarRoutes.mail),
           floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
           floatingActionButton: AMFloatingActionButton(
-            child: Icon(
-              MdiIcons.pen,
+            child: IconTheme(
+              data: AppTheme.floatIconTheme,
+              child: Icon(MdiIcons.pen),
             ),
             onPressed: () => Navigator.pushNamed(context, ComposeRoute.name,
                 arguments: ComposeScreenArgs(
