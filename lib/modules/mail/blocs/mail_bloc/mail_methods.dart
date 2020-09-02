@@ -41,7 +41,7 @@ class MailMethods {
     _mailApi = new MailApi(user: user, account: account);
   }
 
-  final syncQueue = new List<String>();
+ static final syncQueue = new List<String>();
 
   bool get _isOffline => SettingsBloc.isOffline;
 
@@ -408,7 +408,6 @@ class MailMethods {
       arg.messagesInfo,
       arg.userLocalId,
       arg.account,
-      arg.folder,
     );
   }
 
@@ -545,6 +544,7 @@ class MailMethods {
   }
 
   void close() {
+    syncQueue.clear();
     _closed = true;
   }
 }

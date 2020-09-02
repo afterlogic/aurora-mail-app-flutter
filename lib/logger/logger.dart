@@ -59,7 +59,7 @@ class Logger {
   }
 
   log(Object text, [bool show = true]) {
-    final time = DateFormat("hh:mm:ss.ms").format(DateTime.now());
+    final time = DateFormat("hh:mm:ss.SSS").format(DateTime.now());
     if (show == true) print("[$time] $text");
     if (isRun) {
       buffer +=
