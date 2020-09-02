@@ -382,5 +382,6 @@
   "label_record_log_in_background": "Record log in background",
   "label_show_debug_view": "Show debug view",
   "hint_log_delete_record": "Are you sure you want to delete file {name}",
-  "hint_log_delete_all": "Are you sure you want to delete all logs"
+  "hint_log_delete_all": "Are you sure you want to delete all logs",
+  "label_enable_uploaded_message_counter": "Counter of uploaded message"
 }

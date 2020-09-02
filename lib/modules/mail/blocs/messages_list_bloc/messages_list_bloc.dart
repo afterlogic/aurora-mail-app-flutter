@@ -57,7 +57,7 @@ class MessagesListBloc extends Bloc<MessagesListEvent, MessagesListState> {
         stream,
         searchParams,
         isSent,
-        event.props.toString(),
+        event.props.toString() + event.currentFolder.fullNameHash,
         event.filter,
         event.currentFolder.fullNameRaw,
       );
@@ -68,7 +68,7 @@ class MessagesListBloc extends Bloc<MessagesListEvent, MessagesListState> {
         null,
         searchParams,
         false,
-        event.props.toString(),
+        event.props.toString() + event.currentFolder.fullNameHash,
         event.filter,
         event.currentFolder.fullNameRaw,
       );

@@ -15,15 +15,25 @@ class MailBloc extends Bloc<MailEvent, MailState> {
   MailMethods _methods;
   final User user;
   final Account account;
+  final updateMessageCounter = UpdateMessageCounter();
 
   MailBloc({this.user, this.account}) {
     assert(user != null);
-    _methods = new MailMethods(user: user, account: account);
+    _methods = new MailMethods(
+      user: user,
+      account: account,
+      updateMessageCounter: updateMessageCounter,
+    );
     BackgroundHelper.addOnEndAlarmObserver(true, onEndAlarm);
   }
 
   init(User user, Account account) {
-    _methods = new MailMethods(user: user, account: account);
+    _methods.close();
+    _methods = new MailMethods(
+      user: user,
+      account: account,
+      updateMessageCounter: updateMessageCounter,
+    );
   }
 
   Folder _selectedFolder;
@@ -157,16 +167,6 @@ class MailBloc extends Bloc<MailEvent, MailState> {
     final previous = state;
     try {
       final guid = _selectedFolder.guid;
-      final List<Folder> foldersWithInfo = await _methods.updateFoldersHash(
-        _selectedFolder,
-        forceCurrentFolderUpdate: true,
-      );
-
-      yield FoldersLoaded(
-        foldersWithInfo,
-        _selectedFolder,
-        _filter,
-      );
 
       _methods
           .syncFolders(guid: guid, syncSystemFolders: true)
@@ -262,5 +262,26 @@ class MailBloc extends Bloc<MailEvent, MailState> {
 
   Future<Message> getMessageByLocalId(int uid) {
     return _methods.getMessageByLocalId(uid);
+  }
+}
+
+class UpdateMessageCounter {
+  Folder folder;
+  int total;
+  int current;
+  Function onUpdate;
+
+  void empty() {
+      folder = null;
+      total = null;
+    current = null;
+    onUpdate?.call();
+  }
+
+  void update(Folder folder, int total, int current) {
+    this.folder = folder;
+    this.total = total;
+    this.current = current;
+    onUpdate?.call();
   }
 }

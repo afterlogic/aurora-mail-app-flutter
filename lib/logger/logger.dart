@@ -59,10 +59,11 @@ class Logger {
   }
 
   log(Object text, [bool show = true]) {
-    if (show == true) print(text);
+    final time = DateFormat("hh:mm:ss.ms").format(DateTime.now());
+    if (show == true) print("[$time] $text");
     if (isRun) {
       buffer +=
-          "[${DateFormat("hh:mm:ss.ms").format(DateTime.now())}] ${"$text".replaceAll("\n", newLine)}$newLine$newLine";
+          "[$time] ${"$text".replaceAll("\n", newLine)}$newLine$newLine";
       count++;
       if (onEdit != null) onEdit();
     }

@@ -123,8 +123,8 @@ class AuthMethods {
 
     final futures = [
       deleteUserRelatedData(user),
-      if(user.localId==currentUserId)
-      _cryptoStorage.deleteAll(),
+      if (_cryptoStorage != null && user.localId==currentUserId)
+        _cryptoStorage.deleteAll(),
       _authLocal.deleteSelectedUserLocalId(),
       if(user.localId==currentUserId)
       _authLocal.deleteSelectedAccountId(),

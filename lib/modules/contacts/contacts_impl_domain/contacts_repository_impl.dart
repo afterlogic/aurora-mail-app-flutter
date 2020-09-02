@@ -429,8 +429,6 @@ class ContactsRepositoryImpl implements ContactsRepository {
         _db.updateContacts(updatedContacts),
       ]);
     }
-
-    getContactsBodies([]);
   }
 
   // returns list of uuids to load
