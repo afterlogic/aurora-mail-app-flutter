@@ -3,6 +3,7 @@ import 'package:aurora_mail/background/background_helper.dart';
 import 'package:aurora_mail/database/accounts/accounts_dao.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/users/users_dao.dart';
+import 'package:aurora_mail/logger/logger.dart';
 import 'package:aurora_mail/main.dart';
 import 'package:aurora_mail/modules/auth/repository/auth_local_storage.dart';
 import 'package:device_id/device_id.dart';
@@ -62,7 +63,7 @@ class PushNotificationsManager {
 }
 
 Future<bool> messageHandler(Map<dynamic, dynamic> message) async {
-  print(message);
+  logger.log(message);
   WidgetsFlutterBinding.ensureInitialized();
   final localStorage = AuthLocalStorage();
 
