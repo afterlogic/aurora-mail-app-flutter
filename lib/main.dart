@@ -78,14 +78,15 @@ Future<bool> onAlarm({
   ApiInterceptor interceptor;
   Logger isolatedLogger = logger;
 
-  if (BackgroundHelper.isBackground && isDebug) {
+  if (isDebug) {
     interceptor = ApiInterceptor();
     isolatedLogger = Logger.isolated("Background_sync", interceptor);
     isolatedLogger.start();
   }
 
   var hasUpdate = false;
-  if (!updateFromNotification.contains(null) && !updateFromNotification.contains(data?.to)) {
+  if (!updateFromNotification.contains(null) &&
+      !updateFromNotification.contains(data?.to)) {
     updateFromNotification.add(data?.to);
     try {
       BackgroundHelper.onStartAlarm();
@@ -99,13 +100,13 @@ Future<bool> onAlarm({
           )
           .timeout(Duration(seconds: kDebugMode ? 360 : 30));
     } catch (e, s) {
-      isolatedLogger?.log("onAlarm exeption $e");
+      isolatedLogger.error(e, s);
       print(s);
     }
     updateFromNotification.remove(data?.to);
   }
   BackgroundHelper.onEndAlarm(hasUpdate);
-  if (isDebug && BackgroundHelper.isBackground) {
+  if (isDebug) {
     isolatedLogger?.save();
   }
   await AlarmService.endAlarm(hasUpdate);
