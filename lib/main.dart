@@ -72,7 +72,6 @@ Set<String> updateFromNotification = {};
 Future<bool> onAlarm({
   bool showNotification = true,
   NotificationData data,
-  Future Function(bool) onSuccess,
 }) async {
   WidgetsFlutterBinding.ensureInitialized();
   final isDebug = await DebugLocalStorage().getBackgroundRecord();
@@ -86,12 +85,10 @@ Future<bool> onAlarm({
   }
 
   var hasUpdate = false;
-  if (!updateFromNotification.contains(null) &&
-      !updateFromNotification.contains(data?.to)) {
+  if (!updateFromNotification.contains(null) && !updateFromNotification.contains(data?.to)) {
     updateFromNotification.add(data?.to);
     try {
       BackgroundHelper.onStartAlarm();
-
       hasUpdate = await BackgroundSync()
           .sync(
             BackgroundHelper.isBackground,
@@ -101,15 +98,9 @@ Future<bool> onAlarm({
             interceptor,
           )
           .timeout(Duration(seconds: kDebugMode ? 360 : 30));
-      if (onSuccess != null) {
-        await onSuccess(true);
-      }
     } catch (e, s) {
       isolatedLogger?.log("onAlarm exeption $e");
       print(s);
-      if (onSuccess != null) {
-        await onSuccess(false);
-      }
     }
     updateFromNotification.remove(data?.to);
   }
