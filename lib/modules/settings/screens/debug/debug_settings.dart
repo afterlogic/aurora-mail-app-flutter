@@ -115,7 +115,14 @@ class _DebugSettingState extends BState<DebugSetting> {
     if (!await dir.exists()) {
       return [];
     }
-    final files = await dir.listSync().toList();
+    var files = (await (await dir.list()).toList());
+    Map<FileSystemEntity, FileStat> statMap = {};
+    for (var file in files) {
+      final stat = await file.stat();
+      statMap[file] = stat;
+    }
+    files.sort((a, b) =>
+        a is Directory ? 0 : statMap[a].changed.compareTo(statMap[b].changed));
     final widgets = <Widget>[];
     for (var value in files) {
       if (value is Directory) {
@@ -130,7 +137,7 @@ class _DebugSettingState extends BState<DebugSetting> {
 
   deleteAll() async {
     final dir = Directory(await logger.logDir());
-   await _delete(dir);
+    await _delete(dir);
     init();
   }
 
