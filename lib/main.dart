@@ -90,15 +90,16 @@ Future<bool> onAlarm({
     updateFromNotification.add(data?.to);
     try {
       BackgroundHelper.onStartAlarm();
-      hasUpdate = await BackgroundSync()
-          .sync(
-            BackgroundHelper.isBackground,
-            showNotification,
-            data,
-            isolatedLogger,
-            interceptor,
-          )
-          .timeout(Duration(seconds: kDebugMode ? 360 : 30));
+      final future = BackgroundSync().sync(
+        BackgroundHelper.isBackground,
+        showNotification,
+        data,
+        isolatedLogger,
+        interceptor,
+      );
+      if (BackgroundHelper.isBackground)
+        future.timeout(Duration(seconds: Platform.isIOS ? 30 : 60));
+      hasUpdate = await future;
     } catch (e, s) {
       isolatedLogger.error(e, s);
       print(s);

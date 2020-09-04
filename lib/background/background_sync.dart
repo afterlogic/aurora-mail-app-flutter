@@ -85,7 +85,7 @@ class BackgroundSync {
       final delay = (now - start) / 1000;
       isolatedLogger.log("MailSync: sync end in ${delay.toStringAsFixed(1)} s");
     } catch (e, s) {
-      isolatedLogger.error(e,s);
+      isolatedLogger.error(e, s);
       Crashlytics.instance.recordFlutterError(
         FlutterErrorDetails(exception: e, stack: s),
       );
@@ -216,6 +216,7 @@ class BackgroundSync {
         final rawInfo = await mailApi.getMessagesInfo(
           folderName: folderToUpdate.fullNameRaw,
           search: "date:$periodStr/",
+          useThreading: false,
         );
 
         List<MessageInfo> newMessagesInfo =
