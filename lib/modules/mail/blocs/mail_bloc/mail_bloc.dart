@@ -108,6 +108,7 @@ class MailBloc extends Bloc<MailEvent, MailState> {
         yield FoldersEmpty();
       }
     } catch (err, s) {
+      logger.error(err,s);
       yield FoldersError(formatError(err, s));
       if (previous is FoldersLoaded) {
         yield previous;
@@ -156,6 +157,8 @@ class MailBloc extends Bloc<MailEvent, MailState> {
 
       yield FoldersLoaded(newFolders, _selectedFolder, _filter);
     } catch (err, s) {
+      logger.error(err,s);
+
       yield FoldersError(formatError(err, s));
       if (previous is FoldersLoaded) {
         yield previous;
@@ -178,6 +181,8 @@ class MailBloc extends Bloc<MailEvent, MailState> {
             event.completer?.complete();
           });
     } catch (err, s) {
+      logger.error(err,s);
+
       yield FoldersError(formatError(err, s));
       if (previous is FoldersLoaded) {
         yield previous;
@@ -204,6 +209,8 @@ class MailBloc extends Bloc<MailEvent, MailState> {
       final guid = event.folder.guid;
       _methods.syncFolders(guid: guid).then((v) => add(UpdateFolders()));
     } catch (err, s) {
+      logger.error(err,s);
+
       yield FoldersError(formatError(err, s));
     }
   }
@@ -228,6 +235,8 @@ class MailBloc extends Bloc<MailEvent, MailState> {
         _filter,
       );
     } catch (err, s) {
+      logger.error(err,s);
+
       yield FoldersError(formatError(err, s));
     }
   }

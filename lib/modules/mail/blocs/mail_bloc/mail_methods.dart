@@ -264,7 +264,8 @@ class MailMethods {
     if (syncQueue.isNotEmpty && queueLengthBeforeInsert == 0) {
       try {
         await _setMessagesInfoToFolder();
-      } catch (e) {
+      } catch (err, s) {
+        logger.error(err, s);
         syncQueue.clear();
         rethrow;
       }
@@ -517,7 +518,8 @@ class MailMethods {
         uids: messages.map((m) => m.uid).toList(),
         isSeen: isSeen,
       );
-    } catch (err) {
+    } catch (err, s) {
+      logger.error(err, s);
       updateMessages(!isSeen);
     }
   }
@@ -557,7 +559,8 @@ class MailMethods {
         uids: messages.map((m) => m.uid).toList(),
         isStarred: isStarred,
       );
-    } catch (err) {
+    } catch (err, s) {
+      logger.error(err, s);
       updateMessages(!isStarred);
     }
   }

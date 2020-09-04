@@ -58,12 +58,22 @@ class Logger {
     }
   }
 
+  error(Object text, StackTrace stackTrace, [bool show = true]) {
+    final time = DateFormat("hh:mm:ss.SSS").format(DateTime.now());
+    text = "____________________________\n\nError:${text}\n${stackTrace.toString()}\n\n____________________________";
+    if (show == true) print("[$time] $text");
+    if (isRun) {
+      buffer += "[$time] ${"$text".replaceAll("\n", newLine)}$newLine$newLine";
+      count++;
+      if (onEdit != null) onEdit();
+    }
+  }
+
   log(Object text, [bool show = true]) {
     final time = DateFormat("hh:mm:ss.SSS").format(DateTime.now());
     if (show == true) print("[$time] $text");
     if (isRun) {
-      buffer +=
-          "[$time] ${"$text".replaceAll("\n", newLine)}$newLine$newLine";
+      buffer += "[$time] ${"$text".replaceAll("\n", newLine)}$newLine$newLine";
       count++;
       if (onEdit != null) onEdit();
     }

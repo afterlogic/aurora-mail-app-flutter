@@ -55,18 +55,22 @@ class BackgroundSync {
       for (final user in users) {
         var accounts = await _accountsDao.getAccounts(user.localId);
         if (notification != null) {
-          accounts = accounts.where((item) => item.email == notification.to).toList();
+          accounts =
+              accounts.where((item) => item.email == notification.to).toList();
         }
         if (accounts.isEmpty) {
           continue;
         }
         final newMessages = await ((notification != null && isBackground)
             ? _getNewMessages(user, accounts, interceptor)
-            : _updateAccountMessages(isBackground, user, accounts, interceptor));
+            : _updateAccountMessages(
+                isBackground, user, accounts, interceptor));
         if (newMessages.isNotEmpty) {
           if (showNotification == true) {
-            newMessages.sort((a, b) => a.timeStampInUTC.compareTo(b.timeStampInUTC));
-            isolatedLogger.log("MailSync: ${newMessages.length} new message(s)");
+            newMessages
+                .sort((a, b) => a.timeStampInUTC.compareTo(b.timeStampInUTC));
+            isolatedLogger
+                .log("MailSync: ${newMessages.length} new message(s)");
             for (final message in newMessages) {
               await _showNewMessage(message, user);
             }
@@ -80,11 +84,8 @@ class BackgroundSync {
       final now = DateTime.now().millisecondsSinceEpoch;
       final delay = (now - start) / 1000;
       isolatedLogger.log("MailSync: sync end in ${delay.toStringAsFixed(1)} s");
-    }
-//    on SocketException {
-//
-//    }
-    catch (e, s) {
+    } catch (e, s) {
+      isolatedLogger.error(e, s);
       Crashlytics.instance.recordFlutterError(
         FlutterErrorDetails(exception: e, stack: s),
       );
@@ -101,15 +102,16 @@ class BackgroundSync {
     final newMessages = new List<Message>();
     for (var account in accounts) {
       final inboxFolders = await (isBackground
-          ? _foldersDao
-              .getByType([Folder.getNumberFromFolderType(FolderType.inbox)], account.localId)
-          : _foldersDao
-              .getAllFolders(account.localId)
-              .then((value) => value.where((element) => element.isSystemFolder).toList()));
+          ? _foldersDao.getByType(
+              [Folder.getNumberFromFolderType(FolderType.inbox)],
+              account.localId)
+          : _foldersDao.getAllFolders(account.localId).then((value) =>
+              value.where((element) => element.isSystemFolder).toList()));
       if (inboxFolders.isEmpty) continue;
 
       final foldersToUpdate =
-          (await _updateFolderHash(inboxFolders, user, account, interceptor)).toList();
+          (await _updateFolderHash(inboxFolders, user, account, interceptor))
+              .toList();
 
       if (account == null) return new List<Message>();
 
@@ -135,13 +137,16 @@ class BackgroundSync {
         final rawInfo = await mailApi.getMessagesInfo(
             folderName: folderToUpdate.fullNameRaw, search: "date:$periodStr/");
 
-        List<MessageInfo> newMessagesInfo = MessageInfo.flattenMessagesInfo(rawInfo);
+        List<MessageInfo> newMessagesInfo =
+            MessageInfo.flattenMessagesInfo(rawInfo);
 
-        final result = await Folders.calculateMessagesInfoDiffAsync(messagesInfo, newMessagesInfo);
+        final result = await Folders.calculateMessagesInfoDiffAsync(
+            messagesInfo, newMessagesInfo);
 
         if (result.addedMessages.isEmpty) break;
 
-        await _mailDao.deleteMessages(result.removedUids, folderToUpdate.fullNameRaw);
+        await _mailDao.deleteMessages(
+            result.removedUids, folderToUpdate.fullNameRaw);
 
         await _mailDao.updateMessagesFlags(result.infosToUpdateFlags);
         logger.log("start add empty message");
@@ -154,7 +159,8 @@ class BackgroundSync {
           uids: uids.toList(),
         );
 
-        final newMessageBodies = Mail.getMessageObjFromServerAndUpdateInfoHasBody(
+        final newMessageBodies =
+            Mail.getMessageObjFromServerAndUpdateInfoHasBody(
           rawBodies,
           await _getMessageInfoWithNotBody(result.addedMessages),
           user.localId,
@@ -171,8 +177,8 @@ class BackgroundSync {
             .where((m) => !m.flags.contains("\\seen"))
             .map((e) => e.uid)
             .toSet();
-        newMessages
-            .addAll(newMessageBodies.where((element) => notSeenMessagesUids.contains(element.uid)));
+        newMessages.addAll(newMessageBodies
+            .where((element) => notSeenMessagesUids.contains(element.uid)));
       }
     }
     return newMessages;
@@ -186,8 +192,8 @@ class BackgroundSync {
     final newMessages = new List<Message>();
     for (var account in accounts) {
       if (account == null) continue;
-      final inboxFolders = await _foldersDao
-          .getByType([Folder.getNumberFromFolderType(FolderType.inbox)], account.localId);
+      final inboxFolders = await _foldersDao.getByType(
+          [Folder.getNumberFromFolderType(FolderType.inbox)], account.localId);
       if (inboxFolders.isEmpty) continue;
 
       for (LocalFolder folderToUpdate in inboxFolders) {
@@ -210,9 +216,11 @@ class BackgroundSync {
         final rawInfo = await mailApi.getMessagesInfo(
           folderName: folderToUpdate.fullNameRaw,
           search: "date:$periodStr/",
+          useThreading: false,
         );
 
-        List<MessageInfo> newMessagesInfo = MessageInfo.flattenMessagesInfo(rawInfo);
+        List<MessageInfo> newMessagesInfo =
+            MessageInfo.flattenMessagesInfo(rawInfo);
 
         final result = await Folders.calculateMessagesInfoDiffAsync(
           messagesInfo,
@@ -239,7 +247,8 @@ class BackgroundSync {
           messagesInfo,
           newMessagesInfo,
         );
-        final newMessageBodies = Mail.getMessageObjFromServerAndUpdateInfoHasBody(
+        final newMessageBodies =
+            Mail.getMessageObjFromServerAndUpdateInfoHasBody(
           rawBodies,
           await _getMessageInfoWithNotBody(result.addedMessages),
           user.localId,
@@ -256,14 +265,15 @@ class BackgroundSync {
             .where((m) => !m.flags.contains("\\seen"))
             .map((e) => e.uid)
             .toSet();
-        newMessages
-            .addAll(newMessageBodies.where((element) => notSeenMessagesUids.contains(element.uid)));
+        newMessages.addAll(newMessageBodies
+            .where((element) => notSeenMessagesUids.contains(element.uid)));
       }
     }
     return newMessages;
   }
 
-  Future<List<Message>> _getMessageInfoWithNotBody(List<MessageInfo> messagesInfo) async {
+  Future<List<Message>> _getMessageInfoWithNotBody(
+      List<MessageInfo> messagesInfo) async {
     final List<Message> messages = [];
 
     final length = messagesInfo.length;
@@ -311,8 +321,8 @@ class BackgroundSync {
       account: account,
       interceptor: interceptor,
     );
-    final newFolders =
-        await _foldersApi.getRelevantFoldersInformation(folders.map((e) => e.fullNameRaw).toList());
+    final newFolders = await _foldersApi.getRelevantFoldersInformation(
+        folders.map((e) => e.fullNameRaw).toList());
     final outFolder = <LocalFolder>[];
     newFolders.keys.forEach((fName) {
       final updatedFolder = newFolders[fName];
