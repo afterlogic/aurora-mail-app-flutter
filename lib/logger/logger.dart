@@ -59,6 +59,7 @@ class Logger {
   }
 
   error(Object text, StackTrace stackTrace, [bool show = true]) {
+    stackTrace??=StackTrace.current;
     final time = DateFormat("hh:mm:ss.SSS").format(DateTime.now());
     text = "____________________________\n\nError:${text}\n${stackTrace.toString()}\n\n____________________________";
     if (show == true) print("[$time] $text");
@@ -79,10 +80,12 @@ class Logger {
     }
   }
 
-  static Logger isolated(String tag, ApiInterceptor apiInterceptor) {
-    return Logger._(tag, apiInterceptor);
+  static Logger backgroundSync(ApiInterceptor apiInterceptor) {
+    return Logger._("Background_sync", apiInterceptor);
   }
-
+  static errorLog(Object error,StackTrace stackTrace) {
+    return Logger._("Error")..start()..error(error, stackTrace)..save();
+  }
   start() {
     isRun = true;
     if (onEdit != null) onEdit();

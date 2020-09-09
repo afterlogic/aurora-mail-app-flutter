@@ -80,13 +80,12 @@ Future<bool> onAlarm({
 
   if (isDebug) {
     interceptor = ApiInterceptor();
-    isolatedLogger = Logger.isolated("Background_sync", interceptor);
+    isolatedLogger = Logger.backgroundSync(interceptor);
     isolatedLogger.start();
   }
 
   var hasUpdate = false;
-  if (!updateFromNotification.contains(null) &&
-      !updateFromNotification.contains(data?.to)) {
+  if (!updateFromNotification.contains(null) && !updateFromNotification.contains(data?.to)) {
     updateFromNotification.add(data?.to);
     try {
       BackgroundHelper.onStartAlarm();

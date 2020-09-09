@@ -94,9 +94,11 @@ Future<bool> messageHandler(Map<dynamic, dynamic> message) async {
         showNotification: !notificationFromPush,
         data: notification,
       );
-    } catch (e) {
-      print(e);
+    } catch (e, s) {
+      Logger.errorLog(e, s);
     }
+  }else{
+    Logger.errorLog("handle push with not user", null);
   }
   return false;
 }
