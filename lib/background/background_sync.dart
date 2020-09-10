@@ -46,7 +46,7 @@ class BackgroundSync {
     if ((await _authLocal.getSelectedUserLocalId()) == null) {
       return false;
     }
-    isolatedLogger.log("MAIL_SYNC: sync start");
+    isolatedLogger.log("MAIL_SYNC: sync start isBackground:$isBackground");
     var hasUpdate = false;
 
     try {
@@ -158,11 +158,14 @@ class BackgroundSync {
           folderName: folderToUpdate.fullNameRaw,
           uids: uids.toList(),
         );
-
+        logger.log(rawBodies);
+        final messageBody =
+            await _getMessageInfoWithNotBody(result.addedMessages);
+        logger.log(messageBody);
         final newMessageBodies =
             Mail.getMessageObjFromServerAndUpdateInfoHasBody(
           rawBodies,
-          await _getMessageInfoWithNotBody(result.addedMessages),
+          messageBody,
           user.localId,
           account,
         );
@@ -247,10 +250,14 @@ class BackgroundSync {
           messagesInfo,
           newMessagesInfo,
         );
+        logger.log(rawBodies);
+        final messageBody =
+            await _getMessageInfoWithNotBody(result.addedMessages);
+        logger.log(messageBody);
         final newMessageBodies =
             Mail.getMessageObjFromServerAndUpdateInfoHasBody(
           rawBodies,
-          await _getMessageInfoWithNotBody(result.addedMessages),
+          messageBody,
           user.localId,
           account,
         );
