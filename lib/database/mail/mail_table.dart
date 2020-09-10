@@ -201,16 +201,15 @@ class Mail extends Table {
 
       try {
         messageInfo = messageInfoMap[raw["Uid"]];
+        if (messageInfo == null) return;
       } catch (err) {
         throw Exception("Couldn't find message: ${raw["Uid"]}");
       }
-      final toToDisplay = (raw["To"] != null &&
-              raw["To"]["@Collection"]?.isNotEmpty == true)
+      final toToDisplay = (raw["To"] != null && raw["To"]["@Collection"]?.isNotEmpty == true)
           ? raw["To"]["@Collection"]
               ?.map(
-                (item) => item["DisplayName"]?.isNotEmpty == true
-                    ? item["DisplayName"]
-                    : item["Email"],
+                (item) =>
+                    item["DisplayName"]?.isNotEmpty == true ? item["DisplayName"] : item["Email"],
               )
               ?.join(", ") as String
           : (raw["CC"] != null && raw["CC"]["@Collection"]?.isNotEmpty == true)
@@ -246,8 +245,7 @@ class Mail extends Table {
         textSize: raw["TextSize"] as int,
         truncated: raw["Truncated"] as bool,
         internalTimeStampInUTC: raw["InternalTimeStampInUTC"] as int,
-        receivedOrDateTimeStampInUTC:
-            raw["ReceivedOrDateTimeStampInUTC"] as int,
+        receivedOrDateTimeStampInUTC: raw["ReceivedOrDateTimeStampInUTC"] as int,
         timeStampInUTC: raw["TimeStampInUTC"] as int,
         toToDisplay: toToDisplay,
         fromToDisplay: fromToDisplay,
@@ -272,16 +270,13 @@ class Mail extends Table {
         headers: raw["Headers"] as String,
         inReplyTo: raw["InReplyTo"] as String,
         references: raw["References"] as String,
-        readingConfirmationAddressee:
-            raw["ReadingConfirmationAddressee"] as String,
+        readingConfirmationAddressee: raw["ReadingConfirmationAddressee"] as String,
         htmlBody: raw["Html"] != null && (raw["Html"] as String).isNotEmpty
             ? raw["Html"] as String
             : raw["Plain"] as String,
-        rawBody:
-            raw["PlainRaw"] != null && (raw["PlainRaw"] as String).isNotEmpty
-                ? raw["PlainRaw"] as String
-                : MailUtils.htmlToPlain(
-                    (raw["HtmlRaw"] ?? raw["Html"] ?? "") as String),
+        rawBody: raw["PlainRaw"] != null && (raw["PlainRaw"] as String).isNotEmpty
+            ? raw["PlainRaw"] as String
+            : MailUtils.htmlToPlain((raw["HtmlRaw"] ?? raw["Html"] ?? "") as String),
         bodyForSearch: _htmlToTextSearch(
             ((((raw["HtmlRaw"] ?? raw["Html"]) as String)?.isNotEmpty == true
                     ? raw["Html"]
@@ -292,11 +287,9 @@ class Mail extends Table {
         safety: raw["Safety"] as bool,
         hasExternals: raw["HasExternals"] as bool,
         foundedCIDsInJson: _encode(raw["FoundedCIDs"]),
-        foundedContentLocationUrlsInJson:
-            _encode(raw["FoundedContentLocationUrls"]),
+        foundedContentLocationUrlsInJson: _encode(raw["FoundedContentLocationUrls"]),
         attachmentsInJson: _encode(raw["Attachments"]),
-        attachmentsForSearch:
-            _getAttachmentsForSearch(raw["Attachments"] as Map),
+        attachmentsForSearch: _getAttachmentsForSearch(raw["Attachments"] as Map),
         customInJson: _encode(raw["Custom"]),
         isHtml: (raw["Html"] as String)?.isNotEmpty == true,
         hasBody: true,
@@ -310,8 +303,7 @@ class Mail extends Table {
 
   static String _htmlToTextSearch(String html) {
     return html
-        .replaceAllMapped(
-            RegExp("(([^>]{1})<div>)"), (math) => '${math.group(2)} ')
+        .replaceAllMapped(RegExp("(([^>]{1})<div>)"), (math) => '${math.group(2)} ')
         .replaceAllMapped(RegExp('(<a [^>]*href="([^"]*?)"[^>]*>(.*?)<\/a>)'),
             (math) => '${math.group(1)} (${math.group(2)})')
         .replaceAll(RegExp("(<style[^>]*>[^<]*<\/style>)"), ' ')
@@ -353,8 +345,7 @@ class Mail extends Table {
 
   static String _getAttachmentsForSearch(Map attachments) {
     if (attachments == null) return "";
-    final names =
-        (attachments["@Collection"] as List).map((a) => a["FileName"]);
+    final names = (attachments["@Collection"] as List).map((a) => a["FileName"]);
     return names.join(SEARCH_SEPARATOR);
   }
 }
