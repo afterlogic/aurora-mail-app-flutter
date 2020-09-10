@@ -86,6 +86,9 @@ class Logger {
   static errorLog(Object error,StackTrace stackTrace) {
     return Logger._("Error")..start()..error(error, stackTrace)..save();
   }
+  static notifications(Object value) {
+    return Logger._("Notifications")..start()..log(value)..save();
+  }
   start() {
     isRun = true;
     if (onEdit != null) onEdit();

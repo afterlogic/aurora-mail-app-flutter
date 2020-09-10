@@ -63,8 +63,8 @@ class PushNotificationsManager {
 }
 
 Future<bool> messageHandler(Map<dynamic, dynamic> message) async {
-  logger.log(message);
   WidgetsFlutterBinding.ensureInitialized();
+  Logger.notifications(message);
   final localStorage = AuthLocalStorage();
 
   if ((await localStorage.getSelectedUserLocalId()) != null) {
