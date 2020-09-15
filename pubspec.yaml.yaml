@@ -99,7 +99,9 @@ dependencies:
   flutter_secure_storage: 3.3.1+1
   # if: cryptoEnable
   crypto_stream:
-    git: https://github.com/afterlogic/flutter_crypto_stream
+    git:
+      url: https://github.com/afterlogic/flutter_crypto_stream
+      ref: master
   crypto_storage_impl:
     path: module/crypto/crypto_storage_impl
   crypto_worker_impl:

@@ -17,7 +17,9 @@ dependencies:
   crypto_storage:
     path: ../crypto_storage
   crypto_stream:
-    git: https://github.com/afterlogic/flutter_crypto_stream
+    git:
+      url: https://github.com/afterlogic/flutter_crypto_stream
+      ref: master
   path_provider: ^1.6.0
 dev_dependencies:
   flutter_test:

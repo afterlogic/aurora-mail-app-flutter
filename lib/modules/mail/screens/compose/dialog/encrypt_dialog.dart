@@ -10,7 +10,6 @@ class EncryptDialog extends StatefulWidget {
 }
 
 class _EncryptDialogState extends BState<EncryptDialog> {
-  final _formKey = GlobalKey<FormState>();
   var _sign = false;
   var _encrypt = true;
 
@@ -66,12 +65,10 @@ class _EncryptDialogState extends BState<EncryptDialog> {
   }
 
   _signOrEncrypt() {
-    if (_formKey.currentState.validate()) {
       Navigator.pop(
         context,
         EncryptDialogResult(_sign, _encrypt),
       );
-    }
   }
 }
 
