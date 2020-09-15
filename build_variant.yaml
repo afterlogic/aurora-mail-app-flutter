@@ -10,6 +10,7 @@ _files:
   - lib/inject/modules/crypto_module.dart.temp
   - ios/Runner/Runner.entitlements.temp
   - ios/AppShareExtension/AppShareExtension.entitlements.temp
+  - ios/ExportOptions.plist.temp
 _copy:
   "{{main_logo}}": "android/app/src/main/res/drawable/main_logo.png"
   "{{_google_services}}": "android/app/google-services.json"

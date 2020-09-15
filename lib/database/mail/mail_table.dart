@@ -201,7 +201,6 @@ class Mail extends Table {
 
       try {
         messageInfo = messageInfoMap[raw["Uid"]];
-        if (messageInfo == null) return;
       } catch (err) {
         throw Exception("Couldn't find message: ${raw["Uid"]}");
       }

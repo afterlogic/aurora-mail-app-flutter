@@ -48,8 +48,7 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
     fields.add(mail.timeStampInUTC);
     fields.add(mail.folder);
 
-    var query =
-        "SELECT ${fields.map((item) => item.escapedName).join(",")} FROM ";
+    var query = "SELECT ${fields.map((item) => item.escapedName).join(",")} FROM ";
 
     query += "${mail.actualTableName} WHERE ";
     query += "${mail.accountEntityId.escapedName} = ? ";
@@ -92,8 +91,7 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
           query += "AND (${mail.timeStampInUTC.escapedName} > ?) ";
         }
         if (date.till != null) {
-          final till = DateTime(
-              date.till.year, date.till.month, date.till.day, 23, 59, 59);
+          final till = DateTime(date.till.year, date.till.month, date.till.day, 23, 59, 59);
 
           params.add(
             Variable.withInt(till.millisecondsSinceEpoch ~/ 1000),
@@ -138,9 +136,7 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
     params.add(Variable.withInt(limit));
     params.add(Variable.withInt(offset));
 
-    return customSelectQuery(query, variables: params, readsFrom: {mail})
-        .watch()
-        .map((list) {
+    return customSelectQuery(query, variables: params, readsFrom: {mail}).watch().map((list) {
       return list.map((item) {
         return Message.fromData(item.data, db);
       }).toList();
@@ -148,8 +144,7 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
   }
 
   Future<Message> getMessage(int localId) {
-    return (select(mail)..where((item) => item.localId.equals(localId)))
-        .getSingle();
+    return (select(mail)..where((item) => item.localId.equals(localId))).getSingle();
   }
 
   Future<void> fillMessage(List<Message> newMessages) async {
@@ -165,8 +160,8 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
   Future<void> updateMessagesFlags(List<MessageInfo> infos) async {
     return transaction(() async {
       for (final info in infos) {
-        await (update(mail)..where((m) => m.uid.equals(info.uid))).write(
-            new MailCompanion(flagsInJson: Value(json.encode(info.flags))));
+        await (update(mail)..where((m) => m.uid.equals(info.uid)))
+            .write(new MailCompanion(flagsInJson: Value(json.encode(info.flags))));
       }
     });
   }
@@ -187,11 +182,9 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
     return (delete(mail)..where((m) => m.folder.equals(folderRawName))).go();
   }
 
-  Future<int> deleteMessagesFromRemovedFolders(
-      List<String> removedFoldersRawNames) async {
-    final deletedMessages = await (delete(mail)
-          ..where((m) => isIn(m.folder, removedFoldersRawNames)))
-        .go();
+  Future<int> deleteMessagesFromRemovedFolders(List<String> removedFoldersRawNames) async {
+    final deletedMessages =
+        await (delete(mail)..where((m) => isIn(m.folder, removedFoldersRawNames))).go();
 
     print("deleted messages from removed folders: $deletedMessages");
 
@@ -203,15 +196,10 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
   }
 
   Future<List<Message>> getMessageWithNotBody(List<int> uids) {
-    var query = "SELECT * FROM ${mail.actualTableName} WHERE ";
-
-    query += "${mail.uid.escapedName} IN ";
-    query += "(${uids.join(", ")}) ";
-    query += "AND ${mail.hasBody.escapedName} = 0 ";
-
-    return customSelectQuery(query, readsFrom: {mail}).get().then((response) {
-      return response.map((item) => Message.fromData(item.data, db)).toList();
-    });
+    return (select(mail)
+          ..where((tbl) => tbl.uid.isIn(uids))
+          ..where((tbl) => tbl.hasBody.equals(false)))
+        .get();
   }
 
   Future addEmptyMessage(
@@ -221,24 +209,23 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
     String folder,
   ) {
     final uniqueUidInFolder = "${account.entityId}${account.localId}$folder";
-
+    final messages = messagesInfo.map((messageInfo) {
+      return Message(
+        folder: folder,
+        localId: null,
+        accountEntityId: account.entityId,
+        userLocalId: user.localId,
+        uniqueUidInFolder: "$uniqueUidInFolder${messageInfo.uid}",
+        uid: messageInfo.uid,
+        parentUid: messageInfo.parentUid,
+        hasThread: messageInfo.hasThread,
+        flagsInJson: json.encode(messageInfo.flags),
+        hasBody: false,
+        htmlBody: null,
+        rawBody: null,
+      );
+    }).toList();
     return batch((bath) {
-      final messages = messagesInfo.map((messageInfo) {
-        return Message(
-          folder: folder,
-          localId: null,
-          accountEntityId: account.entityId,
-          userLocalId: user.localId,
-          uniqueUidInFolder: "$uniqueUidInFolder${messageInfo.uid}",
-          uid: messageInfo.uid,
-          parentUid: messageInfo.parentUid,
-          hasThread: messageInfo.hasThread,
-          flagsInJson: json.encode(messageInfo.flags),
-          hasBody: false,
-          htmlBody: null,
-          rawBody: null,
-        );
-      }).toList();
       bath.insertAll(
         mail,
         messages,
@@ -248,9 +235,7 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
   }
 
   Future<Message> getMessageByLocalId(int uid) {
-    return (select(mail)..where((item) => item.localId.equals(uid)))
-        .get()
-        .then((value) {
+    return (select(mail)..where((item) => item.localId.equals(uid))).get().then((value) {
       if (value.isNotEmpty) {
         return value.last;
       } else {

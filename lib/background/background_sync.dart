@@ -242,7 +242,7 @@ class BackgroundSync {
           uids: uids.toList(),
         );
 
-        _foldersDao.updateFolder(
+       await _foldersDao.updateFolder(
           FoldersCompanion(needsInfoUpdate: Value(true)),
           folderToUpdate.guid,
         );
