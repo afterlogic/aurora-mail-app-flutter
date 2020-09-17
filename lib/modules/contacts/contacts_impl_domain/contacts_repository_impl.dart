@@ -30,7 +30,6 @@ class ContactsRepositoryImpl implements ContactsRepository {
   final _storagesCtrl = new StreamController<List<ContactsStorage>>();
   final _groupCtrl = new StreamController<List<ContactsGroup>>();
 
-
   StreamController<List<int>> _currentlySyncingStorageCtrl;
 
   ContactsRepositoryImpl({
@@ -391,76 +390,93 @@ class ContactsRepositoryImpl implements ContactsRepository {
     final storages = await _db.getStorages(_userLocalId);
     final storageToSync = storages.firstWhere((i) => i.sqliteId == id);
 
-    final uuidsToFetch = _takeChunkForAdd(storageToSync.contactsInfo);
-    final uuidsToUpdate = _takeChunkForUpdate(storageToSync.contactsInfo);
+    final uuidsToFetch = forAdd(storageToSync.contactsInfo);
+    final uuidsToUpdate = forUpdate(storageToSync.contactsInfo);
 
     if (_syncQueue.isNotEmpty &&
         uuidsToFetch.isEmpty &&
         uuidsToUpdate.isEmpty) {
       _syncQueue.removeAt(0);
     } else {
-      final result = await Future.wait([
-        _network.getContactsByUids(
-          storage: storageToSync,
-          uuids: uuidsToFetch,
-          userLocalId: _userLocalId,
-        ),
-        _network.getContactsByUids(
-          storage: storageToSync,
-          uuids: uuidsToUpdate,
-          userLocalId: _userLocalId,
-        ),
-      ]);
-      final newContacts = result[0];
-      final updatedContacts = result[1];
-
-      storageToSync.contactsInfo.forEach((i) {
-        if (newContacts.where((c) => c.uuid == i.uuid).isNotEmpty) {
-          i.hasBody = true;
+      final futures = <Future>[];
+      futures.add(() async {
+        final length = uuidsToFetch.length;
+        var current = 0;
+        while (uuidsToFetch.isNotEmpty) {
+          final chunk = getChunk(uuidsToFetch);
+          current += chunk.length;
+          final newContacts = await _network.getContactsByUids(
+            storage: storageToSync,
+            uuids: chunk,
+            userLocalId: _userLocalId,
+          );
+          storageToSync.contactsInfo.forEach((i) {
+            if (newContacts.where((c) => c.uuid == i.uuid).isNotEmpty) {
+              i.hasBody = true;
+            }
+          });
+          await _db.addContacts(newContacts);
+          await _db.updateStorages([storageToSync], _userServerId);
         }
-        if (updatedContacts.where((c) => c.uuid == i.uuid).isNotEmpty) {
-          i.needsUpdate = false;
-        }
-      });
+        print(length == current);
+      }());
+      futures.add(() async {
+        while (uuidsToUpdate.isNotEmpty) {
+          final chunk = getChunk(uuidsToUpdate);
+          final updatedContacts = await _network.getContactsByUids(
+            storage: storageToSync,
+            uuids: chunk,
+            userLocalId: _userLocalId,
+          );
+          storageToSync.contactsInfo.forEach((i) {
+            if (updatedContacts.where((c) => c.uuid == i.uuid).isNotEmpty) {
+              i.needsUpdate = false;
+            }
+          });
 
-      await Future.wait([
-        _db.updateStorages([storageToSync], _userServerId),
-        _db.addContacts(newContacts),
-        _db.updateContacts(updatedContacts),
-      ]);
+          await _db.updateContacts(updatedContacts);
+          await _db.updateStorages([storageToSync], _userServerId);
+        }
+      }());
+
+      await Future.wait(futures);
+    }
+  }
+
+  List<String> getChunk(List<String> list) {
+    if (list.length <= CONTACTS_PER_CHUNK) {
+      final out = list.toList();
+      list.clear();
+      return out;
+    } else {
+      final out = list.getRange(0, CONTACTS_PER_CHUNK).toList();
+      list.removeRange(0, CONTACTS_PER_CHUNK);
+      return out;
     }
   }
 
   // returns list of uuids to load
-  List<String> _takeChunkForAdd(List<ContactInfoItem> infos) {
+  List<String> forAdd(List<ContactInfoItem> infos) {
     final uids = new List<String>();
-    int iteration = 0;
 
-    infos.where((i) => i.hasBody == false).forEach((i) {
-      if (iteration < CONTACTS_PER_CHUNK) {
+    infos.forEach((i) {
+      if (i.hasBody == false) {
         uids.add(i.uuid);
-        iteration++;
       }
     });
-
-    assert(iteration <= CONTACTS_PER_CHUNK);
 
     return uids;
   }
 
   // returns list of uuids to load
-  List<String> _takeChunkForUpdate(List<ContactInfoItem> infos) {
+  List<String> forUpdate(List<ContactInfoItem> infos) {
     final uids = new List<String>();
-    int iteration = 0;
 
-    infos.where((i) => i.needsUpdate == true).forEach((i) {
-      if (iteration < CONTACTS_PER_CHUNK) {
+    infos.forEach((i) {
+      if (i.needsUpdate == true) {
         uids.add(i.uuid);
-        iteration++;
       }
     });
-
-    assert(iteration <= CONTACTS_PER_CHUNK);
 
     return uids;
   }

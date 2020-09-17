@@ -390,25 +390,27 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
       ),
     ]);
 
-    final keyInfo = InkWell(
-      onTap: key == null
-          ? null
-          : () {
-              Navigator.pushNamed(
-                context,
-                PgpKeyRoute.name,
-                arguments: PgpKeyRouteArg(key, pgpSettingsBloc),
-              );
-            },
-      child: _buildInfoItem(
-        icon: MdiIcons.key,
-        label: i18n(context, "label_pgp_public_key"),
-        v: key == null
-            ? ""
-            : key.formatName() +
-                "\n${key.key?.length != null ? "(${key.length}-bit," : "("} ${key.isPrivate ? "private" : "public"})",
-      ),
-    );
+    final keyInfo = key == null
+        ? null
+        : InkWell(
+            onTap: key == null
+                ? null
+                : () {
+                    Navigator.pushNamed(
+                      context,
+                      PgpKeyRoute.name,
+                      arguments: PgpKeyRouteArg(key, pgpSettingsBloc),
+                    );
+                  },
+            child: _buildInfoItem(
+              icon: MdiIcons.key,
+              label: i18n(context, "label_pgp_public_key"),
+              v: key == null
+                  ? ""
+                  : key.formatName() +
+                      "\n${key.key?.length != null ? "(${key.length}-bit," : "("} ${key.isPrivate ? "private" : "public"})",
+            ),
+          );
 
     List<Widget> _buildGroups(List<String> groupUUIDs) {
       final widgets = <Widget>[];

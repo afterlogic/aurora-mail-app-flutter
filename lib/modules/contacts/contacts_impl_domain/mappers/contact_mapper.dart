@@ -141,6 +141,8 @@ class ContactMapper {
 
   static List<Contact> fromNetwork(List<dynamic> rawItems, int userLocalId) {
     return rawItems.map((i) {
+
+      final pgpPublicKey=i["PublicPgpKey"]??i["OpenPgpWebclient::PgpKey"];
       return new Contact(
         entityId: i["EntityId"] as int,
         userLocalId: userLocalId,
@@ -197,7 +199,7 @@ class ContactMapper {
         davContactsUid: i["DavContacts::UID"] as String,
         davContactsVCardUid: i["DavContacts::VCardUID"] as String,
         groupUUIDs: new List<String>.from(i["GroupUUIDs"] as List),
-        pgpPublicKey: i["OpenPgpWebclient::PgpKey"] as String,
+        pgpPublicKey:pgpPublicKey as String,
         autoSign: i["OpenPgpWebclient::PgpSignMessages"] as bool,
         autoEncrypt: i["OpenPgpWebclient::PgpEncryptMessages"] as bool,
       );
