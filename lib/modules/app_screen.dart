@@ -112,7 +112,7 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
 
   void _initApp() async {
     _authBloc.add(InitUserAndAccounts());
-
+    _authBloc.add(UpdateAccounts(null));
     final connectivity = new Connectivity();
 
     connectivity.checkConnectivity().then((res) {

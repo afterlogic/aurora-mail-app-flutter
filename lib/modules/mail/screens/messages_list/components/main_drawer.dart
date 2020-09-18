@@ -44,7 +44,7 @@ class _MainDrawerState extends BState<MainDrawer> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               InkWell(
-                onTap: (multiAccountEnable && authBloc.accounts.length>1)
+                onTap: (multiAccountEnable && authBloc.accounts.length > 1)
                     ? () {
                         _changeMode();
                       }
@@ -123,27 +123,38 @@ class _MainDrawerState extends BState<MainDrawer> {
   }
 
   Widget _buildAccounts(AuthBloc authBloc) {
-    Account current = authBloc.currentAccount;
-    List<Account> accounts = authBloc.accounts;
+    return BlocBuilder(
+        bloc: authBloc,
+        builder: (context, _) {
+          Account current = authBloc.currentAccount;
+          List<Account> accounts = authBloc.accounts;
 
-    final _accounts =
-        accounts.where((item) => item.email != current.email).toList();
-    return ListView.builder(
-      itemCount: _accounts.length,
-      itemBuilder: (_, i) {
-        final account = _accounts[i];
-        return InkWell(
-          onTap: () {
-            _changeMode();
-            authBloc.add(ChangeAccount(account));
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Text(account.email),
-          ),
-        );
-      },
-    );
+          final _accounts =
+          accounts.where((item) => item.email != current.email).toList();
+          return RefreshIndicator(
+            onRefresh: () {
+              final completer = Completer();
+              authBloc.add(UpdateAccounts(completer));
+              return completer.future;
+            },
+            child: ListView.builder(
+              itemCount: _accounts.length,
+              itemBuilder: (_, i) {
+                final account = _accounts[i];
+                return InkWell(
+                  onTap: () {
+                    _changeMode();
+                    authBloc.add(ChangeAccount(account));
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Text(account.email),
+                  ),
+                );
+              },
+            ),
+          );
+        });
   }
 
   void _changeMode() {

@@ -32,7 +32,8 @@ class InitializedUserAndAccounts extends AuthState {
   }) : assert(needsLogin != null);
 
   @override
-  List<Object> get props => [user, account, needsLogin,account,users];
+  List<Object> get props =>
+      [user, account, needsLogin, account, users, accounts, identity];
 }
 
 class ReceivedLastEmail extends AuthState {

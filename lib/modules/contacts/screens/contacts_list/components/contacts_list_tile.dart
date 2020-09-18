@@ -106,6 +106,7 @@ class ContactsListTile extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
+            if (contact.pgpPublicKey != null) Icon(MdiIcons.key),
             if (currentStorage != null &&
                 currentStorage.name == StorageNames.team &&
                 contact.viewEmail == authBloc.currentAccount.email)

@@ -123,11 +123,10 @@ class AuthMethods {
 
     final futures = [
       deleteUserRelatedData(user),
-      if (_cryptoStorage != null && user.localId==currentUserId)
+      if (_cryptoStorage != null && user.localId == currentUserId)
         _cryptoStorage.deleteAll(),
       _authLocal.deleteSelectedUserLocalId(),
-      if(user.localId==currentUserId)
-      _authLocal.deleteSelectedAccountId(),
+      if (user.localId == currentUserId) _authLocal.deleteSelectedAccountId(),
       _usersDao.deleteUser(user.localId),
       _accountsDao.deleteAccountsOfUser(user.localId),
     ];
@@ -176,13 +175,10 @@ class AuthMethods {
     }
   }
 
-  Future<AccountIdentity> updateIdentity(
+  Future<List<AccountIdentity>> updateIdentity(
       User user, Account account, List<Account> accounts) async {
     try {
       final identities = await _authApi.getIdentity(user);
-      await _accountIdentityDao.deleteByUser(user.serverId);
-      var currentIdentity =
-          identities.firstWhere((item) => item.isDefault, orElse: () => null);
 
       final accountsIdentity = accounts.map((item) {
         final identity = AccountIdentity(
@@ -195,33 +191,36 @@ class AuthMethods {
           signature: item.signature,
           entityId: item.entityId,
         );
-        if (identity.isDefault && item.entityId == account.entityId) {
-          currentIdentity = identity;
-        }
+
         return identity;
       });
       identities.addAll(accountsIdentity);
+
+      await _accountIdentityDao.deleteByUser(user.serverId);
       await _accountIdentityDao.set(identities);
-      return currentIdentity;
+      return identities;
     } catch (e, s) {
       print(s);
       print(e);
-      final identities = await getAccountIdentities(user, account);
-      return identities.firstWhere(
-            (item) => item.isDefault,
-            orElse: () => null,
-          ) ??
-          AccountIdentity(
-            email: account.email,
-            useSignature: account.useSignature,
-            idUser: account.idUser,
-            isDefault: true,
-            idAccount: account.accountId,
-            friendlyName: account.friendlyName,
-            signature: account.signature,
-            entityId: account.serverId,
-          );
+      return await getAccountIdentities(user, account);
     }
+  }
+
+  AccountIdentity getDefaultIdentity(
+      Account account, List<AccountIdentity> identities) {
+    return identities.firstWhere(
+      (item) => item.isDefault && item.entityId == account.entityId,
+      orElse: () => AccountIdentity(
+        email: account.email,
+        useSignature: account.useSignature,
+        idUser: account.idUser,
+        isDefault: true,
+        idAccount: account.accountId,
+        friendlyName: account.friendlyName,
+        signature: account.signature,
+        entityId: account.serverId,
+      ),
+    );
   }
 
   Future<List<AccountIdentity>> getAccountIdentities(

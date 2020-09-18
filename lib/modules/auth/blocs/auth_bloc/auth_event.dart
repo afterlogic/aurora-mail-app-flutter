@@ -56,6 +56,12 @@ class InitUserAndAccounts extends AuthEvent with AlwaysNonEqualObject {
   List<Object> get props => [completer];
 }
 
+class UpdateAccounts extends AuthEvent with AlwaysNonEqualObject {
+  final Completer completer;
+
+  UpdateAccounts(this.completer);
+}
+
 class GetLastEmail extends AuthEvent {}
 
 class SelectUser extends AuthEvent {

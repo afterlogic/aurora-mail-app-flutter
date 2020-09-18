@@ -177,7 +177,11 @@ class PgpSettingsMethods {
     try {
       final contacts = <Contact>[];
       for (var value in selectedContact) {
-        Contact contact = value.contact;
+        Contact contact = value?.contact ??
+            Contact.empty(
+              viewEmail: value.pgpKey.mail,
+              fullName: value.pgpKey.name,
+            );
         contacts.add(
           contact.copyWith(pgpPublicKey: value.key),
         );
@@ -185,6 +189,7 @@ class PgpSettingsMethods {
       await contactsDao.addKeyToContacts(
         contacts,
       );
+
     } catch (e) {
       print(e);
     }
