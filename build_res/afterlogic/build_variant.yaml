@@ -18,5 +18,5 @@ cryptoEnable: true
 selfDestructingEmail: true
 pushNotification: false
 
-_version: 2.0.0
+_version: 2.1.0
 supportLanguage: "en"

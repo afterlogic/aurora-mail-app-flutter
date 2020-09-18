@@ -4,7 +4,7 @@
 <dict>
     <key>provisioningProfiles</key>
     <dict>
-        <key>com.afterlogic.aurora.mail</key>
+        <key>com.afterlogic.aurora.mail.custom</key>
         <string>Runner</string>
     </dict>
     <key>method</key>
