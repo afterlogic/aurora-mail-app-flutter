@@ -30,7 +30,7 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
 
   @override
   Future<List<Contact>> getContactsByUids({
-    ContactsStorage storage,
+    String storageId,
     List<String> uuids,
     int userLocalId,
   }) async {
@@ -39,7 +39,7 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
     }
 
     final params = {
-      "Storage": storage.id,
+      "Storage": storageId,
       "Uids": uuids,
     };
 
@@ -203,7 +203,7 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
     return result as bool;
   }
 
-  Future<void> addKeyToContacts(List<Contact> contacts) async {
+  Future<List<String>> addKeyToContacts(List<Contact> contacts) async {
     final body = new WebMailApiBody(
       module: "OpenPgpWebclient",
       method: "AddPublicKeysToContacts",
@@ -222,7 +222,7 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
     );
 
     final result = await contactsModule.post(body);
-    return result as bool;
+    return (result as List).cast();
   }
 
   @override
