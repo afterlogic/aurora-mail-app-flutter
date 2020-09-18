@@ -22,7 +22,7 @@ abstract class ContactsNetworkService {
 
   /// Get contacts by their uuids
   Future<List<Contact>> getContactsByUids({
-    ContactsStorage storage,
+    String storageId,
     List<String> uuids,
     int userLocalId,
   });
@@ -45,7 +45,7 @@ abstract class ContactsNetworkService {
 
   Future<bool> deleteGroup(ContactsGroup group);
 
-  Future<void> addKeyToContacts(List<Contact> contacts);
+  Future<List<String>> addKeyToContacts(List<Contact> contacts);
 
   Future deleteContactKey(String mail);
 

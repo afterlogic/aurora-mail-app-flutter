@@ -16,7 +16,7 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
     await batch((b) => b.insertAll(
           contactsTable,
           newContacts,
-          mode: InsertMode.insertOrFail,
+          mode: InsertMode.insertOrReplace,
         ));
   }
 

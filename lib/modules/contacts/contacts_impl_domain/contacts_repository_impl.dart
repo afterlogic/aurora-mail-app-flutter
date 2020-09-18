@@ -194,10 +194,13 @@ class ContactsRepositoryImpl implements ContactsRepository {
   }
 
   Future<void> addKeyToContacts(List<Contact> contacts) async {
-    await _network.addKeyToContacts(contacts);
-    for (var contact in contacts) {
-      await _db.addKeyToContact(contact.viewEmail, contact.pgpPublicKey);
-    }
+    final uuid = await _network.addKeyToContacts(contacts);
+    final newContacts = await _network.getContactsByUids(
+      userLocalId: _userLocalId,
+      storageId: StorageNames.personal,
+      uuids: uuid,
+    );
+    await _db.addContacts(newContacts);
   }
 
   @override
@@ -406,7 +409,7 @@ class ContactsRepositoryImpl implements ContactsRepository {
           final chunk = getChunk(uuidsToFetch);
           current += chunk.length;
           final newContacts = await _network.getContactsByUids(
-            storage: storageToSync,
+            storageId: storageToSync.id,
             uuids: chunk,
             userLocalId: _userLocalId,
           );
@@ -424,7 +427,7 @@ class ContactsRepositoryImpl implements ContactsRepository {
         while (uuidsToUpdate.isNotEmpty) {
           final chunk = getChunk(uuidsToUpdate);
           final updatedContacts = await _network.getContactsByUids(
-            storage: storageToSync,
+            storageId: storageToSync.id,
             uuids: chunk,
             userLocalId: _userLocalId,
           );
