@@ -107,11 +107,21 @@ class AuthMethods {
   Future<List<User>> get users => _usersDao.getUsers();
 
   Future<List<Account>> getAccounts(User user) async {
-    final accounts = await _authApi.getAccounts(user);
+    final accounts = (await _authApi.getAccounts(user)).toSet();
     // ignore unique constraint errors from the db
     try {
-      await _accountsDao.deleteAccountsOfUser(user.localId);
-      await _accountsDao.addAccounts(accounts);
+      final localAccounts = await _accountsDao.getAccounts(user.localId);
+      for (var local in localAccounts) {
+        final server = accounts.firstWhere((element) => element.serverId == local.serverId,
+            orElse: () => null);
+        if (server == null) {
+          await _accountsDao.deleteAccountById(local.localId);
+        } else {
+          await _accountsDao.updateAccount(server, local.localId);
+        }
+        accounts.remove(server);
+      }
+      await _accountsDao.addAccounts(accounts.toList());
       final accountsWithLocalIds = await _accountsDao.getAccounts(user.localId);
       await _authLocal.setSelectedAccountId(accountsWithLocalIds[0].localId);
     } catch (err) {}
@@ -123,8 +133,7 @@ class AuthMethods {
 
     final futures = [
       deleteUserRelatedData(user),
-      if (_cryptoStorage != null && user.localId == currentUserId)
-        _cryptoStorage.deleteAll(),
+      if (_cryptoStorage != null && user.localId == currentUserId) _cryptoStorage.deleteAll(),
       _authLocal.deleteSelectedUserLocalId(),
       if (user.localId == currentUserId) _authLocal.deleteSelectedAccountId(),
       _usersDao.deleteUser(user.localId),
@@ -155,8 +164,7 @@ class AuthMethods {
 
   Future<User> invalidateToken(int userLocalId) async {
     try {
-      await _usersDao.updateUser(
-          userLocalId, UsersCompanion(token: Value(null)));
+      await _usersDao.updateUser(userLocalId, UsersCompanion(token: Value(null)));
     } catch (e) {}
     return _usersDao.getUserByLocalId(userLocalId);
   }
@@ -206,8 +214,7 @@ class AuthMethods {
     }
   }
 
-  AccountIdentity getDefaultIdentity(
-      Account account, List<AccountIdentity> identities) {
+  AccountIdentity getDefaultIdentity(Account account, List<AccountIdentity> identities) {
     return identities.firstWhere(
       (item) => item.isDefault && item.entityId == account.entityId,
       orElse: () => AccountIdentity(
@@ -254,10 +261,9 @@ class AuthMethods {
         final emails = <String>{};
 
         for (var account in accounts) {
-          final identities = await _accountIdentityDao.getByUserAndAccount(
-              user.localId, account.localId);
-          final aliases = await _aliasesDao.getByUserAndAccount(
-              user.localId, account.localId);
+          final identities =
+              await _accountIdentityDao.getByUserAndAccount(user.localId, account.localId);
+          final aliases = await _aliasesDao.getByUserAndAccount(user.localId, account.localId);
           emails.add(account.email);
           emails.addAll(identities.map((item) => item.email));
           emails.addAll(aliases.map((item) => item.email));
@@ -265,8 +271,7 @@ class AuthMethods {
         emails.add(user.emailFromLogin);
         userWithAccount[user] = emails.toList();
       }
-      final success =
-          await _authApi.setPushToken(userWithAccount, uid, fbToken);
+      final success = await _authApi.setPushToken(userWithAccount, uid, fbToken);
 
       PushNotificationsManager.instance.setTokenStatus(success);
     } catch (e) {
