@@ -21,17 +21,16 @@ class AppDelegate: FlutterAppDelegate{
         if #available(iOS 10.0, *) {
             UNUserNotificationCenter.current().delegate = self
         }
-
+        
         GeneratedPluginRegistrant.register(with: self)
+        let notificationOption = launchOptions?[.remoteNotification]
+        if let notification = notificationOption as? [String:AnyObject],let aps = notification["aps"] as? [String:AnyObject]{
+            SwiftIosNotificationHandlerPlugin.reciveNotification(didReceiveRemoteNotification: notification,fetchCompletionHandler: {_ in })
+        }
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
-    
-    override func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-             SwiftIosNotificationHandlerPlugin.reciveNotification(didReceiveRemoteNotification: userInfo,fetchCompletionHandler: completionHandler)
-         }
-    
-    override func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any]) {
 
-        SwiftIosNotificationHandlerPlugin.reciveNotification(didReceiveRemoteNotification: userInfo,fetchCompletionHandler: {_ in })
+    override func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+        SwiftIosNotificationHandlerPlugin.reciveNotification(didReceiveRemoteNotification: userInfo,fetchCompletionHandler: completionHandler)
     }
 }

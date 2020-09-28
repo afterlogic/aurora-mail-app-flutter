@@ -89,15 +89,16 @@ Future<bool> onAlarm({
     updateFromNotification.add(data?.to);
     try {
       BackgroundHelper.onStartAlarm();
-      final future = BackgroundSync().sync(
-        BackgroundHelper.isBackground,
-        showNotification,
-        data,
-        isolatedLogger,
-        interceptor,
-      );
-      if (BackgroundHelper.isBackground)
-        future.timeout(Duration(seconds: Platform.isIOS ? 30 : 60));
+      final future = BackgroundSync()
+          .sync(
+            BackgroundHelper.isBackground,
+            showNotification,
+            data,
+            isolatedLogger,
+            interceptor,
+          )
+          .timeout(
+              Duration(seconds: BackgroundHelper.isBackground ? (Platform.isIOS ? 30 : 60) : 1080));
       hasUpdate = await future;
     } catch (e, s) {
       isolatedLogger.error(e, s);
