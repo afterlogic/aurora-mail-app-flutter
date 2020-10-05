@@ -40,7 +40,7 @@ class AppDelegate: FlutterAppDelegate{
                 }
             }
         }
-        return true // super.application(application, didFinishLaunchingWithOptions: launchOptions)
+        return  super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
     
     override func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
@@ -54,6 +54,8 @@ class AppDelegate: FlutterAppDelegate{
             task?.setTaskCompleted(success: false)
         }
         if(notification==nil){
+
+
             task?.setTaskCompleted(success: true)
         }else{
             SwiftIosNotificationHandlerPlugin.reciveNotification(didReceiveRemoteNotification: notification!,fetchCompletionHandler: {_ in
