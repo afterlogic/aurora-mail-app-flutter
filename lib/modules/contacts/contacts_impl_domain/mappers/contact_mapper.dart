@@ -252,9 +252,9 @@ class ContactMapper {
       "BirthYear": c.birthYear,
       "ETag": c.eTag,
       "GroupUUIDs": c.groupUUIDs,
-      "PublicPgpKey": c.pgpPublicKey,
-      "PgpSignMessages": c.autoSign,
-      "PgpEncryptMessages": c.autoEncrypt,
+      "OpenPgpWebclient::PublicPgpKey": c.pgpPublicKey,
+      "OpenPgpWebclient::PgpSignMessages": c.autoSign,
+      "OpenPgpWebclient::PgpEncryptMessages": c.autoEncrypt,
     };
   }
 }
