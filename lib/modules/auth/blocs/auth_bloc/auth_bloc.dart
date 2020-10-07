@@ -8,7 +8,6 @@ import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_methods.dart';
 import 'package:aurora_mail/modules/auth/repository/auth_api.dart';
 import 'package:aurora_mail/utils/api_utils.dart';
 import 'package:bloc/bloc.dart';
-import 'package:webmail_api_client/webmail_api_error.dart';
 
 import './bloc.dart';
 
@@ -135,11 +134,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       return;
     } else {
       try {
-        final user = await _methods.login(
+        var user = await _methods.login(
           email: event.email,
           password: event.password,
           host: event.hostname,
         );
+        if (userFromDb != null) {
+          user = user.copyWith(localId: userFromDb.localId);
+        }
 
         if (user == null) {
           yield NeedsHost();
@@ -263,6 +265,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       InvalidateCurrentUserToken event) async* {
     if (currentUser != null) {
       currentUser = await _methods.invalidateToken(currentUser.localId);
+      add(InitUserAndAccounts());
     } else {
       print("cannot invalidate token, no currentUser selected");
     }

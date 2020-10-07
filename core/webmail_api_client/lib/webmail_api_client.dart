@@ -5,7 +5,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/widgets.dart';
-import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:http/io_client.dart';
 
@@ -104,8 +103,8 @@ class WebMailApi {
         return res["Result"];
     } else {
       _onError(id, rawResponse.body);
-      if (res["ErrorCode"] == 102) {
-        _authErrorStreamCtrl.add(102);
+      if (res["ErrorCode"] == 102 || res["ErrorCode"] == 108) {
+        _authErrorStreamCtrl.add(res["ErrorCode"]);
       }
       throw WebMailApiError(res);
     }
@@ -143,7 +142,7 @@ class WebMailApi {
         return res["Result"];
     } else {
       if (onError != null) onError("$id\n${responseBody}");
-      if (res["ErrorCode"] == 102) {
+      if (res["ErrorCode"] == 102|| res["ErrorCode"] == 108) {
         _authErrorStreamCtrl.add(102);
       }
       throw WebMailApiError(res);

@@ -1,10 +1,10 @@
+import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/database/account_identity/accounts_identity_dao.dart';
 import 'package:aurora_mail/database/accounts/accounts_dao.dart';
 import 'package:aurora_mail/database/aliases/aliases_dao.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/folders/folders_dao.dart';
 import 'package:aurora_mail/database/mail/mail_dao.dart';
-import 'package:aurora_mail/database/pgp/pgp_key_dao.dart';
 import 'package:aurora_mail/database/users/users_dao.dart';
 import 'package:aurora_mail/inject/app_inject.dart';
 import 'package:aurora_mail/modules/auth/repository/auth_api.dart';
@@ -12,11 +12,9 @@ import 'package:aurora_mail/modules/auth/repository/auth_local_storage.dart';
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/contacts/contacts_dao.dart';
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/groups/contacts_groups_dao.dart';
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/storages/contacts_storages_dao.dart';
-import 'package:aurora_mail/modules/settings/models/language.dart';
 import 'package:aurora_mail/notification/push_notifications_manager.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:moor_flutter/moor_flutter.dart';
-import 'package:aurora_mail/build_property.dart';
 
 class AuthMethods {
   final _authApi = new AuthApi();
@@ -42,12 +40,12 @@ class AuthMethods {
     final result = await Future.wait(futures);
     final user = result[0] as User;
     final accounts = List<Account>.from(result[1] as Iterable);
+    if (user == null || user.token.isEmpty) return null;
     if (accounts.isEmpty) return null;
     final account = accounts.firstWhere(
       (item) => item.localId == selectedAccountId,
       orElse: () => accounts.first,
     );
-    if (user == null || accounts.isEmpty) return null;
 
     // else
     return InitializerResponse(user, account, accounts);
@@ -90,10 +88,9 @@ class AuthMethods {
   Future<User> setUser(User user) async {
     User userToReturn = await _usersDao.getUserByEmail(user.emailFromLogin);
 
-    if (userToReturn == null) {
+
       await _usersDao.addUser(user);
       userToReturn = await _usersDao.getUserByEmail(user.emailFromLogin);
-    }
     selectUser(userToReturn.localId);
     _authLocal.setLastEmail(user.emailFromLogin);
     _authLocal.setLastHost(user.hostname);
@@ -112,7 +109,8 @@ class AuthMethods {
     try {
       final localAccounts = await _accountsDao.getAccounts(user.localId);
       for (var local in localAccounts) {
-        final server = accounts.firstWhere((element) => element.serverId == local.serverId,
+        final server = accounts.firstWhere(
+            (element) => element.serverId == local.serverId,
             orElse: () => null);
         if (server == null) {
           await _accountsDao.deleteAccountById(local.localId);
@@ -133,7 +131,8 @@ class AuthMethods {
 
     final futures = [
       deleteUserRelatedData(user),
-      if (_cryptoStorage != null && user.localId == currentUserId) _cryptoStorage.deleteAll(),
+      if (_cryptoStorage != null && user.localId == currentUserId)
+        _cryptoStorage.deleteAll(),
       _authLocal.deleteSelectedUserLocalId(),
       if (user.localId == currentUserId) _authLocal.deleteSelectedAccountId(),
       _usersDao.deleteUser(user.localId),
@@ -164,8 +163,10 @@ class AuthMethods {
 
   Future<User> invalidateToken(int userLocalId) async {
     try {
-      await _usersDao.updateUser(userLocalId, UsersCompanion(token: Value(null)));
-    } catch (e) {}
+      await _usersDao.updateUser(userLocalId, UsersCompanion(token: Value("")));
+    } catch (e) {
+      print(e);
+    }
     return _usersDao.getUserByLocalId(userLocalId);
   }
 
@@ -214,7 +215,8 @@ class AuthMethods {
     }
   }
 
-  AccountIdentity getDefaultIdentity(Account account, List<AccountIdentity> identities) {
+  AccountIdentity getDefaultIdentity(
+      Account account, List<AccountIdentity> identities) {
     return identities.firstWhere(
       (item) => item.isDefault && item.entityId == account.entityId,
       orElse: () => AccountIdentity(
@@ -261,9 +263,10 @@ class AuthMethods {
         final emails = <String>{};
 
         for (var account in accounts) {
-          final identities =
-              await _accountIdentityDao.getByUserAndAccount(user.localId, account.localId);
-          final aliases = await _aliasesDao.getByUserAndAccount(user.localId, account.localId);
+          final identities = await _accountIdentityDao.getByUserAndAccount(
+              user.localId, account.localId);
+          final aliases = await _aliasesDao.getByUserAndAccount(
+              user.localId, account.localId);
           emails.add(account.email);
           emails.addAll(identities.map((item) => item.email));
           emails.addAll(aliases.map((item) => item.email));
@@ -271,7 +274,8 @@ class AuthMethods {
         emails.add(user.emailFromLogin);
         userWithAccount[user] = emails.toList();
       }
-      final success = await _authApi.setPushToken(userWithAccount, uid, fbToken);
+      final success =
+          await _authApi.setPushToken(userWithAccount, uid, fbToken);
 
       PushNotificationsManager.instance.setTokenStatus(success);
     } catch (e) {

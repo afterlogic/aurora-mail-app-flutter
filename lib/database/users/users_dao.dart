@@ -27,7 +27,7 @@ class UsersDao extends DatabaseAccessor<AppDatabase> with _$UsersDaoMixin {
     return localUsers[0];
   }
 
-  Future<int> addUser(User newUser) => into(users).insert(newUser);
+  Future<int> addUser(User newUser) => into(users).insert(newUser,mode: InsertMode.insertOrReplace);
 
   Future<void> deleteUser(int localId) {
     return (delete(users)..where((u) => u.localId.equals(localId))).go();

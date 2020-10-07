@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:aurora_mail/background/background_helper.dart';
@@ -38,7 +39,7 @@ class App extends StatefulWidget {
 class _AppState extends BState<App> with WidgetsBindingObserver {
   final _authBloc = new AuthBloc();
   final _settingsBloc = new SettingsBloc();
-
+  StreamSubscription sub;
   final _navKey = GlobalKey<NavigatorState>();
 
   @override
@@ -46,7 +47,7 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     BackgroundHelper.current = AppLifecycleState.resumed;
-    WebMailApi.authErrorStream.listen((_) {
+    sub = WebMailApi.authErrorStream.listen((_) {
       _authBloc.add(InvalidateCurrentUserToken());
     });
     BackgroundHelper.current = AppLifecycleState.resumed;
@@ -144,6 +145,7 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
     super.dispose();
 //    _authBloc.close();
 //    _settingsBloc.close();
+    sub?.cancel();
     BackgroundHelper.current = AppLifecycleState.detached;
     WidgetsBinding.instance.removeObserver(this);
   }
@@ -158,6 +160,11 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
         listener: (_, state) {
           if (state is LoggedOut) _navigateToLogin();
           if (state is UserSelected) RestartWidget.restartApp(context);
+          if (state is InitializedUserAndAccounts) {
+            if (state.user == null) {
+              _navigateToLogin();
+            }
+          }
         },
         child: BlocBuilder<AuthBloc, AuthState>(
           bloc: _authBloc,
