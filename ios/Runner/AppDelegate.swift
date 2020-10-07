@@ -31,10 +31,12 @@ class AppDelegate: FlutterAppDelegate{
                 showNotification(notification)
             }
         }
+        testNotification("application(didFinishLaunchingWithOptions)",nil)
         return  super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
     
     override func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+        testNotification("application(didReceiveRemoteNotification)",nil)
         SwiftIosNotificationHandlerPlugin.reciveNotification(didReceiveRemoteNotification: userInfo,fetchCompletionHandler: completionHandler)
     }
     
@@ -45,6 +47,16 @@ class AppDelegate: FlutterAppDelegate{
         content.userInfo=["payload":notification["To"] as? String ?? ""]
         content.title = notification["From"] as? String ?? ""
         content.body = notification["Subject"] as? String ?? ""
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
+        let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
+        notificationCenter.add(request)
+    }
+    func testNotification(_ text:String, _ notification :[String:AnyObject]?){
+        let notificationCenter = UNUserNotificationCenter.current()
+        let identifier = text
+        let content = UNMutableNotificationContent()
+        content.title = text
+        content.body = notification?.debugDescription ?? ""
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
         let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
         notificationCenter.add(request)
