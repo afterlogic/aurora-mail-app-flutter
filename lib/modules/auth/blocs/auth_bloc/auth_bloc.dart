@@ -34,6 +34,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     if (event is GetLastEmail) yield* _getLastEmail(event);
     if (event is LogIn) yield* _login(event);
     if (event is SelectUser) yield* _selectUser(event);
+    if (event is SelectUserByEmail) yield* _selectUserByEmail(event);
     if (event is DeleteUser) yield* _deleteUser(event);
     if (event is InvalidateCurrentUserToken)
       yield* _invalidateCurrentUserToken(event);
@@ -104,6 +105,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     if (email != null) yield ReceivedLastEmail(email);
   }
 
+  Stream<AuthState> _selectUserByEmail(SelectUserByEmail event) async* {
+    if (currentUser.emailFromLogin == event.email) {
+      event.completer?.complete();
+      return;
+    }
+    await _methods.selectUserByEmail(event.email);
+    yield UserSelected();
+    add(InitUserAndAccounts(event.completer));
+  }
   Stream<AuthState> _selectUser(SelectUser event) async* {
     if (currentUser.localId == event.userLocalId) {
       event.completer?.complete();

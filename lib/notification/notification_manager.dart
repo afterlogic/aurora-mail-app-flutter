@@ -1,11 +1,11 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/app_screen.dart';
 import 'package:aurora_mail/modules/dialog_wrap.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart'
-    hide Message;
+import 'package:flutter_local_notifications/flutter_local_notifications.dart' hide Message;
 import 'package:notifications_utils/notifications_utils.dart';
 import 'package:package_info/package_info.dart';
 
@@ -101,7 +101,7 @@ class NotificationManager {
         from,
         subject,
         NotificationDetails(androidNotificationDetails, null),
-        payload: "${user.localId}|$localId",
+        payload: jsonEncode({"user": user.localId, "message": localId}),
       );
     }
   }
@@ -109,10 +109,14 @@ class NotificationManager {
 
 Future onSelectNotification(String payload) async {
   await Future.delayed(Duration(seconds: 1));
-  final data = payload.split("|");
-  final userLocalId = int.tryParse(data[0]);
-  final messageLocalId = int.tryParse(data[1]);
-  RouteWrap.staticState.showMessage(userLocalId, messageLocalId);
+  if(payload.startsWith("{")) {
+  final json=jsonDecode(payload) as Map<String,dynamic>;
+    final userLocalId = json["user"] as int;
+    final messageLocalId = json["message"] as int;
+    RouteWrap.staticState.showMessage(userLocalId, messageLocalId);
+  }else {
+    RouteWrap.staticState.selectUser(payload);
+  }
 }
 
 const NOTIFICATION_MAIL_CHANNEL_ID = "new_mail";

@@ -73,6 +73,19 @@ class RouteWrapState extends State<RouteWrap> {
   Widget build(BuildContext context) {
     return widget.child;
   }
+
+  void selectUser(String email) async {
+    if (await discardNotSavedChanges()) {
+      final completer = Completer();
+      widget.authBloc.add(SelectUserByEmail(email, completer));
+      await completer.future;
+      widget.navKey.currentState.pushNamedAndRemoveUntil(
+        MessagesListRoute.name,
+        (_) => false,
+        arguments: MessagesListRouteArg(),
+      );
+    }
+  }
 }
 
 mixin NotSavedChangesMixin<T extends StatefulWidget> on State<T> {

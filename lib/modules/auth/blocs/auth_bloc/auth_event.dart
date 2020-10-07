@@ -74,6 +74,15 @@ class SelectUser extends AuthEvent {
   List<Object> get props => [userLocalId];
 }
 
+class SelectUserByEmail extends AuthEvent {
+  final String email;
+  final Completer completer;
+
+  const SelectUserByEmail(this.email, [this.completer]);
+
+  @override
+  List<Object> get props => [email];
+}
 class DeleteUser extends AuthEvent {
   final User user;
 

@@ -278,6 +278,37 @@ class AuthMethods {
       print(e);
     }
   }
+
+  Future selectUserByEmail(String email) async {
+    final users = await _usersDao.getUsers();
+    for (var user in users) {
+      if (user.emailFromLogin == email) {
+        await _authLocal.setSelectedUserLocalId(user.localId);
+        await _selectAccountByEmail(user.localId, email);
+        return;
+      }
+    }
+    for (var user in users) {
+      final accounts = await _accountsDao.getAccounts(user.localId);
+      for (var account in accounts) {
+        if (account.email == email) {
+          await _authLocal.setSelectedUserLocalId(user.localId);
+          await _authLocal.setSelectedAccountId(account.localId);
+          return;
+        }
+      }
+    }
+  }
+
+  Future _selectAccountByEmail(int userId, String email) async {
+    final accounts = await _accountsDao.getAccounts(userId);
+    for (var account in accounts) {
+      if (account.email == email) {
+        await _authLocal.setSelectedAccountId(account.localId);
+        return;
+      }
+    }
+  }
 }
 
 class InitializerResponse {
