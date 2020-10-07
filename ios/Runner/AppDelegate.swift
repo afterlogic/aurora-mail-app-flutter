@@ -32,6 +32,11 @@ class AppDelegate: FlutterAppDelegate{
             }
         }
         testNotification("application(didFinishLaunchingWithOptions)",nil)
+        var i = 0
+        Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { timer in
+            i=i+1
+            self.testNotification("timer\(i)",nil)
+        }
         return  super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
     
