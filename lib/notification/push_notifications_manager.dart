@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:aurora_mail/background/background_helper.dart';
+import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/database/accounts/accounts_dao.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/users/users_dao.dart';
@@ -24,20 +25,22 @@ class PushNotificationsManager {
   bool _initialized = false;
 
   init() async {
-    if (!_initialized) {
-      if (Platform.isIOS) {
-        IosNotificationHandler.onMessage(messageHandler);
+    if (BuildProperty.pushNotification) {
+      if (!_initialized) {
+        if (Platform.isIOS) {
+          IosNotificationHandler.onMessage(messageHandler);
+        }
+        deviceId = await _getIMEI();
+        await _firebaseMessaging.requestNotificationPermissions();
+        _firebaseMessaging.configure(
+          onMessage: messageHandler,
+          onBackgroundMessage: Platform.isIOS ? null : messageHandler,
+        );
+        _firebaseMessaging.onIosSettingsRegistered.listen((setting) {
+          setting;
+        });
+        _initialized = true;
       }
-      deviceId = await _getIMEI();
-      await _firebaseMessaging.requestNotificationPermissions();
-      _firebaseMessaging.configure(
-        onMessage: messageHandler,
-        onBackgroundMessage: Platform.isIOS ? null : messageHandler,
-      );
-      _firebaseMessaging.onIosSettingsRegistered.listen((setting) {
-        setting;
-      });
-      _initialized = true;
     }
   }
 
@@ -97,7 +100,7 @@ Future<bool> messageHandler(Map<dynamic, dynamic> message) async {
     } catch (e, s) {
       Logger.errorLog(e, s);
     }
-  }else{
+  } else {
     Logger.errorLog("handle push with not user", null);
   }
   return false;

@@ -29,20 +29,19 @@ class AuthApi {
   }
 
   Future<User> login(String email, String password, String hostname) async {
-    final coreModuleForLogin =
-        WebMailApi(moduleName: WebMailModules.core, hostname: hostname);
+    final coreModuleForLogin = WebMailApi(moduleName: WebMailModules.core, hostname: hostname);
 
-    final parameters =
-        json.encode({"Login": email, "Password": password, "Pattern": ""});
+    final parameters = json.encode({"Login": email, "Password": password, "Pattern": ""});
 
     final body = new WebMailApiBody(method: "Login", parameters: parameters);
 
     final response = await coreModuleForLogin.post(body, getRawResponse: true);
-    if (response['Result'] != null &&
-        response['Result']['TwoFactorAuth'] != null) {
+    if (response["ErrorCode"] == 108) {
+      throw AllowAccess();
+    }
+    if (response['Result'] != null && response['Result']['TwoFactorAuth'] != null) {
       throw RequestTwoFactor(hostname);
-    } else if (response['Result'] != null &&
-        response['Result']['AuthToken'] is String) {
+    } else if (response['Result'] != null && response['Result']['AuthToken'] is String) {
       if (response['Result']["AllowAccess"] != 1) {
         throw AllowAccess();
       }
@@ -86,8 +85,7 @@ class AuthApi {
 
     final parameters = json.encode({"UserId": user.serverId});
 
-    final body =
-        new WebMailApiBody(method: "GetAccounts", parameters: parameters);
+    final body = new WebMailApiBody(method: "GetAccounts", parameters: parameters);
 
     final res = await coreModuleForLogin.post(body);
 
@@ -116,13 +114,11 @@ class AuthApi {
       "Password": password,
     });
 
-    final body =
-        new WebMailApiBody(method: "VerifyPin", parameters: parameters);
+    final body = new WebMailApiBody(method: "VerifyPin", parameters: parameters);
 
     final res = await twoFactorModule.post(body, getRawResponse: true);
 
-    if (res["Result"] is! Map ||
-        !(res["Result"] as Map).containsKey("AuthToken")) {
+    if (res["Result"] is! Map || !(res["Result"] as Map).containsKey("AuthToken")) {
       throw InvalidPin();
     }
     final userId = res['AuthenticatedUserId'] as int;
@@ -150,8 +146,7 @@ class AuthApi {
     if (res is List) {
       return res
           .map(
-            (map) =>
-                AccountIdentityMap.fromNetwork(map as Map<String, dynamic>),
+            (map) => AccountIdentityMap.fromNetwork(map as Map<String, dynamic>),
           )
           .toList();
     } else {
@@ -180,8 +175,8 @@ class AuthApi {
     }
   }
 
-  Future<bool> setPushToken(Map<User, List<String>> userWithAccount, String uid,
-      String fbToken) async {
+  Future<bool> setPushToken(
+      Map<User, List<String>> userWithAccount, String uid, String fbToken) async {
     final map = <String, List<MapEntry<User, List<String>>>>{};
     bool success = true;
     for (var value in userWithAccount.entries) {

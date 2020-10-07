@@ -9,16 +9,21 @@ class IosNotificationHandler {
   }
 
   static Future _finish(bool result) {
-    return _channel.invokeMethod("finish",[result??false]);
+    return _channel.invokeMethod("finish", [result ?? false]);
   }
 
   static onMessage(Future<bool> Function(Map<String, dynamic> message) onMessage) async {
     if (_isInit) throw "_isInit == true";
     _isInit = true;
     while (true) {
-      final map = await _listen();
-      final result=await onMessage(Map<String, dynamic>.from(map));
-      await _finish(result);
+      try {
+        final map = await _listen();
+        print(map);
+        final result = await onMessage(Map<String, dynamic>.from(map));
+        await _finish(result);
+      }catch(e){
+        print(e);
+      }
     }
   }
 }
