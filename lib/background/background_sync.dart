@@ -65,10 +65,12 @@ class BackgroundSync {
             : _updateAccountMessages(isBackground, user, accounts, interceptor));
         if (newMessages.isNotEmpty) {
           if (showNotification == true) {
-            newMessages.sort((a, b) => a.timeStampInUTC.compareTo(b.timeStampInUTC));
             isolatedLogger.log("MailSync: ${newMessages.length} new message(s)");
-            for (final message in newMessages) {
-              await _showNewMessage(message, user);
+            for (final entity in newMessages.entries) {
+              entity.value.sort((a, b) => a.timeStampInUTC.compareTo(b.timeStampInUTC));
+              for (final message in entity.value) {
+                await _showNewMessage(message, entity.key, user);
+              }
             }
           }
 
