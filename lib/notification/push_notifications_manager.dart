@@ -79,12 +79,13 @@ Future<bool> messageHandler(Map<dynamic, dynamic> message) async {
         final users = await _usersDao.getUsers();
         for (var user in users) {
           final accounts = await _accountsDao.getAccounts(user.localId);
-          for (var value in accounts) {
-            if (value.email == notification.to) {
+          for (var account in accounts) {
+            if (account.email == notification.to) {
               final manager = NotificationManager.instance;
               manager.showNotification(
                 notification.from,
                 notification.subject,
+                account,
                 user,
                 1,
               );

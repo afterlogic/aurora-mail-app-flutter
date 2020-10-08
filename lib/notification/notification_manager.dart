@@ -31,11 +31,12 @@ class NotificationManager {
     }
   }
 
-  Future<void> showMessageNotification(Message message, User user) async {
-    return showNotification(message.fromToDisplay, message.subject, user, message.localId);
+  Future<void> showMessageNotification(Message message, Account account, User user) async {
+    return showNotification(message.fromToDisplay, message.subject, account, user, message.localId);
   }
 
-  Future<void> showNotification(String from, String subject, User user, int localId) async {
+  Future<void> showNotification(
+      String from, String subject, Account account, User user, int localId) async {
     final packageName = (await PackageInfo.fromPlatform()).packageName;
     bool isFirstNotification = false;
     if (!Platform.isIOS) {
