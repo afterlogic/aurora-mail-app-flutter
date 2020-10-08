@@ -78,7 +78,7 @@ class NotificationManager {
       from,
       subject,
       NotificationDetails(androidNotificationDetails, null),
-      payload: "${user.localId}|$localId",
+      payload: jsonEncode({"user": user.localId, "message": localId}),
     );
 
     if (isFirstNotification) {

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:alarm_service/alarm_service.dart';
@@ -72,6 +73,7 @@ Set<String> updateFromNotification = {};
 Future<bool> onAlarm({
   bool showNotification = true,
   NotificationData data,
+  bool isBackgroundForce,
 }) async {
   WidgetsFlutterBinding.ensureInitialized();
   final isDebug = await DebugLocalStorage().getBackgroundRecord();
@@ -83,7 +85,7 @@ Future<bool> onAlarm({
     isolatedLogger = Logger.backgroundSync(interceptor);
     isolatedLogger.start();
   }
-
+  final isBackground = isBackgroundForce ?? BackgroundHelper.isBackground;
   var hasUpdate = false;
   if (!updateFromNotification.contains(null) && !updateFromNotification.contains(data?.to)) {
     updateFromNotification.add(data?.to);
@@ -91,14 +93,14 @@ Future<bool> onAlarm({
       BackgroundHelper.onStartAlarm();
       final future = BackgroundSync()
           .sync(
-            BackgroundHelper.isBackground,
+        isBackground,
             showNotification,
             data,
             isolatedLogger,
             interceptor,
           )
           .timeout(
-              Duration(seconds: BackgroundHelper.isBackground ? (Platform.isIOS ? 30 : 60) : 1080));
+              Duration(seconds: isBackground ? (Platform.isIOS ? 30 : 60) : 1080));
       hasUpdate = await future;
     } catch (e, s) {
       isolatedLogger.error(e, s);

@@ -49,6 +49,7 @@ class PushNotificationsManager {
     print(token);
     return token;
   }
+
   Future<String> _getIMEI() async {
     return await DeviceId.getID;
   }
@@ -95,6 +96,7 @@ Future<bool> messageHandler(Map<dynamic, dynamic> message) async {
       return await onAlarm(
         showNotification: !notificationFromPush,
         data: notification,
+        isBackgroundForce:await IosNotificationHandler.isBackground(),
       );
     } catch (e, s) {
       Logger.errorLog(e, s);

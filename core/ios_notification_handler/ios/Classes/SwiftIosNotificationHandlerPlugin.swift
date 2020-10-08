@@ -6,7 +6,7 @@ public class SwiftIosNotificationHandlerPlugin: NSObject, FlutterPlugin {
     var onEndAlarm: ((Bool) -> Void)?=nil
     var onAlarm:FlutterResult?=nil
     var hasAlarm = false
-    
+    var userInfo: [AnyHashable : Any]?=nil
     public static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(name: "ios_notification_handler", binaryMessenger: registrar.messenger())
         if(instance == nil){
@@ -21,10 +21,13 @@ public class SwiftIosNotificationHandlerPlugin: NSObject, FlutterPlugin {
         let arg = call.arguments as? [Any]
         do {
             switch call.method {
+            case "isBackground":
+                UIApplication.State.active
+                result(UIApplication.shared.applicationState.rawValue)
             case "listen":
                 if hasAlarm {
                     hasAlarm=false
-                    result(-1)
+                    result(userInfo)
                     onAlarm=nil
                 }else{
                     onAlarm = result
@@ -61,6 +64,7 @@ public class SwiftIosNotificationHandlerPlugin: NSObject, FlutterPlugin {
             onAlarm?(userInfo)
             onAlarm=nil
         } else{
+            self.userInfo=userInfo
             hasAlarm=true
         }
         timer=Timer.scheduledTimer(timeInterval: 30, target: self, selector: #selector(timeOut), userInfo: nil, repeats: false)
