@@ -113,12 +113,18 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     yield UserSelected();
     add(InitUserAndAccounts(event.completer));
   }
+
   Stream<AuthState> _selectUser(SelectUser event) async* {
-    if (currentUser.localId == event.userLocalId) {
+    if (currentUser.localId == event.userLocalId &&
+        (event.accountLocalId == null ||
+            currentAccount.localId == event.accountLocalId)) {
       event.completer?.complete();
       return;
     }
     await _methods.selectUser(event.userLocalId);
+    if (event.accountLocalId != null) {
+      await _methods.selectAccount(event.accountLocalId);
+    }
     yield UserSelected();
     add(InitUserAndAccounts(event.completer));
   }
@@ -272,7 +278,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   Stream<AuthState> _changeAccount(ChangeAccount event) async* {
-    await _methods.selectAccount(event.account);
+    await _methods.selectAccount(event.account.localId);
     add(InitUserAndAccounts());
   }
 

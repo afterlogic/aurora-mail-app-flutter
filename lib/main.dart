@@ -7,6 +7,7 @@ import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/inject/app_inject.dart';
 import 'package:aurora_mail/logger/logger_view.dart';
+import 'package:aurora_mail/modules/dialog_wrap.dart';
 import 'package:aurora_mail/notification/push_notifications_manager.dart';
 import 'package:aurora_mail/shared_ui/restart_widget.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -87,20 +88,21 @@ Future<bool> onAlarm({
   }
   final isBackground = isBackgroundForce ?? BackgroundHelper.isBackground;
   var hasUpdate = false;
-  if (!updateFromNotification.contains(null) && !updateFromNotification.contains(data?.to)) {
+  if (!updateFromNotification.contains(null) &&
+      !updateFromNotification.contains(data?.to)) {
     updateFromNotification.add(data?.to);
     try {
       BackgroundHelper.onStartAlarm();
       final future = BackgroundSync()
           .sync(
-        isBackground,
+            isBackground,
             showNotification,
             data,
             isolatedLogger,
             interceptor,
           )
-          .timeout(
-              Duration(seconds: isBackground ? (Platform.isIOS ? 30 : 60) : 1080));
+          .timeout(Duration(
+              seconds: isBackground ? (Platform.isIOS ? 30 : 60) : 1080));
       hasUpdate = await future;
     } catch (e, s) {
       isolatedLogger.error(e, s);
