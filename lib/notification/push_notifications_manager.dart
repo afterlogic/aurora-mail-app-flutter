@@ -49,7 +49,6 @@ class PushNotificationsManager {
     print(token);
     return token;
   }
-
   Future<String> _getIMEI() async {
     return await DeviceId.getID;
   }
