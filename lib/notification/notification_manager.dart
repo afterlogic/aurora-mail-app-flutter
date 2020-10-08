@@ -20,8 +20,7 @@ class NotificationManager {
       IOSInitializationSettings(),
     );
 
-    plugin.initialize(initializationSettings,
-        onSelectNotification: onSelectNotification);
+    plugin.initialize(initializationSettings, onSelectNotification: onSelectNotification);
     test();
   }
 
@@ -33,20 +32,16 @@ class NotificationManager {
   }
 
   Future<void> showMessageNotification(Message message, User user) async {
-    return showNotification(
-        message.fromToDisplay, message.subject, user, message.localId);
+    return showNotification(message.fromToDisplay, message.subject, user, message.localId);
   }
 
-  Future<void> showNotification(
-      String from, String subject, User user, int localId) async {
+  Future<void> showNotification(String from, String subject, User user, int localId) async {
     final packageName = (await PackageInfo.fromPlatform()).packageName;
     bool isFirstNotification = false;
     if (!Platform.isIOS) {
-      final activeNotifications =
-          await NotificationsUtils.getActiveNotifications();
+      final activeNotifications = await NotificationsUtils.getActiveNotifications();
       isFirstNotification = activeNotifications.where((n) {
-        return n.packageName == packageName &&
-            n.groupKey.contains(user.emailFromLogin);
+        return n.packageName == packageName && n.groupKey.contains(user.emailFromLogin);
       }).isEmpty;
     }
 
@@ -108,14 +103,10 @@ class NotificationManager {
 }
 
 Future onSelectNotification(String payload) async {
-  await Future.delayed(Duration(seconds: 1));
-  if(payload.startsWith("{")) {
-  final json=jsonDecode(payload) as Map<String,dynamic>;
-    final userLocalId = json["user"] as int;
-    final messageLocalId = json["message"] as int;
-    RouteWrap.staticState.showMessage(userLocalId, messageLocalId);
-  }else {
-    RouteWrap.staticState.selectUser(payload);
+  if (RouteWrap.staticState != null) {
+    RouteWrap.staticState.onMessage(payload);
+  } else {
+    RouteWrap.message = payload;
   }
 }
 

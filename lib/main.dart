@@ -24,6 +24,7 @@ import 'modules/settings/screens/debug/debug_local_storage.dart';
 import 'notification/notification_manager.dart';
 
 void main() async {
+  onSelectNotification(jsonEncode({"user": 1, "message": 10}));
   Crashlytics.instance.enableInDevMode = true;
   AppInjector.create();
   FlutterError.onError = Crashlytics.instance.recordFlutterError;

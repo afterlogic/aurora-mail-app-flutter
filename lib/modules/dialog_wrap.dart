@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_event.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_android.dart';
@@ -14,6 +15,7 @@ class RouteWrap extends StatefulWidget {
   final Widget child;
   final GlobalKey<NavigatorState> navKey;
   static RouteWrapState staticState;
+  static String message;
   final AuthBloc authBloc;
 
   const RouteWrap({
@@ -34,6 +36,10 @@ class RouteWrapState extends State<RouteWrap> {
   void initState() {
     super.initState();
     RouteWrap.staticState = this;
+    if (RouteWrap.message != null) {
+      onMessage(RouteWrap.message);
+      RouteWrap.message = null;
+    }
   }
 
   @override
@@ -50,9 +56,20 @@ class RouteWrapState extends State<RouteWrap> {
       MessagesListAndroid.openMessageId = messageUid;
       widget.navKey.currentState.pushNamedAndRemoveUntil(
         MessagesListRoute.name,
-        (_) => false,
+            (_) => false,
         arguments: MessagesListRouteArg(),
       );
+    }
+  }
+
+  onMessage(String payload) {
+    if (payload.startsWith("{")) {
+      final json = jsonDecode(payload) as Map<String, dynamic>;
+      final userLocalId = json["user"] as int;
+      final messageLocalId = json["message"] as int;
+      showMessage(userLocalId, messageLocalId);
+    } else {
+      selectUser(payload);
     }
   }
 
@@ -81,7 +98,7 @@ class RouteWrapState extends State<RouteWrap> {
       await completer.future;
       widget.navKey.currentState.pushNamedAndRemoveUntil(
         MessagesListRoute.name,
-        (_) => false,
+            (_) => false,
         arguments: MessagesListRouteArg(),
       );
     }
