@@ -1,9 +1,11 @@
 import 'package:aurora_mail/modules/contacts/screens/contact_edit/dialog/select_key_dialog.dart';
 import 'package:aurora_mail/modules/settings/blocs/pgp_settings/bloc.dart';
 import 'package:aurora_mail/modules/settings/screens/pgp_settings/dialogs/import_from_text_dialog.dart';
+import 'package:aurora_mail/modules/settings/screens/pgp_settings/screens/pgp_key_route.dart';
 import 'package:aurora_mail/utils/identity_util.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_dialog.dart';
+import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:crypto_model/crypto_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -37,48 +39,52 @@ class KeyInputState extends State<KeyInput> {
   @override
   Widget build(BuildContext context) {
     if (pgpKey != null)
-      return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: ListTile(
-          title: Text(pgpKey.formatName() +
-              "\n${pgpKey.key?.length != null ? "(${pgpKey.length}-bit," : "("} ${pgpKey.isPrivate ? "private" : "public"})"),
-          trailing: IconButton(
-            icon: Icon(Icons.close),
-            onPressed: () {
-              _setKey(null);
-            },
-          ),
+      return ListTile(
+        leading: Icon(Icons.vpn_key),
+        title: Text(pgpKey.formatName() +
+            "\n${pgpKey.key?.length != null ? "(${pgpKey.length}-bit," : "("} ${pgpKey.isPrivate ? "private" : "public"})"),
+        trailing: Icon(
+          Icons.arrow_forward_ios,
+          size: 20,
         ),
+        onTap: () => _openKey(),
       );
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          FlatButton(
-            child: Text(i18n(context, "btn_pgp_import_from_text")),
-            onPressed: () async {
-              final result = await dialog(
-                context: context,
-                builder: (_) => ImportFromTextDialog(),
-              );
-              if (result is String) {
-                _onKey(result);
-              }
-            },
-          ),
-          FlatButton(
-            child: Text(i18n(context, "btn_pgp_import_from_file")),
-            onPressed: () async {
-              final result = await widget.pgpSettingsBloc.getKeyFromFile();
-              if (result is String) {
-                _onKey(result);
-              }
-            },
-          ),
-        ],
-      ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        FlatButton(
+          child: Text(i18n(context, "btn_pgp_import_from_text")),
+          onPressed: () async {
+            final result = await dialog(
+              context: context,
+              builder: (_) => ImportFromTextDialog(),
+            );
+            if (result is String) {
+              _onKey(result);
+            }
+          },
+        ),
+        FlatButton(
+          child: Text(i18n(context, "btn_pgp_import_from_file")),
+          onPressed: () async {
+            final result = await widget.pgpSettingsBloc.getKeyFromFile();
+            if (result is String) {
+              _onKey(result);
+            }
+          },
+        ),
+      ],
+    );
+  }
+
+  _openKey() {
+    Navigator.pushNamed(
+      context,
+      PgpKeyRoute.name,
+      arguments: PgpKeyRouteArg(widget.pgpKey, widget.pgpSettingsBloc, () {
+        _setKey(null);
+      }),
     );
   }
 
@@ -87,6 +93,10 @@ class KeyInputState extends State<KeyInput> {
         .where((item) => !item.isPrivate)
         .toList();
     if (keys.isEmpty) {
+      showSnack(
+          context: context,
+          scaffoldState: Scaffold.of(context),
+          msg: "error_no_pgp_key");
       return;
     }
     if (keys.length == 1) {

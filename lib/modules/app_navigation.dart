@@ -27,6 +27,7 @@ import 'package:aurora_mail/modules/settings/screens/debug/log_screen/log_screen
 import 'package:aurora_mail/modules/settings/screens/manage_users/manage_users_android.dart';
 import 'package:aurora_mail/modules/settings/screens/manage_users/manage_users_route.dart';
 import 'package:aurora_mail/modules/settings/screens/notifications_settings/notifications_settings.dart';
+import 'package:aurora_mail/modules/settings/screens/notifications_settings/notifications_settings_route.dart';
 import 'package:aurora_mail/modules/settings/screens/pgp_settings/pgp_settings.dart';
 import 'package:aurora_mail/modules/settings/screens/pgp_settings/pgp_settings_route.dart';
 import 'package:aurora_mail/modules/settings/screens/pgp_settings/screens/pgp_key.dart';
@@ -43,7 +44,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:aurora_mail/modules/settings/screens/notifications_settings/notifications_settings_route.dart';
 import 'auth/screens/login/login_android.dart';
 import 'auth/screens/login/login_route.dart';
 import 'auth/screens/two_factor_auth/two_factor_auth_route.dart';
@@ -264,6 +264,7 @@ class AppNavigation {
             builder: (_) => PgpKeyScreen(
                   arg.pgpKey,
                   arg.bloc,
+                  arg.onDelete,
                 ));
         break;
       case PgpKeysRoute.name:

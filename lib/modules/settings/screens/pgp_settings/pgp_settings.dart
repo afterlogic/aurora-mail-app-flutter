@@ -139,7 +139,7 @@ class _PgpSettingsState extends BState<PgpSettings> {
     Navigator.pushNamed(
       context,
       PgpKeyRoute.name,
-      arguments: PgpKeyRouteArg(key, bloc),
+      arguments: PgpKeyRouteArg(key, bloc,null),
     );
   }
 

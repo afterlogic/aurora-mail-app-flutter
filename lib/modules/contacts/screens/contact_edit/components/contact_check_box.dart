@@ -14,13 +14,10 @@ class ContactCheckBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      child: CheckboxListTile(
-        title: Text(i18n(context, label)),
-        value: value,
-        onChanged: onEdit,
-      ),
+    return CheckboxListTile(
+      title: Text(i18n(context, label)),
+      value: value,
+      onChanged: onEdit,
     );
   }
 }

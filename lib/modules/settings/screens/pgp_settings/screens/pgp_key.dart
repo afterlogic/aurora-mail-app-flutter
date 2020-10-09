@@ -12,8 +12,9 @@ import 'package:flutter/material.dart';
 class PgpKeyScreen extends StatelessWidget {
   final PgpKey pgpKey;
   final PgpSettingsBloc bloc;
+  final Function() onDelete;
 
-  const PgpKeyScreen(this.pgpKey, this.bloc);
+  const PgpKeyScreen(this.pgpKey, this.bloc, this.onDelete);
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +93,11 @@ class PgpKeyScreen extends StatelessWidget {
                         i18n(context, "btn_delete"),
                       );
                       if (result == true) {
-                        bloc.add(DeleteKey(pgpKey));
+                        if (onDelete != null) {
+                          onDelete();
+                        } else {
+                          bloc.add(DeleteKey(pgpKey));
+                        }
                         Navigator.pop(context);
                       }
                     },

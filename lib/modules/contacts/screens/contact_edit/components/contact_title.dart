@@ -1,11 +1,11 @@
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/material.dart';
 
-class ContactTitle extends StatelessWidget {
+class ContactTile extends StatelessWidget {
   final String title;
   final TextStyle textStyle;
 
-  const ContactTitle(this.title, [this.textStyle]);
+  const ContactTile(this.title, [this.textStyle]);
 
   @override
   Widget build(BuildContext context) {

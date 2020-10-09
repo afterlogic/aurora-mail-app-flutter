@@ -17,7 +17,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'components/contact_birth_date_picker.dart';
 import 'components/contact_check_box.dart';
-import 'components/contact_dropdown.dart';
 import 'components/contact_input.dart';
 import 'components/contact_primary_input.dart';
 import 'components/contact_title.dart';
@@ -349,7 +348,7 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
                   ContactInput("contacts_view_first_name", _firstName),
                   ContactInput("contacts_view_last_name", _lastName),
                   ContactInput("contacts_view_nickname", _nickName),
-                  ContactTitle("contacts_view_section_home"),
+                  ContactTile("contacts_view_section_home"),
                   ContactInput("contacts_view_personal_email", _personalEmail,
                       keyboardType: TextInputType.emailAddress),
                   ContactInput(
@@ -365,7 +364,7 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
                       keyboardType: TextInputType.phone),
                   ContactInput("contacts_view_mobile", _personalMobile,
                       keyboardType: TextInputType.phone),
-                  ContactTitle("contacts_view_section_business"),
+                  ContactTile("contacts_view_section_business"),
                   ContactInput("contacts_view_business_email", _businessEmail,
                       keyboardType: TextInputType.emailAddress),
                   ContactInput("contacts_view_company", _businessCompany),
@@ -383,7 +382,7 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
                       keyboardType: TextInputType.phone),
                   ContactInput("contacts_view_phone", _businessPhone,
                       keyboardType: TextInputType.phone),
-                  ContactTitle("contacts_view_section_other_info"),
+                  ContactTile("contacts_view_section_other_info"),
                   ContactBirthDatePicker(
                     birthDay: _birthDay,
                     birthMonth: _birthMonth,
@@ -393,9 +392,9 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
                   ContactInput("contacts_view_other_email", _otherEmail,
                       keyboardType: TextInputType.emailAddress),
                   ContactInput("contacts_view_notes", _notes),
-                  if (BuildProperty.cryptoEnable && !BuildProperty.legacyPgpKey)
-                    ContactTitle("label_pgp_public_key"),
-                  if (BuildProperty.cryptoEnable && !BuildProperty.legacyPgpKey)
+                  if (BuildProperty.cryptoEnable &&
+                      !BuildProperty.legacyPgpKey) ...[
+                    ContactTile("label_contact_pgp_settings"),
                     KeyInput(
                       pgpSettingsBloc,
                       pgpKey,
@@ -404,22 +403,20 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
                       },
                       (error) {},
                     ),
-                  if (BuildProperty.cryptoEnable && !BuildProperty.legacyPgpKey)
-                    ContactTitle("hint_auto_encrypt_messages",
+                    ContactTile("hint_auto_encrypt_messages",
                         theme.textTheme.subtitle1),
-                  if (BuildProperty.cryptoEnable && !BuildProperty.legacyPgpKey)
                     ContactCheckBox(
                       "label_pgp_sign",
                       autoSign,
                       (v) => setState(() => autoSign = v),
                     ),
-                  if (BuildProperty.cryptoEnable && !BuildProperty.legacyPgpKey)
                     ContactCheckBox(
                       "label_pgp_encrypt",
                       autoEncrypt,
                       (v) => setState(() => autoEncrypt = v),
                     ),
-                  ContactTitle("contacts_view_section_groups"),
+                  ],
+                  ContactTile("contacts_view_section_groups"),
                   ..._bloc.state.groups.map((g) {
                     return CheckboxListTile(
                       title: Text("# " + g.name),

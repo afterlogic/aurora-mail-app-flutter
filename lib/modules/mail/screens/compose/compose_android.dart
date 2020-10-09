@@ -14,6 +14,7 @@ import 'package:aurora_mail/modules/mail/models/compose_actions.dart';
 import 'package:aurora_mail/modules/mail/models/compose_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/temp_attachment_upload.dart';
+import 'package:aurora_mail/modules/mail/screens/compose/components/automatically_encrypt_label.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/components/compose_bottom_bar.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/components/identity_selector.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/compose_route.dart';
@@ -22,7 +23,6 @@ import 'package:aurora_mail/modules/mail/screens/compose/self_destructing/bloc/s
 import 'package:aurora_mail/modules/mail/screens/compose/self_destructing/bloc/self_destructing_state.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/self_destructing/encrypt_setting.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/self_destructing/view_password.dart';
-import 'package:aurora_mail/modules/mail/screens/message_view/dialog/request_password_dialog.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
 import 'package:aurora_mail/modules/settings/screens/pgp_settings/dialogs/key_request_dialog.dart';
 import 'package:aurora_mail/utils/base_state.dart';
@@ -72,7 +72,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
   final bccNode = FocusNode();
   final subjectNode = FocusNode();
   final bodyNode = FocusNode();
-
+  bool automaticallyEncrypt = true;
   final _scaffoldKey = GlobalKey<ScaffoldState>();
 
   Timer _timer;
@@ -257,8 +257,8 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
 
   Future _initSender(Message message) async {
     if (message.toInJson?.isNotEmpty == true) {
-    final authBloc = BlocProvider.of<AuthBloc>(context);
-    final items = await authBloc.getAliasesAndIdentities();
+      final authBloc = BlocProvider.of<AuthBloc>(context);
+      final items = await authBloc.getAliasesAndIdentities();
       final identity = MailUtils.findIdentity(message.toInJson, items);
       setIdentityOrSender(
         identity ?? AliasOrIdentity(null, authBloc.currentIdentity),
@@ -320,208 +320,224 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
           isError: false);
     }
     if (_encryptType == EncryptType.None) {
-      final emails = [..._toEmails, ..._ccEmails, ..._bccEmails];
-      final encryptEmails = <String>[];
-      final encryptSignEmails = <String>[];
-      final signEmails = <String>[];
-      final defaultEmails = <String>[];
-      for (var emailWithName in emails) {
-        String email;
-        final match = RegExp("<(.*)?>").firstMatch(emailWithName);
-        if (match != null && match.groupCount > 0) {
-          email = match.group(1);
-        } else {
-          email = emailWithName;
-        }
-        final contacts = await _bloc.getContacts(email);
+      if (automaticallyEncrypt) {
+        final emails = [..._toEmails, ..._ccEmails, ..._bccEmails];
+        final encryptEmails = <String>[];
+        final encryptSignEmails = <String>[];
+        final signEmails = <String>[];
+        final defaultEmails = <String>[];
+        for (var emailWithName in emails) {
+          String email;
+          final match = RegExp("<(.*)?>").firstMatch(emailWithName);
+          if (match != null && match.groupCount > 0) {
+            email = match.group(1);
+          } else {
+            email = emailWithName;
+          }
+          final contacts = await _bloc.getContacts(email);
 
-        if (contacts.isNotEmpty) {
-          final contact = contacts.firstWhere(
-            (element) => element.storage == "personal",
-            orElse: () => contacts.first,
-          );
-          if (contact?.pgpPublicKey != null) {
-            if (contact.autoEncrypt && contact.autoSign) {
-              encryptSignEmails.add(emailWithName);
-            } else if (contact.autoEncrypt) {
-              encryptEmails.add(emailWithName);
-            } else if (contact.autoSign) {
-              signEmails.add(emailWithName);
-            } else {
-              defaultEmails.add(emailWithName);
+          if (contacts.isNotEmpty) {
+            final contact = contacts.firstWhere(
+              (element) => element.storage == "personal",
+              orElse: () => contacts.first,
+            );
+            if (contact?.pgpPublicKey != null) {
+              if (contact.autoEncrypt && contact.autoSign) {
+                encryptSignEmails.add(emailWithName);
+              } else if (contact.autoEncrypt) {
+                encryptEmails.add(emailWithName);
+              } else if (contact.autoSign) {
+                signEmails.add(emailWithName);
+              } else {
+                defaultEmails.add(emailWithName);
+              }
+              continue;
             }
-            continue;
           }
+          defaultEmails.add(emailWithName);
         }
-        defaultEmails.add(emailWithName);
-      }
-      final sender = AliasOrIdentity(alias, identity);
-      String password;
-      try {
-        if (encryptSignEmails.isNotEmpty || signEmails.isNotEmpty) {
-          final key = await AppInjector.instance
-              .cryptoStorage()
-              .getPgpKey(sender.mail, true, false);
-          if (key == null) {
-            _showError("error_pgp_not_found_keys_for", {"users": sender.mail});
-            return;
+        final sender = AliasOrIdentity(alias, identity);
+        String password;
+        try {
+          if (encryptSignEmails.isNotEmpty || signEmails.isNotEmpty) {
+            final key = await AppInjector.instance
+                .cryptoStorage()
+                .getPgpKey(sender.mail, true, false);
+            if (key == null) {
+              _showError(
+                  "error_pgp_not_found_keys_for", {"users": sender.mail});
+              return;
+            }
+            password = await KeyRequestDialog.request(context, key.key);
+            if (password == null) {
+              return;
+            }
           }
-          password = await KeyRequestDialog.request(context, key.key);
-          if (password == null) {
-            return;
+          final messages = <SendMessage>[];
+          if (encryptSignEmails.isNotEmpty) {
+            final ccEmails = _ccEmails
+                .where((element) => encryptSignEmails.contains(element));
+            final bccEmails = _bccEmails
+                .where((element) => encryptSignEmails.contains(element));
+            final toEmails = _toEmails
+                .where((element) => encryptSignEmails.contains(element));
+
+            final contact = <String>{};
+            contact.addAll(ccEmails);
+            contact.addAll(bccEmails);
+            contact.addAll(toEmails);
+
+            final body = await _bloc.encryptBody(
+              EncryptBody(
+                contact,
+                _bodyTextCtrl.text,
+                true,
+                true,
+                password,
+                sender.mail,
+              ),
+            );
+            messages.add(
+              SendMessage(
+                to: toEmails.join(","),
+                cc: ccEmails.join(","),
+                bcc: bccEmails.join(","),
+                isHtml: false,
+                subject: _subjectTextCtrl.text,
+                composeAttachments:
+                    new List<ComposeAttachment>.from(_attachments),
+                messageText: body,
+                draftUid: _currentDraftUid,
+                identity: identity,
+                alias: alias,
+              ),
+            );
           }
+          if (signEmails.isNotEmpty) {
+            final ccEmails =
+                _ccEmails.where((element) => signEmails.contains(element));
+            final bccEmails =
+                _bccEmails.where((element) => signEmails.contains(element));
+            final toEmails =
+                _toEmails.where((element) => signEmails.contains(element));
+
+            final contact = <String>{};
+            contact.addAll(ccEmails);
+            contact.addAll(bccEmails);
+            contact.addAll(toEmails);
+
+            final body = await _bloc.encryptBody(
+              EncryptBody(
+                contact,
+                _bodyTextCtrl.text,
+                false,
+                true,
+                password,
+                sender.mail,
+              ),
+            );
+            messages.add(
+              SendMessage(
+                to: toEmails.join(","),
+                cc: ccEmails.join(","),
+                bcc: bccEmails.join(","),
+                isHtml: false,
+                subject: _subjectTextCtrl.text,
+                composeAttachments:
+                    new List<ComposeAttachment>.from(_attachments),
+                messageText: body,
+                draftUid: _currentDraftUid,
+                identity: identity,
+                alias: alias,
+              ),
+            );
+          }
+          if (encryptEmails.isNotEmpty) {
+            final ccEmails = _ccEmails
+                .where((element) => encryptSignEmails.contains(element));
+            final bccEmails = _bccEmails
+                .where((element) => encryptSignEmails.contains(element));
+            final toEmails = _toEmails
+                .where((element) => encryptSignEmails.contains(element));
+
+            final contact = <String>{};
+            contact.addAll(ccEmails);
+            contact.addAll(bccEmails);
+            contact.addAll(toEmails);
+
+            final body = await _bloc.encryptBody(
+              EncryptBody(
+                contact,
+                _bodyTextCtrl.text,
+                true,
+                false,
+                null,
+                sender.mail,
+              ),
+            );
+            messages.add(
+              SendMessage(
+                to: toEmails.join(","),
+                cc: ccEmails.join(","),
+                bcc: bccEmails.join(","),
+                isHtml: false,
+                subject: _subjectTextCtrl.text,
+                composeAttachments:
+                    new List<ComposeAttachment>.from(_attachments),
+                messageText: body,
+                draftUid: _currentDraftUid,
+                identity: identity,
+                alias: alias,
+              ),
+            );
+          }
+          if (defaultEmails.isNotEmpty) {
+            final ccEmails =
+                _ccEmails.where((element) => defaultEmails.contains(element));
+            final bccEmails =
+                _bccEmails.where((element) => defaultEmails.contains(element));
+            final toEmails =
+                _toEmails.where((element) => defaultEmails.contains(element));
+
+            final contact = <String>{};
+            contact.addAll(ccEmails);
+            contact.addAll(bccEmails);
+            contact.addAll(toEmails);
+
+            final body = _bodyTextCtrl.text;
+            messages.add(
+              SendMessage(
+                to: toEmails.join(","),
+                cc: ccEmails.join(","),
+                bcc: bccEmails.join(","),
+                isHtml: false,
+                subject: _subjectTextCtrl.text,
+                composeAttachments:
+                    new List<ComposeAttachment>.from(_attachments),
+                messageText: body,
+                draftUid: _currentDraftUid,
+                identity: identity,
+                alias: alias,
+              ),
+            );
+          }
+          return _bloc.add(SendMessages(messages));
+        } catch (e) {
+          print(e);
         }
-        final messages = <SendMessage>[];
-        if (encryptSignEmails.isNotEmpty) {
-          final ccEmails =
-              _ccEmails.where((element) => encryptSignEmails.contains(element));
-          final bccEmails = _bccEmails
-              .where((element) => encryptSignEmails.contains(element));
-          final toEmails =
-              _toEmails.where((element) => encryptSignEmails.contains(element));
-
-          final contact = <String>{};
-          contact.addAll(ccEmails);
-          contact.addAll(bccEmails);
-          contact.addAll(toEmails);
-
-          final body = await _bloc.encryptBody(
-            EncryptBody(
-              contact,
-              _bodyTextCtrl.text,
-              true,
-              true,
-              password,
-              sender.mail,
-            ),
-          );
-          messages.add(
-            SendMessage(
-              to: toEmails.join(","),
-              cc: ccEmails.join(","),
-              bcc: bccEmails.join(","),
-              isHtml: false,
-              subject: _subjectTextCtrl.text,
-              composeAttachments:
-                  new List<ComposeAttachment>.from(_attachments),
-              messageText: body,
-              draftUid: _currentDraftUid,
-              identity: identity,
-              alias: alias,
-            ),
-          );
-        }
-        if (signEmails.isNotEmpty) {
-          final ccEmails =
-              _ccEmails.where((element) => signEmails.contains(element));
-          final bccEmails =
-              _bccEmails.where((element) => signEmails.contains(element));
-          final toEmails =
-              _toEmails.where((element) => signEmails.contains(element));
-
-          final contact = <String>{};
-          contact.addAll(ccEmails);
-          contact.addAll(bccEmails);
-          contact.addAll(toEmails);
-
-          final body = await _bloc.encryptBody(
-            EncryptBody(
-              contact,
-              _bodyTextCtrl.text,
-              false,
-              true,
-              password,
-              sender.mail,
-            ),
-          );
-          messages.add(
-            SendMessage(
-              to: toEmails.join(","),
-              cc: ccEmails.join(","),
-              bcc: bccEmails.join(","),
-              isHtml: false,
-              subject: _subjectTextCtrl.text,
-              composeAttachments:
-                  new List<ComposeAttachment>.from(_attachments),
-              messageText: body,
-              draftUid: _currentDraftUid,
-              identity: identity,
-              alias: alias,
-            ),
-          );
-        }
-        if (encryptEmails.isNotEmpty) {
-          final ccEmails =
-              _ccEmails.where((element) => encryptSignEmails.contains(element));
-          final bccEmails = _bccEmails
-              .where((element) => encryptSignEmails.contains(element));
-          final toEmails =
-              _toEmails.where((element) => encryptSignEmails.contains(element));
-
-          final contact = <String>{};
-          contact.addAll(ccEmails);
-          contact.addAll(bccEmails);
-          contact.addAll(toEmails);
-
-          final body = await _bloc.encryptBody(
-            EncryptBody(
-              contact,
-              _bodyTextCtrl.text,
-              true,
-              false,
-              null,
-              sender.mail,
-            ),
-          );
-          messages.add(
-            SendMessage(
-              to: toEmails.join(","),
-              cc: ccEmails.join(","),
-              bcc: bccEmails.join(","),
-              isHtml: false,
-              subject: _subjectTextCtrl.text,
-              composeAttachments:
-                  new List<ComposeAttachment>.from(_attachments),
-              messageText: body,
-              draftUid: _currentDraftUid,
-              identity: identity,
-              alias: alias,
-            ),
-          );
-        }
-        if (defaultEmails.isNotEmpty) {
-          final ccEmails =
-              _ccEmails.where((element) => defaultEmails.contains(element));
-          final bccEmails =
-              _bccEmails.where((element) => defaultEmails.contains(element));
-          final toEmails =
-              _toEmails.where((element) => defaultEmails.contains(element));
-
-          final contact = <String>{};
-          contact.addAll(ccEmails);
-          contact.addAll(bccEmails);
-          contact.addAll(toEmails);
-
-          final body = _bodyTextCtrl.text;
-          messages.add(
-            SendMessage(
-              to: toEmails.join(","),
-              cc: ccEmails.join(","),
-              bcc: bccEmails.join(","),
-              isHtml: false,
-              subject: _subjectTextCtrl.text,
-              composeAttachments:
-                  new List<ComposeAttachment>.from(_attachments),
-              messageText: body,
-              draftUid: _currentDraftUid,
-              identity: identity,
-              alias: alias,
-            ),
-          );
-        }
-        return _bloc.add(SendMessages(messages));
-      } catch (e) {
-        print(e);
+      } else {
+        _bloc.add(SendMessage(
+          to: _toEmails.join(","),
+          cc: _ccEmails.join(","),
+          bcc: _bccEmails.join(","),
+          isHtml: false,
+          subject: _subjectTextCtrl.text,
+          composeAttachments: new List<ComposeAttachment>.from(_attachments),
+          messageText: _bodyTextCtrl.text,
+          draftUid: _currentDraftUid,
+          identity: identity,
+          alias: alias,
+        ));
       }
     } else {
       return _bloc.add(SendMessage(
@@ -812,8 +828,19 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
             child: SingleChildScrollView(
               child: Column(
                 children: <Widget>[
+                  if (_encryptType == EncryptType.None)
+                    AutomaticallyEncryptLabel(
+                      value: automaticallyEncrypt,
+                      onChanged: (_) {
+                        setState(() {
+                          automaticallyEncrypt = !automaticallyEncrypt;
+                        });
+                      },
+                      emails: [..._toEmails, ..._ccEmails, ..._bccEmails],
+                      bloc: _bloc,
+                    ),
                   IdentitySelector(
-                    padding: EdgeInsets.all( 16.0),
+                    padding: EdgeInsets.all(16.0),
                     enable: !lockUsers,
                     label: i18n(context, "messages_from"),
                     onIdentity: setIdentityOrSender,
@@ -822,8 +849,8 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
                   Divider(height: 0.0),
                   ComposeEmails(
                     key: _toKey,
-
-                    padding: EdgeInsets.symmetric(horizontal: 16.0,vertical: 8),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
                     enable: !lockUsers,
                     focusNode: toNode,
                     label: i18n(context, "messages_to"),
@@ -832,12 +859,16 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
                     onNext: () {
                       ccNode.requestFocus();
                     },
+                    onChange: () {
+                      setState(() {});
+                    },
+                    bloc: _bloc,
                   ),
                   Divider(height: 0.0),
                   ComposeEmails(
                     key: _ccKey,
-
-                    padding: EdgeInsets.symmetric(horizontal: 16.0,vertical: 8),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
                     enable: !lockUsers,
                     focusNode: ccNode,
                     label: i18n(context, "messages_cc"),
@@ -851,12 +882,17 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
                         subjectNode.requestFocus();
                       }
                     },
+                    onChange: () {
+                      setState(() {});
+                    },
+                    bloc: _bloc,
                   ),
                   Divider(height: 0.0),
                   if (_showBCC)
                     ComposeEmails(
                       key: _bccKey,
-                      padding: EdgeInsets.symmetric(horizontal: 16.0,vertical: 8),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
                       enable: !lockUsers,
                       focusNode: bccNode,
                       label: i18n(context, "messages_bcc"),
@@ -865,6 +901,10 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
                       onNext: () {
                         subjectNode.requestFocus();
                       },
+                      onChange: () {
+                        setState(() {});
+                      },
+                      bloc: _bloc,
                     ),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16.0),

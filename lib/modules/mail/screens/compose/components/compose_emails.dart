@@ -1,6 +1,7 @@
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
+import 'package:aurora_mail/modules/mail/blocs/compose_bloc/compose_bloc.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/input_validation.dart';
 import 'package:aurora_mail/utils/mail_utils.dart';
@@ -21,6 +22,8 @@ class ComposeEmails extends StatefulWidget {
   final FocusNode focusNode;
   final EdgeInsets padding;
   final VoidCallback onNext;
+  final Function onChange;
+  final ComposeBloc bloc;
 
   const ComposeEmails({
     Key key,
@@ -32,6 +35,8 @@ class ComposeEmails extends StatefulWidget {
     this.enable = true,
     this.padding,
     this.onNext,
+    this.onChange,
+    this.bloc,
   }) : super(key: key);
 
   @override
@@ -68,11 +73,13 @@ class ComposeEmailsState extends BState<ComposeEmails> {
       setState(() => widget.emails.add(email));
     }
     composeTypeAheadFieldKey.currentState.reopen();
+    widget.onChange();
   }
 
   void _deleteEmail(String email) {
     setState(() => widget.emails.remove(email));
     composeTypeAheadFieldKey.currentState.reopen();
+    widget.onChange();
   }
 
   validate() {
@@ -118,6 +125,33 @@ class ComposeEmailsState extends BState<ComposeEmails> {
     final gesture = textFieldKey.currentState
         as TextSelectionGestureDetectorBuilderDelegate;
     gesture.editableTextKey.currentState.toggleToolbar();
+  }
+
+  Future<Map<String, Contact>> getContacts() async {
+    final emails = widget.emails;
+    if (emails.isEmpty) {
+      return {};
+    }
+    final contacts = <String, Contact>{};
+    for (var emailWithName in emails) {
+      String email;
+      final match = RegExp("<(.*)?>").firstMatch(emailWithName);
+      if (match != null && match.groupCount > 0) {
+        email = match.group(1);
+      } else {
+        email = emailWithName;
+      }
+      final emailContacts = await widget.bloc.getContacts(email);
+      if (emailContacts.isNotEmpty) {
+        final contact = emailContacts.firstWhere(
+          (element) => element.storage == "personal",
+          orElse: () => emailContacts.first,
+        );
+        final displayName = MailUtils.getFriendlyName(contact);
+        contacts[displayName] = contact;
+      }
+    }
+    return contacts;
   }
 
   @override
@@ -258,69 +292,90 @@ class ComposeEmailsState extends BState<ComposeEmails> {
                 SizedBox(width: 8.0),
                 Flexible(
                   flex: 1,
-                  child: Wrap(spacing: 8.0, children: [
-                    ...widget.emails.map((e) {
-                      final displayName = MailUtils.displayNameFromFriendly(e);
-                      return SizedBox(
-                        height: 43.0,
-                        child: GestureDetector(
-                          onTap: widget.enable
-                              ? () {
-                                  if (_emailToShowDelete == e) {
-                                    setState(() => _emailToShowDelete = null);
-                                  } else {
-                                    setState(() => _emailToShowDelete = e);
-                                  }
-                                }
-                              : null,
-                          child: Chip(
-                            avatar: CircleAvatar(
-                              backgroundColor: theme.accentColor,
-                              child: Text(
-                                displayName[0],
-                                style: TextStyle(color: Colors.white),
+                  child: FutureBuilder<Map<String, Contact>>(
+                    future: getContacts(),
+                    builder: (context, result) {
+                      return Wrap(spacing: 8.0, children: [
+                        ...widget.emails.map((e) {
+                          final displayName =
+                              MailUtils.displayNameFromFriendly(e);
+                          final contact = result.data != null
+                              ? result.data[e]
+                              : null;
+
+                          return SizedBox(
+                            height: 43.0,
+                            child: GestureDetector(
+                              onTap: widget.enable
+                                  ? () {
+                                      if (_emailToShowDelete == e) {
+                                        setState(
+                                            () => _emailToShowDelete = null);
+                                      } else {
+                                        setState(() => _emailToShowDelete = e);
+                                      }
+                                    }
+                                  : null,
+                              child: Chip(
+                                avatar: CircleAvatar(
+                                  backgroundColor: theme.accentColor,
+                                  child: Text(
+                                    displayName[0],
+                                    style: TextStyle(color: Colors.white),
+                                  ),
+                                ),
+                                label: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(displayName),
+                                    SizedBox(width: 5),
+                                    if (contact?.autoEncrypt == true)
+                                      Icon(Icons.lock_outline),
+                                    if (contact?.autoSign == true)
+                                      Icon(Icons.edit_outlined)
+                                  ],
+                                ),
+                                onDeleted: e == _emailToShowDelete
+                                    ? () => _deleteEmail(e)
+                                    : null,
                               ),
                             ),
-                            label: Text(displayName),
-                            onDeleted: e == _emailToShowDelete
-                                ? () => _deleteEmail(e)
-                                : null,
+                          );
+                        }).toList(),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          child: FitTextField(
+                            controller: widget.textCtrl,
+                            child: TextField(
+                              key: textFieldKey,
+                              enabled: widget.enable,
+                              focusNode: widget.focusNode,
+                              controller: widget.textCtrl,
+                              autofocus: true,
+                              keyboardType: TextInputType.emailAddress,
+                              decoration: InputDecoration.collapsed(
+                                hintText: null,
+                              ),
+                              onChanged: (value) {
+                                if (widget.emails.isNotEmpty && value.isEmpty) {
+                                  widget.textCtrl.text = " ";
+                                  widget.textCtrl.selection =
+                                      TextSelection.collapsed(offset: 1);
+                                  _deleteEmail(widget.emails.last);
+                                } else if (value.length > 1 &&
+                                    value.endsWith(" ")) {
+                                  onSubmit();
+                                }
+                              },
+                              onEditingComplete: () {
+                                onSubmit();
+                              },
+                            ),
                           ),
                         ),
-                      );
-                    }).toList(),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                      child: FitTextField(
-                        controller: widget.textCtrl,
-                        child: TextField(
-                          key: textFieldKey,
-                          enabled: widget.enable,
-                          focusNode: widget.focusNode,
-                          controller: widget.textCtrl,
-                          autofocus: true,
-                          keyboardType: TextInputType.emailAddress,
-                          decoration: InputDecoration.collapsed(
-                            hintText: null,
-                          ),
-                          onChanged: (value) {
-                            if (widget.emails.isNotEmpty && value.isEmpty) {
-                              widget.textCtrl.text = " ";
-                              widget.textCtrl.selection =
-                                  TextSelection.collapsed(offset: 1);
-                              _deleteEmail(widget.emails.last);
-                            } else if (value.length > 1 &&
-                                value.endsWith(" ")) {
-                              onSubmit();
-                            }
-                          },
-                          onEditingComplete: () {
-                            onSubmit();
-                          },
-                        ),
-                      ),
-                    ),
-                  ]),
+                      ]);
+                    },
+                  ),
                 ),
                 if (widget.focusNode.hasFocus && false)
                   SizedBox(
