@@ -39,15 +39,24 @@ class AppDelegate: FlutterAppDelegate{
     }
     
     override func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void){
-     
+        
         completionHandler([.alert, .badge, .sound])
     }
     
-    override func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-            self.debugNotification("notification sent to flutter in \(UIApplication.shared.applicationState)")
-            SwiftIosNotificationHandlerPlugin.reciveNotification(didReceiveRemoteNotification: userInfo,fetchCompletionHandler: completionHandler)
+    func getStateName(_ state:UIApplication.State)->String{
+        switch state {
+        case .active :
+            return "active"
+        case .inactive :
+            return "inactive"
+        case .background :
+            return "background"
         }
+    }
+    
+    override func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+        self.debugNotification("notification sent to flutter in \(getStateName(UIApplication.shared.applicationState))")
+        SwiftIosNotificationHandlerPlugin.reciveNotification(didReceiveRemoteNotification: userInfo,fetchCompletionHandler: completionHandler)
     }
     
     func showNotification(_ notification :[String:AnyObject]){

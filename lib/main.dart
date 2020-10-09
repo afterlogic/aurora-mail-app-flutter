@@ -75,8 +75,8 @@ Future<bool> onAlarm({
   NotificationData data,
   bool isBackgroundForce,
 }) async {
-  if(kDebugMode){
-    isBackgroundForce=true;
+  if (kDebugMode) {
+    isBackgroundForce = true;
   }
   WidgetsFlutterBinding.ensureInitialized();
   final isDebug = await DebugLocalStorage().getBackgroundRecord();
@@ -93,17 +93,18 @@ Future<bool> onAlarm({
   if (!updateFromNotification.contains(null) && !updateFromNotification.contains(data?.to)) {
     updateFromNotification.add(data?.to);
     try {
-      BackgroundHelper.onStartAlarm();
+      if (!isBackground) {
+        BackgroundHelper.onStartAlarm();
+      }
       final future = BackgroundSync()
           .sync(
-        isBackground,
+            isBackground,
             showNotification,
             data,
             isolatedLogger,
             interceptor,
           )
-          .timeout(
-              Duration(seconds: isBackground ? (Platform.isIOS ? 30 : 60) : 1080));
+          .timeout(Duration(seconds: isBackground ? (Platform.isIOS ? 30 : 60) : 1080));
       hasUpdate = await future;
     } catch (e, s) {
       isolatedLogger.error(e, s);
@@ -111,7 +112,9 @@ Future<bool> onAlarm({
     }
     updateFromNotification.remove(data?.to);
   }
-  BackgroundHelper.onEndAlarm(hasUpdate);
+  if (!isBackground) {
+    BackgroundHelper.onEndAlarm(hasUpdate);
+  }
   if (isDebug) {
     isolatedLogger?.save();
   }

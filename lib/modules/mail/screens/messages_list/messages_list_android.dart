@@ -76,8 +76,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
     };
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (MessagesListAndroid.shareHolder != null) {
-        MessagesListAndroid.onShare(
-            MessagesListAndroid.shareHolder[0] as List<File>,
+        MessagesListAndroid.onShare(MessagesListAndroid.shareHolder[0] as List<File>,
             MessagesListAndroid.shareHolder[1] as List<String>);
         MessagesListAndroid.shareHolder = null;
       }
@@ -118,8 +117,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
 
   void _initBlocs() {
     final authBloc = BlocProvider.of<AuthBloc>(context);
-    if (_messagesListBloc != null &&
-        _messagesListBloc.account == authBloc.currentAccount) return;
+    if (_messagesListBloc != null && _messagesListBloc.account == authBloc.currentAccount) return;
     _messagesListBloc = new MessagesListBloc(
       user: authBloc.currentUser,
       account: authBloc.currentAccount,
@@ -131,8 +129,9 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
       authBloc.currentUser,
       authBloc.currentAccount,
     );
-
-    _mailBloc.add(FetchFolders());
+    if (!BackgroundHelper.isBackground) {
+      _mailBloc.add(FetchFolders());
+    }
   }
 
   void _showError(BuildContext ctx, String err) {
@@ -199,8 +198,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
 
   @override
   Widget build(BuildContext context) {
-    final authKey =
-        BlocProvider.of<AuthBloc>(context).currentAccount.localId.toString();
+    final authKey = BlocProvider.of<AuthBloc>(context).currentAccount.localId.toString();
     return MultiBlocProvider(
       key: Key(authKey),
       providers: [
@@ -251,8 +249,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
                   BlocListener(
                     bloc: _messagesListBloc,
                     listener: (BuildContext context, state) {
-                      if (state is MailError)
-                        _showError(context, state.errorMsg);
+                      if (state is MailError) _showError(context, state.errorMsg);
                       if (state is MessagesDeleted) {
                         _startRefresh();
                       }
@@ -285,8 +282,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
                   color: Colors.black,
                   child: BlocBuilder<MessagesListBloc, MessagesListState>(
                       bloc: _messagesListBloc,
-                      condition: (prevState, state) =>
-                          state is SubscribedToMessages,
+                      condition: (prevState, state) => state is SubscribedToMessages,
                       builder: (context, state) {
                         Widget child;
                         if (state is SubscribedToMessages) {
@@ -309,8 +305,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
               ),
             ],
           ),
-          bottomNavigationBar:
-              MailBottomAppBar(selectedRoute: MailBottomAppBarRoutes.mail),
+          bottomNavigationBar: MailBottomAppBar(selectedRoute: MailBottomAppBarRoutes.mail),
           floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
           floatingActionButton: AMFloatingActionButton(
             child: IconTheme(
@@ -346,8 +341,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
             onPressed: () async {
               final result = await dialog(
                 context: context,
-                builder: (_) =>
-                    AdvancedSearch(appBarKey.currentState.searchText),
+                builder: (_) => AdvancedSearch(appBarKey.currentState.searchText),
               );
               if (result is String && result.isNotEmpty) {
                 appBarKey.currentState.search(result);
@@ -372,8 +366,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
             key: Key(key),
             folder: folder,
             selectionController: selectionController,
-            header: ([FolderType.spam, FolderType.trash]
-                        .contains(_selectedFolder.folderType) &&
+            header: ([FolderType.spam, FolderType.trash].contains(_selectedFolder.folderType) &&
                     !isSearch)
                 ? _emptyFolder
                 : null,
@@ -421,10 +414,9 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
     if (messageCount == null || messageCount == 0) {
       return SizedBox.shrink();
     }
-    final emptyFolder =
-        Folder.getFolderTypeFromNumber(_selectedFolder.type) == FolderType.trash
-            ? "btn_message_empty_trash_folder"
-            : "btn_message_empty_spam_folder";
+    final emptyFolder = Folder.getFolderTypeFromNumber(_selectedFolder.type) == FolderType.trash
+        ? "btn_message_empty_trash_folder"
+        : "btn_message_empty_spam_folder";
     return ListTile(
       leading: Icon(Icons.delete_forever),
       title: Text(i18n(context, emptyFolder)),

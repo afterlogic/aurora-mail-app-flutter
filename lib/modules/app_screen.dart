@@ -50,7 +50,7 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
     sub = WebMailApi.authErrorStream.listen((_) {
       _authBloc.add(InvalidateCurrentUserToken());
     });
-    BackgroundHelper.current = AppLifecycleState.resumed;
+    BackgroundHelper.current = WidgetsBinding.instance.lifecycleState;
     _initApp();
     ReceiveSharing.getInitialMedia().then((shared) {
       if (shared == null) return;
