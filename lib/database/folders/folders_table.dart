@@ -86,8 +86,7 @@ class Folders extends Table {
     final userLocalId = args["userLocalId"] as int;
     final accountLocalId = args["accountLocalId"] as int;
     final namespace = (args["namespace"] as String) ?? "";
-    final rawFolders =
-        new List<Map<String, dynamic>>.from(args["folders"] as Iterable);
+    final rawFolders = new List<Map<String, dynamic>>.from(args["folders"] as Iterable);
 
     final flattenedFolders = new List<LocalFolder>();
 
@@ -143,22 +142,18 @@ class Folders extends Table {
   }
 
   // TODO folders might change their order
-  static FoldersDiffCalcResult _calculateFoldersDiff(
-      Map<String, List<LocalFolder>> args) {
+  static FoldersDiffCalcResult _calculateFoldersDiff(Map<String, List<LocalFolder>> args) {
     final oldFolders = args["oldItems"];
     final newFolders = args["newItems"];
 
     final addedFolders = newFolders.where((i) =>
-        oldFolders.firstWhere((j) => j.fullNameRaw == i.fullNameRaw,
-            orElse: () => null) ==
-        null);
+        oldFolders.firstWhere((j) => j.fullNameRaw == i.fullNameRaw, orElse: () => null) == null);
 
     final removedFolders = <LocalFolder>[];
     final updatedFolders = <LocalFolder>[];
     for (var oldFolder in oldFolders) {
-      final newFolder = newFolders.firstWhere(
-          (j) => j.fullNameRaw == oldFolder.fullNameRaw,
-          orElse: () => null);
+      final newFolder =
+          newFolders.firstWhere((j) => j.fullNameRaw == oldFolder.fullNameRaw, orElse: () => null);
       if (newFolder == null) {
         removedFolders.add(oldFolder);
       } else {
@@ -185,34 +180,33 @@ class Folders extends Table {
     List<MessageInfo> oldInfo,
     List<MessageInfo> newInfo, [
     bool showLog = true,
+    bool force = false,
   ]) {
     final Map<String, dynamic> args = {
       "oldItems": oldInfo,
       "newItems": newInfo,
       "showLog": showLog,
+      "force": force,
     };
-    return compute(_calculateMessagesInfoDiff, args);
+    return compute(_hashCalculateMessagesInfoDiff, args);
   }
 
   // you cannot just return newInfo
   // you have to return oldInfo (because it contains hasBody: true) + addedMessages
-  static MessagesInfoDiffCalcResult _calculateMessagesInfoDiff(
-      Map<String, dynamic> args) {
+  static MessagesInfoDiffCalcResult _calculateMessagesInfoDiff(Map<String, dynamic> args) {
     final oldInfo = args["oldItems"] as List<MessageInfo>;
     final newInfo = args["newItems"] as List<MessageInfo>;
     final showLog = args["showLog"] as bool;
-
+    final force = args["force"] as bool;
     final unchangedMessages = oldInfo.where((i) =>
         newInfo.firstWhere(
-            (j) =>
-                j.uid == i.uid &&
-                j.parentUid == i.parentUid &&
-                listEquals(j.flags, i.flags),
+            (j) => j.uid == i.uid && j.parentUid == i.parentUid && listEquals(j.flags, i.flags),
             orElse: () => null) !=
         null);
 
     // no need to calculate difference if all the messages are unchanged
-    if (unchangedMessages.length == oldInfo.length &&
+    if (!force &&
+        unchangedMessages.length == oldInfo.length &&
         unchangedMessages.length == newInfo.length) {
       if (showLog) logger.log("Diff calcultaion finished: no changes");
       return new MessagesInfoDiffCalcResult(
@@ -223,11 +217,11 @@ class Folders extends Table {
       );
     }
 
-    final addedMessages = newInfo.where((i) =>
-        oldInfo.firstWhere((j) => j.uid == i.uid, orElse: () => null) == null);
+    final addedMessages =
+        newInfo.where((i) => oldInfo.firstWhere((j) => j.uid == i.uid, orElse: () => null) == null);
 
-    final removedMessages = oldInfo.where((i) =>
-        newInfo.firstWhere((j) => j.uid == i.uid, orElse: () => null) == null);
+    final removedMessages =
+        oldInfo.where((i) => newInfo.firstWhere((j) => j.uid == i.uid, orElse: () => null) == null);
 
     final changedParent = newInfo.where((i) =>
         oldInfo.firstWhere((j) => j.uid == i.uid && j.parentUid != i.parentUid,
@@ -235,8 +229,7 @@ class Folders extends Table {
         null);
 
     final changedFlags = newInfo.where((i) =>
-        oldInfo.firstWhere(
-            (j) => j.uid == i.uid && !listEquals(j.flags, i.flags),
+        oldInfo.firstWhere((j) => j.uid == i.uid && !listEquals(j.flags, i.flags),
             orElse: () => null) !=
         null);
 
@@ -267,8 +260,93 @@ class Folders extends Table {
     );
   }
 
-  static LocalFolder getFolderOfType(
-      List<LocalFolder> folders, FolderType type) {
+  static MessagesInfoDiffCalcResult _hashCalculateMessagesInfoDiff(Map<String, dynamic> args) {
+    final oldInfo = args["oldItems"] as List<MessageInfo>;
+    final newInfo = args["newItems"] as List<MessageInfo>;
+    final showLog = args["showLog"] as bool;
+    final force = args["force"] as bool;
+
+    final hashOldInfo = <int, MessageInfo>{};
+    final hashNewInfo = <int, MessageInfo>{};
+    for (var value in oldInfo) {
+      hashOldInfo[value.uid] = value;
+    }
+    for (var value in newInfo) {
+      hashNewInfo[value.uid] = value;
+    }
+
+    final changedFlags = List<MessageInfo>();
+    final addedMessages = List<MessageInfo>();
+    final removedMessages = List<MessageInfo>();
+    final unchangedMessages = List<MessageInfo>();
+    final changedParent = List<MessageInfo>();
+
+    for (var key in hashOldInfo.keys) {
+      final newItem = hashNewInfo[key];
+      if (newItem != null) {
+        final oldItem = hashOldInfo[key];
+        if (newItem.parentUid == oldItem.parentUid && listEquals(newItem.flags, oldItem.flags)) {
+          unchangedMessages.add(newItem);
+        }
+      } else {
+        removedMessages.add(hashOldInfo[key]);
+      }
+    }
+    for (var key in hashNewInfo.keys) {
+      final oldItem = hashOldInfo[key];
+      if (oldItem != null) {
+        final newItem = hashNewInfo[key];
+        if (oldItem.parentUid != newItem.parentUid) {
+          changedParent.add(newItem);
+        }
+        if (!listEquals(newItem.flags, oldItem.flags)) {
+          changedFlags.add(newItem);
+        }
+      } else {
+        addedMessages.add(hashNewInfo[key]);
+      }
+    }
+    // no need to calculate difference if all the messages are unchanged
+    if (!force &&
+        unchangedMessages.length == oldInfo.length &&
+        unchangedMessages.length == newInfo.length) {
+      if (showLog) logger.log("Diff calcultaion finished: no changes");
+      return new MessagesInfoDiffCalcResult(
+        updatedInfo: oldInfo,
+        removedUids: [],
+        infosToUpdateFlags: [],
+        addedMessages: [],
+      );
+    }
+
+    if (showLog) logger.log("""
+    Messages info diff calcultaion finished:
+      unchanged: ${unchangedMessages.length}
+      changedParent: ${changedParent.length}
+      changedFlags: ${changedFlags.length}
+      removed: ${removedMessages.length}
+      added: ${addedMessages.length}
+    """);
+
+    final removedUids = removedMessages.map((m) => m.uid).toList();
+    final changedParentUid = changedParent.map((m) => m.uid).toList();
+
+    final List<MessageInfo> updatedInfo = [
+      ...addedMessages,
+      ...changedParent,
+      ...changedFlags,
+      ...unchangedMessages
+    ];
+
+    return new MessagesInfoDiffCalcResult(
+      updatedInfo: updatedInfo,
+      removedUids: [...removedUids, ...changedParentUid],
+      infosToUpdateFlags: changedFlags.toList(),
+      addedMessages: addedMessages.toList(),
+    );
+  }
+
+  static LocalFolder getFolderOfType(List<LocalFolder> folders, FolderType type) {
     return folders.firstWhere(
       (f) => Folder.getFolderTypeFromNumber(f.type) == type,
       orElse: () => null,
@@ -282,9 +360,7 @@ class FoldersDiffCalcResult {
   final List<LocalFolder> updatedFolders;
 
   FoldersDiffCalcResult(
-      {@required this.updatedFolders,
-      @required this.addedFolders,
-      @required this.deletedFolders})
+      {@required this.updatedFolders, @required this.addedFolders, @required this.deletedFolders})
       : assert(addedFolders != null, deletedFolders != null);
 }
 
@@ -299,9 +375,7 @@ class MessagesInfoDiffCalcResult {
       @required this.removedUids,
       @required this.infosToUpdateFlags,
       @required this.addedMessages})
-      : assert(updatedInfo != null &&
-            removedUids != null &&
-            infosToUpdateFlags != null);
+      : assert(updatedInfo != null && removedUids != null && infosToUpdateFlags != null);
 }
 
 class FolderMessageInfo {

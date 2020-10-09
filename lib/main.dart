@@ -75,13 +75,16 @@ Future<bool> onAlarm({
   NotificationData data,
   bool isBackgroundForce,
 }) async {
+  if(kDebugMode){
+    isBackgroundForce=true;
+  }
   WidgetsFlutterBinding.ensureInitialized();
   final isDebug = await DebugLocalStorage().getBackgroundRecord();
   ApiInterceptor interceptor;
   Logger isolatedLogger = logger;
 
   if (isDebug) {
-    interceptor = ApiInterceptor();
+    interceptor = ApiInterceptor(true);
     isolatedLogger = Logger.backgroundSync(interceptor);
     isolatedLogger.start();
   }

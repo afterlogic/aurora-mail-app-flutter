@@ -22,7 +22,6 @@ public class SwiftIosNotificationHandlerPlugin: NSObject, FlutterPlugin {
         do {
             switch call.method {
             case "isBackground":
-                UIApplication.State.active
                 result(UIApplication.shared.applicationState.rawValue)
             case "listen":
                 if hasAlarm {

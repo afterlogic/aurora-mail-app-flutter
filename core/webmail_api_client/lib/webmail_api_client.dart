@@ -60,11 +60,11 @@ class WebMailApi {
     }
   }
 
-  _onResponse(String id, int delay, int status) {
+  _onResponse(String id, int delay, int status,dynamic res) {
     if (interceptor?.onResponse != null) {
-      interceptor?.onResponse("$id\nDELAY: ${delay}\nSTATUS: ${status}");
+      interceptor?.onResponse("$id\nDELAY: ${delay}\nSTATUS: ${status} ${interceptor.logResponse==true?"\nBODY:$res":""}");
     } else if (onResponse != null) {
-      onResponse("$id\nDELAY: ${delay}\nSTATUS: ${status}");
+      onResponse("$id\nDELAY: ${delay}\nSTATUS: ${status} ${status}${interceptor?.logResponse==true?"\nBODY:$res":""}");
     }
   }
 
@@ -96,7 +96,7 @@ class WebMailApi {
 
     if (res["Result"] != null && (res["Result"] != false || getRawResponse)) {
       _onResponse(id, DateTime.now().millisecondsSinceEpoch - start,
-          rawResponse.statusCode);
+          rawResponse.statusCode,res);
       if (getRawResponse)
         return res;
       else
@@ -151,7 +151,10 @@ class WebMailApi {
 }
 
 class ApiInterceptor {
+ final bool logResponse;
   Function(String) onRequest;
   Function(String) onError;
   Function(String) onResponse;
+
+  ApiInterceptor(this.logResponse);
 }

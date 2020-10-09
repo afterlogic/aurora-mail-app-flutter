@@ -13,7 +13,7 @@ import FirebaseMessaging
 
 @UIApplicationMain
 class AppDelegate: FlutterAppDelegate{
-    
+    let enableDebugLog=true
     override func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
@@ -24,11 +24,13 @@ class AppDelegate: FlutterAppDelegate{
         }
         application.registerForRemoteNotifications()
         GeneratedPluginRegistrant.register(with: self)
+        debugNotification("App running")
         let version = UIDevice.current.systemVersion
         let iosVersion = NSString(string: version).doubleValue
         if (iosVersion >= 13 && iosVersion < 14) {
             let notificationOption = launchOptions?[.remoteNotification]
             if let notification = notificationOption as? [String:AnyObject]{
+                debugNotification("notification showing from swift")
                 showNotification(notification)
             }
         }
@@ -36,8 +38,14 @@ class AppDelegate: FlutterAppDelegate{
         return  super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
     
+    override func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void){
+     
+        completionHandler([.alert, .badge, .sound])
+    }
+    
     override func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+            self.debugNotification("notification sent to flutter in \(UIApplication.shared.applicationState)")
             SwiftIosNotificationHandlerPlugin.reciveNotification(didReceiveRemoteNotification: userInfo,fetchCompletionHandler: completionHandler)
         }
     }
@@ -49,6 +57,19 @@ class AppDelegate: FlutterAppDelegate{
         content.userInfo=["payload":notification["To"] as? String ?? ""]
         content.title = notification["From"] as? String ?? ""
         content.body = notification["Subject"] as? String ?? ""
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
+        let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
+        notificationCenter.add(request)
+    }
+    func debugNotification(_ text:String){
+        if(!enableDebugLog){
+            return
+        }
+        let notificationCenter = UNUserNotificationCenter.current()
+        let identifier = text
+        let content = UNMutableNotificationContent()
+        content.title = "Debug Log"
+        content.body = text
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
         let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
         notificationCenter.add(request)

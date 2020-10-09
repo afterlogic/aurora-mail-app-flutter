@@ -61,8 +61,8 @@ class BackgroundSync {
           continue;
         }
         final newMessages = await ((notification != null && isBackground)
-            ? _getNewMessages(user, accounts, interceptor)
-            : _updateAccountMessages(isBackground, user, accounts, interceptor));
+            ? _getNewMessages(user, accounts, interceptor, isolatedLogger)
+            : _updateAccountMessages(isBackground, user, accounts, interceptor, isolatedLogger));
         if (newMessages.isNotEmpty) {
           if (showNotification == true) {
             isolatedLogger.log("MailSync: ${newMessages.length} new message(s)");
@@ -96,6 +96,7 @@ class BackgroundSync {
     User user,
     List<Account> accounts,
     ApiInterceptor interceptor,
+    Logger isolatedLogger,
   ) async {
     final newMessages = <Account, List<Message>>{};
     for (var account in accounts) {
@@ -136,25 +137,30 @@ class BackgroundSync {
 
         List<MessageInfo> newMessagesInfo = MessageInfo.flattenMessagesInfo(rawInfo);
 
-        final result = await Folders.calculateMessagesInfoDiffAsync(messagesInfo, newMessagesInfo);
+        final result = await Folders.calculateMessagesInfoDiffAsync(
+          messagesInfo,
+          newMessagesInfo,
+          true,
+          true,
+        );
 
         if (result.addedMessages.isEmpty) break;
 
         await _mailDao.deleteMessages(result.removedUids, folderToUpdate.fullNameRaw);
 
         await _mailDao.updateMessagesFlags(result.infosToUpdateFlags);
-        logger.log("start add empty message");
+        isolatedLogger.log("start add empty message");
         await _mailDao.addEmptyMessage(
             result.addedMessages, account, user, folderToUpdate.fullNameRaw);
-        logger.log("finish add empty message");
+        isolatedLogger.log("finish add empty message");
         final uids = result.addedMessages.map((m) => m.uid);
         final rawBodies = await mailApi.getMessageBodies(
           folderName: folderToUpdate.fullNameRaw,
           uids: uids.toList(),
         );
-        logger.log(rawBodies);
+        isolatedLogger.log("rawBodies: \n$rawBodies");
         final messageBody = await _getMessageInfoWithNotBody(result.addedMessages);
-        logger.log(messageBody);
+        isolatedLogger.log("messageBody: \n$messageBody");
         final newMessageBodies = Mail.getMessageObjFromServerAndUpdateInfoHasBody(
           rawBodies,
           messageBody,
@@ -183,6 +189,7 @@ class BackgroundSync {
     User user,
     List<Account> accounts,
     ApiInterceptor interceptor,
+    Logger isolatedLogger,
   ) async {
     final newMessages = <Account, List<Message>>{};
     for (var account in accounts) {
@@ -219,6 +226,8 @@ class BackgroundSync {
         final result = await Folders.calculateMessagesInfoDiffAsync(
           messagesInfo,
           newMessagesInfo,
+          true,
+          true,
         );
 
         if (result.addedMessages.isEmpty) continue;
@@ -241,9 +250,9 @@ class BackgroundSync {
           messagesInfo,
           newMessagesInfo,
         );
-        logger.log(rawBodies);
+        isolatedLogger.log(rawBodies);
         final messageBody = await _getMessageInfoWithNotBody(result.addedMessages);
-        logger.log(messageBody);
+        isolatedLogger.log(messageBody);
         final newMessageBodies = Mail.getMessageObjFromServerAndUpdateInfoHasBody(
           rawBodies,
           messageBody,
