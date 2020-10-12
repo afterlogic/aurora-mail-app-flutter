@@ -66,9 +66,14 @@ class GetLastEmail extends AuthEvent {}
 
 class SelectUser extends AuthEvent {
   final int userLocalId;
+  final int accountLocalId;
   final Completer completer;
 
-  const SelectUser(this.userLocalId, [this.completer]);
+  const SelectUser(
+    this.userLocalId, [
+    this.completer,
+    this.accountLocalId,
+  ]);
 
   @override
   List<Object> get props => [userLocalId];
@@ -83,6 +88,7 @@ class SelectUserByEmail extends AuthEvent {
   @override
   List<Object> get props => [email];
 }
+
 class DeleteUser extends AuthEvent {
   final User user;
 

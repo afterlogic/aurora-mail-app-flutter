@@ -2,6 +2,7 @@ import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/auth_input.dart';
+import 'package:aurora_mail/modules/auth/screens/login/components/host_input_formatter.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/login_gradient.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/presentation_header.dart';
 import 'package:aurora_mail/modules/auth/screens/login/login_route.dart';
@@ -256,6 +257,7 @@ class _LoginAndroidState extends BState<LoginAndroid> {
                     if (_showHostField)
                       AuthInput(
                         controller: hostCtrl,
+                        inputFormatters: [HostInputFormatter()],
                         label: i18n(context, "login_input_host"),
                         keyboardType: TextInputType.url,
                         isEnabled: !loading,

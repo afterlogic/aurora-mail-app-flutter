@@ -88,9 +88,8 @@ class AuthMethods {
   Future<User> setUser(User user) async {
     User userToReturn = await _usersDao.getUserByEmail(user.emailFromLogin);
 
-
-      await _usersDao.addUser(user);
-      userToReturn = await _usersDao.getUserByEmail(user.emailFromLogin);
+    await _usersDao.addUser(user);
+    userToReturn = await _usersDao.getUserByEmail(user.emailFromLogin);
     selectUser(userToReturn.localId);
     _authLocal.setLastEmail(user.emailFromLogin);
     _authLocal.setLastHost(user.hostname);
@@ -170,8 +169,8 @@ class AuthMethods {
     return _usersDao.getUserByLocalId(userLocalId);
   }
 
-  Future selectAccount(Account account) {
-    return _authLocal.setSelectedAccountId(account.localId);
+  Future selectAccount(int accountLocalId) {
+    return _authLocal.setSelectedAccountId(accountLocalId);
   }
 
   Future<void> updateAliases(User user, Account account) async {

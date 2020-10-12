@@ -7,7 +7,6 @@ import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_rou
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'auth/blocs/auth_bloc/auth_bloc.dart';
 
@@ -48,15 +47,15 @@ class RouteWrapState extends State<RouteWrap> {
     if (RouteWrap.staticState == this) RouteWrap.staticState = null;
   }
 
-  void showMessage(int userId, int messageUid) async {
+  void showMessage(int userId, int messageUid, int accountLocalId) async {
     if (await discardNotSavedChanges()) {
       final completer = Completer();
-      widget.authBloc.add(SelectUser(userId, completer));
+      widget.authBloc.add(SelectUser(userId, completer, accountLocalId));
       await completer.future;
       MessagesListAndroid.openMessageId = messageUid;
       widget.navKey.currentState.pushNamedAndRemoveUntil(
         MessagesListRoute.name,
-            (_) => false,
+        (_) => false,
         arguments: MessagesListRouteArg(),
       );
     }
@@ -67,7 +66,8 @@ class RouteWrapState extends State<RouteWrap> {
       final json = jsonDecode(payload) as Map<String, dynamic>;
       final userLocalId = json["user"] as int;
       final messageLocalId = json["message"] as int;
-      showMessage(userLocalId, messageLocalId);
+      final accountLocalId = json["account"] as int;
+      showMessage(userLocalId, messageLocalId, accountLocalId);
     } else {
       selectUser(payload);
     }
@@ -98,7 +98,7 @@ class RouteWrapState extends State<RouteWrap> {
       await completer.future;
       widget.navKey.currentState.pushNamedAndRemoveUntil(
         MessagesListRoute.name,
-            (_) => false,
+        (_) => false,
         arguments: MessagesListRouteArg(),
       );
     }
