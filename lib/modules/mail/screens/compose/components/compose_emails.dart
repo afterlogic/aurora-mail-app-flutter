@@ -106,7 +106,7 @@ class ComposeEmailsState extends BState<ComposeEmails> {
 
       contacts.removeWhere((i) => i.viewEmail.isEmpty);
       contacts.removeWhere(
-          (i) => widget.emails.contains(MailUtils.getFriendlyName(i)));
+              (i) => widget.emails.contains(MailUtils.getFriendlyName(i)));
       return contacts;
     } catch (e, s) {
       print(s);
@@ -123,7 +123,7 @@ class ComposeEmailsState extends BState<ComposeEmails> {
     _focus();
     await Future.delayed(Duration(milliseconds: 100));
     final gesture = textFieldKey.currentState
-        as TextSelectionGestureDetectorBuilderDelegate;
+    as TextSelectionGestureDetectorBuilderDelegate;
     gesture.editableTextKey.currentState.toggleToolbar();
   }
 
@@ -144,7 +144,7 @@ class ComposeEmailsState extends BState<ComposeEmails> {
       final emailContacts = await widget.bloc.getContacts(email);
       if (emailContacts.isNotEmpty) {
         final contact = emailContacts.firstWhere(
-          (element) => element.storage == "personal",
+              (element) => element.storage == "personal",
           orElse: () => emailContacts.first,
         );
         final displayName = MailUtils.getFriendlyName(contact);
@@ -156,7 +156,10 @@ class ComposeEmailsState extends BState<ComposeEmails> {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
+    final screenWidth = MediaQuery
+        .of(context)
+        .size
+        .width;
     final dropDownWidth = screenWidth / 1.25;
 
     TextSpan _searchMatch(String match) {
@@ -270,7 +273,7 @@ class ComposeEmailsState extends BState<ComposeEmails> {
           getImmediateSuggestions: true,
           noItemsFoundBuilder: (_) => SizedBox(),
           suggestionsCallback: (pattern) async =>
-              lastSuggestions = await _buildSuggestions(pattern),
+          lastSuggestions = await _buildSuggestions(pattern),
           itemBuilder: (_, c) {
             return Padding(
               padding: const EdgeInsets.all(16.0),
@@ -298,23 +301,27 @@ class ComposeEmailsState extends BState<ComposeEmails> {
                       return Wrap(spacing: 8.0, children: [
                         ...widget.emails.map((e) {
                           final displayName =
-                              MailUtils.displayNameFromFriendly(e);
-                          final contact = result.data != null
-                              ? result.data[e]
-                              : null;
+                          MailUtils.displayNameFromFriendly(e);
+                          Contact contact;
+                          if (BuildProperty.cryptoEnable &&
+                              !BuildProperty.legacyPgpKey) {
+                            contact = result.data != null
+                                ? result.data[e]
+                                : null;
+                          }
 
                           return SizedBox(
                             height: 43.0,
                             child: GestureDetector(
                               onTap: widget.enable
                                   ? () {
-                                      if (_emailToShowDelete == e) {
-                                        setState(
-                                            () => _emailToShowDelete = null);
-                                      } else {
-                                        setState(() => _emailToShowDelete = e);
-                                      }
-                                    }
+                                if (_emailToShowDelete == e) {
+                                  setState(
+                                          () => _emailToShowDelete = null);
+                                } else {
+                                  setState(() => _emailToShowDelete = e);
+                                }
+                              }
                                   : null,
                               child: Chip(
                                 avatar: CircleAvatar(
