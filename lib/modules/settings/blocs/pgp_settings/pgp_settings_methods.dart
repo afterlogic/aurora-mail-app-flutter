@@ -21,8 +21,7 @@ class PgpSettingsMethods {
   final ContactsRepository contactsDao;
   final User user;
 
-  PgpSettingsMethods(
-      this.cryptoStorage, this.cryptoWorker, this.user, this.contactsDao);
+  PgpSettingsMethods(this.cryptoStorage, this.cryptoWorker, this.user, this.contactsDao);
 
   Future<List<PgpKey>> getKeys(bool isPrivate) {
     return cryptoStorage.getPgpKeys(isPrivate);
@@ -98,15 +97,13 @@ class PgpSettingsMethods {
   Future<Map<PgpKey, bool>> userKeyMarkIfNotExist(List<PgpKey> keys) async {
     final map = <PgpKey, bool>{};
     for (var key in keys) {
-      final existKey =
-          await cryptoStorage.getPgpKey(key.mail, key.isPrivate, false);
+      final existKey = await cryptoStorage.getPgpKey(key.mail, key.isPrivate, false);
       map[key] = existKey == null ? true : null;
     }
     return map;
   }
 
-  Future<Map<PgpKeyWithContact, bool>> contactKeyMarkIfNotExist(
-      List<PgpKey> keys) async {
+  Future<Map<PgpKeyWithContact, bool>> contactKeyMarkIfNotExist(List<PgpKey> keys) async {
     final map = <PgpKeyWithContact, bool>{};
     for (var key in keys) {
       final contact = await contactsDao.getContactByEmail(key.mail);
@@ -133,14 +130,21 @@ class PgpSettingsMethods {
   Future<String> pickFileContent() async {
     await getStoragePermissions();
     var content = "";
-    final files = Platform.isIOS
-        ? (await FilePicker.getMultiFile(type: FileType.any))
-        : (await FilePicker.getMultiFile(
-            type: FileType.custom, allowedExtensions: ["asc"]));
-    if (files == null) return null;
+    final result = Platform.isIOS
+        ? (await FilePicker.platform.pickFiles(
+            type: FileType.any,
+            allowMultiple: true,
+          ))
+        : (await FilePicker.platform.pickFiles(
+            allowMultiple: true,
+            type: FileType.custom,
+            allowedExtensions: ["asc"],
+          ));
+    if (content == null) return null;
+    final files = result.files;
     for (var file in files) {
       if (file.path.endsWith(".asc")) {
-        content += await file.readAsString();
+        content += await File(file.path).readAsString();
       }
     }
     return content;
@@ -189,7 +193,6 @@ class PgpSettingsMethods {
       await contactsDao.addKeyToContacts(
         contacts,
       );
-
     } catch (e) {
       print(e);
     }

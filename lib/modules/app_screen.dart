@@ -46,11 +46,10 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    BackgroundHelper.current = AppLifecycleState.resumed;
+    BackgroundHelper.current = WidgetsBinding.instance.lifecycleState;
     sub = WebMailApi.authErrorStream.listen((_) {
       _authBloc.add(InvalidateCurrentUserToken());
     });
-    BackgroundHelper.current = WidgetsBinding.instance.lifecycleState;
     _initApp();
     ReceiveSharing.getInitialMedia().then((shared) {
       if (shared == null) return;
@@ -146,7 +145,7 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
 //    _authBloc.close();
 //    _settingsBloc.close();
     sub?.cancel();
-    BackgroundHelper.current = AppLifecycleState.detached;
+    BackgroundHelper.current = WidgetsBinding.instance.lifecycleState;
     WidgetsBinding.instance.removeObserver(this);
   }
 

@@ -46,7 +46,7 @@ class MessagesListAndroid extends StatefulWidget {
   static List shareHolder;
 }
 
-class _MessagesListAndroidState extends BState<MessagesListAndroid> {
+class _MessagesListAndroidState extends BState<MessagesListAndroid> with WidgetsBindingObserver {
   MessagesListBloc _messagesListBloc;
   MailBloc _mailBloc;
   ContactsBloc _contactsBloc;
@@ -59,7 +59,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
   @override
   void initState() {
     super.initState();
-
+    WidgetsBinding.instance.addObserver(this);
     _initBlocs();
     MessagesListAndroid.onShare = (files, text) {
       if (files?.isNotEmpty == true || text?.isNotEmpty == true) {
@@ -89,6 +89,14 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
     BackgroundHelper.addOnEndAlarmObserver(false, onEndAlarm);
   }
 
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _mailBloc.add(FetchFolders());
+    }
+    super.didChangeAppLifecycleState(state);
+  }
+
   openMessage(int uid) async {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       try {
@@ -111,6 +119,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid> {
     super.dispose();
     _messagesListBloc.close();
     MessagesListAndroid.onShare = null;
+    WidgetsBinding.instance.removeObserver(this);
     BackgroundHelper.removeOnAlarmObserver(onAlarm);
     BackgroundHelper.removeOnEndAlarmObserver(onEndAlarm);
   }
