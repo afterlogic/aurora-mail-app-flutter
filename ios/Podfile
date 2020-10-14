@@ -35,6 +35,38 @@ def parse_KV_file(file, separator='=')
   return pods_ary
 end
 
+target 'NotificationService' do
+  use_frameworks!
+  # Prepare symlinks folder. We use symlinks to avoid having Podfile.lock
+  # referring to absolute paths on developers' machines.
+
+  system('rm -rf .symlinks')
+  system('mkdir -p .symlinks/plugins')
+
+  # Flutter Pods
+  generated_xcode_build_settings = parse_KV_file('./Flutter/Generated.xcconfig')
+  if generated_xcode_build_settings.empty?
+    puts "Generated.xcconfig must exist. If you're running pod install manually, make sure flutter pub get is executed first."
+  end
+  generated_xcode_build_settings.map { |p|
+    if p[:name] == 'FLUTTER_FRAMEWORK_DIR'
+      symlink = File.join('.symlinks', 'flutter')
+      File.symlink(File.dirname(p[:path]), symlink)
+      pod 'Flutter', :path => File.join(symlink, File.basename(p[:path]))
+    end
+  }
+
+  # Plugin Pods
+  plugin_pods = parse_KV_file('../.flutter-plugins')
+  plugin_pods.map { |p|
+    if p[:name] != 'url_launcher' && p[:name] != 'esys_flutter_share' && p[:name] != 'permission_handler' && p[:name] != 'ios_notification_handler' && p[:name] != 'fluttertoast' && p[:name] != 'flutter_uploader' && p[:name] != 'alarm_service'  && p[:name] != 'flutter_webview_plugin' && p[:name] != 'flutter_local_notifications' && p[:name] != 'flutter_downloader' && p[:name] != 'file_picker' && p[:name] != 'firebase_messaging'
+        symlink = File.join('.symlinks', 'plugins', p[:name])
+        File.symlink(p[:path], symlink)
+        pod p[:name], :path => File.join(symlink, 'ios')
+    end
+  }
+end
+
 target 'Runner' do
   use_frameworks!
   # Prepare symlinks folder. We use symlinks to avoid having Podfile.lock

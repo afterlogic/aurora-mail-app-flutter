@@ -10,7 +10,6 @@ import Firebase
 import receive_sharing
 import ios_notification_handler
 import FirebaseMessaging
-
 @UIApplicationMain
 class AppDelegate: FlutterAppDelegate{
     let enableDebugLog=true
@@ -25,6 +24,7 @@ class AppDelegate: FlutterAppDelegate{
         application.registerForRemoteNotifications()
         GeneratedPluginRegistrant.register(with: self)
         debugNotification("App running")
+        
         let version = UIDevice.current.systemVersion
         let iosVersion = NSString(string: version).doubleValue
         if (iosVersion >= 13 && iosVersion < 14) {
@@ -34,7 +34,9 @@ class AppDelegate: FlutterAppDelegate{
                 showNotification(notification)
             }
         }
-        
+        FlutterMethodChannel.init(name: "getToken", binaryMessenger: (window.rootViewController as! FlutterViewController).binaryMessenger).setMethodCallHandler { (call,  result) in
+            result(self.token)
+        }
         return  super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
     
@@ -82,5 +84,16 @@ class AppDelegate: FlutterAppDelegate{
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
         let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
         notificationCenter.add(request)
+    }
+    
+    var token:String?
+    override func application(
+        _ application: UIApplication,
+        didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data
+    ) {
+        
+        let tokenParts = deviceToken.map { data in String(format: "%02.2hhx", data) }
+        token = tokenParts.joined()
+        print("Device Token: \(token)")
     }
 }

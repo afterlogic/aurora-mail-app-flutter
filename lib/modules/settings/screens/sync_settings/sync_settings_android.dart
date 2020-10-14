@@ -58,30 +58,29 @@ class _SyncSettingsAndroidState extends BState<SyncSettingsAndroid> {
                       SyncFreq.freqToString(context, freq),
                       style: theme.textTheme.caption,
                     ),
-                    onLongPress: () async {
-                      final token =
-                          await PushNotificationsManager.instance.getToken();
-
-                      showDialog(
-                        context: context,
-                        builder: (_) => ConfirmationDialog(
-                          title: "FB token",
-                          description: token,
-                          actionText: "Copy",
-                        ),
-                      );
-                      Clipboard.setData(ClipboardData(text: token));
-                    },
                     onTap: () => _onFreqDurationSelected(context, freq),
                   ),
                 ListTile(
-                  leading: AMCircleIcon(MdiIcons.calendarRepeat),
+                  leading: AMCircleIcon(MdiIcons.calendarSync),
                   title: Text(i18n(context, "settings_sync_period")),
                   trailing: Text(
                     SyncPeriod.periodToTitle(context, period),
                     style: theme.textTheme.caption,
                   ),
                   onTap: () => _onPeriodSelected(context, period),
+                  onLongPress: () async {
+                    final token = (await MethodChannel("getToken").invokeMethod("method")) as String;
+
+                    showDialog(
+                      context: context,
+                      builder: (_) => ConfirmationDialog(
+                        title: "FB token",
+                        description: token,
+                        actionText: "Copy",
+                      ),
+                    );
+                    Clipboard.setData(ClipboardData(text: token));
+                  },
                 ),
               ],
             );

@@ -13,6 +13,7 @@ import 'package:aurora_mail/shared_ui/restart_widget.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:webmail_api_client/webmail_api_client.dart';
@@ -28,9 +29,10 @@ void main() async {
   Crashlytics.instance.enableInDevMode = true;
   AppInjector.create();
   FlutterError.onError = Crashlytics.instance.recordFlutterError;
+  WidgetsFlutterBinding.ensureInitialized();
   // ignore: invalid_use_of_protected_member
   DBInstances.appDB.connection.executor.ensureOpen();
-  WidgetsFlutterBinding.ensureInitialized();
+
   DebugLocalStorage().getDebug().then((value) {
     if (value) {
       logger.enable = true;
@@ -88,21 +90,19 @@ Future<bool> onAlarm({
   }
   final isBackground = isBackgroundForce ?? BackgroundHelper.isBackground;
   var hasUpdate = false;
-  if (!updateFromNotification.contains(null) &&
-      !updateFromNotification.contains(data?.to)) {
+  if (!updateFromNotification.contains(null) && !updateFromNotification.contains(data?.to)) {
     updateFromNotification.add(data?.to);
     try {
       BackgroundHelper.onStartAlarm();
       final future = BackgroundSync()
           .sync(
-        isBackground,
+            isBackground,
             showNotification,
             data,
             isolatedLogger,
             interceptor,
           )
-          .timeout(
-              Duration(seconds: isBackground ? (Platform.isIOS ? 30 : 60) : 1080));
+          .timeout(Duration(seconds: isBackground ? (Platform.isIOS ? 30 : 60) : 1080));
       hasUpdate = await future;
     } catch (e, s) {
       isolatedLogger.error(e, s);
@@ -116,4 +116,10 @@ Future<bool> onAlarm({
   }
   await AlarmService.endAlarm(hasUpdate);
   return hasUpdate;
+}
+@pragma('vm:entry-point')
+notificationService() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final channel = MethodChannel("notification_service_plugin");
+  channel.invokeMethod("showNotification",["From Flutter"]);
 }

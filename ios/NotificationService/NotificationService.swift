@@ -2,108 +2,71 @@
 //  NotificationService.swift
 //  NotificationService
 //
-//  Created by Alexander Orlov on 18.12.2019.
-//  Copyright © 2019 The Chromium Authors. All rights reserved.
+//  Created by Alexander Orlov on 13.10.2020.
+//  Copyright © 2020 The Chromium Authors. All rights reserved.
 //
-import UIKit
-import UserNotifications
-import CoreData
 import Flutter
-import alarm_service
+import UserNotifications
 
 class NotificationService: UNNotificationServiceExtension {
     
+    
     var contentHandler: ((UNNotificationContent) -> Void)?
-    var bestAttemptContent: UNNotificationContent?
+    var bestAttemptContent: UNMutableNotificationContent?
     
-    
-    override open func didReceive(_ request: UNNotificationRequest, withContentHandler contentHandler: @escaping (UNNotificationContent) -> Void) {
-        self.bestAttemptContent = request.content
+    override func didReceive(_ request: UNNotificationRequest, withContentHandler contentHandler: @escaping (UNNotificationContent) -> Void) {
         self.contentHandler = contentHandler
-        runFetch()
+        bestAttemptContent = (request.content.mutableCopy() as? UNMutableNotificationContent)
+        
+        let flutter=FlutterEngine.init()
+        flutter.run(withEntrypoint: "notificationService")
+        
+        PluginRegistrant.register(flutter)
+        NotificationServicePlugin.register(with: flutter.registrar(forPlugin: "NotificationServicePlugin")!)
+        NotificationServicePlugin.instance?.bestAttemptContent = bestAttemptContent
+        NotificationServicePlugin.instance?.contentHandler = contentHandler
+        
     }
     
-    static var runInApp=false
-    
-    func runFetch(){
-        
-        let appNotification = CFNotificationName("com.afterlogic.aurora.mail.auroraMail" as CFString)
-        let serviceNotification = CFNotificationName("com.afterlogic.aurora.mail.auroraMail.service" as CFString)
-        let notificationCenter = CFNotificationCenterGetDarwinNotifyCenter()
-        CFNotificationCenterPostNotification(notificationCenter, appNotification, nil, nil, false)
-        
-        NotificationService.runInApp = false
-        NotificationService.endCallback = nil
-        CFNotificationCenterAddObserver(
-            notificationCenter,
-            nil,
-            {(
-                center: CFNotificationCenter?,
-                observer: UnsafeMutableRawPointer?,
-                name: CFNotificationName?,
-                object: UnsafeRawPointer?,
-                userInfo: CFDictionary?
-                ) in
-                NotificationService.runInApp=true
-        },
-            serviceNotification.rawValue,
-            nil,
-            CFNotificationSuspensionBehavior.deliverImmediately
-        )
-        
-        sleep(1)
-        
-        if(!NotificationService.runInApp){
-            startFlutter()
-        }else{
-            self.contentHandler!(self.bestAttemptContent!)
+    override func serviceExtensionTimeWillExpire() {
+        if let contentHandler = contentHandler, let bestAttemptContent =  bestAttemptContent {
+            bestAttemptContent.title="TimeOut"
+            contentHandler(bestAttemptContent)
         }
     }
     
-    func startFlutter(){
-        
-        if(NotificationService.flutterEngine==nil){
-            let userDefaults = UserDefaults.init(suiteName: "group.support.afterlogic.alarm")!
-            let entryPoint = userDefaults.string(forKey: "dartEntryPoint")
-            let libUri = userDefaults.string(forKey: "dartLibraryUri")
-            
-            NotificationService.flutterEngine = FlutterEngine(name: "background_work", project:  FlutterDartProject.init(), allowHeadlessExecution: true)
-            NotificationService.flutterEngine!.run(withEntrypoint: entryPoint, libraryURI: libUri)
-            
-            GeneratedPluginRegistrant.register(with: NotificationService.flutterEngine!)
-            
-            let alarmNotification = CFNotificationName("SwiftAlarmPlugin.endAlarm" as CFString)
-            let notificationCenter = CFNotificationCenterGetDarwinNotifyCenter()
-            
-            NotificationService.endCallback = self.serviceExtensionTimeWillExpire
-            
-            CFNotificationCenterAddObserver(
-                notificationCenter,
-                nil,
-                {(
-                    center: CFNotificationCenter?,
-                    observer: UnsafeMutableRawPointer?,
-                    name: CFNotificationName?,
-                    object: UnsafeRawPointer?,
-                    userInfo: CFDictionary?
-                    ) in
-                    NotificationService.endCallback?()
-            },
-                alarmNotification.rawValue,
-                nil,
-                CFNotificationSuspensionBehavior.deliverImmediately
-            )
-        }
-        
+}
+class NotificationServicePlugin:NSObject, FlutterPlugin {
+    var bestAttemptContent: UNMutableNotificationContent?
+    var contentHandler:  ((UNNotificationContent) -> Void)?
+    static var instance :NotificationServicePlugin?
+    static func register(with registrar: FlutterPluginRegistrar) {
+        let channel = FlutterMethodChannel(name: "notification_service_plugin", binaryMessenger: registrar.messenger())
+        instance = NotificationServicePlugin()
+        registrar.addMethodCallDelegate(instance!, channel: channel)
     }
     
-    override open func serviceExtensionTimeWillExpire() {
-        if(NotificationService.flutterEngine != nil){
-            NotificationService.flutterEngine?.destroyContext()
-            NotificationService.flutterEngine = nil
+    func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
+        let arg = call.arguments as? [Any]
+        do {
+            switch call.method {
+            case "getNotification":
+                let map = bestAttemptContent.debugDescription;
+                result(map)
+                return
+            case "showNotification":
+                //bestAttemptContent?.userInfo=["payload":arg?[0] as? String]
+                bestAttemptContent?.title=arg?[0] as? String ?? ":("
+                contentHandler?(bestAttemptContent!)
+                result(arg)
+                return
+            default:
+                result(FlutterMethodNotImplemented)
+                return
+            }
+        } catch let e {
+            print(e.localizedDescription)
+            result(FlutterMethodNotImplemented)
         }
-        NotificationService.endCallback=nil
     }
-    static var flutterEngine: FlutterEngine?
-    static var endCallback: (()-> Void)?
 }
