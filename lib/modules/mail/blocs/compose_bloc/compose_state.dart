@@ -1,6 +1,7 @@
 import 'package:aurora_mail/modules/mail/models/compose_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/temp_attachment_upload.dart';
 import 'package:aurora_mail/utils/always_non_equal_object.dart';
+import 'package:aurora_mail/utils/error_to_show.dart';
 import 'package:crypto_worker/crypto_worker.dart';
 import 'package:equatable/equatable.dart';
 
@@ -45,7 +46,7 @@ class MessageSavedInDrafts extends ComposeState {
 }
 
 class ComposeError extends ComposeState with AlwaysNonEqualObject {
-  final String errorMsg;
+  final ErrorToShow errorMsg;
   final Map<String, String> arg;
 
   ComposeError(this.errorMsg, [this.arg]);

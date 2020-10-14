@@ -4,7 +4,7 @@ import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 import 'package:aurora_mail/res/icons/webmail_icons.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_mail/utils/internationalization.dart'; import 'package:aurora_mail/res/str/s.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -84,7 +84,7 @@ class ContactsListTile extends StatelessWidget {
         title: Text(
           title?.isNotEmpty == true
               ? title
-              : i18n(context, "label_contact_with_not_name"),
+              : i18n(context, S.label_contact_with_not_name),
           maxLines: 1,
           style: title?.isNotEmpty == true
               ? null
@@ -93,7 +93,7 @@ class ContactsListTile extends StatelessWidget {
         subtitle: Text(
           subTitle?.isNotEmpty == true
               ? subTitle
-              : i18n(context, "contacts_email_empty"),
+              : i18n(context, S.contacts_email_empty),
           style: TextStyle(
             color: subTitle?.isNotEmpty == true
                 ? theme.disabledColor
@@ -118,7 +118,7 @@ class ContactsListTile extends StatelessWidget {
                 margin: EdgeInsets.only(right: 4.0),
                 padding: EdgeInsets.symmetric(vertical: 3.0, horizontal: 6.0),
                 child: Text(
-                  i18n(context, "contacts_list_its_me_flag"),
+                  i18n(context, S.contacts_list_its_me_flag),
                   style: theme.textTheme.caption,
                 ),
               ),
@@ -137,10 +137,10 @@ class ContactsListTile extends StatelessWidget {
         onDismissed: (_) => onDeleteContact(contact),
         confirmDismiss: (_) => ConfirmationDialog.show(
           context,
-          i18n(context, "contacts_delete_title"),
-          i18n(context, "contacts_delete_desc_with_name",
+          i18n(context, S.contacts_delete_title),
+          i18n(context, S.contacts_delete_desc_with_name,
               {"contact": contact.fullName}),
-          i18n(context, "btn_delete"),
+          i18n(context, S.btn_delete),
           destructibleAction: true,
         ),
         background: Container(

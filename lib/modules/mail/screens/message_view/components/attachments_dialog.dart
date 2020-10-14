@@ -1,5 +1,6 @@
 import 'package:aurora_mail/modules/mail/blocs/message_view_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
+import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_dialog.dart';
@@ -32,7 +33,7 @@ class _AttachmentsDialogState extends BState<AttachmentsDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(i18n(context, "messages_view_tab_attachments")),
+      title: Text(i18n(context, S.messages_view_tab_attachments)),
       content: AMDialogList(
         children: widget.attachments.map((attachment) {
           if (attachment.isInline) {
@@ -46,7 +47,7 @@ class _AttachmentsDialogState extends BState<AttachmentsDialog> {
         FlatButton(
           textColor:
               theme.brightness == Brightness.light ? theme.accentColor : null,
-          child: Text(i18n(context, "btn_close")),
+          child: Text(i18n(context, S.btn_close)),
           onPressed: () => Navigator.pop(context, false),
         ),
       ],

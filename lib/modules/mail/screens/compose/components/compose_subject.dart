@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:file_picker/file_picker.dart';
@@ -15,7 +16,8 @@ class ComposeSubject extends StatefulWidget {
     Key key,
     @required this.textCtrl,
     @required this.onAttach,
-    this.focusNode, this.onNext,
+    this.focusNode,
+    this.onNext,
   }) : super(key: key);
 
   @override
@@ -39,7 +41,8 @@ class _ComposeSubjectState extends BState<ComposeSubject> {
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: Text(i18n(context, "messages_subject"), style: theme.textTheme.subhead),
+              child: Text(i18n(context, S.messages_subject),
+                  style: theme.textTheme.subhead),
             ),
             SizedBox(width: 8.0),
             Flexible(

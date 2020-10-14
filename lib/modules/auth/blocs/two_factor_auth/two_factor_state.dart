@@ -1,4 +1,5 @@
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/utils/error_to_show.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class TwoFactorState extends Equatable {
@@ -13,7 +14,7 @@ class InitialState extends TwoFactorState {}
 class ProgressState extends TwoFactorState {}
 
 class ErrorState extends TwoFactorState {
-  final String errorMsg;
+  final ErrorToShow errorMsg;
 
   ErrorState(this.errorMsg);
 

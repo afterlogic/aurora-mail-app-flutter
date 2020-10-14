@@ -1,5 +1,5 @@
 import 'package:aurora_mail/modules/mail/blocs/compose_bloc/compose_bloc.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_mail/utils/internationalization.dart'; import 'package:aurora_mail/res/str/s.dart';
 import 'package:flutter/material.dart';
 
 class AutomaticallyEncryptLabel extends StatefulWidget {
@@ -118,7 +118,7 @@ class _AutomaticallyEncryptLabelState extends State<AutomaticallyEncryptLabel> {
           SizedBox(width: 8),
           Expanded(
             child: Text(
-              i18n(context, "hint_pgp_message_automatically_encrypt"),
+              i18n(context, S.hint_pgp_message_automatically_encrypt),
               style: TextStyle(color: Colors.white),
             ),
           )

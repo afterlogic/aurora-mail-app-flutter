@@ -1,5 +1,6 @@
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/bloc.dart';
+import 'package:aurora_mail/utils/error_to_show.dart';
 import 'package:equatable/equatable.dart';
 
 enum PostFolderLoadedAction { subscribeToMessages, stopMessagesRefresh }
@@ -50,7 +51,7 @@ class FoldersLoaded extends MailState {
 }
 
 class FoldersError extends MailState {
-  final String errorMsg;
+  final ErrorToShow errorMsg;
 
   FoldersError(this.errorMsg);
 

@@ -1,6 +1,7 @@
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/mail/repository/search_util.dart';
 import 'package:aurora_mail/utils/always_non_equal_object.dart';
+import 'package:aurora_mail/utils/error_to_show.dart';
 import 'package:equatable/equatable.dart';
 
 enum MessagesFilter { starred, unread, none }
@@ -45,7 +46,7 @@ class MessagesMoved extends MessagesListState with AlwaysNonEqualObject {}
 
 // for both folders and messages
 class MailError extends MessagesListState with AlwaysNonEqualObject {
-  final String errorMsg;
+  final ErrorToShow errorMsg;
 
   MailError(this.errorMsg);
 

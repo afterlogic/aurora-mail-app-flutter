@@ -1,7 +1,7 @@
 import 'package:aurora_mail/inject/app_inject.dart';
 import 'package:aurora_mail/models/alias_or_identity.dart';
 import 'package:aurora_mail/utils/base_state.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_mail/utils/internationalization.dart'; import 'package:aurora_mail/res/str/s.dart';
 import 'package:flutter/material.dart';
 
 class KeyRequestDialog extends StatefulWidget {
@@ -41,7 +41,7 @@ class _KeyRequestDialogState extends BState<KeyRequestDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(i18n(context, "label_encryption_password_for_pgp_key")),
+      title: Text(i18n(context, S.label_encryption_password_for_pgp_key)),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
@@ -50,7 +50,7 @@ class _KeyRequestDialogState extends BState<KeyRequestDialog> {
             child: TextFormField(
               validator: (v) {
                 if (v.isEmpty) {
-                  return i18n(context, "error_password_is_empty");
+                  return i18n(context, S.error_password_is_empty);
                 }
                 if (error != null) {
                   final _error = error;
@@ -60,7 +60,7 @@ class _KeyRequestDialogState extends BState<KeyRequestDialog> {
                 return null;
               },
               decoration: InputDecoration(
-                  labelText: i18n(context, "login_input_password")),
+                  labelText: i18n(context, S.login_input_password)),
               controller: passCtrl,
             ),
           ),
@@ -68,7 +68,7 @@ class _KeyRequestDialogState extends BState<KeyRequestDialog> {
       ),
       actions: <Widget>[
         FlatButton(
-          child: Text(i18n(context, "btn_ok")),
+          child: Text(i18n(context, S.btn_ok)),
           onPressed: () {
             if (formKey.currentState.validate()) {
               _check();

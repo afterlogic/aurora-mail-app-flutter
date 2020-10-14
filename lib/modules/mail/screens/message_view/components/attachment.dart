@@ -2,10 +2,11 @@ import 'dart:io';
 
 import 'package:aurora_mail/modules/mail/blocs/message_view_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
+import 'package:aurora_mail/res/str/s.dart';
+import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
-import 'package:aurora_mail/utils/base_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -26,7 +27,7 @@ class _AttachmentState extends BState<Attachment> {
     void _startDownload() {
       BlocProvider.of<MessageViewBloc>(context)
           .add(DownloadAttachment(widget.attachment));
-      final msg = i18n(context, "messages_attachment_downloading",
+      final msg = i18n(context, S.messages_attachment_downloading,
           {"fileName": widget.attachment.fileName});
       Fluttertoast.showToast(
         msg: msg,
@@ -84,13 +85,13 @@ class _AttachmentState extends BState<Attachment> {
             if (widget.attachment.downloadUrl != null && _taskProgress == null)
               IconButton(
                 icon: Icon(Icons.file_download),
-                tooltip: i18n(context, "messages_attachment_download"),
+                tooltip: i18n(context, S.messages_attachment_download),
                 onPressed: _startDownload,
               ),
             if (_taskProgress != null)
               IconButton(
                 icon: Icon(Icons.cancel),
-                tooltip: i18n(context, "messages_attachment_download_cancel"),
+                tooltip: i18n(context, S.messages_attachment_download_cancel),
                 onPressed: () => setState(() {
                   widget.attachment.endDownloading(_taskProgress.taskId);
                   _taskProgress = null;

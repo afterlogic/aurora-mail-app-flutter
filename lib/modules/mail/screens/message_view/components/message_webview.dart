@@ -2,13 +2,11 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/mail/mail_table.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/contacts_bloc.dart';
-import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/message_view_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
@@ -16,9 +14,10 @@ import 'package:aurora_mail/modules/mail/screens/message_view/dialog/import_vcf.
 import 'package:aurora_mail/modules/settings/blocs/pgp_settings/pgp_settings_bloc.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/modules/settings/screens/pgp_settings/dialogs/import_key_dialog.dart';
-import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
+import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/date_formatting.dart';
+import 'package:aurora_mail/utils/error_to_show.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/mail_utils.dart';
 import 'package:aurora_mail/utils/show_dialog.dart';
@@ -168,7 +167,7 @@ class _MessageWebViewState extends BState<MessageWebView> {
     );
 
     if (items.isEmpty) {
-      return i18n(context, "messages_no_receivers");
+      return i18n(context, S.messages_no_receivers);
     } else {
       return items.join(", ");
     }
@@ -180,7 +179,7 @@ class _MessageWebViewState extends BState<MessageWebView> {
     final date = DateFormatting.getDetailedMessageDate(
       timestamp: widget.message.timeStampInUTC,
       locale: Localizations.localeOf(context).languageCode,
-      yesterdayWord: i18n(context, "label_message_yesterday"),
+      yesterdayWord: i18n(context, S.label_message_yesterday),
       is24: (state as SettingsLoaded).is24 ?? true,
     );
 
@@ -210,7 +209,7 @@ class _MessageWebViewState extends BState<MessageWebView> {
             ImportKeyDialog(keys.contactKeys, keys.contactKeys, widget.bloc),
       );
     } else if (attachment.fileName.endsWith(".vcf")) {
-      final msg = i18n(context, "messages_attachment_downloading",
+      final msg = i18n(context, S.messages_attachment_downloading,
           {"fileName": attachment.fileName});
       Fluttertoast.showToast(
         msg: msg,
@@ -228,21 +227,28 @@ class _MessageWebViewState extends BState<MessageWebView> {
             builder: (_) =>
                 ImportVcfDialog(bloc: widget.contactsBloc, content: content),
           );
-          if (result is String)
-            showSnack(
-              isError: result.isNotEmpty,
+          if (result is ErrorToShow) {
+            showErrorSnack(
+              isError: true,
               context: context,
               scaffoldState: Scaffold.of(context),
-              msg: result.isEmpty
-                  ? i18n(context, "label_contacts_were_imported_successfully")
-                  : result,
+              msg: result,
             );
+          } else {
+            showSnack(
+              isError: false,
+              context: context,
+              scaffoldState: Scaffold.of(context),
+              message:
+                  i18n(context, S.label_contacts_were_imported_successfully),
+            );
+          }
         },
       );
     } else {
       BlocProvider.of<MessageViewBloc>(context)
           .add(DownloadAttachment(attachment));
-      final msg = i18n(context, "messages_attachment_downloading",
+      final msg = i18n(context, S.messages_attachment_downloading,
           {"fileName": attachment.fileName});
       Fluttertoast.showToast(
         msg: msg,
@@ -318,7 +324,7 @@ class _MessageWebViewState extends BState<MessageWebView> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  i18n(context, "messages_images_security_alert"),
+                  i18n(context, S.messages_images_security_alert),
                   style: TextStyle(color: Colors.black),
                 ),
                 GestureDetector(
@@ -329,7 +335,7 @@ class _MessageWebViewState extends BState<MessageWebView> {
                   child: Padding(
                     padding: EdgeInsets.all(4),
                     child: Text(
-                      i18n(context, "messages_show_images"),
+                      i18n(context, S.messages_show_images),
                       style: TextStyle(color: Colors.blue),
                     ),
                   ),
@@ -343,7 +349,7 @@ class _MessageWebViewState extends BState<MessageWebView> {
                   child: Padding(
                     padding: EdgeInsets.all(4),
                     child: Text(
-                      i18n(context, "messages_always_show_images"),
+                      i18n(context, S.messages_always_show_images),
                       style: TextStyle(color: Colors.blue),
                     ),
                   ),

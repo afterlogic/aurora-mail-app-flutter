@@ -1,5 +1,6 @@
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/utils/always_non_equal_object.dart';
+import 'package:aurora_mail/utils/error_to_show.dart';
 import 'package:crypto_worker/crypto_worker.dart';
 import 'package:equatable/equatable.dart';
 
@@ -31,7 +32,7 @@ class DownloadFinished extends MessageViewState {
 }
 
 class MessagesViewError extends MessageViewState with AlwaysNonEqualObject {
-  final String errorMsg;
+  final ErrorToShow errorMsg;
   final Map<String, String> arg;
 
   MessagesViewError(this.errorMsg, [this.arg]);

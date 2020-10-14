@@ -1,8 +1,8 @@
-import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_mail/utils/internationalization.dart'; import 'package:aurora_mail/res/str/s.dart';
 import 'package:flutter/material.dart';
 
 class ContactPrimaryInput<T> extends StatefulWidget {
-  final String label;
+  final int label;
   final void Function(T) onChanged;
   final T selectedValue;
   final List<String> options;

@@ -1,4 +1,4 @@
-import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_mail/utils/internationalization.dart'; import 'package:aurora_mail/res/str/s.dart';
 import 'package:flutter/cupertino.dart';
 
 enum Freq {
@@ -19,19 +19,19 @@ class SyncFreq {
   static String freqToString(BuildContext context, Freq freq) {
     switch (freq) {
       case Freq.never:
-        return i18n(context, "settings_sync_frequency_never");
+        return i18n(context, S.settings_sync_frequency_never);
       case Freq.minutes5:
-        return i18n(context, "settings_sync_frequency_minutes5");
+        return i18n(context, S.settings_sync_frequency_minutes5);
       case Freq.minutes30:
-        return i18n(context, "settings_sync_frequency_minutes30");
+        return i18n(context, S.settings_sync_frequency_minutes30);
       case Freq.hours1:
-        return i18n(context, "settings_sync_frequency_hours1");
+        return i18n(context, S.settings_sync_frequency_hours1);
       case Freq.hours2:
-        return i18n(context, "settings_sync_frequency_hours2");
+        return i18n(context, S.settings_sync_frequency_hours2);
       case Freq.daily:
-        return i18n(context, "settings_sync_frequency_daily");
+        return i18n(context, S.settings_sync_frequency_daily);
       case Freq.monthly:
-        return i18n(context, "settings_sync_frequency_monthly");
+        return i18n(context, S.settings_sync_frequency_monthly);
       case Freq.minute:
         return "minute";
       default:

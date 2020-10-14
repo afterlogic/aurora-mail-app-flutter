@@ -5,10 +5,11 @@ import 'package:aurora_mail/modules/contacts/screens/group_edit/group_edit_route
 import 'package:aurora_mail/res/icons/webmail_icons.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_mail/utils/storage_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-
+import 'package:aurora_mail/res/str/s.dart';
 class ContactsDrawer extends StatefulWidget {
   @override
   _ContactsDrawerState createState() => _ContactsDrawerState();
@@ -20,7 +21,7 @@ class _ContactsDrawerState extends BState<ContactsDrawer> {
       context,
       GroupEditRoute.name,
       arguments:
-      GroupEditScreenArgs(bloc: BlocProvider.of<ContactsBloc>(context)),
+          GroupEditScreenArgs(bloc: BlocProvider.of<ContactsBloc>(context)),
     );
   }
 
@@ -33,37 +34,37 @@ class _ContactsDrawerState extends BState<ContactsDrawer> {
         child: SafeArea(
           child: BlocBuilder<ContactsBloc, ContactsState>(
               builder: (context, state) {
-                return ListView(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Text(
-                        i18n(context, "contacts_drawer_section_storages"),
+            return ListView(
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text(
+                    i18n(context, S.contacts_drawer_section_storages),
+                    style: TextStyle(color: theme.disabledColor),
+                  ),
+                ),
+                _buildStorages(context, state),
+                Divider(),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(
+                        i18n(context, S.contacts_drawer_section_groups),
                         style: TextStyle(color: theme.disabledColor),
                       ),
-                    ),
-                    _buildStorages(context, state),
-                    Divider(),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Text(
-                            i18n(context, "contacts_drawer_section_groups"),
-                            style: TextStyle(color: theme.disabledColor),
-                          ),
-                          IconButton(
-                            icon: Icon(Icons.add, color: theme.accentColor),
-                            onPressed: _addGroup,
-                          ),
-                        ],
+                      IconButton(
+                        icon: Icon(Icons.add, color: theme.accentColor),
+                        onPressed: _addGroup,
                       ),
-                    ),
-                    _buildGroups(context, state),
-                  ],
-                );
-              }),
+                    ],
+                  ),
+                ),
+                _buildGroups(context, state),
+              ],
+            );
+          }),
         ),
       ),
     );
@@ -80,7 +81,7 @@ class _ContactsDrawerState extends BState<ContactsDrawer> {
           if (isAllVisible)
             ListTile(
               leading: Icon(MdiIcons.accountGroup),
-              title: Text(i18n(context, "contacts_drawer_storage_all")),
+              title: Text(i18n(context, S.contacts_drawer_storage_all)),
               selected: state.showAllVisibleContacts,
               onTap: () {
                 bloc.add(SelectStorageGroup());
@@ -108,7 +109,7 @@ class _ContactsDrawerState extends BState<ContactsDrawer> {
         ],
       );
     } else if (state.storages != null && state.storages.isEmpty) {
-      return Center(child: Text(i18n(context, "contacts_empty")));
+      return Center(child: Text(i18n(context, S.contacts_empty)));
     } else {
       return Padding(
         padding: const EdgeInsets.all(16.0),
@@ -126,9 +127,7 @@ class _ContactsDrawerState extends BState<ContactsDrawer> {
     final bloc = BlocProvider.of<ContactsBloc>(context);
     return ListTile(
       leading: Icon(icon),
-      title: Text(name != null
-          ? i18n(context, "contacts_drawer_storage_$name")
-          : s.name),
+      title: Text(name != null ? i18n(context, getStorageName(name)) : s.name),
       selected: s.sqliteId == state.selectedStorage,
       onTap: () {
         bloc.add(SelectStorageGroup(storage: s));
@@ -143,20 +142,19 @@ class _ContactsDrawerState extends BState<ContactsDrawer> {
     if (state.groups != null) {
       return Column(
         children: state.groups
-            .map((g) =>
-            ListTile(
-              leading: Icon(MdiIcons.pound),
-              title: Text(g.name),
-              selected: g.uuid == state.selectedGroup,
-              onTap: () {
-                bloc.add(SelectStorageGroup(group: g));
-                Navigator.pop(context);
-              },
-            ))
+            .map((g) => ListTile(
+                  leading: Icon(MdiIcons.pound),
+                  title: Text(g.name),
+                  selected: g.uuid == state.selectedGroup,
+                  onTap: () {
+                    bloc.add(SelectStorageGroup(group: g));
+                    Navigator.pop(context);
+                  },
+                ))
             .toList(),
       );
     } else if (state.groups != null && state.groups.isEmpty) {
-      return Center(child: Text(i18n(context, "contacts_groups_empty")));
+      return Center(child: Text(i18n(context, S.contacts_groups_empty)));
     } else {
       return Padding(
         padding: const EdgeInsets.all(16.0),

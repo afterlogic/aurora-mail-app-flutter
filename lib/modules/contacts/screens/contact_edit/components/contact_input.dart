@@ -1,8 +1,8 @@
-import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_mail/utils/internationalization.dart'; import 'package:aurora_mail/res/str/s.dart';
 import 'package:flutter/material.dart';
 
 class ContactInput extends StatelessWidget {
-  final String label;
+  final int label;
   final TextEditingController ctrl;
   final TextInputType keyboardType;
 

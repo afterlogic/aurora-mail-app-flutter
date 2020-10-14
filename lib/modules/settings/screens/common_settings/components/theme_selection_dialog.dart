@@ -1,4 +1,4 @@
-import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_mail/utils/internationalization.dart'; import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/utils/show_dialog.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/cupertino.dart';
@@ -24,12 +24,12 @@ class ThemeSelectionDialog extends StatelessWidget {
     return AlertDialog(
       contentPadding: EdgeInsets.zero,
       titlePadding: EdgeInsets.all(24.0),
-      title: Text(i18n(context, "settings_dark_theme")),
+      title: Text(i18n(context, S.settings_dark_theme)),
       content: AMDialogList(
         children: [
           RadioListTile<bool>(
             activeColor: theme.accentColor,
-            title: Text(i18n(context, "settings_dark_theme_system")),
+            title: Text(i18n(context, S.settings_dark_theme_system)),
             value: null,
             groupValue: isTheme,
             onChanged: (val) {
@@ -39,7 +39,7 @@ class ThemeSelectionDialog extends StatelessWidget {
           ),
           RadioListTile<bool>(
             activeColor: theme.accentColor,
-            title: Text(i18n(context, "settings_dark_theme_dark")),
+            title: Text(i18n(context, S.settings_dark_theme_dark)),
             value: true,
             groupValue: isTheme,
             onChanged: (val) {
@@ -49,7 +49,7 @@ class ThemeSelectionDialog extends StatelessWidget {
           ),
           RadioListTile<bool>(
             activeColor: theme.accentColor,
-            title: Text(i18n(context, "settings_dark_theme_light")),
+            title: Text(i18n(context, S.settings_dark_theme_light)),
             value: false,
             groupValue: isTheme,
             onChanged: (val) {
@@ -63,7 +63,7 @@ class ThemeSelectionDialog extends StatelessWidget {
         FlatButton(
           textColor:
               theme.brightness == Brightness.light ? theme.accentColor : null,
-          child: Text(i18n(context, "btn_cancel")),
+          child: Text(i18n(context, S.btn_cancel)),
           onPressed: Navigator.of(context).pop,
         ),
       ],

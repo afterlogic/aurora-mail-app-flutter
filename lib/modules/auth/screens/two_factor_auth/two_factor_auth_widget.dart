@@ -6,7 +6,9 @@ import 'package:aurora_mail/modules/auth/screens/login/components/login_gradient
 import 'package:aurora_mail/modules/auth/screens/login/components/mail_logo.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/presentation_header.dart';
 import 'package:aurora_mail/modules/auth/screens/two_factor_auth/two_factor_auth_route.dart';
+import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/utils/base_state.dart';
+import 'package:aurora_mail/utils/error_to_show.dart';
 import 'package:aurora_mail/utils/input_validation.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
@@ -58,7 +60,7 @@ class _TwoFactorAuthWidgetState extends BState<TwoFactorAuthWidget> {
     return Scaffold(
       appBar: widget.args.isDialog
           ? AMAppBar(
-              title: Text(i18n(context, "settings_accounts_add")),
+              title: Text(i18n(context, S.settings_accounts_add)),
             )
           : null,
       body: _gradientWrap(
@@ -69,7 +71,7 @@ class _TwoFactorAuthWidgetState extends BState<TwoFactorAuthWidget> {
               pinCtrl.clear();
               _showError(
                 context,
-                i18n(context, state.errorMsg),
+                state.errorMsg,
               );
             } else if (state is CompleteState) {
               widget.args.authBloc.add(UserLogIn(state.user));
@@ -107,13 +109,13 @@ class _TwoFactorAuthWidgetState extends BState<TwoFactorAuthWidget> {
               children: <Widget>[
                 if (!widget.args.isDialog)
                   PresentationHeader(
-                    message: i18n(context, "hint_2fa"),
+                    message: i18n(context, S.hint_2fa),
                   ),
                 Column(
                   children: <Widget>[
                     AuthInput(
                       controller: pinCtrl,
-                      label: i18n(context, "input_2fa_pin"),
+                      label: i18n(context, S.input_2fa_pin),
                       keyboardType: TextInputType.emailAddress,
                       validator: (value) =>
                           validateInput(context, value, [ValidationType.empty]),
@@ -126,7 +128,7 @@ class _TwoFactorAuthWidgetState extends BState<TwoFactorAuthWidget> {
                   width: double.infinity,
                   child: AMButton(
                     shadow: AppColor.enableShadow ? null : BoxShadow(),
-                    child: Text(i18n(context, "btn_verify_pin")),
+                    child: Text(i18n(context, S.btn_verify_pin)),
                     isLoading: loading,
                     onPressed: () => _login(),
                   ),
@@ -139,8 +141,8 @@ class _TwoFactorAuthWidgetState extends BState<TwoFactorAuthWidget> {
     );
   }
 
-  void _showError(BuildContext context, String msg) {
-    showSnack(
+  void _showError(BuildContext context, ErrorToShow msg) {
+    showErrorSnack(
       context: context,
       scaffoldState: Scaffold.of(context),
       msg: msg,

@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/contacts_repository_impl.dart';
+import 'package:aurora_mail/utils/error_to_show.dart';
 import 'package:aurora_mail/utils/identity_util.dart';
 import 'package:bloc/bloc.dart';
 import 'package:crypto_model/crypto_model.dart';
@@ -11,7 +12,7 @@ import 'package:crypto_storage/crypto_storage.dart';
 import 'package:crypto_worker/crypto_worker.dart';
 
 import 'bloc.dart';
-
+import 'package:aurora_mail/res/str/s.dart';
 class PgpSettingsBloc extends Bloc<PgpSettingsEvent, PgpSettingsState> {
   final PgpSettingsMethods _methods;
   final AuthBloc authBloc;
@@ -82,7 +83,7 @@ class PgpSettingsBloc extends Bloc<PgpSettingsEvent, PgpSettingsState> {
   Stream<PgpSettingsState> _parseKey(ParseKey event) async* {
     final keys = await _methods.parseKey(event.key);
     if (keys.isEmpty) {
-      yield ErrorState("error_pgp_keys_not_found");
+      yield ErrorState(ErrorToShow.code(S.error_pgp_keys_not_found));
       return;
     }
     final userEmail = await authBloc

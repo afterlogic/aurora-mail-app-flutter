@@ -1,4 +1,4 @@
-import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_mail/utils/internationalization.dart'; import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/utils/show_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -45,7 +45,7 @@ class ConfirmationDialog extends StatelessWidget {
       content: Text(description),
       actions: <Widget>[
         FlatButton(
-          child: Text(i18n(context, "btn_cancel")),
+          child: Text(i18n(context, S.btn_cancel)),
           onPressed: () => Navigator.pop(context, false),
         ),
         if (actions != null) ...actions,

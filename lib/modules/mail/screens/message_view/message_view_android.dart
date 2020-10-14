@@ -22,8 +22,10 @@ import 'package:aurora_mail/modules/mail/screens/message_view/dialog/request_pas
 import 'package:aurora_mail/modules/mail/screens/messages_list/dialog/move_message.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
 import 'package:aurora_mail/modules/settings/blocs/pgp_settings/pgp_settings_bloc.dart';
+import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
 import 'package:aurora_mail/utils/base_state.dart';
+import 'package:aurora_mail/utils/error_to_show.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/mail_utils.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
@@ -208,9 +210,9 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
     final message = widget.message;
     final delete = await ConfirmationDialog.show(
       context,
-      i18n(context, "messages_delete_title"),
-      i18n(context, "messages_delete_desc"),
-      i18n(context, "btn_delete"),
+      i18n(context, S.messages_delete_title),
+      i18n(context, S.messages_delete_desc),
+      i18n(context, S.btn_delete),
       destructibleAction: true,
     );
     if (delete == true) {
@@ -226,20 +228,30 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
 //        context, message.toInJson, BlocProvider.of<AuthBloc>(context).currentAccount.email);
 //
 //    if (items.isEmpty) {
-//      return i18n(context, "messages_no_receivers");
+//      return i18n(context, S.messages_no_receivers);
 //    } else {
 //      return items.join(" | ");
 //    }
 //  }
+  void _showError(ErrorToShow error, BuildContext context,
+      {bool isError = false, Map<String, String> arg}) {
+    showErrorSnack(
+      context: context,
+      scaffoldState: Scaffold.of(context),
+      msg: error,
+      arg: arg,
+      isError: isError,
+    );
+  }
 
-  void _showSnack(String msg, BuildContext context,
+  void _showSnack(int msg, BuildContext context,
       {bool isError = false, Map<String, String> arg}) {
     showSnack(
-        context: context,
-        arg: arg,
-        scaffoldState: Scaffold.of(context),
-        msg: msg,
-        isError: isError);
+      context: context,
+      scaffoldState: Scaffold.of(context),
+      message: i18n(context, msg, arg),
+      isError: isError,
+    );
   }
 
   @override
@@ -266,26 +278,24 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
                     setState(() {});
 
                     _showSnack(
-                        i18n(
-                          context,
-                          state.type == EncryptType.Sign
-                              ? (state.verified
-                                  ? "label_pgp_verified"
-                                  : "label_pgp_not_verified")
-                              : (state.verified
-                                  ? "label_pgp_decrypted_and_verified"
-                                  : "label_pgp_decrypted_but_not_verified"),
-                        ),
+                        state.type == EncryptType.Sign
+                            ? (state.verified
+                                ? S.label_pgp_verified
+                                : S.label_pgp_not_verified)
+                            : (state.verified
+                                ? S.label_pgp_decrypted_and_verified
+                                : S.label_pgp_decrypted_but_not_verified),
                         context);
                   }
                   if (state is DownloadStarted) {
                     _showSnack(
-                        i18n(context, "messages_attachment_downloading",
-                            {"fileName": state.fileName}),
-                        context);
+                      S.messages_attachment_downloading,
+                      context,
+                      arg: {"fileName": state.fileName},
+                    );
                   }
                   if (state is MessagesViewError) {
-                    _showSnack(
+                    _showError(
                       state.errorMsg,
                       context,
                       isError: true,
@@ -295,14 +305,16 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
                   if (state is DownloadFinished) {
                     if (state.path == null) {
                       _showSnack(
-                          i18n(context, "messages_attachment_download_failed"),
-                          context,
-                          isError: true);
+                        S.messages_attachment_download_failed,
+                        context,
+                        isError: true,
+                      );
                     } else {
                       _showSnack(
-                          i18n(context, "messages_attachment_download_success",
-                              {"path": state.path}),
-                          context);
+                        S.messages_attachment_download_success,
+                        context,
+                        arg: {"path": state.path},
+                      );
                     }
                   }
                 },

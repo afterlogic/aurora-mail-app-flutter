@@ -6,7 +6,7 @@ import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/date_formatting.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_mail/utils/internationalization.dart'; import 'package:aurora_mail/res/str/s.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -70,13 +70,13 @@ class _MessageItemState extends BState<MessageItem> {
     final m = widget.message;
     if (widget.isSent) {
       if (m.toToDisplay == "messages_unknown_recipient") {
-        return i18n(context, "messages_unknown_recipient");
+        return i18n(context, S.messages_unknown_recipient);
       } else {
         return m.toToDisplay;
       }
     } else {
       if (m.fromToDisplay == "messages_unknown_sender") {
-        return i18n(context, "messages_unknown_sender");
+        return i18n(context, S.messages_unknown_sender);
       } else {
         return m.fromToDisplay;
       }
@@ -122,10 +122,10 @@ class _MessageItemState extends BState<MessageItem> {
             if (direction == DismissDirection.endToStart) {
               return ConfirmationDialog.show(
                 context,
-                i18n(context, "messages_delete_title"),
-                i18n(context, "messages_delete_desc_with_subject",
+                i18n(context, S.messages_delete_title),
+                i18n(context, S.messages_delete_desc_with_subject,
                     {"subject": m.subject}),
-                i18n(context, "btn_delete"),
+                i18n(context, S.btn_delete),
                 destructibleAction: true,
               );
             } else if (direction == DismissDirection.startToEnd) {
@@ -151,7 +151,7 @@ class _MessageItemState extends BState<MessageItem> {
                       children: <Widget>[
                         Icon(Icons.mail, color: Colors.white, size: 36.0),
                         Text(
-                          i18n(context, isUnread ? "btn_read" : "btn_unread"),
+                          i18n(context, isUnread ? S.btn_read : S.btn_unread),
                           style: TextStyle(
                             color: Colors.white,
                           ),
@@ -180,7 +180,7 @@ class _MessageItemState extends BState<MessageItem> {
                             size: 36.0,
                           ),
                           Text(
-                            i18n(context, "btn_delete"),
+                            i18n(context, S.btn_delete),
                             style: TextStyle(
                               color: Colors.white,
                             ),
@@ -242,7 +242,7 @@ class _MessageItemState extends BState<MessageItem> {
                           child: Text(
                             m.subject.isNotEmpty
                                 ? m.subject
-                                : i18n(context, "messages_no_subject"),
+                                : i18n(context, S.messages_no_subject),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
@@ -273,7 +273,7 @@ class _MessageItemState extends BState<MessageItem> {
                               locale:
                                   Localizations.localeOf(context).languageCode,
                               yesterdayWord:
-                                  i18n(context, "label_message_yesterday"),
+                                  i18n(context, S.label_message_yesterday),
                               is24: (state as SettingsLoaded).is24 ?? true,
                             ),
                             style: TextStyle(

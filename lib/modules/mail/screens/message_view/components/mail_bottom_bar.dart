@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:aurora_mail/modules/mail/blocs/message_view_bloc/message_view_bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/message_view_bloc/message_view_state.dart';
+import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:crypto_worker/crypto_worker.dart';
@@ -57,9 +58,7 @@ class _MailBottomBarState extends BState<MailBottomBar> {
                     children: <Widget>[
                       Icon(
                         encryptType == EncryptType.Sign
-                            ? (decrypted
-                                ? Icons.lock_open
-                                : Icons.lock_outline)
+                            ? (decrypted ? Icons.lock_open : Icons.lock_outline)
                             : (decrypted
                                 ? Icons.lock_open
                                 : Icons.lock_outline),
@@ -68,8 +67,8 @@ class _MailBottomBarState extends BState<MailBottomBar> {
                         i18n(
                             context,
                             encryptType == EncryptType.Sign
-                                ? "button_pgp_verify_sign"
-                                : "btn_pgp_decrypt"),
+                                ? S.button_pgp_verify_sign
+                                : S.btn_pgp_decrypt),
                       ),
                     ],
                   ),

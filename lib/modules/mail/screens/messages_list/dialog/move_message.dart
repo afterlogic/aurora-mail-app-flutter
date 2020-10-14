@@ -7,7 +7,7 @@ import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/messages_list_
 import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/messages_list_event.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/mail_folder.dart';
 import 'package:aurora_mail/shared_ui/sized_dialog_content.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_mail/utils/internationalization.dart'; import 'package:aurora_mail/res/str/s.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -43,7 +43,7 @@ class _MoveMessageDialogState extends State<MoveMessageDialog> with NotSavedChan
         }
       },
       child: AlertDialog(
-        title: Text(i18n(context, "label_message_move_to") +
+        title: Text(i18n(context, S.label_message_move_to) +
             (current == null ? "" : FolderHelper.getTitle(context, current))),
         content: SizedDialogContent(
           child: BlocBuilder<MailBloc, MailState>(
@@ -60,11 +60,11 @@ class _MoveMessageDialogState extends State<MoveMessageDialog> with NotSavedChan
         ),
         actions: <Widget>[
           FlatButton(
-            child: Text(i18n(context, "btn_message_paste")),
+            child: Text(i18n(context, S.btn_message_paste)),
             onPressed: current == null ? null : _paste,
           ),
           FlatButton(
-            child: Text(i18n(context, "btn_cancel")),
+            child: Text(i18n(context, S.btn_cancel)),
             onPressed: _cancel,
           ),
         ],

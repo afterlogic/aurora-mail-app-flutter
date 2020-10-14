@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_mail/utils/internationalization.dart'; import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:aurora_ui_kit/components/am_app_bar.dart';
 import 'package:esys_flutter_share/esys_flutter_share.dart';
@@ -38,10 +38,10 @@ class LogScreen extends StatelessWidget {
               final result = await AMConfirmationDialog.show(
                 context,
                 null,
-                i18n(context, "hint_log_delete_record",
+                i18n(context, S.hint_log_delete_record,
                     {"name": file.path.split(Platform.pathSeparator).last}),
-                i18n(context, "btn_delete"),
-                i18n(context, "btn_cancel"),
+                i18n(context, S.btn_delete),
+                i18n(context, S.btn_cancel),
               );
               if (result == true) {
                 onDelete(file);

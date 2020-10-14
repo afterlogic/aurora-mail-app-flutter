@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/settings_bloc.dart';
+import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/cupertino.dart';
@@ -58,7 +59,7 @@ class _ContactBirthDatePickerState extends BState<ContactBirthDatePicker> {
     final decoded = json.decode(languageString ?? "{}");
     final language = decoded["tag"] as String;
     _dateText.text = DateFormat(
-      i18n(context, "format_contacts_birth_date"),
+      i18n(context, S.format_contacts_birth_date),
       language ?? "en",
     ).format(_selectedDate);
   }
@@ -104,7 +105,7 @@ class _ContactBirthDatePickerState extends BState<ContactBirthDatePicker> {
           child: TextField(
             controller: _dateText,
             decoration: InputDecoration(
-              labelText: i18n(context, "contacts_view_birthday"),
+              labelText: i18n(context, S.contacts_view_birthday),
               alignLabelWithHint: true,
             ),
           ),

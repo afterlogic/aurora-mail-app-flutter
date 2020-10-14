@@ -1,4 +1,4 @@
-import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_mail/utils/internationalization.dart'; import 'package:aurora_mail/res/str/s.dart';import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 
@@ -18,18 +18,18 @@ class GroupViewAppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: <Widget>[
 //        IconButton(
 //          icon: Icon(Icons.mail_outline),
-//          tooltip: i18n(context, "contacts_group_view_app_bar_send_message"),
+//          tooltip: i18n(context, S.contacts_group_view_app_bar_send_message),
 ////          onPressed: () => onActionSelected(ContactViewAppBarAction.sendMessage),
 //          onPressed: null,
 //        ),
         IconButton(
           icon: Icon(Icons.edit),
-          tooltip: i18n(context, "contacts_group_view_app_bar_edit"),
+          tooltip: i18n(context, S.contacts_group_view_app_bar_edit),
           onPressed: () => onActionSelected(GroupViewAppBarAction.edit),
         ),
         IconButton(
           icon: Icon(Icons.delete_outline),
-          tooltip: i18n(context, "contacts_group_view_app_bar_delete"),
+          tooltip: i18n(context, S.contacts_group_view_app_bar_delete),
           onPressed: () => onActionSelected(GroupViewAppBarAction.delete),
         ),
       ],

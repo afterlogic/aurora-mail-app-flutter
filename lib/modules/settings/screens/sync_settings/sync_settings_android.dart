@@ -1,11 +1,10 @@
 import 'package:aurora_mail/build_property.dart';
-import 'package:aurora_mail/modules/mail/screens/compose/self_destructing/components/clipboard_label.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/modules/settings/models/sync_freq.dart';
 import 'package:aurora_mail/modules/settings/models/sync_period.dart';
 import 'package:aurora_mail/modules/settings/screens/sync_settings/components/freq_selection_dialog.dart';
-import 'package:aurora_mail/modules/settings/screens/sync_settings/sync_settings_route.dart';
 import 'package:aurora_mail/notification/push_notifications_manager.dart';
+import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
@@ -39,7 +38,7 @@ class _SyncSettingsAndroidState extends BState<SyncSettingsAndroid> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AMAppBar(
-        title: Text(i18n(context, "settings_sync")),
+        title: Text(i18n(context, S.settings_sync)),
       ),
       body: BlocBuilder<SettingsBloc, SettingsState>(
         bloc: BlocProvider.of<SettingsBloc>(context),
@@ -53,7 +52,7 @@ class _SyncSettingsAndroidState extends BState<SyncSettingsAndroid> {
                 if (!BuildProperty.pushNotification)
                   ListTile(
                     leading: AMCircleIcon(Icons.av_timer),
-                    title: Text(i18n(context, "settings_sync_frequency")),
+                    title: Text(i18n(context, S.settings_sync_frequency)),
                     trailing: Text(
                       SyncFreq.freqToString(context, freq),
                       style: theme.textTheme.caption,
@@ -76,7 +75,7 @@ class _SyncSettingsAndroidState extends BState<SyncSettingsAndroid> {
                   ),
                 ListTile(
                   leading: AMCircleIcon(MdiIcons.calendarRepeat),
-                  title: Text(i18n(context, "settings_sync_period")),
+                  title: Text(i18n(context, S.settings_sync_period)),
                   trailing: Text(
                     SyncPeriod.periodToTitle(context, period),
                     style: theme.textTheme.caption,

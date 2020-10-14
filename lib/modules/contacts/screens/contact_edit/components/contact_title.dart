@@ -1,8 +1,8 @@
-import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_mail/utils/internationalization.dart'; import 'package:aurora_mail/res/str/s.dart';
 import 'package:flutter/material.dart';
 
 class ContactTile extends StatelessWidget {
-  final String title;
+  final int title;
   final TextStyle textStyle;
 
   const ContactTile(this.title, [this.textStyle]);

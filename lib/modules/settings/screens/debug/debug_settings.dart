@@ -4,7 +4,7 @@ import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/settings/screens/debug/debug_local_storage.dart';
 import 'package:aurora_mail/modules/settings/screens/debug/log_screen/log_route.dart';
 import 'package:aurora_mail/utils/base_state.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_mail/utils/internationalization.dart'; import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -58,7 +58,7 @@ class _DebugSettingState extends BState<DebugSetting> {
                 ),
                 CheckboxListTile(
                   value: _debug,
-                  title: Text(i18n(context, "label_show_debug_view")),
+                  title: Text(i18n(context, S.label_show_debug_view)),
                   onChanged: (bool value) {
                     _debug = value;
                     _storage.setDebug(value);
@@ -69,7 +69,7 @@ class _DebugSettingState extends BState<DebugSetting> {
                 CheckboxListTile(
                   value: _messageCounter,
                   title: Text(
-                      i18n(context, "label_enable_uploaded_message_counter")),
+                      i18n(context, S.label_enable_uploaded_message_counter)),
                   onChanged: (bool value) {
                     _messageCounter = value;
                     _storage.setEnableCounter(value);
@@ -78,7 +78,7 @@ class _DebugSettingState extends BState<DebugSetting> {
                 ),
                 CheckboxListTile(
                   value: _backgroundRecord,
-                  title: Text(i18n(context, "label_record_log_in_background")),
+                  title: Text(i18n(context, S.label_record_log_in_background)),
                   onChanged: (bool value) {
                     _backgroundRecord = value;
                     _storage.setBackgroundRecord(value);
@@ -86,14 +86,14 @@ class _DebugSettingState extends BState<DebugSetting> {
                   },
                 ),
                 FlatButton(
-                  child: Text(i18n(context, "btn_log_delete_all")),
+                  child: Text(i18n(context, S.btn_log_delete_all)),
                   onPressed: () async {
                     final result = await AMConfirmationDialog.show(
                       context,
                       null,
-                      i18n(context, "hint_log_delete_all"),
-                      i18n(context, "btn_delete"),
-                      i18n(context, "btn_cancel"),
+                      i18n(context, S.hint_log_delete_all),
+                      i18n(context, S.btn_delete),
+                      i18n(context, S.btn_cancel),
                     );
                     if (result == true) {
                       deleteAll();

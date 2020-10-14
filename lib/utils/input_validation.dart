@@ -1,4 +1,4 @@
-import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_mail/utils/internationalization.dart'; import 'package:aurora_mail/res/str/s.dart';
 import 'package:flutter/cupertino.dart';
 
 enum ValidationType {
@@ -19,13 +19,13 @@ String validateInput(
     throw "In order to check if a name is unique the list must be provided";
   }
   if (types.contains(ValidationType.empty) && value.isEmpty) {
-    return i18n(context, "error_input_validation_empty");
+    return i18n(context, S.error_input_validation_empty);
   }
   if (types.contains(ValidationType.email) && !isEmailValid(value)) {
-    return i18n(context, "error_input_validation_email");
+    return i18n(context, S.error_input_validation_email);
   }
   if (types.contains(ValidationType.fileName) && !_isFileNameValid(value)) {
-    return i18n(context, "error_input_validation_name_illegal_symbol");
+    return i18n(context, S.error_input_validation_name_illegal_symbol);
   }
   if (otherItems is List && types.contains(ValidationType.uniqueName)) {
     bool exists = false;
@@ -35,7 +35,7 @@ String validateInput(
       if (item.name == valueToCheck) exists = true;
     });
 
-    if (exists) return i18n(context, "error_input_validation_unique_name");
+    if (exists) return i18n(context, S.error_input_validation_unique_name);
   }
 
   // else the field is valid

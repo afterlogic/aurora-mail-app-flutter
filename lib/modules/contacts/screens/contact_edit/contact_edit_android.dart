@@ -7,6 +7,7 @@ import 'package:aurora_mail/modules/contacts/screens/contact_edit/components/con
 import 'package:aurora_mail/modules/contacts/screens/contacts_list/contacts_list_route.dart';
 import 'package:aurora_mail/modules/dialog_wrap.dart';
 import 'package:aurora_mail/modules/settings/blocs/pgp_settings/bloc.dart';
+import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_dialog.dart';
@@ -176,7 +177,7 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
           return showSnack(
             context: context,
             scaffoldState: Scaffold.of(context),
-            msg: "error_contacts_email_empty",
+            message: i18n(context, S.error_contacts_email_empty),
           );
         }
 
@@ -190,7 +191,7 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
           return showSnack(
             context: context,
             scaffoldState: Scaffold.of(context),
-            msg: "error_contact_pgp_key_will_not_be_valid",
+            message: i18n(context, S.error_contact_pgp_key_will_not_be_valid),
           );
         } else if (widget.contact != null &&
             contact.pgpPublicKey != null &&
@@ -312,12 +313,12 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
       body: Form(
         child: ListView(
           children: <Widget>[
-            ContactInput("contacts_view_display_name", _fullName),
+            ContactInput(S.contacts_view_display_name, _fullName),
             _buildPrimaryEmail(),
             _buildPrimaryPhone(),
             _buildPrimaryAddress(),
-            ContactInput("contacts_view_skype", _skype),
-            ContactInput("contacts_view_facebook", _facebook),
+            ContactInput(S.contacts_view_skype, _skype),
+            ContactInput(S.contacts_view_facebook, _facebook),
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Center(
@@ -325,8 +326,8 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
                   child: Text(i18n(
                       context,
                       _showAllFields
-                          ? "contacts_view_hide_additional_fields"
-                          : "contacts_view_show_additional_fields")),
+                          ? S.contacts_view_hide_additional_fields
+                          : S.contacts_view_show_additional_fields)),
                   onTap: () {
                     // crutch
                     _personalEmail.text = _personalEmail.text;
@@ -345,56 +346,56 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
             if (_showAllFields)
               Column(
                 children: <Widget>[
-                  ContactInput("contacts_view_first_name", _firstName),
-                  ContactInput("contacts_view_last_name", _lastName),
-                  ContactInput("contacts_view_nickname", _nickName),
-                  ContactTile("contacts_view_section_home"),
-                  ContactInput("contacts_view_personal_email", _personalEmail,
+                  ContactInput(S.contacts_view_first_name, _firstName),
+                  ContactInput(S.contacts_view_last_name, _lastName),
+                  ContactInput(S.contacts_view_nickname, _nickName),
+                  ContactTile(S.contacts_view_section_home),
+                  ContactInput(S.contacts_view_personal_email, _personalEmail,
                       keyboardType: TextInputType.emailAddress),
                   ContactInput(
-                      "contacts_view_personal_address", _personalAddress),
-                  ContactInput("contacts_view_city", _personalCity),
-                  ContactInput("contacts_view_province", _personalState),
-                  ContactInput("contacts_view_zip", _personalZip),
-                  ContactInput("contacts_view_country", _personalCountry),
-                  ContactInput("contacts_view_web_page", _personalWeb),
-                  ContactInput("contacts_view_fax", _personalFax,
+                      S.contacts_view_personal_address, _personalAddress),
+                  ContactInput(S.contacts_view_city, _personalCity),
+                  ContactInput(S.contacts_view_province, _personalState),
+                  ContactInput(S.contacts_view_zip, _personalZip),
+                  ContactInput(S.contacts_view_country, _personalCountry),
+                  ContactInput(S.contacts_view_web_page, _personalWeb),
+                  ContactInput(S.contacts_view_fax, _personalFax,
                       keyboardType: TextInputType.phone),
-                  ContactInput("contacts_view_phone", _personalPhone,
+                  ContactInput(S.contacts_view_phone, _personalPhone,
                       keyboardType: TextInputType.phone),
-                  ContactInput("contacts_view_mobile", _personalMobile,
+                  ContactInput(S.contacts_view_mobile, _personalMobile,
                       keyboardType: TextInputType.phone),
-                  ContactTile("contacts_view_section_business"),
-                  ContactInput("contacts_view_business_email", _businessEmail,
+                  ContactTile(S.contacts_view_section_business),
+                  ContactInput(S.contacts_view_business_email, _businessEmail,
                       keyboardType: TextInputType.emailAddress),
-                  ContactInput("contacts_view_company", _businessCompany),
+                  ContactInput(S.contacts_view_company, _businessCompany),
                   ContactInput(
-                      "contacts_view_personal_address", _businessAddress),
-                  ContactInput("contacts_view_city", _businessCity),
-                  ContactInput("contacts_view_province", _businessState),
-                  ContactInput("contacts_view_zip", _businessZip),
-                  ContactInput("contacts_view_country", _businessCountry),
-                  ContactInput("contacts_view_job_title", _businessJobTitle),
-                  ContactInput("contacts_view_department", _businessDepartment),
-                  ContactInput("contacts_view_office", _businessOffice),
-                  ContactInput("contacts_view_web_page", _businessWeb),
-                  ContactInput("contacts_view_fax", _businessFax,
+                      S.contacts_view_personal_address, _businessAddress),
+                  ContactInput(S.contacts_view_city, _businessCity),
+                  ContactInput(S.contacts_view_province, _businessState),
+                  ContactInput(S.contacts_view_zip, _businessZip),
+                  ContactInput(S.contacts_view_country, _businessCountry),
+                  ContactInput(S.contacts_view_job_title, _businessJobTitle),
+                  ContactInput(S.contacts_view_department, _businessDepartment),
+                  ContactInput(S.contacts_view_office, _businessOffice),
+                  ContactInput(S.contacts_view_web_page, _businessWeb),
+                  ContactInput(S.contacts_view_fax, _businessFax,
                       keyboardType: TextInputType.phone),
-                  ContactInput("contacts_view_phone", _businessPhone,
+                  ContactInput(S.contacts_view_phone, _businessPhone,
                       keyboardType: TextInputType.phone),
-                  ContactTile("contacts_view_section_other_info"),
+                  ContactTile(S.contacts_view_section_other_info),
                   ContactBirthDatePicker(
                     birthDay: _birthDay,
                     birthMonth: _birthMonth,
                     birthYear: _birthYear,
                     onPicked: _onDateSelected,
                   ),
-                  ContactInput("contacts_view_other_email", _otherEmail,
+                  ContactInput(S.contacts_view_other_email, _otherEmail,
                       keyboardType: TextInputType.emailAddress),
-                  ContactInput("contacts_view_notes", _notes),
+                  ContactInput(S.contacts_view_notes, _notes),
                   if (BuildProperty.cryptoEnable &&
                       !BuildProperty.legacyPgpKey) ...[
-                    ContactTile("label_contact_pgp_settings"),
+                    ContactTile(S.label_contact_pgp_settings),
                     KeyInput(
                       pgpSettingsBloc,
                       pgpKey,
@@ -403,20 +404,20 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
                       },
                       (error) {},
                     ),
-                    ContactTile("hint_auto_encrypt_messages",
+                    ContactTile(S.hint_auto_encrypt_messages,
                         theme.textTheme.subtitle1),
                     ContactCheckBox(
-                      "label_pgp_sign",
+                      S.label_pgp_sign,
                       autoSign,
                       (v) => setState(() => autoSign = v),
                     ),
                     ContactCheckBox(
-                      "label_pgp_encrypt",
+                      S.label_pgp_encrypt,
                       autoEncrypt,
                       (v) => setState(() => autoEncrypt = v),
                     ),
                   ],
-                  ContactTile("contacts_view_section_groups"),
+                  ContactTile(S.contacts_view_section_groups),
                   ..._bloc.state.groups.map((g) {
                     return CheckboxListTile(
                       title: Text("# " + g.name),
@@ -483,16 +484,16 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
   }
 
   Widget _buildPrimaryEmail() {
-    final label = "contacts_view_email";
+    final label = S.contacts_view_email;
 
     if (!_showAllFields) {
       return ContactInput(label, _getPrimaryEmailCtrl(),
           keyboardType: TextInputType.emailAddress);
     } else {
       final options = [
-        "${i18n(context, "contacts_view_personal_email")}",
-        "${i18n(context, "contacts_view_business_email")}",
-        "${i18n(context, "contacts_view_other_email")}",
+        "${i18n(context, S.contacts_view_personal_email)}",
+        "${i18n(context, S.contacts_view_business_email)}",
+        "${i18n(context, S.contacts_view_other_email)}",
       ];
       return ContactPrimaryInput<int>(
         (int value) => setState(() => _primaryEmail = value),
@@ -507,16 +508,16 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
   }
 
   Widget _buildPrimaryPhone() {
-    final label = "contacts_view_phone";
+    final label = S.contacts_view_phone;
 
     if (!_showAllFields) {
       return ContactInput(label, _getPrimaryPhoneCtrl(),
           keyboardType: TextInputType.phone);
     } else {
       final options = [
-        "${i18n(context, "contacts_view_mobile")}",
-        "${i18n(context, "contacts_view_personal_phone")}",
-        "${i18n(context, "contacts_view_business_phone")}",
+        "${i18n(context, S.contacts_view_mobile)}",
+        "${i18n(context, S.contacts_view_personal_phone)}",
+        "${i18n(context, S.contacts_view_business_phone)}",
       ];
       return ContactPrimaryInput<int>(
         (int value) => setState(() => _primaryPhone = value),
@@ -531,14 +532,14 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
   }
 
   Widget _buildPrimaryAddress() {
-    final label = "contacts_view_address";
+    final label = S.contacts_view_address;
 
     if (!_showAllFields) {
       return ContactInput(label, _getPrimaryAddressCtrl());
     } else {
       final options = [
-        "${i18n(context, "contacts_view_personal_address")}",
-        "${i18n(context, "contacts_view_business_address")}",
+        "${i18n(context, S.contacts_view_personal_address)}",
+        "${i18n(context, S.contacts_view_business_address)}",
       ];
       return ContactPrimaryInput<int>(
         (int value) => setState(() => _primaryAddress = value),

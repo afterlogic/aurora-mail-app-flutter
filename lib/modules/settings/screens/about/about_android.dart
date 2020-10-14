@@ -1,6 +1,6 @@
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/utils/base_state.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_mail/utils/internationalization.dart'; import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -54,7 +54,7 @@ class _AboutAndroidState extends BState<AboutAndroid> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Scaffold(
-      appBar: AMAppBar(title: Text(i18n(context, "settings_about"))),
+      appBar: AMAppBar(title: Text(i18n(context, S.settings_about))),
       body: loading
           ? Center(child: CircularProgressIndicator())
           : Column(
@@ -64,7 +64,7 @@ class _AboutAndroidState extends BState<AboutAndroid> {
                 Text(_appName, style: theme.textTheme.title),
                 SizedBox(height: 12.0),
                 Text(
-                  i18n(context, "settings_about_app_version",
+                  i18n(context, S.settings_about_app_version,
                       {"version": _version}),
                   style: theme.textTheme.caption.copyWith(fontSize: 14.0),
                 ),
@@ -80,7 +80,7 @@ class _AboutAndroidState extends BState<AboutAndroid> {
                 if (BuildProperty.termsOfService.isNotEmpty)
                   GestureDetector(
                     child: Text(
-                      i18n(context, "settings_about_terms_of_service"),
+                      i18n(context, S.settings_about_terms_of_service),
                       style: TextStyle(
                         color: theme.accentColor,
                         decoration: TextDecoration.underline,
@@ -94,7 +94,7 @@ class _AboutAndroidState extends BState<AboutAndroid> {
                 if (BuildProperty.privacyPolicy.isNotEmpty)
                   GestureDetector(
                     child: Text(
-                      i18n(context, "settings_about_privacy_policy"),
+                      i18n(context, S.settings_about_privacy_policy),
                       style: TextStyle(
                         color: theme.accentColor,
                         decoration: TextDecoration.underline,

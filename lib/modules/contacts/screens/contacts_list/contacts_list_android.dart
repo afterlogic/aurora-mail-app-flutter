@@ -1,7 +1,5 @@
 import 'dart:async';
 
-import 'package:aurora_mail/background/background_helper.dart';
-import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/inject/app_inject.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
@@ -11,6 +9,7 @@ import 'package:aurora_mail/modules/contacts/screens/contacts_list/components/co
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/mail_bloc.dart';
 import 'package:aurora_mail/modules/settings/blocs/pgp_settings/bloc.dart';
 import 'package:aurora_mail/modules/settings/screens/pgp_settings/dialogs/import_key_dialog.dart';
+import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/shared_ui/mail_bottom_app_bar.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
@@ -43,8 +42,6 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
     pgpSettingsBloc =
         AppInjector.instance.pgpSettingsBloc(BlocProvider.of(context));
   }
-
-
 
   void _onContactSelected(BuildContext context, Contact contact) {
     Navigator.pushNamed(
@@ -94,7 +91,7 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
             }
             if (state.error != null) {
               _completeRefresh();
-              showSnack(
+              showErrorSnack(
                 context: context,
                 scaffoldState: Scaffold.of(context),
                 msg: state.error,
@@ -172,7 +169,7 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
   }
 
   Widget _buildContactsEmpty(ContactsState state) {
-    return AMEmptyList(message: i18n(context, "contacts_empty"));
+    return AMEmptyList(message: i18n(context, S.contacts_empty));
   }
 
   Widget _buildContacts(BuildContext context, ContactsState state) {

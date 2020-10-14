@@ -3,6 +3,7 @@ import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_gro
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_storage_model.dart';
 import 'package:aurora_mail/utils/always_non_equal_object.dart';
 import 'package:aurora_mail/utils/copy_with_value.dart';
+import 'package:aurora_mail/utils/error_to_show.dart';
 
 class ContactsState with AlwaysNonEqualObject {
   final List<ContactsStorage> storages;
@@ -12,7 +13,7 @@ class ContactsState with AlwaysNonEqualObject {
   final List<Contact> contacts;
   final List<ContactsGroup> groups;
   final List<int> currentlySyncingStorages;
-  final String error;
+  final ErrorToShow error;
   final String key;
 
   ContactsState({
@@ -35,7 +36,7 @@ class ContactsState with AlwaysNonEqualObject {
     List<Contact> contacts,
     List<ContactsGroup> groups,
     List<int> currentlySyncingStorages,
-    String error,
+    ErrorToShow error,
     String key,
   }) {
     return new ContactsState(

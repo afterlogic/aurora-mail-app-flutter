@@ -1,6 +1,9 @@
 import 'dart:io';
 
+import 'package:aurora_mail/res/str/s.dart';
+import 'package:aurora_mail/utils/error_to_show.dart';
 import 'package:webmail_api_client/webmail_api_client.dart';
+import 'error_code.dart';
 
 //Map<String, String> getHeaderWithToken() {
 //  return {'Authorization': 'Bearer ${AuthBloc.currentUser.token}'};
@@ -19,19 +22,20 @@ import 'package:webmail_api_client/webmail_api_client.dart';
 //  }
 //}
 
-String formatError(dynamic err, StackTrace stack) {
+ErrorToShow formatError(dynamic err, StackTrace stack) {
   if (err is WebMailApiError) {
-    return err.message;
+    return err.toShow();
   } else if (err is SocketException) {
     if (err.osError.errorCode == 7) {
-      return "error_connection";
+      return ErrorToShow.code(S.error_connection);
     } else {
-      return err.message.isNotEmpty ? err.message : err.toString();
+      return ErrorToShow.message(
+          err.message.isNotEmpty ? err.message : err.toString());
     }
   } else {
     print("Debug error: $err");
     print("Debug stack: $stack");
-    return err.toString();
+    return ErrorToShow(err);
     // TODO set unknown for release
 //    return "Unknown error";
   }

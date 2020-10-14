@@ -1,6 +1,6 @@
 import 'package:aurora_mail/modules/mail/repository/search_util.dart';
 import 'package:aurora_mail/shared_ui/sized_dialog_content.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_mail/utils/internationalization.dart'; import 'package:aurora_mail/res/str/s.dart';
 import 'package:flutter/material.dart';
 
 class AdvancedSearch extends StatefulWidget {
@@ -71,7 +71,7 @@ class AdvancedSearchState extends State<AdvancedSearch> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(i18n(context, "label_message_advanced_search")),
+      title: Text(i18n(context, S.label_message_advanced_search)),
       content: SizedDialogContent(
         child: SingleChildScrollView(
           child: Column(
@@ -79,25 +79,25 @@ class AdvancedSearchState extends State<AdvancedSearch> {
             children: <Widget>[
               TextField(
                 decoration: InputDecoration(
-                  labelText: i18n(context, "messages_from"),
+                  labelText: i18n(context, S.messages_from),
                 ),
                 controller: fromCtrl,
               ),
               TextField(
                 decoration: InputDecoration(
-                  labelText: i18n(context, "messages_to"),
+                  labelText: i18n(context, S.messages_to),
                 ),
                 controller: toCtrl,
               ),
               TextField(
                 decoration: InputDecoration(
-                  labelText: i18n(context, "messages_subject"),
+                  labelText: i18n(context, S.messages_subject),
                 ),
                 controller: subjectCtrl,
               ),
               TextField(
                 decoration: InputDecoration(
-                  labelText: i18n(context, "input_message_search_text"),
+                  labelText: i18n(context, S.input_message_search_text),
                 ),
                 controller: textCtrl,
               ),
@@ -119,7 +119,7 @@ class AdvancedSearchState extends State<AdvancedSearch> {
                       },
                       child: InputDecorator(
                         decoration: InputDecoration(
-                          labelText: i18n(context, "input_message_search_since"),
+                          labelText: i18n(context, S.input_message_search_since),
                         ),
                         child: SizedBox(
                             height: 20,
@@ -146,7 +146,7 @@ class AdvancedSearchState extends State<AdvancedSearch> {
                       },
                       child: InputDecorator(
                         decoration: InputDecoration(
-                          labelText: i18n(context, "input_message_search_till"),
+                          labelText: i18n(context, S.input_message_search_till),
                         ),
                         child: SizedBox(
                           height: 20,
@@ -164,7 +164,7 @@ class AdvancedSearchState extends State<AdvancedSearch> {
                 children: <Widget>[
                   TextField(
                     decoration: InputDecoration(
-                      labelText: i18n(context, "messages_view_tab_attachments"),
+                      labelText: i18n(context, S.messages_view_tab_attachments),
                     ),
                     onChanged: (v) {
                       if (previousText.isEmpty != v.isEmpty) {
@@ -191,11 +191,11 @@ class AdvancedSearchState extends State<AdvancedSearch> {
       ),
       actions: <Widget>[
         FlatButton(
-          child: Text(i18n(context, "btn_cancel")),
+          child: Text(i18n(context, S.btn_cancel)),
           onPressed: () => Navigator.pop(context),
         ),
         FlatButton(
-          child: Text(i18n(context, "messages_list_app_bar_search")),
+          child: Text(i18n(context, S.messages_list_app_bar_search)),
           onPressed: _search,
         ),
       ],

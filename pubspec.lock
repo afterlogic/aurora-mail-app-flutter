@@ -374,13 +374,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.4.3"
-  flutter_i18n:
-    dependency: "direct main"
-    description:
-      name: flutter_i18n
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.8.3"
   flutter_keyboard_visibility:
     dependency: transitive
     description:
@@ -571,6 +564,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.2.0"
+  localizator:
+    dependency: "direct dev"
+    description:
+      name: localizator
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.4.0"
+  localizator_interface:
+    dependency: "direct main"
+    description:
+      name: localizator_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.4.0"
   logging:
     dependency: transitive
     description:

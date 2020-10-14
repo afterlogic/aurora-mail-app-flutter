@@ -12,7 +12,7 @@ import 'package:aurora_mail/modules/mail/screens/messages_list/components/select
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/user_selection_popup.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/utils/base_state.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_mail/utils/internationalization.dart'; import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -85,15 +85,15 @@ class MailAppBarState extends BState<MailAppBar> {
   String _getTitle(BuildContext context, Folder folder) {
     switch (folder.folderType) {
       case FolderType.inbox:
-        return i18n(context, "folders_inbox");
+        return i18n(context, S.folders_inbox);
       case FolderType.sent:
-        return i18n(context, "folders_sent");
+        return i18n(context, S.folders_sent);
       case FolderType.drafts:
-        return i18n(context, "folders_drafts");
+        return i18n(context, S.folders_drafts);
       case FolderType.spam:
-        return i18n(context, "folders_spam");
+        return i18n(context, S.folders_spam);
       case FolderType.trash:
-        return i18n(context, "folders_trash");
+        return i18n(context, S.folders_trash);
       default:
         return folder.name;
     }
@@ -141,12 +141,12 @@ class MailAppBarState extends BState<MailAppBar> {
         builder: (_, state) {
           if (state is FoldersLoaded) {
             return Text(state.filter == MessagesFilter.starred
-                ? i18n(context, "folders_starred")
+                ? i18n(context, S.folders_starred)
                 : _getTitle(context, state.selectedFolder));
           } else if (state is FoldersLoading) {
-            return Text(i18n(context, "messages_list_app_bar_loading_folders"));
+            return Text(i18n(context, S.messages_list_app_bar_loading_folders));
           } else if (state is FoldersEmpty) {
-            return Text(i18n(context, "folders_empty"));
+            return Text(i18n(context, S.folders_empty));
           } else {
             return SizedBox();
           }

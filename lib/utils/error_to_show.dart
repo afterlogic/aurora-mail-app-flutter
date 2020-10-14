@@ -1,0 +1,33 @@
+import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:flutter/widgets.dart';
+import 'package:webmail_api_client/webmail_api_client.dart';
+
+class ErrorToShow {
+  final int code;
+  final String message;
+
+  factory ErrorToShow(dynamic error) {
+    if (error is WebMailApiError) {
+      return error.toShow();
+    } else {
+      return ErrorToShow.message(error.toString());
+    }
+  }
+
+  ErrorToShow.code(this.code) : message = null;
+
+  ErrorToShow.message(this.message) : code = null;
+
+  String getString(BuildContext context, [Map<String, String> arg]) {
+    if (code != null) {
+      return i18n(context, code, arg);
+    } else {
+      return message;
+    }
+  }
+
+  @override
+  String toString() {
+    return "$code$message";
+  }
+}

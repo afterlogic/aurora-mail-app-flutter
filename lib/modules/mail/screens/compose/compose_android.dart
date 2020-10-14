@@ -25,7 +25,9 @@ import 'package:aurora_mail/modules/mail/screens/compose/self_destructing/encryp
 import 'package:aurora_mail/modules/mail/screens/compose/self_destructing/view_password.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
 import 'package:aurora_mail/modules/settings/screens/pgp_settings/dialogs/key_request_dialog.dart';
+import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/utils/base_state.dart';
+import 'package:aurora_mail/utils/error_to_show.dart';
 import 'package:aurora_mail/utils/identity_util.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/mail_utils.dart';
@@ -311,12 +313,12 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
     }
 
     if (_toEmails.isEmpty && _ccEmails.isEmpty && _bccEmails.isEmpty)
-      return _showError(i18n(context, "error_compose_no_receivers"));
+      return _showSnack(S.error_compose_no_receivers);
     if (_attachments.where((a) => a is TempAttachmentUpload).isNotEmpty) {
       return showSnack(
           context: context,
           scaffoldState: _scaffoldKey.currentState,
-          msg: i18n(context, "error_compose_wait_attachments"),
+          message: i18n(context, S.error_compose_wait_attachments),
           isError: false);
     }
     if (_encryptType == EncryptType.None) {
@@ -364,8 +366,8 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
                 .cryptoStorage()
                 .getPgpKey(sender.mail, true, false);
             if (key == null) {
-              _showError(
-                  "error_pgp_not_found_keys_for", {"users": sender.mail});
+              _showSnack(
+                  S.error_pgp_not_found_keys_for, {"users": sender.mail});
               return;
             }
             password = await KeyRequestDialog.request(context, key.key);
@@ -608,7 +610,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
                 children: <Widget>[
                   CircularProgressIndicator(),
                   SizedBox(width: 16.0),
-                  Text(i18n(context, "messages_sending")),
+                  Text(i18n(context, S.messages_sending)),
                 ],
               ),
             ));
@@ -636,7 +638,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
     showSnack(
       context: context,
       scaffoldState: _scaffoldKey.currentState,
-      msg: "messages_saved_in_drafts",
+      message: i18n(context, S.messages_saved_in_drafts),
       isError: false,
     );
   }
@@ -678,7 +680,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
           .cryptoStorage()
           .getPgpKey(sender.mail, true, false);
       if (key == null) {
-        _showError("error_pgp_not_found_keys_for", {"users": sender.mail});
+        _showSnack(S.error_pgp_not_found_keys_for, {"users": sender.mail});
         return;
       }
       final password = await KeyRequestDialog.request(context, key.key);
@@ -759,9 +761,18 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
     _bodyTextCtrl.text = text.replaceRange(startIndex, endIndex, signature);
   }
 
-  void _showError(String err, [Map<String, String> arg]) {
+  void _showSnack(int code, [Map<String, String> arg]) {
     Navigator.popUntil(context, ModalRoute.withName(ComposeRoute.name));
     showSnack(
+      context: context,
+      scaffoldState: _scaffoldKey.currentState,
+      message: i18n(context, code, arg),
+    );
+  }
+
+  void _showError(ErrorToShow err, [Map<String, String> arg]) {
+    Navigator.popUntil(context, ModalRoute.withName(ComposeRoute.name));
+    showErrorSnack(
       context: context,
       scaffoldState: _scaffoldKey.currentState,
       msg: err,
@@ -777,7 +788,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
     Widget _done(FocusNode node) {
       return FlatButton(
         child: Text(
-          i18n(context, "btn_done"),
+          i18n(context, S.btn_done),
           style: theme.textTheme.body1.copyWith(color: Colors.black),
         ),
         onPressed: node.unfocus,
@@ -842,7 +853,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
                   IdentitySelector(
                     padding: EdgeInsets.all(16.0),
                     enable: !lockUsers,
-                    label: i18n(context, "messages_from"),
+                    label: i18n(context, S.messages_from),
                     onIdentity: setIdentityOrSender,
                     textCtrl: _fromCtrl,
                   ),
@@ -853,7 +864,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
                         EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
                     enable: !lockUsers,
                     focusNode: toNode,
-                    label: i18n(context, "messages_to"),
+                    label: i18n(context, S.messages_to),
                     textCtrl: _toTextCtrl,
                     emails: _toEmails,
                     onNext: () {
@@ -871,7 +882,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
                         EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
                     enable: !lockUsers,
                     focusNode: ccNode,
-                    label: i18n(context, "messages_cc"),
+                    label: i18n(context, S.messages_cc),
                     textCtrl: _ccTextCtrl,
                     emails: _ccEmails,
                     onCCSelected: () => setState(() => _showBCC = true),
@@ -895,7 +906,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
                           EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
                       enable: !lockUsers,
                       focusNode: bccNode,
-                      label: i18n(context, "messages_bcc"),
+                      label: i18n(context, S.messages_bcc),
                       textCtrl: _bccTextCtrl,
                       emails: _bccEmails,
                       onNext: () {
@@ -975,9 +986,10 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
 
     if (_toEmails.isEmpty) {
       return showSnack(
-          context: context,
-          scaffoldState: _scaffoldKey.currentState,
-          msg: "error_pgp_select_recipient");
+        context: context,
+        scaffoldState: _scaffoldKey.currentState,
+        message: i18n(context, S.error_pgp_select_recipient),
+      );
     }
     final bloc = SelfDestructingBloc(
       _bloc.user,
@@ -1017,7 +1029,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
       decryptBody = _bodyTextCtrl.text;
 
       _subjectTextCtrl.text =
-          i18n(context, "template_self_destructing_message_title");
+          i18n(context, S.template_self_destructing_message_title);
       _bodyTextCtrl.text = result.body;
       _attachments.clear();
       _ccEmails.clear();

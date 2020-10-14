@@ -1,0 +1,1 @@
+flutter pub run localizator -from assets/flutter_i18n -to lib/res/str

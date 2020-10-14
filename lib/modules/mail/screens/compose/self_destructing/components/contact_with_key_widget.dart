@@ -1,5 +1,5 @@
 import 'package:aurora_mail/modules/mail/screens/compose/self_destructing/model/contact_with_key.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_mail/utils/internationalization.dart'; import 'package:aurora_mail/res/str/s.dart';
 import 'package:flutter/material.dart';
 
 class ContactWithKeyWidget extends StatelessWidget {
@@ -14,7 +14,7 @@ class ContactWithKeyWidget extends StatelessWidget {
     var name = model.contact?.fullName;
     final hasName = !(name?.isNotEmpty != true);
     if (!hasName) {
-      name = i18n(context, "label_pgp_key_with_not_name");
+      name = i18n(context, S.label_pgp_key_with_not_name);
     }
     return GestureDetector(
       behavior: HitTestBehavior.opaque,

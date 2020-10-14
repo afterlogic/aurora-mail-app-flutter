@@ -6,7 +6,7 @@ import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/messages_list_
 import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/messages_list_event.dart';
 import 'package:aurora_mail/modules/mail/repository/search_util.dart';
 import 'package:aurora_mail/utils/base_state.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_mail/utils/internationalization.dart'; import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -53,7 +53,7 @@ class SearchBarState extends BState<SearchBar> {
         style: theme.textTheme.body1,
         autofocus: true,
         decoration: InputDecoration.collapsed(
-          hintText: i18n(context, "messages_list_app_bar_search"),
+          hintText: i18n(context, S.messages_list_app_bar_search),
           hintStyle: theme.textTheme.display1,
         ),
         onChanged: _getMessages,

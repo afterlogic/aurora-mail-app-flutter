@@ -1,6 +1,6 @@
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/input_validation.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_mail/utils/internationalization.dart'; import 'package:aurora_mail/res/str/s.dart';
 import 'package:flutter/material.dart';
 
 class RequestPasswordDialog extends StatefulWidget {
@@ -16,7 +16,7 @@ class _RequestPasswordDialogState extends BState<RequestPasswordDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(i18n(context, "label_pgp_decrypt")),
+      title: Text(i18n(context, S.label_pgp_decrypt)),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -28,7 +28,7 @@ class _RequestPasswordDialogState extends BState<RequestPasswordDialog> {
                 validator: (v) =>
                     validateInput(context, v, [ValidationType.empty]),
                 decoration: InputDecoration(
-                    labelText: i18n(context, "login_input_password"),
+                    labelText: i18n(context, S.login_input_password),
                     suffix: IconButton(
                       icon: Icon(
                         _obscurePass ? Icons.visibility : Icons.visibility_off,
@@ -46,11 +46,11 @@ class _RequestPasswordDialogState extends BState<RequestPasswordDialog> {
       ),
       actions: <Widget>[
         FlatButton(
-          child: Text(i18n(context, "btn_close")),
+          child: Text(i18n(context, S.btn_close)),
           onPressed: () => Navigator.pop(context),
         ),
         FlatButton(
-          child: Text(i18n(context, "btn_pgp_decrypt")),
+          child: Text(i18n(context, S.btn_pgp_decrypt)),
           onPressed: _decrypt,
         ),
       ],

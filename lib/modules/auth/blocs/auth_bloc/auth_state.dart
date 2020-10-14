@@ -1,5 +1,6 @@
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/utils/always_non_equal_object.dart';
+import 'package:aurora_mail/utils/error_to_show.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -58,7 +59,7 @@ class TwoFactor extends AuthState {
 class NeedsHost extends AuthState {}
 
 class UpgradePlan extends AuthState with AlwaysNonEqualObject {
-  final String err;
+  final ErrorToShow err;
 
   UpgradePlan(this.err);
 }
@@ -76,7 +77,7 @@ class LoggedIn extends AuthState {
 class LoggedOut extends AuthState {}
 
 class AuthError extends AuthState {
-  final String errorMsg;
+  final ErrorToShow errorMsg;
 
   const AuthError(this.errorMsg);
 

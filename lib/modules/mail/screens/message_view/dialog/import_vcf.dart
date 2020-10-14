@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/contacts_bloc.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/events/contacts_event.dart';
-import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
+import 'package:aurora_mail/res/str/s.dart';
+import 'package:aurora_mail/utils/error_to_show.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
-import 'package:aurora_mail/utils/show_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -24,10 +24,10 @@ class _ImportVcfDialogState extends State<ImportVcfDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      content: Text(i18n(context, "hint_vcf_import")),
+      content: Text(i18n(context, S.hint_vcf_import)),
       actions: <Widget>[
         FlatButton(
-          child: Text(i18n(context, "btn_cancel")),
+          child: Text(i18n(context, S.btn_cancel)),
           onPressed: () => Navigator.pop(context),
         ),
         FlatButton(
@@ -35,7 +35,7 @@ class _ImportVcfDialogState extends State<ImportVcfDialog> {
               ? SizedBox(
                   child: CircularProgressIndicator(),
                 )
-              : Text(i18n(context, "btn_vcf_import")),
+              : Text(i18n(context, S.btn_vcf_import)),
           onPressed: importVcf,
         ),
       ],
@@ -51,7 +51,7 @@ class _ImportVcfDialogState extends State<ImportVcfDialog> {
       setState(() => progress = false);
       Navigator.pop(context, "");
     } catch (e) {
-      final result = e.toString();
+      final result = ErrorToShow(e);
       setState(() => progress = false);
       Navigator.pop(context, result);
     }

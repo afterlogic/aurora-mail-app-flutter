@@ -1,3 +1,4 @@
+import 'package:aurora_mail/res/str/s.dart';
 enum LifeTime {
   Day,
   Days3,
@@ -5,14 +6,14 @@ enum LifeTime {
 }
 
 extension LifeTimeMap on LifeTime {
-  String toText() {
+  int toTextCode() {
     switch (this) {
       case LifeTime.Day:
-        return "self_destructing_life_time_day";
+        return S.self_destructing_life_time_day;
       case LifeTime.Days3:
-        return "self_destructing_life_time_days_3";
+        return S.self_destructing_life_time_days_3;
       case LifeTime.Days7:
-        return "self_destructing_life_time_days_7";
+        return S.self_destructing_life_time_days_7;
     }
     return null;
   }

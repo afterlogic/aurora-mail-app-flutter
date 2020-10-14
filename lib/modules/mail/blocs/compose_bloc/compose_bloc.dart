@@ -8,7 +8,9 @@ import 'package:aurora_mail/modules/mail/blocs/compose_bloc/compose_methods.dart
 import 'package:aurora_mail/modules/mail/models/compose_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/temp_attachment_upload.dart';
 import 'package:aurora_mail/modules/mail/repository/mail_local_storage.dart';
+import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/utils/api_utils.dart';
+import 'package:aurora_mail/utils/error_to_show.dart';
 import 'package:bloc/bloc.dart';
 import 'package:crypto_worker/crypto_worker.dart';
 import 'package:flutter/foundation.dart';
@@ -141,7 +143,7 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
     }, onUploadEnd: (ComposeAttachment attachment) {
       add(EndUpload(attachment));
     }, onError: (dynamic err) {
-      add(ErrorUpload(err.toString()));
+      add(ErrorUpload(ErrorToShow(err)));
     }).then((_) {
       "";
     });
@@ -177,7 +179,7 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
     try {
       if (event.encrypt && event.contacts.isEmpty) {
         yield ComposeError(
-          "error_pgp_need_contact_for_encrypt",
+          ErrorToShow.code(S.error_pgp_need_contact_for_encrypt),
         );
         return;
       }
@@ -188,13 +190,13 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
     } catch (e) {
       if (e is PgpKeyNotFound) {
         yield ComposeError(
-          "error_pgp_not_found_keys_for",
+          ErrorToShow.code(S.error_pgp_not_found_keys_for),
           {"users": e.email.join(" , ")},
         );
       } else if (e is PgpInvalidSign) {
-        yield ComposeError("error_pgp_invalid_password");
+        yield ComposeError(ErrorToShow.code(S.error_pgp_invalid_password));
       } else {
-        yield ComposeError("error_server_unknown_email");
+        yield ComposeError(ErrorToShow.code(S.error_server_unknown_email));
       }
     }
   }
@@ -226,7 +228,7 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
     }, onUploadEnd: (ComposeAttachment attachment) {
       add(EndUpload(attachment));
     }, onError: (dynamic err) {
-      add(ErrorUpload(err.toString()));
+      add(ErrorUpload(ErrorToShow(err)));
     }).then((_) {
       "";
     });

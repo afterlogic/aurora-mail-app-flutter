@@ -3,6 +3,7 @@ import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_group_model.dart';
 import 'package:aurora_mail/modules/contacts/screens/contacts_list/contacts_list_route.dart';
 import 'package:aurora_mail/modules/dialog_wrap.dart';
+import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
@@ -64,7 +65,7 @@ class _GroupEditAndroidState extends BState<GroupEditAndroid>
           return showSnack(
             context: context,
             scaffoldState: Scaffold.of(context),
-            msg: "error_contacts_save_name_empty",
+            message: i18n(context, S.error_contacts_save_name_empty),
           );
         }
         FocusScope.of(context).unfocus();
@@ -107,9 +108,9 @@ class _GroupEditAndroidState extends BState<GroupEditAndroid>
       appBar: GroupEditAppBar(_onAppBarActionSelected, widget.group != null),
       body: ListView(
         children: <Widget>[
-          _buildInput("contacts_view_section_group_name", _nameCtrl),
+          _buildInput(S.contacts_view_section_group_name, _nameCtrl),
           SwitchListTile.adaptive(
-            title: Text(i18n(context, "contacts_group_edit_is_organization")),
+            title: Text(i18n(context, S.contacts_group_edit_is_organization)),
             value: _isOrg,
             activeColor: theme.accentColor,
             onChanged: (v) => setState(() => _isOrg = v),
@@ -117,19 +118,19 @@ class _GroupEditAndroidState extends BState<GroupEditAndroid>
           if (_isOrg)
             Column(
               children: <Widget>[
-                _buildInput("contacts_view_email", _emailCtrl,
+                _buildInput(S.contacts_view_email, _emailCtrl,
                     TextInputType.emailAddress),
-                _buildInput("contacts_view_company", _companyCtrl),
-                _buildInput("contacts_view_country", _countryCtrl),
-                _buildInput("contacts_view_province", _stateCtrl),
-                _buildInput("contacts_view_city", _cityCtrl),
-                _buildInput("contacts_view_street_address", _streetCtrl),
-                _buildInput("contacts_view_zip", _zipCtrl),
+                _buildInput(S.contacts_view_company, _companyCtrl),
+                _buildInput(S.contacts_view_country, _countryCtrl),
+                _buildInput(S.contacts_view_province, _stateCtrl),
+                _buildInput(S.contacts_view_city, _cityCtrl),
+                _buildInput(S.contacts_view_street_address, _streetCtrl),
+                _buildInput(S.contacts_view_zip, _zipCtrl),
                 _buildInput(
-                    "contacts_view_phone", _phoneCtrl, TextInputType.phone),
-                _buildInput("contacts_view_fax", _faxCtrl),
+                    S.contacts_view_phone, _phoneCtrl, TextInputType.phone),
+                _buildInput(S.contacts_view_fax, _faxCtrl),
                 _buildInput(
-                    "contacts_view_web_page", _webCtrl, TextInputType.url),
+                    S.contacts_view_web_page, _webCtrl, TextInputType.url),
               ],
             ),
         ],
@@ -138,7 +139,7 @@ class _GroupEditAndroidState extends BState<GroupEditAndroid>
   }
 
   Widget _buildInput(
-    String label,
+    int label,
     TextEditingController ctrl, [
     TextInputType type,
   ]) {

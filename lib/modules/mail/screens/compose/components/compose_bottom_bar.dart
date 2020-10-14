@@ -1,14 +1,11 @@
 import 'dart:io';
 
 import 'package:aurora_mail/build_property.dart';
-import 'package:aurora_mail/modules/mail/blocs/compose_bloc/bloc.dart';
-import 'package:aurora_mail/modules/mail/blocs/compose_bloc/compose_bloc.dart';
-import 'package:aurora_mail/utils/base_state.dart';
+import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:crypto_worker/crypto_worker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class ComposeBottomBar extends StatelessWidget {
@@ -53,7 +50,7 @@ class ComposeBottomBar extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       Icon(Icons.arrow_back),
-                      Text(i18n(context, "btn_pgp_undo_pgp")),
+                      Text(i18n(context, S.btn_pgp_undo_pgp)),
                     ],
                   ),
                 ),
@@ -74,7 +71,7 @@ class ComposeBottomBar extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
                         Icon(MdiIcons.clockAlertOutline),
-                        Text(i18n(context, "btn_self_destructing")),
+                        Text(i18n(context, S.btn_self_destructing)),
                       ],
                     ),
                   ),
@@ -95,7 +92,7 @@ class ComposeBottomBar extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
                         Icon(Icons.lock_outline),
-                        Text(i18n(context, "btn_pgp_encrypt")),
+                        Text(i18n(context, S.btn_pgp_encrypt)),
                       ],
                     ),
                   ),

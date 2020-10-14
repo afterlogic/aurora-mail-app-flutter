@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:aurora_mail/modules/settings/blocs/pgp_settings/bloc.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_mail/utils/internationalization.dart'; import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:crypto_model/crypto_model.dart';
 import 'package:flutter/cupertino.dart';
@@ -19,7 +19,7 @@ class PgpKeysScreen extends StatelessWidget {
       appBar: AMAppBar(
         title: Text(i18n(
           context,
-          "label_pgp_all_public_key",
+          S.label_pgp_all_public_key,
         )),
       ),
       body: Padding(
@@ -43,7 +43,7 @@ class PgpKeysScreen extends StatelessWidget {
                 SizedBox(
                   width: double.infinity,
                   child: AMButton(
-                    child: Text(i18n(context, "btn_php_send_all")),
+                    child: Text(i18n(context, S.btn_php_send_all)),
                     onPressed: () {
                       bloc.add(ShareKeys(pgpKeys));
                     },
@@ -54,7 +54,7 @@ class PgpKeysScreen extends StatelessWidget {
                   SizedBox(
                     width: double.infinity,
                     child: AMButton(
-                      child: Text(i18n(context, "btn_pgp_download_all")),
+                      child: Text(i18n(context, S.btn_pgp_download_all)),
                       onPressed: () {
                         bloc.add(DownloadKeys(pgpKeys));
                         Navigator.pop(context);

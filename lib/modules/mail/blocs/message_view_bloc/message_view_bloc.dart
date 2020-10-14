@@ -1,10 +1,11 @@
 import 'dart:async';
-
+import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/inject/app_inject.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/mail/blocs/message_view_bloc/message_view_methods.dart';
 import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
+import 'package:aurora_mail/utils/error_to_show.dart';
 import 'package:aurora_mail/utils/permissions.dart';
 import 'package:bloc/bloc.dart';
 import 'package:crypto_worker/crypto_worker.dart';
@@ -53,7 +54,7 @@ class MessageViewBloc extends Bloc<MessageViewEvent, MessageViewState> {
     try {
       await getStoragePermissions();
     } catch (err) {
-      yield MessagesViewError(err.toString());
+      yield MessagesViewError(ErrorToShow(err));
     }
 
     _methods.downloadAttachment(
@@ -99,17 +100,18 @@ class MessageViewBloc extends Bloc<MessageViewEvent, MessageViewState> {
         event.sender,
         event.body,
       );
-      yield DecryptComplete(decrypted.text, decrypted.verified,event.type);
+      yield DecryptComplete(decrypted.text, decrypted.verified, event.type);
     } catch (e) {
       if (e is PgpKeyNotFound) {
         yield MessagesViewError(
-          "error_pgp_not_found_keys_for",
+          ErrorToShow.code(S.error_pgp_not_found_keys_for),
           {"users": e.email.join(" , ")},
         );
       } else if (e is PgpInvalidSign) {
-        yield MessagesViewError("error_pgp_invalid_key_or_password");
+        yield MessagesViewError(
+            ErrorToShow.code(S.error_pgp_invalid_key_or_password));
       } else {
-        yield MessagesViewError("error_pgp_can_not_decrypt");
+        yield MessagesViewError(ErrorToShow.code(S.error_pgp_can_not_decrypt));
       }
     }
   }

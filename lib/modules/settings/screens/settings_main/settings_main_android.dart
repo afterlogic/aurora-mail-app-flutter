@@ -12,7 +12,7 @@ import 'package:aurora_mail/modules/settings/screens/sync_settings/sync_settings
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
 import 'package:aurora_mail/shared_ui/mail_bottom_app_bar.dart';
 import 'package:aurora_mail/utils/base_state.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_mail/utils/internationalization.dart'; import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -30,42 +30,42 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AMAppBar(
-        title: Text(i18n(context, "settings")),
+        title: Text(i18n(context, S.settings)),
       ),
       body: ListView(
         children: <Widget>[
           ListTile(
             leading: AMCircleIcon(Icons.tune),
-            title: Text(i18n(context, "settings_common")),
+            title: Text(i18n(context, S.settings_common)),
             onTap: () => Navigator.pushNamed(context, CommonSettingsRoute.name),
           ),
           ListTile(
             leading: AMCircleIcon(Icons.sync),
-            title: Text(i18n(context, "settings_sync")),
+            title: Text(i18n(context, S.settings_sync)),
             onTap: () => Navigator.pushNamed(context, SyncSettingsRoute.name),
           ),
           if (BuildProperty.pushNotification)
             ListTile(
               leading: AMCircleIcon(Icons.notifications),
-              title: Text(i18n(context, "label_notifications_settings")),
+              title: Text(i18n(context, S.label_notifications_settings)),
               onTap: () =>
                   Navigator.pushNamed(context, NotificationsSettingsRoute.name),
             ),
           if (BuildProperty.cryptoEnable)
             ListTile(
               leading: AMCircleIcon(Icons.vpn_key),
-              title: Text(i18n(context, "label_pgp_settings")),
+              title: Text(i18n(context, S.label_pgp_settings)),
               onTap: () => Navigator.pushNamed(context, PgpSettingsRoute.name),
             ),
           if (BuildProperty.multiUserEnable)
             ListTile(
               leading: AMCircleIcon(Icons.account_circle),
-              title: Text(i18n(context, "settings_accounts_manage")),
+              title: Text(i18n(context, S.settings_accounts_manage)),
               onTap: () => Navigator.pushNamed(context, ManageUsersRoute.name),
             ),
           ListTile(
             leading: AMCircleIcon(Icons.info_outline),
-            title: Text(i18n(context, "settings_about")),
+            title: Text(i18n(context, S.settings_about)),
             onLongPress: BuildProperty.logger
                 ? () => setState(() => showDebug = true)
                 : null,
@@ -80,7 +80,7 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
           if (!BuildProperty.multiUserEnable)
             ListTile(
               leading: AMCircleIcon(Icons.exit_to_app),
-              title: Text(i18n(context, "messages_list_app_bar_logout")),
+              title: Text(i18n(context, S.messages_list_app_bar_logout)),
               onTap: _exit,
             ),
         ],
@@ -95,8 +95,8 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
       context: context,
       builder: (_) => ConfirmationDialog(
         title: null,
-        description: i18n(context, "hint_confirm_exit"),
-        actionText: i18n(context, "btn_exit"),
+        description: i18n(context, S.hint_confirm_exit),
+        actionText: i18n(context, S.btn_exit),
       ),
     );
     if (result == true) {

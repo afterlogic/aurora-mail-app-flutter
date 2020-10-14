@@ -1,3 +1,4 @@
+import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
@@ -46,7 +47,7 @@ class _ComposeAppBarState extends BState<ComposeAppBar> {
               value: ComposeAppBarAction.saveToDrafts,
               child: ListTile(
                 leading: Icon(Icons.drafts),
-                title: Text(i18n(context, "btn_save")),
+                title: Text(i18n(context, S.btn_save)),
               ),
             ),
           ],

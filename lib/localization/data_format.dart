@@ -1,8 +1,4 @@
 import 'package:flutter/widgets.dart';
-import 'package:intl/date_symbol_data_local.dart';
-import 'package:intl/date_time_patterns.dart';
-import 'package:intl/date_symbol_data_custom.dart';
-import 'package:intl/date_symbols.dart';
 
 class DataFormatDelegate extends LocalizationsDelegate {
   @override

@@ -6,7 +6,9 @@ import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/models/alias_or_identity.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_methods.dart';
 import 'package:aurora_mail/modules/auth/repository/auth_api.dart';
+import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/utils/api_utils.dart';
+import 'package:aurora_mail/utils/error_to_show.dart';
 import 'package:bloc/bloc.dart';
 
 import './bloc.dart';
@@ -35,7 +37,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     if (event is SelectUser) yield* _selectUser(event);
     if (event is SelectUserByEmail) yield* _selectUserByEmail(event);
     if (event is DeleteUser) yield* _deleteUser(event);
-    if (event is InvalidateCurrentUserToken) yield* _invalidateCurrentUserToken(event);
+    if (event is InvalidateCurrentUserToken)
+      yield* _invalidateCurrentUserToken(event);
     if (event is ChangeAccount) yield* _changeAccount(event);
     if (event is UserLogIn) yield* _userLogIn(event);
     if (event is UpdateAccounts) yield* _updateAccounts(event);
@@ -51,9 +54,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         currentUser = result.user;
         currentAccount = result.account;
 
-        final identities = await _methods.getAccountIdentities(currentUser, currentAccount);
+        final identities =
+            await _methods.getAccountIdentities(currentUser, currentAccount);
         _methods.setFbToken(users);
-        currentIdentity = identities.firstWhere((item) => item.isDefault, orElse: () => null) ??
+        currentIdentity = identities.firstWhere((item) => item.isDefault,
+                orElse: () => null) ??
             AccountIdentity(
               email: currentAccount.email,
               useSignature: currentAccount.useSignature,
@@ -113,7 +118,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   Stream<AuthState> _selectUser(SelectUser event) async* {
     if (currentUser.localId == event.userLocalId &&
-        (event.accountLocalId == null || currentAccount.localId == event.accountLocalId)) {
+        (event.accountLocalId == null ||
+            currentAccount.localId == event.accountLocalId)) {
       event.completer?.complete();
       return;
     }
@@ -128,10 +134,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   Stream<AuthState> _login(LogIn event) async* {
     yield LoggingIn();
     users = await _methods.users;
-    final userFromDb = users.firstWhere((u) => u.emailFromLogin == event.email, orElse: () => null);
+    final userFromDb = users.firstWhere((u) => u.emailFromLogin == event.email,
+        orElse: () => null);
 
     if (!event.firstLogin && userFromDb != null) {
-      yield AuthError("error_user_already_logged");
+      yield AuthError(ErrorToShow.code(S.error_user_already_logged));
       return;
     } else {
       try {
@@ -182,7 +189,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           currentAccount,
           accounts,
         );
-        currentIdentity = _methods.getDefaultIdentity(currentAccount, identities);
+        currentIdentity =
+            _methods.getDefaultIdentity(currentAccount, identities);
         yield InitializedUserAndAccounts(
           users: users,
           user: currentUser,
@@ -191,7 +199,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           needsLogin: false,
         );
       } else {
-        yield AuthError("error_login_no_accounts");
+        yield AuthError(ErrorToShow.code(S.error_login_no_accounts));
       }
     } catch (e, s) {
       yield AuthError(formatError(e, s));
@@ -205,7 +213,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     await _methods.getAccounts(currentUser).then((accounts) async {
       assert(accounts.isNotEmpty);
       if (currentAccount == null ||
-          accounts.firstWhere((element) => element.serverId == currentAccount.serverId,
+          accounts.firstWhere(
+                  (element) => element.serverId == currentAccount.serverId,
                   orElse: () => null) ==
               null) {
         currentAccount = accounts[0];
@@ -218,10 +227,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         accounts,
       );
       if (currentIdentity == null ||
-          identities.firstWhere((element) => element.entityId == currentIdentity.entityId,
+          identities.firstWhere(
+                  (element) => element.entityId == currentIdentity.entityId,
                   orElse: () => null) ==
               null) {
-        currentIdentity = _methods.getDefaultIdentity(currentAccount, identities);
+        currentIdentity =
+            _methods.getDefaultIdentity(currentAccount, identities);
       }
       add(InitUserAndAccounts());
     }).whenComplete(() => event.completer?.complete());
@@ -247,7 +258,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
   }
 
-  Stream<AuthState> _invalidateCurrentUserToken(InvalidateCurrentUserToken event) async* {
+  Stream<AuthState> _invalidateCurrentUserToken(
+      InvalidateCurrentUserToken event) async* {
     if (currentUser != null) {
       currentUser = await _methods.invalidateToken(currentUser.localId);
       add(InitUserAndAccounts());
@@ -275,7 +287,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     );
   }
 
-  Future<List<AliasOrIdentity>> getAliasesAndIdentities([bool forAllAccount]) async {
+  Future<List<AliasOrIdentity>> getAliasesAndIdentities(
+      [bool forAllAccount]) async {
     final identities = await getIdentities(forAllAccount);
     final aliases = await getAliases(forAllAccount);
     final items = <AliasOrIdentity>[];

@@ -1,5 +1,5 @@
 import 'package:aurora_mail/modules/settings/models/sync_freq.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_mail/utils/internationalization.dart'; import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/utils/show_dialog.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/cupertino.dart';
@@ -27,7 +27,7 @@ class FreqSelectionDialog extends StatelessWidget {
     return AlertDialog(
       contentPadding: EdgeInsets.zero,
       titlePadding: EdgeInsets.all(24.0),
-      title: Text(i18n(context, "settings_sync_frequency")),
+      title: Text(i18n(context, S.settings_sync_frequency)),
       content: AMDialogList(
         children: values.map((freq) {
           return RadioListTile(
@@ -46,7 +46,7 @@ class FreqSelectionDialog extends StatelessWidget {
         FlatButton(
           textColor:
               theme.brightness == Brightness.light ? theme.accentColor : null,
-          child: Text(i18n(context, "btn_cancel")),
+          child: Text(i18n(context, S.btn_cancel)),
           onPressed: Navigator.of(context).pop,
         ),
       ],

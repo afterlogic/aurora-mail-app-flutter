@@ -7,7 +7,7 @@ import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_mode
 import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:aurora_mail/modules/mail/screens/message_view/components/message_webview.dart';
 import 'package:aurora_mail/utils/date_formatting.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_mail/utils/internationalization.dart'; import 'package:aurora_mail/res/str/s.dart';
 import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -197,11 +197,11 @@ class MailUtils {
     final baseMessage = htmlToPlain(message.htmlBody ?? "");
     final time = DateFormatting.formatDateFromSeconds(
         message.timeStampInUTC, Localizations.localeOf(context).languageCode,
-        format: i18n(context, "format_compose_reply_date"));
+        format: i18n(context, S.format_compose_reply_date));
 
     final from = getDisplayName(message.fromInJson);
 
-    return "\n\n${i18n(context, "compose_reply_body_title", {
+    return "\n\n${i18n(context, S.compose_reply_body_title, {
       "time": time,
       "from": from
     })}\n$baseMessage";
@@ -215,7 +215,7 @@ class MailUtils {
     final baseMessage = htmlToPlain(message.htmlBody ?? "");
 
     String forwardMessage =
-        "\n\n${i18n(context, "compose_forward_body_original_message")}\n";
+        "\n\n${i18n(context, S.compose_forward_body_original_message)}\n";
 
     final from = MailUtils.getEmails(message.fromInJson).join(", ");
     final to = MailUtils.getEmails(message.toInJson).join(", ");
@@ -224,25 +224,25 @@ class MailUtils {
 
     if (from.isNotEmpty)
       forwardMessage +=
-          i18n(context, "compose_forward_from", {"emails": from}) + "\n";
+          i18n(context, S.compose_forward_from, {"emails": from}) + "\n";
     if (to.isNotEmpty)
       forwardMessage +=
-          i18n(context, "compose_forward_to", {"emails": to}) + "\n";
+          i18n(context, S.compose_forward_to, {"emails": to}) + "\n";
     if (cc.isNotEmpty)
       forwardMessage +=
-          i18n(context, "compose_forward_cc", {"emails": cc}) + "\n";
+          i18n(context, S.compose_forward_cc, {"emails": cc}) + "\n";
     if (bcc.isNotEmpty)
       forwardMessage +=
-          i18n(context, "compose_forward_bcc", {"emails": bcc}) + "\n";
+          i18n(context, S.compose_forward_bcc, {"emails": bcc}) + "\n";
 
     final date = DateFormatting.formatDateFromSeconds(
         message.timeStampInUTC, Localizations.localeOf(context).languageCode,
-        format: i18n(context, "format_compose_forward_date"));
+        format: i18n(context, S.format_compose_forward_date));
     forwardMessage +=
-        i18n(context, "compose_forward_sent", {"date": date}) + "\n";
+        i18n(context, S.compose_forward_sent, {"date": date}) + "\n";
 
     forwardMessage +=
-        i18n(context, "compose_forward_subject", {"subject": message.subject}) +
+        i18n(context, S.compose_forward_subject, {"subject": message.subject}) +
             "\n\n";
     return forwardMessage + baseMessage;
   }
@@ -261,11 +261,11 @@ class MailUtils {
 
     final subject = message.subject.isNotEmpty
         ? message.subject
-        : i18n(context, "messages_no_subject");
+        : i18n(context, S.messages_no_subject);
     final shortDate = DateFormatting.getShortMessageDate(
       timestamp: message.timeStampInUTC,
       locale: Localizations.localeOf(context).languageCode,
-      yesterdayWord: i18n(context, "label_message_yesterday"),
+      yesterdayWord: i18n(context, S.label_message_yesterday),
       is24: true,
     );
     final paddingBottom = MediaQuery.of(context).padding.bottom;
@@ -286,7 +286,7 @@ class MailUtils {
         .toSet()
         .join("<br>");
     if (toPrimary.isEmpty) {
-      toPrimary = i18n(context, "messages_no_receivers");
+      toPrimary = i18n(context, S.messages_no_receivers);
     }
 //    cc ??= "";
 
@@ -394,9 +394,9 @@ class MailUtils {
     <script>      
         var toggle = function (elem) {
          if(elem.classList.contains("is-visible")){
-              document.getElementById("info-btn").innerHTML ="${i18n(context, "btn_show_details")}";
+              document.getElementById("info-btn").innerHTML ="${i18n(context, S.btn_show_details)}";
          }else{
-           document.getElementById("info-btn").innerHTML ="${i18n(context, "btn_hide_details")}";
+           document.getElementById("info-btn").innerHTML ="${i18n(context, S.btn_hide_details)}";
          } 
         	elem.classList.toggle('is-visible');
         };
@@ -423,7 +423,7 @@ class MailUtils {
             <div style="font-size: 18px">${message.fromToDisplay}</div>
             <div class="disabled-text">$toPrimary</div>
              <div class="disabled-text">$shortDate</div>
-            <a style='margin-top: 7px;' class="toggle primary-color" href="#info" id="info-btn">${i18n(context, "btn_show_details")}</a>
+            <a style='margin-top: 7px;' class="toggle primary-color" href="#info" id="info-btn">${i18n(context, S.btn_show_details)}</a>
           </div>
           <div class="flex" style="flex: 0">
             <!-- <a href='https://dummy-crutch.com/#${MessageWebViewActions.SHOW_INFO}' class='icon-btn' style="padding: 0 12px 12px;">${_getInfoIcon(accentColor)}</a> -->

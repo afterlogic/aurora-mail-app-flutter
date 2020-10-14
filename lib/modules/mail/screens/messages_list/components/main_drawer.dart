@@ -8,7 +8,7 @@ import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/starred_folder.dart';
 import 'package:aurora_mail/utils/base_state.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_mail/utils/internationalization.dart'; import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -216,7 +216,7 @@ class _MainDrawerState extends BState<MainDrawer> {
   }
 
   Widget _buildFoldersEmpty() {
-    return AMEmptyList(message: i18n(context, "folders_empty"));
+    return AMEmptyList(message: i18n(context, S.folders_empty));
   }
 
   Widget _buildFoldersLoading() {

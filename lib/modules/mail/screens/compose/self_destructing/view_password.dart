@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:aurora_mail/modules/dialog_wrap.dart';
 import 'package:aurora_mail/shared_ui/toast_widget.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_mail/utils/internationalization.dart'; import 'package:aurora_mail/res/str/s.dart';
 import 'package:flutter/material.dart';
 
 import 'components/clipboard_label.dart';
@@ -27,7 +27,7 @@ class _ViewPasswordState extends State<ViewPassword> with NotSavedChangesMixin  
     final theme = Theme.of(context);
     final size = MediaQuery.of(context).size;
     return AlertDialog(
-      title: Text(i18n(context, "label_self_destructing")),
+      title: Text(i18n(context, S.label_self_destructing)),
       content: SizedBox(
         height: min(size.height / 2, 350),
         width: min(size.width - 40, 300),
@@ -36,7 +36,7 @@ class _ViewPasswordState extends State<ViewPassword> with NotSavedChangesMixin  
             ListView(
               children: <Widget>[
                 Text(
-                  i18n(context, "hint_self_destructing_supports_plain_text_only"),
+                  i18n(context, S.hint_self_destructing_supports_plain_text_only),
                   style: theme.textTheme.caption,
                 ),
                 SizedBox(height: 20),
@@ -47,11 +47,11 @@ class _ViewPasswordState extends State<ViewPassword> with NotSavedChangesMixin  
                 ),
                 SizedBox(height: 20),
                 ClipboardLabel(widget.password, "Encrypted message password.", () {
-              toastKey.currentState.show(i18n(context, "hint_self_destructing_password_coppied_to_clipboard"));
+              toastKey.currentState.show(i18n(context, S.hint_self_destructing_password_coppied_to_clipboard));
                 }),
                 SizedBox(height: 20),
                 Text(
-                  i18n(context, "hint_self_destructing_sent_password_using_different_channel"),
+                  i18n(context, S.hint_self_destructing_sent_password_using_different_channel),
                   style: theme.textTheme.caption,
                 ),
               ],
@@ -66,11 +66,11 @@ class _ViewPasswordState extends State<ViewPassword> with NotSavedChangesMixin  
       ),
       actions: <Widget>[
         FlatButton(
-          child: Text(i18n(context, "btn_cancel")),
+          child: Text(i18n(context, S.btn_cancel)),
           onPressed: () => Navigator.pop(context),
         ),
         FlatButton(
-          child: Text(i18n(context, "btn_ok")),
+          child: Text(i18n(context, S.btn_ok)),
           onPressed: () => Navigator.pop(context, true),
         )
       ],

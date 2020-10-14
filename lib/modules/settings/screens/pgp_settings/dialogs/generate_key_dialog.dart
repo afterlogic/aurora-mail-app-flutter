@@ -2,7 +2,7 @@ import 'package:aurora_mail/models/alias_or_identity.dart';
 import 'package:aurora_mail/modules/dialog_wrap.dart';
 import 'package:aurora_mail/utils/identity_util.dart';
 import 'package:aurora_mail/utils/input_validation.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_mail/utils/internationalization.dart'; import 'package:aurora_mail/res/str/s.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:aurora_mail/utils/base_state.dart';
@@ -35,7 +35,7 @@ class _GenerateKeyDialogState extends BState<GenerateKeyDialog> with NotSavedCha
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(i18n(context, "btn_pgp_generate_keys")),
+      title: Text(i18n(context, S.btn_pgp_generate_keys)),
       content: SingleChildScrollView(
           child: Form(
         key: _formKey,
@@ -43,7 +43,7 @@ class _GenerateKeyDialogState extends BState<GenerateKeyDialog> with NotSavedCha
           children: <Widget>[
             DropdownButtonFormField(
               decoration: InputDecoration(
-                  labelText: i18n(context, "login_input_email")),
+                  labelText: i18n(context, S.login_input_email)),
               value: current,
               items: widget.identities.map((value) {
                 return DropdownMenuItem<AliasOrIdentity>(
@@ -68,7 +68,7 @@ class _GenerateKeyDialogState extends BState<GenerateKeyDialog> with NotSavedCha
             ),
             TextFormField(
               decoration: InputDecoration(
-                labelText: i18n(context, "login_input_password"),
+                labelText: i18n(context, S.login_input_password),
                 suffix: GestureDetector(
                   child: Icon(
                     _obscure ? Icons.visibility : Icons.visibility_off,
@@ -86,7 +86,7 @@ class _GenerateKeyDialogState extends BState<GenerateKeyDialog> with NotSavedCha
             ),
             DropdownButtonFormField(
               decoration:
-                  InputDecoration(labelText: i18n(context, "label_length")),
+                  InputDecoration(labelText: i18n(context, S.label_length)),
               value: length,
               items: lengths.map((value) {
                 return DropdownMenuItem<int>(
@@ -111,11 +111,11 @@ class _GenerateKeyDialogState extends BState<GenerateKeyDialog> with NotSavedCha
       )),
       actions: <Widget>[
         FlatButton(
-          child: Text(i18n(context, "btn_close")),
+          child: Text(i18n(context, S.btn_close)),
           onPressed: () => Navigator.pop(context),
         ),
         FlatButton(
-          child: Text(i18n(context, "btn_pgp_generate")),
+          child: Text(i18n(context, S.btn_pgp_generate)),
           onPressed: _generate,
         )
       ],

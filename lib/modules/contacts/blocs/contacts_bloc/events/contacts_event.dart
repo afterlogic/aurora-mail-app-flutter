@@ -5,6 +5,7 @@ import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_gro
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_storage_model.dart';
 import 'package:aurora_mail/modules/contacts/screens/contact_edit/dialog/confirm_edit_dialog.dart';
 import 'package:aurora_mail/utils/always_non_equal_object.dart';
+import 'package:aurora_mail/utils/error_to_show.dart';
 import 'package:equatable/equatable.dart';
 
 abstract class ContactsEvent extends Equatable {
@@ -138,7 +139,7 @@ class RemoveContactsFromGroup extends ContactsEvent {
 }
 
 class AddError extends ContactsEvent {
-  final String error;
+  final ErrorToShow error;
 
   const AddError(this.error);
 

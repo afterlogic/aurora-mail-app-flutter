@@ -1,3 +1,4 @@
+import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
@@ -16,12 +17,12 @@ class ContactEditAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AMAppBar(
-      title: Text(i18n(context, isEdit ? "contacts_edit" : "contacts_add")),
+      title: Text(i18n(context, isEdit ? S.contacts_edit : S.contacts_add)),
       actions: <Widget>[
         Builder(
           builder: (context) => FlatButton(
             child: Text(
-              i18n(context, "btn_save"),
+              i18n(context, S.btn_save),
               style: TextStyle(
                   color: Theme.of(context)?.appBarTheme?.iconTheme?.color),
             ),

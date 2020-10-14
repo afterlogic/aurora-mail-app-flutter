@@ -60,11 +60,13 @@ class WebMailApi {
     }
   }
 
-  _onResponse(String id, int delay, int status,dynamic res) {
+  _onResponse(String id, int delay, int status, dynamic res) {
     if (interceptor?.onResponse != null) {
-      interceptor?.onResponse("$id\nDELAY: ${delay}\nSTATUS: ${status} ${interceptor.logResponse==true?"\nBODY:$res":""}");
+      interceptor?.onResponse(
+          "$id\nDELAY: ${delay}\nSTATUS: ${status} ${interceptor.logResponse == true ? "\nBODY:$res" : ""}");
     } else if (onResponse != null) {
-      onResponse("$id\nDELAY: ${delay}\nSTATUS: ${status} ${status}${interceptor?.logResponse==true?"\nBODY:$res":""}");
+      onResponse(
+          "$id\nDELAY: ${delay}\nSTATUS: ${status} ${status}${interceptor?.logResponse == true ? "\nBODY:$res" : ""}");
     }
   }
 
@@ -96,7 +98,7 @@ class WebMailApi {
 
     if (res["Result"] != null && (res["Result"] != false || getRawResponse)) {
       _onResponse(id, DateTime.now().millisecondsSinceEpoch - start,
-          rawResponse.statusCode,res);
+          rawResponse.statusCode, res);
       if (getRawResponse)
         return res;
       else
@@ -142,7 +144,7 @@ class WebMailApi {
         return res["Result"];
     } else {
       if (onError != null) onError("$id\n${responseBody}");
-      if (res["ErrorCode"] == 102|| res["ErrorCode"] == 108) {
+      if (res["ErrorCode"] == 102 || res["ErrorCode"] == 108) {
         _authErrorStreamCtrl.add(102);
       }
       throw WebMailApiError(res);
@@ -151,7 +153,7 @@ class WebMailApi {
 }
 
 class ApiInterceptor {
- final bool logResponse;
+  final bool logResponse;
   Function(String) onRequest;
   Function(String) onError;
   Function(String) onResponse;

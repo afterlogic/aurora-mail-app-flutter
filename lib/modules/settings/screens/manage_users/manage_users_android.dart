@@ -4,7 +4,7 @@ import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_event.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_state.dart';
 import 'package:aurora_mail/modules/auth/screens/login/login_route.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_mail/utils/internationalization.dart'; import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:aurora_mail/utils/base_state.dart';
@@ -28,11 +28,11 @@ class _ManageUsersAndroidState extends BState<ManageUsersAndroid> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AMAppBar(
-        title: Text(i18n(context, "settings_accounts_manage")),
+        title: Text(i18n(context, S.settings_accounts_manage)),
         actions: <Widget>[
           IconButton(
             icon: Icon(MdiIcons.accountPlus),
-            tooltip: i18n(context, "settings_accounts_add"),
+            tooltip: i18n(context, S.settings_accounts_add),
             onPressed: () => _addAccount(context),
           )
         ],

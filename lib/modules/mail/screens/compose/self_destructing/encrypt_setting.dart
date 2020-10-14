@@ -5,14 +5,13 @@ import 'package:aurora_mail/modules/mail/screens/compose/self_destructing/bloc/b
 import 'package:aurora_mail/modules/mail/screens/compose/self_destructing/bloc/self_destructing_bloc.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/self_destructing/components/contact_with_key_widget.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/self_destructing/model/contact_with_key.dart';
+import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/shared_ui/toast_widget.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/input_validation.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
-import 'package:crypto_model/src/pgp_key.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 import 'package:time_machine/time_machine.dart';
 
 import 'model/life_time.dart';
@@ -58,7 +57,7 @@ class _EncryptSettingState extends BState<EncryptSetting>
               final contact = state.contact;
               final recipientHaveKey = contact.key != null;
               return AlertDialog(
-                title: Text(i18n(context, "label_self_destructing")),
+                title: Text(i18n(context, S.label_self_destructing)),
                 content: SizedBox(
                   height: min(size.height / 2, 350),
                   width: min(size.width - 40, 300),
@@ -70,7 +69,7 @@ class _EncryptSettingState extends BState<EncryptSetting>
                         children: <Widget>[
                           Text(
                             i18n(context,
-                                "hint_self_destructing_supports_plain_text_only"),
+                                S.hint_self_destructing_supports_plain_text_only),
                             style: theme.textTheme.caption,
                           ),
                           SizedBox(height: 20),
@@ -80,25 +79,25 @@ class _EncryptSettingState extends BState<EncryptSetting>
                             i18n(
                                 context,
                                 recipientHaveKey
-                                    ? "hint_self_destructing_encrypt_with_key"
-                                    : "hint_self_destructing_encrypt_with_not_key"),
+                                    ? S.hint_self_destructing_encrypt_with_key
+                                    : S.hint_self_destructing_encrypt_with_not_key),
                             style: theme.textTheme.caption,
                           ),
                           SizedBox(height: 10),
                           DropdownButtonFormField<LifeTime>(
                             decoration: InputDecoration(
-                              labelText: i18n(context, "message_lifetime"),
+                              labelText: i18n(context, S.message_lifetime),
                             ),
                             value: lifeTime,
                             items: LifeTime.values.map((value) {
                               return DropdownMenuItem<LifeTime>(
                                 value: value,
-                                child: Text(i18n(context, value.toText())),
+                                child: Text(i18n(context, value.toTextCode())),
                               );
                             }).toList(),
                             selectedItemBuilder: (context) {
                               return LifeTime.values.map((value) {
-                                return Text(i18n(context, value.toText()));
+                                return Text(i18n(context, value.toTextCode()));
                               }).toList();
                             },
                             isExpanded: true,
@@ -109,7 +108,7 @@ class _EncryptSettingState extends BState<EncryptSetting>
                           ),
                           RadioListTile(
                             title: Text(i18n(context,
-                                "input_self_destructing_password_based_encryption")),
+                                S.input_self_destructing_password_based_encryption)),
                             value: false,
                             onChanged: (bool value) {
                               isKeyBased = value;
@@ -120,7 +119,7 @@ class _EncryptSettingState extends BState<EncryptSetting>
                           ),
                           RadioListTile(
                             title: Text(i18n(context,
-                                "input_self_destructing_key_based_encryption")),
+                                S.input_self_destructing_key_based_encryption)),
                             value: true,
                             groupValue: isKeyBased,
                             onChanged: !recipientHaveKey
@@ -136,15 +135,15 @@ class _EncryptSettingState extends BState<EncryptSetting>
                             i18n(
                                 context,
                                 isKeyBased
-                                    ? "label_self_destructing_key_based_encryption_used"
-                                    : "label_self_destructing_password_based_encryption_used"),
+                                    ? S.label_self_destructing_key_based_encryption_used
+                                    : S.label_self_destructing_password_based_encryption_used),
                             style: theme.textTheme.caption,
                           ),
                           SizedBox(height: 10),
                           SwitchListTile(
                             contentPadding: EdgeInsets.zero,
                             title: Text(i18n(context,
-                                "input_self_destructing_add_digital_signature")),
+                                S.input_self_destructing_add_digital_signature)),
                             value: useSign,
                             onChanged: hasKey && isKeyBased
                                 ? (v) {
@@ -163,7 +162,7 @@ class _EncryptSettingState extends BState<EncryptSetting>
                                   context, text, [ValidationType.empty]),
                               decoration: InputDecoration(
                                 labelText:
-                                    i18n(context, "login_input_password"),
+                                    i18n(context, S.login_input_password),
                                 suffix: GestureDetector(
                                   child: Padding(
                                     padding: const EdgeInsets.only(right: 8.0),
@@ -184,8 +183,8 @@ class _EncryptSettingState extends BState<EncryptSetting>
                             i18n(
                                 context,
                                 useSign
-                                    ? "label_self_destructing_sign_data"
-                                    : "label_self_destructing_not_sign_data"),
+                                    ? S.label_self_destructing_sign_data
+                                    : S.label_self_destructing_not_sign_data),
                             style: theme.textTheme.caption,
                           ),
                         ],
@@ -200,7 +199,7 @@ class _EncryptSettingState extends BState<EncryptSetting>
                 ),
                 actions: [
                   FlatButton(
-                    child: Text(i18n(context, "btn_cancel")),
+                    child: Text(i18n(context, S.btn_cancel)),
                     onPressed: () {
                       Navigator.pop(context);
                     },
@@ -208,7 +207,7 @@ class _EncryptSettingState extends BState<EncryptSetting>
                   BlocBuilder<SelfDestructingBloc, SelfDestructingState>(
                     builder: (context, state) => FlatButton(
                       child: state is! ProgressState
-                          ? Text(i18n(context, "btn_pgp_encrypt"))
+                          ? Text(i18n(context, S.btn_pgp_encrypt))
                           : CircularProgressIndicator(),
                       onPressed: state is! ProgressState
                           ? () => create(contact, sender)
@@ -228,7 +227,7 @@ class _EncryptSettingState extends BState<EncryptSetting>
           }),
       listener: (BuildContext context, SelfDestructingState state) {
         if (state is ErrorState) {
-          toastKey.currentState.show(i18n(context, state.message));
+          toastKey.currentState.show(state.message.getString(context));
         } else if (state is Encrypted) {
           Navigator.pop(context, state);
         }
@@ -248,13 +247,13 @@ class _EncryptSettingState extends BState<EncryptSetting>
               DateTimeZone.local.getUtcOffset(dateTime).toString();
 
       final passwordText = !isKeyBased && contact.key != null
-          ? i18n(context, "template_self_destructing_message_password")
+          ? i18n(context, S.template_self_destructing_message_password)
           : "";
-      final lifeTimeText = i18n(context, lifeTime.toText());
+      final lifeTimeText = i18n(context, lifeTime.toTextCode());
 
       final viewBody = i18n(
         context,
-        "template_self_destructing_message",
+        S.template_self_destructing_message,
         {
           "sender": contactName,
           "message_password": passwordText,
