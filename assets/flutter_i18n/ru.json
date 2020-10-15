@@ -384,5 +384,8 @@
   "error_no_pgp_key": "No PGP public key was found",
   "label_contact_pgp_settings": "PGP Settings",
   "hint_pgp_message_automatically_encrypt": "The message will be automatically encrypted and/or signed for contacts with OpenPgp keys.\n OpenPGP supports plain text only. All the formatting will be removed before encryption.",
-  "btn_not_spam": "Not spam"
+  "btn_not_spam": "Not spam",
+  "error_password_is_empty": "password is empty",
+  "label_encryption_password_for_pgp_key": "Required password for PGP key",
+  "hint_log_delete_record": "Are you sure you want to delete file {name}"
 }

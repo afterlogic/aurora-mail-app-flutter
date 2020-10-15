@@ -132,7 +132,7 @@ class AuthMethods {
       deleteUserRelatedData(user),
       if (_cryptoStorage != null && user.localId == currentUserId)
         _cryptoStorage.deleteAll(),
-      _authLocal.deleteSelectedUserLocalId(),
+      if (user.localId == currentUserId) _authLocal.deleteSelectedUserLocalId(),
       if (user.localId == currentUserId) _authLocal.deleteSelectedAccountId(),
       _usersDao.deleteUser(user.localId),
       _accountsDao.deleteAccountsOfUser(user.localId),
