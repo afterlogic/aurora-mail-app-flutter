@@ -973,7 +973,7 @@ packages:
   theme:
     dependency: "direct main"
     description:
-      path: "aurora-mail-app-customs/natro/theme"
+      path: "build_res/test/theme"
       relative: true
     source: path
     version: "0.0.1"
