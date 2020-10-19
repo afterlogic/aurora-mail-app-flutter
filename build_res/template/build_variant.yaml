@@ -1,10 +1,10 @@
 #variables
 appName: ""
-# android app id
+# android App ID
 _appId: ""
-# ios app id
+# ios Team ID
 _iosDeveloperId: ""
-# ios id AppShareExtension
+# ios App Group ID
 _appleGroupId: ""
 
 _version: 1.0.0
@@ -21,13 +21,11 @@ autodiscover_url: "https://{domain}/aurora-autodiscover.json?email={email}"
 privacyPolicy: ""
 termsOfService: ""
 
-hasFloatingPlaceholder: false
 multiUserEnable: false
 cryptoEnable: false
 multiAccountEnable: false
 useMainLogo: false
 selfDestructingEmail: false
 expandMessageThread: false
-legacyPgpKey: false
 logger: false
 pushNotification: false
