@@ -7,7 +7,7 @@ _iosDeveloperId: ""
 # ios id AppShareExtension
 _appleGroupId: ""
 
-_version: 2.0.0
+_version: 1.0.0
 #android splash screen
 background_color: "#FFFFFF"
 splashGradientTop: "#FFFFFF"

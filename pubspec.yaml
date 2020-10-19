@@ -1,7 +1,7 @@
 name: aurora_mail
 description: Mail client for mobile.
 
-version: 1.2.0+174
+version: 2.5.0+174
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -87,7 +87,7 @@ dependencies:
   keyboard_actions: 3.2.0
 
   theme:
-    path: aurora-mail-app-customs/natro/theme
+    path: aurora-mail-app-customs/private_mail/theme
 
   crypto_model:
     path: module/crypto/crypto_model
@@ -96,6 +96,14 @@ dependencies:
   crypto_worker:
     path: module/crypto/crypto_worker
   flutter_secure_storage: 3.3.1+1
+  crypto_stream:
+    git:
+      url: https://github.com/afterlogic/flutter_crypto_stream
+      ref: master
+  crypto_storage_impl:
+    path: module/crypto/crypto_storage_impl
+  crypto_worker_impl:
+    path: module/crypto/crypto_worker_impl
 
   dm: 0.1.0
 
@@ -112,9 +120,9 @@ dev_dependencies:
 flutter_icons:
   ios: true
   android: true
-  image_path: aurora-mail-app-customs/natro/icon.png
-  adaptive_icon_background: "#FFFFFF"
-  adaptive_icon_foreground: aurora-mail-app-customs/natro/icon_foreground.png
+  image_path: aurora-mail-app-customs/private_mail/image/icon.png
+  adaptive_icon_background: "#34113C"
+  adaptive_icon_foreground: aurora-mail-app-customs/private_mail/image/icon_foreground.png
 
 flutter:
   uses-material-design: true
@@ -122,9 +130,9 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/
-    - aurora-mail-app-customs/natro/icon.png
-    - aurora-mail-app-customs/natro/image/main_logo.png
-    - aurora-mail-app-customs/natro/image/
+    - aurora-mail-app-customs/private_mail/image/icon.png
+    - aurora-mail-app-customs/private_mail/image/main_logo.png
+    - aurora-mail-app-customs/private_mail/image/
 
   fonts:
     - family: WebMailIcons
