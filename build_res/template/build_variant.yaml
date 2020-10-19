@@ -1,0 +1,33 @@
+#variables
+appName: "appName"
+# android app id
+_appId: "_appId"
+# ios app id
+_iosDeveloperId: "J7AW6VHJK4"
+# ios id AppShareExtension
+_appleGroupId: "group.com.afterlogic.aurora"
+
+_version: 2.0.0
+#android splash screen
+background_color: "#FFFFFF"
+splashGradientTop: "#FFFFFF"
+splashGradientBottom: "#FFFFFF"
+splashGradientTopDark: "#000000"
+splashGradientBottomDark: "#000000"
+
+supportLanguage: "en"
+
+autodiscover_url: "https://{domain}/aurora-autodiscover.json?email={email}"
+privacyPolicy: ""
+termsOfService: ""
+
+hasFloatingPlaceholder: false
+multiUserEnable: false
+cryptoEnable: false
+multiAccountEnable: false
+useMainLogo: false
+selfDestructingEmail: false
+expandMessageThread: false
+legacyPgpKey: false
+logger: false
+pushNotification: false

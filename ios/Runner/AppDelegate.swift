@@ -13,7 +13,7 @@ import FirebaseMessaging
 
 @UIApplicationMain
 class AppDelegate: FlutterAppDelegate{
-    let enableDebugLog=true
+    let enableDebugLog=false
     override func application(
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
