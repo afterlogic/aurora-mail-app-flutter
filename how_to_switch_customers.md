@@ -59,8 +59,8 @@ id AppShareExtension указывать не нужно
 
 15. Для сборки iOS
 выполнить ```sh/build_ios.sh``` 
-собранные пакеты появятся в каталоге ```build```
-Собранный пакет можно залить в TestFlight с помощью приложения [Transporter](https://apps.apple.com/ru/app/transporter/id1450874784?l=en&mt=12)
+Собранный пакет появятся в каталоге ```build```
+его можно залить в TestFlight с помощью приложения [Transporter](https://apps.apple.com/ru/app/transporter/id1450874784?l=en&mt=12)
 
 В приложении можно включить и отключить определенный функционал указав true либо false в поле с соответсвующем флагом в файле ```build_variant.yaml```
 Флаги сборки
