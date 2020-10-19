@@ -4,8 +4,7 @@ import 'dart:math';
 
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/dialog_wrap.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart'
-    hide Message;
+import 'package:flutter_local_notifications/flutter_local_notifications.dart' hide Message;
 import 'package:notifications_utils/notifications_utils.dart';
 import 'package:package_info/package_info.dart';
 
@@ -20,8 +19,7 @@ class NotificationManager {
       IOSInitializationSettings(),
     );
 
-    plugin.initialize(initializationSettings,
-        onSelectNotification: onSelectNotification);
+    plugin.initialize(initializationSettings, onSelectNotification: onSelectNotification);
     test();
   }
 
@@ -32,22 +30,18 @@ class NotificationManager {
     }
   }
 
-  Future<void> showMessageNotification(
-      Message message, Account account, User user) async {
-    return showNotification(
-        message.fromToDisplay, message.subject, account, user, message.localId);
+  Future<void> showMessageNotification(Message message, Account account, User user) async {
+    return showNotification(message.fromToDisplay, message.subject, account, user, message.localId);
   }
 
-  Future<void> showNotification(String from, String subject, Account account,
-      User user, int localId) async {
+  Future<void> showNotification(
+      String from, String subject, Account account, User user, int localId) async {
     final packageName = (await PackageInfo.fromPlatform()).packageName;
     bool isFirstNotification = false;
     if (!Platform.isIOS) {
-      final activeNotifications =
-          await NotificationsUtils.getActiveNotifications();
+      final activeNotifications = await NotificationsUtils.getActiveNotifications();
       isFirstNotification = activeNotifications.where((n) {
-        return n.packageName == packageName &&
-            n.groupKey.contains(user.emailFromLogin);
+        return n.packageName == packageName && n.groupKey.contains(user.emailFromLogin);
       }).isEmpty;
     }
 
@@ -55,11 +49,14 @@ class NotificationManager {
     final groupChannelId = user.emailFromLogin;
     final groupChannelName = user.emailFromLogin;
     final groupChannelDescription = user.emailFromLogin;
-    final payload = jsonEncode({
-      "user": user.localId,
-      "message": localId,
-      "account": account.localId,
-    });
+
+    final payload = localId == null
+        ? null
+        : jsonEncode({
+            "user": user.localId,
+            "message": localId,
+            "account": account.localId,
+          });
     if (from.contains("@")) from = from.split("@")[0];
 
     var androidNotificationDetails = AndroidNotificationDetails(
@@ -113,6 +110,9 @@ class NotificationManager {
 }
 
 Future onSelectNotification(String payload) async {
+  if (payload == null) {
+    return;
+  }
   if (RouteWrap.staticState != null) {
     RouteWrap.staticState.onMessage(payload);
   } else {

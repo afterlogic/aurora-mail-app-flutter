@@ -87,7 +87,7 @@ Future<bool> messageHandler(Map<dynamic, dynamic> message) async {
                 notification.subject,
                 account,
                 user,
-                1,
+                null,
               );
               break;
             }
@@ -103,12 +103,12 @@ Future<bool> messageHandler(Map<dynamic, dynamic> message) async {
       Logger.errorLog(e, s);
     }
   } else {
-    Logger.errorLog("handle push with not user", null);
+    Logger.errorLog("handle push without user", null);
   }
   return false;
 }
 
-final notificationFromPush = false;
+final notificationFromPush = true;
 
 class NotificationData {
   final String subject;
