@@ -36,8 +36,9 @@ icon: "{{image_dir}}/icon.png"
 main_logo: "{{image_dir}}/main_logo.png"
 image_dir: "{{_dir}}/image"
 
-_google_services: "{{_dir}}/google-services.json"
-_google_services_ios: "{{_dir}}/GoogleService-Info.plist"
+_google_services_dir: "{{_dir}}/crashlytics"
+_google_services: "{{_google_services_dir}}/google-services.json"
+_google_services_ios: "{{_google_services_dir}}/GoogleService-Info.plist"
 
 autodiscover_url: ""
 
