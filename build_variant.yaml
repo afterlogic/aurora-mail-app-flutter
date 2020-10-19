@@ -32,7 +32,7 @@ _version: ""
 _version_android: "{{_version}}{{_build}}"
 version_ios: "{{_version}}+{{_build}}"
 
-icon: "{{_dir}}/icon.png"
+icon: "{{image_dir}}/icon.png"
 main_logo: "{{image_dir}}/main_logo.png"
 image_dir: "{{_dir}}/image"
 
@@ -41,7 +41,7 @@ _google_services_ios: "{{_dir}}/GoogleService-Info.plist"
 
 autodiscover_url: ""
 
-foreground_icon: "{{_dir}}/icon_foreground.png"
+foreground_icon: "{{image_dir}}/icon_foreground.png"
 background_color: "#3b3b3b"
 _theme_module: "{{_dir}}/theme"
 

@@ -1,11 +1,11 @@
 #variables
-appName: "appName"
+appName: ""
 # android app id
-_appId: "_appId"
+_appId: ""
 # ios app id
-_iosDeveloperId: "J7AW6VHJK4"
+_iosDeveloperId: ""
 # ios id AppShareExtension
-_appleGroupId: "group.com.afterlogic.aurora"
+_appleGroupId: ""
 
 _version: 2.0.0
 #android splash screen
@@ -15,7 +15,7 @@ splashGradientBottom: "#FFFFFF"
 splashGradientTopDark: "#000000"
 splashGradientBottomDark: "#000000"
 
-supportLanguage: "en"
+supportLanguage: "ru,en,tr"
 
 autodiscover_url: "https://{domain}/aurora-autodiscover.json?email={email}"
 privacyPolicy: ""

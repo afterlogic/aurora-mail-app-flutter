@@ -1,18 +1,19 @@
 Копируйте папку template из каталога build_res, она содержит необходимые ресурсы для приложения 
 
-В неё требуется добавить файл ```google-services.json``` и ```GoogleService-Info.plist```
+Создайте в ней папке ```crashlytics``` и в неё вставте файлы ```google-services.json``` и ```GoogleService-Info.plist```
 из вашего firebase проекта.
-Так же требуется файл ```key.jks```, который содержит ключ для подписи приложения, и файл ```key.properties``` 
-с полями из файла ```key_template.properties```.
-
-В ```build_variant.yaml``` н
+Так же требуется папка ```sign``` c файлом ```key.jks```, который содержит ключ для подписи android приложения, и файл ```key.properties``` 
+с заполнеными полями из файла ```key_template.properties```.
 
 IOS
 Нужно создать id приложения и id для модуля AppShareExtension? который состоит из id ващего приложения + ".AppShareExtension".
 например id = ```my.app.id``` id AppShareExtension = ```my.app.id.AppShareExtension```
 Нужно создать ```App Groups``` 
-После указать данные id в соответсвующих полях файла ```build_variant.yaml```
+После указать данные id и id разработчика в соответсвующих полях файла ```build_variant.yaml```
+
+Android
+заполните поле "_appId", указав в нем android app id
 
 для переключения на сборку нужно выполнить sh файл 
 ```sh/build_variant.sh <путь>``` 
-где в переменной ```путь``` находится путь до ```build_variant.yaml``` файла 
+где в переменной ```путь``` находится путь до вашего ```build_variant.yaml``` файла 
