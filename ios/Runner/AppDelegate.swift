@@ -42,7 +42,7 @@ class AppDelegate: FlutterAppDelegate{
         
         completionHandler([.alert, .badge, .sound])
     }
-    
+     
     func getStateName(_ state:UIApplication.State)->String{
         switch state {
         case .active :
