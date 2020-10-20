@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:aurora_mail/background/background_helper.dart';
+
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/database/accounts/accounts_dao.dart';
 import 'package:aurora_mail/database/app_database.dart';
@@ -7,6 +7,7 @@ import 'package:aurora_mail/database/users/users_dao.dart';
 import 'package:aurora_mail/logger/logger.dart';
 import 'package:aurora_mail/main.dart';
 import 'package:aurora_mail/modules/auth/repository/auth_local_storage.dart';
+import 'package:aurora_mail/modules/dialog_wrap.dart';
 import 'package:device_id/device_id.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/widgets.dart';
@@ -35,6 +36,8 @@ class PushNotificationsManager {
         _firebaseMessaging.configure(
           onMessage: messageHandler,
           onBackgroundMessage: Platform.isIOS ? null : messageHandler,
+          onLaunch: onResume,
+          onResume: onResume,
         );
         _firebaseMessaging.onIosSettingsRegistered.listen((setting) {
           setting;
@@ -65,6 +68,16 @@ class PushNotificationsManager {
   }
 }
 
+Future onResume(Map<dynamic, dynamic> message) async {
+  final notification = NotificationData.fromMap(message);
+  final payload = notification.to;
+  if (RouteWrap.staticState != null) {
+    RouteWrap.staticState.onMessage(payload);
+  } else {
+    RouteWrap.message = payload;
+  }
+}
+
 Future<bool> messageHandler(Map<dynamic, dynamic> message) async {
   WidgetsFlutterBinding.ensureInitialized();
   Logger.notifications(message);
@@ -88,6 +101,9 @@ Future<bool> messageHandler(Map<dynamic, dynamic> message) async {
                 account,
                 user,
                 null,
+                forcePayload: {
+                  "To": notification.to,
+                },
               );
               break;
             }
@@ -97,7 +113,7 @@ Future<bool> messageHandler(Map<dynamic, dynamic> message) async {
       return await onAlarm(
         showNotification: !notificationFromPush,
         data: notification,
-        isBackgroundForce:await IosNotificationHandler.isBackground(),
+        isBackgroundForce: await IosNotificationHandler.isBackground(),
       );
     } catch (e, s) {
       Logger.errorLog(e, s);

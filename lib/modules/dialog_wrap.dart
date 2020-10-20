@@ -4,8 +4,9 @@ import 'dart:convert';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_event.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_android.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
+import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
-import 'package:aurora_mail/utils/internationalization.dart'; import 'package:aurora_mail/res/str/s.dart';
+import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/material.dart';
 
 import 'auth/blocs/auth_bloc/auth_bloc.dart';
@@ -64,6 +65,9 @@ class RouteWrapState extends State<RouteWrap> {
   onMessage(String payload) {
     if (payload.startsWith("{")) {
       final json = jsonDecode(payload) as Map<String, dynamic>;
+      if (json.containsKey("To")) {
+        return selectUser(json["To"] as String);
+      }
       final userLocalId = json["user"] as int;
       final messageLocalId = json["message"] as int;
       final accountLocalId = json["account"] as int;
