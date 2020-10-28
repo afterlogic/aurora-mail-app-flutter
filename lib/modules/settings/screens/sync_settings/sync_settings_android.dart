@@ -74,7 +74,7 @@ class _SyncSettingsAndroidState extends BState<SyncSettingsAndroid> {
                     onTap: () => _onFreqDurationSelected(context, freq),
                   ),
                 ListTile(
-                  leading: AMCircleIcon(MdiIcons.calendarRepeat),
+                  leading: AMCircleIcon(MdiIcons.calendarSync),
                   title: Text(i18n(context, S.settings_sync_period)),
                   trailing: Text(
                     SyncPeriod.periodToTitle(context, period),

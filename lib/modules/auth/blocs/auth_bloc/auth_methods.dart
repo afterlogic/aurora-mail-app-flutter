@@ -80,8 +80,11 @@ class AuthMethods {
     // hostname is implied not to be empty
     hostname = hostname.startsWith("http") ? hostname : "https://$hostname";
 
-    final newUser = await _authApi.login(email, password, hostname);
+    var newUser = await _authApi.login(email, password, hostname);
 
+    newUser = newUser.copyWith(
+      syncPeriod: BuildProperty.syncPeriod,
+    );
     return newUser;
   }
 

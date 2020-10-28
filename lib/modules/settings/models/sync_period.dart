@@ -1,4 +1,5 @@
-import 'package:aurora_mail/utils/internationalization.dart'; import 'package:aurora_mail/res/str/s.dart';
+import 'package:aurora_mail/res/str/s.dart';
+import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 
@@ -58,6 +59,9 @@ class SyncPeriod {
 
   static Period dbStringToPeriod(String str) {
     if (str == null) return Period.allTime;
-    return Period.values.firstWhere((e) => e.toString() == str);
+    return Period.values.firstWhere(
+      (e) => e.toString() == str,
+      orElse: () => Period.allTime,
+    );
   }
 }
