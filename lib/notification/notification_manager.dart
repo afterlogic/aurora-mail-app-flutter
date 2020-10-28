@@ -22,30 +22,30 @@ class NotificationManager {
 
     plugin.initialize(initializationSettings,
         onSelectNotification: onSelectNotification);
-    test();
+    _openFromNotification();
   }
 
-  test() async {
+  _openFromNotification() async {
     final notification = await plugin.getNotificationAppLaunchDetails();
     if (notification.didNotificationLaunchApp) {
       onSelectNotification(notification.payload);
     }
   }
 
-  Future<void> showMessageNotification(
-      Message message, Account account, User user) async {
+  Future<void> showMessageNotification(Message message, Account account,
+      User user) async {
     return showNotification(
         message.fromToDisplay, message.subject, account, user, message.localId);
   }
 
-  Future<void> showNotification(
-      String from, String subject, Account account, User user, int localId,
+  Future<void> showNotification(String from, String subject, Account account,
+      User user, int localId,
       {Map<String, dynamic> forcePayload}) async {
     final packageName = (await PackageInfo.fromPlatform()).packageName;
     bool isFirstNotification = false;
     if (!Platform.isIOS) {
       final activeNotifications =
-          await NotificationsUtils.getActiveNotifications();
+      await NotificationsUtils.getActiveNotifications();
       isFirstNotification = activeNotifications.where((n) {
         return n.packageName == packageName &&
             n.groupKey.contains(user.emailFromLogin);
@@ -64,10 +64,10 @@ class NotificationManager {
       payload = localId == null
           ? null
           : jsonEncode({
-              "user": user.localId,
-              "message": localId,
-              "account": account.localId,
-            });
+        "user": user.localId,
+        "message": localId,
+        "account": account.localId,
+      });
     }
     if (from.contains("@")) from = from.split("@")[0];
 
@@ -121,20 +121,20 @@ class NotificationManager {
   }
 }
 
-String lastPayload;
-
 Future onSelectNotification(String payload) async {
-  lastPayload = payload ?? "Null";
   if (payload == null) {
     return;
   }
+
+  final json = jsonDecode(payload) as Map<String, dynamic>;
   if (RouteWrap.staticState != null) {
-    RouteWrap.staticState.onMessage(payload);
+    RouteWrap.staticState.onMessage(json);
   } else {
-    RouteWrap.message = payload;
+    RouteWrap.notification = json;
   }
 }
 
 const NOTIFICATION_MAIL_CHANNEL_ID = "new_mail";
 const NOTIFICATION_MAIL_CHANNEL_NAME = "New mail";
 const NOTIFICATION_MAIL_CHANNEL_DESCRIPTION = "";
+

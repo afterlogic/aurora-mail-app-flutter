@@ -24,6 +24,22 @@ enum MailViewAppBarAction {
   forwardAsAttachment,
 }
 
+class MailViewAppBarMock extends StatelessWidget
+    implements PreferredSizeWidget {
+  @override
+  final Size preferredSize = const Size.fromHeight(kToolbarHeight);
+
+  const MailViewAppBarMock();
+
+  @override
+  Widget build(BuildContext context) {
+    return PreferredSize(
+      preferredSize: preferredSize,
+      child: AMAppBar(),
+    );
+  }
+}
+
 class MailViewAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   final Size preferredSize = const Size.fromHeight(kToolbarHeight);

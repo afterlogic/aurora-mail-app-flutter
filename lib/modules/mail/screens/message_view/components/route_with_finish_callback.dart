@@ -31,14 +31,15 @@ class RouteWithFinishCallback extends CupertinoPageRoute {
   }
 
   routeEndListener(AnimationStatus status) {
-    if (status == AnimationStatus.completed &&
-        routeAnimationListener?.onComplete != null) {
-      routeAnimationListener?.onComplete();
+    if (status == AnimationStatus.completed) {
+      routeAnimationListener.isCompleted = true;
+      routeAnimationListener?.onComplete?.call();
       routeAnimationListener?.onComplete = null;
     }
   }
 }
 
 class RouteAnimationListener {
+  bool isCompleted = false;
   Function onComplete;
 }

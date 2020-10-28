@@ -16,6 +16,7 @@ import 'package:aurora_mail/modules/mail/screens/compose/compose_android.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/compose_route.dart';
 import 'package:aurora_mail/modules/mail/screens/message_view/components/route_with_finish_callback.dart';
 import 'package:aurora_mail/modules/mail/screens/message_view/message_view_android.dart';
+import 'package:aurora_mail/modules/mail/screens/message_view/message_view_progress.dart';
 import 'package:aurora_mail/modules/mail/screens/message_view/message_view_route.dart';
 import 'package:aurora_mail/modules/settings/screens/about/about_android.dart';
 import 'package:aurora_mail/modules/settings/screens/common_settings/common_settings_android.dart';
@@ -134,6 +135,26 @@ class AppNavigation {
               BlocProvider<ContactsBloc>.value(value: args.contactsBloc),
             ],
             child: MessageViewAndroid(
+              args.message,
+              routeAnimationListener,
+            ),
+          ),
+        );
+        break;
+      case MessageProgressRoute.name:
+        final args = settings.arguments as MessageProgressRouteArg;
+        final routeAnimationListener = RouteAnimationListener();
+        return RouteWithFinishCallback(
+          routeAnimationListener: routeAnimationListener,
+          settings: RouteSettings(name: settings.name),
+          builder: (_) => MultiBlocProvider(
+            providers: [
+              BlocProvider<MailBloc>.value(value: args.mailBloc),
+              BlocProvider<MessagesListBloc>.value(
+                  value: args.messagesListBloc),
+              BlocProvider<ContactsBloc>.value(value: args.contactsBloc),
+            ],
+            child: MessageViewProgress(
               args.message,
               routeAnimationListener,
             ),

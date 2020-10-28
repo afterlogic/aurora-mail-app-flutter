@@ -21,3 +21,21 @@ class MessageViewScreenArgs {
     @required this.contactsBloc,
   });
 }
+
+class MessageProgressRoute {
+  static const name = "MessageProgressRoute";
+}
+
+class MessageProgressRouteArg {
+  final Future<Message> message;
+  final MailBloc mailBloc;
+  final ContactsBloc contactsBloc;
+  final MessagesListBloc messagesListBloc;
+
+  const MessageProgressRouteArg({
+    @required this.message,
+    @required this.mailBloc,
+    @required this.messagesListBloc,
+    @required this.contactsBloc,
+  });
+}

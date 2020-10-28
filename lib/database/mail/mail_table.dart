@@ -274,9 +274,10 @@ class Mail extends Table {
         references: raw["References"] as String,
         readingConfirmationAddressee:
             raw["ReadingConfirmationAddressee"] as String,
-        htmlBody: raw["Html"] != null && (raw["Html"] as String).isNotEmpty
-            ? raw["Html"] as String
-            : raw["Plain"] as String,
+        htmlBody: (raw["Html"] != null && (raw["Html"] as String).isNotEmpty
+                ? raw["Html"] as String
+                : raw["Plain"] as String) ??
+            "",
         rawBody:
             raw["PlainRaw"] != null && (raw["PlainRaw"] as String).isNotEmpty
                 ? raw["PlainRaw"] as String
@@ -290,7 +291,7 @@ class Mail extends Table {
         rtl: raw["Rtl"] as bool,
         extendInJson: _encode(raw["Extend"]),
         safety: raw["Safety"] as bool,
-        hasExternals: raw["HasExternals"] as bool,
+        hasExternals: (raw["HasExternals"] as bool) ?? false,
         foundedCIDsInJson: _encode(raw["FoundedCIDs"]),
         foundedContentLocationUrlsInJson:
             _encode(raw["FoundedContentLocationUrls"]),

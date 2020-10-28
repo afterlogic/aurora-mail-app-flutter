@@ -36,7 +36,9 @@ import 'components/message_item.dart';
 
 class MessagesListAndroid extends StatefulWidget {
   final String initSearch;
-  static int openMessageId = null;
+  static int openMessageLocalId = null;
+  static String openMessageId = null;
+  static String openMessageFolder = null;
 
   const MessagesListAndroid({this.initSearch});
 
@@ -57,6 +59,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
   Folder _selectedFolder;
   final appBarKey = GlobalKey<MailAppBarState>();
   final _refreshKey = GlobalKey<RefreshIndicatorState>();
+  final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -84,9 +87,17 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
         MessagesListAndroid.shareHolder = null;
       }
     });
-    if (MessagesListAndroid.openMessageId != null) {
-      openMessage(MessagesListAndroid.openMessageId);
+    if (MessagesListAndroid.openMessageLocalId != null) {
+      openMessageByLocalId(MessagesListAndroid.openMessageLocalId);
+      MessagesListAndroid.openMessageLocalId = null;
+    } else if (MessagesListAndroid.openMessageId != null &&
+        MessagesListAndroid.openMessageFolder != null) {
+      openMessageById(
+        MessagesListAndroid.openMessageId,
+        MessagesListAndroid.openMessageFolder,
+      );
       MessagesListAndroid.openMessageId = null;
+      MessagesListAndroid.openMessageFolder = null;
     }
     BackgroundHelper.addOnAlarmObserver(false, onAlarm);
     BackgroundHelper.addOnEndAlarmObserver(false, onEndAlarm);
@@ -100,7 +111,21 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
     super.didChangeAppLifecycleState(state);
   }
 
-  openMessage(int uid) async {
+  openMessageById(String messageId, String folder) async {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      try {
+        final message = _mailBloc.getMessageById(messageId, folder);
+        final result = await _onMessageSelectedWithProgress(message);
+        if(result is ErrorToShow){
+          _showError(context, result);
+        }
+      } catch (e) {
+        print(e);
+      }
+    });
+  }
+
+  openMessageByLocalId(int uid) async {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       try {
         final message = await _mailBloc.getMessageByLocalId(uid);
@@ -148,7 +173,21 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
   }
 
   void _showError(BuildContext ctx, ErrorToShow err) {
-    showErrorSnack(context: ctx, scaffoldState: Scaffold.of(ctx), msg: err);
+    showErrorSnack(
+        context: ctx, scaffoldState: scaffoldKey.currentState, msg: err);
+  }
+
+  Future _onMessageSelectedWithProgress(Future<Message> message) {
+    return Navigator.pushNamed(
+      context,
+      MessageProgressRoute.name,
+      arguments: MessageProgressRouteArg(
+        message: message,
+        mailBloc: _mailBloc,
+        messagesListBloc: _messagesListBloc,
+        contactsBloc: _contactsBloc,
+      ),
+    );
   }
 
   Future _onMessageSelected(Message _message) async {
@@ -229,6 +268,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
           setState(() {});
         },
         child: Scaffold(
+          key: scaffoldKey,
           appBar: MailAppBar(
               key: appBarKey,
               initSearch: widget.initSearch,

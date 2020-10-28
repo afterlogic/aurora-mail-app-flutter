@@ -322,14 +322,14 @@ class MailMethods {
           calcResult.removedUids, folderToUpdate.fullNameRaw);
       await _mailDao.updateMessagesFlags(calcResult.infosToUpdateFlags);
 
-      await _mailDao.addEmptyMessage(
+      await _mailDao.addEmptyMessages(
         calcResult.addedMessages,
         account,
         user,
         folderToUpdate.fullNameRaw,
       );
     } else {
-      await _mailDao.addEmptyMessage(
+      await _mailDao.addEmptyMessages(
         newMessagesInfo,
         account,
         user,
@@ -439,7 +439,7 @@ class MailMethods {
         updatedUser.localId,
         account,
       ));
-      await _mailDao.fillMessage(messages);
+      await _mailDao.fillMessages(messages);
       // check if there are other messages to sync
       _syncMessagesChunk(
         syncPeriod,
@@ -477,7 +477,8 @@ class MailMethods {
           .map((item) => item.uid)
           .toList();
 
-      messages.addAll(await _mailDao.getMessageWithNotBody(uids));
+      messages
+          .addAll(await _mailDao.getMessageWithNotBody(uids, account, user));
     }
 
     return messages;
@@ -590,13 +591,75 @@ class MailMethods {
         account.localId).then((value) => value.isEmpty ? null : value.first);
   }
 
-  Future<Message> getMessageByLocalId(int uid) {
-    return _mailDao.getMessageByLocalId(uid);
-  }
-
   void close() {
     syncQueue.clear();
     _closed = true;
+  }
+
+  Future<Message> getMessageById(String messageId, String folder) async {
+    var message = await _mailDao.getMessageById(messageId, folder);
+    if (message != null) {
+      return message;
+    } else {
+      var messageInfos = await FolderMessageInfo.getMessageInfo(
+        folder,
+        account.localId,
+      );
+      final lastUid = messageInfos.isEmpty ? null : messageInfos.first.uid;
+      final response = await _mailApi.getMessageById(
+        messageId,
+        folder,
+        lastUid,
+      );
+      final messageInfo = MessageInfo(
+        uid: response["Uid"] as int,
+        hasThread: false,
+        flags: [],
+      );
+      message = await _mailDao.getMessageByUid(
+        messageInfo.uid,
+        folder,
+        account,
+        user,
+      );
+      if (message != null) {
+        if (message.hasBody == true) {
+          return message;
+        }
+      } else {
+        messageInfos = await FolderMessageInfo.getMessageInfo(
+          folder,
+          account.localId,
+        );
+        try {
+          message = await _mailDao.addEmptyMessage(
+              messageInfo, account, user, folder);
+          messageInfos.insert(0, messageInfo);
+          await FolderMessageInfo.setMessageInfo(
+            folder,
+            account.localId,
+            messageInfos,
+          );
+        } catch (e) {
+          message = await _mailDao.getMessageByUid(
+            messageInfo.uid,
+            folder,
+            account,
+            user,
+          );
+          if (message.hasBody == true) {
+            return message;
+          }
+        }
+      }
+      final newMessages = Mail.getMessageObjFromServerAndUpdateInfoHasBody(
+        [response],
+        [message],
+        user.localId,
+        account,
+      );
+      return _mailDao.fillMessage(newMessages.first);
+    }
   }
 }
 

@@ -10,6 +10,9 @@ class ErrorToShow {
     if (error is WebMailApiError) {
       return error.toShow();
     } else {
+      if (error is ErrorToShow) {
+        return error;
+      }
       return ErrorToShow.message(error.toString());
     }
   }

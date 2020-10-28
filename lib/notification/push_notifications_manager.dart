@@ -70,11 +70,11 @@ class PushNotificationsManager {
 
 Future onResume(Map<dynamic, dynamic> message) async {
   final notification = NotificationData.fromMap(message);
-  final payload = notification.to;
+  final payload = notification.toJson();
   if (RouteWrap.staticState != null) {
     RouteWrap.staticState.onMessage(payload);
   } else {
-    RouteWrap.message = payload;
+    RouteWrap.notification = payload;
   }
 }
 
@@ -101,9 +101,7 @@ Future<bool> messageHandler(Map<dynamic, dynamic> message) async {
                 account,
                 user,
                 null,
-                forcePayload: {
-                  "To": notification.to,
-                },
+                forcePayload: notification.toJson(),
               );
               break;
             }
@@ -130,8 +128,11 @@ class NotificationData {
   final String subject;
   final String to;
   final String from;
+  final String messageID;
+  final String folder;
 
-  NotificationData(this.subject, this.to, this.from);
+  NotificationData(
+      this.subject, this.to, this.from, this.messageID, this.folder);
 
   static NotificationData fromMap(Map<dynamic, dynamic> message) {
     final notification = (message["data"] ?? message) as Map;
@@ -140,6 +141,16 @@ class NotificationData {
       notification["Subject"] as String,
       notification["To"] as String,
       notification["From"] as String,
+      notification["MessageId"] as String,
+      notification["Folder"] as String,
     );
   }
+
+  Map<String, dynamic> toJson() => {
+        "Subject": subject,
+        "To": to,
+        "From": from,
+        "MessageId": messageID,
+        "Folder": folder,
+      };
 }

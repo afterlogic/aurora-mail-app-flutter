@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_event.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_android.dart';
@@ -14,8 +13,8 @@ import 'auth/blocs/auth_bloc/auth_bloc.dart';
 class RouteWrap extends StatefulWidget {
   final Widget child;
   final GlobalKey<NavigatorState> navKey;
+  static Map<String, dynamic> notification;
   static RouteWrapState staticState;
-  static String message;
   final AuthBloc authBloc;
 
   const RouteWrap({
@@ -36,9 +35,9 @@ class RouteWrapState extends State<RouteWrap> {
   void initState() {
     super.initState();
     RouteWrap.staticState = this;
-    if (RouteWrap.message != null) {
-      onMessage(RouteWrap.message);
-      RouteWrap.message = null;
+    if (RouteWrap.notification != null) {
+      onMessage(RouteWrap.notification);
+      RouteWrap.notification = null;
     }
   }
 
@@ -53,7 +52,7 @@ class RouteWrapState extends State<RouteWrap> {
       final completer = Completer();
       widget.authBloc.add(SelectUser(userId, completer, accountLocalId));
       await completer.future;
-      MessagesListAndroid.openMessageId = messageUid;
+      MessagesListAndroid.openMessageLocalId = messageUid;
       widget.navKey.currentState.pushNamedAndRemoveUntil(
         MessagesListRoute.name,
         (_) => false,
@@ -62,18 +61,15 @@ class RouteWrapState extends State<RouteWrap> {
     }
   }
 
-  onMessage(String payload) {
-    if (payload.startsWith("{")) {
-      final json = jsonDecode(payload) as Map<String, dynamic>;
-      if (json.containsKey("To")) {
-        return selectUser(json["To"] as String);
-      }
+  onMessage(Map<String, dynamic> json) {
+    if (json.containsKey("To")) {
+      return selectUser(json);
+    } else {
+      //notification from background update
       final userLocalId = json["user"] as int;
       final messageLocalId = json["message"] as int;
       final accountLocalId = json["account"] as int;
-      showMessage(userLocalId, messageLocalId, accountLocalId);
-    } else {
-      selectUser(payload);
+      return showMessage(userLocalId, messageLocalId, accountLocalId);
     }
   }
 
@@ -95,16 +91,25 @@ class RouteWrapState extends State<RouteWrap> {
     return widget.child;
   }
 
-  void selectUser(String email) async {
+  void selectUser(Map<String, dynamic> json) async {
     if (await discardNotSavedChanges()) {
+      final email = json["To"] as String;
       final completer = Completer();
-      widget.authBloc.add(SelectUserByEmail(email, completer));
-      await completer.future;
-      widget.navKey.currentState.pushNamedAndRemoveUntil(
-        MessagesListRoute.name,
-        (_) => false,
-        arguments: MessagesListRouteArg(),
-      );
+      MessagesListAndroid.openMessageFolder = json["Folder"] as String;
+      MessagesListAndroid.openMessageId = json["MessageId"] as String;
+
+      if (widget.authBloc.currentAccount?.email != email) {
+        widget.authBloc.add(SelectUserByEmail(email, completer));
+        await completer.future;
+      }
+      if (widget.authBloc.currentAccount?.email != email ||
+          MessagesListAndroid.openMessageFolder != null) {
+          widget.navKey.currentState.pushNamedAndRemoveUntil(
+          MessagesListRoute.name,
+          (_) => false,
+          arguments: MessagesListRouteArg(),
+        );
+      }
     }
   }
 }

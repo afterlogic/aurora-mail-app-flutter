@@ -62,10 +62,14 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
     contactsBloc = BlocProvider.of<ContactsBloc>(context);
 
     pgpBloc = AppInjector.instance.pgpSettingsBloc(authBloc);
-    widget.routeAnimationListener.onComplete = () {
+    if (widget.routeAnimationListener.isCompleted == true) {
       animationFinished = true;
-      setState(() {});
-    };
+    } else {
+      widget.routeAnimationListener.onComplete = () {
+        animationFinished = true;
+        setState(() {});
+      };
+    }
   }
 
   @override
