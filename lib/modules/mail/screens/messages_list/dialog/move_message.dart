@@ -6,20 +6,24 @@ import 'package:aurora_mail/modules/mail/blocs/mail_bloc/mail_state.dart';
 import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/messages_list_bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/messages_list_event.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/mail_folder.dart';
+import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/shared_ui/sized_dialog_content.dart';
-import 'package:aurora_mail/utils/internationalization.dart'; import 'package:aurora_mail/res/str/s.dart';
+import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MoveMessageDialog extends StatefulWidget {
   final List<Message> messages;
   final MessagesListBloc bloc;
+
   MoveMessageDialog(this.messages, this.bloc);
+
   @override
   _MoveMessageDialogState createState() => _MoveMessageDialogState();
 }
 
-class _MoveMessageDialogState extends State<MoveMessageDialog> with NotSavedChangesMixin{
+class _MoveMessageDialogState extends State<MoveMessageDialog>
+    with NotSavedChangesMixin {
   List<Folder> stack = [];
 
   Folder get current {
@@ -60,7 +64,7 @@ class _MoveMessageDialogState extends State<MoveMessageDialog> with NotSavedChan
         ),
         actions: <Widget>[
           FlatButton(
-            child: Text(i18n(context, S.btn_message_paste)),
+            child: Text(i18n(context, S.btn_message_move)),
             onPressed: current == null ? null : _paste,
           ),
           FlatButton(
@@ -102,6 +106,6 @@ class _MoveMessageDialogState extends State<MoveMessageDialog> with NotSavedChan
 
   _paste() {
     widget.bloc.add(MoveToFolderMessages(widget.messages, current));
-    _cancel();
+    Navigator.pop(context, true);
   }
 }

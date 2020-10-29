@@ -346,7 +346,7 @@
   "hint_pgp_your_keys": "Your keys",
   "label_pgp_contact_public_keys": "External public keys",
   "label_message_move_to": "Move to: ",
-  "btn_message_paste": "Paste",
+  "btn_message_move": "Move",
   "label_message_move_to_folder": "Move to folder",
   "btn_message_advanced_search": "Advanced search",
   "label_message_advanced_search": "Advanced search",

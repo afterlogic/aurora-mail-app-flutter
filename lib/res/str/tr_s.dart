@@ -356,7 +356,7 @@ class TrS extends S {
     344: "Anahtarlarınız",
     345: "Ortak anahtar bağlantısı",
     346: "Taşı: ",
-    347: "Yapıştır",
+    347: "Move",
     348: "Klasöre taşı",
     349: "Gelişmiş arama",
     350: "Gelişmiş arama",
@@ -391,16 +391,19 @@ class TrS extends S {
     375: "Encrypt",
     376:
         "If you want messages to this contact to be automatically encrypted and/or signed, check the boxes below. Please note that these messages will be converted to plain text. Attachments will not be encrypted.",
-    379: "Delete all",
-    380: "Record log in background",
-    381: "Show debug view",
-    383: "Are you sure you want to delete all logs",
-    384: "Counter of uploaded message",
-    385: "No PGP public key was found",
-    386: "PGP Settings",
-    387:
+    377: "Delete all",
+    378: "Record log in background",
+    379: "Show debug view",
+    380: "Are you sure you want to delete all logs",
+    381: "Counter of uploaded message",
+    382: "No PGP public key was found",
+    383: "PGP Settings",
+    384:
         "The message will be automatically encrypted and/or signed for contacts with OpenPgp keys.\n OpenPGP supports plain text only. All the formatting will be removed before encryption.",
-    388: "Not spam",
+    385: "Not spam",
+    386: "password is empty",
+    387: "Required password for PGP key",
+    388: "Are you sure you want to delete file {name}",
   };
   String get(int id) => _map[id];
 }

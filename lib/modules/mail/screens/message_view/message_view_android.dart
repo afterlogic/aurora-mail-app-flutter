@@ -110,7 +110,7 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
     }
   }
 
-  void _onAppBarActionSelected(MailViewAppBarAction action) {
+  void _onAppBarActionSelected(MailViewAppBarAction action) async {
     // ignore: close_sinks
     final mailBloc = BlocProvider.of<MailBloc>(context);
     final contactsBloc = BlocProvider.of<ContactsBloc>(context);
@@ -160,14 +160,16 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
       case MailViewAppBarAction.delete:
         return _deleteMessage();
       case MailViewAppBarAction.move:
-        Navigator.pop(context);
-        AMDialog.show(
+        final result = await AMDialog.show(
           context: context,
           builder: (_) => MoveMessageDialog(
             [widget.message],
             BlocProvider.of<MessagesListBloc>(context),
           ),
         );
+        if (result == true) {
+          Navigator.popUntil(context, ModalRoute.withName(MessagesListRoute.name));
+        }
         break;
       case MailViewAppBarAction.showHeaders:
         Navigator.pushNamed(

@@ -343,7 +343,7 @@
   "hint_pgp_your_keys": "Anahtarlarınız",
   "label_pgp_contact_public_keys": "Ortak anahtar bağlantısı",
   "label_message_move_to": "Taşı: ",
-  "btn_message_paste": "Yapıştır",
+  "btn_message_move": "Move",
   "label_message_move_to_folder": "Klasöre taşı",
   "btn_message_advanced_search": "Gelişmiş arama",
   "label_message_advanced_search": "Gelişmiş arama",
