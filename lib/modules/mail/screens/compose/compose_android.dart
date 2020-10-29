@@ -149,6 +149,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
   }
 
   void _initWithAttachment(InitWithAttachment action) {
+
     _bodyTextCtrl.text = action.message.join("\n\n");
     _bloc.add(UploadAttachments(action.files));
   }
