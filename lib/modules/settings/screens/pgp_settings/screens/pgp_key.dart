@@ -1,9 +1,10 @@
 import 'dart:io';
 
 import 'package:aurora_mail/modules/settings/blocs/pgp_settings/bloc.dart';
+import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
 import 'package:aurora_mail/utils/identity_util.dart';
-import 'package:aurora_mail/utils/internationalization.dart'; import 'package:aurora_mail/res/str/s.dart';
+import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:crypto_model/crypto_model.dart';
 import 'package:flutter/cupertino.dart';
@@ -54,14 +55,15 @@ class PgpKeyScreen extends StatelessWidget {
                   child: AMButton(
                     child: Text(i18n(context, S.btn_share)),
                     onPressed: () async {
-                      final result = await ConfirmationDialog.show(
-                          context,
-                          i18n(context, S.label_pgp_share_warning),
-                          i18n(context, S.hint_pgp_share_warning),
-                          i18n(context, S.btn_share));
+                      final result = pgpKey.isPrivate
+                          ? await ConfirmationDialog.show(
+                              context,
+                              i18n(context, S.label_pgp_share_warning),
+                              i18n(context, S.hint_pgp_share_warning),
+                              i18n(context, S.btn_share))
+                          : true;
                       if (result == true) {
                         bloc.add(ShareKeys([pgpKey]));
-                        Navigator.pop(context);
                       }
                     },
                   ),
