@@ -95,16 +95,16 @@ class RouteWrapState extends State<RouteWrap> {
     if (await discardNotSavedChanges()) {
       final email = json["To"] as String;
       final completer = Completer();
-      MessagesListAndroid.openMessageFolder = json["Folder"] as String;
-      MessagesListAndroid.openMessageId = json["MessageId"] as String;
 
       if (widget.authBloc.currentAccount?.email != email) {
         widget.authBloc.add(SelectUserByEmail(email, completer));
         await completer.future;
       }
       if (widget.authBloc.currentAccount?.email != email ||
-          MessagesListAndroid.openMessageFolder != null) {
-          widget.navKey.currentState.pushNamedAndRemoveUntil(
+          json["Folder"] as String != null) {
+        MessagesListAndroid.openMessageFolder = json["Folder"] as String;
+        MessagesListAndroid.openMessageId = json["MessageId"] as String;
+        widget.navKey.currentState.pushNamedAndRemoveUntil(
           MessagesListRoute.name,
           (_) => false,
           arguments: MessagesListRouteArg(),
