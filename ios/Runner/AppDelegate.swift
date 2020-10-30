@@ -25,15 +25,6 @@ class AppDelegate: FlutterAppDelegate{
         application.registerForRemoteNotifications()
         GeneratedPluginRegistrant.register(with: self)
         debugNotification("App running")
-        let version = UIDevice.current.systemVersion
-        let iosVersion = NSString(string: version).doubleValue
-        if (iosVersion >= 13 && iosVersion < 14) {
-            let notificationOption = launchOptions?[.remoteNotification]
-            if let notification = notificationOption as? [String:AnyObject]{
-                debugNotification("notification showing from swift")
-                showNotification(notification)
-            }
-        }
         
         return  super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
