@@ -458,7 +458,7 @@ class MailUtils {
       <div class='email-content'>$body</div>
       ${attachments.isNotEmpty ? '<div style="height: 1px; background-color: black; opacity: 0.05; margin: 24px 0 0"></div>' : ""}
       <div class='attachments'>
-        ${attachments.map((a) => _getAttachment(context, a)).toList().join()}
+        ${attachments.where((element) => !element.isInline).map((a) => _getAttachment(context, a)).toList().join()}
       </div>
     </div>
   </body>
