@@ -116,7 +116,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
       try {
         final message = _mailBloc.getMessageById(messageId, folder);
         final result = await _onMessageSelectedWithProgress(message);
-        if(result is ErrorToShow){
+        if (result is ErrorToShow) {
           _showError(context, result);
         }
       } catch (e) {
@@ -205,7 +205,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
         ),
       );
     } else {
-      Navigator.pushNamed(
+      await Navigator.pushNamed(
         context,
         MessageViewRoute.name,
         arguments: MessageViewScreenArgs(

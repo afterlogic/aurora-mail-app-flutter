@@ -6,8 +6,9 @@ import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:aurora_mail/modules/mail/screens/message_view/components/message_webview.dart';
+import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/utils/date_formatting.dart';
-import 'package:aurora_mail/utils/internationalization.dart'; import 'package:aurora_mail/res/str/s.dart';
+import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -383,12 +384,20 @@ class MailUtils {
       }
       .toggle-content.is-visible {
         padding: 16px;
-        background: ${theme.backgroundColor.toHex()};
+        background: ${Color.lerp(
+          theme.scaffoldBackgroundColor,
+          theme.brightness == Brightness.dark ? Colors.white : Colors.black,
+          0.1,
+        ).toHex()};
       	display: block;
       }
       .details-description {
         width: 20%; 
-        opacity: 0.3;
+        color: ${(theme.brightness == Brightness.dark ? Colors.white : Colors.black).toHex()};
+        opacity: 0.4;
+      }
+      .details-value {
+        color: ${(theme.brightness == Brightness.dark ? Colors.white : Colors.black).toHex()};
       }
     </style>
     <script>      
@@ -431,10 +440,10 @@ class MailUtils {
         </div>
         </div>
           <div class="toggle-content flex" id="info">
-              <div class='row'><a class='details-description'>From</a><a>$from</a></div>
-              <div class='row'><a class='details-description'>To</a><a>$to</a></div>        
-              ${cc.isNotEmpty ? "<div class='row'><a class='details-description'>Cc</a><a>$cc</a></div>" : ""}
-        <div class='row'><a style='width: 20%; opacity: 0.3;'>Date</a><a>$date</a></div>
+              <div class='row'><a class='details-description'>From</a><a class='details-value'>$from</a></div>
+              <div class='row'><a class='details-description'>To</a><a class='details-value'>$to</a></div>        
+              ${cc.isNotEmpty ? "<div class='row'><a class='details-description'>Cc</a><a class='details-value'>$cc</a></div>" : ""}
+        <div class='row'><a class='details-description'>Date</a><a class='details-value'>$date</a></div>
           </div>
         <div class='email-head' style='padding-top: 0px;'>
         <div style="display: flex; flex-direction: row;justify-content: space-between; padding-top: 24px;">
@@ -449,7 +458,7 @@ class MailUtils {
       <div class='email-content'>$body</div>
       ${attachments.isNotEmpty ? '<div style="height: 1px; background-color: black; opacity: 0.05; margin: 24px 0 0"></div>' : ""}
       <div class='attachments'>
-        ${attachments.map((a) => _getAttachment(context, a)).toList().join()}
+        ${attachments.where((element) => !element.isInline).map((a) => _getAttachment(context, a)).toList().join()}
       </div>
     </div>
   </body>
