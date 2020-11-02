@@ -119,8 +119,10 @@ class MailBloc extends Bloc<MailEvent, MailState> {
   Stream<MailState> _updateFolders(UpdateFolders event) async* {
     final List<Folder> folders = await _methods.getFolders();
 
-    _selectedFolder = folders.firstWhere((f) => f.guid == _selectedFolder.guid,
-        orElse: () => folders[0]);
+    _selectedFolder = folders.firstWhere(
+      (f) => f.guid == _selectedFolder.guid,
+      orElse: () => folders[0],
+    );
 
     yield FoldersLoaded(
       folders,
@@ -207,7 +209,13 @@ class MailBloc extends Bloc<MailEvent, MailState> {
       );
 
       final guid = event.folder.guid;
-      _methods.syncFolders(guid: guid).then((v) => add(UpdateFolders()));
+      //todo
+      _methods
+          .syncFolders(
+            guid: guid,
+            syncSystemFolders: true,
+          )
+          .then((v) => add(UpdateFolders()));
     } catch (err, s) {
       logger.error(err, s);
 
@@ -274,7 +282,7 @@ class MailBloc extends Bloc<MailEvent, MailState> {
   }
 
   Future<Message> getMessageById(String messageId, String folder) {
-    return _methods.getMessageById(messageId,folder);
+    return _methods.getMessageById(messageId, folder);
   }
 }
 
