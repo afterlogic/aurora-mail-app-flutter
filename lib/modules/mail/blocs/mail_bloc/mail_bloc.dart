@@ -174,7 +174,11 @@ class MailBloc extends Bloc<MailEvent, MailState> {
       final guid = _selectedFolder.guid;
       await _methods.updateFolderHash(_selectedFolder);
       _methods
-          .syncFolders(guid: guid, syncSystemFolders: true)
+          .syncFolders(
+            guid: guid,
+            syncSystemFolders: true,
+            forceUpdateMessagesInfo: true,
+          )
           .then((v) {
             add(UpdateFolders());
           })

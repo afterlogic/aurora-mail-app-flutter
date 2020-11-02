@@ -237,8 +237,11 @@ class MailMethods {
     return Folder.getFolderObjectsFromDb(updatedLocalFolders);
   }
 
-  Future<void> syncFolders(
-      {@required String guid, bool syncSystemFolders = false}) async {
+  Future<void> syncFolders({
+    @required String guid,
+    bool syncSystemFolders = false,
+    bool forceUpdateMessagesInfo = false,
+  }) async {
     logger.log("method syncFolders");
     if (_isOffline || user == null) return null;
 
@@ -266,7 +269,7 @@ class MailMethods {
       try {
         await _setMessagesInfoToFolder(
           guid: guid,
-          forceSync: syncSystemFolders,
+          forceSync: forceUpdateMessagesInfo,
         );
       } catch (err, s) {
         logger.error(err, s);
@@ -282,8 +285,8 @@ class MailMethods {
     String guid,
     bool forceSync = false,
   }) async {
-    logger
-        .log("method _setMessagesInfoToFolder(guid:$guid forceSync:$forceSync)");
+    logger.log(
+        "method _setMessagesInfoToFolder(guid:$guid forceSync:$forceSync)");
     if (_isOffline || user == null) return null;
     if (syncQueue.isEmpty) {
       return;
