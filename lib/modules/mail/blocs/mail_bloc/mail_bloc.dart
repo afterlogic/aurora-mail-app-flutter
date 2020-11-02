@@ -209,11 +209,10 @@ class MailBloc extends Bloc<MailEvent, MailState> {
       );
 
       final guid = event.folder.guid;
-      //todo
       _methods
           .syncFolders(
             guid: guid,
-            syncSystemFolders: true,
+            syncSystemFolders: false,
           )
           .then((v) => add(UpdateFolders()));
     } catch (err, s) {
