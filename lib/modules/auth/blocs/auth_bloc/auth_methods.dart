@@ -254,11 +254,13 @@ class AuthMethods {
     );
   }
 
-  Future setFbToken(List<User> users) async {
+  Future setFbToken(List<User> users, [bool setNullToken = false]) async {
     if (!BuildProperty.pushNotification) return;
     try {
       final uid = await PushNotificationsManager.instance.deviceId;
-      final fbToken = await PushNotificationsManager.instance.getToken();
+      final fbToken = setNullToken
+          ? null
+          : await PushNotificationsManager.instance.getToken();
       final userWithAccount = <User, List<String>>{};
       for (var user in users) {
         final accounts = await _accountsDao.getAccounts(user.localId);
@@ -276,10 +278,14 @@ class AuthMethods {
         emails.add(user.emailFromLogin);
         userWithAccount[user] = emails.toList();
       }
-      final success =
-          await _authApi.setPushToken(userWithAccount, uid, fbToken);
+      if (setNullToken) {
+        _authApi.setPushToken(userWithAccount, uid, fbToken);
+      } else {
+        final success =
+            await _authApi.setPushToken(userWithAccount, uid, fbToken);
 
-      PushNotificationsManager.instance.setTokenStatus(success);
+        PushNotificationsManager.instance.setTokenStatus(success);
+      }
     } catch (e) {
       print(e);
     }

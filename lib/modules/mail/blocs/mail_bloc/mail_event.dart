@@ -17,7 +17,7 @@ abstract class MailEvent extends Equatable {
 class FetchFolders extends MailEvent with AlwaysNonEqualObject {}
 
 // always from DB (e.g. to update needsInfoUpdate, which controls loading)
-class UpdateFolders extends MailEvent {}
+class UpdateFolders extends MailEvent with AlwaysNonEqualObject{}
 
 // always from server
 class RefreshFolders extends MailEvent with AlwaysNonEqualObject {

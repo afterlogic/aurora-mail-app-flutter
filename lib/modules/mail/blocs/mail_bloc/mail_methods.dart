@@ -147,7 +147,8 @@ class MailMethods {
     final localFolders = await _foldersDao.getAllFolders(account.localId);
 
     final folders = await _foldersApi.getRelevantFoldersInformation(
-        localFolders.map((e) => e.fullNameRaw).toList());
+      localFolders.map((e) => e.fullNameRaw).toList(),
+    );
 
     final futures = new List<Future>();
 
@@ -236,8 +237,11 @@ class MailMethods {
     return Folder.getFolderObjectsFromDb(updatedLocalFolders);
   }
 
-  Future<void> syncFolders(
-      {@required String guid, bool syncSystemFolders = false}) async {
+  Future<void> syncFolders({
+    @required String guid,
+    bool syncSystemFolders = false,
+    bool forceUpdateMessagesInfo = false,
+  }) async {
     logger.log("method syncFolders");
     if (_isOffline || user == null) return null;
 
@@ -263,7 +267,10 @@ class MailMethods {
     }
     if (syncQueue.isNotEmpty && queueLengthBeforeInsert == 0) {
       try {
-        await _setMessagesInfoToFolder();
+        await _setMessagesInfoToFolder(
+          guid: guid,
+          forceSync: forceUpdateMessagesInfo,
+        );
       } catch (err, s) {
         logger.error(err, s);
         syncQueue.clear();
@@ -274,8 +281,12 @@ class MailMethods {
     }
   }
 
-  Future<void> _setMessagesInfoToFolder() async {
-    logger.log("method _setMessagesInfoToFolder");
+  Future<void> _setMessagesInfoToFolder({
+    String guid,
+    bool forceSync = false,
+  }) async {
+    logger.log(
+        "method _setMessagesInfoToFolder(guid:$guid forceSync:$forceSync)");
     if (_isOffline || user == null) return null;
     if (syncQueue.isEmpty) {
       return;
@@ -284,8 +295,8 @@ class MailMethods {
     final folderToUpdate = await _foldersDao.getFolderByGuId(syncQueue[0]);
     // get the actual sync period
     final updatedUser = await _usersDao.getUserByLocalId(user.localId);
-
-    if (folderToUpdate.needsInfoUpdate == false) {
+    final forceUpdate = forceSync ? guid == folderToUpdate.guid : false;
+    if (folderToUpdate.needsInfoUpdate == false && !forceUpdate) {
       syncQueue.remove(folderToUpdate.guid);
       if (syncQueue.isNotEmpty) {
         return _setMessagesInfoToFolder();
