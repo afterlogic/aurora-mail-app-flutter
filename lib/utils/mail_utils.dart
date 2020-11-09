@@ -299,6 +299,11 @@ class MailUtils {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
+      blockquote {
+        border-left: solid 2px #000000;
+        margin: 4px 2px;
+        padding-left: 6px;
+      }
       html, body {
         margin: 0;
         overflow-x: hidden;
