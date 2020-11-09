@@ -299,11 +299,6 @@ class MailUtils {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-      blockquote {
-        border-left: solid 2px #000000;
-        margin: 4px 2px;
-        padding-left: 6px;
-      }
       html, body {
         margin: 0;
         overflow-x: hidden;
@@ -403,6 +398,11 @@ class MailUtils {
       }
       .details-value {
         color: ${(theme.brightness == Brightness.dark ? Colors.white : Colors.black).toHex()};
+      }
+      blockquote {
+        border-left: solid 2px #000000;
+        margin: 4px 2px;
+        padding-left: 6px;
       }
     </style>
     <script>      
@@ -519,8 +519,13 @@ class MailUtils {
     return """
     <div class='attachment'>
       $leading
-      <div class='flex' style='flex: 1'>
-        <span>${attachment.fileName}</span>
+      <div class='flex' style="flex: 1;white-space: nowrap;overflow: hidden;/* text-overflow: ellipsis; */">
+        <span style="
+    display: inline-block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+">${attachment.fileName}</span>
         <span class='disabled-text'>${filesize(attachment.size)}</span>
       </div>
       <a class='icon-btn' href='https://dummy-crutch.com/#${MessageWebViewActions.DOWNLOAD_ATTACHMENT + attachment.downloadUrl + MessageWebViewActions.DOWNLOAD_ATTACHMENT}'>${_getDownloadIcon(iconColor)}</a>
