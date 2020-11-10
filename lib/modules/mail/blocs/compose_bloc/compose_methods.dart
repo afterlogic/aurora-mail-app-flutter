@@ -16,8 +16,6 @@ import 'package:aurora_mail/modules/mail/repository/mail_api.dart';
 import 'package:crypto_worker/crypto_worker.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_uploader/flutter_uploader.dart';
-import 'package:uuid/uuid.dart';
-import 'package:uuid/uuid_util.dart';
 
 class ComposeMethods {
   final Account account;
@@ -190,5 +188,10 @@ class ComposeMethods {
   Future<List<Contact>> getContacts(String email) async {
     return ContactMapper.listFromDB(
         await _contactsDao.getContactsByEmail(email));
+  }
+
+  Future<List<ComposeAttachment>> getMessageAttachment(Message message) {
+    return getComposeAttachments(
+        MailAttachment.fromJsonString(message.attachmentsInJson));
   }
 }

@@ -135,6 +135,15 @@ class ErrorUpload extends ComposeEvent {
   List<Object> get props => [error];
 }
 
+class GetMessageAttachments extends ComposeEvent {
+  final Message message;
+
+  GetMessageAttachments(this.message);
+
+  @override
+  List<Object> get props => [message];
+}
+
 class GetComposeAttachments extends ComposeEvent {
   final List<MailAttachment> attachments;
 

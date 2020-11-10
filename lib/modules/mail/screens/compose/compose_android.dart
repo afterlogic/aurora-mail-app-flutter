@@ -149,7 +149,6 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
   }
 
   void _initWithAttachment(InitWithAttachment action) {
-
     _bodyTextCtrl.text = action.message.join("\n\n");
     _bloc.add(UploadAttachments(action.files));
   }
@@ -186,7 +185,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
 
   void _initForward(Forward action) async {
     _message = action.message;
-
+    _bloc.add(GetMessageAttachments(_message));
     _subjectTextCtrl.text = MailUtils.getForwardSubject(_message);
     _bodyTextCtrl.text = MailUtils.getForwardBody(context, _message);
   }

@@ -47,6 +47,7 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
     if (event is StartUpload) yield UploadStarted(event.tempAttachment);
     if (event is EndUpload) yield AttachmentUploaded(event.composeAttachment);
     if (event is GetComposeAttachments) yield* _getComposeAttachments(event);
+    if (event is GetMessageAttachments) yield* _getForwardAttachment(event);
     if (event is GetContactsAsAttachments)
       yield* _getContactsAsAttachment(event);
     if (event is ErrorUpload)
@@ -155,6 +156,19 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
     try {
       final composeAttachments =
           await _methods.getComposeAttachments(event.attachments);
+
+      yield ReceivedComposeAttachments(composeAttachments);
+    } catch (err, s) {
+      yield ComposeError(formatError(err, s));
+    }
+  }
+
+  Stream<ComposeState> _getForwardAttachment(
+      GetMessageAttachments event) async* {
+    yield ConvertingAttachments();
+    try {
+      final composeAttachments =
+          await _methods.getMessageAttachment(event.message);
 
       yield ReceivedComposeAttachments(composeAttachments);
     } catch (err, s) {
