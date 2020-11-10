@@ -4,6 +4,7 @@ import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/mail_utils.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart' as widgets;
 import 'package:moor_flutter/moor_flutter.dart';
 
@@ -185,12 +186,32 @@ class Mail extends Table {
     }
   }
 
-  static List<Message> getMessageObjFromServerAndUpdateInfoHasBody(
-    List result,
+  static Future<List<Message>> getMessageObjFromServerAndUpdateInfoHasBody(
+    List list,
     List<Message> messagesInfo,
     int userLocalId,
     Account account,
-  ) {
+  ) async {
+    final result = await compute(_getMessageObjFromServerAndUpdateInfoHasBody, {
+      "result": list,
+      "messagesInfo": messagesInfo.map((e) => e.toJson()).toList(),
+      "userLocalId": userLocalId,
+      "accountEntityId": account.entityId,
+    });
+    return result.map((e) => Message.fromJson(e)).toList();
+  }
+
+  static List<Map<String, dynamic>>
+      _getMessageObjFromServerAndUpdateInfoHasBody(
+    Map<String, dynamic> map,
+) {
+    List result = map["result"] as List;
+    List<Message> messagesInfo =
+        (map["messagesInfo"] as List<Map<String, dynamic>>)
+            .map((e) => Message.fromJson(e))
+            .toList();
+    int userLocalId = map["userLocalId"] as int;
+    int accountEntityId = map["accountEntityId"] as int;
     assert(result.isNotEmpty);
 
     final messagesChunk = new List<Message>();
@@ -234,7 +255,7 @@ class Mail extends Table {
         localId: messageInfo.localId,
         uid: messageInfo.uid,
         userLocalId: userLocalId,
-        accountEntityId: account.entityId,
+        accountEntityId: accountEntityId,
         uniqueUidInFolder: messageInfo.uniqueUidInFolder,
         parentUid: messageInfo.parentUid,
         flagsInJson: messageInfo.flagsInJson,
@@ -306,7 +327,7 @@ class Mail extends Table {
 
     assert(result.length == messagesChunk.length);
 
-    return messagesChunk;
+    return messagesChunk.map((e) => e.toJson()).toList();
   }
 
   static String _htmlToTextSearch(String html) {

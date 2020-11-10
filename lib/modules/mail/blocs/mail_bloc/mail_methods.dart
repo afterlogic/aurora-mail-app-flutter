@@ -444,12 +444,12 @@ class MailMethods {
         uids: uids.map((item) => item.uid).toList(),
       );
       // TODO make async
-      final messages = await fillMessage(_FillMessageArg(
+      final messages = await Mail.getMessageObjFromServerAndUpdateInfoHasBody(
         rawBodies,
         uids,
         updatedUser.localId,
         account,
-      ));
+      );
       await _mailDao.fillMessages(messages);
       // check if there are other messages to sync
       _syncMessagesChunk(
@@ -460,15 +460,6 @@ class MailMethods {
         currentFolder,
       );
     }
-  }
-
-  static Future<List<Message>> fillMessage(_FillMessageArg arg) async {
-    return await Mail.getMessageObjFromServerAndUpdateInfoHasBody(
-      arg.result,
-      arg.messagesInfo,
-      arg.userLocalId,
-      arg.account,
-    );
   }
 
   // returns list of uids to load
@@ -663,7 +654,8 @@ class MailMethods {
           }
         }
       }
-      final newMessages = Mail.getMessageObjFromServerAndUpdateInfoHasBody(
+      final newMessages =
+          await Mail.getMessageObjFromServerAndUpdateInfoHasBody(
         [response],
         [message],
         user.localId,

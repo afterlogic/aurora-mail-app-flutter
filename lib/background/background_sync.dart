@@ -169,7 +169,7 @@ class BackgroundSync {
             result.addedMessages, account, user);
         isolatedLogger.log("messageBody: \n$messageBody");
         final newMessageBodies =
-            Mail.getMessageObjFromServerAndUpdateInfoHasBody(
+            await Mail.getMessageObjFromServerAndUpdateInfoHasBody(
           rawBodies,
           messageBody,
           user.localId,
@@ -265,7 +265,7 @@ class BackgroundSync {
             result.addedMessages, account, user);
         isolatedLogger.log(messageBody);
         final newMessageBodies =
-            Mail.getMessageObjFromServerAndUpdateInfoHasBody(
+            await Mail.getMessageObjFromServerAndUpdateInfoHasBody(
           rawBodies,
           messageBody,
           user.localId,

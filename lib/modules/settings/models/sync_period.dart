@@ -30,10 +30,7 @@ class SyncPeriod {
   }
 
   static String periodToDbString(Period period) {
-    if (period == Period.allTime)
-      return null;
-    else
-      return period.toString();
+    return period.toString();
   }
 
   static String subtractPeriodFromNow(Duration duration) {
