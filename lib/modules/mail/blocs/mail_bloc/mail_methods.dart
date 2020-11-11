@@ -194,43 +194,55 @@ class MailMethods {
     if (_isOffline) return;
 
     assert(selectedFolder != null);
-
+    var foldersForUpdate = await _foldersDao
+        .getByType(
+          [FolderType.inbox, FolderType.sent, FolderType.drafts]
+              .map((e) => Folder.getNumberFromFolderType(e))
+              .toList(),
+          account.localId,
+        )
+        .then((value) => Folder.getFolderObjectsFromDb(value));
+    final foldersMap = {
+      for (var item in foldersForUpdate) item.fullNameRaw: item,
+      selectedFolder.fullNameRaw: selectedFolder,
+    };
     final folders = await _foldersApi
-        .getRelevantFoldersInformation([selectedFolder.fullNameRaw]);
+        .getRelevantFoldersInformation(foldersMap.keys.toList());
 
     final futures = new List<Future>();
     if (folders.isEmpty) {
       return;
     }
-    final fName = folders.keys.first;
-    final updatedFolder = folders.values.first;
-    final folder = selectedFolder;
+    for (var value in folders.entries) {
+      final fName = value.key;
+      final updatedFolder = value.value;
+      final folder = foldersMap[value.key];
 
-    // only current folder can be force updated
-    // the value cannot be set from true to false
-    // because non-system folders update only when they are entered
-    // thus might not have been synced yet
-    final shouldUpdate = forceCurrentFolderUpdate == true &&
-            folder.fullName == selectedFolder.fullName ||
-        folder.needsInfoUpdate;
+      // only current folder can be force updated
+      // the value cannot be set from true to false
+      // because non-system folders update only when they are entered
+      // thus might not have been synced yet
+      final shouldUpdate = forceCurrentFolderUpdate == true &&
+              folder.fullName == selectedFolder.fullName ||
+          folder.needsInfoUpdate;
 
-    final count = updatedFolder[0];
-    final unread = updatedFolder[1];
-    final newHash = updatedFolder[3];
-    final needsInfoUpdate = folder.fullNameHash != newHash || shouldUpdate;
-    if (folder.fullNameHash != newHash) {
-      logger.log("folder ${fName} have new hash");
+      final count = updatedFolder[0];
+      final unread = updatedFolder[1];
+      final newHash = updatedFolder[3];
+      final needsInfoUpdate = folder.fullNameHash != newHash || shouldUpdate;
+      if (folder.fullNameHash != newHash) {
+        logger.log("folder ${fName} have new hash");
+      }
+      futures.add(_foldersDao.updateFolder(
+        new FoldersCompanion(
+          count: Value(count as int),
+          unread: Value(unread as int),
+          fullNameHash: Value(newHash as String),
+          needsInfoUpdate: Value(needsInfoUpdate),
+        ),
+        folder.guid,
+      ));
     }
-    futures.add(_foldersDao.updateFolder(
-      new FoldersCompanion(
-        count: Value(count as int),
-        unread: Value(unread as int),
-        fullNameHash: Value(newHash as String),
-        needsInfoUpdate: Value(needsInfoUpdate),
-      ),
-      folder.guid,
-    ));
-
     await Future.wait(futures);
     final updatedLocalFolders =
         await _foldersDao.getAllFolders(account.localId);
