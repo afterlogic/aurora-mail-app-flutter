@@ -70,11 +70,12 @@ class WebMailApi {
     }
   }
 
-  _onError(String id, String body) {
+  _onError(String token, String id, String body) {
+    final log = "TOKEN: $token\n$id\n${body}";
     if (interceptor?.onError != null) {
-      interceptor?.onError("$id\n${body}");
+      interceptor?.onError(log);
     } else if (onError != null) {
-      onError("$id\n${body}");
+      onError(log);
     }
   }
 
@@ -104,7 +105,7 @@ class WebMailApi {
       else
         return res["Result"];
     } else {
-      _onError(id, rawResponse.body);
+      _onError(token, id, rawResponse.body);
       if (res["ErrorCode"] == 102 || res["ErrorCode"] == 108) {
         _authErrorStreamCtrl.add(res["ErrorCode"]);
       }

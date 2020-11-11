@@ -1,6 +1,18 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DebugLocalStorage {
+  static const _debugEnable = "debugEnable";
+
+  Future setDebugEnable(bool enable) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool(_debugEnable, enable);
+  }
+
+  Future<bool> getDebugEnable() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(_debugEnable) ?? false;
+  }
+
   static const _debug = "debug";
 
   Future setDebug(bool enable) async {
@@ -12,6 +24,7 @@ class DebugLocalStorage {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getBool(_debug) ?? false;
   }
+
   static const _enableCounter = "enableCounter";
 
   Future setEnableCounter(bool enable) async {
@@ -23,6 +36,7 @@ class DebugLocalStorage {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getBool(_enableCounter) ?? false;
   }
+
   static const _backgroundRecord = "backgroundRecord";
 
   Future setBackgroundRecord(bool enable) async {

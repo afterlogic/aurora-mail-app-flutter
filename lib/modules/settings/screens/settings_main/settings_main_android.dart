@@ -1,22 +1,22 @@
 import 'package:aurora_mail/build_property.dart';
-import 'package:aurora_mail/logger/logger.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_event.dart';
 import 'package:aurora_mail/modules/settings/screens/about/about_route.dart';
 import 'package:aurora_mail/modules/settings/screens/common_settings/common_settings_route.dart';
+import 'package:aurora_mail/modules/settings/screens/debug/debug_local_storage.dart';
 import 'package:aurora_mail/modules/settings/screens/debug/debug_route.dart';
 import 'package:aurora_mail/modules/settings/screens/manage_users/manage_users_route.dart';
+import 'package:aurora_mail/modules/settings/screens/notifications_settings/notifications_settings_route.dart';
 import 'package:aurora_mail/modules/settings/screens/pgp_settings/pgp_settings_route.dart';
-import 'package:aurora_mail/modules/settings/screens/settings_main/settings_main_route.dart';
 import 'package:aurora_mail/modules/settings/screens/sync_settings/sync_settings_route.dart';
+import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
 import 'package:aurora_mail/shared_ui/mail_bottom_app_bar.dart';
 import 'package:aurora_mail/utils/base_state.dart';
-import 'package:aurora_mail/utils/internationalization.dart'; import 'package:aurora_mail/res/str/s.dart';
+import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:aurora_mail/modules/settings/screens/notifications_settings/notifications_settings_route.dart';
 
 class SettingsMainAndroid extends StatefulWidget {
   @override
@@ -25,6 +25,13 @@ class SettingsMainAndroid extends StatefulWidget {
 
 class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
   bool showDebug = false;
+  final storage = DebugLocalStorage();
+
+  @override
+  initState() {
+    super.initState();
+    storage.getDebugEnable().then((value) => setState(() => showDebug = value));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +74,10 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
             leading: AMCircleIcon(Icons.info_outline),
             title: Text(i18n(context, S.settings_about)),
             onLongPress: BuildProperty.logger
-                ? () => setState(() => showDebug = true)
+                ? () {
+                    storage.setDebugEnable(true);
+                    setState(() => showDebug = true);
+                  }
                 : null,
             onTap: () => Navigator.pushNamed(context, AboutRoute.name),
           ),

@@ -59,9 +59,10 @@ class Logger {
   }
 
   error(Object text, StackTrace stackTrace, [bool show = true]) {
-    stackTrace??=StackTrace.current;
+    stackTrace ??= StackTrace.current;
     final time = DateFormat("hh:mm:ss.SSS").format(DateTime.now());
-    text = "____________________________\n\nError:${text}\n${stackTrace.toString()}\n\n____________________________";
+    text =
+        "____________________________\n\nError:${text}\n${stackTrace.toString()}\n\n____________________________";
     if (show == true) print("[$time] $text");
     if (isRun) {
       buffer += "[$time] ${"$text".replaceAll("\n", newLine)}$newLine$newLine";
@@ -83,12 +84,21 @@ class Logger {
   static Logger backgroundSync(ApiInterceptor apiInterceptor) {
     return Logger._("Background_sync", apiInterceptor);
   }
-  static errorLog(Object error,StackTrace stackTrace) {
-    return Logger._("Error")..start()..error(error, stackTrace)..save();
+
+  static errorLog(Object error, StackTrace stackTrace) {
+    return Logger._("Error")
+      ..start()
+      ..error(error, stackTrace)
+      ..save();
   }
+
   static notifications(Object value) {
-    return Logger._("Notifications")..start()..log(value)..save();
+    return Logger._("Notifications")
+      ..start()
+      ..log(value)
+      ..save();
   }
+
   start() {
     isRun = true;
     if (onEdit != null) onEdit();
@@ -97,7 +107,6 @@ class Logger {
   clear() {
     buffer = "";
     count = 0;
-    isRun = false;
     if (onEdit != null) onEdit();
   }
 
@@ -120,7 +129,6 @@ class Logger {
     }
     buffer = "";
     count = 0;
-    isRun = false;
     if (onEdit != null) onEdit();
   }
 
