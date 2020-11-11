@@ -9,6 +9,7 @@ import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_mode
 import 'package:aurora_mail/modules/mail/models/compose_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/temp_attachment_upload.dart';
+import 'package:aurora_mail/utils/download_directory.dart';
 import 'package:aurora_mail/utils/file_utils.dart';
 import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/foundation.dart';
@@ -267,9 +268,7 @@ class MailApi {
     @required Function() onDownloadStart,
     @required Function(String) onDownloadEnd,
   }) async {
-    final downloadsDirectories =
-        await getExternalStorageDirectories(type: StorageDirectory.downloads);
-    final downloadsDirectory = downloadsDirectories[0];
+    final downloadsDirectory =await getDownloadDirectory();
 
     await attachment.startDownload(
       onDownloadStart: () async {
@@ -278,13 +277,13 @@ class MailApi {
 //        FlutterDownloader.registerCallback(MailAttachment.downloadCallback);
       },
       onDownloadEnd: () =>
-          onDownloadEnd("${downloadsDirectory.path}/${attachment.fileName}"),
+          onDownloadEnd("${downloadsDirectory}/${attachment.fileName}"),
       onError: () => onDownloadEnd(null),
     );
 
     final taskId = await FlutterDownloader.enqueue(
       url: _mailModule.hostname + attachment.downloadUrl,
-      savedDir: downloadsDirectory.path,
+      savedDir: downloadsDirectory,
       fileName: attachment.fileName,
       headers: _mailModule.headerWithToken,
     );
