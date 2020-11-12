@@ -1,24 +1,20 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:aurora_mail/utils/mail_utils.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:html/parser.dart' as html;
 import 'package:webview_flutter/webview_flutter.dart';
 
 class ComposeWebViewController {
   String _text = "";
   WebViewController _webViewController;
-  BuildContext _context;
+  bool _isHtml = true;
 
-  void setText(String text) {
+  Future setText(String text) async {
     _text = text;
-
     if (_webViewController != null) {
-      final html = _formatToWebView(text);
-      _webViewController.loadUrl(html);
+      await _webViewController.evaluateJavascript("setBodyContent(${json.encode(text)})");
     }
   }
 
@@ -33,50 +29,21 @@ class ComposeWebViewController {
     }
   }
 
-  String _formatToWebView(String text) {
-    var htmlData = MailUtils.wrapInHtmlEditor(
-      _context,
-      text ?? "",
-    );
-    return Uri.dataFromString(
-      htmlData,
-      mimeType: 'text/html',
-      encoding: Encoding.getByName('utf-8'),
-    ).toString();
-    htmlData = htmlData
-        .replaceAll("data-x-src=", "src=")
-        .replaceAll("src=\"http:", "src=\"https:");
-
-    final document = html.parse(htmlData);
-
-    void getAllChildren(nodes) {
-      nodes.forEach((c) {
-        c.nodes.forEach((node) {
-          if (node.attributes.containsKey("data-x-style-url") as bool) {
-            var backgroundImageUrl =
-                node.attributes["data-x-style-url"] as String;
-            backgroundImageUrl =
-                backgroundImageUrl.replaceAll("http://", "https://");
-            node.attributes.remove("data-x-style-url");
-
-            String style = node.attributes["style"] as String;
-            style = style.endsWith(";") ? style : style + "; ";
-            style += backgroundImageUrl;
-            node.attributes["style"] = style;
-          }
-        });
-
-        getAllChildren(c.nodes);
-      });
+  setIsHtml(bool html) async {
+    _isHtml = html;
+    if (_webViewController != null) {
+      if (html) {
+        await _webViewController.evaluateJavascript("setHtml()");
+      } else {
+        await _webViewController.evaluateJavascript("setPlain()");
+      }
     }
+  }
 
-    getAllChildren(document.nodes.toList());
-    htmlData = document.outerHtml;
-    return Uri.dataFromString(
-      htmlData,
-      mimeType: 'text/html',
-      encoding: Encoding.getByName('utf-8'),
-    ).toString();
+  init(WebViewController webViewController) {
+    _webViewController = webViewController;
+    setText(_text);
+    setIsHtml(_isHtml);
   }
 }
 
@@ -92,10 +59,21 @@ class ComposeWebView extends StatefulWidget {
 
 class _ComposeWebViewState extends State<ComposeWebView> {
   WebViewController _ctrl;
+  String initUrl;
 
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    var htmlData = MailUtils.wrapInHtmlEditor(
+      context,
+      "",
+      true,
+    );
+    initUrl = Uri.dataFromString(
+      htmlData,
+      mimeType: 'text/html',
+      encoding: Encoding.getByName('utf-8'),
+    ).toString();
   }
 
   @override
@@ -120,9 +98,8 @@ class _ComposeWebViewState extends State<ComposeWebView> {
     );
   }
 
-  init() {
-    widget.textCtrl._context = context;
-    widget.textCtrl._webViewController = _ctrl;
-    widget.textCtrl.setText(widget.textCtrl._text);
+  init() async{
+   await _ctrl.loadUrl(initUrl);
+    widget.textCtrl.init(_ctrl);
   }
 }

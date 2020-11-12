@@ -251,6 +251,7 @@ class MailUtils {
   static String wrapInHtmlEditor(
     BuildContext context,
     String text,
+    bool isHtml,
   ) {
     final theme = Theme.of(context);
     return "<!doctype html>" +
@@ -358,12 +359,21 @@ class MailUtils {
     </style>
     <script>      
     window.getBodyContent = function () {
-    console.log(document.body);
     return document.body.innerHTML;
+    }
+    window.setBodyContent = function (content) {
+      document.body.innerHTML=content;
+    }
+    window.setPlain = function () {
+     document.body.style = "white-space: pre;";
+    }
+    
+    window.setHtml = function () {
+        document.body.style = "";
     }
     </script>
   </head>
-  <body contenteditable="true">
+  <body contenteditable="true" ${!isHtml ? "style=\"white-space: pre;\"" : ""}>
     $text
   </body>
 </html>

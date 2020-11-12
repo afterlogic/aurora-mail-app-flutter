@@ -433,7 +433,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
             final body = await _bloc.encryptBody(
               EncryptBody(
                 contact,
-                await _bodyTextCtrl.getText(),
+                MailUtils.htmlToPlain(await _bodyTextCtrl.getText()),
                 false,
                 true,
                 password,
@@ -472,7 +472,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
             final body = await _bloc.encryptBody(
               EncryptBody(
                 contact,
-                await _bodyTextCtrl.getText(),
+                MailUtils.htmlToPlain(await _bodyTextCtrl.getText()),
                 true,
                 false,
                 null,
@@ -514,7 +514,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
                 to: toEmails.join(","),
                 cc: ccEmails.join(","),
                 bcc: bccEmails.join(","),
-                isHtml: false,
+                isHtml: true,
                 subject: _subjectTextCtrl.text,
                 composeAttachments:
                     new List<ComposeAttachment>.from(_attachments),
@@ -534,7 +534,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
           to: _toEmails.join(","),
           cc: _ccEmails.join(","),
           bcc: _bccEmails.join(","),
-          isHtml: true,
+          isHtml: _encryptType == EncryptType.None,
           subject: _subjectTextCtrl.text,
           composeAttachments: new List<ComposeAttachment>.from(_attachments),
           messageText: await _bodyTextCtrl.getText(),
@@ -647,6 +647,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
 
   _encryptLock(EncryptComplete state) async {
     decryptBody = await _bodyTextCtrl.getText();
+    _bodyTextCtrl.setIsHtml(false);
     _bodyTextCtrl.setText(state.text);
     _encryptType = state.type;
 
@@ -654,6 +655,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
   }
 
   _decrypt() {
+    _bodyTextCtrl.setIsHtml(true);
     if (decryptBody != null) {
       _bodyTextCtrl.setText(decryptBody);
       decryptBody = null;
@@ -696,7 +698,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
 
       _bloc.add(EncryptBody(
         contact,
-        (await _bodyTextCtrl.getText()),
+        MailUtils.htmlToPlain(await _bodyTextCtrl.getText()),
         result.encrypt,
         result.sign,
         password,
@@ -1009,7 +1011,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
 
   _createSelfDestructingEmail() async {
     final subject = _subjectTextCtrl.text;
-    final body = await _bodyTextCtrl.getText();
+    final body = MailUtils.htmlToPlain(await _bodyTextCtrl.getText());
 
     if (_toEmails.isEmpty) {
       return showSnack(
