@@ -239,12 +239,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   Stream<AuthState> _deleteUser(DeleteUser event) async* {
-    await AlarmService.removeAlarm(ALARM_ID);
+    AlarmService.removeAlarm(ALARM_ID);
     try {
       if (users.length == 1) {
-       await _methods.setFbToken(users,true);
+        _methods.setFbToken(users, true);
       }
-      await _methods.logout(currentUser.localId, event.user);
+      _methods.logout(currentUser.localId, event.user);
       users = await _methods.users;
       if (users.isNotEmpty) {
         if (currentUser.localId != event.user.localId) {

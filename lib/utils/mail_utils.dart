@@ -195,17 +195,17 @@ class MailUtils {
   }
 
   static String getReplyBody(BuildContext context, Message message) {
-    final baseMessage = htmlToPlain(message.htmlBody ?? "");
+    final baseMessage = message.htmlBody;
     final time = DateFormatting.formatDateFromSeconds(
         message.timeStampInUTC, Localizations.localeOf(context).languageCode,
         format: i18n(context, S.format_compose_reply_date));
 
     final from = getDisplayName(message.fromInJson);
 
-    return "\n\n${i18n(context, S.compose_reply_body_title, {
+    return "<br><br><br>${i18n(context, S.compose_reply_body_title, {
       "time": time,
       "from": from
-    })}\n$baseMessage";
+    })}<br><blockquote>$baseMessage</blockquote>";
   }
 
   static String getForwardSubject(Message message) {
@@ -216,7 +216,7 @@ class MailUtils {
     final baseMessage = htmlToPlain(message.htmlBody ?? "");
 
     String forwardMessage =
-        "\n\n${i18n(context, S.compose_forward_body_original_message)}\n";
+        "<br><br>${i18n(context, S.compose_forward_body_original_message)}<br>";
 
     final from = MailUtils.getEmails(message.fromInJson).join(", ");
     final to = MailUtils.getEmails(message.toInJson).join(", ");
@@ -225,27 +225,150 @@ class MailUtils {
 
     if (from.isNotEmpty)
       forwardMessage +=
-          i18n(context, S.compose_forward_from, {"emails": from}) + "\n";
+          i18n(context, S.compose_forward_from, {"emails": from}) + "<br>";
     if (to.isNotEmpty)
       forwardMessage +=
-          i18n(context, S.compose_forward_to, {"emails": to}) + "\n";
+          i18n(context, S.compose_forward_to, {"emails": to}) + "<br>";
     if (cc.isNotEmpty)
       forwardMessage +=
-          i18n(context, S.compose_forward_cc, {"emails": cc}) + "\n";
+          i18n(context, S.compose_forward_cc, {"emails": cc}) + "<br>";
     if (bcc.isNotEmpty)
       forwardMessage +=
-          i18n(context, S.compose_forward_bcc, {"emails": bcc}) + "\n";
+          i18n(context, S.compose_forward_bcc, {"emails": bcc}) + "<br>";
 
     final date = DateFormatting.formatDateFromSeconds(
         message.timeStampInUTC, Localizations.localeOf(context).languageCode,
         format: i18n(context, S.format_compose_forward_date));
     forwardMessage +=
-        i18n(context, S.compose_forward_sent, {"date": date}) + "\n";
+        i18n(context, S.compose_forward_sent, {"date": date}) + "<br>";
 
     forwardMessage +=
         i18n(context, S.compose_forward_subject, {"subject": message.subject}) +
-            "\n\n";
+            "<br><br>";
     return forwardMessage + baseMessage;
+  }
+
+  static String wrapInHtmlEditor(
+    BuildContext context,
+    String text,
+  ) {
+    final theme = Theme.of(context);
+    return "<!doctype html>" +
+        """
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+      html, body {
+        margin: 0;
+        overflow-x: hidden;
+        padding: 10px;
+        color:${_getWebColor(DefaultTextStyle.of(context).style.color)};
+        background: ${_getWebColor(theme.scaffoldBackgroundColor)};
+      }
+      .primary-color {
+        color:#224ea1;
+      }
+      body {
+        font-family: sans-serif;
+        min-height: 100vh;
+      }
+      .container {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+      .flex {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+      }
+      .row {
+        display: flex;
+        flex-direction: row;
+        padding: 5px 0px;
+      }
+      .disabled-text {
+        opacity: 0.3;
+        font-size: 14px; 
+        margin-top: 7px;
+      }
+      .icon-btn {
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        outline: 0;
+      }
+      .email-content {
+        background-color: white;
+        word-break: break-all;
+        overflow-x: scroll;
+        flex: 1;
+      }
+      .attachment {
+        display: flex;
+        align-items: center;
+        margin-bottom: 22px;
+      }
+      .attachment .leading, .attachment .leading img {
+        height: 50px;
+        width: 50px;
+      }
+      .attachment .leading {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        margin-right: 16px;
+        object-fit: cover;
+        border-radius: 10px;
+      }
+      .folder_label {
+       display: flex;
+       border-radius: 15px;
+       background: #609;
+      }
+      .toggle {
+        text-decoration: none;
+      }
+      .toggle-content {
+      	display: none;
+      }
+      .toggle-content.is-visible {
+        padding: 16px;
+        background: ${Color.lerp(
+          theme.scaffoldBackgroundColor,
+          theme.brightness == Brightness.dark ? Colors.white : Colors.black,
+          0.1,
+        ).toHex()};
+      	display: block;
+      }
+      .details-description {
+        width: 20%; 
+        color: ${(theme.brightness == Brightness.dark ? Colors.white : Colors.black).toHex()};
+        opacity: 0.4;
+      }
+      .details-value {
+        color: ${(theme.brightness == Brightness.dark ? Colors.white : Colors.black).toHex()};
+      }
+      blockquote {
+        border-left: solid 2px #000000;
+        margin: 4px 2px;
+        padding-left: 6px;
+      }
+    </style>
+    <script>      
+    window.getBodyContent = function () {
+    console.log(document.body);
+    return document.body.innerHTML;
+    }
+    </script>
+  </head>
+  <body contenteditable="true">
+    $text
+  </body>
+</html>
+    
+    """;
   }
 
   static String wrapInHtml(
@@ -303,7 +426,6 @@ class MailUtils {
         margin: 0;
         overflow-x: hidden;
         padding: 0;
-       
         background: ${_getWebColor(theme.scaffoldBackgroundColor)};
       }
       .primary-color {

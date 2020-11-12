@@ -17,6 +17,7 @@ import 'package:aurora_mail/modules/mail/models/temp_attachment_upload.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/components/automatically_encrypt_label.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/components/compose_bottom_bar.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/components/identity_selector.dart';
+import 'package:aurora_mail/modules/mail/screens/compose/components/web_view_wrap.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/compose_route.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/dialog/encrypt_dialog.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/self_destructing/bloc/self_destructing_bloc.dart';
@@ -43,9 +44,9 @@ import 'package:keyboard_actions/keyboard_actions.dart';
 
 import 'components/compose_app_bar.dart';
 import 'components/compose_attachment_item.dart';
-import 'components/compose_body.dart';
 import 'components/compose_emails.dart';
 import 'components/compose_subject.dart';
+import 'components/compose_web_view.dart';
 
 class ComposeAndroid extends StatefulWidget {
   final ComposeAction composeAction;
@@ -100,7 +101,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
   final _ccTextCtrl = new TextEditingController();
   final _bccTextCtrl = new TextEditingController();
   final _subjectTextCtrl = new TextEditingController();
-  final _bodyTextCtrl = new TextEditingController();
+  final _bodyTextCtrl = ComposeWebViewController();
   final _fromCtrl = TextEditingController();
 
   @override
@@ -111,15 +112,12 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
       account: widget.account,
     );
     _initSaveToDraftsTimer();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final authBloc = BlocProvider.of<AuthBloc>(context);
-
-    setIdentityOrSender(AliasOrIdentity(null, authBloc.currentIdentity));
-    _prepareMessage();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      final authBloc = BlocProvider.of<AuthBloc>(context);
+      await setIdentityOrSender(
+          AliasOrIdentity(null, authBloc.currentIdentity));
+      _prepareMessage();
+    });
   }
 
   @override
@@ -149,7 +147,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
   }
 
   void _initWithAttachment(InitWithAttachment action) {
-    _bodyTextCtrl.text = action.message.join("\n\n");
+    initBody(action.message.join("\n\n"));
     _bloc.add(UploadAttachments(action.files));
   }
 
@@ -180,14 +178,14 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
       });
     }
     _subjectTextCtrl.text = _message.subject;
-    _bodyTextCtrl.text = _message.rawBody;
+    _bodyTextCtrl.setText(_message.rawBody);
   }
 
   void _initForward(Forward action) async {
     _message = action.message;
     _bloc.add(GetMessageAttachments(_message));
     _subjectTextCtrl.text = MailUtils.getForwardSubject(_message);
-    _bodyTextCtrl.text = MailUtils.getForwardBody(context, _message);
+    initBody(MailUtils.getForwardBody(context, _message));
   }
 
   void _initReply(Reply action) async {
@@ -199,7 +197,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
       });
     }
     _subjectTextCtrl.text = MailUtils.getReplySubject(_message);
-    _bodyTextCtrl.text = MailUtils.getReplyBody(context, _message);
+    initBody(MailUtils.getReplyBody(context, _message));
   }
 
   void _initResend(Resend action) async {
@@ -211,9 +209,9 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
       });
     }
     _subjectTextCtrl.text = MailUtils.htmlToPlain(_message.subject);
-    _bodyTextCtrl.text = MailUtils.htmlToPlain(
+    initBody(MailUtils.htmlToPlain(
       _message.isHtml ? _message.htmlBody : _message.rawBody,
-    );
+    ));
   }
 
   void _initReplyAll(ReplyToAll action) async {
@@ -233,7 +231,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
       });
     }
     _subjectTextCtrl.text = MailUtils.getReplySubject(_message);
-    _bodyTextCtrl.text = MailUtils.getReplyBody(context, _message);
+    initBody(MailUtils.getReplyBody(context, _message));
   }
 
   void _initFromContacts(EmailToContacts action) {
@@ -299,6 +297,10 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
     setState(() {
       _attachments.removeWhere((a) => a.guid == attachment.guid);
     });
+  }
+
+  void initBody(String text) async {
+    _bodyTextCtrl.setText(await _bodyTextCtrl.getText() + "<br>" + text);
   }
 
   void _sendMessage() async {
@@ -392,7 +394,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
             final body = await _bloc.encryptBody(
               EncryptBody(
                 contact,
-                _bodyTextCtrl.text,
+                await _bodyTextCtrl.getText(),
                 true,
                 true,
                 password,
@@ -431,7 +433,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
             final body = await _bloc.encryptBody(
               EncryptBody(
                 contact,
-                _bodyTextCtrl.text,
+                await _bodyTextCtrl.getText(),
                 false,
                 true,
                 password,
@@ -470,7 +472,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
             final body = await _bloc.encryptBody(
               EncryptBody(
                 contact,
-                _bodyTextCtrl.text,
+                await _bodyTextCtrl.getText(),
                 true,
                 false,
                 null,
@@ -506,7 +508,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
             contact.addAll(bccEmails);
             contact.addAll(toEmails);
 
-            final body = _bodyTextCtrl.text;
+            final body = await _bodyTextCtrl.getText();
             messages.add(
               SendMessage(
                 to: toEmails.join(","),
@@ -532,10 +534,10 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
           to: _toEmails.join(","),
           cc: _ccEmails.join(","),
           bcc: _bccEmails.join(","),
-          isHtml: false,
+          isHtml: true,
           subject: _subjectTextCtrl.text,
           composeAttachments: new List<ComposeAttachment>.from(_attachments),
-          messageText: _bodyTextCtrl.text,
+          messageText: await _bodyTextCtrl.getText(),
           draftUid: _currentDraftUid,
           identity: identity,
           alias: alias,
@@ -549,7 +551,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
         isHtml: false,
         subject: _subjectTextCtrl.text,
         composeAttachments: new List<ComposeAttachment>.from(_attachments),
-        messageText: _bodyTextCtrl.text,
+        messageText: (await _bodyTextCtrl.getText()),
         draftUid: _currentDraftUid,
         identity: identity,
         alias: alias,
@@ -557,10 +559,10 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
     }
   }
 
-  bool get _hasMessageChanged {
+  Future<bool> get _hasMessageChanged async {
     if (_message != null) {
       final result = _subjectTextCtrl.text != _message.subject ||
-          _bodyTextCtrl.text != _message.rawBody ||
+          (await _bodyTextCtrl.getText()) != _message.rawBody ||
           !listEquals<String>(
               MailUtils.getEmails(_message.toInJson), _toEmails.toList()) ||
           !listEquals<String>(
@@ -573,7 +575,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
       }
       return result;
     } else {
-      return _bodyTextCtrl.text.isNotEmpty ||
+      return (await _bodyTextCtrl.getText()).isNotEmpty ||
           _subjectTextCtrl.text.isNotEmpty ||
           _toEmails.isNotEmpty ||
           _ccEmails.isNotEmpty ||
@@ -582,8 +584,8 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
     }
   }
 
-  void _saveToDrafts() {
-    if (!_hasMessageChanged) return;
+  void _saveToDrafts() async {
+    if (!await _hasMessageChanged) return;
 
     final attachmentsForSave =
         _attachments.where((a) => a is ComposeAttachment);
@@ -595,7 +597,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
       isHtml: false,
       subject: _subjectTextCtrl.text,
       composeAttachments: new List<ComposeAttachment>.from(attachmentsForSave),
-      messageText: _bodyTextCtrl.text,
+      messageText: (await _bodyTextCtrl.getText()),
       draftUid: _currentDraftUid,
       identity: identity,
       alias: alias,
@@ -643,9 +645,9 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
     );
   }
 
-  _encryptLock(EncryptComplete state) {
-    decryptBody = _bodyTextCtrl.text;
-    _bodyTextCtrl.text = state.text;
+  _encryptLock(EncryptComplete state) async {
+    decryptBody = await _bodyTextCtrl.getText();
+    _bodyTextCtrl.setText(state.text);
     _encryptType = state.type;
 
     setState(() {});
@@ -653,7 +655,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
 
   _decrypt() {
     if (decryptBody != null) {
-      _bodyTextCtrl.text = decryptBody;
+      _bodyTextCtrl.setText(decryptBody);
       decryptBody = null;
     }
     if (decryptTitle != null) {
@@ -694,7 +696,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
 
       _bloc.add(EncryptBody(
         contact,
-        _bodyTextCtrl.text,
+        (await _bodyTextCtrl.getText()),
         result.encrypt,
         result.sign,
         password,
@@ -723,10 +725,10 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
 //        break;
 //    }
 //  }
-  void setIdentityOrSender(AliasOrIdentity aliasOrIdentity) {
-    changeSignature(
-      MailUtils.htmlToPlain(AliasOrIdentity(alias, identity).signature),
-      MailUtils.htmlToPlain(aliasOrIdentity.signature ?? ""),
+  Future setIdentityOrSender(AliasOrIdentity aliasOrIdentity) async {
+    await changeSignature(
+      AliasOrIdentity(alias, identity)?.signature ?? "",
+      aliasOrIdentity.signature ?? "",
     );
     this.alias = aliasOrIdentity.alias;
     this.identity = aliasOrIdentity.identity;
@@ -734,21 +736,23 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
         IdentityView.solid(aliasOrIdentity.name, aliasOrIdentity.mail);
   }
 
-  void changeSignature(String oldSignature, String newSignature) {
+  void changeSignature(String oldSignature, String newSignature) async {
     if (oldSignature.isEmpty && newSignature.isEmpty) {
       return;
     }
-    var text = _bodyTextCtrl.text;
+    var text = await _bodyTextCtrl.getText();
     if (text.isEmpty) {
-      _bodyTextCtrl.text = text = "\n$newSignature";
+      text = "<br><br>$newSignature";
+      await _bodyTextCtrl.setText(text);
       return;
     }
+
     int startIndex;
     int endIndex;
     if (oldSignature.isEmpty) {
       startIndex = -1;
     } else {
-      startIndex = text.lastIndexOf(oldSignature);
+      startIndex = text.indexOf(oldSignature);
     }
     if (startIndex == -1) {
       startIndex = text.length;
@@ -758,7 +762,8 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
     }
     var signature = newSignature;
 
-    _bodyTextCtrl.text = text.replaceRange(startIndex, endIndex, signature);
+    await _bodyTextCtrl
+        .setText(text.replaceRange(startIndex, endIndex, signature));
   }
 
   void _showSnack(int code, [Map<String, String> arg]) {
@@ -819,25 +824,26 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
       child: Scaffold(
         key: _scaffoldKey,
         appBar: ComposeAppBar(_onAppBarActionSelected),
-        body: _keyboardActions(
-          BlocListener<ComposeBloc, ComposeState>(
-            listener: (context, state) {
-              if (state is EncryptComplete) _encryptLock(state);
+        body: BlocListener<ComposeBloc, ComposeState>(
+          listener: (context, state) {
+            if (state is EncryptComplete) _encryptLock(state);
 
-              if (state is MessageSending) _showSending();
-              if (state is MessageSent) _onMessageSent(context);
-              if (state is MessageSavedInDrafts)
-                _onMessageSaved(context, state.draftUid);
-              if (state is ComposeError) _showError(state.errorMsg, state.arg);
-              if (state is UploadStarted)
-                _setUploadProgress(state.tempAttachment);
-              if (state is AttachmentUploaded)
-                _onAttachmentUploaded(state.composeAttachment);
-              if (state is ReceivedComposeAttachments)
-                setState(() => _attachments.addAll(state.attachments));
-            },
-            child: SingleChildScrollView(
+            if (state is MessageSending) _showSending();
+            if (state is MessageSent) _onMessageSent(context);
+            if (state is MessageSavedInDrafts)
+              _onMessageSaved(context, state.draftUid);
+            if (state is ComposeError) _showError(state.errorMsg, state.arg);
+            if (state is UploadStarted)
+              _setUploadProgress(state.tempAttachment);
+            if (state is AttachmentUploaded)
+              _onAttachmentUploaded(state.composeAttachment);
+            if (state is ReceivedComposeAttachments)
+              setState(() => _attachments.addAll(state.attachments));
+          },
+          child: WebViewWrap(
+            topWidget: Container(
               child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   if (_encryptType == EncryptType.None)
                     AutomaticallyEncryptLabel(
@@ -954,17 +960,38 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
                     ),
                   ),
                   Divider(height: 0.0),
-                  ComposeBody(
-                    enable: ![
-                      EncryptType.SelfDestructingEncrypt,
-                      EncryptType.Encrypt,
-                      EncryptType.Sign
-                    ].contains(_encryptType),
-                    textCtrl: _bodyTextCtrl,
-                    focusNode: bodyNode,
-                  ),
                 ],
               ),
+            ),
+            closeWebView: (fun) => PreferredSize(
+              preferredSize: Size(double.infinity, 50),
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  border: Border(
+                    top: BorderSide(
+                      color: theme.appBarTheme.shadowColor ?? Colors.black12,
+                    ),
+                  ),
+                  color: theme.appBarTheme.color,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    FlatButton(
+                      onPressed: fun,
+                      child: Text("Done"),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            webView: ComposeWebView(
+              enable: ![
+                EncryptType.SelfDestructingEncrypt,
+                EncryptType.Encrypt,
+                EncryptType.Sign
+              ].contains(_encryptType),
+              textCtrl: _bodyTextCtrl,
             ),
           ),
         ),
@@ -982,7 +1009,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
 
   _createSelfDestructingEmail() async {
     final subject = _subjectTextCtrl.text;
-    final body = _bodyTextCtrl.text;
+    final body = await _bodyTextCtrl.getText();
 
     if (_toEmails.isEmpty) {
       return showSnack(
@@ -1026,11 +1053,11 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
         }
       }
       decryptTitle = _subjectTextCtrl.text;
-      decryptBody = _bodyTextCtrl.text;
+      decryptBody = await _bodyTextCtrl.getText();
 
       _subjectTextCtrl.text =
           i18n(context, S.template_self_destructing_message_title);
-      _bodyTextCtrl.text = result.body;
+      _bodyTextCtrl.setText(result.body);
       _attachments.clear();
       _ccEmails.clear();
       _bccEmails.clear();
