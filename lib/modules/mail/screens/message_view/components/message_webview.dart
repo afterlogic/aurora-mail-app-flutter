@@ -262,7 +262,6 @@ class MessageWebViewState extends BState<MessageWebView> {
   setStared(bool isStared) {
     _isStared = isStared;
     _mailBloc.add(SetStarred([widget.message], isStared));
-    _getHtmlWithImages();
   }
 
   FutureOr<NavigationDecision> _onWebViewNavigateRequestIos(
