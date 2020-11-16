@@ -43,11 +43,18 @@ class _WebViewWrapState extends State<WebViewWrap> {
   }
 
   setFocus(bool value) async {
-    scroll.animateTo(
-      value ? scroll.position.maxScrollExtent : scroll.position.minScrollExtent,
+    final position = value
+        ? scroll.position.maxScrollExtent
+        : scroll.position.minScrollExtent;
+    scroll
+        .animateTo(
+      position,
       duration: Duration(milliseconds: 100),
       curve: Curves.linear,
-    );
+    )
+        .then((_) {
+      scroll.jumpTo(position);
+    });
 
     if (value) {
       FocusScope.of(context).unfocus();
