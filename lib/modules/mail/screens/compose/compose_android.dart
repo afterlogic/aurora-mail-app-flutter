@@ -178,18 +178,20 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
       });
     }
     _subjectTextCtrl.text = _message.subject;
-    _bodyTextCtrl.setText(_message.rawBody);
+    initBodyFromMessage(_message.htmlBody, _message);
   }
 
   void _initForward(Forward action) async {
     _message = action.message;
+    _bodyTextCtrl.showImage = action.showImage;
     _bloc.add(GetMessageAttachments(_message));
     _subjectTextCtrl.text = MailUtils.getForwardSubject(_message);
-    initBody(MailUtils.getForwardBody(context, _message));
+    initBodyFromMessage(MailUtils.getForwardBody(context, _message), _message);
   }
 
   void _initReply(Reply action) async {
     _message = action.message;
+    _bodyTextCtrl.showImage = action.showImage;
     await _initSender(_message);
     if (_toEmails.isEmpty) {
       setState(() {
@@ -197,11 +199,12 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
       });
     }
     _subjectTextCtrl.text = MailUtils.getReplySubject(_message);
-    initBody(MailUtils.getReplyBody(context, _message));
+    initBodyFromMessage(MailUtils.getReplyBody(context, _message), _message);
   }
 
   void _initResend(Resend action) async {
     _message = action.message;
+    _bodyTextCtrl.showImage = action.showImage;
     await _initSender(_message);
     if (_toEmails.isEmpty) {
       setState(() {
@@ -209,13 +212,12 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
       });
     }
     _subjectTextCtrl.text = MailUtils.htmlToPlain(_message.subject);
-    initBody(MailUtils.htmlToPlain(
-      _message.isHtml ? _message.htmlBody : _message.rawBody,
-    ));
+    initBodyFromMessage(_message.htmlBody, _message);
   }
 
   void _initReplyAll(ReplyToAll action) async {
     _message = action.message;
+    _bodyTextCtrl.showImage = action.showImage;
     await _initSender(_message);
     if (_toEmails.isEmpty) {
       setState(() {
@@ -231,7 +233,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
       });
     }
     _subjectTextCtrl.text = MailUtils.getReplySubject(_message);
-    initBody(MailUtils.getReplyBody(context, _message));
+    initBodyFromMessage(MailUtils.getReplyBody(context, _message), _message);
   }
 
   void _initFromContacts(EmailToContacts action) {
@@ -297,6 +299,15 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
     setState(() {
       _attachments.removeWhere((a) => a.guid == attachment.guid);
     });
+  }
+
+  void initBodyFromMessage(String text, Message message) async {
+    final user = BlocProvider.of<AuthBloc>(context).currentUser;
+    _bodyTextCtrl.setMessage(
+      await _bodyTextCtrl.getText() + "<br>" + text,
+      message,
+      user,
+    );
   }
 
   void initBody(String text) async {
@@ -994,6 +1005,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
                 EncryptType.Sign
               ].contains(_encryptType),
               textCtrl: _bodyTextCtrl,
+              init: () {},
             ),
           ),
         ),

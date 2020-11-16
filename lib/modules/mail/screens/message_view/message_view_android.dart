@@ -48,6 +48,7 @@ class MessageViewAndroid extends StatefulWidget {
 
 class _MessageViewAndroidState extends BState<MessageViewAndroid>
     with TickerProviderStateMixin {
+  final webViewKey = GlobalKey<MessageWebViewState>();
   PgpSettingsBloc pgpBloc;
   ContactsBloc contactsBloc;
   MessageViewBloc _messageViewBloc;
@@ -112,6 +113,7 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
 
   void _onAppBarActionSelected(MailViewAppBarAction action) async {
     // ignore: close_sinks
+    final showImage = webViewKey.currentState.showImages;
     final mailBloc = BlocProvider.of<MailBloc>(context);
     final contactsBloc = BlocProvider.of<ContactsBloc>(context);
     final msg = widget.message;
@@ -120,7 +122,7 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
         final args = new ComposeScreenArgs(
           mailBloc: mailBloc,
           contactsBloc: contactsBloc,
-          composeAction: Reply(msg),
+          composeAction: Reply(msg,showImage),
         );
         Navigator.pushNamed(context, ComposeRoute.name, arguments: args);
         break;
@@ -128,7 +130,7 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
         final args = new ComposeScreenArgs(
           mailBloc: mailBloc,
           contactsBloc: contactsBloc,
-          composeAction: ReplyToAll(msg),
+          composeAction: ReplyToAll(msg,showImage),
         );
         Navigator.pushNamed(context, ComposeRoute.name, arguments: args);
         break;
@@ -136,7 +138,7 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
         final args = new ComposeScreenArgs(
           mailBloc: mailBloc,
           contactsBloc: contactsBloc,
-          composeAction: Forward(msg),
+          composeAction: Forward(msg,showImage),
         );
         Navigator.pushNamed(context, ComposeRoute.name, arguments: args);
         break;
@@ -145,7 +147,7 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
         final args = new ComposeScreenArgs(
           mailBloc: mailBloc,
           contactsBloc: contactsBloc,
-          composeAction: Resend(msg),
+          composeAction: Resend(msg,showImage),
         );
         Navigator.pushNamed(context, ComposeRoute.name, arguments: args);
         break;
@@ -168,7 +170,8 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
           ),
         );
         if (result == true) {
-          Navigator.popUntil(context, ModalRoute.withName(MessagesListRoute.name));
+          Navigator.popUntil(
+              context, ModalRoute.withName(MessagesListRoute.name));
         }
         break;
       case MailViewAppBarAction.showHeaders:
@@ -331,6 +334,7 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
                   pgpBloc,
                   contactsBloc,
                   _messageViewBloc,
+                  key: webViewKey,
                 ),
               ),
         bottomNavigationBar: BuildProperty.cryptoEnable

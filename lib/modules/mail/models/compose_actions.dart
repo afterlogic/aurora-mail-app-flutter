@@ -17,13 +17,17 @@ class OpenFromDrafts implements ComposeAction {
 class Forward implements ComposeAction {
   final Message message;
 
-  const Forward(this.message);
+  final bool showImage;
+
+  const Forward(this.message, this.showImage);
 }
 
 class Resend implements ComposeAction {
   final Message message;
 
-  const Resend(this.message);
+  final bool showImage;
+
+  const Resend(this.message, this.showImage);
 }
 class ForwardAsAttachment implements ComposeAction {
   final Message message;
@@ -34,13 +38,17 @@ class ForwardAsAttachment implements ComposeAction {
 class Reply implements ComposeAction {
   final Message message;
 
-  const Reply(this.message);
+  final bool showImage;
+
+  const Reply(this.message, this.showImage);
 }
 
 class ReplyToAll implements ComposeAction {
   final Message message;
 
-  const ReplyToAll(this.message);
+  final bool showImage;
+
+  const ReplyToAll(this.message, this.showImage);
 }
 
 class EmailToContacts implements ComposeAction {

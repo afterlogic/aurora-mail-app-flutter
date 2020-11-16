@@ -49,8 +49,11 @@ class _WebViewWrapState extends State<WebViewWrap> {
       curve: Curves.linear,
     );
 
-    FocusScope.of(context).unfocus();
-    SystemChannels.textInput.invokeMethod('TextInput.hide');
+    if (value) {
+      FocusScope.of(context).unfocus();
+    } else {
+      SystemChannels.textInput.invokeMethod('TextInput.hide');
+    }
     focused = value;
     setState(() {});
   }
