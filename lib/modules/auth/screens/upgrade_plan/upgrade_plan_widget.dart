@@ -1,4 +1,5 @@
 import 'package:aurora_mail/build_property.dart';
+import 'package:aurora_mail/modules/app_config/app_config.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/login_gradient.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/mail_logo.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/presentation_header.dart';
@@ -33,6 +34,8 @@ class UpgradePlanWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isTablet = AppConfig.of(context).isTablet;
+    final media = MediaQuery.of(context);
     return Scaffold(
       body: _gradientWrap(
         Stack(
@@ -44,6 +47,9 @@ class UpgradePlanWidget extends StatelessWidget {
                 child: MailLogo(isBackground: true),
               ),
             Container(
+              padding: isTablet
+                  ? EdgeInsets.symmetric(horizontal: media.size.width / 6)
+                  : null,
               margin: EdgeInsets.symmetric(horizontal: 22.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,

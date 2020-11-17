@@ -7,7 +7,6 @@ import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/messages_list_
 import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/messages_list_event.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/mail_folder.dart';
 import 'package:aurora_mail/res/str/s.dart';
-import 'package:aurora_mail/shared_ui/sized_dialog_content.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -49,19 +48,17 @@ class _MoveMessageDialogState extends State<MoveMessageDialog>
       child: AlertDialog(
         title: Text(i18n(context, S.label_message_move_to) +
             (current == null ? "" : FolderHelper.getTitle(context, current))),
-        content: SizedDialogContent(
-          child: BlocBuilder<MailBloc, MailState>(
-              bloc: BlocProvider.of<MailBloc>(context),
-              condition: (prevState, state) =>
-                  state is FoldersLoaded || state is FoldersEmpty,
-              builder: (ctx, state) {
-                if (state is FoldersLoaded) {
-                  return _buildFolders(state);
-                } else {
-                  return SizedBox.shrink();
-                }
-              }),
-        ),
+        content: BlocBuilder<MailBloc, MailState>(
+            bloc: BlocProvider.of<MailBloc>(context),
+            condition: (prevState, state) =>
+                state is FoldersLoaded || state is FoldersEmpty,
+            builder: (ctx, state) {
+              if (state is FoldersLoaded) {
+                return _buildFolders(state);
+              } else {
+                return SizedBox.shrink();
+              }
+            }),
         actions: <Widget>[
           FlatButton(
             child: Text(i18n(context, S.btn_message_move)),
@@ -80,9 +77,12 @@ class _MoveMessageDialogState extends State<MoveMessageDialog>
     final currentFolders = state.folders
         .where((item) => item.parentGuid == current?.guid)
         .toList();
-    return ListView.builder(
-      itemCount: currentFolders.length,
-      itemBuilder: (context, i) => _folder(currentFolders[i]),
+    final items =
+        List.generate(currentFolders.length, (i) => _folder(currentFolders[i]));
+    return SingleChildScrollView(
+      child: Column(
+        children: items,
+      ),
     );
   }
 

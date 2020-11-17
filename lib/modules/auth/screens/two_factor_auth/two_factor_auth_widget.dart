@@ -1,4 +1,5 @@
 import 'package:aurora_mail/build_property.dart';
+import 'package:aurora_mail/modules/app_config/app_config.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/auth/blocs/two_factor_auth/bloc.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/auth_input.dart';
@@ -57,6 +58,7 @@ class _TwoFactorAuthWidgetState extends BState<TwoFactorAuthWidget> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: widget.args.isDialog
           ? AMAppBar(
@@ -88,7 +90,8 @@ class _TwoFactorAuthWidgetState extends BState<TwoFactorAuthWidget> {
 
   Widget _buildPinForm(BuildContext context, TwoFactorState state) {
     final loading = state is ProgressState || state is CompleteState;
-
+    final isTablet = AppConfig.of(context).isTablet;
+    final media = MediaQuery.of(context);
     return Stack(
       children: <Widget>[
         if (!widget.args.isDialog && !BuildProperty.useMainLogo)
@@ -98,6 +101,9 @@ class _TwoFactorAuthWidgetState extends BState<TwoFactorAuthWidget> {
             child: MailLogo(isBackground: true),
           ),
         Container(
+          padding: isTablet
+              ? EdgeInsets.symmetric(horizontal: media.size.width / 6)
+              : null,
           margin: EdgeInsets.symmetric(horizontal: 22.0),
           child: Form(
             key: formKey,

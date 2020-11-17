@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:aurora_mail/inject/app_inject.dart';
+import 'package:aurora_mail/modules/app_config/app_config.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 import 'package:aurora_mail/modules/contacts/screens/contact_edit/contact_edit_route.dart';
@@ -72,76 +73,88 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: ContactsAppBar(),
-      drawer: ContactsDrawer(),
-      body: BlocListener(
-        bloc: pgpSettingsBloc,
-        listener: (BuildContext context, state) {
-          if (state is SelectKeyForImport) {
-            _importKey(state.userKeys, state.contactKeys);
+    final isTablet = AppConfig.of(context).isTablet;
+    Widget body = BlocListener(
+      bloc: pgpSettingsBloc,
+      listener: (BuildContext context, state) {
+        if (state is SelectKeyForImport) {
+          _importKey(state.userKeys, state.contactKeys);
+          return;
+        }
+      },
+      child: BlocListener<ContactsBloc, ContactsState>(
+        listener: (context, state) {
+          if (state.key != null) {
+            pgpSettingsBloc.add(ParseKey(state.key));
             return;
           }
-        },
-        child: BlocListener<ContactsBloc, ContactsState>(
-          listener: (context, state) {
-            if (state.key != null) {
-              pgpSettingsBloc.add(ParseKey(state.key));
-              return;
-            }
-            if (state.error != null) {
-              _completeRefresh();
-              showErrorSnack(
-                context: context,
-                scaffoldState: Scaffold.of(context),
-                msg: state.error,
-              );
-            }
+          if (state.error != null) {
+            _completeRefresh();
+            showErrorSnack(
+              context: context,
+              scaffoldState: Scaffold.of(context),
+              msg: state.error,
+            );
+          }
 
-            if (state.currentlySyncingStorages != null) {
-              if (state.showAllVisibleContacts == true) {
+          if (state.currentlySyncingStorages != null) {
+            if (state.showAllVisibleContacts == true) {
+              if (state.currentlySyncingStorages.isEmpty) {
+                // for "All" storage
+                _completeRefresh();
+              }
+            } else {
+              if (state.selectedGroup != null) {
                 if (state.currentlySyncingStorages.isEmpty) {
-                  // for "All" storage
+                  // for groups
                   _completeRefresh();
                 }
-              } else {
-                if (state.selectedGroup != null) {
-                  if (state.currentlySyncingStorages.isEmpty) {
-                    // for groups
-                    _completeRefresh();
-                  }
-                } else if (state.showAllVisibleContacts != true &&
-                    !state.currentlySyncingStorages
-                        .contains(state.selectedStorage)) {
-                  // for storages
-                  _completeRefresh();
-                }
+              } else if (state.showAllVisibleContacts != true &&
+                  !state.currentlySyncingStorages
+                      .contains(state.selectedStorage)) {
+                // for storages
+                _completeRefresh();
               }
             }
+          }
+        },
+        child: RefreshIndicator(
+          key: _refreshKey,
+          onRefresh: () {
+            BlocProvider.of<ContactsBloc>(context).add(GetContacts());
+            return _refreshCompleter.future;
           },
-          child: RefreshIndicator(
-            key: _refreshKey,
-            onRefresh: () {
-              BlocProvider.of<ContactsBloc>(context).add(GetContacts());
-              return _refreshCompleter.future;
-            },
-            backgroundColor: Colors.white,
-            color: Colors.black,
-            child: BlocBuilder<ContactsBloc, ContactsState>(
-                builder: (context, state) {
-              if (state.contacts == null ||
-                  state.contacts.isEmpty &&
-                      state.currentlySyncingStorages
-                          .contains(state.selectedStorage))
-                return _buildLoading(state);
-              else if (state.contacts.isEmpty)
-                return _buildContactsEmpty(state);
-              else
-                return _buildContacts(context, state);
-            }),
-          ),
+          backgroundColor: Colors.white,
+          color: Colors.black,
+          child: BlocBuilder<ContactsBloc, ContactsState>(
+              builder: (context, state) {
+            if (state.contacts == null ||
+                state.contacts.isEmpty &&
+                    state.currentlySyncingStorages
+                        .contains(state.selectedStorage))
+              return _buildLoading(state);
+            else if (state.contacts.isEmpty)
+              return _buildContactsEmpty(state);
+            else
+              return _buildContacts(context, state);
+          }),
         ),
       ),
+    );
+    if (isTablet) {
+      body = Row(
+        children: [
+          ClipRRect(child: ContactsDrawer()),
+          Flexible(
+            child: body,
+          ),
+        ],
+      );
+    }
+    return Scaffold(
+      appBar: ContactsAppBar(),
+      drawer: isTablet ? null : ContactsDrawer(),
+      body: body,
       bottomNavigationBar:
           MailBottomAppBar(selectedRoute: MailBottomAppBarRoutes.contacts),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,

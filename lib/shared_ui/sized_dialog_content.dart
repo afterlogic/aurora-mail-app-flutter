@@ -1,3 +1,4 @@
+import 'package:aurora_mail/modules/app_config/app_config.dart';
 import 'package:flutter/material.dart';
 
 class SizedDialogContent extends StatelessWidget {
@@ -7,10 +8,16 @@ class SizedDialogContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final isTablet = AppConfig
+        .of(context)
+        .isTablet;
+    final divided = isTablet ? 2 : 2;
+    final size = MediaQuery
+        .of(context)
+        .size;
     return SizedBox(
-      width: size.height / 2,
-      height: size.height / 2,
+      width: size.width /divided,
+      height: size.height / divided,
       child: child,
     );
   }

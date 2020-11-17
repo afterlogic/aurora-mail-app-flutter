@@ -1,5 +1,6 @@
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/modules/app_config/app_config.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/auth_input.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/host_input_formatter.dart';
@@ -53,10 +54,7 @@ class _LoginAndroidState extends BState<LoginAndroid> {
   @override
   void initState() {
     super.initState();
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
+
     if (kDebugMode) {
       hostCtrl.text = AuthData.host;
       emailCtrl.text = AuthData.email;
@@ -67,7 +65,13 @@ class _LoginAndroidState extends BState<LoginAndroid> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-
+    final isTablet = AppConfig.of(context).isTablet;
+    if (!isTablet) {
+      SystemChrome.setPreferredOrientations([
+        DeviceOrientation.portraitUp,
+        DeviceOrientation.portraitDown,
+      ]);
+    }
     if (widget.isDialog == true) {
       if (widget.email != null) emailCtrl.text = widget.email;
     } else {
@@ -133,7 +137,6 @@ class _LoginAndroidState extends BState<LoginAndroid> {
   @override
   Widget build(BuildContext context) {
     final authBloc = BlocProvider.of<AuthBloc>(context);
-
     return Scaffold(
       appBar: widget.isDialog
           ? AMAppBar(
@@ -235,6 +238,8 @@ class _LoginAndroidState extends BState<LoginAndroid> {
   }
 
   Widget _buildLoginForm(BuildContext context, {bool loading = false}) {
+    final isTablet = AppConfig.of(context).isTablet;
+    final media = MediaQuery.of(context);
     return Stack(
       children: <Widget>[
         if (!widget.isDialog && !BuildProperty.useMainLogo)
@@ -244,6 +249,9 @@ class _LoginAndroidState extends BState<LoginAndroid> {
             child: MailLogo(isBackground: true),
           ),
         Container(
+          padding: isTablet
+              ? EdgeInsets.symmetric(horizontal: media.size.width / 6)
+              : null,
           margin: EdgeInsets.symmetric(horizontal: 22.0),
           child: Form(
             key: LoginAndroid._authFormKey,

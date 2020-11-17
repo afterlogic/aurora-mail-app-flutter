@@ -16,7 +16,7 @@ class ComposeWebViewController {
   bool _isHtml = true;
   bool showImage = false;
 
-  Future setMessage(String text, Message message,User user) async {
+  Future setMessage(String text, Message message, User user) async {
     if (showImage) {
       text = text
           .replaceAll("data-x-src=", "src=")
@@ -118,6 +118,12 @@ class ComposeWebView extends StatefulWidget {
 class _ComposeWebViewState extends State<ComposeWebView> {
   WebViewController _ctrl;
   String initUrl;
+
+  @override
+  initState() {
+    super.initState();
+    print("initState");
+  }
 
   @override
   void didChangeDependencies() {

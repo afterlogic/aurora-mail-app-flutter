@@ -1,3 +1,4 @@
+import 'package:aurora_mail/modules/app_config/app_config.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_group_model.dart';
@@ -104,9 +105,14 @@ class _GroupEditAndroidState extends BState<GroupEditAndroid>
 
   @override
   Widget build(BuildContext context) {
+    final isTablet = AppConfig.of(context).isTablet;
+    final media = MediaQuery.of(context);
     return Scaffold(
       appBar: GroupEditAppBar(_onAppBarActionSelected, widget.group != null),
       body: ListView(
+        padding: isTablet
+            ? EdgeInsets.symmetric(horizontal: media.size.width / 6)
+            : null,
         children: <Widget>[
           _buildInput(S.contacts_view_section_group_name, _nameCtrl),
           SwitchListTile.adaptive(

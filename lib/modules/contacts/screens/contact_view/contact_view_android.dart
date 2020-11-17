@@ -1,5 +1,6 @@
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/config.dart';
+import 'package:aurora_mail/modules/app_config/app_config.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
@@ -431,7 +432,8 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
     }
 
     final groupInfo = _buildGroups(c.groupUUIDs);
-
+    final isTablet = AppConfig.of(context).isTablet;
+    final media = MediaQuery.of(context);
     return Scaffold(
       appBar: ContactViewAppBar(
         name: c.fullName,
@@ -467,6 +469,9 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
           }
         },
         child: ListView(
+          padding: isTablet
+              ? EdgeInsets.symmetric(horizontal: media.size.width / 6)
+              : null,
           children: <Widget>[
             ..._mainInfo,
             if (personalInfo.isNotEmpty) Divider(indent: 16.0, endIndent: 16.0),

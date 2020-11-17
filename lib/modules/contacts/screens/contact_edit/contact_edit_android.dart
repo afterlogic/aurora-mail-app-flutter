@@ -1,5 +1,6 @@
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/config.dart';
+import 'package:aurora_mail/modules/app_config/app_config.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
@@ -13,6 +14,7 @@ import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_dialog.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:crypto_model/crypto_model.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -305,6 +307,8 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
 
   @override
   Widget build(BuildContext context) {
+    final isTablet = AppConfig.of(context).isTablet;
+    final media = MediaQuery.of(context);
     return Scaffold(
       appBar: ContactEditAppBar(
         _onAppBarActionSelected,
@@ -312,6 +316,9 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
       ),
       body: Form(
         child: ListView(
+          padding: isTablet
+              ? EdgeInsets.symmetric(horizontal: media.size.width / 6)
+              : null,
           children: <Widget>[
             ContactInput(S.contacts_view_display_name, _fullName),
             _buildPrimaryEmail(),

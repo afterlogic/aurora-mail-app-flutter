@@ -1,3 +1,4 @@
+import 'package:aurora_mail/modules/app_config/app_config.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/modules/settings/models/language.dart';
 import 'package:aurora_mail/modules/settings/screens/common_settings/components/theme_selection_dialog.dart';
@@ -29,11 +30,13 @@ class _CommonSettingsAndroidState extends BState<CommonSettingsAndroid> {
   Widget build(BuildContext context) {
     // ignore: close_sinks
     final bloc = BlocProvider.of<SettingsBloc>(context);
-
+    final isTablet = AppConfig.of(context).isTablet;
     return Scaffold(
-      appBar: AMAppBar(
-        title: Text(i18n(context, S.settings_common)),
-      ),
+      appBar: isTablet
+          ? null
+          : AMAppBar(
+              title: Text(i18n(context, S.settings_common)),
+            ),
       body: BlocBuilder<SettingsBloc, SettingsState>(
         builder: (_, state) {
           if (state is SettingsLoaded) {

@@ -4,8 +4,9 @@ import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/messages_list_state.dart';
 import 'package:aurora_mail/res/icons/app_assets.dart';
+import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/shared_ui/svg_icon.dart';
-import 'package:aurora_mail/utils/internationalization.dart'; import 'package:aurora_mail/res/str/s.dart';
+import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -24,12 +25,16 @@ class MailFolder extends StatelessWidget {
       : super(key: key);
 
   void _selectFolder(BuildContext context) {
-    Navigator.pop(context);
+    if (Navigator.canPop(context)) {
+      Navigator.pop(context);
+    }
     BlocProvider.of<MailBloc>(context).add(SelectFolder(mailFolder));
   }
 
   void _selectUnreadOnly(BuildContext context) {
-    Navigator.pop(context);
+    if (Navigator.canPop(context)) {
+      Navigator.pop(context);
+    }
     BlocProvider.of<MailBloc>(context)
         .add(SelectFolder(mailFolder, filter: MessagesFilter.unread));
   }
