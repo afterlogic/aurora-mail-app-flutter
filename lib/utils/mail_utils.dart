@@ -417,7 +417,7 @@ class MailUtils {
       return (jsonDecode(json)["@Collection"] as List)
           .map((item) =>
       (item["DisplayName"]?.isNotEmpty == true
-          ? (item["DisplayName"] + " (${item["Email"]})")
+          ? (item["DisplayName"])
           : item["Email"]) as String)
           .toList();
     }
