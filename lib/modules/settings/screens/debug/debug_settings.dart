@@ -1,10 +1,12 @@
 import 'dart:io';
 import 'package:aurora_mail/logger/logger.dart';
+import 'package:aurora_mail/modules/app_config/app_config.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/settings/screens/debug/debug_local_storage.dart';
 import 'package:aurora_mail/modules/settings/screens/debug/log_screen/log_route.dart';
 import 'package:aurora_mail/utils/base_state.dart';
-import 'package:aurora_mail/utils/internationalization.dart'; import 'package:aurora_mail/res/str/s.dart';
+import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -44,10 +46,13 @@ class _DebugSettingState extends BState<DebugSetting> {
 
   @override
   Widget build(BuildContext context) {
+    final isTablet = AppConfig.of(context).isTablet;
     return Scaffold(
-      appBar: AMAppBar(
-        title: Text("Debug"),
-      ),
+      appBar: isTablet
+          ? null
+          : AMAppBar(
+              title: Text("Debug"),
+            ),
       body: _debug == null
           ? SizedBox.shrink()
           : Column(

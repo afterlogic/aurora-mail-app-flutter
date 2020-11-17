@@ -387,5 +387,6 @@
   "btn_not_spam": "Not spam",
   "error_password_is_empty": "password is empty",
   "label_encryption_password_for_pgp_key": "Required password for PGP key",
-  "hint_log_delete_record": "Are you sure you want to delete file {name}"
+  "hint_log_delete_record": "Are you sure you want to delete file {name}",
+  "error_timeout": "Can't connect to the server"
 }

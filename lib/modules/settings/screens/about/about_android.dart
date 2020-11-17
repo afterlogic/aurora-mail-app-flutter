@@ -1,6 +1,8 @@
 import 'package:aurora_mail/build_property.dart';
+import 'package:aurora_mail/modules/app_config/app_config.dart';
+import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/utils/base_state.dart';
-import 'package:aurora_mail/utils/internationalization.dart'; import 'package:aurora_mail/res/str/s.dart';
+import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -20,11 +22,19 @@ class _AboutAndroidState extends BState<AboutAndroid> {
   @override
   void initState() {
     super.initState();
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
     _initAppInfo();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final isTablet = AppConfig.of(context).isTablet;
+    if (!isTablet) {
+      SystemChrome.setPreferredOrientations([
+        DeviceOrientation.portraitUp,
+        DeviceOrientation.portraitDown,
+      ]);
+    }
   }
 
   @override
@@ -53,8 +63,11 @@ class _AboutAndroidState extends BState<AboutAndroid> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isTablet = AppConfig.of(context).isTablet;
     return Scaffold(
-      appBar: AMAppBar(title: Text(i18n(context, S.settings_about))),
+      appBar: isTablet
+          ? null
+          : AMAppBar(title: Text(i18n(context, S.settings_about))),
       body: loading
           ? Center(child: CircularProgressIndicator())
           : Column(

@@ -1,3 +1,4 @@
+import 'package:aurora_mail/modules/app_config/app_config.dart';
 import 'package:aurora_mail/modules/settings/blocs/notifications/bloc.dart';
 import 'package:aurora_mail/notification/push_notifications_manager.dart';
 import 'package:aurora_mail/res/str/s.dart';
@@ -19,10 +20,15 @@ class _NotificationsSettingsState extends BState<NotificationsSettings> {
 
   @override
   Widget build(BuildContext context) {
+    final isTablet = AppConfig.of(context).isTablet;
     return Scaffold(
-      appBar: AMAppBar(
-        title: Text(i18n(context, S.label_notifications_settings)),
-      ),
+      appBar: isTablet
+          ? null
+          : AMAppBar(
+              title: Text(
+                i18n(context, S.label_notifications_settings),
+              ),
+            ),
       body: BlocBuilder(
           bloc: bloc,
           builder: (context, state) {

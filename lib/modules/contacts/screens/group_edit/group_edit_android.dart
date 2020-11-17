@@ -1,3 +1,4 @@
+import 'package:aurora_mail/modules/app_config/app_config.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_group_model.dart';
@@ -106,34 +107,41 @@ class _GroupEditAndroidState extends BState<GroupEditAndroid>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: GroupEditAppBar(_onAppBarActionSelected, widget.group != null),
-      body: ListView(
-        children: <Widget>[
-          _buildInput(S.contacts_view_section_group_name, _nameCtrl),
-          SwitchListTile.adaptive(
-            title: Text(i18n(context, S.contacts_group_edit_is_organization)),
-            value: _isOrg,
-            activeColor: theme.accentColor,
-            onChanged: (v) => setState(() => _isOrg = v),
+      body: Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: AppConfig.formWidth,
           ),
-          if (_isOrg)
-            Column(
-              children: <Widget>[
-                _buildInput(S.contacts_view_email, _emailCtrl,
-                    TextInputType.emailAddress),
-                _buildInput(S.contacts_view_company, _companyCtrl),
-                _buildInput(S.contacts_view_country, _countryCtrl),
-                _buildInput(S.contacts_view_province, _stateCtrl),
-                _buildInput(S.contacts_view_city, _cityCtrl),
-                _buildInput(S.contacts_view_street_address, _streetCtrl),
-                _buildInput(S.contacts_view_zip, _zipCtrl),
-                _buildInput(
-                    S.contacts_view_phone, _phoneCtrl, TextInputType.phone),
-                _buildInput(S.contacts_view_fax, _faxCtrl),
-                _buildInput(
-                    S.contacts_view_web_page, _webCtrl, TextInputType.url),
-              ],
-            ),
-        ],
+          child: ListView(
+            children: <Widget>[
+              _buildInput(S.contacts_view_section_group_name, _nameCtrl),
+              SwitchListTile.adaptive(
+                title: Text(i18n(context, S.contacts_group_edit_is_organization)),
+                value: _isOrg,
+                activeColor: theme.accentColor,
+                onChanged: (v) => setState(() => _isOrg = v),
+              ),
+              if (_isOrg)
+                Column(
+                  children: <Widget>[
+                    _buildInput(S.contacts_view_email, _emailCtrl,
+                        TextInputType.emailAddress),
+                    _buildInput(S.contacts_view_company, _companyCtrl),
+                    _buildInput(S.contacts_view_country, _countryCtrl),
+                    _buildInput(S.contacts_view_province, _stateCtrl),
+                    _buildInput(S.contacts_view_city, _cityCtrl),
+                    _buildInput(S.contacts_view_street_address, _streetCtrl),
+                    _buildInput(S.contacts_view_zip, _zipCtrl),
+                    _buildInput(
+                        S.contacts_view_phone, _phoneCtrl, TextInputType.phone),
+                    _buildInput(S.contacts_view_fax, _faxCtrl),
+                    _buildInput(
+                        S.contacts_view_web_page, _webCtrl, TextInputType.url),
+                  ],
+                ),
+            ],
+          ),
+        ),
       ),
     );
   }

@@ -55,7 +55,7 @@ import 'mail/screens/messages_list/messages_list_android.dart';
 import 'mail/screens/messages_list/messages_list_route.dart';
 import 'settings/screens/about/about_route.dart';
 
-class AppNavigation {
+class RouteGenerator {
   static Route onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
       // ================= AUTH =================
@@ -100,7 +100,7 @@ class AppNavigation {
           settings: RouteSettings(
             name: settings.name,
           ),
-          builder: (_) => UpgradePlanWidget(args.message),
+          builder: (_) => UpgradePlanWidget(args?.message),
         );
 
         break;

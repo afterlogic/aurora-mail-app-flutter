@@ -39,23 +39,15 @@ class ContactViewAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     PopupMenuEntry<ContactViewAppBarAction> _buildMenuItem({
       @required ContactViewAppBarAction value,
       @required String text,
       @required IconData icon,
     }) {
       return PopupMenuItem(
-        child: IconTheme(
-          data: theme.iconTheme,
-          child: Row(
-            children: <Widget>[
-              Icon(icon),
-              SizedBox(width: 12.0),
-              Text(text),
-            ],
-          ),
+        child: ListTile(
+          leading: Icon(icon),
+          title: Text(text),
         ),
         value: value,
       );

@@ -62,14 +62,14 @@ class MessageWebView extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _MessageWebViewState createState() => _MessageWebViewState();
+  MessageWebViewState createState() => MessageWebViewState();
 }
 
-class _MessageWebViewState extends BState<MessageWebView> {
+class MessageWebViewState extends BState<MessageWebView> {
   WebViewController _controller;
   String _htmlData;
   bool _pageLoaded = false;
-  bool _showImages = false;
+  bool showImages = false;
   bool _isStared;
   ThemeData theme;
   MailBloc _mailBloc;
@@ -84,7 +84,7 @@ class _MessageWebViewState extends BState<MessageWebView> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _showImages = !widget.message.hasExternals || widget.message.safety;
+    showImages = !widget.message.hasExternals || widget.message.safety;
     theme = Theme.of(context);
     _mailBloc = BlocProvider.of(context);
     _getHtmlWithImages();
@@ -112,7 +112,7 @@ class _MessageWebViewState extends BState<MessageWebView> {
       htmlData = widget.message.htmlBody;
     }
 
-    if (_showImages) {
+    if (showImages) {
       htmlData = htmlData
           .replaceAll("data-x-src=", "src=")
           .replaceAll("src=\"http:", "src=\"https:");
@@ -262,7 +262,6 @@ class _MessageWebViewState extends BState<MessageWebView> {
   setStared(bool isStared) {
     _isStared = isStared;
     _mailBloc.add(SetStarred([widget.message], isStared));
-    _getHtmlWithImages();
   }
 
   FutureOr<NavigationDecision> _onWebViewNavigateRequestIos(
@@ -300,7 +299,7 @@ class _MessageWebViewState extends BState<MessageWebView> {
 
   Future onLoad() async {
     if (widget.message.hasExternals == true) {
-      _showImages =
+      showImages =
           await widget.messageViewBloc.checkInWhiteList(widget.message);
       _getHtmlWithImages();
       setState(() {});
@@ -315,7 +314,7 @@ class _MessageWebViewState extends BState<MessageWebView> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        if (widget.message.hasExternals && !_showImages)
+        if (widget.message.hasExternals && !showImages)
           Container(
             width: double.infinity,
             padding: const EdgeInsets.all(6.0),
@@ -329,7 +328,7 @@ class _MessageWebViewState extends BState<MessageWebView> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    setState(() => _showImages = true);
+                    setState(() => showImages = true);
                     _getHtmlWithImages();
                   },
                   child: Padding(
@@ -342,7 +341,7 @@ class _MessageWebViewState extends BState<MessageWebView> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    setState(() => _showImages = true);
+                    setState(() => showImages = true);
                     widget.messageViewBloc.add(AddInWhiteList(widget.message));
                     _getHtmlWithImages();
                   },

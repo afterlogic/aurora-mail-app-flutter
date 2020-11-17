@@ -1,5 +1,6 @@
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/modules/app_config/app_config.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/auth_input.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/host_input_formatter.dart';
@@ -53,10 +54,7 @@ class _LoginAndroidState extends BState<LoginAndroid> {
   @override
   void initState() {
     super.initState();
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
+
     if (kDebugMode) {
       hostCtrl.text = AuthData.host;
       emailCtrl.text = AuthData.email;
@@ -67,7 +65,13 @@ class _LoginAndroidState extends BState<LoginAndroid> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-
+    final isTablet = AppConfig.of(context).isTablet;
+    if (!isTablet) {
+      SystemChrome.setPreferredOrientations([
+        DeviceOrientation.portraitUp,
+        DeviceOrientation.portraitDown,
+      ]);
+    }
     if (widget.isDialog == true) {
       if (widget.email != null) emailCtrl.text = widget.email;
     } else {
@@ -133,9 +137,8 @@ class _LoginAndroidState extends BState<LoginAndroid> {
   @override
   Widget build(BuildContext context) {
     final authBloc = BlocProvider.of<AuthBloc>(context);
-
     return Scaffold(
-      appBar: widget.isDialog
+      appBar: (widget.isDialog && !AppConfig.of(context).isTablet)
           ? AMAppBar(
               title: Text(
                 i18n(
@@ -243,64 +246,89 @@ class _LoginAndroidState extends BState<LoginAndroid> {
             left: -70.0,
             child: MailLogo(isBackground: true),
           ),
-        Container(
-          margin: EdgeInsets.symmetric(horizontal: 22.0),
-          child: Form(
-            key: LoginAndroid._authFormKey,
-            child: Column(
-              mainAxisAlignment: widget.isDialog
-                  ? MainAxisAlignment.start
-                  : MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                if (!widget.isDialog) PresentationHeader(),
-                Column(
+        Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: AppConfig.formWidth,
+            ),
+            child: Container(
+              margin: EdgeInsets.symmetric(horizontal: 22.0),
+              child: Form(
+                key: LoginAndroid._authFormKey,
+                child: Column(
+                  mainAxisAlignment: widget.isDialog
+                      ? MainAxisAlignment.start
+                      : MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    if (_showHostField)
-                      AuthInput(
-                        controller: hostCtrl,
-                        inputFormatters: [HostInputFormatter()],
-                        label: i18n(context, S.login_input_host),
-                        keyboardType: TextInputType.url,
-                        isEnabled: !loading,
-                      ),
-                    SizedBox(height: 10),
-                    AuthInput(
-                      enableSuggestions: false,
-                      autocorrect: false,
-                      inputFormatters: [FilteringTextInputFormatter.deny(" ")],
-                      controller: emailCtrl,
-                      label: i18n(context, S.login_input_email),
-                      keyboardType: TextInputType.emailAddress,
-                      validator: (value) => validateInput(context, value,
-                          [ValidationType.empty, ValidationType.email]),
-                      isEnabled: !loading,
+                    if (!widget.isDialog) PresentationHeader(),
+                    Column(
+                      children: <Widget>[
+                        if (widget.isDialog && AppConfig.of(context).isTablet)
+                          Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Text(
+                              i18n(
+                                context,
+                                widget.email == null
+                                    ? S.settings_accounts_add
+                                    : S.settings_accounts_relogin,
+                              ),
+                              style: theme.textTheme.title,
+                            ),
+                          ),
+                        if (_showHostField)
+                          AuthInput(
+                            controller: hostCtrl,
+                            inputFormatters: [HostInputFormatter()],
+                            label: i18n(context, S.login_input_host),
+                            keyboardType: TextInputType.url,
+                            isEnabled: !loading,
+                          ),
+                        SizedBox(height: 10),
+                        AuthInput(
+                          enableSuggestions: false,
+                          autocorrect: false,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.deny(" ")
+                          ],
+                          controller: emailCtrl,
+                          label: i18n(context, S.login_input_email),
+                          keyboardType: TextInputType.emailAddress,
+                          validator: (value) => validateInput(context, value,
+                              [ValidationType.empty, ValidationType.email]),
+                          isEnabled: !loading,
+                        ),
+                        SizedBox(height: 10),
+                        AuthInput(
+                          controller: passwordCtrl,
+                          label: i18n(context, S.login_input_password),
+                          validator: (value) => validateInput(
+                              context, value, [ValidationType.empty]),
+                          isPassword: true,
+                          isEnabled: !loading,
+                        ),
+                      ],
                     ),
-                    SizedBox(height: 10),
-                    AuthInput(
-                      controller: passwordCtrl,
-                      label: i18n(context, S.login_input_password),
-                      validator: (value) =>
-                          validateInput(context, value, [ValidationType.empty]),
-                      isPassword: true,
-                      isEnabled: !loading,
+                    if (widget.isDialog) SizedBox(height: 40.0),
+                    SizedBox(
+                      width: double.infinity,
+                      child: _debugRouteToTwoFactor(
+                        AMButton(
+                          shadow: AppColor.enableShadow ? null : BoxShadow(),
+                          child: Text(i18n(
+                              context,
+                              widget.isDialog
+                                  ? S.btn_add_account
+                                  : S.btn_login)),
+                          isLoading: loading,
+                          onPressed: () => _login(context),
+                        ),
+                      ),
                     ),
                   ],
                 ),
-                if (widget.isDialog) SizedBox(height: 40.0),
-                SizedBox(
-                  width: double.infinity,
-                  child: _debugRouteToTwoFactor(
-                    AMButton(
-                      shadow: AppColor.enableShadow ? null : BoxShadow(),
-                      child: Text(i18n(context,
-                          widget.isDialog ? S.btn_add_account : S.btn_login)),
-                      isLoading: loading,
-                      onPressed: () => _login(context),
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
         ),

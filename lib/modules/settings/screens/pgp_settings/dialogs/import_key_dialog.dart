@@ -62,8 +62,9 @@ class _ImportKeyDialogState extends BState<ImportKeyDialog> with NotSavedChanges
             Navigator.pop(context);
           }
         },
-        child: SizedDialogContent(
-          child: ListView(
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment:CrossAxisAlignment.start,
             children: <Widget>[
               if (keyAlreadyExist)
                 Padding(

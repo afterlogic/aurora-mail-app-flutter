@@ -1,5 +1,6 @@
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/config.dart';
+import 'package:aurora_mail/modules/app_config/app_config.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
@@ -13,6 +14,7 @@ import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_dialog.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:crypto_model/crypto_model.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -310,133 +312,144 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
         _onAppBarActionSelected,
         isEdit: widget.contact != null,
       ),
-      body: Form(
-        child: ListView(
-          children: <Widget>[
-            ContactInput(S.contacts_view_display_name, _fullName),
-            _buildPrimaryEmail(),
-            _buildPrimaryPhone(),
-            _buildPrimaryAddress(),
-            ContactInput(S.contacts_view_skype, _skype),
-            ContactInput(S.contacts_view_facebook, _facebook),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Center(
-                child: GestureDetector(
-                  child: Text(i18n(
-                      context,
-                      _showAllFields
-                          ? S.contacts_view_hide_additional_fields
-                          : S.contacts_view_show_additional_fields)),
-                  onTap: () {
-                    // crutch
-                    _personalEmail.text = _personalEmail.text;
-                    _personalAddress.text = _personalAddress.text;
-                    _personalPhone.text = _personalPhone.text;
-                    _personalMobile.text = _personalMobile.text;
-                    _businessEmail.text = _businessEmail.text;
-                    _businessAddress.text = _businessAddress.text;
-                    _businessPhone.text = _businessPhone.text;
-                    _otherEmail.text = _otherEmail.text;
-                    setState(() => _showAllFields = !_showAllFields);
-                  },
-                ),
-              ),
-            ),
-            if (_showAllFields)
-              Column(
-                children: <Widget>[
-                  ContactInput(S.contacts_view_first_name, _firstName),
-                  ContactInput(S.contacts_view_last_name, _lastName),
-                  ContactInput(S.contacts_view_nickname, _nickName),
-                  ContactTile(S.contacts_view_section_home),
-                  ContactInput(S.contacts_view_personal_email, _personalEmail,
-                      keyboardType: TextInputType.emailAddress),
-                  ContactInput(
-                      S.contacts_view_personal_address, _personalAddress),
-                  ContactInput(S.contacts_view_city, _personalCity),
-                  ContactInput(S.contacts_view_province, _personalState),
-                  ContactInput(S.contacts_view_zip, _personalZip),
-                  ContactInput(S.contacts_view_country, _personalCountry),
-                  ContactInput(S.contacts_view_web_page, _personalWeb),
-                  ContactInput(S.contacts_view_fax, _personalFax,
-                      keyboardType: TextInputType.phone),
-                  ContactInput(S.contacts_view_phone, _personalPhone,
-                      keyboardType: TextInputType.phone),
-                  ContactInput(S.contacts_view_mobile, _personalMobile,
-                      keyboardType: TextInputType.phone),
-                  ContactTile(S.contacts_view_section_business),
-                  ContactInput(S.contacts_view_business_email, _businessEmail,
-                      keyboardType: TextInputType.emailAddress),
-                  ContactInput(S.contacts_view_company, _businessCompany),
-                  ContactInput(
-                      S.contacts_view_personal_address, _businessAddress),
-                  ContactInput(S.contacts_view_city, _businessCity),
-                  ContactInput(S.contacts_view_province, _businessState),
-                  ContactInput(S.contacts_view_zip, _businessZip),
-                  ContactInput(S.contacts_view_country, _businessCountry),
-                  ContactInput(S.contacts_view_job_title, _businessJobTitle),
-                  ContactInput(S.contacts_view_department, _businessDepartment),
-                  ContactInput(S.contacts_view_office, _businessOffice),
-                  ContactInput(S.contacts_view_web_page, _businessWeb),
-                  ContactInput(S.contacts_view_fax, _businessFax,
-                      keyboardType: TextInputType.phone),
-                  ContactInput(S.contacts_view_phone, _businessPhone,
-                      keyboardType: TextInputType.phone),
-                  ContactTile(S.contacts_view_section_other_info),
-                  ContactBirthDatePicker(
-                    birthDay: _birthDay,
-                    birthMonth: _birthMonth,
-                    birthYear: _birthYear,
-                    onPicked: _onDateSelected,
+      body: Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: AppConfig.formWidth,
+          ),
+          child: Form(
+            child: ListView(
+              children: <Widget>[
+                ContactInput(S.contacts_view_display_name, _fullName),
+                _buildPrimaryEmail(),
+                _buildPrimaryPhone(),
+                _buildPrimaryAddress(),
+                ContactInput(S.contacts_view_skype, _skype),
+                ContactInput(S.contacts_view_facebook, _facebook),
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Center(
+                    child: GestureDetector(
+                      child: Text(i18n(
+                          context,
+                          _showAllFields
+                              ? S.contacts_view_hide_additional_fields
+                              : S.contacts_view_show_additional_fields)),
+                      onTap: () {
+                        // crutch
+                        _personalEmail.text = _personalEmail.text;
+                        _personalAddress.text = _personalAddress.text;
+                        _personalPhone.text = _personalPhone.text;
+                        _personalMobile.text = _personalMobile.text;
+                        _businessEmail.text = _businessEmail.text;
+                        _businessAddress.text = _businessAddress.text;
+                        _businessPhone.text = _businessPhone.text;
+                        _otherEmail.text = _otherEmail.text;
+                        setState(() => _showAllFields = !_showAllFields);
+                      },
+                    ),
                   ),
-                  ContactInput(S.contacts_view_other_email, _otherEmail,
-                      keyboardType: TextInputType.emailAddress),
-                  ContactInput(S.contacts_view_notes, _notes),
-                  if (BuildProperty.cryptoEnable &&
-                      !BuildProperty.legacyPgpKey) ...[
-                    ContactTile(S.label_contact_pgp_settings),
-                    KeyInput(
-                      pgpSettingsBloc,
-                      pgpKey,
-                      (key) {
-                        pgpKey = key;
-                      },
-                      (error) {},
-                    ),
-                    ContactTile(S.hint_auto_encrypt_messages,
-                        theme.textTheme.subtitle1),
-                    ContactCheckBox(
-                      S.label_pgp_sign,
-                      autoSign,
-                      (v) => setState(() => autoSign = v),
-                    ),
-                    ContactCheckBox(
-                      S.label_pgp_encrypt,
-                      autoEncrypt,
-                      (v) => setState(() => autoEncrypt = v),
-                    ),
-                  ],
-                  ContactTile(S.contacts_view_section_groups),
-                  ..._bloc.state.groups.map((g) {
-                    return CheckboxListTile(
-                      title: Text("# " + g.name),
-                      value: _selectedGroupsUuids.contains(g.uuid),
-                      onChanged: (v) {
-                        setState(() {
-                          if (v)
-                            _selectedGroupsUuids.add(g.uuid);
-                          else
-                            _selectedGroupsUuids
-                                .removeWhere((id) => id == g.uuid);
-                        });
-                      },
-                    );
-                  }).toList(),
-                  SizedBox(height: 24.0),
-                ],
-              ),
-          ],
+                ),
+                if (_showAllFields)
+                  Column(
+                    children: <Widget>[
+                      ContactInput(S.contacts_view_first_name, _firstName),
+                      ContactInput(S.contacts_view_last_name, _lastName),
+                      ContactInput(S.contacts_view_nickname, _nickName),
+                      ContactTile(S.contacts_view_section_home),
+                      ContactInput(
+                          S.contacts_view_personal_email, _personalEmail,
+                          keyboardType: TextInputType.emailAddress),
+                      ContactInput(
+                          S.contacts_view_personal_address, _personalAddress),
+                      ContactInput(S.contacts_view_city, _personalCity),
+                      ContactInput(S.contacts_view_province, _personalState),
+                      ContactInput(S.contacts_view_zip, _personalZip),
+                      ContactInput(S.contacts_view_country, _personalCountry),
+                      ContactInput(S.contacts_view_web_page, _personalWeb),
+                      ContactInput(S.contacts_view_fax, _personalFax,
+                          keyboardType: TextInputType.phone),
+                      ContactInput(S.contacts_view_phone, _personalPhone,
+                          keyboardType: TextInputType.phone),
+                      ContactInput(S.contacts_view_mobile, _personalMobile,
+                          keyboardType: TextInputType.phone),
+                      ContactTile(S.contacts_view_section_business),
+                      ContactInput(
+                          S.contacts_view_business_email, _businessEmail,
+                          keyboardType: TextInputType.emailAddress),
+                      ContactInput(S.contacts_view_company, _businessCompany),
+                      ContactInput(
+                          S.contacts_view_personal_address, _businessAddress),
+                      ContactInput(S.contacts_view_city, _businessCity),
+                      ContactInput(S.contacts_view_province, _businessState),
+                      ContactInput(S.contacts_view_zip, _businessZip),
+                      ContactInput(S.contacts_view_country, _businessCountry),
+                      ContactInput(
+                          S.contacts_view_job_title, _businessJobTitle),
+                      ContactInput(
+                          S.contacts_view_department, _businessDepartment),
+                      ContactInput(S.contacts_view_office, _businessOffice),
+                      ContactInput(S.contacts_view_web_page, _businessWeb),
+                      ContactInput(S.contacts_view_fax, _businessFax,
+                          keyboardType: TextInputType.phone),
+                      ContactInput(S.contacts_view_phone, _businessPhone,
+                          keyboardType: TextInputType.phone),
+                      ContactTile(S.contacts_view_section_other_info),
+                      ContactBirthDatePicker(
+                        birthDay: _birthDay,
+                        birthMonth: _birthMonth,
+                        birthYear: _birthYear,
+                        onPicked: _onDateSelected,
+                      ),
+                      ContactInput(S.contacts_view_other_email, _otherEmail,
+                          keyboardType: TextInputType.emailAddress),
+                      ContactInput(S.contacts_view_notes, _notes),
+                      if (BuildProperty.cryptoEnable &&
+                          !BuildProperty.legacyPgpKey) ...[
+                        ContactTile(S.label_contact_pgp_settings),
+                        KeyInput(
+                          pgpSettingsBloc,
+                          pgpKey,
+                          (key) {
+                            pgpKey = key;
+                          },
+                          (error) {},
+                        ),
+                        ContactTile(S.hint_auto_encrypt_messages,
+                            theme.textTheme.subtitle1),
+                        ContactCheckBox(
+                          S.label_pgp_sign,
+                          autoSign,
+                          (v) => setState(() => autoSign = v),
+                        ),
+                        ContactCheckBox(
+                          S.label_pgp_encrypt,
+                          autoEncrypt,
+                          (v) => setState(() => autoEncrypt = v),
+                        ),
+                      ],
+                      ContactTile(S.contacts_view_section_groups),
+                      ..._bloc.state.groups.map((g) {
+                        return CheckboxListTile(
+                          title: Text("# " + g.name),
+                          value: _selectedGroupsUuids.contains(g.uuid),
+                          onChanged: (v) {
+                            setState(() {
+                              if (v)
+                                _selectedGroupsUuids.add(g.uuid);
+                              else
+                                _selectedGroupsUuids
+                                    .removeWhere((id) => id == g.uuid);
+                            });
+                          },
+                        );
+                      }).toList(),
+                      SizedBox(height: 24.0),
+                    ],
+                  ),
+              ],
+            ),
+          ),
         ),
       ),
     );

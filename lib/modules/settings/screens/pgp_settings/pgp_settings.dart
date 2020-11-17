@@ -1,6 +1,7 @@
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/inject/app_inject.dart';
 import 'package:aurora_mail/models/alias_or_identity.dart';
+import 'package:aurora_mail/modules/app_config/app_config.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/settings/blocs/pgp_settings/bloc.dart';
 import 'package:aurora_mail/modules/settings/screens/pgp_settings/dialogs/generate_key_dialog.dart';
@@ -8,6 +9,7 @@ import 'package:aurora_mail/modules/settings/screens/pgp_settings/dialogs/import
 import 'package:aurora_mail/modules/settings/screens/pgp_settings/dialogs/import_key_dialog.dart';
 import 'package:aurora_mail/modules/settings/screens/pgp_settings/screens/pgp_key_route.dart';
 import 'package:aurora_mail/modules/settings/screens/pgp_settings/screens/pgp_keys_route.dart';
+import 'package:aurora_mail/modules/settings/screens/settings_main/settings_navigator.dart';
 import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/identity_util.dart';
@@ -42,10 +44,13 @@ class _PgpSettingsState extends BState<PgpSettings> {
 
   @override
   Widget build(BuildContext context) {
+    final isTablet = AppConfig.of(context).isTablet;
     return Scaffold(
-      appBar: AMAppBar(
-        title: Text(i18n(context, S.label_pgp_settings)),
-      ),
+      appBar: isTablet
+          ? null
+          : AMAppBar(
+              title: Text(i18n(context, S.label_pgp_settings)),
+            ),
       body: BlocListener<PgpSettingsBloc, PgpSettingsState>(
         bloc: bloc,
         listener: (context, state) {
@@ -84,6 +89,7 @@ class _PgpSettingsState extends BState<PgpSettings> {
             final loadedState = state as LoadedState;
 
             return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Expanded(
                   child: _keys(
@@ -138,8 +144,7 @@ class _PgpSettingsState extends BState<PgpSettings> {
   }
 
   _openKey(BuildContext context, PgpKey key) {
-    Navigator.pushNamed(
-      context,
+    SettingsNavigatorWidget.of(context).pushNamed(
       PgpKeyRoute.name,
       arguments: PgpKeyRouteArg(key, bloc, null),
     );
@@ -168,8 +173,7 @@ class _PgpSettingsState extends BState<PgpSettings> {
   }
 
   _exportAllPublicKeys(List<PgpKey> keys) {
-    Navigator.pushNamed(
-      context,
+    SettingsNavigatorWidget.of(context).pushNamed(
       PgpKeysRoute.name,
       arguments: PgpKeysRouteArg(keys, bloc),
     );
@@ -188,46 +192,44 @@ class _PgpSettingsState extends BState<PgpSettings> {
     List<PgpKey> contactPublic,
     String keyProgress,
   ) {
-    return Padding(
+    return ListView(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: ListView(
-        children: <Widget>[
-          if (public.isNotEmpty || keyProgress != null)
-            Text(
-              i18n(context, S.label_pgp_public_keys),
-              style: theme.textTheme.title,
-            ),
-          keysGroup(
-            context,
-            public,
-            keyProgress,
+      children: <Widget>[
+        if (public.isNotEmpty || keyProgress != null)
+          Text(
+            i18n(context, S.label_pgp_public_keys),
+            style: theme.textTheme.title,
           ),
+        keysGroup(
+          context,
+          public,
+          keyProgress,
+        ),
+        SizedBox(height: 10),
+        if (private.isNotEmpty || keyProgress != null)
+          Text(
+            i18n(context, S.label_pgp_private_keys),
+            style: theme.textTheme.title,
+          ),
+        keysGroup(
+          context,
+          private,
+          keyProgress,
+        ),
+        if (!BuildProperty.legacyPgpKey) ...[
           SizedBox(height: 10),
-          if (private.isNotEmpty || keyProgress != null)
+          if (contactPublic.isNotEmpty)
             Text(
-              i18n(context, S.label_pgp_private_keys),
+              i18n(context, S.label_pgp_contact_public_keys),
               style: theme.textTheme.title,
             ),
           keysGroup(
             context,
-            private,
-            keyProgress,
+            contactPublic,
+            null,
           ),
-          if (!BuildProperty.legacyPgpKey) ...[
-            SizedBox(height: 10),
-            if (contactPublic.isNotEmpty)
-              Text(
-                i18n(context, S.label_pgp_contact_public_keys),
-                style: theme.textTheme.title,
-              ),
-            keysGroup(
-              context,
-              contactPublic,
-              null,
-            ),
-          ]
-        ],
-      ),
+        ]
+      ],
     );
   }
 
@@ -286,35 +288,46 @@ class _PgpSettingsState extends BState<PgpSettings> {
   }
 
   Widget _button(BuildContext context, LoadedState state) {
-    final space = SizedBox(height: 10.0);
-
+    final isTablet = AppConfig.of(context).isTablet;
+    final space = isTablet
+        ? SizedBox.shrink()
+        : SizedBox(
+            height: 10.0,
+            width: 10,
+          );
+    final children = <Widget>[
+      if (state.myPublic.isNotEmpty)
+        AMButton(
+          child: Text(i18n(context, S.btn_pgp_export_all_public_keys)),
+          onPressed: () => _exportAllPublicKeys(state.myPublic),
+        ),
+      space,
+      AMButton(
+        child: Text(i18n(context, S.btn_pgp_import_keys_from_text)),
+        onPressed: _importFromText,
+      ),
+      space,
+      AMButton(
+        child: Text(i18n(context, S.btn_pgp_import_keys_from_file)),
+        onPressed: _importFromFile,
+      ),
+      space,
+      AMButton(
+        child: Text(i18n(context, S.btn_pgp_generate_keys)),
+        onPressed: () => _generateKey(state),
+      ),
+    ];
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          if (state.myPublic.isNotEmpty)
-            AMButton(
-              child: Text(i18n(context, S.btn_pgp_export_all_public_keys)),
-              onPressed: () => _exportAllPublicKeys(state.myPublic),
-            ),
-          space,
-          AMButton(
-            child: Text(i18n(context, S.btn_pgp_import_keys_from_text)),
-            onPressed: _importFromText,
-          ),
-          space,
-          AMButton(
-            child: Text(i18n(context, S.btn_pgp_import_keys_from_file)),
-            onPressed: _importFromFile,
-          ),
-          space,
-          AMButton(
-            child: Text(i18n(context, S.btn_pgp_generate_keys)),
-            onPressed: () => _generateKey(state),
-          ),
-        ],
-      ),
+      child: isTablet
+          ? Wrap(
+              spacing: 10,
+              runSpacing: 10,
+              children: children,
+            )
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: children),
     );
   }
 }

@@ -72,121 +72,120 @@ class AdvancedSearchState extends State<AdvancedSearch> {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: Text(i18n(context, S.label_message_advanced_search)),
-      content: SizedDialogContent(
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              TextField(
-                decoration: InputDecoration(
-                  labelText: i18n(context, S.messages_from),
-                ),
-                controller: fromCtrl,
+      content: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment:CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            TextField(
+              decoration: InputDecoration(
+                labelText: i18n(context, S.messages_from),
               ),
-              TextField(
-                decoration: InputDecoration(
-                  labelText: i18n(context, S.messages_to),
-                ),
-                controller: toCtrl,
+              controller: fromCtrl,
+            ),
+            TextField(
+              decoration: InputDecoration(
+                labelText: i18n(context, S.messages_to),
               ),
-              TextField(
-                decoration: InputDecoration(
-                  labelText: i18n(context, S.messages_subject),
-                ),
-                controller: subjectCtrl,
+              controller: toCtrl,
+            ),
+            TextField(
+              decoration: InputDecoration(
+                labelText: i18n(context, S.messages_subject),
               ),
-              TextField(
-                decoration: InputDecoration(
-                  labelText: i18n(context, S.input_message_search_text),
-                ),
-                controller: textCtrl,
+              controller: subjectCtrl,
+            ),
+            TextField(
+              decoration: InputDecoration(
+                labelText: i18n(context, S.input_message_search_text),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Flexible(
-                    child: GestureDetector(
-                      onTap: () async {
-                        final date = await showDatePicker(
-                          context: context,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime.fromMillisecondsSinceEpoch(0),
-                          lastDate: DateTime.now(),
-                        );
+              controller: textCtrl,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Flexible(
+                  child: GestureDetector(
+                    onTap: () async {
+                      final date = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime.fromMillisecondsSinceEpoch(0),
+                        lastDate: DateTime.now(),
+                      );
 
-                        since = date;
-                        setState(() {});
-                      },
-                      child: InputDecorator(
-                        decoration: InputDecoration(
-                          labelText: i18n(context, S.input_message_search_since),
-                        ),
-                        child: SizedBox(
-                            height: 20,
-                            child: since == null
-                                ? null
-                                : Text(dateFormat.format(since))),
+                      since = date;
+                      setState(() {});
+                    },
+                    child: InputDecorator(
+                      decoration: InputDecoration(
+                        labelText: i18n(context, S.input_message_search_since),
                       ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Flexible(
-                    child: GestureDetector(
-                      onTap: () async {
-                        final date = await showDatePicker(
-                          context: context,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime.fromMillisecondsSinceEpoch(0),
-                          lastDate: DateTime.now(),
-                        );
-                        till = date;
-                        setState(() {});
-                      },
-                      child: InputDecorator(
-                        decoration: InputDecoration(
-                          labelText: i18n(context, S.input_message_search_till),
-                        ),
-                        child: SizedBox(
+                      child: SizedBox(
                           height: 20,
-                          child: till == null
+                          child: since == null
                               ? null
-                              : Text(dateFormat.format(till)),
-                        ),
+                              : Text(dateFormat.format(since))),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                Flexible(
+                  child: GestureDetector(
+                    onTap: () async {
+                      final date = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime.fromMillisecondsSinceEpoch(0),
+                        lastDate: DateTime.now(),
+                      );
+                      till = date;
+                      setState(() {});
+                    },
+                    child: InputDecorator(
+                      decoration: InputDecoration(
+                        labelText: i18n(context, S.input_message_search_till),
+                      ),
+                      child: SizedBox(
+                        height: 20,
+                        child: till == null
+                            ? null
+                            : Text(dateFormat.format(till)),
                       ),
                     ),
                   ),
-                ],
-              ),
-              Stack(
-                alignment: Alignment.centerRight,
-                children: <Widget>[
-                  TextField(
-                    decoration: InputDecoration(
-                      labelText: i18n(context, S.messages_view_tab_attachments),
-                    ),
-                    onChanged: (v) {
-                      if (previousText.isEmpty != v.isEmpty) {
-                        setState(() {});
-                      }
-                      previousText = v;
-                    },
-                    controller: attachmentCtrl,
+                ),
+              ],
+            ),
+            Stack(
+              alignment: Alignment.centerRight,
+              children: <Widget>[
+                TextField(
+                  decoration: InputDecoration(
+                    labelText: i18n(context, S.messages_view_tab_attachments),
                   ),
-                  Checkbox(
-                    value: withAttachment || attachmentCtrl.text.isNotEmpty,
-                    onChanged: (bool value) {
-                      if (attachmentCtrl.text.isEmpty) {
-                        withAttachment = value;
-                        setState(() {});
-                      }
-                    },
-                  ),
-                ],
-              ),
-            ],
-          ),
+                  onChanged: (v) {
+                    if (previousText.isEmpty != v.isEmpty) {
+                      setState(() {});
+                    }
+                    previousText = v;
+                  },
+                  controller: attachmentCtrl,
+                ),
+                Checkbox(
+                  value: withAttachment || attachmentCtrl.text.isNotEmpty,
+                  onChanged: (bool value) {
+                    if (attachmentCtrl.text.isEmpty) {
+                      withAttachment = value;
+                      setState(() {});
+                    }
+                  },
+                ),
+              ],
+            ),
+          ],
         ),
       ),
       actions: <Widget>[

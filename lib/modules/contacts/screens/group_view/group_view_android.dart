@@ -1,3 +1,4 @@
+import 'package:aurora_mail/modules/app_config/app_config.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/contacts_bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_group_model.dart';
@@ -6,9 +7,10 @@ import 'package:aurora_mail/modules/contacts/screens/group_edit/group_edit_route
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/models/compose_actions.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/compose_route.dart';
+import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
 import 'package:aurora_mail/utils/base_state.dart';
-import 'package:aurora_mail/utils/internationalization.dart'; import 'package:aurora_mail/res/str/s.dart';
+import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -139,10 +141,18 @@ class _GroupViewAndroidState extends BState<GroupViewAndroid> {
         cb: () => _visitWebsite(g.web),
       ),
     ]);
-
     return Scaffold(
       appBar: GroupViewAppBar(onActionSelected: _onAppBarActionSelected),
-      body: ListView(children: _mainInfo),
+      body: Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: AppConfig.formWidth,
+          ),
+          child: ListView(
+            children: _mainInfo,
+          ),
+        ),
+      ),
     );
   }
 

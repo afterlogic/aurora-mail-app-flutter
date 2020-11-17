@@ -3,13 +3,14 @@ import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_storage_model.dart';
 import 'package:aurora_mail/modules/contacts/screens/group_edit/group_edit_route.dart';
 import 'package:aurora_mail/res/icons/webmail_icons.dart';
+import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/storage_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:aurora_mail/res/str/s.dart';
+
 class ContactsDrawer extends StatefulWidget {
   @override
   _ContactsDrawerState createState() => _ContactsDrawerState();
@@ -85,7 +86,9 @@ class _ContactsDrawerState extends BState<ContactsDrawer> {
               selected: state.showAllVisibleContacts,
               onTap: () {
                 bloc.add(SelectStorageGroup());
-                Navigator.pop(context);
+                if (Navigator.canPop(context)) {
+                  Navigator.pop(context);
+                }
               },
             ),
           ...visibleStorages.map((s) {
@@ -131,7 +134,9 @@ class _ContactsDrawerState extends BState<ContactsDrawer> {
       selected: s.sqliteId == state.selectedStorage,
       onTap: () {
         bloc.add(SelectStorageGroup(storage: s));
-        Navigator.pop(context);
+        if (Navigator.canPop(context)) {
+          Navigator.pop(context);
+        }
       },
     );
   }
@@ -148,7 +153,9 @@ class _ContactsDrawerState extends BState<ContactsDrawer> {
                   selected: g.uuid == state.selectedGroup,
                   onTap: () {
                     bloc.add(SelectStorageGroup(group: g));
-                    Navigator.pop(context);
+                    if (Navigator.canPop(context)) {
+                      Navigator.pop(context);
+                    }
                   },
                 ))
             .toList(),

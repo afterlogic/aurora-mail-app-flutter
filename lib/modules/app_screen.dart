@@ -24,7 +24,7 @@ import 'package:receive_sharing/recive_sharing.dart';
 import 'package:theme/app_theme.dart';
 import 'package:webmail_api_client/webmail_api_client.dart';
 
-import 'app_navigation.dart';
+import 'route_generator.dart';
 import 'auth/blocs/auth_bloc/bloc.dart';
 import 'auth/screens/login/login_route.dart';
 import 'dialog_wrap.dart';
@@ -207,7 +207,7 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
                             }
                             return BuildProperty.appName;
                           },
-                          onGenerateRoute: AppNavigation.onGenerateRoute,
+                          onGenerateRoute: RouteGenerator.onGenerateRoute,
                           theme: theme ?? AppTheme.light,
                           darkTheme: theme ?? AppTheme.dark,
                           localizationsDelegates: [

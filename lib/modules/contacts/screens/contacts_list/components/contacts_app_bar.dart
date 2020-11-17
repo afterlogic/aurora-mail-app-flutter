@@ -49,7 +49,6 @@ class _ContactsAppBarState extends State<ContactsAppBar> {
     setState(() {});
   }
 
-
   Widget common(BuildContext context) {
     final theme = Theme.of(context);
 

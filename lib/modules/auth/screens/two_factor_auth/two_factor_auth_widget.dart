@@ -1,4 +1,5 @@
 import 'package:aurora_mail/build_property.dart';
+import 'package:aurora_mail/modules/app_config/app_config.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/auth/blocs/two_factor_auth/bloc.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/auth_input.dart';
@@ -97,43 +98,50 @@ class _TwoFactorAuthWidgetState extends BState<TwoFactorAuthWidget> {
             left: -70.0,
             child: MailLogo(isBackground: true),
           ),
-        Container(
-          margin: EdgeInsets.symmetric(horizontal: 22.0),
-          child: Form(
-            key: formKey,
-            child: Column(
-              mainAxisAlignment: widget.args.isDialog
-                  ? MainAxisAlignment.start
-                  : MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                if (!widget.args.isDialog)
-                  PresentationHeader(
-                    message: i18n(context, S.hint_2fa),
-                  ),
-                Column(
+        Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: AppConfig.formWidth,
+            ),
+            child: Container(
+              margin: EdgeInsets.symmetric(horizontal: 22.0),
+              child: Form(
+                key: formKey,
+                child: Column(
+                  mainAxisAlignment: widget.args.isDialog
+                      ? MainAxisAlignment.start
+                      : MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    AuthInput(
-                      controller: pinCtrl,
-                      label: i18n(context, S.input_2fa_pin),
-                      keyboardType: TextInputType.emailAddress,
-                      validator: (value) =>
-                          validateInput(context, value, [ValidationType.empty]),
-                      isEnabled: !loading,
+                    if (!widget.args.isDialog)
+                      PresentationHeader(
+                        message: i18n(context, S.hint_2fa),
+                      ),
+                    Column(
+                      children: <Widget>[
+                        AuthInput(
+                          controller: pinCtrl,
+                          label: i18n(context, S.input_2fa_pin),
+                          keyboardType: TextInputType.emailAddress,
+                          validator: (value) => validateInput(
+                              context, value, [ValidationType.empty]),
+                          isEnabled: !loading,
+                        ),
+                      ],
+                    ),
+                    if (widget.args.isDialog) SizedBox(height: 40.0),
+                    SizedBox(
+                      width: double.infinity,
+                      child: AMButton(
+                        shadow: AppColor.enableShadow ? null : BoxShadow(),
+                        child: Text(i18n(context, S.btn_verify_pin)),
+                        isLoading: loading,
+                        onPressed: () => _login(),
+                      ),
                     ),
                   ],
                 ),
-                if (widget.args.isDialog) SizedBox(height: 40.0),
-                SizedBox(
-                  width: double.infinity,
-                  child: AMButton(
-                    shadow: AppColor.enableShadow ? null : BoxShadow(),
-                    child: Text(i18n(context, S.btn_verify_pin)),
-                    isLoading: loading,
-                    onPressed: () => _login(),
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
         ),
