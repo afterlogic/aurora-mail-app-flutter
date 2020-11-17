@@ -58,7 +58,6 @@ class _TwoFactorAuthWidgetState extends BState<TwoFactorAuthWidget> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: widget.args.isDialog
           ? AMAppBar(
@@ -90,8 +89,7 @@ class _TwoFactorAuthWidgetState extends BState<TwoFactorAuthWidget> {
 
   Widget _buildPinForm(BuildContext context, TwoFactorState state) {
     final loading = state is ProgressState || state is CompleteState;
-    final isTablet = AppConfig.of(context).isTablet;
-    final media = MediaQuery.of(context);
+
     return Stack(
       children: <Widget>[
         if (!widget.args.isDialog && !BuildProperty.useMainLogo)
@@ -100,46 +98,50 @@ class _TwoFactorAuthWidgetState extends BState<TwoFactorAuthWidget> {
             left: -70.0,
             child: MailLogo(isBackground: true),
           ),
-        Container(
-          padding: isTablet
-              ? EdgeInsets.symmetric(horizontal: media.size.width / 6)
-              : null,
-          margin: EdgeInsets.symmetric(horizontal: 22.0),
-          child: Form(
-            key: formKey,
-            child: Column(
-              mainAxisAlignment: widget.args.isDialog
-                  ? MainAxisAlignment.start
-                  : MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                if (!widget.args.isDialog)
-                  PresentationHeader(
-                    message: i18n(context, S.hint_2fa),
-                  ),
-                Column(
+        Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: AppConfig.formWidth,
+            ),
+            child: Container(
+              margin: EdgeInsets.symmetric(horizontal: 22.0),
+              child: Form(
+                key: formKey,
+                child: Column(
+                  mainAxisAlignment: widget.args.isDialog
+                      ? MainAxisAlignment.start
+                      : MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    AuthInput(
-                      controller: pinCtrl,
-                      label: i18n(context, S.input_2fa_pin),
-                      keyboardType: TextInputType.emailAddress,
-                      validator: (value) =>
-                          validateInput(context, value, [ValidationType.empty]),
-                      isEnabled: !loading,
+                    if (!widget.args.isDialog)
+                      PresentationHeader(
+                        message: i18n(context, S.hint_2fa),
+                      ),
+                    Column(
+                      children: <Widget>[
+                        AuthInput(
+                          controller: pinCtrl,
+                          label: i18n(context, S.input_2fa_pin),
+                          keyboardType: TextInputType.emailAddress,
+                          validator: (value) => validateInput(
+                              context, value, [ValidationType.empty]),
+                          isEnabled: !loading,
+                        ),
+                      ],
+                    ),
+                    if (widget.args.isDialog) SizedBox(height: 40.0),
+                    SizedBox(
+                      width: double.infinity,
+                      child: AMButton(
+                        shadow: AppColor.enableShadow ? null : BoxShadow(),
+                        child: Text(i18n(context, S.btn_verify_pin)),
+                        isLoading: loading,
+                        onPressed: () => _login(),
+                      ),
                     ),
                   ],
                 ),
-                if (widget.args.isDialog) SizedBox(height: 40.0),
-                SizedBox(
-                  width: double.infinity,
-                  child: AMButton(
-                    shadow: AppColor.enableShadow ? null : BoxShadow(),
-                    child: Text(i18n(context, S.btn_verify_pin)),
-                    isLoading: loading,
-                    onPressed: () => _login(),
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
         ),

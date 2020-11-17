@@ -392,6 +392,7 @@ abstract class S extends SInterface {
   static const error_password_is_empty = 386;
   static const label_encryption_password_for_pgp_key = 387;
   static const hint_log_delete_record = 388;
-  static const messages_list_app_bar_Mail = 389;
+  static const error_timeout = 389;
+  static const messages_list_app_bar_Mail = 390;
   String get(int id);
 }

@@ -2,17 +2,16 @@ import 'package:flutter/cupertino.dart';
 
 class AppConfig {
   final bool isTablet;
+  static const formWidth = 450.0;
 
   AppConfig(this.isTablet);
 
   static AppConfig of(BuildContext context) {
-    return AppConfig(
-      _isTablet(context),
-    );
-  }
+    var media = MediaQuery.of(context);
+    final isTablet = media.size.shortestSide >= 600;
 
-  static bool _isTablet(BuildContext context) {
-    var shortestSide = MediaQuery.of(context).size.shortestSide;
-    return shortestSide >= 600;
+    return AppConfig(
+      isTablet,
+    );
   }
 }

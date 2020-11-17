@@ -3,7 +3,8 @@ import 'package:aurora_mail/modules/app_config/app_config.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/login_gradient.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/mail_logo.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/presentation_header.dart';
-import 'package:aurora_mail/utils/internationalization.dart'; import 'package:aurora_mail/res/str/s.dart';
+import 'package:aurora_mail/res/str/s.dart';
+import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_ui_kit/components/am_button.dart';
 import 'package:flutter/material.dart';
 import 'package:theme/app_color.dart';
@@ -34,8 +35,6 @@ class UpgradePlanWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isTablet = AppConfig.of(context).isTablet;
-    final media = MediaQuery.of(context);
     return Scaffold(
       body: _gradientWrap(
         Stack(
@@ -46,38 +45,40 @@ class UpgradePlanWidget extends StatelessWidget {
                 left: -70.0,
                 child: MailLogo(isBackground: true),
               ),
-            Container(
-              padding: isTablet
-                  ? EdgeInsets.symmetric(horizontal: media.size.width / 6)
-                  : null,
-              margin: EdgeInsets.symmetric(horizontal: 22.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  PresentationHeader(),
-                  Column(
+            Center(
+              child:ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: AppConfig.formWidth,
+                ),
+                child: Container(
+                  margin: EdgeInsets.symmetric(horizontal: 22.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Text(
-                        message ??
-                            i18n(context, S.hint_login_upgrade_your_plan),
-                        style: Theme.of(context)
-                            .textTheme
-                            .subhead
-                            .copyWith(fontSize: 18),
-                        textAlign: TextAlign.center,
+                      PresentationHeader(),
+                      Column(
+                        children: <Widget>[
+                          Text(
+                            message ??
+                                i18n(context, S.hint_login_upgrade_your_plan),
+                            style: Theme.of(context).textTheme.subhead.copyWith(
+                                fontSize: 18, color: AppTheme.loginTextColor),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        width: double.infinity,
+                        child: AMButton(
+                          shadow: AppColor.enableShadow ? null : BoxShadow(),
+                          child: Text(i18n(context, S.btn_login_back_to_login)),
+                          onPressed: () => Navigator.of(context).pop(),
+                        ),
                       ),
                     ],
                   ),
-                  SizedBox(
-                    width: double.infinity,
-                    child: AMButton(
-                      shadow: AppColor.enableShadow ? null : BoxShadow(),
-                      child: Text(i18n(context, S.btn_login_back_to_login)),
-                      onPressed: () => Navigator.of(context).pop(),
-                    ),
-                  ),
-                ],
+                ),
               ),
             ),
           ],

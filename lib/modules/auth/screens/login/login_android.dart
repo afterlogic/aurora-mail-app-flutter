@@ -138,7 +138,7 @@ class _LoginAndroidState extends BState<LoginAndroid> {
   Widget build(BuildContext context) {
     final authBloc = BlocProvider.of<AuthBloc>(context);
     return Scaffold(
-      appBar: widget.isDialog
+      appBar: (widget.isDialog && !AppConfig.of(context).isTablet)
           ? AMAppBar(
               title: Text(
                 i18n(
@@ -238,8 +238,6 @@ class _LoginAndroidState extends BState<LoginAndroid> {
   }
 
   Widget _buildLoginForm(BuildContext context, {bool loading = false}) {
-    final isTablet = AppConfig.of(context).isTablet;
-    final media = MediaQuery.of(context);
     return Stack(
       children: <Widget>[
         if (!widget.isDialog && !BuildProperty.useMainLogo)
@@ -248,67 +246,89 @@ class _LoginAndroidState extends BState<LoginAndroid> {
             left: -70.0,
             child: MailLogo(isBackground: true),
           ),
-        Container(
-          padding: isTablet
-              ? EdgeInsets.symmetric(horizontal: media.size.width / 6)
-              : null,
-          margin: EdgeInsets.symmetric(horizontal: 22.0),
-          child: Form(
-            key: LoginAndroid._authFormKey,
-            child: Column(
-              mainAxisAlignment: widget.isDialog
-                  ? MainAxisAlignment.start
-                  : MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                if (!widget.isDialog) PresentationHeader(),
-                Column(
+        Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: AppConfig.formWidth,
+            ),
+            child: Container(
+              margin: EdgeInsets.symmetric(horizontal: 22.0),
+              child: Form(
+                key: LoginAndroid._authFormKey,
+                child: Column(
+                  mainAxisAlignment: widget.isDialog
+                      ? MainAxisAlignment.start
+                      : MainAxisAlignment.spaceEvenly,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    if (_showHostField)
-                      AuthInput(
-                        controller: hostCtrl,
-                        inputFormatters: [HostInputFormatter()],
-                        label: i18n(context, S.login_input_host),
-                        keyboardType: TextInputType.url,
-                        isEnabled: !loading,
-                      ),
-                    SizedBox(height: 10),
-                    AuthInput(
-                      enableSuggestions: false,
-                      autocorrect: false,
-                      inputFormatters: [FilteringTextInputFormatter.deny(" ")],
-                      controller: emailCtrl,
-                      label: i18n(context, S.login_input_email),
-                      keyboardType: TextInputType.emailAddress,
-                      validator: (value) => validateInput(context, value,
-                          [ValidationType.empty, ValidationType.email]),
-                      isEnabled: !loading,
+                    if (!widget.isDialog) PresentationHeader(),
+                    Column(
+                      children: <Widget>[
+                        if (widget.isDialog && AppConfig.of(context).isTablet)
+                          Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Text(
+                              i18n(
+                                context,
+                                widget.email == null
+                                    ? S.settings_accounts_add
+                                    : S.settings_accounts_relogin,
+                              ),
+                              style: theme.textTheme.title,
+                            ),
+                          ),
+                        if (_showHostField)
+                          AuthInput(
+                            controller: hostCtrl,
+                            inputFormatters: [HostInputFormatter()],
+                            label: i18n(context, S.login_input_host),
+                            keyboardType: TextInputType.url,
+                            isEnabled: !loading,
+                          ),
+                        SizedBox(height: 10),
+                        AuthInput(
+                          enableSuggestions: false,
+                          autocorrect: false,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.deny(" ")
+                          ],
+                          controller: emailCtrl,
+                          label: i18n(context, S.login_input_email),
+                          keyboardType: TextInputType.emailAddress,
+                          validator: (value) => validateInput(context, value,
+                              [ValidationType.empty, ValidationType.email]),
+                          isEnabled: !loading,
+                        ),
+                        SizedBox(height: 10),
+                        AuthInput(
+                          controller: passwordCtrl,
+                          label: i18n(context, S.login_input_password),
+                          validator: (value) => validateInput(
+                              context, value, [ValidationType.empty]),
+                          isPassword: true,
+                          isEnabled: !loading,
+                        ),
+                      ],
                     ),
-                    SizedBox(height: 10),
-                    AuthInput(
-                      controller: passwordCtrl,
-                      label: i18n(context, S.login_input_password),
-                      validator: (value) =>
-                          validateInput(context, value, [ValidationType.empty]),
-                      isPassword: true,
-                      isEnabled: !loading,
+                    if (widget.isDialog) SizedBox(height: 40.0),
+                    SizedBox(
+                      width: double.infinity,
+                      child: _debugRouteToTwoFactor(
+                        AMButton(
+                          shadow: AppColor.enableShadow ? null : BoxShadow(),
+                          child: Text(i18n(
+                              context,
+                              widget.isDialog
+                                  ? S.btn_add_account
+                                  : S.btn_login)),
+                          isLoading: loading,
+                          onPressed: () => _login(context),
+                        ),
+                      ),
                     ),
                   ],
                 ),
-                if (widget.isDialog) SizedBox(height: 40.0),
-                SizedBox(
-                  width: double.infinity,
-                  child: _debugRouteToTwoFactor(
-                    AMButton(
-                      shadow: AppColor.enableShadow ? null : BoxShadow(),
-                      child: Text(i18n(context,
-                          widget.isDialog ? S.btn_add_account : S.btn_login)),
-                      isLoading: loading,
-                      onPressed: () => _login(context),
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
         ),
