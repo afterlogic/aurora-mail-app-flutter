@@ -141,15 +141,17 @@ class _GroupViewAndroidState extends BState<GroupViewAndroid> {
         cb: () => _visitWebsite(g.web),
       ),
     ]);
-    final isTablet = AppConfig.of(context).isTablet;
-    final media = MediaQuery.of(context);
     return Scaffold(
       appBar: GroupViewAppBar(onActionSelected: _onAppBarActionSelected),
-      body: ListView(
-        padding: isTablet
-            ? EdgeInsets.symmetric(horizontal: media.size.width / 6)
-            : null,
-        children: _mainInfo,
+      body: Center(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: AppConfig.formWidth,
+          ),
+          child: ListView(
+            children: _mainInfo,
+          ),
+        ),
       ),
     );
   }

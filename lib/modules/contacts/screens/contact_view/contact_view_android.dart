@@ -432,8 +432,6 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
     }
 
     final groupInfo = _buildGroups(c.groupUUIDs);
-    final isTablet = AppConfig.of(context).isTablet;
-    final media = MediaQuery.of(context);
     return Scaffold(
       appBar: ContactViewAppBar(
         name: c.fullName,
@@ -468,59 +466,67 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
             return;
           }
         },
-        child: ListView(
-          padding: isTablet
-              ? EdgeInsets.symmetric(horizontal: media.size.width / 6)
-              : null,
-          children: <Widget>[
-            ..._mainInfo,
-            if (personalInfo.isNotEmpty) Divider(indent: 16.0, endIndent: 16.0),
-            if (personalInfo.isNotEmpty)
-              ListTile(
-                title: Text(
-                  i18n(context, S.contacts_view_section_home),
-                  style: sectionTitleTheme,
-                ),
-              ),
-            ...personalInfo,
-            if (businessInfo.isNotEmpty) Divider(indent: 16.0, endIndent: 16.0),
-            if (businessInfo.isNotEmpty)
-              ListTile(
-                title: Text(
-                  i18n(context, S.contacts_view_section_business),
-                  style: sectionTitleTheme,
-                ),
-              ),
-            ...businessInfo,
-            if (otherInfo.isNotEmpty) Divider(indent: 16.0, endIndent: 16.0),
-            if (otherInfo.isNotEmpty)
-              ListTile(
-                title: Text(
-                  i18n(context, S.contacts_view_section_other_info),
-                  style: sectionTitleTheme,
-                ),
-              ),
-            ...otherInfo,
-            if (BuildProperty.cryptoEnable && keyInfo != null)
-              Divider(indent: 16.0, endIndent: 16.0),
-            if (BuildProperty.cryptoEnable && keyInfo != null) keyInfo,
-            if (groupInfo.isNotEmpty) Divider(indent: 16.0, endIndent: 16.0),
-            if (groupInfo.isNotEmpty)
-              ListTile(
-                title: Text(
-                  i18n(context, S.contacts_view_section_groups),
-                  style: sectionTitleTheme,
-                ),
-              ),
-            if (groupInfo.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Wrap(
-                  spacing: 16,
-                  children: groupInfo,
-                ),
-              ),
-          ],
+        child: Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: AppConfig.formWidth,
+            ),
+            child: ListView(
+              children: <Widget>[
+                ..._mainInfo,
+                if (personalInfo.isNotEmpty)
+                  Divider(indent: 16.0, endIndent: 16.0),
+                if (personalInfo.isNotEmpty)
+                  ListTile(
+                    title: Text(
+                      i18n(context, S.contacts_view_section_home),
+                      style: sectionTitleTheme,
+                    ),
+                  ),
+                ...personalInfo,
+                if (businessInfo.isNotEmpty)
+                  Divider(indent: 16.0, endIndent: 16.0),
+                if (businessInfo.isNotEmpty)
+                  ListTile(
+                    title: Text(
+                      i18n(context, S.contacts_view_section_business),
+                      style: sectionTitleTheme,
+                    ),
+                  ),
+                ...businessInfo,
+                if (otherInfo.isNotEmpty)
+                  Divider(indent: 16.0, endIndent: 16.0),
+                if (otherInfo.isNotEmpty)
+                  ListTile(
+                    title: Text(
+                      i18n(context, S.contacts_view_section_other_info),
+                      style: sectionTitleTheme,
+                    ),
+                  ),
+                ...otherInfo,
+                if (BuildProperty.cryptoEnable && keyInfo != null)
+                  Divider(indent: 16.0, endIndent: 16.0),
+                if (BuildProperty.cryptoEnable && keyInfo != null) keyInfo,
+                if (groupInfo.isNotEmpty)
+                  Divider(indent: 16.0, endIndent: 16.0),
+                if (groupInfo.isNotEmpty)
+                  ListTile(
+                    title: Text(
+                      i18n(context, S.contacts_view_section_groups),
+                      style: sectionTitleTheme,
+                    ),
+                  ),
+                if (groupInfo.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Wrap(
+                      spacing: 16,
+                      children: groupInfo,
+                    ),
+                  ),
+              ],
+            ),
+          ),
         ),
       ),
     );
