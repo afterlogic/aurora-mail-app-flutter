@@ -59,19 +59,21 @@ class _ComposeSubjectState extends BState<ComposeSubject> {
                 ),
               ]),
             ),
-            IconButton(
-              icon: Icon(Icons.attachment),
-              padding: EdgeInsets.zero,
-              color: theme.accentColor,
-              onPressed: () => widget.onAttach(FileType.any),
-            ),
-            if (Platform.isIOS)
+            if (widget.onAttach != null) ...[
               IconButton(
-                icon: Icon(Icons.perm_media),
+                icon: Icon(Icons.attachment),
                 padding: EdgeInsets.zero,
                 color: theme.accentColor,
-                onPressed: () => widget.onAttach(FileType.media),
+                onPressed: () => widget.onAttach(FileType.any),
               ),
+              if (Platform.isIOS)
+                IconButton(
+                  icon: Icon(Icons.perm_media),
+                  padding: EdgeInsets.zero,
+                  color: theme.accentColor,
+                  onPressed: () => widget.onAttach(FileType.media),
+                ),
+            ],
           ],
         ),
       ),

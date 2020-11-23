@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:aurora_mail/modules/app_config/app_config.dart';
+import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/settings/blocs/pgp_settings/bloc.dart';
 import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
@@ -21,7 +21,7 @@ class PgpKeyScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isTablet = AppConfig.of(context).isTablet;
+    final isTablet = LayoutConfig.of(context).isTablet;
     return Scaffold(
       appBar: isTablet
           ? null
@@ -77,7 +77,7 @@ class PgpKeyScreen extends StatelessWidget {
   }
 
   Widget _button(BuildContext context) {
-    final isTablet = AppConfig.of(context).isTablet;
+    final isTablet = LayoutConfig.of(context).isTablet;
     final space = isTablet
         ? SizedBox.shrink()
         : SizedBox(

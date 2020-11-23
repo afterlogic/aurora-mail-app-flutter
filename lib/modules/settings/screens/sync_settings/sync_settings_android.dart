@@ -1,5 +1,5 @@
 import 'package:aurora_mail/build_property.dart';
-import 'package:aurora_mail/modules/app_config/app_config.dart';
+import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/modules/settings/models/sync_freq.dart';
 import 'package:aurora_mail/modules/settings/models/sync_period.dart';
@@ -37,7 +37,7 @@ class _SyncSettingsAndroidState extends BState<SyncSettingsAndroid> {
 
   @override
   Widget build(BuildContext context) {
-    final isTablet = AppConfig.of(context).isTablet;
+    final isTablet = LayoutConfig.of(context).isTablet;
     return Scaffold(
       appBar: isTablet ? null :AMAppBar(
         title: Text(i18n(context, S.settings_sync)),

@@ -1,6 +1,6 @@
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/config.dart';
-import 'package:aurora_mail/modules/app_config/app_config.dart';
+import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
@@ -469,7 +469,7 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
         child: Center(
           child: ConstrainedBox(
             constraints: BoxConstraints(
-              maxWidth: AppConfig.formWidth,
+              maxWidth: LayoutConfig.formWidth,
             ),
             child: ListView(
               children: <Widget>[

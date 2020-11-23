@@ -1,6 +1,6 @@
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/database/app_database.dart';
-import 'package:aurora_mail/modules/app_config/app_config.dart';
+import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/auth_input.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/host_input_formatter.dart';
@@ -65,7 +65,7 @@ class _LoginAndroidState extends BState<LoginAndroid> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final isTablet = AppConfig.of(context).isTablet;
+    final isTablet = LayoutConfig.of(context).isTablet;
     if (!isTablet) {
       SystemChrome.setPreferredOrientations([
         DeviceOrientation.portraitUp,
@@ -138,7 +138,7 @@ class _LoginAndroidState extends BState<LoginAndroid> {
   Widget build(BuildContext context) {
     final authBloc = BlocProvider.of<AuthBloc>(context);
     return Scaffold(
-      appBar: (widget.isDialog && !AppConfig.of(context).isTablet)
+      appBar: (widget.isDialog && !LayoutConfig.of(context).isTablet)
           ? AMAppBar(
               title: Text(
                 i18n(
@@ -249,7 +249,7 @@ class _LoginAndroidState extends BState<LoginAndroid> {
         Center(
           child: ConstrainedBox(
             constraints: BoxConstraints(
-              maxWidth: AppConfig.formWidth,
+              maxWidth: LayoutConfig.formWidth,
             ),
             child: Container(
               margin: EdgeInsets.symmetric(horizontal: 22.0),
@@ -264,7 +264,7 @@ class _LoginAndroidState extends BState<LoginAndroid> {
                     if (!widget.isDialog) PresentationHeader(),
                     Column(
                       children: <Widget>[
-                        if (widget.isDialog && AppConfig.of(context).isTablet)
+                        if (widget.isDialog && LayoutConfig.of(context).isTablet)
                           Padding(
                             padding: const EdgeInsets.all(16),
                             child: Text(

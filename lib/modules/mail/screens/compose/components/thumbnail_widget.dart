@@ -22,6 +22,7 @@ class ThumbnailWidget extends StatefulWidget {
 
 class _ThumbnailWidgetState extends State<ThumbnailWidget> {
   ImageProvider provider;
+  String extension;
 
   @override
   void initState() {
@@ -31,8 +32,16 @@ class _ThumbnailWidgetState extends State<ThumbnailWidget> {
 
   initImage() async {
     if (widget.file != null) {
+      final name = widget.file.path.split("/").last;
+      final extension = name.split(".").last;
+      if (name != extension) {
+        this.extension = ".$extension";
+      }
       try {
         final type = lookupMimeType(widget.file.path).split("/").first;
+        if (this.extension == null) {
+          this.extension = type;
+        }
         if (type == "image") {
           provider = FileImage(widget.file, scale: 5);
         } else if (type == "video") {
@@ -50,13 +59,27 @@ class _ThumbnailWidgetState extends State<ThumbnailWidget> {
         headers: WebMailApi.getHeaderWithToken(user.token),
       );
     }
+
     if (mounted) setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
     if (provider == null) {
-      return SizedBox.shrink();
+      if (widget.size > 100) {
+        return SizedBox(
+          height: widget.size,
+          width: widget.size,
+          child: Center(
+            child: Text(
+              extension,
+              style: Theme.of(context).textTheme.title.copyWith(fontSize: 30),
+            ),
+          ),
+        );
+      } else {
+        return SizedBox.shrink();
+      }
     }
     return SizedBox(
       height: widget.size,

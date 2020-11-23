@@ -1,7 +1,7 @@
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/inject/app_inject.dart';
 import 'package:aurora_mail/models/alias_or_identity.dart';
-import 'package:aurora_mail/modules/app_config/app_config.dart';
+import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/settings/blocs/pgp_settings/bloc.dart';
 import 'package:aurora_mail/modules/settings/screens/pgp_settings/dialogs/generate_key_dialog.dart';
@@ -44,7 +44,7 @@ class _PgpSettingsState extends BState<PgpSettings> {
 
   @override
   Widget build(BuildContext context) {
-    final isTablet = AppConfig.of(context).isTablet;
+    final isTablet = LayoutConfig.of(context).isTablet;
     return Scaffold(
       appBar: isTablet
           ? null
@@ -288,7 +288,7 @@ class _PgpSettingsState extends BState<PgpSettings> {
   }
 
   Widget _button(BuildContext context, LoadedState state) {
-    final isTablet = AppConfig.of(context).isTablet;
+    final isTablet = LayoutConfig.of(context).isTablet;
     final space = isTablet
         ? SizedBox.shrink()
         : SizedBox(

@@ -1,5 +1,5 @@
 import 'package:aurora_mail/build_property.dart';
-import 'package:aurora_mail/modules/app_config/app_config.dart';
+import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_event.dart';
 import 'package:aurora_mail/modules/route_generator.dart';
@@ -39,7 +39,7 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
 
   @override
   Widget build(BuildContext context) {
-    final isTablet = AppConfig.of(context).isTablet;
+    final isTablet = LayoutConfig.of(context).isTablet;
     final current = isTablet
         ? (navigatorKey?.currentState?.current?.name ??
             CommonSettingsRoute.name)
@@ -109,21 +109,41 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
     if (isTablet) {
       body = Row(
         children: [
-          Drawer(
-            child: ListTileTheme(
-              style: ListTileStyle.drawer,
-              selectedColor: theme.accentColor,
-              child: SafeArea(child: body),
+          ClipRRect(
+            child: SizedBox(
+              width: 304,
+              child: Scaffold(
+                appBar: AMAppBar(),
+                body: DecoratedBox(
+                  position: DecorationPosition.foreground,
+                  decoration: BoxDecoration(
+                      border: Border(right: BorderSide(width: 0.2))),
+                  child: Drawer(
+                    child: ListTileTheme(
+                      style: ListTileStyle.drawer,
+                      selectedColor: theme.accentColor,
+                      child: SafeArea(child: body),
+                    ),
+                  ),
+                ),
+              ),
             ),
           ),
           Flexible(
-            child: SettingsNavigatorWidget(
-              key: navigatorKey,
-              onUpdate: () {
-                setState(() {});
-              },
-              initialRoute: CommonSettingsRoute.name,
-              routeFactory: RouteGenerator.onGenerateRoute,
+            child: ClipRRect(
+              child: Scaffold(
+                appBar: AMAppBar(
+                  title: Text(i18n(context, S.settings)),
+                ),
+                body: SettingsNavigatorWidget(
+                  key: navigatorKey,
+                  onUpdate: () {
+                    setState(() {});
+                  },
+                  initialRoute: CommonSettingsRoute.name,
+                  routeFactory: RouteGenerator.onGenerateRoute,
+                ),
+              ),
             ),
             flex: 3,
           ),
@@ -131,9 +151,11 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
       );
     }
     return Scaffold(
-      appBar: AMAppBar(
-        title: Text(i18n(context, S.settings)),
-      ),
+      appBar: isTablet
+          ? null
+          : AMAppBar(
+              title: Text(i18n(context, S.settings)),
+            ),
       body: body,
       bottomNavigationBar:
           MailBottomAppBar(selectedRoute: MailBottomAppBarRoutes.settings),

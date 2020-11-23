@@ -1,4 +1,4 @@
-import 'package:aurora_mail/modules/app_config/app_config.dart';
+import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/contacts_bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_group_model.dart';
@@ -146,7 +146,7 @@ class _GroupViewAndroidState extends BState<GroupViewAndroid> {
       body: Center(
         child: ConstrainedBox(
           constraints: BoxConstraints(
-            maxWidth: AppConfig.formWidth,
+            maxWidth: LayoutConfig.formWidth,
           ),
           child: ListView(
             children: _mainInfo,

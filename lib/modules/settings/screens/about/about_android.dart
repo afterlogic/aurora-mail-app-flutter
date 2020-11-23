@@ -1,5 +1,5 @@
 import 'package:aurora_mail/build_property.dart';
-import 'package:aurora_mail/modules/app_config/app_config.dart';
+import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
@@ -28,7 +28,7 @@ class _AboutAndroidState extends BState<AboutAndroid> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final isTablet = AppConfig.of(context).isTablet;
+    final isTablet = LayoutConfig.of(context).isTablet;
     if (!isTablet) {
       SystemChrome.setPreferredOrientations([
         DeviceOrientation.portraitUp,
@@ -63,7 +63,7 @@ class _AboutAndroidState extends BState<AboutAndroid> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isTablet = AppConfig.of(context).isTablet;
+    final isTablet = LayoutConfig.of(context).isTablet;
     return Scaffold(
       appBar: isTablet
           ? null

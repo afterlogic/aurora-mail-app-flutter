@@ -1,5 +1,6 @@
 import 'dart:async';
-
+import 'dart:io';
+import 'package:theme/app_theme.dart';
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
@@ -8,6 +9,7 @@ import 'package:aurora_mail/models/alias_or_identity.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/dialog_wrap.dart';
+import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/mail/blocs/compose_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/models/compose_actions.dart';
@@ -33,6 +35,7 @@ import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/mail_utils.dart';
 import 'package:aurora_mail/utils/show_dialog.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
+import 'package:aurora_ui_kit/components/am_fab.dart';
 import 'package:crypto_worker/crypto_worker.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
@@ -784,7 +787,8 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
   Widget build(BuildContext context) {
     final lockUsers = [EncryptType.Encrypt, EncryptType.SelfDestructingEncrypt]
         .contains(_encryptType);
-
+    final config = LayoutConfig.of(context);
+    final isTablet = config.isTablet && config.columnCount >= 3;
     Widget _done(FocusNode node) {
       return FlatButton(
         child: Text(
@@ -814,159 +818,228 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
       );
     }
 
+    Widget body = SingleChildScrollView(
+      child: Column(
+        children: <Widget>[
+          if (_encryptType == EncryptType.None)
+            AutomaticallyEncryptLabel(
+              value: automaticallyEncrypt,
+              onChanged: (_) {
+                setState(() {
+                  automaticallyEncrypt = !automaticallyEncrypt;
+                });
+              },
+              emails: [..._toEmails, ..._ccEmails, ..._bccEmails],
+              bloc: _bloc,
+            ),
+          IdentitySelector(
+            padding: EdgeInsets.all(16.0),
+            enable: !lockUsers,
+            label: i18n(context, S.messages_from),
+            onIdentity: setIdentityOrSender,
+            textCtrl: _fromCtrl,
+          ),
+          Divider(height: 0.0),
+          ComposeEmails(
+            key: _toKey,
+            padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
+            enable: !lockUsers,
+            focusNode: toNode,
+            label: i18n(context, S.messages_to),
+            textCtrl: _toTextCtrl,
+            emails: _toEmails,
+            onNext: () {
+              ccNode.requestFocus();
+            },
+            onChange: () {
+              setState(() {});
+            },
+            bloc: _bloc,
+          ),
+          Divider(height: 0.0),
+          ComposeEmails(
+            key: _ccKey,
+            padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
+            enable: !lockUsers,
+            focusNode: ccNode,
+            label: i18n(context, S.messages_cc),
+            textCtrl: _ccTextCtrl,
+            emails: _ccEmails,
+            onCCSelected: () => setState(() => _showBCC = true),
+            onNext: () {
+              if (_showBCC) {
+                bccNode.requestFocus();
+              } else {
+                subjectNode.requestFocus();
+              }
+            },
+            onChange: () {
+              setState(() {});
+            },
+            bloc: _bloc,
+          ),
+          Divider(height: 0.0),
+          if (_showBCC)
+            ComposeEmails(
+              key: _bccKey,
+              padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
+              enable: !lockUsers,
+              focusNode: bccNode,
+              label: i18n(context, S.messages_bcc),
+              textCtrl: _bccTextCtrl,
+              emails: _bccEmails,
+              onNext: () {
+                subjectNode.requestFocus();
+              },
+              onChange: () {
+                setState(() {});
+              },
+              bloc: _bloc,
+            ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
+            child: Column(
+              children: <Widget>[
+                if (_showBCC) Divider(height: 0.0),
+                ComposeSubject(
+                  focusNode: subjectNode,
+                  textCtrl: _subjectTextCtrl,
+                  onAttach: isTablet
+                      ? null
+                      : (FileType type) => _bloc.add(UploadAttachment(type)),
+                  onNext: () {
+                    bodyNode.requestFocus();
+                  },
+                ),
+                if (!isTablet && _attachments.isNotEmpty) Divider(height: 0.0),
+                if (!isTablet)
+                  BlocBuilder<ComposeBloc, ComposeState>(
+                    builder: (_, state) {
+                      if (state is ConvertingAttachments) {
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Center(child: CircularProgressIndicator()),
+                        );
+                      } else {
+                        return Column(
+                          children: _attachments
+                              .map((a) =>
+                                  ComposeAttachmentItem(a, _cancelAttachment))
+                              .toList(),
+                        );
+                      }
+                    },
+                  ),
+              ],
+            ),
+          ),
+          Divider(height: 0.0),
+          ComposeBody(
+            enable: ![
+              EncryptType.SelfDestructingEncrypt,
+              EncryptType.Encrypt,
+              EncryptType.Sign
+            ].contains(_encryptType),
+            textCtrl: _bodyTextCtrl,
+            focusNode: bodyNode,
+          ),
+        ],
+      ),
+    );
+    body = _keyboardActions(body);
+    if (isTablet) {
+      body = Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Flexible(
+            flex: 3,
+            child: body,
+          ),
+          SizedBox(
+            height: double.infinity,
+            width: 1,
+            child: Divider(),
+          ),
+          Flexible(
+            flex: 1,
+            child: DecoratedBox(
+              position: DecorationPosition.foreground,
+              decoration:
+                  BoxDecoration(border: Border(left: BorderSide(width: 0.2))),
+              child: Scaffold(
+                floatingActionButton: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (Platform.isIOS) ...[
+                      AMFloatingActionButton(
+                        child: IconTheme(
+                          data: AppTheme.floatIconTheme,
+                          child: Icon(Icons.perm_media),
+                        ),
+                        onPressed: () =>
+                            _bloc.add(UploadAttachment(FileType.media)),
+                      ),
+                      SizedBox(height: 10),
+                    ],
+                    AMFloatingActionButton(
+                      child: IconTheme(
+                        data: AppTheme.floatIconTheme,
+                        child: Icon(Icons.attachment),
+                      ),
+                      onPressed: () =>
+                          _bloc.add(UploadAttachment(FileType.any)),
+                    ),
+                  ],
+                ),
+                body: BlocBuilder<ComposeBloc, ComposeState>(
+                  builder: (_, state) {
+                    if (state is ConvertingAttachments) {
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Center(child: CircularProgressIndicator()),
+                      );
+                    } else {
+                      return ListView(
+                        children: _attachments
+                            .map((a) => ComposeAttachmentItem(
+                                  a,
+                                  _cancelAttachment,
+                                  isLarge: true,
+                                ))
+                            .toList(),
+                      );
+                    }
+                  },
+                ),
+              ),
+            ),
+          ),
+        ],
+      );
+    }
+
     return BlocProvider<ComposeBloc>.value(
       value: _bloc,
       child: Scaffold(
         key: _scaffoldKey,
         appBar: ComposeAppBar(_onAppBarActionSelected),
-        body: _keyboardActions(
-          BlocListener<ComposeBloc, ComposeState>(
-            listener: (context, state) {
-              if (state is EncryptComplete) _encryptLock(state);
+        body: BlocListener<ComposeBloc, ComposeState>(
+          listener: (context, state) {
+            if (state is EncryptComplete) _encryptLock(state);
 
-              if (state is MessageSending) _showSending();
-              if (state is MessageSent) _onMessageSent(context);
-              if (state is MessageSavedInDrafts)
-                _onMessageSaved(context, state.draftUid);
-              if (state is ComposeError) _showError(state.errorMsg, state.arg);
-              if (state is UploadStarted)
-                _setUploadProgress(state.tempAttachment);
-              if (state is AttachmentUploaded)
-                _onAttachmentUploaded(state.composeAttachment);
-              if (state is ReceivedComposeAttachments)
-                setState(() => _attachments.addAll(state.attachments));
-            },
-            child: SingleChildScrollView(
-              child: Column(
-                children: <Widget>[
-                  if (_encryptType == EncryptType.None)
-                    AutomaticallyEncryptLabel(
-                      value: automaticallyEncrypt,
-                      onChanged: (_) {
-                        setState(() {
-                          automaticallyEncrypt = !automaticallyEncrypt;
-                        });
-                      },
-                      emails: [..._toEmails, ..._ccEmails, ..._bccEmails],
-                      bloc: _bloc,
-                    ),
-                  IdentitySelector(
-                    padding: EdgeInsets.all(16.0),
-                    enable: !lockUsers,
-                    label: i18n(context, S.messages_from),
-                    onIdentity: setIdentityOrSender,
-                    textCtrl: _fromCtrl,
-                  ),
-                  Divider(height: 0.0),
-                  ComposeEmails(
-                    key: _toKey,
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
-                    enable: !lockUsers,
-                    focusNode: toNode,
-                    label: i18n(context, S.messages_to),
-                    textCtrl: _toTextCtrl,
-                    emails: _toEmails,
-                    onNext: () {
-                      ccNode.requestFocus();
-                    },
-                    onChange: () {
-                      setState(() {});
-                    },
-                    bloc: _bloc,
-                  ),
-                  Divider(height: 0.0),
-                  ComposeEmails(
-                    key: _ccKey,
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
-                    enable: !lockUsers,
-                    focusNode: ccNode,
-                    label: i18n(context, S.messages_cc),
-                    textCtrl: _ccTextCtrl,
-                    emails: _ccEmails,
-                    onCCSelected: () => setState(() => _showBCC = true),
-                    onNext: () {
-                      if (_showBCC) {
-                        bccNode.requestFocus();
-                      } else {
-                        subjectNode.requestFocus();
-                      }
-                    },
-                    onChange: () {
-                      setState(() {});
-                    },
-                    bloc: _bloc,
-                  ),
-                  Divider(height: 0.0),
-                  if (_showBCC)
-                    ComposeEmails(
-                      key: _bccKey,
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
-                      enable: !lockUsers,
-                      focusNode: bccNode,
-                      label: i18n(context, S.messages_bcc),
-                      textCtrl: _bccTextCtrl,
-                      emails: _bccEmails,
-                      onNext: () {
-                        subjectNode.requestFocus();
-                      },
-                      onChange: () {
-                        setState(() {});
-                      },
-                      bloc: _bloc,
-                    ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Column(
-                      children: <Widget>[
-                        if (_showBCC) Divider(height: 0.0),
-                        ComposeSubject(
-                          focusNode: subjectNode,
-                          textCtrl: _subjectTextCtrl,
-                          onAttach: (FileType type) =>
-                              _bloc.add(UploadAttachment(type)),
-                          onNext: () {
-                            bodyNode.requestFocus();
-                          },
-                        ),
-                        if (_attachments.isNotEmpty) Divider(height: 0.0),
-                        BlocBuilder<ComposeBloc, ComposeState>(
-                          builder: (_, state) {
-                            if (state is ConvertingAttachments) {
-                              return Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child:
-                                    Center(child: CircularProgressIndicator()),
-                              );
-                            } else {
-                              return Column(
-                                children: _attachments
-                                    .map((a) => ComposeAttachmentItem(
-                                        a, _cancelAttachment))
-                                    .toList(),
-                              );
-                            }
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                  Divider(height: 0.0),
-                  ComposeBody(
-                    enable: ![
-                      EncryptType.SelfDestructingEncrypt,
-                      EncryptType.Encrypt,
-                      EncryptType.Sign
-                    ].contains(_encryptType),
-                    textCtrl: _bodyTextCtrl,
-                    focusNode: bodyNode,
-                  ),
-                ],
-              ),
-            ),
-          ),
+            if (state is MessageSending) _showSending();
+            if (state is MessageSent) _onMessageSent(context);
+            if (state is MessageSavedInDrafts)
+              _onMessageSaved(context, state.draftUid);
+            if (state is ComposeError) _showError(state.errorMsg, state.arg);
+            if (state is UploadStarted)
+              _setUploadProgress(state.tempAttachment);
+            if (state is AttachmentUploaded)
+              _onAttachmentUploaded(state.composeAttachment);
+            if (state is ReceivedComposeAttachments)
+              setState(() => _attachments.addAll(state.attachments));
+          },
+          child: body,
         ),
         bottomNavigationBar: BuildProperty.cryptoEnable
             ? ComposeBottomBar(

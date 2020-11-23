@@ -1,5 +1,5 @@
 import 'package:aurora_mail/build_property.dart';
-import 'package:aurora_mail/modules/app_config/app_config.dart';
+import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/login_gradient.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/mail_logo.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/presentation_header.dart';
@@ -48,7 +48,7 @@ class UpgradePlanWidget extends StatelessWidget {
             Center(
               child:ConstrainedBox(
                 constraints: BoxConstraints(
-                  maxWidth: AppConfig.formWidth,
+                  maxWidth: LayoutConfig.formWidth,
                 ),
                 child: Container(
                   margin: EdgeInsets.symmetric(horizontal: 22.0),

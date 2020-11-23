@@ -1,5 +1,5 @@
 import 'package:aurora_mail/build_property.dart';
-import 'package:aurora_mail/modules/app_config/app_config.dart';
+import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/auth/blocs/two_factor_auth/bloc.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/auth_input.dart';
@@ -101,7 +101,7 @@ class _TwoFactorAuthWidgetState extends BState<TwoFactorAuthWidget> {
         Center(
           child: ConstrainedBox(
             constraints: BoxConstraints(
-              maxWidth: AppConfig.formWidth,
+              maxWidth: LayoutConfig.formWidth,
             ),
             child: Container(
               margin: EdgeInsets.symmetric(horizontal: 22.0),

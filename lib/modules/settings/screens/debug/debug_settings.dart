@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:aurora_mail/logger/logger.dart';
-import 'package:aurora_mail/modules/app_config/app_config.dart';
+import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/settings/screens/debug/debug_local_storage.dart';
 import 'package:aurora_mail/modules/settings/screens/debug/log_screen/log_route.dart';
@@ -46,7 +46,7 @@ class _DebugSettingState extends BState<DebugSetting> {
 
   @override
   Widget build(BuildContext context) {
-    final isTablet = AppConfig.of(context).isTablet;
+    final isTablet = LayoutConfig.of(context).isTablet;
     return Scaffold(
       appBar: isTablet
           ? null

@@ -1,5 +1,5 @@
 import 'package:aurora_mail/database/app_database.dart';
-import 'package:aurora_mail/modules/app_config/app_config.dart';
+import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_state.dart';
 import 'package:aurora_mail/modules/auth/screens/login/login_route.dart';
@@ -28,7 +28,7 @@ class _ManageUsersAndroidState extends BState<ManageUsersAndroid> {
 
   @override
   Widget build(BuildContext context) {
-    final isTablet = AppConfig.of(context).isTablet;
+    final isTablet = LayoutConfig.of(context).isTablet;
     return Scaffold(
       appBar: isTablet
           ? null

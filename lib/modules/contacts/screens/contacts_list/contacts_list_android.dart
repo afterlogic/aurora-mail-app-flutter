@@ -1,10 +1,11 @@
 import 'dart:async';
 
 import 'package:aurora_mail/inject/app_inject.dart';
-import 'package:aurora_mail/modules/app_config/app_config.dart';
+import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 import 'package:aurora_mail/modules/contacts/screens/contact_edit/contact_edit_route.dart';
+import 'package:aurora_mail/modules/contacts/screens/contact_view/contact_view_android.dart';
 import 'package:aurora_mail/modules/contacts/screens/contact_view/contact_view_route.dart';
 import 'package:aurora_mail/modules/contacts/screens/contacts_list/components/contacts_app_bar.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/mail_bloc.dart';
@@ -34,7 +35,8 @@ class ContactsListAndroid extends StatefulWidget {
 class _ContactsListAndroidState extends BState<ContactsListAndroid> {
   final _refreshKey = GlobalKey<RefreshIndicatorState>();
   PgpSettingsBloc pgpSettingsBloc;
-
+  Contact selectedContact;
+  Widget selectedWidget;
   var _refreshCompleter = new Completer();
 
   @override
@@ -45,17 +47,33 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
   }
 
   void _onContactSelected(BuildContext context, Contact contact) {
-    Navigator.pushNamed(
-      context,
-      ContactViewRoute.name,
-      arguments: ContactViewScreenArgs(
-        pgpSettingsBloc,
-        contact: contact,
-        mailBloc: BlocProvider.of<MailBloc>(context),
-        contactsBloc: BlocProvider.of<ContactsBloc>(context),
-        scaffoldState: Scaffold.of(context),
-      ),
-    );
+    final config = LayoutConfig.of(context);
+    if (config.isTablet && config.columnCount >= 3) {
+      if (selectedContact != contact) {
+        selectedContact = contact;
+        selectedWidget = SizedBox(
+          key: ValueKey(contact.hashCode),
+          child: ContactViewAndroid(
+            contact,
+            Scaffold.of(context),
+            pgpSettingsBloc,
+          ),
+        );
+        setState(() {});
+      }
+    } else {
+      Navigator.pushNamed(
+        context,
+        ContactViewRoute.name,
+        arguments: ContactViewScreenArgs(
+          pgpSettingsBloc,
+          contact: contact,
+          mailBloc: BlocProvider.of<MailBloc>(context),
+          contactsBloc: BlocProvider.of<ContactsBloc>(context),
+          scaffoldState: Scaffold.of(context),
+        ),
+      );
+    }
   }
 
   void _completeRefresh() {
@@ -73,7 +91,8 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
 
   @override
   Widget build(BuildContext context) {
-    final isTablet = AppConfig.of(context).isTablet;
+    final config = LayoutConfig.of(context);
+    final isTablet = config.isTablet;
     Widget body = BlocListener(
       bloc: pgpSettingsBloc,
       listener: (BuildContext context, state) {
@@ -144,32 +163,78 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
     if (isTablet) {
       body = Row(
         children: [
-          ClipRRect(child: ContactsDrawer()),
-          Flexible(
-            child: body,
+          ClipRRect(
+            child: SizedBox(
+              width: 304,
+              child: Scaffold(
+                appBar: AMAppBar(),
+                body: DecoratedBox(
+                    position: DecorationPosition.foreground,
+                    decoration: BoxDecoration(
+                        border: Border(right: BorderSide(width: 0.2))),
+                    child: ContactsDrawer()),
+              ),
+            ),
           ),
+          Flexible(
+            child: ClipRRect(
+              child: Scaffold(
+                appBar: ContactsAppBar(),
+                body: DecoratedBox(
+                  position: DecorationPosition.foreground,
+                  decoration: BoxDecoration(
+                      border: selectedWidget == null && config.columnCount >= 3
+                          ? null
+                          : Border(right: BorderSide(width: 0.2))),
+                  child: body,
+                ),
+                floatingActionButtonLocation:
+                    FloatingActionButtonLocation.endFloat,
+                floatingActionButton: isTablet
+                    ? null
+                    : AMFloatingActionButton(
+                        child: IconTheme(
+                          data: AppTheme.floatIconTheme,
+                          child: Icon(MdiIcons.accountPlusOutline),
+                        ),
+                        onPressed: () => Navigator.pushNamed(
+                          context,
+                          ContactEditRoute.name,
+                          arguments: ContactEditScreenArgs(pgpSettingsBloc,
+                              bloc: BlocProvider.of<ContactsBloc>(context)),
+                        ),
+                      ),
+              ),
+            ),
+          ),
+          if (selectedWidget != null && config.columnCount >= 3)
+            Flexible(
+              child: ClipRRect(child: selectedWidget),
+            ),
         ],
       );
     }
     return Scaffold(
-      appBar: ContactsAppBar(),
+      appBar: isTablet ? null : ContactsAppBar(),
       drawer: isTablet ? null : ContactsDrawer(),
       body: body,
       bottomNavigationBar:
           MailBottomAppBar(selectedRoute: MailBottomAppBarRoutes.contacts),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: AMFloatingActionButton(
-        child: IconTheme(
-          data: AppTheme.floatIconTheme,
-          child: Icon(MdiIcons.accountPlusOutline),
-        ),
-        onPressed: () => Navigator.pushNamed(
-          context,
-          ContactEditRoute.name,
-          arguments: ContactEditScreenArgs(pgpSettingsBloc,
-              bloc: BlocProvider.of<ContactsBloc>(context)),
-        ),
-      ),
+      floatingActionButton: isTablet
+          ? null
+          : AMFloatingActionButton(
+              child: IconTheme(
+                data: AppTheme.floatIconTheme,
+                child: Icon(MdiIcons.accountPlusOutline),
+              ),
+              onPressed: () => Navigator.pushNamed(
+                context,
+                ContactEditRoute.name,
+                arguments: ContactEditScreenArgs(pgpSettingsBloc,
+                    bloc: BlocProvider.of<ContactsBloc>(context)),
+              ),
+            ),
     );
   }
 
