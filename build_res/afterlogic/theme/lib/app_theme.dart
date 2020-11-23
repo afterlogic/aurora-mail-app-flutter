@@ -112,4 +112,6 @@ class AppTheme {
   static final ThemeData login = null;
 
   static final floatIconTheme = IconThemeData(color: Colors.white);
+
+  static final Color loginTextColor = null;
 }

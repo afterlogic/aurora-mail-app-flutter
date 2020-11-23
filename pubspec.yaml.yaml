@@ -110,6 +110,10 @@ dependencies:
 
   dm: 0.1.0
 
+  # fido
+  yubico_flutter:
+    git: https://github.com/afterlogic/yubico_flutter
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

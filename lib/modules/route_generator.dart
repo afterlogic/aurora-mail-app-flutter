@@ -1,3 +1,4 @@
+import 'package:aurora_mail/modules/auth/screens/fido_auth/platform/android/android_fido_auth_route.dart';
 import 'package:aurora_mail/modules/auth/screens/upgrade_plan/upgrade_plan_route.dart';
 import 'package:aurora_mail/modules/auth/screens/upgrade_plan/upgrade_plan_widget.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
@@ -45,6 +46,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'auth/screens/fido_auth/platform/android/android_fido_auth.dart';
 import 'auth/screens/login/login_android.dart';
 import 'auth/screens/login/login_route.dart';
 import 'auth/screens/two_factor_auth/two_factor_auth_route.dart';
@@ -80,6 +82,15 @@ class RouteGenerator {
             builder: (_) => LoginAndroid(),
           );
         }
+        break;
+      case AndroidFidoAuthRoute.name:
+        return FadeRoute(
+          settings: RouteSettings(
+            name: settings.name,
+          ),
+          builder: (_) => AndroidFidoAuth(),
+        );
+
         break;
       case TwoFactorAuthRoute.name:
         final args = settings.arguments as TwoFactorAuthRouteArgs;
