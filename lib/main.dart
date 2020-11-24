@@ -16,7 +16,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:webmail_api_client/webmail_api_client.dart';
-
+import 'package:firebase_core/firebase_core.dart';
 import 'background/background_helper.dart';
 import 'background/background_sync.dart';
 import 'logger/logger.dart';
@@ -25,9 +25,10 @@ import 'modules/settings/screens/debug/debug_local_storage.dart';
 import 'notification/notification_manager.dart';
 
 void main() async {
-  Crashlytics.instance.enableInDevMode = true;
   AppInjector.create();
-  FlutterError.onError = Crashlytics.instance.recordFlutterError;
+  await Firebase.initializeApp();
+  FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true) ;
+  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
   // ignore: invalid_use_of_protected_member
   DBInstances.appDB.connection.executor.ensureOpen();
   WidgetsFlutterBinding.ensureInitialized();
