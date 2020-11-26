@@ -264,9 +264,9 @@ class EnS extends S {
     257: "Yesterday",
     258:
         "Your account is protected with\nTwo Factor Authentication.\nPlease provide the PIN code.",
-    259: "PIN",
-    260: "Verify PIN",
-    261: "Invalid PIN",
+    259: "Verification code",
+    260: "Verify",
+    261: "Invalid code",
     262: "Done",
     263: "Are you sure want to exit",
     264: "Exit",
@@ -403,6 +403,25 @@ class EnS extends S {
     387: "Required password for PGP key",
     388: "Are you sure you want to delete file {name}",
     389: "Can't connect to the server",
+    390: "Invalid security key",
+    391: "Two Factor Verification",
+    392:
+        "This extra step is intended to confirm it’s really you trying to sign in",
+    393: "Use security key",
+    394: "Please scan your security key or insert it to the device",
+    395: "Success",
+    396: "Other options",
+    397: "Use Backup code",
+    398: "Use Authenticator app",
+    399: "Use your Security key",
+    400: "Security options available",
+    401: "Touch you security key",
+    402: "Please follow the instructions in the popup dialog",
+    403: "There was a problem",
+    404:
+        "Try using your security key again or try another way to verify it's you",
+    405: "Try again",
+    406: "Specify verification code from the Authenticator app",
   };
   String get(int id) => _map[id];
 }

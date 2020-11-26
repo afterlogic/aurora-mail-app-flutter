@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:aurora_mail/utils/always_non_equal_object.dart';
 import 'package:aurora_mail/utils/error_to_show.dart';
 import 'package:equatable/equatable.dart';
@@ -19,6 +21,11 @@ class SendingBeginAuthRequestState extends IosFidoAuthState {}
 
 class WaitKeyState extends IosFidoAuthState {}
 
-class TouchKeyState extends IosFidoAuthState {}
+class TouchKeyState extends IosFidoAuthState {
+}
 
-class SendingFinishAuthRequestState extends IosFidoAuthState {}
+class SendingFinishAuthRequestState extends IosFidoAuthState {
+  final Completer waitSheet;
+
+  SendingFinishAuthRequestState(this.waitSheet);
+}

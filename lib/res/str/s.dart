@@ -391,8 +391,26 @@ abstract class S extends SInterface {
   static const btn_not_spam = 385;
   static const error_password_is_empty = 386;
   static const label_encryption_password_for_pgp_key = 387;
-  static const hint_log_delete_record = 388;
+  static const debug_hint_log_delete_record = 388;
   static const error_timeout = 389;
-  static const messages_list_app_bar_Mail = 390;
+  static const fido_error_invalid_key = 390;
+  static const tfa_label = 391;
+  static const tfa_hint_step = 392;
+  static const fido_btn_use_key = 393;
+  static const fido_label_connect_your_key = 394;
+  static const fido_label_success = 395;
+  static const tfa_btn_other_options = 396;
+  static const tfa_btn_use_backup_code = 397;
+  static const tfa_btn_use_auth_app = 398;
+  static const tfa_btn_use_security_key = 399;
+  static const tfa_label_hint_security_options = 400;
+  static const fido_label_touch_your_key = 401;
+  static const fido_hint_follow_the_instructions = 402;
+  static const fido_error_title = 403;
+  static const fido_error_hint = 404;
+  static const fido_btn_try_again = 405;
+  static const tfa_input_hint_code_from_app = 406;
+  static const hint_log_delete_record = 407;
+  static const messages_list_app_bar_Mail = 408;
   String get(int id);
 }

@@ -1,4 +1,8 @@
 import 'package:aurora_mail/modules/auth/screens/fido_auth/platform/android/android_fido_auth_route.dart';
+import 'package:aurora_mail/modules/auth/screens/fido_auth/platform/ios/ios_fido_auth.dart';
+import 'package:aurora_mail/modules/auth/screens/fido_auth/platform/ios/ios_fido_auth_route.dart';
+import 'package:aurora_mail/modules/auth/screens/select_two_factor/select_two_factor.dart';
+import 'package:aurora_mail/modules/auth/screens/select_two_factor/select_two_factor_route.dart';
 import 'package:aurora_mail/modules/auth/screens/upgrade_plan/upgrade_plan_route.dart';
 import 'package:aurora_mail/modules/auth/screens/upgrade_plan/upgrade_plan_widget.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
@@ -71,8 +75,7 @@ class RouteGenerator {
               name: settings.name,
             ),
             fullscreenDialog: true,
-            builder: (_) =>
-                LoginAndroid(isDialog: args.isDialog, email: args.email),
+            builder: (_) => LoginAndroid(isDialog: args.isDialog, email: args.email),
           );
         } else {
           return FadeRoute(
@@ -89,6 +92,26 @@ class RouteGenerator {
             name: settings.name,
           ),
           builder: (_) => AndroidFidoAuth(),
+        );
+
+        break;
+      case IosFidoAuthRoute.name:
+        final args = settings.arguments as IosFidoAuthRouteArgs;
+        return FadeRoute(
+          settings: RouteSettings(
+            name: settings.name,
+          ),
+          builder: (_) => IosFidoAuthWidget(args: args),
+        );
+
+        break;
+      case SelectTwoFactorRoute.name:
+        final args = settings.arguments as SelectTwoFactorRouteArgs;
+        return FadeRoute(
+          settings: RouteSettings(
+            name: settings.name,
+          ),
+          builder: (_) => SelectTwoFactorWidget(args: args),
         );
 
         break;
@@ -141,8 +164,7 @@ class RouteGenerator {
           builder: (_) => MultiBlocProvider(
             providers: [
               BlocProvider<MailBloc>.value(value: args.mailBloc),
-              BlocProvider<MessagesListBloc>.value(
-                  value: args.messagesListBloc),
+              BlocProvider<MessagesListBloc>.value(value: args.messagesListBloc),
               BlocProvider<ContactsBloc>.value(value: args.contactsBloc),
             ],
             child: MessageViewAndroid(
@@ -161,8 +183,7 @@ class RouteGenerator {
           builder: (_) => MultiBlocProvider(
             providers: [
               BlocProvider<MailBloc>.value(value: args.mailBloc),
-              BlocProvider<MessagesListBloc>.value(
-                  value: args.messagesListBloc),
+              BlocProvider<MessagesListBloc>.value(value: args.messagesListBloc),
               BlocProvider<ContactsBloc>.value(value: args.contactsBloc),
             ],
             child: MessageViewProgress(
@@ -217,8 +238,7 @@ class RouteGenerator {
                     BlocProvider<MailBloc>.value(value: args.mailBloc),
                     BlocProvider<ContactsBloc>.value(value: args.contactsBloc),
                   ],
-                  child: ContactViewAndroid(
-                      args.contact, args.scaffoldState, args.pgpSettingBloc),
+                  child: ContactViewAndroid(args.contact, args.scaffoldState, args.pgpSettingBloc),
                 ));
         break;
 
@@ -265,13 +285,11 @@ class RouteGenerator {
         break;
       case DebugRoute.name:
         return FadeRoute(
-            settings: RouteSettings(name: settings.name),
-            builder: (_) => DebugSetting());
+            settings: RouteSettings(name: settings.name), builder: (_) => DebugSetting());
         break;
       case SettingsMainRoute.name:
         return FadeRoute(
-            settings: RouteSettings(name: settings.name),
-            builder: (_) => SettingsMainAndroid());
+            settings: RouteSettings(name: settings.name), builder: (_) => SettingsMainAndroid());
         break;
       case NotificationsSettingsRoute.name:
         return CupertinoPageRoute(
@@ -312,26 +330,22 @@ class RouteGenerator {
         break;
       case CommonSettingsRoute.name:
         return CupertinoPageRoute(
-            settings: RouteSettings(name: settings.name),
-            builder: (_) => CommonSettingsAndroid());
+            settings: RouteSettings(name: settings.name), builder: (_) => CommonSettingsAndroid());
         break;
 
       case SyncSettingsRoute.name:
         return CupertinoPageRoute(
-            settings: RouteSettings(name: settings.name),
-            builder: (_) => SyncSettingsAndroid());
+            settings: RouteSettings(name: settings.name), builder: (_) => SyncSettingsAndroid());
         break;
 
       case ManageUsersRoute.name:
         return CupertinoPageRoute(
-            settings: RouteSettings(name: settings.name),
-            builder: (_) => ManageUsersAndroid());
+            settings: RouteSettings(name: settings.name), builder: (_) => ManageUsersAndroid());
         break;
 
       case AboutRoute.name:
         return CupertinoPageRoute(
-            settings: RouteSettings(name: settings.name),
-            builder: (_) => AboutAndroid());
+            settings: RouteSettings(name: settings.name), builder: (_) => AboutAndroid());
         break;
 
       // ==================================

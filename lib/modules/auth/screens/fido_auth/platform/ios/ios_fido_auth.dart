@@ -4,125 +4,168 @@ import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/auth/blocs/ios_fido_auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/auth/blocs/ios_fido_auth_bloc/event.dart';
 import 'package:aurora_mail/modules/auth/blocs/ios_fido_auth_bloc/state.dart';
+import 'package:aurora_mail/modules/auth/screens/component/two_factor_screen.dart';
+import 'package:aurora_mail/modules/auth/screens/fido_auth/platform/ios/Ios_nfc_dialog.dart';
+import 'package:aurora_mail/modules/auth/screens/fido_auth/platform/ios/ios_fido_auth_route.dart';
+import 'package:aurora_mail/modules/auth/screens/login/components/login_gradient.dart';
+import 'package:aurora_mail/modules/auth/screens/login/components/mail_logo.dart';
+import 'package:aurora_mail/modules/auth/screens/login/components/presentation_header.dart';
+import 'package:aurora_mail/modules/auth/screens/login/login_route.dart';
+import 'package:aurora_mail/modules/auth/screens/select_two_factor/select_two_factor.dart';
+import 'package:aurora_mail/modules/auth/screens/select_two_factor/select_two_factor_route.dart';
+import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/utils/base_state.dart';
+import 'package:aurora_mail/utils/error_to_show.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_mail/utils/show_snack.dart';
+import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:aurora_ui_kit/components/dialogs/am_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:theme/app_color.dart';
+import 'package:theme/app_theme.dart';
 import 'package:yubico_flutter/yubico_flutter.dart';
+import 'package:aurora_mail/build_property.dart';
 
-class IosFidoAuth extends StatefulWidget {
-  final String host;
-  final String login;
-  final String password;
-  final AuthBloc authBloc;
+class IosFidoAuthWidget extends StatefulWidget {
+  final IosFidoAuthRouteArgs args;
 
-  const IosFidoAuth(
-    this.host,
-    this.login,
-    this.password,
-    this.authBloc,
-  );
+  const IosFidoAuthWidget({Key key, this.args}) : super(key: key);
 
   @override
-  _IosFidoAuthState createState() => _IosFidoAuthState();
+  _IosFidoAuthWidgetState createState() => _IosFidoAuthWidgetState();
 }
 
-class _IosFidoAuthState extends BState<IosFidoAuth> {
+class _IosFidoAuthWidgetState extends BState<IosFidoAuthWidget> {
   IosFidoAuthBloc bloc;
-  StreamSubscription sub;
-  bool waitConnect = false;
+  final touchDialogKey = GlobalKey<IosPressOnKeyDialogState>();
 
   @override
   void initState() {
     super.initState();
     bloc = IosFidoAuthBloc(
-      widget.host,
-      widget.login,
-      widget.password,
-      widget.authBloc,
+      widget.args.state.hostname,
+      widget.args.state.email,
+      widget.args.state.password,
+      widget.args.authBloc,
     );
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      bloc.add(StartAuth(
+          true, i18n(context, S.fido_label_connect_your_key), i18n(context, S.fido_label_success)));
+    });
   }
 
   @override
   dispose() {
-    bloc.close();
+    bloc?.close();
     super.dispose();
-    sub.cancel();
   }
 
   @override
   Widget build(BuildContext context) {
-    return AMDialog(
-      title: Text("Fido auth"),
-      content: BlocListener<IosFidoAuthBloc, IosFidoAuthState>(
-        bloc: bloc,
-        listener: (BuildContext context, state) {},
-        child: BlocBuilder<IosFidoAuthBloc, IosFidoAuthState>(
-          bloc: bloc,
-          builder: (BuildContext context, state) {
-            if (state is ErrorState) {
-              return Column(
-                children: [
-                  Text(
-                    state.errorToShow.getString(context),
-                    style: TextStyle(color: Colors.red),
-                  ),
-                  Row(
-                    children: [
-                      FlatButton(
-                          onPressed: () => bloc.add(StartAuth(true)),
-                          child: Text("NFC")),
-                      FlatButton(
-                          onPressed: () => bloc.add(StartAuth(false)),
-                          child: Text("MFI"))
-                    ],
-                  ),
-                ],
-              );
-            }
-            if (state is SendingBeginAuthRequestState) {
-              return Center(
-                child: Text("SendingBeginAuthRequestState"),
-              );
-            }
-            if (state is WaitKeyState) {
-              return Center(
-                child: Text("WaitKeyState"),
-              );
-            }
-            if (state is TouchKeyState) {
-              return Center(
-                child: Text("TouchKeyState"),
-              );
-            }
-            if (state is SendingFinishAuthRequestState) {
-              return Center(
-                child: Text("SendingFinishAuthRequestState"),
-              );
-            }
-
-            return Row(
-              children: [
-                FlatButton(
-                    onPressed: () => bloc.add(StartAuth(true)),
-                    child: Text("NFC")),
-                FlatButton(
-                    onPressed: () => bloc.add(StartAuth(false)),
-                    child: Text("MFI"))
-              ],
-            );
-          },
-        ),
+    return TwoFactorScene(
+      logoHint: "",
+      isDialog: widget.args.isDialog,
+      title: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Text(
+            i18n(context, S.tfa_label),
+            style: Theme.of(context).textTheme.title,
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: 10),
+          Text(
+            i18n(context, S.tfa_hint_step),
+            textAlign: TextAlign.center,
+          ),
+        ],
       ),
-      actions: [
-        FlatButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: Text(i18n(context, S.btn_cancel)))
-      ],
+      button: BlocListener<IosFidoAuthBloc, IosFidoAuthState>(
+        bloc: bloc,
+        listener: (BuildContext context, state) {
+          if (state is ErrorState) {
+            if (state.errorToShow != null) {
+              _showError(context, state.errorToShow);
+            }
+          }
+          if (state is TouchKeyState) {
+            if (touchDialogKey.currentState != null) {
+              touchDialogKey.currentState.close();
+            }
+            IosPressOnKeyDialog(touchDialogKey, () => bloc.add(CancelByUser())).show(context);
+          } else if (state is SendingFinishAuthRequestState) {
+            if (touchDialogKey.currentState != null) {
+              touchDialogKey.currentState.success().then((value) => state.waitSheet.complete());
+            } else {
+              state.waitSheet.complete();
+            }
+          } else {
+            if (touchDialogKey.currentState != null) {
+              touchDialogKey.currentState.close();
+            }
+          }
+        },
+        child: BlocBuilder<IosFidoAuthBloc, IosFidoAuthState>(
+            bloc: bloc,
+            builder: (_, state) {
+              return state is InitState || state is ErrorState
+                  ? Column(
+                      children: [
+                        Text(
+                          i18n(context, S.fido_error_title),
+                          textAlign: TextAlign.center,
+                          style: theme.textTheme.title,
+                        ),
+                        SizedBox(height: 10),
+                        Text(
+                          i18n(context, S.fido_error_hint),
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(height: 30),
+                        SizedBox(
+                          width: double.infinity,
+                          child: AMButton(
+                            shadow: AppColor.enableShadow ? null : BoxShadow(),
+                            child: Text(i18n(context, S.fido_btn_try_again)),
+                            onPressed: () {
+                              bloc.add(StartAuth(true, i18n(context, S.fido_label_connect_your_key),
+                                  i18n(context, S.fido_label_success)));
+                            },
+                          ),
+                        ),
+                        SizedBox(height: 20),
+                        SizedBox(
+                          width: double.infinity,
+                          child: FlatButton(
+                            child: Text(i18n(context, S.tfa_btn_other_options)),
+                            onPressed: () {
+                              Navigator.pushNamedAndRemoveUntil(
+                                context,
+                                SelectTwoFactorRoute.name,
+                                ModalRoute.withName(LoginRoute.name),
+                                arguments: SelectTwoFactorRouteArgs(
+                                    widget.args.isDialog, widget.args.authBloc, widget.args.state),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    )
+                  : Center(
+                      child: CircularProgressIndicator(),
+                    );
+            }),
+      ),
+    );
+  }
+
+  void _showError(BuildContext context, ErrorToShow msg) {
+    showErrorSnack(
+      context: context,
+      scaffoldState: Scaffold.of(context),
+      msg: msg,
     );
   }
 }

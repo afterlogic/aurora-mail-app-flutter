@@ -1,4 +1,8 @@
 import 'package:aurora_mail/build_property.dart';
+import 'package:aurora_mail/modules/auth/screens/component/two_factor_screen.dart';
+import 'package:aurora_mail/modules/auth/screens/login/login_route.dart';
+import 'package:aurora_mail/modules/auth/screens/select_two_factor/select_two_factor.dart';
+import 'package:aurora_mail/modules/auth/screens/select_two_factor/select_two_factor_route.dart';
 import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/auth/blocs/two_factor_auth/bloc.dart';
@@ -34,118 +38,88 @@ class _TwoFactorAuthWidgetState extends BState<TwoFactorAuthWidget> {
   final formKey = GlobalKey<FormState>();
   final bloc = TwoFactorBloc();
 
-  Widget _gradientWrap(Widget child) {
-    if (widget.args.isDialog) {
-      return child;
-    } else {
-      return themeWrap(
-        LoginGradient(
-          child: child,
-        ),
-      );
-    }
-  }
-
-  Widget themeWrap(Widget widget) {
-    if (AppTheme.login != null) {
-      return Theme(
-        data: AppTheme.login,
-        child: widget,
-      );
-    }
-    return widget;
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: widget.args.isDialog
-          ? AMAppBar(
-              title: Text(i18n(context, S.settings_accounts_add)),
-            )
-          : null,
-      body: _gradientWrap(
-        BlocListener<TwoFactorBloc, TwoFactorState>(
-          bloc: bloc,
-          listener: (BuildContext context, state) {
-            if (state is ErrorState) {
-              pinCtrl.clear();
-              _showError(
-                context,
-                state.errorMsg,
-              );
-            } else if (state is CompleteState) {
-              widget.args.authBloc.add(UserLogIn(state.user));
-            }
-          },
-          child: BlocBuilder<TwoFactorBloc, TwoFactorState>(
-            bloc: bloc,
-            builder: (_, state) => _buildPinForm(context, state),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildPinForm(BuildContext context, TwoFactorState state) {
-    final loading = state is ProgressState || state is CompleteState;
-
-    return Stack(
-      children: <Widget>[
-        if (!widget.args.isDialog && !BuildProperty.useMainLogo)
-          Positioned(
-            top: -70.0,
-            left: -70.0,
-            child: MailLogo(isBackground: true),
-          ),
-        Center(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              maxWidth: LayoutConfig.formWidth,
-            ),
-            child: Container(
-              margin: EdgeInsets.symmetric(horizontal: 22.0),
-              child: Form(
-                key: formKey,
-                child: Column(
-                  mainAxisAlignment: widget.args.isDialog
-                      ? MainAxisAlignment.start
-                      : MainAxisAlignment.spaceEvenly,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    if (!widget.args.isDialog)
-                      PresentationHeader(
-                        message: i18n(context, S.hint_2fa),
-                      ),
-                    Column(
-                      children: <Widget>[
-                        AuthInput(
-                          controller: pinCtrl,
-                          label: i18n(context, S.input_2fa_pin),
-                          keyboardType: TextInputType.emailAddress,
-                          validator: (value) => validateInput(
-                              context, value, [ValidationType.empty]),
-                          isEnabled: !loading,
-                        ),
-                      ],
-                    ),
-                    if (widget.args.isDialog) SizedBox(height: 40.0),
-                    SizedBox(
-                      width: double.infinity,
-                      child: AMButton(
-                        shadow: AppColor.enableShadow ? null : BoxShadow(),
-                        child: Text(i18n(context, S.btn_verify_pin)),
-                        isLoading: loading,
-                        onPressed: () => _login(),
-                      ),
-                    ),
-                  ],
+    return BlocListener<TwoFactorBloc, TwoFactorState>(
+      bloc: bloc,
+      listener: (BuildContext context, state) {
+        if (state is ErrorState) {
+          pinCtrl.clear();
+          _showError(
+            context,
+            state.errorMsg,
+          );
+        } else if (state is CompleteState) {
+          widget.args.authBloc.add(UserLogIn(state.user));
+        }
+      },
+      child: BlocBuilder<TwoFactorBloc, TwoFactorState>(
+        bloc: bloc,
+        builder: (_, state) {
+          final loading = state is ProgressState || state is CompleteState;
+          return TwoFactorScene(
+            logoHint: "",
+            isDialog: widget.args.isDialog,
+            title: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  i18n(context, S.tfa_label),
+                  style: Theme.of(context).textTheme.title,
+                  textAlign: TextAlign.center,
                 ),
-              ),
+                SizedBox(height: 10),
+                Text(
+                  i18n(context, S.tfa_hint_step),
+                  textAlign: TextAlign.center,
+                ),
+              ],
             ),
-          ),
-        ),
-      ],
+            button: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  i18n(context, S.tfa_input_hint_code_from_app),
+                ),
+                SizedBox(height: 20),
+                AuthInput(
+                  controller: pinCtrl,
+                  label: i18n(context, S.input_2fa_pin),
+                  keyboardType: TextInputType.emailAddress,
+                  validator: (value) => validateInput(context, value, [ValidationType.empty]),
+                  isEnabled: !loading,
+                ),
+                SizedBox(height: 20),
+                SizedBox(
+                  width: double.infinity,
+                  child: AMButton(
+                    shadow: AppColor.enableShadow ? null : BoxShadow(),
+                    child: Text(i18n(context, S.btn_verify_pin)),
+                    isLoading: loading,
+                    onPressed: () => _login(),
+                  ),
+                ),
+                SizedBox(height: 20),
+                SizedBox(
+                  width: double.infinity,
+                  child: FlatButton(
+                    child: Text("Other options"),
+                    onPressed: () {
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        SelectTwoFactorRoute.name,
+                        ModalRoute.withName(LoginRoute.name),
+                        arguments: SelectTwoFactorRouteArgs(
+                            widget.args.isDialog, widget.args.authBloc, widget.args.state),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 
@@ -163,9 +137,9 @@ class _TwoFactorAuthWidgetState extends BState<TwoFactorAuthWidget> {
       bloc.add(
         Verify(
           pinCtrl.text,
-          args.host,
-          args.login,
-          args.password,
+          args.state.hostname,
+          args.state.email,
+          args.state.password,
         ),
       );
     }

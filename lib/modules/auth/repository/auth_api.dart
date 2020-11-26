@@ -29,11 +29,9 @@ class AuthApi {
   }
 
   Future<User> login(String email, String password, String hostname) async {
-    final coreModuleForLogin =
-        WebMailApi(moduleName: WebMailModules.core, hostname: hostname);
+    final coreModuleForLogin = WebMailApi(moduleName: WebMailModules.core, hostname: hostname);
 
-    final parameters =
-        json.encode({"Login": email, "Password": password, "Pattern": ""});
+    final parameters = json.encode({"Login": email, "Password": password, "Pattern": ""});
 
     final body = new WebMailApiBody(method: "Login", parameters: parameters);
 
@@ -41,11 +39,15 @@ class AuthApi {
     if (response["ErrorCode"] == 108) {
       throw AllowAccess();
     }
-    if (response['Result'] != null &&
-        response['Result']['TwoFactorAuth'] != null) {
-      throw RequestTwoFactor(hostname);
-    } else if (response['Result'] != null &&
-        response['Result']['AuthToken'] is String) {
+    if (response['Result'] != null && response['Result']['TwoFactorAuth'] != null) {
+      final twoFactor = response['Result']['TwoFactorAuth'];
+      throw RequestTwoFactor(
+        hostname,
+        twoFactor["HasAuthenticatorApp"] as bool,
+        twoFactor["HasSecurityKey"] as bool,
+        twoFactor["HasBackupCodes"] as bool,
+      );
+    } else if (response['Result'] != null && response['Result']['AuthToken'] is String) {
       if (response['Result']["AllowAccess"] != 1) {
         throw AllowAccess();
       }
@@ -89,8 +91,7 @@ class AuthApi {
 
     final parameters = json.encode({"UserId": user.serverId});
 
-    final body =
-        new WebMailApiBody(method: "GetAccounts", parameters: parameters);
+    final body = new WebMailApiBody(method: "GetAccounts", parameters: parameters);
 
     final res = await coreModuleForLogin.post(body);
 
@@ -114,18 +115,16 @@ class AuthApi {
       hostname: hostname,
     );
     final parameters = json.encode({
-      "Pin": pin,
+      "Code": pin,
       "Login": login,
       "Password": password,
     });
 
-    final body =
-        new WebMailApiBody(method: "VerifyPin", parameters: parameters);
+    final body = new WebMailApiBody(method: "VerifyAuthenticatorAppCode", parameters: parameters);
 
     final res = await twoFactorModule.post(body, getRawResponse: true);
 
-    if (res["Result"] is! Map ||
-        !(res["Result"] as Map).containsKey("AuthToken")) {
+    if (res["Result"] is! Map || !(res["Result"] as Map).containsKey("AuthToken")) {
       throw InvalidPin();
     }
     final userId = res['AuthenticatedUserId'] as int;
@@ -153,8 +152,7 @@ class AuthApi {
     if (res is List) {
       return res
           .map(
-            (map) =>
-                AccountIdentityMap.fromNetwork(map as Map<String, dynamic>),
+            (map) => AccountIdentityMap.fromNetwork(map as Map<String, dynamic>),
           )
           .toList();
     } else {
@@ -183,8 +181,8 @@ class AuthApi {
     }
   }
 
-  Future<bool> setPushToken(Map<User, List<String>> userWithAccount, String uid,
-      String fbToken) async {
+  Future<bool> setPushToken(
+      Map<User, List<String>> userWithAccount, String uid, String fbToken) async {
     final map = <String, List<MapEntry<User, List<String>>>>{};
     bool success = true;
     for (var value in userWithAccount.entries) {
@@ -251,9 +249,7 @@ class AuthApi {
         (map["timeout"] as num).toDouble(),
         map["challenge"] as String,
         map["rpId"] as String,
-        (map["allowCredentials"] as List)
-            .map((e) => e["id"] as String)
-            .toList(),
+        (map["allowCredentials"] as List).map((e) => e["id"] as String).toList(),
       );
     } else {
       throw WebMailApiError(res);
@@ -279,8 +275,7 @@ class AuthApi {
           "Attestation": attestation,
         }));
     final res = await mailModule.post(request, getRawResponse: true);
-    if (res["Result"] is! Map ||
-        !(res["Result"] as Map).containsKey("AuthToken")) {
+    if (res["Result"] is! Map || !(res["Result"] as Map).containsKey("AuthToken")) {
       throw WebMailApiError(res);
     }
     final userId = res['AuthenticatedUserId'] as int;
@@ -298,8 +293,11 @@ class AuthApi {
 
 class RequestTwoFactor extends Error {
   final String host;
+  final bool hasAuthenticatorApp;
+  final bool hasSecurityKey;
+  final bool hasBackupCodes;
 
-  RequestTwoFactor(this.host);
+  RequestTwoFactor(this.host, this.hasAuthenticatorApp, this.hasSecurityKey, this.hasBackupCodes);
 }
 
 class AllowAccess extends Error {

@@ -9,12 +9,16 @@ abstract class IosFidoAuthEvent extends Equatable {
 
 class StartAuth extends IosFidoAuthEvent with AlwaysNonEqualObject {
   final bool nfc;
+  final String message;
+  final String success;
 
-  StartAuth(this.nfc);
+  StartAuth(this.nfc, this.message, this.success);
 }
+class KeyResult extends IosFidoAuthEvent with AlwaysNonEqualObject {
+  final Map result;
 
-class SendToKey extends IosFidoAuthEvent with AlwaysNonEqualObject {
-  final SecurityKeyBegin request;
+  KeyResult(this.result);
+}
+class CancelByUser extends IosFidoAuthEvent with AlwaysNonEqualObject{
 
-  SendToKey(this.request);
 }

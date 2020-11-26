@@ -22,7 +22,7 @@ class TrS extends S {
     17: "İletiyi sil",
     19: "{subject} silmek istediğinize emin misiniz?",
     20: "Bu iletiyi silmek istediğinden emin misin?",
-    390: "E-posta",
+    408: "E-posta",
     23: "Kişiler",
     24: "Ayarlar",
     25: "Oturumu kapat",
@@ -403,7 +403,7 @@ class TrS extends S {
     385: "Not spam",
     386: "password is empty",
     387: "Required password for PGP key",
-    388: "Are you sure you want to delete file {name}",
+    407: "Are you sure you want to delete file {name}",
     389: "Can't connect to the server",
   };
   String get(int id) => _map[id];

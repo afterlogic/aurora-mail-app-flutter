@@ -25,23 +25,21 @@ import 'modules/settings/screens/debug/debug_local_storage.dart';
 import 'notification/notification_manager.dart';
 
 void main() async {
-  AppInjector.create();
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true) ;
+  AppInjector.create();
+
+  FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
   // ignore: invalid_use_of_protected_member
   DBInstances.appDB.connection.executor.ensureOpen();
-  WidgetsFlutterBinding.ensureInitialized();
-  DebugLocalStorage().getDebug().then((value) {
-    if (value) {
-      logger.enable = true;
-    }
-  });
-  DebugLocalStorage().getIsRun().then((value) {
-    if (value) {
-      logger.start();
-    }
-  });
+  DebugLocalStorage()
+    ..getDebug().then((value) {
+      if (value) logger.enable = true;
+    })
+    ..getIsRun().then((value) {
+      if (value) logger.start();
+    });
   PushNotificationsManager.instance.init();
   runApp(
     LoggerView.wrap(
@@ -89,21 +87,19 @@ Future<bool> onAlarm({
   }
   final isBackground = isBackgroundForce ?? BackgroundHelper.isBackground;
   var hasUpdate = false;
-  if (!updateFromNotification.contains(null) &&
-      !updateFromNotification.contains(data?.to)) {
+  if (!updateFromNotification.contains(null) && !updateFromNotification.contains(data?.to)) {
     updateFromNotification.add(data?.to);
     try {
       BackgroundHelper.onStartAlarm();
       final future = BackgroundSync()
           .sync(
-        isBackground,
+            isBackground,
             showNotification,
             data,
             isolatedLogger,
             interceptor,
           )
-          .timeout(
-              Duration(seconds: isBackground ? (Platform.isIOS ? 30 : 60) : 1080));
+          .timeout(Duration(seconds: isBackground ? (Platform.isIOS ? 30 : 60) : 1080));
       hasUpdate = await future;
     } catch (e, s) {
       isolatedLogger.error(e, s);

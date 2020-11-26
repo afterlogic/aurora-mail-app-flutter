@@ -1,16 +1,16 @@
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
-import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
+import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_state.dart';
 
-class TwoFactorAuthRoute {
-  static const name = "twoFactorAuthRoute";
+class IosFidoAuthRoute {
+  static const name = "IosFidoAuthRoute";
 }
 
-class TwoFactorAuthRouteArgs {
+class IosFidoAuthRouteArgs {
   final bool isDialog;
   final AuthBloc authBloc;
   final TwoFactor state;
 
-  const TwoFactorAuthRouteArgs(
+  const IosFidoAuthRouteArgs(
     this.isDialog,
     this.authBloc,
     this.state,
