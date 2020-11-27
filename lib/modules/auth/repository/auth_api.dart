@@ -40,6 +40,9 @@ class AuthApi {
       throw AllowAccess();
     }
     if (response['Result'] != null && response['Result']['TwoFactorAuth'] != null) {
+      if (BuildProperty.supportAllowAccess && response['Result']["AllowAccess"] != 1) {
+        throw AllowAccess();
+      }
       final twoFactor = response['Result']['TwoFactorAuth'];
       throw RequestTwoFactor(
         hostname,
@@ -48,7 +51,7 @@ class AuthApi {
         twoFactor["HasBackupCodes"] as bool,
       );
     } else if (response['Result'] != null && response['Result']['AuthToken'] is String) {
-      if (response['Result']["AllowAccess"] != 1) {
+      if (BuildProperty.supportAllowAccess && response['Result']["AllowAccess"] != 1) {
         throw AllowAccess();
       }
       final token = response['Result']['AuthToken'] as String;

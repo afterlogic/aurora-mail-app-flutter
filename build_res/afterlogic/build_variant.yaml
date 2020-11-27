@@ -17,6 +17,7 @@ multiAccountEnable: true
 cryptoEnable: true
 selfDestructingEmail: false
 pushNotification: false
+supportAllowAccess: true
 
 _version: 2.0.0
 supportLanguage: "en"
