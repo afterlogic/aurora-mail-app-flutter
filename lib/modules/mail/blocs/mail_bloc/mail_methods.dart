@@ -414,7 +414,7 @@ class MailMethods {
 //          "Attention! messagesInfo is null, perhaps another folder was selected while messages info was being retrieved.");
 //      return _setMessagesInfoToFolder();
 //    }
-    if (updatedUser.syncPeriod != syncPeriod) {
+    if (SyncPeriod.dbStringToPeriod(updatedUser.syncPeriod) != SyncPeriod.dbStringToPeriod(syncPeriod)) {
       print(
           "Attention! another sync period was selected, refetching messages info...");
       updateMessageCounter.empty();

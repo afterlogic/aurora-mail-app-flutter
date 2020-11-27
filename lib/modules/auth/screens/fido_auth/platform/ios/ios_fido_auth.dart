@@ -72,13 +72,14 @@ class _IosFidoAuthWidgetState extends BState<IosFidoAuthWidget> {
         children: <Widget>[
           Text(
             i18n(context, S.tfa_label),
-            style: Theme.of(context).textTheme.title,
+            style: Theme.of(context).textTheme.title.copyWith(color: AppTheme.loginTextColor),
             textAlign: TextAlign.center,
           ),
           SizedBox(height: 10),
           Text(
             i18n(context, S.tfa_hint_step),
             textAlign: TextAlign.center,
+            style: TextStyle(color: AppTheme.loginTextColor),
           ),
         ],
       ),
@@ -116,19 +117,20 @@ class _IosFidoAuthWidgetState extends BState<IosFidoAuthWidget> {
                         Text(
                           i18n(context, S.fido_error_title),
                           textAlign: TextAlign.center,
-                          style: theme.textTheme.title,
+                          style: theme.textTheme.title.copyWith(color: AppTheme.loginTextColor),
                         ),
                         SizedBox(height: 10),
                         Text(
                           i18n(context, S.fido_error_hint),
                           textAlign: TextAlign.center,
+                          style: TextStyle(color: AppTheme.loginTextColor),
                         ),
                         SizedBox(height: 30),
                         SizedBox(
                           width: double.infinity,
                           child: AMButton(
                             shadow: AppColor.enableShadow ? null : BoxShadow(),
-                            child: Text(i18n(context, S.fido_btn_try_again)),
+                            child: Text(i18n(context, S.fido_btn_try_again),style: TextStyle(color: AppTheme.loginTextColor),),
                             onPressed: () {
                               bloc.add(StartAuth(true, i18n(context, S.fido_label_connect_your_key),
                                   i18n(context, S.fido_label_success)));
@@ -139,7 +141,7 @@ class _IosFidoAuthWidgetState extends BState<IosFidoAuthWidget> {
                         SizedBox(
                           width: double.infinity,
                           child: FlatButton(
-                            child: Text(i18n(context, S.tfa_btn_other_options)),
+                            child: Text(i18n(context, S.tfa_btn_other_options),style: TextStyle(color: AppTheme.loginTextColor),),
                             onPressed: () {
                               Navigator.pushNamedAndRemoveUntil(
                                 context,

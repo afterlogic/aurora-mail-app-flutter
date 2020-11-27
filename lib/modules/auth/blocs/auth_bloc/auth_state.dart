@@ -47,7 +47,7 @@ class ReceivedLastEmail extends AuthState {
 
 class LoggingIn extends AuthState {}
 
-class TwoFactor extends AuthState {
+class TwoFactor extends AuthState with AlwaysNonEqualObject {
   final String email;
   final String password;
   final String hostname;

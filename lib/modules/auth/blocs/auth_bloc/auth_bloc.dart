@@ -149,7 +149,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         if (user == null) {
           yield NeedsHost();
         } else {
-          yield* _userLogIn(UserLogIn(user));
+          yield* _userLogIn(UserLogIn(user,null));
         }
       } catch (err, s) {
         if (err is RequestTwoFactor) {
@@ -158,7 +158,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             event.password,
             err.host,
             err.hasAuthenticatorApp,
-            err.hasAuthenticatorApp,
+            err.hasSecurityKey,
             err.hasBackupCodes,
           );
         } else if (err is AllowAccess) {
@@ -195,10 +195,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           account: currentAccount,
           needsLogin: false,
         );
+        event.completer?.complete();
       } else {
+        event.completer?.completeError(ErrorToShow.code(S.error_login_no_accounts));
         yield AuthError(ErrorToShow.code(S.error_login_no_accounts));
       }
     } catch (e, s) {
+      event.completer?.completeError(AuthError(formatError(e, s)));
       yield AuthError(formatError(e, s));
     }
   }

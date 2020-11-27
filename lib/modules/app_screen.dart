@@ -13,7 +13,8 @@ import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_rou
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/shared_ui/restart_widget.dart';
 import 'package:aurora_mail/utils/base_state.dart';
-import 'package:aurora_mail/utils/internationalization.dart'; import 'package:aurora_mail/res/str/s.dart';
+import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_mail/res/str/s.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -48,7 +49,9 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
     WidgetsBinding.instance.addObserver(this);
     BackgroundHelper.current = WidgetsBinding.instance.lifecycleState;
     sub = WebMailApi.authErrorStream.listen((_) {
-      _authBloc.add(InvalidateCurrentUserToken());
+      if (_authBloc.currentUser != null) {
+        _authBloc.add(InvalidateCurrentUserToken());
+      }
     });
     _initApp();
     ReceiveSharing.getInitialMedia().then((shared) {
@@ -102,8 +105,7 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
     BackgroundHelper.current = state;
 
     if (state == AppLifecycleState.resumed) {
-      DBInstances.appDB.streamQueries
-          .handleTableUpdates({DBInstances.appDB.mail});
+      DBInstances.appDB.streamQueries.handleTableUpdates({DBInstances.appDB.mail});
       _settingsBloc.add(OnResume());
     }
 
@@ -171,8 +173,7 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
           builder: (_, authState) {
             if (authState is InitializedUserAndAccounts) {
               if (authState.user != null) {
-                _settingsBloc
-                    .add(InitSettings(authState.user, authState.users));
+                _settingsBloc.add(InitSettings(authState.user, authState.users));
               }
               return BlocBuilder<SettingsBloc, SettingsState>(
                   bloc: _settingsBloc,
@@ -200,8 +201,7 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
                         child: MaterialApp(
                           navigatorKey: _navKey,
                           onGenerateTitle: (context) {
-                            final is24 =
-                                MediaQuery.of(context).alwaysUse24HourFormat;
+                            final is24 = MediaQuery.of(context).alwaysUse24HourFormat;
                             if (settingsState.is24 == null) {
                               _settingsBloc.add(SetTimeFormat(is24));
                             }
@@ -215,28 +215,24 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
                             GlobalWidgetsLocalizations.delegate,
                             GlobalCupertinoLocalizations.delegate,
                             LocalizationI18nDelegate(
-                              forcedLocale: supportedLocales.contains(
-                                      settingsState.language?.toLocale())
-                                  ? settingsState.language?.toLocale()
-                                  : null,
+                              forcedLocale:
+                                  supportedLocales.contains(settingsState.language?.toLocale())
+                                      ? settingsState.language?.toLocale()
+                                      : null,
                             ),
                             DataFormatDelegate()
                           ],
                           supportedLocales: supportedLocales,
                           localeResolutionCallback: (locale, locales) {
                             final supportedLocale = locales.firstWhere((l) {
-                              return locale != null &&
-                                  l.languageCode == locale.languageCode;
+                              return locale != null && l.languageCode == locale.languageCode;
                             }, orElse: () => null);
 
-                            return supportedLocale ??
-                                locales.first ??
-                                Locale("en", "");
+                            return supportedLocale ?? locales.first ?? Locale("en", "");
                           },
                           locale: settingsState.language?.toLocale(),
-                          initialRoute: authState.needsLogin
-                              ? LoginRoute.name
-                              : MessagesListRoute.name,
+                          initialRoute:
+                              authState.needsLogin ? LoginRoute.name : MessagesListRoute.name,
                           navigatorObservers: [routeObserver],
                         ),
                       );

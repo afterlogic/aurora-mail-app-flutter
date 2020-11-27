@@ -56,7 +56,9 @@ class IosFidoAuthBloc extends Bloc<IosFidoAuthEvent, IosFidoAuthState> {
         password,
         event.result["attestation"] as Map,
       );
-      authBloc.add(UserLogIn(loginResponse));
+      final completer = Completer();
+      authBloc.add(UserLogIn(loginResponse, completer));
+      await completer.future;
     } catch (e) {
       if (e is PlatformException) {
         if (e.message == "No valid credentials provided.") {

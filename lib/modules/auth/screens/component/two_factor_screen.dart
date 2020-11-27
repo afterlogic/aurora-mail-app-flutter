@@ -63,7 +63,6 @@ class _SelectTwoFactorWidgetState extends BState<TwoFactorScene> {
   }
 
   Widget _buildPinForm(BuildContext context) {
-
     return SafeArea(
       top: false,
       child: Stack(
@@ -89,7 +88,7 @@ class _SelectTwoFactorWidgetState extends BState<TwoFactorScene> {
                     Spacer(),
                     if (!widget.isDialog) ...[
                       Flexible(
-                        flex: 2,
+                        flex: 3,
                         child: PresentationHeader(
                           message: widget.logoHint,
                         ),
@@ -102,20 +101,24 @@ class _SelectTwoFactorWidgetState extends BState<TwoFactorScene> {
                         children: <Widget>[
                           Text(
                             i18n(context, S.tfa_label),
-                            style: Theme.of(context).textTheme.title,
+                            style: Theme.of(context)
+                                .textTheme
+                                .title
+                                .copyWith(color: AppTheme.loginTextColor),
                             textAlign: TextAlign.center,
                           ),
                           SizedBox(height: 10),
                           Text(
                             i18n(context, S.tfa_hint_step),
                             textAlign: TextAlign.center,
+                            style: TextStyle(color: AppTheme.loginTextColor),
                           ),
                         ],
                       ),
                     ),
                     if (widget.isDialog) SizedBox(height: 40.0),
                     Flexible(
-                      flex: 3,
+                      flex: 4,
                       child: widget.button,
                     ),
                     Flexible(
@@ -123,7 +126,10 @@ class _SelectTwoFactorWidgetState extends BState<TwoFactorScene> {
                       child: SizedBox(
                         width: double.infinity,
                         child: FlatButton(
-                          child: Text(i18n(context, S.btn_login_back_to_login)),
+                          child: Text(
+                            i18n(context, S.btn_login_back_to_login),
+                            style: TextStyle(color: AppTheme.loginTextColor),
+                          ),
                           onPressed: () {
                             Navigator.popUntil(
                               context,

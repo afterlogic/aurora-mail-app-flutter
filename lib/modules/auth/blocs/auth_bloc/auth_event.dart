@@ -40,8 +40,9 @@ class LogIn extends AuthEvent {
 
 class UserLogIn extends AuthEvent {
   final User user;
+  final Completer completer;
 
-  UserLogIn(this.user);
+  UserLogIn(this.user, this.completer);
 
   @override
   List<Object> get props => [user];

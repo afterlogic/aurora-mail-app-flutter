@@ -37,26 +37,33 @@ class _SelectTwoFactorWidgetState extends BState<SelectTwoFactorWidget> {
         children: <Widget>[
           Text(
             i18n(context, S.tfa_label),
-            style: Theme.of(context).textTheme.title,
+            style: Theme.of(context).textTheme.title.copyWith(color: AppTheme.loginTextColor),
             textAlign: TextAlign.center,
           ),
           SizedBox(height: 10),
           Text(
             i18n(context, S.tfa_hint_step),
             textAlign: TextAlign.center,
+            style: TextStyle(color: AppTheme.loginTextColor),
           ),
         ],
       ),
       button: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(i18n(context, S.tfa_label_hint_security_options)),
+          Text(
+            i18n(context, S.tfa_label_hint_security_options),
+            style: TextStyle(color: AppTheme.loginTextColor),
+          ),
           SizedBox(height: 20),
           if (widget.args.state.hasSecurityKey) ...[
             SizedBox(
               width: double.infinity,
               child: AMButton(
-                child: Text(i18n(context, S.tfa_btn_use_security_key)),
+                child: Text(
+                  i18n(context, S.tfa_btn_use_security_key),
+                  style: TextStyle(color: AppTheme.loginTextColor),
+                ),
                 onPressed: () {
                   Navigator.pushNamedAndRemoveUntil(
                     context,
@@ -74,7 +81,10 @@ class _SelectTwoFactorWidgetState extends BState<SelectTwoFactorWidget> {
             SizedBox(
               width: double.infinity,
               child: AMButton(
-                child: Text(i18n(context, S.tfa_btn_use_auth_app)),
+                child: Text(
+                  i18n(context, S.tfa_btn_use_auth_app),
+                  style: TextStyle(color: AppTheme.loginTextColor),
+                ),
                 onPressed: () {
                   Navigator.pushNamedAndRemoveUntil(
                     context,
@@ -92,7 +102,10 @@ class _SelectTwoFactorWidgetState extends BState<SelectTwoFactorWidget> {
             SizedBox(
               width: double.infinity,
               child: AMButton(
-                child: Text(i18n(context, S.tfa_btn_use_backup_code)),
+                child: Text(
+                  i18n(context, S.tfa_btn_use_backup_code),
+                  style: TextStyle(color: AppTheme.loginTextColor),
+                ),
                 onPressed: null,
               ),
             ),
