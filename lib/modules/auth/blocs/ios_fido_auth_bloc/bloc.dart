@@ -109,12 +109,8 @@ class FidoAuthBloc extends Bloc<FidoAuthEvent, FidoAuthState> {
     try {
       yield SendingBeginAuthRequestState();
       if (Platform.isAndroid) {
-        final hostUri = Uri.parse(host);
-        final uri = Uri(
-            scheme: hostUri.scheme,
-            host: hostUri.host,
-            query:
-                "verify-security-key&login=$login&password=$password&package_name=${BuildProperty.packageName}");
+        final uri = Uri.parse(
+            "${host}?verify-security-key&login=$login&password=$password&package_name=${BuildProperty.packageName}");
 
         tab.launch(uri.toString(),
             option: tab.CustomTabsOption(
