@@ -1,5 +1,5 @@
 import 'package:aurora_mail/modules/auth/screens/component/two_factor_screen.dart';
-import 'package:aurora_mail/modules/auth/screens/fido_auth/platform/ios/ios_fido_auth_route.dart';
+import 'package:aurora_mail/modules/auth/screens/fido_auth/ios_fido_auth_route.dart';
 import 'package:aurora_mail/modules/auth/screens/login/login_route.dart';
 import 'package:aurora_mail/modules/auth/screens/select_two_factor/select_two_factor_route.dart';
 import 'package:aurora_mail/modules/auth/screens/two_factor_auth/two_factor_auth_route.dart';
@@ -67,9 +67,9 @@ class _SelectTwoFactorWidgetState extends BState<SelectTwoFactorWidget> {
                 onPressed: () {
                   Navigator.pushNamedAndRemoveUntil(
                     context,
-                    IosFidoAuthRoute.name,
+                    FidoAuthRoute.name,
                     ModalRoute.withName(LoginRoute.name),
-                    arguments: IosFidoAuthRouteArgs(
+                    arguments: FidoAuthRouteArgs(
                         widget.args.isDialog, widget.args.authBloc, widget.args.state),
                   );
                 },

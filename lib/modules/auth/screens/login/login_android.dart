@@ -1,6 +1,5 @@
 import 'package:aurora_mail/build_property.dart';
-import 'package:aurora_mail/database/app_database.dart';
-import 'package:aurora_mail/modules/auth/screens/fido_auth/fido_manager.dart';
+import 'package:aurora_mail/modules/auth/screens/fido_auth/ios_fido_auth_route.dart';
 import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/auth_input.dart';
@@ -38,7 +37,8 @@ class LoginAndroid extends StatefulWidget {
   final bool isDialog;
   final String email;
 
-  const LoginAndroid({Key key, this.isDialog = false, this.email}) : super(key: key);
+  const LoginAndroid({Key key, this.isDialog = false, this.email})
+      : super(key: key);
 
   @override
   _LoginAndroidState createState() => _LoginAndroidState();
@@ -144,7 +144,9 @@ class _LoginAndroidState extends BState<LoginAndroid> {
               title: Text(
                 i18n(
                   context,
-                  widget.email == null ? S.settings_accounts_add : S.settings_accounts_relogin,
+                  widget.email == null
+                      ? S.settings_accounts_add
+                      : S.settings_accounts_relogin,
                 ),
               ),
             )
@@ -155,14 +157,14 @@ class _LoginAndroidState extends BState<LoginAndroid> {
             listener: (context, state) {
               if (state is TwoFactor) {
                 if (state.hasSecurityKey == true) {
-                  fidoManager(
+                  Navigator.pushNamed(
                     context,
-                    widget.isDialog,
-                    state.hostname,
-                    state.email,
-                    state.password,
-                    state,
-                    authBloc,
+                    FidoAuthRoute.name,
+                    arguments: FidoAuthRouteArgs(
+                      widget.isDialog,
+                      authBloc,
+                      state,
+                    ),
                   );
                 } else if (state.hasAuthenticatorApp == true) {
                   Navigator.pushNamed(
@@ -186,19 +188,23 @@ class _LoginAndroidState extends BState<LoginAndroid> {
                 setState(() => _showHostField = true);
                 _showError(
                   context,
-                  ErrorToShow.message(i18n(context, S.error_login_auto_discover)),
+                  ErrorToShow.message(
+                      i18n(context, S.error_login_auto_discover)),
                 );
               }
               if (state is InitializedUserAndAccounts) {
                 if (state.user != null) {
-                  BlocProvider.of<SettingsBloc>(context).add(InitSettings(state.user, state.users));
+                  BlocProvider.of<SettingsBloc>(context)
+                      .add(InitSettings(state.user, state.users));
                 }
 
                 if (widget.isDialog) {
                   RestartWidget.restartApp(context);
                 } else {
-                  Navigator.popUntil(context, ModalRoute.withName(LoginRoute.name));
-                  Navigator.pushReplacementNamed(context, MessagesListRoute.name);
+                  Navigator.popUntil(
+                      context, ModalRoute.withName(LoginRoute.name));
+                  Navigator.pushReplacementNamed(
+                      context, MessagesListRoute.name);
                 }
               }
               if (state is AuthError) {
@@ -257,14 +263,16 @@ class _LoginAndroidState extends BState<LoginAndroid> {
               child: Form(
                 key: LoginAndroid._authFormKey,
                 child: Column(
-                  mainAxisAlignment:
-                      widget.isDialog ? MainAxisAlignment.start : MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: widget.isDialog
+                      ? MainAxisAlignment.start
+                      : MainAxisAlignment.spaceEvenly,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     if (!widget.isDialog) PresentationHeader(),
                     Column(
                       children: <Widget>[
-                        if (widget.isDialog && LayoutConfig.of(context).isTablet)
+                        if (widget.isDialog &&
+                            LayoutConfig.of(context).isTablet)
                           Padding(
                             padding: const EdgeInsets.all(16),
                             child: Text(
@@ -289,20 +297,22 @@ class _LoginAndroidState extends BState<LoginAndroid> {
                         AuthInput(
                           enableSuggestions: false,
                           autocorrect: false,
-                          inputFormatters: [FilteringTextInputFormatter.deny(" ")],
+                          inputFormatters: [
+                            FilteringTextInputFormatter.deny(" ")
+                          ],
                           controller: emailCtrl,
                           label: i18n(context, S.login_input_email),
                           keyboardType: TextInputType.emailAddress,
-                          validator: (value) => validateInput(
-                              context, value, [ValidationType.empty, ValidationType.email]),
+                          validator: (value) => validateInput(context, value,
+                              [ValidationType.empty, ValidationType.email]),
                           isEnabled: !loading,
                         ),
                         SizedBox(height: 10),
                         AuthInput(
                           controller: passwordCtrl,
                           label: i18n(context, S.login_input_password),
-                          validator: (value) =>
-                              validateInput(context, value, [ValidationType.empty]),
+                          validator: (value) => validateInput(
+                              context, value, [ValidationType.empty]),
                           isPassword: true,
                           isEnabled: !loading,
                         ),
@@ -314,8 +324,11 @@ class _LoginAndroidState extends BState<LoginAndroid> {
                       child: _debugRouteToTwoFactor(
                         AMButton(
                           shadow: AppColor.enableShadow ? null : BoxShadow(),
-                          child: Text(
-                              i18n(context, widget.isDialog ? S.btn_add_account : S.btn_login)),
+                          child: Text(i18n(
+                              context,
+                              widget.isDialog
+                                  ? S.btn_add_account
+                                  : S.btn_login)),
                           isLoading: loading,
                           onPressed: () => _login(context),
                         ),

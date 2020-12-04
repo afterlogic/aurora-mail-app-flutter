@@ -4,27 +4,29 @@ import 'package:aurora_mail/utils/always_non_equal_object.dart';
 import 'package:aurora_mail/utils/error_to_show.dart';
 import 'package:equatable/equatable.dart';
 
-abstract class IosFidoAuthState extends Equatable {
+abstract class FidoAuthState extends Equatable {
   @override
   List<Object> get props => [];
 }
 
-class InitState extends IosFidoAuthState {}
+class InitState extends FidoAuthState {}
 
-class ErrorState extends IosFidoAuthState with AlwaysNonEqualObject {
+class ErrorState extends FidoAuthState with AlwaysNonEqualObject {
   final ErrorToShow errorToShow;
 
   ErrorState(this.errorToShow);
 }
 
-class SendingBeginAuthRequestState extends IosFidoAuthState {}
+class SendingBeginAuthRequestState extends FidoAuthState {}
 
-class WaitKeyState extends IosFidoAuthState {}
+class WaitWebView extends FidoAuthState {}
 
-class TouchKeyState extends IosFidoAuthState {
+class WaitKeyState extends FidoAuthState {}
+
+class TouchKeyState extends FidoAuthState {
 }
 
-class SendingFinishAuthRequestState extends IosFidoAuthState {
+class SendingFinishAuthRequestState extends FidoAuthState {
   final Completer waitSheet;
 
   SendingFinishAuthRequestState(this.waitSheet);
