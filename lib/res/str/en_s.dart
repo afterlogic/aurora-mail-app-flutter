@@ -422,6 +422,9 @@ class EnS extends S {
         "Try using your security key again or try another way to verify it's you",
     405: "Try again",
     406: "Specify verification code from the Authenticator app",
+    407: "Invalid backup code",
+    408: "Enter one of your 8-character backup codes",
+    409: "Backup code",
   };
   String get(int id) => _map[id];
 }

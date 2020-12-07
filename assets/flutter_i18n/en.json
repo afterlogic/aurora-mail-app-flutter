@@ -405,5 +405,8 @@
   "fido_error_title": "There was a problem",
   "fido_error_hint": "Try using your security key again or try another way to verify it's you",
   "fido_btn_try_again": "Try again",
-  "tfa_input_hint_code_from_app": "Specify verification code from the Authenticator app"
+  "tfa_input_hint_code_from_app": "Specify verification code from the Authenticator app",
+  "tfa_error_invalid_backup_code": "Invalid backup code",
+  "tfa_label_enter_backup_code": "Enter one of your 8-character backup codes",
+  "tfa_input_backup_code": "Backup code"
 }

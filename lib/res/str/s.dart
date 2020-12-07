@@ -410,7 +410,10 @@ abstract class S extends SInterface {
   static const fido_error_hint = 404;
   static const fido_btn_try_again = 405;
   static const tfa_input_hint_code_from_app = 406;
-  static const hint_log_delete_record = 407;
-  static const messages_list_app_bar_Mail = 408;
+  static const tfa_error_invalid_backup_code = 407;
+  static const tfa_label_enter_backup_code = 408;
+  static const tfa_input_backup_code = 409;
+  static const hint_log_delete_record = 410;
+  static const messages_list_app_bar_Mail = 411;
   String get(int id);
 }

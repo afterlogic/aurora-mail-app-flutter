@@ -1,3 +1,6 @@
+import 'package:aurora_mail/modules/auth/screens/backup_code_auth/backup_code_auth_widget.dart';
+
+import 'auth/screens/backup_code_auth/backup_code_auth_route.dart';
 import 'auth/screens/fido_auth/ios_fido_auth.dart';
 import 'auth/screens/fido_auth/ios_fido_auth_route.dart';
 import 'package:aurora_mail/modules/auth/screens/select_two_factor/select_two_factor.dart';
@@ -114,6 +117,19 @@ class RouteGenerator {
             name: settings.name,
           ),
           builder: (_) => TwoFactorAuthWidget(
+            args: args,
+          ),
+        );
+
+        break;
+      case BackupCodeAuthRoute.name:
+        final args = settings.arguments as BackupCodeAuthRouteArgs;
+
+        return FadeRoute(
+          settings: RouteSettings(
+            name: settings.name,
+          ),
+          builder: (_) => BackupCodeAuthWidget(
             args: args,
           ),
         );

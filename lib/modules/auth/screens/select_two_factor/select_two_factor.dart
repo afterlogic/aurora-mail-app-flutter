@@ -1,3 +1,4 @@
+import 'package:aurora_mail/modules/auth/screens/backup_code_auth/backup_code_auth_route.dart';
 import 'package:aurora_mail/modules/auth/screens/component/two_factor_screen.dart';
 import 'package:aurora_mail/modules/auth/screens/fido_auth/ios_fido_auth_route.dart';
 import 'package:aurora_mail/modules/auth/screens/login/login_route.dart';
@@ -37,7 +38,10 @@ class _SelectTwoFactorWidgetState extends BState<SelectTwoFactorWidget> {
         children: <Widget>[
           Text(
             i18n(context, S.tfa_label),
-            style: Theme.of(context).textTheme.title.copyWith(color: AppTheme.loginTextColor),
+            style: Theme.of(context)
+                .textTheme
+                .title
+                .copyWith(color: AppTheme.loginTextColor),
             textAlign: TextAlign.center,
           ),
           SizedBox(height: 10),
@@ -69,8 +73,8 @@ class _SelectTwoFactorWidgetState extends BState<SelectTwoFactorWidget> {
                     context,
                     FidoAuthRoute.name,
                     ModalRoute.withName(LoginRoute.name),
-                    arguments: FidoAuthRouteArgs(
-                        widget.args.isDialog, widget.args.authBloc, widget.args.state),
+                    arguments: FidoAuthRouteArgs(widget.args.isDialog,
+                        widget.args.authBloc, widget.args.state),
                   );
                 },
               ),
@@ -90,8 +94,8 @@ class _SelectTwoFactorWidgetState extends BState<SelectTwoFactorWidget> {
                     context,
                     TwoFactorAuthRoute.name,
                     ModalRoute.withName(LoginRoute.name),
-                    arguments: TwoFactorAuthRouteArgs(
-                        widget.args.isDialog, widget.args.authBloc, widget.args.state),
+                    arguments: TwoFactorAuthRouteArgs(widget.args.isDialog,
+                        widget.args.authBloc, widget.args.state),
                   );
                 },
               ),
@@ -106,7 +110,15 @@ class _SelectTwoFactorWidgetState extends BState<SelectTwoFactorWidget> {
                   i18n(context, S.tfa_btn_use_backup_code),
                   style: TextStyle(color: AppTheme.loginTextColor),
                 ),
-                onPressed: null,
+                onPressed: () {
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    BackupCodeAuthRoute.name,
+                    ModalRoute.withName(LoginRoute.name),
+                    arguments: BackupCodeAuthRouteArgs(widget.args.isDialog,
+                        widget.args.authBloc, widget.args.state),
+                  );
+                },
               ),
             ),
           ],

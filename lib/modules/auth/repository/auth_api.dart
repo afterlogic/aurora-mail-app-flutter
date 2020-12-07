@@ -289,6 +289,42 @@ class AuthApi {
       emailFromLogin: login,
     );
   }
+
+
+  Future<User> verifyCode(
+      String hostname,
+      String code,
+      String login,
+      String password,
+      ) async {
+    final twoFactorModule = WebMailApi(
+      moduleName: WebMailModules.twoFactorAuth,
+      hostname: hostname,
+    );
+    final parameters = json.encode({
+      "BackupCode": code,
+      "Login": login,
+      "Password": password,
+    });
+
+    final body = new WebMailApiBody(method: "VerifyBackupCode", parameters: parameters);
+
+    final res = await twoFactorModule.post(body, getRawResponse: true);
+
+    if (res["Result"] is! Map || !(res["Result"] as Map).containsKey("AuthToken")) {
+      throw InvalidPin();
+    }
+    final userId = res['AuthenticatedUserId'] as int;
+    final token = res["Result"]["AuthToken"] as String;
+
+    return User(
+      localId: null,
+      serverId: userId,
+      token: token,
+      hostname: hostname,
+      emailFromLogin: login,
+    );
+  }
 }
 
 class RequestTwoFactor extends Error {
