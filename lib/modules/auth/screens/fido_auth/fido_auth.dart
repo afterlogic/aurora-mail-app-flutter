@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
-import 'package:aurora_mail/modules/auth/blocs/ios_fido_auth_bloc/bloc.dart';
-import 'package:aurora_mail/modules/auth/blocs/ios_fido_auth_bloc/event.dart';
-import 'package:aurora_mail/modules/auth/blocs/ios_fido_auth_bloc/state.dart';
+import 'package:aurora_mail/modules/auth/blocs/fido_auth_bloc/bloc.dart';
+import 'package:aurora_mail/modules/auth/blocs/fido_auth_bloc/event.dart';
+import 'package:aurora_mail/modules/auth/blocs/fido_auth_bloc/state.dart';
 import 'package:aurora_mail/modules/auth/screens/component/two_factor_screen.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/login_gradient.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/mail_logo.dart';
@@ -27,7 +27,7 @@ import 'package:yubico_flutter/yubico_flutter.dart';
 import 'package:aurora_mail/build_property.dart';
 
 import 'nfc_dialog.dart';
-import 'ios_fido_auth_route.dart';
+import 'fido_auth_route.dart';
 
 class IosFidoAuthWidget extends StatefulWidget {
   final FidoAuthRouteArgs args;
@@ -116,66 +116,66 @@ class _IosFidoAuthWidgetState extends BState<IosFidoAuthWidget> {
           }
         },
         child: BlocBuilder<FidoAuthBloc, FidoAuthState>(
-            bloc: bloc,
-            builder: (_, state) {
-              return state is InitState || state is ErrorState
-                  ? Column(
-                      children: [
-                        Text(
-                          i18n(context, S.fido_error_title),
-                          textAlign: TextAlign.center,
-                          style: theme.textTheme.title
-                              .copyWith(color: AppTheme.loginTextColor),
-                        ),
-                        SizedBox(height: 10),
-                        Text(
-                          i18n(context, S.fido_error_hint),
-                          textAlign: TextAlign.center,
-                          style: TextStyle(color: AppTheme.loginTextColor),
-                        ),
-                        SizedBox(height: 30),
-                        SizedBox(
-                          width: double.infinity,
-                          child: AMButton(
-                            shadow: AppColor.enableShadow ? null : BoxShadow(),
-                            child: Text(
-                              i18n(context, S.fido_btn_try_again),
-                              style: TextStyle(color: AppTheme.loginTextColor),
-                            ),
-                            onPressed: () {
-                              bloc.add(StartAuth(
-                                  true,
-                                  i18n(context, S.fido_label_connect_your_key),
-                                  i18n(context, S.fido_label_success)));
-                            },
+          bloc: bloc,
+          builder: (_, state) {
+            return state is InitState || state is ErrorState
+                ? Column(
+                    children: [
+                      Text(
+                        i18n(context, S.fido_error_title),
+                        textAlign: TextAlign.center,
+                        style: theme.textTheme.title
+                            .copyWith(color: AppTheme.loginTextColor),
+                      ),
+                      SizedBox(height: 10),
+                      Text(
+                        i18n(context, S.fido_error_hint),
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: AppTheme.loginTextColor),
+                      ),
+                      SizedBox(height: 30),
+                      SizedBox(
+                        width: double.infinity,
+                        child: AMButton(
+                          shadow: AppColor.enableShadow ? null : BoxShadow(),
+                          child: Text(
+                            i18n(context, S.fido_btn_try_again),
+                            style: TextStyle(color: AppTheme.loginTextColor),
                           ),
+                          onPressed: () {
+                            bloc.add(StartAuth(
+                                true,
+                                i18n(context, S.fido_label_connect_your_key),
+                                i18n(context, S.fido_label_success)));
+                          },
                         ),
-                        SizedBox(height: 20),
-                        SizedBox(
-                          width: double.infinity,
-                          child: FlatButton(
-                            child: Text(
-                              i18n(context, S.tfa_btn_other_options),
-                              style: TextStyle(color: AppTheme.loginTextColor),
-                            ),
-                            onPressed: () {
-                              Navigator.pushNamedAndRemoveUntil(
-                                context,
-                                SelectTwoFactorRoute.name,
-                                ModalRoute.withName(LoginRoute.name),
-                                arguments: SelectTwoFactorRouteArgs(
-                                    widget.args.isDialog,
-                                    widget.args.authBloc,
-                                    widget.args.state),
-                              );
-                            },
+                      ),
+                      SizedBox(height: 20),
+                      SizedBox(
+                        width: double.infinity,
+                        child: FlatButton(
+                          child: Text(
+                            i18n(context, S.tfa_btn_other_options),
+                            style: TextStyle(color: AppTheme.loginTextColor),
                           ),
+                          onPressed: () {
+                            Navigator.pushNamedAndRemoveUntil(
+                              context,
+                              SelectTwoFactorRoute.name,
+                              ModalRoute.withName(LoginRoute.name),
+                              arguments: SelectTwoFactorRouteArgs(
+                                  widget.args.isDialog,
+                                  widget.args.authBloc,
+                                  widget.args.state),
+                            );
+                          },
                         ),
-                      ],
-                    )
-                  : (state is WaitWebView
-                      ? Center(
-                          child: Column(
+                      ),
+                    ],
+                  )
+                : (state is WaitWebView
+                    ? Center(
+                        child: Column(
                           children: [
                             CircularProgressIndicator(),
                             FlatButton(
@@ -185,11 +185,13 @@ class _IosFidoAuthWidgetState extends BState<IosFidoAuthWidget> {
                               child: Text(i18n(context, S.btn_cancel)),
                             )
                           ],
-                        ))
-                      : Center(
-                          child: CircularProgressIndicator(),
-                        ));
-            }),
+                        ),
+                      )
+                    : Center(
+                        child: CircularProgressIndicator(),
+                      ));
+          },
+        ),
       ),
     );
   }

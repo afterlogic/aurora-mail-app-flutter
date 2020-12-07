@@ -4,8 +4,8 @@ import 'dart:io';
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
-import 'package:aurora_mail/modules/auth/blocs/ios_fido_auth_bloc/event.dart';
-import 'package:aurora_mail/modules/auth/blocs/ios_fido_auth_bloc/state.dart';
+import 'package:aurora_mail/modules/auth/blocs/fido_auth_bloc/event.dart';
+import 'package:aurora_mail/modules/auth/blocs/fido_auth_bloc/state.dart';
 import 'package:aurora_mail/modules/auth/repository/auth_api.dart';
 import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/utils/error_to_show.dart';
@@ -79,8 +79,7 @@ class FidoAuthBloc extends Bloc<FidoAuthEvent, FidoAuthState> {
       if (fidoRequest?.isNFC == false) {
         await waitSheet.future;
       }
-      final attestation =
-          Platform.isIOS ? event.result : event.result;
+      final attestation = Platform.isIOS ? event.result : event.result;
       final loginResponse = await authApi.verifySecurityKeyFinish(
         host,
         login,
@@ -108,7 +107,7 @@ class FidoAuthBloc extends Bloc<FidoAuthEvent, FidoAuthState> {
   Stream<FidoAuthState> _startAuth(StartAuth event) async* {
     try {
       yield SendingBeginAuthRequestState();
-      if (Platform.isAndroid) {
+      if (Platform.isAndroid && false) {
         final uri = Uri.parse(
             "${host}?verify-security-key&login=$login&password=$password&package_name=${BuildProperty.deepLink}");
 

@@ -1,6 +1,6 @@
 import 'package:aurora_mail/modules/auth/screens/backup_code_auth/backup_code_auth_route.dart';
 import 'package:aurora_mail/modules/auth/screens/component/two_factor_screen.dart';
-import 'package:aurora_mail/modules/auth/screens/fido_auth/ios_fido_auth_route.dart';
+import 'package:aurora_mail/modules/auth/screens/fido_auth/fido_auth_route.dart';
 import 'package:aurora_mail/modules/auth/screens/login/login_route.dart';
 import 'package:aurora_mail/modules/auth/screens/select_two_factor/select_two_factor_route.dart';
 import 'package:aurora_mail/modules/auth/screens/two_factor_auth/two_factor_auth_route.dart';
