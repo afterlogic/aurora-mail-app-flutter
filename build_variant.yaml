@@ -43,6 +43,8 @@ _google_services_ios: "{{_google_services_dir}}/GoogleService-Info.plist"
 
 autodiscover_url: ""
 
+deepLink: "{{packageName}}"
+
 foreground_icon: "{{image_dir}}/icon_foreground.png"
 background_color: "#3b3b3b"
 _theme_module: "{{_dir}}/theme"

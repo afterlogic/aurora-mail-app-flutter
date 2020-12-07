@@ -80,7 +80,7 @@ class FidoAuthBloc extends Bloc<FidoAuthEvent, FidoAuthState> {
         await waitSheet.future;
       }
       final attestation =
-          Platform.isIOS ? event.result["attestation"] : event.result;
+          Platform.isIOS ? event.result : event.result;
       final loginResponse = await authApi.verifySecurityKeyFinish(
         host,
         login,
@@ -110,7 +110,7 @@ class FidoAuthBloc extends Bloc<FidoAuthEvent, FidoAuthState> {
       yield SendingBeginAuthRequestState();
       if (Platform.isAndroid) {
         final uri = Uri.parse(
-            "${host}?verify-security-key&login=$login&password=$password&package_name=${BuildProperty.packageName}");
+            "${host}?verify-security-key&login=$login&password=$password&package_name=${BuildProperty.deepLink}");
 
         tab.launch(uri.toString(),
             option: tab.CustomTabsOption(

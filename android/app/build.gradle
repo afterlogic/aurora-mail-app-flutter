@@ -53,7 +53,7 @@ android {
     }
 
     defaultConfig {
-        manifestPlaceholders = [deepLink:buildVariableProperties["packageName"]]
+        manifestPlaceholders = [deepLink:buildVariableProperties["deepLink"]]
         applicationId buildVariableProperties["packageName"]
         minSdkVersion 18
         targetSdkVersion 29
