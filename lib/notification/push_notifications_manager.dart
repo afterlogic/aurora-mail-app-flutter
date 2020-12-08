@@ -13,7 +13,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/widgets.dart';
 import 'package:ios_notification_handler/ios_notification_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:aurora_mail/modules/auth/repository/device_id_storage.dart';
 import 'notification_manager.dart';
 
 class PushNotificationsManager {
@@ -31,7 +31,7 @@ class PushNotificationsManager {
         if (Platform.isIOS) {
           IosNotificationHandler.onMessage(messageHandler);
         }
-        deviceId = await _getIMEI();
+        deviceId = await DeviceIdStorage.getDeviceId();
         await _firebaseMessaging.requestNotificationPermissions();
         _firebaseMessaging.configure(
           onMessage: messageHandler,
@@ -51,10 +51,6 @@ class PushNotificationsManager {
     final token = await _firebaseMessaging.getToken();
     print(token);
     return token;
-  }
-
-  Future<String> _getIMEI() async {
-    return await DeviceId.getID;
   }
 
   Future setTokenStatus(bool status) async {

@@ -38,14 +38,20 @@ class LogIn extends AuthEvent {
   }
 }
 
-class UserLogIn extends AuthEvent {
+class UserLogIn extends AuthEvent with AlwaysNonEqualObject {
+  final User user;
+  final String login;
+  final String password;
+  final Completer completer;
+
+  UserLogIn(this.user, this.completer, this.login, this.password);
+}
+
+  class UserLogInFinish extends AuthEvent with AlwaysNonEqualObject {
   final User user;
   final Completer completer;
 
-  UserLogIn(this.user, this.completer);
-
-  @override
-  List<Object> get props => [user];
+  UserLogInFinish(this.user, this.completer);
 }
 
 class InitUserAndAccounts extends AuthEvent with AlwaysNonEqualObject {

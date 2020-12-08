@@ -5,11 +5,16 @@ import 'package:aurora_mail/database/account_identity/account_identity_table.dar
 import 'package:aurora_mail/database/accounts/accounts_table.dart';
 import 'package:aurora_mail/database/aliases/aliases_table.dart';
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/modules/auth/repository/device_id_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:webmail_api_client/webmail_api_client.dart';
 
 class AuthApi {
+  Future<Map<String, String>> deviceIdHeader() async {
+    return {"X-DeviceId": await DeviceIdStorage.getDeviceId()};
+  }
+
   Future<String> autoDiscoverHostname(String email) async {
     try {
       final dogIndex = email.indexOf("@") + 1;
@@ -29,26 +34,44 @@ class AuthApi {
   }
 
   Future<User> login(String email, String password, String hostname) async {
-    final coreModuleForLogin = WebMailApi(moduleName: WebMailModules.core, hostname: hostname);
+    final coreModuleForLogin =
+        WebMailApi(moduleName: WebMailModules.core, hostname: hostname);
 
-    final parameters = json.encode({"Login": email, "Password": password, "Pattern": ""});
+    final parameters =
+        json.encode({"Login": email, "Password": password, "Pattern": ""});
 
     final body = new WebMailApiBody(method: "Login", parameters: parameters);
 
-    final response = await coreModuleForLogin.post(body, getRawResponse: true);
+    final response = await coreModuleForLogin.post(
+      body,
+      getRawResponse: true,
+      addedHeaders: await deviceIdHeader(),
+    );
     if (response["ErrorCode"] == 108) {
       throw AllowAccess();
     }
-    if (response['Result'] != null && response['Result']['TwoFactorAuth'] != null) {
+    if (response['Result'] != null &&
+        response['Result']['TwoFactorAuth'] != null) {
       final twoFactor = response['Result']['TwoFactorAuth'];
+      if (twoFactor == true) {
+        throw RequestTwoFactor(
+          hostname,
+          true,
+          false,
+          false,
+        );
+      }
+
       throw RequestTwoFactor(
         hostname,
         twoFactor["HasAuthenticatorApp"] as bool,
         twoFactor["HasSecurityKey"] as bool,
         twoFactor["HasBackupCodes"] as bool,
       );
-    } else if (response['Result'] != null && response['Result']['AuthToken'] is String) {
-      if (BuildProperty.supportAllowAccess && response['Result']["AllowAccess"] != 1) {
+    } else if (response['Result'] != null &&
+        response['Result']['AuthToken'] is String) {
+      if (BuildProperty.supportAllowAccess &&
+          response['Result']["AllowAccess"] != 1) {
         throw AllowAccess();
       }
       final token = response['Result']['AuthToken'] as String;
@@ -75,7 +98,10 @@ class AuthApi {
 
     final body = new WebMailApiBody(module: "Core", method: "Logout");
 
-    final res = await coreModuleForLogin.post(body);
+    final res = await coreModuleForLogin.post(
+      body,
+      addedHeaders: await deviceIdHeader(),
+    );
 
     if (res != true) {
       throw WebMailApiError(res);
@@ -91,9 +117,13 @@ class AuthApi {
 
     final parameters = json.encode({"UserId": user.serverId});
 
-    final body = new WebMailApiBody(method: "GetAccounts", parameters: parameters);
+    final body =
+        new WebMailApiBody(method: "GetAccounts", parameters: parameters);
 
-    final res = await coreModuleForLogin.post(body);
+    final res = await coreModuleForLogin.post(
+      body,
+      addedHeaders: await deviceIdHeader(),
+    );
 
     if (res is List) {
       final accounts = Accounts.getAccountsObjFromServer(res, user.localId);
@@ -120,11 +150,17 @@ class AuthApi {
       "Password": password,
     });
 
-    final body = new WebMailApiBody(method: "VerifyAuthenticatorAppCode", parameters: parameters);
+    final body = new WebMailApiBody(
+        method: "VerifyAuthenticatorAppCode", parameters: parameters);
 
-    final res = await twoFactorModule.post(body, getRawResponse: true);
+    final res = await twoFactorModule.post(
+      body,
+      getRawResponse: true,
+      addedHeaders: await deviceIdHeader(),
+    );
 
-    if (res["Result"] is! Map || !(res["Result"] as Map).containsKey("AuthToken")) {
+    if (res["Result"] is! Map ||
+        !(res["Result"] as Map).containsKey("AuthToken")) {
       throw InvalidPin();
     }
     final userId = res['AuthenticatedUserId'] as int;
@@ -147,12 +183,16 @@ class AuthApi {
     );
 
     final request = new WebMailApiBody(method: "GetIdentities");
-    final res = await mailModule.post(request);
+    final res = await mailModule.post(
+      request,
+      addedHeaders: await deviceIdHeader(),
+    );
 
     if (res is List) {
       return res
           .map(
-            (map) => AccountIdentityMap.fromNetwork(map as Map<String, dynamic>),
+            (map) =>
+                AccountIdentityMap.fromNetwork(map as Map<String, dynamic>),
           )
           .toList();
     } else {
@@ -168,7 +208,10 @@ class AuthApi {
     );
 
     final request = new WebMailApiBody(method: "GetAliases");
-    final res = await mailModule.post(request);
+    final res = await mailModule.post(
+      request,
+      addedHeaders: await deviceIdHeader(),
+    );
 
     if (res is Map) {
       return (res["ObjAliases"] as List)
@@ -181,8 +224,8 @@ class AuthApi {
     }
   }
 
-  Future<bool> setPushToken(
-      Map<User, List<String>> userWithAccount, String uid, String fbToken) async {
+  Future<bool> setPushToken(Map<User, List<String>> userWithAccount, String uid,
+      String fbToken) async {
     final map = <String, List<MapEntry<User, List<String>>>>{};
     bool success = true;
     for (var value in userWithAccount.entries) {
@@ -214,7 +257,10 @@ class AuthApi {
           method: "SetPushToken",
           parameters: parameters,
         );
-        final res = await webMailApi.post(body);
+        final res = await webMailApi.post(
+          body,
+          addedHeaders: await deviceIdHeader(),
+        );
         print(res);
       } catch (e, s) {
         success = false;
@@ -240,7 +286,10 @@ class AuthApi {
           "Login": login,
           "Password": password,
         }));
-    final res = await mailModule.post(request);
+    final res = await mailModule.post(
+      request,
+      addedHeaders: await deviceIdHeader(),
+    );
 
     if (res is Map) {
       final map = res["publicKey"];
@@ -249,7 +298,9 @@ class AuthApi {
         (map["timeout"] as num).toDouble(),
         map["challenge"] as String,
         map["rpId"] as String,
-        (map["allowCredentials"] as List).map((e) => e["id"] as String).toList(),
+        (map["allowCredentials"] as List)
+            .map((e) => e["id"] as String)
+            .toList(),
       );
     } else {
       throw WebMailApiError(res);
@@ -274,8 +325,13 @@ class AuthApi {
           "Password": password,
           "Attestation": attestation,
         }));
-    final res = await mailModule.post(request, getRawResponse: true);
-    if (res["Result"] is! Map || !(res["Result"] as Map).containsKey("AuthToken")) {
+    final res = await mailModule.post(
+      request,
+      getRawResponse: true,
+      addedHeaders: await deviceIdHeader(),
+    );
+    if (res["Result"] is! Map ||
+        !(res["Result"] as Map).containsKey("AuthToken")) {
       throw WebMailApiError(res);
     }
     final userId = res['AuthenticatedUserId'] as int;
@@ -290,13 +346,12 @@ class AuthApi {
     );
   }
 
-
   Future<User> verifyCode(
-      String hostname,
-      String code,
-      String login,
-      String password,
-      ) async {
+    String hostname,
+    String code,
+    String login,
+    String password,
+  ) async {
     final twoFactorModule = WebMailApi(
       moduleName: WebMailModules.twoFactorAuth,
       hostname: hostname,
@@ -307,11 +362,17 @@ class AuthApi {
       "Password": password,
     });
 
-    final body = new WebMailApiBody(method: "VerifyBackupCode", parameters: parameters);
+    final body =
+        new WebMailApiBody(method: "VerifyBackupCode", parameters: parameters);
 
-    final res = await twoFactorModule.post(body, getRawResponse: true);
+    final res = await twoFactorModule.post(
+      body,
+      getRawResponse: true,
+      addedHeaders: await deviceIdHeader(),
+    );
 
-    if (res["Result"] is! Map || !(res["Result"] as Map).containsKey("AuthToken")) {
+    if (res["Result"] is! Map ||
+        !(res["Result"] as Map).containsKey("AuthToken")) {
       throw InvalidPin();
     }
     final userId = res['AuthenticatedUserId'] as int;
@@ -325,6 +386,64 @@ class AuthApi {
       emailFromLogin: login,
     );
   }
+
+  Future saveDevice(
+    String deviceId,
+    String deviceName,
+    String hostname,
+    String token,
+  ) async {
+    final twoFactorModule = WebMailApi(
+      moduleName: WebMailModules.twoFactorAuth,
+      hostname: hostname,
+      token: token,
+    );
+    final parameters = json.encode({
+      "DeviceId": deviceId,
+      "DeviceName": deviceName,
+    });
+
+    final body =
+        new WebMailApiBody(method: "SaveDevice", parameters: parameters);
+
+    final res = await twoFactorModule.post(
+      body,
+      addedHeaders: await deviceIdHeader(),
+    );
+
+    print(res);
+  }
+
+  Future trustDevice(
+    String deviceId,
+    String deviceName,
+    String hostname,
+    String login,
+    String password,
+    String token,
+  ) async {
+    final twoFactorModule = WebMailApi(
+      moduleName: WebMailModules.twoFactorAuth,
+      hostname: hostname,
+      token: token,
+    );
+    final parameters = json.encode({
+      "DeviceId": deviceId,
+      "DeviceName": deviceName,
+      "Login": login,
+      "Password": password,
+    });
+
+    final body =
+        new WebMailApiBody(method: "TrustDevice", parameters: parameters);
+
+    final res = await twoFactorModule.post(
+      body,
+      addedHeaders: await deviceIdHeader(),
+    );
+
+    print(res);
+  }
 }
 
 class RequestTwoFactor extends Error {
@@ -333,7 +452,8 @@ class RequestTwoFactor extends Error {
   final bool hasSecurityKey;
   final bool hasBackupCodes;
 
-  RequestTwoFactor(this.host, this.hasAuthenticatorApp, this.hasSecurityKey, this.hasBackupCodes);
+  RequestTwoFactor(this.host, this.hasAuthenticatorApp, this.hasSecurityKey,
+      this.hasBackupCodes);
 }
 
 class AllowAccess extends Error {

@@ -33,7 +33,8 @@ class InitializedUserAndAccounts extends AuthState {
   }) : assert(needsLogin != null);
 
   @override
-  List<Object> get props => [user, account, needsLogin, account, users, accounts, identity];
+  List<Object> get props =>
+      [user, account, needsLogin, account, users, accounts, identity];
 }
 
 class ReceivedLastEmail extends AuthState {
@@ -92,4 +93,12 @@ class AuthError extends AuthState {
 
   @override
   List<Object> get props => [errorMsg];
+}
+
+class ShowTrustDeviceDialog extends AuthState {
+  final User user;
+  final String email;
+  final String password;
+
+  ShowTrustDeviceDialog(this.user, this.email, this.password);
 }

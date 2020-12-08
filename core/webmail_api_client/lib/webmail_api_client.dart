@@ -81,14 +81,19 @@ class WebMailApi {
 
   // getRawResponse in case AuthenticatedUserId is required, which is outside Result objects
   Future post(WebMailApiBody body,
-      {bool useToken, bool getRawResponse = false}) async {
+      {bool useToken,
+      bool getRawResponse = false,
+      Map<String, String> addedHeaders}) async {
     Map<String, String> headers;
     final id = "MODULE: ${moduleName ?? body.module}\nMETHOD: ${body.method}";
     if (useToken == false || token == null) {
-      headers = null;
+      headers = {};
     } else {
       headers = {'Authorization': 'Bearer $token'};
     }
+    addedHeaders?.forEach((key, value) {
+      headers[key] = value;
+    });
     final start = DateTime.now().millisecondsSinceEpoch;
     _onRequest(id, body.parameters);
 

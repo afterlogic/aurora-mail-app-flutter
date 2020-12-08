@@ -413,7 +413,10 @@ abstract class S extends SInterface {
   static const tfa_error_invalid_backup_code = 407;
   static const tfa_label_enter_backup_code = 408;
   static const tfa_input_backup_code = 409;
-  static const hint_log_delete_record = 410;
-  static const messages_list_app_bar_Mail = 411;
+  static const tfa_label_trust_device = 410;
+  static const tfa_check_box_trust_device = 411;
+  static const tfa_button_continue = 412;
+  static const hint_log_delete_record = 413;
+  static const messages_list_app_bar_Mail = 414;
   String get(int id);
 }

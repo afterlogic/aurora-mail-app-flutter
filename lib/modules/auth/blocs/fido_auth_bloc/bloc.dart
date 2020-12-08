@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:aurora_mail/build_property.dart';
+import 'package:aurora_mail/logger/logger.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/auth/blocs/fido_auth_bloc/event.dart';
@@ -80,14 +81,15 @@ class FidoAuthBloc extends Bloc<FidoAuthEvent, FidoAuthState> {
         await waitSheet.future;
       }
       final attestation = Platform.isIOS ? event.result : event.result;
+      Logger.fido(jsonEncode(attestation));
       final loginResponse = await authApi.verifySecurityKeyFinish(
         host,
         login,
         password,
-        attestation as Map,
+        attestation,
       );
       final completer = Completer();
-      authBloc.add(UserLogIn(loginResponse, completer));
+      authBloc.add(UserLogIn(loginResponse, completer, login, password));
       await completer.future;
     } catch (e) {
       if (e is PlatformException) {

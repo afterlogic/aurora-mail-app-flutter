@@ -1,4 +1,5 @@
 import 'package:aurora_mail/modules/auth/screens/backup_code_auth/backup_code_auth_widget.dart';
+import 'package:aurora_mail/modules/auth/screens/trust_device/trust_device_widget.dart';
 
 import 'auth/screens/backup_code_auth/backup_code_auth_route.dart';
 import 'auth/screens/fido_auth/fido_auth.dart';
@@ -54,6 +55,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'auth/screens/login/login_android.dart';
 import 'auth/screens/login/login_route.dart';
+import 'auth/screens/trust_device/trust_device_route.dart';
 import 'auth/screens/two_factor_auth/two_factor_auth_route.dart';
 import 'auth/screens/two_factor_auth/two_factor_auth_widget.dart';
 import 'mail/blocs/mail_bloc/mail_bloc.dart';
@@ -88,7 +90,16 @@ class RouteGenerator {
           );
         }
         break;
+      case TrustDeviceRoute.name:
+        final args = settings.arguments as TrustDeviceRouteArgs;
+        return FadeRoute(
+          settings: RouteSettings(
+            name: settings.name,
+          ),
+          builder: (_) => TrustDeviceWidget(args: args),
+        );
 
+        break;
       case FidoAuthRoute.name:
         final args = settings.arguments as FidoAuthRouteArgs;
         return FadeRoute(

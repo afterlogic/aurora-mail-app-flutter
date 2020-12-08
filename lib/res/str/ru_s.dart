@@ -402,7 +402,7 @@ class RuS extends S {
     385: "Not spam",
     386: "password is empty",
     387: "Required password for PGP key",
-    410: "Are you sure you want to delete file {name}",
+    413: "Are you sure you want to delete file {name}",
     389: "Can't connect to the server",
   };
   String get(int id) => _map[id];

@@ -33,97 +33,75 @@ class _SelectTwoFactorWidgetState extends BState<SelectTwoFactorWidget> {
     return TwoFactorScene(
       logoHint: "",
       isDialog: widget.args.isDialog,
-      title: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Text(
-            i18n(context, S.tfa_label),
-            style: Theme.of(context)
-                .textTheme
-                .title
-                .copyWith(color: AppTheme.loginTextColor),
-            textAlign: TextAlign.center,
+      button: [
+        Text(
+          i18n(context, S.tfa_label_hint_security_options),
+          style: TextStyle(color: AppTheme.loginTextColor),
+        ),
+        SizedBox(height: 20),
+        if (widget.args.state.hasSecurityKey) ...[
+          SizedBox(
+            width: double.infinity,
+            child: AMButton(
+              child: Text(
+                i18n(context, S.tfa_btn_use_security_key),
+                style: TextStyle(color: AppTheme.loginTextColor),
+              ),
+              onPressed: () {
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  FidoAuthRoute.name,
+                  ModalRoute.withName(LoginRoute.name),
+                  arguments: FidoAuthRouteArgs(widget.args.isDialog,
+                      widget.args.authBloc, widget.args.state),
+                );
+              },
+            ),
           ),
-          SizedBox(height: 10),
-          Text(
-            i18n(context, S.tfa_hint_step),
-            textAlign: TextAlign.center,
-            style: TextStyle(color: AppTheme.loginTextColor),
+          SizedBox(height: 20)
+        ],
+        if (widget.args.state.hasAuthenticatorApp) ...[
+          SizedBox(
+            width: double.infinity,
+            child: AMButton(
+              child: Text(
+                i18n(context, S.tfa_btn_use_auth_app),
+                style: TextStyle(color: AppTheme.loginTextColor),
+              ),
+              onPressed: () {
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  TwoFactorAuthRoute.name,
+                  ModalRoute.withName(LoginRoute.name),
+                  arguments: TwoFactorAuthRouteArgs(widget.args.isDialog,
+                      widget.args.authBloc, widget.args.state),
+                );
+              },
+            ),
+          ),
+          SizedBox(height: 20)
+        ],
+        if (widget.args.state.hasBackupCodes) ...[
+          SizedBox(
+            width: double.infinity,
+            child: AMButton(
+              child: Text(
+                i18n(context, S.tfa_btn_use_backup_code),
+                style: TextStyle(color: AppTheme.loginTextColor),
+              ),
+              onPressed: () {
+                Navigator.pushNamedAndRemoveUntil(
+                  context,
+                  BackupCodeAuthRoute.name,
+                  ModalRoute.withName(LoginRoute.name),
+                  arguments: BackupCodeAuthRouteArgs(widget.args.isDialog,
+                      widget.args.authBloc, widget.args.state),
+                );
+              },
+            ),
           ),
         ],
-      ),
-      button: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            i18n(context, S.tfa_label_hint_security_options),
-            style: TextStyle(color: AppTheme.loginTextColor),
-          ),
-          SizedBox(height: 20),
-          if (widget.args.state.hasSecurityKey) ...[
-            SizedBox(
-              width: double.infinity,
-              child: AMButton(
-                child: Text(
-                  i18n(context, S.tfa_btn_use_security_key),
-                  style: TextStyle(color: AppTheme.loginTextColor),
-                ),
-                onPressed: () {
-                  Navigator.pushNamedAndRemoveUntil(
-                    context,
-                    FidoAuthRoute.name,
-                    ModalRoute.withName(LoginRoute.name),
-                    arguments: FidoAuthRouteArgs(widget.args.isDialog,
-                        widget.args.authBloc, widget.args.state),
-                  );
-                },
-              ),
-            ),
-            SizedBox(height: 20)
-          ],
-          if (widget.args.state.hasAuthenticatorApp) ...[
-            SizedBox(
-              width: double.infinity,
-              child: AMButton(
-                child: Text(
-                  i18n(context, S.tfa_btn_use_auth_app),
-                  style: TextStyle(color: AppTheme.loginTextColor),
-                ),
-                onPressed: () {
-                  Navigator.pushNamedAndRemoveUntil(
-                    context,
-                    TwoFactorAuthRoute.name,
-                    ModalRoute.withName(LoginRoute.name),
-                    arguments: TwoFactorAuthRouteArgs(widget.args.isDialog,
-                        widget.args.authBloc, widget.args.state),
-                  );
-                },
-              ),
-            ),
-            SizedBox(height: 20)
-          ],
-          if (widget.args.state.hasBackupCodes) ...[
-            SizedBox(
-              width: double.infinity,
-              child: AMButton(
-                child: Text(
-                  i18n(context, S.tfa_btn_use_backup_code),
-                  style: TextStyle(color: AppTheme.loginTextColor),
-                ),
-                onPressed: () {
-                  Navigator.pushNamedAndRemoveUntil(
-                    context,
-                    BackupCodeAuthRoute.name,
-                    ModalRoute.withName(LoginRoute.name),
-                    arguments: BackupCodeAuthRouteArgs(widget.args.isDialog,
-                        widget.args.authBloc, widget.args.state),
-                  );
-                },
-              ),
-            ),
-          ],
-        ],
-      ),
+      ],
     );
   }
 }

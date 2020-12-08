@@ -39,29 +39,18 @@ class _TwoFactorAuthWidgetState extends BState<TwoFactorAuthWidget> {
   final bloc = TwoFactorBloc();
 
   @override
+  void dispose() {
+    super.dispose();
+    bloc.close();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return TwoFactorScene(
       logoHint: "",
       isDialog: widget.args.isDialog,
-      title: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Text(
-            i18n(context, S.tfa_label),
-            style: Theme.of(context).textTheme.title.copyWith(color: AppTheme.loginTextColor),
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(height: 10),
-          Text(
-            i18n(context, S.tfa_hint_step),
-            textAlign: TextAlign.center,
-            style: TextStyle(color: AppTheme.loginTextColor),
-          ),
-        ],
-      ),
-      button: ListView(
-        padding: EdgeInsets.zero,
-        children: [
+
+      button:  [
           BlocListener<TwoFactorBloc, TwoFactorState>(
             bloc: bloc,
             listener: (BuildContext context, state) {
@@ -72,13 +61,19 @@ class _TwoFactorAuthWidgetState extends BState<TwoFactorAuthWidget> {
                   state.errorMsg,
                 );
               } else if (state is CompleteState) {
-                widget.args.authBloc.add(UserLogIn(state.user,null));
+                widget.args.authBloc.add(UserLogIn(
+                  state.user,
+                  null,
+                  widget.args.state.email,
+                  widget.args.state.password,
+                ));
               }
             },
             child: BlocBuilder<TwoFactorBloc, TwoFactorState>(
                 bloc: bloc,
                 builder: (context, state) {
-                  final loading = state is ProgressState || state is CompleteState;
+                  final loading =
+                      state is ProgressState || state is CompleteState;
                   return Form(
                     key: formKey,
                     child: Column(
@@ -93,7 +88,8 @@ class _TwoFactorAuthWidgetState extends BState<TwoFactorAuthWidget> {
                           controller: pinCtrl,
                           label: i18n(context, S.input_2fa_pin),
                           keyboardType: TextInputType.emailAddress,
-                          validator: (value) => validateInput(context, value, [ValidationType.empty]),
+                          validator: (value) => validateInput(
+                              context, value, [ValidationType.empty]),
                           isEnabled: !loading,
                         ),
                         SizedBox(height: 20),
@@ -123,7 +119,9 @@ class _TwoFactorAuthWidgetState extends BState<TwoFactorAuthWidget> {
                                 SelectTwoFactorRoute.name,
                                 ModalRoute.withName(LoginRoute.name),
                                 arguments: SelectTwoFactorRouteArgs(
-                                    widget.args.isDialog, widget.args.authBloc, widget.args.state),
+                                    widget.args.isDialog,
+                                    widget.args.authBloc,
+                                    widget.args.state),
                               );
                             },
                           ),
@@ -134,7 +132,6 @@ class _TwoFactorAuthWidgetState extends BState<TwoFactorAuthWidget> {
                 }),
           ),
         ],
-      ),
     );
   }
 

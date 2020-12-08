@@ -99,6 +99,13 @@ class Logger {
       ..save();
   }
 
+  static fido(Object value) {
+    return Logger._("FIDO")
+      ..start()
+      ..log(value)
+      ..save();
+  }
+
   start() {
     isRun = true;
     if (onEdit != null) onEdit();
@@ -113,6 +120,9 @@ class Logger {
   save() async {
 //    await Crashlytics.instance.log(buffer);
 //    await Crashlytics.instance.recordError("record log", null);
+    final content = buffer;
+    buffer = "";
+    count = 0;
     try {
       final dir = await logDir();
       final file = File(
@@ -123,12 +133,11 @@ class Logger {
             ".log.txt",
       );
       await file.create(recursive: true);
-      await file.writeAsString(buffer.replaceAll(newLine, "\n"));
+      await file.writeAsString(content.replaceAll(newLine, "\n"));
     } catch (e) {
       e;
     }
-    buffer = "";
-    count = 0;
+
     if (onEdit != null) onEdit();
   }
 
