@@ -64,11 +64,7 @@ class FidoAuthBloc extends Bloc<FidoAuthEvent, FidoAuthState> {
   Stream<FidoAuthState> _cancelByUser(Cancel event) async* {
     fidoRequest?.close();
     fidoRequest = null;
-    if (event.error != null && event.error != FidoErrorCase.Canceled) {
-      yield ErrorState(ErrorToShow(event.error));
-    } else {
-      yield ErrorState(null);
-    }
+    yield mapError(event.error);
   }
 
   Stream<FidoAuthState> _keyResult(KeyResult event) async* {
@@ -92,17 +88,7 @@ class FidoAuthBloc extends Bloc<FidoAuthEvent, FidoAuthState> {
       authBloc.add(UserLogIn(loginResponse, completer, login, password));
       await completer.future;
     } catch (e) {
-      if (e is PlatformException) {
-        if (e.message == "No valid credentials provided.") {
-          yield ErrorState(ErrorToShow.code(S.fido_error_invalid_key));
-          return;
-        }
-      }
-      if (e is CanceledByUser) {
-        yield ErrorState(null);
-        return;
-      }
-      yield ErrorState(ErrorToShow(e));
+      yield mapError(e);
     }
   }
 
@@ -148,17 +134,29 @@ class FidoAuthBloc extends Bloc<FidoAuthEvent, FidoAuthState> {
           .then((value) => add(KeyResult(value)))
           .catchError((e) => add(Cancel(e)));
     } catch (e) {
-      if (e is PlatformException) {
-        if (e.message == "No valid credentials provided.") {
-          yield ErrorState(ErrorToShow.code(S.fido_error_invalid_key));
-          return;
-        }
-      }
-      if (e is CanceledByUser) {
-        yield ErrorState(null);
-        return;
-      }
-      yield ErrorState(ErrorToShow(e));
+      yield mapError(e);
     }
+  }
+
+  ErrorState mapError(dynamic e) {
+    if (e == null) {
+      return ErrorState(null);
+    }
+    if (e is FidoError) {
+      if (e.errorCase == FidoErrorCase.Canceled) {
+        return ErrorState(null);
+      } else if (e.message?.isNotEmpty == true) {
+        return ErrorState(ErrorToShow.message(e.message));
+      } else {
+        return ErrorState(ErrorToShow.message("The system misconfigured"));
+      }
+    } else if (e is PlatformException) {
+      if (e.message == "No valid credentials provided.") {
+        return ErrorState(ErrorToShow.code(S.fido_error_invalid_key));
+      }
+    } else if (e is CanceledByUser) {
+      return ErrorState(null);
+    }
+    return ErrorState(ErrorToShow(e));
   }
 }

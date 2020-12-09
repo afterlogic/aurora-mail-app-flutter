@@ -96,35 +96,35 @@ class _SelectTwoFactorWidgetState extends BState<TwoFactorScene> {
                     if (widget.isDialog) SizedBox(height: 40.0),
                     Flexible(
                       flex: 4,
-                      child: ListView(
-                        padding: EdgeInsets.zero,
-                        children: [
-                          widget.title ??
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: <Widget>[
-                                  Text(
-                                    i18n(context, S.tfa_label),
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .title
-                                        .copyWith(
-                                            color: AppTheme.loginTextColor),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  SizedBox(height: 10),
-                                  Text(
-                                    i18n(context, S.tfa_hint_step),
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                        color: AppTheme.loginTextColor),
-                                  ),
-                                ],
-                              ),
-                          SizedBox(height: 20),
-                          ...widget.button
-                        ],
-                      ),
+                        child: ListView(
+                          padding: EdgeInsets.zero,
+                          children: [
+                            widget.title ??
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: <Widget>[
+                                    Text(
+                                      i18n(context, S.tfa_label),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .title
+                                          .copyWith(
+                                              color: AppTheme.loginTextColor),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    SizedBox(height: 10),
+                                    Text(
+                                      i18n(context, S.tfa_hint_step),
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          color: AppTheme.loginTextColor),
+                                    ),
+                                  ],
+                                ),
+                            SizedBox(height: 20),
+                            ...widget.button
+                          ],
+                        ),
                     ),
                     Flexible(
                       child: SizedBox(
