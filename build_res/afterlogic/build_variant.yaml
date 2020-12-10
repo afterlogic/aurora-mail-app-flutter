@@ -19,5 +19,5 @@ selfDestructingEmail: false
 pushNotification: false
 supportAllowAccess: true
 
-_version: 2.0.0
+_version: 2.3.0
 supportLanguage: "en"
