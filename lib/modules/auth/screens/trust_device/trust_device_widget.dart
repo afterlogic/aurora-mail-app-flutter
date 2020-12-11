@@ -52,6 +52,7 @@ class _TrustDeviceWidgetState extends BState<TrustDeviceWidget> {
     return TwoFactorScene(
       logoHint: "",
       isDialog: widget.args.isDialog,
+      allowBack: false,
       button: [
         BlocListener<TrustDeviceBloc, TrustDeviceState>(
           bloc: bloc,
@@ -83,7 +84,8 @@ class _TrustDeviceWidgetState extends BState<TrustDeviceWidget> {
                           setState(() {});
                         },
                         title: Text(
-                          i18n(context, S.tfa_check_box_trust_device),
+                          i18n(context, S.tfa_check_box_trust_device,
+                              {"daysCount": widget.args.daysCount.toString()}),
                           style: TextStyle(color: AppTheme.loginTextColor),
                         ),
                       ),

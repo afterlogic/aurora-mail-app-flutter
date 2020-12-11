@@ -444,6 +444,21 @@ class AuthApi {
 
     print(res);
   }
+
+  Future<int> getTwoFactorSettings(String hostname) async {
+    final twoFactorModule = WebMailApi(
+      moduleName: WebMailModules.twoFactorAuth,
+      hostname: hostname,
+    );
+    final body = new WebMailApiBody(method: "GetSettings");
+
+    final res = await twoFactorModule.post(
+      body,
+      addedHeaders: await deviceIdHeader(),
+    );
+
+    return (res["TrustDevicesForDays"] as num).toInt();
+  }
 }
 
 class RequestTwoFactor extends Error {

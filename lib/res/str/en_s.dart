@@ -426,7 +426,7 @@ class EnS extends S {
     408: "Enter one of your 8-character backup codes",
     409: "Backup code",
     410: "You're all set",
-    411: "Don't ask again on this device for 30 days",
+    411: "Don't ask again on this device for {daysCount} days",
     412: "Continue",
   };
   String get(int id) => _map[id];

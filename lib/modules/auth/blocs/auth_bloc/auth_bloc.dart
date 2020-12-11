@@ -178,8 +178,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   Stream<AuthState> _userLogIn(UserLogIn event) async* {
     await _methods.saveDevice(event.user);
-    yield ShowTrustDeviceDialog(event.user, event.login, event.password);
-    event.completer?.complete();
+
+    final daysCount = await _methods.getTwoFactorSettings(event.user);
+    if (daysCount == 0) {
+      yield* _userLogInFinish(UserLogInFinish(event.user, event.completer));
+    } else {
+      yield ShowTrustDeviceDialog(event.user, event.login, event.password, daysCount);
+      event.completer?.complete();
+    }
   }
 
   Stream<AuthState> _userLogInFromMain(UserLogInFinish event) async* {

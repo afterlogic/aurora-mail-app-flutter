@@ -166,6 +166,7 @@ class _LoginAndroidState extends BState<LoginAndroid> {
                     state.user,
                     state.email,
                     state.password,
+                    state.daysCount,
                   ),
                 );
               }

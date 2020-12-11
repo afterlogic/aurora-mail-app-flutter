@@ -1,7 +1,7 @@
 name: aurora_mail
 description: Mail client for mobile.
 
-version: 2.5.0+201
+version: 2.0.0+201
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -92,7 +92,7 @@ dependencies:
   keyboard_actions: 3.2.0
 
   theme:
-    path: aurora-mail-app-customs/private_mail/theme
+    path: build_res/afterlogic/theme
 
   crypto_model:
     path: module/crypto/crypto_model
@@ -129,9 +129,9 @@ dev_dependencies:
 flutter_icons:
   ios: true
   android: true
-  image_path: aurora-mail-app-customs/private_mail/image/icon.png
-  adaptive_icon_background: "#34113C"
-  adaptive_icon_foreground: aurora-mail-app-customs/private_mail/image/icon_foreground.png
+  image_path: build_res/afterlogic/image/icon.png
+  adaptive_icon_background: "#FFFFFF"
+  adaptive_icon_foreground: build_res/afterlogic/image/icon_foreground.png
 
 flutter:
   uses-material-design: true
@@ -139,9 +139,9 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/
-    - aurora-mail-app-customs/private_mail/image/icon.png
-    - aurora-mail-app-customs/private_mail/image/main_logo.png
-    - aurora-mail-app-customs/private_mail/image/
+    - build_res/afterlogic/image/icon.png
+    - build_res/afterlogic/image/main_logo.png
+    - build_res/afterlogic/image/
 
   fonts:
     - family: WebMailIcons

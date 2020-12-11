@@ -341,6 +341,14 @@ class AuthMethods {
       print(e);
     }
   }
+
+  Future<int> getTwoFactorSettings(User user) async {
+    try {
+      return await _authApi.getTwoFactorSettings(user.hostname);
+    } catch (e) {
+      return 0;
+    }
+  }
 }
 
 class InitializerResponse {

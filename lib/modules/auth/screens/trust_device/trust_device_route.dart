@@ -12,6 +12,7 @@ class TrustDeviceRouteArgs {
   final String login;
   final String password;
   final User user;
+  final int daysCount;
 
   const TrustDeviceRouteArgs(
     this.isDialog,
@@ -19,5 +20,6 @@ class TrustDeviceRouteArgs {
     this.user,
     this.login,
     this.password,
+    this.daysCount,
   );
 }

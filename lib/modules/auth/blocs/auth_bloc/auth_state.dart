@@ -99,6 +99,7 @@ class ShowTrustDeviceDialog extends AuthState {
   final User user;
   final String email;
   final String password;
+  final int daysCount;
 
-  ShowTrustDeviceDialog(this.user, this.email, this.password);
+  ShowTrustDeviceDialog(this.user, this.email, this.password, this.daysCount);
 }
