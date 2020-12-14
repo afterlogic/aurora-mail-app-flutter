@@ -12,10 +12,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ContactsAppBar extends StatefulWidget implements PreferredSizeWidget {
+  final bool isAppBar;
+  final bool enable;
   @override
   final Size preferredSize = const Size.fromHeight(kToolbarHeight);
 
-  const ContactsAppBar();
+  const ContactsAppBar({
+    this.isAppBar = true,
+    this.enable = true,
+  });
 
   @override
   _ContactsAppBarState createState() => _ContactsAppBarState();
@@ -29,9 +34,14 @@ class _ContactsAppBarState extends State<ContactsAppBar> {
   Widget build(BuildContext context) {
     return AnimatedSwitcher(
       duration: Duration(milliseconds: 250),
-      child: mode == ContactAppBarMode.common
-          ? common(context)
-          : SearchBar(searchCtrl, changeMode, search),
+      child: mode == ContactAppBarMode.search && widget.enable
+          ? SearchBar(
+              searchCtrl,
+              changeMode,
+              search,
+              isAppBar: widget.isAppBar,
+            )
+          : common(context),
     );
   }
 
@@ -105,33 +115,68 @@ class _ContactsAppBarState extends State<ContactsAppBar> {
       }
     }
 
-    return BlocBuilder<ContactsBloc, ContactsState>(
-      builder: (context, state) => AMAppBar(
-        title: _buildTitle(context, state),
-        actions: <Widget>[
-          if (state.selectedGroup != null)
-            IconButton(
-              icon: Icon(Icons.info_outline),
-              onPressed: () {
-                final group = state.groups
-                    .firstWhere((g) => g.uuid == state.selectedGroup);
-                final bloc = BlocProvider.of<ContactsBloc>(context);
-                Navigator.pushNamed(context, GroupViewRoute.name,
-                    arguments: GroupViewScreenArgs(group, bloc));
-              },
+    return BlocBuilder<ContactsBloc, ContactsState>(builder: (context, state) {
+      if (!widget.isAppBar) {
+        return SizedBox(
+          height: 50,
+          width: double.infinity,
+          child: ListTile(
+            leading: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                if (state.selectedGroup != null)
+                  IconButton(
+                    icon: Icon(Icons.info_outline),
+                    onPressed: () {
+                      final group = state.groups
+                          .firstWhere((g) => g.uuid == state.selectedGroup);
+                      final bloc = BlocProvider.of<ContactsBloc>(context);
+                      Navigator.pushNamed(context, GroupViewRoute.name,
+                          arguments: GroupViewScreenArgs(group, bloc));
+                    },
+                  ),
+                IconButton(
+                  icon: Icon(Icons.search),
+                  onPressed: changeMode,
+                ),
+                if (BuildProperty.multiUserEnable)
+                  BlocBuilder<SettingsBloc, SettingsState>(
+                    builder: (_, state) =>
+                        UserSelectionPopup((state as SettingsLoaded).users),
+                  ),
+              ],
             ),
-          IconButton(
-            icon: Icon(Icons.search),
-            onPressed: changeMode,
           ),
-          if (BuildProperty.multiUserEnable)
-            BlocBuilder<SettingsBloc, SettingsState>(
-              builder: (_, state) =>
-                  UserSelectionPopup((state as SettingsLoaded).users),
-            ),
-        ],
-      ),
-    );
+        );
+      }
+      return AMAppBar(
+        title: _buildTitle(context, state),
+        actions: widget.enable
+            ? <Widget>[
+                if (state.selectedGroup != null)
+                  IconButton(
+                    icon: Icon(Icons.info_outline),
+                    onPressed: () {
+                      final group = state.groups
+                          .firstWhere((g) => g.uuid == state.selectedGroup);
+                      final bloc = BlocProvider.of<ContactsBloc>(context);
+                      Navigator.pushNamed(context, GroupViewRoute.name,
+                          arguments: GroupViewScreenArgs(group, bloc));
+                    },
+                  ),
+                IconButton(
+                  icon: Icon(Icons.search),
+                  onPressed: changeMode,
+                ),
+                if (BuildProperty.multiUserEnable)
+                  BlocBuilder<SettingsBloc, SettingsState>(
+                    builder: (_, state) =>
+                        UserSelectionPopup((state as SettingsLoaded).users),
+                  ),
+              ]
+            : null,
+      );
+    });
   }
 }
 

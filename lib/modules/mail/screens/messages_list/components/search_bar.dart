@@ -6,7 +6,8 @@ import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/messages_list_
 import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/messages_list_event.dart';
 import 'package:aurora_mail/modules/mail/repository/search_util.dart';
 import 'package:aurora_mail/utils/base_state.dart';
-import 'package:aurora_mail/utils/internationalization.dart'; import 'package:aurora_mail/res/str/s.dart';
+import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,9 +16,15 @@ class SearchBar extends StatefulWidget {
   final Function onCancel;
   final TextEditingController searchCtrl;
   final Function(String) onSearch;
+  final bool isAppBar;
 
-  const SearchBar(this.searchCtrl, this.onCancel, this.onSearch, {Key key})
-      : super(key: key);
+  const SearchBar(
+    this.searchCtrl,
+    this.onCancel,
+    this.onSearch, {
+    Key key,
+    this.isAppBar = true,
+  }) : super(key: key);
 
   @override
   SearchBarState createState() => SearchBarState();
@@ -35,7 +42,6 @@ class SearchBarState extends BState<SearchBar> {
     }
   }
 
-
   void _getMessages(String val) {
     if (debounce?.isActive == true) debounce.cancel();
     debounce = Timer(Duration(milliseconds: val == null ? 0 : 500), () {
@@ -46,31 +52,61 @@ class SearchBarState extends BState<SearchBar> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context).appBarTheme;
-    return AMAppBar(
-      key: Key("search_mail_app_bar"),
-      leading: Icon(Icons.search),
-      title: TextField(
-        style: theme.textTheme.body1,
-        autofocus: true,
-        decoration: InputDecoration.collapsed(
-          hintText: i18n(context, S.messages_list_app_bar_search),
-          hintStyle: theme.textTheme.display1,
+    if (!widget.isAppBar) {
+      return SizedBox(
+        height: 50,
+        width: double.infinity,
+        child: ListTile(
+          key: Key("search_mail_app_bar"),
+          leading: IconButton(onPressed: null, icon: Icon(Icons.search)),
+          title: TextField(
+            autofocus: true,
+            decoration: InputDecoration.collapsed(
+              hintText: i18n(context, S.messages_list_app_bar_search),
+              hintStyle: theme.textTheme.display1,
+            ),
+            onChanged: _getMessages,
+            controller: widget.searchCtrl,
+          ),
+          trailing: IconButton(
+            icon: Icon(Icons.close),
+            onPressed: () {
+              setState(() {
+                widget.searchCtrl.clear();
+                widget.onCancel();
+              });
+              widget.onSearch(null);
+            },
+          ),
         ),
-        onChanged: _getMessages,
-        controller: widget.searchCtrl,
-      ),
-      actions: <Widget>[
-        IconButton(
-          icon: Icon(Icons.close),
-          onPressed: () {
-            setState(() {
-              widget.searchCtrl.clear();
-              widget.onCancel();
-            });
-            widget.onSearch(null);
-          },
+      );
+    } else {
+      return AMAppBar(
+        key: Key("search_mail_app_bar"),
+        leading: Icon(Icons.search),
+        title: TextField(
+          style: theme.textTheme.body1,
+          autofocus: true,
+          decoration: InputDecoration.collapsed(
+            hintText: i18n(context, S.messages_list_app_bar_search),
+            hintStyle: theme.textTheme.display1,
+          ),
+          onChanged: _getMessages,
+          controller: widget.searchCtrl,
         ),
-      ],
-    );
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.close),
+            onPressed: () {
+              setState(() {
+                widget.searchCtrl.clear();
+                widget.onCancel();
+              });
+              widget.onSearch(null);
+            },
+          ),
+        ],
+      );
+    }
   }
 }

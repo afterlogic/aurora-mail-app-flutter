@@ -107,47 +107,48 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
       ],
     );
     if (isTablet) {
-      body = Row(
-        children: [
-          ClipRRect(
-            child: SizedBox(
-              width: 304,
-              child: Scaffold(
-                appBar: AMAppBar(),
-                body: DecoratedBox(
-                  position: DecorationPosition.foreground,
-                  decoration: BoxDecoration(
-                      border: Border(right: BorderSide(width: 0.2))),
-                  child: Drawer(
-                    child: ListTileTheme(
-                      style: ListTileStyle.drawer,
-                      selectedColor: theme.accentColor,
-                      child: SafeArea(child: body),
+      body = Scaffold(
+        appBar: AMAppBar(
+          title: Text(i18n(context, S.settings)),
+        ),
+        body: Row(
+          children: [
+            ClipRRect(
+              child: SizedBox(
+                width: 304,
+                child: Scaffold(
+                  body: DecoratedBox(
+                    position: DecorationPosition.foreground,
+                    decoration: BoxDecoration(
+                        border: Border(right: BorderSide(width: 0.2))),
+                    child: Drawer(
+                      child: ListTileTheme(
+                        style: ListTileStyle.drawer,
+                        selectedColor: theme.accentColor,
+                        child: SafeArea(child: body),
+                      ),
                     ),
                   ),
                 ),
               ),
             ),
-          ),
-          Flexible(
-            child: ClipRRect(
-              child: Scaffold(
-                appBar: AMAppBar(
-                  title: Text(i18n(context, S.settings)),
-                ),
-                body: SettingsNavigatorWidget(
-                  key: navigatorKey,
-                  onUpdate: () {
-                    setState(() {});
-                  },
-                  initialRoute: CommonSettingsRoute.name,
-                  routeFactory: RouteGenerator.onGenerateRoute,
+            Flexible(
+              child: ClipRRect(
+                child: Scaffold(
+                  body: SettingsNavigatorWidget(
+                    key: navigatorKey,
+                    onUpdate: () {
+                      setState(() {});
+                    },
+                    initialRoute: CommonSettingsRoute.name,
+                    routeFactory: RouteGenerator.onGenerateRoute,
+                  ),
                 ),
               ),
+              flex: 3,
             ),
-            flex: 3,
-          ),
-        ],
+          ],
+        ),
       );
     }
     return Scaffold(

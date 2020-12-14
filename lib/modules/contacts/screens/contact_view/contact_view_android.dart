@@ -34,9 +34,14 @@ class ContactViewAndroid extends StatefulWidget {
   final Contact contact;
   final ScaffoldState contactsListScaffoldState;
   final PgpSettingsBloc pgpSettingsBloc;
+  final bool isPart;
 
   const ContactViewAndroid(
-      this.contact, this.contactsListScaffoldState, this.pgpSettingsBloc);
+    this.contact,
+    this.contactsListScaffoldState,
+    this.pgpSettingsBloc, {
+    this.isPart = false,
+  });
 
   @override
   _ContactViewAndroidState createState() => _ContactViewAndroidState();
@@ -433,18 +438,20 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
 
     final groupInfo = _buildGroups(c.groupUUIDs);
     return Scaffold(
-      appBar: ContactViewAppBar(
-        name: c.fullName,
-        allowShare: c.storage == StorageNames.personal,
-        allowUnshare: c.storage == StorageNames.shared,
-        allowEdit: c.storage == StorageNames.personal ||
-            c.viewEmail ==
-                BlocProvider.of<AuthBloc>(context).currentAccount.email,
-        allowDelete: c.storage == StorageNames.personal ||
-            c.storage == StorageNames.shared,
-        onActionSelected: _onMainAppBarActionSelected,
-        hasEmail: _contactInfo.viewEmail?.isNotEmpty == true,
-      ),
+      appBar: widget.isPart
+          ? null
+          : ContactViewAppBar(
+              name: c.fullName,
+              allowShare: c.storage == StorageNames.personal,
+              allowUnshare: c.storage == StorageNames.shared,
+              allowEdit: c.storage == StorageNames.personal ||
+                  c.viewEmail ==
+                      BlocProvider.of<AuthBloc>(context).currentAccount.email,
+              allowDelete: c.storage == StorageNames.personal ||
+                  c.storage == StorageNames.shared,
+              onActionSelected: _onMainAppBarActionSelected,
+              hasEmail: _contactInfo.viewEmail?.isNotEmpty == true,
+            ),
       body: BlocListener(
         bloc: pgpSettingsBloc,
         listener: (BuildContext context, state) async {
@@ -466,68 +473,97 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
             return;
           }
         },
-        child: Center(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              maxWidth: LayoutConfig.formWidth,
-            ),
-            child: ListView(
-              children: <Widget>[
-                ..._mainInfo,
-                if (personalInfo.isNotEmpty)
-                  Divider(indent: 16.0, endIndent: 16.0),
-                if (personalInfo.isNotEmpty)
-                  ListTile(
-                    title: Text(
-                      i18n(context, S.contacts_view_section_home),
-                      style: sectionTitleTheme,
-                    ),
+        child: Builder(builder: (context) {
+          final child = ListView(
+            children: <Widget>[
+              ..._mainInfo,
+              if (personalInfo.isNotEmpty)
+                Divider(indent: 16.0, endIndent: 16.0),
+              if (personalInfo.isNotEmpty)
+                ListTile(
+                  title: Text(
+                    i18n(context, S.contacts_view_section_home),
+                    style: sectionTitleTheme,
                   ),
-                ...personalInfo,
-                if (businessInfo.isNotEmpty)
-                  Divider(indent: 16.0, endIndent: 16.0),
-                if (businessInfo.isNotEmpty)
-                  ListTile(
-                    title: Text(
-                      i18n(context, S.contacts_view_section_business),
-                      style: sectionTitleTheme,
-                    ),
+                ),
+              ...personalInfo,
+              if (businessInfo.isNotEmpty)
+                Divider(indent: 16.0, endIndent: 16.0),
+              if (businessInfo.isNotEmpty)
+                ListTile(
+                  title: Text(
+                    i18n(context, S.contacts_view_section_business),
+                    style: sectionTitleTheme,
                   ),
-                ...businessInfo,
-                if (otherInfo.isNotEmpty)
-                  Divider(indent: 16.0, endIndent: 16.0),
-                if (otherInfo.isNotEmpty)
-                  ListTile(
-                    title: Text(
-                      i18n(context, S.contacts_view_section_other_info),
-                      style: sectionTitleTheme,
-                    ),
+                ),
+              ...businessInfo,
+              if (otherInfo.isNotEmpty) Divider(indent: 16.0, endIndent: 16.0),
+              if (otherInfo.isNotEmpty)
+                ListTile(
+                  title: Text(
+                    i18n(context, S.contacts_view_section_other_info),
+                    style: sectionTitleTheme,
                   ),
-                ...otherInfo,
-                if (BuildProperty.cryptoEnable && keyInfo != null)
-                  Divider(indent: 16.0, endIndent: 16.0),
-                if (BuildProperty.cryptoEnable && keyInfo != null) keyInfo,
-                if (groupInfo.isNotEmpty)
-                  Divider(indent: 16.0, endIndent: 16.0),
-                if (groupInfo.isNotEmpty)
-                  ListTile(
-                    title: Text(
-                      i18n(context, S.contacts_view_section_groups),
-                      style: sectionTitleTheme,
-                    ),
+                ),
+              ...otherInfo,
+              if (BuildProperty.cryptoEnable && keyInfo != null)
+                Divider(indent: 16.0, endIndent: 16.0),
+              if (BuildProperty.cryptoEnable && keyInfo != null) keyInfo,
+              if (groupInfo.isNotEmpty) Divider(indent: 16.0, endIndent: 16.0),
+              if (groupInfo.isNotEmpty)
+                ListTile(
+                  title: Text(
+                    i18n(context, S.contacts_view_section_groups),
+                    style: sectionTitleTheme,
                   ),
-                if (groupInfo.isNotEmpty)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Wrap(
-                      spacing: 16,
-                      children: groupInfo,
-                    ),
+                ),
+              if (groupInfo.isNotEmpty)
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  child: Wrap(
+                    spacing: 16,
+                    children: groupInfo,
                   ),
+                ),
+            ],
+          );
+          if (widget.isPart) {
+            return Column(
+              children: [
+                if (widget.isPart) ...[
+                  ContactViewAppBar(
+                    name: c.fullName,
+                    allowShare: c.storage == StorageNames.personal,
+                    allowUnshare: c.storage == StorageNames.shared,
+                    allowEdit: c.storage == StorageNames.personal ||
+                        c.viewEmail ==
+                            BlocProvider.of<AuthBloc>(context)
+                                .currentAccount
+                                .email,
+                    allowDelete: c.storage == StorageNames.personal ||
+                        c.storage == StorageNames.shared,
+                    onActionSelected: _onMainAppBarActionSelected,
+                    hasEmail: _contactInfo.viewEmail?.isNotEmpty == true,
+                    isAppBar: false,
+                  ),
+                  Divider(height: 1),
+                ],
+                Expanded(
+                  child: child,
+                ),
               ],
-            ),
-          ),
-        ),
+            );
+          } else {
+            return Center(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: LayoutConfig.formWidth,
+                ),
+                child: child,
+              ),
+            );
+          }
+        }),
       ),
     );
   }

@@ -12,7 +12,8 @@ import 'package:aurora_mail/modules/mail/screens/messages_list/components/select
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/user_selection_popup.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/utils/base_state.dart';
-import 'package:aurora_mail/utils/internationalization.dart'; import 'package:aurora_mail/res/str/s.dart';
+import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -21,12 +22,16 @@ class MailAppBar extends StatefulWidget implements PreferredSizeWidget {
   final String initSearch;
   final SelectionController<int, Message> selectionController;
   final Function(bool value) onSearch;
+  final bool enable;
+  final bool isAppBar;
 
   const MailAppBar({
     this.initSearch,
     this.selectionController,
     Key key,
     this.onSearch,
+    this.enable = true,
+    this.isAppBar = true,
   }) : super(key: key);
 
   @override
@@ -101,16 +106,20 @@ class MailAppBarState extends BState<MailAppBar> {
 
   @override
   Widget build(BuildContext context) {
+    if (!widget.enable) {
+      return _buildDefaultAppBar();
+    }
     return AnimatedSwitcher(
       duration: Duration(milliseconds: 250),
       child: isSelectMode
-          ? SelectAppBar(widget.selectionController)
+          ? SelectAppBar(widget.selectionController, isAppBar: widget.isAppBar)
           : isSearchMode
               ? SearchBar(
                   searchCtrl,
                   changeMode,
                   _search,
                   key: searchKey,
+                  isAppBar: widget.isAppBar,
                 )
               : _buildDefaultAppBar(),
     );
@@ -130,6 +139,24 @@ class MailAppBarState extends BState<MailAppBar> {
   }
 
   Widget _buildDefaultAppBar() {
+    if (!widget.isAppBar) {
+      return ListTile(
+        leading: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            IconButton(
+              icon: Icon(Icons.search),
+              onPressed: changeMode,
+            ),
+            if (BuildProperty.multiUserEnable)
+              BlocBuilder<AuthBloc, AuthState>(
+                builder: (_, state) => UserSelectionPopup(
+                    BlocProvider.of<AuthBloc>(context).users),
+              ),
+          ],
+        ),
+      );
+    }
     return AMAppBar(
       key: Key("default_mail_app_bar"),
       title: BlocBuilder<MailBloc, MailState>(
@@ -152,17 +179,19 @@ class MailAppBarState extends BState<MailAppBar> {
           }
         },
       ),
-      actions: <Widget>[
-        IconButton(
-          icon: Icon(Icons.search),
-          onPressed: changeMode,
-        ),
-        if (BuildProperty.multiUserEnable)
-          BlocBuilder<AuthBloc, AuthState>(
-            builder: (_, state) =>
-                UserSelectionPopup(BlocProvider.of<AuthBloc>(context).users),
-          ),
-      ],
+      actions: widget.enable
+          ? <Widget>[
+              IconButton(
+                icon: Icon(Icons.search),
+                onPressed: changeMode,
+              ),
+              if (BuildProperty.multiUserEnable)
+                BlocBuilder<AuthBloc, AuthState>(
+                  builder: (_, state) => UserSelectionPopup(
+                      BlocProvider.of<AuthBloc>(context).users),
+                ),
+            ]
+          : null,
     );
   }
 }

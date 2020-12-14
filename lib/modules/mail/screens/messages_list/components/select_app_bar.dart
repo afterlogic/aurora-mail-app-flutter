@@ -10,7 +10,8 @@ import 'package:aurora_mail/res/icons/app_assets.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
 import 'package:aurora_mail/shared_ui/svg_icon.dart';
 import 'package:aurora_mail/utils/base_state.dart';
-import 'package:aurora_mail/utils/internationalization.dart'; import 'package:aurora_mail/res/str/s.dart';
+import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,8 +19,12 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 
 class SelectAppBar extends StatefulWidget {
   final SelectionController<int, Message> controller;
+  final bool isAppBar;
 
-  const SelectAppBar(this.controller);
+  const SelectAppBar(
+    this.controller, {
+    this.isAppBar = true,
+  });
 
   @override
   _SelectAppBarState createState() => _SelectAppBarState();
@@ -50,43 +55,60 @@ class _SelectAppBarState extends BState<SelectAppBar> {
       builder: (context, state) {
         final folderType =
             state is FoldersLoaded ? state.selectedFolder.folderType : null;
+        final actions = folderType == null
+            ? null
+            : <Widget>[
+                if (![FolderType.sent, FolderType.drafts, FolderType.spam]
+                    .contains(folderType))
+                  IconButton(
+                    icon: SvgIcon(
+                      AppAssets.spam,
+                    ),
+                    onPressed: () => _spam(true),
+                  ),
+                if (FolderType.spam == folderType)
+                  IconButton(
+                    icon: SvgIcon(
+                      AppAssets.not_spam,
+                    ),
+                    onPressed: () => _spam(false),
+                  ),
+                IconButton(
+                  icon: Icon(
+                    MdiIcons.fileMove,
+                  ),
+                  onPressed: _move,
+                ),
+                IconButton(
+                  icon: Icon(Icons.delete_outline),
+                  onPressed: _delete,
+                ),
+              ];
+        if (!widget.isAppBar) {
+          return ListTile(
+            leading: IconButton(
+              icon: Icon(
+                Icons.close,
+              ),
+              onPressed: () => widget.controller.enable = false,
+            ),
+            title: Text(widget.controller.selected.length.toString()),
+            trailing: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: actions,
+            ),
+          );
+        }
         return AppBar(
           leading: IconButton(
             icon: Icon(
-              Icons.arrow_back_ios,
+              Icons.close,
             ),
             onPressed: () => widget.controller.enable = false,
           ),
           title: Text(widget.controller.selected.length.toString()),
-          actions: folderType == null
-              ? []
-              : <Widget>[
-                  if (![FolderType.sent, FolderType.drafts, FolderType.spam]
-                      .contains(folderType))
-                    IconButton(
-                      icon: SvgIcon(
-                        AppAssets.spam,
-                      ),
-                      onPressed: () => _spam(true),
-                    ),
-                  if (FolderType.spam == folderType)
-                    IconButton(
-                      icon: SvgIcon(
-                        AppAssets.not_spam,
-                      ),
-                      onPressed: () => _spam(false),
-                    ),
-                  IconButton(
-                    icon: Icon(
-                      MdiIcons.fileMove,
-                    ),
-                    onPressed: _move,
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.delete_outline),
-                    onPressed: _delete,
-                  ),
-                ],
+          actions: actions,
         );
       },
     );

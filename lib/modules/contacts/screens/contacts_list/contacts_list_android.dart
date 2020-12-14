@@ -57,6 +57,7 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
             contact,
             Scaffold.of(context),
             pgpSettingsBloc,
+            isPart: true,
           ),
         );
         setState(() {});
@@ -161,57 +162,72 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
       ),
     );
     if (isTablet) {
-      body = Row(
-        children: [
-          ClipRRect(
-            child: SizedBox(
-              width: 304,
-              child: Scaffold(
-                appBar: AMAppBar(),
-                body: DecoratedBox(
+      body = Scaffold(
+        appBar: ContactsAppBar(
+          enable: false,
+        ),
+        body: Row(
+          children: [
+            ClipRRect(
+              child: SizedBox(
+                width: 304,
+                child: Scaffold(
+                  body: DecoratedBox(
+                      position: DecorationPosition.foreground,
+                      decoration: BoxDecoration(
+                          border: Border(right: BorderSide(width: 0.2))),
+                      child: ContactsDrawer()),
+                ),
+              ),
+            ),
+            Flexible(
+              child: ClipRRect(
+                child: Scaffold(
+                  body: DecoratedBox(
                     position: DecorationPosition.foreground,
                     decoration: BoxDecoration(
-                        border: Border(right: BorderSide(width: 0.2))),
-                    child: ContactsDrawer()),
-              ),
-            ),
-          ),
-          Flexible(
-            child: ClipRRect(
-              child: Scaffold(
-                appBar: ContactsAppBar(),
-                body: DecoratedBox(
-                  position: DecorationPosition.foreground,
-                  decoration: BoxDecoration(
-                      border: selectedWidget == null && config.columnCount >= 3
-                          ? null
-                          : Border(right: BorderSide(width: 0.2))),
-                  child: body,
+                        border:
+                            selectedWidget == null && config.columnCount >= 3
+                                ? null
+                                : Border(right: BorderSide(width: 0.2))),
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: 50,
+                          child: ContactsAppBar(
+                            isAppBar: false,
+                          ),
+                        ),
+                        Divider(height: 1),
+                        Expanded(child: body),
+                      ],
+                    ),
+                  ),
+                  floatingActionButtonLocation:
+                      FloatingActionButtonLocation.endFloat,
+                  floatingActionButton: isTablet
+                      ? null
+                      : AMFloatingActionButton(
+                          child: IconTheme(
+                            data: AppTheme.floatIconTheme,
+                            child: Icon(MdiIcons.accountPlusOutline),
+                          ),
+                          onPressed: () => Navigator.pushNamed(
+                            context,
+                            ContactEditRoute.name,
+                            arguments: ContactEditScreenArgs(pgpSettingsBloc,
+                                bloc: BlocProvider.of<ContactsBloc>(context)),
+                          ),
+                        ),
                 ),
-                floatingActionButtonLocation:
-                    FloatingActionButtonLocation.endFloat,
-                floatingActionButton: isTablet
-                    ? null
-                    : AMFloatingActionButton(
-                        child: IconTheme(
-                          data: AppTheme.floatIconTheme,
-                          child: Icon(MdiIcons.accountPlusOutline),
-                        ),
-                        onPressed: () => Navigator.pushNamed(
-                          context,
-                          ContactEditRoute.name,
-                          arguments: ContactEditScreenArgs(pgpSettingsBloc,
-                              bloc: BlocProvider.of<ContactsBloc>(context)),
-                        ),
-                      ),
               ),
             ),
-          ),
-          if (selectedWidget != null && config.columnCount >= 3)
-            Flexible(
-              child: ClipRRect(child: selectedWidget),
-            ),
-        ],
+            if (selectedWidget != null && config.columnCount >= 3)
+              Flexible(
+                child: ClipRRect(child: selectedWidget),
+              ),
+          ],
+        ),
       );
     }
     return Scaffold(
