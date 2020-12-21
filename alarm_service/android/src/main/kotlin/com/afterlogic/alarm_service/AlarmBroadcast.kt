@@ -15,8 +15,7 @@ class AlarmBroadcast : BroadcastReceiver() {
         try {
             val serviceIntent = Intent(context, app.clazzService)
 
-            serviceIntent.putExtra(ENTRY_POINT, intent.getStringExtra(ENTRY_POINT))
-            serviceIntent.putExtra(LIBRARY_PATH, intent.getStringExtra(LIBRARY_PATH))
+            serviceIntent.putExtra(CALLBACK_ID, intent.getLongExtra(CALLBACK_ID, -1))
             serviceIntent.putExtra(ID, intent.getIntExtra(ID, -1))
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -31,16 +30,14 @@ class AlarmBroadcast : BroadcastReceiver() {
 
     companion object {
         fun setAlarm(context: Context,
-                     dartEntryPoint: String,
-                     libraryPath: String,
+                     callbackId: Long,
                      id: Int,
                      secondDelay: Long,
                      repeat: Boolean = true) {
             val intent = Intent(context, AlarmBroadcast::class.java)
 
             intent.putExtra(DELAY, secondDelay)
-            intent.putExtra(ENTRY_POINT, dartEntryPoint)
-            intent.putExtra(LIBRARY_PATH, libraryPath)
+            intent.putExtra(CALLBACK_ID, callbackId)
             intent.putExtra(ID, id)
 
             val pendingIntent = PendingIntent.getBroadcast(context, id, intent, 0)
@@ -71,8 +68,7 @@ class AlarmBroadcast : BroadcastReceiver() {
         }
 
         private const val DELAY = "delay"
-        const val ENTRY_POINT = "entryPoint"
-        const val LIBRARY_PATH = "libraryPath"
+        const val CALLBACK_ID = "callbackId"
         const val ID = "id"
     }
 }

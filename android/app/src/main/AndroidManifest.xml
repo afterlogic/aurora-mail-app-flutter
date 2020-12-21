@@ -100,5 +100,8 @@
             android:name=".AppService"
             android:exported="false" />
         <receiver android:name="com.afterlogic.alarm_service.AlarmBroadcast" />
+        <meta-data
+                android:name="flutterEmbedding"
+                android:value="2" />
     </application>
 </manifest>

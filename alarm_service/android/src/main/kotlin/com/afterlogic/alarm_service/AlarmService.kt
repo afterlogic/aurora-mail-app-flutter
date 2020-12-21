@@ -3,16 +3,15 @@ package com.afterlogic.alarm_service
 import android.app.IntentService
 import android.app.Notification
 import android.content.Intent
-import android.os.AsyncTask
 import android.os.Build
-import io.flutter.plugin.common.PluginRegistry
-import io.flutter.view.FlutterNativeView
-import android.os.Looper
 import android.os.Handler
+import android.os.Looper
 import android.util.Log
-import io.flutter.view.FlutterMain
 import io.flutter.embedding.engine.FlutterEngine
-import io.flutter.view.FlutterRunArguments
+import io.flutter.embedding.engine.FlutterJNI
+import io.flutter.embedding.engine.dart.DartExecutor.DartCallback
+import io.flutter.view.FlutterCallbackInformation
+import io.flutter.view.FlutterMain
 import java.lang.ref.SoftReference
 import kotlin.system.exitProcess
 
@@ -45,9 +44,10 @@ abstract class AlarmService : IntentService("Check update mail") {
         }
     }
 
-    override fun onHandleIntent(intent: Intent) {
-        val entryPoint = intent.getStringExtra(AlarmBroadcast.ENTRY_POINT)
-        val libraryPath = intent.getStringExtra(AlarmBroadcast.LIBRARY_PATH)
+
+    override fun onHandleIntent(intent: Intent?) {
+        intent ?: return
+        val callbackId = intent.getLongExtra(AlarmBroadcast.CALLBACK_ID, -1)
         val id = intent.getIntExtra(AlarmBroadcast.ID, -1)
 
         val onComplete = {
@@ -61,16 +61,16 @@ abstract class AlarmService : IntentService("Check update mail") {
             AlarmPlugin.onComplete = onComplete
             Handler(Looper.getMainLooper()).post {
                 try {
-                    FlutterMain.ensureInitializationComplete(application, null)
+                    FlutterMain.startInitialization(applicationContext)
+                    FlutterMain.ensureInitializationComplete(applicationContext, null)
                     val mAppBundlePath = FlutterMain.findAppBundlePath()
-                    val flutter = SoftReference(FlutterNativeView(this, true))
-                    val args = FlutterRunArguments()
-                    args.bundlePath = mAppBundlePath
-                    args.entrypoint = entryPoint
-                    args.libraryPath = libraryPath
-                    flutter.get()?.apply {
-                        runFromBundle(args)
-                        onStartFlutter(this.pluginRegistry)
+
+                    flutter = SoftReference(FlutterEngine(applicationContext))
+                    flutter?.get()?.apply {
+                        val flutterCallback = FlutterCallbackInformation.lookupCallbackInformation(callbackId)
+                        val dartCallback = DartCallback(applicationContext.resources.assets, mAppBundlePath, flutterCallback)
+                        this.dartExecutor.executeDartCallback(dartCallback)
+                        onStartFlutter(this)
                     }
                 } catch (e: Throwable) {
                     Log.e("flutter alarm service", "$e")
@@ -83,7 +83,7 @@ abstract class AlarmService : IntentService("Check update mail") {
     }
 
 
-    abstract fun onStartFlutter(registry: PluginRegistry)
+    abstract fun onStartFlutter(registry: FlutterEngine)
 
     abstract fun createNotification(): Notification
 

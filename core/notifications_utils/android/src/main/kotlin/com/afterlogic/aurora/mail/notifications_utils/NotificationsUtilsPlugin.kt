@@ -14,11 +14,13 @@ import io.flutter.plugin.common.PluginRegistry.Registrar
 
 
 /** NotificationsUtilsPlugin */
-class NotificationsUtilsPlugin(private val context: Context) : FlutterPlugin, MethodCallHandler {
-
+class NotificationsUtilsPlugin() : FlutterPlugin, MethodCallHandler {
+    lateinit var context: Context;
     override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
-        val channel = MethodChannel(flutterPluginBinding.getFlutterEngine().getDartExecutor(), "notifications_utils")
-        channel.setMethodCallHandler(NotificationsUtilsPlugin(flutterPluginBinding.applicationContext))
+        val channel = MethodChannel(flutterPluginBinding.binaryMessenger, "notifications_utils")
+        val plugin = NotificationsUtilsPlugin();
+        plugin.context = flutterPluginBinding.applicationContext;
+        channel.setMethodCallHandler(plugin)
     }
 
     // This static function is optional and equivalent to onAttachedToEngine. It supports the old
@@ -34,7 +36,9 @@ class NotificationsUtilsPlugin(private val context: Context) : FlutterPlugin, Me
         @JvmStatic
         fun registerWith(registrar: Registrar) {
             val channel = MethodChannel(registrar.messenger(), "notifications_utils")
-            channel.setMethodCallHandler(NotificationsUtilsPlugin(registrar.context()))
+            val plugin = NotificationsUtilsPlugin();
+            plugin.context = registrar.context()
+            channel.setMethodCallHandler(plugin);
         }
     }
 
@@ -72,4 +76,5 @@ class NotificationsUtilsPlugin(private val context: Context) : FlutterPlugin, Me
 
     override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
     }
+
 }

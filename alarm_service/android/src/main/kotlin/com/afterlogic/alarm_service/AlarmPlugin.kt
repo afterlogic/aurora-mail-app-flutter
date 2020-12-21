@@ -41,12 +41,9 @@ class AlarmPlugin(private val applicationContext: Context) : MethodCallHandler {
         try {
             when {
                 call.method == "setAlarm" -> {
-                    val callbackId = arg!![0] as Long
-                    val callback = FlutterCallbackInformation.lookupCallbackInformation(callbackId)
                     AlarmBroadcast.setAlarm(applicationContext,
-                            callback.callbackName,
-                            callback.callbackLibraryPath,
-                            arg[1] as Int,
+                            (arg!![0] as Number).toLong(),
+                            (arg[1] as Number).toInt(),
                             (arg[2] as Number).toLong())
                     result.success("")
                 }
