@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 
 class WebViewWrap extends StatefulWidget {
   final Widget webView;
-  final PreferredSizeWidget Function(VoidCallback) closeWebView;
+  final Widget Function(VoidCallback) closeWebView;
   final Widget topWidget;
 
   const WebViewWrap({
@@ -35,7 +35,7 @@ class _WebViewWrapState extends State<WebViewWrap> {
   }
 
   listener() {
-    if (scroll.offset == scroll.position.maxScrollExtent) {
+    if (scroll.offset >= scroll.position.maxScrollExtent) {
       setState(() {
         setFocus(true);
       });
@@ -43,9 +43,7 @@ class _WebViewWrapState extends State<WebViewWrap> {
   }
 
   setFocus(bool value) async {
-    final position = value
-        ? scroll.position.maxScrollExtent
-        : scroll.position.minScrollExtent;
+    final position = value ? scroll.position.maxScrollExtent : scroll.position.minScrollExtent;
     scroll
         .animateTo(
       position,
@@ -77,23 +75,31 @@ class _WebViewWrapState extends State<WebViewWrap> {
             mainAxisSize: MainAxisSize.min,
             children: [
               widget.topWidget,
-              Container(
-                width: double.infinity,
-                height: size.maxHeight - closeWebView.preferredSize.height,
-                child: GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onTapDown: focused
-                      ? null
-                      : (_) {
-                          setFocus(true);
-                        },
-                  child: IgnorePointer(
-                    ignoring: !focused,
-                    child: widget.webView,
+              Stack(
+                children: [
+                  Container(
+                    width: double.infinity,
+                    height: size.maxHeight,
+                    child: GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTapDown: focused
+                          ? null
+                          : (_) {
+                              setFocus(true);
+                            },
+                      child: IgnorePointer(
+                        ignoring: !focused,
+                        child: widget.webView,
+                      ),
+                    ),
                   ),
-                ),
+                  Positioned(
+                    bottom: bottom+15,
+                    right: 15,
+                    child: closeWebView,
+                  ),
+                ],
               ),
-              closeWebView,
             ],
           ),
         );

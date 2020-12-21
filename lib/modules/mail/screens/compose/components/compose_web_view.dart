@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
@@ -18,9 +19,7 @@ class ComposeWebViewController {
 
   Future setMessage(String text, Message message, User user) async {
     if (showImage) {
-      text = text
-          .replaceAll("data-x-src=", "src=")
-          .replaceAll("src=\"http:", "src=\"https:");
+      text = text.replaceAll("data-x-src=", "src=").replaceAll("src=\"http:", "src=\"https:");
 
       final document = html.parse(text);
 
@@ -28,10 +27,8 @@ class ComposeWebViewController {
         nodes.forEach((c) {
           c.nodes.forEach((node) {
             if (node.attributes.containsKey("data-x-style-url") as bool) {
-              var backgroundImageUrl =
-                  node.attributes["data-x-style-url"] as String;
-              backgroundImageUrl =
-                  backgroundImageUrl.replaceAll("http://", "https://");
+              var backgroundImageUrl = node.attributes["data-x-style-url"] as String;
+              backgroundImageUrl = backgroundImageUrl.replaceAll("http://", "https://");
               node.attributes.remove("data-x-style-url");
 
               String style = node.attributes["style"] as String;
@@ -65,8 +62,7 @@ class ComposeWebViewController {
   Future setText(String text) async {
     _text = text;
     if (_webViewController != null) {
-      await _webViewController
-          .evaluateJavascript("setBodyContent(${json.encode(_text)})");
+      await _webViewController.evaluateJavascript("setBodyContent(${json.encode(_text)})");
     }
   }
 
@@ -74,10 +70,13 @@ class ComposeWebViewController {
     if (_webViewController == null) {
       return _text;
     } else {
-      final text =
-          await _webViewController.evaluateJavascript("getBodyContent()");
-      final decoded = json.decode(text) as String;
-      return decoded;
+      final text = await _webViewController.evaluateJavascript("getBodyContent()");
+      try {
+        final decoded = json.decode(text) as String;
+        return decoded;
+      } catch (e) {
+        return text;
+      }
     }
   }
 
@@ -108,8 +107,7 @@ class ComposeWebView extends StatefulWidget {
   final bool enable;
   final Function init;
 
-  const ComposeWebView({Key key, this.textCtrl, this.enable, this.init})
-      : super(key: key);
+  const ComposeWebView({Key key, this.textCtrl, this.enable, this.init}) : super(key: key);
 
   @override
   _ComposeWebViewState createState() => _ComposeWebViewState();
@@ -123,7 +121,7 @@ class _ComposeWebViewState extends State<ComposeWebView> {
   initState() {
     super.initState();
     print("initState");
-    WebView.platform = SurfaceAndroidWebView();
+    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
   }
 
   @override
@@ -140,9 +138,8 @@ class _ComposeWebViewState extends State<ComposeWebView> {
     );
 
     if (true) {
-      htmlData = htmlData
-          .replaceAll("data-x-src=", "src=")
-          .replaceAll("src=\"http:", "src=\"https:");
+      htmlData =
+          htmlData.replaceAll("data-x-src=", "src=").replaceAll("src=\"http:", "src=\"https:");
 
       final document = html.parse(htmlData);
 
@@ -150,10 +147,8 @@ class _ComposeWebViewState extends State<ComposeWebView> {
         nodes.forEach((c) {
           c.nodes.forEach((node) {
             if (node.attributes.containsKey("data-x-style-url") as bool) {
-              var backgroundImageUrl =
-                  node.attributes["data-x-style-url"] as String;
-              backgroundImageUrl =
-                  backgroundImageUrl.replaceAll("http://", "https://");
+              var backgroundImageUrl = node.attributes["data-x-style-url"] as String;
+              backgroundImageUrl = backgroundImageUrl.replaceAll("http://", "https://");
               node.attributes.remove("data-x-style-url");
 
               String style = node.attributes["style"] as String;
@@ -182,8 +177,10 @@ class _ComposeWebViewState extends State<ComposeWebView> {
     widget.textCtrl.dispose();
   }
 
-  Future<NavigationDecision> navigationDelegate(
-      NavigationRequest navigation) async {
+  Future<NavigationDecision> navigationDelegate(NavigationRequest navigation) async {
+    if (initUrl == navigation.url) {
+      return NavigationDecision.navigate;
+    }
     launch(navigation.url);
     return NavigationDecision.prevent;
   }
@@ -210,7 +207,6 @@ class _ComposeWebViewState extends State<ComposeWebView> {
       javascriptMode: JavascriptMode.unrestricted,
       onWebViewCreated: (c) {
         _ctrl = c;
-        init();
       },
     );
   }

@@ -39,8 +39,7 @@ class MessageWebViewActions {
   static const SET_NOT_STARED = "MessageWebViewActions.NOT_STARED";
   static const SHOW_ATTACHMENTS = "MessageWebViewActions.SHOW_ATTACHMENTS";
   static const SHOW_INFO = "MessageWebViewActions.SHOW_INFO";
-  static const DOWNLOAD_ATTACHMENT =
-      "MessageWebViewActions.DOWNLOAD_ATTACHMENT";
+  static const DOWNLOAD_ATTACHMENT = "MessageWebViewActions.DOWNLOAD_ATTACHMENT";
 }
 
 class MessageWebView extends StatefulWidget {
@@ -78,7 +77,7 @@ class MessageWebViewState extends BState<MessageWebView> {
   void initState() {
     super.initState();
     onLoad();
-    WebView.platform = SurfaceAndroidWebView();
+    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
     _isStared = widget.message.flagsInJson.contains("\\flagged");
   }
 
@@ -94,8 +93,7 @@ class MessageWebViewState extends BState<MessageWebView> {
   @override
   void didUpdateWidget(MessageWebView oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.decrypted != widget.decrypted ||
-        oldWidget.message != widget.message) {
+    if (oldWidget.decrypted != widget.decrypted || oldWidget.message != widget.message) {
       _getHtmlWithImages();
       setState(() {});
     }
@@ -114,9 +112,8 @@ class MessageWebViewState extends BState<MessageWebView> {
     }
 
     if (showImages) {
-      htmlData = htmlData
-          .replaceAll("data-x-src=", "src=")
-          .replaceAll("src=\"http:", "src=\"https:");
+      htmlData =
+          htmlData.replaceAll("data-x-src=", "src=").replaceAll("src=\"http:", "src=\"https:");
 
       final document = html.parse(htmlData);
 
@@ -124,10 +121,8 @@ class MessageWebViewState extends BState<MessageWebView> {
         nodes.forEach((c) {
           c.nodes.forEach((node) {
             if (node.attributes.containsKey("data-x-style-url") as bool) {
-              var backgroundImageUrl =
-                  node.attributes["data-x-style-url"] as String;
-              backgroundImageUrl =
-                  backgroundImageUrl.replaceAll("http://", "https://");
+              var backgroundImageUrl = node.attributes["data-x-style-url"] as String;
+              backgroundImageUrl = backgroundImageUrl.replaceAll("http://", "https://");
               node.attributes.remove("data-x-style-url");
 
               String style = node.attributes["style"] as String;
@@ -200,33 +195,29 @@ class MessageWebViewState extends BState<MessageWebView> {
   }
 
   void _startDownload(String downloadUrl) async {
-    final attachment = widget.attachments
-        .firstWhere((a) => !a.isInline && a.downloadUrl == downloadUrl);
+    final attachment =
+        widget.attachments.firstWhere((a) => !a.isInline && a.downloadUrl == downloadUrl);
     if (attachment.fileName.endsWith(".asc")) {
       final keys = await widget.bloc.sortKey(attachment.location);
       await showDialog(
         context: context,
-        builder: (_) =>
-            ImportKeyDialog(keys.contactKeys, keys.contactKeys, widget.bloc),
+        builder: (_) => ImportKeyDialog(keys.contactKeys, keys.contactKeys, widget.bloc),
       );
     } else if (attachment.fileName.endsWith(".vcf")) {
-      final msg = i18n(context, S.messages_attachment_downloading,
-          {"fileName": attachment.fileName});
+      final msg =
+          i18n(context, S.messages_attachment_downloading, {"fileName": attachment.fileName});
       Fluttertoast.showToast(
         msg: msg,
         timeInSecForIos: 2,
-        backgroundColor:
-            Platform.isIOS ? theme.disabledColor.withOpacity(0.5) : null,
+        backgroundColor: Platform.isIOS ? theme.disabledColor.withOpacity(0.5) : null,
       );
       BlocProvider.of<MessageViewBloc>(context).downloadAttachment(
         attachment,
         (path) async {
-          String content =
-              Platform.isIOS ? path : await File(path).readAsString();
+          String content = Platform.isIOS ? path : await File(path).readAsString();
           final result = await dialog(
             context: context,
-            builder: (_) =>
-                ImportVcfDialog(bloc: widget.contactsBloc, content: content),
+            builder: (_) => ImportVcfDialog(bloc: widget.contactsBloc, content: content),
           );
           if (result is ErrorToShow) {
             showErrorSnack(
@@ -240,22 +231,19 @@ class MessageWebViewState extends BState<MessageWebView> {
               isError: false,
               context: context,
               scaffoldState: Scaffold.of(context),
-              message:
-                  i18n(context, S.label_contacts_were_imported_successfully),
+              message: i18n(context, S.label_contacts_were_imported_successfully),
             );
           }
         },
       );
     } else {
-      BlocProvider.of<MessageViewBloc>(context)
-          .add(DownloadAttachment(attachment));
-      final msg = i18n(context, S.messages_attachment_downloading,
-          {"fileName": attachment.fileName});
+      BlocProvider.of<MessageViewBloc>(context).add(DownloadAttachment(attachment));
+      final msg =
+          i18n(context, S.messages_attachment_downloading, {"fileName": attachment.fileName});
       Fluttertoast.showToast(
         msg: msg,
         timeInSecForIos: 2,
-        backgroundColor:
-            Platform.isIOS ? theme.disabledColor.withOpacity(0.5) : null,
+        backgroundColor: Platform.isIOS ? theme.disabledColor.withOpacity(0.5) : null,
       );
     }
   }
@@ -265,8 +253,7 @@ class MessageWebViewState extends BState<MessageWebView> {
     _mailBloc.add(SetStarred([widget.message], isStared));
   }
 
-  FutureOr<NavigationDecision> _onWebViewNavigateRequestIos(
-      NavigationRequest request) async {
+  FutureOr<NavigationDecision> _onWebViewNavigateRequestIos(NavigationRequest request) async {
     if (request.url.startsWith(MessageWebViewActions.ACTION)) {
       final action = request.url.substring(MessageWebViewActions.ACTION.length);
       if (action == MessageWebViewActions.SET_STARED) {
@@ -283,10 +270,8 @@ class MessageWebViewState extends BState<MessageWebView> {
       final messageViewBloc = BlocProvider.of<MessageViewBloc>(context);
       AttachmentsDialog.show(context, widget.attachments, messageViewBloc);
       return NavigationDecision.prevent;
-    } else if (request.url
-        .endsWith(MessageWebViewActions.DOWNLOAD_ATTACHMENT)) {
-      final parts =
-          request.url.split(MessageWebViewActions.DOWNLOAD_ATTACHMENT);
+    } else if (request.url.endsWith(MessageWebViewActions.DOWNLOAD_ATTACHMENT)) {
+      final parts = request.url.split(MessageWebViewActions.DOWNLOAD_ATTACHMENT);
       final downloadUrl = parts[parts.length - 2];
       _startDownload(downloadUrl);
       return NavigationDecision.prevent;
@@ -300,8 +285,7 @@ class MessageWebViewState extends BState<MessageWebView> {
 
   Future onLoad() async {
     if (widget.message.hasExternals == true) {
-      showImages =
-          await widget.messageViewBloc.checkInWhiteList(widget.message);
+      showImages = await widget.messageViewBloc.checkInWhiteList(widget.message);
       _getHtmlWithImages();
       setState(() {});
     } else {
@@ -364,7 +348,9 @@ class MessageWebViewState extends BState<MessageWebView> {
                 key: Key(widget.message.uid.toString()),
                 initialUrl: _getHtmlUri(_htmlData),
                 javascriptMode: JavascriptMode.unrestricted,
-                onWebViewCreated: (WebViewController c) => _controller = c,
+                onWebViewCreated: (WebViewController c) {
+                  _controller = c;
+                },
                 navigationDelegate: _onWebViewNavigateRequestIos,
                 onPageFinished: (_) async => setState(() => _pageLoaded = true),
                 gestureRecognizers: {

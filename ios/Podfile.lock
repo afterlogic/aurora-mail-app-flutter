@@ -7,10 +7,6 @@ PODS:
     - Reachability
   - connectivity_macos (0.0.1):
     - Flutter
-  - crypto_stream (0.0.1):
-    - Flutter
-    - OpenSSL-Universal (~> 1.0.2.17)
-    - RxSwift (~> 5)
   - device_id (0.0.1):
     - Flutter
   - device_info (0.0.1):
@@ -68,10 +64,12 @@ PODS:
     - Firebase/CoreOnly (~> 6.33.0)
     - Firebase/Crashlytics (~> 6.33.0)
     - firebase_core
-  - firebase_messaging (7.0.3):
+  - firebase_messaging (8.0.0-dev.11):
     - Firebase/CoreOnly (~> 6.33.0)
     - Firebase/Messaging (~> 6.33.0)
     - firebase_core
+    - Flutter
+  - firebase_messaging_web (0.1.0):
     - Flutter
   - FirebaseCore (6.10.3):
     - FirebaseCoreDiagnostics (~> 1.6)
@@ -164,9 +162,6 @@ PODS:
   - nanopb/encode (1.30906.0)
   - notifications_utils (0.0.1):
     - Flutter
-  - OpenSSL-Universal (1.0.2.20):
-    - OpenSSL-Universal/Static (= 1.0.2.20)
-  - OpenSSL-Universal/Static (1.0.2.20)
   - package_info (0.0.1):
     - Flutter
   - path_provider (0.0.1):
@@ -180,7 +175,6 @@ PODS:
   - Reachability (3.2)
   - receive_sharing (0.0.1):
     - Flutter
-  - RxSwift (5.1.1)
   - SDWebImage (5.9.5):
     - SDWebImage/Core (= 5.9.5)
   - SDWebImage/Core (5.9.5)
@@ -216,7 +210,6 @@ DEPENDENCIES:
   - alarm_service (from `.symlinks/plugins/alarm_service/ios`)
   - connectivity (from `.symlinks/plugins/connectivity/ios`)
   - connectivity_macos (from `.symlinks/plugins/connectivity_macos/ios`)
-  - crypto_stream (from `.symlinks/plugins/crypto_stream/ios`)
   - device_id (from `.symlinks/plugins/device_id/ios`)
   - device_info (from `.symlinks/plugins/device_info/ios`)
   - esys_flutter_share (from `.symlinks/plugins/esys_flutter_share/ios`)
@@ -225,7 +218,8 @@ DEPENDENCIES:
   - firebase_core_web (from `.symlinks/plugins/firebase_core_web/ios`)
   - firebase_crashlytics (from `.symlinks/plugins/firebase_crashlytics/ios`)
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
-  - Flutter (from `.symlinks/flutter/ios-release`)
+  - firebase_messaging_web (from `.symlinks/plugins/firebase_messaging_web/ios`)
+  - Flutter (from `.symlinks/flutter/ios`)
   - flutter_custom_tabs (from `.symlinks/plugins/flutter_custom_tabs/ios`)
   - flutter_downloader (from `.symlinks/plugins/flutter_downloader/ios`)
   - flutter_keyboard_visibility (from `.symlinks/plugins/flutter_keyboard_visibility/ios`)
@@ -270,11 +264,9 @@ SPEC REPOS:
     - GoogleUtilities
     - libwebp
     - nanopb
-    - OpenSSL-Universal
     - PromisesObjC
     - Protobuf
     - Reachability
-    - RxSwift
     - SDWebImage
     - SwiftyGif
     - YubiKit
@@ -286,8 +278,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/connectivity/ios"
   connectivity_macos:
     :path: ".symlinks/plugins/connectivity_macos/ios"
-  crypto_stream:
-    :path: ".symlinks/plugins/crypto_stream/ios"
   device_id:
     :path: ".symlinks/plugins/device_id/ios"
   device_info:
@@ -304,8 +294,10 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/firebase_crashlytics/ios"
   firebase_messaging:
     :path: ".symlinks/plugins/firebase_messaging/ios"
+  firebase_messaging_web:
+    :path: ".symlinks/plugins/firebase_messaging_web/ios"
   Flutter:
-    :path: ".symlinks/flutter/ios-release"
+    :path: ".symlinks/flutter/ios"
   flutter_custom_tabs:
     :path: ".symlinks/plugins/flutter_custom_tabs/ios"
   flutter_downloader:
@@ -364,7 +356,6 @@ SPEC CHECKSUMS:
   alarm_service: 7d51197a36d70731596573cc452427e5893ac80d
   connectivity: 6e94255659cc86dcbef1d452ad3e0491bb1b3e75
   connectivity_macos: e2e9731b6b22dda39eb1b128f6969d574460e191
-  crypto_stream: 2a2fdbfdec937d8779e8e6b14afb3a5e093a61e4
   device_id: 4a0bf078741a3eec6ba0e6cc72e786395d5991b0
   device_info: d7d233b645a32c40dfdc212de5cf646ca482f175
   DKImagePickerController: b5eb7f7a388e4643264105d648d01f727110fc3d
@@ -375,7 +366,8 @@ SPEC CHECKSUMS:
   firebase_core: 5d6a02f3d85acd5f8321c2d6d62877626a670659
   firebase_core_web: d501d8b946b60c8af265428ce483b0fff5ad52d1
   firebase_crashlytics: ebe0a8b60ac43115a4c80db5c63a00bbdeaf1770
-  firebase_messaging: 0aea2cd5885b65e19ede58ee3507f485c992cc75
+  firebase_messaging: 738982b5b4110cdc7a72449544123f6fcdb65604
+  firebase_messaging_web: 40d490d4507fcf5519de8b42af0d653dcc74ac0f
   FirebaseCore: d889d9e12535b7f36ac8bfbf1713a0836a3012cd
   FirebaseCoreDiagnostics: 770ac5958e1372ce67959ae4b4f31d8e127c3ac1
   FirebaseCrashlytics: 1a747c9cc084a24dc6d9511c991db1cd078154eb
@@ -398,7 +390,6 @@ SPEC CHECKSUMS:
   libwebp: 946cb3063cea9236285f7e9a8505d806d30e07f3
   nanopb: 59317e09cf1f1a0af72f12af412d54edf52603fc
   notifications_utils: 2689b5cbda5be923ddc3868f5c86c4ab2dc98d5c
-  OpenSSL-Universal: ff34003318d5e1163e9529b08470708e389ffcdd
   package_info: 48b108e75b8802c2d5e126f208ef540561c98aef
   path_provider: fb74bd0465e96b594bb3b5088ee4a4e7bb1f2a9d
   path_provider_macos: f760a3c5b04357c380e2fddb6f9db6f3015897e0
@@ -407,7 +398,6 @@ SPEC CHECKSUMS:
   Protobuf: 3dac39b34a08151c6d949560efe3f86134a3f748
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   receive_sharing: d6db01a09636ce060b2bd1a5ca8a41eea4437a3d
-  RxSwift: 81470a2074fa8780320ea5fe4102807cb7118178
   SDWebImage: 0b2ba0d56479bf6a45ecddbfd5558bea93150d25
   shared_preferences: 430726339841afefe5142b9c1f50cb6bd7793e01
   shared_preferences_macos: f3f29b71ccbb56bf40c9dd6396c9acf15e214087
@@ -419,7 +409,7 @@ SPEC CHECKSUMS:
   url_launcher_macos: fd7894421cd39320dce5f292fc99ea9270b2a313
   url_launcher_web: e5527357f037c87560776e36436bf2b0288b965c
   video_thumbnail: c4e2a3c539e247d4de13cd545344fd2d26ffafd1
-  webview_flutter: bec7599de6bfbe8008a739aa3ebd7b364ea9d0cd
+  webview_flutter: d2b4d6c66968ad042ad94cbb791f5b72b4678a96
   yubico_flutter: 3fee5838c73d3946031a1405ef347de018bbd944
   YubiKit: b9f3b240e75feec0cf81a8ade503c072eea6dc3a
 
