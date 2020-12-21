@@ -22,26 +22,21 @@ class PushNotificationsManager {
   String deviceId;
   static final PushNotificationsManager instance = PushNotificationsManager._();
 
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   bool _initialized = false;
 
   init() async {
     if (BuildProperty.pushNotification) {
       if (!_initialized) {
         if (Platform.isIOS) {
-          IosNotificationHandler.onMessage(messageHandler);
+          IosNotificationHandler.onMessage(mapMessageHandler);
         }
         deviceId = await DeviceIdStorage.getDeviceId();
-        await _firebaseMessaging.requestNotificationPermissions();
-        _firebaseMessaging.configure(
-          onMessage: messageHandler,
-          onBackgroundMessage: Platform.isIOS ? null : messageHandler,
-          onLaunch: onResume,
-          onResume: onResume,
-        );
-        _firebaseMessaging.onIosSettingsRegistered.listen((setting) {
-          setting;
-        });
+        await _firebaseMessaging.requestPermission();
+        FirebaseMessaging.onBackgroundMessage(voidMessageHandler);
+        FirebaseMessaging.onMessage.listen(messageHandler);
+        FirebaseMessaging.onMessageOpenedApp.listen((v) => onResume(v));
+
         _initialized = true;
       }
     }
@@ -64,7 +59,7 @@ class PushNotificationsManager {
   }
 }
 
-Future onResume(Map<dynamic, dynamic> message) async {
+Future onResume(RemoteMessage message) async {
   final notification = NotificationData.fromMap(message);
   final payload = notification.toJson();
   if (RouteWrap.staticState != null) {
@@ -74,7 +69,15 @@ Future onResume(Map<dynamic, dynamic> message) async {
   }
 }
 
-Future<bool> messageHandler(Map<dynamic, dynamic> message) async {
+Future<bool> mapMessageHandler(Map<String, dynamic> message) async {
+  return messageHandler(RemoteMessage.fromMap(message));
+}
+
+Future<void> voidMessageHandler(RemoteMessage message) async {
+  await messageHandler(message);
+}
+
+Future<bool> messageHandler(RemoteMessage message) async {
   WidgetsFlutterBinding.ensureInitialized();
   Logger.notifications(message);
   final localStorage = AuthLocalStorage();
@@ -130,8 +133,8 @@ class NotificationData {
   NotificationData(
       this.subject, this.to, this.from, this.messageID, this.folder);
 
-  static NotificationData fromMap(Map<dynamic, dynamic> message) {
-    final notification = (message["data"] ?? message) as Map;
+  static NotificationData fromMap(RemoteMessage message) {
+    final notification = message.data;
 
     return NotificationData(
       notification["Subject"] as String,

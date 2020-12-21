@@ -78,6 +78,7 @@ class MessageWebViewState extends BState<MessageWebView> {
   void initState() {
     super.initState();
     onLoad();
+    WebView.platform = SurfaceAndroidWebView();
     _isStared = widget.message.flagsInJson.contains("\\flagged");
   }
 

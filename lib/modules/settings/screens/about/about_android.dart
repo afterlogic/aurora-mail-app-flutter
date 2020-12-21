@@ -1,4 +1,6 @@
 import 'package:aurora_mail/build_property.dart';
+import 'package:aurora_mail/modules/layout_config/layout_config.dart';
+import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';

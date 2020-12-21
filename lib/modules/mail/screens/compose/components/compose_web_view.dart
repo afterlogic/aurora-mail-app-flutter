@@ -123,6 +123,7 @@ class _ComposeWebViewState extends State<ComposeWebView> {
   initState() {
     super.initState();
     print("initState");
+    WebView.platform = SurfaceAndroidWebView();
   }
 
   @override
