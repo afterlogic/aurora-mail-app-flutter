@@ -6,4 +6,5 @@
 -keep class io.flutter.**  { *; }
 -keep class io.flutter.plugins.**  { *; }
 -keep class com.dexterous.** { *; }
+-keep class com.google.firebase.** { *; }
 -dontwarn io.flutter.embedding.**
