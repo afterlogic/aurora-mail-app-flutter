@@ -1,5 +1,5 @@
 name: aurora_mail
-description: Mail client for mobile.
+description: Mail client for {{appName}}.
 
 version: {{version_ios}}
 

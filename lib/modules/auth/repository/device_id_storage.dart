@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:aurora_mail/build_property.dart';
 import 'package:device_id/device_id.dart';
 import 'package:device_info/device_info.dart';
 import 'package:flutter/foundation.dart';
@@ -10,14 +10,16 @@ class DeviceIdStorage {
   DeviceIdStorage._();
 
   static Future<String> getDeviceName() async {
-    return Platform.isIOS
-        ? (await _deviceInfo.iosInfo).model
-        : (await _deviceInfo.androidInfo).model;
+    return BuildProperty.appName +
+        " " +
+        (Platform.isIOS
+            ? (await _deviceInfo.iosInfo).localizedModel
+            : (await _deviceInfo.androidInfo).model);
   }
 
   static Future<String> getDeviceId() async {
     try {
-      return (kDebugMode ? "debug5" : "") + await DeviceId.getID;
+      return (kDebugMode ? "DEBUG" : "") + await DeviceId.getID;
     } catch (_) {
       try {
         return await DeviceId.getIMEI;
