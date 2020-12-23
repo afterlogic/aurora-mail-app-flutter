@@ -42,50 +42,57 @@ class AuthApi {
 
     final body = new WebMailApiBody(method: "Login", parameters: parameters);
 
-    final response = await coreModuleForLogin.post(
-      body,
-      getRawResponse: true,
-      addedHeaders: await deviceIdHeader(),
-    );
-    if (response["ErrorCode"] == 108) {
-      throw AllowAccess();
-    }
-    if (response['Result'] != null &&
-        response['Result']['TwoFactorAuth'] != null) {
-      final twoFactor = response['Result']['TwoFactorAuth'];
-      if (twoFactor == true) {
-        throw RequestTwoFactor(
-          hostname,
-          true,
-          false,
-          false,
-        );
-      }
-
-      throw RequestTwoFactor(
-        hostname,
-        twoFactor["HasAuthenticatorApp"] as bool,
-        twoFactor["HasSecurityKey"] as bool,
-        twoFactor["HasBackupCodes"] as bool,
+    try {
+      final response = await coreModuleForLogin.post(
+        body,
+        getRawResponse: true,
+        addedHeaders: await deviceIdHeader(),
       );
-    } else if (response['Result'] != null &&
-        response['Result']['AuthToken'] is String) {
-      if (BuildProperty.supportAllowAccess &&
-          response['Result']["AllowAccess"] != 1) {
+      if (response["ErrorCode"] == 108) {
         throw AllowAccess();
       }
-      final token = response['Result']['AuthToken'] as String;
-      final id = response['AuthenticatedUserId'] as int;
+      if (response['Result'] != null &&
+          response['Result']['TwoFactorAuth'] != null) {
+        final twoFactor = response['Result']['TwoFactorAuth'];
+        if (twoFactor == true) {
+          throw RequestTwoFactor(
+            hostname,
+            true,
+            false,
+            false,
+          );
+        }
 
-      return new User(
-        localId: null,
-        serverId: id,
-        token: token,
-        hostname: hostname,
-        emailFromLogin: email,
-      );
-    } else {
-      throw WebMailApiError(response);
+        throw RequestTwoFactor(
+          hostname,
+          twoFactor["HasAuthenticatorApp"] as bool,
+          twoFactor["HasSecurityKey"] as bool,
+          twoFactor["HasBackupCodes"] as bool,
+        );
+      } else if (response['Result'] != null &&
+          response['Result']['AuthToken'] is String) {
+        if (BuildProperty.supportAllowAccess &&
+            response['Result']["AllowAccess"] != 1) {
+          throw AllowAccess();
+        }
+        final token = response['Result']['AuthToken'] as String;
+        final id = response['AuthenticatedUserId'] as int;
+
+        return new User(
+          localId: null,
+          serverId: id,
+          token: token,
+          hostname: hostname,
+          emailFromLogin: email,
+        );
+      } else {
+        throw WebMailApiError(response);
+      }
+    } catch (e) {
+      if (e is WebMailApiError && e.code == 108) {
+        throw AllowAccess();
+      }
+      rethrow;
     }
   }
 

@@ -4,13 +4,14 @@ class WebMailApiError implements Exception {
 
   factory WebMailApiError(dynamic error) {
     final msg = _getErrMsg(error);
-    if (msg is int) {
-      return WebMailApiError.code(msg);
-    } else if (msg is String) {
-      return WebMailApiError.message(msg);
+    final code = _getErrCode(error);
+    if (msg != null || code != null) {
+      return WebMailApiError.fill(msg, code);
     }
     return WebMailApiError.errorUnknown();
   }
+
+  WebMailApiError.fill(this.message, this.code);
 
   WebMailApiError.message(this.message) : code = null;
 
@@ -23,11 +24,21 @@ class WebMailApiError implements Exception {
   @override
   String toString() => "$code$message";
 
-  static dynamic _getErrMsg(dynamic err) {
+  static String _getErrMsg(dynamic err) {
     if (err is Map) {
       if (err["ErrorMessage"] is String) {
         return err["ErrorMessage"] as String;
-      } else if (err["ErrorCode"] is int) {
+      } else {
+        return null;
+      }
+    } else {
+      return null;
+    }
+  }
+
+  static int _getErrCode(dynamic err) {
+    if (err is Map) {
+      if (err["ErrorCode"] is int) {
         return err["ErrorCode"] as int;
       } else {
         return null;
