@@ -10,11 +10,14 @@ class DeviceIdStorage {
   DeviceIdStorage._();
 
   static Future<String> getDeviceName() async {
-    return BuildProperty.appName +
-        " " +
-        (Platform.isIOS
-            ? (await _deviceInfo.iosInfo).localizedModel
-            : (await _deviceInfo.androidInfo).model);
+    String device;
+    if (Platform.isIOS) {
+      final info = await _deviceInfo.iosInfo;
+      device = "${info.name} ${info.systemName} ${info.systemVersion}";
+    } else {
+      device = (await _deviceInfo.androidInfo).model;
+    }
+    return BuildProperty.appName + " " + device;
   }
 
   static Future<String> getDeviceId() async {

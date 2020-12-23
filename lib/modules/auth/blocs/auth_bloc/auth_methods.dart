@@ -92,8 +92,7 @@ class AuthMethods {
   Future<User> setUser(User user) async {
     User userToReturn = await _usersDao.getUserByEmail(user.emailFromLogin);
     if (userToReturn != null) {
-      await _usersDao.updateUser(
-          userToReturn.localId, UsersCompanion(token: Value(user.token)));
+      await _usersDao.updateUser(userToReturn.localId, UsersCompanion(token: Value(user.token)));
     } else {
       await _usersDao.addUser(user);
     }
@@ -116,8 +115,7 @@ class AuthMethods {
     try {
       final localAccounts = await _accountsDao.getAccounts(user.localId);
       for (var local in localAccounts) {
-        final server = accounts.firstWhere(
-            (element) => element.serverId == local.serverId,
+        final server = accounts.firstWhere((element) => element.serverId == local.serverId,
             orElse: () => null);
         if (server == null) {
           await _accountsDao.deleteAccountById(local.localId);
@@ -134,12 +132,12 @@ class AuthMethods {
   }
 
   Future<void> logout(int currentUserId, User user) async {
-    _authApi.logout(user);
-
+    try {
+      await _authApi.logout(user);
+    } catch (e) {}
     final futures = [
       deleteUserRelatedData(user),
-      if (_cryptoStorage != null && user.localId == currentUserId)
-        _cryptoStorage.deleteAll(),
+      if (_cryptoStorage != null && user.localId == currentUserId) _cryptoStorage.deleteAll(),
       if (user.localId == currentUserId) _authLocal.deleteSelectedUserLocalId(),
       if (user.localId == currentUserId) _authLocal.deleteSelectedAccountId(),
       _usersDao.deleteUser(user.localId),
@@ -222,8 +220,7 @@ class AuthMethods {
     }
   }
 
-  AccountIdentity getDefaultIdentity(
-      Account account, List<AccountIdentity> identities) {
+  AccountIdentity getDefaultIdentity(Account account, List<AccountIdentity> identities) {
     return identities.firstWhere(
       (item) => item.isDefault && item.entityId == account.entityId,
       orElse: () => AccountIdentity(
@@ -263,19 +260,16 @@ class AuthMethods {
     if (!BuildProperty.pushNotification) return;
     try {
       final uid = await PushNotificationsManager.instance.deviceId;
-      final fbToken = setNullToken
-          ? null
-          : await PushNotificationsManager.instance.getToken();
+      final fbToken = setNullToken ? null : await PushNotificationsManager.instance.getToken();
       final userWithAccount = <User, List<String>>{};
       for (var user in users) {
         final accounts = await _accountsDao.getAccounts(user.localId);
         final emails = <String>{};
 
         for (var account in accounts) {
-          final identities = await _accountIdentityDao.getByUserAndAccount(
-              user.localId, account.localId);
-          final aliases = await _aliasesDao.getByUserAndAccount(
-              user.localId, account.localId);
+          final identities =
+              await _accountIdentityDao.getByUserAndAccount(user.localId, account.localId);
+          final aliases = await _aliasesDao.getByUserAndAccount(user.localId, account.localId);
           emails.add(account.email);
           emails.addAll(identities.map((item) => item.email));
           emails.addAll(aliases.map((item) => item.email));
@@ -286,8 +280,7 @@ class AuthMethods {
       if (setNullToken) {
         _authApi.setPushToken(userWithAccount, uid, fbToken);
       } else {
-        final success =
-            await _authApi.setPushToken(userWithAccount, uid, fbToken);
+        final success = await _authApi.setPushToken(userWithAccount, uid, fbToken);
 
         PushNotificationsManager.instance.setTokenStatus(success);
       }

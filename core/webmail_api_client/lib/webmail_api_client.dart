@@ -25,8 +25,7 @@ class WebMailApi {
   static Function(String) onResponse;
   static IOClient _client = IOClient(
     HttpClient()
-      ..badCertificateCallback =
-          ((X509Certificate cert, String host, int port) {
+      ..badCertificateCallback = ((X509Certificate cert, String host, int port) {
         return false;
       }),
   );
@@ -45,8 +44,7 @@ class WebMailApi {
   static final _authErrorStreamCtrl = StreamController<void>.broadcast();
 
   // fired when token is invalid (e.g. to send user back to login)
-  static Stream<void> get authErrorStream =>
-      _authErrorStreamCtrl.stream.asBroadcastStream();
+  static Stream<void> get authErrorStream => _authErrorStreamCtrl.stream.asBroadcastStream();
 
   static Map<String, String> getHeaderWithToken(String token) {
     return {'Authorization': 'Bearer $token'};
@@ -81,9 +79,7 @@ class WebMailApi {
 
   // getRawResponse in case AuthenticatedUserId is required, which is outside Result objects
   Future post(WebMailApiBody body,
-      {bool useToken,
-      bool getRawResponse = false,
-      Map<String, String> addedHeaders}) async {
+      {bool useToken, bool getRawResponse = false, Map<String, String> addedHeaders}) async {
     Map<String, String> headers;
     final id = "MODULE: ${moduleName ?? body.module}\nMETHOD: ${body.method}";
     if (useToken == false || token == null) {
@@ -96,25 +92,27 @@ class WebMailApi {
     });
     final start = DateTime.now().millisecondsSinceEpoch;
     _onRequest(id, body.parameters);
+    try {
+      final rawResponse =
+          await _client.post(apiUrl, headers: headers, body: body.toMap(moduleName));
+      final res = json.decode(rawResponse.body);
 
-    final rawResponse = await _client.post(apiUrl,
-        headers: headers, body: body.toMap(moduleName));
-
-    final res = json.decode(rawResponse.body);
-
-    if (res["Result"] != null && (res["Result"] != false || getRawResponse)) {
-      _onResponse(id, DateTime.now().millisecondsSinceEpoch - start,
-          rawResponse.statusCode, res);
-      if (getRawResponse)
-        return res;
-      else
-        return res["Result"];
-    } else {
-      _onError(token, id, rawResponse.body);
-      if (res["ErrorCode"] == 102 || res["ErrorCode"] == 108) {
-        _authErrorStreamCtrl.add(res["ErrorCode"]);
+      if (res["Result"] != null && (res["Result"] != false || getRawResponse)) {
+        _onResponse(id, DateTime.now().millisecondsSinceEpoch - start, rawResponse.statusCode, res);
+        if (getRawResponse)
+          return res;
+        else
+          return res["Result"];
+      } else {
+        _onError(token, id, rawResponse.body);
+        if (res["ErrorCode"] == 102 || res["ErrorCode"] == 108) {
+          _authErrorStreamCtrl.add(res["ErrorCode"]);
+        }
+        throw WebMailApiError(res);
       }
-      throw WebMailApiError(res);
+    } catch (e) {
+      print(e);
+      rethrow;
     }
   }
 
@@ -128,8 +126,7 @@ class WebMailApi {
       headers = {'Authorization': 'Bearer $token'};
     }
     final start = DateTime.now().millisecondsSinceEpoch;
-    if (onRequest != null)
-      onRequest("$id\nURL:$apiUrl\nPARAMETERS:${body.parameters}");
+    if (onRequest != null) onRequest("$id\nURL:$apiUrl\nPARAMETERS:${body.parameters}");
 
     final request = MultipartRequest("POST", Uri.parse(apiUrl));
 
