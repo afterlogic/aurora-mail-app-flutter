@@ -71,7 +71,7 @@ class MailBloc extends Bloc<MailEvent, MailState> {
   }
 
   Stream<MailState> _fetchFolders(FetchFolders event) async* {
-    selectedFolderGuid = _selectedFolder.guid;
+    selectedFolderGuid = _selectedFolder?.guid;
     final previous = state;
     if (state is! FoldersLoaded) yield FoldersLoading();
 
@@ -86,6 +86,7 @@ class MailBloc extends Bloc<MailEvent, MailState> {
               (f) => f.guid == _selectedFolder.guid,
               orElse: () => folders[0]);
         }
+        selectedFolderGuid = _selectedFolder?.guid;
         yield FoldersLoaded(
           folders,
           _selectedFolder,

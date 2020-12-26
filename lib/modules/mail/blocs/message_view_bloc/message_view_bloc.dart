@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/inject/app_inject.dart';
@@ -49,12 +50,12 @@ class MessageViewBloc extends Bloc<MessageViewEvent, MessageViewState> {
     return has;
   }
 
-  Stream<MessageViewState> _downloadAttachment(
-      DownloadAttachment event) async* {
+  Stream<MessageViewState> _downloadAttachment(DownloadAttachment event) async* {
     try {
       await getStoragePermissions();
     } catch (err) {
       yield MessagesViewError(ErrorToShow(err));
+      return;
     }
 
     _methods.downloadAttachment(
@@ -62,9 +63,11 @@ class MessageViewBloc extends Bloc<MessageViewEvent, MessageViewState> {
       onDownloadStart: () {
 //        add(StartDownload(event.attachment.fileName));
       },
-      onDownloadEnd: (String path) {
+      onDownloadEnd: Platform.isIOS
+          ? null
+          : (String path) {
 //        add(EndDownload(path));
-      },
+            },
     );
   }
 
@@ -108,8 +111,7 @@ class MessageViewBloc extends Bloc<MessageViewEvent, MessageViewState> {
           {"users": e.email.join(" , ")},
         );
       } else if (e is PgpInvalidSign) {
-        yield MessagesViewError(
-            ErrorToShow.code(S.error_pgp_invalid_key_or_password));
+        yield MessagesViewError(ErrorToShow.code(S.error_pgp_invalid_key_or_password));
       } else {
         yield MessagesViewError(ErrorToShow.code(S.error_pgp_can_not_decrypt));
       }

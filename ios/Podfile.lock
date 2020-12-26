@@ -7,10 +7,6 @@ PODS:
     - Reachability
   - connectivity_macos (0.0.1):
     - Flutter
-  - crypto_stream (0.0.1):
-    - Flutter
-    - OpenSSL-Universal (~> 1.0.2.17)
-    - RxSwift (~> 5)
   - device_id (0.0.1):
     - Flutter
   - device_info (0.0.1):
@@ -166,9 +162,6 @@ PODS:
   - nanopb/encode (1.30906.0)
   - notifications_utils (0.0.1):
     - Flutter
-  - OpenSSL-Universal (1.0.2.20):
-    - OpenSSL-Universal/Static (= 1.0.2.20)
-  - OpenSSL-Universal/Static (1.0.2.20)
   - package_info (0.0.1):
     - Flutter
   - path_provider (0.0.1):
@@ -182,7 +175,6 @@ PODS:
   - Reachability (3.2)
   - receive_sharing (0.0.1):
     - Flutter
-  - RxSwift (5.1.1)
   - SDWebImage (5.9.5):
     - SDWebImage/Core (= 5.9.5)
   - SDWebImage/Core (5.9.5)
@@ -218,7 +210,6 @@ DEPENDENCIES:
   - alarm_service (from `.symlinks/plugins/alarm_service/ios`)
   - connectivity (from `.symlinks/plugins/connectivity/ios`)
   - connectivity_macos (from `.symlinks/plugins/connectivity_macos/ios`)
-  - crypto_stream (from `.symlinks/plugins/crypto_stream/ios`)
   - device_id (from `.symlinks/plugins/device_id/ios`)
   - device_info (from `.symlinks/plugins/device_info/ios`)
   - esys_flutter_share (from `.symlinks/plugins/esys_flutter_share/ios`)
@@ -273,11 +264,9 @@ SPEC REPOS:
     - GoogleUtilities
     - libwebp
     - nanopb
-    - OpenSSL-Universal
     - PromisesObjC
     - Protobuf
     - Reachability
-    - RxSwift
     - SDWebImage
     - SwiftyGif
     - YubiKit
@@ -289,8 +278,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/connectivity/ios"
   connectivity_macos:
     :path: ".symlinks/plugins/connectivity_macos/ios"
-  crypto_stream:
-    :path: ".symlinks/plugins/crypto_stream/ios"
   device_id:
     :path: ".symlinks/plugins/device_id/ios"
   device_info:
@@ -369,7 +356,6 @@ SPEC CHECKSUMS:
   alarm_service: 7d51197a36d70731596573cc452427e5893ac80d
   connectivity: 6e94255659cc86dcbef1d452ad3e0491bb1b3e75
   connectivity_macos: e2e9731b6b22dda39eb1b128f6969d574460e191
-  crypto_stream: 2a2fdbfdec937d8779e8e6b14afb3a5e093a61e4
   device_id: 4a0bf078741a3eec6ba0e6cc72e786395d5991b0
   device_info: d7d233b645a32c40dfdc212de5cf646ca482f175
   DKImagePickerController: b5eb7f7a388e4643264105d648d01f727110fc3d
@@ -404,7 +390,6 @@ SPEC CHECKSUMS:
   libwebp: 946cb3063cea9236285f7e9a8505d806d30e07f3
   nanopb: 59317e09cf1f1a0af72f12af412d54edf52603fc
   notifications_utils: 2689b5cbda5be923ddc3868f5c86c4ab2dc98d5c
-  OpenSSL-Universal: ff34003318d5e1163e9529b08470708e389ffcdd
   package_info: 48b108e75b8802c2d5e126f208ef540561c98aef
   path_provider: fb74bd0465e96b594bb3b5088ee4a4e7bb1f2a9d
   path_provider_macos: f760a3c5b04357c380e2fddb6f9db6f3015897e0
@@ -413,7 +398,6 @@ SPEC CHECKSUMS:
   Protobuf: 3dac39b34a08151c6d949560efe3f86134a3f748
   Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
   receive_sharing: d6db01a09636ce060b2bd1a5ca8a41eea4437a3d
-  RxSwift: 81470a2074fa8780320ea5fe4102807cb7118178
   SDWebImage: 0b2ba0d56479bf6a45ecddbfd5558bea93150d25
   shared_preferences: 430726339841afefe5142b9c1f50cb6bd7793e01
   shared_preferences_macos: f3f29b71ccbb56bf40c9dd6396c9acf15e214087

@@ -270,7 +270,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       if (users.length == 1) {
         _methods.setFbToken(users, true);
       }
-      _methods.logout(currentUser.localId, event.user);
+      await _methods.logout(currentUser.localId, event.user);
       users = await _methods.users;
       if (users.isNotEmpty) {
         if (currentUser.localId != event.user.localId) {
