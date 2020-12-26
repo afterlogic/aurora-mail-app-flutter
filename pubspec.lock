@@ -243,10 +243,33 @@ packages:
       relative: true
     source: path
     version: "0.0.1"
+  crypto_storage_impl:
+    dependency: "direct main"
+    description:
+      path: "module/crypto/crypto_storage_impl"
+      relative: true
+    source: path
+    version: "0.0.1"
+  crypto_stream:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: master
+      resolved-ref: "209580aa28d06de749de0365e479cf707152807e"
+      url: "https://github.com/afterlogic/flutter_crypto_stream"
+    source: git
+    version: "0.0.1"
   crypto_worker:
     dependency: "direct main"
     description:
       path: "module/crypto/crypto_worker"
+      relative: true
+    source: path
+    version: "0.0.1"
+  crypto_worker_impl:
+    dependency: "direct main"
+    description:
+      path: "module/crypto/crypto_worker_impl"
       relative: true
     source: path
     version: "0.0.1"
@@ -1043,7 +1066,7 @@ packages:
   theme:
     dependency: "direct main"
     description:
-      path: "aurora-mail-app-customs/natro/theme"
+      path: "build_res/afterlogic/theme"
       relative: true
     source: path
     version: "0.0.1"
