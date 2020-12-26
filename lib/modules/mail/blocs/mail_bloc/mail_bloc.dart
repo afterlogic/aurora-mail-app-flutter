@@ -16,6 +16,7 @@ class MailBloc extends Bloc<MailEvent, MailState> {
   final User user;
   final Account account;
   final updateMessageCounter = UpdateMessageCounter();
+  static String selectedFolderGuid;
 
   MailBloc({this.user, this.account}) {
     assert(user != null);
@@ -70,6 +71,7 @@ class MailBloc extends Bloc<MailEvent, MailState> {
   }
 
   Stream<MailState> _fetchFolders(FetchFolders event) async* {
+    selectedFolderGuid = _selectedFolder.guid;
     final previous = state;
     if (state is! FoldersLoaded) yield FoldersLoading();
 
@@ -198,6 +200,7 @@ class MailBloc extends Bloc<MailEvent, MailState> {
 
   Stream<MailState> _selectFolder(SelectFolder event) async* {
     try {
+      selectedFolderGuid = event.folder.guid;
       final List<Folder> folders = state is FoldersLoaded
           ? (state as FoldersLoaded).folders
           : await _methods.getFolders();

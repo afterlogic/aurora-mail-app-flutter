@@ -11,6 +11,7 @@ import 'package:aurora_mail/logger/logger.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/models/message_info.dart';
 import 'package:aurora_mail/modules/auth/repository/auth_local_storage.dart';
+import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/mail_methods.dart';
 import 'package:aurora_mail/modules/mail/repository/folders_api.dart';
 import 'package:aurora_mail/modules/mail/repository/mail_api.dart';
@@ -87,7 +88,7 @@ class BackgroundSync {
       isolatedLogger.log("MailSync: sync end in ${delay.toStringAsFixed(1)} s");
     } catch (e, s) {
       isolatedLogger.error(e, s);
-      Crashlytics.instance.recordFlutterError(
+      FirebaseCrashlytics.instance.recordFlutterError(
         FlutterErrorDetails(exception: e, stack: s),
       );
     }
@@ -107,8 +108,7 @@ class BackgroundSync {
           ? _foldersDao.getByType(
               [Folder.getNumberFromFolderType(FolderType.inbox)],
               account.localId)
-          : _foldersDao.getAllFolders(account.localId).then((value) =>
-              value.where((element) => element.isSystemFolder).toList()));
+          : _foldersDao.getAllFolders(account.localId));
       if (inboxFolders.isEmpty) continue;
 
       final foldersToUpdate =
@@ -116,14 +116,38 @@ class BackgroundSync {
               .toList();
 
       if (account == null) continue;
-
+      final folderGuidToUpdateMessage = {
+        MailBloc.selectedFolderGuid,
+        ...inboxFolders
+            .where(
+              (element) => [
+                Folder.getNumberFromFolderType(FolderType.inbox),
+                Folder.getNumberFromFolderType(FolderType.sent),
+                Folder.getNumberFromFolderType(FolderType.drafts),
+              ].contains(element.type),
+            )
+            .map((e) => e.guid)
+      };
       for (Folder folderToUpdate in foldersToUpdate) {
         final messagesInfo = await FolderMessageInfo.getMessageInfo(
           folderToUpdate.fullNameRaw,
           account.localId,
         );
-
-        if (!folderToUpdate.needsInfoUpdate || messagesInfo == null) {
+        final allowUpdateMessage = folderGuidToUpdateMessage.firstWhere(
+              (element) => folderToUpdate.guid == element,
+              orElse: () => null,
+            ) !=
+            null;
+        if (folderToUpdate.needsInfoUpdate) {
+          await _foldersDao.updateFolder(
+            FoldersCompanion(
+                needsInfoUpdate: Value(folderToUpdate.needsInfoUpdate)),
+            folderToUpdate.guid,
+          );
+        }
+        if (!folderToUpdate.needsInfoUpdate ||
+            messagesInfo == null ||
+            !allowUpdateMessage) {
           continue;
         }
 

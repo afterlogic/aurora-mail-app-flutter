@@ -1066,7 +1066,7 @@ packages:
   theme:
     dependency: "direct main"
     description:
-      path: "aurora-mail-app-customs/private_mail/theme"
+      path: "build_res/afterlogic/theme"
       relative: true
     source: path
     version: "0.0.1"

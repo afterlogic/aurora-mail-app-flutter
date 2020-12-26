@@ -48,21 +48,23 @@ class MailUtils {
     }
   }
 
-  static AliasOrIdentity findIdentity(String infoInJson,
-      List<AliasOrIdentity> aliasOrIdentity,) {
+  static AliasOrIdentity findIdentity(
+    String infoInJson,
+    List<AliasOrIdentity> aliasOrIdentity,
+  ) {
     final users = json.decode(infoInJson)["@Collection"] as List;
     for (var user in users) {
       final name = user["DisplayName"] as String;
       final mail = user["Email"] as String;
       final identities = aliasOrIdentity
           .where((item) {
-        return item.mail == mail;
-      })
+            return item.mail == mail;
+          })
           .toList()
           .reversed;
       if (identities.isNotEmpty) {
         final identity = identities.firstWhere(
-              (item) {
+          (item) {
             return item.name == name;
           },
           orElse: () => null,
@@ -102,7 +104,7 @@ class MailUtils {
     final sender = json.decode(senderInJson);
     if (sender == null) return "";
     final mapped =
-    sender["@Collection"].map((t) => t["DisplayName"]) as Iterable;
+        sender["@Collection"].map((t) => t["DisplayName"]) as Iterable;
     final results = List<String>.from(mapped);
     if (results.isEmpty || results[0] == null || results[0].isEmpty) {
       final mapped = sender["@Collection"].map((t) => t["Email"]) as Iterable;
@@ -142,12 +144,12 @@ class MailUtils {
         bool fwd = fwdPrefixes.contains(partUpper);
         int count = 1;
         final lastResPart =
-        (resParts.length > 0) ? resParts[resParts.length - 1] : null;
+            (resParts.length > 0) ? resParts[resParts.length - 1] : null;
 
         if (!re && !fwd) {
           final matches = (new RegExp(
-              r'^\s?(' + prefixes + r')\s?[\[(]([\d]+)[\])]$',
-              caseSensitive: false))
+                  r'^\s?(' + prefixes + r')\s?[\[(]([\d]+)[\])]$',
+                  caseSensitive: false))
               .allMatches(partUpper)
               .toList();
           if (matches != null &&
@@ -195,9 +197,7 @@ class MailUtils {
   static String getReplyBody(BuildContext context, Message message) {
     final baseMessage = message.htmlBody;
     final time = DateFormatting.formatDateFromSeconds(
-        message.timeStampInUTC, Localizations
-        .localeOf(context)
-        .languageCode,
+        message.timeStampInUTC, Localizations.localeOf(context).languageCode,
         format: i18n(context, S.format_compose_reply_date));
 
     final from = getDisplayName(message.fromInJson);
@@ -237,9 +237,7 @@ class MailUtils {
           i18n(context, S.compose_forward_bcc, {"emails": bcc}) + "<br>";
 
     final date = DateFormatting.formatDateFromSeconds(
-        message.timeStampInUTC, Localizations
-        .localeOf(context)
-        .languageCode,
+        message.timeStampInUTC, Localizations.localeOf(context).languageCode,
         format: i18n(context, S.format_compose_forward_date));
     forwardMessage +=
         i18n(context, S.compose_forward_sent, {"date": date}) + "<br>";
@@ -250,9 +248,11 @@ class MailUtils {
     return forwardMessage + baseMessage;
   }
 
-  static String wrapInHtmlEditor(BuildContext context,
-      String text,
-      bool isHtml,) {
+  static String wrapInHtmlEditor(
+    BuildContext context,
+    String text,
+    bool isHtml,
+  ) {
     final theme = Theme.of(context);
     return "<!doctype html>" +
         """
@@ -265,10 +265,7 @@ class MailUtils {
         margin: 0;
         overflow-x: hidden;
         padding: 10px;
-        color:${_getWebColor(DefaultTextStyle
-            .of(context)
-            .style
-            .color)};
+        color:${_getWebColor(DefaultTextStyle.of(context).style.color)};
         background: ${_getWebColor(theme.scaffoldBackgroundColor)};
       }
       .primary-color {
@@ -348,13 +345,11 @@ class MailUtils {
       }
       .details-description {
         width: 20%; 
-        color: ${(theme.brightness == Brightness.dark ? Colors.white : Colors
-            .black).toHex()};
+        color: ${(theme.brightness == Brightness.dark ? Colors.white : Colors.black).toHex()};
         opacity: 0.4;
       }
       .details-value {
-        color: ${(theme.brightness == Brightness.dark ? Colors.white : Colors
-            .black).toHex()};
+        color: ${(theme.brightness == Brightness.dark ? Colors.white : Colors.black).toHex()};
       }
       blockquote {
         border-left: solid 2px #000000;
@@ -386,7 +381,8 @@ class MailUtils {
     """;
   }
 
-  static String wrapInHtml(BuildContext context, {
+  static String wrapInHtml(
+    BuildContext context, {
     @required Message message,
     @required String to,
     @required String date,
@@ -402,23 +398,17 @@ class MailUtils {
         : i18n(context, S.messages_no_subject);
     final shortDate = DateFormatting.getShortMessageDate(
       timestamp: message.timeStampInUTC,
-      locale: Localizations
-          .localeOf(context)
-          .languageCode,
+      locale: Localizations.localeOf(context).languageCode,
       yesterdayWord: i18n(context, S.label_message_yesterday),
       is24: true,
     );
-    final paddingBottom = MediaQuery
-        .of(context)
-        .padding
-        .bottom;
+    final paddingBottom = MediaQuery.of(context).padding.bottom;
     List<String> formatContact(String json) {
       if (json == null) return [];
       return (jsonDecode(json)["@Collection"] as List)
-          .map((item) =>
-      (item["DisplayName"]?.isNotEmpty == true
-          ? (item["DisplayName"])
-          : item["Email"]) as String)
+          .map((item) => (item["DisplayName"]?.isNotEmpty == true
+              ? (item["DisplayName"])
+              : item["Email"]) as String)
           .toList();
     }
 
@@ -426,7 +416,7 @@ class MailUtils {
     final cc = formatContact(message.ccInJson).join("<br>");
     final to = formatContact(message.toInJson).join("<br>");
     var toPrimary = (formatContact(message.toInJson)
-      ..addAll(formatContact(message.ccInJson)))
+          ..addAll(formatContact(message.ccInJson)))
         .toSet()
         .join("<br>");
     if (toPrimary.isEmpty) {
@@ -535,13 +525,11 @@ class MailUtils {
       }
       .details-description {
         width: 20%; 
-        color: ${(theme.brightness == Brightness.dark ? Colors.white : Colors
-            .black).toHex()};
+        color: ${(theme.brightness == Brightness.dark ? Colors.white : Colors.black).toHex()};
         opacity: 0.4;
       }
       .details-value {
-        color: ${(theme.brightness == Brightness.dark ? Colors.white : Colors
-            .black).toHex()};
+        color: ${(theme.brightness == Brightness.dark ? Colors.white : Colors.black).toHex()};
       }
       blockquote {
         border-left: solid 2px #000000;
@@ -556,13 +544,11 @@ class MailUtils {
                 if (elem.classList.contains("is-stared")) {
                     elem.innerHTML = "&#9734;"
                     elem.classList.remove("is-stared");
-                       elem.href="${MessageWebViewActions.ACTION +
-            MessageWebViewActions.SET_STARED}"
+                       elem.href="${MessageWebViewActions.ACTION + MessageWebViewActions.SET_STARED}"
                 } else {
-                    elem.innerHTML = "&#9733;"
+                    elem.innerHTML = "&#9733;" 
                     elem.classList.add("is-stared");
-                    elem.href="${MessageWebViewActions.ACTION +
-            MessageWebViewActions.SET_NOT_STARED}"
+                    elem.href="${MessageWebViewActions.ACTION + MessageWebViewActions.SET_NOT_STARED}"
                 }
             }, false);
             document.getElementById('info-btn').addEventListener('click', function (event) {
@@ -577,6 +563,10 @@ class MailUtils {
                 elem.classList.toggle('is-visible');
             }, false);
         });
+        
+       function downloadAttachment(str){
+        return window.${MessageWebViewActions.WEB_VIEW_JS_CHANNEL}.postMessage('${MessageWebViewActions.DOWNLOAD_ATTACHMENT}'+str);
+       }
     </script>
   </head>
   <body>
@@ -587,8 +577,7 @@ class MailUtils {
             <div style="font-size: 18px">${message.fromToDisplay}</div>
             <div class="disabled-text">$toPrimary</div>
              <div class="disabled-text">$shortDate</div>
-            <a style='margin-top: 7px;' class="toggle primary-color" href="#info" id="info-btn">${i18n(
-            context, S.btn_show_details)}</a>
+            <a style='margin-top: 7px;' class="toggle primary-color" href="#info" id="info-btn">${i18n(context, S.btn_show_details)}</a>
           </div>
           <div class="flex" style="flex: 0"></div>
         </div>
@@ -596,43 +585,27 @@ class MailUtils {
           <div class="toggle-content flex" id="info">
               <div class='row'><a class='details-description'>From</a><a class='details-value'>$from</a></div>
               <div class='row'><a class='details-description'>To</a><a class='details-value'>$to</a></div>        
-              ${cc.isNotEmpty
-            ? "<div class='row'><a class='details-description'>Cc</a><a class='details-value'>$cc</a></div>"
-            : ""}
+              ${cc.isNotEmpty ? "<div class='row'><a class='details-description'>Cc</a><a class='details-value'>$cc</a></div>" : ""}
         <div class='row'><a class='details-description'>Date</a><a class='details-value'>$date</a></div>
           </div>
         <div class='email-head' style='padding-top: 0px;'>
         <div style="display: flex; flex-direction: row;justify-content: space-between; padding-top: 24px;">
           <h1 style="font-size: 24px; font-weight: 500; margin-top: 0px;">
             <span style="margin-right: 10px;">${subject}</span>
-            <span style="display: inline-block; font-size: 14px; background: ${theme
-            .selectedRowColor
-            .toHex()};padding: 3px 8px; border-radius: 3px; margin-top: -2px; vertical-align: middle;">${message
-            .folder}</span>
+            <span style="display: inline-block; font-size: 14px; background: ${theme.selectedRowColor.toHex()};padding: 3px 8px; border-radius: 3px; margin-top: -2px; vertical-align: middle;">${message.folder}</span>
           </h1>
-          <a id="stared-btn" class="stared${isStared
-            ? " is-stared"
-            : ""}" href='${MessageWebViewActions.ACTION + (isStared
-            ? MessageWebViewActions.SET_NOT_STARED
-            : MessageWebViewActions
-            .SET_STARED)}' style='text-decoration: none; font-size: 24px; line-height: 1.2; color: orange'>${isStared
-            ? "&#9733;"
-            : "&#9734;"}</a>
+          <a id="stared-btn" class="stared${isStared ? " is-stared" : ""}" href='${MessageWebViewActions.ACTION + (isStared ? MessageWebViewActions.SET_NOT_STARED : MessageWebViewActions.SET_STARED)}' style='text-decoration: none; font-size: 24px; line-height: 1.2; color: orange'>${isStared ? "&#9733;" : "&#9734;"}</a>
         </div>
         <div style="clear: both;height: 1px; background-color: black; opacity: 0.05; margin: 24px 0 0"></div>
       </div>
       <div class='email-content'>$body</div>
-      ${attachments.isNotEmpty
-            ? '<div style="height: 1px; background-color: black; opacity: 0.05; margin: 24px 0 0"></div>'
-            : ""}
+      ${attachments.isNotEmpty ? '<div style="height: 1px; background-color: black; opacity: 0.05; margin: 24px 0 0"></div>' : ""}
       <div class='attachments'>
-        ${attachments.where((element) => !element.isInline).map((a) =>
-            _getAttachment(context, a)).toList().join()}
+        ${attachments.where((element) => !element.isInline).map((a) => _getAttachment(context, a)).toList().join()}
       </div>
     </div>
   </body>
 </html>
-    
     """;
   }
 
@@ -665,8 +638,8 @@ class MailUtils {
     return text.replaceAll("\n", "<br>").replaceAll("\r\n", "<br />");
   }
 
-  static String _getAttachment(BuildContext context,
-      MailAttachment attachment) {
+  static String _getAttachment(
+      BuildContext context, MailAttachment attachment) {
     final theme = Theme.of(context);
 
     final iconColor = _getWebColor(theme.iconTheme.color);
@@ -678,9 +651,7 @@ class MailUtils {
       final thumbUrl = attachment.thumbnailUrl
           .replaceFirst("mail-attachment/", "mail-attachments-cookieless/");
       leading =
-      "<div class='leading'><img src='${"${authBloc.currentUser
-          .hostname}$thumbUrl&AuthToken=${authBloc.currentUser
-          .token}"}' alt=''></div>";
+          "<div class='leading'><img src='${"${authBloc.currentUser.hostname}$thumbUrl&AuthToken=${authBloc.currentUser.token}"}' alt=''></div>";
     }
     return """
     <div class='attachment'>
@@ -694,10 +665,7 @@ class MailUtils {
 ">${attachment.fileName}</span>
         <span class='disabled-text'>${filesize(attachment.size)}</span>
       </div>
-      <a class='icon-btn' href='https://dummy-crutch.com/#${MessageWebViewActions
-        .DOWNLOAD_ATTACHMENT + attachment.downloadUrl +
-        MessageWebViewActions.DOWNLOAD_ATTACHMENT}'>${_getDownloadIcon(
-        iconColor)}</a>
+      <a class='icon-btn' onclick="downloadAttachment('${attachment.downloadUrl}')">${_getDownloadIcon(iconColor)}</a>
     </div>
     """;
   }

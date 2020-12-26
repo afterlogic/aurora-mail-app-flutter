@@ -195,10 +195,7 @@ class MailMethods {
 
     assert(selectedFolder != null);
     var foldersForUpdate = await _foldersDao
-        .getByType(
-          [FolderType.inbox, FolderType.sent, FolderType.drafts]
-              .map((e) => Folder.getNumberFromFolderType(e))
-              .toList(),
+        .getAllFolders(
           account.localId,
         )
         .then((value) => Folder.getFolderObjectsFromDb(value));
@@ -251,7 +248,7 @@ class MailMethods {
 
   Future<void> syncFolders({
     @required String guid,
-    bool syncSystemFolders = false,
+    bool syncSystemFolders = true,
     bool forceUpdateMessagesInfo = false,
   }) async {
     logger.log("method syncFolders");
@@ -261,7 +258,11 @@ class MailMethods {
     assert(guid != null || syncSystemFolders != null);
     var localFolders = new List<LocalFolder>();
     if (syncSystemFolders == true) {
-      localFolders = await _foldersDao.getAllFolders(account.localId);
+      localFolders = await _foldersDao.getByType([
+        Folder.getNumberFromFolderType(FolderType.inbox),
+        Folder.getNumberFromFolderType(FolderType.sent),
+        Folder.getNumberFromFolderType(FolderType.drafts)
+      ], account.localId);
       localFolders.sort((a, b) => a.folderOrder.compareTo(b.folderOrder));
     }
 
@@ -414,7 +415,8 @@ class MailMethods {
 //          "Attention! messagesInfo is null, perhaps another folder was selected while messages info was being retrieved.");
 //      return _setMessagesInfoToFolder();
 //    }
-    if (SyncPeriod.dbStringToPeriod(updatedUser.syncPeriod) != SyncPeriod.dbStringToPeriod(syncPeriod)) {
+    if (SyncPeriod.dbStringToPeriod(updatedUser.syncPeriod) !=
+        SyncPeriod.dbStringToPeriod(syncPeriod)) {
       print(
           "Attention! another sync period was selected, refetching messages info...");
       updateMessageCounter.empty();
