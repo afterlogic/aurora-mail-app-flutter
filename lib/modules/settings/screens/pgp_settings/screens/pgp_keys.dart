@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:aurora_mail/inject/app_inject.dart';
+import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/settings/blocs/pgp_settings/bloc.dart';
 import 'package:aurora_mail/res/str/s.dart';
@@ -8,12 +10,33 @@ import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:crypto_model/crypto_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class PgpKeysScreen extends StatelessWidget {
+class PgpKeysScreen extends StatefulWidget {
   final List<PgpKey> pgpKeys;
-  final PgpSettingsBloc bloc;
 
-  const PgpKeysScreen(this.pgpKeys, this.bloc);
+  const PgpKeysScreen(
+    this.pgpKeys,
+  );
+
+  @override
+  _PgpKeysScreenState createState() => _PgpKeysScreenState();
+}
+
+class _PgpKeysScreenState extends State<PgpKeysScreen> {
+  PgpSettingsBloc bloc;
+
+  @override
+  void initState() {
+    bloc = AppInjector.instance.pgpSettingsBloc(BlocProvider.of<AuthBloc>(context));
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    bloc.close();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +78,7 @@ class PgpKeysScreen extends StatelessWidget {
                 SizedBox(
                   height: 20,
                 ),
-                SelectableText(pgpKeys.map((key) => key.key).join("\n\n")),
+                SelectableText(widget.pgpKeys.map((key) => key.key).join("\n\n")),
               ],
             ),
           ),
@@ -77,7 +100,14 @@ class PgpKeysScreen extends StatelessWidget {
       AMButton(
         child: Text(i18n(context, S.btn_php_send_all)),
         onPressed: () {
-          bloc.add(ShareKeys(pgpKeys));
+          bloc.add(ShareKeys(
+            widget.pgpKeys,
+            Rect.fromCenter(
+              center: MediaQuery.of(context).size.bottomCenter(Offset.zero),
+              width: 0,
+              height: 0,
+            ),
+          ));
         },
       ),
       space,
@@ -85,7 +115,7 @@ class PgpKeysScreen extends StatelessWidget {
         AMButton(
           child: Text(i18n(context, S.btn_pgp_download_all)),
           onPressed: () {
-            bloc.add(DownloadKeys(pgpKeys));
+            bloc.add(DownloadKeys(widget.pgpKeys));
             Navigator.pop(context);
           },
         ),

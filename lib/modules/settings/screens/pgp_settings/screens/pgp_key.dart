@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:aurora_mail/inject/app_inject.dart';
+import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/settings/blocs/pgp_settings/bloc.dart';
 import 'package:aurora_mail/res/str/s.dart';
@@ -10,27 +12,44 @@ import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:crypto_model/crypto_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class PgpKeyScreen extends StatelessWidget {
+class PgpKeyScreen extends StatefulWidget {
   final PgpKey pgpKey;
-  final PgpSettingsBloc bloc;
   final Function() onDelete;
+  final bool withAppBar;
+  const PgpKeyScreen(this.pgpKey, this.onDelete, this.withAppBar);
 
-  const PgpKeyScreen(this.pgpKey, this.bloc, this.onDelete);
+  @override
+  _PgpKeyScreenState createState() => _PgpKeyScreenState();
+}
+
+class _PgpKeyScreenState extends State<PgpKeyScreen> {
+  PgpSettingsBloc bloc;
+
+  @override
+  void initState() {
+    bloc = AppInjector.instance.pgpSettingsBloc(BlocProvider.of<AuthBloc>(context));
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    bloc.close();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isTablet = LayoutConfig.of(context).isTablet;
     return Scaffold(
-      appBar: isTablet
+      appBar: isTablet && !widget.withAppBar
           ? null
           : AMAppBar(
               title: Text(i18n(
                 context,
-                pgpKey.isPrivate
-                    ? S.label_pgp_private_key
-                    : S.label_pgp_public_key,
+                widget.pgpKey.isPrivate ? S.label_pgp_private_key : S.label_pgp_public_key,
               )),
             ),
       body: Flex(
@@ -50,7 +69,7 @@ class PgpKeyScreen extends StatelessWidget {
                         child: Text(
                           i18n(
                             context,
-                            pgpKey.isPrivate
+                            widget.pgpKey.isPrivate
                                 ? S.label_pgp_private_key
                                 : S.label_pgp_public_key,
                           ),
@@ -60,13 +79,13 @@ class PgpKeyScreen extends StatelessWidget {
                     ),
                   ),
                 Text(
-                  pgpKey.formatName(),
+                  widget.pgpKey.formatName(),
                   style: theme.textTheme.title,
                 ),
                 SizedBox(
                   height: 20,
                 ),
-                SelectableText(pgpKey.key),
+                SelectableText(widget.pgpKey.key),
               ],
             ),
           ),
@@ -81,22 +100,26 @@ class PgpKeyScreen extends StatelessWidget {
     final space = isTablet
         ? SizedBox.shrink()
         : SizedBox(
-      height: 10.0,
-      width: 10,
-    );
+            height: 10.0,
+            width: 10,
+          );
     final children = <Widget>[
       AMButton(
         child: Text(i18n(context, S.btn_share)),
         onPressed: () async {
-          final result = pgpKey.isPrivate
-              ? await ConfirmationDialog.show(
-                  context,
-                  i18n(context, S.label_pgp_share_warning),
-                  i18n(context, S.hint_pgp_share_warning),
-                  i18n(context, S.btn_share))
+          final result = widget.pgpKey.isPrivate
+              ? await ConfirmationDialog.show(context, i18n(context, S.label_pgp_share_warning),
+                  i18n(context, S.hint_pgp_share_warning), i18n(context, S.btn_share))
               : true;
           if (result == true) {
-            bloc.add(ShareKeys([pgpKey]));
+            bloc.add(ShareKeys(
+              [widget.pgpKey],
+              Rect.fromCenter(
+                center: MediaQuery.of(context).size.bottomCenter(Offset.zero),
+                width: 0,
+                height: 0,
+              ),
+            ));
           }
         },
       ),
@@ -105,7 +128,7 @@ class PgpKeyScreen extends StatelessWidget {
         AMButton(
           child: Text(i18n(context, S.btn_download)),
           onPressed: () {
-            bloc.add(DownloadKeys([pgpKey]));
+            bloc.add(DownloadKeys([widget.pgpKey]));
             Navigator.pop(context);
           },
         ),
@@ -116,15 +139,14 @@ class PgpKeyScreen extends StatelessWidget {
           final result = await ConfirmationDialog.show(
             context,
             "",
-            i18n(context, S.hint_pgp_delete_user_key_confirm,
-                {"user": pgpKey.mail}),
+            i18n(context, S.hint_pgp_delete_user_key_confirm, {"user": widget.pgpKey.mail}),
             i18n(context, S.btn_delete),
           );
           if (result == true) {
-            if (onDelete != null) {
-              onDelete();
+            if (widget.onDelete != null) {
+              widget.onDelete();
             } else {
-              bloc.add(DeleteKey(pgpKey));
+              bloc.add(DeleteKey(widget.pgpKey));
             }
             Navigator.pop(context);
           }

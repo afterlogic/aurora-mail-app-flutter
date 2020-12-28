@@ -146,7 +146,7 @@ class _PgpSettingsState extends BState<PgpSettings> {
   _openKey(BuildContext context, PgpKey key) {
     SettingsNavigatorWidget.of(context).pushNamed(
       PgpKeyRoute.name,
-      arguments: PgpKeyRouteArg(key, bloc, null),
+      arguments: PgpKeyRouteArg(key, null,false),
     );
   }
 
@@ -175,7 +175,7 @@ class _PgpSettingsState extends BState<PgpSettings> {
   _exportAllPublicKeys(List<PgpKey> keys) {
     SettingsNavigatorWidget.of(context).pushNamed(
       PgpKeysRoute.name,
-      arguments: PgpKeysRouteArg(keys, bloc),
+      arguments: PgpKeysRouteArg(keys),
     );
   }
 

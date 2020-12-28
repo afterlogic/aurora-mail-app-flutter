@@ -7,7 +7,6 @@ class PgpKeysRoute {
 
 class PgpKeysRouteArg {
   final List<PgpKey> pgpKeys;
-  final PgpSettingsBloc bloc;
 
-  PgpKeysRouteArg(this.pgpKeys, this.bloc);
+  PgpKeysRouteArg(this.pgpKeys);
 }

@@ -83,16 +83,15 @@ class KeyInputState extends State<KeyInput> {
     Navigator.pushNamed(
       context,
       PgpKeyRoute.name,
-      arguments: PgpKeyRouteArg(widget.pgpKey, widget.pgpSettingsBloc, () {
+      arguments: PgpKeyRouteArg(widget.pgpKey, () {
         _setKey(null);
-      }),
+      },true),
     );
   }
 
   _onKey(String key) async {
-    final keys = (await widget.pgpSettingsBloc.parseKey(key))
-        .where((item) => !item.isPrivate)
-        .toList();
+    final keys =
+        (await widget.pgpSettingsBloc.parseKey(key)).where((item) => !item.isPrivate).toList();
     if (keys.isEmpty) {
       showSnack(
           context: context,
@@ -103,8 +102,7 @@ class KeyInputState extends State<KeyInput> {
     if (keys.length == 1) {
       _setKey(keys.first);
     } else {
-      final result =
-          await dialog(context: context, builder: (_) => SelectKeyDialog(keys));
+      final result = await dialog(context: context, builder: (_) => SelectKeyDialog(keys));
       if (result is PgpKey) {
         _setKey(result);
       }

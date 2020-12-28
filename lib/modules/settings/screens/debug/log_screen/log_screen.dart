@@ -1,12 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:aurora_mail/utils/internationalization.dart'; import 'package:aurora_mail/res/str/s.dart';
+import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:aurora_ui_kit/components/am_app_bar.dart';
-import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:share/share.dart';
 
 class LogScreen extends StatelessWidget {
   final File file;
@@ -24,11 +25,15 @@ class LogScreen extends StatelessWidget {
           IconButton(
             icon: Icon(Icons.share),
             onPressed: () {
-              Share.file(
-                file.path.split(Platform.pathSeparator).last,
-                file.path.split(Platform.pathSeparator).last,
-                utf8.encode(content),
-                'text/plain',
+              Share.shareFiles(
+                [file.path],
+                mimeTypes: ['text/plain'],
+                subject: file.path.split(Platform.pathSeparator).last,
+                sharePositionOrigin: Rect.fromCenter(
+                  center: MediaQuery.of(context).size.bottomCenter(Offset.zero),
+                  width: 0,
+                  height: 0,
+                ),
               );
             },
           ),

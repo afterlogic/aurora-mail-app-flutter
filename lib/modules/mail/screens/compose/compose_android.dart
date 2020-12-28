@@ -995,6 +995,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
                   children: [
                     if (Platform.isIOS) ...[
                       AMFloatingActionButton(
+                        heroTag: "second",
                         child: IconTheme(
                           data: AppTheme.floatIconTheme,
                           child: Icon(Icons.perm_media),
@@ -1041,12 +1042,12 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
       );
     }
 
-    if (BuildProperty.cryptoEnable) {
+
       final keyboardIsOpened = MediaQuery.of(context).viewInsets.bottom > 100;
       body = Column(
         children: [
           Expanded(child: body),
-          if (!keyboardIsOpened)
+          if (!keyboardIsOpened && BuildProperty.cryptoEnable)
             ComposeBottomBar(
               _encryptDialog,
               _decrypt,
@@ -1055,7 +1056,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
             )
         ],
       );
-    }
+
     return BlocProvider<ComposeBloc>.value(
       value: _bloc,
       child: Scaffold(

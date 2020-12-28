@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:ui';
 import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/inject/app_inject.dart';
@@ -60,6 +61,7 @@ class MessageViewBloc extends Bloc<MessageViewEvent, MessageViewState> {
 
     _methods.downloadAttachment(
       event.attachment,
+      rect: event.rect,
       onDownloadStart: () {
 //        add(StartDownload(event.attachment.fileName));
       },
@@ -71,7 +73,7 @@ class MessageViewBloc extends Bloc<MessageViewEvent, MessageViewState> {
     );
   }
 
-  downloadAttachment(MailAttachment attachment, Function(String) onEnd) async {
+  downloadAttachment(MailAttachment attachment, Function(String) onEnd,Rect rect) async {
     try {
       await getStoragePermissions();
     } catch (err) {
@@ -80,6 +82,7 @@ class MessageViewBloc extends Bloc<MessageViewEvent, MessageViewState> {
 
     _methods.downloadAttachment(
       attachment,
+      rect:rect,
       onDownloadStart: () {
 //        add(StartDownload(event.attachment.fileName));
       },

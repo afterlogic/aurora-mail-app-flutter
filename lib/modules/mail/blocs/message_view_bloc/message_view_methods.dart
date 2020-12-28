@@ -31,9 +31,10 @@ class MessageViewMethods {
     MailAttachment attachment, {
     @required Function(String) onDownloadEnd,
     @required Function() onDownloadStart,
+    Rect rect,
   }) {
     if (Platform.isIOS) {
-      _mailApi.shareAttachment(attachment, onDownloadEnd);
+      _mailApi.shareAttachment(attachment, onDownloadEnd, rect);
     } else {
       _mailApi.downloadAttachment(
         attachment,
@@ -67,10 +68,9 @@ class MessageViewMethods {
   }
 
   Future<bool> checkInWhiteList(Message message) async {
-    final List<String> emails =
-        (json.decode(message.fromInJson)["@Collection"] as List)
-            .map((item) => item["Email"] as String)
-            .toList();
+    final List<String> emails = (json.decode(message.fromInJson)["@Collection"] as List)
+        .map((item) => item["Email"] as String)
+        .toList();
     if (message.safety == true) {
       await _whiteMailDao.add(emails);
       return true;
@@ -89,10 +89,9 @@ class MessageViewMethods {
   }
 
   Future addInWhiteList(Message message) async {
-    final List<String> emails =
-        (json.decode(message.fromInJson)["@Collection"] as List)
-            .map((item) => item["Email"] as String)
-            .toList();
+    final List<String> emails = (json.decode(message.fromInJson)["@Collection"] as List)
+        .map((item) => item["Email"] as String)
+        .toList();
     await _whiteMailDao.add(emails);
   }
 }

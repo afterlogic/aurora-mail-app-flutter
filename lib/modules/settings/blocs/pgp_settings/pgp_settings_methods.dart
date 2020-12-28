@@ -11,8 +11,9 @@ import 'package:aurora_mail/utils/permissions.dart';
 import 'package:crypto_model/crypto_model.dart';
 import 'package:crypto_storage/src/pgp_storage.dart';
 import 'package:crypto_worker/src/pgp/pgp_worker.dart';
-import 'package:esys_flutter_share/esys_flutter_share.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/widgets.dart';
+import 'package:share/share.dart';
 
 class PgpSettingsMethods {
   final CryptoStorage cryptoStorage;
@@ -20,8 +21,7 @@ class PgpSettingsMethods {
   final ContactsRepository contactsDao;
   final User user;
 
-  PgpSettingsMethods(
-      this.cryptoStorage, this.cryptoWorker, this.user, this.contactsDao);
+  PgpSettingsMethods(this.cryptoStorage, this.cryptoWorker, this.user, this.contactsDao);
 
   Future<List<PgpKey>> getKeys(bool isPrivate) {
     return cryptoStorage.getPgpKeys(isPrivate);
@@ -69,22 +69,22 @@ class PgpSettingsMethods {
     return file;
   }
 
-  shareKey(PgpKey key) {
+  shareKey(PgpKey key, Rect rect) {
     final title =
         "${(key.name + " ") ?? ""}${key.mail} PGP ${key.isPrivate ? "private" : "public"} key.asc";
     _shareFile(
       title,
-      title,
       key.key,
+      rect,
     );
   }
 
-  shareKeys(List<PgpKey> keys) {
+  shareKeys(List<PgpKey> keys, Rect rect) {
     final title = "PGP public keys.asc";
     _shareFile(
       title,
-      title,
       keys.map((key) => key.key).join("\n\n"),
+      rect,
     );
   }
 
@@ -105,15 +105,13 @@ class PgpSettingsMethods {
   Future<Map<PgpKey, bool>> userKeyMarkIfNotExist(List<PgpKey> keys) async {
     final map = <PgpKey, bool>{};
     for (var key in keys) {
-      final existKey =
-          await cryptoStorage.getPgpKey(key.mail, key.isPrivate, false);
+      final existKey = await cryptoStorage.getPgpKey(key.mail, key.isPrivate, false);
       map[key] = existKey == null ? true : null;
     }
     return map;
   }
 
-  Future<Map<PgpKeyWithContact, bool>> contactKeyMarkIfNotExist(
-      List<PgpKey> keys) async {
+  Future<Map<PgpKeyWithContact, bool>> contactKeyMarkIfNotExist(List<PgpKey> keys) async {
     final map = <PgpKeyWithContact, bool>{};
     for (var key in keys) {
       final contact = await contactsDao.getContactByEmail(key.mail);
@@ -160,8 +158,12 @@ class PgpSettingsMethods {
     return content;
   }
 
-  _shareFile(String title, String name, String content) {
-    Share.file(title, name, utf8.encode(content), "text/plain");
+  _shareFile(String title, String content, Rect rect) {
+    Share.share(
+      content,
+      subject: title,
+      sharePositionOrigin: rect
+    );
   }
 
   static const KEY_FOLDER = "pgp_keys";

@@ -7,7 +7,8 @@ class PgpKeyRoute {
 
 class PgpKeyRouteArg {
   final PgpKey pgpKey;
-  final PgpSettingsBloc bloc;
   final Function() onDelete;
-  PgpKeyRouteArg(this.pgpKey, this.bloc, this.onDelete);
+  final bool withAppBar;
+
+  PgpKeyRouteArg(this.pgpKey, this.onDelete, this.withAppBar);
 }

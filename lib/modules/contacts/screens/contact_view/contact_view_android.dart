@@ -406,7 +406,7 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
                     Navigator.pushNamed(
                       context,
                       PgpKeyRoute.name,
-                      arguments: PgpKeyRouteArg(key, pgpSettingsBloc, null),
+                      arguments: PgpKeyRouteArg(key, null,true),
                     );
                   },
             child: _buildInfoItem(

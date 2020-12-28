@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:aurora_mail/utils/always_non_equal_object.dart';
@@ -10,8 +12,8 @@ abstract class MessageViewEvent extends Equatable {
 
 class DownloadAttachment extends MessageViewEvent {
   final MailAttachment attachment;
-
-  const DownloadAttachment(this.attachment);
+  final Rect rect;
+  const DownloadAttachment(this.attachment, this.rect);
 
   @override
   List<Object> get props => [attachment];
