@@ -1,4 +1,5 @@
 #config
+# шаблоны файлов из которых будут собраны их копии но без последнего расширения в имени и точки в начале ".build_res.xml.temp" -> "build_res.xml"
 _files:
   - pubspec.yaml.yaml
   #  - lib/di/di.dart.temp
@@ -11,12 +12,14 @@ _files:
   - ios/Runner/Runner.entitlements.temp
   - ios/AppShareExtension/AppShareExtension.entitlements.temp
   - ios/ExportOptions.plist.temp
+# файлы которые будут копированны. ключ - откуда, значение - куда
 _copy:
   "{{main_logo}}": "android/app/src/main/res/drawable/main_logo.png"
   "{{_google_services}}": "android/app/google-services.json"
   "{{_google_services_ios}}": "ios/Runner/GoogleService-Info.plist"
   "{{_sign_dir}}/key.properties": "android/key.properties"
   "{{_sign_dir}}/key.jks": "android/app/key.jks"
+# переменные которые используются в шаблонах и записаваются в пути _buildPropertyPath
 _buildPropertyPath: lib/build_property.dart
 #default config
 _buildVariant: "build_res/afterlogic/build_variant.yaml"
