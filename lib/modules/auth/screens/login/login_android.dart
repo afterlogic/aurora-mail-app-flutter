@@ -29,7 +29,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:theme/app_color.dart';
 import 'package:theme/app_theme.dart';
 
-import 'auth_data.dart';
 import 'components/mail_logo.dart';
 
 class LoginAndroid extends StatefulWidget {
@@ -56,11 +55,6 @@ class _LoginAndroidState extends BState<LoginAndroid> {
   void initState() {
     super.initState();
 
-    if (kDebugMode) {
-      hostCtrl.text = AuthData.host;
-      emailCtrl.text = AuthData.email;
-      passwordCtrl.text = AuthData.password;
-    }
 
     if (widget.isDialog == true) {
       if (widget.email != null) emailCtrl.text = widget.email;

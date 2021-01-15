@@ -9,11 +9,6 @@
 (`Configure` -> `Plugins` -> Search `Flutter`)
 и открываем Flutter проект.
 
-```
-Если открыть корень проекта, то он будет индексироваться как Flutter проект.
-Если открыть папку android как проект в adnroid, то он будет индексироваться как Android проект
-```
-
 Для сборки приложения под конкретную версию android, нужно установить Android sdk такой же версии.
 
 Для этого в Android Studio нажимаем 2 раза Shift, вводим SDK Manage, выбираем нужные sdk и нажимаем ok
@@ -23,15 +18,12 @@
 поля в  `build_res/afterlogic/build_variant.yaml` переопределяют поля с тем же ключем в корневом `build_variant.yaml`.
 Если версия для разных сборок разная и находятся в папке конкретной сборки, то номер сборки для всех один и находится в корневом `build_variant.yaml`.
 
-для переключения на сборку нужно ввести команду `sh sh/build_variant.sh {путь к build_variant.yaml сборки}` 
-подробнее в файле [how_to_switch_customers.md](./how_to_switch_customers.md)
-
 в папках отсутвуют ключи подписи и файлы google-services
 
 Google-services можно скачать из firebase проектов 
 ([firebase](https://console.firebase.google.com) -> `Настройки проекта` -> `Общие настройки` -> `Ваши приложения`-> Кнопка `google-services.json`)
 
-Ключи находятся у мэнеджера, но так же понадобится 4 значения записанные в файл `key.properties`
+Ключи находятся у менеджера, но так же понадобится 4 значения записанные в файл `key.properties`
 ```
 storePassword=...
 keyPassword=...
@@ -53,7 +45,11 @@ theme:
     ...
 build_variant.yaml 
 ```
-это так же написано в [how_to_switch_customers.md](./how_to_switch_customers.md)
+
+для переключения на сборку нужно ввести команду `sh sh/build_variant.sh {путь к build_variant.yaml сборки}` 
+например  `sh sh/build_variant.sh build_res/afterlogic/build_variant.yaml`
+
+подробнее в файле [how_to_switch_customers.md](./how_to_switch_customers.md)
 
 # Сборка Android
 для релизной сборки используется скрипт
@@ -62,6 +58,14 @@ build_variant.yaml
 
 # Сборка IOS
 
+Нужно импортировать сертификаты, которые находятся у менеджера
+открыть папку ios в xcode
+в проводнике выбрать `Runner` и перейти на вкладку `Signing & Capabilities`
+нажать `Add Account` и добавить аккаунт
+выполнить команду `flutter build ios`
+открыть папку ios в xcode
+выбрать в устройствах `Any IOS Device`
+в toolbar нажать `Product` и `Archive`
 
 # Локализация 
 для локалиции используется plugin `localizator`
