@@ -9,7 +9,8 @@
 (`Configure` -> `Plugins` -> Search `Flutter`)
 и открываем Flutter проект.
 
-Для сборки приложения под конкретную версию android, нужно установить Android sdk такой же версии.
+Для debug сборки приложения под конкретную версию android, нужно установить Android sdk такой же версии.
+[подробнее](https://developer.android.com/studio/releases/platforms)
 
 Для этого в Android Studio нажимаем 2 раза Shift, вводим SDK Manage, выбираем нужные sdk и нажимаем ok
 
