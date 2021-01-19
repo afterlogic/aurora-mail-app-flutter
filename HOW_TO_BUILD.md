@@ -57,16 +57,25 @@ build_variant.yaml
 `sh/build_android.sh`
 после его выполнения в папке `build` появится файл .apk и .aab
 
-# Сборка IOS
+# настройка IOS
 
 Нужно импортировать сертификаты, которые находятся у менеджера
 открыть папку ios в xcode
 в проводнике выбрать `Runner` и перейти на вкладку `Signing & Capabilities`
 нажать `Add Account` и добавить аккаунт
+
+# Сборка IOS
+
+### Способ через xcode
 выполнить команду `flutter build ios`
 открыть папку ios в xcode
 выбрать в устройствах `Any IOS Device`
 в toolbar нажать `Product` и `Archive`
+
+### Способ через скрипт
+выполнить `sh/build_ios.sh`
+Собранный пакет появятся в каталоге `build` с расширением .ipa
+его можно залить в TestFlight с помощью приложения [Transporter](https://apps.apple.com/ru/app/transporter/id1450874784?l=en&mt=12)
 
 # Локализация 
 для локалиции используется plugin `localizator`
