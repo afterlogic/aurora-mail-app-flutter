@@ -301,7 +301,7 @@ class MailUtils {
       }
       .email-content {
         background-color: white;
-        word-break: break-all;
+        word-break: break-word;
         overflow-x: scroll;
         flex: 1;
       }
