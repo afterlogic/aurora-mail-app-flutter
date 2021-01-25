@@ -333,7 +333,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
                           isSearch = value;
                           setState(() {});
                         },
-                        isAppBar:false,
+                        isAppBar: false,
                       ),
                     ),
                     Divider(height: 1),
@@ -493,10 +493,10 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
             child: RefreshIndicator(
               key: _refreshKey,
               onRefresh: () {
-                _startRefresh();
                 if (isBackgroundRefresh) {
                   isBackgroundRefresh = false;
                 } else {
+                  _startRefresh();
                   _mailBloc.add(RefreshMessages(_refreshCompleter));
                 }
                 return _refreshCompleter.future;
@@ -682,6 +682,8 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
   }
 
   onEndAlarm(bool hasUpdate) {
-    if (_refreshCompleter?.isCompleted == false) _refreshCompleter?.complete();
+    if (_refreshCompleter?.isCompleted == false) {
+      _refreshCompleter?.complete();
+    }
   }
 }
