@@ -227,7 +227,7 @@ DEPENDENCIES:
   - firebase_crashlytics (from `.symlinks/plugins/firebase_crashlytics/ios`)
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
   - firebase_messaging_web (from `.symlinks/plugins/firebase_messaging_web/ios`)
-  - Flutter (from `.symlinks/flutter/ios-release`)
+  - Flutter (from `.symlinks/flutter/ios`)
   - flutter_custom_tabs (from `.symlinks/plugins/flutter_custom_tabs/ios`)
   - flutter_downloader (from `.symlinks/plugins/flutter_downloader/ios`)
   - flutter_keyboard_visibility (from `.symlinks/plugins/flutter_keyboard_visibility/ios`)
@@ -308,7 +308,7 @@ EXTERNAL SOURCES:
   firebase_messaging_web:
     :path: ".symlinks/plugins/firebase_messaging_web/ios"
   Flutter:
-    :path: ".symlinks/flutter/ios-release"
+    :path: ".symlinks/flutter/ios"
   flutter_custom_tabs:
     :path: ".symlinks/plugins/flutter_custom_tabs/ios"
   flutter_downloader:
@@ -429,6 +429,6 @@ SPEC CHECKSUMS:
   yubico_flutter: 3fee5838c73d3946031a1405ef347de018bbd944
   YubiKit: b9f3b240e75feec0cf81a8ade503c072eea6dc3a
 
-PODFILE CHECKSUM: f751337fadc0130b9831edc6c98aabf871db71bb
+PODFILE CHECKSUM: c7ba73d489556bcf3c73904a94c41f8e96c10537
 
-COCOAPODS: 1.9.0
+COCOAPODS: 1.9.3

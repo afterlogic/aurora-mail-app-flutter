@@ -198,6 +198,7 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
                           ),
                         ],
                         child: MaterialApp(
+                          debugShowCheckedModeBanner: false,
                           navigatorKey: _navKey,
                           onGenerateTitle: (context) {
                             final is24 = MediaQuery.of(context).alwaysUse24HourFormat;

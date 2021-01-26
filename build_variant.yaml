@@ -30,7 +30,7 @@ _appId: ""
 _iosAppId: "{{_appId}}"
 _appleGroupId: ""
 packageName: "{{_appId}}"
-_build: 211
+_build: 212
 _version: ""
 _version_android: "{{_version}}{{_build}}"
 version_ios: "{{_version}}+{{_build}}"
