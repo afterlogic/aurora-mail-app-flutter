@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/dialog_wrap.dart';
+import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/mail_bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/mail_state.dart';
 import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/messages_list_bloc.dart';
@@ -14,8 +17,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class MoveMessageDialog extends StatefulWidget {
   final List<Message> messages;
   final MessagesListBloc bloc;
+  final MailBloc mailBloc;
 
-  MoveMessageDialog(this.messages, this.bloc);
+  MoveMessageDialog(this.messages, this.bloc, this.mailBloc);
 
   @override
   _MoveMessageDialogState createState() => _MoveMessageDialogState();
@@ -65,7 +69,8 @@ class _MoveMessageDialogState extends State<MoveMessageDialog>
             onPressed: current == null ? null : _paste,
           ),
           FlatButton(
-            child: Text(i18n(context, stack.isNotEmpty?S.btn_back:S.btn_cancel)),
+            child: Text(
+                i18n(context, stack.isNotEmpty ? S.btn_back : S.btn_cancel)),
             onPressed: _cancel,
           ),
         ],
@@ -123,7 +128,11 @@ class _MoveMessageDialogState extends State<MoveMessageDialog>
   }
 
   _paste() {
-    widget.bloc.add(MoveToFolderMessages(widget.messages, current));
+    final completer = Completer();
+    widget.bloc.add(MoveToFolderMessages(widget.messages, current, completer));
+    completer.future.then((value) {
+      widget.mailBloc.add(RefreshMessages(null));
+    });
     Navigator.pop(context, true);
   }
 }

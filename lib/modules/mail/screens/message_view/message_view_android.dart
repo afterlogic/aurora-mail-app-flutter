@@ -122,7 +122,7 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
         final args = new ComposeScreenArgs(
           mailBloc: mailBloc,
           contactsBloc: contactsBloc,
-          composeAction: Reply(msg,showImage),
+          composeAction: Reply(msg, showImage),
         );
         Navigator.pushNamed(context, ComposeRoute.name, arguments: args);
         break;
@@ -130,7 +130,7 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
         final args = new ComposeScreenArgs(
           mailBloc: mailBloc,
           contactsBloc: contactsBloc,
-          composeAction: ReplyToAll(msg,showImage),
+          composeAction: ReplyToAll(msg, showImage),
         );
         Navigator.pushNamed(context, ComposeRoute.name, arguments: args);
         break;
@@ -138,7 +138,7 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
         final args = new ComposeScreenArgs(
           mailBloc: mailBloc,
           contactsBloc: contactsBloc,
-          composeAction: Forward(msg,showImage),
+          composeAction: Forward(msg, showImage),
         );
         Navigator.pushNamed(context, ComposeRoute.name, arguments: args);
         break;
@@ -147,7 +147,7 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
         final args = new ComposeScreenArgs(
           mailBloc: mailBloc,
           contactsBloc: contactsBloc,
-          composeAction: Resend(msg,showImage),
+          composeAction: Resend(msg, showImage),
         );
         Navigator.pushNamed(context, ComposeRoute.name, arguments: args);
         break;
@@ -167,6 +167,7 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
           builder: (_) => MoveMessageDialog(
             [widget.message],
             BlocProvider.of<MessagesListBloc>(context),
+            BlocProvider.of<MailBloc>(context),
           ),
         );
         if (result == true) {

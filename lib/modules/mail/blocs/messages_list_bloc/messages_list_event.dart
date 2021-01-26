@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/bloc.dart';
@@ -17,10 +19,12 @@ class SubscribeToMessages extends MessagesListEvent {
   final MessagesFilter filter;
   final List<SearchParams> searchParams;
 
-  const SubscribeToMessages(this.currentFolder, this.filter, [this.searchParams]);
+  const SubscribeToMessages(this.currentFolder, this.filter,
+      [this.searchParams]);
 
   @override
-  List<Object> get props => [currentFolder.fullNameRaw, filter, searchParams.hashCode];
+  List<Object> get props =>
+      [currentFolder.fullNameRaw, filter, searchParams.hashCode];
 }
 
 class StopMessagesRefresh extends MessagesListEvent {}
@@ -56,8 +60,9 @@ class EmptyFolder extends MessagesListEvent {
 class MoveToFolderMessages extends MessagesListEvent {
   final List<Message> messages;
   final Folder folder;
+  final Completer completer;
 
-  MoveToFolderMessages(this.messages, this.folder);
+  MoveToFolderMessages(this.messages, this.folder, [this.completer]);
 
   @override
   List<Object> get props => [messages, folder];
