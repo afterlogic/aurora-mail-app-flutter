@@ -142,7 +142,7 @@ class _SelectAppBarState extends BState<SelectAppBar> {
     }
   }
 
-  void _move() {
+  void _move() async {
     final messages = widget.controller.selected.values.toList();
     widget.controller.enable = false;
     AMDialog.show(
@@ -150,6 +150,7 @@ class _SelectAppBarState extends BState<SelectAppBar> {
       builder: (_) => MoveMessageDialog(
         messages,
         BlocProvider.of<MessagesListBloc>(context),
+        BlocProvider.of<MailBloc>(context),
       ),
     );
   }

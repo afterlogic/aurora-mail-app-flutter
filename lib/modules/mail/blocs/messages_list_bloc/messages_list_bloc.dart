@@ -96,6 +96,7 @@ class MessagesListBloc extends Bloc<MessagesListEvent, MessagesListState> {
   Stream<MessagesListState> _moveToFolder(MoveToFolderMessages event) async* {
     try {
       await _methods.moveToFolder(event.messages, event.folder);
+      event.completer?.complete();
       yield MessagesMoved();
     } catch (err, s) {
       yield MailError(formatError(err, s));
