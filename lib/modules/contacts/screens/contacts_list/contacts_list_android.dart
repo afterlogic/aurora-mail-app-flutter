@@ -205,9 +205,7 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
                   ),
                   floatingActionButtonLocation:
                       FloatingActionButtonLocation.endFloat,
-                  floatingActionButton: isTablet
-                      ? null
-                      : AMFloatingActionButton(
+                  floatingActionButton:  AMFloatingActionButton(
                           child: IconTheme(
                             data: AppTheme.floatIconTheme,
                             child: Icon(MdiIcons.accountPlusOutline),
