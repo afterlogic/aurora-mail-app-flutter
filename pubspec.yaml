@@ -124,7 +124,7 @@ dev_dependencies:
   build_variant:
     git: "https://github.com/afterlogic/build_variant"
   flutter_launcher_icons: 0.7.4
-  localizator: 0.4.0
+  localizator: 0.4.1+1
 flutter_icons:
   ios: true
   android: true
