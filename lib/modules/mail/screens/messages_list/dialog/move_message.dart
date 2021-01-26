@@ -65,7 +65,7 @@ class _MoveMessageDialogState extends State<MoveMessageDialog>
             onPressed: current == null ? null : _paste,
           ),
           FlatButton(
-            child: Text(i18n(context, S.btn_cancel)),
+            child: Text(i18n(context, stack.isNotEmpty?S.btn_back:S.btn_cancel)),
             onPressed: _cancel,
           ),
         ],
@@ -74,9 +74,22 @@ class _MoveMessageDialogState extends State<MoveMessageDialog>
   }
 
   Widget _buildFolders(FoldersLoaded state) {
-    final currentFolders = state.folders
-        .where((item) => item.parentGuid == current?.guid)
-        .toList();
+    final currentFolders = state.folders.where((item) {
+      if (item.isSubscribed == false) {
+        return false;
+      }
+      final isRoot = item.nameSpace?.isNotEmpty == true &&
+          item.fullName.startsWith(item.nameSpace) &&
+          item.fullName.allMatches(item.delimiter).length ==
+              item.nameSpace.allMatches(item.delimiter).length;
+      if (!isRoot && item.parentGuid == current?.guid) {
+        return true;
+      }
+      if (current?.guid == null && isRoot) {
+        return true;
+      }
+      return false;
+    }).toList();
     final items =
         List.generate(currentFolders.length, (i) => _folder(currentFolders[i]));
     return SingleChildScrollView(
@@ -100,8 +113,13 @@ class _MoveMessageDialogState extends State<MoveMessageDialog>
   }
 
   _cancel() {
-    stack.clear();
-    Navigator.pop(context);
+    if (stack.isNotEmpty) {
+      stack.removeLast();
+      setState(() {});
+    } else {
+      stack.clear();
+      Navigator.pop(context);
+    }
   }
 
   _paste() {

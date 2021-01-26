@@ -411,5 +411,6 @@
   "tfa_input_backup_code": "Backup code",
   "tfa_label_trust_device": "You're all set",
   "tfa_check_box_trust_device": "Don't ask again on this device for {daysCount} days",
-  "tfa_button_continue": "Continue"
+  "tfa_button_continue": "Continue",
+  "btn_back": "Back"
 }
