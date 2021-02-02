@@ -40,7 +40,7 @@ Edit the `key_template.properties` file and rename it into `key.properties`.
 
 11. Changing theme and updating image files.
 Images are found in `image` subdirectory.
-All the images must be of 512õ512 or 1024õ1024 size.
+All the images must be of 512Ãµ512 or 1024Ãµ1024 size.
 
 * `icon.png` icon is used on desktop. Should not have alpha channel. 
 * `icon_foreground.png` icon with transparent background is used as physical icnon in some versions of Android. 
@@ -58,7 +58,7 @@ Packages built will be placed to `build` directory.
 
 15. To build iOS version run `sh/build_ios.sh` 
 
-Package built will be placed to `build` directory, it can be uploaded to TestFlight using [Transporter](https://apps.apple.com/app/transporter/id1450874784?l=en&mt=12) application.
+Package built will be placed to `build` directory, with `.ipa` extension, it can be uploaded to TestFlight using [Transporter](https://apps.apple.com/app/transporter/id1450874784?l=en&mt=12) application.
 
 In the application, you can turn specific features on/off by specifying `true` or `false` in for a flag in ```build_variant.yaml``` file.
 
