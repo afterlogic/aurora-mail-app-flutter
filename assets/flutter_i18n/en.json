@@ -387,7 +387,7 @@
   "btn_not_spam": "Not spam",
   "error_password_is_empty": "password is empty",
   "label_encryption_password_for_pgp_key": "Required password for PGP key",
-  "debug_hint_log_delete_record": "Are you sure you want to delete file {name}",
+  "debug_hint_log_delete_record": "Are you sure you want to delete the file",
   "error_timeout": "Can't connect to the server",
   "fido_error_invalid_key": "Invalid security key",
   "tfa_label": "Two Factor Verification",

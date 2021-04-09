@@ -52,13 +52,13 @@ dependencies:
   localizator_interface: 0.4.0
   # misc
   uuid: 2.0.4
-  intl: 0.16.1
+  intl: 0.17.0
   filesize: 1.0.4
   permission_handler: 5.0.0+hotfix.3
   url_launcher: 5.4.2
   connectivity: 0.4.8+2
   package_info: 0.4.0+16
-  time_machine: 0.9.12
+  time_machine: 0.9.16
   device_id: 0.2.0
   device_info: 1.0.0
   uni_links: 0.4.0
@@ -116,6 +116,9 @@ dependencies:
   # fido
   yubico_flutter:
     git: https://github.com/afterlogic/yubico_flutter
+  # logger
+  aurora_logger:
+    git: https://github.com/afterlogic/aurora_logger_flutter
 
 dev_dependencies:
   flutter_test:

@@ -1,12 +1,12 @@
 import 'dart:convert';
 import 'dart:io';
-
+import 'build_property.dart';
 import 'package:alarm_service/alarm_service.dart';
+import 'package:aurora_logger/aurora_logger.dart';
 import 'package:aurora_mail/bloc_logger.dart';
 import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/inject/app_inject.dart';
-import 'package:aurora_mail/logger/logger_view.dart';
 import 'package:aurora_mail/modules/dialog_wrap.dart';
 import 'package:aurora_mail/notification/push_notifications_manager.dart';
 import 'package:aurora_mail/shared_ui/restart_widget.dart';
@@ -19,12 +19,17 @@ import 'package:webmail_api_client/webmail_api_client.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'background/background_helper.dart';
 import 'background/background_sync.dart';
-import 'logger/logger.dart';
 import 'modules/app_screen.dart';
 import 'modules/settings/screens/debug/debug_local_storage.dart';
+import 'modules/settings/screens/debug/default_logger_interceptor_adapter.dart';
+import 'modules/settings/screens/debug/logger_interceptor_adapter.dart';
 import 'notification/notification_manager.dart';
 
 void main() async {
+  LoggerSetting.init(LoggerSetting(
+    packageName: BuildProperty.packageName,
+    defaultInterceptor: DefaultLoggerInterceptorAdapter(),
+  ));
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   AppInjector.create();
@@ -33,7 +38,7 @@ void main() async {
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
   // ignore: invalid_use_of_protected_member
   DBInstances.appDB.connection.executor.ensureOpen();
-  DebugLocalStorage()
+  LoggerStorage()
     ..getDebug().then((value) {
       if (value) logger.enable = true;
     })
@@ -42,7 +47,7 @@ void main() async {
     });
   PushNotificationsManager.instance.init();
   runApp(
-    LoggerView.wrap(
+    LoggerControllerWidget.wrap(
       FutureBuilder(
         future: DBInstances.appDB.migrationCompleter.future,
         builder: (context, snapshot) {
@@ -82,12 +87,14 @@ Future<bool> onAlarm({
 
   if (isDebug) {
     interceptor = ApiInterceptor(true);
-    isolatedLogger = Logger.backgroundSync(interceptor);
+    isolatedLogger =
+        Logger.backgroundSync(LoggerInterceptorAdapter(interceptor));
     isolatedLogger.start();
   }
   final isBackground = isBackgroundForce ?? BackgroundHelper.isBackground;
   var hasUpdate = false;
-  if (!updateFromNotification.contains(null) && !updateFromNotification.contains(data?.to)) {
+  if (!updateFromNotification.contains(null) &&
+      !updateFromNotification.contains(data?.to)) {
     updateFromNotification.add(data?.to);
     try {
       BackgroundHelper.onStartAlarm();
@@ -99,7 +106,8 @@ Future<bool> onAlarm({
             isolatedLogger,
             interceptor,
           )
-          .timeout(Duration(seconds: isBackground ? (Platform.isIOS ? 30 : 60) : 1080));
+          .timeout(Duration(
+              seconds: isBackground ? (Platform.isIOS ? 30 : 60) : 1080));
       hasUpdate = await future;
     } catch (e, s) {
       isolatedLogger.error(e, s);

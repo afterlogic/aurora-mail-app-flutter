@@ -1,7 +1,7 @@
+import 'package:aurora_logger/aurora_logger.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'logger/logger.dart';
 
 class BlocLogger extends BlocDelegate {
   @override

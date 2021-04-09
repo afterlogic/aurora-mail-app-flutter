@@ -1,4 +1,4 @@
-import 'package:aurora_mail/logger/logger.dart';
+import 'package:aurora_logger/aurora_logger.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_storage_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';

@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:aurora_mail/database/app_database.dart';
-import 'package:aurora_mail/logger/logger.dart';
+import 'package:aurora_logger/aurora_logger.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/models/message_info.dart';
 import 'package:flutter/foundation.dart';

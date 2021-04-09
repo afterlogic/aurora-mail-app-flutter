@@ -1,3 +1,4 @@
+import 'package:aurora_logger/aurora_logger.dart';
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
@@ -28,7 +29,7 @@ class SettingsMainAndroid extends StatefulWidget {
 
 class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
   bool showDebug = false;
-  final storage = DebugLocalStorage();
+  final storage = LoggerStorage();
   final navigatorKey = GlobalKey<SettingsNavigatorState>();
 
   @override

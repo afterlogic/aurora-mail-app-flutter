@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:aurora_mail/build_property.dart';
-import 'package:aurora_mail/logger/logger.dart';
+import 'package:aurora_logger/aurora_logger.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/auth/blocs/fido_auth_bloc/event.dart';
