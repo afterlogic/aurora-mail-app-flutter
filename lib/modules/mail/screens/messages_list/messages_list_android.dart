@@ -392,6 +392,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
                                 } else {
                                   _mailBloc
                                       .add(RefreshMessages(_refreshCompleter));
+                                  _mailBloc.add(RefreshFolders());
                                 }
                                 return _refreshCompleter.future;
                               },
@@ -498,6 +499,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
                 } else {
                   _startRefresh();
                   _mailBloc.add(RefreshMessages(_refreshCompleter));
+                  _mailBloc.add(RefreshFolders());
                 }
                 return _refreshCompleter.future;
               },
