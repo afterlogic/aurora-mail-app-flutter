@@ -11,5 +11,5 @@
     <string name="flutter_uploader_notification_canceled">Upload canceled</string>
     <string name="flutter_uploader_notification_failed">Upload failed</string>
     <string name="flutter_uploader_notification_complete">Upload complete</string>
-    <string name="default_notification_channel_id">new_mail</string>
+    <string name="default_notification_channel_id">default</string>
 </resources>

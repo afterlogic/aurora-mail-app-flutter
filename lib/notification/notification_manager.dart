@@ -16,8 +16,8 @@ class NotificationManager {
   NotificationManager._() {
     final initializationSettings = InitializationSettings(
       //todo VO res/drawable/app_icon.png
-      android: AndroidInitializationSettings('app_icon'),
-      iOS: IOSInitializationSettings(),
+      AndroidInitializationSettings('app_icon'),
+      IOSInitializationSettings(),
     );
 
     plugin.initialize(initializationSettings,
@@ -58,11 +58,13 @@ class NotificationManager {
     } else {
       payload = localId == null
           ? null
-          : jsonEncode({
-              "user": user.localId,
-              "message": localId,
-              "account": account.localId,
-            });
+          : jsonEncode(
+              {
+                "user": user.localId,
+                "message": localId,
+                "account": account.localId,
+              },
+            );
     }
 
     final id = Random().nextInt(1 << 30);
@@ -71,7 +73,8 @@ class NotificationManager {
       from,
       subject,
       NotificationDetails(
-        android: AndroidNotificationDetails("default", "Default",""),
+        AndroidNotificationDetails("default", "Default", ""),
+        null,
       ),
       payload: payload,
     );
