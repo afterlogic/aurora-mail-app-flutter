@@ -1,7 +1,7 @@
 name: aurora_mail
 description: Mail client for PrivateMail.
 
-version: 2.7.0+215
+version: 2.7.0+216
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -85,7 +85,7 @@ dependencies:
     git: https://github.com/afterlogic/receive_sharing
 
   #notification
-  flutter_local_notifications: 4.0.1+2
+  flutter_local_notifications: 1.4.4+1
   ios_notification_handler:
     path: core/ios_notification_handler
   keyboard_actions: 3.2.0
