@@ -1,24 +1,24 @@
-import 'dart:convert';
 import 'dart:io';
-import 'build_property.dart';
+
 import 'package:alarm_service/alarm_service.dart';
 import 'package:aurora_logger/aurora_logger.dart';
 import 'package:aurora_mail/bloc_logger.dart';
 import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/inject/app_inject.dart';
-import 'package:aurora_mail/modules/dialog_wrap.dart';
 import 'package:aurora_mail/notification/push_notifications_manager.dart';
 import 'package:aurora_mail/shared_ui/restart_widget.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:webmail_api_client/webmail_api_client.dart';
-import 'package:firebase_core/firebase_core.dart';
+
 import 'background/background_helper.dart';
 import 'background/background_sync.dart';
+import 'build_property.dart';
 import 'modules/app_screen.dart';
 import 'modules/settings/screens/debug/debug_local_storage.dart';
 import 'modules/settings/screens/debug/default_logger_interceptor_adapter.dart';
@@ -26,6 +26,7 @@ import 'modules/settings/screens/debug/logger_interceptor_adapter.dart';
 import 'notification/notification_manager.dart';
 
 void main() async {
+  BackgroundHelper.appIsRunning = true;
   LoggerSetting.init(LoggerSetting(
     packageName: BuildProperty.packageName,
     defaultInterceptor: DefaultLoggerInterceptorAdapter(),

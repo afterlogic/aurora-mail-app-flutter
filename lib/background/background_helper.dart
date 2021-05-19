@@ -21,6 +21,8 @@ class BackgroundHelper {
     _current = value;
   }
 
+  static bool appIsRunning = false;
+
   static AppLifecycleState get current => _current;
 
   static Map<Function, bool> _doOnAlarm = {};

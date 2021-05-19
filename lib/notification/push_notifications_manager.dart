@@ -1,19 +1,20 @@
 import 'dart:io';
 
 import 'package:aurora_logger/aurora_logger.dart';
+import 'package:aurora_mail/background/background_helper.dart';
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/database/accounts/accounts_dao.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/users/users_dao.dart';
 import 'package:aurora_mail/main.dart';
 import 'package:aurora_mail/modules/auth/repository/auth_local_storage.dart';
+import 'package:aurora_mail/modules/auth/repository/device_id_storage.dart';
 import 'package:aurora_mail/modules/dialog_wrap.dart';
-import 'package:device_id/device_id.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/widgets.dart';
 import 'package:ios_notification_handler/ios_notification_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:aurora_mail/modules/auth/repository/device_id_storage.dart';
+
 import 'notification_manager.dart';
 
 class PushNotificationsManager {
@@ -78,6 +79,9 @@ Future<void> voidMessageHandler(RemoteMessage message) async {
 }
 
 Future<bool> messageHandler(RemoteMessage message) async {
+  if (Platform.isAndroid && !BackgroundHelper.appIsRunning) {
+    return false;
+  }
   WidgetsFlutterBinding.ensureInitialized();
   Logger.notifications(message);
   final localStorage = AuthLocalStorage();

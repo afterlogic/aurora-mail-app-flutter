@@ -69,7 +69,6 @@ class NotificationManager {
         "account": account.localId,
       });
     }
-    if (from.contains("@")) from = from.split("@")[0];
 
     var androidNotificationDetails = AndroidNotificationDetails(
       groupChannelId,
