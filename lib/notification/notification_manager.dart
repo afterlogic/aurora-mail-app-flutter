@@ -16,8 +16,8 @@ class NotificationManager {
   NotificationManager._() {
     final initializationSettings = InitializationSettings(
       //todo VO res/drawable/app_icon.png
-      AndroidInitializationSettings('app_icon'),
-      IOSInitializationSettings(),
+      android: AndroidInitializationSettings('app_icon'),
+      iOS: IOSInitializationSettings(),
     );
 
     plugin.initialize(initializationSettings,
@@ -32,30 +32,25 @@ class NotificationManager {
     }
   }
 
-  Future<void> showMessageNotification(Message message, Account account,
-      User user) async {
+  Future<void> showMessageNotification(
+      Message message, Account account, User user) async {
     return showNotification(
         message.fromToDisplay, message.subject, account, user, message.localId);
   }
 
-  Future<void> showNotification(String from, String subject, Account account,
-      User user, int localId,
+  Future<void> showNotification(
+      String from, String subject, Account account, User user, int localId,
       {Map<String, dynamic> forcePayload}) async {
     final packageName = (await PackageInfo.fromPlatform()).packageName;
     bool isFirstNotification = false;
     if (!Platform.isIOS) {
       final activeNotifications =
-      await NotificationsUtils.getActiveNotifications();
+          await NotificationsUtils.getActiveNotifications();
       isFirstNotification = activeNotifications.where((n) {
         return n.packageName == packageName &&
             n.groupKey.contains(user.emailFromLogin);
       }).isEmpty;
     }
-
-    final groupKey = "$packageName.${user.emailFromLogin}";
-    final groupChannelId = user.emailFromLogin;
-    final groupChannelName = user.emailFromLogin;
-    final groupChannelDescription = user.emailFromLogin;
 
     String payload;
     if (forcePayload != null) {
@@ -64,59 +59,22 @@ class NotificationManager {
       payload = localId == null
           ? null
           : jsonEncode({
-        "user": user.localId,
-        "message": localId,
-        "account": account.localId,
-      });
+              "user": user.localId,
+              "message": localId,
+              "account": account.localId,
+            });
     }
-
-    var androidNotificationDetails = AndroidNotificationDetails(
-      groupChannelId,
-      groupChannelName,
-      groupChannelDescription,
-      importance: Importance.Max,
-      priority: Priority.High,
-      styleInformation: InboxStyleInformation(
-        [subject],
-        contentTitle: from,
-        summaryText: user.emailFromLogin,
-      ),
-      groupKey: groupKey,
-      setAsGroupSummary: isFirstNotification,
-    );
 
     final id = Random().nextInt(1 << 30);
     await plugin.show(
       id,
       from,
       subject,
-      NotificationDetails(androidNotificationDetails, null),
+      NotificationDetails(
+        android: AndroidNotificationDetails("default", "Default",""),
+      ),
       payload: payload,
     );
-
-    if (isFirstNotification) {
-      androidNotificationDetails = AndroidNotificationDetails(
-        NOTIFICATION_MAIL_CHANNEL_ID,
-        NOTIFICATION_MAIL_CHANNEL_NAME,
-        NOTIFICATION_MAIL_CHANNEL_DESCRIPTION,
-        importance: Importance.Max,
-        priority: Priority.High,
-        styleInformation: InboxStyleInformation(
-          [subject],
-          contentTitle: from,
-          summaryText: user.emailFromLogin,
-        ),
-        groupKey: groupKey,
-        setAsGroupSummary: false,
-      );
-      await plugin.show(
-        id + 999999,
-        from,
-        subject,
-        NotificationDetails(androidNotificationDetails, null),
-        payload: payload,
-      );
-    }
   }
 }
 
@@ -136,4 +94,3 @@ Future onSelectNotification(String payload) async {
 const NOTIFICATION_MAIL_CHANNEL_ID = "new_mail";
 const NOTIFICATION_MAIL_CHANNEL_NAME = "New mail";
 const NOTIFICATION_MAIL_CHANNEL_DESCRIPTION = "";
-

@@ -37,7 +37,6 @@ class PushNotificationsManager {
         FirebaseMessaging.onBackgroundMessage(voidMessageHandler);
         FirebaseMessaging.onMessage.listen(messageHandler);
         FirebaseMessaging.onMessageOpenedApp.listen((v) => onResume(v));
-
         _initialized = true;
       }
     }
