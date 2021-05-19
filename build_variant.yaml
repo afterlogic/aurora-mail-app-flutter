@@ -68,4 +68,5 @@ expandMessageThread: false
 legacyPgpKey: false
 logger: true
 pushNotification: false
+backgroundSync: false
 supportAllowAccess: true

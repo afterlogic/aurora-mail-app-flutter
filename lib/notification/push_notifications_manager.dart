@@ -115,6 +115,7 @@ Future<bool> messageHandler(RemoteMessage message) async {
         showNotification: !notificationFromPush,
         data: notification,
         isBackgroundForce: await IosNotificationHandler.isBackground(),
+        recordLog:false
       );
     } catch (e, s) {
       Logger.errorLog(e, s);

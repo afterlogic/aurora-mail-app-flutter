@@ -50,7 +50,7 @@ class _SyncSettingsAndroidState extends BState<SyncSettingsAndroid> {
             final period = SyncPeriod.dbStringToPeriod(state.syncPeriod);
             return ListView(
               children: <Widget>[
-                if (!BuildProperty.pushNotification)
+                if (BuildProperty.backgroundSync)
                   ListTile(
                     leading: AMCircleIcon(Icons.av_timer),
                     title: Text(i18n(context, S.settings_sync_frequency)),

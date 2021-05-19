@@ -3760,7 +3760,7 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
   GeneratedIntColumn _constructSyncFreqInSeconds() {
     return GeneratedIntColumn('sync_freq_in_seconds', $tableName, true,
         defaultValue: Constant(
-            BuildProperty.pushNotification ? SyncFreq.NEVER_IN_SECONDS : 300));
+            !BuildProperty.backgroundSync ? SyncFreq.NEVER_IN_SECONDS : 300));
   }
 
   final VerificationMeta _syncPeriodMeta = const VerificationMeta('syncPeriod');

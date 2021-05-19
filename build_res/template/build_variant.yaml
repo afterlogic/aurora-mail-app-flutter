@@ -29,3 +29,4 @@ selfDestructingEmail: false
 expandMessageThread: false
 logger: false
 pushNotification: false
+backgroundSync: true

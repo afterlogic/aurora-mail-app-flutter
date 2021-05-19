@@ -15,7 +15,7 @@ class Users extends Table {
 
   IntColumn get syncFreqInSeconds => integer()
       .withDefault(Constant(
-          BuildProperty.pushNotification ? SyncFreq.NEVER_IN_SECONDS : 300))
+          !BuildProperty.backgroundSync ? SyncFreq.NEVER_IN_SECONDS : 300))
       .nullable()();
 
   TextColumn get syncPeriod => text().nullable()();

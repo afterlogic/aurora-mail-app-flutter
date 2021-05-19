@@ -80,13 +80,14 @@ Future<bool> onAlarm({
   bool showNotification = true,
   NotificationData data,
   bool isBackgroundForce,
+  bool recordLog = true,
 }) async {
   WidgetsFlutterBinding.ensureInitialized();
   final isDebug = await DebugLocalStorage().getBackgroundRecord();
   ApiInterceptor interceptor;
   Logger isolatedLogger = logger;
-
-  if (isDebug) {
+  recordLog ??= true;
+  if (recordLog && isDebug) {
     interceptor = ApiInterceptor(true);
     isolatedLogger =
         Logger.backgroundSync(LoggerInterceptorAdapter(interceptor));
@@ -117,7 +118,7 @@ Future<bool> onAlarm({
     updateFromNotification.remove(data?.to);
   }
   BackgroundHelper.onEndAlarm(hasUpdate);
-  if (isDebug) {
+  if (recordLog && isDebug) {
     isolatedLogger?.save();
   }
   await AlarmService.endAlarm(hasUpdate);

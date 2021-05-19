@@ -17,6 +17,7 @@ multiAccountEnable: true
 cryptoEnable: true
 selfDestructingEmail: false
 pushNotification: false
+backgroundSync: true
 supportAllowAccess: true
 
 _version: 2.3.0
