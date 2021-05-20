@@ -41,7 +41,7 @@ dependencies:
   flutter_typeahead: 1.8.0
 
   # ui
-  flutter_svg: 0.18.1
+  flutter_svg: 0.21.0
   material_design_icons_flutter: 3.4.5045+1
   webview_flutter: 1.0.7
   flutter_speed_dial: 1.2.5
@@ -136,7 +136,11 @@ flutter_icons:
   image_path: {{icon}}
   adaptive_icon_background: "{{background_color}}"
   adaptive_icon_foreground: {{foreground_icon}}
-
+dependency_overrides:
+  yaml: ^2.1.15
+  dart_style: ^1.0.0
+  image: ^2.1.1
+  xml: ^4.2.0
 flutter:
   uses-material-design: true
 
