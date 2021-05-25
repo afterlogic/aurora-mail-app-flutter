@@ -1,7 +1,7 @@
 name: aurora_mail
 description: Mail client for PrivateMail.
 
-version: 2.7.0+216
+version: 2.7.0+217
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -134,7 +134,6 @@ flutter_icons:
   image_path: aurora-mail-app-customs/private_mail/image/icon.png
   adaptive_icon_background: "#34113C"
   adaptive_icon_foreground: aurora-mail-app-customs/private_mail/image/icon_foreground.png
-
 dependency_overrides:
   yaml: ^2.1.15
   dart_style: ^1.0.0
