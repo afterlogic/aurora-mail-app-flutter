@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:aurora_logger/aurora_logger.dart';
 import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/folders/folders_dao.dart';
@@ -8,7 +9,6 @@ import 'package:aurora_mail/database/folders/folders_table.dart';
 import 'package:aurora_mail/database/mail/mail_dao.dart';
 import 'package:aurora_mail/database/mail/mail_table.dart';
 import 'package:aurora_mail/database/users/users_dao.dart';
-import 'package:aurora_logger/aurora_logger.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/models/message_info.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
@@ -16,6 +16,8 @@ import 'package:aurora_mail/modules/mail/repository/folders_api.dart';
 import 'package:aurora_mail/modules/mail/repository/mail_api.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/modules/settings/models/sync_period.dart';
+import 'package:aurora_mail/res/str/s.dart';
+import 'package:aurora_mail/utils/error_to_show.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:moor_flutter/moor_flutter.dart';
@@ -613,69 +615,81 @@ class MailMethods {
   }
 
   Future<Message> getMessageById(String messageId, String folder) async {
-    var message = await _mailDao.getMessageById(messageId, folder);
-    if (message != null) {
-      return message;
-    } else {
-      var messageInfos = await FolderMessageInfo.getMessageInfo(
-        folder,
-        account.localId,
-      );
-      final lastUid = messageInfos.isEmpty ? null : messageInfos.first.uid;
-      final response = await _mailApi.getMessageById(
-        messageId,
-        folder,
-        lastUid,
-      );
-      final messageInfo = MessageInfo(
-        uid: response["Uid"] as int,
-        hasThread: false,
-        flags: [],
-      );
-      message = await _mailDao.getMessageByUid(
-        messageInfo.uid,
-        folder,
-        account,
-        user,
-      );
+    try {
+      var message = await _mailDao.getMessageById(messageId, folder);
       if (message != null) {
-        if (message.hasBody == true) {
-          return message;
-        }
+        return message;
       } else {
-        messageInfos = await FolderMessageInfo.getMessageInfo(
+        var messageInfos = await FolderMessageInfo.getMessageInfo(
           folder,
           account.localId,
         );
-        try {
-          message = await _mailDao.addEmptyMessage(
-              messageInfo, account, user, folder);
-          messageInfos.insert(0, messageInfo);
-          await FolderMessageInfo.setMessageInfo(
-            folder,
-            account.localId,
-            messageInfos,
-          );
-        } catch (e) {
-          message = await _mailDao.getMessageByUid(
-            messageInfo.uid,
-            folder,
-            account,
-            user,
-          );
+        final lastUid =
+            messageInfos?.isNotEmpty == true ? messageInfos.first.uid : null;
+        if (lastUid == null) {
+          throw ErrorToShow.code(S.error_message_not_found);
+        }
+        final response = await _mailApi.getMessageById(
+          messageId,
+          folder,
+          lastUid,
+        );
+        if (response == null) {
+          throw ErrorToShow.code(S.error_message_not_found);
+        }
+        final messageInfo = MessageInfo(
+          uid: response["Uid"] as int,
+          hasThread: false,
+          flags: [],
+        );
+        message = await _mailDao.getMessageByUid(
+          messageInfo.uid,
+          folder,
+          account,
+          user,
+        );
+        if (message != null) {
           if (message.hasBody == true) {
             return message;
           }
+        } else {
+          messageInfos = await FolderMessageInfo.getMessageInfo(
+            folder,
+            account.localId,
+          );
+          try {
+            message = await _mailDao.addEmptyMessage(
+                messageInfo, account, user, folder);
+            messageInfos.insert(0, messageInfo);
+            await FolderMessageInfo.setMessageInfo(
+              folder,
+              account.localId,
+              messageInfos,
+            );
+          } catch (e) {
+            message = await _mailDao.getMessageByUid(
+              messageInfo.uid,
+              folder,
+              account,
+              user,
+            );
+            if (message.hasBody == true) {
+              return message;
+            }
+          }
         }
+        final newMessages =
+            await Mail.getMessageObjFromServerAndUpdateInfoHasBody(
+          [response],
+          [message],
+          user.localId,
+          account,
+        );
+        return _mailDao.fillMessage(newMessages.first);
       }
-      final newMessages =
-          await Mail.getMessageObjFromServerAndUpdateInfoHasBody(
-        [response],
-        [message],
-        user.localId,
-        account,
-      );
-      return _mailDao.fillMessage(newMessages.first);
+    } catch (e) {
+      print(e);
+      rethrow;
     }
   }
 }

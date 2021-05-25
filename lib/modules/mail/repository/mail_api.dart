@@ -3,7 +3,6 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:aurora_mail/database/app_database.dart';
-import 'package:aurora_mail/database/mail/mail_table.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 import 'package:aurora_mail/modules/mail/models/compose_attachment.dart';
@@ -24,7 +23,10 @@ class MailApi {
 
   WebMailApi _mailModule;
 
-  MailApi({@required User user, @required this.account, ApiInterceptor interceptor}) {
+  MailApi(
+      {@required User user,
+      @required this.account,
+      ApiInterceptor interceptor}) {
     _mailModule = WebMailApi(
       moduleName: WebMailModules.mail,
       hostname: user.hostname,
@@ -48,7 +50,8 @@ class MailApi {
       "SortBy": sortBy
     });
 
-    final body = new WebMailApiBody(method: "GetMessagesInfo", parameters: parameters);
+    final body =
+        new WebMailApiBody(method: "GetMessagesInfo", parameters: parameters);
 
     final res = await _mailModule.post(body);
 
@@ -59,14 +62,16 @@ class MailApi {
     }
   }
 
-  Future<List> getMessageBodies({@required String folderName, @required List<int> uids}) async {
+  Future<List> getMessageBodies(
+      {@required String folderName, @required List<int> uids}) async {
     final parameters = json.encode({
       "Folder": folderName,
       "AccountID": _accountId,
       "Uids": uids,
     });
 
-    final body = new WebMailApiBody(method: "GetMessagesBodies", parameters: parameters);
+    final body =
+        new WebMailApiBody(method: "GetMessagesBodies", parameters: parameters);
 
     final res = await _mailModule.post(body);
 
@@ -125,7 +130,8 @@ class MailApi {
       "DraftFolder": draftsFolderName
     });
 
-    final body = new WebMailApiBody(method: "SendMessage", parameters: parameters);
+    final body =
+        new WebMailApiBody(method: "SendMessage", parameters: parameters);
 
     final res = await _mailModule.post(body);
 
@@ -176,7 +182,8 @@ class MailApi {
       "DraftFolder": draftsFolderName,
     });
 
-    final body = new WebMailApiBody(method: "SaveMessage", parameters: parameters);
+    final body =
+        new WebMailApiBody(method: "SaveMessage", parameters: parameters);
 
     final res = await _mailModule.post(body);
 
@@ -198,7 +205,8 @@ class MailApi {
 
     final parameters = json.encode({"AccountID": _accountId});
 
-    final body = new WebMailApiBody(method: "UploadAttachment", parameters: parameters);
+    final body =
+        new WebMailApiBody(method: "UploadAttachment", parameters: parameters);
 
     final fileName = FileUtils.getFileNameFromPath(file.path);
 
@@ -230,9 +238,12 @@ class MailApi {
     uploader.result.listen((result) {
       if (result.taskId == tempAttachment.taskId) {
         final res = json.decode(result.response);
-        if (res is Map && res["Result"] is Map && res["Result"]["Attachment"] is Map) {
+        if (res is Map &&
+            res["Result"] is Map &&
+            res["Result"]["Attachment"] is Map) {
           final attachment = res["Result"]["Attachment"];
-          final composeAttachment = ComposeAttachment.fromNetwork(attachment as Map);
+          final composeAttachment =
+              ComposeAttachment.fromNetwork(attachment as Map);
           assert(tempAttachment != null && tempAttachment.guid is String);
           composeAttachment.guid = tempAttachment.guid;
           composeAttachment.file = tempAttachment.file;
@@ -264,7 +275,8 @@ class MailApi {
         // TODO repair progress updating
 //        FlutterDownloader.registerCallback(MailAttachment.downloadCallback);
       },
-      onDownloadEnd: () => onDownloadEnd("${downloadsDirectory}/${attachment.fileName}"),
+      onDownloadEnd: () =>
+          onDownloadEnd("${downloadsDirectory}/${attachment.fileName}"),
       onError: () => onDownloadEnd(null),
     );
 
@@ -277,10 +289,10 @@ class MailApi {
     attachment.add(taskId, FlutterDownloader.cancel);
   }
 
-  Future<void> shareAttachment(
-      MailAttachment attachment, Function(String) onIosDownloadEnd, Rect rect) async {
-    final request =
-        await HttpClient().getUrl(Uri.parse(_mailModule.hostname + attachment.downloadUrl));
+  Future<void> shareAttachment(MailAttachment attachment,
+      Function(String) onIosDownloadEnd, Rect rect) async {
+    final request = await HttpClient()
+        .getUrl(Uri.parse(_mailModule.hostname + attachment.downloadUrl));
 
     request.headers.add(
       _mailModule.headerWithToken.keys.elementAt(0),
@@ -296,7 +308,8 @@ class MailApi {
       final tempDir = await getTemporaryDirectory();
       final file = await new File('${tempDir.path}/$name').create();
       await file.writeAsBytes(bytes);
-      await Share.shareFiles([file.path], subject: attachment.fileName, sharePositionOrigin: rect);
+      await Share.shareFiles([file.path],
+          subject: attachment.fileName, sharePositionOrigin: rect);
     }
   }
 
@@ -309,7 +322,9 @@ class MailApi {
     });
 
     final body = new WebMailApiBody(
-        module: "Mail", method: "SaveAttachmentsAsTempFiles", parameters: parameters);
+        module: "Mail",
+        method: "SaveAttachmentsAsTempFiles",
+        parameters: parameters);
 
     final res = await _mailModule.post(body);
 
@@ -327,7 +342,9 @@ class MailApi {
     });
 
     final body = new WebMailApiBody(
-        module: "Contacts", method: "SaveContactAsTempFile", parameters: parameters);
+        module: "Contacts",
+        method: "SaveContactAsTempFile",
+        parameters: parameters);
 
     final res = await _mailModule.post(body);
 
@@ -350,7 +367,8 @@ class MailApi {
       "Uids": uids.join(","),
     });
 
-    final body = new WebMailApiBody(method: "MoveMessages", parameters: parameters);
+    final body =
+        new WebMailApiBody(method: "MoveMessages", parameters: parameters);
 
     final res = await _mailModule.post(body);
 
@@ -369,7 +387,8 @@ class MailApi {
       "Uids": uids.join(","),
     });
 
-    final body = new WebMailApiBody(method: "DeleteMessages", parameters: parameters);
+    final body =
+        new WebMailApiBody(method: "DeleteMessages", parameters: parameters);
 
     final res = await _mailModule.post(body);
 
@@ -387,7 +406,8 @@ class MailApi {
       "SetAction": isSeen,
     });
 
-    final body = new WebMailApiBody(method: "SetMessagesSeen", parameters: parameters);
+    final body =
+        new WebMailApiBody(method: "SetMessagesSeen", parameters: parameters);
 
     final res = await _mailModule.post(body);
 
@@ -408,7 +428,8 @@ class MailApi {
       "SetAction": isStarred,
     });
 
-    final body = new WebMailApiBody(method: "SetMessageFlagged", parameters: parameters);
+    final body =
+        new WebMailApiBody(method: "SetMessageFlagged", parameters: parameters);
 
     final res = await _mailModule.post(body);
 
@@ -425,7 +446,8 @@ class MailApi {
       "Email": senderEmail,
     });
 
-    final body = new WebMailApiBody(method: "SetEmailSafety", parameters: parameters);
+    final body =
+        new WebMailApiBody(method: "SetEmailSafety", parameters: parameters);
 
     final res = await _mailModule.post(body);
 
@@ -434,7 +456,8 @@ class MailApi {
     }
   }
 
-  Future moveMessage({List<int> uids, String fromFolder, String toFolder}) async {
+  Future moveMessage(
+      {List<int> uids, String fromFolder, String toFolder}) async {
     final parameters = json.encode({
       "Folder": fromFolder,
       "ToFolder": toFolder,
@@ -442,7 +465,8 @@ class MailApi {
       "Uids": uids.join(","),
     });
 
-    final body = new WebMailApiBody(method: "MoveMessages", parameters: parameters);
+    final body =
+        new WebMailApiBody(method: "MoveMessages", parameters: parameters);
 
     final res = await _mailModule.post(body);
 
@@ -457,7 +481,8 @@ class MailApi {
       "AccountID": _accountId,
     });
 
-    final body = new WebMailApiBody(method: "ClearFolder", parameters: parameters);
+    final body =
+        new WebMailApiBody(method: "ClearFolder", parameters: parameters);
 
     final res = await _mailModule.post(body);
 
@@ -476,7 +501,8 @@ class MailApi {
       },
     );
 
-    final body = new WebMailApiBody(method: "SaveMessageAsTempFile", parameters: parameters);
+    final body = new WebMailApiBody(
+        method: "SaveMessageAsTempFile", parameters: parameters);
 
     final res = await _mailModule.post(body);
 
@@ -501,13 +527,17 @@ class MailApi {
       },
     );
 
-    final body = new WebMailApiBody(method: "GetMessageByMessageID", parameters: parameters);
+    final body = new WebMailApiBody(
+        method: "GetMessageByMessageID", parameters: parameters);
 
-    final res = await _mailModule.post(body);
-
+    var res = await _mailModule.post(body, getRawResponse: true);
+    res = res["Result"];
     if (res is Map<String, dynamic>) {
       return res;
     } else {
+      if (res is bool) {
+        return null;
+      }
       throw WebMailApiError(res);
     }
   }
