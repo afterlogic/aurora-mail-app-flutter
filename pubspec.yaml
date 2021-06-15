@@ -55,6 +55,7 @@ dependencies:
   intl: 0.17.0
   filesize: 1.0.4
   permission_handler: 5.0.0+hotfix.3
+  permission_handler_platform_interface: 2.0.1
   url_launcher: 5.4.2
   connectivity: 0.4.8+2
   package_info: 0.4.0+16

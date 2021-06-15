@@ -821,12 +821,12 @@ packages:
     source: hosted
     version: "5.0.0+hotfix.3"
   permission_handler_platform_interface:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: permission_handler_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.2"
+    version: "2.0.1"
   petitparser:
     dependency: transitive
     description:

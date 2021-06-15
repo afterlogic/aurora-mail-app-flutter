@@ -10,7 +10,7 @@ Future getStoragePermissions() async {
         ? _requestStoragePermission()
         : Permission.storage.request());
     if (status != PermissionStatus.granted) {
-      throw "Access denied";
+      throw "Access denied.\nPermissionStatus = $status";
     }
   }
 }
