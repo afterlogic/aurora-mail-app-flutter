@@ -475,11 +475,11 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
           }
           if (encryptEmails.isNotEmpty) {
             final ccEmails = _ccEmails
-                .where((element) => encryptSignEmails.contains(element));
+                .where((element) => encryptEmails.contains(element));
             final bccEmails = _bccEmails
-                .where((element) => encryptSignEmails.contains(element));
+                .where((element) => encryptEmails.contains(element));
             final toEmails = _toEmails
-                .where((element) => encryptSignEmails.contains(element));
+                .where((element) => encryptEmails.contains(element));
 
             final contact = <String>{};
             contact.addAll(ccEmails);
@@ -543,7 +543,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
             );
           }
           return _bloc.add(SendMessages(messages));
-        } catch (e) {
+        } catch (e,s) {
           print(e);
         }
       } else {
