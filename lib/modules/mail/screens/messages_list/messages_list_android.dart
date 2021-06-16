@@ -4,9 +4,9 @@ import 'dart:io';
 import 'package:aurora_mail/background/background_helper.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/models/folder.dart';
-import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
+import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/models/compose_actions.dart';
@@ -168,6 +168,9 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
       authBloc.currentUser,
       authBloc.currentAccount,
     );
+    if (MessagesListAndroid.openMessageFolder != null) {
+      _mailBloc.add(SelectFolderByName(MessagesListAndroid.openMessageFolder));
+    }
     if (!BackgroundHelper.isBackground) {
       _mailBloc.add(FetchFolders());
     }

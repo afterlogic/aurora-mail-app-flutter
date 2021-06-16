@@ -1,8 +1,8 @@
 import 'dart:async';
 
+import 'package:aurora_logger/aurora_logger.dart';
 import 'package:aurora_mail/background/background_helper.dart';
 import 'package:aurora_mail/database/app_database.dart';
-import 'package:aurora_logger/aurora_logger.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/bloc.dart';
 import 'package:aurora_mail/utils/api_utils.dart';
@@ -62,6 +62,7 @@ class MailBloc extends Bloc<MailEvent, MailState> {
       yield* _checkFoldersMessagesChanges(event);
     if (event is SetSeen) yield* _setSeen(event);
     if (event is SetStarred) yield* _setStarred(event);
+    if (event is SelectFolderByName) yield* _selectFolderByName(event);
   }
 
   onEndAlarm(bool hasUpdate) async {
@@ -270,6 +271,11 @@ class MailBloc extends Bloc<MailEvent, MailState> {
       messages: event.messages,
       isStarred: event.isStarred,
     );
+  }
+
+  Stream<MailState> _selectFolderByName(SelectFolderByName event) async* {
+    final folder = await _methods.getFolderByName(event.name);
+    add(SelectFolder(folder));
   }
 
   Future<Message> getFullMessage(int localId) {

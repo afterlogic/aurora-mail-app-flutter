@@ -152,39 +152,42 @@ class Folder {
     }
   }
 
-  static List<Folder> getFolderObjectsFromDb(List<LocalFolder> localFolders,
-      [String parentGuid]) {
+  static List<Folder> getFoldersObjectsFromDb(List<LocalFolder> localFolders) {
     try {
       return localFolders.map((localFolder) {
-        return Folder(
-          accountLocalId: localFolder.accountLocalId,
-          nameSpace: localFolder.namespace,
-          guid: localFolder.guid,
-          parentGuid: localFolder.parentGuid,
-          type: localFolder.type,
-          folderType: getFolderTypeFromNumber(localFolder.type),
-          order: localFolder.folderOrder,
-          name: localFolder.name,
-          fullName: localFolder.fullName,
-          fullNameRaw: localFolder.fullNameRaw,
-          fullNameHash: localFolder.fullNameHash,
-          folderHash: localFolder.folderHash,
-          delimiter: localFolder.delimiter,
-          needsInfoUpdate: localFolder.needsInfoUpdate,
-          isSystemFolder: localFolder.isSystemFolder,
-          isSubscribed: localFolder.isSubscribed,
-          isSelectable: localFolder.isSelectable,
-          exists: localFolder.folderExists,
-          extended: localFolder.extended,
-          alwaysRefresh: localFolder.alwaysRefresh,
-          count: localFolder.count,
-          unread: localFolder.unread,
-        );
+        return getFolderObjectsFromDb(localFolder);
       }).toList();
     } catch (err, s) {
       print("getFolderObjectsFromDb err: $err");
       print("getFolderObjectsFromDb s: $s");
       return null;
     }
+  }
+
+  static Folder getFolderObjectsFromDb(LocalFolder localFolder) {
+    return Folder(
+      accountLocalId: localFolder.accountLocalId,
+      nameSpace: localFolder.namespace,
+      guid: localFolder.guid,
+      parentGuid: localFolder.parentGuid,
+      type: localFolder.type,
+      folderType: getFolderTypeFromNumber(localFolder.type),
+      order: localFolder.folderOrder,
+      name: localFolder.name,
+      fullName: localFolder.fullName,
+      fullNameRaw: localFolder.fullNameRaw,
+      fullNameHash: localFolder.fullNameHash,
+      folderHash: localFolder.folderHash,
+      delimiter: localFolder.delimiter,
+      needsInfoUpdate: localFolder.needsInfoUpdate,
+      isSystemFolder: localFolder.isSystemFolder,
+      isSubscribed: localFolder.isSubscribed,
+      isSelectable: localFolder.isSelectable,
+      exists: localFolder.folderExists,
+      extended: localFolder.extended,
+      alwaysRefresh: localFolder.alwaysRefresh,
+      count: localFolder.count,
+      unread: localFolder.unread,
+    );
   }
 }

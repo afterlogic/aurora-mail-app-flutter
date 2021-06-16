@@ -70,7 +70,7 @@ class MailMethods {
 
       final newFoldersWithIds =
           await _foldersDao.getAllFolders(account.localId);
-      return Folder.getFolderObjectsFromDb(newFoldersWithIds);
+      return Folder.getFoldersObjectsFromDb(newFoldersWithIds);
     }
   }
 
@@ -133,9 +133,9 @@ class MailMethods {
 
       final newFoldersWithIds =
           await _foldersDao.getAllFolders(account.localId);
-      return Folder.getFolderObjectsFromDb(newFoldersWithIds);
+      return Folder.getFoldersObjectsFromDb(newFoldersWithIds);
     } else {
-      return Folder.getFolderObjectsFromDb(oldLocalFolders);
+      return Folder.getFoldersObjectsFromDb(oldLocalFolders);
     }
   }
 
@@ -187,7 +187,7 @@ class MailMethods {
     await Future.wait(futures);
     final updatedLocalFolders =
         await _foldersDao.getAllFolders(account.localId);
-    return Folder.getFolderObjectsFromDb(updatedLocalFolders);
+    return Folder.getFoldersObjectsFromDb(updatedLocalFolders);
   }
 
   Future updateFolderHash(Folder selectedFolder,
@@ -200,7 +200,7 @@ class MailMethods {
         .getAllFolders(
           account.localId,
         )
-        .then((value) => Folder.getFolderObjectsFromDb(value));
+        .then((value) => Folder.getFoldersObjectsFromDb(value));
     final foldersMap = {
       for (var item in foldersForUpdate) item.fullNameRaw: item,
       selectedFolder.fullNameRaw: selectedFolder,
@@ -245,7 +245,7 @@ class MailMethods {
     await Future.wait(futures);
     final updatedLocalFolders =
         await _foldersDao.getAllFolders(account.localId);
-    return Folder.getFolderObjectsFromDb(updatedLocalFolders);
+    return Folder.getFoldersObjectsFromDb(updatedLocalFolders);
   }
 
   Future<void> syncFolders({
@@ -587,7 +587,7 @@ class MailMethods {
   Future<List<Folder>> _getOfflineFolders() async {
     final List<LocalFolder> localFolders =
         await _foldersDao.getAllFolders(account.localId);
-    return Folder.getFolderObjectsFromDb(localFolders);
+    return Folder.getFoldersObjectsFromDb(localFolders);
   }
 
   Future<void> setEmailSafety(String senderEmail) async {
@@ -691,6 +691,10 @@ class MailMethods {
       print(e);
       rethrow;
     }
+  }
+
+  Future<Folder> getFolderByName(String name) {
+    return _foldersDao.getByName(name, account.localId).then(Folder.getFolderObjectsFromDb);
   }
 }
 

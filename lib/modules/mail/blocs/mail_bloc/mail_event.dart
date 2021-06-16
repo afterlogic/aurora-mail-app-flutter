@@ -17,7 +17,7 @@ abstract class MailEvent extends Equatable {
 class FetchFolders extends MailEvent with AlwaysNonEqualObject {}
 
 // always from DB (e.g. to update needsInfoUpdate, which controls loading)
-class UpdateFolders extends MailEvent with AlwaysNonEqualObject{}
+class UpdateFolders extends MailEvent with AlwaysNonEqualObject {}
 
 // always from server
 class RefreshFolders extends MailEvent with AlwaysNonEqualObject {
@@ -44,6 +44,15 @@ class SelectFolder extends MailEvent {
 
   @override
   List<Object> get props => [folder.fullNameRaw, filter];
+}
+
+class SelectFolderByName extends MailEvent {
+  final String name;
+
+  const SelectFolderByName(this.name);
+
+  @override
+  List<Object> get props => [name];
 }
 
 class SetSeen extends MailEvent {

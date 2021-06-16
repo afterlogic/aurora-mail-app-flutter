@@ -391,7 +391,7 @@ class BackgroundSync {
         needsInfoUpdate: needsInfoUpdate,
       ));
     });
-    return Folder.getFolderObjectsFromDb(outFolder);
+    return Folder.getFoldersObjectsFromDb(outFolder);
   }
 
   Future<void> _showNewMessage(
