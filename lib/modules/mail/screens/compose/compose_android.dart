@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:theme/app_theme.dart';
+
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
@@ -42,6 +42,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:theme/app_theme.dart';
 
 import 'components/compose_app_bar.dart';
 import 'components/compose_attachment_item.dart';
@@ -394,6 +395,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
               return;
             }
           }
+          final bodyPlainText = MailUtils.htmlToPlain(await _bodyTextCtrl.getText());
           final messages = <SendMessage>[];
           if (encryptSignEmails.isNotEmpty) {
             final ccEmails = _ccEmails
@@ -408,10 +410,10 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
             contact.addAll(bccEmails);
             contact.addAll(toEmails);
 
-            final body = await _bloc.encryptBody(
+            final encryptedBody = await _bloc.encryptBody(
               EncryptBody(
                 contact,
-                await _bodyTextCtrl.getText(),
+                bodyPlainText,
                 true,
                 true,
                 password,
@@ -427,7 +429,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
                 subject: _subjectTextCtrl.text,
                 composeAttachments:
                     new List<ComposeAttachment>.from(_attachments),
-                messageText: body,
+                messageText: encryptedBody,
                 draftUid: _currentDraftUid,
                 identity: identity,
                 alias: alias,
@@ -447,10 +449,10 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
             contact.addAll(bccEmails);
             contact.addAll(toEmails);
 
-            final body = await _bloc.encryptBody(
+            final encryptedBody = await _bloc.encryptBody(
               EncryptBody(
                 contact,
-                MailUtils.htmlToPlain(await _bodyTextCtrl.getText()),
+                bodyPlainText,
                 false,
                 true,
                 password,
@@ -466,7 +468,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
                 subject: _subjectTextCtrl.text,
                 composeAttachments:
                     new List<ComposeAttachment>.from(_attachments),
-                messageText: body,
+                messageText: encryptedBody,
                 draftUid: _currentDraftUid,
                 identity: identity,
                 alias: alias,
@@ -474,22 +476,22 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
             );
           }
           if (encryptEmails.isNotEmpty) {
-            final ccEmails = _ccEmails
-                .where((element) => encryptEmails.contains(element));
-            final bccEmails = _bccEmails
-                .where((element) => encryptEmails.contains(element));
-            final toEmails = _toEmails
-                .where((element) => encryptEmails.contains(element));
+            final ccEmails =
+                _ccEmails.where((element) => encryptEmails.contains(element));
+            final bccEmails =
+                _bccEmails.where((element) => encryptEmails.contains(element));
+            final toEmails =
+                _toEmails.where((element) => encryptEmails.contains(element));
 
             final contact = <String>{};
             contact.addAll(ccEmails);
             contact.addAll(bccEmails);
             contact.addAll(toEmails);
 
-            final body = await _bloc.encryptBody(
+            final encryptedBody = await _bloc.encryptBody(
               EncryptBody(
                 contact,
-                MailUtils.htmlToPlain(await _bodyTextCtrl.getText()),
+                bodyPlainText,
                 true,
                 false,
                 null,
@@ -505,7 +507,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
                 subject: _subjectTextCtrl.text,
                 composeAttachments:
                     new List<ComposeAttachment>.from(_attachments),
-                messageText: body,
+                messageText: encryptedBody,
                 draftUid: _currentDraftUid,
                 identity: identity,
                 alias: alias,
@@ -543,7 +545,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
             );
           }
           return _bloc.add(SendMessages(messages));
-        } catch (e,s) {
+        } catch (e, s) {
           print(e);
         }
       } else {
@@ -568,7 +570,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
         isHtml: false,
         subject: _subjectTextCtrl.text,
         composeAttachments: new List<ComposeAttachment>.from(_attachments),
-        messageText: (await _bodyTextCtrl.getText()),
+        messageText: await _bodyTextCtrl.getText(),
         draftUid: _currentDraftUid,
         identity: identity,
         alias: alias,
@@ -1042,20 +1044,19 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
       );
     }
 
-
-      final keyboardIsOpened = MediaQuery.of(context).viewInsets.bottom > 100;
-      body = Column(
-        children: [
-          Expanded(child: body),
-          if (!keyboardIsOpened && BuildProperty.cryptoEnable)
-            ComposeBottomBar(
-              _encryptDialog,
-              _decrypt,
-              _createSelfDestructingEmail,
-              _encryptType,
-            )
-        ],
-      );
+    final keyboardIsOpened = MediaQuery.of(context).viewInsets.bottom > 100;
+    body = Column(
+      children: [
+        Expanded(child: body),
+        if (!keyboardIsOpened && BuildProperty.cryptoEnable)
+          ComposeBottomBar(
+            _encryptDialog,
+            _decrypt,
+            _createSelfDestructingEmail,
+            _encryptType,
+          )
+      ],
+    );
 
     return BlocProvider<ComposeBloc>.value(
       value: _bloc,
