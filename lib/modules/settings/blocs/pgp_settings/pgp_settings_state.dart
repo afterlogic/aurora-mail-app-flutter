@@ -41,7 +41,7 @@ class LoadedState extends PgpSettingsState {
   }
 
   @override
-  List<Object> get props => [myPublic, myPrivate, contactPublic, keyProgress];
+  List<Object> get props => [myPublic.hashCode, myPrivate.hashCode, contactPublic.hashCode, keyProgress];
 }
 
 class SelectKeyForImport extends PgpSettingsState with AlwaysNonEqualObject {

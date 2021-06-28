@@ -146,7 +146,7 @@ class _PgpSettingsState extends BState<PgpSettings> {
   _openKey(BuildContext context, PgpKey key) {
     SettingsNavigatorWidget.of(context).pushNamed(
       PgpKeyRoute.name,
-      arguments: PgpKeyRouteArg(key, null,false),
+      arguments: PgpKeyRouteArg(key, null,false,bloc),
     );
   }
 

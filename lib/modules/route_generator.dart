@@ -320,6 +320,7 @@ class RouteGenerator {
                   arg.pgpKey,
                   arg.onDelete,
                   arg.withAppBar,
+              arg.bloc,
                 ));
         break;
       case PgpKeysRoute.name:

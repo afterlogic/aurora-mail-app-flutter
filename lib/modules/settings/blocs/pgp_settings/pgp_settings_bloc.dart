@@ -4,16 +4,15 @@ import 'dart:io';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/contacts_repository_impl.dart';
+import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/utils/error_to_show.dart';
 import 'package:aurora_mail/utils/identity_util.dart';
 import 'package:bloc/bloc.dart';
 import 'package:crypto_model/crypto_model.dart';
 import 'package:crypto_storage/crypto_storage.dart';
 import 'package:crypto_worker/crypto_worker.dart';
-import 'package:flutter/widgets.dart';
 
 import 'bloc.dart';
-import 'package:aurora_mail/res/str/s.dart';
 
 class PgpSettingsBloc extends Bloc<PgpSettingsEvent, PgpSettingsState> {
   final PgpSettingsMethods _methods;
@@ -27,7 +26,8 @@ class PgpSettingsBloc extends Bloc<PgpSettingsEvent, PgpSettingsState> {
           _cryptoStorage,
           _cryptoWorker,
           authBloc.currentUser,
-          ContactsRepositoryImpl(user: authBloc.currentUser, appDB: DBInstances.appDB),
+          ContactsRepositoryImpl(
+              user: authBloc.currentUser, appDB: DBInstances.appDB),
         );
 
   @override
@@ -163,9 +163,9 @@ class PgpSettingsBloc extends Bloc<PgpSettingsEvent, PgpSettingsState> {
 
   Stream<PgpSettingsState> _shareKeys(ShareKeys event) async* {
     if (event.pgpKeys.length == 1) {
-      await _methods.shareKey(event.pgpKeys.first,event.rect);
+      await _methods.shareKey(event.pgpKeys.first, event.rect);
     } else {
-      await _methods.shareKeys(event.pgpKeys,event.rect);
+      await _methods.shareKeys(event.pgpKeys, event.rect);
     }
   }
 }

@@ -1,6 +1,5 @@
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/config.dart';
-import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
@@ -9,6 +8,7 @@ import 'package:aurora_mail/modules/contacts/screens/contact_edit/contact_edit_r
 import 'package:aurora_mail/modules/contacts/screens/contact_view/components/contact_view_app_bar.dart';
 import 'package:aurora_mail/modules/contacts/screens/contact_view/components/contacts_info_item.dart';
 import 'package:aurora_mail/modules/contacts/utils/contact_info.dart';
+import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/models/compose_actions.dart';
 import 'package:aurora_mail/modules/mail/repository/search_util.dart';
@@ -406,7 +406,8 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
                     Navigator.pushNamed(
                       context,
                       PgpKeyRoute.name,
-                      arguments: PgpKeyRouteArg(key, null,true),
+                      arguments:
+                          PgpKeyRouteArg(key, null, true, pgpSettingsBloc),
                     );
                   },
             child: _buildInfoItem(
