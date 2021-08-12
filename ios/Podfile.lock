@@ -106,7 +106,7 @@ PODS:
     - GoogleUtilities/Reachability (~> 6.7)
     - GoogleUtilities/UserDefaults (~> 6.7)
     - Protobuf (>= 3.9.2, ~> 3.9)
-  - Flutter (1.0.0)
+  - Flutter (2.0.2)
   - flutter_custom_tabs (0.0.1):
     - Flutter
   - flutter_downloader (0.0.1):
@@ -227,7 +227,6 @@ DEPENDENCIES:
   - firebase_crashlytics (from `.symlinks/plugins/firebase_crashlytics/ios`)
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
   - firebase_messaging_web (from `.symlinks/plugins/firebase_messaging_web/ios`)
-  - Flutter (from `.symlinks/flutter/ios`)
   - flutter_custom_tabs (from `.symlinks/plugins/flutter_custom_tabs/ios`)
   - flutter_downloader (from `.symlinks/plugins/flutter_downloader/ios`)
   - flutter_keyboard_visibility (from `.symlinks/plugins/flutter_keyboard_visibility/ios`)
@@ -268,6 +267,7 @@ SPEC REPOS:
     - FirebaseInstallations
     - FirebaseInstanceID
     - FirebaseMessaging
+    - Flutter
     - FMDB
     - GoogleDataTransport
     - GoogleUtilities
@@ -307,8 +307,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/firebase_messaging/ios"
   firebase_messaging_web:
     :path: ".symlinks/plugins/firebase_messaging_web/ios"
-  Flutter:
-    :path: ".symlinks/flutter/ios"
   flutter_custom_tabs:
     :path: ".symlinks/plugins/flutter_custom_tabs/ios"
   flutter_downloader:
@@ -387,7 +385,7 @@ SPEC CHECKSUMS:
   FirebaseInstallations: 466c7b4d1f58fe16707693091da253726a731ed2
   FirebaseInstanceID: bd3ffc24367f901a43c063b36c640b345a4a5dd1
   FirebaseMessaging: 5eca4ef173de76253352511aafef774caa1cba2a
-  Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
+  Flutter: c48dd2c06f81cd2d28c2d5e68a129c76508452c2
   flutter_custom_tabs: 9f7596dc1593f2e0d0562ce888dde6447751e97c
   flutter_downloader: 058b9c41564a90500f67f3e432e3524613a7fd83
   flutter_keyboard_visibility: 6195387fb6d8f46e5cd6dda4a4154e41f800f545
@@ -429,6 +427,6 @@ SPEC CHECKSUMS:
   yubico_flutter: 3fee5838c73d3946031a1405ef347de018bbd944
   YubiKit: b9f3b240e75feec0cf81a8ade503c072eea6dc3a
 
-PODFILE CHECKSUM: c7ba73d489556bcf3c73904a94c41f8e96c10537
+PODFILE CHECKSUM: 7dadb0023c970d3c3bc47994512fadd95fb20141
 
-COCOAPODS: 1.9.3
+COCOAPODS: 1.10.1
