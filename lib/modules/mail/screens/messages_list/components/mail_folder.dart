@@ -105,20 +105,7 @@ class MailFolder extends StatelessWidget {
 
 class FolderHelper {
   static String getTitle(BuildContext context, Folder folder) {
-    switch (folder.folderType) {
-      case FolderType.inbox:
-        return i18n(context, S.folders_inbox);
-      case FolderType.sent:
-        return i18n(context, S.folders_sent);
-      case FolderType.drafts:
-        return i18n(context, S.folders_drafts);
-      case FolderType.spam:
-        return i18n(context, S.folders_spam);
-      case FolderType.trash:
-        return i18n(context, S.folders_trash);
-      default:
-        return folder.name;
-    }
+    return folder.viewName(context);
   }
 
   static Widget getIcon(Folder folder) {

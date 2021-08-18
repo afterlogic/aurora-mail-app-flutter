@@ -1,4 +1,6 @@
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/res/str/s.dart';
+import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/cupertino.dart';
 
 enum FolderType {
@@ -84,11 +86,27 @@ class Folder {
     @required this.accountLocalId,
   });
 
-  String get viewName {
-    if (fullName.startsWith(nameSpace)) {
-      return fullName.substring(nameSpace.length);
-    } else {
-      return fullName;
+  String viewName(BuildContext context, {bool full = false}) {
+    switch (this.folderType) {
+      case FolderType.inbox:
+        return i18n(context, S.folders_inbox);
+      case FolderType.sent:
+        return i18n(context, S.folders_sent);
+      case FolderType.drafts:
+        return i18n(context, S.folders_drafts);
+      case FolderType.spam:
+        return i18n(context, S.folders_spam);
+      case FolderType.trash:
+        return i18n(context, S.folders_trash);
+      default:
+        if (!full) {
+          return name;
+        }
+        if (fullName.startsWith(nameSpace)) {
+          return fullName.substring(nameSpace.length);
+        } else {
+          return fullName;
+        }
     }
   }
 
