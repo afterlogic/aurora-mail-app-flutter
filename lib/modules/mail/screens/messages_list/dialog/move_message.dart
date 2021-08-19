@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/models/folder.dart';
@@ -105,10 +106,20 @@ class _MoveMessageDialogState extends State<MoveMessageDialog>
   }
 
   Widget _folder(Folder folder) {
-    return ListTile(
-      onTap: () => _addToStack(folder),
-      leading: FolderHelper.getIcon(folder),
-      title: Text(FolderHelper.getTitle(context, folder)),
+    final paddingStep = 40.0;
+    var paddingCount = folder.delimiter.allMatches(folder.fullName).length;
+    if (folder.nameSpace?.isNotEmpty == true &&
+        folder.fullName.startsWith(folder.nameSpace)) {
+      paddingCount -= 1;
+    }
+    paddingCount = max(paddingCount, 0);
+    return Padding(
+      padding: EdgeInsets.only(left: paddingCount * paddingStep),
+      child: ListTile(
+        onTap: () => _addToStack(folder),
+        leading: FolderHelper.getIcon(folder),
+        title: Text(FolderHelper.getTitle(context, folder)),
+      ),
     );
   }
 
