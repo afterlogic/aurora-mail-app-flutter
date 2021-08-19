@@ -254,7 +254,9 @@ class MailApi {
         }
       }
     }, onError: (err) {
-      if (err is UploadException && err.code == "flutter_upload_cancelled") {
+      if (err is UploadException &&
+          (err.status == UploadTaskStatus.canceled ||
+              err.code == "flutter_upload_cancelled")) {
         return;
       }
       onError(WebMailApiError(err));
