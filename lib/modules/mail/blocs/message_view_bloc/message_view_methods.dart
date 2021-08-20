@@ -64,7 +64,7 @@ class MessageViewMethods {
 
   Future<FolderType> getFolderType(String folder) async {
     return Folder.getFolderTypeFromNumber(
-        (await _foldersDao.getByName(folder, account.localId)).type);
+        (await _foldersDao.getByName(folder, account.localId))?.type);
   }
 
   Future<bool> checkInWhiteList(Message message) async {
