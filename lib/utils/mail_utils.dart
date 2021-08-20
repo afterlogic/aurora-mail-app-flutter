@@ -389,7 +389,7 @@ class MailUtils {
     @required String body,
     @required List<MailAttachment> attachments,
     @required bool showLightEmail,
-    bool isStared,
+    bool isStarred,
   }) {
     final theme = Theme.of(context);
 
@@ -547,14 +547,14 @@ class MailUtils {
         document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('stared-btn').addEventListener('click', function (event) {
                 let elem=event.target
-                if (elem.classList.contains("is-stared")) {
+                if (elem.classList.contains("is-starred")) {
                     elem.innerHTML = "&#9734;"
-                    elem.classList.remove("is-stared");
-                       elem.href="${MessageWebViewActions.ACTION + MessageWebViewActions.SET_STARED}"
+                    elem.classList.remove("is-starred");
+                       elem.href="${MessageWebViewActions.ACTION + MessageWebViewActions.SET_NOT_STARRED}"
                 } else {
                     elem.innerHTML = "&#9733;" 
-                    elem.classList.add("is-stared");
-                    elem.href="${MessageWebViewActions.ACTION + MessageWebViewActions.SET_NOT_STARED}"
+                    elem.classList.add("is-starred");
+                    elem.href="${MessageWebViewActions.ACTION + MessageWebViewActions.SET_STARRED}"
                 }
             }, false);
             document.getElementById('info-btn').addEventListener('click', function (event) {
@@ -600,7 +600,7 @@ class MailUtils {
             <span style="margin-right: 10px;" class='selectable'>${subject}</span>
             <span style="display: inline-block; font-size: 14px; background: ${theme.selectedRowColor.toHex()};padding: 3px 8px; border-radius: 3px; margin-top: -2px; vertical-align: middle;">${message.folder}</span>
           </h1>
-          <a id="stared-btn" class="stared${isStared ? " is-stared" : ""}" href='${MessageWebViewActions.ACTION + (isStared ? MessageWebViewActions.SET_NOT_STARED : MessageWebViewActions.SET_STARED)}' style='text-decoration: none; font-size: 24px; line-height: 1.2; color: orange'>${isStared ? "&#9733;" : "&#9734;"}</a>
+          <a id="stared-btn" class="stared${isStarred ? " is-starred" : ""}" href='${MessageWebViewActions.ACTION + (isStarred ? MessageWebViewActions.SET_NOT_STARRED : MessageWebViewActions.SET_STARRED)}' style='text-decoration: none; font-size: 24px; line-height: 1.2; color: orange'>${isStarred ? "&#9733;" : "&#9734;"}</a>
         </div>
         <div style="clear: both;height: 1px; background-color: black; opacity: 0.05; margin: 24px 0 0"></div>
       </div>

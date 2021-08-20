@@ -35,8 +35,8 @@ import 'attachments_dialog.dart';
 
 class MessageWebViewActions {
   static const ACTION = "action:";
-  static const SET_STARED = "MessageWebViewActions.STARED";
-  static const SET_NOT_STARED = "MessageWebViewActions.NOT_STARED";
+  static const SET_STARRED = "MessageWebViewActions.STARRED";
+  static const SET_NOT_STARRED = "MessageWebViewActions.NOT_STARRED";
   static const SHOW_ATTACHMENTS = "MessageWebViewActions.SHOW_ATTACHMENTS";
   static const SHOW_INFO = "MessageWebViewActions.SHOW_INFO";
   static const DOWNLOAD_ATTACHMENT = "MessageWebViewActions.DOWNLOAD_ATTACHMENT";
@@ -70,7 +70,7 @@ class MessageWebViewState extends BState<MessageWebView> {
   String _htmlData;
   bool _pageLoaded = false;
   bool showImages = false;
-  bool _isStared;
+  bool _isStarred;
   ThemeData theme;
   MailBloc _mailBloc;
   Set<JavascriptChannel> jsChannels;
@@ -80,7 +80,7 @@ class MessageWebViewState extends BState<MessageWebView> {
     super.initState();
     onLoad();
     if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
-    _isStared = widget.message.flagsInJson.contains("\\flagged");
+    _isStarred = widget.message.flagsInJson.contains("\\flagged");
     jsChannels = {
       JavascriptChannel(
         name: "WEB_VIEW_JS_CHANNEL",
@@ -201,7 +201,7 @@ class MessageWebViewState extends BState<MessageWebView> {
       body: html,
       attachments: widget.attachments.toList(),
       showLightEmail: false,
-      isStared: _isStared,
+      isStarred: _isStarred,
     );
     return Uri.dataFromString(wrappedHtml,
             mimeType: 'text/html', encoding: Encoding.getByName('utf-8'))
@@ -277,18 +277,18 @@ class MessageWebViewState extends BState<MessageWebView> {
     }
   }
 
-  setStared(bool isStared) {
-    _isStared = isStared;
-    _mailBloc.add(SetStarred([widget.message], isStared));
+  setStarred(bool isStarred) {
+    _isStarred = isStarred;
+    _mailBloc.add(SetStarred([widget.message], isStarred));
   }
 
   FutureOr<NavigationDecision> _onWebViewNavigateRequestIos(NavigationRequest request) async {
     if (request.url.startsWith(MessageWebViewActions.ACTION)) {
       final action = request.url.substring(MessageWebViewActions.ACTION.length);
-      if (action == MessageWebViewActions.SET_STARED) {
-        setStared(true);
-      } else if (action == MessageWebViewActions.SET_NOT_STARED) {
-        setStared(false);
+      if (action == MessageWebViewActions.SET_STARRED) {
+        setStarred(true);
+      } else if (action == MessageWebViewActions.SET_NOT_STARRED) {
+        setStarred(false);
       }
       print(action);
       return NavigationDecision.prevent;
