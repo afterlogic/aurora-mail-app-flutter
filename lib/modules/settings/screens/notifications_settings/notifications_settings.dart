@@ -34,62 +34,77 @@ class _NotificationsSettingsState extends BState<NotificationsSettings> {
           builder: (context, state) {
             final isProgress = state is ProgressState;
             final tokenStatus = state is InitState ? state.state : null;
-            return ListView(
-              children: <Widget>[
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
-                  child: Row(
-                    children: <Widget>[
-                      Text(
-                        i18n(context, S.label_device_identifier),
-                        style: theme.textTheme.subtitle1,
-                      ),
-                      Expanded(
-                          child: Text(
-                        PushNotificationsManager.instance.deviceId,
-                        textAlign: TextAlign.right,
-                      )),
-                      IconButton(
-                        icon: Icon(Icons.content_copy),
-                        onPressed: () {
-                          Clipboard.setData(ClipboardData(
-                              text:
-                                  PushNotificationsManager.instance.deviceId));
-                          showSnack(
-                            isError: false,
-                            context: context,
-                            scaffoldState: Scaffold.of(context),
-                            message: i18n(context,
-                                S.label_device_id_copied_to_clip_board),
-                          );
-                        },
-                      ),
-                    ],
+            Widget button = AMButton(
+              isLoading: isProgress,
+              child: Text(i18n(context, S.btn_resend_push_token)),
+              onPressed: () {
+                bloc.add(SendToken());
+              },
+            );
+            if (isTablet) {
+              button = Center(child: button);
+            }
+            return SafeArea(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Expanded(
+                    child: ListView(
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16.0, vertical: 8),
+                          child: Row(
+                            children: <Widget>[
+                              Text(
+                                i18n(context, S.label_device_identifier),
+                                style: theme.textTheme.subtitle1,
+                              ),
+                              Expanded(
+                                  child: Text(
+                                PushNotificationsManager.instance.deviceId,
+                                textAlign: TextAlign.right,
+                              )),
+                              IconButton(
+                                icon: Icon(Icons.content_copy),
+                                onPressed: () {
+                                  Clipboard.setData(ClipboardData(
+                                      text: PushNotificationsManager
+                                          .instance.deviceId));
+                                  showSnack(
+                                    isError: false,
+                                    context: context,
+                                    scaffoldState: Scaffold.of(context),
+                                    message: i18n(context,
+                                        S.label_device_id_copied_to_clip_board),
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
+                        ),
+                        ListTile(
+                          title: Text(
+                              i18n(context, S.label_token_storing_status),
+                              style: theme.textTheme.subtitle1),
+                          trailing: Text(tokenStatus != null
+                              ? i18n(
+                                  context,
+                                  tokenStatus
+                                      ? S.label_token_successful
+                                      : S.label_token_failed)
+                              : "..."),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                ListTile(
-                  title: Text(i18n(context, S.label_token_storing_status),
-                      style: theme.textTheme.subtitle1),
-                  trailing: Text(tokenStatus != null
-                      ? i18n(
-                          context,
-                          tokenStatus
-                              ? S.label_token_successful
-                              : S.label_token_failed)
-                      : "..."),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: AMButton(
-                    isLoading: isProgress,
-                    child: Text(i18n(context, S.btn_resend_push_token)),
-                    onPressed: () {
-                      bloc.add(SendToken());
-                    },
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16.0, vertical: 8.0),
+                    child: button,
                   ),
-                )
-              ],
+                ],
+              ),
             );
           }),
     );

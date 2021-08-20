@@ -22,7 +22,6 @@ class PgpKeyScreen extends StatelessWidget {
 
   const PgpKeyScreen(this.pgpKey, this.onDelete, this.withAppBar, this.bloc);
 
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -75,13 +74,13 @@ class PgpKeyScreen extends StatelessWidget {
               ],
             ),
           ),
-          _button(context),
+          _buttons(context),
         ],
       ),
     );
   }
 
-  Widget _button(BuildContext context) {
+  Widget _buttons(BuildContext context) {
     final isTablet = LayoutConfig.of(context).isTablet;
     final space = isTablet
         ? SizedBox.shrink()
@@ -114,14 +113,18 @@ class PgpKeyScreen extends StatelessWidget {
       ),
       space,
       if (!Platform.isIOS)
-        AMButton(
-          child: Text(i18n(context, S.btn_download)),
-          onPressed: () {
-            bloc.add(DownloadKeys([pgpKey]));
-            Navigator.pop(context);
-          },
+        Column(
+          children: [
+            AMButton(
+              child: Text(i18n(context, S.btn_download)),
+              onPressed: () {
+                bloc.add(DownloadKeys([pgpKey]));
+                Navigator.pop(context);
+              },
+            ),
+            space,
+          ],
         ),
-      space,
       AMButton(
         child: Text(i18n(context, S.btn_delete)),
         onPressed: () async {
@@ -146,14 +149,19 @@ class PgpKeyScreen extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       child: isTablet
-          ? Wrap(
-              spacing: 10,
-              runSpacing: 10,
-              children: children,
+          ? Center(
+              child: Wrap(
+                alignment: WrapAlignment.center,
+                spacing: 10,
+                runSpacing: 10,
+                children: children,
+              ),
             )
-          : Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: children,
+          : SafeArea(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: children,
+              ),
             ),
     );
   }

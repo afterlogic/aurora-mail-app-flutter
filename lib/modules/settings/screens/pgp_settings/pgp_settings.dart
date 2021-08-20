@@ -100,7 +100,7 @@ class _PgpSettingsState extends BState<PgpSettings> {
                     loadedState.keyProgress,
                   ),
                 ),
-                _button(context, loadedState),
+                _buttons(context, loadedState),
               ],
             );
           },
@@ -146,7 +146,7 @@ class _PgpSettingsState extends BState<PgpSettings> {
   _openKey(BuildContext context, PgpKey key) {
     SettingsNavigatorWidget.of(context).pushNamed(
       PgpKeyRoute.name,
-      arguments: PgpKeyRouteArg(key, null,false,bloc),
+      arguments: PgpKeyRouteArg(key, null, false, bloc),
     );
   }
 
@@ -287,7 +287,7 @@ class _PgpSettingsState extends BState<PgpSettings> {
     );
   }
 
-  Widget _button(BuildContext context, LoadedState state) {
+  Widget _buttons(BuildContext context, LoadedState state) {
     final isTablet = LayoutConfig.of(context).isTablet;
     final space = isTablet
         ? SizedBox.shrink()
@@ -320,14 +320,19 @@ class _PgpSettingsState extends BState<PgpSettings> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       child: isTablet
-          ? Wrap(
-              spacing: 10,
-              runSpacing: 10,
-              children: children,
+          ? Center(
+              child: Wrap(
+                alignment: WrapAlignment.center,
+                spacing: 10,
+                runSpacing: 10,
+                children: children,
+              ),
             )
-          : Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: children),
+          : SafeArea(
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: children),
+            ),
     );
   }
 }
