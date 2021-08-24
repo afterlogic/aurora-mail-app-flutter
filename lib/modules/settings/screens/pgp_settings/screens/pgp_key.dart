@@ -14,13 +14,41 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class PgpKeyScreen extends StatelessWidget {
+class PgpKeyScreen extends StatefulWidget {
   final PgpSettingsBloc bloc;
   final PgpKey pgpKey;
   final Function() onDelete;
   final bool withAppBar;
 
   const PgpKeyScreen(this.pgpKey, this.onDelete, this.withAppBar, this.bloc);
+
+  @override
+  _PgpKeyScreenState createState() => _PgpKeyScreenState();
+}
+
+class _PgpKeyScreenState extends State<PgpKeyScreen> {
+  PgpSettingsBloc bloc;
+  PgpKey pgpKey;
+  Function() onDelete;
+  bool withAppBar;
+
+  @override
+  void initState() {
+    super.initState();
+    pgpKey = widget.pgpKey;
+    onDelete = widget.onDelete;
+    withAppBar = widget.withAppBar;
+    // TODO
+    // creating a new block, because the old one is being closed in PgpSettings page
+    bloc = AppInjector.instance
+        .pgpSettingsBloc(BlocProvider.of<AuthBloc>(context));
+  }
+
+  @override
+  void dispose() {
+    bloc.close();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
