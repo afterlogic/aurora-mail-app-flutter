@@ -7,6 +7,7 @@ import 'package:aurora_mail/modules/settings/blocs/pgp_settings/bloc.dart';
 import 'package:aurora_mail/modules/settings/screens/pgp_settings/dialogs/generate_key_dialog.dart';
 import 'package:aurora_mail/modules/settings/screens/pgp_settings/dialogs/import_from_text_dialog.dart';
 import 'package:aurora_mail/modules/settings/screens/pgp_settings/dialogs/import_key_dialog.dart';
+import 'package:aurora_mail/modules/settings/screens/pgp_settings/dialogs/key_request_dialog.dart';
 import 'package:aurora_mail/modules/settings/screens/pgp_settings/screens/pgp_key_route.dart';
 import 'package:aurora_mail/modules/settings/screens/pgp_settings/screens/pgp_keys_route.dart';
 import 'package:aurora_mail/modules/settings/screens/settings_main/settings_navigator.dart';
@@ -143,7 +144,17 @@ class _PgpSettingsState extends BState<PgpSettings> {
     }
   }
 
-  _openKey(BuildContext context, PgpKey key) {
+  _openKey(
+    BuildContext context,
+    PgpKey key, [
+    bool needPassword = false,
+  ]) async {
+    if (needPassword) {
+      final password = await KeyRequestDialog.request(context, key.key);
+      if (password == null) {
+        return;
+      }
+    }
     SettingsNavigatorWidget.of(context).pushNamed(
       PgpKeyRoute.name,
       arguments: PgpKeyRouteArg(key, null, false, bloc),
@@ -215,6 +226,7 @@ class _PgpSettingsState extends BState<PgpSettings> {
           context,
           private,
           keyProgress,
+          true,
         ),
         if (!BuildProperty.legacyPgpKey) ...[
           SizedBox(height: 10),
@@ -236,12 +248,13 @@ class _PgpSettingsState extends BState<PgpSettings> {
   Widget keysGroup(
     BuildContext context,
     List<PgpKey> keys,
-    String keyProgress,
-  ) {
+    String keyProgress, [
+    bool needPassword = false,
+  ]) {
     final List<Widget> widgets = keys
         .map<Widget>(
           (key) => InkWell(
-            onTap: () => _openKey(context, key),
+            onTap: () => _openKey(context, key, needPassword),
             child: _key(
               key.formatName(),
               false,
