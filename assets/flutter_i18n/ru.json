@@ -388,5 +388,6 @@
   "error_password_is_empty": "password is empty",
   "label_encryption_password_for_pgp_key": "Required password for PGP key",
   "hint_log_delete_record": "Are you sure you want to delete file {name}",
-  "error_timeout": "Can't connect to the server"
+  "error_timeout": "Can't connect to the server",
+  "clear_cache_during_logout": "Очистить локальный кэш и сохранённые ключи"
 }

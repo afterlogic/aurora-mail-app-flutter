@@ -16,6 +16,7 @@ import 'package:aurora_mail/modules/settings/screens/sync_settings/sync_settings
 import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
 import 'package:aurora_mail/shared_ui/mail_bottom_app_bar.dart';
+import 'package:aurora_mail/shared_ui/optional_dialog.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
@@ -165,17 +166,23 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
   }
 
   _exit() async {
+    final optionText = i18n(context, S.clear_cache_during_logout);
     final result = await showDialog(
       context: context,
-      builder: (_) => ConfirmationDialog(
+      builder: (_) => OptionalDialog(
         title: null,
         description: i18n(context, S.hint_confirm_exit),
+        options: {optionText: true},
         actionText: i18n(context, S.btn_exit),
       ),
     );
-    if (result == true) {
+    if (result is OptionalResult && result.generalResult == true) {
       final authBloc = BlocProvider.of<AuthBloc>(context);
-      authBloc.add(DeleteUser(authBloc.currentUser));
+      if (result.options[optionText] == true) {
+        authBloc.add(DeleteUser(authBloc.currentUser));
+      } else {
+        authBloc.add(InvalidateCurrentUserToken());
+      }
     }
   }
 
