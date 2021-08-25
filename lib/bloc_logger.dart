@@ -7,7 +7,7 @@ class BlocLogger extends BlocDelegate {
   @override
   void onError(Bloc bloc, Object error, StackTrace stacktrace) {
     logger.log("Bloc error $error in ${bloc.runtimeType}");
-    Crashlytics.instance.recordError(error,stacktrace);
+    FirebaseCrashlytics.instance.recordError(error,stacktrace);
     super.onError(bloc, error, stacktrace);
   }
 }

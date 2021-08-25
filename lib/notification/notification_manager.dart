@@ -16,8 +16,8 @@ class NotificationManager {
   NotificationManager._() {
     final initializationSettings = InitializationSettings(
       //todo VO res/drawable/app_icon.png
-      AndroidInitializationSettings('app_icon'),
-      IOSInitializationSettings(),
+      android: AndroidInitializationSettings('app_icon'),
+      iOS: IOSInitializationSettings(),
     );
 
     plugin.initialize(initializationSettings,
@@ -73,8 +73,8 @@ class NotificationManager {
       from,
       subject,
       NotificationDetails(
-        AndroidNotificationDetails("default", "Default", ""),
-        null,
+        android: AndroidNotificationDetails("default", "Default", ""),
+        iOS: null,
       ),
       payload: payload,
     );
