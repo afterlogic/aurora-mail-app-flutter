@@ -1,7 +1,7 @@
 name: aurora_mail
 description: Mail client for PrivateMail.
 
-version: 2.7.2+221
+version: 2.7.2+224
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
