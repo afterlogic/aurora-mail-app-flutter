@@ -12,12 +12,15 @@ import 'package:aurora_mail/modules/dialog_wrap.dart';
 import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/mail/blocs/compose_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
+import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/messages_list_bloc.dart';
+import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/messages_list_event.dart';
 import 'package:aurora_mail/modules/mail/models/compose_actions.dart';
 import 'package:aurora_mail/modules/mail/models/compose_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/temp_attachment_upload.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/components/automatically_encrypt_label.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/components/compose_bottom_bar.dart';
+import 'package:aurora_mail/modules/mail/screens/compose/components/discard_compose_changes_dialog.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/components/identity_selector.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/components/web_view_wrap.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/compose_route.dart';
@@ -136,6 +139,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
 
   void _prepareMessage() async {
     final action = widget.composeAction;
+    print('_prepareMessage, action is ${action.runtimeType}');
 
     if (action is OpenFromDrafts) await _initFromDrafts(action);
     if (action is Forward) await _initForward(action);
@@ -276,8 +280,9 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
         _saveToDrafts();
         break;
       case ComposeAppBarAction.cancel:
-        Navigator.pop(context);
-        _saveToDrafts();
+        // Navigator.pop(context);
+        // _saveToDrafts();
+        _onGoBack();
         break;
       case ComposeAppBarAction.send:
         _sendMessage();
@@ -395,7 +400,8 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
               return;
             }
           }
-          final bodyPlainText = MailUtils.htmlToPlain(await _bodyTextCtrl.getText());
+          final bodyPlainText =
+              MailUtils.htmlToPlain(await _bodyTextCtrl.getText());
           final messages = <SendMessage>[];
           if (encryptSignEmails.isNotEmpty) {
             final ccEmails = _ccEmails
@@ -726,26 +732,32 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
     }
   }
 
-  // TODO task frozen
-//  Future<void> _onGoBack() async {
-//    final result = await showDialog<DiscardComposeChangesOption>(
-//      context: context,
-//      builder: (_) => DiscardComposeChangesDialog(),
-//    );
-//
-//    switch(result) {
-//      case DiscardComposeChangesOption.discard:
-//        Navigator.pop(context);
-//        if (_currentDraftUid != null && _currentDraftUid != widget.draftUid) {
-//          BlocProvider.of<MessagesListBloc>(context).add(DeleteMessages(uids: [_currentDraftUid], ));
-//        }
-//        break;
-//      case DiscardComposeChangesOption.save:
-//        Navigator.pop(context);
-//        _saveToDrafts();
-//        break;
-//    }
-//  }
+  Future<void> _onGoBack() async {
+    if (await _hasMessageChanged) {
+      final result = await showDialog<DiscardComposeChangesOption>(
+        context: context,
+        builder: (_) => DiscardComposeChangesDialog(),
+      );
+
+      switch (result) {
+        case DiscardComposeChangesOption.discard:
+          print('_onGoBack, discard');
+          // if (_currentDraftUid != null && _currentDraftUid != widget.draftUid) {
+          //   BlocProvider.of<MessagesListBloc>(context).add(DeleteMessages(
+          //     messages: [_currentDraftUid],
+          //   ));
+          // }
+          Navigator.pop(context);
+          break;
+        case DiscardComposeChangesOption.save:
+          print('_onGoBack, save');
+          _saveToDrafts();
+          Navigator.pop(context);
+          break;
+      }
+    }
+  }
+
   Future setIdentityOrSender(AliasOrIdentity aliasOrIdentity) async {
     await changeSignature(
       AliasOrIdentity(alias, identity)?.signature ?? "",

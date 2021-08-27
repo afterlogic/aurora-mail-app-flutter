@@ -1,4 +1,5 @@
-import 'package:aurora_mail/utils/internationalization.dart'; import 'package:aurora_mail/res/str/s.dart';
+import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_mail/res/str/s.dart';
 import 'package:flutter/material.dart';
 
 enum DiscardComposeChangesOption { discard, save }
@@ -17,7 +18,6 @@ class DiscardComposeChangesDialog extends StatelessWidget {
           child: Text(i18n(context, S.btn_cancel)),
           onPressed: () {
             Navigator.pop(context);
-            return DiscardComposeChangesOption.save;
           },
         ),
         FlatButton(
@@ -25,8 +25,7 @@ class DiscardComposeChangesDialog extends StatelessWidget {
               theme.brightness == Brightness.light ? theme.accentColor : null,
           child: Text(i18n(context, S.btn_discard)),
           onPressed: () {
-            Navigator.pop(context);
-            return DiscardComposeChangesOption.discard;
+            Navigator.pop(context, DiscardComposeChangesOption.discard);
           },
         ),
         FlatButton(
@@ -34,7 +33,7 @@ class DiscardComposeChangesDialog extends StatelessWidget {
               theme.brightness == Brightness.light ? theme.accentColor : null,
           child: Text(i18n(context, S.btn_save)),
           onPressed: () {
-            Navigator.pop(context);
+            Navigator.pop(context, DiscardComposeChangesOption.save);
           },
         ),
       ],

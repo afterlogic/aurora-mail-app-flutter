@@ -261,6 +261,7 @@ class AuthMethods {
     try {
       final uid = await PushNotificationsManager.instance.deviceId;
       final fbToken = setNullToken ? null : await PushNotificationsManager.instance.getToken();
+      print('setFbToken, fbToken = $fbToken');
       final userWithAccount = <User, List<String>>{};
       for (var user in users) {
         final accounts = await _accountsDao.getAccounts(user.localId);

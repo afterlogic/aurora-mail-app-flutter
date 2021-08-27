@@ -166,19 +166,19 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
   }
 
   _exit() async {
-    final optionText = i18n(context, S.clear_cache_during_logout);
+    final clearCacheText = i18n(context, S.clear_cache_during_logout);
     final result = await showDialog(
       context: context,
       builder: (_) => OptionalDialog(
         title: null,
         description: i18n(context, S.hint_confirm_exit),
-        options: {optionText: true},
+        options: {clearCacheText: true},
         actionText: i18n(context, S.btn_exit),
       ),
     );
     if (result is OptionalResult && result.generalResult == true) {
       final authBloc = BlocProvider.of<AuthBloc>(context);
-      if (result.options[optionText] == true) {
+      if (result.options[clearCacheText] == true) {
         authBloc.add(DeleteUser(authBloc.currentUser));
       } else {
         authBloc.add(InvalidateCurrentUserToken());
