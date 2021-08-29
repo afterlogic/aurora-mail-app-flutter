@@ -71,7 +71,7 @@ class _OptionalDialogState extends State<OptionalDialog> {
   Widget build(BuildContext context) {
     List<Widget> children = [
       Padding(
-        padding: const EdgeInsets.only(bottom: 16),
+        padding: const EdgeInsets.only(right: 16, bottom: 16),
         child: Text(description),
       )
     ];

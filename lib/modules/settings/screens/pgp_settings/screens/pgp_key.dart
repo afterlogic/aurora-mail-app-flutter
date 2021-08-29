@@ -141,18 +141,14 @@ class _PgpKeyScreenState extends State<PgpKeyScreen> {
       ),
       space,
       if (!Platform.isIOS)
-        Column(
-          children: [
-            AMButton(
-              child: Text(i18n(context, S.btn_download)),
-              onPressed: () {
-                bloc.add(DownloadKeys([pgpKey]));
-                Navigator.pop(context);
-              },
-            ),
-            space,
-          ],
+        AMButton(
+          child: Text(i18n(context, S.btn_download)),
+          onPressed: () {
+            bloc.add(DownloadKeys([pgpKey]));
+            Navigator.pop(context);
+          },
         ),
+      if (!Platform.isIOS) space,
       AMButton(
         child: Text(i18n(context, S.btn_delete)),
         onPressed: () async {
