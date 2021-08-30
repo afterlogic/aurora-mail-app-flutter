@@ -111,11 +111,10 @@ Future<bool> messageHandler(RemoteMessage message) async {
         }
       }
       return await onAlarm(
-        showNotification: !notificationFromPush,
-        data: notification,
-        isBackgroundForce: await IosNotificationHandler.isBackground(),
-        recordLog:false
-      );
+          showNotification: !notificationFromPush,
+          data: notification,
+          isBackgroundForce: await IosNotificationHandler.isBackground(),
+          recordLog: false);
     } catch (e, s) {
       Logger.errorLog(e, s);
     }

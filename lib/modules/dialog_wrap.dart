@@ -75,8 +75,9 @@ class RouteWrapState extends State<RouteWrap> {
 
   Future<bool> discardNotSavedChanges() async {
     if (hasNotSavedChanges) {
+      final context = widget.navKey.currentState.overlay.context;
       final result = await ConfirmationDialog.show(
-        widget.navKey.currentState.overlay.context,
+        context,
         null,
         i18n(context, S.label_discard_not_saved_changes),
         i18n(context, S.btn_discard),

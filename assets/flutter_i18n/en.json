@@ -67,7 +67,7 @@
   "compose_forward_subject": "Subject: {subject}",
   "compose_reply_body_title": "On {time}, {from} wrote:",
   "compose_discard_save_dialog_title": "Discard changes",
-  "compose_discard_save_dialog_description": "Would you like to save the changes to drafts?",
+  "compose_discard_save_dialog_description": "Save changes in drafts?",
   "contacts": "Contacts",
   "contacts_list_app_bar_view_group": "View group",
   "contacts_list_app_bar_all_contacts": "All contacts",

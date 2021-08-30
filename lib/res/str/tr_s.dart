@@ -68,7 +68,7 @@ class TrS extends S {
     63: "Konu: {subject}",
     64: "{time},tarihinde {from} yazdı:",
     65: "Değişiklikleri iptal et",
-    66: "Değişiklikleri taslak olarak kaydetmek ister misiniz?",
+    66: "Değişiklikleri taslaklara Kaydet?",
     67: "Kişiler",
     68: "Grubu görüntüle",
     69: "Tüm kişiler",

@@ -70,7 +70,7 @@ class EnS extends S {
     63: "Subject: {subject}",
     64: "On {time}, {from} wrote:",
     65: "Discard changes",
-    66: "Would you like to save the changes to drafts?",
+    66: "Save changes in drafts?",
     67: "Contacts",
     68: "View group",
     69: "All contacts",

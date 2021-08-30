@@ -67,7 +67,7 @@
   "compose_forward_subject": "Тема: {subject}",
   "compose_reply_body_title": "В {time}, {from} написал(а):",
   "compose_discard_save_dialog_title": "Сбросить изменения",
-  "compose_discard_save_dialog_description": "Вы хотите сохранить изменения в черновиках?",
+  "compose_discard_save_dialog_description": "Сохранить изменения в черновиках?",
   "contacts": "Контакты",
   "contacts_list_app_bar_view_group": "Инфорамация о группе",
   "contacts_list_app_bar_all_contacts": "Все контакты",

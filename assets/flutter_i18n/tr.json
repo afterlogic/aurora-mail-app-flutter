@@ -65,7 +65,7 @@
   "compose_forward_subject": "Konu: {subject}",
   "compose_reply_body_title": "{time},tarihinde {from} yazdı:",
   "compose_discard_save_dialog_title": "Değişiklikleri iptal et",
-  "compose_discard_save_dialog_description": "Değişiklikleri taslak olarak kaydetmek ister misiniz?",
+  "compose_discard_save_dialog_description": "Değişiklikleri taslaklara Kaydet?",
   "contacts": "Kişiler",
   "contacts_list_app_bar_view_group": "Grubu görüntüle",
   "contacts_list_app_bar_all_contacts": "Tüm kişiler",
