@@ -86,7 +86,10 @@ class _OptionalDialogState extends State<OptionalDialog> {
               });
             },
           ),
-          Text(key),
+          Expanded(child: Padding(
+            padding: const EdgeInsets.only(right: 16),
+            child: Text(key),
+          )),
         ],
       );
       children.add(row);
