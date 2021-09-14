@@ -32,7 +32,7 @@ _appId: ""
 _iosAppId: "{{_appId}}"
 _appleGroupId: ""
 packageName: "{{_appId}}"
-_build: 226
+_build: 227
 _version: ""
 _version_android: "{{_version}}{{_build}}"
 version_ios: "{{_version}}+{{_build}}"
@@ -72,3 +72,9 @@ logger: true
 pushNotification: false
 backgroundSync: false
 supportAllowAccess: true
+
+# fido
+useYubiKit: false
+yubico_flutter_lib: "path: module/mocks/yubico_flutter"
+#useYubiKit: true
+#yubico_flutter_lib: "git: https://github.com/afterlogic/yubico_flutter"
