@@ -139,7 +139,8 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
 
   void _prepareMessage() async {
     final action = widget.composeAction;
-    print('_prepareMessage, action is ${action.runtimeType}');
+
+    print('ComposeAndroid, _prepareMessage(), action is ${action.runtimeType}');
 
     if (action is OpenFromDrafts) await _initFromDrafts(action);
     if (action is Forward) await _initForward(action);
@@ -280,8 +281,6 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
         _saveToDrafts();
         break;
       case ComposeAppBarAction.cancel:
-        // Navigator.pop(context);
-        // _saveToDrafts();
         _onGoBack();
         break;
       case ComposeAppBarAction.send:
@@ -752,6 +751,8 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
           Navigator.pop(context);
           break;
       }
+    } else {
+      Navigator.pop(context);
     }
   }
 

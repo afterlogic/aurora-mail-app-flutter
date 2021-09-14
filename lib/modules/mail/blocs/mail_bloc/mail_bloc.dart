@@ -13,23 +13,25 @@ import 'mail_methods.dart';
 
 class MailBloc extends Bloc<MailEvent, MailState> {
   MailMethods _methods;
-  final User user;
-  final Account account;
+  User _user;
+  Account _account;
   final updateMessageCounter = UpdateMessageCounter();
   static String selectedFolderGuid;
 
-  MailBloc({this.user, this.account}) {
+  MailBloc({User user, Account account}) {
     assert(user != null);
-    _methods = new MailMethods(
-      user: user,
-      account: account,
-      updateMessageCounter: updateMessageCounter,
-    );
+    init(user, account);
     BackgroundHelper.addOnEndAlarmObserver(true, onEndAlarm);
   }
 
+  User get user => _user;
+
+  Account get account => _account;
+
   init(User user, Account account) {
-    _methods.close();
+    _user = user;
+    _account = account;
+    _methods?.close();
     _methods = new MailMethods(
       user: user,
       account: account,
