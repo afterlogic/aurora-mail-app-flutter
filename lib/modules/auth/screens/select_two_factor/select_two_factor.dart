@@ -39,7 +39,7 @@ class _SelectTwoFactorWidgetState extends BState<SelectTwoFactorWidget> {
           style: TextStyle(color: AppTheme.loginTextColor),
         ),
         SizedBox(height: 20),
-        if (widget.args.state.hasSecurityKey) ...[
+        if (widget.args.state.hasSecurityKey && BuildProperty.useYubiKit) ...[
           SizedBox(
             width: double.infinity,
             child: AMButton(

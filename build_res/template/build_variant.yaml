@@ -30,3 +30,9 @@ expandMessageThread: false
 logger: false
 pushNotification: false
 backgroundSync: true
+
+# fido
+useYubiKit: false
+yubico_flutter_lib: "path: module/mocks/yubico_flutter"
+#useYubiKit: true
+#yubico_flutter_lib: "git: https://github.com/afterlogic/yubico_flutter"

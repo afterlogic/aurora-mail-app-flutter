@@ -165,7 +165,7 @@ class _LoginAndroidState extends BState<LoginAndroid> {
                 );
               }
               if (state is TwoFactor) {
-                if (state.hasSecurityKey == true) {
+                if (state.hasSecurityKey == true && BuildProperty.useYubiKit) {
                   Navigator.pushNamed(
                     context,
                     FidoAuthRoute.name,

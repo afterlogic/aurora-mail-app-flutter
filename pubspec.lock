@@ -536,7 +536,7 @@ packages:
       name: flutter_plugin_android_lifecycle
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.2"
+    version: "2.0.3"
   flutter_secure_storage:
     dependency: "direct main"
     description:
@@ -840,7 +840,7 @@ packages:
       name: path_provider_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.0"
+    version: "2.0.1"
   path_provider_windows:
     dependency: transitive
     description:
@@ -1103,7 +1103,7 @@ packages:
   theme:
     dependency: "direct main"
     description:
-      path: "aurora-mail-app-customs/private_mail/theme"
+      path: "build_res/afterlogic/theme"
       relative: true
     source: path
     version: "0.0.1"
@@ -1155,14 +1155,14 @@ packages:
       name: url_launcher_linux
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.1"
+    version: "2.0.2"
   url_launcher_macos:
     dependency: transitive
     description:
       name: url_launcher_macos
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.1"
+    version: "2.0.2"
   url_launcher_platform_interface:
     dependency: transitive
     description:
@@ -1239,7 +1239,7 @@ packages:
       name: win32
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.2.6"
+    version: "2.2.9"
   xdg_directories:
     dependency: transitive
     description:
@@ -1264,11 +1264,9 @@ packages:
   yubico_flutter:
     dependency: "direct main"
     description:
-      path: "."
-      ref: HEAD
-      resolved-ref: "2feefe055cc44f75e590f835a50e894b9b7996c2"
-      url: "https://github.com/afterlogic/yubico_flutter"
-    source: git
+      path: "module/mocks/yubico_flutter"
+      relative: true
+    source: path
     version: "0.0.1"
 sdks:
   dart: ">=2.13.0 <3.0.0"

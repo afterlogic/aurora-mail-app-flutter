@@ -31,8 +31,6 @@ target 'Runner' do
   use_frameworks!
   use_modular_headers!
 
-  pod 'YubiKit', :git => 'https://github.com/Yubico/yubikit-ios.git', :commit => '89fac6206a4c44eed84764a7f9528ba936d13693'
-
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
 
 #   target 'AppShareExtension' do
