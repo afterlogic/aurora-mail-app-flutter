@@ -8,7 +8,8 @@ import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/starred_folder.dart';
 import 'package:aurora_mail/utils/base_state.dart';
-import 'package:aurora_mail/utils/internationalization.dart'; import 'package:aurora_mail/res/str/s.dart';
+import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -124,37 +125,38 @@ class _MainDrawerState extends BState<MainDrawer> {
 
   Widget _buildAccounts(AuthBloc authBloc) {
     return BlocBuilder(
-        bloc: authBloc,
-        builder: (context, _) {
-          Account current = authBloc.currentAccount;
-          List<Account> accounts = authBloc.accounts;
+      bloc: authBloc,
+      builder: (context, _) {
+        Account current = authBloc.currentAccount;
+        List<Account> accounts = authBloc.accounts;
 
-          final _accounts =
-          accounts.where((item) => item.email != current.email).toList();
-          return RefreshIndicator(
-            onRefresh: () {
-              final completer = Completer();
-              authBloc.add(UpdateAccounts(completer));
-              return completer.future;
+        final _accounts =
+            accounts.where((item) => item.email != current.email).toList();
+        return RefreshIndicator(
+          onRefresh: () {
+            final completer = Completer();
+            authBloc.add(UpdateAccounts(completer));
+            return completer.future;
+          },
+          child: ListView.builder(
+            itemCount: _accounts.length,
+            itemBuilder: (_, i) {
+              final account = _accounts[i];
+              return InkWell(
+                onTap: () {
+                  _changeMode();
+                  authBloc.add(ChangeAccount(account));
+                },
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Text(account.email),
+                ),
+              );
             },
-            child: ListView.builder(
-              itemCount: _accounts.length,
-              itemBuilder: (_, i) {
-                final account = _accounts[i];
-                return InkWell(
-                  onTap: () {
-                    _changeMode();
-                    authBloc.add(ChangeAccount(account));
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Text(account.email),
-                  ),
-                );
-              },
-            ),
-          );
-        });
+          ),
+        );
+      },
+    );
   }
 
   void _changeMode() {

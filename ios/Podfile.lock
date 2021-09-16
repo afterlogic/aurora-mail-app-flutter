@@ -188,10 +188,6 @@ PODS:
     - libwebp
   - webview_flutter (0.0.1):
     - Flutter
-  - yubico_flutter (0.0.1):
-    - Flutter
-    - YubiKit (= 3.1.0)
-  - YubiKit (3.1.0)
 
 DEPENDENCIES:
   - alarm_service (from `.symlinks/plugins/alarm_service/ios`)
@@ -224,7 +220,6 @@ DEPENDENCIES:
   - url_launcher (from `.symlinks/plugins/url_launcher/ios`)
   - video_thumbnail (from `.symlinks/plugins/video_thumbnail/ios`)
   - webview_flutter (from `.symlinks/plugins/webview_flutter/ios`)
-  - yubico_flutter (from `.symlinks/plugins/yubico_flutter/ios`)
 
 SPEC REPOS:
   trunk:
@@ -248,7 +243,6 @@ SPEC REPOS:
     - RxSwift
     - SDWebImage
     - SwiftyGif
-    - YubiKit
 
 EXTERNAL SOURCES:
   alarm_service:
@@ -311,8 +305,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/video_thumbnail/ios"
   webview_flutter:
     :path: ".symlinks/plugins/webview_flutter/ios"
-  yubico_flutter:
-    :path: ".symlinks/plugins/yubico_flutter/ios"
 
 SPEC CHECKSUMS:
   Alamofire: 85e8a02c69d6020a0d734f6054870d7ecb75cf18
@@ -365,8 +357,6 @@ SPEC CHECKSUMS:
   url_launcher: 6fef411d543ceb26efce54b05a0a40bfd74cbbef
   video_thumbnail: c4e2a3c539e247d4de13cd545344fd2d26ffafd1
   webview_flutter: d2b4d6c66968ad042ad94cbb791f5b72b4678a96
-  yubico_flutter: ac789dc612fb56b10890e81a8fe03d0df1ef6113
-  YubiKit: b9f3b240e75feec0cf81a8ade503c072eea6dc3a
 
 PODFILE CHECKSUM: 28ed8d153a623037857f30599c0dd030e2760f94
 

@@ -163,7 +163,6 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
     );
     _mailBloc = BlocProvider.of<MailBloc>(context);
     _contactsBloc = BlocProvider.of<ContactsBloc>(context);
-
     _mailBloc.init(
       authBloc.currentUser,
       authBloc.currentAccount,
@@ -304,11 +303,14 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
           data: AppTheme.floatIconTheme,
           child: Icon(MdiIcons.pen),
         ),
-        onPressed: () => Navigator.pushNamed(context, ComposeRoute.name,
-            arguments: ComposeScreenArgs(
-              mailBloc: _mailBloc,
-              contactsBloc: _contactsBloc,
-            )),
+        onPressed: () => Navigator.pushNamed(
+          context,
+          ComposeRoute.name,
+          arguments: ComposeScreenArgs(
+            mailBloc: _mailBloc,
+            contactsBloc: _contactsBloc,
+          ),
+        ),
       ),
       body: Row(
         children: [
@@ -546,11 +548,14 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
           data: AppTheme.floatIconTheme,
           child: Icon(MdiIcons.pen),
         ),
-        onPressed: () => Navigator.pushNamed(context, ComposeRoute.name,
-            arguments: ComposeScreenArgs(
-              mailBloc: _mailBloc,
-              contactsBloc: _contactsBloc,
-            )),
+        onPressed: () => Navigator.pushNamed(
+          context,
+          ComposeRoute.name,
+          arguments: ComposeScreenArgs(
+            mailBloc: _mailBloc,
+            contactsBloc: _contactsBloc,
+          ),
+        ),
       ),
     );
   }
