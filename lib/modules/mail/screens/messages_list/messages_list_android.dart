@@ -209,8 +209,6 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
         ),
       );
     } else {
-      final isTablet = LayoutConfig.of(context).isTablet;
-      if (isTablet) {}
       await Navigator.pushNamed(
         context,
         MessageViewRoute.name,

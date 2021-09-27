@@ -28,6 +28,8 @@ class MailBloc extends Bloc<MailEvent, MailState> {
 
   Account get account => _account;
 
+  Folder get selectedFolder => _selectedFolder;
+
   init(User user, Account account) {
     _user = user;
     _account = account;
