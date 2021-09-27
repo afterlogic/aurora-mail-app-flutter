@@ -88,7 +88,7 @@ class MailAppBarState extends BState<MailAppBar> {
   }
 
   String _getTitle(BuildContext context, Folder folder) {
-    return folder.viewName(context);
+    return folder.displayName(context);
   }
 
   @override

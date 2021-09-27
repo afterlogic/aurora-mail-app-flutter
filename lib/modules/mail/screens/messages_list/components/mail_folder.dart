@@ -105,7 +105,7 @@ class MailFolder extends StatelessWidget {
 
 class FolderHelper {
   static String getTitle(BuildContext context, Folder folder) {
-    return folder.viewName(context);
+    return folder.displayName(context);
   }
 
   static Widget getIcon(Folder folder) {

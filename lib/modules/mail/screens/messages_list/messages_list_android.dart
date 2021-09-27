@@ -194,13 +194,10 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
   }
 
   Future _onMessageSelected(Message _message) async {
-    final result = await _mailBloc.getFullMessage(_message.localId);
+    final message = await _mailBloc.getFullMessage(_message.localId);
     final draftsFolder = await _mailBloc.getFolderByType(FolderType.drafts);
     final isDraftMessage =
-        draftsFolder != null && result.folder == draftsFolder.fullNameRaw;
-    final message =
-        result.copyWith(folder: _selectedFolder.viewName(context, full: true));
-    print(message.localId);
+        draftsFolder != null && message.folder == draftsFolder.fullNameRaw;
     if (isDraftMessage) {
       Navigator.pushNamed(
         context,

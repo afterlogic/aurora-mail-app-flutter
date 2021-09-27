@@ -86,7 +86,7 @@ class Folder {
     @required this.accountLocalId,
   });
 
-  String viewName(BuildContext context, {bool full = false}) {
+  String displayName(BuildContext context, {bool full = false}) {
     switch (this.folderType) {
       case FolderType.inbox:
         return i18n(context, S.folders_inbox);
