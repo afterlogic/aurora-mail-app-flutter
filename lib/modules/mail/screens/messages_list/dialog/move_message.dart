@@ -51,10 +51,9 @@ class _MoveMessageDialogState extends State<MoveMessageDialog>
         }
       },
       child: AlertDialog(
-        title: Text(i18n(context, S.label_message_move_to) +
-            (current == null ? "" : FolderHelper.getTitle(context, current))),
+        title: Text(i18n(context, S.label_message_move_to)),
         content: BlocBuilder<MailBloc, MailState>(
-            bloc: BlocProvider.of<MailBloc>(context),
+            bloc: widget.mailBloc,
             condition: (prevState, state) =>
                 state is FoldersLoaded || state is FoldersEmpty,
             builder: (ctx, state) {
@@ -70,8 +69,7 @@ class _MoveMessageDialogState extends State<MoveMessageDialog>
             onPressed: current == null ? null : _paste,
           ),
           FlatButton(
-            child: Text(
-                i18n(context, stack.isNotEmpty ? S.btn_back : S.btn_cancel)),
+            child: Text(i18n(context, S.btn_cancel)),
             onPressed: _cancel,
           ),
         ],
@@ -81,20 +79,7 @@ class _MoveMessageDialogState extends State<MoveMessageDialog>
 
   Widget _buildFolders(FoldersLoaded state) {
     final currentFolders = state.folders.where((item) {
-      if (item.isSubscribed == false) {
-        return false;
-      }
-      final isRoot = item.nameSpace?.isNotEmpty == true &&
-          item.fullName.startsWith(item.nameSpace) &&
-          item.fullName.allMatches(item.delimiter).length ==
-              item.nameSpace.allMatches(item.delimiter).length;
-      if (!isRoot && item.parentGuid == current?.guid) {
-        return true;
-      }
-      if (current?.guid == null && isRoot) {
-        return true;
-      }
-      return false;
+      return item.isSubscribed;
     }).toList();
     final items =
         List.generate(currentFolders.length, (i) => _folder(currentFolders[i]));
@@ -106,6 +91,7 @@ class _MoveMessageDialogState extends State<MoveMessageDialog>
   }
 
   Widget _folder(Folder folder) {
+    final theme = Theme.of(context);
     final paddingStep = 40.0;
     var paddingCount = folder.delimiter.allMatches(folder.fullName).length;
     if (folder.nameSpace?.isNotEmpty == true &&
@@ -115,27 +101,27 @@ class _MoveMessageDialogState extends State<MoveMessageDialog>
     paddingCount = max(paddingCount, 0);
     return Padding(
       padding: EdgeInsets.only(left: paddingCount * paddingStep),
-      child: ListTile(
-        onTap: () => _addToStack(folder),
-        leading: FolderHelper.getIcon(folder),
-        title: Text(FolderHelper.getTitle(context, folder)),
+      child: ListTileTheme(
+        selectedColor: theme.accentColor,
+        child: ListTile(
+          selected: folder == current,
+          onTap: () => _addToStack(folder),
+          leading: FolderHelper.getIcon(folder),
+          title: Text(FolderHelper.getTitle(context, folder)),
+        ),
       ),
     );
   }
 
   _addToStack(Folder folder) {
-    stack.add(folder);
-    setState(() {});
+    setState(() {
+      stack.clear();
+      stack.add(folder);
+    });
   }
 
   _cancel() {
-    if (stack.isNotEmpty) {
-      stack.removeLast();
-      setState(() {});
-    } else {
-      stack.clear();
-      Navigator.pop(context);
-    }
+    Navigator.pop(context);
   }
 
   _paste() {
