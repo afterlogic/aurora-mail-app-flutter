@@ -50,37 +50,40 @@ class _MoveMessageDialogState extends State<MoveMessageDialog>
           return false;
         }
       },
-      child: AlertDialog(
-        title: Text(i18n(context, S.label_message_move_to)),
-        content: BlocBuilder<MailBloc, MailState>(
-            bloc: widget.mailBloc,
-            condition: (prevState, state) =>
-                state is FoldersLoaded || state is FoldersEmpty,
-            builder: (ctx, state) {
-              if (state is FoldersLoaded) {
-                return _buildFolders(state);
-              } else {
-                return SizedBox.shrink();
-              }
-            }),
-        actions: <Widget>[
-          FlatButton(
-            child: Text(i18n(context, S.btn_message_move)),
-            onPressed: current == null ? null : _paste,
-          ),
-          FlatButton(
-            child: Text(i18n(context, S.btn_cancel)),
-            onPressed: _cancel,
-          ),
-        ],
+      child: SafeArea(
+        child: AlertDialog(
+          title: Text(i18n(context, S.label_message_move_to)),
+          content: BlocBuilder<MailBloc, MailState>(
+              bloc: widget.mailBloc,
+              condition: (prevState, state) =>
+                  state is FoldersLoaded || state is FoldersEmpty,
+              builder: (ctx, state) {
+                if (state is FoldersLoaded) {
+                  return _buildFolders(state);
+                } else {
+                  return SizedBox.shrink();
+                }
+              }),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(i18n(context, S.btn_message_move)),
+              onPressed: current == null ? null : _paste,
+            ),
+            FlatButton(
+              child: Text(i18n(context, S.btn_cancel)),
+              onPressed: _cancel,
+            ),
+          ],
+        ),
       ),
     );
   }
 
   Widget _buildFolders(FoldersLoaded state) {
-    final currentFolders = state.folders.where((item) {
-      return item.isSubscribed;
-    }).toList();
+    final subscribedFolders =
+        state.folders.where((e) => e.isSubscribed).toList();
+    subscribedFolders.sort((a, b) => a.order - b.order);
+    final currentFolders = _sortFolders(subscribedFolders);
     final items =
         List.generate(currentFolders.length, (i) => _folder(currentFolders[i]));
     return SingleChildScrollView(
@@ -88,6 +91,16 @@ class _MoveMessageDialogState extends State<MoveMessageDialog>
         children: items,
       ),
     );
+  }
+
+  List<Folder> _sortFolders(List<Folder> folders, [String parentGuid]) {
+    List<Folder> result = [];
+    final currentLevel = folders.where((item) => item.parentGuid == parentGuid);
+    for (final element in currentLevel) {
+      result.add(element);
+      result.addAll(_sortFolders(folders, element.guid));
+    }
+    return result;
   }
 
   Widget _folder(Folder folder) {
