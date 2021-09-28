@@ -42,62 +42,59 @@ class _NotificationsSettingsState extends BState<NotificationsSettings> {
               },
             );
             if (isTablet) {
-              button = Center(child: button);
+              button = Align(
+                alignment: Alignment.centerLeft,
+                child: button,);
             }
             return SafeArea(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Expanded(
-                    child: ListView(
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16.0, vertical: 8),
+                    child: Row(
                       children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16.0, vertical: 8),
-                          child: Row(
-                            children: <Widget>[
-                              Text(
-                                i18n(context, S.label_device_identifier),
-                                style: theme.textTheme.subtitle1,
-                              ),
-                              Expanded(
-                                  child: Text(
-                                PushNotificationsManager.instance.deviceId,
-                                textAlign: TextAlign.right,
-                              )),
-                              IconButton(
-                                icon: Icon(Icons.content_copy),
-                                onPressed: () {
-                                  Clipboard.setData(ClipboardData(
-                                      text: PushNotificationsManager
-                                          .instance.deviceId));
-                                  showSnack(
-                                    isError: false,
-                                    context: context,
-                                    scaffoldState: Scaffold.of(context),
-                                    message: i18n(context,
-                                        S.label_device_id_copied_to_clip_board),
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
+                        Text(
+                          i18n(context, S.label_device_identifier),
+                          style: theme.textTheme.subtitle1,
                         ),
-                        ListTile(
-                          title: Text(
-                              i18n(context, S.label_token_storing_status),
-                              style: theme.textTheme.subtitle1),
-                          trailing: Text(tokenStatus != null
-                              ? i18n(
-                                  context,
-                                  tokenStatus
-                                      ? S.label_token_successful
-                                      : S.label_token_failed)
-                              : "..."),
+                        Expanded(
+                            child: Text(
+                          PushNotificationsManager.instance.deviceId,
+                          textAlign: TextAlign.right,
+                        )),
+                        IconButton(
+                          icon: Icon(Icons.content_copy),
+                          onPressed: () {
+                            Clipboard.setData(ClipboardData(
+                                text: PushNotificationsManager
+                                    .instance.deviceId));
+                            showSnack(
+                              isError: false,
+                              context: context,
+                              scaffoldState: Scaffold.of(context),
+                              message: i18n(context,
+                                  S.label_device_id_copied_to_clip_board),
+                            );
+                          },
                         ),
                       ],
                     ),
                   ),
+                  ListTile(
+                    title: Text(
+                        i18n(context, S.label_token_storing_status),
+                        style: theme.textTheme.subtitle1),
+                    trailing: Text(tokenStatus != null
+                        ? i18n(
+                            context,
+                            tokenStatus
+                                ? S.label_token_successful
+                                : S.label_token_failed)
+                        : "..."),
+                  ),
+                  if (!isTablet) Spacer(),
                   Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 16.0, vertical: 8.0),
