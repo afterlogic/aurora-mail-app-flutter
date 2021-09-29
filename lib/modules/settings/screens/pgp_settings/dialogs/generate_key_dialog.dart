@@ -2,7 +2,8 @@ import 'package:aurora_mail/models/alias_or_identity.dart';
 import 'package:aurora_mail/modules/dialog_wrap.dart';
 import 'package:aurora_mail/utils/identity_util.dart';
 import 'package:aurora_mail/utils/input_validation.dart';
-import 'package:aurora_mail/utils/internationalization.dart'; import 'package:aurora_mail/res/str/s.dart';
+import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_mail/res/str/s.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:aurora_mail/utils/base_state.dart';
@@ -17,7 +18,8 @@ class GenerateKeyDialog extends StatefulWidget {
   _GenerateKeyDialogState createState() => _GenerateKeyDialogState();
 }
 
-class _GenerateKeyDialogState extends BState<GenerateKeyDialog> with NotSavedChangesMixin{
+class _GenerateKeyDialogState extends BState<GenerateKeyDialog>
+    with NotSavedChangesMixin {
   static const lengths = [2048, 4096];
   var length = lengths[0];
   AliasOrIdentity current;
@@ -53,6 +55,7 @@ class _GenerateKeyDialogState extends BState<GenerateKeyDialog> with NotSavedCha
                 );
               }).toList(),
               isExpanded: true,
+              isDense: false,
               selectedItemBuilder: (_) {
                 return widget.identities.map((value) {
                   return Text(
