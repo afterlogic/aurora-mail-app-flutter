@@ -20,8 +20,8 @@ class OptionalDialog extends StatefulWidget {
 
   const OptionalDialog({
     Key key,
-    @required this.title,
-    @required this.description,
+    this.title,
+    this.description,
     @required this.options,
     @required this.actionText,
     this.actions,
@@ -70,28 +70,31 @@ class _OptionalDialogState extends State<OptionalDialog> {
   @override
   Widget build(BuildContext context) {
     List<Widget> children = [
-      Padding(
-        padding: const EdgeInsets.only(bottom: 16),
-        child: Text(description),
-      )
+      if (description != null)
+        Padding(
+          padding: const EdgeInsets.only(bottom: 16),
+          child: Text(description),
+        )
     ];
     for (final key in options.keys) {
-      final row = Row(
-        children: [
-          Checkbox(
-            value: options[key],
-            onChanged: (bool value) {
-              setState(() {
-                options[key] = value;
-              });
-            },
-          ),
-          Expanded(child: Padding(
-            padding: const EdgeInsets.only(right: 16),
-            child: Text(key),
-          )),
-        ],
+      final row = GestureDetector(
+        onTap: () => _onTapOption(key),
+        child: Row(
+          children: [
+            Checkbox(
+              value: options[key],
+              onChanged: (_) => _onTapOption(key),
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(right: 16),
+                child: Text(key),
+              ),
+            ),
+          ],
+        ),
       );
+
       children.add(row);
     }
     return AlertDialog(
@@ -118,5 +121,11 @@ class _OptionalDialogState extends State<OptionalDialog> {
         ),
       ],
     );
+  }
+
+  void _onTapOption(String key) {
+    setState(() {
+      options[key] = !options[key];
+    });
   }
 }

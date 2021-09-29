@@ -302,7 +302,7 @@
   "btn_verify_pin": "Подтвердите PIN",
   "error_invalid_pin": "Неверный PIN",
   "btn_done": "Готово",
-  "hint_confirm_exit": "Вы уверены что хотите выйти",
+  "hint_confirm_exit": "Вы уверены что хотите выйти?",
   "btn_exit": "Выйти",
   "btn_contact_find_in_email": "Искать в письмах",
   "btn_message_resend": "Повторить",

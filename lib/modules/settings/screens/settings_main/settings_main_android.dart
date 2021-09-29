@@ -170,8 +170,7 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
     final result = await showDialog(
       context: context,
       builder: (_) => OptionalDialog(
-        title: null,
-        description: i18n(context, S.hint_confirm_exit),
+        title: i18n(context, S.hint_confirm_exit),
         options: {clearCacheText: true},
         actionText: i18n(context, S.btn_exit),
       ),

@@ -268,7 +268,7 @@ class EnS extends S {
     258: "Verify",
     259: "Invalid code",
     260: "Done",
-    261: "Are you sure want to exit",
+    261: "Are you sure want to exit?",
     262: "Exit",
     263: "OpenPGP",
     264: "Public keys",

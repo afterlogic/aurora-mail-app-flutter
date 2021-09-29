@@ -262,7 +262,7 @@
   "btn_verify_pin": "Verify",
   "error_invalid_pin": "Invalid code",
   "btn_done": "Done",
-  "hint_confirm_exit": "Are you sure want to exit",
+  "hint_confirm_exit": "Are you sure want to exit?",
   "btn_exit": "Exit",
   "label_pgp_settings": "OpenPGP",
   "label_pgp_public_keys": "Public keys",
