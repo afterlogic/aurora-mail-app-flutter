@@ -309,10 +309,10 @@ class _PgpSettingsState extends BState<PgpSettings> {
             width: 10,
           );
     final children = <Widget>[
-      if (state.myPublic.isNotEmpty)
+      if (state.contactPublic.isNotEmpty)
         AMButton(
           child: Text(i18n(context, S.btn_pgp_export_all_public_keys)),
-          onPressed: () => _exportAllPublicKeys(state.myPublic),
+          onPressed: () => _exportAllPublicKeys(state.contactPublic),
         ),
       space,
       AMButton(
