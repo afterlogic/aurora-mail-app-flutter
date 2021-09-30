@@ -17,6 +17,13 @@ enum FolderType {
   unknown,
 }
 
+class FolderNode {
+  Folder folder;
+  List<FolderNode> children;
+
+  FolderNode(this.folder, this.children);
+}
+
 class Folder {
   final String guid;
 
@@ -207,5 +214,36 @@ class Folder {
       count: localFolder.count,
       unread: localFolder.unread,
     );
+  }
+
+  static List<FolderNode> getFolderTree(
+    List<Folder> folders, [
+    String parentGuid,
+  ]) {
+    final List<FolderNode> result = [];
+    folders.sort((a, b) => a.order - b.order);
+    var currentLevelFolders =
+        folders.where((e) => e.parentGuid == parentGuid).toList();
+    if (_isRootOfNameSpaceStructure(currentLevelFolders)) {
+      final rootFolder = currentLevelFolders[0];
+      result.add(FolderNode(rootFolder, []));
+      currentLevelFolders =
+          folders.where((e) => e.parentGuid == rootFolder.guid).toList();
+    }
+    for (final f in currentLevelFolders) {
+      result.add(FolderNode(
+        f,
+        getFolderTree(folders, f.guid),
+      ));
+    }
+    return result;
+  }
+
+  static bool _isRootOfNameSpaceStructure(List<Folder> folders) {
+    return folders.length == 1 &&
+        folders[0].parentGuid == null &&
+        folders[0].nameSpace?.isNotEmpty == true &&
+        folders[0].fullNameRaw ==
+            folders[0].nameSpace.replaceAll(folders[0].delimiter, '');
   }
 }

@@ -21,7 +21,7 @@ class MailFolder extends StatelessWidget {
       @required this.mailFolder,
       @required this.isSelected,
       int paddingCount,
-      this.children})
+      @required this.children})
       : super(key: key);
 
   void _selectFolder(BuildContext context) {

@@ -197,24 +197,40 @@ class _MainDrawerState extends BState<MainDrawer> {
   }
 
   List<MailFolder> _getFolderWidgets(
-    List<Folder> mailFolders,
+    List<Folder> folders,
     String selected,
     MessagesFilter filter, [
     String parentGuid,
   ]) {
-    mailFolders.sort((a, b) => a.order - b.order);
-    return mailFolders
-        .where((item) => item.parentGuid == parentGuid)
-        .map((mailFolder) {
-      return MailFolder(
-        mailFolder: mailFolder,
+    // TODO: redo on Folder.getFolderTree()
+    folders.sort((a, b) => a.order - b.order);
+    final List<MailFolder> result = [];
+    var rootFolders = folders.where((e) => e.parentGuid == parentGuid).toList();
+    final isUsedNameSpace = rootFolders.length == 1 &&
+        rootFolders[0].nameSpace?.isNotEmpty == true &&
+        rootFolders[0].fullNameRaw ==
+            rootFolders[0].nameSpace.replaceAll(rootFolders[0].delimiter, '');
+    if (isUsedNameSpace) {
+      final rootFolder = rootFolders[0];
+      result.add(MailFolder(
+        mailFolder: rootFolder,
         isSelected:
-            selected == mailFolder.guid && filter != MessagesFilter.starred,
-        key: Key(mailFolder.guid),
-        children:
-            _getFolderWidgets(mailFolders, selected, filter, mailFolder.guid),
-      );
-    }).toList();
+            selected == rootFolder.guid && filter != MessagesFilter.starred,
+        key: Key(rootFolder.guid),
+        children: [],
+      ));
+      rootFolders =
+          folders.where((e) => e.parentGuid == rootFolder.guid).toList();
+    }
+    for (final f in rootFolders) {
+      result.add(MailFolder(
+        mailFolder: f,
+        isSelected: selected == f.guid && filter != MessagesFilter.starred,
+        key: Key(f.guid),
+        children: _getFolderWidgets(folders, selected, filter, f.guid),
+      ));
+    }
+    return result;
   }
 
   Widget _buildFoldersEmpty() {
