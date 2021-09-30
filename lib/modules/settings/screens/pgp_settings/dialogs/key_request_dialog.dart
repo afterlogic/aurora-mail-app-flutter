@@ -38,6 +38,7 @@ class _KeyRequestDialogState extends BState<KeyRequestDialog> {
   final formKey = GlobalKey<FormState>();
   String error;
   bool progress = false;
+  bool _obscure = true;
 
   @override
   Widget build(BuildContext context) {
@@ -63,8 +64,18 @@ class _KeyRequestDialogState extends BState<KeyRequestDialog> {
               decoration: InputDecoration(
                 labelText: i18n(context, S.login_input_password),
                 helperText: '',
+                suffix: GestureDetector(
+                  child: Icon(
+                    _obscure ? Icons.visibility : Icons.visibility_off,
+                  ),
+                  onTap: () {
+                    _obscure = !_obscure;
+                    setState(() {});
+                  },
+                ),
               ),
               controller: passCtrl,
+              obscureText: _obscure,
             ),
           ),
         ],
