@@ -12,3 +12,6 @@ class StorageNames {
   static const team = "team";
   static const collected = "collected";
 }
+
+const double MENU_PADDING_STEP = 30.0;
+const double MENU_ITEM_LENGTH = 160.0;

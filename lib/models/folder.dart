@@ -246,4 +246,13 @@ class Folder {
         folders[0].fullNameRaw ==
             folders[0].nameSpace.replaceAll(folders[0].delimiter, '');
   }
+
+  static int getFoldersDepth(List<Folder> folders) {
+    var result = 0;
+    for (final folder in folders) {
+      var levelFolder = folder.delimiter.allMatches(folder.fullName).length;
+      if (levelFolder > result) result = levelFolder;
+    }
+    return result;
+  }
 }

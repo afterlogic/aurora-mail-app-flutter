@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/dialog_wrap.dart';
@@ -86,11 +87,25 @@ class _MoveMessageDialogState extends State<MoveMessageDialog>
     final currentFolders = _sortFolders(subscribedFolders);
     final items =
         List.generate(currentFolders.length, (i) => _folder(currentFolders[i]));
-    return SingleChildScrollView(
+    Widget result = SingleChildScrollView(
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: items,
       ),
     );
+    final depthFolders = Folder.getFoldersDepth(currentFolders);
+    if (depthFolders >= 3) {
+      result = SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: depthFolders * MENU_PADDING_STEP + MENU_ITEM_LENGTH,
+          ),
+          child: result,
+        ),
+      );
+    }
+    return result;
   }
 
   List<Folder> _sortFolders(List<Folder> folders, [String parentGuid]) {
@@ -105,7 +120,6 @@ class _MoveMessageDialogState extends State<MoveMessageDialog>
 
   Widget _folder(Folder folder) {
     final theme = Theme.of(context);
-    final paddingStep = 40.0;
     var paddingCount = folder.delimiter.allMatches(folder.fullName).length;
     if (folder.nameSpace?.isNotEmpty == true &&
         folder.fullName.startsWith(folder.nameSpace)) {
@@ -113,14 +127,16 @@ class _MoveMessageDialogState extends State<MoveMessageDialog>
     }
     paddingCount = max(paddingCount, 0);
     return Padding(
-      padding: EdgeInsets.only(left: paddingCount * paddingStep),
+      padding: EdgeInsets.only(left: paddingCount * MENU_PADDING_STEP),
       child: ListTileTheme(
         selectedColor: theme.accentColor,
         child: ListTile(
           selected: folder == current,
           onTap: () => _addToStack(folder),
           leading: FolderHelper.getIcon(folder),
-          title: Text(FolderHelper.getTitle(context, folder)),
+          title: Text(
+            FolderHelper.getTitle(context, folder),
+          ),
         ),
       ),
     );

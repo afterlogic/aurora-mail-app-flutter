@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/messages_list_state.dart';
@@ -71,7 +72,6 @@ class MailFolder extends StatelessWidget {
       }
     }
 
-    final paddingStep = 40.0;
     var paddingCount =
         mailFolder.delimiter.allMatches(mailFolder.fullName).length;
     if (mailFolder.nameSpace?.isNotEmpty == true &&
@@ -83,7 +83,7 @@ class MailFolder extends StatelessWidget {
       return Column(
         children: <Widget>[
           Padding(
-            padding: EdgeInsets.only(left: paddingCount * paddingStep),
+            padding: EdgeInsets.only(left: paddingCount * MENU_PADDING_STEP),
             child: ListTile(
               selected: isSelected,
               leading: FolderHelper.getIcon(mailFolder),
