@@ -6,7 +6,6 @@ import 'package:aurora_mail/database/accounts/accounts_table.dart';
 import 'package:aurora_mail/database/aliases/aliases_table.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/auth/repository/device_id_storage.dart';
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:webmail_api_client/webmail_api_client.dart';
 
@@ -25,7 +24,7 @@ class AuthApi {
           .replaceFirst("{domain}", domain)
           .replaceFirst("{email}", email);
 
-      final res = await http.get(url);
+      final res = await http.get(Uri.parse(url));
       final resBody = json.decode(res.body);
       return resBody["url"] as String;
     } catch (err) {

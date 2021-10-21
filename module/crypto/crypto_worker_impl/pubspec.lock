@@ -44,7 +44,7 @@ packages:
       path: "../../.."
       relative: true
     source: path
-    version: "2.7.2+226"
+    version: "2.3.0+231"
   aurora_ui_kit:
     dependency: transitive
     description:
@@ -933,11 +933,9 @@ packages:
   yubico_flutter:
     dependency: transitive
     description:
-      path: "."
-      ref: HEAD
-      resolved-ref: "2feefe055cc44f75e590f835a50e894b9b7996c2"
-      url: "https://github.com/afterlogic/yubico_flutter"
-    source: git
+      path: "../../mocks/yubico_flutter"
+      relative: true
+    source: path
     version: "0.0.1"
 sdks:
   dart: ">=2.13.0 <3.0.0"

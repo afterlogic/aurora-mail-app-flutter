@@ -7,5 +7,5 @@ part of 'white_mail_dao.dart';
 // **************************************************************************
 
 mixin _$WhiteMailDaoMixin on DatabaseAccessor<AppDatabase> {
-  $WhiteMailTableTable get whiteMailTable => db.whiteMailTable;
+  $WhiteMailTableTable get whiteMailTable => attachedDatabase.whiteMailTable;
 }

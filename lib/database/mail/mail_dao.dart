@@ -138,7 +138,7 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
     params.add(Variable.withInt(limit));
     params.add(Variable.withInt(offset));
 
-    return customSelectQuery(query, variables: params, readsFrom: {mail})
+    return customSelect(query, variables: params, readsFrom: {mail})
         .watch()
         .map((list) {
       return list.map((item) {
@@ -210,7 +210,7 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
   Future<int> deleteMessagesFromRemovedFolders(
       List<String> removedFoldersRawNames) async {
     final deletedMessages = await (delete(mail)
-          ..where((m) => isIn(m.folder, removedFoldersRawNames)))
+          ..where((m) => m.folder.isIn(removedFoldersRawNames)))
         .go();
 
     print("deleted messages from removed folders: $deletedMessages");

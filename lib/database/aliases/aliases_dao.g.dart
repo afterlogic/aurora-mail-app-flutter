@@ -7,5 +7,5 @@ part of 'aliases_dao.dart';
 // **************************************************************************
 
 mixin _$AliasesDaoMixin on DatabaseAccessor<AppDatabase> {
-  $AliasesTableTable get aliasesTable => db.aliasesTable;
+  $AliasesTableTable get aliasesTable => attachedDatabase.aliasesTable;
 }

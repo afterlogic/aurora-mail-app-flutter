@@ -4,15 +4,12 @@ import 'package:dm/dm.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class StorageModule {
-  @provide
-  @singleton
+  @Provide()
   FlutterSecureStorage flutterSecureStorage() => FlutterSecureStorage();
 
-  @provide
-  @singleton
+  @Provide()
   SettingsLocalStorage settingsLocalStorage() => SettingsLocalStorage();
 
-  @provide
-  @singleton
+  @Provide()
   AuthLocalStorage authLocalStorage() => AuthLocalStorage();
 }

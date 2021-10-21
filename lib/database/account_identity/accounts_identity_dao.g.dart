@@ -8,5 +8,5 @@ part of 'accounts_identity_dao.dart';
 
 mixin _$AccountIdentityDaoMixin on DatabaseAccessor<AppDatabase> {
   $AccountIdentityTableTable get accountIdentityTable =>
-      db.accountIdentityTable;
+      attachedDatabase.accountIdentityTable;
 }

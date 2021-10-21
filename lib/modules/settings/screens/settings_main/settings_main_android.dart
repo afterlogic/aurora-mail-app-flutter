@@ -6,7 +6,6 @@ import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_event.dart';
 import 'package:aurora_mail/modules/route_generator.dart';
 import 'package:aurora_mail/modules/settings/screens/about/about_route.dart';
 import 'package:aurora_mail/modules/settings/screens/common_settings/common_settings_route.dart';
-import 'package:aurora_mail/modules/settings/screens/debug/debug_local_storage.dart';
 import 'package:aurora_mail/modules/settings/screens/debug/debug_route.dart';
 import 'package:aurora_mail/modules/settings/screens/manage_users/manage_users_route.dart';
 import 'package:aurora_mail/modules/settings/screens/notifications_settings/notifications_settings_route.dart';
@@ -14,7 +13,6 @@ import 'package:aurora_mail/modules/settings/screens/pgp_settings/pgp_settings_r
 import 'package:aurora_mail/modules/settings/screens/settings_main/settings_navigator.dart';
 import 'package:aurora_mail/modules/settings/screens/sync_settings/sync_settings_route.dart';
 import 'package:aurora_mail/res/str/s.dart';
-import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
 import 'package:aurora_mail/shared_ui/mail_bottom_app_bar.dart';
 import 'package:aurora_mail/shared_ui/optional_dialog.dart';
 import 'package:aurora_mail/utils/base_state.dart';
@@ -175,7 +173,7 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
         actionText: i18n(context, S.btn_exit),
       ),
     );
-    if (result is OptionalResult && result.generalResult == true) {
+    if (result is OptionalDialogResult && result.generalResult == true) {
       final authBloc = BlocProvider.of<AuthBloc>(context);
       if (result.options[clearCacheText] == true) {
         authBloc.add(DeleteUser(authBloc.currentUser));

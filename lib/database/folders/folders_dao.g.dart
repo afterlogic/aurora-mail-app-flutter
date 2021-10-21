@@ -7,5 +7,5 @@ part of 'folders_dao.dart';
 // **************************************************************************
 
 mixin _$FoldersDaoMixin on DatabaseAccessor<AppDatabase> {
-  $FoldersTable get folders => db.folders;
+  $FoldersTable get folders => attachedDatabase.folders;
 }

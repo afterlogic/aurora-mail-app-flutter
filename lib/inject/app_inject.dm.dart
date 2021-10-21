@@ -21,9 +21,17 @@ import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/settings_methods.dart';
 
 class AppInjectorImpl extends AppInjector {
-  final _cryptoModule = CryptoModule();
-  final _daoModule = DaoModule();
-  final _storageModule = StorageModule();
+  final CryptoModule _cryptoModule;
+  final DaoModule _daoModule;
+  final StorageModule _storageModule;
+
+  AppInjectorImpl({
+    CryptoModule cryptoModule,
+    DaoModule daoModule,
+    StorageModule storageModule,
+  })  : this._cryptoModule = cryptoModule ?? CryptoModule(),
+        this._daoModule = daoModule ?? DaoModule(),
+        this._storageModule = storageModule ?? StorageModule();
 
   CryptoStorage _cryptoStorage;
   PgpWorker _pgpWorker;

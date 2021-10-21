@@ -109,7 +109,7 @@ class ContactsDbServiceImpl implements ContactsDbService {
       {bool nullToAbsent = true}) {
     final formatted = ContactMapper.toDB(updatedContacts);
     final companions =
-        formatted.map((c) => c.createCompanion(nullToAbsent)).toList();
+        formatted.map((c) => c.toCompanion(nullToAbsent)).toList();
     return _contactsDao.updateContacts(companions);
   }
 
@@ -118,13 +118,13 @@ class ContactsDbServiceImpl implements ContactsDbService {
       {bool nullToAbsent = true}) {
     final formatted = ContactsStorageMapper.toDB(updatedStorages, userId);
     final companions =
-        formatted.map((c) => c.createCompanion(nullToAbsent)).toList();
+        formatted.map((c) => c.toCompanion(nullToAbsent)).toList();
     return _storagesDao.updateStorages(companions);
   }
 
   Future<void> editGroups(List<ContactsGroup> newGroups) {
     final formatted = ContactsGroupMapper.toDB(newGroups);
-    final companions = formatted.map((c) => c.createCompanion(true)).toList();
+    final companions = formatted.map((c) => c.toCompanion(true)).toList();
     return _groupsDao.updateGroups(companions);
   }
 

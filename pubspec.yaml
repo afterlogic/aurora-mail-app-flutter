@@ -21,22 +21,23 @@ dependencies:
   equatable: 1.1.1
 
   # http
-  http: 0.12.0+4
+  http: 0.13.3
   webmail_api_client:
     path: ./core/webmail_api_client
+  html: ^0.15.0
 
   # local storage
-  moor_flutter: 2.1.1
+  moor_flutter: ^4.0.0
   shared_preferences: 0.5.6+3
 
   # file downloading/uploading
   file_picker: 4.0.0
   flutter_uploader: 1.2.0
   flutter_downloader: 1.5.2
-  share: 0.6.5+4
+  share: ^2.0.4
   path_provider: 2.0.2
   video_thumbnail: 0.2.1
-  mime: 0.9.7
+  mime: ^1.0.1
   # type ahead
   flutter_typeahead: 1.8.0
 
@@ -51,7 +52,7 @@ dependencies:
   # i18n
   localizator_interface: 0.4.0
   # misc
-  uuid: 2.0.4
+  uuid: ^3.0.5
   intl: 0.17.0
   filesize: 1.0.4
   permission_handler: 8.1.4+2
@@ -110,7 +111,7 @@ dependencies:
   crypto_worker_impl:
     path: module/crypto/crypto_worker_impl
 
-  dm: 0.1.0
+  dm: ^0.4.0
 
   # fido
   yubico_flutter:
@@ -122,24 +123,26 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  dm_gen: 0.1.0
-  build_runner: 1.8.1
-  moor_generator: 2.4.0
+  dm_gen: ^0.5.1+1
+  build_runner: 2.1.2
+  moor_generator: 4.5.1
   build_variant:
     git: "https://github.com/afterlogic/build_variant"
-  flutter_launcher_icons: 0.7.4
-  localizator: 0.4.0
+  flutter_launcher_icons: ^0.9.2
+  localizator: ^0.4.2
+
+dependency_overrides:
+  analyzer: 2.3.0
+  build: 2.1.0
+  meta: ^1.7.0
+
 flutter_icons:
   ios: true
   android: true
   image_path: build_res/afterlogic/image/icon.png
   adaptive_icon_background: "#FFFFFF"
   adaptive_icon_foreground: build_res/afterlogic/image/icon_foreground.png
-dependency_overrides:
-  yaml: ^2.1.15
-  dart_style: ^1.0.0
-  image: ^2.1.1
-  xml: ^4.2.0
+
 flutter:
   uses-material-design: true
 

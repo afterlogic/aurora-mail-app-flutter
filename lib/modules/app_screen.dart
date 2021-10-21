@@ -20,6 +20,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:moor_flutter/moor_flutter.dart';
 import 'package:receive_sharing/recive_sharing.dart';
 import 'package:theme/app_theme.dart';
 import 'package:webmail_api_client/webmail_api_client.dart';
@@ -104,7 +105,8 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
     BackgroundHelper.current = state;
 
     if (state == AppLifecycleState.resumed) {
-      DBInstances.appDB.streamQueries.handleTableUpdates({DBInstances.appDB.mail});
+      DBInstances.appDB.streamQueries
+          .handleTableUpdates({TableUpdate.onTable(DBInstances.appDB.mail)});
       _settingsBloc.add(OnResume());
     }
 
@@ -172,7 +174,8 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
           builder: (_, authState) {
             if (authState is InitializedUserAndAccounts) {
               if (authState.user != null) {
-                _settingsBloc.add(InitSettings(authState.user, authState.users));
+                _settingsBloc
+                    .add(InitSettings(authState.user, authState.users));
               }
               return BlocBuilder<SettingsBloc, SettingsState>(
                   bloc: _settingsBloc,
@@ -201,7 +204,8 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
                           debugShowCheckedModeBanner: false,
                           navigatorKey: _navKey,
                           onGenerateTitle: (context) {
-                            final is24 = MediaQuery.of(context).alwaysUse24HourFormat;
+                            final is24 =
+                                MediaQuery.of(context).alwaysUse24HourFormat;
                             if (settingsState.is24 == null) {
                               _settingsBloc.add(SetTimeFormat(is24));
                             }
@@ -215,23 +219,27 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
                             GlobalWidgetsLocalizations.delegate,
                             GlobalCupertinoLocalizations.delegate,
                             LocalizationI18nDelegate(
-                              forcedLocale:
-                                  supportedLocales.contains(settingsState.language?.toLocale())
-                                      ? settingsState.language?.toLocale()
-                                      : null,
+                              forcedLocale: supportedLocales.contains(
+                                      settingsState.language?.toLocale())
+                                  ? settingsState.language?.toLocale()
+                                  : null,
                             ),
                           ],
                           supportedLocales: supportedLocales,
                           localeResolutionCallback: (locale, locales) {
                             final supportedLocale = locales.firstWhere((l) {
-                              return locale != null && l.languageCode == locale.languageCode;
+                              return locale != null &&
+                                  l.languageCode == locale.languageCode;
                             }, orElse: () => null);
 
-                            return supportedLocale ?? locales.first ?? Locale("en", "");
+                            return supportedLocale ??
+                                locales.first ??
+                                Locale("en", "");
                           },
                           locale: settingsState.language?.toLocale(),
-                          initialRoute:
-                              authState.needsLogin ? LoginRoute.name : MessagesListRoute.name,
+                          initialRoute: authState.needsLogin
+                              ? LoginRoute.name
+                              : MessagesListRoute.name,
                           navigatorObservers: [routeObserver],
                         ),
                       );

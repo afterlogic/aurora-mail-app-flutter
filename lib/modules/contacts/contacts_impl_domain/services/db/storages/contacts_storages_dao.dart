@@ -18,7 +18,10 @@ class ContactsStoragesDao extends DatabaseAccessor<AppDatabase>
 
   Future<void> addStorages(List<ContactsStoragesTable> newStorages) {
     try {
-      return into(contactsStorages).insertAll(newStorages);
+      return batch((b) => b.insertAll(
+            contactsStorages,
+            newStorages,
+          ));
     } catch (err) {
       print("insert contactsStorages error: $err");
       return null;

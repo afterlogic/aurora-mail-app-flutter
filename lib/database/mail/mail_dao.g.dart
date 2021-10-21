@@ -7,5 +7,5 @@ part of 'mail_dao.dart';
 // **************************************************************************
 
 mixin _$MailDaoMixin on DatabaseAccessor<AppDatabase> {
-  $MailTable get mail => db.mail;
+  $MailTable get mail => attachedDatabase.mail;
 }

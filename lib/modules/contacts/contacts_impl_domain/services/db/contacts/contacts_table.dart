@@ -96,7 +96,7 @@ class ContactsTable extends Table {
 
   TextColumn get otherEmail => text()();
 
-  TextColumn get notes => text()();
+  TextColumn get notes => text().nullable()();
 
   IntColumn get birthDay => integer()();
 

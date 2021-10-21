@@ -14,6 +14,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:moor_flutter/moor_flutter.dart';
 import 'package:webmail_api_client/webmail_api_client.dart';
 
 import 'background/background_helper.dart';
@@ -38,7 +39,7 @@ void main() async {
   FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
   FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
   // ignore: invalid_use_of_protected_member
-  DBInstances.appDB.connection.executor.ensureOpen();
+  DBInstances.appDB.connection.executor.ensureOpen(DBInstances.appDB);
   LoggerStorage()
     ..getDebug().then((value) {
       if (value) logger.enable = true;

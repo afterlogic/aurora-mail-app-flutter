@@ -4,11 +4,11 @@ import 'package:aurora_mail/utils/show_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class OptionalResult {
+class OptionalDialogResult {
   final bool generalResult;
   final Map<String, bool> options;
 
-  OptionalResult({this.generalResult, this.options});
+  OptionalDialogResult({this.generalResult, this.options});
 }
 
 class OptionalDialog extends StatefulWidget {
@@ -108,7 +108,7 @@ class _OptionalDialogState extends State<OptionalDialog> {
           child: Text(i18n(context, S.btn_cancel)),
           onPressed: () => Navigator.pop(
             context,
-            OptionalResult(generalResult: false, options: options),
+            OptionalDialogResult(generalResult: false, options: options),
           ),
         ),
         if (actions != null) ...actions,
@@ -116,7 +116,7 @@ class _OptionalDialogState extends State<OptionalDialog> {
           child: Text(actionText),
           onPressed: () => Navigator.pop(
             context,
-            OptionalResult(generalResult: true, options: options),
+            OptionalDialogResult(generalResult: true, options: options),
           ),
         ),
       ],

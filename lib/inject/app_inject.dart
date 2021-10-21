@@ -11,6 +11,7 @@ import 'package:dm/dm.dart';
 import 'app_inject.dm.dart';
 
 @Modules(const [CryptoModule, DaoModule, StorageModule])
+
 abstract class AppInjector {
   static AppInjector instance;
 
@@ -18,10 +19,10 @@ abstract class AppInjector {
     instance = await AppInjectorImpl().init();
   }
 
-  @provide
+  @getInstance
   PgpWorker pgpWorker();
 
-  @provide
+  @getInstance
   CryptoStorage cryptoStorage();
 
   PgpSettingsBloc pgpSettingsBloc(AuthBloc authBloc);
