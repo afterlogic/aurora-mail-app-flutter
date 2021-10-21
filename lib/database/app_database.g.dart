@@ -5119,7 +5119,7 @@ class ContactDb extends DataClass implements Insertable<ContactDb> {
       @required this.businessFax,
       @required this.businessWeb,
       @required this.otherEmail,
-      this.notes,
+      @required this.notes,
       @required this.birthDay,
       @required this.birthMonth,
       @required this.birthYear,
@@ -6193,7 +6193,7 @@ class ContactsTableCompanion extends UpdateCompanion<ContactDb> {
     @required String businessFax,
     @required String businessWeb,
     @required String otherEmail,
-    this.notes = const Value.absent(),
+    @required String notes,
     @required int birthDay,
     @required int birthMonth,
     @required int birthYear,
@@ -6247,6 +6247,7 @@ class ContactsTableCompanion extends UpdateCompanion<ContactDb> {
         businessFax = Value(businessFax),
         businessWeb = Value(businessWeb),
         otherEmail = Value(otherEmail),
+        notes = Value(notes),
         birthDay = Value(birthDay),
         birthMonth = Value(birthMonth),
         birthYear = Value(birthYear),
@@ -7054,8 +7055,8 @@ class $ContactsTableTable extends ContactsTable
   GeneratedColumn<String> _notes;
   @override
   GeneratedColumn<String> get notes =>
-      _notes ??= GeneratedColumn<String>('notes', aliasedName, true,
-          typeName: 'TEXT', requiredDuringInsert: false);
+      _notes ??= GeneratedColumn<String>('notes', aliasedName, false,
+          typeName: 'TEXT', requiredDuringInsert: true);
   final VerificationMeta _birthDayMeta = const VerificationMeta('birthDay');
   GeneratedColumn<int> _birthDay;
   @override
@@ -7542,6 +7543,8 @@ class $ContactsTableTable extends ContactsTable
     if (data.containsKey('notes')) {
       context.handle(
           _notesMeta, notes.isAcceptableOrUnknown(data['notes'], _notesMeta));
+    } else if (isInserting) {
+      context.missing(_notesMeta);
     }
     if (data.containsKey('birth_day')) {
       context.handle(_birthDayMeta,
