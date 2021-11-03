@@ -52,7 +52,7 @@ class ContactsListTile extends StatelessWidget {
       final authBloc = BlocProvider.of<AuthBloc>(context);
       final contactsBloc = BlocProvider.of<ContactsBloc>(context);
       final currentStorage = contactsBloc.state.storages.firstWhere(
-          (s) => s.sqliteId == contactsBloc.state.selectedStorage,
+          (s) => s.id == contactsBloc.state.selectedStorage,
           orElse: () => null);
 
       return ListTile(

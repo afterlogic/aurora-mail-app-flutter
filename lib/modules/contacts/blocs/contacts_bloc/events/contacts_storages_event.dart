@@ -12,12 +12,12 @@ class ReceivedStorages extends ContactsEvent {
 }
 
 class SetSelectedStorage extends ContactsEvent {
-  final String storageSqliteId;
+  final String storageId;
 
-  const SetSelectedStorage(this.storageSqliteId);
+  const SetSelectedStorage(this.storageId);
 
   @override
-  List<Object> get props => [storageSqliteId];
+  List<Object> get props => [storageId];
 }
 
 class SetCurrentlySyncingStorages extends ContactsEvent {

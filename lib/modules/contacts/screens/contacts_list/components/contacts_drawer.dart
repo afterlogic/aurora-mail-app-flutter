@@ -131,7 +131,7 @@ class _ContactsDrawerState extends BState<ContactsDrawer> {
     return ListTile(
       leading: Icon(icon),
       title: Text(name != null ? i18n(context, getStorageName(name)) : s.name),
-      selected: s.sqliteId == state.selectedStorage,
+      selected: s.id == state.selectedStorage,
       onTap: () {
         bloc.add(SelectStorageGroup(storage: s));
         if (Navigator.canPop(context)) {
