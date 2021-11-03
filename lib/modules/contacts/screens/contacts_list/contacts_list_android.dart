@@ -130,8 +130,7 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
                   _completeRefresh();
                 }
               } else if (state.showAllVisibleContacts != true &&
-                  !state.currentlySyncingStorages
-                      .contains(state.selectedStorage)) {
+                  !_isSelectedStorageSyncing()) {
                 // for storages
                 _completeRefresh();
               }
@@ -149,9 +148,7 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
           child: BlocBuilder<ContactsBloc, ContactsState>(
               builder: (context, state) {
             if (state.contacts == null ||
-                state.contacts.isEmpty &&
-                    state.currentlySyncingStorages
-                        .contains(state.selectedStorage))
+                state.contacts.isEmpty && _isSelectedStorageSyncing())
               return _buildLoading(state);
             else if (state.contacts.isEmpty)
               return _buildContactsEmpty(state);
@@ -205,18 +202,18 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
                   ),
                   floatingActionButtonLocation:
                       FloatingActionButtonLocation.endFloat,
-                  floatingActionButton:  AMFloatingActionButton(
-                          child: IconTheme(
-                            data: AppTheme.floatIconTheme,
-                            child: Icon(MdiIcons.accountPlusOutline),
-                          ),
-                          onPressed: () => Navigator.pushNamed(
-                            context,
-                            ContactEditRoute.name,
-                            arguments: ContactEditScreenArgs(pgpSettingsBloc,
-                                bloc: BlocProvider.of<ContactsBloc>(context)),
-                          ),
-                        ),
+                  floatingActionButton: AMFloatingActionButton(
+                    child: IconTheme(
+                      data: AppTheme.floatIconTheme,
+                      child: Icon(MdiIcons.accountPlusOutline),
+                    ),
+                    onPressed: () => Navigator.pushNamed(
+                      context,
+                      ContactEditRoute.name,
+                      arguments: ContactEditScreenArgs(pgpSettingsBloc,
+                          bloc: BlocProvider.of<ContactsBloc>(context)),
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -250,6 +247,14 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
               ),
             ),
     );
+  }
+
+  bool _isSelectedStorageSyncing() {
+    final state = BlocProvider.of<ContactsBloc>(context).state;
+    final storage = state.storages
+        .firstWhere((e) => e.id == state.selectedStorage, orElse: () => null);
+    return (state.currentlySyncingStorages?.contains(storage?.sqliteId) ==
+        true);
   }
 
   void _deleteContact(Contact contact) {

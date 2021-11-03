@@ -22,7 +22,7 @@ Stream<ContactsState> reduceState(ContactsState state, dynamic event) async* {
   }
   if (event is SetSelectedStorage) {
     yield state.copyWith(
-      selectedStorage: CWVal(event.storageSqliteId),
+      selectedStorage: CWVal(event.storageId),
       selectedGroup: CWVal(null),
       showAllVisibleContacts: false,
     );
