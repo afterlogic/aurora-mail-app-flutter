@@ -37,7 +37,7 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
   PgpSettingsBloc pgpSettingsBloc;
   Contact selectedContact;
   Widget selectedWidget;
-  var _refreshCompleter = new Completer();
+  Completer _refreshCompleter;
 
   @override
   void initState() {
@@ -79,7 +79,7 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
 
   void _completeRefresh() {
     _refreshCompleter?.complete();
-    _refreshCompleter = new Completer();
+    _refreshCompleter = null;
   }
 
   _importKey(Map<PgpKey, bool> userKeys,
@@ -141,14 +141,16 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
           key: _refreshKey,
           onRefresh: () {
             BlocProvider.of<ContactsBloc>(context).add(GetContacts());
+            _refreshCompleter = Completer();
             return _refreshCompleter.future;
           },
           backgroundColor: Colors.white,
           color: Colors.black,
           child: BlocBuilder<ContactsBloc, ContactsState>(
               builder: (context, state) {
-            if (state.contacts == null ||
-                state.contacts.isEmpty && _isSelectedStorageSyncing())
+            if (_refreshCompleter == null &&
+                (state.contacts == null ||
+                    state.contacts.isEmpty && _isSelectedStorageSyncing()))
               return _buildLoading(state);
             else if (state.contacts.isEmpty)
               return _buildContactsEmpty(state);
