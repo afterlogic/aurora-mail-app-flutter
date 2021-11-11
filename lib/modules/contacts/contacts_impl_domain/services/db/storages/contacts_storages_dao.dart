@@ -23,7 +23,7 @@ class ContactsStoragesDao extends DatabaseAccessor<AppDatabase>
             newStorages,
           ));
     } catch (err) {
-      print("insert contactsStorages error: $err");
+      print("addStorages error: $err");
       return null;
     }
   }
@@ -37,7 +37,9 @@ class ContactsStoragesDao extends DatabaseAccessor<AppDatabase>
                 ..where((s) => s.serverId.equals(storage.serverId.value)))
               .write(storage);
         }
-      } catch (err) {}
+      } catch (err) {
+        print("updateStorages error: $err");
+      }
     });
   }
 

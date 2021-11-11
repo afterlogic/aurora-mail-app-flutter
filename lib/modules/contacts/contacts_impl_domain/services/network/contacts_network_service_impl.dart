@@ -116,8 +116,9 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
   }
 
   @override
-  Future<void> deleteContacts(List<String> uuids) {
+  Future<void> deleteContacts(String storage, List<String> uuids) {
     final params = {
+      "Storage": storage,
       "UUIDs": uuids,
     };
 

@@ -17,6 +17,8 @@ abstract class ContactsDbService {
   Stream<List<Contact>> watchContactsFromGroup(
       int userLocalId, String group, String search);
 
+  Future<List<Contact>> getAllContacts();
+
   Future<List<Contact>> getContacts(int userLocalId,
       {List<String> storages, String pattern});
 

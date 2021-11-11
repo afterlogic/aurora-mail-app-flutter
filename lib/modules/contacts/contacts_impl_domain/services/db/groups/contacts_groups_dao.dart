@@ -21,7 +21,9 @@ class ContactsGroupsDao extends DatabaseAccessor<AppDatabase>
           contactsGroups,
           newGroups,
           mode: InsertMode.insertOrReplace,
-        )).catchError((_) {});
+        )).catchError((err) {
+      print('addGroups error: $err');
+    });
   }
 
   Future<void> updateGroups(List<ContactsGroupsCompanion> updatedGroups) {

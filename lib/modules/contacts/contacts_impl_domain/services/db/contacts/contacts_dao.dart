@@ -1,6 +1,5 @@
 import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
-import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 import 'package:moor_flutter/moor_flutter.dart';
 
 import 'contacts_table.dart';
@@ -28,6 +27,17 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
     return (delete(contactsTable)
           ..where((c) => c.userLocalId.equals(userLocalId)))
         .go();
+  }
+
+  Future<List<ContactDb>> getAllContacts() {
+    return (select(contactsTable)
+          ..orderBy([
+            (c) => OrderingTerm(expression: c.storage.collate(Collate.noCase)),
+            (c) => OrderingTerm(expression: c.fullName.collate(Collate.noCase)),
+            (c) =>
+                OrderingTerm(expression: c.viewEmail.collate(Collate.noCase)),
+          ]))
+        .get();
   }
 
   Future<List<ContactDb>> getContacts(int userLocalId,
@@ -138,7 +148,7 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
 
   Future<ContactDb> getContactWithPgpKey(String email) {
     return (select(contactsTable)
-          ..where((item) => isNotNull(item.pgpPublicKey))
+          ..where((item) => item.pgpPublicKey.isNotNull())
           ..where((item) => item.viewEmail.equals(email)))
         .get()
         .then((items) {
