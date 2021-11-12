@@ -137,9 +137,9 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
             return Stack(
               alignment: Alignment.center,
               children: [
-                state.contacts.isEmpty
-                    ? _buildContactsEmpty(state)
-                    : _buildContacts(context, state),
+                state.contacts?.isNotEmpty == true
+                    ? _buildContacts(context, state)
+                    : _buildContactsEmpty(state),
                 state.progress ? _buildLoading(state) : SizedBox.shrink(),
               ],
             );
