@@ -146,3 +146,21 @@ class AddError extends ContactsEvent {
   @override
   List<Object> get props => [error];
 }
+
+class StartActivity extends ContactsEvent {
+  final String activity;
+
+  const StartActivity(this.activity);
+
+  @override
+  List<Object> get props => [activity];
+}
+
+class StopActivity extends ContactsEvent {
+  final String activity;
+
+  const StopActivity(this.activity);
+
+  @override
+  List<Object> get props => [activity];
+}

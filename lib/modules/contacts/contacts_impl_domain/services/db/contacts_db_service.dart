@@ -20,7 +20,7 @@ abstract class ContactsDbService {
   Future<List<Contact>> getAllContacts();
 
   Future<List<Contact>> getContacts(int userLocalId,
-      {List<String> storages, String pattern});
+      {List<String> storages, String groupUuid, String pattern});
 
   Future<void> addContacts(List<Contact> newContacts);
 

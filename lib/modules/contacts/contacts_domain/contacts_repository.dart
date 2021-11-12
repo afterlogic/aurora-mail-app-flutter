@@ -15,7 +15,19 @@ abstract class ContactsRepository {
         user: user,
       );
 
-  Stream<List<int>> get currentlySyncingStorage;
+  Stream<List<ContactsStorage>> get contactsStorages;
+
+  Stream<List<ContactsGroup>> get contactsGroups;
+
+  Stream<List<int>> get syncingStorages;
+
+  Future<List<Contact>> getAllContacts();
+
+  Future<List<Contact>> getContacts({
+    List<String> storages,
+    String groupUuid,
+    String pattern,
+  });
 
   Stream<List<Contact>> watchAllContacts(String search);
 
@@ -23,9 +35,13 @@ abstract class ContactsRepository {
 
   Stream<List<Contact>> watchContactsFromGroup(String group, String search);
 
-  Stream<List<ContactsStorage>> watchContactsStorages();
+  // Stream<List<ContactsStorage>> watchContactsStorages();
 
-  Stream<List<ContactsGroup>> watchContactsGroups();
+  Future<void> refreshStorages();
+
+  // Stream<List<ContactsGroup>> watchContactsGroups({String selectedGroupUuid});
+
+  Future<void> refreshGroups();
 
   Future<Contact> addContact(Contact contact);
 
@@ -46,7 +62,7 @@ abstract class ContactsRepository {
 
   Future<List<Contact>> getSuggestionContacts(String pattern);
 
-  Future<void> addGroup(ContactsGroup group);
+  Future<ContactsGroup> addGroup(ContactsGroup group);
 
   Future<bool> editGroup(ContactsGroup group);
 

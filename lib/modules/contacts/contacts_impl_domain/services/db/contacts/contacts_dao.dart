@@ -41,7 +41,7 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
   }
 
   Future<List<ContactDb>> getContacts(int userLocalId,
-      {List<String> storages, String pattern}) {
+      {List<String> storages, String groupUuid, String pattern}) {
     return (select(contactsTable)
           ..where((c) => c.userLocalId.equals(userLocalId))
           ..where((c) {
@@ -54,6 +54,9 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
           })
           ..where((c) =>
               storages != null ? c.storage.isIn(storages) : Constant(true))
+          ..where((c) => groupUuid != null
+              ? c.groupUUIDs.like("%$groupUuid%")
+              : Constant(true))
           ..orderBy([
             (c) => OrderingTerm(expression: c.fullName.collate(Collate.noCase)),
             (c) =>
@@ -193,7 +196,7 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
     });
   }
 
-    Future<List<ContactDb>> getContactsByEmail(String mail) {
+  Future<List<ContactDb>> getContactsByEmail(String mail) {
     return (select(contactsTable)..where((item) => item.viewEmail.equals(mail)))
         .get();
   }

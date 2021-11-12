@@ -15,6 +15,7 @@ class ContactsState with AlwaysNonEqualObject {
   final List<int> currentlySyncingStorages;
   final ErrorToShow error;
   final String key;
+  final List<String> currentActivities;
 
   ContactsState({
     this.storages,
@@ -26,7 +27,10 @@ class ContactsState with AlwaysNonEqualObject {
     this.currentlySyncingStorages,
     this.error,
     this.key,
+    this.currentActivities = const [],
   });
+
+  bool get progress => currentActivities.isNotEmpty;
 
   ContactsState copyWith({
     List<ContactsStorage> storages,
@@ -38,6 +42,7 @@ class ContactsState with AlwaysNonEqualObject {
     List<int> currentlySyncingStorages,
     ErrorToShow error,
     String key,
+    List<String> currentActivities,
   }) {
     return new ContactsState(
       storages: storages ?? this.storages,
@@ -51,6 +56,7 @@ class ContactsState with AlwaysNonEqualObject {
           currentlySyncingStorages ?? this.currentlySyncingStorages,
       error: error,
       key: key,
+      currentActivities: currentActivities ?? this.currentActivities,
     );
   }
 }

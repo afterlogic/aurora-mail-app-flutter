@@ -67,10 +67,11 @@ class ContactsDbServiceImpl implements ContactsDbService {
 
   @override
   Future<List<Contact>> getContacts(int userLocalId,
-      {List<String> storages, String pattern}) async {
+      {List<String> storages, String groupUuid, String pattern}) async {
     final result = await _contactsDao.getContacts(
       userLocalId,
       storages: storages,
+      groupUuid: groupUuid,
       pattern: pattern,
     );
     return ContactMapper.listFromDB(result);

@@ -34,6 +34,7 @@ class ContactsListAndroid extends StatefulWidget {
 
 class _ContactsListAndroidState extends BState<ContactsListAndroid> {
   final _refreshKey = GlobalKey<RefreshIndicatorState>();
+  ContactsBloc contactsBloc;
   PgpSettingsBloc pgpSettingsBloc;
   Contact selectedContact;
   Widget selectedWidget;
@@ -42,6 +43,7 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
   @override
   void initState() {
     super.initState();
+    contactsBloc = BlocProvider.of<ContactsBloc>(context);
     pgpSettingsBloc =
         AppInjector.instance.pgpSettingsBloc(BlocProvider.of(context));
   }
@@ -70,19 +72,27 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
           pgpSettingsBloc,
           contact: contact,
           mailBloc: BlocProvider.of<MailBloc>(context),
-          contactsBloc: BlocProvider.of<ContactsBloc>(context),
+          contactsBloc: contactsBloc,
           scaffoldState: Scaffold.of(context),
         ),
       );
     }
   }
 
+  Future<void> _onRefresh() {
+    _refreshCompleter = Completer();
+    contactsBloc.add(GetContacts(completer: _refreshCompleter));
+    return _refreshCompleter.future.then((_) => _completeRefresh());
+  }
+
   void _completeRefresh() {
-    _refreshCompleter?.complete();
+    if (!_refreshCompleter.isCompleted) {
+      _refreshCompleter.complete();
+    }
     _refreshCompleter = null;
   }
 
-  _importKey(Map<PgpKey, bool> userKeys,
+  void _importKey(Map<PgpKey, bool> userKeys,
       Map<PgpKeyWithContact, bool> contactKeys) async {
     await showDialog(
       context: context,
@@ -116,46 +126,23 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
               msg: state.error,
             );
           }
-
-          if (state.currentlySyncingStorages != null) {
-            if (state.showAllVisibleContacts == true) {
-              if (state.currentlySyncingStorages.isEmpty) {
-                // for "All" storage
-                _completeRefresh();
-              }
-            } else {
-              if (state.selectedGroup != null) {
-                if (state.currentlySyncingStorages.isEmpty) {
-                  // for groups
-                  _completeRefresh();
-                }
-              } else if (state.showAllVisibleContacts != true &&
-                  !_isSelectedStorageSyncing()) {
-                // for storages
-                _completeRefresh();
-              }
-            }
-          }
         },
         child: RefreshIndicator(
           key: _refreshKey,
-          onRefresh: () {
-            BlocProvider.of<ContactsBloc>(context).add(GetContacts());
-            _refreshCompleter = Completer();
-            return _refreshCompleter.future;
-          },
+          onRefresh: _onRefresh,
           backgroundColor: Colors.white,
           color: Colors.black,
           child: BlocBuilder<ContactsBloc, ContactsState>(
               builder: (context, state) {
-            if (_refreshCompleter == null &&
-                (state.contacts == null ||
-                    state.contacts.isEmpty && _isSelectedStorageSyncing()))
-              return _buildLoading(state);
-            else if (state.contacts.isEmpty)
-              return _buildContactsEmpty(state);
-            else
-              return _buildContacts(context, state);
+            return Stack(
+              alignment: Alignment.center,
+              children: [
+                state.contacts.isEmpty
+                    ? _buildContactsEmpty(state)
+                    : _buildContacts(context, state),
+                state.progress ? _buildLoading(state) : SizedBox.shrink(),
+              ],
+            );
           }),
         ),
       ),
@@ -213,7 +200,7 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
                       context,
                       ContactEditRoute.name,
                       arguments: ContactEditScreenArgs(pgpSettingsBloc,
-                          bloc: BlocProvider.of<ContactsBloc>(context)),
+                          bloc: contactsBloc),
                     ),
                   ),
                 ),
@@ -244,23 +231,15 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
               onPressed: () => Navigator.pushNamed(
                 context,
                 ContactEditRoute.name,
-                arguments: ContactEditScreenArgs(pgpSettingsBloc,
-                    bloc: BlocProvider.of<ContactsBloc>(context)),
+                arguments:
+                    ContactEditScreenArgs(pgpSettingsBloc, bloc: contactsBloc),
               ),
             ),
     );
   }
 
-  bool _isSelectedStorageSyncing() {
-    final state = BlocProvider.of<ContactsBloc>(context).state;
-    final storage = state.storages
-        .firstWhere((e) => e.id == state.selectedStorage, orElse: () => null);
-    return (state.currentlySyncingStorages?.contains(storage?.sqliteId) ==
-        true);
-  }
-
   void _deleteContact(Contact contact) {
-    BlocProvider.of<ContactsBloc>(context).add(DeleteContacts([contact]));
+    contactsBloc.add(DeleteContacts([contact]));
   }
 
   Widget _buildLoading(ContactsState state) {

@@ -27,7 +27,7 @@ Stream<ContactsState> reduceState(ContactsState state, dynamic event) async* {
       showAllVisibleContacts: false,
     );
   }
-  if (event is SetGroupSelected) {
+  if (event is SetSelectedGroup) {
     yield state.copyWith(
       selectedStorage: CWVal(null),
       selectedGroup: CWVal(event.groupUuid),
@@ -54,6 +54,16 @@ Stream<ContactsState> reduceState(ContactsState state, dynamic event) async* {
   if (event is ReImport) {
     yield state.copyWith(
       key: event.key,
+    );
+  }
+  if (event is StartActivity) {
+    yield state.copyWith(
+      currentActivities: [...state.currentActivities]..add(event.activity),
+    );
+  }
+  if (event is StopActivity) {
+    yield state.copyWith(
+      currentActivities: [...state.currentActivities]..remove(event.activity),
     );
   }
 }

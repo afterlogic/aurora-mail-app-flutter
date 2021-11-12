@@ -40,6 +40,22 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
       user: user,
     );
     BackgroundHelper.addOnEndAlarmObserver(false, _doOnAlarm);
+    _initListeners();
+  }
+
+  _initListeners() {
+    _storagesSub = _repo.contactsStorages.listen(
+      _handleStoragesStream,
+      onError: (err, _) => add(AddError(formatError(err, null))),
+    );
+    _groupsSub = _repo.contactsGroups.listen(
+      _handleGroupsStream,
+      onError: (err) => add(AddError(formatError(err, null))),
+    );
+    _syncingStoragesSub = _repo.syncingStorages.listen(
+      _handleSyncingStoragesStream,
+      onError: (err) => add(AddError(formatError(err, null))),
+    );
   }
 
   @override
@@ -75,10 +91,6 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
     yield* reduceState(state, event);
   }
 
-  initListener(){
-
-  }
-
   _doOnAlarm(bool hasUpdate) {
     add(GetContacts());
   }
@@ -95,82 +107,106 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
   }
 
   Stream<ContactsState> _getContacts(GetContacts event) async* {
-    print("_getContacts");
+    add(StartActivity('GetContacts'));
     try {
-      _storagesSub = _repo.watchContactsStorages().listen((storages) {
-        if (state.storages == null) {
-          final storage = storages
-              .firstWhere((s) => s.name == StorageNames.personal, orElse: null);
-          add(SelectStorageGroup(storage: storage));
-        }
-
-        add(ReceivedStorages(storages));
-      }, onError: (err) {
-        add(AddError(formatError(err, null)));
-      });
-    } catch (e) {
-      print(e);
-    }
-    try {
-      _groupsSub = _repo.watchContactsGroups().listen((groups) {
-        add(ReceivedGroups(groups));
-      }, onError: (err) {
-        add(AddError(formatError(err, null)));
-      });
-    } catch (e) {
-      print(e);
-    }
-    try {
-      _syncingStoragesSub =
-          _repo.currentlySyncingStorage.listen((List<int> ids) {
-        add(SetCurrentlySyncingStorages(ids));
-      });
-    } catch (e) {
-      print(e);
+      final future1 = _repo.refreshStorages();
+      final future2 = _repo.refreshGroups();
+      await Future.wait([future1, future2]);
+    } catch (err) {
+      add(AddError(formatError(err, null)));
     }
     event.completer?.complete();
+    add(StopActivity('GetContacts'));
+  }
+
+  void _handleStoragesStream(List<ContactsStorage> storages) {
+    add(ReceivedStorages(storages));
+    final needDefaultStorage = state.selectedStorage == null &&
+        state.selectedGroup == null &&
+        state.showAllVisibleContacts != true &&
+        storages.isNotEmpty;
+    if (needDefaultStorage) {
+      final personalStorage = storages
+          .firstWhere((s) => s.name == StorageNames.personal, orElse: null);
+      add(SelectStorageGroup(storage: personalStorage));
+    }
+  }
+
+  void _handleGroupsStream(List<ContactsGroup> groups) {
+    add(ReceivedGroups(groups));
+  }
+
+  void _handleSyncingStoragesStream(List<int> ids) {
+    add(SetCurrentlySyncingStorages(ids));
   }
 
   Stream<ContactsState> _selectStorageGroup(SelectStorageGroup event) async* {
+    add(StartActivity('SelectStorageGroup'));
     _contactsSub?.cancel();
     if (event.storageId != null) {
       add(SetSelectedStorage(event.storageId));
-      _contactsSub = _repo
-          .watchContactsFromStorage(event.storageId, searchPattern)
-          .listen((contacts) {
-        add(ReceivedContacts(contacts));
-      }, onError: (err) {
-        add(AddError(formatError(err, null)));
-      });
+      await _watchContactsFromStorage(event.storageId);
     } else if (event.groupId != null) {
-      add(SetGroupSelected(event.groupId));
-      _contactsSub = _repo
-          .watchContactsFromGroup(event.groupId, searchPattern)
-          .listen((contacts) {
-        add(ReceivedContacts(contacts));
-      }, onError: (err) {
-        add(AddError(formatError(err, null)));
-      });
+      add(SetSelectedGroup(event.groupId));
+      await _watchContactsFromGroup(event.groupId);
     } else {
       add(SetAllVisibleContactsSelected());
-      _contactsSub = _repo.watchAllContacts(searchPattern).listen((contacts) {
-        add(ReceivedContacts(contacts));
-      }, onError: (err) {
-        add(AddError(formatError(err, null)));
-      });
+      await _watchAllContacts();
     }
+    add(GetContacts());
+    add(StopActivity('SelectStorageGroup'));
+  }
+
+  Future<void> _watchContactsFromStorage(String storageId) async {
+    final currentContacts =
+        await _repo.getContacts(storages: [storageId], pattern: searchPattern);
+    add(ReceivedContacts(currentContacts));
+    _contactsSub = _repo
+        .watchContactsFromStorage(storageId, searchPattern)
+        .listen((contacts) {
+      add(ReceivedContacts(contacts));
+    }, onError: (err) {
+      add(AddError(formatError(err, null)));
+    });
+  }
+
+  Future<void> _watchContactsFromGroup(String groupUuid) async {
+    final currentContacts =
+        await _repo.getContacts(groupUuid: groupUuid, pattern: searchPattern);
+    add(ReceivedContacts(currentContacts));
+    _contactsSub = _repo
+        .watchContactsFromGroup(groupUuid, searchPattern)
+        .listen((contacts) {
+      add(ReceivedContacts(contacts));
+    }, onError: (err) {
+      add(AddError(formatError(err, null)));
+    });
+  }
+
+  Future<void> _watchAllContacts() async {
+    final currentContacts = await _repo.getContacts(pattern: searchPattern);
+    add(ReceivedContacts(currentContacts));
+    _contactsSub = _repo.watchAllContacts(searchPattern).listen((contacts) {
+      add(ReceivedContacts(contacts));
+    }, onError: (err) {
+      add(AddError(formatError(err, null)));
+    });
   }
 
   Stream<ContactsState> _createContact(CreateContact event) async* {
-    _repo
-        .addContact(event.contact)
-        .catchError((err) => add(AddError(formatError(err, null))))
-        .whenComplete(() {
+    add(StartActivity('CreateContact'));
+    _repo.addContact(event.contact).catchError((err) {
+      add(AddError(formatError(err, null)));
+      add(StopActivity('CreateContact'));
+      return null;
+    }).whenComplete(() {
       if (event.completer != null) add(GetContacts(completer: event.completer));
+      add(StopActivity('CreateContact'));
     });
   }
 
   Stream<ContactsState> _updateContact(UpdateContact event) async* {
+    add(StartActivity('UpdateContact'));
     _repo.editContact(event.contact).then((value) async {
       if (event.freeKey != null) {
         await _repo.deleteContactKey(event.contact.viewEmail);
@@ -186,63 +222,87 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
           }
         }
       }
-    }).catchError((err) => add(AddError(formatError(err, null))));
+      add(StopActivity('UpdateContact'));
+    }).catchError((err) {
+      add(AddError(formatError(err, null)));
+      add(StopActivity('UpdateContact'));
+    });
   }
 
   Stream<ContactsState> _deleteContacts(DeleteContacts event) async* {
+    add(StartActivity('DeleteContacts'));
     _repo
         .deleteContacts(event.contacts)
         .catchError((err) => add(AddError(formatError(err, null))));
+    add(StopActivity('DeleteContacts'));
   }
 
   Stream<ContactsState> _shareContacts(ShareContacts event) async* {
-    _repo
-        .shareContacts(event.contacts)
-        .catchError((err) => add(AddError(formatError(err, null))))
-        .whenComplete(() {
+    add(StartActivity('ShareContacts'));
+    _repo.shareContacts(event.contacts).catchError((err) {
+      add(AddError(formatError(err, null)));
+      add(StopActivity('ShareContacts'));
+    }).whenComplete(() {
       add(GetContacts());
+      add(StopActivity('ShareContacts'));
     });
   }
 
   Stream<ContactsState> _unshareContacts(UnshareContacts event) async* {
-    _repo
-        .unshareContacts(event.contacts)
-        .catchError((err) => add(AddError(formatError(err, null))))
-        .whenComplete(() {
+    add(StartActivity('UnshareContacts'));
+    _repo.unshareContacts(event.contacts).catchError((err) {
+      add(AddError(formatError(err, null)));
+      add(StopActivity('UnshareContacts'));
+    }).whenComplete(() {
       add(GetContacts());
+      add(StopActivity('UnshareContacts'));
     });
   }
 
   Stream<ContactsState> _addContactsToGroup(AddContactsToGroup event) async* {
+    add(StartActivity('AddContactsToGroup'));
     _repo
         .addContactsToGroup(event.group, event.contacts)
         .catchError((err) => add(AddError(formatError(err, null))));
+    add(StopActivity('AddContactsToGroup'));
   }
 
   Stream<ContactsState> _removeContactsFromGroup(
       RemoveContactsFromGroup event) async* {
+    add(StartActivity('RemoveContactsFromGroup'));
     _repo
         .removeContactsFromGroup(event.group, event.contacts)
         .catchError((err) => add(AddError(formatError(err, null))));
+    add(StopActivity('RemoveContactsFromGroup'));
   }
 
   Stream<ContactsState> _addGroup(CreateGroup event) async* {
-    _repo
-        .addGroup(event.group)
-        .catchError((err) => add(AddError(formatError(err, null))));
+    add(StartActivity('CreateGroup'));
+    final groupWithId = await _repo.addGroup(event.group).catchError((err) {
+      add(AddError(formatError(err, null)));
+      return null;
+    });
+    add(SelectStorageGroup(group: groupWithId));
+    add(StopActivity('CreateGroup'));
   }
 
   Stream<ContactsState> _deleteGroup(DeleteGroup event) async* {
+    add(StartActivity('DeleteGroup'));
     add(SelectStorageGroup());
-    _repo
-        .deleteGroup(event.group)
-        .catchError((err) => add(AddError(formatError(err, null))));
+    _repo.deleteGroup(event.group).catchError((err) {
+      add(AddError(formatError(err, null)));
+      return false;
+    });
+    add(StopActivity('DeleteGroup'));
   }
 
   Stream<ContactsState> _updateGroup(UpdateGroup event) async* {
-    _repo
-        .editGroup(event.group)
-        .catchError((err) => add(AddError(formatError(err, null))));
+    add(StartActivity('UpdateGroup'));
+    _repo.editGroup(event.group).catchError((err) {
+      add(AddError(formatError(err, null)));
+      return false;
+    });
+    add(StopActivity('UpdateGroup'));
   }
 
   Future<List<Contact>> getTypeAheadContacts(String pattern) {
@@ -258,11 +318,13 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
   }
 
   Stream<ContactsState> _importVcf(ImportVcf event) async* {
+    add(StartActivity('ImportVcf'));
     try {
       await _repo.importVcf(event.content);
       event.completer.complete();
     } catch (e) {
       event.completer.completeError(e);
     }
+    add(StopActivity('ImportVcf'));
   }
 }

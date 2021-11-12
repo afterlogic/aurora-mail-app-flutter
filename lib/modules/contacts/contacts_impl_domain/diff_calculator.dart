@@ -68,26 +68,33 @@ Contacts diff calcultaion finished:
     final oldStorages = args["oldItems"];
     final newStorages = args["newItems"];
 
-    final addedStorages = newStorages.where((i) =>
-        oldStorages.firstWhere((j) => j.id == i.id, orElse: () => null) ==
-        null);
+    final addedStorages = newStorages
+        .where((i) =>
+            oldStorages.firstWhere((j) => j.id == i.id, orElse: () => null) ==
+            null)
+        .toList();
 
-    final deletedStorages = oldStorages.where((i) =>
-        newStorages.firstWhere((j) => j.id == i.id, orElse: () => null) ==
-        null);
+    final deletedStorages = oldStorages
+        .where((i) =>
+            newStorages.firstWhere((j) => j.id == i.id, orElse: () => null) ==
+            null)
+        .toList();
 
-    final updatedStorages = newStorages.where((i) =>
-        oldStorages.firstWhere((j) {
-          if (j.id == i.id && j.cTag != i.cTag) {
-            if (j.contactsInfo != null) {
-              i.contactsInfo = new List<ContactInfoItem>.from(j.contactsInfo);
-            }
-            return true;
-          } else {
-            return false;
-          }
-        }, orElse: () => null) !=
-        null);
+    final updatedStorages = <ContactsStorage>[];
+    newStorages.forEach((newStorage) {
+      final changedStorage = oldStorages.firstWhere(
+          (oldStorage) =>
+              oldStorage.id == newStorage.id &&
+              oldStorage.cTag != newStorage.cTag,
+          orElse: () => null);
+      if (changedStorage != null) {
+        final updatedStorage = newStorage.copyWith(
+          sqliteId: changedStorage.sqliteId,
+          contactsInfo: changedStorage.contactsInfo,
+        );
+        updatedStorages.add(updatedStorage);
+      }
+    });
 
     if (addedStorages.isNotEmpty ||
         deletedStorages.isNotEmpty ||
@@ -101,9 +108,9 @@ Storages diff calcultaion finished:
     }
 
     return new StoragesDiffCalcResult(
-      addedStorages: addedStorages.toList(),
-      deletedStorages: deletedStorages.toList(),
-      updatedStorages: updatedStorages.toList(),
+      addedStorages: addedStorages,
+      deletedStorages: deletedStorages,
+      updatedStorages: updatedStorages,
     );
   }
 }
