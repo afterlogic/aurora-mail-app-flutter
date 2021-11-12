@@ -38,7 +38,6 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
   PgpSettingsBloc pgpSettingsBloc;
   Contact selectedContact;
   Widget selectedWidget;
-  Completer _refreshCompleter;
 
   @override
   void initState() {
@@ -80,16 +79,9 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
   }
 
   Future<void> _onRefresh() {
-    _refreshCompleter = Completer();
-    contactsBloc.add(GetContacts(completer: _refreshCompleter));
-    return _refreshCompleter.future.then((_) => _completeRefresh());
-  }
-
-  void _completeRefresh() {
-    if (!_refreshCompleter.isCompleted) {
-      _refreshCompleter.complete();
-    }
-    _refreshCompleter = null;
+    final completer = Completer();
+    contactsBloc.add(GetContacts(completer: completer));
+    return completer.future;
   }
 
   void _importKey(Map<PgpKey, bool> userKeys,
@@ -119,7 +111,6 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
             return;
           }
           if (state.error != null) {
-            _completeRefresh();
             showErrorSnack(
               context: context,
               scaffoldState: Scaffold.of(context),

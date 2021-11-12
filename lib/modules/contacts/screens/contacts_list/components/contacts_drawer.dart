@@ -35,7 +35,7 @@ class _ContactsDrawerState extends BState<ContactsDrawer> {
     );
   }
 
-  Future<void> _onRefresh() async {
+  Future<void> _onRefresh() {
     final completer = Completer();
     contactsBloc.add(GetContacts(completer: completer));
     return completer.future;
