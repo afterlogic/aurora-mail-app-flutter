@@ -139,6 +139,7 @@ dependency_overrides:
 flutter_icons:
   ios: true
   android: true
+  remove_alpha_ios: true
   image_path: build_res/afterlogic/image/icon.png
   adaptive_icon_background: "#FFFFFF"
   adaptive_icon_foreground: build_res/afterlogic/image/icon_foreground.png
