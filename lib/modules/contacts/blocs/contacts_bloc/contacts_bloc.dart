@@ -150,6 +150,14 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
       add(SetSelectedGroup(event.groupId));
       await _watchContactsFromGroup(event.groupId);
     } else {
+      // if visible storage is only one - switch to it
+      final visibleStorages = state.storages?.where((s) => s.display);
+      if (visibleStorages?.length == 1) {
+        add(SelectStorageGroup(storage: state.storages[0]));
+        add(StopActivity('SelectStorageGroup'));
+        return;
+      }
+      // else show storage "All contacts"
       add(SetAllVisibleContactsSelected());
       await _watchAllContacts();
     }
