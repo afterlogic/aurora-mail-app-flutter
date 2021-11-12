@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_storage_model.dart';
@@ -17,62 +19,77 @@ class ContactsDrawer extends StatefulWidget {
 }
 
 class _ContactsDrawerState extends BState<ContactsDrawer> {
+  ContactsBloc contactsBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    contactsBloc = BlocProvider.of<ContactsBloc>(context);
+  }
+
   void _addGroup() {
     Navigator.pushNamed(
       context,
       GroupEditRoute.name,
-      arguments:
-          GroupEditScreenArgs(bloc: BlocProvider.of<ContactsBloc>(context)),
+      arguments: GroupEditScreenArgs(bloc: contactsBloc),
     );
+  }
+
+  Future<void> _onRefresh() async {
+    final completer = Completer();
+    contactsBloc.add(GetContacts(completer: completer));
+    return completer.future;
   }
 
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      child: ListTileTheme(
-        selectedColor: theme.accentColor,
-        style: ListTileStyle.drawer,
-        child: SafeArea(
-          child: BlocBuilder<ContactsBloc, ContactsState>(
-              builder: (context, state) {
-            return ListView(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Text(
-                    i18n(context, S.contacts_drawer_section_storages),
-                    style: TextStyle(color: theme.disabledColor),
+      child: RefreshIndicator(
+        onRefresh: _onRefresh,
+        child: ListTileTheme(
+          selectedColor: theme.accentColor,
+          style: ListTileStyle.drawer,
+          child: SafeArea(
+            child: BlocBuilder<ContactsBloc, ContactsState>(
+                builder: (context, state) {
+              return ListView(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Text(
+                      i18n(context, S.contacts_drawer_section_storages),
+                      style: TextStyle(color: theme.disabledColor),
+                    ),
                   ),
-                ),
-                _buildStorages(context, state),
-                Divider(),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Text(
-                        i18n(context, S.contacts_drawer_section_groups),
-                        style: TextStyle(color: theme.disabledColor),
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.add, color: theme.accentColor),
-                        onPressed: _addGroup,
-                      ),
-                    ],
+                  _buildStorages(context, state),
+                  Divider(),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Text(
+                          i18n(context, S.contacts_drawer_section_groups),
+                          style: TextStyle(color: theme.disabledColor),
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.add, color: theme.accentColor),
+                          onPressed: _addGroup,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                _buildGroups(context, state),
-              ],
-            );
-          }),
+                  _buildGroups(context, state),
+                ],
+              );
+            }),
+          ),
         ),
       ),
     );
   }
 
   Widget _buildStorages(BuildContext context, ContactsState state) {
-    final bloc = BlocProvider.of<ContactsBloc>(context);
     final visibleStorages = state.storages?.where((s) => s.display);
 
     final isAllVisible = visibleStorages != null && visibleStorages.length > 1;
@@ -85,7 +102,7 @@ class _ContactsDrawerState extends BState<ContactsDrawer> {
               title: Text(i18n(context, S.contacts_drawer_storage_all)),
               selected: state.showAllVisibleContacts,
               onTap: () {
-                bloc.add(SelectStorageGroup());
+                contactsBloc.add(SelectStorageGroup());
                 if (Navigator.canPop(context)) {
                   Navigator.pop(context);
                 }
@@ -127,13 +144,12 @@ class _ContactsDrawerState extends BState<ContactsDrawer> {
     @required IconData icon,
     @required ContactsState state,
   }) {
-    final bloc = BlocProvider.of<ContactsBloc>(context);
     return ListTile(
       leading: Icon(icon),
       title: Text(name != null ? i18n(context, getStorageName(name)) : s.name),
       selected: s.id == state.selectedStorage,
       onTap: () {
-        bloc.add(SelectStorageGroup(storage: s));
+        contactsBloc.add(SelectStorageGroup(storage: s));
         if (Navigator.canPop(context)) {
           Navigator.pop(context);
         }
@@ -142,8 +158,6 @@ class _ContactsDrawerState extends BState<ContactsDrawer> {
   }
 
   Widget _buildGroups(BuildContext context, ContactsState state) {
-    final bloc = BlocProvider.of<ContactsBloc>(context);
-
     if (state.groups != null) {
       return Column(
         children: state.groups
@@ -152,7 +166,7 @@ class _ContactsDrawerState extends BState<ContactsDrawer> {
                   title: Text(g.name),
                   selected: g.uuid == state.selectedGroup,
                   onTap: () {
-                    bloc.add(SelectStorageGroup(group: g));
+                    contactsBloc.add(SelectStorageGroup(group: g));
                     if (Navigator.canPop(context)) {
                       Navigator.pop(context);
                     }
