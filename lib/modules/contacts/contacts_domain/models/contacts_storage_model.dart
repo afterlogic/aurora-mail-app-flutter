@@ -79,4 +79,20 @@ class ContactInfoItem {
       needsUpdate: map['needsUpdate'] as bool,
     );
   }
+
+  ContactInfoItem copyWith({
+    String uuid,
+    String storage,
+    String eTag,
+    bool hasBody,
+    bool needsUpdate,
+  }) {
+    return new ContactInfoItem(
+      uuid: uuid ?? this.uuid,
+      storage: storage ?? this.storage,
+      eTag: eTag ?? this.eTag,
+      hasBody: hasBody ?? this.hasBody,
+      needsUpdate: needsUpdate ?? this.needsUpdate,
+    );
+  }
 }

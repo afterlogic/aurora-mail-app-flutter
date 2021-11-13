@@ -385,13 +385,13 @@ class ContactsRepositoryImpl implements ContactsRepository {
   }
 
   Future<ContactsStorage> getStoragesWithUpdatedInfo(ContactsStorage s) async {
-    final infos = await _network.getContactsInfo(s);
+    final infoFromNetwork = await _network.getContactsInfo(s);
 
     if (s.contactsInfo == null) {
       return new ContactsStorage(
         id: s.id,
         userLocalId: s.userLocalId,
-        contactsInfo: infos,
+        contactsInfo: infoFromNetwork,
         sqliteId: s.sqliteId,
         cTag: s.cTag,
         display: s.display,
@@ -402,7 +402,7 @@ class ContactsRepositoryImpl implements ContactsRepository {
       final calcResult =
           await ContactsDiffCalculator.calculateContactsInfoDiffAsync(
         s.contactsInfo,
-        infos,
+        infoFromNetwork,
       );
 
       final infosToUpdate = new List<ContactInfoItem>.from(s.contactsInfo);

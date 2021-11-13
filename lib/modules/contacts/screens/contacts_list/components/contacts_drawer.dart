@@ -46,6 +46,8 @@ class _ContactsDrawerState extends BState<ContactsDrawer> {
     return Drawer(
       child: RefreshIndicator(
         onRefresh: _onRefresh,
+        backgroundColor: Colors.white,
+        color: Colors.black,
         child: ListTileTheme(
           selectedColor: theme.accentColor,
           style: ListTileStyle.drawer,
@@ -100,7 +102,7 @@ class _ContactsDrawerState extends BState<ContactsDrawer> {
             ListTile(
               leading: Icon(MdiIcons.accountGroup),
               title: Text(i18n(context, S.contacts_drawer_storage_all)),
-              selected: state.showAllVisibleContacts,
+              selected: state.showAllVisibleContacts == true,
               onTap: () {
                 contactsBloc.add(SelectStorageGroup());
                 if (Navigator.canPop(context)) {

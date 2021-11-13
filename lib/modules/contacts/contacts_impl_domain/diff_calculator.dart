@@ -18,27 +18,38 @@ class ContactsDiffCalculator {
     final oldContacts = args["oldItems"];
     final newContacts = args["newItems"];
 
-    final addedContacts = newContacts.where((i) =>
-        oldContacts.firstWhere((j) => j.uuidPlusStorage == i.uuidPlusStorage,
-            orElse: () => null) ==
-        null);
+    final addedContacts = newContacts
+        .where((i) =>
+            oldContacts.firstWhere(
+                (j) => j.uuidPlusStorage == i.uuidPlusStorage,
+                orElse: () => null) ==
+            null)
+        .toList();
 
-    final deletedContacts = oldContacts.where((i) =>
-        newContacts.firstWhere((j) => j.uuidPlusStorage == i.uuidPlusStorage,
-            orElse: () => null) ==
-        null);
+    final deletedContacts = oldContacts
+        .where((i) =>
+            newContacts.firstWhere(
+                (j) => j.uuidPlusStorage == i.uuidPlusStorage,
+                orElse: () => null) ==
+            null)
+        .map((c) => c.uuid)
+        .toList();
 
-    final updatedContacts = newContacts.where((i) =>
-        oldContacts.firstWhere((j) {
-          if (j.uuidPlusStorage == i.uuidPlusStorage && j.eTag != i.eTag) {
-            i.hasBody = j.hasBody;
-            i.needsUpdate = true;
-            return true;
-          } else {
-            return false;
-          }
-        }, orElse: () => null) !=
-        null);
+    final updatedContacts = <ContactInfoItem>[];
+    newContacts.forEach((newContact) {
+      final changedContact = oldContacts.firstWhere(
+          (oldContact) =>
+              oldContact.uuidPlusStorage == newContact.uuidPlusStorage &&
+              oldContact.eTag != newContact.eTag,
+          orElse: () => null);
+      if (changedContact != null) {
+        final updatedContact = newContact.copyWith(
+          hasBody: changedContact.hasBody,
+          needsUpdate: true,
+        );
+        updatedContacts.add(updatedContact);
+      }
+    });
 
     logger.log("""
 Contacts diff calcultaion finished:
@@ -48,9 +59,9 @@ Contacts diff calcultaion finished:
     """);
 
     return new ContactInfoDiffCalcResult(
-      addedContacts: addedContacts.toList(),
-      deletedContacts: deletedContacts.map((c) => c.uuid).toList(),
-      updatedContacts: updatedContacts.toList(),
+      addedContacts: addedContacts,
+      deletedContacts: deletedContacts,
+      updatedContacts: updatedContacts,
     );
   }
 
