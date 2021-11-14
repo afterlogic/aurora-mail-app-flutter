@@ -344,7 +344,7 @@ class MailUtils {
       	display: block;
       }
       .details-description {
-        width: 20%; 
+        min-width: 50px; 
         color: ${(theme.brightness == Brightness.dark ? Colors.white : Colors.black).toHex()};
         opacity: 0.4;
       }
@@ -524,7 +524,7 @@ class MailUtils {
       	display: block;
       }
       .details-description {
-        width: 20%; 
+        min-width: 50px; 
         color: ${(theme.brightness == Brightness.dark ? Colors.white : Colors.black).toHex()};
         opacity: 0.4;
       }
