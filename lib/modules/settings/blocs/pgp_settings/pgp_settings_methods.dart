@@ -89,7 +89,11 @@ class PgpSettingsMethods {
   }
 
   Future<String> _keysFolderPath() async {
-    await getStoragePermissions();
+    try {
+      await getStoragePermissions();
+    } catch (err) {
+      rethrow;
+    }
     final dirPath = (await getDownloadDirectory());
     return dirPath + Platform.pathSeparator + KEY_FOLDER;
   }
@@ -136,7 +140,11 @@ class PgpSettingsMethods {
   }
 
   Future<String> pickFileContent() async {
-    await getStoragePermissions();
+    try {
+      await getStoragePermissions();
+    } catch (err) {
+      rethrow;
+    }
     var content = "";
     final result = Platform.isIOS
         ? (await FilePicker.platform.pickFiles(
@@ -148,7 +156,7 @@ class PgpSettingsMethods {
             type: FileType.custom,
             allowedExtensions: ["asc"],
           ));
-    if (content == null) return null;
+    if (result == null) return null;
     final files = result.files;
     for (var file in files) {
       if (file.path.endsWith(".asc")) {

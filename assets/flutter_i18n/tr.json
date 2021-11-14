@@ -389,5 +389,6 @@
   "label_encryption_password_for_pgp_key": "Required password for PGP key",
   "hint_log_delete_record": "Are you sure you want to delete file {name}",
   "error_timeout": "Can't connect to the server",
-  "clear_cache_during_logout": "Yerel önbelleği ve kayıtlı anahtarları Temizle"
+  "clear_cache_during_logout": "Yerel önbelleği ve kayıtlı anahtarları Temizle",
+  "no_permission_to_local_storage": "Yerel depolamaya erişim izni yok. Cihazınızın ayarlarını kontrol edin."
 }

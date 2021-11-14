@@ -1,16 +1,18 @@
 import 'dart:io';
 
+import 'package:aurora_mail/res/str/s.dart';
 import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 Future getStoragePermissions() async {
   PermissionStatus status = await Permission.storage.status;
   if (status != PermissionStatus.granted) {
-    status = await (Platform.isAndroid
-        ? _requestStoragePermission()
-        : Permission.storage.request());
+    status = await Permission.storage.request();
+    // (Platform.isAndroid
+    //     ? _requestStoragePermission()
+    //     : Permission.storage.request());
     if (status != PermissionStatus.granted) {
-      throw "Access denied.\nPermissionStatus = $status";
+      throw S.no_permission_to_local_storage;
     }
   }
 }

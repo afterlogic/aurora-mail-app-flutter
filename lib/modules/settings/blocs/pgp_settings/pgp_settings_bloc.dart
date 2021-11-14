@@ -113,11 +113,28 @@ class PgpSettingsBloc extends Bloc<PgpSettingsEvent, PgpSettingsState> {
   }
 
   Future<String> getKeyFromFile() async {
-    return _methods.pickFileContent();
+    Future<String> result;
+    try {
+      result = _methods.pickFileContent();
+    } catch (err) {
+      _showError(ErrorToShow(err));
+    }
+    return result;
+  }
+
+  Stream<PgpSettingsState> _showError(ErrorToShow errorToShow) async* {
+    yield ErrorState(errorToShow);
   }
 
   Stream<PgpSettingsState> _importKeyFromFile() async* {
-    final file = await _methods.pickFileContent();
+    String file;
+    try {
+      file = await _methods.pickFileContent();
+    } catch (err) {
+      yield ErrorState(ErrorToShow(err));
+      return;
+    }
+    if (file == null) return;
     yield* _parseKey(ParseKey(file));
   }
 
