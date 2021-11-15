@@ -1,9 +1,11 @@
 import 'package:aurora_logger/aurora_logger.dart';
 import 'package:aurora_mail/build_property.dart';
+import 'package:aurora_mail/inject/app_inject.dart';
 import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_event.dart';
 import 'package:aurora_mail/modules/route_generator.dart';
+import 'package:aurora_mail/modules/settings/blocs/pgp_settings/pgp_settings_bloc.dart';
 import 'package:aurora_mail/modules/settings/screens/about/about_route.dart';
 import 'package:aurora_mail/modules/settings/screens/common_settings/common_settings_route.dart';
 import 'package:aurora_mail/modules/settings/screens/debug/debug_route.dart';
@@ -30,11 +32,20 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
   bool showDebug = false;
   final storage = LoggerStorage();
   final navigatorKey = GlobalKey<SettingsNavigatorState>();
+  PgpSettingsBloc pgpSettingsBloc;
 
   @override
   initState() {
     super.initState();
     storage.getDebugEnable().then((value) => setState(() => showDebug = value));
+    pgpSettingsBloc = AppInjector.instance
+        .pgpSettingsBloc(BlocProvider.of<AuthBloc>(context));
+  }
+
+  @override
+  void dispose() {
+    pgpSettingsBloc.close();
+    super.dispose();
   }
 
   @override
@@ -70,7 +81,10 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
             selected: current == PgpSettingsRoute.name,
             leading: AMCircleIcon(Icons.vpn_key),
             title: Text(i18n(context, S.label_pgp_settings)),
-            onTap: () => navigator().setRoot(PgpSettingsRoute.name),
+            onTap: () => navigator().setRoot(
+              PgpSettingsRoute.name,
+              arguments: PgpSettingsRouteArg(pgpSettingsBloc),
+            ),
           ),
         if (BuildProperty.multiUserEnable)
           ListTile(

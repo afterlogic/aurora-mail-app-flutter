@@ -1,5 +1,4 @@
 import 'package:aurora_mail/build_property.dart';
-import 'package:aurora_mail/inject/app_inject.dart';
 import 'package:aurora_mail/models/alias_or_identity.dart';
 import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
@@ -22,6 +21,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PgpSettings extends StatefulWidget {
+  final PgpSettingsBloc pgpSettingsBloc;
+
+  const PgpSettings(this.pgpSettingsBloc);
+
   @override
   _PgpSettingsState createState() => _PgpSettingsState();
 }
@@ -33,15 +36,13 @@ class _PgpSettingsState extends BState<PgpSettings> {
   @override
   void initState() {
     super.initState();
-    bloc = AppInjector.instance
-        .pgpSettingsBloc(BlocProvider.of<AuthBloc>(context));
+    bloc = widget.pgpSettingsBloc;
     bloc.add(LoadKeys());
   }
 
   @override
   void dispose() {
     super.dispose();
-    bloc.close();
   }
 
   @override

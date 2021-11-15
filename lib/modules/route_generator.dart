@@ -310,11 +310,14 @@ class RouteGenerator {
             builder: (_) => NotificationsSettings());
         break;
       case PgpSettingsRoute.name:
+        final arg = settings.arguments as PgpSettingsRouteArg;
         return CupertinoPageRoute(
             settings: RouteSettings(
               name: settings.name,
             ),
-            builder: (_) => PgpSettings());
+            builder: (_) => PgpSettings(
+              arg.pgpSettingsBloc,
+            ));
         break;
       case PgpKeyRoute.name:
         final arg = settings.arguments as PgpKeyRouteArg;
