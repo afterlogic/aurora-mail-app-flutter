@@ -14,10 +14,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PgpKeysScreen extends StatefulWidget {
   final List<PgpKey> pgpKeys;
+  final PgpSettingsBloc bloc;
 
-  const PgpKeysScreen(
-    this.pgpKeys,
-  );
+  const PgpKeysScreen(this.pgpKeys, this.bloc);
 
   @override
   _PgpKeysScreenState createState() => _PgpKeysScreenState();
@@ -28,13 +27,12 @@ class _PgpKeysScreenState extends State<PgpKeysScreen> {
 
   @override
   void initState() {
-    bloc = AppInjector.instance.pgpSettingsBloc(BlocProvider.of<AuthBloc>(context));
     super.initState();
+    bloc = widget.bloc;
   }
 
   @override
   void dispose() {
-    bloc.close();
     super.dispose();
   }
 
@@ -78,7 +76,8 @@ class _PgpKeysScreenState extends State<PgpKeysScreen> {
                 SizedBox(
                   height: 20,
                 ),
-                SelectableText(widget.pgpKeys.map((key) => key.key).join("\n\n")),
+                SelectableText(
+                    widget.pgpKeys.map((key) => key.key).join("\n\n")),
               ],
             ),
           ),

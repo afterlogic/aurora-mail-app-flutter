@@ -27,6 +27,7 @@ class PgpSettings extends StatefulWidget {
 }
 
 class _PgpSettingsState extends BState<PgpSettings> {
+  GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   PgpSettingsBloc bloc;
 
   @override
@@ -47,6 +48,7 @@ class _PgpSettingsState extends BState<PgpSettings> {
   Widget build(BuildContext context) {
     final isTablet = LayoutConfig.of(context).isTablet;
     return Scaffold(
+      key: _scaffoldKey,
       appBar: isTablet
           ? null
           : AMAppBar(
@@ -116,15 +118,21 @@ class _PgpSettingsState extends BState<PgpSettings> {
     exist.addAll(state.myPublic.map((item) => item.mail));
 
     final authBloc = BlocProvider.of<AuthBloc>(context);
-    var aliasOrIdentity = await authBloc.getAliasesAndIdentities(true);
+    var aliasesOrIdentities = await authBloc.getAliasesAndIdentities(true);
     var current = AliasOrIdentity(null, authBloc.currentIdentity);
 
-    var notExist = aliasOrIdentity.where((item) {
+    var notExist = aliasesOrIdentities.where((item) {
       return !exist.contains(item.mail);
     }).toList();
     if (exist.contains(current.mail)) {
       if (notExist.isEmpty) {
         current = null;
+        showSnack(
+            isError: false,
+            context: context,
+            scaffoldState: _scaffoldKey.currentState,
+            message: i18n(context, S.already_have_key));
+        return;
       } else {
         current = notExist.first;
       }
@@ -186,7 +194,7 @@ class _PgpSettingsState extends BState<PgpSettings> {
   _exportAllPublicKeys(List<PgpKey> keys) {
     SettingsNavigatorWidget.of(context).pushNamed(
       PgpKeysRoute.name,
-      arguments: PgpKeysRouteArg(keys),
+      arguments: PgpKeysRouteArg(keys, bloc),
     );
   }
 

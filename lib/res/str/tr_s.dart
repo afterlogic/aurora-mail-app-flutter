@@ -443,6 +443,7 @@ class TrS extends S {
         "Yerel önbelleği ve kayıtlı anahtarları Temizle",
     S.no_permission_to_local_storage:
         "Yerel depolamaya erişim izni yok. Cihazınızın ayarlarını kontrol edin.",
+    S.already_have_key: "Zaten bir genel veya özel anahtarınız var",
   };
   String get(int id) => _map[id];
 }

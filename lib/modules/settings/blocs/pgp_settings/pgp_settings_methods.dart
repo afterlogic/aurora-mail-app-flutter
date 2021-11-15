@@ -21,7 +21,8 @@ class PgpSettingsMethods {
   final ContactsRepository contactsDao;
   final User user;
 
-  PgpSettingsMethods(this.cryptoStorage, this.cryptoWorker, this.user, this.contactsDao);
+  PgpSettingsMethods(
+      this.cryptoStorage, this.cryptoWorker, this.user, this.contactsDao);
 
   Future<List<PgpKey>> getKeys(bool isPrivate) {
     return cryptoStorage.getPgpKeys(isPrivate);
@@ -46,27 +47,35 @@ class PgpSettingsMethods {
   }
 
   Future<File> downloadKey(PgpKey key) async {
-    final fileName =
-        "${((key.name.startsWith(" ") ? key.name.substring(1) : key.name) + " ") ?? ""}${key.mail} PGP ${key.isPrivate ? "private" : "public"} key.asc"
-            .replaceAll(Platform.pathSeparator, "");
-    final file = File(
-      await _keysFolderPath() + Platform.pathSeparator + fileName,
-    );
+    try {
+      final fileName =
+          "${((key.name.startsWith(" ") ? key.name.substring(1) : key.name) + " ") ?? ""}${key.mail} PGP ${key.isPrivate ? "private" : "public"} key.asc"
+              .replaceAll(Platform.pathSeparator, "");
+      final file = File(
+        await _keysFolderPath() + Platform.pathSeparator + fileName,
+      );
 
-    if (await file.exists()) await file.delete();
-    await file.create(recursive: true);
-    await file.writeAsString(key.key);
-    return file;
+      if (await file.exists()) await file.delete();
+      await file.create(recursive: true);
+      await file.writeAsString(key.key);
+      return file;
+    } catch (err) {
+      rethrow;
+    }
   }
 
   Future<File> downloadKeys(List<PgpKey> keys) async {
-    final fileName = "PGP public keys.asc";
-    final file = File(
-      await _keysFolderPath() + Platform.pathSeparator + fileName,
-    );
-    await file.create(recursive: true);
-    await file.writeAsString(keys.map((key) => key.key).join("\n\n"));
-    return file;
+    try {
+      final fileName = "PGP public keys.asc";
+      final file = File(
+        await _keysFolderPath() + Platform.pathSeparator + fileName,
+      );
+      await file.create(recursive: true);
+      await file.writeAsString(keys.map((key) => key.key).join("\n\n"));
+      return file;
+    } catch (err) {
+      rethrow;
+    }
   }
 
   shareKey(PgpKey key, Rect rect) {
@@ -109,13 +118,15 @@ class PgpSettingsMethods {
   Future<Map<PgpKey, bool>> userKeyMarkIfNotExist(List<PgpKey> keys) async {
     final map = <PgpKey, bool>{};
     for (var key in keys) {
-      final existKey = await cryptoStorage.getPgpKey(key.mail, key.isPrivate, false);
+      final existKey =
+          await cryptoStorage.getPgpKey(key.mail, key.isPrivate, false);
       map[key] = existKey == null ? true : null;
     }
     return map;
   }
 
-  Future<Map<PgpKeyWithContact, bool>> contactKeyMarkIfNotExist(List<PgpKey> keys) async {
+  Future<Map<PgpKeyWithContact, bool>> contactKeyMarkIfNotExist(
+      List<PgpKey> keys) async {
     final map = <PgpKeyWithContact, bool>{};
     for (var key in keys) {
       final contact = await contactsDao.getContactByEmail(key.mail);
@@ -167,11 +178,7 @@ class PgpSettingsMethods {
   }
 
   _shareFile(String title, String content, Rect rect) {
-    Share.share(
-      content,
-      subject: title,
-      sharePositionOrigin: rect
-    );
+    Share.share(content, subject: title, sharePositionOrigin: rect);
   }
 
   static const KEY_FOLDER = "pgp_keys";

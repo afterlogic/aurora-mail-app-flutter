@@ -300,7 +300,7 @@ class RuS extends S {
     S.btn_php_send_all: "Отправить всё",
     S.label_pgp_downloading_to: "Загруженно в {path}",
     S.hint_pgp_delete_user_key_confirm:
-        "Вы действительно хотите удалить OpenPGP key для {user}",
+        "Вы действительно хотите удалить OpenPGP key для {user}?",
     S.btn_pgp_sign_or_encrypt: "Sign/Encrypt",
     S.label_pgp_sign_or_encrypt: "Open PGP шифрование",
     S.label_pgp_decrypt: "Open PGP дешифровка",
@@ -381,7 +381,7 @@ class RuS extends S {
     S.btn_login_back_to_login: "Back to login",
     S.error_contact_pgp_key_will_not_be_valid:
         "Pgp ключ не будет действительным",
-    S.btn_contact_key_re_import: "Импортировать заного",
+    S.btn_contact_key_re_import: "Импортировать заново",
     S.btn_contact_delete_key: "Удалить ключ",
     S.label_contact_select_key: "Выберите ключ",
     S.hint_pgp_keys_will_be_import_to_contacts:
@@ -399,7 +399,7 @@ class RuS extends S {
     S.input_message_search_till: "До",
     S.label_pgp_share_warning: "Предупреждение",
     S.hint_pgp_share_warning:
-        "You are going to share you private PGP key. The key must be kept from the 3-thd party. Do you want to continue?",
+        "Вы собираетесь поделиться своим закрытым PGP-ключом. Закрытый ключ должен храниться только у владельца. Продолжить?",
     S.label_message_headers: "Заголовки письма",
     S.label_message_advanced_search: "Advanced search",
     S.btn_vcf_import: "Import",
@@ -441,6 +441,7 @@ class RuS extends S {
     S.clear_cache_during_logout: "Очистить локальный кэш и сохранённые ключи",
     S.no_permission_to_local_storage:
         "Нет разрешения для доступа к файлам. Проверьте настройки на вашем устройстве.",
+    S.already_have_key: "У вас уже есть открытый или закрытый ключ",
   };
   String get(int id) => _map[id];
 }

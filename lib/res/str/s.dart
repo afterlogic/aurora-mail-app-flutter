@@ -420,7 +420,8 @@ abstract class S extends SInterface {
   static const error_message_not_found = 414;
   static const clear_cache_during_logout = 415;
   static const no_permission_to_local_storage = 416;
-  static const hint_log_delete_record = 417;
-  static const messages_list_app_bar_Mail = 418;
+  static const already_have_key = 417;
+  static const hint_log_delete_record = 418;
+  static const messages_list_app_bar_Mail = 419;
   String get(int id);
 }

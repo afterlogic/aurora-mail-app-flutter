@@ -275,7 +275,7 @@
   "btn_pgp_download_all": "Скачать всё",
   "btn_php_send_all": "Отправить всё",
   "label_pgp_downloading_to": "Загруженно в {path}",
-  "hint_pgp_delete_user_key_confirm": "Вы действительно хотите удалить OpenPGP key для {user}",
+  "hint_pgp_delete_user_key_confirm": "Вы действительно хотите удалить OpenPGP key для {user}?",
   "btn_pgp_sign_or_encrypt": "Sign/Encrypt",
   "label_pgp_sign_or_encrypt": "Open PGP шифрование",
   "label_pgp_decrypt": "Open PGP дешифровка",
@@ -338,7 +338,7 @@
   "hint_login_upgrade_your_plan": "Mobile apps are not allowed in your account.",
   "btn_login_back_to_login": "Back to login",
   "error_contact_pgp_key_will_not_be_valid": "Pgp ключ не будет действительным",
-  "btn_contact_key_re_import": "Импортировать заного",
+  "btn_contact_key_re_import": "Импортировать заново",
   "btn_contact_delete_key": "Удалить ключ",
   "label_contact_select_key": "Выберите ключ",
   "hint_pgp_keys_will_be_import_to_contacts": "Эти ключи будут экспортированны в контакты",
@@ -353,7 +353,7 @@
   "input_message_search_since": "От",
   "input_message_search_till": "До",
   "label_pgp_share_warning": "Предупреждение",
-  "hint_pgp_share_warning": "You are going to share you private PGP key. The key must be kept from the 3-thd party. Do you want to continue?",
+  "hint_pgp_share_warning": "Вы собираетесь поделиться своим закрытым PGP-ключом. Закрытый ключ должен храниться только у владельца. Продолжить?",
   "label_message_headers": "Заголовки письма",
   "label_message_advanced_search": "Advanced search",
   "btn_vcf_import": "Import",
@@ -390,5 +390,6 @@
   "hint_log_delete_record": "Are you sure you want to delete file {name}",
   "error_timeout": "Can't connect to the server",
   "clear_cache_during_logout": "Очистить локальный кэш и сохранённые ключи",
-  "no_permission_to_local_storage": "Нет разрешения для доступа к файлам. Проверьте настройки на вашем устройстве."
+  "no_permission_to_local_storage": "Нет разрешения для доступа к файлам. Проверьте настройки на вашем устройстве.",
+  "already_have_key": "У вас уже есть открытый или закрытый ключ"
 }

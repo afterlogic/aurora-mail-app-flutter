@@ -38,15 +38,11 @@ class _PgpKeyScreenState extends State<PgpKeyScreen> {
     pgpKey = widget.pgpKey;
     onDelete = widget.onDelete;
     withAppBar = widget.withAppBar;
-    // TODO
-    // creating a new block, because the old one is being closed in PgpSettings page
-    bloc = AppInjector.instance
-        .pgpSettingsBloc(BlocProvider.of<AuthBloc>(context));
+    bloc = widget.bloc;
   }
 
   @override
   void dispose() {
-    bloc.close();
     super.dispose();
   }
 

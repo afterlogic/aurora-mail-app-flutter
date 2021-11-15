@@ -287,7 +287,7 @@
   "btn_pgp_download_all": "Download all",
   "btn_php_send_all": "Send all",
   "label_pgp_downloading_to": "Downloading to {path}",
-  "hint_pgp_delete_user_key_confirm": "Are you sure you want to delete OpenPGP key for {user}",
+  "hint_pgp_delete_user_key_confirm": "Are you sure you want to delete OpenPGP key for {user}?",
   "btn_pgp_sign_or_encrypt": "Sign/Encrypt",
   "label_pgp_sign_or_encrypt": "Open PGP Sign/Encrypt",
   "label_pgp_decrypt": "Open PGP Decrypt",
@@ -354,7 +354,7 @@
   "input_message_search_since": "Since",
   "input_message_search_till": "Till",
   "label_pgp_share_warning": "Warning",
-  "hint_pgp_share_warning": "You are going to share you private PGP key. The key must be kept from the 3rd parties. Do you want to continue?",
+  "hint_pgp_share_warning": "You are going to share your private PGP key. The key must be kept from the 3rd parties. Do you want to continue?",
   "btn_vcf_import": "Import",
   "hint_vcf_import": "Import contact from vcf?",
   "label_message_headers": "View message headers",
@@ -379,7 +379,7 @@
   "btn_log_delete_all": "Delete all",
   "label_record_log_in_background": "Record log in background",
   "label_show_debug_view": "Show debug view",
-  "hint_log_delete_all": "Are you sure you want to delete all logs",
+  "hint_log_delete_all": "Are you sure you want to delete all logs?",
   "label_enable_uploaded_message_counter": "Counter of uploaded message",
   "error_no_pgp_key": "No PGP public key was found",
   "label_contact_pgp_settings": "PGP Settings",
@@ -387,7 +387,7 @@
   "btn_not_spam": "Not spam",
   "error_password_is_empty": "password is empty",
   "label_encryption_password_for_pgp_key": "Required password for PGP key",
-  "debug_hint_log_delete_record": "Are you sure you want to delete the file",
+  "debug_hint_log_delete_record": "Are you sure you want to delete the file?",
   "error_timeout": "Can't connect to the server",
   "fido_error_invalid_key": "Invalid security key",
   "tfa_label": "Two Factor Verification",
@@ -415,5 +415,6 @@
   "btn_back": "Back",
   "error_message_not_found": "Message not found",
   "clear_cache_during_logout": "Delete cached data and keys",
-  "no_permission_to_local_storage": "No permission to access the local storage. Check your device settings."
+  "no_permission_to_local_storage": "No permission to access the local storage. Check your device settings.",
+  "already_have_key": "You already have a public or private key"
 }

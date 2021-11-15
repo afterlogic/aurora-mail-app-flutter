@@ -173,8 +173,8 @@ class PgpSettingsBloc extends Bloc<PgpSettingsEvent, PgpSettingsState> {
         file = await _methods.downloadKeys(event.pgpKeys);
       }
       yield CompleteDownload(file.path);
-    } catch (e) {
-      print(e);
+    } catch (err) {
+      yield ErrorState(ErrorToShow(err));
     }
   }
 

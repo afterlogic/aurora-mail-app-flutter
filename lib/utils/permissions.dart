@@ -12,7 +12,7 @@ Future getStoragePermissions() async {
     //     ? _requestStoragePermission()
     //     : Permission.storage.request());
     if (status != PermissionStatus.granted) {
-      throw S.no_permission_to_local_storage;
+      throw "No permission to access the local storage. Check your device settings."; //S.no_permission_to_local_storage;
     }
   }
 }

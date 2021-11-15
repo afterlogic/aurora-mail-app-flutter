@@ -309,7 +309,7 @@ class EnS extends S {
     S.btn_php_send_all: "Send all",
     S.label_pgp_downloading_to: "Downloading to {path}",
     S.hint_pgp_delete_user_key_confirm:
-        "Are you sure you want to delete OpenPGP key for {user}",
+        "Are you sure you want to delete OpenPGP key for {user}?",
     S.btn_pgp_sign_or_encrypt: "Sign/Encrypt",
     S.label_pgp_sign_or_encrypt: "Open PGP Sign/Encrypt",
     S.label_pgp_decrypt: "Open PGP Decrypt",
@@ -396,7 +396,7 @@ class EnS extends S {
     S.input_message_search_till: "Till",
     S.label_pgp_share_warning: "Warning",
     S.hint_pgp_share_warning:
-        "You are going to share you private PGP key. The key must be kept from the 3rd parties. Do you want to continue?",
+        "You are going to share your private PGP key. The key must be kept from the 3rd parties. Do you want to continue?",
     S.btn_vcf_import: "Import",
     S.hint_vcf_import: "Import contact from vcf?",
     S.label_message_headers: "View message headers",
@@ -423,7 +423,7 @@ class EnS extends S {
     S.btn_log_delete_all: "Delete all",
     S.label_record_log_in_background: "Record log in background",
     S.label_show_debug_view: "Show debug view",
-    S.hint_log_delete_all: "Are you sure you want to delete all logs",
+    S.hint_log_delete_all: "Are you sure you want to delete all logs?",
     S.label_enable_uploaded_message_counter: "Counter of uploaded message",
     S.error_no_pgp_key: "No PGP public key was found",
     S.label_contact_pgp_settings: "PGP Settings",
@@ -432,7 +432,7 @@ class EnS extends S {
     S.btn_not_spam: "Not spam",
     S.error_password_is_empty: "password is empty",
     S.label_encryption_password_for_pgp_key: "Required password for PGP key",
-    S.debug_hint_log_delete_record: "Are you sure you want to delete the file",
+    S.debug_hint_log_delete_record: "Are you sure you want to delete the file?",
     S.error_timeout: "Can't connect to the server",
     S.fido_error_invalid_key: "Invalid security key",
     S.tfa_label: "Two Factor Verification",
@@ -468,6 +468,7 @@ class EnS extends S {
     S.clear_cache_during_logout: "Delete cached data and keys",
     S.no_permission_to_local_storage:
         "No permission to access the local storage. Check your device settings.",
+    S.already_have_key: "You already have a public or private key",
   };
   String get(int id) => _map[id];
 }
