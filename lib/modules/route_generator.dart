@@ -316,8 +316,8 @@ class RouteGenerator {
               name: settings.name,
             ),
             builder: (_) => PgpSettings(
-              arg.pgpSettingsBloc,
-            ));
+                  arg.pgpSettingsBloc,
+                ));
         break;
       case PgpKeyRoute.name:
         final arg = settings.arguments as PgpKeyRouteArg;

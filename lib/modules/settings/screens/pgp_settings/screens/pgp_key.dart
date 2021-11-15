@@ -1,9 +1,8 @@
 import 'dart:io';
 
-import 'package:aurora_mail/inject/app_inject.dart';
-import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/settings/blocs/pgp_settings/bloc.dart';
+import 'package:aurora_mail/modules/settings/screens/settings_main/settings_navigator.dart';
 import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
 import 'package:aurora_mail/utils/identity_util.dart';
@@ -12,7 +11,6 @@ import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:crypto_model/crypto_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PgpKeyScreen extends StatefulWidget {
   final PgpSettingsBloc bloc;
@@ -141,7 +139,7 @@ class _PgpKeyScreenState extends State<PgpKeyScreen> {
           child: Text(i18n(context, S.btn_download)),
           onPressed: () {
             bloc.add(DownloadKeys([pgpKey]));
-            Navigator.pop(context);
+            SettingsNavigatorWidget.of(context).pop();
           },
         ),
       if (!Platform.isIOS) space,
@@ -161,7 +159,7 @@ class _PgpKeyScreenState extends State<PgpKeyScreen> {
             } else {
               bloc.add(DeleteKey(pgpKey));
             }
-            Navigator.pop(context);
+            SettingsNavigatorWidget.of(context).pop();
           }
         },
       ),
