@@ -170,7 +170,7 @@ class PgpSettingsMethods {
     if (result == null) return null;
     final files = result.files;
     for (var file in files) {
-      if (file.path.endsWith(".asc")) {
+      if (file.path.endsWith(".asc") || file.path.contains(".asc.")) {
         content += await File(file.path).readAsString();
       }
     }
