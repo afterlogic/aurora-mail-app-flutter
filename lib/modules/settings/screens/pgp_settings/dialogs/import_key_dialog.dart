@@ -2,9 +2,9 @@ import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/modules/dialog_wrap.dart';
 import 'package:aurora_mail/modules/settings/blocs/pgp_settings/bloc.dart';
 import 'package:aurora_mail/modules/settings/screens/pgp_settings/components/key_item.dart';
-import 'package:aurora_mail/shared_ui/sized_dialog_content.dart';
 import 'package:aurora_mail/utils/base_state.dart';
-import 'package:aurora_mail/utils/internationalization.dart'; import 'package:aurora_mail/res/str/s.dart';
+import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_mail/res/str/s.dart';
 import 'package:crypto_model/crypto_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -24,7 +24,8 @@ class ImportKeyDialog extends StatefulWidget {
   _ImportKeyDialogState createState() => _ImportKeyDialogState();
 }
 
-class _ImportKeyDialogState extends BState<ImportKeyDialog> with NotSavedChangesMixin{
+class _ImportKeyDialogState extends BState<ImportKeyDialog>
+    with NotSavedChangesMixin {
   final List<PgpKey> userKeys = [];
   final List<PgpKeyWithContact> contactKeys = [];
   final List<PgpKeyWithContact> newContactKeys = [];
@@ -53,6 +54,8 @@ class _ImportKeyDialogState extends BState<ImportKeyDialog> with NotSavedChanges
 
   @override
   Widget build(BuildContext context) {
+    final areSelectedKeys = widget.userKeys.values.contains(true) ||
+        widget.contactKeys.values.contains(true);
     return AlertDialog(
       title: Text(i18n(context, S.label_pgp_import_key)),
       content: BlocListener(
@@ -64,7 +67,7 @@ class _ImportKeyDialogState extends BState<ImportKeyDialog> with NotSavedChanges
         },
         child: SingleChildScrollView(
           child: Column(
-            crossAxisAlignment:CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               if (keyAlreadyExist)
                 Padding(
@@ -129,7 +132,8 @@ class _ImportKeyDialogState extends BState<ImportKeyDialog> with NotSavedChanges
             child: state is! ImportProgress
                 ? Text(i18n(context, S.btn_pgp_import_selected_key))
                 : CircularProgressIndicator(),
-            onPressed: state is! ImportProgress ? _import : null,
+            onPressed:
+                areSelectedKeys && state is! ImportProgress ? _import : null,
           ),
         ),
       ],
