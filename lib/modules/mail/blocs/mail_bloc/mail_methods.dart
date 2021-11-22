@@ -16,6 +16,7 @@ import 'package:aurora_mail/modules/mail/repository/folders_api.dart';
 import 'package:aurora_mail/modules/mail/repository/mail_api.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/modules/settings/models/sync_period.dart';
+import 'package:aurora_mail/modules/settings/screens/debug/default_api_interceptor.dart';
 import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/utils/error_to_show.dart';
 import 'package:flutter/cupertino.dart';
@@ -39,8 +40,16 @@ class MailMethods {
     @required this.user,
     this.updateMessageCounter,
   }) {
-    _foldersApi = new FoldersApi(user: user, account: account);
-    _mailApi = new MailApi(user: user, account: account);
+    _foldersApi = new FoldersApi(
+      user: user,
+      account: account,
+      interceptor: DefaultApiInterceptor.get(),
+    );
+    _mailApi = new MailApi(
+      user: user,
+      account: account,
+      interceptor: DefaultApiInterceptor.get(),
+    );
   }
 
   static final syncQueue = new List<String>();
@@ -694,7 +703,9 @@ class MailMethods {
   }
 
   Future<Folder> getFolderByName(String name) {
-    return _foldersDao.getByName(name, account.localId).then(Folder.getFolderObjectsFromDb);
+    return _foldersDao
+        .getByName(name, account.localId)
+        .then(Folder.getFolderObjectsFromDb);
   }
 }
 

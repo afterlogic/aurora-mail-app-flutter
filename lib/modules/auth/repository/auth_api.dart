@@ -6,6 +6,7 @@ import 'package:aurora_mail/database/accounts/accounts_table.dart';
 import 'package:aurora_mail/database/aliases/aliases_table.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/auth/repository/device_id_storage.dart';
+import 'package:aurora_mail/modules/settings/screens/debug/default_api_interceptor.dart';
 import 'package:http/http.dart' as http;
 import 'package:webmail_api_client/webmail_api_client.dart';
 
@@ -33,8 +34,11 @@ class AuthApi {
   }
 
   Future<User> login(String email, String password, String hostname) async {
-    final coreModuleForLogin =
-        WebMailApi(moduleName: WebMailModules.core, hostname: hostname);
+    final coreModuleForLogin = WebMailApi(
+      moduleName: WebMailModules.core,
+      hostname: hostname,
+      interceptor: DefaultApiInterceptor.get(),
+    );
 
     final parameters =
         json.encode({"Login": email, "Password": password, "Pattern": ""});
@@ -100,6 +104,7 @@ class AuthApi {
       moduleName: WebMailModules.core,
       hostname: user.hostname,
       token: user.token,
+      interceptor: DefaultApiInterceptor.get(),
     );
 
     final body = new WebMailApiBody(module: "Core", method: "Logout");
@@ -119,6 +124,7 @@ class AuthApi {
       moduleName: WebMailModules.mail,
       hostname: user.hostname,
       token: user.token,
+      interceptor: DefaultApiInterceptor.get(),
     );
 
     final parameters = json.encode({"UserId": user.serverId});
@@ -149,6 +155,7 @@ class AuthApi {
     final twoFactorModule = WebMailApi(
       moduleName: WebMailModules.twoFactorAuth,
       hostname: hostname,
+      interceptor: DefaultApiInterceptor.get(),
     );
     final parameters = json.encode({
       "Code": pin,
@@ -186,6 +193,7 @@ class AuthApi {
       moduleName: WebMailModules.mail,
       hostname: user.hostname,
       token: user.token,
+      interceptor: DefaultApiInterceptor.get(),
     );
 
     final request = new WebMailApiBody(method: "GetIdentities");
@@ -211,6 +219,7 @@ class AuthApi {
       moduleName: "CpanelIntegrator",
       hostname: user.hostname,
       token: user.token,
+      interceptor: DefaultApiInterceptor.get(),
     );
 
     final request = new WebMailApiBody(method: "GetAliases");
@@ -247,6 +256,7 @@ class AuthApi {
         final webMailApi = WebMailApi(
           moduleName: WebMailModules.core,
           hostname: entry.key,
+          interceptor: DefaultApiInterceptor.get(),
         );
         final parameters = json.encode({
           "Users": entry.value
@@ -284,6 +294,7 @@ class AuthApi {
     final mailModule = WebMailApi(
       moduleName: "TwoFactorAuth",
       hostname: host,
+      interceptor: DefaultApiInterceptor.get(),
     );
 
     final request = new WebMailApiBody(
@@ -322,6 +333,7 @@ class AuthApi {
     final mailModule = WebMailApi(
       moduleName: "TwoFactorAuth",
       hostname: host,
+      interceptor: DefaultApiInterceptor.get(),
     );
 
     final request = new WebMailApiBody(
@@ -361,6 +373,7 @@ class AuthApi {
     final twoFactorModule = WebMailApi(
       moduleName: WebMailModules.twoFactorAuth,
       hostname: hostname,
+      interceptor: DefaultApiInterceptor.get(),
     );
     final parameters = json.encode({
       "BackupCode": code,
@@ -403,6 +416,7 @@ class AuthApi {
       moduleName: WebMailModules.twoFactorAuth,
       hostname: hostname,
       token: token,
+      interceptor: DefaultApiInterceptor.get(),
     );
     final parameters = json.encode({
       "DeviceId": deviceId,
@@ -432,6 +446,7 @@ class AuthApi {
       moduleName: WebMailModules.twoFactorAuth,
       hostname: hostname,
       token: token,
+      interceptor: DefaultApiInterceptor.get(),
     );
     final parameters = json.encode({
       "DeviceId": deviceId,
@@ -455,6 +470,7 @@ class AuthApi {
     final twoFactorModule = WebMailApi(
       moduleName: WebMailModules.twoFactorAuth,
       hostname: hostname,
+      interceptor: DefaultApiInterceptor.get(),
     );
     final body = new WebMailApiBody(method: "GetSettings");
 

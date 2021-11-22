@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/modules/settings/screens/debug/default_api_interceptor.dart';
 import 'package:webmail_api_client/webmail_api_client.dart';
 
 class PgpApi {
@@ -15,6 +16,7 @@ class PgpApi {
           moduleName: WebMailModules.openPgp,
           hostname: user.hostname,
           token: user.token,
+          interceptor: DefaultApiInterceptor.get(),
         );
 
   Future<String> createSelfDestructLink(

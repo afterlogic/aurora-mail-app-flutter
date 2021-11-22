@@ -4,6 +4,7 @@ import 'package:aurora_mail/database/mail/mail_dao.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/mail/repository/mail_api.dart';
 import 'package:aurora_mail/modules/mail/repository/search_util.dart';
+import 'package:aurora_mail/modules/settings/screens/debug/default_api_interceptor.dart';
 import 'package:flutter/foundation.dart';
 
 class MessagesListMethods {
@@ -13,7 +14,11 @@ class MessagesListMethods {
   MailApi _mailApi;
 
   MessagesListMethods({@required User user, @required this.account}) {
-    _mailApi = new MailApi(user: user, account: account);
+    _mailApi = new MailApi(
+      user: user,
+      account: account,
+      interceptor: DefaultApiInterceptor.get(),
+    );
   }
 
   Stream<List<Message>> getMessages(
@@ -64,7 +69,7 @@ class MessagesListMethods {
     }
     for (var folder in splitToFolder.keys) {
       final uids = splitToFolder[folder];
-     await _mailDao.deleteMessages(uids, folder);
+      await _mailDao.deleteMessages(uids, folder);
       if (foldersForPermanentlyDeleteName.contains(folder)) {
         await _mailApi.deleteMessages(
           uids: uids,
@@ -109,7 +114,6 @@ class MessagesListMethods {
 
       await Future.wait(futures);
     }
-
   }
 
   static const _limit = 30;

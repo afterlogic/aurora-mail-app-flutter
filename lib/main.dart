@@ -6,6 +6,7 @@ import 'package:aurora_mail/bloc_logger.dart';
 import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/inject/app_inject.dart';
+import 'package:aurora_mail/modules/settings/screens/debug/default_api_interceptor.dart';
 import 'package:aurora_mail/notification/push_notifications_manager.dart';
 import 'package:aurora_mail/shared_ui/restart_widget.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -14,8 +15,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
-import 'package:moor_flutter/moor_flutter.dart';
-import 'package:webmail_api_client/webmail_api_client.dart';
 
 import 'background/background_helper.dart';
 import 'background/background_sync.dart';
@@ -85,11 +84,10 @@ Future<bool> onAlarm({
 }) async {
   WidgetsFlutterBinding.ensureInitialized();
   final isDebug = await DebugLocalStorage().getBackgroundRecord();
-  ApiInterceptor interceptor;
+  final interceptor = DefaultApiInterceptor.get();
   Logger isolatedLogger = logger;
   recordLog ??= true;
   if (recordLog && isDebug) {
-    interceptor = ApiInterceptor(true);
     isolatedLogger =
         Logger.backgroundSync(LoggerInterceptorAdapter(interceptor));
     isolatedLogger.start();

@@ -15,11 +15,25 @@ export 'webmail_api_body.dart';
 export 'webmail_api_error.dart';
 export 'webmail_api_modules.dart';
 
+class ApiInterceptor extends ChangeNotifier {
+  bool _logResponse;
+  Function(String) onRequest;
+  Function(String) onError;
+  Function(String) onResponse;
+
+  ApiInterceptor([this._logResponse = false]);
+
+  bool get logResponse => _logResponse;
+
+  void set logResponse(bool value) {
+    if (value != _logResponse) {
+      _logResponse = value;
+      notifyListeners();
+    }
+  }
+}
+
 class WebMailApi {
-  final String moduleName;
-  final String hostname;
-  final String token;
-  final ApiInterceptor interceptor;
   static Function(String) onRequest;
   static Function(String) onError;
   static Function(String) onResponse;
@@ -28,19 +42,9 @@ class WebMailApi {
       ..badCertificateCallback =
           ((X509Certificate cert, String host, int port) {
         return false;
-      }),
+      })
+      ..connectionTimeout = const Duration(seconds: 15),
   );
-
-  String get apiUrl => "$hostname/?Api/";
-
-  Map<String, String> get headerWithToken => {'Authorization': 'Bearer $token'};
-
-  WebMailApi({
-    @required this.moduleName,
-    @required this.hostname,
-    this.token,
-    this.interceptor,
-  }) : assert(moduleName != null && hostname != null);
 
   static final _authErrorStreamCtrl = StreamController<void>.broadcast();
 
@@ -51,6 +55,27 @@ class WebMailApi {
   static Map<String, String> getHeaderWithToken(String token) {
     return {'Authorization': 'Bearer $token'};
   }
+
+  final String moduleName;
+  final String hostname;
+  final String token;
+  final ApiInterceptor interceptor;
+
+  WebMailApi({
+    @required this.moduleName,
+    @required this.hostname,
+    this.token,
+    @required this.interceptor,
+  }) : assert(moduleName != null && hostname != null);
+
+  String get apiUrl => "$hostname/?Api/";
+
+  Map<String, String> get headerWithToken => {'Authorization': 'Bearer $token'};
+
+  // Duration _connectionTimeout = const Duration(seconds: 120);
+  // Response Function() _onConnectionTimeout = () => Response(
+  //     json.encode({"ErrorMessage": "Connection timed out", "ErrorCode": 408}),
+  //     408);
 
   _onRequest(String id, String parameters) {
     if (interceptor?.onRequest != null) {
@@ -66,7 +91,7 @@ class WebMailApi {
           "$id\nDELAY: ${delay}\nSTATUS: ${status} ${interceptor.logResponse == true ? "\nBODY:$res" : ""}");
     } else if (onResponse != null) {
       onResponse(
-          "$id\nDELAY: ${delay}\nSTATUS: ${status} ${status}${interceptor?.logResponse == true ? "\nBODY:$res" : ""}");
+          "$id\nDELAY: ${delay}\nSTATUS: ${status} ${interceptor?.logResponse == true ? "\nBODY:$res" : ""}");
     }
   }
 
@@ -97,8 +122,16 @@ class WebMailApi {
     final start = DateTime.now().millisecondsSinceEpoch;
     _onRequest(id, body.parameters);
     try {
-      final rawResponse = await _client.post(Uri.parse(apiUrl),
-          headers: headers, body: body.toMap(moduleName));
+      final rawResponse = await _client.post(
+        Uri.parse(apiUrl),
+        headers: headers,
+        body: body.toMap(moduleName),
+      )
+          // .timeout(
+          //   _connectionTimeout,
+          //   onTimeout: _onConnectionTimeout,
+          // )
+          ;
       final res = json.decode(rawResponse.body);
 
       if (res["Result"] != null && (res["Result"] != false || getRawResponse)) {
@@ -115,8 +148,8 @@ class WebMailApi {
         }
         throw WebMailApiError(res);
       }
-    } catch (e) {
-      print(e);
+    } catch (err) {
+      print('ERROR WebMailApi.post(): $err');
       rethrow;
     }
   }
@@ -159,13 +192,4 @@ class WebMailApi {
       throw WebMailApiError(res);
     }
   }
-}
-
-class ApiInterceptor {
-  final bool logResponse;
-  Function(String) onRequest;
-  Function(String) onError;
-  Function(String) onResponse;
-
-  ApiInterceptor(this.logResponse);
 }

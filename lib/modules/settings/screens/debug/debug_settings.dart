@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:aurora_logger/aurora_logger.dart';
 import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
@@ -19,6 +18,7 @@ class _DebugSettingState extends BState<DebugSetting> {
   final _storage = DebugLocalStorage();
   bool _messageCounter;
   bool _backgroundRecord;
+  bool _showResponseBody;
 
   @override
   void initState() {
@@ -30,10 +30,13 @@ class _DebugSettingState extends BState<DebugSetting> {
     Future.wait([
       _storage.getBackgroundRecord(),
       _storage.getEnableCounter(),
+      _storage.getShowResponseBody(),
     ]).then((value) {
-      _backgroundRecord = (value[0] ?? false);
-      _messageCounter = (value[1] ?? false);
-      setState(() {});
+      setState(() {
+        _backgroundRecord = (value[0] ?? false);
+        _messageCounter = (value[1] ?? false);
+        _showResponseBody = (value[2] ?? false);
+      });
     });
   }
 
@@ -67,6 +70,16 @@ class _DebugSettingState extends BState<DebugSetting> {
                     _messageCounter = value;
                     _storage.setEnableCounter(value);
                     setState(() {});
+                  },
+                ),
+                CheckboxListTile(
+                  value: _showResponseBody,
+                  title: Text('Show request body'),
+                  onChanged: (bool value) {
+                    setState(() {
+                      _showResponseBody = value;
+                      _storage.setShowResponseBody(value);
+                    });
                   },
                 ),
                 Expanded(

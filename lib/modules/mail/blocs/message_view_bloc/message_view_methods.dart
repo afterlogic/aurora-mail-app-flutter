@@ -7,6 +7,7 @@ import 'package:aurora_mail/database/white_mail/white_mail_dao.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:aurora_mail/modules/mail/repository/mail_api.dart';
+import 'package:aurora_mail/modules/settings/screens/debug/default_api_interceptor.dart';
 import 'package:crypto_worker/crypto_worker.dart';
 import 'package:crypto_worker/src/pgp/pgp_worker.dart';
 import 'package:flutter/widgets.dart';
@@ -24,7 +25,11 @@ class MessageViewMethods {
     @required this.account,
     this.pgpWorker,
   }) {
-    _mailApi = new MailApi(user: user, account: account);
+    _mailApi = new MailApi(
+      user: user,
+      account: account,
+      interceptor: DefaultApiInterceptor.get(),
+    );
   }
 
   void downloadAttachment(
@@ -68,9 +73,10 @@ class MessageViewMethods {
   }
 
   Future<bool> checkInWhiteList(Message message) async {
-    final List<String> emails = (json.decode(message.fromInJson)["@Collection"] as List)
-        .map((item) => item["Email"] as String)
-        .toList();
+    final List<String> emails =
+        (json.decode(message.fromInJson)["@Collection"] as List)
+            .map((item) => item["Email"] as String)
+            .toList();
     if (message.safety == true) {
       await _whiteMailDao.add(emails);
       return true;
@@ -89,9 +95,10 @@ class MessageViewMethods {
   }
 
   Future addInWhiteList(Message message) async {
-    final List<String> emails = (json.decode(message.fromInJson)["@Collection"] as List)
-        .map((item) => item["Email"] as String)
-        .toList();
+    final List<String> emails =
+        (json.decode(message.fromInJson)["@Collection"] as List)
+            .map((item) => item["Email"] as String)
+            .toList();
     await _whiteMailDao.add(emails);
   }
 }

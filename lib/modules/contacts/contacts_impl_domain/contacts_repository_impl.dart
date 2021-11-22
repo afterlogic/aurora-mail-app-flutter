@@ -10,7 +10,7 @@ import 'package:aurora_mail/modules/contacts/contacts_impl_domain/contacts_confi
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/diff_calculator.dart';
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/contacts_db_service.dart';
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/network/contacts_network_service.dart';
-import 'package:aurora_mail/utils/api_utils.dart';
+import 'package:aurora_mail/modules/settings/screens/debug/default_api_interceptor.dart';
 import 'package:flutter/widgets.dart';
 import 'package:moor_flutter/moor_flutter.dart';
 import 'package:webmail_api_client/webmail_api_client.dart';
@@ -40,6 +40,7 @@ class ContactsRepositoryImpl implements ContactsRepository {
       moduleName: WebMailModules.contacts,
       hostname: user.hostname,
       token: user.token,
+      interceptor: DefaultApiInterceptor.get(),
     );
 
     _network = new ContactsNetworkService(module, user.serverId);

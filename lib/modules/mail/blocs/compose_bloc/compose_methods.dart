@@ -13,6 +13,7 @@ import 'package:aurora_mail/modules/mail/models/compose_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/temp_attachment_upload.dart';
 import 'package:aurora_mail/modules/mail/repository/mail_api.dart';
+import 'package:aurora_mail/modules/settings/screens/debug/default_api_interceptor.dart';
 import 'package:crypto_worker/crypto_worker.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_uploader/flutter_uploader.dart';
@@ -29,7 +30,11 @@ class ComposeMethods {
     @required this.account,
     @required this.pgpWorker,
   }) {
-    _mailApi = new MailApi(user: user, account: account);
+    _mailApi = new MailApi(
+      user: user,
+      account: account,
+      interceptor: DefaultApiInterceptor.get(),
+    );
   }
 
   Future<void> sendMessage({
