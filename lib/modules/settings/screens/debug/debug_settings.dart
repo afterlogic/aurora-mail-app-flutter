@@ -74,7 +74,7 @@ class _DebugSettingState extends BState<DebugSetting> {
                 ),
                 CheckboxListTile(
                   value: _showResponseBody,
-                  title: Text('Show request body'),
+                  title: Text('Show response body'),
                   onChanged: (bool value) {
                     setState(() {
                       _showResponseBody = value;
