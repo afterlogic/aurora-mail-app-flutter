@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:aurora_mail/build_property.dart';
 import 'package:device_id/device_id.dart';
-import 'package:device_info/device_info.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/foundation.dart';
 
 class DeviceIdStorage {
@@ -34,5 +34,18 @@ class DeviceIdStorage {
         }
       }
     }
+  }
+
+  static Future<bool> isAndroid10orHigh() async {
+    if (Platform.isAndroid) {
+      final androidInfo = await _deviceInfo.androidInfo;
+      final sdkVersion = androidInfo.version.sdkInt;
+      print('!!! sdkVersion = $sdkVersion');
+      // for Android 10 or high
+      if (sdkVersion != null && sdkVersion >= 29) {
+        return true;
+      }
+    }
+    return false;
   }
 }

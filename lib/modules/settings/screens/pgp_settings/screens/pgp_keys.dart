@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:aurora_mail/inject/app_inject.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
+import 'package:aurora_mail/modules/auth/repository/device_id_storage.dart';
 import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/settings/blocs/pgp_settings/bloc.dart';
 import 'package:aurora_mail/res/str/s.dart';
@@ -24,11 +25,21 @@ class PgpKeysScreen extends StatefulWidget {
 
 class _PgpKeysScreenState extends State<PgpKeysScreen> {
   PgpSettingsBloc bloc;
+  bool isAndroid9orLow;
 
   @override
   void initState() {
     super.initState();
     bloc = widget.bloc;
+    isAndroid9orLow = Platform.isAndroid;
+    DeviceIdStorage.isAndroid10orHigh().then((value) {
+      if (value) {
+        setState(() {
+          // TODO: deal with Android 10 file permissions
+          // isAndroid9orLow = false;
+        });
+      }
+    });
   }
 
   @override
@@ -110,7 +121,7 @@ class _PgpKeysScreenState extends State<PgpKeysScreen> {
         },
       ),
       space,
-      if (!Platform.isIOS)
+      if (isAndroid9orLow)
         AMButton(
           child: Text(i18n(context, S.btn_pgp_download_all)),
           onPressed: () {

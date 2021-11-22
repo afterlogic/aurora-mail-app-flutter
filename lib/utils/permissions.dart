@@ -8,7 +8,7 @@ Future getStoragePermissions() async {
   PermissionStatus status = await Permission.storage.status;
   if (status != PermissionStatus.granted) {
     status = await Permission.storage.request();
-    // (Platform.isAndroid
+    // status = await (Platform.isAndroid
     //     ? _requestStoragePermission()
     //     : Permission.storage.request());
     if (status != PermissionStatus.granted) {

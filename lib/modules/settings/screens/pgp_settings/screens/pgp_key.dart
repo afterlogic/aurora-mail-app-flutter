@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:aurora_mail/modules/auth/repository/device_id_storage.dart';
 import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/settings/blocs/pgp_settings/bloc.dart';
 import 'package:aurora_mail/modules/settings/screens/settings_main/settings_navigator.dart';
@@ -29,6 +30,7 @@ class _PgpKeyScreenState extends State<PgpKeyScreen> {
   PgpKey pgpKey;
   Function() onDelete;
   bool withAppBar;
+  bool isAndroid9orLow;
 
   @override
   void initState() {
@@ -37,6 +39,15 @@ class _PgpKeyScreenState extends State<PgpKeyScreen> {
     onDelete = widget.onDelete;
     withAppBar = widget.withAppBar;
     bloc = widget.bloc;
+    isAndroid9orLow = Platform.isAndroid;
+    DeviceIdStorage.isAndroid10orHigh().then((value) {
+      if (value) {
+        setState(() {
+          // TODO: deal with Android 10 file permissions
+          // isAndroid9orLow = false;
+        });
+      }
+    });
   }
 
   @override
@@ -134,7 +145,7 @@ class _PgpKeyScreenState extends State<PgpKeyScreen> {
         },
       ),
       space,
-      if (!Platform.isIOS)
+      if (isAndroid9orLow)
         AMButton(
           child: Text(i18n(context, S.btn_download)),
           onPressed: () {
@@ -142,7 +153,7 @@ class _PgpKeyScreenState extends State<PgpKeyScreen> {
             SettingsNavigatorWidget.of(context).pop();
           },
         ),
-      if (!Platform.isIOS) space,
+      if (isAndroid9orLow) space,
       AMButton(
         child: Text(i18n(context, S.btn_delete)),
         onPressed: () async {

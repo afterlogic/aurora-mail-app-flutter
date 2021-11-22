@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 
 import 'package:aurora_mail/build_property.dart';
@@ -109,6 +108,7 @@ class PgpSettingsMethods {
       rethrow;
     }
     final dirPath = (await getDownloadDirectory());
+    print('!!! dirPath = $dirPath}');
     return dirPath + Platform.pathSeparator + KEY_FOLDER;
   }
 
