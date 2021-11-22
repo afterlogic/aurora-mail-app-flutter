@@ -48,6 +48,7 @@ class PgpSettingsMethods {
 
   Future<File> downloadKey(PgpKey key) async {
     try {
+      await getStoragePermissions();
       final fileName =
           "${((key.name.startsWith(" ") ? key.name.substring(1) : key.name) + " ") ?? ""}${key.mail} PGP ${key.isPrivate ? "private" : "public"} key.asc"
               .replaceAll(Platform.pathSeparator, "");
@@ -60,12 +61,14 @@ class PgpSettingsMethods {
       await file.writeAsString(key.key);
       return file;
     } catch (err) {
+      print('ERROR PgpSettingsMethods.downloadKey(): $err');
       rethrow;
     }
   }
 
   Future<File> downloadKeys(List<PgpKey> keys) async {
     try {
+      await getStoragePermissions();
       final fileName = "PGP public keys.asc";
       final file = File(
         await _keysFolderPath() + Platform.pathSeparator + fileName,
@@ -74,6 +77,7 @@ class PgpSettingsMethods {
       await file.writeAsString(keys.map((key) => key.key).join("\n\n"));
       return file;
     } catch (err) {
+      print('ERROR PgpSettingsMethods.downloadKeys(): $err');
       rethrow;
     }
   }
@@ -101,6 +105,7 @@ class PgpSettingsMethods {
     try {
       await getStoragePermissions();
     } catch (err) {
+      print('ERROR PgpSettingsMethods._keysFolderPath(): $err');
       rethrow;
     }
     final dirPath = (await getDownloadDirectory());
