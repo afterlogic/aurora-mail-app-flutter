@@ -92,6 +92,7 @@ Contacts diff calcultaion finished:
         .toList();
 
     final updatedStorages = <ContactsStorage>[];
+    // adding storages that have changed cTag
     newStorages.forEach((newStorage) {
       final changedStorage = oldStorages.firstWhere(
           (oldStorage) =>
@@ -104,6 +105,12 @@ Contacts diff calcultaion finished:
           contactsInfo: changedStorage.contactsInfo,
         );
         updatedStorages.add(updatedStorage);
+      }
+    });
+    // adding storages with unloaded contacts
+    oldStorages.forEach((oldStorage) {
+      if (_hasUnloadedContacts(oldStorage)) {
+        _addToUpdatedStoragesIfNotIn(updatedStorages, oldStorage);
       }
     });
 
@@ -123,6 +130,30 @@ Storages diff calcultaion finished:
       deletedStorages: deletedStorages,
       updatedStorages: updatedStorages,
     );
+  }
+
+  static bool _hasUnloadedContacts(ContactsStorage storage) {
+    if (storage.contactsInfo == null || storage.contactsInfo.isEmpty) {
+      return true;
+    }
+    final infoToUpdate = storage.contactsInfo.firstWhere(
+      (info) => info.hasBody == false || info.needsUpdate == true,
+      orElse: () => null,
+    );
+    return infoToUpdate != null;
+  }
+
+  static void _addToUpdatedStoragesIfNotIn(
+    List<ContactsStorage> updatedStorages,
+    ContactsStorage storage,
+  ) {
+    final foundStorage = updatedStorages.firstWhere(
+      (updatedStorage) => updatedStorage.id == storage.id,
+      orElse: () => null,
+    );
+    if (foundStorage == null) {
+      updatedStorages.add(storage);
+    }
   }
 }
 

@@ -1,6 +1,5 @@
 import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/utils/error_to_show.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:webmail_api_client/webmail_api_client.dart';
 
 extension WebMailApiErrorUtil on WebMailApiError {
@@ -47,6 +46,8 @@ int getErrMsgFromCode(int code) {
       return S.error_server_method_not_found;
     case 115:
       return S.error_server_license_limit;
+    case 408:
+      return S.error_connection;
     case 501:
       return S.error_server_can_not_save_settings;
     case 502:

@@ -57,13 +57,15 @@ Stream<ContactsState> reduceState(ContactsState state, dynamic event) async* {
     );
   }
   if (event is StartActivity) {
+    final activities = [...state.currentActivities]..add(event.activity);
     yield state.copyWith(
-      currentActivities: [...state.currentActivities]..add(event.activity),
+      currentActivities: activities,
     );
   }
   if (event is StopActivity) {
+    final activities = [...state.currentActivities]..remove(event.activity);
     yield state.copyWith(
-      currentActivities: [...state.currentActivities]..remove(event.activity),
+      currentActivities: activities,
     );
   }
 }

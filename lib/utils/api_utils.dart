@@ -26,7 +26,8 @@ ErrorToShow formatError(dynamic err, StackTrace stack) {
   if (err is WebMailApiError) {
     return err.toShow();
   } else if (err is SocketException) {
-    if (err.osError.errorCode == 7) {
+    if (err.osError?.errorCode == 7 ||
+        err.message?.contains('connection timed out') == true) {
       return ErrorToShow.code(S.error_connection);
     } else {
       return ErrorToShow.message(

@@ -20,7 +20,7 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
   @override
   Future<List<ContactsStorage>> getContactStorages(int userLocalId) async {
     final body = new WebMailApiBody(
-      method: "GetContactStorages",
+      method: "GetStorages",
       parameters: null,
     );
 

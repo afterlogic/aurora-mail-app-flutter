@@ -41,10 +41,13 @@ class ContactsDbServiceImpl implements ContactsDbService {
   @override
   Future<void> addStorages(
       List<ContactsStorage> newStorages, int userId) async {
+    if (newStorages?.isEmpty == true) return;
     final formatted = ContactsStorageMapper.toDB(newStorages, userId);
     try {
       await _storagesDao.addStorages(formatted);
-    } catch (err) {}
+    } catch (err) {
+      print('ERROR ContactsDbServiceImpl.addStorages(): $err');
+    }
   }
 
   @override

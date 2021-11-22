@@ -5,12 +5,14 @@ import 'package:moor_flutter/moor_flutter.dart';
 
 class ContactsInfoConverter
     extends TypeConverter<List<ContactInfoItem>, String> {
-  const ContactsInfoConverter();
+  final bool nullable;
+
+  const ContactsInfoConverter({this.nullable = true}) : assert(nullable != null);
 
   @override
   List<ContactInfoItem> mapToDart(String fromDb) {
     if (fromDb == null) {
-      return new List<ContactInfoItem>();
+      return <ContactInfoItem>[];
     }
 
     final items = json.decode(fromDb) as Iterable;
@@ -24,7 +26,11 @@ class ContactsInfoConverter
   @override
   String mapToSql(List<ContactInfoItem> value) {
     if (value == null) {
-      return "[]";
+      if (nullable == true) {
+        return null;
+      } else {
+        return "[]";
+      }
     }
 
     final maps = value.map((i) => i.toMap()).toList();
