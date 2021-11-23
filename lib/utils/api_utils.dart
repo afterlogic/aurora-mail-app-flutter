@@ -33,6 +33,9 @@ ErrorToShow formatError(dynamic err, StackTrace stack) {
       return ErrorToShow.message(
           err.message.isNotEmpty ? err.message : err.toString());
     }
+  } else if (err is TypeError) {
+    print("TypeError: $err Stack: $stack");
+    return ErrorToShow(err);
   } else {
     print("Debug error: $err");
     print("Debug stack: $stack");
