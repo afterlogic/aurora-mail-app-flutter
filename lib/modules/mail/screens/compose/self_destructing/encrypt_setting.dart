@@ -206,9 +206,15 @@ class _EncryptSettingState extends BState<EncryptSetting>
                   ),
                   BlocBuilder<SelfDestructingBloc, SelfDestructingState>(
                     builder: (context, state) => FlatButton(
-                      child: state is! ProgressState
-                          ? Text(i18n(context, S.btn_pgp_encrypt))
-                          : CircularProgressIndicator(),
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          Text(i18n(context, S.btn_pgp_encrypt)),
+                          state is ProgressState
+                              ? CircularProgressIndicator()
+                              : SizedBox.shrink(),
+                        ],
+                      ),
                       onPressed: state is! ProgressState
                           ? () => create(contact, sender)
                           : null,

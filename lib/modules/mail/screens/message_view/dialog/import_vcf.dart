@@ -31,11 +31,13 @@ class _ImportVcfDialogState extends State<ImportVcfDialog> {
           onPressed: () => Navigator.pop(context),
         ),
         FlatButton(
-          child: progress
-              ? SizedBox(
-                  child: CircularProgressIndicator(),
-                )
-              : Text(i18n(context, S.btn_vcf_import)),
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              Text(i18n(context, S.btn_vcf_import)),
+              progress ? CircularProgressIndicator() : SizedBox.shrink(),
+            ],
+          ),
           onPressed: importVcf,
         ),
       ],
