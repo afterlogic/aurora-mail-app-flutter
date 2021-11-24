@@ -391,5 +391,8 @@
   "error_timeout": "Can't connect to the server",
   "clear_cache_during_logout": "Yerel önbelleği ve kayıtlı anahtarları Temizle",
   "no_permission_to_local_storage": "Yerel depolamaya erişim izni yok. Cihazınızın ayarlarını kontrol edin.",
-  "already_have_key": "Zaten bir genel veya özel anahtarınız var"
+  "already_have_key": "Zaten bir genel veya özel anahtarınız var",
+  "hint_pgp_keys_for_import": "İçe aktarılabilecek anahtarlar",
+  "hint_pgp_existed_keys": "Zaten sistemde olan anahtarlar içe aktarılmayacak",
+  "hint_pgp_external_private_keys": "Harici özel anahtarlar desteklenmez ve içe aktarılmaz"
 }

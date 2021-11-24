@@ -416,5 +416,8 @@
   "error_message_not_found": "Message not found",
   "clear_cache_during_logout": "Delete cached data and keys",
   "no_permission_to_local_storage": "No permission to access the local storage. Check your device settings.",
-  "already_have_key": "You already have a public or private key"
+  "already_have_key": "You already have a public or private key",
+  "hint_pgp_keys_for_import": "Keys that are available for import",
+  "hint_pgp_existed_keys": "Keys that are already in the system will not be imported",
+  "hint_pgp_external_private_keys": "External private keys are not supported and will not be imported"
 }

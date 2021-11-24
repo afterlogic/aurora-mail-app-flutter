@@ -87,11 +87,11 @@ class PgpSettingsBloc extends Bloc<PgpSettingsEvent, PgpSettingsState> {
       yield ErrorState(ErrorToShow.code(S.error_pgp_keys_not_found));
       return;
     }
-    final userEmail = await authBloc
+    final userEmails = await authBloc
         .getAliasesAndIdentities(true)
         .then((items) => items.map((item) => item.mail).toSet());
 
-    final sortKey = await _methods.sortKeys(keys, userEmail);
+    final sortKey = await _methods.sortKeys(keys, userEmails);
 
     yield SelectKeyForImport(sortKey.userKey, sortKey.contactKey);
   }

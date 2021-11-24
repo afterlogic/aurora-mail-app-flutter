@@ -469,6 +469,11 @@ class EnS extends S {
     S.no_permission_to_local_storage:
         "No permission to access the local storage. Check your device settings.",
     S.already_have_key: "You already have a public or private key",
+    S.hint_pgp_keys_for_import: "Keys that are available for import",
+    S.hint_pgp_existed_keys:
+        "Keys that are already in the system will not be imported",
+    S.hint_pgp_external_private_keys:
+        "External private keys are not supported and will not be imported",
   };
   String get(int id) => _map[id];
 }

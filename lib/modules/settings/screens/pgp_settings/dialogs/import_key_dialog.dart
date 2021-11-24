@@ -1,4 +1,5 @@
 import 'package:aurora_mail/build_property.dart';
+import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 import 'package:aurora_mail/modules/dialog_wrap.dart';
 import 'package:aurora_mail/modules/settings/blocs/pgp_settings/bloc.dart';
 import 'package:aurora_mail/modules/settings/screens/pgp_settings/components/key_item.dart';
@@ -24,38 +25,58 @@ class ImportKeyDialog extends StatefulWidget {
   _ImportKeyDialogState createState() => _ImportKeyDialogState();
 }
 
+class PgpKeyForDisplay {
+  final PgpKey key;
+  final Contact contact;
+  bool selected;
+
+  PgpKeyForDisplay(this.key, {this.contact, this.selected = false});
+
+  bool get external => contact != null;
+
+  void toggle() {
+    this.selected = !this.selected;
+  }
+}
+
 class _ImportKeyDialogState extends BState<ImportKeyDialog>
     with NotSavedChangesMixin {
-  final List<PgpKey> userKeys = [];
-  final List<PgpKeyWithContact> contactKeys = [];
-  final List<PgpKeyWithContact> newContactKeys = [];
-  bool keyAlreadyExist = false;
+  final List<PgpKeyForDisplay> newKeys = [];
+  final List<PgpKeyForDisplay> existedKeys = [];
+  final List<PgpKeyForDisplay> externalPrivateKeys = [];
 
   @override
   void initState() {
     super.initState();
-    widget.userKeys.forEach((key, value) {
-      userKeys.add(key);
-      if (value == null) {
-        keyAlreadyExist = true;
+    widget.userKeys.forEach((key, notExist) {
+      if (notExist == true) {
+        newKeys.add(PgpKeyForDisplay(key, selected: true));
+      } else {
+        existedKeys.add(PgpKeyForDisplay(key));
       }
     });
-    widget.contactKeys.forEach((key, value) {
-      if (key.contact == null) {
-        newContactKeys.add(key);
+    widget.contactKeys.forEach((key, notExist) {
+      if (key.isPrivate) {
+        externalPrivateKeys
+            .add(PgpKeyForDisplay(key.pgpKey, contact: key.contact));
       } else {
-        contactKeys.add(key);
-      }
-      if (value == null) {
-        keyAlreadyExist = true;
+        notExist == true
+            ? newKeys.add(PgpKeyForDisplay(
+                key.pgpKey,
+                contact: key.contact,
+                selected: true,
+              ))
+            : existedKeys
+                .add(PgpKeyForDisplay(key.pgpKey, contact: key.contact));
       }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final areSelectedKeys = widget.userKeys.values.contains(true) ||
-        widget.contactKeys.values.contains(true);
+    final areSelectedKeys =
+        newKeys.firstWhere((e) => e.selected == true, orElse: () => null) !=
+            null;
     return AlertDialog(
       title: Text(i18n(context, S.label_pgp_import_key)),
       content: BlocListener(
@@ -69,51 +90,49 @@ class _ImportKeyDialogState extends BState<ImportKeyDialog>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              if (keyAlreadyExist)
+              if (newKeys.isNotEmpty && !BuildProperty.legacyPgpKey)
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 8),
-                  child: Text(i18n(context, S.hint_pgp_already_have_keys)),
-                ),
-              if (userKeys.isNotEmpty && !BuildProperty.legacyPgpKey)
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: 8),
-                  child: Text(i18n(context, S.hint_pgp_your_keys)),
+                  child: Text(i18n(context, S.hint_pgp_keys_for_import)),
                 ),
               Column(
-                children: userKeys.map((key) {
-                  return KeyItem(key, widget.userKeys[key], (select) {
-                    widget.userKeys[key] = select;
-                    setState(() {});
-                  });
+                children: newKeys.map((displayKey) {
+                  return KeyItem(
+                      pgpKey: displayKey.key,
+                      external: displayKey.external,
+                      selected: displayKey.selected,
+                      onSelect: (select) {
+                        setState(() {
+                          displayKey.toggle();
+                        });
+                      });
                 }).toList(),
               ),
               if (!BuildProperty.legacyPgpKey) ...[
-                if (contactKeys.isNotEmpty)
+                if (existedKeys.isNotEmpty)
                   Padding(
                     padding: EdgeInsets.symmetric(vertical: 8),
-                    child: Text(i18n(
-                        context, S.hint_pgp_keys_will_be_import_to_contacts)),
+                    child: Text(i18n(context, S.hint_pgp_existed_keys)),
                   ),
                 Column(
-                  children: contactKeys.map((key) {
-                    return KeyItem(key, widget.contactKeys[key], (select) {
-                      widget.contactKeys[key] = select;
-                      setState(() {});
-                    });
+                  children: existedKeys.map((displayKey) {
+                    return KeyItem(
+                      pgpKey: displayKey.key,
+                      external: displayKey.external,
+                    );
                   }).toList(),
                 ),
-                if (newContactKeys.isNotEmpty)
+                if (externalPrivateKeys.isNotEmpty)
                   Padding(
                     padding: EdgeInsets.symmetric(vertical: 8),
-                    child: Text(i18n(
-                        context, S.hint_pgp_keys_contacts_will_be_created)),
+                    child: Text(i18n(context, S.hint_pgp_external_private_keys)),
                   ),
                 Column(
-                  children: newContactKeys.map((key) {
-                    return KeyItem(key, widget.contactKeys[key], (select) {
-                      widget.contactKeys[key] = select;
-                      setState(() {});
-                    });
+                  children: externalPrivateKeys.map((displayKey) {
+                    return KeyItem(
+                      pgpKey: displayKey.key,
+                      external: displayKey.external,
+                    );
                   }).toList(),
                 ),
               ],
@@ -129,9 +148,15 @@ class _ImportKeyDialogState extends BState<ImportKeyDialog>
         BlocBuilder(
           bloc: widget.bloc,
           builder: (context, state) => FlatButton(
-            child: state is! ImportProgress
-                ? Text(i18n(context, S.btn_pgp_import_selected_key))
-                : CircularProgressIndicator(),
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Text(i18n(context, S.btn_pgp_import_selected_key)),
+                state is ImportProgress
+                    ? CircularProgressIndicator()
+                    : SizedBox.shrink(),
+              ],
+            ),
             onPressed:
                 areSelectedKeys && state is! ImportProgress ? _import : null,
           ),
@@ -141,10 +166,22 @@ class _ImportKeyDialogState extends BState<ImportKeyDialog>
   }
 
   _import() {
+    final Map<PgpKey, bool> userKeys = {};
+    final Map<PgpKeyWithContact, bool> contactKeys = {};
+    final selected = newKeys.where((e) => e.selected);
+    selected.forEach((displayKey) {
+      if (displayKey.external) {
+        final key = PgpKeyWithContact(displayKey.key, displayKey.contact);
+        contactKeys[key] = true;
+      } else {
+        final key = displayKey.key;
+        userKeys[key] = true;
+      }
+    });
     widget.bloc.add(
       ImportKey(
-        widget.userKeys,
-        widget.contactKeys,
+        userKeys,
+        contactKeys,
       ),
     );
   }

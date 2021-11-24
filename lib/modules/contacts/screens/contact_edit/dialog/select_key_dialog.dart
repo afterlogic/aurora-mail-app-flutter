@@ -18,7 +18,7 @@ class SelectKeyDialog extends StatelessWidget {
           children: keys.map((key) {
             return InkWell(
               onTap: () => Navigator.pop(context, key),
-              child: KeyItem(key, null, null),
+              child: KeyItem(pgpKey: key),
             );
           }).toList(),
       ),

@@ -444,6 +444,11 @@ class TrS extends S {
     S.no_permission_to_local_storage:
         "Yerel depolamaya erişim izni yok. Cihazınızın ayarlarını kontrol edin.",
     S.already_have_key: "Zaten bir genel veya özel anahtarınız var",
+    S.hint_pgp_keys_for_import: "İçe aktarılabilecek anahtarlar",
+    S.hint_pgp_existed_keys:
+        "Zaten sistemde olan anahtarlar içe aktarılmayacak",
+    S.hint_pgp_external_private_keys:
+        "Harici özel anahtarlar desteklenmez ve içe aktarılmaz",
   };
   String get(int id) => _map[id];
 }

@@ -421,7 +421,10 @@ abstract class S extends SInterface {
   static const clear_cache_during_logout = 415;
   static const no_permission_to_local_storage = 416;
   static const already_have_key = 417;
-  static const hint_log_delete_record = 418;
-  static const messages_list_app_bar_Mail = 419;
+  static const hint_pgp_keys_for_import = 418;
+  static const hint_pgp_existed_keys = 419;
+  static const hint_pgp_external_private_keys = 420;
+  static const hint_log_delete_record = 421;
+  static const messages_list_app_bar_Mail = 422;
   String get(int id);
 }

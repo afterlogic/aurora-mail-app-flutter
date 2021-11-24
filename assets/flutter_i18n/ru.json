@@ -391,5 +391,8 @@
   "error_timeout": "Can't connect to the server",
   "clear_cache_during_logout": "Очистить локальный кэш и сохранённые ключи",
   "no_permission_to_local_storage": "Нет разрешения для доступа к файлам. Проверьте настройки на вашем устройстве.",
-  "already_have_key": "У вас уже есть открытый или закрытый ключ"
+  "already_have_key": "У вас уже есть открытый или закрытый ключ",
+  "hint_pgp_keys_for_import": "Ключи, доступные для импорта",
+  "hint_pgp_existed_keys": "Ключи, которые уже есть в системе, и не будут импортированы",
+  "hint_pgp_external_private_keys": "Внешние закрытые ключи не поддерживаются и не будут импортированы"
 }

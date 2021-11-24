@@ -188,7 +188,7 @@ class PgpSettingsMethods {
 
   static const KEY_FOLDER = "pgp_keys";
 
-  Future<PgpKeyMap> sortKeys(List<PgpKey> keys, Set<String> userEmail) async {
+  Future<PgpKeyMap> sortKeys(List<PgpKey> keys, Set<String> userEmails) async {
     final userKeys = <PgpKey>[];
     final contactKeys = <PgpKey>[];
 
@@ -196,7 +196,7 @@ class PgpSettingsMethods {
       userKeys.addAll(keys);
     } else {
       for (var key in keys) {
-        if (userEmail.contains(IdentityView.fromString(key.mail).email)) {
+        if (userEmails.contains(IdentityView.fromString(key.mail).email)) {
           userKeys.add(key);
         } else {
           contactKeys.add(key);

@@ -442,6 +442,11 @@ class RuS extends S {
     S.no_permission_to_local_storage:
         "Нет разрешения для доступа к файлам. Проверьте настройки на вашем устройстве.",
     S.already_have_key: "У вас уже есть открытый или закрытый ключ",
+    S.hint_pgp_keys_for_import: "Ключи, доступные для импорта",
+    S.hint_pgp_existed_keys:
+        "Ключи, которые уже есть в системе, и не будут импортированы",
+    S.hint_pgp_external_private_keys:
+        "Внешние закрытые ключи не поддерживаются и не будут импортированы",
   };
   String get(int id) => _map[id];
 }
