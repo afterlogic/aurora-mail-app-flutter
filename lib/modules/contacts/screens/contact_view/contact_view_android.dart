@@ -35,12 +35,14 @@ class ContactViewAndroid extends StatefulWidget {
   final ScaffoldState contactsListScaffoldState;
   final PgpSettingsBloc pgpSettingsBloc;
   final bool isPart;
+  final Function onClose;
 
   const ContactViewAndroid(
     this.contact,
     this.contactsListScaffoldState,
     this.pgpSettingsBloc, {
     this.isPart = false,
+    this.onClose,
   });
 
   @override
@@ -80,6 +82,14 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
         this.key = null;
         if (mounted) setState(() {});
       }
+    }
+  }
+
+  void _onClose() {
+    if (widget.isPart) {
+      widget.onClose();
+    } else {
+      Navigator.pop(context);
     }
   }
 
@@ -136,7 +146,7 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
             },
           ),
         );
-        Navigator.pop(context);
+        _onClose();
         break;
       case ContactViewAppBarAction.unshare:
         bloc.add(UnshareContacts([contact]));
@@ -153,7 +163,7 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
             },
           ),
         );
-        Navigator.pop(context);
+        _onClose();
         break;
       case ContactViewAppBarAction.delete:
         final result = await ConfirmationDialog.show(
@@ -167,7 +177,7 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
 
         if (result == true) {
           bloc.add(DeleteContacts([contact]));
-          Navigator.pop(context);
+          _onClose();
         }
         break;
     }

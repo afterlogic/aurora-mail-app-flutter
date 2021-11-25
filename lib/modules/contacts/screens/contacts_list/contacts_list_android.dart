@@ -59,6 +59,12 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
             Scaffold.of(context),
             pgpSettingsBloc,
             isPart: true,
+            onClose: () {
+              setState(() {
+                selectedContact = null;
+                selectedWidget = null;
+              });
+            },
           ),
         );
         setState(() {});
