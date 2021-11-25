@@ -28,11 +28,11 @@ class AliasesMap {
     return Aliases(
       entityId: map["EntityId"] as int,
       email: map["Email"] as String,
-      friendlyName: map["FriendlyName"] as String,
-      signature: map["Signature"] as String,
+      friendlyName: map["FriendlyName"] as String ?? "",
+      signature: map["Signature"] as String ?? "",
       idUser: map["IdUser"] as int,
       idAccount: map["IdAccount"] as int,
-      useSignature: map["UseSignature"] as bool,
+      useSignature: map["UseSignature"] as bool ?? false,
     );
   }
 }
