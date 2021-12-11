@@ -58,6 +58,18 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:host="u2f" android:scheme="${deepLink}" />
             </intent-filter>
+// if : useYubiKit
+            <intent-filter>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:scheme="https" android:host="my.yubico.com"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:scheme="https" android:host="demo.yubico.com"/>
+            </intent-filter>
+// end : if
         </activity>
 
         <provider

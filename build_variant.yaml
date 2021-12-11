@@ -7,7 +7,9 @@ _files:
   - sh/build_apk.sh.temp
   - sh/build_appbundle.sh.temp
   - android/build_variable.properties.temp
+  - android/app/src/main/AndroidManifest.xml.temp
   - ios/BuildVariable.xcconfig.temp
+  - ios/Runner/Info.plist.temp
   - lib/inject/modules/crypto_module.dart.temp
   - ios/Runner/Runner.entitlements.temp
   - ios/AppShareExtension/AppShareExtension.entitlements.temp
