@@ -262,12 +262,12 @@
 				TargetAttributes = {
 					97C146ED1CF9000F007C117D = {
 						CreatedOnToolsVersion = 7.3.1;
-						DevelopmentTeam = K6298N65JA;
+						DevelopmentTeam = J7AW6VHJK4;
 						LastSwiftMigration = 0910;
 					};
 					DB8E5D4E2440825400D721A7 = {
 						CreatedOnToolsVersion = 11.3;
-						DevelopmentTeam = K6298N65JA;
+						DevelopmentTeam = J7AW6VHJK4;
 						ProvisioningStyle = Automatic;
 					};
 				};
