@@ -4,11 +4,13 @@
 <dict>
     <key>aps-environment</key>
 	<string>development</string>
+// if : useYubiKit
 	<key>com.apple.developer.nfc.readersession.formats</key>
     <array>
     	<string>NDEF</string>
     	<string>TAG</string>
     </array>
+// end : if
 	<key>com.apple.security.application-groups</key>
 	<array>
     		<string>{{_appleGroupId}}</string>
