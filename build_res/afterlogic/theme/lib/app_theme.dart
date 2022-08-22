@@ -95,6 +95,11 @@ class AppTheme {
     toggleableActiveColor: AppColor.primary,
   );
 
+  static final ThemeData login = null;
+  static final Color loginTextColor = null;
+
+  static final floatIconTheme = IconThemeData(color: Colors.white);
+
   static final _dialogTheme = DialogTheme(
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
   );
@@ -108,10 +113,4 @@ class AppTheme {
     hoverColor: AppColor.accent.withOpacity(0.8),
     backgroundColor: AppColor.accent,
   );
-
-  static final ThemeData login = null;
-
-  static final floatIconTheme = IconThemeData(color: Colors.white);
-
-  static final Color loginTextColor = null;
 }

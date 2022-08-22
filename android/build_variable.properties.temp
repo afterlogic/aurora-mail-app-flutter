@@ -1,4 +1,4 @@
 packageName={{_appId}}
 deepLink={{deepLink}}
-flutter.versionCode={{_build}}
-flutter.versionName={{_version_android}}
+flutter.versionCode={{build}}
+flutter.versionName={{version}}

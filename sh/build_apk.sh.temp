@@ -1,2 +1,2 @@
 flutter build apk
-mv build/app/outputs/apk/release/app-release.apk build/{{_appId}}.{{_version_android}}+{{_build}}.apk
+mv build/app/outputs/apk/release/app-release.apk build/{{_appId}}.{{version}}+{{build}}.apk

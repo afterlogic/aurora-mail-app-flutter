@@ -54,7 +54,7 @@ class _AboutAndroidState extends BState<AboutAndroid> {
     if (packageInfo.version != null && packageInfo.buildNumber != null) {
       _version = "${packageInfo.version}+${packageInfo.buildNumber}";
     } else {
-      _version = BuildProperty.version_ios;
+      _version = '${BuildProperty.version} + ${BuildProperty.build}';
     }
     _appName = packageInfo.appName ?? BuildProperty.appName;
     setState(() => loading = false);

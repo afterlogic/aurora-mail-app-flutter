@@ -1,5 +1,7 @@
 #variables
 appName: ""
+version: 1.0.0
+
 # android App ID
 _appId: ""
 # ios Team ID
@@ -7,7 +9,6 @@ _iosDeveloperId: ""
 # ios App Group ID
 _appleGroupId: ""
 
-_version: 1.0.0
 #android splash screen
 background_color: "#FFFFFF"
 splashGradientTop: "#FFFFFF"
@@ -15,21 +16,20 @@ splashGradientBottom: "#FFFFFF"
 splashGradientTopDark: "#000000"
 splashGradientBottomDark: "#000000"
 
-supportLanguage: "ru,en,tr"
-
 autodiscover_url: "https://{domain}/aurora-autodiscover.json?email={email}"
 privacyPolicy: ""
 termsOfService: ""
+supportLanguage: "ru,en,tr"
 
-multiUserEnable: false
+backgroundSync: true
 cryptoEnable: false
-multiAccountEnable: false
-useMainLogo: false
-selfDestructingEmail: false
 expandMessageThread: false
 logger: false
+multiAccountEnable: false
+multiUserEnable: false
 pushNotification: false
-backgroundSync: true
+selfDestructingEmail: false
+useMainLogo: false
 
 # fido
 useYubiKit: false
