@@ -69,13 +69,14 @@ class AuthMethods {
         hostname = (await lastHost) ?? "";
       }
     }
-    if (hostname.isEmpty) {
-      final autoDiscoveredHost = await _authApi.autoDiscoverHostname(email);
-      if (autoDiscoveredHost == null || autoDiscoveredHost.isEmpty) {
-        return null;
-      } else {
+    final autoDiscoveredHost = await _authApi.autoDiscoverHostname(email);
+    if (autoDiscoveredHost != null && autoDiscoveredHost.isNotEmpty) {
+      if (hostname != autoDiscoveredHost) {
         hostname = autoDiscoveredHost;
       }
+    }
+    if (hostname.isEmpty) {
+        return null;
     }
 
     // hostname is implied not to be empty
