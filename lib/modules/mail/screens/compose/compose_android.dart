@@ -586,20 +586,6 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
 
   Future<bool> get _hasMessageChanged async {
     if (_message != null) {
-      final cond11 = _subjectTextCtrl.text;
-      final cond12 = _message.subject;
-      final cond21 = MailUtils.htmlToPlain(await _bodyTextCtrl.getText());
-      final cond22 = _message.rawBody;
-      final cond2 = cond21 != cond22;
-      final cond31 = MailUtils.getEmails(_message.toInJson);
-      final cond32 = _toEmails.toList();
-      final cond41 = MailUtils.getEmails(_message.ccInJson);
-      final cond42 = _ccEmails.toList();
-      final cond51 = MailUtils.getEmails(_message.bccInJson);
-      final cond52 = _bccEmails.toList();
-      final cond61 = _savedAttachments;
-      final cond62 = _attachments;
-
       final changedSubject = _subjectTextCtrl.text != _message.subject;
       final changedBody =
           MailUtils.htmlToPlain(await _bodyTextCtrl.getText()) !=
@@ -769,8 +755,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
   }
 
   Future<void> _onGoBack() async {
-    final changed = await _hasMessageChanged;
-    if (changed) {
+    if (await _hasMessageChanged) {
       final result = await showDialog<DiscardComposeChangesOption>(
         context: context,
         builder: (_) => DiscardComposeChangesDialog(),
