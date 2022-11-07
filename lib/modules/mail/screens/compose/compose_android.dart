@@ -12,8 +12,6 @@ import 'package:aurora_mail/modules/dialog_wrap.dart';
 import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/mail/blocs/compose_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
-import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/messages_list_bloc.dart';
-import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/messages_list_event.dart';
 import 'package:aurora_mail/modules/mail/models/compose_actions.dart';
 import 'package:aurora_mail/modules/mail/models/compose_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
@@ -88,6 +86,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
   String decryptTitle;
   String decryptBody;
   bool _showBCC = false;
+  bool _waitingToExit = false;
 
   // if compose was opened from screen which does not have MessagesListRoute in stack, just pop
   bool _returnToMessagesList = true;
@@ -97,8 +96,8 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
   final _toEmails = new Set<String>();
   final _ccEmails = new Set<String>();
   final _bccEmails = new Set<String>();
-  final _attachments = new List();
-  List _savedAttachments;
+  final _attachments = [];
+  List _savedAttachments = [];
   final _toKey = new GlobalKey<ComposeEmailsState>();
   final _ccKey = new GlobalKey<ComposeEmailsState>();
   final _bccKey = new GlobalKey<ComposeEmailsState>();
@@ -185,7 +184,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
       });
     }
     _subjectTextCtrl.text = _message.subject;
-    initBodyFromMessage(_message.htmlBody, _message);
+    initBodyFromMessage(null, _message);
   }
 
   void _initForward(Forward action) async {
@@ -310,9 +309,9 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
   void initBodyFromMessage(String text, Message message) async {
     final user = BlocProvider.of<AuthBloc>(context).currentUser;
     try {
-      final body = await _bodyTextCtrl.getText() + "<br>" + text;
+      final bodyText = await _bodyTextCtrl.getText();
       _bodyTextCtrl.setMessage(
-        body,
+        bodyText + (text == null ? '' : "<br>" + text),
         message,
         user,
       );
@@ -585,19 +584,42 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
 
   Future<bool> get _hasMessageChanged async {
     if (_message != null) {
-      final result = _subjectTextCtrl.text != _message.subject ||
-          (await _bodyTextCtrl.getText()) != _message.rawBody ||
-          !listEquals<String>(
-              MailUtils.getEmails(_message.toInJson), _toEmails.toList()) ||
-          !listEquals<String>(
-              MailUtils.getEmails(_message.ccInJson), _ccEmails.toList()) ||
-          !listEquals<String>(
-              MailUtils.getEmails(_message.bccInJson), _bccEmails.toList()) ||
-          !listEquals(_savedAttachments, _attachments);
-      if (result) {
+      final cond11 = _subjectTextCtrl.text;
+      final cond12 = _message.subject;
+      final cond21 = MailUtils.htmlToPlain(await _bodyTextCtrl.getText());
+      final cond22 = _message.rawBody;
+      final cond2 = cond21 != cond22;
+      final cond31 = MailUtils.getEmails(_message.toInJson);
+      final cond32 = _toEmails.toList();
+      final cond41 = MailUtils.getEmails(_message.ccInJson);
+      final cond42 = _ccEmails.toList();
+      final cond51 = MailUtils.getEmails(_message.bccInJson);
+      final cond52 = _bccEmails.toList();
+      final cond61 = _savedAttachments;
+      final cond62 = _attachments;
+
+      final changedSubject = _subjectTextCtrl.text != _message.subject;
+      final changedBody =
+          MailUtils.htmlToPlain(await _bodyTextCtrl.getText()) !=
+              _message.rawBody;
+      final changedToEmails = !listEquals<String>(
+          MailUtils.getEmails(_message.toInJson), _toEmails.toList());
+      final changedCcEmails = !listEquals<String>(
+          MailUtils.getEmails(_message.ccInJson), _ccEmails.toList());
+      final changedBccEmails = !listEquals<String>(
+          MailUtils.getEmails(_message.bccInJson), _bccEmails.toList());
+      final changedAttachments = !listEquals(_savedAttachments, _attachments);
+
+      if (changedAttachments) {
         _savedAttachments = _attachments.toList();
       }
-      return result;
+
+      return changedSubject ||
+          changedBody ||
+          changedToEmails ||
+          changedCcEmails ||
+          changedBccEmails ||
+          changedAttachments;
     } else {
       return (await _bodyTextCtrl.getText()).isNotEmpty ||
           _subjectTextCtrl.text.isNotEmpty ||
@@ -608,13 +630,18 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
     }
   }
 
-  void _saveToDrafts() async {
-    if (!await _hasMessageChanged) return;
+  Future<void> _saveToDrafts({bool withExit = false}) async {
+    if (!await _hasMessageChanged) {
+      if (withExit) {
+        Navigator.pop(context);
+      }
+      return;
+    }
 
     final attachmentsForSave =
         _attachments.where((a) => a is ComposeAttachment);
 
-    return _bloc.add(SaveToDrafts(
+    _bloc.add(SaveToDrafts(
       to: _toEmails.join(","),
       cc: _ccEmails.join(","),
       bcc: _bccEmails.join(","),
@@ -626,9 +653,13 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
       identity: identity,
       alias: alias,
     ));
+
+    if (withExit) {
+      _waitingToExit = true;
+    }
   }
 
-  void _showSending() {
+  void _showSending(BuildContext context) {
     dialog(
         context: context,
         builder: (_) => AlertDialog(
@@ -657,7 +688,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
   }
 
   // to provide mail bloc
-  void _onMessageSaved(BuildContext context, int draftUid) {
+  void _onMessageSavedInDrafts(BuildContext context, int draftUid) {
     _currentDraftUid = draftUid;
     BlocProvider.of<MailBloc>(context).add(CheckFoldersMessagesChanges());
 
@@ -667,6 +698,10 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
       message: i18n(context, S.messages_saved_in_drafts),
       isError: false,
     );
+
+    if (_waitingToExit) {
+      Navigator.pop(context);
+    }
   }
 
   _encryptLock(EncryptComplete state) async {
@@ -732,7 +767,8 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
   }
 
   Future<void> _onGoBack() async {
-    if (await _hasMessageChanged) {
+    final changed = await _hasMessageChanged;
+    if (changed) {
       final result = await showDialog<DiscardComposeChangesOption>(
         context: context,
         builder: (_) => DiscardComposeChangesDialog(),
@@ -747,8 +783,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
           Navigator.pop(context);
           break;
         case DiscardComposeChangesOption.save:
-          _saveToDrafts();
-          Navigator.pop(context);
+          _saveToDrafts(withExit: true);
           break;
       }
     } else {
@@ -1077,10 +1112,10 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
           listener: (context, state) {
             if (state is EncryptComplete) _encryptLock(state);
 
-            if (state is MessageSending) _showSending();
+            if (state is MessageSending) _showSending(context);
             if (state is MessageSent) _onMessageSent(context);
             if (state is MessageSavedInDrafts)
-              _onMessageSaved(context, state.draftUid);
+              _onMessageSavedInDrafts(context, state.draftUid);
             if (state is ComposeError) _showError(state.errorMsg, state.arg);
             if (state is UploadStarted)
               _setUploadProgress(state.tempAttachment);
