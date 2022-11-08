@@ -9,9 +9,9 @@ class StreamPaginationList extends StatefulWidget {
   final Widget Function(BuildContext, Message, List<Message>) builder;
   final Widget Function(BuildContext, dynamic e) onError;
   final Stream<List<Message>> Function(int) fetch;
-  final Widget Function(BuildContext) empty;
+  final Widget Function(BuildContext) emptyWidget;
   final Function(int count) onSelect;
-  final Widget progress;
+  final Widget progressWidget;
   final Widget Function(int) header;
   final String folder;
   final SelectionController selectionController;
@@ -19,9 +19,9 @@ class StreamPaginationList extends StatefulWidget {
   const StreamPaginationList({
     this.builder,
     this.fetch,
-    this.progress,
+    this.progressWidget,
     this.onError,
-    this.empty,
+    this.emptyWidget,
     Key key,
     this.folder,
     this.onSelect,
@@ -85,9 +85,9 @@ class _StreamPaginationListState extends State<StreamPaginationList> {
           widget.fetch,
           (context, item) => widget.builder(context, item, threads),
           onInit,
-          widget.progress,
+          widget.progressWidget,
           widget.onError,
-          widget.empty,
+          widget.emptyWidget,
           widget.folder,
           parts.length - 1 == id,
         );
@@ -136,10 +136,21 @@ class _ListPartWidget extends StatefulWidget {
 }
 
 class _ListPartWidgetState extends State<_ListPartWidget> {
-  bool disposed = true;
   bool isInit = false;
-  var error;
-  StreamSubscription subscription;
+  dynamic error;
+  StreamSubscription<List<Message>> subscription;
+
+  @override
+  void initState() {
+    super.initState();
+    _load();
+  }
+
+  @override
+  void dispose() {
+    _clear();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -173,25 +184,7 @@ class _ListPartWidgetState extends State<_ListPartWidget> {
     }
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-    disposed = true;
-
-    clear();
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    disposed = false;
-
-    load();
-  }
-
-  load() async {
-    isInit = false;
-    error = null;
+  Future<void> _load() async {
     subscription = widget.fetch(widget.id).listen((items) {
       error = null;
       if (!isInit) {
@@ -210,7 +203,7 @@ class _ListPartWidgetState extends State<_ListPartWidget> {
     });
   }
 
-  clear() {
+  void _clear() {
     subscription?.cancel();
     subscription = null;
     try {

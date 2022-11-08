@@ -53,9 +53,11 @@ class MessagesListAndroid extends StatefulWidget {
 class _MessagesListAndroidState extends BState<MessagesListAndroid>
     with WidgetsBindingObserver {
   MessagesListBloc _messagesListBloc;
+  SubscribedToMessages _subscribedToMessagesState;
   MailBloc _mailBloc;
   ContactsBloc _contactsBloc;
   bool isSearch = false;
+  bool isLoading = false;
   Completer _refreshCompleter;
   Folder _selectedFolder;
   final appBarKey = GlobalKey<MailAppBarState>();
@@ -366,17 +368,22 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
                             listeners: [
                               BlocListener(
                                 bloc: _messagesListBloc,
-                                listener: (BuildContext context, state) {
+                                listener: (context, state) {
                                   if (state is MailError)
                                     _showError(context, state.errorMsg);
-                                  if (state is MessagesDeleted) {
-                                    _startRefresh();
-                                  }
+                                  if (state is MessagesDeleted) _startRefresh();
+                                  if (state is SubscribedToMessages)
+                                    _subscribedToMessagesState = state;
                                 },
                               ),
                               BlocListener(
                                 bloc: _mailBloc,
-                                listener: (BuildContext context, state) {
+                                listener: (context, state) {
+                                  final loading = state is FoldersLoading ||
+                                      (state is FoldersLoaded &&
+                                          state.isProgress == true);
+                                  _setIsLoading(loading);
+
                                   if (state is FoldersLoaded) {
                                     setState(() =>
                                         _selectedFolder = state.selectedFolder);
@@ -402,29 +409,19 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
                               },
                               backgroundColor: Colors.white,
                               color: Colors.black,
-                              child: BlocBuilder<MessagesListBloc,
-                                      MessagesListState>(
-                                  bloc: _messagesListBloc,
-                                  condition: (prevState, state) =>
-                                      state is SubscribedToMessages,
-                                  builder: (context, state) {
-                                    Widget child;
-                                    if (state is SubscribedToMessages) {
-                                      child = _buildMessagesStream(
-                                        state.stream,
-                                        state.filter,
-                                        state.isSent,
-                                        state.key,
-                                        state.folder,
-                                      );
-                                    } else {
-                                      child = _buildMessagesLoading();
-                                    }
-                                    return AnimatedSwitcher(
-                                      duration: Duration(milliseconds: 300),
-                                      child: child,
-                                    );
-                                  }),
+                              child: AnimatedSwitcher(
+                                duration: Duration(milliseconds: 300),
+                                child: _subscribedToMessagesState != null &&
+                                        !isLoading
+                                    ? _buildMessagesStream(
+                                        _subscribedToMessagesState.stream,
+                                        _subscribedToMessagesState.filter,
+                                        _subscribedToMessagesState.isSent,
+                                        _subscribedToMessagesState.key,
+                                        _subscribedToMessagesState.folder,
+                                      )
+                                    : _buildMessagesLoading(),
+                              ),
                             ),
                           ),
                         ],
@@ -476,16 +473,20 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
             listeners: [
               BlocListener(
                 bloc: _messagesListBloc,
-                listener: (BuildContext context, state) {
+                listener: (context, state) {
                   if (state is MailError) _showError(context, state.errorMsg);
-                  if (state is MessagesDeleted) {
-                    _startRefresh();
-                  }
+                  if (state is MessagesDeleted) _startRefresh();
+                  if (state is SubscribedToMessages)
+                    _subscribedToMessagesState = state;
                 },
               ),
               BlocListener(
                 bloc: _mailBloc,
-                listener: (BuildContext context, state) {
+                listener: (context, state) {
+                  final loading = state is FoldersLoading ||
+                      (state is FoldersLoaded && state.isProgress == true);
+                  _setIsLoading(loading);
+
                   if (state is FoldersLoaded) {
                     setState(() => _selectedFolder = state.selectedFolder);
                     if (state.postAction != null) {
@@ -509,28 +510,18 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
               },
               backgroundColor: Colors.white,
               color: Colors.black,
-              child: BlocBuilder<MessagesListBloc, MessagesListState>(
-                  bloc: _messagesListBloc,
-                  condition: (prevState, state) =>
-                      state is SubscribedToMessages,
-                  builder: (context, state) {
-                    Widget child;
-                    if (state is SubscribedToMessages) {
-                      child = _buildMessagesStream(
-                        state.stream,
-                        state.filter,
-                        state.isSent,
-                        state.key,
-                        state.folder,
-                      );
-                    } else {
-                      child = _buildMessagesLoading();
-                    }
-                    return AnimatedSwitcher(
-                      duration: Duration(milliseconds: 300),
-                      child: child,
-                    );
-                  }),
+              child: AnimatedSwitcher(
+                duration: Duration(milliseconds: 300),
+                child: _subscribedToMessagesState != null && !isLoading
+                    ? _buildMessagesStream(
+                        _subscribedToMessagesState.stream,
+                        _subscribedToMessagesState.filter,
+                        _subscribedToMessagesState.isSent,
+                        _subscribedToMessagesState.key,
+                        _subscribedToMessagesState.folder,
+                      )
+                    : _buildMessagesLoading(),
+              ),
             ),
           ),
         ],
@@ -617,7 +608,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
                 onUnreadMessage: _unreadMessage,
               );
             },
-            progress: Padding(
+            progressWidget: Padding(
               padding: EdgeInsets.all(20),
               child: Center(child: CircularProgressIndicator()),
             ),
@@ -625,7 +616,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
               _showError(context, ErrorToShow(e));
               return SizedBox.shrink();
             },
-            empty: (context) {
+            emptyWidget: (context) {
               if (_selectedFolder != null && _selectedFolder.needsInfoUpdate) {
                 return Padding(
                   padding: EdgeInsets.all(20),
@@ -693,6 +684,14 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
   onEndAlarm(bool hasUpdate) {
     if (_refreshCompleter?.isCompleted == false) {
       _refreshCompleter?.complete();
+    }
+  }
+
+  void _setIsLoading(bool value) {
+    if (value != isLoading) {
+      setState(() {
+        isLoading = value;
+      });
     }
   }
 }

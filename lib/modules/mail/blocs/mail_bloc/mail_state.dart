@@ -26,7 +26,7 @@ class FoldersLoaded extends MailState {
   // to fire messages events if needed
   final PostFolderLoadedAction postAction;
 
-  final isProgress;
+  final bool isProgress;
 
   const FoldersLoaded(this.folders, this.selectedFolder, this.filter,
       [this.postAction, this.isProgress = false]);
