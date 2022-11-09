@@ -411,22 +411,29 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
                           pgpSettingsBloc,
                           pgpKey,
                           (key) {
-                            pgpKey = key;
+                            setState(() {
+                              pgpKey = key;
+                            });
                           },
                           (error) {},
                         ),
-                        ContactTile(S.hint_auto_encrypt_messages,
-                            theme.textTheme.subtitle1),
-                        ContactCheckBox(
-                          S.label_pgp_sign,
-                          autoSign,
-                          (v) => setState(() => autoSign = v),
-                        ),
-                        ContactCheckBox(
-                          S.label_pgp_encrypt,
-                          autoEncrypt,
-                          (v) => setState(() => autoEncrypt = v),
-                        ),
+                        if (pgpKey != null)
+                          Column(
+                            children: [
+                              ContactTile(S.hint_auto_encrypt_messages,
+                                  theme.textTheme.subtitle1),
+                              ContactCheckBox(
+                                S.label_pgp_sign,
+                                autoSign,
+                                (v) => setState(() => autoSign = v),
+                              ),
+                              ContactCheckBox(
+                                S.label_pgp_encrypt,
+                                autoEncrypt,
+                                (v) => setState(() => autoEncrypt = v),
+                              ),
+                            ],
+                          ),
                       ],
                       ContactTile(S.contacts_view_section_groups),
                       ..._bloc.state.groups.map((g) {

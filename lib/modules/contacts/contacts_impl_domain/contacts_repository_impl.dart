@@ -243,13 +243,13 @@ class ContactsRepositoryImpl implements ContactsRepository {
   }
 
   Future<void> addKeyToContacts(List<Contact> contacts) async {
-    final uuid = await _network.addKeyToContacts(contacts);
+    final uuids = await _network.addKeyToContacts(contacts);
     final newContacts = await _network.getContactsByUids(
       userLocalId: _userLocalId,
       storageId: StorageNames.personal,
-      uuids: uuid,
+      uuids: uuids,
     );
-    await _db.addContacts(newContacts);
+    await _db.updateContacts(newContacts);
   }
 
   @override
