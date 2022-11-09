@@ -680,16 +680,16 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
     _currentDraftUid = draftUid;
     BlocProvider.of<MailBloc>(context).add(CheckFoldersMessagesChanges());
 
+    if (_waitingToExit) {
+      Navigator.pop(context);
+    }
+
     showSnack(
       context: context,
       scaffoldState: _scaffoldKey.currentState,
       message: i18n(context, S.messages_saved_in_drafts),
       isError: false,
     );
-
-    if (_waitingToExit) {
-      Navigator.pop(context);
-    }
   }
 
   _encryptLock(EncryptComplete state) async {
