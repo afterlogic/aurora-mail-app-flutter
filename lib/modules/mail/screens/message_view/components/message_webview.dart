@@ -226,7 +226,7 @@ class MessageWebViewState extends BState<MessageWebView> {
       await showDialog(
         context: context,
         builder: (_) =>
-            ImportKeyDialog(keys.contactKeys, keys.contactKeys, widget.bloc),
+            ImportKeyDialog(keys.userKeys, keys.contactKeys, widget.bloc),
       );
     } else if (attachment.fileName.endsWith(".vcf")) {
       final msg = i18n(context, S.messages_attachment_downloading,
