@@ -27,16 +27,27 @@ class ContactsAppBar extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _ContactsAppBarState extends State<ContactsAppBar> {
-  ContactAppBarMode mode = ContactAppBarMode.common;
-  final searchCtrl = TextEditingController();
+  ContactAppBarMode _mode = ContactAppBarMode.common;
+  final _searchCtrl = TextEditingController();
+  ContactsBloc _contactsBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    _contactsBloc = BlocProvider.of<ContactsBloc>(context);
+    if (_contactsBloc.searchPattern != null) {
+      _mode = ContactAppBarMode.search;
+      _searchCtrl.text = _contactsBloc.searchPattern;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return AnimatedSwitcher(
       duration: Duration(milliseconds: 250),
-      child: mode == ContactAppBarMode.search && widget.enable
+      child: _mode == ContactAppBarMode.search && widget.enable
           ? SearchBar(
-              searchCtrl,
+              _searchCtrl,
               changeMode,
               search,
               isAppBar: widget.isAppBar,
@@ -46,15 +57,15 @@ class _ContactsAppBarState extends State<ContactsAppBar> {
   }
 
   void search(String text) {
-    BlocProvider.of<ContactsBloc>(context).add(SearchContacts(text));
+    _contactsBloc.add(SearchContacts(text));
   }
 
   void changeMode() {
-    searchCtrl.clear();
-    if (mode == ContactAppBarMode.common) {
-      mode = ContactAppBarMode.search;
+    _searchCtrl.clear();
+    if (_mode == ContactAppBarMode.common) {
+      _mode = ContactAppBarMode.search;
     } else {
-      mode = ContactAppBarMode.common;
+      _mode = ContactAppBarMode.common;
     }
     setState(() {});
   }
@@ -125,9 +136,8 @@ class _ContactsAppBarState extends State<ContactsAppBar> {
                 onPressed: () {
                   final group = state.groups
                       .firstWhere((g) => g.uuid == state.selectedGroup);
-                  final bloc = BlocProvider.of<ContactsBloc>(context);
                   Navigator.pushNamed(context, GroupViewRoute.name,
-                      arguments: GroupViewScreenArgs(group, bloc));
+                      arguments: GroupViewScreenArgs(group, _contactsBloc));
                 },
               ),
             Expanded(
@@ -164,9 +174,8 @@ class _ContactsAppBarState extends State<ContactsAppBar> {
                     onPressed: () {
                       final group = state.groups
                           .firstWhere((g) => g.uuid == state.selectedGroup);
-                      final bloc = BlocProvider.of<ContactsBloc>(context);
                       Navigator.pushNamed(context, GroupViewRoute.name,
-                          arguments: GroupViewScreenArgs(group, bloc));
+                          arguments: GroupViewScreenArgs(group, _contactsBloc));
                     },
                   ),
                 IconButton(
