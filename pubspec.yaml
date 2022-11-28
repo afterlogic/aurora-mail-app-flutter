@@ -81,7 +81,9 @@ dependencies:
     path: core/notifications_utils
 
   aurora_ui_kit:
-    git: https://github.com/afterlogic/aurora_ui_kit_flutter.git
+    git:
+      url: https://github.com/afterlogic/aurora_ui_kit_flutter.git
+      ref: flutter_2.2.3
 
   receive_sharing:
     git: https://github.com/afterlogic/receive_sharing
@@ -118,7 +120,9 @@ dependencies:
     path: module/mocks/yubico_flutter
   # logger
   aurora_logger:
-    git: https://github.com/afterlogic/aurora_logger_flutter
+    git:
+      url: https://github.com/afterlogic/aurora_logger_flutter
+      ref: flutter_2.2.3
 
 dev_dependencies:
   flutter_test:
@@ -127,13 +131,17 @@ dev_dependencies:
   build_runner: 2.1.2
   moor_generator: 4.5.1
   build_variant:
-    git: "https://github.com/afterlogic/build_variant"
+    git:
+      url: "https://github.com/afterlogic/build_variant"
+      ref: flutter_2.2.3
+
   flutter_launcher_icons: ^0.9.2
   localizator: ^0.4.2
 
 dependency_overrides:
   analyzer: 2.3.0
   build: 2.1.0
+  dart_style: 2.2.0
   meta: ^1.7.0
 
 flutter_icons:

@@ -61,20 +61,20 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: HEAD
-      resolved-ref: "8ac1aab0148f1ad8bc3dd014c8e1d00ea09455a3"
+      ref: "flutter_2.2.3"
+      resolved-ref: "42557b6607b63bae952327a13a6901e9a47b9ac1"
       url: "https://github.com/afterlogic/aurora_logger_flutter"
     source: git
-    version: "0.0.3"
+    version: "0.0.2"
   aurora_ui_kit:
     dependency: "direct main"
     description:
       path: "."
-      ref: HEAD
-      resolved-ref: bd5e2d264b18e195a7817e20fa0c8e1664634ead
+      ref: "flutter_2.2.3"
+      resolved-ref: "41d9c2accbe25e5b75c7455f4632ee0987d99beb"
       url: "https://github.com/afterlogic/aurora_ui_kit_flutter.git"
     source: git
-    version: "0.0.5"
+    version: "0.0.4"
   bloc:
     dependency: transitive
     description:
@@ -135,11 +135,11 @@ packages:
     dependency: "direct dev"
     description:
       path: "."
-      ref: HEAD
-      resolved-ref: eca4ea76cbef95258d96c5664a0f901409a8f916
+      ref: "flutter_2.2.3"
+      resolved-ref: beac875147c084052ff5e02755fc828c644a9c17
       url: "https://github.com/afterlogic/build_variant"
     source: git
-    version: "0.0.3"
+    version: "0.0.2"
   built_collection:
     dependency: transitive
     description:
@@ -297,12 +297,12 @@ packages:
     source: hosted
     version: "0.17.2"
   dart_style:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: dart_style
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.2.3"
+    version: "2.2.0"
   device_id:
     dependency: "direct main"
     description:
