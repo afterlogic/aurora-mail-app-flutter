@@ -10,7 +10,6 @@ import 'package:aurora_mail/modules/mail/screens/messages_list/components/search
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/select_app_bar.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/selection_controller.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/user_selection_popup.dart';
-import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/res/str/s.dart';
@@ -112,7 +111,7 @@ class MailAppBarState extends BState<MailAppBar> {
     );
   }
 
-  _search(String val) {
+  void _search(String val) {
     final mailState = BlocProvider.of<MailBloc>(context).state as FoldersLoaded;
     final params = searchUtil.searchParams(val);
     BlocProvider.of<MessagesListBloc>(context).add(
@@ -120,28 +119,37 @@ class MailAppBarState extends BState<MailAppBar> {
     );
   }
 
-  changeMode() {
+  void changeMode() {
     searchCtrl.clear();
     setState(() => isSearchMode = !isSearchMode);
   }
 
   Widget _buildDefaultAppBar() {
+    final theme = Theme.of(context);
     if (!widget.isAppBar) {
-      return ListTile(
-        leading: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            IconButton(
-              icon: Icon(Icons.search),
-              onPressed: changeMode,
-            ),
-            if (BuildProperty.multiUserEnable)
-              BlocBuilder<AuthBloc, AuthState>(
-                builder: (_, state) => UserSelectionPopup(
-                    BlocProvider.of<AuthBloc>(context).users),
+      return Row(
+        children: <Widget>[
+          Expanded(
+            child: InkWell(
+              onTap: changeMode,
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 28, top: 6),
+                  child: Icon(
+                    Icons.search,
+                    color: theme.disabledColor,
+                  ),
+                ),
               ),
-          ],
-        ),
+            ),
+          ),
+          if (BuildProperty.multiUserEnable)
+            BlocBuilder<AuthBloc, AuthState>(
+              builder: (_, state) =>
+                  UserSelectionPopup(BlocProvider.of<AuthBloc>(context).users),
+            ),
+        ],
       );
     }
     return AMAppBar(

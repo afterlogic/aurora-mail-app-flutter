@@ -45,11 +45,11 @@ class _ContactsAppBarState extends State<ContactsAppBar> {
     );
   }
 
-  search(String text) {
+  void search(String text) {
     BlocProvider.of<ContactsBloc>(context).add(SearchContacts(text));
   }
 
-  changeMode() {
+  void changeMode() {
     searchCtrl.clear();
     if (mode == ContactAppBarMode.common) {
       mode = ContactAppBarMode.search;
@@ -117,38 +117,43 @@ class _ContactsAppBarState extends State<ContactsAppBar> {
 
     return BlocBuilder<ContactsBloc, ContactsState>(builder: (context, state) {
       if (!widget.isAppBar) {
-        return SizedBox(
-          height: 50,
-          width: double.infinity,
-          child: ListTile(
-            leading: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                if (state.selectedGroup != null)
-                  IconButton(
-                    icon: Icon(Icons.info_outline),
-                    onPressed: () {
-                      final group = state.groups
-                          .firstWhere((g) => g.uuid == state.selectedGroup);
-                      final bloc = BlocProvider.of<ContactsBloc>(context);
-                      Navigator.pushNamed(context, GroupViewRoute.name,
-                          arguments: GroupViewScreenArgs(group, bloc));
-                    },
+        return Row(
+          children: <Widget>[
+            if (state.selectedGroup != null)
+              IconButton(
+                icon: Icon(Icons.info_outline),
+                onPressed: () {
+                  final group = state.groups
+                      .firstWhere((g) => g.uuid == state.selectedGroup);
+                  final bloc = BlocProvider.of<ContactsBloc>(context);
+                  Navigator.pushNamed(context, GroupViewRoute.name,
+                      arguments: GroupViewScreenArgs(group, bloc));
+                },
+              ),
+            Expanded(
+              child: InkWell(
+                onTap: changeMode,
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 28, top: 6),
+                    child: Icon(
+                      Icons.search,
+                      color: theme.disabledColor,
+                    ),
                   ),
-                IconButton(
-                  icon: Icon(Icons.search),
-                  onPressed: changeMode,
                 ),
-                if (BuildProperty.multiUserEnable)
-                  BlocBuilder<SettingsBloc, SettingsState>(
-                    builder: (_, state) =>
-                        UserSelectionPopup((state as SettingsLoaded).users),
-                  ),
-              ],
+              ),
             ),
-          ),
+            if (BuildProperty.multiUserEnable)
+              BlocBuilder<SettingsBloc, SettingsState>(
+                builder: (_, state) =>
+                    UserSelectionPopup((state as SettingsLoaded).users),
+              ),
+          ],
         );
       }
+
       return AMAppBar(
         title: _buildTitle(context, state),
         actions: widget.enable
