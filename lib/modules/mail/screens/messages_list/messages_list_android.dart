@@ -27,6 +27,7 @@ import 'package:aurora_mail/utils/show_dialog.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:theme/app_theme.dart';
@@ -60,6 +61,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
   bool isLoading = false;
   Completer _refreshCompleter;
   Folder _selectedFolder;
+  bool _isBackgroundRefresh = false;
   final appBarKey = GlobalKey<MailAppBarState>();
   final _refreshKey = GlobalKey<RefreshIndicatorState>();
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -91,11 +93,11 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
       }
     });
     if (MessagesListAndroid.openMessageLocalId != null) {
-      openMessageByLocalId(MessagesListAndroid.openMessageLocalId);
+      _openMessageByLocalId(MessagesListAndroid.openMessageLocalId);
       MessagesListAndroid.openMessageLocalId = null;
     } else if (MessagesListAndroid.openMessageId != null &&
         MessagesListAndroid.openMessageFolder != null) {
-      openMessageById(
+      _openMessageById(
         MessagesListAndroid.openMessageId,
         MessagesListAndroid.openMessageFolder,
       );
@@ -114,7 +116,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
     super.didChangeAppLifecycleState(state);
   }
 
-  openMessageById(String messageId, String folder) async {
+  Future<void> _openMessageById(String messageId, String folder) async {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       try {
         final message = _mailBloc.getMessageById(messageId, folder);
@@ -128,8 +130,8 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
     });
   }
 
-  openMessageByLocalId(int uid) async {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+  Future<void> _openMessageByLocalId(int uid) async {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       try {
         final message = await _mailBloc.getMessageByLocalId(uid);
         await _onMessageSelected(message);
@@ -148,7 +150,6 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
   @override
   void dispose() {
     super.dispose();
-    _messagesListBloc.close();
     MessagesListAndroid.onShare = null;
     WidgetsBinding.instance.removeObserver(this);
     BackgroundHelper.removeOnAlarmObserver(onAlarm);
@@ -159,10 +160,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
     final authBloc = BlocProvider.of<AuthBloc>(context);
     if (_messagesListBloc != null &&
         _messagesListBloc.account == authBloc.currentAccount) return;
-    _messagesListBloc = new MessagesListBloc(
-      user: authBloc.currentUser,
-      account: authBloc.currentAccount,
-    );
+    _messagesListBloc = BlocProvider.of<MessagesListBloc>(context);
     _mailBloc = BlocProvider.of<MailBloc>(context);
     _contactsBloc = BlocProvider.of<ContactsBloc>(context);
     _mailBloc.init(
@@ -182,7 +180,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
         context: ctx, scaffoldState: scaffoldKey.currentState, msg: err);
   }
 
-  Future _onMessageSelectedWithProgress(Future<Message> message) {
+  Future<ErrorToShow> _onMessageSelectedWithProgress(Future<Message> message) {
     return Navigator.pushNamed(
       context,
       MessageProgressRoute.name,
@@ -195,7 +193,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
     );
   }
 
-  Future _onMessageSelected(Message _message) async {
+  Future<void> _onMessageSelected(Message _message) async {
     final message = await _mailBloc.getFullMessage(_message.localId);
     final draftsFolder = await _mailBloc.getFolderByType(FolderType.drafts);
     final isDraftMessage =
@@ -238,6 +236,8 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
         _messagesListBloc.add(SubscribeToMessages(
           state.selectedFolder,
           state.filter,
+          _messagesListBloc.searchParams,
+          _messagesListBloc.searchText,
         ));
         break;
       case PostFolderLoadedAction.stopMessagesRefresh:
@@ -254,29 +254,26 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
     _mailBloc.add(SelectFolder(_selectedFolder));
   }
 
+  void _onSearch(bool value) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      isSearch = value;
+      setState(() {});
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    final authKey =
-        BlocProvider.of<AuthBloc>(context).currentAccount.localId.toString();
-    return MultiBlocProvider(
-      key: Key(authKey),
-      providers: [
-        BlocProvider<MessagesListBloc>.value(value: _messagesListBloc),
-        BlocProvider<MailBloc>.value(value: _mailBloc),
-        BlocProvider<ContactsBloc>.value(value: _contactsBloc),
-      ],
-      child: BlocListener<AuthBloc, AuthState>(
-        condition: (prev, next) {
-          return next is InitializedUserAndAccounts;
-        },
-        listener: (BuildContext context, AuthState state) {
-          _initBlocs();
-          setState(() {});
-        },
-        child: LayoutConfig.of(context).isTablet
-            ? buildTablet(context)
-            : buildPhone(context),
-      ),
+    return BlocListener<AuthBloc, AuthState>(
+      condition: (prev, next) {
+        return next is InitializedUserAndAccounts;
+      },
+      listener: (context, state) {
+        _initBlocs();
+        setState(() {});
+      },
+      child: LayoutConfig.of(context).isTablet
+          ? buildTablet(context)
+          : buildPhone(context),
     );
   }
 
@@ -284,13 +281,8 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
     return Scaffold(
       key: scaffoldKey,
       appBar: MailAppBar(
-        initSearch: widget.initSearch,
-        selectionController: selectionController,
-        onSearch: (value) {
-          isSearch = value;
-          setState(() {});
-        },
         enable: false,
+        selectionController: selectionController,
       ),
       bottomNavigationBar:
           MailBottomAppBar(selectedRoute: MailBottomAppBarRoutes.mail),
@@ -335,10 +327,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
                         key: appBarKey,
                         initSearch: widget.initSearch,
                         selectionController: selectionController,
-                        onSearch: (value) {
-                          isSearch = value;
-                          setState(() {});
-                        },
+                        onSearch: _onSearch,
                         isAppBar: false,
                       ),
                     ),
@@ -346,7 +335,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
                     Expanded(
                       child: Stack(
                         children: <Widget>[
-                          BlocBuilder(
+                          BlocBuilder<MailBloc, MailState>(
                               bloc: _mailBloc,
                               condition: (_, s) {
                                 return s is FoldersLoaded;
@@ -366,17 +355,19 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
                               }),
                           MultiBlocListener(
                             listeners: [
-                              BlocListener(
+                              BlocListener<MessagesListBloc, MessagesListState>(
                                 bloc: _messagesListBloc,
                                 listener: (context, state) {
                                   if (state is MailError)
                                     _showError(context, state.errorMsg);
                                   if (state is MessagesDeleted) _startRefresh();
                                   if (state is SubscribedToMessages)
-                                    _subscribedToMessagesState = state;
+                                    setState(() {
+                                      _subscribedToMessagesState = state;
+                                    });
                                 },
                               ),
-                              BlocListener(
+                              BlocListener<MailBloc, MailState>(
                                 bloc: _mailBloc,
                                 listener: (context, state) {
                                   final loading = state is FoldersLoading ||
@@ -398,8 +389,8 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
                               key: _refreshKey,
                               onRefresh: () {
                                 _startRefresh();
-                                if (isBackgroundRefresh) {
-                                  isBackgroundRefresh = false;
+                                if (_isBackgroundRefresh) {
+                                  _isBackgroundRefresh = false;
                                 } else {
                                   _mailBloc
                                       .add(RefreshMessages(_refreshCompleter));
@@ -441,17 +432,15 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
     return Scaffold(
       key: scaffoldKey,
       appBar: MailAppBar(
-          key: appBarKey,
-          initSearch: widget.initSearch,
-          selectionController: selectionController,
-          onSearch: (value) {
-            isSearch = value;
-            setState(() {});
-          }),
+        key: appBarKey,
+        initSearch: widget.initSearch,
+        selectionController: selectionController,
+        onSearch: _onSearch,
+      ),
       drawer: MainDrawer(),
       body: Stack(
         children: <Widget>[
-          BlocBuilder(
+          BlocBuilder<MailBloc, MailState>(
               bloc: _mailBloc,
               condition: (_, s) {
                 return s is FoldersLoaded;
@@ -471,16 +460,18 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
               }),
           MultiBlocListener(
             listeners: [
-              BlocListener(
+              BlocListener<MessagesListBloc, MessagesListState>(
                 bloc: _messagesListBloc,
                 listener: (context, state) {
                   if (state is MailError) _showError(context, state.errorMsg);
                   if (state is MessagesDeleted) _startRefresh();
                   if (state is SubscribedToMessages)
-                    _subscribedToMessagesState = state;
+                    setState(() {
+                      _subscribedToMessagesState = state;
+                    });
                 },
               ),
-              BlocListener(
+              BlocListener<MailBloc, MailState>(
                 bloc: _mailBloc,
                 listener: (context, state) {
                   final loading = state is FoldersLoading ||
@@ -499,8 +490,8 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
             child: RefreshIndicator(
               key: _refreshKey,
               onRefresh: () {
-                if (isBackgroundRefresh) {
-                  isBackgroundRefresh = false;
+                if (_isBackgroundRefresh) {
+                  _isBackgroundRefresh = false;
                 } else {
                   _startRefresh();
                   _mailBloc.add(RefreshMessages(_refreshCompleter));
@@ -668,20 +659,18 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
     );
   }
 
-  _startRefresh() {
+  void _startRefresh() {
     if (_refreshCompleter?.isCompleted == false) _refreshCompleter?.complete();
     _refreshCompleter = Completer();
     _refreshKey.currentState.show();
   }
 
-  bool isBackgroundRefresh = false;
-
-  onAlarm() {
-    isBackgroundRefresh = true;
+  void onAlarm() {
+    _isBackgroundRefresh = true;
     _startRefresh();
   }
 
-  onEndAlarm(bool hasUpdate) {
+  void onEndAlarm(bool hasUpdate) {
     if (_refreshCompleter?.isCompleted == false) {
       _refreshCompleter?.complete();
     }

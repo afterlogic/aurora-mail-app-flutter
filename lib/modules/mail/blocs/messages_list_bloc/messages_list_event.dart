@@ -18,9 +18,10 @@ class SubscribeToMessages extends MessagesListEvent {
   final Folder currentFolder;
   final MessagesFilter filter;
   final List<SearchParams> searchParams;
+  final String searchText;
 
   const SubscribeToMessages(this.currentFolder, this.filter,
-      [this.searchParams]);
+      [this.searchParams, this.searchText]);
 
   @override
   List<Object> get props =>

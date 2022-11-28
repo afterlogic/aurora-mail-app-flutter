@@ -17,6 +17,8 @@ class MessagesListBloc extends Bloc<MessagesListEvent, MessagesListState> {
 
   List<SearchParams> searchParams = [];
 
+  String searchText = '';
+
   MessagesListBloc({@required this.user, @required this.account}) {
     _methods = new MessagesListMethods(user: user, account: account);
   }
@@ -39,6 +41,7 @@ class MessagesListBloc extends Bloc<MessagesListEvent, MessagesListState> {
   Stream<MessagesListState> _subscribeToMessages(
       SubscribeToMessages event) async* {
     searchParams = event.searchParams ?? [];
+    searchText = event.searchText ?? '';
     try {
       final type = Folder.getFolderTypeFromNumber(event.currentFolder.type);
       final isSent = type == FolderType.sent || type == FolderType.drafts;

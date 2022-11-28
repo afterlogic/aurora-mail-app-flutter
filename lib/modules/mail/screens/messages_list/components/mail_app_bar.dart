@@ -42,28 +42,33 @@ class MailAppBar extends StatefulWidget implements PreferredSizeWidget {
 
 class MailAppBarState extends BState<MailAppBar> {
   final searchKey = GlobalKey<SearchBarState>();
-  TextEditingController searchCtrl;
+  MailBloc _mailBloc;
+  MessagesListBloc _messagesListBloc;
+  TextEditingController _searchCtrl;
+  bool isSelectMode = false;
   bool _isSearchMode = false;
 
   bool get isSearchMode => _isSearchMode;
 
-  String get searchText => searchCtrl?.text;
-
-  set isSearchMode(bool value) {
+  void set isSearchMode(bool value) {
     _isSearchMode = value;
     widget.onSearch(value);
   }
 
-  bool isSelectMode = false;
+  String get searchText => _searchCtrl?.text;
 
   @override
   void initState() {
-    searchCtrl = TextEditingController(text: widget.initSearch ?? "");
-    if (widget.initSearch != null) {
-      isSearchMode = true;
+    super.initState();
+    _mailBloc = BlocProvider.of<MailBloc>(context);
+    _messagesListBloc = BlocProvider.of<MessagesListBloc>(context);
+    final prevSearchText = _messagesListBloc.searchText;
+    final search = widget.initSearch ?? prevSearchText;
+    _searchCtrl = TextEditingController(text: search);
+    if (search.isNotEmpty) {
+      _isSearchMode = true;
     }
     widget.selectionController.addListener(onSelect);
-    super.initState();
   }
 
   @override
@@ -72,16 +77,16 @@ class MailAppBarState extends BState<MailAppBar> {
     widget.selectionController.removeListener(onSelect);
   }
 
-  onSelect() {
+  void onSelect() {
     if (widget.selectionController.enable != isSelectMode) {
       isSelectMode = widget.selectionController.enable;
       setState(() {});
     }
   }
 
-  search(String text) {
+  void search(String text) {
     isSearchMode = true;
-    searchCtrl.text = text;
+    _searchCtrl.text = text;
     _search(text);
     setState(() {});
   }
@@ -101,7 +106,7 @@ class MailAppBarState extends BState<MailAppBar> {
           ? SelectAppBar(widget.selectionController, isAppBar: widget.isAppBar)
           : isSearchMode
               ? SearchBar(
-                  searchCtrl,
+                  _searchCtrl,
                   changeMode,
                   _search,
                   key: searchKey,
@@ -111,16 +116,19 @@ class MailAppBarState extends BState<MailAppBar> {
     );
   }
 
-  void _search(String val) {
-    final mailState = BlocProvider.of<MailBloc>(context).state as FoldersLoaded;
-    final params = searchUtil.searchParams(val);
-    BlocProvider.of<MessagesListBloc>(context).add(
-      SubscribeToMessages(mailState.selectedFolder, mailState.filter, params),
-    );
+  void _search(String searchText) {
+    final mailState = _mailBloc.state;
+    if (mailState is FoldersLoaded) {
+      final searchParams = searchUtil.searchParams(searchText);
+      _messagesListBloc.add(
+        SubscribeToMessages(mailState.selectedFolder, mailState.filter,
+            searchParams, searchText),
+      );
+    }
   }
 
   void changeMode() {
-    searchCtrl.clear();
+    _searchCtrl.clear();
     setState(() => isSearchMode = !isSearchMode);
   }
 
@@ -155,7 +163,7 @@ class MailAppBarState extends BState<MailAppBar> {
     return AMAppBar(
       key: Key("default_mail_app_bar"),
       title: BlocBuilder<MailBloc, MailState>(
-        bloc: BlocProvider.of<MailBloc>(context),
+        bloc: _mailBloc,
         condition: (_, state) =>
             state is FoldersLoaded ||
             state is FoldersLoading ||

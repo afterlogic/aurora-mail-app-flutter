@@ -7,13 +7,13 @@ import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/localization/localization_delegate.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
+import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/messages_list_bloc.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_android.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/shared_ui/restart_widget.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
-import 'package:aurora_mail/res/str/s.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -145,8 +145,6 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
   @override
   void dispose() {
     super.dispose();
-//    _authBloc.close();
-//    _settingsBloc.close();
     sub?.cancel();
     BackgroundHelper.current = WidgetsBinding.instance.lifecycleState;
     WidgetsBinding.instance.removeObserver(this);
@@ -188,13 +186,19 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
                           BlocProvider.value(value: _authBloc),
                           BlocProvider.value(value: _settingsBloc),
                           BlocProvider(
-                            create: (_) => new MailBloc(
+                            create: (_) => MailBloc(
                               user: _authBloc.currentUser,
                               account: _authBloc.currentAccount,
                             ),
                           ),
                           BlocProvider(
-                            create: (_) => new ContactsBloc(
+                            create: (_) => MessagesListBloc(
+                              user: _authBloc.currentUser,
+                              account: _authBloc.currentAccount,
+                            ),
+                          ),
+                          BlocProvider(
+                            create: (_) => ContactsBloc(
                               user: _authBloc.currentUser,
                               appDatabase: DBInstances.appDB,
                             )..add(GetContacts()),
