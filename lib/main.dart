@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:alarm_service/alarm_service.dart';
@@ -35,8 +36,10 @@ void main() async {
   await Firebase.initializeApp();
   AppInjector.create();
 
-  FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
-  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+  if (!kDebugMode) {
+    FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
+    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+  }
   // ignore: invalid_use_of_protected_member
   DBInstances.appDB.connection.executor.ensureOpen(DBInstances.appDB);
   LoggerStorage()
@@ -47,20 +50,29 @@ void main() async {
       if (value) logger.start();
     });
   PushNotificationsManager.instance.init();
-  runApp(
-    LoggerControllerWidget.wrap(
-      FutureBuilder(
-        future: DBInstances.appDB.migrationCompleter.future,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            return RestartWidget(child: App());
-          } else {
-            return Container();
-          }
-        },
+
+  runZonedGuarded<void>(
+    () => runApp(
+      LoggerControllerWidget.wrap(
+        FutureBuilder(
+          future: DBInstances.appDB.migrationCompleter.future,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              return RestartWidget(child: App());
+            } else {
+              return Container();
+            }
+          },
+        ),
       ),
     ),
+    (error, stack) {
+      if (!kDebugMode) {
+        FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+      }
+    },
   );
+
   NotificationManager.instance;
   AlarmService.init();
   AlarmService.onAlarm(onAlarm, ALARM_ID);
