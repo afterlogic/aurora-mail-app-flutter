@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:aurora_mail/modules/auth/repository/device_id_storage.dart';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart';
 import 'package:http/io_client.dart';
@@ -116,6 +117,8 @@ class WebMailApi {
     } else {
       headers = {'Authorization': 'Bearer $token'};
     }
+    headers['X-DeviceId'] = await DeviceIdStorage.getDeviceId();
+
     addedHeaders?.forEach((key, value) {
       headers[key] = value;
     });

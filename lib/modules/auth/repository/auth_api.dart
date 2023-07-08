@@ -49,7 +49,7 @@ class AuthApi {
       final response = await coreModuleForLogin.post(
         body,
         getRawResponse: true,
-        addedHeaders: await deviceIdHeader(),
+        // addedHeaders: await deviceIdHeader(),
       );
       if (response["ErrorCode"] == 108) {
         throw AllowAccess();
@@ -111,7 +111,7 @@ class AuthApi {
 
     final res = await coreModuleForLogin.post(
       body,
-      addedHeaders: await deviceIdHeader(),
+      // addedHeaders: await deviceIdHeader(),
     );
 
     if (res != true) {
@@ -134,7 +134,7 @@ class AuthApi {
 
     final res = await coreModuleForLogin.post(
       body,
-      addedHeaders: await deviceIdHeader(),
+      // addedHeaders: await deviceIdHeader(),
     );
 
     if (res is List) {
@@ -169,7 +169,7 @@ class AuthApi {
     final res = await twoFactorModule.post(
       body,
       getRawResponse: true,
-      addedHeaders: await deviceIdHeader(),
+      // addedHeaders: await deviceIdHeader(),
     );
 
     if (res["Result"] is! Map ||
@@ -199,7 +199,7 @@ class AuthApi {
     final request = new WebMailApiBody(method: "GetIdentities");
     final res = await mailModule.post(
       request,
-      addedHeaders: await deviceIdHeader(),
+      // addedHeaders: await deviceIdHeader(),
     );
 
     if (res is List) {
@@ -225,7 +225,7 @@ class AuthApi {
     final request = new WebMailApiBody(method: "GetAliases");
     final res = await mailModule.post(
       request,
-      addedHeaders: await deviceIdHeader(),
+      // addedHeaders: await deviceIdHeader(),
     );
 
     if (res is Map) {
@@ -275,7 +275,7 @@ class AuthApi {
         );
         final res = await webMailApi.post(
           body,
-          addedHeaders: await deviceIdHeader(),
+          // addedHeaders: await deviceIdHeader(),
         );
         print(res);
       } catch (e, s) {
@@ -305,7 +305,7 @@ class AuthApi {
         }));
     final res = await mailModule.post(
       request,
-      addedHeaders: await deviceIdHeader(),
+      // addedHeaders: await deviceIdHeader(),
     );
 
     if (res is Map) {
@@ -346,7 +346,7 @@ class AuthApi {
     final res = await mailModule.post(
       request,
       getRawResponse: true,
-      addedHeaders: await deviceIdHeader(),
+      // addedHeaders: await deviceIdHeader(),
     );
     if (res["Result"] is! Map ||
         !(res["Result"] as Map).containsKey("AuthToken")) {
@@ -387,7 +387,7 @@ class AuthApi {
     final res = await twoFactorModule.post(
       body,
       getRawResponse: true,
-      addedHeaders: await deviceIdHeader(),
+      // addedHeaders: await deviceIdHeader(),
     );
 
     if (res["Result"] is! Map ||
@@ -428,7 +428,7 @@ class AuthApi {
 
     final res = await twoFactorModule.post(
       body,
-      addedHeaders: await deviceIdHeader(),
+      // addedHeaders: await deviceIdHeader(),
     );
 
     print(res);
@@ -460,7 +460,7 @@ class AuthApi {
 
     final res = await twoFactorModule.post(
       body,
-      addedHeaders: await deviceIdHeader(),
+      // addedHeaders: await deviceIdHeader(),
     );
 
     print(res);
@@ -476,7 +476,7 @@ class AuthApi {
 
     final res = await twoFactorModule.post(
       body,
-      addedHeaders: await deviceIdHeader(),
+      // addedHeaders: await deviceIdHeader(),
     );
 
     return (res["TrustDevicesForDays"] as num).toInt();
