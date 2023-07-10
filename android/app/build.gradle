@@ -42,7 +42,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    compileSdkVersion 31
+    compileSdkVersion 33
     ndkVersion "24.0.8215888"
 
     sourceSets {

@@ -25,7 +25,8 @@
             android:hardwareAccelerated="true"
             android:launchMode="singleInstance"
             android:theme="@style/LaunchTheme"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize"
+            android:exported="true">
             <!-- This keeps the window background of the activity showing
                  until Flutter renders its first frame. It can be removed if
                  there is no splash screen (such as the default splash screen
@@ -99,7 +100,9 @@
         <service
             android:name=".AppService"
             android:exported="false" />
-        <receiver android:name="com.afterlogic.alarm_service.AlarmBroadcast" />
+        <receiver
+            android:name="com.afterlogic.alarm_service.AlarmBroadcast"
+            android:exported="false" />
         <meta-data
                 android:name="flutterEmbedding"
                 android:value="2" />
