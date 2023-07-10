@@ -87,7 +87,7 @@ dependencies:
     git: https://github.com/afterlogic/receive_sharing
 
   #notification
-  flutter_local_notifications: 8.1.1+1
+  flutter_local_notifications: 9.5.3+1
   ios_notification_handler:
     path: core/ios_notification_handler
   keyboard_actions: 3.2.0
