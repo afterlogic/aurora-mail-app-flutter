@@ -73,7 +73,7 @@ class NotificationManager {
       from,
       subject,
       NotificationDetails(
-        android: AndroidNotificationDetails("default", "Default", ""),
+        android: AndroidNotificationDetails("default", "Default"),
         iOS: null,
       ),
       payload: payload,
