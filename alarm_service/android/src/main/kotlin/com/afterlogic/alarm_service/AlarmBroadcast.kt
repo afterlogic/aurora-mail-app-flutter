@@ -40,7 +40,7 @@ class AlarmBroadcast : BroadcastReceiver() {
             intent.putExtra(CALLBACK_ID, callbackId)
             intent.putExtra(ID, id)
 
-            val pendingIntent = PendingIntent.getBroadcast(context, id, intent, 0)
+            val pendingIntent = PendingIntent.getBroadcast(context, id, intent, PendingIntent.FLAG_IMMUTABLE)
             val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
             val interval = secondDelay * 1000L
@@ -62,7 +62,7 @@ class AlarmBroadcast : BroadcastReceiver() {
 
         fun cancelAlarm(context: Context, id: Int) {
             val intent = Intent(context, AlarmBroadcast::class.java)
-            val pendingIntent = PendingIntent.getBroadcast(context, id, intent, 0)
+            val pendingIntent = PendingIntent.getBroadcast(context, id, intent, PendingIntent.FLAG_IMMUTABLE)
             val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
             alarmManager.cancel(pendingIntent)
         }
