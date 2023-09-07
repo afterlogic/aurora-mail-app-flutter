@@ -202,13 +202,10 @@ class MailApi {
   }) async {
     var _onUploadEnd = onUploadEnd;
     final uploader = FlutterUploader();
-
     final parameters = json.encode({"AccountID": _accountId});
-
-    final body =
-        new WebMailApiBody(method: "UploadAttachment", parameters: parameters);
-
+    final body = new WebMailApiBody(method: "UploadAttachment", parameters: parameters);
     final fileName = FileUtils.getFileNameFromPath(file.path);
+    final headers = await _mailModule.getAuthHeaders();
 
     final taskId = await uploader.enqueue(
       url: _mailModule.apiUrl,
@@ -220,7 +217,7 @@ class MailApi {
         )
       ],
       method: UploadMethod.POST,
-      headers: _mailModule.headerWithToken,
+      headers: headers,
       data: body.toMap("Mail"),
       showNotification: false,
       tag: fileName,
@@ -270,6 +267,7 @@ class MailApi {
     @required Function(String) onDownloadEnd,
   }) async {
     final downloadsDirectory = await getDownloadDirectory();
+    final headers = await _mailModule.getAuthHeaders();
 
     await attachment.startDownload(
       onDownloadStart: () async {
@@ -286,7 +284,7 @@ class MailApi {
       url: _mailModule.hostname + attachment.downloadUrl,
       savedDir: downloadsDirectory,
       fileName: attachment.fileName,
-      headers: _mailModule.headerWithToken,
+      headers: headers,
     );
     attachment.add(taskId, FlutterDownloader.cancel);
   }
@@ -295,11 +293,11 @@ class MailApi {
       Function(String) onIosDownloadEnd, Rect rect) async {
     final request = await HttpClient()
         .getUrl(Uri.parse(_mailModule.hostname + attachment.downloadUrl));
+    final headers = await _mailModule.getAuthHeaders();
 
-    request.headers.add(
-      _mailModule.headerWithToken.keys.elementAt(0),
-      _mailModule.headerWithToken.values.elementAt(0),
-    );
+    headers.forEach((key, value) {
+      request.headers.add(key, value);
+    });
 
     final response = await request.close();
     Uint8List bytes = await consolidateHttpClientResponseBytes(response);

@@ -49,7 +49,6 @@ class AuthApi {
       final response = await coreModuleForLogin.post(
         body,
         getRawResponse: true,
-        // addedHeaders: await deviceIdHeader(),
       );
       if (response["ErrorCode"] == 108) {
         throw AllowAccess();
