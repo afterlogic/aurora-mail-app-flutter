@@ -1,4 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.afterlogic.aurora.mail.aurora_mail">
 
     <!-- io.flutter.app.FlutterApplication is an android.app.Application that
@@ -61,11 +62,22 @@
             </intent-filter>
         </activity>
 
-        <provider
+        <!-- <provider
             android:name="androidx.work.impl.WorkManagerInitializer"
             android:authorities="${applicationId}.workmanager-init"
             android:enabled="false"
-            android:exported="false" />
+            android:exported="false" /> -->
+
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            android:exported="false"
+            tools:node="merge">
+            <meta-data
+                android:name="androidx.work.WorkManagerInitializer"
+                android:value="androidx.startup"
+                tools:node="remove" />
+        </provider>
 
         <provider
             android:name="com.bluechilli.flutteruploader.FlutterUploaderInitializer"
@@ -91,11 +103,11 @@
                 android:resource="@xml/provider_paths" />
         </provider>
 
-        <provider
+        <!-- <provider
             android:name="androidx.work.impl.WorkManagerInitializer"
             android:authorities="${applicationId}.workmanager-init"
             android:enabled="false"
-            android:exported="false" />
+            android:exported="false" /> -->
 
         <service
             android:name=".AppService"
