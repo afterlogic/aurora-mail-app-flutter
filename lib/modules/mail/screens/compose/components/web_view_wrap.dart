@@ -43,7 +43,9 @@ class _WebViewWrapState extends State<WebViewWrap> {
   }
 
   setFocus(bool value) async {
-    final position = value ? scroll.position.maxScrollExtent : scroll.position.minScrollExtent;
+    final position = value
+        ? scroll.position.maxScrollExtent
+        : scroll.position.minScrollExtent;
     scroll
         .animateTo(
       position,
@@ -94,7 +96,7 @@ class _WebViewWrapState extends State<WebViewWrap> {
                     ),
                   ),
                   Positioned(
-                    bottom: bottom+15,
+                    bottom: bottom + 15,
                     right: 15,
                     child: closeWebView,
                   ),

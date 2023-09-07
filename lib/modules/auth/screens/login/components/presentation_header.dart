@@ -9,7 +9,8 @@ class PresentationHeader extends StatelessWidget {
   final String message;
   final String subTitle;
 
-  const PresentationHeader({Key key, this.message, this.subTitle}) : super(key: key);
+  const PresentationHeader({Key key, this.message, this.subTitle})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {

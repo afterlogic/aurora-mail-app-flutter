@@ -1,4 +1,5 @@
 import 'package:aurora_mail/res/str/s.dart';
+
 enum LifeTime {
   Day,
   Days3,

@@ -1,6 +1,7 @@
 import 'package:aurora_mail/modules/mail/repository/search_util.dart';
 import 'package:aurora_mail/shared_ui/sized_dialog_content.dart';
-import 'package:aurora_mail/utils/internationalization.dart'; import 'package:aurora_mail/res/str/s.dart';
+import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_mail/res/str/s.dart';
 import 'package:flutter/material.dart';
 
 class AdvancedSearch extends StatefulWidget {
@@ -74,7 +75,7 @@ class AdvancedSearchState extends State<AdvancedSearch> {
       title: Text(i18n(context, S.label_message_advanced_search)),
       content: SingleChildScrollView(
         child: Column(
-          crossAxisAlignment:CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             TextField(
@@ -150,9 +151,8 @@ class AdvancedSearchState extends State<AdvancedSearch> {
                       ),
                       child: SizedBox(
                         height: 20,
-                        child: till == null
-                            ? null
-                            : Text(dateFormat.format(till)),
+                        child:
+                            till == null ? null : Text(dateFormat.format(till)),
                       ),
                     ),
                   ),

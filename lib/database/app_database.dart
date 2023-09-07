@@ -85,5 +85,5 @@ class AppDatabase extends _$AppDatabase {
   // you should bump this number whenever you change or add a table definition. Migrations
   // are covered later in this readme.
   @override
-  int get schemaVersion =>6;
+  int get schemaVersion => 6;
 }

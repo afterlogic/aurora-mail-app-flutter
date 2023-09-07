@@ -67,7 +67,6 @@ class DecryptBody extends MessageViewEvent with AlwaysNonEqualObject {
   List<Object> get props => [sender, body];
 }
 
-
 class AddInWhiteList extends MessageViewEvent {
   final Message message;
 

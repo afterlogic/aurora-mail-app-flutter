@@ -30,8 +30,7 @@ class FoldersDao extends DatabaseAccessor<AppDatabase> with _$FoldersDaoMixin {
 
     return foundFolders.isEmpty
         ? null
-        : Folder.getFoldersObjectsFromDb(
-            foundFolders)[0];
+        : Folder.getFoldersObjectsFromDb(foundFolders)[0];
   }
 
 //  Stream<List<LocalFolder>> watchAllFolders(int accountLocalId) {

@@ -76,7 +76,7 @@ class WebMailApi {
       'Authorization': 'Bearer $token',
       'X-DeviceId': await DeviceIdStorage.getDeviceId()
     };
-  } 
+  }
 
   // Duration _connectionTimeout = const Duration(seconds: 120);
   // Response Function() _onConnectionTimeout = () => Response(

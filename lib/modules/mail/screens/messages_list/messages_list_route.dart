@@ -5,5 +5,5 @@ class MessagesListRoute {
 class MessagesListRouteArg {
   final String search;
 
-  MessagesListRouteArg({ this.search});
+  MessagesListRouteArg({this.search});
 }

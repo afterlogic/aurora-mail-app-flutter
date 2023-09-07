@@ -92,7 +92,8 @@ class Folders extends Table {
 
     void getObj(List<Map<String, dynamic>> rawFolders, String parentGuid) {
       rawFolders.forEach((rawFolder) {
-        final guid = "$userLocalId $accountLocalId ${rawFolder["FullNameHash"]}}";
+        final guid =
+            "$userLocalId $accountLocalId ${rawFolder["FullNameHash"]}}";
         final t = rawFolder["Type"];
         flattenedFolders.add(LocalFolder(
           namespace: namespace,

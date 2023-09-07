@@ -16,5 +16,4 @@ class PgpKeyModel extends Table {
   IntColumn get length => integer().nullable()();
 
   TextColumn get other => text()();
-
 }

@@ -47,7 +47,7 @@ class UserLogIn extends AuthEvent with AlwaysNonEqualObject {
   UserLogIn(this.user, this.completer, this.login, this.password);
 }
 
-  class UserLogInFinish extends AuthEvent with AlwaysNonEqualObject {
+class UserLogInFinish extends AuthEvent with AlwaysNonEqualObject {
   final User user;
   final Completer completer;
 

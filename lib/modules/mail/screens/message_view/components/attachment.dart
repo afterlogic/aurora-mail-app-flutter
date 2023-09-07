@@ -28,14 +28,17 @@ class _AttachmentState extends BState<Attachment> {
       BlocProvider.of<MessageViewBloc>(context).add(DownloadAttachment(
         widget.attachment,
         Rect.fromCenter(
-            center: MediaQuery.of(context).size.center(Offset.zero), height: 0, width: 0),
+            center: MediaQuery.of(context).size.center(Offset.zero),
+            height: 0,
+            width: 0),
       ));
-      final msg = i18n(
-          context, S.messages_attachment_downloading, {"fileName": widget.attachment.fileName});
+      final msg = i18n(context, S.messages_attachment_downloading,
+          {"fileName": widget.attachment.fileName});
       Fluttertoast.showToast(
         msg: msg,
         timeInSecForIos: 2,
-        backgroundColor: Platform.isIOS ? theme.disabledColor.withOpacity(0.5) : null,
+        backgroundColor:
+            Platform.isIOS ? theme.disabledColor.withOpacity(0.5) : null,
       );
     }
 
@@ -72,9 +75,11 @@ class _AttachmentState extends BState<Attachment> {
                     height: 3.0,
                     child: LinearProgressIndicator(
                       backgroundColor: theme.disabledColor.withOpacity(0.1),
-                      value: snapshot.connectionState == ConnectionState.active && snapshot.hasData
-                          ? snapshot.data / 100
-                          : null,
+                      value:
+                          snapshot.connectionState == ConnectionState.active &&
+                                  snapshot.hasData
+                              ? snapshot.data / 100
+                              : null,
                     ),
                   );
                 },

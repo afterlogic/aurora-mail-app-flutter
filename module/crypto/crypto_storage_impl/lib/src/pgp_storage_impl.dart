@@ -162,4 +162,3 @@ class CryptoStorageImpl extends CryptoStorage {
     }
   }
 }
-

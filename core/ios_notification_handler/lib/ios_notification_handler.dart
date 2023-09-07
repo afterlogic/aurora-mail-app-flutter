@@ -26,7 +26,8 @@ class IosNotificationHandler {
     return _channel.invokeMethod("finish", [result ?? false]);
   }
 
-  static onMessage(Future<bool> Function(Map<String, dynamic> message) onMessage) async {
+  static onMessage(
+      Future<bool> Function(Map<String, dynamic> message) onMessage) async {
     if (_isInit) throw "_isInit == true";
     _isInit = true;
     while (true) {

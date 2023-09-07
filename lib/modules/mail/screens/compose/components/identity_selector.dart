@@ -66,9 +66,7 @@ class _IdentitySelectorState extends BState<IdentitySelector> {
           color: widget.enable ? null : theme.disabledColor.withAlpha(20),
         ),
         child: InkWell(
-          onTap: widget.enable
-              ? focusNode.requestFocus
-              : null,
+          onTap: widget.enable ? focusNode.requestFocus : null,
           child: ComposeTypeAheadField<AliasOrIdentity>(
             textFieldConfiguration: TextFieldConfiguration(
               focusNode: focusNode,
@@ -84,7 +82,8 @@ class _IdentitySelectorState extends BState<IdentitySelector> {
               ),
             ),
             suggestionsBoxVerticalOffset: 0.0,
-            suggestionsBoxHorizontalOffset: screenWidth - dropDownWidth - 16 * 2,
+            suggestionsBoxHorizontalOffset:
+                screenWidth - dropDownWidth - 16 * 2,
             autoFlipDirection: true,
             hideOnLoading: true,
             keepSuggestionsOnLoading: true,

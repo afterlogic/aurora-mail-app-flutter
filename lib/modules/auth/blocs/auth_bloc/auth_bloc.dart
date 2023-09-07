@@ -183,7 +183,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     if (daysCount == 0) {
       yield* _userLogInFinish(UserLogInFinish(event.user, event.completer));
     } else {
-      yield ShowTrustDeviceDialog(event.user, event.login, event.password, daysCount);
+      yield ShowTrustDeviceDialog(
+          event.user, event.login, event.password, daysCount);
       event.completer?.complete();
     }
   }

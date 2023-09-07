@@ -8,15 +8,11 @@ class SizedDialogContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isTablet = LayoutConfig
-        .of(context)
-        .isTablet;
+    final isTablet = LayoutConfig.of(context).isTablet;
     final divided = isTablet ? 2 : 2;
-    final size = MediaQuery
-        .of(context)
-        .size;
+    final size = MediaQuery.of(context).size;
     return SizedBox(
-      width: size.width /divided,
+      width: size.width / divided,
       height: size.height / divided,
       child: child,
     );

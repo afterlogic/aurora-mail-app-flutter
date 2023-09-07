@@ -17,15 +17,13 @@ class AccountsDao extends DatabaseAccessor<AppDatabase>
   }
 
   Future<List<Account>> getAccounts(int userLocalId) {
-    return (select(accounts)
-      ..where((a) => a.userLocalId.equals(userLocalId)))
+    return (select(accounts)..where((a) => a.userLocalId.equals(userLocalId)))
         .get();
   }
 
   Future<Account> getAccount(int localId) async {
     final accountsFromDb =
-    await (select(accounts)
-      ..where((a) => a.localId.equals(localId))).get();
+        await (select(accounts)..where((a) => a.localId.equals(localId))).get();
 
     if (accountsFromDb.isNotEmpty)
       return accountsFromDb[0];
@@ -34,15 +32,12 @@ class AccountsDao extends DatabaseAccessor<AppDatabase>
   }
 
   Future<void> deleteAccountsOfUser(int userLocalId) {
-    return (delete(accounts)
-      ..where((a) => a.userLocalId.equals(userLocalId)))
+    return (delete(accounts)..where((a) => a.userLocalId.equals(userLocalId)))
         .go();
   }
 
   Future<void> deleteAccountById(int localId) {
-    return (delete(accounts)
-      ..where((a) => a.localId.equals(localId)))
-        .go();
+    return (delete(accounts)..where((a) => a.localId.equals(localId))).go();
   }
 
   Future updateAccount(Account server, int localId) {

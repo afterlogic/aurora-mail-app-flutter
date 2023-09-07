@@ -203,7 +203,8 @@ class MailApi {
     var _onUploadEnd = onUploadEnd;
     final uploader = FlutterUploader();
     final parameters = json.encode({"AccountID": _accountId});
-    final body = new WebMailApiBody(method: "UploadAttachment", parameters: parameters);
+    final body =
+        new WebMailApiBody(method: "UploadAttachment", parameters: parameters);
     final fileName = FileUtils.getFileNameFromPath(file.path);
     final headers = await _mailModule.getAuthHeaders();
 

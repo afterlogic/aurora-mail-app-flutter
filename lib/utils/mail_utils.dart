@@ -203,9 +203,9 @@ class MailUtils {
     final from = getDisplayName(message.fromInJson);
 
     return "<br><br><br>${i18n(context, S.compose_reply_body_title, {
-      "time": time,
-      "from": from
-    })}<br><blockquote>$baseMessage</blockquote>";
+          "time": time,
+          "from": from
+        })}<br><blockquote>$baseMessage</blockquote>";
   }
 
   static String getForwardSubject(Message message) {

@@ -125,7 +125,8 @@ class _ImportKeyDialogState extends BState<ImportKeyDialog>
                 if (externalPrivateKeys.isNotEmpty)
                   Padding(
                     padding: EdgeInsets.symmetric(vertical: 8),
-                    child: Text(i18n(context, S.hint_pgp_external_private_keys)),
+                    child:
+                        Text(i18n(context, S.hint_pgp_external_private_keys)),
                   ),
                 Column(
                   children: externalPrivateKeys.map((displayKey) {

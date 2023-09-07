@@ -13,5 +13,4 @@ class DaoModule {
 
   @Provide()
   ContactsDao contactsDao() => ContactsDao(DBInstances.appDB);
-
 }

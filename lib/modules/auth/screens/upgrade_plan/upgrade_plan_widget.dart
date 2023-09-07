@@ -46,7 +46,7 @@ class UpgradePlanWidget extends StatelessWidget {
                 child: MailLogo(isBackground: true),
               ),
             Center(
-              child:ConstrainedBox(
+              child: ConstrainedBox(
                 constraints: BoxConstraints(
                   maxWidth: LayoutConfig.formWidth,
                 ),

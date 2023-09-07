@@ -63,6 +63,6 @@ class DownloadKeys extends PgpSettingsEvent with AlwaysNonEqualObject {
 
 class ShareKeys extends PgpSettingsEvent with AlwaysNonEqualObject {
   final List<PgpKey> pgpKeys;
-final Rect rect;
+  final Rect rect;
   ShareKeys(this.pgpKeys, this.rect);
 }

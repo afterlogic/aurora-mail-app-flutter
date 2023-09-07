@@ -56,7 +56,8 @@ class IosPressOnKeyDialogState extends _IosDialogState<IosPressOnKeyDialog> {
           opacity: 0,
           child: Text(
             "Ready to Scan",
-            style: TextStyle(fontSize: 26, color: Colors.grey, fontWeight: FontWeight.w400),
+            style: TextStyle(
+                fontSize: 26, color: Colors.grey, fontWeight: FontWeight.w400),
           ),
         ),
         ClipRRect(
@@ -81,7 +82,8 @@ class IosPressOnKeyDialogState extends _IosDialogState<IosPressOnKeyDialog> {
         ),
         Text(
           i18n(context, S.fido_label_success),
-          style: TextStyle(fontSize: 16, color: Colors.black, fontWeight: FontWeight.w400),
+          style: TextStyle(
+              fontSize: 16, color: Colors.black, fontWeight: FontWeight.w400),
         ),
       ],
     );
@@ -94,7 +96,8 @@ class IosPressOnKeyDialogState extends _IosDialogState<IosPressOnKeyDialog> {
       children: [
         Text(
           "Ready to Scan",
-          style: TextStyle(fontSize: 26, color: Colors.grey, fontWeight: FontWeight.w400),
+          style: TextStyle(
+              fontSize: 26, color: Colors.grey, fontWeight: FontWeight.w400),
         ),
         ClipRRect(
           borderRadius: BorderRadius.circular(size),
@@ -112,7 +115,8 @@ class IosPressOnKeyDialogState extends _IosDialogState<IosPressOnKeyDialog> {
         ),
         Text(
           "Touch your security key",
-          style: TextStyle(fontSize: 16, color: Colors.black, fontWeight: FontWeight.w400),
+          style: TextStyle(
+              fontSize: 16, color: Colors.black, fontWeight: FontWeight.w400),
         ),
       ],
     );
@@ -145,7 +149,8 @@ abstract class _IosDialogState<W extends _IosDialog> extends State<W>
 
   initState() {
     super.initState();
-    _animationController = AnimationController(vsync: this, duration: Duration(milliseconds: 350));
+    _animationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 350));
     _animationController.forward();
     _offsetAnimation = Tween<Offset>(
       begin: const Offset(0, 1),
@@ -209,7 +214,9 @@ abstract class _IosDialogState<W extends _IosDialog> extends State<W>
                             color: Colors.grey.withOpacity(0.5),
                             child: Text(
                               "Cancel",
-                              style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
+                              style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.w600),
                             ),
                             onPressed: () async {
                               close();

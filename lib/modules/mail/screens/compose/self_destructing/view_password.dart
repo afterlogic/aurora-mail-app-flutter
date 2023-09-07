@@ -2,7 +2,8 @@ import 'dart:math';
 
 import 'package:aurora_mail/modules/dialog_wrap.dart';
 import 'package:aurora_mail/shared_ui/toast_widget.dart';
-import 'package:aurora_mail/utils/internationalization.dart'; import 'package:aurora_mail/res/str/s.dart';
+import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_mail/res/str/s.dart';
 import 'package:flutter/material.dart';
 
 import 'components/clipboard_label.dart';
@@ -19,7 +20,7 @@ class ViewPassword extends StatefulWidget {
   _ViewPasswordState createState() => _ViewPasswordState();
 }
 
-class _ViewPasswordState extends State<ViewPassword> with NotSavedChangesMixin  {
+class _ViewPasswordState extends State<ViewPassword> with NotSavedChangesMixin {
   final toastKey = GlobalKey<ToastWidgetState>();
 
   @override
@@ -36,7 +37,8 @@ class _ViewPasswordState extends State<ViewPassword> with NotSavedChangesMixin  
             ListView(
               children: <Widget>[
                 Text(
-                  i18n(context, S.hint_self_destructing_supports_plain_text_only),
+                  i18n(context,
+                      S.hint_self_destructing_supports_plain_text_only),
                   style: theme.textTheme.caption,
                 ),
                 SizedBox(height: 20),
@@ -46,12 +48,15 @@ class _ViewPasswordState extends State<ViewPassword> with NotSavedChangesMixin  
                       .toList(),
                 ),
                 SizedBox(height: 20),
-                ClipboardLabel(widget.password, "Encrypted message password.", () {
-              toastKey.currentState.show(i18n(context, S.hint_self_destructing_password_coppied_to_clipboard));
+                ClipboardLabel(widget.password, "Encrypted message password.",
+                    () {
+                  toastKey.currentState.show(i18n(context,
+                      S.hint_self_destructing_password_coppied_to_clipboard));
                 }),
                 SizedBox(height: 20),
                 Text(
-                  i18n(context, S.hint_self_destructing_sent_password_using_different_channel),
+                  i18n(context,
+                      S.hint_self_destructing_sent_password_using_different_channel),
                   style: theme.textTheme.caption,
                 ),
               ],

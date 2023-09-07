@@ -7,7 +7,8 @@ class ContactsInfoConverter
     extends TypeConverter<List<ContactInfoItem>, String> {
   final bool nullable;
 
-  const ContactsInfoConverter({this.nullable = true}) : assert(nullable != null);
+  const ContactsInfoConverter({this.nullable = true})
+      : assert(nullable != null);
 
   @override
   List<ContactInfoItem> mapToDart(String fromDb) {

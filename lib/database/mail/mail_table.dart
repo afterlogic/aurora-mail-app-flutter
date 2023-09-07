@@ -204,7 +204,7 @@ class Mail extends Table {
   static List<Map<String, dynamic>>
       _getMessageObjFromServerAndUpdateInfoHasBody(
     Map<String, dynamic> map,
-) {
+  ) {
     List result = map["result"] as List;
     List<Message> messagesInfo =
         (map["messagesInfo"] as List<Map<String, dynamic>>)

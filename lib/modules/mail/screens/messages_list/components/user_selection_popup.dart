@@ -1,7 +1,8 @@
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/settings/screens/manage_users/componenets/account_tile.dart';
 import 'package:aurora_mail/modules/settings/screens/manage_users/manage_users_route.dart';
-import 'package:aurora_mail/utils/internationalization.dart'; import 'package:aurora_mail/res/str/s.dart';
+import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_mail/res/str/s.dart';
 import 'package:flutter/material.dart';
 
 class UserSelectionPopup extends StatelessWidget {

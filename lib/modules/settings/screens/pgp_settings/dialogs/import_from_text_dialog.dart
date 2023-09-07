@@ -2,7 +2,8 @@ import 'package:aurora_mail/modules/dialog_wrap.dart';
 import 'package:aurora_mail/shared_ui/sized_dialog_content.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/input_validation.dart';
-import 'package:aurora_mail/utils/internationalization.dart'; import 'package:aurora_mail/res/str/s.dart';
+import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_mail/res/str/s.dart';
 import 'package:flutter/material.dart';
 
 class ImportFromTextDialog extends StatefulWidget {
@@ -10,7 +11,8 @@ class ImportFromTextDialog extends StatefulWidget {
   _ImportFromTextDialogState createState() => _ImportFromTextDialogState();
 }
 
-class _ImportFromTextDialogState extends BState<ImportFromTextDialog> with NotSavedChangesMixin {
+class _ImportFromTextDialogState extends BState<ImportFromTextDialog>
+    with NotSavedChangesMixin {
   final _textController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 

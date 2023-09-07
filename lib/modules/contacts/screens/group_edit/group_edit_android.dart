@@ -116,7 +116,8 @@ class _GroupEditAndroidState extends BState<GroupEditAndroid>
             children: <Widget>[
               _buildInput(S.contacts_view_section_group_name, _nameCtrl),
               SwitchListTile.adaptive(
-                title: Text(i18n(context, S.contacts_group_edit_is_organization)),
+                title:
+                    Text(i18n(context, S.contacts_group_edit_is_organization)),
                 value: _isOrg,
                 activeColor: theme.accentColor,
                 onChanged: (v) => setState(() => _isOrg = v),

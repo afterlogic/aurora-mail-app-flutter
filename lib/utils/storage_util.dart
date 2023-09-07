@@ -1,4 +1,5 @@
 import 'package:aurora_mail/res/str/s.dart';
+
 int getStorageName(String storage) {
   switch (storage) {
     case "all":

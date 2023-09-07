@@ -27,5 +27,4 @@ class StatusBarNotification {
       isGroup: map['isGroup'] as bool,
     );
   }
-
 }

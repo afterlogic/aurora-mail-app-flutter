@@ -55,7 +55,6 @@ class _LoginAndroidState extends BState<LoginAndroid> {
   void initState() {
     super.initState();
 
-
     if (widget.isDialog == true) {
       if (widget.email != null) emailCtrl.text = widget.email;
     } else {

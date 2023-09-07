@@ -13,7 +13,8 @@ class TempAttachmentUpload {
   final Function({String taskId}) cancel;
   final File file;
 
-  TempAttachmentUpload(this.file, {
+  TempAttachmentUpload(
+    this.file, {
     @required this.name,
     @required this.size,
     @required this.taskId,

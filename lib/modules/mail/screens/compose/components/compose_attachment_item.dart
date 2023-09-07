@@ -32,7 +32,8 @@ class ComposeAttachmentItem extends StatelessWidget {
                 children: [
                   if (attachment.file != null) ...[
                     Expanded(
-                        child: ThumbnailWidget(null, attachment.file as File, 300)),
+                        child: ThumbnailWidget(
+                            null, attachment.file as File, 300)),
                   ],
                   ListTile(
                     contentPadding: EdgeInsets.zero,
@@ -40,16 +41,17 @@ class ComposeAttachmentItem extends StatelessWidget {
                     leading: Icon(Icons.attach_file),
                     title: Text(attachment.name as String),
                     subtitle: StreamBuilder(
-                      stream:
-                          (attachment.uploadProgress as Stream<UploadTaskProgress>)
-                              .where(
+                      stream: (attachment.uploadProgress
+                              as Stream<UploadTaskProgress>)
+                          .where(
                         (item) => item.taskId == attachment.taskId,
                       ),
                       builder: (_, AsyncSnapshot<UploadTaskProgress> snapshot) {
                         return SizedBox(
                           height: 3.0,
                           child: LinearProgressIndicator(
-                            backgroundColor: theme.disabledColor.withOpacity(0.1),
+                            backgroundColor:
+                                theme.disabledColor.withOpacity(0.1),
                             value: snapshot.connectionState ==
                                         ConnectionState.active &&
                                     snapshot.hasData
@@ -64,8 +66,8 @@ class ComposeAttachmentItem extends StatelessWidget {
                       children: <Widget>[
                         IconButton(
                           icon: Icon(Icons.cancel),
-                          tooltip:
-                              i18n(context, S.messages_attachment_upload_cancel),
+                          tooltip: i18n(
+                              context, S.messages_attachment_upload_cancel),
                           onPressed: () {
                             attachment.cancel(taskId: attachment.taskId);
                             onCancel(attachment);
@@ -139,8 +141,9 @@ class ComposeAttachmentItem extends StatelessWidget {
                     dense: true,
                     leading: Icon(Icons.attach_file),
                     title: Text(attachment.fileName as String),
-                    subtitle:
-                        attachment.size == 0 ? null : Text(filesize(attachment.size)),
+                    subtitle: attachment.size == 0
+                        ? null
+                        : Text(filesize(attachment.size)),
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[

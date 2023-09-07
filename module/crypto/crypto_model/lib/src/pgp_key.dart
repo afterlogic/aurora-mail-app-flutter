@@ -23,6 +23,7 @@ class PgpKey {
     this.length,
   );
 }
+
 class PgpKeyWithContact implements PgpKey {
   final PgpKey pgpKey;
   final Contact contact;

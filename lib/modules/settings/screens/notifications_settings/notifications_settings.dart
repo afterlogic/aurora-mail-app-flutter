@@ -44,7 +44,8 @@ class _NotificationsSettingsState extends BState<NotificationsSettings> {
             if (isTablet) {
               button = Align(
                 alignment: Alignment.centerLeft,
-                child: button,);
+                child: button,
+              );
             }
             return SafeArea(
               child: Column(
@@ -83,8 +84,7 @@ class _NotificationsSettingsState extends BState<NotificationsSettings> {
                     ),
                   ),
                   ListTile(
-                    title: Text(
-                        i18n(context, S.label_token_storing_status),
+                    title: Text(i18n(context, S.label_token_storing_status),
                         style: theme.textTheme.subtitle1),
                     trailing: Text(tokenStatus != null
                         ? i18n(

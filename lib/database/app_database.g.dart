@@ -10205,9 +10205,7 @@ class WhiteMail extends DataClass implements Insertable<WhiteMail> {
       );
   @override
   String toString() {
-    return (StringBuffer('WhiteMail(')
-          ..write('mail: $mail')
-          ..write(')'))
+    return (StringBuffer('WhiteMail(')..write('mail: $mail')..write(')'))
         .toString();
   }
 

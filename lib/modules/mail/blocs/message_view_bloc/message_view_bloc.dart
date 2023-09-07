@@ -51,7 +51,8 @@ class MessageViewBloc extends Bloc<MessageViewEvent, MessageViewState> {
     return has;
   }
 
-  Stream<MessageViewState> _downloadAttachment(DownloadAttachment event) async* {
+  Stream<MessageViewState> _downloadAttachment(
+      DownloadAttachment event) async* {
     try {
       await getStoragePermissions();
     } catch (err) {
@@ -73,7 +74,8 @@ class MessageViewBloc extends Bloc<MessageViewEvent, MessageViewState> {
     );
   }
 
-  downloadAttachment(MailAttachment attachment, Function(String) onEnd,Rect rect) async {
+  downloadAttachment(
+      MailAttachment attachment, Function(String) onEnd, Rect rect) async {
     try {
       await getStoragePermissions();
     } catch (err) {
@@ -82,7 +84,7 @@ class MessageViewBloc extends Bloc<MessageViewEvent, MessageViewState> {
 
     _methods.downloadAttachment(
       attachment,
-      rect:rect,
+      rect: rect,
       onDownloadStart: () {
 //        add(StartDownload(event.attachment.fileName));
       },
@@ -114,7 +116,8 @@ class MessageViewBloc extends Bloc<MessageViewEvent, MessageViewState> {
           {"users": e.email.join(" , ")},
         );
       } else if (e is PgpInvalidSign) {
-        yield MessagesViewError(ErrorToShow.code(S.error_pgp_invalid_key_or_password));
+        yield MessagesViewError(
+            ErrorToShow.code(S.error_pgp_invalid_key_or_password));
       } else {
         yield MessagesViewError(ErrorToShow.code(S.error_pgp_can_not_decrypt));
       }
