@@ -73,7 +73,7 @@ class _ThumbnailWidgetState extends State<ThumbnailWidget> {
           child: Center(
             child: Text(
               extension,
-              style: Theme.of(context).textTheme.title.copyWith(fontSize: 30),
+              style: Theme.of(context).textTheme.headline6.copyWith(fontSize: 30),
             ),
           ),
         );

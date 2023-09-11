@@ -59,7 +59,7 @@ termsOfService: ""
 # enum from package:aurora_mail/modules/settings/models/sync_period.dart
 syncPeriod: "Period.allTime"
 supportLanguage: "ru,en,tr"
-hasFloatingPlaceholder: false
+hasFloatingPlaceholder: "never" # auto or never
 
 multiUserEnable: false
 cryptoEnable: false

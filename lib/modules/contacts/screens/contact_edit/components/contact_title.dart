@@ -16,7 +16,7 @@ class ContactTile extends StatelessWidget {
       child: ListTile(
         title: Text(
           i18n(context, title),
-          style: textStyle ?? theme.textTheme.title,
+          style: textStyle ?? theme.textTheme.headline6,
         ),
       ),
     );

@@ -210,7 +210,7 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
       format: i18n(context, S.format_contacts_birth_date),
     );
 
-    final sectionTitleTheme = theme.textTheme.body2;
+    final sectionTitleTheme = theme.textTheme.bodyText1;
 
     final _mainInfo = _buildInfos([
 //      _buildInfoItem(

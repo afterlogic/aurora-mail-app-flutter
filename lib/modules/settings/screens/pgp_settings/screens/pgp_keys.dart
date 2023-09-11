@@ -79,7 +79,7 @@ class _PgpKeysScreenState extends State<PgpKeysScreen> {
                             context,
                             S.label_pgp_all_public_key,
                           ),
-                          style: theme.textTheme.title,
+                          style: theme.textTheme.headline6,
                         ),
                       ),
                     ),

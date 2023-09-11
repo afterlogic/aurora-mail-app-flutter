@@ -290,7 +290,7 @@ class _LoginAndroidState extends BState<LoginAndroid> {
                                     ? S.settings_accounts_add
                                     : S.settings_accounts_relogin,
                               ),
-                              style: theme.textTheme.title,
+                              style: theme.textTheme.headline6,
                             ),
                           ),
                         if (_showHostField)

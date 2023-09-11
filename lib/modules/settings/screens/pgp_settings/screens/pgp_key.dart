@@ -91,14 +91,14 @@ class _PgpKeyScreenState extends State<PgpKeyScreen> {
                                 ? S.label_pgp_private_key
                                 : S.label_pgp_public_key,
                           ),
-                          style: theme.textTheme.title,
+                          style: theme.textTheme.headline6,
                         ),
                       ),
                     ),
                   ),
                 Text(
                   pgpKey.formatName(),
-                  style: theme.textTheme.title,
+                  style: theme.textTheme.headline6,
                 ),
                 SizedBox(
                   height: 20,

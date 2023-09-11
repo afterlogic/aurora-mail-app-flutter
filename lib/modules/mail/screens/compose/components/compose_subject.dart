@@ -42,7 +42,7 @@ class _ComposeSubjectState extends BState<ComposeSubject> {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: Text(i18n(context, S.messages_subject),
-                  style: theme.textTheme.subhead),
+                  style: theme.textTheme.subtitle1),
             ),
             SizedBox(width: 8.0),
             Flexible(

@@ -21,7 +21,7 @@ class AppTheme {
     scaffoldBackgroundColor: Colors.white,
 //    iconTheme: IconThemeData(color: AppColor.primary),
     textTheme: TextTheme(
-      display1: TextStyle(
+      headline4: TextStyle(
         color: Colors.black,
         fontSize: 32.0,
         fontWeight: FontWeight.w500,
@@ -33,12 +33,12 @@ class AppTheme {
       iconTheme: IconThemeData(color: Colors.black),
       actionsIconTheme: IconThemeData(color: Colors.black),
       textTheme: TextTheme(
-        title: TextStyle(
+        headline6: TextStyle(
           color: Colors.black,
           fontSize: 18.0,
           fontWeight: FontWeight.w500,
         ),
-        subtitle: TextStyle(
+        subtitle2: TextStyle(
           color: Colors.black,
           fontSize: 12.0,
           fontWeight: FontWeight.w400,
@@ -66,7 +66,7 @@ class AppTheme {
     disabledColor: Colors.white.withOpacity(0.4),
     scaffoldBackgroundColor: Color(0xFF1A1A1A),
     textTheme: TextTheme(
-      display1: TextStyle(
+      headline4: TextStyle(
         color: Colors.white,
         fontSize: 32.0,
         fontWeight: FontWeight.w500,
@@ -78,12 +78,12 @@ class AppTheme {
       iconTheme: IconThemeData(color: Colors.white),
       actionsIconTheme: IconThemeData(color: Colors.white),
       textTheme: TextTheme(
-        title: TextStyle(
+        headline6: TextStyle(
           color: Colors.white,
           fontSize: 18.0,
           fontWeight: FontWeight.w500,
         ),
-        subtitle: TextStyle(
+        subtitle2: TextStyle(
           color: Colors.white,
           fontSize: 12.0,
           fontWeight: FontWeight.w400,

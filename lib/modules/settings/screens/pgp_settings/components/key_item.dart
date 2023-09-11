@@ -57,7 +57,7 @@ class _KeyItemState extends BState<KeyItem> {
                       widget.pgpKey.formatName(),
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
-                      style: textTheme.body1,
+                      style: textTheme.bodyText2,
                     ),
                     Text(
                       description,

@@ -249,7 +249,7 @@ class _MessageItemState extends BState<MessageItem> {
                             style: TextStyle(
                               fontWeight: fontWeight,
                               fontSize: 16.0,
-                              color: theme.textTheme.title.color,
+                              color: theme.textTheme.headline6.color,
                             ),
                           ),
                         ),

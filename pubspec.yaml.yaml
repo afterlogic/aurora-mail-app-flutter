@@ -31,7 +31,7 @@ dependencies:
   shared_preferences: 0.5.6+3
 
   # file downloading/uploading
-  file_picker: 4.0.0
+  file_picker: 4.5.0 # > 4.6.1
   flutter_uploader: 1.2.1
   flutter_downloader: 1.7.4
   share: ^2.0.4

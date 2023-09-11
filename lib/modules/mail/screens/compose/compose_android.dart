@@ -848,7 +848,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
       return FlatButton(
         child: Text(
           i18n(context, S.btn_done),
-          style: theme.textTheme.body1.copyWith(color: Colors.black),
+          style: theme.textTheme.bodyText2.copyWith(color: Colors.black),
         ),
         onPressed: node.unfocus,
       );

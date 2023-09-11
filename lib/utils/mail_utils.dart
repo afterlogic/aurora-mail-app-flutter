@@ -620,7 +620,7 @@ class MailUtils {
 
     final isDark = theme.brightness == Brightness.dark;
     final backgroundColor = _getWebColor(theme.scaffoldBackgroundColor);
-    final textColor = _getWebColor(theme.textTheme.body1.color);
+    final textColor = _getWebColor(theme.textTheme.bodyText2.color);
 
     if (isDark == true && showLightEmail == false) {
       return """

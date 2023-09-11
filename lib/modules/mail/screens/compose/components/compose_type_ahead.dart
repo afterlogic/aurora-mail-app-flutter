@@ -292,7 +292,7 @@ class TypeAheadFormField<T> extends FormField<String> {
             key: key,
             onSaved: onSaved,
             validator: validator,
-            autovalidate: autovalidate,
+            autovalidateMode: AutovalidateMode.disabled,
             initialValue: textFieldConfiguration.controller != null
                 ? textFieldConfiguration.controller.text
                 : (initialValue ?? ''),

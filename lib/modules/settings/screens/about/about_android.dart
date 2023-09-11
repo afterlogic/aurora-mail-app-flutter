@@ -74,7 +74,7 @@ class _AboutAndroidState extends BState<AboutAndroid> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                Text(_appName, style: theme.textTheme.title),
+                Text(_appName, style: theme.textTheme.headline6),
                 SizedBox(height: 12.0),
                 Text(
                   i18n(context, S.settings_about_app_version,

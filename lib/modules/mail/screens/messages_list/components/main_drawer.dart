@@ -59,7 +59,7 @@ class _MainDrawerState extends BState<MainDrawer> {
                       children: <Widget>[
                         Text(
                           authBloc.currentAccount.friendlyName,
-                          style: theme.textTheme.title,
+                          style: theme.textTheme.headline6,
                         ),
                         SizedBox(height: 8.0),
                         Row(

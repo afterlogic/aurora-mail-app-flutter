@@ -50,14 +50,17 @@ class _AuthInputState extends BState<AuthInput> {
       validator: widget.validator,
       obscureText: widget.isPassword && _obscureText,
       decoration: InputDecoration(
-        hasFloatingPlaceholder: BuildProperty.hasFloatingPlaceholder,
+        // floatingLabelBehavior: BuildProperty.hasFloatingPlaceholder,
+        floatingLabelBehavior: FloatingLabelBehavior.never,
         enabledBorder: UnderlineInputBorder(
             borderSide:
                 BorderSide(color: theme.disabledColor.withOpacity(0.1))),
         focusedBorder: UnderlineInputBorder(
             borderSide: BorderSide(color: theme.accentColor)),
-        hintText: BuildProperty.hasFloatingPlaceholder ? null : widget.label,
-        labelText: BuildProperty.hasFloatingPlaceholder ? widget.label : null,
+        // hintText: BuildProperty.hasFloatingPlaceholder ? null : widget.label,
+        // labelText: BuildProperty.hasFloatingPlaceholder ? widget.label : null,
+        hintText: false ? null : widget.label,
+        labelText: false ? widget.label : null,
         suffixIcon: widget.isPassword
             ? SizedBox(
                 height: 50.0,

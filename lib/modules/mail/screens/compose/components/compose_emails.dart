@@ -160,7 +160,7 @@ class ComposeEmailsState extends BState<ComposeEmails> {
     final dropDownWidth = screenWidth / 1.25;
 
     TextSpan _searchMatch(String match) {
-      final color = theme.textTheme.body1.color;
+      final color = theme.textTheme.bodyText2.color;
       final posRes = TextStyle(fontWeight: FontWeight.w700, color: color);
       final negRes = TextStyle(fontWeight: FontWeight.w400, color: color);
 
@@ -287,7 +287,7 @@ class ComposeEmailsState extends BState<ComposeEmails> {
               children: <Widget>[
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 0.0),
-                  child: Text(widget.label, style: theme.textTheme.subhead),
+                  child: Text(widget.label, style: theme.textTheme.subtitle1),
                 ),
                 SizedBox(width: 8.0),
                 Flexible(

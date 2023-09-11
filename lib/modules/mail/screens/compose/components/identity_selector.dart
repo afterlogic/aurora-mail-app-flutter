@@ -107,7 +107,7 @@ class _IdentitySelectorState extends BState<IdentitySelector> {
                     padding: const EdgeInsets.symmetric(vertical: 0.0),
                     child: Text(
                       widget.label,
-                      style: theme.textTheme.subhead,
+                      style: theme.textTheme.subtitle1,
                     ),
                   ),
                   SizedBox(width: 8.0),

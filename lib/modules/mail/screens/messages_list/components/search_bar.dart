@@ -57,7 +57,7 @@ class SearchBarState extends BState<SearchBar> {
             autofocus: true,
             decoration: InputDecoration.collapsed(
               hintText: i18n(context, S.messages_list_app_bar_search),
-              hintStyle: theme.textTheme.display1,
+              hintStyle: theme.textTheme.headline4,
             ),
             textInputAction: TextInputAction.search,
             onChanged: _getMessages,
@@ -80,11 +80,11 @@ class SearchBarState extends BState<SearchBar> {
         key: Key("search_mail_app_bar"),
         leading: Icon(Icons.search),
         title: TextField(
-          style: theme.textTheme.body1,
+          style: theme.textTheme.bodyText2,
           autofocus: true,
           decoration: InputDecoration.collapsed(
             hintText: i18n(context, S.messages_list_app_bar_search),
-            hintStyle: theme.textTheme.display1,
+            hintStyle: theme.textTheme.headline4,
           ),
           onChanged: _getMessages,
           controller: widget.searchCtrl,
