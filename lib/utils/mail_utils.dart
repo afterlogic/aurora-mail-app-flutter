@@ -679,13 +679,13 @@ class='selectable'>${attachment.fileName}</span>
 
   static String _getInfoIcon(String color) =>
       """<svg id="information" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20">
-  <g id="Group_32" data-name="Group 32">
-  <g id="Group_31" data-name="Group 31">
+  <g id="Group_32" data-name="Group">
+  <g id="Group_31" data-name="Group">
   <path id="Path_53" data-name="Path 53" d="M10,0A10,10,0,1,0,20,10,9.988,9.988,0,0,0,10,0Zm0,18.34A8.34,8.34,0,1,1,18.34,10,8.354,8.354,0,0,1,10,18.34Z" fill="$color"/>
   </g>
   </g>
-  <g id="Group_34" data-name="Group 34" transform="translate(9.135 7.761)">
-  <g id="Group_33" data-name="Group 33">
+  <g id="Group_34" data-name="Group" transform="translate(9.135 7.761)">
+  <g id="Group_33" data-name="Group">
   <path id="Path_54" data-name="Path 54" d="M231.307,192a.887.887,0,0,0-.907.859v6.961a.91.91,0,0,0,1.814.043v-7A.887.887,0,0,0,231.307,192Z" transform="translate(-230.4 -192)" fill="$color"/>
   </g>
   </g>

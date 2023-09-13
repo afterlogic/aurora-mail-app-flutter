@@ -281,10 +281,16 @@ class MailApi {
       onError: () => onDownloadEnd(null),
     );
 
+    print(_mailModule.hostname + '/' + attachment.downloadUrl);
+    print(downloadsDirectory);
+    print(attachment.fileName);
+    print(headers);
+
     final taskId = await FlutterDownloader.enqueue(
-      url: _mailModule.hostname + attachment.downloadUrl,
-      savedDir: downloadsDirectory,
+      url: _mailModule.hostname + '/' + attachment.downloadUrl,
+      savedDir: downloadsDirectory + '/',
       fileName: attachment.fileName,
+      saveInPublicStorage: true,
       headers: headers,
     );
     attachment.add(taskId, FlutterDownloader.cancel);

@@ -1,7 +1,7 @@
 name: aurora_mail
 description: Mail client for Aurora Mail.
 
-version: "2.3.3+246"
+version: "2.3.3+249"
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -31,7 +31,7 @@ dependencies:
   shared_preferences: 0.5.6+3
 
   # file downloading/uploading
-  file_picker: 4.5.0 # > 4.6.1
+  file_picker: 4.6.1 # > ^5.2.6
   flutter_uploader: 1.2.1
   flutter_downloader: 1.7.4
   share: ^2.0.4
@@ -55,8 +55,8 @@ dependencies:
   uuid: ^3.0.5
   intl: 0.17.0
   filesize: 1.0.4
-  permission_handler: 8.1.4+2
-  permission_handler_platform_interface: 3.6.1
+  permission_handler: ^11.0.0
+  permission_handler_platform_interface: ^3.11.5
   url_launcher: 6.0.9
   connectivity: 3.0.6
   package_info: 0.4.0+16

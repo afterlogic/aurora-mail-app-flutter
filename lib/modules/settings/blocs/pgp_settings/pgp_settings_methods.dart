@@ -109,7 +109,8 @@ class PgpSettingsMethods {
     }
     final dirPath = (await getDownloadDirectory());
     print('!!! dirPath = $dirPath}');
-    return dirPath + Platform.pathSeparator + KEY_FOLDER;
+    // return dirPath + Platform.pathSeparator + KEY_FOLDER;
+    return dirPath;
   }
 
   Future deleteKey(String name, String mail, bool isPrivate) async {
