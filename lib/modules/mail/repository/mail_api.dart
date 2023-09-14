@@ -218,7 +218,7 @@ class MailApi {
         )
       ],
       method: UploadMethod.POST,
-      headers: headers,
+      headers: headers as Map<String, String>,
       data: body.toMap("Mail"),
       showNotification: false,
       tag: fileName,
@@ -291,7 +291,7 @@ class MailApi {
       savedDir: downloadsDirectory + '/',
       fileName: attachment.fileName,
       saveInPublicStorage: true,
-      headers: headers,
+      headers: headers as Map<String, String>,
     );
     attachment.add(taskId, FlutterDownloader.cancel);
   }
@@ -303,7 +303,7 @@ class MailApi {
     final headers = await _mailModule.getAuthHeaders();
 
     headers.forEach((key, value) {
-      request.headers.add(key, value);
+      request.headers.add(key as String, value);
     });
 
     final response = await request.close();

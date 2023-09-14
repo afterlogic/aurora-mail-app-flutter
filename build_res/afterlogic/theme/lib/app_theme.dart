@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:aurora_mail/utils/base_state.dart';
 
 import 'app_color.dart';
 
