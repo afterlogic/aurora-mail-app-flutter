@@ -47,7 +47,6 @@ class PgpSettingsMethods {
 
   Future<File> downloadKey(PgpKey key) async {
     try {
-      await getStoragePermissions();
       final fileName =
           "${((key.name.startsWith(" ") ? key.name.substring(1) : key.name) + " ") ?? ""}${key.mail} PGP ${key.isPrivate ? "private" : "public"} key.asc"
               .replaceAll(Platform.pathSeparator, "");
@@ -67,7 +66,6 @@ class PgpSettingsMethods {
 
   Future<File> downloadKeys(List<PgpKey> keys) async {
     try {
-      await getStoragePermissions();
       final fileName = "PGP public keys.asc";
       final file = File(
         await _keysFolderPath() + Platform.pathSeparator + fileName,
@@ -101,12 +99,6 @@ class PgpSettingsMethods {
   }
 
   Future<String> _keysFolderPath() async {
-    try {
-      await getStoragePermissions();
-    } catch (err) {
-      print('ERROR PgpSettingsMethods._keysFolderPath(): $err');
-      rethrow;
-    }
     final dirPath = (await getDownloadDirectory());
     print('!!! dirPath = $dirPath}');
     // return dirPath + Platform.pathSeparator + KEY_FOLDER;
@@ -157,11 +149,6 @@ class PgpSettingsMethods {
   }
 
   Future<String> pickFileContent() async {
-    try {
-      await getStoragePermissions();
-    } catch (err) {
-      rethrow;
-    }
     var content = "";
     final result = Platform.isIOS
         ? (await FilePicker.platform.pickFiles(

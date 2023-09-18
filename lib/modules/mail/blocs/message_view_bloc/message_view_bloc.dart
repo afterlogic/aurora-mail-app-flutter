@@ -53,13 +53,6 @@ class MessageViewBloc extends Bloc<MessageViewEvent, MessageViewState> {
 
   Stream<MessageViewState> _downloadAttachment(
       DownloadAttachment event) async* {
-    try {
-      await getStoragePermissions();
-    } catch (err) {
-      yield MessagesViewError(ErrorToShow(err));
-      return;
-    }
-
     _methods.downloadAttachment(
       event.attachment,
       rect: event.rect,
@@ -76,12 +69,6 @@ class MessageViewBloc extends Bloc<MessageViewEvent, MessageViewState> {
 
   downloadAttachment(
       MailAttachment attachment, Function(String) onEnd, Rect rect) async {
-    try {
-      await getStoragePermissions();
-    } catch (err) {
-      return;
-    }
-
     _methods.downloadAttachment(
       attachment,
       rect: rect,
