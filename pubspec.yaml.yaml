@@ -31,7 +31,7 @@ dependencies:
   shared_preferences: 0.5.6+3
 
   # file downloading/uploading
-  file_picker: 4.6.1
+  file_picker: 5.2.10
   flutter_uploader: 1.2.1
   flutter_downloader: 1.7.4
   share: ^2.0.4
@@ -42,7 +42,7 @@ dependencies:
   flutter_typeahead: 1.8.0
 
   # ui
-  flutter_svg: 0.21.0
+  flutter_svg: 1.1.2
   material_design_icons_flutter: 3.4.5045+1
   webview_flutter: 1.0.7
   flutter_speed_dial: 1.2.5
@@ -62,7 +62,7 @@ dependencies:
   package_info: 0.4.0+16
   time_machine: 0.9.16
   device_id: 0.2.0
-  device_info_plus: ^3.1.1
+  device_info_plus: ^5.0.0
   uni_links: 0.4.0
   flutter_custom_tabs: 1.0.3
   # crashlytics
