@@ -289,7 +289,7 @@ class MailApi {
     final taskId = await FlutterDownloader.enqueue(
       url: _mailModule.hostname + '/' + attachment.downloadUrl,
       savedDir: downloadsDirectory + '/',
-      fileName: attachment.fileName,
+      fileName: '${attachment.fileName}_${DateTime.now().millisecondsSinceEpoch}',
       saveInPublicStorage: true,
       headers: headers as Map<String, String>,
     );
