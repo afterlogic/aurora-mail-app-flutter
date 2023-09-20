@@ -15,6 +15,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_uploader/flutter_uploader.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
+
 import 'package:share/share.dart';
 import 'package:webmail_api_client/webmail_api_client.dart';
 
@@ -286,10 +288,12 @@ class MailApi {
     print(attachment.fileName);
     print(headers);
 
+    final _regexpBeforeDot = RegExp(r'^[^.]*');
+
     final taskId = await FlutterDownloader.enqueue(
       url: _mailModule.hostname + '/' + attachment.downloadUrl,
       savedDir: downloadsDirectory + '/',
-      fileName: '${attachment.fileName}_${DateTime.now().millisecondsSinceEpoch}',
+      fileName: '${_regexpBeforeDot.stringMatch(attachment.fileName).toString()}',
       saveInPublicStorage: true,
       headers: headers as Map<String, String>,
     );
