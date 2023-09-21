@@ -33,7 +33,7 @@ dependencies:
   # file downloading/uploading
   file_picker: 5.2.10
   flutter_uploader: 1.2.1
-  flutter_downloader: 1.7.4
+  flutter_downloader: 1.10.5
   share: ^2.0.4
   path_provider: 2.0.2
   video_thumbnail: 0.2.1

@@ -95,7 +95,7 @@ class MailAttachment {
 
   static void downloadCallback(
     String id,
-    DownloadTaskStatus status,
+    int status,
     int progress,
   ) {
     print("Not called");

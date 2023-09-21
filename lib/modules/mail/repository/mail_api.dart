@@ -288,12 +288,12 @@ class MailApi {
     print(attachment.fileName);
     print(headers);
 
-    final _regexpBeforeDot = RegExp(r'^[^.]*');
+    final _regexpBeforeDot = RegExp(r'^.*(?=\.)');
 
     final taskId = await FlutterDownloader.enqueue(
       url: _mailModule.hostname + '/' + attachment.downloadUrl,
-      savedDir: downloadsDirectory + '/',
-      fileName: '${_regexpBeforeDot.stringMatch(attachment.fileName).toString()}',
+      savedDir: downloadsDirectory,
+      // fileName: '${_regexpBeforeDot.stringMatch(attachment.fileName).toString()}_${DateTime.now().millisecondsSinceEpoch}',
       saveInPublicStorage: true,
       headers: headers as Map<String, String>,
     );
