@@ -163,6 +163,10 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
     _messagesListBloc = BlocProvider.of<MessagesListBloc>(context);
     _mailBloc = BlocProvider.of<MailBloc>(context);
     _contactsBloc = BlocProvider.of<ContactsBloc>(context);
+    _messagesListBloc.setUserAndAccount(
+      user: authBloc.currentUser,
+      account: authBloc.currentAccount,
+    );
     _mailBloc.init(
       authBloc.currentUser,
       authBloc.currentAccount,

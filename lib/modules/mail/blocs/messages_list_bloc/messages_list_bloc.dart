@@ -11,16 +11,24 @@ import 'bloc.dart';
 import 'messages_list_methods.dart';
 
 class MessagesListBloc extends Bloc<MessagesListEvent, MessagesListState> {
-  final User user;
-  final Account account;
+  User _user;
+  Account _account;
   MessagesListMethods _methods;
 
   List<SearchParams> searchParams = [];
 
   String searchText = '';
 
-  MessagesListBloc({@required this.user, @required this.account}) {
-    _methods = new MessagesListMethods(user: user, account: account);
+  MessagesListBloc({@required User user, @required Account account}) {
+    setUserAndAccount(user: user, account: account);
+  }
+
+  Account get account => _account;
+
+  void setUserAndAccount({@required User user, @required Account account}) {
+    _user = user;
+    _account = account;
+    _methods = new MessagesListMethods(user: _user, account: _account);
   }
 
   @override
@@ -51,8 +59,8 @@ class MessagesListBloc extends Bloc<MessagesListEvent, MessagesListState> {
             event.filter == MessagesFilter.starred,
             event.filter == MessagesFilter.unread,
             searchParams,
-            user,
-            account,
+            _user,
+            _account,
             page,
           );
 
