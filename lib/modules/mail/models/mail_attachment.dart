@@ -79,7 +79,6 @@ class MailAttachment {
       }
     });
     FlutterDownloader.registerCallback(downloadCallback);
-
     onDownloadStart();
   }
 
@@ -99,6 +98,7 @@ class MailAttachment {
     int progress,
   ) {
     print("Not called");
+    ///Status 4 - error
     final SendPort send =
         IsolateNameServer.lookupPortByName(_DOWNLOAD_PORT_NAME);
     send.send([id, status, progress]);
