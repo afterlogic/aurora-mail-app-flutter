@@ -4,8 +4,6 @@ _files:
   - pubspec.yaml.yaml
   #  - lib/di/di.dart.temp
   - android/app/src/main/res/values/.build_res.xml.temp
-  - sh/build_apk.sh.temp
-  - sh/build_appbundle.sh.temp
   - android/build_variable.properties.temp
   - android/app/src/main/AndroidManifest.xml.temp
   - ios/BuildVariable.xcconfig.temp
