@@ -233,7 +233,7 @@ class MessageWebViewState extends BState<MessageWebView> {
           {"fileName": attachment.fileName});
       Fluttertoast.showToast(
         msg: msg,
-        timeInSecForIos: 2,
+        timeInSecForIosWeb: 2,
         backgroundColor:
             Platform.isIOS ? theme.disabledColor.withOpacity(0.5) : null,
       );
@@ -286,7 +286,7 @@ class MessageWebViewState extends BState<MessageWebView> {
           {"fileName": attachment.fileName});
       Fluttertoast.showToast(
         msg: msg,
-        timeInSecForIos: 2,
+        timeInSecForIosWeb: 2,
         backgroundColor:
             Platform.isIOS ? theme.disabledColor.withOpacity(0.5) : null,
       );

@@ -36,7 +36,7 @@ class _AttachmentState extends BState<Attachment> {
           {"fileName": widget.attachment.fileName});
       Fluttertoast.showToast(
         msg: msg,
-        timeInSecForIos: 2,
+        timeInSecForIosWeb: 2,
         backgroundColor:
             Platform.isIOS ? theme.disabledColor.withOpacity(0.5) : null,
       );
