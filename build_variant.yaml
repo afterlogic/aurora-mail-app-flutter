@@ -4,8 +4,6 @@ _files:
   - pubspec.yaml.yaml
   #  - lib/di/di.dart.temp
   - android/app/src/main/res/values/.build_res.xml.temp
-  - sh/build_apk.sh.temp
-  - sh/build_appbundle.sh.temp
   - android/build_variable.properties.temp
   - android/app/src/main/AndroidManifest.xml.temp
   - ios/BuildVariable.xcconfig.temp
@@ -35,7 +33,7 @@ _iosAppId: "{{_appId}}"
 _appleGroupId: ""
 packageName: "{{_appId}}"
 version: ""
-build: 250
+build: 252
 
 icon: "{{image_dir}}/icon.png"
 main_logo: "{{image_dir}}/main_logo.png"

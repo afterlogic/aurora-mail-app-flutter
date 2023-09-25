@@ -1,2 +1,0 @@
-flutter build apk
-mv build/app/outputs/apk/release/app-release.apk build/{{_appId}}.{{version}}+{{build}}.apk

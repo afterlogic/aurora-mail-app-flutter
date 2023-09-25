@@ -1,2 +1,0 @@
-flutter build appbundle
-mv build/app/outputs/bundle/release/app-release.aab build/{{_appId}}.{{version}}+{{build}}.aab
