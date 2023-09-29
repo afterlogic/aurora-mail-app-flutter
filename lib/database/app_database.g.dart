@@ -6,7 +6,7 @@ part of 'app_database.dart';
 // MoorGenerator
 // **************************************************************************
 
-// ignore_for_file: unnecessary_brace_in_string_interps, unnecessary_this
+// ignore_for_file: type=lint
 class Message extends DataClass implements Insertable<Message> {
   final int localId;
   final int uid;
@@ -887,49 +887,63 @@ class Message extends DataClass implements Insertable<Message> {
   }
 
   @override
-  int get hashCode => $mrjf($mrjc(
-      localId.hashCode,
-      $mrjc(
-          uid.hashCode,
-          $mrjc(
-              accountEntityId.hashCode,
-              $mrjc(
-                  userLocalId.hashCode,
-                  $mrjc(
-                      uniqueUidInFolder.hashCode,
-                      $mrjc(
-                          parentUid.hashCode,
-                          $mrjc(
-                              messageId.hashCode,
-                              $mrjc(
-                                  folder.hashCode,
-                                  $mrjc(
-                                      flagsInJson.hashCode,
-                                      $mrjc(
-                                          hasThread.hashCode,
-                                          $mrjc(
-                                              subject.hashCode,
-                                              $mrjc(
-                                                  size.hashCode,
-                                                  $mrjc(
-                                                      textSize.hashCode,
-                                                      $mrjc(
-                                                          truncated.hashCode,
-                                                          $mrjc(
-                                                              internalTimeStampInUTC
-                                                                  .hashCode,
-                                                              $mrjc(
-                                                                  receivedOrDateTimeStampInUTC
-                                                                      .hashCode,
-                                                                  $mrjc(
-                                                                      timeStampInUTC
-                                                                          .hashCode,
-                                                                      $mrjc(
-                                                                          toToDisplay
-                                                                              .hashCode,
-                                                                          $mrjc(
-                                                                              toInJson.hashCode,
-                                                                              $mrjc(fromInJson.hashCode, $mrjc(fromToDisplay.hashCode, $mrjc(ccInJson.hashCode, $mrjc(bccInJson.hashCode, $mrjc(senderInJson.hashCode, $mrjc(replyToInJson.hashCode, $mrjc(hasAttachments.hashCode, $mrjc(hasVcardAttachment.hashCode, $mrjc(hasIcalAttachment.hashCode, $mrjc(importance.hashCode, $mrjc(draftInfoInJson.hashCode, $mrjc(sensitivity.hashCode, $mrjc(downloadAsEmlUrl.hashCode, $mrjc(hash.hashCode, $mrjc(headers.hashCode, $mrjc(inReplyTo.hashCode, $mrjc(references.hashCode, $mrjc(readingConfirmationAddressee.hashCode, $mrjc(htmlBody.hashCode, $mrjc(rawBody.hashCode, $mrjc(bodyForSearch.hashCode, $mrjc(rtl.hashCode, $mrjc(extendInJson.hashCode, $mrjc(safety.hashCode, $mrjc(hasExternals.hashCode, $mrjc(foundedCIDsInJson.hashCode, $mrjc(foundedContentLocationUrlsInJson.hashCode, $mrjc(attachmentsInJson.hashCode, $mrjc(toForSearch.hashCode, $mrjc(fromForSearch.hashCode, $mrjc(ccForSearch.hashCode, $mrjc(bccForSearch.hashCode, $mrjc(attachmentsForSearch.hashCode, $mrjc(customInJson.hashCode, $mrjc(isHtml.hashCode, hasBody.hashCode)))))))))))))))))))))))))))))))))))))))))))))))))))))));
+  int get hashCode => Object.hashAll([
+        localId,
+        uid,
+        accountEntityId,
+        userLocalId,
+        uniqueUidInFolder,
+        parentUid,
+        messageId,
+        folder,
+        flagsInJson,
+        hasThread,
+        subject,
+        size,
+        textSize,
+        truncated,
+        internalTimeStampInUTC,
+        receivedOrDateTimeStampInUTC,
+        timeStampInUTC,
+        toToDisplay,
+        toInJson,
+        fromInJson,
+        fromToDisplay,
+        ccInJson,
+        bccInJson,
+        senderInJson,
+        replyToInJson,
+        hasAttachments,
+        hasVcardAttachment,
+        hasIcalAttachment,
+        importance,
+        draftInfoInJson,
+        sensitivity,
+        downloadAsEmlUrl,
+        hash,
+        headers,
+        inReplyTo,
+        references,
+        readingConfirmationAddressee,
+        htmlBody,
+        rawBody,
+        bodyForSearch,
+        rtl,
+        extendInJson,
+        safety,
+        hasExternals,
+        foundedCIDsInJson,
+        foundedContentLocationUrlsInJson,
+        attachmentsInJson,
+        toForSearch,
+        fromForSearch,
+        ccForSearch,
+        bccForSearch,
+        attachmentsForSearch,
+        customInJson,
+        isHtml,
+        hasBody
+      ]);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1657,15 +1671,16 @@ class MailCompanion extends UpdateCompanion<Message> {
 }
 
 class $MailTable extends Mail with TableInfo<$MailTable, Message> {
-  final GeneratedDatabase _db;
+  @override
+  final GeneratedDatabase attachedDatabase;
   final String _alias;
-  $MailTable(this._db, [this._alias]);
+  $MailTable(this.attachedDatabase, [this._alias]);
   final VerificationMeta _localIdMeta = const VerificationMeta('localId');
   GeneratedColumn<int> _localId;
   @override
   GeneratedColumn<int> get localId =>
       _localId ??= GeneratedColumn<int>('local_id', aliasedName, false,
-          typeName: 'INTEGER',
+          type: const IntType(),
           requiredDuringInsert: false,
           defaultConstraints: 'PRIMARY KEY AUTOINCREMENT');
   final VerificationMeta _uidMeta = const VerificationMeta('uid');
@@ -1673,28 +1688,28 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
   @override
   GeneratedColumn<int> get uid =>
       _uid ??= GeneratedColumn<int>('uid', aliasedName, false,
-          typeName: 'INTEGER', requiredDuringInsert: true);
+          type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _accountEntityIdMeta =
       const VerificationMeta('accountEntityId');
   GeneratedColumn<int> _accountEntityId;
   @override
   GeneratedColumn<int> get accountEntityId => _accountEntityId ??=
       GeneratedColumn<int>('account_entity_id', aliasedName, false,
-          typeName: 'INTEGER', requiredDuringInsert: true);
+          type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _userLocalIdMeta =
       const VerificationMeta('userLocalId');
   GeneratedColumn<int> _userLocalId;
   @override
   GeneratedColumn<int> get userLocalId =>
       _userLocalId ??= GeneratedColumn<int>('user_local_id', aliasedName, false,
-          typeName: 'INTEGER', requiredDuringInsert: true);
+          type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _uniqueUidInFolderMeta =
       const VerificationMeta('uniqueUidInFolder');
   GeneratedColumn<String> _uniqueUidInFolder;
   @override
   GeneratedColumn<String> get uniqueUidInFolder => _uniqueUidInFolder ??=
       GeneratedColumn<String>('unique_uid_in_folder', aliasedName, false,
-          typeName: 'TEXT',
+          type: const StringType(),
           requiredDuringInsert: true,
           $customConstraints: 'UNIQUE');
   final VerificationMeta _parentUidMeta = const VerificationMeta('parentUid');
@@ -1702,32 +1717,32 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
   @override
   GeneratedColumn<int> get parentUid =>
       _parentUid ??= GeneratedColumn<int>('parent_uid', aliasedName, true,
-          typeName: 'INTEGER', requiredDuringInsert: false);
+          type: const IntType(), requiredDuringInsert: false);
   final VerificationMeta _messageIdMeta = const VerificationMeta('messageId');
   GeneratedColumn<String> _messageId;
   @override
   GeneratedColumn<String> get messageId =>
       _messageId ??= GeneratedColumn<String>('message_id', aliasedName, true,
-          typeName: 'TEXT', requiredDuringInsert: false);
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _folderMeta = const VerificationMeta('folder');
   GeneratedColumn<String> _folder;
   @override
   GeneratedColumn<String> get folder =>
       _folder ??= GeneratedColumn<String>('folder', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _flagsInJsonMeta =
       const VerificationMeta('flagsInJson');
   GeneratedColumn<String> _flagsInJson;
   @override
   GeneratedColumn<String> get flagsInJson => _flagsInJson ??=
       GeneratedColumn<String>('flags_in_json', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _hasThreadMeta = const VerificationMeta('hasThread');
   GeneratedColumn<bool> _hasThread;
   @override
   GeneratedColumn<bool> get hasThread =>
       _hasThread ??= GeneratedColumn<bool>('has_thread', aliasedName, false,
-          typeName: 'INTEGER',
+          type: const BoolType(),
           requiredDuringInsert: true,
           defaultConstraints: 'CHECK (has_thread IN (0, 1))');
   final VerificationMeta _subjectMeta = const VerificationMeta('subject');
@@ -1735,25 +1750,25 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
   @override
   GeneratedColumn<String> get subject =>
       _subject ??= GeneratedColumn<String>('subject', aliasedName, true,
-          typeName: 'TEXT', requiredDuringInsert: false);
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _sizeMeta = const VerificationMeta('size');
   GeneratedColumn<int> _size;
   @override
   GeneratedColumn<int> get size =>
       _size ??= GeneratedColumn<int>('size', aliasedName, true,
-          typeName: 'INTEGER', requiredDuringInsert: false);
+          type: const IntType(), requiredDuringInsert: false);
   final VerificationMeta _textSizeMeta = const VerificationMeta('textSize');
   GeneratedColumn<int> _textSize;
   @override
   GeneratedColumn<int> get textSize =>
       _textSize ??= GeneratedColumn<int>('text_size', aliasedName, true,
-          typeName: 'INTEGER', requiredDuringInsert: false);
+          type: const IntType(), requiredDuringInsert: false);
   final VerificationMeta _truncatedMeta = const VerificationMeta('truncated');
   GeneratedColumn<bool> _truncated;
   @override
   GeneratedColumn<bool> get truncated =>
       _truncated ??= GeneratedColumn<bool>('truncated', aliasedName, true,
-          typeName: 'INTEGER',
+          type: const BoolType(),
           requiredDuringInsert: false,
           defaultConstraints: 'CHECK (truncated IN (0, 1))');
   final VerificationMeta _internalTimeStampInUTCMeta =
@@ -1762,7 +1777,7 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
   @override
   GeneratedColumn<int> get internalTimeStampInUTC => _internalTimeStampInUTC ??=
       GeneratedColumn<int>('internal_time_stamp_in_u_t_c', aliasedName, true,
-          typeName: 'INTEGER', requiredDuringInsert: false);
+          type: const IntType(), requiredDuringInsert: false);
   final VerificationMeta _receivedOrDateTimeStampInUTCMeta =
       const VerificationMeta('receivedOrDateTimeStampInUTC');
   GeneratedColumn<int> _receivedOrDateTimeStampInUTC;
@@ -1770,73 +1785,73 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
   GeneratedColumn<int> get receivedOrDateTimeStampInUTC =>
       _receivedOrDateTimeStampInUTC ??= GeneratedColumn<int>(
           'received_or_date_time_stamp_in_u_t_c', aliasedName, true,
-          typeName: 'INTEGER', requiredDuringInsert: false);
+          type: const IntType(), requiredDuringInsert: false);
   final VerificationMeta _timeStampInUTCMeta =
       const VerificationMeta('timeStampInUTC');
   GeneratedColumn<int> _timeStampInUTC;
   @override
   GeneratedColumn<int> get timeStampInUTC => _timeStampInUTC ??=
       GeneratedColumn<int>('time_stamp_in_u_t_c', aliasedName, true,
-          typeName: 'INTEGER', requiredDuringInsert: false);
+          type: const IntType(), requiredDuringInsert: false);
   final VerificationMeta _toToDisplayMeta =
       const VerificationMeta('toToDisplay');
   GeneratedColumn<String> _toToDisplay;
   @override
   GeneratedColumn<String> get toToDisplay => _toToDisplay ??=
       GeneratedColumn<String>('to_to_display', aliasedName, true,
-          typeName: 'TEXT', requiredDuringInsert: false);
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _toInJsonMeta = const VerificationMeta('toInJson');
   GeneratedColumn<String> _toInJson;
   @override
   GeneratedColumn<String> get toInJson =>
       _toInJson ??= GeneratedColumn<String>('to_in_json', aliasedName, true,
-          typeName: 'TEXT', requiredDuringInsert: false);
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _fromInJsonMeta = const VerificationMeta('fromInJson');
   GeneratedColumn<String> _fromInJson;
   @override
   GeneratedColumn<String> get fromInJson =>
       _fromInJson ??= GeneratedColumn<String>('from_in_json', aliasedName, true,
-          typeName: 'TEXT', requiredDuringInsert: false);
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _fromToDisplayMeta =
       const VerificationMeta('fromToDisplay');
   GeneratedColumn<String> _fromToDisplay;
   @override
   GeneratedColumn<String> get fromToDisplay => _fromToDisplay ??=
       GeneratedColumn<String>('from_to_display', aliasedName, true,
-          typeName: 'TEXT', requiredDuringInsert: false);
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _ccInJsonMeta = const VerificationMeta('ccInJson');
   GeneratedColumn<String> _ccInJson;
   @override
   GeneratedColumn<String> get ccInJson =>
       _ccInJson ??= GeneratedColumn<String>('cc_in_json', aliasedName, true,
-          typeName: 'TEXT', requiredDuringInsert: false);
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _bccInJsonMeta = const VerificationMeta('bccInJson');
   GeneratedColumn<String> _bccInJson;
   @override
   GeneratedColumn<String> get bccInJson =>
       _bccInJson ??= GeneratedColumn<String>('bcc_in_json', aliasedName, true,
-          typeName: 'TEXT', requiredDuringInsert: false);
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _senderInJsonMeta =
       const VerificationMeta('senderInJson');
   GeneratedColumn<String> _senderInJson;
   @override
   GeneratedColumn<String> get senderInJson => _senderInJson ??=
       GeneratedColumn<String>('sender_in_json', aliasedName, true,
-          typeName: 'TEXT', requiredDuringInsert: false);
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _replyToInJsonMeta =
       const VerificationMeta('replyToInJson');
   GeneratedColumn<String> _replyToInJson;
   @override
   GeneratedColumn<String> get replyToInJson => _replyToInJson ??=
       GeneratedColumn<String>('reply_to_in_json', aliasedName, true,
-          typeName: 'TEXT', requiredDuringInsert: false);
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _hasAttachmentsMeta =
       const VerificationMeta('hasAttachments');
   GeneratedColumn<bool> _hasAttachments;
   @override
   GeneratedColumn<bool> get hasAttachments => _hasAttachments ??=
       GeneratedColumn<bool>('has_attachments', aliasedName, true,
-          typeName: 'INTEGER',
+          type: const BoolType(),
           requiredDuringInsert: false,
           defaultConstraints: 'CHECK (has_attachments IN (0, 1))');
   final VerificationMeta _hasVcardAttachmentMeta =
@@ -1845,7 +1860,7 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
   @override
   GeneratedColumn<bool> get hasVcardAttachment => _hasVcardAttachment ??=
       GeneratedColumn<bool>('has_vcard_attachment', aliasedName, true,
-          typeName: 'INTEGER',
+          type: const BoolType(),
           requiredDuringInsert: false,
           defaultConstraints: 'CHECK (has_vcard_attachment IN (0, 1))');
   final VerificationMeta _hasIcalAttachmentMeta =
@@ -1854,7 +1869,7 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
   @override
   GeneratedColumn<bool> get hasIcalAttachment => _hasIcalAttachment ??=
       GeneratedColumn<bool>('has_ical_attachment', aliasedName, true,
-          typeName: 'INTEGER',
+          type: const BoolType(),
           requiredDuringInsert: false,
           defaultConstraints: 'CHECK (has_ical_attachment IN (0, 1))');
   final VerificationMeta _importanceMeta = const VerificationMeta('importance');
@@ -1862,52 +1877,52 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
   @override
   GeneratedColumn<int> get importance =>
       _importance ??= GeneratedColumn<int>('importance', aliasedName, true,
-          typeName: 'INTEGER', requiredDuringInsert: false);
+          type: const IntType(), requiredDuringInsert: false);
   final VerificationMeta _draftInfoInJsonMeta =
       const VerificationMeta('draftInfoInJson');
   GeneratedColumn<String> _draftInfoInJson;
   @override
   GeneratedColumn<String> get draftInfoInJson => _draftInfoInJson ??=
       GeneratedColumn<String>('draft_info_in_json', aliasedName, true,
-          typeName: 'TEXT', requiredDuringInsert: false);
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _sensitivityMeta =
       const VerificationMeta('sensitivity');
   GeneratedColumn<int> _sensitivity;
   @override
   GeneratedColumn<int> get sensitivity =>
       _sensitivity ??= GeneratedColumn<int>('sensitivity', aliasedName, true,
-          typeName: 'INTEGER', requiredDuringInsert: false);
+          type: const IntType(), requiredDuringInsert: false);
   final VerificationMeta _downloadAsEmlUrlMeta =
       const VerificationMeta('downloadAsEmlUrl');
   GeneratedColumn<String> _downloadAsEmlUrl;
   @override
   GeneratedColumn<String> get downloadAsEmlUrl => _downloadAsEmlUrl ??=
       GeneratedColumn<String>('download_as_eml_url', aliasedName, true,
-          typeName: 'TEXT', requiredDuringInsert: false);
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _hashMeta = const VerificationMeta('hash');
   GeneratedColumn<String> _hash;
   @override
   GeneratedColumn<String> get hash =>
       _hash ??= GeneratedColumn<String>('hash', aliasedName, true,
-          typeName: 'TEXT', requiredDuringInsert: false);
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _headersMeta = const VerificationMeta('headers');
   GeneratedColumn<String> _headers;
   @override
   GeneratedColumn<String> get headers =>
       _headers ??= GeneratedColumn<String>('headers', aliasedName, true,
-          typeName: 'TEXT', requiredDuringInsert: false);
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _inReplyToMeta = const VerificationMeta('inReplyTo');
   GeneratedColumn<String> _inReplyTo;
   @override
   GeneratedColumn<String> get inReplyTo =>
       _inReplyTo ??= GeneratedColumn<String>('in_reply_to', aliasedName, true,
-          typeName: 'TEXT', requiredDuringInsert: false);
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _referencesMeta = const VerificationMeta('references');
   GeneratedColumn<String> _references;
   @override
   GeneratedColumn<String> get references => _references ??=
       GeneratedColumn<String>('message_references', aliasedName, true,
-          typeName: 'TEXT', requiredDuringInsert: false);
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _readingConfirmationAddresseeMeta =
       const VerificationMeta('readingConfirmationAddressee');
   GeneratedColumn<String> _readingConfirmationAddressee;
@@ -1915,13 +1930,13 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
   GeneratedColumn<String> get readingConfirmationAddressee =>
       _readingConfirmationAddressee ??= GeneratedColumn<String>(
           'reading_confirmation_addressee', aliasedName, true,
-          typeName: 'TEXT', requiredDuringInsert: false);
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _htmlBodyMeta = const VerificationMeta('htmlBody');
   GeneratedColumn<String> _htmlBody;
   @override
   GeneratedColumn<String> get htmlBody =>
       _htmlBody ??= GeneratedColumn<String>('html_body', aliasedName, false,
-          typeName: 'TEXT',
+          type: const StringType(),
           requiredDuringInsert: false,
           defaultValue: Constant(""));
   final VerificationMeta _rawBodyMeta = const VerificationMeta('rawBody');
@@ -1929,7 +1944,7 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
   @override
   GeneratedColumn<String> get rawBody =>
       _rawBody ??= GeneratedColumn<String>('raw_body', aliasedName, false,
-          typeName: 'TEXT',
+          type: const StringType(),
           requiredDuringInsert: false,
           defaultValue: Constant(""));
   final VerificationMeta _bodyForSearchMeta =
@@ -1938,7 +1953,7 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
   @override
   GeneratedColumn<String> get bodyForSearch => _bodyForSearch ??=
       GeneratedColumn<String>('body_for_search', aliasedName, true,
-          typeName: 'TEXT',
+          type: const StringType(),
           requiredDuringInsert: false,
           defaultValue: Constant(""));
   final VerificationMeta _rtlMeta = const VerificationMeta('rtl');
@@ -1946,7 +1961,7 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
   @override
   GeneratedColumn<bool> get rtl =>
       _rtl ??= GeneratedColumn<bool>('rtl', aliasedName, true,
-          typeName: 'INTEGER',
+          type: const BoolType(),
           requiredDuringInsert: false,
           defaultConstraints: 'CHECK (rtl IN (0, 1))');
   final VerificationMeta _extendInJsonMeta =
@@ -1955,13 +1970,13 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
   @override
   GeneratedColumn<String> get extendInJson => _extendInJson ??=
       GeneratedColumn<String>('extend_in_json', aliasedName, true,
-          typeName: 'TEXT', requiredDuringInsert: false);
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _safetyMeta = const VerificationMeta('safety');
   GeneratedColumn<bool> _safety;
   @override
   GeneratedColumn<bool> get safety =>
       _safety ??= GeneratedColumn<bool>('safety', aliasedName, true,
-          typeName: 'INTEGER',
+          type: const BoolType(),
           requiredDuringInsert: false,
           defaultConstraints: 'CHECK (safety IN (0, 1))');
   final VerificationMeta _hasExternalsMeta =
@@ -1970,7 +1985,7 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
   @override
   GeneratedColumn<bool> get hasExternals => _hasExternals ??=
       GeneratedColumn<bool>('has_externals', aliasedName, true,
-          typeName: 'INTEGER',
+          type: const BoolType(),
           requiredDuringInsert: false,
           defaultConstraints: 'CHECK (has_externals IN (0, 1))');
   final VerificationMeta _foundedCIDsInJsonMeta =
@@ -1979,7 +1994,7 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
   @override
   GeneratedColumn<String> get foundedCIDsInJson => _foundedCIDsInJson ??=
       GeneratedColumn<String>('founded_c_i_ds_in_json', aliasedName, true,
-          typeName: 'TEXT', requiredDuringInsert: false);
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _foundedContentLocationUrlsInJsonMeta =
       const VerificationMeta('foundedContentLocationUrlsInJson');
   GeneratedColumn<String> _foundedContentLocationUrlsInJson;
@@ -1987,62 +2002,62 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
   GeneratedColumn<String> get foundedContentLocationUrlsInJson =>
       _foundedContentLocationUrlsInJson ??= GeneratedColumn<String>(
           'founded_content_location_urls_in_json', aliasedName, true,
-          typeName: 'TEXT', requiredDuringInsert: false);
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _attachmentsInJsonMeta =
       const VerificationMeta('attachmentsInJson');
   GeneratedColumn<String> _attachmentsInJson;
   @override
   GeneratedColumn<String> get attachmentsInJson => _attachmentsInJson ??=
       GeneratedColumn<String>('attachments_in_json', aliasedName, true,
-          typeName: 'TEXT', requiredDuringInsert: false);
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _toForSearchMeta =
       const VerificationMeta('toForSearch');
   GeneratedColumn<String> _toForSearch;
   @override
   GeneratedColumn<String> get toForSearch => _toForSearch ??=
       GeneratedColumn<String>('to_for_search', aliasedName, true,
-          typeName: 'TEXT', requiredDuringInsert: false);
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _fromForSearchMeta =
       const VerificationMeta('fromForSearch');
   GeneratedColumn<String> _fromForSearch;
   @override
   GeneratedColumn<String> get fromForSearch => _fromForSearch ??=
       GeneratedColumn<String>('from_for_search', aliasedName, true,
-          typeName: 'TEXT', requiredDuringInsert: false);
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _ccForSearchMeta =
       const VerificationMeta('ccForSearch');
   GeneratedColumn<String> _ccForSearch;
   @override
   GeneratedColumn<String> get ccForSearch => _ccForSearch ??=
       GeneratedColumn<String>('cc_for_search', aliasedName, true,
-          typeName: 'TEXT', requiredDuringInsert: false);
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _bccForSearchMeta =
       const VerificationMeta('bccForSearch');
   GeneratedColumn<String> _bccForSearch;
   @override
   GeneratedColumn<String> get bccForSearch => _bccForSearch ??=
       GeneratedColumn<String>('bcc_for_search', aliasedName, true,
-          typeName: 'TEXT', requiredDuringInsert: false);
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _attachmentsForSearchMeta =
       const VerificationMeta('attachmentsForSearch');
   GeneratedColumn<String> _attachmentsForSearch;
   @override
   GeneratedColumn<String> get attachmentsForSearch => _attachmentsForSearch ??=
       GeneratedColumn<String>('attachments_for_search', aliasedName, true,
-          typeName: 'TEXT', requiredDuringInsert: false);
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _customInJsonMeta =
       const VerificationMeta('customInJson');
   GeneratedColumn<String> _customInJson;
   @override
   GeneratedColumn<String> get customInJson => _customInJson ??=
       GeneratedColumn<String>('custom_in_json', aliasedName, true,
-          typeName: 'TEXT', requiredDuringInsert: false);
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _isHtmlMeta = const VerificationMeta('isHtml');
   GeneratedColumn<bool> _isHtml;
   @override
   GeneratedColumn<bool> get isHtml =>
       _isHtml ??= GeneratedColumn<bool>('is_html', aliasedName, true,
-          typeName: 'INTEGER',
+          type: const BoolType(),
           requiredDuringInsert: false,
           defaultConstraints: 'CHECK (is_html IN (0, 1))');
   final VerificationMeta _hasBodyMeta = const VerificationMeta('hasBody');
@@ -2050,7 +2065,7 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
   @override
   GeneratedColumn<bool> get hasBody =>
       _hasBody ??= GeneratedColumn<bool>('has_body', aliasedName, false,
-          typeName: 'INTEGER',
+          type: const BoolType(),
           requiredDuringInsert: true,
           defaultConstraints: 'CHECK (has_body IN (0, 1))');
   @override
@@ -2433,13 +2448,13 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
   Set<GeneratedColumn> get $primaryKey => {localId};
   @override
   Message map(Map<String, dynamic> data, {String tablePrefix}) {
-    return Message.fromData(data, _db,
+    return Message.fromData(data, attachedDatabase,
         prefix: tablePrefix != null ? '$tablePrefix.' : null);
   }
 
   @override
   $MailTable createAlias(String alias) {
-    return $MailTable(_db, alias);
+    return $MailTable(attachedDatabase, alias);
   }
 }
 
@@ -2823,49 +2838,31 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
   }
 
   @override
-  int get hashCode => $mrjf($mrjc(
-      fullName.hashCode,
-      $mrjc(
-          accountLocalId.hashCode,
-          $mrjc(
-              userLocalId.hashCode,
-              $mrjc(
-                  guid.hashCode,
-                  $mrjc(
-                      parentGuid.hashCode,
-                      $mrjc(
-                          accountId.hashCode,
-                          $mrjc(
-                              type.hashCode,
-                              $mrjc(
-                                  folderOrder.hashCode,
-                                  $mrjc(
-                                      count.hashCode,
-                                      $mrjc(
-                                          unread.hashCode,
-                                          $mrjc(
-                                              name.hashCode,
-                                              $mrjc(
-                                                  fullNameRaw.hashCode,
-                                                  $mrjc(
-                                                      fullNameHash.hashCode,
-                                                      $mrjc(
-                                                          folderHash.hashCode,
-                                                          $mrjc(
-                                                              delimiter
-                                                                  .hashCode,
-                                                              $mrjc(
-                                                                  needsInfoUpdate
-                                                                      .hashCode,
-                                                                  $mrjc(
-                                                                      isSystemFolder
-                                                                          .hashCode,
-                                                                      $mrjc(
-                                                                          isSubscribed
-                                                                              .hashCode,
-                                                                          $mrjc(
-                                                                              isSelectable.hashCode,
-                                                                              $mrjc(folderExists.hashCode, $mrjc(extended.hashCode, $mrjc(alwaysRefresh.hashCode, namespace.hashCode)))))))))))))))))))))));
+  int get hashCode => Object.hashAll([
+        fullName,
+        accountLocalId,
+        userLocalId,
+        guid,
+        parentGuid,
+        accountId,
+        type,
+        folderOrder,
+        count,
+        unread,
+        name,
+        fullNameRaw,
+        fullNameHash,
+        folderHash,
+        delimiter,
+        needsInfoUpdate,
+        isSystemFolder,
+        isSubscribed,
+        isSelectable,
+        folderExists,
+        extended,
+        alwaysRefresh,
+        namespace
+      ]);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -3197,111 +3194,112 @@ class FoldersCompanion extends UpdateCompanion<LocalFolder> {
 }
 
 class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
-  final GeneratedDatabase _db;
+  @override
+  final GeneratedDatabase attachedDatabase;
   final String _alias;
-  $FoldersTable(this._db, [this._alias]);
+  $FoldersTable(this.attachedDatabase, [this._alias]);
   final VerificationMeta _fullNameMeta = const VerificationMeta('fullName');
   GeneratedColumn<String> _fullName;
   @override
   GeneratedColumn<String> get fullName =>
       _fullName ??= GeneratedColumn<String>('full_name', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _accountLocalIdMeta =
       const VerificationMeta('accountLocalId');
   GeneratedColumn<int> _accountLocalId;
   @override
   GeneratedColumn<int> get accountLocalId => _accountLocalId ??=
       GeneratedColumn<int>('account_local_id', aliasedName, false,
-          typeName: 'INTEGER', requiredDuringInsert: true);
+          type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _userLocalIdMeta =
       const VerificationMeta('userLocalId');
   GeneratedColumn<int> _userLocalId;
   @override
   GeneratedColumn<int> get userLocalId =>
       _userLocalId ??= GeneratedColumn<int>('user_local_id', aliasedName, false,
-          typeName: 'INTEGER', requiredDuringInsert: true);
+          type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _guidMeta = const VerificationMeta('guid');
   GeneratedColumn<String> _guid;
   @override
   GeneratedColumn<String> get guid =>
       _guid ??= GeneratedColumn<String>('guid', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _parentGuidMeta = const VerificationMeta('parentGuid');
   GeneratedColumn<String> _parentGuid;
   @override
   GeneratedColumn<String> get parentGuid =>
       _parentGuid ??= GeneratedColumn<String>('parent_guid', aliasedName, true,
-          typeName: 'TEXT', requiredDuringInsert: false);
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _accountIdMeta = const VerificationMeta('accountId');
   GeneratedColumn<int> _accountId;
   @override
   GeneratedColumn<int> get accountId =>
       _accountId ??= GeneratedColumn<int>('account_id', aliasedName, false,
-          typeName: 'INTEGER', requiredDuringInsert: true);
+          type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _typeMeta = const VerificationMeta('type');
   GeneratedColumn<int> _type;
   @override
   GeneratedColumn<int> get type =>
       _type ??= GeneratedColumn<int>('type', aliasedName, false,
-          typeName: 'INTEGER', requiredDuringInsert: true);
+          type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _folderOrderMeta =
       const VerificationMeta('folderOrder');
   GeneratedColumn<int> _folderOrder;
   @override
   GeneratedColumn<int> get folderOrder =>
       _folderOrder ??= GeneratedColumn<int>('folder_order', aliasedName, false,
-          typeName: 'INTEGER', requiredDuringInsert: true);
+          type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _countMeta = const VerificationMeta('count');
   GeneratedColumn<int> _count;
   @override
   GeneratedColumn<int> get count =>
       _count ??= GeneratedColumn<int>('count', aliasedName, true,
-          typeName: 'INTEGER', requiredDuringInsert: false);
+          type: const IntType(), requiredDuringInsert: false);
   final VerificationMeta _unreadMeta = const VerificationMeta('unread');
   GeneratedColumn<int> _unread;
   @override
   GeneratedColumn<int> get unread =>
       _unread ??= GeneratedColumn<int>('unread', aliasedName, true,
-          typeName: 'INTEGER', requiredDuringInsert: false);
+          type: const IntType(), requiredDuringInsert: false);
   final VerificationMeta _nameMeta = const VerificationMeta('name');
   GeneratedColumn<String> _name;
   @override
   GeneratedColumn<String> get name =>
       _name ??= GeneratedColumn<String>('name', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _fullNameRawMeta =
       const VerificationMeta('fullNameRaw');
   GeneratedColumn<String> _fullNameRaw;
   @override
   GeneratedColumn<String> get fullNameRaw => _fullNameRaw ??=
       GeneratedColumn<String>('full_name_raw', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _fullNameHashMeta =
       const VerificationMeta('fullNameHash');
   GeneratedColumn<String> _fullNameHash;
   @override
   GeneratedColumn<String> get fullNameHash => _fullNameHash ??=
       GeneratedColumn<String>('full_name_hash', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _folderHashMeta = const VerificationMeta('folderHash');
   GeneratedColumn<String> _folderHash;
   @override
   GeneratedColumn<String> get folderHash =>
       _folderHash ??= GeneratedColumn<String>('folder_hash', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _delimiterMeta = const VerificationMeta('delimiter');
   GeneratedColumn<String> _delimiter;
   @override
   GeneratedColumn<String> get delimiter =>
       _delimiter ??= GeneratedColumn<String>('delimiter', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _needsInfoUpdateMeta =
       const VerificationMeta('needsInfoUpdate');
   GeneratedColumn<bool> _needsInfoUpdate;
   @override
   GeneratedColumn<bool> get needsInfoUpdate => _needsInfoUpdate ??=
       GeneratedColumn<bool>('needs_info_update', aliasedName, false,
-          typeName: 'INTEGER',
+          type: const BoolType(),
           requiredDuringInsert: true,
           defaultConstraints: 'CHECK (needs_info_update IN (0, 1))');
   final VerificationMeta _isSystemFolderMeta =
@@ -3310,7 +3308,7 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
   @override
   GeneratedColumn<bool> get isSystemFolder => _isSystemFolder ??=
       GeneratedColumn<bool>('is_system_folder', aliasedName, false,
-          typeName: 'INTEGER',
+          type: const BoolType(),
           requiredDuringInsert: true,
           defaultConstraints: 'CHECK (is_system_folder IN (0, 1))');
   final VerificationMeta _isSubscribedMeta =
@@ -3319,7 +3317,7 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
   @override
   GeneratedColumn<bool> get isSubscribed => _isSubscribed ??=
       GeneratedColumn<bool>('is_subscribed', aliasedName, false,
-          typeName: 'INTEGER',
+          type: const BoolType(),
           requiredDuringInsert: true,
           defaultConstraints: 'CHECK (is_subscribed IN (0, 1))');
   final VerificationMeta _isSelectableMeta =
@@ -3328,7 +3326,7 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
   @override
   GeneratedColumn<bool> get isSelectable => _isSelectable ??=
       GeneratedColumn<bool>('is_selectable', aliasedName, false,
-          typeName: 'INTEGER',
+          type: const BoolType(),
           requiredDuringInsert: true,
           defaultConstraints: 'CHECK (is_selectable IN (0, 1))');
   final VerificationMeta _folderExistsMeta =
@@ -3337,7 +3335,7 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
   @override
   GeneratedColumn<bool> get folderExists => _folderExists ??=
       GeneratedColumn<bool>('folder_exists', aliasedName, false,
-          typeName: 'INTEGER',
+          type: const BoolType(),
           requiredDuringInsert: true,
           defaultConstraints: 'CHECK (folder_exists IN (0, 1))');
   final VerificationMeta _extendedMeta = const VerificationMeta('extended');
@@ -3345,7 +3343,7 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
   @override
   GeneratedColumn<bool> get extended =>
       _extended ??= GeneratedColumn<bool>('extended', aliasedName, true,
-          typeName: 'INTEGER',
+          type: const BoolType(),
           requiredDuringInsert: false,
           defaultConstraints: 'CHECK (extended IN (0, 1))');
   final VerificationMeta _alwaysRefreshMeta =
@@ -3354,7 +3352,7 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
   @override
   GeneratedColumn<bool> get alwaysRefresh => _alwaysRefresh ??=
       GeneratedColumn<bool>('always_refresh', aliasedName, false,
-          typeName: 'INTEGER',
+          type: const BoolType(),
           requiredDuringInsert: true,
           defaultConstraints: 'CHECK (always_refresh IN (0, 1))');
   final VerificationMeta _namespaceMeta = const VerificationMeta('namespace');
@@ -3362,7 +3360,7 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
   @override
   GeneratedColumn<String> get namespace =>
       _namespace ??= GeneratedColumn<String>('namespace', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns => [
         fullName,
@@ -3561,13 +3559,13 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
   Set<GeneratedColumn> get $primaryKey => {fullName, accountLocalId};
   @override
   LocalFolder map(Map<String, dynamic> data, {String tablePrefix}) {
-    return LocalFolder.fromData(data, _db,
+    return LocalFolder.fromData(data, attachedDatabase,
         prefix: tablePrefix != null ? '$tablePrefix.' : null);
   }
 
   @override
   $FoldersTable createAlias(String alias) {
-    return $FoldersTable(_db, alias);
+    return $FoldersTable(attachedDatabase, alias);
   }
 }
 
@@ -3718,18 +3716,8 @@ class User extends DataClass implements Insertable<User> {
   }
 
   @override
-  int get hashCode => $mrjf($mrjc(
-      localId.hashCode,
-      $mrjc(
-          serverId.hashCode,
-          $mrjc(
-              hostname.hashCode,
-              $mrjc(
-                  emailFromLogin.hashCode,
-                  $mrjc(
-                      token.hashCode,
-                      $mrjc(syncFreqInSeconds.hashCode,
-                          syncPeriod.hashCode)))))));
+  int get hashCode => Object.hash(localId, serverId, hostname, emailFromLogin,
+      token, syncFreqInSeconds, syncPeriod);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -3854,15 +3842,16 @@ class UsersCompanion extends UpdateCompanion<User> {
 }
 
 class $UsersTable extends Users with TableInfo<$UsersTable, User> {
-  final GeneratedDatabase _db;
+  @override
+  final GeneratedDatabase attachedDatabase;
   final String _alias;
-  $UsersTable(this._db, [this._alias]);
+  $UsersTable(this.attachedDatabase, [this._alias]);
   final VerificationMeta _localIdMeta = const VerificationMeta('localId');
   GeneratedColumn<int> _localId;
   @override
   GeneratedColumn<int> get localId =>
       _localId ??= GeneratedColumn<int>('local_id', aliasedName, false,
-          typeName: 'INTEGER',
+          type: const IntType(),
           requiredDuringInsert: false,
           defaultConstraints: 'PRIMARY KEY AUTOINCREMENT');
   final VerificationMeta _serverIdMeta = const VerificationMeta('serverId');
@@ -3870,33 +3859,33 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
   @override
   GeneratedColumn<int> get serverId =>
       _serverId ??= GeneratedColumn<int>('server_id', aliasedName, false,
-          typeName: 'INTEGER', requiredDuringInsert: true);
+          type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _hostnameMeta = const VerificationMeta('hostname');
   GeneratedColumn<String> _hostname;
   @override
   GeneratedColumn<String> get hostname =>
       _hostname ??= GeneratedColumn<String>('hostname', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _emailFromLoginMeta =
       const VerificationMeta('emailFromLogin');
   GeneratedColumn<String> _emailFromLogin;
   @override
   GeneratedColumn<String> get emailFromLogin => _emailFromLogin ??=
       GeneratedColumn<String>('email_from_login', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _tokenMeta = const VerificationMeta('token');
   GeneratedColumn<String> _token;
   @override
   GeneratedColumn<String> get token =>
       _token ??= GeneratedColumn<String>('token', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _syncFreqInSecondsMeta =
       const VerificationMeta('syncFreqInSeconds');
   GeneratedColumn<int> _syncFreqInSeconds;
   @override
   GeneratedColumn<int> get syncFreqInSeconds => _syncFreqInSeconds ??=
       GeneratedColumn<int>('sync_freq_in_seconds', aliasedName, true,
-          typeName: 'INTEGER',
+          type: const IntType(),
           requiredDuringInsert: false,
           defaultValue: Constant(
               !BuildProperty.backgroundSync ? SyncFreq.NEVER_IN_SECONDS : 300));
@@ -3905,7 +3894,7 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
   @override
   GeneratedColumn<String> get syncPeriod =>
       _syncPeriod ??= GeneratedColumn<String>('sync_period', aliasedName, true,
-          typeName: 'TEXT', requiredDuringInsert: false);
+          type: const StringType(), requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns => [
         localId,
@@ -3974,13 +3963,13 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
   Set<GeneratedColumn> get $primaryKey => {localId};
   @override
   User map(Map<String, dynamic> data, {String tablePrefix}) {
-    return User.fromData(data, _db,
+    return User.fromData(data, attachedDatabase,
         prefix: tablePrefix != null ? '$tablePrefix.' : null);
   }
 
   @override
   $UsersTable createAlias(String alias) {
-    return $UsersTable(_db, alias);
+    return $UsersTable(attachedDatabase, alias);
   }
 }
 
@@ -4328,50 +4317,27 @@ class Account extends DataClass implements Insertable<Account> {
   }
 
   @override
-  int get hashCode => $mrjf($mrjc(
-      localId.hashCode,
-      $mrjc(
-          userLocalId.hashCode,
-          $mrjc(
-              entityId.hashCode,
-              $mrjc(
-                  idUser.hashCode,
-                  $mrjc(
-                      uuid.hashCode,
-                      $mrjc(
-                          parentUuid.hashCode,
-                          $mrjc(
-                              moduleName.hashCode,
-                              $mrjc(
-                                  useToAuthorize.hashCode,
-                                  $mrjc(
-                                      email.hashCode,
-                                      $mrjc(
-                                          friendlyName.hashCode,
-                                          $mrjc(
-                                              useSignature.hashCode,
-                                              $mrjc(
-                                                  signature.hashCode,
-                                                  $mrjc(
-                                                      serverId.hashCode,
-                                                      $mrjc(
-                                                          foldersOrderInJson
-                                                              .hashCode,
-                                                          $mrjc(
-                                                              useThreading
-                                                                  .hashCode,
-                                                              $mrjc(
-                                                                  saveRepliesToCurrFolder
-                                                                      .hashCode,
-                                                                  $mrjc(
-                                                                      accountId
-                                                                          .hashCode,
-                                                                      $mrjc(
-                                                                          allowFilters
-                                                                              .hashCode,
-                                                                          $mrjc(
-                                                                              allowForward.hashCode,
-                                                                              allowAutoResponder.hashCode))))))))))))))))))));
+  int get hashCode => Object.hash(
+      localId,
+      userLocalId,
+      entityId,
+      idUser,
+      uuid,
+      parentUuid,
+      moduleName,
+      useToAuthorize,
+      email,
+      friendlyName,
+      useSignature,
+      signature,
+      serverId,
+      foldersOrderInJson,
+      useThreading,
+      saveRepliesToCurrFolder,
+      accountId,
+      allowFilters,
+      allowForward,
+      allowAutoResponder);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -4672,15 +4638,16 @@ class AccountsCompanion extends UpdateCompanion<Account> {
 }
 
 class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
-  final GeneratedDatabase _db;
+  @override
+  final GeneratedDatabase attachedDatabase;
   final String _alias;
-  $AccountsTable(this._db, [this._alias]);
+  $AccountsTable(this.attachedDatabase, [this._alias]);
   final VerificationMeta _localIdMeta = const VerificationMeta('localId');
   GeneratedColumn<int> _localId;
   @override
   GeneratedColumn<int> get localId =>
       _localId ??= GeneratedColumn<int>('local_id', aliasedName, false,
-          typeName: 'INTEGER',
+          type: const IntType(),
           requiredDuringInsert: false,
           defaultConstraints: 'PRIMARY KEY AUTOINCREMENT');
   final VerificationMeta _userLocalIdMeta =
@@ -4689,44 +4656,44 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
   @override
   GeneratedColumn<int> get userLocalId =>
       _userLocalId ??= GeneratedColumn<int>('user_local_id', aliasedName, false,
-          typeName: 'INTEGER', requiredDuringInsert: true);
+          type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _entityIdMeta = const VerificationMeta('entityId');
   GeneratedColumn<int> _entityId;
   @override
   GeneratedColumn<int> get entityId =>
       _entityId ??= GeneratedColumn<int>('entity_id', aliasedName, false,
-          typeName: 'INTEGER', requiredDuringInsert: true);
+          type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _idUserMeta = const VerificationMeta('idUser');
   GeneratedColumn<int> _idUser;
   @override
   GeneratedColumn<int> get idUser =>
       _idUser ??= GeneratedColumn<int>('id_user', aliasedName, false,
-          typeName: 'INTEGER', requiredDuringInsert: true);
+          type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _uuidMeta = const VerificationMeta('uuid');
   GeneratedColumn<String> _uuid;
   @override
   GeneratedColumn<String> get uuid =>
       _uuid ??= GeneratedColumn<String>('uuid', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _parentUuidMeta = const VerificationMeta('parentUuid');
   GeneratedColumn<String> _parentUuid;
   @override
   GeneratedColumn<String> get parentUuid =>
       _parentUuid ??= GeneratedColumn<String>('parent_uuid', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _moduleNameMeta = const VerificationMeta('moduleName');
   GeneratedColumn<String> _moduleName;
   @override
   GeneratedColumn<String> get moduleName =>
       _moduleName ??= GeneratedColumn<String>('module_name', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _useToAuthorizeMeta =
       const VerificationMeta('useToAuthorize');
   GeneratedColumn<bool> _useToAuthorize;
   @override
   GeneratedColumn<bool> get useToAuthorize => _useToAuthorize ??=
       GeneratedColumn<bool>('use_to_authorize', aliasedName, false,
-          typeName: 'INTEGER',
+          type: const BoolType(),
           requiredDuringInsert: true,
           defaultConstraints: 'CHECK (use_to_authorize IN (0, 1))');
   final VerificationMeta _emailMeta = const VerificationMeta('email');
@@ -4734,21 +4701,21 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
   @override
   GeneratedColumn<String> get email =>
       _email ??= GeneratedColumn<String>('email', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _friendlyNameMeta =
       const VerificationMeta('friendlyName');
   GeneratedColumn<String> _friendlyName;
   @override
   GeneratedColumn<String> get friendlyName => _friendlyName ??=
       GeneratedColumn<String>('friendly_name', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _useSignatureMeta =
       const VerificationMeta('useSignature');
   GeneratedColumn<bool> _useSignature;
   @override
   GeneratedColumn<bool> get useSignature => _useSignature ??=
       GeneratedColumn<bool>('use_signature', aliasedName, false,
-          typeName: 'INTEGER',
+          type: const BoolType(),
           requiredDuringInsert: true,
           defaultConstraints: 'CHECK (use_signature IN (0, 1))');
   final VerificationMeta _signatureMeta = const VerificationMeta('signature');
@@ -4756,27 +4723,27 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
   @override
   GeneratedColumn<String> get signature =>
       _signature ??= GeneratedColumn<String>('signature', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _serverIdMeta = const VerificationMeta('serverId');
   GeneratedColumn<int> _serverId;
   @override
   GeneratedColumn<int> get serverId =>
       _serverId ??= GeneratedColumn<int>('server_id', aliasedName, false,
-          typeName: 'INTEGER', requiredDuringInsert: true);
+          type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _foldersOrderInJsonMeta =
       const VerificationMeta('foldersOrderInJson');
   GeneratedColumn<String> _foldersOrderInJson;
   @override
   GeneratedColumn<String> get foldersOrderInJson => _foldersOrderInJson ??=
       GeneratedColumn<String>('folders_order_in_json', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _useThreadingMeta =
       const VerificationMeta('useThreading');
   GeneratedColumn<bool> _useThreading;
   @override
   GeneratedColumn<bool> get useThreading => _useThreading ??=
       GeneratedColumn<bool>('use_threading', aliasedName, false,
-          typeName: 'INTEGER',
+          type: const BoolType(),
           requiredDuringInsert: true,
           defaultConstraints: 'CHECK (use_threading IN (0, 1))');
   final VerificationMeta _saveRepliesToCurrFolderMeta =
@@ -4786,7 +4753,7 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
   GeneratedColumn<bool> get saveRepliesToCurrFolder =>
       _saveRepliesToCurrFolder ??= GeneratedColumn<bool>(
           'save_replies_to_curr_folder', aliasedName, false,
-          typeName: 'INTEGER',
+          type: const BoolType(),
           requiredDuringInsert: true,
           defaultConstraints: 'CHECK (save_replies_to_curr_folder IN (0, 1))');
   final VerificationMeta _accountIdMeta = const VerificationMeta('accountId');
@@ -4794,14 +4761,14 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
   @override
   GeneratedColumn<int> get accountId =>
       _accountId ??= GeneratedColumn<int>('account_id', aliasedName, false,
-          typeName: 'INTEGER', requiredDuringInsert: true);
+          type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _allowFiltersMeta =
       const VerificationMeta('allowFilters');
   GeneratedColumn<bool> _allowFilters;
   @override
   GeneratedColumn<bool> get allowFilters => _allowFilters ??=
       GeneratedColumn<bool>('allow_filters', aliasedName, false,
-          typeName: 'INTEGER',
+          type: const BoolType(),
           requiredDuringInsert: true,
           defaultConstraints: 'CHECK (allow_filters IN (0, 1))');
   final VerificationMeta _allowForwardMeta =
@@ -4810,7 +4777,7 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
   @override
   GeneratedColumn<bool> get allowForward => _allowForward ??=
       GeneratedColumn<bool>('allow_forward', aliasedName, false,
-          typeName: 'INTEGER',
+          type: const BoolType(),
           requiredDuringInsert: true,
           defaultConstraints: 'CHECK (allow_forward IN (0, 1))');
   final VerificationMeta _allowAutoResponderMeta =
@@ -4819,7 +4786,7 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
   @override
   GeneratedColumn<bool> get allowAutoResponder => _allowAutoResponder ??=
       GeneratedColumn<bool>('allow_auto_responder', aliasedName, false,
-          typeName: 'INTEGER',
+          type: const BoolType(),
           requiredDuringInsert: true,
           defaultConstraints: 'CHECK (allow_auto_responder IN (0, 1))');
   @override
@@ -5004,13 +4971,13 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
   Set<GeneratedColumn> get $primaryKey => {localId};
   @override
   Account map(Map<String, dynamic> data, {String tablePrefix}) {
-    return Account.fromData(data, _db,
+    return Account.fromData(data, attachedDatabase,
         prefix: tablePrefix != null ? '$tablePrefix.' : null);
   }
 
   @override
   $AccountsTable createAlias(String alias) {
-    return $AccountsTable(_db, alias);
+    return $AccountsTable(attachedDatabase, alias);
   }
 }
 
@@ -5920,50 +5887,66 @@ class ContactDb extends DataClass implements Insertable<ContactDb> {
   }
 
   @override
-  int get hashCode => $mrjf($mrjc(
-      uuidPlusStorage.hashCode,
-      $mrjc(
-          uuid.hashCode,
-          $mrjc(
-              userLocalId.hashCode,
-              $mrjc(
-                  entityId.hashCode,
-                  $mrjc(
-                      parentUuid.hashCode,
-                      $mrjc(
-                          eTag.hashCode,
-                          $mrjc(
-                              idUser.hashCode,
-                              $mrjc(
-                                  idTenant.hashCode,
-                                  $mrjc(
-                                      storage.hashCode,
-                                      $mrjc(
-                                          fullName.hashCode,
-                                          $mrjc(
-                                              useFriendlyName.hashCode,
-                                              $mrjc(
-                                                  primaryEmail.hashCode,
-                                                  $mrjc(
-                                                      primaryPhone.hashCode,
-                                                      $mrjc(
-                                                          primaryAddress
-                                                              .hashCode,
-                                                          $mrjc(
-                                                              viewEmail
-                                                                  .hashCode,
-                                                              $mrjc(
-                                                                  title
-                                                                      .hashCode,
-                                                                  $mrjc(
-                                                                      firstName
-                                                                          .hashCode,
-                                                                      $mrjc(
-                                                                          lastName
-                                                                              .hashCode,
-                                                                          $mrjc(
-                                                                              nickName.hashCode,
-                                                                              $mrjc(skype.hashCode, $mrjc(facebook.hashCode, $mrjc(personalEmail.hashCode, $mrjc(personalAddress.hashCode, $mrjc(personalCity.hashCode, $mrjc(personalState.hashCode, $mrjc(personalZip.hashCode, $mrjc(personalCountry.hashCode, $mrjc(personalWeb.hashCode, $mrjc(personalFax.hashCode, $mrjc(personalPhone.hashCode, $mrjc(personalMobile.hashCode, $mrjc(businessEmail.hashCode, $mrjc(businessCompany.hashCode, $mrjc(businessAddress.hashCode, $mrjc(businessCity.hashCode, $mrjc(businessState.hashCode, $mrjc(businessZip.hashCode, $mrjc(businessCountry.hashCode, $mrjc(businessJobTitle.hashCode, $mrjc(businessDepartment.hashCode, $mrjc(businessOffice.hashCode, $mrjc(businessPhone.hashCode, $mrjc(businessFax.hashCode, $mrjc(businessWeb.hashCode, $mrjc(otherEmail.hashCode, $mrjc(notes.hashCode, $mrjc(birthDay.hashCode, $mrjc(birthMonth.hashCode, $mrjc(birthYear.hashCode, $mrjc(auto.hashCode, $mrjc(frequency.hashCode, $mrjc(dateModified.hashCode, $mrjc(davContactsUid.hashCode, $mrjc(davContactsVCardUid.hashCode, $mrjc(pgpPublicKey.hashCode, $mrjc(groupUUIDs.hashCode, $mrjc(autoSign.hashCode, autoEncrypt.hashCode))))))))))))))))))))))))))))))))))))))))))))))))))))))))));
+  int get hashCode => Object.hashAll([
+        uuidPlusStorage,
+        uuid,
+        userLocalId,
+        entityId,
+        parentUuid,
+        eTag,
+        idUser,
+        idTenant,
+        storage,
+        fullName,
+        useFriendlyName,
+        primaryEmail,
+        primaryPhone,
+        primaryAddress,
+        viewEmail,
+        title,
+        firstName,
+        lastName,
+        nickName,
+        skype,
+        facebook,
+        personalEmail,
+        personalAddress,
+        personalCity,
+        personalState,
+        personalZip,
+        personalCountry,
+        personalWeb,
+        personalFax,
+        personalPhone,
+        personalMobile,
+        businessEmail,
+        businessCompany,
+        businessAddress,
+        businessCity,
+        businessState,
+        businessZip,
+        businessCountry,
+        businessJobTitle,
+        businessDepartment,
+        businessOffice,
+        businessPhone,
+        businessFax,
+        businessWeb,
+        otherEmail,
+        notes,
+        birthDay,
+        birthMonth,
+        birthYear,
+        auto,
+        frequency,
+        dateModified,
+        davContactsUid,
+        davContactsVCardUid,
+        pgpPublicKey,
+        groupUUIDs,
+        autoSign,
+        autoEncrypt
+      ]);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -6747,78 +6730,79 @@ class ContactsTableCompanion extends UpdateCompanion<ContactDb> {
 
 class $ContactsTableTable extends ContactsTable
     with TableInfo<$ContactsTableTable, ContactDb> {
-  final GeneratedDatabase _db;
+  @override
+  final GeneratedDatabase attachedDatabase;
   final String _alias;
-  $ContactsTableTable(this._db, [this._alias]);
+  $ContactsTableTable(this.attachedDatabase, [this._alias]);
   final VerificationMeta _uuidPlusStorageMeta =
       const VerificationMeta('uuidPlusStorage');
   GeneratedColumn<String> _uuidPlusStorage;
   @override
   GeneratedColumn<String> get uuidPlusStorage => _uuidPlusStorage ??=
       GeneratedColumn<String>('uuid_plus_storage', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _uuidMeta = const VerificationMeta('uuid');
   GeneratedColumn<String> _uuid;
   @override
   GeneratedColumn<String> get uuid =>
       _uuid ??= GeneratedColumn<String>('uuid', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _userLocalIdMeta =
       const VerificationMeta('userLocalId');
   GeneratedColumn<int> _userLocalId;
   @override
   GeneratedColumn<int> get userLocalId =>
       _userLocalId ??= GeneratedColumn<int>('user_local_id', aliasedName, false,
-          typeName: 'INTEGER', requiredDuringInsert: true);
+          type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _entityIdMeta = const VerificationMeta('entityId');
   GeneratedColumn<int> _entityId;
   @override
   GeneratedColumn<int> get entityId =>
       _entityId ??= GeneratedColumn<int>('entity_id', aliasedName, true,
-          typeName: 'INTEGER', requiredDuringInsert: false);
+          type: const IntType(), requiredDuringInsert: false);
   final VerificationMeta _parentUuidMeta = const VerificationMeta('parentUuid');
   GeneratedColumn<String> _parentUuid;
   @override
   GeneratedColumn<String> get parentUuid =>
       _parentUuid ??= GeneratedColumn<String>('parent_uuid', aliasedName, true,
-          typeName: 'TEXT', requiredDuringInsert: false);
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _eTagMeta = const VerificationMeta('eTag');
   GeneratedColumn<String> _eTag;
   @override
   GeneratedColumn<String> get eTag =>
       _eTag ??= GeneratedColumn<String>('e_tag', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _idUserMeta = const VerificationMeta('idUser');
   GeneratedColumn<int> _idUser;
   @override
   GeneratedColumn<int> get idUser =>
       _idUser ??= GeneratedColumn<int>('id_user', aliasedName, false,
-          typeName: 'INTEGER', requiredDuringInsert: true);
+          type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _idTenantMeta = const VerificationMeta('idTenant');
   GeneratedColumn<int> _idTenant;
   @override
   GeneratedColumn<int> get idTenant =>
       _idTenant ??= GeneratedColumn<int>('id_tenant', aliasedName, true,
-          typeName: 'INTEGER', requiredDuringInsert: false);
+          type: const IntType(), requiredDuringInsert: false);
   final VerificationMeta _storageMeta = const VerificationMeta('storage');
   GeneratedColumn<String> _storage;
   @override
   GeneratedColumn<String> get storage =>
       _storage ??= GeneratedColumn<String>('storage', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _fullNameMeta = const VerificationMeta('fullName');
   GeneratedColumn<String> _fullName;
   @override
   GeneratedColumn<String> get fullName =>
       _fullName ??= GeneratedColumn<String>('full_name', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _useFriendlyNameMeta =
       const VerificationMeta('useFriendlyName');
   GeneratedColumn<bool> _useFriendlyName;
   @override
   GeneratedColumn<bool> get useFriendlyName => _useFriendlyName ??=
       GeneratedColumn<bool>('use_friendly_name', aliasedName, true,
-          typeName: 'INTEGER',
+          type: const BoolType(),
           requiredDuringInsert: false,
           defaultConstraints: 'CHECK (use_friendly_name IN (0, 1))');
   final VerificationMeta _primaryEmailMeta =
@@ -6827,260 +6811,260 @@ class $ContactsTableTable extends ContactsTable
   @override
   GeneratedColumn<int> get primaryEmail => _primaryEmail ??=
       GeneratedColumn<int>('primary_email', aliasedName, false,
-          typeName: 'INTEGER', requiredDuringInsert: true);
+          type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _primaryPhoneMeta =
       const VerificationMeta('primaryPhone');
   GeneratedColumn<int> _primaryPhone;
   @override
   GeneratedColumn<int> get primaryPhone => _primaryPhone ??=
       GeneratedColumn<int>('primary_phone', aliasedName, false,
-          typeName: 'INTEGER', requiredDuringInsert: true);
+          type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _primaryAddressMeta =
       const VerificationMeta('primaryAddress');
   GeneratedColumn<int> _primaryAddress;
   @override
   GeneratedColumn<int> get primaryAddress => _primaryAddress ??=
       GeneratedColumn<int>('primary_address', aliasedName, false,
-          typeName: 'INTEGER', requiredDuringInsert: true);
+          type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _viewEmailMeta = const VerificationMeta('viewEmail');
   GeneratedColumn<String> _viewEmail;
   @override
   GeneratedColumn<String> get viewEmail =>
       _viewEmail ??= GeneratedColumn<String>('view_email', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _titleMeta = const VerificationMeta('title');
   GeneratedColumn<String> _title;
   @override
   GeneratedColumn<String> get title =>
       _title ??= GeneratedColumn<String>('title', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _firstNameMeta = const VerificationMeta('firstName');
   GeneratedColumn<String> _firstName;
   @override
   GeneratedColumn<String> get firstName =>
       _firstName ??= GeneratedColumn<String>('first_name', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _lastNameMeta = const VerificationMeta('lastName');
   GeneratedColumn<String> _lastName;
   @override
   GeneratedColumn<String> get lastName =>
       _lastName ??= GeneratedColumn<String>('last_name', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _nickNameMeta = const VerificationMeta('nickName');
   GeneratedColumn<String> _nickName;
   @override
   GeneratedColumn<String> get nickName =>
       _nickName ??= GeneratedColumn<String>('nick_name', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _skypeMeta = const VerificationMeta('skype');
   GeneratedColumn<String> _skype;
   @override
   GeneratedColumn<String> get skype =>
       _skype ??= GeneratedColumn<String>('skype', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _facebookMeta = const VerificationMeta('facebook');
   GeneratedColumn<String> _facebook;
   @override
   GeneratedColumn<String> get facebook =>
       _facebook ??= GeneratedColumn<String>('facebook', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _personalEmailMeta =
       const VerificationMeta('personalEmail');
   GeneratedColumn<String> _personalEmail;
   @override
   GeneratedColumn<String> get personalEmail => _personalEmail ??=
       GeneratedColumn<String>('personal_email', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _personalAddressMeta =
       const VerificationMeta('personalAddress');
   GeneratedColumn<String> _personalAddress;
   @override
   GeneratedColumn<String> get personalAddress => _personalAddress ??=
       GeneratedColumn<String>('personal_address', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _personalCityMeta =
       const VerificationMeta('personalCity');
   GeneratedColumn<String> _personalCity;
   @override
   GeneratedColumn<String> get personalCity => _personalCity ??=
       GeneratedColumn<String>('personal_city', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _personalStateMeta =
       const VerificationMeta('personalState');
   GeneratedColumn<String> _personalState;
   @override
   GeneratedColumn<String> get personalState => _personalState ??=
       GeneratedColumn<String>('personal_state', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _personalZipMeta =
       const VerificationMeta('personalZip');
   GeneratedColumn<String> _personalZip;
   @override
   GeneratedColumn<String> get personalZip => _personalZip ??=
       GeneratedColumn<String>('personal_zip', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _personalCountryMeta =
       const VerificationMeta('personalCountry');
   GeneratedColumn<String> _personalCountry;
   @override
   GeneratedColumn<String> get personalCountry => _personalCountry ??=
       GeneratedColumn<String>('personal_country', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _personalWebMeta =
       const VerificationMeta('personalWeb');
   GeneratedColumn<String> _personalWeb;
   @override
   GeneratedColumn<String> get personalWeb => _personalWeb ??=
       GeneratedColumn<String>('personal_web', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _personalFaxMeta =
       const VerificationMeta('personalFax');
   GeneratedColumn<String> _personalFax;
   @override
   GeneratedColumn<String> get personalFax => _personalFax ??=
       GeneratedColumn<String>('personal_fax', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _personalPhoneMeta =
       const VerificationMeta('personalPhone');
   GeneratedColumn<String> _personalPhone;
   @override
   GeneratedColumn<String> get personalPhone => _personalPhone ??=
       GeneratedColumn<String>('personal_phone', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _personalMobileMeta =
       const VerificationMeta('personalMobile');
   GeneratedColumn<String> _personalMobile;
   @override
   GeneratedColumn<String> get personalMobile => _personalMobile ??=
       GeneratedColumn<String>('personal_mobile', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _businessEmailMeta =
       const VerificationMeta('businessEmail');
   GeneratedColumn<String> _businessEmail;
   @override
   GeneratedColumn<String> get businessEmail => _businessEmail ??=
       GeneratedColumn<String>('business_email', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _businessCompanyMeta =
       const VerificationMeta('businessCompany');
   GeneratedColumn<String> _businessCompany;
   @override
   GeneratedColumn<String> get businessCompany => _businessCompany ??=
       GeneratedColumn<String>('business_company', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _businessAddressMeta =
       const VerificationMeta('businessAddress');
   GeneratedColumn<String> _businessAddress;
   @override
   GeneratedColumn<String> get businessAddress => _businessAddress ??=
       GeneratedColumn<String>('business_address', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _businessCityMeta =
       const VerificationMeta('businessCity');
   GeneratedColumn<String> _businessCity;
   @override
   GeneratedColumn<String> get businessCity => _businessCity ??=
       GeneratedColumn<String>('business_city', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _businessStateMeta =
       const VerificationMeta('businessState');
   GeneratedColumn<String> _businessState;
   @override
   GeneratedColumn<String> get businessState => _businessState ??=
       GeneratedColumn<String>('business_state', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _businessZipMeta =
       const VerificationMeta('businessZip');
   GeneratedColumn<String> _businessZip;
   @override
   GeneratedColumn<String> get businessZip => _businessZip ??=
       GeneratedColumn<String>('business_zip', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _businessCountryMeta =
       const VerificationMeta('businessCountry');
   GeneratedColumn<String> _businessCountry;
   @override
   GeneratedColumn<String> get businessCountry => _businessCountry ??=
       GeneratedColumn<String>('business_country', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _businessJobTitleMeta =
       const VerificationMeta('businessJobTitle');
   GeneratedColumn<String> _businessJobTitle;
   @override
   GeneratedColumn<String> get businessJobTitle => _businessJobTitle ??=
       GeneratedColumn<String>('business_job_title', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _businessDepartmentMeta =
       const VerificationMeta('businessDepartment');
   GeneratedColumn<String> _businessDepartment;
   @override
   GeneratedColumn<String> get businessDepartment => _businessDepartment ??=
       GeneratedColumn<String>('business_department', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _businessOfficeMeta =
       const VerificationMeta('businessOffice');
   GeneratedColumn<String> _businessOffice;
   @override
   GeneratedColumn<String> get businessOffice => _businessOffice ??=
       GeneratedColumn<String>('business_office', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _businessPhoneMeta =
       const VerificationMeta('businessPhone');
   GeneratedColumn<String> _businessPhone;
   @override
   GeneratedColumn<String> get businessPhone => _businessPhone ??=
       GeneratedColumn<String>('business_phone', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _businessFaxMeta =
       const VerificationMeta('businessFax');
   GeneratedColumn<String> _businessFax;
   @override
   GeneratedColumn<String> get businessFax => _businessFax ??=
       GeneratedColumn<String>('business_fax', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _businessWebMeta =
       const VerificationMeta('businessWeb');
   GeneratedColumn<String> _businessWeb;
   @override
   GeneratedColumn<String> get businessWeb => _businessWeb ??=
       GeneratedColumn<String>('business_web', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _otherEmailMeta = const VerificationMeta('otherEmail');
   GeneratedColumn<String> _otherEmail;
   @override
   GeneratedColumn<String> get otherEmail =>
       _otherEmail ??= GeneratedColumn<String>('other_email', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _notesMeta = const VerificationMeta('notes');
   GeneratedColumn<String> _notes;
   @override
   GeneratedColumn<String> get notes =>
       _notes ??= GeneratedColumn<String>('notes', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _birthDayMeta = const VerificationMeta('birthDay');
   GeneratedColumn<int> _birthDay;
   @override
   GeneratedColumn<int> get birthDay =>
       _birthDay ??= GeneratedColumn<int>('birth_day', aliasedName, false,
-          typeName: 'INTEGER', requiredDuringInsert: true);
+          type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _birthMonthMeta = const VerificationMeta('birthMonth');
   GeneratedColumn<int> _birthMonth;
   @override
   GeneratedColumn<int> get birthMonth =>
       _birthMonth ??= GeneratedColumn<int>('birth_month', aliasedName, false,
-          typeName: 'INTEGER', requiredDuringInsert: true);
+          type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _birthYearMeta = const VerificationMeta('birthYear');
   GeneratedColumn<int> _birthYear;
   @override
   GeneratedColumn<int> get birthYear =>
       _birthYear ??= GeneratedColumn<int>('birth_year', aliasedName, false,
-          typeName: 'INTEGER', requiredDuringInsert: true);
+          type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _autoMeta = const VerificationMeta('auto');
   GeneratedColumn<bool> _auto;
   @override
   GeneratedColumn<bool> get auto =>
       _auto ??= GeneratedColumn<bool>('auto', aliasedName, true,
-          typeName: 'INTEGER',
+          type: const BoolType(),
           requiredDuringInsert: false,
           defaultConstraints: 'CHECK (auto IN (0, 1))');
   final VerificationMeta _frequencyMeta = const VerificationMeta('frequency');
@@ -7088,7 +7072,7 @@ class $ContactsTableTable extends ContactsTable
   @override
   GeneratedColumn<int> get frequency =>
       _frequency ??= GeneratedColumn<int>('frequency', aliasedName, false,
-          typeName: 'INTEGER',
+          type: const IntType(),
           requiredDuringInsert: false,
           defaultValue: Constant(0));
   final VerificationMeta _dateModifiedMeta =
@@ -7097,42 +7081,42 @@ class $ContactsTableTable extends ContactsTable
   @override
   GeneratedColumn<String> get dateModified => _dateModified ??=
       GeneratedColumn<String>('date_modified', aliasedName, true,
-          typeName: 'TEXT', requiredDuringInsert: false);
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _davContactsUidMeta =
       const VerificationMeta('davContactsUid');
   GeneratedColumn<String> _davContactsUid;
   @override
   GeneratedColumn<String> get davContactsUid => _davContactsUid ??=
       GeneratedColumn<String>('dav_contacts_uid', aliasedName, true,
-          typeName: 'TEXT', requiredDuringInsert: false);
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _davContactsVCardUidMeta =
       const VerificationMeta('davContactsVCardUid');
   GeneratedColumn<String> _davContactsVCardUid;
   @override
   GeneratedColumn<String> get davContactsVCardUid => _davContactsVCardUid ??=
       GeneratedColumn<String>('dav_contacts_v_card_uid', aliasedName, true,
-          typeName: 'TEXT', requiredDuringInsert: false);
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _pgpPublicKeyMeta =
       const VerificationMeta('pgpPublicKey');
   GeneratedColumn<String> _pgpPublicKey;
   @override
   GeneratedColumn<String> get pgpPublicKey => _pgpPublicKey ??=
       GeneratedColumn<String>('pgp_public_key', aliasedName, true,
-          typeName: 'TEXT', requiredDuringInsert: false);
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _groupUUIDsMeta = const VerificationMeta('groupUUIDs');
   GeneratedColumnWithTypeConverter<List<String>, String> _groupUUIDs;
   @override
   GeneratedColumnWithTypeConverter<List<String>, String> get groupUUIDs =>
       _groupUUIDs ??= GeneratedColumn<String>(
               'group_u_u_i_ds', aliasedName, false,
-              typeName: 'TEXT', requiredDuringInsert: true)
+              type: const StringType(), requiredDuringInsert: true)
           .withConverter<List<String>>($ContactsTableTable.$converter0);
   final VerificationMeta _autoSignMeta = const VerificationMeta('autoSign');
   GeneratedColumn<bool> _autoSign;
   @override
   GeneratedColumn<bool> get autoSign =>
       _autoSign ??= GeneratedColumn<bool>('auto_sign', aliasedName, false,
-          typeName: 'INTEGER',
+          type: const BoolType(),
           requiredDuringInsert: false,
           defaultConstraints: 'CHECK (auto_sign IN (0, 1))',
           defaultValue: Constant(false));
@@ -7142,7 +7126,7 @@ class $ContactsTableTable extends ContactsTable
   @override
   GeneratedColumn<bool> get autoEncrypt =>
       _autoEncrypt ??= GeneratedColumn<bool>('auto_encrypt', aliasedName, false,
-          typeName: 'INTEGER',
+          type: const BoolType(),
           requiredDuringInsert: false,
           defaultConstraints: 'CHECK (auto_encrypt IN (0, 1))',
           defaultValue: Constant(false));
@@ -7616,13 +7600,13 @@ class $ContactsTableTable extends ContactsTable
   Set<GeneratedColumn> get $primaryKey => {entityId};
   @override
   ContactDb map(Map<String, dynamic> data, {String tablePrefix}) {
-    return ContactDb.fromData(data, _db,
+    return ContactDb.fromData(data, attachedDatabase,
         prefix: tablePrefix != null ? '$tablePrefix.' : null);
   }
 
   @override
   $ContactsTableTable createAlias(String alias) {
-    return $ContactsTableTable(_db, alias);
+    return $ContactsTableTable(attachedDatabase, alias);
   }
 
   static TypeConverter<List<String>, String> $converter0 =
@@ -7897,36 +7881,23 @@ class ContactsGroupsTable extends DataClass
   }
 
   @override
-  int get hashCode => $mrjf($mrjc(
-      uuid.hashCode,
-      $mrjc(
-          userLocalId.hashCode,
-          $mrjc(
-              idUser.hashCode,
-              $mrjc(
-                  city.hashCode,
-                  $mrjc(
-                      company.hashCode,
-                      $mrjc(
-                          country.hashCode,
-                          $mrjc(
-                              email.hashCode,
-                              $mrjc(
-                                  fax.hashCode,
-                                  $mrjc(
-                                      isOrganization.hashCode,
-                                      $mrjc(
-                                          name.hashCode,
-                                          $mrjc(
-                                              parentUUID.hashCode,
-                                              $mrjc(
-                                                  phone.hashCode,
-                                                  $mrjc(
-                                                      state.hashCode,
-                                                      $mrjc(
-                                                          street.hashCode,
-                                                          $mrjc(web.hashCode,
-                                                              zip.hashCode))))))))))))))));
+  int get hashCode => Object.hash(
+      uuid,
+      userLocalId,
+      idUser,
+      city,
+      company,
+      country,
+      email,
+      fax,
+      isOrganization,
+      name,
+      parentUUID,
+      phone,
+      state,
+      street,
+      web,
+      zip);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -8172,15 +8143,16 @@ class ContactsGroupsCompanion extends UpdateCompanion<ContactsGroupsTable> {
 
 class $ContactsGroupsTable extends ContactsGroups
     with TableInfo<$ContactsGroupsTable, ContactsGroupsTable> {
-  final GeneratedDatabase _db;
+  @override
+  final GeneratedDatabase attachedDatabase;
   final String _alias;
-  $ContactsGroupsTable(this._db, [this._alias]);
+  $ContactsGroupsTable(this.attachedDatabase, [this._alias]);
   final VerificationMeta _uuidMeta = const VerificationMeta('uuid');
   GeneratedColumn<String> _uuid;
   @override
   GeneratedColumn<String> get uuid =>
       _uuid ??= GeneratedColumn<String>('uuid', aliasedName, false,
-          typeName: 'TEXT',
+          type: const StringType(),
           requiredDuringInsert: true,
           $customConstraints: 'UNIQUE');
   final VerificationMeta _userLocalIdMeta =
@@ -8189,50 +8161,50 @@ class $ContactsGroupsTable extends ContactsGroups
   @override
   GeneratedColumn<int> get userLocalId =>
       _userLocalId ??= GeneratedColumn<int>('user_local_id', aliasedName, false,
-          typeName: 'INTEGER', requiredDuringInsert: true);
+          type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _idUserMeta = const VerificationMeta('idUser');
   GeneratedColumn<int> _idUser;
   @override
   GeneratedColumn<int> get idUser =>
       _idUser ??= GeneratedColumn<int>('id_user', aliasedName, false,
-          typeName: 'INTEGER', requiredDuringInsert: true);
+          type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _cityMeta = const VerificationMeta('city');
   GeneratedColumn<String> _city;
   @override
   GeneratedColumn<String> get city =>
       _city ??= GeneratedColumn<String>('city', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _companyMeta = const VerificationMeta('company');
   GeneratedColumn<String> _company;
   @override
   GeneratedColumn<String> get company =>
       _company ??= GeneratedColumn<String>('company', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _countryMeta = const VerificationMeta('country');
   GeneratedColumn<String> _country;
   @override
   GeneratedColumn<String> get country =>
       _country ??= GeneratedColumn<String>('country', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _emailMeta = const VerificationMeta('email');
   GeneratedColumn<String> _email;
   @override
   GeneratedColumn<String> get email =>
       _email ??= GeneratedColumn<String>('email', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _faxMeta = const VerificationMeta('fax');
   GeneratedColumn<String> _fax;
   @override
   GeneratedColumn<String> get fax =>
       _fax ??= GeneratedColumn<String>('fax', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _isOrganizationMeta =
       const VerificationMeta('isOrganization');
   GeneratedColumn<bool> _isOrganization;
   @override
   GeneratedColumn<bool> get isOrganization => _isOrganization ??=
       GeneratedColumn<bool>('is_organization', aliasedName, false,
-          typeName: 'INTEGER',
+          type: const BoolType(),
           requiredDuringInsert: true,
           defaultConstraints: 'CHECK (is_organization IN (0, 1))');
   final VerificationMeta _nameMeta = const VerificationMeta('name');
@@ -8240,43 +8212,43 @@ class $ContactsGroupsTable extends ContactsGroups
   @override
   GeneratedColumn<String> get name =>
       _name ??= GeneratedColumn<String>('name', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _parentUUIDMeta = const VerificationMeta('parentUUID');
   GeneratedColumn<String> _parentUUID;
   @override
   GeneratedColumn<String> get parentUUID => _parentUUID ??=
       GeneratedColumn<String>('parent_u_u_i_d', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _phoneMeta = const VerificationMeta('phone');
   GeneratedColumn<String> _phone;
   @override
   GeneratedColumn<String> get phone =>
       _phone ??= GeneratedColumn<String>('phone', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _stateMeta = const VerificationMeta('state');
   GeneratedColumn<String> _state;
   @override
   GeneratedColumn<String> get state =>
       _state ??= GeneratedColumn<String>('state', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _streetMeta = const VerificationMeta('street');
   GeneratedColumn<String> _street;
   @override
   GeneratedColumn<String> get street =>
       _street ??= GeneratedColumn<String>('street', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _webMeta = const VerificationMeta('web');
   GeneratedColumn<String> _web;
   @override
   GeneratedColumn<String> get web =>
       _web ??= GeneratedColumn<String>('web', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _zipMeta = const VerificationMeta('zip');
   GeneratedColumn<String> _zip;
   @override
   GeneratedColumn<String> get zip =>
       _zip ??= GeneratedColumn<String>('zip', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns => [
         uuid,
@@ -8415,13 +8387,13 @@ class $ContactsGroupsTable extends ContactsGroups
   Set<GeneratedColumn> get $primaryKey => <GeneratedColumn>{};
   @override
   ContactsGroupsTable map(Map<String, dynamic> data, {String tablePrefix}) {
-    return ContactsGroupsTable.fromData(data, _db,
+    return ContactsGroupsTable.fromData(data, attachedDatabase,
         prefix: tablePrefix != null ? '$tablePrefix.' : null);
   }
 
   @override
   $ContactsGroupsTable createAlias(String alias) {
-    return $ContactsGroupsTable(_db, alias);
+    return $ContactsGroupsTable(attachedDatabase, alias);
   }
 }
 
@@ -8603,22 +8575,8 @@ class ContactsStoragesTable extends DataClass
   }
 
   @override
-  int get hashCode => $mrjf($mrjc(
-      sqliteId.hashCode,
-      $mrjc(
-          userLocalId.hashCode,
-          $mrjc(
-              idUser.hashCode,
-              $mrjc(
-                  serverId.hashCode,
-                  $mrjc(
-                      uniqueName.hashCode,
-                      $mrjc(
-                          name.hashCode,
-                          $mrjc(
-                              cTag.hashCode,
-                              $mrjc(display.hashCode,
-                                  contactsInfo.hashCode)))))))));
+  int get hashCode => Object.hash(sqliteId, userLocalId, idUser, serverId,
+      uniqueName, name, cTag, display, contactsInfo);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -8773,15 +8731,16 @@ class ContactsStoragesCompanion extends UpdateCompanion<ContactsStoragesTable> {
 
 class $ContactsStoragesTable extends ContactsStorages
     with TableInfo<$ContactsStoragesTable, ContactsStoragesTable> {
-  final GeneratedDatabase _db;
+  @override
+  final GeneratedDatabase attachedDatabase;
   final String _alias;
-  $ContactsStoragesTable(this._db, [this._alias]);
+  $ContactsStoragesTable(this.attachedDatabase, [this._alias]);
   final VerificationMeta _sqliteIdMeta = const VerificationMeta('sqliteId');
   GeneratedColumn<int> _sqliteId;
   @override
   GeneratedColumn<int> get sqliteId =>
       _sqliteId ??= GeneratedColumn<int>('sqlite_id', aliasedName, false,
-          typeName: 'INTEGER',
+          type: const IntType(),
           requiredDuringInsert: false,
           defaultConstraints: 'PRIMARY KEY AUTOINCREMENT');
   final VerificationMeta _userLocalIdMeta =
@@ -8790,25 +8749,25 @@ class $ContactsStoragesTable extends ContactsStorages
   @override
   GeneratedColumn<int> get userLocalId =>
       _userLocalId ??= GeneratedColumn<int>('user_local_id', aliasedName, false,
-          typeName: 'INTEGER', requiredDuringInsert: true);
+          type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _idUserMeta = const VerificationMeta('idUser');
   GeneratedColumn<int> _idUser;
   @override
   GeneratedColumn<int> get idUser =>
       _idUser ??= GeneratedColumn<int>('id_user', aliasedName, false,
-          typeName: 'INTEGER', requiredDuringInsert: true);
+          type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _serverIdMeta = const VerificationMeta('serverId');
   GeneratedColumn<String> _serverId;
   @override
   GeneratedColumn<String> get serverId =>
       _serverId ??= GeneratedColumn<String>('server_id', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _uniqueNameMeta = const VerificationMeta('uniqueName');
   GeneratedColumn<String> _uniqueName;
   @override
   GeneratedColumn<String> get uniqueName =>
       _uniqueName ??= GeneratedColumn<String>('unique_name', aliasedName, false,
-          typeName: 'TEXT',
+          type: const StringType(),
           requiredDuringInsert: true,
           $customConstraints: 'UNIQUE');
   final VerificationMeta _nameMeta = const VerificationMeta('name');
@@ -8816,19 +8775,19 @@ class $ContactsStoragesTable extends ContactsStorages
   @override
   GeneratedColumn<String> get name =>
       _name ??= GeneratedColumn<String>('name', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _cTagMeta = const VerificationMeta('cTag');
   GeneratedColumn<int> _cTag;
   @override
   GeneratedColumn<int> get cTag =>
       _cTag ??= GeneratedColumn<int>('c_tag', aliasedName, false,
-          typeName: 'INTEGER', requiredDuringInsert: true);
+          type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _displayMeta = const VerificationMeta('display');
   GeneratedColumn<bool> _display;
   @override
   GeneratedColumn<bool> get display =>
       _display ??= GeneratedColumn<bool>('display', aliasedName, false,
-          typeName: 'INTEGER',
+          type: const BoolType(),
           requiredDuringInsert: true,
           defaultConstraints: 'CHECK (display IN (0, 1))');
   final VerificationMeta _contactsInfoMeta =
@@ -8838,7 +8797,7 @@ class $ContactsStoragesTable extends ContactsStorages
   GeneratedColumnWithTypeConverter<List<ContactInfoItem>, String>
       get contactsInfo => _contactsInfo ??= GeneratedColumn<String>(
               'contacts_info', aliasedName, true,
-              typeName: 'TEXT', requiredDuringInsert: false)
+              type: const StringType(), requiredDuringInsert: false)
           .withConverter<List<ContactInfoItem>>(
               $ContactsStoragesTable.$converter0);
   @override
@@ -8921,13 +8880,13 @@ class $ContactsStoragesTable extends ContactsStorages
   Set<GeneratedColumn> get $primaryKey => {sqliteId};
   @override
   ContactsStoragesTable map(Map<String, dynamic> data, {String tablePrefix}) {
-    return ContactsStoragesTable.fromData(data, _db,
+    return ContactsStoragesTable.fromData(data, attachedDatabase,
         prefix: tablePrefix != null ? '$tablePrefix.' : null);
   }
 
   @override
   $ContactsStoragesTable createAlias(String alias) {
-    return $ContactsStoragesTable(_db, alias);
+    return $ContactsStoragesTable(attachedDatabase, alias);
   }
 
   static TypeConverter<List<ContactInfoItem>, String> $converter0 =
@@ -9059,14 +9018,7 @@ class LocalPgpKey extends DataClass implements Insertable<LocalPgpKey> {
   }
 
   @override
-  int get hashCode => $mrjf($mrjc(
-      id.hashCode,
-      $mrjc(
-          name.hashCode,
-          $mrjc(
-              mail.hashCode,
-              $mrjc(isPrivate.hashCode,
-                  $mrjc(length.hashCode, other.hashCode))))));
+  int get hashCode => Object.hash(id, name, mail, isPrivate, length, other);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -9180,33 +9132,34 @@ class PgpKeyModelCompanion extends UpdateCompanion<LocalPgpKey> {
 
 class $PgpKeyModelTable extends PgpKeyModel
     with TableInfo<$PgpKeyModelTable, LocalPgpKey> {
-  final GeneratedDatabase _db;
+  @override
+  final GeneratedDatabase attachedDatabase;
   final String _alias;
-  $PgpKeyModelTable(this._db, [this._alias]);
+  $PgpKeyModelTable(this.attachedDatabase, [this._alias]);
   final VerificationMeta _idMeta = const VerificationMeta('id');
   GeneratedColumn<String> _id;
   @override
   GeneratedColumn<String> get id =>
       _id ??= GeneratedColumn<String>('id', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _nameMeta = const VerificationMeta('name');
   GeneratedColumn<String> _name;
   @override
   GeneratedColumn<String> get name =>
       _name ??= GeneratedColumn<String>('name', aliasedName, true,
-          typeName: 'TEXT', requiredDuringInsert: false);
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _mailMeta = const VerificationMeta('mail');
   GeneratedColumn<String> _mail;
   @override
   GeneratedColumn<String> get mail =>
       _mail ??= GeneratedColumn<String>('mail', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _isPrivateMeta = const VerificationMeta('isPrivate');
   GeneratedColumn<bool> _isPrivate;
   @override
   GeneratedColumn<bool> get isPrivate =>
       _isPrivate ??= GeneratedColumn<bool>('is_private', aliasedName, false,
-          typeName: 'INTEGER',
+          type: const BoolType(),
           requiredDuringInsert: true,
           defaultConstraints: 'CHECK (is_private IN (0, 1))');
   final VerificationMeta _lengthMeta = const VerificationMeta('length');
@@ -9214,13 +9167,13 @@ class $PgpKeyModelTable extends PgpKeyModel
   @override
   GeneratedColumn<int> get length =>
       _length ??= GeneratedColumn<int>('length', aliasedName, true,
-          typeName: 'INTEGER', requiredDuringInsert: false);
+          type: const IntType(), requiredDuringInsert: false);
   final VerificationMeta _otherMeta = const VerificationMeta('other');
   GeneratedColumn<String> _other;
   @override
   GeneratedColumn<String> get other =>
       _other ??= GeneratedColumn<String>('other', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns =>
       [id, name, mail, isPrivate, length, other];
@@ -9271,13 +9224,13 @@ class $PgpKeyModelTable extends PgpKeyModel
   Set<GeneratedColumn> get $primaryKey => {other, id};
   @override
   LocalPgpKey map(Map<String, dynamic> data, {String tablePrefix}) {
-    return LocalPgpKey.fromData(data, _db,
+    return LocalPgpKey.fromData(data, attachedDatabase,
         prefix: tablePrefix != null ? '$tablePrefix.' : null);
   }
 
   @override
   $PgpKeyModelTable createAlias(String alias) {
-    return $PgpKeyModelTable(_db, alias);
+    return $PgpKeyModelTable(attachedDatabase, alias);
   }
 }
 
@@ -9443,20 +9396,8 @@ class AccountIdentity extends DataClass implements Insertable<AccountIdentity> {
   }
 
   @override
-  int get hashCode => $mrjf($mrjc(
-      entityId.hashCode,
-      $mrjc(
-          email.hashCode,
-          $mrjc(
-              friendlyName.hashCode,
-              $mrjc(
-                  signature.hashCode,
-                  $mrjc(
-                      idUser.hashCode,
-                      $mrjc(
-                          idAccount.hashCode,
-                          $mrjc(
-                              isDefault.hashCode, useSignature.hashCode))))))));
+  int get hashCode => Object.hash(entityId, email, friendlyName, signature,
+      idUser, idAccount, isDefault, useSignature);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -9598,52 +9539,53 @@ class AccountIdentityTableCompanion extends UpdateCompanion<AccountIdentity> {
 
 class $AccountIdentityTableTable extends AccountIdentityTable
     with TableInfo<$AccountIdentityTableTable, AccountIdentity> {
-  final GeneratedDatabase _db;
+  @override
+  final GeneratedDatabase attachedDatabase;
   final String _alias;
-  $AccountIdentityTableTable(this._db, [this._alias]);
+  $AccountIdentityTableTable(this.attachedDatabase, [this._alias]);
   final VerificationMeta _entityIdMeta = const VerificationMeta('entityId');
   GeneratedColumn<int> _entityId;
   @override
   GeneratedColumn<int> get entityId =>
       _entityId ??= GeneratedColumn<int>('entity_id', aliasedName, false,
-          typeName: 'INTEGER', requiredDuringInsert: true);
+          type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _emailMeta = const VerificationMeta('email');
   GeneratedColumn<String> _email;
   @override
   GeneratedColumn<String> get email =>
       _email ??= GeneratedColumn<String>('email', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _friendlyNameMeta =
       const VerificationMeta('friendlyName');
   GeneratedColumn<String> _friendlyName;
   @override
   GeneratedColumn<String> get friendlyName => _friendlyName ??=
       GeneratedColumn<String>('friendly_name', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _signatureMeta = const VerificationMeta('signature');
   GeneratedColumn<String> _signature;
   @override
   GeneratedColumn<String> get signature =>
       _signature ??= GeneratedColumn<String>('signature', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _idUserMeta = const VerificationMeta('idUser');
   GeneratedColumn<int> _idUser;
   @override
   GeneratedColumn<int> get idUser =>
       _idUser ??= GeneratedColumn<int>('id_user', aliasedName, false,
-          typeName: 'INTEGER', requiredDuringInsert: true);
+          type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _idAccountMeta = const VerificationMeta('idAccount');
   GeneratedColumn<int> _idAccount;
   @override
   GeneratedColumn<int> get idAccount =>
       _idAccount ??= GeneratedColumn<int>('id_account', aliasedName, false,
-          typeName: 'INTEGER', requiredDuringInsert: true);
+          type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _isDefaultMeta = const VerificationMeta('isDefault');
   GeneratedColumn<bool> _isDefault;
   @override
   GeneratedColumn<bool> get isDefault =>
       _isDefault ??= GeneratedColumn<bool>('is_default', aliasedName, false,
-          typeName: 'INTEGER',
+          type: const BoolType(),
           requiredDuringInsert: true,
           defaultConstraints: 'CHECK (is_default IN (0, 1))');
   final VerificationMeta _useSignatureMeta =
@@ -9652,7 +9594,7 @@ class $AccountIdentityTableTable extends AccountIdentityTable
   @override
   GeneratedColumn<bool> get useSignature => _useSignature ??=
       GeneratedColumn<bool>('use_signature', aliasedName, false,
-          typeName: 'INTEGER',
+          type: const BoolType(),
           requiredDuringInsert: true,
           defaultConstraints: 'CHECK (use_signature IN (0, 1))');
   @override
@@ -9734,13 +9676,13 @@ class $AccountIdentityTableTable extends AccountIdentityTable
   Set<GeneratedColumn> get $primaryKey => {entityId, idUser};
   @override
   AccountIdentity map(Map<String, dynamic> data, {String tablePrefix}) {
-    return AccountIdentity.fromData(data, _db,
+    return AccountIdentity.fromData(data, attachedDatabase,
         prefix: tablePrefix != null ? '$tablePrefix.' : null);
   }
 
   @override
   $AccountIdentityTableTable createAlias(String alias) {
-    return $AccountIdentityTableTable(_db, alias);
+    return $AccountIdentityTableTable(attachedDatabase, alias);
   }
 }
 
@@ -9890,16 +9832,8 @@ class Aliases extends DataClass implements Insertable<Aliases> {
   }
 
   @override
-  int get hashCode => $mrjf($mrjc(
-      entityId.hashCode,
-      $mrjc(
-          email.hashCode,
-          $mrjc(
-              friendlyName.hashCode,
-              $mrjc(
-                  signature.hashCode,
-                  $mrjc(idUser.hashCode,
-                      $mrjc(idAccount.hashCode, useSignature.hashCode)))))));
+  int get hashCode => Object.hash(entityId, email, friendlyName, signature,
+      idUser, idAccount, useSignature);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -10028,53 +9962,54 @@ class AliasesTableCompanion extends UpdateCompanion<Aliases> {
 
 class $AliasesTableTable extends AliasesTable
     with TableInfo<$AliasesTableTable, Aliases> {
-  final GeneratedDatabase _db;
+  @override
+  final GeneratedDatabase attachedDatabase;
   final String _alias;
-  $AliasesTableTable(this._db, [this._alias]);
+  $AliasesTableTable(this.attachedDatabase, [this._alias]);
   final VerificationMeta _entityIdMeta = const VerificationMeta('entityId');
   GeneratedColumn<int> _entityId;
   @override
   GeneratedColumn<int> get entityId =>
       _entityId ??= GeneratedColumn<int>('entity_id', aliasedName, false,
-          typeName: 'INTEGER', requiredDuringInsert: true);
+          type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _emailMeta = const VerificationMeta('email');
   GeneratedColumn<String> _email;
   @override
   GeneratedColumn<String> get email =>
       _email ??= GeneratedColumn<String>('email', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _friendlyNameMeta =
       const VerificationMeta('friendlyName');
   GeneratedColumn<String> _friendlyName;
   @override
   GeneratedColumn<String> get friendlyName => _friendlyName ??=
       GeneratedColumn<String>('friendly_name', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _signatureMeta = const VerificationMeta('signature');
   GeneratedColumn<String> _signature;
   @override
   GeneratedColumn<String> get signature =>
       _signature ??= GeneratedColumn<String>('signature', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _idUserMeta = const VerificationMeta('idUser');
   GeneratedColumn<int> _idUser;
   @override
   GeneratedColumn<int> get idUser =>
       _idUser ??= GeneratedColumn<int>('id_user', aliasedName, false,
-          typeName: 'INTEGER', requiredDuringInsert: true);
+          type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _idAccountMeta = const VerificationMeta('idAccount');
   GeneratedColumn<int> _idAccount;
   @override
   GeneratedColumn<int> get idAccount =>
       _idAccount ??= GeneratedColumn<int>('id_account', aliasedName, false,
-          typeName: 'INTEGER', requiredDuringInsert: true);
+          type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _useSignatureMeta =
       const VerificationMeta('useSignature');
   GeneratedColumn<bool> _useSignature;
   @override
   GeneratedColumn<bool> get useSignature => _useSignature ??=
       GeneratedColumn<bool>('use_signature', aliasedName, false,
-          typeName: 'INTEGER',
+          type: const BoolType(),
           requiredDuringInsert: true,
           defaultConstraints: 'CHECK (use_signature IN (0, 1))');
   @override
@@ -10149,13 +10084,13 @@ class $AliasesTableTable extends AliasesTable
   Set<GeneratedColumn> get $primaryKey => {entityId, idUser};
   @override
   Aliases map(Map<String, dynamic> data, {String tablePrefix}) {
-    return Aliases.fromData(data, _db,
+    return Aliases.fromData(data, attachedDatabase,
         prefix: tablePrefix != null ? '$tablePrefix.' : null);
   }
 
   @override
   $AliasesTableTable createAlias(String alias) {
-    return $AliasesTableTable(_db, alias);
+    return $AliasesTableTable(attachedDatabase, alias);
   }
 }
 
@@ -10205,12 +10140,14 @@ class WhiteMail extends DataClass implements Insertable<WhiteMail> {
       );
   @override
   String toString() {
-    return (StringBuffer('WhiteMail(')..write('mail: $mail')..write(')'))
+    return (StringBuffer('WhiteMail(')
+          ..write('mail: $mail')
+          ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => $mrjf(mail.hashCode);
+  int get hashCode => mail.hashCode;
   @override
   bool operator ==(Object other) =>
       identical(this, other) || (other is WhiteMail && other.mail == this.mail);
@@ -10258,15 +10195,16 @@ class WhiteMailTableCompanion extends UpdateCompanion<WhiteMail> {
 
 class $WhiteMailTableTable extends WhiteMailTable
     with TableInfo<$WhiteMailTableTable, WhiteMail> {
-  final GeneratedDatabase _db;
+  @override
+  final GeneratedDatabase attachedDatabase;
   final String _alias;
-  $WhiteMailTableTable(this._db, [this._alias]);
+  $WhiteMailTableTable(this.attachedDatabase, [this._alias]);
   final VerificationMeta _mailMeta = const VerificationMeta('mail');
   GeneratedColumn<String> _mail;
   @override
   GeneratedColumn<String> get mail =>
       _mail ??= GeneratedColumn<String>('mail', aliasedName, false,
-          typeName: 'TEXT', requiredDuringInsert: true);
+          type: const StringType(), requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns => [mail];
   @override
@@ -10291,13 +10229,13 @@ class $WhiteMailTableTable extends WhiteMailTable
   Set<GeneratedColumn> get $primaryKey => {mail};
   @override
   WhiteMail map(Map<String, dynamic> data, {String tablePrefix}) {
-    return WhiteMail.fromData(data, _db,
+    return WhiteMail.fromData(data, attachedDatabase,
         prefix: tablePrefix != null ? '$tablePrefix.' : null);
   }
 
   @override
   $WhiteMailTableTable createAlias(String alias) {
-    return $WhiteMailTableTable(_db, alias);
+    return $WhiteMailTableTable(attachedDatabase, alias);
   }
 }
 
