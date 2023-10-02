@@ -62,8 +62,12 @@ class UpgradePlanWidget extends StatelessWidget {
                           Text(
                             message ??
                                 i18n(context, S.hint_login_upgrade_your_plan),
-                            style: Theme.of(context).textTheme.subtitle1.copyWith(
-                                fontSize: 18, color: AppTheme.loginTextColor),
+                            style: Theme.of(context)
+                                .textTheme
+                                .subtitle1
+                                .copyWith(
+                                    fontSize: 18,
+                                    color: AppTheme.loginTextColor),
                             textAlign: TextAlign.center,
                           ),
                         ],

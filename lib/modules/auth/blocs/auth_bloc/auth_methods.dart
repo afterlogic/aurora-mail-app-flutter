@@ -14,7 +14,8 @@ import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/gr
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/storages/contacts_storages_dao.dart';
 import 'package:aurora_mail/notification/push_notifications_manager.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:moor_flutter/moor_flutter.dart';
+import 'package:drift_sqflite/drift_sqflite.dart';
+import 'package:drift/drift.dart';
 import 'package:aurora_mail/modules/auth/repository/device_id_storage.dart';
 
 class AuthMethods {

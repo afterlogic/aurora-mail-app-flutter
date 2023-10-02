@@ -1,12 +1,13 @@
 import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
-import 'package:moor_flutter/moor_flutter.dart';
+import 'package:drift_sqflite/drift_sqflite.dart';
+import 'package:drift/drift.dart';
 
 import 'contacts_table.dart';
 
 part 'contacts_dao.g.dart';
 
-@UseDao(tables: [ContactsTable])
+@DriftAccessor(tables: [ContactsTable])
 class ContactsDao extends DatabaseAccessor<AppDatabase>
     with _$ContactsDaoMixin {
   ContactsDao(AppDatabase db) : super(db);
@@ -83,7 +84,9 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
 
   Stream<List<ContactDb>> watchAllContacts(int userLocalId, String search) {
     return _search(
-      (select(contactsTable)..where((c) => c.userLocalId.equals(userLocalId))..where((c) => c.storage.isNotIn([StorageNames.collected])))
+      (select(contactsTable)
+        ..where((c) => c.userLocalId.equals(userLocalId))
+        ..where((c) => c.storage.isNotIn([StorageNames.collected])))
         ..orderBy([
           (c) => OrderingTerm(expression: c.fullName.collate(Collate.noCase)),
           (c) => OrderingTerm(expression: c.viewEmail.collate(Collate.noCase)),

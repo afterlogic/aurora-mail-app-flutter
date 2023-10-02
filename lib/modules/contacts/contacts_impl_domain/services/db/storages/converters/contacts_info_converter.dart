@@ -1,7 +1,8 @@
 import 'dart:convert';
 
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_storage_model.dart';
-import 'package:moor_flutter/moor_flutter.dart';
+import 'package:drift_sqflite/drift_sqflite.dart';
+import 'package:drift/drift.dart';
 
 class ContactsInfoConverter
     extends TypeConverter<List<ContactInfoItem>, String> {

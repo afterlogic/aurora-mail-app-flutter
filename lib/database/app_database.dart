@@ -14,7 +14,8 @@ import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/gr
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/storages/contacts_storages_table.dart';
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/storages/converters/contacts_info_converter.dart';
 import 'package:aurora_mail/modules/settings/models/sync_freq.dart';
-import 'package:moor_flutter/moor_flutter.dart';
+import 'package:drift_sqflite/drift_sqflite.dart';
+import 'package:drift/drift.dart';
 
 import 'accounts/accounts_table.dart';
 import 'migration/drop_all.dart';
@@ -32,7 +33,7 @@ class DBInstances {
   static final appDB = new AppDatabase();
 }
 
-@UseMoor(tables: [
+@DriftDatabase(tables: [
   Mail,
   Folders,
   Users,
@@ -49,7 +50,7 @@ class AppDatabase extends _$AppDatabase {
   final migrationCompleter = Completer();
 
   AppDatabase()
-      : super(FlutterQueryExecutor.inDatabaseFolder(path: 'app_db.sqlite'));
+      : super(SqfliteQueryExecutor.inDatabaseFolder(path: 'app_db.sqlite'));
 
   Map<int, _Migration> get _migrationMap => {
         1: dropAll,

@@ -119,8 +119,7 @@ class Message extends DataClass implements Insertable<Message> {
       this.customInJson,
       this.isHtml,
       @required this.hasBody});
-  factory Message.fromData(Map<String, dynamic> data, GeneratedDatabase db,
-      {String prefix}) {
+  factory Message.fromData(Map<String, dynamic> data, {String prefix}) {
     final effectivePrefix = prefix ?? '';
     return Message(
       localId: const IntType()
@@ -575,7 +574,7 @@ class Message extends DataClass implements Insertable<Message> {
 
   factory Message.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer}) {
-    serializer ??= moorRuntimeOptions.defaultSerializer;
+    serializer ??= driftRuntimeOptions.defaultSerializer;
     return Message(
       localId: serializer.fromJson<int>(json['localId']),
       uid: serializer.fromJson<int>(json['uid']),
@@ -641,7 +640,7 @@ class Message extends DataClass implements Insertable<Message> {
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer serializer}) {
-    serializer ??= moorRuntimeOptions.defaultSerializer;
+    serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'localId': serializer.toJson<int>(localId),
       'uid': serializer.toJson<int>(uid),
@@ -2448,7 +2447,7 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
   Set<GeneratedColumn> get $primaryKey => {localId};
   @override
   Message map(Map<String, dynamic> data, {String tablePrefix}) {
-    return Message.fromData(data, attachedDatabase,
+    return Message.fromData(data,
         prefix: tablePrefix != null ? '$tablePrefix.' : null);
   }
 
@@ -2506,8 +2505,7 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
       this.extended,
       @required this.alwaysRefresh,
       @required this.namespace});
-  factory LocalFolder.fromData(Map<String, dynamic> data, GeneratedDatabase db,
-      {String prefix}) {
+  factory LocalFolder.fromData(Map<String, dynamic> data, {String prefix}) {
     final effectivePrefix = prefix ?? '';
     return LocalFolder(
       fullName: const StringType()
@@ -2701,7 +2699,7 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
 
   factory LocalFolder.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer}) {
-    serializer ??= moorRuntimeOptions.defaultSerializer;
+    serializer ??= driftRuntimeOptions.defaultSerializer;
     return LocalFolder(
       fullName: serializer.fromJson<String>(json['fullName']),
       accountLocalId: serializer.fromJson<int>(json['accountLocalId']),
@@ -2730,7 +2728,7 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer serializer}) {
-    serializer ??= moorRuntimeOptions.defaultSerializer;
+    serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'fullName': serializer.toJson<String>(fullName),
       'accountLocalId': serializer.toJson<int>(accountLocalId),
@@ -3559,7 +3557,7 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
   Set<GeneratedColumn> get $primaryKey => {fullName, accountLocalId};
   @override
   LocalFolder map(Map<String, dynamic> data, {String tablePrefix}) {
-    return LocalFolder.fromData(data, attachedDatabase,
+    return LocalFolder.fromData(data,
         prefix: tablePrefix != null ? '$tablePrefix.' : null);
   }
 
@@ -3585,8 +3583,7 @@ class User extends DataClass implements Insertable<User> {
       @required this.token,
       this.syncFreqInSeconds,
       this.syncPeriod});
-  factory User.fromData(Map<String, dynamic> data, GeneratedDatabase db,
-      {String prefix}) {
+  factory User.fromData(Map<String, dynamic> data, {String prefix}) {
     final effectivePrefix = prefix ?? '';
     return User(
       localId: const IntType()
@@ -3659,7 +3656,7 @@ class User extends DataClass implements Insertable<User> {
 
   factory User.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer}) {
-    serializer ??= moorRuntimeOptions.defaultSerializer;
+    serializer ??= driftRuntimeOptions.defaultSerializer;
     return User(
       localId: serializer.fromJson<int>(json['localId']),
       serverId: serializer.fromJson<int>(json['serverId']),
@@ -3672,7 +3669,7 @@ class User extends DataClass implements Insertable<User> {
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer serializer}) {
-    serializer ??= moorRuntimeOptions.defaultSerializer;
+    serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'localId': serializer.toJson<int>(localId),
       'serverId': serializer.toJson<int>(serverId),
@@ -3963,7 +3960,7 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
   Set<GeneratedColumn> get $primaryKey => {localId};
   @override
   User map(Map<String, dynamic> data, {String tablePrefix}) {
-    return User.fromData(data, attachedDatabase,
+    return User.fromData(data,
         prefix: tablePrefix != null ? '$tablePrefix.' : null);
   }
 
@@ -4015,8 +4012,7 @@ class Account extends DataClass implements Insertable<Account> {
       @required this.allowFilters,
       @required this.allowForward,
       @required this.allowAutoResponder});
-  factory Account.fromData(Map<String, dynamic> data, GeneratedDatabase db,
-      {String prefix}) {
+  factory Account.fromData(Map<String, dynamic> data, {String prefix}) {
     final effectivePrefix = prefix ?? '';
     return Account(
       localId: const IntType()
@@ -4191,7 +4187,7 @@ class Account extends DataClass implements Insertable<Account> {
 
   factory Account.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer}) {
-    serializer ??= moorRuntimeOptions.defaultSerializer;
+    serializer ??= driftRuntimeOptions.defaultSerializer;
     return Account(
       localId: serializer.fromJson<int>(json['localId']),
       userLocalId: serializer.fromJson<int>(json['userLocalId']),
@@ -4219,7 +4215,7 @@ class Account extends DataClass implements Insertable<Account> {
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer serializer}) {
-    serializer ??= moorRuntimeOptions.defaultSerializer;
+    serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'localId': serializer.toJson<int>(localId),
       'userLocalId': serializer.toJson<int>(userLocalId),
@@ -4971,7 +4967,7 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
   Set<GeneratedColumn> get $primaryKey => {localId};
   @override
   Account map(Map<String, dynamic> data, {String tablePrefix}) {
-    return Account.fromData(data, attachedDatabase,
+    return Account.fromData(data,
         prefix: tablePrefix != null ? '$tablePrefix.' : null);
   }
 
@@ -5099,8 +5095,7 @@ class ContactDb extends DataClass implements Insertable<ContactDb> {
       @required this.groupUUIDs,
       @required this.autoSign,
       @required this.autoEncrypt});
-  factory ContactDb.fromData(Map<String, dynamic> data, GeneratedDatabase db,
-      {String prefix}) {
+  factory ContactDb.fromData(Map<String, dynamic> data, {String prefix}) {
     final effectivePrefix = prefix ?? '';
     return ContactDb(
       uuidPlusStorage: const StringType()
@@ -5573,7 +5568,7 @@ class ContactDb extends DataClass implements Insertable<ContactDb> {
 
   factory ContactDb.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer}) {
-    serializer ??= moorRuntimeOptions.defaultSerializer;
+    serializer ??= driftRuntimeOptions.defaultSerializer;
     return ContactDb(
       uuidPlusStorage: serializer.fromJson<String>(json['uuidPlusStorage']),
       uuid: serializer.fromJson<String>(json['uuid']),
@@ -5639,7 +5634,7 @@ class ContactDb extends DataClass implements Insertable<ContactDb> {
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer serializer}) {
-    serializer ??= moorRuntimeOptions.defaultSerializer;
+    serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'uuidPlusStorage': serializer.toJson<String>(uuidPlusStorage),
       'uuid': serializer.toJson<String>(uuid),
@@ -7600,7 +7595,7 @@ class $ContactsTableTable extends ContactsTable
   Set<GeneratedColumn> get $primaryKey => {entityId};
   @override
   ContactDb map(Map<String, dynamic> data, {String tablePrefix}) {
-    return ContactDb.fromData(data, attachedDatabase,
+    return ContactDb.fromData(data,
         prefix: tablePrefix != null ? '$tablePrefix.' : null);
   }
 
@@ -7648,8 +7643,7 @@ class ContactsGroupsTable extends DataClass
       @required this.street,
       @required this.web,
       @required this.zip});
-  factory ContactsGroupsTable.fromData(
-      Map<String, dynamic> data, GeneratedDatabase db,
+  factory ContactsGroupsTable.fromData(Map<String, dynamic> data,
       {String prefix}) {
     final effectivePrefix = prefix ?? '';
     return ContactsGroupsTable(
@@ -7779,7 +7773,7 @@ class ContactsGroupsTable extends DataClass
 
   factory ContactsGroupsTable.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer}) {
-    serializer ??= moorRuntimeOptions.defaultSerializer;
+    serializer ??= driftRuntimeOptions.defaultSerializer;
     return ContactsGroupsTable(
       uuid: serializer.fromJson<String>(json['uuid']),
       userLocalId: serializer.fromJson<int>(json['userLocalId']),
@@ -7801,7 +7795,7 @@ class ContactsGroupsTable extends DataClass
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer serializer}) {
-    serializer ??= moorRuntimeOptions.defaultSerializer;
+    serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'uuid': serializer.toJson<String>(uuid),
       'userLocalId': serializer.toJson<int>(userLocalId),
@@ -8387,7 +8381,7 @@ class $ContactsGroupsTable extends ContactsGroups
   Set<GeneratedColumn> get $primaryKey => <GeneratedColumn>{};
   @override
   ContactsGroupsTable map(Map<String, dynamic> data, {String tablePrefix}) {
-    return ContactsGroupsTable.fromData(data, attachedDatabase,
+    return ContactsGroupsTable.fromData(data,
         prefix: tablePrefix != null ? '$tablePrefix.' : null);
   }
 
@@ -8418,8 +8412,7 @@ class ContactsStoragesTable extends DataClass
       @required this.cTag,
       @required this.display,
       this.contactsInfo});
-  factory ContactsStoragesTable.fromData(
-      Map<String, dynamic> data, GeneratedDatabase db,
+  factory ContactsStoragesTable.fromData(Map<String, dynamic> data,
       {String prefix}) {
     final effectivePrefix = prefix ?? '';
     return ContactsStoragesTable(
@@ -8507,7 +8500,7 @@ class ContactsStoragesTable extends DataClass
 
   factory ContactsStoragesTable.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer}) {
-    serializer ??= moorRuntimeOptions.defaultSerializer;
+    serializer ??= driftRuntimeOptions.defaultSerializer;
     return ContactsStoragesTable(
       sqliteId: serializer.fromJson<int>(json['sqliteId']),
       userLocalId: serializer.fromJson<int>(json['userLocalId']),
@@ -8523,7 +8516,7 @@ class ContactsStoragesTable extends DataClass
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer serializer}) {
-    serializer ??= moorRuntimeOptions.defaultSerializer;
+    serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'sqliteId': serializer.toJson<int>(sqliteId),
       'userLocalId': serializer.toJson<int>(userLocalId),
@@ -8880,7 +8873,7 @@ class $ContactsStoragesTable extends ContactsStorages
   Set<GeneratedColumn> get $primaryKey => {sqliteId};
   @override
   ContactsStoragesTable map(Map<String, dynamic> data, {String tablePrefix}) {
-    return ContactsStoragesTable.fromData(data, attachedDatabase,
+    return ContactsStoragesTable.fromData(data,
         prefix: tablePrefix != null ? '$tablePrefix.' : null);
   }
 
@@ -8907,8 +8900,7 @@ class LocalPgpKey extends DataClass implements Insertable<LocalPgpKey> {
       @required this.isPrivate,
       this.length,
       @required this.other});
-  factory LocalPgpKey.fromData(Map<String, dynamic> data, GeneratedDatabase db,
-      {String prefix}) {
+  factory LocalPgpKey.fromData(Map<String, dynamic> data, {String prefix}) {
     final effectivePrefix = prefix ?? '';
     return LocalPgpKey(
       id: const StringType()
@@ -8966,7 +8958,7 @@ class LocalPgpKey extends DataClass implements Insertable<LocalPgpKey> {
 
   factory LocalPgpKey.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer}) {
-    serializer ??= moorRuntimeOptions.defaultSerializer;
+    serializer ??= driftRuntimeOptions.defaultSerializer;
     return LocalPgpKey(
       id: serializer.fromJson<String>(json['id']),
       name: serializer.fromJson<String>(json['name']),
@@ -8978,7 +8970,7 @@ class LocalPgpKey extends DataClass implements Insertable<LocalPgpKey> {
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer serializer}) {
-    serializer ??= moorRuntimeOptions.defaultSerializer;
+    serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<String>(id),
       'name': serializer.toJson<String>(name),
@@ -9224,7 +9216,7 @@ class $PgpKeyModelTable extends PgpKeyModel
   Set<GeneratedColumn> get $primaryKey => {other, id};
   @override
   LocalPgpKey map(Map<String, dynamic> data, {String tablePrefix}) {
-    return LocalPgpKey.fromData(data, attachedDatabase,
+    return LocalPgpKey.fromData(data,
         prefix: tablePrefix != null ? '$tablePrefix.' : null);
   }
 
@@ -9252,9 +9244,7 @@ class AccountIdentity extends DataClass implements Insertable<AccountIdentity> {
       @required this.idAccount,
       @required this.isDefault,
       @required this.useSignature});
-  factory AccountIdentity.fromData(
-      Map<String, dynamic> data, GeneratedDatabase db,
-      {String prefix}) {
+  factory AccountIdentity.fromData(Map<String, dynamic> data, {String prefix}) {
     final effectivePrefix = prefix ?? '';
     return AccountIdentity(
       entityId: const IntType()
@@ -9334,7 +9324,7 @@ class AccountIdentity extends DataClass implements Insertable<AccountIdentity> {
 
   factory AccountIdentity.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer}) {
-    serializer ??= moorRuntimeOptions.defaultSerializer;
+    serializer ??= driftRuntimeOptions.defaultSerializer;
     return AccountIdentity(
       entityId: serializer.fromJson<int>(json['entityId']),
       email: serializer.fromJson<String>(json['email']),
@@ -9348,7 +9338,7 @@ class AccountIdentity extends DataClass implements Insertable<AccountIdentity> {
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer serializer}) {
-    serializer ??= moorRuntimeOptions.defaultSerializer;
+    serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'entityId': serializer.toJson<int>(entityId),
       'email': serializer.toJson<String>(email),
@@ -9676,7 +9666,7 @@ class $AccountIdentityTableTable extends AccountIdentityTable
   Set<GeneratedColumn> get $primaryKey => {entityId, idUser};
   @override
   AccountIdentity map(Map<String, dynamic> data, {String tablePrefix}) {
-    return AccountIdentity.fromData(data, attachedDatabase,
+    return AccountIdentity.fromData(data,
         prefix: tablePrefix != null ? '$tablePrefix.' : null);
   }
 
@@ -9702,8 +9692,7 @@ class Aliases extends DataClass implements Insertable<Aliases> {
       @required this.idUser,
       @required this.idAccount,
       @required this.useSignature});
-  factory Aliases.fromData(Map<String, dynamic> data, GeneratedDatabase db,
-      {String prefix}) {
+  factory Aliases.fromData(Map<String, dynamic> data, {String prefix}) {
     final effectivePrefix = prefix ?? '';
     return Aliases(
       entityId: const IntType()
@@ -9775,7 +9764,7 @@ class Aliases extends DataClass implements Insertable<Aliases> {
 
   factory Aliases.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer}) {
-    serializer ??= moorRuntimeOptions.defaultSerializer;
+    serializer ??= driftRuntimeOptions.defaultSerializer;
     return Aliases(
       entityId: serializer.fromJson<int>(json['entityId']),
       email: serializer.fromJson<String>(json['email']),
@@ -9788,7 +9777,7 @@ class Aliases extends DataClass implements Insertable<Aliases> {
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer serializer}) {
-    serializer ??= moorRuntimeOptions.defaultSerializer;
+    serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'entityId': serializer.toJson<int>(entityId),
       'email': serializer.toJson<String>(email),
@@ -10084,7 +10073,7 @@ class $AliasesTableTable extends AliasesTable
   Set<GeneratedColumn> get $primaryKey => {entityId, idUser};
   @override
   Aliases map(Map<String, dynamic> data, {String tablePrefix}) {
-    return Aliases.fromData(data, attachedDatabase,
+    return Aliases.fromData(data,
         prefix: tablePrefix != null ? '$tablePrefix.' : null);
   }
 
@@ -10097,8 +10086,7 @@ class $AliasesTableTable extends AliasesTable
 class WhiteMail extends DataClass implements Insertable<WhiteMail> {
   final String mail;
   WhiteMail({@required this.mail});
-  factory WhiteMail.fromData(Map<String, dynamic> data, GeneratedDatabase db,
-      {String prefix}) {
+  factory WhiteMail.fromData(Map<String, dynamic> data, {String prefix}) {
     final effectivePrefix = prefix ?? '';
     return WhiteMail(
       mail: const StringType()
@@ -10122,14 +10110,14 @@ class WhiteMail extends DataClass implements Insertable<WhiteMail> {
 
   factory WhiteMail.fromJson(Map<String, dynamic> json,
       {ValueSerializer serializer}) {
-    serializer ??= moorRuntimeOptions.defaultSerializer;
+    serializer ??= driftRuntimeOptions.defaultSerializer;
     return WhiteMail(
       mail: serializer.fromJson<String>(json['mail']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer serializer}) {
-    serializer ??= moorRuntimeOptions.defaultSerializer;
+    serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'mail': serializer.toJson<String>(mail),
     };
@@ -10229,7 +10217,7 @@ class $WhiteMailTableTable extends WhiteMailTable
   Set<GeneratedColumn> get $primaryKey => {mail};
   @override
   WhiteMail map(Map<String, dynamic> data, {String tablePrefix}) {
-    return WhiteMail.fromData(data, attachedDatabase,
+    return WhiteMail.fromData(data,
         prefix: tablePrefix != null ? '$tablePrefix.' : null);
   }
 

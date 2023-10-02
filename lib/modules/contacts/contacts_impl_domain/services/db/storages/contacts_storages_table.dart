@@ -1,5 +1,6 @@
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/storages/converters/contacts_info_converter.dart';
-import 'package:moor_flutter/moor_flutter.dart';
+import 'package:drift_sqflite/drift_sqflite.dart';
+import 'package:drift/drift.dart';
 
 @DataClassName("ContactsStoragesTable")
 class ContactsStorages extends Table {

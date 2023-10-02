@@ -34,14 +34,16 @@ class ContactWithKeyWidget extends StatelessWidget {
                 Text(
                   name,
                   maxLines: 1,
-                  style:
-                      hasName ? theme.textTheme.bodyText1 : theme.textTheme.caption,
+                  style: hasName
+                      ? theme.textTheme.bodyText1
+                      : theme.textTheme.caption,
                 ),
                 Text(
                   model.contact?.viewEmail ?? model.key?.mail ?? "",
                   maxLines: 1,
-                  style:
-                      hasName ? theme.textTheme.caption : theme.textTheme.bodyText1,
+                  style: hasName
+                      ? theme.textTheme.caption
+                      : theme.textTheme.bodyText1,
                 ),
               ],
             ),

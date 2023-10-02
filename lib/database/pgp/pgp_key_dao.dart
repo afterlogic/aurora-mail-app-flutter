@@ -1,11 +1,12 @@
 import 'package:aurora_mail/database/app_database.dart';
-import 'package:moor_flutter/moor_flutter.dart';
+import 'package:drift_sqflite/drift_sqflite.dart';
+import 'package:drift/drift.dart';
 
 import 'pgp_key_model.dart';
 
 part 'pgp_key_dao.g.dart';
 
-@UseDao(tables: [PgpKeyModel])
+@DriftAccessor(tables: [PgpKeyModel])
 class PgpKeyDao extends DatabaseAccessor<AppDatabase> with _$PgpKeyDaoMixin {
   PgpKeyDao(AppDatabase db) : super(db);
   String _other;

@@ -98,6 +98,7 @@ class MailAttachment {
     int progress,
   ) {
     print("Not called");
+
     ///Status 4 - error
     final SendPort send =
         IsolateNameServer.lookupPortByName(_DOWNLOAD_PORT_NAME);

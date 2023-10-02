@@ -1,11 +1,12 @@
 import 'package:aurora_mail/database/app_database.dart';
-import 'package:moor_flutter/moor_flutter.dart';
+import 'package:drift_sqflite/drift_sqflite.dart';
+import 'package:drift/drift.dart';
 
 import 'white_mail_model.dart';
 
 part 'white_mail_dao.g.dart';
 
-@UseDao(tables: [WhiteMailTable])
+@DriftAccessor(tables: [WhiteMailTable])
 class WhiteMailDao extends DatabaseAccessor<AppDatabase>
     with _$WhiteMailDaoMixin {
   WhiteMailDao(AppDatabase db) : super(db);

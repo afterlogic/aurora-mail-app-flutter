@@ -191,4 +191,5 @@ enum SearchPattern {
   Text,
   Attachment,
 }
+
 enum SearchFlag { Attachment }

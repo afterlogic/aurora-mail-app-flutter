@@ -1,12 +1,13 @@
 import 'package:aurora_mail/models/folder.dart';
-import 'package:moor_flutter/moor_flutter.dart';
+import 'package:drift_sqflite/drift_sqflite.dart';
+import 'package:drift/drift.dart';
 
 import '../app_database.dart';
 import 'folders_table.dart';
 
 part 'folders_dao.g.dart';
 
-@UseDao(tables: [Folders])
+@DriftAccessor(tables: [Folders])
 class FoldersDao extends DatabaseAccessor<AppDatabase> with _$FoldersDaoMixin {
   FoldersDao(AppDatabase db) : super(db);
 

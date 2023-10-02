@@ -27,7 +27,7 @@ dependencies:
   html: ^0.15.0
 
   # local storage
-  moor_flutter: ^4.0.0
+  drift_sqflite: ^1.0.0
   shared_preferences: ^2.1.1
 
   # file downloading/uploading
@@ -130,10 +130,10 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-#  dm_gen should be commented for moor_generator work
+#  dm_gen should be commented for moor_generator/drift_dev work
 #  dm_gen: ^0.5.1+1
   build_runner: ^2.3.3
-  moor_generator: ^4.4.1
+  drift_dev: ^1.7.1
   build_variant:
     git:
       url: "https://github.com/afterlogic/build_variant"

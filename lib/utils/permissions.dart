@@ -6,7 +6,6 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 
 Future getStoragePermissions() async {
-
   DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
 
   final androidInfo = await deviceInfo.androidInfo;
@@ -14,7 +13,6 @@ Future getStoragePermissions() async {
   print('SDK');
   print(androidInfo.version.sdkInt);
   if (androidInfo.version.sdkInt >= 33) {
-    
     PermissionStatus status = await Permission.photos.status;
 
     if (status != PermissionStatus.granted) {

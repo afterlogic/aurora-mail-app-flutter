@@ -20,7 +20,8 @@ import 'package:aurora_mail/notification/notification_manager.dart';
 import 'package:aurora_mail/notification/push_notifications_manager.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
-import 'package:moor_flutter/moor_flutter.dart';
+import 'package:drift_sqflite/drift_sqflite.dart';
+import 'package:drift/drift.dart';
 import 'package:webmail_api_client/webmail_api_client.dart';
 
 class BackgroundSync {

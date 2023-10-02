@@ -1,5 +1,6 @@
 import 'package:aurora_mail/database/app_database.dart';
-import 'package:moor_flutter/moor_flutter.dart';
+import 'package:drift_sqflite/drift_sqflite.dart';
+import 'package:drift/drift.dart';
 
 @DataClassName("AccountIdentity")
 class AccountIdentityTable extends Table {

@@ -1,11 +1,12 @@
 import 'package:aurora_mail/database/app_database.dart';
-import 'package:moor_flutter/moor_flutter.dart';
+import 'package:drift_sqflite/drift_sqflite.dart';
+import 'package:drift/drift.dart';
 
 import 'aliases_table.dart';
 
 part 'aliases_dao.g.dart';
 
-@UseDao(tables: [AliasesTable])
+@DriftAccessor(tables: [AliasesTable])
 class AliasesDao extends DatabaseAccessor<AppDatabase> with _$AliasesDaoMixin {
   AliasesDao(AppDatabase db) : super(db);
 

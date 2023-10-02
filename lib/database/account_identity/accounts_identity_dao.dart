@@ -1,11 +1,12 @@
 import 'package:aurora_mail/database/app_database.dart';
-import 'package:moor_flutter/moor_flutter.dart';
+import 'package:drift_sqflite/drift_sqflite.dart';
+import 'package:drift/drift.dart';
 
 import 'account_identity_table.dart';
 
 part 'accounts_identity_dao.g.dart';
 
-@UseDao(tables: [AccountIdentityTable])
+@DriftAccessor(tables: [AccountIdentityTable])
 class AccountIdentityDao extends DatabaseAccessor<AppDatabase>
     with _$AccountIdentityDaoMixin {
   AccountIdentityDao(AppDatabase db) : super(db);

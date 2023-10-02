@@ -3,7 +3,8 @@ import 'dart:math';
 
 import 'package:aurora_mail/models/message_info.dart';
 import 'package:aurora_mail/modules/mail/repository/search_util.dart';
-import 'package:moor_flutter/moor_flutter.dart';
+import 'package:drift_sqflite/drift_sqflite.dart';
+import 'package:drift/drift.dart';
 
 import '../app_database.dart';
 import 'mail_table.dart';
@@ -12,7 +13,7 @@ part 'mail_dao.g.dart';
 
 // TODO in all daos, make sure to select specific account's messages/folders
 
-@UseDao(tables: [Mail])
+@DriftAccessor(tables: [Mail])
 class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
   MailDao(AppDatabase db) : super(db);
 
@@ -142,7 +143,7 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
         .watch()
         .map((list) {
       return list.map((item) {
-        return Message.fromData(item.data, db);
+        return Message.fromData(item.data);
       }).toList();
     });
   }

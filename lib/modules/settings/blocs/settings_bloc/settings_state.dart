@@ -2,7 +2,8 @@ import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/settings/models/language.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:equatable/equatable.dart';
-import 'package:moor_flutter/moor_flutter.dart';
+import 'package:drift_sqflite/drift_sqflite.dart';
+import 'package:drift/drift.dart';
 
 abstract class SettingsState extends Equatable {
   const SettingsState();

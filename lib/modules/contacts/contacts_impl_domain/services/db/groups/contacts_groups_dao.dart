@@ -1,11 +1,12 @@
 import 'package:aurora_mail/database/app_database.dart';
-import 'package:moor_flutter/moor_flutter.dart';
+import 'package:drift_sqflite/drift_sqflite.dart';
+import 'package:drift/drift.dart';
 
 import 'contacts_groups_table.dart';
 
 part 'contacts_groups_dao.g.dart';
 
-@UseDao(tables: [ContactsGroups])
+@DriftAccessor(tables: [ContactsGroups])
 class ContactsGroupsDao extends DatabaseAccessor<AppDatabase>
     with _$ContactsGroupsDaoMixin {
   ContactsGroupsDao(AppDatabase db) : super(db);

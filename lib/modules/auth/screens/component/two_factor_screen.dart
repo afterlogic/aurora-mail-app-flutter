@@ -111,7 +111,11 @@ class _SelectTwoFactorWidgetState extends BState<TwoFactorScene> {
                                 children: <Widget>[
                                   Text(
                                     i18n(context, S.tfa_label),
-                                    style: Theme.of(context).textTheme.headline6.copyWith(color: AppTheme.loginTextColor),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headline6
+                                        .copyWith(
+                                            color: AppTheme.loginTextColor),
                                     textAlign: TextAlign.center,
                                   ),
                                   SizedBox(height: 10),
