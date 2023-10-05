@@ -113,16 +113,13 @@ class _ContactsDrawerState extends BState<ContactsDrawer> {
           ...visibleStorages.map((s) {
             if (s.id == StorageNames.personal) {
               return _buildStorageTile(
-                  name: s.id, icon: WebMailIcons.personal, s: s, state: state);
+                  icon: WebMailIcons.personal, s: s, state: state);
             } else if (s.id == StorageNames.shared) {
               return _buildStorageTile(
-                  name: s.id,
-                  icon: WebMailIcons.shared_with_all,
-                  s: s,
-                  state: state);
+                  icon: WebMailIcons.shared_with_all, s: s, state: state);
             } else if (s.id == StorageNames.team) {
               return _buildStorageTile(
-                  name: s.id, icon: Icons.business_center, s: s, state: state);
+                  icon: Icons.business_center, s: s, state: state);
             } else {
               return _buildStorageTile(
                   icon: MdiIcons.folderAccountOutline, s: s, state: state);
@@ -141,14 +138,19 @@ class _ContactsDrawerState extends BState<ContactsDrawer> {
   }
 
   Widget _buildStorageTile({
-    String name,
     @required ContactsStorage s,
     @required IconData icon,
     @required ContactsState state,
   }) {
     return ListTile(
       leading: Icon(icon),
-      title: Text(name != null ? i18n(context, getStorageName(name)) : s.name),
+      title: Text(
+        s.displayName.substring(0, 6) == 'LABEL_'
+            ? i18n(context, getStorageName(s.displayName.substring(6)))
+            : s.displayName == null
+                ? s.name
+                : s.displayName.toString(),
+      ),
       selected: s.id == state.selectedStorage,
       onTap: () {
         contactsBloc.add(SelectStorageGroup(storage: s));

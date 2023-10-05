@@ -84,7 +84,10 @@ class _ContactsAppBarState extends State<ContactsAppBar> {
             Text(i18n(context, S.contacts)),
             SizedBox(height: 3.0),
             Text(
-              i18n(context, getStorageName(selectedStorage.name)),
+              selectedStorage.displayName.substring(0, 6) == 'LABEL_'
+                  ? i18n(context,
+                      getStorageName(selectedStorage.displayName.substring(6)))
+                  : selectedStorage.displayName,
               style: TextStyle(
                   fontSize: theme.textTheme.caption.fontSize,
                   fontWeight: FontWeight.w400),

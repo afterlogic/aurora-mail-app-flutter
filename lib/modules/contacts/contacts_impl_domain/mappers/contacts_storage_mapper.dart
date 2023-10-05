@@ -12,6 +12,7 @@ class ContactsStorageMapper {
         uniqueName: i.uniqueName,
         cTag: i.cTag,
         display: i.display,
+        displayName: i.displayName,
         contactsInfo: i.contactsInfo,
       );
     }).toList();
@@ -29,6 +30,7 @@ class ContactsStorageMapper {
         name: i.name,
         cTag: i.cTag,
         display: i.display,
+        displayName: i.displayName,
         contactsInfo: i.contactsInfo,
       );
     }).toList();
@@ -51,6 +53,7 @@ class ContactsStorageMapper {
       name: rawItems["Name"] as String ?? rawItems["Id"] as String,
       cTag: rawItems["CTag"] as int,
       display: rawItems["Display"] as bool ?? true,
+      displayName: rawItems["DisplayName"] as String,
       contactsInfo: null,
     );
   }

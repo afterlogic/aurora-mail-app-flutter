@@ -8,6 +8,7 @@ class ContactsStorage {
   final String uniqueName;
   final int cTag;
   final bool display;
+  final String displayName;
   List<ContactInfoItem> contactsInfo;
 
   ContactsStorage({
@@ -18,6 +19,7 @@ class ContactsStorage {
     @required this.uniqueName,
     @required this.cTag,
     @required this.display,
+    @required this.displayName,
     @required this.contactsInfo,
   }) : assert(userLocalId != null);
 
@@ -28,6 +30,7 @@ class ContactsStorage {
     String uniqueName,
     int cTag,
     bool display,
+    String displayName,
     List<ContactInfoItem> contactsInfo,
   }) {
     return new ContactsStorage(
@@ -38,6 +41,7 @@ class ContactsStorage {
       uniqueName: uniqueName ?? this.uniqueName,
       cTag: cTag ?? this.cTag,
       display: display ?? this.display,
+      displayName: displayName ?? this.displayName,
       contactsInfo: contactsInfo ?? this.contactsInfo,
     );
   }

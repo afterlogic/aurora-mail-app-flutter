@@ -20,6 +20,8 @@ class ContactsStorages extends Table {
 
   BoolColumn get display => boolean()();
 
+  TextColumn get displayName => text().withDefault(Constant(""))();
+
   TextColumn get contactsInfo =>
       text().map(const ContactsInfoConverter()).nullable()();
 }

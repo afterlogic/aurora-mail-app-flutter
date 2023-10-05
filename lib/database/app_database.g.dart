@@ -8401,6 +8401,7 @@ class ContactsStoragesTable extends DataClass
   final String name;
   final int cTag;
   final bool display;
+  final String displayName;
   final List<ContactInfoItem> contactsInfo;
   ContactsStoragesTable(
       {@required this.sqliteId,
@@ -8411,6 +8412,7 @@ class ContactsStoragesTable extends DataClass
       @required this.name,
       @required this.cTag,
       @required this.display,
+      @required this.displayName,
       this.contactsInfo});
   factory ContactsStoragesTable.fromData(Map<String, dynamic> data,
       {String prefix}) {
@@ -8432,6 +8434,8 @@ class ContactsStoragesTable extends DataClass
           .mapFromDatabaseResponse(data['${effectivePrefix}c_tag']),
       display: const BoolType()
           .mapFromDatabaseResponse(data['${effectivePrefix}display']),
+      displayName: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}display_name']),
       contactsInfo: $ContactsStoragesTable.$converter0.mapToDart(
           const StringType().mapFromDatabaseResponse(
               data['${effectivePrefix}contacts_info'])),
@@ -8464,6 +8468,9 @@ class ContactsStoragesTable extends DataClass
     if (!nullToAbsent || display != null) {
       map['display'] = Variable<bool>(display);
     }
+    if (!nullToAbsent || displayName != null) {
+      map['display_name'] = Variable<String>(displayName);
+    }
     if (!nullToAbsent || contactsInfo != null) {
       final converter = $ContactsStoragesTable.$converter0;
       map['contacts_info'] = Variable<String>(converter.mapToSql(contactsInfo));
@@ -8492,6 +8499,9 @@ class ContactsStoragesTable extends DataClass
       display: display == null && nullToAbsent
           ? const Value.absent()
           : Value(display),
+      displayName: displayName == null && nullToAbsent
+          ? const Value.absent()
+          : Value(displayName),
       contactsInfo: contactsInfo == null && nullToAbsent
           ? const Value.absent()
           : Value(contactsInfo),
@@ -8510,6 +8520,7 @@ class ContactsStoragesTable extends DataClass
       name: serializer.fromJson<String>(json['name']),
       cTag: serializer.fromJson<int>(json['cTag']),
       display: serializer.fromJson<bool>(json['display']),
+      displayName: serializer.fromJson<String>(json['displayName']),
       contactsInfo:
           serializer.fromJson<List<ContactInfoItem>>(json['contactsInfo']),
     );
@@ -8526,6 +8537,7 @@ class ContactsStoragesTable extends DataClass
       'name': serializer.toJson<String>(name),
       'cTag': serializer.toJson<int>(cTag),
       'display': serializer.toJson<bool>(display),
+      'displayName': serializer.toJson<String>(displayName),
       'contactsInfo': serializer.toJson<List<ContactInfoItem>>(contactsInfo),
     };
   }
@@ -8539,6 +8551,7 @@ class ContactsStoragesTable extends DataClass
           String name,
           int cTag,
           bool display,
+          String displayName,
           List<ContactInfoItem> contactsInfo}) =>
       ContactsStoragesTable(
         sqliteId: sqliteId ?? this.sqliteId,
@@ -8549,6 +8562,7 @@ class ContactsStoragesTable extends DataClass
         name: name ?? this.name,
         cTag: cTag ?? this.cTag,
         display: display ?? this.display,
+        displayName: displayName ?? this.displayName,
         contactsInfo: contactsInfo ?? this.contactsInfo,
       );
   @override
@@ -8562,6 +8576,7 @@ class ContactsStoragesTable extends DataClass
           ..write('name: $name, ')
           ..write('cTag: $cTag, ')
           ..write('display: $display, ')
+          ..write('displayName: $displayName, ')
           ..write('contactsInfo: $contactsInfo')
           ..write(')'))
         .toString();
@@ -8569,7 +8584,7 @@ class ContactsStoragesTable extends DataClass
 
   @override
   int get hashCode => Object.hash(sqliteId, userLocalId, idUser, serverId,
-      uniqueName, name, cTag, display, contactsInfo);
+      uniqueName, name, cTag, display, displayName, contactsInfo);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -8582,6 +8597,7 @@ class ContactsStoragesTable extends DataClass
           other.name == this.name &&
           other.cTag == this.cTag &&
           other.display == this.display &&
+          other.displayName == this.displayName &&
           other.contactsInfo == this.contactsInfo);
 }
 
@@ -8594,6 +8610,7 @@ class ContactsStoragesCompanion extends UpdateCompanion<ContactsStoragesTable> {
   final Value<String> name;
   final Value<int> cTag;
   final Value<bool> display;
+  final Value<String> displayName;
   final Value<List<ContactInfoItem>> contactsInfo;
   const ContactsStoragesCompanion({
     this.sqliteId = const Value.absent(),
@@ -8604,6 +8621,7 @@ class ContactsStoragesCompanion extends UpdateCompanion<ContactsStoragesTable> {
     this.name = const Value.absent(),
     this.cTag = const Value.absent(),
     this.display = const Value.absent(),
+    this.displayName = const Value.absent(),
     this.contactsInfo = const Value.absent(),
   });
   ContactsStoragesCompanion.insert({
@@ -8615,6 +8633,7 @@ class ContactsStoragesCompanion extends UpdateCompanion<ContactsStoragesTable> {
     @required String name,
     @required int cTag,
     @required bool display,
+    @required String displayName,
     this.contactsInfo = const Value.absent(),
   })  : userLocalId = Value(userLocalId),
         idUser = Value(idUser),
@@ -8622,7 +8641,8 @@ class ContactsStoragesCompanion extends UpdateCompanion<ContactsStoragesTable> {
         uniqueName = Value(uniqueName),
         name = Value(name),
         cTag = Value(cTag),
-        display = Value(display);
+        display = Value(display),
+        displayName = Value(displayName);
   static Insertable<ContactsStoragesTable> custom({
     Expression<int> sqliteId,
     Expression<int> userLocalId,
@@ -8632,6 +8652,7 @@ class ContactsStoragesCompanion extends UpdateCompanion<ContactsStoragesTable> {
     Expression<String> name,
     Expression<int> cTag,
     Expression<bool> display,
+    Expression<String> displayName,
     Expression<List<ContactInfoItem>> contactsInfo,
   }) {
     return RawValuesInsertable({
@@ -8643,6 +8664,7 @@ class ContactsStoragesCompanion extends UpdateCompanion<ContactsStoragesTable> {
       if (name != null) 'name': name,
       if (cTag != null) 'c_tag': cTag,
       if (display != null) 'display': display,
+      if (displayName != null) 'display_name': displayName,
       if (contactsInfo != null) 'contacts_info': contactsInfo,
     });
   }
@@ -8656,6 +8678,7 @@ class ContactsStoragesCompanion extends UpdateCompanion<ContactsStoragesTable> {
       Value<String> name,
       Value<int> cTag,
       Value<bool> display,
+      Value<String> displayName,
       Value<List<ContactInfoItem>> contactsInfo}) {
     return ContactsStoragesCompanion(
       sqliteId: sqliteId ?? this.sqliteId,
@@ -8666,6 +8689,7 @@ class ContactsStoragesCompanion extends UpdateCompanion<ContactsStoragesTable> {
       name: name ?? this.name,
       cTag: cTag ?? this.cTag,
       display: display ?? this.display,
+      displayName: displayName ?? this.displayName,
       contactsInfo: contactsInfo ?? this.contactsInfo,
     );
   }
@@ -8697,6 +8721,9 @@ class ContactsStoragesCompanion extends UpdateCompanion<ContactsStoragesTable> {
     if (display.present) {
       map['display'] = Variable<bool>(display.value);
     }
+    if (displayName.present) {
+      map['display_name'] = Variable<String>(displayName.value);
+    }
     if (contactsInfo.present) {
       final converter = $ContactsStoragesTable.$converter0;
       map['contacts_info'] =
@@ -8716,6 +8743,7 @@ class ContactsStoragesCompanion extends UpdateCompanion<ContactsStoragesTable> {
           ..write('name: $name, ')
           ..write('cTag: $cTag, ')
           ..write('display: $display, ')
+          ..write('displayName: $displayName, ')
           ..write('contactsInfo: $contactsInfo')
           ..write(')'))
         .toString();
@@ -8783,6 +8811,13 @@ class $ContactsStoragesTable extends ContactsStorages
           type: const BoolType(),
           requiredDuringInsert: true,
           defaultConstraints: 'CHECK (display IN (0, 1))');
+  final VerificationMeta _displayNameMeta =
+      const VerificationMeta('displayName');
+  GeneratedColumn<String> _displayName;
+  @override
+  GeneratedColumn<String> get displayName => _displayName ??=
+      GeneratedColumn<String>('display_name', aliasedName, false,
+          type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _contactsInfoMeta =
       const VerificationMeta('contactsInfo');
   GeneratedColumnWithTypeConverter<List<ContactInfoItem>, String> _contactsInfo;
@@ -8803,6 +8838,7 @@ class $ContactsStoragesTable extends ContactsStorages
         name,
         cTag,
         display,
+        displayName,
         contactsInfo
       ];
   @override
@@ -8864,6 +8900,14 @@ class $ContactsStoragesTable extends ContactsStorages
           display.isAcceptableOrUnknown(data['display'], _displayMeta));
     } else if (isInserting) {
       context.missing(_displayMeta);
+    }
+    if (data.containsKey('display_name')) {
+      context.handle(
+          _displayNameMeta,
+          displayName.isAcceptableOrUnknown(
+              data['display_name'], _displayNameMeta));
+    } else if (isInserting) {
+      context.missing(_displayNameMeta);
     }
     context.handle(_contactsInfoMeta, const VerificationResult.success());
     return context;

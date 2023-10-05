@@ -397,6 +397,7 @@ class ContactsRepositoryImpl implements ContactsRepository {
         sqliteId: s.sqliteId,
         cTag: s.cTag,
         display: s.display,
+        displayName: s.displayName,
         uniqueName: s.uniqueName,
         name: s.name,
       );
@@ -427,6 +428,7 @@ class ContactsRepositoryImpl implements ContactsRepository {
         sqliteId: s.sqliteId,
         cTag: s.cTag,
         display: s.display,
+        displayName: s.displayName,
         name: s.name,
         uniqueName: s.uniqueName,
       );
