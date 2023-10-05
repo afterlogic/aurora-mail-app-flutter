@@ -55,10 +55,10 @@ class SyncPeriod {
   }
 
   static Period dbStringToPeriod(String str) {
-    if (str == null) return Period.allTime;
+    if (str == null) return Period.months3;
     return Period.values.firstWhere(
       (e) => e.toString() == str,
-      orElse: () => Period.allTime,
+      orElse: () => Period.months3,
     );
   }
 }

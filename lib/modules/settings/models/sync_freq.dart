@@ -4,13 +4,13 @@ import 'package:flutter/cupertino.dart';
 
 enum Freq {
   never,
+  minute,
   minutes5,
   minutes30,
   hours1,
   hours2,
   daily,
   monthly,
-  minute,
 }
 
 // Freq == frequency
@@ -34,7 +34,7 @@ class SyncFreq {
       case Freq.monthly:
         return i18n(context, S.settings_sync_frequency_monthly);
       case Freq.minute:
-        return "minute";
+        return "1 minute";
       default:
         return null;
     }
