@@ -727,16 +727,19 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
         return;
       }
       final sender = AliasOrIdentity(alias, identity);
-      final key = await AppInjector.instance
-          .cryptoStorage()
-          .getPgpKey(sender.mail, true, false);
-      if (key == null) {
-        _showSnack(S.error_pgp_not_found_keys_for, {"users": sender.mail});
-        return;
-      }
-      final password = await KeyRequestDialog.request(context, key.key);
-      if (password == null) {
-        return;
+      String password;
+      if(result.sign) {
+        final key = await AppInjector.instance
+            .cryptoStorage()
+            .getPgpKey(sender.mail, true, false);
+        if (key == null) {
+          _showSnack(S.error_pgp_not_found_keys_for, {"users": sender.mail});
+          return;
+        }
+        password = await KeyRequestDialog.request(context, key.key);
+        if (password == null) {
+          return;
+        }
       }
       final contact = <String>{};
       contact.addAll(_ccEmails);
