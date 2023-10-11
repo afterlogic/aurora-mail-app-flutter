@@ -60,7 +60,6 @@ dependencies:
   connectivity: 3.0.6
   package_info: ^2.0.2
   time_machine: ^0.9.17
-  device_id: 0.2.0
   device_info_plus: ^5.0.0
   uni_links: ^0.5.1
   flutter_custom_tabs: ^1.0.4
