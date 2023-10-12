@@ -145,7 +145,7 @@ class _ContactsDrawerState extends BState<ContactsDrawer> {
     return ListTile(
       leading: Icon(icon),
       title: Text(
-        s.displayName.substring(0, 6) == 'LABEL_'
+        s.displayName.length > 6 && s.displayName.substring(0, 6) == 'LABEL_'
             ? i18n(context, getStorageName(s.displayName.substring(6)))
             : s.displayName == null
                 ? s.name
