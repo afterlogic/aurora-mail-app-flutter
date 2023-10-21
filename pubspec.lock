@@ -7,7 +7,14 @@ packages:
       name: _fe_analyzer_shared
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "26.0.0"
+    version: "47.0.0"
+  _flutterfire_internals:
+    dependency: transitive
+    description:
+      name: _flutterfire_internals
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.18"
   alarm_service:
     dependency: "direct main"
     description:
@@ -16,19 +23,19 @@ packages:
     source: path
     version: "0.0.1"
   analyzer:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       name: analyzer
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.3.0"
+    version: "4.7.0"
   analyzer_plugin:
     dependency: transitive
     description:
       name: analyzer_plugin
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.7.0"
+    version: "0.11.1"
   archive:
     dependency: transitive
     description:
@@ -90,47 +97,47 @@ packages:
     source: hosted
     version: "2.1.0"
   build:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       name: build
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.0"
+    version: "2.3.1"
   build_config:
     dependency: transitive
     description:
       name: build_config
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.0"
+    version: "1.1.1"
   build_daemon:
     dependency: transitive
     description:
       name: build_daemon
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.0"
+    version: "3.1.1"
   build_resolvers:
     dependency: transitive
     description:
       name: build_resolvers
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.4"
+    version: "2.0.10"
   build_runner:
     dependency: "direct dev"
     description:
       name: build_runner
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.2"
+    version: "2.3.3"
   build_runner_core:
     dependency: transitive
     description:
       name: build_runner_core
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "7.1.0"
+    version: "7.2.7"
   build_variant:
     dependency: "direct dev"
     description:
@@ -195,7 +202,7 @@ packages:
       name: code_builder
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.1.0"
+    version: "4.4.0"
   collection:
     dependency: transitive
     description:
@@ -297,12 +304,12 @@ packages:
     source: hosted
     version: "0.17.2"
   dart_style:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       name: dart_style
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.2.0"
+    version: "2.2.4"
   dbus:
     dependency: transitive
     description:
@@ -310,13 +317,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.7.8"
-  device_id:
-    dependency: "direct main"
-    description:
-      name: device_id
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.2.0"
   device_info_plus:
     dependency: "direct main"
     description:
@@ -366,13 +366,27 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.4.0"
-  dm_gen:
-    dependency: "direct dev"
+  drift:
+    dependency: transitive
     description:
-      name: dm_gen
+      name: drift
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.5.1+1"
+    version: "1.7.1"
+  drift_dev:
+    dependency: "direct dev"
+    description:
+      name: drift_dev
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.7.1"
+  drift_sqflite:
+    dependency: "direct main"
+    description:
+      name: drift_sqflite
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
   encrypt:
     dependency: "direct main"
     description:
@@ -386,7 +400,7 @@ packages:
       name: equatable
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.1"
+    version: "2.0.5"
   fake_async:
     dependency: transitive
     description:
@@ -421,63 +435,63 @@ packages:
       name: filesize
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.4"
+    version: "2.0.1"
   firebase_core:
     dependency: "direct main"
     description:
       name: firebase_core
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.7.0"
+    version: "2.8.0"
   firebase_core_platform_interface:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: firebase_core_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.2.4"
+    version: "4.5.3"
   firebase_core_web:
     dependency: transitive
     description:
       name: firebase_core_web
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.6.0"
+    version: "2.2.2"
   firebase_crashlytics:
     dependency: "direct main"
     description:
       name: firebase_crashlytics
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.2.0"
+    version: "3.0.17"
   firebase_crashlytics_platform_interface:
     dependency: transitive
     description:
       name: firebase_crashlytics_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.1.3"
+    version: "3.3.17"
   firebase_messaging:
     dependency: "direct main"
     description:
       name: firebase_messaging
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "10.0.5"
+    version: "14.3.0"
   firebase_messaging_platform_interface:
     dependency: transitive
     description:
       name: firebase_messaging_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.6"
+    version: "4.2.16"
   firebase_messaging_web:
     dependency: transitive
     description:
       name: firebase_messaging_web
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.6"
+    version: "3.2.17"
   fixnum:
     dependency: transitive
     description:
@@ -510,7 +524,7 @@ packages:
       name: flutter_custom_tabs
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.3"
+    version: "1.0.4"
   flutter_custom_tabs_platform_interface:
     dependency: transitive
     description:
@@ -533,7 +547,7 @@ packages:
     source: hosted
     version: "1.10.5"
   flutter_keyboard_visibility:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: flutter_keyboard_visibility
       url: "https://pub.dartlang.org"
@@ -545,7 +559,7 @@ packages:
       name: flutter_launcher_icons
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.9.3"
+    version: "0.11.0"
   flutter_local_notifications:
     dependency: "direct main"
     description:
@@ -585,7 +599,7 @@ packages:
       name: flutter_secure_storage
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.3.1+1"
+    version: "3.3.5"
   flutter_speed_dial:
     dependency: "direct main"
     description:
@@ -599,19 +613,12 @@ packages:
       name: flutter_svg
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.2"
+    version: "1.1.6"
   flutter_test:
     dependency: "direct dev"
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_typeahead:
-    dependency: "direct main"
-    description:
-      name: flutter_typeahead
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.8.0"
   flutter_uploader:
     dependency: "direct main"
     description:
@@ -630,14 +637,14 @@ packages:
       name: fluttertoast
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.1.3"
+    version: "8.2.2"
   frontend_server_client:
     dependency: transitive
     description:
       name: frontend_server_client
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.1.3"
+    version: "3.2.0"
   glob:
     dependency: transitive
     description:
@@ -721,14 +728,14 @@ packages:
       name: json_annotation
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.1.0"
+    version: "4.7.0"
   keyboard_actions:
     dependency: "direct main"
     description:
       name: keyboard_actions
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.2.0"
+    version: "4.2.0"
   localizator:
     dependency: "direct dev"
     description:
@@ -772,12 +779,12 @@ packages:
     source: hosted
     version: "3.4.5045+1"
   meta:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
       name: meta
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.10.0"
+    version: "1.7.0"
   mime:
     dependency: "direct main"
     description:
@@ -793,19 +800,12 @@ packages:
     source: hosted
     version: "4.5.0"
   moor_flutter:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: moor_flutter
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.1.0"
-  moor_generator:
-    dependency: "direct dev"
-    description:
-      name: moor_generator
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "4.5.1"
   nested:
     dependency: transitive
     description:
@@ -833,7 +833,7 @@ packages:
       name: package_info
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.0+16"
+    version: "2.0.2"
   path:
     dependency: transitive
     description:
@@ -1031,28 +1031,49 @@ packages:
       name: shared_preferences
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.5.6+3"
-  shared_preferences_macos:
+    version: "2.1.1"
+  shared_preferences_android:
     dependency: transitive
     description:
-      name: shared_preferences_macos
+      name: shared_preferences_android
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.1+11"
+    version: "2.1.4"
+  shared_preferences_foundation:
+    dependency: transitive
+    description:
+      name: shared_preferences_foundation
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.2.2"
+  shared_preferences_linux:
+    dependency: transitive
+    description:
+      name: shared_preferences_linux
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.2.0"
   shared_preferences_platform_interface:
     dependency: transitive
     description:
       name: shared_preferences_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.4"
+    version: "2.2.0"
   shared_preferences_web:
     dependency: transitive
     description:
       name: shared_preferences_web
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.1.2+7"
+    version: "2.1.0"
+  shared_preferences_windows:
+    dependency: transitive
+    description:
+      name: shared_preferences_windows
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.2.0"
   shelf:
     dependency: transitive
     description:
@@ -1073,7 +1094,7 @@ packages:
       name: shimmer
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.0"
+    version: "3.0.0"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -1085,7 +1106,7 @@ packages:
       name: source_gen
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.5"
+    version: "1.2.6"
   source_span:
     dependency: transitive
     description:
@@ -1093,6 +1114,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.8.2"
+  sprintf:
+    dependency: transitive
+    description:
+      name: sprintf
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "7.0.0"
   sqflite:
     dependency: transitive
     description:
@@ -1120,7 +1148,7 @@ packages:
       name: sqlparser
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.17.2"
+    version: "0.22.0"
   stack_trace:
     dependency: transitive
     description:
@@ -1183,7 +1211,7 @@ packages:
       name: time_machine
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.9.16"
+    version: "0.9.17"
   timezone:
     dependency: transitive
     description:
@@ -1211,14 +1239,42 @@ packages:
       name: uni_links
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.4.0"
+    version: "0.5.1"
+  uni_links_platform_interface:
+    dependency: transitive
+    description:
+      name: uni_links_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
+  uni_links_web:
+    dependency: transitive
+    description:
+      name: uni_links_web
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.0"
   url_launcher:
     dependency: "direct main"
     description:
       name: url_launcher
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "6.0.9"
+    version: "6.1.10"
+  url_launcher_android:
+    dependency: transitive
+    description:
+      name: url_launcher_android
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "6.0.26"
+  url_launcher_ios:
+    dependency: transitive
+    description:
+      name: url_launcher_ios
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "6.0.18"
   url_launcher_linux:
     dependency: transitive
     description:
@@ -1239,7 +1295,7 @@ packages:
       name: url_launcher_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.5"
+    version: "2.1.2"
   url_launcher_web:
     dependency: transitive
     description:
@@ -1260,7 +1316,7 @@ packages:
       name: uuid
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.7"
+    version: "4.1.0"
   vector_math:
     dependency: transitive
     description:
@@ -1274,7 +1330,7 @@ packages:
       name: video_thumbnail
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.1"
+    version: "0.5.3"
   watcher:
     dependency: transitive
     description:

@@ -39,7 +39,6 @@ dependencies:
   video_thumbnail: 0.5.3
   mime: ^1.0.1
   # type ahead
-  flutter_typeahead: ^4.3.1
 
   # ui
   flutter_svg: ^1.1.6
@@ -61,7 +60,6 @@ dependencies:
   connectivity: 3.0.6
   package_info: ^2.0.2
   time_machine: ^0.9.17
-  device_id: 0.2.0
   device_info_plus: ^5.0.0
   uni_links: ^0.5.1
   flutter_custom_tabs: ^1.0.4
@@ -93,7 +91,7 @@ dependencies:
   ios_notification_handler:
     path: core/ios_notification_handler
   keyboard_actions: ^4.2.0
-  keyboard_visibility: 0.5.6
+  flutter_keyboard_visibility: 0.7.0
 
   theme:
     path: build_res/afterlogic/theme
