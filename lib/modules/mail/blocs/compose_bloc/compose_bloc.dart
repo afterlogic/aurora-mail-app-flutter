@@ -128,8 +128,10 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
 
   Stream<ComposeState> _addAttachment(UploadAttachment event) async* {
     try {
-      final file = await _mailLocal.pickFile(type: event.type);
-      await _uploadAttachment(file);
+      final files = await _mailLocal.pickFiles(type: event.type);
+      for (File file in files) {
+        await _uploadAttachment(file);
+      }
     } catch (err, s) {
       yield ComposeError(formatError(err, s));
     }
