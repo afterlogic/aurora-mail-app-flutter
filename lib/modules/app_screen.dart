@@ -129,11 +129,15 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
   }
 
   void _navigateToLogin() {
-    if(_navKey.currentState != null){
+
+    try{
       _navKey.currentState.popUntil((r) => r.isFirst);
       _navKey.currentState.pushReplacementNamed(LoginRoute.name);
+      RestartWidget.restartApp(context);
+    }catch(e,st){
+      print(e);
+      print(st);
     }
-    RestartWidget.restartApp(context);
   }
 
   ThemeData _getTheme(bool isDarkTheme) {
