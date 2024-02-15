@@ -154,7 +154,7 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
 
   Future<ContactDb> getContactWithPgpKey(String email) {
     return (select(contactsTable)
-          ..where((item) => item.pgpPublicKey.isNotNull())
+          ..where((item) => item.pgpPublicKey.isNotNull() & item.pgpPublicKey.equals('').not())
           ..where((item) => item.viewEmail.equals(email)))
         .get()
         .then((items) {

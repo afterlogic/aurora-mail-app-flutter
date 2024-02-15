@@ -8,12 +8,10 @@ import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
-import io.flutter.embedding.engine.plugins.FlutterPlugin
-import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 import io.flutter.plugin.common.PluginRegistry.Registrar
 import io.flutter.view.FlutterCallbackInformation
 
-class AlarmPlugin() : MethodCallHandler, FlutterPlugin{
+class AlarmPlugin(private val applicationContext: Context) : MethodCallHandler {
     companion object {
         var onComplete: (() -> Unit)? = null
         var isBackground: Boolean = false
@@ -22,10 +20,8 @@ class AlarmPlugin() : MethodCallHandler, FlutterPlugin{
         @JvmStatic
         fun registerWith(registrar: Registrar) {
             val channel = MethodChannel(registrar.messenger(), "alarm_service")
-            if (instance == null){
-                instance = AlarmPlugin()
-                instance?.applicationContext = registrar.context().applicationContext
-            }
+            if (instance == null)
+                instance = AlarmPlugin(registrar.context().applicationContext)
             channel.setMethodCallHandler(instance)
             registrar.addViewDestroyListener {
                 instance = null
@@ -38,20 +34,6 @@ class AlarmPlugin() : MethodCallHandler, FlutterPlugin{
         ""
     }
 
-    override fun onAttachedToEngine(binding: FlutterPluginBinding) {
-        this.applicationContext = binding.applicationContext
-        methodChannel = MethodChannel(binding.binaryMessenger, "alarm_service")
-        methodChannel!!.setMethodCallHandler(this)
-    }
-
-    override fun onDetachedFromEngine(binding: FlutterPluginBinding) {
-        applicationContext = null
-        methodChannel!!.setMethodCallHandler(null)
-        methodChannel = null
-    }
-
-    var applicationContext: Context? = null
-    private var methodChannel: MethodChannel? = null
     private var doOnAlarm: Result? = null
 
     override fun onMethodCall(call: MethodCall, result: Result) {
@@ -59,7 +41,7 @@ class AlarmPlugin() : MethodCallHandler, FlutterPlugin{
         try {
             when {
                 call.method == "setAlarm" -> {
-                    AlarmBroadcast.setAlarm(applicationContext!!,
+                    AlarmBroadcast.setAlarm(applicationContext,
                             (arg!![0] as Number).toLong(),
                             (arg[1] as Number).toInt(),
                             (arg[2] as Number).toLong())
@@ -67,7 +49,7 @@ class AlarmPlugin() : MethodCallHandler, FlutterPlugin{
                 }
                 call.method == "removeAlarm" -> {
                     doOnAlarm?.success(null)
-                    AlarmBroadcast.cancelAlarm(applicationContext!!, arg!![0] as Int)
+                    AlarmBroadcast.cancelAlarm(applicationContext, arg!![0] as Int)
                     result.success("")
                 }
                 call.method == "endAlarm" -> {
