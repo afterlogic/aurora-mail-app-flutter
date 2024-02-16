@@ -1,7 +1,7 @@
 name: aurora_mail
 description: Mail client for Aurora Mail.
 
-version: "2.3.4+259"
+version: "2.3.4+260"
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
