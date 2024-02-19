@@ -66,11 +66,21 @@ abstract class AlarmService : IntentService("Check update mail") {
                     val mAppBundlePath = FlutterMain.findAppBundlePath()
 
                     flutter = SoftReference(FlutterEngine(applicationContext))
-                    flutter?.get()?.apply {
-                        val flutterCallback = FlutterCallbackInformation.lookupCallbackInformation(callbackId)
-                        val dartCallback = DartCallback(applicationContext.resources.assets, mAppBundlePath, flutterCallback)
-                        this.dartExecutor.executeDartCallback(dartCallback)
-                        onStartFlutter(this)
+                    if (flutter != null) {
+                        flutter?.get()?.apply {
+                            if (callbackId != null) {
+                                val flutterCallback = FlutterCallbackInformation.lookupCallbackInformation(callbackId)
+                                if (flutterCallback != null) {
+                                    val dartCallback = DartCallback(applicationContext.resources.assets, mAppBundlePath, flutterCallback)
+                                    if (dartCallback != null) {
+                                        this.dartExecutor.executeDartCallback(dartCallback)
+                                    }
+                                } 
+                            }
+                            if (this != null) {
+                                onStartFlutter(this) 
+                            }
+                        }
                     }
                 } catch (e: Throwable) {
                     Log.e("flutter alarm service", "$e")

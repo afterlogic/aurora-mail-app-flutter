@@ -85,7 +85,7 @@ class _GroupEditAndroidState extends BState<GroupEditAndroid>
     final user = BlocProvider.of<AuthBloc>(context).currentUser;
 
     return ContactsGroup(
-      uuid: widget.group?.uuid,
+      uuid: widget.group?.uuid ?? '',
       userLocalId: widget.group?.userLocalId ?? user.localId,
       idUser: widget.group?.idUser ?? user.serverId,
       name: _nameCtrl.text,

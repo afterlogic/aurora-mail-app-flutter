@@ -142,10 +142,8 @@ class ContactMapper {
   static List<Contact> fromNetwork(List<dynamic> rawItems, int userLocalId) {
     final result = <Contact>[];
     rawItems.forEach((i) {
-      final pgpPublicKey = i["PublicPgpKey"] ?? i["OpenPgpWebclient::PgpKey"];
-      if (pgpPublicKey != null) {
-        print(pgpPublicKey);
-      }
+      final pgpPublicKey =
+          i["PublicPgpKey"] == null || i["PublicPgpKey"] == "" ? i["OpenPgpWebclient::PgpKey"] : i["PublicPgpKey"];
       try {
         final contact = Contact(
           entityId: i["EntityId"] as int,
@@ -203,7 +201,7 @@ class ContactMapper {
           davContactsUid: i["DavContacts::UID"] as String,
           davContactsVCardUid: i["DavContacts::VCardUID"] as String,
           groupUUIDs: new List<String>.from(i["GroupUUIDs"] as List),
-          pgpPublicKey: pgpPublicKey as String,
+          pgpPublicKey: pgpPublicKey as String ?? '',
           autoSign: i["OpenPgpWebclient::PgpSignMessages"] as bool,
           autoEncrypt: i["OpenPgpWebclient::PgpEncryptMessages"] as bool,
         );

@@ -1,7 +1,7 @@
 name: aurora_mail
 description: Mail client for Aurora Mail.
 
-version: "2.3.4+252"
+version: "2.3.4+260"
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
@@ -91,7 +91,7 @@ dependencies:
   ios_notification_handler:
     path: core/ios_notification_handler
   keyboard_actions: ^4.2.0
-  flutter_keyboard_visibility: 0.7.0
+#  flutter_keyboard_visibility: 0.7.0
 
   theme:
     path: build_res/afterlogic/theme

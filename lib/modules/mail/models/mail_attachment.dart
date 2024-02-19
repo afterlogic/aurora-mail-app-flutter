@@ -62,7 +62,7 @@ class MailAttachment {
     );
     port.listen((data) {
       String id = data[0] as String;
-      DownloadTaskStatus status = data[1] as DownloadTaskStatus;
+      DownloadTaskStatus status = DownloadTaskStatus(data[1] as int);
       int progress = data[2] as int;
       if ([
         DownloadTaskStatus.complete,

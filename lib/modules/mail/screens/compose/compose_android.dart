@@ -945,9 +945,13 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
                   ComposeSubject(
                     focusNode: subjectNode,
                     textCtrl: _subjectTextCtrl,
-                    onAttach: isTablet
-                        ? null
-                        : (FileType type) => _bloc.add(UploadAttachment(type)),
+                    onAttach: (FileType type) {
+                      toNode.unfocus();
+                      bccNode.unfocus();
+                      ccNode.unfocus();
+                      subjectNode.unfocus();
+                      bodyNode.unfocus();
+                      _bloc.add(UploadAttachment(type));},
                     onNext: () {
                       bodyNode.requestFocus();
                     },

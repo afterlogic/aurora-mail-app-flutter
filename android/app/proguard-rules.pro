@@ -7,4 +7,5 @@
 -keep class io.flutter.plugins.**  { *; }
 -keep class com.dexterous.** { *; }
 -keep class com.google.firebase.** { *; }
+-keep class androidx.lifecycle.DefaultLifecycleObserver
 -dontwarn io.flutter.embedding.**
