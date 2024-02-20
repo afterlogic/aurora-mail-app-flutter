@@ -1,3 +1,4 @@
+//@dart=2.9
 import 'dart:convert';
 
 import 'package:drift_sqflite/drift_sqflite.dart';

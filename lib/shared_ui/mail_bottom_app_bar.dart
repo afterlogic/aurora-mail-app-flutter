@@ -1,3 +1,4 @@
+//@dart=2.9
 import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/screens/contacts_list/contacts_list_route.dart';
@@ -60,7 +61,7 @@ class MailBottomAppBar extends StatelessWidget {
         ),
         IconButton(
           icon: Icon(
-            MdiIcons.contactMail,
+            MdiIcons.cardAccountMail,
             color: selectedRoute == MailBottomAppBarRoutes.contacts
                 ? theme.accentColor
                 : theme.disabledColor,
@@ -71,7 +72,7 @@ class MailBottomAppBar extends StatelessWidget {
         ),
         IconButton(
           icon: Icon(
-            MdiIcons.settings,
+            MdiIcons.cog,
             color: selectedRoute == MailBottomAppBarRoutes.settings
                 ? theme.accentColor
                 : theme.disabledColor,

@@ -1,3 +1,4 @@
+//@dart=2.9
 import 'dart:async';
 
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_event.dart';

@@ -1,3 +1,4 @@
+//@dart=2.9
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -18,8 +19,7 @@ class ContactsSpeedDial extends StatelessWidget {
       overlayColor: Colors.black,
       overlayOpacity: 0.5,
       curve: Curves.easeInOutExpo,
-      marginRight: 14.0,
-      marginBottom: 16.0,
+      // floatingActionButtonLocation property of Scafold instead of marginRight and marginBottom
 //      animationSpeed: 200,
       children: [
         SpeedDialChild(

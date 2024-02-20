@@ -1,3 +1,4 @@
+//@dart=2.9
 import "s.dart";
 
 class RuS extends S {

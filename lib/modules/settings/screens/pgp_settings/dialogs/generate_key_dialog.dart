@@ -1,3 +1,4 @@
+//@dart=2.9
 import 'package:aurora_mail/models/alias_or_identity.dart';
 import 'package:aurora_mail/modules/dialog_wrap.dart';
 import 'package:aurora_mail/utils/identity_util.dart';

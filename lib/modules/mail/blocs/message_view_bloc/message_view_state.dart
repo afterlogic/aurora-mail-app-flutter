@@ -1,3 +1,4 @@
+//@dart=2.9
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/utils/always_non_equal_object.dart';
 import 'package:aurora_mail/utils/error_to_show.dart';

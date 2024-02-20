@@ -42,9 +42,9 @@ dependencies:
 
   # ui
   flutter_svg: ^1.1.6
-  material_design_icons_flutter: ^3.4.5045+1
-  webview_flutter: ^1.0.7
-  flutter_speed_dial: ^1.2.5
+  material_design_icons_flutter: ^7.0.7296
+  webview_flutter: ^4.0.7
+  flutter_speed_dial: ^7.0.0
   fluttertoast: 8.2.2
   shimmer: ^3.0.0
 
@@ -60,7 +60,7 @@ dependencies:
   connectivity: 3.0.6
   package_info: ^2.0.2
   time_machine: ^0.9.17
-  device_info_plus: ^5.0.0
+  device_info_plus: ^8.2.2
   uni_links: ^0.5.1
   flutter_custom_tabs: ^1.0.4
   # crashlytics

@@ -1,3 +1,4 @@
+//@dart=2.9
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/models/alias_or_identity.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';

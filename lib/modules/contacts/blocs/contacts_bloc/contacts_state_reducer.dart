@@ -1,3 +1,4 @@
+//@dart=2.9
 import 'package:aurora_mail/utils/copy_with_value.dart';
 
 import 'bloc.dart';

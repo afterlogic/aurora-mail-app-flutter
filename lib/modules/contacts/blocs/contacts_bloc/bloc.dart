@@ -1,3 +1,4 @@
+//@dart=2.9
 export 'contacts_bloc.dart';
 export 'contacts_state.dart';
 export 'events/contacts_event.dart';

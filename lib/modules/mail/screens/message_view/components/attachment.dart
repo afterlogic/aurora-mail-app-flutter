@@ -1,3 +1,4 @@
+//@dart=2.9
 import 'dart:io';
 
 import 'package:aurora_mail/modules/mail/blocs/message_view_bloc/bloc.dart';

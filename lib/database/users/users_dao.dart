@@ -1,3 +1,4 @@
+//@dart=2.9
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/users/users_table.dart';
 import 'package:drift_sqflite/drift_sqflite.dart';

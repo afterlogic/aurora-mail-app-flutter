@@ -1,3 +1,4 @@
+//@dart=2.9
 /// # Flutter TypeAhead
 /// A TypeAhead widget for Flutter, where you can show suggestions to
 /// users as they type

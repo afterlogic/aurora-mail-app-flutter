@@ -1,3 +1,4 @@
+//@dart=2.9
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:flutter/cupertino.dart';

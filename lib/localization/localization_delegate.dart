@@ -1,3 +1,4 @@
+//@dart=2.9
 import 'package:aurora_mail/res/str/en_s.dart';
 import 'package:aurora_mail/res/str/ru_s.dart';
 import 'package:aurora_mail/res/str/tr_s.dart';

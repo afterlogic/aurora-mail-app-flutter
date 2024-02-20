@@ -1,3 +1,4 @@
+//@dart=2.9
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/modules/auth/screens/fido_auth/fido_auth_route.dart';
 import 'package:aurora_mail/modules/auth/screens/trust_device/trust_device_route.dart';

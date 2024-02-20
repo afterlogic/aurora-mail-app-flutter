@@ -1,3 +1,4 @@
+//@dart=2.9
 import 'package:aurora_mail/modules/auth/screens/backup_code_auth/backup_code_auth_route.dart';
 import 'package:aurora_mail/modules/auth/screens/component/two_factor_screen.dart';
 import 'package:aurora_mail/modules/auth/screens/fido_auth/fido_auth_route.dart';

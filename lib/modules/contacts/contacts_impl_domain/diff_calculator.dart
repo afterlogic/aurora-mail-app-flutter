@@ -1,3 +1,4 @@
+//@dart=2.9
 import 'package:aurora_logger/aurora_logger.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_storage_model.dart';
 import 'package:flutter/foundation.dart';

@@ -1,3 +1,4 @@
+//@dart=2.9
 import 'package:aurora_mail/modules/contacts/screens/contact_edit/dialog/select_key_dialog.dart';
 import 'package:aurora_mail/modules/settings/blocs/pgp_settings/bloc.dart';
 import 'package:aurora_mail/modules/settings/screens/pgp_settings/dialogs/import_from_text_dialog.dart';

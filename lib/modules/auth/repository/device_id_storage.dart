@@ -1,3 +1,4 @@
+//@dart=2.9
 import 'dart:io';
 import 'package:aurora_mail/build_property.dart';
 import 'package:device_info_plus/device_info_plus.dart';

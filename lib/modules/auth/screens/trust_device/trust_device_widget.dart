@@ -1,3 +1,4 @@
+//@dart=2.9
 import 'package:aurora_mail/modules/auth/blocs/trust_device/trust_device_bloc.dart';
 import 'package:aurora_mail/modules/auth/blocs/trust_device/trust_device_event.dart';
 import 'package:aurora_mail/modules/auth/blocs/trust_device/trust_device_state.dart';

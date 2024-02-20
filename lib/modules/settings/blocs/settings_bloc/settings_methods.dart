@@ -1,3 +1,4 @@
+//@dart=2.9
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/users/users_dao.dart';
 import 'package:aurora_mail/modules/auth/repository/auth_local_storage.dart';

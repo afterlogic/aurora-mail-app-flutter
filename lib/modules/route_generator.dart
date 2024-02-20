@@ -1,3 +1,4 @@
+//@dart=2.9
 import 'package:aurora_mail/modules/auth/screens/backup_code_auth/backup_code_auth_widget.dart';
 import 'package:aurora_mail/modules/auth/screens/trust_device/trust_device_widget.dart';
 

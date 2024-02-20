@@ -1,3 +1,4 @@
+//@dart=2.9
 import 'package:aurora_mail/utils/error_to_show.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/material.dart';

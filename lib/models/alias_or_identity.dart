@@ -1,3 +1,4 @@
+//@dart=2.9
 import 'package:aurora_mail/database/app_database.dart';
 
 class AliasOrIdentity {

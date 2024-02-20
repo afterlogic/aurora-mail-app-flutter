@@ -1,3 +1,4 @@
+//@dart=2.9
 import 'dart:convert';
 import 'dart:io';
 
@@ -19,9 +20,7 @@ class ComposeWebViewController {
 
   Future setMessage(String text, Message message, User user) async {
     if (showImage) {
-      text = text
-          .replaceAll("data-x-src=", "src=")
-          .replaceAll("src=\"http:", "src=\"https:");
+      text = text.replaceAll("data-x-src=", "src=").replaceAll("src=\"http:", "src=\"https:");
 
       final document = html.parse(text);
 
@@ -29,10 +28,8 @@ class ComposeWebViewController {
         nodes.forEach((c) {
           c.nodes.forEach((node) {
             if (node.attributes.containsKey("data-x-style-url") as bool) {
-              var backgroundImageUrl =
-                  node.attributes["data-x-style-url"] as String;
-              backgroundImageUrl =
-                  backgroundImageUrl.replaceAll("http://", "https://");
+              var backgroundImageUrl = node.attributes["data-x-style-url"] as String;
+              backgroundImageUrl = backgroundImageUrl.replaceAll("http://", "https://");
               node.attributes.remove("data-x-style-url");
 
               String style = node.attributes["style"] as String;
@@ -66,8 +63,7 @@ class ComposeWebViewController {
   Future setText(String text) async {
     _text = text;
     if (_webViewController != null) {
-      await _webViewController
-          .evaluateJavascript("setBodyContent(${json.encode(_text)})");
+      await _webViewController.runJavaScript("setBodyContent(${json.encode(_text)})");
     }
   }
 
@@ -75,13 +71,12 @@ class ComposeWebViewController {
     if (_webViewController == null) {
       return _text;
     } else {
-      final text =
-          await _webViewController.evaluateJavascript("getBodyContent()");
+      final text = await _webViewController.runJavaScriptReturningResult("getBodyContent()");
       try {
-        final decoded = json.decode(text) as String;
+        final decoded = json.decode(text.toString()) as String;
         return decoded;
       } catch (e) {
-        return text;
+        return text.toString();
       }
     }
   }
@@ -90,9 +85,9 @@ class ComposeWebViewController {
     _isHtml = html;
     if (_webViewController != null) {
       if (html) {
-        await _webViewController.evaluateJavascript("setHtml()");
+        await _webViewController.runJavaScript("setHtml()");
       } else {
-        await _webViewController.evaluateJavascript("setPlain()");
+        await _webViewController.runJavaScript("setPlain()");
       }
     }
   }
@@ -113,8 +108,7 @@ class ComposeWebView extends StatefulWidget {
   final bool enable;
   final Function init;
 
-  const ComposeWebView({Key key, this.textCtrl, this.enable, this.init})
-      : super(key: key);
+  const ComposeWebView({Key key, this.textCtrl, this.enable, this.init}) : super(key: key);
 
   @override
   _ComposeWebViewState createState() => _ComposeWebViewState();
@@ -127,8 +121,19 @@ class _ComposeWebViewState extends State<ComposeWebView> {
   @override
   initState() {
     super.initState();
-    print("initState");
-    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
+    // On Android, hybrid composition (SurfaceAndroidWebView) is now the default (webview_flutter 3.0.0)
+    // if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
+    _ctrl = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setNavigationDelegate(
+        NavigationDelegate(
+            onProgress: (int progress) {},
+            onPageStarted: (String url) {},
+            onPageFinished: (String url) => {init()},
+            onWebResourceError: (WebResourceError error) {},
+            onNavigationRequest: navigationDelegate),
+      )
+      ;
   }
 
   @override
@@ -145,20 +150,14 @@ class _ComposeWebViewState extends State<ComposeWebView> {
     );
 
     if (true) {
-      htmlData = htmlData
-          .replaceAll("data-x-src=", "src=")
-          .replaceAll("src=\"http:", "src=\"https:");
-
+      htmlData = htmlData.replaceAll("data-x-src=", "src=").replaceAll("src=\"http:", "src=\"https:");
       final document = html.parse(htmlData);
-
       void getAllChildren(nodes) {
         nodes.forEach((c) {
           c.nodes.forEach((node) {
             if (node.attributes.containsKey("data-x-style-url") as bool) {
-              var backgroundImageUrl =
-                  node.attributes["data-x-style-url"] as String;
-              backgroundImageUrl =
-                  backgroundImageUrl.replaceAll("http://", "https://");
+              var backgroundImageUrl = node.attributes["data-x-style-url"] as String;
+              backgroundImageUrl = backgroundImageUrl.replaceAll("http://", "https://");
               node.attributes.remove("data-x-style-url");
 
               String style = node.attributes["style"] as String;
@@ -180,6 +179,7 @@ class _ComposeWebViewState extends State<ComposeWebView> {
       mimeType: 'text/html',
       encoding: Encoding.getByName('utf-8'),
     ).toString();
+    _ctrl.loadRequest(Uri.parse(initUrl));
   }
 
   dispose() {
@@ -187,8 +187,7 @@ class _ComposeWebViewState extends State<ComposeWebView> {
     widget.textCtrl.dispose();
   }
 
-  Future<NavigationDecision> navigationDelegate(
-      NavigationRequest navigation) async {
+  Future<NavigationDecision> navigationDelegate(NavigationRequest navigation) async {
     if (initUrl == navigation.url) {
       return NavigationDecision.navigate;
     }
@@ -198,8 +197,8 @@ class _ComposeWebViewState extends State<ComposeWebView> {
 
   @override
   Widget build(BuildContext context) {
-    return WebView(
-      initialUrl: initUrl,
+    return WebViewWidget(
+      controller: _ctrl,
       gestureRecognizers: {
         Factory<VerticalDragGestureRecognizer>(() {
           return VerticalDragGestureRecognizer();
@@ -210,14 +209,6 @@ class _ComposeWebViewState extends State<ComposeWebView> {
         Factory<TapGestureRecognizer>(() {
           return TapGestureRecognizer();
         }),
-      },
-      navigationDelegate: navigationDelegate,
-      onPageFinished: (_) {
-        init();
-      },
-      javascriptMode: JavascriptMode.unrestricted,
-      onWebViewCreated: (c) {
-        _ctrl = c;
       },
     );
   }

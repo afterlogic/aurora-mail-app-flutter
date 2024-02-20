@@ -1,3 +1,4 @@
+//@dart=2.9
 import 'package:aurora_mail/modules/mail/screens/compose/self_destructing/model/contact_with_key.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/res/str/s.dart';

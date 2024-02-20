@@ -1,3 +1,4 @@
+//@dart=2.9
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/modules/auth/screens/component/two_factor_screen.dart';
 import 'package:aurora_mail/modules/auth/screens/login/login_route.dart';

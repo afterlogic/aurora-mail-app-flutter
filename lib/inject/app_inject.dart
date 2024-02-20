@@ -1,3 +1,4 @@
+//@dart=2.9
 import 'package:aurora_mail/inject/modules/crypto_module.dart';
 import 'package:aurora_mail/inject/modules/dao_module.dart';
 import 'package:aurora_mail/inject/modules/storage_module.dart';

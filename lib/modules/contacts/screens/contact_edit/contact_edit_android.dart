@@ -1,3 +1,4 @@
+//@dart=2.9
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/modules/layout_config/layout_config.dart';

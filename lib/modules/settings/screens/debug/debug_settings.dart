@@ -1,3 +1,4 @@
+//@dart=2.9
 import 'package:aurora_logger/aurora_logger.dart';
 import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';

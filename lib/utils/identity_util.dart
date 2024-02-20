@@ -1,3 +1,4 @@
+//@dart=2.9
 import 'package:crypto_model/crypto_model.dart';
 
 extension NameUtil on PgpKey {

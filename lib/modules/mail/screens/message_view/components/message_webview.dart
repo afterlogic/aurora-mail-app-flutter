@@ -1,3 +1,4 @@
+//@dart=2.9
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -74,27 +75,36 @@ class MessageWebViewState extends BState<MessageWebView> {
   bool _isStarred;
   ThemeData theme;
   MailBloc _mailBloc;
-  Set<JavascriptChannel> jsChannels;
 
   @override
   void initState() {
     super.initState();
     onLoad();
-    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
+    // On Android, hybrid composition (SurfaceAndroidWebView) is now the default (webview_flutter 3.0.0)
+    // if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
     _isStarred = widget.message.flagsInJson.contains("\\flagged");
-    jsChannels = {
-      JavascriptChannel(
-        name: "WEB_VIEW_JS_CHANNEL",
-        onMessageReceived: (message) {
-          if (message.message
-              .startsWith(MessageWebViewActions.DOWNLOAD_ATTACHMENT)) {
-            final downloadUrl = message.message
-                .substring(MessageWebViewActions.DOWNLOAD_ATTACHMENT.length);
-            _startDownload(downloadUrl);
-          }
-        },
-      )
-    };
+    _controller = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setNavigationDelegate(
+
+        NavigationDelegate(
+          onProgress: (int progress) {
+            // Update loading bar.
+          },
+          onPageStarted: (String url) {},
+          onPageFinished: (String url) {setState(() => _pageLoaded = true);},
+          onWebResourceError: (WebResourceError error) {},
+          onNavigationRequest: _onWebViewNavigateRequestIos
+        ),
+      );
+    _controller.addJavaScriptChannel("WEB_VIEW_JS_CHANNEL", onMessageReceived: (message) {
+      if (message.message
+          .startsWith(MessageWebViewActions.DOWNLOAD_ATTACHMENT)) {
+        final downloadUrl = message.message
+            .substring(MessageWebViewActions.DOWNLOAD_ATTACHMENT.length);
+        _startDownload(downloadUrl);
+      }});
+
   }
 
   @override
@@ -121,7 +131,7 @@ class MessageWebViewState extends BState<MessageWebView> {
     if (widget.decrypted != null) {
       htmlData = widget.decrypted;
       _htmlData = htmlData;
-      _controller?.loadUrl(_getHtmlUri(htmlData));
+      _controller?.loadRequest(Uri.parse(_getHtmlUri(htmlData)));
       setState(() {});
       return;
     } else {
@@ -170,7 +180,7 @@ class MessageWebViewState extends BState<MessageWebView> {
     }
 
     if (_htmlData != null) {
-      _controller?.loadUrl(_getHtmlUri(htmlData));
+      _controller?.loadRequest(Uri.parse(_getHtmlUri(htmlData)));
     }
     if (mounted) setState(() => _htmlData = htmlData);
   }
@@ -386,16 +396,9 @@ class MessageWebViewState extends BState<MessageWebView> {
         Flexible(
           child: Stack(
             children: [
-              WebView(
+              WebViewWidget(
                 key: Key(widget.message.uid.toString()),
-                initialUrl: _getHtmlUri(_htmlData),
-                javascriptMode: JavascriptMode.unrestricted,
-                onWebViewCreated: (WebViewController c) {
-                  _controller = c;
-                },
-                javascriptChannels: jsChannels,
-                navigationDelegate: _onWebViewNavigateRequestIos,
-                onPageFinished: (_) async => setState(() => _pageLoaded = true),
+                controller: _controller,
                 gestureRecognizers: {
                   Factory<LongPressGestureRecognizer>(
                       () => LongPressGestureRecognizer()..onLongPress = () {}),

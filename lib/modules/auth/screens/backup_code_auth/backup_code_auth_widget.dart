@@ -1,3 +1,4 @@
+//@dart=2.9
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/modules/auth/blocs/backup_code_auth/backup_code_bloc.dart';
 import 'package:aurora_mail/modules/auth/blocs/backup_code_auth/backup_code_event.dart';

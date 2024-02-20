@@ -1,3 +1,4 @@
+//@dart=2.9
 import 'package:aurora_mail/modules/mail/repository/search_util.dart';
 import 'package:aurora_mail/shared_ui/sized_dialog_content.dart';
 import 'package:aurora_mail/utils/internationalization.dart';

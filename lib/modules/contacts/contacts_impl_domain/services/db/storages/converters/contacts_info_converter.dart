@@ -1,3 +1,4 @@
+//@dart=2.9
 import 'dart:convert';
 
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_storage_model.dart';

@@ -1,3 +1,4 @@
+//@dart=2.9
 import 'package:aurora_mail/modules/settings/screens/debug/debug_local_storage.dart';
 import 'package:webmail_api_client/webmail_api_client.dart';
 
