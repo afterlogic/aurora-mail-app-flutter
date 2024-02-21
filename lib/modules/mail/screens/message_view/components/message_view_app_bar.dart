@@ -56,7 +56,7 @@ class MailViewAppBar extends StatelessWidget implements PreferredSizeWidget {
       preferredSize: preferredSize,
       child: BlocBuilder<MessageViewBloc, MessageViewState>(
           bloc: bloc,
-          condition: (_, newS) => newS is FolderTypeState,
+          buildWhen: (_, newS) => newS is FolderTypeState,
           builder: (context, state) {
             final folderType = state is FolderTypeState ? state.type : null;
             return AMAppBar(

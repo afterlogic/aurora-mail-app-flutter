@@ -20,10 +20,7 @@ class TrustDeviceBloc extends Bloc<TrustDeviceEvent, TrustDeviceState> {
   final String password;
   final AuthBloc authBloc;
 
-  TrustDeviceBloc(this.login, this.password, this.user, this.authBloc);
-
-  @override
-  TrustDeviceState get initialState => InitialState();
+  TrustDeviceBloc(this.login, this.password, this.user, this.authBloc) : super(InitialState());
 
   @override
   Stream<TrustDeviceState> mapEventToState(

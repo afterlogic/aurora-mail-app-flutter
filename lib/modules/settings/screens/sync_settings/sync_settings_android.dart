@@ -43,7 +43,7 @@ class _SyncSettingsAndroidState extends BState<SyncSettingsAndroid> {
             ),
       body: BlocBuilder<SettingsBloc, SettingsState>(
         bloc: BlocProvider.of<SettingsBloc>(context),
-        condition: (_, state) => state is SettingsLoaded,
+        buildWhen: (_, state) => state is SettingsLoaded,
         builder: (_, state) {
           if (state is SettingsLoaded) {
             final freq = SyncFreq.secondsToFreq(state.syncFrequency);
@@ -72,7 +72,7 @@ class _SyncSettingsAndroidState extends BState<SyncSettingsAndroid> {
               ],
             );
           } else {
-            return null;
+            return const SizedBox.shrink();
           }
         },
       ),

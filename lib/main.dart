@@ -79,7 +79,7 @@ void main() async {
   AlarmService.init();
   AlarmService.onAlarm(onAlarm, ALARM_ID);
   AlarmService.onNotification(mapMessageHandler);
-  BlocSupervisor.delegate = BlocLogger();
+  Bloc.observer = BlocLogger();
   try {
     if (Platform.isAndroid) FlutterDownloader.initialize();
   } catch (e) {

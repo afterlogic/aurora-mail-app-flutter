@@ -57,7 +57,7 @@ class _MoveMessageDialogState extends State<MoveMessageDialog>
           title: Text(i18n(context, S.label_message_move_to)),
           content: BlocBuilder<MailBloc, MailState>(
               bloc: widget.mailBloc,
-              condition: (prevState, state) =>
+              buildWhen: (prevState, state) =>
                   state is FoldersLoaded || state is FoldersEmpty,
               builder: (ctx, state) {
                 if (state is FoldersLoaded) {

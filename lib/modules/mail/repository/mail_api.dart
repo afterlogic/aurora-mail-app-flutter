@@ -211,21 +211,19 @@ class MailApi {
     final fileName = FileUtils.getFileNameFromPath(file.path);
     final headers = await _mailModule.getAuthHeaders();
 
-    final taskId = await uploader.enqueue(
+    final taskId = await uploader.enqueue(MultipartFormDataUpload(
       url: _mailModule.apiUrl,
       files: [
         FileItem(
-          filename: fileName,
-          savedDir: file.parent.path,
-          fieldname: "file",
+          path: file.path,
+          field: "file",
         )
       ],
       method: UploadMethod.POST,
       headers: headers as Map<String, String>,
       data: body.toMap("Mail"),
-      showNotification: false,
       tag: fileName,
-    );
+    ));
 
     final tempAttachment = new TempAttachmentUpload(
       file,
@@ -255,9 +253,9 @@ class MailApi {
         }
       }
     }, onError: (err) {
-      if (err is UploadException &&
-          (err.status == UploadTaskStatus.canceled ||
-              err.code == "flutter_upload_cancelled")) {
+      if (
+          err?.status == UploadTaskStatus.canceled ||
+              err?.code == "flutter_upload_cancelled") {
         return;
       }
       onError(WebMailApiError(err));

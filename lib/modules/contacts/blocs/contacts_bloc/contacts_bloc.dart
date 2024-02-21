@@ -35,7 +35,7 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
   ContactsBloc({
     @required this.user,
     @required this.appDatabase,
-  }) : pgpWorker = AppInjector.instance.pgpWorker() {
+  }) : pgpWorker = AppInjector.instance.pgpWorker(), super(ContactsState()) {
     _repo = ContactsRepository(
       appDB: appDatabase,
       user: user,
@@ -68,9 +68,6 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
     _syncingStoragesSub?.cancel();
     super.close();
   }
-
-  @override
-  ContactsState get initialState => ContactsState();
 
   @override
   Stream<ContactsState> mapEventToState(ContactsEvent event) async* {

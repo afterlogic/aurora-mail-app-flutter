@@ -19,16 +19,13 @@ import './bloc.dart';
 class MessageViewBloc extends Bloc<MessageViewEvent, MessageViewState> {
   MessageViewMethods _methods;
 
-  MessageViewBloc({@required User user, @required Account account}) {
+  MessageViewBloc({@required User user, @required Account account}) : super(InitialMessageViewState()) {
     _methods = new MessageViewMethods(
       user: user,
       account: account,
       pgpWorker: AppInjector.instance.pgpWorker(),
     );
   }
-
-  @override
-  MessageViewState get initialState => InitialMessageViewState();
 
   @override
   Stream<MessageViewState> mapEventToState(

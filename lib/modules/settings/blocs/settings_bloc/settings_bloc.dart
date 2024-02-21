@@ -19,8 +19,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
 
   static bool isOffline = true;
 
-  @override
-  SettingsState get initialState => SettingsEmpty();
+  SettingsBloc() : super(SettingsEmpty());
 
   @override
   Stream<SettingsState> mapEventToState(

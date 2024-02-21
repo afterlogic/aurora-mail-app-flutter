@@ -19,7 +19,7 @@ class MailBloc extends Bloc<MailEvent, MailState> {
   final updateMessageCounter = UpdateMessageCounter();
   static String selectedFolderGuid;
 
-  MailBloc({User user, Account account}) {
+  MailBloc({User user, Account account}) : super(FoldersEmpty()) {
     assert(user != null);
     init(user, account);
     BackgroundHelper.addOnEndAlarmObserver(true, onEndAlarm);
@@ -44,9 +44,6 @@ class MailBloc extends Bloc<MailEvent, MailState> {
 
   Folder _selectedFolder;
   MessagesFilter _filter = MessagesFilter.none;
-
-  @override
-  MailState get initialState => FoldersEmpty();
 
   @override
   Future<void> close() async {

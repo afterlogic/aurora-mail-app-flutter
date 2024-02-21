@@ -20,7 +20,7 @@ class MessagesListBloc extends Bloc<MessagesListEvent, MessagesListState> {
 
   String searchText = '';
 
-  MessagesListBloc({@required User user, @required Account account}) {
+  MessagesListBloc({@required User user, @required Account account}) : super(MessagesEmpty()) {
     setUserAndAccount(user: user, account: account);
   }
 
@@ -31,9 +31,6 @@ class MessagesListBloc extends Bloc<MessagesListEvent, MessagesListState> {
     _account = account;
     _methods = new MessagesListMethods(user: _user, account: _account);
   }
-
-  @override
-  MessagesListState get initialState => MessagesEmpty();
 
   @override
   Stream<MessagesListState> mapEventToState(

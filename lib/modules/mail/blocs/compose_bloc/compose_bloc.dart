@@ -24,16 +24,13 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
   final Account account;
   final _mailLocal = new MailLocalStorage();
 
-  ComposeBloc({@required this.user, @required this.account}) {
+  ComposeBloc({@required this.user, @required this.account}) : super(InitialComposeState()) {
     _methods = new ComposeMethods(
       user: user,
       account: account,
       pgpWorker: AppInjector.instance.pgpWorker(),
     );
   }
-
-  @override
-  ComposeState get initialState => InitialComposeState();
 
   @override
   Stream<ComposeState> mapEventToState(

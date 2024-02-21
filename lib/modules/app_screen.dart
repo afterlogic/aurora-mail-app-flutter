@@ -176,7 +176,7 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
         },
         child: BlocBuilder<AuthBloc, AuthState>(
           bloc: _authBloc,
-          condition: (_, state) => state is InitializedUserAndAccounts,
+          buildWhen: (_, state) => state is InitializedUserAndAccounts,
           builder: (_, authState) {
             if (authState is InitializedUserAndAccounts) {
               if (authState.user != null) {

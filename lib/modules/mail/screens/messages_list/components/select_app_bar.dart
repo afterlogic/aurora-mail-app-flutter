@@ -52,7 +52,7 @@ class _SelectAppBarState extends BState<SelectAppBar> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<MailBloc, MailState>(
-      condition: (_, state) => state is FoldersLoaded,
+      buildWhen: (_, state) => state is FoldersLoaded,
       builder: (context, state) {
         final folderType =
             state is FoldersLoaded ? state.selectedFolder.folderType : null;

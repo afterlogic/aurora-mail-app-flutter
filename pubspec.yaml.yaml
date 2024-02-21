@@ -16,9 +16,10 @@ dependencies:
   flutter_cupertino_localizations: 1.0.1
 
   # state management
-  provider: ^4.0.1
-  flutter_bloc: ^3.2.0
+  provider: ^5.0.0
+  flutter_bloc: ^7.0.0
   equatable: ^2.0.5
+  rxdart: ^0.27.7
 
   # http
   http: 0.13.3
@@ -32,7 +33,7 @@ dependencies:
 
   # file downloading/uploading
   file_picker: 5.2.10
-  flutter_uploader: 1.2.1
+  flutter_uploader: 3.0.0-beta.4
   flutter_downloader: 1.10.5
   share: ^2.0.4
   path_provider: 2.0.2
@@ -102,7 +103,7 @@ dependencies:
     path: module/crypto/crypto_storage
   crypto_worker:
     path: module/crypto/crypto_worker
-  flutter_secure_storage: ^3.3.5
+  flutter_secure_storage: ^4.2.1
   # if: cryptoEnable
   crypto_stream:
     git:

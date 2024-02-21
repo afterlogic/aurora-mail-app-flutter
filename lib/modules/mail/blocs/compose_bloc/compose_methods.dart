@@ -179,14 +179,14 @@ class ComposeMethods {
       attachment.guid = tempAttachment.guid;
       attachment.file = tempAttachment.file;
       completer.complete(
-        UploadTaskProgress(taskId, 100, UploadTaskStatus.complete, ""),
+        UploadTaskProgress(taskId, 100, UploadTaskStatus.complete),
       );
       tempAttachment.size = attachment.size;
       onUploadEnd(attachment);
     } catch (e) {
       onError(e);
       completer.complete(
-        UploadTaskProgress(taskId, 0, UploadTaskStatus.failed, ""),
+        UploadTaskProgress(taskId, 0, UploadTaskStatus.failed),
       );
     }
   }

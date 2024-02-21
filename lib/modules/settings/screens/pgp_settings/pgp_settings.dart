@@ -84,7 +84,7 @@ class _PgpSettingsState extends BState<PgpSettings> {
         },
         child: BlocBuilder<PgpSettingsBloc, PgpSettingsState>(
           bloc: bloc,
-          condition: (current, next) {
+          buildWhen: (current, next) {
             return next is ProgressState || next is LoadedState;
           },
           builder: (BuildContext context, PgpSettingsState state) {

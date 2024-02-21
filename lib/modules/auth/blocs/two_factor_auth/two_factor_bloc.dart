@@ -10,8 +10,7 @@ import 'two_factor_state.dart';
 class TwoFactorBloc extends Bloc<TwoFactorEvent, TwoFactorState> {
   final _methods = TwoFactorMethods();
 
-  @override
-  TwoFactorState get initialState => InitialState();
+  TwoFactorBloc() : super(InitialState());
 
   @override
   Stream<TwoFactorState> mapEventToState(

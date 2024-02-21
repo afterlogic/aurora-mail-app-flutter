@@ -37,10 +37,7 @@ class SelfDestructingBloc
     this.aliasOrIdentity,
     this.subject,
     this.body,
-  ) : pgpApi = PgpApi(user, account);
-
-  @override
-  SelfDestructingState get initialState => InitState();
+  ) : pgpApi = PgpApi(user, account), super(InitState());
 
   @override
   Stream<SelfDestructingState> mapEventToState(

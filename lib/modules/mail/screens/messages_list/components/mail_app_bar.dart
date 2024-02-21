@@ -165,7 +165,7 @@ class MailAppBarState extends BState<MailAppBar> {
       key: Key("default_mail_app_bar"),
       title: BlocBuilder<MailBloc, MailState>(
         bloc: _mailBloc,
-        condition: (_, state) =>
+        buildWhen: (_, state) =>
             state is FoldersLoaded ||
             state is FoldersLoading ||
             state is FoldersEmpty,

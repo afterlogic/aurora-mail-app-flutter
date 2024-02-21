@@ -11,8 +11,7 @@ import 'backup_code_state.dart';
 class BackupCodeBloc extends Bloc<BackupCodeEvent, BackupCodeState> {
   final _methods = BackupCodeMethods();
 
-  @override
-  BackupCodeState get initialState => InitialState();
+  BackupCodeBloc() : super(InitialState());
 
   @override
   Stream<BackupCodeState> mapEventToState(

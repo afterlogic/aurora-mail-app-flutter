@@ -103,7 +103,7 @@ class _MainDrawerState extends BState<MainDrawer> {
                       color: Colors.black,
                       child: BlocBuilder<MailBloc, MailState>(
                           bloc: BlocProvider.of<MailBloc>(context),
-                          condition: (prevState, state) =>
+                          buildWhen: (prevState, state) =>
                               state is FoldersLoaded || state is FoldersEmpty,
                           builder: (ctx, state) {
                             if (state is FoldersLoaded) {

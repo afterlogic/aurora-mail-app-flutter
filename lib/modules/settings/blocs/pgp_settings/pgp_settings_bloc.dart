@@ -29,10 +29,7 @@ class PgpSettingsBloc extends Bloc<PgpSettingsEvent, PgpSettingsState> {
           authBloc.currentUser,
           ContactsRepositoryImpl(
               user: authBloc.currentUser, appDB: DBInstances.appDB),
-        );
-
-  @override
-  PgpSettingsState get initialState => ProgressState();
+        ), super(ProgressState());
 
   @override
   Stream<PgpSettingsState> mapEventToState(

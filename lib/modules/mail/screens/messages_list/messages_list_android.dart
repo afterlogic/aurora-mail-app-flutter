@@ -269,7 +269,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
   @override
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
-      condition: (prev, next) {
+      listenWhen: (prev, next) {
         return next is InitializedUserAndAccounts;
       },
       listener: (context, state) {
@@ -342,7 +342,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
                         children: <Widget>[
                           BlocBuilder<MailBloc, MailState>(
                               bloc: _mailBloc,
-                              condition: (_, s) {
+                              buildWhen: (_, s) {
                                 return s is FoldersLoaded;
                               },
                               builder: (context, state) {
@@ -447,7 +447,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
         children: <Widget>[
           BlocBuilder<MailBloc, MailState>(
               bloc: _mailBloc,
-              condition: (_, s) {
+              buildWhen: (_, s) {
                 return s is FoldersLoaded;
               },
               builder: (context, state) {

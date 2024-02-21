@@ -14,7 +14,7 @@ dependencies:
     path: ../crypto_model
   crypto_storage:
     path: ../crypto_storage
-  flutter_secure_storage: ^3.3.1+1
+  flutter_secure_storage: ^4.2.1
   moor_flutter: ^4.0.0
   #move all db to module
   aurora_mail:

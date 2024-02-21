@@ -29,7 +29,7 @@ class _MailBottomBarState extends BState<MailBottomBar> {
     final bloc = BlocProvider.of<MessageViewBloc>(context);
     return BlocBuilder<MessageViewBloc, MessageViewState>(
       bloc: bloc,
-      condition: (_, next) {
+      buildWhen: (_, next) {
         return next is DecryptComplete || next is MessageIsEncrypt;
       },
       builder: (context, state) {

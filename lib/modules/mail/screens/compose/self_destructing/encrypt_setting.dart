@@ -49,7 +49,7 @@ class _EncryptSettingState extends BState<EncryptSetting>
     final size = MediaQuery.of(context).size;
     return BlocListener<SelfDestructingBloc, SelfDestructingState>(
       child: BlocBuilder<SelfDestructingBloc, SelfDestructingState>(
-          condition: (_, state) => state is LoadedKey,
+          buildWhen: (_, state) => state is LoadedKey,
           builder: (context, state) {
             if (state is LoadedKey) {
               final sender = state.sender;

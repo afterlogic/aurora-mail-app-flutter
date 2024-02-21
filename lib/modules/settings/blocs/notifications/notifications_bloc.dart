@@ -7,12 +7,9 @@ import 'bloc.dart';
 class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
   final _methods = new AuthMethods();
 
-  NotificationsBloc() {
+  NotificationsBloc() : super(ProgressState()) {
     add(InitToken());
   }
-
-  @override
-  NotificationsState get initialState => ProgressState();
 
   @override
   Stream<NotificationsState> mapEventToState(

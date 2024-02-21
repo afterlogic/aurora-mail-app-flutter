@@ -25,8 +25,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AccountIdentity currentIdentity;
   User currentUser;
 
-  @override
-  AuthState get initialState => InitialAuthState();
+  AuthBloc() : super(InitialAuthState());
 
   @override
   Stream<AuthState> mapEventToState(
