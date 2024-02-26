@@ -137,7 +137,7 @@ class _SelectTwoFactorWidgetState extends BState<TwoFactorScene> {
                       child: widget.allowBack
                           ? SizedBox(
                               width: double.infinity,
-                              child: FlatButton(
+                              child: TextButton(
                                 child: Text(
                                   i18n(context, S.btn_login_back_to_login),
                                   style:

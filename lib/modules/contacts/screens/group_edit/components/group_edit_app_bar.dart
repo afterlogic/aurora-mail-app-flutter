@@ -22,7 +22,7 @@ class GroupEditAppBar extends StatelessWidget implements PreferredSizeWidget {
           i18n(context, isEdit ? S.contacts_group_edit : S.contacts_group_add)),
       actions: <Widget>[
         Builder(
-          builder: (context) => FlatButton(
+          builder: (context) => TextButton(
             child: Text(
               i18n(context, S.contacts_edit_save),
               style: TextStyle(

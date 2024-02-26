@@ -44,10 +44,14 @@ class _AttachmentsDialogState extends BState<AttachmentsDialog> {
         }).toList(),
       ),
       actions: <Widget>[
-        FlatButton(
-          textColor:
-              theme.brightness == Brightness.light ? theme.accentColor : null,
-          child: Text(i18n(context, S.btn_close)),
+        TextButton(
+          child: Text(
+            i18n(context, S.btn_close),
+            style: TextStyle(
+                color: theme.brightness == Brightness.light
+                    ? theme.accentColor
+                    : null),
+          ),
           onPressed: () => Navigator.pop(context, false),
         ),
       ],

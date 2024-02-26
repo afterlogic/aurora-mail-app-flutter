@@ -110,7 +110,7 @@ class _BackupCodeAuthWidgetState extends BState<BackupCodeAuthWidget> {
                       SizedBox(height: 20),
                       SizedBox(
                         width: double.infinity,
-                        child: FlatButton(
+                        child: TextButton(
                           child: Text(
                             "Other options",
                             style: TextStyle(color: AppTheme.loginTextColor),

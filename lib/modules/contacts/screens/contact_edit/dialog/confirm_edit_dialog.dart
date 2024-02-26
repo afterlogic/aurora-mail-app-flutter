@@ -10,15 +10,15 @@ class ConfirmationEditDialog extends StatelessWidget {
     return AlertDialog(
       content: Text(i18n(context, S.error_contact_pgp_key_will_not_be_valid)),
       actions: <Widget>[
-        FlatButton(
+        TextButton(
           child: Text(i18n(context, S.btn_cancel)),
           onPressed: () => Navigator.pop(context),
         ),
-        FlatButton(
+        TextButton(
           child: Text(i18n(context, S.btn_contact_key_re_import)),
           onPressed: () => Navigator.pop(context, FreeKeyAction.Import),
         ),
-        FlatButton(
+        TextButton(
           child: Text(i18n(context, S.btn_contact_delete_key)),
           onPressed: () => Navigator.pop(context, FreeKeyAction.Delete),
         ),

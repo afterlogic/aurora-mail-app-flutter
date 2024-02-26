@@ -59,7 +59,7 @@ void showSnack({
   if (message.isEmpty) {
     print("Cannot show empty snack");
   } else {
-    scaffoldState.removeCurrentSnackBar();
-    scaffoldState.showSnackBar(snack);
+    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+    ScaffoldMessenger.of(context).showSnackBar(snack);
   }
 }

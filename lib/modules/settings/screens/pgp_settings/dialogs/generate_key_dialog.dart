@@ -114,11 +114,11 @@ class _GenerateKeyDialogState extends BState<GenerateKeyDialog>
         ),
       )),
       actions: <Widget>[
-        FlatButton(
+        TextButton(
           child: Text(i18n(context, S.btn_close)),
           onPressed: () => Navigator.pop(context),
         ),
-        FlatButton(
+        TextButton(
           child: Text(i18n(context, S.btn_pgp_generate)),
           onPressed: _generate,
         )

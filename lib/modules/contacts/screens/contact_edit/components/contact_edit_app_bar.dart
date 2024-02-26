@@ -21,7 +21,7 @@ class ContactEditAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: Text(i18n(context, isEdit ? S.contacts_edit : S.contacts_add)),
       actions: <Widget>[
         Builder(
-          builder: (context) => FlatButton(
+          builder: (context) => TextButton(
             child: Text(
               i18n(context, S.btn_save),
               style: TextStyle(

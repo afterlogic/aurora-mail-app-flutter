@@ -9,29 +9,28 @@ class DiscardComposeChangesDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return AlertDialog(
-      // title: Text(i18n(context, S.compose_discard_save_dialog_title)),
       content: Text(i18n(context, S.compose_discard_save_dialog_description)),
       actions: <Widget>[
-        // FlatButton(
-        //   textColor:
-        //       theme.brightness == Brightness.light ? theme.accentColor : null,
-        //   child: Text(i18n(context, S.btn_cancel)),
-        //   onPressed: () {
-        //     Navigator.pop(context);
-        //   },
-        // ),
-        FlatButton(
-          textColor:
-              theme.brightness == Brightness.light ? theme.accentColor : null,
-          child: Text(i18n(context, S.btn_discard)),
+        TextButton(
+          child: Text(
+            i18n(context, S.btn_discard),
+            style: TextStyle(
+                color: theme.brightness == Brightness.light
+                    ? theme.accentColor
+                    : null),
+          ),
           onPressed: () {
             Navigator.pop(context, DiscardComposeChangesOption.discard);
           },
         ),
-        FlatButton(
-          textColor:
-              theme.brightness == Brightness.light ? theme.accentColor : null,
-          child: Text(i18n(context, S.btn_save)),
+        TextButton(
+          child: Text(
+            i18n(context, S.btn_save),
+            style: TextStyle(
+                color: theme.brightness == Brightness.light
+                    ? theme.accentColor
+                    : null),
+          ),
           onPressed: () {
             Navigator.pop(context, DiscardComposeChangesOption.save);
           },

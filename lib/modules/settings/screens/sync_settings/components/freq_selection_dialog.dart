@@ -44,10 +44,14 @@ class FreqSelectionDialog extends StatelessWidget {
         }).toList(),
       ),
       actions: <Widget>[
-        FlatButton(
-          textColor:
-              theme.brightness == Brightness.light ? theme.accentColor : null,
-          child: Text(i18n(context, S.btn_cancel)),
+        TextButton(
+          child: Text(
+            i18n(context, S.btn_cancel),
+            style: TextStyle(
+                color: theme.brightness == Brightness.light
+                    ? theme.accentColor
+                    : null),
+          ),
           onPressed: Navigator.of(context).pop,
         ),
       ],

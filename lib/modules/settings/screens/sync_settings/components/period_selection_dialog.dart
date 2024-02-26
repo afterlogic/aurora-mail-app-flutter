@@ -3,7 +3,6 @@ import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/utils/show_dialog.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class PeriodSelectionDialog extends StatelessWidget {
@@ -42,10 +41,14 @@ class PeriodSelectionDialog extends StatelessWidget {
         }).toList(),
       ),
       actions: <Widget>[
-        FlatButton(
-          textColor:
-              theme.brightness == Brightness.light ? theme.accentColor : null,
-          child: Text(i18n(context, S.btn_cancel)),
+        TextButton(
+          child: Text(
+            i18n(context, S.btn_cancel),
+            style: TextStyle(
+                color: theme.brightness == Brightness.light
+                    ? theme.accentColor
+                    : null),
+          ),
           onPressed: Navigator.of(context).pop,
         ),
       ],

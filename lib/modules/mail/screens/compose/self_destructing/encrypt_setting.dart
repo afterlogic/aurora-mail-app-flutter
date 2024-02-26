@@ -199,14 +199,14 @@ class _EncryptSettingState extends BState<EncryptSetting>
                   ),
                 ),
                 actions: [
-                  FlatButton(
+                  TextButton(
                     child: Text(i18n(context, S.btn_cancel)),
                     onPressed: () {
                       Navigator.pop(context);
                     },
                   ),
                   BlocBuilder<SelfDestructingBloc, SelfDestructingState>(
-                    builder: (context, state) => FlatButton(
+                    builder: (context, state) => TextButton(
                       child: Stack(
                         alignment: Alignment.center,
                         children: [

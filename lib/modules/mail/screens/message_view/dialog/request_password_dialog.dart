@@ -47,11 +47,11 @@ class _RequestPasswordDialogState extends BState<RequestPasswordDialog> {
         ),
       ),
       actions: <Widget>[
-        FlatButton(
+        TextButton(
           child: Text(i18n(context, S.btn_close)),
           onPressed: () => Navigator.pop(context),
         ),
-        FlatButton(
+        TextButton(
           child: Text(i18n(context, S.btn_pgp_decrypt)),
           onPressed: _decrypt,
         ),

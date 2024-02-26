@@ -27,11 +27,11 @@ class _ImportVcfDialogState extends State<ImportVcfDialog> {
     return AlertDialog(
       content: Text(i18n(context, S.hint_vcf_import)),
       actions: <Widget>[
-        FlatButton(
+        TextButton(
           child: Text(i18n(context, S.btn_cancel)),
           onPressed: () => Navigator.pop(context),
         ),
-        FlatButton(
+        TextButton(
           child: Stack(
             alignment: Alignment.center,
             children: [

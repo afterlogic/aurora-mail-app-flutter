@@ -67,11 +67,11 @@ class _MoveMessageDialogState extends State<MoveMessageDialog>
                 }
               }),
           actions: <Widget>[
-            FlatButton(
+            TextButton(
               child: Text(i18n(context, S.btn_message_move)),
               onPressed: current == null ? null : _paste,
             ),
-            FlatButton(
+            TextButton(
               child: Text(i18n(context, S.btn_cancel)),
               onPressed: _cancel,
             ),

@@ -190,11 +190,11 @@ class AdvancedSearchState extends State<AdvancedSearch> {
         ),
       ),
       actions: <Widget>[
-        FlatButton(
+        TextButton(
           child: Text(i18n(context, S.btn_cancel)),
           onPressed: () => Navigator.pop(context),
         ),
-        FlatButton(
+        TextButton(
           child: Text(i18n(context, S.messages_list_app_bar_search)),
           onPressed: _search,
         ),

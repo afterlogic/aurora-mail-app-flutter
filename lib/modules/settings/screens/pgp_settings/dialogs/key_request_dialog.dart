@@ -87,7 +87,7 @@ class _KeyRequestDialogState extends BState<KeyRequestDialog> {
                 padding: const EdgeInsets.fromLTRB(28, 0, 28, 12),
                 child: CircularProgressIndicator(),
               )
-            : FlatButton(
+            : TextButton(
                 child: Text(i18n(context, S.btn_ok)),
                 onPressed: () {
                   if (formKey.currentState.validate()) {

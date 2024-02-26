@@ -127,7 +127,7 @@ class _IosFidoAuthWidgetState extends BState<IosFidoAuthWidget> {
                         SizedBox(height: 20),
                         SizedBox(
                           width: double.infinity,
-                          child: FlatButton(
+                          child: TextButton(
                             child: Text(
                               i18n(context, S.tfa_btn_other_options),
                               style: TextStyle(color: AppTheme.loginTextColor),
@@ -152,7 +152,7 @@ class _IosFidoAuthWidgetState extends BState<IosFidoAuthWidget> {
                           child: Column(
                             children: [
                               CircularProgressIndicator(),
-                              FlatButton(
+                              TextButton(
                                 onPressed: () {
                                   bloc.add(Cancel());
                                 },

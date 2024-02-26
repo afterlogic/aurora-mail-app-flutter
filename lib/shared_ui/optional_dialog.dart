@@ -105,7 +105,7 @@ class _OptionalDialogState extends State<OptionalDialog> {
         children: children,
       ),
       actions: <Widget>[
-        FlatButton(
+        TextButton(
           child: Text(i18n(context, S.btn_cancel)),
           onPressed: () => Navigator.pop(
             context,
@@ -113,7 +113,7 @@ class _OptionalDialogState extends State<OptionalDialog> {
           ),
         ),
         if (actions != null) ...actions,
-        FlatButton(
+        TextButton(
           child: Text(actionText),
           onPressed: () => Navigator.pop(
             context,

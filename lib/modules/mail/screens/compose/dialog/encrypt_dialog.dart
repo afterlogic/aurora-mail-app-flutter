@@ -54,11 +54,11 @@ class _EncryptDialogState extends BState<EncryptDialog> {
         ),
       ),
       actions: <Widget>[
-        FlatButton(
+        TextButton(
           child: Text(i18n(context, S.btn_close)),
           onPressed: () => Navigator.pop(context),
         ),
-        FlatButton(
+        TextButton(
           child: Text(i18n(context, S.btn_pgp_sign_or_encrypt)),
           onPressed: _signOrEncrypt,
         ),

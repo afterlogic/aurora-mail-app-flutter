@@ -556,7 +556,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
     return Column(
       children: <Widget>[
         if (isSearch)
-          FlatButton(
+          TextButton(
             onPressed: () async {
               final result = await dialog(
                 context: context,
@@ -574,9 +574,10 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
             children: <Widget>[
               SizedBox(height: 12.0),
               Text(i18n(context, S.messages_filter_unread)),
-              FlatButton(
-                child: Text(i18n(context, S.btn_show_all)),
-                textColor: theme.accentColor,
+              TextButton(
+                child: Text(i18n(context, S.btn_show_all),
+                  style: TextStyle(color: theme.accentColor),
+                ),
                 onPressed: () => _showAllMessages(context),
               )
             ],

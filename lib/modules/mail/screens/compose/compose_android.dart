@@ -849,7 +849,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
     final config = LayoutConfig.of(context);
     final isTablet = config.isTablet && config.columnCount >= 3;
     Widget _done(FocusNode node) {
-      return FlatButton(
+      return TextButton(
         child: Text(
           i18n(context, S.btn_done),
           style: theme.textTheme.bodyText2.copyWith(color: Colors.black),
