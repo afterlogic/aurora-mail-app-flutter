@@ -4,7 +4,7 @@ description: Mail client for {{appName}}.
 version: "{{version}}+{{build}}"
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
+  sdk: ">=2.17.0 <3.0.0"
 
 dependencies:
   flutter:
@@ -84,7 +84,9 @@ dependencies:
       url: https://github.com/afterlogic/aurora_ui_kit_flutter.git
 
   receive_sharing:
-    git: https://github.com/afterlogic/receive_sharing
+    git:
+      url: https://github.com/afterlogic/receive_sharing.git
+      ref: master
 
   #notification
   flutter_local_notifications: ^9.5.3+1
@@ -107,7 +109,7 @@ dependencies:
   crypto_stream:
     git:
       url: https://github.com/afterlogic/flutter_crypto_stream
-      ref: master
+      ref: flutter_3.3
   crypto_storage_impl:
     path: module/crypto/crypto_storage_impl
   crypto_worker_impl:
@@ -123,6 +125,7 @@ dependencies:
   aurora_logger:
     git:
       url: https://github.com/afterlogic/aurora_logger_flutter
+      ref: master
 
 dev_dependencies:
   flutter_test:
