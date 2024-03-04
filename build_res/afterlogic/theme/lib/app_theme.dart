@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'app_color.dart';
 
@@ -10,44 +11,54 @@ class AppTheme {
       selectionHandleColor: AppColor.accent,
       cursorColor: AppColor.accent,
     ),
-    accentColor: AppColor.accent,
-    buttonColor: AppColor.accent,
+    colorScheme: ColorScheme.fromSeed(
+        seedColor: AppColor.primary,
+        background: Color(0xFFe6ebf0),
+        brightness: Brightness.light),
     buttonTheme: _buttonTheme,
     dialogTheme: _dialogTheme,
-    selectedRowColor: Color(0xFFe2e7ec),
-    backgroundColor: Color(0xFFe6ebf0),
     splashFactory: InkRipple.splashFactory,
-    brightness: Brightness.light,
     disabledColor: Colors.black.withOpacity(0.4),
     scaffoldBackgroundColor: Colors.white,
 //    iconTheme: IconThemeData(color: AppColor.primary),
     textTheme: TextTheme(
-      headline4: TextStyle(
+      headlineMedium: TextStyle(
         color: Colors.black,
         fontSize: 32.0,
         fontWeight: FontWeight.w500,
       ),
     ),
     appBarTheme: AppBarTheme(
-      brightness: Brightness.light,
       color: Colors.white,
       iconTheme: IconThemeData(color: Colors.black),
       actionsIconTheme: IconThemeData(color: Colors.black),
-      textTheme: TextTheme(
-        headline6: TextStyle(
+      systemOverlayStyle: SystemUiOverlayStyle.dark,
+      toolbarTextStyle: TextTheme(
+        titleLarge: TextStyle(
           color: Colors.black,
           fontSize: 18.0,
           fontWeight: FontWeight.w500,
         ),
-        subtitle2: TextStyle(
+        titleSmall: TextStyle(
           color: Colors.black,
           fontSize: 12.0,
           fontWeight: FontWeight.w400,
         ),
-      ),
+      ).bodyMedium,
+      titleTextStyle: TextTheme(
+        titleLarge: TextStyle(
+          color: Colors.black,
+          fontSize: 18.0,
+          fontWeight: FontWeight.w500,
+        ),
+        titleSmall: TextStyle(
+          color: Colors.black,
+          fontSize: 12.0,
+          fontWeight: FontWeight.w400,
+        ),
+      ).titleLarge,
     ),
     floatingActionButtonTheme: _floatTheme,
-    toggleableActiveColor: AppColor.primary,
   );
 
   static final dark = ThemeData(
@@ -57,49 +68,60 @@ class AppTheme {
       cursorColor: AppColor.accent,
     ),
     primaryColor: AppColor.primary,
-    accentColor: AppColor.accent,
-    buttonColor: AppColor.accent,
     buttonTheme: _buttonTheme,
     dialogTheme: _dialogTheme,
-    selectedRowColor: Colors.black,
-    backgroundColor: Color(0xFFe6ebf0),
+    colorScheme: ColorScheme.fromSeed(
+        seedColor: AppColor.primary,
+        background: Color(0xFFe6ebf0),
+        brightness: Brightness.dark),
+
 //    iconTheme: IconThemeData(color: AppColor.primary),
     splashFactory: InkRipple.splashFactory,
-    brightness: Brightness.dark,
     disabledColor: Colors.white.withOpacity(0.4),
     scaffoldBackgroundColor: Color(0xFF1A1A1A),
     textTheme: TextTheme(
-      headline4: TextStyle(
+      headlineMedium: TextStyle(
         color: Colors.white,
         fontSize: 32.0,
         fontWeight: FontWeight.w500,
       ),
     ),
     appBarTheme: AppBarTheme(
-      brightness: Brightness.dark,
       color: Colors.black,
       iconTheme: IconThemeData(color: Colors.white),
       actionsIconTheme: IconThemeData(color: Colors.white),
-      textTheme: TextTheme(
-        headline6: TextStyle(
+      systemOverlayStyle: SystemUiOverlayStyle.light,
+      toolbarTextStyle: TextTheme(
+        titleLarge: TextStyle(
           color: Colors.white,
           fontSize: 18.0,
           fontWeight: FontWeight.w500,
         ),
-        subtitle2: TextStyle(
+        titleSmall: TextStyle(
           color: Colors.white,
           fontSize: 12.0,
           fontWeight: FontWeight.w400,
         ),
-      ),
+      ).bodyMedium,
+      titleTextStyle: TextTheme(
+        titleLarge: TextStyle(
+          color: Colors.white,
+          fontSize: 18.0,
+          fontWeight: FontWeight.w500,
+        ),
+        titleSmall: TextStyle(
+          color: Colors.white,
+          fontSize: 12.0,
+          fontWeight: FontWeight.w400,
+        ),
+      ).titleLarge,
     ),
     floatingActionButtonTheme: _floatTheme,
-    bottomAppBarColor: Colors.black,
-    toggleableActiveColor: AppColor.primary,
+    bottomAppBarTheme: BottomAppBarTheme(color: Colors.black),
   );
 
-  static final ThemeData login = null;
-  static final Color loginTextColor = null;
+  static final ThemeData? login = null;
+  static final Color? loginTextColor = null;
 
   static final floatIconTheme = IconThemeData(color: Colors.white);
 
