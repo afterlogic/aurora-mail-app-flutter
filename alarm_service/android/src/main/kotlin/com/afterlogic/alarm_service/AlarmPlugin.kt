@@ -10,29 +10,34 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import io.flutter.plugin.common.PluginRegistry.Registrar
 import io.flutter.view.FlutterCallbackInformation
+import io.flutter.embedding.engine.plugins.FlutterPlugin
+import io.flutter.embedding.engine.plugins.FlutterPlugin.FlutterPluginBinding
 
-class AlarmPlugin(private val applicationContext: Context) : MethodCallHandler {
+class AlarmPlugin : MethodCallHandler, FlutterPlugin{
+
+    private var applicationContext: Context? = null
+    private var methodChannel: MethodChannel? = null
+
     companion object {
         var onComplete: (() -> Unit)? = null
         var isBackground: Boolean = false
         var instance: AlarmPlugin? = null
-
-        @JvmStatic
-        fun registerWith(registrar: Registrar) {
-            val channel = MethodChannel(registrar.messenger(), "alarm_service")
-            if (instance == null)
-                instance = AlarmPlugin(registrar.context().applicationContext)
-            channel.setMethodCallHandler(instance)
-            registrar.addViewDestroyListener {
-                instance = null
-                true
-            }
-        }
     }
 
-    init {
-        ""
+    override fun onAttachedToEngine(binding: FlutterPluginBinding) {
+        this.applicationContext = binding.applicationContext
+        methodChannel = MethodChannel(binding.binaryMessenger, "alarm_service")
+        methodChannel!!.setMethodCallHandler(this)
+        instance = this
     }
+
+    override fun onDetachedFromEngine(binding: FlutterPluginBinding) {
+        applicationContext = null
+        methodChannel!!.setMethodCallHandler(null)
+        methodChannel = null
+        instance = null
+    }
+
 
     private var doOnAlarm: Result? = null
 
@@ -41,7 +46,7 @@ class AlarmPlugin(private val applicationContext: Context) : MethodCallHandler {
         try {
             when {
                 call.method == "setAlarm" -> {
-                    AlarmBroadcast.setAlarm(applicationContext,
+                    AlarmBroadcast.setAlarm(applicationContext!!,
                             (arg!![0] as Number).toLong(),
                             (arg[1] as Number).toInt(),
                             (arg[2] as Number).toLong())
@@ -49,7 +54,7 @@ class AlarmPlugin(private val applicationContext: Context) : MethodCallHandler {
                 }
                 call.method == "removeAlarm" -> {
                     doOnAlarm?.success(null)
-                    AlarmBroadcast.cancelAlarm(applicationContext, arg!![0] as Int)
+                    AlarmBroadcast.cancelAlarm(applicationContext!!, arg!![0] as Int)
                     result.success("")
                 }
                 call.method == "endAlarm" -> {

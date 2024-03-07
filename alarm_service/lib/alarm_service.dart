@@ -7,10 +7,10 @@ import 'package:flutter/services.dart';
 class AlarmService {
   static const MethodChannel _channel = const MethodChannel('alarm_service');
   static final Map<int, Function> _onAlarmMap = {};
-  static Future Function(Map<String, dynamic> message) _onNotification;
+  static Future Function(Map<String, dynamic> message)? _onNotification;
   static bool _isInit = false;
-  static Duration _iosInterval;
-  static Timer _timer;
+  static Duration? _iosInterval;
+  static Timer? _timer;
 
   static init() {
     if (!_isInit) {
@@ -28,7 +28,7 @@ class AlarmService {
       initTimer(interval);
     }
     return _channel.invokeMethod('setAlarm', [
-      PluginUtilities.getCallbackHandle(onAlarm).toRawHandle(),
+      PluginUtilities.getCallbackHandle(onAlarm)?.toRawHandle(),
       id,
       interval.inSeconds,
     ]);
@@ -45,7 +45,7 @@ class AlarmService {
   static startTimer() {
     stopTimer();
     if (_iosInterval == null) return;
-    _timer = Timer.periodic(_iosInterval, (_) => _alarm(-1));
+    _timer = Timer.periodic(_iosInterval!, (_) => _alarm(-1));
   }
 
   static stopTimer() {
@@ -87,14 +87,12 @@ class AlarmService {
   }
 
   static _alarm(int id) {
-    if (id != null) {
       final function = id == -1 ? _onAlarmMap.values.first : _onAlarmMap[id];
       if (function != null) function();
-    }
   }
 
   static _notification(Map<String, dynamic> message) {
-    _onNotification(message);
+    _onNotification?.call(message);
   }
 
   static void onNotification(
