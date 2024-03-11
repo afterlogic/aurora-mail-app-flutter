@@ -13,7 +13,7 @@ class PgpWorkerImpl extends PgpWorker {
   final utf8 = Utf8Codec(allowMalformed: true);
   final Pgp _pgp;
   final CryptoStorage _storage;
-  PgpEncryptDecrypt _pgpEncryptDecrypt;
+  PgpEncryptDecrypt? _pgpEncryptDecrypt;
 
   PgpWorkerImpl(this._pgp, this._storage);
 
@@ -28,7 +28,7 @@ class PgpWorkerImpl extends PgpWorker {
       sender,
       recipient,
     );
-    return _pgpEncryptDecrypt;
+    return _pgpEncryptDecrypt!;
   }
 
   Future<List<PgpKey>> createKeyPair(
@@ -58,16 +58,17 @@ class PgpWorkerImpl extends PgpWorker {
         .map((regExp) => regExp.group(0))
         .toList();
     final keys = <PgpKey>[];
-    for (String key in keysText) {
+    for (String? key in keysText) {
+      if(key == null) continue;
       final description = await _pgp.getKeyDescription(key);
       for (String email in description.emails) {
         final groups =
             RegExp("([\\D|\\d]*)?<((?:\\D|\\d)*)>").firstMatch(email);
-        String validEmail = "";
-        String name = "";
+        String? validEmail;
+        String? name;
         if (groups?.groupCount == 2) {
-          name = groups.group(1);
-          validEmail = groups.group(2);
+          name = groups?.group(1);
+          validEmail = groups?.group(2);
         } else {
           validEmail = email;
         }

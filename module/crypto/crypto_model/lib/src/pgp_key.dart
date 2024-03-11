@@ -5,14 +5,14 @@ class PgpKey {
   final String mail;
   final String key;
   final bool isPrivate;
-  final int length;
+  final int? length;
 
   PgpKey({
-    this.name,
-    this.mail,
-    this.isPrivate,
-    this.key,
-    this.length,
+    required this.name,
+    required this.mail,
+    required this.isPrivate,
+    required this.key,
+    required this.length,
   });
 
   PgpKey.fill(
@@ -38,5 +38,5 @@ class PgpKeyWithContact implements PgpKey {
 
   bool get isPrivate => pgpKey.isPrivate;
 
-  int get length => pgpKey.length;
+  int? get length => pgpKey.length;
 }

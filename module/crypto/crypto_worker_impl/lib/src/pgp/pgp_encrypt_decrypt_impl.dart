@@ -20,7 +20,7 @@ class PgpEncryptDecryptImpl extends PgpEncryptDecrypt {
   Future<Decrypted> decrypt(String message, String password) async {
     assert(recipients.length == 1, "expected single recipient");
 
-    PgpKey privateKey;
+    PgpKey? privateKey;
     final emails = [...recipients, sender];
     for (var email in emails) {
       privateKey = await _storage.getPgpKey(email, true);
@@ -28,9 +28,9 @@ class PgpEncryptDecryptImpl extends PgpEncryptDecrypt {
         break;
       }
     }
-    PgpKey publicKey = await _storage.getPgpKey(sender, false);
+    PgpKey? publicKey = await _storage.getPgpKey(sender, false);
 
-    if (privateKey == null) {
+    if (privateKey?.key == null) {
       throw PgpKeyNotFound([sender]);
     }
 
@@ -38,7 +38,7 @@ class PgpEncryptDecryptImpl extends PgpEncryptDecrypt {
       final result = await _pgp.bufferPlatformSink(
           message,
           _pgp.decrypt(
-            privateKey?.key,
+            privateKey!.key,
             publicKey == null ? null : [publicKey.key],
             password,
           ));
@@ -57,11 +57,11 @@ class PgpEncryptDecryptImpl extends PgpEncryptDecrypt {
 
   Future<Decrypted> verifySign(String message) async {
     final publicKey = await _storage.getPgpKey(sender, false);
-    if (publicKey == null) {
+    if (publicKey?.key == null) {
       throw PgpKeyNotFound([sender]);
     }
 
-    final text = await _pgp.verify(message, publicKey?.key);
+    final text = await _pgp.verify(message, publicKey!.key);
     final verified = await _pgp.lastVerifyResult();
 
     return Decrypted(verified, text);
@@ -86,9 +86,9 @@ class PgpEncryptDecryptImpl extends PgpEncryptDecrypt {
   }
 
   @override
-  Future<String> encrypt(String message, [String password]) async {
-    PgpKey privateKey;
-    if (sender != null && password != null) {
+  Future<String> encrypt(String message, [String? password]) async {
+    PgpKey? privateKey;
+    if (password != null) {
       privateKey = await _storage.getPgpKey(sender, true);
       if (privateKey == null) {
         throw PgpKeyNotFound([sender]);

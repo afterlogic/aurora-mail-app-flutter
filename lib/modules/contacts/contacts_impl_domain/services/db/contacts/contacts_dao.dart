@@ -1,4 +1,3 @@
-//@dart=2.9
 import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:drift_sqflite/drift_sqflite.dart';
@@ -43,7 +42,7 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
   }
 
   Future<List<ContactDb>> getContacts(int userLocalId,
-      {List<String> storages, String groupUuid, String pattern}) {
+      {required List<String> storages, required String groupUuid, required String pattern}) {
     return (select(contactsTable)
           ..where((c) => c.userLocalId.equals(userLocalId))
           ..where((c) {
@@ -128,7 +127,7 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
         .watch();
   }
 
-  Future<void> updateContacts(List<ContactsTableCompanion> updatedContacts) {
+  Future<void> updateContacts(List<ContactsTableCompanion> updatedContacts) async{
     try {
       return transaction(() async {
         for (final contact in updatedContacts) {
@@ -138,11 +137,11 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
         }
       });
     } catch (err) {
-      return null;
+      return;
     }
   }
 
-  Future<void> addKey(String mail, String key) {
+  Future<void> addKey(String mail, String key) async {
     try {
       return transaction(() async {
         await (update(contactsTable)..where((c) => c.viewEmail.equals(mail)))
@@ -153,7 +152,7 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
     }
   }
 
-  Future<ContactDb> getContactWithPgpKey(String email) {
+  Future<ContactDb?> getContactWithPgpKey(String email) {
     return (select(contactsTable)
           ..where((item) => item.pgpPublicKey.isNotNull() & item.pgpPublicKey.equals('').not())
           ..where((item) => item.viewEmail.equals(email)))
@@ -173,13 +172,13 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
         .get();
   }
 
-  Future deleteContactKey(String mail) {
+  Future deleteContactKey(String mail) async{
     try {
       return transaction(() async {
         await (update(contactsTable)..where((c) => c.viewEmail.equals(mail)))
             .write(
           ContactsTableCompanion(
-            pgpPublicKey: Value(null),
+            pgpPublicKey: Value.absent(),
           ),
         );
       });
@@ -188,7 +187,7 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
     }
   }
 
-  Future<ContactDb> getContactByEmail(String mail) {
+  Future<ContactDb?> getContactByEmail(String mail) {
     return (select(contactsTable)..where((item) => item.viewEmail.equals(mail)))
         .get()
         .then((item) {

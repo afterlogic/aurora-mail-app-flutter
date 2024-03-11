@@ -11,7 +11,7 @@ class CryptoStorageImpl extends CryptoStorage {
   final FlutterSecureStorage _secureStorage;
   final PgpKeyDao _keyDao;
   final ContactsDao _contactsDao;
-  String _other;
+  String? _other;
 
   CryptoStorageImpl(this._secureStorage, this._keyDao, this._contactsDao);
 
@@ -33,7 +33,7 @@ class CryptoStorageImpl extends CryptoStorage {
     return _keyDao.addPgpKeys(localPgpKeys);
   }
 
-  Future<PgpKey> getPgpKey(String email, bool isPrivate,
+  Future<PgpKey?> getPgpKey(String email, bool isPrivate,
       [bool fromContact = true]) async {
     final localKey = await _keyDao.getPgpKey(email, isPrivate);
     if (localKey != null) {
@@ -63,9 +63,10 @@ class CryptoStorageImpl extends CryptoStorage {
     return _keyDao.getPgpKeys(isPrivate).then((list) async {
       final out = <PgpKey>[];
       for (var item in list) {
-        out.add(await _fromDb(item));
+        final key = await _fromDb(item);
+        if (key == null) continue;
+        out.add(key);
       }
-
       return out;
     });
   }
@@ -102,13 +103,14 @@ class CryptoStorageImpl extends CryptoStorage {
 
 //----------------------------------private--------------------------------------
 
-  Future<PgpKey> _fromDb(LocalPgpKey pgpKey) async {
-    if (pgpKey == null) {
-      return null;
-    }
+  Future<PgpKey?> _fromDb(LocalPgpKey pgpKey) async {
     final id = _id(pgpKey.name, pgpKey.mail, pgpKey.isPrivate);
 
     final key = await _secureStorage.read(key: id);
+
+    if (key == null) {
+      return null;
+    }
 
     return PgpKey.fill(
       pgpKey.name,
@@ -120,9 +122,6 @@ class CryptoStorageImpl extends CryptoStorage {
   }
 
   Future<LocalPgpKey> _toDb(PgpKey pgpKey) async {
-    if (pgpKey == null) {
-      return null;
-    }
     final id = _id(pgpKey.name, pgpKey.mail, pgpKey.isPrivate);
 
     await _secureStorage.write(key: id, value: pgpKey.key);
@@ -138,11 +137,11 @@ class CryptoStorageImpl extends CryptoStorage {
   }
 
   String _id(String name, String mail, bool isPrivate) {
-    assert(_other.isNotEmpty, "other required");
+    assert(_other?.isNotEmpty ?? false, "other required");
     return "$_other$name$mail$isPrivate";
   }
 
-  Future<String> _key(String name, String mail, bool isPrivate) async {
+  Future<String?> _key(String name, String mail, bool isPrivate) async {
     final id = _id(name, mail, isPrivate);
 
     return await _secureStorage.read(key: id);

@@ -1,4 +1,3 @@
-//@dart=2.9
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:drift_sqflite/drift_sqflite.dart';
 import 'package:drift/drift.dart';
@@ -10,7 +9,7 @@ part 'pgp_key_dao.g.dart';
 @DriftAccessor(tables: [PgpKeyModel])
 class PgpKeyDao extends DatabaseAccessor<AppDatabase> with _$PgpKeyDaoMixin {
   PgpKeyDao(AppDatabase db) : super(db);
-  String _other;
+  String? _other;
 
   Future<List<LocalPgpKey>> getPgpKeys(bool isPrivate) {
     return _forOther(select(pgpKeyModel)
@@ -18,7 +17,7 @@ class PgpKeyDao extends DatabaseAccessor<AppDatabase> with _$PgpKeyDaoMixin {
         .get();
   }
 
-  Future<LocalPgpKey> getPgpKey(String email, bool isPrivate) {
+  Future<LocalPgpKey?> getPgpKey(String email, bool isPrivate) {
     return _forOther(select(pgpKeyModel)
           ..where((pgpKey) => pgpKey.mail.equals(email))
           ..where((pgpKey) => pgpKey.isPrivate.equals(isPrivate)))
