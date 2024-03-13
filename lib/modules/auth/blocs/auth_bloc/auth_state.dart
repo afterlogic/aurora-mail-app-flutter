@@ -96,6 +96,8 @@ class AuthError extends AuthState {
   List<Object> get props => [errorMsg];
 }
 
+class AlreadyLoggedError extends AuthState {}
+
 class ShowTrustDeviceDialog extends AuthState {
   final User user;
   final String email;

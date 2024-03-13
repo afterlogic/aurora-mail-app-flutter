@@ -4,10 +4,10 @@ import 'dart:async';
 import 'package:alarm_service/alarm_service.dart';
 import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/models/alias_or_identity.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_methods.dart';
 import 'package:aurora_mail/modules/auth/repository/auth_api.dart';
-import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/utils/api_utils.dart';
 import 'package:aurora_mail/utils/error_to_show.dart';
 import 'package:bloc/bloc.dart';
@@ -139,7 +139,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         orElse: () => null);
 
     if (!event.firstLogin && userFromDb != null) {
-      yield AuthError(ErrorToShow.code(S.error_user_already_logged));
+      yield AlreadyLoggedError();
       return;
     } else {
       try {
@@ -224,8 +224,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         event.completer?.complete();
       } else {
         event.completer
-            ?.completeError(ErrorToShow.code(S.error_login_no_accounts));
-        yield AuthError(ErrorToShow.code(S.error_login_no_accounts));
+            ?.completeError(ErrorToShow.message(S.current.error_login_no_accounts));
+        yield AuthError(ErrorToShow.message(S.current.error_login_no_accounts));
       }
     } catch (e, s) {
       event.completer?.completeError(AuthError(formatError(e, s)));

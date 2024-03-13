@@ -1,7 +1,6 @@
 //@dart=2.9
 // import 'dart:io';
 
-// import 'package:aurora_mail/res/str/s.dart';
 // import 'package:flutter/services.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:device_info_plus/device_info_plus.dart';

@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/inject/app_inject.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
@@ -23,11 +24,9 @@ import 'package:aurora_mail/modules/mail/screens/message_view/dialog/request_pas
 import 'package:aurora_mail/modules/mail/screens/messages_list/dialog/move_message.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
 import 'package:aurora_mail/modules/settings/blocs/pgp_settings/pgp_settings_bloc.dart';
-import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/error_to_show.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/mail_utils.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
@@ -221,9 +220,9 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
     final message = widget.message;
     final delete = await ConfirmationDialog.show(
       context,
-      i18n(context, S.messages_delete_title),
-      i18n(context, S.messages_delete_desc),
-      i18n(context, S.btn_delete),
+      S.of(context).messages_delete_title,
+      S.of(context).messages_delete_desc,
+      S.of(context).btn_delete,
       destructibleAction: true,
     );
     if (delete == true) {
@@ -239,7 +238,7 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
 //        context, message.toInJson, BlocProvider.of<AuthBloc>(context).currentAccount.email);
 //
 //    if (items.isEmpty) {
-//      return i18n(context, S.messages_no_receivers);
+//      return S.of(context).messages_no_receivers);
 //    } else {
 //      return items.join(" | ");
 //    }
@@ -255,12 +254,12 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
     );
   }
 
-  void _showSnack(int msg, BuildContext context,
-      {bool isError = false, Map<String, String> arg}) {
+  void _showSnack(String msg, BuildContext context,
+      {bool isError = false}) {
     showSnack(
       context: context,
       scaffoldState: Scaffold.of(context),
-      message: i18n(context, msg, arg),
+      message: msg,
       isError: isError,
     );
   }
@@ -291,18 +290,17 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
                     _showSnack(
                         state.type == EncryptType.Sign
                             ? (state.verified
-                                ? S.label_pgp_verified
-                                : S.label_pgp_not_verified)
+                                ? S.of(context).label_pgp_verified
+                                : S.of(context).label_pgp_not_verified)
                             : (state.verified
-                                ? S.label_pgp_decrypted_and_verified
-                                : S.label_pgp_decrypted_but_not_verified),
+                                ? S.of(context).label_pgp_decrypted_and_verified
+                                : S.of(context).label_pgp_decrypted_but_not_verified),
                         context);
                   }
                   if (state is DownloadStarted) {
                     _showSnack(
-                      S.messages_attachment_downloading,
+                      S.of(context).messages_attachment_downloading(state.fileName),
                       context,
-                      arg: {"fileName": state.fileName},
                     );
                   }
                   if (state is MessagesViewError) {
@@ -316,15 +314,14 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
                   if (state is DownloadFinished) {
                     if (state.path == null) {
                       _showSnack(
-                        S.messages_attachment_download_failed,
+                        S.of(context).messages_attachment_download_failed,
                         context,
                         isError: true,
                       );
                     } else {
                       _showSnack(
-                        S.messages_attachment_download_success,
+                        S.of(context).messages_attachment_download_success(state.path),
                         context,
-                        arg: {"path": state.path},
                       );
                     }
                   }

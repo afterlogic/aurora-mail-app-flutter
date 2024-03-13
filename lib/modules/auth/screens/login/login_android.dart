@@ -1,5 +1,6 @@
 //@dart=2.9
 import 'package:aurora_mail/build_property.dart';
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/auth/screens/fido_auth/fido_auth_route.dart';
 import 'package:aurora_mail/modules/auth/screens/trust_device/trust_device_route.dart';
 import 'package:aurora_mail/modules/layout_config/layout_config.dart';
@@ -13,7 +14,6 @@ import 'package:aurora_mail/modules/auth/screens/two_factor_auth/two_factor_auth
 import 'package:aurora_mail/modules/auth/screens/upgrade_plan/upgrade_plan_route.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
-import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/shared_ui/restart_widget.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/error_to_show.dart';
@@ -137,12 +137,9 @@ class _LoginAndroidState extends BState<LoginAndroid> {
       appBar: (widget.isDialog && !LayoutConfig.of(context).isTablet)
           ? AMAppBar(
               title: Text(
-                i18n(
-                  context,
-                  widget.email == null
-                      ? S.settings_accounts_add
-                      : S.settings_accounts_relogin,
-                ),
+                widget.email == null
+                    ? S.of(context).settings_accounts_add
+                    : S.of(context).settings_accounts_relogin,
               ),
             )
           : null,
@@ -197,8 +194,7 @@ class _LoginAndroidState extends BState<LoginAndroid> {
                 setState(() => _showHostField = true);
                 _showError(
                   context,
-                  ErrorToShow.message(
-                      i18n(context, S.error_login_auto_discover)),
+                  ErrorToShow.message(S.of(context).error_login_auto_discover),
                 );
               }
               if (state is InitializedUserAndAccounts) {
@@ -216,11 +212,12 @@ class _LoginAndroidState extends BState<LoginAndroid> {
                       context, MessagesListRoute.name);
                 }
               }
-              if (state is AuthError) {
+              if (state is AlreadyLoggedError) {
                 showErrorSnack(
                   context: context,
                   scaffoldState: Scaffold.of(context),
-                  msg: state.errorMsg,
+                  msg: ErrorToShow.message(
+                      S.of(context).error_user_already_logged),
                 );
               }
               if (state is UpgradePlan) {
@@ -285,12 +282,9 @@ class _LoginAndroidState extends BState<LoginAndroid> {
                           Padding(
                             padding: const EdgeInsets.all(16),
                             child: Text(
-                              i18n(
-                                context,
-                                widget.email == null
-                                    ? S.settings_accounts_add
-                                    : S.settings_accounts_relogin,
-                              ),
+                              widget.email == null
+                                  ? S.of(context).settings_accounts_add
+                                  : S.of(context).settings_accounts_relogin,
                               style: theme.textTheme.headline6,
                             ),
                           ),
@@ -298,7 +292,7 @@ class _LoginAndroidState extends BState<LoginAndroid> {
                           AuthInput(
                             controller: hostCtrl,
                             inputFormatters: [HostInputFormatter()],
-                            label: i18n(context, S.login_input_host),
+                            label: S.of(context).login_input_host,
                             keyboardType: TextInputType.url,
                             isEnabled: !loading,
                           ),
@@ -310,7 +304,7 @@ class _LoginAndroidState extends BState<LoginAndroid> {
                             FilteringTextInputFormatter.deny(" ")
                           ],
                           controller: emailCtrl,
-                          label: i18n(context, S.login_input_email),
+                          label: S.of(context).login_input_email,
                           keyboardType: TextInputType.emailAddress,
                           validator: (value) => validateInput(context, value,
                               [ValidationType.empty, ValidationType.email]),
@@ -319,7 +313,7 @@ class _LoginAndroidState extends BState<LoginAndroid> {
                         SizedBox(height: 10),
                         AuthInput(
                           controller: passwordCtrl,
-                          label: i18n(context, S.login_input_password),
+                          label: S.of(context).login_input_password,
                           validator: (value) => validateInput(
                               context, value, [ValidationType.empty]),
                           isPassword: true,
@@ -333,11 +327,9 @@ class _LoginAndroidState extends BState<LoginAndroid> {
                       child: _debugRouteToTwoFactor(
                         AMButton(
                           shadow: AppColor.enableShadow ? null : BoxShadow(),
-                          child: Text(i18n(
-                              context,
-                              widget.isDialog
-                                  ? S.btn_add_account
-                                  : S.btn_login)),
+                          child: Text(widget.isDialog
+                              ? S.of(context).btn_add_account
+                              : S.of(context).btn_login),
                           isLoading: loading,
                           onPressed: () => _login(context),
                         ),

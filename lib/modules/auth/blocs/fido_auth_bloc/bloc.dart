@@ -4,17 +4,16 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_logger/aurora_logger.dart';
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/auth/blocs/fido_auth_bloc/event.dart';
 import 'package:aurora_mail/modules/auth/blocs/fido_auth_bloc/state.dart';
 import 'package:aurora_mail/modules/auth/repository/auth_api.dart';
-import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/utils/error_to_show.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:uni_links/uni_links.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:yubico_flutter/yubico_flutter.dart';
 import 'package:flutter_custom_tabs/flutter_custom_tabs.dart' as tab;
 
@@ -150,7 +149,7 @@ class FidoAuthBloc extends Bloc<FidoAuthEvent, FidoAuthState> {
       }
     } else if (e is PlatformException) {
       if (e.message == "No valid credentials provided.") {
-        return ErrorState(ErrorToShow.code(S.fido_error_invalid_key));
+        return ErrorState(ErrorToShow.message(S.current.fido_error_invalid_key));
       }
     } else if (e is CanceledByUser) {
       return ErrorState(null);

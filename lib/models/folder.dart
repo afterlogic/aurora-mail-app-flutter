@@ -1,7 +1,6 @@
 //@dart=2.9
 import 'package:aurora_mail/database/app_database.dart';
-import 'package:aurora_mail/res/str/s.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:flutter/cupertino.dart';
 
 enum FolderType {
@@ -97,15 +96,15 @@ class Folder {
   String displayName(BuildContext context, {bool full = false}) {
     switch (this.folderType) {
       case FolderType.inbox:
-        return i18n(context, S.folders_inbox);
+        return S.of(context).folders_inbox;
       case FolderType.sent:
-        return i18n(context, S.folders_sent);
+        return S.of(context).folders_sent;
       case FolderType.drafts:
-        return i18n(context, S.folders_drafts);
+        return S.of(context).folders_drafts;
       case FolderType.spam:
-        return i18n(context, S.folders_spam);
+        return S.of(context).folders_spam;
       case FolderType.trash:
-        return i18n(context, S.folders_trash);
+        return S.of(context).folders_trash;
       default:
         if (!full) {
           return name;

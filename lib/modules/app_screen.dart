@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:aurora_mail/background/background_helper.dart';
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/localization/localization_delegate.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
@@ -230,6 +231,7 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
                             GlobalMaterialLocalizations.delegate,
                             GlobalWidgetsLocalizations.delegate,
                             GlobalCupertinoLocalizations.delegate,
+                            S.delegate,
                             LocalizationI18nDelegate(
                               forcedLocale: supportedLocales.contains(
                                       settingsState.language?.toLocale())
