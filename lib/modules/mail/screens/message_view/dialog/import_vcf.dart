@@ -1,12 +1,10 @@
 //@dart=2.9
 import 'dart:async';
 
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/contacts_bloc.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/events/contacts_event.dart';
-import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/utils/error_to_show.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ImportVcfDialog extends StatefulWidget {
@@ -25,17 +23,17 @@ class _ImportVcfDialogState extends State<ImportVcfDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      content: Text(i18n(context, S.hint_vcf_import)),
+      content: Text(S.of(context).hint_vcf_import),
       actions: <Widget>[
         TextButton(
-          child: Text(i18n(context, S.btn_cancel)),
+          child: Text(S.of(context).btn_cancel),
           onPressed: () => Navigator.pop(context),
         ),
         TextButton(
           child: Stack(
             alignment: Alignment.center,
             children: [
-              Text(i18n(context, S.btn_vcf_import)),
+              Text(S.of(context).btn_vcf_import),
               progress ? CircularProgressIndicator() : SizedBox.shrink(),
             ],
           ),

@@ -1,10 +1,8 @@
 //@dart=2.9
-import 'package:aurora_mail/utils/internationalization.dart';
-import 'package:aurora_mail/res/str/s.dart';
 import 'package:flutter/material.dart';
 
 class ContactCheckBox extends StatelessWidget {
-  final int label;
+  final String label;
   final bool value;
   final Function(bool) onEdit;
 
@@ -17,7 +15,7 @@ class ContactCheckBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CheckboxListTile(
-      title: Text(i18n(context, label)),
+      title: Text(label),
       value: value,
       onChanged: onEdit,
     );

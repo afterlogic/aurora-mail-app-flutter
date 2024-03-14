@@ -1,22 +1,16 @@
 //@dart=2.9
-import 'package:aurora_mail/build_property.dart';
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/auth/blocs/backup_code_auth/backup_code_bloc.dart';
 import 'package:aurora_mail/modules/auth/blocs/backup_code_auth/backup_code_event.dart';
 import 'package:aurora_mail/modules/auth/blocs/backup_code_auth/backup_code_state.dart';
 import 'package:aurora_mail/modules/auth/screens/component/two_factor_screen.dart';
 import 'package:aurora_mail/modules/auth/screens/login/login_route.dart';
 import 'package:aurora_mail/modules/auth/screens/select_two_factor/select_two_factor_route.dart';
-import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/auth_input.dart';
-import 'package:aurora_mail/modules/auth/screens/login/components/login_gradient.dart';
-import 'package:aurora_mail/modules/auth/screens/login/components/mail_logo.dart';
-import 'package:aurora_mail/modules/auth/screens/login/components/presentation_header.dart';
-import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/error_to_show.dart';
 import 'package:aurora_mail/utils/input_validation.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:aurora_ui_kit/components/am_button.dart';
@@ -82,13 +76,13 @@ class _BackupCodeAuthWidgetState extends BState<BackupCodeAuthWidget> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        i18n(context, S.tfa_label_enter_backup_code),
+                        S.of(context).tfa_label_enter_backup_code,
                         style: TextStyle(color: AppTheme.loginTextColor),
                       ),
                       SizedBox(height: 20),
                       AuthInput(
                         controller: pinCtrl,
-                        label: i18n(context, S.tfa_input_backup_code),
+                        label: S.of(context).tfa_input_backup_code,
                         keyboardType: TextInputType.emailAddress,
                         validator: (value) => validateInput(
                             context, value, [ValidationType.empty]),
@@ -100,7 +94,7 @@ class _BackupCodeAuthWidgetState extends BState<BackupCodeAuthWidget> {
                         child: AMButton(
                           shadow: AppColor.enableShadow ? null : BoxShadow(),
                           child: Text(
-                            i18n(context, S.btn_verify_pin),
+                            S.of(context).btn_verify_pin,
                             style: TextStyle(color: AppTheme.loginTextColor),
                           ),
                           isLoading: loading,

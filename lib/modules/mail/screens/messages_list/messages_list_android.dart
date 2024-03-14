@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:aurora_mail/background/background_helper.dart';
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
@@ -18,21 +19,17 @@ import 'package:aurora_mail/modules/mail/screens/messages_list/components/messag
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/selection_controller.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/stream_pagination_list.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/dialog/advanced_search.dart';
-import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
 import 'package:aurora_mail/shared_ui/mail_bottom_app_bar.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/error_to_show.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_dialog.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:theme/app_theme.dart';
-
 import 'components/mail_app_bar.dart';
 import 'components/mail_folder.dart';
 import 'components/message_item.dart';
@@ -567,15 +564,16 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
                 appBarKey.currentState.search(result);
               }
             },
-            child: Text(i18n(context, S.btn_message_advanced_search)),
+            child: Text(S.of(context).btn_message_advanced_search),
           ),
         if (filter == MessagesFilter.unread)
           Column(
             children: <Widget>[
               SizedBox(height: 12.0),
-              Text(i18n(context, S.messages_filter_unread)),
+              Text(S.of(context).messages_filter_unread),
               TextButton(
-                child: Text(i18n(context, S.btn_show_all),
+                child: Text(
+                  S.of(context).btn_show_all,
                   style: TextStyle(color: theme.accentColor),
                 ),
                 onPressed: () => _showAllMessages(context),
@@ -622,7 +620,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
               }
               return Padding(
                 padding: const EdgeInsets.only(top: 100.0),
-                child: Center(child: Text(i18n(context, S.messages_empty))),
+                child: Center(child: Text(S.of(context).messages_empty)),
               );
             },
             fetch: stream,
@@ -638,23 +636,21 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
     }
     final emptyFolder =
         Folder.getFolderTypeFromNumber(_selectedFolder.type) == FolderType.trash
-            ? S.btn_message_empty_trash_folder
-            : S.btn_message_empty_spam_folder;
+            ? S.of(context).btn_message_empty_trash_folder
+            : S.of(context).btn_message_empty_spam_folder;
     return ListTile(
       leading: Icon(Icons.delete_forever),
-      title: Text(i18n(context, emptyFolder)),
+      title: Text(emptyFolder),
       onTap: messageCount == 0
           ? null
           : () async {
               final delete = await ConfirmationDialog.show(
                 context,
-                i18n(context, emptyFolder),
-                i18n(
-                  context,
-                  S.hint_message_empty_folder,
-                  {"folder": FolderHelper.getTitle(context, _selectedFolder)},
-                ),
-                i18n(context, S.btn_delete),
+                emptyFolder,
+                S.of(context).hint_message_empty_folder(
+                      FolderHelper.getTitle(context, _selectedFolder),
+                    ),
+                S.of(context).btn_delete,
                 destructibleAction: true,
               );
               if (delete == true) {

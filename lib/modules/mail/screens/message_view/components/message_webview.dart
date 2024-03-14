@@ -5,6 +5,7 @@ import 'dart:io';
 
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/mail/mail_table.dart';
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/contacts_bloc.dart';
@@ -15,11 +16,9 @@ import 'package:aurora_mail/modules/mail/screens/message_view/dialog/import_vcf.
 import 'package:aurora_mail/modules/settings/blocs/pgp_settings/pgp_settings_bloc.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/modules/settings/screens/pgp_settings/dialogs/import_key_dialog.dart';
-import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/date_formatting.dart';
 import 'package:aurora_mail/utils/error_to_show.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/mail_utils.dart';
 import 'package:aurora_mail/utils/show_dialog.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
@@ -193,7 +192,7 @@ class MessageWebViewState extends BState<MessageWebView> {
     );
 
     if (items.isEmpty) {
-      return i18n(context, S.messages_no_receivers);
+      return S.of(context).messages_no_receivers;
     } else {
       return items.join(", ");
     }
@@ -205,7 +204,7 @@ class MessageWebViewState extends BState<MessageWebView> {
     final date = DateFormatting.getDetailedMessageDate(
       timestamp: widget.message.timeStampInUTC,
       locale: Localizations.localeOf(context).languageCode,
-      yesterdayWord: i18n(context, S.label_message_yesterday),
+      yesterdayWord: S.of(context).label_message_yesterday,
       is24: (state as SettingsLoaded).is24 ?? true,
     );
 
@@ -239,8 +238,7 @@ class MessageWebViewState extends BState<MessageWebView> {
             ImportKeyDialog(keys.userKeys, keys.contactKeys, widget.bloc),
       );
     } else if (attachment.fileName.endsWith(".vcf")) {
-      final msg = i18n(context, S.messages_attachment_downloading,
-          {"fileName": attachment.fileName});
+      final msg =  S.of(context).messages_attachment_downloading(attachment.fileName);
       Fluttertoast.showToast(
         msg: msg,
         timeInSecForIosWeb: 2,
@@ -271,7 +269,7 @@ class MessageWebViewState extends BState<MessageWebView> {
               context: context,
               scaffoldState: Scaffold.of(context),
               message:
-                  i18n(context, S.label_contacts_were_imported_successfully),
+                  S.of(context).label_contacts_were_imported_successfully,
             );
           }
         },
@@ -292,8 +290,7 @@ class MessageWebViewState extends BState<MessageWebView> {
           ),
         ),
       );
-      final msg = i18n(context, S.messages_attachment_downloading,
-          {"fileName": attachment.fileName});
+      final msg = S.of(context).messages_attachment_downloading(attachment.fileName);
       Fluttertoast.showToast(
         msg: msg,
         timeInSecForIosWeb: 2,
@@ -360,7 +357,7 @@ class MessageWebViewState extends BState<MessageWebView> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  i18n(context, S.messages_images_security_alert),
+                  S.of(context).messages_images_security_alert,
                   style: TextStyle(color: Colors.black),
                 ),
                 GestureDetector(
@@ -371,7 +368,7 @@ class MessageWebViewState extends BState<MessageWebView> {
                   child: Padding(
                     padding: EdgeInsets.all(4),
                     child: Text(
-                      i18n(context, S.messages_show_images),
+                      S.of(context).messages_show_images,
                       style: TextStyle(color: Colors.blue),
                     ),
                   ),
@@ -385,7 +382,7 @@ class MessageWebViewState extends BState<MessageWebView> {
                   child: Padding(
                     padding: EdgeInsets.all(4),
                     child: Text(
-                      i18n(context, S.messages_always_show_images),
+                      S.of(context).messages_always_show_images,
                       style: TextStyle(color: Colors.blue),
                     ),
                   ),

@@ -1,6 +1,7 @@
 //@dart=2.9
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/config.dart';
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
@@ -9,16 +10,12 @@ import 'package:aurora_mail/modules/contacts/screens/contact_edit/components/con
 import 'package:aurora_mail/modules/contacts/screens/contacts_list/contacts_list_route.dart';
 import 'package:aurora_mail/modules/dialog_wrap.dart';
 import 'package:aurora_mail/modules/settings/blocs/pgp_settings/bloc.dart';
-import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/utils/base_state.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_dialog.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:crypto_model/crypto_model.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'components/contact_birth_date_picker.dart';
 import 'components/contact_check_box.dart';
 import 'components/contact_input.dart';
@@ -180,7 +177,7 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
           return showSnack(
             context: context,
             scaffoldState: Scaffold.of(context),
-            message: i18n(context, S.error_contacts_email_empty),
+            message: S.of(context).error_contacts_email_empty,
           );
         }
 
@@ -194,7 +191,7 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
           return showSnack(
             context: context,
             scaffoldState: Scaffold.of(context),
-            message: i18n(context, S.error_contact_pgp_key_will_not_be_valid),
+            message: S.of(context).error_contact_pgp_key_will_not_be_valid,
           );
         } else if (widget.contact != null &&
             contact.pgpPublicKey != null &&
@@ -321,21 +318,20 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
           child: Form(
             child: ListView(
               children: <Widget>[
-                ContactInput(S.contacts_view_display_name, _fullName),
+                ContactInput(
+                    S.of(context).contacts_view_display_name, _fullName),
                 _buildPrimaryEmail(),
                 _buildPrimaryPhone(),
                 _buildPrimaryAddress(),
-                ContactInput(S.contacts_view_skype, _skype),
-                ContactInput(S.contacts_view_facebook, _facebook),
+                ContactInput(S.of(context).contacts_view_skype, _skype),
+                ContactInput(S.of(context).contacts_view_facebook, _facebook),
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Center(
                     child: GestureDetector(
-                      child: Text(i18n(
-                          context,
-                          _showAllFields
-                              ? S.contacts_view_hide_additional_fields
-                              : S.contacts_view_show_additional_fields)),
+                      child: Text(_showAllFields
+                          ? S.of(context).contacts_view_hide_additional_fields
+                          : S.of(context).contacts_view_show_additional_fields),
                       onTap: () {
                         // crutch
                         _personalEmail.text = _personalEmail.text;
@@ -354,60 +350,82 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
                 if (_showAllFields)
                   Column(
                     children: <Widget>[
-                      ContactInput(S.contacts_view_first_name, _firstName),
-                      ContactInput(S.contacts_view_last_name, _lastName),
-                      ContactInput(S.contacts_view_nickname, _nickName),
-                      ContactTile(S.contacts_view_section_home),
                       ContactInput(
-                          S.contacts_view_personal_email, _personalEmail,
+                          S.of(context).contacts_view_first_name, _firstName),
+                      ContactInput(
+                          S.of(context).contacts_view_last_name, _lastName),
+                      ContactInput(
+                          S.of(context).contacts_view_nickname, _nickName),
+                      ContactTile(S.of(context).contacts_view_section_home),
+                      ContactInput(S.of(context).contacts_view_personal_email,
+                          _personalEmail,
                           keyboardType: TextInputType.emailAddress),
+                      ContactInput(S.of(context).contacts_view_personal_address,
+                          _personalAddress),
                       ContactInput(
-                          S.contacts_view_personal_address, _personalAddress),
-                      ContactInput(S.contacts_view_city, _personalCity),
-                      ContactInput(S.contacts_view_province, _personalState),
-                      ContactInput(S.contacts_view_zip, _personalZip),
-                      ContactInput(S.contacts_view_country, _personalCountry),
-                      ContactInput(S.contacts_view_web_page, _personalWeb),
-                      ContactInput(S.contacts_view_fax, _personalFax,
-                          keyboardType: TextInputType.phone),
-                      ContactInput(S.contacts_view_phone, _personalPhone,
-                          keyboardType: TextInputType.phone),
-                      ContactInput(S.contacts_view_mobile, _personalMobile,
-                          keyboardType: TextInputType.phone),
-                      ContactTile(S.contacts_view_section_business),
+                          S.of(context).contacts_view_city, _personalCity),
                       ContactInput(
-                          S.contacts_view_business_email, _businessEmail,
+                          S.of(context).contacts_view_province, _personalState),
+                      ContactInput(
+                          S.of(context).contacts_view_zip, _personalZip),
+                      ContactInput(S.of(context).contacts_view_country,
+                          _personalCountry),
+                      ContactInput(
+                          S.of(context).contacts_view_web_page, _personalWeb),
+                      ContactInput(
+                          S.of(context).contacts_view_fax, _personalFax,
+                          keyboardType: TextInputType.phone),
+                      ContactInput(
+                          S.of(context).contacts_view_phone, _personalPhone,
+                          keyboardType: TextInputType.phone),
+                      ContactInput(
+                          S.of(context).contacts_view_mobile, _personalMobile,
+                          keyboardType: TextInputType.phone),
+                      ContactTile(S.of(context).contacts_view_section_business),
+                      ContactInput(S.of(context).contacts_view_business_email,
+                          _businessEmail,
                           keyboardType: TextInputType.emailAddress),
-                      ContactInput(S.contacts_view_company, _businessCompany),
+                      ContactInput(S.of(context).contacts_view_company,
+                          _businessCompany),
+                      ContactInput(S.of(context).contacts_view_personal_address,
+                          _businessAddress),
                       ContactInput(
-                          S.contacts_view_personal_address, _businessAddress),
-                      ContactInput(S.contacts_view_city, _businessCity),
-                      ContactInput(S.contacts_view_province, _businessState),
-                      ContactInput(S.contacts_view_zip, _businessZip),
-                      ContactInput(S.contacts_view_country, _businessCountry),
+                          S.of(context).contacts_view_city, _businessCity),
                       ContactInput(
-                          S.contacts_view_job_title, _businessJobTitle),
+                          S.of(context).contacts_view_province, _businessState),
                       ContactInput(
-                          S.contacts_view_department, _businessDepartment),
-                      ContactInput(S.contacts_view_office, _businessOffice),
-                      ContactInput(S.contacts_view_web_page, _businessWeb),
-                      ContactInput(S.contacts_view_fax, _businessFax,
+                          S.of(context).contacts_view_zip, _businessZip),
+                      ContactInput(S.of(context).contacts_view_country,
+                          _businessCountry),
+                      ContactInput(S.of(context).contacts_view_job_title,
+                          _businessJobTitle),
+                      ContactInput(S.of(context).contacts_view_department,
+                          _businessDepartment),
+                      ContactInput(
+                          S.of(context).contacts_view_office, _businessOffice),
+                      ContactInput(
+                          S.of(context).contacts_view_web_page, _businessWeb),
+                      ContactInput(
+                          S.of(context).contacts_view_fax, _businessFax,
                           keyboardType: TextInputType.phone),
-                      ContactInput(S.contacts_view_phone, _businessPhone,
+                      ContactInput(
+                          S.of(context).contacts_view_phone, _businessPhone,
                           keyboardType: TextInputType.phone),
-                      ContactTile(S.contacts_view_section_other_info),
+                      ContactTile(
+                          S.of(context).contacts_view_section_other_info),
                       ContactBirthDatePicker(
                         birthDay: _birthDay,
                         birthMonth: _birthMonth,
                         birthYear: _birthYear,
                         onPicked: _onDateSelected,
                       ),
-                      ContactInput(S.contacts_view_other_email, _otherEmail,
+                      ContactInput(
+                          S.of(context).contacts_view_other_email, _otherEmail,
                           keyboardType: TextInputType.emailAddress),
-                      ContactInput(S.contacts_view_notes, _notes),
+                      ContactInput(S.of(context).contacts_view_notes, _notes),
                       if (BuildProperty.cryptoEnable &&
                           !BuildProperty.legacyPgpKey) ...[
-                        ContactTile(S.label_contact_pgp_settings),
+                        ContactTile(S.of(context).label_contact_pgp_settings),
                         KeyInput(
                           pgpSettingsBloc,
                           pgpKey,
@@ -421,22 +439,23 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
                         if (pgpKey != null)
                           Column(
                             children: [
-                              ContactTile(S.hint_auto_encrypt_messages,
+                              ContactTile(
+                                  S.of(context).hint_auto_encrypt_messages,
                                   theme.textTheme.subtitle1),
                               ContactCheckBox(
-                                S.label_pgp_sign,
+                                S.of(context).label_pgp_sign,
                                 autoSign,
                                 (v) => setState(() => autoSign = v),
                               ),
                               ContactCheckBox(
-                                S.label_pgp_encrypt,
+                                S.of(context).label_pgp_encrypt,
                                 autoEncrypt,
                                 (v) => setState(() => autoEncrypt = v),
                               ),
                             ],
                           ),
                       ],
-                      ContactTile(S.contacts_view_section_groups),
+                      ContactTile(S.of(context).contacts_view_section_groups),
                       ..._bloc.state.groups.map((g) {
                         return CheckboxListTile(
                           title: Text("# " + g.name),
@@ -505,16 +524,16 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
   }
 
   Widget _buildPrimaryEmail() {
-    final label = S.contacts_view_email;
+    final label = S.of(context).contacts_view_email;
 
     if (!_showAllFields) {
       return ContactInput(label, _getPrimaryEmailCtrl(),
           keyboardType: TextInputType.emailAddress);
     } else {
       final options = [
-        "${i18n(context, S.contacts_view_personal_email)}",
-        "${i18n(context, S.contacts_view_business_email)}",
-        "${i18n(context, S.contacts_view_other_email)}",
+        "${S.of(context).contacts_view_personal_email}",
+        "${S.of(context).contacts_view_business_email}",
+        "${S.of(context).contacts_view_other_email}",
       ];
       return ContactPrimaryInput<int>(
         (int value) => setState(() => _primaryEmail = value),
@@ -529,16 +548,16 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
   }
 
   Widget _buildPrimaryPhone() {
-    final label = S.contacts_view_phone;
+    final label = S.of(context).contacts_view_phone;
 
     if (!_showAllFields) {
       return ContactInput(label, _getPrimaryPhoneCtrl(),
           keyboardType: TextInputType.phone);
     } else {
       final options = [
-        "${i18n(context, S.contacts_view_mobile)}",
-        "${i18n(context, S.contacts_view_personal_phone)}",
-        "${i18n(context, S.contacts_view_business_phone)}",
+        "${S.of(context).contacts_view_mobile}",
+        "${S.of(context).contacts_view_personal_phone}",
+        "${S.of(context).contacts_view_business_phone}",
       ];
       return ContactPrimaryInput<int>(
         (int value) => setState(() => _primaryPhone = value),
@@ -553,14 +572,14 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
   }
 
   Widget _buildPrimaryAddress() {
-    final label = S.contacts_view_address;
+    final label = S.of(context).contacts_view_address;
 
     if (!_showAllFields) {
       return ContactInput(label, _getPrimaryAddressCtrl());
     } else {
       final options = [
-        "${i18n(context, S.contacts_view_personal_address)}",
-        "${i18n(context, S.contacts_view_business_address)}",
+        "${S.of(context).contacts_view_personal_address}",
+        "${S.of(context).contacts_view_business_address}",
       ];
       return ContactPrimaryInput<int>(
         (int value) => setState(() => _primaryAddress = value),

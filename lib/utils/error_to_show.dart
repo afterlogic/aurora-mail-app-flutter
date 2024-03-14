@@ -1,7 +1,7 @@
 //@dart=2.9
 import 'dart:io';
 
-import 'package:aurora_mail/res/str/s.dart';
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/widgets.dart';
 import 'package:webmail_api_client/webmail_api_client.dart';
@@ -12,7 +12,7 @@ class ErrorToShow {
 
   factory ErrorToShow(dynamic error) {
     if (error is SocketException) {
-      return ErrorToShow.code(S.error_timeout);
+      return ErrorToShow.message(S.current.error_timeout);
     } else if (error is WebMailApiError) {
       return error.toShow();
     } else {

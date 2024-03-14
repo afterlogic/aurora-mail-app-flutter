@@ -1,7 +1,6 @@
 //@dart=2.9
-import 'package:aurora_mail/res/str/s.dart';
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/utils/base_state.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -40,7 +39,7 @@ class _ComposeBodyState extends BState<ComposeBody> {
         filled: true,
         fillColor:
             widget.enable ? theme.cardColor : theme.disabledColor.withAlpha(20),
-        hintText: i18n(context, S.compose_body_placeholder),
+        hintText: S.of(context).compose_body_placeholder,
       ),
     );
   }

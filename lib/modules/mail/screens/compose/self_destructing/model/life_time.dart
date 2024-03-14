@@ -1,5 +1,7 @@
 //@dart=2.9
-import 'package:aurora_mail/res/str/s.dart';
+
+import 'package:aurora_mail/generated/l10n.dart';
+import 'package:flutter/material.dart';
 
 enum LifeTime {
   Day,
@@ -8,14 +10,14 @@ enum LifeTime {
 }
 
 extension LifeTimeMap on LifeTime {
-  int toTextCode() {
+  String toText(BuildContext context) {
     switch (this) {
       case LifeTime.Day:
-        return S.self_destructing_life_time_day;
+        return S.of(context).self_destructing_life_time_day;
       case LifeTime.Days3:
-        return S.self_destructing_life_time_days_3;
+        return S.of(context).self_destructing_life_time_days_3;
       case LifeTime.Days7:
-        return S.self_destructing_life_time_days_7;
+        return S.of(context).self_destructing_life_time_days_7;
     }
     return null;
   }

@@ -1,10 +1,8 @@
 //@dart=2.9
-import 'package:aurora_mail/utils/internationalization.dart';
-import 'package:aurora_mail/res/str/s.dart';
 import 'package:flutter/material.dart';
 
 class ContactPrimaryInput<T> extends StatefulWidget {
-  final int label;
+  final String label;
   final void Function(T) onChanged;
   final T selectedValue;
   final List<String> options;
@@ -76,7 +74,7 @@ class _ContactPrimaryInputState<T> extends State<ContactPrimaryInput<T>> {
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16),
       child: InputDecorator(
         decoration: InputDecoration(
-          labelText: i18n(context, widget.label),
+          labelText: widget.label,
           alignLabelWithHint: true,
           contentPadding: EdgeInsets.all(0),
         ),

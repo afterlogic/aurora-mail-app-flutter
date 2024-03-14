@@ -10,6 +10,7 @@ import 'package:aurora_mail/database/folders/folders_table.dart';
 import 'package:aurora_mail/database/mail/mail_dao.dart';
 import 'package:aurora_mail/database/mail/mail_table.dart';
 import 'package:aurora_mail/database/users/users_dao.dart';
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/models/message_info.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
@@ -18,11 +19,7 @@ import 'package:aurora_mail/modules/mail/repository/mail_api.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/modules/settings/models/sync_period.dart';
 import 'package:aurora_mail/modules/settings/screens/debug/default_api_interceptor.dart';
-import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/utils/error_to_show.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
-import 'package:drift_sqflite/drift_sqflite.dart';
 import 'package:drift/drift.dart';
 
 class MailMethods {
@@ -638,7 +635,7 @@ class MailMethods {
         final lastUid =
             messageInfos?.isNotEmpty == true ? messageInfos.first.uid : null;
         if (lastUid == null) {
-          throw ErrorToShow.code(S.error_message_not_found);
+          throw ErrorToShow.message(S.current.error_message_not_found);
         }
         final response = await _mailApi.getMessageById(
           messageId,
@@ -646,7 +643,7 @@ class MailMethods {
           lastUid,
         );
         if (response == null) {
-          throw ErrorToShow.code(S.error_message_not_found);
+          throw ErrorToShow.message(S.current.error_message_not_found);
         }
         final messageInfo = MessageInfo(
           uid: response["Uid"] as int,

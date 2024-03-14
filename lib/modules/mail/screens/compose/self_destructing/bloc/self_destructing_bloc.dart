@@ -2,13 +2,13 @@
 import 'dart:async';
 
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/inject/app_inject.dart';
 import 'package:aurora_mail/models/alias_or_identity.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/contacts/contacts_dao.dart';
 import 'package:aurora_mail/modules/mail/repository/pgp_api.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/self_destructing/model/contact_with_key.dart';
-import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/utils/crypto_util.dart';
 import 'package:aurora_mail/utils/error_to_show.dart';
 import 'package:aurora_mail/utils/identity_util.dart';
@@ -116,7 +116,7 @@ class SelfDestructingBloc
         encryptSubject = subject;
         encryptBody = await _encryptSymmetric(body, password);
       } catch (e) {
-        yield ErrorState(ErrorToShow.code(S.error_unknown));
+        yield ErrorState(ErrorToShow.message(S.current.error_unknown));
         return;
       }
     } else {
@@ -127,7 +127,7 @@ class SelfDestructingBloc
           event.useSign ? event.password : null,
         );
       } catch (e) {
-        yield ErrorState(ErrorToShow.code(S.error_unknown));
+        yield ErrorState(ErrorToShow.message(S.current.error_unknown));
         return;
       }
     }
@@ -144,7 +144,7 @@ class SelfDestructingBloc
       if (e is WebMailApiError) {
         yield ErrorState(ErrorToShow(e));
       } else {
-        yield ErrorState(ErrorToShow.code(S.error_unknown));
+        yield ErrorState(ErrorToShow.message(S.current.error_unknown));
       }
       return;
     }
@@ -160,9 +160,9 @@ class SelfDestructingBloc
         );
       } catch (e) {
         if (e is PgpInvalidSign) {
-          yield ErrorState(ErrorToShow.code(S.error_pgp_invalid_password));
+          yield ErrorState(ErrorToShow.message(S.current.error_pgp_invalid_password));
         } else {
-          yield ErrorState(ErrorToShow.code(S.error_unknown));
+          yield ErrorState(ErrorToShow.message(S.current.error_unknown));
         }
         return;
       }

@@ -1,15 +1,12 @@
 //@dart=2.9
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/auth/blocs/trust_device/trust_device_bloc.dart';
 import 'package:aurora_mail/modules/auth/blocs/trust_device/trust_device_event.dart';
 import 'package:aurora_mail/modules/auth/blocs/trust_device/trust_device_state.dart';
 import 'package:aurora_mail/modules/auth/screens/component/two_factor_screen.dart';
-import 'package:aurora_mail/modules/auth/screens/login/login_route.dart';
-import 'package:aurora_mail/modules/auth/screens/select_two_factor/select_two_factor_route.dart';
 import 'package:aurora_mail/modules/auth/screens/trust_device/trust_device_route.dart';
-import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/error_to_show.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:aurora_ui_kit/components/am_button.dart';
@@ -71,7 +68,7 @@ class _TrustDeviceWidgetState extends BState<TrustDeviceWidget> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      i18n(context, S.tfa_label_trust_device),
+                      S.of(context).tfa_label_trust_device,
                       style: TextStyle(color: AppTheme.loginTextColor),
                     ),
                     SizedBox(height: 20),
@@ -85,8 +82,8 @@ class _TrustDeviceWidgetState extends BState<TrustDeviceWidget> {
                           setState(() {});
                         },
                         title: Text(
-                          i18n(context, S.tfa_check_box_trust_device,
-                              {"daysCount": widget.args.daysCount.toString()}),
+                          S.of(context).tfa_check_box_trust_device(
+                              widget.args.daysCount.toString()),
                           style: TextStyle(color: AppTheme.loginTextColor),
                         ),
                       ),
@@ -97,7 +94,7 @@ class _TrustDeviceWidgetState extends BState<TrustDeviceWidget> {
                       child: AMButton(
                         shadow: AppColor.enableShadow ? null : BoxShadow(),
                         child: Text(
-                          i18n(context, S.tfa_button_continue),
+                          S.of(context).tfa_button_continue,
                           style: TextStyle(color: AppTheme.loginTextColor),
                         ),
                         isLoading: loading,

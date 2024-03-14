@@ -1,6 +1,5 @@
 //@dart=2.9
-import 'package:aurora_mail/utils/internationalization.dart';
-import 'package:aurora_mail/res/str/s.dart';
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 
@@ -18,13 +17,14 @@ class GroupEditAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AMAppBar(
-      title: Text(
-          i18n(context, isEdit ? S.contacts_group_edit : S.contacts_group_add)),
+      title: Text(isEdit
+          ? S.of(context).contacts_group_edit
+          : S.of(context).contacts_group_add),
       actions: <Widget>[
         Builder(
           builder: (context) => TextButton(
             child: Text(
-              i18n(context, S.contacts_edit_save),
+              S.of(context).contacts_edit_save,
               style: TextStyle(
                   color: Theme.of(context)?.appBarTheme?.iconTheme?.color),
             ),

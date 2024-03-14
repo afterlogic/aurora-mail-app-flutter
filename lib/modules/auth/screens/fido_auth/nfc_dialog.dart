@@ -2,12 +2,9 @@
 import 'dart:async';
 import 'dart:math';
 
-import 'package:aurora_mail/res/str/s.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
-import 'package:aurora_ui_kit/aurora_ui_kit.dart';
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:yubico_flutter/yubico_flutter.dart';
 
 class IosPressOnKeyDialog extends _IosDialog {
   final Function breaker;
@@ -82,7 +79,7 @@ class IosPressOnKeyDialogState extends _IosDialogState<IosPressOnKeyDialog> {
           ),
         ),
         Text(
-          i18n(context, S.fido_label_success),
+          S.of(context).fido_label_success,
           style: TextStyle(
               fontSize: 16, color: Colors.black, fontWeight: FontWeight.w400),
         ),

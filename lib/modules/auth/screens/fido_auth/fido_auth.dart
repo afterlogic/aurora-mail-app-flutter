@@ -1,16 +1,13 @@
 //@dart=2.9
-import 'dart:async';
-
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/auth/blocs/fido_auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/auth/blocs/fido_auth_bloc/event.dart';
 import 'package:aurora_mail/modules/auth/blocs/fido_auth_bloc/state.dart';
 import 'package:aurora_mail/modules/auth/screens/component/two_factor_screen.dart';
 import 'package:aurora_mail/modules/auth/screens/login/login_route.dart';
 import 'package:aurora_mail/modules/auth/screens/select_two_factor/select_two_factor_route.dart';
-import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/error_to_show.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
@@ -44,8 +41,8 @@ class _IosFidoAuthWidgetState extends BState<IosFidoAuthWidget> {
       widget.args.authBloc,
     );
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      bloc.add(StartAuth(true, i18n(context, S.fido_label_connect_your_key),
-          i18n(context, S.fido_label_success)));
+      bloc.add(StartAuth(true, S.of(context).fido_label_connect_your_key,
+          S.of(context).fido_label_success));
     });
   }
 
@@ -96,14 +93,14 @@ class _IosFidoAuthWidgetState extends BState<IosFidoAuthWidget> {
                   ? Column(
                       children: [
                         Text(
-                          i18n(context, S.fido_error_title),
+                          S.of(context).fido_error_title,
                           textAlign: TextAlign.center,
                           style: theme.textTheme.headline6
                               .copyWith(color: AppTheme.loginTextColor),
                         ),
                         SizedBox(height: 10),
                         Text(
-                          i18n(context, S.fido_error_hint),
+                          S.of(context).fido_error_hint,
                           textAlign: TextAlign.center,
                           style: TextStyle(color: AppTheme.loginTextColor),
                         ),
@@ -113,14 +110,14 @@ class _IosFidoAuthWidgetState extends BState<IosFidoAuthWidget> {
                           child: AMButton(
                             shadow: AppColor.enableShadow ? null : BoxShadow(),
                             child: Text(
-                              i18n(context, S.fido_btn_try_again),
+                              S.of(context).fido_btn_try_again,
                               style: TextStyle(color: AppTheme.loginTextColor),
                             ),
                             onPressed: () {
                               bloc.add(StartAuth(
                                   true,
-                                  i18n(context, S.fido_label_connect_your_key),
-                                  i18n(context, S.fido_label_success)));
+                                  S.of(context).fido_label_connect_your_key,
+                                  S.of(context).fido_label_success));
                             },
                           ),
                         ),
@@ -129,7 +126,7 @@ class _IosFidoAuthWidgetState extends BState<IosFidoAuthWidget> {
                           width: double.infinity,
                           child: TextButton(
                             child: Text(
-                              i18n(context, S.tfa_btn_other_options),
+                              S.of(context).tfa_btn_other_options,
                               style: TextStyle(color: AppTheme.loginTextColor),
                             ),
                             onPressed: () {
@@ -156,7 +153,7 @@ class _IosFidoAuthWidgetState extends BState<IosFidoAuthWidget> {
                                 onPressed: () {
                                   bloc.add(Cancel());
                                 },
-                                child: Text(i18n(context, S.btn_cancel)),
+                                child: Text(S.of(context).btn_cancel),
                               )
                             ],
                           ),

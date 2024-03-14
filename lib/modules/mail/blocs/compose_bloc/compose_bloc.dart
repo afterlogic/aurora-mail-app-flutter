@@ -3,13 +3,13 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/inject/app_inject.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 import 'package:aurora_mail/modules/mail/blocs/compose_bloc/compose_methods.dart';
 import 'package:aurora_mail/modules/mail/models/compose_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/temp_attachment_upload.dart';
 import 'package:aurora_mail/modules/mail/repository/mail_local_storage.dart';
-import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/utils/api_utils.dart';
 import 'package:aurora_mail/utils/error_to_show.dart';
 import 'package:bloc/bloc.dart';
@@ -24,7 +24,8 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
   final Account account;
   final _mailLocal = new MailLocalStorage();
 
-  ComposeBloc({@required this.user, @required this.account}) : super(InitialComposeState()) {
+  ComposeBloc({@required this.user, @required this.account})
+      : super(InitialComposeState()) {
     _methods = new ComposeMethods(
       user: user,
       account: account,
@@ -197,7 +198,7 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
     try {
       if (event.encrypt && event.contacts.isEmpty) {
         yield ComposeError(
-          ErrorToShow.code(S.error_pgp_need_contact_for_encrypt),
+          ErrorToShow.message(S.current.error_pgp_need_contact_for_encrypt),
         );
         return;
       }
@@ -207,14 +208,14 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
       yield EncryptComplete(encrypted, type);
     } catch (e) {
       if (e is PgpKeyNotFound) {
-        yield ComposeError(
-          ErrorToShow.code(S.error_pgp_not_found_keys_for),
-          {"users": e.email.join(" , ")},
-        );
+        yield ComposeError(ErrorToShow.message(
+            S.current.error_pgp_not_found_keys_for(e.email.join(" , "))));
       } else if (e is PgpInvalidSign) {
-        yield ComposeError(ErrorToShow.code(S.error_pgp_invalid_password));
+        yield ComposeError(
+            ErrorToShow.message(S.current.error_pgp_invalid_password));
       } else {
-        yield ComposeError(ErrorToShow.code(S.error_server_unknown_email));
+        yield ComposeError(
+            ErrorToShow.message(S.current.error_server_unknown_email));
       }
     }
   }

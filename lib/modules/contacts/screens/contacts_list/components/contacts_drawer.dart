@@ -2,13 +2,12 @@
 import 'dart:async';
 
 import 'package:aurora_mail/config.dart';
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_storage_model.dart';
 import 'package:aurora_mail/modules/contacts/screens/group_edit/group_edit_route.dart';
 import 'package:aurora_mail/res/icons/webmail_icons.dart';
-import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/utils/base_state.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/storage_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -60,7 +59,7 @@ class _ContactsDrawerState extends BState<ContactsDrawer> {
                   Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Text(
-                      i18n(context, S.contacts_drawer_section_storages),
+                      S.of(context).contacts_drawer_section_storages,
                       style: TextStyle(color: theme.disabledColor),
                     ),
                   ),
@@ -72,7 +71,7 @@ class _ContactsDrawerState extends BState<ContactsDrawer> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Text(
-                          i18n(context, S.contacts_drawer_section_groups),
+                          S.of(context).contacts_drawer_section_groups,
                           style: TextStyle(color: theme.disabledColor),
                         ),
                         IconButton(
@@ -102,7 +101,7 @@ class _ContactsDrawerState extends BState<ContactsDrawer> {
           if (isAllVisible)
             ListTile(
               leading: Icon(MdiIcons.accountGroup),
-              title: Text(i18n(context, S.contacts_drawer_storage_all)),
+              title: Text(S.of(context).contacts_drawer_storage_all),
               selected: state.showAllVisibleContacts == true,
               onTap: () {
                 contactsBloc.add(SelectStorageGroup());
@@ -129,7 +128,7 @@ class _ContactsDrawerState extends BState<ContactsDrawer> {
         ],
       );
     } else if (state.storages != null && state.storages.isEmpty) {
-      return Center(child: Text(i18n(context, S.contacts_empty)));
+      return Center(child: Text(S.of(context).contacts_empty));
     } else {
       return Padding(
         padding: const EdgeInsets.all(16.0),
@@ -147,7 +146,7 @@ class _ContactsDrawerState extends BState<ContactsDrawer> {
       leading: Icon(icon),
       title: Text(
         s.displayName.length > 6 && s.displayName.substring(0, 6) == 'LABEL_'
-            ? i18n(context, getStorageName(s.displayName.substring(6)))
+            ? getStorageName(s.displayName.substring(6), context)
             : s.displayName == null
                 ? s.name
                 : s.displayName.toString(),
@@ -180,7 +179,7 @@ class _ContactsDrawerState extends BState<ContactsDrawer> {
             .toList(),
       );
     } else if (state.groups != null && state.groups.isEmpty) {
-      return Center(child: Text(i18n(context, S.contacts_groups_empty)));
+      return Center(child: Text(S.of(context).contacts_groups_empty));
     } else {
       return Padding(
         padding: const EdgeInsets.all(16.0),

@@ -1,13 +1,12 @@
 //@dart=2.9
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_group_model.dart';
 import 'package:aurora_mail/modules/contacts/screens/contacts_list/contacts_list_route.dart';
 import 'package:aurora_mail/modules/dialog_wrap.dart';
-import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/utils/base_state.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -67,7 +66,7 @@ class _GroupEditAndroidState extends BState<GroupEditAndroid>
           return showSnack(
             context: context,
             scaffoldState: Scaffold.of(context),
-            message: i18n(context, S.error_contacts_save_name_empty),
+            message: S.of(context).error_contacts_save_name_empty,
           );
         }
         FocusScope.of(context).unfocus();
@@ -115,10 +114,10 @@ class _GroupEditAndroidState extends BState<GroupEditAndroid>
           ),
           child: ListView(
             children: <Widget>[
-              _buildInput(S.contacts_view_section_group_name, _nameCtrl),
+              _buildInput(
+                  S.of(context).contacts_view_section_group_name, _nameCtrl),
               SwitchListTile.adaptive(
-                title:
-                    Text(i18n(context, S.contacts_group_edit_is_organization)),
+                title: Text(S.of(context).contacts_group_edit_is_organization),
                 value: _isOrg,
                 activeColor: theme.accentColor,
                 onChanged: (v) => setState(() => _isOrg = v),
@@ -126,19 +125,23 @@ class _GroupEditAndroidState extends BState<GroupEditAndroid>
               if (_isOrg)
                 Column(
                   children: <Widget>[
-                    _buildInput(S.contacts_view_email, _emailCtrl,
+                    _buildInput(S.of(context).contacts_view_email, _emailCtrl,
                         TextInputType.emailAddress),
-                    _buildInput(S.contacts_view_company, _companyCtrl),
-                    _buildInput(S.contacts_view_country, _countryCtrl),
-                    _buildInput(S.contacts_view_province, _stateCtrl),
-                    _buildInput(S.contacts_view_city, _cityCtrl),
-                    _buildInput(S.contacts_view_street_address, _streetCtrl),
-                    _buildInput(S.contacts_view_zip, _zipCtrl),
                     _buildInput(
-                        S.contacts_view_phone, _phoneCtrl, TextInputType.phone),
-                    _buildInput(S.contacts_view_fax, _faxCtrl),
+                        S.of(context).contacts_view_company, _companyCtrl),
                     _buildInput(
-                        S.contacts_view_web_page, _webCtrl, TextInputType.url),
+                        S.of(context).contacts_view_country, _countryCtrl),
+                    _buildInput(
+                        S.of(context).contacts_view_province, _stateCtrl),
+                    _buildInput(S.of(context).contacts_view_city, _cityCtrl),
+                    _buildInput(S.of(context).contacts_view_street_address,
+                        _streetCtrl),
+                    _buildInput(S.of(context).contacts_view_zip, _zipCtrl),
+                    _buildInput(S.of(context).contacts_view_phone, _phoneCtrl,
+                        TextInputType.phone),
+                    _buildInput(S.of(context).contacts_view_fax, _faxCtrl),
+                    _buildInput(S.of(context).contacts_view_web_page, _webCtrl,
+                        TextInputType.url),
                   ],
                 ),
             ],
@@ -149,7 +152,7 @@ class _GroupEditAndroidState extends BState<GroupEditAndroid>
   }
 
   Widget _buildInput(
-    int label,
+    String label,
     TextEditingController ctrl, [
     TextInputType type,
   ]) {
@@ -159,7 +162,7 @@ class _GroupEditAndroidState extends BState<GroupEditAndroid>
         controller: ctrl,
         keyboardType: type,
         decoration: InputDecoration(
-          labelText: i18n(context, label),
+          labelText: label,
           alignLabelWithHint: true,
         ),
       ),

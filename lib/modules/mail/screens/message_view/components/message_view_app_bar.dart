@@ -1,11 +1,9 @@
 //@dart=2.9
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/mail/blocs/message_view_bloc/bloc.dart';
-import 'package:aurora_mail/modules/mail/blocs/message_view_bloc/message_view_bloc.dart';
 import 'package:aurora_mail/res/icons/app_assets.dart';
-import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/shared_ui/svg_icon.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -67,13 +65,13 @@ class MailViewAppBar extends StatelessWidget implements PreferredSizeWidget {
                           .contains(folderType))
                         IconButton(
                           icon: Icon(Icons.reply),
-                          tooltip: i18n(context, S.messages_reply),
+                          tooltip: S.of(context).messages_reply,
                           onPressed: () => onAppBarActionSelected(
                               MailViewAppBarAction.reply),
                         ),
                       IconButton(
                         icon: Icon(Icons.delete_outline),
-                        tooltip: i18n(context, S.btn_delete),
+                        tooltip: S.of(context).btn_delete,
                         onPressed: () =>
                             onAppBarActionSelected(MailViewAppBarAction.delete),
                       ),
@@ -86,8 +84,7 @@ class MailViewAppBar extends StatelessWidget implements PreferredSizeWidget {
                               value: MailViewAppBarAction.replyToAll,
                               child: ListTile(
                                 leading: Icon(Icons.reply_all),
-                                title:
-                                    Text(i18n(context, S.messages_reply_all)),
+                                title: Text(S.of(context).messages_reply_all),
                               ),
                             ),
                           if (folderType != FolderType.drafts)
@@ -95,7 +92,7 @@ class MailViewAppBar extends StatelessWidget implements PreferredSizeWidget {
                               value: MailViewAppBarAction.forward,
                               child: ListTile(
                                 leading: Icon(MdiIcons.share),
-                                title: Text(i18n(context, S.messages_forward)),
+                                title: Text(S.of(context).messages_forward),
                               ),
                             ),
                           if (![
@@ -109,7 +106,7 @@ class MailViewAppBar extends StatelessWidget implements PreferredSizeWidget {
                                 leading: SvgIcon(
                                   AppAssets.spam,
                                 ),
-                                title: Text(i18n(context, S.btn_to_spam)),
+                                title: Text(S.of(context).btn_to_spam),
                               ),
                             ),
                           if (folderType == FolderType.spam)
@@ -119,7 +116,7 @@ class MailViewAppBar extends StatelessWidget implements PreferredSizeWidget {
                                 leading: SvgIcon(
                                   AppAssets.not_spam,
                                 ),
-                                title: Text(i18n(context, S.btn_not_spam)),
+                                title: Text(S.of(context).btn_not_spam),
                               ),
                             ),
                           if (folderType == FolderType.sent)
@@ -129,24 +126,22 @@ class MailViewAppBar extends StatelessWidget implements PreferredSizeWidget {
                                 leading: SvgIcon(
                                   AppAssets.resend,
                                 ),
-                                title:
-                                    Text(i18n(context, S.btn_message_resend)),
+                                title: Text(S.of(context).btn_message_resend),
                               ),
                             ),
                           PopupMenuItem(
                             value: MailViewAppBarAction.move,
                             child: ListTile(
                               leading: Icon(MdiIcons.fileMove),
-                              title: Text(i18n(
-                                  context, S.label_message_move_to_folder)),
+                              title: Text(
+                                  S.of(context).label_message_move_to_folder),
                             ),
                           ),
                           PopupMenuItem(
                             value: MailViewAppBarAction.showHeaders,
                             child: ListTile(
                               leading: Icon(Icons.code),
-                              title:
-                                  Text(i18n(context, S.label_message_headers)),
+                              title: Text(S.of(context).label_message_headers),
                             ),
                           ),
                           PopupMenuItem(
@@ -154,7 +149,7 @@ class MailViewAppBar extends StatelessWidget implements PreferredSizeWidget {
                             child: ListTile(
                               leading: Icon(Icons.forward),
                               title: Text(
-                                  i18n(context, S.label_forward_as_attachment)),
+                                  S.of(context).label_forward_as_attachment),
                             ),
                           ),
                         ],

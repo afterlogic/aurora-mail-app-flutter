@@ -1,11 +1,10 @@
 //@dart=2.9
 import 'dart:io';
 
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/mail/models/compose_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/temp_attachment_upload.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/components/thumbnail_widget.dart';
-import 'package:aurora_mail/res/str/s.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_uploader/flutter_uploader.dart';
@@ -67,8 +66,7 @@ class ComposeAttachmentItem extends StatelessWidget {
                       children: <Widget>[
                         IconButton(
                           icon: Icon(Icons.cancel),
-                          tooltip: i18n(
-                              context, S.messages_attachment_upload_cancel),
+                          tooltip: S.of(context).messages_attachment_upload_cancel,
                           onPressed: () {
                             attachment.cancel(taskId: attachment.taskId);
                             onCancel(attachment);
@@ -115,7 +113,7 @@ class ComposeAttachmentItem extends StatelessWidget {
               ),
             IconButton(
               icon: Icon(Icons.cancel),
-              tooltip: i18n(context, S.messages_attachment_upload_cancel),
+              tooltip: S.of(context).messages_attachment_upload_cancel,
               onPressed: () {
                 attachment.cancel(taskId: attachment.taskId);
                 onCancel(attachment);
@@ -150,7 +148,7 @@ class ComposeAttachmentItem extends StatelessWidget {
                       children: <Widget>[
                         IconButton(
                           icon: Icon(Icons.cancel),
-                          tooltip: i18n(context, S.messages_attachment_delete),
+                          tooltip: S.of(context).messages_attachment_delete,
                           onPressed: () => onCancel(attachment),
                         ),
                       ],
@@ -178,7 +176,7 @@ class ComposeAttachmentItem extends StatelessWidget {
             ),
             IconButton(
               icon: Icon(Icons.cancel),
-              tooltip: i18n(context, S.messages_attachment_delete),
+              tooltip: S.of(context).messages_attachment_delete,
               onPressed: () => onCancel(attachment),
             ),
           ],

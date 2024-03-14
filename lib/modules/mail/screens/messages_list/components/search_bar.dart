@@ -1,9 +1,8 @@
 //@dart=2.9
 import 'dart:async';
 
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/utils/base_state.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
-import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 
@@ -57,7 +56,7 @@ class SearchBarState extends BState<SearchBar> {
           title: TextField(
             autofocus: true,
             decoration: InputDecoration.collapsed(
-              hintText: i18n(context, S.messages_list_app_bar_search),
+              hintText: S.of(context).messages_list_app_bar_search,
               hintStyle: theme.textTheme.headline4,
             ),
             textInputAction: TextInputAction.search,
@@ -84,7 +83,7 @@ class SearchBarState extends BState<SearchBar> {
           style: theme.textTheme.bodyText2,
           autofocus: true,
           decoration: InputDecoration.collapsed(
-            hintText: i18n(context, S.messages_list_app_bar_search),
+            hintText: S.of(context).messages_list_app_bar_search,
             hintStyle: theme.textTheme.headline4,
           ),
           onChanged: _getMessages,

@@ -1,7 +1,6 @@
 //@dart=2.9
 import 'package:aurora_mail/build_property.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
-import 'package:aurora_mail/res/str/s.dart';
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:flutter/material.dart';
 
 import 'mail_logo.dart';
@@ -35,7 +34,7 @@ class PresentationHeader extends StatelessWidget {
           ],
           SizedBox(height: 12.0),
           Text(
-            message ?? i18n(context, S.login_to_continue),
+            message ?? S.of(context).login_to_continue,
             style: TextStyle(color: theme.disabledColor),
           ),
         ]

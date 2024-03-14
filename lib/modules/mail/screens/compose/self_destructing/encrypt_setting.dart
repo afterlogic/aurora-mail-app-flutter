@@ -1,16 +1,14 @@
 //@dart=2.9
 import 'dart:math';
 
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/dialog_wrap.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/self_destructing/bloc/bloc.dart';
-import 'package:aurora_mail/modules/mail/screens/compose/self_destructing/bloc/self_destructing_bloc.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/self_destructing/components/contact_with_key_widget.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/self_destructing/model/contact_with_key.dart';
-import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/shared_ui/toast_widget.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/input_validation.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:time_machine/time_machine.dart';
@@ -58,7 +56,7 @@ class _EncryptSettingState extends BState<EncryptSetting>
               final contact = state.contact;
               final recipientHaveKey = contact.key != null;
               return AlertDialog(
-                title: Text(i18n(context, S.label_self_destructing)),
+                title: Text(S.of(context).label_self_destructing),
                 content: SizedBox(
                   height: min(size.height / 2, 350),
                   width: min(size.width - 40, 300),
@@ -69,36 +67,39 @@ class _EncryptSettingState extends BState<EncryptSetting>
                         padding: EdgeInsets.all(0),
                         children: <Widget>[
                           Text(
-                            i18n(context,
-                                S.hint_self_destructing_supports_plain_text_only),
+                            S
+                                .of(context)
+                                .hint_self_destructing_supports_plain_text_only,
                             style: theme.textTheme.caption,
                           ),
                           SizedBox(height: 20),
                           ContactWithKeyWidget(contact),
                           SizedBox(height: 20),
                           Text(
-                            i18n(
-                                context,
-                                recipientHaveKey
-                                    ? S.hint_self_destructing_encrypt_with_key
-                                    : S.hint_self_destructing_encrypt_with_not_key),
+                            recipientHaveKey
+                                ? S
+                                    .of(context)
+                                    .hint_self_destructing_encrypt_with_key
+                                : S
+                                    .of(context)
+                                    .hint_self_destructing_encrypt_with_not_key,
                             style: theme.textTheme.caption,
                           ),
                           SizedBox(height: 10),
                           DropdownButtonFormField<LifeTime>(
                             decoration: InputDecoration(
-                              labelText: i18n(context, S.message_lifetime),
+                              labelText: S.of(context).message_lifetime,
                             ),
                             value: lifeTime,
                             items: LifeTime.values.map((value) {
                               return DropdownMenuItem<LifeTime>(
                                 value: value,
-                                child: Text(i18n(context, value.toTextCode())),
+                                child: Text(value.toText(context)),
                               );
                             }).toList(),
                             selectedItemBuilder: (context) {
                               return LifeTime.values.map((value) {
-                                return Text(i18n(context, value.toTextCode()));
+                                return Text(value.toText(context));
                               }).toList();
                             },
                             isExpanded: true,
@@ -108,8 +109,9 @@ class _EncryptSettingState extends BState<EncryptSetting>
                             },
                           ),
                           RadioListTile(
-                            title: Text(i18n(context,
-                                S.input_self_destructing_password_based_encryption)),
+                            title: Text(S
+                                .of(context)
+                                .input_self_destructing_password_based_encryption),
                             value: false,
                             onChanged: (bool value) {
                               isKeyBased = value;
@@ -119,8 +121,9 @@ class _EncryptSettingState extends BState<EncryptSetting>
                             groupValue: isKeyBased,
                           ),
                           RadioListTile(
-                            title: Text(i18n(context,
-                                S.input_self_destructing_key_based_encryption)),
+                            title: Text(S
+                                .of(context)
+                                .input_self_destructing_key_based_encryption),
                             value: true,
                             groupValue: isKeyBased,
                             onChanged: !recipientHaveKey
@@ -133,18 +136,21 @@ class _EncryptSettingState extends BState<EncryptSetting>
                           ),
                           SizedBox(height: 10),
                           Text(
-                            i18n(
-                                context,
-                                isKeyBased
-                                    ? S.label_self_destructing_key_based_encryption_used
-                                    : S.label_self_destructing_password_based_encryption_used),
+                            isKeyBased
+                                ? S
+                                    .of(context)
+                                    .label_self_destructing_key_based_encryption_used
+                                : S
+                                    .of(context)
+                                    .label_self_destructing_password_based_encryption_used,
                             style: theme.textTheme.caption,
                           ),
                           SizedBox(height: 10),
                           SwitchListTile(
                             contentPadding: EdgeInsets.zero,
-                            title: Text(i18n(context,
-                                S.input_self_destructing_add_digital_signature)),
+                            title: Text(S
+                                .of(context)
+                                .input_self_destructing_add_digital_signature),
                             value: useSign,
                             onChanged: hasKey && isKeyBased
                                 ? (v) {
@@ -162,8 +168,7 @@ class _EncryptSettingState extends BState<EncryptSetting>
                               validator: (text) => validateInput(
                                   context, text, [ValidationType.empty]),
                               decoration: InputDecoration(
-                                labelText:
-                                    i18n(context, S.login_input_password),
+                                labelText: S.of(context).login_input_password,
                                 suffix: GestureDetector(
                                   child: Padding(
                                     padding: const EdgeInsets.only(right: 8.0),
@@ -181,11 +186,11 @@ class _EncryptSettingState extends BState<EncryptSetting>
                           ),
                           SizedBox(height: 20),
                           Text(
-                            i18n(
-                                context,
-                                useSign
-                                    ? S.label_self_destructing_sign_data
-                                    : S.label_self_destructing_not_sign_data),
+                            useSign
+                                ? S.of(context).label_self_destructing_sign_data
+                                : S
+                                    .of(context)
+                                    .label_self_destructing_not_sign_data,
                             style: theme.textTheme.caption,
                           ),
                         ],
@@ -200,7 +205,7 @@ class _EncryptSettingState extends BState<EncryptSetting>
                 ),
                 actions: [
                   TextButton(
-                    child: Text(i18n(context, S.btn_cancel)),
+                    child: Text(S.of(context).btn_cancel),
                     onPressed: () {
                       Navigator.pop(context);
                     },
@@ -210,7 +215,7 @@ class _EncryptSettingState extends BState<EncryptSetting>
                       child: Stack(
                         alignment: Alignment.center,
                         children: [
-                          Text(i18n(context, S.btn_pgp_encrypt)),
+                          Text(S.of(context).btn_pgp_encrypt),
                           state is ProgressState
                               ? CircularProgressIndicator()
                               : SizedBox.shrink(),
@@ -254,20 +259,12 @@ class _EncryptSettingState extends BState<EncryptSetting>
               DateTimeZone.local.getUtcOffset(dateTime).toString();
 
       final passwordText = !isKeyBased && contact.key != null
-          ? i18n(context, S.template_self_destructing_message_password)
+          ? S.of(context).template_self_destructing_message_password('')
           : "";
-      final lifeTimeText = i18n(context, lifeTime.toTextCode());
+      final lifeTimeText = lifeTime.toText(context);
 
-      final viewBody = i18n(
-        context,
-        S.template_self_destructing_message,
-        {
-          "sender": contactName,
-          "message_password": passwordText,
-          "lifeTime": lifeTimeText,
-          "now": now
-        },
-      );
+      final viewBody = S.of(context).template_self_destructing_message(
+          contactName, '', passwordText, lifeTimeText, now);
 
       final bloc = BlocProvider.of<SelfDestructingBloc>(context);
       bloc.add(

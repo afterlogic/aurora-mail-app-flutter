@@ -1,11 +1,10 @@
 //@dart=2.9
 import 'package:aurora_mail/build_property.dart';
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/login_gradient.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/mail_logo.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/presentation_header.dart';
-import 'package:aurora_mail/res/str/s.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_ui_kit/components/am_button.dart';
 import 'package:flutter/material.dart';
 import 'package:theme/app_color.dart';
@@ -62,7 +61,7 @@ class UpgradePlanWidget extends StatelessWidget {
                         children: <Widget>[
                           Text(
                             message ??
-                                i18n(context, S.hint_login_upgrade_your_plan),
+                                S.of(context).hint_login_upgrade_your_plan,
                             style: Theme.of(context)
                                 .textTheme
                                 .subtitle1
@@ -77,7 +76,7 @@ class UpgradePlanWidget extends StatelessWidget {
                         width: double.infinity,
                         child: AMButton(
                           shadow: AppColor.enableShadow ? null : BoxShadow(),
-                          child: Text(i18n(context, S.btn_login_back_to_login)),
+                          child: Text(S.of(context).btn_login_back_to_login),
                           onPressed: () => Navigator.of(context).pop(),
                         ),
                       ),

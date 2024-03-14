@@ -1,15 +1,13 @@
 //@dart=2.9
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/login_gradient.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/mail_logo.dart';
 import 'package:aurora_mail/modules/auth/screens/login/components/presentation_header.dart';
 import 'package:aurora_mail/modules/auth/screens/login/login_route.dart';
 import 'package:aurora_mail/modules/layout_config/layout_config.dart';
-import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/utils/base_state.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:theme/app_theme.dart';
 import 'package:aurora_mail/build_property.dart';
 
@@ -61,7 +59,7 @@ class _SelectTwoFactorWidgetState extends BState<TwoFactorScene> {
     return Scaffold(
       appBar: widget.isDialog
           ? AMAppBar(
-              title: Text(i18n(context, S.settings_accounts_add)),
+              title: Text(S.of(context).settings_accounts_add),
             )
           : null,
       body: _gradientWrap(
@@ -111,7 +109,7 @@ class _SelectTwoFactorWidgetState extends BState<TwoFactorScene> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: <Widget>[
                                   Text(
-                                    i18n(context, S.tfa_label),
+                                    S.of(context).tfa_label,
                                     style: Theme.of(context)
                                         .textTheme
                                         .headline6
@@ -121,7 +119,7 @@ class _SelectTwoFactorWidgetState extends BState<TwoFactorScene> {
                                   ),
                                   SizedBox(height: 10),
                                   Text(
-                                    i18n(context, S.tfa_hint_step),
+                                    S.of(context).tfa_hint_step,
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
                                         color: AppTheme.loginTextColor),
@@ -139,7 +137,7 @@ class _SelectTwoFactorWidgetState extends BState<TwoFactorScene> {
                               width: double.infinity,
                               child: TextButton(
                                 child: Text(
-                                  i18n(context, S.btn_login_back_to_login),
+                                  S.of(context).btn_login_back_to_login,
                                   style:
                                       TextStyle(color: AppTheme.loginTextColor),
                                 ),

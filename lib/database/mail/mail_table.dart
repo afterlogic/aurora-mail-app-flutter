@@ -2,12 +2,10 @@
 import 'dart:convert';
 
 import 'package:aurora_mail/database/app_database.dart';
-import 'package:aurora_mail/res/str/s.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/utils/mail_utils.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart' as widgets;
-import 'package:drift_sqflite/drift_sqflite.dart';
 import 'package:drift/drift.dart';
 
 enum MessageFlags {
@@ -155,7 +153,7 @@ class Mail extends Table {
     if (collection == null || collection.isEmpty) return [];
     return collection.map((to) {
       if (to["Email"] == currentUserEmail) {
-        return i18n(context, S.messages_to_me);
+        return S.of(context).messages_to_me;
       } else {
         final displayName = to["DisplayName"] as String;
         return displayName.isNotEmpty ? to["DisplayName"] : to["Email"];

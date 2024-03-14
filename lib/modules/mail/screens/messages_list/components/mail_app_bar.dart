@@ -1,6 +1,7 @@
 //@dart=2.9
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_state.dart';
@@ -12,8 +13,6 @@ import 'package:aurora_mail/modules/mail/screens/messages_list/components/select
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/selection_controller.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/user_selection_popup.dart';
 import 'package:aurora_mail/utils/base_state.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
-import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -172,12 +171,12 @@ class MailAppBarState extends BState<MailAppBar> {
         builder: (_, state) {
           if (state is FoldersLoaded) {
             return Text(state.filter == MessagesFilter.starred
-                ? i18n(context, S.folders_starred)
+                ? S.of(context).folders_starred
                 : _getTitle(context, state.selectedFolder));
           } else if (state is FoldersLoading) {
-            return Text(i18n(context, S.messages_list_app_bar_loading_folders));
+            return Text(S.of(context).messages_list_app_bar_loading_folders);
           } else if (state is FoldersEmpty) {
-            return Text(i18n(context, S.folders_empty));
+            return Text(S.of(context).folders_empty);
           } else {
             return SizedBox();
           }

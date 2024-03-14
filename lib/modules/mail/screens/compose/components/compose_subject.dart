@@ -1,9 +1,8 @@
 //@dart=2.9
 import 'dart:io';
 
-import 'package:aurora_mail/res/str/s.dart';
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/utils/base_state.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
@@ -42,7 +41,7 @@ class _ComposeSubjectState extends BState<ComposeSubject> {
           children: <Widget>[
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: Text(i18n(context, S.messages_subject),
+              child: Text(S.of(context).messages_subject,
                   style: theme.textTheme.subtitle1),
             ),
             SizedBox(width: 8.0),

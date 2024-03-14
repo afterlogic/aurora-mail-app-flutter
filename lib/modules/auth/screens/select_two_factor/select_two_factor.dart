@@ -1,4 +1,5 @@
 //@dart=2.9
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/auth/screens/backup_code_auth/backup_code_auth_route.dart';
 import 'package:aurora_mail/modules/auth/screens/component/two_factor_screen.dart';
 import 'package:aurora_mail/modules/auth/screens/fido_auth/fido_auth_route.dart';
@@ -9,11 +10,6 @@ import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:aurora_mail/build_property.dart';
-import 'package:aurora_mail/modules/layout_config/layout_config.dart';
-import 'package:aurora_mail/modules/auth/screens/login/components/login_gradient.dart';
-import 'package:aurora_mail/modules/auth/screens/login/components/mail_logo.dart';
-import 'package:aurora_mail/modules/auth/screens/login/components/presentation_header.dart';
-import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_ui_kit/components/am_button.dart';
@@ -36,7 +32,7 @@ class _SelectTwoFactorWidgetState extends BState<SelectTwoFactorWidget> {
       isDialog: widget.args.isDialog,
       button: [
         Text(
-          i18n(context, S.tfa_label_hint_security_options),
+          S.of(context).tfa_label_hint_security_options,
           style: TextStyle(color: AppTheme.loginTextColor),
         ),
         SizedBox(height: 20),
@@ -45,7 +41,7 @@ class _SelectTwoFactorWidgetState extends BState<SelectTwoFactorWidget> {
             width: double.infinity,
             child: AMButton(
               child: Text(
-                i18n(context, S.tfa_btn_use_security_key),
+                S.of(context).tfa_btn_use_security_key,
                 style: TextStyle(color: AppTheme.loginTextColor),
               ),
               onPressed: () {
@@ -66,7 +62,7 @@ class _SelectTwoFactorWidgetState extends BState<SelectTwoFactorWidget> {
             width: double.infinity,
             child: AMButton(
               child: Text(
-                i18n(context, S.tfa_btn_use_auth_app),
+                S.of(context).tfa_btn_use_auth_app,
                 style: TextStyle(color: AppTheme.loginTextColor),
               ),
               onPressed: () {
@@ -87,7 +83,7 @@ class _SelectTwoFactorWidgetState extends BState<SelectTwoFactorWidget> {
             width: double.infinity,
             child: AMButton(
               child: Text(
-                i18n(context, S.tfa_btn_use_backup_code),
+                S.of(context).tfa_btn_use_backup_code,
                 style: TextStyle(color: AppTheme.loginTextColor),
               ),
               onPressed: () {

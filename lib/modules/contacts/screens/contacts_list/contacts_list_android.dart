@@ -1,6 +1,7 @@
 //@dart=2.9
 import 'dart:async';
 
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/inject/app_inject.dart';
 import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
@@ -12,10 +13,8 @@ import 'package:aurora_mail/modules/contacts/screens/contacts_list/components/co
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/mail_bloc.dart';
 import 'package:aurora_mail/modules/settings/blocs/pgp_settings/bloc.dart';
 import 'package:aurora_mail/modules/settings/screens/pgp_settings/dialogs/import_key_dialog.dart';
-import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/shared_ui/mail_bottom_app_bar.dart';
 import 'package:aurora_mail/utils/base_state.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:crypto_model/crypto_model.dart';
@@ -245,7 +244,7 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
   }
 
   Widget _buildContactsEmpty(ContactsState state) {
-    return AMEmptyList(message: i18n(context, S.contacts_empty));
+    return AMEmptyList(message: S.of(context).contacts_empty);
   }
 
   Widget _buildContacts(BuildContext context, ContactsState state) {

@@ -1,7 +1,5 @@
-import 'package:aurora_mail/utils/internationalization.dart';
-import 'package:aurora_mail/res/str/s.dart';
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class MessageHeaders extends StatelessWidget {
@@ -13,7 +11,7 @@ class MessageHeaders extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AMAppBar(
-        title: Text(i18n(context, S.label_message_headers)),
+        title: Text(S.of(context).label_message_headers),
       ),
       body: Padding(
         child: SelectableText(text),

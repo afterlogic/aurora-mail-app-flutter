@@ -1,6 +1,7 @@
 //@dart=2.9
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/config.dart';
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
@@ -18,12 +19,10 @@ import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_rou
 import 'package:aurora_mail/modules/settings/blocs/pgp_settings/bloc.dart';
 import 'package:aurora_mail/modules/settings/screens/pgp_settings/dialogs/import_key_dialog.dart';
 import 'package:aurora_mail/modules/settings/screens/pgp_settings/screens/pgp_key_route.dart';
-import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/date_formatting.dart';
 import 'package:aurora_mail/utils/identity_util.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:crypto_model/crypto_model.dart';
 import 'package:flutter/material.dart';
@@ -138,14 +137,8 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
           context: context,
           scaffoldState: widget.contactsListScaffoldState,
           isError: false,
-          message: i18n(
-            context,
-            S.contacts_shared_message,
-            {
-              "contact": contact.fullName,
-              "storage": i18n(context, S.contacts_drawer_storage_shared)
-            },
-          ),
+          message: S.of(context).contacts_shared_message(
+              contact.fullName, S.of(context).contacts_drawer_storage_shared),
         );
         _onClose();
         break;
@@ -155,24 +148,17 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
           context: context,
           scaffoldState: widget.contactsListScaffoldState,
           isError: false,
-          message: i18n(
-            context,
-            S.contacts_shared_message,
-            {
-              "contact": contact.fullName,
-              "storage": i18n(context, S.contacts_drawer_storage_personal)
-            },
-          ),
+          message: S.of(context).contacts_shared_message(
+              contact.fullName, S.of(context).contacts_drawer_storage_personal),
         );
         _onClose();
         break;
       case ContactViewAppBarAction.delete:
         final result = await ConfirmationDialog.show(
           context,
-          i18n(context, S.contacts_delete_title),
-          i18n(context, S.contacts_delete_desc_with_name,
-              {"contact": contact.fullName}),
-          i18n(context, S.btn_delete),
+          S.of(context).contacts_delete_title,
+          S.of(context).contacts_delete_desc_with_name(contact.fullName),
+          S.of(context).btn_delete,
           destructibleAction: true,
         );
 
@@ -208,7 +194,7 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
       month: c.birthMonth,
       year: c.birthYear,
       locale: Localizations.localeOf(context).languageCode,
-      format: i18n(context, S.format_contacts_birth_date),
+      format: S.of(context).format_contacts_birth_date,
     );
 
     final sectionTitleTheme = theme.textTheme.bodyText1;
@@ -221,46 +207,46 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
 //      ),
       _buildInfoItem(
         icon: Icons.alternate_email,
-        label: i18n(context, S.contacts_view_email),
+        label: S.of(context).contacts_view_email,
         v: _contactInfo.viewEmail,
         action: InfoAction.email,
         cb: () => _emailToContacts(_contactInfo.viewEmail),
       ),
       _buildInfoItem(
         icon: MdiIcons.phone,
-        label: i18n(context, S.contacts_view_phone),
+        label: S.of(context).contacts_view_phone,
         v: _contactInfo.viewPhone,
         action: InfoAction.call,
         cb: () => _callContact(_contactInfo.viewPhone),
       ),
       _buildInfoItem(
         icon: MdiIcons.mapMarkerOutline,
-        label: i18n(context, S.contacts_view_address),
+        label: S.of(context).contacts_view_address,
         v: _contactInfo.viewAddress,
       ),
       _buildInfoItem(
         icon: MdiIcons.skype,
-        label: i18n(context, S.contacts_view_skype),
+        label: S.of(context).contacts_view_skype,
         v: c.skype,
       ),
       _buildInfoItem(
         icon: MdiIcons.facebook,
-        label: i18n(context, S.contacts_view_facebook),
+        label: S.of(context).contacts_view_facebook,
         v: c.facebook,
       ),
       _buildInfoItem(
         icon: Icons.person_outline,
-        label: i18n(context, S.contacts_view_first_name),
+        label: S.of(context).contacts_view_first_name,
         v: c.firstName,
       ),
       _buildInfoItem(
         icon: Icons.person_outline,
-        label: i18n(context, S.contacts_view_last_name),
+        label: S.of(context).contacts_view_last_name,
         v: c.lastName,
       ),
       _buildInfoItem(
         icon: Icons.person_outline,
-        label: i18n(context, S.contacts_view_nickname),
+        label: S.of(context).contacts_view_nickname,
         v: c.nickName,
       ),
     ]);
@@ -269,7 +255,7 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
       if (_contactInfo.viewEmail != c.personalEmail)
         _buildInfoItem(
           icon: Icons.alternate_email,
-          label: i18n(context, S.contacts_view_email),
+          label: S.of(context).contacts_view_email,
           v: c.personalEmail,
           action: InfoAction.email,
           cb: () => _emailToContacts(c.personalEmail),
@@ -277,45 +263,45 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
       if (_contactInfo.viewAddress != c.personalAddress)
         _buildInfoItem(
           icon: MdiIcons.mapMarkerOutline,
-          label: i18n(context, S.contacts_view_address),
+          label: S.of(context).contacts_view_address,
           v: c.personalAddress,
         ),
       _buildInfoItem(
         icon: MdiIcons.homeCityOutline,
-        label: i18n(context, S.contacts_view_city),
+        label: S.of(context).contacts_view_city,
         v: c.personalCity,
       ),
       _buildInfoItem(
         icon: MdiIcons.map,
-        label: i18n(context, S.contacts_view_province),
+        label: S.of(context).contacts_view_province,
         v: c.personalState,
       ),
       _buildInfoItem(
         icon: MdiIcons.postOutline,
-        label: i18n(context, S.contacts_view_zip),
+        label: S.of(context).contacts_view_zip,
         v: c.personalZip,
       ),
       _buildInfoItem(
         icon: MdiIcons.earth,
-        label: i18n(context, S.contacts_view_country),
+        label: S.of(context).contacts_view_country,
         v: c.personalCountry,
       ),
       _buildInfoItem(
         icon: Icons.web,
-        label: i18n(context, S.contacts_view_web_page),
+        label: S.of(context).contacts_view_web_page,
         v: c.personalWeb,
         action: InfoAction.visitWebsite,
         cb: () => _visitWebsite(c.personalWeb),
       ),
       _buildInfoItem(
         icon: MdiIcons.fax,
-        label: i18n(context, S.contacts_view_fax),
+        label: S.of(context).contacts_view_fax,
         v: c.personalFax,
       ),
       if (_contactInfo.viewPhone != c.personalPhone)
         _buildInfoItem(
           icon: MdiIcons.phone,
-          label: i18n(context, S.contacts_view_phone),
+          label: S.of(context).contacts_view_phone,
           v: c.personalPhone,
           action: InfoAction.call,
           cb: () => _callContact(c.personalPhone),
@@ -323,7 +309,7 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
       if (_contactInfo.viewPhone != c.personalMobile)
         _buildInfoItem(
           icon: MdiIcons.cellphone,
-          label: i18n(context, S.contacts_view_mobile),
+          label: S.of(context).contacts_view_mobile,
           v: c.personalMobile,
           action: InfoAction.call,
           cb: () => _callContact(c.personalMobile),
@@ -334,7 +320,7 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
       if (_contactInfo.viewEmail != c.businessEmail)
         _buildInfoItem(
           icon: Icons.alternate_email,
-          label: i18n(context, S.contacts_view_email),
+          label: S.of(context).contacts_view_email,
           v: c.businessEmail,
           action: InfoAction.email,
           cb: () => _emailToContacts(c.businessEmail),
@@ -342,45 +328,45 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
       if (_contactInfo.viewAddress != c.businessAddress)
         _buildInfoItem(
           icon: MdiIcons.mapMarkerOutline,
-          label: i18n(context, S.contacts_view_address),
+          label: S.of(context).contacts_view_address,
           v: c.businessAddress,
         ),
       _buildInfoItem(
         icon: MdiIcons.homeCityOutline,
-        label: i18n(context, S.contacts_view_city),
+        label: S.of(context).contacts_view_city,
         v: c.businessCity,
       ),
       _buildInfoItem(
         icon: MdiIcons.map,
-        label: i18n(context, S.contacts_view_province),
+        label: S.of(context).contacts_view_province,
         v: c.businessState,
       ),
       _buildInfoItem(
         icon: MdiIcons.postOutline,
-        label: i18n(context, S.contacts_view_zip),
+        label: S.of(context).contacts_view_zip,
         v: c.businessZip,
       ),
       _buildInfoItem(
         icon: MdiIcons.earth,
-        label: i18n(context, S.contacts_view_country),
+        label: S.of(context).contacts_view_country,
         v: c.businessCountry,
       ),
       _buildInfoItem(
         icon: MdiIcons.web,
-        label: i18n(context, S.contacts_view_web_page),
+        label: S.of(context).contacts_view_web_page,
         v: c.businessWeb,
         action: InfoAction.visitWebsite,
         cb: () => _visitWebsite(c.businessWeb),
       ),
       _buildInfoItem(
         icon: MdiIcons.fax,
-        label: i18n(context, S.contacts_view_fax),
+        label: S.of(context).contacts_view_fax,
         v: c.businessFax,
       ),
       if (_contactInfo.viewPhone != c.businessPhone)
         _buildInfoItem(
           icon: MdiIcons.cellphone,
-          label: i18n(context, S.contacts_view_phone),
+          label: S.of(context).contacts_view_phone,
           v: c.businessPhone,
           action: InfoAction.call,
           cb: () => _callContact(c.businessPhone),
@@ -391,19 +377,19 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
       if (_contactInfo.viewEmail != c.otherEmail)
         _buildInfoItem(
           icon: Icons.alternate_email,
-          label: i18n(context, S.contacts_view_other_email),
+          label: S.of(context).contacts_view_other_email,
           v: c.otherEmail,
           action: InfoAction.email,
           cb: () => _emailToContacts(c.otherEmail),
         ),
       _buildInfoItem(
         icon: MdiIcons.calendar,
-        label: i18n(context, S.contacts_view_birthday),
+        label: S.of(context).contacts_view_birthday,
         v: birthDate,
       ),
       _buildInfoItem(
         icon: MdiIcons.text,
-        label: i18n(context, S.contacts_view_notes),
+        label: S.of(context).contacts_view_notes,
         v: c.notes,
       ),
     ]);
@@ -423,7 +409,7 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
                   },
             child: _buildInfoItem(
               icon: MdiIcons.key,
-              label: i18n(context, S.label_pgp_public_key),
+              label: S.of(context).label_pgp_public_key,
               v: key == null
                   ? ""
                   : key.formatName() +
@@ -476,8 +462,7 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
               isError: false,
               context: context,
               scaffoldState: Scaffold.of(context),
-              message: i18n(context, S.label_pgp_downloading_to,
-                  {"path": state.filePath}),
+              message: S.of(context).label_pgp_downloading_to(state.filePath),
             );
           }
           if (state is SelectKeyForImport) {
@@ -494,7 +479,7 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
               if (personalInfo.isNotEmpty)
                 ListTile(
                   title: Text(
-                    i18n(context, S.contacts_view_section_home),
+                    S.of(context).contacts_view_section_home,
                     style: sectionTitleTheme,
                   ),
                 ),
@@ -504,7 +489,7 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
               if (businessInfo.isNotEmpty)
                 ListTile(
                   title: Text(
-                    i18n(context, S.contacts_view_section_business),
+                    S.of(context).contacts_view_section_business,
                     style: sectionTitleTheme,
                   ),
                 ),
@@ -513,7 +498,7 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
               if (otherInfo.isNotEmpty)
                 ListTile(
                   title: Text(
-                    i18n(context, S.contacts_view_section_other_info),
+                    S.of(context).contacts_view_section_other_info,
                     style: sectionTitleTheme,
                   ),
                 ),
@@ -525,7 +510,7 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
               if (groupInfo.isNotEmpty)
                 ListTile(
                   title: Text(
-                    i18n(context, S.contacts_view_section_groups),
+                    S.of(context).contacts_view_section_groups,
                     style: sectionTitleTheme,
                   ),
                 ),

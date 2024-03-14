@@ -1,12 +1,11 @@
 //@dart=2.9
 import 'package:aurora_mail/build_property.dart';
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/screens/group_view/group_view_route.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/search_bar.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/user_selection_popup.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
-import 'package:aurora_mail/res/str/s.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/storage_util.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
@@ -82,12 +81,11 @@ class _ContactsAppBarState extends State<ContactsAppBar> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Text(i18n(context, S.contacts)),
+            Text(S.of(context).contacts),
             SizedBox(height: 3.0),
             Text(
               selectedStorage.displayName.length > 6 && selectedStorage.displayName.substring(0, 6) == 'LABEL_'
-                  ? i18n(context,
-                      getStorageName(selectedStorage.displayName.substring(6)))
+                  ? getStorageName(selectedStorage.displayName.substring(6), context)
                   : selectedStorage.displayName,
               style: TextStyle(
                   fontSize: theme.textTheme.caption.fontSize,
@@ -101,7 +99,7 @@ class _ContactsAppBarState extends State<ContactsAppBar> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Text(i18n(context, S.contacts)),
+            Text(S.of(context).contacts),
             SizedBox(height: 3.0),
             Text(
               "# " + selectedGroup.name,
@@ -115,10 +113,10 @@ class _ContactsAppBarState extends State<ContactsAppBar> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Text(i18n(context, S.contacts)),
-            SizedBox(height: 3.0),
+            Text(S.of(context).contacts),
+            const SizedBox(height: 3.0),
             Text(
-              i18n(context, S.contacts_list_app_bar_all_contacts),
+              S.of(context).contacts_list_app_bar_all_contacts,
               style: TextStyle(
                   fontSize: theme.textTheme.caption.fontSize,
                   fontWeight: FontWeight.w400),
@@ -126,7 +124,7 @@ class _ContactsAppBarState extends State<ContactsAppBar> {
           ],
         );
       } else {
-        return Text(i18n(context, S.contacts));
+        return Text(S.of(context).contacts);
       }
     }
 

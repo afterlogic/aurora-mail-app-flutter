@@ -1,5 +1,4 @@
-import 'package:aurora_mail/utils/internationalization.dart';
-import 'package:aurora_mail/res/str/s.dart';
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:flutter/material.dart';
 
 enum DiscardComposeChangesOption { discard, save }
@@ -9,11 +8,11 @@ class DiscardComposeChangesDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return AlertDialog(
-      content: Text(i18n(context, S.compose_discard_save_dialog_description)),
+      content: Text(S.of(context).compose_discard_save_dialog_description),
       actions: <Widget>[
         TextButton(
           child: Text(
-            i18n(context, S.btn_discard),
+            S.of(context).btn_discard,
             style: TextStyle(
                 color: theme.brightness == Brightness.light
                     ? theme.accentColor
@@ -25,7 +24,7 @@ class DiscardComposeChangesDialog extends StatelessWidget {
         ),
         TextButton(
           child: Text(
-            i18n(context, S.btn_save),
+            S.of(context).btn_save,
             style: TextStyle(
                 color: theme.brightness == Brightness.light
                     ? theme.accentColor

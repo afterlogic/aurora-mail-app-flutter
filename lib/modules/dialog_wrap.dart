@@ -1,12 +1,11 @@
 //@dart=2.9
 import 'dart:async';
 
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_event.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_android.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
-import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/material.dart';
 
 import 'auth/blocs/auth_bloc/auth_bloc.dart';
@@ -80,8 +79,8 @@ class RouteWrapState extends State<RouteWrap> {
       final result = await ConfirmationDialog.show(
         context,
         null,
-        i18n(context, S.label_discard_not_saved_changes),
-        i18n(context, S.btn_discard),
+        S.of(context).label_discard_not_saved_changes,
+        S.of(context).btn_discard,
       );
       return result ?? false;
     }

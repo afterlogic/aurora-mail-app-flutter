@@ -1,9 +1,6 @@
 //@dart=2.9
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/utils/base_state.dart';
-import 'package:aurora_mail/utils/input_validation.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
-import 'package:aurora_mail/res/str/s.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class EncryptDialog extends StatefulWidget {
@@ -18,7 +15,7 @@ class _EncryptDialogState extends BState<EncryptDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(i18n(context, S.label_pgp_sign_or_encrypt)),
+      title: Text(S.of(context).label_pgp_sign_or_encrypt),
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -26,7 +23,7 @@ class _EncryptDialogState extends BState<EncryptDialog> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Text(i18n(context, S.btn_pgp_encrypt)),
+                Text(S.of(context).btn_pgp_encrypt),
                 Checkbox(
                   value: _encrypt,
                   onChanged: (bool value) {
@@ -40,7 +37,7 @@ class _EncryptDialogState extends BState<EncryptDialog> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Text(i18n(context, S.label_pgp_sign)),
+                Text(S.of(context).label_pgp_sign),
                 Checkbox(
                   value: _sign,
                   onChanged: (bool value) {
@@ -55,11 +52,11 @@ class _EncryptDialogState extends BState<EncryptDialog> {
       ),
       actions: <Widget>[
         TextButton(
-          child: Text(i18n(context, S.btn_close)),
+          child: Text(S.of(context).btn_close),
           onPressed: () => Navigator.pop(context),
         ),
         TextButton(
-          child: Text(i18n(context, S.btn_pgp_sign_or_encrypt)),
+          child: Text(S.of(context).btn_pgp_sign_or_encrypt),
           onPressed: _signOrEncrypt,
         ),
       ],

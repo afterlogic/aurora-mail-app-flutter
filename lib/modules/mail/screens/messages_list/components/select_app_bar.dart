@@ -1,5 +1,6 @@
 //@dart=2.9
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/mail_state.dart';
@@ -11,8 +12,6 @@ import 'package:aurora_mail/res/icons/app_assets.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
 import 'package:aurora_mail/shared_ui/svg_icon.dart';
 import 'package:aurora_mail/utils/base_state.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
-import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -130,9 +129,9 @@ class _SelectAppBarState extends BState<SelectAppBar> {
     final messages = widget.controller.selected.values.toList();
     final delete = await ConfirmationDialog.show(
       context,
-      i18n(context, S.messages_delete_title_with_count),
-      i18n(context, S.messages_delete_desc_with_count),
-      i18n(context, S.btn_delete),
+      S.of(context).messages_delete_title_with_count,
+      S.of(context).messages_delete_desc_with_count,
+      S.of(context).btn_delete,
       destructibleAction: true,
     );
     if (delete == true) {

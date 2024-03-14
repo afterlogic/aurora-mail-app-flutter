@@ -1,10 +1,8 @@
 //@dart=2.9
-import 'package:aurora_mail/utils/internationalization.dart';
-import 'package:aurora_mail/res/str/s.dart';
 import 'package:flutter/material.dart';
 
 class ContactTile extends StatelessWidget {
-  final int title;
+  final String title;
   final TextStyle textStyle;
 
   const ContactTile(this.title, [this.textStyle]);
@@ -16,7 +14,7 @@ class ContactTile extends StatelessWidget {
       padding: const EdgeInsets.only(top: 32.0),
       child: ListTile(
         title: Text(
-          i18n(context, title),
+          title,
           style: textStyle ?? theme.textTheme.headline6,
         ),
       ),
