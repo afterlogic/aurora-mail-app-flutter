@@ -1,8 +1,6 @@
 //@dart=2.9
-import 'package:aurora_mail/utils/internationalization.dart';
-import 'package:aurora_mail/res/str/s.dart';
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/utils/show_dialog.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class OptionalDialogResult {
@@ -106,7 +104,7 @@ class _OptionalDialogState extends State<OptionalDialog> {
       ),
       actions: <Widget>[
         TextButton(
-          child: Text(i18n(context, S.btn_cancel)),
+          child: Text(S.of(context).btn_cancel),
           onPressed: () => Navigator.pop(
             context,
             OptionalDialogResult(generalResult: false, options: options),

@@ -1,9 +1,8 @@
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/settings/blocs/notifications/bloc.dart';
 import 'package:aurora_mail/notification/push_notifications_manager.dart';
-import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/utils/base_state.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +25,7 @@ class _NotificationsSettingsState extends BState<NotificationsSettings> {
           ? null
           : AMAppBar(
               title: Text(
-                i18n(context, S.label_notifications_settings),
+                S.of(context).label_notifications_settings,
               ),
             ),
       body: BlocBuilder(
@@ -36,7 +35,7 @@ class _NotificationsSettingsState extends BState<NotificationsSettings> {
             final tokenStatus = state is InitState ? state.state : null;
             Widget button = AMButton(
               isLoading: isProgress,
-              child: Text(i18n(context, S.btn_resend_push_token)),
+              child: Text(S.of(context).btn_resend_push_token),
               onPressed: () {
                 bloc.add(SendToken());
               },
@@ -57,7 +56,7 @@ class _NotificationsSettingsState extends BState<NotificationsSettings> {
                     child: Row(
                       children: <Widget>[
                         Text(
-                          i18n(context, S.label_device_identifier),
+                          S.of(context).label_device_identifier,
                           style: theme.textTheme.subtitle1,
                         ),
                         Expanded(
@@ -75,8 +74,9 @@ class _NotificationsSettingsState extends BState<NotificationsSettings> {
                               isError: false,
                               context: context,
                               scaffoldState: Scaffold.of(context),
-                              message: i18n(context,
-                                  S.label_device_id_copied_to_clip_board),
+                              message: S
+                                  .of(context)
+                                  .label_device_id_copied_to_clip_board,
                             );
                           },
                         ),
@@ -84,14 +84,12 @@ class _NotificationsSettingsState extends BState<NotificationsSettings> {
                     ),
                   ),
                   ListTile(
-                    title: Text(i18n(context, S.label_token_storing_status),
+                    title: Text(S.of(context).label_token_storing_status,
                         style: theme.textTheme.subtitle1),
                     trailing: Text(tokenStatus != null
-                        ? i18n(
-                            context,
-                            tokenStatus
-                                ? S.label_token_successful
-                                : S.label_token_failed)
+                        ? tokenStatus
+                            ? S.of(context).label_token_successful
+                            : S.of(context).label_token_failed
                         : "..."),
                   ),
                   if (!isTablet) Spacer(),

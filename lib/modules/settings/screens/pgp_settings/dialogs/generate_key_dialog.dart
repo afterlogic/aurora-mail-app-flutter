@@ -1,11 +1,9 @@
 //@dart=2.9
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/models/alias_or_identity.dart';
 import 'package:aurora_mail/modules/dialog_wrap.dart';
 import 'package:aurora_mail/utils/identity_util.dart';
 import 'package:aurora_mail/utils/input_validation.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
-import 'package:aurora_mail/res/str/s.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 
@@ -38,7 +36,7 @@ class _GenerateKeyDialogState extends BState<GenerateKeyDialog>
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(i18n(context, S.btn_pgp_generate_keys)),
+      title: Text(S.of(context).btn_pgp_generate_keys),
       content: SingleChildScrollView(
           child: Form(
         key: _formKey,
@@ -46,7 +44,7 @@ class _GenerateKeyDialogState extends BState<GenerateKeyDialog>
           children: <Widget>[
             DropdownButtonFormField(
               decoration: InputDecoration(
-                  labelText: i18n(context, S.login_input_email)),
+                  labelText: S.of(context).login_input_email),
               value: current,
               items: widget.identities.map((value) {
                 return DropdownMenuItem<AliasOrIdentity>(
@@ -72,7 +70,7 @@ class _GenerateKeyDialogState extends BState<GenerateKeyDialog>
             ),
             TextFormField(
               decoration: InputDecoration(
-                labelText: i18n(context, S.login_input_password),
+                labelText: S.of(context).login_input_password,
                 suffix: GestureDetector(
                   child: Icon(
                     _obscure ? Icons.visibility : Icons.visibility_off,
@@ -90,7 +88,7 @@ class _GenerateKeyDialogState extends BState<GenerateKeyDialog>
             ),
             DropdownButtonFormField(
               decoration:
-                  InputDecoration(labelText: i18n(context, S.label_length)),
+                  InputDecoration(labelText: S.of(context).label_length),
               value: length,
               items: lengths.map((value) {
                 return DropdownMenuItem<int>(
@@ -115,11 +113,11 @@ class _GenerateKeyDialogState extends BState<GenerateKeyDialog>
       )),
       actions: <Widget>[
         TextButton(
-          child: Text(i18n(context, S.btn_close)),
+          child: Text(S.of(context).btn_close),
           onPressed: () => Navigator.pop(context),
         ),
         TextButton(
-          child: Text(i18n(context, S.btn_pgp_generate)),
+          child: Text(S.of(context).btn_pgp_generate),
           onPressed: _generate,
         )
       ],

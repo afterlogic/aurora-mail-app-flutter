@@ -1,17 +1,15 @@
 //@dart=2.9
 import 'dart:io';
 
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/auth/repository/device_id_storage.dart';
 import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/settings/blocs/pgp_settings/bloc.dart';
 import 'package:aurora_mail/modules/settings/screens/settings_main/settings_navigator.dart';
-import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
 import 'package:aurora_mail/utils/identity_util.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:crypto_model/crypto_model.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class PgpKeyScreen extends StatefulWidget {
@@ -64,12 +62,11 @@ class _PgpKeyScreenState extends State<PgpKeyScreen> {
       appBar: isTablet && !withAppBar
           ? null
           : AMAppBar(
-              title: Text(i18n(
-                context,
+              title: Text(
                 pgpKey.isPrivate
-                    ? S.label_pgp_private_key
-                    : S.label_pgp_public_key,
-              )),
+                    ? S.of(context).label_pgp_private_key
+                    : S.of(context).label_pgp_public_key,
+              ),
             ),
       body: Flex(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -86,12 +83,9 @@ class _PgpKeyScreenState extends State<PgpKeyScreen> {
                       width: double.infinity,
                       child: Center(
                         child: Text(
-                          i18n(
-                            context,
-                            pgpKey.isPrivate
-                                ? S.label_pgp_private_key
-                                : S.label_pgp_public_key,
-                          ),
+                          pgpKey.isPrivate
+                              ? S.of(context).label_pgp_private_key
+                              : S.of(context).label_pgp_public_key,
                           style: theme.textTheme.headline6,
                         ),
                       ),
@@ -124,14 +118,14 @@ class _PgpKeyScreenState extends State<PgpKeyScreen> {
           );
     final children = <Widget>[
       AMButton(
-        child: Text(i18n(context, S.btn_share)),
+        child: Text(S.of(context).btn_share),
         onPressed: () async {
           final result = pgpKey.isPrivate
               ? await ConfirmationDialog.show(
                   context,
-                  i18n(context, S.label_pgp_share_warning),
-                  i18n(context, S.hint_pgp_share_warning),
-                  i18n(context, S.btn_share))
+                  S.of(context).label_pgp_share_warning,
+                  S.of(context).hint_pgp_share_warning,
+                  S.of(context).btn_share)
               : true;
           if (result == true) {
             bloc.add(ShareKeys(
@@ -148,7 +142,7 @@ class _PgpKeyScreenState extends State<PgpKeyScreen> {
       space,
       if (isAndroid9orLow)
         AMButton(
-          child: Text(i18n(context, S.btn_download)),
+          child: Text(S.of(context).btn_download),
           onPressed: () {
             bloc.add(DownloadKeys([pgpKey]));
             SettingsNavigatorWidget.of(context).pop();
@@ -156,14 +150,13 @@ class _PgpKeyScreenState extends State<PgpKeyScreen> {
         ),
       if (isAndroid9orLow) space,
       AMButton(
-        child: Text(i18n(context, S.btn_delete)),
+        child: Text(S.of(context).btn_delete),
         onPressed: () async {
           final result = await ConfirmationDialog.show(
             context,
             "",
-            i18n(context, S.hint_pgp_delete_user_key_confirm,
-                {"user": pgpKey.mail}),
-            i18n(context, S.btn_delete),
+            S.of(context).hint_pgp_delete_user_key_confirm(pgpKey.mail),
+            S.of(context).btn_delete,
           );
           if (result == true) {
             if (onDelete != null) {

@@ -5,7 +5,7 @@ import 'package:webmail_api_client/webmail_api_client.dart';
 extension WebMailApiErrorUtil on WebMailApiError {
   ErrorToShow toShow() {
     if (code != null) {
-      return ErrorToShow.message(getErrMsgFromCode(code));
+      return ErrorToShow.message(getErrMsgFromCode(code!));
     } else if (message != null) {
       return ErrorToShow.message(message);
     } else {

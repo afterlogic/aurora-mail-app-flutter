@@ -1,9 +1,7 @@
 //@dart=2.9
-import 'package:aurora_mail/utils/internationalization.dart';
-import 'package:aurora_mail/res/str/s.dart';
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/utils/show_dialog.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ThemeSelectionDialog extends StatelessWidget {
@@ -26,12 +24,12 @@ class ThemeSelectionDialog extends StatelessWidget {
     return AlertDialog(
       contentPadding: EdgeInsets.zero,
       titlePadding: EdgeInsets.all(24.0),
-      title: Text(i18n(context, S.settings_dark_theme)),
+      title: Text(S.of(context).settings_dark_theme),
       content: AMDialogList(
         children: [
           RadioListTile<bool>(
             activeColor: theme.accentColor,
-            title: Text(i18n(context, S.settings_dark_theme_system)),
+            title: Text(S.of(context).settings_dark_theme_system),
             value: null,
             groupValue: isTheme,
             onChanged: (val) {
@@ -41,7 +39,7 @@ class ThemeSelectionDialog extends StatelessWidget {
           ),
           RadioListTile<bool>(
             activeColor: theme.accentColor,
-            title: Text(i18n(context, S.settings_dark_theme_dark)),
+            title: Text(S.of(context).settings_dark_theme_dark),
             value: true,
             groupValue: isTheme,
             onChanged: (val) {
@@ -51,7 +49,7 @@ class ThemeSelectionDialog extends StatelessWidget {
           ),
           RadioListTile<bool>(
             activeColor: theme.accentColor,
-            title: Text(i18n(context, S.settings_dark_theme_light)),
+            title: Text(S.of(context).settings_dark_theme_light),
             value: false,
             groupValue: isTheme,
             onChanged: (val) {
@@ -64,7 +62,7 @@ class ThemeSelectionDialog extends StatelessWidget {
       actions: <Widget>[
         TextButton(
           child: Text(
-            i18n(context, S.btn_cancel),
+            S.of(context).btn_cancel,
             style: TextStyle(
                 color: theme.brightness == Brightness.light
                     ? theme.accentColor

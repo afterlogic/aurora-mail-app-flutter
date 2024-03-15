@@ -1,15 +1,13 @@
 //@dart=2.9
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/contacts/screens/contact_edit/dialog/select_key_dialog.dart';
 import 'package:aurora_mail/modules/settings/blocs/pgp_settings/bloc.dart';
 import 'package:aurora_mail/modules/settings/screens/pgp_settings/dialogs/import_from_text_dialog.dart';
 import 'package:aurora_mail/modules/settings/screens/pgp_settings/screens/pgp_key_route.dart';
-import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/utils/identity_util.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_dialog.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:crypto_model/crypto_model.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class KeyInput extends StatefulWidget {
@@ -56,7 +54,7 @@ class KeyInputState extends State<KeyInput> {
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         TextButton(
-          child: Text(i18n(context, S.btn_pgp_import_from_text)),
+          child: Text(S.of(context).btn_pgp_import_from_text),
           onPressed: () async {
             final result = await dialog(
               context: context,
@@ -68,7 +66,7 @@ class KeyInputState extends State<KeyInput> {
           },
         ),
         TextButton(
-          child: Text(i18n(context, S.btn_pgp_import_from_file)),
+          child: Text(S.of(context).btn_pgp_import_from_file),
           onPressed: () async {
             final result = await widget.pgpSettingsBloc.getKeyFromFile();
             if (result is String) {
@@ -103,7 +101,7 @@ class KeyInputState extends State<KeyInput> {
       showSnack(
           context: context,
           scaffoldState: Scaffold.of(context),
-          message: i18n(context, S.error_no_pgp_key));
+          message: S.of(context).error_no_pgp_key);
       return;
     }
     if (keys.length == 1) {

@@ -1,17 +1,15 @@
 //@dart=2.9
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
-import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/contacts_bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_group_model.dart';
 import 'package:aurora_mail/modules/contacts/screens/contact_view/components/contacts_info_item.dart';
 import 'package:aurora_mail/modules/contacts/screens/group_edit/group_edit_route.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/models/compose_actions.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/compose_route.dart';
-import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
 import 'package:aurora_mail/utils/base_state.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -37,10 +35,9 @@ class _GroupViewAndroidState extends BState<GroupViewAndroid> {
       case GroupViewAppBarAction.delete:
         final delete = await ConfirmationDialog.show(
           context,
-          i18n(context, S.contacts_group_delete_title),
-          i18n(context, S.contacts_group_delete_desc_with_name,
-              {"group": widget.group.name}),
-          i18n(context, S.btn_delete),
+          S.of(context).contacts_group_delete_title,
+          S.of(context).contacts_group_delete_desc_with_name(widget.group.name),
+          S.of(context).btn_delete,
           destructibleAction: true,
         );
 
@@ -82,61 +79,61 @@ class _GroupViewAndroidState extends BState<GroupViewAndroid> {
     final _mainInfo = _buildInfos([
       _buildInfoItem(
         icon: MdiIcons.accountGroup,
-        label: i18n(context, S.contacts_view_section_group_name),
+        label: S.of(context).contacts_view_section_group_name,
         v: g.name,
       ),
       _buildInfoItem(
         icon: Icons.alternate_email,
-        label: i18n(context, S.contacts_view_email),
+        label: S.of(context).contacts_view_email,
         v: g.email,
         action: InfoAction.email,
         cb: () => _emailToGroupEmail(g.email),
       ),
       _buildInfoItem(
         icon: MdiIcons.domain,
-        label: i18n(context, S.contacts_view_company),
+        label: S.of(context).contacts_view_company,
         v: g.company,
       ),
       _buildInfoItem(
         icon: MdiIcons.earth,
-        label: i18n(context, S.contacts_view_country),
+        label: S.of(context).contacts_view_country,
         v: g.country,
       ),
       _buildInfoItem(
         icon: MdiIcons.map,
-        label: i18n(context, S.contacts_view_province),
+        label: S.of(context).contacts_view_province,
         v: g.state,
       ),
       _buildInfoItem(
         icon: MdiIcons.homeCityOutline,
-        label: i18n(context, S.contacts_view_city),
+        label: S.of(context).contacts_view_city,
         v: g.city,
       ),
       _buildInfoItem(
         icon: MdiIcons.mapMarkerOutline,
-        label: i18n(context, S.contacts_view_street_address),
+        label: S.of(context).contacts_view_street_address,
         v: g.street,
       ),
       _buildInfoItem(
         icon: MdiIcons.postOutline,
-        label: i18n(context, S.contacts_view_zip),
+        label: S.of(context).contacts_view_zip,
         v: g.zip,
       ),
       _buildInfoItem(
         icon: MdiIcons.phone,
-        label: i18n(context, S.contacts_view_phone),
+        label: S.of(context).contacts_view_phone,
         v: g.phone,
         action: InfoAction.call,
         cb: () => _callGroupPhone(g.phone),
       ),
       _buildInfoItem(
         icon: MdiIcons.fax,
-        label: i18n(context, S.contacts_view_fax),
+        label: S.of(context).contacts_view_fax,
         v: g.fax,
       ),
       _buildInfoItem(
         icon: MdiIcons.web,
-        label: i18n(context, S.contacts_view_web_page),
+        label: S.of(context).contacts_view_web_page,
         v: g.web,
         action: InfoAction.visitWebsite,
         cb: () => _visitWebsite(g.web),

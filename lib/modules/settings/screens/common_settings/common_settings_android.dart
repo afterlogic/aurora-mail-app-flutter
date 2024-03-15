@@ -1,10 +1,9 @@
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/modules/settings/models/language.dart';
 import 'package:aurora_mail/modules/settings/screens/common_settings/components/theme_selection_dialog.dart';
-import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/utils/base_state.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,11 +18,11 @@ class CommonSettingsAndroid extends StatefulWidget {
 class _CommonSettingsAndroidState extends BState<CommonSettingsAndroid> {
   String _getThemeName(bool isDarkTheme) {
     if (isDarkTheme == false)
-      return i18n(context, S.settings_dark_theme_light);
+      return S.of(context).settings_dark_theme_light;
     else if (isDarkTheme == true)
-      return i18n(context, S.settings_dark_theme_dark);
+      return S.of(context).settings_dark_theme_dark;
     else
-      return i18n(context, S.settings_dark_theme_system);
+      return S.of(context).settings_dark_theme_system;
   }
 
   @override
@@ -35,7 +34,7 @@ class _CommonSettingsAndroidState extends BState<CommonSettingsAndroid> {
       appBar: isTablet
           ? null
           : AMAppBar(
-              title: Text(i18n(context, S.settings_common)),
+              title: Text(S.of(context).settings_common),
             ),
       body: BlocBuilder<SettingsBloc, SettingsState>(
         builder: (_, state) {
@@ -48,7 +47,7 @@ class _CommonSettingsAndroidState extends BState<CommonSettingsAndroid> {
                         AMCircleIcon(Icons.access_time),
                         SizedBox(width: 16.0),
                         Expanded(
-                          child: Text(i18n(context, S.settings_24_time_format),
+                          child: Text(S.of(context).settings_24_time_format,
                               overflow: TextOverflow.ellipsis),
                         ),
                       ],
@@ -58,7 +57,7 @@ class _CommonSettingsAndroidState extends BState<CommonSettingsAndroid> {
                     onChanged: (val) => bloc.add(SetTimeFormat(val))),
                 ListTile(
                   leading: AMCircleIcon(Icons.color_lens),
-                  title: Text(i18n(context, S.settings_dark_theme)),
+                  title: Text(S.of(context).settings_dark_theme),
                   onTap: () => ThemeSelectionDialog.show(
                       context,
                       state.darkThemeEnabled,
@@ -71,12 +70,12 @@ class _CommonSettingsAndroidState extends BState<CommonSettingsAndroid> {
                 if (Language.availableLanguages.length > 2)
                   ListTile(
                     leading: AMCircleIcon(Icons.translate),
-                    title: Text(i18n(context, S.settings_language)),
+                    title: Text(S.of(context).settings_language),
                     onTap: () => LanguageSelectionDialog.show(context,
                         state.language, (lang) => bloc.add(SetLanguage(lang))),
                     trailing: Text(
                       state.language == null
-                          ? i18n(context, S.settings_language_system)
+                          ? S.of(context).settings_language_system
                           : state.language.name,
                       style: theme.textTheme.caption,
                     ),

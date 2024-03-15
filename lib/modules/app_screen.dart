@@ -6,7 +6,6 @@ import 'package:aurora_mail/background/background_helper.dart';
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/generated/l10n.dart';
-import 'package:aurora_mail/localization/localization_delegate.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/messages_list_bloc.dart';
@@ -15,9 +14,7 @@ import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_rou
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/shared_ui/restart_widget.dart';
 import 'package:aurora_mail/utils/base_state.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:connectivity/connectivity.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -131,12 +128,11 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
   }
 
   void _navigateToLogin() {
-
-    try{
+    try {
       _navKey.currentState.popUntil((r) => r.isFirst);
       _navKey.currentState.pushReplacementNamed(LoginRoute.name);
       RestartWidget.restartApp(context);
-    }catch(e,st){
+    } catch (e, st) {
       print(e);
       print(st);
     }
@@ -232,14 +228,17 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
                             GlobalWidgetsLocalizations.delegate,
                             GlobalCupertinoLocalizations.delegate,
                             S.delegate,
-                            LocalizationI18nDelegate(
-                              forcedLocale: supportedLocales.contains(
-                                      settingsState.language?.toLocale())
-                                  ? settingsState.language?.toLocale()
-                                  : null,
-                            ),
+                            // LocalizationI18nDelegate(
+                            //   forcedLocale: supportedLocales.contains(
+                            //           settingsState.language?.toLocale())
+                            //       ? settingsState.language?.toLocale()
+                            //       : null,
+                            // ),
                           ],
-                          supportedLocales: supportedLocales,
+                          supportedLocales: BuildProperty.supportLanguage
+                              .split(",")
+                              .map((item) => Locale(item))
+                              .toList(),
                           localeResolutionCallback: (locale, locales) {
                             final supportedLocale = locales.firstWhere((l) {
                               return locale != null &&

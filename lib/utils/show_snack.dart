@@ -1,6 +1,5 @@
 //@dart=2.9
 import 'package:aurora_mail/utils/error_to_show.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/material.dart';
 
 void showErrorSnack({
@@ -12,7 +11,7 @@ void showErrorSnack({
   SnackBarAction action,
   bool isError = true,
 }) {
-  final error = msg.getString(context, arg);
+  final error = msg.getString();
   return showSnack(
     context: context,
     scaffoldState: scaffoldState,

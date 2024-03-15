@@ -1,10 +1,9 @@
 //@dart=2.9
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/dialog_wrap.dart';
 import 'package:aurora_mail/shared_ui/sized_dialog_content.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/input_validation.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
-import 'package:aurora_mail/res/str/s.dart';
 import 'package:flutter/material.dart';
 
 class ImportFromTextDialog extends StatefulWidget {
@@ -20,7 +19,7 @@ class _ImportFromTextDialogState extends BState<ImportFromTextDialog>
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(i18n(context, S.label_pgp_import_key)),
+      title: Text(S.of(context).label_pgp_import_key),
       content: SizedDialogContent(
         child: DecoratedBox(
           decoration: BoxDecoration(
@@ -42,11 +41,11 @@ class _ImportFromTextDialogState extends BState<ImportFromTextDialog>
       ),
       actions: <Widget>[
         TextButton(
-          child: Text(i18n(context, S.btn_cancel)),
+          child: Text(S.of(context).btn_cancel),
           onPressed: () => Navigator.pop(context),
         ),
         TextButton(
-          child: Text(i18n(context, S.btn_pgp_check_keys)),
+          child: Text(S.of(context).btn_pgp_check_keys),
           onPressed: () => _checkText(context),
         )
       ],

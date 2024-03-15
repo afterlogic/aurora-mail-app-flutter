@@ -1,5 +1,6 @@
 //@dart=2.9
 import 'package:aurora_mail/build_property.dart';
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/models/alias_or_identity.dart';
 import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
@@ -11,10 +12,8 @@ import 'package:aurora_mail/modules/settings/screens/pgp_settings/dialogs/key_re
 import 'package:aurora_mail/modules/settings/screens/pgp_settings/screens/pgp_key_route.dart';
 import 'package:aurora_mail/modules/settings/screens/pgp_settings/screens/pgp_keys_route.dart';
 import 'package:aurora_mail/modules/settings/screens/settings_main/settings_navigator.dart';
-import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/identity_util.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:crypto_model/crypto_model.dart';
@@ -54,7 +53,7 @@ class _PgpSettingsState extends BState<PgpSettings> {
       appBar: isTablet
           ? null
           : AMAppBar(
-              title: Text(i18n(context, S.label_pgp_settings)),
+              title: Text(S.of(context).label_pgp_settings),
             ),
       body: BlocListener<PgpSettingsBloc, PgpSettingsState>(
         bloc: bloc,
@@ -76,8 +75,7 @@ class _PgpSettingsState extends BState<PgpSettings> {
               isError: false,
               context: context,
               scaffoldState: Scaffold.of(context),
-              message: i18n(context, S.label_pgp_downloading_to,
-                  {"path": state.filePath}),
+              message: S.of(context).label_pgp_downloading_to(state.filePath),
             );
             return;
           }
@@ -133,7 +131,7 @@ class _PgpSettingsState extends BState<PgpSettings> {
             isError: false,
             context: context,
             scaffoldState: _scaffoldKey.currentState,
-            message: i18n(context, S.already_have_key));
+            message: S.of(context).already_have_key);
         return;
       } else {
         current = notExist.first;
@@ -218,7 +216,7 @@ class _PgpSettingsState extends BState<PgpSettings> {
       children: <Widget>[
         if (public.isNotEmpty || keyProgress != null)
           Text(
-            i18n(context, S.label_pgp_public_keys),
+            S.of(context).label_pgp_public_keys,
             style: theme.textTheme.headline6,
           ),
         keysGroup(
@@ -229,7 +227,7 @@ class _PgpSettingsState extends BState<PgpSettings> {
         SizedBox(height: 10),
         if (private.isNotEmpty || keyProgress != null)
           Text(
-            i18n(context, S.label_pgp_private_keys),
+            S.of(context).label_pgp_private_keys,
             style: theme.textTheme.headline6,
           ),
         keysGroup(
@@ -242,7 +240,7 @@ class _PgpSettingsState extends BState<PgpSettings> {
           SizedBox(height: 10),
           if (contactPublic.isNotEmpty)
             Text(
-              i18n(context, S.label_pgp_contact_public_keys),
+              S.of(context).label_pgp_contact_public_keys,
               style: theme.textTheme.headline6,
             ),
           keysGroup(
@@ -321,22 +319,22 @@ class _PgpSettingsState extends BState<PgpSettings> {
     final children = <Widget>[
       if (state.contactPublic.isNotEmpty)
         AMButton(
-          child: Text(i18n(context, S.btn_pgp_export_all_public_keys)),
+          child: Text(S.of(context).btn_pgp_export_all_public_keys),
           onPressed: () => _exportAllPublicKeys(state.contactPublic),
         ),
       space,
       AMButton(
-        child: Text(i18n(context, S.btn_pgp_import_keys_from_text)),
+        child: Text(S.of(context).btn_pgp_import_keys_from_text),
         onPressed: _importFromText,
       ),
       space,
       AMButton(
-        child: Text(i18n(context, S.btn_pgp_import_keys_from_file)),
+        child: Text(S.of(context).btn_pgp_import_keys_from_file),
         onPressed: _importFromFile,
       ),
       space,
       AMButton(
-        child: Text(i18n(context, S.btn_pgp_generate_keys)),
+        child: Text(S.of(context).btn_pgp_generate_keys),
         onPressed: () => _generateKey(state),
       ),
     ];

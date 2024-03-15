@@ -1,7 +1,7 @@
 //@dart=2.9
 import 'dart:convert';
 
-import 'package:aurora_mail/utils/internationalization.dart';
+import 'package:aurora_mail/build_property.dart';
 import 'package:flutter/cupertino.dart';
 
 class Language {
@@ -15,7 +15,11 @@ class Language {
     final languages = new List<Language>();
     // null sets system default language
     languages.add(null);
-    languages.addAll(supportedLocales.map((locale) {
+    languages.addAll(BuildProperty.supportLanguage
+        .split(",")
+        .map((item) => Locale(item))
+        .toList()
+        .map((locale) {
       final tag = locale.toLanguageTag();
       return new Language(_getNameFromTag(tag), tag);
     }));
@@ -36,8 +40,11 @@ class Language {
   }
 
   Locale toLocale() {
-    return supportedLocales.firstWhere((l) => l.toLanguageTag() == tag,
-        orElse: () {
+    return BuildProperty.supportLanguage
+        .split(",")
+        .map((item) => Locale(item))
+        .toList()
+        .firstWhere((l) => l.toLanguageTag() == tag, orElse: () {
       throw "Language $tag is not supported";
     });
   }

@@ -2,15 +2,13 @@
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/mail/mail_table.dart';
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/selection_controller.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/date_formatting.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
-import 'package:aurora_mail/res/str/s.dart';
 import 'package:connectivity/connectivity.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -72,13 +70,13 @@ class _MessageItemState extends BState<MessageItem> {
     final m = widget.message;
     if (widget.isSent) {
       if (m.toToDisplay == "messages_unknown_recipient") {
-        return i18n(context, S.messages_unknown_recipient);
+        return S.of(context).messages_unknown_recipient;
       } else {
         return m.toToDisplay;
       }
     } else {
       if (m.fromToDisplay == "messages_unknown_sender") {
-        return i18n(context, S.messages_unknown_sender);
+        return S.of(context).messages_unknown_sender;
       } else {
         return m.fromToDisplay;
       }
@@ -124,10 +122,9 @@ class _MessageItemState extends BState<MessageItem> {
             if (direction == DismissDirection.endToStart) {
               return ConfirmationDialog.show(
                 context,
-                i18n(context, S.messages_delete_title),
-                i18n(context, S.messages_delete_desc_with_subject,
-                    {"subject": m.subject}),
-                i18n(context, S.btn_delete),
+                S.of(context).messages_delete_title,
+                S.of(context).messages_delete_desc_with_subject(m.subject),
+                S.of(context).btn_delete,
                 destructibleAction: true,
               );
             } else if (direction == DismissDirection.startToEnd) {
@@ -153,7 +150,7 @@ class _MessageItemState extends BState<MessageItem> {
                       children: <Widget>[
                         Icon(Icons.mail, color: Colors.white, size: 36.0),
                         Text(
-                          i18n(context, isUnread ? S.btn_read : S.btn_unread),
+                          isUnread ? S.of(context).btn_read : S.of(context).btn_unread,
                           style: TextStyle(
                             color: Colors.white,
                           ),
@@ -182,7 +179,7 @@ class _MessageItemState extends BState<MessageItem> {
                             size: 36.0,
                           ),
                           Text(
-                            i18n(context, S.btn_delete),
+                            S.of(context).btn_delete,
                             style: TextStyle(
                               color: Colors.white,
                             ),
@@ -244,7 +241,7 @@ class _MessageItemState extends BState<MessageItem> {
                           child: Text(
                             m.subject.isNotEmpty
                                 ? m.subject
-                                : i18n(context, S.messages_no_subject),
+                                : S.of(context).messages_no_subject,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: TextStyle(
@@ -275,7 +272,7 @@ class _MessageItemState extends BState<MessageItem> {
                               locale:
                                   Localizations.localeOf(context).languageCode,
                               yesterdayWord:
-                                  i18n(context, S.label_message_yesterday),
+                                  S.of(context).label_message_yesterday,
                               is24: (state as SettingsLoaded).is24 ?? true,
                             ),
                             style: TextStyle(

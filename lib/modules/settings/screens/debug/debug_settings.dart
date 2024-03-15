@@ -1,11 +1,10 @@
 //@dart=2.9
 import 'package:aurora_logger/aurora_logger.dart';
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/settings/screens/debug/debug_local_storage.dart';
 import 'package:aurora_mail/utils/base_state.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
-import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -56,7 +55,7 @@ class _DebugSettingState extends BState<DebugSetting> {
               children: <Widget>[
                 CheckboxListTile(
                   value: _backgroundRecord,
-                  title: Text(i18n(context, S.label_record_log_in_background)),
+                  title: Text(S.of(context).label_record_log_in_background),
                   onChanged: (bool value) {
                     _backgroundRecord = value;
                     _storage.setBackgroundRecord(value);
@@ -66,7 +65,7 @@ class _DebugSettingState extends BState<DebugSetting> {
                 CheckboxListTile(
                   value: _messageCounter,
                   title: Text(
-                      i18n(context, S.label_enable_uploaded_message_counter)),
+                      S.of(context).label_enable_uploaded_message_counter),
                   onChanged: (bool value) {
                     _messageCounter = value;
                     _storage.setEnableCounter(value);
@@ -87,17 +86,17 @@ class _DebugSettingState extends BState<DebugSetting> {
                   child: LoggerSettingWidget(
                     LoggerSettingArg(
                         BlocProvider.of<AuthBloc>(context).currentUser.hostname,
-                        i18n(context, S.label_show_debug_view),
-                        i18n(context, S.btn_log_delete_all),
-                        i18n(context, S.hint_log_delete_all),
-                        i18n(context, S.debug_hint_log_delete_record),
+                        S.of(context).label_show_debug_view,
+                        S.of(context).btn_log_delete_all,
+                        S.of(context).hint_log_delete_all,
+                        S.of(context).debug_hint_log_delete_record,
                         (hint) async {
                       final result = await AMConfirmationDialog.show(
                         context,
                         "",
                         hint,
-                        i18n(context, S.btn_delete),
-                        i18n(context, S.btn_cancel),
+                        S.of(context).btn_delete,
+                        S.of(context).btn_cancel,
                       );
                       if (result == true) {
                         return true;

@@ -1,18 +1,14 @@
 //@dart=2.9
 import 'dart:io';
 
-import 'package:aurora_mail/inject/app_inject.dart';
-import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/auth/repository/device_id_storage.dart';
 import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/settings/blocs/pgp_settings/bloc.dart';
-import 'package:aurora_mail/res/str/s.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:crypto_model/crypto_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PgpKeysScreen extends StatefulWidget {
   final List<PgpKey> pgpKeys;
@@ -56,10 +52,9 @@ class _PgpKeysScreenState extends State<PgpKeysScreen> {
       appBar: isTablet
           ? null
           : AMAppBar(
-              title: Text(i18n(
-                context,
-                S.label_pgp_all_public_key,
-              )),
+              title: Text(
+                S.of(context).label_pgp_all_public_key,
+              ),
             ),
       body: Flex(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -76,10 +71,7 @@ class _PgpKeysScreenState extends State<PgpKeysScreen> {
                       width: double.infinity,
                       child: Center(
                         child: Text(
-                          i18n(
-                            context,
-                            S.label_pgp_all_public_key,
-                          ),
+                          S.of(context).label_pgp_all_public_key,
                           style: theme.textTheme.headline6,
                         ),
                       ),
@@ -109,7 +101,7 @@ class _PgpKeysScreenState extends State<PgpKeysScreen> {
           );
     final children = <Widget>[
       AMButton(
-        child: Text(i18n(context, S.btn_php_send_all)),
+        child: Text(S.of(context).btn_php_send_all),
         onPressed: () {
           bloc.add(ShareKeys(
             widget.pgpKeys,
@@ -124,7 +116,7 @@ class _PgpKeysScreenState extends State<PgpKeysScreen> {
       space,
       if (isAndroid9orLow)
         AMButton(
-          child: Text(i18n(context, S.btn_pgp_download_all)),
+          child: Text(S.of(context).btn_pgp_download_all),
           onPressed: () {
             bloc.add(DownloadKeys(widget.pgpKeys));
             Navigator.pop(context);

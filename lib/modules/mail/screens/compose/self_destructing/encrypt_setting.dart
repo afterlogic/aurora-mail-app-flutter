@@ -239,7 +239,7 @@ class _EncryptSettingState extends BState<EncryptSetting>
           }),
       listener: (BuildContext context, SelfDestructingState state) {
         if (state is ErrorState) {
-          toastKey.currentState.show(state.message.getString(context));
+          toastKey.currentState.show(state.message.getString());
         } else if (state is Encrypted) {
           Navigator.pop(context, state);
         }

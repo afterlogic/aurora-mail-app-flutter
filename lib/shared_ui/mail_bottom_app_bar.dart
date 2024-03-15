@@ -1,12 +1,11 @@
 //@dart=2.9
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/screens/contacts_list/contacts_list_route.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
 import 'package:aurora_mail/modules/settings/screens/settings_main/settings_main_route.dart';
-import 'package:aurora_mail/res/str/s.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -55,7 +54,7 @@ class MailBottomAppBar extends StatelessWidget {
                 ? theme.accentColor
                 : theme.disabledColor,
           ),
-          tooltip: i18n(context, S.messages_list_app_bar_mail),
+          tooltip: S.of(context).messages_list_app_bar_mail,
           iconSize: iconSize,
           onPressed: () => _openMail(context),
         ),
@@ -66,7 +65,7 @@ class MailBottomAppBar extends StatelessWidget {
                 ? theme.accentColor
                 : theme.disabledColor,
           ),
-          tooltip: i18n(context, S.messages_list_app_bar_contacts),
+          tooltip: S.of(context).messages_list_app_bar_contacts,
           iconSize: iconSize,
           onPressed: () => _openContacts(context),
         ),
@@ -77,7 +76,7 @@ class MailBottomAppBar extends StatelessWidget {
                 ? theme.accentColor
                 : theme.disabledColor,
           ),
-          tooltip: i18n(context, S.messages_list_app_bar_settings),
+          tooltip: S.of(context).messages_list_app_bar_settings,
           iconSize: iconSize,
           onPressed: () => _openSettings(context),
         ),

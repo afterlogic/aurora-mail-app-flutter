@@ -1,9 +1,7 @@
 //@dart=2.9
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/inject/app_inject.dart';
-import 'package:aurora_mail/models/alias_or_identity.dart';
 import 'package:aurora_mail/utils/base_state.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
-import 'package:aurora_mail/res/str/s.dart';
 import 'package:flutter/material.dart';
 
 class KeyRequestDialog extends StatefulWidget {
@@ -44,7 +42,7 @@ class _KeyRequestDialogState extends BState<KeyRequestDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(i18n(context, S.label_encryption_password_for_pgp_key)),
+      title: Text(S.of(context).label_encryption_password_for_pgp_key),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
@@ -53,7 +51,7 @@ class _KeyRequestDialogState extends BState<KeyRequestDialog> {
             child: TextFormField(
               validator: (v) {
                 if (v.isEmpty) {
-                  return i18n(context, S.error_password_is_empty);
+                  return S.of(context).error_password_is_empty;
                 }
                 if (error != null) {
                   final _error = error;
@@ -63,7 +61,7 @@ class _KeyRequestDialogState extends BState<KeyRequestDialog> {
                 return null;
               },
               decoration: InputDecoration(
-                labelText: i18n(context, S.login_input_password),
+                labelText: S.of(context).login_input_password,
                 helperText: '',
                 suffix: GestureDetector(
                   child: Icon(
@@ -88,7 +86,7 @@ class _KeyRequestDialogState extends BState<KeyRequestDialog> {
                 child: CircularProgressIndicator(),
               )
             : TextButton(
-                child: Text(i18n(context, S.btn_ok)),
+                child: Text(S.of(context).btn_ok),
                 onPressed: () {
                   if (formKey.currentState.validate()) {
                     _check();

@@ -1,6 +1,5 @@
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/settings/models/sync_period.dart';
-import 'package:aurora_mail/utils/internationalization.dart';
-import 'package:aurora_mail/res/str/s.dart';
 import 'package:aurora_mail/utils/show_dialog.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +24,7 @@ class PeriodSelectionDialog extends StatelessWidget {
     return AlertDialog(
       contentPadding: EdgeInsets.zero,
       titlePadding: EdgeInsets.all(24.0),
-      title: Text(i18n(context, S.settings_sync_period)),
+      title: Text(S.of(context).settings_sync_period),
       content: AMDialogList(
         children: Period.values.map((period) {
           return RadioListTile(
@@ -43,7 +42,7 @@ class PeriodSelectionDialog extends StatelessWidget {
       actions: <Widget>[
         TextButton(
           child: Text(
-            i18n(context, S.btn_cancel),
+            S.of(context).btn_cancel,
             style: TextStyle(
                 color: theme.brightness == Brightness.light
                     ? theme.accentColor
