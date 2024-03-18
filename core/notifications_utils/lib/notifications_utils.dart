@@ -8,13 +8,13 @@ class NotificationsUtils {
   static const MethodChannel _channel =
       const MethodChannel('notifications_utils');
 
-  static Future<List<StatusBarNotification>> getActiveNotifications() async {
+  static Future<List<StatusBarNotification>?> getActiveNotifications() async {
     if (!Platform.isAndroid) {
       throw UnsupportedError("This feature is only supported on Android 24+");
     }
-    final List activeNotifications =
-        await _channel.invokeMethod('getActiveNotifications');
-    return activeNotifications.map((n) {
+    final List? activeNotifications =
+        await _channel.invokeMethod<List>('getActiveNotifications');
+    return activeNotifications?.map((n) {
       return StatusBarNotification.fromMap(n as Map);
     }).toList();
   }

@@ -18,9 +18,9 @@ export 'webmail_api_modules.dart';
 
 class ApiInterceptor extends ChangeNotifier {
   bool _logResponse;
-  Function(String) onRequest;
-  Function(String) onError;
-  Function(String) onResponse;
+  Function(String)? onRequest;
+  Function(String)? onError;
+  Function(String)? onResponse;
 
   ApiInterceptor([this._logResponse = false]);
 
@@ -35,9 +35,9 @@ class ApiInterceptor extends ChangeNotifier {
 }
 
 class WebMailApi {
-  static Function(String) onRequest;
-  static Function(String) onError;
-  static Function(String) onResponse;
+  static Function(String)? onRequest;
+  static Function(String)? onError;
+  static Function(String)? onResponse;
   static IOClient _client = IOClient(
     HttpClient()
       ..badCertificateCallback =
@@ -57,17 +57,17 @@ class WebMailApi {
     return {'Authorization': 'Bearer $token'};
   }
 
-  final String moduleName;
+  final String? moduleName;
   final String hostname;
-  final String token;
+  final String? token;
   final ApiInterceptor interceptor;
 
   WebMailApi({
-    @required this.moduleName,
-    @required this.hostname,
+    required this.moduleName,
+    required this.hostname,
     this.token,
-    @required this.interceptor,
-  }) : assert(moduleName != null && hostname != null);
+    required this.interceptor,
+  });
 
   String get apiUrl => "$hostname/?Api/";
 
@@ -83,38 +83,38 @@ class WebMailApi {
   //     json.encode({"ErrorMessage": "Connection timed out", "ErrorCode": 408}),
   //     408);
 
-  _onRequest(String id, String parameters) {
-    if (interceptor?.onRequest != null) {
-      interceptor?.onRequest("$id\nURL: $apiUrl\nPARAMETERS: ${parameters}");
+  _onRequest(String id, String? parameters) {
+    if (interceptor.onRequest != null) {
+      interceptor.onRequest!("$id\nURL: $apiUrl\nPARAMETERS: ${parameters ?? ''}");
     } else if (onRequest != null) {
-      onRequest("$id\nURL: $apiUrl\nPARAMETERS: ${parameters}");
+      onRequest!("$id\nURL: $apiUrl\nPARAMETERS: ${parameters ?? ''}");
     }
   }
 
   _onResponse(String id, int delay, int status, dynamic res) {
-    if (interceptor?.onResponse != null) {
-      interceptor?.onResponse(
+    if (interceptor.onResponse != null) {
+      interceptor.onResponse!(
           "$id\nDELAY: ${delay}\nSTATUS: ${status} ${interceptor.logResponse == true ? "\nBODY:$res" : ""}");
     } else if (onResponse != null) {
-      onResponse(
-          "$id\nDELAY: ${delay}\nSTATUS: ${status} ${interceptor?.logResponse == true ? "\nBODY:$res" : ""}");
+      onResponse!(
+          "$id\nDELAY: ${delay}\nSTATUS: ${status} ${interceptor.logResponse == true ? "\nBODY:$res" : ""}");
     }
   }
 
-  _onError(String token, String id, String body) {
-    final log = "TOKEN: $token\n$id\n${body}";
-    if (interceptor?.onError != null) {
-      interceptor?.onError(log);
+  _onError(String? token, String id, String body) {
+    final log = "TOKEN: ${token ?? ""}\n$id\n${body}";
+    if (interceptor.onError != null) {
+      interceptor.onError!(log);
     } else if (onError != null) {
-      onError(log);
+      onError!(log);
     }
   }
 
   // getRawResponse in case AuthenticatedUserId is required, which is outside Result objects
   Future post(WebMailApiBody body,
-      {bool useToken,
+      {bool useToken = true,
       bool getRawResponse = false,
-      Map<String, String> addedHeaders}) async {
+      Map<String, String>? addedHeaders}) async {
     Map<String, String> headers;
     final id = "MODULE: ${moduleName ?? body.module}\nMETHOD: ${body.method}";
     if (useToken == false || token == null) {
@@ -163,8 +163,8 @@ class WebMailApi {
   }
 
   Future multiPart(WebMailApiBody body, MultipartFile file,
-      {bool useToken, bool getRawResponse = false}) async {
-    Map<String, String> headers;
+      {bool useToken = true, bool getRawResponse = false}) async {
+    Map<String, String>? headers;
     final id = "MODULE: ${moduleName ?? body.module}\nMETHOD: ${body.method}";
     if (useToken == false || token == null) {
       headers = null;
@@ -172,12 +172,14 @@ class WebMailApi {
       headers = {'Authorization': 'Bearer $token'};
     }
     final start = DateTime.now().millisecondsSinceEpoch;
-    if (onRequest != null)
-      onRequest("$id\nURL:$apiUrl\nPARAMETERS:${body.parameters}");
+      onRequest?.call("$id\nURL:$apiUrl\nPARAMETERS:${body.parameters}");
 
     final request = MultipartRequest("POST", Uri.parse(apiUrl));
 
-    request.headers.addAll(headers);
+
+    if(headers != null){
+      request.headers.addAll(headers);
+    }
     request.fields.addAll(body.toMap(moduleName));
     request.files.add(file);
     final rawResponse = await request.send();
@@ -185,15 +187,14 @@ class WebMailApi {
     final res = json.decode(responseBody);
 
     if (res["Result"] != null && (res["Result"] != false || getRawResponse)) {
-      if (onResponse != null)
-        onResponse(
+        onResponse?.call(
             "$id\nDELAY: ${DateTime.now().millisecondsSinceEpoch - start}\nSTATUS:${rawResponse.statusCode}");
       if (getRawResponse)
         return res;
       else
         return res["Result"];
     } else {
-      if (onError != null) onError("$id\n${responseBody}");
+      onError?.call("$id\n${responseBody}");
       if (res["ErrorCode"] == 102 || res["ErrorCode"] == 108) {
         _authErrorStreamCtrl.add(102);
       }

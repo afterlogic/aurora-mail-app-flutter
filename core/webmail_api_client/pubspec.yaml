@@ -5,13 +5,15 @@ author: Afterlogic
 homepage: https://afterlogic.com/webmail-pro-8-webapi/
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
 
   http: 0.13.3
+  aurora_mail:
+    path: ../..
 
 dev_dependencies:
   flutter_test:

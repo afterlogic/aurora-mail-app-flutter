@@ -9,12 +9,12 @@ class StatusBarNotification {
   final bool isGroup;
 
   const StatusBarNotification({
-    @required this.packageName,
-    @required this.id,
-    @required this.tag,
-    @required this.postTime,
-    @required this.groupKey,
-    @required this.isGroup,
+    required this.packageName,
+    required this.id,
+    required this.tag,
+    required this.postTime,
+    required this.groupKey,
+    required this.isGroup,
   });
 
   factory StatusBarNotification.fromMap(Map map) {

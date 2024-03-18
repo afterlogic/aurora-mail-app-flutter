@@ -4,11 +4,11 @@ class IosNotificationHandler {
   static bool _isInit = false;
   static final _channel = MethodChannel("ios_notification_handler");
 
-  static Future<Map> _listen() async {
+  static Future<Map?> _listen() async {
     return _channel.invokeMethod("listen");
   }
 
-  static Future<bool> isBackground() async {
+  static Future<bool?> isBackground() async {
     try {
       final result = await _channel.invokeMethod("isBackground");
       if (result != 0) {
@@ -34,7 +34,7 @@ class IosNotificationHandler {
       try {
         final map = await _listen();
         print(map);
-        final result = await onMessage(Map<String, dynamic>.from(map));
+        final result = await onMessage(Map<String, dynamic>.from(map!));
         await _finish(result);
       } catch (e) {
         print(e);
