@@ -30,12 +30,48 @@ class AccountIdentityDao extends DatabaseAccessor<AppDatabase>
   Future<List<AccountIdentity>> getByUserAndAccount(
     int idUser,
     int idAccount,
-  ) {
-    final statement = select(accountIdentityTable);
-    statement.where((item) => item.idUser.equals(idUser));
-    if (idAccount != null) {
-      statement.where((item) => item.idAccount.equals(idAccount));
+  ) async {
+    // selects separated for handling case with large signature
+    String? signature;
+
+    final signatureQuery = selectOnly(accountIdentityTable)
+      ..where(accountIdentityTable.idUser.equals(idUser))
+      ..where(accountIdentityTable.idAccount.equals(idAccount))
+      ..addColumns([accountIdentityTable.signature]);
+    try {
+      signature = await signatureQuery
+          .map((a) => a.read(accountIdentityTable.signature))
+          .getSingle();
+    } catch (e, st) {
+      print(e);
+      print(st);
+    } finally {
+      final query = selectOnly(accountIdentityTable)
+        ..where(accountIdentityTable.idUser.equals(idUser))
+        ..where(accountIdentityTable.idAccount.equals(idAccount))
+        ..addColumns([
+          accountIdentityTable.entityId,
+          accountIdentityTable.email,
+          accountIdentityTable.friendlyName,
+          accountIdentityTable.idUser,
+          accountIdentityTable.idAccount,
+          accountIdentityTable.isDefault,
+          accountIdentityTable.useSignature,
+        ]);
+      return query.map(
+        (a) {
+          return AccountIdentity(
+            entityId: a.read(accountIdentityTable.entityId),
+            idUser: a.read(accountIdentityTable.idUser),
+            email: a.read(accountIdentityTable.email),
+            friendlyName: a.read(accountIdentityTable.friendlyName),
+            useSignature: a.read(accountIdentityTable.useSignature),
+            signature: signature ?? "",
+            idAccount: a.read(accountIdentityTable.idAccount),
+            isDefault: a.read(accountIdentityTable.isDefault),
+          );
+        },
+      ).get();
     }
-    return statement.get();
   }
 }
