@@ -1,23 +1,22 @@
-//@dart=2.9
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 
 class MessageInfo {
   final int uid;
-  final int parentUid;
+  final int? parentUid;
   final List<String> flags;
   final bool hasThread;
 
   MessageInfo({
-    @required this.uid,
+    required this.uid,
     this.parentUid,
-    @required this.flags,
-    @required this.hasThread,
+    required this.flags,
+    required this.hasThread,
   });
 
   // for writing to DB
-  static String toJsonString(List<MessageInfo> items) {
+  static String? toJsonString(List<MessageInfo>? items) {
     if (items == null) return null;
     final List mappedItems = items.map((item) {
       return json.encode({
@@ -32,7 +31,7 @@ class MessageInfo {
   }
 
   // for retrieving from DB
-  static List<MessageInfo> fromJsonString(String rawItems) {
+  static List<MessageInfo>? fromJsonString(String? rawItems) {
     if (rawItems == null) return null;
     final items = List<String>.from(json.decode(rawItems) as Iterable);
     return items.map((rawItem) {
@@ -47,14 +46,14 @@ class MessageInfo {
   }
 
   // for flattening nested array from server
-  static List<MessageInfo> flattenMessagesInfo(String messagesInfoRaw) {
+  static List<MessageInfo>? flattenMessagesInfo(String? messagesInfoRaw) {
     if (messagesInfoRaw == null) return null;
 
     final messagesInfo = List.from(json.decode(messagesInfoRaw) as Iterable);
 
-    final flatList = new List<MessageInfo>();
+    final flatList = <MessageInfo>[];
 
-    void addItems(List messagesInfo, [int parentUid]) {
+    void addItems(List messagesInfo, [int? parentUid]) {
       messagesInfo.forEach((info) {
         final uid = info["uid"] is String
             ? int.parse(info["uid"] as String)
@@ -62,13 +61,13 @@ class MessageInfo {
         flatList.add(new MessageInfo(
           uid: uid as int,
           parentUid: parentUid,
-          flags: new List<String>.from(info["flags"] as Iterable ?? []),
+          flags: new List<String>.from(info["flags"] as Iterable? ?? []),
           hasThread: info["thread"] != null,
         ));
 
         if (info["thread"] != null) {
           final thread = List.from(info["thread"] as Iterable);
-          addItems(thread, uid as int);
+          addItems(thread, uid);
         }
       });
     }

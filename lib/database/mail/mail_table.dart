@@ -1,4 +1,3 @@
-//@dart=2.9
 import 'dart:convert';
 
 import 'package:aurora_mail/database/app_database.dart';
@@ -19,17 +18,17 @@ const SEARCH_SEPARATOR = "/^_^/";
 
 @DataClassName("Message")
 class Mail extends Table {
-  IntColumn get localId => integer().autoIncrement()();
+  IntColumn get localId => integer().autoIncrement().nullable()();
 
   IntColumn get uid => integer()();
 
-  IntColumn get accountEntityId => integer()();
+  IntColumn get accountEntityId => integer().nullable()();
 
-  IntColumn get userLocalId => integer()();
+  IntColumn get userLocalId => integer().nullable()();
 
   // in order to prevent inserting duplicate messages in the same folder
   // since uids are unique only inside a particular folder
-  TextColumn get uniqueUidInFolder => text().customConstraint("UNIQUE")();
+  TextColumn get uniqueUidInFolder => text().customConstraint("UNIQUE").nullable()();
 
   IntColumn get parentUid => integer().nullable()();
 
@@ -39,7 +38,7 @@ class Mail extends Table {
 
   TextColumn get flagsInJson => text()();
 
-  BoolColumn get hasThread => boolean()();
+  BoolColumn get hasThread => boolean().nullable()();
 
   TextColumn get subject => text().nullable()();
 
@@ -105,9 +104,9 @@ class Mail extends Table {
 
 //  TextColumn get htmlRaw => text().nullable()();
 
-  TextColumn get htmlBody => text().withDefault(Constant(""))();
+  TextColumn get htmlBody => text().withDefault(Constant("")).nullable()();
 
-  TextColumn get rawBody => text().withDefault(Constant(""))();
+  TextColumn get rawBody => text().withDefault(Constant("")).nullable()();
 
   TextColumn get bodyForSearch => text().nullable().withDefault(Constant(""))();
 
@@ -139,17 +138,17 @@ class Mail extends Table {
 
   BoolColumn get isHtml => boolean().nullable()();
 
-  BoolColumn get hasBody => boolean()();
+  BoolColumn get hasBody => boolean().nullable()();
 
   static List getToForDisplay(
     widgets.BuildContext context,
-    String toInJson,
+    String? toInJson,
     String currentUserEmail,
   ) {
     if (toInJson == null) return [];
     final toDecoded = json.decode(toInJson);
     if (toDecoded == null) return [];
-    final collection = toDecoded["@Collection"] as List;
+    final collection = toDecoded["@Collection"] as List?;
     if (collection == null || collection.isEmpty) return [];
     return collection.map((to) {
       if (to["Email"] == currentUserEmail) {
@@ -163,7 +162,7 @@ class Mail extends Table {
 
   static List<MessageFlags> getFlags(String flagsInJson) {
     final flags = json.decode(flagsInJson) as Iterable;
-    final messageFlags = new List<MessageFlags>();
+    final messageFlags = <MessageFlags>[];
     if (flags.contains("\\seen")) messageFlags.add(MessageFlags.seen);
     if (flags.contains("\\answered")) messageFlags.add(MessageFlags.answered);
     if (flags.contains("\\flagged")) messageFlags.add(MessageFlags.starred);
@@ -214,14 +213,14 @@ class Mail extends Table {
     int accountEntityId = map["accountEntityId"] as int;
     assert(result.isNotEmpty);
 
-    final messagesChunk = new List<Message>();
+    final messagesChunk = <Message>[];
     final messageInfoMap = Map.fromEntries(
         messagesInfo.map((item) => MapEntry(item.uid, item)).toList());
     result.forEach((raw) {
       Message messageInfo;
 
       try {
-        messageInfo = messageInfoMap[raw["Uid"]];
+        messageInfo = messageInfoMap[raw["Uid"]]!;
       } catch (err) {
         throw Exception("Couldn't find message: ${raw["Uid"]}");
       }
@@ -296,8 +295,8 @@ class Mail extends Table {
         readingConfirmationAddressee:
             raw["ReadingConfirmationAddressee"] as String,
         htmlBody: (raw["Html"] != null && (raw["Html"] as String).isNotEmpty
-                ? raw["Html"] as String
-                : raw["Plain"] as String) ??
+                ? raw["Html"] as String?
+                : raw["Plain"] as String?) ??
             "",
         rawBody:
             raw["PlainRaw"] != null && (raw["PlainRaw"] as String).isNotEmpty
@@ -305,14 +304,14 @@ class Mail extends Table {
                 : MailUtils.htmlToPlain(
                     (raw["HtmlRaw"] ?? raw["Html"] ?? "") as String),
         bodyForSearch: _htmlToTextSearch(
-            ((((raw["HtmlRaw"] ?? raw["Html"]) as String)?.isNotEmpty == true
+            ((((raw["HtmlRaw"] ?? raw["Html"]) as String?)?.isNotEmpty == true
                     ? raw["Html"]
                     : raw["PlainRaw"]) ??
                 "") as String),
         rtl: raw["Rtl"] as bool,
         extendInJson: _encode(raw["Extend"]),
         safety: raw["Safety"] as bool,
-        hasExternals: (raw["HasExternals"] as bool) ?? false,
+        hasExternals: (raw["HasExternals"] as bool?) ?? false,
         foundedCIDsInJson: _encode(raw["FoundedCIDs"]),
         foundedContentLocationUrlsInJson:
             _encode(raw["FoundedContentLocationUrls"]),
@@ -320,7 +319,7 @@ class Mail extends Table {
         attachmentsForSearch:
             _getAttachmentsForSearch(raw["Attachments"] as Map),
         customInJson: _encode(raw["Custom"]),
-        isHtml: (raw["Html"] as String)?.isNotEmpty == true,
+        isHtml: (raw["Html"] as String?)?.isNotEmpty == true,
         hasBody: true,
       ));
     });
@@ -349,16 +348,16 @@ class Mail extends Table {
         .replaceAll("\s+", ' ');
   }
 
-  static String _encode(dynamic raw) {
+  static String? _encode(dynamic raw) {
     if (raw == null) return null;
     return json.encode(raw);
   }
 
-  static String _getEmailsForSearch(Map emails) {
+  static String _getEmailsForSearch(Map? emails) {
     if (emails == null) return "";
     final result = [];
     emails["@Collection"].forEach((t) {
-      final display = t["DisplayName"] as String;
+      final display = t["DisplayName"] as String?;
       final email = t["Email"] as String;
 
       if (display != null && display.isNotEmpty) {
@@ -373,7 +372,7 @@ class Mail extends Table {
     return result.join(SEARCH_SEPARATOR);
   }
 
-  static String _getAttachmentsForSearch(Map attachments) {
+  static String _getAttachmentsForSearch(Map? attachments) {
     if (attachments == null) return "";
     final names =
         (attachments["@Collection"] as List).map((a) => a["FileName"]);
@@ -385,5 +384,5 @@ class Sender {
   final String displayName;
   final String email;
 
-  Sender({@required this.displayName, @required this.email});
+  Sender({required this.displayName, required this.email});
 }

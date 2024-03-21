@@ -40,7 +40,7 @@ class CryptoStorageImpl extends CryptoStorage {
       return _fromDb(localKey);
     } else if (!isPrivate) {
       final contact = await _contactsDao.getContactWithPgpKey(email);
-      if (contact == null) {
+      if (contact == null || contact.pgpPublicKey == null) {
         return null;
       }
 
@@ -49,7 +49,7 @@ class CryptoStorageImpl extends CryptoStorage {
           contact.fullName,
           contact.viewEmail,
           false,
-          contact.pgpPublicKey,
+          contact.pgpPublicKey!,
           null,
         ),
         ContactMapper.fromDB(contact),
@@ -79,7 +79,7 @@ class CryptoStorageImpl extends CryptoStorage {
                   item.fullName,
                   item.viewEmail,
                   false,
-                  item.pgpPublicKey,
+                  item.pgpPublicKey!,
                   null,
                 ),
                 ContactMapper.fromDB(item),
@@ -132,11 +132,11 @@ class CryptoStorageImpl extends CryptoStorage {
       mail: pgpKey.mail,
       isPrivate: pgpKey.isPrivate,
       length: pgpKey.length,
-      other: _other,
+      other: _other!,
     );
   }
 
-  String _id(String name, String mail, bool isPrivate) {
+  String _id(String? name, String mail, bool isPrivate) {
     assert(_other?.isNotEmpty ?? false, "other required");
     return "$_other$name$mail$isPrivate";
   }

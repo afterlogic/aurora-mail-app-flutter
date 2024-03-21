@@ -27,7 +27,7 @@ class AliasesDao extends DatabaseAccessor<AppDatabase> with _$AliasesDaoMixin {
 
   Future<List<Aliases>> getByUserAndAccount(
     int idUser,
-    int idAccount,
+    int? idAccount,
   ) {
     final statement = select(aliasesTable);
     statement.where((item) => item.idUser.equals(idUser));

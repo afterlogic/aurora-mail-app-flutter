@@ -1,4 +1,3 @@
-//@dart=2.9
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:drift_sqflite/drift_sqflite.dart';
 import 'package:drift/drift.dart';
@@ -38,11 +37,11 @@ class ContactsGroupsDao extends DatabaseAccessor<AppDatabase>
     });
   }
 
-  Future<void> deleteGroups(List<String> uuids) async {
+  Future deleteGroups(List<String> uuids) async {
     return (delete(contactsGroups)..where((g) => g.uuid.isIn(uuids))).go();
   }
 
-  Future<void> deleteGroupsOfUser(int userLocalId) async {
+  Future deleteGroupsOfUser(int userLocalId) async {
     return (delete(contactsGroups)
           ..where((g) => g.userLocalId.equals(userLocalId)))
         .go();

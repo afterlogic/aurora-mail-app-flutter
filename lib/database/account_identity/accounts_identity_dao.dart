@@ -59,16 +59,17 @@ class AccountIdentityDao extends DatabaseAccessor<AppDatabase>
           accountIdentityTable.useSignature,
         ]);
       return query.map(
-        (a) {
+        (row) {
+
           return AccountIdentity(
-            entityId: a.read(accountIdentityTable.entityId),
-            idUser: a.read(accountIdentityTable.idUser),
-            email: a.read(accountIdentityTable.email),
-            friendlyName: a.read(accountIdentityTable.friendlyName),
-            useSignature: a.read(accountIdentityTable.useSignature),
+            entityId: row.read(accountIdentityTable.entityId)!,
+            idUser: row.read(accountIdentityTable.idUser)!,
+            email: row.read(accountIdentityTable.email)!,
+            friendlyName: row.read(accountIdentityTable.friendlyName)!,
+            useSignature: row.read(accountIdentityTable.useSignature)!,
             signature: signature ?? "",
-            idAccount: a.read(accountIdentityTable.idAccount),
-            isDefault: a.read(accountIdentityTable.isDefault),
+            idAccount: row.read(accountIdentityTable.idAccount)!,
+            isDefault: row.read(accountIdentityTable.isDefault)!,
           );
         },
       ).get();

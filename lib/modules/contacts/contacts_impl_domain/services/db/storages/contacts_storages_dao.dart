@@ -1,4 +1,3 @@
-//@dart=2.9
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:drift_sqflite/drift_sqflite.dart';
 import 'package:drift/drift.dart';
@@ -18,7 +17,7 @@ class ContactsStoragesDao extends DatabaseAccessor<AppDatabase>
         .get();
   }
 
-  Future<void> addStorages(List<ContactsStoragesTable> newStorages) {
+  Future<void> addStorages(List<ContactsStoragesTable> newStorages) async {
     try {
       return batch((b) => b.insertAll(
             contactsStorages,
@@ -26,7 +25,7 @@ class ContactsStoragesDao extends DatabaseAccessor<AppDatabase>
           ));
     } catch (err) {
       print("addStorages error: $err");
-      return null;
+      return;
     }
   }
 

@@ -1,4 +1,3 @@
-//@dart=2.9
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
 part of 'app_database.dart';
@@ -9,72 +8,72 @@ part of 'app_database.dart';
 
 // ignore_for_file: type=lint
 class Message extends DataClass implements Insertable<Message> {
-  final int localId;
+  final int? localId;
   final int uid;
-  final int accountEntityId;
-  final int userLocalId;
-  final String uniqueUidInFolder;
-  final int parentUid;
-  final String messageId;
+  final int? accountEntityId;
+  final int? userLocalId;
+  final String? uniqueUidInFolder;
+  final int? parentUid;
+  final String? messageId;
   final String folder;
   final String flagsInJson;
-  final bool hasThread;
-  final String subject;
-  final int size;
-  final int textSize;
-  final bool truncated;
-  final int internalTimeStampInUTC;
-  final int receivedOrDateTimeStampInUTC;
-  final int timeStampInUTC;
-  final String toToDisplay;
-  final String toInJson;
-  final String fromInJson;
-  final String fromToDisplay;
-  final String ccInJson;
-  final String bccInJson;
-  final String senderInJson;
-  final String replyToInJson;
-  final bool hasAttachments;
-  final bool hasVcardAttachment;
-  final bool hasIcalAttachment;
-  final int importance;
-  final String draftInfoInJson;
-  final int sensitivity;
-  final String downloadAsEmlUrl;
-  final String hash;
-  final String headers;
-  final String inReplyTo;
-  final String references;
-  final String readingConfirmationAddressee;
-  final String htmlBody;
-  final String rawBody;
-  final String bodyForSearch;
-  final bool rtl;
-  final String extendInJson;
-  final bool safety;
-  final bool hasExternals;
-  final String foundedCIDsInJson;
-  final String foundedContentLocationUrlsInJson;
-  final String attachmentsInJson;
-  final String toForSearch;
-  final String fromForSearch;
-  final String ccForSearch;
-  final String bccForSearch;
-  final String attachmentsForSearch;
-  final String customInJson;
-  final bool isHtml;
-  final bool hasBody;
+  final bool? hasThread;
+  final String? subject;
+  final int? size;
+  final int? textSize;
+  final bool? truncated;
+  final int? internalTimeStampInUTC;
+  final int? receivedOrDateTimeStampInUTC;
+  final int? timeStampInUTC;
+  final String? toToDisplay;
+  final String? toInJson;
+  final String? fromInJson;
+  final String? fromToDisplay;
+  final String? ccInJson;
+  final String? bccInJson;
+  final String? senderInJson;
+  final String? replyToInJson;
+  final bool? hasAttachments;
+  final bool? hasVcardAttachment;
+  final bool? hasIcalAttachment;
+  final int? importance;
+  final String? draftInfoInJson;
+  final int? sensitivity;
+  final String? downloadAsEmlUrl;
+  final String? hash;
+  final String? headers;
+  final String? inReplyTo;
+  final String? references;
+  final String? readingConfirmationAddressee;
+  final String? htmlBody;
+  final String? rawBody;
+  final String? bodyForSearch;
+  final bool? rtl;
+  final String? extendInJson;
+  final bool? safety;
+  final bool? hasExternals;
+  final String? foundedCIDsInJson;
+  final String? foundedContentLocationUrlsInJson;
+  final String? attachmentsInJson;
+  final String? toForSearch;
+  final String? fromForSearch;
+  final String? ccForSearch;
+  final String? bccForSearch;
+  final String? attachmentsForSearch;
+  final String? customInJson;
+  final bool? isHtml;
+  final bool? hasBody;
   Message(
-      {@required this.localId,
-      @required this.uid,
-      @required this.accountEntityId,
-      @required this.userLocalId,
-      @required this.uniqueUidInFolder,
+      {this.localId,
+      required this.uid,
+      this.accountEntityId,
+      this.userLocalId,
+      this.uniqueUidInFolder,
       this.parentUid,
       this.messageId,
-      @required this.folder,
-      @required this.flagsInJson,
-      @required this.hasThread,
+      required this.folder,
+      required this.flagsInJson,
+      this.hasThread,
       this.subject,
       this.size,
       this.textSize,
@@ -102,8 +101,8 @@ class Message extends DataClass implements Insertable<Message> {
       this.inReplyTo,
       this.references,
       this.readingConfirmationAddressee,
-      @required this.htmlBody,
-      @required this.rawBody,
+      this.htmlBody,
+      this.rawBody,
       this.bodyForSearch,
       this.rtl,
       this.extendInJson,
@@ -119,14 +118,14 @@ class Message extends DataClass implements Insertable<Message> {
       this.attachmentsForSearch,
       this.customInJson,
       this.isHtml,
-      @required this.hasBody});
-  factory Message.fromData(Map<String, dynamic> data, {String prefix}) {
+      this.hasBody});
+  factory Message.fromData(Map<String, dynamic> data, {String? prefix}) {
     final effectivePrefix = prefix ?? '';
     return Message(
       localId: const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}local_id']),
       uid: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}uid']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}uid'])!,
       accountEntityId: const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}account_entity_id']),
       userLocalId: const IntType()
@@ -138,9 +137,9 @@ class Message extends DataClass implements Insertable<Message> {
       messageId: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}message_id']),
       folder: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}folder']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}folder'])!,
       flagsInJson: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}flags_in_json']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}flags_in_json'])!,
       hasThread: const BoolType()
           .mapFromDatabaseResponse(data['${effectivePrefix}has_thread']),
       subject: const StringType()
@@ -240,173 +239,167 @@ class Message extends DataClass implements Insertable<Message> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (!nullToAbsent || localId != null) {
-      map['local_id'] = Variable<int>(localId);
+      map['local_id'] = Variable<int?>(localId);
     }
-    if (!nullToAbsent || uid != null) {
-      map['uid'] = Variable<int>(uid);
-    }
+    map['uid'] = Variable<int>(uid);
     if (!nullToAbsent || accountEntityId != null) {
-      map['account_entity_id'] = Variable<int>(accountEntityId);
+      map['account_entity_id'] = Variable<int?>(accountEntityId);
     }
     if (!nullToAbsent || userLocalId != null) {
-      map['user_local_id'] = Variable<int>(userLocalId);
+      map['user_local_id'] = Variable<int?>(userLocalId);
     }
     if (!nullToAbsent || uniqueUidInFolder != null) {
-      map['unique_uid_in_folder'] = Variable<String>(uniqueUidInFolder);
+      map['unique_uid_in_folder'] = Variable<String?>(uniqueUidInFolder);
     }
     if (!nullToAbsent || parentUid != null) {
-      map['parent_uid'] = Variable<int>(parentUid);
+      map['parent_uid'] = Variable<int?>(parentUid);
     }
     if (!nullToAbsent || messageId != null) {
-      map['message_id'] = Variable<String>(messageId);
+      map['message_id'] = Variable<String?>(messageId);
     }
-    if (!nullToAbsent || folder != null) {
-      map['folder'] = Variable<String>(folder);
-    }
-    if (!nullToAbsent || flagsInJson != null) {
-      map['flags_in_json'] = Variable<String>(flagsInJson);
-    }
+    map['folder'] = Variable<String>(folder);
+    map['flags_in_json'] = Variable<String>(flagsInJson);
     if (!nullToAbsent || hasThread != null) {
-      map['has_thread'] = Variable<bool>(hasThread);
+      map['has_thread'] = Variable<bool?>(hasThread);
     }
     if (!nullToAbsent || subject != null) {
-      map['subject'] = Variable<String>(subject);
+      map['subject'] = Variable<String?>(subject);
     }
     if (!nullToAbsent || size != null) {
-      map['size'] = Variable<int>(size);
+      map['size'] = Variable<int?>(size);
     }
     if (!nullToAbsent || textSize != null) {
-      map['text_size'] = Variable<int>(textSize);
+      map['text_size'] = Variable<int?>(textSize);
     }
     if (!nullToAbsent || truncated != null) {
-      map['truncated'] = Variable<bool>(truncated);
+      map['truncated'] = Variable<bool?>(truncated);
     }
     if (!nullToAbsent || internalTimeStampInUTC != null) {
       map['internal_time_stamp_in_u_t_c'] =
-          Variable<int>(internalTimeStampInUTC);
+          Variable<int?>(internalTimeStampInUTC);
     }
     if (!nullToAbsent || receivedOrDateTimeStampInUTC != null) {
       map['received_or_date_time_stamp_in_u_t_c'] =
-          Variable<int>(receivedOrDateTimeStampInUTC);
+          Variable<int?>(receivedOrDateTimeStampInUTC);
     }
     if (!nullToAbsent || timeStampInUTC != null) {
-      map['time_stamp_in_u_t_c'] = Variable<int>(timeStampInUTC);
+      map['time_stamp_in_u_t_c'] = Variable<int?>(timeStampInUTC);
     }
     if (!nullToAbsent || toToDisplay != null) {
-      map['to_to_display'] = Variable<String>(toToDisplay);
+      map['to_to_display'] = Variable<String?>(toToDisplay);
     }
     if (!nullToAbsent || toInJson != null) {
-      map['to_in_json'] = Variable<String>(toInJson);
+      map['to_in_json'] = Variable<String?>(toInJson);
     }
     if (!nullToAbsent || fromInJson != null) {
-      map['from_in_json'] = Variable<String>(fromInJson);
+      map['from_in_json'] = Variable<String?>(fromInJson);
     }
     if (!nullToAbsent || fromToDisplay != null) {
-      map['from_to_display'] = Variable<String>(fromToDisplay);
+      map['from_to_display'] = Variable<String?>(fromToDisplay);
     }
     if (!nullToAbsent || ccInJson != null) {
-      map['cc_in_json'] = Variable<String>(ccInJson);
+      map['cc_in_json'] = Variable<String?>(ccInJson);
     }
     if (!nullToAbsent || bccInJson != null) {
-      map['bcc_in_json'] = Variable<String>(bccInJson);
+      map['bcc_in_json'] = Variable<String?>(bccInJson);
     }
     if (!nullToAbsent || senderInJson != null) {
-      map['sender_in_json'] = Variable<String>(senderInJson);
+      map['sender_in_json'] = Variable<String?>(senderInJson);
     }
     if (!nullToAbsent || replyToInJson != null) {
-      map['reply_to_in_json'] = Variable<String>(replyToInJson);
+      map['reply_to_in_json'] = Variable<String?>(replyToInJson);
     }
     if (!nullToAbsent || hasAttachments != null) {
-      map['has_attachments'] = Variable<bool>(hasAttachments);
+      map['has_attachments'] = Variable<bool?>(hasAttachments);
     }
     if (!nullToAbsent || hasVcardAttachment != null) {
-      map['has_vcard_attachment'] = Variable<bool>(hasVcardAttachment);
+      map['has_vcard_attachment'] = Variable<bool?>(hasVcardAttachment);
     }
     if (!nullToAbsent || hasIcalAttachment != null) {
-      map['has_ical_attachment'] = Variable<bool>(hasIcalAttachment);
+      map['has_ical_attachment'] = Variable<bool?>(hasIcalAttachment);
     }
     if (!nullToAbsent || importance != null) {
-      map['importance'] = Variable<int>(importance);
+      map['importance'] = Variable<int?>(importance);
     }
     if (!nullToAbsent || draftInfoInJson != null) {
-      map['draft_info_in_json'] = Variable<String>(draftInfoInJson);
+      map['draft_info_in_json'] = Variable<String?>(draftInfoInJson);
     }
     if (!nullToAbsent || sensitivity != null) {
-      map['sensitivity'] = Variable<int>(sensitivity);
+      map['sensitivity'] = Variable<int?>(sensitivity);
     }
     if (!nullToAbsent || downloadAsEmlUrl != null) {
-      map['download_as_eml_url'] = Variable<String>(downloadAsEmlUrl);
+      map['download_as_eml_url'] = Variable<String?>(downloadAsEmlUrl);
     }
     if (!nullToAbsent || hash != null) {
-      map['hash'] = Variable<String>(hash);
+      map['hash'] = Variable<String?>(hash);
     }
     if (!nullToAbsent || headers != null) {
-      map['headers'] = Variable<String>(headers);
+      map['headers'] = Variable<String?>(headers);
     }
     if (!nullToAbsent || inReplyTo != null) {
-      map['in_reply_to'] = Variable<String>(inReplyTo);
+      map['in_reply_to'] = Variable<String?>(inReplyTo);
     }
     if (!nullToAbsent || references != null) {
-      map['message_references'] = Variable<String>(references);
+      map['message_references'] = Variable<String?>(references);
     }
     if (!nullToAbsent || readingConfirmationAddressee != null) {
       map['reading_confirmation_addressee'] =
-          Variable<String>(readingConfirmationAddressee);
+          Variable<String?>(readingConfirmationAddressee);
     }
     if (!nullToAbsent || htmlBody != null) {
-      map['html_body'] = Variable<String>(htmlBody);
+      map['html_body'] = Variable<String?>(htmlBody);
     }
     if (!nullToAbsent || rawBody != null) {
-      map['raw_body'] = Variable<String>(rawBody);
+      map['raw_body'] = Variable<String?>(rawBody);
     }
     if (!nullToAbsent || bodyForSearch != null) {
-      map['body_for_search'] = Variable<String>(bodyForSearch);
+      map['body_for_search'] = Variable<String?>(bodyForSearch);
     }
     if (!nullToAbsent || rtl != null) {
-      map['rtl'] = Variable<bool>(rtl);
+      map['rtl'] = Variable<bool?>(rtl);
     }
     if (!nullToAbsent || extendInJson != null) {
-      map['extend_in_json'] = Variable<String>(extendInJson);
+      map['extend_in_json'] = Variable<String?>(extendInJson);
     }
     if (!nullToAbsent || safety != null) {
-      map['safety'] = Variable<bool>(safety);
+      map['safety'] = Variable<bool?>(safety);
     }
     if (!nullToAbsent || hasExternals != null) {
-      map['has_externals'] = Variable<bool>(hasExternals);
+      map['has_externals'] = Variable<bool?>(hasExternals);
     }
     if (!nullToAbsent || foundedCIDsInJson != null) {
-      map['founded_c_i_ds_in_json'] = Variable<String>(foundedCIDsInJson);
+      map['founded_c_i_ds_in_json'] = Variable<String?>(foundedCIDsInJson);
     }
     if (!nullToAbsent || foundedContentLocationUrlsInJson != null) {
       map['founded_content_location_urls_in_json'] =
-          Variable<String>(foundedContentLocationUrlsInJson);
+          Variable<String?>(foundedContentLocationUrlsInJson);
     }
     if (!nullToAbsent || attachmentsInJson != null) {
-      map['attachments_in_json'] = Variable<String>(attachmentsInJson);
+      map['attachments_in_json'] = Variable<String?>(attachmentsInJson);
     }
     if (!nullToAbsent || toForSearch != null) {
-      map['to_for_search'] = Variable<String>(toForSearch);
+      map['to_for_search'] = Variable<String?>(toForSearch);
     }
     if (!nullToAbsent || fromForSearch != null) {
-      map['from_for_search'] = Variable<String>(fromForSearch);
+      map['from_for_search'] = Variable<String?>(fromForSearch);
     }
     if (!nullToAbsent || ccForSearch != null) {
-      map['cc_for_search'] = Variable<String>(ccForSearch);
+      map['cc_for_search'] = Variable<String?>(ccForSearch);
     }
     if (!nullToAbsent || bccForSearch != null) {
-      map['bcc_for_search'] = Variable<String>(bccForSearch);
+      map['bcc_for_search'] = Variable<String?>(bccForSearch);
     }
     if (!nullToAbsent || attachmentsForSearch != null) {
-      map['attachments_for_search'] = Variable<String>(attachmentsForSearch);
+      map['attachments_for_search'] = Variable<String?>(attachmentsForSearch);
     }
     if (!nullToAbsent || customInJson != null) {
-      map['custom_in_json'] = Variable<String>(customInJson);
+      map['custom_in_json'] = Variable<String?>(customInJson);
     }
     if (!nullToAbsent || isHtml != null) {
-      map['is_html'] = Variable<bool>(isHtml);
+      map['is_html'] = Variable<bool?>(isHtml);
     }
     if (!nullToAbsent || hasBody != null) {
-      map['has_body'] = Variable<bool>(hasBody);
+      map['has_body'] = Variable<bool?>(hasBody);
     }
     return map;
   }
@@ -416,7 +409,7 @@ class Message extends DataClass implements Insertable<Message> {
       localId: localId == null && nullToAbsent
           ? const Value.absent()
           : Value(localId),
-      uid: uid == null && nullToAbsent ? const Value.absent() : Value(uid),
+      uid: Value(uid),
       accountEntityId: accountEntityId == null && nullToAbsent
           ? const Value.absent()
           : Value(accountEntityId),
@@ -432,11 +425,8 @@ class Message extends DataClass implements Insertable<Message> {
       messageId: messageId == null && nullToAbsent
           ? const Value.absent()
           : Value(messageId),
-      folder:
-          folder == null && nullToAbsent ? const Value.absent() : Value(folder),
-      flagsInJson: flagsInJson == null && nullToAbsent
-          ? const Value.absent()
-          : Value(flagsInJson),
+      folder: Value(folder),
+      flagsInJson: Value(flagsInJson),
       hasThread: hasThread == null && nullToAbsent
           ? const Value.absent()
           : Value(hasThread),
@@ -574,192 +564,196 @@ class Message extends DataClass implements Insertable<Message> {
   }
 
   factory Message.fromJson(Map<String, dynamic> json,
-      {ValueSerializer serializer}) {
+      {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return Message(
-      localId: serializer.fromJson<int>(json['localId']),
+      localId: serializer.fromJson<int?>(json['localId']),
       uid: serializer.fromJson<int>(json['uid']),
-      accountEntityId: serializer.fromJson<int>(json['accountEntityId']),
-      userLocalId: serializer.fromJson<int>(json['userLocalId']),
-      uniqueUidInFolder: serializer.fromJson<String>(json['uniqueUidInFolder']),
-      parentUid: serializer.fromJson<int>(json['parentUid']),
-      messageId: serializer.fromJson<String>(json['messageId']),
+      accountEntityId: serializer.fromJson<int?>(json['accountEntityId']),
+      userLocalId: serializer.fromJson<int?>(json['userLocalId']),
+      uniqueUidInFolder:
+          serializer.fromJson<String?>(json['uniqueUidInFolder']),
+      parentUid: serializer.fromJson<int?>(json['parentUid']),
+      messageId: serializer.fromJson<String?>(json['messageId']),
       folder: serializer.fromJson<String>(json['folder']),
       flagsInJson: serializer.fromJson<String>(json['flagsInJson']),
-      hasThread: serializer.fromJson<bool>(json['hasThread']),
-      subject: serializer.fromJson<String>(json['subject']),
-      size: serializer.fromJson<int>(json['size']),
-      textSize: serializer.fromJson<int>(json['textSize']),
-      truncated: serializer.fromJson<bool>(json['truncated']),
+      hasThread: serializer.fromJson<bool?>(json['hasThread']),
+      subject: serializer.fromJson<String?>(json['subject']),
+      size: serializer.fromJson<int?>(json['size']),
+      textSize: serializer.fromJson<int?>(json['textSize']),
+      truncated: serializer.fromJson<bool?>(json['truncated']),
       internalTimeStampInUTC:
-          serializer.fromJson<int>(json['internalTimeStampInUTC']),
+          serializer.fromJson<int?>(json['internalTimeStampInUTC']),
       receivedOrDateTimeStampInUTC:
-          serializer.fromJson<int>(json['receivedOrDateTimeStampInUTC']),
-      timeStampInUTC: serializer.fromJson<int>(json['timeStampInUTC']),
-      toToDisplay: serializer.fromJson<String>(json['toToDisplay']),
-      toInJson: serializer.fromJson<String>(json['toInJson']),
-      fromInJson: serializer.fromJson<String>(json['fromInJson']),
-      fromToDisplay: serializer.fromJson<String>(json['fromToDisplay']),
-      ccInJson: serializer.fromJson<String>(json['ccInJson']),
-      bccInJson: serializer.fromJson<String>(json['bccInJson']),
-      senderInJson: serializer.fromJson<String>(json['senderInJson']),
-      replyToInJson: serializer.fromJson<String>(json['replyToInJson']),
-      hasAttachments: serializer.fromJson<bool>(json['hasAttachments']),
-      hasVcardAttachment: serializer.fromJson<bool>(json['hasVcardAttachment']),
-      hasIcalAttachment: serializer.fromJson<bool>(json['hasIcalAttachment']),
-      importance: serializer.fromJson<int>(json['importance']),
-      draftInfoInJson: serializer.fromJson<String>(json['draftInfoInJson']),
-      sensitivity: serializer.fromJson<int>(json['sensitivity']),
-      downloadAsEmlUrl: serializer.fromJson<String>(json['downloadAsEmlUrl']),
-      hash: serializer.fromJson<String>(json['hash']),
-      headers: serializer.fromJson<String>(json['headers']),
-      inReplyTo: serializer.fromJson<String>(json['inReplyTo']),
-      references: serializer.fromJson<String>(json['references']),
+          serializer.fromJson<int?>(json['receivedOrDateTimeStampInUTC']),
+      timeStampInUTC: serializer.fromJson<int?>(json['timeStampInUTC']),
+      toToDisplay: serializer.fromJson<String?>(json['toToDisplay']),
+      toInJson: serializer.fromJson<String?>(json['toInJson']),
+      fromInJson: serializer.fromJson<String?>(json['fromInJson']),
+      fromToDisplay: serializer.fromJson<String?>(json['fromToDisplay']),
+      ccInJson: serializer.fromJson<String?>(json['ccInJson']),
+      bccInJson: serializer.fromJson<String?>(json['bccInJson']),
+      senderInJson: serializer.fromJson<String?>(json['senderInJson']),
+      replyToInJson: serializer.fromJson<String?>(json['replyToInJson']),
+      hasAttachments: serializer.fromJson<bool?>(json['hasAttachments']),
+      hasVcardAttachment:
+          serializer.fromJson<bool?>(json['hasVcardAttachment']),
+      hasIcalAttachment: serializer.fromJson<bool?>(json['hasIcalAttachment']),
+      importance: serializer.fromJson<int?>(json['importance']),
+      draftInfoInJson: serializer.fromJson<String?>(json['draftInfoInJson']),
+      sensitivity: serializer.fromJson<int?>(json['sensitivity']),
+      downloadAsEmlUrl: serializer.fromJson<String?>(json['downloadAsEmlUrl']),
+      hash: serializer.fromJson<String?>(json['hash']),
+      headers: serializer.fromJson<String?>(json['headers']),
+      inReplyTo: serializer.fromJson<String?>(json['inReplyTo']),
+      references: serializer.fromJson<String?>(json['references']),
       readingConfirmationAddressee:
-          serializer.fromJson<String>(json['readingConfirmationAddressee']),
-      htmlBody: serializer.fromJson<String>(json['htmlBody']),
-      rawBody: serializer.fromJson<String>(json['rawBody']),
-      bodyForSearch: serializer.fromJson<String>(json['bodyForSearch']),
-      rtl: serializer.fromJson<bool>(json['rtl']),
-      extendInJson: serializer.fromJson<String>(json['extendInJson']),
-      safety: serializer.fromJson<bool>(json['safety']),
-      hasExternals: serializer.fromJson<bool>(json['hasExternals']),
-      foundedCIDsInJson: serializer.fromJson<String>(json['foundedCIDsInJson']),
-      foundedContentLocationUrlsInJson:
-          serializer.fromJson<String>(json['foundedContentLocationUrlsInJson']),
-      attachmentsInJson: serializer.fromJson<String>(json['attachmentsInJson']),
-      toForSearch: serializer.fromJson<String>(json['toForSearch']),
-      fromForSearch: serializer.fromJson<String>(json['fromForSearch']),
-      ccForSearch: serializer.fromJson<String>(json['ccForSearch']),
-      bccForSearch: serializer.fromJson<String>(json['bccForSearch']),
+          serializer.fromJson<String?>(json['readingConfirmationAddressee']),
+      htmlBody: serializer.fromJson<String?>(json['htmlBody']),
+      rawBody: serializer.fromJson<String?>(json['rawBody']),
+      bodyForSearch: serializer.fromJson<String?>(json['bodyForSearch']),
+      rtl: serializer.fromJson<bool?>(json['rtl']),
+      extendInJson: serializer.fromJson<String?>(json['extendInJson']),
+      safety: serializer.fromJson<bool?>(json['safety']),
+      hasExternals: serializer.fromJson<bool?>(json['hasExternals']),
+      foundedCIDsInJson:
+          serializer.fromJson<String?>(json['foundedCIDsInJson']),
+      foundedContentLocationUrlsInJson: serializer
+          .fromJson<String?>(json['foundedContentLocationUrlsInJson']),
+      attachmentsInJson:
+          serializer.fromJson<String?>(json['attachmentsInJson']),
+      toForSearch: serializer.fromJson<String?>(json['toForSearch']),
+      fromForSearch: serializer.fromJson<String?>(json['fromForSearch']),
+      ccForSearch: serializer.fromJson<String?>(json['ccForSearch']),
+      bccForSearch: serializer.fromJson<String?>(json['bccForSearch']),
       attachmentsForSearch:
-          serializer.fromJson<String>(json['attachmentsForSearch']),
-      customInJson: serializer.fromJson<String>(json['customInJson']),
-      isHtml: serializer.fromJson<bool>(json['isHtml']),
-      hasBody: serializer.fromJson<bool>(json['hasBody']),
+          serializer.fromJson<String?>(json['attachmentsForSearch']),
+      customInJson: serializer.fromJson<String?>(json['customInJson']),
+      isHtml: serializer.fromJson<bool?>(json['isHtml']),
+      hasBody: serializer.fromJson<bool?>(json['hasBody']),
     );
   }
   @override
-  Map<String, dynamic> toJson({ValueSerializer serializer}) {
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'localId': serializer.toJson<int>(localId),
+      'localId': serializer.toJson<int?>(localId),
       'uid': serializer.toJson<int>(uid),
-      'accountEntityId': serializer.toJson<int>(accountEntityId),
-      'userLocalId': serializer.toJson<int>(userLocalId),
-      'uniqueUidInFolder': serializer.toJson<String>(uniqueUidInFolder),
-      'parentUid': serializer.toJson<int>(parentUid),
-      'messageId': serializer.toJson<String>(messageId),
+      'accountEntityId': serializer.toJson<int?>(accountEntityId),
+      'userLocalId': serializer.toJson<int?>(userLocalId),
+      'uniqueUidInFolder': serializer.toJson<String?>(uniqueUidInFolder),
+      'parentUid': serializer.toJson<int?>(parentUid),
+      'messageId': serializer.toJson<String?>(messageId),
       'folder': serializer.toJson<String>(folder),
       'flagsInJson': serializer.toJson<String>(flagsInJson),
-      'hasThread': serializer.toJson<bool>(hasThread),
-      'subject': serializer.toJson<String>(subject),
-      'size': serializer.toJson<int>(size),
-      'textSize': serializer.toJson<int>(textSize),
-      'truncated': serializer.toJson<bool>(truncated),
-      'internalTimeStampInUTC': serializer.toJson<int>(internalTimeStampInUTC),
+      'hasThread': serializer.toJson<bool?>(hasThread),
+      'subject': serializer.toJson<String?>(subject),
+      'size': serializer.toJson<int?>(size),
+      'textSize': serializer.toJson<int?>(textSize),
+      'truncated': serializer.toJson<bool?>(truncated),
+      'internalTimeStampInUTC': serializer.toJson<int?>(internalTimeStampInUTC),
       'receivedOrDateTimeStampInUTC':
-          serializer.toJson<int>(receivedOrDateTimeStampInUTC),
-      'timeStampInUTC': serializer.toJson<int>(timeStampInUTC),
-      'toToDisplay': serializer.toJson<String>(toToDisplay),
-      'toInJson': serializer.toJson<String>(toInJson),
-      'fromInJson': serializer.toJson<String>(fromInJson),
-      'fromToDisplay': serializer.toJson<String>(fromToDisplay),
-      'ccInJson': serializer.toJson<String>(ccInJson),
-      'bccInJson': serializer.toJson<String>(bccInJson),
-      'senderInJson': serializer.toJson<String>(senderInJson),
-      'replyToInJson': serializer.toJson<String>(replyToInJson),
-      'hasAttachments': serializer.toJson<bool>(hasAttachments),
-      'hasVcardAttachment': serializer.toJson<bool>(hasVcardAttachment),
-      'hasIcalAttachment': serializer.toJson<bool>(hasIcalAttachment),
-      'importance': serializer.toJson<int>(importance),
-      'draftInfoInJson': serializer.toJson<String>(draftInfoInJson),
-      'sensitivity': serializer.toJson<int>(sensitivity),
-      'downloadAsEmlUrl': serializer.toJson<String>(downloadAsEmlUrl),
-      'hash': serializer.toJson<String>(hash),
-      'headers': serializer.toJson<String>(headers),
-      'inReplyTo': serializer.toJson<String>(inReplyTo),
-      'references': serializer.toJson<String>(references),
+          serializer.toJson<int?>(receivedOrDateTimeStampInUTC),
+      'timeStampInUTC': serializer.toJson<int?>(timeStampInUTC),
+      'toToDisplay': serializer.toJson<String?>(toToDisplay),
+      'toInJson': serializer.toJson<String?>(toInJson),
+      'fromInJson': serializer.toJson<String?>(fromInJson),
+      'fromToDisplay': serializer.toJson<String?>(fromToDisplay),
+      'ccInJson': serializer.toJson<String?>(ccInJson),
+      'bccInJson': serializer.toJson<String?>(bccInJson),
+      'senderInJson': serializer.toJson<String?>(senderInJson),
+      'replyToInJson': serializer.toJson<String?>(replyToInJson),
+      'hasAttachments': serializer.toJson<bool?>(hasAttachments),
+      'hasVcardAttachment': serializer.toJson<bool?>(hasVcardAttachment),
+      'hasIcalAttachment': serializer.toJson<bool?>(hasIcalAttachment),
+      'importance': serializer.toJson<int?>(importance),
+      'draftInfoInJson': serializer.toJson<String?>(draftInfoInJson),
+      'sensitivity': serializer.toJson<int?>(sensitivity),
+      'downloadAsEmlUrl': serializer.toJson<String?>(downloadAsEmlUrl),
+      'hash': serializer.toJson<String?>(hash),
+      'headers': serializer.toJson<String?>(headers),
+      'inReplyTo': serializer.toJson<String?>(inReplyTo),
+      'references': serializer.toJson<String?>(references),
       'readingConfirmationAddressee':
-          serializer.toJson<String>(readingConfirmationAddressee),
-      'htmlBody': serializer.toJson<String>(htmlBody),
-      'rawBody': serializer.toJson<String>(rawBody),
-      'bodyForSearch': serializer.toJson<String>(bodyForSearch),
-      'rtl': serializer.toJson<bool>(rtl),
-      'extendInJson': serializer.toJson<String>(extendInJson),
-      'safety': serializer.toJson<bool>(safety),
-      'hasExternals': serializer.toJson<bool>(hasExternals),
-      'foundedCIDsInJson': serializer.toJson<String>(foundedCIDsInJson),
+          serializer.toJson<String?>(readingConfirmationAddressee),
+      'htmlBody': serializer.toJson<String?>(htmlBody),
+      'rawBody': serializer.toJson<String?>(rawBody),
+      'bodyForSearch': serializer.toJson<String?>(bodyForSearch),
+      'rtl': serializer.toJson<bool?>(rtl),
+      'extendInJson': serializer.toJson<String?>(extendInJson),
+      'safety': serializer.toJson<bool?>(safety),
+      'hasExternals': serializer.toJson<bool?>(hasExternals),
+      'foundedCIDsInJson': serializer.toJson<String?>(foundedCIDsInJson),
       'foundedContentLocationUrlsInJson':
-          serializer.toJson<String>(foundedContentLocationUrlsInJson),
-      'attachmentsInJson': serializer.toJson<String>(attachmentsInJson),
-      'toForSearch': serializer.toJson<String>(toForSearch),
-      'fromForSearch': serializer.toJson<String>(fromForSearch),
-      'ccForSearch': serializer.toJson<String>(ccForSearch),
-      'bccForSearch': serializer.toJson<String>(bccForSearch),
-      'attachmentsForSearch': serializer.toJson<String>(attachmentsForSearch),
-      'customInJson': serializer.toJson<String>(customInJson),
-      'isHtml': serializer.toJson<bool>(isHtml),
-      'hasBody': serializer.toJson<bool>(hasBody),
+          serializer.toJson<String?>(foundedContentLocationUrlsInJson),
+      'attachmentsInJson': serializer.toJson<String?>(attachmentsInJson),
+      'toForSearch': serializer.toJson<String?>(toForSearch),
+      'fromForSearch': serializer.toJson<String?>(fromForSearch),
+      'ccForSearch': serializer.toJson<String?>(ccForSearch),
+      'bccForSearch': serializer.toJson<String?>(bccForSearch),
+      'attachmentsForSearch': serializer.toJson<String?>(attachmentsForSearch),
+      'customInJson': serializer.toJson<String?>(customInJson),
+      'isHtml': serializer.toJson<bool?>(isHtml),
+      'hasBody': serializer.toJson<bool?>(hasBody),
     };
   }
 
   Message copyWith(
-          {int localId,
-          int uid,
-          int accountEntityId,
-          int userLocalId,
-          String uniqueUidInFolder,
-          int parentUid,
-          String messageId,
-          String folder,
-          String flagsInJson,
-          bool hasThread,
-          String subject,
-          int size,
-          int textSize,
-          bool truncated,
-          int internalTimeStampInUTC,
-          int receivedOrDateTimeStampInUTC,
-          int timeStampInUTC,
-          String toToDisplay,
-          String toInJson,
-          String fromInJson,
-          String fromToDisplay,
-          String ccInJson,
-          String bccInJson,
-          String senderInJson,
-          String replyToInJson,
-          bool hasAttachments,
-          bool hasVcardAttachment,
-          bool hasIcalAttachment,
-          int importance,
-          String draftInfoInJson,
-          int sensitivity,
-          String downloadAsEmlUrl,
-          String hash,
-          String headers,
-          String inReplyTo,
-          String references,
-          String readingConfirmationAddressee,
-          String htmlBody,
-          String rawBody,
-          String bodyForSearch,
-          bool rtl,
-          String extendInJson,
-          bool safety,
-          bool hasExternals,
-          String foundedCIDsInJson,
-          String foundedContentLocationUrlsInJson,
-          String attachmentsInJson,
-          String toForSearch,
-          String fromForSearch,
-          String ccForSearch,
-          String bccForSearch,
-          String attachmentsForSearch,
-          String customInJson,
-          bool isHtml,
-          bool hasBody}) =>
+          {int? localId,
+          int? uid,
+          int? accountEntityId,
+          int? userLocalId,
+          String? uniqueUidInFolder,
+          int? parentUid,
+          String? messageId,
+          String? folder,
+          String? flagsInJson,
+          bool? hasThread,
+          String? subject,
+          int? size,
+          int? textSize,
+          bool? truncated,
+          int? internalTimeStampInUTC,
+          int? receivedOrDateTimeStampInUTC,
+          int? timeStampInUTC,
+          String? toToDisplay,
+          String? toInJson,
+          String? fromInJson,
+          String? fromToDisplay,
+          String? ccInJson,
+          String? bccInJson,
+          String? senderInJson,
+          String? replyToInJson,
+          bool? hasAttachments,
+          bool? hasVcardAttachment,
+          bool? hasIcalAttachment,
+          int? importance,
+          String? draftInfoInJson,
+          int? sensitivity,
+          String? downloadAsEmlUrl,
+          String? hash,
+          String? headers,
+          String? inReplyTo,
+          String? references,
+          String? readingConfirmationAddressee,
+          String? htmlBody,
+          String? rawBody,
+          String? bodyForSearch,
+          bool? rtl,
+          String? extendInJson,
+          bool? safety,
+          bool? hasExternals,
+          String? foundedCIDsInJson,
+          String? foundedContentLocationUrlsInJson,
+          String? attachmentsInJson,
+          String? toForSearch,
+          String? fromForSearch,
+          String? ccForSearch,
+          String? bccForSearch,
+          String? attachmentsForSearch,
+          String? customInJson,
+          bool? isHtml,
+          bool? hasBody}) =>
       Message(
         localId: localId ?? this.localId,
         uid: uid ?? this.uid,
@@ -1009,61 +1003,61 @@ class Message extends DataClass implements Insertable<Message> {
 }
 
 class MailCompanion extends UpdateCompanion<Message> {
-  final Value<int> localId;
+  final Value<int?> localId;
   final Value<int> uid;
-  final Value<int> accountEntityId;
-  final Value<int> userLocalId;
-  final Value<String> uniqueUidInFolder;
-  final Value<int> parentUid;
-  final Value<String> messageId;
+  final Value<int?> accountEntityId;
+  final Value<int?> userLocalId;
+  final Value<String?> uniqueUidInFolder;
+  final Value<int?> parentUid;
+  final Value<String?> messageId;
   final Value<String> folder;
   final Value<String> flagsInJson;
-  final Value<bool> hasThread;
-  final Value<String> subject;
-  final Value<int> size;
-  final Value<int> textSize;
-  final Value<bool> truncated;
-  final Value<int> internalTimeStampInUTC;
-  final Value<int> receivedOrDateTimeStampInUTC;
-  final Value<int> timeStampInUTC;
-  final Value<String> toToDisplay;
-  final Value<String> toInJson;
-  final Value<String> fromInJson;
-  final Value<String> fromToDisplay;
-  final Value<String> ccInJson;
-  final Value<String> bccInJson;
-  final Value<String> senderInJson;
-  final Value<String> replyToInJson;
-  final Value<bool> hasAttachments;
-  final Value<bool> hasVcardAttachment;
-  final Value<bool> hasIcalAttachment;
-  final Value<int> importance;
-  final Value<String> draftInfoInJson;
-  final Value<int> sensitivity;
-  final Value<String> downloadAsEmlUrl;
-  final Value<String> hash;
-  final Value<String> headers;
-  final Value<String> inReplyTo;
-  final Value<String> references;
-  final Value<String> readingConfirmationAddressee;
-  final Value<String> htmlBody;
-  final Value<String> rawBody;
-  final Value<String> bodyForSearch;
-  final Value<bool> rtl;
-  final Value<String> extendInJson;
-  final Value<bool> safety;
-  final Value<bool> hasExternals;
-  final Value<String> foundedCIDsInJson;
-  final Value<String> foundedContentLocationUrlsInJson;
-  final Value<String> attachmentsInJson;
-  final Value<String> toForSearch;
-  final Value<String> fromForSearch;
-  final Value<String> ccForSearch;
-  final Value<String> bccForSearch;
-  final Value<String> attachmentsForSearch;
-  final Value<String> customInJson;
-  final Value<bool> isHtml;
-  final Value<bool> hasBody;
+  final Value<bool?> hasThread;
+  final Value<String?> subject;
+  final Value<int?> size;
+  final Value<int?> textSize;
+  final Value<bool?> truncated;
+  final Value<int?> internalTimeStampInUTC;
+  final Value<int?> receivedOrDateTimeStampInUTC;
+  final Value<int?> timeStampInUTC;
+  final Value<String?> toToDisplay;
+  final Value<String?> toInJson;
+  final Value<String?> fromInJson;
+  final Value<String?> fromToDisplay;
+  final Value<String?> ccInJson;
+  final Value<String?> bccInJson;
+  final Value<String?> senderInJson;
+  final Value<String?> replyToInJson;
+  final Value<bool?> hasAttachments;
+  final Value<bool?> hasVcardAttachment;
+  final Value<bool?> hasIcalAttachment;
+  final Value<int?> importance;
+  final Value<String?> draftInfoInJson;
+  final Value<int?> sensitivity;
+  final Value<String?> downloadAsEmlUrl;
+  final Value<String?> hash;
+  final Value<String?> headers;
+  final Value<String?> inReplyTo;
+  final Value<String?> references;
+  final Value<String?> readingConfirmationAddressee;
+  final Value<String?> htmlBody;
+  final Value<String?> rawBody;
+  final Value<String?> bodyForSearch;
+  final Value<bool?> rtl;
+  final Value<String?> extendInJson;
+  final Value<bool?> safety;
+  final Value<bool?> hasExternals;
+  final Value<String?> foundedCIDsInJson;
+  final Value<String?> foundedContentLocationUrlsInJson;
+  final Value<String?> attachmentsInJson;
+  final Value<String?> toForSearch;
+  final Value<String?> fromForSearch;
+  final Value<String?> ccForSearch;
+  final Value<String?> bccForSearch;
+  final Value<String?> attachmentsForSearch;
+  final Value<String?> customInJson;
+  final Value<bool?> isHtml;
+  final Value<bool?> hasBody;
   const MailCompanion({
     this.localId = const Value.absent(),
     this.uid = const Value.absent(),
@@ -1123,15 +1117,15 @@ class MailCompanion extends UpdateCompanion<Message> {
   });
   MailCompanion.insert({
     this.localId = const Value.absent(),
-    @required int uid,
-    @required int accountEntityId,
-    @required int userLocalId,
-    @required String uniqueUidInFolder,
+    required int uid,
+    this.accountEntityId = const Value.absent(),
+    this.userLocalId = const Value.absent(),
+    this.uniqueUidInFolder = const Value.absent(),
     this.parentUid = const Value.absent(),
     this.messageId = const Value.absent(),
-    @required String folder,
-    @required String flagsInJson,
-    @required bool hasThread,
+    required String folder,
+    required String flagsInJson,
+    this.hasThread = const Value.absent(),
     this.subject = const Value.absent(),
     this.size = const Value.absent(),
     this.textSize = const Value.absent(),
@@ -1176,71 +1170,66 @@ class MailCompanion extends UpdateCompanion<Message> {
     this.attachmentsForSearch = const Value.absent(),
     this.customInJson = const Value.absent(),
     this.isHtml = const Value.absent(),
-    @required bool hasBody,
+    this.hasBody = const Value.absent(),
   })  : uid = Value(uid),
-        accountEntityId = Value(accountEntityId),
-        userLocalId = Value(userLocalId),
-        uniqueUidInFolder = Value(uniqueUidInFolder),
         folder = Value(folder),
-        flagsInJson = Value(flagsInJson),
-        hasThread = Value(hasThread),
-        hasBody = Value(hasBody);
+        flagsInJson = Value(flagsInJson);
   static Insertable<Message> custom({
-    Expression<int> localId,
-    Expression<int> uid,
-    Expression<int> accountEntityId,
-    Expression<int> userLocalId,
-    Expression<String> uniqueUidInFolder,
-    Expression<int> parentUid,
-    Expression<String> messageId,
-    Expression<String> folder,
-    Expression<String> flagsInJson,
-    Expression<bool> hasThread,
-    Expression<String> subject,
-    Expression<int> size,
-    Expression<int> textSize,
-    Expression<bool> truncated,
-    Expression<int> internalTimeStampInUTC,
-    Expression<int> receivedOrDateTimeStampInUTC,
-    Expression<int> timeStampInUTC,
-    Expression<String> toToDisplay,
-    Expression<String> toInJson,
-    Expression<String> fromInJson,
-    Expression<String> fromToDisplay,
-    Expression<String> ccInJson,
-    Expression<String> bccInJson,
-    Expression<String> senderInJson,
-    Expression<String> replyToInJson,
-    Expression<bool> hasAttachments,
-    Expression<bool> hasVcardAttachment,
-    Expression<bool> hasIcalAttachment,
-    Expression<int> importance,
-    Expression<String> draftInfoInJson,
-    Expression<int> sensitivity,
-    Expression<String> downloadAsEmlUrl,
-    Expression<String> hash,
-    Expression<String> headers,
-    Expression<String> inReplyTo,
-    Expression<String> references,
-    Expression<String> readingConfirmationAddressee,
-    Expression<String> htmlBody,
-    Expression<String> rawBody,
-    Expression<String> bodyForSearch,
-    Expression<bool> rtl,
-    Expression<String> extendInJson,
-    Expression<bool> safety,
-    Expression<bool> hasExternals,
-    Expression<String> foundedCIDsInJson,
-    Expression<String> foundedContentLocationUrlsInJson,
-    Expression<String> attachmentsInJson,
-    Expression<String> toForSearch,
-    Expression<String> fromForSearch,
-    Expression<String> ccForSearch,
-    Expression<String> bccForSearch,
-    Expression<String> attachmentsForSearch,
-    Expression<String> customInJson,
-    Expression<bool> isHtml,
-    Expression<bool> hasBody,
+    Expression<int?>? localId,
+    Expression<int>? uid,
+    Expression<int?>? accountEntityId,
+    Expression<int?>? userLocalId,
+    Expression<String?>? uniqueUidInFolder,
+    Expression<int?>? parentUid,
+    Expression<String?>? messageId,
+    Expression<String>? folder,
+    Expression<String>? flagsInJson,
+    Expression<bool?>? hasThread,
+    Expression<String?>? subject,
+    Expression<int?>? size,
+    Expression<int?>? textSize,
+    Expression<bool?>? truncated,
+    Expression<int?>? internalTimeStampInUTC,
+    Expression<int?>? receivedOrDateTimeStampInUTC,
+    Expression<int?>? timeStampInUTC,
+    Expression<String?>? toToDisplay,
+    Expression<String?>? toInJson,
+    Expression<String?>? fromInJson,
+    Expression<String?>? fromToDisplay,
+    Expression<String?>? ccInJson,
+    Expression<String?>? bccInJson,
+    Expression<String?>? senderInJson,
+    Expression<String?>? replyToInJson,
+    Expression<bool?>? hasAttachments,
+    Expression<bool?>? hasVcardAttachment,
+    Expression<bool?>? hasIcalAttachment,
+    Expression<int?>? importance,
+    Expression<String?>? draftInfoInJson,
+    Expression<int?>? sensitivity,
+    Expression<String?>? downloadAsEmlUrl,
+    Expression<String?>? hash,
+    Expression<String?>? headers,
+    Expression<String?>? inReplyTo,
+    Expression<String?>? references,
+    Expression<String?>? readingConfirmationAddressee,
+    Expression<String?>? htmlBody,
+    Expression<String?>? rawBody,
+    Expression<String?>? bodyForSearch,
+    Expression<bool?>? rtl,
+    Expression<String?>? extendInJson,
+    Expression<bool?>? safety,
+    Expression<bool?>? hasExternals,
+    Expression<String?>? foundedCIDsInJson,
+    Expression<String?>? foundedContentLocationUrlsInJson,
+    Expression<String?>? attachmentsInJson,
+    Expression<String?>? toForSearch,
+    Expression<String?>? fromForSearch,
+    Expression<String?>? ccForSearch,
+    Expression<String?>? bccForSearch,
+    Expression<String?>? attachmentsForSearch,
+    Expression<String?>? customInJson,
+    Expression<bool?>? isHtml,
+    Expression<bool?>? hasBody,
   }) {
     return RawValuesInsertable({
       if (localId != null) 'local_id': localId,
@@ -1310,61 +1299,61 @@ class MailCompanion extends UpdateCompanion<Message> {
   }
 
   MailCompanion copyWith(
-      {Value<int> localId,
-      Value<int> uid,
-      Value<int> accountEntityId,
-      Value<int> userLocalId,
-      Value<String> uniqueUidInFolder,
-      Value<int> parentUid,
-      Value<String> messageId,
-      Value<String> folder,
-      Value<String> flagsInJson,
-      Value<bool> hasThread,
-      Value<String> subject,
-      Value<int> size,
-      Value<int> textSize,
-      Value<bool> truncated,
-      Value<int> internalTimeStampInUTC,
-      Value<int> receivedOrDateTimeStampInUTC,
-      Value<int> timeStampInUTC,
-      Value<String> toToDisplay,
-      Value<String> toInJson,
-      Value<String> fromInJson,
-      Value<String> fromToDisplay,
-      Value<String> ccInJson,
-      Value<String> bccInJson,
-      Value<String> senderInJson,
-      Value<String> replyToInJson,
-      Value<bool> hasAttachments,
-      Value<bool> hasVcardAttachment,
-      Value<bool> hasIcalAttachment,
-      Value<int> importance,
-      Value<String> draftInfoInJson,
-      Value<int> sensitivity,
-      Value<String> downloadAsEmlUrl,
-      Value<String> hash,
-      Value<String> headers,
-      Value<String> inReplyTo,
-      Value<String> references,
-      Value<String> readingConfirmationAddressee,
-      Value<String> htmlBody,
-      Value<String> rawBody,
-      Value<String> bodyForSearch,
-      Value<bool> rtl,
-      Value<String> extendInJson,
-      Value<bool> safety,
-      Value<bool> hasExternals,
-      Value<String> foundedCIDsInJson,
-      Value<String> foundedContentLocationUrlsInJson,
-      Value<String> attachmentsInJson,
-      Value<String> toForSearch,
-      Value<String> fromForSearch,
-      Value<String> ccForSearch,
-      Value<String> bccForSearch,
-      Value<String> attachmentsForSearch,
-      Value<String> customInJson,
-      Value<bool> isHtml,
-      Value<bool> hasBody}) {
+      {Value<int?>? localId,
+      Value<int>? uid,
+      Value<int?>? accountEntityId,
+      Value<int?>? userLocalId,
+      Value<String?>? uniqueUidInFolder,
+      Value<int?>? parentUid,
+      Value<String?>? messageId,
+      Value<String>? folder,
+      Value<String>? flagsInJson,
+      Value<bool?>? hasThread,
+      Value<String?>? subject,
+      Value<int?>? size,
+      Value<int?>? textSize,
+      Value<bool?>? truncated,
+      Value<int?>? internalTimeStampInUTC,
+      Value<int?>? receivedOrDateTimeStampInUTC,
+      Value<int?>? timeStampInUTC,
+      Value<String?>? toToDisplay,
+      Value<String?>? toInJson,
+      Value<String?>? fromInJson,
+      Value<String?>? fromToDisplay,
+      Value<String?>? ccInJson,
+      Value<String?>? bccInJson,
+      Value<String?>? senderInJson,
+      Value<String?>? replyToInJson,
+      Value<bool?>? hasAttachments,
+      Value<bool?>? hasVcardAttachment,
+      Value<bool?>? hasIcalAttachment,
+      Value<int?>? importance,
+      Value<String?>? draftInfoInJson,
+      Value<int?>? sensitivity,
+      Value<String?>? downloadAsEmlUrl,
+      Value<String?>? hash,
+      Value<String?>? headers,
+      Value<String?>? inReplyTo,
+      Value<String?>? references,
+      Value<String?>? readingConfirmationAddressee,
+      Value<String?>? htmlBody,
+      Value<String?>? rawBody,
+      Value<String?>? bodyForSearch,
+      Value<bool?>? rtl,
+      Value<String?>? extendInJson,
+      Value<bool?>? safety,
+      Value<bool?>? hasExternals,
+      Value<String?>? foundedCIDsInJson,
+      Value<String?>? foundedContentLocationUrlsInJson,
+      Value<String?>? attachmentsInJson,
+      Value<String?>? toForSearch,
+      Value<String?>? fromForSearch,
+      Value<String?>? ccForSearch,
+      Value<String?>? bccForSearch,
+      Value<String?>? attachmentsForSearch,
+      Value<String?>? customInJson,
+      Value<bool?>? isHtml,
+      Value<bool?>? hasBody}) {
     return MailCompanion(
       localId: localId ?? this.localId,
       uid: uid ?? this.uid,
@@ -1432,25 +1421,25 @@ class MailCompanion extends UpdateCompanion<Message> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (localId.present) {
-      map['local_id'] = Variable<int>(localId.value);
+      map['local_id'] = Variable<int?>(localId.value);
     }
     if (uid.present) {
       map['uid'] = Variable<int>(uid.value);
     }
     if (accountEntityId.present) {
-      map['account_entity_id'] = Variable<int>(accountEntityId.value);
+      map['account_entity_id'] = Variable<int?>(accountEntityId.value);
     }
     if (userLocalId.present) {
-      map['user_local_id'] = Variable<int>(userLocalId.value);
+      map['user_local_id'] = Variable<int?>(userLocalId.value);
     }
     if (uniqueUidInFolder.present) {
-      map['unique_uid_in_folder'] = Variable<String>(uniqueUidInFolder.value);
+      map['unique_uid_in_folder'] = Variable<String?>(uniqueUidInFolder.value);
     }
     if (parentUid.present) {
-      map['parent_uid'] = Variable<int>(parentUid.value);
+      map['parent_uid'] = Variable<int?>(parentUid.value);
     }
     if (messageId.present) {
-      map['message_id'] = Variable<String>(messageId.value);
+      map['message_id'] = Variable<String?>(messageId.value);
     }
     if (folder.present) {
       map['folder'] = Variable<String>(folder.value);
@@ -1459,147 +1448,148 @@ class MailCompanion extends UpdateCompanion<Message> {
       map['flags_in_json'] = Variable<String>(flagsInJson.value);
     }
     if (hasThread.present) {
-      map['has_thread'] = Variable<bool>(hasThread.value);
+      map['has_thread'] = Variable<bool?>(hasThread.value);
     }
     if (subject.present) {
-      map['subject'] = Variable<String>(subject.value);
+      map['subject'] = Variable<String?>(subject.value);
     }
     if (size.present) {
-      map['size'] = Variable<int>(size.value);
+      map['size'] = Variable<int?>(size.value);
     }
     if (textSize.present) {
-      map['text_size'] = Variable<int>(textSize.value);
+      map['text_size'] = Variable<int?>(textSize.value);
     }
     if (truncated.present) {
-      map['truncated'] = Variable<bool>(truncated.value);
+      map['truncated'] = Variable<bool?>(truncated.value);
     }
     if (internalTimeStampInUTC.present) {
       map['internal_time_stamp_in_u_t_c'] =
-          Variable<int>(internalTimeStampInUTC.value);
+          Variable<int?>(internalTimeStampInUTC.value);
     }
     if (receivedOrDateTimeStampInUTC.present) {
       map['received_or_date_time_stamp_in_u_t_c'] =
-          Variable<int>(receivedOrDateTimeStampInUTC.value);
+          Variable<int?>(receivedOrDateTimeStampInUTC.value);
     }
     if (timeStampInUTC.present) {
-      map['time_stamp_in_u_t_c'] = Variable<int>(timeStampInUTC.value);
+      map['time_stamp_in_u_t_c'] = Variable<int?>(timeStampInUTC.value);
     }
     if (toToDisplay.present) {
-      map['to_to_display'] = Variable<String>(toToDisplay.value);
+      map['to_to_display'] = Variable<String?>(toToDisplay.value);
     }
     if (toInJson.present) {
-      map['to_in_json'] = Variable<String>(toInJson.value);
+      map['to_in_json'] = Variable<String?>(toInJson.value);
     }
     if (fromInJson.present) {
-      map['from_in_json'] = Variable<String>(fromInJson.value);
+      map['from_in_json'] = Variable<String?>(fromInJson.value);
     }
     if (fromToDisplay.present) {
-      map['from_to_display'] = Variable<String>(fromToDisplay.value);
+      map['from_to_display'] = Variable<String?>(fromToDisplay.value);
     }
     if (ccInJson.present) {
-      map['cc_in_json'] = Variable<String>(ccInJson.value);
+      map['cc_in_json'] = Variable<String?>(ccInJson.value);
     }
     if (bccInJson.present) {
-      map['bcc_in_json'] = Variable<String>(bccInJson.value);
+      map['bcc_in_json'] = Variable<String?>(bccInJson.value);
     }
     if (senderInJson.present) {
-      map['sender_in_json'] = Variable<String>(senderInJson.value);
+      map['sender_in_json'] = Variable<String?>(senderInJson.value);
     }
     if (replyToInJson.present) {
-      map['reply_to_in_json'] = Variable<String>(replyToInJson.value);
+      map['reply_to_in_json'] = Variable<String?>(replyToInJson.value);
     }
     if (hasAttachments.present) {
-      map['has_attachments'] = Variable<bool>(hasAttachments.value);
+      map['has_attachments'] = Variable<bool?>(hasAttachments.value);
     }
     if (hasVcardAttachment.present) {
-      map['has_vcard_attachment'] = Variable<bool>(hasVcardAttachment.value);
+      map['has_vcard_attachment'] = Variable<bool?>(hasVcardAttachment.value);
     }
     if (hasIcalAttachment.present) {
-      map['has_ical_attachment'] = Variable<bool>(hasIcalAttachment.value);
+      map['has_ical_attachment'] = Variable<bool?>(hasIcalAttachment.value);
     }
     if (importance.present) {
-      map['importance'] = Variable<int>(importance.value);
+      map['importance'] = Variable<int?>(importance.value);
     }
     if (draftInfoInJson.present) {
-      map['draft_info_in_json'] = Variable<String>(draftInfoInJson.value);
+      map['draft_info_in_json'] = Variable<String?>(draftInfoInJson.value);
     }
     if (sensitivity.present) {
-      map['sensitivity'] = Variable<int>(sensitivity.value);
+      map['sensitivity'] = Variable<int?>(sensitivity.value);
     }
     if (downloadAsEmlUrl.present) {
-      map['download_as_eml_url'] = Variable<String>(downloadAsEmlUrl.value);
+      map['download_as_eml_url'] = Variable<String?>(downloadAsEmlUrl.value);
     }
     if (hash.present) {
-      map['hash'] = Variable<String>(hash.value);
+      map['hash'] = Variable<String?>(hash.value);
     }
     if (headers.present) {
-      map['headers'] = Variable<String>(headers.value);
+      map['headers'] = Variable<String?>(headers.value);
     }
     if (inReplyTo.present) {
-      map['in_reply_to'] = Variable<String>(inReplyTo.value);
+      map['in_reply_to'] = Variable<String?>(inReplyTo.value);
     }
     if (references.present) {
-      map['message_references'] = Variable<String>(references.value);
+      map['message_references'] = Variable<String?>(references.value);
     }
     if (readingConfirmationAddressee.present) {
       map['reading_confirmation_addressee'] =
-          Variable<String>(readingConfirmationAddressee.value);
+          Variable<String?>(readingConfirmationAddressee.value);
     }
     if (htmlBody.present) {
-      map['html_body'] = Variable<String>(htmlBody.value);
+      map['html_body'] = Variable<String?>(htmlBody.value);
     }
     if (rawBody.present) {
-      map['raw_body'] = Variable<String>(rawBody.value);
+      map['raw_body'] = Variable<String?>(rawBody.value);
     }
     if (bodyForSearch.present) {
-      map['body_for_search'] = Variable<String>(bodyForSearch.value);
+      map['body_for_search'] = Variable<String?>(bodyForSearch.value);
     }
     if (rtl.present) {
-      map['rtl'] = Variable<bool>(rtl.value);
+      map['rtl'] = Variable<bool?>(rtl.value);
     }
     if (extendInJson.present) {
-      map['extend_in_json'] = Variable<String>(extendInJson.value);
+      map['extend_in_json'] = Variable<String?>(extendInJson.value);
     }
     if (safety.present) {
-      map['safety'] = Variable<bool>(safety.value);
+      map['safety'] = Variable<bool?>(safety.value);
     }
     if (hasExternals.present) {
-      map['has_externals'] = Variable<bool>(hasExternals.value);
+      map['has_externals'] = Variable<bool?>(hasExternals.value);
     }
     if (foundedCIDsInJson.present) {
-      map['founded_c_i_ds_in_json'] = Variable<String>(foundedCIDsInJson.value);
+      map['founded_c_i_ds_in_json'] =
+          Variable<String?>(foundedCIDsInJson.value);
     }
     if (foundedContentLocationUrlsInJson.present) {
       map['founded_content_location_urls_in_json'] =
-          Variable<String>(foundedContentLocationUrlsInJson.value);
+          Variable<String?>(foundedContentLocationUrlsInJson.value);
     }
     if (attachmentsInJson.present) {
-      map['attachments_in_json'] = Variable<String>(attachmentsInJson.value);
+      map['attachments_in_json'] = Variable<String?>(attachmentsInJson.value);
     }
     if (toForSearch.present) {
-      map['to_for_search'] = Variable<String>(toForSearch.value);
+      map['to_for_search'] = Variable<String?>(toForSearch.value);
     }
     if (fromForSearch.present) {
-      map['from_for_search'] = Variable<String>(fromForSearch.value);
+      map['from_for_search'] = Variable<String?>(fromForSearch.value);
     }
     if (ccForSearch.present) {
-      map['cc_for_search'] = Variable<String>(ccForSearch.value);
+      map['cc_for_search'] = Variable<String?>(ccForSearch.value);
     }
     if (bccForSearch.present) {
-      map['bcc_for_search'] = Variable<String>(bccForSearch.value);
+      map['bcc_for_search'] = Variable<String?>(bccForSearch.value);
     }
     if (attachmentsForSearch.present) {
       map['attachments_for_search'] =
-          Variable<String>(attachmentsForSearch.value);
+          Variable<String?>(attachmentsForSearch.value);
     }
     if (customInJson.present) {
-      map['custom_in_json'] = Variable<String>(customInJson.value);
+      map['custom_in_json'] = Variable<String?>(customInJson.value);
     }
     if (isHtml.present) {
-      map['is_html'] = Variable<bool>(isHtml.value);
+      map['is_html'] = Variable<bool?>(isHtml.value);
     }
     if (hasBody.present) {
-      map['has_body'] = Variable<bool>(hasBody.value);
+      map['has_body'] = Variable<bool?>(hasBody.value);
     }
     return map;
   }
@@ -1673,401 +1663,346 @@ class MailCompanion extends UpdateCompanion<Message> {
 class $MailTable extends Mail with TableInfo<$MailTable, Message> {
   @override
   final GeneratedDatabase attachedDatabase;
-  final String _alias;
+  final String? _alias;
   $MailTable(this.attachedDatabase, [this._alias]);
   final VerificationMeta _localIdMeta = const VerificationMeta('localId');
-  GeneratedColumn<int> _localId;
   @override
-  GeneratedColumn<int> get localId =>
-      _localId ??= GeneratedColumn<int>('local_id', aliasedName, false,
-          type: const IntType(),
-          requiredDuringInsert: false,
-          defaultConstraints: 'PRIMARY KEY AUTOINCREMENT');
+  late final GeneratedColumn<int?> localId = GeneratedColumn<int?>(
+      'local_id', aliasedName, true,
+      type: const IntType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'PRIMARY KEY AUTOINCREMENT');
   final VerificationMeta _uidMeta = const VerificationMeta('uid');
-  GeneratedColumn<int> _uid;
   @override
-  GeneratedColumn<int> get uid =>
-      _uid ??= GeneratedColumn<int>('uid', aliasedName, false,
-          type: const IntType(), requiredDuringInsert: true);
+  late final GeneratedColumn<int?> uid = GeneratedColumn<int?>(
+      'uid', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _accountEntityIdMeta =
       const VerificationMeta('accountEntityId');
-  GeneratedColumn<int> _accountEntityId;
   @override
-  GeneratedColumn<int> get accountEntityId => _accountEntityId ??=
-      GeneratedColumn<int>('account_entity_id', aliasedName, false,
-          type: const IntType(), requiredDuringInsert: true);
+  late final GeneratedColumn<int?> accountEntityId = GeneratedColumn<int?>(
+      'account_entity_id', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
   final VerificationMeta _userLocalIdMeta =
       const VerificationMeta('userLocalId');
-  GeneratedColumn<int> _userLocalId;
   @override
-  GeneratedColumn<int> get userLocalId =>
-      _userLocalId ??= GeneratedColumn<int>('user_local_id', aliasedName, false,
-          type: const IntType(), requiredDuringInsert: true);
+  late final GeneratedColumn<int?> userLocalId = GeneratedColumn<int?>(
+      'user_local_id', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
   final VerificationMeta _uniqueUidInFolderMeta =
       const VerificationMeta('uniqueUidInFolder');
-  GeneratedColumn<String> _uniqueUidInFolder;
   @override
-  GeneratedColumn<String> get uniqueUidInFolder => _uniqueUidInFolder ??=
-      GeneratedColumn<String>('unique_uid_in_folder', aliasedName, false,
+  late final GeneratedColumn<String?> uniqueUidInFolder =
+      GeneratedColumn<String?>('unique_uid_in_folder', aliasedName, true,
           type: const StringType(),
-          requiredDuringInsert: true,
+          requiredDuringInsert: false,
           $customConstraints: 'UNIQUE');
   final VerificationMeta _parentUidMeta = const VerificationMeta('parentUid');
-  GeneratedColumn<int> _parentUid;
   @override
-  GeneratedColumn<int> get parentUid =>
-      _parentUid ??= GeneratedColumn<int>('parent_uid', aliasedName, true,
-          type: const IntType(), requiredDuringInsert: false);
+  late final GeneratedColumn<int?> parentUid = GeneratedColumn<int?>(
+      'parent_uid', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
   final VerificationMeta _messageIdMeta = const VerificationMeta('messageId');
-  GeneratedColumn<String> _messageId;
   @override
-  GeneratedColumn<String> get messageId =>
-      _messageId ??= GeneratedColumn<String>('message_id', aliasedName, true,
-          type: const StringType(), requiredDuringInsert: false);
+  late final GeneratedColumn<String?> messageId = GeneratedColumn<String?>(
+      'message_id', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _folderMeta = const VerificationMeta('folder');
-  GeneratedColumn<String> _folder;
   @override
-  GeneratedColumn<String> get folder =>
-      _folder ??= GeneratedColumn<String>('folder', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> folder = GeneratedColumn<String?>(
+      'folder', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _flagsInJsonMeta =
       const VerificationMeta('flagsInJson');
-  GeneratedColumn<String> _flagsInJson;
   @override
-  GeneratedColumn<String> get flagsInJson => _flagsInJson ??=
-      GeneratedColumn<String>('flags_in_json', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> flagsInJson = GeneratedColumn<String?>(
+      'flags_in_json', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _hasThreadMeta = const VerificationMeta('hasThread');
-  GeneratedColumn<bool> _hasThread;
   @override
-  GeneratedColumn<bool> get hasThread =>
-      _hasThread ??= GeneratedColumn<bool>('has_thread', aliasedName, false,
-          type: const BoolType(),
-          requiredDuringInsert: true,
-          defaultConstraints: 'CHECK (has_thread IN (0, 1))');
+  late final GeneratedColumn<bool?> hasThread = GeneratedColumn<bool?>(
+      'has_thread', aliasedName, true,
+      type: const BoolType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'CHECK (has_thread IN (0, 1))');
   final VerificationMeta _subjectMeta = const VerificationMeta('subject');
-  GeneratedColumn<String> _subject;
   @override
-  GeneratedColumn<String> get subject =>
-      _subject ??= GeneratedColumn<String>('subject', aliasedName, true,
-          type: const StringType(), requiredDuringInsert: false);
+  late final GeneratedColumn<String?> subject = GeneratedColumn<String?>(
+      'subject', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _sizeMeta = const VerificationMeta('size');
-  GeneratedColumn<int> _size;
   @override
-  GeneratedColumn<int> get size =>
-      _size ??= GeneratedColumn<int>('size', aliasedName, true,
-          type: const IntType(), requiredDuringInsert: false);
+  late final GeneratedColumn<int?> size = GeneratedColumn<int?>(
+      'size', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
   final VerificationMeta _textSizeMeta = const VerificationMeta('textSize');
-  GeneratedColumn<int> _textSize;
   @override
-  GeneratedColumn<int> get textSize =>
-      _textSize ??= GeneratedColumn<int>('text_size', aliasedName, true,
-          type: const IntType(), requiredDuringInsert: false);
+  late final GeneratedColumn<int?> textSize = GeneratedColumn<int?>(
+      'text_size', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
   final VerificationMeta _truncatedMeta = const VerificationMeta('truncated');
-  GeneratedColumn<bool> _truncated;
   @override
-  GeneratedColumn<bool> get truncated =>
-      _truncated ??= GeneratedColumn<bool>('truncated', aliasedName, true,
-          type: const BoolType(),
-          requiredDuringInsert: false,
-          defaultConstraints: 'CHECK (truncated IN (0, 1))');
+  late final GeneratedColumn<bool?> truncated = GeneratedColumn<bool?>(
+      'truncated', aliasedName, true,
+      type: const BoolType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'CHECK (truncated IN (0, 1))');
   final VerificationMeta _internalTimeStampInUTCMeta =
       const VerificationMeta('internalTimeStampInUTC');
-  GeneratedColumn<int> _internalTimeStampInUTC;
   @override
-  GeneratedColumn<int> get internalTimeStampInUTC => _internalTimeStampInUTC ??=
-      GeneratedColumn<int>('internal_time_stamp_in_u_t_c', aliasedName, true,
+  late final GeneratedColumn<int?> internalTimeStampInUTC =
+      GeneratedColumn<int?>('internal_time_stamp_in_u_t_c', aliasedName, true,
           type: const IntType(), requiredDuringInsert: false);
   final VerificationMeta _receivedOrDateTimeStampInUTCMeta =
       const VerificationMeta('receivedOrDateTimeStampInUTC');
-  GeneratedColumn<int> _receivedOrDateTimeStampInUTC;
   @override
-  GeneratedColumn<int> get receivedOrDateTimeStampInUTC =>
-      _receivedOrDateTimeStampInUTC ??= GeneratedColumn<int>(
+  late final GeneratedColumn<int?> receivedOrDateTimeStampInUTC =
+      GeneratedColumn<int?>(
           'received_or_date_time_stamp_in_u_t_c', aliasedName, true,
           type: const IntType(), requiredDuringInsert: false);
   final VerificationMeta _timeStampInUTCMeta =
       const VerificationMeta('timeStampInUTC');
-  GeneratedColumn<int> _timeStampInUTC;
   @override
-  GeneratedColumn<int> get timeStampInUTC => _timeStampInUTC ??=
-      GeneratedColumn<int>('time_stamp_in_u_t_c', aliasedName, true,
-          type: const IntType(), requiredDuringInsert: false);
+  late final GeneratedColumn<int?> timeStampInUTC = GeneratedColumn<int?>(
+      'time_stamp_in_u_t_c', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
   final VerificationMeta _toToDisplayMeta =
       const VerificationMeta('toToDisplay');
-  GeneratedColumn<String> _toToDisplay;
   @override
-  GeneratedColumn<String> get toToDisplay => _toToDisplay ??=
-      GeneratedColumn<String>('to_to_display', aliasedName, true,
-          type: const StringType(), requiredDuringInsert: false);
+  late final GeneratedColumn<String?> toToDisplay = GeneratedColumn<String?>(
+      'to_to_display', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _toInJsonMeta = const VerificationMeta('toInJson');
-  GeneratedColumn<String> _toInJson;
   @override
-  GeneratedColumn<String> get toInJson =>
-      _toInJson ??= GeneratedColumn<String>('to_in_json', aliasedName, true,
-          type: const StringType(), requiredDuringInsert: false);
+  late final GeneratedColumn<String?> toInJson = GeneratedColumn<String?>(
+      'to_in_json', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _fromInJsonMeta = const VerificationMeta('fromInJson');
-  GeneratedColumn<String> _fromInJson;
   @override
-  GeneratedColumn<String> get fromInJson =>
-      _fromInJson ??= GeneratedColumn<String>('from_in_json', aliasedName, true,
-          type: const StringType(), requiredDuringInsert: false);
+  late final GeneratedColumn<String?> fromInJson = GeneratedColumn<String?>(
+      'from_in_json', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _fromToDisplayMeta =
       const VerificationMeta('fromToDisplay');
-  GeneratedColumn<String> _fromToDisplay;
   @override
-  GeneratedColumn<String> get fromToDisplay => _fromToDisplay ??=
-      GeneratedColumn<String>('from_to_display', aliasedName, true,
-          type: const StringType(), requiredDuringInsert: false);
+  late final GeneratedColumn<String?> fromToDisplay = GeneratedColumn<String?>(
+      'from_to_display', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _ccInJsonMeta = const VerificationMeta('ccInJson');
-  GeneratedColumn<String> _ccInJson;
   @override
-  GeneratedColumn<String> get ccInJson =>
-      _ccInJson ??= GeneratedColumn<String>('cc_in_json', aliasedName, true,
-          type: const StringType(), requiredDuringInsert: false);
+  late final GeneratedColumn<String?> ccInJson = GeneratedColumn<String?>(
+      'cc_in_json', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _bccInJsonMeta = const VerificationMeta('bccInJson');
-  GeneratedColumn<String> _bccInJson;
   @override
-  GeneratedColumn<String> get bccInJson =>
-      _bccInJson ??= GeneratedColumn<String>('bcc_in_json', aliasedName, true,
-          type: const StringType(), requiredDuringInsert: false);
+  late final GeneratedColumn<String?> bccInJson = GeneratedColumn<String?>(
+      'bcc_in_json', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _senderInJsonMeta =
       const VerificationMeta('senderInJson');
-  GeneratedColumn<String> _senderInJson;
   @override
-  GeneratedColumn<String> get senderInJson => _senderInJson ??=
-      GeneratedColumn<String>('sender_in_json', aliasedName, true,
-          type: const StringType(), requiredDuringInsert: false);
+  late final GeneratedColumn<String?> senderInJson = GeneratedColumn<String?>(
+      'sender_in_json', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _replyToInJsonMeta =
       const VerificationMeta('replyToInJson');
-  GeneratedColumn<String> _replyToInJson;
   @override
-  GeneratedColumn<String> get replyToInJson => _replyToInJson ??=
-      GeneratedColumn<String>('reply_to_in_json', aliasedName, true,
-          type: const StringType(), requiredDuringInsert: false);
+  late final GeneratedColumn<String?> replyToInJson = GeneratedColumn<String?>(
+      'reply_to_in_json', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _hasAttachmentsMeta =
       const VerificationMeta('hasAttachments');
-  GeneratedColumn<bool> _hasAttachments;
   @override
-  GeneratedColumn<bool> get hasAttachments => _hasAttachments ??=
-      GeneratedColumn<bool>('has_attachments', aliasedName, true,
-          type: const BoolType(),
-          requiredDuringInsert: false,
-          defaultConstraints: 'CHECK (has_attachments IN (0, 1))');
+  late final GeneratedColumn<bool?> hasAttachments = GeneratedColumn<bool?>(
+      'has_attachments', aliasedName, true,
+      type: const BoolType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'CHECK (has_attachments IN (0, 1))');
   final VerificationMeta _hasVcardAttachmentMeta =
       const VerificationMeta('hasVcardAttachment');
-  GeneratedColumn<bool> _hasVcardAttachment;
   @override
-  GeneratedColumn<bool> get hasVcardAttachment => _hasVcardAttachment ??=
-      GeneratedColumn<bool>('has_vcard_attachment', aliasedName, true,
-          type: const BoolType(),
-          requiredDuringInsert: false,
-          defaultConstraints: 'CHECK (has_vcard_attachment IN (0, 1))');
+  late final GeneratedColumn<bool?> hasVcardAttachment = GeneratedColumn<bool?>(
+      'has_vcard_attachment', aliasedName, true,
+      type: const BoolType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'CHECK (has_vcard_attachment IN (0, 1))');
   final VerificationMeta _hasIcalAttachmentMeta =
       const VerificationMeta('hasIcalAttachment');
-  GeneratedColumn<bool> _hasIcalAttachment;
   @override
-  GeneratedColumn<bool> get hasIcalAttachment => _hasIcalAttachment ??=
-      GeneratedColumn<bool>('has_ical_attachment', aliasedName, true,
-          type: const BoolType(),
-          requiredDuringInsert: false,
-          defaultConstraints: 'CHECK (has_ical_attachment IN (0, 1))');
+  late final GeneratedColumn<bool?> hasIcalAttachment = GeneratedColumn<bool?>(
+      'has_ical_attachment', aliasedName, true,
+      type: const BoolType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'CHECK (has_ical_attachment IN (0, 1))');
   final VerificationMeta _importanceMeta = const VerificationMeta('importance');
-  GeneratedColumn<int> _importance;
   @override
-  GeneratedColumn<int> get importance =>
-      _importance ??= GeneratedColumn<int>('importance', aliasedName, true,
-          type: const IntType(), requiredDuringInsert: false);
+  late final GeneratedColumn<int?> importance = GeneratedColumn<int?>(
+      'importance', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
   final VerificationMeta _draftInfoInJsonMeta =
       const VerificationMeta('draftInfoInJson');
-  GeneratedColumn<String> _draftInfoInJson;
   @override
-  GeneratedColumn<String> get draftInfoInJson => _draftInfoInJson ??=
-      GeneratedColumn<String>('draft_info_in_json', aliasedName, true,
+  late final GeneratedColumn<String?> draftInfoInJson =
+      GeneratedColumn<String?>('draft_info_in_json', aliasedName, true,
           type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _sensitivityMeta =
       const VerificationMeta('sensitivity');
-  GeneratedColumn<int> _sensitivity;
   @override
-  GeneratedColumn<int> get sensitivity =>
-      _sensitivity ??= GeneratedColumn<int>('sensitivity', aliasedName, true,
-          type: const IntType(), requiredDuringInsert: false);
+  late final GeneratedColumn<int?> sensitivity = GeneratedColumn<int?>(
+      'sensitivity', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
   final VerificationMeta _downloadAsEmlUrlMeta =
       const VerificationMeta('downloadAsEmlUrl');
-  GeneratedColumn<String> _downloadAsEmlUrl;
   @override
-  GeneratedColumn<String> get downloadAsEmlUrl => _downloadAsEmlUrl ??=
-      GeneratedColumn<String>('download_as_eml_url', aliasedName, true,
+  late final GeneratedColumn<String?> downloadAsEmlUrl =
+      GeneratedColumn<String?>('download_as_eml_url', aliasedName, true,
           type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _hashMeta = const VerificationMeta('hash');
-  GeneratedColumn<String> _hash;
   @override
-  GeneratedColumn<String> get hash =>
-      _hash ??= GeneratedColumn<String>('hash', aliasedName, true,
-          type: const StringType(), requiredDuringInsert: false);
+  late final GeneratedColumn<String?> hash = GeneratedColumn<String?>(
+      'hash', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _headersMeta = const VerificationMeta('headers');
-  GeneratedColumn<String> _headers;
   @override
-  GeneratedColumn<String> get headers =>
-      _headers ??= GeneratedColumn<String>('headers', aliasedName, true,
-          type: const StringType(), requiredDuringInsert: false);
+  late final GeneratedColumn<String?> headers = GeneratedColumn<String?>(
+      'headers', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _inReplyToMeta = const VerificationMeta('inReplyTo');
-  GeneratedColumn<String> _inReplyTo;
   @override
-  GeneratedColumn<String> get inReplyTo =>
-      _inReplyTo ??= GeneratedColumn<String>('in_reply_to', aliasedName, true,
-          type: const StringType(), requiredDuringInsert: false);
+  late final GeneratedColumn<String?> inReplyTo = GeneratedColumn<String?>(
+      'in_reply_to', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _referencesMeta = const VerificationMeta('references');
-  GeneratedColumn<String> _references;
   @override
-  GeneratedColumn<String> get references => _references ??=
-      GeneratedColumn<String>('message_references', aliasedName, true,
-          type: const StringType(), requiredDuringInsert: false);
+  late final GeneratedColumn<String?> references = GeneratedColumn<String?>(
+      'message_references', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _readingConfirmationAddresseeMeta =
       const VerificationMeta('readingConfirmationAddressee');
-  GeneratedColumn<String> _readingConfirmationAddressee;
   @override
-  GeneratedColumn<String> get readingConfirmationAddressee =>
-      _readingConfirmationAddressee ??= GeneratedColumn<String>(
+  late final GeneratedColumn<String?> readingConfirmationAddressee =
+      GeneratedColumn<String?>(
           'reading_confirmation_addressee', aliasedName, true,
           type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _htmlBodyMeta = const VerificationMeta('htmlBody');
-  GeneratedColumn<String> _htmlBody;
   @override
-  GeneratedColumn<String> get htmlBody =>
-      _htmlBody ??= GeneratedColumn<String>('html_body', aliasedName, false,
-          type: const StringType(),
-          requiredDuringInsert: false,
-          defaultValue: Constant(""));
+  late final GeneratedColumn<String?> htmlBody = GeneratedColumn<String?>(
+      'html_body', aliasedName, true,
+      type: const StringType(),
+      requiredDuringInsert: false,
+      defaultValue: Constant(""));
   final VerificationMeta _rawBodyMeta = const VerificationMeta('rawBody');
-  GeneratedColumn<String> _rawBody;
   @override
-  GeneratedColumn<String> get rawBody =>
-      _rawBody ??= GeneratedColumn<String>('raw_body', aliasedName, false,
-          type: const StringType(),
-          requiredDuringInsert: false,
-          defaultValue: Constant(""));
+  late final GeneratedColumn<String?> rawBody = GeneratedColumn<String?>(
+      'raw_body', aliasedName, true,
+      type: const StringType(),
+      requiredDuringInsert: false,
+      defaultValue: Constant(""));
   final VerificationMeta _bodyForSearchMeta =
       const VerificationMeta('bodyForSearch');
-  GeneratedColumn<String> _bodyForSearch;
   @override
-  GeneratedColumn<String> get bodyForSearch => _bodyForSearch ??=
-      GeneratedColumn<String>('body_for_search', aliasedName, true,
-          type: const StringType(),
-          requiredDuringInsert: false,
-          defaultValue: Constant(""));
+  late final GeneratedColumn<String?> bodyForSearch = GeneratedColumn<String?>(
+      'body_for_search', aliasedName, true,
+      type: const StringType(),
+      requiredDuringInsert: false,
+      defaultValue: Constant(""));
   final VerificationMeta _rtlMeta = const VerificationMeta('rtl');
-  GeneratedColumn<bool> _rtl;
   @override
-  GeneratedColumn<bool> get rtl =>
-      _rtl ??= GeneratedColumn<bool>('rtl', aliasedName, true,
-          type: const BoolType(),
-          requiredDuringInsert: false,
-          defaultConstraints: 'CHECK (rtl IN (0, 1))');
+  late final GeneratedColumn<bool?> rtl = GeneratedColumn<bool?>(
+      'rtl', aliasedName, true,
+      type: const BoolType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'CHECK (rtl IN (0, 1))');
   final VerificationMeta _extendInJsonMeta =
       const VerificationMeta('extendInJson');
-  GeneratedColumn<String> _extendInJson;
   @override
-  GeneratedColumn<String> get extendInJson => _extendInJson ??=
-      GeneratedColumn<String>('extend_in_json', aliasedName, true,
-          type: const StringType(), requiredDuringInsert: false);
+  late final GeneratedColumn<String?> extendInJson = GeneratedColumn<String?>(
+      'extend_in_json', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _safetyMeta = const VerificationMeta('safety');
-  GeneratedColumn<bool> _safety;
   @override
-  GeneratedColumn<bool> get safety =>
-      _safety ??= GeneratedColumn<bool>('safety', aliasedName, true,
-          type: const BoolType(),
-          requiredDuringInsert: false,
-          defaultConstraints: 'CHECK (safety IN (0, 1))');
+  late final GeneratedColumn<bool?> safety = GeneratedColumn<bool?>(
+      'safety', aliasedName, true,
+      type: const BoolType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'CHECK (safety IN (0, 1))');
   final VerificationMeta _hasExternalsMeta =
       const VerificationMeta('hasExternals');
-  GeneratedColumn<bool> _hasExternals;
   @override
-  GeneratedColumn<bool> get hasExternals => _hasExternals ??=
-      GeneratedColumn<bool>('has_externals', aliasedName, true,
-          type: const BoolType(),
-          requiredDuringInsert: false,
-          defaultConstraints: 'CHECK (has_externals IN (0, 1))');
+  late final GeneratedColumn<bool?> hasExternals = GeneratedColumn<bool?>(
+      'has_externals', aliasedName, true,
+      type: const BoolType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'CHECK (has_externals IN (0, 1))');
   final VerificationMeta _foundedCIDsInJsonMeta =
       const VerificationMeta('foundedCIDsInJson');
-  GeneratedColumn<String> _foundedCIDsInJson;
   @override
-  GeneratedColumn<String> get foundedCIDsInJson => _foundedCIDsInJson ??=
-      GeneratedColumn<String>('founded_c_i_ds_in_json', aliasedName, true,
+  late final GeneratedColumn<String?> foundedCIDsInJson =
+      GeneratedColumn<String?>('founded_c_i_ds_in_json', aliasedName, true,
           type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _foundedContentLocationUrlsInJsonMeta =
       const VerificationMeta('foundedContentLocationUrlsInJson');
-  GeneratedColumn<String> _foundedContentLocationUrlsInJson;
   @override
-  GeneratedColumn<String> get foundedContentLocationUrlsInJson =>
-      _foundedContentLocationUrlsInJson ??= GeneratedColumn<String>(
+  late final GeneratedColumn<String?> foundedContentLocationUrlsInJson =
+      GeneratedColumn<String?>(
           'founded_content_location_urls_in_json', aliasedName, true,
           type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _attachmentsInJsonMeta =
       const VerificationMeta('attachmentsInJson');
-  GeneratedColumn<String> _attachmentsInJson;
   @override
-  GeneratedColumn<String> get attachmentsInJson => _attachmentsInJson ??=
-      GeneratedColumn<String>('attachments_in_json', aliasedName, true,
+  late final GeneratedColumn<String?> attachmentsInJson =
+      GeneratedColumn<String?>('attachments_in_json', aliasedName, true,
           type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _toForSearchMeta =
       const VerificationMeta('toForSearch');
-  GeneratedColumn<String> _toForSearch;
   @override
-  GeneratedColumn<String> get toForSearch => _toForSearch ??=
-      GeneratedColumn<String>('to_for_search', aliasedName, true,
-          type: const StringType(), requiredDuringInsert: false);
+  late final GeneratedColumn<String?> toForSearch = GeneratedColumn<String?>(
+      'to_for_search', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _fromForSearchMeta =
       const VerificationMeta('fromForSearch');
-  GeneratedColumn<String> _fromForSearch;
   @override
-  GeneratedColumn<String> get fromForSearch => _fromForSearch ??=
-      GeneratedColumn<String>('from_for_search', aliasedName, true,
-          type: const StringType(), requiredDuringInsert: false);
+  late final GeneratedColumn<String?> fromForSearch = GeneratedColumn<String?>(
+      'from_for_search', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _ccForSearchMeta =
       const VerificationMeta('ccForSearch');
-  GeneratedColumn<String> _ccForSearch;
   @override
-  GeneratedColumn<String> get ccForSearch => _ccForSearch ??=
-      GeneratedColumn<String>('cc_for_search', aliasedName, true,
-          type: const StringType(), requiredDuringInsert: false);
+  late final GeneratedColumn<String?> ccForSearch = GeneratedColumn<String?>(
+      'cc_for_search', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _bccForSearchMeta =
       const VerificationMeta('bccForSearch');
-  GeneratedColumn<String> _bccForSearch;
   @override
-  GeneratedColumn<String> get bccForSearch => _bccForSearch ??=
-      GeneratedColumn<String>('bcc_for_search', aliasedName, true,
-          type: const StringType(), requiredDuringInsert: false);
+  late final GeneratedColumn<String?> bccForSearch = GeneratedColumn<String?>(
+      'bcc_for_search', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _attachmentsForSearchMeta =
       const VerificationMeta('attachmentsForSearch');
-  GeneratedColumn<String> _attachmentsForSearch;
   @override
-  GeneratedColumn<String> get attachmentsForSearch => _attachmentsForSearch ??=
-      GeneratedColumn<String>('attachments_for_search', aliasedName, true,
+  late final GeneratedColumn<String?> attachmentsForSearch =
+      GeneratedColumn<String?>('attachments_for_search', aliasedName, true,
           type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _customInJsonMeta =
       const VerificationMeta('customInJson');
-  GeneratedColumn<String> _customInJson;
   @override
-  GeneratedColumn<String> get customInJson => _customInJson ??=
-      GeneratedColumn<String>('custom_in_json', aliasedName, true,
-          type: const StringType(), requiredDuringInsert: false);
+  late final GeneratedColumn<String?> customInJson = GeneratedColumn<String?>(
+      'custom_in_json', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _isHtmlMeta = const VerificationMeta('isHtml');
-  GeneratedColumn<bool> _isHtml;
   @override
-  GeneratedColumn<bool> get isHtml =>
-      _isHtml ??= GeneratedColumn<bool>('is_html', aliasedName, true,
-          type: const BoolType(),
-          requiredDuringInsert: false,
-          defaultConstraints: 'CHECK (is_html IN (0, 1))');
+  late final GeneratedColumn<bool?> isHtml = GeneratedColumn<bool?>(
+      'is_html', aliasedName, true,
+      type: const BoolType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'CHECK (is_html IN (0, 1))');
   final VerificationMeta _hasBodyMeta = const VerificationMeta('hasBody');
-  GeneratedColumn<bool> _hasBody;
   @override
-  GeneratedColumn<bool> get hasBody =>
-      _hasBody ??= GeneratedColumn<bool>('has_body', aliasedName, false,
-          type: const BoolType(),
-          requiredDuringInsert: true,
-          defaultConstraints: 'CHECK (has_body IN (0, 1))');
+  late final GeneratedColumn<bool?> hasBody = GeneratedColumn<bool?>(
+      'has_body', aliasedName, true,
+      type: const BoolType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'CHECK (has_body IN (0, 1))');
   @override
   List<GeneratedColumn> get $columns => [
         localId,
@@ -2137,11 +2072,11 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
     final data = instance.toColumns(true);
     if (data.containsKey('local_id')) {
       context.handle(_localIdMeta,
-          localId.isAcceptableOrUnknown(data['local_id'], _localIdMeta));
+          localId.isAcceptableOrUnknown(data['local_id']!, _localIdMeta));
     }
     if (data.containsKey('uid')) {
       context.handle(
-          _uidMeta, uid.isAcceptableOrUnknown(data['uid'], _uidMeta));
+          _uidMeta, uid.isAcceptableOrUnknown(data['uid']!, _uidMeta));
     } else if (isInserting) {
       context.missing(_uidMeta);
     }
@@ -2149,37 +2084,31 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
       context.handle(
           _accountEntityIdMeta,
           accountEntityId.isAcceptableOrUnknown(
-              data['account_entity_id'], _accountEntityIdMeta));
-    } else if (isInserting) {
-      context.missing(_accountEntityIdMeta);
+              data['account_entity_id']!, _accountEntityIdMeta));
     }
     if (data.containsKey('user_local_id')) {
       context.handle(
           _userLocalIdMeta,
           userLocalId.isAcceptableOrUnknown(
-              data['user_local_id'], _userLocalIdMeta));
-    } else if (isInserting) {
-      context.missing(_userLocalIdMeta);
+              data['user_local_id']!, _userLocalIdMeta));
     }
     if (data.containsKey('unique_uid_in_folder')) {
       context.handle(
           _uniqueUidInFolderMeta,
           uniqueUidInFolder.isAcceptableOrUnknown(
-              data['unique_uid_in_folder'], _uniqueUidInFolderMeta));
-    } else if (isInserting) {
-      context.missing(_uniqueUidInFolderMeta);
+              data['unique_uid_in_folder']!, _uniqueUidInFolderMeta));
     }
     if (data.containsKey('parent_uid')) {
       context.handle(_parentUidMeta,
-          parentUid.isAcceptableOrUnknown(data['parent_uid'], _parentUidMeta));
+          parentUid.isAcceptableOrUnknown(data['parent_uid']!, _parentUidMeta));
     }
     if (data.containsKey('message_id')) {
       context.handle(_messageIdMeta,
-          messageId.isAcceptableOrUnknown(data['message_id'], _messageIdMeta));
+          messageId.isAcceptableOrUnknown(data['message_id']!, _messageIdMeta));
     }
     if (data.containsKey('folder')) {
       context.handle(_folderMeta,
-          folder.isAcceptableOrUnknown(data['folder'], _folderMeta));
+          folder.isAcceptableOrUnknown(data['folder']!, _folderMeta));
     } else if (isInserting) {
       context.missing(_folderMeta);
     }
@@ -2187,259 +2116,259 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
       context.handle(
           _flagsInJsonMeta,
           flagsInJson.isAcceptableOrUnknown(
-              data['flags_in_json'], _flagsInJsonMeta));
+              data['flags_in_json']!, _flagsInJsonMeta));
     } else if (isInserting) {
       context.missing(_flagsInJsonMeta);
     }
     if (data.containsKey('has_thread')) {
       context.handle(_hasThreadMeta,
-          hasThread.isAcceptableOrUnknown(data['has_thread'], _hasThreadMeta));
-    } else if (isInserting) {
-      context.missing(_hasThreadMeta);
+          hasThread.isAcceptableOrUnknown(data['has_thread']!, _hasThreadMeta));
     }
     if (data.containsKey('subject')) {
       context.handle(_subjectMeta,
-          subject.isAcceptableOrUnknown(data['subject'], _subjectMeta));
+          subject.isAcceptableOrUnknown(data['subject']!, _subjectMeta));
     }
     if (data.containsKey('size')) {
       context.handle(
-          _sizeMeta, size.isAcceptableOrUnknown(data['size'], _sizeMeta));
+          _sizeMeta, size.isAcceptableOrUnknown(data['size']!, _sizeMeta));
     }
     if (data.containsKey('text_size')) {
       context.handle(_textSizeMeta,
-          textSize.isAcceptableOrUnknown(data['text_size'], _textSizeMeta));
+          textSize.isAcceptableOrUnknown(data['text_size']!, _textSizeMeta));
     }
     if (data.containsKey('truncated')) {
       context.handle(_truncatedMeta,
-          truncated.isAcceptableOrUnknown(data['truncated'], _truncatedMeta));
+          truncated.isAcceptableOrUnknown(data['truncated']!, _truncatedMeta));
     }
     if (data.containsKey('internal_time_stamp_in_u_t_c')) {
       context.handle(
           _internalTimeStampInUTCMeta,
           internalTimeStampInUTC.isAcceptableOrUnknown(
-              data['internal_time_stamp_in_u_t_c'],
+              data['internal_time_stamp_in_u_t_c']!,
               _internalTimeStampInUTCMeta));
     }
     if (data.containsKey('received_or_date_time_stamp_in_u_t_c')) {
       context.handle(
           _receivedOrDateTimeStampInUTCMeta,
           receivedOrDateTimeStampInUTC.isAcceptableOrUnknown(
-              data['received_or_date_time_stamp_in_u_t_c'],
+              data['received_or_date_time_stamp_in_u_t_c']!,
               _receivedOrDateTimeStampInUTCMeta));
     }
     if (data.containsKey('time_stamp_in_u_t_c')) {
       context.handle(
           _timeStampInUTCMeta,
           timeStampInUTC.isAcceptableOrUnknown(
-              data['time_stamp_in_u_t_c'], _timeStampInUTCMeta));
+              data['time_stamp_in_u_t_c']!, _timeStampInUTCMeta));
     }
     if (data.containsKey('to_to_display')) {
       context.handle(
           _toToDisplayMeta,
           toToDisplay.isAcceptableOrUnknown(
-              data['to_to_display'], _toToDisplayMeta));
+              data['to_to_display']!, _toToDisplayMeta));
     }
     if (data.containsKey('to_in_json')) {
       context.handle(_toInJsonMeta,
-          toInJson.isAcceptableOrUnknown(data['to_in_json'], _toInJsonMeta));
+          toInJson.isAcceptableOrUnknown(data['to_in_json']!, _toInJsonMeta));
     }
     if (data.containsKey('from_in_json')) {
       context.handle(
           _fromInJsonMeta,
           fromInJson.isAcceptableOrUnknown(
-              data['from_in_json'], _fromInJsonMeta));
+              data['from_in_json']!, _fromInJsonMeta));
     }
     if (data.containsKey('from_to_display')) {
       context.handle(
           _fromToDisplayMeta,
           fromToDisplay.isAcceptableOrUnknown(
-              data['from_to_display'], _fromToDisplayMeta));
+              data['from_to_display']!, _fromToDisplayMeta));
     }
     if (data.containsKey('cc_in_json')) {
       context.handle(_ccInJsonMeta,
-          ccInJson.isAcceptableOrUnknown(data['cc_in_json'], _ccInJsonMeta));
+          ccInJson.isAcceptableOrUnknown(data['cc_in_json']!, _ccInJsonMeta));
     }
     if (data.containsKey('bcc_in_json')) {
-      context.handle(_bccInJsonMeta,
-          bccInJson.isAcceptableOrUnknown(data['bcc_in_json'], _bccInJsonMeta));
+      context.handle(
+          _bccInJsonMeta,
+          bccInJson.isAcceptableOrUnknown(
+              data['bcc_in_json']!, _bccInJsonMeta));
     }
     if (data.containsKey('sender_in_json')) {
       context.handle(
           _senderInJsonMeta,
           senderInJson.isAcceptableOrUnknown(
-              data['sender_in_json'], _senderInJsonMeta));
+              data['sender_in_json']!, _senderInJsonMeta));
     }
     if (data.containsKey('reply_to_in_json')) {
       context.handle(
           _replyToInJsonMeta,
           replyToInJson.isAcceptableOrUnknown(
-              data['reply_to_in_json'], _replyToInJsonMeta));
+              data['reply_to_in_json']!, _replyToInJsonMeta));
     }
     if (data.containsKey('has_attachments')) {
       context.handle(
           _hasAttachmentsMeta,
           hasAttachments.isAcceptableOrUnknown(
-              data['has_attachments'], _hasAttachmentsMeta));
+              data['has_attachments']!, _hasAttachmentsMeta));
     }
     if (data.containsKey('has_vcard_attachment')) {
       context.handle(
           _hasVcardAttachmentMeta,
           hasVcardAttachment.isAcceptableOrUnknown(
-              data['has_vcard_attachment'], _hasVcardAttachmentMeta));
+              data['has_vcard_attachment']!, _hasVcardAttachmentMeta));
     }
     if (data.containsKey('has_ical_attachment')) {
       context.handle(
           _hasIcalAttachmentMeta,
           hasIcalAttachment.isAcceptableOrUnknown(
-              data['has_ical_attachment'], _hasIcalAttachmentMeta));
+              data['has_ical_attachment']!, _hasIcalAttachmentMeta));
     }
     if (data.containsKey('importance')) {
       context.handle(
           _importanceMeta,
           importance.isAcceptableOrUnknown(
-              data['importance'], _importanceMeta));
+              data['importance']!, _importanceMeta));
     }
     if (data.containsKey('draft_info_in_json')) {
       context.handle(
           _draftInfoInJsonMeta,
           draftInfoInJson.isAcceptableOrUnknown(
-              data['draft_info_in_json'], _draftInfoInJsonMeta));
+              data['draft_info_in_json']!, _draftInfoInJsonMeta));
     }
     if (data.containsKey('sensitivity')) {
       context.handle(
           _sensitivityMeta,
           sensitivity.isAcceptableOrUnknown(
-              data['sensitivity'], _sensitivityMeta));
+              data['sensitivity']!, _sensitivityMeta));
     }
     if (data.containsKey('download_as_eml_url')) {
       context.handle(
           _downloadAsEmlUrlMeta,
           downloadAsEmlUrl.isAcceptableOrUnknown(
-              data['download_as_eml_url'], _downloadAsEmlUrlMeta));
+              data['download_as_eml_url']!, _downloadAsEmlUrlMeta));
     }
     if (data.containsKey('hash')) {
       context.handle(
-          _hashMeta, hash.isAcceptableOrUnknown(data['hash'], _hashMeta));
+          _hashMeta, hash.isAcceptableOrUnknown(data['hash']!, _hashMeta));
     }
     if (data.containsKey('headers')) {
       context.handle(_headersMeta,
-          headers.isAcceptableOrUnknown(data['headers'], _headersMeta));
+          headers.isAcceptableOrUnknown(data['headers']!, _headersMeta));
     }
     if (data.containsKey('in_reply_to')) {
-      context.handle(_inReplyToMeta,
-          inReplyTo.isAcceptableOrUnknown(data['in_reply_to'], _inReplyToMeta));
+      context.handle(
+          _inReplyToMeta,
+          inReplyTo.isAcceptableOrUnknown(
+              data['in_reply_to']!, _inReplyToMeta));
     }
     if (data.containsKey('message_references')) {
       context.handle(
           _referencesMeta,
           references.isAcceptableOrUnknown(
-              data['message_references'], _referencesMeta));
+              data['message_references']!, _referencesMeta));
     }
     if (data.containsKey('reading_confirmation_addressee')) {
       context.handle(
           _readingConfirmationAddresseeMeta,
           readingConfirmationAddressee.isAcceptableOrUnknown(
-              data['reading_confirmation_addressee'],
+              data['reading_confirmation_addressee']!,
               _readingConfirmationAddresseeMeta));
     }
     if (data.containsKey('html_body')) {
       context.handle(_htmlBodyMeta,
-          htmlBody.isAcceptableOrUnknown(data['html_body'], _htmlBodyMeta));
+          htmlBody.isAcceptableOrUnknown(data['html_body']!, _htmlBodyMeta));
     }
     if (data.containsKey('raw_body')) {
       context.handle(_rawBodyMeta,
-          rawBody.isAcceptableOrUnknown(data['raw_body'], _rawBodyMeta));
+          rawBody.isAcceptableOrUnknown(data['raw_body']!, _rawBodyMeta));
     }
     if (data.containsKey('body_for_search')) {
       context.handle(
           _bodyForSearchMeta,
           bodyForSearch.isAcceptableOrUnknown(
-              data['body_for_search'], _bodyForSearchMeta));
+              data['body_for_search']!, _bodyForSearchMeta));
     }
     if (data.containsKey('rtl')) {
       context.handle(
-          _rtlMeta, rtl.isAcceptableOrUnknown(data['rtl'], _rtlMeta));
+          _rtlMeta, rtl.isAcceptableOrUnknown(data['rtl']!, _rtlMeta));
     }
     if (data.containsKey('extend_in_json')) {
       context.handle(
           _extendInJsonMeta,
           extendInJson.isAcceptableOrUnknown(
-              data['extend_in_json'], _extendInJsonMeta));
+              data['extend_in_json']!, _extendInJsonMeta));
     }
     if (data.containsKey('safety')) {
       context.handle(_safetyMeta,
-          safety.isAcceptableOrUnknown(data['safety'], _safetyMeta));
+          safety.isAcceptableOrUnknown(data['safety']!, _safetyMeta));
     }
     if (data.containsKey('has_externals')) {
       context.handle(
           _hasExternalsMeta,
           hasExternals.isAcceptableOrUnknown(
-              data['has_externals'], _hasExternalsMeta));
+              data['has_externals']!, _hasExternalsMeta));
     }
     if (data.containsKey('founded_c_i_ds_in_json')) {
       context.handle(
           _foundedCIDsInJsonMeta,
           foundedCIDsInJson.isAcceptableOrUnknown(
-              data['founded_c_i_ds_in_json'], _foundedCIDsInJsonMeta));
+              data['founded_c_i_ds_in_json']!, _foundedCIDsInJsonMeta));
     }
     if (data.containsKey('founded_content_location_urls_in_json')) {
       context.handle(
           _foundedContentLocationUrlsInJsonMeta,
           foundedContentLocationUrlsInJson.isAcceptableOrUnknown(
-              data['founded_content_location_urls_in_json'],
+              data['founded_content_location_urls_in_json']!,
               _foundedContentLocationUrlsInJsonMeta));
     }
     if (data.containsKey('attachments_in_json')) {
       context.handle(
           _attachmentsInJsonMeta,
           attachmentsInJson.isAcceptableOrUnknown(
-              data['attachments_in_json'], _attachmentsInJsonMeta));
+              data['attachments_in_json']!, _attachmentsInJsonMeta));
     }
     if (data.containsKey('to_for_search')) {
       context.handle(
           _toForSearchMeta,
           toForSearch.isAcceptableOrUnknown(
-              data['to_for_search'], _toForSearchMeta));
+              data['to_for_search']!, _toForSearchMeta));
     }
     if (data.containsKey('from_for_search')) {
       context.handle(
           _fromForSearchMeta,
           fromForSearch.isAcceptableOrUnknown(
-              data['from_for_search'], _fromForSearchMeta));
+              data['from_for_search']!, _fromForSearchMeta));
     }
     if (data.containsKey('cc_for_search')) {
       context.handle(
           _ccForSearchMeta,
           ccForSearch.isAcceptableOrUnknown(
-              data['cc_for_search'], _ccForSearchMeta));
+              data['cc_for_search']!, _ccForSearchMeta));
     }
     if (data.containsKey('bcc_for_search')) {
       context.handle(
           _bccForSearchMeta,
           bccForSearch.isAcceptableOrUnknown(
-              data['bcc_for_search'], _bccForSearchMeta));
+              data['bcc_for_search']!, _bccForSearchMeta));
     }
     if (data.containsKey('attachments_for_search')) {
       context.handle(
           _attachmentsForSearchMeta,
           attachmentsForSearch.isAcceptableOrUnknown(
-              data['attachments_for_search'], _attachmentsForSearchMeta));
+              data['attachments_for_search']!, _attachmentsForSearchMeta));
     }
     if (data.containsKey('custom_in_json')) {
       context.handle(
           _customInJsonMeta,
           customInJson.isAcceptableOrUnknown(
-              data['custom_in_json'], _customInJsonMeta));
+              data['custom_in_json']!, _customInJsonMeta));
     }
     if (data.containsKey('is_html')) {
       context.handle(_isHtmlMeta,
-          isHtml.isAcceptableOrUnknown(data['is_html'], _isHtmlMeta));
+          isHtml.isAcceptableOrUnknown(data['is_html']!, _isHtmlMeta));
     }
     if (data.containsKey('has_body')) {
       context.handle(_hasBodyMeta,
-          hasBody.isAcceptableOrUnknown(data['has_body'], _hasBodyMeta));
-    } else if (isInserting) {
-      context.missing(_hasBodyMeta);
+          hasBody.isAcceptableOrUnknown(data['has_body']!, _hasBodyMeta));
     }
     return context;
   }
@@ -2447,7 +2376,7 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
   @override
   Set<GeneratedColumn> get $primaryKey => {localId};
   @override
-  Message map(Map<String, dynamic> data, {String tablePrefix}) {
+  Message map(Map<String, dynamic> data, {String? tablePrefix}) {
     return Message.fromData(data,
         prefix: tablePrefix != null ? '$tablePrefix.' : null);
   }
@@ -2463,12 +2392,12 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
   final int accountLocalId;
   final int userLocalId;
   final String guid;
-  final String parentGuid;
+  final String? parentGuid;
   final int accountId;
   final int type;
   final int folderOrder;
-  final int count;
-  final int unread;
+  final int? count;
+  final int? unread;
   final String name;
   final String fullNameRaw;
   final String fullNameHash;
@@ -2479,239 +2408,169 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
   final bool isSubscribed;
   final bool isSelectable;
   final bool folderExists;
-  final bool extended;
+  final bool? extended;
   final bool alwaysRefresh;
   final String namespace;
   LocalFolder(
-      {@required this.fullName,
-      @required this.accountLocalId,
-      @required this.userLocalId,
-      @required this.guid,
+      {required this.fullName,
+      required this.accountLocalId,
+      required this.userLocalId,
+      required this.guid,
       this.parentGuid,
-      @required this.accountId,
-      @required this.type,
-      @required this.folderOrder,
+      required this.accountId,
+      required this.type,
+      required this.folderOrder,
       this.count,
       this.unread,
-      @required this.name,
-      @required this.fullNameRaw,
-      @required this.fullNameHash,
-      @required this.folderHash,
-      @required this.delimiter,
-      @required this.needsInfoUpdate,
-      @required this.isSystemFolder,
-      @required this.isSubscribed,
-      @required this.isSelectable,
-      @required this.folderExists,
+      required this.name,
+      required this.fullNameRaw,
+      required this.fullNameHash,
+      required this.folderHash,
+      required this.delimiter,
+      required this.needsInfoUpdate,
+      required this.isSystemFolder,
+      required this.isSubscribed,
+      required this.isSelectable,
+      required this.folderExists,
       this.extended,
-      @required this.alwaysRefresh,
-      @required this.namespace});
-  factory LocalFolder.fromData(Map<String, dynamic> data, {String prefix}) {
+      required this.alwaysRefresh,
+      required this.namespace});
+  factory LocalFolder.fromData(Map<String, dynamic> data, {String? prefix}) {
     final effectivePrefix = prefix ?? '';
     return LocalFolder(
       fullName: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}full_name']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}full_name'])!,
       accountLocalId: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}account_local_id']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}account_local_id'])!,
       userLocalId: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}user_local_id']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}user_local_id'])!,
       guid: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}guid']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}guid'])!,
       parentGuid: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}parent_guid']),
       accountId: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}account_id']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}account_id'])!,
       type: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}type']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}type'])!,
       folderOrder: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}folder_order']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}folder_order'])!,
       count: const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}count']),
       unread: const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}unread']),
       name: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}name']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}name'])!,
       fullNameRaw: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}full_name_raw']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}full_name_raw'])!,
       fullNameHash: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}full_name_hash']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}full_name_hash'])!,
       folderHash: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}folder_hash']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}folder_hash'])!,
       delimiter: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}delimiter']),
-      needsInfoUpdate: const BoolType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}needs_info_update']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}delimiter'])!,
+      needsInfoUpdate: const BoolType().mapFromDatabaseResponse(
+          data['${effectivePrefix}needs_info_update'])!,
       isSystemFolder: const BoolType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}is_system_folder']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}is_system_folder'])!,
       isSubscribed: const BoolType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}is_subscribed']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}is_subscribed'])!,
       isSelectable: const BoolType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}is_selectable']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}is_selectable'])!,
       folderExists: const BoolType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}folder_exists']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}folder_exists'])!,
       extended: const BoolType()
           .mapFromDatabaseResponse(data['${effectivePrefix}extended']),
       alwaysRefresh: const BoolType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}always_refresh']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}always_refresh'])!,
       namespace: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}namespace']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}namespace'])!,
     );
   }
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (!nullToAbsent || fullName != null) {
-      map['full_name'] = Variable<String>(fullName);
-    }
-    if (!nullToAbsent || accountLocalId != null) {
-      map['account_local_id'] = Variable<int>(accountLocalId);
-    }
-    if (!nullToAbsent || userLocalId != null) {
-      map['user_local_id'] = Variable<int>(userLocalId);
-    }
-    if (!nullToAbsent || guid != null) {
-      map['guid'] = Variable<String>(guid);
-    }
+    map['full_name'] = Variable<String>(fullName);
+    map['account_local_id'] = Variable<int>(accountLocalId);
+    map['user_local_id'] = Variable<int>(userLocalId);
+    map['guid'] = Variable<String>(guid);
     if (!nullToAbsent || parentGuid != null) {
-      map['parent_guid'] = Variable<String>(parentGuid);
+      map['parent_guid'] = Variable<String?>(parentGuid);
     }
-    if (!nullToAbsent || accountId != null) {
-      map['account_id'] = Variable<int>(accountId);
-    }
-    if (!nullToAbsent || type != null) {
-      map['type'] = Variable<int>(type);
-    }
-    if (!nullToAbsent || folderOrder != null) {
-      map['folder_order'] = Variable<int>(folderOrder);
-    }
+    map['account_id'] = Variable<int>(accountId);
+    map['type'] = Variable<int>(type);
+    map['folder_order'] = Variable<int>(folderOrder);
     if (!nullToAbsent || count != null) {
-      map['count'] = Variable<int>(count);
+      map['count'] = Variable<int?>(count);
     }
     if (!nullToAbsent || unread != null) {
-      map['unread'] = Variable<int>(unread);
+      map['unread'] = Variable<int?>(unread);
     }
-    if (!nullToAbsent || name != null) {
-      map['name'] = Variable<String>(name);
-    }
-    if (!nullToAbsent || fullNameRaw != null) {
-      map['full_name_raw'] = Variable<String>(fullNameRaw);
-    }
-    if (!nullToAbsent || fullNameHash != null) {
-      map['full_name_hash'] = Variable<String>(fullNameHash);
-    }
-    if (!nullToAbsent || folderHash != null) {
-      map['folder_hash'] = Variable<String>(folderHash);
-    }
-    if (!nullToAbsent || delimiter != null) {
-      map['delimiter'] = Variable<String>(delimiter);
-    }
-    if (!nullToAbsent || needsInfoUpdate != null) {
-      map['needs_info_update'] = Variable<bool>(needsInfoUpdate);
-    }
-    if (!nullToAbsent || isSystemFolder != null) {
-      map['is_system_folder'] = Variable<bool>(isSystemFolder);
-    }
-    if (!nullToAbsent || isSubscribed != null) {
-      map['is_subscribed'] = Variable<bool>(isSubscribed);
-    }
-    if (!nullToAbsent || isSelectable != null) {
-      map['is_selectable'] = Variable<bool>(isSelectable);
-    }
-    if (!nullToAbsent || folderExists != null) {
-      map['folder_exists'] = Variable<bool>(folderExists);
-    }
+    map['name'] = Variable<String>(name);
+    map['full_name_raw'] = Variable<String>(fullNameRaw);
+    map['full_name_hash'] = Variable<String>(fullNameHash);
+    map['folder_hash'] = Variable<String>(folderHash);
+    map['delimiter'] = Variable<String>(delimiter);
+    map['needs_info_update'] = Variable<bool>(needsInfoUpdate);
+    map['is_system_folder'] = Variable<bool>(isSystemFolder);
+    map['is_subscribed'] = Variable<bool>(isSubscribed);
+    map['is_selectable'] = Variable<bool>(isSelectable);
+    map['folder_exists'] = Variable<bool>(folderExists);
     if (!nullToAbsent || extended != null) {
-      map['extended'] = Variable<bool>(extended);
+      map['extended'] = Variable<bool?>(extended);
     }
-    if (!nullToAbsent || alwaysRefresh != null) {
-      map['always_refresh'] = Variable<bool>(alwaysRefresh);
-    }
-    if (!nullToAbsent || namespace != null) {
-      map['namespace'] = Variable<String>(namespace);
-    }
+    map['always_refresh'] = Variable<bool>(alwaysRefresh);
+    map['namespace'] = Variable<String>(namespace);
     return map;
   }
 
   FoldersCompanion toCompanion(bool nullToAbsent) {
     return FoldersCompanion(
-      fullName: fullName == null && nullToAbsent
-          ? const Value.absent()
-          : Value(fullName),
-      accountLocalId: accountLocalId == null && nullToAbsent
-          ? const Value.absent()
-          : Value(accountLocalId),
-      userLocalId: userLocalId == null && nullToAbsent
-          ? const Value.absent()
-          : Value(userLocalId),
-      guid: guid == null && nullToAbsent ? const Value.absent() : Value(guid),
+      fullName: Value(fullName),
+      accountLocalId: Value(accountLocalId),
+      userLocalId: Value(userLocalId),
+      guid: Value(guid),
       parentGuid: parentGuid == null && nullToAbsent
           ? const Value.absent()
           : Value(parentGuid),
-      accountId: accountId == null && nullToAbsent
-          ? const Value.absent()
-          : Value(accountId),
-      type: type == null && nullToAbsent ? const Value.absent() : Value(type),
-      folderOrder: folderOrder == null && nullToAbsent
-          ? const Value.absent()
-          : Value(folderOrder),
+      accountId: Value(accountId),
+      type: Value(type),
+      folderOrder: Value(folderOrder),
       count:
           count == null && nullToAbsent ? const Value.absent() : Value(count),
       unread:
           unread == null && nullToAbsent ? const Value.absent() : Value(unread),
-      name: name == null && nullToAbsent ? const Value.absent() : Value(name),
-      fullNameRaw: fullNameRaw == null && nullToAbsent
-          ? const Value.absent()
-          : Value(fullNameRaw),
-      fullNameHash: fullNameHash == null && nullToAbsent
-          ? const Value.absent()
-          : Value(fullNameHash),
-      folderHash: folderHash == null && nullToAbsent
-          ? const Value.absent()
-          : Value(folderHash),
-      delimiter: delimiter == null && nullToAbsent
-          ? const Value.absent()
-          : Value(delimiter),
-      needsInfoUpdate: needsInfoUpdate == null && nullToAbsent
-          ? const Value.absent()
-          : Value(needsInfoUpdate),
-      isSystemFolder: isSystemFolder == null && nullToAbsent
-          ? const Value.absent()
-          : Value(isSystemFolder),
-      isSubscribed: isSubscribed == null && nullToAbsent
-          ? const Value.absent()
-          : Value(isSubscribed),
-      isSelectable: isSelectable == null && nullToAbsent
-          ? const Value.absent()
-          : Value(isSelectable),
-      folderExists: folderExists == null && nullToAbsent
-          ? const Value.absent()
-          : Value(folderExists),
+      name: Value(name),
+      fullNameRaw: Value(fullNameRaw),
+      fullNameHash: Value(fullNameHash),
+      folderHash: Value(folderHash),
+      delimiter: Value(delimiter),
+      needsInfoUpdate: Value(needsInfoUpdate),
+      isSystemFolder: Value(isSystemFolder),
+      isSubscribed: Value(isSubscribed),
+      isSelectable: Value(isSelectable),
+      folderExists: Value(folderExists),
       extended: extended == null && nullToAbsent
           ? const Value.absent()
           : Value(extended),
-      alwaysRefresh: alwaysRefresh == null && nullToAbsent
-          ? const Value.absent()
-          : Value(alwaysRefresh),
-      namespace: namespace == null && nullToAbsent
-          ? const Value.absent()
-          : Value(namespace),
+      alwaysRefresh: Value(alwaysRefresh),
+      namespace: Value(namespace),
     );
   }
 
   factory LocalFolder.fromJson(Map<String, dynamic> json,
-      {ValueSerializer serializer}) {
+      {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return LocalFolder(
       fullName: serializer.fromJson<String>(json['fullName']),
       accountLocalId: serializer.fromJson<int>(json['accountLocalId']),
       userLocalId: serializer.fromJson<int>(json['userLocalId']),
       guid: serializer.fromJson<String>(json['guid']),
-      parentGuid: serializer.fromJson<String>(json['parentGuid']),
+      parentGuid: serializer.fromJson<String?>(json['parentGuid']),
       accountId: serializer.fromJson<int>(json['accountId']),
       type: serializer.fromJson<int>(json['type']),
       folderOrder: serializer.fromJson<int>(json['folderOrder']),
-      count: serializer.fromJson<int>(json['count']),
-      unread: serializer.fromJson<int>(json['unread']),
+      count: serializer.fromJson<int?>(json['count']),
+      unread: serializer.fromJson<int?>(json['unread']),
       name: serializer.fromJson<String>(json['name']),
       fullNameRaw: serializer.fromJson<String>(json['fullNameRaw']),
       fullNameHash: serializer.fromJson<String>(json['fullNameHash']),
@@ -2722,25 +2581,25 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
       isSubscribed: serializer.fromJson<bool>(json['isSubscribed']),
       isSelectable: serializer.fromJson<bool>(json['isSelectable']),
       folderExists: serializer.fromJson<bool>(json['folderExists']),
-      extended: serializer.fromJson<bool>(json['extended']),
+      extended: serializer.fromJson<bool?>(json['extended']),
       alwaysRefresh: serializer.fromJson<bool>(json['alwaysRefresh']),
       namespace: serializer.fromJson<String>(json['namespace']),
     );
   }
   @override
-  Map<String, dynamic> toJson({ValueSerializer serializer}) {
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'fullName': serializer.toJson<String>(fullName),
       'accountLocalId': serializer.toJson<int>(accountLocalId),
       'userLocalId': serializer.toJson<int>(userLocalId),
       'guid': serializer.toJson<String>(guid),
-      'parentGuid': serializer.toJson<String>(parentGuid),
+      'parentGuid': serializer.toJson<String?>(parentGuid),
       'accountId': serializer.toJson<int>(accountId),
       'type': serializer.toJson<int>(type),
       'folderOrder': serializer.toJson<int>(folderOrder),
-      'count': serializer.toJson<int>(count),
-      'unread': serializer.toJson<int>(unread),
+      'count': serializer.toJson<int?>(count),
+      'unread': serializer.toJson<int?>(unread),
       'name': serializer.toJson<String>(name),
       'fullNameRaw': serializer.toJson<String>(fullNameRaw),
       'fullNameHash': serializer.toJson<String>(fullNameHash),
@@ -2751,36 +2610,36 @@ class LocalFolder extends DataClass implements Insertable<LocalFolder> {
       'isSubscribed': serializer.toJson<bool>(isSubscribed),
       'isSelectable': serializer.toJson<bool>(isSelectable),
       'folderExists': serializer.toJson<bool>(folderExists),
-      'extended': serializer.toJson<bool>(extended),
+      'extended': serializer.toJson<bool?>(extended),
       'alwaysRefresh': serializer.toJson<bool>(alwaysRefresh),
       'namespace': serializer.toJson<String>(namespace),
     };
   }
 
   LocalFolder copyWith(
-          {String fullName,
-          int accountLocalId,
-          int userLocalId,
-          String guid,
-          String parentGuid,
-          int accountId,
-          int type,
-          int folderOrder,
-          int count,
-          int unread,
-          String name,
-          String fullNameRaw,
-          String fullNameHash,
-          String folderHash,
-          String delimiter,
-          bool needsInfoUpdate,
-          bool isSystemFolder,
-          bool isSubscribed,
-          bool isSelectable,
-          bool folderExists,
-          bool extended,
-          bool alwaysRefresh,
-          String namespace}) =>
+          {String? fullName,
+          int? accountLocalId,
+          int? userLocalId,
+          String? guid,
+          String? parentGuid,
+          int? accountId,
+          int? type,
+          int? folderOrder,
+          int? count,
+          int? unread,
+          String? name,
+          String? fullNameRaw,
+          String? fullNameHash,
+          String? folderHash,
+          String? delimiter,
+          bool? needsInfoUpdate,
+          bool? isSystemFolder,
+          bool? isSubscribed,
+          bool? isSelectable,
+          bool? folderExists,
+          bool? extended,
+          bool? alwaysRefresh,
+          String? namespace}) =>
       LocalFolder(
         fullName: fullName ?? this.fullName,
         accountLocalId: accountLocalId ?? this.accountLocalId,
@@ -2896,12 +2755,12 @@ class FoldersCompanion extends UpdateCompanion<LocalFolder> {
   final Value<int> accountLocalId;
   final Value<int> userLocalId;
   final Value<String> guid;
-  final Value<String> parentGuid;
+  final Value<String?> parentGuid;
   final Value<int> accountId;
   final Value<int> type;
   final Value<int> folderOrder;
-  final Value<int> count;
-  final Value<int> unread;
+  final Value<int?> count;
+  final Value<int?> unread;
   final Value<String> name;
   final Value<String> fullNameRaw;
   final Value<String> fullNameHash;
@@ -2912,7 +2771,7 @@ class FoldersCompanion extends UpdateCompanion<LocalFolder> {
   final Value<bool> isSubscribed;
   final Value<bool> isSelectable;
   final Value<bool> folderExists;
-  final Value<bool> extended;
+  final Value<bool?> extended;
   final Value<bool> alwaysRefresh;
   final Value<String> namespace;
   const FoldersCompanion({
@@ -2941,29 +2800,29 @@ class FoldersCompanion extends UpdateCompanion<LocalFolder> {
     this.namespace = const Value.absent(),
   });
   FoldersCompanion.insert({
-    @required String fullName,
-    @required int accountLocalId,
-    @required int userLocalId,
-    @required String guid,
+    required String fullName,
+    required int accountLocalId,
+    required int userLocalId,
+    required String guid,
     this.parentGuid = const Value.absent(),
-    @required int accountId,
-    @required int type,
-    @required int folderOrder,
+    required int accountId,
+    required int type,
+    required int folderOrder,
     this.count = const Value.absent(),
     this.unread = const Value.absent(),
-    @required String name,
-    @required String fullNameRaw,
-    @required String fullNameHash,
-    @required String folderHash,
-    @required String delimiter,
-    @required bool needsInfoUpdate,
-    @required bool isSystemFolder,
-    @required bool isSubscribed,
-    @required bool isSelectable,
-    @required bool folderExists,
+    required String name,
+    required String fullNameRaw,
+    required String fullNameHash,
+    required String folderHash,
+    required String delimiter,
+    required bool needsInfoUpdate,
+    required bool isSystemFolder,
+    required bool isSubscribed,
+    required bool isSelectable,
+    required bool folderExists,
     this.extended = const Value.absent(),
-    @required bool alwaysRefresh,
-    @required String namespace,
+    required bool alwaysRefresh,
+    required String namespace,
   })  : fullName = Value(fullName),
         accountLocalId = Value(accountLocalId),
         userLocalId = Value(userLocalId),
@@ -2984,29 +2843,29 @@ class FoldersCompanion extends UpdateCompanion<LocalFolder> {
         alwaysRefresh = Value(alwaysRefresh),
         namespace = Value(namespace);
   static Insertable<LocalFolder> custom({
-    Expression<String> fullName,
-    Expression<int> accountLocalId,
-    Expression<int> userLocalId,
-    Expression<String> guid,
-    Expression<String> parentGuid,
-    Expression<int> accountId,
-    Expression<int> type,
-    Expression<int> folderOrder,
-    Expression<int> count,
-    Expression<int> unread,
-    Expression<String> name,
-    Expression<String> fullNameRaw,
-    Expression<String> fullNameHash,
-    Expression<String> folderHash,
-    Expression<String> delimiter,
-    Expression<bool> needsInfoUpdate,
-    Expression<bool> isSystemFolder,
-    Expression<bool> isSubscribed,
-    Expression<bool> isSelectable,
-    Expression<bool> folderExists,
-    Expression<bool> extended,
-    Expression<bool> alwaysRefresh,
-    Expression<String> namespace,
+    Expression<String>? fullName,
+    Expression<int>? accountLocalId,
+    Expression<int>? userLocalId,
+    Expression<String>? guid,
+    Expression<String?>? parentGuid,
+    Expression<int>? accountId,
+    Expression<int>? type,
+    Expression<int>? folderOrder,
+    Expression<int?>? count,
+    Expression<int?>? unread,
+    Expression<String>? name,
+    Expression<String>? fullNameRaw,
+    Expression<String>? fullNameHash,
+    Expression<String>? folderHash,
+    Expression<String>? delimiter,
+    Expression<bool>? needsInfoUpdate,
+    Expression<bool>? isSystemFolder,
+    Expression<bool>? isSubscribed,
+    Expression<bool>? isSelectable,
+    Expression<bool>? folderExists,
+    Expression<bool?>? extended,
+    Expression<bool>? alwaysRefresh,
+    Expression<String>? namespace,
   }) {
     return RawValuesInsertable({
       if (fullName != null) 'full_name': fullName,
@@ -3036,29 +2895,29 @@ class FoldersCompanion extends UpdateCompanion<LocalFolder> {
   }
 
   FoldersCompanion copyWith(
-      {Value<String> fullName,
-      Value<int> accountLocalId,
-      Value<int> userLocalId,
-      Value<String> guid,
-      Value<String> parentGuid,
-      Value<int> accountId,
-      Value<int> type,
-      Value<int> folderOrder,
-      Value<int> count,
-      Value<int> unread,
-      Value<String> name,
-      Value<String> fullNameRaw,
-      Value<String> fullNameHash,
-      Value<String> folderHash,
-      Value<String> delimiter,
-      Value<bool> needsInfoUpdate,
-      Value<bool> isSystemFolder,
-      Value<bool> isSubscribed,
-      Value<bool> isSelectable,
-      Value<bool> folderExists,
-      Value<bool> extended,
-      Value<bool> alwaysRefresh,
-      Value<String> namespace}) {
+      {Value<String>? fullName,
+      Value<int>? accountLocalId,
+      Value<int>? userLocalId,
+      Value<String>? guid,
+      Value<String?>? parentGuid,
+      Value<int>? accountId,
+      Value<int>? type,
+      Value<int>? folderOrder,
+      Value<int?>? count,
+      Value<int?>? unread,
+      Value<String>? name,
+      Value<String>? fullNameRaw,
+      Value<String>? fullNameHash,
+      Value<String>? folderHash,
+      Value<String>? delimiter,
+      Value<bool>? needsInfoUpdate,
+      Value<bool>? isSystemFolder,
+      Value<bool>? isSubscribed,
+      Value<bool>? isSelectable,
+      Value<bool>? folderExists,
+      Value<bool?>? extended,
+      Value<bool>? alwaysRefresh,
+      Value<String>? namespace}) {
     return FoldersCompanion(
       fullName: fullName ?? this.fullName,
       accountLocalId: accountLocalId ?? this.accountLocalId,
@@ -3102,7 +2961,7 @@ class FoldersCompanion extends UpdateCompanion<LocalFolder> {
       map['guid'] = Variable<String>(guid.value);
     }
     if (parentGuid.present) {
-      map['parent_guid'] = Variable<String>(parentGuid.value);
+      map['parent_guid'] = Variable<String?>(parentGuid.value);
     }
     if (accountId.present) {
       map['account_id'] = Variable<int>(accountId.value);
@@ -3114,10 +2973,10 @@ class FoldersCompanion extends UpdateCompanion<LocalFolder> {
       map['folder_order'] = Variable<int>(folderOrder.value);
     }
     if (count.present) {
-      map['count'] = Variable<int>(count.value);
+      map['count'] = Variable<int?>(count.value);
     }
     if (unread.present) {
-      map['unread'] = Variable<int>(unread.value);
+      map['unread'] = Variable<int?>(unread.value);
     }
     if (name.present) {
       map['name'] = Variable<String>(name.value);
@@ -3150,7 +3009,7 @@ class FoldersCompanion extends UpdateCompanion<LocalFolder> {
       map['folder_exists'] = Variable<bool>(folderExists.value);
     }
     if (extended.present) {
-      map['extended'] = Variable<bool>(extended.value);
+      map['extended'] = Variable<bool?>(extended.value);
     }
     if (alwaysRefresh.present) {
       map['always_refresh'] = Variable<bool>(alwaysRefresh.value);
@@ -3195,171 +3054,148 @@ class FoldersCompanion extends UpdateCompanion<LocalFolder> {
 class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
   @override
   final GeneratedDatabase attachedDatabase;
-  final String _alias;
+  final String? _alias;
   $FoldersTable(this.attachedDatabase, [this._alias]);
   final VerificationMeta _fullNameMeta = const VerificationMeta('fullName');
-  GeneratedColumn<String> _fullName;
   @override
-  GeneratedColumn<String> get fullName =>
-      _fullName ??= GeneratedColumn<String>('full_name', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> fullName = GeneratedColumn<String?>(
+      'full_name', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _accountLocalIdMeta =
       const VerificationMeta('accountLocalId');
-  GeneratedColumn<int> _accountLocalId;
   @override
-  GeneratedColumn<int> get accountLocalId => _accountLocalId ??=
-      GeneratedColumn<int>('account_local_id', aliasedName, false,
-          type: const IntType(), requiredDuringInsert: true);
+  late final GeneratedColumn<int?> accountLocalId = GeneratedColumn<int?>(
+      'account_local_id', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _userLocalIdMeta =
       const VerificationMeta('userLocalId');
-  GeneratedColumn<int> _userLocalId;
   @override
-  GeneratedColumn<int> get userLocalId =>
-      _userLocalId ??= GeneratedColumn<int>('user_local_id', aliasedName, false,
-          type: const IntType(), requiredDuringInsert: true);
+  late final GeneratedColumn<int?> userLocalId = GeneratedColumn<int?>(
+      'user_local_id', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _guidMeta = const VerificationMeta('guid');
-  GeneratedColumn<String> _guid;
   @override
-  GeneratedColumn<String> get guid =>
-      _guid ??= GeneratedColumn<String>('guid', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> guid = GeneratedColumn<String?>(
+      'guid', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _parentGuidMeta = const VerificationMeta('parentGuid');
-  GeneratedColumn<String> _parentGuid;
   @override
-  GeneratedColumn<String> get parentGuid =>
-      _parentGuid ??= GeneratedColumn<String>('parent_guid', aliasedName, true,
-          type: const StringType(), requiredDuringInsert: false);
+  late final GeneratedColumn<String?> parentGuid = GeneratedColumn<String?>(
+      'parent_guid', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _accountIdMeta = const VerificationMeta('accountId');
-  GeneratedColumn<int> _accountId;
   @override
-  GeneratedColumn<int> get accountId =>
-      _accountId ??= GeneratedColumn<int>('account_id', aliasedName, false,
-          type: const IntType(), requiredDuringInsert: true);
+  late final GeneratedColumn<int?> accountId = GeneratedColumn<int?>(
+      'account_id', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _typeMeta = const VerificationMeta('type');
-  GeneratedColumn<int> _type;
   @override
-  GeneratedColumn<int> get type =>
-      _type ??= GeneratedColumn<int>('type', aliasedName, false,
-          type: const IntType(), requiredDuringInsert: true);
+  late final GeneratedColumn<int?> type = GeneratedColumn<int?>(
+      'type', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _folderOrderMeta =
       const VerificationMeta('folderOrder');
-  GeneratedColumn<int> _folderOrder;
   @override
-  GeneratedColumn<int> get folderOrder =>
-      _folderOrder ??= GeneratedColumn<int>('folder_order', aliasedName, false,
-          type: const IntType(), requiredDuringInsert: true);
+  late final GeneratedColumn<int?> folderOrder = GeneratedColumn<int?>(
+      'folder_order', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _countMeta = const VerificationMeta('count');
-  GeneratedColumn<int> _count;
   @override
-  GeneratedColumn<int> get count =>
-      _count ??= GeneratedColumn<int>('count', aliasedName, true,
-          type: const IntType(), requiredDuringInsert: false);
+  late final GeneratedColumn<int?> count = GeneratedColumn<int?>(
+      'count', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
   final VerificationMeta _unreadMeta = const VerificationMeta('unread');
-  GeneratedColumn<int> _unread;
   @override
-  GeneratedColumn<int> get unread =>
-      _unread ??= GeneratedColumn<int>('unread', aliasedName, true,
-          type: const IntType(), requiredDuringInsert: false);
+  late final GeneratedColumn<int?> unread = GeneratedColumn<int?>(
+      'unread', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
   final VerificationMeta _nameMeta = const VerificationMeta('name');
-  GeneratedColumn<String> _name;
   @override
-  GeneratedColumn<String> get name =>
-      _name ??= GeneratedColumn<String>('name', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> name = GeneratedColumn<String?>(
+      'name', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _fullNameRawMeta =
       const VerificationMeta('fullNameRaw');
-  GeneratedColumn<String> _fullNameRaw;
   @override
-  GeneratedColumn<String> get fullNameRaw => _fullNameRaw ??=
-      GeneratedColumn<String>('full_name_raw', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> fullNameRaw = GeneratedColumn<String?>(
+      'full_name_raw', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _fullNameHashMeta =
       const VerificationMeta('fullNameHash');
-  GeneratedColumn<String> _fullNameHash;
   @override
-  GeneratedColumn<String> get fullNameHash => _fullNameHash ??=
-      GeneratedColumn<String>('full_name_hash', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> fullNameHash = GeneratedColumn<String?>(
+      'full_name_hash', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _folderHashMeta = const VerificationMeta('folderHash');
-  GeneratedColumn<String> _folderHash;
   @override
-  GeneratedColumn<String> get folderHash =>
-      _folderHash ??= GeneratedColumn<String>('folder_hash', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> folderHash = GeneratedColumn<String?>(
+      'folder_hash', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _delimiterMeta = const VerificationMeta('delimiter');
-  GeneratedColumn<String> _delimiter;
   @override
-  GeneratedColumn<String> get delimiter =>
-      _delimiter ??= GeneratedColumn<String>('delimiter', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> delimiter = GeneratedColumn<String?>(
+      'delimiter', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _needsInfoUpdateMeta =
       const VerificationMeta('needsInfoUpdate');
-  GeneratedColumn<bool> _needsInfoUpdate;
   @override
-  GeneratedColumn<bool> get needsInfoUpdate => _needsInfoUpdate ??=
-      GeneratedColumn<bool>('needs_info_update', aliasedName, false,
-          type: const BoolType(),
-          requiredDuringInsert: true,
-          defaultConstraints: 'CHECK (needs_info_update IN (0, 1))');
+  late final GeneratedColumn<bool?> needsInfoUpdate = GeneratedColumn<bool?>(
+      'needs_info_update', aliasedName, false,
+      type: const BoolType(),
+      requiredDuringInsert: true,
+      defaultConstraints: 'CHECK (needs_info_update IN (0, 1))');
   final VerificationMeta _isSystemFolderMeta =
       const VerificationMeta('isSystemFolder');
-  GeneratedColumn<bool> _isSystemFolder;
   @override
-  GeneratedColumn<bool> get isSystemFolder => _isSystemFolder ??=
-      GeneratedColumn<bool>('is_system_folder', aliasedName, false,
-          type: const BoolType(),
-          requiredDuringInsert: true,
-          defaultConstraints: 'CHECK (is_system_folder IN (0, 1))');
+  late final GeneratedColumn<bool?> isSystemFolder = GeneratedColumn<bool?>(
+      'is_system_folder', aliasedName, false,
+      type: const BoolType(),
+      requiredDuringInsert: true,
+      defaultConstraints: 'CHECK (is_system_folder IN (0, 1))');
   final VerificationMeta _isSubscribedMeta =
       const VerificationMeta('isSubscribed');
-  GeneratedColumn<bool> _isSubscribed;
   @override
-  GeneratedColumn<bool> get isSubscribed => _isSubscribed ??=
-      GeneratedColumn<bool>('is_subscribed', aliasedName, false,
-          type: const BoolType(),
-          requiredDuringInsert: true,
-          defaultConstraints: 'CHECK (is_subscribed IN (0, 1))');
+  late final GeneratedColumn<bool?> isSubscribed = GeneratedColumn<bool?>(
+      'is_subscribed', aliasedName, false,
+      type: const BoolType(),
+      requiredDuringInsert: true,
+      defaultConstraints: 'CHECK (is_subscribed IN (0, 1))');
   final VerificationMeta _isSelectableMeta =
       const VerificationMeta('isSelectable');
-  GeneratedColumn<bool> _isSelectable;
   @override
-  GeneratedColumn<bool> get isSelectable => _isSelectable ??=
-      GeneratedColumn<bool>('is_selectable', aliasedName, false,
-          type: const BoolType(),
-          requiredDuringInsert: true,
-          defaultConstraints: 'CHECK (is_selectable IN (0, 1))');
+  late final GeneratedColumn<bool?> isSelectable = GeneratedColumn<bool?>(
+      'is_selectable', aliasedName, false,
+      type: const BoolType(),
+      requiredDuringInsert: true,
+      defaultConstraints: 'CHECK (is_selectable IN (0, 1))');
   final VerificationMeta _folderExistsMeta =
       const VerificationMeta('folderExists');
-  GeneratedColumn<bool> _folderExists;
   @override
-  GeneratedColumn<bool> get folderExists => _folderExists ??=
-      GeneratedColumn<bool>('folder_exists', aliasedName, false,
-          type: const BoolType(),
-          requiredDuringInsert: true,
-          defaultConstraints: 'CHECK (folder_exists IN (0, 1))');
+  late final GeneratedColumn<bool?> folderExists = GeneratedColumn<bool?>(
+      'folder_exists', aliasedName, false,
+      type: const BoolType(),
+      requiredDuringInsert: true,
+      defaultConstraints: 'CHECK (folder_exists IN (0, 1))');
   final VerificationMeta _extendedMeta = const VerificationMeta('extended');
-  GeneratedColumn<bool> _extended;
   @override
-  GeneratedColumn<bool> get extended =>
-      _extended ??= GeneratedColumn<bool>('extended', aliasedName, true,
-          type: const BoolType(),
-          requiredDuringInsert: false,
-          defaultConstraints: 'CHECK (extended IN (0, 1))');
+  late final GeneratedColumn<bool?> extended = GeneratedColumn<bool?>(
+      'extended', aliasedName, true,
+      type: const BoolType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'CHECK (extended IN (0, 1))');
   final VerificationMeta _alwaysRefreshMeta =
       const VerificationMeta('alwaysRefresh');
-  GeneratedColumn<bool> _alwaysRefresh;
   @override
-  GeneratedColumn<bool> get alwaysRefresh => _alwaysRefresh ??=
-      GeneratedColumn<bool>('always_refresh', aliasedName, false,
-          type: const BoolType(),
-          requiredDuringInsert: true,
-          defaultConstraints: 'CHECK (always_refresh IN (0, 1))');
+  late final GeneratedColumn<bool?> alwaysRefresh = GeneratedColumn<bool?>(
+      'always_refresh', aliasedName, false,
+      type: const BoolType(),
+      requiredDuringInsert: true,
+      defaultConstraints: 'CHECK (always_refresh IN (0, 1))');
   final VerificationMeta _namespaceMeta = const VerificationMeta('namespace');
-  GeneratedColumn<String> _namespace;
   @override
-  GeneratedColumn<String> get namespace =>
-      _namespace ??= GeneratedColumn<String>('namespace', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> namespace = GeneratedColumn<String?>(
+      'namespace', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns => [
         fullName,
@@ -3397,7 +3233,7 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
     final data = instance.toColumns(true);
     if (data.containsKey('full_name')) {
       context.handle(_fullNameMeta,
-          fullName.isAcceptableOrUnknown(data['full_name'], _fullNameMeta));
+          fullName.isAcceptableOrUnknown(data['full_name']!, _fullNameMeta));
     } else if (isInserting) {
       context.missing(_fullNameMeta);
     }
@@ -3405,7 +3241,7 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
       context.handle(
           _accountLocalIdMeta,
           accountLocalId.isAcceptableOrUnknown(
-              data['account_local_id'], _accountLocalIdMeta));
+              data['account_local_id']!, _accountLocalIdMeta));
     } else if (isInserting) {
       context.missing(_accountLocalIdMeta);
     }
@@ -3413,13 +3249,13 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
       context.handle(
           _userLocalIdMeta,
           userLocalId.isAcceptableOrUnknown(
-              data['user_local_id'], _userLocalIdMeta));
+              data['user_local_id']!, _userLocalIdMeta));
     } else if (isInserting) {
       context.missing(_userLocalIdMeta);
     }
     if (data.containsKey('guid')) {
       context.handle(
-          _guidMeta, guid.isAcceptableOrUnknown(data['guid'], _guidMeta));
+          _guidMeta, guid.isAcceptableOrUnknown(data['guid']!, _guidMeta));
     } else if (isInserting) {
       context.missing(_guidMeta);
     }
@@ -3427,17 +3263,17 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
       context.handle(
           _parentGuidMeta,
           parentGuid.isAcceptableOrUnknown(
-              data['parent_guid'], _parentGuidMeta));
+              data['parent_guid']!, _parentGuidMeta));
     }
     if (data.containsKey('account_id')) {
       context.handle(_accountIdMeta,
-          accountId.isAcceptableOrUnknown(data['account_id'], _accountIdMeta));
+          accountId.isAcceptableOrUnknown(data['account_id']!, _accountIdMeta));
     } else if (isInserting) {
       context.missing(_accountIdMeta);
     }
     if (data.containsKey('type')) {
       context.handle(
-          _typeMeta, type.isAcceptableOrUnknown(data['type'], _typeMeta));
+          _typeMeta, type.isAcceptableOrUnknown(data['type']!, _typeMeta));
     } else if (isInserting) {
       context.missing(_typeMeta);
     }
@@ -3445,21 +3281,21 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
       context.handle(
           _folderOrderMeta,
           folderOrder.isAcceptableOrUnknown(
-              data['folder_order'], _folderOrderMeta));
+              data['folder_order']!, _folderOrderMeta));
     } else if (isInserting) {
       context.missing(_folderOrderMeta);
     }
     if (data.containsKey('count')) {
       context.handle(
-          _countMeta, count.isAcceptableOrUnknown(data['count'], _countMeta));
+          _countMeta, count.isAcceptableOrUnknown(data['count']!, _countMeta));
     }
     if (data.containsKey('unread')) {
       context.handle(_unreadMeta,
-          unread.isAcceptableOrUnknown(data['unread'], _unreadMeta));
+          unread.isAcceptableOrUnknown(data['unread']!, _unreadMeta));
     }
     if (data.containsKey('name')) {
       context.handle(
-          _nameMeta, name.isAcceptableOrUnknown(data['name'], _nameMeta));
+          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
     } else if (isInserting) {
       context.missing(_nameMeta);
     }
@@ -3467,7 +3303,7 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
       context.handle(
           _fullNameRawMeta,
           fullNameRaw.isAcceptableOrUnknown(
-              data['full_name_raw'], _fullNameRawMeta));
+              data['full_name_raw']!, _fullNameRawMeta));
     } else if (isInserting) {
       context.missing(_fullNameRawMeta);
     }
@@ -3475,7 +3311,7 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
       context.handle(
           _fullNameHashMeta,
           fullNameHash.isAcceptableOrUnknown(
-              data['full_name_hash'], _fullNameHashMeta));
+              data['full_name_hash']!, _fullNameHashMeta));
     } else if (isInserting) {
       context.missing(_fullNameHashMeta);
     }
@@ -3483,13 +3319,13 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
       context.handle(
           _folderHashMeta,
           folderHash.isAcceptableOrUnknown(
-              data['folder_hash'], _folderHashMeta));
+              data['folder_hash']!, _folderHashMeta));
     } else if (isInserting) {
       context.missing(_folderHashMeta);
     }
     if (data.containsKey('delimiter')) {
       context.handle(_delimiterMeta,
-          delimiter.isAcceptableOrUnknown(data['delimiter'], _delimiterMeta));
+          delimiter.isAcceptableOrUnknown(data['delimiter']!, _delimiterMeta));
     } else if (isInserting) {
       context.missing(_delimiterMeta);
     }
@@ -3497,7 +3333,7 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
       context.handle(
           _needsInfoUpdateMeta,
           needsInfoUpdate.isAcceptableOrUnknown(
-              data['needs_info_update'], _needsInfoUpdateMeta));
+              data['needs_info_update']!, _needsInfoUpdateMeta));
     } else if (isInserting) {
       context.missing(_needsInfoUpdateMeta);
     }
@@ -3505,7 +3341,7 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
       context.handle(
           _isSystemFolderMeta,
           isSystemFolder.isAcceptableOrUnknown(
-              data['is_system_folder'], _isSystemFolderMeta));
+              data['is_system_folder']!, _isSystemFolderMeta));
     } else if (isInserting) {
       context.missing(_isSystemFolderMeta);
     }
@@ -3513,7 +3349,7 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
       context.handle(
           _isSubscribedMeta,
           isSubscribed.isAcceptableOrUnknown(
-              data['is_subscribed'], _isSubscribedMeta));
+              data['is_subscribed']!, _isSubscribedMeta));
     } else if (isInserting) {
       context.missing(_isSubscribedMeta);
     }
@@ -3521,7 +3357,7 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
       context.handle(
           _isSelectableMeta,
           isSelectable.isAcceptableOrUnknown(
-              data['is_selectable'], _isSelectableMeta));
+              data['is_selectable']!, _isSelectableMeta));
     } else if (isInserting) {
       context.missing(_isSelectableMeta);
     }
@@ -3529,25 +3365,25 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
       context.handle(
           _folderExistsMeta,
           folderExists.isAcceptableOrUnknown(
-              data['folder_exists'], _folderExistsMeta));
+              data['folder_exists']!, _folderExistsMeta));
     } else if (isInserting) {
       context.missing(_folderExistsMeta);
     }
     if (data.containsKey('extended')) {
       context.handle(_extendedMeta,
-          extended.isAcceptableOrUnknown(data['extended'], _extendedMeta));
+          extended.isAcceptableOrUnknown(data['extended']!, _extendedMeta));
     }
     if (data.containsKey('always_refresh')) {
       context.handle(
           _alwaysRefreshMeta,
           alwaysRefresh.isAcceptableOrUnknown(
-              data['always_refresh'], _alwaysRefreshMeta));
+              data['always_refresh']!, _alwaysRefreshMeta));
     } else if (isInserting) {
       context.missing(_alwaysRefreshMeta);
     }
     if (data.containsKey('namespace')) {
       context.handle(_namespaceMeta,
-          namespace.isAcceptableOrUnknown(data['namespace'], _namespaceMeta));
+          namespace.isAcceptableOrUnknown(data['namespace']!, _namespaceMeta));
     } else if (isInserting) {
       context.missing(_namespaceMeta);
     }
@@ -3557,7 +3393,7 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
   @override
   Set<GeneratedColumn> get $primaryKey => {fullName, accountLocalId};
   @override
-  LocalFolder map(Map<String, dynamic> data, {String tablePrefix}) {
+  LocalFolder map(Map<String, dynamic> data, {String? tablePrefix}) {
     return LocalFolder.fromData(data,
         prefix: tablePrefix != null ? '$tablePrefix.' : null);
   }
@@ -3574,29 +3410,29 @@ class User extends DataClass implements Insertable<User> {
   final String hostname;
   final String emailFromLogin;
   final String token;
-  final int syncFreqInSeconds;
-  final String syncPeriod;
+  final int? syncFreqInSeconds;
+  final String? syncPeriod;
   User(
-      {@required this.localId,
-      @required this.serverId,
-      @required this.hostname,
-      @required this.emailFromLogin,
-      @required this.token,
+      {required this.localId,
+      required this.serverId,
+      required this.hostname,
+      required this.emailFromLogin,
+      required this.token,
       this.syncFreqInSeconds,
       this.syncPeriod});
-  factory User.fromData(Map<String, dynamic> data, {String prefix}) {
+  factory User.fromData(Map<String, dynamic> data, {String? prefix}) {
     final effectivePrefix = prefix ?? '';
     return User(
       localId: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}local_id']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}local_id'])!,
       serverId: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}server_id']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}server_id'])!,
       hostname: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}hostname']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}hostname'])!,
       emailFromLogin: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}email_from_login']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}email_from_login'])!,
       token: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}token']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}token'])!,
       syncFreqInSeconds: const IntType().mapFromDatabaseResponse(
           data['${effectivePrefix}sync_freq_in_seconds']),
       syncPeriod: const StringType()
@@ -3606,46 +3442,27 @@ class User extends DataClass implements Insertable<User> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (!nullToAbsent || localId != null) {
-      map['local_id'] = Variable<int>(localId);
-    }
-    if (!nullToAbsent || serverId != null) {
-      map['server_id'] = Variable<int>(serverId);
-    }
-    if (!nullToAbsent || hostname != null) {
-      map['hostname'] = Variable<String>(hostname);
-    }
-    if (!nullToAbsent || emailFromLogin != null) {
-      map['email_from_login'] = Variable<String>(emailFromLogin);
-    }
-    if (!nullToAbsent || token != null) {
-      map['token'] = Variable<String>(token);
-    }
+    map['local_id'] = Variable<int>(localId);
+    map['server_id'] = Variable<int>(serverId);
+    map['hostname'] = Variable<String>(hostname);
+    map['email_from_login'] = Variable<String>(emailFromLogin);
+    map['token'] = Variable<String>(token);
     if (!nullToAbsent || syncFreqInSeconds != null) {
-      map['sync_freq_in_seconds'] = Variable<int>(syncFreqInSeconds);
+      map['sync_freq_in_seconds'] = Variable<int?>(syncFreqInSeconds);
     }
     if (!nullToAbsent || syncPeriod != null) {
-      map['sync_period'] = Variable<String>(syncPeriod);
+      map['sync_period'] = Variable<String?>(syncPeriod);
     }
     return map;
   }
 
   UsersCompanion toCompanion(bool nullToAbsent) {
     return UsersCompanion(
-      localId: localId == null && nullToAbsent
-          ? const Value.absent()
-          : Value(localId),
-      serverId: serverId == null && nullToAbsent
-          ? const Value.absent()
-          : Value(serverId),
-      hostname: hostname == null && nullToAbsent
-          ? const Value.absent()
-          : Value(hostname),
-      emailFromLogin: emailFromLogin == null && nullToAbsent
-          ? const Value.absent()
-          : Value(emailFromLogin),
-      token:
-          token == null && nullToAbsent ? const Value.absent() : Value(token),
+      localId: Value(localId),
+      serverId: Value(serverId),
+      hostname: Value(hostname),
+      emailFromLogin: Value(emailFromLogin),
+      token: Value(token),
       syncFreqInSeconds: syncFreqInSeconds == null && nullToAbsent
           ? const Value.absent()
           : Value(syncFreqInSeconds),
@@ -3656,7 +3473,7 @@ class User extends DataClass implements Insertable<User> {
   }
 
   factory User.fromJson(Map<String, dynamic> json,
-      {ValueSerializer serializer}) {
+      {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return User(
       localId: serializer.fromJson<int>(json['localId']),
@@ -3664,12 +3481,12 @@ class User extends DataClass implements Insertable<User> {
       hostname: serializer.fromJson<String>(json['hostname']),
       emailFromLogin: serializer.fromJson<String>(json['emailFromLogin']),
       token: serializer.fromJson<String>(json['token']),
-      syncFreqInSeconds: serializer.fromJson<int>(json['syncFreqInSeconds']),
-      syncPeriod: serializer.fromJson<String>(json['syncPeriod']),
+      syncFreqInSeconds: serializer.fromJson<int?>(json['syncFreqInSeconds']),
+      syncPeriod: serializer.fromJson<String?>(json['syncPeriod']),
     );
   }
   @override
-  Map<String, dynamic> toJson({ValueSerializer serializer}) {
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'localId': serializer.toJson<int>(localId),
@@ -3677,19 +3494,19 @@ class User extends DataClass implements Insertable<User> {
       'hostname': serializer.toJson<String>(hostname),
       'emailFromLogin': serializer.toJson<String>(emailFromLogin),
       'token': serializer.toJson<String>(token),
-      'syncFreqInSeconds': serializer.toJson<int>(syncFreqInSeconds),
-      'syncPeriod': serializer.toJson<String>(syncPeriod),
+      'syncFreqInSeconds': serializer.toJson<int?>(syncFreqInSeconds),
+      'syncPeriod': serializer.toJson<String?>(syncPeriod),
     };
   }
 
   User copyWith(
-          {int localId,
-          int serverId,
-          String hostname,
-          String emailFromLogin,
-          String token,
-          int syncFreqInSeconds,
-          String syncPeriod}) =>
+          {int? localId,
+          int? serverId,
+          String? hostname,
+          String? emailFromLogin,
+          String? token,
+          int? syncFreqInSeconds,
+          String? syncPeriod}) =>
       User(
         localId: localId ?? this.localId,
         serverId: serverId ?? this.serverId,
@@ -3735,8 +3552,8 @@ class UsersCompanion extends UpdateCompanion<User> {
   final Value<String> hostname;
   final Value<String> emailFromLogin;
   final Value<String> token;
-  final Value<int> syncFreqInSeconds;
-  final Value<String> syncPeriod;
+  final Value<int?> syncFreqInSeconds;
+  final Value<String?> syncPeriod;
   const UsersCompanion({
     this.localId = const Value.absent(),
     this.serverId = const Value.absent(),
@@ -3748,10 +3565,10 @@ class UsersCompanion extends UpdateCompanion<User> {
   });
   UsersCompanion.insert({
     this.localId = const Value.absent(),
-    @required int serverId,
-    @required String hostname,
-    @required String emailFromLogin,
-    @required String token,
+    required int serverId,
+    required String hostname,
+    required String emailFromLogin,
+    required String token,
     this.syncFreqInSeconds = const Value.absent(),
     this.syncPeriod = const Value.absent(),
   })  : serverId = Value(serverId),
@@ -3759,13 +3576,13 @@ class UsersCompanion extends UpdateCompanion<User> {
         emailFromLogin = Value(emailFromLogin),
         token = Value(token);
   static Insertable<User> custom({
-    Expression<int> localId,
-    Expression<int> serverId,
-    Expression<String> hostname,
-    Expression<String> emailFromLogin,
-    Expression<String> token,
-    Expression<int> syncFreqInSeconds,
-    Expression<String> syncPeriod,
+    Expression<int>? localId,
+    Expression<int>? serverId,
+    Expression<String>? hostname,
+    Expression<String>? emailFromLogin,
+    Expression<String>? token,
+    Expression<int?>? syncFreqInSeconds,
+    Expression<String?>? syncPeriod,
   }) {
     return RawValuesInsertable({
       if (localId != null) 'local_id': localId,
@@ -3779,13 +3596,13 @@ class UsersCompanion extends UpdateCompanion<User> {
   }
 
   UsersCompanion copyWith(
-      {Value<int> localId,
-      Value<int> serverId,
-      Value<String> hostname,
-      Value<String> emailFromLogin,
-      Value<String> token,
-      Value<int> syncFreqInSeconds,
-      Value<String> syncPeriod}) {
+      {Value<int>? localId,
+      Value<int>? serverId,
+      Value<String>? hostname,
+      Value<String>? emailFromLogin,
+      Value<String>? token,
+      Value<int?>? syncFreqInSeconds,
+      Value<String?>? syncPeriod}) {
     return UsersCompanion(
       localId: localId ?? this.localId,
       serverId: serverId ?? this.serverId,
@@ -3816,10 +3633,10 @@ class UsersCompanion extends UpdateCompanion<User> {
       map['token'] = Variable<String>(token.value);
     }
     if (syncFreqInSeconds.present) {
-      map['sync_freq_in_seconds'] = Variable<int>(syncFreqInSeconds.value);
+      map['sync_freq_in_seconds'] = Variable<int?>(syncFreqInSeconds.value);
     }
     if (syncPeriod.present) {
-      map['sync_period'] = Variable<String>(syncPeriod.value);
+      map['sync_period'] = Variable<String?>(syncPeriod.value);
     }
     return map;
   }
@@ -3842,57 +3659,50 @@ class UsersCompanion extends UpdateCompanion<User> {
 class $UsersTable extends Users with TableInfo<$UsersTable, User> {
   @override
   final GeneratedDatabase attachedDatabase;
-  final String _alias;
+  final String? _alias;
   $UsersTable(this.attachedDatabase, [this._alias]);
   final VerificationMeta _localIdMeta = const VerificationMeta('localId');
-  GeneratedColumn<int> _localId;
   @override
-  GeneratedColumn<int> get localId =>
-      _localId ??= GeneratedColumn<int>('local_id', aliasedName, false,
-          type: const IntType(),
-          requiredDuringInsert: false,
-          defaultConstraints: 'PRIMARY KEY AUTOINCREMENT');
+  late final GeneratedColumn<int?> localId = GeneratedColumn<int?>(
+      'local_id', aliasedName, false,
+      type: const IntType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'PRIMARY KEY AUTOINCREMENT');
   final VerificationMeta _serverIdMeta = const VerificationMeta('serverId');
-  GeneratedColumn<int> _serverId;
   @override
-  GeneratedColumn<int> get serverId =>
-      _serverId ??= GeneratedColumn<int>('server_id', aliasedName, false,
-          type: const IntType(), requiredDuringInsert: true);
+  late final GeneratedColumn<int?> serverId = GeneratedColumn<int?>(
+      'server_id', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _hostnameMeta = const VerificationMeta('hostname');
-  GeneratedColumn<String> _hostname;
   @override
-  GeneratedColumn<String> get hostname =>
-      _hostname ??= GeneratedColumn<String>('hostname', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> hostname = GeneratedColumn<String?>(
+      'hostname', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _emailFromLoginMeta =
       const VerificationMeta('emailFromLogin');
-  GeneratedColumn<String> _emailFromLogin;
   @override
-  GeneratedColumn<String> get emailFromLogin => _emailFromLogin ??=
-      GeneratedColumn<String>('email_from_login', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> emailFromLogin = GeneratedColumn<String?>(
+      'email_from_login', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _tokenMeta = const VerificationMeta('token');
-  GeneratedColumn<String> _token;
   @override
-  GeneratedColumn<String> get token =>
-      _token ??= GeneratedColumn<String>('token', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> token = GeneratedColumn<String?>(
+      'token', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _syncFreqInSecondsMeta =
       const VerificationMeta('syncFreqInSeconds');
-  GeneratedColumn<int> _syncFreqInSeconds;
   @override
-  GeneratedColumn<int> get syncFreqInSeconds => _syncFreqInSeconds ??=
-      GeneratedColumn<int>('sync_freq_in_seconds', aliasedName, true,
-          type: const IntType(),
-          requiredDuringInsert: false,
-          defaultValue: Constant(
-              !BuildProperty.backgroundSync ? SyncFreq.NEVER_IN_SECONDS : 300));
+  late final GeneratedColumn<int?> syncFreqInSeconds = GeneratedColumn<int?>(
+      'sync_freq_in_seconds', aliasedName, true,
+      type: const IntType(),
+      requiredDuringInsert: false,
+      defaultValue: Constant(
+          !BuildProperty.backgroundSync ? SyncFreq.NEVER_IN_SECONDS : 300));
   final VerificationMeta _syncPeriodMeta = const VerificationMeta('syncPeriod');
-  GeneratedColumn<String> _syncPeriod;
   @override
-  GeneratedColumn<String> get syncPeriod =>
-      _syncPeriod ??= GeneratedColumn<String>('sync_period', aliasedName, true,
-          type: const StringType(), requiredDuringInsert: false);
+  late final GeneratedColumn<String?> syncPeriod = GeneratedColumn<String?>(
+      'sync_period', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns => [
         localId,
@@ -3914,17 +3724,17 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
     final data = instance.toColumns(true);
     if (data.containsKey('local_id')) {
       context.handle(_localIdMeta,
-          localId.isAcceptableOrUnknown(data['local_id'], _localIdMeta));
+          localId.isAcceptableOrUnknown(data['local_id']!, _localIdMeta));
     }
     if (data.containsKey('server_id')) {
       context.handle(_serverIdMeta,
-          serverId.isAcceptableOrUnknown(data['server_id'], _serverIdMeta));
+          serverId.isAcceptableOrUnknown(data['server_id']!, _serverIdMeta));
     } else if (isInserting) {
       context.missing(_serverIdMeta);
     }
     if (data.containsKey('hostname')) {
       context.handle(_hostnameMeta,
-          hostname.isAcceptableOrUnknown(data['hostname'], _hostnameMeta));
+          hostname.isAcceptableOrUnknown(data['hostname']!, _hostnameMeta));
     } else if (isInserting) {
       context.missing(_hostnameMeta);
     }
@@ -3932,13 +3742,13 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
       context.handle(
           _emailFromLoginMeta,
           emailFromLogin.isAcceptableOrUnknown(
-              data['email_from_login'], _emailFromLoginMeta));
+              data['email_from_login']!, _emailFromLoginMeta));
     } else if (isInserting) {
       context.missing(_emailFromLoginMeta);
     }
     if (data.containsKey('token')) {
       context.handle(
-          _tokenMeta, token.isAcceptableOrUnknown(data['token'], _tokenMeta));
+          _tokenMeta, token.isAcceptableOrUnknown(data['token']!, _tokenMeta));
     } else if (isInserting) {
       context.missing(_tokenMeta);
     }
@@ -3946,13 +3756,13 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
       context.handle(
           _syncFreqInSecondsMeta,
           syncFreqInSeconds.isAcceptableOrUnknown(
-              data['sync_freq_in_seconds'], _syncFreqInSecondsMeta));
+              data['sync_freq_in_seconds']!, _syncFreqInSecondsMeta));
     }
     if (data.containsKey('sync_period')) {
       context.handle(
           _syncPeriodMeta,
           syncPeriod.isAcceptableOrUnknown(
-              data['sync_period'], _syncPeriodMeta));
+              data['sync_period']!, _syncPeriodMeta));
     }
     return context;
   }
@@ -3960,7 +3770,7 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
   @override
   Set<GeneratedColumn> get $primaryKey => {localId};
   @override
-  User map(Map<String, dynamic> data, {String tablePrefix}) {
+  User map(Map<String, dynamic> data, {String? tablePrefix}) {
     return User.fromData(data,
         prefix: tablePrefix != null ? '$tablePrefix.' : null);
   }
@@ -3972,7 +3782,7 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
 }
 
 class Account extends DataClass implements Insertable<Account> {
-  final int localId;
+  final int? localId;
   final int userLocalId;
   final int entityId;
   final int idUser;
@@ -3993,135 +3803,97 @@ class Account extends DataClass implements Insertable<Account> {
   final bool allowForward;
   final bool allowAutoResponder;
   Account(
-      {@required this.localId,
-      @required this.userLocalId,
-      @required this.entityId,
-      @required this.idUser,
-      @required this.uuid,
-      @required this.parentUuid,
-      @required this.moduleName,
-      @required this.useToAuthorize,
-      @required this.email,
-      @required this.friendlyName,
-      @required this.useSignature,
-      @required this.signature,
-      @required this.serverId,
-      @required this.foldersOrderInJson,
-      @required this.useThreading,
-      @required this.saveRepliesToCurrFolder,
-      @required this.accountId,
-      @required this.allowFilters,
-      @required this.allowForward,
-      @required this.allowAutoResponder});
-  factory Account.fromData(Map<String, dynamic> data, {String prefix}) {
+      {this.localId,
+      required this.userLocalId,
+      required this.entityId,
+      required this.idUser,
+      required this.uuid,
+      required this.parentUuid,
+      required this.moduleName,
+      required this.useToAuthorize,
+      required this.email,
+      required this.friendlyName,
+      required this.useSignature,
+      required this.signature,
+      required this.serverId,
+      required this.foldersOrderInJson,
+      required this.useThreading,
+      required this.saveRepliesToCurrFolder,
+      required this.accountId,
+      required this.allowFilters,
+      required this.allowForward,
+      required this.allowAutoResponder});
+  factory Account.fromData(Map<String, dynamic> data, {String? prefix}) {
     final effectivePrefix = prefix ?? '';
     return Account(
       localId: const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}local_id']),
       userLocalId: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}user_local_id']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}user_local_id'])!,
       entityId: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}entity_id']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}entity_id'])!,
       idUser: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}id_user']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}id_user'])!,
       uuid: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}uuid']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}uuid'])!,
       parentUuid: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}parent_uuid']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}parent_uuid'])!,
       moduleName: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}module_name']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}module_name'])!,
       useToAuthorize: const BoolType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}use_to_authorize']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}use_to_authorize'])!,
       email: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}email']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}email'])!,
       friendlyName: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}friendly_name']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}friendly_name'])!,
       useSignature: const BoolType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}use_signature']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}use_signature'])!,
       signature: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}signature']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}signature'])!,
       serverId: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}server_id']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}server_id'])!,
       foldersOrderInJson: const StringType().mapFromDatabaseResponse(
-          data['${effectivePrefix}folders_order_in_json']),
+          data['${effectivePrefix}folders_order_in_json'])!,
       useThreading: const BoolType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}use_threading']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}use_threading'])!,
       saveRepliesToCurrFolder: const BoolType().mapFromDatabaseResponse(
-          data['${effectivePrefix}save_replies_to_curr_folder']),
+          data['${effectivePrefix}save_replies_to_curr_folder'])!,
       accountId: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}account_id']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}account_id'])!,
       allowFilters: const BoolType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}allow_filters']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}allow_filters'])!,
       allowForward: const BoolType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}allow_forward']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}allow_forward'])!,
       allowAutoResponder: const BoolType().mapFromDatabaseResponse(
-          data['${effectivePrefix}allow_auto_responder']),
+          data['${effectivePrefix}allow_auto_responder'])!,
     );
   }
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (!nullToAbsent || localId != null) {
-      map['local_id'] = Variable<int>(localId);
+      map['local_id'] = Variable<int?>(localId);
     }
-    if (!nullToAbsent || userLocalId != null) {
-      map['user_local_id'] = Variable<int>(userLocalId);
-    }
-    if (!nullToAbsent || entityId != null) {
-      map['entity_id'] = Variable<int>(entityId);
-    }
-    if (!nullToAbsent || idUser != null) {
-      map['id_user'] = Variable<int>(idUser);
-    }
-    if (!nullToAbsent || uuid != null) {
-      map['uuid'] = Variable<String>(uuid);
-    }
-    if (!nullToAbsent || parentUuid != null) {
-      map['parent_uuid'] = Variable<String>(parentUuid);
-    }
-    if (!nullToAbsent || moduleName != null) {
-      map['module_name'] = Variable<String>(moduleName);
-    }
-    if (!nullToAbsent || useToAuthorize != null) {
-      map['use_to_authorize'] = Variable<bool>(useToAuthorize);
-    }
-    if (!nullToAbsent || email != null) {
-      map['email'] = Variable<String>(email);
-    }
-    if (!nullToAbsent || friendlyName != null) {
-      map['friendly_name'] = Variable<String>(friendlyName);
-    }
-    if (!nullToAbsent || useSignature != null) {
-      map['use_signature'] = Variable<bool>(useSignature);
-    }
-    if (!nullToAbsent || signature != null) {
-      map['signature'] = Variable<String>(signature);
-    }
-    if (!nullToAbsent || serverId != null) {
-      map['server_id'] = Variable<int>(serverId);
-    }
-    if (!nullToAbsent || foldersOrderInJson != null) {
-      map['folders_order_in_json'] = Variable<String>(foldersOrderInJson);
-    }
-    if (!nullToAbsent || useThreading != null) {
-      map['use_threading'] = Variable<bool>(useThreading);
-    }
-    if (!nullToAbsent || saveRepliesToCurrFolder != null) {
-      map['save_replies_to_curr_folder'] =
-          Variable<bool>(saveRepliesToCurrFolder);
-    }
-    if (!nullToAbsent || accountId != null) {
-      map['account_id'] = Variable<int>(accountId);
-    }
-    if (!nullToAbsent || allowFilters != null) {
-      map['allow_filters'] = Variable<bool>(allowFilters);
-    }
-    if (!nullToAbsent || allowForward != null) {
-      map['allow_forward'] = Variable<bool>(allowForward);
-    }
-    if (!nullToAbsent || allowAutoResponder != null) {
-      map['allow_auto_responder'] = Variable<bool>(allowAutoResponder);
-    }
+    map['user_local_id'] = Variable<int>(userLocalId);
+    map['entity_id'] = Variable<int>(entityId);
+    map['id_user'] = Variable<int>(idUser);
+    map['uuid'] = Variable<String>(uuid);
+    map['parent_uuid'] = Variable<String>(parentUuid);
+    map['module_name'] = Variable<String>(moduleName);
+    map['use_to_authorize'] = Variable<bool>(useToAuthorize);
+    map['email'] = Variable<String>(email);
+    map['friendly_name'] = Variable<String>(friendlyName);
+    map['use_signature'] = Variable<bool>(useSignature);
+    map['signature'] = Variable<String>(signature);
+    map['server_id'] = Variable<int>(serverId);
+    map['folders_order_in_json'] = Variable<String>(foldersOrderInJson);
+    map['use_threading'] = Variable<bool>(useThreading);
+    map['save_replies_to_curr_folder'] =
+        Variable<bool>(saveRepliesToCurrFolder);
+    map['account_id'] = Variable<int>(accountId);
+    map['allow_filters'] = Variable<bool>(allowFilters);
+    map['allow_forward'] = Variable<bool>(allowForward);
+    map['allow_auto_responder'] = Variable<bool>(allowAutoResponder);
     return map;
   }
 
@@ -4130,67 +3902,33 @@ class Account extends DataClass implements Insertable<Account> {
       localId: localId == null && nullToAbsent
           ? const Value.absent()
           : Value(localId),
-      userLocalId: userLocalId == null && nullToAbsent
-          ? const Value.absent()
-          : Value(userLocalId),
-      entityId: entityId == null && nullToAbsent
-          ? const Value.absent()
-          : Value(entityId),
-      idUser:
-          idUser == null && nullToAbsent ? const Value.absent() : Value(idUser),
-      uuid: uuid == null && nullToAbsent ? const Value.absent() : Value(uuid),
-      parentUuid: parentUuid == null && nullToAbsent
-          ? const Value.absent()
-          : Value(parentUuid),
-      moduleName: moduleName == null && nullToAbsent
-          ? const Value.absent()
-          : Value(moduleName),
-      useToAuthorize: useToAuthorize == null && nullToAbsent
-          ? const Value.absent()
-          : Value(useToAuthorize),
-      email:
-          email == null && nullToAbsent ? const Value.absent() : Value(email),
-      friendlyName: friendlyName == null && nullToAbsent
-          ? const Value.absent()
-          : Value(friendlyName),
-      useSignature: useSignature == null && nullToAbsent
-          ? const Value.absent()
-          : Value(useSignature),
-      signature: signature == null && nullToAbsent
-          ? const Value.absent()
-          : Value(signature),
-      serverId: serverId == null && nullToAbsent
-          ? const Value.absent()
-          : Value(serverId),
-      foldersOrderInJson: foldersOrderInJson == null && nullToAbsent
-          ? const Value.absent()
-          : Value(foldersOrderInJson),
-      useThreading: useThreading == null && nullToAbsent
-          ? const Value.absent()
-          : Value(useThreading),
-      saveRepliesToCurrFolder: saveRepliesToCurrFolder == null && nullToAbsent
-          ? const Value.absent()
-          : Value(saveRepliesToCurrFolder),
-      accountId: accountId == null && nullToAbsent
-          ? const Value.absent()
-          : Value(accountId),
-      allowFilters: allowFilters == null && nullToAbsent
-          ? const Value.absent()
-          : Value(allowFilters),
-      allowForward: allowForward == null && nullToAbsent
-          ? const Value.absent()
-          : Value(allowForward),
-      allowAutoResponder: allowAutoResponder == null && nullToAbsent
-          ? const Value.absent()
-          : Value(allowAutoResponder),
+      userLocalId: Value(userLocalId),
+      entityId: Value(entityId),
+      idUser: Value(idUser),
+      uuid: Value(uuid),
+      parentUuid: Value(parentUuid),
+      moduleName: Value(moduleName),
+      useToAuthorize: Value(useToAuthorize),
+      email: Value(email),
+      friendlyName: Value(friendlyName),
+      useSignature: Value(useSignature),
+      signature: Value(signature),
+      serverId: Value(serverId),
+      foldersOrderInJson: Value(foldersOrderInJson),
+      useThreading: Value(useThreading),
+      saveRepliesToCurrFolder: Value(saveRepliesToCurrFolder),
+      accountId: Value(accountId),
+      allowFilters: Value(allowFilters),
+      allowForward: Value(allowForward),
+      allowAutoResponder: Value(allowAutoResponder),
     );
   }
 
   factory Account.fromJson(Map<String, dynamic> json,
-      {ValueSerializer serializer}) {
+      {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return Account(
-      localId: serializer.fromJson<int>(json['localId']),
+      localId: serializer.fromJson<int?>(json['localId']),
       userLocalId: serializer.fromJson<int>(json['userLocalId']),
       entityId: serializer.fromJson<int>(json['entityId']),
       idUser: serializer.fromJson<int>(json['idUser']),
@@ -4215,10 +3953,10 @@ class Account extends DataClass implements Insertable<Account> {
     );
   }
   @override
-  Map<String, dynamic> toJson({ValueSerializer serializer}) {
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'localId': serializer.toJson<int>(localId),
+      'localId': serializer.toJson<int?>(localId),
       'userLocalId': serializer.toJson<int>(userLocalId),
       'entityId': serializer.toJson<int>(entityId),
       'idUser': serializer.toJson<int>(idUser),
@@ -4243,26 +3981,26 @@ class Account extends DataClass implements Insertable<Account> {
   }
 
   Account copyWith(
-          {int localId,
-          int userLocalId,
-          int entityId,
-          int idUser,
-          String uuid,
-          String parentUuid,
-          String moduleName,
-          bool useToAuthorize,
-          String email,
-          String friendlyName,
-          bool useSignature,
-          String signature,
-          int serverId,
-          String foldersOrderInJson,
-          bool useThreading,
-          bool saveRepliesToCurrFolder,
-          int accountId,
-          bool allowFilters,
-          bool allowForward,
-          bool allowAutoResponder}) =>
+          {int? localId,
+          int? userLocalId,
+          int? entityId,
+          int? idUser,
+          String? uuid,
+          String? parentUuid,
+          String? moduleName,
+          bool? useToAuthorize,
+          String? email,
+          String? friendlyName,
+          bool? useSignature,
+          String? signature,
+          int? serverId,
+          String? foldersOrderInJson,
+          bool? useThreading,
+          bool? saveRepliesToCurrFolder,
+          int? accountId,
+          bool? allowFilters,
+          bool? allowForward,
+          bool? allowAutoResponder}) =>
       Account(
         localId: localId ?? this.localId,
         userLocalId: userLocalId ?? this.userLocalId,
@@ -4362,7 +4100,7 @@ class Account extends DataClass implements Insertable<Account> {
 }
 
 class AccountsCompanion extends UpdateCompanion<Account> {
-  final Value<int> localId;
+  final Value<int?> localId;
   final Value<int> userLocalId;
   final Value<int> entityId;
   final Value<int> idUser;
@@ -4406,25 +4144,25 @@ class AccountsCompanion extends UpdateCompanion<Account> {
   });
   AccountsCompanion.insert({
     this.localId = const Value.absent(),
-    @required int userLocalId,
-    @required int entityId,
-    @required int idUser,
-    @required String uuid,
-    @required String parentUuid,
-    @required String moduleName,
-    @required bool useToAuthorize,
-    @required String email,
-    @required String friendlyName,
-    @required bool useSignature,
-    @required String signature,
-    @required int serverId,
-    @required String foldersOrderInJson,
-    @required bool useThreading,
-    @required bool saveRepliesToCurrFolder,
-    @required int accountId,
-    @required bool allowFilters,
-    @required bool allowForward,
-    @required bool allowAutoResponder,
+    required int userLocalId,
+    required int entityId,
+    required int idUser,
+    required String uuid,
+    required String parentUuid,
+    required String moduleName,
+    required bool useToAuthorize,
+    required String email,
+    required String friendlyName,
+    required bool useSignature,
+    required String signature,
+    required int serverId,
+    required String foldersOrderInJson,
+    required bool useThreading,
+    required bool saveRepliesToCurrFolder,
+    required int accountId,
+    required bool allowFilters,
+    required bool allowForward,
+    required bool allowAutoResponder,
   })  : userLocalId = Value(userLocalId),
         entityId = Value(entityId),
         idUser = Value(idUser),
@@ -4445,26 +4183,26 @@ class AccountsCompanion extends UpdateCompanion<Account> {
         allowForward = Value(allowForward),
         allowAutoResponder = Value(allowAutoResponder);
   static Insertable<Account> custom({
-    Expression<int> localId,
-    Expression<int> userLocalId,
-    Expression<int> entityId,
-    Expression<int> idUser,
-    Expression<String> uuid,
-    Expression<String> parentUuid,
-    Expression<String> moduleName,
-    Expression<bool> useToAuthorize,
-    Expression<String> email,
-    Expression<String> friendlyName,
-    Expression<bool> useSignature,
-    Expression<String> signature,
-    Expression<int> serverId,
-    Expression<String> foldersOrderInJson,
-    Expression<bool> useThreading,
-    Expression<bool> saveRepliesToCurrFolder,
-    Expression<int> accountId,
-    Expression<bool> allowFilters,
-    Expression<bool> allowForward,
-    Expression<bool> allowAutoResponder,
+    Expression<int?>? localId,
+    Expression<int>? userLocalId,
+    Expression<int>? entityId,
+    Expression<int>? idUser,
+    Expression<String>? uuid,
+    Expression<String>? parentUuid,
+    Expression<String>? moduleName,
+    Expression<bool>? useToAuthorize,
+    Expression<String>? email,
+    Expression<String>? friendlyName,
+    Expression<bool>? useSignature,
+    Expression<String>? signature,
+    Expression<int>? serverId,
+    Expression<String>? foldersOrderInJson,
+    Expression<bool>? useThreading,
+    Expression<bool>? saveRepliesToCurrFolder,
+    Expression<int>? accountId,
+    Expression<bool>? allowFilters,
+    Expression<bool>? allowForward,
+    Expression<bool>? allowAutoResponder,
   }) {
     return RawValuesInsertable({
       if (localId != null) 'local_id': localId,
@@ -4494,26 +4232,26 @@ class AccountsCompanion extends UpdateCompanion<Account> {
   }
 
   AccountsCompanion copyWith(
-      {Value<int> localId,
-      Value<int> userLocalId,
-      Value<int> entityId,
-      Value<int> idUser,
-      Value<String> uuid,
-      Value<String> parentUuid,
-      Value<String> moduleName,
-      Value<bool> useToAuthorize,
-      Value<String> email,
-      Value<String> friendlyName,
-      Value<bool> useSignature,
-      Value<String> signature,
-      Value<int> serverId,
-      Value<String> foldersOrderInJson,
-      Value<bool> useThreading,
-      Value<bool> saveRepliesToCurrFolder,
-      Value<int> accountId,
-      Value<bool> allowFilters,
-      Value<bool> allowForward,
-      Value<bool> allowAutoResponder}) {
+      {Value<int?>? localId,
+      Value<int>? userLocalId,
+      Value<int>? entityId,
+      Value<int>? idUser,
+      Value<String>? uuid,
+      Value<String>? parentUuid,
+      Value<String>? moduleName,
+      Value<bool>? useToAuthorize,
+      Value<String>? email,
+      Value<String>? friendlyName,
+      Value<bool>? useSignature,
+      Value<String>? signature,
+      Value<int>? serverId,
+      Value<String>? foldersOrderInJson,
+      Value<bool>? useThreading,
+      Value<bool>? saveRepliesToCurrFolder,
+      Value<int>? accountId,
+      Value<bool>? allowFilters,
+      Value<bool>? allowForward,
+      Value<bool>? allowAutoResponder}) {
     return AccountsCompanion(
       localId: localId ?? this.localId,
       userLocalId: userLocalId ?? this.userLocalId,
@@ -4543,7 +4281,7 @@ class AccountsCompanion extends UpdateCompanion<Account> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (localId.present) {
-      map['local_id'] = Variable<int>(localId.value);
+      map['local_id'] = Variable<int?>(localId.value);
     }
     if (userLocalId.present) {
       map['user_local_id'] = Variable<int>(userLocalId.value);
@@ -4637,155 +4375,134 @@ class AccountsCompanion extends UpdateCompanion<Account> {
 class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
   @override
   final GeneratedDatabase attachedDatabase;
-  final String _alias;
+  final String? _alias;
   $AccountsTable(this.attachedDatabase, [this._alias]);
   final VerificationMeta _localIdMeta = const VerificationMeta('localId');
-  GeneratedColumn<int> _localId;
   @override
-  GeneratedColumn<int> get localId =>
-      _localId ??= GeneratedColumn<int>('local_id', aliasedName, false,
-          type: const IntType(),
-          requiredDuringInsert: false,
-          defaultConstraints: 'PRIMARY KEY AUTOINCREMENT');
+  late final GeneratedColumn<int?> localId = GeneratedColumn<int?>(
+      'local_id', aliasedName, true,
+      type: const IntType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'PRIMARY KEY AUTOINCREMENT');
   final VerificationMeta _userLocalIdMeta =
       const VerificationMeta('userLocalId');
-  GeneratedColumn<int> _userLocalId;
   @override
-  GeneratedColumn<int> get userLocalId =>
-      _userLocalId ??= GeneratedColumn<int>('user_local_id', aliasedName, false,
-          type: const IntType(), requiredDuringInsert: true);
+  late final GeneratedColumn<int?> userLocalId = GeneratedColumn<int?>(
+      'user_local_id', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _entityIdMeta = const VerificationMeta('entityId');
-  GeneratedColumn<int> _entityId;
   @override
-  GeneratedColumn<int> get entityId =>
-      _entityId ??= GeneratedColumn<int>('entity_id', aliasedName, false,
-          type: const IntType(), requiredDuringInsert: true);
+  late final GeneratedColumn<int?> entityId = GeneratedColumn<int?>(
+      'entity_id', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _idUserMeta = const VerificationMeta('idUser');
-  GeneratedColumn<int> _idUser;
   @override
-  GeneratedColumn<int> get idUser =>
-      _idUser ??= GeneratedColumn<int>('id_user', aliasedName, false,
-          type: const IntType(), requiredDuringInsert: true);
+  late final GeneratedColumn<int?> idUser = GeneratedColumn<int?>(
+      'id_user', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _uuidMeta = const VerificationMeta('uuid');
-  GeneratedColumn<String> _uuid;
   @override
-  GeneratedColumn<String> get uuid =>
-      _uuid ??= GeneratedColumn<String>('uuid', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> uuid = GeneratedColumn<String?>(
+      'uuid', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _parentUuidMeta = const VerificationMeta('parentUuid');
-  GeneratedColumn<String> _parentUuid;
   @override
-  GeneratedColumn<String> get parentUuid =>
-      _parentUuid ??= GeneratedColumn<String>('parent_uuid', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> parentUuid = GeneratedColumn<String?>(
+      'parent_uuid', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _moduleNameMeta = const VerificationMeta('moduleName');
-  GeneratedColumn<String> _moduleName;
   @override
-  GeneratedColumn<String> get moduleName =>
-      _moduleName ??= GeneratedColumn<String>('module_name', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> moduleName = GeneratedColumn<String?>(
+      'module_name', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _useToAuthorizeMeta =
       const VerificationMeta('useToAuthorize');
-  GeneratedColumn<bool> _useToAuthorize;
   @override
-  GeneratedColumn<bool> get useToAuthorize => _useToAuthorize ??=
-      GeneratedColumn<bool>('use_to_authorize', aliasedName, false,
-          type: const BoolType(),
-          requiredDuringInsert: true,
-          defaultConstraints: 'CHECK (use_to_authorize IN (0, 1))');
+  late final GeneratedColumn<bool?> useToAuthorize = GeneratedColumn<bool?>(
+      'use_to_authorize', aliasedName, false,
+      type: const BoolType(),
+      requiredDuringInsert: true,
+      defaultConstraints: 'CHECK (use_to_authorize IN (0, 1))');
   final VerificationMeta _emailMeta = const VerificationMeta('email');
-  GeneratedColumn<String> _email;
   @override
-  GeneratedColumn<String> get email =>
-      _email ??= GeneratedColumn<String>('email', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> email = GeneratedColumn<String?>(
+      'email', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _friendlyNameMeta =
       const VerificationMeta('friendlyName');
-  GeneratedColumn<String> _friendlyName;
   @override
-  GeneratedColumn<String> get friendlyName => _friendlyName ??=
-      GeneratedColumn<String>('friendly_name', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> friendlyName = GeneratedColumn<String?>(
+      'friendly_name', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _useSignatureMeta =
       const VerificationMeta('useSignature');
-  GeneratedColumn<bool> _useSignature;
   @override
-  GeneratedColumn<bool> get useSignature => _useSignature ??=
-      GeneratedColumn<bool>('use_signature', aliasedName, false,
-          type: const BoolType(),
-          requiredDuringInsert: true,
-          defaultConstraints: 'CHECK (use_signature IN (0, 1))');
+  late final GeneratedColumn<bool?> useSignature = GeneratedColumn<bool?>(
+      'use_signature', aliasedName, false,
+      type: const BoolType(),
+      requiredDuringInsert: true,
+      defaultConstraints: 'CHECK (use_signature IN (0, 1))');
   final VerificationMeta _signatureMeta = const VerificationMeta('signature');
-  GeneratedColumn<String> _signature;
   @override
-  GeneratedColumn<String> get signature =>
-      _signature ??= GeneratedColumn<String>('signature', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> signature = GeneratedColumn<String?>(
+      'signature', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _serverIdMeta = const VerificationMeta('serverId');
-  GeneratedColumn<int> _serverId;
   @override
-  GeneratedColumn<int> get serverId =>
-      _serverId ??= GeneratedColumn<int>('server_id', aliasedName, false,
-          type: const IntType(), requiredDuringInsert: true);
+  late final GeneratedColumn<int?> serverId = GeneratedColumn<int?>(
+      'server_id', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _foldersOrderInJsonMeta =
       const VerificationMeta('foldersOrderInJson');
-  GeneratedColumn<String> _foldersOrderInJson;
   @override
-  GeneratedColumn<String> get foldersOrderInJson => _foldersOrderInJson ??=
-      GeneratedColumn<String>('folders_order_in_json', aliasedName, false,
+  late final GeneratedColumn<String?> foldersOrderInJson =
+      GeneratedColumn<String?>('folders_order_in_json', aliasedName, false,
           type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _useThreadingMeta =
       const VerificationMeta('useThreading');
-  GeneratedColumn<bool> _useThreading;
   @override
-  GeneratedColumn<bool> get useThreading => _useThreading ??=
-      GeneratedColumn<bool>('use_threading', aliasedName, false,
-          type: const BoolType(),
-          requiredDuringInsert: true,
-          defaultConstraints: 'CHECK (use_threading IN (0, 1))');
+  late final GeneratedColumn<bool?> useThreading = GeneratedColumn<bool?>(
+      'use_threading', aliasedName, false,
+      type: const BoolType(),
+      requiredDuringInsert: true,
+      defaultConstraints: 'CHECK (use_threading IN (0, 1))');
   final VerificationMeta _saveRepliesToCurrFolderMeta =
       const VerificationMeta('saveRepliesToCurrFolder');
-  GeneratedColumn<bool> _saveRepliesToCurrFolder;
   @override
-  GeneratedColumn<bool> get saveRepliesToCurrFolder =>
-      _saveRepliesToCurrFolder ??= GeneratedColumn<bool>(
-          'save_replies_to_curr_folder', aliasedName, false,
+  late final GeneratedColumn<bool?> saveRepliesToCurrFolder =
+      GeneratedColumn<bool?>('save_replies_to_curr_folder', aliasedName, false,
           type: const BoolType(),
           requiredDuringInsert: true,
           defaultConstraints: 'CHECK (save_replies_to_curr_folder IN (0, 1))');
   final VerificationMeta _accountIdMeta = const VerificationMeta('accountId');
-  GeneratedColumn<int> _accountId;
   @override
-  GeneratedColumn<int> get accountId =>
-      _accountId ??= GeneratedColumn<int>('account_id', aliasedName, false,
-          type: const IntType(), requiredDuringInsert: true);
+  late final GeneratedColumn<int?> accountId = GeneratedColumn<int?>(
+      'account_id', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _allowFiltersMeta =
       const VerificationMeta('allowFilters');
-  GeneratedColumn<bool> _allowFilters;
   @override
-  GeneratedColumn<bool> get allowFilters => _allowFilters ??=
-      GeneratedColumn<bool>('allow_filters', aliasedName, false,
-          type: const BoolType(),
-          requiredDuringInsert: true,
-          defaultConstraints: 'CHECK (allow_filters IN (0, 1))');
+  late final GeneratedColumn<bool?> allowFilters = GeneratedColumn<bool?>(
+      'allow_filters', aliasedName, false,
+      type: const BoolType(),
+      requiredDuringInsert: true,
+      defaultConstraints: 'CHECK (allow_filters IN (0, 1))');
   final VerificationMeta _allowForwardMeta =
       const VerificationMeta('allowForward');
-  GeneratedColumn<bool> _allowForward;
   @override
-  GeneratedColumn<bool> get allowForward => _allowForward ??=
-      GeneratedColumn<bool>('allow_forward', aliasedName, false,
-          type: const BoolType(),
-          requiredDuringInsert: true,
-          defaultConstraints: 'CHECK (allow_forward IN (0, 1))');
+  late final GeneratedColumn<bool?> allowForward = GeneratedColumn<bool?>(
+      'allow_forward', aliasedName, false,
+      type: const BoolType(),
+      requiredDuringInsert: true,
+      defaultConstraints: 'CHECK (allow_forward IN (0, 1))');
   final VerificationMeta _allowAutoResponderMeta =
       const VerificationMeta('allowAutoResponder');
-  GeneratedColumn<bool> _allowAutoResponder;
   @override
-  GeneratedColumn<bool> get allowAutoResponder => _allowAutoResponder ??=
-      GeneratedColumn<bool>('allow_auto_responder', aliasedName, false,
-          type: const BoolType(),
-          requiredDuringInsert: true,
-          defaultConstraints: 'CHECK (allow_auto_responder IN (0, 1))');
+  late final GeneratedColumn<bool?> allowAutoResponder = GeneratedColumn<bool?>(
+      'allow_auto_responder', aliasedName, false,
+      type: const BoolType(),
+      requiredDuringInsert: true,
+      defaultConstraints: 'CHECK (allow_auto_responder IN (0, 1))');
   @override
   List<GeneratedColumn> get $columns => [
         localId,
@@ -4820,31 +4537,31 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
     final data = instance.toColumns(true);
     if (data.containsKey('local_id')) {
       context.handle(_localIdMeta,
-          localId.isAcceptableOrUnknown(data['local_id'], _localIdMeta));
+          localId.isAcceptableOrUnknown(data['local_id']!, _localIdMeta));
     }
     if (data.containsKey('user_local_id')) {
       context.handle(
           _userLocalIdMeta,
           userLocalId.isAcceptableOrUnknown(
-              data['user_local_id'], _userLocalIdMeta));
+              data['user_local_id']!, _userLocalIdMeta));
     } else if (isInserting) {
       context.missing(_userLocalIdMeta);
     }
     if (data.containsKey('entity_id')) {
       context.handle(_entityIdMeta,
-          entityId.isAcceptableOrUnknown(data['entity_id'], _entityIdMeta));
+          entityId.isAcceptableOrUnknown(data['entity_id']!, _entityIdMeta));
     } else if (isInserting) {
       context.missing(_entityIdMeta);
     }
     if (data.containsKey('id_user')) {
       context.handle(_idUserMeta,
-          idUser.isAcceptableOrUnknown(data['id_user'], _idUserMeta));
+          idUser.isAcceptableOrUnknown(data['id_user']!, _idUserMeta));
     } else if (isInserting) {
       context.missing(_idUserMeta);
     }
     if (data.containsKey('uuid')) {
       context.handle(
-          _uuidMeta, uuid.isAcceptableOrUnknown(data['uuid'], _uuidMeta));
+          _uuidMeta, uuid.isAcceptableOrUnknown(data['uuid']!, _uuidMeta));
     } else if (isInserting) {
       context.missing(_uuidMeta);
     }
@@ -4852,7 +4569,7 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
       context.handle(
           _parentUuidMeta,
           parentUuid.isAcceptableOrUnknown(
-              data['parent_uuid'], _parentUuidMeta));
+              data['parent_uuid']!, _parentUuidMeta));
     } else if (isInserting) {
       context.missing(_parentUuidMeta);
     }
@@ -4860,7 +4577,7 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
       context.handle(
           _moduleNameMeta,
           moduleName.isAcceptableOrUnknown(
-              data['module_name'], _moduleNameMeta));
+              data['module_name']!, _moduleNameMeta));
     } else if (isInserting) {
       context.missing(_moduleNameMeta);
     }
@@ -4868,13 +4585,13 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
       context.handle(
           _useToAuthorizeMeta,
           useToAuthorize.isAcceptableOrUnknown(
-              data['use_to_authorize'], _useToAuthorizeMeta));
+              data['use_to_authorize']!, _useToAuthorizeMeta));
     } else if (isInserting) {
       context.missing(_useToAuthorizeMeta);
     }
     if (data.containsKey('email')) {
       context.handle(
-          _emailMeta, email.isAcceptableOrUnknown(data['email'], _emailMeta));
+          _emailMeta, email.isAcceptableOrUnknown(data['email']!, _emailMeta));
     } else if (isInserting) {
       context.missing(_emailMeta);
     }
@@ -4882,7 +4599,7 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
       context.handle(
           _friendlyNameMeta,
           friendlyName.isAcceptableOrUnknown(
-              data['friendly_name'], _friendlyNameMeta));
+              data['friendly_name']!, _friendlyNameMeta));
     } else if (isInserting) {
       context.missing(_friendlyNameMeta);
     }
@@ -4890,19 +4607,19 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
       context.handle(
           _useSignatureMeta,
           useSignature.isAcceptableOrUnknown(
-              data['use_signature'], _useSignatureMeta));
+              data['use_signature']!, _useSignatureMeta));
     } else if (isInserting) {
       context.missing(_useSignatureMeta);
     }
     if (data.containsKey('signature')) {
       context.handle(_signatureMeta,
-          signature.isAcceptableOrUnknown(data['signature'], _signatureMeta));
+          signature.isAcceptableOrUnknown(data['signature']!, _signatureMeta));
     } else if (isInserting) {
       context.missing(_signatureMeta);
     }
     if (data.containsKey('server_id')) {
       context.handle(_serverIdMeta,
-          serverId.isAcceptableOrUnknown(data['server_id'], _serverIdMeta));
+          serverId.isAcceptableOrUnknown(data['server_id']!, _serverIdMeta));
     } else if (isInserting) {
       context.missing(_serverIdMeta);
     }
@@ -4910,7 +4627,7 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
       context.handle(
           _foldersOrderInJsonMeta,
           foldersOrderInJson.isAcceptableOrUnknown(
-              data['folders_order_in_json'], _foldersOrderInJsonMeta));
+              data['folders_order_in_json']!, _foldersOrderInJsonMeta));
     } else if (isInserting) {
       context.missing(_foldersOrderInJsonMeta);
     }
@@ -4918,7 +4635,7 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
       context.handle(
           _useThreadingMeta,
           useThreading.isAcceptableOrUnknown(
-              data['use_threading'], _useThreadingMeta));
+              data['use_threading']!, _useThreadingMeta));
     } else if (isInserting) {
       context.missing(_useThreadingMeta);
     }
@@ -4926,14 +4643,14 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
       context.handle(
           _saveRepliesToCurrFolderMeta,
           saveRepliesToCurrFolder.isAcceptableOrUnknown(
-              data['save_replies_to_curr_folder'],
+              data['save_replies_to_curr_folder']!,
               _saveRepliesToCurrFolderMeta));
     } else if (isInserting) {
       context.missing(_saveRepliesToCurrFolderMeta);
     }
     if (data.containsKey('account_id')) {
       context.handle(_accountIdMeta,
-          accountId.isAcceptableOrUnknown(data['account_id'], _accountIdMeta));
+          accountId.isAcceptableOrUnknown(data['account_id']!, _accountIdMeta));
     } else if (isInserting) {
       context.missing(_accountIdMeta);
     }
@@ -4941,7 +4658,7 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
       context.handle(
           _allowFiltersMeta,
           allowFilters.isAcceptableOrUnknown(
-              data['allow_filters'], _allowFiltersMeta));
+              data['allow_filters']!, _allowFiltersMeta));
     } else if (isInserting) {
       context.missing(_allowFiltersMeta);
     }
@@ -4949,7 +4666,7 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
       context.handle(
           _allowForwardMeta,
           allowForward.isAcceptableOrUnknown(
-              data['allow_forward'], _allowForwardMeta));
+              data['allow_forward']!, _allowForwardMeta));
     } else if (isInserting) {
       context.missing(_allowForwardMeta);
     }
@@ -4957,7 +4674,7 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
       context.handle(
           _allowAutoResponderMeta,
           allowAutoResponder.isAcceptableOrUnknown(
-              data['allow_auto_responder'], _allowAutoResponderMeta));
+              data['allow_auto_responder']!, _allowAutoResponderMeta));
     } else if (isInserting) {
       context.missing(_allowAutoResponderMeta);
     }
@@ -4967,7 +4684,7 @@ class $AccountsTable extends Accounts with TableInfo<$AccountsTable, Account> {
   @override
   Set<GeneratedColumn> get $primaryKey => {localId};
   @override
-  Account map(Map<String, dynamic> data, {String tablePrefix}) {
+  Account map(Map<String, dynamic> data, {String? tablePrefix}) {
     return Account.fromData(data,
         prefix: tablePrefix != null ? '$tablePrefix.' : null);
   }
@@ -4982,14 +4699,14 @@ class ContactDb extends DataClass implements Insertable<ContactDb> {
   final String uuidPlusStorage;
   final String uuid;
   final int userLocalId;
-  final int entityId;
-  final String parentUuid;
+  final int? entityId;
+  final String? parentUuid;
   final String eTag;
   final int idUser;
-  final int idTenant;
+  final int? idTenant;
   final String storage;
   final String fullName;
-  final bool useFriendlyName;
+  final bool? useFriendlyName;
   final int primaryEmail;
   final int primaryPhone;
   final int primaryAddress;
@@ -5028,179 +4745,179 @@ class ContactDb extends DataClass implements Insertable<ContactDb> {
   final int birthDay;
   final int birthMonth;
   final int birthYear;
-  final bool auto;
+  final bool? auto;
   final int frequency;
-  final String dateModified;
-  final String davContactsUid;
-  final String davContactsVCardUid;
-  final String pgpPublicKey;
+  final String? dateModified;
+  final String? davContactsUid;
+  final String? davContactsVCardUid;
+  final String? pgpPublicKey;
   final List<String> groupUUIDs;
   final bool autoSign;
   final bool autoEncrypt;
   ContactDb(
-      {@required this.uuidPlusStorage,
-      @required this.uuid,
-      @required this.userLocalId,
+      {required this.uuidPlusStorage,
+      required this.uuid,
+      required this.userLocalId,
       this.entityId,
       this.parentUuid,
-      @required this.eTag,
-      @required this.idUser,
+      required this.eTag,
+      required this.idUser,
       this.idTenant,
-      @required this.storage,
-      @required this.fullName,
+      required this.storage,
+      required this.fullName,
       this.useFriendlyName,
-      @required this.primaryEmail,
-      @required this.primaryPhone,
-      @required this.primaryAddress,
-      @required this.viewEmail,
-      @required this.title,
-      @required this.firstName,
-      @required this.lastName,
-      @required this.nickName,
-      @required this.skype,
-      @required this.facebook,
-      @required this.personalEmail,
-      @required this.personalAddress,
-      @required this.personalCity,
-      @required this.personalState,
-      @required this.personalZip,
-      @required this.personalCountry,
-      @required this.personalWeb,
-      @required this.personalFax,
-      @required this.personalPhone,
-      @required this.personalMobile,
-      @required this.businessEmail,
-      @required this.businessCompany,
-      @required this.businessAddress,
-      @required this.businessCity,
-      @required this.businessState,
-      @required this.businessZip,
-      @required this.businessCountry,
-      @required this.businessJobTitle,
-      @required this.businessDepartment,
-      @required this.businessOffice,
-      @required this.businessPhone,
-      @required this.businessFax,
-      @required this.businessWeb,
-      @required this.otherEmail,
-      @required this.notes,
-      @required this.birthDay,
-      @required this.birthMonth,
-      @required this.birthYear,
+      required this.primaryEmail,
+      required this.primaryPhone,
+      required this.primaryAddress,
+      required this.viewEmail,
+      required this.title,
+      required this.firstName,
+      required this.lastName,
+      required this.nickName,
+      required this.skype,
+      required this.facebook,
+      required this.personalEmail,
+      required this.personalAddress,
+      required this.personalCity,
+      required this.personalState,
+      required this.personalZip,
+      required this.personalCountry,
+      required this.personalWeb,
+      required this.personalFax,
+      required this.personalPhone,
+      required this.personalMobile,
+      required this.businessEmail,
+      required this.businessCompany,
+      required this.businessAddress,
+      required this.businessCity,
+      required this.businessState,
+      required this.businessZip,
+      required this.businessCountry,
+      required this.businessJobTitle,
+      required this.businessDepartment,
+      required this.businessOffice,
+      required this.businessPhone,
+      required this.businessFax,
+      required this.businessWeb,
+      required this.otherEmail,
+      required this.notes,
+      required this.birthDay,
+      required this.birthMonth,
+      required this.birthYear,
       this.auto,
-      @required this.frequency,
+      required this.frequency,
       this.dateModified,
       this.davContactsUid,
       this.davContactsVCardUid,
       this.pgpPublicKey,
-      @required this.groupUUIDs,
-      @required this.autoSign,
-      @required this.autoEncrypt});
-  factory ContactDb.fromData(Map<String, dynamic> data, {String prefix}) {
+      required this.groupUUIDs,
+      required this.autoSign,
+      required this.autoEncrypt});
+  factory ContactDb.fromData(Map<String, dynamic> data, {String? prefix}) {
     final effectivePrefix = prefix ?? '';
     return ContactDb(
-      uuidPlusStorage: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}uuid_plus_storage']),
+      uuidPlusStorage: const StringType().mapFromDatabaseResponse(
+          data['${effectivePrefix}uuid_plus_storage'])!,
       uuid: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}uuid']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}uuid'])!,
       userLocalId: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}user_local_id']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}user_local_id'])!,
       entityId: const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}entity_id']),
       parentUuid: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}parent_uuid']),
       eTag: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}e_tag']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}e_tag'])!,
       idUser: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}id_user']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}id_user'])!,
       idTenant: const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}id_tenant']),
       storage: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}storage']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}storage'])!,
       fullName: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}full_name']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}full_name'])!,
       useFriendlyName: const BoolType()
           .mapFromDatabaseResponse(data['${effectivePrefix}use_friendly_name']),
       primaryEmail: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}primary_email']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}primary_email'])!,
       primaryPhone: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}primary_phone']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}primary_phone'])!,
       primaryAddress: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}primary_address']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}primary_address'])!,
       viewEmail: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}view_email']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}view_email'])!,
       title: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}title']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}title'])!,
       firstName: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}first_name']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}first_name'])!,
       lastName: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}last_name']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}last_name'])!,
       nickName: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}nick_name']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}nick_name'])!,
       skype: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}skype']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}skype'])!,
       facebook: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}facebook']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}facebook'])!,
       personalEmail: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}personal_email']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}personal_email'])!,
       personalAddress: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}personal_address']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}personal_address'])!,
       personalCity: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}personal_city']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}personal_city'])!,
       personalState: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}personal_state']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}personal_state'])!,
       personalZip: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}personal_zip']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}personal_zip'])!,
       personalCountry: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}personal_country']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}personal_country'])!,
       personalWeb: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}personal_web']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}personal_web'])!,
       personalFax: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}personal_fax']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}personal_fax'])!,
       personalPhone: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}personal_phone']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}personal_phone'])!,
       personalMobile: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}personal_mobile']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}personal_mobile'])!,
       businessEmail: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}business_email']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}business_email'])!,
       businessCompany: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}business_company']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}business_company'])!,
       businessAddress: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}business_address']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}business_address'])!,
       businessCity: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}business_city']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}business_city'])!,
       businessState: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}business_state']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}business_state'])!,
       businessZip: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}business_zip']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}business_zip'])!,
       businessCountry: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}business_country']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}business_country'])!,
       businessJobTitle: const StringType().mapFromDatabaseResponse(
-          data['${effectivePrefix}business_job_title']),
+          data['${effectivePrefix}business_job_title'])!,
       businessDepartment: const StringType().mapFromDatabaseResponse(
-          data['${effectivePrefix}business_department']),
+          data['${effectivePrefix}business_department'])!,
       businessOffice: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}business_office']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}business_office'])!,
       businessPhone: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}business_phone']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}business_phone'])!,
       businessFax: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}business_fax']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}business_fax'])!,
       businessWeb: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}business_web']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}business_web'])!,
       otherEmail: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}other_email']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}other_email'])!,
       notes: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}notes']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}notes'])!,
       birthDay: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}birth_day']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}birth_day'])!,
       birthMonth: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}birth_month']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}birth_month'])!,
       birthYear: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}birth_year']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}birth_year'])!,
       auto: const BoolType()
           .mapFromDatabaseResponse(data['${effectivePrefix}auto']),
       frequency: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}frequency']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}frequency'])!,
       dateModified: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}date_modified']),
       davContactsUid: const StringType()
@@ -5210,339 +4927,159 @@ class ContactDb extends DataClass implements Insertable<ContactDb> {
       pgpPublicKey: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}pgp_public_key']),
       groupUUIDs: $ContactsTableTable.$converter0.mapToDart(const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}group_u_u_i_ds'])),
+          .mapFromDatabaseResponse(data['${effectivePrefix}group_u_u_i_ds']))!,
       autoSign: const BoolType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}auto_sign']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}auto_sign'])!,
       autoEncrypt: const BoolType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}auto_encrypt']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}auto_encrypt'])!,
     );
   }
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (!nullToAbsent || uuidPlusStorage != null) {
-      map['uuid_plus_storage'] = Variable<String>(uuidPlusStorage);
-    }
-    if (!nullToAbsent || uuid != null) {
-      map['uuid'] = Variable<String>(uuid);
-    }
-    if (!nullToAbsent || userLocalId != null) {
-      map['user_local_id'] = Variable<int>(userLocalId);
-    }
+    map['uuid_plus_storage'] = Variable<String>(uuidPlusStorage);
+    map['uuid'] = Variable<String>(uuid);
+    map['user_local_id'] = Variable<int>(userLocalId);
     if (!nullToAbsent || entityId != null) {
-      map['entity_id'] = Variable<int>(entityId);
+      map['entity_id'] = Variable<int?>(entityId);
     }
     if (!nullToAbsent || parentUuid != null) {
-      map['parent_uuid'] = Variable<String>(parentUuid);
+      map['parent_uuid'] = Variable<String?>(parentUuid);
     }
-    if (!nullToAbsent || eTag != null) {
-      map['e_tag'] = Variable<String>(eTag);
-    }
-    if (!nullToAbsent || idUser != null) {
-      map['id_user'] = Variable<int>(idUser);
-    }
+    map['e_tag'] = Variable<String>(eTag);
+    map['id_user'] = Variable<int>(idUser);
     if (!nullToAbsent || idTenant != null) {
-      map['id_tenant'] = Variable<int>(idTenant);
+      map['id_tenant'] = Variable<int?>(idTenant);
     }
-    if (!nullToAbsent || storage != null) {
-      map['storage'] = Variable<String>(storage);
-    }
-    if (!nullToAbsent || fullName != null) {
-      map['full_name'] = Variable<String>(fullName);
-    }
+    map['storage'] = Variable<String>(storage);
+    map['full_name'] = Variable<String>(fullName);
     if (!nullToAbsent || useFriendlyName != null) {
-      map['use_friendly_name'] = Variable<bool>(useFriendlyName);
+      map['use_friendly_name'] = Variable<bool?>(useFriendlyName);
     }
-    if (!nullToAbsent || primaryEmail != null) {
-      map['primary_email'] = Variable<int>(primaryEmail);
-    }
-    if (!nullToAbsent || primaryPhone != null) {
-      map['primary_phone'] = Variable<int>(primaryPhone);
-    }
-    if (!nullToAbsent || primaryAddress != null) {
-      map['primary_address'] = Variable<int>(primaryAddress);
-    }
-    if (!nullToAbsent || viewEmail != null) {
-      map['view_email'] = Variable<String>(viewEmail);
-    }
-    if (!nullToAbsent || title != null) {
-      map['title'] = Variable<String>(title);
-    }
-    if (!nullToAbsent || firstName != null) {
-      map['first_name'] = Variable<String>(firstName);
-    }
-    if (!nullToAbsent || lastName != null) {
-      map['last_name'] = Variable<String>(lastName);
-    }
-    if (!nullToAbsent || nickName != null) {
-      map['nick_name'] = Variable<String>(nickName);
-    }
-    if (!nullToAbsent || skype != null) {
-      map['skype'] = Variable<String>(skype);
-    }
-    if (!nullToAbsent || facebook != null) {
-      map['facebook'] = Variable<String>(facebook);
-    }
-    if (!nullToAbsent || personalEmail != null) {
-      map['personal_email'] = Variable<String>(personalEmail);
-    }
-    if (!nullToAbsent || personalAddress != null) {
-      map['personal_address'] = Variable<String>(personalAddress);
-    }
-    if (!nullToAbsent || personalCity != null) {
-      map['personal_city'] = Variable<String>(personalCity);
-    }
-    if (!nullToAbsent || personalState != null) {
-      map['personal_state'] = Variable<String>(personalState);
-    }
-    if (!nullToAbsent || personalZip != null) {
-      map['personal_zip'] = Variable<String>(personalZip);
-    }
-    if (!nullToAbsent || personalCountry != null) {
-      map['personal_country'] = Variable<String>(personalCountry);
-    }
-    if (!nullToAbsent || personalWeb != null) {
-      map['personal_web'] = Variable<String>(personalWeb);
-    }
-    if (!nullToAbsent || personalFax != null) {
-      map['personal_fax'] = Variable<String>(personalFax);
-    }
-    if (!nullToAbsent || personalPhone != null) {
-      map['personal_phone'] = Variable<String>(personalPhone);
-    }
-    if (!nullToAbsent || personalMobile != null) {
-      map['personal_mobile'] = Variable<String>(personalMobile);
-    }
-    if (!nullToAbsent || businessEmail != null) {
-      map['business_email'] = Variable<String>(businessEmail);
-    }
-    if (!nullToAbsent || businessCompany != null) {
-      map['business_company'] = Variable<String>(businessCompany);
-    }
-    if (!nullToAbsent || businessAddress != null) {
-      map['business_address'] = Variable<String>(businessAddress);
-    }
-    if (!nullToAbsent || businessCity != null) {
-      map['business_city'] = Variable<String>(businessCity);
-    }
-    if (!nullToAbsent || businessState != null) {
-      map['business_state'] = Variable<String>(businessState);
-    }
-    if (!nullToAbsent || businessZip != null) {
-      map['business_zip'] = Variable<String>(businessZip);
-    }
-    if (!nullToAbsent || businessCountry != null) {
-      map['business_country'] = Variable<String>(businessCountry);
-    }
-    if (!nullToAbsent || businessJobTitle != null) {
-      map['business_job_title'] = Variable<String>(businessJobTitle);
-    }
-    if (!nullToAbsent || businessDepartment != null) {
-      map['business_department'] = Variable<String>(businessDepartment);
-    }
-    if (!nullToAbsent || businessOffice != null) {
-      map['business_office'] = Variable<String>(businessOffice);
-    }
-    if (!nullToAbsent || businessPhone != null) {
-      map['business_phone'] = Variable<String>(businessPhone);
-    }
-    if (!nullToAbsent || businessFax != null) {
-      map['business_fax'] = Variable<String>(businessFax);
-    }
-    if (!nullToAbsent || businessWeb != null) {
-      map['business_web'] = Variable<String>(businessWeb);
-    }
-    if (!nullToAbsent || otherEmail != null) {
-      map['other_email'] = Variable<String>(otherEmail);
-    }
-    if (!nullToAbsent || notes != null) {
-      map['notes'] = Variable<String>(notes);
-    }
-    if (!nullToAbsent || birthDay != null) {
-      map['birth_day'] = Variable<int>(birthDay);
-    }
-    if (!nullToAbsent || birthMonth != null) {
-      map['birth_month'] = Variable<int>(birthMonth);
-    }
-    if (!nullToAbsent || birthYear != null) {
-      map['birth_year'] = Variable<int>(birthYear);
-    }
+    map['primary_email'] = Variable<int>(primaryEmail);
+    map['primary_phone'] = Variable<int>(primaryPhone);
+    map['primary_address'] = Variable<int>(primaryAddress);
+    map['view_email'] = Variable<String>(viewEmail);
+    map['title'] = Variable<String>(title);
+    map['first_name'] = Variable<String>(firstName);
+    map['last_name'] = Variable<String>(lastName);
+    map['nick_name'] = Variable<String>(nickName);
+    map['skype'] = Variable<String>(skype);
+    map['facebook'] = Variable<String>(facebook);
+    map['personal_email'] = Variable<String>(personalEmail);
+    map['personal_address'] = Variable<String>(personalAddress);
+    map['personal_city'] = Variable<String>(personalCity);
+    map['personal_state'] = Variable<String>(personalState);
+    map['personal_zip'] = Variable<String>(personalZip);
+    map['personal_country'] = Variable<String>(personalCountry);
+    map['personal_web'] = Variable<String>(personalWeb);
+    map['personal_fax'] = Variable<String>(personalFax);
+    map['personal_phone'] = Variable<String>(personalPhone);
+    map['personal_mobile'] = Variable<String>(personalMobile);
+    map['business_email'] = Variable<String>(businessEmail);
+    map['business_company'] = Variable<String>(businessCompany);
+    map['business_address'] = Variable<String>(businessAddress);
+    map['business_city'] = Variable<String>(businessCity);
+    map['business_state'] = Variable<String>(businessState);
+    map['business_zip'] = Variable<String>(businessZip);
+    map['business_country'] = Variable<String>(businessCountry);
+    map['business_job_title'] = Variable<String>(businessJobTitle);
+    map['business_department'] = Variable<String>(businessDepartment);
+    map['business_office'] = Variable<String>(businessOffice);
+    map['business_phone'] = Variable<String>(businessPhone);
+    map['business_fax'] = Variable<String>(businessFax);
+    map['business_web'] = Variable<String>(businessWeb);
+    map['other_email'] = Variable<String>(otherEmail);
+    map['notes'] = Variable<String>(notes);
+    map['birth_day'] = Variable<int>(birthDay);
+    map['birth_month'] = Variable<int>(birthMonth);
+    map['birth_year'] = Variable<int>(birthYear);
     if (!nullToAbsent || auto != null) {
-      map['auto'] = Variable<bool>(auto);
+      map['auto'] = Variable<bool?>(auto);
     }
-    if (!nullToAbsent || frequency != null) {
-      map['frequency'] = Variable<int>(frequency);
-    }
+    map['frequency'] = Variable<int>(frequency);
     if (!nullToAbsent || dateModified != null) {
-      map['date_modified'] = Variable<String>(dateModified);
+      map['date_modified'] = Variable<String?>(dateModified);
     }
     if (!nullToAbsent || davContactsUid != null) {
-      map['dav_contacts_uid'] = Variable<String>(davContactsUid);
+      map['dav_contacts_uid'] = Variable<String?>(davContactsUid);
     }
     if (!nullToAbsent || davContactsVCardUid != null) {
-      map['dav_contacts_v_card_uid'] = Variable<String>(davContactsVCardUid);
+      map['dav_contacts_v_card_uid'] = Variable<String?>(davContactsVCardUid);
     }
     if (!nullToAbsent || pgpPublicKey != null) {
-      map['pgp_public_key'] = Variable<String>(pgpPublicKey);
+      map['pgp_public_key'] = Variable<String?>(pgpPublicKey);
     }
-    if (!nullToAbsent || groupUUIDs != null) {
+    {
       final converter = $ContactsTableTable.$converter0;
-      map['group_u_u_i_ds'] = Variable<String>(converter.mapToSql(groupUUIDs));
+      map['group_u_u_i_ds'] = Variable<String>(converter.mapToSql(groupUUIDs)!);
     }
-    if (!nullToAbsent || autoSign != null) {
-      map['auto_sign'] = Variable<bool>(autoSign);
-    }
-    if (!nullToAbsent || autoEncrypt != null) {
-      map['auto_encrypt'] = Variable<bool>(autoEncrypt);
-    }
+    map['auto_sign'] = Variable<bool>(autoSign);
+    map['auto_encrypt'] = Variable<bool>(autoEncrypt);
     return map;
   }
 
   ContactsTableCompanion toCompanion(bool nullToAbsent) {
     return ContactsTableCompanion(
-      uuidPlusStorage: uuidPlusStorage == null && nullToAbsent
-          ? const Value.absent()
-          : Value(uuidPlusStorage),
-      uuid: uuid == null && nullToAbsent ? const Value.absent() : Value(uuid),
-      userLocalId: userLocalId == null && nullToAbsent
-          ? const Value.absent()
-          : Value(userLocalId),
+      uuidPlusStorage: Value(uuidPlusStorage),
+      uuid: Value(uuid),
+      userLocalId: Value(userLocalId),
       entityId: entityId == null && nullToAbsent
           ? const Value.absent()
           : Value(entityId),
       parentUuid: parentUuid == null && nullToAbsent
           ? const Value.absent()
           : Value(parentUuid),
-      eTag: eTag == null && nullToAbsent ? const Value.absent() : Value(eTag),
-      idUser:
-          idUser == null && nullToAbsent ? const Value.absent() : Value(idUser),
+      eTag: Value(eTag),
+      idUser: Value(idUser),
       idTenant: idTenant == null && nullToAbsent
           ? const Value.absent()
           : Value(idTenant),
-      storage: storage == null && nullToAbsent
-          ? const Value.absent()
-          : Value(storage),
-      fullName: fullName == null && nullToAbsent
-          ? const Value.absent()
-          : Value(fullName),
+      storage: Value(storage),
+      fullName: Value(fullName),
       useFriendlyName: useFriendlyName == null && nullToAbsent
           ? const Value.absent()
           : Value(useFriendlyName),
-      primaryEmail: primaryEmail == null && nullToAbsent
-          ? const Value.absent()
-          : Value(primaryEmail),
-      primaryPhone: primaryPhone == null && nullToAbsent
-          ? const Value.absent()
-          : Value(primaryPhone),
-      primaryAddress: primaryAddress == null && nullToAbsent
-          ? const Value.absent()
-          : Value(primaryAddress),
-      viewEmail: viewEmail == null && nullToAbsent
-          ? const Value.absent()
-          : Value(viewEmail),
-      title:
-          title == null && nullToAbsent ? const Value.absent() : Value(title),
-      firstName: firstName == null && nullToAbsent
-          ? const Value.absent()
-          : Value(firstName),
-      lastName: lastName == null && nullToAbsent
-          ? const Value.absent()
-          : Value(lastName),
-      nickName: nickName == null && nullToAbsent
-          ? const Value.absent()
-          : Value(nickName),
-      skype:
-          skype == null && nullToAbsent ? const Value.absent() : Value(skype),
-      facebook: facebook == null && nullToAbsent
-          ? const Value.absent()
-          : Value(facebook),
-      personalEmail: personalEmail == null && nullToAbsent
-          ? const Value.absent()
-          : Value(personalEmail),
-      personalAddress: personalAddress == null && nullToAbsent
-          ? const Value.absent()
-          : Value(personalAddress),
-      personalCity: personalCity == null && nullToAbsent
-          ? const Value.absent()
-          : Value(personalCity),
-      personalState: personalState == null && nullToAbsent
-          ? const Value.absent()
-          : Value(personalState),
-      personalZip: personalZip == null && nullToAbsent
-          ? const Value.absent()
-          : Value(personalZip),
-      personalCountry: personalCountry == null && nullToAbsent
-          ? const Value.absent()
-          : Value(personalCountry),
-      personalWeb: personalWeb == null && nullToAbsent
-          ? const Value.absent()
-          : Value(personalWeb),
-      personalFax: personalFax == null && nullToAbsent
-          ? const Value.absent()
-          : Value(personalFax),
-      personalPhone: personalPhone == null && nullToAbsent
-          ? const Value.absent()
-          : Value(personalPhone),
-      personalMobile: personalMobile == null && nullToAbsent
-          ? const Value.absent()
-          : Value(personalMobile),
-      businessEmail: businessEmail == null && nullToAbsent
-          ? const Value.absent()
-          : Value(businessEmail),
-      businessCompany: businessCompany == null && nullToAbsent
-          ? const Value.absent()
-          : Value(businessCompany),
-      businessAddress: businessAddress == null && nullToAbsent
-          ? const Value.absent()
-          : Value(businessAddress),
-      businessCity: businessCity == null && nullToAbsent
-          ? const Value.absent()
-          : Value(businessCity),
-      businessState: businessState == null && nullToAbsent
-          ? const Value.absent()
-          : Value(businessState),
-      businessZip: businessZip == null && nullToAbsent
-          ? const Value.absent()
-          : Value(businessZip),
-      businessCountry: businessCountry == null && nullToAbsent
-          ? const Value.absent()
-          : Value(businessCountry),
-      businessJobTitle: businessJobTitle == null && nullToAbsent
-          ? const Value.absent()
-          : Value(businessJobTitle),
-      businessDepartment: businessDepartment == null && nullToAbsent
-          ? const Value.absent()
-          : Value(businessDepartment),
-      businessOffice: businessOffice == null && nullToAbsent
-          ? const Value.absent()
-          : Value(businessOffice),
-      businessPhone: businessPhone == null && nullToAbsent
-          ? const Value.absent()
-          : Value(businessPhone),
-      businessFax: businessFax == null && nullToAbsent
-          ? const Value.absent()
-          : Value(businessFax),
-      businessWeb: businessWeb == null && nullToAbsent
-          ? const Value.absent()
-          : Value(businessWeb),
-      otherEmail: otherEmail == null && nullToAbsent
-          ? const Value.absent()
-          : Value(otherEmail),
-      notes:
-          notes == null && nullToAbsent ? const Value.absent() : Value(notes),
-      birthDay: birthDay == null && nullToAbsent
-          ? const Value.absent()
-          : Value(birthDay),
-      birthMonth: birthMonth == null && nullToAbsent
-          ? const Value.absent()
-          : Value(birthMonth),
-      birthYear: birthYear == null && nullToAbsent
-          ? const Value.absent()
-          : Value(birthYear),
+      primaryEmail: Value(primaryEmail),
+      primaryPhone: Value(primaryPhone),
+      primaryAddress: Value(primaryAddress),
+      viewEmail: Value(viewEmail),
+      title: Value(title),
+      firstName: Value(firstName),
+      lastName: Value(lastName),
+      nickName: Value(nickName),
+      skype: Value(skype),
+      facebook: Value(facebook),
+      personalEmail: Value(personalEmail),
+      personalAddress: Value(personalAddress),
+      personalCity: Value(personalCity),
+      personalState: Value(personalState),
+      personalZip: Value(personalZip),
+      personalCountry: Value(personalCountry),
+      personalWeb: Value(personalWeb),
+      personalFax: Value(personalFax),
+      personalPhone: Value(personalPhone),
+      personalMobile: Value(personalMobile),
+      businessEmail: Value(businessEmail),
+      businessCompany: Value(businessCompany),
+      businessAddress: Value(businessAddress),
+      businessCity: Value(businessCity),
+      businessState: Value(businessState),
+      businessZip: Value(businessZip),
+      businessCountry: Value(businessCountry),
+      businessJobTitle: Value(businessJobTitle),
+      businessDepartment: Value(businessDepartment),
+      businessOffice: Value(businessOffice),
+      businessPhone: Value(businessPhone),
+      businessFax: Value(businessFax),
+      businessWeb: Value(businessWeb),
+      otherEmail: Value(otherEmail),
+      notes: Value(notes),
+      birthDay: Value(birthDay),
+      birthMonth: Value(birthMonth),
+      birthYear: Value(birthYear),
       auto: auto == null && nullToAbsent ? const Value.absent() : Value(auto),
-      frequency: frequency == null && nullToAbsent
-          ? const Value.absent()
-          : Value(frequency),
+      frequency: Value(frequency),
       dateModified: dateModified == null && nullToAbsent
           ? const Value.absent()
           : Value(dateModified),
@@ -5555,33 +5092,27 @@ class ContactDb extends DataClass implements Insertable<ContactDb> {
       pgpPublicKey: pgpPublicKey == null && nullToAbsent
           ? const Value.absent()
           : Value(pgpPublicKey),
-      groupUUIDs: groupUUIDs == null && nullToAbsent
-          ? const Value.absent()
-          : Value(groupUUIDs),
-      autoSign: autoSign == null && nullToAbsent
-          ? const Value.absent()
-          : Value(autoSign),
-      autoEncrypt: autoEncrypt == null && nullToAbsent
-          ? const Value.absent()
-          : Value(autoEncrypt),
+      groupUUIDs: Value(groupUUIDs),
+      autoSign: Value(autoSign),
+      autoEncrypt: Value(autoEncrypt),
     );
   }
 
   factory ContactDb.fromJson(Map<String, dynamic> json,
-      {ValueSerializer serializer}) {
+      {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return ContactDb(
       uuidPlusStorage: serializer.fromJson<String>(json['uuidPlusStorage']),
       uuid: serializer.fromJson<String>(json['uuid']),
       userLocalId: serializer.fromJson<int>(json['userLocalId']),
-      entityId: serializer.fromJson<int>(json['entityId']),
-      parentUuid: serializer.fromJson<String>(json['parentUuid']),
+      entityId: serializer.fromJson<int?>(json['entityId']),
+      parentUuid: serializer.fromJson<String?>(json['parentUuid']),
       eTag: serializer.fromJson<String>(json['eTag']),
       idUser: serializer.fromJson<int>(json['idUser']),
-      idTenant: serializer.fromJson<int>(json['idTenant']),
+      idTenant: serializer.fromJson<int?>(json['idTenant']),
       storage: serializer.fromJson<String>(json['storage']),
       fullName: serializer.fromJson<String>(json['fullName']),
-      useFriendlyName: serializer.fromJson<bool>(json['useFriendlyName']),
+      useFriendlyName: serializer.fromJson<bool?>(json['useFriendlyName']),
       primaryEmail: serializer.fromJson<int>(json['primaryEmail']),
       primaryPhone: serializer.fromJson<int>(json['primaryPhone']),
       primaryAddress: serializer.fromJson<int>(json['primaryAddress']),
@@ -5621,33 +5152,33 @@ class ContactDb extends DataClass implements Insertable<ContactDb> {
       birthDay: serializer.fromJson<int>(json['birthDay']),
       birthMonth: serializer.fromJson<int>(json['birthMonth']),
       birthYear: serializer.fromJson<int>(json['birthYear']),
-      auto: serializer.fromJson<bool>(json['auto']),
+      auto: serializer.fromJson<bool?>(json['auto']),
       frequency: serializer.fromJson<int>(json['frequency']),
-      dateModified: serializer.fromJson<String>(json['dateModified']),
-      davContactsUid: serializer.fromJson<String>(json['davContactsUid']),
+      dateModified: serializer.fromJson<String?>(json['dateModified']),
+      davContactsUid: serializer.fromJson<String?>(json['davContactsUid']),
       davContactsVCardUid:
-          serializer.fromJson<String>(json['davContactsVCardUid']),
-      pgpPublicKey: serializer.fromJson<String>(json['pgpPublicKey']),
+          serializer.fromJson<String?>(json['davContactsVCardUid']),
+      pgpPublicKey: serializer.fromJson<String?>(json['pgpPublicKey']),
       groupUUIDs: serializer.fromJson<List<String>>(json['groupUUIDs']),
       autoSign: serializer.fromJson<bool>(json['autoSign']),
       autoEncrypt: serializer.fromJson<bool>(json['autoEncrypt']),
     );
   }
   @override
-  Map<String, dynamic> toJson({ValueSerializer serializer}) {
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'uuidPlusStorage': serializer.toJson<String>(uuidPlusStorage),
       'uuid': serializer.toJson<String>(uuid),
       'userLocalId': serializer.toJson<int>(userLocalId),
-      'entityId': serializer.toJson<int>(entityId),
-      'parentUuid': serializer.toJson<String>(parentUuid),
+      'entityId': serializer.toJson<int?>(entityId),
+      'parentUuid': serializer.toJson<String?>(parentUuid),
       'eTag': serializer.toJson<String>(eTag),
       'idUser': serializer.toJson<int>(idUser),
-      'idTenant': serializer.toJson<int>(idTenant),
+      'idTenant': serializer.toJson<int?>(idTenant),
       'storage': serializer.toJson<String>(storage),
       'fullName': serializer.toJson<String>(fullName),
-      'useFriendlyName': serializer.toJson<bool>(useFriendlyName),
+      'useFriendlyName': serializer.toJson<bool?>(useFriendlyName),
       'primaryEmail': serializer.toJson<int>(primaryEmail),
       'primaryPhone': serializer.toJson<int>(primaryPhone),
       'primaryAddress': serializer.toJson<int>(primaryAddress),
@@ -5686,12 +5217,12 @@ class ContactDb extends DataClass implements Insertable<ContactDb> {
       'birthDay': serializer.toJson<int>(birthDay),
       'birthMonth': serializer.toJson<int>(birthMonth),
       'birthYear': serializer.toJson<int>(birthYear),
-      'auto': serializer.toJson<bool>(auto),
+      'auto': serializer.toJson<bool?>(auto),
       'frequency': serializer.toJson<int>(frequency),
-      'dateModified': serializer.toJson<String>(dateModified),
-      'davContactsUid': serializer.toJson<String>(davContactsUid),
-      'davContactsVCardUid': serializer.toJson<String>(davContactsVCardUid),
-      'pgpPublicKey': serializer.toJson<String>(pgpPublicKey),
+      'dateModified': serializer.toJson<String?>(dateModified),
+      'davContactsUid': serializer.toJson<String?>(davContactsUid),
+      'davContactsVCardUid': serializer.toJson<String?>(davContactsVCardUid),
+      'pgpPublicKey': serializer.toJson<String?>(pgpPublicKey),
       'groupUUIDs': serializer.toJson<List<String>>(groupUUIDs),
       'autoSign': serializer.toJson<bool>(autoSign),
       'autoEncrypt': serializer.toJson<bool>(autoEncrypt),
@@ -5699,64 +5230,64 @@ class ContactDb extends DataClass implements Insertable<ContactDb> {
   }
 
   ContactDb copyWith(
-          {String uuidPlusStorage,
-          String uuid,
-          int userLocalId,
-          int entityId,
-          String parentUuid,
-          String eTag,
-          int idUser,
-          int idTenant,
-          String storage,
-          String fullName,
-          bool useFriendlyName,
-          int primaryEmail,
-          int primaryPhone,
-          int primaryAddress,
-          String viewEmail,
-          String title,
-          String firstName,
-          String lastName,
-          String nickName,
-          String skype,
-          String facebook,
-          String personalEmail,
-          String personalAddress,
-          String personalCity,
-          String personalState,
-          String personalZip,
-          String personalCountry,
-          String personalWeb,
-          String personalFax,
-          String personalPhone,
-          String personalMobile,
-          String businessEmail,
-          String businessCompany,
-          String businessAddress,
-          String businessCity,
-          String businessState,
-          String businessZip,
-          String businessCountry,
-          String businessJobTitle,
-          String businessDepartment,
-          String businessOffice,
-          String businessPhone,
-          String businessFax,
-          String businessWeb,
-          String otherEmail,
-          String notes,
-          int birthDay,
-          int birthMonth,
-          int birthYear,
-          bool auto,
-          int frequency,
-          String dateModified,
-          String davContactsUid,
-          String davContactsVCardUid,
-          String pgpPublicKey,
-          List<String> groupUUIDs,
-          bool autoSign,
-          bool autoEncrypt}) =>
+          {String? uuidPlusStorage,
+          String? uuid,
+          int? userLocalId,
+          int? entityId,
+          String? parentUuid,
+          String? eTag,
+          int? idUser,
+          int? idTenant,
+          String? storage,
+          String? fullName,
+          bool? useFriendlyName,
+          int? primaryEmail,
+          int? primaryPhone,
+          int? primaryAddress,
+          String? viewEmail,
+          String? title,
+          String? firstName,
+          String? lastName,
+          String? nickName,
+          String? skype,
+          String? facebook,
+          String? personalEmail,
+          String? personalAddress,
+          String? personalCity,
+          String? personalState,
+          String? personalZip,
+          String? personalCountry,
+          String? personalWeb,
+          String? personalFax,
+          String? personalPhone,
+          String? personalMobile,
+          String? businessEmail,
+          String? businessCompany,
+          String? businessAddress,
+          String? businessCity,
+          String? businessState,
+          String? businessZip,
+          String? businessCountry,
+          String? businessJobTitle,
+          String? businessDepartment,
+          String? businessOffice,
+          String? businessPhone,
+          String? businessFax,
+          String? businessWeb,
+          String? otherEmail,
+          String? notes,
+          int? birthDay,
+          int? birthMonth,
+          int? birthYear,
+          bool? auto,
+          int? frequency,
+          String? dateModified,
+          String? davContactsUid,
+          String? davContactsVCardUid,
+          String? pgpPublicKey,
+          List<String>? groupUUIDs,
+          bool? autoSign,
+          bool? autoEncrypt}) =>
       ContactDb(
         uuidPlusStorage: uuidPlusStorage ?? this.uuidPlusStorage,
         uuid: uuid ?? this.uuid,
@@ -6011,14 +5542,14 @@ class ContactsTableCompanion extends UpdateCompanion<ContactDb> {
   final Value<String> uuidPlusStorage;
   final Value<String> uuid;
   final Value<int> userLocalId;
-  final Value<int> entityId;
-  final Value<String> parentUuid;
+  final Value<int?> entityId;
+  final Value<String?> parentUuid;
   final Value<String> eTag;
   final Value<int> idUser;
-  final Value<int> idTenant;
+  final Value<int?> idTenant;
   final Value<String> storage;
   final Value<String> fullName;
-  final Value<bool> useFriendlyName;
+  final Value<bool?> useFriendlyName;
   final Value<int> primaryEmail;
   final Value<int> primaryPhone;
   final Value<int> primaryAddress;
@@ -6057,12 +5588,12 @@ class ContactsTableCompanion extends UpdateCompanion<ContactDb> {
   final Value<int> birthDay;
   final Value<int> birthMonth;
   final Value<int> birthYear;
-  final Value<bool> auto;
+  final Value<bool?> auto;
   final Value<int> frequency;
-  final Value<String> dateModified;
-  final Value<String> davContactsUid;
-  final Value<String> davContactsVCardUid;
-  final Value<String> pgpPublicKey;
+  final Value<String?> dateModified;
+  final Value<String?> davContactsUid;
+  final Value<String?> davContactsVCardUid;
+  final Value<String?> pgpPublicKey;
   final Value<List<String>> groupUUIDs;
   final Value<bool> autoSign;
   final Value<bool> autoEncrypt;
@@ -6127,62 +5658,62 @@ class ContactsTableCompanion extends UpdateCompanion<ContactDb> {
     this.autoEncrypt = const Value.absent(),
   });
   ContactsTableCompanion.insert({
-    @required String uuidPlusStorage,
-    @required String uuid,
-    @required int userLocalId,
+    required String uuidPlusStorage,
+    required String uuid,
+    required int userLocalId,
     this.entityId = const Value.absent(),
     this.parentUuid = const Value.absent(),
-    @required String eTag,
-    @required int idUser,
+    required String eTag,
+    required int idUser,
     this.idTenant = const Value.absent(),
-    @required String storage,
-    @required String fullName,
+    required String storage,
+    required String fullName,
     this.useFriendlyName = const Value.absent(),
-    @required int primaryEmail,
-    @required int primaryPhone,
-    @required int primaryAddress,
-    @required String viewEmail,
-    @required String title,
-    @required String firstName,
-    @required String lastName,
-    @required String nickName,
-    @required String skype,
-    @required String facebook,
-    @required String personalEmail,
-    @required String personalAddress,
-    @required String personalCity,
-    @required String personalState,
-    @required String personalZip,
-    @required String personalCountry,
-    @required String personalWeb,
-    @required String personalFax,
-    @required String personalPhone,
-    @required String personalMobile,
-    @required String businessEmail,
-    @required String businessCompany,
-    @required String businessAddress,
-    @required String businessCity,
-    @required String businessState,
-    @required String businessZip,
-    @required String businessCountry,
-    @required String businessJobTitle,
-    @required String businessDepartment,
-    @required String businessOffice,
-    @required String businessPhone,
-    @required String businessFax,
-    @required String businessWeb,
-    @required String otherEmail,
-    @required String notes,
-    @required int birthDay,
-    @required int birthMonth,
-    @required int birthYear,
+    required int primaryEmail,
+    required int primaryPhone,
+    required int primaryAddress,
+    required String viewEmail,
+    required String title,
+    required String firstName,
+    required String lastName,
+    required String nickName,
+    required String skype,
+    required String facebook,
+    required String personalEmail,
+    required String personalAddress,
+    required String personalCity,
+    required String personalState,
+    required String personalZip,
+    required String personalCountry,
+    required String personalWeb,
+    required String personalFax,
+    required String personalPhone,
+    required String personalMobile,
+    required String businessEmail,
+    required String businessCompany,
+    required String businessAddress,
+    required String businessCity,
+    required String businessState,
+    required String businessZip,
+    required String businessCountry,
+    required String businessJobTitle,
+    required String businessDepartment,
+    required String businessOffice,
+    required String businessPhone,
+    required String businessFax,
+    required String businessWeb,
+    required String otherEmail,
+    required String notes,
+    required int birthDay,
+    required int birthMonth,
+    required int birthYear,
     this.auto = const Value.absent(),
     this.frequency = const Value.absent(),
     this.dateModified = const Value.absent(),
     this.davContactsUid = const Value.absent(),
     this.davContactsVCardUid = const Value.absent(),
     this.pgpPublicKey = const Value.absent(),
-    @required List<String> groupUUIDs,
+    required List<String> groupUUIDs,
     this.autoSign = const Value.absent(),
     this.autoEncrypt = const Value.absent(),
   })  : uuidPlusStorage = Value(uuidPlusStorage),
@@ -6232,64 +5763,64 @@ class ContactsTableCompanion extends UpdateCompanion<ContactDb> {
         birthYear = Value(birthYear),
         groupUUIDs = Value(groupUUIDs);
   static Insertable<ContactDb> custom({
-    Expression<String> uuidPlusStorage,
-    Expression<String> uuid,
-    Expression<int> userLocalId,
-    Expression<int> entityId,
-    Expression<String> parentUuid,
-    Expression<String> eTag,
-    Expression<int> idUser,
-    Expression<int> idTenant,
-    Expression<String> storage,
-    Expression<String> fullName,
-    Expression<bool> useFriendlyName,
-    Expression<int> primaryEmail,
-    Expression<int> primaryPhone,
-    Expression<int> primaryAddress,
-    Expression<String> viewEmail,
-    Expression<String> title,
-    Expression<String> firstName,
-    Expression<String> lastName,
-    Expression<String> nickName,
-    Expression<String> skype,
-    Expression<String> facebook,
-    Expression<String> personalEmail,
-    Expression<String> personalAddress,
-    Expression<String> personalCity,
-    Expression<String> personalState,
-    Expression<String> personalZip,
-    Expression<String> personalCountry,
-    Expression<String> personalWeb,
-    Expression<String> personalFax,
-    Expression<String> personalPhone,
-    Expression<String> personalMobile,
-    Expression<String> businessEmail,
-    Expression<String> businessCompany,
-    Expression<String> businessAddress,
-    Expression<String> businessCity,
-    Expression<String> businessState,
-    Expression<String> businessZip,
-    Expression<String> businessCountry,
-    Expression<String> businessJobTitle,
-    Expression<String> businessDepartment,
-    Expression<String> businessOffice,
-    Expression<String> businessPhone,
-    Expression<String> businessFax,
-    Expression<String> businessWeb,
-    Expression<String> otherEmail,
-    Expression<String> notes,
-    Expression<int> birthDay,
-    Expression<int> birthMonth,
-    Expression<int> birthYear,
-    Expression<bool> auto,
-    Expression<int> frequency,
-    Expression<String> dateModified,
-    Expression<String> davContactsUid,
-    Expression<String> davContactsVCardUid,
-    Expression<String> pgpPublicKey,
-    Expression<List<String>> groupUUIDs,
-    Expression<bool> autoSign,
-    Expression<bool> autoEncrypt,
+    Expression<String>? uuidPlusStorage,
+    Expression<String>? uuid,
+    Expression<int>? userLocalId,
+    Expression<int?>? entityId,
+    Expression<String?>? parentUuid,
+    Expression<String>? eTag,
+    Expression<int>? idUser,
+    Expression<int?>? idTenant,
+    Expression<String>? storage,
+    Expression<String>? fullName,
+    Expression<bool?>? useFriendlyName,
+    Expression<int>? primaryEmail,
+    Expression<int>? primaryPhone,
+    Expression<int>? primaryAddress,
+    Expression<String>? viewEmail,
+    Expression<String>? title,
+    Expression<String>? firstName,
+    Expression<String>? lastName,
+    Expression<String>? nickName,
+    Expression<String>? skype,
+    Expression<String>? facebook,
+    Expression<String>? personalEmail,
+    Expression<String>? personalAddress,
+    Expression<String>? personalCity,
+    Expression<String>? personalState,
+    Expression<String>? personalZip,
+    Expression<String>? personalCountry,
+    Expression<String>? personalWeb,
+    Expression<String>? personalFax,
+    Expression<String>? personalPhone,
+    Expression<String>? personalMobile,
+    Expression<String>? businessEmail,
+    Expression<String>? businessCompany,
+    Expression<String>? businessAddress,
+    Expression<String>? businessCity,
+    Expression<String>? businessState,
+    Expression<String>? businessZip,
+    Expression<String>? businessCountry,
+    Expression<String>? businessJobTitle,
+    Expression<String>? businessDepartment,
+    Expression<String>? businessOffice,
+    Expression<String>? businessPhone,
+    Expression<String>? businessFax,
+    Expression<String>? businessWeb,
+    Expression<String>? otherEmail,
+    Expression<String>? notes,
+    Expression<int>? birthDay,
+    Expression<int>? birthMonth,
+    Expression<int>? birthYear,
+    Expression<bool?>? auto,
+    Expression<int>? frequency,
+    Expression<String?>? dateModified,
+    Expression<String?>? davContactsUid,
+    Expression<String?>? davContactsVCardUid,
+    Expression<String?>? pgpPublicKey,
+    Expression<List<String>>? groupUUIDs,
+    Expression<bool>? autoSign,
+    Expression<bool>? autoEncrypt,
   }) {
     return RawValuesInsertable({
       if (uuidPlusStorage != null) 'uuid_plus_storage': uuidPlusStorage,
@@ -6355,64 +5886,64 @@ class ContactsTableCompanion extends UpdateCompanion<ContactDb> {
   }
 
   ContactsTableCompanion copyWith(
-      {Value<String> uuidPlusStorage,
-      Value<String> uuid,
-      Value<int> userLocalId,
-      Value<int> entityId,
-      Value<String> parentUuid,
-      Value<String> eTag,
-      Value<int> idUser,
-      Value<int> idTenant,
-      Value<String> storage,
-      Value<String> fullName,
-      Value<bool> useFriendlyName,
-      Value<int> primaryEmail,
-      Value<int> primaryPhone,
-      Value<int> primaryAddress,
-      Value<String> viewEmail,
-      Value<String> title,
-      Value<String> firstName,
-      Value<String> lastName,
-      Value<String> nickName,
-      Value<String> skype,
-      Value<String> facebook,
-      Value<String> personalEmail,
-      Value<String> personalAddress,
-      Value<String> personalCity,
-      Value<String> personalState,
-      Value<String> personalZip,
-      Value<String> personalCountry,
-      Value<String> personalWeb,
-      Value<String> personalFax,
-      Value<String> personalPhone,
-      Value<String> personalMobile,
-      Value<String> businessEmail,
-      Value<String> businessCompany,
-      Value<String> businessAddress,
-      Value<String> businessCity,
-      Value<String> businessState,
-      Value<String> businessZip,
-      Value<String> businessCountry,
-      Value<String> businessJobTitle,
-      Value<String> businessDepartment,
-      Value<String> businessOffice,
-      Value<String> businessPhone,
-      Value<String> businessFax,
-      Value<String> businessWeb,
-      Value<String> otherEmail,
-      Value<String> notes,
-      Value<int> birthDay,
-      Value<int> birthMonth,
-      Value<int> birthYear,
-      Value<bool> auto,
-      Value<int> frequency,
-      Value<String> dateModified,
-      Value<String> davContactsUid,
-      Value<String> davContactsVCardUid,
-      Value<String> pgpPublicKey,
-      Value<List<String>> groupUUIDs,
-      Value<bool> autoSign,
-      Value<bool> autoEncrypt}) {
+      {Value<String>? uuidPlusStorage,
+      Value<String>? uuid,
+      Value<int>? userLocalId,
+      Value<int?>? entityId,
+      Value<String?>? parentUuid,
+      Value<String>? eTag,
+      Value<int>? idUser,
+      Value<int?>? idTenant,
+      Value<String>? storage,
+      Value<String>? fullName,
+      Value<bool?>? useFriendlyName,
+      Value<int>? primaryEmail,
+      Value<int>? primaryPhone,
+      Value<int>? primaryAddress,
+      Value<String>? viewEmail,
+      Value<String>? title,
+      Value<String>? firstName,
+      Value<String>? lastName,
+      Value<String>? nickName,
+      Value<String>? skype,
+      Value<String>? facebook,
+      Value<String>? personalEmail,
+      Value<String>? personalAddress,
+      Value<String>? personalCity,
+      Value<String>? personalState,
+      Value<String>? personalZip,
+      Value<String>? personalCountry,
+      Value<String>? personalWeb,
+      Value<String>? personalFax,
+      Value<String>? personalPhone,
+      Value<String>? personalMobile,
+      Value<String>? businessEmail,
+      Value<String>? businessCompany,
+      Value<String>? businessAddress,
+      Value<String>? businessCity,
+      Value<String>? businessState,
+      Value<String>? businessZip,
+      Value<String>? businessCountry,
+      Value<String>? businessJobTitle,
+      Value<String>? businessDepartment,
+      Value<String>? businessOffice,
+      Value<String>? businessPhone,
+      Value<String>? businessFax,
+      Value<String>? businessWeb,
+      Value<String>? otherEmail,
+      Value<String>? notes,
+      Value<int>? birthDay,
+      Value<int>? birthMonth,
+      Value<int>? birthYear,
+      Value<bool?>? auto,
+      Value<int>? frequency,
+      Value<String?>? dateModified,
+      Value<String?>? davContactsUid,
+      Value<String?>? davContactsVCardUid,
+      Value<String?>? pgpPublicKey,
+      Value<List<String>>? groupUUIDs,
+      Value<bool>? autoSign,
+      Value<bool>? autoEncrypt}) {
     return ContactsTableCompanion(
       uuidPlusStorage: uuidPlusStorage ?? this.uuidPlusStorage,
       uuid: uuid ?? this.uuid,
@@ -6488,10 +6019,10 @@ class ContactsTableCompanion extends UpdateCompanion<ContactDb> {
       map['user_local_id'] = Variable<int>(userLocalId.value);
     }
     if (entityId.present) {
-      map['entity_id'] = Variable<int>(entityId.value);
+      map['entity_id'] = Variable<int?>(entityId.value);
     }
     if (parentUuid.present) {
-      map['parent_uuid'] = Variable<String>(parentUuid.value);
+      map['parent_uuid'] = Variable<String?>(parentUuid.value);
     }
     if (eTag.present) {
       map['e_tag'] = Variable<String>(eTag.value);
@@ -6500,7 +6031,7 @@ class ContactsTableCompanion extends UpdateCompanion<ContactDb> {
       map['id_user'] = Variable<int>(idUser.value);
     }
     if (idTenant.present) {
-      map['id_tenant'] = Variable<int>(idTenant.value);
+      map['id_tenant'] = Variable<int?>(idTenant.value);
     }
     if (storage.present) {
       map['storage'] = Variable<String>(storage.value);
@@ -6509,7 +6040,7 @@ class ContactsTableCompanion extends UpdateCompanion<ContactDb> {
       map['full_name'] = Variable<String>(fullName.value);
     }
     if (useFriendlyName.present) {
-      map['use_friendly_name'] = Variable<bool>(useFriendlyName.value);
+      map['use_friendly_name'] = Variable<bool?>(useFriendlyName.value);
     }
     if (primaryEmail.present) {
       map['primary_email'] = Variable<int>(primaryEmail.value);
@@ -6626,28 +6157,28 @@ class ContactsTableCompanion extends UpdateCompanion<ContactDb> {
       map['birth_year'] = Variable<int>(birthYear.value);
     }
     if (auto.present) {
-      map['auto'] = Variable<bool>(auto.value);
+      map['auto'] = Variable<bool?>(auto.value);
     }
     if (frequency.present) {
       map['frequency'] = Variable<int>(frequency.value);
     }
     if (dateModified.present) {
-      map['date_modified'] = Variable<String>(dateModified.value);
+      map['date_modified'] = Variable<String?>(dateModified.value);
     }
     if (davContactsUid.present) {
-      map['dav_contacts_uid'] = Variable<String>(davContactsUid.value);
+      map['dav_contacts_uid'] = Variable<String?>(davContactsUid.value);
     }
     if (davContactsVCardUid.present) {
       map['dav_contacts_v_card_uid'] =
-          Variable<String>(davContactsVCardUid.value);
+          Variable<String?>(davContactsVCardUid.value);
     }
     if (pgpPublicKey.present) {
-      map['pgp_public_key'] = Variable<String>(pgpPublicKey.value);
+      map['pgp_public_key'] = Variable<String?>(pgpPublicKey.value);
     }
     if (groupUUIDs.present) {
       final converter = $ContactsTableTable.$converter0;
       map['group_u_u_i_ds'] =
-          Variable<String>(converter.mapToSql(groupUUIDs.value));
+          Variable<String>(converter.mapToSql(groupUUIDs.value)!);
     }
     if (autoSign.present) {
       map['auto_sign'] = Variable<bool>(autoSign.value);
@@ -6728,404 +6259,346 @@ class $ContactsTableTable extends ContactsTable
     with TableInfo<$ContactsTableTable, ContactDb> {
   @override
   final GeneratedDatabase attachedDatabase;
-  final String _alias;
+  final String? _alias;
   $ContactsTableTable(this.attachedDatabase, [this._alias]);
   final VerificationMeta _uuidPlusStorageMeta =
       const VerificationMeta('uuidPlusStorage');
-  GeneratedColumn<String> _uuidPlusStorage;
   @override
-  GeneratedColumn<String> get uuidPlusStorage => _uuidPlusStorage ??=
-      GeneratedColumn<String>('uuid_plus_storage', aliasedName, false,
+  late final GeneratedColumn<String?> uuidPlusStorage =
+      GeneratedColumn<String?>('uuid_plus_storage', aliasedName, false,
           type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _uuidMeta = const VerificationMeta('uuid');
-  GeneratedColumn<String> _uuid;
   @override
-  GeneratedColumn<String> get uuid =>
-      _uuid ??= GeneratedColumn<String>('uuid', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> uuid = GeneratedColumn<String?>(
+      'uuid', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _userLocalIdMeta =
       const VerificationMeta('userLocalId');
-  GeneratedColumn<int> _userLocalId;
   @override
-  GeneratedColumn<int> get userLocalId =>
-      _userLocalId ??= GeneratedColumn<int>('user_local_id', aliasedName, false,
-          type: const IntType(), requiredDuringInsert: true);
+  late final GeneratedColumn<int?> userLocalId = GeneratedColumn<int?>(
+      'user_local_id', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _entityIdMeta = const VerificationMeta('entityId');
-  GeneratedColumn<int> _entityId;
   @override
-  GeneratedColumn<int> get entityId =>
-      _entityId ??= GeneratedColumn<int>('entity_id', aliasedName, true,
-          type: const IntType(), requiredDuringInsert: false);
+  late final GeneratedColumn<int?> entityId = GeneratedColumn<int?>(
+      'entity_id', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
   final VerificationMeta _parentUuidMeta = const VerificationMeta('parentUuid');
-  GeneratedColumn<String> _parentUuid;
   @override
-  GeneratedColumn<String> get parentUuid =>
-      _parentUuid ??= GeneratedColumn<String>('parent_uuid', aliasedName, true,
-          type: const StringType(), requiredDuringInsert: false);
+  late final GeneratedColumn<String?> parentUuid = GeneratedColumn<String?>(
+      'parent_uuid', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _eTagMeta = const VerificationMeta('eTag');
-  GeneratedColumn<String> _eTag;
   @override
-  GeneratedColumn<String> get eTag =>
-      _eTag ??= GeneratedColumn<String>('e_tag', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> eTag = GeneratedColumn<String?>(
+      'e_tag', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _idUserMeta = const VerificationMeta('idUser');
-  GeneratedColumn<int> _idUser;
   @override
-  GeneratedColumn<int> get idUser =>
-      _idUser ??= GeneratedColumn<int>('id_user', aliasedName, false,
-          type: const IntType(), requiredDuringInsert: true);
+  late final GeneratedColumn<int?> idUser = GeneratedColumn<int?>(
+      'id_user', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _idTenantMeta = const VerificationMeta('idTenant');
-  GeneratedColumn<int> _idTenant;
   @override
-  GeneratedColumn<int> get idTenant =>
-      _idTenant ??= GeneratedColumn<int>('id_tenant', aliasedName, true,
-          type: const IntType(), requiredDuringInsert: false);
+  late final GeneratedColumn<int?> idTenant = GeneratedColumn<int?>(
+      'id_tenant', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
   final VerificationMeta _storageMeta = const VerificationMeta('storage');
-  GeneratedColumn<String> _storage;
   @override
-  GeneratedColumn<String> get storage =>
-      _storage ??= GeneratedColumn<String>('storage', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> storage = GeneratedColumn<String?>(
+      'storage', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _fullNameMeta = const VerificationMeta('fullName');
-  GeneratedColumn<String> _fullName;
   @override
-  GeneratedColumn<String> get fullName =>
-      _fullName ??= GeneratedColumn<String>('full_name', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> fullName = GeneratedColumn<String?>(
+      'full_name', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _useFriendlyNameMeta =
       const VerificationMeta('useFriendlyName');
-  GeneratedColumn<bool> _useFriendlyName;
   @override
-  GeneratedColumn<bool> get useFriendlyName => _useFriendlyName ??=
-      GeneratedColumn<bool>('use_friendly_name', aliasedName, true,
-          type: const BoolType(),
-          requiredDuringInsert: false,
-          defaultConstraints: 'CHECK (use_friendly_name IN (0, 1))');
+  late final GeneratedColumn<bool?> useFriendlyName = GeneratedColumn<bool?>(
+      'use_friendly_name', aliasedName, true,
+      type: const BoolType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'CHECK (use_friendly_name IN (0, 1))');
   final VerificationMeta _primaryEmailMeta =
       const VerificationMeta('primaryEmail');
-  GeneratedColumn<int> _primaryEmail;
   @override
-  GeneratedColumn<int> get primaryEmail => _primaryEmail ??=
-      GeneratedColumn<int>('primary_email', aliasedName, false,
-          type: const IntType(), requiredDuringInsert: true);
+  late final GeneratedColumn<int?> primaryEmail = GeneratedColumn<int?>(
+      'primary_email', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _primaryPhoneMeta =
       const VerificationMeta('primaryPhone');
-  GeneratedColumn<int> _primaryPhone;
   @override
-  GeneratedColumn<int> get primaryPhone => _primaryPhone ??=
-      GeneratedColumn<int>('primary_phone', aliasedName, false,
-          type: const IntType(), requiredDuringInsert: true);
+  late final GeneratedColumn<int?> primaryPhone = GeneratedColumn<int?>(
+      'primary_phone', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _primaryAddressMeta =
       const VerificationMeta('primaryAddress');
-  GeneratedColumn<int> _primaryAddress;
   @override
-  GeneratedColumn<int> get primaryAddress => _primaryAddress ??=
-      GeneratedColumn<int>('primary_address', aliasedName, false,
-          type: const IntType(), requiredDuringInsert: true);
+  late final GeneratedColumn<int?> primaryAddress = GeneratedColumn<int?>(
+      'primary_address', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _viewEmailMeta = const VerificationMeta('viewEmail');
-  GeneratedColumn<String> _viewEmail;
   @override
-  GeneratedColumn<String> get viewEmail =>
-      _viewEmail ??= GeneratedColumn<String>('view_email', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> viewEmail = GeneratedColumn<String?>(
+      'view_email', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _titleMeta = const VerificationMeta('title');
-  GeneratedColumn<String> _title;
   @override
-  GeneratedColumn<String> get title =>
-      _title ??= GeneratedColumn<String>('title', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> title = GeneratedColumn<String?>(
+      'title', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _firstNameMeta = const VerificationMeta('firstName');
-  GeneratedColumn<String> _firstName;
   @override
-  GeneratedColumn<String> get firstName =>
-      _firstName ??= GeneratedColumn<String>('first_name', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> firstName = GeneratedColumn<String?>(
+      'first_name', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _lastNameMeta = const VerificationMeta('lastName');
-  GeneratedColumn<String> _lastName;
   @override
-  GeneratedColumn<String> get lastName =>
-      _lastName ??= GeneratedColumn<String>('last_name', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> lastName = GeneratedColumn<String?>(
+      'last_name', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _nickNameMeta = const VerificationMeta('nickName');
-  GeneratedColumn<String> _nickName;
   @override
-  GeneratedColumn<String> get nickName =>
-      _nickName ??= GeneratedColumn<String>('nick_name', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> nickName = GeneratedColumn<String?>(
+      'nick_name', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _skypeMeta = const VerificationMeta('skype');
-  GeneratedColumn<String> _skype;
   @override
-  GeneratedColumn<String> get skype =>
-      _skype ??= GeneratedColumn<String>('skype', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> skype = GeneratedColumn<String?>(
+      'skype', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _facebookMeta = const VerificationMeta('facebook');
-  GeneratedColumn<String> _facebook;
   @override
-  GeneratedColumn<String> get facebook =>
-      _facebook ??= GeneratedColumn<String>('facebook', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> facebook = GeneratedColumn<String?>(
+      'facebook', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _personalEmailMeta =
       const VerificationMeta('personalEmail');
-  GeneratedColumn<String> _personalEmail;
   @override
-  GeneratedColumn<String> get personalEmail => _personalEmail ??=
-      GeneratedColumn<String>('personal_email', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> personalEmail = GeneratedColumn<String?>(
+      'personal_email', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _personalAddressMeta =
       const VerificationMeta('personalAddress');
-  GeneratedColumn<String> _personalAddress;
   @override
-  GeneratedColumn<String> get personalAddress => _personalAddress ??=
-      GeneratedColumn<String>('personal_address', aliasedName, false,
+  late final GeneratedColumn<String?> personalAddress =
+      GeneratedColumn<String?>('personal_address', aliasedName, false,
           type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _personalCityMeta =
       const VerificationMeta('personalCity');
-  GeneratedColumn<String> _personalCity;
   @override
-  GeneratedColumn<String> get personalCity => _personalCity ??=
-      GeneratedColumn<String>('personal_city', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> personalCity = GeneratedColumn<String?>(
+      'personal_city', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _personalStateMeta =
       const VerificationMeta('personalState');
-  GeneratedColumn<String> _personalState;
   @override
-  GeneratedColumn<String> get personalState => _personalState ??=
-      GeneratedColumn<String>('personal_state', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> personalState = GeneratedColumn<String?>(
+      'personal_state', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _personalZipMeta =
       const VerificationMeta('personalZip');
-  GeneratedColumn<String> _personalZip;
   @override
-  GeneratedColumn<String> get personalZip => _personalZip ??=
-      GeneratedColumn<String>('personal_zip', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> personalZip = GeneratedColumn<String?>(
+      'personal_zip', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _personalCountryMeta =
       const VerificationMeta('personalCountry');
-  GeneratedColumn<String> _personalCountry;
   @override
-  GeneratedColumn<String> get personalCountry => _personalCountry ??=
-      GeneratedColumn<String>('personal_country', aliasedName, false,
+  late final GeneratedColumn<String?> personalCountry =
+      GeneratedColumn<String?>('personal_country', aliasedName, false,
           type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _personalWebMeta =
       const VerificationMeta('personalWeb');
-  GeneratedColumn<String> _personalWeb;
   @override
-  GeneratedColumn<String> get personalWeb => _personalWeb ??=
-      GeneratedColumn<String>('personal_web', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> personalWeb = GeneratedColumn<String?>(
+      'personal_web', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _personalFaxMeta =
       const VerificationMeta('personalFax');
-  GeneratedColumn<String> _personalFax;
   @override
-  GeneratedColumn<String> get personalFax => _personalFax ??=
-      GeneratedColumn<String>('personal_fax', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> personalFax = GeneratedColumn<String?>(
+      'personal_fax', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _personalPhoneMeta =
       const VerificationMeta('personalPhone');
-  GeneratedColumn<String> _personalPhone;
   @override
-  GeneratedColumn<String> get personalPhone => _personalPhone ??=
-      GeneratedColumn<String>('personal_phone', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> personalPhone = GeneratedColumn<String?>(
+      'personal_phone', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _personalMobileMeta =
       const VerificationMeta('personalMobile');
-  GeneratedColumn<String> _personalMobile;
   @override
-  GeneratedColumn<String> get personalMobile => _personalMobile ??=
-      GeneratedColumn<String>('personal_mobile', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> personalMobile = GeneratedColumn<String?>(
+      'personal_mobile', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _businessEmailMeta =
       const VerificationMeta('businessEmail');
-  GeneratedColumn<String> _businessEmail;
   @override
-  GeneratedColumn<String> get businessEmail => _businessEmail ??=
-      GeneratedColumn<String>('business_email', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> businessEmail = GeneratedColumn<String?>(
+      'business_email', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _businessCompanyMeta =
       const VerificationMeta('businessCompany');
-  GeneratedColumn<String> _businessCompany;
   @override
-  GeneratedColumn<String> get businessCompany => _businessCompany ??=
-      GeneratedColumn<String>('business_company', aliasedName, false,
+  late final GeneratedColumn<String?> businessCompany =
+      GeneratedColumn<String?>('business_company', aliasedName, false,
           type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _businessAddressMeta =
       const VerificationMeta('businessAddress');
-  GeneratedColumn<String> _businessAddress;
   @override
-  GeneratedColumn<String> get businessAddress => _businessAddress ??=
-      GeneratedColumn<String>('business_address', aliasedName, false,
+  late final GeneratedColumn<String?> businessAddress =
+      GeneratedColumn<String?>('business_address', aliasedName, false,
           type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _businessCityMeta =
       const VerificationMeta('businessCity');
-  GeneratedColumn<String> _businessCity;
   @override
-  GeneratedColumn<String> get businessCity => _businessCity ??=
-      GeneratedColumn<String>('business_city', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> businessCity = GeneratedColumn<String?>(
+      'business_city', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _businessStateMeta =
       const VerificationMeta('businessState');
-  GeneratedColumn<String> _businessState;
   @override
-  GeneratedColumn<String> get businessState => _businessState ??=
-      GeneratedColumn<String>('business_state', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> businessState = GeneratedColumn<String?>(
+      'business_state', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _businessZipMeta =
       const VerificationMeta('businessZip');
-  GeneratedColumn<String> _businessZip;
   @override
-  GeneratedColumn<String> get businessZip => _businessZip ??=
-      GeneratedColumn<String>('business_zip', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> businessZip = GeneratedColumn<String?>(
+      'business_zip', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _businessCountryMeta =
       const VerificationMeta('businessCountry');
-  GeneratedColumn<String> _businessCountry;
   @override
-  GeneratedColumn<String> get businessCountry => _businessCountry ??=
-      GeneratedColumn<String>('business_country', aliasedName, false,
+  late final GeneratedColumn<String?> businessCountry =
+      GeneratedColumn<String?>('business_country', aliasedName, false,
           type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _businessJobTitleMeta =
       const VerificationMeta('businessJobTitle');
-  GeneratedColumn<String> _businessJobTitle;
   @override
-  GeneratedColumn<String> get businessJobTitle => _businessJobTitle ??=
-      GeneratedColumn<String>('business_job_title', aliasedName, false,
+  late final GeneratedColumn<String?> businessJobTitle =
+      GeneratedColumn<String?>('business_job_title', aliasedName, false,
           type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _businessDepartmentMeta =
       const VerificationMeta('businessDepartment');
-  GeneratedColumn<String> _businessDepartment;
   @override
-  GeneratedColumn<String> get businessDepartment => _businessDepartment ??=
-      GeneratedColumn<String>('business_department', aliasedName, false,
+  late final GeneratedColumn<String?> businessDepartment =
+      GeneratedColumn<String?>('business_department', aliasedName, false,
           type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _businessOfficeMeta =
       const VerificationMeta('businessOffice');
-  GeneratedColumn<String> _businessOffice;
   @override
-  GeneratedColumn<String> get businessOffice => _businessOffice ??=
-      GeneratedColumn<String>('business_office', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> businessOffice = GeneratedColumn<String?>(
+      'business_office', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _businessPhoneMeta =
       const VerificationMeta('businessPhone');
-  GeneratedColumn<String> _businessPhone;
   @override
-  GeneratedColumn<String> get businessPhone => _businessPhone ??=
-      GeneratedColumn<String>('business_phone', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> businessPhone = GeneratedColumn<String?>(
+      'business_phone', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _businessFaxMeta =
       const VerificationMeta('businessFax');
-  GeneratedColumn<String> _businessFax;
   @override
-  GeneratedColumn<String> get businessFax => _businessFax ??=
-      GeneratedColumn<String>('business_fax', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> businessFax = GeneratedColumn<String?>(
+      'business_fax', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _businessWebMeta =
       const VerificationMeta('businessWeb');
-  GeneratedColumn<String> _businessWeb;
   @override
-  GeneratedColumn<String> get businessWeb => _businessWeb ??=
-      GeneratedColumn<String>('business_web', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> businessWeb = GeneratedColumn<String?>(
+      'business_web', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _otherEmailMeta = const VerificationMeta('otherEmail');
-  GeneratedColumn<String> _otherEmail;
   @override
-  GeneratedColumn<String> get otherEmail =>
-      _otherEmail ??= GeneratedColumn<String>('other_email', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> otherEmail = GeneratedColumn<String?>(
+      'other_email', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _notesMeta = const VerificationMeta('notes');
-  GeneratedColumn<String> _notes;
   @override
-  GeneratedColumn<String> get notes =>
-      _notes ??= GeneratedColumn<String>('notes', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> notes = GeneratedColumn<String?>(
+      'notes', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _birthDayMeta = const VerificationMeta('birthDay');
-  GeneratedColumn<int> _birthDay;
   @override
-  GeneratedColumn<int> get birthDay =>
-      _birthDay ??= GeneratedColumn<int>('birth_day', aliasedName, false,
-          type: const IntType(), requiredDuringInsert: true);
+  late final GeneratedColumn<int?> birthDay = GeneratedColumn<int?>(
+      'birth_day', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _birthMonthMeta = const VerificationMeta('birthMonth');
-  GeneratedColumn<int> _birthMonth;
   @override
-  GeneratedColumn<int> get birthMonth =>
-      _birthMonth ??= GeneratedColumn<int>('birth_month', aliasedName, false,
-          type: const IntType(), requiredDuringInsert: true);
+  late final GeneratedColumn<int?> birthMonth = GeneratedColumn<int?>(
+      'birth_month', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _birthYearMeta = const VerificationMeta('birthYear');
-  GeneratedColumn<int> _birthYear;
   @override
-  GeneratedColumn<int> get birthYear =>
-      _birthYear ??= GeneratedColumn<int>('birth_year', aliasedName, false,
-          type: const IntType(), requiredDuringInsert: true);
+  late final GeneratedColumn<int?> birthYear = GeneratedColumn<int?>(
+      'birth_year', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _autoMeta = const VerificationMeta('auto');
-  GeneratedColumn<bool> _auto;
   @override
-  GeneratedColumn<bool> get auto =>
-      _auto ??= GeneratedColumn<bool>('auto', aliasedName, true,
-          type: const BoolType(),
-          requiredDuringInsert: false,
-          defaultConstraints: 'CHECK (auto IN (0, 1))');
+  late final GeneratedColumn<bool?> auto = GeneratedColumn<bool?>(
+      'auto', aliasedName, true,
+      type: const BoolType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'CHECK (auto IN (0, 1))');
   final VerificationMeta _frequencyMeta = const VerificationMeta('frequency');
-  GeneratedColumn<int> _frequency;
   @override
-  GeneratedColumn<int> get frequency =>
-      _frequency ??= GeneratedColumn<int>('frequency', aliasedName, false,
-          type: const IntType(),
-          requiredDuringInsert: false,
-          defaultValue: Constant(0));
+  late final GeneratedColumn<int?> frequency = GeneratedColumn<int?>(
+      'frequency', aliasedName, false,
+      type: const IntType(),
+      requiredDuringInsert: false,
+      defaultValue: Constant(0));
   final VerificationMeta _dateModifiedMeta =
       const VerificationMeta('dateModified');
-  GeneratedColumn<String> _dateModified;
   @override
-  GeneratedColumn<String> get dateModified => _dateModified ??=
-      GeneratedColumn<String>('date_modified', aliasedName, true,
-          type: const StringType(), requiredDuringInsert: false);
+  late final GeneratedColumn<String?> dateModified = GeneratedColumn<String?>(
+      'date_modified', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _davContactsUidMeta =
       const VerificationMeta('davContactsUid');
-  GeneratedColumn<String> _davContactsUid;
   @override
-  GeneratedColumn<String> get davContactsUid => _davContactsUid ??=
-      GeneratedColumn<String>('dav_contacts_uid', aliasedName, true,
-          type: const StringType(), requiredDuringInsert: false);
+  late final GeneratedColumn<String?> davContactsUid = GeneratedColumn<String?>(
+      'dav_contacts_uid', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _davContactsVCardUidMeta =
       const VerificationMeta('davContactsVCardUid');
-  GeneratedColumn<String> _davContactsVCardUid;
   @override
-  GeneratedColumn<String> get davContactsVCardUid => _davContactsVCardUid ??=
-      GeneratedColumn<String>('dav_contacts_v_card_uid', aliasedName, true,
+  late final GeneratedColumn<String?> davContactsVCardUid =
+      GeneratedColumn<String?>('dav_contacts_v_card_uid', aliasedName, true,
           type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _pgpPublicKeyMeta =
       const VerificationMeta('pgpPublicKey');
-  GeneratedColumn<String> _pgpPublicKey;
   @override
-  GeneratedColumn<String> get pgpPublicKey => _pgpPublicKey ??=
-      GeneratedColumn<String>('pgp_public_key', aliasedName, true,
-          type: const StringType(), requiredDuringInsert: false);
+  late final GeneratedColumn<String?> pgpPublicKey = GeneratedColumn<String?>(
+      'pgp_public_key', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _groupUUIDsMeta = const VerificationMeta('groupUUIDs');
-  GeneratedColumnWithTypeConverter<List<String>, String> _groupUUIDs;
   @override
-  GeneratedColumnWithTypeConverter<List<String>, String> get groupUUIDs =>
-      _groupUUIDs ??= GeneratedColumn<String>(
+  late final GeneratedColumnWithTypeConverter<List<String>, String?>
+      groupUUIDs = GeneratedColumn<String?>(
               'group_u_u_i_ds', aliasedName, false,
               type: const StringType(), requiredDuringInsert: true)
           .withConverter<List<String>>($ContactsTableTable.$converter0);
   final VerificationMeta _autoSignMeta = const VerificationMeta('autoSign');
-  GeneratedColumn<bool> _autoSign;
   @override
-  GeneratedColumn<bool> get autoSign =>
-      _autoSign ??= GeneratedColumn<bool>('auto_sign', aliasedName, false,
-          type: const BoolType(),
-          requiredDuringInsert: false,
-          defaultConstraints: 'CHECK (auto_sign IN (0, 1))',
-          defaultValue: Constant(false));
+  late final GeneratedColumn<bool?> autoSign = GeneratedColumn<bool?>(
+      'auto_sign', aliasedName, false,
+      type: const BoolType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'CHECK (auto_sign IN (0, 1))',
+      defaultValue: Constant(false));
   final VerificationMeta _autoEncryptMeta =
       const VerificationMeta('autoEncrypt');
-  GeneratedColumn<bool> _autoEncrypt;
   @override
-  GeneratedColumn<bool> get autoEncrypt =>
-      _autoEncrypt ??= GeneratedColumn<bool>('auto_encrypt', aliasedName, false,
-          type: const BoolType(),
-          requiredDuringInsert: false,
-          defaultConstraints: 'CHECK (auto_encrypt IN (0, 1))',
-          defaultValue: Constant(false));
+  late final GeneratedColumn<bool?> autoEncrypt = GeneratedColumn<bool?>(
+      'auto_encrypt', aliasedName, false,
+      type: const BoolType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'CHECK (auto_encrypt IN (0, 1))',
+      defaultValue: Constant(false));
   @override
   List<GeneratedColumn> get $columns => [
         uuidPlusStorage,
@@ -7200,13 +6673,13 @@ class $ContactsTableTable extends ContactsTable
       context.handle(
           _uuidPlusStorageMeta,
           uuidPlusStorage.isAcceptableOrUnknown(
-              data['uuid_plus_storage'], _uuidPlusStorageMeta));
+              data['uuid_plus_storage']!, _uuidPlusStorageMeta));
     } else if (isInserting) {
       context.missing(_uuidPlusStorageMeta);
     }
     if (data.containsKey('uuid')) {
       context.handle(
-          _uuidMeta, uuid.isAcceptableOrUnknown(data['uuid'], _uuidMeta));
+          _uuidMeta, uuid.isAcceptableOrUnknown(data['uuid']!, _uuidMeta));
     } else if (isInserting) {
       context.missing(_uuidMeta);
     }
@@ -7214,45 +6687,45 @@ class $ContactsTableTable extends ContactsTable
       context.handle(
           _userLocalIdMeta,
           userLocalId.isAcceptableOrUnknown(
-              data['user_local_id'], _userLocalIdMeta));
+              data['user_local_id']!, _userLocalIdMeta));
     } else if (isInserting) {
       context.missing(_userLocalIdMeta);
     }
     if (data.containsKey('entity_id')) {
       context.handle(_entityIdMeta,
-          entityId.isAcceptableOrUnknown(data['entity_id'], _entityIdMeta));
+          entityId.isAcceptableOrUnknown(data['entity_id']!, _entityIdMeta));
     }
     if (data.containsKey('parent_uuid')) {
       context.handle(
           _parentUuidMeta,
           parentUuid.isAcceptableOrUnknown(
-              data['parent_uuid'], _parentUuidMeta));
+              data['parent_uuid']!, _parentUuidMeta));
     }
     if (data.containsKey('e_tag')) {
       context.handle(
-          _eTagMeta, eTag.isAcceptableOrUnknown(data['e_tag'], _eTagMeta));
+          _eTagMeta, eTag.isAcceptableOrUnknown(data['e_tag']!, _eTagMeta));
     } else if (isInserting) {
       context.missing(_eTagMeta);
     }
     if (data.containsKey('id_user')) {
       context.handle(_idUserMeta,
-          idUser.isAcceptableOrUnknown(data['id_user'], _idUserMeta));
+          idUser.isAcceptableOrUnknown(data['id_user']!, _idUserMeta));
     } else if (isInserting) {
       context.missing(_idUserMeta);
     }
     if (data.containsKey('id_tenant')) {
       context.handle(_idTenantMeta,
-          idTenant.isAcceptableOrUnknown(data['id_tenant'], _idTenantMeta));
+          idTenant.isAcceptableOrUnknown(data['id_tenant']!, _idTenantMeta));
     }
     if (data.containsKey('storage')) {
       context.handle(_storageMeta,
-          storage.isAcceptableOrUnknown(data['storage'], _storageMeta));
+          storage.isAcceptableOrUnknown(data['storage']!, _storageMeta));
     } else if (isInserting) {
       context.missing(_storageMeta);
     }
     if (data.containsKey('full_name')) {
       context.handle(_fullNameMeta,
-          fullName.isAcceptableOrUnknown(data['full_name'], _fullNameMeta));
+          fullName.isAcceptableOrUnknown(data['full_name']!, _fullNameMeta));
     } else if (isInserting) {
       context.missing(_fullNameMeta);
     }
@@ -7260,13 +6733,13 @@ class $ContactsTableTable extends ContactsTable
       context.handle(
           _useFriendlyNameMeta,
           useFriendlyName.isAcceptableOrUnknown(
-              data['use_friendly_name'], _useFriendlyNameMeta));
+              data['use_friendly_name']!, _useFriendlyNameMeta));
     }
     if (data.containsKey('primary_email')) {
       context.handle(
           _primaryEmailMeta,
           primaryEmail.isAcceptableOrUnknown(
-              data['primary_email'], _primaryEmailMeta));
+              data['primary_email']!, _primaryEmailMeta));
     } else if (isInserting) {
       context.missing(_primaryEmailMeta);
     }
@@ -7274,7 +6747,7 @@ class $ContactsTableTable extends ContactsTable
       context.handle(
           _primaryPhoneMeta,
           primaryPhone.isAcceptableOrUnknown(
-              data['primary_phone'], _primaryPhoneMeta));
+              data['primary_phone']!, _primaryPhoneMeta));
     } else if (isInserting) {
       context.missing(_primaryPhoneMeta);
     }
@@ -7282,49 +6755,49 @@ class $ContactsTableTable extends ContactsTable
       context.handle(
           _primaryAddressMeta,
           primaryAddress.isAcceptableOrUnknown(
-              data['primary_address'], _primaryAddressMeta));
+              data['primary_address']!, _primaryAddressMeta));
     } else if (isInserting) {
       context.missing(_primaryAddressMeta);
     }
     if (data.containsKey('view_email')) {
       context.handle(_viewEmailMeta,
-          viewEmail.isAcceptableOrUnknown(data['view_email'], _viewEmailMeta));
+          viewEmail.isAcceptableOrUnknown(data['view_email']!, _viewEmailMeta));
     } else if (isInserting) {
       context.missing(_viewEmailMeta);
     }
     if (data.containsKey('title')) {
       context.handle(
-          _titleMeta, title.isAcceptableOrUnknown(data['title'], _titleMeta));
+          _titleMeta, title.isAcceptableOrUnknown(data['title']!, _titleMeta));
     } else if (isInserting) {
       context.missing(_titleMeta);
     }
     if (data.containsKey('first_name')) {
       context.handle(_firstNameMeta,
-          firstName.isAcceptableOrUnknown(data['first_name'], _firstNameMeta));
+          firstName.isAcceptableOrUnknown(data['first_name']!, _firstNameMeta));
     } else if (isInserting) {
       context.missing(_firstNameMeta);
     }
     if (data.containsKey('last_name')) {
       context.handle(_lastNameMeta,
-          lastName.isAcceptableOrUnknown(data['last_name'], _lastNameMeta));
+          lastName.isAcceptableOrUnknown(data['last_name']!, _lastNameMeta));
     } else if (isInserting) {
       context.missing(_lastNameMeta);
     }
     if (data.containsKey('nick_name')) {
       context.handle(_nickNameMeta,
-          nickName.isAcceptableOrUnknown(data['nick_name'], _nickNameMeta));
+          nickName.isAcceptableOrUnknown(data['nick_name']!, _nickNameMeta));
     } else if (isInserting) {
       context.missing(_nickNameMeta);
     }
     if (data.containsKey('skype')) {
       context.handle(
-          _skypeMeta, skype.isAcceptableOrUnknown(data['skype'], _skypeMeta));
+          _skypeMeta, skype.isAcceptableOrUnknown(data['skype']!, _skypeMeta));
     } else if (isInserting) {
       context.missing(_skypeMeta);
     }
     if (data.containsKey('facebook')) {
       context.handle(_facebookMeta,
-          facebook.isAcceptableOrUnknown(data['facebook'], _facebookMeta));
+          facebook.isAcceptableOrUnknown(data['facebook']!, _facebookMeta));
     } else if (isInserting) {
       context.missing(_facebookMeta);
     }
@@ -7332,7 +6805,7 @@ class $ContactsTableTable extends ContactsTable
       context.handle(
           _personalEmailMeta,
           personalEmail.isAcceptableOrUnknown(
-              data['personal_email'], _personalEmailMeta));
+              data['personal_email']!, _personalEmailMeta));
     } else if (isInserting) {
       context.missing(_personalEmailMeta);
     }
@@ -7340,7 +6813,7 @@ class $ContactsTableTable extends ContactsTable
       context.handle(
           _personalAddressMeta,
           personalAddress.isAcceptableOrUnknown(
-              data['personal_address'], _personalAddressMeta));
+              data['personal_address']!, _personalAddressMeta));
     } else if (isInserting) {
       context.missing(_personalAddressMeta);
     }
@@ -7348,7 +6821,7 @@ class $ContactsTableTable extends ContactsTable
       context.handle(
           _personalCityMeta,
           personalCity.isAcceptableOrUnknown(
-              data['personal_city'], _personalCityMeta));
+              data['personal_city']!, _personalCityMeta));
     } else if (isInserting) {
       context.missing(_personalCityMeta);
     }
@@ -7356,7 +6829,7 @@ class $ContactsTableTable extends ContactsTable
       context.handle(
           _personalStateMeta,
           personalState.isAcceptableOrUnknown(
-              data['personal_state'], _personalStateMeta));
+              data['personal_state']!, _personalStateMeta));
     } else if (isInserting) {
       context.missing(_personalStateMeta);
     }
@@ -7364,7 +6837,7 @@ class $ContactsTableTable extends ContactsTable
       context.handle(
           _personalZipMeta,
           personalZip.isAcceptableOrUnknown(
-              data['personal_zip'], _personalZipMeta));
+              data['personal_zip']!, _personalZipMeta));
     } else if (isInserting) {
       context.missing(_personalZipMeta);
     }
@@ -7372,7 +6845,7 @@ class $ContactsTableTable extends ContactsTable
       context.handle(
           _personalCountryMeta,
           personalCountry.isAcceptableOrUnknown(
-              data['personal_country'], _personalCountryMeta));
+              data['personal_country']!, _personalCountryMeta));
     } else if (isInserting) {
       context.missing(_personalCountryMeta);
     }
@@ -7380,7 +6853,7 @@ class $ContactsTableTable extends ContactsTable
       context.handle(
           _personalWebMeta,
           personalWeb.isAcceptableOrUnknown(
-              data['personal_web'], _personalWebMeta));
+              data['personal_web']!, _personalWebMeta));
     } else if (isInserting) {
       context.missing(_personalWebMeta);
     }
@@ -7388,7 +6861,7 @@ class $ContactsTableTable extends ContactsTable
       context.handle(
           _personalFaxMeta,
           personalFax.isAcceptableOrUnknown(
-              data['personal_fax'], _personalFaxMeta));
+              data['personal_fax']!, _personalFaxMeta));
     } else if (isInserting) {
       context.missing(_personalFaxMeta);
     }
@@ -7396,7 +6869,7 @@ class $ContactsTableTable extends ContactsTable
       context.handle(
           _personalPhoneMeta,
           personalPhone.isAcceptableOrUnknown(
-              data['personal_phone'], _personalPhoneMeta));
+              data['personal_phone']!, _personalPhoneMeta));
     } else if (isInserting) {
       context.missing(_personalPhoneMeta);
     }
@@ -7404,7 +6877,7 @@ class $ContactsTableTable extends ContactsTable
       context.handle(
           _personalMobileMeta,
           personalMobile.isAcceptableOrUnknown(
-              data['personal_mobile'], _personalMobileMeta));
+              data['personal_mobile']!, _personalMobileMeta));
     } else if (isInserting) {
       context.missing(_personalMobileMeta);
     }
@@ -7412,7 +6885,7 @@ class $ContactsTableTable extends ContactsTable
       context.handle(
           _businessEmailMeta,
           businessEmail.isAcceptableOrUnknown(
-              data['business_email'], _businessEmailMeta));
+              data['business_email']!, _businessEmailMeta));
     } else if (isInserting) {
       context.missing(_businessEmailMeta);
     }
@@ -7420,7 +6893,7 @@ class $ContactsTableTable extends ContactsTable
       context.handle(
           _businessCompanyMeta,
           businessCompany.isAcceptableOrUnknown(
-              data['business_company'], _businessCompanyMeta));
+              data['business_company']!, _businessCompanyMeta));
     } else if (isInserting) {
       context.missing(_businessCompanyMeta);
     }
@@ -7428,7 +6901,7 @@ class $ContactsTableTable extends ContactsTable
       context.handle(
           _businessAddressMeta,
           businessAddress.isAcceptableOrUnknown(
-              data['business_address'], _businessAddressMeta));
+              data['business_address']!, _businessAddressMeta));
     } else if (isInserting) {
       context.missing(_businessAddressMeta);
     }
@@ -7436,7 +6909,7 @@ class $ContactsTableTable extends ContactsTable
       context.handle(
           _businessCityMeta,
           businessCity.isAcceptableOrUnknown(
-              data['business_city'], _businessCityMeta));
+              data['business_city']!, _businessCityMeta));
     } else if (isInserting) {
       context.missing(_businessCityMeta);
     }
@@ -7444,7 +6917,7 @@ class $ContactsTableTable extends ContactsTable
       context.handle(
           _businessStateMeta,
           businessState.isAcceptableOrUnknown(
-              data['business_state'], _businessStateMeta));
+              data['business_state']!, _businessStateMeta));
     } else if (isInserting) {
       context.missing(_businessStateMeta);
     }
@@ -7452,7 +6925,7 @@ class $ContactsTableTable extends ContactsTable
       context.handle(
           _businessZipMeta,
           businessZip.isAcceptableOrUnknown(
-              data['business_zip'], _businessZipMeta));
+              data['business_zip']!, _businessZipMeta));
     } else if (isInserting) {
       context.missing(_businessZipMeta);
     }
@@ -7460,7 +6933,7 @@ class $ContactsTableTable extends ContactsTable
       context.handle(
           _businessCountryMeta,
           businessCountry.isAcceptableOrUnknown(
-              data['business_country'], _businessCountryMeta));
+              data['business_country']!, _businessCountryMeta));
     } else if (isInserting) {
       context.missing(_businessCountryMeta);
     }
@@ -7468,7 +6941,7 @@ class $ContactsTableTable extends ContactsTable
       context.handle(
           _businessJobTitleMeta,
           businessJobTitle.isAcceptableOrUnknown(
-              data['business_job_title'], _businessJobTitleMeta));
+              data['business_job_title']!, _businessJobTitleMeta));
     } else if (isInserting) {
       context.missing(_businessJobTitleMeta);
     }
@@ -7476,7 +6949,7 @@ class $ContactsTableTable extends ContactsTable
       context.handle(
           _businessDepartmentMeta,
           businessDepartment.isAcceptableOrUnknown(
-              data['business_department'], _businessDepartmentMeta));
+              data['business_department']!, _businessDepartmentMeta));
     } else if (isInserting) {
       context.missing(_businessDepartmentMeta);
     }
@@ -7484,7 +6957,7 @@ class $ContactsTableTable extends ContactsTable
       context.handle(
           _businessOfficeMeta,
           businessOffice.isAcceptableOrUnknown(
-              data['business_office'], _businessOfficeMeta));
+              data['business_office']!, _businessOfficeMeta));
     } else if (isInserting) {
       context.missing(_businessOfficeMeta);
     }
@@ -7492,7 +6965,7 @@ class $ContactsTableTable extends ContactsTable
       context.handle(
           _businessPhoneMeta,
           businessPhone.isAcceptableOrUnknown(
-              data['business_phone'], _businessPhoneMeta));
+              data['business_phone']!, _businessPhoneMeta));
     } else if (isInserting) {
       context.missing(_businessPhoneMeta);
     }
@@ -7500,7 +6973,7 @@ class $ContactsTableTable extends ContactsTable
       context.handle(
           _businessFaxMeta,
           businessFax.isAcceptableOrUnknown(
-              data['business_fax'], _businessFaxMeta));
+              data['business_fax']!, _businessFaxMeta));
     } else if (isInserting) {
       context.missing(_businessFaxMeta);
     }
@@ -7508,7 +6981,7 @@ class $ContactsTableTable extends ContactsTable
       context.handle(
           _businessWebMeta,
           businessWeb.isAcceptableOrUnknown(
-              data['business_web'], _businessWebMeta));
+              data['business_web']!, _businessWebMeta));
     } else if (isInserting) {
       context.missing(_businessWebMeta);
     }
@@ -7516,19 +6989,19 @@ class $ContactsTableTable extends ContactsTable
       context.handle(
           _otherEmailMeta,
           otherEmail.isAcceptableOrUnknown(
-              data['other_email'], _otherEmailMeta));
+              data['other_email']!, _otherEmailMeta));
     } else if (isInserting) {
       context.missing(_otherEmailMeta);
     }
     if (data.containsKey('notes')) {
       context.handle(
-          _notesMeta, notes.isAcceptableOrUnknown(data['notes'], _notesMeta));
+          _notesMeta, notes.isAcceptableOrUnknown(data['notes']!, _notesMeta));
     } else if (isInserting) {
       context.missing(_notesMeta);
     }
     if (data.containsKey('birth_day')) {
       context.handle(_birthDayMeta,
-          birthDay.isAcceptableOrUnknown(data['birth_day'], _birthDayMeta));
+          birthDay.isAcceptableOrUnknown(data['birth_day']!, _birthDayMeta));
     } else if (isInserting) {
       context.missing(_birthDayMeta);
     }
@@ -7536,58 +7009,58 @@ class $ContactsTableTable extends ContactsTable
       context.handle(
           _birthMonthMeta,
           birthMonth.isAcceptableOrUnknown(
-              data['birth_month'], _birthMonthMeta));
+              data['birth_month']!, _birthMonthMeta));
     } else if (isInserting) {
       context.missing(_birthMonthMeta);
     }
     if (data.containsKey('birth_year')) {
       context.handle(_birthYearMeta,
-          birthYear.isAcceptableOrUnknown(data['birth_year'], _birthYearMeta));
+          birthYear.isAcceptableOrUnknown(data['birth_year']!, _birthYearMeta));
     } else if (isInserting) {
       context.missing(_birthYearMeta);
     }
     if (data.containsKey('auto')) {
       context.handle(
-          _autoMeta, auto.isAcceptableOrUnknown(data['auto'], _autoMeta));
+          _autoMeta, auto.isAcceptableOrUnknown(data['auto']!, _autoMeta));
     }
     if (data.containsKey('frequency')) {
       context.handle(_frequencyMeta,
-          frequency.isAcceptableOrUnknown(data['frequency'], _frequencyMeta));
+          frequency.isAcceptableOrUnknown(data['frequency']!, _frequencyMeta));
     }
     if (data.containsKey('date_modified')) {
       context.handle(
           _dateModifiedMeta,
           dateModified.isAcceptableOrUnknown(
-              data['date_modified'], _dateModifiedMeta));
+              data['date_modified']!, _dateModifiedMeta));
     }
     if (data.containsKey('dav_contacts_uid')) {
       context.handle(
           _davContactsUidMeta,
           davContactsUid.isAcceptableOrUnknown(
-              data['dav_contacts_uid'], _davContactsUidMeta));
+              data['dav_contacts_uid']!, _davContactsUidMeta));
     }
     if (data.containsKey('dav_contacts_v_card_uid')) {
       context.handle(
           _davContactsVCardUidMeta,
           davContactsVCardUid.isAcceptableOrUnknown(
-              data['dav_contacts_v_card_uid'], _davContactsVCardUidMeta));
+              data['dav_contacts_v_card_uid']!, _davContactsVCardUidMeta));
     }
     if (data.containsKey('pgp_public_key')) {
       context.handle(
           _pgpPublicKeyMeta,
           pgpPublicKey.isAcceptableOrUnknown(
-              data['pgp_public_key'], _pgpPublicKeyMeta));
+              data['pgp_public_key']!, _pgpPublicKeyMeta));
     }
     context.handle(_groupUUIDsMeta, const VerificationResult.success());
     if (data.containsKey('auto_sign')) {
       context.handle(_autoSignMeta,
-          autoSign.isAcceptableOrUnknown(data['auto_sign'], _autoSignMeta));
+          autoSign.isAcceptableOrUnknown(data['auto_sign']!, _autoSignMeta));
     }
     if (data.containsKey('auto_encrypt')) {
       context.handle(
           _autoEncryptMeta,
           autoEncrypt.isAcceptableOrUnknown(
-              data['auto_encrypt'], _autoEncryptMeta));
+              data['auto_encrypt']!, _autoEncryptMeta));
     }
     return context;
   }
@@ -7595,7 +7068,7 @@ class $ContactsTableTable extends ContactsTable
   @override
   Set<GeneratedColumn> get $primaryKey => {entityId};
   @override
-  ContactDb map(Map<String, dynamic> data, {String tablePrefix}) {
+  ContactDb map(Map<String, dynamic> data, {String? tablePrefix}) {
     return ContactDb.fromData(data,
         prefix: tablePrefix != null ? '$tablePrefix.' : null);
   }
@@ -7628,152 +7101,105 @@ class ContactsGroupsTable extends DataClass
   final String web;
   final String zip;
   ContactsGroupsTable(
-      {@required this.uuid,
-      @required this.userLocalId,
-      @required this.idUser,
-      @required this.city,
-      @required this.company,
-      @required this.country,
-      @required this.email,
-      @required this.fax,
-      @required this.isOrganization,
-      @required this.name,
-      @required this.parentUUID,
-      @required this.phone,
-      @required this.state,
-      @required this.street,
-      @required this.web,
-      @required this.zip});
+      {required this.uuid,
+      required this.userLocalId,
+      required this.idUser,
+      required this.city,
+      required this.company,
+      required this.country,
+      required this.email,
+      required this.fax,
+      required this.isOrganization,
+      required this.name,
+      required this.parentUUID,
+      required this.phone,
+      required this.state,
+      required this.street,
+      required this.web,
+      required this.zip});
   factory ContactsGroupsTable.fromData(Map<String, dynamic> data,
-      {String prefix}) {
+      {String? prefix}) {
     final effectivePrefix = prefix ?? '';
     return ContactsGroupsTable(
       uuid: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}uuid']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}uuid'])!,
       userLocalId: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}user_local_id']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}user_local_id'])!,
       idUser: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}id_user']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}id_user'])!,
       city: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}city']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}city'])!,
       company: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}company']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}company'])!,
       country: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}country']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}country'])!,
       email: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}email']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}email'])!,
       fax: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}fax']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}fax'])!,
       isOrganization: const BoolType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}is_organization']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}is_organization'])!,
       name: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}name']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}name'])!,
       parentUUID: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}parent_u_u_i_d']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}parent_u_u_i_d'])!,
       phone: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}phone']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}phone'])!,
       state: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}state']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}state'])!,
       street: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}street']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}street'])!,
       web: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}web']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}web'])!,
       zip: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}zip']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}zip'])!,
     );
   }
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (!nullToAbsent || uuid != null) {
-      map['uuid'] = Variable<String>(uuid);
-    }
-    if (!nullToAbsent || userLocalId != null) {
-      map['user_local_id'] = Variable<int>(userLocalId);
-    }
-    if (!nullToAbsent || idUser != null) {
-      map['id_user'] = Variable<int>(idUser);
-    }
-    if (!nullToAbsent || city != null) {
-      map['city'] = Variable<String>(city);
-    }
-    if (!nullToAbsent || company != null) {
-      map['company'] = Variable<String>(company);
-    }
-    if (!nullToAbsent || country != null) {
-      map['country'] = Variable<String>(country);
-    }
-    if (!nullToAbsent || email != null) {
-      map['email'] = Variable<String>(email);
-    }
-    if (!nullToAbsent || fax != null) {
-      map['fax'] = Variable<String>(fax);
-    }
-    if (!nullToAbsent || isOrganization != null) {
-      map['is_organization'] = Variable<bool>(isOrganization);
-    }
-    if (!nullToAbsent || name != null) {
-      map['name'] = Variable<String>(name);
-    }
-    if (!nullToAbsent || parentUUID != null) {
-      map['parent_u_u_i_d'] = Variable<String>(parentUUID);
-    }
-    if (!nullToAbsent || phone != null) {
-      map['phone'] = Variable<String>(phone);
-    }
-    if (!nullToAbsent || state != null) {
-      map['state'] = Variable<String>(state);
-    }
-    if (!nullToAbsent || street != null) {
-      map['street'] = Variable<String>(street);
-    }
-    if (!nullToAbsent || web != null) {
-      map['web'] = Variable<String>(web);
-    }
-    if (!nullToAbsent || zip != null) {
-      map['zip'] = Variable<String>(zip);
-    }
+    map['uuid'] = Variable<String>(uuid);
+    map['user_local_id'] = Variable<int>(userLocalId);
+    map['id_user'] = Variable<int>(idUser);
+    map['city'] = Variable<String>(city);
+    map['company'] = Variable<String>(company);
+    map['country'] = Variable<String>(country);
+    map['email'] = Variable<String>(email);
+    map['fax'] = Variable<String>(fax);
+    map['is_organization'] = Variable<bool>(isOrganization);
+    map['name'] = Variable<String>(name);
+    map['parent_u_u_i_d'] = Variable<String>(parentUUID);
+    map['phone'] = Variable<String>(phone);
+    map['state'] = Variable<String>(state);
+    map['street'] = Variable<String>(street);
+    map['web'] = Variable<String>(web);
+    map['zip'] = Variable<String>(zip);
     return map;
   }
 
   ContactsGroupsCompanion toCompanion(bool nullToAbsent) {
     return ContactsGroupsCompanion(
-      uuid: uuid == null && nullToAbsent ? const Value.absent() : Value(uuid),
-      userLocalId: userLocalId == null && nullToAbsent
-          ? const Value.absent()
-          : Value(userLocalId),
-      idUser:
-          idUser == null && nullToAbsent ? const Value.absent() : Value(idUser),
-      city: city == null && nullToAbsent ? const Value.absent() : Value(city),
-      company: company == null && nullToAbsent
-          ? const Value.absent()
-          : Value(company),
-      country: country == null && nullToAbsent
-          ? const Value.absent()
-          : Value(country),
-      email:
-          email == null && nullToAbsent ? const Value.absent() : Value(email),
-      fax: fax == null && nullToAbsent ? const Value.absent() : Value(fax),
-      isOrganization: isOrganization == null && nullToAbsent
-          ? const Value.absent()
-          : Value(isOrganization),
-      name: name == null && nullToAbsent ? const Value.absent() : Value(name),
-      parentUUID: parentUUID == null && nullToAbsent
-          ? const Value.absent()
-          : Value(parentUUID),
-      phone:
-          phone == null && nullToAbsent ? const Value.absent() : Value(phone),
-      state:
-          state == null && nullToAbsent ? const Value.absent() : Value(state),
-      street:
-          street == null && nullToAbsent ? const Value.absent() : Value(street),
-      web: web == null && nullToAbsent ? const Value.absent() : Value(web),
-      zip: zip == null && nullToAbsent ? const Value.absent() : Value(zip),
+      uuid: Value(uuid),
+      userLocalId: Value(userLocalId),
+      idUser: Value(idUser),
+      city: Value(city),
+      company: Value(company),
+      country: Value(country),
+      email: Value(email),
+      fax: Value(fax),
+      isOrganization: Value(isOrganization),
+      name: Value(name),
+      parentUUID: Value(parentUUID),
+      phone: Value(phone),
+      state: Value(state),
+      street: Value(street),
+      web: Value(web),
+      zip: Value(zip),
     );
   }
 
   factory ContactsGroupsTable.fromJson(Map<String, dynamic> json,
-      {ValueSerializer serializer}) {
+      {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return ContactsGroupsTable(
       uuid: serializer.fromJson<String>(json['uuid']),
@@ -7795,7 +7221,7 @@ class ContactsGroupsTable extends DataClass
     );
   }
   @override
-  Map<String, dynamic> toJson({ValueSerializer serializer}) {
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'uuid': serializer.toJson<String>(uuid),
@@ -7818,22 +7244,22 @@ class ContactsGroupsTable extends DataClass
   }
 
   ContactsGroupsTable copyWith(
-          {String uuid,
-          int userLocalId,
-          int idUser,
-          String city,
-          String company,
-          String country,
-          String email,
-          String fax,
-          bool isOrganization,
-          String name,
-          String parentUUID,
-          String phone,
-          String state,
-          String street,
-          String web,
-          String zip}) =>
+          {String? uuid,
+          int? userLocalId,
+          int? idUser,
+          String? city,
+          String? company,
+          String? country,
+          String? email,
+          String? fax,
+          bool? isOrganization,
+          String? name,
+          String? parentUUID,
+          String? phone,
+          String? state,
+          String? street,
+          String? web,
+          String? zip}) =>
       ContactsGroupsTable(
         uuid: uuid ?? this.uuid,
         userLocalId: userLocalId ?? this.userLocalId,
@@ -7951,22 +7377,22 @@ class ContactsGroupsCompanion extends UpdateCompanion<ContactsGroupsTable> {
     this.zip = const Value.absent(),
   });
   ContactsGroupsCompanion.insert({
-    @required String uuid,
-    @required int userLocalId,
-    @required int idUser,
-    @required String city,
-    @required String company,
-    @required String country,
-    @required String email,
-    @required String fax,
-    @required bool isOrganization,
-    @required String name,
-    @required String parentUUID,
-    @required String phone,
-    @required String state,
-    @required String street,
-    @required String web,
-    @required String zip,
+    required String uuid,
+    required int userLocalId,
+    required int idUser,
+    required String city,
+    required String company,
+    required String country,
+    required String email,
+    required String fax,
+    required bool isOrganization,
+    required String name,
+    required String parentUUID,
+    required String phone,
+    required String state,
+    required String street,
+    required String web,
+    required String zip,
   })  : uuid = Value(uuid),
         userLocalId = Value(userLocalId),
         idUser = Value(idUser),
@@ -7984,22 +7410,22 @@ class ContactsGroupsCompanion extends UpdateCompanion<ContactsGroupsTable> {
         web = Value(web),
         zip = Value(zip);
   static Insertable<ContactsGroupsTable> custom({
-    Expression<String> uuid,
-    Expression<int> userLocalId,
-    Expression<int> idUser,
-    Expression<String> city,
-    Expression<String> company,
-    Expression<String> country,
-    Expression<String> email,
-    Expression<String> fax,
-    Expression<bool> isOrganization,
-    Expression<String> name,
-    Expression<String> parentUUID,
-    Expression<String> phone,
-    Expression<String> state,
-    Expression<String> street,
-    Expression<String> web,
-    Expression<String> zip,
+    Expression<String>? uuid,
+    Expression<int>? userLocalId,
+    Expression<int>? idUser,
+    Expression<String>? city,
+    Expression<String>? company,
+    Expression<String>? country,
+    Expression<String>? email,
+    Expression<String>? fax,
+    Expression<bool>? isOrganization,
+    Expression<String>? name,
+    Expression<String>? parentUUID,
+    Expression<String>? phone,
+    Expression<String>? state,
+    Expression<String>? street,
+    Expression<String>? web,
+    Expression<String>? zip,
   }) {
     return RawValuesInsertable({
       if (uuid != null) 'uuid': uuid,
@@ -8022,22 +7448,22 @@ class ContactsGroupsCompanion extends UpdateCompanion<ContactsGroupsTable> {
   }
 
   ContactsGroupsCompanion copyWith(
-      {Value<String> uuid,
-      Value<int> userLocalId,
-      Value<int> idUser,
-      Value<String> city,
-      Value<String> company,
-      Value<String> country,
-      Value<String> email,
-      Value<String> fax,
-      Value<bool> isOrganization,
-      Value<String> name,
-      Value<String> parentUUID,
-      Value<String> phone,
-      Value<String> state,
-      Value<String> street,
-      Value<String> web,
-      Value<String> zip}) {
+      {Value<String>? uuid,
+      Value<int>? userLocalId,
+      Value<int>? idUser,
+      Value<String>? city,
+      Value<String>? company,
+      Value<String>? country,
+      Value<String>? email,
+      Value<String>? fax,
+      Value<bool>? isOrganization,
+      Value<String>? name,
+      Value<String>? parentUUID,
+      Value<String>? phone,
+      Value<String>? state,
+      Value<String>? street,
+      Value<String>? web,
+      Value<String>? zip}) {
     return ContactsGroupsCompanion(
       uuid: uuid ?? this.uuid,
       userLocalId: userLocalId ?? this.userLocalId,
@@ -8140,110 +7566,94 @@ class $ContactsGroupsTable extends ContactsGroups
     with TableInfo<$ContactsGroupsTable, ContactsGroupsTable> {
   @override
   final GeneratedDatabase attachedDatabase;
-  final String _alias;
+  final String? _alias;
   $ContactsGroupsTable(this.attachedDatabase, [this._alias]);
   final VerificationMeta _uuidMeta = const VerificationMeta('uuid');
-  GeneratedColumn<String> _uuid;
   @override
-  GeneratedColumn<String> get uuid =>
-      _uuid ??= GeneratedColumn<String>('uuid', aliasedName, false,
-          type: const StringType(),
-          requiredDuringInsert: true,
-          $customConstraints: 'UNIQUE');
+  late final GeneratedColumn<String?> uuid = GeneratedColumn<String?>(
+      'uuid', aliasedName, false,
+      type: const StringType(),
+      requiredDuringInsert: true,
+      $customConstraints: 'UNIQUE');
   final VerificationMeta _userLocalIdMeta =
       const VerificationMeta('userLocalId');
-  GeneratedColumn<int> _userLocalId;
   @override
-  GeneratedColumn<int> get userLocalId =>
-      _userLocalId ??= GeneratedColumn<int>('user_local_id', aliasedName, false,
-          type: const IntType(), requiredDuringInsert: true);
+  late final GeneratedColumn<int?> userLocalId = GeneratedColumn<int?>(
+      'user_local_id', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _idUserMeta = const VerificationMeta('idUser');
-  GeneratedColumn<int> _idUser;
   @override
-  GeneratedColumn<int> get idUser =>
-      _idUser ??= GeneratedColumn<int>('id_user', aliasedName, false,
-          type: const IntType(), requiredDuringInsert: true);
+  late final GeneratedColumn<int?> idUser = GeneratedColumn<int?>(
+      'id_user', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _cityMeta = const VerificationMeta('city');
-  GeneratedColumn<String> _city;
   @override
-  GeneratedColumn<String> get city =>
-      _city ??= GeneratedColumn<String>('city', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> city = GeneratedColumn<String?>(
+      'city', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _companyMeta = const VerificationMeta('company');
-  GeneratedColumn<String> _company;
   @override
-  GeneratedColumn<String> get company =>
-      _company ??= GeneratedColumn<String>('company', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> company = GeneratedColumn<String?>(
+      'company', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _countryMeta = const VerificationMeta('country');
-  GeneratedColumn<String> _country;
   @override
-  GeneratedColumn<String> get country =>
-      _country ??= GeneratedColumn<String>('country', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> country = GeneratedColumn<String?>(
+      'country', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _emailMeta = const VerificationMeta('email');
-  GeneratedColumn<String> _email;
   @override
-  GeneratedColumn<String> get email =>
-      _email ??= GeneratedColumn<String>('email', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> email = GeneratedColumn<String?>(
+      'email', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _faxMeta = const VerificationMeta('fax');
-  GeneratedColumn<String> _fax;
   @override
-  GeneratedColumn<String> get fax =>
-      _fax ??= GeneratedColumn<String>('fax', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> fax = GeneratedColumn<String?>(
+      'fax', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _isOrganizationMeta =
       const VerificationMeta('isOrganization');
-  GeneratedColumn<bool> _isOrganization;
   @override
-  GeneratedColumn<bool> get isOrganization => _isOrganization ??=
-      GeneratedColumn<bool>('is_organization', aliasedName, false,
-          type: const BoolType(),
-          requiredDuringInsert: true,
-          defaultConstraints: 'CHECK (is_organization IN (0, 1))');
+  late final GeneratedColumn<bool?> isOrganization = GeneratedColumn<bool?>(
+      'is_organization', aliasedName, false,
+      type: const BoolType(),
+      requiredDuringInsert: true,
+      defaultConstraints: 'CHECK (is_organization IN (0, 1))');
   final VerificationMeta _nameMeta = const VerificationMeta('name');
-  GeneratedColumn<String> _name;
   @override
-  GeneratedColumn<String> get name =>
-      _name ??= GeneratedColumn<String>('name', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> name = GeneratedColumn<String?>(
+      'name', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _parentUUIDMeta = const VerificationMeta('parentUUID');
-  GeneratedColumn<String> _parentUUID;
   @override
-  GeneratedColumn<String> get parentUUID => _parentUUID ??=
-      GeneratedColumn<String>('parent_u_u_i_d', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> parentUUID = GeneratedColumn<String?>(
+      'parent_u_u_i_d', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _phoneMeta = const VerificationMeta('phone');
-  GeneratedColumn<String> _phone;
   @override
-  GeneratedColumn<String> get phone =>
-      _phone ??= GeneratedColumn<String>('phone', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> phone = GeneratedColumn<String?>(
+      'phone', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _stateMeta = const VerificationMeta('state');
-  GeneratedColumn<String> _state;
   @override
-  GeneratedColumn<String> get state =>
-      _state ??= GeneratedColumn<String>('state', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> state = GeneratedColumn<String?>(
+      'state', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _streetMeta = const VerificationMeta('street');
-  GeneratedColumn<String> _street;
   @override
-  GeneratedColumn<String> get street =>
-      _street ??= GeneratedColumn<String>('street', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> street = GeneratedColumn<String?>(
+      'street', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _webMeta = const VerificationMeta('web');
-  GeneratedColumn<String> _web;
   @override
-  GeneratedColumn<String> get web =>
-      _web ??= GeneratedColumn<String>('web', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> web = GeneratedColumn<String?>(
+      'web', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _zipMeta = const VerificationMeta('zip');
-  GeneratedColumn<String> _zip;
   @override
-  GeneratedColumn<String> get zip =>
-      _zip ??= GeneratedColumn<String>('zip', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> zip = GeneratedColumn<String?>(
+      'zip', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns => [
         uuid,
@@ -8275,7 +7685,7 @@ class $ContactsGroupsTable extends ContactsGroups
     final data = instance.toColumns(true);
     if (data.containsKey('uuid')) {
       context.handle(
-          _uuidMeta, uuid.isAcceptableOrUnknown(data['uuid'], _uuidMeta));
+          _uuidMeta, uuid.isAcceptableOrUnknown(data['uuid']!, _uuidMeta));
     } else if (isInserting) {
       context.missing(_uuidMeta);
     }
@@ -8283,43 +7693,43 @@ class $ContactsGroupsTable extends ContactsGroups
       context.handle(
           _userLocalIdMeta,
           userLocalId.isAcceptableOrUnknown(
-              data['user_local_id'], _userLocalIdMeta));
+              data['user_local_id']!, _userLocalIdMeta));
     } else if (isInserting) {
       context.missing(_userLocalIdMeta);
     }
     if (data.containsKey('id_user')) {
       context.handle(_idUserMeta,
-          idUser.isAcceptableOrUnknown(data['id_user'], _idUserMeta));
+          idUser.isAcceptableOrUnknown(data['id_user']!, _idUserMeta));
     } else if (isInserting) {
       context.missing(_idUserMeta);
     }
     if (data.containsKey('city')) {
       context.handle(
-          _cityMeta, city.isAcceptableOrUnknown(data['city'], _cityMeta));
+          _cityMeta, city.isAcceptableOrUnknown(data['city']!, _cityMeta));
     } else if (isInserting) {
       context.missing(_cityMeta);
     }
     if (data.containsKey('company')) {
       context.handle(_companyMeta,
-          company.isAcceptableOrUnknown(data['company'], _companyMeta));
+          company.isAcceptableOrUnknown(data['company']!, _companyMeta));
     } else if (isInserting) {
       context.missing(_companyMeta);
     }
     if (data.containsKey('country')) {
       context.handle(_countryMeta,
-          country.isAcceptableOrUnknown(data['country'], _countryMeta));
+          country.isAcceptableOrUnknown(data['country']!, _countryMeta));
     } else if (isInserting) {
       context.missing(_countryMeta);
     }
     if (data.containsKey('email')) {
       context.handle(
-          _emailMeta, email.isAcceptableOrUnknown(data['email'], _emailMeta));
+          _emailMeta, email.isAcceptableOrUnknown(data['email']!, _emailMeta));
     } else if (isInserting) {
       context.missing(_emailMeta);
     }
     if (data.containsKey('fax')) {
       context.handle(
-          _faxMeta, fax.isAcceptableOrUnknown(data['fax'], _faxMeta));
+          _faxMeta, fax.isAcceptableOrUnknown(data['fax']!, _faxMeta));
     } else if (isInserting) {
       context.missing(_faxMeta);
     }
@@ -8327,13 +7737,13 @@ class $ContactsGroupsTable extends ContactsGroups
       context.handle(
           _isOrganizationMeta,
           isOrganization.isAcceptableOrUnknown(
-              data['is_organization'], _isOrganizationMeta));
+              data['is_organization']!, _isOrganizationMeta));
     } else if (isInserting) {
       context.missing(_isOrganizationMeta);
     }
     if (data.containsKey('name')) {
       context.handle(
-          _nameMeta, name.isAcceptableOrUnknown(data['name'], _nameMeta));
+          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
     } else if (isInserting) {
       context.missing(_nameMeta);
     }
@@ -8341,37 +7751,37 @@ class $ContactsGroupsTable extends ContactsGroups
       context.handle(
           _parentUUIDMeta,
           parentUUID.isAcceptableOrUnknown(
-              data['parent_u_u_i_d'], _parentUUIDMeta));
+              data['parent_u_u_i_d']!, _parentUUIDMeta));
     } else if (isInserting) {
       context.missing(_parentUUIDMeta);
     }
     if (data.containsKey('phone')) {
       context.handle(
-          _phoneMeta, phone.isAcceptableOrUnknown(data['phone'], _phoneMeta));
+          _phoneMeta, phone.isAcceptableOrUnknown(data['phone']!, _phoneMeta));
     } else if (isInserting) {
       context.missing(_phoneMeta);
     }
     if (data.containsKey('state')) {
       context.handle(
-          _stateMeta, state.isAcceptableOrUnknown(data['state'], _stateMeta));
+          _stateMeta, state.isAcceptableOrUnknown(data['state']!, _stateMeta));
     } else if (isInserting) {
       context.missing(_stateMeta);
     }
     if (data.containsKey('street')) {
       context.handle(_streetMeta,
-          street.isAcceptableOrUnknown(data['street'], _streetMeta));
+          street.isAcceptableOrUnknown(data['street']!, _streetMeta));
     } else if (isInserting) {
       context.missing(_streetMeta);
     }
     if (data.containsKey('web')) {
       context.handle(
-          _webMeta, web.isAcceptableOrUnknown(data['web'], _webMeta));
+          _webMeta, web.isAcceptableOrUnknown(data['web']!, _webMeta));
     } else if (isInserting) {
       context.missing(_webMeta);
     }
     if (data.containsKey('zip')) {
       context.handle(
-          _zipMeta, zip.isAcceptableOrUnknown(data['zip'], _zipMeta));
+          _zipMeta, zip.isAcceptableOrUnknown(data['zip']!, _zipMeta));
     } else if (isInserting) {
       context.missing(_zipMeta);
     }
@@ -8381,7 +7791,7 @@ class $ContactsGroupsTable extends ContactsGroups
   @override
   Set<GeneratedColumn> get $primaryKey => <GeneratedColumn>{};
   @override
-  ContactsGroupsTable map(Map<String, dynamic> data, {String tablePrefix}) {
+  ContactsGroupsTable map(Map<String, dynamic> data, {String? tablePrefix}) {
     return ContactsGroupsTable.fromData(data,
         prefix: tablePrefix != null ? '$tablePrefix.' : null);
   }
@@ -8403,40 +7813,40 @@ class ContactsStoragesTable extends DataClass
   final int cTag;
   final bool display;
   final String displayName;
-  final List<ContactInfoItem> contactsInfo;
+  final List<ContactInfoItem>? contactsInfo;
   ContactsStoragesTable(
-      {@required this.sqliteId,
-      @required this.userLocalId,
-      @required this.idUser,
-      @required this.serverId,
-      @required this.uniqueName,
-      @required this.name,
-      @required this.cTag,
-      @required this.display,
-      @required this.displayName,
+      {required this.sqliteId,
+      required this.userLocalId,
+      required this.idUser,
+      required this.serverId,
+      required this.uniqueName,
+      required this.name,
+      required this.cTag,
+      required this.display,
+      required this.displayName,
       this.contactsInfo});
   factory ContactsStoragesTable.fromData(Map<String, dynamic> data,
-      {String prefix}) {
+      {String? prefix}) {
     final effectivePrefix = prefix ?? '';
     return ContactsStoragesTable(
       sqliteId: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}sqlite_id']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}sqlite_id'])!,
       userLocalId: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}user_local_id']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}user_local_id'])!,
       idUser: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}id_user']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}id_user'])!,
       serverId: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}server_id']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}server_id'])!,
       uniqueName: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}unique_name']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}unique_name'])!,
       name: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}name']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}name'])!,
       cTag: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}c_tag']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}c_tag'])!,
       display: const BoolType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}display']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}display'])!,
       displayName: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}display_name']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}display_name'])!,
       contactsInfo: $ContactsStoragesTable.$converter0.mapToDart(
           const StringType().mapFromDatabaseResponse(
               data['${effectivePrefix}contacts_info'])),
@@ -8445,64 +7855,34 @@ class ContactsStoragesTable extends DataClass
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (!nullToAbsent || sqliteId != null) {
-      map['sqlite_id'] = Variable<int>(sqliteId);
-    }
-    if (!nullToAbsent || userLocalId != null) {
-      map['user_local_id'] = Variable<int>(userLocalId);
-    }
-    if (!nullToAbsent || idUser != null) {
-      map['id_user'] = Variable<int>(idUser);
-    }
-    if (!nullToAbsent || serverId != null) {
-      map['server_id'] = Variable<String>(serverId);
-    }
-    if (!nullToAbsent || uniqueName != null) {
-      map['unique_name'] = Variable<String>(uniqueName);
-    }
-    if (!nullToAbsent || name != null) {
-      map['name'] = Variable<String>(name);
-    }
-    if (!nullToAbsent || cTag != null) {
-      map['c_tag'] = Variable<int>(cTag);
-    }
-    if (!nullToAbsent || display != null) {
-      map['display'] = Variable<bool>(display);
-    }
-    if (!nullToAbsent || displayName != null) {
-      map['display_name'] = Variable<String>(displayName);
-    }
+    map['sqlite_id'] = Variable<int>(sqliteId);
+    map['user_local_id'] = Variable<int>(userLocalId);
+    map['id_user'] = Variable<int>(idUser);
+    map['server_id'] = Variable<String>(serverId);
+    map['unique_name'] = Variable<String>(uniqueName);
+    map['name'] = Variable<String>(name);
+    map['c_tag'] = Variable<int>(cTag);
+    map['display'] = Variable<bool>(display);
+    map['display_name'] = Variable<String>(displayName);
     if (!nullToAbsent || contactsInfo != null) {
       final converter = $ContactsStoragesTable.$converter0;
-      map['contacts_info'] = Variable<String>(converter.mapToSql(contactsInfo));
+      map['contacts_info'] =
+          Variable<String?>(converter.mapToSql(contactsInfo));
     }
     return map;
   }
 
   ContactsStoragesCompanion toCompanion(bool nullToAbsent) {
     return ContactsStoragesCompanion(
-      sqliteId: sqliteId == null && nullToAbsent
-          ? const Value.absent()
-          : Value(sqliteId),
-      userLocalId: userLocalId == null && nullToAbsent
-          ? const Value.absent()
-          : Value(userLocalId),
-      idUser:
-          idUser == null && nullToAbsent ? const Value.absent() : Value(idUser),
-      serverId: serverId == null && nullToAbsent
-          ? const Value.absent()
-          : Value(serverId),
-      uniqueName: uniqueName == null && nullToAbsent
-          ? const Value.absent()
-          : Value(uniqueName),
-      name: name == null && nullToAbsent ? const Value.absent() : Value(name),
-      cTag: cTag == null && nullToAbsent ? const Value.absent() : Value(cTag),
-      display: display == null && nullToAbsent
-          ? const Value.absent()
-          : Value(display),
-      displayName: displayName == null && nullToAbsent
-          ? const Value.absent()
-          : Value(displayName),
+      sqliteId: Value(sqliteId),
+      userLocalId: Value(userLocalId),
+      idUser: Value(idUser),
+      serverId: Value(serverId),
+      uniqueName: Value(uniqueName),
+      name: Value(name),
+      cTag: Value(cTag),
+      display: Value(display),
+      displayName: Value(displayName),
       contactsInfo: contactsInfo == null && nullToAbsent
           ? const Value.absent()
           : Value(contactsInfo),
@@ -8510,7 +7890,7 @@ class ContactsStoragesTable extends DataClass
   }
 
   factory ContactsStoragesTable.fromJson(Map<String, dynamic> json,
-      {ValueSerializer serializer}) {
+      {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return ContactsStoragesTable(
       sqliteId: serializer.fromJson<int>(json['sqliteId']),
@@ -8523,11 +7903,11 @@ class ContactsStoragesTable extends DataClass
       display: serializer.fromJson<bool>(json['display']),
       displayName: serializer.fromJson<String>(json['displayName']),
       contactsInfo:
-          serializer.fromJson<List<ContactInfoItem>>(json['contactsInfo']),
+          serializer.fromJson<List<ContactInfoItem>?>(json['contactsInfo']),
     );
   }
   @override
-  Map<String, dynamic> toJson({ValueSerializer serializer}) {
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'sqliteId': serializer.toJson<int>(sqliteId),
@@ -8539,21 +7919,21 @@ class ContactsStoragesTable extends DataClass
       'cTag': serializer.toJson<int>(cTag),
       'display': serializer.toJson<bool>(display),
       'displayName': serializer.toJson<String>(displayName),
-      'contactsInfo': serializer.toJson<List<ContactInfoItem>>(contactsInfo),
+      'contactsInfo': serializer.toJson<List<ContactInfoItem>?>(contactsInfo),
     };
   }
 
   ContactsStoragesTable copyWith(
-          {int sqliteId,
-          int userLocalId,
-          int idUser,
-          String serverId,
-          String uniqueName,
-          String name,
-          int cTag,
-          bool display,
-          String displayName,
-          List<ContactInfoItem> contactsInfo}) =>
+          {int? sqliteId,
+          int? userLocalId,
+          int? idUser,
+          String? serverId,
+          String? uniqueName,
+          String? name,
+          int? cTag,
+          bool? display,
+          String? displayName,
+          List<ContactInfoItem>? contactsInfo}) =>
       ContactsStoragesTable(
         sqliteId: sqliteId ?? this.sqliteId,
         userLocalId: userLocalId ?? this.userLocalId,
@@ -8612,7 +7992,7 @@ class ContactsStoragesCompanion extends UpdateCompanion<ContactsStoragesTable> {
   final Value<int> cTag;
   final Value<bool> display;
   final Value<String> displayName;
-  final Value<List<ContactInfoItem>> contactsInfo;
+  final Value<List<ContactInfoItem>?> contactsInfo;
   const ContactsStoragesCompanion({
     this.sqliteId = const Value.absent(),
     this.userLocalId = const Value.absent(),
@@ -8627,14 +8007,14 @@ class ContactsStoragesCompanion extends UpdateCompanion<ContactsStoragesTable> {
   });
   ContactsStoragesCompanion.insert({
     this.sqliteId = const Value.absent(),
-    @required int userLocalId,
-    @required int idUser,
-    @required String serverId,
-    @required String uniqueName,
-    @required String name,
-    @required int cTag,
-    @required bool display,
-    @required String displayName,
+    required int userLocalId,
+    required int idUser,
+    required String serverId,
+    required String uniqueName,
+    required String name,
+    required int cTag,
+    required bool display,
+    this.displayName = const Value.absent(),
     this.contactsInfo = const Value.absent(),
   })  : userLocalId = Value(userLocalId),
         idUser = Value(idUser),
@@ -8642,19 +8022,18 @@ class ContactsStoragesCompanion extends UpdateCompanion<ContactsStoragesTable> {
         uniqueName = Value(uniqueName),
         name = Value(name),
         cTag = Value(cTag),
-        display = Value(display),
-        displayName = Value(displayName);
+        display = Value(display);
   static Insertable<ContactsStoragesTable> custom({
-    Expression<int> sqliteId,
-    Expression<int> userLocalId,
-    Expression<int> idUser,
-    Expression<String> serverId,
-    Expression<String> uniqueName,
-    Expression<String> name,
-    Expression<int> cTag,
-    Expression<bool> display,
-    Expression<String> displayName,
-    Expression<List<ContactInfoItem>> contactsInfo,
+    Expression<int>? sqliteId,
+    Expression<int>? userLocalId,
+    Expression<int>? idUser,
+    Expression<String>? serverId,
+    Expression<String>? uniqueName,
+    Expression<String>? name,
+    Expression<int>? cTag,
+    Expression<bool>? display,
+    Expression<String>? displayName,
+    Expression<List<ContactInfoItem>?>? contactsInfo,
   }) {
     return RawValuesInsertable({
       if (sqliteId != null) 'sqlite_id': sqliteId,
@@ -8671,16 +8050,16 @@ class ContactsStoragesCompanion extends UpdateCompanion<ContactsStoragesTable> {
   }
 
   ContactsStoragesCompanion copyWith(
-      {Value<int> sqliteId,
-      Value<int> userLocalId,
-      Value<int> idUser,
-      Value<String> serverId,
-      Value<String> uniqueName,
-      Value<String> name,
-      Value<int> cTag,
-      Value<bool> display,
-      Value<String> displayName,
-      Value<List<ContactInfoItem>> contactsInfo}) {
+      {Value<int>? sqliteId,
+      Value<int>? userLocalId,
+      Value<int>? idUser,
+      Value<String>? serverId,
+      Value<String>? uniqueName,
+      Value<String>? name,
+      Value<int>? cTag,
+      Value<bool>? display,
+      Value<String>? displayName,
+      Value<List<ContactInfoItem>?>? contactsInfo}) {
     return ContactsStoragesCompanion(
       sqliteId: sqliteId ?? this.sqliteId,
       userLocalId: userLocalId ?? this.userLocalId,
@@ -8728,7 +8107,7 @@ class ContactsStoragesCompanion extends UpdateCompanion<ContactsStoragesTable> {
     if (contactsInfo.present) {
       final converter = $ContactsStoragesTable.$converter0;
       map['contacts_info'] =
-          Variable<String>(converter.mapToSql(contactsInfo.value));
+          Variable<String?>(converter.mapToSql(contactsInfo.value));
     }
     return map;
   }
@@ -8755,76 +8134,68 @@ class $ContactsStoragesTable extends ContactsStorages
     with TableInfo<$ContactsStoragesTable, ContactsStoragesTable> {
   @override
   final GeneratedDatabase attachedDatabase;
-  final String _alias;
+  final String? _alias;
   $ContactsStoragesTable(this.attachedDatabase, [this._alias]);
   final VerificationMeta _sqliteIdMeta = const VerificationMeta('sqliteId');
-  GeneratedColumn<int> _sqliteId;
   @override
-  GeneratedColumn<int> get sqliteId =>
-      _sqliteId ??= GeneratedColumn<int>('sqlite_id', aliasedName, false,
-          type: const IntType(),
-          requiredDuringInsert: false,
-          defaultConstraints: 'PRIMARY KEY AUTOINCREMENT');
+  late final GeneratedColumn<int?> sqliteId = GeneratedColumn<int?>(
+      'sqlite_id', aliasedName, false,
+      type: const IntType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'PRIMARY KEY AUTOINCREMENT');
   final VerificationMeta _userLocalIdMeta =
       const VerificationMeta('userLocalId');
-  GeneratedColumn<int> _userLocalId;
   @override
-  GeneratedColumn<int> get userLocalId =>
-      _userLocalId ??= GeneratedColumn<int>('user_local_id', aliasedName, false,
-          type: const IntType(), requiredDuringInsert: true);
+  late final GeneratedColumn<int?> userLocalId = GeneratedColumn<int?>(
+      'user_local_id', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _idUserMeta = const VerificationMeta('idUser');
-  GeneratedColumn<int> _idUser;
   @override
-  GeneratedColumn<int> get idUser =>
-      _idUser ??= GeneratedColumn<int>('id_user', aliasedName, false,
-          type: const IntType(), requiredDuringInsert: true);
+  late final GeneratedColumn<int?> idUser = GeneratedColumn<int?>(
+      'id_user', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _serverIdMeta = const VerificationMeta('serverId');
-  GeneratedColumn<String> _serverId;
   @override
-  GeneratedColumn<String> get serverId =>
-      _serverId ??= GeneratedColumn<String>('server_id', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> serverId = GeneratedColumn<String?>(
+      'server_id', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _uniqueNameMeta = const VerificationMeta('uniqueName');
-  GeneratedColumn<String> _uniqueName;
   @override
-  GeneratedColumn<String> get uniqueName =>
-      _uniqueName ??= GeneratedColumn<String>('unique_name', aliasedName, false,
-          type: const StringType(),
-          requiredDuringInsert: true,
-          $customConstraints: 'UNIQUE');
+  late final GeneratedColumn<String?> uniqueName = GeneratedColumn<String?>(
+      'unique_name', aliasedName, false,
+      type: const StringType(),
+      requiredDuringInsert: true,
+      $customConstraints: 'UNIQUE');
   final VerificationMeta _nameMeta = const VerificationMeta('name');
-  GeneratedColumn<String> _name;
   @override
-  GeneratedColumn<String> get name =>
-      _name ??= GeneratedColumn<String>('name', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> name = GeneratedColumn<String?>(
+      'name', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _cTagMeta = const VerificationMeta('cTag');
-  GeneratedColumn<int> _cTag;
   @override
-  GeneratedColumn<int> get cTag =>
-      _cTag ??= GeneratedColumn<int>('c_tag', aliasedName, false,
-          type: const IntType(), requiredDuringInsert: true);
+  late final GeneratedColumn<int?> cTag = GeneratedColumn<int?>(
+      'c_tag', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _displayMeta = const VerificationMeta('display');
-  GeneratedColumn<bool> _display;
   @override
-  GeneratedColumn<bool> get display =>
-      _display ??= GeneratedColumn<bool>('display', aliasedName, false,
-          type: const BoolType(),
-          requiredDuringInsert: true,
-          defaultConstraints: 'CHECK (display IN (0, 1))');
+  late final GeneratedColumn<bool?> display = GeneratedColumn<bool?>(
+      'display', aliasedName, false,
+      type: const BoolType(),
+      requiredDuringInsert: true,
+      defaultConstraints: 'CHECK (display IN (0, 1))');
   final VerificationMeta _displayNameMeta =
       const VerificationMeta('displayName');
-  GeneratedColumn<String> _displayName;
   @override
-  GeneratedColumn<String> get displayName => _displayName ??=
-      GeneratedColumn<String>('display_name', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> displayName = GeneratedColumn<String?>(
+      'display_name', aliasedName, false,
+      type: const StringType(),
+      requiredDuringInsert: false,
+      defaultValue: Constant(""));
   final VerificationMeta _contactsInfoMeta =
       const VerificationMeta('contactsInfo');
-  GeneratedColumnWithTypeConverter<List<ContactInfoItem>, String> _contactsInfo;
   @override
-  GeneratedColumnWithTypeConverter<List<ContactInfoItem>, String>
-      get contactsInfo => _contactsInfo ??= GeneratedColumn<String>(
+  late final GeneratedColumnWithTypeConverter<List<ContactInfoItem>, String?>
+      contactsInfo = GeneratedColumn<String?>(
               'contacts_info', aliasedName, true,
               type: const StringType(), requiredDuringInsert: false)
           .withConverter<List<ContactInfoItem>>(
@@ -8854,25 +8225,25 @@ class $ContactsStoragesTable extends ContactsStorages
     final data = instance.toColumns(true);
     if (data.containsKey('sqlite_id')) {
       context.handle(_sqliteIdMeta,
-          sqliteId.isAcceptableOrUnknown(data['sqlite_id'], _sqliteIdMeta));
+          sqliteId.isAcceptableOrUnknown(data['sqlite_id']!, _sqliteIdMeta));
     }
     if (data.containsKey('user_local_id')) {
       context.handle(
           _userLocalIdMeta,
           userLocalId.isAcceptableOrUnknown(
-              data['user_local_id'], _userLocalIdMeta));
+              data['user_local_id']!, _userLocalIdMeta));
     } else if (isInserting) {
       context.missing(_userLocalIdMeta);
     }
     if (data.containsKey('id_user')) {
       context.handle(_idUserMeta,
-          idUser.isAcceptableOrUnknown(data['id_user'], _idUserMeta));
+          idUser.isAcceptableOrUnknown(data['id_user']!, _idUserMeta));
     } else if (isInserting) {
       context.missing(_idUserMeta);
     }
     if (data.containsKey('server_id')) {
       context.handle(_serverIdMeta,
-          serverId.isAcceptableOrUnknown(data['server_id'], _serverIdMeta));
+          serverId.isAcceptableOrUnknown(data['server_id']!, _serverIdMeta));
     } else if (isInserting) {
       context.missing(_serverIdMeta);
     }
@@ -8880,25 +8251,25 @@ class $ContactsStoragesTable extends ContactsStorages
       context.handle(
           _uniqueNameMeta,
           uniqueName.isAcceptableOrUnknown(
-              data['unique_name'], _uniqueNameMeta));
+              data['unique_name']!, _uniqueNameMeta));
     } else if (isInserting) {
       context.missing(_uniqueNameMeta);
     }
     if (data.containsKey('name')) {
       context.handle(
-          _nameMeta, name.isAcceptableOrUnknown(data['name'], _nameMeta));
+          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
     } else if (isInserting) {
       context.missing(_nameMeta);
     }
     if (data.containsKey('c_tag')) {
       context.handle(
-          _cTagMeta, cTag.isAcceptableOrUnknown(data['c_tag'], _cTagMeta));
+          _cTagMeta, cTag.isAcceptableOrUnknown(data['c_tag']!, _cTagMeta));
     } else if (isInserting) {
       context.missing(_cTagMeta);
     }
     if (data.containsKey('display')) {
       context.handle(_displayMeta,
-          display.isAcceptableOrUnknown(data['display'], _displayMeta));
+          display.isAcceptableOrUnknown(data['display']!, _displayMeta));
     } else if (isInserting) {
       context.missing(_displayMeta);
     }
@@ -8906,9 +8277,7 @@ class $ContactsStoragesTable extends ContactsStorages
       context.handle(
           _displayNameMeta,
           displayName.isAcceptableOrUnknown(
-              data['display_name'], _displayNameMeta));
-    } else if (isInserting) {
-      context.missing(_displayNameMeta);
+              data['display_name']!, _displayNameMeta));
     }
     context.handle(_contactsInfoMeta, const VerificationResult.success());
     return context;
@@ -8917,7 +8286,7 @@ class $ContactsStoragesTable extends ContactsStorages
   @override
   Set<GeneratedColumn> get $primaryKey => {sqliteId};
   @override
-  ContactsStoragesTable map(Map<String, dynamic> data, {String tablePrefix}) {
+  ContactsStoragesTable map(Map<String, dynamic> data, {String? tablePrefix}) {
     return ContactsStoragesTable.fromData(data,
         prefix: tablePrefix != null ? '$tablePrefix.' : null);
   }
@@ -8933,106 +8302,95 @@ class $ContactsStoragesTable extends ContactsStorages
 
 class LocalPgpKey extends DataClass implements Insertable<LocalPgpKey> {
   final String id;
-  final String name;
+  final String? name;
   final String mail;
   final bool isPrivate;
-  final int length;
+  final int? length;
   final String other;
   LocalPgpKey(
-      {@required this.id,
+      {required this.id,
       this.name,
-      @required this.mail,
-      @required this.isPrivate,
+      required this.mail,
+      required this.isPrivate,
       this.length,
-      @required this.other});
-  factory LocalPgpKey.fromData(Map<String, dynamic> data, {String prefix}) {
+      required this.other});
+  factory LocalPgpKey.fromData(Map<String, dynamic> data, {String? prefix}) {
     final effectivePrefix = prefix ?? '';
     return LocalPgpKey(
       id: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}id']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
       name: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}name']),
       mail: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}mail']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}mail'])!,
       isPrivate: const BoolType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}is_private']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}is_private'])!,
       length: const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}length']),
       other: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}other']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}other'])!,
     );
   }
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (!nullToAbsent || id != null) {
-      map['id'] = Variable<String>(id);
-    }
+    map['id'] = Variable<String>(id);
     if (!nullToAbsent || name != null) {
-      map['name'] = Variable<String>(name);
+      map['name'] = Variable<String?>(name);
     }
-    if (!nullToAbsent || mail != null) {
-      map['mail'] = Variable<String>(mail);
-    }
-    if (!nullToAbsent || isPrivate != null) {
-      map['is_private'] = Variable<bool>(isPrivate);
-    }
+    map['mail'] = Variable<String>(mail);
+    map['is_private'] = Variable<bool>(isPrivate);
     if (!nullToAbsent || length != null) {
-      map['length'] = Variable<int>(length);
+      map['length'] = Variable<int?>(length);
     }
-    if (!nullToAbsent || other != null) {
-      map['other'] = Variable<String>(other);
-    }
+    map['other'] = Variable<String>(other);
     return map;
   }
 
   PgpKeyModelCompanion toCompanion(bool nullToAbsent) {
     return PgpKeyModelCompanion(
-      id: id == null && nullToAbsent ? const Value.absent() : Value(id),
+      id: Value(id),
       name: name == null && nullToAbsent ? const Value.absent() : Value(name),
-      mail: mail == null && nullToAbsent ? const Value.absent() : Value(mail),
-      isPrivate: isPrivate == null && nullToAbsent
-          ? const Value.absent()
-          : Value(isPrivate),
+      mail: Value(mail),
+      isPrivate: Value(isPrivate),
       length:
           length == null && nullToAbsent ? const Value.absent() : Value(length),
-      other:
-          other == null && nullToAbsent ? const Value.absent() : Value(other),
+      other: Value(other),
     );
   }
 
   factory LocalPgpKey.fromJson(Map<String, dynamic> json,
-      {ValueSerializer serializer}) {
+      {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return LocalPgpKey(
       id: serializer.fromJson<String>(json['id']),
-      name: serializer.fromJson<String>(json['name']),
+      name: serializer.fromJson<String?>(json['name']),
       mail: serializer.fromJson<String>(json['mail']),
       isPrivate: serializer.fromJson<bool>(json['isPrivate']),
-      length: serializer.fromJson<int>(json['length']),
+      length: serializer.fromJson<int?>(json['length']),
       other: serializer.fromJson<String>(json['other']),
     );
   }
   @override
-  Map<String, dynamic> toJson({ValueSerializer serializer}) {
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<String>(id),
-      'name': serializer.toJson<String>(name),
+      'name': serializer.toJson<String?>(name),
       'mail': serializer.toJson<String>(mail),
       'isPrivate': serializer.toJson<bool>(isPrivate),
-      'length': serializer.toJson<int>(length),
+      'length': serializer.toJson<int?>(length),
       'other': serializer.toJson<String>(other),
     };
   }
 
   LocalPgpKey copyWith(
-          {String id,
-          String name,
-          String mail,
-          bool isPrivate,
-          int length,
-          String other}) =>
+          {String? id,
+          String? name,
+          String? mail,
+          bool? isPrivate,
+          int? length,
+          String? other}) =>
       LocalPgpKey(
         id: id ?? this.id,
         name: name ?? this.name,
@@ -9070,10 +8428,10 @@ class LocalPgpKey extends DataClass implements Insertable<LocalPgpKey> {
 
 class PgpKeyModelCompanion extends UpdateCompanion<LocalPgpKey> {
   final Value<String> id;
-  final Value<String> name;
+  final Value<String?> name;
   final Value<String> mail;
   final Value<bool> isPrivate;
-  final Value<int> length;
+  final Value<int?> length;
   final Value<String> other;
   const PgpKeyModelCompanion({
     this.id = const Value.absent(),
@@ -9084,23 +8442,23 @@ class PgpKeyModelCompanion extends UpdateCompanion<LocalPgpKey> {
     this.other = const Value.absent(),
   });
   PgpKeyModelCompanion.insert({
-    @required String id,
+    required String id,
     this.name = const Value.absent(),
-    @required String mail,
-    @required bool isPrivate,
+    required String mail,
+    required bool isPrivate,
     this.length = const Value.absent(),
-    @required String other,
+    required String other,
   })  : id = Value(id),
         mail = Value(mail),
         isPrivate = Value(isPrivate),
         other = Value(other);
   static Insertable<LocalPgpKey> custom({
-    Expression<String> id,
-    Expression<String> name,
-    Expression<String> mail,
-    Expression<bool> isPrivate,
-    Expression<int> length,
-    Expression<String> other,
+    Expression<String>? id,
+    Expression<String?>? name,
+    Expression<String>? mail,
+    Expression<bool>? isPrivate,
+    Expression<int?>? length,
+    Expression<String>? other,
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
@@ -9113,12 +8471,12 @@ class PgpKeyModelCompanion extends UpdateCompanion<LocalPgpKey> {
   }
 
   PgpKeyModelCompanion copyWith(
-      {Value<String> id,
-      Value<String> name,
-      Value<String> mail,
-      Value<bool> isPrivate,
-      Value<int> length,
-      Value<String> other}) {
+      {Value<String>? id,
+      Value<String?>? name,
+      Value<String>? mail,
+      Value<bool>? isPrivate,
+      Value<int?>? length,
+      Value<String>? other}) {
     return PgpKeyModelCompanion(
       id: id ?? this.id,
       name: name ?? this.name,
@@ -9136,7 +8494,7 @@ class PgpKeyModelCompanion extends UpdateCompanion<LocalPgpKey> {
       map['id'] = Variable<String>(id.value);
     }
     if (name.present) {
-      map['name'] = Variable<String>(name.value);
+      map['name'] = Variable<String?>(name.value);
     }
     if (mail.present) {
       map['mail'] = Variable<String>(mail.value);
@@ -9145,7 +8503,7 @@ class PgpKeyModelCompanion extends UpdateCompanion<LocalPgpKey> {
       map['is_private'] = Variable<bool>(isPrivate.value);
     }
     if (length.present) {
-      map['length'] = Variable<int>(length.value);
+      map['length'] = Variable<int?>(length.value);
     }
     if (other.present) {
       map['other'] = Variable<String>(other.value);
@@ -9171,46 +8529,40 @@ class $PgpKeyModelTable extends PgpKeyModel
     with TableInfo<$PgpKeyModelTable, LocalPgpKey> {
   @override
   final GeneratedDatabase attachedDatabase;
-  final String _alias;
+  final String? _alias;
   $PgpKeyModelTable(this.attachedDatabase, [this._alias]);
   final VerificationMeta _idMeta = const VerificationMeta('id');
-  GeneratedColumn<String> _id;
   @override
-  GeneratedColumn<String> get id =>
-      _id ??= GeneratedColumn<String>('id', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> id = GeneratedColumn<String?>(
+      'id', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _nameMeta = const VerificationMeta('name');
-  GeneratedColumn<String> _name;
   @override
-  GeneratedColumn<String> get name =>
-      _name ??= GeneratedColumn<String>('name', aliasedName, true,
-          type: const StringType(), requiredDuringInsert: false);
+  late final GeneratedColumn<String?> name = GeneratedColumn<String?>(
+      'name', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _mailMeta = const VerificationMeta('mail');
-  GeneratedColumn<String> _mail;
   @override
-  GeneratedColumn<String> get mail =>
-      _mail ??= GeneratedColumn<String>('mail', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> mail = GeneratedColumn<String?>(
+      'mail', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _isPrivateMeta = const VerificationMeta('isPrivate');
-  GeneratedColumn<bool> _isPrivate;
   @override
-  GeneratedColumn<bool> get isPrivate =>
-      _isPrivate ??= GeneratedColumn<bool>('is_private', aliasedName, false,
-          type: const BoolType(),
-          requiredDuringInsert: true,
-          defaultConstraints: 'CHECK (is_private IN (0, 1))');
+  late final GeneratedColumn<bool?> isPrivate = GeneratedColumn<bool?>(
+      'is_private', aliasedName, false,
+      type: const BoolType(),
+      requiredDuringInsert: true,
+      defaultConstraints: 'CHECK (is_private IN (0, 1))');
   final VerificationMeta _lengthMeta = const VerificationMeta('length');
-  GeneratedColumn<int> _length;
   @override
-  GeneratedColumn<int> get length =>
-      _length ??= GeneratedColumn<int>('length', aliasedName, true,
-          type: const IntType(), requiredDuringInsert: false);
+  late final GeneratedColumn<int?> length = GeneratedColumn<int?>(
+      'length', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
   final VerificationMeta _otherMeta = const VerificationMeta('other');
-  GeneratedColumn<String> _other;
   @override
-  GeneratedColumn<String> get other =>
-      _other ??= GeneratedColumn<String>('other', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> other = GeneratedColumn<String?>(
+      'other', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns =>
       [id, name, mail, isPrivate, length, other];
@@ -9224,33 +8576,33 @@ class $PgpKeyModelTable extends PgpKeyModel
     final context = VerificationContext();
     final data = instance.toColumns(true);
     if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id'], _idMeta));
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     } else if (isInserting) {
       context.missing(_idMeta);
     }
     if (data.containsKey('name')) {
       context.handle(
-          _nameMeta, name.isAcceptableOrUnknown(data['name'], _nameMeta));
+          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
     }
     if (data.containsKey('mail')) {
       context.handle(
-          _mailMeta, mail.isAcceptableOrUnknown(data['mail'], _mailMeta));
+          _mailMeta, mail.isAcceptableOrUnknown(data['mail']!, _mailMeta));
     } else if (isInserting) {
       context.missing(_mailMeta);
     }
     if (data.containsKey('is_private')) {
       context.handle(_isPrivateMeta,
-          isPrivate.isAcceptableOrUnknown(data['is_private'], _isPrivateMeta));
+          isPrivate.isAcceptableOrUnknown(data['is_private']!, _isPrivateMeta));
     } else if (isInserting) {
       context.missing(_isPrivateMeta);
     }
     if (data.containsKey('length')) {
       context.handle(_lengthMeta,
-          length.isAcceptableOrUnknown(data['length'], _lengthMeta));
+          length.isAcceptableOrUnknown(data['length']!, _lengthMeta));
     }
     if (data.containsKey('other')) {
       context.handle(
-          _otherMeta, other.isAcceptableOrUnknown(data['other'], _otherMeta));
+          _otherMeta, other.isAcceptableOrUnknown(data['other']!, _otherMeta));
     } else if (isInserting) {
       context.missing(_otherMeta);
     }
@@ -9260,7 +8612,7 @@ class $PgpKeyModelTable extends PgpKeyModel
   @override
   Set<GeneratedColumn> get $primaryKey => {other, id};
   @override
-  LocalPgpKey map(Map<String, dynamic> data, {String tablePrefix}) {
+  LocalPgpKey map(Map<String, dynamic> data, {String? tablePrefix}) {
     return LocalPgpKey.fromData(data,
         prefix: tablePrefix != null ? '$tablePrefix.' : null);
   }
@@ -9281,94 +8633,65 @@ class AccountIdentity extends DataClass implements Insertable<AccountIdentity> {
   final bool isDefault;
   final bool useSignature;
   AccountIdentity(
-      {@required this.entityId,
-      @required this.email,
-      @required this.friendlyName,
-      @required this.signature,
-      @required this.idUser,
-      @required this.idAccount,
-      @required this.isDefault,
-      @required this.useSignature});
-  factory AccountIdentity.fromData(Map<String, dynamic> data, {String prefix}) {
+      {required this.entityId,
+      required this.email,
+      required this.friendlyName,
+      required this.signature,
+      required this.idUser,
+      required this.idAccount,
+      required this.isDefault,
+      required this.useSignature});
+  factory AccountIdentity.fromData(Map<String, dynamic> data,
+      {String? prefix}) {
     final effectivePrefix = prefix ?? '';
     return AccountIdentity(
       entityId: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}entity_id']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}entity_id'])!,
       email: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}email']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}email'])!,
       friendlyName: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}friendly_name']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}friendly_name'])!,
       signature: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}signature']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}signature'])!,
       idUser: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}id_user']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}id_user'])!,
       idAccount: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}id_account']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}id_account'])!,
       isDefault: const BoolType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}is_default']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}is_default'])!,
       useSignature: const BoolType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}use_signature']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}use_signature'])!,
     );
   }
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (!nullToAbsent || entityId != null) {
-      map['entity_id'] = Variable<int>(entityId);
-    }
-    if (!nullToAbsent || email != null) {
-      map['email'] = Variable<String>(email);
-    }
-    if (!nullToAbsent || friendlyName != null) {
-      map['friendly_name'] = Variable<String>(friendlyName);
-    }
-    if (!nullToAbsent || signature != null) {
-      map['signature'] = Variable<String>(signature);
-    }
-    if (!nullToAbsent || idUser != null) {
-      map['id_user'] = Variable<int>(idUser);
-    }
-    if (!nullToAbsent || idAccount != null) {
-      map['id_account'] = Variable<int>(idAccount);
-    }
-    if (!nullToAbsent || isDefault != null) {
-      map['is_default'] = Variable<bool>(isDefault);
-    }
-    if (!nullToAbsent || useSignature != null) {
-      map['use_signature'] = Variable<bool>(useSignature);
-    }
+    map['entity_id'] = Variable<int>(entityId);
+    map['email'] = Variable<String>(email);
+    map['friendly_name'] = Variable<String>(friendlyName);
+    map['signature'] = Variable<String>(signature);
+    map['id_user'] = Variable<int>(idUser);
+    map['id_account'] = Variable<int>(idAccount);
+    map['is_default'] = Variable<bool>(isDefault);
+    map['use_signature'] = Variable<bool>(useSignature);
     return map;
   }
 
   AccountIdentityTableCompanion toCompanion(bool nullToAbsent) {
     return AccountIdentityTableCompanion(
-      entityId: entityId == null && nullToAbsent
-          ? const Value.absent()
-          : Value(entityId),
-      email:
-          email == null && nullToAbsent ? const Value.absent() : Value(email),
-      friendlyName: friendlyName == null && nullToAbsent
-          ? const Value.absent()
-          : Value(friendlyName),
-      signature: signature == null && nullToAbsent
-          ? const Value.absent()
-          : Value(signature),
-      idUser:
-          idUser == null && nullToAbsent ? const Value.absent() : Value(idUser),
-      idAccount: idAccount == null && nullToAbsent
-          ? const Value.absent()
-          : Value(idAccount),
-      isDefault: isDefault == null && nullToAbsent
-          ? const Value.absent()
-          : Value(isDefault),
-      useSignature: useSignature == null && nullToAbsent
-          ? const Value.absent()
-          : Value(useSignature),
+      entityId: Value(entityId),
+      email: Value(email),
+      friendlyName: Value(friendlyName),
+      signature: Value(signature),
+      idUser: Value(idUser),
+      idAccount: Value(idAccount),
+      isDefault: Value(isDefault),
+      useSignature: Value(useSignature),
     );
   }
 
   factory AccountIdentity.fromJson(Map<String, dynamic> json,
-      {ValueSerializer serializer}) {
+      {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return AccountIdentity(
       entityId: serializer.fromJson<int>(json['entityId']),
@@ -9382,7 +8705,7 @@ class AccountIdentity extends DataClass implements Insertable<AccountIdentity> {
     );
   }
   @override
-  Map<String, dynamic> toJson({ValueSerializer serializer}) {
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'entityId': serializer.toJson<int>(entityId),
@@ -9397,14 +8720,14 @@ class AccountIdentity extends DataClass implements Insertable<AccountIdentity> {
   }
 
   AccountIdentity copyWith(
-          {int entityId,
-          String email,
-          String friendlyName,
-          String signature,
-          int idUser,
-          int idAccount,
-          bool isDefault,
-          bool useSignature}) =>
+          {int? entityId,
+          String? email,
+          String? friendlyName,
+          String? signature,
+          int? idUser,
+          int? idAccount,
+          bool? isDefault,
+          bool? useSignature}) =>
       AccountIdentity(
         entityId: entityId ?? this.entityId,
         email: email ?? this.email,
@@ -9467,14 +8790,14 @@ class AccountIdentityTableCompanion extends UpdateCompanion<AccountIdentity> {
     this.useSignature = const Value.absent(),
   });
   AccountIdentityTableCompanion.insert({
-    @required int entityId,
-    @required String email,
-    @required String friendlyName,
-    @required String signature,
-    @required int idUser,
-    @required int idAccount,
-    @required bool isDefault,
-    @required bool useSignature,
+    required int entityId,
+    required String email,
+    required String friendlyName,
+    required String signature,
+    required int idUser,
+    required int idAccount,
+    required bool isDefault,
+    required bool useSignature,
   })  : entityId = Value(entityId),
         email = Value(email),
         friendlyName = Value(friendlyName),
@@ -9484,14 +8807,14 @@ class AccountIdentityTableCompanion extends UpdateCompanion<AccountIdentity> {
         isDefault = Value(isDefault),
         useSignature = Value(useSignature);
   static Insertable<AccountIdentity> custom({
-    Expression<int> entityId,
-    Expression<String> email,
-    Expression<String> friendlyName,
-    Expression<String> signature,
-    Expression<int> idUser,
-    Expression<int> idAccount,
-    Expression<bool> isDefault,
-    Expression<bool> useSignature,
+    Expression<int>? entityId,
+    Expression<String>? email,
+    Expression<String>? friendlyName,
+    Expression<String>? signature,
+    Expression<int>? idUser,
+    Expression<int>? idAccount,
+    Expression<bool>? isDefault,
+    Expression<bool>? useSignature,
   }) {
     return RawValuesInsertable({
       if (entityId != null) 'entity_id': entityId,
@@ -9506,14 +8829,14 @@ class AccountIdentityTableCompanion extends UpdateCompanion<AccountIdentity> {
   }
 
   AccountIdentityTableCompanion copyWith(
-      {Value<int> entityId,
-      Value<String> email,
-      Value<String> friendlyName,
-      Value<String> signature,
-      Value<int> idUser,
-      Value<int> idAccount,
-      Value<bool> isDefault,
-      Value<bool> useSignature}) {
+      {Value<int>? entityId,
+      Value<String>? email,
+      Value<String>? friendlyName,
+      Value<String>? signature,
+      Value<int>? idUser,
+      Value<int>? idAccount,
+      Value<bool>? isDefault,
+      Value<bool>? useSignature}) {
     return AccountIdentityTableCompanion(
       entityId: entityId ?? this.entityId,
       email: email ?? this.email,
@@ -9576,62 +8899,54 @@ class $AccountIdentityTableTable extends AccountIdentityTable
     with TableInfo<$AccountIdentityTableTable, AccountIdentity> {
   @override
   final GeneratedDatabase attachedDatabase;
-  final String _alias;
+  final String? _alias;
   $AccountIdentityTableTable(this.attachedDatabase, [this._alias]);
   final VerificationMeta _entityIdMeta = const VerificationMeta('entityId');
-  GeneratedColumn<int> _entityId;
   @override
-  GeneratedColumn<int> get entityId =>
-      _entityId ??= GeneratedColumn<int>('entity_id', aliasedName, false,
-          type: const IntType(), requiredDuringInsert: true);
+  late final GeneratedColumn<int?> entityId = GeneratedColumn<int?>(
+      'entity_id', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _emailMeta = const VerificationMeta('email');
-  GeneratedColumn<String> _email;
   @override
-  GeneratedColumn<String> get email =>
-      _email ??= GeneratedColumn<String>('email', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> email = GeneratedColumn<String?>(
+      'email', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _friendlyNameMeta =
       const VerificationMeta('friendlyName');
-  GeneratedColumn<String> _friendlyName;
   @override
-  GeneratedColumn<String> get friendlyName => _friendlyName ??=
-      GeneratedColumn<String>('friendly_name', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> friendlyName = GeneratedColumn<String?>(
+      'friendly_name', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _signatureMeta = const VerificationMeta('signature');
-  GeneratedColumn<String> _signature;
   @override
-  GeneratedColumn<String> get signature =>
-      _signature ??= GeneratedColumn<String>('signature', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> signature = GeneratedColumn<String?>(
+      'signature', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _idUserMeta = const VerificationMeta('idUser');
-  GeneratedColumn<int> _idUser;
   @override
-  GeneratedColumn<int> get idUser =>
-      _idUser ??= GeneratedColumn<int>('id_user', aliasedName, false,
-          type: const IntType(), requiredDuringInsert: true);
+  late final GeneratedColumn<int?> idUser = GeneratedColumn<int?>(
+      'id_user', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _idAccountMeta = const VerificationMeta('idAccount');
-  GeneratedColumn<int> _idAccount;
   @override
-  GeneratedColumn<int> get idAccount =>
-      _idAccount ??= GeneratedColumn<int>('id_account', aliasedName, false,
-          type: const IntType(), requiredDuringInsert: true);
+  late final GeneratedColumn<int?> idAccount = GeneratedColumn<int?>(
+      'id_account', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _isDefaultMeta = const VerificationMeta('isDefault');
-  GeneratedColumn<bool> _isDefault;
   @override
-  GeneratedColumn<bool> get isDefault =>
-      _isDefault ??= GeneratedColumn<bool>('is_default', aliasedName, false,
-          type: const BoolType(),
-          requiredDuringInsert: true,
-          defaultConstraints: 'CHECK (is_default IN (0, 1))');
+  late final GeneratedColumn<bool?> isDefault = GeneratedColumn<bool?>(
+      'is_default', aliasedName, false,
+      type: const BoolType(),
+      requiredDuringInsert: true,
+      defaultConstraints: 'CHECK (is_default IN (0, 1))');
   final VerificationMeta _useSignatureMeta =
       const VerificationMeta('useSignature');
-  GeneratedColumn<bool> _useSignature;
   @override
-  GeneratedColumn<bool> get useSignature => _useSignature ??=
-      GeneratedColumn<bool>('use_signature', aliasedName, false,
-          type: const BoolType(),
-          requiredDuringInsert: true,
-          defaultConstraints: 'CHECK (use_signature IN (0, 1))');
+  late final GeneratedColumn<bool?> useSignature = GeneratedColumn<bool?>(
+      'use_signature', aliasedName, false,
+      type: const BoolType(),
+      requiredDuringInsert: true,
+      defaultConstraints: 'CHECK (use_signature IN (0, 1))');
   @override
   List<GeneratedColumn> get $columns => [
         entityId,
@@ -9654,13 +8969,13 @@ class $AccountIdentityTableTable extends AccountIdentityTable
     final data = instance.toColumns(true);
     if (data.containsKey('entity_id')) {
       context.handle(_entityIdMeta,
-          entityId.isAcceptableOrUnknown(data['entity_id'], _entityIdMeta));
+          entityId.isAcceptableOrUnknown(data['entity_id']!, _entityIdMeta));
     } else if (isInserting) {
       context.missing(_entityIdMeta);
     }
     if (data.containsKey('email')) {
       context.handle(
-          _emailMeta, email.isAcceptableOrUnknown(data['email'], _emailMeta));
+          _emailMeta, email.isAcceptableOrUnknown(data['email']!, _emailMeta));
     } else if (isInserting) {
       context.missing(_emailMeta);
     }
@@ -9668,31 +8983,31 @@ class $AccountIdentityTableTable extends AccountIdentityTable
       context.handle(
           _friendlyNameMeta,
           friendlyName.isAcceptableOrUnknown(
-              data['friendly_name'], _friendlyNameMeta));
+              data['friendly_name']!, _friendlyNameMeta));
     } else if (isInserting) {
       context.missing(_friendlyNameMeta);
     }
     if (data.containsKey('signature')) {
       context.handle(_signatureMeta,
-          signature.isAcceptableOrUnknown(data['signature'], _signatureMeta));
+          signature.isAcceptableOrUnknown(data['signature']!, _signatureMeta));
     } else if (isInserting) {
       context.missing(_signatureMeta);
     }
     if (data.containsKey('id_user')) {
       context.handle(_idUserMeta,
-          idUser.isAcceptableOrUnknown(data['id_user'], _idUserMeta));
+          idUser.isAcceptableOrUnknown(data['id_user']!, _idUserMeta));
     } else if (isInserting) {
       context.missing(_idUserMeta);
     }
     if (data.containsKey('id_account')) {
       context.handle(_idAccountMeta,
-          idAccount.isAcceptableOrUnknown(data['id_account'], _idAccountMeta));
+          idAccount.isAcceptableOrUnknown(data['id_account']!, _idAccountMeta));
     } else if (isInserting) {
       context.missing(_idAccountMeta);
     }
     if (data.containsKey('is_default')) {
       context.handle(_isDefaultMeta,
-          isDefault.isAcceptableOrUnknown(data['is_default'], _isDefaultMeta));
+          isDefault.isAcceptableOrUnknown(data['is_default']!, _isDefaultMeta));
     } else if (isInserting) {
       context.missing(_isDefaultMeta);
     }
@@ -9700,7 +9015,7 @@ class $AccountIdentityTableTable extends AccountIdentityTable
       context.handle(
           _useSignatureMeta,
           useSignature.isAcceptableOrUnknown(
-              data['use_signature'], _useSignatureMeta));
+              data['use_signature']!, _useSignatureMeta));
     } else if (isInserting) {
       context.missing(_useSignatureMeta);
     }
@@ -9710,7 +9025,7 @@ class $AccountIdentityTableTable extends AccountIdentityTable
   @override
   Set<GeneratedColumn> get $primaryKey => {entityId, idUser};
   @override
-  AccountIdentity map(Map<String, dynamic> data, {String tablePrefix}) {
+  AccountIdentity map(Map<String, dynamic> data, {String? tablePrefix}) {
     return AccountIdentity.fromData(data,
         prefix: tablePrefix != null ? '$tablePrefix.' : null);
   }
@@ -9730,85 +9045,59 @@ class Aliases extends DataClass implements Insertable<Aliases> {
   final int idAccount;
   final bool useSignature;
   Aliases(
-      {@required this.entityId,
-      @required this.email,
-      @required this.friendlyName,
-      @required this.signature,
-      @required this.idUser,
-      @required this.idAccount,
-      @required this.useSignature});
-  factory Aliases.fromData(Map<String, dynamic> data, {String prefix}) {
+      {required this.entityId,
+      required this.email,
+      required this.friendlyName,
+      required this.signature,
+      required this.idUser,
+      required this.idAccount,
+      required this.useSignature});
+  factory Aliases.fromData(Map<String, dynamic> data, {String? prefix}) {
     final effectivePrefix = prefix ?? '';
     return Aliases(
       entityId: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}entity_id']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}entity_id'])!,
       email: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}email']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}email'])!,
       friendlyName: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}friendly_name']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}friendly_name'])!,
       signature: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}signature']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}signature'])!,
       idUser: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}id_user']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}id_user'])!,
       idAccount: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}id_account']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}id_account'])!,
       useSignature: const BoolType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}use_signature']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}use_signature'])!,
     );
   }
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (!nullToAbsent || entityId != null) {
-      map['entity_id'] = Variable<int>(entityId);
-    }
-    if (!nullToAbsent || email != null) {
-      map['email'] = Variable<String>(email);
-    }
-    if (!nullToAbsent || friendlyName != null) {
-      map['friendly_name'] = Variable<String>(friendlyName);
-    }
-    if (!nullToAbsent || signature != null) {
-      map['signature'] = Variable<String>(signature);
-    }
-    if (!nullToAbsent || idUser != null) {
-      map['id_user'] = Variable<int>(idUser);
-    }
-    if (!nullToAbsent || idAccount != null) {
-      map['id_account'] = Variable<int>(idAccount);
-    }
-    if (!nullToAbsent || useSignature != null) {
-      map['use_signature'] = Variable<bool>(useSignature);
-    }
+    map['entity_id'] = Variable<int>(entityId);
+    map['email'] = Variable<String>(email);
+    map['friendly_name'] = Variable<String>(friendlyName);
+    map['signature'] = Variable<String>(signature);
+    map['id_user'] = Variable<int>(idUser);
+    map['id_account'] = Variable<int>(idAccount);
+    map['use_signature'] = Variable<bool>(useSignature);
     return map;
   }
 
   AliasesTableCompanion toCompanion(bool nullToAbsent) {
     return AliasesTableCompanion(
-      entityId: entityId == null && nullToAbsent
-          ? const Value.absent()
-          : Value(entityId),
-      email:
-          email == null && nullToAbsent ? const Value.absent() : Value(email),
-      friendlyName: friendlyName == null && nullToAbsent
-          ? const Value.absent()
-          : Value(friendlyName),
-      signature: signature == null && nullToAbsent
-          ? const Value.absent()
-          : Value(signature),
-      idUser:
-          idUser == null && nullToAbsent ? const Value.absent() : Value(idUser),
-      idAccount: idAccount == null && nullToAbsent
-          ? const Value.absent()
-          : Value(idAccount),
-      useSignature: useSignature == null && nullToAbsent
-          ? const Value.absent()
-          : Value(useSignature),
+      entityId: Value(entityId),
+      email: Value(email),
+      friendlyName: Value(friendlyName),
+      signature: Value(signature),
+      idUser: Value(idUser),
+      idAccount: Value(idAccount),
+      useSignature: Value(useSignature),
     );
   }
 
   factory Aliases.fromJson(Map<String, dynamic> json,
-      {ValueSerializer serializer}) {
+      {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return Aliases(
       entityId: serializer.fromJson<int>(json['entityId']),
@@ -9821,7 +9110,7 @@ class Aliases extends DataClass implements Insertable<Aliases> {
     );
   }
   @override
-  Map<String, dynamic> toJson({ValueSerializer serializer}) {
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'entityId': serializer.toJson<int>(entityId),
@@ -9835,13 +9124,13 @@ class Aliases extends DataClass implements Insertable<Aliases> {
   }
 
   Aliases copyWith(
-          {int entityId,
-          String email,
-          String friendlyName,
-          String signature,
-          int idUser,
-          int idAccount,
-          bool useSignature}) =>
+          {int? entityId,
+          String? email,
+          String? friendlyName,
+          String? signature,
+          int? idUser,
+          int? idAccount,
+          bool? useSignature}) =>
       Aliases(
         entityId: entityId ?? this.entityId,
         email: email ?? this.email,
@@ -9899,13 +9188,13 @@ class AliasesTableCompanion extends UpdateCompanion<Aliases> {
     this.useSignature = const Value.absent(),
   });
   AliasesTableCompanion.insert({
-    @required int entityId,
-    @required String email,
-    @required String friendlyName,
-    @required String signature,
-    @required int idUser,
-    @required int idAccount,
-    @required bool useSignature,
+    required int entityId,
+    required String email,
+    required String friendlyName,
+    required String signature,
+    required int idUser,
+    required int idAccount,
+    required bool useSignature,
   })  : entityId = Value(entityId),
         email = Value(email),
         friendlyName = Value(friendlyName),
@@ -9914,13 +9203,13 @@ class AliasesTableCompanion extends UpdateCompanion<Aliases> {
         idAccount = Value(idAccount),
         useSignature = Value(useSignature);
   static Insertable<Aliases> custom({
-    Expression<int> entityId,
-    Expression<String> email,
-    Expression<String> friendlyName,
-    Expression<String> signature,
-    Expression<int> idUser,
-    Expression<int> idAccount,
-    Expression<bool> useSignature,
+    Expression<int>? entityId,
+    Expression<String>? email,
+    Expression<String>? friendlyName,
+    Expression<String>? signature,
+    Expression<int>? idUser,
+    Expression<int>? idAccount,
+    Expression<bool>? useSignature,
   }) {
     return RawValuesInsertable({
       if (entityId != null) 'entity_id': entityId,
@@ -9934,13 +9223,13 @@ class AliasesTableCompanion extends UpdateCompanion<Aliases> {
   }
 
   AliasesTableCompanion copyWith(
-      {Value<int> entityId,
-      Value<String> email,
-      Value<String> friendlyName,
-      Value<String> signature,
-      Value<int> idUser,
-      Value<int> idAccount,
-      Value<bool> useSignature}) {
+      {Value<int>? entityId,
+      Value<String>? email,
+      Value<String>? friendlyName,
+      Value<String>? signature,
+      Value<int>? idUser,
+      Value<int>? idAccount,
+      Value<bool>? useSignature}) {
     return AliasesTableCompanion(
       entityId: entityId ?? this.entityId,
       email: email ?? this.email,
@@ -9998,54 +9287,47 @@ class $AliasesTableTable extends AliasesTable
     with TableInfo<$AliasesTableTable, Aliases> {
   @override
   final GeneratedDatabase attachedDatabase;
-  final String _alias;
+  final String? _alias;
   $AliasesTableTable(this.attachedDatabase, [this._alias]);
   final VerificationMeta _entityIdMeta = const VerificationMeta('entityId');
-  GeneratedColumn<int> _entityId;
   @override
-  GeneratedColumn<int> get entityId =>
-      _entityId ??= GeneratedColumn<int>('entity_id', aliasedName, false,
-          type: const IntType(), requiredDuringInsert: true);
+  late final GeneratedColumn<int?> entityId = GeneratedColumn<int?>(
+      'entity_id', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _emailMeta = const VerificationMeta('email');
-  GeneratedColumn<String> _email;
   @override
-  GeneratedColumn<String> get email =>
-      _email ??= GeneratedColumn<String>('email', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> email = GeneratedColumn<String?>(
+      'email', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _friendlyNameMeta =
       const VerificationMeta('friendlyName');
-  GeneratedColumn<String> _friendlyName;
   @override
-  GeneratedColumn<String> get friendlyName => _friendlyName ??=
-      GeneratedColumn<String>('friendly_name', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> friendlyName = GeneratedColumn<String?>(
+      'friendly_name', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _signatureMeta = const VerificationMeta('signature');
-  GeneratedColumn<String> _signature;
   @override
-  GeneratedColumn<String> get signature =>
-      _signature ??= GeneratedColumn<String>('signature', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> signature = GeneratedColumn<String?>(
+      'signature', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _idUserMeta = const VerificationMeta('idUser');
-  GeneratedColumn<int> _idUser;
   @override
-  GeneratedColumn<int> get idUser =>
-      _idUser ??= GeneratedColumn<int>('id_user', aliasedName, false,
-          type: const IntType(), requiredDuringInsert: true);
+  late final GeneratedColumn<int?> idUser = GeneratedColumn<int?>(
+      'id_user', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _idAccountMeta = const VerificationMeta('idAccount');
-  GeneratedColumn<int> _idAccount;
   @override
-  GeneratedColumn<int> get idAccount =>
-      _idAccount ??= GeneratedColumn<int>('id_account', aliasedName, false,
-          type: const IntType(), requiredDuringInsert: true);
+  late final GeneratedColumn<int?> idAccount = GeneratedColumn<int?>(
+      'id_account', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _useSignatureMeta =
       const VerificationMeta('useSignature');
-  GeneratedColumn<bool> _useSignature;
   @override
-  GeneratedColumn<bool> get useSignature => _useSignature ??=
-      GeneratedColumn<bool>('use_signature', aliasedName, false,
-          type: const BoolType(),
-          requiredDuringInsert: true,
-          defaultConstraints: 'CHECK (use_signature IN (0, 1))');
+  late final GeneratedColumn<bool?> useSignature = GeneratedColumn<bool?>(
+      'use_signature', aliasedName, false,
+      type: const BoolType(),
+      requiredDuringInsert: true,
+      defaultConstraints: 'CHECK (use_signature IN (0, 1))');
   @override
   List<GeneratedColumn> get $columns => [
         entityId,
@@ -10067,13 +9349,13 @@ class $AliasesTableTable extends AliasesTable
     final data = instance.toColumns(true);
     if (data.containsKey('entity_id')) {
       context.handle(_entityIdMeta,
-          entityId.isAcceptableOrUnknown(data['entity_id'], _entityIdMeta));
+          entityId.isAcceptableOrUnknown(data['entity_id']!, _entityIdMeta));
     } else if (isInserting) {
       context.missing(_entityIdMeta);
     }
     if (data.containsKey('email')) {
       context.handle(
-          _emailMeta, email.isAcceptableOrUnknown(data['email'], _emailMeta));
+          _emailMeta, email.isAcceptableOrUnknown(data['email']!, _emailMeta));
     } else if (isInserting) {
       context.missing(_emailMeta);
     }
@@ -10081,25 +9363,25 @@ class $AliasesTableTable extends AliasesTable
       context.handle(
           _friendlyNameMeta,
           friendlyName.isAcceptableOrUnknown(
-              data['friendly_name'], _friendlyNameMeta));
+              data['friendly_name']!, _friendlyNameMeta));
     } else if (isInserting) {
       context.missing(_friendlyNameMeta);
     }
     if (data.containsKey('signature')) {
       context.handle(_signatureMeta,
-          signature.isAcceptableOrUnknown(data['signature'], _signatureMeta));
+          signature.isAcceptableOrUnknown(data['signature']!, _signatureMeta));
     } else if (isInserting) {
       context.missing(_signatureMeta);
     }
     if (data.containsKey('id_user')) {
       context.handle(_idUserMeta,
-          idUser.isAcceptableOrUnknown(data['id_user'], _idUserMeta));
+          idUser.isAcceptableOrUnknown(data['id_user']!, _idUserMeta));
     } else if (isInserting) {
       context.missing(_idUserMeta);
     }
     if (data.containsKey('id_account')) {
       context.handle(_idAccountMeta,
-          idAccount.isAcceptableOrUnknown(data['id_account'], _idAccountMeta));
+          idAccount.isAcceptableOrUnknown(data['id_account']!, _idAccountMeta));
     } else if (isInserting) {
       context.missing(_idAccountMeta);
     }
@@ -10107,7 +9389,7 @@ class $AliasesTableTable extends AliasesTable
       context.handle(
           _useSignatureMeta,
           useSignature.isAcceptableOrUnknown(
-              data['use_signature'], _useSignatureMeta));
+              data['use_signature']!, _useSignatureMeta));
     } else if (isInserting) {
       context.missing(_useSignatureMeta);
     }
@@ -10117,7 +9399,7 @@ class $AliasesTableTable extends AliasesTable
   @override
   Set<GeneratedColumn> get $primaryKey => {entityId, idUser};
   @override
-  Aliases map(Map<String, dynamic> data, {String tablePrefix}) {
+  Aliases map(Map<String, dynamic> data, {String? tablePrefix}) {
     return Aliases.fromData(data,
         prefix: tablePrefix != null ? '$tablePrefix.' : null);
   }
@@ -10130,45 +9412,43 @@ class $AliasesTableTable extends AliasesTable
 
 class WhiteMail extends DataClass implements Insertable<WhiteMail> {
   final String mail;
-  WhiteMail({@required this.mail});
-  factory WhiteMail.fromData(Map<String, dynamic> data, {String prefix}) {
+  WhiteMail({required this.mail});
+  factory WhiteMail.fromData(Map<String, dynamic> data, {String? prefix}) {
     final effectivePrefix = prefix ?? '';
     return WhiteMail(
       mail: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}mail']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}mail'])!,
     );
   }
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (!nullToAbsent || mail != null) {
-      map['mail'] = Variable<String>(mail);
-    }
+    map['mail'] = Variable<String>(mail);
     return map;
   }
 
   WhiteMailTableCompanion toCompanion(bool nullToAbsent) {
     return WhiteMailTableCompanion(
-      mail: mail == null && nullToAbsent ? const Value.absent() : Value(mail),
+      mail: Value(mail),
     );
   }
 
   factory WhiteMail.fromJson(Map<String, dynamic> json,
-      {ValueSerializer serializer}) {
+      {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return WhiteMail(
       mail: serializer.fromJson<String>(json['mail']),
     );
   }
   @override
-  Map<String, dynamic> toJson({ValueSerializer serializer}) {
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'mail': serializer.toJson<String>(mail),
     };
   }
 
-  WhiteMail copyWith({String mail}) => WhiteMail(
+  WhiteMail copyWith({String? mail}) => WhiteMail(
         mail: mail ?? this.mail,
       );
   @override
@@ -10192,17 +9472,17 @@ class WhiteMailTableCompanion extends UpdateCompanion<WhiteMail> {
     this.mail = const Value.absent(),
   });
   WhiteMailTableCompanion.insert({
-    @required String mail,
+    required String mail,
   }) : mail = Value(mail);
   static Insertable<WhiteMail> custom({
-    Expression<String> mail,
+    Expression<String>? mail,
   }) {
     return RawValuesInsertable({
       if (mail != null) 'mail': mail,
     });
   }
 
-  WhiteMailTableCompanion copyWith({Value<String> mail}) {
+  WhiteMailTableCompanion copyWith({Value<String>? mail}) {
     return WhiteMailTableCompanion(
       mail: mail ?? this.mail,
     );
@@ -10230,14 +9510,13 @@ class $WhiteMailTableTable extends WhiteMailTable
     with TableInfo<$WhiteMailTableTable, WhiteMail> {
   @override
   final GeneratedDatabase attachedDatabase;
-  final String _alias;
+  final String? _alias;
   $WhiteMailTableTable(this.attachedDatabase, [this._alias]);
   final VerificationMeta _mailMeta = const VerificationMeta('mail');
-  GeneratedColumn<String> _mail;
   @override
-  GeneratedColumn<String> get mail =>
-      _mail ??= GeneratedColumn<String>('mail', aliasedName, false,
-          type: const StringType(), requiredDuringInsert: true);
+  late final GeneratedColumn<String?> mail = GeneratedColumn<String?>(
+      'mail', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   @override
   List<GeneratedColumn> get $columns => [mail];
   @override
@@ -10251,7 +9530,7 @@ class $WhiteMailTableTable extends WhiteMailTable
     final data = instance.toColumns(true);
     if (data.containsKey('mail')) {
       context.handle(
-          _mailMeta, mail.isAcceptableOrUnknown(data['mail'], _mailMeta));
+          _mailMeta, mail.isAcceptableOrUnknown(data['mail']!, _mailMeta));
     } else if (isInserting) {
       context.missing(_mailMeta);
     }
@@ -10261,7 +9540,7 @@ class $WhiteMailTableTable extends WhiteMailTable
   @override
   Set<GeneratedColumn> get $primaryKey => {mail};
   @override
-  WhiteMail map(Map<String, dynamic> data, {String tablePrefix}) {
+  WhiteMail map(Map<String, dynamic> data, {String? tablePrefix}) {
     return WhiteMail.fromData(data,
         prefix: tablePrefix != null ? '$tablePrefix.' : null);
   }
@@ -10274,34 +9553,19 @@ class $WhiteMailTableTable extends WhiteMailTable
 
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(SqlTypeSystem.defaultInstance, e);
-  $MailTable _mail;
-  $MailTable get mail => _mail ??= $MailTable(this);
-  $FoldersTable _folders;
-  $FoldersTable get folders => _folders ??= $FoldersTable(this);
-  $UsersTable _users;
-  $UsersTable get users => _users ??= $UsersTable(this);
-  $AccountsTable _accounts;
-  $AccountsTable get accounts => _accounts ??= $AccountsTable(this);
-  $ContactsTableTable _contactsTable;
-  $ContactsTableTable get contactsTable =>
-      _contactsTable ??= $ContactsTableTable(this);
-  $ContactsGroupsTable _contactsGroups;
-  $ContactsGroupsTable get contactsGroups =>
-      _contactsGroups ??= $ContactsGroupsTable(this);
-  $ContactsStoragesTable _contactsStorages;
-  $ContactsStoragesTable get contactsStorages =>
-      _contactsStorages ??= $ContactsStoragesTable(this);
-  $PgpKeyModelTable _pgpKeyModel;
-  $PgpKeyModelTable get pgpKeyModel => _pgpKeyModel ??= $PgpKeyModelTable(this);
-  $AccountIdentityTableTable _accountIdentityTable;
-  $AccountIdentityTableTable get accountIdentityTable =>
-      _accountIdentityTable ??= $AccountIdentityTableTable(this);
-  $AliasesTableTable _aliasesTable;
-  $AliasesTableTable get aliasesTable =>
-      _aliasesTable ??= $AliasesTableTable(this);
-  $WhiteMailTableTable _whiteMailTable;
-  $WhiteMailTableTable get whiteMailTable =>
-      _whiteMailTable ??= $WhiteMailTableTable(this);
+  late final $MailTable mail = $MailTable(this);
+  late final $FoldersTable folders = $FoldersTable(this);
+  late final $UsersTable users = $UsersTable(this);
+  late final $AccountsTable accounts = $AccountsTable(this);
+  late final $ContactsTableTable contactsTable = $ContactsTableTable(this);
+  late final $ContactsGroupsTable contactsGroups = $ContactsGroupsTable(this);
+  late final $ContactsStoragesTable contactsStorages =
+      $ContactsStoragesTable(this);
+  late final $PgpKeyModelTable pgpKeyModel = $PgpKeyModelTable(this);
+  late final $AccountIdentityTableTable accountIdentityTable =
+      $AccountIdentityTableTable(this);
+  late final $AliasesTableTable aliasesTable = $AliasesTableTable(this);
+  late final $WhiteMailTableTable whiteMailTable = $WhiteMailTableTable(this);
   @override
   Iterable<TableInfo> get allTables => allSchemaEntities.whereType<TableInfo>();
   @override

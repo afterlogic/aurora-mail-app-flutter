@@ -1,14 +1,14 @@
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 
 class PgpKey {
-  final String name;
+  final String? name;
   final String mail;
   final String key;
   final bool isPrivate;
   final int? length;
 
   PgpKey({
-    required this.name,
+    this.name,
     required this.mail,
     required this.isPrivate,
     required this.key,
@@ -30,7 +30,7 @@ class PgpKeyWithContact implements PgpKey {
 
   PgpKeyWithContact(this.pgpKey, this.contact);
 
-  String get name => pgpKey.name;
+  String? get name => pgpKey.name;
 
   String get mail => pgpKey.mail;
 

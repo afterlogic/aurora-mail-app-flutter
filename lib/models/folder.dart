@@ -1,4 +1,3 @@
-//@dart=2.9
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:flutter/cupertino.dart';
@@ -27,13 +26,13 @@ class FolderNode {
 class Folder {
   final String guid;
 
-  final String parentGuid;
+  final String? parentGuid;
 
   final int accountLocalId;
 
   final int type;
 
-  final FolderType folderType;
+  final FolderType? folderType;
 
   final int order;
 
@@ -57,40 +56,40 @@ class Folder {
 
   final bool isSelectable;
 
-  final bool exists;
+  final bool? exists;
 
-  final bool extended;
+  final bool? extended;
 
   final bool alwaysRefresh;
 
-  final int count;
+  final int? count;
 
-  final int unread;
+  final int? unread;
   final String nameSpace;
 
   Folder({
-    @required this.guid,
-    @required this.parentGuid,
-    @required this.type,
-    @required this.folderType,
-    @required this.order,
-    @required this.name,
-    @required this.fullName,
-    @required this.fullNameRaw,
-    @required this.fullNameHash,
-    @required this.folderHash,
-    @required this.delimiter,
-    @required this.needsInfoUpdate,
-    @required this.isSystemFolder,
-    @required this.isSubscribed,
-    @required this.isSelectable,
-    @required this.exists,
-    @required this.extended,
-    @required this.alwaysRefresh,
-    @required this.count,
-    @required this.unread,
-    @required this.nameSpace,
-    @required this.accountLocalId,
+    required this.guid,
+    required this.parentGuid,
+    required this.type,
+    required this.folderType,
+    required this.order,
+    required this.name,
+    required this.fullName,
+    required this.fullNameRaw,
+    required this.fullNameHash,
+    required this.folderHash,
+    required this.delimiter,
+    required this.needsInfoUpdate,
+    required this.isSystemFolder,
+    required this.isSubscribed,
+    required this.isSelectable,
+    required this.exists,
+    this.extended,
+    required this.alwaysRefresh,
+    this.count,
+    this.unread,
+    required this.nameSpace,
+    required this.accountLocalId,
   });
 
   String displayName(BuildContext context, {bool full = false}) {
@@ -117,7 +116,7 @@ class Folder {
     }
   }
 
-  static FolderType getFolderTypeFromNumber(int num) {
+  static FolderType? getFolderTypeFromNumber(int? num) {
     if (num == null) {
       return null;
     }
@@ -147,7 +146,7 @@ class Folder {
     }
   }
 
-  static int getNumberFromFolderType(FolderType num) {
+  static int? getNumberFromFolderType(FolderType? num) {
     if (num == null) {
       return null;
     }
@@ -177,7 +176,7 @@ class Folder {
     }
   }
 
-  static List<Folder> getFoldersObjectsFromDb(List<LocalFolder> localFolders) {
+  static List<Folder>? getFoldersObjectsFromDb(List<LocalFolder> localFolders) {
     try {
       return localFolders.map((localFolder) {
         return getFolderObjectsFromDb(localFolder);
@@ -218,7 +217,7 @@ class Folder {
 
   static List<FolderNode> getFolderTree(
     List<Folder> folders, [
-    String parentGuid,
+    String? parentGuid,
   ]) {
     final List<FolderNode> result = [];
     folders.sort((a, b) => a.order - b.order);
@@ -242,7 +241,7 @@ class Folder {
   static bool _isRootOfNameSpaceStructure(List<Folder> folders) {
     return folders.length == 1 &&
         folders[0].parentGuid == null &&
-        folders[0].nameSpace?.isNotEmpty == true &&
+        folders[0].nameSpace.isNotEmpty == true &&
         folders[0].fullNameRaw ==
             folders[0].nameSpace.replaceAll(folders[0].delimiter, '');
   }

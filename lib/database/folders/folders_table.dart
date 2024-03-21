@@ -1,10 +1,10 @@
-//@dart=2.9
 import 'dart:io';
 
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_logger/aurora_logger.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/models/message_info.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:drift_sqflite/drift_sqflite.dart';
 import 'package:drift/drift.dart';
@@ -65,10 +65,10 @@ class Folders extends Table {
   TextColumn get namespace => text()();
 
   static Future<List<LocalFolder>> getFolderObjectsFromServerAsync({
-    @required Map<String, dynamic> rawFolders,
-    @required int accountId,
-    @required int userLocalId,
-    @required int accountLocalId,
+    required Map<String, dynamic> rawFolders,
+    required int accountId,
+    required int userLocalId,
+    required int accountLocalId,
   }) {
     final args = {
       "id": accountId,
@@ -90,9 +90,9 @@ class Folders extends Table {
     final rawFolders =
         new List<Map<String, dynamic>>.from(args["folders"] as Iterable);
 
-    final flattenedFolders = new List<LocalFolder>();
+    final flattenedFolders = <LocalFolder>[];
 
-    void getObj(List<Map<String, dynamic>> rawFolders, String parentGuid) {
+    void getObj(List<Map<String, dynamic>> rawFolders, String? parentGuid) {
       rawFolders.forEach((rawFolder) {
         final guid =
             "$userLocalId $accountLocalId ${rawFolder["FullNameHash"]}}";
@@ -147,18 +147,18 @@ class Folders extends Table {
   // TODO folders might change their order
   static FoldersDiffCalcResult _calculateFoldersDiff(
       Map<String, List<LocalFolder>> args) {
-    final oldFolders = args["oldItems"];
-    final newFolders = args["newItems"];
+    final oldFolders = args["oldItems"] ?? [];
+    final newFolders = args["newItems"] ?? [];
 
-    final addedFolders = newFolders.where((i) =>
-        oldFolders.firstWhere((j) => j.guid == i.guid, orElse: () => null) ==
-        null);
+    final addedFolders = newFolders.where(
+        (i) => oldFolders.firstWhereOrNull((j) => j.guid == i.guid) == null);
 
     final removedFolders = <LocalFolder>[];
     final updatedFolders = <LocalFolder>[];
-    for (var oldFolder in oldFolders) {
-      final newFolder = newFolders.firstWhere((j) => j.guid == oldFolder.guid,
-          orElse: () => null);
+    for (final oldFolder in oldFolders) {
+      final newFolder = newFolders.firstWhereOrNull(
+        (j) => j.guid == oldFolder.guid,
+      );
       if (newFolder == null) {
         removedFolders.add(oldFolder);
       } else {
@@ -205,12 +205,12 @@ class Folders extends Table {
     final showLog = args["showLog"] as bool;
     final force = args["force"] as bool;
     final unchangedMessages = oldInfo.where((i) =>
-        newInfo.firstWhere(
-            (j) =>
-                j.uid == i.uid &&
-                j.parentUid == i.parentUid &&
-                listEquals(j.flags, i.flags),
-            orElse: () => null) !=
+        newInfo.firstWhereOrNull(
+          (j) =>
+              j.uid == i.uid &&
+              j.parentUid == i.parentUid &&
+              listEquals(j.flags, i.flags),
+        ) !=
         null);
 
     // no need to calculate difference if all the messages are unchanged
@@ -226,21 +226,22 @@ class Folders extends Table {
       );
     }
 
-    final addedMessages = newInfo.where((i) =>
-        oldInfo.firstWhere((j) => j.uid == i.uid, orElse: () => null) == null);
+    final addedMessages = newInfo
+        .where((i) => oldInfo.firstWhereOrNull((j) => j.uid == i.uid) == null);
 
-    final removedMessages = oldInfo.where((i) =>
-        newInfo.firstWhere((j) => j.uid == i.uid, orElse: () => null) == null);
+    final removedMessages = oldInfo
+        .where((i) => newInfo.firstWhereOrNull((j) => j.uid == i.uid) == null);
 
     final changedParent = newInfo.where((i) =>
-        oldInfo.firstWhere((j) => j.uid == i.uid && j.parentUid != i.parentUid,
-            orElse: () => null) !=
+        oldInfo.firstWhereOrNull(
+          (j) => j.uid == i.uid && j.parentUid != i.parentUid,
+        ) !=
         null);
 
     final changedFlags = newInfo.where((i) =>
-        oldInfo.firstWhere(
-            (j) => j.uid == i.uid && !listEquals(j.flags, i.flags),
-            orElse: () => null) !=
+        oldInfo.firstWhereOrNull(
+          (j) => j.uid == i.uid && !listEquals(j.flags, i.flags),
+        ) !=
         null);
 
     if (showLog) logger.log("""
@@ -286,28 +287,28 @@ class Folders extends Table {
       hashNewInfo[value.uid] = value;
     }
 
-    final changedFlags = List<MessageInfo>();
-    final addedMessages = List<MessageInfo>();
-    final removedMessages = List<MessageInfo>();
-    final unchangedMessages = List<MessageInfo>();
-    final changedParent = List<MessageInfo>();
+    final changedFlags = <MessageInfo>[];
+    final addedMessages = <MessageInfo>[];
+    final removedMessages = <MessageInfo>[];
+    final unchangedMessages = <MessageInfo>[];
+    final changedParent = <MessageInfo>[];
 
     for (var key in hashOldInfo.keys) {
       final newItem = hashNewInfo[key];
+      final MessageInfo oldItem = hashOldInfo[key]!;
       if (newItem != null) {
-        final oldItem = hashOldInfo[key];
         if (newItem.parentUid == oldItem.parentUid &&
             listEquals(newItem.flags, oldItem.flags)) {
           unchangedMessages.add(newItem);
         }
       } else {
-        removedMessages.add(hashOldInfo[key]);
+        removedMessages.add(oldItem);
       }
     }
     for (var key in hashNewInfo.keys) {
       final oldItem = hashOldInfo[key];
+      final MessageInfo newItem = hashNewInfo[key]!;
       if (oldItem != null) {
-        final newItem = hashNewInfo[key];
         if (oldItem.parentUid != newItem.parentUid) {
           changedParent.add(newItem);
         }
@@ -315,7 +316,7 @@ class Folders extends Table {
           changedFlags.add(newItem);
         }
       } else {
-        addedMessages.add(hashNewInfo[key]);
+        addedMessages.add(newItem);
       }
     }
     // no need to calculate difference if all the messages are unchanged
@@ -358,11 +359,11 @@ class Folders extends Table {
     );
   }
 
-  static LocalFolder getFolderOfType(
+  static LocalFolder? getFolderOfType(
       List<LocalFolder> folders, FolderType type) {
-    return folders.firstWhere(
+    return folders.firstWhereOrNull(
       (f) => Folder.getFolderTypeFromNumber(f.type) == type,
-      orElse: () => null,
+
     );
   }
 }
@@ -373,9 +374,9 @@ class FoldersDiffCalcResult {
   final List<LocalFolder> updatedFolders;
 
   FoldersDiffCalcResult(
-      {@required this.updatedFolders,
-      @required this.addedFolders,
-      @required this.deletedFolders})
+      {required this.updatedFolders,
+      required this.addedFolders,
+      required this.deletedFolders})
       : assert(addedFolders != null, deletedFolders != null);
 }
 
@@ -386,17 +387,17 @@ class MessagesInfoDiffCalcResult {
   final List<MessageInfo> addedMessages;
 
   MessagesInfoDiffCalcResult(
-      {@required this.updatedInfo,
-      @required this.removedUids,
-      @required this.infosToUpdateFlags,
-      @required this.addedMessages})
+      {required this.updatedInfo,
+      required this.removedUids,
+      required this.infosToUpdateFlags,
+      required this.addedMessages})
       : assert(updatedInfo != null &&
             removedUids != null &&
             infosToUpdateFlags != null);
 }
 
 class FolderMessageInfo {
-  static Future<List<MessageInfo>> getMessageInfo(
+  static Future<List<MessageInfo>?> getMessageInfo(
     String fullName,
     int accountLocalId,
   ) async {
@@ -426,7 +427,7 @@ class FolderMessageInfo {
       await file.create(recursive: true);
     }
     try {
-      return file.writeAsString(MessageInfo.toJsonString(items));
+      return file.writeAsString(MessageInfo.toJsonString(items)!);
     } catch (e) {
       return null;
     }

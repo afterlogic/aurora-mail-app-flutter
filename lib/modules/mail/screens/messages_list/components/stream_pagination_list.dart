@@ -156,6 +156,7 @@ class _ListPartWidgetState extends State<_ListPartWidget> {
   @override
   Widget build(BuildContext context) {
     if (error != null) {
+      print(error);
       return widget.onError(context, error);
     }
     if (widget.part.items != null) {

@@ -1,4 +1,3 @@
-//@dart=2.9
 import 'dart:convert';
 import 'dart:math';
 
@@ -154,7 +153,7 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
         .getSingle();
   }
 
-  Future<Message> getMessageById(String messageId, String folder) {
+  Future<Message?> getMessageById(String messageId, String folder) {
     return (select(mail)
           ..where((item) => item.messageId.equals(messageId))
           ..where((item) => item.folder.equals(folder)))
@@ -270,8 +269,8 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
         hasThread: messageInfo.hasThread,
         flagsInJson: json.encode(messageInfo.flags),
         hasBody: false,
-        htmlBody: null,
-        rawBody: null,
+        htmlBody: "",
+        rawBody: "",
       );
     }).toList();
     return batch((bath) {
@@ -301,8 +300,8 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
       hasThread: messageInfo.hasThread,
       flagsInJson: json.encode(messageInfo.flags),
       hasBody: false,
-      htmlBody: null,
-      rawBody: null,
+      htmlBody: "",
+      rawBody: "",
     );
     final localId = await into(mail).insert(messages);
     return messages.copyWith(localId: localId);

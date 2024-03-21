@@ -1,4 +1,3 @@
-//@dart=2.9
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:drift_sqflite/drift_sqflite.dart';
 import 'package:drift/drift.dart';
@@ -24,13 +23,14 @@ class AccountsDao extends DatabaseAccessor<AppDatabase>
       ..where(accounts.userLocalId.equals(userLocalId))
       ..addColumns([accounts.localId]);
 
-    final Set<int> accountLocalIds =
+    final Set<int?> accountLocalIds =
         (await accountLocalIdsQuery.map((a) => a.read(accounts.localId)).get())
             .toSet();
 
-    final Map<int, String> signatureMap = {};
+    final Map<int, String?> signatureMap = {};
 
-    for (int accountLocalId in accountLocalIds) {
+    for (int? accountLocalId in accountLocalIds) {
+      if (accountLocalId == null) continue;
       final signatureQuery = selectOnly(accounts)
         ..where(accounts.localId.equals(accountLocalId))
         ..addColumns([accounts.signature]);
@@ -70,40 +70,40 @@ class AccountsDao extends DatabaseAccessor<AppDatabase>
         accounts.allowAutoResponder
       ]);
     return query.map(
-      (a) {
-        final int localId = a.read(accounts.localId);
-
+      (row) {
+        final localId = row.read(accounts.localId);
+        
         return Account(
           localId: localId,
-          userLocalId: a.read(accounts.userLocalId),
-          entityId: a.read(accounts.entityId),
-          idUser: a.read(accounts.idUser),
-          uuid: a.read(accounts.uuid),
-          parentUuid: a.read(accounts.parentUuid),
-          moduleName: a.read(accounts.moduleName),
-          useToAuthorize: a.read(accounts.useToAuthorize),
-          email: a.read(accounts.email),
-          friendlyName: a.read(accounts.friendlyName),
-          useSignature: a.read(accounts.useSignature),
+          userLocalId: row.read(accounts.userLocalId)!,
+          entityId: row.read(accounts.entityId)!,
+          idUser: row.read(accounts.idUser)!,
+          uuid: row.read(accounts.uuid)!,
+          parentUuid: row.read(accounts.parentUuid)!,
+          moduleName: row.read(accounts.moduleName)!,
+          useToAuthorize: row.read(accounts.useToAuthorize)!,
+          email: row.read(accounts.email)!,
+          friendlyName: row.read(accounts.friendlyName)!,
+          useSignature: row.read(accounts.useSignature)!,
           signature:
-              signatureMap.containsKey(localId) ? signatureMap[localId] : "",
-          serverId: a.read(accounts.serverId),
-          foldersOrderInJson: a.read(accounts.foldersOrderInJson),
-          useThreading: a.read(accounts.useThreading),
-          saveRepliesToCurrFolder: a.read(accounts.saveRepliesToCurrFolder),
-          accountId: a.read(accounts.accountId),
-          allowFilters: a.read(accounts.allowFilters),
-          allowForward: a.read(accounts.allowForward),
-          allowAutoResponder: a.read(accounts.allowAutoResponder),
+              signatureMap.containsKey(localId) ? signatureMap[localId] ?? "" : "",
+          serverId: row.read(accounts.serverId)!,
+          foldersOrderInJson: row.read(accounts.foldersOrderInJson)!,
+          useThreading: row.read(accounts.useThreading)!,
+          saveRepliesToCurrFolder: row.read(accounts.saveRepliesToCurrFolder)!,
+          accountId: row.read(accounts.accountId)!,
+          allowFilters: row.read(accounts.allowFilters)!,
+          allowForward: row.read(accounts.allowForward)!,
+          allowAutoResponder: row.read(accounts.allowAutoResponder)!,
         );
       },
     ).get();
   }
 
-  Future<Account> getAccount(int localId) async {
+  Future<Account?> getAccount(int localId) async {
     // selects separated for handling case with large signature
 
-    String signature;
+    String? signature;
 
     final signatureQuery = selectOnly(accounts)
       ..where(accounts.localId.equals(localId))
@@ -140,28 +140,28 @@ class AccountsDao extends DatabaseAccessor<AppDatabase>
           accounts.allowAutoResponder
         ]);
       return query.map(
-        (a) {
+        (row) {
           return Account(
-            localId: a.read(accounts.localId),
-            userLocalId: a.read(accounts.userLocalId),
-            entityId: a.read(accounts.entityId),
-            idUser: a.read(accounts.idUser),
-            uuid: a.read(accounts.uuid),
-            parentUuid: a.read(accounts.parentUuid),
-            moduleName: a.read(accounts.moduleName),
-            useToAuthorize: a.read(accounts.useToAuthorize),
-            email: a.read(accounts.email),
-            friendlyName: a.read(accounts.friendlyName),
-            useSignature: a.read(accounts.useSignature),
+            localId: row.read(accounts.localId),
+            userLocalId: row.read(accounts.userLocalId)!,
+            entityId: row.read(accounts.entityId)!,
+            idUser: row.read(accounts.idUser)!,
+            uuid: row.read(accounts.uuid)!,
+            parentUuid: row.read(accounts.parentUuid)!,
+            moduleName: row.read(accounts.moduleName)!,
+            useToAuthorize: row.read(accounts.useToAuthorize)!,
+            email: row.read(accounts.email)!,
+            friendlyName: row.read(accounts.friendlyName)!,
+            useSignature: row.read(accounts.useSignature)!,
             signature: signature ?? "",
-            serverId: a.read(accounts.serverId),
-            foldersOrderInJson: a.read(accounts.foldersOrderInJson),
-            useThreading: a.read(accounts.useThreading),
-            saveRepliesToCurrFolder: a.read(accounts.saveRepliesToCurrFolder),
-            accountId: a.read(accounts.accountId),
-            allowFilters: a.read(accounts.allowFilters),
-            allowForward: a.read(accounts.allowForward),
-            allowAutoResponder: a.read(accounts.allowAutoResponder),
+            serverId: row.read(accounts.serverId)!,
+            foldersOrderInJson: row.read(accounts.foldersOrderInJson)!,
+            useThreading: row.read(accounts.useThreading)!,
+            saveRepliesToCurrFolder: row.read(accounts.saveRepliesToCurrFolder)!,
+            accountId: row.read(accounts.accountId)!,
+            allowFilters: row.read(accounts.allowFilters)!,
+            allowForward: row.read(accounts.allowForward)!,
+            allowAutoResponder: row.read(accounts.allowAutoResponder)!,
           );
         },
       ).getSingleOrNull();

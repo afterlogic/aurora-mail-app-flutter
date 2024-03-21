@@ -1,10 +1,8 @@
-//@dart=2.9
 import 'package:aurora_mail/database/app_database.dart';
-import 'package:drift_sqflite/drift_sqflite.dart';
 import 'package:drift/drift.dart';
 
 class Accounts extends Table {
-  IntColumn get localId => integer().autoIncrement()();
+  IntColumn get localId => integer().autoIncrement().nullable()();
 
   IntColumn get userLocalId => integer()();
 

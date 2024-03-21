@@ -39,7 +39,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     await AlarmService.setAlarm(
       main.onAlarm,
       ALARM_ID,
-      Duration(seconds: event.user.syncFreqInSeconds),
+      Duration(seconds: event.user.syncFreqInSeconds ?? 300),
     );
 
     final appSettings = await _methods.getSettingsSharedPrefs();
@@ -49,8 +49,8 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     if (state is SettingsLoaded) {
       yield (state as SettingsLoaded).copyWith(
           users: Value(event.users),
-          syncFrequency: Value(event.user.syncFreqInSeconds),
-          syncPeriod: Value(event.user.syncPeriod),
+          syncFrequency: Value(event.user.syncFreqInSeconds ?? 300),
+          syncPeriod: Value(event.user.syncPeriod ?? "Period.allTime"),
           darkThemeEnabled: Value(appSettings.isDarkTheme),
           is24: Value(appSettings.is24),
           language: Value(
