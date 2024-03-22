@@ -49,7 +49,7 @@ class _ContactsDrawerState extends BState<ContactsDrawer> {
         backgroundColor: Colors.white,
         color: Colors.black,
         child: ListTileTheme(
-          selectedColor: theme.accentColor,
+          selectedColor: theme.primaryColor,
           style: ListTileStyle.drawer,
           child: SafeArea(
             child: BlocBuilder<ContactsBloc, ContactsState>(
@@ -75,7 +75,7 @@ class _ContactsDrawerState extends BState<ContactsDrawer> {
                           style: TextStyle(color: theme.disabledColor),
                         ),
                         IconButton(
-                          icon: Icon(Icons.add, color: theme.accentColor),
+                          icon: Icon(Icons.add, color: theme.primaryColor),
                           onPressed: _addGroup,
                         ),
                       ],

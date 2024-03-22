@@ -39,7 +39,7 @@ class _MainDrawerState extends BState<MainDrawer> {
     return Drawer(
       child: ListTileTheme(
         style: ListTileStyle.drawer,
-        selectedColor: theme.accentColor,
+        selectedColor: theme.primaryColor,
         child: SafeArea(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

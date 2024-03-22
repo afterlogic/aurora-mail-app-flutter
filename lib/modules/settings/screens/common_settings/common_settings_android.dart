@@ -52,7 +52,7 @@ class _CommonSettingsAndroidState extends BState<CommonSettingsAndroid> {
                         ),
                       ],
                     ),
-                    activeColor: theme.accentColor,
+                    activeColor: theme.primaryColor,
                     value: state.is24,
                     onChanged: (val) => bloc.add(SetTimeFormat(val))),
                 ListTile(

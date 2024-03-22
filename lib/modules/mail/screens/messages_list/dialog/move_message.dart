@@ -129,7 +129,7 @@ class _MoveMessageDialogState extends State<MoveMessageDialog>
     return Padding(
       padding: EdgeInsets.only(left: paddingCount * MENU_PADDING_STEP),
       child: ListTileTheme(
-        selectedColor: theme.accentColor,
+        selectedColor: theme.primaryColor,
         child: ListTile(
           selected: folder == current,
           onTap: () => _addToStack(folder),

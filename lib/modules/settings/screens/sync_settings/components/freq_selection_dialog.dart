@@ -30,7 +30,7 @@ class FreqSelectionDialog extends StatelessWidget {
       content: AMDialogList(
         children: values.map((freq) {
           return RadioListTile(
-            activeColor: theme.accentColor,
+            activeColor: theme.primaryColor,
             title: Text(SyncFreq.freqToString(context, freq)),
             value: freq,
             groupValue: selectedItem,
@@ -47,7 +47,7 @@ class FreqSelectionDialog extends StatelessWidget {
             S.of(context).btn_cancel,
             style: TextStyle(
                 color: theme.brightness == Brightness.light
-                    ? theme.accentColor
+                    ? theme.primaryColor
                     : null),
           ),
           onPressed: Navigator.of(context).pop,

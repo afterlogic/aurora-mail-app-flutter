@@ -56,7 +56,7 @@ class MailFolder extends StatelessWidget {
             padding: EdgeInsets.symmetric(vertical: 6.0, horizontal: 10.0),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(50.0)),
-              color: isSelected ? theme.accentColor : theme.disabledColor,
+              color: isSelected ? theme.primaryColor : theme.disabledColor,
             ),
             child: Text(
               mailFolder.folderType == FolderType.drafts

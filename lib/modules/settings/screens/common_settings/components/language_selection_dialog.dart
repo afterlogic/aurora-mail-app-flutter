@@ -30,7 +30,7 @@ class LanguageSelectionDialog extends StatelessWidget {
         children: Language.availableLanguages
             .map(
               (lang) => RadioListTile(
-                activeColor: theme.accentColor,
+                activeColor: theme.primaryColor,
                 title: Text(lang == null
                     ? S.of(context).settings_language_system
                     : lang.name),
@@ -50,7 +50,7 @@ class LanguageSelectionDialog extends StatelessWidget {
             S.of(context).btn_cancel,
             style: TextStyle(
                 color: theme.brightness == Brightness.light
-                    ? theme.accentColor
+                    ? theme.primaryColor
                     : null),
           ),
           onPressed: Navigator.of(context).pop,

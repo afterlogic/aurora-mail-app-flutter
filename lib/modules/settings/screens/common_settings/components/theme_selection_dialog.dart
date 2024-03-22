@@ -28,7 +28,7 @@ class ThemeSelectionDialog extends StatelessWidget {
       content: AMDialogList(
         children: [
           RadioListTile<bool>(
-            activeColor: theme.accentColor,
+            activeColor: theme.primaryColor,
             title: Text(S.of(context).settings_dark_theme_system),
             value: null,
             groupValue: isTheme,
@@ -38,7 +38,7 @@ class ThemeSelectionDialog extends StatelessWidget {
             },
           ),
           RadioListTile<bool>(
-            activeColor: theme.accentColor,
+            activeColor: theme.primaryColor,
             title: Text(S.of(context).settings_dark_theme_dark),
             value: true,
             groupValue: isTheme,
@@ -48,7 +48,7 @@ class ThemeSelectionDialog extends StatelessWidget {
             },
           ),
           RadioListTile<bool>(
-            activeColor: theme.accentColor,
+            activeColor: theme.primaryColor,
             title: Text(S.of(context).settings_dark_theme_light),
             value: false,
             groupValue: isTheme,
@@ -65,7 +65,7 @@ class ThemeSelectionDialog extends StatelessWidget {
             S.of(context).btn_cancel,
             style: TextStyle(
                 color: theme.brightness == Brightness.light
-                    ? theme.accentColor
+                    ? theme.primaryColor
                     : null),
           ),
           onPressed: Navigator.of(context).pop,

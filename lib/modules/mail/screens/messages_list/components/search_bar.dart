@@ -57,7 +57,6 @@ class SearchBarState extends BState<SearchBar> {
             autofocus: true,
             decoration: InputDecoration.collapsed(
               hintText: S.of(context).messages_list_app_bar_search,
-              hintStyle: theme.textTheme.headline4,
             ),
             textInputAction: TextInputAction.search,
             onChanged: _getMessages,

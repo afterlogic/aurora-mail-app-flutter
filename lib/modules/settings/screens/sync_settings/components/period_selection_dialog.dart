@@ -28,7 +28,7 @@ class PeriodSelectionDialog extends StatelessWidget {
       content: AMDialogList(
         children: Period.values.map((period) {
           return RadioListTile(
-            activeColor: theme.accentColor,
+            activeColor: theme.primaryColor,
             title: Text(SyncPeriod.periodToTitle(context, period)),
             value: period,
             groupValue: selectedItem,
@@ -45,7 +45,7 @@ class PeriodSelectionDialog extends StatelessWidget {
             S.of(context).btn_cancel,
             style: TextStyle(
                 color: theme.brightness == Brightness.light
-                    ? theme.accentColor
+                    ? theme.primaryColor
                     : null),
           ),
           onPressed: Navigator.of(context).pop,

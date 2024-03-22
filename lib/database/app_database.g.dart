@@ -3405,7 +3405,7 @@ class $FoldersTable extends Folders with TableInfo<$FoldersTable, LocalFolder> {
 }
 
 class User extends DataClass implements Insertable<User> {
-  final int localId;
+  final int? localId;
   final int serverId;
   final String hostname;
   final String emailFromLogin;
@@ -3413,7 +3413,7 @@ class User extends DataClass implements Insertable<User> {
   final int? syncFreqInSeconds;
   final String? syncPeriod;
   User(
-      {required this.localId,
+      {this.localId,
       required this.serverId,
       required this.hostname,
       required this.emailFromLogin,
@@ -3424,7 +3424,7 @@ class User extends DataClass implements Insertable<User> {
     final effectivePrefix = prefix ?? '';
     return User(
       localId: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}local_id'])!,
+          .mapFromDatabaseResponse(data['${effectivePrefix}local_id']),
       serverId: const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}server_id'])!,
       hostname: const StringType()
@@ -3442,7 +3442,9 @@ class User extends DataClass implements Insertable<User> {
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['local_id'] = Variable<int>(localId);
+    if (!nullToAbsent || localId != null) {
+      map['local_id'] = Variable<int?>(localId);
+    }
     map['server_id'] = Variable<int>(serverId);
     map['hostname'] = Variable<String>(hostname);
     map['email_from_login'] = Variable<String>(emailFromLogin);
@@ -3458,7 +3460,9 @@ class User extends DataClass implements Insertable<User> {
 
   UsersCompanion toCompanion(bool nullToAbsent) {
     return UsersCompanion(
-      localId: Value(localId),
+      localId: localId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(localId),
       serverId: Value(serverId),
       hostname: Value(hostname),
       emailFromLogin: Value(emailFromLogin),
@@ -3476,7 +3480,7 @@ class User extends DataClass implements Insertable<User> {
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return User(
-      localId: serializer.fromJson<int>(json['localId']),
+      localId: serializer.fromJson<int?>(json['localId']),
       serverId: serializer.fromJson<int>(json['serverId']),
       hostname: serializer.fromJson<String>(json['hostname']),
       emailFromLogin: serializer.fromJson<String>(json['emailFromLogin']),
@@ -3489,7 +3493,7 @@ class User extends DataClass implements Insertable<User> {
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'localId': serializer.toJson<int>(localId),
+      'localId': serializer.toJson<int?>(localId),
       'serverId': serializer.toJson<int>(serverId),
       'hostname': serializer.toJson<String>(hostname),
       'emailFromLogin': serializer.toJson<String>(emailFromLogin),
@@ -3547,7 +3551,7 @@ class User extends DataClass implements Insertable<User> {
 }
 
 class UsersCompanion extends UpdateCompanion<User> {
-  final Value<int> localId;
+  final Value<int?> localId;
   final Value<int> serverId;
   final Value<String> hostname;
   final Value<String> emailFromLogin;
@@ -3576,7 +3580,7 @@ class UsersCompanion extends UpdateCompanion<User> {
         emailFromLogin = Value(emailFromLogin),
         token = Value(token);
   static Insertable<User> custom({
-    Expression<int>? localId,
+    Expression<int?>? localId,
     Expression<int>? serverId,
     Expression<String>? hostname,
     Expression<String>? emailFromLogin,
@@ -3596,7 +3600,7 @@ class UsersCompanion extends UpdateCompanion<User> {
   }
 
   UsersCompanion copyWith(
-      {Value<int>? localId,
+      {Value<int?>? localId,
       Value<int>? serverId,
       Value<String>? hostname,
       Value<String>? emailFromLogin,
@@ -3618,7 +3622,7 @@ class UsersCompanion extends UpdateCompanion<User> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (localId.present) {
-      map['local_id'] = Variable<int>(localId.value);
+      map['local_id'] = Variable<int?>(localId.value);
     }
     if (serverId.present) {
       map['server_id'] = Variable<int>(serverId.value);
@@ -3664,7 +3668,7 @@ class $UsersTable extends Users with TableInfo<$UsersTable, User> {
   final VerificationMeta _localIdMeta = const VerificationMeta('localId');
   @override
   late final GeneratedColumn<int?> localId = GeneratedColumn<int?>(
-      'local_id', aliasedName, false,
+      'local_id', aliasedName, true,
       type: const IntType(),
       requiredDuringInsert: false,
       defaultConstraints: 'PRIMARY KEY AUTOINCREMENT');
@@ -7804,7 +7808,7 @@ class $ContactsGroupsTable extends ContactsGroups
 
 class ContactsStoragesTable extends DataClass
     implements Insertable<ContactsStoragesTable> {
-  final int sqliteId;
+  final int? sqliteId;
   final int userLocalId;
   final int idUser;
   final String serverId;
@@ -7815,7 +7819,7 @@ class ContactsStoragesTable extends DataClass
   final String displayName;
   final List<ContactInfoItem>? contactsInfo;
   ContactsStoragesTable(
-      {required this.sqliteId,
+      {this.sqliteId,
       required this.userLocalId,
       required this.idUser,
       required this.serverId,
@@ -7830,7 +7834,7 @@ class ContactsStoragesTable extends DataClass
     final effectivePrefix = prefix ?? '';
     return ContactsStoragesTable(
       sqliteId: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}sqlite_id'])!,
+          .mapFromDatabaseResponse(data['${effectivePrefix}sqlite_id']),
       userLocalId: const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}user_local_id'])!,
       idUser: const IntType()
@@ -7855,7 +7859,9 @@ class ContactsStoragesTable extends DataClass
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['sqlite_id'] = Variable<int>(sqliteId);
+    if (!nullToAbsent || sqliteId != null) {
+      map['sqlite_id'] = Variable<int?>(sqliteId);
+    }
     map['user_local_id'] = Variable<int>(userLocalId);
     map['id_user'] = Variable<int>(idUser);
     map['server_id'] = Variable<String>(serverId);
@@ -7874,7 +7880,9 @@ class ContactsStoragesTable extends DataClass
 
   ContactsStoragesCompanion toCompanion(bool nullToAbsent) {
     return ContactsStoragesCompanion(
-      sqliteId: Value(sqliteId),
+      sqliteId: sqliteId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(sqliteId),
       userLocalId: Value(userLocalId),
       idUser: Value(idUser),
       serverId: Value(serverId),
@@ -7893,7 +7901,7 @@ class ContactsStoragesTable extends DataClass
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return ContactsStoragesTable(
-      sqliteId: serializer.fromJson<int>(json['sqliteId']),
+      sqliteId: serializer.fromJson<int?>(json['sqliteId']),
       userLocalId: serializer.fromJson<int>(json['userLocalId']),
       idUser: serializer.fromJson<int>(json['idUser']),
       serverId: serializer.fromJson<String>(json['serverId']),
@@ -7910,7 +7918,7 @@ class ContactsStoragesTable extends DataClass
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'sqliteId': serializer.toJson<int>(sqliteId),
+      'sqliteId': serializer.toJson<int?>(sqliteId),
       'userLocalId': serializer.toJson<int>(userLocalId),
       'idUser': serializer.toJson<int>(idUser),
       'serverId': serializer.toJson<String>(serverId),
@@ -7983,7 +7991,7 @@ class ContactsStoragesTable extends DataClass
 }
 
 class ContactsStoragesCompanion extends UpdateCompanion<ContactsStoragesTable> {
-  final Value<int> sqliteId;
+  final Value<int?> sqliteId;
   final Value<int> userLocalId;
   final Value<int> idUser;
   final Value<String> serverId;
@@ -8024,7 +8032,7 @@ class ContactsStoragesCompanion extends UpdateCompanion<ContactsStoragesTable> {
         cTag = Value(cTag),
         display = Value(display);
   static Insertable<ContactsStoragesTable> custom({
-    Expression<int>? sqliteId,
+    Expression<int?>? sqliteId,
     Expression<int>? userLocalId,
     Expression<int>? idUser,
     Expression<String>? serverId,
@@ -8050,7 +8058,7 @@ class ContactsStoragesCompanion extends UpdateCompanion<ContactsStoragesTable> {
   }
 
   ContactsStoragesCompanion copyWith(
-      {Value<int>? sqliteId,
+      {Value<int?>? sqliteId,
       Value<int>? userLocalId,
       Value<int>? idUser,
       Value<String>? serverId,
@@ -8078,7 +8086,7 @@ class ContactsStoragesCompanion extends UpdateCompanion<ContactsStoragesTable> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (sqliteId.present) {
-      map['sqlite_id'] = Variable<int>(sqliteId.value);
+      map['sqlite_id'] = Variable<int?>(sqliteId.value);
     }
     if (userLocalId.present) {
       map['user_local_id'] = Variable<int>(userLocalId.value);
@@ -8139,7 +8147,7 @@ class $ContactsStoragesTable extends ContactsStorages
   final VerificationMeta _sqliteIdMeta = const VerificationMeta('sqliteId');
   @override
   late final GeneratedColumn<int?> sqliteId = GeneratedColumn<int?>(
-      'sqlite_id', aliasedName, false,
+      'sqlite_id', aliasedName, true,
       type: const IntType(),
       requiredDuringInsert: false,
       defaultConstraints: 'PRIMARY KEY AUTOINCREMENT');

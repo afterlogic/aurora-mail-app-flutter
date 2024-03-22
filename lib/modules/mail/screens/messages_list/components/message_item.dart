@@ -100,13 +100,13 @@ class _MessageItemState extends BState<MessageItem> {
       return Container(
         padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 10.0),
         decoration: BoxDecoration(
-          color: hasUnread ? theme.accentColor : null,
+          color: hasUnread ? theme.primaryColor : null,
           borderRadius: BorderRadius.all(Radius.circular(50.0)),
-          border: Border.all(color: theme.accentColor, width: 2.0),
+          border: Border.all(color: theme.primaryColor, width: 2.0),
         ),
         child: Text(
           widget.children.length.toString(),
-          style: TextStyle(color: hasUnread ? Colors.white : theme.accentColor),
+          style: TextStyle(color: hasUnread ? Colors.white : theme.primaryColor),
         ),
       );
     }
@@ -309,8 +309,8 @@ class _MessageItemState extends BState<MessageItem> {
                                   border: selected
                                       ? null
                                       : Border.all(
-                                          color: theme.accentColor, width: 2),
-                                  color: selected ? theme.accentColor : null,
+                                          color: theme.primaryColor, width: 2),
+                                  color: selected ? theme.primaryColor : null,
                                 ),
                                 child: SizedBox(
                                   height: 10,
@@ -377,7 +377,7 @@ class _MessageItemState extends BState<MessageItem> {
                     bottom: 0,
                     child: Container(
                       width: 4.0,
-                      color: theme.accentColor,
+                      color: theme.primaryColor,
                     ),
                   ),
                 ],

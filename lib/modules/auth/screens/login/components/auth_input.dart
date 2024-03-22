@@ -57,7 +57,7 @@ class _AuthInputState extends BState<AuthInput> {
             borderSide:
                 BorderSide(color: theme.disabledColor.withOpacity(0.1))),
         focusedBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: theme.accentColor)),
+            borderSide: BorderSide(color: theme.primaryColor)),
         // hintText: BuildProperty.hasFloatingPlaceholder ? null : widget.label,
         // labelText: BuildProperty.hasFloatingPlaceholder ? widget.label : null,
         hintText: false ? null : widget.label,

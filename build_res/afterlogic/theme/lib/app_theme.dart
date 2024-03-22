@@ -72,6 +72,7 @@ class AppTheme {
     dialogTheme: _dialogTheme,
     colorScheme: ColorScheme.fromSeed(
         seedColor: AppColor.primary,
+        onPrimary: AppColor.primary,
         background: Color(0xFFe6ebf0),
         brightness: Brightness.dark),
 

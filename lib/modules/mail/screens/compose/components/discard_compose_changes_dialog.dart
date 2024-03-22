@@ -15,7 +15,7 @@ class DiscardComposeChangesDialog extends StatelessWidget {
             S.of(context).btn_discard,
             style: TextStyle(
                 color: theme.brightness == Brightness.light
-                    ? theme.accentColor
+                    ? theme.primaryColor
                     : null),
           ),
           onPressed: () {
@@ -27,7 +27,7 @@ class DiscardComposeChangesDialog extends StatelessWidget {
             S.of(context).btn_save,
             style: TextStyle(
                 color: theme.brightness == Brightness.light
-                    ? theme.accentColor
+                    ? theme.primaryColor
                     : null),
           ),
           onPressed: () {

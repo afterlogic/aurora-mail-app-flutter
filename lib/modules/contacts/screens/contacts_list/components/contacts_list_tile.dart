@@ -65,8 +65,8 @@ class ContactsListTile extends StatelessWidget {
               height: 36.0,
               decoration: BoxDecoration(
                 color: theme.brightness == Brightness.dark
-                    ? theme.accentColor.withOpacity(0.2)
-                    : theme.accentColor.withOpacity(0.06),
+                    ? theme.primaryColor.withOpacity(0.2)
+                    : theme.primaryColor.withOpacity(0.06),
                 borderRadius: BorderRadius.circular(10.0),
               ),
               child: Center(
@@ -75,7 +75,7 @@ class ContactsListTile extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 18.0,
                     fontWeight: FontWeight.w500,
-                    color: theme.accentColor,
+                    color: theme.primaryColor,
                   ),
                 ),
               ),

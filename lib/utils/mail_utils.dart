@@ -415,7 +415,7 @@ class MailUtils {
     }
 //    cc ??= "";
 
-    final accentColor = _getWebColor(theme.accentColor);
+    final accentColor = _getWebColor(theme.primaryColor);
     return "<!doctype html>" +
         """
 <html lang="en">

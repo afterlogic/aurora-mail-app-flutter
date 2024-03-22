@@ -51,7 +51,7 @@ class MailBottomAppBar extends StatelessWidget {
           icon: Icon(
             MdiIcons.email,
             color: selectedRoute == MailBottomAppBarRoutes.mail
-                ? theme.accentColor
+                ? theme.primaryColor
                 : theme.disabledColor,
           ),
           tooltip: S.of(context).messages_list_app_bar_mail,
@@ -62,7 +62,7 @@ class MailBottomAppBar extends StatelessWidget {
           icon: Icon(
             MdiIcons.cardAccountMail,
             color: selectedRoute == MailBottomAppBarRoutes.contacts
-                ? theme.accentColor
+                ? theme.primaryColor
                 : theme.disabledColor,
           ),
           tooltip: S.of(context).messages_list_app_bar_contacts,
@@ -73,7 +73,7 @@ class MailBottomAppBar extends StatelessWidget {
           icon: Icon(
             MdiIcons.cog,
             color: selectedRoute == MailBottomAppBarRoutes.settings
-                ? theme.accentColor
+                ? theme.primaryColor
                 : theme.disabledColor,
           ),
           tooltip: S.of(context).messages_list_app_bar_settings,

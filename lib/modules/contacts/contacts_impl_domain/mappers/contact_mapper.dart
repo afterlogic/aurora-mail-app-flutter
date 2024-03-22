@@ -134,8 +134,8 @@ class ContactMapper {
         davContactsVCardUid: e.davContactsVCardUid,
         groupUUIDs: e.groupUUIDs,
         pgpPublicKey: e.pgpPublicKey,
-        autoEncrypt: e.autoEncrypt,
-        autoSign: e.autoSign,
+        autoEncrypt: e.autoEncrypt ?? false,
+        autoSign: e.autoSign ?? false,
       );
     }).toList();
   }

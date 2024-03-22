@@ -138,7 +138,7 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
                     child: Drawer(
                       child: ListTileTheme(
                         style: ListTileStyle.drawer,
-                        selectedColor: theme.accentColor,
+                        selectedColor: theme.primaryColor,
                         child: SafeArea(child: body),
                       ),
                     ),

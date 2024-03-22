@@ -23,7 +23,7 @@ class MailLogo extends StatelessWidget {
           height: size,
           width: size,
           decoration: BoxDecoration(
-            color: theme.accentColor,
+            color: theme.primaryColor,
             borderRadius: BorderRadius.circular(500.0),
           ),
           child: Icon(Icons.alternate_email,

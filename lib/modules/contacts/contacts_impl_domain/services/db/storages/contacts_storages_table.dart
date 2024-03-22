@@ -4,7 +4,7 @@ import 'package:drift/drift.dart';
 
 @DataClassName("ContactsStoragesTable")
 class ContactsStorages extends Table {
-  IntColumn get sqliteId => integer().autoIncrement()();
+  IntColumn get sqliteId => integer().autoIncrement().nullable()();
 
   IntColumn get userLocalId => integer()();
 

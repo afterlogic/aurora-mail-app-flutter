@@ -4,7 +4,7 @@ import 'package:drift_sqflite/drift_sqflite.dart';
 import 'package:drift/drift.dart';
 
 class Users extends Table {
-  IntColumn get localId => integer().autoIncrement()();
+  IntColumn get localId => integer().autoIncrement().nullable()();
 
   IntColumn get serverId => integer()();
 

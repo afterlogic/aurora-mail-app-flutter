@@ -574,7 +574,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
               TextButton(
                 child: Text(
                   S.of(context).btn_show_all,
-                  style: TextStyle(color: theme.accentColor),
+                  style: TextStyle(color: theme.primaryColor),
                 ),
                 onPressed: () => _showAllMessages(context),
               )

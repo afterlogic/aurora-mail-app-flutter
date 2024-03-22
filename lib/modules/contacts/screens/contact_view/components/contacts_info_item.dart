@@ -30,7 +30,7 @@ class ContactsInfoItem extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           SizedBox(width: 16.0),
-          Icon(icon, color: theme.accentColor),
+          Icon(icon, color: theme.primaryColor),
           SizedBox(width: 22.0),
           Expanded(
             child: Column(

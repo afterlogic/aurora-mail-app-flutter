@@ -322,7 +322,7 @@ class ComposeEmailsState extends BState<ComposeEmails> {
                                   : null,
                               child: Chip(
                                 avatar: CircleAvatar(
-                                  backgroundColor: theme.accentColor,
+                                  backgroundColor: theme.primaryColor,
                                   child: Text(
                                     displayName[0],
                                     style: TextStyle(color: Colors.white),
