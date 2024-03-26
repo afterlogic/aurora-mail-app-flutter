@@ -55,7 +55,7 @@ packages:
       path: "../.."
       relative: true
     source: path
-    version: "2.3.5+261"
+    version: "2.3.5+264"
   aurora_ui_kit:
     dependency: transitive
     description:

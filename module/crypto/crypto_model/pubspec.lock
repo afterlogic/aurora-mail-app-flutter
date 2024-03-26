@@ -55,7 +55,7 @@ packages:
       path: "../../.."
       relative: true
     source: path
-    version: "2.3.5+261"
+    version: "2.3.5+264"
   aurora_ui_kit:
     dependency: transitive
     description:
@@ -387,14 +387,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.1.0"
-  flutter_cupertino_localizations:
-    dependency: transitive
-    description:
-      name: flutter_cupertino_localizations
-      sha256: a4276b91cc3e75738e2e3b1168331bfa68cc87de2eacce637c50f441f9075f3b
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.1"
   flutter_custom_tabs:
     dependency: transitive
     description:
@@ -569,14 +561,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.2.0"
-  localizator_interface:
-    dependency: transitive
-    description:
-      name: localizator_interface
-      sha256: edb5a5e8bb22b4d3e7b599d71e818fc9f698667b50b38cf43d9de2cf72b4d142
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.4.0"
   matcher:
     dependency: transitive
     description:
