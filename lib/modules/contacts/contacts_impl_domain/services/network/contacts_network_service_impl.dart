@@ -179,8 +179,10 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
     );
 
     final result = await contactsModule.post(body);
-    if (result is! String) throw "addGroup must be a string";
-    return group.copyWith(uuid: result as String);
+    ///check for both types String and Map is for old API versions
+    if (result is! String && result is! Map) throw "addGroup must be a string or map";
+    final String uuid = result is String ? result : result["UUID"] as String;
+    return group.copyWith(uuid: uuid);
   }
 
   @override
@@ -191,7 +193,10 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
     );
 
     final result = await contactsModule.post(body);
-    return result as bool;
+    ///check for both types bool and Map is for old API versions
+    if (result is! bool && result is! Map) throw "updateGroup must be a bool or map";
+    final bool updateResult = result is bool ? result : (result["UUID"] as String).isNotEmpty;
+    return updateResult;
   }
 
   @override

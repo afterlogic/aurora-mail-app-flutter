@@ -118,7 +118,9 @@ class _PgpKeyScreenState extends State<PgpKeyScreen> {
           );
     final children = <Widget>[
       AMButton(
-        child: Text(S.of(context).btn_share),
+        color: Theme.of(context).primaryColor,
+        child: Text(S.of(context).btn_share,
+            style: TextStyle(color: Colors.white)),
         onPressed: () async {
           final result = pgpKey.isPrivate
               ? await ConfirmationDialog.show(
@@ -142,7 +144,9 @@ class _PgpKeyScreenState extends State<PgpKeyScreen> {
       space,
       if (isAndroid9orLow)
         AMButton(
-          child: Text(S.of(context).btn_download),
+          color: Theme.of(context).primaryColor,
+          child: Text(S.of(context).btn_download,
+              style: TextStyle(color: Colors.white)),
           onPressed: () {
             bloc.add(DownloadKeys([pgpKey]));
             SettingsNavigatorWidget.of(context).pop();
@@ -150,7 +154,9 @@ class _PgpKeyScreenState extends State<PgpKeyScreen> {
         ),
       if (isAndroid9orLow) space,
       AMButton(
-        child: Text(S.of(context).btn_delete),
+        color: Theme.of(context).primaryColor,
+        child: Text(S.of(context).btn_delete,
+            style: TextStyle(color: Colors.white)),
         onPressed: () async {
           final result = await ConfirmationDialog.show(
             context,

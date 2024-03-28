@@ -108,6 +108,7 @@ class _IosFidoAuthWidgetState extends BState<IosFidoAuthWidget> {
                         SizedBox(
                           width: double.infinity,
                           child: AMButton(
+                            color: Theme.of(context).primaryColor,
                             shadow: AppColor.enableShadow ? null : BoxShadow(),
                             child: Text(
                               S.of(context).fido_btn_try_again,

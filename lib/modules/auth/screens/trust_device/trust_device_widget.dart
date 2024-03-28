@@ -32,8 +32,6 @@ class _TrustDeviceWidgetState extends BState<TrustDeviceWidget> {
   void initState() {
     super.initState();
     bloc = TrustDeviceBloc(
-      widget.args.login,
-      widget.args.password,
       widget.args.user,
       widget.args.authBloc,
     );
@@ -92,6 +90,7 @@ class _TrustDeviceWidgetState extends BState<TrustDeviceWidget> {
                     SizedBox(
                       width: double.infinity,
                       child: AMButton(
+                        color: Theme.of(context).primaryColor,
                         shadow: AppColor.enableShadow ? null : BoxShadow(),
                         child: Text(
                           S.of(context).tfa_button_continue,

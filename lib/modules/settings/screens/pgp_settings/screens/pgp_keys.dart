@@ -101,7 +101,9 @@ class _PgpKeysScreenState extends State<PgpKeysScreen> {
           );
     final children = <Widget>[
       AMButton(
-        child: Text(S.of(context).btn_php_send_all),
+        color: Theme.of(context).primaryColor,
+        child: Text(S.of(context).btn_php_send_all,
+            style: TextStyle(color: Colors.white)),
         onPressed: () {
           bloc.add(ShareKeys(
             widget.pgpKeys,
@@ -116,7 +118,11 @@ class _PgpKeysScreenState extends State<PgpKeysScreen> {
       space,
       if (isAndroid9orLow)
         AMButton(
-          child: Text(S.of(context).btn_pgp_download_all),
+          color: Theme.of(context).primaryColor,
+          child: Text(
+            S.of(context).btn_pgp_download_all,
+            style: TextStyle(color: Colors.white),
+          ),
           onPressed: () {
             bloc.add(DownloadKeys(widget.pgpKeys));
             Navigator.pop(context);

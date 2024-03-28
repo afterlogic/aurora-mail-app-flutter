@@ -5,7 +5,17 @@ import 'app_color.dart';
 
 class AppTheme {
   static final light = ThemeData(
+
+    progressIndicatorTheme: ProgressIndicatorThemeData(
+      color: AppColor.primary,
+    ),
     primaryColor: AppColor.primary,
+    inputDecorationTheme: InputDecorationTheme(
+        floatingLabelStyle: TextStyle(color: AppColor.primary)),
+    textButtonTheme: TextButtonThemeData(
+        style: ButtonStyle(
+      foregroundColor: MaterialStateProperty.all(AppColor.primary),
+    )),
     textSelectionTheme: TextSelectionThemeData(
       selectionColor: AppColor.accent,
       selectionHandleColor: AppColor.accent,
@@ -13,6 +23,7 @@ class AppTheme {
     ),
     colorScheme: ColorScheme.fromSeed(
         seedColor: AppColor.primary,
+        secondary: AppColor.primary,
         background: Color(0xFFe6ebf0),
         brightness: Brightness.light),
     buttonTheme: _buttonTheme,

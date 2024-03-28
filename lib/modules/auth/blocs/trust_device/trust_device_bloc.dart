@@ -13,11 +13,9 @@ import 'trust_device_state.dart';
 class TrustDeviceBloc extends Bloc<TrustDeviceEvent, TrustDeviceState> {
   final _methods = TrustDeviceMethods();
   final User user;
-  final String login;
-  final String password;
   final AuthBloc authBloc;
 
-  TrustDeviceBloc(this.login, this.password, this.user, this.authBloc) : super(InitialState());
+  TrustDeviceBloc(this.user, this.authBloc) : super(InitialState());
 
   @override
   Stream<TrustDeviceState> mapEventToState(
@@ -31,7 +29,7 @@ class TrustDeviceBloc extends Bloc<TrustDeviceEvent, TrustDeviceState> {
 
     try {
       if (state.trust) {
-        await _methods.trustDevice(login, password, user);
+        await _methods.trustDevice(user);
       }
       final completer = Completer();
       await authBloc.add(UserLogInFinish(user, completer));

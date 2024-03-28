@@ -79,11 +79,11 @@ class SearchBarState extends BState<SearchBar> {
         key: Key("search_mail_app_bar"),
         leading: Icon(Icons.search),
         title: TextField(
-          style: theme.textTheme.bodyText2,
+          style: theme.titleTextStyle,
           autofocus: true,
           decoration: InputDecoration.collapsed(
             hintText: S.of(context).messages_list_app_bar_search,
-            hintStyle: theme.textTheme.headline4,
+            hintStyle: theme.toolbarTextStyle,
           ),
           onChanged: _getMessages,
           controller: widget.searchCtrl,

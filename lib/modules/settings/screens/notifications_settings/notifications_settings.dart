@@ -34,8 +34,10 @@ class _NotificationsSettingsState extends BState<NotificationsSettings> {
             final isProgress = state is ProgressState;
             final tokenStatus = state is InitState ? state.state : null;
             Widget button = AMButton(
+              color: Theme.of(context).primaryColor,
               isLoading: isProgress,
-              child: Text(S.of(context).btn_resend_push_token),
+              child: Text(S.of(context).btn_resend_push_token,
+                  style: TextStyle(color: Colors.white)),
               onPressed: () {
                 bloc.add(SendToken());
               },

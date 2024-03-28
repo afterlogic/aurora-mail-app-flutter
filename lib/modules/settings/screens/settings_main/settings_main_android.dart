@@ -50,6 +50,9 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
 
   @override
   Widget build(BuildContext context) {
+    final iconBG = theme.brightness == Brightness.dark
+        ? theme.colorScheme.onPrimary.withOpacity(0.20)
+        : theme.colorScheme.primary.withOpacity(0.08);
     final isTablet = LayoutConfig.of(context).isTablet;
     final current = isTablet
         ? (navigatorKey?.currentState?.current?.name ??
@@ -59,27 +62,37 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
       children: <Widget>[
         ListTile(
           selected: current == CommonSettingsRoute.name,
-          leading: AMCircleIcon(Icons.tune),
+          leading: AMCircleIcon(
+            Icons.tune,
+            color: theme.primaryColor,
+            background: iconBG,
+          ),
           title: Text(S.of(context).settings_common),
           onTap: () => navigator().setRoot(CommonSettingsRoute.name),
         ),
         ListTile(
           selected: current == SyncSettingsRoute.name,
-          leading: AMCircleIcon(Icons.sync),
+          leading: AMCircleIcon(Icons.sync,
+            color: theme.primaryColor,
+            background: iconBG,),
           title: Text(S.of(context).settings_sync),
           onTap: () => navigator().setRoot(SyncSettingsRoute.name),
         ),
         if (BuildProperty.pushNotification)
           ListTile(
             selected: current == NotificationsSettingsRoute.name,
-            leading: AMCircleIcon(Icons.notifications),
+            leading: AMCircleIcon(Icons.notifications,
+              color: theme.primaryColor,
+              background: iconBG,),
             title: Text(S.of(context).label_notifications_settings),
             onTap: () => navigator().setRoot(NotificationsSettingsRoute.name),
           ),
         if (BuildProperty.cryptoEnable)
           ListTile(
             selected: current == PgpSettingsRoute.name,
-            leading: AMCircleIcon(Icons.vpn_key),
+            leading: AMCircleIcon(Icons.vpn_key,
+              color: theme.primaryColor,
+              background: iconBG,),
             title: Text(S.of(context).label_pgp_settings),
             onTap: () => navigator().setRoot(
               PgpSettingsRoute.name,
@@ -89,13 +102,17 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
         if (BuildProperty.multiUserEnable)
           ListTile(
             selected: current == ManageUsersRoute.name,
-            leading: AMCircleIcon(Icons.account_circle),
+            leading: AMCircleIcon(Icons.account_circle,
+              color: theme.primaryColor,
+              background: iconBG,),
             title: Text(S.of(context).settings_accounts_manage),
             onTap: () => navigator().setRoot(ManageUsersRoute.name),
           ),
         ListTile(
           selected: current == AboutRoute.name,
-          leading: AMCircleIcon(Icons.info_outline),
+          leading: AMCircleIcon(Icons.info_outline,
+            color: theme.primaryColor,
+            background: iconBG,),
           title: Text(S.of(context).settings_about),
           onLongPress: BuildProperty.logger
               ? () {
@@ -108,13 +125,17 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
         if (showDebug)
           ListTile(
             selected: current == DebugRoute.name,
-            leading: AMCircleIcon(Icons.perm_device_information),
+            leading: AMCircleIcon(Icons.perm_device_information,
+              color: theme.primaryColor,
+              background: iconBG,),
             title: Text("Debug"),
             onTap: () => navigator().setRoot(DebugRoute.name),
           ),
         if (!BuildProperty.multiUserEnable)
           ListTile(
-            leading: AMCircleIcon(Icons.exit_to_app),
+            leading: AMCircleIcon(Icons.exit_to_app,
+              color: theme.primaryColor,
+              background: iconBG,),
             title: Text(S.of(context).messages_list_app_bar_logout),
             onTap: _exit,
           ),

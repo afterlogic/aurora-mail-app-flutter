@@ -438,8 +438,6 @@ class AuthApi {
     String deviceId,
     String deviceName,
     String hostname,
-    String login,
-    String password,
     String token,
   ) async {
     final twoFactorModule = WebMailApi(
@@ -451,8 +449,6 @@ class AuthApi {
     final parameters = json.encode({
       "DeviceId": deviceId,
       "DeviceName": deviceName,
-      "Login": login,
-      "Password": password,
     });
 
     final body =

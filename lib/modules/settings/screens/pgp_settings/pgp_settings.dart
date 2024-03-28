@@ -319,22 +319,38 @@ class _PgpSettingsState extends BState<PgpSettings> {
     final children = <Widget>[
       if (state.contactPublic.isNotEmpty)
         AMButton(
-          child: Text(S.of(context).btn_pgp_export_all_public_keys),
+          color: Theme.of(context).primaryColor,
+          child: Text(
+            S.of(context).btn_pgp_export_all_public_keys,
+            style: TextStyle(color: Colors.white),
+          ),
           onPressed: () => _exportAllPublicKeys(state.contactPublic),
         ),
       space,
       AMButton(
-        child: Text(S.of(context).btn_pgp_import_keys_from_text),
+        color: Theme.of(context).primaryColor,
+        child: Text(
+          S.of(context).btn_pgp_import_keys_from_text,
+          style: TextStyle(color: Colors.white),
+        ),
         onPressed: _importFromText,
       ),
       space,
       AMButton(
-        child: Text(S.of(context).btn_pgp_import_keys_from_file),
+        color: Theme.of(context).primaryColor,
+        child: Text(
+          S.of(context).btn_pgp_import_keys_from_file,
+          style: TextStyle(color: Colors.white),
+        ),
         onPressed: _importFromFile,
       ),
       space,
       AMButton(
-        child: Text(S.of(context).btn_pgp_generate_keys),
+        color: Theme.of(context).primaryColor,
+        child: Text(
+          S.of(context).btn_pgp_generate_keys,
+          style: TextStyle(color: Colors.white),
+        ),
         onPressed: () => _generateKey(state),
       ),
     ];

@@ -34,6 +34,9 @@ class _SyncSettingsAndroidState extends BState<SyncSettingsAndroid> {
   @override
   Widget build(BuildContext context) {
     final isTablet = LayoutConfig.of(context).isTablet;
+    final iconBG = theme.brightness == Brightness.dark
+        ? theme.colorScheme.onPrimary.withOpacity(0.20)
+        : theme.colorScheme.primary.withOpacity(0.08);
     return Scaffold(
       appBar: isTablet
           ? null
@@ -51,7 +54,11 @@ class _SyncSettingsAndroidState extends BState<SyncSettingsAndroid> {
               children: <Widget>[
                 if (BuildProperty.backgroundSync)
                   ListTile(
-                    leading: AMCircleIcon(Icons.av_timer),
+                    leading: AMCircleIcon(
+                      Icons.av_timer,
+                      color: theme.primaryColor,
+                      background: iconBG,
+                    ),
                     title: Text(S.of(context).settings_sync_frequency),
                     trailing: Text(
                       SyncFreq.freqToString(context, freq),
@@ -60,7 +67,11 @@ class _SyncSettingsAndroidState extends BState<SyncSettingsAndroid> {
                     onTap: () => _onFreqDurationSelected(context, freq),
                   ),
                 ListTile(
-                  leading: AMCircleIcon(MdiIcons.calendarSync),
+                  leading: AMCircleIcon(
+                    MdiIcons.calendarSync,
+                    color: theme.primaryColor,
+                    background: iconBG,
+                  ),
                   title: Text(S.of(context).settings_sync_period),
                   trailing: Text(
                     SyncPeriod.periodToTitle(context, period),

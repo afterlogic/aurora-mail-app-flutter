@@ -28,6 +28,9 @@ class _CommonSettingsAndroidState extends BState<CommonSettingsAndroid> {
   @override
   Widget build(BuildContext context) {
     // ignore: close_sinks
+    final iconBG = theme.brightness == Brightness.dark
+        ? theme.colorScheme.onPrimary.withOpacity(0.20)
+        : theme.colorScheme.primary.withOpacity(0.08);
     final bloc = BlocProvider.of<SettingsBloc>(context);
     final isTablet = LayoutConfig.of(context).isTablet;
     return Scaffold(
@@ -44,7 +47,11 @@ class _CommonSettingsAndroidState extends BState<CommonSettingsAndroid> {
                 SwitchListTile.adaptive(
                     title: Row(
                       children: <Widget>[
-                        AMCircleIcon(Icons.access_time),
+                        AMCircleIcon(
+                          Icons.access_time,
+                          color: theme.primaryColor,
+                          background: iconBG,
+                        ),
                         SizedBox(width: 16.0),
                         Expanded(
                           child: Text(S.of(context).settings_24_time_format,
@@ -56,7 +63,11 @@ class _CommonSettingsAndroidState extends BState<CommonSettingsAndroid> {
                     value: state.is24,
                     onChanged: (val) => bloc.add(SetTimeFormat(val))),
                 ListTile(
-                  leading: AMCircleIcon(Icons.color_lens),
+                  leading: AMCircleIcon(
+                    Icons.color_lens,
+                    color: theme.primaryColor,
+                    background: iconBG,
+                  ),
                   title: Text(S.of(context).settings_dark_theme),
                   onTap: () => ThemeSelectionDialog.show(
                       context,

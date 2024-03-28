@@ -323,10 +323,13 @@ class _LoginAndroidState extends BState<LoginAndroid> {
                       width: double.infinity,
                       child: _debugRouteToTwoFactor(
                         AMButton(
+                          color: Theme.of(context).primaryColor,
                           shadow: AppColor.enableShadow ? null : BoxShadow(),
-                          child: Text(widget.isDialog
-                              ? S.of(context).btn_add_account
-                              : S.of(context).btn_login),
+                          child: Text(
+                              widget.isDialog
+                                  ? S.of(context).btn_add_account
+                                  : S.of(context).btn_login,
+                              style: TextStyle(color: Colors.white)),
                           isLoading: loading,
                           onPressed: () => _login(context),
                         ),

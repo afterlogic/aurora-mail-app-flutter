@@ -589,7 +589,7 @@ class MailUtils {
         <div style="display: flex; flex-direction: row;justify-content: space-between; padding-top: 24px;">
           <h1 style="font-size: 24px; font-weight: 500; margin-top: 0px;">
             <span style="margin-right: 10px;" class='selectable'>${subject}</span>
-            <span style="display: inline-block; font-size: 14px; background: ${theme.selectedRowColor.toHex()};padding: 3px 8px; border-radius: 3px; margin-top: -2px; vertical-align: middle;">${message.folder}</span>
+            <span style="display: inline-block; font-size: 14px; background: #B6B5B5; ${theme.brightness == Brightness.dark ? 'color: black;' : 'color: white;'} padding: 3px 8px; border-radius: 10px; margin-top: -2px; vertical-align: middle;">${message.folder}</span>
           </h1>
           <a id="stared-btn" class="stared${isStarred ? " is-starred" : ""}" href='${MessageWebViewActions.ACTION + (isStarred ? MessageWebViewActions.SET_NOT_STARRED : MessageWebViewActions.SET_STARRED)}' style='text-decoration: none; font-size: 24px; line-height: 1.2; color: orange'>${isStarred ? "&#9733;" : "&#9734;"}</a>
         </div>
@@ -611,7 +611,7 @@ class MailUtils {
 
     final isDark = theme.brightness == Brightness.dark;
     final backgroundColor = _getWebColor(theme.scaffoldBackgroundColor);
-    final textColor = _getWebColor(theme.textTheme.bodyText2.color);
+    final textColor = _getWebColor(theme.textTheme.titleSmall.color);
 
     if (isDark == true && showLightEmail == false) {
       return """

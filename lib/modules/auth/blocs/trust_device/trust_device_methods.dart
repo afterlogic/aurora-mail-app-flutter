@@ -6,8 +6,6 @@ class TrustDeviceMethods {
   final _authApi = new AuthApi();
 
   Future trustDevice(
-    String login,
-    String password,
     User user,
   ) async {
     final deviceId = await DeviceIdStorage.getDeviceId();
@@ -16,8 +14,6 @@ class TrustDeviceMethods {
       deviceId,
       deviceName,
       user.hostname,
-      login,
-      password,
       user.token,
     );
   }
