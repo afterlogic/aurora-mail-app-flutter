@@ -638,9 +638,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
         Folder.getFolderTypeFromNumber(_selectedFolder.type) == FolderType.trash
             ? S.of(context).btn_message_empty_trash_folder
             : S.of(context).btn_message_empty_spam_folder;
-    return ListTile(
-      leading: Icon(Icons.delete_forever),
-      title: Text(emptyFolder),
+    return InkWell(
       onTap: messageCount == 0
           ? null
           : () async {
@@ -658,6 +656,25 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
                 selectionController.enable = false;
               }
             },
+      child: Padding(
+        padding: const EdgeInsets.only(top: 16.0, bottom: 16.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.delete_forever,
+              color: Theme.of(context).primaryColor,
+            ),
+            const SizedBox(
+              width: 8,
+            ),
+            Text(
+              emptyFolder,
+              style: TextStyle(color: Theme.of(context).primaryColor),
+            ),
+          ],
+        ),
+      ),
     );
   }
 

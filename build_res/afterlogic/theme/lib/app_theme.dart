@@ -81,8 +81,15 @@ class AppTheme {
     primaryColor: AppColor.primary,
     buttonTheme: _buttonTheme,
     dialogTheme: _dialogTheme,
+    inputDecorationTheme: InputDecorationTheme(
+        floatingLabelStyle: TextStyle(color: AppColor.primary)),
+    textButtonTheme: TextButtonThemeData(
+        style: ButtonStyle(
+          foregroundColor: MaterialStateProperty.all(AppColor.primary),
+        )),
     colorScheme: ColorScheme.fromSeed(
         seedColor: AppColor.primary,
+        secondary: AppColor.primary,
         onPrimary: AppColor.primary,
         background: Color(0xFFe6ebf0),
         brightness: Brightness.dark),

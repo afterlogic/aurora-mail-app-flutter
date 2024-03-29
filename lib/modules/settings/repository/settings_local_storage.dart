@@ -18,7 +18,9 @@ class SettingsLocalStorage {
 
   Future<bool> setIsDarkTheme(bool value) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.setBool(isDarkTheme, value);
+    return value == null
+        ? prefs.remove(isDarkTheme)
+        : prefs.setBool(isDarkTheme, value);
   }
 
 //  Future<void> deleteSettings() async {

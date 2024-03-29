@@ -260,7 +260,7 @@ class MailUtils {
         background: ${_getWebColor(theme.scaffoldBackgroundColor)};
       }
       .primary-color {
-        color:#224ea1;
+        color: ${_getWebColor(theme.primaryColor)};
       }
       body {
         font-family: sans-serif;
@@ -430,7 +430,7 @@ class MailUtils {
         background: ${_getWebColor(theme.scaffoldBackgroundColor)};
       }
       .primary-color {
-        color:#224ea1;
+        color:${accentColor};
       }
       .attachments, .email-head, .email-content {
         padding: 18px;

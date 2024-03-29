@@ -424,7 +424,7 @@ class AuthApi {
     });
 
     final body =
-        new WebMailApiBody(method: "SaveDevice", parameters: parameters);
+        new WebMailApiBody(method: "SetDeviceName", parameters: parameters);
 
     final res = await twoFactorModule.post(
       body,

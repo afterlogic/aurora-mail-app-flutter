@@ -16,7 +16,7 @@ class InfoActionButton extends StatelessWidget {
     return InkWell(
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 6.0, horizontal: 10.0),
-        color: Theme.of(context).accentColor,
+        color: Theme.of(context).primaryColor,
         child: Icon(
           icon,
           color: Colors.white,
