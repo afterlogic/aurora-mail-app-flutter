@@ -1,4 +1,3 @@
-//@dart=2.9
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_group_model.dart';
 
@@ -61,19 +60,19 @@ class ContactsGroupMapper {
       uuid: i["UUID"] as String,
       userLocalId: userLocalId,
       idUser: i["IdUser"] as int,
-      city: i["City"] as String ?? '',
-      company: i["Company"] as String ?? '',
-      country: i["Country"] as String ?? '',
-      email: i["Email"] as String ?? '',
-      fax: i["Fax"] as String ?? '',
+      city: i["City"] as String? ?? '',
+      company: i["Company"] as String? ?? '',
+      country: i["Country"] as String? ?? '',
+      email: i["Email"] as String? ?? '',
+      fax: i["Fax"] as String? ?? '',
       isOrganization: i["IsOrganization"] as bool,
       name: i["Name"] as String,
-      parentUUID: i["ParentUUID"] as String ?? '',
-      phone: i["Phone"] as String ?? '',
-      state: i["State"] as String ?? '',
-      street: i["Street"] as String ?? '',
-      web: i["Web"] as String ?? '',
-      zip: i["Zip"] as String ?? '',
+      parentUUID: i["ParentUUID"] as String? ?? '',
+      phone: i["Phone"] as String? ?? '',
+      state: i["State"] as String? ?? '',
+      street: i["Street"] as String? ?? '',
+      web: i["Web"] as String? ?? '',
+      zip: i["Zip"] as String? ?? '',
     );
   }
 

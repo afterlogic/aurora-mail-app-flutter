@@ -1,4 +1,3 @@
-//@dart=2.9
 import 'dart:convert';
 
 import 'package:drift_sqflite/drift_sqflite.dart';
@@ -7,10 +6,10 @@ import 'package:drift/drift.dart';
 class ListIntConverter extends TypeConverter<List<int>, String> {
   final bool nullable;
 
-  const ListIntConverter({this.nullable = false}) : assert(nullable != null);
+  const ListIntConverter({this.nullable = false});
 
   @override
-  List<int> mapToDart(String fromDb) {
+  List<int>? mapToDart(String? fromDb) {
     if (fromDb == null) {
       if (nullable == true) {
         return null;
@@ -22,7 +21,7 @@ class ListIntConverter extends TypeConverter<List<int>, String> {
   }
 
   @override
-  String mapToSql(List<int> value) {
+  String? mapToSql(List<int>? value) {
     if (value == null) {
       if (nullable == true) {
         return null;

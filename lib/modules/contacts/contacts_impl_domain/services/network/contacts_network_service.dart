@@ -22,9 +22,9 @@ abstract class ContactsNetworkService {
 
   /// Get contacts by their uuids
   Future<List<Contact>> getContactsByUids({
-    String storageId,
+    required String storageId,
     List<String> uuids,
-    int userLocalId,
+    required int userLocalId,
   });
 
   Future<Contact> addContact(Contact contact);

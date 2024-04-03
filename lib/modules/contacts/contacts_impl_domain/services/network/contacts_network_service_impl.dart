@@ -1,4 +1,3 @@
-//@dart=2.9
 import 'dart:convert';
 
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
@@ -31,12 +30,12 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
 
   @override
   Future<List<Contact>> getContactsByUids({
-    String storageId,
-    List<String> uuids,
-    int userLocalId,
+    required String storageId,
+    List<String>? uuids,
+    required int userLocalId,
   }) async {
     if (uuids == null || uuids.isEmpty) {
-      return new List<Contact>();
+      return <Contact>[];
     }
 
     final params = {

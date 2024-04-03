@@ -1,4 +1,3 @@
-//@dart=2.9
 import 'package:aurora_mail/models/folder.dart';
 import 'package:drift_sqflite/drift_sqflite.dart';
 import 'package:drift/drift.dart';
@@ -25,14 +24,14 @@ class FoldersDao extends DatabaseAccessor<AppDatabase> with _$FoldersDaoMixin {
         .get();
   }
 
-  Future<Folder> getFolderByGuId(String guid) async {
+  Future<Folder?> getFolderByGuId(String guid) async {
     final foundFolders = await (select(folders)
           ..where((folder) => folder.guid.equals(guid)))
         .get();
 
     return foundFolders.isEmpty
         ? null
-        : Folder.getFoldersObjectsFromDb(foundFolders)[0];
+        : Folder.getFoldersObjectsFromDb(foundFolders)?[0];
   }
 
 //  Stream<List<LocalFolder>> watchAllFolders(int accountLocalId) {
@@ -52,7 +51,7 @@ class FoldersDao extends DatabaseAccessor<AppDatabase> with _$FoldersDaoMixin {
         .write(foldersCompanion);
   }
 
-  Future<int> deleteFolders([List<LocalFolder> foldersToDelete]) async {
+  Future<int> deleteFolders([List<LocalFolder>? foldersToDelete]) async {
     if (foldersToDelete == null) {
       return delete(folders).go();
     } else {

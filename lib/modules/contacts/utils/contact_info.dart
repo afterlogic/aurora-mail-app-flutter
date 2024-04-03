@@ -9,7 +9,7 @@ class ContactInfo {
 
   const ContactInfo(this.c);
 
-  String get viewEmail {
+  String? get viewEmail {
     switch (c.primaryEmail) {
       case 0:
         return c.personalEmail;
@@ -22,7 +22,7 @@ class ContactInfo {
     }
   }
 
-  String get viewPhone {
+  String? get viewPhone {
     switch (c.primaryPhone) {
       case 0:
         return c.personalMobile;
@@ -35,7 +35,7 @@ class ContactInfo {
     }
   }
 
-  String get viewAddress {
+  String? get viewAddress {
     switch (c.primaryAddress) {
       case 0:
         return c.personalAddress;

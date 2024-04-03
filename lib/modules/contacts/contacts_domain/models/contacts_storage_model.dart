@@ -1,8 +1,7 @@
-//@dart=2.9
 import 'package:flutter/widgets.dart';
 
 class ContactsStorage {
-  final int sqliteId;
+  final int? sqliteId;
   final String id;
   final int userLocalId;
   final String name;
@@ -10,34 +9,34 @@ class ContactsStorage {
   final int cTag;
   final bool display;
   final String displayName;
-  List<ContactInfoItem> contactsInfo;
+  List<ContactInfoItem>? contactsInfo;
 
   ContactsStorage({
-    @required this.sqliteId,
-    @required this.id,
-    @required this.userLocalId,
-    @required this.name,
-    @required this.uniqueName,
-    @required this.cTag,
-    @required this.display,
-    @required this.displayName,
-    @required this.contactsInfo,
-  }) : assert(userLocalId != null);
+    required this.sqliteId,
+    required this.id,
+    required this.userLocalId,
+    required this.name,
+    required this.uniqueName,
+    required this.cTag,
+    required this.display,
+    required this.displayName,
+    required this.contactsInfo,
+  });
 
   ContactsStorage copyWith({
-    int sqliteId,
-    String id,
-    String name,
-    String uniqueName,
-    int cTag,
-    bool display,
-    String displayName,
-    List<ContactInfoItem> contactsInfo,
+    int? sqliteId,
+    String? id,
+    String? name,
+    String? uniqueName,
+    int? cTag,
+    bool? display,
+    String? displayName,
+    List<ContactInfoItem>? contactsInfo,
   }) {
     return new ContactsStorage(
       sqliteId: sqliteId ?? this.sqliteId,
       id: id ?? this.id,
-      userLocalId: userLocalId ?? this.userLocalId,
+      userLocalId: userLocalId,
       name: name ?? this.name,
       uniqueName: uniqueName ?? this.uniqueName,
       cTag: cTag ?? this.cTag,
@@ -58,12 +57,12 @@ class ContactInfoItem {
   bool needsUpdate;
 
   ContactInfoItem({
-    @required this.uuid,
-    @required this.storage,
-    @required this.eTag,
+    required this.uuid,
+    required this.storage,
+    required this.eTag,
     this.hasBody = false,
     this.needsUpdate = false,
-  }) : assert(storage != null);
+  });
 
   Map<String, dynamic> toMap() {
     return {
@@ -86,11 +85,11 @@ class ContactInfoItem {
   }
 
   ContactInfoItem copyWith({
-    String uuid,
-    String storage,
-    String eTag,
-    bool hasBody,
-    bool needsUpdate,
+    String? uuid,
+    String? storage,
+    String? eTag,
+    bool? hasBody,
+    bool? needsUpdate,
   }) {
     return new ContactInfoItem(
       uuid: uuid ?? this.uuid,

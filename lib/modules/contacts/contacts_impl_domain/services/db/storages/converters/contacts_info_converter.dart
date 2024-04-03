@@ -1,4 +1,3 @@
-//@dart=2.9
 import 'dart:convert';
 
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_storage_model.dart';
@@ -9,11 +8,10 @@ class ContactsInfoConverter
     extends TypeConverter<List<ContactInfoItem>, String> {
   final bool nullable;
 
-  const ContactsInfoConverter({this.nullable = true})
-      : assert(nullable != null);
+  const ContactsInfoConverter({this.nullable = true});
 
   @override
-  List<ContactInfoItem> mapToDart(String fromDb) {
+  List<ContactInfoItem> mapToDart(String? fromDb) {
     if (fromDb == null) {
       return <ContactInfoItem>[];
     }
@@ -27,7 +25,7 @@ class ContactsInfoConverter
   }
 
   @override
-  String mapToSql(List<ContactInfoItem> value) {
+  String? mapToSql(List<ContactInfoItem>? value) {
     if (value == null) {
       if (nullable == true) {
         return null;

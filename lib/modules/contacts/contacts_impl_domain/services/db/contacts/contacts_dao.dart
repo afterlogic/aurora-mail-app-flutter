@@ -1,6 +1,5 @@
 import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
-import 'package:drift_sqflite/drift_sqflite.dart';
 import 'package:drift/drift.dart';
 
 import 'contacts_table.dart';
@@ -42,22 +41,27 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
   }
 
   Future<List<ContactDb>> getContacts(int userLocalId,
-      {required List<String> storages, required String groupUuid, required String pattern}) {
+      {List<String> storages = const [],
+      String groupUuid = '',
+      String pattern = ''}) {
     return (select(contactsTable)
           ..where((c) => c.userLocalId.equals(userLocalId))
           ..where((c) {
-            if (pattern != null && pattern.isNotEmpty) {
+            if (pattern.isNotEmpty) {
               return c.fullName.like("%$pattern%") |
                   c.viewEmail.like("%$pattern%");
             } else {
               return Constant(true);
             }
           })
-          ..where((c) =>
-              storages != null ? c.storage.isIn(storages) : Constant(true))
-          ..where((c) => groupUuid != null
-              ? c.groupUUIDs.like("%$groupUuid%")
-              : Constant(true))
+          ..where((c) => c.storage.isIn(storages))
+          ..where((c) {
+            if (groupUuid.isNotEmpty) {
+              return c.groupUUIDs.like("%$groupUuid%");
+            } else {
+              return Constant(true);
+            }
+          })
           ..orderBy([
             (c) => OrderingTerm(expression: c.fullName.collate(Collate.noCase)),
             (c) =>
@@ -68,7 +72,7 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
 
   SimpleSelectStatement<$ContactsTableTable, ContactDb> _search(
       SimpleSelectStatement<$ContactsTableTable, ContactDb> select,
-      String search) {
+      String? search) {
     if (search?.isNotEmpty == true) {
       return select
         ..where((c) =>
@@ -96,7 +100,7 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
   }
 
   Stream<List<ContactDb>> watchContactsFromStorage(
-      int userLocalId, String storage, String search) {
+      int userLocalId, String storage, String? search) {
     return _search(
             select(contactsTable)
               ..where((c) => c.userLocalId.equals(userLocalId))
@@ -127,7 +131,8 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
         .watch();
   }
 
-  Future<void> updateContacts(List<ContactsTableCompanion> updatedContacts) async{
+  Future<void> updateContacts(
+      List<ContactsTableCompanion> updatedContacts) async {
     try {
       return transaction(() async {
         for (final contact in updatedContacts) {
@@ -154,7 +159,9 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
 
   Future<ContactDb?> getContactWithPgpKey(String email) {
     return (select(contactsTable)
-          ..where((item) => item.pgpPublicKey.isNotNull() & item.pgpPublicKey.equals('').not())
+          ..where((item) =>
+              item.pgpPublicKey.isNotNull() &
+              item.pgpPublicKey.equals('').not())
           ..where((item) => item.viewEmail.equals(email)))
         .get()
         .then((items) {
@@ -172,7 +179,7 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
         .get();
   }
 
-  Future deleteContactKey(String mail) async{
+  Future deleteContactKey(String mail) async {
     try {
       return transaction(() async {
         await (update(contactsTable)..where((c) => c.viewEmail.equals(mail)))
@@ -194,7 +201,6 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
       if (item.isEmpty) {
         return null;
       }
-
       return item.first;
     });
   }

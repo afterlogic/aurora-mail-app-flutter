@@ -1,4 +1,3 @@
-//@dart=2.9
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_group_model.dart';
@@ -8,8 +7,8 @@ import 'package:flutter/widgets.dart';
 
 abstract class ContactsRepository {
   factory ContactsRepository({
-    @required User user,
-    @required AppDatabase appDB,
+    required User user,
+    required AppDatabase appDB,
   }) =>
       ContactsRepositoryImpl(
         appDB: appDB,
@@ -36,11 +35,7 @@ abstract class ContactsRepository {
 
   Stream<List<Contact>> watchContactsFromGroup(String group, String search);
 
-  // Stream<List<ContactsStorage>> watchContactsStorages();
-
   Future<void> refreshStorages();
-
-  // Stream<List<ContactsGroup>> watchContactsGroups({String selectedGroupUuid});
 
   Future<void> refreshGroups();
 
@@ -71,9 +66,9 @@ abstract class ContactsRepository {
 
   void dispose();
 
-  Future<Contact> getContactWithPgpKey(String mail);
+  Future<Contact?> getContactWithPgpKey(String mail);
 
-  Future<Contact> getContactByEmail(String mail);
+  Future<Contact?> getContactByEmail(String mail);
 
   Future<Contact> getContactById(int entityId);
 

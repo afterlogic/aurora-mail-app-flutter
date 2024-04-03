@@ -1,4 +1,3 @@
-//@dart=2.9
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_storage_model.dart';
 
@@ -51,9 +50,9 @@ class ContactsStorageMapper {
       id: rawItems["Id"] as String,
       uniqueName: rawItems["Id"].toString() + userLocalId.toString(),
       userLocalId: userLocalId,
-      name: rawItems["Name"] as String ?? rawItems["Id"] as String,
+      name: rawItems["Name"] as String? ?? rawItems["Id"] as String,
       cTag: rawItems["CTag"] as int,
-      display: rawItems["Display"] as bool ?? true,
+      display: rawItems["Display"] as bool? ?? true,
       displayName: rawItems["DisplayName"] as String,
       contactsInfo: null,
     );

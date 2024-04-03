@@ -12,7 +12,7 @@ abstract class ContactsDbService {
   Stream<List<Contact>> watchAllContacts(int userLocalId, String search);
 
   Stream<List<Contact>> watchContactsFromStorage(
-      int userLocalId, String storage, String search);
+      int userLocalId, String storage, String? search);
 
   Stream<List<Contact>> watchContactsFromGroup(
       int userLocalId, String group, String search);
@@ -20,7 +20,7 @@ abstract class ContactsDbService {
   Future<List<Contact>> getAllContacts();
 
   Future<List<Contact>> getContacts(int userLocalId,
-      {List<String> storages, String groupUuid, String pattern});
+      {List<String>? storages, String? groupUuid, String? pattern});
 
   Future<void> addContacts(List<Contact> newContacts);
 
@@ -46,7 +46,7 @@ abstract class ContactsDbService {
 
   Future<void> deleteGroups(List<String> uuids);
 
-  Future<Contact> getContactWithPgpKey(String email);
+  Future<Contact?> getContactWithPgpKey(String email);
 
   Future<List<Contact>> getContactsWithPgpKey();
 
@@ -54,7 +54,7 @@ abstract class ContactsDbService {
 
   Future addKeyToContact(String viewEmail, String pgpPublicKey);
 
-  Future<Contact> getContactByEmail(String mail);
+  Future<Contact?> getContactByEmail(String mail);
 
   Future<Contact> getContactById(int entityId);
 }
