@@ -1,4 +1,3 @@
-//@dart=2.9
 import 'dart:io';
 import 'package:aurora_mail/build_property.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -19,7 +18,7 @@ class DeviceIdStorage {
     return BuildProperty.appName + " " + device;
   }
 
-  static Future<String> getDeviceId() async {
+  static Future<String?> getDeviceId() async {
     if (Platform.isIOS) {
      return (await _deviceInfo.iosInfo).identifierForVendor;
     } else if(Platform.isAndroid) {

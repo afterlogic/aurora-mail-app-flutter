@@ -1,4 +1,3 @@
-//@dart=2.9
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/settings/models/language.dart';
 import 'package:connectivity/connectivity.dart';
@@ -10,22 +9,22 @@ abstract class SettingsState extends Equatable {
   const SettingsState();
 
   @override
-  List<Object> get props => null;
+  List<Object?> get props => [];
 }
 
 class SettingsEmpty extends SettingsState {}
 
 class SettingsLoaded extends SettingsState {
   final List<User> users;
-  final int syncFrequency;
-  final String syncPeriod;
-  final bool darkThemeEnabled;
-  final bool is24;
-  final Language language;
+  final int? syncFrequency;
+  final String? syncPeriod;
+  final bool? darkThemeEnabled;
+  final bool? is24;
+  final Language? language;
   final ConnectivityResult connection;
 
   const SettingsLoaded({
-    this.users,
+    this.users = const[],
     this.syncFrequency,
     this.syncPeriod,
     this.darkThemeEnabled,
@@ -35,13 +34,13 @@ class SettingsLoaded extends SettingsState {
   });
 
   SettingsLoaded copyWith({
-    Value<List<User>> users,
-    Value<int> syncFrequency,
-    Value<String> syncPeriod,
-    Value<bool> darkThemeEnabled,
-    Value<bool> is24,
-    Value<Language> language,
-    Value<ConnectivityResult> connection,
+    Value<List<User>>? users,
+    Value<int>? syncFrequency,
+    Value<String>? syncPeriod,
+    Value<bool>? darkThemeEnabled,
+    Value<bool>? is24,
+    Value<Language>? language,
+    Value<ConnectivityResult>? connection,
   }) {
     return new SettingsLoaded(
       users: users != null ? users.value : this.users,
@@ -58,7 +57,7 @@ class SettingsLoaded extends SettingsState {
   }
 
   @override
-  List<Object> get props => [
+  List<Object?> get props => [
         syncFrequency,
         syncPeriod,
         darkThemeEnabled,

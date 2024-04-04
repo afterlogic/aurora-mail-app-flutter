@@ -16,7 +16,7 @@ class CommonSettingsAndroid extends StatefulWidget {
 }
 
 class _CommonSettingsAndroidState extends BState<CommonSettingsAndroid> {
-  String _getThemeName(bool isDarkTheme) {
+  String _getThemeName(bool? isDarkTheme) {
     if (isDarkTheme == false)
       return S.of(context).settings_dark_theme_light;
     else if (isDarkTheme == true)
@@ -60,7 +60,7 @@ class _CommonSettingsAndroidState extends BState<CommonSettingsAndroid> {
                       ],
                     ),
                     activeColor: theme.primaryColor,
-                    value: state.is24,
+                    value: state.is24 ?? false,
                     onChanged: (val) => bloc.add(SetTimeFormat(val))),
                 ListTile(
                   leading: AMCircleIcon(
@@ -87,7 +87,7 @@ class _CommonSettingsAndroidState extends BState<CommonSettingsAndroid> {
                     trailing: Text(
                       state.language == null
                           ? S.of(context).settings_language_system
-                          : state.language.name,
+                          : state.language!.name,
                       style: theme.textTheme.caption,
                     ),
                   ),

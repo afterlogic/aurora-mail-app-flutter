@@ -1,4 +1,3 @@
-//@dart=2.9
 import 'dart:convert';
 
 import 'package:aurora_mail/build_property.dart';
@@ -13,10 +12,10 @@ import 'package:webmail_api_client/webmail_api_client.dart';
 
 class AuthApi {
   Future<Map<String, String>> deviceIdHeader() async {
-    return {"X-DeviceId": await DeviceIdStorage.getDeviceId()};
+    return {"X-DeviceId": await DeviceIdStorage.getDeviceId() ?? ''};
   }
 
-  Future<String> autoDiscoverHostname(String email) async {
+  Future<String?> autoDiscoverHostname(String email) async {
     try {
       final dogIndex = email.indexOf("@") + 1;
 
@@ -138,7 +137,7 @@ class AuthApi {
     );
 
     if (res is List) {
-      final accounts = Accounts.getAccountsObjFromServer(res, user.localId);
+      final accounts = Accounts.getAccountsObjFromServer(res, user.localId!);
 
       return accounts;
     } else {
@@ -435,7 +434,7 @@ class AuthApi {
   }
 
   Future trustDevice(
-    String deviceId,
+    String? deviceId,
     String deviceName,
     String hostname,
     String token,

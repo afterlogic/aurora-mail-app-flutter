@@ -61,7 +61,7 @@ class _SyncSettingsAndroidState extends BState<SyncSettingsAndroid> {
                     ),
                     title: Text(S.of(context).settings_sync_frequency),
                     trailing: Text(
-                      SyncFreq.freqToString(context, freq),
+                      SyncFreq.freqToString(context, freq)!,
                       style: theme.textTheme.caption,
                     ),
                     onTap: () => _onFreqDurationSelected(context, freq),

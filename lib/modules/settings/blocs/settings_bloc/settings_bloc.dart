@@ -51,10 +51,10 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
           users: Value(event.users),
           syncFrequency: Value(event.user.syncFreqInSeconds ?? 300),
           syncPeriod: Value(event.user.syncPeriod ?? "Period.allTime"),
-          darkThemeEnabled: Value(appSettings.isDarkTheme),
-          is24: Value(appSettings.is24),
-          language: Value(
-            Language.fromJson(language),
+          darkThemeEnabled: appSettings.isDarkTheme == null ? null : Value(appSettings.isDarkTheme!),
+          is24: appSettings.is24 == null ? null : Value(appSettings.is24!),
+          language: Language.fromJson(language) == null ? null : Value(
+            Language.fromJson(language)!,
           ));
     } else {
       yield SettingsLoaded(

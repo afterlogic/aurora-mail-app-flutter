@@ -31,7 +31,7 @@ class FreqSelectionDialog extends StatelessWidget {
         children: values.map((freq) {
           return RadioListTile(
             activeColor: theme.primaryColor,
-            title: Text(SyncFreq.freqToString(context, freq)),
+            title: Text(SyncFreq.freqToString(context, freq)!),
             value: freq,
             groupValue: selectedItem,
             onChanged: (val) {

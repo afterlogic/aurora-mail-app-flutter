@@ -1,4 +1,3 @@
-//@dart=2.9
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -16,7 +15,7 @@ class SettingsLocalStorage {
     );
   }
 
-  Future<bool> setIsDarkTheme(bool value) async {
+  Future<bool> setIsDarkTheme(bool? value) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return value == null
         ? prefs.remove(isDarkTheme)
@@ -39,16 +38,16 @@ class SettingsLocalStorage {
     prefs.setString(language, languageString);
   }
 
-  Future<String> getLanguage() async {
+  Future<String?> getLanguage() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString(language);
   }
 }
 
 class AppSettingsSharedPrefs {
-  final bool isDarkTheme;
-  final bool is24;
+  final bool? isDarkTheme;
+  final bool? is24;
 
   const AppSettingsSharedPrefs(
-      {@required this.isDarkTheme, @required this.is24});
+      {required this.isDarkTheme, required this.is24});
 }

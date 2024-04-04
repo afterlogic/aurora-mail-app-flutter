@@ -122,7 +122,7 @@ class WebMailApi {
     } else {
       headers = {'Authorization': 'Bearer $token'};
     }
-    headers['X-DeviceId'] = await DeviceIdStorage.getDeviceId();
+    headers['X-DeviceId'] = await DeviceIdStorage.getDeviceId() ?? "";
 
     addedHeaders?.forEach((key, value) {
       headers[key] = value;

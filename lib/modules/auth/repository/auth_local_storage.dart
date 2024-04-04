@@ -1,11 +1,10 @@
-//@dart=2.9
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthLocalStorage {
   final _selectedUserIdKey = "selectedUserId";
 
   // User local id
-  Future<int> getSelectedUserLocalId() async {
+  Future<int?> getSelectedUserLocalId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getInt(_selectedUserIdKey);
   }
@@ -23,7 +22,7 @@ class AuthLocalStorage {
   final _selectedAccountIdKey = "selectedAccountId";
 
   // Account local id
-  Future<int> getSelectedAccountId() async {
+  Future<int?> getSelectedAccountId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getInt(_selectedAccountIdKey);
   }
@@ -41,7 +40,7 @@ class AuthLocalStorage {
   final _lastEmailKey = "lastEmail";
 
   // User Id
-  Future<String> getLastEmail() async {
+  Future<String?> getLastEmail() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString(_lastEmailKey);
   }
@@ -53,7 +52,7 @@ class AuthLocalStorage {
 
   final _lastHostKey = "lastHost";
 
-  Future<String> getLastHost() async {
+  Future<String?> getLastHost() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     return prefs.getString(_lastHostKey);
   }

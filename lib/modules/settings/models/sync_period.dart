@@ -1,4 +1,3 @@
-//@dart=2.9
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
@@ -24,8 +23,6 @@ class SyncPeriod {
         return S.of(context).settings_sync_period_months6;
       case Period.years1:
         return S.of(context).settings_sync_period_years1;
-      default:
-        return null;
     }
   }
 
@@ -37,7 +34,7 @@ class SyncPeriod {
     return DateFormat("yyyy.MM.dd").format(DateTime.now().subtract(duration));
   }
 
-  static String periodToDate(Period period) {
+  static String? periodToDate(Period period) {
     switch (period) {
       case Period.allTime:
         return null;
@@ -54,7 +51,7 @@ class SyncPeriod {
     }
   }
 
-  static Period dbStringToPeriod(String str) {
+  static Period dbStringToPeriod(String? str) {
     if (str == null) return Period.months3;
     return Period.values.firstWhere(
       (e) => e.toString() == str,

@@ -1,4 +1,3 @@
-//@dart=2.9
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -17,7 +16,7 @@ enum Freq {
 class SyncFreq {
   static const NEVER_IN_SECONDS = Duration.secondsPerDay * 365 * 1000;
 
-  static String freqToString(BuildContext context, Freq freq) {
+  static String? freqToString(BuildContext context, Freq freq) {
     switch (freq) {
       case Freq.never:
         return S.of(context).settings_sync_frequency_never;
@@ -58,16 +57,15 @@ class SyncFreq {
         return Duration(days: 30);
       case Freq.minute:
         return Duration(minutes: 1);
-      default:
-        return null;
     }
   }
 
-  static Freq secondsToFreq(int seconds) {
+  static Freq secondsToFreq(int? seconds) {
     switch (seconds) {
       case NEVER_IN_SECONDS:
         return Freq.never;
       case Duration.secondsPerMinute * 5:
+      case null:
         return Freq.minutes5;
       case Duration.secondsPerMinute * 30:
         return Freq.minutes30;

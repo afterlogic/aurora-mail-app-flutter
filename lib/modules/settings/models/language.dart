@@ -1,4 +1,3 @@
-//@dart=2.9
 import 'dart:convert';
 
 import 'package:aurora_mail/build_property.dart';
@@ -6,13 +5,13 @@ import 'package:flutter/cupertino.dart';
 
 class Language {
   final String name;
-  final String tag;
+  final String? tag;
 
   const Language(this.name, this.tag);
 
   // for language selection modal
-  static List<Language> get availableLanguages {
-    final languages = new List<Language>();
+  static List<Language?> get availableLanguages {
+    final languages = <Language?>[];
     // null sets system default language
     languages.add(null);
     languages.addAll(BuildProperty.supportLanguage
@@ -49,7 +48,7 @@ class Language {
     });
   }
 
-  String toNullableJson() {
+  String? toNullableJson() {
     if (tag == null) {
       return null;
     } else {
@@ -60,7 +59,7 @@ class Language {
     }
   }
 
-  static Language fromJson(String lang) {
+  static Language? fromJson(String? lang) {
     if (lang == null) {
       return null;
     } else {
