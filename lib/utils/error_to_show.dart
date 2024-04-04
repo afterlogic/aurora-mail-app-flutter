@@ -25,9 +25,7 @@ class ErrorToShow {
   ErrorToShow.message(this.message);
 
   String getString() {
-
       return message;
-
   }
 
   @override

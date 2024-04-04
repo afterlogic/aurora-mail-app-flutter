@@ -85,25 +85,26 @@ class MessageWebViewState extends BState<MessageWebView> {
     _controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setNavigationDelegate(
-
         NavigationDelegate(
-          onProgress: (int progress) {
-            // Update loading bar.
-          },
-          onPageStarted: (String url) {},
-          onPageFinished: (String url) {setState(() => _pageLoaded = true);},
-          onWebResourceError: (WebResourceError error) {},
-          onNavigationRequest: _onWebViewNavigateRequestIos
-        ),
+            onProgress: (int progress) {
+              // Update loading bar.
+            },
+            onPageStarted: (String url) {
+              if (mounted) setState(() => _pageLoaded = true);
+            },
+            onPageFinished: (String url) {},
+            onWebResourceError: (WebResourceError error) {},
+            onNavigationRequest: _onWebViewNavigateRequestIos),
       );
-    _controller.addJavaScriptChannel("WEB_VIEW_JS_CHANNEL", onMessageReceived: (message) {
+    _controller.addJavaScriptChannel("WEB_VIEW_JS_CHANNEL",
+        onMessageReceived: (message) {
       if (message.message
           .startsWith(MessageWebViewActions.DOWNLOAD_ATTACHMENT)) {
         final downloadUrl = message.message
             .substring(MessageWebViewActions.DOWNLOAD_ATTACHMENT.length);
         _startDownload(downloadUrl);
-      }});
-
+      }
+    });
   }
 
   @override
@@ -112,6 +113,7 @@ class MessageWebViewState extends BState<MessageWebView> {
     showImages = !widget.message.hasExternals || widget.message.safety;
     theme = Theme.of(context);
     _mailBloc = BlocProvider.of(context);
+    _controller.setBackgroundColor(theme.scaffoldBackgroundColor);
     _getHtmlWithImages();
   }
 
@@ -120,6 +122,7 @@ class MessageWebViewState extends BState<MessageWebView> {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.decrypted != widget.decrypted ||
         oldWidget.message != widget.message) {
+      _controller.setBackgroundColor(theme.scaffoldBackgroundColor);
       _getHtmlWithImages();
       setState(() {});
     }
@@ -131,7 +134,7 @@ class MessageWebViewState extends BState<MessageWebView> {
       htmlData = widget.decrypted;
       _htmlData = htmlData;
       _controller?.loadRequest(Uri.parse(_getHtmlUri(htmlData)));
-      setState(() {});
+      if (mounted) setState(() {});
       return;
     } else {
       htmlData = widget.message.htmlBody;
@@ -238,7 +241,8 @@ class MessageWebViewState extends BState<MessageWebView> {
             ImportKeyDialog(keys.userKeys, keys.contactKeys, widget.bloc),
       );
     } else if (attachment.fileName.endsWith(".vcf")) {
-      final msg =  S.of(context).messages_attachment_downloading(attachment.fileName);
+      final msg =
+          S.of(context).messages_attachment_downloading(attachment.fileName);
       Fluttertoast.showToast(
         msg: msg,
         timeInSecForIosWeb: 2,
@@ -268,8 +272,7 @@ class MessageWebViewState extends BState<MessageWebView> {
               isError: false,
               context: context,
               scaffoldState: Scaffold.of(context),
-              message:
-                  S.of(context).label_contacts_were_imported_successfully,
+              message: S.of(context).label_contacts_were_imported_successfully,
             );
           }
         },
@@ -290,7 +293,8 @@ class MessageWebViewState extends BState<MessageWebView> {
           ),
         ),
       );
-      final msg = S.of(context).messages_attachment_downloading(attachment.fileName);
+      final msg =
+          S.of(context).messages_attachment_downloading(attachment.fileName);
       Fluttertoast.showToast(
         msg: msg,
         timeInSecForIosWeb: 2,
@@ -336,10 +340,10 @@ class MessageWebViewState extends BState<MessageWebView> {
       showImages =
           await widget.messageViewBloc.checkInWhiteList(widget.message);
       _getHtmlWithImages();
-      setState(() {});
+      if (mounted) setState(() {});
     } else {
       _getHtmlWithImages();
-      setState(() {});
+      if (mounted) setState(() {});
     }
   }
 

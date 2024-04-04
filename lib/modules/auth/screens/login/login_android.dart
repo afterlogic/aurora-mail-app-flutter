@@ -182,11 +182,9 @@ class _LoginAndroidState extends BState<LoginAndroid> {
                 }
                 return;
               }
-
               if (state is ReceivedLastEmail) {
                 emailCtrl.text = state.email;
               }
-
               if (state is NeedsHost) {
                 setState(() => _showHostField = true);
                 _showError(
@@ -232,6 +230,13 @@ class _LoginAndroidState extends BState<LoginAndroid> {
                   );
                 }
               }
+              if (state is AuthError) {
+                _showError(
+                  context,
+                  ErrorToShow.message(state.errorMsg.message),
+                );
+              }
+
             },
             child: BlocBuilder<AuthBloc, AuthState>(
               bloc: BlocProvider.of<AuthBloc>(context),

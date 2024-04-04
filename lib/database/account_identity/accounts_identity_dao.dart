@@ -29,15 +29,17 @@ class AccountIdentityDao extends DatabaseAccessor<AppDatabase>
 
   Future<List<AccountIdentity>> getByUserAndAccount(
     int idUser,
-    int idAccount,
+    int? idAccount,
   ) async {
     // selects separated for handling case with large signature
     String? signature;
 
     final signatureQuery = selectOnly(accountIdentityTable)
-      ..where(accountIdentityTable.idUser.equals(idUser))
-      ..where(accountIdentityTable.idAccount.equals(idAccount))
-      ..addColumns([accountIdentityTable.signature]);
+      ..where(accountIdentityTable.idUser.equals(idUser));
+    if (idAccount != null) {
+      signatureQuery.where(accountIdentityTable.idAccount.equals(idAccount));
+    }
+    signatureQuery.addColumns([accountIdentityTable.signature]);
     try {
       signature = await signatureQuery
           .map((a) => a.read(accountIdentityTable.signature))
@@ -47,20 +49,21 @@ class AccountIdentityDao extends DatabaseAccessor<AppDatabase>
       print(st);
     } finally {
       final query = selectOnly(accountIdentityTable)
-        ..where(accountIdentityTable.idUser.equals(idUser))
-        ..where(accountIdentityTable.idAccount.equals(idAccount))
-        ..addColumns([
-          accountIdentityTable.entityId,
-          accountIdentityTable.email,
-          accountIdentityTable.friendlyName,
-          accountIdentityTable.idUser,
-          accountIdentityTable.idAccount,
-          accountIdentityTable.isDefault,
-          accountIdentityTable.useSignature,
-        ]);
+        ..where(accountIdentityTable.idUser.equals(idUser));
+      if (idAccount != null) {
+        query.where(accountIdentityTable.idAccount.equals(idAccount));
+      }
+      query.addColumns([
+        accountIdentityTable.entityId,
+        accountIdentityTable.email,
+        accountIdentityTable.friendlyName,
+        accountIdentityTable.idUser,
+        accountIdentityTable.idAccount,
+        accountIdentityTable.isDefault,
+        accountIdentityTable.useSignature,
+      ]);
       return query.map(
         (row) {
-
           return AccountIdentity(
             entityId: row.read(accountIdentityTable.entityId)!,
             idUser: row.read(accountIdentityTable.idUser)!,
