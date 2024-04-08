@@ -178,11 +178,13 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
         await (update(contactsTable)..where((c) => c.viewEmail.equals(mail)))
             .write(
           ContactsTableCompanion(
-            pgpPublicKey: Value.absent(),
+            pgpPublicKey: Value(null),
           ),
         );
       });
-    } catch (err) {
+    } catch (err, st) {
+      print(err);
+      print(st);
       return null;
     }
   }

@@ -47,7 +47,7 @@ class ContactViewAppBar extends StatelessWidget implements PreferredSizeWidget {
     }) {
       return PopupMenuItem(
         child: ListTile(
-          leading: Icon(icon),
+          leading: Icon(icon, color: Theme.of(context).brightness == Brightness.light ? Colors.black : null,),
           title: Text(text),
         ),
         value: value,

@@ -23,6 +23,7 @@ class AppTheme {
     ),
     colorScheme: ColorScheme.fromSeed(
         seedColor: AppColor.primary,
+        primary: AppColor.primary,
         secondary: AppColor.primary,
         background: Color(0xFFe6ebf0),
         brightness: Brightness.light),

@@ -209,8 +209,8 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
             ? UpdateContact(
                 contact,
                 freeKey,
-                widget.contact.pgpPublicKey != contact.pgpPublicKey,
-              )
+                _keysNotEqual(
+                    widget.contact.pgpPublicKey, contact.pgpPublicKey))
             : CreateContact(contact);
 
         _bloc.add(event);
@@ -218,6 +218,20 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
             context, ModalRoute.withName(ContactsListRoute.name));
         break;
     }
+  }
+
+  bool _keysNotEqual(String key1, String key2) {
+    if (key1 == null) {
+      if (key2 == null || key2 == "") {
+        return false;
+      }
+    }
+    if (key2 == null) {
+      if (key1 == null || key1 == "") {
+        return false;
+      }
+    }
+    return key1 != key2;
   }
 
   Future<FreeKeyAction> _confirm() {
@@ -328,11 +342,11 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Center(
-                    child: GestureDetector(
+                    child: TextButton(
                       child: Text(_showAllFields
                           ? S.of(context).contacts_view_hide_additional_fields
                           : S.of(context).contacts_view_show_additional_fields),
-                      onTap: () {
+                      onPressed: () {
                         // crutch
                         _personalEmail.text = _personalEmail.text;
                         _personalAddress.text = _personalAddress.text;
@@ -430,6 +444,11 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
                           pgpSettingsBloc,
                           pgpKey,
                           (key) {
+                            _bloc.add(UpdateContact(
+                                widget.contact
+                                    .copyWith(pgpPublicKey: () => key?.key),
+                                null,
+                                true));
                             setState(() {
                               pgpKey = key;
                             });

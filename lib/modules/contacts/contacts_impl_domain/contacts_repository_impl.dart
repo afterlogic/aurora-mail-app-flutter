@@ -230,7 +230,7 @@ class ContactsRepositoryImpl implements ContactsRepository {
     ]);
     if (contact.pgpPublicKey != null) {
       final contactWithKey =
-          newContact.copyWith(pgpPublicKey: contact.pgpPublicKey);
+          newContact.copyWith(pgpPublicKey: () => contact.pgpPublicKey);
 
       await addKeyToContacts([contactWithKey]);
       return contactWithKey;

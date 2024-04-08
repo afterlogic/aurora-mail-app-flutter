@@ -22,7 +22,7 @@ class WebMailApiError implements Exception {
   WebMailApiError.code(this.code) : message = null;
 
   @override
-  String toString() => "$code$message";
+  String toString() => "$code: $message";
 
   static String? _getErrMsg(dynamic err) {
     if (err is Map) {

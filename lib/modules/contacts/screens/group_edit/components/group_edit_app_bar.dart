@@ -24,7 +24,7 @@ class GroupEditAppBar extends StatelessWidget implements PreferredSizeWidget {
         Builder(
           builder: (context) => TextButton(
             child: Text(
-              S.of(context).contacts_edit_save,
+              S.of(context).btn_save,
               style: TextStyle(
                   color: Theme.of(context)?.appBarTheme?.iconTheme?.color),
             ),

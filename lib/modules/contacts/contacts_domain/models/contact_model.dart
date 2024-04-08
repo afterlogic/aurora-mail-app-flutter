@@ -246,7 +246,7 @@ class Contact {
     String davContactsUid,
     String davContactsVCardUid,
     List<String> groupUUIDs,
-    String pgpPublicKey,
+    String Function() pgpPublicKey,
     bool autoSign,
     bool autoEncrypt,
   }) {
@@ -306,7 +306,7 @@ class Contact {
       davContactsUid: davContactsUid ?? this.davContactsUid,
       davContactsVCardUid: davContactsVCardUid ?? this.davContactsVCardUid,
       groupUUIDs: groupUUIDs ?? this.groupUUIDs,
-      pgpPublicKey: pgpPublicKey ?? this.pgpPublicKey,
+      pgpPublicKey: pgpPublicKey == null ? this.pgpPublicKey : pgpPublicKey(),
       autoEncrypt: autoEncrypt ?? this.autoEncrypt,
       autoSign: autoSign ?? this.autoSign,
     );

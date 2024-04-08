@@ -18,11 +18,11 @@ import 'package:share/share.dart';
 class PgpSettingsMethods {
   final CryptoStorage cryptoStorage;
   final PgpWorker cryptoWorker;
-  final ContactsRepository contactsDao;
+  final ContactsRepository contactsRepository;
   final User user;
 
   PgpSettingsMethods(
-      this.cryptoStorage, this.cryptoWorker, this.user, this.contactsDao);
+      this.cryptoStorage, this.cryptoWorker, this.user, this.contactsRepository);
 
   Future<List<PgpKey>> getKeys(bool isPrivate) {
     return cryptoStorage.getPgpKeys(isPrivate);
@@ -128,7 +128,7 @@ class PgpSettingsMethods {
       List<PgpKey> keys) async {
     final map = <PgpKeyWithContact, bool>{};
     for (var key in keys) {
-      final contact = await contactsDao.getContactByEmail(key.mail);
+      final contact = await contactsRepository.getContactByEmail(key.mail);
       map[PgpKeyWithContact(key, contact)] =
           (contact?.pgpPublicKey?.length ?? 0) <= 10 ? true : null;
     }
@@ -208,10 +208,10 @@ class PgpSettingsMethods {
               fullName: value.pgpKey.name,
             );
         contacts.add(
-          contact.copyWith(pgpPublicKey: value.key),
+          contact.copyWith(pgpPublicKey: () => value.key),
         );
       }
-      await contactsDao.addKeyToContacts(
+      await contactsRepository.addKeyToContacts(
         contacts,
       );
     } catch (e) {
@@ -220,7 +220,7 @@ class PgpSettingsMethods {
   }
 
   Future deleteContactKey(String mail) async {
-    await contactsDao.deleteContactKey(
+    await contactsRepository.deleteContactKey(
       mail,
     );
   }

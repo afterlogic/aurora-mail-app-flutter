@@ -46,7 +46,7 @@ class _ComposeAppBarState extends BState<ComposeAppBar> {
             PopupMenuItem(
               value: ComposeAppBarAction.saveToDrafts,
               child: ListTile(
-                leading: Icon(Icons.drafts),
+                leading: Icon(Icons.drafts, color: Theme.of(context).brightness == Brightness.light ? Colors.black : null,),
                 title: Text(S.of(context).btn_save),
               ),
             ),
