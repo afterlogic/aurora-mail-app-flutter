@@ -14,6 +14,8 @@ abstract class PgpSettingsState extends Equatable {
 
 class ProgressState extends PgpSettingsState {}
 
+class KeyFlagsUpdated extends PgpSettingsState {}
+
 class LoadedState extends PgpSettingsState {
   final List<PgpKey> myPublic;
   final List<PgpKey> myPrivate;

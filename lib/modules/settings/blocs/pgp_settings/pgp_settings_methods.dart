@@ -21,8 +21,8 @@ class PgpSettingsMethods {
   final ContactsRepository contactsRepository;
   final User user;
 
-  PgpSettingsMethods(
-      this.cryptoStorage, this.cryptoWorker, this.user, this.contactsRepository);
+  PgpSettingsMethods(this.cryptoStorage, this.cryptoWorker, this.user,
+      this.contactsRepository);
 
   Future<List<PgpKey>> getKeys(bool isPrivate) {
     return cryptoStorage.getPgpKeys(isPrivate);
@@ -147,6 +147,14 @@ class PgpSettingsMethods {
 
   Future addToStorage(List<PgpKey> selected) {
     return cryptoStorage.addPgpKeys(selected);
+  }
+
+  Future updateContactPublicKeyFlags(
+      {@required Contact contact, bool pgpEncryptMessages, bool pgpSignMessages}) {
+    return contactsRepository.updateContactPublicKeyFlags(
+        contact: contact,
+        pgpEncryptMessages: pgpEncryptMessages,
+        pgpSignMessages: pgpSignMessages);
   }
 
   Future<String> pickFileContent() async {

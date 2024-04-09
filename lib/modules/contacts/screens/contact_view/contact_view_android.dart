@@ -6,6 +6,7 @@ import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_group_model.dart';
+import 'package:aurora_mail/modules/contacts/screens/contact_edit/components/contact_check_box.dart';
 import 'package:aurora_mail/modules/contacts/screens/contact_edit/contact_edit_route.dart';
 import 'package:aurora_mail/modules/contacts/screens/contact_view/components/contact_view_app_bar.dart';
 import 'package:aurora_mail/modules/contacts/screens/contact_view/components/contacts_info_item.dart';
@@ -396,25 +397,52 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
 
     final keyInfo = pgpKey == null
         ? null
-        : InkWell(
-            onTap: pgpKey == null
-                ? null
-                : () {
-                    Navigator.pushNamed(
-                      context,
-                      PgpKeyRoute.name,
-                      arguments:
-                          PgpKeyRouteArg(pgpKey, null, true, pgpSettingsBloc),
-                    );
+        : Column(
+            children: [
+              InkWell(
+                onTap: pgpKey == null
+                    ? null
+                    : () {
+                        Navigator.pushNamed(
+                          context,
+                          PgpKeyRoute.name,
+                          arguments: PgpKeyRouteArg(
+                              pgpKey, null, true, pgpSettingsBloc),
+                        );
+                      },
+                child: _buildInfoItem(
+                  icon: MdiIcons.key,
+                  label: S.of(context).label_pgp_public_key,
+                  v: pgpKey == null
+                      ? ""
+                      : pgpKey.formatName() +
+                          "\n${pgpKey.key?.length != null ? "(${pgpKey.length}-bit," : "("} ${pgpKey.isPrivate ? "private" : "public"})",
+                ),
+              ),
+              if (c.storage == StorageNames.team) ...[
+                ContactCheckBox(
+                  S.of(context).label_pgp_sign,
+                  c.autoSign,
+                  (v) {
+                    print(v);
+                    pgpSettingsBloc.add(UpdateKeyFlags(
+                        contact: c,
+                        pgpSignMessages: v,
+                        pgpEncryptMessages: c.autoEncrypt ?? false));
                   },
-            child: _buildInfoItem(
-              icon: MdiIcons.key,
-              label: S.of(context).label_pgp_public_key,
-              v: pgpKey == null
-                  ? ""
-                  : pgpKey.formatName() +
-                      "\n${pgpKey.key?.length != null ? "(${pgpKey.length}-bit," : "("} ${pgpKey.isPrivate ? "private" : "public"})",
-            ),
+                ),
+                ContactCheckBox(
+                  S.of(context).label_pgp_encrypt,
+                  c.autoEncrypt,
+                  (v) {
+                    pgpSettingsBloc.add(UpdateKeyFlags(
+                        contact: c,
+                        pgpEncryptMessages: v,
+                        pgpSignMessages: c.autoSign ?? false));
+                  },
+                ),
+              ]
+            ],
           );
 
     List<Widget> _buildGroups(List<String> groupUUIDs) {
@@ -453,7 +481,7 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
       body: BlocListener(
         bloc: pgpSettingsBloc,
         listener: (BuildContext context, state) async {
-          if (state is LoadedState) {
+          if (state is LoadedState || state is KeyFlagsUpdated) {
             final result = await contactsBloc.getContact(contact.entityId);
             init(result);
           }

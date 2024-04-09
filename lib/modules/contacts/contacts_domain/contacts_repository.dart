@@ -40,6 +40,8 @@ abstract class ContactsRepository {
 
   Future<void> refreshStorages();
 
+  Future<void> updateContactPublicKeyFlags({@required Contact contact, bool pgpEncryptMessages, bool pgpSignMessages});
+
   // Stream<List<ContactsGroup>> watchContactsGroups({String selectedGroupUuid});
 
   Future<void> refreshGroups();

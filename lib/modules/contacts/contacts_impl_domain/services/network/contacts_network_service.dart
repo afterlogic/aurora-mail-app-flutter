@@ -27,6 +27,8 @@ abstract class ContactsNetworkService {
     int userLocalId,
   });
 
+  Future<bool> updateContactPublicKeyFlags({required String uuid, bool? pgpEncryptMessages, bool? pgpSignMessages});
+
   Future<Contact> addContact(Contact contact);
 
   Future<void> editContact(Contact contact);

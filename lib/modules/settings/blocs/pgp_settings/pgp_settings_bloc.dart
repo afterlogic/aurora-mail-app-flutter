@@ -35,6 +35,7 @@ class PgpSettingsBloc extends Bloc<PgpSettingsEvent, PgpSettingsState> {
   Stream<PgpSettingsState> mapEventToState(
     PgpSettingsEvent event,
   ) async* {
+    if (event is UpdateKeyFlags) yield* _updateKeyFlags(event);
     if (event is LoadKeys) yield* _loadKeys();
     if (event is DeleteKey) yield* _deleteKey(event);
     if (event is GenerateKeys) yield* _generateKeys(event);
@@ -43,6 +44,16 @@ class PgpSettingsBloc extends Bloc<PgpSettingsEvent, PgpSettingsState> {
     if (event is ImportFromFile) yield* _importKeyFromFile();
     if (event is DownloadKeys) yield* _downloadKeys(event);
     if (event is ShareKeys) yield* _shareKeys(event);
+  }
+
+  Stream<PgpSettingsState> _updateKeyFlags(UpdateKeyFlags event) async* {
+    try{
+      yield ProgressState();
+      await _methods.updateContactPublicKeyFlags(contact: event.contact, pgpSignMessages: event.pgpSignMessages, pgpEncryptMessages: event.pgpEncryptMessages);
+      yield KeyFlagsUpdated();
+    } catch(err, st){
+      yield ErrorState(ErrorToShow(err));
+    }
   }
 
   Stream<PgpSettingsState> _loadKeys() async* {

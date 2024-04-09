@@ -255,6 +255,18 @@ class ContactsRepositoryImpl implements ContactsRepository {
   }
 
   @override
+  Future<void> updateContactPublicKeyFlags({@required Contact contact, bool pgpEncryptMessages, bool pgpSignMessages}) async {
+    final isUpdateSuccess = await _network.updateContactPublicKeyFlags(uuid: contact.uuid, pgpEncryptMessages: pgpEncryptMessages, pgpSignMessages: pgpSignMessages);
+    if(!isUpdateSuccess) throw Exception('Error while changing key flags');
+    final newContacts = await _network.getContactsByUids(
+      userLocalId: _userLocalId,
+      storageId: StorageNames.personal,
+      uuids: [contact.uuid],
+    );
+    await _db.updateContacts(newContacts);
+  }
+
+  @override
   Future<void> deleteContacts(List<Contact> contacts) async {
     final uuids = contacts.map((c) => c.uuid).toList();
     final storage = contacts[0].storage;

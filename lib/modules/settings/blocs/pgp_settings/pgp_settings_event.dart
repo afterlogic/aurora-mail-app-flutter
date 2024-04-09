@@ -1,4 +1,5 @@
 //@dart=2.9
+import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 import 'package:aurora_mail/modules/settings/blocs/pgp_settings/pgp_settings_methods.dart';
 import 'package:aurora_mail/utils/always_non_equal_object.dart';
 import 'package:crypto_model/crypto_model.dart';
@@ -24,6 +25,17 @@ class GenerateKeys extends PgpSettingsEvent with AlwaysNonEqualObject {
 
   @override
   List<Object> get props => [mail, length, password];
+}
+
+class UpdateKeyFlags extends PgpSettingsEvent {
+  final Contact contact;
+  final bool pgpEncryptMessages;
+  final bool pgpSignMessages;
+
+  UpdateKeyFlags({@required this.contact, this.pgpEncryptMessages, this.pgpSignMessages});
+
+  @override
+  List<Object> get props => [contact, pgpEncryptMessages, pgpSignMessages];
 }
 
 class DeleteKey extends PgpSettingsEvent {

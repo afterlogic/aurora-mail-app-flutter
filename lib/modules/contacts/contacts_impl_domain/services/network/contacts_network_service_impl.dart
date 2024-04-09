@@ -264,4 +264,30 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
     );
     await contactsModule.multiPart(body, file);
   }
+
+  @override
+  Future<bool> updateContactPublicKeyFlags({String uuid, bool pgpEncryptMessages, bool pgpSignMessages}) async {
+    final Map<String, dynamic> parameters = {
+      "UUID" : uuid,
+      "PgpEncryptMessages" : pgpEncryptMessages,
+      "PgpSignMessages" : pgpSignMessages
+    };
+    //
+    // if(pgpEncryptMessages != null){
+    //   parameters.addAll({"PgpEncryptMessages" : pgpEncryptMessages});
+    // }
+    //
+    // if(pgpSignMessages != null){
+    //   parameters.addAll({"PgpSignMessages" : pgpSignMessages});
+    // }
+
+    final body = new WebMailApiBody(
+      module: "OpenPgpWebclient",
+      method: "UpdateContactPublicKeyFlags",
+      parameters: json.encode(parameters),
+    );
+
+    final result = await contactsModule.post(body);
+    return result as bool;
+  }
 }
