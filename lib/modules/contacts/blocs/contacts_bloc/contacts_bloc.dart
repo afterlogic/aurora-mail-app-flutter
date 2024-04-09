@@ -35,7 +35,8 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
   ContactsBloc({
     @required this.user,
     @required this.appDatabase,
-  }) : pgpWorker = AppInjector.instance.pgpWorker(), super(ContactsState()) {
+  })  : pgpWorker = AppInjector.instance.pgpWorker(),
+        super(ContactsState()) {
     _repo = ContactsRepository(
       appDB: appDatabase,
       user: user,
@@ -75,6 +76,7 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
     if (event is GetContacts) yield* _getContacts(event);
     if (event is CreateContact) yield* _createContact(event);
     if (event is UpdateContact) yield* _updateContact(event);
+    if (event is UpdateContactPgpKey) yield* _updateContactPgpKey(event);
     if (event is DeleteContacts) yield* _deleteContacts(event);
     if (event is ImportVcf) yield* _importVcf(event);
     if (event is ShareContacts) yield* _shareContacts(event);
@@ -211,6 +213,18 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
     });
   }
 
+  Stream<ContactsState> _updateContactPgpKey(UpdateContactPgpKey event) async* {
+    try {
+      if (event.contact.pgpPublicKey == null) {
+        _repo.deleteContactKey(event.contact.viewEmail);
+      } else {
+        _repo.addKeyToContacts([event.contact]);
+      }
+    } catch (err, st) {
+      add(AddError(formatError(err, st)));
+    }
+  }
+
   Stream<ContactsState> _updateContact(UpdateContact event) async* {
     add(StartActivity('UpdateContact'));
     _repo.editContact(event.contact).then((value) async {
@@ -218,14 +232,6 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
         await _repo.deleteContactKey(event.contact.viewEmail);
         if (event.freeKey == FreeKeyAction.Import) {
           add(ReImport(event.contact.pgpPublicKey));
-        }
-      } else {
-        if (event.updateKey) {
-          if (event.contact.pgpPublicKey == null) {
-            await _repo.deleteContactKey(event.contact.viewEmail);
-          } else {
-            await _repo.addKeyToContacts([event.contact]);
-          }
         }
       }
       add(StopActivity('UpdateContact'));

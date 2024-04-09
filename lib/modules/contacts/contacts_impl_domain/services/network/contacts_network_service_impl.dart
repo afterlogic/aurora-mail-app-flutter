@@ -229,7 +229,7 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
     );
 
     final result = await contactsModule.post(body);
-    return (result as List).cast();
+    return (result as List).map((e) => e.toString()).toList();
   }
 
   @override

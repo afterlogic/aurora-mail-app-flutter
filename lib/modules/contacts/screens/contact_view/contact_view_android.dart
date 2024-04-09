@@ -52,7 +52,7 @@ class ContactViewAndroid extends StatefulWidget {
 class _ContactViewAndroidState extends BState<ContactViewAndroid> {
   Contact contact;
   ContactInfo _contactInfo;
-  PgpKeyWithContact key;
+  PgpKeyWithContact pgpKey;
   PgpSettingsBloc pgpSettingsBloc;
   ContactsBloc contactsBloc;
 
@@ -72,14 +72,14 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
       if (contact?.pgpPublicKey != null) {
         contactsBloc.getKeyInfo(contact.pgpPublicKey).then((key) {
           if (key == null) {
-            this.key = null;
+            this.pgpKey = null;
           } else {
-            this.key = PgpKeyWithContact(key, contact);
+            this.pgpKey = PgpKeyWithContact(key, contact);
           }
           if (mounted) setState(() {});
         });
       } else {
-        this.key = null;
+        this.pgpKey = null;
         if (mounted) setState(() {});
       }
     }
@@ -394,26 +394,26 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
       ),
     ]);
 
-    final keyInfo = key == null
+    final keyInfo = pgpKey == null
         ? null
         : InkWell(
-            onTap: key == null
+            onTap: pgpKey == null
                 ? null
                 : () {
                     Navigator.pushNamed(
                       context,
                       PgpKeyRoute.name,
                       arguments:
-                          PgpKeyRouteArg(key, null, true, pgpSettingsBloc),
+                          PgpKeyRouteArg(pgpKey, null, true, pgpSettingsBloc),
                     );
                   },
             child: _buildInfoItem(
               icon: MdiIcons.key,
               label: S.of(context).label_pgp_public_key,
-              v: key == null
+              v: pgpKey == null
                   ? ""
-                  : key.formatName() +
-                      "\n${key.key?.length != null ? "(${key.length}-bit," : "("} ${key.isPrivate ? "private" : "public"})",
+                  : pgpKey.formatName() +
+                      "\n${pgpKey.key?.length != null ? "(${pgpKey.length}-bit," : "("} ${pgpKey.isPrivate ? "private" : "public"})",
             ),
           );
 
@@ -468,6 +468,13 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
           if (state is SelectKeyForImport) {
             _importKey(state.userKeys, state.contactKeys);
             return;
+          }
+          if (state is ErrorState) {
+            showErrorSnack(
+              context: context,
+              scaffoldState: Scaffold.of(context),
+              msg: state.message,
+            );
           }
         },
         child: Builder(builder: (context) {

@@ -148,18 +148,23 @@ class PgpSettingsBloc extends Bloc<PgpSettingsEvent, PgpSettingsState> {
   }
 
   Stream<PgpSettingsState> _deleteKey(DeleteKey event) async* {
-    if (event.pgpKey is PgpKeyWithContact) {
-      await _methods.deleteContactKey(
-        event.pgpKey.mail,
-      );
-    } else {
-      await _methods.deleteKey(
-        event.pgpKey.name,
-        event.pgpKey.mail,
-        event.pgpKey.isPrivate,
-      );
+    try{
+      if (event.pgpKey is PgpKeyWithContact) {
+        await _methods.deleteContactKey(
+          event.pgpKey.mail,
+        );
+      } else {
+        await _methods.deleteKey(
+          event.pgpKey.name,
+          event.pgpKey.mail,
+          event.pgpKey.isPrivate,
+        );
+      }
+    }catch(err){
+      yield ErrorState(ErrorToShow(err));
+    }finally{
+      yield* _loadKeys();
     }
-    yield* _loadKeys();
   }
 
   Stream<PgpSettingsState> _downloadKeys(DownloadKeys event) async* {
