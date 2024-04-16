@@ -1480,6 +1480,26 @@ class S {
     );
   }
 
+  /// `Delete contacts`
+  String get contacts_delete_title_plural {
+    return Intl.message(
+      'Delete contacts',
+      name: 'contacts_delete_title_plural',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Are you sure you want to delete selected contacts?`
+  String get contacts_delete_selected {
+    return Intl.message(
+      'Are you sure you want to delete selected contacts?',
+      name: 'contacts_delete_selected',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Are you sure you want to delete {contact}?`
   String contacts_delete_desc_with_name(Object contact) {
     return Intl.message(

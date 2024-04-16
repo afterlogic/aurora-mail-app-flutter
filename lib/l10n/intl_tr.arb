@@ -142,6 +142,8 @@
   "contacts_group_edit_is_organization": "Bu grup bir şirket",
   "contacts_group_edit_cancel": "Grubu düzenlemekten vazgeç",
   "contacts_delete_title": "Kişiyi sil",
+  "contacts_delete_title_plural": "Delete contacts",
+  "contacts_delete_selected": "Are you sure you want to delete selected contacts?",
   "contacts_delete_desc_with_name": "{contact} silmek istediğinize emin misiniz?",
   "contacts_group_delete_title": "Grubu sil",
   "contacts_group_delete_desc_with_name": " {group} silmek istediğinize emin misiniz? Gruptaki kişiler silinmeyecektir.",

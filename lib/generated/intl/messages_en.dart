@@ -177,8 +177,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "contacts": MessageLookupByLibrary.simpleMessage("Contacts"),
         "contacts_add": MessageLookupByLibrary.simpleMessage("Add contact"),
         "contacts_delete_desc_with_name": m7,
+        "contacts_delete_selected": MessageLookupByLibrary.simpleMessage(
+            "Are you sure you want to delete selected contacts?"),
         "contacts_delete_title":
             MessageLookupByLibrary.simpleMessage("Delete contact"),
+        "contacts_delete_title_plural":
+            MessageLookupByLibrary.simpleMessage("Delete contacts"),
         "contacts_drawer_section_groups":
             MessageLookupByLibrary.simpleMessage("Groups"),
         "contacts_drawer_section_storages":

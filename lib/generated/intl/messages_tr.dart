@@ -183,8 +183,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "contacts": MessageLookupByLibrary.simpleMessage("Kişiler"),
         "contacts_add": MessageLookupByLibrary.simpleMessage("Kişi ekle"),
         "contacts_delete_desc_with_name": m7,
+        "contacts_delete_selected": MessageLookupByLibrary.simpleMessage(
+            "Are you sure you want to delete selected contacts?"),
         "contacts_delete_title":
             MessageLookupByLibrary.simpleMessage("Kişiyi sil"),
+        "contacts_delete_title_plural":
+            MessageLookupByLibrary.simpleMessage("Delete contacts"),
         "contacts_drawer_section_groups":
             MessageLookupByLibrary.simpleMessage("Gruplar"),
         "contacts_drawer_section_storages":

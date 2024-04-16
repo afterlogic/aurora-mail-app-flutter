@@ -142,6 +142,8 @@
   "contacts_group_edit_is_organization": "This group is a Company",
   "contacts_group_edit_cancel": "Cancel editing group",
   "contacts_delete_title": "Delete contact",
+  "contacts_delete_title_plural": "Delete contacts",
+  "contacts_delete_selected": "Are you sure you want to delete selected contacts?",
   "contacts_delete_desc_with_name": "Are you sure you want to delete {contact}?",
   "contacts_group_delete_title": "Delete group",
   "contacts_group_delete_desc_with_name": "Are you sure you want to delete {group}? The contacts of this group will not be deleted.",

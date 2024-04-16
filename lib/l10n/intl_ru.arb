@@ -142,6 +142,8 @@
   "contacts_group_edit_is_organization": "Эта группа является компанией",
   "contacts_group_edit_cancel": "Отменить редактирование группы",
   "contacts_delete_title": "Удалить контакт",
+  "contacts_delete_title_plural": "Delete contacts",
+  "contacts_delete_selected": "Are you sure you want to delete selected contacts?",
   "contacts_delete_desc_with_name": "Вы действительно хотите удалить {contact}?",
   "contacts_group_delete_title": "Удалить группу",
   "contacts_group_delete_desc_with_name": "Вы действительно хотите удалить {group}? Контакты этой группы удалены не будут.",
