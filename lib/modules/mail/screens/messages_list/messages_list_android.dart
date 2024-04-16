@@ -68,6 +68,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    selectionController.addListener(selectionCallback);
     _initBlocs();
     MessagesListAndroid.onShare = (files, text) {
       if (files?.isNotEmpty == true || text?.isNotEmpty == true) {
@@ -150,6 +151,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
     super.dispose();
     MessagesListAndroid.onShare = null;
     WidgetsBinding.instance.removeObserver(this);
+    selectionController.removeListener(selectionCallback);
     BackgroundHelper.removeOnAlarmObserver(onAlarm);
     BackgroundHelper.removeOnEndAlarmObserver(onEndAlarm);
   }
@@ -289,7 +291,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
       bottomNavigationBar:
           MailBottomAppBar(selectedRoute: MailBottomAppBarRoutes.mail),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: AMFloatingActionButton(
+      floatingActionButton: selectionController.enable ? null : AMFloatingActionButton(
         child: IconTheme(
           data: AppTheme.floatIconTheme,
           child: Icon(MdiIcons.pen),
@@ -522,7 +524,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
       bottomNavigationBar:
           MailBottomAppBar(selectedRoute: MailBottomAppBarRoutes.mail),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: AMFloatingActionButton(
+      floatingActionButton: selectionController.enable ? null : AMFloatingActionButton(
         child: IconTheme(
           data: AppTheme.floatIconTheme,
           child: Icon(MdiIcons.pen),
@@ -542,6 +544,12 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
   Widget _buildMessagesLoading() => Center(child: CircularProgressIndicator());
 
   final selectionController = SelectionController<int, Message>();
+
+  void selectionCallback() {
+    //rebuild only if selection mode changes
+    if(selectionController.selected.length < 2);
+    setState(() { });
+  }
 
   Widget _buildMessagesStream(
     Stream<List<Message>> Function(int page) stream,

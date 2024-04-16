@@ -43,12 +43,26 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
   final selectionController = SelectionController<String, Contact>();
 
 
+
   @override
   void initState() {
     super.initState();
+    selectionController.addListener(_selectionCallback);
     contactsBloc = BlocProvider.of<ContactsBloc>(context);
     pgpSettingsBloc =
         AppInjector.instance.pgpSettingsBloc(BlocProvider.of(context));
+  }
+
+  @override
+  void dispose() {
+    selectionController.removeListener(_selectionCallback);
+    super.dispose();
+  }
+
+  void _selectionCallback() {
+    //rebuild only if selection mode changes
+    if(selectionController.selected.length < 2);
+    setState(() { });
   }
 
   void _onContactSelected(BuildContext context, Contact contact) {
@@ -151,6 +165,7 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
     if (isTablet) {
       body = Scaffold(
         appBar: ContactsAppBar(
+          controller: selectionController,
           enable: false,
         ),
         body: Row(
@@ -224,7 +239,7 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: isTablet
           ? null
-          : AMFloatingActionButton(
+          : selectionController.enable ? null : AMFloatingActionButton(
               child: IconTheme(
                 data: AppTheme.floatIconTheme,
                 child: Icon(MdiIcons.accountPlusOutline),
