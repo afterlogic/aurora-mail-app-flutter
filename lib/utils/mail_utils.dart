@@ -342,7 +342,8 @@ class MailUtils {
       .details-value {
         color: ${(theme.brightness == Brightness.dark ? Colors.white : Colors.black).toHex()};
       }
-      blockquote {
+      blockquote,
+      .blockquote {
         border-left: solid 2px #000000;
         margin: 4px 2px;
         padding-left: 6px;
@@ -522,6 +523,7 @@ class MailUtils {
       .details-value {
         color: ${(theme.brightness == Brightness.dark ? Colors.white : Colors.black).toHex()};
       }
+      blockquote,
       .blockquote {
         border-left: solid 2px #000000;
         margin: 4px 2px;
