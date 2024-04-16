@@ -3,6 +3,7 @@ import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_mode
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_group_model.dart';
 import 'package:aurora_mail/utils/show_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 class GroupsSelectDialog extends StatefulWidget {
   final List<ContactsGroup> options;
@@ -53,24 +54,19 @@ class _GroupsSelectDialogState extends State<GroupsSelectDialog> {
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.only(
-                        right: 16, bottom: 4, left: 8, top: 4),
+                        right: 16, bottom: 6, left: 8, top: 6),
                     child: Row(
                       children: [
-                        Text(
-                          '#',
-                          style: TextStyle(
-                              fontSize: 28,
-                              color: widget.options[i] == selectedGroup
-                                  ? selectedColor
-                                  : null),
-                        ),
+                        Icon(MdiIcons.pound, color: widget.options[i] == selectedGroup
+                        ? selectedColor
+                          : null,),
                         SizedBox(
-                          width: 20,
+                          width: 12,
                         ),
                         Text(
                           widget.options[i].name,
                           style: TextStyle(
-                              fontSize: 24,
+                              fontSize: 18,
                               color: widget.options[i] == selectedGroup
                                   ? selectedColor
                                   : null),

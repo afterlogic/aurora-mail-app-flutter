@@ -273,9 +273,9 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
 
   Stream<ContactsState> _addContactsToGroup(AddContactsToGroup event) async* {
     add(StartActivity('AddContactsToGroup'));
-    _repo
-        .addContactsToGroup(event.group, event.contacts)
-        .catchError((err) => add(AddError(formatError(err, null))));
+     await _repo
+          .addContactsToGroup(event.groups, event.contacts)
+          .catchError((err) => add(AddError(formatError(err, null))));
     add(StopActivity('AddContactsToGroup'));
   }
 

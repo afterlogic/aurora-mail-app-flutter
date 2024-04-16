@@ -190,7 +190,7 @@ class _ContactsListTileState extends State<ContactsListTile> {
       child: InkWell(
         onLongPress: changeEnable,
         onTap: widget.selectionController.enable ? changeEnable : () => widget.onPressed(widget.contact),
-        child: allowDeleting ? Dismissible(
+        child: allowDeleting && !widget.selectionController.enable ? Dismissible(
           key: Key(widget.contact.uuid),
           direction: DismissDirection.endToStart,
           child: _buildTile(context),

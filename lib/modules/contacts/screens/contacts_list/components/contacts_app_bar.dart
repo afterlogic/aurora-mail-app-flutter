@@ -22,11 +22,8 @@ class ContactsAppBar extends StatefulWidget implements PreferredSizeWidget {
   @override
   final Size preferredSize = const Size.fromHeight(kToolbarHeight);
 
-  const ContactsAppBar({
-    this.isAppBar = true,
-    this.enable = true,
-    this.controller
-  });
+  const ContactsAppBar(
+      {this.isAppBar = true, this.enable = true, this.controller});
 
   @override
   _ContactsAppBarState createState() => _ContactsAppBarState();
@@ -41,7 +38,7 @@ class _ContactsAppBarState extends State<ContactsAppBar> {
   void initState() {
     super.initState();
     _contactsBloc = BlocProvider.of<ContactsBloc>(context);
-    widget.controller.addListener(update);
+    widget.controller?.addListener(update);
     if (_contactsBloc.searchPattern != null) {
       _mode = ContactAppBarMode.search;
       _searchCtrl.text = _contactsBloc.searchPattern;
@@ -51,7 +48,7 @@ class _ContactsAppBarState extends State<ContactsAppBar> {
   @override
   void dispose() {
     super.dispose();
-    widget.controller.removeListener(update);
+    widget.controller?.removeListener(update);
   }
 
   update() {
@@ -62,14 +59,16 @@ class _ContactsAppBarState extends State<ContactsAppBar> {
   Widget build(BuildContext context) {
     return AnimatedSwitcher(
       duration: Duration(milliseconds: 250),
-      child: widget.controller.enable ? SelectAppBar(widget.controller, _contactsBloc) :  _mode == ContactAppBarMode.search && widget.enable
-          ? SearchBar(
-              _searchCtrl,
-              changeMode,
-              search,
-              isAppBar: widget.isAppBar,
-            )
-          : common(context),
+      child: widget.controller?.enable == true
+          ? SelectAppBar(widget.controller, _contactsBloc)
+          : _mode == ContactAppBarMode.search && widget.enable
+              ? SearchBar(
+                  _searchCtrl,
+                  changeMode,
+                  search,
+                  isAppBar: widget.isAppBar,
+                )
+              : common(),
     );
   }
 
@@ -87,7 +86,7 @@ class _ContactsAppBarState extends State<ContactsAppBar> {
     setState(() {});
   }
 
-  Widget common(BuildContext context) {
+  Widget common() {
     final theme = Theme.of(context);
 
     Widget _buildTitle(BuildContext context, ContactsState state) {
@@ -101,8 +100,10 @@ class _ContactsAppBarState extends State<ContactsAppBar> {
             Text(S.of(context).contacts),
             SizedBox(height: 3.0),
             Text(
-              selectedStorage.displayName.length > 6 && selectedStorage.displayName.substring(0, 6) == 'LABEL_'
-                  ? getStorageName(selectedStorage.displayName.substring(6), context)
+              selectedStorage.displayName.length > 6 &&
+                      selectedStorage.displayName.substring(0, 6) == 'LABEL_'
+                  ? getStorageName(
+                      selectedStorage.displayName.substring(6), context)
                   : selectedStorage.displayName,
               style: TextStyle(
                   fontSize: theme.textTheme.caption.fontSize,
