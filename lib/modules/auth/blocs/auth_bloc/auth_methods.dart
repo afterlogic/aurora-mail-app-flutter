@@ -61,10 +61,10 @@ class AuthMethods {
   Future<User> login({
     @required String email,
     @required String password,
-    @required String host,
+    @required String manuallyEnteredHost,
   }) async {
     // auto discover domain
-    String hostname = host;
+    String hostname = manuallyEnteredHost;
     if (hostname.isEmpty) {
       if (email == await lastEmail) {
         hostname = (await lastHost) ?? "";
@@ -72,9 +72,11 @@ class AuthMethods {
     }
     final autoDiscoveredHost = await _authApi.autoDiscoverHostname(email);
     if (autoDiscoveredHost != null && autoDiscoveredHost.isNotEmpty) {
-      if (hostname != autoDiscoveredHost) {
-        hostname = autoDiscoveredHost;
-      }
+      hostname = autoDiscoveredHost;
+    }
+    //manually entered host has priority
+    if (manuallyEnteredHost != null && manuallyEnteredHost.isNotEmpty) {
+      hostname = manuallyEnteredHost;
     }
     if (hostname.isEmpty) {
       return null;
