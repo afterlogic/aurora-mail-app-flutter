@@ -1,6 +1,7 @@
 {
   "app_title": "Mail Client",
   "add": "Add",
+  "remove": "Remove",
   "login_input_host": "Host",
   "login_input_email": "Email",
   "login_input_password": "Password",
@@ -142,8 +143,10 @@
   "contacts_group_edit_is_organization": "This group is a Company",
   "contacts_group_edit_cancel": "Cancel editing group",
   "contacts_delete_title": "Delete contact",
+  "contacts_remove_from_group": "Remove contacts from group",
   "contacts_delete_title_plural": "Delete contacts",
   "contacts_delete_selected": "Are you sure you want to delete selected contacts?",
+  "contacts_remove_selected": "Are you sure you want to remove selected contacts from group?",
   "contacts_delete_desc_with_name": "Are you sure you want to delete {contact}?",
   "contacts_group_delete_title": "Delete group",
   "contacts_group_delete_desc_with_name": "Are you sure you want to delete {group}? The contacts of this group will not be deleted.",

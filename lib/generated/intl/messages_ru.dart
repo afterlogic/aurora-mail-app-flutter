@@ -185,11 +185,11 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Добавить контакт"),
         "contacts_delete_desc_with_name": m7,
         "contacts_delete_selected": MessageLookupByLibrary.simpleMessage(
-            "Are you sure you want to delete selected contacts?"),
+            "Вы действительно хотите удалить выбранные контакты?"),
         "contacts_delete_title":
             MessageLookupByLibrary.simpleMessage("Удалить контакт"),
         "contacts_delete_title_plural":
-            MessageLookupByLibrary.simpleMessage("Delete contacts"),
+            MessageLookupByLibrary.simpleMessage("Удалить контакты"),
         "contacts_drawer_section_groups":
             MessageLookupByLibrary.simpleMessage("Группы"),
         "contacts_drawer_section_storages":
@@ -239,6 +239,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Инфорамация о группе"),
         "contacts_list_its_me_flag":
             MessageLookupByLibrary.simpleMessage("Это я!"),
+        "contacts_remove_from_group":
+            MessageLookupByLibrary.simpleMessage("Убрать контакты из группы"),
+        "contacts_remove_selected": MessageLookupByLibrary.simpleMessage(
+            "Вы действительно хотите убрать выбранные контакты из группы?"),
         "contacts_shared_message": m9,
         "contacts_view_address": MessageLookupByLibrary.simpleMessage("Адрес"),
         "contacts_view_app_bar_attach":
@@ -771,6 +775,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Тело письма"),
         "no_permission_to_local_storage": MessageLookupByLibrary.simpleMessage(
             "Нет разрешения для доступа к файлам. Проверьте настройки на вашем устройстве."),
+        "remove": MessageLookupByLibrary.simpleMessage("Удалить"),
         "self_destructing_life_time_day":
             MessageLookupByLibrary.simpleMessage("24 hours"),
         "self_destructing_life_time_days_3":

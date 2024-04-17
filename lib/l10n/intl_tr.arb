@@ -1,6 +1,7 @@
 {
   "app_title": "E-posta Okuyucu",
   "add": "Add",
+  "remove": "Remove",
   "login_input_host": "Sunucu",
   "login_input_email": "E-posta",
   "login_input_password": "Şifre",
@@ -142,8 +143,10 @@
   "contacts_group_edit_is_organization": "Bu grup bir şirket",
   "contacts_group_edit_cancel": "Grubu düzenlemekten vazgeç",
   "contacts_delete_title": "Kişiyi sil",
+  "contacts_remove_from_group": "Remove contacts from group",
   "contacts_delete_title_plural": "Delete contacts",
   "contacts_delete_selected": "Are you sure you want to delete selected contacts?",
+  "contacts_remove_selected": "Are you sure you want to remove selected contacts from group?",
   "contacts_delete_desc_with_name": "{contact} silmek istediğinize emin misiniz?",
   "contacts_group_delete_title": "Grubu sil",
   "contacts_group_delete_desc_with_name": " {group} silmek istediğinize emin misiniz? Gruptaki kişiler silinmeyecektir.",

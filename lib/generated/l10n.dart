@@ -70,6 +70,16 @@ class S {
     );
   }
 
+  /// `Remove`
+  String get remove {
+    return Intl.message(
+      'Remove',
+      name: 'remove',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Host`
   String get login_input_host {
     return Intl.message(
@@ -1480,6 +1490,16 @@ class S {
     );
   }
 
+  /// `Remove contacts from group`
+  String get contacts_remove_from_group {
+    return Intl.message(
+      'Remove contacts from group',
+      name: 'contacts_remove_from_group',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Delete contacts`
   String get contacts_delete_title_plural {
     return Intl.message(
@@ -1495,6 +1515,16 @@ class S {
     return Intl.message(
       'Are you sure you want to delete selected contacts?',
       name: 'contacts_delete_selected',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Are you sure you want to remove selected contacts from group?`
+  String get contacts_remove_selected {
+    return Intl.message(
+      'Are you sure you want to remove selected contacts from group?',
+      name: 'contacts_remove_selected',
       desc: '',
       args: [],
     );

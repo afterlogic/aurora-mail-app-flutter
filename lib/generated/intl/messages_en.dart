@@ -230,6 +230,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("View group"),
         "contacts_list_its_me_flag":
             MessageLookupByLibrary.simpleMessage("It\'s me!"),
+        "contacts_remove_from_group":
+            MessageLookupByLibrary.simpleMessage("Remove contacts from group"),
+        "contacts_remove_selected": MessageLookupByLibrary.simpleMessage(
+            "Are you sure you want to remove selected contacts from group?"),
         "contacts_shared_message": m9,
         "contacts_view_address":
             MessageLookupByLibrary.simpleMessage("Address"),
@@ -758,6 +762,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Message body"),
         "no_permission_to_local_storage": MessageLookupByLibrary.simpleMessage(
             "No permission to access the local storage. Check your device settings."),
+        "remove": MessageLookupByLibrary.simpleMessage("Remove"),
         "self_destructing_life_time_day":
             MessageLookupByLibrary.simpleMessage("24 hours"),
         "self_destructing_life_time_days_3":

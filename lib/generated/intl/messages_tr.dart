@@ -236,6 +236,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Grubu görüntüle"),
         "contacts_list_its_me_flag":
             MessageLookupByLibrary.simpleMessage("Sizin hesabınız"),
+        "contacts_remove_from_group":
+            MessageLookupByLibrary.simpleMessage("Remove contacts from group"),
+        "contacts_remove_selected": MessageLookupByLibrary.simpleMessage(
+            "Are you sure you want to remove selected contacts from group?"),
         "contacts_shared_message": m9,
         "contacts_view_address": MessageLookupByLibrary.simpleMessage("Adres"),
         "contacts_view_app_bar_attach":
@@ -766,6 +770,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("İleti metni"),
         "no_permission_to_local_storage": MessageLookupByLibrary.simpleMessage(
             "Yerel depolamaya erişim izni yok. Cihazınızın ayarlarını kontrol edin."),
+        "remove": MessageLookupByLibrary.simpleMessage("Remove"),
         "self_destructing_life_time_day":
             MessageLookupByLibrary.simpleMessage("24 saat"),
         "self_destructing_life_time_days_3":
