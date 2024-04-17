@@ -22,6 +22,12 @@ class ContactsStorages extends Table {
 
   TextColumn get displayName => text().withDefault(Constant(""))();
 
+  TextColumn get ownerMail => text().nullable()();
+
+  BoolColumn get isShared => boolean().nullable()();
+
+  IntColumn get accessCode => integer().nullable()();
+
   TextColumn get contactsInfo =>
       text().map(const ContactsInfoConverter()).nullable()();
 }

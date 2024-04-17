@@ -6,16 +6,18 @@ class ContactsStorageMapper {
   static List<ContactsStorage> fromDB(List<ContactsStoragesTable> items) {
     return items.map((i) {
       return new ContactsStorage(
-        sqliteId: i.sqliteId,
-        id: i.serverId,
-        userLocalId: i.userLocalId,
-        name: i.name,
-        uniqueName: i.uniqueName,
-        cTag: i.cTag,
-        display: i.display,
-        displayName: i.displayName,
-        contactsInfo: i.contactsInfo,
-      );
+          sqliteId: i.sqliteId,
+          id: i.serverId,
+          userLocalId: i.userLocalId,
+          name: i.name,
+          uniqueName: i.uniqueName,
+          cTag: i.cTag,
+          display: i.display,
+          displayName: i.displayName,
+          contactsInfo: i.contactsInfo,
+          ownerMail: i.ownerMail,
+          isShared: i.isShared,
+          accessCode: i.accessCode);
     }).toList();
   }
 
@@ -23,17 +25,19 @@ class ContactsStorageMapper {
       List<ContactsStorage> items, int userId) {
     return items.map((i) {
       return new ContactsStoragesTable(
-        sqliteId: i.sqliteId,
-        userLocalId: i.userLocalId,
-        idUser: userId,
-        serverId: i.id,
-        uniqueName: i.uniqueName,
-        name: i.name,
-        cTag: i.cTag,
-        display: i.display,
-        displayName: i.displayName,
-        contactsInfo: i.contactsInfo,
-      );
+          sqliteId: i.sqliteId,
+          userLocalId: i.userLocalId,
+          idUser: userId,
+          serverId: i.id,
+          uniqueName: i.uniqueName,
+          name: i.name,
+          cTag: i.cTag,
+          display: i.display,
+          displayName: i.displayName,
+          contactsInfo: i.contactsInfo,
+          ownerMail: i.ownerMail,
+          isShared: i.isShared,
+          accessCode: i.accessCode);
     }).toList();
   }
 
@@ -56,6 +60,9 @@ class ContactsStorageMapper {
       display: rawItems["Display"] as bool ?? true,
       displayName: rawItems["DisplayName"] as String,
       contactsInfo: null,
+      ownerMail: rawItems["Owner"] as String,
+      isShared: rawItems["Shared"] as bool,
+      accessCode: rawItems["Access"] as int,
     );
   }
 }

@@ -7817,6 +7817,9 @@ class ContactsStoragesTable extends DataClass
   final int cTag;
   final bool display;
   final String displayName;
+  final String? ownerMail;
+  final bool? isShared;
+  final int? accessCode;
   final List<ContactInfoItem>? contactsInfo;
   ContactsStoragesTable(
       {this.sqliteId,
@@ -7828,6 +7831,9 @@ class ContactsStoragesTable extends DataClass
       required this.cTag,
       required this.display,
       required this.displayName,
+      this.ownerMail,
+      this.isShared,
+      this.accessCode,
       this.contactsInfo});
   factory ContactsStoragesTable.fromData(Map<String, dynamic> data,
       {String? prefix}) {
@@ -7851,6 +7857,12 @@ class ContactsStoragesTable extends DataClass
           .mapFromDatabaseResponse(data['${effectivePrefix}display'])!,
       displayName: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}display_name'])!,
+      ownerMail: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}owner_mail']),
+      isShared: const BoolType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}is_shared']),
+      accessCode: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}access_code']),
       contactsInfo: $ContactsStoragesTable.$converter0.mapToDart(
           const StringType().mapFromDatabaseResponse(
               data['${effectivePrefix}contacts_info'])),
@@ -7870,6 +7882,15 @@ class ContactsStoragesTable extends DataClass
     map['c_tag'] = Variable<int>(cTag);
     map['display'] = Variable<bool>(display);
     map['display_name'] = Variable<String>(displayName);
+    if (!nullToAbsent || ownerMail != null) {
+      map['owner_mail'] = Variable<String?>(ownerMail);
+    }
+    if (!nullToAbsent || isShared != null) {
+      map['is_shared'] = Variable<bool?>(isShared);
+    }
+    if (!nullToAbsent || accessCode != null) {
+      map['access_code'] = Variable<int?>(accessCode);
+    }
     if (!nullToAbsent || contactsInfo != null) {
       final converter = $ContactsStoragesTable.$converter0;
       map['contacts_info'] =
@@ -7891,6 +7912,15 @@ class ContactsStoragesTable extends DataClass
       cTag: Value(cTag),
       display: Value(display),
       displayName: Value(displayName),
+      ownerMail: ownerMail == null && nullToAbsent
+          ? const Value.absent()
+          : Value(ownerMail),
+      isShared: isShared == null && nullToAbsent
+          ? const Value.absent()
+          : Value(isShared),
+      accessCode: accessCode == null && nullToAbsent
+          ? const Value.absent()
+          : Value(accessCode),
       contactsInfo: contactsInfo == null && nullToAbsent
           ? const Value.absent()
           : Value(contactsInfo),
@@ -7910,6 +7940,9 @@ class ContactsStoragesTable extends DataClass
       cTag: serializer.fromJson<int>(json['cTag']),
       display: serializer.fromJson<bool>(json['display']),
       displayName: serializer.fromJson<String>(json['displayName']),
+      ownerMail: serializer.fromJson<String?>(json['ownerMail']),
+      isShared: serializer.fromJson<bool?>(json['isShared']),
+      accessCode: serializer.fromJson<int?>(json['accessCode']),
       contactsInfo:
           serializer.fromJson<List<ContactInfoItem>?>(json['contactsInfo']),
     );
@@ -7927,6 +7960,9 @@ class ContactsStoragesTable extends DataClass
       'cTag': serializer.toJson<int>(cTag),
       'display': serializer.toJson<bool>(display),
       'displayName': serializer.toJson<String>(displayName),
+      'ownerMail': serializer.toJson<String?>(ownerMail),
+      'isShared': serializer.toJson<bool?>(isShared),
+      'accessCode': serializer.toJson<int?>(accessCode),
       'contactsInfo': serializer.toJson<List<ContactInfoItem>?>(contactsInfo),
     };
   }
@@ -7941,6 +7977,9 @@ class ContactsStoragesTable extends DataClass
           int? cTag,
           bool? display,
           String? displayName,
+          String? ownerMail,
+          bool? isShared,
+          int? accessCode,
           List<ContactInfoItem>? contactsInfo}) =>
       ContactsStoragesTable(
         sqliteId: sqliteId ?? this.sqliteId,
@@ -7952,6 +7991,9 @@ class ContactsStoragesTable extends DataClass
         cTag: cTag ?? this.cTag,
         display: display ?? this.display,
         displayName: displayName ?? this.displayName,
+        ownerMail: ownerMail ?? this.ownerMail,
+        isShared: isShared ?? this.isShared,
+        accessCode: accessCode ?? this.accessCode,
         contactsInfo: contactsInfo ?? this.contactsInfo,
       );
   @override
@@ -7966,14 +8008,29 @@ class ContactsStoragesTable extends DataClass
           ..write('cTag: $cTag, ')
           ..write('display: $display, ')
           ..write('displayName: $displayName, ')
+          ..write('ownerMail: $ownerMail, ')
+          ..write('isShared: $isShared, ')
+          ..write('accessCode: $accessCode, ')
           ..write('contactsInfo: $contactsInfo')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(sqliteId, userLocalId, idUser, serverId,
-      uniqueName, name, cTag, display, displayName, contactsInfo);
+  int get hashCode => Object.hash(
+      sqliteId,
+      userLocalId,
+      idUser,
+      serverId,
+      uniqueName,
+      name,
+      cTag,
+      display,
+      displayName,
+      ownerMail,
+      isShared,
+      accessCode,
+      contactsInfo);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -7987,6 +8044,9 @@ class ContactsStoragesTable extends DataClass
           other.cTag == this.cTag &&
           other.display == this.display &&
           other.displayName == this.displayName &&
+          other.ownerMail == this.ownerMail &&
+          other.isShared == this.isShared &&
+          other.accessCode == this.accessCode &&
           other.contactsInfo == this.contactsInfo);
 }
 
@@ -8000,6 +8060,9 @@ class ContactsStoragesCompanion extends UpdateCompanion<ContactsStoragesTable> {
   final Value<int> cTag;
   final Value<bool> display;
   final Value<String> displayName;
+  final Value<String?> ownerMail;
+  final Value<bool?> isShared;
+  final Value<int?> accessCode;
   final Value<List<ContactInfoItem>?> contactsInfo;
   const ContactsStoragesCompanion({
     this.sqliteId = const Value.absent(),
@@ -8011,6 +8074,9 @@ class ContactsStoragesCompanion extends UpdateCompanion<ContactsStoragesTable> {
     this.cTag = const Value.absent(),
     this.display = const Value.absent(),
     this.displayName = const Value.absent(),
+    this.ownerMail = const Value.absent(),
+    this.isShared = const Value.absent(),
+    this.accessCode = const Value.absent(),
     this.contactsInfo = const Value.absent(),
   });
   ContactsStoragesCompanion.insert({
@@ -8023,6 +8089,9 @@ class ContactsStoragesCompanion extends UpdateCompanion<ContactsStoragesTable> {
     required int cTag,
     required bool display,
     this.displayName = const Value.absent(),
+    this.ownerMail = const Value.absent(),
+    this.isShared = const Value.absent(),
+    this.accessCode = const Value.absent(),
     this.contactsInfo = const Value.absent(),
   })  : userLocalId = Value(userLocalId),
         idUser = Value(idUser),
@@ -8041,6 +8110,9 @@ class ContactsStoragesCompanion extends UpdateCompanion<ContactsStoragesTable> {
     Expression<int>? cTag,
     Expression<bool>? display,
     Expression<String>? displayName,
+    Expression<String?>? ownerMail,
+    Expression<bool?>? isShared,
+    Expression<int?>? accessCode,
     Expression<List<ContactInfoItem>?>? contactsInfo,
   }) {
     return RawValuesInsertable({
@@ -8053,6 +8125,9 @@ class ContactsStoragesCompanion extends UpdateCompanion<ContactsStoragesTable> {
       if (cTag != null) 'c_tag': cTag,
       if (display != null) 'display': display,
       if (displayName != null) 'display_name': displayName,
+      if (ownerMail != null) 'owner_mail': ownerMail,
+      if (isShared != null) 'is_shared': isShared,
+      if (accessCode != null) 'access_code': accessCode,
       if (contactsInfo != null) 'contacts_info': contactsInfo,
     });
   }
@@ -8067,6 +8142,9 @@ class ContactsStoragesCompanion extends UpdateCompanion<ContactsStoragesTable> {
       Value<int>? cTag,
       Value<bool>? display,
       Value<String>? displayName,
+      Value<String?>? ownerMail,
+      Value<bool?>? isShared,
+      Value<int?>? accessCode,
       Value<List<ContactInfoItem>?>? contactsInfo}) {
     return ContactsStoragesCompanion(
       sqliteId: sqliteId ?? this.sqliteId,
@@ -8078,6 +8156,9 @@ class ContactsStoragesCompanion extends UpdateCompanion<ContactsStoragesTable> {
       cTag: cTag ?? this.cTag,
       display: display ?? this.display,
       displayName: displayName ?? this.displayName,
+      ownerMail: ownerMail ?? this.ownerMail,
+      isShared: isShared ?? this.isShared,
+      accessCode: accessCode ?? this.accessCode,
       contactsInfo: contactsInfo ?? this.contactsInfo,
     );
   }
@@ -8112,6 +8193,15 @@ class ContactsStoragesCompanion extends UpdateCompanion<ContactsStoragesTable> {
     if (displayName.present) {
       map['display_name'] = Variable<String>(displayName.value);
     }
+    if (ownerMail.present) {
+      map['owner_mail'] = Variable<String?>(ownerMail.value);
+    }
+    if (isShared.present) {
+      map['is_shared'] = Variable<bool?>(isShared.value);
+    }
+    if (accessCode.present) {
+      map['access_code'] = Variable<int?>(accessCode.value);
+    }
     if (contactsInfo.present) {
       final converter = $ContactsStoragesTable.$converter0;
       map['contacts_info'] =
@@ -8132,6 +8222,9 @@ class ContactsStoragesCompanion extends UpdateCompanion<ContactsStoragesTable> {
           ..write('cTag: $cTag, ')
           ..write('display: $display, ')
           ..write('displayName: $displayName, ')
+          ..write('ownerMail: $ownerMail, ')
+          ..write('isShared: $isShared, ')
+          ..write('accessCode: $accessCode, ')
           ..write('contactsInfo: $contactsInfo')
           ..write(')'))
         .toString();
@@ -8199,6 +8292,23 @@ class $ContactsStoragesTable extends ContactsStorages
       type: const StringType(),
       requiredDuringInsert: false,
       defaultValue: Constant(""));
+  final VerificationMeta _ownerMailMeta = const VerificationMeta('ownerMail');
+  @override
+  late final GeneratedColumn<String?> ownerMail = GeneratedColumn<String?>(
+      'owner_mail', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _isSharedMeta = const VerificationMeta('isShared');
+  @override
+  late final GeneratedColumn<bool?> isShared = GeneratedColumn<bool?>(
+      'is_shared', aliasedName, true,
+      type: const BoolType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'CHECK (is_shared IN (0, 1))');
+  final VerificationMeta _accessCodeMeta = const VerificationMeta('accessCode');
+  @override
+  late final GeneratedColumn<int?> accessCode = GeneratedColumn<int?>(
+      'access_code', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
   final VerificationMeta _contactsInfoMeta =
       const VerificationMeta('contactsInfo');
   @override
@@ -8219,6 +8329,9 @@ class $ContactsStoragesTable extends ContactsStorages
         cTag,
         display,
         displayName,
+        ownerMail,
+        isShared,
+        accessCode,
         contactsInfo
       ];
   @override
@@ -8286,6 +8399,20 @@ class $ContactsStoragesTable extends ContactsStorages
           _displayNameMeta,
           displayName.isAcceptableOrUnknown(
               data['display_name']!, _displayNameMeta));
+    }
+    if (data.containsKey('owner_mail')) {
+      context.handle(_ownerMailMeta,
+          ownerMail.isAcceptableOrUnknown(data['owner_mail']!, _ownerMailMeta));
+    }
+    if (data.containsKey('is_shared')) {
+      context.handle(_isSharedMeta,
+          isShared.isAcceptableOrUnknown(data['is_shared']!, _isSharedMeta));
+    }
+    if (data.containsKey('access_code')) {
+      context.handle(
+          _accessCodeMeta,
+          accessCode.isAcceptableOrUnknown(
+              data['access_code']!, _accessCodeMeta));
     }
     context.handle(_contactsInfoMeta, const VerificationResult.success());
     return context;

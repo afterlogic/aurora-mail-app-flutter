@@ -10,6 +10,10 @@ class ContactsStorage {
   final int cTag;
   final bool display;
   final String displayName;
+  final String ownerMail;
+  final bool isShared;
+  // access codes - 1 == write, 2 == read
+  final int accessCode;
   List<ContactInfoItem> contactsInfo;
 
   ContactsStorage({
@@ -21,6 +25,9 @@ class ContactsStorage {
     @required this.cTag,
     @required this.display,
     @required this.displayName,
+    this.ownerMail,
+    this.isShared,
+    this.accessCode,
     @required this.contactsInfo,
   }) : assert(userLocalId != null);
 
@@ -43,6 +50,9 @@ class ContactsStorage {
       cTag: cTag ?? this.cTag,
       display: display ?? this.display,
       displayName: displayName ?? this.displayName,
+      ownerMail: ownerMail,
+      isShared: isShared,
+      accessCode: accessCode,
       contactsInfo: contactsInfo ?? this.contactsInfo,
     );
   }
