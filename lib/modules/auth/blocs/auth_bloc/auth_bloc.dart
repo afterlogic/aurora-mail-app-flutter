@@ -146,7 +146,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         var user = await _methods.login(
           email: event.email,
           password: event.password,
-          host: event.hostname,
+          manuallyEnteredHost: event.hostname,
         );
         if (userFromDb != null) {
           user = user.copyWith(localId: userFromDb.localId);
