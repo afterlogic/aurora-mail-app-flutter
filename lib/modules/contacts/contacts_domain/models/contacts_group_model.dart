@@ -2,6 +2,7 @@
 import 'package:flutter/widgets.dart';
 
 class ContactsGroup {
+  final List<int> contacts;
   final String uuid;
   final int userLocalId;
   final int idUser;
@@ -24,6 +25,7 @@ class ContactsGroup {
     @required this.userLocalId,
     @required this.idUser,
     @required this.name,
+    this.contacts = const [],
     this.city = "",
     this.company = "",
     this.country = "",
@@ -56,6 +58,7 @@ class ContactsGroup {
     String street,
     String web,
     String zip,
+    List<int> contacts,
   }) {
     return new ContactsGroup(
       uuid: uuid ?? this.uuid,
@@ -74,6 +77,7 @@ class ContactsGroup {
       street: street ?? this.street,
       web: web ?? this.web,
       zip: zip ?? this.zip,
+      contacts: contacts ?? this.contacts
     );
   }
 }

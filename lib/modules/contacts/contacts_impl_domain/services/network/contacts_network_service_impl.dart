@@ -36,7 +36,7 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
     int userLocalId,
   }) async {
     if (uuids == null || uuids.isEmpty) {
-      return new List<Contact>();
+      return [];
     }
 
     final params = {

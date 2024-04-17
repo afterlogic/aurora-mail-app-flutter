@@ -488,124 +488,137 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
               onActionSelected: _onMainAppBarActionSelected,
               hasEmail: _contactInfo.viewEmail?.isNotEmpty == true,
             ),
-      body: BlocListener(
-        bloc: pgpSettingsBloc,
-        listener: (BuildContext context, state) async {
-          if (state is LoadedState || state is KeyFlagsUpdated) {
+      body: BlocListener<ContactsBloc, ContactsState>(
+        bloc: contactsBloc,
+        listener: (context, state) async {
+          final newContact = state.contacts.firstWhere((e) => e.uuid == c.uuid);
+          final isGroupsUpdated = !listEquals(newContact.groupUUIDs, c.groupUUIDs);
+          if(isGroupsUpdated){
             final result = await contactsBloc.getContact(contact.entityId);
             init(result);
           }
-          if (state is CompleteDownload) {
-            showSnack(
-              isError: false,
-              context: context,
-              scaffoldState: Scaffold.of(context),
-              message: S.of(context).label_pgp_downloading_to(state.filePath),
-            );
-          }
-          if (state is SelectKeyForImport) {
-            _importKey(state.userKeys, state.contactKeys);
-            return;
-          }
-          if (state is ErrorState) {
-            showErrorSnack(
-              context: context,
-              scaffoldState: Scaffold.of(context),
-              msg: state.message,
-            );
-          }
         },
-        child: Builder(builder: (context) {
-          final child = ListView(
-            children: <Widget>[
-              ..._mainInfo,
-              if (personalInfo.isNotEmpty)
-                Divider(indent: 16.0, endIndent: 16.0),
-              if (personalInfo.isNotEmpty)
-                ListTile(
-                  title: Text(
-                    S.of(context).contacts_view_section_home,
-                    style: sectionTitleTheme,
+        child: BlocListener(
+          bloc: pgpSettingsBloc,
+          listener: (BuildContext context, state) async {
+            if (state is LoadedState || state is KeyFlagsUpdated) {
+              final result = await contactsBloc.getContact(contact.entityId);
+              init(result);
+            }
+            if (state is CompleteDownload) {
+              showSnack(
+                isError: false,
+                context: context,
+                scaffoldState: Scaffold.of(context),
+                message: S.of(context).label_pgp_downloading_to(state.filePath),
+              );
+            }
+            if (state is SelectKeyForImport) {
+              _importKey(state.userKeys, state.contactKeys);
+              return;
+            }
+            if (state is ErrorState) {
+              showErrorSnack(
+                context: context,
+                scaffoldState: Scaffold.of(context),
+                msg: state.message,
+              );
+            }
+          },
+          child: Builder(builder: (context) {
+            final child = ListView(
+              children: <Widget>[
+                ..._mainInfo,
+                if (personalInfo.isNotEmpty)
+                  Divider(indent: 16.0, endIndent: 16.0),
+                if (personalInfo.isNotEmpty)
+                  ListTile(
+                    title: Text(
+                      S.of(context).contacts_view_section_home,
+                      style: sectionTitleTheme,
+                    ),
                   ),
-                ),
-              ...personalInfo,
-              if (businessInfo.isNotEmpty)
-                Divider(indent: 16.0, endIndent: 16.0),
-              if (businessInfo.isNotEmpty)
-                ListTile(
-                  title: Text(
-                    S.of(context).contacts_view_section_business,
-                    style: sectionTitleTheme,
+                ...personalInfo,
+                if (businessInfo.isNotEmpty)
+                  Divider(indent: 16.0, endIndent: 16.0),
+                if (businessInfo.isNotEmpty)
+                  ListTile(
+                    title: Text(
+                      S.of(context).contacts_view_section_business,
+                      style: sectionTitleTheme,
+                    ),
                   ),
-                ),
-              ...businessInfo,
-              if (otherInfo.isNotEmpty) Divider(indent: 16.0, endIndent: 16.0),
-              if (otherInfo.isNotEmpty)
-                ListTile(
-                  title: Text(
-                    S.of(context).contacts_view_section_other_info,
-                    style: sectionTitleTheme,
+                ...businessInfo,
+                if (otherInfo.isNotEmpty)
+                  Divider(indent: 16.0, endIndent: 16.0),
+                if (otherInfo.isNotEmpty)
+                  ListTile(
+                    title: Text(
+                      S.of(context).contacts_view_section_other_info,
+                      style: sectionTitleTheme,
+                    ),
                   ),
-                ),
-              ...otherInfo,
-              if (BuildProperty.cryptoEnable && keyInfo != null)
-                Divider(indent: 16.0, endIndent: 16.0),
-              if (BuildProperty.cryptoEnable && keyInfo != null) keyInfo,
-              if (groupInfo.isNotEmpty) Divider(indent: 16.0, endIndent: 16.0),
-              if (groupInfo.isNotEmpty)
-                ListTile(
-                  title: Text(
-                    S.of(context).contacts_view_section_groups,
-                    style: sectionTitleTheme,
+                ...otherInfo,
+                if (BuildProperty.cryptoEnable && keyInfo != null)
+                  Divider(indent: 16.0, endIndent: 16.0),
+                if (BuildProperty.cryptoEnable && keyInfo != null) keyInfo,
+                if (groupInfo.isNotEmpty)
+                  Divider(indent: 16.0, endIndent: 16.0),
+                if (groupInfo.isNotEmpty)
+                  ListTile(
+                    title: Text(
+                      S.of(context).contacts_view_section_groups,
+                      style: sectionTitleTheme,
+                    ),
                   ),
-                ),
-              if (groupInfo.isNotEmpty)
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Wrap(
-                    spacing: 16,
-                    children: groupInfo,
+                if (groupInfo.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Wrap(
+                      spacing: 16,
+                      children: groupInfo,
+                    ),
                   ),
-                ),
-            ],
-          );
-          if (widget.isPart) {
-            return Column(
-              children: [
-                if (widget.isPart) ...[
-                  ContactViewAppBar(
-                    name: c.fullName,
-                    allowShare: c.storage == StorageNames.personal,
-                    allowUnshare: c.storage == StorageNames.shared,
-                    allowEdit: c.storage == StorageNames.personal ||
-                        c.viewEmail ==
-                            BlocProvider.of<AuthBloc>(context)
-                                .currentAccount
-                                .email,
-                    allowDelete: c.storage == StorageNames.personal ||
-                        c.storage == StorageNames.shared,
-                    onActionSelected: _onMainAppBarActionSelected,
-                    hasEmail: _contactInfo.viewEmail?.isNotEmpty == true,
-                    isAppBar: false,
-                  ),
-                  Divider(height: 1),
-                ],
-                Expanded(
-                  child: child,
-                ),
               ],
             );
-          } else {
-            return Center(
-              child: ConstrainedBox(
-                constraints: BoxConstraints(
-                  maxWidth: LayoutConfig.formWidth,
+            if (widget.isPart) {
+              return Column(
+                children: [
+                  if (widget.isPart) ...[
+                    ContactViewAppBar(
+                      name: c.fullName,
+                      allowShare: c.storage == StorageNames.personal,
+                      allowUnshare: c.storage == StorageNames.shared,
+                      allowEdit: c.storage == StorageNames.personal ||
+                          c.viewEmail ==
+                              BlocProvider.of<AuthBloc>(context)
+                                  .currentAccount
+                                  .email,
+                      allowDelete: c.storage == StorageNames.personal ||
+                          c.storage == StorageNames.shared,
+                      onActionSelected: _onMainAppBarActionSelected,
+                      hasEmail: _contactInfo.viewEmail?.isNotEmpty == true,
+                      isAppBar: false,
+                    ),
+                    Divider(height: 1),
+                  ],
+                  Expanded(
+                    child: child,
+                  ),
+                ],
+              );
+            } else {
+              return Center(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    maxWidth: LayoutConfig.formWidth,
+                  ),
+                  child: child,
                 ),
-                child: child,
-              ),
-            );
-          }
-        }),
+              );
+            }
+          }),
+        ),
       ),
     );
   }

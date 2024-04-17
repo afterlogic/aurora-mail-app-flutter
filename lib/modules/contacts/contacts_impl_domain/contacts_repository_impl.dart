@@ -129,8 +129,22 @@ class ContactsRepositoryImpl implements ContactsRepository {
           orElse: () => null);
       if (exist == null) groupsForDelete.add(group.uuid);
     });
+    final contactUuidsFromNewGroups = {for (ContactsGroup g in newGroups) g.name : g.contacts};
     await _db.deleteGroups(groupsForDelete);
     await _db.addGroups(newGroups);
+
+    // TODO alternative more optimized solution: after getting contacts check each
+    // inside DB if has link to group. If there is no link, get contacts from
+    // network and update DB
+
+    for(final entry in contactUuidsFromNewGroups.entries) {
+      final contacts = await _network.getContactsByUids(
+        storageId: entry.key,
+        uuids: entry.value.map((e) => e.toString()).toList(),
+        userLocalId: _userLocalId
+      );
+      await _db.updateContacts(contacts);
+    }
   }
 
   // @override
@@ -255,9 +269,15 @@ class ContactsRepositoryImpl implements ContactsRepository {
   }
 
   @override
-  Future<void> updateContactPublicKeyFlags({@required Contact contact, bool pgpEncryptMessages, bool pgpSignMessages}) async {
-    final isUpdateSuccess = await _network.updateContactPublicKeyFlags(uuid: contact.uuid, pgpEncryptMessages: pgpEncryptMessages, pgpSignMessages: pgpSignMessages);
-    if(!isUpdateSuccess) throw Exception('Error while changing key flags');
+  Future<void> updateContactPublicKeyFlags(
+      {@required Contact contact,
+      bool pgpEncryptMessages,
+      bool pgpSignMessages}) async {
+    final isUpdateSuccess = await _network.updateContactPublicKeyFlags(
+        uuid: contact.uuid,
+        pgpEncryptMessages: pgpEncryptMessages,
+        pgpSignMessages: pgpSignMessages);
+    if (!isUpdateSuccess) throw Exception('Error while changing key flags');
     final newContacts = await _network.getContactsByUids(
       userLocalId: _userLocalId,
       storageId: StorageNames.personal,

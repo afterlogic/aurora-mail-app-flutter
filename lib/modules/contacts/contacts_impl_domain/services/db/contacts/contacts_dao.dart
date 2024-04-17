@@ -42,7 +42,7 @@ class ContactsDao extends DatabaseAccessor<AppDatabase>
   }
 
   Future<List<ContactDb>> getContacts(int userLocalId,
-      {required List<String> storages, required String groupUuid, required String pattern}) {
+      {required List<String>? storages, required String? groupUuid, required String? pattern}) {
     return (select(contactsTable)
           ..where((c) => c.userLocalId.equals(userLocalId))
           ..where((c) {

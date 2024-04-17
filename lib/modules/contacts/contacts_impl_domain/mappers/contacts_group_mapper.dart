@@ -74,6 +74,7 @@ class ContactsGroupMapper {
       street: i["Street"] as String ?? '',
       web: i["Web"] as String ?? '',
       zip: i["Zip"] as String ?? '',
+      contacts: (i["Contacts"] as List).map((e) => e as int).toList()
     );
   }
 
