@@ -3,6 +3,7 @@ import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/res/icons/webmail_icons.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
 enum ContactViewAppBarAction {
   attach,
@@ -11,6 +12,7 @@ enum ContactViewAppBarAction {
   edit,
   share,
   unshare,
+  add_to_group,
   delete
 }
 
@@ -92,6 +94,11 @@ class ContactViewAppBar extends StatelessWidget implements PreferredSizeWidget {
               text: S.of(context).contacts_view_app_bar_edit_contact,
               value: ContactViewAppBarAction.edit,
             ),
+          _buildMenuItem(
+            icon: MdiIcons.fileMove,
+            text: S.of(context).contacts_group_add_to_group,
+            value: ContactViewAppBarAction.add_to_group,
+          ),
           if (allowDelete)
             _buildMenuItem(
               icon: Icons.delete_outline,

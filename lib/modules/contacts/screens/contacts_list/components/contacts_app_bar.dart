@@ -2,8 +2,11 @@
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
+import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
+import 'package:aurora_mail/modules/contacts/screens/contacts_list/components/select_app_bar.dart';
 import 'package:aurora_mail/modules/contacts/screens/group_view/group_view_route.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/search_bar.dart';
+import 'package:aurora_mail/modules/mail/screens/messages_list/components/selection_controller.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/user_selection_popup.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/utils/storage_util.dart';
@@ -14,12 +17,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class ContactsAppBar extends StatefulWidget implements PreferredSizeWidget {
   final bool isAppBar;
   final bool enable;
+  final SelectionController<String, Contact> controller;
+
   @override
   final Size preferredSize = const Size.fromHeight(kToolbarHeight);
 
   const ContactsAppBar({
     this.isAppBar = true,
     this.enable = true,
+    this.controller
   });
 
   @override
@@ -35,6 +41,7 @@ class _ContactsAppBarState extends State<ContactsAppBar> {
   void initState() {
     super.initState();
     _contactsBloc = BlocProvider.of<ContactsBloc>(context);
+    widget.controller.addListener(update);
     if (_contactsBloc.searchPattern != null) {
       _mode = ContactAppBarMode.search;
       _searchCtrl.text = _contactsBloc.searchPattern;
@@ -42,10 +49,20 @@ class _ContactsAppBarState extends State<ContactsAppBar> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    widget.controller.removeListener(update);
+  }
+
+  update() {
+    setState(() {});
+  }
+
+  @override
   Widget build(BuildContext context) {
     return AnimatedSwitcher(
       duration: Duration(milliseconds: 250),
-      child: _mode == ContactAppBarMode.search && widget.enable
+      child: widget.controller.enable ? SelectAppBar(widget.controller, _contactsBloc) :  _mode == ContactAppBarMode.search && widget.enable
           ? SearchBar(
               _searchCtrl,
               changeMode,

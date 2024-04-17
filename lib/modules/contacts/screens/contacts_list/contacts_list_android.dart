@@ -3,6 +3,7 @@ import 'dart:async';
 
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/inject/app_inject.dart';
+import 'package:aurora_mail/modules/contacts/screens/contacts_list/components/select_app_bar.dart';
 import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
@@ -11,6 +12,7 @@ import 'package:aurora_mail/modules/contacts/screens/contact_view/contact_view_a
 import 'package:aurora_mail/modules/contacts/screens/contact_view/contact_view_route.dart';
 import 'package:aurora_mail/modules/contacts/screens/contacts_list/components/contacts_app_bar.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/mail_bloc.dart';
+import 'package:aurora_mail/modules/mail/screens/messages_list/components/selection_controller.dart';
 import 'package:aurora_mail/modules/settings/blocs/pgp_settings/bloc.dart';
 import 'package:aurora_mail/modules/settings/screens/pgp_settings/dialogs/import_key_dialog.dart';
 import 'package:aurora_mail/shared_ui/mail_bottom_app_bar.dart';
@@ -38,6 +40,8 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
   PgpSettingsBloc pgpSettingsBloc;
   Contact selectedContact;
   Widget selectedWidget;
+  final selectionController = SelectionController<String, Contact>();
+
 
   @override
   void initState() {
@@ -212,7 +216,7 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
       );
     }
     return Scaffold(
-      appBar: isTablet ? null : ContactsAppBar(),
+      appBar: isTablet ? null : ContactsAppBar(controller: selectionController,),
       drawer: isTablet ? null : ContactsDrawer(),
       body: body,
       bottomNavigationBar:
@@ -259,6 +263,7 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
               contact: state.contacts[i],
               onPressed: (c) => _onContactSelected(context, c),
               onDeleteContact: _deleteContact,
+              selectionController: selectionController,
             ),
             itemCount: state.contacts.length,
           ),

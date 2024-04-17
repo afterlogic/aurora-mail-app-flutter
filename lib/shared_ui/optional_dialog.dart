@@ -26,6 +26,25 @@ class OptionalDialog extends StatefulWidget {
     this.actions,
   }) : super(key: key);
 
+  static Future<OptionalDialogResult> showWithOptions(
+      BuildContext context,
+      String title,
+      String description,
+      Map<String, bool> options,
+      String actionText, {
+        List<Widget> actions,
+      }) {
+    return dialog(
+        context: context,
+        builder: (_) => OptionalDialog(
+          title: title,
+          description: description,
+          options: options,
+          actionText: actionText,
+          actions: actions,
+        )).then((value) => ( value as OptionalDialogResult) ?? null);
+  }
+
   static Future<bool> show(
     BuildContext context,
     String title,

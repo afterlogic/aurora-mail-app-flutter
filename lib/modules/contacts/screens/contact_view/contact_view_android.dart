@@ -6,6 +6,7 @@ import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_group_model.dart';
+import 'package:aurora_mail/modules/contacts/screens/components/groups_select_dialog.dart';
 import 'package:aurora_mail/modules/contacts/screens/contact_edit/components/contact_check_box.dart';
 import 'package:aurora_mail/modules/contacts/screens/contact_edit/contact_edit_route.dart';
 import 'package:aurora_mail/modules/contacts/screens/contact_view/components/contact_view_app_bar.dart';
@@ -21,11 +22,13 @@ import 'package:aurora_mail/modules/settings/blocs/pgp_settings/bloc.dart';
 import 'package:aurora_mail/modules/settings/screens/pgp_settings/dialogs/import_key_dialog.dart';
 import 'package:aurora_mail/modules/settings/screens/pgp_settings/screens/pgp_key_route.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
+import 'package:aurora_mail/shared_ui/optional_dialog.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/date_formatting.dart';
 import 'package:aurora_mail/utils/identity_util.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:crypto_model/crypto_model.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -167,6 +170,13 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
           bloc.add(DeleteContacts([contact]));
           _onClose();
         }
+        break;
+      case ContactViewAppBarAction.add_to_group:
+        final result = await GroupsSelectDialog.show(context, bloc.state.groups,);
+        if(result == null){
+          break;
+        }
+        bloc.add(AddContactsToGroup([result], [contact]));
         break;
     }
   }

@@ -310,14 +310,16 @@ class ContactsRepositoryImpl implements ContactsRepository {
   }
 
   Future<void> addContactsToGroup(
-    ContactsGroup group,
+    List<ContactsGroup> groups,
     List<Contact> contacts,
   ) async {
     final uuids = contacts.map((c) => c.uuid).toList();
-    await _network.addContactsToGroup(group.uuid, uuids);
 
+    for(final g in groups) {
+      await _network.addContactsToGroup(g.uuid, uuids);
+    }
     final updatedContacts = contacts.map((c) {
-      return c.copyWith(groupUUIDs: [...c.groupUUIDs, group.uuid]);
+      return c.copyWith(groupUUIDs: [...c.groupUUIDs, ...groups.map((e) => e.uuid)]);
     }).toList();
 
     await _db.updateContacts(updatedContacts);

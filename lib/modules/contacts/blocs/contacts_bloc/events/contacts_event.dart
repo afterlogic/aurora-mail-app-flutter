@@ -132,13 +132,13 @@ class UnshareContacts extends ContactsEvent {
 }
 
 class AddContactsToGroup extends ContactsEvent {
-  final ContactsGroup group;
+  final List<ContactsGroup> groups;
   final List<Contact> contacts;
 
-  const AddContactsToGroup(this.group, this.contacts);
+  const AddContactsToGroup(this.groups, this.contacts);
 
   @override
-  List<Object> get props => [group, contacts];
+  List<Object> get props => [groups, contacts];
 }
 
 class RemoveContactsFromGroup extends ContactsEvent {

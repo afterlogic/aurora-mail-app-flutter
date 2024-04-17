@@ -58,7 +58,7 @@ abstract class ContactsRepository {
 
   Future<void> unshareContacts(List<Contact> contact);
 
-  Future<void> addContactsToGroup(ContactsGroup group, List<Contact> contacts);
+  Future<void> addContactsToGroup(List<ContactsGroup> groups, List<Contact> contacts);
 
   Future<void> removeContactsFromGroup(
       ContactsGroup group, List<Contact> contacts);
