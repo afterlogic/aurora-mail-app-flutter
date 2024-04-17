@@ -79,6 +79,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "add": MessageLookupByLibrary.simpleMessage("Add"),
         "already_have_key": MessageLookupByLibrary.simpleMessage(
             "Zaten bir genel veya özel anahtarınız var"),
         "app_title": MessageLookupByLibrary.simpleMessage("E-posta Okuyucu"),
@@ -205,6 +206,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("E-posta adresi yok"),
         "contacts_empty": MessageLookupByLibrary.simpleMessage("Kişi yok"),
         "contacts_group_add": MessageLookupByLibrary.simpleMessage("Grup ekle"),
+        "contacts_group_add_to_group":
+            MessageLookupByLibrary.simpleMessage("Add to group"),
         "contacts_group_delete_desc_with_name": m8,
         "contacts_group_delete_title":
             MessageLookupByLibrary.simpleMessage("Grubu sil"),

@@ -1,5 +1,6 @@
 {
   "app_title": "E-posta Okuyucu",
+  "add": "Add",
   "login_input_host": "Sunucu",
   "login_input_email": "E-posta",
   "login_input_password": "Şifre",
@@ -136,6 +137,7 @@
   "contacts_edit_save": "Değişiklikleri kaydet",
   "contacts_add": "Kişi ekle",
   "contacts_group_add": "Grup ekle",
+  "contacts_group_add_to_group": "Add to group",
   "contacts_group_edit": "Grubu düzenle",
   "contacts_group_edit_is_organization": "Bu grup bir şirket",
   "contacts_group_edit_cancel": "Grubu düzenlemekten vazgeç",

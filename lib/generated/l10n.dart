@@ -60,6 +60,16 @@ class S {
     );
   }
 
+  /// `Add`
+  String get add {
+    return Intl.message(
+      'Add',
+      name: 'add',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Host`
   String get login_input_host {
     return Intl.message(
@@ -1415,6 +1425,16 @@ class S {
     return Intl.message(
       'Add group',
       name: 'contacts_group_add',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Add to group`
+  String get contacts_group_add_to_group {
+    return Intl.message(
+      'Add to group',
+      name: 'contacts_group_add_to_group',
       desc: '',
       args: [],
     );

@@ -1,5 +1,6 @@
 {
   "app_title":  "Mail Client",
+  "add": "Добавить",
   "login_input_host":  "Домен",
   "login_input_email":  "Почта",
   "login_input_password":  "Пароль",
@@ -136,6 +137,7 @@
   "contacts_edit_save": "Сохранить",
   "contacts_add": "Добавить контакт",
   "contacts_group_add": "Добавить группу",
+  "contacts_group_add_to_group": "Добавить в группу",
   "contacts_group_edit": "Редактировать группу",
   "contacts_group_edit_is_organization": "Эта группа является компанией",
   "contacts_group_edit_cancel": "Отменить редактирование группы",

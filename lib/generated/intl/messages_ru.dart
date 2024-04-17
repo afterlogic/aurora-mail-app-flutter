@@ -78,6 +78,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "add": MessageLookupByLibrary.simpleMessage("Добавить"),
         "already_have_key": MessageLookupByLibrary.simpleMessage(
             "У вас уже есть открытый или закрытый ключ"),
         "app_title": MessageLookupByLibrary.simpleMessage("Mail Client"),
@@ -207,6 +208,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "contacts_empty": MessageLookupByLibrary.simpleMessage("Контактов нет"),
         "contacts_group_add":
             MessageLookupByLibrary.simpleMessage("Добавить группу"),
+        "contacts_group_add_to_group":
+            MessageLookupByLibrary.simpleMessage("Добавить в группу"),
         "contacts_group_delete_desc_with_name": m8,
         "contacts_group_delete_title":
             MessageLookupByLibrary.simpleMessage("Удалить группу"),

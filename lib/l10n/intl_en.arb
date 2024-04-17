@@ -1,5 +1,6 @@
 {
   "app_title": "Mail Client",
+  "add": "Add",
   "login_input_host": "Host",
   "login_input_email": "Email",
   "login_input_password": "Password",
@@ -136,6 +137,7 @@
   "contacts_edit_save": "Save changes",
   "contacts_add": "Add contact",
   "contacts_group_add": "Add group",
+  "contacts_group_add_to_group": "Add to group",
   "contacts_group_edit": "Edit group",
   "contacts_group_edit_is_organization": "This group is a Company",
   "contacts_group_edit_cancel": "Cancel editing group",
