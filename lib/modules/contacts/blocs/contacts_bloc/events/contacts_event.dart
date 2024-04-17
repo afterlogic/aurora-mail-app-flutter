@@ -141,14 +141,13 @@ class AddContactsToGroup extends ContactsEvent {
   List<Object> get props => [groups, contacts];
 }
 
-class RemoveContactsFromGroup extends ContactsEvent {
-  final ContactsGroup group;
+class RemoveContactsFromCurrentGroup extends ContactsEvent {
   final List<Contact> contacts;
 
-  const RemoveContactsFromGroup(this.group, this.contacts);
+  const RemoveContactsFromCurrentGroup(this.contacts);
 
   @override
-  List<Object> get props => [group, contacts];
+  List<Object> get props => [contacts];
 }
 
 class AddError extends ContactsEvent {

@@ -82,7 +82,7 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
     if (event is ShareContacts) yield* _shareContacts(event);
     if (event is UnshareContacts) yield* _unshareContacts(event);
     if (event is AddContactsToGroup) yield* _addContactsToGroup(event);
-    if (event is RemoveContactsFromGroup)
+    if (event is RemoveContactsFromCurrentGroup)
       yield* _removeContactsFromGroup(event);
     if (event is SelectStorageGroup) yield* _selectStorageGroup(event);
     if (event is CreateGroup) yield* _addGroup(event);
@@ -273,17 +273,19 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
 
   Stream<ContactsState> _addContactsToGroup(AddContactsToGroup event) async* {
     add(StartActivity('AddContactsToGroup'));
-     await _repo
-          .addContactsToGroup(event.groups, event.contacts)
-          .catchError((err) => add(AddError(formatError(err, null))));
+    await _repo
+        .addContactsToGroup(event.groups, event.contacts)
+        .catchError((err) => add(AddError(formatError(err, null))));
     add(StopActivity('AddContactsToGroup'));
   }
 
   Stream<ContactsState> _removeContactsFromGroup(
-      RemoveContactsFromGroup event) async* {
+      RemoveContactsFromCurrentGroup event) async* {
     add(StartActivity('RemoveContactsFromGroup'));
     _repo
-        .removeContactsFromGroup(event.group, event.contacts)
+        .removeContactsFromGroup(
+            state.groups.firstWhere((e) => e.uuid == state.selectedGroup),
+            event.contacts)
         .catchError((err) => add(AddError(formatError(err, null))));
     add(StopActivity('RemoveContactsFromGroup'));
   }
