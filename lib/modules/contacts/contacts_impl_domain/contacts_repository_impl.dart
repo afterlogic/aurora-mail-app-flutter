@@ -435,6 +435,9 @@ class ContactsRepositoryImpl implements ContactsRepository {
         displayName: s.displayName,
         uniqueName: s.uniqueName,
         name: s.name,
+        ownerMail: s.ownerMail,
+        isShared: s.isShared,
+        accessCode: s.accessCode
       );
     } else {
       final calcResult =
@@ -466,6 +469,9 @@ class ContactsRepositoryImpl implements ContactsRepository {
         displayName: s.displayName,
         name: s.name,
         uniqueName: s.uniqueName,
+        ownerMail: s.ownerMail,
+        isShared: s.isShared,
+        accessCode: s.accessCode
       );
     }
   }
