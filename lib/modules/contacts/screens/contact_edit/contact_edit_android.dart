@@ -83,6 +83,7 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
   int _birthYear = 0;
   List<String> _selectedGroupsUuids;
   PgpSettingsBloc pgpSettingsBloc;
+  String currentSelectedStorage;
 
   @override
   void initState() {
@@ -102,6 +103,7 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
       }
     }
     final selectedGroup = _bloc.state.selectedGroup;
+    currentSelectedStorage = _bloc.state.selectedStorage == null ? StorageNames.personal : _bloc.state.selectedStorage;
 
     _selectedGroupsUuids = [];
 
@@ -261,7 +263,7 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
       parentUuid: widget.contact?.parentUuid ?? null,
       idUser: widget.contact?.idUser ?? user.serverId,
       idTenant: widget.contact?.idTenant ?? null,
-      storage: widget.contact?.storage ?? StorageNames.personal,
+      storage: widget.contact?.storage ?? currentSelectedStorage,
       fullName: _fullName.text,
       useFriendlyName: widget.contact?.useFriendlyName ?? null,
       primaryEmail: _primaryEmail,

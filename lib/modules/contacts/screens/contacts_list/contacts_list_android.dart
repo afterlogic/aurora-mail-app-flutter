@@ -3,6 +3,7 @@ import 'dart:async';
 
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/inject/app_inject.dart';
+import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aurora_mail/modules/contacts/screens/contacts_list/components/select_app_bar.dart';
 import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
@@ -42,8 +43,6 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
   Widget selectedWidget;
   final selectionController = SelectionController<String, Contact>();
 
-
-
   @override
   void initState() {
     super.initState();
@@ -61,8 +60,8 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
 
   void _selectionCallback() {
     //rebuild only if selection mode changes
-    if(selectionController.selected.length < 2);
-    setState(() { });
+    if (selectionController.selected.length < 2) ;
+    setState(() {});
   }
 
   void _onContactSelected(BuildContext context, Contact contact) {
@@ -207,17 +206,28 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
                   ),
                   floatingActionButtonLocation:
                       FloatingActionButtonLocation.endFloat,
-                  floatingActionButton: AMFloatingActionButton(
-                    child: IconTheme(
-                      data: AppTheme.floatIconTheme,
-                      child: Icon(MdiIcons.accountPlusOutline),
-                    ),
-                    onPressed: () => Navigator.pushNamed(
-                      context,
-                      ContactEditRoute.name,
-                      arguments: ContactEditScreenArgs(pgpSettingsBloc,
-                          bloc: contactsBloc),
-                    ),
+                  floatingActionButton:
+                      BlocBuilder<ContactsBloc, ContactsState>(
+                    buildWhen: (prev, current) =>
+                        (prev.selectedStorage != current.selectedStorage) ||
+                        (prev.selectedGroup != current.selectedGroup),
+                    builder: (context, state) {
+                      return _checkIfContactCanBeAdded(state)
+                          ? AMFloatingActionButton(
+                              child: IconTheme(
+                                data: AppTheme.floatIconTheme,
+                                child: Icon(MdiIcons.accountPlusOutline),
+                              ),
+                              onPressed: () => Navigator.pushNamed(
+                                context,
+                                ContactEditRoute.name,
+                                arguments: ContactEditScreenArgs(
+                                    pgpSettingsBloc,
+                                    bloc: contactsBloc),
+                              ),
+                            )
+                          : SizedBox.shrink();
+                    },
                   ),
                 ),
               ),
@@ -231,27 +241,52 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
       );
     }
     return Scaffold(
-      appBar: isTablet ? null : ContactsAppBar(controller: selectionController,),
+      appBar: isTablet
+          ? null
+          : ContactsAppBar(
+              controller: selectionController,
+            ),
       drawer: isTablet ? null : ContactsDrawer(),
       body: body,
       bottomNavigationBar:
           MailBottomAppBar(selectedRoute: MailBottomAppBarRoutes.contacts),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: isTablet
-          ? null
-          : selectionController.enable ? null : AMFloatingActionButton(
-              child: IconTheme(
-                data: AppTheme.floatIconTheme,
-                child: Icon(MdiIcons.accountPlusOutline),
-              ),
-              onPressed: () => Navigator.pushNamed(
-                context,
-                ContactEditRoute.name,
-                arguments:
-                    ContactEditScreenArgs(pgpSettingsBloc, bloc: contactsBloc),
-              ),
-            ),
+      floatingActionButton: BlocBuilder<ContactsBloc, ContactsState>(
+        buildWhen: (prev, current) =>
+            (prev.selectedStorage != current.selectedStorage) ||
+            (prev.selectedGroup != current.selectedGroup),
+        builder: (context, state) {
+          return _checkIfContactCanBeAdded(state) && !(isTablet || selectionController.enable)
+              ? AMFloatingActionButton(
+                  child: IconTheme(
+                    data: AppTheme.floatIconTheme,
+                    child: Icon(MdiIcons.accountPlusOutline),
+                  ),
+                  onPressed: () => Navigator.pushNamed(
+                    context,
+                    ContactEditRoute.name,
+                    arguments: ContactEditScreenArgs(pgpSettingsBloc,
+                        bloc: contactsBloc),
+                  ),
+                )
+              : SizedBox.shrink();
+        },
+      ),
     );
+  }
+
+  bool _checkIfContactCanBeAdded(ContactsState state) {
+    if (state.selectedStorage == null) {
+      return true;
+    }
+
+    final storage =
+        state.storages.firstWhere((e) => e.name == state.selectedStorage);
+
+    final authBlocState = BlocProvider.of<AuthBloc>(context).currentUser;
+    return authBlocState.emailFromLogin == storage.ownerMail
+        ? true
+        : storage.isShared == true && storage.accessCode == 1;
   }
 
   void _deleteContact(Contact contact) {
