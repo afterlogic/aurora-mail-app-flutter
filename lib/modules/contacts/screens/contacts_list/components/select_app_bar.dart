@@ -37,7 +37,7 @@ class SelectAppBar extends StatelessWidget {
               icon: Icon(Icons.drive_file_move_outline),
               onPressed: () => _moveToGroup(context),
             ),
-            IconButton(
+            if (state.selectedGroup != null) IconButton(
               icon: Icon(Icons.folder_delete_outlined),
               onPressed: () => _removeFromGroup(context),
             ),
