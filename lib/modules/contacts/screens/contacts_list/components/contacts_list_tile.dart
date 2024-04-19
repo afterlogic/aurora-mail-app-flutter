@@ -48,20 +48,15 @@ class _ContactsListTileState extends State<ContactsListTile> {
   }
 
   Widget _getStorageIcon(BuildContext context) {
-    final bloc = BlocProvider.of<ContactsBloc>(context);
-    if (bloc.state.showAllVisibleContacts) {
-      switch (widget.contact.storage) {
-        case StorageNames.personal:
-          return Icon(WebMailIcons.personal);
-        case StorageNames.shared:
-          return Icon(WebMailIcons.shared_with_all);
-        case StorageNames.team:
-          return Icon(Icons.business_center);
-        default:
-          return Icon(MdiIcons.folderAccountOutline);
-      }
-    } else {
-      return SizedBox();
+    switch (widget.contact.storage) {
+      case StorageNames.personal:
+        return Icon(WebMailIcons.personal);
+      case StorageNames.shared:
+        return Icon(WebMailIcons.shared_with_all);
+      case StorageNames.team:
+        return Icon(Icons.business_center);
+      default:
+        return Icon(WebMailIcons.personal);
     }
   }
 
