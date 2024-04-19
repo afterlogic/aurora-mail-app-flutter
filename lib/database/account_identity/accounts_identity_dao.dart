@@ -32,50 +32,65 @@ class AccountIdentityDao extends DatabaseAccessor<AppDatabase>
     int? idAccount,
   ) async {
     // selects separated for handling case with large signature
-    String? signature;
 
-    final signatureQuery = selectOnly(accountIdentityTable)
+    final accountIdentityIdsQuery = selectOnly(accountIdentityTable)
       ..where(accountIdentityTable.idUser.equals(idUser));
     if (idAccount != null) {
-      signatureQuery.where(accountIdentityTable.idAccount.equals(idAccount));
+      accountIdentityIdsQuery
+          .where(accountIdentityTable.idAccount.equals(idAccount));
     }
-    signatureQuery.addColumns([accountIdentityTable.signature]);
-    try {
-      signature = await signatureQuery
-          .map((a) => a.read(accountIdentityTable.signature))
-          .getSingle();
-    } catch (e, st) {
-      print(e);
-      print(st);
-    } finally {
-      final query = selectOnly(accountIdentityTable)
-        ..where(accountIdentityTable.idUser.equals(idUser));
-      if (idAccount != null) {
-        query.where(accountIdentityTable.idAccount.equals(idAccount));
+    accountIdentityIdsQuery.addColumns([accountIdentityTable.entityId]);
+
+    final Set<int?> accountIdentityEntityIds = (await accountIdentityIdsQuery
+            .map((a) => a.read(accountIdentityTable.entityId))
+            .get())
+        .toSet();
+
+    final Map<int, String?> signatureMap = {};
+
+    for (int? entityId in accountIdentityEntityIds) {
+      if (entityId == null) continue;
+      final signatureQuery = selectOnly(accountIdentityTable)
+        ..where(accountIdentityTable.entityId.equals(entityId))
+        ..addColumns([accountIdentityTable.signature]);
+      try {
+        final signatureLocalIdPair = await signatureQuery
+            .map((a) => {entityId: a.read(accountIdentityTable.signature)})
+            .getSingle();
+        signatureMap.addAll(signatureLocalIdPair);
+      } catch (e, st) {
+        print(e);
+        print(st);
+        continue;
       }
-      query.addColumns([
-        accountIdentityTable.entityId,
-        accountIdentityTable.email,
-        accountIdentityTable.friendlyName,
-        accountIdentityTable.idUser,
-        accountIdentityTable.idAccount,
-        accountIdentityTable.isDefault,
-        accountIdentityTable.useSignature,
-      ]);
-      return query.map(
-        (row) {
-          return AccountIdentity(
-            entityId: row.read(accountIdentityTable.entityId)!,
-            idUser: row.read(accountIdentityTable.idUser)!,
-            email: row.read(accountIdentityTable.email)!,
-            friendlyName: row.read(accountIdentityTable.friendlyName)!,
-            useSignature: row.read(accountIdentityTable.useSignature)!,
-            signature: signature ?? "",
-            idAccount: row.read(accountIdentityTable.idAccount)!,
-            isDefault: row.read(accountIdentityTable.isDefault)!,
-          );
-        },
-      ).get();
     }
+
+    final query = selectOnly(accountIdentityTable)
+      ..where(accountIdentityTable.entityId.isIn(accountIdentityEntityIds));
+    query.addColumns([
+      accountIdentityTable.entityId,
+      accountIdentityTable.email,
+      accountIdentityTable.friendlyName,
+      accountIdentityTable.idUser,
+      accountIdentityTable.idAccount,
+      accountIdentityTable.isDefault,
+      accountIdentityTable.useSignature,
+    ]);
+    return query.map(
+      (row) {
+        final entityId = row.read(accountIdentityTable.entityId);
+
+        return AccountIdentity(
+          entityId: entityId!,
+          idUser: row.read(accountIdentityTable.idUser)!,
+          email: row.read(accountIdentityTable.email)!,
+          friendlyName: row.read(accountIdentityTable.friendlyName)!,
+          useSignature: row.read(accountIdentityTable.useSignature)!,
+          signature: signatureMap.containsKey(entityId) ? signatureMap[entityId] ?? "" : "",
+          idAccount: row.read(accountIdentityTable.idAccount)!,
+          isDefault: row.read(accountIdentityTable.isDefault)!,
+        );
+      },
+    ).get();
   }
 }
