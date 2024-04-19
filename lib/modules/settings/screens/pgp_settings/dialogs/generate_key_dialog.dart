@@ -1,5 +1,6 @@
 //@dart=2.9
 import 'package:aurora_mail/generated/l10n.dart';
+import 'package:aurora_mail/models/alias_or_account.dart';
 import 'package:aurora_mail/models/alias_or_identity.dart';
 import 'package:aurora_mail/modules/dialog_wrap.dart';
 import 'package:aurora_mail/utils/identity_util.dart';
@@ -8,8 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 
 class GenerateKeyDialog extends StatefulWidget {
-  final List<AliasOrIdentity> identities;
-  final AliasOrIdentity current;
+  final List<AliasOrAccount> identities;
+  final AliasOrAccount current;
 
   const GenerateKeyDialog(this.identities, this.current);
 
@@ -21,7 +22,7 @@ class _GenerateKeyDialogState extends BState<GenerateKeyDialog>
     with NotSavedChangesMixin {
   static const lengths = [2048, 4096];
   var length = lengths[0];
-  AliasOrIdentity current;
+  AliasOrAccount current;
   bool _obscure = true;
 
   final _passwordController = TextEditingController();
@@ -47,7 +48,7 @@ class _GenerateKeyDialogState extends BState<GenerateKeyDialog>
                   labelText: S.of(context).login_input_email),
               value: current,
               items: widget.identities.map((value) {
-                return DropdownMenuItem<AliasOrIdentity>(
+                return DropdownMenuItem<AliasOrAccount>(
                   value: value,
 //                  child: Text(identityViewName(value.name, value.mail)),
                   child: _buildEmails(value),
@@ -63,7 +64,7 @@ class _GenerateKeyDialogState extends BState<GenerateKeyDialog>
                   );
                 }).toList();
               },
-              onChanged: (AliasOrIdentity v) {
+              onChanged: (AliasOrAccount v) {
                 current = v;
                 setState(() {});
               },
@@ -124,7 +125,7 @@ class _GenerateKeyDialogState extends BState<GenerateKeyDialog>
     );
   }
 
-  Widget _buildEmails(AliasOrIdentity value) {
+  Widget _buildEmails(AliasOrAccount value) {
     final padding = widget.identities.last == value ? 0.0 : 20.0;
 
     return Column(
@@ -149,7 +150,7 @@ class _GenerateKeyDialogState extends BState<GenerateKeyDialog>
 
 class GenerateKeyDialogResult {
   final int length;
-  final AliasOrIdentity alias;
+  final AliasOrAccount alias;
   final String password;
 
   GenerateKeyDialogResult(this.length, this.alias, this.password);

@@ -1,6 +1,7 @@
 //@dart=2.9
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/generated/l10n.dart';
+import 'package:aurora_mail/models/alias_or_account.dart';
 import 'package:aurora_mail/models/alias_or_identity.dart';
 import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
@@ -118,10 +119,10 @@ class _PgpSettingsState extends BState<PgpSettings> {
     exist.addAll(state.myPublic.map((item) => item.mail));
 
     final authBloc = BlocProvider.of<AuthBloc>(context);
-    var aliasesOrIdentities = await authBloc.getAliasesAndIdentities(true);
-    var current = AliasOrIdentity(null, authBloc.currentIdentity);
+    var aliasesOrAccounts = await authBloc.getAliasesAndAccounts();
+    var current = AliasOrAccount(authBloc.currentAccount, null);
 
-    var notExist = aliasesOrIdentities.where((item) {
+    var notExist = aliasesOrAccounts.where((item) {
       return !exist.contains(item.mail);
     }).toList();
     if (exist.contains(current.mail)) {
