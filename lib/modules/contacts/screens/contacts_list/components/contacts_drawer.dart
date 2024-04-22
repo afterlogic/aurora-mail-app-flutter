@@ -122,7 +122,7 @@ class _ContactsDrawerState extends BState<ContactsDrawer> {
                   icon: Icons.business_center, s: s, state: state);
             } else {
               return _buildStorageTile(
-                  icon: MdiIcons.folderAccountOutline, s: s, state: state);
+                  icon: WebMailIcons.personal, s: s, state: state);
             }
           }).toList(),
         ],
