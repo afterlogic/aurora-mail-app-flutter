@@ -1,5 +1,6 @@
 //@dart=2.9
 import 'package:aurora_mail/generated/l10n.dart';
+import 'package:aurora_mail/modules/calendar/screens/calendar_route.dart';
 import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/screens/contacts_list/contacts_list_route.dart';
@@ -10,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 
-enum MailBottomAppBarRoutes { mail, contacts, settings }
+enum MailBottomAppBarRoutes { mail, contacts, settings, calendar }
 
 class MailBottomAppBar extends StatelessWidget {
   final MailBottomAppBarRoutes selectedRoute;
@@ -33,6 +34,10 @@ class MailBottomAppBar extends StatelessWidget {
 
   void _openMail(BuildContext context) {
     Navigator.pushReplacementNamed(context, MessagesListRoute.name);
+  }
+
+  void _openCalendar(BuildContext context) {
+    Navigator.pushReplacementNamed(context, CalendarRoute.name);
   }
 
   void _openSettings(BuildContext context) {
@@ -79,6 +84,17 @@ class MailBottomAppBar extends StatelessWidget {
           tooltip: S.of(context).messages_list_app_bar_settings,
           iconSize: iconSize,
           onPressed: () => _openSettings(context),
+        ),
+        IconButton(
+          icon: Icon(
+            MdiIcons.calendar,
+            color: selectedRoute == MailBottomAppBarRoutes.calendar
+                ? theme.primaryColor
+                : theme.disabledColor,
+          ),
+          tooltip: S.of(context).messages_list_app_bar_settings,
+          iconSize: iconSize,
+          onPressed: () => _openCalendar(context),
         ),
       ],
     );

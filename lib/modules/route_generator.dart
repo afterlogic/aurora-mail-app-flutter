@@ -1,6 +1,8 @@
 //@dart=2.9
 import 'package:aurora_mail/modules/auth/screens/backup_code_auth/backup_code_auth_widget.dart';
 import 'package:aurora_mail/modules/auth/screens/trust_device/trust_device_widget.dart';
+import 'package:aurora_mail/modules/calendar/screens/calendar_page.dart';
+import 'package:aurora_mail/modules/calendar/screens/calendar_route.dart';
 
 import 'auth/screens/backup_code_auth/backup_code_auth_route.dart';
 import 'auth/screens/fido_auth/fido_auth.dart';
@@ -155,6 +157,15 @@ class RouteGenerator {
         );
 
         break;
+
+      // ================= CALENDAR =================
+
+      case CalendarRoute.name:
+        return FadeRoute(
+            settings: RouteSettings(name: settings.name),
+            builder: (_) => CalendarPage());
+        break;
+
       // ================= MAIL =================
 
       case MessagesListRoute.name:
@@ -285,9 +296,8 @@ class RouteGenerator {
 
       case GroupEditRoute.name:
         final args = settings.arguments as GroupEditScreenArgs;
-        return MaterialPageRoute(
+        return CupertinoPageRoute(
             settings: RouteSettings(name: settings.name),
-            fullscreenDialog: true,
             builder: (_) => BlocProvider<ContactsBloc>.value(
                 value: args.bloc, child: GroupEditAndroid(group: args.group)));
         break;

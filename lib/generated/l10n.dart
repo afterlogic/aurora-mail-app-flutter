@@ -650,6 +650,16 @@ class S {
     );
   }
 
+  /// `Calendar`
+  String get calendar {
+    return Intl.message(
+      'Calendar',
+      name: 'calendar',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Message text...`
   String get compose_body_placeholder {
     return Intl.message(
