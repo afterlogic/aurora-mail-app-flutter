@@ -1,11 +1,20 @@
-class Event {
-  final String title;
-  final int id;
+abstract class CalendarEvent {
+  const CalendarEvent();
+}
 
-  const Event(this.title, this.id);
+class Event extends CalendarEvent{
+  final String title;
+  final int? id;
+  final Edge edge;
+
+  const Event(this.title, this.id, {this.edge = Edge.single});
 
   @override
   String toString() => title;
+}
+
+class EmptyEvent extends CalendarEvent {
+  const EmptyEvent();
 }
 
 final kToday = DateTime.now();
@@ -18,4 +27,18 @@ List<DateTime> daysInRange(DateTime first, DateTime last) {
     dayCount,
         (index) => DateTime.utc(first.year, first.month, first.day + index),
   );
+}
+
+enum Edge {
+  start,
+  single,
+  end,
+  part
+}
+
+extension EdgeX on Edge {
+  bool get isStart => this == Edge.start;
+  bool get isSingle => this == Edge.single;
+  bool get isEnd => this == Edge.end;
+  bool get isPart => this == Edge.part;
 }

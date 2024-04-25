@@ -1,5 +1,6 @@
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/calendar/models/event.dart';
+import 'package:aurora_mail/modules/calendar/widgets/month_event_marker.dart';
 import 'package:aurora_mail/shared_ui/mail_bottom_app_bar.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
@@ -12,11 +13,11 @@ class CalendarPage extends StatefulWidget {
   State<CalendarPage> createState() => _CalendarPageState();
 }
 
-class _CalendarPageState extends State<CalendarPage> with TickerProviderStateMixin{
-  late final ValueNotifier<List<Event>> _selectedEvents;
+class _CalendarPageState extends State<CalendarPage>
+    with TickerProviderStateMixin {
+  late final ValueNotifier<List<CalendarEvent>> _selectedEvents;
   CalendarFormat _calendarFormat = CalendarFormat.month;
-  RangeSelectionMode _rangeSelectionMode = RangeSelectionMode
-      .toggledOff;
+  RangeSelectionMode _rangeSelectionMode = RangeSelectionMode.toggledOff;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
   DateTime? _rangeStart;
@@ -27,12 +28,15 @@ class _CalendarPageState extends State<CalendarPage> with TickerProviderStateMix
   late final AnimationController _calendarAnimationController;
   late final Animation _calendarAnimation;
 
+  final double _calendarDayTitleHeight = 36;
+
   @override
   void initState() {
     super.initState();
     _eventListAnimationController = AnimationController(
         duration: const Duration(milliseconds: 200), vsync: this);
-    _eventListAnimation = IntTween(begin: 100, end: 0).animate(_eventListAnimationController);
+    _eventListAnimation =
+        IntTween(begin: 100, end: 0).animate(_eventListAnimationController);
     _eventListAnimation.addListener(() => setState(() {}));
     _calendarAnimationController = AnimationController(
         duration: const Duration(milliseconds: 200), vsync: this);
@@ -54,33 +58,31 @@ class _CalendarPageState extends State<CalendarPage> with TickerProviderStateMix
     super.dispose();
   }
 
-  final kEvents = <DateTime, List<Event>>{}..addAll({
-    DateTime.utc(kToday.year, kToday.month, kToday.day - 1): [
-      const Event('test2', 2),
-      const Event('test1', 1),
-      const Event('test1', 1)
-    ],
-    DateTime.utc(kToday.year, kToday.month, kToday.day): [
-      const Event('test2', 2),
-      const Event('test1', 1),
-      const Event('test1', 1),
-      const Event('test2', 2)
-    ],
-    DateTime.utc(kToday.year, kToday.month, kToday.day + 1): [
-      const Event('test2', 2),
-      const Event('test1', 1),
-      const Event('test', 3),
-      const Event('test2', 2),
-    ]
-  });
+  final kEvents = <DateTime, List<CalendarEvent>>{}..addAll({
+      DateTime.utc(kToday.year, kToday.month, kToday.day - 1): [
+        const Event('test2', 2, edge: Edge.start),
+        const Event('test4', 1, edge: Edge.start),
+        const EmptyEvent(),
+      ],
+      DateTime.utc(kToday.year, kToday.month, kToday.day): [
+        const Event('test2', 2, edge: Edge.part),
+        const Event('test4', 1, edge: Edge.end),
+        const EmptyEvent(),
+      ],
+      DateTime.utc(kToday.year, kToday.month, kToday.day + 1): [
+        const Event('test2', 2, edge: Edge.end),
+        const EmptyEvent(),
+        const Event('test3', 3, edge: Edge.single),
+      ]
+    });
 
-  List<Event> _getEventsForDay(DateTime day) {
+  List<CalendarEvent> _getEventsForDay(DateTime day) {
     // Implementation example
 
     return kEvents[day] ?? [];
   }
 
-  List<Event> _getEventsForRange(DateTime start, DateTime end) {
+  List<CalendarEvent> _getEventsForRange(DateTime start, DateTime end) {
     // Implementation example
     final days = daysInRange(start, end);
 
@@ -122,27 +124,80 @@ class _CalendarPageState extends State<CalendarPage> with TickerProviderStateMix
     }
   }
 
-  Widget? _builder(ctx, time, List<Event> events) {
+  Widget? _extendedModeBuilder(ctx, time, List<CalendarEvent> events) {
     // print(kEvents);
     // print(events);
-    return events.isNotEmpty
-        ? Column(
-      children: events
-          .map<Widget>((e) => Container(
-        margin: const EdgeInsets.only(bottom: 5),
+    if (events.isEmpty) {
+      return null;
+    }
+    return Padding(
+      padding: EdgeInsets.only(top: _calendarDayTitleHeight),
+      child: Column(
+        children: events
+            .map<Widget>((e) => MonthEventMarker(
+                  event: e,
+                ))
+            .toList(),
+      ),
+    );
+  }
+
+  Widget _defaultDayBuilder(BuildContext context, DateTime currentDate, DateTime selectedDate){
+    final bool containsEvents = kEvents[currentDate]?.isNotEmpty ?? false;
+
+    return Align(
+      alignment: Alignment.topCenter,
+      child: SizedBox(
+        height: _calendarDayTitleHeight,
+        width: _calendarDayTitleHeight,
+        child:
+        Padding(
+          padding: const EdgeInsets.all(4.0),
+          child: Column(
+            children: [
+              Text(currentDate.day.toString(),),
+              const SizedBox(height: 4,),
+              if(containsEvents) Container(
+                width: 5,
+                height: 5,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(5),
+                    color: Theme.of(context).primaryColor),
+              ),
+            ],
+          ),
+        ),),);
+
+  }
+
+  Widget _todayDayBuilder(BuildContext context, DateTime currentDate, DateTime selectedDate){
+    final bool containsEvents = kEvents[currentDate]?.isNotEmpty ?? false;
+
+    return Align(
+      alignment: Alignment.topCenter,
+      child: Container(
+        padding: EdgeInsets.all(4.0),
+        height: _calendarDayTitleHeight,
+        width: _calendarDayTitleHeight,
         decoration: BoxDecoration(
-            color: e.id == 1
-                ? Colors.blue
-                : e.id == 2
-                ? Colors.red
-                : Colors.transparent),
-        width: 60,
-        height: 20,
-        child: Text(e.title),
-      ))
-          .toList(),
-    )
-        : null;
+          color: Colors.red.withOpacity(0.5),
+              borderRadius: BorderRadius.circular(4)
+        ),
+        child:
+        Column(
+          children: [
+            Text(currentDate.day.toString(),),
+            const SizedBox(height: 4,),
+            if(containsEvents) Container(
+              width: 5,
+              height: 5,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(5),
+                  color: Theme.of(context).primaryColor),
+            ),
+          ],
+        ),),);
+
   }
 
   @override
@@ -167,8 +222,7 @@ class _CalendarPageState extends State<CalendarPage> with TickerProviderStateMix
                       if (details.delta.dy > 1 &&
                           _calendarAnimationController.value == 1.0 &&
                           _eventListAnimationController.value == 0.0) {
-                        _calendarAnimationController.reverse();
-                        Future.delayed(const Duration(milliseconds: 200), () {
+                        _calendarAnimationController.reverse().then((_) {
                           _calendarFormat = CalendarFormat.month;
                           setState(() {});
                         });
@@ -176,8 +230,7 @@ class _CalendarPageState extends State<CalendarPage> with TickerProviderStateMix
                       if (details.delta.dy < -1 &&
                           _calendarAnimationController.value == 0.0 &&
                           _eventListAnimationController.value == 0.0) {
-                        _calendarAnimationController.forward();
-                        Future.delayed(const Duration(milliseconds: 200), () {
+                        _calendarAnimationController.forward().then((_) {
                           _calendarFormat = CalendarFormat.week;
                           setState(() {});
                         });
@@ -194,8 +247,9 @@ class _CalendarPageState extends State<CalendarPage> with TickerProviderStateMix
                         _eventListAnimationController.reverse();
                       }
                     },
-                    child: TableCalendar<Event>(
+                    child: TableCalendar<CalendarEvent>(
                       firstDay: kFirstDay,
+                      rowHeight: 10,
                       formatAnimationDuration: const Duration(seconds: 1),
                       lastDay: kLastDay,
                       shouldFillViewport: true,
@@ -209,17 +263,15 @@ class _CalendarPageState extends State<CalendarPage> with TickerProviderStateMix
                       eventLoader: _getEventsForDay,
                       availableGestures: AvailableGestures.horizontalSwipe,
                       calendarBuilders: CalendarBuilders(
-                        // defaultBuilder: (_, __, ___) => const SizedBox.shrink(),
-                        markerBuilder: _calendarFormat == CalendarFormat.month
-                            ? _builder
-                            : null,
+                        defaultBuilder: _defaultDayBuilder,
+                        todayBuilder: _todayDayBuilder,
+                        markerBuilder:
+                            _eventListAnimationController.value == 1.0
+                                ? _extendedModeBuilder
+                                : (_, __, ___) => SizedBox.shrink(),
                       ),
                       startingDayOfWeek: StartingDayOfWeek.monday,
-                      calendarStyle: const CalendarStyle(
-                        // tableBorder: TableBorder.all(color: Colors.black, width: 1),
-                        // Use `CalendarStyle` to customize the UI
-                        // outsideDaysVisible: false,
-                      ),
+                      calendarStyle: const CalendarStyle(),
                       onDaySelected: _onDaySelected,
                       onRangeSelected: _onRangeSelected,
                       onFormatChanged: (format) {
@@ -239,9 +291,9 @@ class _CalendarPageState extends State<CalendarPage> with TickerProviderStateMix
                   duration: const Duration(milliseconds: 200),
                   child: _eventListAnimationController.value == 1.0
                       ? const RotatedBox(
-                    quarterTurns: 1,
-                    child: Icon(Icons.arrow_back_ios_outlined),
-                  )
+                          quarterTurns: 1,
+                          child: Icon(Icons.arrow_back_ios_outlined),
+                        )
                       : const Icon(Icons.minimize_outlined),
                 ),
               ],
@@ -253,36 +305,36 @@ class _CalendarPageState extends State<CalendarPage> with TickerProviderStateMix
               duration: const Duration(milliseconds: 100),
               child: _eventListAnimation.value == 0.0
                   ? const SizedBox.shrink()
-                  : ValueListenableBuilder<List<Event>>(
-                valueListenable: _selectedEvents,
-                builder: (context, value, _) {
-                  return ListView.builder(
-                    itemCount: value.length,
-                    itemBuilder: (context, index) {
-                      return Container(
-                        margin: const EdgeInsets.symmetric(
-                          horizontal: 12.0,
-                          vertical: 4.0,
-                        ),
-                        decoration: BoxDecoration(
-                          border: Border.all(),
-                          borderRadius: BorderRadius.circular(12.0),
-                        ),
-                        child: ListTile(
-                          onTap: () => print('${value[index]}'),
-                          title: Text('${value[index]}'),
-                        ),
-                      );
-                    },
-                  );
-                },
-              ),
+                  : ValueListenableBuilder<List<CalendarEvent>>(
+                      valueListenable: _selectedEvents,
+                      builder: (context, value, _) {
+                        return ListView.builder(
+                          itemCount: value.length,
+                          itemBuilder: (context, index) {
+                            return Container(
+                              margin: const EdgeInsets.symmetric(
+                                horizontal: 12.0,
+                                vertical: 4.0,
+                              ),
+                              decoration: BoxDecoration(
+                                border: Border.all(),
+                                borderRadius: BorderRadius.circular(12.0),
+                              ),
+                              child: ListTile(
+                                onTap: () => print('${value[index]}'),
+                                title: Text('${value[index]}'),
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    ),
             ),
           ),
         ],
       ),
       bottomNavigationBar:
-      MailBottomAppBar(selectedRoute: MailBottomAppBarRoutes.calendar),
+          MailBottomAppBar(selectedRoute: MailBottomAppBarRoutes.calendar),
     );
   }
 }
