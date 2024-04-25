@@ -161,6 +161,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Подтвердите PIN"),
         "button_pgp_verify_sign":
             MessageLookupByLibrary.simpleMessage("Проверить"),
+        "calendar": MessageLookupByLibrary.simpleMessage("Календарь"),
         "clear_cache_during_logout": MessageLookupByLibrary.simpleMessage(
             "Очистить локальный кэш и сохранённые ключи"),
         "compose_body_placeholder":

@@ -162,6 +162,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("PIN\'i doğrula"),
         "button_pgp_verify_sign":
             MessageLookupByLibrary.simpleMessage("Doğrula"),
+        "calendar": MessageLookupByLibrary.simpleMessage("Calendar"),
         "clear_cache_during_logout": MessageLookupByLibrary.simpleMessage(
             "Yerel önbelleği ve kayıtlı anahtarları Temizle"),
         "compose_body_placeholder":

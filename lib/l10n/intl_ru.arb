@@ -59,6 +59,7 @@
   "messages_attachment_upload_failed": "Загрузка не удалась",
   "messages_attachment_upload_cancel": "Отменить загрузку",
   "messages_attachment_upload_success": "Файл загружен в: {path}",
+  "calendar": "Календарь",
   "compose_body_placeholder": "Текст сообщения...",
   "compose_forward_body_original_message": "---- Оригинал сообщения ----",
   "compose_forward_from": "От: {emails}",

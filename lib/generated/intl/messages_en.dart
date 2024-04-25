@@ -157,6 +157,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "btn_verify_pin": MessageLookupByLibrary.simpleMessage("Verify"),
         "button_pgp_verify_sign":
             MessageLookupByLibrary.simpleMessage("Verify"),
+        "calendar": MessageLookupByLibrary.simpleMessage("Calendar"),
         "clear_cache_during_logout":
             MessageLookupByLibrary.simpleMessage("Delete cached data and keys"),
         "compose_body_placeholder":

@@ -59,6 +59,7 @@
   "messages_attachment_upload_failed": "Yükleme işlemi başarısız",
   "messages_attachment_upload_cancel": "Yüklemeyi iptal et",
   "messages_attachment_upload_success": "Dosya şuraya yüklendi: {path}",
+  "calendar": "Calendar",
   "compose_body_placeholder": "İleti metni...",
   "compose_forward_body_original_message": "---- Orijinal İleti ----",
   "compose_forward_from": "Gönderen: {emails}",

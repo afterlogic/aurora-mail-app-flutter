@@ -59,6 +59,7 @@
   "messages_attachment_upload_failed": "Upload failed",
   "messages_attachment_upload_cancel": "Cancel upload",
   "messages_attachment_upload_success": "File uploaded into: {path}",
+  "calendar": "Calendar",
   "compose_body_placeholder": "Message text...",
   "compose_forward_body_original_message": "---- Original Message ----",
   "compose_forward_from": "From: {emails}",
