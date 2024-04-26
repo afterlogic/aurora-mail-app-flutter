@@ -1,5 +1,8 @@
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/calendar/models/event.dart';
+import 'package:aurora_mail/modules/calendar/widgets/calendar_drawer.dart';
+import 'package:aurora_mail/modules/calendar/widgets/calendar_tab.dart';
+import 'package:aurora_mail/modules/calendar/widgets/event_card.dart';
 import 'package:aurora_mail/modules/calendar/widgets/month_event_marker.dart';
 import 'package:aurora_mail/modules/calendar/widgets/short_month_day.dart';
 import 'package:aurora_mail/shared_ui/mail_bottom_app_bar.dart';
@@ -30,6 +33,8 @@ class _CalendarPageState extends State<CalendarPage>
   late final Animation _calendarAnimation;
 
   final double _calendarDayTitleHeight = 36;
+  late final TabController _tabController;
+  bool _showTabs = false;
 
   @override
   void initState() {
@@ -42,7 +47,7 @@ class _CalendarPageState extends State<CalendarPage>
     _calendarAnimationController = AnimationController(
         duration: const Duration(milliseconds: 200), vsync: this);
     _calendarAnimation =
-        IntTween(begin: 140, end: 40).animate(_calendarAnimationController);
+        IntTween(begin: 140, end: 50).animate(_calendarAnimationController);
     _calendarAnimation.addListener(() {
       print(_calendarAnimationController.value);
 
@@ -51,6 +56,8 @@ class _CalendarPageState extends State<CalendarPage>
     _selectedDay = _focusedDay;
     _selectedEvents = ValueNotifier(
         kEvents.entries.map((e) => e.value).expand((e) => e).toList());
+
+    _tabController = TabController(length: 2, vsync: this);
   }
 
   @override
@@ -61,19 +68,49 @@ class _CalendarPageState extends State<CalendarPage>
 
   final kEvents = <DateTime, List<CalendarEvent>>{}..addAll({
       DateTime.utc(kToday.year, kToday.month, kToday.day - 1): [
-        const Event('test2', 2, edge: Edge.start),
-        const Event('test4', 1, edge: Edge.start),
+        Event(
+            title: 'test2',
+            startDate: DateTime.utc(kToday.year, kToday.month, kToday.day - 1),
+            endDate: DateTime.utc(kToday.year, kToday.month, kToday.day - 1),
+            id: 2,
+            edge: Edge.start),
+        Event(
+            title: 'test4',
+            startDate: DateTime.utc(kToday.year, kToday.month, kToday.day - 1),
+            endDate: DateTime.utc(kToday.year, kToday.month, kToday.day - 1),
+            id: 1,
+            edge: Edge.start),
         const EmptyEvent(),
       ],
       DateTime.utc(kToday.year, kToday.month, kToday.day): [
-        const Event('test2', 2, edge: Edge.part),
-        const Event('test4', 1, edge: Edge.end),
+        Event(
+            title: 'test2',
+            startDate: DateTime.utc(kToday.year, kToday.month, kToday.day - 1),
+            endDate: DateTime.utc(kToday.year, kToday.month, kToday.day - 1),
+            id: 2,
+            edge: Edge.part),
+        Event(
+            title: 'test4',
+            startDate: DateTime.utc(kToday.year, kToday.month, kToday.day - 1),
+            endDate: DateTime.utc(kToday.year, kToday.month, kToday.day - 1),
+            id: 1,
+            edge: Edge.end),
         const EmptyEvent(),
       ],
       DateTime.utc(kToday.year, kToday.month, kToday.day + 1): [
-        const Event('test2', 2, edge: Edge.end),
+        Event(
+            title: 'test2',
+            startDate: DateTime.utc(kToday.year, kToday.month, kToday.day - 1),
+            endDate: DateTime.utc(kToday.year, kToday.month, kToday.day - 1),
+            id: 2,
+            edge: Edge.end),
         const EmptyEvent(),
-        const Event('test3', 3, edge: Edge.single),
+        Event(
+            title: 'test3',
+            startDate: DateTime.utc(kToday.year, kToday.month, kToday.day - 1),
+            endDate: DateTime.utc(kToday.year, kToday.month, kToday.day - 1),
+            id: 3,
+            edge: Edge.single),
       ]
     });
 
@@ -218,135 +255,246 @@ class _CalendarPageState extends State<CalendarPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: CalendarDrawer(),
       appBar: AMAppBar(
-        title: Text(S.of(context).calendar),
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(S.of(context).calendar),
+            IconButton(
+                onPressed: () => setState(() {
+                      _showTabs = !_showTabs;
+                    }),
+                icon: Icon(Icons.grid_view_outlined))
+          ],
+        ),
       ),
       body: Column(
         children: [
-          // Flexible(child: child)
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 100),
+            child: _showTabs
+                ? Padding(
+                    padding:
+                        const EdgeInsets.only(top: 18.0, right: 24, left: 24),
+                    child: Row(
+                      children: [
+                        CalendarTab(
+                            title: 'Month',
+                            controller: _tabController,
+                            index: 0),
+                        const SizedBox(
+                          width: 16,
+                        ),
+                        CalendarTab(
+                            title: 'Week',
+                            controller: _tabController,
+                            index: 1),
+                      ],
+                    ),
+                  )
+                : SizedBox.shrink(),
+          ),
           Expanded(
-            flex: _calendarAnimation.value as int,
-            child: Column(
-              children: [
-                Expanded(
-                  child: GestureDetector(
-                    onVerticalDragUpdate: (details) {
-                      // details.delta.dy > 1 - scroll up (finger from top to bottom)
-                      // _animationController.value == 1.0 - ListView collapsed
-                      // _calendarAnimationController.value == 1.0 - calendar shows 1 week
-                      if (details.delta.dy > 1 &&
-                          _calendarAnimationController.value == 1.0 &&
-                          _eventListAnimationController.value == 0.0) {
-                        _calendarAnimationController.reverse().then((_) {
-                          _calendarFormat = CalendarFormat.month;
-                          setState(() {});
-                        });
-                      }
-                      if (details.delta.dy < -1 &&
-                          _calendarAnimationController.value == 0.0 &&
-                          _eventListAnimationController.value == 0.0) {
-                        _calendarAnimationController.forward().then((_) {
-                          _calendarFormat = CalendarFormat.week;
-                          setState(() {});
-                        });
-                      }
+            child: TabBarView(controller: _tabController, children: [
+              Column(
+                children: [
+                  Expanded(
+                    flex: _calendarAnimation.value as int,
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: GestureDetector(
+                            onVerticalDragUpdate: (details) {
+                              // details.delta.dy > 1 - scroll up (finger from top to bottom)
+                              // _animationController.value == 1.0 - ListView collapsed
+                              // _calendarAnimationController.value == 1.0 - calendar shows 1 week
+                              if (details.delta.dy > 1 &&
+                                  _calendarAnimationController.value == 1.0 &&
+                                  _eventListAnimationController.value == 0.0) {
+                                _calendarAnimationController
+                                    .reverse()
+                                    .then((_) {
+                                  _calendarFormat = CalendarFormat.month;
+                                  setState(() {});
+                                });
+                              }
+                              if (details.delta.dy < -1 &&
+                                  _calendarAnimationController.value == 0.0 &&
+                                  _eventListAnimationController.value == 0.0) {
+                                _calendarAnimationController
+                                    .forward()
+                                    .then((_) {
+                                  _calendarFormat = CalendarFormat.week;
+                                  setState(() {});
+                                });
+                              }
 
-                      if (details.delta.dy > 1 &&
-                          _eventListAnimationController.value == 0.0 &&
-                          _calendarAnimationController.value == 0.0) {
-                        _eventListAnimationController.forward();
-                      }
-                      if (details.delta.dy < -1 &&
-                          _eventListAnimationController.value == 1.0 &&
-                          _calendarAnimationController.value == 0.0) {
-                        _eventListAnimationController.reverse();
-                      }
-                    },
-                    child: TableCalendar<CalendarEvent>(
-                      firstDay: kFirstDay,
-                      rowHeight: 10,
-                      formatAnimationDuration: const Duration(seconds: 1),
-                      lastDay: kLastDay,
-                      shouldFillViewport: true,
-                      focusedDay: _focusedDay,
-                      selectedDayPredicate: (day) =>
-                          isSameDay(_selectedDay, day),
-                      rangeStartDay: _rangeStart,
-                      rangeEndDay: _rangeEnd,
-                      calendarFormat: _calendarFormat,
-                      rangeSelectionMode: _rangeSelectionMode,
-                      eventLoader: _getEventsForDay,
-                      availableGestures: AvailableGestures.horizontalSwipe,
-                      calendarBuilders: CalendarBuilders(
-                        defaultBuilder: _defaultDayBuilder,
-                        todayBuilder: _todayDayBuilder,
-                        markerBuilder:
-                            _eventListAnimationController.value == 1.0
-                                ? _extendedModeBuilder
-                                : (_, __, ___) => SizedBox.shrink(),
-                      ),
-                      startingDayOfWeek: StartingDayOfWeek.monday,
-                      calendarStyle: const CalendarStyle(),
-                      onDaySelected: _onDaySelected,
-                      onRangeSelected: _onRangeSelected,
-                      onFormatChanged: (format) {
-                        if (_calendarFormat != format) {
-                          setState(() {
-                            _calendarFormat = format;
-                          });
-                        }
-                      },
-                      onPageChanged: (focusedDay) {
-                        _focusedDay = focusedDay;
-                      },
+                              if (details.delta.dy > 1 &&
+                                  _eventListAnimationController.value == 0.0 &&
+                                  _calendarAnimationController.value == 0.0) {
+                                _eventListAnimationController.forward();
+                              }
+                              if (details.delta.dy < -1 &&
+                                  _eventListAnimationController.value == 1.0 &&
+                                  _calendarAnimationController.value == 0.0) {
+                                _eventListAnimationController.reverse();
+                              }
+                            },
+                            child: TableCalendar<CalendarEvent>(
+                              firstDay: kFirstDay,
+                              rowHeight: 10,
+                              formatAnimationDuration:
+                                  const Duration(milliseconds: 200),
+                              lastDay: kLastDay,
+                              shouldFillViewport: true,
+                              focusedDay: _focusedDay,
+                              selectedDayPredicate: (day) =>
+                                  isSameDay(_selectedDay, day),
+                              rangeStartDay: _rangeStart,
+                              rangeEndDay: _rangeEnd,
+                              calendarFormat: _calendarFormat,
+                              rangeSelectionMode: _rangeSelectionMode,
+                              eventLoader: _getEventsForDay,
+                              availableGestures:
+                                  AvailableGestures.horizontalSwipe,
+                              headerStyle: HeaderStyle(
+                                formatButtonVisible: false,
+                                titleCentered: true,
+                                titleTextStyle: TextStyle(
+                                    fontWeight: FontWeight.w700, fontSize: 20),
+                                leftChevronIcon: Icon(
+                                  Icons.chevron_left,
+                                  size: 30,
+                                ),
+                                rightChevronIcon: Icon(
+                                  Icons.chevron_right,
+                                  size: 30,
+                                ),
+                              ),
+                              daysOfWeekStyle: DaysOfWeekStyle(
+                                  weekdayStyle: TextStyle(
+                                      color: Theme.of(context).primaryColor,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w700),
+                                  weekendStyle: TextStyle(
+                                      color: Theme.of(context).primaryColor,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w700)),
+                              calendarBuilders: CalendarBuilders(
+                                defaultBuilder: _defaultDayBuilder,
+                                todayBuilder: _todayDayBuilder,
+                                selectedBuilder: _selectedDayBuilder,
+                                outsideBuilder: _outsideDayBuilder,
+                                disabledBuilder: _disabledDayBuilder,
+                                markerBuilder:
+                                    _eventListAnimationController.value == 1.0
+                                        ? _extendedModeBuilder
+                                        : (_, __, ___) => SizedBox.shrink(),
+                              ),
+                              startingDayOfWeek: StartingDayOfWeek.monday,
+                              calendarStyle: const CalendarStyle(),
+                              onDaySelected: _onDaySelected,
+                              onRangeSelected: _onRangeSelected,
+                              daysOfWeekHeight: 40,
+                              onFormatChanged: (format) {
+                                if (_calendarFormat != format) {
+                                  setState(() {
+                                    _calendarFormat = format;
+                                  });
+                                }
+                              },
+                              onPageChanged: (focusedDay) {
+                                _focusedDay = focusedDay;
+                              },
+                            ),
+                          ),
+                        ),
+                        AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 200),
+                          child: _eventListAnimationController.value == 1.0
+                              ? const RotatedBox(
+                                  quarterTurns: 1,
+                                  child: Icon(
+                                    Icons.arrow_back_ios_outlined,
+                                    color: Color.fromRGBO(217, 217, 217, 1),
+                                    size: 18,
+                                  ),
+                                )
+                              : const Icon(
+                                  Icons.minimize_outlined,
+                                  color: Color.fromRGBO(217, 217, 217, 1),
+                                ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        )
+                      ],
                     ),
                   ),
-                ),
-                AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 200),
-                  child: _eventListAnimationController.value == 1.0
-                      ? const RotatedBox(
-                          quarterTurns: 1,
-                          child: Icon(Icons.arrow_back_ios_outlined),
-                        )
-                      : const Icon(Icons.minimize_outlined),
-                ),
-              ],
-            ),
-          ),
-          Expanded(
-            flex: _eventListAnimation.value as int,
-            child: AnimatedSwitcher(
-              duration: const Duration(milliseconds: 100),
-              child: _eventListAnimation.value == 0.0
-                  ? const SizedBox.shrink()
-                  : ValueListenableBuilder<List<CalendarEvent>>(
-                      valueListenable: _selectedEvents,
-                      builder: (context, value, _) {
-                        return ListView.builder(
-                          itemCount: value.length,
-                          itemBuilder: (context, index) {
-                            return Container(
-                              margin: const EdgeInsets.symmetric(
-                                horizontal: 12.0,
-                                vertical: 4.0,
-                              ),
-                              decoration: BoxDecoration(
-                                border: Border.all(),
-                                borderRadius: BorderRadius.circular(12.0),
-                              ),
-                              child: ListTile(
-                                onTap: () => print('${value[index]}'),
-                                title: Text('${value[index]}'),
-                              ),
-                            );
-                          },
-                        );
-                      },
+                  Expanded(
+                    flex: _eventListAnimation.value as int,
+                    child: AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 100),
+                      child: _eventListAnimation.value == 0.0
+                          ? const SizedBox.shrink()
+                          : Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  clipBehavior: Clip.hardEdge,
+                                  height: 10,
+                                  decoration: BoxDecoration(
+                                    color: Color.fromRGBO(246, 246, 246, 1),
+                                  ),
+                                  margin: EdgeInsets.only(bottom: 10),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 24.0, bottom: 24, top: 20),
+                                  child: Text(
+                                    'Placeholder',
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        color:
+                                            Color.fromRGBO(150, 148, 148, 1)),
+                                    overflow: TextOverflow.clip,
+                                  ),
+                                ),
+                                Expanded(
+                                  child: ValueListenableBuilder<
+                                      List<CalendarEvent>>(
+                                    valueListenable: _selectedEvents,
+                                    builder: (context, value, _) {
+                                      return  ListView.builder(
+                                          
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 24.0),
+                                          itemCount: value.length,
+                                          itemBuilder: (context, index) {
+                                            return EventCard(
+                                              event: value[index],
+                                            );
+                                          },
+                                        );
+
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
                     ),
-            ),
-          ),
+                  ),
+                ],
+              ),
+              Text('Placeholder')
+            ]),
+          )
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        child: const Icon(Icons.add),
       ),
       bottomNavigationBar:
           MailBottomAppBar(selectedRoute: MailBottomAppBarRoutes.calendar),

@@ -2,12 +2,21 @@ abstract class CalendarEvent {
   const CalendarEvent();
 }
 
-class Event extends CalendarEvent{
+class Event extends CalendarEvent {
   final String title;
   final int? id;
   final Edge edge;
+  final DateTime startDate;
+  final DateTime endDate;
+  final bool isAllDay;
 
-  const Event(this.title, this.id, {this.edge = Edge.single});
+  const Event(
+      {this.edge = Edge.single,
+      required this.title,
+      required this.id,
+      required this.startDate,
+      required this.endDate,
+      this.isAllDay = false});
 
   @override
   String toString() => title;
@@ -25,16 +34,11 @@ List<DateTime> daysInRange(DateTime first, DateTime last) {
   final dayCount = last.difference(first).inDays + 1;
   return List.generate(
     dayCount,
-        (index) => DateTime.utc(first.year, first.month, first.day + index),
+    (index) => DateTime.utc(first.year, first.month, first.day + index),
   );
 }
 
-enum Edge {
-  start,
-  single,
-  end,
-  part
-}
+enum Edge { start, single, end, part }
 
 extension EdgeX on Edge {
   bool get isStart => this == Edge.start;
