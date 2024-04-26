@@ -18,7 +18,7 @@ class MonthEventMarker extends StatelessWidget {
             margin: EdgeInsets.only(bottom: eventGap),
             decoration: BoxDecoration(
                 borderRadius: _calculateBorderRadius((event as Event).edge),
-                color: _generateColorFromString((event as Event).title)),
+                color: generateColorFromString((event as Event).title)),
             width: 60,
             height: height,
             padding: EdgeInsets.only(left: 4),
@@ -68,7 +68,7 @@ class _EventText extends StatelessWidget {
   }
 }
 
-Color _generateColorFromString(String input) {
+Color generateColorFromString(String input) {
   int hashCode = input.hashCode;
 
   // Extract RGB values from the hash code
