@@ -1,6 +1,7 @@
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/calendar/models/event.dart';
 import 'package:aurora_mail/modules/calendar/widgets/month_event_marker.dart';
+import 'package:aurora_mail/modules/calendar/widgets/short_month_day.dart';
 import 'package:aurora_mail/shared_ui/mail_bottom_app_bar.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
@@ -142,62 +143,76 @@ class _CalendarPageState extends State<CalendarPage>
     );
   }
 
-  Widget _defaultDayBuilder(BuildContext context, DateTime currentDate, DateTime selectedDate){
-    final bool containsEvents = kEvents[currentDate]?.isNotEmpty ?? false;
-
-    return Align(
-      alignment: Alignment.topCenter,
-      child: SizedBox(
-        height: _calendarDayTitleHeight,
-        width: _calendarDayTitleHeight,
-        child:
-        Padding(
-          padding: const EdgeInsets.all(4.0),
-          child: Column(
-            children: [
-              Text(currentDate.day.toString(),),
-              const SizedBox(height: 4,),
-              if(containsEvents) Container(
-                width: 5,
-                height: 5,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                    color: Theme.of(context).primaryColor),
-              ),
-            ],
-          ),
-        ),),);
-
+  Widget _disabledDayBuilder(
+      BuildContext context, DateTime currentDate, DateTime selectedDate) {
+    return ShortMonthDay(
+      height: _calendarDayTitleHeight,
+      dayNumber: currentDate.day.toString(),
+      hasEvents: false,
+      boxColor: Colors.transparent,
+      eventsMarkerColor: Theme.of(context).primaryColor.withOpacity(0.5),
+      dayNumberColor: Colors.grey.shade300,
+    );
   }
 
-  Widget _todayDayBuilder(BuildContext context, DateTime currentDate, DateTime selectedDate){
+  Widget _outsideDayBuilder(
+      BuildContext context, DateTime currentDate, DateTime selectedDate) {
     final bool containsEvents = kEvents[currentDate]?.isNotEmpty ?? false;
 
-    return Align(
-      alignment: Alignment.topCenter,
-      child: Container(
-        padding: EdgeInsets.all(4.0),
-        height: _calendarDayTitleHeight,
-        width: _calendarDayTitleHeight,
-        decoration: BoxDecoration(
-          color: Colors.red.withOpacity(0.5),
-              borderRadius: BorderRadius.circular(4)
-        ),
-        child:
-        Column(
-          children: [
-            Text(currentDate.day.toString(),),
-            const SizedBox(height: 4,),
-            if(containsEvents) Container(
-              width: 5,
-              height: 5,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5),
-                  color: Theme.of(context).primaryColor),
-            ),
-          ],
-        ),),);
+    return ShortMonthDay(
+      height: _calendarDayTitleHeight,
+      dayNumber: currentDate.day.toString(),
+      hasEvents:
+          _eventListAnimationController.value == 1.0 ? false : containsEvents,
+      boxColor: Colors.transparent,
+      eventsMarkerColor: Theme.of(context).primaryColor.withOpacity(0.5),
+      dayNumberColor: Colors.grey,
+    );
+  }
 
+  Widget _defaultDayBuilder(
+      BuildContext context, DateTime currentDate, DateTime selectedDate) {
+    final bool containsEvents = kEvents[currentDate]?.isNotEmpty ?? false;
+
+    return ShortMonthDay(
+      height: _calendarDayTitleHeight,
+      dayNumber: currentDate.day.toString(),
+      hasEvents:
+          _eventListAnimationController.value == 1.0 ? false : containsEvents,
+      boxColor: Colors.transparent,
+      eventsMarkerColor: Theme.of(context).primaryColor,
+      dayNumberColor: Colors.black,
+    );
+  }
+
+  Widget _selectedDayBuilder(
+      BuildContext context, DateTime currentDate, DateTime selectedDate) {
+    final bool containsEvents = kEvents[currentDate]?.isNotEmpty ?? false;
+
+    return ShortMonthDay(
+      height: _calendarDayTitleHeight,
+      dayNumber: currentDate.day.toString(),
+      hasEvents:
+          _eventListAnimationController.value == 1.0 ? false : containsEvents,
+      boxColor: Color.fromARGB(255, 209, 230, 253),
+      eventsMarkerColor: Theme.of(context).primaryColor,
+      dayNumberColor: Theme.of(context).primaryColor,
+    );
+  }
+
+  Widget _todayDayBuilder(
+      BuildContext context, DateTime currentDate, DateTime selectedDate) {
+    final bool containsEvents = kEvents[currentDate]?.isNotEmpty ?? false;
+
+    return ShortMonthDay(
+      height: _calendarDayTitleHeight,
+      dayNumber: currentDate.day.toString(),
+      hasEvents:
+          _eventListAnimationController.value == 1.0 ? false : containsEvents,
+      boxColor: Color.fromARGB(255, 240, 150, 80),
+      eventsMarkerColor: Colors.white,
+      dayNumberColor: Colors.white,
+    );
   }
 
   @override
