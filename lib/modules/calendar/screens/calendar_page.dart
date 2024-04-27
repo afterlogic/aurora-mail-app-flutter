@@ -1,9 +1,11 @@
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/calendar/views/month_view.dart';
+import 'package:aurora_mail/modules/calendar/views/week_view.dart';
 import 'package:aurora_mail/modules/calendar/widgets/calendar_drawer.dart';
 import 'package:aurora_mail/modules/calendar/widgets/calendar_tab.dart';
 import 'package:aurora_mail/shared_ui/mail_bottom_app_bar.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
+import 'package:calendar_view/calendar_view.dart' as CV;
 import 'package:flutter/material.dart';
 
 class CalendarPage extends StatefulWidget {
@@ -73,9 +75,13 @@ class _CalendarPageState extends State<CalendarPage>
                 : SizedBox.shrink(),
           ),
           Expanded(
-            child: TabBarView(
-                controller: _tabController,
-                children: [MonthView(), Text('Placeholder')]),
+            child: TabBarView(controller: _tabController, children: [
+              MonthView(),
+              CV.CalendarControllerProvider(
+                controller: CV.EventController(),
+                child: WeekView(),
+              )
+            ]),
           )
         ],
       ),
