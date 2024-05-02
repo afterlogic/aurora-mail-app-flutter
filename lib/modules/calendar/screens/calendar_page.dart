@@ -1,4 +1,5 @@
 import 'package:aurora_mail/generated/l10n.dart';
+import 'package:aurora_mail/modules/calendar/views/day_view.dart';
 import 'package:aurora_mail/modules/calendar/views/month_view.dart';
 import 'package:aurora_mail/modules/calendar/views/week_view.dart';
 import 'package:aurora_mail/modules/calendar/widgets/calendar_drawer.dart';
@@ -23,7 +24,7 @@ class _CalendarPageState extends State<CalendarPage>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
   }
 
   @override
@@ -69,6 +70,13 @@ class _CalendarPageState extends State<CalendarPage>
                             title: 'Week',
                             controller: _tabController,
                             index: 1),
+                        const SizedBox(
+                          width: 16,
+                        ),
+                        CalendarTab(
+                            title: 'Day',
+                            controller: _tabController,
+                            index: 2),
                       ],
                     ),
                   )
@@ -77,10 +85,8 @@ class _CalendarPageState extends State<CalendarPage>
           Expanded(
             child: TabBarView(controller: _tabController, children: [
               MonthView(),
-              CV.CalendarControllerProvider(
-                controller: CV.EventController(),
-                child: WeekView(),
-              )
+              WeekView(),
+              DayView()
             ]),
           )
         ],
