@@ -3,6 +3,7 @@ import 'package:aurora_mail/modules/calendar/widgets/calendar_tile.dart';
 import 'package:aurora_mail/modules/calendar/widgets/text_input.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class EventCreationPage extends StatefulWidget {
   static const name = "calendar_creation_page";
@@ -13,7 +14,6 @@ class EventCreationPage extends StatefulWidget {
 }
 
 class _EventCreationPageState extends State<EventCreationPage> {
-
   late final TextEditingController _titleController;
   late final TextEditingController _descriptionController;
   late final TextEditingController _locationController;
@@ -77,9 +77,174 @@ class _EventCreationPageState extends State<EventCreationPage> {
               ],
             ),
           ),
-          const Divider(color: const Color(0xFFB6B5B5))
+          const Divider(
+            color: const Color(0xFFB6B5B5),
+            height: 1,
+          ),
+          Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+              child: _Section(
+                  icon: Padding(
+                    padding: const EdgeInsets.only(top: 4.0),
+                    child: Icon(
+                      Icons.access_time_rounded,
+                      size: 15,
+                    ),
+                  ),
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          'All day',
+                        ),
+                        Spacer(),
+                        Checkbox(
+                            value: false,
+                            onChanged: (value) {},
+                            materialTapTargetSize:
+                                MaterialTapTargetSize.shrinkWrap,
+                            visualDensity:
+                                VisualDensity(horizontal: -4, vertical: -4))
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    _DateTimeTile(
+                      dateTime: DateTime.now(),
+                    )
+                  ])),
+          const Divider(
+            color: const Color(0xFFB6B5B5),
+            height: 1,
+          ),
+          Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+              child: _Section(
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        'Daily',
+                      ),
+                      Spacer(),
+                      Text(
+                        'Always',
+                      ),
+                    ],
+                  ),
+                ],
+                icon: Icon(
+                  Icons.sync,
+                  size: 15,
+                ),
+              )),
+          const Divider(
+            color: const Color(0xFFB6B5B5),
+            height: 1,
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+            child: _Section(
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      'Reminders',
+                    ),
+                    const Spacer(),
+                    const _AddIcon(),
+                  ],
+                ),
+              ],
+              icon: Padding(
+                padding: const EdgeInsets.only(top: 6.0),
+                child: Icon(
+                  Icons.notifications_none,
+                  size: 15,
+                ),
+              ),
+            ),
+          ),
+          const Divider(
+            color: const Color(0xFFB6B5B5),
+            height: 1,
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+            child: _Section(
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      'Attendees',
+                    ),
+                    const Spacer(),
+                    const _AddIcon(),
+                  ],
+                ),
+              ],
+              icon: Padding(
+                padding: const EdgeInsets.only(top: 6.0),
+                child: Icon(
+                  Icons.group,
+                  size: 15,
+                ),
+              ),
+            ),
+          ),
         ],
       ),
+    );
+  }
+}
+
+class _DateTimeTile extends StatelessWidget {
+  const _DateTimeTile({super.key, required this.dateTime});
+
+  final DateTime dateTime;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Text(DateFormat('E, MMM d, y').format(dateTime)),
+        Spacer(),
+        Text(DateFormat.jm().format(dateTime)),
+      ],
+    );
+  }
+}
+
+class _Section extends StatelessWidget {
+  const _Section({super.key, required this.children, required this.icon});
+
+  final List<Widget> children;
+  final Widget icon;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+      icon,
+      const SizedBox(
+        width: 8,
+      ),
+      Expanded(
+        child: Column(children: children),
+      ),
+    ]);
+  }
+}
+
+class _AddIcon extends StatelessWidget {
+  const _AddIcon({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Icon(
+      Icons.add,
+      color: Theme.of(context).primaryColor,
+      size: 26,
     );
   }
 }
