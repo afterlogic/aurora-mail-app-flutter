@@ -1,10 +1,9 @@
 //@dart=2.9
 import 'package:aurora_mail/modules/auth/screens/backup_code_auth/backup_code_auth_widget.dart';
 import 'package:aurora_mail/modules/auth/screens/trust_device/trust_device_widget.dart';
-import 'package:aurora_mail/modules/calendar/screens/calendar_page.dart';
-import 'package:aurora_mail/modules/calendar/screens/calendar_route.dart';
-import 'package:aurora_mail/modules/calendar/screens/event_creation_page.dart';
-
+import 'package:aurora_mail/modules/calendar/ui/screens/calendar_page.dart';
+import 'package:aurora_mail/modules/calendar/ui/screens/calendar_route.dart';
+import 'package:aurora_mail/modules/calendar/ui/screens/event_creation_page.dart';
 import 'auth/screens/backup_code_auth/backup_code_auth_route.dart';
 import 'auth/screens/fido_auth/fido_auth.dart';
 import 'auth/screens/fido_auth/fido_auth_route.dart';

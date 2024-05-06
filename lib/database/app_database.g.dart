@@ -2387,6 +2387,710 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
   }
 }
 
+class CalendarDb extends DataClass implements Insertable<CalendarDb> {
+  final String uuid;
+  final String color;
+  final String? description;
+  final String name;
+  final int userLocalId;
+  CalendarDb(
+      {required this.uuid,
+      required this.color,
+      this.description,
+      required this.name,
+      required this.userLocalId});
+  factory CalendarDb.fromData(Map<String, dynamic> data, {String? prefix}) {
+    final effectivePrefix = prefix ?? '';
+    return CalendarDb(
+      uuid: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}uuid'])!,
+      color: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}color'])!,
+      description: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}description']),
+      name: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}name'])!,
+      userLocalId: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}user_local_id'])!,
+    );
+  }
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['uuid'] = Variable<String>(uuid);
+    map['color'] = Variable<String>(color);
+    if (!nullToAbsent || description != null) {
+      map['description'] = Variable<String?>(description);
+    }
+    map['name'] = Variable<String>(name);
+    map['user_local_id'] = Variable<int>(userLocalId);
+    return map;
+  }
+
+  CalendarTableCompanion toCompanion(bool nullToAbsent) {
+    return CalendarTableCompanion(
+      uuid: Value(uuid),
+      color: Value(color),
+      description: description == null && nullToAbsent
+          ? const Value.absent()
+          : Value(description),
+      name: Value(name),
+      userLocalId: Value(userLocalId),
+    );
+  }
+
+  factory CalendarDb.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return CalendarDb(
+      uuid: serializer.fromJson<String>(json['uuid']),
+      color: serializer.fromJson<String>(json['color']),
+      description: serializer.fromJson<String?>(json['description']),
+      name: serializer.fromJson<String>(json['name']),
+      userLocalId: serializer.fromJson<int>(json['userLocalId']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'uuid': serializer.toJson<String>(uuid),
+      'color': serializer.toJson<String>(color),
+      'description': serializer.toJson<String?>(description),
+      'name': serializer.toJson<String>(name),
+      'userLocalId': serializer.toJson<int>(userLocalId),
+    };
+  }
+
+  CalendarDb copyWith(
+          {String? uuid,
+          String? color,
+          String? description,
+          String? name,
+          int? userLocalId}) =>
+      CalendarDb(
+        uuid: uuid ?? this.uuid,
+        color: color ?? this.color,
+        description: description ?? this.description,
+        name: name ?? this.name,
+        userLocalId: userLocalId ?? this.userLocalId,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('CalendarDb(')
+          ..write('uuid: $uuid, ')
+          ..write('color: $color, ')
+          ..write('description: $description, ')
+          ..write('name: $name, ')
+          ..write('userLocalId: $userLocalId')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(uuid, color, description, name, userLocalId);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is CalendarDb &&
+          other.uuid == this.uuid &&
+          other.color == this.color &&
+          other.description == this.description &&
+          other.name == this.name &&
+          other.userLocalId == this.userLocalId);
+}
+
+class CalendarTableCompanion extends UpdateCompanion<CalendarDb> {
+  final Value<String> uuid;
+  final Value<String> color;
+  final Value<String?> description;
+  final Value<String> name;
+  final Value<int> userLocalId;
+  const CalendarTableCompanion({
+    this.uuid = const Value.absent(),
+    this.color = const Value.absent(),
+    this.description = const Value.absent(),
+    this.name = const Value.absent(),
+    this.userLocalId = const Value.absent(),
+  });
+  CalendarTableCompanion.insert({
+    required String uuid,
+    required String color,
+    this.description = const Value.absent(),
+    required String name,
+    required int userLocalId,
+  })  : uuid = Value(uuid),
+        color = Value(color),
+        name = Value(name),
+        userLocalId = Value(userLocalId);
+  static Insertable<CalendarDb> custom({
+    Expression<String>? uuid,
+    Expression<String>? color,
+    Expression<String?>? description,
+    Expression<String>? name,
+    Expression<int>? userLocalId,
+  }) {
+    return RawValuesInsertable({
+      if (uuid != null) 'uuid': uuid,
+      if (color != null) 'color': color,
+      if (description != null) 'description': description,
+      if (name != null) 'name': name,
+      if (userLocalId != null) 'user_local_id': userLocalId,
+    });
+  }
+
+  CalendarTableCompanion copyWith(
+      {Value<String>? uuid,
+      Value<String>? color,
+      Value<String?>? description,
+      Value<String>? name,
+      Value<int>? userLocalId}) {
+    return CalendarTableCompanion(
+      uuid: uuid ?? this.uuid,
+      color: color ?? this.color,
+      description: description ?? this.description,
+      name: name ?? this.name,
+      userLocalId: userLocalId ?? this.userLocalId,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (uuid.present) {
+      map['uuid'] = Variable<String>(uuid.value);
+    }
+    if (color.present) {
+      map['color'] = Variable<String>(color.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String?>(description.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (userLocalId.present) {
+      map['user_local_id'] = Variable<int>(userLocalId.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CalendarTableCompanion(')
+          ..write('uuid: $uuid, ')
+          ..write('color: $color, ')
+          ..write('description: $description, ')
+          ..write('name: $name, ')
+          ..write('userLocalId: $userLocalId')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $CalendarTableTable extends CalendarTable
+    with TableInfo<$CalendarTableTable, CalendarDb> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $CalendarTableTable(this.attachedDatabase, [this._alias]);
+  final VerificationMeta _uuidMeta = const VerificationMeta('uuid');
+  @override
+  late final GeneratedColumn<String?> uuid = GeneratedColumn<String?>(
+      'uuid', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _colorMeta = const VerificationMeta('color');
+  @override
+  late final GeneratedColumn<String?> color = GeneratedColumn<String?>(
+      'color', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _descriptionMeta =
+      const VerificationMeta('description');
+  @override
+  late final GeneratedColumn<String?> description = GeneratedColumn<String?>(
+      'description', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String?> name = GeneratedColumn<String?>(
+      'name', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _userLocalIdMeta =
+      const VerificationMeta('userLocalId');
+  @override
+  late final GeneratedColumn<int?> userLocalId = GeneratedColumn<int?>(
+      'user_local_id', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns =>
+      [uuid, color, description, name, userLocalId];
+  @override
+  String get aliasedName => _alias ?? 'calendar_table';
+  @override
+  String get actualTableName => 'calendar_table';
+  @override
+  VerificationContext validateIntegrity(Insertable<CalendarDb> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('uuid')) {
+      context.handle(
+          _uuidMeta, uuid.isAcceptableOrUnknown(data['uuid']!, _uuidMeta));
+    } else if (isInserting) {
+      context.missing(_uuidMeta);
+    }
+    if (data.containsKey('color')) {
+      context.handle(
+          _colorMeta, color.isAcceptableOrUnknown(data['color']!, _colorMeta));
+    } else if (isInserting) {
+      context.missing(_colorMeta);
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+          _descriptionMeta,
+          description.isAcceptableOrUnknown(
+              data['description']!, _descriptionMeta));
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('user_local_id')) {
+      context.handle(
+          _userLocalIdMeta,
+          userLocalId.isAcceptableOrUnknown(
+              data['user_local_id']!, _userLocalIdMeta));
+    } else if (isInserting) {
+      context.missing(_userLocalIdMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {uuid};
+  @override
+  CalendarDb map(Map<String, dynamic> data, {String? tablePrefix}) {
+    return CalendarDb.fromData(data,
+        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+  }
+
+  @override
+  $CalendarTableTable createAlias(String alias) {
+    return $CalendarTableTable(attachedDatabase, alias);
+  }
+}
+
+class EventDb extends DataClass implements Insertable<EventDb> {
+  final int localId;
+  final int userLocalId;
+  final String calendarId;
+  final DateTime startTS;
+  final DateTime? endTS;
+  final String? description;
+  final String? name;
+  final bool isAllDay;
+  EventDb(
+      {required this.localId,
+      required this.userLocalId,
+      required this.calendarId,
+      required this.startTS,
+      this.endTS,
+      this.description,
+      this.name,
+      required this.isAllDay});
+  factory EventDb.fromData(Map<String, dynamic> data, {String? prefix}) {
+    final effectivePrefix = prefix ?? '';
+    return EventDb(
+      localId: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}local_id'])!,
+      userLocalId: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}user_local_id'])!,
+      calendarId: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}calendar_id'])!,
+      startTS: const DateTimeType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}start_t_s'])!,
+      endTS: const DateTimeType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}end_t_s']),
+      description: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}description']),
+      name: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}name']),
+      isAllDay: const BoolType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}is_all_day'])!,
+    );
+  }
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['local_id'] = Variable<int>(localId);
+    map['user_local_id'] = Variable<int>(userLocalId);
+    map['calendar_id'] = Variable<String>(calendarId);
+    map['start_t_s'] = Variable<DateTime>(startTS);
+    if (!nullToAbsent || endTS != null) {
+      map['end_t_s'] = Variable<DateTime?>(endTS);
+    }
+    if (!nullToAbsent || description != null) {
+      map['description'] = Variable<String?>(description);
+    }
+    if (!nullToAbsent || name != null) {
+      map['name'] = Variable<String?>(name);
+    }
+    map['is_all_day'] = Variable<bool>(isAllDay);
+    return map;
+  }
+
+  EventTableCompanion toCompanion(bool nullToAbsent) {
+    return EventTableCompanion(
+      localId: Value(localId),
+      userLocalId: Value(userLocalId),
+      calendarId: Value(calendarId),
+      startTS: Value(startTS),
+      endTS:
+          endTS == null && nullToAbsent ? const Value.absent() : Value(endTS),
+      description: description == null && nullToAbsent
+          ? const Value.absent()
+          : Value(description),
+      name: name == null && nullToAbsent ? const Value.absent() : Value(name),
+      isAllDay: Value(isAllDay),
+    );
+  }
+
+  factory EventDb.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return EventDb(
+      localId: serializer.fromJson<int>(json['localId']),
+      userLocalId: serializer.fromJson<int>(json['userLocalId']),
+      calendarId: serializer.fromJson<String>(json['calendarId']),
+      startTS: serializer.fromJson<DateTime>(json['startTS']),
+      endTS: serializer.fromJson<DateTime?>(json['endTS']),
+      description: serializer.fromJson<String?>(json['description']),
+      name: serializer.fromJson<String?>(json['name']),
+      isAllDay: serializer.fromJson<bool>(json['isAllDay']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'localId': serializer.toJson<int>(localId),
+      'userLocalId': serializer.toJson<int>(userLocalId),
+      'calendarId': serializer.toJson<String>(calendarId),
+      'startTS': serializer.toJson<DateTime>(startTS),
+      'endTS': serializer.toJson<DateTime?>(endTS),
+      'description': serializer.toJson<String?>(description),
+      'name': serializer.toJson<String?>(name),
+      'isAllDay': serializer.toJson<bool>(isAllDay),
+    };
+  }
+
+  EventDb copyWith(
+          {int? localId,
+          int? userLocalId,
+          String? calendarId,
+          DateTime? startTS,
+          DateTime? endTS,
+          String? description,
+          String? name,
+          bool? isAllDay}) =>
+      EventDb(
+        localId: localId ?? this.localId,
+        userLocalId: userLocalId ?? this.userLocalId,
+        calendarId: calendarId ?? this.calendarId,
+        startTS: startTS ?? this.startTS,
+        endTS: endTS ?? this.endTS,
+        description: description ?? this.description,
+        name: name ?? this.name,
+        isAllDay: isAllDay ?? this.isAllDay,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('EventDb(')
+          ..write('localId: $localId, ')
+          ..write('userLocalId: $userLocalId, ')
+          ..write('calendarId: $calendarId, ')
+          ..write('startTS: $startTS, ')
+          ..write('endTS: $endTS, ')
+          ..write('description: $description, ')
+          ..write('name: $name, ')
+          ..write('isAllDay: $isAllDay')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(localId, userLocalId, calendarId, startTS,
+      endTS, description, name, isAllDay);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is EventDb &&
+          other.localId == this.localId &&
+          other.userLocalId == this.userLocalId &&
+          other.calendarId == this.calendarId &&
+          other.startTS == this.startTS &&
+          other.endTS == this.endTS &&
+          other.description == this.description &&
+          other.name == this.name &&
+          other.isAllDay == this.isAllDay);
+}
+
+class EventTableCompanion extends UpdateCompanion<EventDb> {
+  final Value<int> localId;
+  final Value<int> userLocalId;
+  final Value<String> calendarId;
+  final Value<DateTime> startTS;
+  final Value<DateTime?> endTS;
+  final Value<String?> description;
+  final Value<String?> name;
+  final Value<bool> isAllDay;
+  const EventTableCompanion({
+    this.localId = const Value.absent(),
+    this.userLocalId = const Value.absent(),
+    this.calendarId = const Value.absent(),
+    this.startTS = const Value.absent(),
+    this.endTS = const Value.absent(),
+    this.description = const Value.absent(),
+    this.name = const Value.absent(),
+    this.isAllDay = const Value.absent(),
+  });
+  EventTableCompanion.insert({
+    this.localId = const Value.absent(),
+    required int userLocalId,
+    required String calendarId,
+    required DateTime startTS,
+    this.endTS = const Value.absent(),
+    this.description = const Value.absent(),
+    this.name = const Value.absent(),
+    this.isAllDay = const Value.absent(),
+  })  : userLocalId = Value(userLocalId),
+        calendarId = Value(calendarId),
+        startTS = Value(startTS);
+  static Insertable<EventDb> custom({
+    Expression<int>? localId,
+    Expression<int>? userLocalId,
+    Expression<String>? calendarId,
+    Expression<DateTime>? startTS,
+    Expression<DateTime?>? endTS,
+    Expression<String?>? description,
+    Expression<String?>? name,
+    Expression<bool>? isAllDay,
+  }) {
+    return RawValuesInsertable({
+      if (localId != null) 'local_id': localId,
+      if (userLocalId != null) 'user_local_id': userLocalId,
+      if (calendarId != null) 'calendar_id': calendarId,
+      if (startTS != null) 'start_t_s': startTS,
+      if (endTS != null) 'end_t_s': endTS,
+      if (description != null) 'description': description,
+      if (name != null) 'name': name,
+      if (isAllDay != null) 'is_all_day': isAllDay,
+    });
+  }
+
+  EventTableCompanion copyWith(
+      {Value<int>? localId,
+      Value<int>? userLocalId,
+      Value<String>? calendarId,
+      Value<DateTime>? startTS,
+      Value<DateTime?>? endTS,
+      Value<String?>? description,
+      Value<String?>? name,
+      Value<bool>? isAllDay}) {
+    return EventTableCompanion(
+      localId: localId ?? this.localId,
+      userLocalId: userLocalId ?? this.userLocalId,
+      calendarId: calendarId ?? this.calendarId,
+      startTS: startTS ?? this.startTS,
+      endTS: endTS ?? this.endTS,
+      description: description ?? this.description,
+      name: name ?? this.name,
+      isAllDay: isAllDay ?? this.isAllDay,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (localId.present) {
+      map['local_id'] = Variable<int>(localId.value);
+    }
+    if (userLocalId.present) {
+      map['user_local_id'] = Variable<int>(userLocalId.value);
+    }
+    if (calendarId.present) {
+      map['calendar_id'] = Variable<String>(calendarId.value);
+    }
+    if (startTS.present) {
+      map['start_t_s'] = Variable<DateTime>(startTS.value);
+    }
+    if (endTS.present) {
+      map['end_t_s'] = Variable<DateTime?>(endTS.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String?>(description.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String?>(name.value);
+    }
+    if (isAllDay.present) {
+      map['is_all_day'] = Variable<bool>(isAllDay.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('EventTableCompanion(')
+          ..write('localId: $localId, ')
+          ..write('userLocalId: $userLocalId, ')
+          ..write('calendarId: $calendarId, ')
+          ..write('startTS: $startTS, ')
+          ..write('endTS: $endTS, ')
+          ..write('description: $description, ')
+          ..write('name: $name, ')
+          ..write('isAllDay: $isAllDay')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $EventTableTable extends EventTable
+    with TableInfo<$EventTableTable, EventDb> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $EventTableTable(this.attachedDatabase, [this._alias]);
+  final VerificationMeta _localIdMeta = const VerificationMeta('localId');
+  @override
+  late final GeneratedColumn<int?> localId = GeneratedColumn<int?>(
+      'local_id', aliasedName, false,
+      type: const IntType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'PRIMARY KEY AUTOINCREMENT');
+  final VerificationMeta _userLocalIdMeta =
+      const VerificationMeta('userLocalId');
+  @override
+  late final GeneratedColumn<int?> userLocalId = GeneratedColumn<int?>(
+      'user_local_id', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
+  final VerificationMeta _calendarIdMeta = const VerificationMeta('calendarId');
+  @override
+  late final GeneratedColumn<String?> calendarId = GeneratedColumn<String?>(
+      'calendar_id', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _startTSMeta = const VerificationMeta('startTS');
+  @override
+  late final GeneratedColumn<DateTime?> startTS = GeneratedColumn<DateTime?>(
+      'start_t_s', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
+  final VerificationMeta _endTSMeta = const VerificationMeta('endTS');
+  @override
+  late final GeneratedColumn<DateTime?> endTS = GeneratedColumn<DateTime?>(
+      'end_t_s', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _descriptionMeta =
+      const VerificationMeta('description');
+  @override
+  late final GeneratedColumn<String?> description = GeneratedColumn<String?>(
+      'description', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String?> name = GeneratedColumn<String?>(
+      'name', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _isAllDayMeta = const VerificationMeta('isAllDay');
+  @override
+  late final GeneratedColumn<bool?> isAllDay = GeneratedColumn<bool?>(
+      'is_all_day', aliasedName, false,
+      type: const BoolType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'CHECK (is_all_day IN (0, 1))',
+      defaultValue: const Constant(false));
+  @override
+  List<GeneratedColumn> get $columns => [
+        localId,
+        userLocalId,
+        calendarId,
+        startTS,
+        endTS,
+        description,
+        name,
+        isAllDay
+      ];
+  @override
+  String get aliasedName => _alias ?? 'event_table';
+  @override
+  String get actualTableName => 'event_table';
+  @override
+  VerificationContext validateIntegrity(Insertable<EventDb> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('local_id')) {
+      context.handle(_localIdMeta,
+          localId.isAcceptableOrUnknown(data['local_id']!, _localIdMeta));
+    }
+    if (data.containsKey('user_local_id')) {
+      context.handle(
+          _userLocalIdMeta,
+          userLocalId.isAcceptableOrUnknown(
+              data['user_local_id']!, _userLocalIdMeta));
+    } else if (isInserting) {
+      context.missing(_userLocalIdMeta);
+    }
+    if (data.containsKey('calendar_id')) {
+      context.handle(
+          _calendarIdMeta,
+          calendarId.isAcceptableOrUnknown(
+              data['calendar_id']!, _calendarIdMeta));
+    } else if (isInserting) {
+      context.missing(_calendarIdMeta);
+    }
+    if (data.containsKey('start_t_s')) {
+      context.handle(_startTSMeta,
+          startTS.isAcceptableOrUnknown(data['start_t_s']!, _startTSMeta));
+    } else if (isInserting) {
+      context.missing(_startTSMeta);
+    }
+    if (data.containsKey('end_t_s')) {
+      context.handle(_endTSMeta,
+          endTS.isAcceptableOrUnknown(data['end_t_s']!, _endTSMeta));
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+          _descriptionMeta,
+          description.isAcceptableOrUnknown(
+              data['description']!, _descriptionMeta));
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
+    }
+    if (data.containsKey('is_all_day')) {
+      context.handle(_isAllDayMeta,
+          isAllDay.isAcceptableOrUnknown(data['is_all_day']!, _isAllDayMeta));
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {localId};
+  @override
+  EventDb map(Map<String, dynamic> data, {String? tablePrefix}) {
+    return EventDb.fromData(data,
+        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+  }
+
+  @override
+  $EventTableTable createAlias(String alias) {
+    return $EventTableTable(attachedDatabase, alias);
+  }
+}
+
 class LocalFolder extends DataClass implements Insertable<LocalFolder> {
   final String fullName;
   final int accountLocalId;
@@ -9689,6 +10393,8 @@ class $WhiteMailTableTable extends WhiteMailTable
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(SqlTypeSystem.defaultInstance, e);
   late final $MailTable mail = $MailTable(this);
+  late final $CalendarTableTable calendarTable = $CalendarTableTable(this);
+  late final $EventTableTable eventTable = $EventTableTable(this);
   late final $FoldersTable folders = $FoldersTable(this);
   late final $UsersTable users = $UsersTable(this);
   late final $AccountsTable accounts = $AccountsTable(this);
@@ -9706,6 +10412,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities => [
         mail,
+        calendarTable,
+        eventTable,
         folders,
         users,
         accounts,

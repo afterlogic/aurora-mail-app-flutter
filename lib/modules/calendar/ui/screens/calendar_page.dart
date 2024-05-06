@@ -1,10 +1,10 @@
 import 'package:aurora_mail/generated/l10n.dart';
-import 'package:aurora_mail/modules/calendar/screens/event_creation_page.dart';
-import 'package:aurora_mail/modules/calendar/views/day_view.dart';
-import 'package:aurora_mail/modules/calendar/views/month_view.dart';
-import 'package:aurora_mail/modules/calendar/views/week_view.dart';
-import 'package:aurora_mail/modules/calendar/widgets/calendar_drawer.dart';
-import 'package:aurora_mail/modules/calendar/widgets/calendar_tab.dart';
+import 'package:aurora_mail/modules/calendar/ui/screens/event_creation_page.dart';
+import 'package:aurora_mail/modules/calendar/ui/views/day_view.dart';
+import 'package:aurora_mail/modules/calendar/ui/views/month_view.dart';
+import 'package:aurora_mail/modules/calendar/ui/views/week_view.dart';
+import 'package:aurora_mail/modules/calendar/ui/widgets/calendar_drawer.dart';
+import 'package:aurora_mail/modules/calendar/ui/widgets/calendar_tab.dart';
 import 'package:aurora_mail/shared_ui/mail_bottom_app_bar.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';

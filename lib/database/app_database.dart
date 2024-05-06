@@ -7,6 +7,8 @@ import 'package:aurora_mail/database/folders/folders_table.dart';
 import 'package:aurora_mail/database/mail/mail_table.dart';
 import 'package:aurora_mail/database/pgp/pgp_key_model.dart';
 import 'package:aurora_mail/database/white_mail/white_mail_model.dart';
+import 'package:aurora_mail/modules/calendar/services/db/calendar_table.dart';
+import 'package:aurora_mail/modules/calendar/services/db/event_table.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_storage_model.dart';
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/contacts/contacts_table.dart';
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/contacts/converters/list_string_converter.dart';
@@ -37,6 +39,8 @@ class DBInstances {
 
 @DriftDatabase(tables: [
   Mail,
+  CalendarTable,
+  EventTable,
   Folders,
   Users,
   Accounts,

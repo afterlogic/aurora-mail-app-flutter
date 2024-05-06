@@ -1,6 +1,6 @@
 import 'package:aurora_mail/generated/l10n.dart';
-import 'package:aurora_mail/modules/calendar/widgets/calendar_tile.dart';
-import 'package:aurora_mail/modules/calendar/widgets/text_input.dart';
+import 'package:aurora_mail/modules/calendar/ui/widgets/calendar_tile.dart';
+import 'package:aurora_mail/modules/calendar/ui/widgets/text_input.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';

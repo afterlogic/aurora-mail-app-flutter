@@ -62,6 +62,16 @@ class _WeekViewState extends State<WeekView> {
         endTime: _currentDate.copyWith(
             day: _currentDate.day + 3, hour: _currentDate.hour + 2),
       ),
+
+      CV.CalendarEventData(
+        title: 'test5',
+        date: _currentDate.copyWith(day: _currentDate.day).withoutTime,
+        // endDate: _currentDate.copyWith(day: _currentDate.day + 3).withoutTime,
+        startTime: _currentDate.copyWith(
+            day: _currentDate.day, hour: _currentDate.hour - 3),
+        endTime: _currentDate.copyWith(
+            day: _currentDate.day + 3, hour: _currentDate.hour + 1),
+      ),
     ];
 
     events.forEach((element) {

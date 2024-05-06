@@ -1,6 +1,6 @@
 //@dart=2.9
 import 'package:aurora_mail/generated/l10n.dart';
-import 'package:aurora_mail/modules/calendar/screens/calendar_route.dart';
+import 'package:aurora_mail/modules/calendar/ui/screens/calendar_route.dart';
 import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/screens/contacts_list/contacts_list_route.dart';

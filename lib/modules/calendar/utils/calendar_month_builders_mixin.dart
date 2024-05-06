@@ -1,6 +1,6 @@
 import 'package:aurora_mail/modules/calendar/models/event.dart';
-import 'package:aurora_mail/modules/calendar/widgets/month_event_marker.dart';
-import 'package:aurora_mail/modules/calendar/widgets/short_month_day.dart';
+import 'package:aurora_mail/modules/calendar/ui/widgets/month_event_marker.dart';
+import 'package:aurora_mail/modules/calendar/ui/widgets/short_month_day.dart';
 import 'package:flutter/material.dart';
 
 mixin CalendarMonthBuilders {
