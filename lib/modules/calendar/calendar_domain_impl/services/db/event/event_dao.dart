@@ -1,5 +1,5 @@
 import 'package:aurora_mail/database/app_database.dart';
-import 'package:aurora_mail/modules/calendar/services/db/event_table.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain_impl/services/db/event/event_table.dart';
 import 'package:drift/drift.dart';
 
 part 'event_dao.g.dart';

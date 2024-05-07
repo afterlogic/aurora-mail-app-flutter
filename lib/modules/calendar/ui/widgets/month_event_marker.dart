@@ -1,4 +1,4 @@
-import 'package:aurora_mail/modules/calendar/models/event.dart';
+import 'package:aurora_mail/modules/calendar/ui/models/event.dart';
 import 'package:flutter/material.dart';
 
 class MonthEventMarker extends StatelessWidget {

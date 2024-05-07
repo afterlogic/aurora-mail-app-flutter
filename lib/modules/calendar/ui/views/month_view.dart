@@ -1,4 +1,4 @@
-import 'package:aurora_mail/modules/calendar/models/event.dart';
+import 'package:aurora_mail/modules/calendar/ui/models/event.dart';
 import 'package:aurora_mail/modules/calendar/utils/calendar_month_builders_mixin.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/event_card.dart';
 import 'package:flutter/material.dart';

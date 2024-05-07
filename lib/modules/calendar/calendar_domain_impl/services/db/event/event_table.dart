@@ -15,7 +15,7 @@ class EventTable extends Table{
 
   TextColumn get description => text().nullable()();
 
-  TextColumn get name => text().nullable()();
+  TextColumn get name => text()();
 
   BoolColumn get isAllDay => boolean().withDefault(const Constant(false))();
 

@@ -2689,7 +2689,7 @@ class EventDb extends DataClass implements Insertable<EventDb> {
   final DateTime startTS;
   final DateTime? endTS;
   final String? description;
-  final String? name;
+  final String name;
   final bool isAllDay;
   EventDb(
       {required this.localId,
@@ -2698,7 +2698,7 @@ class EventDb extends DataClass implements Insertable<EventDb> {
       required this.startTS,
       this.endTS,
       this.description,
-      this.name,
+      required this.name,
       required this.isAllDay});
   factory EventDb.fromData(Map<String, dynamic> data, {String? prefix}) {
     final effectivePrefix = prefix ?? '';
@@ -2716,7 +2716,7 @@ class EventDb extends DataClass implements Insertable<EventDb> {
       description: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}description']),
       name: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}name']),
+          .mapFromDatabaseResponse(data['${effectivePrefix}name'])!,
       isAllDay: const BoolType()
           .mapFromDatabaseResponse(data['${effectivePrefix}is_all_day'])!,
     );
@@ -2734,9 +2734,7 @@ class EventDb extends DataClass implements Insertable<EventDb> {
     if (!nullToAbsent || description != null) {
       map['description'] = Variable<String?>(description);
     }
-    if (!nullToAbsent || name != null) {
-      map['name'] = Variable<String?>(name);
-    }
+    map['name'] = Variable<String>(name);
     map['is_all_day'] = Variable<bool>(isAllDay);
     return map;
   }
@@ -2752,7 +2750,7 @@ class EventDb extends DataClass implements Insertable<EventDb> {
       description: description == null && nullToAbsent
           ? const Value.absent()
           : Value(description),
-      name: name == null && nullToAbsent ? const Value.absent() : Value(name),
+      name: Value(name),
       isAllDay: Value(isAllDay),
     );
   }
@@ -2767,7 +2765,7 @@ class EventDb extends DataClass implements Insertable<EventDb> {
       startTS: serializer.fromJson<DateTime>(json['startTS']),
       endTS: serializer.fromJson<DateTime?>(json['endTS']),
       description: serializer.fromJson<String?>(json['description']),
-      name: serializer.fromJson<String?>(json['name']),
+      name: serializer.fromJson<String>(json['name']),
       isAllDay: serializer.fromJson<bool>(json['isAllDay']),
     );
   }
@@ -2781,7 +2779,7 @@ class EventDb extends DataClass implements Insertable<EventDb> {
       'startTS': serializer.toJson<DateTime>(startTS),
       'endTS': serializer.toJson<DateTime?>(endTS),
       'description': serializer.toJson<String?>(description),
-      'name': serializer.toJson<String?>(name),
+      'name': serializer.toJson<String>(name),
       'isAllDay': serializer.toJson<bool>(isAllDay),
     };
   }
@@ -2844,7 +2842,7 @@ class EventTableCompanion extends UpdateCompanion<EventDb> {
   final Value<DateTime> startTS;
   final Value<DateTime?> endTS;
   final Value<String?> description;
-  final Value<String?> name;
+  final Value<String> name;
   final Value<bool> isAllDay;
   const EventTableCompanion({
     this.localId = const Value.absent(),
@@ -2863,11 +2861,12 @@ class EventTableCompanion extends UpdateCompanion<EventDb> {
     required DateTime startTS,
     this.endTS = const Value.absent(),
     this.description = const Value.absent(),
-    this.name = const Value.absent(),
+    required String name,
     this.isAllDay = const Value.absent(),
   })  : userLocalId = Value(userLocalId),
         calendarId = Value(calendarId),
-        startTS = Value(startTS);
+        startTS = Value(startTS),
+        name = Value(name);
   static Insertable<EventDb> custom({
     Expression<int>? localId,
     Expression<int>? userLocalId,
@@ -2875,7 +2874,7 @@ class EventTableCompanion extends UpdateCompanion<EventDb> {
     Expression<DateTime>? startTS,
     Expression<DateTime?>? endTS,
     Expression<String?>? description,
-    Expression<String?>? name,
+    Expression<String>? name,
     Expression<bool>? isAllDay,
   }) {
     return RawValuesInsertable({
@@ -2897,7 +2896,7 @@ class EventTableCompanion extends UpdateCompanion<EventDb> {
       Value<DateTime>? startTS,
       Value<DateTime?>? endTS,
       Value<String?>? description,
-      Value<String?>? name,
+      Value<String>? name,
       Value<bool>? isAllDay}) {
     return EventTableCompanion(
       localId: localId ?? this.localId,
@@ -2933,7 +2932,7 @@ class EventTableCompanion extends UpdateCompanion<EventDb> {
       map['description'] = Variable<String?>(description.value);
     }
     if (name.present) {
-      map['name'] = Variable<String?>(name.value);
+      map['name'] = Variable<String>(name.value);
     }
     if (isAllDay.present) {
       map['is_all_day'] = Variable<bool>(isAllDay.value);
@@ -3000,8 +2999,8 @@ class $EventTableTable extends EventTable
   final VerificationMeta _nameMeta = const VerificationMeta('name');
   @override
   late final GeneratedColumn<String?> name = GeneratedColumn<String?>(
-      'name', aliasedName, true,
-      type: const StringType(), requiredDuringInsert: false);
+      'name', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _isAllDayMeta = const VerificationMeta('isAllDay');
   @override
   late final GeneratedColumn<bool?> isAllDay = GeneratedColumn<bool?>(
@@ -3069,6 +3068,8 @@ class $EventTableTable extends EventTable
     if (data.containsKey('name')) {
       context.handle(
           _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
+    } else if (isInserting) {
+      context.missing(_nameMeta);
     }
     if (data.containsKey('is_all_day')) {
       context.handle(_isAllDayMeta,
