@@ -2388,54 +2388,96 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
 }
 
 class CalendarDb extends DataClass implements Insertable<CalendarDb> {
-  final String uuid;
+  final String id;
   final String color;
   final String? description;
   final String name;
-  final int userLocalId;
+  final String owner;
+  final bool isDefault;
+  final bool shared;
+  final bool sharedToAll;
+  final int sharedToAllAccess;
+  final int access;
+  final bool isPublic;
+  final String syncToken;
   CalendarDb(
-      {required this.uuid,
+      {required this.id,
       required this.color,
       this.description,
       required this.name,
-      required this.userLocalId});
+      required this.owner,
+      required this.isDefault,
+      required this.shared,
+      required this.sharedToAll,
+      required this.sharedToAllAccess,
+      required this.access,
+      required this.isPublic,
+      required this.syncToken});
   factory CalendarDb.fromData(Map<String, dynamic> data, {String? prefix}) {
     final effectivePrefix = prefix ?? '';
     return CalendarDb(
-      uuid: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}uuid'])!,
+      id: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
       color: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}color'])!,
       description: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}description']),
       name: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}name'])!,
-      userLocalId: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}user_local_id'])!,
+      owner: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}owner'])!,
+      isDefault: const BoolType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}is_default'])!,
+      shared: const BoolType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}shared'])!,
+      sharedToAll: const BoolType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}shared_to_all'])!,
+      sharedToAllAccess: const IntType().mapFromDatabaseResponse(
+          data['${effectivePrefix}shared_to_all_access'])!,
+      access: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}access'])!,
+      isPublic: const BoolType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}is_public'])!,
+      syncToken: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}sync_token'])!,
     );
   }
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['uuid'] = Variable<String>(uuid);
+    map['id'] = Variable<String>(id);
     map['color'] = Variable<String>(color);
     if (!nullToAbsent || description != null) {
       map['description'] = Variable<String?>(description);
     }
     map['name'] = Variable<String>(name);
-    map['user_local_id'] = Variable<int>(userLocalId);
+    map['owner'] = Variable<String>(owner);
+    map['is_default'] = Variable<bool>(isDefault);
+    map['shared'] = Variable<bool>(shared);
+    map['shared_to_all'] = Variable<bool>(sharedToAll);
+    map['shared_to_all_access'] = Variable<int>(sharedToAllAccess);
+    map['access'] = Variable<int>(access);
+    map['is_public'] = Variable<bool>(isPublic);
+    map['sync_token'] = Variable<String>(syncToken);
     return map;
   }
 
   CalendarTableCompanion toCompanion(bool nullToAbsent) {
     return CalendarTableCompanion(
-      uuid: Value(uuid),
+      id: Value(id),
       color: Value(color),
       description: description == null && nullToAbsent
           ? const Value.absent()
           : Value(description),
       name: Value(name),
-      userLocalId: Value(userLocalId),
+      owner: Value(owner),
+      isDefault: Value(isDefault),
+      shared: Value(shared),
+      sharedToAll: Value(sharedToAll),
+      sharedToAllAccess: Value(sharedToAllAccess),
+      access: Value(access),
+      isPublic: Value(isPublic),
+      syncToken: Value(syncToken),
     );
   }
 
@@ -2443,122 +2485,232 @@ class CalendarDb extends DataClass implements Insertable<CalendarDb> {
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return CalendarDb(
-      uuid: serializer.fromJson<String>(json['uuid']),
+      id: serializer.fromJson<String>(json['id']),
       color: serializer.fromJson<String>(json['color']),
       description: serializer.fromJson<String?>(json['description']),
       name: serializer.fromJson<String>(json['name']),
-      userLocalId: serializer.fromJson<int>(json['userLocalId']),
+      owner: serializer.fromJson<String>(json['owner']),
+      isDefault: serializer.fromJson<bool>(json['isDefault']),
+      shared: serializer.fromJson<bool>(json['shared']),
+      sharedToAll: serializer.fromJson<bool>(json['sharedToAll']),
+      sharedToAllAccess: serializer.fromJson<int>(json['sharedToAllAccess']),
+      access: serializer.fromJson<int>(json['access']),
+      isPublic: serializer.fromJson<bool>(json['isPublic']),
+      syncToken: serializer.fromJson<String>(json['syncToken']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'uuid': serializer.toJson<String>(uuid),
+      'id': serializer.toJson<String>(id),
       'color': serializer.toJson<String>(color),
       'description': serializer.toJson<String?>(description),
       'name': serializer.toJson<String>(name),
-      'userLocalId': serializer.toJson<int>(userLocalId),
+      'owner': serializer.toJson<String>(owner),
+      'isDefault': serializer.toJson<bool>(isDefault),
+      'shared': serializer.toJson<bool>(shared),
+      'sharedToAll': serializer.toJson<bool>(sharedToAll),
+      'sharedToAllAccess': serializer.toJson<int>(sharedToAllAccess),
+      'access': serializer.toJson<int>(access),
+      'isPublic': serializer.toJson<bool>(isPublic),
+      'syncToken': serializer.toJson<String>(syncToken),
     };
   }
 
   CalendarDb copyWith(
-          {String? uuid,
+          {String? id,
           String? color,
           String? description,
           String? name,
-          int? userLocalId}) =>
+          String? owner,
+          bool? isDefault,
+          bool? shared,
+          bool? sharedToAll,
+          int? sharedToAllAccess,
+          int? access,
+          bool? isPublic,
+          String? syncToken}) =>
       CalendarDb(
-        uuid: uuid ?? this.uuid,
+        id: id ?? this.id,
         color: color ?? this.color,
         description: description ?? this.description,
         name: name ?? this.name,
-        userLocalId: userLocalId ?? this.userLocalId,
+        owner: owner ?? this.owner,
+        isDefault: isDefault ?? this.isDefault,
+        shared: shared ?? this.shared,
+        sharedToAll: sharedToAll ?? this.sharedToAll,
+        sharedToAllAccess: sharedToAllAccess ?? this.sharedToAllAccess,
+        access: access ?? this.access,
+        isPublic: isPublic ?? this.isPublic,
+        syncToken: syncToken ?? this.syncToken,
       );
   @override
   String toString() {
     return (StringBuffer('CalendarDb(')
-          ..write('uuid: $uuid, ')
+          ..write('id: $id, ')
           ..write('color: $color, ')
           ..write('description: $description, ')
           ..write('name: $name, ')
-          ..write('userLocalId: $userLocalId')
+          ..write('owner: $owner, ')
+          ..write('isDefault: $isDefault, ')
+          ..write('shared: $shared, ')
+          ..write('sharedToAll: $sharedToAll, ')
+          ..write('sharedToAllAccess: $sharedToAllAccess, ')
+          ..write('access: $access, ')
+          ..write('isPublic: $isPublic, ')
+          ..write('syncToken: $syncToken')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(uuid, color, description, name, userLocalId);
+  int get hashCode => Object.hash(
+      id,
+      color,
+      description,
+      name,
+      owner,
+      isDefault,
+      shared,
+      sharedToAll,
+      sharedToAllAccess,
+      access,
+      isPublic,
+      syncToken);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is CalendarDb &&
-          other.uuid == this.uuid &&
+          other.id == this.id &&
           other.color == this.color &&
           other.description == this.description &&
           other.name == this.name &&
-          other.userLocalId == this.userLocalId);
+          other.owner == this.owner &&
+          other.isDefault == this.isDefault &&
+          other.shared == this.shared &&
+          other.sharedToAll == this.sharedToAll &&
+          other.sharedToAllAccess == this.sharedToAllAccess &&
+          other.access == this.access &&
+          other.isPublic == this.isPublic &&
+          other.syncToken == this.syncToken);
 }
 
 class CalendarTableCompanion extends UpdateCompanion<CalendarDb> {
-  final Value<String> uuid;
+  final Value<String> id;
   final Value<String> color;
   final Value<String?> description;
   final Value<String> name;
-  final Value<int> userLocalId;
+  final Value<String> owner;
+  final Value<bool> isDefault;
+  final Value<bool> shared;
+  final Value<bool> sharedToAll;
+  final Value<int> sharedToAllAccess;
+  final Value<int> access;
+  final Value<bool> isPublic;
+  final Value<String> syncToken;
   const CalendarTableCompanion({
-    this.uuid = const Value.absent(),
+    this.id = const Value.absent(),
     this.color = const Value.absent(),
     this.description = const Value.absent(),
     this.name = const Value.absent(),
-    this.userLocalId = const Value.absent(),
+    this.owner = const Value.absent(),
+    this.isDefault = const Value.absent(),
+    this.shared = const Value.absent(),
+    this.sharedToAll = const Value.absent(),
+    this.sharedToAllAccess = const Value.absent(),
+    this.access = const Value.absent(),
+    this.isPublic = const Value.absent(),
+    this.syncToken = const Value.absent(),
   });
   CalendarTableCompanion.insert({
-    required String uuid,
+    required String id,
     required String color,
     this.description = const Value.absent(),
     required String name,
-    required int userLocalId,
-  })  : uuid = Value(uuid),
+    required String owner,
+    required bool isDefault,
+    required bool shared,
+    required bool sharedToAll,
+    required int sharedToAllAccess,
+    required int access,
+    required bool isPublic,
+    required String syncToken,
+  })  : id = Value(id),
         color = Value(color),
         name = Value(name),
-        userLocalId = Value(userLocalId);
+        owner = Value(owner),
+        isDefault = Value(isDefault),
+        shared = Value(shared),
+        sharedToAll = Value(sharedToAll),
+        sharedToAllAccess = Value(sharedToAllAccess),
+        access = Value(access),
+        isPublic = Value(isPublic),
+        syncToken = Value(syncToken);
   static Insertable<CalendarDb> custom({
-    Expression<String>? uuid,
+    Expression<String>? id,
     Expression<String>? color,
     Expression<String?>? description,
     Expression<String>? name,
-    Expression<int>? userLocalId,
+    Expression<String>? owner,
+    Expression<bool>? isDefault,
+    Expression<bool>? shared,
+    Expression<bool>? sharedToAll,
+    Expression<int>? sharedToAllAccess,
+    Expression<int>? access,
+    Expression<bool>? isPublic,
+    Expression<String>? syncToken,
   }) {
     return RawValuesInsertable({
-      if (uuid != null) 'uuid': uuid,
+      if (id != null) 'id': id,
       if (color != null) 'color': color,
       if (description != null) 'description': description,
       if (name != null) 'name': name,
-      if (userLocalId != null) 'user_local_id': userLocalId,
+      if (owner != null) 'owner': owner,
+      if (isDefault != null) 'is_default': isDefault,
+      if (shared != null) 'shared': shared,
+      if (sharedToAll != null) 'shared_to_all': sharedToAll,
+      if (sharedToAllAccess != null) 'shared_to_all_access': sharedToAllAccess,
+      if (access != null) 'access': access,
+      if (isPublic != null) 'is_public': isPublic,
+      if (syncToken != null) 'sync_token': syncToken,
     });
   }
 
   CalendarTableCompanion copyWith(
-      {Value<String>? uuid,
+      {Value<String>? id,
       Value<String>? color,
       Value<String?>? description,
       Value<String>? name,
-      Value<int>? userLocalId}) {
+      Value<String>? owner,
+      Value<bool>? isDefault,
+      Value<bool>? shared,
+      Value<bool>? sharedToAll,
+      Value<int>? sharedToAllAccess,
+      Value<int>? access,
+      Value<bool>? isPublic,
+      Value<String>? syncToken}) {
     return CalendarTableCompanion(
-      uuid: uuid ?? this.uuid,
+      id: id ?? this.id,
       color: color ?? this.color,
       description: description ?? this.description,
       name: name ?? this.name,
-      userLocalId: userLocalId ?? this.userLocalId,
+      owner: owner ?? this.owner,
+      isDefault: isDefault ?? this.isDefault,
+      shared: shared ?? this.shared,
+      sharedToAll: sharedToAll ?? this.sharedToAll,
+      sharedToAllAccess: sharedToAllAccess ?? this.sharedToAllAccess,
+      access: access ?? this.access,
+      isPublic: isPublic ?? this.isPublic,
+      syncToken: syncToken ?? this.syncToken,
     );
   }
 
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (uuid.present) {
-      map['uuid'] = Variable<String>(uuid.value);
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
     }
     if (color.present) {
       map['color'] = Variable<String>(color.value);
@@ -2569,8 +2721,29 @@ class CalendarTableCompanion extends UpdateCompanion<CalendarDb> {
     if (name.present) {
       map['name'] = Variable<String>(name.value);
     }
-    if (userLocalId.present) {
-      map['user_local_id'] = Variable<int>(userLocalId.value);
+    if (owner.present) {
+      map['owner'] = Variable<String>(owner.value);
+    }
+    if (isDefault.present) {
+      map['is_default'] = Variable<bool>(isDefault.value);
+    }
+    if (shared.present) {
+      map['shared'] = Variable<bool>(shared.value);
+    }
+    if (sharedToAll.present) {
+      map['shared_to_all'] = Variable<bool>(sharedToAll.value);
+    }
+    if (sharedToAllAccess.present) {
+      map['shared_to_all_access'] = Variable<int>(sharedToAllAccess.value);
+    }
+    if (access.present) {
+      map['access'] = Variable<int>(access.value);
+    }
+    if (isPublic.present) {
+      map['is_public'] = Variable<bool>(isPublic.value);
+    }
+    if (syncToken.present) {
+      map['sync_token'] = Variable<String>(syncToken.value);
     }
     return map;
   }
@@ -2578,11 +2751,18 @@ class CalendarTableCompanion extends UpdateCompanion<CalendarDb> {
   @override
   String toString() {
     return (StringBuffer('CalendarTableCompanion(')
-          ..write('uuid: $uuid, ')
+          ..write('id: $id, ')
           ..write('color: $color, ')
           ..write('description: $description, ')
           ..write('name: $name, ')
-          ..write('userLocalId: $userLocalId')
+          ..write('owner: $owner, ')
+          ..write('isDefault: $isDefault, ')
+          ..write('shared: $shared, ')
+          ..write('sharedToAll: $sharedToAll, ')
+          ..write('sharedToAllAccess: $sharedToAllAccess, ')
+          ..write('access: $access, ')
+          ..write('isPublic: $isPublic, ')
+          ..write('syncToken: $syncToken')
           ..write(')'))
         .toString();
   }
@@ -2594,10 +2774,10 @@ class $CalendarTableTable extends CalendarTable
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $CalendarTableTable(this.attachedDatabase, [this._alias]);
-  final VerificationMeta _uuidMeta = const VerificationMeta('uuid');
+  final VerificationMeta _idMeta = const VerificationMeta('id');
   @override
-  late final GeneratedColumn<String?> uuid = GeneratedColumn<String?>(
-      'uuid', aliasedName, false,
+  late final GeneratedColumn<String?> id = GeneratedColumn<String?>(
+      'id', aliasedName, false,
       type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _colorMeta = const VerificationMeta('color');
   @override
@@ -2615,15 +2795,71 @@ class $CalendarTableTable extends CalendarTable
   late final GeneratedColumn<String?> name = GeneratedColumn<String?>(
       'name', aliasedName, false,
       type: const StringType(), requiredDuringInsert: true);
-  final VerificationMeta _userLocalIdMeta =
-      const VerificationMeta('userLocalId');
+  final VerificationMeta _ownerMeta = const VerificationMeta('owner');
   @override
-  late final GeneratedColumn<int?> userLocalId = GeneratedColumn<int?>(
-      'user_local_id', aliasedName, false,
+  late final GeneratedColumn<String?> owner = GeneratedColumn<String?>(
+      'owner', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _isDefaultMeta = const VerificationMeta('isDefault');
+  @override
+  late final GeneratedColumn<bool?> isDefault = GeneratedColumn<bool?>(
+      'is_default', aliasedName, false,
+      type: const BoolType(),
+      requiredDuringInsert: true,
+      defaultConstraints: 'CHECK (is_default IN (0, 1))');
+  final VerificationMeta _sharedMeta = const VerificationMeta('shared');
+  @override
+  late final GeneratedColumn<bool?> shared = GeneratedColumn<bool?>(
+      'shared', aliasedName, false,
+      type: const BoolType(),
+      requiredDuringInsert: true,
+      defaultConstraints: 'CHECK (shared IN (0, 1))');
+  final VerificationMeta _sharedToAllMeta =
+      const VerificationMeta('sharedToAll');
+  @override
+  late final GeneratedColumn<bool?> sharedToAll = GeneratedColumn<bool?>(
+      'shared_to_all', aliasedName, false,
+      type: const BoolType(),
+      requiredDuringInsert: true,
+      defaultConstraints: 'CHECK (shared_to_all IN (0, 1))');
+  final VerificationMeta _sharedToAllAccessMeta =
+      const VerificationMeta('sharedToAllAccess');
+  @override
+  late final GeneratedColumn<int?> sharedToAllAccess = GeneratedColumn<int?>(
+      'shared_to_all_access', aliasedName, false,
       type: const IntType(), requiredDuringInsert: true);
+  final VerificationMeta _accessMeta = const VerificationMeta('access');
   @override
-  List<GeneratedColumn> get $columns =>
-      [uuid, color, description, name, userLocalId];
+  late final GeneratedColumn<int?> access = GeneratedColumn<int?>(
+      'access', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
+  final VerificationMeta _isPublicMeta = const VerificationMeta('isPublic');
+  @override
+  late final GeneratedColumn<bool?> isPublic = GeneratedColumn<bool?>(
+      'is_public', aliasedName, false,
+      type: const BoolType(),
+      requiredDuringInsert: true,
+      defaultConstraints: 'CHECK (is_public IN (0, 1))');
+  final VerificationMeta _syncTokenMeta = const VerificationMeta('syncToken');
+  @override
+  late final GeneratedColumn<String?> syncToken = GeneratedColumn<String?>(
+      'sync_token', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        color,
+        description,
+        name,
+        owner,
+        isDefault,
+        shared,
+        sharedToAll,
+        sharedToAllAccess,
+        access,
+        isPublic,
+        syncToken
+      ];
   @override
   String get aliasedName => _alias ?? 'calendar_table';
   @override
@@ -2633,11 +2869,10 @@ class $CalendarTableTable extends CalendarTable
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
-    if (data.containsKey('uuid')) {
-      context.handle(
-          _uuidMeta, uuid.isAcceptableOrUnknown(data['uuid']!, _uuidMeta));
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     } else if (isInserting) {
-      context.missing(_uuidMeta);
+      context.missing(_idMeta);
     }
     if (data.containsKey('color')) {
       context.handle(
@@ -2657,19 +2892,63 @@ class $CalendarTableTable extends CalendarTable
     } else if (isInserting) {
       context.missing(_nameMeta);
     }
-    if (data.containsKey('user_local_id')) {
+    if (data.containsKey('owner')) {
       context.handle(
-          _userLocalIdMeta,
-          userLocalId.isAcceptableOrUnknown(
-              data['user_local_id']!, _userLocalIdMeta));
+          _ownerMeta, owner.isAcceptableOrUnknown(data['owner']!, _ownerMeta));
     } else if (isInserting) {
-      context.missing(_userLocalIdMeta);
+      context.missing(_ownerMeta);
+    }
+    if (data.containsKey('is_default')) {
+      context.handle(_isDefaultMeta,
+          isDefault.isAcceptableOrUnknown(data['is_default']!, _isDefaultMeta));
+    } else if (isInserting) {
+      context.missing(_isDefaultMeta);
+    }
+    if (data.containsKey('shared')) {
+      context.handle(_sharedMeta,
+          shared.isAcceptableOrUnknown(data['shared']!, _sharedMeta));
+    } else if (isInserting) {
+      context.missing(_sharedMeta);
+    }
+    if (data.containsKey('shared_to_all')) {
+      context.handle(
+          _sharedToAllMeta,
+          sharedToAll.isAcceptableOrUnknown(
+              data['shared_to_all']!, _sharedToAllMeta));
+    } else if (isInserting) {
+      context.missing(_sharedToAllMeta);
+    }
+    if (data.containsKey('shared_to_all_access')) {
+      context.handle(
+          _sharedToAllAccessMeta,
+          sharedToAllAccess.isAcceptableOrUnknown(
+              data['shared_to_all_access']!, _sharedToAllAccessMeta));
+    } else if (isInserting) {
+      context.missing(_sharedToAllAccessMeta);
+    }
+    if (data.containsKey('access')) {
+      context.handle(_accessMeta,
+          access.isAcceptableOrUnknown(data['access']!, _accessMeta));
+    } else if (isInserting) {
+      context.missing(_accessMeta);
+    }
+    if (data.containsKey('is_public')) {
+      context.handle(_isPublicMeta,
+          isPublic.isAcceptableOrUnknown(data['is_public']!, _isPublicMeta));
+    } else if (isInserting) {
+      context.missing(_isPublicMeta);
+    }
+    if (data.containsKey('sync_token')) {
+      context.handle(_syncTokenMeta,
+          syncToken.isAcceptableOrUnknown(data['sync_token']!, _syncTokenMeta));
+    } else if (isInserting) {
+      context.missing(_syncTokenMeta);
     }
     return context;
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {uuid};
+  Set<GeneratedColumn> get $primaryKey => {id};
   @override
   CalendarDb map(Map<String, dynamic> data, {String? tablePrefix}) {
     return CalendarDb.fromData(data,
@@ -2682,76 +2961,325 @@ class $CalendarTableTable extends CalendarTable
   }
 }
 
-class EventDb extends DataClass implements Insertable<EventDb> {
-  final int localId;
-  final int userLocalId;
-  final String calendarId;
-  final DateTime startTS;
-  final DateTime? endTS;
-  final String? description;
-  final String name;
-  final bool isAllDay;
-  EventDb(
-      {required this.localId,
-      required this.userLocalId,
-      required this.calendarId,
-      required this.startTS,
-      this.endTS,
-      this.description,
-      required this.name,
-      required this.isAllDay});
-  factory EventDb.fromData(Map<String, dynamic> data, {String? prefix}) {
+class EventUpdateInfoDb extends DataClass
+    implements Insertable<EventUpdateInfoDb> {
+  final String uid;
+  final UpdateStatus updateStatus;
+  EventUpdateInfoDb({required this.uid, required this.updateStatus});
+  factory EventUpdateInfoDb.fromData(Map<String, dynamic> data,
+      {String? prefix}) {
     final effectivePrefix = prefix ?? '';
-    return EventDb(
-      localId: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}local_id'])!,
-      userLocalId: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}user_local_id'])!,
-      calendarId: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}calendar_id'])!,
-      startTS: const DateTimeType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}start_t_s'])!,
-      endTS: const DateTimeType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}end_t_s']),
-      description: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}description']),
-      name: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}name'])!,
-      isAllDay: const BoolType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}is_all_day'])!,
+    return EventUpdateInfoDb(
+      uid: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}uid'])!,
+      updateStatus: $EventUpdateInfoTableTable.$converter0.mapToDart(
+          const IntType().mapFromDatabaseResponse(
+              data['${effectivePrefix}update_status']))!,
     );
   }
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['local_id'] = Variable<int>(localId);
-    map['user_local_id'] = Variable<int>(userLocalId);
+    map['uid'] = Variable<String>(uid);
+    {
+      final converter = $EventUpdateInfoTableTable.$converter0;
+      map['update_status'] = Variable<int>(converter.mapToSql(updateStatus)!);
+    }
+    return map;
+  }
+
+  EventUpdateInfoTableCompanion toCompanion(bool nullToAbsent) {
+    return EventUpdateInfoTableCompanion(
+      uid: Value(uid),
+      updateStatus: Value(updateStatus),
+    );
+  }
+
+  factory EventUpdateInfoDb.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return EventUpdateInfoDb(
+      uid: serializer.fromJson<String>(json['uid']),
+      updateStatus: serializer.fromJson<UpdateStatus>(json['updateStatus']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'uid': serializer.toJson<String>(uid),
+      'updateStatus': serializer.toJson<UpdateStatus>(updateStatus),
+    };
+  }
+
+  EventUpdateInfoDb copyWith({String? uid, UpdateStatus? updateStatus}) =>
+      EventUpdateInfoDb(
+        uid: uid ?? this.uid,
+        updateStatus: updateStatus ?? this.updateStatus,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('EventUpdateInfoDb(')
+          ..write('uid: $uid, ')
+          ..write('updateStatus: $updateStatus')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(uid, updateStatus);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is EventUpdateInfoDb &&
+          other.uid == this.uid &&
+          other.updateStatus == this.updateStatus);
+}
+
+class EventUpdateInfoTableCompanion extends UpdateCompanion<EventUpdateInfoDb> {
+  final Value<String> uid;
+  final Value<UpdateStatus> updateStatus;
+  const EventUpdateInfoTableCompanion({
+    this.uid = const Value.absent(),
+    this.updateStatus = const Value.absent(),
+  });
+  EventUpdateInfoTableCompanion.insert({
+    required String uid,
+    required UpdateStatus updateStatus,
+  })  : uid = Value(uid),
+        updateStatus = Value(updateStatus);
+  static Insertable<EventUpdateInfoDb> custom({
+    Expression<String>? uid,
+    Expression<UpdateStatus>? updateStatus,
+  }) {
+    return RawValuesInsertable({
+      if (uid != null) 'uid': uid,
+      if (updateStatus != null) 'update_status': updateStatus,
+    });
+  }
+
+  EventUpdateInfoTableCompanion copyWith(
+      {Value<String>? uid, Value<UpdateStatus>? updateStatus}) {
+    return EventUpdateInfoTableCompanion(
+      uid: uid ?? this.uid,
+      updateStatus: updateStatus ?? this.updateStatus,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (uid.present) {
+      map['uid'] = Variable<String>(uid.value);
+    }
+    if (updateStatus.present) {
+      final converter = $EventUpdateInfoTableTable.$converter0;
+      map['update_status'] =
+          Variable<int>(converter.mapToSql(updateStatus.value)!);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('EventUpdateInfoTableCompanion(')
+          ..write('uid: $uid, ')
+          ..write('updateStatus: $updateStatus')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $EventUpdateInfoTableTable extends EventUpdateInfoTable
+    with TableInfo<$EventUpdateInfoTableTable, EventUpdateInfoDb> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $EventUpdateInfoTableTable(this.attachedDatabase, [this._alias]);
+  final VerificationMeta _uidMeta = const VerificationMeta('uid');
+  @override
+  late final GeneratedColumn<String?> uid = GeneratedColumn<String?>(
+      'uid', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _updateStatusMeta =
+      const VerificationMeta('updateStatus');
+  @override
+  late final GeneratedColumnWithTypeConverter<UpdateStatus, int?> updateStatus =
+      GeneratedColumn<int?>('update_status', aliasedName, false,
+              type: const IntType(), requiredDuringInsert: true)
+          .withConverter<UpdateStatus>($EventUpdateInfoTableTable.$converter0);
+  @override
+  List<GeneratedColumn> get $columns => [uid, updateStatus];
+  @override
+  String get aliasedName => _alias ?? 'event_update_info_table';
+  @override
+  String get actualTableName => 'event_update_info_table';
+  @override
+  VerificationContext validateIntegrity(Insertable<EventUpdateInfoDb> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('uid')) {
+      context.handle(
+          _uidMeta, uid.isAcceptableOrUnknown(data['uid']!, _uidMeta));
+    } else if (isInserting) {
+      context.missing(_uidMeta);
+    }
+    context.handle(_updateStatusMeta, const VerificationResult.success());
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => <GeneratedColumn>{};
+  @override
+  EventUpdateInfoDb map(Map<String, dynamic> data, {String? tablePrefix}) {
+    return EventUpdateInfoDb.fromData(data,
+        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+  }
+
+  @override
+  $EventUpdateInfoTableTable createAlias(String alias) {
+    return $EventUpdateInfoTableTable(attachedDatabase, alias);
+  }
+
+  static TypeConverter<UpdateStatus, int> $converter0 =
+      const EnumIndexConverter<UpdateStatus>(UpdateStatus.values);
+}
+
+class EventDb extends DataClass implements Insertable<EventDb> {
+  final String organizer;
+  final bool appointment;
+  final int appointmentAccess;
+  final String calendarId;
+  final String id;
+  final String uid;
+  final String? subject;
+  final String? description;
+  final DateTime startTS;
+  final DateTime? endTS;
+  final bool allDay;
+  final String owner;
+  final bool modified;
+  final int recurrenceId;
+  final int lastModified;
+  final bool status;
+  final bool withDate;
+  final bool isPrivate;
+  EventDb(
+      {required this.organizer,
+      required this.appointment,
+      required this.appointmentAccess,
+      required this.calendarId,
+      required this.id,
+      required this.uid,
+      this.subject,
+      this.description,
+      required this.startTS,
+      this.endTS,
+      required this.allDay,
+      required this.owner,
+      required this.modified,
+      required this.recurrenceId,
+      required this.lastModified,
+      required this.status,
+      required this.withDate,
+      required this.isPrivate});
+  factory EventDb.fromData(Map<String, dynamic> data, {String? prefix}) {
+    final effectivePrefix = prefix ?? '';
+    return EventDb(
+      organizer: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}organizer'])!,
+      appointment: const BoolType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}appointment'])!,
+      appointmentAccess: const IntType().mapFromDatabaseResponse(
+          data['${effectivePrefix}appointment_access'])!,
+      calendarId: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}calendar_id'])!,
+      id: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
+      uid: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}uid'])!,
+      subject: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}subject']),
+      description: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}description']),
+      startTS: const DateTimeType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}start_t_s'])!,
+      endTS: const DateTimeType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}end_t_s']),
+      allDay: const BoolType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}all_day'])!,
+      owner: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}owner'])!,
+      modified: const BoolType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}modified'])!,
+      recurrenceId: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}recurrence_id'])!,
+      lastModified: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}last_modified'])!,
+      status: const BoolType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}status'])!,
+      withDate: const BoolType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}with_date'])!,
+      isPrivate: const BoolType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}is_private'])!,
+    );
+  }
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['organizer'] = Variable<String>(organizer);
+    map['appointment'] = Variable<bool>(appointment);
+    map['appointment_access'] = Variable<int>(appointmentAccess);
     map['calendar_id'] = Variable<String>(calendarId);
-    map['start_t_s'] = Variable<DateTime>(startTS);
-    if (!nullToAbsent || endTS != null) {
-      map['end_t_s'] = Variable<DateTime?>(endTS);
+    map['id'] = Variable<String>(id);
+    map['uid'] = Variable<String>(uid);
+    if (!nullToAbsent || subject != null) {
+      map['subject'] = Variable<String?>(subject);
     }
     if (!nullToAbsent || description != null) {
       map['description'] = Variable<String?>(description);
     }
-    map['name'] = Variable<String>(name);
-    map['is_all_day'] = Variable<bool>(isAllDay);
+    map['start_t_s'] = Variable<DateTime>(startTS);
+    if (!nullToAbsent || endTS != null) {
+      map['end_t_s'] = Variable<DateTime?>(endTS);
+    }
+    map['all_day'] = Variable<bool>(allDay);
+    map['owner'] = Variable<String>(owner);
+    map['modified'] = Variable<bool>(modified);
+    map['recurrence_id'] = Variable<int>(recurrenceId);
+    map['last_modified'] = Variable<int>(lastModified);
+    map['status'] = Variable<bool>(status);
+    map['with_date'] = Variable<bool>(withDate);
+    map['is_private'] = Variable<bool>(isPrivate);
     return map;
   }
 
   EventTableCompanion toCompanion(bool nullToAbsent) {
     return EventTableCompanion(
-      localId: Value(localId),
-      userLocalId: Value(userLocalId),
+      organizer: Value(organizer),
+      appointment: Value(appointment),
+      appointmentAccess: Value(appointmentAccess),
       calendarId: Value(calendarId),
-      startTS: Value(startTS),
-      endTS:
-          endTS == null && nullToAbsent ? const Value.absent() : Value(endTS),
+      id: Value(id),
+      uid: Value(uid),
+      subject: subject == null && nullToAbsent
+          ? const Value.absent()
+          : Value(subject),
       description: description == null && nullToAbsent
           ? const Value.absent()
           : Value(description),
-      name: Value(name),
-      isAllDay: Value(isAllDay),
+      startTS: Value(startTS),
+      endTS:
+          endTS == null && nullToAbsent ? const Value.absent() : Value(endTS),
+      allDay: Value(allDay),
+      owner: Value(owner),
+      modified: Value(modified),
+      recurrenceId: Value(recurrenceId),
+      lastModified: Value(lastModified),
+      status: Value(status),
+      withDate: Value(withDate),
+      isPrivate: Value(isPrivate),
     );
   }
 
@@ -2759,168 +3287,341 @@ class EventDb extends DataClass implements Insertable<EventDb> {
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return EventDb(
-      localId: serializer.fromJson<int>(json['localId']),
-      userLocalId: serializer.fromJson<int>(json['userLocalId']),
+      organizer: serializer.fromJson<String>(json['organizer']),
+      appointment: serializer.fromJson<bool>(json['appointment']),
+      appointmentAccess: serializer.fromJson<int>(json['appointmentAccess']),
       calendarId: serializer.fromJson<String>(json['calendarId']),
+      id: serializer.fromJson<String>(json['id']),
+      uid: serializer.fromJson<String>(json['uid']),
+      subject: serializer.fromJson<String?>(json['subject']),
+      description: serializer.fromJson<String?>(json['description']),
       startTS: serializer.fromJson<DateTime>(json['startTS']),
       endTS: serializer.fromJson<DateTime?>(json['endTS']),
-      description: serializer.fromJson<String?>(json['description']),
-      name: serializer.fromJson<String>(json['name']),
-      isAllDay: serializer.fromJson<bool>(json['isAllDay']),
+      allDay: serializer.fromJson<bool>(json['allDay']),
+      owner: serializer.fromJson<String>(json['owner']),
+      modified: serializer.fromJson<bool>(json['modified']),
+      recurrenceId: serializer.fromJson<int>(json['recurrenceId']),
+      lastModified: serializer.fromJson<int>(json['lastModified']),
+      status: serializer.fromJson<bool>(json['status']),
+      withDate: serializer.fromJson<bool>(json['withDate']),
+      isPrivate: serializer.fromJson<bool>(json['isPrivate']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'localId': serializer.toJson<int>(localId),
-      'userLocalId': serializer.toJson<int>(userLocalId),
+      'organizer': serializer.toJson<String>(organizer),
+      'appointment': serializer.toJson<bool>(appointment),
+      'appointmentAccess': serializer.toJson<int>(appointmentAccess),
       'calendarId': serializer.toJson<String>(calendarId),
+      'id': serializer.toJson<String>(id),
+      'uid': serializer.toJson<String>(uid),
+      'subject': serializer.toJson<String?>(subject),
+      'description': serializer.toJson<String?>(description),
       'startTS': serializer.toJson<DateTime>(startTS),
       'endTS': serializer.toJson<DateTime?>(endTS),
-      'description': serializer.toJson<String?>(description),
-      'name': serializer.toJson<String>(name),
-      'isAllDay': serializer.toJson<bool>(isAllDay),
+      'allDay': serializer.toJson<bool>(allDay),
+      'owner': serializer.toJson<String>(owner),
+      'modified': serializer.toJson<bool>(modified),
+      'recurrenceId': serializer.toJson<int>(recurrenceId),
+      'lastModified': serializer.toJson<int>(lastModified),
+      'status': serializer.toJson<bool>(status),
+      'withDate': serializer.toJson<bool>(withDate),
+      'isPrivate': serializer.toJson<bool>(isPrivate),
     };
   }
 
   EventDb copyWith(
-          {int? localId,
-          int? userLocalId,
+          {String? organizer,
+          bool? appointment,
+          int? appointmentAccess,
           String? calendarId,
+          String? id,
+          String? uid,
+          String? subject,
+          String? description,
           DateTime? startTS,
           DateTime? endTS,
-          String? description,
-          String? name,
-          bool? isAllDay}) =>
+          bool? allDay,
+          String? owner,
+          bool? modified,
+          int? recurrenceId,
+          int? lastModified,
+          bool? status,
+          bool? withDate,
+          bool? isPrivate}) =>
       EventDb(
-        localId: localId ?? this.localId,
-        userLocalId: userLocalId ?? this.userLocalId,
+        organizer: organizer ?? this.organizer,
+        appointment: appointment ?? this.appointment,
+        appointmentAccess: appointmentAccess ?? this.appointmentAccess,
         calendarId: calendarId ?? this.calendarId,
+        id: id ?? this.id,
+        uid: uid ?? this.uid,
+        subject: subject ?? this.subject,
+        description: description ?? this.description,
         startTS: startTS ?? this.startTS,
         endTS: endTS ?? this.endTS,
-        description: description ?? this.description,
-        name: name ?? this.name,
-        isAllDay: isAllDay ?? this.isAllDay,
+        allDay: allDay ?? this.allDay,
+        owner: owner ?? this.owner,
+        modified: modified ?? this.modified,
+        recurrenceId: recurrenceId ?? this.recurrenceId,
+        lastModified: lastModified ?? this.lastModified,
+        status: status ?? this.status,
+        withDate: withDate ?? this.withDate,
+        isPrivate: isPrivate ?? this.isPrivate,
       );
   @override
   String toString() {
     return (StringBuffer('EventDb(')
-          ..write('localId: $localId, ')
-          ..write('userLocalId: $userLocalId, ')
+          ..write('organizer: $organizer, ')
+          ..write('appointment: $appointment, ')
+          ..write('appointmentAccess: $appointmentAccess, ')
           ..write('calendarId: $calendarId, ')
+          ..write('id: $id, ')
+          ..write('uid: $uid, ')
+          ..write('subject: $subject, ')
+          ..write('description: $description, ')
           ..write('startTS: $startTS, ')
           ..write('endTS: $endTS, ')
-          ..write('description: $description, ')
-          ..write('name: $name, ')
-          ..write('isAllDay: $isAllDay')
+          ..write('allDay: $allDay, ')
+          ..write('owner: $owner, ')
+          ..write('modified: $modified, ')
+          ..write('recurrenceId: $recurrenceId, ')
+          ..write('lastModified: $lastModified, ')
+          ..write('status: $status, ')
+          ..write('withDate: $withDate, ')
+          ..write('isPrivate: $isPrivate')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(localId, userLocalId, calendarId, startTS,
-      endTS, description, name, isAllDay);
+  int get hashCode => Object.hash(
+      organizer,
+      appointment,
+      appointmentAccess,
+      calendarId,
+      id,
+      uid,
+      subject,
+      description,
+      startTS,
+      endTS,
+      allDay,
+      owner,
+      modified,
+      recurrenceId,
+      lastModified,
+      status,
+      withDate,
+      isPrivate);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is EventDb &&
-          other.localId == this.localId &&
-          other.userLocalId == this.userLocalId &&
+          other.organizer == this.organizer &&
+          other.appointment == this.appointment &&
+          other.appointmentAccess == this.appointmentAccess &&
           other.calendarId == this.calendarId &&
+          other.id == this.id &&
+          other.uid == this.uid &&
+          other.subject == this.subject &&
+          other.description == this.description &&
           other.startTS == this.startTS &&
           other.endTS == this.endTS &&
-          other.description == this.description &&
-          other.name == this.name &&
-          other.isAllDay == this.isAllDay);
+          other.allDay == this.allDay &&
+          other.owner == this.owner &&
+          other.modified == this.modified &&
+          other.recurrenceId == this.recurrenceId &&
+          other.lastModified == this.lastModified &&
+          other.status == this.status &&
+          other.withDate == this.withDate &&
+          other.isPrivate == this.isPrivate);
 }
 
 class EventTableCompanion extends UpdateCompanion<EventDb> {
-  final Value<int> localId;
-  final Value<int> userLocalId;
+  final Value<String> organizer;
+  final Value<bool> appointment;
+  final Value<int> appointmentAccess;
   final Value<String> calendarId;
+  final Value<String> id;
+  final Value<String> uid;
+  final Value<String?> subject;
+  final Value<String?> description;
   final Value<DateTime> startTS;
   final Value<DateTime?> endTS;
-  final Value<String?> description;
-  final Value<String> name;
-  final Value<bool> isAllDay;
+  final Value<bool> allDay;
+  final Value<String> owner;
+  final Value<bool> modified;
+  final Value<int> recurrenceId;
+  final Value<int> lastModified;
+  final Value<bool> status;
+  final Value<bool> withDate;
+  final Value<bool> isPrivate;
   const EventTableCompanion({
-    this.localId = const Value.absent(),
-    this.userLocalId = const Value.absent(),
+    this.organizer = const Value.absent(),
+    this.appointment = const Value.absent(),
+    this.appointmentAccess = const Value.absent(),
     this.calendarId = const Value.absent(),
+    this.id = const Value.absent(),
+    this.uid = const Value.absent(),
+    this.subject = const Value.absent(),
+    this.description = const Value.absent(),
     this.startTS = const Value.absent(),
     this.endTS = const Value.absent(),
-    this.description = const Value.absent(),
-    this.name = const Value.absent(),
-    this.isAllDay = const Value.absent(),
+    this.allDay = const Value.absent(),
+    this.owner = const Value.absent(),
+    this.modified = const Value.absent(),
+    this.recurrenceId = const Value.absent(),
+    this.lastModified = const Value.absent(),
+    this.status = const Value.absent(),
+    this.withDate = const Value.absent(),
+    this.isPrivate = const Value.absent(),
   });
   EventTableCompanion.insert({
-    this.localId = const Value.absent(),
-    required int userLocalId,
+    required String organizer,
+    required bool appointment,
+    required int appointmentAccess,
     required String calendarId,
+    required String id,
+    required String uid,
+    this.subject = const Value.absent(),
+    this.description = const Value.absent(),
     required DateTime startTS,
     this.endTS = const Value.absent(),
-    this.description = const Value.absent(),
-    required String name,
-    this.isAllDay = const Value.absent(),
-  })  : userLocalId = Value(userLocalId),
+    required bool allDay,
+    required String owner,
+    required bool modified,
+    required int recurrenceId,
+    required int lastModified,
+    required bool status,
+    required bool withDate,
+    required bool isPrivate,
+  })  : organizer = Value(organizer),
+        appointment = Value(appointment),
+        appointmentAccess = Value(appointmentAccess),
         calendarId = Value(calendarId),
+        id = Value(id),
+        uid = Value(uid),
         startTS = Value(startTS),
-        name = Value(name);
+        allDay = Value(allDay),
+        owner = Value(owner),
+        modified = Value(modified),
+        recurrenceId = Value(recurrenceId),
+        lastModified = Value(lastModified),
+        status = Value(status),
+        withDate = Value(withDate),
+        isPrivate = Value(isPrivate);
   static Insertable<EventDb> custom({
-    Expression<int>? localId,
-    Expression<int>? userLocalId,
+    Expression<String>? organizer,
+    Expression<bool>? appointment,
+    Expression<int>? appointmentAccess,
     Expression<String>? calendarId,
+    Expression<String>? id,
+    Expression<String>? uid,
+    Expression<String?>? subject,
+    Expression<String?>? description,
     Expression<DateTime>? startTS,
     Expression<DateTime?>? endTS,
-    Expression<String?>? description,
-    Expression<String>? name,
-    Expression<bool>? isAllDay,
+    Expression<bool>? allDay,
+    Expression<String>? owner,
+    Expression<bool>? modified,
+    Expression<int>? recurrenceId,
+    Expression<int>? lastModified,
+    Expression<bool>? status,
+    Expression<bool>? withDate,
+    Expression<bool>? isPrivate,
   }) {
     return RawValuesInsertable({
-      if (localId != null) 'local_id': localId,
-      if (userLocalId != null) 'user_local_id': userLocalId,
+      if (organizer != null) 'organizer': organizer,
+      if (appointment != null) 'appointment': appointment,
+      if (appointmentAccess != null) 'appointment_access': appointmentAccess,
       if (calendarId != null) 'calendar_id': calendarId,
+      if (id != null) 'id': id,
+      if (uid != null) 'uid': uid,
+      if (subject != null) 'subject': subject,
+      if (description != null) 'description': description,
       if (startTS != null) 'start_t_s': startTS,
       if (endTS != null) 'end_t_s': endTS,
-      if (description != null) 'description': description,
-      if (name != null) 'name': name,
-      if (isAllDay != null) 'is_all_day': isAllDay,
+      if (allDay != null) 'all_day': allDay,
+      if (owner != null) 'owner': owner,
+      if (modified != null) 'modified': modified,
+      if (recurrenceId != null) 'recurrence_id': recurrenceId,
+      if (lastModified != null) 'last_modified': lastModified,
+      if (status != null) 'status': status,
+      if (withDate != null) 'with_date': withDate,
+      if (isPrivate != null) 'is_private': isPrivate,
     });
   }
 
   EventTableCompanion copyWith(
-      {Value<int>? localId,
-      Value<int>? userLocalId,
+      {Value<String>? organizer,
+      Value<bool>? appointment,
+      Value<int>? appointmentAccess,
       Value<String>? calendarId,
+      Value<String>? id,
+      Value<String>? uid,
+      Value<String?>? subject,
+      Value<String?>? description,
       Value<DateTime>? startTS,
       Value<DateTime?>? endTS,
-      Value<String?>? description,
-      Value<String>? name,
-      Value<bool>? isAllDay}) {
+      Value<bool>? allDay,
+      Value<String>? owner,
+      Value<bool>? modified,
+      Value<int>? recurrenceId,
+      Value<int>? lastModified,
+      Value<bool>? status,
+      Value<bool>? withDate,
+      Value<bool>? isPrivate}) {
     return EventTableCompanion(
-      localId: localId ?? this.localId,
-      userLocalId: userLocalId ?? this.userLocalId,
+      organizer: organizer ?? this.organizer,
+      appointment: appointment ?? this.appointment,
+      appointmentAccess: appointmentAccess ?? this.appointmentAccess,
       calendarId: calendarId ?? this.calendarId,
+      id: id ?? this.id,
+      uid: uid ?? this.uid,
+      subject: subject ?? this.subject,
+      description: description ?? this.description,
       startTS: startTS ?? this.startTS,
       endTS: endTS ?? this.endTS,
-      description: description ?? this.description,
-      name: name ?? this.name,
-      isAllDay: isAllDay ?? this.isAllDay,
+      allDay: allDay ?? this.allDay,
+      owner: owner ?? this.owner,
+      modified: modified ?? this.modified,
+      recurrenceId: recurrenceId ?? this.recurrenceId,
+      lastModified: lastModified ?? this.lastModified,
+      status: status ?? this.status,
+      withDate: withDate ?? this.withDate,
+      isPrivate: isPrivate ?? this.isPrivate,
     );
   }
 
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    if (localId.present) {
-      map['local_id'] = Variable<int>(localId.value);
+    if (organizer.present) {
+      map['organizer'] = Variable<String>(organizer.value);
     }
-    if (userLocalId.present) {
-      map['user_local_id'] = Variable<int>(userLocalId.value);
+    if (appointment.present) {
+      map['appointment'] = Variable<bool>(appointment.value);
+    }
+    if (appointmentAccess.present) {
+      map['appointment_access'] = Variable<int>(appointmentAccess.value);
     }
     if (calendarId.present) {
       map['calendar_id'] = Variable<String>(calendarId.value);
+    }
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (uid.present) {
+      map['uid'] = Variable<String>(uid.value);
+    }
+    if (subject.present) {
+      map['subject'] = Variable<String?>(subject.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String?>(description.value);
     }
     if (startTS.present) {
       map['start_t_s'] = Variable<DateTime>(startTS.value);
@@ -2928,14 +3629,29 @@ class EventTableCompanion extends UpdateCompanion<EventDb> {
     if (endTS.present) {
       map['end_t_s'] = Variable<DateTime?>(endTS.value);
     }
-    if (description.present) {
-      map['description'] = Variable<String?>(description.value);
+    if (allDay.present) {
+      map['all_day'] = Variable<bool>(allDay.value);
     }
-    if (name.present) {
-      map['name'] = Variable<String>(name.value);
+    if (owner.present) {
+      map['owner'] = Variable<String>(owner.value);
     }
-    if (isAllDay.present) {
-      map['is_all_day'] = Variable<bool>(isAllDay.value);
+    if (modified.present) {
+      map['modified'] = Variable<bool>(modified.value);
+    }
+    if (recurrenceId.present) {
+      map['recurrence_id'] = Variable<int>(recurrenceId.value);
+    }
+    if (lastModified.present) {
+      map['last_modified'] = Variable<int>(lastModified.value);
+    }
+    if (status.present) {
+      map['status'] = Variable<bool>(status.value);
+    }
+    if (withDate.present) {
+      map['with_date'] = Variable<bool>(withDate.value);
+    }
+    if (isPrivate.present) {
+      map['is_private'] = Variable<bool>(isPrivate.value);
     }
     return map;
   }
@@ -2943,14 +3659,24 @@ class EventTableCompanion extends UpdateCompanion<EventDb> {
   @override
   String toString() {
     return (StringBuffer('EventTableCompanion(')
-          ..write('localId: $localId, ')
-          ..write('userLocalId: $userLocalId, ')
+          ..write('organizer: $organizer, ')
+          ..write('appointment: $appointment, ')
+          ..write('appointmentAccess: $appointmentAccess, ')
           ..write('calendarId: $calendarId, ')
+          ..write('id: $id, ')
+          ..write('uid: $uid, ')
+          ..write('subject: $subject, ')
+          ..write('description: $description, ')
           ..write('startTS: $startTS, ')
           ..write('endTS: $endTS, ')
-          ..write('description: $description, ')
-          ..write('name: $name, ')
-          ..write('isAllDay: $isAllDay')
+          ..write('allDay: $allDay, ')
+          ..write('owner: $owner, ')
+          ..write('modified: $modified, ')
+          ..write('recurrenceId: $recurrenceId, ')
+          ..write('lastModified: $lastModified, ')
+          ..write('status: $status, ')
+          ..write('withDate: $withDate, ')
+          ..write('isPrivate: $isPrivate')
           ..write(')'))
         .toString();
   }
@@ -2962,24 +3688,51 @@ class $EventTableTable extends EventTable
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
   $EventTableTable(this.attachedDatabase, [this._alias]);
-  final VerificationMeta _localIdMeta = const VerificationMeta('localId');
+  final VerificationMeta _organizerMeta = const VerificationMeta('organizer');
   @override
-  late final GeneratedColumn<int?> localId = GeneratedColumn<int?>(
-      'local_id', aliasedName, false,
-      type: const IntType(),
-      requiredDuringInsert: false,
-      defaultConstraints: 'PRIMARY KEY AUTOINCREMENT');
-  final VerificationMeta _userLocalIdMeta =
-      const VerificationMeta('userLocalId');
+  late final GeneratedColumn<String?> organizer = GeneratedColumn<String?>(
+      'organizer', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _appointmentMeta =
+      const VerificationMeta('appointment');
   @override
-  late final GeneratedColumn<int?> userLocalId = GeneratedColumn<int?>(
-      'user_local_id', aliasedName, false,
+  late final GeneratedColumn<bool?> appointment = GeneratedColumn<bool?>(
+      'appointment', aliasedName, false,
+      type: const BoolType(),
+      requiredDuringInsert: true,
+      defaultConstraints: 'CHECK (appointment IN (0, 1))');
+  final VerificationMeta _appointmentAccessMeta =
+      const VerificationMeta('appointmentAccess');
+  @override
+  late final GeneratedColumn<int?> appointmentAccess = GeneratedColumn<int?>(
+      'appointment_access', aliasedName, false,
       type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _calendarIdMeta = const VerificationMeta('calendarId');
   @override
   late final GeneratedColumn<String?> calendarId = GeneratedColumn<String?>(
       'calendar_id', aliasedName, false,
       type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String?> id = GeneratedColumn<String?>(
+      'id', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _uidMeta = const VerificationMeta('uid');
+  @override
+  late final GeneratedColumn<String?> uid = GeneratedColumn<String?>(
+      'uid', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _subjectMeta = const VerificationMeta('subject');
+  @override
+  late final GeneratedColumn<String?> subject = GeneratedColumn<String?>(
+      'subject', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _descriptionMeta =
+      const VerificationMeta('description');
+  @override
+  late final GeneratedColumn<String?> description = GeneratedColumn<String?>(
+      'description', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _startTSMeta = const VerificationMeta('startTS');
   @override
   late final GeneratedColumn<DateTime?> startTS = GeneratedColumn<DateTime?>(
@@ -2990,35 +3743,78 @@ class $EventTableTable extends EventTable
   late final GeneratedColumn<DateTime?> endTS = GeneratedColumn<DateTime?>(
       'end_t_s', aliasedName, true,
       type: const IntType(), requiredDuringInsert: false);
-  final VerificationMeta _descriptionMeta =
-      const VerificationMeta('description');
+  final VerificationMeta _allDayMeta = const VerificationMeta('allDay');
   @override
-  late final GeneratedColumn<String?> description = GeneratedColumn<String?>(
-      'description', aliasedName, true,
-      type: const StringType(), requiredDuringInsert: false);
-  final VerificationMeta _nameMeta = const VerificationMeta('name');
-  @override
-  late final GeneratedColumn<String?> name = GeneratedColumn<String?>(
-      'name', aliasedName, false,
-      type: const StringType(), requiredDuringInsert: true);
-  final VerificationMeta _isAllDayMeta = const VerificationMeta('isAllDay');
-  @override
-  late final GeneratedColumn<bool?> isAllDay = GeneratedColumn<bool?>(
-      'is_all_day', aliasedName, false,
+  late final GeneratedColumn<bool?> allDay = GeneratedColumn<bool?>(
+      'all_day', aliasedName, false,
       type: const BoolType(),
-      requiredDuringInsert: false,
-      defaultConstraints: 'CHECK (is_all_day IN (0, 1))',
-      defaultValue: const Constant(false));
+      requiredDuringInsert: true,
+      defaultConstraints: 'CHECK (all_day IN (0, 1))');
+  final VerificationMeta _ownerMeta = const VerificationMeta('owner');
+  @override
+  late final GeneratedColumn<String?> owner = GeneratedColumn<String?>(
+      'owner', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _modifiedMeta = const VerificationMeta('modified');
+  @override
+  late final GeneratedColumn<bool?> modified = GeneratedColumn<bool?>(
+      'modified', aliasedName, false,
+      type: const BoolType(),
+      requiredDuringInsert: true,
+      defaultConstraints: 'CHECK (modified IN (0, 1))');
+  final VerificationMeta _recurrenceIdMeta =
+      const VerificationMeta('recurrenceId');
+  @override
+  late final GeneratedColumn<int?> recurrenceId = GeneratedColumn<int?>(
+      'recurrence_id', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
+  final VerificationMeta _lastModifiedMeta =
+      const VerificationMeta('lastModified');
+  @override
+  late final GeneratedColumn<int?> lastModified = GeneratedColumn<int?>(
+      'last_modified', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
+  final VerificationMeta _statusMeta = const VerificationMeta('status');
+  @override
+  late final GeneratedColumn<bool?> status = GeneratedColumn<bool?>(
+      'status', aliasedName, false,
+      type: const BoolType(),
+      requiredDuringInsert: true,
+      defaultConstraints: 'CHECK (status IN (0, 1))');
+  final VerificationMeta _withDateMeta = const VerificationMeta('withDate');
+  @override
+  late final GeneratedColumn<bool?> withDate = GeneratedColumn<bool?>(
+      'with_date', aliasedName, false,
+      type: const BoolType(),
+      requiredDuringInsert: true,
+      defaultConstraints: 'CHECK (with_date IN (0, 1))');
+  final VerificationMeta _isPrivateMeta = const VerificationMeta('isPrivate');
+  @override
+  late final GeneratedColumn<bool?> isPrivate = GeneratedColumn<bool?>(
+      'is_private', aliasedName, false,
+      type: const BoolType(),
+      requiredDuringInsert: true,
+      defaultConstraints: 'CHECK (is_private IN (0, 1))');
   @override
   List<GeneratedColumn> get $columns => [
-        localId,
-        userLocalId,
+        organizer,
+        appointment,
+        appointmentAccess,
         calendarId,
+        id,
+        uid,
+        subject,
+        description,
         startTS,
         endTS,
-        description,
-        name,
-        isAllDay
+        allDay,
+        owner,
+        modified,
+        recurrenceId,
+        lastModified,
+        status,
+        withDate,
+        isPrivate
       ];
   @override
   String get aliasedName => _alias ?? 'event_table';
@@ -3029,17 +3825,27 @@ class $EventTableTable extends EventTable
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
-    if (data.containsKey('local_id')) {
-      context.handle(_localIdMeta,
-          localId.isAcceptableOrUnknown(data['local_id']!, _localIdMeta));
-    }
-    if (data.containsKey('user_local_id')) {
-      context.handle(
-          _userLocalIdMeta,
-          userLocalId.isAcceptableOrUnknown(
-              data['user_local_id']!, _userLocalIdMeta));
+    if (data.containsKey('organizer')) {
+      context.handle(_organizerMeta,
+          organizer.isAcceptableOrUnknown(data['organizer']!, _organizerMeta));
     } else if (isInserting) {
-      context.missing(_userLocalIdMeta);
+      context.missing(_organizerMeta);
+    }
+    if (data.containsKey('appointment')) {
+      context.handle(
+          _appointmentMeta,
+          appointment.isAcceptableOrUnknown(
+              data['appointment']!, _appointmentMeta));
+    } else if (isInserting) {
+      context.missing(_appointmentMeta);
+    }
+    if (data.containsKey('appointment_access')) {
+      context.handle(
+          _appointmentAccessMeta,
+          appointmentAccess.isAcceptableOrUnknown(
+              data['appointment_access']!, _appointmentAccessMeta));
+    } else if (isInserting) {
+      context.missing(_appointmentAccessMeta);
     }
     if (data.containsKey('calendar_id')) {
       context.handle(
@@ -3048,6 +3854,27 @@ class $EventTableTable extends EventTable
               data['calendar_id']!, _calendarIdMeta));
     } else if (isInserting) {
       context.missing(_calendarIdMeta);
+    }
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('uid')) {
+      context.handle(
+          _uidMeta, uid.isAcceptableOrUnknown(data['uid']!, _uidMeta));
+    } else if (isInserting) {
+      context.missing(_uidMeta);
+    }
+    if (data.containsKey('subject')) {
+      context.handle(_subjectMeta,
+          subject.isAcceptableOrUnknown(data['subject']!, _subjectMeta));
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+          _descriptionMeta,
+          description.isAcceptableOrUnknown(
+              data['description']!, _descriptionMeta));
     }
     if (data.containsKey('start_t_s')) {
       context.handle(_startTSMeta,
@@ -3059,27 +3886,63 @@ class $EventTableTable extends EventTable
       context.handle(_endTSMeta,
           endTS.isAcceptableOrUnknown(data['end_t_s']!, _endTSMeta));
     }
-    if (data.containsKey('description')) {
-      context.handle(
-          _descriptionMeta,
-          description.isAcceptableOrUnknown(
-              data['description']!, _descriptionMeta));
-    }
-    if (data.containsKey('name')) {
-      context.handle(
-          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
+    if (data.containsKey('all_day')) {
+      context.handle(_allDayMeta,
+          allDay.isAcceptableOrUnknown(data['all_day']!, _allDayMeta));
     } else if (isInserting) {
-      context.missing(_nameMeta);
+      context.missing(_allDayMeta);
     }
-    if (data.containsKey('is_all_day')) {
-      context.handle(_isAllDayMeta,
-          isAllDay.isAcceptableOrUnknown(data['is_all_day']!, _isAllDayMeta));
+    if (data.containsKey('owner')) {
+      context.handle(
+          _ownerMeta, owner.isAcceptableOrUnknown(data['owner']!, _ownerMeta));
+    } else if (isInserting) {
+      context.missing(_ownerMeta);
+    }
+    if (data.containsKey('modified')) {
+      context.handle(_modifiedMeta,
+          modified.isAcceptableOrUnknown(data['modified']!, _modifiedMeta));
+    } else if (isInserting) {
+      context.missing(_modifiedMeta);
+    }
+    if (data.containsKey('recurrence_id')) {
+      context.handle(
+          _recurrenceIdMeta,
+          recurrenceId.isAcceptableOrUnknown(
+              data['recurrence_id']!, _recurrenceIdMeta));
+    } else if (isInserting) {
+      context.missing(_recurrenceIdMeta);
+    }
+    if (data.containsKey('last_modified')) {
+      context.handle(
+          _lastModifiedMeta,
+          lastModified.isAcceptableOrUnknown(
+              data['last_modified']!, _lastModifiedMeta));
+    } else if (isInserting) {
+      context.missing(_lastModifiedMeta);
+    }
+    if (data.containsKey('status')) {
+      context.handle(_statusMeta,
+          status.isAcceptableOrUnknown(data['status']!, _statusMeta));
+    } else if (isInserting) {
+      context.missing(_statusMeta);
+    }
+    if (data.containsKey('with_date')) {
+      context.handle(_withDateMeta,
+          withDate.isAcceptableOrUnknown(data['with_date']!, _withDateMeta));
+    } else if (isInserting) {
+      context.missing(_withDateMeta);
+    }
+    if (data.containsKey('is_private')) {
+      context.handle(_isPrivateMeta,
+          isPrivate.isAcceptableOrUnknown(data['is_private']!, _isPrivateMeta));
+    } else if (isInserting) {
+      context.missing(_isPrivateMeta);
     }
     return context;
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {localId};
+  Set<GeneratedColumn> get $primaryKey => <GeneratedColumn>{};
   @override
   EventDb map(Map<String, dynamic> data, {String? tablePrefix}) {
     return EventDb.fromData(data,
@@ -10395,6 +11258,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(SqlTypeSystem.defaultInstance, e);
   late final $MailTable mail = $MailTable(this);
   late final $CalendarTableTable calendarTable = $CalendarTableTable(this);
+  late final $EventUpdateInfoTableTable eventUpdateInfoTable =
+      $EventUpdateInfoTableTable(this);
   late final $EventTableTable eventTable = $EventTableTable(this);
   late final $FoldersTable folders = $FoldersTable(this);
   late final $UsersTable users = $UsersTable(this);
@@ -10414,6 +11279,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   List<DatabaseSchemaEntity> get allSchemaEntities => [
         mail,
         calendarTable,
+        eventUpdateInfoTable,
         eventTable,
         folders,
         users,

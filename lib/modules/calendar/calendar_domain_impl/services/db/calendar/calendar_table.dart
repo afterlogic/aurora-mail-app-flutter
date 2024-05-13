@@ -4,9 +4,9 @@ import 'package:drift/drift.dart';
 class CalendarTable extends Table{
 
   @override
-  Set<Column> get primaryKey => {uuid};
+  Set<Column> get primaryKey => {id};
 
-  TextColumn get uuid => text()();
+  TextColumn get id => text()();
 
   TextColumn get color => text()();
 
@@ -14,7 +14,22 @@ class CalendarTable extends Table{
 
   TextColumn get name => text()();
 
-  IntColumn get userLocalId => integer()();
+  TextColumn get owner => text()();
 
+  BoolColumn get isDefault => boolean()();
+
+  BoolColumn get shared => boolean()();
+
+  BoolColumn get sharedToAll => boolean()();
+
+  IntColumn get sharedToAllAccess => integer()();
+
+  IntColumn get access => integer()();
+
+  // TODO shares one to many
+
+  BoolColumn get isPublic => boolean()();
+
+  TextColumn get syncToken => text()();
 }
 

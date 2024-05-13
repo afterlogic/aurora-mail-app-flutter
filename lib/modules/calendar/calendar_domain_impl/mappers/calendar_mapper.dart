@@ -5,9 +5,17 @@ class CalendarMapper {
   static Calendar fromDB(CalendarDb c) {
     return Calendar(
       color: c.color,
-      uuid: c.uuid,
       name: c.name,
       description: c.description,
+      id: c.id,
+      owner: c.owner,
+      isDefault: c.isDefault,
+      shared: c.shared,
+      sharedToAll: c.sharedToAll,
+      sharedToAllAccess: c.sharedToAllAccess,
+      access: c.access,
+      isPublic: c.isPublic,
+      syncToken: c.syncToken,
     );
   }
 
@@ -19,10 +27,17 @@ class CalendarMapper {
       {required Calendar calendar, required int userLocalId}) {
     return CalendarDb(
       color: calendar.color,
-      uuid: calendar.uuid,
       name: calendar.name,
       description: calendar.description,
-      userLocalId: userLocalId,
+      id: calendar.id,
+      owner: calendar.owner,
+      isDefault: calendar.isDefault,
+      shared: calendar.shared,
+      sharedToAll: calendar.sharedToAll,
+      sharedToAllAccess: calendar.sharedToAllAccess,
+      access: calendar.access,
+      isPublic: calendar.isPublic,
+      syncToken: calendar.syncToken,
     );
   }
 
@@ -35,10 +50,19 @@ class CalendarMapper {
 
   static Calendar fromNetwork(Map<String, dynamic> map) {
     return Calendar(
-      uuid: map['uuid'] as String,
-      color: map['color'] as String,
-      description: map['description'] as String?,
-      name: map['name'] as String,
+      id:(map['Id'] as String?)!,
+      color: (map['Color'] as String?)!,
+      description:map['Description'] as String?,
+      name:(map['Name'] as String?)!,
+      owner:(map['Owner'] as String?)!,
+      isDefault:(map['IsDefault'] as bool?)!,
+      shared:(map['Shared'] as bool?)!,
+      sharedToAll:(map['SharedToAll'] as bool?)!,
+      sharedToAllAccess:(map['SharedToAllAccess'] as int?)!,
+      access:(map['Access'] as int?)!,
+      isPublic:(map['IsPublic'] as bool?)!,
+      // shares:(map['shares'] as List?)!,
+      syncToken:(map['SyncToken'] as String?)!,
     );
   }
 
@@ -48,11 +72,29 @@ class CalendarMapper {
 
   static Map<String, dynamic> toNetwork(Calendar c) {
     return {
-      'uuid': c.uuid,
+      'id': c.id,
       'color': c.color,
       'description': c.description,
       'name': c.name,
+      'owner': c.owner,
+      'isDefault': c.isDefault,
+      'shared': c.shared,
+      'sharedToAll': c.sharedToAll,
+      'sharedToAllAccess': c.sharedToAllAccess,
+      'access': c.access,
+      'isPublic': c.isPublic,
+      // 'shares': c.shares,
+      'syncToken': c.syncToken,
     };
   }
 
+  static Map<String, Calendar> convertListToMapById(List<Calendar> calendars) {
+    Map<String, Calendar> resultMap = {};
+
+    calendars.forEach((calendar) {
+      resultMap[calendar.id] = calendar;
+    });
+
+    return resultMap;
+  }
 }

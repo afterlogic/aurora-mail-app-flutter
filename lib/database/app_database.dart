@@ -9,6 +9,7 @@ import 'package:aurora_mail/database/pgp/pgp_key_model.dart';
 import 'package:aurora_mail/database/white_mail/white_mail_model.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain_impl/services/db/calendar/calendar_table.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain_impl/services/db/event/event_table.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain_impl/services/db/event/event_update_info.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_storage_model.dart';
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/contacts/contacts_table.dart';
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/contacts/converters/list_string_converter.dart';
@@ -27,6 +28,7 @@ import 'migration/m4.dart';
 import 'migration/m5.dart';
 import 'migration/m6.dart';
 import 'migration/m7.dart';
+import 'migration/m8.dart';
 import 'users/users_table.dart';
 
 part 'app_database.g.dart';
@@ -40,6 +42,7 @@ class DBInstances {
 @DriftDatabase(tables: [
   Mail,
   CalendarTable,
+  EventUpdateInfoTable,
   EventTable,
   Folders,
   Users,
@@ -66,6 +69,7 @@ class AppDatabase extends _$AppDatabase {
         5: m5,
         6: m6,
         7: m7,
+        8: m8,
       };
 
   @override
@@ -94,5 +98,5 @@ class AppDatabase extends _$AppDatabase {
   // you should bump this number whenever you change or add a table definition. Migrations
   // are covered later in this readme.
   @override
-  int get schemaVersion => 8;
+  int get schemaVersion => 9;
 }

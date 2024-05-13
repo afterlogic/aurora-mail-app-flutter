@@ -4,13 +4,25 @@ import 'package:aurora_mail/modules/calendar/calendar_domain/models/event.dart';
 class EventMapper {
   static Event fromDB(EventDb e) {
     return Event(
-      name: e.name,
-      description: e.description,
-      localId: e.localId,
-      calendarId: e.calendarId,
-      startTS: e.startTS,
-      isAllDay: e.isAllDay,
-    );
+        description: e.description,
+        calendarId: e.calendarId,
+        startTS: e.startTS,
+        organizer: e.organizer,
+        appointment: e.appointment,
+        appointmentAccess: e.appointmentAccess,
+        id: e.id,
+        uid: e.uid,
+        allDay: e.allDay,
+        owner: e.owner,
+        modified: e.modified,
+        recurrenceId: e.recurrenceId,
+        lastModified: e.lastModified,
+        status: e.status,
+        withDate: e.withDate,
+        isPrivate: e.isPrivate,
+        rrule: null,
+        subject: e.subject,
+        endTS: e.endTS);
   }
 
   static List<Event> listFromDB(List<EventDb> dbEntries) {
@@ -19,15 +31,25 @@ class EventMapper {
 
   static EventDb toDB({required Event event, required int userLocalId}) {
     return EventDb(
-      name: event.name,
-      description: event.description,
-      userLocalId: userLocalId,
-      localId: event.localId,
-      calendarId: event.calendarId,
-      startTS: event.startTS,
-      endTS: event.endTS,
-      isAllDay: event.isAllDay,
-    );
+        description: event.description,
+        calendarId: event.calendarId,
+        startTS: event.startTS,
+        organizer: event.organizer,
+        appointment: event.appointment,
+        appointmentAccess: event.appointmentAccess,
+        id: event.id,
+        uid: event.uid,
+        allDay: event.allDay,
+        owner: event.owner,
+        modified: event.modified,
+        recurrenceId: event.recurrenceId,
+        lastModified: event.lastModified,
+        status: event.status,
+        withDate: event.withDate,
+        isPrivate: event.isPrivate,
+        // rrule: null,
+        subject: event.subject,
+        endTS: event.endTS);
   }
 
   static List<EventDb> listToDB(
@@ -39,13 +61,28 @@ class EventMapper {
 
   static Event fromNetwork(Map<String, dynamic> map) {
     return Event(
-      localId: map['localId'] as int,
+      organizer: map['organizer'] as String,
+      appointment: map['appointment'] as bool,
+      appointmentAccess: map['appointmentAccess'] as int,
       calendarId: map['calendarId'] as String,
-      startTS:  DateTime.fromMillisecondsSinceEpoch((map['startTS'] as int) * 1000),
-      endTS: (map['endTS'] as int?) == null ? null : DateTime.fromMillisecondsSinceEpoch((map['endTS'] as int) * 1000) ,
+      id: map['id'] as String,
+      uid: map['uid'] as String,
+      subject: map['subject'] as String,
       description: map['description'] as String,
-      name: map['name'] as String,
-      isAllDay: map['isAllDay'] as bool,
+      startTS:
+          DateTime.fromMillisecondsSinceEpoch((map['startTS'] as int) * 1000),
+      endTS: (map['endTS'] as int?) == null
+          ? null
+          : DateTime.fromMillisecondsSinceEpoch((map['endTS'] as int) * 1000),
+      allDay: map['allDay'] as bool,
+      owner: map['owner'] as String,
+      modified: map['modified'] as bool,
+      recurrenceId: map['recurrenceId'] as int,
+      lastModified: map['lastModified'] as int,
+      rrule: map['rrule'] as Rrule,
+      status: map['status'] as bool,
+      withDate: map['withDate'] as bool,
+      isPrivate: map['isPrivate'] as bool,
     );
   }
 
@@ -55,13 +92,27 @@ class EventMapper {
 
   static Map<String, dynamic> toNetwork(Event e) {
     return {
-      'localId': e.localId,
+      'organizer': e.organizer,
+      'appointment': e.appointment,
+      'appointmentAccess': e.appointmentAccess,
       'calendarId': e.calendarId,
-      'startTS': e.startTS.toUtc().millisecondsSinceEpoch ~/ 1000,
-      'endTS': e.endTS == null ? null : e.endTS!.toUtc().millisecondsSinceEpoch ~/ 1000,
+      'id': e.id,
+      'uid': e.uid,
+      'subject': e.subject,
       'description': e.description,
-      'name': e.name,
-      'isAllDay': e.isAllDay,
+      'startTS': e.startTS.toUtc().millisecondsSinceEpoch ~/ 1000,
+      'endTS': e.endTS == null
+          ? null
+          : e.endTS!.toUtc().millisecondsSinceEpoch ~/ 1000,
+      'allDay': e.allDay,
+      'owner': e.owner,
+      'modified': e.modified,
+      'recurrenceId': e.recurrenceId,
+      'lastModified': e.lastModified,
+      'rrule': e.rrule,
+      'status': e.status,
+      'withDate': e.withDate,
+      'isPrivate': e.isPrivate,
     };
   }
 }

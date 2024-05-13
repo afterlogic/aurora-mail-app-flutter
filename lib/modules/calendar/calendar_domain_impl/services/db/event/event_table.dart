@@ -1,23 +1,42 @@
 import 'package:drift/drift.dart';
 
 @DataClassName("EventDb")
-class EventTable extends Table{
+class EventTable extends Table {
+  TextColumn get organizer => text()();
 
-  IntColumn get localId => integer().autoIncrement()();
+  BoolColumn get appointment => boolean()();
 
-  IntColumn get userLocalId => integer()();
+  IntColumn get appointmentAccess => integer()();
 
   TextColumn get calendarId => text()();
+
+  TextColumn get id => text()();
+
+  TextColumn get uid => text()();
+
+  TextColumn get subject => text().nullable()();
+
+  TextColumn get description => text().nullable()();
 
   DateTimeColumn get startTS => dateTime()();
 
   DateTimeColumn get endTS => dateTime().nullable()();
 
-  TextColumn get description => text().nullable()();
+  BoolColumn get allDay => boolean()();
 
-  TextColumn get name => text()();
+  TextColumn get owner => text()();
 
-  BoolColumn get isAllDay => boolean().withDefault(const Constant(false))();
+  BoolColumn get modified => boolean()();
 
+  IntColumn get recurrenceId => integer()();
+
+  IntColumn get lastModified => integer()();
+
+  // TODO add rrule
+
+  BoolColumn get status => boolean()();
+
+  BoolColumn get withDate => boolean()();
+
+  BoolColumn get isPrivate => boolean()();
 }
-
