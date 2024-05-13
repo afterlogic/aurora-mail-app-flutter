@@ -11,7 +11,6 @@ class CalendarDao extends DatabaseAccessor<AppDatabase>
 
   Future<List<CalendarDb>> getAllCalendars(int userLocalId) {
     return (select(calendarTable)
-          ..where((t) => t.userLocalId.equals(userLocalId))
           ..orderBy([
             (c) => OrderingTerm(expression: c.name),
           ]))
