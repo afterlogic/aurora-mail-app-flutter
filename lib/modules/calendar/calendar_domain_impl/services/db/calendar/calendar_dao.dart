@@ -16,4 +16,16 @@ class CalendarDao extends DatabaseAccessor<AppDatabase>
           ]))
         .get();
   }
+
+  Future<void> createOrUpdateCalendar(CalendarDb calendar) async {
+    try {
+      // Try to insert the calendar
+      await into(calendarTable).insert(calendar);
+    } catch (e) {
+      // If there's a conflict, update the existing record
+      await (update(calendarTable)
+        ..where((tbl) => tbl.id.equals(calendar.id)))
+          .write(calendar);
+    }
+  }
 }

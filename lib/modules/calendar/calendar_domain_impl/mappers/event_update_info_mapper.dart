@@ -33,7 +33,7 @@ class EventUpdateInfoMapper{
     for (final entry in map.entries){
       final status = UpdateStatusX.fromApiString(entry.key);
       if(status == null) continue;
-      result.addAll((entry.value as List<String>).map((e) => EventUpdateInfo(uid: e, updateStatus: status)));
+      result.addAll((entry.value as List).map((e) => EventUpdateInfo(uid: e as String, updateStatus: status)));
     }
     return result;
   }

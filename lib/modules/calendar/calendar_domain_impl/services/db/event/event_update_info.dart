@@ -2,6 +2,8 @@ import 'package:drift/drift.dart';
 
 @DataClassName("EventUpdateInfoDb")
 class EventUpdateInfoTable extends Table {
+  @override
+  Set<Column> get primaryKey => {uid};
   TextColumn get uid => text()();
   IntColumn get updateStatus => intEnum<UpdateStatus>()();
 }

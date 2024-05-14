@@ -10,6 +10,9 @@ import 'package:aurora_mail/modules/settings/screens/debug/default_api_intercept
 import 'package:webmail_api_client/webmail_api_client.dart';
 
 class CalendarRepositoryImpl implements CalendarRepository {
+
+  static const int BATCH_SIZE = 50;
+
   final User user;
 
   late final CalendarNetworkService _network;
@@ -32,6 +35,7 @@ class CalendarRepositoryImpl implements CalendarRepository {
 
   @override
   Future<void> syncCalendars() async {
+    //TODO delete local calendars, that deleted globally
     //TODO Download events by existing local event info, then delete local event info
     final localCalendars = CalendarMapper.convertListToMapById(
         await _db.getCalendars(user.localId!));
@@ -49,10 +53,13 @@ class CalendarRepositoryImpl implements CalendarRepository {
 
       for(final calendar in calendarsForUpdate){
         int currentSync = int.parse(localCalendars[calendar.id]?.syncToken ?? '0');
-        // TODO download changes
-        // TODO safe changes
-        // TODO update calendar
+        while (currentSync < int.parse(calendar.syncToken)){
+          final changes = await _network.getChangesForCalendar(calendarId: calendar.id, syncTokenFrom: currentSync);
+          await _db.createOrUpdateEventUpdateInfoList(changes);
+          currentSync += BATCH_SIZE;
 
+        }
+        await _db.createOrUpdateCalendar(calendar);
       }
       // TODO download and save events from changes
     } catch (e) {

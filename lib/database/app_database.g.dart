@@ -3130,7 +3130,7 @@ class $EventUpdateInfoTableTable extends EventUpdateInfoTable
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => <GeneratedColumn>{};
+  Set<GeneratedColumn> get $primaryKey => {uid};
   @override
   EventUpdateInfoDb map(Map<String, dynamic> data, {String? tablePrefix}) {
     return EventUpdateInfoDb.fromData(data,
