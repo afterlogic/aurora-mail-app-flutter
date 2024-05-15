@@ -5,8 +5,9 @@ class EventUpdateInfoMapper{
   static EventUpdateInfo fromDB(EventUpdateInfoDb e) {
     return EventUpdateInfo(
         uid: e.uid,
-        updateStatus: e.updateStatus
-
+        updateStatus: e.updateStatus,
+        calendarId: e.calendarId,
+        userLocalId: e.userLocalId,
     );
   }
 
@@ -18,7 +19,9 @@ class EventUpdateInfoMapper{
        EventUpdateInfo event) {
     return EventUpdateInfoDb(
         uid: event.uid,
-        updateStatus: event.updateStatus
+        updateStatus: event.updateStatus,
+        calendarId: event.calendarId,
+        userLocalId: event.userLocalId,
     );
   }
 
@@ -28,13 +31,26 @@ class EventUpdateInfoMapper{
   }
 
 
-  static List<EventUpdateInfo> listFromNetworkMap(Map<String, dynamic> map) {
+  static List<EventUpdateInfo> listFromNetworkMap(Map<String, dynamic> map, {required int userLocalId, required String calendarId}) {
     final List<EventUpdateInfo> result = [];
     for (final entry in map.entries){
       final status = UpdateStatusX.fromApiString(entry.key);
       if(status == null) continue;
-      result.addAll((entry.value as List).map((e) => EventUpdateInfo(uid: e as String, updateStatus: status)));
+      result.addAll((entry.value as List).map((e) => EventUpdateInfo(uid: e as String, updateStatus: status, userLocalId: userLocalId, calendarId: calendarId)));
     }
     return result;
+  }
+
+  static List<List<EventUpdateInfo>> groupByCalendarId(List<EventUpdateInfo> models) {
+    Map<String, List<EventUpdateInfo>> groupedMap = {};
+
+    for (final EventUpdateInfo model in models) {
+      if (!groupedMap.containsKey(model.calendarId)) {
+        groupedMap[model.calendarId] = [];
+      }
+      groupedMap[model.calendarId]!.add(model);
+    }
+
+    return groupedMap.values.toList();
   }
 }

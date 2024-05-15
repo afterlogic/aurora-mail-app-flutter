@@ -4,6 +4,7 @@ class Event {
   final int appointmentAccess;
   final String calendarId;
   final String id;
+  final int userLocalId;
   final String uid;
   final String? subject;
   final String? description;
@@ -25,6 +26,7 @@ class Event {
     required this.appointmentAccess,
     required this.calendarId,
     required this.id,
+    required this.userLocalId,
     required this.uid,
     this.subject,
     this.description,
@@ -51,6 +53,7 @@ class Event {
           appointmentAccess == other.appointmentAccess &&
           calendarId == other.calendarId &&
           id == other.id &&
+          userLocalId == other.userLocalId &&
           uid == other.uid &&
           subject == other.subject &&
           description == other.description &&
@@ -73,6 +76,7 @@ class Event {
       appointmentAccess.hashCode ^
       calendarId.hashCode ^
       id.hashCode ^
+      userLocalId.hashCode ^
       uid.hashCode ^
       subject.hashCode ^
       description.hashCode ^
@@ -96,6 +100,7 @@ class Event {
         ' appointmentAccess: $appointmentAccess,' +
         ' calendarId: $calendarId,' +
         ' id: $id,' +
+        ' userLocalId: $userLocalId,' +
         ' uid: $uid,' +
         ' subject: $subject,' +
         ' description: $description,' +
@@ -119,6 +124,7 @@ class Event {
     int? appointmentAccess,
     String? calendarId,
     String? id,
+    int? userLocalId,
     String? uid,
     String? subject,
     String? description,
@@ -139,6 +145,7 @@ class Event {
       appointment: appointment ?? this.appointment,
       appointmentAccess: appointmentAccess ?? this.appointmentAccess,
       calendarId: calendarId ?? this.calendarId,
+      userLocalId: userLocalId ?? this.userLocalId,
       id: id ?? this.id,
       uid: uid ?? this.uid,
       subject: subject ?? this.subject,

@@ -3,18 +3,24 @@ import 'package:drift/drift.dart';
 @DataClassName("EventUpdateInfoDb")
 class EventUpdateInfoTable extends Table {
   @override
-  Set<Column> get primaryKey => {uid};
+  Set<Column> get primaryKey => {uid, userLocalId};
   TextColumn get uid => text()();
+  IntColumn get userLocalId => integer()();
+  TextColumn get calendarId => text()();
   IntColumn get updateStatus => intEnum<UpdateStatus>()();
 }
 
 class EventUpdateInfo {
   final String uid;
   final UpdateStatus updateStatus;
+  final int userLocalId;
+  final String calendarId;
 
   const EventUpdateInfo({
     required this.uid,
     required this.updateStatus,
+    required this.userLocalId,
+    required this.calendarId,
   });
 
   @override
@@ -23,25 +29,37 @@ class EventUpdateInfo {
       (other is EventUpdateInfo &&
           runtimeType == other.runtimeType &&
           uid == other.uid &&
+          userLocalId == other.userLocalId &&
+          calendarId == other.calendarId &&
           updateStatus == other.updateStatus);
 
   @override
-  int get hashCode => uid.hashCode ^ updateStatus.hashCode;
+  int get hashCode =>
+      uid.hashCode ^
+      userLocalId.hashCode ^
+      calendarId.hashCode ^
+      updateStatus.hashCode;
 
   @override
   String toString() {
     return 'EventUpdateInfo{' +
         ' uid: $uid,' +
+        ' calendarId: $calendarId,' +
+        ' userLocalId: $userLocalId,' +
         ' updateStatus: ${updateStatus.name},' +
         '}';
   }
 
   EventUpdateInfo copyWith({
     String? uid,
+    String? calendarId,
+    int? userLocalId,
     UpdateStatus? updateStatus,
   }) {
     return EventUpdateInfo(
       uid: uid ?? this.uid,
+      calendarId: calendarId ?? this.calendarId,
+      userLocalId: userLocalId ?? this.userLocalId,
       updateStatus: updateStatus ?? this.updateStatus,
     );
   }
@@ -61,13 +79,15 @@ extension UpdateStatusX on UpdateStatus {
     }
   }
 
+  bool get isDeleted => this == UpdateStatus.deleted;
+
   static UpdateStatus? fromApiString(String status) {
     switch (status) {
-      case "added":
+      case "Added":
         return UpdateStatus.added;
-      case "modified":
+      case "Modified":
         return UpdateStatus.modified;
-      case "deleted":
+      case "Deleted":
         return UpdateStatus.deleted;
       default:
         return null;

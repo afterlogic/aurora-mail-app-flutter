@@ -16,10 +16,13 @@ class CalendarDao extends DatabaseAccessor<AppDatabase>
           ]))
         .get();
   }
+  
+  Future<void> deleteCalendars(List<String> ids) async{
+    await (delete(calendarTable)..where((t) => t.id.isIn(ids))).go();
+  }
 
   Future<void> createOrUpdateCalendar(CalendarDb calendar) async {
     try {
-      // Try to insert the calendar
       await into(calendarTable).insert(calendar);
     } catch (e) {
       // If there's a conflict, update the existing record

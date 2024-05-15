@@ -4,13 +4,15 @@ import 'package:drift/drift.dart';
 class CalendarTable extends Table{
 
   @override
-  Set<Column> get primaryKey => {id};
+  Set<Column> get primaryKey => {id, userLocalId};
 
   TextColumn get id => text()();
 
   TextColumn get color => text()();
 
   TextColumn get description => text().nullable()();
+
+  IntColumn get userLocalId => integer()();
 
   TextColumn get name => text()();
 

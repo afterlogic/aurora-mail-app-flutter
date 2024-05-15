@@ -2,6 +2,10 @@ import 'package:drift/drift.dart';
 
 @DataClassName("EventDb")
 class EventTable extends Table {
+
+  @override
+  Set<Column> get primaryKey => {id, userLocalId};
+
   TextColumn get organizer => text()();
 
   BoolColumn get appointment => boolean()();
@@ -9,6 +13,8 @@ class EventTable extends Table {
   IntColumn get appointmentAccess => integer()();
 
   TextColumn get calendarId => text()();
+
+  IntColumn get userLocalId => integer()();
 
   TextColumn get id => text()();
 

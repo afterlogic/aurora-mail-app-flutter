@@ -12,9 +12,21 @@ abstract class CalendarDbService {
 
   Future<List<Calendar>> getCalendars(int userLocalId);
 
-  Future<List<Event>> getEvents(String calendarId);
+  Future<List<Event>> getEvents(String calendarId, int userLocalId);
 
   Future<void> createOrUpdateEventUpdateInfoList(List<EventUpdateInfo> events);
 
   Future<void> createOrUpdateCalendar(Calendar calendar);
+
+  Future<void> deleteCalendars(List<Calendar> calendars);
+
+  Future<void> clearEvents(List<Calendar> calendars);
+
+  Future<List<EventUpdateInfo>> getEventUpdateInfoList({int limit});
+
+  Future<void> createOrUpdateEventList(List<Event> events);
+
+  Future<void> deleteEventsByInfo(List<EventUpdateInfo> infoList);
+
+  Future<void> deleteEventUpdateInfoList(List<EventUpdateInfo> infoList);
 }

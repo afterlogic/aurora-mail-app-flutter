@@ -1,5 +1,6 @@
 class Calendar {
   final String id;
+  final int userLocalId;
   final String color;
   final String? description;
   final String name;
@@ -15,6 +16,7 @@ class Calendar {
 
   const Calendar({
     required this.id,
+    required this.userLocalId,
     required this.color,
     this.description,
     required this.name,
@@ -35,6 +37,7 @@ class Calendar {
       (other is Calendar &&
           runtimeType == other.runtimeType &&
           id == other.id &&
+          userLocalId == other.userLocalId &&
           color == other.color &&
           description == other.description &&
           name == other.name &&
@@ -51,6 +54,7 @@ class Calendar {
   @override
   int get hashCode =>
       id.hashCode ^
+      userLocalId.hashCode ^
       color.hashCode ^
       description.hashCode ^
       name.hashCode ^
@@ -68,6 +72,7 @@ class Calendar {
   String toString() {
     return 'Calendar{' +
         ' id: $id,' +
+        ' userLocalId: $userLocalId,' +
         ' color: $color,' +
         ' description: $description,' +
         ' name: $name,' +
@@ -85,6 +90,7 @@ class Calendar {
 
   Calendar copyWith({
     String? id,
+    int? userLocalId,
     String? color,
     String? description,
     String? name,
@@ -100,6 +106,7 @@ class Calendar {
   }) {
     return Calendar(
       id: id ?? this.id,
+      userLocalId: userLocalId ?? this.userLocalId,
       color: color ?? this.color,
       description: description ?? this.description,
       name: name ?? this.name,

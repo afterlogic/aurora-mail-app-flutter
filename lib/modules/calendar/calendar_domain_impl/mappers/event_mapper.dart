@@ -6,6 +6,7 @@ class EventMapper {
     return Event(
         description: e.description,
         calendarId: e.calendarId,
+        userLocalId: e.userLocalId,
         startTS: e.startTS,
         organizer: e.organizer,
         appointment: e.appointment,
@@ -29,7 +30,7 @@ class EventMapper {
     return dbEntries.map(fromDB).toList();
   }
 
-  static EventDb toDB({required Event event, required int userLocalId}) {
+  static EventDb toDB({required Event event}) {
     return EventDb(
         description: event.description,
         calendarId: event.calendarId,
@@ -38,6 +39,7 @@ class EventMapper {
         appointment: event.appointment,
         appointmentAccess: event.appointmentAccess,
         id: event.id,
+        userLocalId: event.userLocalId,
         uid: event.uid,
         allDay: event.allDay,
         owner: event.owner,
@@ -53,41 +55,42 @@ class EventMapper {
   }
 
   static List<EventDb> listToDB(
-      {required List<Event> calendars, required int userLocalId}) {
-    return calendars.map((e) {
-      return toDB(event: e, userLocalId: userLocalId);
+      {required List<Event> events}) {
+    return events.map((e) {
+      return toDB(event: e);
     }).toList();
   }
 
-  static Event fromNetwork(Map<String, dynamic> map) {
+  static Event fromNetwork(Map<String, dynamic> map, {required int userLocalId}) {
     return Event(
-      organizer: map['organizer'] as String,
-      appointment: map['appointment'] as bool,
-      appointmentAccess: map['appointmentAccess'] as int,
-      calendarId: map['calendarId'] as String,
-      id: map['id'] as String,
-      uid: map['uid'] as String,
-      subject: map['subject'] as String,
-      description: map['description'] as String,
+      organizer: map['organizer'] as String? ?? '',
+      appointment: (map['appointment'] as bool?)!,
+      appointmentAccess: (map['appointmentAccess'] as int?)!,
+      calendarId: (map['calendarId'] as String?)!,
+      id: (map['id'] as String?)!,
+      userLocalId: userLocalId,
+      uid: (map['uid'] as String?)!,
+      subject: (map['subject'] as String?)!,
+      description: (map['description'] as String?)!,
       startTS:
-          DateTime.fromMillisecondsSinceEpoch((map['startTS'] as int) * 1000),
+          DateTime.fromMillisecondsSinceEpoch((map['startTS'] as int?) ?? 100000 * 1000),
       endTS: (map['endTS'] as int?) == null
           ? null
           : DateTime.fromMillisecondsSinceEpoch((map['endTS'] as int) * 1000),
-      allDay: map['allDay'] as bool,
-      owner: map['owner'] as String,
-      modified: map['modified'] as bool,
-      recurrenceId: map['recurrenceId'] as int,
-      lastModified: map['lastModified'] as int,
-      rrule: map['rrule'] as Rrule,
-      status: map['status'] as bool,
-      withDate: map['withDate'] as bool,
-      isPrivate: map['isPrivate'] as bool,
+      allDay: (map['allDay'] as bool?)!,
+      owner: (map['owner'] as String?)!,
+      modified: (map['modified'] as bool?)!,
+      recurrenceId: (map['recurrenceId'] as int?)!,
+      lastModified: (map['lastModified'] as int?)!,
+      rrule: null,
+      status: (map['status'] as bool?)!,
+      withDate: (map['withDate'] as bool?)!,
+      isPrivate: (map['isPrivate'] as bool?)!,
     );
   }
 
-  static List<Event> listFromNetwork(List<dynamic> rawItems) {
-    return rawItems.map((e) => fromNetwork(e as Map<String, dynamic>)).toList();
+  static List<Event> listFromNetwork(List<dynamic> rawItems, {required int userLocalId}) {
+    return rawItems.map((e) => fromNetwork(e as Map<String, dynamic>, userLocalId: userLocalId)).toList();
   }
 
   static Map<String, dynamic> toNetwork(Event e) {

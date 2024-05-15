@@ -12,7 +12,6 @@ class EventUpdateInfoDao extends DatabaseAccessor<AppDatabase>
   Future<void> upsert(List<EventUpdateInfoDb> events) async{
     events.forEach((element) async {
       try {
-        // Try to insert the calendar
         await into(eventUpdateInfoTable).insert(element);
       } catch (e) {
         // If there's a conflict, update the existing record
@@ -21,5 +20,37 @@ class EventUpdateInfoDao extends DatabaseAccessor<AppDatabase>
             .write(element);
       }
     });
+  }
+
+  Future<void> deleteInfoFromCalendar(
+      {required String uid, required String calendarUUID,required int userLocalId}) async {
+    await (delete(eventUpdateInfoTable)
+      ..where((t) =>
+      t.uid.equals(uid) &
+      t.calendarId.equals(calendarUUID) &
+      t.userLocalId.equals(userLocalId)))
+        .go();
+  }
+
+  Future<void> deleteAllInfoFromCalendar(
+      String calendarUUID, int userLocalId) async {
+    await (delete(eventUpdateInfoTable)
+      ..where((t) =>
+      t.calendarId.equals(calendarUUID) &
+      t.userLocalId.equals(userLocalId)))
+        .go();
+  }
+
+  Future<void> deleteAllUnusedInfo(
+      List<String> calendarUUIDs, List<int> userLocalIds) async {
+    await (delete(eventUpdateInfoTable)
+      ..where((t) =>
+      t.calendarId.isNotIn(calendarUUIDs) &
+      t.userLocalId.isNotIn(userLocalIds)))
+        .go();
+  }
+
+  Future<List<EventUpdateInfoDb>> getList(int limit) async {
+    return (select(eventUpdateInfoTable)..limit(limit)).get();
   }
 }

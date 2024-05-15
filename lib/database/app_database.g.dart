@@ -2391,6 +2391,7 @@ class CalendarDb extends DataClass implements Insertable<CalendarDb> {
   final String id;
   final String color;
   final String? description;
+  final int userLocalId;
   final String name;
   final String owner;
   final bool isDefault;
@@ -2404,6 +2405,7 @@ class CalendarDb extends DataClass implements Insertable<CalendarDb> {
       {required this.id,
       required this.color,
       this.description,
+      required this.userLocalId,
       required this.name,
       required this.owner,
       required this.isDefault,
@@ -2422,6 +2424,8 @@ class CalendarDb extends DataClass implements Insertable<CalendarDb> {
           .mapFromDatabaseResponse(data['${effectivePrefix}color'])!,
       description: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}description']),
+      userLocalId: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}user_local_id'])!,
       name: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}name'])!,
       owner: const StringType()
@@ -2450,6 +2454,7 @@ class CalendarDb extends DataClass implements Insertable<CalendarDb> {
     if (!nullToAbsent || description != null) {
       map['description'] = Variable<String?>(description);
     }
+    map['user_local_id'] = Variable<int>(userLocalId);
     map['name'] = Variable<String>(name);
     map['owner'] = Variable<String>(owner);
     map['is_default'] = Variable<bool>(isDefault);
@@ -2469,6 +2474,7 @@ class CalendarDb extends DataClass implements Insertable<CalendarDb> {
       description: description == null && nullToAbsent
           ? const Value.absent()
           : Value(description),
+      userLocalId: Value(userLocalId),
       name: Value(name),
       owner: Value(owner),
       isDefault: Value(isDefault),
@@ -2488,6 +2494,7 @@ class CalendarDb extends DataClass implements Insertable<CalendarDb> {
       id: serializer.fromJson<String>(json['id']),
       color: serializer.fromJson<String>(json['color']),
       description: serializer.fromJson<String?>(json['description']),
+      userLocalId: serializer.fromJson<int>(json['userLocalId']),
       name: serializer.fromJson<String>(json['name']),
       owner: serializer.fromJson<String>(json['owner']),
       isDefault: serializer.fromJson<bool>(json['isDefault']),
@@ -2506,6 +2513,7 @@ class CalendarDb extends DataClass implements Insertable<CalendarDb> {
       'id': serializer.toJson<String>(id),
       'color': serializer.toJson<String>(color),
       'description': serializer.toJson<String?>(description),
+      'userLocalId': serializer.toJson<int>(userLocalId),
       'name': serializer.toJson<String>(name),
       'owner': serializer.toJson<String>(owner),
       'isDefault': serializer.toJson<bool>(isDefault),
@@ -2522,6 +2530,7 @@ class CalendarDb extends DataClass implements Insertable<CalendarDb> {
           {String? id,
           String? color,
           String? description,
+          int? userLocalId,
           String? name,
           String? owner,
           bool? isDefault,
@@ -2535,6 +2544,7 @@ class CalendarDb extends DataClass implements Insertable<CalendarDb> {
         id: id ?? this.id,
         color: color ?? this.color,
         description: description ?? this.description,
+        userLocalId: userLocalId ?? this.userLocalId,
         name: name ?? this.name,
         owner: owner ?? this.owner,
         isDefault: isDefault ?? this.isDefault,
@@ -2551,6 +2561,7 @@ class CalendarDb extends DataClass implements Insertable<CalendarDb> {
           ..write('id: $id, ')
           ..write('color: $color, ')
           ..write('description: $description, ')
+          ..write('userLocalId: $userLocalId, ')
           ..write('name: $name, ')
           ..write('owner: $owner, ')
           ..write('isDefault: $isDefault, ')
@@ -2569,6 +2580,7 @@ class CalendarDb extends DataClass implements Insertable<CalendarDb> {
       id,
       color,
       description,
+      userLocalId,
       name,
       owner,
       isDefault,
@@ -2585,6 +2597,7 @@ class CalendarDb extends DataClass implements Insertable<CalendarDb> {
           other.id == this.id &&
           other.color == this.color &&
           other.description == this.description &&
+          other.userLocalId == this.userLocalId &&
           other.name == this.name &&
           other.owner == this.owner &&
           other.isDefault == this.isDefault &&
@@ -2600,6 +2613,7 @@ class CalendarTableCompanion extends UpdateCompanion<CalendarDb> {
   final Value<String> id;
   final Value<String> color;
   final Value<String?> description;
+  final Value<int> userLocalId;
   final Value<String> name;
   final Value<String> owner;
   final Value<bool> isDefault;
@@ -2613,6 +2627,7 @@ class CalendarTableCompanion extends UpdateCompanion<CalendarDb> {
     this.id = const Value.absent(),
     this.color = const Value.absent(),
     this.description = const Value.absent(),
+    this.userLocalId = const Value.absent(),
     this.name = const Value.absent(),
     this.owner = const Value.absent(),
     this.isDefault = const Value.absent(),
@@ -2627,6 +2642,7 @@ class CalendarTableCompanion extends UpdateCompanion<CalendarDb> {
     required String id,
     required String color,
     this.description = const Value.absent(),
+    required int userLocalId,
     required String name,
     required String owner,
     required bool isDefault,
@@ -2638,6 +2654,7 @@ class CalendarTableCompanion extends UpdateCompanion<CalendarDb> {
     required String syncToken,
   })  : id = Value(id),
         color = Value(color),
+        userLocalId = Value(userLocalId),
         name = Value(name),
         owner = Value(owner),
         isDefault = Value(isDefault),
@@ -2651,6 +2668,7 @@ class CalendarTableCompanion extends UpdateCompanion<CalendarDb> {
     Expression<String>? id,
     Expression<String>? color,
     Expression<String?>? description,
+    Expression<int>? userLocalId,
     Expression<String>? name,
     Expression<String>? owner,
     Expression<bool>? isDefault,
@@ -2665,6 +2683,7 @@ class CalendarTableCompanion extends UpdateCompanion<CalendarDb> {
       if (id != null) 'id': id,
       if (color != null) 'color': color,
       if (description != null) 'description': description,
+      if (userLocalId != null) 'user_local_id': userLocalId,
       if (name != null) 'name': name,
       if (owner != null) 'owner': owner,
       if (isDefault != null) 'is_default': isDefault,
@@ -2681,6 +2700,7 @@ class CalendarTableCompanion extends UpdateCompanion<CalendarDb> {
       {Value<String>? id,
       Value<String>? color,
       Value<String?>? description,
+      Value<int>? userLocalId,
       Value<String>? name,
       Value<String>? owner,
       Value<bool>? isDefault,
@@ -2694,6 +2714,7 @@ class CalendarTableCompanion extends UpdateCompanion<CalendarDb> {
       id: id ?? this.id,
       color: color ?? this.color,
       description: description ?? this.description,
+      userLocalId: userLocalId ?? this.userLocalId,
       name: name ?? this.name,
       owner: owner ?? this.owner,
       isDefault: isDefault ?? this.isDefault,
@@ -2717,6 +2738,9 @@ class CalendarTableCompanion extends UpdateCompanion<CalendarDb> {
     }
     if (description.present) {
       map['description'] = Variable<String?>(description.value);
+    }
+    if (userLocalId.present) {
+      map['user_local_id'] = Variable<int>(userLocalId.value);
     }
     if (name.present) {
       map['name'] = Variable<String>(name.value);
@@ -2754,6 +2778,7 @@ class CalendarTableCompanion extends UpdateCompanion<CalendarDb> {
           ..write('id: $id, ')
           ..write('color: $color, ')
           ..write('description: $description, ')
+          ..write('userLocalId: $userLocalId, ')
           ..write('name: $name, ')
           ..write('owner: $owner, ')
           ..write('isDefault: $isDefault, ')
@@ -2790,6 +2815,12 @@ class $CalendarTableTable extends CalendarTable
   late final GeneratedColumn<String?> description = GeneratedColumn<String?>(
       'description', aliasedName, true,
       type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _userLocalIdMeta =
+      const VerificationMeta('userLocalId');
+  @override
+  late final GeneratedColumn<int?> userLocalId = GeneratedColumn<int?>(
+      'user_local_id', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _nameMeta = const VerificationMeta('name');
   @override
   late final GeneratedColumn<String?> name = GeneratedColumn<String?>(
@@ -2850,6 +2881,7 @@ class $CalendarTableTable extends CalendarTable
         id,
         color,
         description,
+        userLocalId,
         name,
         owner,
         isDefault,
@@ -2885,6 +2917,14 @@ class $CalendarTableTable extends CalendarTable
           _descriptionMeta,
           description.isAcceptableOrUnknown(
               data['description']!, _descriptionMeta));
+    }
+    if (data.containsKey('user_local_id')) {
+      context.handle(
+          _userLocalIdMeta,
+          userLocalId.isAcceptableOrUnknown(
+              data['user_local_id']!, _userLocalIdMeta));
+    } else if (isInserting) {
+      context.missing(_userLocalIdMeta);
     }
     if (data.containsKey('name')) {
       context.handle(
@@ -2948,7 +2988,7 @@ class $CalendarTableTable extends CalendarTable
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {id};
+  Set<GeneratedColumn> get $primaryKey => {id, userLocalId};
   @override
   CalendarDb map(Map<String, dynamic> data, {String? tablePrefix}) {
     return CalendarDb.fromData(data,
@@ -2964,14 +3004,24 @@ class $CalendarTableTable extends CalendarTable
 class EventUpdateInfoDb extends DataClass
     implements Insertable<EventUpdateInfoDb> {
   final String uid;
+  final int userLocalId;
+  final String calendarId;
   final UpdateStatus updateStatus;
-  EventUpdateInfoDb({required this.uid, required this.updateStatus});
+  EventUpdateInfoDb(
+      {required this.uid,
+      required this.userLocalId,
+      required this.calendarId,
+      required this.updateStatus});
   factory EventUpdateInfoDb.fromData(Map<String, dynamic> data,
       {String? prefix}) {
     final effectivePrefix = prefix ?? '';
     return EventUpdateInfoDb(
       uid: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}uid'])!,
+      userLocalId: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}user_local_id'])!,
+      calendarId: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}calendar_id'])!,
       updateStatus: $EventUpdateInfoTableTable.$converter0.mapToDart(
           const IntType().mapFromDatabaseResponse(
               data['${effectivePrefix}update_status']))!,
@@ -2981,6 +3031,8 @@ class EventUpdateInfoDb extends DataClass
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['uid'] = Variable<String>(uid);
+    map['user_local_id'] = Variable<int>(userLocalId);
+    map['calendar_id'] = Variable<String>(calendarId);
     {
       final converter = $EventUpdateInfoTableTable.$converter0;
       map['update_status'] = Variable<int>(converter.mapToSql(updateStatus)!);
@@ -2991,6 +3043,8 @@ class EventUpdateInfoDb extends DataClass
   EventUpdateInfoTableCompanion toCompanion(bool nullToAbsent) {
     return EventUpdateInfoTableCompanion(
       uid: Value(uid),
+      userLocalId: Value(userLocalId),
+      calendarId: Value(calendarId),
       updateStatus: Value(updateStatus),
     );
   }
@@ -3000,6 +3054,8 @@ class EventUpdateInfoDb extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return EventUpdateInfoDb(
       uid: serializer.fromJson<String>(json['uid']),
+      userLocalId: serializer.fromJson<int>(json['userLocalId']),
+      calendarId: serializer.fromJson<String>(json['calendarId']),
       updateStatus: serializer.fromJson<UpdateStatus>(json['updateStatus']),
     );
   }
@@ -3008,60 +3064,89 @@ class EventUpdateInfoDb extends DataClass
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'uid': serializer.toJson<String>(uid),
+      'userLocalId': serializer.toJson<int>(userLocalId),
+      'calendarId': serializer.toJson<String>(calendarId),
       'updateStatus': serializer.toJson<UpdateStatus>(updateStatus),
     };
   }
 
-  EventUpdateInfoDb copyWith({String? uid, UpdateStatus? updateStatus}) =>
+  EventUpdateInfoDb copyWith(
+          {String? uid,
+          int? userLocalId,
+          String? calendarId,
+          UpdateStatus? updateStatus}) =>
       EventUpdateInfoDb(
         uid: uid ?? this.uid,
+        userLocalId: userLocalId ?? this.userLocalId,
+        calendarId: calendarId ?? this.calendarId,
         updateStatus: updateStatus ?? this.updateStatus,
       );
   @override
   String toString() {
     return (StringBuffer('EventUpdateInfoDb(')
           ..write('uid: $uid, ')
+          ..write('userLocalId: $userLocalId, ')
+          ..write('calendarId: $calendarId, ')
           ..write('updateStatus: $updateStatus')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(uid, updateStatus);
+  int get hashCode => Object.hash(uid, userLocalId, calendarId, updateStatus);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       (other is EventUpdateInfoDb &&
           other.uid == this.uid &&
+          other.userLocalId == this.userLocalId &&
+          other.calendarId == this.calendarId &&
           other.updateStatus == this.updateStatus);
 }
 
 class EventUpdateInfoTableCompanion extends UpdateCompanion<EventUpdateInfoDb> {
   final Value<String> uid;
+  final Value<int> userLocalId;
+  final Value<String> calendarId;
   final Value<UpdateStatus> updateStatus;
   const EventUpdateInfoTableCompanion({
     this.uid = const Value.absent(),
+    this.userLocalId = const Value.absent(),
+    this.calendarId = const Value.absent(),
     this.updateStatus = const Value.absent(),
   });
   EventUpdateInfoTableCompanion.insert({
     required String uid,
+    required int userLocalId,
+    required String calendarId,
     required UpdateStatus updateStatus,
   })  : uid = Value(uid),
+        userLocalId = Value(userLocalId),
+        calendarId = Value(calendarId),
         updateStatus = Value(updateStatus);
   static Insertable<EventUpdateInfoDb> custom({
     Expression<String>? uid,
+    Expression<int>? userLocalId,
+    Expression<String>? calendarId,
     Expression<UpdateStatus>? updateStatus,
   }) {
     return RawValuesInsertable({
       if (uid != null) 'uid': uid,
+      if (userLocalId != null) 'user_local_id': userLocalId,
+      if (calendarId != null) 'calendar_id': calendarId,
       if (updateStatus != null) 'update_status': updateStatus,
     });
   }
 
   EventUpdateInfoTableCompanion copyWith(
-      {Value<String>? uid, Value<UpdateStatus>? updateStatus}) {
+      {Value<String>? uid,
+      Value<int>? userLocalId,
+      Value<String>? calendarId,
+      Value<UpdateStatus>? updateStatus}) {
     return EventUpdateInfoTableCompanion(
       uid: uid ?? this.uid,
+      userLocalId: userLocalId ?? this.userLocalId,
+      calendarId: calendarId ?? this.calendarId,
       updateStatus: updateStatus ?? this.updateStatus,
     );
   }
@@ -3071,6 +3156,12 @@ class EventUpdateInfoTableCompanion extends UpdateCompanion<EventUpdateInfoDb> {
     final map = <String, Expression>{};
     if (uid.present) {
       map['uid'] = Variable<String>(uid.value);
+    }
+    if (userLocalId.present) {
+      map['user_local_id'] = Variable<int>(userLocalId.value);
+    }
+    if (calendarId.present) {
+      map['calendar_id'] = Variable<String>(calendarId.value);
     }
     if (updateStatus.present) {
       final converter = $EventUpdateInfoTableTable.$converter0;
@@ -3084,6 +3175,8 @@ class EventUpdateInfoTableCompanion extends UpdateCompanion<EventUpdateInfoDb> {
   String toString() {
     return (StringBuffer('EventUpdateInfoTableCompanion(')
           ..write('uid: $uid, ')
+          ..write('userLocalId: $userLocalId, ')
+          ..write('calendarId: $calendarId, ')
           ..write('updateStatus: $updateStatus')
           ..write(')'))
         .toString();
@@ -3101,6 +3194,17 @@ class $EventUpdateInfoTableTable extends EventUpdateInfoTable
   late final GeneratedColumn<String?> uid = GeneratedColumn<String?>(
       'uid', aliasedName, false,
       type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _userLocalIdMeta =
+      const VerificationMeta('userLocalId');
+  @override
+  late final GeneratedColumn<int?> userLocalId = GeneratedColumn<int?>(
+      'user_local_id', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
+  final VerificationMeta _calendarIdMeta = const VerificationMeta('calendarId');
+  @override
+  late final GeneratedColumn<String?> calendarId = GeneratedColumn<String?>(
+      'calendar_id', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _updateStatusMeta =
       const VerificationMeta('updateStatus');
   @override
@@ -3109,7 +3213,8 @@ class $EventUpdateInfoTableTable extends EventUpdateInfoTable
               type: const IntType(), requiredDuringInsert: true)
           .withConverter<UpdateStatus>($EventUpdateInfoTableTable.$converter0);
   @override
-  List<GeneratedColumn> get $columns => [uid, updateStatus];
+  List<GeneratedColumn> get $columns =>
+      [uid, userLocalId, calendarId, updateStatus];
   @override
   String get aliasedName => _alias ?? 'event_update_info_table';
   @override
@@ -3125,12 +3230,28 @@ class $EventUpdateInfoTableTable extends EventUpdateInfoTable
     } else if (isInserting) {
       context.missing(_uidMeta);
     }
+    if (data.containsKey('user_local_id')) {
+      context.handle(
+          _userLocalIdMeta,
+          userLocalId.isAcceptableOrUnknown(
+              data['user_local_id']!, _userLocalIdMeta));
+    } else if (isInserting) {
+      context.missing(_userLocalIdMeta);
+    }
+    if (data.containsKey('calendar_id')) {
+      context.handle(
+          _calendarIdMeta,
+          calendarId.isAcceptableOrUnknown(
+              data['calendar_id']!, _calendarIdMeta));
+    } else if (isInserting) {
+      context.missing(_calendarIdMeta);
+    }
     context.handle(_updateStatusMeta, const VerificationResult.success());
     return context;
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {uid};
+  Set<GeneratedColumn> get $primaryKey => {uid, userLocalId};
   @override
   EventUpdateInfoDb map(Map<String, dynamic> data, {String? tablePrefix}) {
     return EventUpdateInfoDb.fromData(data,
@@ -3151,6 +3272,7 @@ class EventDb extends DataClass implements Insertable<EventDb> {
   final bool appointment;
   final int appointmentAccess;
   final String calendarId;
+  final int userLocalId;
   final String id;
   final String uid;
   final String? subject;
@@ -3170,6 +3292,7 @@ class EventDb extends DataClass implements Insertable<EventDb> {
       required this.appointment,
       required this.appointmentAccess,
       required this.calendarId,
+      required this.userLocalId,
       required this.id,
       required this.uid,
       this.subject,
@@ -3195,6 +3318,8 @@ class EventDb extends DataClass implements Insertable<EventDb> {
           data['${effectivePrefix}appointment_access'])!,
       calendarId: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}calendar_id'])!,
+      userLocalId: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}user_local_id'])!,
       id: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
       uid: const StringType()
@@ -3232,6 +3357,7 @@ class EventDb extends DataClass implements Insertable<EventDb> {
     map['appointment'] = Variable<bool>(appointment);
     map['appointment_access'] = Variable<int>(appointmentAccess);
     map['calendar_id'] = Variable<String>(calendarId);
+    map['user_local_id'] = Variable<int>(userLocalId);
     map['id'] = Variable<String>(id);
     map['uid'] = Variable<String>(uid);
     if (!nullToAbsent || subject != null) {
@@ -3261,6 +3387,7 @@ class EventDb extends DataClass implements Insertable<EventDb> {
       appointment: Value(appointment),
       appointmentAccess: Value(appointmentAccess),
       calendarId: Value(calendarId),
+      userLocalId: Value(userLocalId),
       id: Value(id),
       uid: Value(uid),
       subject: subject == null && nullToAbsent
@@ -3291,6 +3418,7 @@ class EventDb extends DataClass implements Insertable<EventDb> {
       appointment: serializer.fromJson<bool>(json['appointment']),
       appointmentAccess: serializer.fromJson<int>(json['appointmentAccess']),
       calendarId: serializer.fromJson<String>(json['calendarId']),
+      userLocalId: serializer.fromJson<int>(json['userLocalId']),
       id: serializer.fromJson<String>(json['id']),
       uid: serializer.fromJson<String>(json['uid']),
       subject: serializer.fromJson<String?>(json['subject']),
@@ -3315,6 +3443,7 @@ class EventDb extends DataClass implements Insertable<EventDb> {
       'appointment': serializer.toJson<bool>(appointment),
       'appointmentAccess': serializer.toJson<int>(appointmentAccess),
       'calendarId': serializer.toJson<String>(calendarId),
+      'userLocalId': serializer.toJson<int>(userLocalId),
       'id': serializer.toJson<String>(id),
       'uid': serializer.toJson<String>(uid),
       'subject': serializer.toJson<String?>(subject),
@@ -3337,6 +3466,7 @@ class EventDb extends DataClass implements Insertable<EventDb> {
           bool? appointment,
           int? appointmentAccess,
           String? calendarId,
+          int? userLocalId,
           String? id,
           String? uid,
           String? subject,
@@ -3356,6 +3486,7 @@ class EventDb extends DataClass implements Insertable<EventDb> {
         appointment: appointment ?? this.appointment,
         appointmentAccess: appointmentAccess ?? this.appointmentAccess,
         calendarId: calendarId ?? this.calendarId,
+        userLocalId: userLocalId ?? this.userLocalId,
         id: id ?? this.id,
         uid: uid ?? this.uid,
         subject: subject ?? this.subject,
@@ -3378,6 +3509,7 @@ class EventDb extends DataClass implements Insertable<EventDb> {
           ..write('appointment: $appointment, ')
           ..write('appointmentAccess: $appointmentAccess, ')
           ..write('calendarId: $calendarId, ')
+          ..write('userLocalId: $userLocalId, ')
           ..write('id: $id, ')
           ..write('uid: $uid, ')
           ..write('subject: $subject, ')
@@ -3402,6 +3534,7 @@ class EventDb extends DataClass implements Insertable<EventDb> {
       appointment,
       appointmentAccess,
       calendarId,
+      userLocalId,
       id,
       uid,
       subject,
@@ -3424,6 +3557,7 @@ class EventDb extends DataClass implements Insertable<EventDb> {
           other.appointment == this.appointment &&
           other.appointmentAccess == this.appointmentAccess &&
           other.calendarId == this.calendarId &&
+          other.userLocalId == this.userLocalId &&
           other.id == this.id &&
           other.uid == this.uid &&
           other.subject == this.subject &&
@@ -3445,6 +3579,7 @@ class EventTableCompanion extends UpdateCompanion<EventDb> {
   final Value<bool> appointment;
   final Value<int> appointmentAccess;
   final Value<String> calendarId;
+  final Value<int> userLocalId;
   final Value<String> id;
   final Value<String> uid;
   final Value<String?> subject;
@@ -3464,6 +3599,7 @@ class EventTableCompanion extends UpdateCompanion<EventDb> {
     this.appointment = const Value.absent(),
     this.appointmentAccess = const Value.absent(),
     this.calendarId = const Value.absent(),
+    this.userLocalId = const Value.absent(),
     this.id = const Value.absent(),
     this.uid = const Value.absent(),
     this.subject = const Value.absent(),
@@ -3484,6 +3620,7 @@ class EventTableCompanion extends UpdateCompanion<EventDb> {
     required bool appointment,
     required int appointmentAccess,
     required String calendarId,
+    required int userLocalId,
     required String id,
     required String uid,
     this.subject = const Value.absent(),
@@ -3502,6 +3639,7 @@ class EventTableCompanion extends UpdateCompanion<EventDb> {
         appointment = Value(appointment),
         appointmentAccess = Value(appointmentAccess),
         calendarId = Value(calendarId),
+        userLocalId = Value(userLocalId),
         id = Value(id),
         uid = Value(uid),
         startTS = Value(startTS),
@@ -3518,6 +3656,7 @@ class EventTableCompanion extends UpdateCompanion<EventDb> {
     Expression<bool>? appointment,
     Expression<int>? appointmentAccess,
     Expression<String>? calendarId,
+    Expression<int>? userLocalId,
     Expression<String>? id,
     Expression<String>? uid,
     Expression<String?>? subject,
@@ -3538,6 +3677,7 @@ class EventTableCompanion extends UpdateCompanion<EventDb> {
       if (appointment != null) 'appointment': appointment,
       if (appointmentAccess != null) 'appointment_access': appointmentAccess,
       if (calendarId != null) 'calendar_id': calendarId,
+      if (userLocalId != null) 'user_local_id': userLocalId,
       if (id != null) 'id': id,
       if (uid != null) 'uid': uid,
       if (subject != null) 'subject': subject,
@@ -3560,6 +3700,7 @@ class EventTableCompanion extends UpdateCompanion<EventDb> {
       Value<bool>? appointment,
       Value<int>? appointmentAccess,
       Value<String>? calendarId,
+      Value<int>? userLocalId,
       Value<String>? id,
       Value<String>? uid,
       Value<String?>? subject,
@@ -3579,6 +3720,7 @@ class EventTableCompanion extends UpdateCompanion<EventDb> {
       appointment: appointment ?? this.appointment,
       appointmentAccess: appointmentAccess ?? this.appointmentAccess,
       calendarId: calendarId ?? this.calendarId,
+      userLocalId: userLocalId ?? this.userLocalId,
       id: id ?? this.id,
       uid: uid ?? this.uid,
       subject: subject ?? this.subject,
@@ -3610,6 +3752,9 @@ class EventTableCompanion extends UpdateCompanion<EventDb> {
     }
     if (calendarId.present) {
       map['calendar_id'] = Variable<String>(calendarId.value);
+    }
+    if (userLocalId.present) {
+      map['user_local_id'] = Variable<int>(userLocalId.value);
     }
     if (id.present) {
       map['id'] = Variable<String>(id.value);
@@ -3663,6 +3808,7 @@ class EventTableCompanion extends UpdateCompanion<EventDb> {
           ..write('appointment: $appointment, ')
           ..write('appointmentAccess: $appointmentAccess, ')
           ..write('calendarId: $calendarId, ')
+          ..write('userLocalId: $userLocalId, ')
           ..write('id: $id, ')
           ..write('uid: $uid, ')
           ..write('subject: $subject, ')
@@ -3712,6 +3858,12 @@ class $EventTableTable extends EventTable
   late final GeneratedColumn<String?> calendarId = GeneratedColumn<String?>(
       'calendar_id', aliasedName, false,
       type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _userLocalIdMeta =
+      const VerificationMeta('userLocalId');
+  @override
+  late final GeneratedColumn<int?> userLocalId = GeneratedColumn<int?>(
+      'user_local_id', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
   final VerificationMeta _idMeta = const VerificationMeta('id');
   @override
   late final GeneratedColumn<String?> id = GeneratedColumn<String?>(
@@ -3801,6 +3953,7 @@ class $EventTableTable extends EventTable
         appointment,
         appointmentAccess,
         calendarId,
+        userLocalId,
         id,
         uid,
         subject,
@@ -3854,6 +4007,14 @@ class $EventTableTable extends EventTable
               data['calendar_id']!, _calendarIdMeta));
     } else if (isInserting) {
       context.missing(_calendarIdMeta);
+    }
+    if (data.containsKey('user_local_id')) {
+      context.handle(
+          _userLocalIdMeta,
+          userLocalId.isAcceptableOrUnknown(
+              data['user_local_id']!, _userLocalIdMeta));
+    } else if (isInserting) {
+      context.missing(_userLocalIdMeta);
     }
     if (data.containsKey('id')) {
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
@@ -3942,7 +4103,7 @@ class $EventTableTable extends EventTable
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => <GeneratedColumn>{};
+  Set<GeneratedColumn> get $primaryKey => {id, userLocalId};
   @override
   EventDb map(Map<String, dynamic> data, {String? tablePrefix}) {
     return EventDb.fromData(data,

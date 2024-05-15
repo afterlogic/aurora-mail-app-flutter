@@ -8,6 +8,7 @@ class CalendarMapper {
       name: c.name,
       description: c.description,
       id: c.id,
+      userLocalId: c.userLocalId,
       owner: c.owner,
       isDefault: c.isDefault,
       shared: c.shared,
@@ -24,12 +25,13 @@ class CalendarMapper {
   }
 
   static CalendarDb toDB(
-      {required Calendar calendar, required int userLocalId}) {
+      {required Calendar calendar}) {
     return CalendarDb(
       color: calendar.color,
       name: calendar.name,
       description: calendar.description,
       id: calendar.id,
+      userLocalId: calendar.userLocalId,
       owner: calendar.owner,
       isDefault: calendar.isDefault,
       shared: calendar.shared,
@@ -42,15 +44,16 @@ class CalendarMapper {
   }
 
   static List<CalendarDb> listToDB(
-      {required List<Calendar> calendars, required int userLocalId}) {
+      {required List<Calendar> calendars}) {
     return calendars.map((e) {
-      return toDB(calendar: e, userLocalId: userLocalId);
+      return toDB(calendar: e);
     }).toList();
   }
 
-  static Calendar fromNetwork(Map<String, dynamic> map) {
+  static Calendar fromNetwork(Map<String, dynamic> map, {required int userLocalId}) {
     return Calendar(
       id:(map['Id'] as String?)!,
+      userLocalId: userLocalId,
       color: (map['Color'] as String?)!,
       description:map['Description'] as String?,
       name:(map['Name'] as String?)!,
@@ -66,8 +69,8 @@ class CalendarMapper {
     );
   }
 
-  static List<Calendar> listFromNetwork(List<dynamic> rawItems) {
-    return rawItems.map((e) => fromNetwork(e as Map<String, dynamic>)).toList();
+  static List<Calendar> listFromNetwork(List<dynamic> rawItems, {required int userLocalId}) {
+    return rawItems.map((e) => fromNetwork(e as Map<String, dynamic>, userLocalId: userLocalId),).toList();
   }
 
   static Map<String, dynamic> toNetwork(Calendar c) {
