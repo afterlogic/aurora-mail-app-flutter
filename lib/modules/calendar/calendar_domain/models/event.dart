@@ -1,47 +1,143 @@
-class Event {
-  final String organizer;
-  final bool appointment;
-  final int appointmentAccess;
+import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/event_base.dart';
+
+class Event extends EventBase {
+  final String? organizer;
+  final bool? appointment;
+  final int? appointmentAccess;
   final String calendarId;
-  final String id;
   final int userLocalId;
   final String uid;
   final String? subject;
   final String? description;
-  final DateTime startTS;
+  final DateTime? startTS;
   final DateTime? endTS;
-  final bool allDay;
-  final String owner;
-  final bool modified;
-  final int recurrenceId;
-  final int lastModified;
+  final bool? allDay;
+  final String? owner;
+  final bool? modified;
+  final int? recurrenceId;
+  final int? lastModified;
   final Rrule? rrule;
-  final bool status;
-  final bool withDate;
-  final bool isPrivate;
+  final bool? status;
+  final bool? withDate;
+  final bool? isPrivate;
+  final UpdateStatus updateStatus;
+  final bool synced;
+  final bool onceLoaded;
 
   const Event({
-    required this.organizer,
-    required this.appointment,
-    required this.appointmentAccess,
+    this.organizer,
+    this.appointment,
+    this.appointmentAccess,
     required this.calendarId,
-    required this.id,
     required this.userLocalId,
     required this.uid,
     this.subject,
     this.description,
-    required this.startTS,
+    this.startTS,
     this.endTS,
-    required this.allDay,
-    required this.owner,
-    required this.modified,
-    required this.recurrenceId,
-    required this.lastModified,
+    this.allDay,
+    this.owner,
+    this.modified,
+    this.recurrenceId,
+    this.lastModified,
     this.rrule,
-    required this.status,
-    required this.withDate,
-    required this.isPrivate,
-  });
+    this.status,
+    this.withDate,
+    this.isPrivate,
+    required this.updateStatus,
+    required this.synced,
+    required this.onceLoaded,
+  }) : super(
+            uid: uid,
+            updateStatus: updateStatus,
+            userLocalId: userLocalId,
+            calendarId: calendarId);
+
+  factory Event.fill(Event base, Map<String, dynamic>? newData) {
+    if (newData == null) {
+      return base;
+    }
+    return Event(
+      organizer: newData['organizer'] as String? ?? '',
+      appointment: (newData['appointment'] as bool?)!,
+      appointmentAccess: (newData['appointmentAccess'] as int?)!,
+      calendarId: (newData['calendarId'] as String?)!,
+      userLocalId: base.userLocalId,
+      uid: (newData['uid'] as String?)!,
+      subject: (newData['subject'] as String?)!,
+      description: (newData['description'] as String?)!,
+      startTS: DateTime.fromMillisecondsSinceEpoch(
+          (newData['startTS'] as int?) ?? 100000 * 1000),
+      endTS: (newData['endTS'] as int?) == null
+          ? null
+          : DateTime.fromMillisecondsSinceEpoch((newData['endTS'] as int) * 1000),
+      allDay: (newData['allDay'] as bool?)!,
+      owner: (newData['owner'] as String?)!,
+      modified: (newData['modified'] as bool?)!,
+      recurrenceId: (newData['recurrenceId'] as int?)!,
+      lastModified: (newData['lastModified'] as int?)!,
+      rrule: null,
+      status: (newData['status'] as bool?)!,
+      withDate: (newData['withDate'] as bool?)!,
+      isPrivate: (newData['isPrivate'] as bool?)!,
+      updateStatus: base.updateStatus,
+      synced: true,
+      onceLoaded: true,);
+  }
+
+  factory Event.fromDb(EventDb entity) {
+    return Event(
+        description: entity.description,
+        calendarId: entity.calendarId,
+        startTS: entity.startTS,
+        organizer: entity.organizer,
+        appointment: entity.appointment,
+        appointmentAccess: entity.appointmentAccess,
+        userLocalId: entity.userLocalId,
+        uid: entity.uid,
+        allDay: entity.allDay,
+        owner: entity.owner,
+        modified: entity.modified,
+        recurrenceId: entity.recurrenceId,
+        lastModified: entity.lastModified,
+        status: entity.status,
+        withDate: entity.withDate,
+        isPrivate: entity.isPrivate,
+        // rrule: null,
+        subject: entity.subject,
+        endTS: entity.endTS,
+        updateStatus: entity.updateStatus,
+        synced: entity.synced,
+        onceLoaded: entity.onceLoaded);
+  }
+
+  @override
+  EventDb toDb() {
+    return EventDb(
+        description: description,
+        calendarId: calendarId,
+        startTS: startTS,
+        organizer: organizer,
+        appointment: appointment,
+        appointmentAccess: appointmentAccess,
+        userLocalId: userLocalId,
+        uid: uid,
+        allDay: allDay,
+        owner: owner,
+        modified: modified,
+        recurrenceId: recurrenceId,
+        lastModified: lastModified,
+        status: status,
+        withDate: withDate,
+        isPrivate: isPrivate,
+        // rrule: null,
+        subject: subject,
+        endTS: endTS,
+        updateStatus: updateStatus,
+        synced: synced,
+        onceLoaded: onceLoaded);
+  }
 
   @override
   bool operator ==(Object other) =>
@@ -52,7 +148,6 @@ class Event {
           appointment == other.appointment &&
           appointmentAccess == other.appointmentAccess &&
           calendarId == other.calendarId &&
-          id == other.id &&
           userLocalId == other.userLocalId &&
           uid == other.uid &&
           subject == other.subject &&
@@ -67,7 +162,10 @@ class Event {
           rrule == other.rrule &&
           status == other.status &&
           withDate == other.withDate &&
-          isPrivate == other.isPrivate);
+          isPrivate == other.isPrivate &&
+          updateStatus == other.updateStatus &&
+          synced == other.synced &&
+          onceLoaded == other.onceLoaded);
 
   @override
   int get hashCode =>
@@ -75,7 +173,6 @@ class Event {
       appointment.hashCode ^
       appointmentAccess.hashCode ^
       calendarId.hashCode ^
-      id.hashCode ^
       userLocalId.hashCode ^
       uid.hashCode ^
       subject.hashCode ^
@@ -90,7 +187,10 @@ class Event {
       rrule.hashCode ^
       status.hashCode ^
       withDate.hashCode ^
-      isPrivate.hashCode;
+      isPrivate.hashCode ^
+      updateStatus.hashCode ^
+      synced.hashCode ^
+      onceLoaded.hashCode;
 
   @override
   String toString() {
@@ -99,7 +199,6 @@ class Event {
         ' appointment: $appointment,' +
         ' appointmentAccess: $appointmentAccess,' +
         ' calendarId: $calendarId,' +
-        ' id: $id,' +
         ' userLocalId: $userLocalId,' +
         ' uid: $uid,' +
         ' subject: $subject,' +
@@ -115,6 +214,9 @@ class Event {
         ' status: $status,' +
         ' withDate: $withDate,' +
         ' isPrivate: $isPrivate,' +
+        ' updateStatus: $updateStatus,' +
+        ' synced: $synced,' +
+        ' onceLoaded: $onceLoaded,' +
         '}';
   }
 
@@ -123,7 +225,6 @@ class Event {
     bool? appointment,
     int? appointmentAccess,
     String? calendarId,
-    String? id,
     int? userLocalId,
     String? uid,
     String? subject,
@@ -139,6 +240,9 @@ class Event {
     bool? status,
     bool? withDate,
     bool? isPrivate,
+    UpdateStatus? updateStatus,
+    bool? synced,
+    bool? onceLoaded,
   }) {
     return Event(
       organizer: organizer ?? this.organizer,
@@ -146,7 +250,6 @@ class Event {
       appointmentAccess: appointmentAccess ?? this.appointmentAccess,
       calendarId: calendarId ?? this.calendarId,
       userLocalId: userLocalId ?? this.userLocalId,
-      id: id ?? this.id,
       uid: uid ?? this.uid,
       subject: subject ?? this.subject,
       description: description ?? this.description,
@@ -161,6 +264,9 @@ class Event {
       status: status ?? this.status,
       withDate: withDate ?? this.withDate,
       isPrivate: isPrivate ?? this.isPrivate,
+      updateStatus: updateStatus ?? this.updateStatus,
+      synced: synced ?? this.synced,
+      onceLoaded: onceLoaded ?? this.onceLoaded,
     );
   }
 }

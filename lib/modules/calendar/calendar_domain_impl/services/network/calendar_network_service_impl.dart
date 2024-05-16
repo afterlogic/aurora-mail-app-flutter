@@ -2,11 +2,11 @@ import 'dart:convert';
 
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/calendar.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/event.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/event_base.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain_impl/mappers/calendar_mapper.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain_impl/mappers/event_mapper.dart';
-import 'package:aurora_mail/modules/calendar/calendar_domain_impl/mappers/event_update_info_mapper.dart';
-import 'package:aurora_mail/modules/calendar/calendar_domain_impl/services/db/event/event_update_info.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain_impl/services/network/calendar_network_service.dart';
+import 'package:collection/collection.dart';
 import 'package:webmail_api_client/webmail_api_client.dart';
 
 class CalendarNetworkServiceImpl implements CalendarNetworkService {
@@ -30,7 +30,7 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
   }
 
   @override
-  Future<List<EventUpdateInfo>> getChangesForCalendar(
+  Future<List<EventBase>> getChangesForCalendar(
       {required String calendarId,
       required int userLocalId,
       required int syncTokenFrom,
@@ -50,16 +50,16 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
     );
 
     final result = await calendarModule.post(body) as Map<String, dynamic>;
-    return EventUpdateInfoMapper.listFromNetworkMap(result,
+    return EventMapper.listOfBaseFromNetworkMap(result,
         userLocalId: userLocalId, calendarId: calendarId);
   }
 
   @override
-  Future<List<Event>> getEvents(
-      {required List<String> uuids,
-      required String calendarId,
-      required int userId}) async {
-    final parameters = {"CalendarId": calendarId, "EventUids": uuids};
+  Future<List<Event>> updateEvents(List<Event> events) async {
+    final parameters = {
+      "CalendarId": events.first.calendarId,
+      "EventUids": events.map((e) => e.uid).toList()
+    };
 
     final body = new WebMailApiBody(
       method: "GetEventsByUids",
@@ -67,9 +67,14 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
     );
 
     final result = await calendarModule.post(body) as List;
-    return EventMapper.listFromNetwork(
-      result,
-      userLocalId: userId,
-    );
+
+    return events
+        .map(
+          (e) => Event.fill(
+              e,
+              result.firstWhereOrNull((map) => map['uid'] == e.uid)
+                  as Map<String, dynamic>),
+        )
+        .toList();
   }
 }

@@ -1,4 +1,5 @@
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/event_base.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain_impl/services/db/event/event_table.dart';
 import 'package:drift/drift.dart';
 
@@ -7,6 +8,7 @@ part 'event_dao.g.dart';
 @DriftAccessor(tables: [EventTable])
 class EventDao extends DatabaseAccessor<AppDatabase> with _$EventDaoMixin {
   EventDao(AppDatabase db) : super(db);
+
 
   Future<List<EventDb>> getAllEventsFromCalendar(
       String calendarUUID, int userLocalId) {
@@ -38,24 +40,45 @@ class EventDao extends DatabaseAccessor<AppDatabase> with _$EventDaoMixin {
         .go();
   }
 
-  Future<void> createOrUpdateEventList(List<EventDb> events) async {
+  Future<void> createOrUpdateEventList(List<EventDb> events, {bool synced = false}) async {
     for (final event in events) {
+      final companion = event.toCompanion(true);
       try {
-        await into(eventTable).insert(event);
+        await into(eventTable).insert(companion);
       } catch (e) {
         // If there's a conflict, update the existing record
-        await (update(eventTable)..where((tbl) => tbl.id.equals(event.id)))
-            .write(event);
+        await (update(eventTable)
+              ..where((tbl) =>
+                  tbl.uid.equals(event.uid) &
+                  tbl.calendarId.equals(event.calendarId) &
+                  tbl.userLocalId.equals(event.userLocalId)))
+            .write(companion.copyWith(synced: Value(synced), onceLoaded: const Value(true)));
       }
     }
   }
 
-  Future<void> deleteEvent({required String uid, required String calendarId, required int userLocalId}) {
+  Future<int> deleteMarkedEvents(
+      ) {
     return (delete(eventTable)
       ..where((t) =>
-      t.uid.equals(uid) &
-      t.calendarId.equals(calendarId) &
-      t.userLocalId.equals(userLocalId)))
+      t.updateStatus.equals(UpdateStatus.deleted.index)
+      ))
+        .go();
+  }
+
+    Future<List<EventDb>> getEventsWithLimit({required int limit, required int offset}) async {
+      return (select(eventTable)..limit(limit, offset: offset)).get();
+    }
+
+  Future<void> deleteEvent(
+      {required String uid,
+      required String calendarId,
+      required int userLocalId}) {
+    return (delete(eventTable)
+          ..where((t) =>
+              t.uid.equals(uid) &
+              t.calendarId.equals(calendarId) &
+              t.userLocalId.equals(userLocalId)))
         .go();
   }
 }

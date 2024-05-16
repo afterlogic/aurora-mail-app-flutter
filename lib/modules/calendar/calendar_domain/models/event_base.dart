@@ -1,32 +1,33 @@
+import 'package:aurora_mail/database/app_database.dart';
 import 'package:drift/drift.dart';
 
-@DataClassName("EventUpdateInfoDb")
-class EventUpdateInfoTable extends Table {
-  @override
-  Set<Column> get primaryKey => {uid, userLocalId};
-  TextColumn get uid => text()();
-  IntColumn get userLocalId => integer()();
-  TextColumn get calendarId => text()();
-  IntColumn get updateStatus => intEnum<UpdateStatus>()();
-}
-
-class EventUpdateInfo {
+class EventBase {
   final String uid;
   final UpdateStatus updateStatus;
   final int userLocalId;
   final String calendarId;
 
-  const EventUpdateInfo({
+  const EventBase({
     required this.uid,
     required this.updateStatus,
     required this.userLocalId,
     required this.calendarId,
   });
 
+  EventDb toDb() {
+    return EventDb(
+        calendarId: calendarId,
+        userLocalId: userLocalId,
+        uid: uid,
+        updateStatus: updateStatus,
+        synced: false,
+        onceLoaded: false);
+  }
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is EventUpdateInfo &&
+      (other is EventBase &&
           runtimeType == other.runtimeType &&
           uid == other.uid &&
           userLocalId == other.userLocalId &&
@@ -50,13 +51,13 @@ class EventUpdateInfo {
         '}';
   }
 
-  EventUpdateInfo copyWith({
+  EventBase copyWith({
     String? uid,
     String? calendarId,
     int? userLocalId,
     UpdateStatus? updateStatus,
   }) {
-    return EventUpdateInfo(
+    return EventBase(
       uid: uid ?? this.uid,
       calendarId: calendarId ?? this.calendarId,
       userLocalId: userLocalId ?? this.userLocalId,

@@ -3001,327 +3001,63 @@ class $CalendarTableTable extends CalendarTable
   }
 }
 
-class EventUpdateInfoDb extends DataClass
-    implements Insertable<EventUpdateInfoDb> {
-  final String uid;
-  final int userLocalId;
-  final String calendarId;
-  final UpdateStatus updateStatus;
-  EventUpdateInfoDb(
-      {required this.uid,
-      required this.userLocalId,
-      required this.calendarId,
-      required this.updateStatus});
-  factory EventUpdateInfoDb.fromData(Map<String, dynamic> data,
-      {String? prefix}) {
-    final effectivePrefix = prefix ?? '';
-    return EventUpdateInfoDb(
-      uid: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}uid'])!,
-      userLocalId: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}user_local_id'])!,
-      calendarId: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}calendar_id'])!,
-      updateStatus: $EventUpdateInfoTableTable.$converter0.mapToDart(
-          const IntType().mapFromDatabaseResponse(
-              data['${effectivePrefix}update_status']))!,
-    );
-  }
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    map['uid'] = Variable<String>(uid);
-    map['user_local_id'] = Variable<int>(userLocalId);
-    map['calendar_id'] = Variable<String>(calendarId);
-    {
-      final converter = $EventUpdateInfoTableTable.$converter0;
-      map['update_status'] = Variable<int>(converter.mapToSql(updateStatus)!);
-    }
-    return map;
-  }
-
-  EventUpdateInfoTableCompanion toCompanion(bool nullToAbsent) {
-    return EventUpdateInfoTableCompanion(
-      uid: Value(uid),
-      userLocalId: Value(userLocalId),
-      calendarId: Value(calendarId),
-      updateStatus: Value(updateStatus),
-    );
-  }
-
-  factory EventUpdateInfoDb.fromJson(Map<String, dynamic> json,
-      {ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return EventUpdateInfoDb(
-      uid: serializer.fromJson<String>(json['uid']),
-      userLocalId: serializer.fromJson<int>(json['userLocalId']),
-      calendarId: serializer.fromJson<String>(json['calendarId']),
-      updateStatus: serializer.fromJson<UpdateStatus>(json['updateStatus']),
-    );
-  }
-  @override
-  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
-    serializer ??= driftRuntimeOptions.defaultSerializer;
-    return <String, dynamic>{
-      'uid': serializer.toJson<String>(uid),
-      'userLocalId': serializer.toJson<int>(userLocalId),
-      'calendarId': serializer.toJson<String>(calendarId),
-      'updateStatus': serializer.toJson<UpdateStatus>(updateStatus),
-    };
-  }
-
-  EventUpdateInfoDb copyWith(
-          {String? uid,
-          int? userLocalId,
-          String? calendarId,
-          UpdateStatus? updateStatus}) =>
-      EventUpdateInfoDb(
-        uid: uid ?? this.uid,
-        userLocalId: userLocalId ?? this.userLocalId,
-        calendarId: calendarId ?? this.calendarId,
-        updateStatus: updateStatus ?? this.updateStatus,
-      );
-  @override
-  String toString() {
-    return (StringBuffer('EventUpdateInfoDb(')
-          ..write('uid: $uid, ')
-          ..write('userLocalId: $userLocalId, ')
-          ..write('calendarId: $calendarId, ')
-          ..write('updateStatus: $updateStatus')
-          ..write(')'))
-        .toString();
-  }
-
-  @override
-  int get hashCode => Object.hash(uid, userLocalId, calendarId, updateStatus);
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is EventUpdateInfoDb &&
-          other.uid == this.uid &&
-          other.userLocalId == this.userLocalId &&
-          other.calendarId == this.calendarId &&
-          other.updateStatus == this.updateStatus);
-}
-
-class EventUpdateInfoTableCompanion extends UpdateCompanion<EventUpdateInfoDb> {
-  final Value<String> uid;
-  final Value<int> userLocalId;
-  final Value<String> calendarId;
-  final Value<UpdateStatus> updateStatus;
-  const EventUpdateInfoTableCompanion({
-    this.uid = const Value.absent(),
-    this.userLocalId = const Value.absent(),
-    this.calendarId = const Value.absent(),
-    this.updateStatus = const Value.absent(),
-  });
-  EventUpdateInfoTableCompanion.insert({
-    required String uid,
-    required int userLocalId,
-    required String calendarId,
-    required UpdateStatus updateStatus,
-  })  : uid = Value(uid),
-        userLocalId = Value(userLocalId),
-        calendarId = Value(calendarId),
-        updateStatus = Value(updateStatus);
-  static Insertable<EventUpdateInfoDb> custom({
-    Expression<String>? uid,
-    Expression<int>? userLocalId,
-    Expression<String>? calendarId,
-    Expression<UpdateStatus>? updateStatus,
-  }) {
-    return RawValuesInsertable({
-      if (uid != null) 'uid': uid,
-      if (userLocalId != null) 'user_local_id': userLocalId,
-      if (calendarId != null) 'calendar_id': calendarId,
-      if (updateStatus != null) 'update_status': updateStatus,
-    });
-  }
-
-  EventUpdateInfoTableCompanion copyWith(
-      {Value<String>? uid,
-      Value<int>? userLocalId,
-      Value<String>? calendarId,
-      Value<UpdateStatus>? updateStatus}) {
-    return EventUpdateInfoTableCompanion(
-      uid: uid ?? this.uid,
-      userLocalId: userLocalId ?? this.userLocalId,
-      calendarId: calendarId ?? this.calendarId,
-      updateStatus: updateStatus ?? this.updateStatus,
-    );
-  }
-
-  @override
-  Map<String, Expression> toColumns(bool nullToAbsent) {
-    final map = <String, Expression>{};
-    if (uid.present) {
-      map['uid'] = Variable<String>(uid.value);
-    }
-    if (userLocalId.present) {
-      map['user_local_id'] = Variable<int>(userLocalId.value);
-    }
-    if (calendarId.present) {
-      map['calendar_id'] = Variable<String>(calendarId.value);
-    }
-    if (updateStatus.present) {
-      final converter = $EventUpdateInfoTableTable.$converter0;
-      map['update_status'] =
-          Variable<int>(converter.mapToSql(updateStatus.value)!);
-    }
-    return map;
-  }
-
-  @override
-  String toString() {
-    return (StringBuffer('EventUpdateInfoTableCompanion(')
-          ..write('uid: $uid, ')
-          ..write('userLocalId: $userLocalId, ')
-          ..write('calendarId: $calendarId, ')
-          ..write('updateStatus: $updateStatus')
-          ..write(')'))
-        .toString();
-  }
-}
-
-class $EventUpdateInfoTableTable extends EventUpdateInfoTable
-    with TableInfo<$EventUpdateInfoTableTable, EventUpdateInfoDb> {
-  @override
-  final GeneratedDatabase attachedDatabase;
-  final String? _alias;
-  $EventUpdateInfoTableTable(this.attachedDatabase, [this._alias]);
-  final VerificationMeta _uidMeta = const VerificationMeta('uid');
-  @override
-  late final GeneratedColumn<String?> uid = GeneratedColumn<String?>(
-      'uid', aliasedName, false,
-      type: const StringType(), requiredDuringInsert: true);
-  final VerificationMeta _userLocalIdMeta =
-      const VerificationMeta('userLocalId');
-  @override
-  late final GeneratedColumn<int?> userLocalId = GeneratedColumn<int?>(
-      'user_local_id', aliasedName, false,
-      type: const IntType(), requiredDuringInsert: true);
-  final VerificationMeta _calendarIdMeta = const VerificationMeta('calendarId');
-  @override
-  late final GeneratedColumn<String?> calendarId = GeneratedColumn<String?>(
-      'calendar_id', aliasedName, false,
-      type: const StringType(), requiredDuringInsert: true);
-  final VerificationMeta _updateStatusMeta =
-      const VerificationMeta('updateStatus');
-  @override
-  late final GeneratedColumnWithTypeConverter<UpdateStatus, int?> updateStatus =
-      GeneratedColumn<int?>('update_status', aliasedName, false,
-              type: const IntType(), requiredDuringInsert: true)
-          .withConverter<UpdateStatus>($EventUpdateInfoTableTable.$converter0);
-  @override
-  List<GeneratedColumn> get $columns =>
-      [uid, userLocalId, calendarId, updateStatus];
-  @override
-  String get aliasedName => _alias ?? 'event_update_info_table';
-  @override
-  String get actualTableName => 'event_update_info_table';
-  @override
-  VerificationContext validateIntegrity(Insertable<EventUpdateInfoDb> instance,
-      {bool isInserting = false}) {
-    final context = VerificationContext();
-    final data = instance.toColumns(true);
-    if (data.containsKey('uid')) {
-      context.handle(
-          _uidMeta, uid.isAcceptableOrUnknown(data['uid']!, _uidMeta));
-    } else if (isInserting) {
-      context.missing(_uidMeta);
-    }
-    if (data.containsKey('user_local_id')) {
-      context.handle(
-          _userLocalIdMeta,
-          userLocalId.isAcceptableOrUnknown(
-              data['user_local_id']!, _userLocalIdMeta));
-    } else if (isInserting) {
-      context.missing(_userLocalIdMeta);
-    }
-    if (data.containsKey('calendar_id')) {
-      context.handle(
-          _calendarIdMeta,
-          calendarId.isAcceptableOrUnknown(
-              data['calendar_id']!, _calendarIdMeta));
-    } else if (isInserting) {
-      context.missing(_calendarIdMeta);
-    }
-    context.handle(_updateStatusMeta, const VerificationResult.success());
-    return context;
-  }
-
-  @override
-  Set<GeneratedColumn> get $primaryKey => {uid, userLocalId};
-  @override
-  EventUpdateInfoDb map(Map<String, dynamic> data, {String? tablePrefix}) {
-    return EventUpdateInfoDb.fromData(data,
-        prefix: tablePrefix != null ? '$tablePrefix.' : null);
-  }
-
-  @override
-  $EventUpdateInfoTableTable createAlias(String alias) {
-    return $EventUpdateInfoTableTable(attachedDatabase, alias);
-  }
-
-  static TypeConverter<UpdateStatus, int> $converter0 =
-      const EnumIndexConverter<UpdateStatus>(UpdateStatus.values);
-}
-
 class EventDb extends DataClass implements Insertable<EventDb> {
-  final String organizer;
-  final bool appointment;
-  final int appointmentAccess;
+  final String? organizer;
+  final bool? appointment;
+  final int? appointmentAccess;
   final String calendarId;
   final int userLocalId;
-  final String id;
   final String uid;
   final String? subject;
   final String? description;
-  final DateTime startTS;
+  final DateTime? startTS;
   final DateTime? endTS;
-  final bool allDay;
-  final String owner;
-  final bool modified;
-  final int recurrenceId;
-  final int lastModified;
-  final bool status;
-  final bool withDate;
-  final bool isPrivate;
+  final bool? allDay;
+  final String? owner;
+  final bool? modified;
+  final int? recurrenceId;
+  final int? lastModified;
+  final bool? status;
+  final bool? withDate;
+  final bool? isPrivate;
+  final UpdateStatus updateStatus;
+  final bool synced;
+  final bool onceLoaded;
   EventDb(
-      {required this.organizer,
-      required this.appointment,
-      required this.appointmentAccess,
+      {this.organizer,
+      this.appointment,
+      this.appointmentAccess,
       required this.calendarId,
       required this.userLocalId,
-      required this.id,
       required this.uid,
       this.subject,
       this.description,
-      required this.startTS,
+      this.startTS,
       this.endTS,
-      required this.allDay,
-      required this.owner,
-      required this.modified,
-      required this.recurrenceId,
-      required this.lastModified,
-      required this.status,
-      required this.withDate,
-      required this.isPrivate});
+      this.allDay,
+      this.owner,
+      this.modified,
+      this.recurrenceId,
+      this.lastModified,
+      this.status,
+      this.withDate,
+      this.isPrivate,
+      required this.updateStatus,
+      required this.synced,
+      required this.onceLoaded});
   factory EventDb.fromData(Map<String, dynamic> data, {String? prefix}) {
     final effectivePrefix = prefix ?? '';
     return EventDb(
       organizer: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}organizer'])!,
+          .mapFromDatabaseResponse(data['${effectivePrefix}organizer']),
       appointment: const BoolType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}appointment'])!,
+          .mapFromDatabaseResponse(data['${effectivePrefix}appointment']),
       appointmentAccess: const IntType().mapFromDatabaseResponse(
-          data['${effectivePrefix}appointment_access'])!,
+          data['${effectivePrefix}appointment_access']),
       calendarId: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}calendar_id'])!,
       userLocalId: const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}user_local_id'])!,
-      id: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
       uid: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}uid'])!,
       subject: const StringType()
@@ -3329,36 +3065,47 @@ class EventDb extends DataClass implements Insertable<EventDb> {
       description: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}description']),
       startTS: const DateTimeType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}start_t_s'])!,
+          .mapFromDatabaseResponse(data['${effectivePrefix}start_t_s']),
       endTS: const DateTimeType()
           .mapFromDatabaseResponse(data['${effectivePrefix}end_t_s']),
       allDay: const BoolType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}all_day'])!,
+          .mapFromDatabaseResponse(data['${effectivePrefix}all_day']),
       owner: const StringType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}owner'])!,
+          .mapFromDatabaseResponse(data['${effectivePrefix}owner']),
       modified: const BoolType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}modified'])!,
+          .mapFromDatabaseResponse(data['${effectivePrefix}modified']),
       recurrenceId: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}recurrence_id'])!,
+          .mapFromDatabaseResponse(data['${effectivePrefix}recurrence_id']),
       lastModified: const IntType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}last_modified'])!,
+          .mapFromDatabaseResponse(data['${effectivePrefix}last_modified']),
       status: const BoolType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}status'])!,
+          .mapFromDatabaseResponse(data['${effectivePrefix}status']),
       withDate: const BoolType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}with_date'])!,
+          .mapFromDatabaseResponse(data['${effectivePrefix}with_date']),
       isPrivate: const BoolType()
-          .mapFromDatabaseResponse(data['${effectivePrefix}is_private'])!,
+          .mapFromDatabaseResponse(data['${effectivePrefix}is_private']),
+      updateStatus: $EventTableTable.$converter0.mapToDart(const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}update_status']))!,
+      synced: const BoolType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}synced'])!,
+      onceLoaded: const BoolType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}once_loaded'])!,
     );
   }
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
-    map['organizer'] = Variable<String>(organizer);
-    map['appointment'] = Variable<bool>(appointment);
-    map['appointment_access'] = Variable<int>(appointmentAccess);
+    if (!nullToAbsent || organizer != null) {
+      map['organizer'] = Variable<String?>(organizer);
+    }
+    if (!nullToAbsent || appointment != null) {
+      map['appointment'] = Variable<bool?>(appointment);
+    }
+    if (!nullToAbsent || appointmentAccess != null) {
+      map['appointment_access'] = Variable<int?>(appointmentAccess);
+    }
     map['calendar_id'] = Variable<String>(calendarId);
     map['user_local_id'] = Variable<int>(userLocalId);
-    map['id'] = Variable<String>(id);
     map['uid'] = Variable<String>(uid);
     if (!nullToAbsent || subject != null) {
       map['subject'] = Variable<String?>(subject);
@@ -3366,29 +3113,58 @@ class EventDb extends DataClass implements Insertable<EventDb> {
     if (!nullToAbsent || description != null) {
       map['description'] = Variable<String?>(description);
     }
-    map['start_t_s'] = Variable<DateTime>(startTS);
+    if (!nullToAbsent || startTS != null) {
+      map['start_t_s'] = Variable<DateTime?>(startTS);
+    }
     if (!nullToAbsent || endTS != null) {
       map['end_t_s'] = Variable<DateTime?>(endTS);
     }
-    map['all_day'] = Variable<bool>(allDay);
-    map['owner'] = Variable<String>(owner);
-    map['modified'] = Variable<bool>(modified);
-    map['recurrence_id'] = Variable<int>(recurrenceId);
-    map['last_modified'] = Variable<int>(lastModified);
-    map['status'] = Variable<bool>(status);
-    map['with_date'] = Variable<bool>(withDate);
-    map['is_private'] = Variable<bool>(isPrivate);
+    if (!nullToAbsent || allDay != null) {
+      map['all_day'] = Variable<bool?>(allDay);
+    }
+    if (!nullToAbsent || owner != null) {
+      map['owner'] = Variable<String?>(owner);
+    }
+    if (!nullToAbsent || modified != null) {
+      map['modified'] = Variable<bool?>(modified);
+    }
+    if (!nullToAbsent || recurrenceId != null) {
+      map['recurrence_id'] = Variable<int?>(recurrenceId);
+    }
+    if (!nullToAbsent || lastModified != null) {
+      map['last_modified'] = Variable<int?>(lastModified);
+    }
+    if (!nullToAbsent || status != null) {
+      map['status'] = Variable<bool?>(status);
+    }
+    if (!nullToAbsent || withDate != null) {
+      map['with_date'] = Variable<bool?>(withDate);
+    }
+    if (!nullToAbsent || isPrivate != null) {
+      map['is_private'] = Variable<bool?>(isPrivate);
+    }
+    {
+      final converter = $EventTableTable.$converter0;
+      map['update_status'] = Variable<int>(converter.mapToSql(updateStatus)!);
+    }
+    map['synced'] = Variable<bool>(synced);
+    map['once_loaded'] = Variable<bool>(onceLoaded);
     return map;
   }
 
   EventTableCompanion toCompanion(bool nullToAbsent) {
     return EventTableCompanion(
-      organizer: Value(organizer),
-      appointment: Value(appointment),
-      appointmentAccess: Value(appointmentAccess),
+      organizer: organizer == null && nullToAbsent
+          ? const Value.absent()
+          : Value(organizer),
+      appointment: appointment == null && nullToAbsent
+          ? const Value.absent()
+          : Value(appointment),
+      appointmentAccess: appointmentAccess == null && nullToAbsent
+          ? const Value.absent()
+          : Value(appointmentAccess),
       calendarId: Value(calendarId),
       userLocalId: Value(userLocalId),
-      id: Value(id),
       uid: Value(uid),
       subject: subject == null && nullToAbsent
           ? const Value.absent()
@@ -3396,17 +3172,35 @@ class EventDb extends DataClass implements Insertable<EventDb> {
       description: description == null && nullToAbsent
           ? const Value.absent()
           : Value(description),
-      startTS: Value(startTS),
+      startTS: startTS == null && nullToAbsent
+          ? const Value.absent()
+          : Value(startTS),
       endTS:
           endTS == null && nullToAbsent ? const Value.absent() : Value(endTS),
-      allDay: Value(allDay),
-      owner: Value(owner),
-      modified: Value(modified),
-      recurrenceId: Value(recurrenceId),
-      lastModified: Value(lastModified),
-      status: Value(status),
-      withDate: Value(withDate),
-      isPrivate: Value(isPrivate),
+      allDay:
+          allDay == null && nullToAbsent ? const Value.absent() : Value(allDay),
+      owner:
+          owner == null && nullToAbsent ? const Value.absent() : Value(owner),
+      modified: modified == null && nullToAbsent
+          ? const Value.absent()
+          : Value(modified),
+      recurrenceId: recurrenceId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(recurrenceId),
+      lastModified: lastModified == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastModified),
+      status:
+          status == null && nullToAbsent ? const Value.absent() : Value(status),
+      withDate: withDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(withDate),
+      isPrivate: isPrivate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(isPrivate),
+      updateStatus: Value(updateStatus),
+      synced: Value(synced),
+      onceLoaded: Value(onceLoaded),
     );
   }
 
@@ -3414,50 +3208,54 @@ class EventDb extends DataClass implements Insertable<EventDb> {
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return EventDb(
-      organizer: serializer.fromJson<String>(json['organizer']),
-      appointment: serializer.fromJson<bool>(json['appointment']),
-      appointmentAccess: serializer.fromJson<int>(json['appointmentAccess']),
+      organizer: serializer.fromJson<String?>(json['organizer']),
+      appointment: serializer.fromJson<bool?>(json['appointment']),
+      appointmentAccess: serializer.fromJson<int?>(json['appointmentAccess']),
       calendarId: serializer.fromJson<String>(json['calendarId']),
       userLocalId: serializer.fromJson<int>(json['userLocalId']),
-      id: serializer.fromJson<String>(json['id']),
       uid: serializer.fromJson<String>(json['uid']),
       subject: serializer.fromJson<String?>(json['subject']),
       description: serializer.fromJson<String?>(json['description']),
-      startTS: serializer.fromJson<DateTime>(json['startTS']),
+      startTS: serializer.fromJson<DateTime?>(json['startTS']),
       endTS: serializer.fromJson<DateTime?>(json['endTS']),
-      allDay: serializer.fromJson<bool>(json['allDay']),
-      owner: serializer.fromJson<String>(json['owner']),
-      modified: serializer.fromJson<bool>(json['modified']),
-      recurrenceId: serializer.fromJson<int>(json['recurrenceId']),
-      lastModified: serializer.fromJson<int>(json['lastModified']),
-      status: serializer.fromJson<bool>(json['status']),
-      withDate: serializer.fromJson<bool>(json['withDate']),
-      isPrivate: serializer.fromJson<bool>(json['isPrivate']),
+      allDay: serializer.fromJson<bool?>(json['allDay']),
+      owner: serializer.fromJson<String?>(json['owner']),
+      modified: serializer.fromJson<bool?>(json['modified']),
+      recurrenceId: serializer.fromJson<int?>(json['recurrenceId']),
+      lastModified: serializer.fromJson<int?>(json['lastModified']),
+      status: serializer.fromJson<bool?>(json['status']),
+      withDate: serializer.fromJson<bool?>(json['withDate']),
+      isPrivate: serializer.fromJson<bool?>(json['isPrivate']),
+      updateStatus: serializer.fromJson<UpdateStatus>(json['updateStatus']),
+      synced: serializer.fromJson<bool>(json['synced']),
+      onceLoaded: serializer.fromJson<bool>(json['onceLoaded']),
     );
   }
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
-      'organizer': serializer.toJson<String>(organizer),
-      'appointment': serializer.toJson<bool>(appointment),
-      'appointmentAccess': serializer.toJson<int>(appointmentAccess),
+      'organizer': serializer.toJson<String?>(organizer),
+      'appointment': serializer.toJson<bool?>(appointment),
+      'appointmentAccess': serializer.toJson<int?>(appointmentAccess),
       'calendarId': serializer.toJson<String>(calendarId),
       'userLocalId': serializer.toJson<int>(userLocalId),
-      'id': serializer.toJson<String>(id),
       'uid': serializer.toJson<String>(uid),
       'subject': serializer.toJson<String?>(subject),
       'description': serializer.toJson<String?>(description),
-      'startTS': serializer.toJson<DateTime>(startTS),
+      'startTS': serializer.toJson<DateTime?>(startTS),
       'endTS': serializer.toJson<DateTime?>(endTS),
-      'allDay': serializer.toJson<bool>(allDay),
-      'owner': serializer.toJson<String>(owner),
-      'modified': serializer.toJson<bool>(modified),
-      'recurrenceId': serializer.toJson<int>(recurrenceId),
-      'lastModified': serializer.toJson<int>(lastModified),
-      'status': serializer.toJson<bool>(status),
-      'withDate': serializer.toJson<bool>(withDate),
-      'isPrivate': serializer.toJson<bool>(isPrivate),
+      'allDay': serializer.toJson<bool?>(allDay),
+      'owner': serializer.toJson<String?>(owner),
+      'modified': serializer.toJson<bool?>(modified),
+      'recurrenceId': serializer.toJson<int?>(recurrenceId),
+      'lastModified': serializer.toJson<int?>(lastModified),
+      'status': serializer.toJson<bool?>(status),
+      'withDate': serializer.toJson<bool?>(withDate),
+      'isPrivate': serializer.toJson<bool?>(isPrivate),
+      'updateStatus': serializer.toJson<UpdateStatus>(updateStatus),
+      'synced': serializer.toJson<bool>(synced),
+      'onceLoaded': serializer.toJson<bool>(onceLoaded),
     };
   }
 
@@ -3467,7 +3265,6 @@ class EventDb extends DataClass implements Insertable<EventDb> {
           int? appointmentAccess,
           String? calendarId,
           int? userLocalId,
-          String? id,
           String? uid,
           String? subject,
           String? description,
@@ -3480,14 +3277,16 @@ class EventDb extends DataClass implements Insertable<EventDb> {
           int? lastModified,
           bool? status,
           bool? withDate,
-          bool? isPrivate}) =>
+          bool? isPrivate,
+          UpdateStatus? updateStatus,
+          bool? synced,
+          bool? onceLoaded}) =>
       EventDb(
         organizer: organizer ?? this.organizer,
         appointment: appointment ?? this.appointment,
         appointmentAccess: appointmentAccess ?? this.appointmentAccess,
         calendarId: calendarId ?? this.calendarId,
         userLocalId: userLocalId ?? this.userLocalId,
-        id: id ?? this.id,
         uid: uid ?? this.uid,
         subject: subject ?? this.subject,
         description: description ?? this.description,
@@ -3501,6 +3300,9 @@ class EventDb extends DataClass implements Insertable<EventDb> {
         status: status ?? this.status,
         withDate: withDate ?? this.withDate,
         isPrivate: isPrivate ?? this.isPrivate,
+        updateStatus: updateStatus ?? this.updateStatus,
+        synced: synced ?? this.synced,
+        onceLoaded: onceLoaded ?? this.onceLoaded,
       );
   @override
   String toString() {
@@ -3510,7 +3312,6 @@ class EventDb extends DataClass implements Insertable<EventDb> {
           ..write('appointmentAccess: $appointmentAccess, ')
           ..write('calendarId: $calendarId, ')
           ..write('userLocalId: $userLocalId, ')
-          ..write('id: $id, ')
           ..write('uid: $uid, ')
           ..write('subject: $subject, ')
           ..write('description: $description, ')
@@ -3523,32 +3324,38 @@ class EventDb extends DataClass implements Insertable<EventDb> {
           ..write('lastModified: $lastModified, ')
           ..write('status: $status, ')
           ..write('withDate: $withDate, ')
-          ..write('isPrivate: $isPrivate')
+          ..write('isPrivate: $isPrivate, ')
+          ..write('updateStatus: $updateStatus, ')
+          ..write('synced: $synced, ')
+          ..write('onceLoaded: $onceLoaded')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(
-      organizer,
-      appointment,
-      appointmentAccess,
-      calendarId,
-      userLocalId,
-      id,
-      uid,
-      subject,
-      description,
-      startTS,
-      endTS,
-      allDay,
-      owner,
-      modified,
-      recurrenceId,
-      lastModified,
-      status,
-      withDate,
-      isPrivate);
+  int get hashCode => Object.hashAll([
+        organizer,
+        appointment,
+        appointmentAccess,
+        calendarId,
+        userLocalId,
+        uid,
+        subject,
+        description,
+        startTS,
+        endTS,
+        allDay,
+        owner,
+        modified,
+        recurrenceId,
+        lastModified,
+        status,
+        withDate,
+        isPrivate,
+        updateStatus,
+        synced,
+        onceLoaded
+      ]);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -3558,7 +3365,6 @@ class EventDb extends DataClass implements Insertable<EventDb> {
           other.appointmentAccess == this.appointmentAccess &&
           other.calendarId == this.calendarId &&
           other.userLocalId == this.userLocalId &&
-          other.id == this.id &&
           other.uid == this.uid &&
           other.subject == this.subject &&
           other.description == this.description &&
@@ -3571,36 +3377,40 @@ class EventDb extends DataClass implements Insertable<EventDb> {
           other.lastModified == this.lastModified &&
           other.status == this.status &&
           other.withDate == this.withDate &&
-          other.isPrivate == this.isPrivate);
+          other.isPrivate == this.isPrivate &&
+          other.updateStatus == this.updateStatus &&
+          other.synced == this.synced &&
+          other.onceLoaded == this.onceLoaded);
 }
 
 class EventTableCompanion extends UpdateCompanion<EventDb> {
-  final Value<String> organizer;
-  final Value<bool> appointment;
-  final Value<int> appointmentAccess;
+  final Value<String?> organizer;
+  final Value<bool?> appointment;
+  final Value<int?> appointmentAccess;
   final Value<String> calendarId;
   final Value<int> userLocalId;
-  final Value<String> id;
   final Value<String> uid;
   final Value<String?> subject;
   final Value<String?> description;
-  final Value<DateTime> startTS;
+  final Value<DateTime?> startTS;
   final Value<DateTime?> endTS;
-  final Value<bool> allDay;
-  final Value<String> owner;
-  final Value<bool> modified;
-  final Value<int> recurrenceId;
-  final Value<int> lastModified;
-  final Value<bool> status;
-  final Value<bool> withDate;
-  final Value<bool> isPrivate;
+  final Value<bool?> allDay;
+  final Value<String?> owner;
+  final Value<bool?> modified;
+  final Value<int?> recurrenceId;
+  final Value<int?> lastModified;
+  final Value<bool?> status;
+  final Value<bool?> withDate;
+  final Value<bool?> isPrivate;
+  final Value<UpdateStatus> updateStatus;
+  final Value<bool> synced;
+  final Value<bool> onceLoaded;
   const EventTableCompanion({
     this.organizer = const Value.absent(),
     this.appointment = const Value.absent(),
     this.appointmentAccess = const Value.absent(),
     this.calendarId = const Value.absent(),
     this.userLocalId = const Value.absent(),
-    this.id = const Value.absent(),
     this.uid = const Value.absent(),
     this.subject = const Value.absent(),
     this.description = const Value.absent(),
@@ -3614,63 +3424,60 @@ class EventTableCompanion extends UpdateCompanion<EventDb> {
     this.status = const Value.absent(),
     this.withDate = const Value.absent(),
     this.isPrivate = const Value.absent(),
+    this.updateStatus = const Value.absent(),
+    this.synced = const Value.absent(),
+    this.onceLoaded = const Value.absent(),
   });
   EventTableCompanion.insert({
-    required String organizer,
-    required bool appointment,
-    required int appointmentAccess,
+    this.organizer = const Value.absent(),
+    this.appointment = const Value.absent(),
+    this.appointmentAccess = const Value.absent(),
     required String calendarId,
     required int userLocalId,
-    required String id,
     required String uid,
     this.subject = const Value.absent(),
     this.description = const Value.absent(),
-    required DateTime startTS,
+    this.startTS = const Value.absent(),
     this.endTS = const Value.absent(),
-    required bool allDay,
-    required String owner,
-    required bool modified,
-    required int recurrenceId,
-    required int lastModified,
-    required bool status,
-    required bool withDate,
-    required bool isPrivate,
-  })  : organizer = Value(organizer),
-        appointment = Value(appointment),
-        appointmentAccess = Value(appointmentAccess),
-        calendarId = Value(calendarId),
+    this.allDay = const Value.absent(),
+    this.owner = const Value.absent(),
+    this.modified = const Value.absent(),
+    this.recurrenceId = const Value.absent(),
+    this.lastModified = const Value.absent(),
+    this.status = const Value.absent(),
+    this.withDate = const Value.absent(),
+    this.isPrivate = const Value.absent(),
+    required UpdateStatus updateStatus,
+    required bool synced,
+    required bool onceLoaded,
+  })  : calendarId = Value(calendarId),
         userLocalId = Value(userLocalId),
-        id = Value(id),
         uid = Value(uid),
-        startTS = Value(startTS),
-        allDay = Value(allDay),
-        owner = Value(owner),
-        modified = Value(modified),
-        recurrenceId = Value(recurrenceId),
-        lastModified = Value(lastModified),
-        status = Value(status),
-        withDate = Value(withDate),
-        isPrivate = Value(isPrivate);
+        updateStatus = Value(updateStatus),
+        synced = Value(synced),
+        onceLoaded = Value(onceLoaded);
   static Insertable<EventDb> custom({
-    Expression<String>? organizer,
-    Expression<bool>? appointment,
-    Expression<int>? appointmentAccess,
+    Expression<String?>? organizer,
+    Expression<bool?>? appointment,
+    Expression<int?>? appointmentAccess,
     Expression<String>? calendarId,
     Expression<int>? userLocalId,
-    Expression<String>? id,
     Expression<String>? uid,
     Expression<String?>? subject,
     Expression<String?>? description,
-    Expression<DateTime>? startTS,
+    Expression<DateTime?>? startTS,
     Expression<DateTime?>? endTS,
-    Expression<bool>? allDay,
-    Expression<String>? owner,
-    Expression<bool>? modified,
-    Expression<int>? recurrenceId,
-    Expression<int>? lastModified,
-    Expression<bool>? status,
-    Expression<bool>? withDate,
-    Expression<bool>? isPrivate,
+    Expression<bool?>? allDay,
+    Expression<String?>? owner,
+    Expression<bool?>? modified,
+    Expression<int?>? recurrenceId,
+    Expression<int?>? lastModified,
+    Expression<bool?>? status,
+    Expression<bool?>? withDate,
+    Expression<bool?>? isPrivate,
+    Expression<UpdateStatus>? updateStatus,
+    Expression<bool>? synced,
+    Expression<bool>? onceLoaded,
   }) {
     return RawValuesInsertable({
       if (organizer != null) 'organizer': organizer,
@@ -3678,7 +3485,6 @@ class EventTableCompanion extends UpdateCompanion<EventDb> {
       if (appointmentAccess != null) 'appointment_access': appointmentAccess,
       if (calendarId != null) 'calendar_id': calendarId,
       if (userLocalId != null) 'user_local_id': userLocalId,
-      if (id != null) 'id': id,
       if (uid != null) 'uid': uid,
       if (subject != null) 'subject': subject,
       if (description != null) 'description': description,
@@ -3692,36 +3498,40 @@ class EventTableCompanion extends UpdateCompanion<EventDb> {
       if (status != null) 'status': status,
       if (withDate != null) 'with_date': withDate,
       if (isPrivate != null) 'is_private': isPrivate,
+      if (updateStatus != null) 'update_status': updateStatus,
+      if (synced != null) 'synced': synced,
+      if (onceLoaded != null) 'once_loaded': onceLoaded,
     });
   }
 
   EventTableCompanion copyWith(
-      {Value<String>? organizer,
-      Value<bool>? appointment,
-      Value<int>? appointmentAccess,
+      {Value<String?>? organizer,
+      Value<bool?>? appointment,
+      Value<int?>? appointmentAccess,
       Value<String>? calendarId,
       Value<int>? userLocalId,
-      Value<String>? id,
       Value<String>? uid,
       Value<String?>? subject,
       Value<String?>? description,
-      Value<DateTime>? startTS,
+      Value<DateTime?>? startTS,
       Value<DateTime?>? endTS,
-      Value<bool>? allDay,
-      Value<String>? owner,
-      Value<bool>? modified,
-      Value<int>? recurrenceId,
-      Value<int>? lastModified,
-      Value<bool>? status,
-      Value<bool>? withDate,
-      Value<bool>? isPrivate}) {
+      Value<bool?>? allDay,
+      Value<String?>? owner,
+      Value<bool?>? modified,
+      Value<int?>? recurrenceId,
+      Value<int?>? lastModified,
+      Value<bool?>? status,
+      Value<bool?>? withDate,
+      Value<bool?>? isPrivate,
+      Value<UpdateStatus>? updateStatus,
+      Value<bool>? synced,
+      Value<bool>? onceLoaded}) {
     return EventTableCompanion(
       organizer: organizer ?? this.organizer,
       appointment: appointment ?? this.appointment,
       appointmentAccess: appointmentAccess ?? this.appointmentAccess,
       calendarId: calendarId ?? this.calendarId,
       userLocalId: userLocalId ?? this.userLocalId,
-      id: id ?? this.id,
       uid: uid ?? this.uid,
       subject: subject ?? this.subject,
       description: description ?? this.description,
@@ -3735,6 +3545,9 @@ class EventTableCompanion extends UpdateCompanion<EventDb> {
       status: status ?? this.status,
       withDate: withDate ?? this.withDate,
       isPrivate: isPrivate ?? this.isPrivate,
+      updateStatus: updateStatus ?? this.updateStatus,
+      synced: synced ?? this.synced,
+      onceLoaded: onceLoaded ?? this.onceLoaded,
     );
   }
 
@@ -3742,22 +3555,19 @@ class EventTableCompanion extends UpdateCompanion<EventDb> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (organizer.present) {
-      map['organizer'] = Variable<String>(organizer.value);
+      map['organizer'] = Variable<String?>(organizer.value);
     }
     if (appointment.present) {
-      map['appointment'] = Variable<bool>(appointment.value);
+      map['appointment'] = Variable<bool?>(appointment.value);
     }
     if (appointmentAccess.present) {
-      map['appointment_access'] = Variable<int>(appointmentAccess.value);
+      map['appointment_access'] = Variable<int?>(appointmentAccess.value);
     }
     if (calendarId.present) {
       map['calendar_id'] = Variable<String>(calendarId.value);
     }
     if (userLocalId.present) {
       map['user_local_id'] = Variable<int>(userLocalId.value);
-    }
-    if (id.present) {
-      map['id'] = Variable<String>(id.value);
     }
     if (uid.present) {
       map['uid'] = Variable<String>(uid.value);
@@ -3769,34 +3579,45 @@ class EventTableCompanion extends UpdateCompanion<EventDb> {
       map['description'] = Variable<String?>(description.value);
     }
     if (startTS.present) {
-      map['start_t_s'] = Variable<DateTime>(startTS.value);
+      map['start_t_s'] = Variable<DateTime?>(startTS.value);
     }
     if (endTS.present) {
       map['end_t_s'] = Variable<DateTime?>(endTS.value);
     }
     if (allDay.present) {
-      map['all_day'] = Variable<bool>(allDay.value);
+      map['all_day'] = Variable<bool?>(allDay.value);
     }
     if (owner.present) {
-      map['owner'] = Variable<String>(owner.value);
+      map['owner'] = Variable<String?>(owner.value);
     }
     if (modified.present) {
-      map['modified'] = Variable<bool>(modified.value);
+      map['modified'] = Variable<bool?>(modified.value);
     }
     if (recurrenceId.present) {
-      map['recurrence_id'] = Variable<int>(recurrenceId.value);
+      map['recurrence_id'] = Variable<int?>(recurrenceId.value);
     }
     if (lastModified.present) {
-      map['last_modified'] = Variable<int>(lastModified.value);
+      map['last_modified'] = Variable<int?>(lastModified.value);
     }
     if (status.present) {
-      map['status'] = Variable<bool>(status.value);
+      map['status'] = Variable<bool?>(status.value);
     }
     if (withDate.present) {
-      map['with_date'] = Variable<bool>(withDate.value);
+      map['with_date'] = Variable<bool?>(withDate.value);
     }
     if (isPrivate.present) {
-      map['is_private'] = Variable<bool>(isPrivate.value);
+      map['is_private'] = Variable<bool?>(isPrivate.value);
+    }
+    if (updateStatus.present) {
+      final converter = $EventTableTable.$converter0;
+      map['update_status'] =
+          Variable<int>(converter.mapToSql(updateStatus.value)!);
+    }
+    if (synced.present) {
+      map['synced'] = Variable<bool>(synced.value);
+    }
+    if (onceLoaded.present) {
+      map['once_loaded'] = Variable<bool>(onceLoaded.value);
     }
     return map;
   }
@@ -3809,7 +3630,6 @@ class EventTableCompanion extends UpdateCompanion<EventDb> {
           ..write('appointmentAccess: $appointmentAccess, ')
           ..write('calendarId: $calendarId, ')
           ..write('userLocalId: $userLocalId, ')
-          ..write('id: $id, ')
           ..write('uid: $uid, ')
           ..write('subject: $subject, ')
           ..write('description: $description, ')
@@ -3822,7 +3642,10 @@ class EventTableCompanion extends UpdateCompanion<EventDb> {
           ..write('lastModified: $lastModified, ')
           ..write('status: $status, ')
           ..write('withDate: $withDate, ')
-          ..write('isPrivate: $isPrivate')
+          ..write('isPrivate: $isPrivate, ')
+          ..write('updateStatus: $updateStatus, ')
+          ..write('synced: $synced, ')
+          ..write('onceLoaded: $onceLoaded')
           ..write(')'))
         .toString();
   }
@@ -3837,22 +3660,22 @@ class $EventTableTable extends EventTable
   final VerificationMeta _organizerMeta = const VerificationMeta('organizer');
   @override
   late final GeneratedColumn<String?> organizer = GeneratedColumn<String?>(
-      'organizer', aliasedName, false,
-      type: const StringType(), requiredDuringInsert: true);
+      'organizer', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _appointmentMeta =
       const VerificationMeta('appointment');
   @override
   late final GeneratedColumn<bool?> appointment = GeneratedColumn<bool?>(
-      'appointment', aliasedName, false,
+      'appointment', aliasedName, true,
       type: const BoolType(),
-      requiredDuringInsert: true,
+      requiredDuringInsert: false,
       defaultConstraints: 'CHECK (appointment IN (0, 1))');
   final VerificationMeta _appointmentAccessMeta =
       const VerificationMeta('appointmentAccess');
   @override
   late final GeneratedColumn<int?> appointmentAccess = GeneratedColumn<int?>(
-      'appointment_access', aliasedName, false,
-      type: const IntType(), requiredDuringInsert: true);
+      'appointment_access', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
   final VerificationMeta _calendarIdMeta = const VerificationMeta('calendarId');
   @override
   late final GeneratedColumn<String?> calendarId = GeneratedColumn<String?>(
@@ -3864,11 +3687,6 @@ class $EventTableTable extends EventTable
   late final GeneratedColumn<int?> userLocalId = GeneratedColumn<int?>(
       'user_local_id', aliasedName, false,
       type: const IntType(), requiredDuringInsert: true);
-  final VerificationMeta _idMeta = const VerificationMeta('id');
-  @override
-  late final GeneratedColumn<String?> id = GeneratedColumn<String?>(
-      'id', aliasedName, false,
-      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _uidMeta = const VerificationMeta('uid');
   @override
   late final GeneratedColumn<String?> uid = GeneratedColumn<String?>(
@@ -3888,8 +3706,8 @@ class $EventTableTable extends EventTable
   final VerificationMeta _startTSMeta = const VerificationMeta('startTS');
   @override
   late final GeneratedColumn<DateTime?> startTS = GeneratedColumn<DateTime?>(
-      'start_t_s', aliasedName, false,
-      type: const IntType(), requiredDuringInsert: true);
+      'start_t_s', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
   final VerificationMeta _endTSMeta = const VerificationMeta('endTS');
   @override
   late final GeneratedColumn<DateTime?> endTS = GeneratedColumn<DateTime?>(
@@ -3898,55 +3716,76 @@ class $EventTableTable extends EventTable
   final VerificationMeta _allDayMeta = const VerificationMeta('allDay');
   @override
   late final GeneratedColumn<bool?> allDay = GeneratedColumn<bool?>(
-      'all_day', aliasedName, false,
+      'all_day', aliasedName, true,
       type: const BoolType(),
-      requiredDuringInsert: true,
+      requiredDuringInsert: false,
       defaultConstraints: 'CHECK (all_day IN (0, 1))');
   final VerificationMeta _ownerMeta = const VerificationMeta('owner');
   @override
   late final GeneratedColumn<String?> owner = GeneratedColumn<String?>(
-      'owner', aliasedName, false,
-      type: const StringType(), requiredDuringInsert: true);
+      'owner', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _modifiedMeta = const VerificationMeta('modified');
   @override
   late final GeneratedColumn<bool?> modified = GeneratedColumn<bool?>(
-      'modified', aliasedName, false,
+      'modified', aliasedName, true,
       type: const BoolType(),
-      requiredDuringInsert: true,
+      requiredDuringInsert: false,
       defaultConstraints: 'CHECK (modified IN (0, 1))');
   final VerificationMeta _recurrenceIdMeta =
       const VerificationMeta('recurrenceId');
   @override
   late final GeneratedColumn<int?> recurrenceId = GeneratedColumn<int?>(
-      'recurrence_id', aliasedName, false,
-      type: const IntType(), requiredDuringInsert: true);
+      'recurrence_id', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
   final VerificationMeta _lastModifiedMeta =
       const VerificationMeta('lastModified');
   @override
   late final GeneratedColumn<int?> lastModified = GeneratedColumn<int?>(
-      'last_modified', aliasedName, false,
-      type: const IntType(), requiredDuringInsert: true);
+      'last_modified', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
   final VerificationMeta _statusMeta = const VerificationMeta('status');
   @override
   late final GeneratedColumn<bool?> status = GeneratedColumn<bool?>(
-      'status', aliasedName, false,
+      'status', aliasedName, true,
       type: const BoolType(),
-      requiredDuringInsert: true,
+      requiredDuringInsert: false,
       defaultConstraints: 'CHECK (status IN (0, 1))');
   final VerificationMeta _withDateMeta = const VerificationMeta('withDate');
   @override
   late final GeneratedColumn<bool?> withDate = GeneratedColumn<bool?>(
-      'with_date', aliasedName, false,
+      'with_date', aliasedName, true,
       type: const BoolType(),
-      requiredDuringInsert: true,
+      requiredDuringInsert: false,
       defaultConstraints: 'CHECK (with_date IN (0, 1))');
   final VerificationMeta _isPrivateMeta = const VerificationMeta('isPrivate');
   @override
   late final GeneratedColumn<bool?> isPrivate = GeneratedColumn<bool?>(
-      'is_private', aliasedName, false,
+      'is_private', aliasedName, true,
+      type: const BoolType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'CHECK (is_private IN (0, 1))');
+  final VerificationMeta _updateStatusMeta =
+      const VerificationMeta('updateStatus');
+  @override
+  late final GeneratedColumnWithTypeConverter<UpdateStatus, int?> updateStatus =
+      GeneratedColumn<int?>('update_status', aliasedName, false,
+              type: const IntType(), requiredDuringInsert: true)
+          .withConverter<UpdateStatus>($EventTableTable.$converter0);
+  final VerificationMeta _syncedMeta = const VerificationMeta('synced');
+  @override
+  late final GeneratedColumn<bool?> synced = GeneratedColumn<bool?>(
+      'synced', aliasedName, false,
       type: const BoolType(),
       requiredDuringInsert: true,
-      defaultConstraints: 'CHECK (is_private IN (0, 1))');
+      defaultConstraints: 'CHECK (synced IN (0, 1))');
+  final VerificationMeta _onceLoadedMeta = const VerificationMeta('onceLoaded');
+  @override
+  late final GeneratedColumn<bool?> onceLoaded = GeneratedColumn<bool?>(
+      'once_loaded', aliasedName, false,
+      type: const BoolType(),
+      requiredDuringInsert: true,
+      defaultConstraints: 'CHECK (once_loaded IN (0, 1))');
   @override
   List<GeneratedColumn> get $columns => [
         organizer,
@@ -3954,7 +3793,6 @@ class $EventTableTable extends EventTable
         appointmentAccess,
         calendarId,
         userLocalId,
-        id,
         uid,
         subject,
         description,
@@ -3967,7 +3805,10 @@ class $EventTableTable extends EventTable
         lastModified,
         status,
         withDate,
-        isPrivate
+        isPrivate,
+        updateStatus,
+        synced,
+        onceLoaded
       ];
   @override
   String get aliasedName => _alias ?? 'event_table';
@@ -3981,24 +3822,18 @@ class $EventTableTable extends EventTable
     if (data.containsKey('organizer')) {
       context.handle(_organizerMeta,
           organizer.isAcceptableOrUnknown(data['organizer']!, _organizerMeta));
-    } else if (isInserting) {
-      context.missing(_organizerMeta);
     }
     if (data.containsKey('appointment')) {
       context.handle(
           _appointmentMeta,
           appointment.isAcceptableOrUnknown(
               data['appointment']!, _appointmentMeta));
-    } else if (isInserting) {
-      context.missing(_appointmentMeta);
     }
     if (data.containsKey('appointment_access')) {
       context.handle(
           _appointmentAccessMeta,
           appointmentAccess.isAcceptableOrUnknown(
               data['appointment_access']!, _appointmentAccessMeta));
-    } else if (isInserting) {
-      context.missing(_appointmentAccessMeta);
     }
     if (data.containsKey('calendar_id')) {
       context.handle(
@@ -4015,11 +3850,6 @@ class $EventTableTable extends EventTable
               data['user_local_id']!, _userLocalIdMeta));
     } else if (isInserting) {
       context.missing(_userLocalIdMeta);
-    }
-    if (data.containsKey('id')) {
-      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
-    } else if (isInserting) {
-      context.missing(_idMeta);
     }
     if (data.containsKey('uid')) {
       context.handle(
@@ -4040,8 +3870,6 @@ class $EventTableTable extends EventTable
     if (data.containsKey('start_t_s')) {
       context.handle(_startTSMeta,
           startTS.isAcceptableOrUnknown(data['start_t_s']!, _startTSMeta));
-    } else if (isInserting) {
-      context.missing(_startTSMeta);
     }
     if (data.containsKey('end_t_s')) {
       context.handle(_endTSMeta,
@@ -4050,60 +3878,59 @@ class $EventTableTable extends EventTable
     if (data.containsKey('all_day')) {
       context.handle(_allDayMeta,
           allDay.isAcceptableOrUnknown(data['all_day']!, _allDayMeta));
-    } else if (isInserting) {
-      context.missing(_allDayMeta);
     }
     if (data.containsKey('owner')) {
       context.handle(
           _ownerMeta, owner.isAcceptableOrUnknown(data['owner']!, _ownerMeta));
-    } else if (isInserting) {
-      context.missing(_ownerMeta);
     }
     if (data.containsKey('modified')) {
       context.handle(_modifiedMeta,
           modified.isAcceptableOrUnknown(data['modified']!, _modifiedMeta));
-    } else if (isInserting) {
-      context.missing(_modifiedMeta);
     }
     if (data.containsKey('recurrence_id')) {
       context.handle(
           _recurrenceIdMeta,
           recurrenceId.isAcceptableOrUnknown(
               data['recurrence_id']!, _recurrenceIdMeta));
-    } else if (isInserting) {
-      context.missing(_recurrenceIdMeta);
     }
     if (data.containsKey('last_modified')) {
       context.handle(
           _lastModifiedMeta,
           lastModified.isAcceptableOrUnknown(
               data['last_modified']!, _lastModifiedMeta));
-    } else if (isInserting) {
-      context.missing(_lastModifiedMeta);
     }
     if (data.containsKey('status')) {
       context.handle(_statusMeta,
           status.isAcceptableOrUnknown(data['status']!, _statusMeta));
-    } else if (isInserting) {
-      context.missing(_statusMeta);
     }
     if (data.containsKey('with_date')) {
       context.handle(_withDateMeta,
           withDate.isAcceptableOrUnknown(data['with_date']!, _withDateMeta));
-    } else if (isInserting) {
-      context.missing(_withDateMeta);
     }
     if (data.containsKey('is_private')) {
       context.handle(_isPrivateMeta,
           isPrivate.isAcceptableOrUnknown(data['is_private']!, _isPrivateMeta));
+    }
+    context.handle(_updateStatusMeta, const VerificationResult.success());
+    if (data.containsKey('synced')) {
+      context.handle(_syncedMeta,
+          synced.isAcceptableOrUnknown(data['synced']!, _syncedMeta));
     } else if (isInserting) {
-      context.missing(_isPrivateMeta);
+      context.missing(_syncedMeta);
+    }
+    if (data.containsKey('once_loaded')) {
+      context.handle(
+          _onceLoadedMeta,
+          onceLoaded.isAcceptableOrUnknown(
+              data['once_loaded']!, _onceLoadedMeta));
+    } else if (isInserting) {
+      context.missing(_onceLoadedMeta);
     }
     return context;
   }
 
   @override
-  Set<GeneratedColumn> get $primaryKey => {id, userLocalId};
+  Set<GeneratedColumn> get $primaryKey => {uid, userLocalId, calendarId};
   @override
   EventDb map(Map<String, dynamic> data, {String? tablePrefix}) {
     return EventDb.fromData(data,
@@ -4114,6 +3941,9 @@ class $EventTableTable extends EventTable
   $EventTableTable createAlias(String alias) {
     return $EventTableTable(attachedDatabase, alias);
   }
+
+  static TypeConverter<UpdateStatus, int> $converter0 =
+      const EnumIndexConverter<UpdateStatus>(UpdateStatus.values);
 }
 
 class LocalFolder extends DataClass implements Insertable<LocalFolder> {
@@ -11419,8 +11249,6 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(SqlTypeSystem.defaultInstance, e);
   late final $MailTable mail = $MailTable(this);
   late final $CalendarTableTable calendarTable = $CalendarTableTable(this);
-  late final $EventUpdateInfoTableTable eventUpdateInfoTable =
-      $EventUpdateInfoTableTable(this);
   late final $EventTableTable eventTable = $EventTableTable(this);
   late final $FoldersTable folders = $FoldersTable(this);
   late final $UsersTable users = $UsersTable(this);
@@ -11440,7 +11268,6 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   List<DatabaseSchemaEntity> get allSchemaEntities => [
         mail,
         calendarTable,
-        eventUpdateInfoTable,
         eventTable,
         folders,
         users,

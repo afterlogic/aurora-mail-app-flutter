@@ -1,22 +1,21 @@
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/event_base.dart';
 import 'package:drift/drift.dart';
 
 @DataClassName("EventDb")
 class EventTable extends Table {
 
   @override
-  Set<Column> get primaryKey => {id, userLocalId};
+  Set<Column> get primaryKey => {uid, userLocalId, calendarId};
 
-  TextColumn get organizer => text()();
+  TextColumn get organizer => text().nullable()();
 
-  BoolColumn get appointment => boolean()();
+  BoolColumn get appointment => boolean().nullable()();
 
-  IntColumn get appointmentAccess => integer()();
+  IntColumn get appointmentAccess => integer().nullable()();
 
   TextColumn get calendarId => text()();
 
   IntColumn get userLocalId => integer()();
-
-  TextColumn get id => text()();
 
   TextColumn get uid => text()();
 
@@ -24,25 +23,31 @@ class EventTable extends Table {
 
   TextColumn get description => text().nullable()();
 
-  DateTimeColumn get startTS => dateTime()();
+  DateTimeColumn get startTS => dateTime().nullable()();
 
   DateTimeColumn get endTS => dateTime().nullable()();
 
-  BoolColumn get allDay => boolean()();
+  BoolColumn get allDay => boolean().nullable()();
 
-  TextColumn get owner => text()();
+  TextColumn get owner => text().nullable()();
 
-  BoolColumn get modified => boolean()();
+  BoolColumn get modified => boolean().nullable()();
 
-  IntColumn get recurrenceId => integer()();
+  IntColumn get recurrenceId => integer().nullable()();
 
-  IntColumn get lastModified => integer()();
+  IntColumn get lastModified => integer().nullable()();
 
   // TODO add rrule
 
-  BoolColumn get status => boolean()();
+  BoolColumn get status => boolean().nullable()();
 
-  BoolColumn get withDate => boolean()();
+  BoolColumn get withDate => boolean().nullable()();
 
-  BoolColumn get isPrivate => boolean()();
+  BoolColumn get isPrivate => boolean().nullable()();
+
+  IntColumn get updateStatus => intEnum<UpdateStatus>()();
+
+  BoolColumn get synced =>  boolean()();
+
+  BoolColumn get onceLoaded =>  boolean()();
 }

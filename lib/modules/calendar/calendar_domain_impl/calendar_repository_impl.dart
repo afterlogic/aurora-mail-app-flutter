@@ -1,12 +1,13 @@
 import 'dart:async';
 
+import 'package:aurora_logger/aurora_logger.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/calendar_repository.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/calendar.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/event.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain_impl/mappers/calendar_mapper.dart';
-import 'package:aurora_mail/modules/calendar/calendar_domain_impl/mappers/event_update_info_mapper.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain_impl/mappers/event_mapper.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain_impl/services/db/calendar_db_service.dart';
-import 'package:aurora_mail/modules/calendar/calendar_domain_impl/services/db/event/event_update_info.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain_impl/services/network/calendar_network_service.dart';
 import 'package:aurora_mail/modules/settings/screens/debug/default_api_interceptor.dart';
 import 'package:webmail_api_client/webmail_api_client.dart';
@@ -34,38 +35,42 @@ class CalendarRepositoryImpl implements CalendarRepository {
   }
 
   Future<void> _syncEvents() async {
-    List<EventUpdateInfo> updateInfo = await _db.getEventUpdateInfoList();
-    //TODO instead of WHILE get all ids from db
-    while (updateInfo.isNotEmpty) {
-      final groupedUpdateInfo =
-          EventUpdateInfoMapper.groupByCalendarId(updateInfo);
-      for (final group in groupedUpdateInfo) {
+    final int step = 20;
+    int currentOffset = 0;
+    List<Event> notUpdatedEvents =
+        await _db.getNotUpdatedEvents(offset: currentOffset, limit: step);
+    await _db.deleteMarkedEvents();
+    while (notUpdatedEvents.isNotEmpty) {
+      logger.log(
+          'CURRENT SYNCiNG EVENTS: ${notUpdatedEvents.map((e) => e.uid).toList()}');
+      final groupedEvents =
+          EventMapper.groupEventsByCalendarId(notUpdatedEvents);
+      for (final group in groupedEvents) {
         try {
-          final events = await _network.getEvents(
-              uuids: group
-                  .where((e) => !e.updateStatus.isDeleted)
-                  .map((e) => e.uid)
-                  .toList(),
-              userId: group.first.userLocalId,
-              calendarId: group.first.calendarId);
-          await _db.createOrUpdateEventList(events);
-          await _db.deleteEventsByInfo(
-              group.where((e) => e.updateStatus.isDeleted).toList());
-          await _db.deleteEventUpdateInfoList(group);
+          final syncedEvents = await _network.updateEvents(group);
+
+          logger.log('CURRENT SYNCED EVENTS: $syncedEvents');
+
+          await _db.updateEventList(syncedEvents);
         } catch (e) {
           rethrow;
         }
       }
-      updateInfo = await _db.getEventUpdateInfoList();
+      currentOffset += step;
+      notUpdatedEvents =
+          await _db.getNotUpdatedEvents(offset: currentOffset, limit: step);
     }
   }
 
   @override
   Future<void> syncCalendars() async {
     final localCalendars = await _db.getCalendars(user.localId!);
+    logger.log('LOCAL CALENDARS: ${localCalendars.map((e) => e.id).toList()}');
     final localCalendarsMap =
         CalendarMapper.convertListToMapById(localCalendars);
+
     await _db.clearEvents(localCalendars);
+
     final List<Calendar> calendarsForUpdate = [];
     try {
       final serverCalendarsMap = CalendarMapper.convertListToMapById(
@@ -75,30 +80,33 @@ class CalendarRepositoryImpl implements CalendarRepository {
             localCalendarsMap[serverEntry.key]?.syncToken) continue;
         calendarsForUpdate.add(serverEntry.value);
       }
+      logger.log(
+          'CALENDARS FOR UPDATE: ${calendarsForUpdate.map((e) => e.id).toList()}');
       final localCalendarsForDeleting = localCalendarsMap.values
           .where((e) => !serverCalendarsMap.containsKey(e.id))
           .toList();
-      await _db.deleteCalendars(localCalendarsForDeleting);
+      logger.log(
+          'CALENDARS FOR DELETING: ${localCalendarsForDeleting.map((e) => e.id).toList()}');
 
-      await _syncEvents();
+      await _db.deleteCalendars(localCalendarsForDeleting);
 
       for (final calendar in calendarsForUpdate) {
         int currentSync =
             int.parse(localCalendarsMap[calendar.id]?.syncToken ?? '0');
         while (currentSync < int.parse(calendar.syncToken)) {
+          logger.log('IN ${calendar.id} SYNC: $currentSync');
           final changes = await _network.getChangesForCalendar(
               userLocalId: user.localId!,
               calendarId: calendar.id,
               syncTokenFrom: currentSync);
-          await _db.createOrUpdateEventUpdateInfoList(changes);
+          await _db.emitChanges(changes);
           currentSync += BATCH_SIZE;
         }
         await _db.createOrUpdateCalendar(calendar);
       }
-
       await _syncEvents();
     } catch (e) {
-      print(e);
+      logger.log('CALENDARS SYNC ERROR: $e');
     }
   }
 }
