@@ -49,7 +49,7 @@ class CalendarRepositoryImpl implements CalendarRepository {
         try {
           final syncedEvents = await _network.updateEvents(group);
 
-          logger.log('CURRENT SYNCED EVENTS: $syncedEvents');
+          logger.log('SYNCED EVENTS: $syncedEvents');
 
           await _db.updateEventList(syncedEvents);
         } catch (e) {
@@ -81,7 +81,7 @@ class CalendarRepositoryImpl implements CalendarRepository {
         calendarsForUpdate.add(serverEntry.value);
       }
       logger.log(
-          'CALENDARS FOR UPDATE: ${calendarsForUpdate.map((e) => e.id).toList()}');
+          'CALENDARS FOR UPDATE/DOWNLOAD: ${calendarsForUpdate.map((e) => e.id).toList()}');
       final localCalendarsForDeleting = localCalendarsMap.values
           .where((e) => !serverCalendarsMap.containsKey(e.id))
           .toList();
@@ -99,6 +99,7 @@ class CalendarRepositoryImpl implements CalendarRepository {
               userLocalId: user.localId!,
               calendarId: calendar.id,
               syncTokenFrom: currentSync);
+          logger.log('CHANGES ${changes.map((e) => e.uid)} ');
           await _db.emitChanges(changes);
           currentSync += BATCH_SIZE;
         }

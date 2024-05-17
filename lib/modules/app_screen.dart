@@ -6,6 +6,7 @@ import 'package:aurora_mail/background/background_helper.dart';
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/generated/l10n.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/calendar_repository.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/messages_list_bloc.dart';
@@ -209,51 +210,55 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
                             )..add(GetContacts()),
                           ),
                         ],
-                        child: MaterialApp(
-                          debugShowCheckedModeBanner: false,
-                          navigatorKey: _navKey,
-                          onGenerateTitle: (context) {
-                            final is24 =
-                                MediaQuery.of(context).alwaysUse24HourFormat;
-                            if (settingsState.is24 == null) {
-                              _settingsBloc.add(SetTimeFormat(is24));
-                            }
-                            return BuildProperty.appName;
-                          },
-                          onGenerateRoute: RouteGenerator.onGenerateRoute,
-                          theme: theme ?? AppTheme.light,
-                          darkTheme: theme ?? AppTheme.dark,
-                          localizationsDelegates: [
-                            GlobalMaterialLocalizations.delegate,
-                            GlobalWidgetsLocalizations.delegate,
-                            GlobalCupertinoLocalizations.delegate,
-                            S.delegate,
-                            // LocalizationI18nDelegate(
-                            //   forcedLocale: supportedLocales.contains(
-                            //           settingsState.language?.toLocale())
-                            //       ? settingsState.language?.toLocale()
-                            //       : null,
-                            // ),
-                          ],
-                          supportedLocales: BuildProperty.supportLanguage
-                              .split(",")
-                              .map((item) => Locale(item))
-                              .toList(),
-                          localeResolutionCallback: (locale, locales) {
-                            final supportedLocale = locales.firstWhere((l) {
-                              return locale != null &&
-                                  l.languageCode == locale.languageCode;
-                            }, orElse: () => null);
+                        child: RepositoryProvider(
+                          create: (context) => CalendarRepository(
+                              user: _authBloc.currentUser, appDB: DBInstances.appDB),
+                          child: MaterialApp(
+                            debugShowCheckedModeBanner: false,
+                            navigatorKey: _navKey,
+                            onGenerateTitle: (context) {
+                              final is24 =
+                                  MediaQuery.of(context).alwaysUse24HourFormat;
+                              if (settingsState.is24 == null) {
+                                _settingsBloc.add(SetTimeFormat(is24));
+                              }
+                              return BuildProperty.appName;
+                            },
+                            onGenerateRoute: RouteGenerator.onGenerateRoute,
+                            theme: theme ?? AppTheme.light,
+                            darkTheme: theme ?? AppTheme.dark,
+                            localizationsDelegates: [
+                              GlobalMaterialLocalizations.delegate,
+                              GlobalWidgetsLocalizations.delegate,
+                              GlobalCupertinoLocalizations.delegate,
+                              S.delegate,
+                              // LocalizationI18nDelegate(
+                              //   forcedLocale: supportedLocales.contains(
+                              //           settingsState.language?.toLocale())
+                              //       ? settingsState.language?.toLocale()
+                              //       : null,
+                              // ),
+                            ],
+                            supportedLocales: BuildProperty.supportLanguage
+                                .split(",")
+                                .map((item) => Locale(item))
+                                .toList(),
+                            localeResolutionCallback: (locale, locales) {
+                              final supportedLocale = locales.firstWhere((l) {
+                                return locale != null &&
+                                    l.languageCode == locale.languageCode;
+                              }, orElse: () => null);
 
-                            return supportedLocale ??
-                                locales.first ??
-                                Locale("en", "");
-                          },
-                          locale: settingsState.language?.toLocale(),
-                          initialRoute: authState.needsLogin
-                              ? LoginRoute.name
-                              : MessagesListRoute.name,
-                          navigatorObservers: [routeObserver],
+                              return supportedLocale ??
+                                  locales.first ??
+                                  Locale("en", "");
+                            },
+                            locale: settingsState.language?.toLocale(),
+                            initialRoute: authState.needsLogin
+                                ? LoginRoute.name
+                                : MessagesListRoute.name,
+                            navigatorObservers: [routeObserver],
+                          ),
                         ),
                       );
                     } else {

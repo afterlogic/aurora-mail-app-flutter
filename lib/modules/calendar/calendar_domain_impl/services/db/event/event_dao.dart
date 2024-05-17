@@ -31,9 +31,9 @@ class EventDao extends DatabaseAccessor<AppDatabase> with _$EventDaoMixin {
         .go();
   }
 
-  Future<void> deleteAllUnusedEvents(
+  Future<int> deleteAllUnusedEvents(
       List<String> calendarUUIDs, List<int> userLocalIds) async {
-    await (delete(eventTable)
+    return (delete(eventTable)
           ..where((t) =>
               t.calendarId.isNotIn(calendarUUIDs) &
               t.userLocalId.isNotIn(userLocalIds)))

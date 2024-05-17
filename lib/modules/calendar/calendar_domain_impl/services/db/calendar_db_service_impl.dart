@@ -1,3 +1,4 @@
+import 'package:aurora_logger/aurora_logger.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/calendar.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/event.dart';
@@ -38,6 +39,7 @@ class CalendarDbServiceImpl implements CalendarDbService {
   Future<void> deleteCalendars(List<Calendar> calendars) async {
     await _calendarDao.deleteCalendars(calendars.map((e) => e.id).toList());
     for (final c in calendars) {
+      logger.log('DELETING CALENDAR: ${c.id}');
       await _eventDao.deleteAllEventsFromCalendar(c.id, c.userLocalId);
     }
   }
@@ -47,7 +49,9 @@ class CalendarDbServiceImpl implements CalendarDbService {
   Future<void> clearEvents(List<Calendar> calendars) async {
     final calendarIds = calendars.map((e) => e.id).toList();
     final userIds = calendars.map((e) => e.userLocalId).toList();
-    await _eventDao.deleteAllUnusedEvents(calendarIds, userIds);
+    final affectedRowsCount = await _eventDao.deleteAllUnusedEvents(calendarIds, userIds);
+    logger.log('DELETED UNUSED EVENTS COUNT: $affectedRowsCount');
+
   }
 
 
@@ -62,7 +66,7 @@ class CalendarDbServiceImpl implements CalendarDbService {
   Future<void> deleteMarkedEvents() async {
     final deletedCount =
     await _eventDao.deleteMarkedEvents();
-    print(deletedCount);
+    logger.log('DELETED $deletedCount EVENTS MARKED AS DELETED: ');
   }
 
   @override
