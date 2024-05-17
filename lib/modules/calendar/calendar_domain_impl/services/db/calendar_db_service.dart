@@ -26,4 +26,6 @@ abstract class CalendarDbService {
 
   Future<void> deleteMarkedEvents();
 
+  Future<List<Event>> getEventsForPeriod({required DateTime start, required DateTime end, required int userLocalId});
+
 }

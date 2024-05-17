@@ -13,20 +13,20 @@ class MonthEventMarker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return event is Event
+    return event is ViewEvent
         ? Container(
             margin: EdgeInsets.only(bottom: eventGap),
             decoration: BoxDecoration(
-                borderRadius: _calculateBorderRadius((event as Event).edge),
-                color: generateColorFromString((event as Event).title)),
+                borderRadius: _calculateBorderRadius((event as ViewEvent).edge),
+                color: generateColorFromString((event as ViewEvent).title)),
             width: 60,
             height: height,
             padding: EdgeInsets.only(left: 4),
             child: Align(
                 alignment: Alignment.centerLeft,
                 child: _EventText(
-                  title: (event as Event).title,
-                  edge: (event as Event).edge,
+                  title: (event as ViewEvent).title,
+                  edge: (event as ViewEvent).edge,
                 )),
           )
         : SizedBox(

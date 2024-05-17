@@ -59,6 +59,7 @@ class Event extends EventBase {
       return base;
     }
     return Event(
+      ///All timestamps should be in seconds
       organizer: newData['organizer'] as String? ?? '',
       appointment: (newData['appointment'] as bool?)!,
       appointmentAccess: (newData['appointmentAccess'] as int?)!,
@@ -67,11 +68,14 @@ class Event extends EventBase {
       uid: (newData['uid'] as String?)!,
       subject: (newData['subject'] as String?)!,
       description: (newData['description'] as String?)!,
-      startTS: DateTime.fromMillisecondsSinceEpoch(
-          (newData['startTS'] as int?) ?? 100000 * 1000),
+      startTS: (newData['startTS'] as int?) == null
+          ? null
+          : DateTime.fromMillisecondsSinceEpoch(
+              (newData['startTS'] as int) * 1000),
       endTS: (newData['endTS'] as int?) == null
           ? null
-          : DateTime.fromMillisecondsSinceEpoch((newData['endTS'] as int) * 1000),
+          : DateTime.fromMillisecondsSinceEpoch(
+              (newData['endTS'] as int) * 1000),
       allDay: (newData['allDay'] as bool?)!,
       owner: (newData['owner'] as String?)!,
       modified: (newData['modified'] as bool?)!,
@@ -83,7 +87,8 @@ class Event extends EventBase {
       isPrivate: (newData['isPrivate'] as bool?)!,
       updateStatus: base.updateStatus,
       synced: true,
-      onceLoaded: true,);
+      onceLoaded: true,
+    );
   }
 
   factory Event.fromDb(EventDb entity) {

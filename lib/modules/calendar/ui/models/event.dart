@@ -1,16 +1,30 @@
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/event.dart';
+
 abstract class CalendarEvent {
   const CalendarEvent();
 }
 
-class Event extends CalendarEvent {
+class ViewEvent extends CalendarEvent {
   final String title;
-  final int? id;
+  final String id;
   final Edge edge;
   final DateTime startDate;
   final DateTime endDate;
   final bool isAllDay;
 
-  const Event(
+  static ViewEvent? tryFromEvent(Event model) {
+    try {
+      return ViewEvent(
+          title: model.subject!,
+          id: model.uid,
+          startDate: model.startTS!,
+          endDate: model.endTS!);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  const ViewEvent(
       {this.edge = Edge.single,
       required this.title,
       required this.id,

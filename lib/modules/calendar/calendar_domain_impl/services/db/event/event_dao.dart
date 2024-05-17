@@ -9,7 +9,6 @@ part 'event_dao.g.dart';
 class EventDao extends DatabaseAccessor<AppDatabase> with _$EventDaoMixin {
   EventDao(AppDatabase db) : super(db);
 
-
   Future<List<EventDb>> getAllEventsFromCalendar(
       String calendarUUID, int userLocalId) {
     return (select(eventTable)
@@ -40,7 +39,8 @@ class EventDao extends DatabaseAccessor<AppDatabase> with _$EventDaoMixin {
         .go();
   }
 
-  Future<void> createOrUpdateEventList(List<EventDb> events, {bool synced = false}) async {
+  Future<void> createOrUpdateEventList(List<EventDb> events,
+      {bool synced = false}) async {
     for (final event in events) {
       final companion = event.toCompanion(true);
       try {
@@ -52,23 +52,22 @@ class EventDao extends DatabaseAccessor<AppDatabase> with _$EventDaoMixin {
                   tbl.uid.equals(event.uid) &
                   tbl.calendarId.equals(event.calendarId) &
                   tbl.userLocalId.equals(event.userLocalId)))
-            .write(companion.copyWith(synced: Value(synced), onceLoaded: const Value(true)));
+            .write(companion.copyWith(
+                synced: Value(synced), onceLoaded: const Value(true)));
       }
     }
   }
 
-  Future<int> deleteMarkedEvents(
-      ) {
+  Future<int> deleteMarkedEvents() {
     return (delete(eventTable)
-      ..where((t) =>
-      t.updateStatus.equals(UpdateStatus.deleted.index)
-      ))
+          ..where((t) => t.updateStatus.equals(UpdateStatus.deleted.index)))
         .go();
   }
 
-    Future<List<EventDb>> getEventsWithLimit({required int limit, required int offset}) async {
-      return (select(eventTable)..limit(limit, offset: offset)).get();
-    }
+  Future<List<EventDb>> getEventsWithLimit(
+      {required int limit, required int offset}) async {
+    return (select(eventTable)..limit(limit, offset: offset)).get();
+  }
 
   Future<void> deleteEvent(
       {required String uid,
@@ -80,5 +79,21 @@ class EventDao extends DatabaseAccessor<AppDatabase> with _$EventDaoMixin {
               t.calendarId.equals(calendarId) &
               t.userLocalId.equals(userLocalId)))
         .go();
+  }
+
+  Future<List<EventDb>> getForPeriod(
+      {required DateTime start,
+      required DateTime end,
+      required int userLocalId}) {
+    return (select(eventTable)
+          ..where((t) =>
+              t.userLocalId.equals(userLocalId) &
+              t.onceLoaded.equals(true) &
+              t.startTS.isBiggerOrEqualValue(start) &
+              t.endTS.isSmallerOrEqualValue(end))
+          ..orderBy([
+            (t) => OrderingTerm(expression: t.startTS),
+          ]))
+        .get();
   }
 }

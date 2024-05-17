@@ -1,5 +1,6 @@
 //@dart=2.9
 import 'package:aurora_mail/generated/l10n.dart';
+import 'package:aurora_mail/modules/calendar/blocs/events/events_bloc.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/calendar_repository.dart';
 import 'package:aurora_mail/modules/calendar/ui/screens/calendar_route.dart';
 import 'package:aurora_mail/modules/layout_config/layout_config.dart';
@@ -96,7 +97,8 @@ class MailBottomAppBar extends StatelessWidget {
           tooltip: S.of(context).messages_list_app_bar_settings,
           iconSize: iconSize,
           onPressed: () {
-            RepositoryProvider.of<CalendarRepository>(context).syncCalendars();
+            // BlocProvider.of<EventsBloc>(context).add(const StartSync());
+            BlocProvider.of<EventsBloc>(context).add(const LoadEvents());
             _openCalendar(context);
           },
         ),

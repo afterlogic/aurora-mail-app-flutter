@@ -108,6 +108,12 @@ class CalendarRepositoryImpl implements CalendarRepository {
       await _syncEvents();
     } catch (e) {
       logger.log('CALENDARS SYNC ERROR: $e');
+      rethrow;
     }
+  }
+
+  @override
+  Future<List<Event>> getForPeriod({required DateTime start, required DateTime end}) {
+    return _db.getEventsForPeriod(start: start, end: end, userLocalId: user.localId!);
   }
 }

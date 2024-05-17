@@ -28,48 +28,48 @@ class _MonthViewState extends State<MonthView>
 
   final kEvents = <DateTime, List<CalendarEvent>>{}..addAll({
       DateTime.utc(kToday.year, kToday.month, kToday.day - 1): [
-        Event(
+        ViewEvent(
             title: 'test2',
             startDate: DateTime.utc(kToday.year, kToday.month, kToday.day - 1),
             endDate: DateTime.utc(kToday.year, kToday.month, kToday.day - 1),
-            id: 2,
+            id: '2',
             edge: Edge.start),
-        Event(
+        ViewEvent(
             title: 'test4',
             startDate: DateTime.utc(kToday.year, kToday.month, kToday.day - 1),
             endDate: DateTime.utc(kToday.year, kToday.month, kToday.day - 1),
-            id: 1,
+            id: '1',
             edge: Edge.start),
         const EmptyEvent(),
       ],
       DateTime.utc(kToday.year, kToday.month, kToday.day): [
-        Event(
+        ViewEvent(
             title: 'test2',
             startDate: DateTime.utc(kToday.year, kToday.month, kToday.day - 1),
             endDate: DateTime.utc(kToday.year, kToday.month, kToday.day - 1),
-            id: 2,
+            id: '2',
             edge: Edge.part),
-        Event(
+        ViewEvent(
             title: 'test4',
             startDate: DateTime.utc(kToday.year, kToday.month, kToday.day - 1),
             endDate: DateTime.utc(kToday.year, kToday.month, kToday.day - 1),
-            id: 1,
+            id: '1',
             edge: Edge.end),
         const EmptyEvent(),
       ],
       DateTime.utc(kToday.year, kToday.month, kToday.day + 1): [
-        Event(
+        ViewEvent(
             title: 'test2',
             startDate: DateTime.utc(kToday.year, kToday.month, kToday.day - 1),
             endDate: DateTime.utc(kToday.year, kToday.month, kToday.day - 1),
-            id: 2,
+            id: '2',
             edge: Edge.end),
         const EmptyEvent(),
-        Event(
+        ViewEvent(
             title: 'test3',
             startDate: DateTime.utc(kToday.year, kToday.month, kToday.day - 1),
             endDate: DateTime.utc(kToday.year, kToday.month, kToday.day - 1),
-            id: 3,
+            id: '3',
             edge: Edge.single),
       ]
     });

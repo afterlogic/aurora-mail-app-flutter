@@ -11,7 +11,7 @@ class EventCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return event is Event
+    return event is ViewEvent
         ? Padding(
           padding: const EdgeInsets.only(bottom: 18.0),
           child: Column(
@@ -20,7 +20,7 @@ class EventCard extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 4.0),
                   child: Text(
-                    '${(event as Event).title}',
+                    '${(event as ViewEvent).title}',
                     style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
                   ),
                 ),
@@ -33,11 +33,11 @@ class EventCard extends StatelessWidget {
                           borderRadius: BorderRadius.all(
                             Radius.circular(4.0),
                           ),
-                          color: generateColorFromString((event as Event).title)),
+                          color: generateColorFromString((event as ViewEvent).title)),
                     ),
                    const SizedBox(width: 4,),
                     Text(
-                      DateFormat("hh:mm a").format((event as Event).startDate),
+                      DateFormat("hh:mm a").format((event as ViewEvent).startDate),
                       style: TextStyle(
                         color: Color.fromRGBO(150, 148, 148, 1),
                       ),

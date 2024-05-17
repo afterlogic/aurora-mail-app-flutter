@@ -22,11 +22,10 @@ class CalendarDbServiceImpl implements CalendarDbService {
     return CalendarMapper.listFromDB(entries);
   }
 
-
   @override
-  Future<void> emitChanges(
-      List<EventBase> events) async {
-    return _eventDao.createOrUpdateEventList(events.map((e) => e.toDb()).toList());
+  Future<void> emitChanges(List<EventBase> events) async {
+    return _eventDao
+        .createOrUpdateEventList(events.map((e) => e.toDb()).toList());
   }
 
   @override
@@ -49,29 +48,39 @@ class CalendarDbServiceImpl implements CalendarDbService {
   Future<void> clearEvents(List<Calendar> calendars) async {
     final calendarIds = calendars.map((e) => e.id).toList();
     final userIds = calendars.map((e) => e.userLocalId).toList();
-    final affectedRowsCount = await _eventDao.deleteAllUnusedEvents(calendarIds, userIds);
+    final affectedRowsCount =
+        await _eventDao.deleteAllUnusedEvents(calendarIds, userIds);
     logger.log('DELETED UNUSED EVENTS COUNT: $affectedRowsCount');
-
   }
-
-
 
   @override
   Future<void> updateEventList(List<Event> events) {
-    return _eventDao
-        .createOrUpdateEventList(events.map((e) => e.toDb()).toList(), synced: true);
+    return _eventDao.createOrUpdateEventList(
+        events.map((e) => e.toDb()).toList(),
+        synced: true);
   }
 
   @override
   Future<void> deleteMarkedEvents() async {
-    final deletedCount =
-    await _eventDao.deleteMarkedEvents();
+    final deletedCount = await _eventDao.deleteMarkedEvents();
     logger.log('DELETED $deletedCount EVENTS MARKED AS DELETED: ');
   }
 
   @override
-  Future<List<Event>> getNotUpdatedEvents({required int limit, required int offset}) async{
-    final result = await _eventDao.getEventsWithLimit(limit: limit, offset: offset);
+  Future<List<Event>> getNotUpdatedEvents(
+      {required int limit, required int offset}) async {
+    final result =
+        await _eventDao.getEventsWithLimit(limit: limit, offset: offset);
     return result.map((e) => Event.fromDb(e)).where((e) => !e.synced).toList();
+  }
+
+  @override
+  Future<List<Event>> getEventsForPeriod(
+      {required DateTime start,
+      required DateTime end,
+      required int userLocalId}) async {
+    final entities = await _eventDao.getForPeriod(
+        start: start, end: end, userLocalId: userLocalId);
+    return entities.map((e) => Event.fromDb(e)).toList();
   }
 }
