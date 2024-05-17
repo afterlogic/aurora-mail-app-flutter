@@ -1,7 +1,7 @@
 name: aurora_mail
 description: Mail client for Aurora Mail.
 
-version: "2.3.5+275"
+version: "2.3.5+276"
 
 environment:
   sdk: ">=2.17.0 <3.0.0"
@@ -125,8 +125,8 @@ dependencies:
     git:
       url: https://github.com/afterlogic/aurora_logger_flutter
       ref: master
-  collection: ^1.17.0
   calendar_view: ^1.1.0
+  collection: ^1.17.0
 
 dev_dependencies:
   flutter_test:
