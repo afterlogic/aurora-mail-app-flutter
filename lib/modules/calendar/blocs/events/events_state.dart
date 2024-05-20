@@ -3,18 +3,54 @@ part of 'events_bloc.dart';
 class EventsState extends Equatable {
   final EventsStatus status;
   final List<CalendarEvent>? events;
-  final DateTime selectedStartDate;
-  final DateTime selectedEndDate;
-
+  final DateTime startIntervalDate;
+  final DateTime endIntervalDate;
+  final DateTime? selectedDate;
 
   @override
-  List<Object?> get props => [events, selectedStartDate, selectedEndDate];
+  List<Object?> get props => [status, events, startIntervalDate, endIntervalDate, selectedDate];
+  List<CalendarEvent> get eventsByMonth {
+    if (events == null) {
+      return [];
+    }
+    int targetYear = startIntervalDate.year;
+    int targetMonth = startIntervalDate.month;
+
+    return events!.where((event) {
+      return (event.startDate.year <= targetYear &&
+              event.startDate.month <= targetMonth) &&
+          (event.endDate.year >= targetYear &&
+              event.endDate.month >= targetMonth);
+    }).toList();
+  }
+
+  List<CalendarEvent> getEventsFromDay(DateTime date) {
+    if (events == null) {
+      return [];
+    }
+    int targetYear = date.year;
+    int targetMonth = date.month;
+    int targetDay = date.day;
+
+    return events!.where((event) {
+      return (event.startDate.year <= targetYear &&
+              event.startDate.month <= targetMonth &&
+              event.startDate.day <= targetDay) &&
+          (event.endDate.year >= targetYear &&
+              event.endDate.month >= targetMonth &&
+              event.endDate.day >= targetDay);
+    }).toList();
+  }
+
+  //TODO implement checking if event cross the day
+  List<CalendarEvent>? get selectedEvents => selectedDate == null ? events : <CalendarEvent>[] ;
 
   const EventsState({
     this.status = EventsStatus.idle,
     this.events,
-    required this.selectedStartDate,
-    required this.selectedEndDate,
+    required this.startIntervalDate,
+    required this.endIntervalDate,
+    this.selectedDate,
   });
 
   @override
@@ -22,30 +58,30 @@ class EventsState extends Equatable {
     return 'EventsState{' +
         ' status: ${status.name}' +
         ' events: $events,' +
-        ' selectedStartDate: $selectedStartDate,' +
-        ' selectedEndDate: $selectedEndDate,' +
+        ' startIntervalDate: $startIntervalDate,' +
+        ' endIntervalDate: $endIntervalDate,' +
+        ' selectedDate: $selectedDate,' +
         '}';
   }
 
   EventsState copyWith({
     EventsStatus? status,
     List<CalendarEvent>? Function()? events,
-    DateTime? selectedStartDate,
-    DateTime? selectedEndDate,
+    DateTime? startIntervalDate,
+    DateTime? endIntervalDate,
+    DateTime? Function()? selectedDate,
   }) {
     return EventsState(
       status: status ?? this.status,
       events: events == null ? this.events : events(),
-      selectedStartDate: selectedStartDate ?? this.selectedStartDate,
-      selectedEndDate: selectedEndDate ?? this.selectedEndDate,
+      startIntervalDate: startIntervalDate ?? this.startIntervalDate,
+      endIntervalDate: endIntervalDate ?? this.endIntervalDate,
+      selectedDate: selectedDate == null ? this.selectedDate : selectedDate()
     );
   }
-
 }
 
-enum EventsStatus {
-  success, error, loading, idle
-}
+enum EventsStatus { success, error, loading, idle }
 
 extension EventsStatusX on EventsStatus {
   bool get isSuccess => this == EventsStatus.success;

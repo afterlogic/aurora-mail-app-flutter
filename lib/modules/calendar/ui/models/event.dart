@@ -1,15 +1,15 @@
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/event.dart';
 
 abstract class CalendarEvent {
-  const CalendarEvent();
+  final DateTime startDate;
+  final DateTime endDate;
+  const CalendarEvent({required this.startDate,required this.endDate});
 }
 
 class ViewEvent extends CalendarEvent {
   final String title;
   final String id;
   final Edge edge;
-  final DateTime startDate;
-  final DateTime endDate;
   final bool isAllDay;
 
   static ViewEvent? tryFromEvent(Event model) {
@@ -28,8 +28,8 @@ class ViewEvent extends CalendarEvent {
       {this.edge = Edge.single,
       required this.title,
       required this.id,
-      required this.startDate,
-      required this.endDate,
+      required super.startDate,
+      required super.endDate,
       this.isAllDay = false});
 
   @override
@@ -37,7 +37,7 @@ class ViewEvent extends CalendarEvent {
 }
 
 class EmptyEvent extends CalendarEvent {
-  const EmptyEvent();
+  const EmptyEvent({required super.startDate, required super.endDate});
 }
 
 final kToday = DateTime.now();

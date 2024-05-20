@@ -14,5 +14,6 @@ abstract class CalendarRepository {
 
   Future<void> syncCalendars();
 
+  /// [end] - not included
   Future<List<Event>> getForPeriod({required DateTime start, required DateTime end});
 }

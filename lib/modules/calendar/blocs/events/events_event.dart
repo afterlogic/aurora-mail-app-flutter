@@ -7,7 +7,8 @@ abstract class EventsEvent extends Equatable {
 }
 
 class SelectDate extends EventsEvent{
- const SelectDate();
+ final DateTime date;
+ const SelectDate(this.date);
 }
 
 class LoadEvents extends EventsEvent{

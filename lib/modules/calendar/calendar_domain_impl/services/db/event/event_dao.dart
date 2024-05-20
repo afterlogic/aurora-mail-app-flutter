@@ -90,7 +90,7 @@ class EventDao extends DatabaseAccessor<AppDatabase> with _$EventDaoMixin {
               t.userLocalId.equals(userLocalId) &
               t.onceLoaded.equals(true) &
               t.startTS.isBiggerOrEqualValue(start) &
-              t.endTS.isSmallerOrEqualValue(end))
+              t.endTS.isSmallerThanValue(end))
           ..orderBy([
             (t) => OrderingTerm(expression: t.startTS),
           ]))
