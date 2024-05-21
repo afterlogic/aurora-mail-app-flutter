@@ -42,8 +42,13 @@ class EventsState extends Equatable {
     }).toList();
   }
 
-  //TODO implement checking if event cross the day
-  List<CalendarEvent>? get selectedEvents => selectedDate == null ? events : <CalendarEvent>[] ;
+  List<CalendarEvent>? get selectedEvents {
+    if(selectedDate == null) return events;
+    final filteredEvents = events?.where((e) =>
+    e.startDate.isBefore(selectedDate!.startOfNextDay) &&
+        e.endDate.isAfterOrEqual(selectedDate!.withoutTime)).toList();
+    return filteredEvents;
+  }
 
   const EventsState({
     this.status = EventsStatus.idle,

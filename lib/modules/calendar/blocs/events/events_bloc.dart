@@ -34,13 +34,14 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
     try {
       final eventModels = await _calendarRepository.getForPeriod(
           start: state.startIntervalDate.withoutTime,
-          end: state.endIntervalDate.nextDayWithoutTime);
+          end: state.endIntervalDate.startOfNextDay);
       final eventViews = eventModels
           .map((e) => ViewEvent.tryFromEvent(e))
           .whereNotNull()
           .toList();
+      final splitEvents = eventViews.expand((e) => e.splitIntoDailyEvents).toList();
       emit(state.copyWith(
-          status: EventsStatus.success, events: () => eventViews));
+          status: EventsStatus.success, events: () => splitEvents));
     } catch (e, st) {
       emit(state.copyWith(status: EventsStatus.error));
     } finally {

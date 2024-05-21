@@ -103,9 +103,9 @@ class _MonthViewState extends State<MonthView>
               Expanded(
                 child: GestureDetector(
                   onVerticalDragUpdate: (details) {
-                    // details.delta.dy > 1 - scroll up (finger from top to bottom)
-                    // _animationController.value == 1.0 - ListView collapsed
-                    // _calendarAnimationController.value == 1.0 - calendar shows 1 week
+                    /// details.delta.dy > 1 - scroll up (finger from top to bottom)
+                    /// _animationController.value == 1.0 - ListView collapsed
+                    /// _calendarAnimationController.value == 1.0 - calendar shows 1 week
                     if (details.delta.dy > 1 &&
                         _calendarAnimationController.value == 1.0 &&
                         _eventListAnimationController.value == 0.0) {
@@ -135,6 +135,7 @@ class _MonthViewState extends State<MonthView>
                     }
                   },
                   child: BlocBuilder<EventsBloc, EventsState>(
+                    buildWhen: (prev, current) => prev != current,
                     builder: (context, state) {
                       return TableCalendar<CalendarEvent>(
                         firstDay: DateTime(2010),
