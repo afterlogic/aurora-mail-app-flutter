@@ -1,7 +1,12 @@
 import 'dart:math';
 
+import 'package:aurora_mail/generated/l10n.dart';
+import 'package:aurora_mail/shared_ui/colored_checkbox.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:flutter/material.dart';
+
+const _horizontalHeaderPadding = 24.0;
+const _horizontalSectionPadding = 22.0;
 
 class CalendarDrawer extends StatefulWidget {
   @override
@@ -9,9 +14,6 @@ class CalendarDrawer extends StatefulWidget {
 }
 
 class _CalendarDrawerState extends BState<CalendarDrawer> {
-  static const _horizontalHeaderPadding = 24.0;
-  static const _horizontalSectionPadding = 22.0;
-
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -51,14 +53,8 @@ class _CalendarDrawerState extends BState<CalendarDrawer> {
                 color: const Color(0xFFF1F1F1),
                 height: 1,
               ),
-              Padding(
-                padding: const EdgeInsets.only(
-                    left: _horizontalSectionPadding, right: _horizontalHeaderPadding)
-                    .copyWith(top: 12,),
-                child: CollapsibleCheckboxList(
-                    title: 'MyCalendar',
-                    items:
-                        List<String>.generate(5, (index) => 'Item ${index + 1}')),
+              CollapsibleCheckboxList(
+                title: 'MyCalendar',
               ),
             ],
           ),
@@ -70,9 +66,10 @@ class _CalendarDrawerState extends BState<CalendarDrawer> {
 
 class CollapsibleCheckboxList extends StatefulWidget {
   final String title;
-  final List<String> items;
 
-  CollapsibleCheckboxList({required this.title, required this.items});
+  CollapsibleCheckboxList({
+    required this.title,
+  });
 
   @override
   _CollapsibleCheckboxListState createState() =>
@@ -82,7 +79,7 @@ class CollapsibleCheckboxList extends StatefulWidget {
 class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
     with SingleTickerProviderStateMixin {
   bool _isExpanded = false;
-  bool _isChecked = false;
+  bool? _isChecked = false;
   late AnimationController _animationController;
 
   @override
@@ -111,57 +108,92 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
     });
   }
 
+  final _menuItems = [
+    _MenuItem(icon: Icon(Icons.edit_outlined), titleBuilder: (ctx) => S.of(ctx).contacts_view_app_bar_edit_contact, onTap: (){}),
+    _MenuItem(icon: Icon(Icons.file_download_outlined), titleBuilder: (ctx) => 'Import ICS file', onTap: (){}),
+    _MenuItem(icon: Icon(Icons.link), titleBuilder: (ctx) => 'Get a link', onTap: (){}),
+    _MenuItem(icon: Icon(Icons.group_add_outlined), titleBuilder: (ctx) => S.of(ctx).btn_share, onTap: (){}),
+    _MenuItem(icon: Icon(Icons.delete_outline), titleBuilder: (ctx) => S.of(ctx).btn_delete, onTap: (){}),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         GestureDetector(
           onTap: _toggleExpansion,
-          child: Row(
-            children: [
-              SizedBox(
-                width: 24,
-                height: 24,
-                child: Checkbox(
-
-                  value: _isChecked,
-                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  onChanged: (bool? value) {
-                    setState(() {
-                      _isChecked = value ?? false;
-                    });
+          child: Padding(
+            padding: const EdgeInsets.only(
+                    left: _horizontalSectionPadding,
+                    right: _horizontalHeaderPadding)
+                .copyWith(
+              top: 12,
+            ),
+            child: Row(
+              children: [
+                SizedBox(
+                  width: 24,
+                  height: 24,
+                  child: ColoredCheckbox(
+                    color: Colors.red,
+                    value: _isChecked,
+                    onChanged: (value) {
+                      setState(() {
+                        _isChecked = value;
+                      });
+                    },
+                  ),
+                ),
+                const SizedBox(
+                  width: 16,
+                ),
+                Expanded(
+                  child: Text(widget.title),
+                ),
+                AnimatedBuilder(
+                  animation: _animationController,
+                  builder: (context, child) {
+                    return Transform.rotate(
+                      angle: _animationController.value *
+                          pi, // 180 degrees in radians
+                      child: Icon(Icons.keyboard_arrow_down, size: 32, color: Color(0xFFB6B5B5),),
+                    );
                   },
                 ),
-              ),
-              const SizedBox(width: 16,),
-              Expanded(
-                child: Text(widget.title),
-              ),
-              AnimatedBuilder(
-                animation: _animationController,
-                builder: (context, child) {
-                  return Transform.rotate(
-                    angle: _animationController.value *
-                        pi, // 180 degrees in radians
-                    child: Icon(Icons.keyboard_arrow_down),
-                  );
-                },
-              ),
-            ],
+              ],
+            ),
           ),
         ),
         SizeTransition(
           sizeFactor: _animationController,
-          child: Column(
-            children: widget.items
-                .map((item) => Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 4.0),
-                      child: Text(item),
-                    ))
-                .toList(),
+          child: Column(children:
+            _menuItems.map((e) => ListTile(
+              title: Text(e.titleBuilder(context)),
+              tileColor: _isExpanded ? Color(0xFFF7FBFF) : null,
+              contentPadding: EdgeInsets.symmetric(
+                  horizontal: _horizontalSectionPadding, vertical: 0),
+              dense: true,
+              horizontalTitleGap: 0,
+              leading: e.icon,
+              iconColor: Theme.of(context).primaryColor,
+              onTap: e.onTap,
+            )).toList()
+
           ),
         ),
       ],
     );
   }
+}
+
+class _MenuItem {
+  final Icon icon;
+  final String Function(BuildContext ctx) titleBuilder;
+  final VoidCallback onTap;
+
+  const _MenuItem({
+    required this.icon,
+    required this.titleBuilder,
+    required this.onTap,
+  });
 }
