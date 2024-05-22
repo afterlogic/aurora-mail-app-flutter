@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:aurora_mail/generated/l10n.dart';
+import 'package:aurora_mail/modules/calendar/ui/dialogs/calendar_creation.dart';
 import 'package:aurora_mail/shared_ui/colored_checkbox.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:flutter/material.dart';
@@ -41,7 +42,9 @@ class _CalendarDrawerState extends BState<CalendarDrawer> {
                     IconButton(
                         padding: EdgeInsets.zero,
                         constraints: BoxConstraints(),
-                        onPressed: () {},
+                        onPressed: () {
+                          CalendarCreationDialog.show(context);
+                        },
                         icon: Icon(
                           Icons.add,
                           color: Theme.of(context).primaryColor,
