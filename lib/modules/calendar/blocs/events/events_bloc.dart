@@ -51,7 +51,8 @@ class EventsBloc extends Bloc<EventsEvent, EventsState> {
 
   _onStartSync(StartSync event, emit) async {
     try {
-      _calendarRepository.syncCalendars();
+      await _calendarRepository.syncCalendars();
+      add(LoadEvents());
     } catch (e, st) {
       print(e);
       print(st);

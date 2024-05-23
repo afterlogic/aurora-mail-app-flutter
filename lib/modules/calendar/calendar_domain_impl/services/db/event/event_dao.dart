@@ -39,7 +39,7 @@ class EventDao extends DatabaseAccessor<AppDatabase> with _$EventDaoMixin {
         .go();
   }
 
-  Future<void> createOrUpdateEventList(List<EventDb> events,
+  Future<void> syncEventList(List<EventDb> events,
       {bool synced = false}) async {
     for (final event in events) {
       final companion = event.toCompanion(true);
@@ -47,6 +47,7 @@ class EventDao extends DatabaseAccessor<AppDatabase> with _$EventDaoMixin {
         await into(eventTable).insert(companion);
       } catch (e) {
         // If there's a conflict, update the existing record
+
         await (update(eventTable)
               ..where((tbl) =>
                   tbl.uid.equals(event.uid) &
@@ -54,6 +55,13 @@ class EventDao extends DatabaseAccessor<AppDatabase> with _$EventDaoMixin {
                   tbl.userLocalId.equals(event.userLocalId)))
             .write(companion.copyWith(
                 synced: Value(synced), onceLoaded: const Value(true)));
+      } finally {
+        if (event.updateStatus.isDeleted) {
+          await (deleteEvent(
+              uid: event.uid,
+              calendarId: event.calendarId,
+              userLocalId: event.userLocalId));
+        }
       }
     }
   }

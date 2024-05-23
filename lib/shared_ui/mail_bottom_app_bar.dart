@@ -97,8 +97,7 @@ class MailBottomAppBar extends StatelessWidget {
           tooltip: S.of(context).messages_list_app_bar_settings,
           iconSize: iconSize,
           onPressed: () {
-            // BlocProvider.of<EventsBloc>(context).add(const StartSync());
-            BlocProvider.of<EventsBloc>(context).add(const LoadEvents());
+            BlocProvider.of<EventsBloc>(context).add(const StartSync());
             _openCalendar(context);
           },
         ),
