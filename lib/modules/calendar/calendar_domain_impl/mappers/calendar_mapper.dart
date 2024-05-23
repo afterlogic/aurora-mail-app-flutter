@@ -1,10 +1,13 @@
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/calendar.dart';
+import 'package:aurora_mail/utils/extensions/colors_extensions.dart';
+import 'package:aurora_mail/utils/mail_utils.dart';
+import 'package:flutter/material.dart';
 
 class CalendarMapper {
   static Calendar fromDB(CalendarDb c) {
     return Calendar(
-      color: c.color,
+      color: HexColor.fromHex(c.color),
       name: c.name,
       description: c.description,
       id: c.id,
@@ -27,7 +30,7 @@ class CalendarMapper {
   static CalendarDb toDB(
       {required Calendar calendar}) {
     return CalendarDb(
-      color: calendar.color,
+      color: calendar.color.toHex(),
       name: calendar.name,
       description: calendar.description,
       id: calendar.id,
@@ -54,7 +57,7 @@ class CalendarMapper {
     return Calendar(
       id:(map['Id'] as String?)!,
       userLocalId: userLocalId,
-      color: (map['Color'] as String?)!,
+      color: HexColor.fromHex((map['Color'] as String?)!) ,
       description:map['Description'] as String?,
       name:(map['Name'] as String?)!,
       owner:(map['Owner'] as String?)!,

@@ -6,7 +6,7 @@ import 'package:aurora_mail/background/background_helper.dart';
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/generated/l10n.dart';
-import 'package:aurora_mail/modules/calendar/blocs/events/events_bloc.dart';
+import 'package:aurora_mail/modules/calendar/blocs/calendar/calendar_bloc.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/calendar_repository.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
@@ -199,7 +199,7 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
                             ),
                           ),
                           BlocProvider(
-                            create: (_) => EventsBloc(
+                            create: (_) => CalendarBloc(
                                 calendarRepository: CalendarRepository(
                                     user: _authBloc.currentUser,
                                     appDB: DBInstances.appDB)),

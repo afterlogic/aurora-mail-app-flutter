@@ -1,7 +1,9 @@
+import 'package:flutter/material.dart';
+
 class Calendar {
   final String id;
   final int userLocalId;
-  final String color;
+  final Color color;
   final String? description;
   final String name;
   final String owner;
@@ -91,7 +93,7 @@ class Calendar {
   Calendar copyWith({
     String? id,
     int? userLocalId,
-    String? color,
+    Color? color,
     String? description,
     String? name,
     String? owner,
@@ -122,3 +124,19 @@ class Calendar {
     );
   }
 }
+
+class CalendarCreationData{
+  final String title;
+  final String description;
+  final Color color;
+  final String? iCalMail;
+
+  const CalendarCreationData({
+    required this.title,
+    required this.description,
+    required this.color,
+    this.iCalMail
+  });
+}
+
+

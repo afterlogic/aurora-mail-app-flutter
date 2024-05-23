@@ -1,10 +1,12 @@
 import 'dart:math';
 
 import 'package:aurora_mail/generated/l10n.dart';
+import 'package:aurora_mail/modules/calendar/blocs/calendar/calendar_bloc.dart';
 import 'package:aurora_mail/modules/calendar/ui/dialogs/calendar_creation.dart';
 import 'package:aurora_mail/shared_ui/colored_checkbox.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 const _horizontalHeaderPadding = 24.0;
 const _horizontalSectionPadding = 22.0;
@@ -43,7 +45,12 @@ class _CalendarDrawerState extends BState<CalendarDrawer> {
                         padding: EdgeInsets.zero,
                         constraints: BoxConstraints(),
                         onPressed: () {
-                          CalendarCreationDialog.show(context);
+                          CalendarCreationDialog.show(context).then((value) {
+                            if (value != null) {
+                              BlocProvider.of<CalendarBloc>(context)
+                                  .add(CreateCalendar(creationData: value));
+                            }
+                          });
                         },
                         icon: Icon(
                           Icons.add,
@@ -112,11 +119,26 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
   }
 
   final _menuItems = [
-    _MenuItem(icon: Icon(Icons.edit_outlined), titleBuilder: (ctx) => S.of(ctx).contacts_view_app_bar_edit_contact, onTap: (){}),
-    _MenuItem(icon: Icon(Icons.file_download_outlined), titleBuilder: (ctx) => 'Import ICS file', onTap: (){}),
-    _MenuItem(icon: Icon(Icons.link), titleBuilder: (ctx) => 'Get a link', onTap: (){}),
-    _MenuItem(icon: Icon(Icons.group_add_outlined), titleBuilder: (ctx) => S.of(ctx).btn_share, onTap: (){}),
-    _MenuItem(icon: Icon(Icons.delete_outline), titleBuilder: (ctx) => S.of(ctx).btn_delete, onTap: (){}),
+    _MenuItem(
+        icon: Icon(Icons.edit_outlined),
+        titleBuilder: (ctx) => S.of(ctx).contacts_view_app_bar_edit_contact,
+        onTap: () {}),
+    _MenuItem(
+        icon: Icon(Icons.file_download_outlined),
+        titleBuilder: (ctx) => 'Import ICS file',
+        onTap: () {}),
+    _MenuItem(
+        icon: Icon(Icons.link),
+        titleBuilder: (ctx) => 'Get a link',
+        onTap: () {}),
+    _MenuItem(
+        icon: Icon(Icons.group_add_outlined),
+        titleBuilder: (ctx) => S.of(ctx).btn_share,
+        onTap: () {}),
+    _MenuItem(
+        icon: Icon(Icons.delete_outline),
+        titleBuilder: (ctx) => S.of(ctx).btn_delete,
+        onTap: () {}),
   ];
 
   @override
@@ -159,7 +181,11 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
                     return Transform.rotate(
                       angle: _animationController.value *
                           pi, // 180 degrees in radians
-                      child: Icon(Icons.keyboard_arrow_down, size: 32, color: Color(0xFFB6B5B5),),
+                      child: Icon(
+                        Icons.keyboard_arrow_down,
+                        size: 32,
+                        color: Color(0xFFB6B5B5),
+                      ),
                     );
                   },
                 ),
@@ -169,20 +195,20 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
         ),
         SizeTransition(
           sizeFactor: _animationController,
-          child: Column(children:
-            _menuItems.map((e) => ListTile(
-              title: Text(e.titleBuilder(context)),
-              tileColor: _isExpanded ? Color(0xFFF7FBFF) : null,
-              contentPadding: EdgeInsets.symmetric(
-                  horizontal: _horizontalSectionPadding, vertical: 0),
-              dense: true,
-              horizontalTitleGap: 0,
-              leading: e.icon,
-              iconColor: Theme.of(context).primaryColor,
-              onTap: e.onTap,
-            )).toList()
-
-          ),
+          child: Column(
+              children: _menuItems
+                  .map((e) => ListTile(
+                        title: Text(e.titleBuilder(context)),
+                        tileColor: _isExpanded ? Color(0xFFF7FBFF) : null,
+                        contentPadding: EdgeInsets.symmetric(
+                            horizontal: _horizontalSectionPadding, vertical: 0),
+                        dense: true,
+                        horizontalTitleGap: 0,
+                        leading: e.icon,
+                        iconColor: Theme.of(context).primaryColor,
+                        onTap: e.onTap,
+                      ))
+                  .toList()),
         ),
       ],
     );

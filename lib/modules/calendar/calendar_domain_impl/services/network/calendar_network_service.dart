@@ -16,6 +16,8 @@ abstract class CalendarNetworkService {
       required int syncTokenFrom,
       int? limit});
 
-  Future<List<Event>> updateEvents(
-      List<Event> events);
+  Future<List<Event>> updateEvents(List<Event> events);
+
+  Future<void> createCalendar(
+      {required String name, String? description, required String color});
 }

@@ -1,4 +1,5 @@
 import 'package:aurora_mail/generated/l10n.dart';
+import 'package:aurora_mail/modules/calendar/blocs/calendar/calendar_bloc.dart';
 import 'package:aurora_mail/modules/calendar/ui/screens/event_creation_page.dart';
 import 'package:aurora_mail/modules/calendar/ui/views/day_view.dart';
 import 'package:aurora_mail/modules/calendar/ui/views/month_view.dart';
@@ -8,6 +9,7 @@ import 'package:aurora_mail/modules/calendar/ui/widgets/calendar_tab.dart';
 import 'package:aurora_mail/shared_ui/mail_bottom_app_bar.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CalendarPage extends StatefulWidget {
   const CalendarPage({super.key});

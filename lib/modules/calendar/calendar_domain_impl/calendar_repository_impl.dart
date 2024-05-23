@@ -10,6 +10,7 @@ import 'package:aurora_mail/modules/calendar/calendar_domain_impl/mappers/event_
 import 'package:aurora_mail/modules/calendar/calendar_domain_impl/services/db/calendar_db_service.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain_impl/services/network/calendar_network_service.dart';
 import 'package:aurora_mail/modules/settings/screens/debug/default_api_interceptor.dart';
+import 'package:aurora_mail/utils/extensions/colors_extensions.dart';
 import 'package:webmail_api_client/webmail_api_client.dart';
 
 class CalendarRepositoryImpl implements CalendarRepository {
@@ -113,7 +114,17 @@ class CalendarRepositoryImpl implements CalendarRepository {
   }
 
   @override
-  Future<List<Event>> getForPeriod({required DateTime start, required DateTime end}) {
-    return _db.getEventsForPeriod(start: start, end: end, userLocalId: user.localId!);
+  Future<List<Event>> getForPeriod(
+      {required DateTime start, required DateTime end}) {
+    return _db.getEventsForPeriod(
+        start: start, end: end, userLocalId: user.localId!);
+  }
+
+  @override
+  Future<void> createCalendar(CalendarCreationData data) async {
+    await _network.createCalendar(
+        name: data.title,
+        color: data.color.toHex(),
+        description: data.description);
   }
 }

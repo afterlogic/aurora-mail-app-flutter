@@ -77,4 +77,21 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
         )
         .toList();
   }
+
+  @override
+  Future<void> createCalendar({required String name, String? description, required String color}) async {
+    final parameters = {
+      "Name": name,
+      "Color": color,
+      "Description": description ?? ''
+    };
+
+    final body = new WebMailApiBody(
+      method: "CreateCalendar",
+      parameters: jsonEncode(parameters),
+    );
+
+    final result = await calendarModule.post(body) as Map<String, dynamic>;
+    print(result);
+  }
 }
