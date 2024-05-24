@@ -1,7 +1,7 @@
-part of 'calendar_bloc.dart';
+part of 'events_bloc.dart';
 
-class CalendarState extends Equatable {
-  final CalendarStatus status;
+class EventsState extends Equatable {
+  final EventsStatus status;
   final List<CalendarEvent>? events;
   final DateTime startIntervalDate;
   final DateTime endIntervalDate;
@@ -50,8 +50,8 @@ class CalendarState extends Equatable {
     return filteredEvents;
   }
 
-  const CalendarState({
-    this.status = CalendarStatus.idle,
+  const EventsState({
+    this.status = EventsStatus.idle,
     this.events,
     required this.startIntervalDate,
     required this.endIntervalDate,
@@ -69,14 +69,15 @@ class CalendarState extends Equatable {
         '}';
   }
 
-  CalendarState copyWith({
-    CalendarStatus? status,
+  EventsState copyWith({
+    EventsStatus? status,
     List<CalendarEvent>? Function()? events,
+    List<Calendar>? Function()? calendars,
     DateTime? startIntervalDate,
     DateTime? endIntervalDate,
     DateTime? Function()? selectedDate,
   }) {
-    return CalendarState(
+    return EventsState(
       status: status ?? this.status,
       events: events == null ? this.events : events(),
       startIntervalDate: startIntervalDate ?? this.startIntervalDate,
@@ -86,11 +87,11 @@ class CalendarState extends Equatable {
   }
 }
 
-enum CalendarStatus { success, error, loading, idle }
+enum EventsStatus { success, error, loading, idle }
 
-extension EventsStatusX on CalendarStatus {
-  bool get isSuccess => this == CalendarStatus.success;
-  bool get isError => this == CalendarStatus.error;
-  bool get isLoading => this == CalendarStatus.loading;
-  bool get isIdle => this == CalendarStatus.idle;
+extension EventsStatusX on EventsStatus {
+  bool get isSuccess => this == EventsStatus.success;
+  bool get isError => this == EventsStatus.error;
+  bool get isLoading => this == EventsStatus.loading;
+  bool get isIdle => this == EventsStatus.idle;
 }

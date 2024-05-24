@@ -1,4 +1,4 @@
-import 'package:aurora_mail/modules/calendar/blocs/calendar/calendar_bloc.dart';
+import 'package:aurora_mail/modules/calendar/blocs/events/events_bloc.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/event.dart';
 import 'package:aurora_mail/modules/calendar/utils/calendar_month_builders_mixin.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/event_card.dart';
@@ -49,7 +49,7 @@ class _MonthViewState extends State<MonthView>
   }
 
   void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
-    BlocProvider.of<CalendarBloc>(context).add(SelectDate(selectedDay));
+    BlocProvider.of<EventsBloc>(context).add(SelectDate(selectedDay));
   }
 
   bool _showEventMarkerInShortMode(DateTime currentDate, bool show) {
@@ -134,7 +134,7 @@ class _MonthViewState extends State<MonthView>
                       _eventListAnimationController.reverse();
                     }
                   },
-                  child: BlocBuilder<CalendarBloc, CalendarState>(
+                  child: BlocBuilder<EventsBloc, EventsState>(
                     buildWhen: (prev, current) => prev != current,
                     builder: (context, state) {
                       return TableCalendar<CalendarEvent>(
@@ -228,7 +228,7 @@ class _MonthViewState extends State<MonthView>
                           }
                         },
                         onPageChanged: (focusedDay) {
-                          BlocProvider.of<CalendarBloc>(context)
+                          BlocProvider.of<EventsBloc>(context)
                               .add(SelectDate(focusedDay));
                         },
                       );
@@ -276,7 +276,7 @@ class _EventsInfoSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CalendarBloc, CalendarState>(
+    return BlocBuilder<EventsBloc, EventsState>(
       builder: (context, state) {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,

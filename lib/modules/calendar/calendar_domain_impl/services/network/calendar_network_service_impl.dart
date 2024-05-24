@@ -79,7 +79,7 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
   }
 
   @override
-  Future<void> createCalendar({required String name, String? description, required String color}) async {
+  Future<Calendar> createCalendar({required String name, String? description, required String color, required int userLocalId}) async {
     final parameters = {
       "Name": name,
       "Color": color,
@@ -92,6 +92,6 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
     );
 
     final result = await calendarModule.post(body) as Map<String, dynamic>;
-    print(result);
+    return CalendarMapper.fromNetwork(result, userLocalId: userLocalId);
   }
 }

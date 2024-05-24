@@ -18,6 +18,6 @@ abstract class CalendarNetworkService {
 
   Future<List<Event>> updateEvents(List<Event> events);
 
-  Future<void> createCalendar(
-      {required String name, String? description, required String color});
+  Future<Calendar> createCalendar(
+      {required String name, String? description, required String color, required int userLocalId});
 }

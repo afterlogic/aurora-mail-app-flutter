@@ -1,7 +1,8 @@
 import 'dart:math';
 
 import 'package:aurora_mail/generated/l10n.dart';
-import 'package:aurora_mail/modules/calendar/blocs/calendar/calendar_bloc.dart';
+import 'package:aurora_mail/modules/calendar/blocs/calendars/calendars_bloc.dart';
+import 'package:aurora_mail/modules/calendar/blocs/events/events_bloc.dart';
 import 'package:aurora_mail/modules/calendar/ui/dialogs/calendar_creation.dart';
 import 'package:aurora_mail/shared_ui/colored_checkbox.dart';
 import 'package:aurora_mail/utils/base_state.dart';
@@ -47,7 +48,7 @@ class _CalendarDrawerState extends BState<CalendarDrawer> {
                         onPressed: () {
                           CalendarCreationDialog.show(context).then((value) {
                             if (value != null) {
-                              BlocProvider.of<CalendarBloc>(context)
+                              BlocProvider.of<CalendarsBloc>(context)
                                   .add(CreateCalendar(creationData: value));
                             }
                           });

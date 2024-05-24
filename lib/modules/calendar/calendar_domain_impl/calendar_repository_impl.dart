@@ -19,6 +19,7 @@ class CalendarRepositoryImpl implements CalendarRepository {
   final User user;
   late final CalendarNetworkService _network;
   late final CalendarDbService _db;
+  List<String> _selectedCalendars = [];
 
   CalendarRepositoryImpl({
     required this.user,
@@ -121,10 +122,19 @@ class CalendarRepositoryImpl implements CalendarRepository {
   }
 
   @override
-  Future<void> createCalendar(CalendarCreationData data) async {
-    await _network.createCalendar(
+  Future<Calendar> createCalendar(CalendarCreationData data) async {
+    final calendarCreationResult = await _network.createCalendar(
         name: data.title,
         color: data.color.toHex(),
-        description: data.description);
+        description: data.description,
+        userLocalId: user.localId!
+    );
+    await _db.createOrUpdateCalendar(calendarCreationResult);
+    return calendarCreationResult;
+  }
+
+  @override
+  Future<List<Calendar>> getCalendars() {
+    return _db.getCalendars(user.localId!);
   }
 }

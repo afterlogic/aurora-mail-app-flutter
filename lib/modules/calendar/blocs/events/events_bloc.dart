@@ -9,16 +9,16 @@ import 'package:calendar_view/calendar_view.dart';
 import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 
-part 'calendar_event.dart';
-part 'calendar_state.dart';
+part 'events_event.dart';
+part 'events_state.dart';
 
-class CalendarBloc extends Bloc<CalendarBlocEvent, CalendarState> {
+class EventsBloc extends Bloc<EventBlocEvent, EventsState> {
   final CalendarRepository _calendarRepository;
 
-  CalendarBloc({required CalendarRepository calendarRepository})
+  EventsBloc({required CalendarRepository calendarRepository})
       : _calendarRepository = calendarRepository,
         super(
-          CalendarState(
+          EventsState(
             startIntervalDate: DateTime.now().firstDayOfMonth,
             endIntervalDate: DateTime.now().lastDayOfMonth,
           ),
@@ -26,11 +26,10 @@ class CalendarBloc extends Bloc<CalendarBlocEvent, CalendarState> {
     on<LoadEvents>(_onLoadEvents);
     on<StartSync>(_onStartSync);
     on<SelectDate>(_onSelectDate);
-    on<CreateCalendar>(_onCreateCalendar);
   }
 
   _onLoadEvents(LoadEvents event, emit) async {
-    emit(state.copyWith(status: CalendarStatus.loading));
+    emit(state.copyWith(status: EventsStatus.loading));
     try {
       final eventModels = await _calendarRepository.getForPeriod(
           start: state.startIntervalDate.withoutTime,
@@ -42,11 +41,11 @@ class CalendarBloc extends Bloc<CalendarBlocEvent, CalendarState> {
       final splitEvents =
           eventViews.expand((e) => e.splitIntoDailyEvents).toList();
       emit(state.copyWith(
-          status: CalendarStatus.success, events: () => splitEvents));
+          status: EventsStatus.success, events: () => splitEvents));
     } catch (e, st) {
-      emit(state.copyWith(status: CalendarStatus.error));
+      emit(state.copyWith(status: EventsStatus.error));
     } finally {
-      emit(state.copyWith(status: CalendarStatus.idle));
+      emit(state.copyWith(status: EventsStatus.idle));
     }
   }
 
@@ -74,18 +73,5 @@ class CalendarBloc extends Bloc<CalendarBlocEvent, CalendarState> {
       add(LoadEvents());
     }
     emit(state.copyWith(selectedDate: () => event.date));
-  }
-
-  _onCreateCalendar(CreateCalendar event, emit) async {
-    try {
-      //TODO possible without sync
-      emit(state.copyWith(status: CalendarStatus.loading));
-      await _calendarRepository.createCalendar(event.creationData);
-      await _calendarRepository.syncCalendars();
-    } catch (e, s) {
-      emit(state.copyWith(status: CalendarStatus.error));
-    } finally {
-      emit(state.copyWith(status: CalendarStatus.idle));
-    }
   }
 }
