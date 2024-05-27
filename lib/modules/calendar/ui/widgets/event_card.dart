@@ -7,11 +7,11 @@ import 'month_event_marker.dart';
 class EventCard extends StatelessWidget {
   const EventCard({super.key, required this.event});
 
-  final CalendarEvent event;
+  final ViewEvent event;
 
   @override
   Widget build(BuildContext context) {
-    return event is ViewEvent
+    return event is VisibleDayEvent
         ? Padding(
           padding: const EdgeInsets.only(bottom: 18.0),
           child: Column(
@@ -20,7 +20,7 @@ class EventCard extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 4.0),
                   child: Text(
-                    '${(event as ViewEvent).title}',
+                    '${(event as VisibleDayEvent).title}',
                     style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
                   ),
                 ),
@@ -33,11 +33,11 @@ class EventCard extends StatelessWidget {
                           borderRadius: BorderRadius.all(
                             Radius.circular(4.0),
                           ),
-                          color: generateColorFromString((event as ViewEvent).title)),
+                          color: generateColorFromString((event as VisibleDayEvent).title)),
                     ),
                    const SizedBox(width: 4,),
                     Text(
-                      DateFormat("hh:mm a").format((event as ViewEvent).startDate),
+                      DateFormat("hh:mm a").format((event as VisibleDayEvent).startDate),
                       style: TextStyle(
                         color: Color.fromRGBO(150, 148, 148, 1),
                       ),

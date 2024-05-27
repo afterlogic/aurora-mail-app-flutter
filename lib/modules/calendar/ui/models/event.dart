@@ -1,19 +1,19 @@
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/event.dart';
 import 'package:aurora_mail/modules/calendar/utils/date_time_ext.dart';
 
-abstract class CalendarEvent {
+abstract class ViewEvent {
   final DateTime startDate;
   final DateTime endDate;
-  const CalendarEvent({required this.startDate, required this.endDate});
+  const ViewEvent({required this.startDate, required this.endDate});
 }
 
-class ViewEvent extends CalendarEvent {
+class VisibleDayEvent extends ViewEvent {
   final String title;
   final String id;
   final Edge edge;
   final bool isAllDay;
 
-  const ViewEvent(
+  const VisibleDayEvent(
       {this.edge = Edge.single,
       required this.title,
       required this.id,
@@ -21,9 +21,9 @@ class ViewEvent extends CalendarEvent {
       required super.endDate,
       this.isAllDay = false});
 
-  static ViewEvent? tryFromEvent(Event model) {
+  static VisibleDayEvent? tryFromEvent(Event model) {
     try {
-      return ViewEvent(
+      return VisibleDayEvent(
           title: model.subject!,
           id: model.uid,
           startDate: model.startTS!,
@@ -33,15 +33,15 @@ class ViewEvent extends CalendarEvent {
     }
   }
 
-  ViewEvent _normalise(){
+  VisibleDayEvent _normalise(){
     if(!startDate.startOfNextDay.isAtSameMomentAs(endDate)){
       return this;
     }
     return copyWith(endDate: endDate.subtract(Duration(seconds: 1)));
   }
 
-  List<ViewEvent> get splitIntoDailyEvents {
-    List<ViewEvent> dailyEvents = [];
+  List<VisibleDayEvent> get splitIntoDailyEvents {
+    List<VisibleDayEvent> dailyEvents = [];
     final event = _normalise();
 
     DateTime currentStart = event.startDate;
@@ -114,8 +114,8 @@ class ViewEvent extends CalendarEvent {
   @override
   String toString() => title;
 
-  ViewEvent copyWith({DateTime? startDate, DateTime? endDate, Edge? edge}) {
-    return ViewEvent(
+  VisibleDayEvent copyWith({DateTime? startDate, DateTime? endDate, Edge? edge}) {
+    return VisibleDayEvent(
         title: title,
         id: id,
         edge: edge ?? this.edge,
@@ -124,7 +124,7 @@ class ViewEvent extends CalendarEvent {
   }
 }
 
-class EmptyEvent extends CalendarEvent {
+class EmptyEvent extends ViewEvent {
   const EmptyEvent({required super.startDate, required super.endDate});
 }
 

@@ -5,7 +5,7 @@ class MonthEventMarker extends StatelessWidget {
   const MonthEventMarker(
       {super.key, required this.event, this.height = 15, this.eventGap = 2});
 
-  final CalendarEvent event;
+  final ViewEvent event;
   final double eventGap;
   final double height;
 
@@ -13,20 +13,20 @@ class MonthEventMarker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return event is ViewEvent
+    return event is VisibleDayEvent
         ? Container(
             margin: EdgeInsets.only(bottom: eventGap),
             decoration: BoxDecoration(
-                borderRadius: _calculateBorderRadius((event as ViewEvent).edge),
-                color: generateColorFromString((event as ViewEvent).title)),
+                borderRadius: _calculateBorderRadius((event as VisibleDayEvent).edge),
+                color: generateColorFromString((event as VisibleDayEvent).title)),
             width: 60,
             height: height,
             padding: EdgeInsets.only(left: 4),
             child: Align(
                 alignment: Alignment.centerLeft,
                 child: _EventText(
-                  title: (event as ViewEvent).title,
-                  edge: (event as ViewEvent).edge,
+                  title: (event as VisibleDayEvent).title,
+                  edge: (event as VisibleDayEvent).edge,
                 )),
           )
         : SizedBox(

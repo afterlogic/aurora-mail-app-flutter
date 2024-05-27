@@ -1,7 +1,11 @@
+import 'dart:async';
+
 import 'package:aurora_mail/modules/calendar/calendar_domain/calendar_repository.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/calendar.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/event.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain_impl/calendar_usecase_impl.dart';
+import 'package:aurora_mail/modules/calendar/ui/models/calendar.dart';
+import 'package:rxdart/streams.dart';
 
 abstract class CalendarUseCase {
   factory CalendarUseCase({
@@ -12,16 +16,17 @@ abstract class CalendarUseCase {
       );
 
 
+  ValueStream<List<ViewCalendar>> get calendarsSubscription;
 
   Future<void> syncCalendars();
 
   Future<List<Event>> getForPeriod({required DateTime start, required DateTime end});
 
-  Future<Calendar> createCalendar(CalendarCreationData data);
+  Future<void> createCalendar(CalendarCreationData data);
 
-  Future<List<Calendar>> getCalendars();
+  Future<void> deleteCalendar(ViewCalendar calendar);
 
-  ///returns update list of selected ids
-  List<String> updateSelectedCalendarIds({required String selectedId, bool isAdded = true});
+  Future<void> getCalendars();
 
+  void updateSelectedCalendarIds({required String selectedId, bool isAdded = true});
 }

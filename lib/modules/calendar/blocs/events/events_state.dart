@@ -2,14 +2,14 @@ part of 'events_bloc.dart';
 
 class EventsState extends Equatable {
   final EventsStatus status;
-  final List<CalendarEvent>? events;
+  final List<ViewEvent>? events;
   final DateTime startIntervalDate;
   final DateTime endIntervalDate;
   final DateTime? selectedDate;
 
   @override
   List<Object?> get props => [status, events, startIntervalDate, endIntervalDate, selectedDate];
-  List<CalendarEvent> get eventsByMonth {
+  List<ViewEvent> get eventsByMonth {
     if (events == null) {
       return [];
     }
@@ -24,7 +24,7 @@ class EventsState extends Equatable {
     }).toList();
   }
 
-  List<CalendarEvent> getEventsFromDay(DateTime date) {
+  List<ViewEvent> getEventsFromDay(DateTime date) {
     if (events == null) {
       return [];
     }
@@ -42,7 +42,7 @@ class EventsState extends Equatable {
     }).toList();
   }
 
-  List<CalendarEvent>? get selectedEvents {
+  List<ViewEvent>? get selectedEvents {
     if(selectedDate == null) return events;
     final filteredEvents = events?.where((e) =>
     e.startDate.isBefore(selectedDate!.startOfNextDay) &&
@@ -71,7 +71,7 @@ class EventsState extends Equatable {
 
   EventsState copyWith({
     EventsStatus? status,
-    List<CalendarEvent>? Function()? events,
+    List<ViewEvent>? Function()? events,
     List<Calendar>? Function()? calendars,
     DateTime? startIntervalDate,
     DateTime? endIntervalDate,

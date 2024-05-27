@@ -1,3 +1,4 @@
+import 'package:aurora_mail/modules/calendar/ui/models/calendar.dart';
 import 'package:flutter/material.dart';
 
 class Calendar {
@@ -33,42 +34,23 @@ class Calendar {
     required this.syncToken,
   });
 
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      (other is Calendar &&
-          runtimeType == other.runtimeType &&
-          id == other.id &&
-          userLocalId == other.userLocalId &&
-          color == other.color &&
-          description == other.description &&
-          name == other.name &&
-          owner == other.owner &&
-          isDefault == other.isDefault &&
-          shared == other.shared &&
-          sharedToAll == other.sharedToAll &&
-          sharedToAllAccess == other.sharedToAllAccess &&
-          access == other.access &&
-          isPublic == other.isPublic &&
-          // shares == other.shares &&
-          syncToken == other.syncToken);
+  ViewCalendar toViewCalendar() {
+    return ViewCalendar(
+        id: id,
+        userLocalId: userLocalId,
+        color: color,
+        name: name,
+        owner: owner,
+        isDefault: isDefault,
+        shared: shared,
+        sharedToAll: sharedToAll,
+        sharedToAllAccess: sharedToAllAccess,
+        access: access,
+        isPublic: isPublic,
+        description: description,
+        syncToken: syncToken);
+  }
 
-  @override
-  int get hashCode =>
-      id.hashCode ^
-      userLocalId.hashCode ^
-      color.hashCode ^
-      description.hashCode ^
-      name.hashCode ^
-      owner.hashCode ^
-      isDefault.hashCode ^
-      shared.hashCode ^
-      sharedToAll.hashCode ^
-      sharedToAllAccess.hashCode ^
-      access.hashCode ^
-      isPublic.hashCode ^
-      // shares.hashCode ^
-      syncToken.hashCode;
 
   @override
   String toString() {
@@ -125,18 +107,15 @@ class Calendar {
   }
 }
 
-class CalendarCreationData{
+class CalendarCreationData {
   final String title;
   final String description;
   final Color color;
   final String? iCalMail;
 
-  const CalendarCreationData({
-    required this.title,
-    required this.description,
-    required this.color,
-    this.iCalMail
-  });
+  const CalendarCreationData(
+      {required this.title,
+      required this.description,
+      required this.color,
+      this.iCalMail});
 }
-
-

@@ -19,7 +19,6 @@ class CalendarRepositoryImpl implements CalendarRepository {
   final User user;
   late final CalendarNetworkService _network;
   late final CalendarDbService _db;
-  List<String> _selectedCalendars = [];
 
   CalendarRepositoryImpl({
     required this.user,
@@ -136,5 +135,11 @@ class CalendarRepositoryImpl implements CalendarRepository {
   @override
   Future<List<Calendar>> getCalendars() {
     return _db.getCalendars(user.localId!);
+  }
+
+  @override
+  Future<void> deleteCalendar(Calendar calendar) async {
+    await _network.deleteCalendar(id: calendar.id);
+    await _db.deleteCalendars([calendar]);
   }
 }

@@ -94,4 +94,18 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
     final result = await calendarModule.post(body) as Map<String, dynamic>;
     return CalendarMapper.fromNetwork(result, userLocalId: userLocalId);
   }
+
+  @override
+  Future<void> deleteCalendar({required String id}) async {
+    final parameters = {
+      "Id": id
+    };
+
+    final body = new WebMailApiBody(
+      method: "DeleteCalendar",
+      parameters: jsonEncode(parameters),
+    );
+
+    await calendarModule.post(body);
+  }
 }

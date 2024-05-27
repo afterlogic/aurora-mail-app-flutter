@@ -19,6 +19,22 @@ class GetCalendars extends CalendarsEvent {
   const GetCalendars();
 }
 
+class AddCalendars extends CalendarsEvent {
+
+  final List<ViewCalendar> calendars;
+  const AddCalendars(this.calendars);
+  @override
+  List<Object?> get props => [calendars];
+}
+
+class DeleteCalendar extends CalendarsEvent {
+  final ViewCalendar calendar;
+  const DeleteCalendar(this.calendar);
+
+  @override
+  List<Object?> get props => [calendar];
+}
+
 class UpdateCalendarSelection extends CalendarsEvent {
   final bool selected;
   final String calendarId;

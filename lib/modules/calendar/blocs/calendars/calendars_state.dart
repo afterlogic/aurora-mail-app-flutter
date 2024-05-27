@@ -2,17 +2,15 @@ part of 'calendars_bloc.dart';
 
 class CalendarsState extends Equatable {
   final CalendarsStatus status;
-  final List<Calendar>? calendars;
-  final List<String> selectedCalendarIds;
+  final List<ViewCalendar>? calendars;
 
   @override
-  List<Object?> get props => [status,  calendars, selectedCalendarIds];
+  List<Object?> get props => [status,  calendars];
 
 
 
   const CalendarsState({
     this.status = CalendarsStatus.idle,
-    this.selectedCalendarIds = const [],
     this.calendars,
   });
 
@@ -24,18 +22,13 @@ class CalendarsState extends Equatable {
         '}';
   }
 
-  bool isCalendarSelected(Calendar calendar) =>
-    selectedCalendarIds.contains(calendar.id);
-
 
   CalendarsState copyWith({
     CalendarsStatus? status,
-    List<Calendar>? Function()? calendars,
-    List<String>? selectedCalendarIds,
+    List<ViewCalendar>? Function()? calendars,
   }) {
     return CalendarsState(
       status: status ?? this.status,
-      selectedCalendarIds: selectedCalendarIds ?? this.selectedCalendarIds,
       calendars: calendars == null ? this.calendars : calendars(),
     );
   }

@@ -1,5 +1,6 @@
 import 'package:aurora_mail/modules/calendar/calendar_domain/calendar_usecase.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/calendar.dart';
+import 'package:aurora_mail/modules/calendar/ui/models/calendar.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/event.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -15,16 +16,23 @@ class CalendarsBloc extends Bloc<CalendarsEvent, CalendarsState> {
         super(
           CalendarsState(),
         ) {
+    _useCase.calendarsSubscription.listen((value) {
+      add(AddCalendars(value));
+    });
     on<CreateCalendar>(_onCreateCalendar);
     on<GetCalendars>(_onGetCalendars);
+    on<AddCalendars>(_onAddCalendars);
+    on<DeleteCalendar>(_onDeleteCalendar);
     on<UpdateCalendarSelection>(_onUpdateCalendarSelection);
+  }
+
+  _onAddCalendars(AddCalendars event, emit) async {
+    emit(state.copyWith(calendars: () => event.calendars));
   }
 
   _onCreateCalendar(CreateCalendar event, emit) async {
     try {
-      final addedCalendar = await _useCase.createCalendar(event.creationData);
-      emit(state.copyWith(
-          calendars: () => [...?state.calendars, addedCalendar]));
+      await _useCase.createCalendar(event.creationData);
     } catch (e, s) {
       emit(state.copyWith(status: CalendarsStatus.error));
     } finally {
@@ -34,8 +42,17 @@ class CalendarsBloc extends Bloc<CalendarsEvent, CalendarsState> {
 
   _onGetCalendars(GetCalendars event, emit) async {
     try {
-      final calendars = await _useCase.getCalendars();
-      emit(state.copyWith(calendars: () => calendars));
+      await _useCase.getCalendars();
+    } catch (e, s) {
+      emit(state.copyWith(status: CalendarsStatus.error));
+    } finally {
+      emit(state.copyWith(status: CalendarsStatus.idle));
+    }
+  }
+
+  _onDeleteCalendar(DeleteCalendar event, emit) async {
+    try {
+      _useCase.deleteCalendar(event.calendar);
     } catch (e, s) {
       emit(state.copyWith(status: CalendarsStatus.error));
     } finally {
@@ -44,8 +61,7 @@ class CalendarsBloc extends Bloc<CalendarsEvent, CalendarsState> {
   }
 
   _onUpdateCalendarSelection(UpdateCalendarSelection event, emit) async {
-    final updatedSelectedIds = _useCase.updateSelectedCalendarIds(
+    _useCase.updateSelectedCalendarIds(
         selectedId: event.calendarId, isAdded: event.selected);
-    emit(state.copyWith(selectedCalendarIds: updatedSelectedIds));
   }
 }

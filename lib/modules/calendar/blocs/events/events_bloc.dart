@@ -35,7 +35,7 @@ class EventsBloc extends Bloc<EventBlocEvent, EventsState> {
           start: state.startIntervalDate.withoutTime,
           end: state.endIntervalDate.startOfNextDay);
       final eventViews = eventModels
-          .map((e) => ViewEvent.tryFromEvent(e))
+          .map((e) => VisibleDayEvent.tryFromEvent(e))
           .whereNotNull()
           .toList();
       final splitEvents =

@@ -18,6 +18,8 @@ abstract class CalendarRepository {
   /// [end] - not included
   Future<List<Event>> getForPeriod({required DateTime start, required DateTime end});
 
+  Future<void> deleteCalendar(Calendar calendar);
+
   Future<Calendar> createCalendar(CalendarCreationData data);
 
   Future<List<Calendar>> getCalendars();

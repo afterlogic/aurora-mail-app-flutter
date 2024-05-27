@@ -2,8 +2,9 @@ import 'dart:math';
 
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/calendar/blocs/calendars/calendars_bloc.dart';
-import 'package:aurora_mail/modules/calendar/blocs/events/events_bloc.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/calendar.dart';
 import 'package:aurora_mail/modules/calendar/ui/dialogs/calendar_creation.dart';
+import 'package:aurora_mail/modules/calendar/ui/models/calendar.dart';
 import 'package:aurora_mail/shared_ui/colored_checkbox.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:flutter/material.dart';
@@ -64,9 +65,27 @@ class _CalendarDrawerState extends BState<CalendarDrawer> {
                 color: const Color(0xFFF1F1F1),
                 height: 1,
               ),
-              CollapsibleCheckboxList(
-                title: 'MyCalendar',
-              ),
+              BlocBuilder<CalendarsBloc, CalendarsState>(
+                  builder: (context, state) {
+                if (state.calendars != null) {
+                  return Column(
+                    children: state.calendars!
+                        .map<Widget>((e) => CollapsibleCheckboxList(
+                              calendar: e,
+                              onChanged: (bool? value) {
+                                BlocProvider.of<CalendarsBloc>(context).add(
+                                    UpdateCalendarSelection(
+                                        calendarId: e.id,
+                                        selected: value ?? false));
+                              },
+                              isChecked: e.selected,
+                            ))
+                        .toList(),
+                  );
+                } else {
+                  return SizedBox.shrink();
+                }
+              }),
             ],
           ),
         ),
@@ -76,11 +95,14 @@ class _CalendarDrawerState extends BState<CalendarDrawer> {
 }
 
 class CollapsibleCheckboxList extends StatefulWidget {
-  final String title;
+  final ViewCalendar calendar;
+  final bool isChecked;
+  final Function(bool?) onChanged;
 
-  CollapsibleCheckboxList({
-    required this.title,
-  });
+  CollapsibleCheckboxList(
+      {required this.calendar,
+      required this.onChanged,
+      required this.isChecked});
 
   @override
   _CollapsibleCheckboxListState createState() =>
@@ -90,7 +112,7 @@ class CollapsibleCheckboxList extends StatefulWidget {
 class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
     with SingleTickerProviderStateMixin {
   bool _isExpanded = false;
-  bool? _isChecked = false;
+
   late AnimationController _animationController;
 
   @override
@@ -100,6 +122,31 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
       duration: const Duration(milliseconds: 200),
       vsync: this,
     );
+
+    _menuItems = [
+      _MenuItem(
+          icon: Icon(Icons.edit_outlined),
+          titleBuilder: (ctx) => S.of(ctx).contacts_view_app_bar_edit_contact,
+          onTap: (ctx) {}),
+      _MenuItem(
+          icon: Icon(Icons.file_download_outlined),
+          titleBuilder: (ctx) => 'Import ICS file',
+          onTap: (ctx) {}),
+      _MenuItem(
+          icon: Icon(Icons.link),
+          titleBuilder: (ctx) => 'Get a link',
+          onTap: (ctx) {}),
+      _MenuItem(
+          icon: Icon(Icons.group_add_outlined),
+          titleBuilder: (ctx) => S.of(ctx).btn_share,
+          onTap: (ctx) {}),
+      _MenuItem(
+          icon: Icon(Icons.delete_outline),
+          titleBuilder: (ctx) => S.of(ctx).btn_delete,
+          onTap: (ctx) {
+            BlocProvider.of<CalendarsBloc>(ctx).add(DeleteCalendar(widget.calendar));
+          }),
+    ];
   }
 
   @override
@@ -119,28 +166,8 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
     });
   }
 
-  final _menuItems = [
-    _MenuItem(
-        icon: Icon(Icons.edit_outlined),
-        titleBuilder: (ctx) => S.of(ctx).contacts_view_app_bar_edit_contact,
-        onTap: () {}),
-    _MenuItem(
-        icon: Icon(Icons.file_download_outlined),
-        titleBuilder: (ctx) => 'Import ICS file',
-        onTap: () {}),
-    _MenuItem(
-        icon: Icon(Icons.link),
-        titleBuilder: (ctx) => 'Get a link',
-        onTap: () {}),
-    _MenuItem(
-        icon: Icon(Icons.group_add_outlined),
-        titleBuilder: (ctx) => S.of(ctx).btn_share,
-        onTap: () {}),
-    _MenuItem(
-        icon: Icon(Icons.delete_outline),
-        titleBuilder: (ctx) => S.of(ctx).btn_delete,
-        onTap: () {}),
-  ];
+
+  late final List<_MenuItem> _menuItems;
 
   @override
   Widget build(BuildContext context) {
@@ -161,20 +188,16 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
                   width: 24,
                   height: 24,
                   child: ColoredCheckbox(
-                    color: Colors.red,
-                    value: _isChecked,
-                    onChanged: (value) {
-                      setState(() {
-                        _isChecked = value;
-                      });
-                    },
+                    color: widget.calendar.color,
+                    value: widget.isChecked,
+                    onChanged: widget.onChanged,
                   ),
                 ),
                 const SizedBox(
                   width: 16,
                 ),
                 Expanded(
-                  child: Text(widget.title),
+                  child: Text(widget.calendar.name),
                 ),
                 AnimatedBuilder(
                   animation: _animationController,
@@ -207,7 +230,7 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
                         horizontalTitleGap: 0,
                         leading: e.icon,
                         iconColor: Theme.of(context).primaryColor,
-                        onTap: e.onTap,
+                        onTap: () => e.onTap(context),
                       ))
                   .toList()),
         ),
@@ -219,7 +242,7 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
 class _MenuItem {
   final Icon icon;
   final String Function(BuildContext ctx) titleBuilder;
-  final VoidCallback onTap;
+  final void Function(BuildContext ctx) onTap;
 
   const _MenuItem({
     required this.icon,

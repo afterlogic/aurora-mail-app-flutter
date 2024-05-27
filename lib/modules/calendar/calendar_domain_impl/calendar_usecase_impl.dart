@@ -1,25 +1,31 @@
+import 'dart:async';
+
 import 'package:aurora_mail/modules/calendar/calendar_domain/calendar_repository.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/calendar_usecase.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/calendar.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/event.dart';
+import 'package:aurora_mail/modules/calendar/ui/models/calendar.dart';
+import 'package:rxdart/rxdart.dart';
 
 class CalendarUseCaseImpl implements CalendarUseCase {
   final CalendarRepository repository;
 
   CalendarUseCaseImpl({required this.repository});
 
-  List<String> _selectedCalendarIds = [];
   DateTime? _selectedStartEventsInterval;
   DateTime? _selectedEndEventsInterval;
+  final BehaviorSubject<List<ViewCalendar>> _calendarsSubject = BehaviorSubject.seeded([]);
 
   @override
-  Future<Calendar> createCalendar(CalendarCreationData data) {
-    return repository.createCalendar(data);
+  Future<void> createCalendar(CalendarCreationData data) async {
+    final addedCalendar = await repository.createCalendar(data);
+    _calendarsSubject.add([..._calendarsSubject.value, addedCalendar.toViewCalendar()]);
   }
 
   @override
-  Future<List<Calendar>> getCalendars() {
-    return repository.getCalendars();
+  Future<void> getCalendars() async{
+    final calendars = await repository.getCalendars();
+    _calendarsSubject.add(calendars.map((e) => e.toViewCalendar()).toList());
   }
 
   @override
@@ -34,15 +40,25 @@ class CalendarUseCaseImpl implements CalendarUseCase {
   }
 
   @override
-  List<String> updateSelectedCalendarIds({required String selectedId, bool isAdded = true}) {
-    if(isAdded){
-      _selectedCalendarIds.add(selectedId);
-    } else{
-      _selectedCalendarIds.removeWhere((e) => e == selectedId);
+  void updateSelectedCalendarIds({required String selectedId, bool isAdded = true}) {
+    final calendars = [..._calendarsSubject.value];
+    int index = calendars.indexWhere((e) => e.id == selectedId);
+
+    if (index != -1) {
+      final selectedCalendar = calendars[index].updateSelect(isAdded);
+      calendars[index] = selectedCalendar;
     }
 
-    return _selectedCalendarIds;
+    _calendarsSubject.add(calendars);
     // TODO: update stream of events
-
   }
+
+  @override
+  Future<void> deleteCalendar(ViewCalendar calendar) async{
+    await repository.deleteCalendar(calendar);
+    _calendarsSubject.add([..._calendarsSubject.value.where((e) => e != calendar)]);
+  }
+
+  @override
+  ValueStream<List<ViewCalendar>> get calendarsSubscription => _calendarsSubject.stream;
 }
