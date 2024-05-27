@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:aurora_mail/modules/calendar/calendar_domain/calendar_repository.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/calendar.dart';
-import 'package:aurora_mail/modules/calendar/calendar_domain/models/event.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain_impl/calendar_usecase_impl.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/calendar.dart';
+import 'package:aurora_mail/modules/calendar/ui/models/event.dart';
 import 'package:rxdart/streams.dart';
 
 abstract class CalendarUseCase {
@@ -18,9 +18,11 @@ abstract class CalendarUseCase {
 
   ValueStream<List<ViewCalendar>> get calendarsSubscription;
 
+  ValueStream<List<VisibleDayEvent>> get eventsSubscription;
+
   Future<void> syncCalendars();
 
-  Future<List<Event>> getForPeriod({required DateTime start, required DateTime end});
+  Future<void> getForPeriod({required DateTime start, required DateTime end});
 
   Future<void> createCalendar(CalendarCreationData data);
 

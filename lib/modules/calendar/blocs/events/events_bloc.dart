@@ -1,29 +1,32 @@
 import 'dart:async';
 
-import 'package:aurora_mail/modules/calendar/calendar_domain/calendar_repository.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/calendar_usecase.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/calendar.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/event.dart';
 import 'package:aurora_mail/modules/calendar/utils/date_time_ext.dart';
 import 'package:bloc/bloc.dart';
 import 'package:calendar_view/calendar_view.dart';
-import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 
 part 'events_event.dart';
 part 'events_state.dart';
 
 class EventsBloc extends Bloc<EventBlocEvent, EventsState> {
-  final CalendarRepository _calendarRepository;
+  final CalendarUseCase _useCase;
 
-  EventsBloc({required CalendarRepository calendarRepository})
-      : _calendarRepository = calendarRepository,
+  EventsBloc({required CalendarUseCase useCase})
+      : _useCase = useCase,
         super(
           EventsState(
             startIntervalDate: DateTime.now().firstDayOfMonth,
             endIntervalDate: DateTime.now().lastDayOfMonth,
           ),
         ) {
+    _useCase.eventsSubscription.listen((events) {
+      add(AddEvents(events));
+    });
     on<LoadEvents>(_onLoadEvents);
+    on<AddEvents>(_onAddEvents);
     on<StartSync>(_onStartSync);
     on<SelectDate>(_onSelectDate);
   }
@@ -31,15 +34,20 @@ class EventsBloc extends Bloc<EventBlocEvent, EventsState> {
   _onLoadEvents(LoadEvents event, emit) async {
     emit(state.copyWith(status: EventsStatus.loading));
     try {
-      final eventModels = await _calendarRepository.getForPeriod(
+      await _useCase.getForPeriod(
           start: state.startIntervalDate.withoutTime,
           end: state.endIntervalDate.startOfNextDay);
-      final eventViews = eventModels
-          .map((e) => VisibleDayEvent.tryFromEvent(e))
-          .whereNotNull()
-          .toList();
+    } catch (e, st) {
+      emit(state.copyWith(status: EventsStatus.error));
+    } finally {
+      emit(state.copyWith(status: EventsStatus.idle));
+    }
+  }
+
+  _onAddEvents(AddEvents event, emit) async {
+    try {
       final splitEvents =
-          eventViews.expand((e) => e.splitIntoDailyEvents).toList();
+          event.events.expand((e) => e.splitIntoDailyEvents).toList();
       emit(state.copyWith(
           status: EventsStatus.success, events: () => splitEvents));
     } catch (e, st) {
@@ -51,7 +59,7 @@ class EventsBloc extends Bloc<EventBlocEvent, EventsState> {
 
   _onStartSync(StartSync event, emit) async {
     try {
-      await _calendarRepository.syncCalendars();
+      await _useCase.syncCalendars();
       add(LoadEvents());
     } catch (e, st) {
       print(e);

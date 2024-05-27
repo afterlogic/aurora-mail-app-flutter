@@ -190,9 +190,11 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
                   builder: (_, settingsState) {
                     if (settingsState is SettingsLoaded) {
                       final theme = _getTheme(settingsState.darkThemeEnabled);
-                      final calendarRepository = CalendarRepository(
+                      final calendarRepository = authState.user != null ?  CalendarRepository(
                           user: _authBloc.currentUser,
-                          appDB: DBInstances.appDB);
+                          appDB: DBInstances.appDB) : null;
+                      final calendarUseCase = authState.user != null ?
+                          CalendarUseCase(repository: calendarRepository) : null;
 
                       return MultiBlocProvider(
                         providers: [
@@ -204,14 +206,12 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
                               account: _authBloc.currentAccount,
                             ),
                           ),
-                          BlocProvider(
-                            create: (_) => EventsBloc(
-                                calendarRepository: calendarRepository),
+                          if(authState.user != null)BlocProvider(
+                            create: (_) => EventsBloc(useCase: calendarUseCase),
                           ),
-                          BlocProvider(
-                            create: (_) => CalendarsBloc(
-                                useCase: CalendarUseCase(
-                                    repository: calendarRepository)),
+                          if(authState.user != null)BlocProvider(
+                            create: (_) =>
+                                CalendarsBloc(useCase: calendarUseCase),
                           ),
                           BlocProvider(
                             create: (_) => MessagesListBloc(

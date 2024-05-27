@@ -78,8 +78,10 @@ class CalendarDbServiceImpl implements CalendarDbService {
   Future<List<Event>> getEventsForPeriod(
       {required DateTime start,
       required DateTime end,
+      required List<String> calendarIds,
       required int userLocalId}) async {
     final entities = await _eventDao.getForPeriod(
+      calendarIds: calendarIds,
         start: start, end: end, userLocalId: userLocalId);
     return entities.map((e) => Event.fromDb(e)).toList();
   }

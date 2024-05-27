@@ -92,10 +92,12 @@ class EventDao extends DatabaseAccessor<AppDatabase> with _$EventDaoMixin {
   Future<List<EventDb>> getForPeriod(
       {required DateTime start,
       required DateTime end,
+        required List<String> calendarIds,
       required int userLocalId}) {
     return (select(eventTable)
           ..where((t) =>
               t.userLocalId.equals(userLocalId) &
+              t.calendarId.isIn(calendarIds) &
               t.onceLoaded.equals(true) &
               t.startTS.isBiggerOrEqualValue(start) &
               t.endTS.isSmallerThanValue(end))

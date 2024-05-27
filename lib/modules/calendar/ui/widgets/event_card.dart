@@ -33,7 +33,7 @@ class EventCard extends StatelessWidget {
                           borderRadius: BorderRadius.all(
                             Radius.circular(4.0),
                           ),
-                          color: generateColorFromString((event as VisibleDayEvent).title)),
+                          color: (event as VisibleDayEvent).color),
                     ),
                    const SizedBox(width: 4,),
                     Text(

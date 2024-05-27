@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/event.dart';
 import 'package:aurora_mail/modules/calendar/utils/date_time_ext.dart';
 
@@ -12,6 +14,7 @@ class VisibleDayEvent extends ViewEvent {
   final String id;
   final Edge edge;
   final bool isAllDay;
+  final Color color;
 
   const VisibleDayEvent(
       {this.edge = Edge.single,
@@ -19,22 +22,24 @@ class VisibleDayEvent extends ViewEvent {
       required this.id,
       required super.startDate,
       required super.endDate,
+      required this.color,
       this.isAllDay = false});
 
-  static VisibleDayEvent? tryFromEvent(Event model) {
+  static VisibleDayEvent? tryFromEvent(Event model, {required Color color}) {
     try {
       return VisibleDayEvent(
           title: model.subject!,
           id: model.uid,
           startDate: model.startTS!,
-          endDate: model.endTS!);
+          endDate: model.endTS!,
+          color: color);
     } catch (e) {
       return null;
     }
   }
 
-  VisibleDayEvent _normalise(){
-    if(!startDate.startOfNextDay.isAtSameMomentAs(endDate)){
+  VisibleDayEvent _normalise() {
+    if (!startDate.startOfNextDay.isAtSameMomentAs(endDate)) {
       return this;
     }
     return copyWith(endDate: endDate.subtract(Duration(seconds: 1)));
@@ -68,7 +73,6 @@ class VisibleDayEvent extends ViewEvent {
         59,
       );
 
-
       if (currentEnd.isAfter(event.endDate) ||
           currentEnd.isAtSameMomentAs(event.endDate)) {
         currentEnd = event.endDate;
@@ -99,28 +103,18 @@ class VisibleDayEvent extends ViewEvent {
     return dailyEvents;
   }
 
-  // late final Edge eventEdge;
-  // if (isFirstEvent) {
-  // eventEdge = Edge.start;
-  // } else if (isLastEvent) {
-  // eventEdge = Edge.end;
-  // } else {
-  // eventEdge = Edge.part;
-  // }
-  //
-  // dailyEvents.add(copyWith(
-  // startDate: currentStart, endDate: currentEnd, edge: eventEdge));
-
   @override
   String toString() => title;
 
-  VisibleDayEvent copyWith({DateTime? startDate, DateTime? endDate, Edge? edge}) {
+  VisibleDayEvent copyWith(
+      {DateTime? startDate, DateTime? endDate, Edge? edge, Color? color}) {
     return VisibleDayEvent(
         title: title,
         id: id,
         edge: edge ?? this.edge,
         startDate: startDate ?? this.startDate,
-        endDate: endDate ?? this.endDate);
+        endDate: endDate ?? this.endDate,
+        color: color ?? this.color);
   }
 }
 
