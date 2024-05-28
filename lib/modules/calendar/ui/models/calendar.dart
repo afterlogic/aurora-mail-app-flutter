@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/calendar.dart';
 import 'package:equatable/equatable.dart';
 
@@ -56,4 +58,46 @@ class ViewCalendar extends Calendar implements Equatable {
 
   @override
   bool? get stringify => null;
+
+  @override
+  ViewCalendar copyWith({
+    String? id,
+    int? userLocalId,
+    Color? color,
+    String? Function()? description,
+    String? name,
+    String? owner,
+    bool? isDefault,
+    bool? shared,
+    bool? sharedToAll,
+    int? sharedToAllAccess,
+    int? access,
+    bool? isPublic,
+    List? shares,
+    String? syncToken,
+  }) {
+    return ViewCalendar(
+      selected: this.selected,
+      id: id ?? this.id,
+      userLocalId: userLocalId ?? this.userLocalId,
+      color: color ?? this.color,
+      description: description == null ? this.description : description(),
+      name: name ?? this.name,
+      owner: owner ?? this.owner,
+      isDefault: isDefault ?? this.isDefault,
+      shared: shared ?? this.shared,
+      sharedToAll: sharedToAll ?? this.sharedToAll,
+      sharedToAllAccess: sharedToAllAccess ?? this.sharedToAllAccess,
+      access: access ?? this.access,
+      isPublic: isPublic ?? this.isPublic,
+      // shares: shares ?? this.shares,
+      syncToken: syncToken ?? this.syncToken,
+    );
+  }
+
+  bool updated(ViewCalendar comparable) {
+    return name != comparable.name ||
+        description != comparable.description ||
+        color != comparable.color;
+  }
 }

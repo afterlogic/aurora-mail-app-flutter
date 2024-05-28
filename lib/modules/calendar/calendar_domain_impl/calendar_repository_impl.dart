@@ -115,9 +115,14 @@ class CalendarRepositoryImpl implements CalendarRepository {
 
   @override
   Future<List<Event>> getForPeriod(
-      {required DateTime start, required DateTime end, required List<String> calendarIds}) {
+      {required DateTime start,
+      required DateTime end,
+      required List<String> calendarIds}) {
     return _db.getEventsForPeriod(
-        start: start, end: end, userLocalId: user.localId!, calendarIds: calendarIds);
+        start: start,
+        end: end,
+        userLocalId: user.localId!,
+        calendarIds: calendarIds);
   }
 
   @override
@@ -126,8 +131,7 @@ class CalendarRepositoryImpl implements CalendarRepository {
         name: data.title,
         color: data.color.toHex(),
         description: data.description,
-        userLocalId: user.localId!
-    );
+        userLocalId: user.localId!);
     await _db.createOrUpdateCalendar(calendarCreationResult);
     return calendarCreationResult;
   }
@@ -141,5 +145,17 @@ class CalendarRepositoryImpl implements CalendarRepository {
   Future<void> deleteCalendar(Calendar calendar) async {
     await _network.deleteCalendar(id: calendar.id);
     await _db.deleteCalendars([calendar]);
+  }
+
+  @override
+  Future<Calendar> updateCalendar(Calendar calendar) async {
+    final isUpdated = await _network.updateCalendar(
+        id: calendar.id,
+        name: calendar.name,
+        description: calendar.description ?? '',
+        color: calendar.color.toHex());
+    if(!isUpdated) throw Exception('Error while updating calendar');
+    await _db.createOrUpdateCalendar(calendar);
+    return calendar;
   }
 }

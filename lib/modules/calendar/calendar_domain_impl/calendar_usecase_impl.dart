@@ -28,6 +28,14 @@ class CalendarUseCaseImpl implements CalendarUseCase {
       .toList();
 
   @override
+  ValueStream<List<ViewCalendar>> get calendarsSubscription =>
+      _calendarsSubject.stream;
+
+  @override
+  ValueStream<List<VisibleDayEvent>> get eventsSubscription =>
+      _eventsSubject.stream;
+
+  @override
   Future<void> createCalendar(CalendarCreationData data) async {
     final addedCalendar = await repository.createCalendar(data);
     _calendarsSubject
@@ -49,8 +57,9 @@ class CalendarUseCaseImpl implements CalendarUseCase {
   }
 
   @override
-  Future<void> syncCalendars() {
-    return repository.syncCalendars();
+  Future<void> syncCalendars() async{
+    await repository.syncCalendars();
+    await getCalendars();
   }
 
   @override
@@ -76,12 +85,20 @@ class CalendarUseCaseImpl implements CalendarUseCase {
   }
 
   @override
-  ValueStream<List<ViewCalendar>> get calendarsSubscription =>
-      _calendarsSubject.stream;
+  Future<void> updateCalendar(ViewCalendar calendar) async{
+    final calendars = [..._calendarsSubject.value];
+    final updatableCalendar =
+      calendars.firstWhere((e) => e.id == calendar.id);
+    if(!updatableCalendar.updated(calendar)){
+      return;
+    };
+    await repository.updateCalendar(calendar);
 
-  @override
-  ValueStream<List<VisibleDayEvent>> get eventsSubscription =>
-      _eventsSubject.stream;
+    int index = calendars.indexWhere((e) => e.id == calendar.id);
+    calendars[index] = calendar;
+    _calendarsSubject.add(calendars);
+    _getLocalEvents();
+  }
 
   Future _getLocalEvents() async {
     if (_selectedStartEventsInterval == null ||

@@ -1,7 +1,6 @@
 import 'package:aurora_mail/modules/calendar/calendar_domain/calendar_usecase.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/calendar.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/calendar.dart';
-import 'package:aurora_mail/modules/calendar/ui/models/event.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
@@ -23,6 +22,7 @@ class CalendarsBloc extends Bloc<CalendarsEvent, CalendarsState> {
     on<GetCalendars>(_onGetCalendars);
     on<AddCalendars>(_onAddCalendars);
     on<DeleteCalendar>(_onDeleteCalendar);
+    on<UpdateCalendar>(_onUpdateCalendar);
     on<UpdateCalendarSelection>(_onUpdateCalendarSelection);
   }
 
@@ -63,5 +63,15 @@ class CalendarsBloc extends Bloc<CalendarsEvent, CalendarsState> {
   _onUpdateCalendarSelection(UpdateCalendarSelection event, emit) async {
     _useCase.updateSelectedCalendarIds(
         selectedId: event.calendarId, isAdded: event.selected);
+  }
+
+  _onUpdateCalendar(UpdateCalendar event, emit) async {
+    try {
+      _useCase.updateCalendar(event.calendar);
+    } catch (e, s) {
+      emit(state.copyWith(status: CalendarsStatus.error));
+    } finally {
+      emit(state.copyWith(status: CalendarsStatus.idle));
+    }
   }
 }

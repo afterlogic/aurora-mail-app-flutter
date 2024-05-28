@@ -21,6 +21,9 @@ abstract class CalendarNetworkService {
   Future<void> deleteCalendar(
       {required String id});
 
+  Future<bool> updateCalendar(
+      {required String id, required String name, required String description, required String color, });
+
   Future<Calendar> createCalendar(
       {required String name, String? description, required String color, required int userLocalId});
 }

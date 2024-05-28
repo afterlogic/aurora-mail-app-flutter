@@ -4,6 +4,7 @@ import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/calendar/blocs/calendars/calendars_bloc.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/calendar.dart';
 import 'package:aurora_mail/modules/calendar/ui/dialogs/calendar_creation.dart';
+import 'package:aurora_mail/modules/calendar/ui/dialogs/calendar_edit.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/calendar.dart';
 import 'package:aurora_mail/shared_ui/colored_checkbox.dart';
 import 'package:aurora_mail/utils/base_state.dart';
@@ -127,7 +128,14 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
       _MenuItem(
           icon: Icon(Icons.edit_outlined),
           titleBuilder: (ctx) => S.of(ctx).contacts_view_app_bar_edit_contact,
-          onTap: (ctx) {}),
+          onTap: (ctx) {
+            CalendarEditDialog.show(ctx, calendar: widget.calendar).then((value) {
+              if (value != null) {
+                BlocProvider.of<CalendarsBloc>(context)
+                    .add(UpdateCalendar(value));
+              }
+            });
+          }),
       _MenuItem(
           icon: Icon(Icons.file_download_outlined),
           titleBuilder: (ctx) => 'Import ICS file',

@@ -79,7 +79,11 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
   }
 
   @override
-  Future<Calendar> createCalendar({required String name, String? description, required String color, required int userLocalId}) async {
+  Future<Calendar> createCalendar(
+      {required String name,
+      String? description,
+      required String color,
+      required int userLocalId}) async {
     final parameters = {
       "Name": name,
       "Color": color,
@@ -97,9 +101,7 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
 
   @override
   Future<void> deleteCalendar({required String id}) async {
-    final parameters = {
-      "Id": id
-    };
+    final parameters = {"Id": id};
 
     final body = new WebMailApiBody(
       method: "DeleteCalendar",
@@ -107,5 +109,27 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
     );
 
     await calendarModule.post(body);
+  }
+
+  @override
+  Future<bool> updateCalendar(
+      {required String id,
+      required String name,
+      required String description,
+      required String color}) async {
+    final parameters = {
+      "Id": id,
+      "Name": name,
+      "Color": color,
+      "Description": description
+    };
+
+    final body = new WebMailApiBody(
+      method: "UpdateCalendar",
+      parameters: jsonEncode(parameters),
+    );
+
+    final result = await calendarModule.post(body) as bool;
+    return result;
   }
 }

@@ -76,7 +76,7 @@ class Calendar {
     String? id,
     int? userLocalId,
     Color? color,
-    String? description,
+    String? Function()? description,
     String? name,
     String? owner,
     bool? isDefault,
@@ -92,7 +92,7 @@ class Calendar {
       id: id ?? this.id,
       userLocalId: userLocalId ?? this.userLocalId,
       color: color ?? this.color,
-      description: description ?? this.description,
+      description: description == null ? this.description : description(),
       name: name ?? this.name,
       owner: owner ?? this.owner,
       isDefault: isDefault ?? this.isDefault,
@@ -109,13 +109,13 @@ class Calendar {
 
 class CalendarCreationData {
   final String title;
-  final String description;
+  final String? description;
   final Color color;
   final String? iCalMail;
 
   const CalendarCreationData(
       {required this.title,
-      required this.description,
+      this.description,
       required this.color,
       this.iCalMail});
 }

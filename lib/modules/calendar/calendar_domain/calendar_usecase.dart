@@ -26,6 +26,8 @@ abstract class CalendarUseCase {
 
   Future<void> createCalendar(CalendarCreationData data);
 
+  Future<void> updateCalendar(ViewCalendar calendar);
+
   Future<void> deleteCalendar(ViewCalendar calendar);
 
   Future<void> getCalendars();
