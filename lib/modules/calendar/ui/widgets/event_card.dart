@@ -12,40 +12,39 @@ class EventCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return event is VisibleDayEvent
-        ? Padding(
-          padding: const EdgeInsets.only(bottom: 18.0),
-          child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+        ? Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(bottom: 4.0),
+              child: Text(
+                '${(event as VisibleDayEvent).title}',
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+              ),
+            ),
+            Row(
               children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4.0),
-                  child: Text(
-                    '${(event as VisibleDayEvent).title}',
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
-                  ),
-                ),
-                Row(
-                  children: [
-                    Container(
-                      width: 20,
-                      height: 20,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(4.0),
-                          ),
-                          color: (event as VisibleDayEvent).color),
-                    ),
-                   const SizedBox(width: 4,),
-                    Text(
-                      DateFormat("hh:mm a").format((event as VisibleDayEvent).startDate),
-                      style: TextStyle(
-                        color: Color.fromRGBO(150, 148, 148, 1),
+                Container(
+                  width: 20,
+                  height: 20,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(4.0),
                       ),
-                    )
-                  ],
+                      color: (event as VisibleDayEvent).color),
+                ),
+                const SizedBox(
+                  width: 4,
+                ),
+                Text(
+                  '${DateFormat("hh:mm a").format((event as VisibleDayEvent).startDate)} - ${DateFormat("hh:mm a").format((event as VisibleDayEvent).endDate)}',
+                  style: TextStyle(
+                    color: Color.fromRGBO(150, 148, 148, 1),
+                  ),
                 )
               ],
-            ),
+            )
+          ],
         )
         : const SizedBox();
   }

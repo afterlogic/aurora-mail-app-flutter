@@ -2,21 +2,38 @@ part of 'events_bloc.dart';
 
 class EventsState extends Equatable {
   final EventsStatus status;
-  final List<ViewEvent>? events;
+  final List<ViewEvent>? splitEvents;
+  final List<ViewEvent>? originalEvents;
   final DateTime startIntervalDate;
   final DateTime endIntervalDate;
   final DateTime? selectedDate;
 
+  const EventsState({
+    this.status = EventsStatus.idle,
+    this.splitEvents,
+    this.originalEvents,
+    required this.startIntervalDate,
+    required this.endIntervalDate,
+    this.selectedDate,
+  });
+
   @override
-  List<Object?> get props => [status, events, startIntervalDate, endIntervalDate, selectedDate];
+  List<Object?> get props => [
+        status,
+        splitEvents,
+        originalEvents,
+        startIntervalDate,
+        endIntervalDate,
+        selectedDate
+      ];
   List<ViewEvent> get eventsByMonth {
-    if (events == null) {
+    if (splitEvents == null) {
       return [];
     }
     int targetYear = startIntervalDate.year;
     int targetMonth = startIntervalDate.month;
 
-    return events!.where((event) {
+    return splitEvents!.where((event) {
       return (event.startDate.year <= targetYear &&
               event.startDate.month <= targetMonth) &&
           (event.endDate.year >= targetYear &&
@@ -25,14 +42,14 @@ class EventsState extends Equatable {
   }
 
   List<ViewEvent> getEventsFromDay(DateTime date) {
-    if (events == null) {
+    if (splitEvents == null) {
       return [];
     }
     int targetYear = date.year;
     int targetMonth = date.month;
     int targetDay = date.day;
 
-    return events!.where((event) {
+    return splitEvents!.where((event) {
       return (event.startDate.year <= targetYear &&
               event.startDate.month <= targetMonth &&
               event.startDate.day <= targetDay) &&
@@ -43,26 +60,42 @@ class EventsState extends Equatable {
   }
 
   List<ViewEvent>? get selectedEvents {
-    if(selectedDate == null) return events;
-    final filteredEvents = events?.where((e) =>
+    if(selectedDate == null) return splitEvents;
+    final filteredEvents = splitEvents?.where((e) =>
     e.startDate.isBefore(selectedDate!.startOfNextDay) &&
         e.endDate.isAfterOrEqual(selectedDate!.withoutTime)).toList();
     return filteredEvents;
   }
 
-  const EventsState({
-    this.status = EventsStatus.idle,
-    this.events,
-    required this.startIntervalDate,
-    required this.endIntervalDate,
-    this.selectedDate,
-  });
+  Map<DateTime, List<ViewEvent>> groupSelectedEventsByDay() {
+    final Map<DateTime, List<ViewEvent>> eventMap = {};
+    if(splitEvents == null) return eventMap;
+
+    for (final event in splitEvents!) {
+      DateTime current = event.startDate;
+
+      while (current.isBefore(event.endDate) || current.isAtSameMomentAs(event.endDate)) {
+        // date without time
+        DateTime dayKey = DateTime(current.year, current.month, current.day);
+
+        if (eventMap.containsKey(dayKey)) {
+          eventMap[dayKey]!.add(event);
+        } else {
+          eventMap[dayKey] = [event];
+        }
+        current = current.add(Duration(days: 1));
+      }
+    }
+
+    return eventMap;
+  }
 
   @override
   String toString() {
     return 'EventsState{' +
         ' status: ${status.name}' +
-        ' events: $events,' +
+        ' splitEvents: $splitEvents,' +
+        ' originalEvents: $originalEvents,' +
         ' startIntervalDate: $startIntervalDate,' +
         ' endIntervalDate: $endIntervalDate,' +
         ' selectedDate: $selectedDate,' +
@@ -71,19 +104,22 @@ class EventsState extends Equatable {
 
   EventsState copyWith({
     EventsStatus? status,
-    List<ViewEvent>? Function()? events,
+    List<ViewEvent>? Function()? splitEvents,
+    List<ViewEvent>? Function()? originalEvents,
     List<Calendar>? Function()? calendars,
     DateTime? startIntervalDate,
     DateTime? endIntervalDate,
     DateTime? Function()? selectedDate,
   }) {
     return EventsState(
-      status: status ?? this.status,
-      events: events == null ? this.events : events(),
-      startIntervalDate: startIntervalDate ?? this.startIntervalDate,
-      endIntervalDate: endIntervalDate ?? this.endIntervalDate,
-      selectedDate: selectedDate == null ? this.selectedDate : selectedDate()
-    );
+        status: status ?? this.status,
+        splitEvents: splitEvents == null ? this.splitEvents : splitEvents(),
+        originalEvents:
+            originalEvents == null ? this.originalEvents : originalEvents(),
+        startIntervalDate: startIntervalDate ?? this.startIntervalDate,
+        endIntervalDate: endIntervalDate ?? this.endIntervalDate,
+        selectedDate:
+            selectedDate == null ? this.selectedDate : selectedDate());
   }
 }
 

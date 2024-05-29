@@ -49,7 +49,9 @@ class EventsBloc extends Bloc<EventBlocEvent, EventsState> {
       final splitEvents =
           event.events.expand((e) => e.splitIntoDailyEvents).toList();
       emit(state.copyWith(
-          status: EventsStatus.success, events: () => splitEvents));
+          status: EventsStatus.success,
+          splitEvents: () => splitEvents,
+          originalEvents: () => event.events));
     } catch (e, st) {
       emit(state.copyWith(status: EventsStatus.error));
     } finally {

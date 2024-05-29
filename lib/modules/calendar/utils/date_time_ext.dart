@@ -14,6 +14,28 @@ extension DateTimeExtension on DateTime {
     return DateTime(year, month);
   }
 
+  DateTime get firstDayOfPreviousMonth {
+    int previousMonth = month - 1;
+    int previousYear = year;
+
+    if (previousMonth == 0) {
+      previousMonth = 12;
+      previousYear--;
+    }
+    return DateTime(previousYear, previousMonth, 1);
+  }
+
+  DateTime get firstDayOfNextMonth {
+    int nextMonth = month + 1;
+    int nextYear = year;
+
+    if (nextMonth == 13) {
+      nextMonth = 1;
+      nextYear++;
+    }
+    return DateTime(nextYear, nextMonth , 1);
+  }
+
   DateTime get startOfNextDay {
     DateTime nextDay = this.add(Duration(days: 1));
     return DateTime(nextDay.year, nextDay.month, nextDay.day);

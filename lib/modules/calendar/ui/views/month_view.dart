@@ -306,8 +306,11 @@ class _EventsInfoSection extends StatelessWidget {
                   padding: EdgeInsets.symmetric(horizontal: 24.0),
                   itemCount: state.selectedEvents!.length,
                   itemBuilder: (context, index) {
-                    return EventCard(
-                      event: state.selectedEvents![index],
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 8.0),
+                      child: EventCard(
+                        event: state.selectedEvents![index],
+                      ),
                     );
                   },
                 ),
