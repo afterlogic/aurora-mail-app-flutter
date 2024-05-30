@@ -1,6 +1,7 @@
 //@dart=2.9
 import 'package:aurora_mail/modules/auth/screens/backup_code_auth/backup_code_auth_widget.dart';
 import 'package:aurora_mail/modules/auth/screens/trust_device/trust_device_widget.dart';
+import 'package:aurora_mail/modules/calendar/ui/screens/attendees_page.dart';
 import 'package:aurora_mail/modules/calendar/ui/screens/calendar_page.dart';
 import 'package:aurora_mail/modules/calendar/ui/screens/calendar_route.dart';
 import 'package:aurora_mail/modules/calendar/ui/screens/event_creation_page.dart';
@@ -170,6 +171,12 @@ class RouteGenerator {
         return FadeRoute(
             settings: RouteSettings(name: settings.name),
             builder: (_) => EventCreationPage());
+        break;
+
+      case AttendeesPage.name:
+        return FadeRoute(
+            settings: RouteSettings(name: settings.name),
+            builder: (_) => AttendeesPage());
         break;
 
       // ================= MAIL =================

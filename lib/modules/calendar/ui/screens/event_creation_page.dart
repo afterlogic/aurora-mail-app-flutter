@@ -1,5 +1,6 @@
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/calendar/ui/dialogs/reminders_dialog.dart';
+import 'package:aurora_mail/modules/calendar/ui/screens/attendees_page.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/calendar_tile.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/text_input.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
@@ -184,7 +185,10 @@ class _EventCreationPageState extends State<EventCreationPage> {
                       'Attendees',
                     ),
                     const Spacer(),
-                    const _AddIcon(),
+                    GestureDetector(
+                        onTap: () =>
+                            Navigator.of(context).pushNamed(AttendeesPage.name),
+                        child: const _AddIcon()),
                   ],
                 ),
               ],
