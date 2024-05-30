@@ -1,4 +1,5 @@
 import 'package:aurora_mail/generated/l10n.dart';
+import 'package:aurora_mail/modules/calendar/ui/dialogs/reminders_dialog.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/calendar_tile.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/text_input.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
@@ -153,7 +154,10 @@ class _EventCreationPageState extends State<EventCreationPage> {
                       'Reminders',
                     ),
                     const Spacer(),
-                    const _AddIcon(),
+                    GestureDetector(
+                        onTap: () => RemindersDialog.show(context,
+                            initialValue: RemindersOption.min5),
+                        child: const _AddIcon()),
                   ],
                 ),
               ],
