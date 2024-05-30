@@ -151,7 +151,7 @@ class _MonthViewState extends State<MonthView>
                         calendarFormat: _calendarFormat,
                         rangeSelectionMode: _rangeSelectionMode,
                         eventLoader: (date) {
-                          return state.getEventsFromDay(date);
+                          return state.getEventsFromDay(date: date);
                         },
                         availableGestures: AvailableGestures.horizontalSwipe,
                         headerStyle: HeaderStyle(
@@ -185,7 +185,7 @@ class _MonthViewState extends State<MonthView>
                                   context,
                                   currentDate,
                                   selectedDate,
-                                  state.getEventsFromDay(currentDate)),
+                                  state.getEventsFromDay(date: currentDate)),
                           todayBuilder: (BuildContext context,
                                   DateTime currentDate,
                                   DateTime selectedDate) =>
@@ -193,7 +193,7 @@ class _MonthViewState extends State<MonthView>
                                   context,
                                   currentDate,
                                   selectedDate,
-                                  state.getEventsFromDay(currentDate)),
+                                  state.getEventsFromDay(date: currentDate)),
                           selectedBuilder: (BuildContext context,
                                   DateTime currentDate,
                                   DateTime selectedDate) =>
@@ -201,7 +201,7 @@ class _MonthViewState extends State<MonthView>
                                   context,
                                   currentDate,
                                   selectedDate,
-                                  state.getEventsFromDay(currentDate)),
+                                  state.getEventsFromDay(date: currentDate)),
                           outsideBuilder: (BuildContext context,
                                   DateTime currentDate,
                                   DateTime selectedDate) =>
@@ -209,7 +209,7 @@ class _MonthViewState extends State<MonthView>
                                   context,
                                   currentDate,
                                   selectedDate,
-                                  state.getEventsFromDay(currentDate)),
+                                  state.getEventsFromDay(date: currentDate)),
                           disabledBuilder: _disabledDayBuilder,
                           markerBuilder:
                               _eventListAnimationController.value == 1.0

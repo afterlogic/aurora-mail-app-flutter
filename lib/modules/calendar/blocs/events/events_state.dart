@@ -41,13 +41,49 @@ class EventsState extends Equatable {
     }).toList();
   }
 
-  List<ViewEvent> getEventsFromDay(DateTime date) {
+  ///Events from selected date or from period between [startIntervalDate] and [endIntervalDate]
+  List<ViewEvent>? get selectedEvents {
+    if (selectedDate == null) return splitEvents;
+    final filteredEvents = splitEvents
+        ?.where((e) =>
+            e.startDate.isBefore(selectedDate!.startOfNextDay) &&
+            e.endDate.isAfterOrEqual(selectedDate!.withoutTime))
+        .toList();
+    return filteredEvents;
+  }
+
+  List<ViewEvent> getEventsFromWeek({DateTime? date}) {
     if (splitEvents == null) {
       return [];
     }
-    int targetYear = date.year;
-    int targetMonth = date.month;
-    int targetDay = date.day;
+
+    DateTime targetDate = date ?? (selectedDate ?? startIntervalDate);
+
+    DateTime startOfWeek = targetDate.subtract(Duration(days: targetDate.weekday - 1));
+    DateTime endOfWeek = startOfWeek.add(Duration(days: 6));
+
+    return splitEvents!.where((event) {
+      return !(event.endDate.isBefore(startOfWeek) || event.startDate.isAfter(endOfWeek));
+    }).toList();
+  }
+
+  List<ViewEvent> getEventsFromDay({DateTime? date}) {
+    if (splitEvents == null) {
+      return [];
+    }
+    late int targetYear;
+    late int targetMonth;
+    late int targetDay;
+
+    if (date != null) {
+      targetYear = date.year;
+      targetMonth = date.month;
+      targetDay = date.day;
+    } else {
+      targetYear = selectedDate == null ? startIntervalDate.year : selectedDate!.year;
+      targetMonth = selectedDate == null ? startIntervalDate.month : selectedDate!.month;
+      targetDay = selectedDate == null ? startIntervalDate.day : selectedDate!.day;
+    }
 
     return splitEvents!.where((event) {
       return (event.startDate.year <= targetYear &&
@@ -59,22 +95,15 @@ class EventsState extends Equatable {
     }).toList();
   }
 
-  List<ViewEvent>? get selectedEvents {
-    if(selectedDate == null) return splitEvents;
-    final filteredEvents = splitEvents?.where((e) =>
-    e.startDate.isBefore(selectedDate!.startOfNextDay) &&
-        e.endDate.isAfterOrEqual(selectedDate!.withoutTime)).toList();
-    return filteredEvents;
-  }
-
   Map<DateTime, List<ViewEvent>> groupSelectedEventsByDay() {
     final Map<DateTime, List<ViewEvent>> eventMap = {};
-    if(splitEvents == null) return eventMap;
+    if (splitEvents == null) return eventMap;
 
     for (final event in splitEvents!) {
       DateTime current = event.startDate;
 
-      while (current.isBefore(event.endDate) || current.isAtSameMomentAs(event.endDate)) {
+      while (current.isBefore(event.endDate) ||
+          current.isAtSameMomentAs(event.endDate)) {
         // date without time
         DateTime dayKey = DateTime(current.year, current.month, current.day);
 
