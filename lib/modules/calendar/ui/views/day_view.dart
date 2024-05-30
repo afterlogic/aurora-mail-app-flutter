@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:aurora_mail/modules/calendar/blocs/events/events_bloc.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/event.dart';
 import 'package:calendar_view/calendar_view.dart' as CV;
@@ -16,6 +18,7 @@ class _DayViewState extends State<DayView> {
   final List<String> weekTitles = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
   final CV.EventController _controller = CV.EventController();
   late final EventsBloc _bloc;
+  late final StreamSubscription _subscription;
 
   @override
   void initState() {
@@ -32,17 +35,22 @@ class _DayViewState extends State<DayView> {
         ),
       );
     });
-    _bloc.stream.listen(onStateChange);
+    _subscription = _bloc.stream.listen(onStateChange);
   }
 
   @override
   void dispose() {
     _controller.dispose();
+    _subscription.cancel();
     super.dispose();
   }
 
   onStateChange(EventsState state) {
     final events = state.getEventsFromDay();
+    final oldEvents = _controller.allEvents;
+    if (oldEvents.isNotEmpty && events.isEmpty) {
+      _controller.removeAll(oldEvents);
+    }
     events.forEach((e) {
       _controller.add(
         CV.CalendarEventData(
