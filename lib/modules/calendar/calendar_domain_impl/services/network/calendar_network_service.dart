@@ -18,6 +18,14 @@ abstract class CalendarNetworkService {
 
   Future<List<Event>> updateEvents(List<Event> events);
 
+  Future<void> createEvent({
+    required String subject,
+    required String calendarId,
+    String? description,
+    required DateTime startDate,
+    required DateTime endDate,
+});
+
   Future<void> deleteCalendar(
       {required String id});
 

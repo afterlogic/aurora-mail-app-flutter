@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:aurora_mail/modules/calendar/calendar_domain/calendar_usecase.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/calendar.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/event.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/event.dart';
 import 'package:aurora_mail/modules/calendar/utils/date_time_ext.dart';
 import 'package:bloc/bloc.dart';
@@ -26,6 +27,7 @@ class EventsBloc extends Bloc<EventBlocEvent, EventsState> {
       add(AddEvents(events));
     });
     on<LoadEvents>(_onLoadEvents);
+    on<CreateEvent>(_onCreateEvent);
     on<AddEvents>(_onAddEvents);
     on<StartSync>(_onStartSync);
     on<SelectDate>(_onSelectDate);
@@ -37,6 +39,17 @@ class EventsBloc extends Bloc<EventBlocEvent, EventsState> {
       await _useCase.getForPeriod(
           start: state.startIntervalDate.withoutTime,
           end: state.endIntervalDate.startOfNextDay);
+    } catch (e, st) {
+      emit(state.copyWith(status: EventsStatus.error));
+    } finally {
+      emit(state.copyWith(status: EventsStatus.idle));
+    }
+  }
+
+  _onCreateEvent(CreateEvent event, emit) async {
+    try {
+      await _useCase.createEvent(
+         event.creationData);
     } catch (e, st) {
       emit(state.copyWith(status: EventsStatus.error));
     } finally {

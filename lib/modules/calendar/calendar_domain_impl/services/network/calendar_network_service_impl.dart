@@ -132,4 +132,80 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
     final result = await calendarModule.post(body) as bool;
     return result;
   }
+
+  @override
+  Future<void> createEvent(
+      {required String subject,
+      required String calendarId,
+      String? description,
+      required DateTime startDate,
+      required DateTime endDate,
+      }) async {
+    // {
+    //   "id": null,
+    //   "uid": null,
+    //   "calendarId": "a2756e51-bf14-4972-b16b-d0df3f3e5b44",
+    //   "newCalendarId": "a2756e51-bf14-4972-b16b-d0df3f3e5b44",
+    //   "subject": "test creation",
+    //   "allDay": 0,
+    //   "location": "",
+    //   "description": "",
+    //   "alarms": "[]",
+    //   "attendees": "[]",
+    //   "owner": "test@afterlogic.com",
+    //   "recurrenceId": null,
+    //   "excluded": false,
+    //   "allEvents": 2,
+    //   "modified": 1,
+    //   "start": "2024-05-23T00:00:00+02:00",
+    //   "end": "2024-05-24T00:00:00+02:00",
+    //   "startTS": 1716415200,
+    //   "endTS": 1716501600,
+    //   "rrule": null,
+    //   "type": "VEVENT",
+    //   "status": false,
+    //   "withDate": true,
+    //   "isPrivate": false,
+    //   "selectStart": 1714262400,
+    //   "selectEnd": 1717891200
+    // };
+
+    final parameters = {
+      "id": null,
+      "uid": null,
+      "calendarId": calendarId,
+      "newCalendarId": calendarId,
+      "subject": subject,
+      "allDay": 0,
+      "location": "",
+      "description": description ?? '',
+      "alarms": "[]",
+      "attendees": "[]",
+      // "owner": ownerMail,
+      "recurrenceId": null,
+      "excluded": false,
+      "allEvents": 2,
+      "modified": 1,
+      "start": startDate.toIso8601String(),
+      "end": endDate.toIso8601String(),
+      "startTS": startDate.toUtc().millisecondsSinceEpoch ~/ 1000,
+      "endTS": endDate.toUtc().millisecondsSinceEpoch ~/ 1000,
+      "rrule": null,
+      "type": "VEVENT",
+      "status": false,
+      "withDate": true,
+      "isPrivate": false,
+      // "selectStart": 1714262400,
+      // "selectEnd": 1717891200
+    };
+
+    final body = new WebMailApiBody(
+      method: "CreateEvent",
+      parameters: jsonEncode(parameters),
+    );
+
+    final result = await calendarModule.post(body) as Map<String, dynamic>;
+    print(result);
+    // return CalendarMapper.fromNetwork(result, userLocalId: userLocalId);
+  }
 }

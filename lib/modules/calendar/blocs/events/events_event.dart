@@ -21,6 +21,13 @@ class AddEvents extends EventBlocEvent {
   List<Object?> get props => [events];
 }
 
+class CreateEvent extends EventBlocEvent{
+  final EventCreationData creationData;
+  const CreateEvent(this.creationData);
+  @override
+  List<Object?> get props => [creationData];
+}
+
 class LoadEvents extends EventBlocEvent{
   const LoadEvents();
 }

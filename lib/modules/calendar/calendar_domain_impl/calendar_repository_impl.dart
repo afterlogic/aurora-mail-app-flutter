@@ -154,8 +154,17 @@ class CalendarRepositoryImpl implements CalendarRepository {
         name: calendar.name,
         description: calendar.description ?? '',
         color: calendar.color.toHex());
-    if(!isUpdated) throw Exception('Error while updating calendar');
+    if (!isUpdated) throw Exception('Error while updating calendar');
     await _db.createOrUpdateCalendar(calendar);
     return calendar;
+  }
+
+  @override
+  Future<void> createEvent(EventCreationData data) {
+    return _network.createEvent(
+        subject: data.subject,
+        calendarId: data.calendarId,
+        startDate: data.startDate,
+        endDate: data.endDate);
   }
 }

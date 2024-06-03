@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:aurora_mail/modules/calendar/calendar_domain/calendar_repository.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/calendar_usecase.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/calendar.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/event.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/calendar.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/event.dart';
 import 'package:collection/collection.dart';
@@ -57,7 +58,7 @@ class CalendarUseCaseImpl implements CalendarUseCase {
   }
 
   @override
-  Future<void> syncCalendars() async{
+  Future<void> syncCalendars() async {
     await repository.syncCalendars();
     await getCalendars();
   }
@@ -85,13 +86,13 @@ class CalendarUseCaseImpl implements CalendarUseCase {
   }
 
   @override
-  Future<void> updateCalendar(ViewCalendar calendar) async{
+  Future<void> updateCalendar(ViewCalendar calendar) async {
     final calendars = [..._calendarsSubject.value];
-    final updatableCalendar =
-      calendars.firstWhere((e) => e.id == calendar.id);
-    if(!updatableCalendar.updated(calendar)){
+    final updatableCalendar = calendars.firstWhere((e) => e.id == calendar.id);
+    if (!updatableCalendar.updated(calendar)) {
       return;
-    };
+    }
+    ;
     await repository.updateCalendar(calendar);
 
     int index = calendars.indexWhere((e) => e.id == calendar.id);
@@ -100,7 +101,7 @@ class CalendarUseCaseImpl implements CalendarUseCase {
     _getLocalEvents();
   }
 
-  Future _getLocalEvents() async {
+  Future<void> _getLocalEvents() async {
     if (_selectedStartEventsInterval == null ||
         _selectedEndEventsInterval == null)
       throw Exception('Select date interval');
@@ -117,5 +118,16 @@ class CalendarUseCaseImpl implements CalendarUseCase {
         .whereNotNull()
         .toList();
     _eventsSubject.add(eventViews);
+  }
+
+  @override
+  Future<void> createEvent(EventCreationData data) async {
+    await repository.createEvent(data);
+    await syncCalendars();
+    if (_selectedEndEventsInterval != null &&
+        _selectedStartEventsInterval != null &&
+        selectedCalendarIds.contains(data.calendarId)) {
+      await _getLocalEvents();
+    }
   }
 }

@@ -1,6 +1,22 @@
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/event_base.dart';
 
+class EventCreationData {
+  final String subject;
+  final String? description;
+  final String calendarId;
+  final DateTime startDate;
+  final DateTime endDate;
+
+  const EventCreationData({
+    required this.subject,
+    this.description,
+    required this.calendarId,
+    required this.startDate,
+    required this.endDate,
+  });
+}
+
 class Event extends EventBase {
   final String? organizer;
   final bool? appointment;
