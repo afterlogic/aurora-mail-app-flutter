@@ -78,9 +78,7 @@ class _CalendarPageState extends State<CalendarPage>
                           width: 16,
                         ),
                         CalendarTab(
-                            title: 'Day',
-                            controller: _tabController,
-                            index: 2),
+                            title: 'Day', controller: _tabController, index: 2),
                         const SizedBox(
                           width: 16,
                         ),
@@ -94,12 +92,15 @@ class _CalendarPageState extends State<CalendarPage>
                 : SizedBox.shrink(),
           ),
           Expanded(
-            child: TabBarView(controller: _tabController, children: [
-              MonthView(),
-              WeekView(),
-              DayView(),
-              ListEventsView()
-            ]),
+            child: TabBarView(
+                controller: _tabController,
+                physics: const NeverScrollableScrollPhysics(),
+                children: [
+                  MonthView(),
+                  WeekView(),
+                  DayView(),
+                  ListEventsView()
+                ]),
           )
         ],
       ),
