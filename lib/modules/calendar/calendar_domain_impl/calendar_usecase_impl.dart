@@ -6,6 +6,7 @@ import 'package:aurora_mail/modules/calendar/calendar_domain/models/calendar.dar
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/event.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/calendar.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/event.dart';
+import 'package:aurora_mail/modules/calendar/utils/events_grid_builder.dart';
 import 'package:collection/collection.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -20,8 +21,8 @@ class CalendarUseCaseImpl implements CalendarUseCase {
   final BehaviorSubject<List<ViewCalendar>> _calendarsSubject =
       BehaviorSubject.seeded([]);
 
-  final BehaviorSubject<List<VisibleDayEvent>> _eventsSubject =
-      BehaviorSubject.seeded([]);
+  final BehaviorSubject<Map<DateTime, List<TestEvent?>>> _eventsSubject =
+      BehaviorSubject.seeded({});
 
   List<String> get selectedCalendarIds => _calendarsSubject.value
       .where((e) => e.selected)
@@ -33,7 +34,7 @@ class CalendarUseCaseImpl implements CalendarUseCase {
       _calendarsSubject.stream;
 
   @override
-  ValueStream<List<VisibleDayEvent>> get eventsSubscription =>
+  ValueStream<Map<DateTime, List<TestEvent?>>> get eventsSubscription =>
       _eventsSubject.stream;
 
   @override
@@ -117,7 +118,16 @@ class CalendarUseCaseImpl implements CalendarUseCase {
                 .color))
         .whereNotNull()
         .toList();
-    _eventsSubject.add(eventViews);
+
+    final weeks = generateWeeks(
+        _selectedStartEventsInterval!, _selectedEndEventsInterval!);
+    final processedEvents = processEvents(weeks,
+        allEvents.map((e) => TestEvent.fromEvent(e, _calendarsSubject.value
+            .firstWhere((c) => c.id == e.calendarId)
+            .color)).whereNotNull().toList());
+    final viewEvents = convertWeeksToMap(processedEvents);
+
+    _eventsSubject.add(viewEvents);
   }
 
   @override

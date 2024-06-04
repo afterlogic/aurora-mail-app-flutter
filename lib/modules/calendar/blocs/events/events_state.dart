@@ -2,6 +2,7 @@ part of 'events_bloc.dart';
 
 class EventsState extends Equatable {
   final EventsStatus status;
+  final Map<DateTime, List<ViewEvent?>>? eventsMap;
   final List<ViewEvent>? splitEvents;
   final List<ViewEvent>? originalEvents;
   final DateTime startIntervalDate;
@@ -12,6 +13,7 @@ class EventsState extends Equatable {
     this.status = EventsStatus.idle,
     this.splitEvents,
     this.originalEvents,
+    this.eventsMap,
     required this.startIntervalDate,
     required this.endIntervalDate,
     this.selectedDate,
@@ -24,7 +26,8 @@ class EventsState extends Equatable {
         originalEvents,
         startIntervalDate,
         endIntervalDate,
-        selectedDate
+        selectedDate,
+    eventsMap
       ];
   List<ViewEvent> get eventsByMonth {
     if (splitEvents == null) {
@@ -65,6 +68,10 @@ class EventsState extends Equatable {
     return splitEvents!.where((event) {
       return !(event.endDate.isBefore(startOfWeek) || event.startDate.isAfter(endOfWeek));
     }).toList();
+  }
+
+  List<ViewEvent?> getEventsForDayFromMap({DateTime? date}) {
+    return eventsMap?[date] ?? [];
   }
 
   List<ViewEvent> getEventsFromDay({DateTime? date}) {
@@ -134,6 +141,7 @@ class EventsState extends Equatable {
   EventsState copyWith({
     EventsStatus? status,
     List<ViewEvent>? Function()? splitEvents,
+    Map<DateTime, List<ViewEvent?>>? Function()? eventsMap,
     List<ViewEvent>? Function()? originalEvents,
     List<Calendar>? Function()? calendars,
     DateTime? startIntervalDate,
@@ -143,6 +151,7 @@ class EventsState extends Equatable {
     return EventsState(
         status: status ?? this.status,
         splitEvents: splitEvents == null ? this.splitEvents : splitEvents(),
+        eventsMap: eventsMap == null ? this.eventsMap : eventsMap(),
         originalEvents:
             originalEvents == null ? this.originalEvents : originalEvents(),
         startIntervalDate: startIntervalDate ?? this.startIntervalDate,

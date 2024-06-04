@@ -19,7 +19,7 @@ abstract class CalendarUseCase {
 
   ValueStream<List<ViewCalendar>> get calendarsSubscription;
 
-  ValueStream<List<VisibleDayEvent>> get eventsSubscription;
+  ValueStream<Map<DateTime, List<ViewEvent?>>> get eventsSubscription;
 
   Future<void> syncCalendars();
 

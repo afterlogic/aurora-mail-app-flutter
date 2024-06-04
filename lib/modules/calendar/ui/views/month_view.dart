@@ -56,8 +56,8 @@ class _MonthViewState extends State<MonthView>
     return _eventListAnimationController.value == 1.0 ? false : show;
   }
 
-  Widget? _extendedModeBuilder(ctx, time, List<ViewEvent> events) =>
-      extendedModeBuilder(events, _calendarDayTitleHeight);
+  Widget? _extendedModeBuilder(ctx, DateTime currentDate, List<ViewEvent?> events) =>
+      extendedModeBuilder(events, _calendarDayTitleHeight, currentDate);
 
   Widget _disabledDayBuilder(
           BuildContext context, DateTime currentDate, DateTime selectedDate) =>
@@ -104,7 +104,7 @@ class _MonthViewState extends State<MonthView>
                 child: BlocBuilder<EventsBloc, EventsState>(
                   buildWhen: (prev, current) => prev != current,
                   builder: (context, state) {
-                    return TableCalendar<ViewEvent>(
+                    return TableCalendar<ViewEvent?>(
                       firstDay: DateTime(2010),
                       rowHeight: 10,
                       formatAnimationDuration:
@@ -118,7 +118,7 @@ class _MonthViewState extends State<MonthView>
                       calendarFormat: _calendarFormat,
                       rangeSelectionMode: _rangeSelectionMode,
                       eventLoader: (date) {
-                        return state.getEventsFromDay(date: date);
+                        return state.getEventsForDayFromMap(date: DateTime(date.year, date.month, date.day));
                       },
                       availableGestures: AvailableGestures.horizontalSwipe,
                       headerStyle: HeaderStyle(

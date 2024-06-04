@@ -4,7 +4,7 @@ import 'package:aurora_mail/modules/calendar/ui/widgets/short_month_day.dart';
 import 'package:flutter/material.dart';
 
 mixin CalendarMonthBuilders {
-  Widget? extendedModeBuilder(List<ViewEvent> events, double topPadding) {
+  Widget? extendedModeBuilder(List<ViewEvent?> events, double topPadding, DateTime currentDate) {
     if (events.isEmpty) {
       return null;
     }
@@ -15,6 +15,7 @@ mixin CalendarMonthBuilders {
             .map<Widget>(
               (e) => MonthEventMarker(
                 event: e,
+                currentDate: currentDate,
               ),
             )
             .toList(),

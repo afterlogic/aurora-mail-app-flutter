@@ -4,9 +4,34 @@ import 'package:aurora_mail/modules/calendar/calendar_domain/models/event.dart';
 import 'package:aurora_mail/modules/calendar/utils/date_time_ext.dart';
 
 abstract class ViewEvent {
-  final DateTime startDate;
-  final DateTime endDate;
-  const ViewEvent({required this.startDate, required this.endDate});
+  DateTime startDate;
+  DateTime endDate;
+
+  Duration get duration => endDate.difference(startDate);
+  ViewEvent({required this.startDate, required this.endDate});
+}
+
+class TestEvent extends ViewEvent{
+  bool overflow;
+  int? slotIndex;
+  final Color color;
+  final String title;
+
+  static TestEvent? fromEvent(Event e, Color color) {
+    try {
+      return TestEvent(startDate: e.startTS!, endDate: e.endTS!, title: e.subject!, color: color);
+    } catch (e, s) {
+      return null;
+    }
+  }
+
+  TestEvent({
+    this.overflow = false,
+    required super.startDate,
+    required super.endDate,
+    required this.title, required this.color,
+    this.slotIndex,
+  });
 }
 
 class VisibleDayEvent extends ViewEvent {
@@ -16,7 +41,7 @@ class VisibleDayEvent extends ViewEvent {
   final bool isAllDay;
   final Color color;
 
-  const VisibleDayEvent(
+  VisibleDayEvent(
       {this.edge = Edge.single,
       required this.title,
       required this.id,
@@ -119,7 +144,7 @@ class VisibleDayEvent extends ViewEvent {
 }
 
 class EmptyEvent extends ViewEvent {
-  const EmptyEvent({required super.startDate, required super.endDate});
+  EmptyEvent({required super.startDate, required super.endDate});
 }
 
 enum Edge { start, single, end, part }
