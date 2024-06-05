@@ -11,14 +11,13 @@ class EventCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return event is VisibleDayEvent
-        ? Column(
+    return  Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
               padding: const EdgeInsets.only(bottom: 4.0),
               child: Text(
-                '${(event as VisibleDayEvent).title}',
+                '${event.title}',
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
               ),
             ),
@@ -31,13 +30,13 @@ class EventCard extends StatelessWidget {
                       borderRadius: BorderRadius.all(
                         Radius.circular(4.0),
                       ),
-                      color: (event as VisibleDayEvent).color),
+                      color: event.color),
                 ),
                 const SizedBox(
                   width: 4,
                 ),
                 Text(
-                  '${DateFormat("hh:mm a").format((event as VisibleDayEvent).startDate)} - ${DateFormat("hh:mm a").format((event as VisibleDayEvent).endDate)}',
+                  '${DateFormat("hh:mm a").format(event.startDate)} - ${DateFormat("hh:mm a").format(event.endDate)}',
                   style: TextStyle(
                     color: Color.fromRGBO(150, 148, 148, 1),
                   ),
@@ -45,7 +44,7 @@ class EventCard extends StatelessWidget {
               ],
             )
           ],
-        )
-        : const SizedBox();
+        );
+       
   }
 }

@@ -21,8 +21,8 @@ class CalendarUseCaseImpl implements CalendarUseCase {
   final BehaviorSubject<List<ViewCalendar>> _calendarsSubject =
       BehaviorSubject.seeded([]);
 
-  final BehaviorSubject<Map<DateTime, List<TestEvent?>>> _eventsSubject =
-      BehaviorSubject.seeded({});
+  final BehaviorSubject<List<ViewEvent>> _eventsSubject =
+      BehaviorSubject.seeded([]);
 
   List<String> get selectedCalendarIds => _calendarsSubject.value
       .where((e) => e.selected)
@@ -34,7 +34,7 @@ class CalendarUseCaseImpl implements CalendarUseCase {
       _calendarsSubject.stream;
 
   @override
-  ValueStream<Map<DateTime, List<TestEvent?>>> get eventsSubscription =>
+  ValueStream<List<ViewEvent>> get eventsSubscription =>
       _eventsSubject.stream;
 
   @override
@@ -112,22 +112,15 @@ class CalendarUseCaseImpl implements CalendarUseCase {
       calendarIds: selectedCalendarIds,
     );
     final eventViews = allEvents
-        .map((e) => VisibleDayEvent.tryFromEvent(e,
+        .map((e) => ViewEvent.tryFromEvent(e,
             color: _calendarsSubject.value
                 .firstWhere((c) => c.id == e.calendarId)
                 .color))
         .whereNotNull()
         .toList();
 
-    final weeks = generateWeeks(
-        _selectedStartEventsInterval!, _selectedEndEventsInterval!);
-    final processedEvents = processEvents(weeks,
-        allEvents.map((e) => TestEvent.fromEvent(e, _calendarsSubject.value
-            .firstWhere((c) => c.id == e.calendarId)
-            .color)).whereNotNull().toList());
-    final viewEvents = convertWeeksToMap(processedEvents);
 
-    _eventsSubject.add(viewEvents);
+    _eventsSubject.add(eventViews);
   }
 
   @override

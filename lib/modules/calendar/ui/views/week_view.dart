@@ -28,7 +28,7 @@ class _WeekViewState extends State<WeekView> {
     _bloc.state.getEventsFromWeek().forEach((e) {
       _controller.add(
         CV.CalendarEventData(
-          title: (e as VisibleDayEvent).title,
+          title: e.title,
           date: e.startDate.withoutTime,
           startTime: e.startDate,
           endTime: e.endDate,
@@ -55,7 +55,7 @@ class _WeekViewState extends State<WeekView> {
     events.forEach((e) {
       _controller.add(
         CV.CalendarEventData(
-          title: (e as VisibleDayEvent).title,
+          title: e.title,
           date: e.startDate.withoutTime,
           // endDate: e.endDate.withoutTime,
           startTime: e.startDate,

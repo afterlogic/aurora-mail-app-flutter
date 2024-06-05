@@ -27,8 +27,8 @@ class _DayViewState extends State<DayView> {
     _bloc.state.getEventsFromDay().forEach((e) {
       _controller.add(
         CV.CalendarEventData(
-          title: (e as VisibleDayEvent).title,
-          date: e.startDate.withoutTime,
+          title: e.title,
+          date: (_bloc.state.selectedDate ?? _bloc.state.startIntervalDate).withoutTime,
           startTime: e.startDate,
           endTime: e.endDate,
           color: e.color,
@@ -54,8 +54,8 @@ class _DayViewState extends State<DayView> {
     events.forEach((e) {
       _controller.add(
         CV.CalendarEventData(
-          title: (e as VisibleDayEvent).title,
-          date: e.startDate.withoutTime,
+          title: e.title,
+          date: (state.selectedDate ?? state.startIntervalDate).withoutTime,
           // endDate: e.endDate.withoutTime,
           startTime: e.startDate,
           endTime: e.endDate,

@@ -15,7 +15,7 @@ class SelectDate extends EventBlocEvent{
 
 class AddEvents extends EventBlocEvent {
 
-  final Map<DateTime, List<ViewEvent?>> events;
+  final List<ViewEvent> events;
   const AddEvents(this.events);
   @override
   List<Object?> get props => [events];

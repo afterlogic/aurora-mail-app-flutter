@@ -14,6 +14,8 @@ extension DateTimeExtension on DateTime {
     return DateTime(year, month);
   }
 
+  DateTime get withoutTime => DateTime(year, month, day);
+
   DateTime get firstDayOfPreviousMonth {
     int previousMonth = month - 1;
     int previousYear = year;

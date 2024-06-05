@@ -27,7 +27,7 @@ class EventsState extends Equatable {
         startIntervalDate,
         endIntervalDate,
         selectedDate,
-    eventsMap
+        eventsMap
       ];
   List<ViewEvent> get eventsByMonth {
     if (splitEvents == null) {
@@ -62,11 +62,13 @@ class EventsState extends Equatable {
 
     DateTime targetDate = date ?? (selectedDate ?? startIntervalDate);
 
-    DateTime startOfWeek = targetDate.subtract(Duration(days: targetDate.weekday - 1));
+    DateTime startOfWeek =
+        targetDate.subtract(Duration(days: targetDate.weekday - 1));
     DateTime endOfWeek = startOfWeek.add(Duration(days: 6));
 
     return splitEvents!.where((event) {
-      return !(event.endDate.isBefore(startOfWeek) || event.startDate.isAfter(endOfWeek));
+      return !(event.endDate.isBefore(startOfWeek) ||
+          event.startDate.isAfter(endOfWeek));
     }).toList();
   }
 
@@ -75,9 +77,9 @@ class EventsState extends Equatable {
   }
 
   List<ViewEvent> getEventsFromDay({DateTime? date}) {
-    if (splitEvents == null) {
-      return [];
-    }
+    // if (splitEvents == null) {
+    //   return [];
+    // }
     late int targetYear;
     late int targetMonth;
     late int targetDay;
@@ -87,19 +89,43 @@ class EventsState extends Equatable {
       targetMonth = date.month;
       targetDay = date.day;
     } else {
-      targetYear = selectedDate == null ? startIntervalDate.year : selectedDate!.year;
-      targetMonth = selectedDate == null ? startIntervalDate.month : selectedDate!.month;
-      targetDay = selectedDate == null ? startIntervalDate.day : selectedDate!.day;
+      targetYear =
+          selectedDate == null ? startIntervalDate.year : selectedDate!.year;
+      targetMonth =
+          selectedDate == null ? startIntervalDate.month : selectedDate!.month;
+      targetDay =
+          selectedDate == null ? startIntervalDate.day : selectedDate!.day;
     }
 
-    return splitEvents!.where((event) {
-      return (event.startDate.year <= targetYear &&
-              event.startDate.month <= targetMonth &&
-              event.startDate.day <= targetDay) &&
-          (event.endDate.year >= targetYear &&
-              event.endDate.month >= targetMonth &&
-              event.endDate.day >= targetDay);
-    }).toList();
+    final targetDate = DateTime(targetYear, targetMonth, targetDay);
+
+    final events =
+        getEventsForDayFromMap(date: targetDate).whereNotNull().toList();
+
+    return events
+        .map((e) => _expandEventTime(e: e, currentDate: targetDate))
+        .toList();
+
+    //
+    // return splitEvents!.where((event) {
+    //   return (event.startDate.year <= targetYear &&
+    //           event.startDate.month <= targetMonth &&
+    //           event.startDate.day <= targetDay) &&
+    //       (event.endDate.year >= targetYear &&
+    //           event.endDate.month >= targetMonth &&
+    //           event.endDate.day >= targetDay);
+    // }).toList();
+  }
+
+  ViewEvent _expandEventTime(
+      {required ViewEvent e, required DateTime currentDate}) {
+    final updatedStart =
+        e.isStartedToday(currentDate) ? e.startDate : e.startDate.withoutTime;
+    final updatedEnd = e.isEndedToday(currentDate)
+        ? e.endDate
+        : e.endDate.withoutTime.add(Duration(hours: 23, minutes: 59));
+
+    return e.copyWith(startDate: updatedStart, endDate: updatedEnd);
   }
 
   Map<DateTime, List<ViewEvent>> groupSelectedEventsByDay() {

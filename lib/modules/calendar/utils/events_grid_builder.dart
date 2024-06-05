@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:aurora_mail/modules/calendar/ui/models/event.dart';
 import 'package:aurora_mail/modules/calendar/utils/date_time_ext.dart';
-import 'package:calendar_view/calendar_view.dart';
 const int slotsNumber = 3;
 
 void spreadWeekEvents(Week week) {
@@ -58,7 +57,7 @@ void spreadWeekEvents(Week week) {
   }
 }
 
-List<Week> processEvents(List<Week> weeks, List<TestEvent> eventsSource) {
+List<Week> processEvents(List<Week> weeks, List<ExtendedMonthEvent> eventsSource) {
   // sort events by duration
   eventsSource.sort((a, b) => b.duration.compareTo(a.duration));
 
@@ -125,8 +124,8 @@ List<Week> generateWeeks(DateTime startDate, DateTime endDate) {
   return weeks;
 }
 
-Map<DateTime, List<TestEvent?>> convertWeeksToMap(List<Week> weeks) {
-  Map<DateTime, List<TestEvent?>> resultMap = {};
+Map<DateTime, List<ExtendedMonthEvent?>> convertWeeksToMap(List<Week> weeks) {
+  Map<DateTime, List<ExtendedMonthEvent?>> resultMap = {};
 
   for (final Week week in weeks) {
     for (final Day day in week.days) {
@@ -140,14 +139,14 @@ Map<DateTime, List<TestEvent?>> convertWeeksToMap(List<Week> weeks) {
 
 
 class Week {
-  List<TestEvent> events;
+  List<ExtendedMonthEvent> events;
   List<Day> days;
   Week({required this.events, required this.days });
 }
 
 class Day {
   DateTime date;
-  List<TestEvent?> events;
+  List<ExtendedMonthEvent?> events;
   int moreNumber;
   Day({required this.events, required this.date, this.moreNumber = 0});
 

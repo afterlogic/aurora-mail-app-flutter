@@ -5,8 +5,9 @@ import 'package:aurora_mail/modules/calendar/calendar_domain/models/calendar.dar
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/event.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/event.dart';
 import 'package:aurora_mail/modules/calendar/utils/date_time_ext.dart';
+import 'package:aurora_mail/modules/calendar/utils/events_grid_builder.dart';
 import 'package:bloc/bloc.dart';
-import 'package:calendar_view/calendar_view.dart';
+import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 
 part 'events_event.dart';
@@ -59,13 +60,16 @@ class EventsBloc extends Bloc<EventBlocEvent, EventsState> {
 
   _onAddEvents(AddEvents event, emit) async {
     try {
+      final weeks = generateWeeks(
+          state.startIntervalDate, state.endIntervalDate);
+      final processedEvents = processEvents(weeks,
+          event.events.map((e) => ExtendedMonthEvent.fromViewEvent(e)).toList());
+      final viewEvents = convertWeeksToMap(processedEvents);
 
-
-      // final splitEvents =
-      //     event.events.expand((e) => e.splitIntoDailyEvents).toList();
       emit(state.copyWith(
           status: EventsStatus.success,
-          eventsMap: () => event.events,
+          eventsMap: () => viewEvents,
+        originalEvents: () => event.events
          ));
     } catch (e, st) {
       emit(state.copyWith(status: EventsStatus.error));
