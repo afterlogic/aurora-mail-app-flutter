@@ -5,6 +5,7 @@ import 'package:aurora_mail/modules/calendar/ui/screens/attendees_page.dart';
 import 'package:aurora_mail/modules/calendar/ui/screens/calendar_page.dart';
 import 'package:aurora_mail/modules/calendar/ui/screens/calendar_route.dart';
 import 'package:aurora_mail/modules/calendar/ui/screens/event_creation_page.dart';
+import 'package:aurora_mail/modules/calendar/ui/screens/event_view_page.dart';
 import 'auth/screens/backup_code_auth/backup_code_auth_route.dart';
 import 'auth/screens/fido_auth/fido_auth.dart';
 import 'auth/screens/fido_auth/fido_auth_route.dart';
@@ -167,10 +168,18 @@ class RouteGenerator {
             builder: (_) => CalendarPage());
         break;
 
-      case EventCreationPage.name:
+      case EventViewPage.name:
+        final args = settings.arguments as EventViewPageArg;
         return FadeRoute(
             settings: RouteSettings(name: settings.name),
-            builder: (_) => EventCreationPage());
+            builder: (_) => EventViewPage(arg: args,));
+        break;
+
+      case EventCreationPage.name:
+        final args = settings.arguments as EventCreationPageArg;
+        return FadeRoute(
+            settings: RouteSettings(name: settings.name),
+            builder: (_) => EventCreationPage(arg: args,));
         break;
 
       case AttendeesPage.name:

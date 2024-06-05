@@ -106,7 +106,8 @@ class _CalendarPageState extends State<CalendarPage>
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.of(context).pushNamed(EventCreationPage.name);
+          Navigator.of(context).pushNamed(EventCreationPage.name,
+              arguments: EventCreationPageArg(mode: EventPageMode.creation));
         },
         child: const Icon(Icons.add),
       ),

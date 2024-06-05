@@ -1,4 +1,6 @@
 import 'package:aurora_mail/modules/calendar/ui/models/event.dart';
+import 'package:aurora_mail/modules/calendar/ui/screens/event_creation_page.dart';
+import 'package:aurora_mail/modules/calendar/ui/screens/event_view_page.dart';
 import 'package:calendar_view/calendar_view.dart';
 import 'package:flutter/material.dart';
 
@@ -22,10 +24,15 @@ class MonthEventMarker extends StatelessWidget {
   Widget build(BuildContext context) {
     return event is ExtendedMonthEvent
         ? GestureDetector(
-      onTap: (){},
-          child: Padding(
+            onTap: () {
+              Navigator.of(context).pushNamed(EventViewPage.name,
+                  arguments: EventViewPageArg(
+                      event: event!));
+            },
+            child: Padding(
               padding: EdgeInsets.only(
-                  left: event?.isStartedToday(currentDate) == true ? 4.0 : 0, right: event?.isEndedToday(currentDate) == true ? 4.0 : 0),
+                  left: event?.isStartedToday(currentDate) == true ? 4.0 : 0,
+                  right: event?.isEndedToday(currentDate) == true ? 4.0 : 0),
               child: Container(
                   margin: EdgeInsets.only(bottom: eventGap),
                   padding: EdgeInsets.only(left: 4),
@@ -37,10 +44,12 @@ class MonthEventMarker extends StatelessWidget {
                         bottomLeft: event?.isStartedToday(currentDate) == true
                             ? Radius.circular(radius)
                             : Radius.zero,
-                        topRight:
-                        event?.isEndedToday(currentDate) == true ? Radius.circular(radius) : Radius.zero,
-                        bottomRight:
-                        event?.isEndedToday(currentDate) == true ? Radius.circular(radius) : Radius.zero,
+                        topRight: event?.isEndedToday(currentDate) == true
+                            ? Radius.circular(radius)
+                            : Radius.zero,
+                        bottomRight: event?.isEndedToday(currentDate) == true
+                            ? Radius.circular(radius)
+                            : Radius.zero,
                       ),
                       color: (event as ExtendedMonthEvent).color),
                   width: 60,
@@ -48,13 +57,15 @@ class MonthEventMarker extends StatelessWidget {
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      event?.isStartedToday(currentDate) == true ? (event as ExtendedMonthEvent).title : '',
+                      event?.isStartedToday(currentDate) == true
+                          ? (event as ExtendedMonthEvent).title
+                          : '',
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(fontSize: 10, color: Colors.white),
                     ),
                   )),
             ),
-        )
+          )
         : SizedBox(
             height: emptyHeight,
           );

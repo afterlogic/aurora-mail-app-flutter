@@ -5,8 +5,11 @@ import 'package:aurora_mail/modules/calendar/calendar_domain/models/event.dart';
 import 'package:aurora_mail/modules/calendar/ui/dialogs/calendar_select_dialog.dart';
 import 'package:aurora_mail/modules/calendar/ui/dialogs/reminders_dialog.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/calendar.dart';
+import 'package:aurora_mail/modules/calendar/ui/models/event.dart';
 import 'package:aurora_mail/modules/calendar/ui/screens/attendees_page.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/calendar_tile.dart';
+import 'package:aurora_mail/modules/calendar/ui/widgets/date_time_tile.dart';
+import 'package:aurora_mail/modules/calendar/ui/widgets/section_with_icon.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/text_input.dart';
 import 'package:aurora_mail/utils/error_to_show.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
@@ -16,9 +19,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
+enum EventPageMode {
+  view, edit, creation
+}
+
+class EventCreationPageArg{
+  final EventPageMode mode;
+  final ViewEvent? event;
+  const EventCreationPageArg({
+    required this.mode,
+    this.event,
+  });
+}
+
+
 class EventCreationPage extends StatefulWidget {
-  static const name = "calendar_creation_page";
-  const EventCreationPage({super.key});
+  static const name = "event_creation_page";
+  final EventCreationPageArg arg;
+  const EventCreationPage({super.key, required this.arg});
 
   @override
   State<EventCreationPage> createState() => _EventCreationPageState();
@@ -47,6 +65,17 @@ class _EventCreationPageState extends State<EventCreationPage> {
     _selectedEndDate = _selectedStartDate.add(Duration(minutes: 30));
     _descriptionController = TextEditingController();
     _locationController = TextEditingController();
+    parseEvent();
+  }
+
+  void parseEvent(){
+    final e = widget.arg.event;
+    if(e == null) return;
+    _titleController.text = e.title;
+    _selectedStartDate = e.startDate;
+    _selectedEndDate = e.endDate;
+    _selectedCalendar = _calendarsBloc.state.calendars?.firstWhereOrNull((c) => c.id == e.calendarId);
+    // _descriptionController
   }
 
   @override
@@ -68,7 +97,7 @@ class _EventCreationPageState extends State<EventCreationPage> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AMAppBar(
-        title: Text('New Event'),
+        title: _TitleBuilder(mode: widget.arg.mode,),
         actions: [
           TextButton(
               onPressed: () {
@@ -157,7 +186,7 @@ class _EventCreationPageState extends State<EventCreationPage> {
               Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                  child: _Section(
+                  child: SectionWithIcon(
                       icon: Padding(
                         padding: const EdgeInsets.only(top: 4.0),
                         child: Icon(
@@ -184,7 +213,7 @@ class _EventCreationPageState extends State<EventCreationPage> {
                         const SizedBox(
                           height: 16,
                         ),
-                        _DateTimeTile(
+                        DateTimeTile(
                             dateTime: _selectedStartDate,
                             onChanged: (DateTime value) {
                               setState(() {
@@ -195,7 +224,7 @@ class _EventCreationPageState extends State<EventCreationPage> {
                           height: 16,
                         ),
                         Builder(builder: (context) {
-                          return _DateTimeTile(
+                          return DateTimeTile(
                               dateTime: _selectedEndDate,
                               onChanged: (DateTime value) {
                                 if (value.isBefore(_selectedStartDate)) {
@@ -220,7 +249,7 @@ class _EventCreationPageState extends State<EventCreationPage> {
               Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
-                  child: _Section(
+                  child: SectionWithIcon(
                     children: [
                       Row(
                         children: [
@@ -246,7 +275,7 @@ class _EventCreationPageState extends State<EventCreationPage> {
               Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                child: _Section(
+                child: SectionWithIcon(
                   children: [
                     Row(
                       children: [
@@ -277,7 +306,7 @@ class _EventCreationPageState extends State<EventCreationPage> {
               Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                child: _Section(
+                child: SectionWithIcon(
                   children: [
                     Row(
                       children: [
@@ -309,70 +338,26 @@ class _EventCreationPageState extends State<EventCreationPage> {
   }
 }
 
-class _DateTimeTile extends StatelessWidget {
-  const _DateTimeTile(
-      {super.key, required this.dateTime, required this.onChanged});
 
-  final Function(DateTime) onChanged;
-  final DateTime dateTime;
+class _TitleBuilder extends StatelessWidget {
+  final EventPageMode mode;
+  const _TitleBuilder({super.key, required this.mode});
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        showDatePicker(
-                context: context,
-                initialDate: dateTime,
-                firstDate: DateTime(1980),
-                lastDate: DateTime(2040))
-            .then((value) {
-          if (value != null) {
-            final DateTime result = dateTime.copyWith(
-                year: value.year, month: value.month, day: value.day);
-            showTimePicker(
-                    context: context,
-                    initialTime: TimeOfDay.fromDateTime(dateTime))
-                .then((value) {
-              if (value != null) {
-                onChanged(
-                    result.copyWith(hour: value.hour, minute: value.minute));
-              } else {
-                onChanged(result);
-              }
-            });
-          }
-        });
-      },
-      child: Row(
-        children: [
-          Text(DateFormat('E, MMM d, y').format(dateTime)),
-          Spacer(),
-          Text(DateFormat.jm().format(dateTime)),
-        ],
-      ),
-    );
+    switch (mode){
+      case EventPageMode.view:
+        return Text('Event');
+      case EventPageMode.edit:
+        return Text('Edit Event');
+      case EventPageMode.creation:
+        return Text('New Event');
+    }
   }
 }
 
-class _Section extends StatelessWidget {
-  const _Section({super.key, required this.children, required this.icon});
 
-  final List<Widget> children;
-  final Widget icon;
 
-  @override
-  Widget build(BuildContext context) {
-    return Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      icon,
-      const SizedBox(
-        width: 8,
-      ),
-      Expanded(
-        child: Column(children: children),
-      ),
-    ]);
-  }
-}
 
 class _AddIcon extends StatelessWidget {
   const _AddIcon({super.key});

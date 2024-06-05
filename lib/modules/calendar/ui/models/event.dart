@@ -7,6 +7,7 @@ class ViewEvent {
   final DateTime startDate;
   final DateTime endDate;
   final String id;
+  final String calendarId;
   final Color color;
   final String title;
 
@@ -23,6 +24,7 @@ class ViewEvent {
       return ViewEvent(
           startDate: e.startTS!,
           endDate: e.endTS!,
+          calendarId: e.calendarId,
           title: e.subject!,
           color: color,
           id: e.uid);
@@ -34,6 +36,7 @@ class ViewEvent {
   const ViewEvent(
       {required this.startDate,
       required this.endDate,
+      required this.calendarId,
       required this.color,
       required this.id,
       required this.title});
@@ -42,6 +45,7 @@ class ViewEvent {
       startDate: startDate ?? this.startDate,
       endDate: endDate ?? this.endDate,
       color: color,
+      calendarId: calendarId,
       id: id,
       title: title);
 }
@@ -57,12 +61,14 @@ class ExtendedMonthEvent extends ViewEvent {
           startDate: e.startDate,
           endDate: e.endDate,
           title: e.title,
+          calendarId: e.calendarId,
           color: e.color,
           id: e.id);
 
   ExtendedMonthEvent({
     this.overflow = false,
     this.slotIndex,
+    required super.calendarId,
     required super.startDate,
     required super.endDate,
     required super.title,
