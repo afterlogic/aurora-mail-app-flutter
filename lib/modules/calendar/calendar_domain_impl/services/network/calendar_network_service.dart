@@ -26,6 +26,8 @@ abstract class CalendarNetworkService {
     required DateTime endDate,
 });
 
+  Future<Event> updateEvent(Event event);
+
   Future<void> deleteCalendar(
       {required String id});
 

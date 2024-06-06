@@ -3,15 +3,15 @@ import 'package:intl/intl.dart';
 
 class DateTimeTile extends StatelessWidget {
   const DateTimeTile(
-      {super.key, required this.dateTime, required this.onChanged});
+      {super.key, required this.dateTime, this.onChanged});
 
-  final Function(DateTime) onChanged;
+  final Function(DateTime)? onChanged;
   final DateTime dateTime;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
+      onTap: onChanged == null ? null : () {
         showDatePicker(
             context: context,
             initialDate: dateTime,
@@ -26,10 +26,10 @@ class DateTimeTile extends StatelessWidget {
                 initialTime: TimeOfDay.fromDateTime(dateTime))
                 .then((value) {
               if (value != null) {
-                onChanged(
+                onChanged!(
                     result.copyWith(hour: value.hour, minute: value.minute));
               } else {
-                onChanged(result);
+                onChanged!(result);
               }
             });
           }

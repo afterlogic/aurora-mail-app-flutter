@@ -29,5 +29,7 @@ abstract class CalendarRepository {
 
   Future<void> updateCalendar(Calendar calendar);
 
+  Future<Event> updateEvent(Event event);
+
   Future<List<Calendar>> getCalendars();
 }

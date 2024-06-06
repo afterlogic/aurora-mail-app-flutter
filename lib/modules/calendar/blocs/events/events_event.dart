@@ -13,6 +13,20 @@ class SelectDate extends EventBlocEvent{
  List<Object?> get props => [date];
 }
 
+class UpdateEvent extends EventBlocEvent{
+  final ViewEvent event;
+  const UpdateEvent(this.event);
+  @override
+  List<Object?> get props => [event];
+}
+
+class SelectEvent extends EventBlocEvent{
+  final ViewEvent? event;
+  const SelectEvent(this.event);
+  @override
+  List<Object?> get props => [event];
+}
+
 class AddEvents extends EventBlocEvent {
 
   final List<ViewEvent> events;

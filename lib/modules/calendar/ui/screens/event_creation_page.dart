@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/calendar/blocs/calendars/calendars_bloc.dart';
 import 'package:aurora_mail/modules/calendar/blocs/events/events_bloc.dart';
@@ -19,40 +21,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
-enum EventPageMode {
-  view, edit, creation
-}
 
-class EventCreationPageArg{
-  final EventPageMode mode;
-  final ViewEvent? event;
-  const EventCreationPageArg({
-    required this.mode,
-    this.event,
-  });
-}
 
 
 class EventCreationPage extends StatefulWidget {
   static const name = "event_creation_page";
-  final EventCreationPageArg arg;
-  const EventCreationPage({super.key, required this.arg});
+  const EventCreationPage({super.key});
 
   @override
   State<EventCreationPage> createState() => _EventCreationPageState();
 }
 
 class _EventCreationPageState extends State<EventCreationPage> {
+  late DateTime _selectedStartDate;
+  late DateTime _selectedEndDate;
   late final TextEditingController _titleController;
   late final TextEditingController _descriptionController;
   late final TextEditingController _locationController;
-  ViewCalendar? _selectedCalendar;
-  late DateTime _selectedStartDate;
-  late DateTime _selectedEndDate;
   late final CalendarsBloc _calendarsBloc;
   late final EventsBloc _eventsBloc;
+  late final StreamSubscription _eventsSubscription;
   final _formKey = GlobalKey<FormState>();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  ViewCalendar? _selectedCalendar;
+  ViewEvent? _selectedEvent;
 
   @override
   void initState() {
@@ -65,16 +57,20 @@ class _EventCreationPageState extends State<EventCreationPage> {
     _selectedEndDate = _selectedStartDate.add(Duration(minutes: 30));
     _descriptionController = TextEditingController();
     _locationController = TextEditingController();
-    parseEvent();
+    onEventsStateChange(_eventsBloc.state);
+    _eventsSubscription = _eventsBloc.stream.listen(onEventsStateChange);
+
   }
 
-  void parseEvent(){
-    final e = widget.arg.event;
+  void onEventsStateChange(EventsState state){
+    final e = state.selectedEvent;
+    _selectedEvent = e;
     if(e == null) return;
     _titleController.text = e.title;
     _selectedStartDate = e.startDate;
     _selectedEndDate = e.endDate;
     _selectedCalendar = _calendarsBloc.state.calendars?.firstWhereOrNull((c) => c.id == e.calendarId);
+    setState(() { });
     // _descriptionController
   }
 
@@ -83,6 +79,7 @@ class _EventCreationPageState extends State<EventCreationPage> {
     _titleController.dispose();
     _descriptionController.dispose();
     _locationController.dispose();
+    _eventsSubscription.cancel();
     super.dispose();
   }
 
@@ -97,7 +94,7 @@ class _EventCreationPageState extends State<EventCreationPage> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AMAppBar(
-        title: _TitleBuilder(mode: widget.arg.mode,),
+        title: Text(_selectedEvent == null ? 'Create Event' : 'Edit Event'),
         actions: [
           TextButton(
               onPressed: () {
@@ -337,27 +334,6 @@ class _EventCreationPageState extends State<EventCreationPage> {
     );
   }
 }
-
-
-class _TitleBuilder extends StatelessWidget {
-  final EventPageMode mode;
-  const _TitleBuilder({super.key, required this.mode});
-
-  @override
-  Widget build(BuildContext context) {
-    switch (mode){
-      case EventPageMode.view:
-        return Text('Event');
-      case EventPageMode.edit:
-        return Text('Edit Event');
-      case EventPageMode.creation:
-        return Text('New Event');
-    }
-  }
-}
-
-
-
 
 class _AddIcon extends StatelessWidget {
   const _AddIcon({super.key});

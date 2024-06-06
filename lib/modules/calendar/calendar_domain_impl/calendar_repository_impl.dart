@@ -167,4 +167,9 @@ class CalendarRepositoryImpl implements CalendarRepository {
         startDate: data.startDate,
         endDate: data.endDate);
   }
+
+  @override
+  Future<Event> updateEvent(Event event) {
+    return _network.updateEvent(event);
+  }
 }

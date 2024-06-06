@@ -169,17 +169,15 @@ class RouteGenerator {
         break;
 
       case EventViewPage.name:
-        final args = settings.arguments as EventViewPageArg;
         return FadeRoute(
             settings: RouteSettings(name: settings.name),
-            builder: (_) => EventViewPage(arg: args,));
+            builder: (_) => EventViewPage());
         break;
 
       case EventCreationPage.name:
-        final args = settings.arguments as EventCreationPageArg;
         return FadeRoute(
             settings: RouteSettings(name: settings.name),
-            builder: (_) => EventCreationPage(arg: args,));
+            builder: (_) => EventCreationPage());
         break;
 
       case AttendeesPage.name:

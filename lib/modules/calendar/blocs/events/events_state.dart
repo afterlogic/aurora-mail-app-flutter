@@ -5,6 +5,7 @@ class EventsState extends Equatable {
   final Map<DateTime, List<ViewEvent?>>? eventsMap;
   final List<ViewEvent>? splitEvents;
   final List<ViewEvent>? originalEvents;
+  final ViewEvent? selectedEvent;
   final DateTime startIntervalDate;
   final DateTime endIntervalDate;
   final DateTime? selectedDate;
@@ -13,6 +14,7 @@ class EventsState extends Equatable {
     this.status = EventsStatus.idle,
     this.splitEvents,
     this.originalEvents,
+    this.selectedEvent,
     this.eventsMap,
     required this.startIntervalDate,
     required this.endIntervalDate,
@@ -24,6 +26,7 @@ class EventsState extends Equatable {
         status,
         splitEvents,
         originalEvents,
+    selectedEvent,
         startIntervalDate,
         endIntervalDate,
         selectedDate,
@@ -169,6 +172,7 @@ class EventsState extends Equatable {
     List<ViewEvent>? Function()? splitEvents,
     Map<DateTime, List<ViewEvent?>>? Function()? eventsMap,
     List<ViewEvent>? Function()? originalEvents,
+    ViewEvent? Function()? selectedEvent,
     List<Calendar>? Function()? calendars,
     DateTime? startIntervalDate,
     DateTime? endIntervalDate,
@@ -180,6 +184,7 @@ class EventsState extends Equatable {
         eventsMap: eventsMap == null ? this.eventsMap : eventsMap(),
         originalEvents:
             originalEvents == null ? this.originalEvents : originalEvents(),
+        selectedEvent: selectedEvent == null ? this.selectedEvent : selectedEvent(),
         startIntervalDate: startIntervalDate ?? this.startIntervalDate,
         endIntervalDate: endIntervalDate ?? this.endIntervalDate,
         selectedDate:

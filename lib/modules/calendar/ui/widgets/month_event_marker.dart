@@ -1,8 +1,10 @@
+import 'package:aurora_mail/modules/calendar/blocs/events/events_bloc.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/event.dart';
 import 'package:aurora_mail/modules/calendar/ui/screens/event_creation_page.dart';
 import 'package:aurora_mail/modules/calendar/ui/screens/event_view_page.dart';
 import 'package:calendar_view/calendar_view.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MonthEventMarker extends StatelessWidget {
   const MonthEventMarker(
@@ -25,9 +27,10 @@ class MonthEventMarker extends StatelessWidget {
     return event is ExtendedMonthEvent
         ? GestureDetector(
             onTap: () {
-              Navigator.of(context).pushNamed(EventViewPage.name,
-                  arguments: EventViewPageArg(
-                      event: event!));
+              BlocProvider.of<EventsBloc>(context).add(SelectEvent(event));
+              Navigator.of(context).pushNamed(
+                EventViewPage.name,
+              );
             },
             child: Padding(
               padding: EdgeInsets.only(

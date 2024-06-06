@@ -133,4 +133,10 @@ class CalendarUseCaseImpl implements CalendarUseCase {
       await _getLocalEvents();
     }
   }
+
+  @override
+  Future<ViewEvent> updateEvent(ViewEvent event) async {
+    final model = await repository.updateEvent(event);
+    return ViewEvent.tryFromEvent(event, color: event.color)!;
+  }
 }

@@ -30,8 +30,26 @@ class EventsBloc extends Bloc<EventBlocEvent, EventsState> {
     on<LoadEvents>(_onLoadEvents);
     on<CreateEvent>(_onCreateEvent);
     on<AddEvents>(_onAddEvents);
+    on<SelectEvent>(_onSelectEvent);
+    on<UpdateEvent>(_onUpdateEvent);
     on<StartSync>(_onStartSync);
     on<SelectDate>(_onSelectDate);
+  }
+
+  _onSelectEvent(SelectEvent event, emit) async {
+    emit(state.copyWith(selectedEvent: () => event.event));
+  }
+
+  _onUpdateEvent(UpdateEvent event, emit) async {
+    try {
+      final updatedEvent = await _useCase.updateEvent(event.event
+          );
+      emit(state.copyWith(selectedEvent: () => updatedEvent));
+    } catch (e, st) {
+      emit(state.copyWith(status: EventsStatus.error));
+    } finally {
+      emit(state.copyWith(status: EventsStatus.idle));
+    }
   }
 
   _onLoadEvents(LoadEvents event, emit) async {
