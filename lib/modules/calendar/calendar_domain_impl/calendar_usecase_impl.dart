@@ -34,8 +34,7 @@ class CalendarUseCaseImpl implements CalendarUseCase {
       _calendarsSubject.stream;
 
   @override
-  ValueStream<List<ViewEvent>> get eventsSubscription =>
-      _eventsSubject.stream;
+  ValueStream<List<ViewEvent>> get eventsSubscription => _eventsSubject.stream;
 
   @override
   Future<void> createCalendar(CalendarCreationData data) async {
@@ -119,7 +118,6 @@ class CalendarUseCaseImpl implements CalendarUseCase {
         .whereNotNull()
         .toList();
 
-
     _eventsSubject.add(eventViews);
   }
 
@@ -137,6 +135,7 @@ class CalendarUseCaseImpl implements CalendarUseCase {
   @override
   Future<ViewEvent> updateEvent(ViewEvent event) async {
     final model = await repository.updateEvent(event);
-    return ViewEvent.tryFromEvent(event, color: event.color)!;
+    syncCalendars().then((_) => _getLocalEvents());
+    return ViewEvent.tryFromEvent(model, color: event.color)!;
   }
 }

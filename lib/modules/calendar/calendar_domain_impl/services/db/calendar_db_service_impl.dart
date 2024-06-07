@@ -68,7 +68,7 @@ class CalendarDbServiceImpl implements CalendarDbService {
 
   @override
   Future<List<Event>> getNotUpdatedEvents(
-      {required int limit, required int offset}) async {
+      {required int? limit, required int? offset}) async {
     final result =
         await _eventDao.getEventsWithLimit(limit: limit, offset: offset);
     return result.map((e) => Event.fromDb(e)).where((e) => !e.synced).toList();

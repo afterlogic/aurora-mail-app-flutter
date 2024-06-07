@@ -20,7 +20,7 @@ abstract class CalendarDbService {
   Future<void> clearEvents(List<Calendar> calendars);
 
   Future<List<Event>> getNotUpdatedEvents(
-      {required int limit, required int offset});
+      {required int? limit, required int? offset});
 
   Future<void> updateEventList(List<Event> events);
 

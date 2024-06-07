@@ -73,7 +73,9 @@ class EventDao extends DatabaseAccessor<AppDatabase> with _$EventDaoMixin {
   }
 
   Future<List<EventDb>> getEventsWithLimit(
-      {required int limit, required int offset}) async {
+      {required int? limit, required int? offset}) async {
+    if (limit == null || offset == null)
+      return select(eventTable).get();
     return (select(eventTable)..limit(limit, offset: offset)).get();
   }
 
@@ -92,7 +94,7 @@ class EventDao extends DatabaseAccessor<AppDatabase> with _$EventDaoMixin {
   Future<List<EventDb>> getForPeriod(
       {required DateTime start,
       required DateTime end,
-        required List<String> calendarIds,
+      required List<String> calendarIds,
       required int userLocalId}) {
     return (select(eventTable)
           ..where((t) =>

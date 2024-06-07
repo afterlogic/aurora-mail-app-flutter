@@ -5,6 +5,7 @@ import 'package:aurora_mail/modules/calendar/blocs/calendars/calendars_bloc.dart
 import 'package:aurora_mail/modules/calendar/blocs/events/events_bloc.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/event.dart';
 import 'package:aurora_mail/modules/calendar/ui/dialogs/calendar_select_dialog.dart';
+import 'package:aurora_mail/modules/calendar/ui/dialogs/recurrence_select_dialog.dart';
 import 'package:aurora_mail/modules/calendar/ui/dialogs/reminders_dialog.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/calendar.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/event.dart';
@@ -20,9 +21,6 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-
-
-
 
 class EventCreationPage extends StatefulWidget {
   static const name = "event_creation_page";
@@ -46,6 +44,12 @@ class _EventCreationPageState extends State<EventCreationPage> {
   ViewCalendar? _selectedCalendar;
   ViewEvent? _selectedEvent;
 
+  EventCreationData get collectCreationData => EventCreationData(
+      subject: _titleController.text,
+      calendarId: _selectedCalendar!.id,
+      startDate: _selectedStartDate,
+      endDate: _selectedEndDate);
+
   @override
   void initState() {
     super.initState();
@@ -59,19 +63,6 @@ class _EventCreationPageState extends State<EventCreationPage> {
     _locationController = TextEditingController();
     onEventsStateChange(_eventsBloc.state);
     _eventsSubscription = _eventsBloc.stream.listen(onEventsStateChange);
-
-  }
-
-  void onEventsStateChange(EventsState state){
-    final e = state.selectedEvent;
-    _selectedEvent = e;
-    if(e == null) return;
-    _titleController.text = e.title;
-    _selectedStartDate = e.startDate;
-    _selectedEndDate = e.endDate;
-    _selectedCalendar = _calendarsBloc.state.calendars?.firstWhereOrNull((c) => c.id == e.calendarId);
-    setState(() { });
-    // _descriptionController
   }
 
   @override
@@ -83,11 +74,29 @@ class _EventCreationPageState extends State<EventCreationPage> {
     super.dispose();
   }
 
-  EventCreationData get collectCreationData => EventCreationData(
-      subject: _titleController.text,
-      calendarId: _selectedCalendar!.id,
-      startDate: _selectedStartDate,
-      endDate: _selectedEndDate);
+  void onEventsStateChange(EventsState state) {
+    final e = state.selectedEvent;
+    _selectedEvent = e;
+    if (e == null) return;
+    _titleController.text = e.title;
+    _selectedStartDate = e.startDate;
+    _selectedEndDate = e.endDate;
+    _selectedCalendar = _calendarsBloc.state.calendars
+        ?.firstWhereOrNull((c) => c.id == e.calendarId);
+    setState(() {});
+    // _descriptionController
+  }
+
+  void _onSaveEditedEvent() {
+    final updatedFields = collectCreationData;
+    final updatedEvent = _selectedEvent!.copyWith(
+        subject: updatedFields.subject,
+        title: updatedFields.subject,
+        description: updatedFields.description,
+        startDate: updatedFields.startDate,
+        endDate: updatedFields.endDate);
+    _eventsBloc.add(UpdateEvent(updatedEvent));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -108,7 +117,11 @@ class _EventCreationPageState extends State<EventCreationPage> {
                       msg: ErrorToShow.message('Please select calendar'));
                   return;
                 }
-                _eventsBloc.add(CreateEvent(collectCreationData));
+                if (_selectedEvent == null) {
+                  _eventsBloc.add(CreateEvent(collectCreationData));
+                } else {
+                  _onSaveEditedEvent();
+                }
                 Navigator.of(context).pop();
               },
               child: Text(S.of(context).btn_save))
@@ -250,8 +263,13 @@ class _EventCreationPageState extends State<EventCreationPage> {
                     children: [
                       Row(
                         children: [
-                          Text(
-                            'Daily',
+                          GestureDetector(
+                            onTap: () {
+                              RecurrenceSelectDialog.show(context);
+                            },
+                            child: Text(
+                              'Daily',
+                            ),
                           ),
                           Spacer(),
                           Text(

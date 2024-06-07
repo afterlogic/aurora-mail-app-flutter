@@ -246,7 +246,6 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
     );
 
     final result = await calendarModule.post(body) as Map<String, dynamic>;
-    print(result);
     return Event.fill(event, (result["Events"] as List).first as Map<String, dynamic>);
   }
 }

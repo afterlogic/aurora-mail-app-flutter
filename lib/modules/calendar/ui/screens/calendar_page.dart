@@ -1,5 +1,6 @@
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/calendar/blocs/calendars/calendars_bloc.dart';
+import 'package:aurora_mail/modules/calendar/blocs/events/events_bloc.dart';
 import 'package:aurora_mail/modules/calendar/ui/screens/event_creation_page.dart';
 import 'package:aurora_mail/modules/calendar/ui/views/day_view.dart';
 import 'package:aurora_mail/modules/calendar/ui/views/list_events_view.dart';
@@ -27,7 +28,7 @@ class _CalendarPageState extends State<CalendarPage>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 4, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
     BlocProvider.of<CalendarsBloc>(context).add(GetCalendars());
   }
 
@@ -82,10 +83,6 @@ class _CalendarPageState extends State<CalendarPage>
                         const SizedBox(
                           width: 16,
                         ),
-                        CalendarTab(
-                            title: 'List',
-                            controller: _tabController,
-                            index: 3),
                       ],
                     ),
                   )
@@ -99,13 +96,13 @@ class _CalendarPageState extends State<CalendarPage>
                   MonthView(),
                   WeekView(),
                   DayView(),
-                  ListEventsView()
                 ]),
           )
         ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
+          BlocProvider.of<EventsBloc>(context).add(SelectEvent(null));
           Navigator.of(context).pushNamed(EventCreationPage.name,
               );
         },

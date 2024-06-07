@@ -81,6 +81,7 @@ class ViewEvent extends Event {
       required super.onceLoaded});
 
   ViewEvent copyWith({
+    String? title,
     DateTime? startDate,
     DateTime? endDate,
     String? organizer,
@@ -131,7 +132,7 @@ class ViewEvent extends Event {
         updateStatus: updateStatus ?? this.updateStatus,
         synced: synced ?? this.synced,
         onceLoaded: onceLoaded ?? this.onceLoaded,
-        title: title,
+        title: title ?? this.title,
         color: color,
       );
 }

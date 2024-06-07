@@ -39,19 +39,17 @@ class CalendarRepositoryImpl implements CalendarRepository {
     final int step = 20;
     int currentOffset = 0;
     List<Event> notUpdatedEvents =
-        await _db.getNotUpdatedEvents(offset: currentOffset, limit: step);
+        await _db.getNotUpdatedEvents(offset: null, limit: null);
     await _db.deleteMarkedEvents();
     while (notUpdatedEvents.isNotEmpty) {
       logger.log(
-          'CURRENT SYNCiNG EVENTS: ${notUpdatedEvents.map((e) => e.uid).toList()}');
+          'CURRENT EVENTS INFO FOR SYNC: ${notUpdatedEvents.map((e) => '${e.uid} : ${e.updateStatus.name}').toList()}');
       final groupedEvents =
           EventMapper.groupEventsByCalendarId(notUpdatedEvents);
       for (final group in groupedEvents) {
         try {
           final syncedEvents = await _network.updateEvents(group);
-
-          logger.log('SYNCED EVENTS: $syncedEvents');
-
+          logger.log('EVENTS FROM SERVER: $syncedEvents');
           await _db.updateEventList(syncedEvents);
         } catch (e) {
           rethrow;
@@ -66,7 +64,7 @@ class CalendarRepositoryImpl implements CalendarRepository {
   @override
   Future<void> syncCalendars() async {
     final localCalendars = await _db.getCalendars(user.localId!);
-    logger.log('LOCAL CALENDARS: ${localCalendars.map((e) => e.id).toList()}');
+    logger.log('LOCAL CALENDARS: ${localCalendars.map((e) => e.toString()).toList()}');
     final localCalendarsMap =
         CalendarMapper.convertListToMapById(localCalendars);
 
@@ -74,35 +72,41 @@ class CalendarRepositoryImpl implements CalendarRepository {
 
     final List<Calendar> calendarsForUpdate = [];
     try {
+      final calendarsFromServer =  await _network.getCalendars(user.localId!);
+      logger.log('CALENDARS FROM SERVER: ${calendarsFromServer.map((e) => e.toString()).toList()}');
       final serverCalendarsMap = CalendarMapper.convertListToMapById(
-          await _network.getCalendars(user.localId!));
+          calendarsFromServer);
       for (final serverEntry in serverCalendarsMap.entries) {
         if (serverEntry.value.syncToken ==
             localCalendarsMap[serverEntry.key]?.syncToken) continue;
         calendarsForUpdate.add(serverEntry.value);
       }
       logger.log(
-          'CALENDARS FOR UPDATE/DOWNLOAD: ${calendarsForUpdate.map((e) => e.id).toList()}');
+          'CALENDARS FOR UPDATE/DOWNLOAD: ${calendarsForUpdate.map((e) => e.toString()).toList()}');
       final localCalendarsForDeleting = localCalendarsMap.values
           .where((e) => !serverCalendarsMap.containsKey(e.id))
           .toList();
       logger.log(
-          'CALENDARS FOR DELETING: ${localCalendarsForDeleting.map((e) => e.id).toList()}');
+          'CALENDARS FOR DELETING: ${localCalendarsForDeleting.map((e) => e.toString()).toList()}');
 
       await _db.deleteCalendars(localCalendarsForDeleting);
 
       for (final calendar in calendarsForUpdate) {
         int currentSync =
             int.parse(localCalendarsMap[calendar.id]?.syncToken ?? '0');
+        logger.log('IN ${calendar.id} INITIAL SYNC: $currentSync, TARGET SYNC: ${calendar.syncToken}');
         while (currentSync < int.parse(calendar.syncToken)) {
           logger.log('IN ${calendar.id} SYNC: $currentSync');
           final changes = await _network.getChangesForCalendar(
               userLocalId: user.localId!,
               calendarId: calendar.id,
               syncTokenFrom: currentSync);
-          logger.log('CHANGES ${changes.map((e) => e.uid)} ');
+          logger.log('FOR ${calendar.id} AND SYNC = $currentSync CHANGES: ${changes.map((e) => e.toString())} ');
           await _db.emitChanges(changes);
           currentSync += BATCH_SIZE;
+          if(currentSync > int.parse(calendar.syncToken)){
+            currentSync = int.parse(calendar.syncToken);
+          }
         }
         await _db.createOrUpdateCalendar(calendar);
       }

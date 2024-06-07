@@ -7,7 +7,7 @@ class ViewCalendar extends Calendar implements Equatable {
   final bool selected;
 
   ViewCalendar(
-      {this.selected = false,
+      {this.selected = true,
       required super.id,
       required super.userLocalId,
       required super.color,

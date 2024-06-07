@@ -54,22 +54,7 @@ class Calendar {
 
   @override
   String toString() {
-    return 'Calendar{' +
-        ' id: $id,' +
-        ' userLocalId: $userLocalId,' +
-        ' color: $color,' +
-        ' description: $description,' +
-        ' name: $name,' +
-        ' owner: $owner,' +
-        ' isDefault: $isDefault,' +
-        ' shared: $shared,' +
-        ' sharedToAll: $sharedToAll,' +
-        ' sharedToAllAccess: $sharedToAllAccess,' +
-        ' access: $access,' +
-        ' isPublic: $isPublic,' +
-        // ' shares: $shares,' +
-        ' syncToken: $syncToken,' +
-        '}';
+    return '${name}, ID: ${id}, sync token: ${syncToken}';
   }
 
   Calendar copyWith({

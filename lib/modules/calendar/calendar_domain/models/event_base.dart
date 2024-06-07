@@ -43,12 +43,9 @@ class EventBase {
 
   @override
   String toString() {
-    return 'EventUpdateInfo{' +
+    return
         ' uid: $uid,' +
-        ' calendarId: $calendarId,' +
-        ' userLocalId: $userLocalId,' +
-        ' updateStatus: ${updateStatus.name},' +
-        '}';
+        ' updateStatus: ${updateStatus.name},' ;
   }
 
   EventBase copyWith({

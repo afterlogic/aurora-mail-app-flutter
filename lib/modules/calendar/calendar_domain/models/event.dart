@@ -216,11 +216,6 @@ class Event extends EventBase {
   @override
   String toString() {
     return 'Event{' +
-        ' organizer: $organizer,' +
-        ' appointment: $appointment,' +
-        ' appointmentAccess: $appointmentAccess,' +
-        ' calendarId: $calendarId,' +
-        ' userLocalId: $userLocalId,' +
         ' uid: $uid,' +
         ' subject: $subject,' +
         ' description: $description,' +
