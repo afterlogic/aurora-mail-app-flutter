@@ -248,4 +248,43 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
     final result = await calendarModule.post(body) as Map<String, dynamic>;
     return Event.fill(event, (result["Events"] as List).first as Map<String, dynamic>);
   }
+
+  @override
+  Future<void> deleteEvent(Event event) async{
+    final parameters = {
+      "id": '${event.uid}-${event.recurrenceId}',
+      "uid": event.uid,
+      "calendarId": event.calendarId,
+      "newCalendarId": event.calendarId,
+      "subject": event.subject!,
+      "allDay": 0,
+      "location": "",
+      "description": event.description ?? '',
+      "alarms": "[]",
+      "attendees": "[]",
+      // "owner": ownerMail,
+      "recurrenceId": null,
+      "excluded": false,
+      "allEvents": 2,
+      "modified": 1,
+      "start": event.startTS!.toIso8601String(),
+      "end": event.endTS!.toIso8601String(),
+      "startTS": event.startTS!.toUtc().millisecondsSinceEpoch ~/ 1000,
+      "endTS": event.endTS!.toUtc().millisecondsSinceEpoch ~/ 1000,
+      "rrule": null,
+      "type": "VEVENT",
+      "status": false,
+      "withDate": true,
+      "isPrivate": false,
+      // "selectStart": 1714262400,
+      // "selectEnd": 1717891200
+    };
+
+    final body = new WebMailApiBody(
+      method: "DeleteEvent",
+      parameters: jsonEncode(parameters),
+    );
+
+    await calendarModule.post(body);
+  }
 }

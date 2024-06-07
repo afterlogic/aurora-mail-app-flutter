@@ -32,6 +32,7 @@ class EventsBloc extends Bloc<EventBlocEvent, EventsState> {
     on<AddEvents>(_onAddEvents);
     on<SelectEvent>(_onSelectEvent);
     on<UpdateEvent>(_onUpdateEvent);
+    on<DeleteEvent>(_onDeleteEvent);
     on<StartSync>(_onStartSync);
     on<SelectDate>(_onSelectDate);
   }
@@ -42,9 +43,19 @@ class EventsBloc extends Bloc<EventBlocEvent, EventsState> {
 
   _onUpdateEvent(UpdateEvent event, emit) async {
     try {
-      final updatedEvent = await _useCase.updateEvent(event.event
-          );
+      final updatedEvent = await _useCase.updateEvent(event.event);
       emit(state.copyWith(selectedEvent: () => updatedEvent));
+    } catch (e, st) {
+      emit(state.copyWith(status: EventsStatus.error));
+    } finally {
+      emit(state.copyWith(status: EventsStatus.idle));
+    }
+  }
+
+  _onDeleteEvent(DeleteEvent event, emit) async {
+    try {
+      await _useCase.deleteEvent(state.selectedEvent!);
+      emit(state.copyWith(selectedEvent: () => null));
     } catch (e, st) {
       emit(state.copyWith(status: EventsStatus.error));
     } finally {
@@ -67,8 +78,7 @@ class EventsBloc extends Bloc<EventBlocEvent, EventsState> {
 
   _onCreateEvent(CreateEvent event, emit) async {
     try {
-      await _useCase.createEvent(
-         event.creationData);
+      await _useCase.createEvent(event.creationData);
     } catch (e, st) {
       emit(state.copyWith(status: EventsStatus.error));
     } finally {
@@ -78,17 +88,19 @@ class EventsBloc extends Bloc<EventBlocEvent, EventsState> {
 
   _onAddEvents(AddEvents event, emit) async {
     try {
-      final weeks = generateWeeks(
-          state.startIntervalDate, state.endIntervalDate);
-      final processedEvents = processEvents(weeks,
-          event.events.map((e) => ExtendedMonthEvent.fromViewEvent(e)).toList());
+      final weeks =
+          generateWeeks(state.startIntervalDate, state.endIntervalDate);
+      final processedEvents = processEvents(
+          weeks,
+          event.events
+              .map((e) => ExtendedMonthEvent.fromViewEvent(e))
+              .toList());
       final viewEvents = convertWeeksToMap(processedEvents);
 
       emit(state.copyWith(
           status: EventsStatus.success,
           eventsMap: () => viewEvents,
-        originalEvents: () => event.events
-         ));
+          originalEvents: () => event.events));
     } catch (e, st) {
       emit(state.copyWith(status: EventsStatus.error));
     } finally {

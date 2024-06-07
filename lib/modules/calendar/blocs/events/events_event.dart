@@ -20,6 +20,10 @@ class UpdateEvent extends EventBlocEvent{
   List<Object?> get props => [event];
 }
 
+class DeleteEvent extends EventBlocEvent{
+  const DeleteEvent();
+}
+
 class SelectEvent extends EventBlocEvent{
   final ViewEvent? event;
   const SelectEvent(this.event);

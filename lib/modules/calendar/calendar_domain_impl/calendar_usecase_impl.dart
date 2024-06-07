@@ -138,4 +138,11 @@ class CalendarUseCaseImpl implements CalendarUseCase {
     syncCalendars().then((_) => _getLocalEvents());
     return ViewEvent.tryFromEvent(model, color: event.color)!;
   }
+
+  @override
+  Future<void> deleteEvent(ViewEvent event) async {
+    await repository.deleteEvent(event);
+    await syncCalendars();
+    await _getLocalEvents();
+  }
 }

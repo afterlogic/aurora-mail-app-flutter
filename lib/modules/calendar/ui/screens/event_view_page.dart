@@ -10,10 +10,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-enum EventViewAppBarAction {
-  edit,
-  delete
-}
+enum EventViewAppBarAction { edit, delete }
 
 class EventViewPage extends StatelessWidget {
   static const name = "event_view_page";
@@ -22,54 +19,54 @@ class EventViewPage extends StatelessWidget {
     super.key,
   });
 
-
-
-  void onActionSelected(EventViewAppBarAction action, BuildContext context){
-    switch (action){
+  void onActionSelected(EventViewAppBarAction action, BuildContext context) {
+    switch (action) {
       case EventViewAppBarAction.edit:
         Navigator.of(context).pushNamed(EventCreationPage.name);
         break;
       case EventViewAppBarAction.delete:
-        // TODO: Handle this case.
+        BlocProvider.of<EventsBloc>(context).add(DeleteEvent());
+        Navigator.of(context).pop();
         break;
     }
   }
 
-  PopupMenuEntry<EventViewAppBarAction> _buildMenuItem({
-    required EventViewAppBarAction value,
-    required String text,
-    required IconData icon,
-    required BuildContext context
-  }) {
+  PopupMenuEntry<EventViewAppBarAction> _buildMenuItem(
+      {required EventViewAppBarAction value,
+      required String text,
+      required IconData icon,
+      required BuildContext context}) {
     return PopupMenuItem(
       child: ListTile(
-        leading: Icon(icon, color: Theme.of(context).brightness == Brightness.light ? Colors.black : null,),
+        leading: Icon(
+          icon,
+          color: Theme.of(context).brightness == Brightness.light
+              ? Colors.black
+              : null,
+        ),
         title: Text(text),
       ),
       value: value,
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
-
     final actions = <Widget>[
       PopupMenuButton(
-        onSelected: (EventViewAppBarAction action) => onActionSelected(action, context),
+        onSelected: (EventViewAppBarAction action) =>
+            onActionSelected(action, context),
         itemBuilder: (ctx) => [
           _buildMenuItem(
               icon: Icons.edit,
               text: S.of(ctx).contacts_view_app_bar_edit_contact,
               value: EventViewAppBarAction.edit,
-              context: ctx
-          ),
+              context: ctx),
           _buildMenuItem(
               icon: Icons.delete_outline,
               text: S.of(ctx).contacts_view_app_bar_delete_contact,
               value: EventViewAppBarAction.delete,
-              context: ctx
-          ),
+              context: ctx),
         ],
       ),
     ];

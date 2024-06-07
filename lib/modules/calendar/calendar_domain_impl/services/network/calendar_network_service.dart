@@ -28,6 +28,8 @@ abstract class CalendarNetworkService {
 
   Future<Event> updateEvent(Event event);
 
+  Future<void> deleteEvent(Event event);
+
   Future<void> deleteCalendar(
       {required String id});
 

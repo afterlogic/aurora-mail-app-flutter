@@ -77,6 +77,7 @@ class _DayViewState extends State<DayView> {
           liveTimeIndicatorSettings: CV.LiveTimeIndicatorSettings(
               color: Theme.of(context).primaryColor, height: 3),
           initialDay: state.selectedDate ?? state.startIntervalDate,
+          heightPerMinute: 1.5,
           headerStyle: CV.HeaderStyle(
             leftIcon: Icon(
               Icons.chevron_left,

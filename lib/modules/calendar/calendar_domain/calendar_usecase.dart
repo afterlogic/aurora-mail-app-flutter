@@ -33,6 +33,8 @@ abstract class CalendarUseCase {
 
   Future<ViewEvent> updateEvent(ViewEvent event);
 
+  Future<void> deleteEvent(ViewEvent event);
+
   Future<void> deleteCalendar(ViewCalendar calendar);
 
   Future<void> getCalendars();

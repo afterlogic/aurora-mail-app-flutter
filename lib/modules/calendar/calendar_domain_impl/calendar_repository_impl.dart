@@ -176,4 +176,9 @@ class CalendarRepositoryImpl implements CalendarRepository {
   Future<Event> updateEvent(Event event) {
     return _network.updateEvent(event);
   }
+
+  @override
+  Future<void> deleteEvent(Event event) {
+    return _network.deleteEvent(event);
+  }
 }
