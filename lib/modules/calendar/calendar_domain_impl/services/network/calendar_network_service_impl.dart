@@ -140,6 +140,7 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
       String? description,
       required DateTime startDate,
       required DateTime endDate,
+      required bool? allDay,
       }) async {
     // {
     //   "id": null,
@@ -176,7 +177,7 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
       "calendarId": calendarId,
       "newCalendarId": calendarId,
       "subject": subject,
-      "allDay": 0,
+      "allDay": allDay == true ? 1 : 0,
       "location": "",
       "description": description ?? '',
       "alarms": "[]",
@@ -217,7 +218,7 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
       "calendarId": event.calendarId,
       "newCalendarId": event.calendarId,
       "subject": event.subject!,
-      "allDay": 0,
+      "allDay": event.allDay == true ? 1 : 0,
       "location": "",
       "description": event.description ?? '',
       "alarms": "[]",

@@ -7,6 +7,7 @@ class EventCreationData {
   final String calendarId;
   final DateTime startDate;
   final DateTime endDate;
+  final bool? allDay;
 
   const EventCreationData({
     required this.subject,
@@ -14,6 +15,7 @@ class EventCreationData {
     required this.calendarId,
     required this.startDate,
     required this.endDate,
+    required this.allDay,
   });
 }
 

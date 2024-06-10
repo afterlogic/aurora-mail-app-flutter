@@ -64,7 +64,8 @@ class CalendarRepositoryImpl implements CalendarRepository {
   @override
   Future<void> syncCalendars() async {
     final localCalendars = await _db.getCalendars(user.localId!);
-    logger.log('LOCAL CALENDARS: ${localCalendars.map((e) => e.toString()).toList()}');
+    logger.log(
+        'LOCAL CALENDARS: ${localCalendars.map((e) => e.toString()).toList()}');
     final localCalendarsMap =
         CalendarMapper.convertListToMapById(localCalendars);
 
@@ -72,10 +73,11 @@ class CalendarRepositoryImpl implements CalendarRepository {
 
     final List<Calendar> calendarsForUpdate = [];
     try {
-      final calendarsFromServer =  await _network.getCalendars(user.localId!);
-      logger.log('CALENDARS FROM SERVER: ${calendarsFromServer.map((e) => e.toString()).toList()}');
-      final serverCalendarsMap = CalendarMapper.convertListToMapById(
-          calendarsFromServer);
+      final calendarsFromServer = await _network.getCalendars(user.localId!);
+      logger.log(
+          'CALENDARS FROM SERVER: ${calendarsFromServer.map((e) => e.toString()).toList()}');
+      final serverCalendarsMap =
+          CalendarMapper.convertListToMapById(calendarsFromServer);
       for (final serverEntry in serverCalendarsMap.entries) {
         if (serverEntry.value.syncToken ==
             localCalendarsMap[serverEntry.key]?.syncToken) continue;
@@ -94,17 +96,19 @@ class CalendarRepositoryImpl implements CalendarRepository {
       for (final calendar in calendarsForUpdate) {
         int currentSync =
             int.parse(localCalendarsMap[calendar.id]?.syncToken ?? '0');
-        logger.log('IN ${calendar.id} INITIAL SYNC: $currentSync, TARGET SYNC: ${calendar.syncToken}');
+        logger.log(
+            'IN ${calendar.id} INITIAL SYNC: $currentSync, TARGET SYNC: ${calendar.syncToken}');
         while (currentSync < int.parse(calendar.syncToken)) {
           logger.log('IN ${calendar.id} SYNC: $currentSync');
           final changes = await _network.getChangesForCalendar(
               userLocalId: user.localId!,
               calendarId: calendar.id,
               syncTokenFrom: currentSync);
-          logger.log('FOR ${calendar.id} AND SYNC = $currentSync CHANGES: ${changes.map((e) => e.toString())} ');
+          logger.log(
+              'FOR ${calendar.id} AND SYNC = $currentSync CHANGES: ${changes.map((e) => e.toString())} ');
           await _db.emitChanges(changes);
           currentSync += BATCH_SIZE;
-          if(currentSync > int.parse(calendar.syncToken)){
+          if (currentSync > int.parse(calendar.syncToken)) {
             currentSync = int.parse(calendar.syncToken);
           }
         }
@@ -169,7 +173,8 @@ class CalendarRepositoryImpl implements CalendarRepository {
         subject: data.subject,
         calendarId: data.calendarId,
         startDate: data.startDate,
-        endDate: data.endDate);
+        endDate: data.endDate,
+        allDay: data.allDay);
   }
 
   @override

@@ -5,6 +5,7 @@ import 'package:aurora_mail/modules/calendar/blocs/calendars/calendars_bloc.dart
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/calendar.dart';
 import 'package:aurora_mail/modules/calendar/ui/dialogs/calendar_creation.dart';
 import 'package:aurora_mail/modules/calendar/ui/dialogs/calendar_edit.dart';
+import 'package:aurora_mail/modules/calendar/ui/dialogs/deletion_confirm_dialog.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/calendar.dart';
 import 'package:aurora_mail/shared_ui/colored_checkbox.dart';
 import 'package:aurora_mail/utils/base_state.dart';
@@ -129,7 +130,8 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
           icon: Icon(Icons.edit_outlined),
           titleBuilder: (ctx) => S.of(ctx).contacts_view_app_bar_edit_contact,
           onTap: (ctx) {
-            CalendarEditDialog.show(ctx, calendar: widget.calendar).then((value) {
+            CalendarEditDialog.show(ctx, calendar: widget.calendar)
+                .then((value) {
               if (value != null) {
                 BlocProvider.of<CalendarsBloc>(context)
                     .add(UpdateCalendar(value));
@@ -152,7 +154,13 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
           icon: Icon(Icons.delete_outline),
           titleBuilder: (ctx) => S.of(ctx).btn_delete,
           onTap: (ctx) {
-            BlocProvider.of<CalendarsBloc>(ctx).add(DeleteCalendar(widget.calendar));
+            CalendarConfirmDialog.show(context, title: 'Delete calendar')
+                .then((value) {
+              if (value != true) return;
+              BlocProvider.of<CalendarsBloc>(ctx)
+                  .add(DeleteCalendar(widget.calendar));
+              Navigator.of(context).pop();
+            });
           }),
     ];
   }
@@ -173,7 +181,6 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
       }
     });
   }
-
 
   late final List<_MenuItem> _menuItems;
 

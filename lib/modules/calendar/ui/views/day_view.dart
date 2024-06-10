@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:aurora_mail/modules/calendar/blocs/events/events_bloc.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/event.dart';
+import 'package:aurora_mail/modules/calendar/ui/screens/event_view_page.dart';
 import 'package:calendar_view/calendar_view.dart' as CV;
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -16,7 +18,8 @@ class DayView extends StatefulWidget {
 
 class _DayViewState extends State<DayView> {
   final List<String> weekTitles = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
-  final CV.EventController _controller = CV.EventController();
+  final CV.EventController<ViewEvent> _controller =
+      CV.EventController<ViewEvent>();
   late final EventsBloc _bloc;
   late final StreamSubscription _subscription;
 
@@ -24,18 +27,8 @@ class _DayViewState extends State<DayView> {
   void initState() {
     super.initState();
     _bloc = BlocProvider.of<EventsBloc>(context);
-    _bloc.state.getEventsFromDay().forEach((e) {
-      _controller.add(
-        CV.CalendarEventData(
-          title: e.title,
-          date: (_bloc.state.selectedDate ?? _bloc.state.startIntervalDate).withoutTime,
-          startTime: e.startDate,
-          endTime: e.endDate,
-          color: e.color,
-        ),
-      );
-    });
-    _subscription = _bloc.stream.listen(onStateChange);
+    _onStateChange(_bloc.state);
+    _subscription = _bloc.stream.listen(_onStateChange);
   }
 
   @override
@@ -45,20 +38,19 @@ class _DayViewState extends State<DayView> {
     super.dispose();
   }
 
-  onStateChange(EventsState state) {
+  _onStateChange(EventsState state) {
     final events = state.getEventsFromDay();
-    final oldEvents = _controller.allEvents;
-    if (oldEvents.isNotEmpty && events.isEmpty) {
-      _controller.removeAll(oldEvents);
-    }
+    final oldEvents = [..._controller.allEvents];
+    _controller.removeAll(oldEvents);
     events.forEach((e) {
       _controller.add(
         CV.CalendarEventData(
+          event: e,
           title: e.title,
           date: (state.selectedDate ?? state.startIntervalDate).withoutTime,
-          // endDate: e.endDate.withoutTime,
-          startTime: e.startDate,
-          endTime: e.endDate,
+          endDate: e.endDate.withoutTime,
+          startTime: e.allDay != false ? null : e.startDate,
+          endTime: e.allDay != false ? null : e.endDate,
           color: e.color,
         ),
       );
@@ -72,11 +64,11 @@ class _DayViewState extends State<DayView> {
     return BlocBuilder<EventsBloc, EventsState>(
       bloc: _bloc,
       builder: (context, state) {
-        return CV.DayView(
+        return CV.DayView<ViewEvent>(
           showLiveTimeLineInAllDays: true,
           liveTimeIndicatorSettings: CV.LiveTimeIndicatorSettings(
               color: Theme.of(context).primaryColor, height: 3),
-          initialDay: state.selectedDate ?? state.startIntervalDate,
+          initialDay: state.selectedDate,
           heightPerMinute: 1.5,
           headerStyle: CV.HeaderStyle(
             leftIcon: Icon(
@@ -95,21 +87,30 @@ class _DayViewState extends State<DayView> {
           ),
           dateStringBuilder: (date, {secondaryDate}) =>
               DateFormat('y MMM d').format(date),
-          fullDayEventBuilder: (events, date) {
-            return Column(
-              children: events
-                  .map((e) => Container(
-                        color: Colors.red,
-                        height: 20,
-                        width: double.infinity,
-                        child: Text(e.title),
-                      ))
-                  .toList(),
-            );
-          },
+          // fullDayEventBuilder: (events, date) {
+          //   return Column(
+          //     children: events
+          //         .map((e) => Container(
+          //               color: Colors.red,
+          //               height: 20,
+          //               width: double.infinity,
+          //               child: Text(e.title),
+          //             ))
+          //         .toList(),
+          //   );
+          // },
           controller: _controller,
           onPageChange: (date, pageIndex) => _bloc.add(SelectDate(date)),
-          onEventTap: (event, date) => print(event),
+          onEventTap:
+              (List<CV.CalendarEventData<Object?>> events, DateTime date) {
+            final event =
+                (events as List<CV.CalendarEventData<ViewEvent?>>).firstOrNull;
+            if (event == null) return;
+            BlocProvider.of<EventsBloc>(context).add(SelectEvent(event.event));
+            Navigator.of(context).pushNamed(
+              EventViewPage.name,
+            );
+          },
           onDateLongPress: (date) => print(date),
         );
       },

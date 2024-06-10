@@ -183,10 +183,10 @@ packages:
     dependency: "direct main"
     description:
       name: calendar_view
-      sha256: "9c22c2f580e46a8f4a963013e562ae36e497e86269128162f3a1db72874fd06d"
+      sha256: "0268c53439f6348f11a35e8a87493843473ab7c28190fe9f38c9ee05a9621564"
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.0"
+    version: "1.2.0"
   characters:
     dependency: transitive
     description:

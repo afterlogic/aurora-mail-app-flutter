@@ -58,7 +58,7 @@ class ListEventsView extends StatelessWidget {
                 ],
               ),
             ),
-            Expanded(child: _EventList(data: state.groupSelectedEventsByDay()))
+            // Expanded(child: _EventList(data: state.groupSelectedEventsByDay()))
           ],
         );
       },

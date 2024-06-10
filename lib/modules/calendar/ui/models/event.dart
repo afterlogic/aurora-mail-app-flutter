@@ -80,6 +80,7 @@ class ViewEvent extends Event {
       required super.synced,
       required super.onceLoaded});
 
+  @override
   ViewEvent copyWith({
     String? title,
     DateTime? startDate,
@@ -135,6 +136,53 @@ class ViewEvent extends Event {
         title: title ?? this.title,
         color: color,
       );
+
+  List<ViewEvent> get splitIntoDailyEvents {
+    List<ViewEvent> dailyEvents = [];
+    final event = _normalise();
+
+    DateTime currentStart = event.startDate;
+    DateTime currentEnd;
+
+    // if event starts and ends at same day
+    if ((event.startDate.year == event.endDate.year &&
+        event.startDate.month == event.endDate.month &&
+        event.startDate.day == event.endDate.day)) {
+      dailyEvents.add(event);
+      return dailyEvents;
+    }
+
+    while (currentStart.isBefore(event.endDate)) {
+      // set end of day OR event
+      currentEnd = DateTime(
+        currentStart.year,
+        currentStart.month,
+        currentStart.day,
+        23,
+        59,
+        59,
+      );
+
+      if (currentEnd.isAfter(event.endDate) ||
+          currentEnd.isAtSameMomentAs(event.endDate)) {
+        currentEnd = event.endDate;
+      }
+
+      dailyEvents.add(copyWith(
+          startDate: currentStart, endDate: currentEnd));
+      // next day iteration
+      currentStart = currentEnd.startOfNextDay;
+    }
+
+    return dailyEvents;
+  }
+
+  ViewEvent _normalise() {
+    if (!startDate.startOfNextDay.isAtSameMomentAs(endDate)) {
+      return this;
+    }
+    return copyWith(endDate: endDate.subtract(Duration(seconds: 1)));
+  }
 }
 
 class ExtendedMonthEvent extends ViewEvent {

@@ -3,76 +3,74 @@ part of 'events_bloc.dart';
 class EventsState extends Equatable {
   final EventsStatus status;
   final Map<DateTime, List<ViewEvent?>>? eventsMap;
-  final List<ViewEvent>? splitEvents;
   final List<ViewEvent>? originalEvents;
   final ViewEvent? selectedEvent;
   final DateTime startIntervalDate;
   final DateTime endIntervalDate;
-  final DateTime? selectedDate;
+  final DateTime selectedDate;
 
   const EventsState({
     this.status = EventsStatus.idle,
-    this.splitEvents,
     this.originalEvents,
     this.selectedEvent,
     this.eventsMap,
     required this.startIntervalDate,
     required this.endIntervalDate,
-    this.selectedDate,
+    required this.selectedDate,
   });
 
   @override
   List<Object?> get props => [
         status,
-        splitEvents,
         originalEvents,
-    selectedEvent,
+        selectedEvent,
         startIntervalDate,
         endIntervalDate,
         selectedDate,
         eventsMap
       ];
-  List<ViewEvent> get eventsByMonth {
-    if (splitEvents == null) {
-      return [];
-    }
-    int targetYear = startIntervalDate.year;
-    int targetMonth = startIntervalDate.month;
-
-    return splitEvents!.where((event) {
-      return (event.startDate.year <= targetYear &&
-              event.startDate.month <= targetMonth) &&
-          (event.endDate.year >= targetYear &&
-              event.endDate.month >= targetMonth);
-    }).toList();
-  }
+  // List<ViewEvent> get eventsByMonth {
+  //   if (splitEvents == null) {
+  //     return [];
+  //   }
+  //   int targetYear = startIntervalDate.year;
+  //   int targetMonth = startIntervalDate.month;
+  //
+  //   return splitEvents!.where((event) {
+  //     return (event.startDate.year <= targetYear &&
+  //             event.startDate.month <= targetMonth) &&
+  //         (event.endDate.year >= targetYear &&
+  //             event.endDate.month >= targetMonth);
+  //   }).toList();
+  // }
 
   ///Events from selected date or from period between [startIntervalDate] and [endIntervalDate]
   List<ViewEvent>? get selectedEvents {
-    if (selectedDate == null) return splitEvents;
-    final filteredEvents = splitEvents
+    final filteredEvents = originalEvents
         ?.where((e) =>
-            e.startDate.isBefore(selectedDate!.startOfNextDay) &&
-            e.endDate.isAfterOrEqual(selectedDate!.withoutTime))
+            e.startDate.isBefore(selectedDate.startOfNextDay) &&
+            e.endDate.isAfterOrEqual(selectedDate.withoutTime))
         .toList();
     return filteredEvents;
   }
 
   List<ViewEvent> getEventsFromWeek({DateTime? date}) {
-    if (splitEvents == null) {
+    if (originalEvents == null) {
       return [];
     }
 
-    DateTime targetDate = date ?? (selectedDate ?? startIntervalDate);
-
     DateTime startOfWeek =
-        targetDate.subtract(Duration(days: targetDate.weekday - 1));
+        selectedDate.subtract(Duration(days: selectedDate.weekday - 1));
     DateTime endOfWeek = startOfWeek.add(Duration(days: 6));
 
-    return splitEvents!.where((event) {
+    final selectedEvents = originalEvents!.where((event) {
       return !(event.endDate.isBefore(startOfWeek) ||
           event.startDate.isAfter(endOfWeek));
     }).toList();
+    return selectedEvents
+        .expand<ViewEvent>(
+            (e) => e.allDay != false ? [e] : e.splitIntoDailyEvents)
+        .toList();
   }
 
   List<ViewEvent?> getEventsForDayFromMap({DateTime? date}) {
@@ -80,9 +78,6 @@ class EventsState extends Equatable {
   }
 
   List<ViewEvent> getEventsFromDay({DateTime? date}) {
-    // if (splitEvents == null) {
-    //   return [];
-    // }
     late int targetYear;
     late int targetMonth;
     late int targetDay;
@@ -92,12 +87,9 @@ class EventsState extends Equatable {
       targetMonth = date.month;
       targetDay = date.day;
     } else {
-      targetYear =
-          selectedDate == null ? startIntervalDate.year : selectedDate!.year;
-      targetMonth =
-          selectedDate == null ? startIntervalDate.month : selectedDate!.month;
-      targetDay =
-          selectedDate == null ? startIntervalDate.day : selectedDate!.day;
+      targetYear = selectedDate.year;
+      targetMonth = selectedDate.month;
+      targetDay = selectedDate.day;
     }
 
     final targetDate = DateTime(targetYear, targetMonth, targetDay);
@@ -131,35 +123,34 @@ class EventsState extends Equatable {
     return e.copyWith(startDate: updatedStart, endDate: updatedEnd);
   }
 
-  Map<DateTime, List<ViewEvent>> groupSelectedEventsByDay() {
-    final Map<DateTime, List<ViewEvent>> eventMap = {};
-    if (splitEvents == null) return eventMap;
-
-    for (final event in splitEvents!) {
-      DateTime current = event.startDate;
-
-      while (current.isBefore(event.endDate) ||
-          current.isAtSameMomentAs(event.endDate)) {
-        // date without time
-        DateTime dayKey = DateTime(current.year, current.month, current.day);
-
-        if (eventMap.containsKey(dayKey)) {
-          eventMap[dayKey]!.add(event);
-        } else {
-          eventMap[dayKey] = [event];
-        }
-        current = current.add(Duration(days: 1));
-      }
-    }
-
-    return eventMap;
-  }
+  // Map<DateTime, List<ViewEvent>> groupSelectedEventsByDay() {
+  //   final Map<DateTime, List<ViewEvent>> eventMap = {};
+  //   if (splitEvents == null) return eventMap;
+  //
+  //   for (final event in splitEvents!) {
+  //     DateTime current = event.startDate;
+  //
+  //     while (current.isBefore(event.endDate) ||
+  //         current.isAtSameMomentAs(event.endDate)) {
+  //       // date without time
+  //       DateTime dayKey = DateTime(current.year, current.month, current.day);
+  //
+  //       if (eventMap.containsKey(dayKey)) {
+  //         eventMap[dayKey]!.add(event);
+  //       } else {
+  //         eventMap[dayKey] = [event];
+  //       }
+  //       current = current.add(Duration(days: 1));
+  //     }
+  //   }
+  //
+  //   return eventMap;
+  // }
 
   @override
   String toString() {
     return 'EventsState{' +
         ' status: ${status.name}' +
-        ' splitEvents: $splitEvents,' +
         ' originalEvents: $originalEvents,' +
         ' startIntervalDate: $startIntervalDate,' +
         ' endIntervalDate: $endIntervalDate,' +
@@ -169,26 +160,25 @@ class EventsState extends Equatable {
 
   EventsState copyWith({
     EventsStatus? status,
-    List<ViewEvent>? Function()? splitEvents,
     Map<DateTime, List<ViewEvent?>>? Function()? eventsMap,
     List<ViewEvent>? Function()? originalEvents,
     ViewEvent? Function()? selectedEvent,
     List<Calendar>? Function()? calendars,
     DateTime? startIntervalDate,
     DateTime? endIntervalDate,
-    DateTime? Function()? selectedDate,
+    DateTime? selectedDate,
   }) {
     return EventsState(
-        status: status ?? this.status,
-        splitEvents: splitEvents == null ? this.splitEvents : splitEvents(),
-        eventsMap: eventsMap == null ? this.eventsMap : eventsMap(),
-        originalEvents:
-            originalEvents == null ? this.originalEvents : originalEvents(),
-        selectedEvent: selectedEvent == null ? this.selectedEvent : selectedEvent(),
-        startIntervalDate: startIntervalDate ?? this.startIntervalDate,
-        endIntervalDate: endIntervalDate ?? this.endIntervalDate,
-        selectedDate:
-            selectedDate == null ? this.selectedDate : selectedDate());
+      status: status ?? this.status,
+      eventsMap: eventsMap == null ? this.eventsMap : eventsMap(),
+      originalEvents:
+          originalEvents == null ? this.originalEvents : originalEvents(),
+      selectedEvent:
+          selectedEvent == null ? this.selectedEvent : selectedEvent(),
+      startIntervalDate: startIntervalDate ?? this.startIntervalDate,
+      endIntervalDate: endIntervalDate ?? this.endIntervalDate,
+      selectedDate: selectedDate ?? this.selectedDate,
+    );
   }
 }
 

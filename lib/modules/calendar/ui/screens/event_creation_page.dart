@@ -43,12 +43,14 @@ class _EventCreationPageState extends State<EventCreationPage> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   ViewCalendar? _selectedCalendar;
   ViewEvent? _selectedEvent;
+  bool _isAllDay = false;
 
   EventCreationData get collectCreationData => EventCreationData(
       subject: _titleController.text,
       calendarId: _selectedCalendar!.id,
       startDate: _selectedStartDate,
-      endDate: _selectedEndDate);
+      endDate: _selectedEndDate,
+      allDay: _isAllDay);
 
   @override
   void initState() {
@@ -83,6 +85,7 @@ class _EventCreationPageState extends State<EventCreationPage> {
     _selectedEndDate = e.endDate;
     _selectedCalendar = _calendarsBloc.state.calendars
         ?.firstWhereOrNull((c) => c.id == e.calendarId);
+    _isAllDay = e.allDay ?? false;
     setState(() {});
     // _descriptionController
   }
@@ -94,6 +97,7 @@ class _EventCreationPageState extends State<EventCreationPage> {
         title: updatedFields.subject,
         description: updatedFields.description,
         startDate: updatedFields.startDate,
+        allDay: updatedFields.allDay,
         endDate: updatedFields.endDate);
     _eventsBloc.add(UpdateEvent(updatedEvent));
   }
@@ -212,8 +216,11 @@ class _EventCreationPageState extends State<EventCreationPage> {
                             ),
                             Spacer(),
                             Checkbox(
-                                value: false,
-                                onChanged: (value) {},
+                                value: _isAllDay,
+                                onChanged: (value) {
+                                  _isAllDay = value ?? false;
+                                  setState(() {});
+                                },
                                 materialTapTargetSize:
                                     MaterialTapTargetSize.shrinkWrap,
                                 visualDensity:

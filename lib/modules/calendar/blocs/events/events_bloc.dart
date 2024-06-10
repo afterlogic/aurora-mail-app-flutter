@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:aurora_mail/modules/calendar/calendar_domain/calendar_usecase.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/calendar.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/event.dart';
@@ -20,8 +18,9 @@ class EventsBloc extends Bloc<EventBlocEvent, EventsState> {
       : _useCase = useCase,
         super(
           EventsState(
+
             startIntervalDate: DateTime.now().firstDayOfMonth,
-            endIntervalDate: DateTime.now().lastDayOfMonth,
+            endIntervalDate: DateTime.now().lastDayOfMonth, selectedDate: DateTime.now().withoutTime,
           ),
         ) {
     _useCase.eventsSubscription.listen((events) {
@@ -119,9 +118,9 @@ class EventsBloc extends Bloc<EventBlocEvent, EventsState> {
   }
 
   _onSelectDate(SelectDate event, emit) async {
-    if (state.selectedDate != null &&
-        event.date.isAtSameMomentAs(state.selectedDate!)) {
-      emit(state.copyWith(selectedDate: () => null));
+    if (
+        event.date.isAtSameMomentAs(state.selectedDate)) {
+      emit(state.copyWith(selectedDate: DateTime.now()));
       return;
     } else if (event.date.isBefore(state.startIntervalDate) ||
         event.date.isAfter(state.endIntervalDate)) {
@@ -131,6 +130,6 @@ class EventsBloc extends Bloc<EventBlocEvent, EventsState> {
           startIntervalDate: newStartDate, endIntervalDate: newEndDate));
       add(LoadEvents());
     }
-    emit(state.copyWith(selectedDate: () => event.date));
+    emit(state.copyWith(selectedDate: event.date));
   }
 }

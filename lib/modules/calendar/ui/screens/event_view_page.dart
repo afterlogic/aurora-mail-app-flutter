@@ -1,6 +1,7 @@
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/calendar/blocs/calendars/calendars_bloc.dart';
 import 'package:aurora_mail/modules/calendar/blocs/events/events_bloc.dart';
+import 'package:aurora_mail/modules/calendar/ui/dialogs/deletion_confirm_dialog.dart';
 import 'package:aurora_mail/modules/calendar/ui/screens/event_creation_page.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/calendar_tile.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/date_time_tile.dart';
@@ -25,8 +26,12 @@ class EventViewPage extends StatelessWidget {
         Navigator.of(context).pushNamed(EventCreationPage.name);
         break;
       case EventViewAppBarAction.delete:
-        BlocProvider.of<EventsBloc>(context).add(DeleteEvent());
-        Navigator.of(context).pop();
+        CalendarConfirmDialog.show(context, title: 'Delete event')
+            .then((value) {
+          if (value != true) return;
+          BlocProvider.of<EventsBloc>(context).add(DeleteEvent());
+          Navigator.of(context).pop();
+        });
         break;
     }
   }

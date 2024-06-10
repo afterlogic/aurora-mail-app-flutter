@@ -24,6 +24,7 @@ abstract class CalendarNetworkService {
     String? description,
     required DateTime startDate,
     required DateTime endDate,
+    required bool? allDay
 });
 
   Future<Event> updateEvent(Event event);

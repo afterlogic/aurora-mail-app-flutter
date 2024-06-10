@@ -78,6 +78,20 @@ class MailBottomAppBar extends StatelessWidget {
         ),
         IconButton(
           icon: Icon(
+            MdiIcons.calendar,
+            color: selectedRoute == MailBottomAppBarRoutes.calendar
+                ? theme.primaryColor
+                : theme.disabledColor,
+          ),
+          tooltip: '',
+          iconSize: iconSize,
+          onPressed: () {
+            BlocProvider.of<EventsBloc>(context).add(const StartSync());
+            _openCalendar(context);
+          },
+        ),
+        IconButton(
+          icon: Icon(
             MdiIcons.cog,
             color: selectedRoute == MailBottomAppBarRoutes.settings
                 ? theme.primaryColor
@@ -86,20 +100,6 @@ class MailBottomAppBar extends StatelessWidget {
           tooltip: S.of(context).messages_list_app_bar_settings,
           iconSize: iconSize,
           onPressed: () => _openSettings(context),
-        ),
-        IconButton(
-          icon: Icon(
-            MdiIcons.calendar,
-            color: selectedRoute == MailBottomAppBarRoutes.calendar
-                ? theme.primaryColor
-                : theme.disabledColor,
-          ),
-          tooltip: S.of(context).messages_list_app_bar_settings,
-          iconSize: iconSize,
-          onPressed: () {
-            BlocProvider.of<EventsBloc>(context).add(const StartSync());
-            _openCalendar(context);
-          },
         ),
       ],
     );

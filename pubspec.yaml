@@ -125,7 +125,7 @@ dependencies:
     git:
       url: https://github.com/afterlogic/aurora_logger_flutter
       ref: master
-  calendar_view: ^1.1.0
+  calendar_view: ^1.2.0
   collection: ^1.17.0
 
 dev_dependencies:
