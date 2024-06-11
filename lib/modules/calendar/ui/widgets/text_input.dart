@@ -22,9 +22,7 @@ class TextInput extends StatelessWidget {
       validator: validator,
       decoration: InputDecoration(
         contentPadding: EdgeInsets.symmetric(horizontal: 8.0, vertical: 12),
-
       label: Text(labelText),
-      hintText: 'Enter value',
       isDense: true,
       labelStyle: TextStyle(color: borderColor),
       enabledBorder: OutlineInputBorder(

@@ -4,13 +4,15 @@ import 'package:flutter/material.dart';
 
 class CalendarConfirmDialog extends StatelessWidget {
   final String title;
-  const CalendarConfirmDialog({required this.title});
+  final String confirmMessage;
+  const CalendarConfirmDialog({required this.title, required this.confirmMessage});
 
   static Future<bool?> show(BuildContext context,
-      {required String title}) {
+      {required String title, String confirmMessage = "Confirm action"}) {
     return showDialog<bool?>(
         context: context,
         builder: (_) => CalendarConfirmDialog(
+          confirmMessage: confirmMessage,
           title: title,
         )).then((value) => value);
   }
@@ -32,7 +34,7 @@ class CalendarConfirmDialog extends StatelessWidget {
       content: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Confirm action')
+          Text(confirmMessage)
         ],
       ),
     );

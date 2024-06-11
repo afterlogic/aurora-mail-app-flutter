@@ -67,27 +67,31 @@ class _CalendarDrawerState extends BState<CalendarDrawer> {
                 color: const Color(0xFFF1F1F1),
                 height: 1,
               ),
-              BlocBuilder<CalendarsBloc, CalendarsState>(
-                  builder: (context, state) {
-                if (state.calendars != null) {
-                  return Column(
-                    children: state.calendars!
-                        .map<Widget>((e) => CollapsibleCheckboxList(
-                              calendar: e,
-                              onChanged: (bool? value) {
-                                BlocProvider.of<CalendarsBloc>(context).add(
-                                    UpdateCalendarSelection(
-                                        calendarId: e.id,
-                                        selected: value ?? false));
-                              },
-                              isChecked: e.selected,
-                            ))
-                        .toList(),
-                  );
-                } else {
-                  return SizedBox.shrink();
-                }
-              }),
+              Expanded(
+                child: BlocBuilder<CalendarsBloc, CalendarsState>(
+                    builder: (context, state) {
+                  if (state.calendars != null) {
+                    return SingleChildScrollView(
+                      child: Column(
+                        children: state.calendars!
+                            .map<Widget>((e) => CollapsibleCheckboxList(
+                                  calendar: e,
+                                  onChanged: (bool? value) {
+                                    BlocProvider.of<CalendarsBloc>(context).add(
+                                        UpdateCalendarSelection(
+                                            calendarId: e.id,
+                                            selected: value ?? false));
+                                  },
+                                  isChecked: e.selected,
+                                ))
+                            .toList(),
+                      ),
+                    );
+                  } else {
+                    return SizedBox.shrink();
+                  }
+                }),
+              ),
             ],
           ),
         ),
@@ -154,7 +158,10 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
           icon: Icon(Icons.delete_outline),
           titleBuilder: (ctx) => S.of(ctx).btn_delete,
           onTap: (ctx) {
-            CalendarConfirmDialog.show(context, title: 'Delete calendar')
+            CalendarConfirmDialog.show(context,
+                    title: 'Delete calendar',
+                    confirmMessage:
+                        "Are you sure you want to delete calendar ${widget.calendar.name}?")
                 .then((value) {
               if (value != true) return;
               BlocProvider.of<CalendarsBloc>(ctx)

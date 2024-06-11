@@ -27,9 +27,6 @@ class ColorSelectionField extends StatelessWidget {
             decoration: BoxDecoration(
               color: color,
               borderRadius: BorderRadius.circular(4),
-              border: selectedColor == color
-                  ? Border.all(color: Colors.black, width: 2)
-                  : null,
             ),
             child: selectedColor == color
                 ? Icon(Icons.check, color: Colors.white)

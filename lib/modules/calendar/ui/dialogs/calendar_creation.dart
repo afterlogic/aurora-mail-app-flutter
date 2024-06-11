@@ -89,25 +89,32 @@ class _CalendarCreationDialogState extends State<CalendarCreationDialog> {
               labelText: 'Description',
             ),
             SizedBox(height: 16),
-            Row(
-              children: [
-                SizedBox(
-                  width: 24,
-                  height: 24,
-                  child: Checkbox(
-                    value: _subscribeToIcalFeed,
-                    onChanged: (bool? value) {
-                      setState(() {
-                        _subscribeToIcalFeed = value ?? false;
-                      });
-                    },
+            GestureDetector(
+              onTap: (){
+                setState(() {
+                  _subscribeToIcalFeed = !_subscribeToIcalFeed;
+                });
+              },
+              child: Row(
+                children: [
+                  SizedBox(
+                    width: 24,
+                    height: 24,
+                    child: Checkbox(
+                      value: _subscribeToIcalFeed,
+                      onChanged: (bool? value) {
+                        setState(() {
+                          _subscribeToIcalFeed = value ?? false;
+                        });
+                      },
+                    ),
                   ),
-                ),
-                const SizedBox(
-                  width: 16,
-                ),
-                Text('Subscribe to iCal feed'),
-              ],
+                  const SizedBox(
+                    width: 16,
+                  ),
+                  Text('Subscribe to iCal feed'),
+                ],
+              ),
             ),
             if (_subscribeToIcalFeed) ...[
               SizedBox(height: 16),

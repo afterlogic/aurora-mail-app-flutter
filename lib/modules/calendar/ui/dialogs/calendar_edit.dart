@@ -4,6 +4,7 @@ import 'package:aurora_mail/modules/calendar/ui/models/calendar.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/color_selection_field.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/text_input.dart';
 import 'package:aurora_mail/modules/calendar/utils/calendar_colors.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 class CalendarEditDialog extends StatefulWidget {
@@ -36,7 +37,7 @@ class _CalendarEditDialogState extends State<CalendarEditDialog> {
     return null;
   }
 
-  Color _selectedColor = calendarColors[0];
+  late Color _selectedColor;
   final List<Color> _colors = calendarColors;
 
   @override
@@ -47,6 +48,13 @@ class _CalendarEditDialogState extends State<CalendarEditDialog> {
     _nameController = TextEditingController()
       ..text = widget.calendar.name;
     _iCalController = TextEditingController()..text = '';
+    final color = _colors.firstWhereOrNull((c) => c.value == widget.calendar.color.value);
+    if(color == null){
+      _colors.add(widget.calendar.color);
+      _selectedColor = widget.calendar.color;
+    }else{
+      _selectedColor = color;
+    }
   }
 
   @override
