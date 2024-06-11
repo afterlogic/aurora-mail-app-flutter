@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:aurora_mail/modules/calendar/blocs/events/events_bloc.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/event.dart';
 import 'package:aurora_mail/modules/calendar/ui/screens/event_view_page.dart';
+import 'package:aurora_mail/modules/calendar/ui/widgets/month_event_marker.dart';
 import 'package:calendar_view/calendar_view.dart' as CV;
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -47,7 +48,7 @@ class _DayViewState extends State<DayView> {
         CV.CalendarEventData(
           event: e,
           title: e.title,
-          date: (state.selectedDate ?? state.startIntervalDate).withoutTime,
+          date: state.selectedDate.withoutTime,
           endDate: e.endDate.withoutTime,
           startTime: e.allDay != false ? null : e.startDate,
           endTime: e.allDay != false ? null : e.endDate,
@@ -87,18 +88,40 @@ class _DayViewState extends State<DayView> {
           ),
           dateStringBuilder: (date, {secondaryDate}) =>
               DateFormat('y MMM d').format(date),
-          // fullDayEventBuilder: (events, date) {
-          //   return Column(
-          //     children: events
-          //         .map((e) => Container(
-          //               color: Colors.red,
-          //               height: 20,
-          //               width: double.infinity,
-          //               child: Text(e.title),
-          //             ))
-          //         .toList(),
-          //   );
-          // },
+          fullDayEventBuilder:
+              (List<CV.CalendarEventData<Object?>> events, DateTime date) {
+            return ConstrainedBox(
+              constraints: const BoxConstraints(maxHeight: 100),
+              child: ListView.builder(
+                itemCount: events.length,
+                padding: EdgeInsets.zero,
+                shrinkWrap: true,
+                itemBuilder: (context, index) => InkWell(
+                  onTap: () {
+                    final event = (events
+                        as List<CV.CalendarEventData<ViewEvent?>>)[index];
+                    BlocProvider.of<EventsBloc>(context)
+                        .add(SelectEvent(event.event));
+                    Navigator.of(context).pushNamed(
+                      EventViewPage.name,
+                    );
+                  },
+                  child: MonthEventMarker(
+                    event: (events
+                            as List<CV.CalendarEventData<ViewEvent?>>)[index]
+                        .event,
+                    currentDate: date,
+                    forceTitleRender: true,
+                    eventGap: 4,
+                    radius: 8,
+                    height: 48,
+                    fontSize: 18,
+                    innerPaddingValue: 8,
+                  ),
+                ),
+              ),
+            );
+          },
           controller: _controller,
           onPageChange: (date, pageIndex) => _bloc.add(SelectDate(date)),
           onEventTap:

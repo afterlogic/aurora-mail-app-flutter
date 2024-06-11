@@ -1,8 +1,6 @@
 import 'package:aurora_mail/modules/calendar/blocs/events/events_bloc.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/event.dart';
-import 'package:aurora_mail/modules/calendar/ui/screens/event_creation_page.dart';
 import 'package:aurora_mail/modules/calendar/ui/screens/event_view_page.dart';
-import 'package:calendar_view/calendar_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -11,6 +9,10 @@ class MonthEventMarker extends StatelessWidget {
       {super.key,
       required this.event,
       this.height = 15,
+      this.fontSize = 10,
+      this.forceTitleRender = false,
+      this.radius = 4.0,
+      this.innerPaddingValue = 4.0,
       required this.currentDate,
       this.eventGap = 2});
 
@@ -18,13 +20,16 @@ class MonthEventMarker extends StatelessWidget {
   final double eventGap;
   final double height;
   final DateTime currentDate;
-  final radius = 4.0;
+  final bool forceTitleRender;
+  final double fontSize;
+  final double radius;
+  final double innerPaddingValue;
 
   double get emptyHeight => eventGap + height;
 
   @override
   Widget build(BuildContext context) {
-    return event is ExtendedMonthEvent
+    return event != null
         ? GestureDetector(
             onTap: () {
               BlocProvider.of<EventsBloc>(context).add(SelectEvent(event));
@@ -34,8 +39,12 @@ class MonthEventMarker extends StatelessWidget {
             },
             child: Padding(
               padding: EdgeInsets.only(
-                  left: event?.isStartedToday(currentDate) == true ? 4.0 : 0,
-                  right: event?.isEndedToday(currentDate) == true ? 4.0 : 0),
+                  left: event?.isStartedToday(currentDate) == true
+                      ? innerPaddingValue
+                      : 0,
+                  right: event?.isEndedToday(currentDate) == true
+                      ? innerPaddingValue
+                      : 0),
               child: Container(
                   margin: EdgeInsets.only(bottom: eventGap),
                   padding: EdgeInsets.only(left: 4),
@@ -54,17 +63,18 @@ class MonthEventMarker extends StatelessWidget {
                             ? Radius.circular(radius)
                             : Radius.zero,
                       ),
-                      color: (event as ExtendedMonthEvent).color),
+                      color: event!.color),
                   width: 60,
                   height: height,
                   child: Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
-                      event?.isStartedToday(currentDate) == true
-                          ? (event as ExtendedMonthEvent).title
+                      forceTitleRender ||
+                              event?.isStartedToday(currentDate) == true
+                          ? event!.title
                           : '',
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(fontSize: 10, color: Colors.white),
+                      style: TextStyle(fontSize: fontSize, color: Colors.white),
                     ),
                   )),
             ),
