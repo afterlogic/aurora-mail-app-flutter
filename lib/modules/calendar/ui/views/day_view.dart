@@ -112,7 +112,7 @@ class _DayViewState extends State<DayView> {
                         .event,
                     currentDate: date,
                     forceTitleRender: true,
-                    eventGap: 4,
+                    eventGap: 2,
                     radius: 8,
                     height: 48,
                     fontSize: 18,
