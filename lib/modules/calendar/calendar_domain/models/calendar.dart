@@ -14,6 +14,7 @@ class Calendar {
   final int sharedToAllAccess;
   final int access;
   final bool isPublic;
+  final bool isSubscribed;
   // final List shares;
   final String syncToken;
 
@@ -30,6 +31,7 @@ class Calendar {
     required this.sharedToAllAccess,
     required this.access,
     required this.isPublic,
+    required this.isSubscribed,
     // required this.shares,
     required this.syncToken,
   });
@@ -48,9 +50,9 @@ class Calendar {
         access: access,
         isPublic: isPublic,
         description: description,
-        syncToken: syncToken);
+        syncToken: syncToken,
+        isSubscribed: isSubscribed);
   }
-
 
   @override
   String toString() {
@@ -70,6 +72,7 @@ class Calendar {
     int? sharedToAllAccess,
     int? access,
     bool? isPublic,
+    bool? isSubscribed,
     List? shares,
     String? syncToken,
   }) {
@@ -86,6 +89,7 @@ class Calendar {
       sharedToAllAccess: sharedToAllAccess ?? this.sharedToAllAccess,
       access: access ?? this.access,
       isPublic: isPublic ?? this.isPublic,
+      isSubscribed: isSubscribed ?? this.isSubscribed,
       // shares: shares ?? this.shares,
       syncToken: syncToken ?? this.syncToken,
     );

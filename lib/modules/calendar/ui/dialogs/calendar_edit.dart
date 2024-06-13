@@ -80,7 +80,7 @@ class _CalendarEditDialogState extends State<CalendarEditDialog> {
               Navigator.of(context).pop(widget.calendar.copyWith(
                 name: _nameController.text,
                 description: () => _descriptionController.text,
-                color: _selectedColor
+                color: _selectedColor,
               ));
             },
             child: Text(S.of(context).btn_save),
@@ -100,7 +100,7 @@ class _CalendarEditDialogState extends State<CalendarEditDialog> {
               labelText: 'Description',
             ),
             SizedBox(height: 16),
-            TextInput(
+            if(widget.calendar.isSubscribed)TextInput(
                 enabled: false,
                 controller: _iCalController,
                 labelText: 'iCal URL'),

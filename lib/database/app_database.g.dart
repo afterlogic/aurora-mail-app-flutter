@@ -2400,6 +2400,7 @@ class CalendarDb extends DataClass implements Insertable<CalendarDb> {
   final int sharedToAllAccess;
   final int access;
   final bool isPublic;
+  final bool isSubscribed;
   final String syncToken;
   CalendarDb(
       {required this.id,
@@ -2414,6 +2415,7 @@ class CalendarDb extends DataClass implements Insertable<CalendarDb> {
       required this.sharedToAllAccess,
       required this.access,
       required this.isPublic,
+      required this.isSubscribed,
       required this.syncToken});
   factory CalendarDb.fromData(Map<String, dynamic> data, {String? prefix}) {
     final effectivePrefix = prefix ?? '';
@@ -2442,6 +2444,8 @@ class CalendarDb extends DataClass implements Insertable<CalendarDb> {
           .mapFromDatabaseResponse(data['${effectivePrefix}access'])!,
       isPublic: const BoolType()
           .mapFromDatabaseResponse(data['${effectivePrefix}is_public'])!,
+      isSubscribed: const BoolType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}is_subscribed'])!,
       syncToken: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}sync_token'])!,
     );
@@ -2463,6 +2467,7 @@ class CalendarDb extends DataClass implements Insertable<CalendarDb> {
     map['shared_to_all_access'] = Variable<int>(sharedToAllAccess);
     map['access'] = Variable<int>(access);
     map['is_public'] = Variable<bool>(isPublic);
+    map['is_subscribed'] = Variable<bool>(isSubscribed);
     map['sync_token'] = Variable<String>(syncToken);
     return map;
   }
@@ -2483,6 +2488,7 @@ class CalendarDb extends DataClass implements Insertable<CalendarDb> {
       sharedToAllAccess: Value(sharedToAllAccess),
       access: Value(access),
       isPublic: Value(isPublic),
+      isSubscribed: Value(isSubscribed),
       syncToken: Value(syncToken),
     );
   }
@@ -2503,6 +2509,7 @@ class CalendarDb extends DataClass implements Insertable<CalendarDb> {
       sharedToAllAccess: serializer.fromJson<int>(json['sharedToAllAccess']),
       access: serializer.fromJson<int>(json['access']),
       isPublic: serializer.fromJson<bool>(json['isPublic']),
+      isSubscribed: serializer.fromJson<bool>(json['isSubscribed']),
       syncToken: serializer.fromJson<String>(json['syncToken']),
     );
   }
@@ -2522,6 +2529,7 @@ class CalendarDb extends DataClass implements Insertable<CalendarDb> {
       'sharedToAllAccess': serializer.toJson<int>(sharedToAllAccess),
       'access': serializer.toJson<int>(access),
       'isPublic': serializer.toJson<bool>(isPublic),
+      'isSubscribed': serializer.toJson<bool>(isSubscribed),
       'syncToken': serializer.toJson<String>(syncToken),
     };
   }
@@ -2539,6 +2547,7 @@ class CalendarDb extends DataClass implements Insertable<CalendarDb> {
           int? sharedToAllAccess,
           int? access,
           bool? isPublic,
+          bool? isSubscribed,
           String? syncToken}) =>
       CalendarDb(
         id: id ?? this.id,
@@ -2553,6 +2562,7 @@ class CalendarDb extends DataClass implements Insertable<CalendarDb> {
         sharedToAllAccess: sharedToAllAccess ?? this.sharedToAllAccess,
         access: access ?? this.access,
         isPublic: isPublic ?? this.isPublic,
+        isSubscribed: isSubscribed ?? this.isSubscribed,
         syncToken: syncToken ?? this.syncToken,
       );
   @override
@@ -2570,6 +2580,7 @@ class CalendarDb extends DataClass implements Insertable<CalendarDb> {
           ..write('sharedToAllAccess: $sharedToAllAccess, ')
           ..write('access: $access, ')
           ..write('isPublic: $isPublic, ')
+          ..write('isSubscribed: $isSubscribed, ')
           ..write('syncToken: $syncToken')
           ..write(')'))
         .toString();
@@ -2589,6 +2600,7 @@ class CalendarDb extends DataClass implements Insertable<CalendarDb> {
       sharedToAllAccess,
       access,
       isPublic,
+      isSubscribed,
       syncToken);
   @override
   bool operator ==(Object other) =>
@@ -2606,6 +2618,7 @@ class CalendarDb extends DataClass implements Insertable<CalendarDb> {
           other.sharedToAllAccess == this.sharedToAllAccess &&
           other.access == this.access &&
           other.isPublic == this.isPublic &&
+          other.isSubscribed == this.isSubscribed &&
           other.syncToken == this.syncToken);
 }
 
@@ -2622,6 +2635,7 @@ class CalendarTableCompanion extends UpdateCompanion<CalendarDb> {
   final Value<int> sharedToAllAccess;
   final Value<int> access;
   final Value<bool> isPublic;
+  final Value<bool> isSubscribed;
   final Value<String> syncToken;
   const CalendarTableCompanion({
     this.id = const Value.absent(),
@@ -2636,6 +2650,7 @@ class CalendarTableCompanion extends UpdateCompanion<CalendarDb> {
     this.sharedToAllAccess = const Value.absent(),
     this.access = const Value.absent(),
     this.isPublic = const Value.absent(),
+    this.isSubscribed = const Value.absent(),
     this.syncToken = const Value.absent(),
   });
   CalendarTableCompanion.insert({
@@ -2651,6 +2666,7 @@ class CalendarTableCompanion extends UpdateCompanion<CalendarDb> {
     required int sharedToAllAccess,
     required int access,
     required bool isPublic,
+    required bool isSubscribed,
     required String syncToken,
   })  : id = Value(id),
         color = Value(color),
@@ -2663,6 +2679,7 @@ class CalendarTableCompanion extends UpdateCompanion<CalendarDb> {
         sharedToAllAccess = Value(sharedToAllAccess),
         access = Value(access),
         isPublic = Value(isPublic),
+        isSubscribed = Value(isSubscribed),
         syncToken = Value(syncToken);
   static Insertable<CalendarDb> custom({
     Expression<String>? id,
@@ -2677,6 +2694,7 @@ class CalendarTableCompanion extends UpdateCompanion<CalendarDb> {
     Expression<int>? sharedToAllAccess,
     Expression<int>? access,
     Expression<bool>? isPublic,
+    Expression<bool>? isSubscribed,
     Expression<String>? syncToken,
   }) {
     return RawValuesInsertable({
@@ -2692,6 +2710,7 @@ class CalendarTableCompanion extends UpdateCompanion<CalendarDb> {
       if (sharedToAllAccess != null) 'shared_to_all_access': sharedToAllAccess,
       if (access != null) 'access': access,
       if (isPublic != null) 'is_public': isPublic,
+      if (isSubscribed != null) 'is_subscribed': isSubscribed,
       if (syncToken != null) 'sync_token': syncToken,
     });
   }
@@ -2709,6 +2728,7 @@ class CalendarTableCompanion extends UpdateCompanion<CalendarDb> {
       Value<int>? sharedToAllAccess,
       Value<int>? access,
       Value<bool>? isPublic,
+      Value<bool>? isSubscribed,
       Value<String>? syncToken}) {
     return CalendarTableCompanion(
       id: id ?? this.id,
@@ -2723,6 +2743,7 @@ class CalendarTableCompanion extends UpdateCompanion<CalendarDb> {
       sharedToAllAccess: sharedToAllAccess ?? this.sharedToAllAccess,
       access: access ?? this.access,
       isPublic: isPublic ?? this.isPublic,
+      isSubscribed: isSubscribed ?? this.isSubscribed,
       syncToken: syncToken ?? this.syncToken,
     );
   }
@@ -2766,6 +2787,9 @@ class CalendarTableCompanion extends UpdateCompanion<CalendarDb> {
     if (isPublic.present) {
       map['is_public'] = Variable<bool>(isPublic.value);
     }
+    if (isSubscribed.present) {
+      map['is_subscribed'] = Variable<bool>(isSubscribed.value);
+    }
     if (syncToken.present) {
       map['sync_token'] = Variable<String>(syncToken.value);
     }
@@ -2787,6 +2811,7 @@ class CalendarTableCompanion extends UpdateCompanion<CalendarDb> {
           ..write('sharedToAllAccess: $sharedToAllAccess, ')
           ..write('access: $access, ')
           ..write('isPublic: $isPublic, ')
+          ..write('isSubscribed: $isSubscribed, ')
           ..write('syncToken: $syncToken')
           ..write(')'))
         .toString();
@@ -2871,6 +2896,14 @@ class $CalendarTableTable extends CalendarTable
       type: const BoolType(),
       requiredDuringInsert: true,
       defaultConstraints: 'CHECK (is_public IN (0, 1))');
+  final VerificationMeta _isSubscribedMeta =
+      const VerificationMeta('isSubscribed');
+  @override
+  late final GeneratedColumn<bool?> isSubscribed = GeneratedColumn<bool?>(
+      'is_subscribed', aliasedName, false,
+      type: const BoolType(),
+      requiredDuringInsert: true,
+      defaultConstraints: 'CHECK (is_subscribed IN (0, 1))');
   final VerificationMeta _syncTokenMeta = const VerificationMeta('syncToken');
   @override
   late final GeneratedColumn<String?> syncToken = GeneratedColumn<String?>(
@@ -2890,6 +2923,7 @@ class $CalendarTableTable extends CalendarTable
         sharedToAllAccess,
         access,
         isPublic,
+        isSubscribed,
         syncToken
       ];
   @override
@@ -2977,6 +3011,14 @@ class $CalendarTableTable extends CalendarTable
           isPublic.isAcceptableOrUnknown(data['is_public']!, _isPublicMeta));
     } else if (isInserting) {
       context.missing(_isPublicMeta);
+    }
+    if (data.containsKey('is_subscribed')) {
+      context.handle(
+          _isSubscribedMeta,
+          isSubscribed.isAcceptableOrUnknown(
+              data['is_subscribed']!, _isSubscribedMeta));
+    } else if (isInserting) {
+      context.missing(_isSubscribedMeta);
     }
     if (data.containsKey('sync_token')) {
       context.handle(_syncTokenMeta,

@@ -12,6 +12,7 @@ class BaseCalendarDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       contentPadding: removeContentPadding ? EdgeInsets.zero : null,
+      insetPadding: EdgeInsets.symmetric(vertical: 24, horizontal: 24),
       scrollable: true,
       titlePadding:
       EdgeInsets.symmetric(horizontal: 24).copyWith(bottom: 0, top: 6),
@@ -30,7 +31,6 @@ class BaseCalendarDialog extends StatelessWidget {
         ],
       ),
       content: content,
-
     );
   }
 }

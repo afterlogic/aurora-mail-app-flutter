@@ -33,66 +33,126 @@ class _CalendarDrawerState extends BState<CalendarDrawer> {
         style: ListTileStyle.drawer,
         selectedColor: theme.primaryColor,
         child: SafeArea(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                        horizontal: _horizontalHeaderPadding)
-                    .copyWith(top: 16, bottom: 4),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text('My calendars',
-                        style: TextStyle(color: theme.disabledColor)),
-                    IconButton(
-                        padding: EdgeInsets.zero,
-                        constraints: BoxConstraints(),
-                        onPressed: () {
-                          CalendarCreationDialog.show(context).then((value) {
-                            if (value != null) {
-                              BlocProvider.of<CalendarsBloc>(context)
-                                  .add(CreateCalendar(creationData: value));
-                            }
-                          });
-                        },
-                        icon: Icon(
-                          Icons.add,
-                          color: Theme.of(context).primaryColor,
-                        ))
+          child: BlocBuilder<CalendarsBloc, CalendarsState>(
+            builder: (context, state) {
+              final myCalendars = state.calendars
+                  ?.where((c) => !c.sharedToAll && !c.shared)
+                  .toList();
+              final sharedCalendars = state.calendars
+                  ?.where((c) => c.shared && !c.sharedToAll)
+                  .toList();
+              final sharedToAllCalendars =
+                  state.calendars?.where((c) => c.sharedToAll).toList();
+              return SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                              horizontal: _horizontalHeaderPadding)
+                          .copyWith(top: 16, bottom: 4),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('My calendars',
+                              style: TextStyle(color: theme.disabledColor)),
+                          IconButton(
+                              padding: EdgeInsets.zero,
+                              constraints: BoxConstraints(),
+                              onPressed: () {
+                                CalendarCreationDialog.show(context)
+                                    .then((value) {
+                                  if (value != null) {
+                                    BlocProvider.of<CalendarsBloc>(context).add(
+                                        CreateCalendar(creationData: value));
+                                  }
+                                });
+                              },
+                              icon: Icon(
+                                Icons.add,
+                                color: Theme.of(context).primaryColor,
+                              ))
+                        ],
+                      ),
+                    ),
+                    const Divider(
+                      color: const Color(0xFFF1F1F1),
+                      height: 1,
+                    ),
+                    (myCalendars != null)
+                        ? Column(
+                            children: myCalendars
+                                .map<Widget>((e) => CollapsibleCheckboxList(
+                                      calendar: e,
+                                      onChanged: (bool? value) {
+                                        BlocProvider.of<CalendarsBloc>(context)
+                                            .add(UpdateCalendarSelection(
+                                                calendarId: e.id,
+                                                selected: value ?? false));
+                                      },
+                                      isChecked: e.selected,
+                                    ))
+                                .toList(),
+                          )
+                        : SizedBox.shrink(),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                              horizontal: _horizontalHeaderPadding)
+                          .copyWith(top: 16, bottom: 4),
+                      child: Text('Shared with me',
+                          style: TextStyle(color: theme.disabledColor)),
+                    ),
+                    const Divider(
+                      color: const Color(0xFFF1F1F1),
+                      height: 1,
+                    ),
+                    (sharedCalendars != null)
+                        ? Column(
+                            children: sharedCalendars
+                                .map<Widget>((e) => CollapsibleCheckboxList(
+                                      calendar: e,
+                                      onChanged: (bool? value) {
+                                        BlocProvider.of<CalendarsBloc>(context)
+                                            .add(UpdateCalendarSelection(
+                                                calendarId: e.id,
+                                                selected: value ?? false));
+                                      },
+                                      isChecked: e.selected,
+                                    ))
+                                .toList(),
+                          )
+                        : SizedBox.shrink(),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                              horizontal: _horizontalHeaderPadding)
+                          .copyWith(top: 16, bottom: 4),
+                      child: Text('Shared with all',
+                          style: TextStyle(color: theme.disabledColor)),
+                    ),
+                    const Divider(
+                      color: const Color(0xFFF1F1F1),
+                      height: 1,
+                    ),
+                    (sharedToAllCalendars != null)
+                        ? Column(
+                            children: sharedToAllCalendars
+                                .map<Widget>((e) => CollapsibleCheckboxList(
+                                      calendar: e,
+                                      onChanged: (bool? value) {
+                                        BlocProvider.of<CalendarsBloc>(context)
+                                            .add(UpdateCalendarSelection(
+                                                calendarId: e.id,
+                                                selected: value ?? false));
+                                      },
+                                      isChecked: e.selected,
+                                    ))
+                                .toList(),
+                          )
+                        : SizedBox.shrink(),
                   ],
                 ),
-              ),
-              const Divider(
-                color: const Color(0xFFF1F1F1),
-                height: 1,
-              ),
-              Expanded(
-                child: BlocBuilder<CalendarsBloc, CalendarsState>(
-                    builder: (context, state) {
-                  if (state.calendars != null) {
-                    return SingleChildScrollView(
-                      child: Column(
-                        children: state.calendars!
-                            .map<Widget>((e) => CollapsibleCheckboxList(
-                                  calendar: e,
-                                  onChanged: (bool? value) {
-                                    BlocProvider.of<CalendarsBloc>(context).add(
-                                        UpdateCalendarSelection(
-                                            calendarId: e.id,
-                                            selected: value ?? false));
-                                  },
-                                  isChecked: e.selected,
-                                ))
-                            .toList(),
-                      ),
-                    );
-                  } else {
-                    return SizedBox.shrink();
-                  }
-                }),
-              ),
-            ],
+              );
+            },
           ),
         ),
       ),
@@ -200,11 +260,12 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
           child: Padding(
             padding: const EdgeInsets.only(
                     left: _horizontalSectionPadding,
-                    right: _horizontalHeaderPadding)
+                    right: _horizontalHeaderPadding - 3)
                 .copyWith(
               top: 12,
             ),
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(
                   width: 24,
@@ -219,7 +280,22 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
                   width: 16,
                 ),
                 Expanded(
-                  child: Text(widget.calendar.name),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(widget.calendar.name),
+                      if ((widget.calendar.shared &&
+                              widget.calendar.access == 2 &&
+                              !widget.calendar.sharedToAll) ||
+                          (widget.calendar.sharedToAll &&
+                              widget.calendar.sharedToAllAccess == 2))
+                        Text(
+                          'read',
+                          style:
+                              TextStyle(color: Color(0xFFB6B5B5), fontSize: 14),
+                        ),
+                    ],
+                  ),
                 ),
                 AnimatedBuilder(
                   animation: _animationController,
