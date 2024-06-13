@@ -19,6 +19,7 @@ class CalendarMapper {
       sharedToAllAccess: c.sharedToAllAccess,
       access: c.access,
       isPublic: c.isPublic,
+      source: c.source,
       syncToken: c.syncToken,
       isSubscribed: c.isSubscribed,
     );
@@ -43,6 +44,7 @@ class CalendarMapper {
       access: calendar.access,
       isPublic: calendar.isPublic,
       isSubscribed: calendar.isSubscribed,
+      source: calendar.source,
       syncToken: calendar.syncToken,
     );
   }
@@ -71,6 +73,7 @@ class CalendarMapper {
       // shares:(map['shares'] as List?)!,
       syncToken: (map['SyncToken'] as String?)!,
       isSubscribed: (map['IsPublic'] as bool?) ?? false,
+      source: (map['Source'] as String?) ?? "",
     );
   }
 

@@ -34,6 +34,8 @@ class CalendarTable extends Table{
 
   BoolColumn get isSubscribed => boolean()();
 
+  TextColumn get source => text()();
+
   TextColumn get syncToken => text()();
 }
 

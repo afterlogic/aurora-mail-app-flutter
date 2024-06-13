@@ -21,7 +21,8 @@ class ViewCalendar extends Calendar implements Equatable {
       required super.access,
       required super.isPublic,
       required super.syncToken,
-      required super.isSubscribed});
+      required super.isSubscribed,
+      required super.source});
 
   ViewCalendar updateSelect(bool selected) => ViewCalendar(
       selected: selected,
@@ -38,6 +39,7 @@ class ViewCalendar extends Calendar implements Equatable {
       access: access,
       isSubscribed: isSubscribed,
       isPublic: isPublic,
+      source: source,
       syncToken: syncToken);
 
   @override
@@ -55,6 +57,7 @@ class ViewCalendar extends Calendar implements Equatable {
         sharedToAllAccess,
         access,
         isPublic,
+    source,
         isSubscribed,
         syncToken
       ];
@@ -77,6 +80,7 @@ class ViewCalendar extends Calendar implements Equatable {
     int? access,
     bool? isPublic,
     bool? isSubscribed,
+    String? source,
     List? shares,
     String? syncToken,
   }) {
@@ -94,6 +98,7 @@ class ViewCalendar extends Calendar implements Equatable {
       sharedToAllAccess: sharedToAllAccess ?? this.sharedToAllAccess,
       access: access ?? this.access,
       isPublic: isPublic ?? this.isPublic,
+      source: source ?? this.source,
       isSubscribed: isSubscribed ?? this.isSubscribed,
       // shares: shares ?? this.shares,
       syncToken: syncToken ?? this.syncToken,
@@ -104,6 +109,7 @@ class ViewCalendar extends Calendar implements Equatable {
     return name != comparable.name ||
         description != comparable.description ||
         isSubscribed != comparable.isSubscribed ||
+        source != comparable.source ||
         color != comparable.color;
   }
 }

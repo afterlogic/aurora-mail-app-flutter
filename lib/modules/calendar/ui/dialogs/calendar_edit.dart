@@ -47,7 +47,7 @@ class _CalendarEditDialogState extends State<CalendarEditDialog> {
       ..text = widget.calendar.description ?? '';
     _nameController = TextEditingController()
       ..text = widget.calendar.name;
-    _iCalController = TextEditingController()..text = '';
+    _iCalController = TextEditingController()..text = widget.calendar.source;
     final color = _colors.firstWhereOrNull((c) => c.value == widget.calendar.color.value);
     if(color == null){
       _colors.add(widget.calendar.color);
@@ -81,6 +81,7 @@ class _CalendarEditDialogState extends State<CalendarEditDialog> {
                 name: _nameController.text,
                 description: () => _descriptionController.text,
                 color: _selectedColor,
+                source: _iCalController.text
               ));
             },
             child: Text(S.of(context).btn_save),
@@ -101,7 +102,6 @@ class _CalendarEditDialogState extends State<CalendarEditDialog> {
             ),
             SizedBox(height: 16),
             if(widget.calendar.isSubscribed)TextInput(
-                enabled: false,
                 controller: _iCalController,
                 labelText: 'iCal URL'),
             SizedBox(height: 16),

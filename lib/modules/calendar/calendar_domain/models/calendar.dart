@@ -17,6 +17,8 @@ class Calendar {
   final bool isSubscribed;
   // final List shares;
   final String syncToken;
+  // same with iCal URL
+  final String source;
 
   const Calendar({
     required this.id,
@@ -32,6 +34,7 @@ class Calendar {
     required this.access,
     required this.isPublic,
     required this.isSubscribed,
+    required this.source,
     // required this.shares,
     required this.syncToken,
   });
@@ -51,7 +54,9 @@ class Calendar {
         isPublic: isPublic,
         description: description,
         syncToken: syncToken,
-        isSubscribed: isSubscribed);
+        isSubscribed: isSubscribed,
+        source: source,
+    );
   }
 
   @override
@@ -73,6 +78,7 @@ class Calendar {
     int? access,
     bool? isPublic,
     bool? isSubscribed,
+    String? source,
     List? shares,
     String? syncToken,
   }) {
@@ -90,6 +96,7 @@ class Calendar {
       access: access ?? this.access,
       isPublic: isPublic ?? this.isPublic,
       isSubscribed: isSubscribed ?? this.isSubscribed,
+      source: source ?? this.source,
       // shares: shares ?? this.shares,
       syncToken: syncToken ?? this.syncToken,
     );

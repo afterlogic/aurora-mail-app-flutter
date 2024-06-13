@@ -2401,6 +2401,7 @@ class CalendarDb extends DataClass implements Insertable<CalendarDb> {
   final int access;
   final bool isPublic;
   final bool isSubscribed;
+  final String source;
   final String syncToken;
   CalendarDb(
       {required this.id,
@@ -2416,6 +2417,7 @@ class CalendarDb extends DataClass implements Insertable<CalendarDb> {
       required this.access,
       required this.isPublic,
       required this.isSubscribed,
+      required this.source,
       required this.syncToken});
   factory CalendarDb.fromData(Map<String, dynamic> data, {String? prefix}) {
     final effectivePrefix = prefix ?? '';
@@ -2446,6 +2448,8 @@ class CalendarDb extends DataClass implements Insertable<CalendarDb> {
           .mapFromDatabaseResponse(data['${effectivePrefix}is_public'])!,
       isSubscribed: const BoolType()
           .mapFromDatabaseResponse(data['${effectivePrefix}is_subscribed'])!,
+      source: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}source'])!,
       syncToken: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}sync_token'])!,
     );
@@ -2468,6 +2472,7 @@ class CalendarDb extends DataClass implements Insertable<CalendarDb> {
     map['access'] = Variable<int>(access);
     map['is_public'] = Variable<bool>(isPublic);
     map['is_subscribed'] = Variable<bool>(isSubscribed);
+    map['source'] = Variable<String>(source);
     map['sync_token'] = Variable<String>(syncToken);
     return map;
   }
@@ -2489,6 +2494,7 @@ class CalendarDb extends DataClass implements Insertable<CalendarDb> {
       access: Value(access),
       isPublic: Value(isPublic),
       isSubscribed: Value(isSubscribed),
+      source: Value(source),
       syncToken: Value(syncToken),
     );
   }
@@ -2510,6 +2516,7 @@ class CalendarDb extends DataClass implements Insertable<CalendarDb> {
       access: serializer.fromJson<int>(json['access']),
       isPublic: serializer.fromJson<bool>(json['isPublic']),
       isSubscribed: serializer.fromJson<bool>(json['isSubscribed']),
+      source: serializer.fromJson<String>(json['source']),
       syncToken: serializer.fromJson<String>(json['syncToken']),
     );
   }
@@ -2530,6 +2537,7 @@ class CalendarDb extends DataClass implements Insertable<CalendarDb> {
       'access': serializer.toJson<int>(access),
       'isPublic': serializer.toJson<bool>(isPublic),
       'isSubscribed': serializer.toJson<bool>(isSubscribed),
+      'source': serializer.toJson<String>(source),
       'syncToken': serializer.toJson<String>(syncToken),
     };
   }
@@ -2548,6 +2556,7 @@ class CalendarDb extends DataClass implements Insertable<CalendarDb> {
           int? access,
           bool? isPublic,
           bool? isSubscribed,
+          String? source,
           String? syncToken}) =>
       CalendarDb(
         id: id ?? this.id,
@@ -2563,6 +2572,7 @@ class CalendarDb extends DataClass implements Insertable<CalendarDb> {
         access: access ?? this.access,
         isPublic: isPublic ?? this.isPublic,
         isSubscribed: isSubscribed ?? this.isSubscribed,
+        source: source ?? this.source,
         syncToken: syncToken ?? this.syncToken,
       );
   @override
@@ -2581,6 +2591,7 @@ class CalendarDb extends DataClass implements Insertable<CalendarDb> {
           ..write('access: $access, ')
           ..write('isPublic: $isPublic, ')
           ..write('isSubscribed: $isSubscribed, ')
+          ..write('source: $source, ')
           ..write('syncToken: $syncToken')
           ..write(')'))
         .toString();
@@ -2601,6 +2612,7 @@ class CalendarDb extends DataClass implements Insertable<CalendarDb> {
       access,
       isPublic,
       isSubscribed,
+      source,
       syncToken);
   @override
   bool operator ==(Object other) =>
@@ -2619,6 +2631,7 @@ class CalendarDb extends DataClass implements Insertable<CalendarDb> {
           other.access == this.access &&
           other.isPublic == this.isPublic &&
           other.isSubscribed == this.isSubscribed &&
+          other.source == this.source &&
           other.syncToken == this.syncToken);
 }
 
@@ -2636,6 +2649,7 @@ class CalendarTableCompanion extends UpdateCompanion<CalendarDb> {
   final Value<int> access;
   final Value<bool> isPublic;
   final Value<bool> isSubscribed;
+  final Value<String> source;
   final Value<String> syncToken;
   const CalendarTableCompanion({
     this.id = const Value.absent(),
@@ -2651,6 +2665,7 @@ class CalendarTableCompanion extends UpdateCompanion<CalendarDb> {
     this.access = const Value.absent(),
     this.isPublic = const Value.absent(),
     this.isSubscribed = const Value.absent(),
+    this.source = const Value.absent(),
     this.syncToken = const Value.absent(),
   });
   CalendarTableCompanion.insert({
@@ -2667,6 +2682,7 @@ class CalendarTableCompanion extends UpdateCompanion<CalendarDb> {
     required int access,
     required bool isPublic,
     required bool isSubscribed,
+    required String source,
     required String syncToken,
   })  : id = Value(id),
         color = Value(color),
@@ -2680,6 +2696,7 @@ class CalendarTableCompanion extends UpdateCompanion<CalendarDb> {
         access = Value(access),
         isPublic = Value(isPublic),
         isSubscribed = Value(isSubscribed),
+        source = Value(source),
         syncToken = Value(syncToken);
   static Insertable<CalendarDb> custom({
     Expression<String>? id,
@@ -2695,6 +2712,7 @@ class CalendarTableCompanion extends UpdateCompanion<CalendarDb> {
     Expression<int>? access,
     Expression<bool>? isPublic,
     Expression<bool>? isSubscribed,
+    Expression<String>? source,
     Expression<String>? syncToken,
   }) {
     return RawValuesInsertable({
@@ -2711,6 +2729,7 @@ class CalendarTableCompanion extends UpdateCompanion<CalendarDb> {
       if (access != null) 'access': access,
       if (isPublic != null) 'is_public': isPublic,
       if (isSubscribed != null) 'is_subscribed': isSubscribed,
+      if (source != null) 'source': source,
       if (syncToken != null) 'sync_token': syncToken,
     });
   }
@@ -2729,6 +2748,7 @@ class CalendarTableCompanion extends UpdateCompanion<CalendarDb> {
       Value<int>? access,
       Value<bool>? isPublic,
       Value<bool>? isSubscribed,
+      Value<String>? source,
       Value<String>? syncToken}) {
     return CalendarTableCompanion(
       id: id ?? this.id,
@@ -2744,6 +2764,7 @@ class CalendarTableCompanion extends UpdateCompanion<CalendarDb> {
       access: access ?? this.access,
       isPublic: isPublic ?? this.isPublic,
       isSubscribed: isSubscribed ?? this.isSubscribed,
+      source: source ?? this.source,
       syncToken: syncToken ?? this.syncToken,
     );
   }
@@ -2790,6 +2811,9 @@ class CalendarTableCompanion extends UpdateCompanion<CalendarDb> {
     if (isSubscribed.present) {
       map['is_subscribed'] = Variable<bool>(isSubscribed.value);
     }
+    if (source.present) {
+      map['source'] = Variable<String>(source.value);
+    }
     if (syncToken.present) {
       map['sync_token'] = Variable<String>(syncToken.value);
     }
@@ -2812,6 +2836,7 @@ class CalendarTableCompanion extends UpdateCompanion<CalendarDb> {
           ..write('access: $access, ')
           ..write('isPublic: $isPublic, ')
           ..write('isSubscribed: $isSubscribed, ')
+          ..write('source: $source, ')
           ..write('syncToken: $syncToken')
           ..write(')'))
         .toString();
@@ -2904,6 +2929,11 @@ class $CalendarTableTable extends CalendarTable
       type: const BoolType(),
       requiredDuringInsert: true,
       defaultConstraints: 'CHECK (is_subscribed IN (0, 1))');
+  final VerificationMeta _sourceMeta = const VerificationMeta('source');
+  @override
+  late final GeneratedColumn<String?> source = GeneratedColumn<String?>(
+      'source', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _syncTokenMeta = const VerificationMeta('syncToken');
   @override
   late final GeneratedColumn<String?> syncToken = GeneratedColumn<String?>(
@@ -2924,6 +2954,7 @@ class $CalendarTableTable extends CalendarTable
         access,
         isPublic,
         isSubscribed,
+        source,
         syncToken
       ];
   @override
@@ -3019,6 +3050,12 @@ class $CalendarTableTable extends CalendarTable
               data['is_subscribed']!, _isSubscribedMeta));
     } else if (isInserting) {
       context.missing(_isSubscribedMeta);
+    }
+    if (data.containsKey('source')) {
+      context.handle(_sourceMeta,
+          source.isAcceptableOrUnknown(data['source']!, _sourceMeta));
+    } else if (isInserting) {
+      context.missing(_sourceMeta);
     }
     if (data.containsKey('sync_token')) {
       context.handle(_syncTokenMeta,
