@@ -21,7 +21,8 @@ abstract class CalendarNetworkService {
   Future<void> createEvent({
     required String subject,
     required String calendarId,
-    String? description,
+    required String description,
+    required String location,
     required DateTime startDate,
     required DateTime endDate,
     required bool? allDay

@@ -170,11 +170,13 @@ class CalendarRepositoryImpl implements CalendarRepository {
   @override
   Future<void> createEvent(EventCreationData data) {
     return _network.createEvent(
+        location: data.location ?? '',
         subject: data.subject,
         calendarId: data.calendarId,
         startDate: data.startDate,
         endDate: data.endDate,
-        allDay: data.allDay);
+        allDay: data.allDay,
+        description: data.description ?? '');
   }
 
   @override
@@ -188,7 +190,7 @@ class CalendarRepositoryImpl implements CalendarRepository {
   }
 
   @override
-  Future<void> clearData() async{
+  Future<void> clearData() async {
     await _db.clearData();
   }
 }

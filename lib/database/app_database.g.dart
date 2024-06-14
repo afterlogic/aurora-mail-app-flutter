@@ -3089,6 +3089,7 @@ class EventDb extends DataClass implements Insertable<EventDb> {
   final String uid;
   final String? subject;
   final String? description;
+  final String? location;
   final DateTime? startTS;
   final DateTime? endTS;
   final bool? allDay;
@@ -3111,6 +3112,7 @@ class EventDb extends DataClass implements Insertable<EventDb> {
       required this.uid,
       this.subject,
       this.description,
+      this.location,
       this.startTS,
       this.endTS,
       this.allDay,
@@ -3143,6 +3145,8 @@ class EventDb extends DataClass implements Insertable<EventDb> {
           .mapFromDatabaseResponse(data['${effectivePrefix}subject']),
       description: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}description']),
+      location: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}location']),
       startTS: const DateTimeType()
           .mapFromDatabaseResponse(data['${effectivePrefix}start_t_s']),
       endTS: const DateTimeType()
@@ -3191,6 +3195,9 @@ class EventDb extends DataClass implements Insertable<EventDb> {
     }
     if (!nullToAbsent || description != null) {
       map['description'] = Variable<String?>(description);
+    }
+    if (!nullToAbsent || location != null) {
+      map['location'] = Variable<String?>(location);
     }
     if (!nullToAbsent || startTS != null) {
       map['start_t_s'] = Variable<DateTime?>(startTS);
@@ -3251,6 +3258,9 @@ class EventDb extends DataClass implements Insertable<EventDb> {
       description: description == null && nullToAbsent
           ? const Value.absent()
           : Value(description),
+      location: location == null && nullToAbsent
+          ? const Value.absent()
+          : Value(location),
       startTS: startTS == null && nullToAbsent
           ? const Value.absent()
           : Value(startTS),
@@ -3295,6 +3305,7 @@ class EventDb extends DataClass implements Insertable<EventDb> {
       uid: serializer.fromJson<String>(json['uid']),
       subject: serializer.fromJson<String?>(json['subject']),
       description: serializer.fromJson<String?>(json['description']),
+      location: serializer.fromJson<String?>(json['location']),
       startTS: serializer.fromJson<DateTime?>(json['startTS']),
       endTS: serializer.fromJson<DateTime?>(json['endTS']),
       allDay: serializer.fromJson<bool?>(json['allDay']),
@@ -3322,6 +3333,7 @@ class EventDb extends DataClass implements Insertable<EventDb> {
       'uid': serializer.toJson<String>(uid),
       'subject': serializer.toJson<String?>(subject),
       'description': serializer.toJson<String?>(description),
+      'location': serializer.toJson<String?>(location),
       'startTS': serializer.toJson<DateTime?>(startTS),
       'endTS': serializer.toJson<DateTime?>(endTS),
       'allDay': serializer.toJson<bool?>(allDay),
@@ -3347,6 +3359,7 @@ class EventDb extends DataClass implements Insertable<EventDb> {
           String? uid,
           String? subject,
           String? description,
+          String? location,
           DateTime? startTS,
           DateTime? endTS,
           bool? allDay,
@@ -3369,6 +3382,7 @@ class EventDb extends DataClass implements Insertable<EventDb> {
         uid: uid ?? this.uid,
         subject: subject ?? this.subject,
         description: description ?? this.description,
+        location: location ?? this.location,
         startTS: startTS ?? this.startTS,
         endTS: endTS ?? this.endTS,
         allDay: allDay ?? this.allDay,
@@ -3394,6 +3408,7 @@ class EventDb extends DataClass implements Insertable<EventDb> {
           ..write('uid: $uid, ')
           ..write('subject: $subject, ')
           ..write('description: $description, ')
+          ..write('location: $location, ')
           ..write('startTS: $startTS, ')
           ..write('endTS: $endTS, ')
           ..write('allDay: $allDay, ')
@@ -3421,6 +3436,7 @@ class EventDb extends DataClass implements Insertable<EventDb> {
         uid,
         subject,
         description,
+        location,
         startTS,
         endTS,
         allDay,
@@ -3447,6 +3463,7 @@ class EventDb extends DataClass implements Insertable<EventDb> {
           other.uid == this.uid &&
           other.subject == this.subject &&
           other.description == this.description &&
+          other.location == this.location &&
           other.startTS == this.startTS &&
           other.endTS == this.endTS &&
           other.allDay == this.allDay &&
@@ -3471,6 +3488,7 @@ class EventTableCompanion extends UpdateCompanion<EventDb> {
   final Value<String> uid;
   final Value<String?> subject;
   final Value<String?> description;
+  final Value<String?> location;
   final Value<DateTime?> startTS;
   final Value<DateTime?> endTS;
   final Value<bool?> allDay;
@@ -3493,6 +3511,7 @@ class EventTableCompanion extends UpdateCompanion<EventDb> {
     this.uid = const Value.absent(),
     this.subject = const Value.absent(),
     this.description = const Value.absent(),
+    this.location = const Value.absent(),
     this.startTS = const Value.absent(),
     this.endTS = const Value.absent(),
     this.allDay = const Value.absent(),
@@ -3516,6 +3535,7 @@ class EventTableCompanion extends UpdateCompanion<EventDb> {
     required String uid,
     this.subject = const Value.absent(),
     this.description = const Value.absent(),
+    this.location = const Value.absent(),
     this.startTS = const Value.absent(),
     this.endTS = const Value.absent(),
     this.allDay = const Value.absent(),
@@ -3544,6 +3564,7 @@ class EventTableCompanion extends UpdateCompanion<EventDb> {
     Expression<String>? uid,
     Expression<String?>? subject,
     Expression<String?>? description,
+    Expression<String?>? location,
     Expression<DateTime?>? startTS,
     Expression<DateTime?>? endTS,
     Expression<bool?>? allDay,
@@ -3567,6 +3588,7 @@ class EventTableCompanion extends UpdateCompanion<EventDb> {
       if (uid != null) 'uid': uid,
       if (subject != null) 'subject': subject,
       if (description != null) 'description': description,
+      if (location != null) 'location': location,
       if (startTS != null) 'start_t_s': startTS,
       if (endTS != null) 'end_t_s': endTS,
       if (allDay != null) 'all_day': allDay,
@@ -3592,6 +3614,7 @@ class EventTableCompanion extends UpdateCompanion<EventDb> {
       Value<String>? uid,
       Value<String?>? subject,
       Value<String?>? description,
+      Value<String?>? location,
       Value<DateTime?>? startTS,
       Value<DateTime?>? endTS,
       Value<bool?>? allDay,
@@ -3614,6 +3637,7 @@ class EventTableCompanion extends UpdateCompanion<EventDb> {
       uid: uid ?? this.uid,
       subject: subject ?? this.subject,
       description: description ?? this.description,
+      location: location ?? this.location,
       startTS: startTS ?? this.startTS,
       endTS: endTS ?? this.endTS,
       allDay: allDay ?? this.allDay,
@@ -3656,6 +3680,9 @@ class EventTableCompanion extends UpdateCompanion<EventDb> {
     }
     if (description.present) {
       map['description'] = Variable<String?>(description.value);
+    }
+    if (location.present) {
+      map['location'] = Variable<String?>(location.value);
     }
     if (startTS.present) {
       map['start_t_s'] = Variable<DateTime?>(startTS.value);
@@ -3712,6 +3739,7 @@ class EventTableCompanion extends UpdateCompanion<EventDb> {
           ..write('uid: $uid, ')
           ..write('subject: $subject, ')
           ..write('description: $description, ')
+          ..write('location: $location, ')
           ..write('startTS: $startTS, ')
           ..write('endTS: $endTS, ')
           ..write('allDay: $allDay, ')
@@ -3781,6 +3809,11 @@ class $EventTableTable extends EventTable
   @override
   late final GeneratedColumn<String?> description = GeneratedColumn<String?>(
       'description', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _locationMeta = const VerificationMeta('location');
+  @override
+  late final GeneratedColumn<String?> location = GeneratedColumn<String?>(
+      'location', aliasedName, true,
       type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _startTSMeta = const VerificationMeta('startTS');
   @override
@@ -3875,6 +3908,7 @@ class $EventTableTable extends EventTable
         uid,
         subject,
         description,
+        location,
         startTS,
         endTS,
         allDay,
@@ -3945,6 +3979,10 @@ class $EventTableTable extends EventTable
           _descriptionMeta,
           description.isAcceptableOrUnknown(
               data['description']!, _descriptionMeta));
+    }
+    if (data.containsKey('location')) {
+      context.handle(_locationMeta,
+          location.isAcceptableOrUnknown(data['location']!, _locationMeta));
     }
     if (data.containsKey('start_t_s')) {
       context.handle(_startTSMeta,

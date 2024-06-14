@@ -119,7 +119,7 @@ class EventViewPage extends StatelessWidget {
                       const SizedBox(
                         height: 4,
                       ),
-                      Text(''),
+                      Text(eventsState.selectedEvent?.description ?? ''),
                       const SizedBox(
                         height: 20,
                       ),
@@ -127,7 +127,7 @@ class EventViewPage extends StatelessWidget {
                       const SizedBox(
                         height: 4,
                       ),
-                      Text(''),
+                      Text(eventsState.selectedEvent?.location ?? ''),
                     ],
                   ),
                 ),

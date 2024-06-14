@@ -4,6 +4,7 @@ import 'package:aurora_mail/modules/calendar/calendar_domain/models/event_base.d
 class EventCreationData {
   final String subject;
   final String? description;
+  final String? location;
   final String calendarId;
   final DateTime startDate;
   final DateTime endDate;
@@ -12,6 +13,7 @@ class EventCreationData {
   const EventCreationData({
     required this.subject,
     this.description,
+    this.location,
     required this.calendarId,
     required this.startDate,
     required this.endDate,
@@ -28,6 +30,7 @@ class Event extends EventBase {
   final String uid;
   final String? subject;
   final String? description;
+  final String? location;
   final DateTime? startTS;
   final DateTime? endTS;
   final bool? allDay;
@@ -52,6 +55,7 @@ class Event extends EventBase {
     required this.uid,
     this.subject,
     this.description,
+    this.location,
     this.startTS,
     this.endTS,
     this.allDay,
@@ -85,7 +89,8 @@ class Event extends EventBase {
       userLocalId: base.userLocalId,
       uid: (newData['uid'] as String?)!,
       subject: (newData['subject'] as String?)!,
-      description: (newData['description'] as String?)!,
+      description: (newData['description'] as String?) ?? '',
+      location: (newData['location'] as String?) ?? '',
       startTS: (newData['startTS'] as int?) == null
           ? null
           : DateTime.fromMillisecondsSinceEpoch(
@@ -112,6 +117,7 @@ class Event extends EventBase {
   factory Event.fromDb(EventDb entity) {
     return Event(
         description: entity.description,
+        location: entity.location,
         calendarId: entity.calendarId,
         startTS: entity.startTS,
         organizer: entity.organizer,
@@ -139,6 +145,7 @@ class Event extends EventBase {
   EventDb toDb() {
     return EventDb(
         description: description,
+        location: location,
         calendarId: calendarId,
         startTS: startTS,
         organizer: organizer,
@@ -175,6 +182,7 @@ class Event extends EventBase {
           uid == other.uid &&
           subject == other.subject &&
           description == other.description &&
+          location == other.location &&
           startTS == other.startTS &&
           endTS == other.endTS &&
           allDay == other.allDay &&
@@ -200,6 +208,7 @@ class Event extends EventBase {
       uid.hashCode ^
       subject.hashCode ^
       description.hashCode ^
+      location.hashCode ^
       startTS.hashCode ^
       endTS.hashCode ^
       allDay.hashCode ^
@@ -247,6 +256,7 @@ class Event extends EventBase {
     String? uid,
     String? subject,
     String? description,
+    String? location,
     DateTime? startTS,
     DateTime? endTS,
     bool? allDay,
@@ -271,6 +281,7 @@ class Event extends EventBase {
       uid: uid ?? this.uid,
       subject: subject ?? this.subject,
       description: description ?? this.description,
+      location: location ?? this.location,
       startTS: startTS ?? this.startTS,
       endTS: endTS ?? this.endTS,
       allDay: allDay ?? this.allDay,

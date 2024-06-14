@@ -133,10 +133,11 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
   Future<void> createEvent(
       {required String subject,
       required String calendarId,
-      String? description,
+      required String description,
       required DateTime startDate,
       required DateTime endDate,
       required bool? allDay,
+       required String location
       }) async {
     // {
     //   "id": null,
@@ -174,8 +175,8 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
       "newCalendarId": calendarId,
       "subject": subject,
       "allDay": allDay == true ? 1 : 0,
-      "location": "",
-      "description": description ?? '',
+      "location": location,
+      "description": description,
       "alarms": "[]",
       "attendees": "[]",
       // "owner": ownerMail,
@@ -202,7 +203,6 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
     );
 
     final result = await calendarModule.post(body) as Map<String, dynamic>;
-    // return CalendarMapper.fromNetwork(result, userLocalId: userLocalId);
   }
 
   @override
@@ -214,7 +214,7 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
       "newCalendarId": event.calendarId,
       "subject": event.subject!,
       "allDay": event.allDay == true ? 1 : 0,
-      "location": "",
+      "location": event.location ?? '',
       "description": event.description ?? '',
       "alarms": "[]",
       "attendees": "[]",

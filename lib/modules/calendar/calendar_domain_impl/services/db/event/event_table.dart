@@ -23,6 +23,8 @@ class EventTable extends Table {
 
   TextColumn get description => text().nullable()();
 
+  TextColumn get location => text().nullable()();
+
   DateTimeColumn get startTS => dateTime().nullable()();
 
   DateTimeColumn get endTS => dateTime().nullable()();

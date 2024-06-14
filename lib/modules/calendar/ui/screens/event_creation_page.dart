@@ -48,6 +48,8 @@ class _EventCreationPageState extends State<EventCreationPage> {
   EventCreationData get collectCreationData => EventCreationData(
       subject: _titleController.text,
       calendarId: _selectedCalendar!.id,
+      description: _descriptionController.text,
+      location: _locationController.text,
       startDate: _selectedStartDate,
       endDate: _selectedEndDate,
       allDay: _isAllDay);
@@ -81,6 +83,8 @@ class _EventCreationPageState extends State<EventCreationPage> {
     _selectedEvent = e;
     if (e == null) return;
     _titleController.text = e.title;
+    _descriptionController.text = e.description ?? '';
+    _locationController.text = e.location ?? '';
     _selectedStartDate = e.startDate;
     _selectedEndDate = e.endDate;
     _selectedCalendar = _calendarsBloc.state.calendars
@@ -96,6 +100,7 @@ class _EventCreationPageState extends State<EventCreationPage> {
         subject: updatedFields.subject,
         title: updatedFields.subject,
         description: updatedFields.description,
+        location: updatedFields.location,
         startDate: updatedFields.startDate,
         allDay: updatedFields.allDay,
         endDate: updatedFields.endDate);
