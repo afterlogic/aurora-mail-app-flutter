@@ -74,8 +74,6 @@ List<Week> processEvents(List<Week> weeks, List<ExtendedMonthEvent> eventsSource
                     item.endDate.isAtSameMomentAs(week.days.first.date)))
         .toList();
 
-    print(week.events);
-
     // populating days with empty events
     for (var day in week.days) {
       day.events = List.filled(slotsNumber, null);

@@ -73,8 +73,8 @@ class EventsState extends Equatable {
         .toList();
   }
 
-  List<ViewEvent?> getEventsForDayFromMap({DateTime? date}) {
-    return eventsMap?[date] ?? [];
+  List<ViewEvent?> getEventsForDayFromMap({required DateTime date}) {
+    return eventsMap?[DateTime(date.year, date.month, date.day)] ?? [];
   }
 
   List<ViewEvent> getEventsFromDay({DateTime? date}) {

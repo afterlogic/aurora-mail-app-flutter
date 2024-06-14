@@ -52,45 +52,45 @@ class _MonthViewState extends State<MonthView>
     BlocProvider.of<EventsBloc>(context).add(SelectDate(selectedDay));
   }
 
-  bool _showEventMarkerInShortMode(DateTime currentDate, bool show) {
-    return _eventListAnimationController.value == 1.0 ? false : show;
+  bool get _showEventMarkerInShortMode {
+    return _eventListAnimationController.value == 1.0 ? false : true;
   }
 
   Widget? _extendedModeBuilder(
           ctx, DateTime currentDate, List<ViewEvent?> events) =>
       extendedModeBuilder(events, _calendarDayTitleHeight, currentDate);
 
-  Widget _disabledDayBuilder(
-          BuildContext context, DateTime currentDate, DateTime selectedDate) =>
+  Widget _disabledDayBuilder(BuildContext context, DateTime currentDate,
+          DateTime selectedDate, List<ViewEvent?> events) =>
       disabledDayBuilder(context, currentDate,
-          cellHeight: _calendarDayTitleHeight);
+          events: events, cellHeight: _calendarDayTitleHeight);
 
   Widget _outsideDayBuilder(BuildContext context, DateTime currentDate,
-          DateTime selectedDate, List<ViewEvent> events) =>
+          DateTime selectedDate, List<ViewEvent?> events) =>
       outsideDayBuilder(context, currentDate,
-          showEventMarker:
-              _showEventMarkerInShortMode(currentDate, events.isNotEmpty),
+          events: events,
+          showEventMarker: _showEventMarkerInShortMode,
           cellHeight: _calendarDayTitleHeight);
 
   Widget _defaultDayBuilder(BuildContext context, DateTime currentDate,
-          DateTime selectedDate, List<ViewEvent> events) =>
+          DateTime selectedDate, List<ViewEvent?> events) =>
       defaultDayBuilder(context, currentDate,
-          showEventMarker:
-              _showEventMarkerInShortMode(currentDate, events.isNotEmpty),
+          events: events,
+          showEventMarker: _showEventMarkerInShortMode,
           cellHeight: _calendarDayTitleHeight);
 
   Widget _selectedDayBuilder(BuildContext context, DateTime currentDate,
-          DateTime selectedDate, List<ViewEvent> events) =>
+          DateTime selectedDate, List<ViewEvent?> events) =>
       selectedDayBuilder(context, currentDate,
-          showEventMarker:
-              _showEventMarkerInShortMode(currentDate, events.isNotEmpty),
+          events: events,
+          showEventMarker: _showEventMarkerInShortMode,
           cellHeight: _calendarDayTitleHeight);
 
   Widget _todayDayBuilder(BuildContext context, DateTime currentDate,
-          DateTime selectedDate, List<ViewEvent> events) =>
+          DateTime selectedDate, List<ViewEvent?> events) =>
       todayDayBuilder(context, currentDate,
-          showEventMarker:
-              _showEventMarkerInShortMode(currentDate, events.isNotEmpty),
+          events: events,
+          showEventMarker: _showEventMarkerInShortMode,
           cellHeight: _calendarDayTitleHeight);
 
   @override
@@ -186,7 +186,7 @@ class _MonthViewState extends State<MonthView>
                                   context,
                                   currentDate,
                                   selectedDate,
-                                  state.getEventsFromDay(date: currentDate)),
+                                  state.getEventsForDayFromMap(date: currentDate)),
                           todayBuilder: (BuildContext context,
                                   DateTime currentDate,
                                   DateTime selectedDate) =>
@@ -194,7 +194,7 @@ class _MonthViewState extends State<MonthView>
                                   context,
                                   currentDate,
                                   selectedDate,
-                                  state.getEventsFromDay(date: currentDate)),
+                                  state.getEventsForDayFromMap(date: currentDate)),
                           selectedBuilder: (BuildContext context,
                                   DateTime currentDate,
                                   DateTime selectedDate) =>
@@ -202,7 +202,7 @@ class _MonthViewState extends State<MonthView>
                                   context,
                                   currentDate,
                                   selectedDate,
-                                  state.getEventsFromDay(date: currentDate)),
+                                  state.getEventsForDayFromMap(date: currentDate)),
                           outsideBuilder: (BuildContext context,
                                   DateTime currentDate,
                                   DateTime selectedDate) =>
@@ -210,12 +210,16 @@ class _MonthViewState extends State<MonthView>
                                   context,
                                   currentDate,
                                   selectedDate,
-                                  state.getEventsFromDay(date: currentDate)),
-                          disabledBuilder: _disabledDayBuilder,
-                          markerBuilder:
-                              _eventListAnimationController.value == 1.0
-                                  ? _extendedModeBuilder
-                                  : (_, __, ___) => SizedBox.shrink(),
+                                  state.getEventsForDayFromMap(date: currentDate)),
+                          disabledBuilder: (BuildContext context,
+                                  DateTime currentDate,
+                                  DateTime selectedDate) =>
+                              _disabledDayBuilder(
+                                  context,
+                                  currentDate,
+                                  selectedDate,
+                                  state.getEventsForDayFromMap(date: currentDate)),
+                          markerBuilder: (_, __, ___) => SizedBox.shrink(),
                         ),
                         startingDayOfWeek: StartingDayOfWeek.monday,
                         calendarStyle: const CalendarStyle(),
@@ -265,7 +269,9 @@ class _MonthViewState extends State<MonthView>
               duration: const Duration(milliseconds: 100),
               child: _eventListAnimation.value == 0.0
                   ? const SizedBox.shrink()
-                  : _EventsInfoSection()),
+                  : Align(
+                      alignment: Alignment.topCenter,
+                      child: _EventsInfoSection())),
         ),
       ],
     );

@@ -14,13 +14,16 @@ part 'events_state.dart';
 class EventsBloc extends Bloc<EventBlocEvent, EventsState> {
   final CalendarUseCase _useCase;
 
+  ///used for handling events from "out of month" days
+  final extraDuration = Duration(days: 7);
+
   EventsBloc({required CalendarUseCase useCase})
       : _useCase = useCase,
         super(
           EventsState(
-
             startIntervalDate: DateTime.now().firstDayOfMonth,
-            endIntervalDate: DateTime.now().lastDayOfMonth, selectedDate: DateTime.now().withoutTime,
+            endIntervalDate: DateTime.now().lastDayOfMonth,
+            selectedDate: DateTime.now().withoutTime,
           ),
         ) {
     _useCase.eventsSubscription.listen((events) {
@@ -66,8 +69,8 @@ class EventsBloc extends Bloc<EventBlocEvent, EventsState> {
     emit(state.copyWith(status: EventsStatus.loading));
     try {
       await _useCase.getForPeriod(
-          start: state.startIntervalDate.withoutTime,
-          end: state.endIntervalDate.startOfNextDay);
+          start: state.startIntervalDate.withoutTime.subtract(extraDuration),
+          end: state.endIntervalDate.startOfNextDay.add(extraDuration));
     } catch (e, st) {
       emit(state.copyWith(status: EventsStatus.error));
     } finally {
@@ -87,8 +90,9 @@ class EventsBloc extends Bloc<EventBlocEvent, EventsState> {
 
   _onAddEvents(AddEvents event, emit) async {
     try {
-      final weeks =
-          generateWeeks(state.startIntervalDate, state.endIntervalDate);
+      final weeks = generateWeeks(
+          state.startIntervalDate.subtract(extraDuration),
+          state.endIntervalDate.add(extraDuration));
       final processedEvents = processEvents(
           weeks,
           event.events
@@ -118,8 +122,7 @@ class EventsBloc extends Bloc<EventBlocEvent, EventsState> {
   }
 
   _onSelectDate(SelectDate event, emit) async {
-    if (
-        event.date.isAtSameMomentAs(state.selectedDate)) {
+    if (event.date.isAtSameMomentAs(state.selectedDate)) {
       emit(state.copyWith(selectedDate: DateTime.now()));
       return;
     } else if (event.date.isBefore(state.startIntervalDate) ||

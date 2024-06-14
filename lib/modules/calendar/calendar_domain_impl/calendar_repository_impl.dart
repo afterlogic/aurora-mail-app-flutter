@@ -115,7 +115,7 @@ class CalendarRepositoryImpl implements CalendarRepository {
         await _db.createOrUpdateCalendar(calendar);
       }
       await _syncEvents();
-    } catch (e) {
+    } catch (e, st) {
       logger.log('CALENDARS SYNC ERROR: $e');
       rethrow;
     }

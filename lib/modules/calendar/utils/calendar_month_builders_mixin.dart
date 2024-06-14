@@ -4,7 +4,8 @@ import 'package:aurora_mail/modules/calendar/ui/widgets/short_month_day.dart';
 import 'package:flutter/material.dart';
 
 mixin CalendarMonthBuilders {
-  Widget? extendedModeBuilder(List<ViewEvent?> events, double topPadding, DateTime currentDate) {
+  Widget? extendedModeBuilder(
+      List<ViewEvent?> events, double topPadding, DateTime currentDate) {
     if (events.isEmpty) {
       return null;
     }
@@ -27,11 +28,14 @@ mixin CalendarMonthBuilders {
     BuildContext context,
     DateTime currentDate, {
     required double cellHeight,
+    required List<ViewEvent?> events,
   }) {
     return ShortMonthDay(
       height: cellHeight,
       dayNumber: currentDate.day.toString(),
-      hasEvents: false,
+      showEventMarker: false,
+      currentDate: currentDate,
+      events: events,
       boxColor: Colors.transparent,
       eventsMarkerColor: Theme.of(context).primaryColor.withOpacity(0.5),
       dayNumberColor: Colors.grey.shade300,
@@ -42,12 +46,15 @@ mixin CalendarMonthBuilders {
     BuildContext context,
     DateTime currentDate, {
     required bool showEventMarker,
+    required List<ViewEvent?> events,
     required double cellHeight,
   }) {
     return ShortMonthDay(
       height: cellHeight,
       dayNumber: currentDate.day.toString(),
-      hasEvents: showEventMarker,
+      currentDate: currentDate,
+      events: events,
+      showEventMarker: showEventMarker,
       boxColor: Colors.transparent,
       eventsMarkerColor: Theme.of(context).primaryColor.withOpacity(0.5),
       dayNumberColor: Colors.grey,
@@ -58,12 +65,15 @@ mixin CalendarMonthBuilders {
     BuildContext context,
     DateTime currentDate, {
     required bool showEventMarker,
+    required List<ViewEvent?> events,
     required double cellHeight,
   }) {
     return ShortMonthDay(
       height: cellHeight,
       dayNumber: currentDate.day.toString(),
-      hasEvents: showEventMarker,
+      showEventMarker: showEventMarker,
+      currentDate: currentDate,
+      events: events,
       boxColor: Colors.transparent,
       eventsMarkerColor: Theme.of(context).primaryColor,
       dayNumberColor: Colors.black,
@@ -74,12 +84,15 @@ mixin CalendarMonthBuilders {
     BuildContext context,
     DateTime currentDate, {
     required bool showEventMarker,
+    required List<ViewEvent?> events,
     required double cellHeight,
   }) {
     return ShortMonthDay(
       height: cellHeight,
       dayNumber: currentDate.day.toString(),
-      hasEvents: showEventMarker,
+      currentDate: currentDate,
+      events: events,
+      showEventMarker: showEventMarker,
       boxColor: Color.fromARGB(255, 209, 230, 253),
       eventsMarkerColor: Theme.of(context).primaryColor,
       dayNumberColor: Theme.of(context).primaryColor,
@@ -90,12 +103,15 @@ mixin CalendarMonthBuilders {
     BuildContext context,
     DateTime currentDate, {
     required bool showEventMarker,
+    required List<ViewEvent?> events,
     required double cellHeight,
   }) {
     return ShortMonthDay(
       height: cellHeight,
+      currentDate: currentDate,
+      events: events,
       dayNumber: currentDate.day.toString(),
-      hasEvents: showEventMarker,
+      showEventMarker: showEventMarker,
       boxColor: Color.fromARGB(255, 240, 150, 80),
       eventsMarkerColor: Colors.white,
       dayNumberColor: Colors.white,
