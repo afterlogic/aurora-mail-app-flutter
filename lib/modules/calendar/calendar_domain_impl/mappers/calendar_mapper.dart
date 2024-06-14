@@ -1,3 +1,4 @@
+import 'package:aurora_logger/aurora_logger.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/calendar.dart';
 import 'package:aurora_mail/utils/extensions/colors_extensions.dart';
@@ -57,6 +58,8 @@ class CalendarMapper {
 
   static Calendar fromNetwork(Map<String, dynamic> map,
       {required int userLocalId}) {
+    final syncToken = (map['SyncToken'] as String?)!;
+    if(syncToken.isEmpty) throw Exception('SyncToken is empty');
     return Calendar(
       id: (map['Id'] as String?)!,
       userLocalId: userLocalId,
@@ -71,7 +74,7 @@ class CalendarMapper {
       access: (map['Access'] as int?)!,
       isPublic: (map['IsPublic'] as bool?)!,
       // shares:(map['shares'] as List?)!,
-      syncToken: (map['SyncToken'] as String?)!,
+      syncToken: syncToken,
       isSubscribed: (map['IsPublic'] as bool?) ?? false,
       source: (map['Source'] as String?) ?? "",
     );
@@ -79,12 +82,16 @@ class CalendarMapper {
 
   static List<Calendar> listFromNetwork(List<dynamic> rawItems,
       {required int userLocalId}) {
-    return rawItems
-        .map(
-          (e) =>
-              fromNetwork(e as Map<String, dynamic>, userLocalId: userLocalId),
-        )
-        .toList();
+    final List<Calendar> result = [];
+    rawItems.forEach((rawItem) {
+      try{
+        final calendar = fromNetwork(rawItem as Map<String, dynamic>, userLocalId: userLocalId);
+        result.add(calendar);
+      }catch(e, st){
+        logger.log(e);
+      }
+    });
+    return result;
   }
 
   static Map<String, dynamic> toNetwork(Calendar c) {

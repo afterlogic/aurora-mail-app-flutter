@@ -22,11 +22,7 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
     );
 
     final result = await calendarModule.post(body);
-    return (result["Calendars"] as Map)
-        .values
-        .map((e) => CalendarMapper.fromNetwork(e as Map<String, dynamic>,
-            userLocalId: userId))
-        .toList();
+    return CalendarMapper.listFromNetwork((result["Calendars"] as Map).values.toList(), userLocalId: userId);
   }
 
   @override
@@ -206,7 +202,6 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
     );
 
     final result = await calendarModule.post(body) as Map<String, dynamic>;
-    print(result);
     // return CalendarMapper.fromNetwork(result, userLocalId: userLocalId);
   }
 
