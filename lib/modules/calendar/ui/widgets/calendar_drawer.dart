@@ -105,7 +105,7 @@ class _CalendarDrawerState extends BState<CalendarDrawer> {
                       ),
                     if (sharedCalendars != null)
                       const Divider(
-                        color: const Color(0xFF000000),
+                        color: const Color(0xFFDDDDDD),
                         height: 1,
                       ),
                     (sharedCalendars != null)
