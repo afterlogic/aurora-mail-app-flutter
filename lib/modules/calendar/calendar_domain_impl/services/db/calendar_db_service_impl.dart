@@ -85,4 +85,10 @@ class CalendarDbServiceImpl implements CalendarDbService {
         start: start, end: end, userLocalId: userLocalId);
     return entities.map((e) => Event.fromDb(e)).toList();
   }
+
+  @override
+  Future<void> clearData() async{
+    await _calendarDao.deleteAllCalendars();
+    await _eventDao.deleteAllEvents();
+  }
 }

@@ -20,6 +20,7 @@ class CalendarsBloc extends Bloc<CalendarsEvent, CalendarsState> {
     });
     on<CreateCalendar>(_onCreateCalendar);
     on<GetCalendars>(_onGetCalendars);
+    on<ClearData>(_onClearData);
     on<AddCalendars>(_onAddCalendars);
     on<DeleteCalendar>(_onDeleteCalendar);
     on<UpdateCalendar>(_onUpdateCalendar);
@@ -28,6 +29,10 @@ class CalendarsBloc extends Bloc<CalendarsEvent, CalendarsState> {
 
   _onAddCalendars(AddCalendars event, emit) async {
     emit(state.copyWith(calendars: () => event.calendars));
+  }
+
+  _onClearData(ClearData event, emit) async {
+    await _useCase.clearData();
   }
 
   _onCreateCalendar(CreateCalendar event, emit) async {

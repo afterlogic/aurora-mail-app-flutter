@@ -19,6 +19,10 @@ class GetCalendars extends CalendarsEvent {
   const GetCalendars();
 }
 
+class ClearData extends CalendarsEvent {
+  const ClearData();
+}
+
 class AddCalendars extends CalendarsEvent {
 
   final List<ViewCalendar> calendars;

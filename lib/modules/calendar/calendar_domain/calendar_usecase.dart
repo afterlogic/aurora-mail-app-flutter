@@ -39,5 +39,7 @@ abstract class CalendarUseCase {
 
   Future<void> getCalendars();
 
+  Future<void> clearData();
+
   void updateSelectedCalendarIds({required String selectedId, bool isAdded = true});
 }

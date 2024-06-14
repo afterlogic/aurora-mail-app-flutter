@@ -145,4 +145,11 @@ class CalendarUseCaseImpl implements CalendarUseCase {
     await syncCalendars();
     await _getLocalEvents();
   }
+
+  @override
+  Future<void> clearData() async{
+    await repository.clearData();
+    _eventsSubject.add([]);
+    _calendarsSubject.add([]);
+  }
 }

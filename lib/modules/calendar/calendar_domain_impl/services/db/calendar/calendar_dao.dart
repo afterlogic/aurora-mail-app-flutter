@@ -16,6 +16,10 @@ class CalendarDao extends DatabaseAccessor<AppDatabase>
           ]))
         .get();
   }
+
+  Future<void> deleteAllCalendars() async{
+    await delete(calendarTable).go();
+  }
   
   Future<void> deleteCalendars(List<String> ids) async{
     await (delete(calendarTable)..where((t) => t.id.isIn(ids))).go();

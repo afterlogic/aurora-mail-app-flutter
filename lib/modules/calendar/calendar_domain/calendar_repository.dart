@@ -34,4 +34,6 @@ abstract class CalendarRepository {
   Future<Event> updateEvent(Event event);
 
   Future<List<Calendar>> getCalendars();
+
+  Future<void> clearData();
 }

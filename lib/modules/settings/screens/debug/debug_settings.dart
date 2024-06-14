@@ -1,6 +1,7 @@
 //@dart=2.9
 import 'package:aurora_logger/aurora_logger.dart';
 import 'package:aurora_mail/generated/l10n.dart';
+import 'package:aurora_mail/modules/calendar/blocs/calendars/calendars_bloc.dart';
 import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/settings/screens/debug/debug_local_storage.dart';
@@ -82,6 +83,9 @@ class _DebugSettingState extends BState<DebugSetting> {
                     });
                   },
                 ),
+                TextButton(onPressed: (){
+                  BlocProvider.of<CalendarsBloc>(context).add(ClearData());
+                }, child: Text('Delete calendars data')),
                 Expanded(
                   child: LoggerSettingWidget(
                     LoggerSettingArg(

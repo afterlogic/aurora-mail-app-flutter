@@ -31,4 +31,6 @@ abstract class CalendarDbService {
       required DateTime end,
       required List<String> calendarIds,
       required int userLocalId});
+
+  Future<void> clearData();
 }

@@ -108,4 +108,8 @@ class EventDao extends DatabaseAccessor<AppDatabase> with _$EventDaoMixin {
           ]))
         .get();
   }
+
+  Future<void> deleteAllEvents() async{
+    await delete(eventTable).go();
+  }
 }
