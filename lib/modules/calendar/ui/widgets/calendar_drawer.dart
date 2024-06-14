@@ -76,7 +76,7 @@ class _CalendarDrawerState extends BState<CalendarDrawer> {
                       ),
                     ),
                     const Divider(
-                      color: const Color(0xFFF1F1F1),
+                      color: const Color(0xFFDDDDDD),
                       height: 1,
                     ),
                     (myCalendars != null)
@@ -95,17 +95,19 @@ class _CalendarDrawerState extends BState<CalendarDrawer> {
                                 .toList(),
                           )
                         : SizedBox.shrink(),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                              horizontal: _horizontalHeaderPadding)
-                          .copyWith(top: 16, bottom: 4),
-                      child: Text('Shared with me',
-                          style: TextStyle(color: theme.disabledColor)),
-                    ),
-                    const Divider(
-                      color: const Color(0xFFF1F1F1),
-                      height: 1,
-                    ),
+                    if (sharedCalendars != null)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                                horizontal: _horizontalHeaderPadding)
+                            .copyWith(top: 16, bottom: 4),
+                        child: Text('Shared with me',
+                            style: TextStyle(color: theme.disabledColor)),
+                      ),
+                    if (sharedCalendars != null)
+                      const Divider(
+                        color: const Color(0xFF000000),
+                        height: 1,
+                      ),
                     (sharedCalendars != null)
                         ? Column(
                             children: sharedCalendars
@@ -122,17 +124,19 @@ class _CalendarDrawerState extends BState<CalendarDrawer> {
                                 .toList(),
                           )
                         : SizedBox.shrink(),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                              horizontal: _horizontalHeaderPadding)
-                          .copyWith(top: 16, bottom: 4),
-                      child: Text('Shared with all',
-                          style: TextStyle(color: theme.disabledColor)),
-                    ),
-                    const Divider(
-                      color: const Color(0xFFF1F1F1),
-                      height: 1,
-                    ),
+                    if (sharedToAllCalendars != null)
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                                horizontal: _horizontalHeaderPadding)
+                            .copyWith(top: 16, bottom: 4),
+                        child: Text('Shared with all',
+                            style: TextStyle(color: theme.disabledColor)),
+                      ),
+                    if (sharedToAllCalendars != null)
+                      const Divider(
+                        color: const Color(0xFFDDDDDD),
+                        height: 1,
+                      ),
                     (sharedToAllCalendars != null)
                         ? Column(
                             children: sharedToAllCalendars
