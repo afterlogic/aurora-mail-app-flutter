@@ -80,7 +80,10 @@ class CalendarRepositoryImpl implements CalendarRepository {
           CalendarMapper.convertListToMapById(calendarsFromServer);
       for (final serverEntry in serverCalendarsMap.entries) {
         if (serverEntry.value.syncToken ==
-            localCalendarsMap[serverEntry.key]?.syncToken) continue;
+                localCalendarsMap[serverEntry.key]?.syncToken &&
+            localCalendarsMap[serverEntry.key]
+                    ?.areFieldsChanged(serverEntry.value) ==
+                false) continue;
         calendarsForUpdate.add(serverEntry.value);
       }
       logger.log(

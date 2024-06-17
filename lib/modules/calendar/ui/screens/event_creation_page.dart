@@ -59,7 +59,7 @@ class _EventCreationPageState extends State<EventCreationPage> {
     super.initState();
     _calendarsBloc = BlocProvider.of<CalendarsBloc>(context);
     _eventsBloc = BlocProvider.of<EventsBloc>(context);
-    _selectedCalendar = _calendarsBloc.state.calendars?.firstOrNull;
+    _selectedCalendar = _calendarsBloc.state.availableCalendars.firstOrNull;
     _titleController = TextEditingController();
     _selectedStartDate = DateTime.now();
     _selectedEndDate = _selectedStartDate.add(Duration(minutes: 30));
@@ -87,7 +87,7 @@ class _EventCreationPageState extends State<EventCreationPage> {
     _locationController.text = e.location ?? '';
     _selectedStartDate = e.startDate;
     _selectedEndDate = e.endDate;
-    _selectedCalendar = _calendarsBloc.state.calendars
+    _selectedCalendar = _calendarsBloc.state.availableCalendars
         ?.firstWhereOrNull((c) => c.id == e.calendarId);
     _isAllDay = e.allDay ?? false;
     setState(() {});
@@ -152,7 +152,7 @@ class _EventCreationPageState extends State<EventCreationPage> {
                           onTap: () {
                             CalendarSelectDialog.show(context,
                                     initialValue: _selectedCalendar,
-                                    options: state.calendars ?? [])
+                                    options: state.availableCalendars)
                                 .then((value) {
                               if (value != null) _selectedCalendar = value;
                               setState(() {});

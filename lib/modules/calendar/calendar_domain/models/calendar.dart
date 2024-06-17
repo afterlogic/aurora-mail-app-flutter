@@ -41,22 +41,29 @@ class Calendar {
 
   ViewCalendar toViewCalendar() {
     return ViewCalendar(
-        id: id,
-        userLocalId: userLocalId,
-        color: color,
-        name: name,
-        owner: owner,
-        isDefault: isDefault,
-        shared: shared,
-        sharedToAll: sharedToAll,
-        sharedToAllAccess: sharedToAllAccess,
-        access: access,
-        isPublic: isPublic,
-        description: description,
-        syncToken: syncToken,
-        isSubscribed: isSubscribed,
-        source: source,
+      id: id,
+      userLocalId: userLocalId,
+      color: color,
+      name: name,
+      owner: owner,
+      isDefault: isDefault,
+      shared: shared,
+      sharedToAll: sharedToAll,
+      sharedToAllAccess: sharedToAllAccess,
+      access: access,
+      isPublic: isPublic,
+      description: description,
+      syncToken: syncToken,
+      isSubscribed: isSubscribed,
+      source: source,
     );
+  }
+
+  bool areFieldsChanged(Calendar comparable) {
+    return comparable.sharedToAll != sharedToAll ||
+        comparable.sharedToAllAccess != sharedToAllAccess ||
+        comparable.access != access ||
+        comparable.shared != shared;
   }
 
   @override

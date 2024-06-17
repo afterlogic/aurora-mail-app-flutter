@@ -5,9 +5,17 @@ class CalendarsState extends Equatable {
   final List<ViewCalendar>? calendars;
 
   @override
-  List<Object?> get props => [status,  calendars];
+  List<Object?> get props => [status, calendars];
 
-
+  List<ViewCalendar> get availableCalendars => calendars == null
+      ? <ViewCalendar>[]
+      : calendars!
+          .where((e) =>
+              !e.shared ||
+              !e.sharedToAll ||
+              (e.shared && e.access == 1 && !e.sharedToAll) ||
+              (e.sharedToAll && e.sharedToAllAccess == 1))
+          .toList();
 
   const CalendarsState({
     this.status = CalendarsStatus.idle,
@@ -21,7 +29,6 @@ class CalendarsState extends Equatable {
         ' calendars: $calendars,' +
         '}';
   }
-
 
   CalendarsState copyWith({
     CalendarsStatus? status,

@@ -26,6 +26,8 @@ class _CalendarDrawerState extends BState<CalendarDrawer> {
     super.didChangeDependencies();
   }
 
+  final dividerColor = const Color(0xFFD0D0D0);
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -75,8 +77,8 @@ class _CalendarDrawerState extends BState<CalendarDrawer> {
                         ],
                       ),
                     ),
-                    const Divider(
-                      color: const Color(0xFFDDDDDD),
+                    Divider(
+                      color: dividerColor,
                       height: 1,
                     ),
                     (myCalendars != null)
@@ -104,8 +106,8 @@ class _CalendarDrawerState extends BState<CalendarDrawer> {
                             style: TextStyle(color: theme.disabledColor)),
                       ),
                     if (sharedCalendars != null)
-                      const Divider(
-                        color: const Color(0xFFDDDDDD),
+                      Divider(
+                        color: dividerColor,
                         height: 1,
                       ),
                     (sharedCalendars != null)
@@ -133,8 +135,8 @@ class _CalendarDrawerState extends BState<CalendarDrawer> {
                             style: TextStyle(color: theme.disabledColor)),
                       ),
                     if (sharedToAllCalendars != null)
-                      const Divider(
-                        color: const Color(0xFFDDDDDD),
+                      Divider(
+                        color: dividerColor,
                         height: 1,
                       ),
                     (sharedToAllCalendars != null)
@@ -153,6 +155,7 @@ class _CalendarDrawerState extends BState<CalendarDrawer> {
                                 .toList(),
                           )
                         : SizedBox.shrink(),
+                    const SizedBox(height: 24,),
                   ],
                 ),
               );
@@ -184,6 +187,7 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
   bool _isExpanded = false;
 
   late AnimationController _animationController;
+  List<_MenuItem> _menuItems = [];
 
   @override
   void initState() {
@@ -192,48 +196,175 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
       duration: const Duration(milliseconds: 200),
       vsync: this,
     );
+    _menuItems = _buildMenuItems();
+  }
 
-    _menuItems = [
+  @override
+  void didUpdateWidget(newWidget) {
+    super.didUpdateWidget(widget);
+    if (widget.calendar != newWidget.calendar) {
+      _menuItems = _buildMenuItems();
+      setState(() {});
+    }
+  }
+
+  List<_MenuItem> _buildSharedToAllAccessReadMenuItems() {
+    return [
       _MenuItem(
-          icon: Icon(Icons.edit_outlined),
-          titleBuilder: (ctx) => S.of(ctx).contacts_view_app_bar_edit_contact,
-          onTap: (ctx) {
-            CalendarEditDialog.show(ctx, calendar: widget.calendar)
-                .then((value) {
-              if (value != null) {
-                BlocProvider.of<CalendarsBloc>(context)
-                    .add(UpdateCalendar(value));
-              }
-            });
-          }),
-      _MenuItem(
-          icon: Icon(Icons.file_download_outlined),
-          titleBuilder: (ctx) => 'Import ICS file',
-          onTap: (ctx) {}),
-      _MenuItem(
-          icon: Icon(Icons.link),
-          titleBuilder: (ctx) => 'Get a link',
-          onTap: (ctx) {}),
-      _MenuItem(
-          icon: Icon(Icons.group_add_outlined),
-          titleBuilder: (ctx) => S.of(ctx).btn_share,
-          onTap: (ctx) {}),
-      _MenuItem(
-          icon: Icon(Icons.delete_outline),
-          titleBuilder: (ctx) => S.of(ctx).btn_delete,
-          onTap: (ctx) {
-            CalendarConfirmDialog.show(context,
-                    title: 'Delete calendar',
-                    confirmMessage:
-                        "Are you sure you want to delete calendar ${widget.calendar.name}?")
-                .then((value) {
-              if (value != true) return;
-              BlocProvider.of<CalendarsBloc>(ctx)
-                  .add(DeleteCalendar(widget.calendar));
-              Navigator.of(context).pop();
-            });
-          }),
+        icon: Icon(Icons.link),
+        titleBuilder: (ctx) => 'Get a link',
+        onTap: (ctx) {},
+      )
     ];
+  }
+
+  List<_MenuItem> _buildSharedToAllAccessWriteMenuItems() {
+    return [
+      _MenuItem(
+        icon: Icon(Icons.edit_outlined),
+        titleBuilder: (ctx) => S.of(context).contacts_view_app_bar_edit_contact,
+        onTap: (ctx) {
+          CalendarEditDialog.show(ctx, calendar: widget.calendar).then((value) {
+            if (value != null) {
+              BlocProvider.of<CalendarsBloc>(context)
+                  .add(UpdateCalendar(value));
+            }
+          });
+        },
+      ),
+      _MenuItem(
+        icon: Icon(Icons.file_download_outlined),
+        titleBuilder: (ctx) => 'Import ICS file',
+        onTap: (ctx) {},
+      ),
+      _MenuItem(
+        icon: Icon(Icons.link),
+        titleBuilder: (ctx) => 'Get a link',
+        onTap: (ctx) {},
+      ),
+    ];
+  }
+
+  List<_MenuItem> _buildSharedAccessReadMenuItems() {
+    return [
+      _MenuItem(
+        icon: Icon(Icons.link),
+        titleBuilder: (ctx) => 'Get a link',
+        onTap: (ctx) {},
+      ),
+      _MenuItem(
+        icon: Icon(Icons.unsubscribe_outlined),
+        titleBuilder: (ctx) => 'Unsubscribe from calendar',
+        onTap: (ctx) {},
+      ),
+    ];
+  }
+
+  List<_MenuItem> _buildSharedAccessWriteMenuItems() {
+    return [
+      _MenuItem(
+        icon: Icon(Icons.edit_outlined),
+        titleBuilder: (ctx) => S.of(context).contacts_view_app_bar_edit_contact,
+        onTap: (ctx) {
+          CalendarEditDialog.show(ctx, calendar: widget.calendar).then((value) {
+            if (value != null) {
+              BlocProvider.of<CalendarsBloc>(context)
+                  .add(UpdateCalendar(value));
+            }
+          });
+        },
+      ),
+      _MenuItem(
+        icon: Icon(Icons.file_download_outlined),
+        titleBuilder: (ctx) => 'Import ICS file',
+        onTap: (ctx) {},
+      ),
+      _MenuItem(
+        icon: Icon(Icons.link),
+        titleBuilder: (ctx) => 'Get a link',
+        onTap: (ctx) {},
+      ),
+      _MenuItem(
+        icon: Icon(Icons.group_add_outlined),
+        titleBuilder: (ctx) => S.of(context).btn_share,
+        onTap: (ctx) {},
+      ),
+      _MenuItem(
+        icon: Icon(Icons.unsubscribe_outlined),
+        titleBuilder: (ctx) => 'Unsubscribe from calendar',
+        onTap: (ctx) {},
+      ),
+    ];
+  }
+
+  List<_MenuItem> _buildDefaultMenuItems() {
+    return [
+      _MenuItem(
+        icon: Icon(Icons.edit_outlined),
+        titleBuilder: (ctx) => S.of(context).contacts_view_app_bar_edit_contact,
+        onTap: (ctx) {
+          CalendarEditDialog.show(ctx, calendar: widget.calendar).then((value) {
+            if (value != null) {
+              BlocProvider.of<CalendarsBloc>(context)
+                  .add(UpdateCalendar(value));
+            }
+          });
+        },
+      ),
+      _MenuItem(
+        icon: Icon(Icons.file_download_outlined),
+        titleBuilder: (ctx) => 'Import ICS file',
+        onTap: (ctx) {},
+      ),
+      _MenuItem(
+        icon: Icon(Icons.link),
+        titleBuilder: (ctx) => 'Get a link',
+        onTap: (ctx) {},
+      ),
+      _MenuItem(
+        icon: Icon(Icons.group_add_outlined),
+        titleBuilder: (ctx) => S.of(context).btn_share,
+        onTap: (ctx) {},
+      ),
+      _MenuItem(
+        icon: Icon(Icons.delete_outline),
+        titleBuilder: (ctx) => S.of(context).btn_delete,
+        onTap: (ctx) {
+          CalendarConfirmDialog.show(context,
+                  title: 'Delete calendar',
+                  confirmMessage:
+                      "Are you sure you want to delete calendar ${widget.calendar.name}?")
+              .then((value) {
+            if (value != true) return;
+            BlocProvider.of<CalendarsBloc>(ctx)
+                .add(DeleteCalendar(widget.calendar));
+            Navigator.of(context).pop();
+          });
+        },
+      ),
+    ];
+  }
+
+  List<_MenuItem> _buildMenuItems() {
+    if (widget.calendar.sharedToAll) {
+      if (widget.calendar.sharedToAllAccess == 2) {
+        return _buildSharedToAllAccessReadMenuItems();
+      } else if (widget.calendar.sharedToAllAccess == 1) {
+        return _buildSharedToAllAccessWriteMenuItems();
+      } else {
+        return [];
+      }
+    } else if (widget.calendar.shared) {
+      if (widget.calendar.access == 2) {
+        return _buildSharedAccessReadMenuItems();
+      } else if (widget.calendar.access == 1) {
+        return _buildSharedAccessWriteMenuItems();
+      } else {
+        return [];
+      }
+    } else {
+      return _buildDefaultMenuItems();
+    }
   }
 
   @override
@@ -243,17 +374,14 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
   }
 
   void _toggleExpansion() {
-    setState(() {
-      _isExpanded = !_isExpanded;
-      if (_isExpanded) {
-        _animationController.forward();
-      } else {
-        _animationController.reverse();
-      }
-    });
+    _isExpanded = !_isExpanded;
+    if (_isExpanded) {
+      _animationController.forward().then((value) => setState(() {}));
+    } else {
+      setState(() {});
+      _animationController.reverse();
+    }
   }
-
-  late final List<_MenuItem> _menuItems;
 
   @override
   Widget build(BuildContext context) {
@@ -271,23 +399,38 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(
-                  width: 24,
-                  height: 24,
-                  child: ColoredCheckbox(
-                    color: widget.calendar.color,
-                    value: widget.isChecked,
-                    onChanged: widget.onChanged,
+                Padding(
+                  padding: const EdgeInsets.only(top: 5.0),
+                  child: SizedBox(
+                    width: 24,
+                    height: 24,
+                    child: ColoredCheckbox(
+                      color: widget.calendar.color,
+                      value: widget.isChecked,
+                      onChanged: widget.onChanged,
+                    ),
                   ),
                 ),
                 const SizedBox(
                   width: 16,
                 ),
-                Expanded(
+                Flexible(
+                  fit: FlexFit.tight,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(widget.calendar.name),
+                      SizedBox(
+                        height: 8,
+                      ),
+                      if (widget.calendar.name.isNotEmpty)
+                        Text(
+                          '${widget.calendar.name} - ${widget.calendar.owner}',
+                          maxLines: 1,
+                          softWrap: false,
+                          overflow: TextOverflow.clip,
+                        )
+                      else
+                        Text(widget.calendar.name),
                       if ((widget.calendar.shared &&
                               widget.calendar.access == 2 &&
                               !widget.calendar.sharedToAll) ||
@@ -300,6 +443,9 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
                         ),
                     ],
                   ),
+                ),
+                const SizedBox(
+                  width: 2,
                 ),
                 AnimatedBuilder(
                   animation: _animationController,
@@ -323,17 +469,19 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
           sizeFactor: _animationController,
           child: Column(
               children: _menuItems
-                  .map((e) => ListTile(
-                        title: Text(e.titleBuilder(context)),
-                        tileColor: _isExpanded ? Color(0xFFF7FBFF) : null,
-                        contentPadding: EdgeInsets.symmetric(
-                            horizontal: _horizontalSectionPadding, vertical: 0),
-                        dense: true,
-                        horizontalTitleGap: 0,
-                        leading: e.icon,
-                        iconColor: Theme.of(context).primaryColor,
-                        onTap: () => e.onTap(context),
-                      ))
+                  .map((e) => Container(
+                color: _isExpanded ? Color(0xFFECF5FF) : null,
+                    child: ListTile(
+                          title: Text(e.titleBuilder(context)),
+                          contentPadding: EdgeInsets.symmetric(
+                              horizontal: _horizontalSectionPadding, vertical: 0),
+                          dense: true,
+                          horizontalTitleGap: 0,
+                          leading: e.icon,
+                          iconColor: Theme.of(context).primaryColor,
+                          onTap: () => e.onTap(context),
+                        ),
+                  ))
                   .toList()),
         ),
       ],
