@@ -1,3 +1,4 @@
+import 'package:aurora_mail/modules/calendar/blocs/calendars/calendars_bloc.dart';
 import 'package:aurora_mail/modules/calendar/blocs/events/events_bloc.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/event.dart';
 import 'package:aurora_mail/modules/calendar/utils/calendar_month_builders_mixin.dart';
@@ -6,6 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
+
+enum MonthViewMode{
+  week,
+  short,
+  full
+}
 
 class MonthView extends StatefulWidget {
   const MonthView({super.key});
@@ -23,12 +30,15 @@ class _MonthViewState extends State<MonthView>
   late final Animation _eventListAnimation;
   late final AnimationController _calendarAnimationController;
   late final Animation _calendarAnimation;
+  late final CalendarsBloc _calendarsBloc;
 
   final double _calendarDayTitleHeight = 36;
 
   @override
   initState() {
     super.initState();
+    _calendarsBloc = BlocProvider.of<CalendarsBloc>(context);
+
     _eventListAnimationController = AnimationController(
         duration: const Duration(milliseconds: 200), vsync: this);
     _eventListAnimation =
@@ -41,10 +51,26 @@ class _MonthViewState extends State<MonthView>
     _calendarAnimation.addListener(() {
       setState(() {});
     });
+    if(_calendarsBloc.state.monthViewMode == MonthViewMode.week){
+      _calendarAnimationController.value = 1.0;
+      _calendarFormat = CalendarFormat.week;
+    }
+    if(_calendarsBloc.state.monthViewMode == MonthViewMode.full){
+      _eventListAnimationController.value = 1.0;
+    }
   }
 
   @override
   dispose() {
+    if(_calendarAnimationController.value == 1.0 && _eventListAnimationController.value == 0.0){
+      _calendarsBloc.add(SaveMonthViewMode(MonthViewMode.week));
+    }if(_calendarAnimationController.value == 0.0 && _eventListAnimationController.value == 0.0){
+      _calendarsBloc.add(SaveMonthViewMode(MonthViewMode.short));
+    }if(_calendarAnimationController.value == 0.0 && _eventListAnimationController.value == 1.0){
+      _calendarsBloc.add(SaveMonthViewMode(MonthViewMode.full));
+    }
+    _eventListAnimationController.dispose();
+    _calendarAnimationController.dispose();
     super.dispose();
   }
 

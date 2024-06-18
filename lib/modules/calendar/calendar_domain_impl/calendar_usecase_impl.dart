@@ -46,7 +46,20 @@ class CalendarUseCaseImpl implements CalendarUseCase {
   @override
   Future<void> getCalendars() async {
     final calendars = await repository.getCalendars();
-    _calendarsSubject.add(calendars.map((e) => e.toViewCalendar()).toList());
+    final calendarViews = calendars.map((e) => e.toViewCalendar()).toList();
+    if(_calendarsSubject.value.isEmpty){
+      _calendarsSubject.add(calendarViews);
+      return;
+    }
+    final lastSelectedIds = _calendarsSubject.value
+        .where((e) => e.selected)
+        .map((e) => e.id)
+        .toSet();
+    _calendarsSubject.add(calendarViews
+        .map((e) => lastSelectedIds.contains(e.id)
+            ? e.updateSelect(true)
+            : e.updateSelect(false))
+        .toList());
   }
 
   @override
@@ -147,7 +160,7 @@ class CalendarUseCaseImpl implements CalendarUseCase {
   }
 
   @override
-  Future<void> clearData() async{
+  Future<void> clearData() async {
     await repository.clearData();
     _eventsSubject.add([]);
     _calendarsSubject.add([]);

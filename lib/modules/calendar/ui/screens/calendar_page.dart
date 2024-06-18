@@ -23,17 +23,21 @@ class CalendarPage extends StatefulWidget {
 class _CalendarPageState extends State<CalendarPage>
     with TickerProviderStateMixin {
   late final TabController _tabController;
+  late final CalendarsBloc _calendarsBloc;
   bool _showTabs = false;
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _calendarsBloc = BlocProvider.of<CalendarsBloc>(context);
+    _tabController = TabController(length: 3, vsync: this, initialIndex: _calendarsBloc.state.selectedTabIndex ?? 0);
     BlocProvider.of<CalendarsBloc>(context).add(GetCalendars());
   }
 
   @override
   void dispose() {
+    _calendarsBloc.add(SaveTabIndex(_tabController.index));
+    _tabController.dispose();
     super.dispose();
   }
 

@@ -1,6 +1,7 @@
 import 'package:aurora_mail/modules/calendar/calendar_domain/calendar_usecase.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/calendar.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/calendar.dart';
+import 'package:aurora_mail/modules/calendar/ui/views/month_view.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
@@ -19,6 +20,8 @@ class CalendarsBloc extends Bloc<CalendarsEvent, CalendarsState> {
       add(AddCalendars(value));
     });
     on<CreateCalendar>(_onCreateCalendar);
+    on<SaveTabIndex>(_onSaveTabIndex);
+    on<SaveMonthViewMode>(_onSaveMonthViewMode);
     on<GetCalendars>(_onGetCalendars);
     on<ClearData>(_onClearData);
     on<AddCalendars>(_onAddCalendars);
@@ -33,6 +36,14 @@ class CalendarsBloc extends Bloc<CalendarsEvent, CalendarsState> {
 
   _onClearData(ClearData event, emit) async {
     await _useCase.clearData();
+  }
+
+  _onSaveTabIndex(SaveTabIndex event, emit) async {
+    emit(state.copyWith(selectedTabIndex: event.index));
+  }
+
+  _onSaveMonthViewMode(SaveMonthViewMode event, emit) async {
+    emit(state.copyWith(monthViewMode: event.mode));
   }
 
   _onCreateCalendar(CreateCalendar event, emit) async {

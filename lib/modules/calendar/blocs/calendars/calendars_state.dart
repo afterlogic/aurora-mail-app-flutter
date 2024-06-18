@@ -3,9 +3,12 @@ part of 'calendars_bloc.dart';
 class CalendarsState extends Equatable {
   final CalendarsStatus status;
   final List<ViewCalendar>? calendars;
+  final int? selectedTabIndex;
+  final MonthViewMode? monthViewMode;
 
   @override
-  List<Object?> get props => [status, calendars];
+  List<Object?> get props =>
+      [status, calendars, selectedTabIndex, monthViewMode];
 
   List<ViewCalendar> get availableCalendars => calendars == null
       ? <ViewCalendar>[]
@@ -20,6 +23,8 @@ class CalendarsState extends Equatable {
   const CalendarsState({
     this.status = CalendarsStatus.idle,
     this.calendars,
+    this.selectedTabIndex,
+    this.monthViewMode,
   });
 
   @override
@@ -33,11 +38,14 @@ class CalendarsState extends Equatable {
   CalendarsState copyWith({
     CalendarsStatus? status,
     List<ViewCalendar>? Function()? calendars,
+    int? selectedTabIndex,
+    MonthViewMode? monthViewMode,
   }) {
     return CalendarsState(
-      status: status ?? this.status,
-      calendars: calendars == null ? this.calendars : calendars(),
-    );
+        status: status ?? this.status,
+        calendars: calendars == null ? this.calendars : calendars(),
+        selectedTabIndex: selectedTabIndex ?? this.selectedTabIndex,
+        monthViewMode: monthViewMode ?? this.monthViewMode);
   }
 }
 

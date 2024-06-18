@@ -7,6 +7,20 @@ abstract class CalendarsEvent extends Equatable {
   List<Object?> get props => [];
 }
 
+class SaveTabIndex extends CalendarsEvent {
+  final int index;
+  const SaveTabIndex(this.index);
+  @override
+  List<Object?> get props => [index];
+}
+
+class SaveMonthViewMode extends CalendarsEvent {
+  final MonthViewMode mode;
+  const SaveMonthViewMode(this.mode);
+  @override
+  List<Object?> get props => [mode];
+}
+
 class CreateCalendar extends CalendarsEvent {
   final CalendarCreationData creationData;
   const CreateCalendar({required this.creationData});
@@ -24,7 +38,6 @@ class ClearData extends CalendarsEvent {
 }
 
 class AddCalendars extends CalendarsEvent {
-
   final List<ViewCalendar> calendars;
   const AddCalendars(this.calendars);
   @override
@@ -40,7 +53,6 @@ class DeleteCalendar extends CalendarsEvent {
 }
 
 class UpdateCalendar extends CalendarsEvent {
-
   final ViewCalendar calendar;
   const UpdateCalendar(this.calendar);
   @override
@@ -50,7 +62,8 @@ class UpdateCalendar extends CalendarsEvent {
 class UpdateCalendarSelection extends CalendarsEvent {
   final bool selected;
   final String calendarId;
-  const UpdateCalendarSelection({required this.calendarId, required this.selected});
+  const UpdateCalendarSelection(
+      {required this.calendarId, required this.selected});
 
   @override
   List<Object?> get props => [selected, calendarId];
