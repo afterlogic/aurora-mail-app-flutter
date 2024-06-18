@@ -16,6 +16,7 @@ class TextInput extends StatelessWidget {
     return TextFormField(
       controller: controller,
       keyboardType: multiLine ? TextInputType.multiline : null,
+      textInputAction: multiLine ? TextInputAction.done : null,
       minLines: multiLine ? 2 : 1,
       maxLines: multiLine ? 4 : 1,
       enabled: enabled,

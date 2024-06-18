@@ -185,6 +185,7 @@ class _EventCreationPageState extends State<EventCreationPage> {
                       height: 20,
                     ),
                     TextInput(
+                      multiLine: true,
                       controller: _descriptionController,
                       labelText: 'Description',
                     ),
@@ -192,6 +193,7 @@ class _EventCreationPageState extends State<EventCreationPage> {
                       height: 20,
                     ),
                     TextInput(
+                      multiLine: true,
                       controller: _locationController,
                       labelText: 'Location',
                     ),
