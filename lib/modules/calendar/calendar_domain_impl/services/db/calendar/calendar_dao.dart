@@ -11,17 +11,24 @@ class CalendarDao extends DatabaseAccessor<AppDatabase>
 
   Future<List<CalendarDb>> getAllCalendars(int userLocalId) {
     return (select(calendarTable)
+          ..where((t) => t.userLocalId.equals(userLocalId))
           ..orderBy([
             (c) => OrderingTerm(expression: c.name),
           ]))
         .get();
   }
 
-  Future<void> deleteAllCalendars() async{
-    await delete(calendarTable).go();
+  Future<void> deleteAllCalendars([int? userLocalId]) async {
+    if (userLocalId != null) {
+      await (delete(calendarTable)
+            ..where((t) => t.userLocalId.equals(userLocalId)))
+          .go();
+    }else{
+      await delete(calendarTable).go();
+    }
   }
-  
-  Future<void> deleteCalendars(List<String> ids) async{
+
+  Future<void> deleteCalendars(List<String> ids) async {
     await (delete(calendarTable)..where((t) => t.id.isIn(ids))).go();
   }
 
@@ -31,7 +38,9 @@ class CalendarDao extends DatabaseAccessor<AppDatabase>
     } catch (e) {
       // If there's a conflict, update the existing record
       await (update(calendarTable)
-        ..where((tbl) => tbl.id.equals(calendar.id)))
+            ..where((tbl) =>
+                tbl.id.equals(calendar.id) &
+                tbl.userLocalId.equals(calendar.userLocalId)))
           .write(calendar);
     }
   }

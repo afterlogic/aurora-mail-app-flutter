@@ -74,8 +74,7 @@ class EventDao extends DatabaseAccessor<AppDatabase> with _$EventDaoMixin {
 
   Future<List<EventDb>> getEventsWithLimit(
       {required int? limit, required int? offset}) async {
-    if (limit == null || offset == null)
-      return select(eventTable).get();
+    if (limit == null || offset == null) return select(eventTable).get();
     return (select(eventTable)..limit(limit, offset: offset)).get();
   }
 
@@ -109,7 +108,13 @@ class EventDao extends DatabaseAccessor<AppDatabase> with _$EventDaoMixin {
         .get();
   }
 
-  Future<void> deleteAllEvents() async{
-    await delete(eventTable).go();
+  Future<void> deleteAllEvents([int? userLocalId]) async {
+    if (userLocalId != null) {
+      await (delete(eventTable)
+            ..where((t) => t.userLocalId.equals(userLocalId)))
+          .go();
+    } else {
+      await delete(eventTable).go();
+    }
   }
 }

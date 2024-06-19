@@ -139,7 +139,6 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
       RestartWidget.restartApp(context);
     } catch (e, st) {
       print(e);
-      print(st);
     }
   }
 
