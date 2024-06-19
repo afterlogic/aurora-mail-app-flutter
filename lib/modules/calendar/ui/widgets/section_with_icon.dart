@@ -14,7 +14,9 @@ class SectionWithIcon extends StatelessWidget {
         width: 8,
       ),
       Expanded(
-        child: Column(children: children),
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: children),
       ),
     ]);
   }

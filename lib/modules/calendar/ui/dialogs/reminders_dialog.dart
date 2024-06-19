@@ -2,15 +2,15 @@ import 'package:aurora_mail/modules/calendar/ui/dialogs/base_calendar_dialog.dar
 import 'package:flutter/material.dart';
 
 class RemindersDialog extends StatefulWidget {
-  final RemindersOption initialValue;
-  const RemindersDialog({required this.initialValue});
+  final Set<RemindersOption> selectedOptions;
+  const RemindersDialog({required this.selectedOptions});
 
   static Future<RemindersOption?> show(BuildContext context,
-      {required RemindersOption initialValue}) {
+      {required Set<RemindersOption> selectedOptions}) {
     return showDialog<RemindersOption?>(
         context: context,
         builder: (_) => RemindersDialog(
-              initialValue: initialValue,
+          selectedOptions: selectedOptions,
             )).then((value) => value);
   }
 
@@ -19,11 +19,11 @@ class RemindersDialog extends StatefulWidget {
 }
 
 class _RemindersOptionState extends State<RemindersDialog> {
-  RemindersOption? _selectedOption;
+  late final Set<RemindersOption> _selectedOptions;
 
   @override
   void initState() {
-    _selectedOption = widget.initialValue;
+    _selectedOptions = Set.of(widget.selectedOptions);
     super.initState();
   }
 
@@ -43,19 +43,21 @@ class _RemindersOptionState extends State<RemindersDialog> {
             ],
           ),
           ...RemindersOption.values.map((option) {
-            return RadioListTile<RemindersOption>(
+            return CheckboxListTile(
               dense: true,
               title: Text(
                 option.buildString,
                 style: TextStyle(fontSize: 14),
               ),
-              value: option,
-              groupValue: _selectedOption,
-              onChanged: (RemindersOption? value) {
-                setState(() {
-                  _selectedOption = value;
-                });
-                Navigator.pop(context, _selectedOption);
+              value: _selectedOptions.contains(option),
+              onChanged: (value) {
+                if(_selectedOptions.contains(option)){
+                  _selectedOptions.remove(option);
+                }else{
+                  _selectedOptions.add(option);
+                }
+                setState(() { });
+                Navigator.pop(context, option);
               },
             );
           }).toList(),

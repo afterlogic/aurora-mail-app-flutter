@@ -43,6 +43,7 @@ class _EventCreationPageState extends State<EventCreationPage> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   ViewCalendar? _selectedCalendar;
   ViewEvent? _selectedEvent;
+  final Set<RemindersOption> _selectedReminders = {};
   bool _isAllDay = false;
 
   EventCreationData get collectCreationData => EventCreationData(
@@ -88,7 +89,7 @@ class _EventCreationPageState extends State<EventCreationPage> {
     _selectedStartDate = e.startDate;
     _selectedEndDate = e.endDate;
     _selectedCalendar = _calendarsBloc.state.availableCalendars
-        ?.firstWhereOrNull((c) => c.id == e.calendarId);
+        .firstWhereOrNull((c) => c.id == e.calendarId);
     _isAllDay = e.allDay ?? false;
     setState(() {});
     // _descriptionController
@@ -313,11 +314,24 @@ class _EventCreationPageState extends State<EventCreationPage> {
                         ),
                         const Spacer(),
                         GestureDetector(
-                            onTap: () => RemindersDialog.show(context,
-                                initialValue: RemindersOption.min5),
+                            onTap: () {
+                              RemindersDialog.show(context,
+                                      selectedOptions: _selectedReminders)
+                                  .then((value) {
+                                    if(value == null) return;
+                                    if(_selectedReminders.contains(value)){
+                                      _selectedReminders.remove(value);
+                                    }else{
+                                      _selectedReminders.add(value);
+                                    }
+                                    setState(() {});
+
+                              });
+                            },
                             child: const _AddIcon()),
                       ],
                     ),
+                    ..._selectedReminders.map((e) => Text(e.name)).toList()
                   ],
                   icon: Padding(
                     padding: const EdgeInsets.only(top: 6.0),
