@@ -26,52 +26,53 @@ class ShortMonthDay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          padding: EdgeInsets.all(4.0),
-          height: showEventMarker && events.whereNotNull().isNotEmpty ? height : height - _markerDiameter,
-          width: height,
-          decoration: BoxDecoration(
-              color: boxColor, borderRadius: BorderRadius.circular(4)),
-          child: Wrap(
-            direction: Axis.vertical,
-            crossAxisAlignment: WrapCrossAlignment.center,
-            alignment: WrapAlignment.center,
-            runAlignment: WrapAlignment.center,
-            children: [
-              Text(
-                dayNumber,
-                style: TextStyle(color: dayNumberColor, fontSize: 18),
-              ),
-              const SizedBox(
-                height: 2,
-              ),
-              if (showEventMarker && events.whereNotNull().isNotEmpty)
-                Container(
-                  width: _markerDiameter,
-                  height: _markerDiameter,
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(_markerDiameter),
-                      color: eventsMarkerColor),
+    return Align(
+      alignment: Alignment.topCenter,
+      child: Wrap(
+        direction: Axis.horizontal,
+        alignment: WrapAlignment.center,
+        children: [
+          Container(
+            padding: EdgeInsets.all(4.0),
+            height: showEventMarker && events.whereNotNull().isNotEmpty ? height : height - _markerDiameter,
+            width: height,
+            decoration: BoxDecoration(
+                color: boxColor, borderRadius: BorderRadius.circular(4)),
+            child: Column(
+              children: [
+                Text(
+                  dayNumber,
+                  style: TextStyle(color: dayNumberColor, fontSize: 18),
                 ),
-            ],
+                const SizedBox(
+                  height: 2,
+                ),
+                if (showEventMarker && events.whereNotNull().isNotEmpty)
+                  Container(
+                    width: _markerDiameter,
+                    height: _markerDiameter,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(_markerDiameter),
+                        color: eventsMarkerColor),
+                  ),
+              ],
+            ),
           ),
-        ),
-        if(!showEventMarker)Padding(
-          padding: EdgeInsets.only(top: 4),
-          child: Column(
-            children: events
-                .map<Widget>(
-                  (e) => MonthEventMarker(
-                event: e,
-                currentDate: currentDate,
-              ),
-            )
-                .toList(),
-          ),
-        )
-      ],
+          if(!showEventMarker)Padding(
+            padding: EdgeInsets.only(top: 4),
+            child: Column(
+              children: events
+                  .map<Widget>(
+                    (e) => MonthEventMarker(
+                  event: e,
+                  currentDate: currentDate,
+                ),
+              )
+                  .toList(),
+            ),
+          )
+        ],
+      ),
     );
   }
 }
