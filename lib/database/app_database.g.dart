@@ -3097,6 +3097,7 @@ class EventDb extends DataClass implements Insertable<EventDb> {
   final bool? modified;
   final int? recurrenceId;
   final int? lastModified;
+  final String? remindersString;
   final bool? status;
   final bool? withDate;
   final bool? isPrivate;
@@ -3120,6 +3121,7 @@ class EventDb extends DataClass implements Insertable<EventDb> {
       this.modified,
       this.recurrenceId,
       this.lastModified,
+      this.remindersString,
       this.status,
       this.withDate,
       this.isPrivate,
@@ -3161,6 +3163,8 @@ class EventDb extends DataClass implements Insertable<EventDb> {
           .mapFromDatabaseResponse(data['${effectivePrefix}recurrence_id']),
       lastModified: const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}last_modified']),
+      remindersString: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}reminders_string']),
       status: const BoolType()
           .mapFromDatabaseResponse(data['${effectivePrefix}status']),
       withDate: const BoolType()
@@ -3219,6 +3223,9 @@ class EventDb extends DataClass implements Insertable<EventDb> {
     }
     if (!nullToAbsent || lastModified != null) {
       map['last_modified'] = Variable<int?>(lastModified);
+    }
+    if (!nullToAbsent || remindersString != null) {
+      map['reminders_string'] = Variable<String?>(remindersString);
     }
     if (!nullToAbsent || status != null) {
       map['status'] = Variable<bool?>(status);
@@ -3279,6 +3286,9 @@ class EventDb extends DataClass implements Insertable<EventDb> {
       lastModified: lastModified == null && nullToAbsent
           ? const Value.absent()
           : Value(lastModified),
+      remindersString: remindersString == null && nullToAbsent
+          ? const Value.absent()
+          : Value(remindersString),
       status:
           status == null && nullToAbsent ? const Value.absent() : Value(status),
       withDate: withDate == null && nullToAbsent
@@ -3313,6 +3323,7 @@ class EventDb extends DataClass implements Insertable<EventDb> {
       modified: serializer.fromJson<bool?>(json['modified']),
       recurrenceId: serializer.fromJson<int?>(json['recurrenceId']),
       lastModified: serializer.fromJson<int?>(json['lastModified']),
+      remindersString: serializer.fromJson<String?>(json['remindersString']),
       status: serializer.fromJson<bool?>(json['status']),
       withDate: serializer.fromJson<bool?>(json['withDate']),
       isPrivate: serializer.fromJson<bool?>(json['isPrivate']),
@@ -3341,6 +3352,7 @@ class EventDb extends DataClass implements Insertable<EventDb> {
       'modified': serializer.toJson<bool?>(modified),
       'recurrenceId': serializer.toJson<int?>(recurrenceId),
       'lastModified': serializer.toJson<int?>(lastModified),
+      'remindersString': serializer.toJson<String?>(remindersString),
       'status': serializer.toJson<bool?>(status),
       'withDate': serializer.toJson<bool?>(withDate),
       'isPrivate': serializer.toJson<bool?>(isPrivate),
@@ -3367,6 +3379,7 @@ class EventDb extends DataClass implements Insertable<EventDb> {
           bool? modified,
           int? recurrenceId,
           int? lastModified,
+          String? remindersString,
           bool? status,
           bool? withDate,
           bool? isPrivate,
@@ -3390,6 +3403,7 @@ class EventDb extends DataClass implements Insertable<EventDb> {
         modified: modified ?? this.modified,
         recurrenceId: recurrenceId ?? this.recurrenceId,
         lastModified: lastModified ?? this.lastModified,
+        remindersString: remindersString ?? this.remindersString,
         status: status ?? this.status,
         withDate: withDate ?? this.withDate,
         isPrivate: isPrivate ?? this.isPrivate,
@@ -3416,6 +3430,7 @@ class EventDb extends DataClass implements Insertable<EventDb> {
           ..write('modified: $modified, ')
           ..write('recurrenceId: $recurrenceId, ')
           ..write('lastModified: $lastModified, ')
+          ..write('remindersString: $remindersString, ')
           ..write('status: $status, ')
           ..write('withDate: $withDate, ')
           ..write('isPrivate: $isPrivate, ')
@@ -3444,6 +3459,7 @@ class EventDb extends DataClass implements Insertable<EventDb> {
         modified,
         recurrenceId,
         lastModified,
+        remindersString,
         status,
         withDate,
         isPrivate,
@@ -3471,6 +3487,7 @@ class EventDb extends DataClass implements Insertable<EventDb> {
           other.modified == this.modified &&
           other.recurrenceId == this.recurrenceId &&
           other.lastModified == this.lastModified &&
+          other.remindersString == this.remindersString &&
           other.status == this.status &&
           other.withDate == this.withDate &&
           other.isPrivate == this.isPrivate &&
@@ -3496,6 +3513,7 @@ class EventTableCompanion extends UpdateCompanion<EventDb> {
   final Value<bool?> modified;
   final Value<int?> recurrenceId;
   final Value<int?> lastModified;
+  final Value<String?> remindersString;
   final Value<bool?> status;
   final Value<bool?> withDate;
   final Value<bool?> isPrivate;
@@ -3519,6 +3537,7 @@ class EventTableCompanion extends UpdateCompanion<EventDb> {
     this.modified = const Value.absent(),
     this.recurrenceId = const Value.absent(),
     this.lastModified = const Value.absent(),
+    this.remindersString = const Value.absent(),
     this.status = const Value.absent(),
     this.withDate = const Value.absent(),
     this.isPrivate = const Value.absent(),
@@ -3543,6 +3562,7 @@ class EventTableCompanion extends UpdateCompanion<EventDb> {
     this.modified = const Value.absent(),
     this.recurrenceId = const Value.absent(),
     this.lastModified = const Value.absent(),
+    this.remindersString = const Value.absent(),
     this.status = const Value.absent(),
     this.withDate = const Value.absent(),
     this.isPrivate = const Value.absent(),
@@ -3572,6 +3592,7 @@ class EventTableCompanion extends UpdateCompanion<EventDb> {
     Expression<bool?>? modified,
     Expression<int?>? recurrenceId,
     Expression<int?>? lastModified,
+    Expression<String?>? remindersString,
     Expression<bool?>? status,
     Expression<bool?>? withDate,
     Expression<bool?>? isPrivate,
@@ -3596,6 +3617,7 @@ class EventTableCompanion extends UpdateCompanion<EventDb> {
       if (modified != null) 'modified': modified,
       if (recurrenceId != null) 'recurrence_id': recurrenceId,
       if (lastModified != null) 'last_modified': lastModified,
+      if (remindersString != null) 'reminders_string': remindersString,
       if (status != null) 'status': status,
       if (withDate != null) 'with_date': withDate,
       if (isPrivate != null) 'is_private': isPrivate,
@@ -3622,6 +3644,7 @@ class EventTableCompanion extends UpdateCompanion<EventDb> {
       Value<bool?>? modified,
       Value<int?>? recurrenceId,
       Value<int?>? lastModified,
+      Value<String?>? remindersString,
       Value<bool?>? status,
       Value<bool?>? withDate,
       Value<bool?>? isPrivate,
@@ -3645,6 +3668,7 @@ class EventTableCompanion extends UpdateCompanion<EventDb> {
       modified: modified ?? this.modified,
       recurrenceId: recurrenceId ?? this.recurrenceId,
       lastModified: lastModified ?? this.lastModified,
+      remindersString: remindersString ?? this.remindersString,
       status: status ?? this.status,
       withDate: withDate ?? this.withDate,
       isPrivate: isPrivate ?? this.isPrivate,
@@ -3705,6 +3729,9 @@ class EventTableCompanion extends UpdateCompanion<EventDb> {
     if (lastModified.present) {
       map['last_modified'] = Variable<int?>(lastModified.value);
     }
+    if (remindersString.present) {
+      map['reminders_string'] = Variable<String?>(remindersString.value);
+    }
     if (status.present) {
       map['status'] = Variable<bool?>(status.value);
     }
@@ -3747,6 +3774,7 @@ class EventTableCompanion extends UpdateCompanion<EventDb> {
           ..write('modified: $modified, ')
           ..write('recurrenceId: $recurrenceId, ')
           ..write('lastModified: $lastModified, ')
+          ..write('remindersString: $remindersString, ')
           ..write('status: $status, ')
           ..write('withDate: $withDate, ')
           ..write('isPrivate: $isPrivate, ')
@@ -3856,6 +3884,12 @@ class $EventTableTable extends EventTable
   late final GeneratedColumn<int?> lastModified = GeneratedColumn<int?>(
       'last_modified', aliasedName, true,
       type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _remindersStringMeta =
+      const VerificationMeta('remindersString');
+  @override
+  late final GeneratedColumn<String?> remindersString =
+      GeneratedColumn<String?>('reminders_string', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
   final VerificationMeta _statusMeta = const VerificationMeta('status');
   @override
   late final GeneratedColumn<bool?> status = GeneratedColumn<bool?>(
@@ -3916,6 +3950,7 @@ class $EventTableTable extends EventTable
         modified,
         recurrenceId,
         lastModified,
+        remindersString,
         status,
         withDate,
         isPrivate,
@@ -4015,6 +4050,12 @@ class $EventTableTable extends EventTable
           _lastModifiedMeta,
           lastModified.isAcceptableOrUnknown(
               data['last_modified']!, _lastModifiedMeta));
+    }
+    if (data.containsKey('reminders_string')) {
+      context.handle(
+          _remindersStringMeta,
+          remindersString.isAcceptableOrUnknown(
+              data['reminders_string']!, _remindersStringMeta));
     }
     if (data.containsKey('status')) {
       context.handle(_statusMeta,

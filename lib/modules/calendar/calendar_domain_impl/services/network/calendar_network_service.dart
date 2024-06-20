@@ -25,7 +25,8 @@ abstract class CalendarNetworkService {
     required String location,
     required DateTime startDate,
     required DateTime endDate,
-    required bool? allDay
+    required bool? allDay,
+    required List<int> reminders,
 });
 
   Future<Event> updateEvent(Event event);

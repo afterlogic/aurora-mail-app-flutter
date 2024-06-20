@@ -47,7 +47,8 @@ class ViewEvent extends Event {
           rrule: e.rrule,
           status: e.status,
           withDate: e.withDate,
-          isPrivate: e.isPrivate);
+          isPrivate: e.isPrivate,
+          reminders: e.reminders);
     } catch (e, s) {
       return null;
     }
@@ -80,7 +81,8 @@ class ViewEvent extends Event {
       required super.isPrivate,
       required super.updateStatus,
       required super.synced,
-      required super.onceLoaded});
+      required super.onceLoaded,
+      required super.reminders});
 
   @override
   ViewEvent copyWith({
@@ -109,6 +111,7 @@ class ViewEvent extends Event {
     bool? isPrivate,
     UpdateStatus? updateStatus,
     bool? synced,
+    Set<RemindersOption>? reminders,
     bool? onceLoaded,
   }) =>
       ViewEvent(
@@ -139,6 +142,7 @@ class ViewEvent extends Event {
         onceLoaded: onceLoaded ?? this.onceLoaded,
         title: title ?? this.title,
         color: color,
+        reminders: reminders ?? this.reminders,
       );
 
   List<ViewEvent> get splitIntoDailyEvents {
@@ -172,8 +176,7 @@ class ViewEvent extends Event {
         currentEnd = event.endDate;
       }
 
-      dailyEvents.add(copyWith(
-          startDate: currentStart, endDate: currentEnd));
+      dailyEvents.add(copyWith(startDate: currentStart, endDate: currentEnd));
       // next day iteration
       currentStart = currentEnd.startOfNextDay;
     }
@@ -223,7 +226,8 @@ class ExtendedMonthEvent extends ViewEvent {
           rrule: e.rrule,
           status: e.status,
           withDate: e.withDate,
-          isPrivate: e.isPrivate);
+          isPrivate: e.isPrivate,
+          reminders: e.reminders);
 
   ExtendedMonthEvent(
       {this.overflow = false,
@@ -254,7 +258,8 @@ class ExtendedMonthEvent extends ViewEvent {
       required super.isPrivate,
       required super.updateStatus,
       required super.synced,
-      required super.onceLoaded});
+      required super.onceLoaded,
+      required super.reminders});
 }
 
 // class VisibleDayEvent extends ViewEvent {

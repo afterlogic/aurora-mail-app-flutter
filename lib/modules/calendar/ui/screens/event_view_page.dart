@@ -1,6 +1,7 @@
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/calendar/blocs/calendars/calendars_bloc.dart';
 import 'package:aurora_mail/modules/calendar/blocs/events/events_bloc.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/event.dart';
 import 'package:aurora_mail/modules/calendar/ui/dialogs/deletion_confirm_dialog.dart';
 import 'package:aurora_mail/modules/calendar/ui/screens/event_creation_page.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/calendar_tile.dart';
@@ -189,16 +190,28 @@ class EventViewPage extends StatelessWidget {
                   child: SectionWithIcon(
                     children: [
                       Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            'Reminders',
+                          Padding(
+                            padding: EdgeInsets.only(top: eventsState.selectedEvent != null && eventsState.selectedEvent!.reminders.length > 1 ? 0.0 : 6.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                if (eventsState.selectedEvent?.reminders.isEmpty ?? true)
+                                  Text(
+                                    'Reminders',
+                                  ),
+                                ...?eventsState.selectedEvent?.reminders
+                                    .map((e) => Text('${e.buildString} before'))
+                                    .toList()
+                              ],
+                            ),
                           ),
-                          const Spacer(),
                         ],
                       ),
                     ],
                     icon: Padding(
-                      padding: const EdgeInsets.only(top: 0.0),
+                      padding: EdgeInsets.only(top: eventsState.selectedEvent != null && eventsState.selectedEvent!.reminders.length > 1 ? 0.0 : 6.0),
                       child: Icon(
                         Icons.notifications_none,
                         size: 15,

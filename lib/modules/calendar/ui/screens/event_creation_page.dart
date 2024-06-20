@@ -43,7 +43,7 @@ class _EventCreationPageState extends State<EventCreationPage> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   ViewCalendar? _selectedCalendar;
   ViewEvent? _selectedEvent;
-  final Set<RemindersOption> _selectedReminders = {};
+  Set<RemindersOption> _selectedReminders = {};
   bool _isAllDay = false;
 
   EventCreationData get collectCreationData => EventCreationData(
@@ -52,6 +52,7 @@ class _EventCreationPageState extends State<EventCreationPage> {
       description: _descriptionController.text,
       location: _locationController.text,
       startDate: _selectedStartDate,
+      reminders: _selectedReminders,
       endDate: _selectedEndDate,
       allDay: _isAllDay);
 
@@ -91,6 +92,7 @@ class _EventCreationPageState extends State<EventCreationPage> {
     _selectedCalendar = _calendarsBloc.state.availableCalendars
         .firstWhereOrNull((c) => c.id == e.calendarId);
     _isAllDay = e.allDay ?? false;
+    _selectedReminders = e.reminders;
     setState(() {});
     // _descriptionController
   }
@@ -104,6 +106,7 @@ class _EventCreationPageState extends State<EventCreationPage> {
         location: updatedFields.location,
         startDate: updatedFields.startDate,
         allDay: updatedFields.allDay,
+        reminders: updatedFields.reminders,
         endDate: updatedFields.endDate);
     _eventsBloc.add(UpdateEvent(updatedEvent));
   }
@@ -308,9 +311,43 @@ class _EventCreationPageState extends State<EventCreationPage> {
                 child: SectionWithIcon(
                   children: [
                     Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          'Reminders',
+                        Padding(
+                          padding: EdgeInsets.only(top: _selectedReminders.length > 1 ? 0.0 : 6.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              if (_selectedReminders.isEmpty)
+                                Text(
+                                  'Reminders',
+                                ),
+                              ..._selectedReminders
+                                  .map((e) => Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Text('${e.buildString} before'),
+                                          GestureDetector(
+                                            onTap: () {
+                                              _selectedReminders.remove(e);
+                                              setState(() {});
+                                            },
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 4.0),
+                                              child: Icon(
+                                                Icons.close,
+                                                size: 12,
+                                                color: Colors.grey,
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      ))
+                                  .toList()
+                            ],
+                          ),
                         ),
                         const Spacer(),
                         GestureDetector(
@@ -318,23 +355,21 @@ class _EventCreationPageState extends State<EventCreationPage> {
                               RemindersDialog.show(context,
                                       selectedOptions: _selectedReminders)
                                   .then((value) {
-                                    if(value == null) return;
-                                    if(_selectedReminders.contains(value)){
-                                      _selectedReminders.remove(value);
-                                    }else{
-                                      _selectedReminders.add(value);
-                                    }
-                                    setState(() {});
-
+                                if (value == null) return;
+                                if (_selectedReminders.contains(value)) {
+                                  _selectedReminders.remove(value);
+                                } else {
+                                  _selectedReminders.add(value);
+                                }
+                                setState(() {});
                               });
                             },
                             child: const _AddIcon()),
                       ],
                     ),
-                    ..._selectedReminders.map((e) => Text(e.name)).toList()
                   ],
                   icon: Padding(
-                    padding: const EdgeInsets.only(top: 6.0),
+                    padding: EdgeInsets.only(top: _selectedReminders.length > 1 ? 0.0 : 6.0),
                     child: Icon(
                       Icons.notifications_none,
                       size: 15,

@@ -39,6 +39,8 @@ class EventTable extends Table {
 
   IntColumn get lastModified => integer().nullable()();
 
+  TextColumn get remindersString => text().nullable()();
+
   // TODO add rrule
 
   BoolColumn get status => boolean().nullable()();

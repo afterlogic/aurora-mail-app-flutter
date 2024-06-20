@@ -22,7 +22,9 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
     );
 
     final result = await calendarModule.post(body);
-    return CalendarMapper.listFromNetwork((result["Calendars"] as Map).values.toList(), userLocalId: userId);
+    return CalendarMapper.listFromNetwork(
+        (result["Calendars"] as Map).values.toList(),
+        userLocalId: userId);
   }
 
   @override
@@ -62,16 +64,23 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
       parameters: jsonEncode(parameters),
     );
 
-    final result = await calendarModule.post(body) as List;
-
-    return events
-        .map(
-          (e) => Event.fill(
-              e,
-              result.firstWhereOrNull((map) => map['uid'] == e.uid)
-                  as Map<String, dynamic>),
-        )
-        .toList();
+    final queryResult = await calendarModule.post(body) as List;
+    final result = <Event>[];
+    for (final rawEvent in queryResult) {
+      try {
+        final baseEvent =
+            events.firstWhereOrNull((e) => rawEvent['uid'] == e.uid);
+        if (baseEvent == null)
+          throw Exception('event info not found from Event from server');
+        result.add(Event.fill(baseEvent, rawEvent as Map<String, dynamic>));
+      } catch (e, st) {
+        print(e);
+        print(st);
+      } finally {
+        continue;
+      }
+    }
+    return result;
   }
 
   @override
@@ -136,9 +145,9 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
       required String description,
       required DateTime startDate,
       required DateTime endDate,
+      required List<int> reminders,
       required bool? allDay,
-       required String location
-      }) async {
+      required String location}) async {
     // {
     //   "id": null,
     //   "uid": null,
@@ -177,7 +186,7 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
       "allDay": allDay == true ? 1 : 0,
       "location": location,
       "description": description,
-      "alarms": "[]",
+      "alarms": "[${reminders.join(',')}]" ,
       "attendees": "[]",
       // "owner": ownerMail,
       "recurrenceId": null,
@@ -206,7 +215,7 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
   }
 
   @override
-  Future<Event> updateEvent(Event event) async{
+  Future<Event> updateEvent(Event event) async {
     final parameters = {
       "id": '${event.uid}-${event.recurrenceId}',
       "uid": event.uid,
@@ -216,7 +225,7 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
       "allDay": event.allDay == true ? 1 : 0,
       "location": event.location ?? '',
       "description": event.description ?? '',
-      "alarms": "[]",
+      "alarms": "[${event.reminders.map((e) => e.toInt).join(',')}]",
       "attendees": "[]",
       // "owner": ownerMail,
       "recurrenceId": null,
@@ -242,11 +251,12 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
     );
 
     final result = await calendarModule.post(body) as Map<String, dynamic>;
-    return Event.fill(event, (result["Events"] as List).first as Map<String, dynamic>);
+    return Event.fill(
+        event, (result["Events"] as List).first as Map<String, dynamic>);
   }
 
   @override
-  Future<void> deleteEvent(Event event) async{
+  Future<void> deleteEvent(Event event) async {
     final parameters = {
       "id": '${event.uid}-${event.recurrenceId}',
       "uid": event.uid,

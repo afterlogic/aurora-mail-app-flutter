@@ -97,7 +97,7 @@ class _CalendarDrawerState extends BState<CalendarDrawer> {
                                 .toList(),
                           )
                         : SizedBox.shrink(),
-                    if (sharedCalendars != null)
+                    if (sharedCalendars?.isNotEmpty ?? false)
                       Padding(
                         padding: const EdgeInsets.symmetric(
                                 horizontal: _horizontalHeaderPadding)
@@ -126,7 +126,7 @@ class _CalendarDrawerState extends BState<CalendarDrawer> {
                                 .toList(),
                           )
                         : SizedBox.shrink(),
-                    if (sharedToAllCalendars != null)
+                    if (sharedToAllCalendars?.isNotEmpty ?? false)
                       Padding(
                         padding: const EdgeInsets.symmetric(
                                 horizontal: _horizontalHeaderPadding)

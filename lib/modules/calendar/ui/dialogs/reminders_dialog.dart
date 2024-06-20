@@ -1,3 +1,4 @@
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/event.dart';
 import 'package:aurora_mail/modules/calendar/ui/dialogs/base_calendar_dialog.dart';
 import 'package:flutter/material.dart';
 
@@ -67,36 +68,5 @@ class _RemindersOptionState extends State<RemindersDialog> {
         ],
       ),
     );
-  }
-}
-
-enum RemindersOption {
-  min5,
-  min10,
-  min15,
-  min30,
-  hours1,
-  hours2,
-  hours3,
-}
-
-extension RemindersOptionString on RemindersOption {
-  String get buildString {
-    switch (this) {
-      case RemindersOption.min5:
-        return '5 minutes';
-      case RemindersOption.min10:
-        return '10 minutes';
-      case RemindersOption.min15:
-        return '15 minutes';
-      case RemindersOption.min30:
-        return '30 minutes';
-      case RemindersOption.hours1:
-        return '1 hours';
-      case RemindersOption.hours2:
-        return '2 hours';
-      case RemindersOption.hours3:
-        return '3 hours';
-    }
   }
 }

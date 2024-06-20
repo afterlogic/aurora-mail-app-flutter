@@ -179,7 +179,8 @@ class CalendarRepositoryImpl implements CalendarRepository {
         startDate: data.startDate,
         endDate: data.endDate,
         allDay: data.allDay,
-        description: data.description ?? '');
+        description: data.description ?? '',
+        reminders: data.reminders.map((e) => e.toInt).toList());
   }
 
   @override

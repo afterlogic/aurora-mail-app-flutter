@@ -1,5 +1,7 @@
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/event_base.dart';
+import 'package:aurora_mail/modules/calendar/ui/dialogs/reminders_dialog.dart';
+import 'package:collection/collection.dart';
 
 class EventCreationData {
   final String subject;
@@ -8,6 +10,7 @@ class EventCreationData {
   final String calendarId;
   final DateTime startDate;
   final DateTime endDate;
+  final Set<RemindersOption> reminders;
   final bool? allDay;
 
   const EventCreationData({
@@ -17,6 +20,7 @@ class EventCreationData {
     required this.calendarId,
     required this.startDate,
     required this.endDate,
+    required this.reminders,
     required this.allDay,
   });
 }
@@ -43,6 +47,7 @@ class Event extends EventBase {
   final bool? withDate;
   final bool? isPrivate;
   final UpdateStatus updateStatus;
+  final Set<RemindersOption> reminders;
   final bool synced;
   final bool onceLoaded;
 
@@ -68,6 +73,7 @@ class Event extends EventBase {
     this.withDate,
     this.isPrivate,
     required this.updateStatus,
+    required this.reminders,
     required this.synced,
     required this.onceLoaded,
   }) : super(
@@ -111,6 +117,10 @@ class Event extends EventBase {
       updateStatus: base.updateStatus,
       synced: true,
       onceLoaded: true,
+      reminders: (newData['alarms'] as List?)
+              ?.map((e) => RemindersIntMapper.fromInt(e as int)).whereNotNull()
+              .toSet() ??
+          {},
     );
   }
 
@@ -133,6 +143,9 @@ class Event extends EventBase {
         status: entity.status,
         withDate: entity.withDate,
         isPrivate: entity.isPrivate,
+        reminders: entity.remindersString != null && entity.remindersString!.isNotEmpty ?
+        entity.remindersString!.split(',')
+            .map((e) => RemindersIntMapper.fromInt(int.parse(e))).whereNotNull().toSet() : {},
         // rrule: null,
         subject: entity.subject,
         endTS: entity.endTS,
@@ -166,6 +179,7 @@ class Event extends EventBase {
         endTS: endTS,
         updateStatus: updateStatus,
         synced: synced,
+        remindersString: reminders.map((e) => e.toInt).join(','),
         onceLoaded: onceLoaded);
   }
 
@@ -196,6 +210,7 @@ class Event extends EventBase {
           isPrivate == other.isPrivate &&
           updateStatus == other.updateStatus &&
           synced == other.synced &&
+          reminders == other.reminders &&
           onceLoaded == other.onceLoaded);
 
   @override
@@ -222,7 +237,8 @@ class Event extends EventBase {
       isPrivate.hashCode ^
       updateStatus.hashCode ^
       synced.hashCode ^
-      onceLoaded.hashCode;
+      onceLoaded.hashCode ^
+      reminders.hashCode;
 
   @override
   String toString() {
@@ -247,31 +263,31 @@ class Event extends EventBase {
         '}';
   }
 
-  Event copyWith({
-    String? organizer,
-    bool? appointment,
-    int? appointmentAccess,
-    String? calendarId,
-    int? userLocalId,
-    String? uid,
-    String? subject,
-    String? description,
-    String? location,
-    DateTime? startTS,
-    DateTime? endTS,
-    bool? allDay,
-    String? owner,
-    bool? modified,
-    int? recurrenceId,
-    int? lastModified,
-    Rrule? rrule,
-    bool? status,
-    bool? withDate,
-    bool? isPrivate,
-    UpdateStatus? updateStatus,
-    bool? synced,
-    bool? onceLoaded,
-  }) {
+  Event copyWith(
+      {String? organizer,
+      bool? appointment,
+      int? appointmentAccess,
+      String? calendarId,
+      int? userLocalId,
+      String? uid,
+      String? subject,
+      String? description,
+      String? location,
+      DateTime? startTS,
+      DateTime? endTS,
+      bool? allDay,
+      String? owner,
+      bool? modified,
+      int? recurrenceId,
+      int? lastModified,
+      Rrule? rrule,
+      bool? status,
+      bool? withDate,
+      bool? isPrivate,
+      UpdateStatus? updateStatus,
+      bool? synced,
+      bool? onceLoaded,
+      Set<RemindersOption>? reminders}) {
     return Event(
       organizer: organizer ?? this.organizer,
       appointment: appointment ?? this.appointment,
@@ -296,7 +312,81 @@ class Event extends EventBase {
       updateStatus: updateStatus ?? this.updateStatus,
       synced: synced ?? this.synced,
       onceLoaded: onceLoaded ?? this.onceLoaded,
+      reminders: reminders ?? this.reminders,
     );
+  }
+}
+
+enum RemindersOption {
+  min5,
+  min10,
+  min15,
+  min30,
+  hours1,
+  hours2,
+  hours3,
+}
+
+extension RemindersIntMapper on RemindersOption {
+  static RemindersOption? fromInt(int value) {
+    switch (value) {
+      case 5:
+        return RemindersOption.min5;
+      case 10:
+        return RemindersOption.min10;
+      case 15:
+        return RemindersOption.min15;
+      case 30:
+        return RemindersOption.min30;
+      case 60:
+        return RemindersOption.hours1;
+      case 120:
+        return RemindersOption.hours2;
+      case 180:
+        return RemindersOption.hours3;
+      default:
+        return null;
+    }
+  }
+
+  int get toInt {
+    switch (this) {
+      case RemindersOption.min5:
+        return 5;
+      case RemindersOption.min10:
+        return 10;
+      case RemindersOption.min15:
+        return 15;
+      case RemindersOption.min30:
+        return 30;
+      case RemindersOption.hours1:
+        return 60;
+      case RemindersOption.hours2:
+        return 120;
+      case RemindersOption.hours3:
+        return 180;
+    }
+  }
+}
+
+extension RemindersOptionString on RemindersOption {
+  String get buildString {
+    switch (this) {
+      case RemindersOption.min5:
+        return '5 minutes';
+      case RemindersOption.min10:
+        return '10 minutes';
+      case RemindersOption.min15:
+        return '15 minutes';
+      case RemindersOption.min30:
+        return '30 minutes';
+      case RemindersOption.hours1:
+        return '1 hours';
+      case RemindersOption.hours2:
+        return '2 hours';
+      case RemindersOption.hours3:
+        return '3 hours';
+    }
   }
 }
 
