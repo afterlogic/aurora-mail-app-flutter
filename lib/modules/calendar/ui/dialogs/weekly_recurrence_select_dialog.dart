@@ -1,41 +1,102 @@
 import 'package:aurora_mail/generated/l10n.dart';
-import 'package:aurora_mail/modules/calendar/calendar_domain/models/calendar.dart';
 import 'package:aurora_mail/modules/calendar/ui/dialogs/base_calendar_dialog.dart';
-import 'package:aurora_mail/modules/calendar/ui/widgets/color_selection_field.dart';
-import 'package:aurora_mail/modules/calendar/ui/widgets/text_input.dart';
-import 'package:aurora_mail/modules/calendar/utils/calendar_colors.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
-class RecurrenceSelectDialog extends StatefulWidget {
-  const RecurrenceSelectDialog();
+enum EveryWeekFrequency {
+  every1,
+  every2,
+  every3,
+  every4,
+}
 
-  static Future<RecurrenceData?> show(
-      BuildContext context,
-      ) {
+extension EveryWeekFrequencyX on EveryWeekFrequency {
+  String buildString() {
+    switch (this) {
+      case EveryWeekFrequency.every1:
+        return '1';
+      case EveryWeekFrequency.every2:
+        return '2';
+      case EveryWeekFrequency.every3:
+        return '3';
+      case EveryWeekFrequency.every4:
+        return '4';
+    }
+  }
+}
+
+enum DaysOfWeek { su, mo, tu, we, th, fr, sa }
+
+extension DaysOfWeekX on DaysOfWeek {
+  String buildString() {
+    switch (this) {
+      case DaysOfWeek.su:
+        return 'Su';
+      case DaysOfWeek.mo:
+        return 'Mo';
+      case DaysOfWeek.tu:
+        return 'Tu';
+      case DaysOfWeek.we:
+        return 'We';
+      case DaysOfWeek.th:
+        return 'Th';
+      case DaysOfWeek.fr:
+        return 'Fr';
+      case DaysOfWeek.sa:
+        return 'Sa';
+    }
+  }
+}
+
+class WeeklyRecurrenceSelectDialog extends StatefulWidget {
+  const WeeklyRecurrenceSelectDialog(
+      {required this.frequency,
+      required this.selectedDays,
+      required this.untilDate,
+      required this.onSaveCallback});
+
+  final EveryWeekFrequency? frequency;
+  final Set<DaysOfWeek>? selectedDays;
+  final DateTime? untilDate;
+  final void Function(DateTime? untilDate, EveryWeekFrequency? frequency,
+      Set<DaysOfWeek>? selectedDays) onSaveCallback;
+
+  static Future<RecurrenceData?> show(BuildContext context,
+      {required EveryWeekFrequency? frequency,
+      required Set<DaysOfWeek>? selectedDays,
+      required DateTime? untilDate,
+      required void Function(DateTime? untilDate, EveryWeekFrequency? frequency,
+              Set<DaysOfWeek>? selectedDays)
+          onSaveCallback}) {
     return showDialog<RecurrenceData?>(
         context: context,
-        builder: (_) => RecurrenceSelectDialog()).then((value) => value);
+        builder: (_) => WeeklyRecurrenceSelectDialog(
+              frequency: frequency,
+              selectedDays: selectedDays,
+              untilDate: untilDate,
+              onSaveCallback: (DateTime? untilDate,
+                  EveryWeekFrequency? frequency,
+                  Set<DaysOfWeek>? selectedDays) {},
+            )).then((value) => value);
   }
 
   @override
-  State<RecurrenceSelectDialog> createState() => _RecurrenceSelectDialogState();
+  State<WeeklyRecurrenceSelectDialog> createState() =>
+      _WeeklyRecurrenceSelectDialogState();
 }
 
-class _RecurrenceSelectDialogState extends State<RecurrenceSelectDialog> {
-  int frequency = 2;
+class _WeeklyRecurrenceSelectDialogState
+    extends State<WeeklyRecurrenceSelectDialog> {
+  EveryWeekFrequency frequency = EveryWeekFrequency.every1;
   bool isAlways = true;
   DateTime? untilDate;
 
-  final List<String> daysOfWeek = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
-  late final Set<String> selectedDays;
+  late final Set<DaysOfWeek> selectedDays;
 
   @override
   void initState() {
     super.initState();
-    selectedDays = {daysOfWeek.first};
+    selectedDays = {DaysOfWeek.mo};
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -54,33 +115,39 @@ class _RecurrenceSelectDialogState extends State<RecurrenceSelectDialog> {
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: daysOfWeek.map((day) {
+            children: DaysOfWeek.values.map((day) {
               return Expanded(
                 child: GestureDetector(
                   onTap: () {
-                    if(selectedDays.contains(day)){
-                      if(selectedDays.length > 1){
+                    if (selectedDays.contains(day)) {
+                      if (selectedDays.length > 1) {
                         selectedDays.remove(day);
                       }
-                    }else{
+                    } else {
                       selectedDays.add(day);
                     }
 
-                    setState(() { });
+                    setState(() {});
                   },
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 4, vertical: 12),
                     decoration: BoxDecoration(
-                      color: selectedDays.contains(day) ? Theme.of(context).primaryColor : Colors.transparent,
+                      color: selectedDays.contains(day)
+                          ? Theme.of(context).primaryColor
+                          : Colors.transparent,
                       border: Border.all(
-                        color: selectedDays.contains(day) ? Theme.of(context).primaryColor : Color(0xFFDFDFDF),
+                        color: selectedDays.contains(day)
+                            ? Theme.of(context).primaryColor
+                            : Color(0xFFDFDFDF),
                       ),
                     ),
                     child: Center(
                       child: Text(
-                        day,
+                        day.buildString(),
                         style: TextStyle(
-                          color: selectedDays.contains(day) ? Colors.white : Theme.of(context).primaryColor,
+                          color: selectedDays.contains(day)
+                              ? Colors.white
+                              : Theme.of(context).primaryColor,
                         ),
                       ),
                     ),
@@ -96,14 +163,16 @@ class _RecurrenceSelectDialogState extends State<RecurrenceSelectDialog> {
               SizedBox(width: 8),
               Expanded(
                 child: InputDecorator(
-                  decoration: InputDecoration(border: const OutlineInputBorder(), contentPadding: EdgeInsets.zero.copyWith(left: 8)),
+                  decoration: InputDecoration(
+                      border: const OutlineInputBorder(),
+                      contentPadding: EdgeInsets.zero.copyWith(left: 8)),
                   child: DropdownButtonHideUnderline(
-                    child: DropdownButton<int>(
+                    child: DropdownButton<EveryWeekFrequency>(
                       value: frequency,
-                      items: [1, 2, 3, 4].map((int value) {
-                        return DropdownMenuItem<int>(
+                      items: EveryWeekFrequency.values.map((value) {
+                        return DropdownMenuItem<EveryWeekFrequency>(
                           value: value,
-                          child: Text(value.toString()),
+                          child: Text(value.buildString()),
                         );
                       }).toList(),
                       onChanged: (newValue) {
@@ -117,7 +186,9 @@ class _RecurrenceSelectDialogState extends State<RecurrenceSelectDialog> {
               ),
             ],
           ),
-          const SizedBox(height: 16,),
+          const SizedBox(
+            height: 16,
+          ),
           Row(
             children: [
               Radio(
@@ -136,7 +207,9 @@ class _RecurrenceSelectDialogState extends State<RecurrenceSelectDialog> {
               Text('Always'),
             ],
           ),
-          const SizedBox(height: 16,),
+          const SizedBox(
+            height: 16,
+          ),
           Row(
             children: [
               Radio(
@@ -175,9 +248,11 @@ class _RecurrenceSelectDialogState extends State<RecurrenceSelectDialog> {
                         decoration: InputDecoration(
                           suffixIcon: Padding(
                             padding: const EdgeInsets.only(bottom: 4.0),
-                            child: Icon(Icons.calendar_today_outlined, size: 16,),
+                            child: Icon(
+                              Icons.calendar_today_outlined,
+                              size: 16,
+                            ),
                           ),
-
                           border: const OutlineInputBorder(gapPadding: 0),
                           contentPadding: EdgeInsets.zero.copyWith(left: 8),
                           hintText: untilDate == null
@@ -190,14 +265,10 @@ class _RecurrenceSelectDialogState extends State<RecurrenceSelectDialog> {
                 ),
             ],
           ),
-
         ],
       ),
     );
   }
-
 }
 
-class RecurrenceData {
-
-}
+class RecurrenceData {}

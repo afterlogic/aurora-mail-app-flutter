@@ -1740,11 +1740,31 @@ class S {
     );
   }
 
+  /// `weekly`
+  String get settings_sync_frequency_weekly {
+    return Intl.message(
+      'weekly',
+      name: 'settings_sync_frequency_weekly',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `monthly`
   String get settings_sync_frequency_monthly {
     return Intl.message(
       'monthly',
       name: 'settings_sync_frequency_monthly',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `yearly`
+  String get settings_sync_frequency_yearly {
+    return Intl.message(
+      'yearly',
+      name: 'settings_sync_frequency_yearly',
       desc: '',
       args: [],
     );

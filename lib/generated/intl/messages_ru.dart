@@ -829,6 +829,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("ежемесячно"),
         "settings_sync_frequency_never":
             MessageLookupByLibrary.simpleMessage("отключено"),
+        "settings_sync_frequency_weekly":
+            MessageLookupByLibrary.simpleMessage("еженедельно"),
+        "settings_sync_frequency_yearly":
+            MessageLookupByLibrary.simpleMessage("ежегодно"),
         "settings_sync_period":
             MessageLookupByLibrary.simpleMessage("Синхронизировать письма за"),
         "settings_sync_period_all_time":

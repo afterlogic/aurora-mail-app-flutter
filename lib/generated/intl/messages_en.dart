@@ -817,6 +817,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("monthly"),
         "settings_sync_frequency_never":
             MessageLookupByLibrary.simpleMessage("never"),
+        "settings_sync_frequency_weekly":
+            MessageLookupByLibrary.simpleMessage("weekly"),
+        "settings_sync_frequency_yearly":
+            MessageLookupByLibrary.simpleMessage("yearly"),
         "settings_sync_period":
             MessageLookupByLibrary.simpleMessage("Sync period"),
         "settings_sync_period_all_time":

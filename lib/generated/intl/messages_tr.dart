@@ -824,6 +824,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("aylık"),
         "settings_sync_frequency_never":
             MessageLookupByLibrary.simpleMessage("hiçbir zaman"),
+        "settings_sync_frequency_weekly":
+            MessageLookupByLibrary.simpleMessage("weekly"),
+        "settings_sync_frequency_yearly":
+            MessageLookupByLibrary.simpleMessage("yearly"),
         "settings_sync_period":
             MessageLookupByLibrary.simpleMessage("Senkronizasyon periyodu"),
         "settings_sync_period_all_time":

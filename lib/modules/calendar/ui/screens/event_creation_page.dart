@@ -5,7 +5,9 @@ import 'package:aurora_mail/modules/calendar/blocs/calendars/calendars_bloc.dart
 import 'package:aurora_mail/modules/calendar/blocs/events/events_bloc.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/event.dart';
 import 'package:aurora_mail/modules/calendar/ui/dialogs/calendar_select_dialog.dart';
-import 'package:aurora_mail/modules/calendar/ui/dialogs/recurrence_select_dialog.dart';
+import 'package:aurora_mail/modules/calendar/ui/dialogs/daily_recurrence_select_dialog.dart';
+import 'package:aurora_mail/modules/calendar/ui/dialogs/recurrence_mode_select_dialog.dart';
+import 'package:aurora_mail/modules/calendar/ui/dialogs/weekly_recurrence_select_dialog.dart';
 import 'package:aurora_mail/modules/calendar/ui/dialogs/reminders_dialog.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/calendar.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/event.dart';
@@ -43,6 +45,8 @@ class _EventCreationPageState extends State<EventCreationPage> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   ViewCalendar? _selectedCalendar;
   ViewEvent? _selectedEvent;
+  RecurrenceMode _selectedRecurrenceMode = RecurrenceMode.never;
+  DateTime? _selectedUntilDate;
   Set<RemindersOption> _selectedReminders = {};
   bool _isAllDay = false;
 
@@ -283,16 +287,50 @@ class _EventCreationPageState extends State<EventCreationPage> {
                         children: [
                           GestureDetector(
                             onTap: () {
-                              RecurrenceSelectDialog.show(context);
+                              RecurrenceModeSelectDialog.show(context,
+                                      selectedOption: _selectedRecurrenceMode)
+                                  .then((value) {
+                                if (value == null) return;
+                                _selectedRecurrenceMode = value;
+                                setState(() {});
+                              });
                             },
                             child: Text(
-                              'Daily',
+                              _selectedRecurrenceMode.buildString(context),
+                              style: TextStyle(),
                             ),
                           ),
                           Spacer(),
-                          Text(
-                            'Always',
-                          ),
+                          if (_selectedRecurrenceMode.isUntilOptionAvailable)
+                            GestureDetector(
+                              onTap: () {
+                                if (_selectedRecurrenceMode ==
+                                    RecurrenceMode.daily) {
+                                  DailyRecurrenceSelectDialog.show(context,
+                                      untilDate: _selectedUntilDate,
+                                      onSaveCallback: (DateTime? untilDate) {
+                                    _selectedUntilDate = untilDate;
+                                    setState(() {});
+                                  });
+                                }
+                                if (_selectedRecurrenceMode ==
+                                    RecurrenceMode.weekly) {
+                                  WeeklyRecurrenceSelectDialog.show(context,
+                                      frequency: null,
+                                      selectedDays: null,
+                                      untilDate: null,
+                                      onSaveCallback: (DateTime? untilDate,
+                                          EveryWeekFrequency? frequency,
+                                          Set<DaysOfWeek>? selectedDays) {});
+                                }
+                              },
+                              child: _selectedUntilDate == null
+                                  ? Text(
+                                      'Always',
+                                    )
+                                  : Text(
+                                      'until ${DateFormat('yyyy/MM/dd').format(_selectedUntilDate!)}'),
+                            ),
                         ],
                       ),
                     ],
@@ -314,7 +352,8 @@ class _EventCreationPageState extends State<EventCreationPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(
-                          padding: EdgeInsets.only(top: _selectedReminders.length > 1 ? 0.0 : 6.0),
+                          padding: EdgeInsets.only(
+                              top: _selectedReminders.length > 1 ? 0.0 : 6.0),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -369,7 +408,8 @@ class _EventCreationPageState extends State<EventCreationPage> {
                     ),
                   ],
                   icon: Padding(
-                    padding: EdgeInsets.only(top: _selectedReminders.length > 1 ? 0.0 : 6.0),
+                    padding: EdgeInsets.only(
+                        top: _selectedReminders.length > 1 ? 0.0 : 6.0),
                     child: Icon(
                       Icons.notifications_none,
                       size: 15,
