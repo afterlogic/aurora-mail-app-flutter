@@ -102,7 +102,7 @@ class _EventCreationPageState extends State<EventCreationPage> {
     _selectedCalendar = _calendarsBloc.state.availableCalendars
         .firstWhereOrNull((c) => c.id == e.calendarId);
     _isAllDay = e.allDay ?? false;
-    _selectedReminders = e.reminders;
+    _selectedReminders = e.reminders ?? {};
     _selectedWeeklyFrequency = e.recurrenceWeeklyFrequency;
     _selectedRecurrenceMode = e.recurrenceMode ?? RecurrenceMode.never;
     _selectedUntilDate = e.recurrenceUntilDate;

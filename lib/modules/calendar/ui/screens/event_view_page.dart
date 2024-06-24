@@ -11,6 +11,7 @@ import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 enum EventViewAppBarAction { edit, delete }
 
@@ -158,28 +159,34 @@ class EventViewPage extends StatelessWidget {
                   color: const Color(0xFFB6B5B5),
                   height: 1,
                 ),
-                Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 24, vertical: 24),
-                    child: SectionWithIcon(
-                      children: [
-                        Row(
-                          children: [
-                            Text(
-                              'Daily',
-                            ),
-                            Spacer(),
-                            Text(
-                              'Always',
-                            ),
-                          ],
+                if (eventsState.selectedEvent?.recurrenceMode != null)
+                  Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 24, vertical: 24),
+                      child: SectionWithIcon(
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                eventsState.selectedEvent!.recurrenceMode!
+                                    .buildString(context),
+                              ),
+                              Spacer(),
+                              if(eventsState.selectedEvent!.recurrenceMode != RecurrenceMode.never)Text(
+                                eventsState.selectedEvent!
+                                            .recurrenceUntilDate ==
+                                        null
+                                    ? 'Always'
+                                    : 'until ${DateFormat('yyyy/MM/dd').format(eventsState.selectedEvent!.recurrenceUntilDate!)}',
+                              ),
+                            ],
+                          ),
+                        ],
+                        icon: Icon(
+                          Icons.sync,
+                          size: 15,
                         ),
-                      ],
-                      icon: Icon(
-                        Icons.sync,
-                        size: 15,
-                      ),
-                    )),
+                      )),
                 const Divider(
                   color: const Color(0xFFB6B5B5),
                   height: 1,
@@ -193,16 +200,26 @@ class EventViewPage extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Padding(
-                            padding: EdgeInsets.only(top: eventsState.selectedEvent != null && eventsState.selectedEvent!.reminders.length > 1 ? 0.0 : 6.0),
+                            padding: EdgeInsets.only(
+                                top: eventsState.selectedEvent?.reminders !=
+                                            null &&
+                                        eventsState.selectedEvent!.reminders!
+                                                .length >
+                                            1
+                                    ? 0.0
+                                    : 6.0),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                if (eventsState.selectedEvent?.reminders.isEmpty ?? true)
+                                if (eventsState
+                                        .selectedEvent?.reminders?.isEmpty ??
+                                    true)
                                   Text(
                                     'Reminders',
                                   ),
                                 ...?eventsState.selectedEvent?.reminders
-                                    .map((e) => Text('${e.buildString} before'))
+                                    ?.map(
+                                        (e) => Text('${e.buildString} before'))
                                     .toList()
                               ],
                             ),
@@ -211,7 +228,12 @@ class EventViewPage extends StatelessWidget {
                       ),
                     ],
                     icon: Padding(
-                      padding: EdgeInsets.only(top: eventsState.selectedEvent != null && eventsState.selectedEvent!.reminders.length > 1 ? 0.0 : 6.0),
+                      padding: EdgeInsets.only(
+                          top: eventsState.selectedEvent?.reminders != null &&
+                                  eventsState.selectedEvent!.reminders!.length >
+                                      1
+                              ? 0.0
+                              : 6.0),
                       child: Icon(
                         Icons.notifications_none,
                         size: 15,

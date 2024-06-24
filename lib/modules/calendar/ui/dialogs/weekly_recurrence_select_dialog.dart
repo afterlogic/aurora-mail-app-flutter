@@ -1,52 +1,8 @@
 import 'package:aurora_mail/generated/l10n.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/event.dart';
 import 'package:aurora_mail/modules/calendar/ui/dialogs/base_calendar_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
-enum EveryWeekFrequency {
-  every1,
-  every2,
-  every3,
-  every4,
-}
-
-extension EveryWeekFrequencyX on EveryWeekFrequency {
-  String buildString() {
-    switch (this) {
-      case EveryWeekFrequency.every1:
-        return '1';
-      case EveryWeekFrequency.every2:
-        return '2';
-      case EveryWeekFrequency.every3:
-        return '3';
-      case EveryWeekFrequency.every4:
-        return '4';
-    }
-  }
-}
-
-enum DaysOfWeek { su, mo, tu, we, th, fr, sa }
-
-extension DaysOfWeekX on DaysOfWeek {
-  String buildString() {
-    switch (this) {
-      case DaysOfWeek.su:
-        return 'Su';
-      case DaysOfWeek.mo:
-        return 'Mo';
-      case DaysOfWeek.tu:
-        return 'Tu';
-      case DaysOfWeek.we:
-        return 'We';
-      case DaysOfWeek.th:
-        return 'Th';
-      case DaysOfWeek.fr:
-        return 'Fr';
-      case DaysOfWeek.sa:
-        return 'Sa';
-    }
-  }
-}
 
 class WeeklyRecurrenceSelectDialog extends StatefulWidget {
   const WeeklyRecurrenceSelectDialog(
@@ -86,7 +42,7 @@ class WeeklyRecurrenceSelectDialog extends StatefulWidget {
 class _WeeklyRecurrenceSelectDialogState
     extends State<WeeklyRecurrenceSelectDialog> {
   late EveryWeekFrequency frequency;
-  bool isAlways = true;
+  late bool isAlways;
   DateTime? untilDate;
 
   late final Set<DaysOfWeek> selectedDays;
@@ -97,6 +53,7 @@ class _WeeklyRecurrenceSelectDialogState
     selectedDays = widget.selectedDays ?? {DaysOfWeek.mo};
     frequency = widget.frequency ?? EveryWeekFrequency.every1;
     untilDate = widget.untilDate;
+    isAlways = untilDate == null;
   }
 
   @override
