@@ -1,6 +1,8 @@
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/event_base.dart';
+import 'package:aurora_mail/modules/calendar/ui/dialogs/recurrence_mode_select_dialog.dart';
 import 'package:aurora_mail/modules/calendar/ui/dialogs/reminders_dialog.dart';
+import 'package:aurora_mail/modules/calendar/ui/dialogs/weekly_recurrence_select_dialog.dart';
 import 'package:collection/collection.dart';
 
 class EventCreationData {
@@ -12,6 +14,10 @@ class EventCreationData {
   final DateTime endDate;
   final Set<RemindersOption> reminders;
   final bool? allDay;
+  final RecurrenceMode recurrenceMode;
+  final DateTime? recurrenceUntilDate;
+  final EveryWeekFrequency? recurrenceWeeklyFrequency;
+  final Set<DaysOfWeek>? recurrenceWeekDays;
 
   const EventCreationData({
     required this.subject,
@@ -22,6 +28,10 @@ class EventCreationData {
     required this.endDate,
     required this.reminders,
     required this.allDay,
+    required this.recurrenceMode,
+    this.recurrenceUntilDate,
+    this.recurrenceWeeklyFrequency,
+    this.recurrenceWeekDays,
   });
 }
 
@@ -50,6 +60,10 @@ class Event extends EventBase {
   final Set<RemindersOption> reminders;
   final bool synced;
   final bool onceLoaded;
+  final RecurrenceMode? recurrenceMode;
+  final DateTime? recurrenceUntilDate;
+  final EveryWeekFrequency? recurrenceWeeklyFrequency;
+  final Set<DaysOfWeek>? recurrenceWeekDays;
 
   const Event({
     this.organizer,
@@ -76,6 +90,10 @@ class Event extends EventBase {
     required this.reminders,
     required this.synced,
     required this.onceLoaded,
+    this.recurrenceMode,
+    this.recurrenceUntilDate,
+    this.recurrenceWeeklyFrequency,
+    this.recurrenceWeekDays,
   }) : super(
             uid: uid,
             updateStatus: updateStatus,
@@ -118,7 +136,8 @@ class Event extends EventBase {
       synced: true,
       onceLoaded: true,
       reminders: (newData['alarms'] as List?)
-              ?.map((e) => RemindersIntMapper.fromInt(e as int)).whereNotNull()
+              ?.map((e) => RemindersIntMapper.fromInt(e as int))
+              .whereNotNull()
               .toSet() ??
           {},
     );
@@ -143,9 +162,14 @@ class Event extends EventBase {
         status: entity.status,
         withDate: entity.withDate,
         isPrivate: entity.isPrivate,
-        reminders: entity.remindersString != null && entity.remindersString!.isNotEmpty ?
-        entity.remindersString!.split(',')
-            .map((e) => RemindersIntMapper.fromInt(int.parse(e))).whereNotNull().toSet() : {},
+        reminders:
+            entity.remindersString != null && entity.remindersString!.isNotEmpty
+                ? entity.remindersString!
+                    .split(',')
+                    .map((e) => RemindersIntMapper.fromInt(int.parse(e)))
+                    .whereNotNull()
+                    .toSet()
+                : {},
         // rrule: null,
         subject: entity.subject,
         endTS: entity.endTS,
@@ -211,7 +235,11 @@ class Event extends EventBase {
           updateStatus == other.updateStatus &&
           synced == other.synced &&
           reminders == other.reminders &&
-          onceLoaded == other.onceLoaded);
+          onceLoaded == other.onceLoaded &&
+          recurrenceMode == other.recurrenceMode &&
+          recurrenceUntilDate == other.recurrenceUntilDate &&
+          recurrenceWeekDays == other.recurrenceWeekDays &&
+          recurrenceWeeklyFrequency == other.recurrenceWeeklyFrequency);
 
   @override
   int get hashCode =>
@@ -238,7 +266,11 @@ class Event extends EventBase {
       updateStatus.hashCode ^
       synced.hashCode ^
       onceLoaded.hashCode ^
-      reminders.hashCode;
+      reminders.hashCode ^
+      recurrenceMode.hashCode ^
+      recurrenceWeeklyFrequency.hashCode ^
+      recurrenceWeekDays.hashCode ^
+      recurrenceUntilDate.hashCode;
 
   @override
   String toString() {
@@ -287,6 +319,10 @@ class Event extends EventBase {
       UpdateStatus? updateStatus,
       bool? synced,
       bool? onceLoaded,
+      RecurrenceMode? Function()? recurrenceMode,
+      DateTime? Function()? recurrenceUntilDate,
+      EveryWeekFrequency? Function()? recurrenceWeeklyFrequency,
+      Set<DaysOfWeek>? Function()? recurrenceWeekDays,
       Set<RemindersOption>? reminders}) {
     return Event(
       organizer: organizer ?? this.organizer,
@@ -313,6 +349,17 @@ class Event extends EventBase {
       synced: synced ?? this.synced,
       onceLoaded: onceLoaded ?? this.onceLoaded,
       reminders: reminders ?? this.reminders,
+      recurrenceMode:
+          recurrenceMode == null ? this.recurrenceMode : recurrenceMode(),
+      recurrenceUntilDate: recurrenceUntilDate == null
+          ? this.recurrenceUntilDate
+          : recurrenceUntilDate(),
+      recurrenceWeekDays: recurrenceWeekDays == null
+          ? this.recurrenceWeekDays
+          : recurrenceWeekDays(),
+      recurrenceWeeklyFrequency: recurrenceWeeklyFrequency == null
+          ? this.recurrenceWeeklyFrequency
+          : recurrenceWeeklyFrequency(),
     );
   }
 }

@@ -2,6 +2,8 @@ import 'dart:ui';
 
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/event.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/event_base.dart';
+import 'package:aurora_mail/modules/calendar/ui/dialogs/recurrence_mode_select_dialog.dart';
+import 'package:aurora_mail/modules/calendar/ui/dialogs/weekly_recurrence_select_dialog.dart';
 import 'package:aurora_mail/modules/calendar/utils/date_time_ext.dart';
 
 class ViewEvent extends Event {
@@ -48,41 +50,50 @@ class ViewEvent extends Event {
           status: e.status,
           withDate: e.withDate,
           isPrivate: e.isPrivate,
-          reminders: e.reminders);
+          reminders: e.reminders,
+          recurrenceMode: e.recurrenceMode,
+          recurrenceUntilDate: e.recurrenceUntilDate,
+          recurrenceWeekDays: e.recurrenceWeekDays,
+          recurrenceWeeklyFrequency: e.recurrenceWeeklyFrequency);
     } catch (e, s) {
       return null;
     }
   }
 
-  const ViewEvent(
-      {required this.startDate,
-      required this.endDate,
-      required this.title,
-      required this.color,
-      required super.organizer,
-      required super.appointment,
-      required super.appointmentAccess,
-      required super.calendarId,
-      required super.userLocalId,
-      required super.uid,
-      required super.subject,
-      required super.description,
-      required super.location,
-      required super.startTS,
-      required super.endTS,
-      required super.allDay,
-      required super.owner,
-      required super.modified,
-      required super.recurrenceId,
-      required super.lastModified,
-      required super.rrule,
-      required super.status,
-      required super.withDate,
-      required super.isPrivate,
-      required super.updateStatus,
-      required super.synced,
-      required super.onceLoaded,
-      required super.reminders});
+  const ViewEvent({
+    required this.startDate,
+    required this.endDate,
+    required this.title,
+    required this.color,
+    required super.organizer,
+    required super.appointment,
+    required super.appointmentAccess,
+    required super.calendarId,
+    required super.userLocalId,
+    required super.uid,
+    required super.subject,
+    required super.description,
+    required super.location,
+    required super.startTS,
+    required super.endTS,
+    required super.allDay,
+    required super.owner,
+    required super.modified,
+    required super.recurrenceId,
+    required super.lastModified,
+    required super.rrule,
+    required super.status,
+    required super.withDate,
+    required super.isPrivate,
+    required super.updateStatus,
+    required super.synced,
+    required super.onceLoaded,
+    required super.reminders,
+    required super.recurrenceMode,
+    required super.recurrenceUntilDate,
+    required super.recurrenceWeekDays,
+    required super.recurrenceWeeklyFrequency,
+  });
 
   @override
   ViewEvent copyWith({
@@ -113,6 +124,10 @@ class ViewEvent extends Event {
     bool? synced,
     Set<RemindersOption>? reminders,
     bool? onceLoaded,
+    RecurrenceMode? Function()? recurrenceMode,
+    DateTime? Function()? recurrenceUntilDate,
+    EveryWeekFrequency? Function()? recurrenceWeeklyFrequency,
+    Set<DaysOfWeek>? Function()? recurrenceWeekDays,
   }) =>
       ViewEvent(
         startDate: startDate ?? this.startDate,
@@ -143,6 +158,17 @@ class ViewEvent extends Event {
         title: title ?? this.title,
         color: color,
         reminders: reminders ?? this.reminders,
+        recurrenceMode:
+            recurrenceMode == null ? this.recurrenceMode : recurrenceMode(),
+        recurrenceUntilDate: recurrenceUntilDate == null
+            ? this.recurrenceUntilDate
+            : recurrenceUntilDate(),
+        recurrenceWeekDays: recurrenceWeekDays == null
+            ? this.recurrenceWeekDays
+            : recurrenceWeekDays(),
+        recurrenceWeeklyFrequency: recurrenceWeeklyFrequency == null
+            ? this.recurrenceWeeklyFrequency
+            : recurrenceWeeklyFrequency(),
       );
 
   List<ViewEvent> get splitIntoDailyEvents {
@@ -227,7 +253,11 @@ class ExtendedMonthEvent extends ViewEvent {
           status: e.status,
           withDate: e.withDate,
           isPrivate: e.isPrivate,
-          reminders: e.reminders);
+          reminders: e.reminders,
+          recurrenceMode: e.recurrenceMode,
+          recurrenceUntilDate: e.recurrenceUntilDate,
+          recurrenceWeekDays: e.recurrenceWeekDays,
+          recurrenceWeeklyFrequency: e.recurrenceWeeklyFrequency);
 
   ExtendedMonthEvent(
       {this.overflow = false,
@@ -259,7 +289,11 @@ class ExtendedMonthEvent extends ViewEvent {
       required super.updateStatus,
       required super.synced,
       required super.onceLoaded,
-      required super.reminders});
+      required super.reminders,
+      required super.recurrenceMode,
+      required super.recurrenceUntilDate,
+      required super.recurrenceWeekDays,
+      required super.recurrenceWeeklyFrequency});
 }
 
 // class VisibleDayEvent extends ViewEvent {

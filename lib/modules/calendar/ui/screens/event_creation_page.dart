@@ -60,7 +60,11 @@ class _EventCreationPageState extends State<EventCreationPage> {
       startDate: _selectedStartDate,
       reminders: _selectedReminders,
       endDate: _selectedEndDate,
-      allDay: _isAllDay);
+      allDay: _isAllDay,
+      recurrenceMode: _selectedRecurrenceMode,
+      recurrenceUntilDate: _selectedUntilDate,
+      recurrenceWeekDays: _selectedWeekDaysRepeat,
+      recurrenceWeeklyFrequency: _selectedWeeklyFrequency);
 
   @override
   void initState() {
@@ -99,6 +103,10 @@ class _EventCreationPageState extends State<EventCreationPage> {
         .firstWhereOrNull((c) => c.id == e.calendarId);
     _isAllDay = e.allDay ?? false;
     _selectedReminders = e.reminders;
+    _selectedWeeklyFrequency = e.recurrenceWeeklyFrequency;
+    _selectedRecurrenceMode = e.recurrenceMode ?? RecurrenceMode.never;
+    _selectedUntilDate = e.recurrenceUntilDate;
+    _selectedWeekDaysRepeat = e.recurrenceWeekDays ?? {};
     setState(() {});
     // _descriptionController
   }
@@ -106,14 +114,19 @@ class _EventCreationPageState extends State<EventCreationPage> {
   void _onSaveEditedEvent() {
     final updatedFields = collectCreationData;
     final updatedEvent = _selectedEvent!.copyWith(
-        subject: updatedFields.subject,
-        title: updatedFields.subject,
-        description: updatedFields.description,
-        location: updatedFields.location,
-        startDate: updatedFields.startDate,
-        allDay: updatedFields.allDay,
-        reminders: updatedFields.reminders,
-        endDate: updatedFields.endDate);
+      subject: updatedFields.subject,
+      title: updatedFields.subject,
+      description: updatedFields.description,
+      location: updatedFields.location,
+      startDate: updatedFields.startDate,
+      allDay: updatedFields.allDay,
+      reminders: updatedFields.reminders,
+      endDate: updatedFields.endDate,
+      recurrenceMode: () => updatedFields.recurrenceMode,
+      recurrenceWeeklyFrequency: () => updatedFields.recurrenceWeeklyFrequency,
+      recurrenceWeekDays: () => updatedFields.recurrenceWeekDays,
+      recurrenceUntilDate: () => updatedFields.recurrenceUntilDate,
+    );
     _eventsBloc.add(UpdateEvent(updatedEvent));
   }
 
@@ -324,11 +337,11 @@ class _EventCreationPageState extends State<EventCreationPage> {
                                       onSaveCallback: (DateTime? untilDate,
                                           EveryWeekFrequency? frequency,
                                           Set<DaysOfWeek>? selectedDays) {
-                                        _selectedUntilDate = untilDate;
-                                        _selectedWeeklyFrequency = frequency;
-                                        _selectedWeekDaysRepeat = selectedDays;
-                                        setState(() {});
-                                      });
+                                    _selectedUntilDate = untilDate;
+                                    _selectedWeeklyFrequency = frequency;
+                                    _selectedWeekDaysRepeat = selectedDays;
+                                    setState(() {});
+                                  });
                                 }
                               },
                               child: _selectedUntilDate == null
