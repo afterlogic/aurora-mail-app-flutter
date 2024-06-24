@@ -1,6 +1,7 @@
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/calendar/ui/dialogs/base_calendar_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 enum EveryWeekFrequency {
   every1,
@@ -73,9 +74,7 @@ class WeeklyRecurrenceSelectDialog extends StatefulWidget {
               frequency: frequency,
               selectedDays: selectedDays,
               untilDate: untilDate,
-              onSaveCallback: (DateTime? untilDate,
-                  EveryWeekFrequency? frequency,
-                  Set<DaysOfWeek>? selectedDays) {},
+              onSaveCallback: onSaveCallback,
             )).then((value) => value);
   }
 
@@ -86,7 +85,7 @@ class WeeklyRecurrenceSelectDialog extends StatefulWidget {
 
 class _WeeklyRecurrenceSelectDialogState
     extends State<WeeklyRecurrenceSelectDialog> {
-  EveryWeekFrequency frequency = EveryWeekFrequency.every1;
+  late EveryWeekFrequency frequency;
   bool isAlways = true;
   DateTime? untilDate;
 
@@ -95,7 +94,9 @@ class _WeeklyRecurrenceSelectDialogState
   @override
   void initState() {
     super.initState();
-    selectedDays = {DaysOfWeek.mo};
+    selectedDays = widget.selectedDays ?? {DaysOfWeek.mo};
+    frequency = widget.frequency ?? EveryWeekFrequency.every1;
+    untilDate = widget.untilDate;
   }
 
   @override
@@ -105,7 +106,10 @@ class _WeeklyRecurrenceSelectDialogState
       actions: [
         TextButton(
           onPressed: () {
-            Navigator.of(context).pop(null);
+            if (!isAlways && untilDate == null) return;
+            final resultDate = isAlways ? null : untilDate;
+            widget.onSaveCallback(resultDate, frequency, selectedDays);
+            Navigator.of(context).pop();
           },
           child: Text(S.of(context).btn_save),
         ),
@@ -237,7 +241,7 @@ class _WeeklyRecurrenceSelectDialogState
                         firstDate: DateTime.now(),
                         lastDate: DateTime(2101),
                       );
-                      if (picked != null && picked != untilDate) {
+                      if (picked != null) {
                         setState(() {
                           untilDate = picked;
                         });
@@ -255,9 +259,12 @@ class _WeeklyRecurrenceSelectDialogState
                           ),
                           border: const OutlineInputBorder(gapPadding: 0),
                           contentPadding: EdgeInsets.zero.copyWith(left: 8),
-                          hintText: untilDate == null
+                          errorText: untilDate == null && !isAlways
                               ? 'Select date'
-                              : '${untilDate!.year}/${untilDate!.month}/${untilDate!.day}',
+                              : null,
+                          hintText: untilDate == null
+                              ? null
+                              : '${DateFormat('yyyy/MM/dd').format(untilDate!)}',
                         ),
                       ),
                     ),

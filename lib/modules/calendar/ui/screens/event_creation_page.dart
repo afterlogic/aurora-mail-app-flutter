@@ -48,6 +48,8 @@ class _EventCreationPageState extends State<EventCreationPage> {
   RecurrenceMode _selectedRecurrenceMode = RecurrenceMode.never;
   DateTime? _selectedUntilDate;
   Set<RemindersOption> _selectedReminders = {};
+  EveryWeekFrequency? _selectedWeeklyFrequency;
+  Set<DaysOfWeek>? _selectedWeekDaysRepeat = {DaysOfWeek.mo};
   bool _isAllDay = false;
 
   EventCreationData get collectCreationData => EventCreationData(
@@ -316,12 +318,17 @@ class _EventCreationPageState extends State<EventCreationPage> {
                                 if (_selectedRecurrenceMode ==
                                     RecurrenceMode.weekly) {
                                   WeeklyRecurrenceSelectDialog.show(context,
-                                      frequency: null,
-                                      selectedDays: null,
-                                      untilDate: null,
+                                      frequency: _selectedWeeklyFrequency,
+                                      selectedDays: _selectedWeekDaysRepeat,
+                                      untilDate: _selectedUntilDate,
                                       onSaveCallback: (DateTime? untilDate,
                                           EveryWeekFrequency? frequency,
-                                          Set<DaysOfWeek>? selectedDays) {});
+                                          Set<DaysOfWeek>? selectedDays) {
+                                        _selectedUntilDate = untilDate;
+                                        _selectedWeeklyFrequency = frequency;
+                                        _selectedWeekDaysRepeat = selectedDays;
+                                        setState(() {});
+                                      });
                                 }
                               },
                               child: _selectedUntilDate == null
