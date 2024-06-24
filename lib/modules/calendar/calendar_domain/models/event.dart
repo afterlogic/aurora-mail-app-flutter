@@ -1,9 +1,9 @@
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/event_base.dart';
-import 'package:aurora_mail/modules/calendar/ui/dialogs/recurrence_mode_select_dialog.dart';
-import 'package:aurora_mail/modules/calendar/ui/dialogs/reminders_dialog.dart';
-import 'package:aurora_mail/modules/calendar/ui/dialogs/weekly_recurrence_select_dialog.dart';
+import 'package:aurora_mail/utils/extensions/string_extensions.dart';
 import 'package:collection/collection.dart';
+import 'package:flutter/material.dart';
 
 class EventCreationData {
   final String subject;
@@ -57,7 +57,7 @@ class Event extends EventBase {
   final bool? withDate;
   final bool? isPrivate;
   final UpdateStatus updateStatus;
-  final Set<RemindersOption> reminders;
+  final Set<RemindersOption>? reminders;
   final bool synced;
   final bool onceLoaded;
   final RecurrenceMode? recurrenceMode;
@@ -104,6 +104,9 @@ class Event extends EventBase {
     if (newData == null) {
       return base;
     }
+
+    final rawRrule = newData['rrule'] as Map<String, dynamic>?;
+
     return Event(
       ///All timestamps should be in seconds
       organizer: newData['organizer'] as String? ?? '',
@@ -128,7 +131,24 @@ class Event extends EventBase {
       modified: (newData['modified'] as bool?)!,
       recurrenceId: (newData['recurrenceId'] as int?)!,
       lastModified: (newData['lastModified'] as int?)!,
-      rrule: null,
+      recurrenceMode: rawRrule == null
+          ? RecurrenceMode.never
+          : RecurrenceModeX.fromPeriodCode((rawRrule['period'] as int?)!),
+      recurrenceUntilDate: rawRrule == null ||
+              rawRrule['until'] == null ||
+              rawRrule['until'] == 0
+          ? null
+          : DateTime.fromMillisecondsSinceEpoch(
+              (rawRrule['until'] as int) * 1000),
+      recurrenceWeeklyFrequency: rawRrule == null
+          ? null
+          : EveryWeekFrequencyX.fromIntervalCode(
+              (rawRrule['interval'] as int?)!),
+      recurrenceWeekDays: rawRrule == null
+          ? null
+          : (rawRrule['byDays'] as List)
+              .map((e) => DaysOfWeekX.fromDaysCode(e as String))
+              .toSet(),
       status: (newData['status'] as bool?)!,
       withDate: (newData['withDate'] as bool?)!,
       isPrivate: (newData['isPrivate'] as bool?)!,
@@ -145,66 +165,84 @@ class Event extends EventBase {
 
   factory Event.fromDb(EventDb entity) {
     return Event(
-        description: entity.description,
-        location: entity.location,
-        calendarId: entity.calendarId,
-        startTS: entity.startTS,
-        organizer: entity.organizer,
-        appointment: entity.appointment,
-        appointmentAccess: entity.appointmentAccess,
-        userLocalId: entity.userLocalId,
-        uid: entity.uid,
-        allDay: entity.allDay,
-        owner: entity.owner,
-        modified: entity.modified,
-        recurrenceId: entity.recurrenceId,
-        lastModified: entity.lastModified,
-        status: entity.status,
-        withDate: entity.withDate,
-        isPrivate: entity.isPrivate,
-        reminders:
-            entity.remindersString != null && entity.remindersString!.isNotEmpty
-                ? entity.remindersString!
-                    .split(',')
-                    .map((e) => RemindersIntMapper.fromInt(int.parse(e)))
-                    .whereNotNull()
-                    .toSet()
-                : {},
-        // rrule: null,
-        subject: entity.subject,
-        endTS: entity.endTS,
-        updateStatus: entity.updateStatus,
-        synced: entity.synced,
-        onceLoaded: entity.onceLoaded);
+      description: entity.description,
+      location: entity.location,
+      calendarId: entity.calendarId,
+      startTS: entity.startTS,
+      organizer: entity.organizer,
+      appointment: entity.appointment,
+      appointmentAccess: entity.appointmentAccess,
+      userLocalId: entity.userLocalId,
+      uid: entity.uid,
+      allDay: entity.allDay,
+      owner: entity.owner,
+      modified: entity.modified,
+      recurrenceId: entity.recurrenceId,
+      lastModified: entity.lastModified,
+      status: entity.status,
+      withDate: entity.withDate,
+      isPrivate: entity.isPrivate,
+      reminders:
+          entity.remindersString != null && entity.remindersString!.isNotEmpty
+              ? entity.remindersString!
+                  .split(',')
+                  .map((e) => RemindersIntMapper.fromInt(int.parse(e)))
+                  .whereNotNull()
+                  .toSet()
+              : {},
+      // rrule: null,
+      subject: entity.subject,
+      endTS: entity.endTS,
+      updateStatus: entity.updateStatus,
+      synced: entity.synced,
+      onceLoaded: entity.onceLoaded,
+      recurrenceMode: entity.recurrenceMode,
+      recurrenceUntilDate: entity.recurrenceUntilDate,
+      recurrenceWeeklyFrequency: entity.recurrenceWeeklyFrequency,
+      recurrenceWeekDays: entity.recurrenceWeekDaysString != null &&
+              entity.recurrenceWeekDaysString!.isNotEmpty
+          ? entity.recurrenceWeekDaysString!
+              .split(',')
+              .map((e) => DaysOfWeekX.fromDaysCode(e))
+              .whereNotNull()
+              .toSet()
+          : {},
+    );
   }
 
   @override
   EventDb toDb() {
     return EventDb(
-        description: description,
-        location: location,
-        calendarId: calendarId,
-        startTS: startTS,
-        organizer: organizer,
-        appointment: appointment,
-        appointmentAccess: appointmentAccess,
-        userLocalId: userLocalId,
-        uid: uid,
-        allDay: allDay,
-        owner: owner,
-        modified: modified,
-        recurrenceId: recurrenceId,
-        lastModified: lastModified,
-        status: status,
-        withDate: withDate,
-        isPrivate: isPrivate,
-        // rrule: null,
-        subject: subject,
-        endTS: endTS,
-        updateStatus: updateStatus,
-        synced: synced,
-        remindersString: reminders.map((e) => e.toInt).join(','),
-        onceLoaded: onceLoaded);
+      description: description,
+      location: location,
+      calendarId: calendarId,
+      startTS: startTS,
+      organizer: organizer,
+      appointment: appointment,
+      appointmentAccess: appointmentAccess,
+      userLocalId: userLocalId,
+      uid: uid,
+      allDay: allDay,
+      owner: owner,
+      modified: modified,
+      recurrenceId: recurrenceId,
+      lastModified: lastModified,
+      status: status,
+      withDate: withDate,
+      isPrivate: isPrivate,
+      // rrule: null,
+      subject: subject,
+      endTS: endTS,
+      updateStatus: updateStatus,
+      synced: synced,
+      remindersString: reminders?.map((e) => e.toInt).join(','),
+      onceLoaded: onceLoaded,
+      recurrenceWeekDaysString:
+          recurrenceWeekDays?.map((e) => e.byDaysCode).join(','),
+      recurrenceWeeklyFrequency: recurrenceWeeklyFrequency,
+      recurrenceUntilDate: recurrenceUntilDate,
+      recurrenceMode: recurrenceMode
+    );
   }
 
   @override
@@ -361,6 +399,182 @@ class Event extends EventBase {
           ? this.recurrenceWeeklyFrequency
           : recurrenceWeeklyFrequency(),
     );
+  }
+}
+
+enum RecurrenceMode { never, daily, weekly, monthly, yearly }
+
+extension RecurrenceModeX on RecurrenceMode {
+  static RecurrenceMode fromPeriodCode(int code) {
+    switch (code) {
+      case 0:
+        return RecurrenceMode.never;
+      case 1:
+        return RecurrenceMode.daily;
+      case 2:
+        return RecurrenceMode.weekly;
+      case 3:
+        return RecurrenceMode.monthly;
+      case 4:
+        return RecurrenceMode.yearly;
+      default:
+        throw Exception('Unknown period code: $code');
+    }
+  }
+
+  int get periodCode {
+    switch (this) {
+      case RecurrenceMode.never:
+        return 0;
+      case RecurrenceMode.daily:
+        return 1;
+      case RecurrenceMode.weekly:
+        return 2;
+      case RecurrenceMode.monthly:
+        return 3;
+      case RecurrenceMode.yearly:
+        return 4;
+    }
+  }
+
+  bool get isUntilOptionAvailable {
+    switch (this) {
+      case RecurrenceMode.daily:
+      case RecurrenceMode.weekly:
+        return true;
+      case RecurrenceMode.monthly:
+      case RecurrenceMode.yearly:
+      case RecurrenceMode.never:
+        return false;
+    }
+  }
+
+  String buildString(BuildContext context) {
+    switch (this) {
+      case RecurrenceMode.never:
+        return S.of(context).settings_sync_frequency_never.toCapitalize();
+      case RecurrenceMode.daily:
+        return S.of(context).settings_sync_frequency_daily.toCapitalize();
+      case RecurrenceMode.weekly:
+        return S.of(context).settings_sync_frequency_weekly.toCapitalize();
+      case RecurrenceMode.monthly:
+        return S.of(context).settings_sync_frequency_monthly.toCapitalize();
+      case RecurrenceMode.yearly:
+        return S.of(context).settings_sync_frequency_yearly.toCapitalize();
+    }
+  }
+}
+
+enum EveryWeekFrequency {
+  every1,
+  every2,
+  every3,
+  every4,
+}
+
+extension EveryWeekFrequencyX on EveryWeekFrequency {
+  static EveryWeekFrequency fromIntervalCode(int code) {
+    switch (code) {
+      case 1:
+        return EveryWeekFrequency.every1;
+      case 2:
+        return EveryWeekFrequency.every2;
+      case 3:
+        return EveryWeekFrequency.every3;
+      case 4:
+        return EveryWeekFrequency.every4;
+      default:
+        throw Exception('Unknown interval code: $code');
+    }
+  }
+
+  int get intervalCode {
+    switch (this) {
+      case EveryWeekFrequency.every1:
+        return 1;
+      case EveryWeekFrequency.every2:
+        return 2;
+      case EveryWeekFrequency.every3:
+        return 3;
+      case EveryWeekFrequency.every4:
+        return 4;
+    }
+  }
+
+  String buildString() {
+    switch (this) {
+      case EveryWeekFrequency.every1:
+        return '1';
+      case EveryWeekFrequency.every2:
+        return '2';
+      case EveryWeekFrequency.every3:
+        return '3';
+      case EveryWeekFrequency.every4:
+        return '4';
+    }
+  }
+}
+
+enum DaysOfWeek { su, mo, tu, we, th, fr, sa }
+
+extension DaysOfWeekX on DaysOfWeek {
+  static DaysOfWeek fromDaysCode(String code) {
+    switch (code) {
+      case "MO":
+        return DaysOfWeek.mo;
+      case "TU":
+        return DaysOfWeek.tu;
+      case "WE":
+        return DaysOfWeek.we;
+      case "TH":
+        return DaysOfWeek.th;
+      case "FR":
+        return DaysOfWeek.fr;
+      case "SA":
+        return DaysOfWeek.sa;
+      case "SU":
+        return DaysOfWeek.su;
+      default:
+        throw Exception('Unknown days code: $code');
+    }
+  }
+
+  String get byDaysCode {
+    switch (this) {
+      case DaysOfWeek.su:
+        return "SU";
+      case DaysOfWeek.mo:
+        return "MO";
+      case DaysOfWeek.tu:
+        return "TU";
+      case DaysOfWeek.we:
+        return "WE";
+      case DaysOfWeek.th:
+        return "TH";
+      case DaysOfWeek.fr:
+        return "FR";
+      case DaysOfWeek.sa:
+        return "SA";
+    }
+  }
+
+  String buildString() {
+    switch (this) {
+      case DaysOfWeek.su:
+        return 'Su';
+      case DaysOfWeek.mo:
+        return 'Mo';
+      case DaysOfWeek.tu:
+        return 'Tu';
+      case DaysOfWeek.we:
+        return 'We';
+      case DaysOfWeek.th:
+        return 'Th';
+      case DaysOfWeek.fr:
+        return 'Fr';
+      case DaysOfWeek.sa:
+        return 'Sa';
+    }
   }
 }
 

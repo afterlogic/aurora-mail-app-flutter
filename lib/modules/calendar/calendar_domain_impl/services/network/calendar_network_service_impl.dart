@@ -139,15 +139,20 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
   }
 
   @override
-  Future<void> createEvent(
-      {required String subject,
-      required String calendarId,
-      required String description,
-      required DateTime startDate,
-      required DateTime endDate,
-      required List<int> reminders,
-      required bool? allDay,
-      required String location}) async {
+  Future<void> createEvent({
+    required String subject,
+    required String calendarId,
+    required String description,
+    required DateTime startDate,
+    required DateTime endDate,
+    required List<int> reminders,
+    required bool? allDay,
+    required String location,
+    required RecurrenceMode recurrenceMode,
+    required DateTime? recurrenceUntilDate,
+    required EveryWeekFrequency? recurrenceWeeklyFrequency,
+    required Set<DaysOfWeek>? recurrenceWeekDays,
+  }) async {
     // {
     //   "id": null,
     //   "uid": null,
@@ -176,6 +181,25 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
     //   "selectStart": 1714262400,
     //   "selectEnd": 1717891200
     // };
+    final rruleParameters = recurrenceMode == RecurrenceMode.never
+        ? null
+        : {
+            "startBase": startDate.toUtc().millisecondsSinceEpoch ~/ 1000,
+            "endBase": endDate.toUtc().millisecondsSinceEpoch ~/ 1000,
+            "period": recurrenceMode.periodCode,
+            "until": recurrenceUntilDate == null
+                ? 0
+                : recurrenceUntilDate.toUtc().millisecondsSinceEpoch ~/ 1000,
+            "interval": recurrenceWeeklyFrequency == null
+                ? 1
+                : recurrenceWeeklyFrequency.intervalCode,
+            "end": recurrenceUntilDate == null ? 3 : 2,
+            "byDays": recurrenceWeekDays == null
+                ? []
+                : recurrenceWeekDays.map((e) => e.byDaysCode).toList(),
+            "weekNum": null,
+            "count": null
+          };
 
     final parameters = {
       "id": null,
@@ -186,7 +210,7 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
       "allDay": allDay == true ? 1 : 0,
       "location": location,
       "description": description,
-      "alarms": "[${reminders.join(',')}]" ,
+      "alarms": "[${reminders.join(',')}]",
       "attendees": "[]",
       // "owner": ownerMail,
       "recurrenceId": null,
@@ -205,6 +229,10 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
       // "selectStart": 1714262400,
       // "selectEnd": 1717891200
     };
+    
+    if(rruleParameters != null){
+      parameters.addAll({"rrule": jsonEncode(rruleParameters)});
+    }
 
     final body = new WebMailApiBody(
       method: "CreateEvent",
@@ -216,6 +244,27 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
 
   @override
   Future<Event> updateEvent(Event event) async {
+
+    final rruleParameters = event.recurrenceMode == RecurrenceMode.never
+        ? null
+        : {
+      "startBase": event.startTS!.toUtc().millisecondsSinceEpoch ~/ 1000,
+      "endBase": event.endTS!.toUtc().millisecondsSinceEpoch ~/ 1000,
+      "period": event.recurrenceMode!.periodCode,
+      "until": event.recurrenceUntilDate == null
+          ? 0
+          : event.recurrenceUntilDate!.toUtc().millisecondsSinceEpoch ~/ 1000,
+      "interval": event.recurrenceWeeklyFrequency == null
+          ? 1
+          : event.recurrenceWeeklyFrequency!.intervalCode,
+      "end": event.recurrenceUntilDate == null ? 3 : 2,
+      "byDays": event.recurrenceWeekDays == null
+          ? []
+          : event.recurrenceWeekDays!.map((e) => e.byDaysCode).toList(),
+      "weekNum": null,
+      "count": null
+    };
+
     final parameters = {
       "id": '${event.uid}-${event.recurrenceId}',
       "uid": event.uid,
@@ -225,7 +274,7 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
       "allDay": event.allDay == true ? 1 : 0,
       "location": event.location ?? '',
       "description": event.description ?? '',
-      "alarms": "[${event.reminders.map((e) => e.toInt).join(',')}]",
+      "alarms": event.reminders == null ? "[]" : "[${event.reminders!.map((e) => e.toInt).join(',')}]",
       "attendees": "[]",
       // "owner": ownerMail,
       "recurrenceId": null,
@@ -244,6 +293,10 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
       // "selectStart": 1714262400,
       // "selectEnd": 1717891200
     };
+
+    if(rruleParameters != null){
+      parameters.addAll({"rrule": jsonEncode(rruleParameters)});
+    }
 
     final body = new WebMailApiBody(
       method: "UpdateEvent",

@@ -27,6 +27,10 @@ abstract class CalendarNetworkService {
     required DateTime endDate,
     required bool? allDay,
     required List<int> reminders,
+    required RecurrenceMode recurrenceMode,
+    required DateTime? recurrenceUntilDate,
+    required EveryWeekFrequency? recurrenceWeeklyFrequency,
+    required Set<DaysOfWeek>? recurrenceWeekDays,
 });
 
   Future<Event> updateEvent(Event event);

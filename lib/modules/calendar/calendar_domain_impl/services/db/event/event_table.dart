@@ -1,3 +1,4 @@
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/event.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/event_base.dart';
 import 'package:drift/drift.dart';
 
@@ -41,8 +42,6 @@ class EventTable extends Table {
 
   TextColumn get remindersString => text().nullable()();
 
-  // TODO add rrule
-
   BoolColumn get status => boolean().nullable()();
 
   BoolColumn get withDate => boolean().nullable()();
@@ -54,4 +53,12 @@ class EventTable extends Table {
   BoolColumn get synced =>  boolean()();
 
   BoolColumn get onceLoaded =>  boolean()();
+
+  IntColumn get recurrenceMode => intEnum<RecurrenceMode>().nullable()();
+
+  IntColumn get recurrenceWeeklyFrequency => intEnum<EveryWeekFrequency>().nullable()();
+
+  DateTimeColumn get recurrenceUntilDate => dateTime().nullable()();
+
+  TextColumn get recurrenceWeekDaysString => text().nullable()();
 }

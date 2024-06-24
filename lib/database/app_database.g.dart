@@ -3104,6 +3104,10 @@ class EventDb extends DataClass implements Insertable<EventDb> {
   final UpdateStatus updateStatus;
   final bool synced;
   final bool onceLoaded;
+  final RecurrenceMode? recurrenceMode;
+  final EveryWeekFrequency? recurrenceWeeklyFrequency;
+  final DateTime? recurrenceUntilDate;
+  final String? recurrenceWeekDaysString;
   EventDb(
       {this.organizer,
       this.appointment,
@@ -3127,7 +3131,11 @@ class EventDb extends DataClass implements Insertable<EventDb> {
       this.isPrivate,
       required this.updateStatus,
       required this.synced,
-      required this.onceLoaded});
+      required this.onceLoaded,
+      this.recurrenceMode,
+      this.recurrenceWeeklyFrequency,
+      this.recurrenceUntilDate,
+      this.recurrenceWeekDaysString});
   factory EventDb.fromData(Map<String, dynamic> data, {String? prefix}) {
     final effectivePrefix = prefix ?? '';
     return EventDb(
@@ -3177,6 +3185,15 @@ class EventDb extends DataClass implements Insertable<EventDb> {
           .mapFromDatabaseResponse(data['${effectivePrefix}synced'])!,
       onceLoaded: const BoolType()
           .mapFromDatabaseResponse(data['${effectivePrefix}once_loaded'])!,
+      recurrenceMode: $EventTableTable.$converter1.mapToDart(const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}recurrence_mode'])),
+      recurrenceWeeklyFrequency: $EventTableTable.$converter2.mapToDart(
+          const IntType().mapFromDatabaseResponse(
+              data['${effectivePrefix}recurrence_weekly_frequency'])),
+      recurrenceUntilDate: const DateTimeType().mapFromDatabaseResponse(
+          data['${effectivePrefix}recurrence_until_date']),
+      recurrenceWeekDaysString: const StringType().mapFromDatabaseResponse(
+          data['${effectivePrefix}recurrence_week_days_string']),
     );
   }
   @override
@@ -3242,6 +3259,23 @@ class EventDb extends DataClass implements Insertable<EventDb> {
     }
     map['synced'] = Variable<bool>(synced);
     map['once_loaded'] = Variable<bool>(onceLoaded);
+    if (!nullToAbsent || recurrenceMode != null) {
+      final converter = $EventTableTable.$converter1;
+      map['recurrence_mode'] =
+          Variable<int?>(converter.mapToSql(recurrenceMode));
+    }
+    if (!nullToAbsent || recurrenceWeeklyFrequency != null) {
+      final converter = $EventTableTable.$converter2;
+      map['recurrence_weekly_frequency'] =
+          Variable<int?>(converter.mapToSql(recurrenceWeeklyFrequency));
+    }
+    if (!nullToAbsent || recurrenceUntilDate != null) {
+      map['recurrence_until_date'] = Variable<DateTime?>(recurrenceUntilDate);
+    }
+    if (!nullToAbsent || recurrenceWeekDaysString != null) {
+      map['recurrence_week_days_string'] =
+          Variable<String?>(recurrenceWeekDaysString);
+    }
     return map;
   }
 
@@ -3300,6 +3334,19 @@ class EventDb extends DataClass implements Insertable<EventDb> {
       updateStatus: Value(updateStatus),
       synced: Value(synced),
       onceLoaded: Value(onceLoaded),
+      recurrenceMode: recurrenceMode == null && nullToAbsent
+          ? const Value.absent()
+          : Value(recurrenceMode),
+      recurrenceWeeklyFrequency:
+          recurrenceWeeklyFrequency == null && nullToAbsent
+              ? const Value.absent()
+              : Value(recurrenceWeeklyFrequency),
+      recurrenceUntilDate: recurrenceUntilDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(recurrenceUntilDate),
+      recurrenceWeekDaysString: recurrenceWeekDaysString == null && nullToAbsent
+          ? const Value.absent()
+          : Value(recurrenceWeekDaysString),
     );
   }
 
@@ -3330,6 +3377,14 @@ class EventDb extends DataClass implements Insertable<EventDb> {
       updateStatus: serializer.fromJson<UpdateStatus>(json['updateStatus']),
       synced: serializer.fromJson<bool>(json['synced']),
       onceLoaded: serializer.fromJson<bool>(json['onceLoaded']),
+      recurrenceMode:
+          serializer.fromJson<RecurrenceMode?>(json['recurrenceMode']),
+      recurrenceWeeklyFrequency: serializer
+          .fromJson<EveryWeekFrequency?>(json['recurrenceWeeklyFrequency']),
+      recurrenceUntilDate:
+          serializer.fromJson<DateTime?>(json['recurrenceUntilDate']),
+      recurrenceWeekDaysString:
+          serializer.fromJson<String?>(json['recurrenceWeekDaysString']),
     );
   }
   @override
@@ -3359,6 +3414,12 @@ class EventDb extends DataClass implements Insertable<EventDb> {
       'updateStatus': serializer.toJson<UpdateStatus>(updateStatus),
       'synced': serializer.toJson<bool>(synced),
       'onceLoaded': serializer.toJson<bool>(onceLoaded),
+      'recurrenceMode': serializer.toJson<RecurrenceMode?>(recurrenceMode),
+      'recurrenceWeeklyFrequency':
+          serializer.toJson<EveryWeekFrequency?>(recurrenceWeeklyFrequency),
+      'recurrenceUntilDate': serializer.toJson<DateTime?>(recurrenceUntilDate),
+      'recurrenceWeekDaysString':
+          serializer.toJson<String?>(recurrenceWeekDaysString),
     };
   }
 
@@ -3385,7 +3446,11 @@ class EventDb extends DataClass implements Insertable<EventDb> {
           bool? isPrivate,
           UpdateStatus? updateStatus,
           bool? synced,
-          bool? onceLoaded}) =>
+          bool? onceLoaded,
+          RecurrenceMode? recurrenceMode,
+          EveryWeekFrequency? recurrenceWeeklyFrequency,
+          DateTime? recurrenceUntilDate,
+          String? recurrenceWeekDaysString}) =>
       EventDb(
         organizer: organizer ?? this.organizer,
         appointment: appointment ?? this.appointment,
@@ -3410,6 +3475,12 @@ class EventDb extends DataClass implements Insertable<EventDb> {
         updateStatus: updateStatus ?? this.updateStatus,
         synced: synced ?? this.synced,
         onceLoaded: onceLoaded ?? this.onceLoaded,
+        recurrenceMode: recurrenceMode ?? this.recurrenceMode,
+        recurrenceWeeklyFrequency:
+            recurrenceWeeklyFrequency ?? this.recurrenceWeeklyFrequency,
+        recurrenceUntilDate: recurrenceUntilDate ?? this.recurrenceUntilDate,
+        recurrenceWeekDaysString:
+            recurrenceWeekDaysString ?? this.recurrenceWeekDaysString,
       );
   @override
   String toString() {
@@ -3436,7 +3507,11 @@ class EventDb extends DataClass implements Insertable<EventDb> {
           ..write('isPrivate: $isPrivate, ')
           ..write('updateStatus: $updateStatus, ')
           ..write('synced: $synced, ')
-          ..write('onceLoaded: $onceLoaded')
+          ..write('onceLoaded: $onceLoaded, ')
+          ..write('recurrenceMode: $recurrenceMode, ')
+          ..write('recurrenceWeeklyFrequency: $recurrenceWeeklyFrequency, ')
+          ..write('recurrenceUntilDate: $recurrenceUntilDate, ')
+          ..write('recurrenceWeekDaysString: $recurrenceWeekDaysString')
           ..write(')'))
         .toString();
   }
@@ -3465,7 +3540,11 @@ class EventDb extends DataClass implements Insertable<EventDb> {
         isPrivate,
         updateStatus,
         synced,
-        onceLoaded
+        onceLoaded,
+        recurrenceMode,
+        recurrenceWeeklyFrequency,
+        recurrenceUntilDate,
+        recurrenceWeekDaysString
       ]);
   @override
   bool operator ==(Object other) =>
@@ -3493,7 +3572,11 @@ class EventDb extends DataClass implements Insertable<EventDb> {
           other.isPrivate == this.isPrivate &&
           other.updateStatus == this.updateStatus &&
           other.synced == this.synced &&
-          other.onceLoaded == this.onceLoaded);
+          other.onceLoaded == this.onceLoaded &&
+          other.recurrenceMode == this.recurrenceMode &&
+          other.recurrenceWeeklyFrequency == this.recurrenceWeeklyFrequency &&
+          other.recurrenceUntilDate == this.recurrenceUntilDate &&
+          other.recurrenceWeekDaysString == this.recurrenceWeekDaysString);
 }
 
 class EventTableCompanion extends UpdateCompanion<EventDb> {
@@ -3520,6 +3603,10 @@ class EventTableCompanion extends UpdateCompanion<EventDb> {
   final Value<UpdateStatus> updateStatus;
   final Value<bool> synced;
   final Value<bool> onceLoaded;
+  final Value<RecurrenceMode?> recurrenceMode;
+  final Value<EveryWeekFrequency?> recurrenceWeeklyFrequency;
+  final Value<DateTime?> recurrenceUntilDate;
+  final Value<String?> recurrenceWeekDaysString;
   const EventTableCompanion({
     this.organizer = const Value.absent(),
     this.appointment = const Value.absent(),
@@ -3544,6 +3631,10 @@ class EventTableCompanion extends UpdateCompanion<EventDb> {
     this.updateStatus = const Value.absent(),
     this.synced = const Value.absent(),
     this.onceLoaded = const Value.absent(),
+    this.recurrenceMode = const Value.absent(),
+    this.recurrenceWeeklyFrequency = const Value.absent(),
+    this.recurrenceUntilDate = const Value.absent(),
+    this.recurrenceWeekDaysString = const Value.absent(),
   });
   EventTableCompanion.insert({
     this.organizer = const Value.absent(),
@@ -3569,6 +3660,10 @@ class EventTableCompanion extends UpdateCompanion<EventDb> {
     required UpdateStatus updateStatus,
     required bool synced,
     required bool onceLoaded,
+    this.recurrenceMode = const Value.absent(),
+    this.recurrenceWeeklyFrequency = const Value.absent(),
+    this.recurrenceUntilDate = const Value.absent(),
+    this.recurrenceWeekDaysString = const Value.absent(),
   })  : calendarId = Value(calendarId),
         userLocalId = Value(userLocalId),
         uid = Value(uid),
@@ -3599,6 +3694,10 @@ class EventTableCompanion extends UpdateCompanion<EventDb> {
     Expression<UpdateStatus>? updateStatus,
     Expression<bool>? synced,
     Expression<bool>? onceLoaded,
+    Expression<RecurrenceMode?>? recurrenceMode,
+    Expression<EveryWeekFrequency?>? recurrenceWeeklyFrequency,
+    Expression<DateTime?>? recurrenceUntilDate,
+    Expression<String?>? recurrenceWeekDaysString,
   }) {
     return RawValuesInsertable({
       if (organizer != null) 'organizer': organizer,
@@ -3624,6 +3723,13 @@ class EventTableCompanion extends UpdateCompanion<EventDb> {
       if (updateStatus != null) 'update_status': updateStatus,
       if (synced != null) 'synced': synced,
       if (onceLoaded != null) 'once_loaded': onceLoaded,
+      if (recurrenceMode != null) 'recurrence_mode': recurrenceMode,
+      if (recurrenceWeeklyFrequency != null)
+        'recurrence_weekly_frequency': recurrenceWeeklyFrequency,
+      if (recurrenceUntilDate != null)
+        'recurrence_until_date': recurrenceUntilDate,
+      if (recurrenceWeekDaysString != null)
+        'recurrence_week_days_string': recurrenceWeekDaysString,
     });
   }
 
@@ -3650,7 +3756,11 @@ class EventTableCompanion extends UpdateCompanion<EventDb> {
       Value<bool?>? isPrivate,
       Value<UpdateStatus>? updateStatus,
       Value<bool>? synced,
-      Value<bool>? onceLoaded}) {
+      Value<bool>? onceLoaded,
+      Value<RecurrenceMode?>? recurrenceMode,
+      Value<EveryWeekFrequency?>? recurrenceWeeklyFrequency,
+      Value<DateTime?>? recurrenceUntilDate,
+      Value<String?>? recurrenceWeekDaysString}) {
     return EventTableCompanion(
       organizer: organizer ?? this.organizer,
       appointment: appointment ?? this.appointment,
@@ -3675,6 +3785,12 @@ class EventTableCompanion extends UpdateCompanion<EventDb> {
       updateStatus: updateStatus ?? this.updateStatus,
       synced: synced ?? this.synced,
       onceLoaded: onceLoaded ?? this.onceLoaded,
+      recurrenceMode: recurrenceMode ?? this.recurrenceMode,
+      recurrenceWeeklyFrequency:
+          recurrenceWeeklyFrequency ?? this.recurrenceWeeklyFrequency,
+      recurrenceUntilDate: recurrenceUntilDate ?? this.recurrenceUntilDate,
+      recurrenceWeekDaysString:
+          recurrenceWeekDaysString ?? this.recurrenceWeekDaysString,
     );
   }
 
@@ -3752,6 +3868,24 @@ class EventTableCompanion extends UpdateCompanion<EventDb> {
     if (onceLoaded.present) {
       map['once_loaded'] = Variable<bool>(onceLoaded.value);
     }
+    if (recurrenceMode.present) {
+      final converter = $EventTableTable.$converter1;
+      map['recurrence_mode'] =
+          Variable<int?>(converter.mapToSql(recurrenceMode.value));
+    }
+    if (recurrenceWeeklyFrequency.present) {
+      final converter = $EventTableTable.$converter2;
+      map['recurrence_weekly_frequency'] =
+          Variable<int?>(converter.mapToSql(recurrenceWeeklyFrequency.value));
+    }
+    if (recurrenceUntilDate.present) {
+      map['recurrence_until_date'] =
+          Variable<DateTime?>(recurrenceUntilDate.value);
+    }
+    if (recurrenceWeekDaysString.present) {
+      map['recurrence_week_days_string'] =
+          Variable<String?>(recurrenceWeekDaysString.value);
+    }
     return map;
   }
 
@@ -3780,7 +3914,11 @@ class EventTableCompanion extends UpdateCompanion<EventDb> {
           ..write('isPrivate: $isPrivate, ')
           ..write('updateStatus: $updateStatus, ')
           ..write('synced: $synced, ')
-          ..write('onceLoaded: $onceLoaded')
+          ..write('onceLoaded: $onceLoaded, ')
+          ..write('recurrenceMode: $recurrenceMode, ')
+          ..write('recurrenceWeeklyFrequency: $recurrenceWeeklyFrequency, ')
+          ..write('recurrenceUntilDate: $recurrenceUntilDate, ')
+          ..write('recurrenceWeekDaysString: $recurrenceWeekDaysString')
           ..write(')'))
         .toString();
   }
@@ -3932,6 +4070,34 @@ class $EventTableTable extends EventTable
       type: const BoolType(),
       requiredDuringInsert: true,
       defaultConstraints: 'CHECK (once_loaded IN (0, 1))');
+  final VerificationMeta _recurrenceModeMeta =
+      const VerificationMeta('recurrenceMode');
+  @override
+  late final GeneratedColumnWithTypeConverter<RecurrenceMode?, int?>
+      recurrenceMode = GeneratedColumn<int?>(
+              'recurrence_mode', aliasedName, true,
+              type: const IntType(), requiredDuringInsert: false)
+          .withConverter<RecurrenceMode?>($EventTableTable.$converter1);
+  final VerificationMeta _recurrenceWeeklyFrequencyMeta =
+      const VerificationMeta('recurrenceWeeklyFrequency');
+  @override
+  late final GeneratedColumnWithTypeConverter<EveryWeekFrequency?, int?>
+      recurrenceWeeklyFrequency = GeneratedColumn<int?>(
+              'recurrence_weekly_frequency', aliasedName, true,
+              type: const IntType(), requiredDuringInsert: false)
+          .withConverter<EveryWeekFrequency?>($EventTableTable.$converter2);
+  final VerificationMeta _recurrenceUntilDateMeta =
+      const VerificationMeta('recurrenceUntilDate');
+  @override
+  late final GeneratedColumn<DateTime?> recurrenceUntilDate =
+      GeneratedColumn<DateTime?>('recurrence_until_date', aliasedName, true,
+          type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _recurrenceWeekDaysStringMeta =
+      const VerificationMeta('recurrenceWeekDaysString');
+  @override
+  late final GeneratedColumn<String?> recurrenceWeekDaysString =
+      GeneratedColumn<String?>('recurrence_week_days_string', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns => [
         organizer,
@@ -3956,7 +4122,11 @@ class $EventTableTable extends EventTable
         isPrivate,
         updateStatus,
         synced,
-        onceLoaded
+        onceLoaded,
+        recurrenceMode,
+        recurrenceWeeklyFrequency,
+        recurrenceUntilDate,
+        recurrenceWeekDaysString
       ];
   @override
   String get aliasedName => _alias ?? 'event_table';
@@ -4084,6 +4254,22 @@ class $EventTableTable extends EventTable
     } else if (isInserting) {
       context.missing(_onceLoadedMeta);
     }
+    context.handle(_recurrenceModeMeta, const VerificationResult.success());
+    context.handle(
+        _recurrenceWeeklyFrequencyMeta, const VerificationResult.success());
+    if (data.containsKey('recurrence_until_date')) {
+      context.handle(
+          _recurrenceUntilDateMeta,
+          recurrenceUntilDate.isAcceptableOrUnknown(
+              data['recurrence_until_date']!, _recurrenceUntilDateMeta));
+    }
+    if (data.containsKey('recurrence_week_days_string')) {
+      context.handle(
+          _recurrenceWeekDaysStringMeta,
+          recurrenceWeekDaysString.isAcceptableOrUnknown(
+              data['recurrence_week_days_string']!,
+              _recurrenceWeekDaysStringMeta));
+    }
     return context;
   }
 
@@ -4102,6 +4288,10 @@ class $EventTableTable extends EventTable
 
   static TypeConverter<UpdateStatus, int> $converter0 =
       const EnumIndexConverter<UpdateStatus>(UpdateStatus.values);
+  static TypeConverter<RecurrenceMode?, int> $converter1 =
+      const EnumIndexConverter<RecurrenceMode>(RecurrenceMode.values);
+  static TypeConverter<EveryWeekFrequency?, int> $converter2 =
+      const EnumIndexConverter<EveryWeekFrequency>(EveryWeekFrequency.values);
 }
 
 class LocalFolder extends DataClass implements Insertable<LocalFolder> {

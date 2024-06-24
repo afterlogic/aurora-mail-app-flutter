@@ -180,7 +180,11 @@ class CalendarRepositoryImpl implements CalendarRepository {
         endDate: data.endDate,
         allDay: data.allDay,
         description: data.description ?? '',
-        reminders: data.reminders.map((e) => e.toInt).toList());
+        reminders: data.reminders.map((e) => e.toInt).toList(),
+        recurrenceMode: data.recurrenceMode,
+        recurrenceUntilDate: data.recurrenceUntilDate,
+        recurrenceWeeklyFrequency: data.recurrenceWeeklyFrequency,
+        recurrenceWeekDays: data.recurrenceWeekDays);
   }
 
   @override
