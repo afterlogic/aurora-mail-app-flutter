@@ -105,7 +105,7 @@ class _CalendarDrawerState extends BState<CalendarDrawer> {
                         child: Text('Shared with me',
                             style: TextStyle(color: theme.disabledColor)),
                       ),
-                    if (sharedCalendars != null)
+                    if (sharedCalendars?.isNotEmpty ?? false)
                       Divider(
                         color: dividerColor,
                         height: 1,
@@ -134,7 +134,7 @@ class _CalendarDrawerState extends BState<CalendarDrawer> {
                         child: Text('Shared with all',
                             style: TextStyle(color: theme.disabledColor)),
                       ),
-                    if (sharedToAllCalendars != null)
+                    if (sharedToAllCalendars?.isNotEmpty ?? false)
                       Divider(
                         color: dividerColor,
                         height: 1,
@@ -422,7 +422,7 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
                       SizedBox(
                         height: 8,
                       ),
-                      if (widget.calendar.name.isNotEmpty)
+                      if (widget.calendar.name.isNotEmpty && (widget.calendar.shared || widget.calendar.sharedToAll))
                         Text(
                           '${widget.calendar.name} - ${widget.calendar.owner}',
                           maxLines: 1,

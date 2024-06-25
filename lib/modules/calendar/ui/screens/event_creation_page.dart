@@ -266,7 +266,7 @@ class _EventCreationPageState extends State<EventCreationPage> {
                               setState(() {
                                 _selectedStartDate = value;
                               });
-                            }),
+                            }, isAllDay: _isAllDay,),
                         const SizedBox(
                           height: 16,
                         ),
@@ -286,7 +286,7 @@ class _EventCreationPageState extends State<EventCreationPage> {
                                     _selectedEndDate = value;
                                   });
                                 }
-                              });
+                              }, isAllDay: _isAllDay,);
                         })
                       ])),
               const Divider(
@@ -382,28 +382,31 @@ class _EventCreationPageState extends State<EventCreationPage> {
                                   'Reminders',
                                 ),
                               ..._selectedReminders
-                                  .map((e) => Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
-                                        children: [
-                                          Text('${e.buildString} before'),
-                                          GestureDetector(
-                                            onTap: () {
-                                              _selectedReminders.remove(e);
-                                              setState(() {});
-                                            },
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 4.0),
-                                              child: Icon(
-                                                Icons.close,
-                                                size: 12,
-                                                color: Colors.grey,
+                                  .map((e) => Padding(
+                                    padding: const EdgeInsets.only(bottom: 4.0),
+                                    child: Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Text('${e.buildString} before'),
+                                            GestureDetector(
+                                              onTap: () {
+                                                _selectedReminders.remove(e);
+                                                setState(() {});
+                                              },
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(
+                                                    left: 4.0),
+                                                child: Icon(
+                                                  Icons.close,
+                                                  size: 12,
+                                                  color: Colors.grey,
+                                                ),
                                               ),
-                                            ),
-                                          )
-                                        ],
-                                      ))
+                                            )
+                                          ],
+                                        ),
+                                  ))
                                   .toList()
                             ],
                           ),

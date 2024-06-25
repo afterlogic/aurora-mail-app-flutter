@@ -77,7 +77,6 @@ class EventViewPage extends StatelessWidget {
         ],
       ),
     ];
-
     return Scaffold(
       appBar: AMAppBar(
         title: Text('Event'),
@@ -86,6 +85,9 @@ class EventViewPage extends StatelessWidget {
       body: SingleChildScrollView(
         child: BlocBuilder<EventsBloc, EventsState>(
           builder: (context, eventsState) {
+            final areRemindersEmpty = (eventsState
+                .selectedEvent?.reminders?.isNotEmpty ??
+                false);
             return Column(
               children: [
                 Padding(
@@ -145,6 +147,7 @@ class EventViewPage extends StatelessWidget {
                         if (eventsState.selectedEvent != null)
                           DateTimeTile(
                             dateTime: eventsState.selectedEvent!.startDate,
+                            isAllDay: eventsState.selectedEvent?.allDay ?? true,
                           ),
                         const SizedBox(
                           height: 16,
@@ -152,6 +155,7 @@ class EventViewPage extends StatelessWidget {
                         if (eventsState.selectedEvent != null)
                           DateTimeTile(
                             dateTime: eventsState.selectedEvent!.endDate,
+                            isAllDay: eventsState.selectedEvent?.allDay ?? true,
                           ),
                       ],
                     )),
@@ -159,7 +163,6 @@ class EventViewPage extends StatelessWidget {
                   color: const Color(0xFFB6B5B5),
                   height: 1,
                 ),
-                if (eventsState.selectedEvent?.recurrenceMode != null)
                   Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 24, vertical: 24),
@@ -172,13 +175,15 @@ class EventViewPage extends StatelessWidget {
                                     .buildString(context),
                               ),
                               Spacer(),
-                              if(eventsState.selectedEvent!.recurrenceMode != RecurrenceMode.never)Text(
-                                eventsState.selectedEvent!
-                                            .recurrenceUntilDate ==
-                                        null
-                                    ? 'Always'
-                                    : 'until ${DateFormat('yyyy/MM/dd').format(eventsState.selectedEvent!.recurrenceUntilDate!)}',
-                              ),
+                              if (eventsState.selectedEvent!.recurrenceMode !=
+                                  RecurrenceMode.never)
+                                Text(
+                                  eventsState.selectedEvent!
+                                              .recurrenceUntilDate ==
+                                          null
+                                      ? 'Always'
+                                      : 'until ${DateFormat('yyyy/MM/dd').format(eventsState.selectedEvent!.recurrenceUntilDate!)}',
+                                ),
                             ],
                           ),
                         ],
@@ -187,60 +192,67 @@ class EventViewPage extends StatelessWidget {
                           size: 15,
                         ),
                       )),
-                const Divider(
-                  color: const Color(0xFFB6B5B5),
-                  height: 1,
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                  child: SectionWithIcon(
-                    children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(
-                                top: eventsState.selectedEvent?.reminders !=
-                                            null &&
-                                        eventsState.selectedEvent!.reminders!
-                                                .length >
-                                            1
-                                    ? 0.0
-                                    : 6.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                if (eventsState
-                                        .selectedEvent?.reminders?.isEmpty ??
-                                    true)
-                                  Text(
-                                    'Reminders',
-                                  ),
-                                ...?eventsState.selectedEvent?.reminders
-                                    ?.map(
-                                        (e) => Text('${e.buildString} before'))
-                                    .toList()
-                              ],
+                if (areRemindersEmpty)
+                  const Divider(
+                    color: const Color(0xFFB6B5B5),
+                    height: 1,
+                  ),
+                if (areRemindersEmpty)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24, vertical: 16),
+                    child: SectionWithIcon(
+                      children: [
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(
+                                  top: eventsState.selectedEvent?.reminders !=
+                                              null &&
+                                          eventsState.selectedEvent!.reminders!
+                                                  .length >
+                                              1
+                                      ? 0.0
+                                      : 6.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  if (eventsState
+                                          .selectedEvent?.reminders?.isEmpty ??
+                                      true)
+                                    Text(
+                                      'Reminders',
+                                    ),
+                                  ...?eventsState.selectedEvent?.reminders
+                                      ?.map((e) => Padding(
+                                            padding: const EdgeInsets.only(
+                                                bottom: 4.0),
+                                            child:
+                                                Text('${e.buildString} before'),
+                                          ))
+                                      .toList()
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
-                    icon: Padding(
-                      padding: EdgeInsets.only(
-                          top: eventsState.selectedEvent?.reminders != null &&
-                                  eventsState.selectedEvent!.reminders!.length >
-                                      1
-                              ? 0.0
-                              : 6.0),
-                      child: Icon(
-                        Icons.notifications_none,
-                        size: 15,
+                          ],
+                        ),
+                      ],
+                      icon: Padding(
+                        padding: EdgeInsets.only(
+                            top: eventsState.selectedEvent?.reminders != null &&
+                                    eventsState
+                                            .selectedEvent!.reminders!.length >
+                                        1
+                                ? 0.0
+                                : 6.0),
+                        child: Icon(
+                          Icons.notifications_none,
+                          size: 15,
+                        ),
                       ),
                     ),
                   ),
-                ),
                 const Divider(
                   color: const Color(0xFFB6B5B5),
                   height: 1,

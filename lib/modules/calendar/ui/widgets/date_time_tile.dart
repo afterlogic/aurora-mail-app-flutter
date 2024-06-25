@@ -3,10 +3,11 @@ import 'package:intl/intl.dart';
 
 class DateTimeTile extends StatelessWidget {
   const DateTimeTile(
-      {super.key, required this.dateTime, this.onChanged});
+      {super.key, required this.dateTime, this.onChanged, required this.isAllDay});
 
   final Function(DateTime)? onChanged;
   final DateTime dateTime;
+  final bool isAllDay;
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +19,7 @@ class DateTimeTile extends StatelessWidget {
             firstDate: DateTime(1980),
             lastDate: DateTime(2040))
             .then((value) {
-          if (value != null) {
+          if (value != null && !isAllDay) {
             final DateTime result = dateTime.copyWith(
                 year: value.year, month: value.month, day: value.day);
             showTimePicker(
@@ -39,7 +40,7 @@ class DateTimeTile extends StatelessWidget {
         children: [
           Text(DateFormat('E, MMM d, y').format(dateTime)),
           Spacer(),
-          Text(DateFormat.jm().format(dateTime)),
+          if(!isAllDay)Text(DateFormat.jm().format(dateTime)),
         ],
       ),
     );

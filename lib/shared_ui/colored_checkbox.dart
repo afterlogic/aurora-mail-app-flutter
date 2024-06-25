@@ -18,9 +18,7 @@ class ColoredCheckbox extends StatelessWidget {
         ),
       ),
       child: Checkbox(
-
         value: value,
-
         activeColor: color,
         checkColor: Colors.white,
         onChanged: onChanged
