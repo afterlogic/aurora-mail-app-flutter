@@ -99,6 +99,10 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
     return _repo.getContactById(id);
   }
 
+  Future<List<Contact>> getContactsByEmail(String mail) async {
+    return _repo.getContactsByEmail(mail);
+  }
+
   Stream<ContactsState> _searchContacts(SearchContacts event) async* {
     searchPattern = event.search;
 

@@ -605,4 +605,9 @@ class ContactsRepositoryImpl implements ContactsRepository {
     // watchContactsStorages();
     refreshStorages();
   }
+
+  @override
+  Future<List<Contact>> getContactsByEmail(String mail) {
+    return _db.getContactsByEmail(mail);
+  }
 }
