@@ -27,6 +27,7 @@ class ViewEvent extends Event {
           endDate: e.endTS!,
           calendarId: e.calendarId,
           title: e.subject!,
+          attendees: e.attendees,
           color: color,
           recurrenceId: e.recurrenceId!,
           uid: e.uid,
@@ -93,6 +94,7 @@ class ViewEvent extends Event {
     required super.recurrenceUntilDate,
     required super.recurrenceWeekDays,
     required super.recurrenceWeeklyFrequency,
+    required super.attendees,
   });
 
   @override
@@ -128,9 +130,11 @@ class ViewEvent extends Event {
     DateTime? Function()? recurrenceUntilDate,
     EveryWeekFrequency? Function()? recurrenceWeeklyFrequency,
     Set<DaysOfWeek>? Function()? recurrenceWeekDays,
+    List<Attendee>? attendees,
   }) =>
       ViewEvent(
         startDate: startDate ?? this.startDate,
+        attendees: attendees ?? this.attendees,
         endDate: endDate ?? this.endDate,
         organizer: organizer ?? this.organizer,
         appointment: appointment ?? this.appointment,
@@ -257,7 +261,7 @@ class ExtendedMonthEvent extends ViewEvent {
           recurrenceMode: e.recurrenceMode,
           recurrenceUntilDate: e.recurrenceUntilDate,
           recurrenceWeekDays: e.recurrenceWeekDays,
-          recurrenceWeeklyFrequency: e.recurrenceWeeklyFrequency);
+          recurrenceWeeklyFrequency: e.recurrenceWeeklyFrequency, attendees: e.attendees);
 
   ExtendedMonthEvent(
       {this.overflow = false,
@@ -293,7 +297,8 @@ class ExtendedMonthEvent extends ViewEvent {
       required super.recurrenceMode,
       required super.recurrenceUntilDate,
       required super.recurrenceWeekDays,
-      required super.recurrenceWeeklyFrequency});
+      required super.recurrenceWeeklyFrequency,
+      required super.attendees});
 }
 
 // class VisibleDayEvent extends ViewEvent {

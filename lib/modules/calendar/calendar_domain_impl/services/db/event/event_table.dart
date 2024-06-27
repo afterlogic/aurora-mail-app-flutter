@@ -1,5 +1,6 @@
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/event.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/event_base.dart';
+import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/contacts/converters/list_string_converter.dart';
 import 'package:drift/drift.dart';
 
 @DataClassName("EventDb")
@@ -61,4 +62,6 @@ class EventTable extends Table {
   DateTimeColumn get recurrenceUntilDate => dateTime().nullable()();
 
   TextColumn get recurrenceWeekDaysString => text().nullable()();
+
+  TextColumn get attendees => text().map(const ListStringConverter()).nullable()();
 }

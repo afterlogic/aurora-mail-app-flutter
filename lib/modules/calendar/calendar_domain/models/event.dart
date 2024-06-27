@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/event_base.dart';
 import 'package:aurora_mail/utils/extensions/string_extensions.dart';
 import 'package:collection/collection.dart';
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 class EventCreationData {
@@ -64,37 +67,39 @@ class Event extends EventBase {
   final DateTime? recurrenceUntilDate;
   final EveryWeekFrequency? recurrenceWeeklyFrequency;
   final Set<DaysOfWeek>? recurrenceWeekDays;
+  final List<Attendee> attendees;
 
-  const Event({
-    this.organizer,
-    this.appointment,
-    this.appointmentAccess,
-    required this.calendarId,
-    required this.userLocalId,
-    required this.uid,
-    this.subject,
-    this.description,
-    this.location,
-    this.startTS,
-    this.endTS,
-    this.allDay,
-    this.owner,
-    this.modified,
-    this.recurrenceId,
-    this.lastModified,
-    this.rrule,
-    this.status,
-    this.withDate,
-    this.isPrivate,
-    required this.updateStatus,
-    required this.reminders,
-    required this.synced,
-    required this.onceLoaded,
-    this.recurrenceMode,
-    this.recurrenceUntilDate,
-    this.recurrenceWeeklyFrequency,
-    this.recurrenceWeekDays,
-  }) : super(
+  const Event(
+      {this.organizer,
+      this.appointment,
+      this.appointmentAccess,
+      required this.calendarId,
+      required this.userLocalId,
+      required this.uid,
+      this.subject,
+      this.description,
+      this.location,
+      this.startTS,
+      this.endTS,
+      this.allDay,
+      this.owner,
+      this.modified,
+      this.recurrenceId,
+      this.lastModified,
+      this.rrule,
+      this.status,
+      this.withDate,
+      this.isPrivate,
+      required this.updateStatus,
+      required this.reminders,
+      required this.synced,
+      required this.onceLoaded,
+      this.recurrenceMode,
+      this.recurrenceUntilDate,
+      this.recurrenceWeeklyFrequency,
+      this.recurrenceWeekDays,
+      required this.attendees})
+      : super(
             uid: uid,
             updateStatus: updateStatus,
             userLocalId: userLocalId,
@@ -108,59 +113,62 @@ class Event extends EventBase {
     final rawRrule = newData['rrule'] as Map<String, dynamic>?;
 
     return Event(
-      ///All timestamps should be in seconds
-      organizer: newData['organizer'] as String? ?? '',
-      appointment: (newData['appointment'] as bool?)!,
-      appointmentAccess: (newData['appointmentAccess'] as int?)!,
-      calendarId: (newData['calendarId'] as String?)!,
-      userLocalId: base.userLocalId,
-      uid: (newData['uid'] as String?)!,
-      subject: (newData['subject'] as String?)!,
-      description: (newData['description'] as String?) ?? '',
-      location: (newData['location'] as String?) ?? '',
-      startTS: (newData['startTS'] as int?) == null
-          ? null
-          : DateTime.fromMillisecondsSinceEpoch(
-              (newData['startTS'] as int) * 1000),
-      endTS: (newData['endTS'] as int?) == null
-          ? null
-          : DateTime.fromMillisecondsSinceEpoch(
-              (newData['endTS'] as int) * 1000),
-      allDay: (newData['allDay'] as bool?)!,
-      owner: (newData['owner'] as String?)!,
-      modified: (newData['modified'] as bool?)!,
-      recurrenceId: (newData['recurrenceId'] as int?)!,
-      lastModified: (newData['lastModified'] as int?)!,
-      recurrenceMode: rawRrule == null
-          ? RecurrenceMode.never
-          : RecurrenceModeX.fromPeriodCode((rawRrule['period'] as int?)!),
-      recurrenceUntilDate: rawRrule == null ||
-              rawRrule['until'] == null ||
-              rawRrule['until'] == 0
-          ? null
-          : DateTime.fromMillisecondsSinceEpoch(
-              (rawRrule['until'] as int) * 1000),
-      recurrenceWeeklyFrequency: rawRrule == null
-          ? null
-          : EveryWeekFrequencyX.fromIntervalCode(
-              (rawRrule['interval'] as int?)!),
-      recurrenceWeekDays: rawRrule == null
-          ? null
-          : (rawRrule['byDays'] as List)
-              .map((e) => DaysOfWeekX.fromDaysCode(e as String))
-              .toSet(),
-      status: (newData['status'] as bool?)!,
-      withDate: (newData['withDate'] as bool?)!,
-      isPrivate: (newData['isPrivate'] as bool?)!,
-      updateStatus: base.updateStatus,
-      synced: true,
-      onceLoaded: true,
-      reminders: (newData['alarms'] as List?)
-              ?.map((e) => RemindersIntMapper.fromInt(e as int))
-              .whereNotNull()
-              .toSet() ??
-          {},
-    );
+
+        ///All timestamps should be in seconds
+        organizer: newData['organizer'] as String? ?? '',
+        appointment: (newData['appointment'] as bool?)!,
+        appointmentAccess: (newData['appointmentAccess'] as int?)!,
+        calendarId: (newData['calendarId'] as String?)!,
+        userLocalId: base.userLocalId,
+        uid: (newData['uid'] as String?)!,
+        subject: (newData['subject'] as String?)!,
+        description: (newData['description'] as String?) ?? '',
+        location: (newData['location'] as String?) ?? '',
+        startTS: (newData['startTS'] as int?) == null
+            ? null
+            : DateTime.fromMillisecondsSinceEpoch(
+                (newData['startTS'] as int) * 1000),
+        endTS: (newData['endTS'] as int?) == null
+            ? null
+            : DateTime.fromMillisecondsSinceEpoch(
+                (newData['endTS'] as int) * 1000),
+        allDay: (newData['allDay'] as bool?)!,
+        owner: (newData['owner'] as String?)!,
+        modified: (newData['modified'] as bool?)!,
+        recurrenceId: (newData['recurrenceId'] as int?)!,
+        lastModified: (newData['lastModified'] as int?)!,
+        recurrenceMode: rawRrule == null
+            ? RecurrenceMode.never
+            : RecurrenceModeX.fromPeriodCode((rawRrule['period'] as int?)!),
+        recurrenceUntilDate: rawRrule == null ||
+                rawRrule['until'] == null ||
+                rawRrule['until'] == 0
+            ? null
+            : DateTime.fromMillisecondsSinceEpoch(
+                (rawRrule['until'] as int) * 1000),
+        recurrenceWeeklyFrequency: rawRrule == null
+            ? null
+            : EveryWeekFrequencyX.fromIntervalCode(
+                (rawRrule['interval'] as int?)!),
+        recurrenceWeekDays: rawRrule == null
+            ? null
+            : (rawRrule['byDays'] as List)
+                .map((e) => DaysOfWeekX.fromDaysCode(e as String))
+                .toSet(),
+        status: (newData['status'] as bool?)!,
+        withDate: (newData['withDate'] as bool?)!,
+        isPrivate: (newData['isPrivate'] as bool?)!,
+        updateStatus: base.updateStatus,
+        synced: true,
+        onceLoaded: true,
+        reminders: (newData['alarms'] as List?)
+                ?.map((e) => RemindersIntMapper.fromInt(e as int))
+                .whereNotNull()
+                .toSet() ??
+            {},
+        attendees: (newData['attendees'] as List)
+            .map((e) => Attendee.fromMap(e as Map<String, dynamic>))
+            .toList());
   }
 
   factory Event.fromDb(EventDb entity) {
@@ -207,41 +215,43 @@ class Event extends EventBase {
               .whereNotNull()
               .toSet()
           : {},
+      attendees: entity.attendees?.map((e) => Attendee.fromMap(jsonDecode(e) as Map<String, dynamic>)).toList() ?? []
     );
   }
 
   @override
   EventDb toDb() {
     return EventDb(
-      description: description,
-      location: location,
-      calendarId: calendarId,
-      startTS: startTS,
-      organizer: organizer,
-      appointment: appointment,
-      appointmentAccess: appointmentAccess,
-      userLocalId: userLocalId,
-      uid: uid,
-      allDay: allDay,
-      owner: owner,
-      modified: modified,
-      recurrenceId: recurrenceId,
-      lastModified: lastModified,
-      status: status,
-      withDate: withDate,
-      isPrivate: isPrivate,
-      // rrule: null,
-      subject: subject,
-      endTS: endTS,
-      updateStatus: updateStatus,
-      synced: synced,
-      remindersString: reminders?.map((e) => e.toInt).join(','),
-      onceLoaded: onceLoaded,
-      recurrenceWeekDaysString:
-          recurrenceWeekDays?.map((e) => e.byDaysCode).join(','),
-      recurrenceWeeklyFrequency: recurrenceWeeklyFrequency,
-      recurrenceUntilDate: recurrenceUntilDate,
-      recurrenceMode: recurrenceMode
+        description: description,
+        location: location,
+        calendarId: calendarId,
+        startTS: startTS,
+        organizer: organizer,
+        appointment: appointment,
+        appointmentAccess: appointmentAccess,
+        userLocalId: userLocalId,
+        uid: uid,
+        allDay: allDay,
+        owner: owner,
+        modified: modified,
+        recurrenceId: recurrenceId,
+        lastModified: lastModified,
+        status: status,
+        withDate: withDate,
+        isPrivate: isPrivate,
+        // rrule: null,
+        subject: subject,
+        endTS: endTS,
+        updateStatus: updateStatus,
+        synced: synced,
+        remindersString: reminders?.map((e) => e.toInt).join(','),
+        onceLoaded: onceLoaded,
+        recurrenceWeekDaysString:
+            recurrenceWeekDays?.map((e) => e.byDaysCode).join(','),
+        recurrenceWeeklyFrequency: recurrenceWeeklyFrequency,
+        recurrenceUntilDate: recurrenceUntilDate,
+      recurrenceMode: recurrenceMode,
+      attendees: attendees.map((e) => jsonEncode(e.toMap())).toList()
     );
   }
 
@@ -277,6 +287,7 @@ class Event extends EventBase {
           recurrenceMode == other.recurrenceMode &&
           recurrenceUntilDate == other.recurrenceUntilDate &&
           recurrenceWeekDays == other.recurrenceWeekDays &&
+          attendees == other.attendees &&
           recurrenceWeeklyFrequency == other.recurrenceWeeklyFrequency);
 
   @override
@@ -308,6 +319,7 @@ class Event extends EventBase {
       recurrenceMode.hashCode ^
       recurrenceWeeklyFrequency.hashCode ^
       recurrenceWeekDays.hashCode ^
+      attendees.hashCode ^
       recurrenceUntilDate.hashCode;
 
   @override
@@ -357,6 +369,7 @@ class Event extends EventBase {
       UpdateStatus? updateStatus,
       bool? synced,
       bool? onceLoaded,
+        List<Attendee>? attendees,
       RecurrenceMode? Function()? recurrenceMode,
       DateTime? Function()? recurrenceUntilDate,
       EveryWeekFrequency? Function()? recurrenceWeeklyFrequency,
@@ -398,8 +411,74 @@ class Event extends EventBase {
       recurrenceWeeklyFrequency: recurrenceWeeklyFrequency == null
           ? this.recurrenceWeeklyFrequency
           : recurrenceWeeklyFrequency(),
+      attendees: attendees ?? this.attendees
     );
   }
+}
+
+enum InviteStatus { accepted, denied, pending, unknown }
+
+extension InviteStatusMapper on InviteStatus {
+  static InviteStatus fromCode(int code) {
+    switch (code) {
+      case 1:
+        return InviteStatus.accepted;
+      case 2:
+        return InviteStatus.pending;
+      case 3:
+        return InviteStatus.denied;
+      default:
+        return InviteStatus.unknown;
+    }
+  }
+
+  int get statusCode {
+    switch (this) {
+      case InviteStatus.unknown:
+        return -1;
+      case InviteStatus.accepted:
+        return 1;
+      case InviteStatus.pending:
+        return 2;
+      case InviteStatus.denied:
+        return 3;
+    }
+  }
+}
+
+class Attendee extends Equatable {
+  final int access;
+  final String email;
+  final String name;
+  final InviteStatus status;
+
+  const Attendee({
+    required this.access,
+    required this.email,
+    required this.name,
+    required this.status,
+  });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'access': this.access,
+      'email': this.email,
+      'name': this.name,
+      'status': this.status.statusCode,
+    };
+  }
+
+  factory Attendee.fromMap(Map<String, dynamic> map) {
+    return Attendee(
+      access: map['access'] as int,
+      email: (map['email'] as String?)!,
+      name: (map['name'] as String?) ?? '',
+      status: InviteStatusMapper.fromCode(map['status'] as int),
+    );
+  }
+
+  @override
+  List<Object?> get props => [access, email, name, status];
 }
 
 enum RecurrenceMode { never, daily, weekly, monthly, yearly }
