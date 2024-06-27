@@ -1,13 +1,14 @@
+import 'dart:async';
+
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/generated/l10n.dart';
-import 'package:aurora_mail/modules/calendar/ui/dialogs/reminders_dialog.dart';
-import 'package:aurora_mail/modules/calendar/ui/widgets/calendar_tile.dart';
-import 'package:aurora_mail/modules/calendar/ui/widgets/text_input.dart';
+import 'package:aurora_mail/modules/calendar/blocs/events/events_bloc.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/event.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
-import 'package:aurora_mail/modules/mail/screens/compose/components/compose_emails.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/components/compose_type_ahead.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/components/fit_text_field.dart';
+import 'package:aurora_mail/utils/input_validation.dart';
 import 'package:aurora_mail/utils/mail_utils.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
@@ -27,17 +28,13 @@ class _AttendeesPageState extends State<AttendeesPage> {
   final _composeTypeAheadFieldKey = new GlobalKey<ComposeTypeAheadFieldState>();
   final _attendeesFocusNode = FocusNode();
   final Set<String> emails = {};
+  late final Set<Attendee> _attendees;
   late final ContactsBloc _contactsBloc;
+  late final StreamSubscription _eventsSubscription;
+  late final EventsBloc _eventsBloc;
   List<Contact> lastSuggestions = [];
   String _search = "";
   String? _emailToShowDelete;
-
-  final List<String> _attendees = [
-    '"John" <user2@domain.com>',
-    '"Bill" <user3@domain.com>',
-    '"Simpson" <user4@domain.com>',
-    'user5@domain.com',
-  ];
 
   String organizer = 'user@domain.com';
   String selectedUser = 'user1@domain.com';
@@ -46,10 +43,23 @@ class _AttendeesPageState extends State<AttendeesPage> {
   void initState() {
     super.initState();
     _contactsBloc = BlocProvider.of<ContactsBloc>(context);
+    _eventsBloc = BlocProvider.of<EventsBloc>(context);
+    _attendees = {};
+    onEventsStateChange(_eventsBloc.state);
+    _eventsSubscription = _eventsBloc.stream.listen(onEventsStateChange);
+  }
+
+  void onEventsStateChange(EventsState state) {
+    final e = state.selectedEvent;
+    _attendees.clear();
+    _attendees.addAll(e?.attendees ?? []);
+    setState(() {});
+    // _descriptionController
   }
 
   @override
   void dispose() {
+    _eventsSubscription.cancel();
     super.dispose();
   }
 
@@ -74,38 +84,27 @@ class _AttendeesPageState extends State<AttendeesPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Organizer: $organizer', style: TextStyle(color: Colors.grey)),
+                Text('Organizer: $organizer',
+                    style: TextStyle(color: Colors.grey)),
                 SizedBox(height: 8),
                 Row(
                   children: [
-                    // Expanded(
-                    //   child: DropdownButtonFormField<String>(
-                    //     value: selectedUser,
-                    //     onChanged: (String? newValue) {
-                    //       setState(() {
-                    //         selectedUser = newValue!;
-                    //       });
-                    //     },
-                    //     items: <String>[
-                    //       'user1@domain.com',
-                    //       'user2@domain.com',
-                    //       'user3@domain.com'
-                    //     ].map<DropdownMenuItem<String>>((String value) {
-                    //       return DropdownMenuItem<String>(
-                    //         value: value,
-                    //         child: Text(value),
-                    //       );
-                    //     }).toList(),
-                    //     decoration: InputDecoration(
-                    //       border: OutlineInputBorder(),
-                    //     ),
-                    //   ),
-                    // ),
                     Expanded(
                       child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Color(0xFFB6B5B5)),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        padding: EdgeInsets.symmetric(horizontal: 8),
                         child: InkWell(
                           // onLongPress: true ? _paste : null,
-                          onTap: () => _attendeesFocusNode.requestFocus(),
+                          onTap: () {
+                            if (_attendeesFocusNode.hasFocus) {
+                              _attendeesFocusNode.unfocus();
+                            } else {
+                              _attendeesFocusNode.requestFocus();
+                            }
+                          },
                           child: ComposeTypeAheadField<Contact>(
                             key: _composeTypeAheadFieldKey,
                             textFieldConfiguration: TextFieldConfiguration(
@@ -130,7 +129,8 @@ class _AttendeesPageState extends State<AttendeesPage> {
                             getImmediateSuggestions: true,
                             noItemsFoundBuilder: (_) => SizedBox(),
                             suggestionsCallback: (pattern) async =>
-                                lastSuggestions = await _buildSuggestions(pattern),
+                                lastSuggestions =
+                                    await _buildSuggestions(pattern),
                             itemBuilder: (_, c) {
                               return Padding(
                                 padding: const EdgeInsets.all(16.0),
@@ -142,19 +142,15 @@ class _AttendeesPageState extends State<AttendeesPage> {
                             },
                             onSuggestionSelected: (c) {
                               _attendeesFocusNode.requestFocus();
-                              //TODO add attendee
+                              _addEmail(MailUtils.getFriendlyName(c));
                             },
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 4.0),
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 4.0),
                               child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: <Widget>[
-                                  Padding(
-                                    padding:
-                                        const EdgeInsets.symmetric(vertical: 0.0),
-                                    child: Text('Select',
-                                        style: Theme.of(context).textTheme.subtitle1),
-                                  ),
-                                  SizedBox(width: 8.0),
                                   Flexible(
                                     flex: 1,
                                     child: FutureBuilder<Map<String, Contact>>(
@@ -162,8 +158,8 @@ class _AttendeesPageState extends State<AttendeesPage> {
                                       builder: (context, result) {
                                         return Wrap(spacing: 8.0, children: [
                                           ...emails.map((e) {
-                                            final displayName =
-                                                MailUtils.displayNameFromFriendly(e);
+                                            final displayName = MailUtils
+                                                .displayNameFromFriendly(e);
                                             Contact? contact;
                                             if (BuildProperty.cryptoEnable &&
                                                 !BuildProperty.legacyPgpKey) {
@@ -175,22 +171,21 @@ class _AttendeesPageState extends State<AttendeesPage> {
                                             return SizedBox(
                                               height: 43.0,
                                               child: GestureDetector(
-                                                onTap: true
-                                                    ? () {
-                                                        if (_emailToShowDelete == e) {
-                                                          setState(() =>
-                                                              _emailToShowDelete =
-                                                                  null);
-                                                        } else {
-                                                          setState(() =>
-                                                              _emailToShowDelete = e);
-                                                        }
-                                                      }
-                                                    : null,
+                                                onTap: () {
+                                                  if (_emailToShowDelete == e) {
+                                                    setState(() =>
+                                                        _emailToShowDelete =
+                                                            null);
+                                                  } else {
+                                                    setState(() =>
+                                                        _emailToShowDelete = e);
+                                                  }
+                                                },
                                                 child: Chip(
                                                   avatar: CircleAvatar(
-                                                    backgroundColor: Theme.of(context)
-                                                        .primaryColor,
+                                                    backgroundColor:
+                                                        Theme.of(context)
+                                                            .primaryColor,
                                                     child: Text(
                                                       displayName[0],
                                                       style: TextStyle(
@@ -198,18 +193,24 @@ class _AttendeesPageState extends State<AttendeesPage> {
                                                     ),
                                                   ),
                                                   label: Row(
-                                                    mainAxisSize: MainAxisSize.min,
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
                                                     children: [
                                                       Text(displayName),
                                                       SizedBox(width: 5),
-                                                      if (contact?.autoEncrypt ==
+                                                      if (contact
+                                                              ?.autoEncrypt ==
                                                           true)
-                                                        Icon(Icons.lock_outline),
-                                                      if (contact?.autoSign == true)
-                                                        Icon(Icons.edit_outlined)
+                                                        Icon(
+                                                            Icons.lock_outline),
+                                                      if (contact?.autoSign ==
+                                                          true)
+                                                        Icon(
+                                                            Icons.edit_outlined)
                                                     ],
                                                   ),
-                                                  onDeleted: e == _emailToShowDelete
+                                                  onDeleted: e ==
+                                                          _emailToShowDelete
                                                       ? () => _deleteEmail(e)
                                                       : null,
                                                 ),
@@ -229,7 +230,8 @@ class _AttendeesPageState extends State<AttendeesPage> {
                                                 autofocus: true,
                                                 keyboardType:
                                                     TextInputType.emailAddress,
-                                                decoration: InputDecoration.collapsed(
+                                                decoration:
+                                                    InputDecoration.collapsed(
                                                   hintText: null,
                                                 ),
                                                 onChanged: (value) {
@@ -242,11 +244,11 @@ class _AttendeesPageState extends State<AttendeesPage> {
                                                     _deleteEmail(emails.last);
                                                   } else if (value.length > 1 &&
                                                       value.endsWith(" ")) {
-                                                    // onSubmit();
+                                                    onSubmitFromKeyboard();
                                                   }
                                                 },
                                                 onEditingComplete: () {
-                                                  // onSubmit();
+                                                  onSubmitFromKeyboard();
                                                 },
                                               ),
                                             ),
@@ -255,15 +257,6 @@ class _AttendeesPageState extends State<AttendeesPage> {
                                       },
                                     ),
                                   ),
-                                  if (_attendeesFocusNode.hasFocus && false)
-                                    SizedBox(
-                                      height: 24.0,
-                                      child: IconButton(
-                                        padding: EdgeInsets.zero,
-                                        icon: Icon(Icons.add),
-                                        onPressed: null,
-                                      ),
-                                    ),
                                 ],
                               ),
                             ),
@@ -273,43 +266,31 @@ class _AttendeesPageState extends State<AttendeesPage> {
                     ),
                     SizedBox(width: 8),
                     SizedBox(
-                      height: 62,
+                      height: 53,
+                      width: 53,
                       child: ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            if (selectedUser.isNotEmpty) {
-                              _attendees.add(selectedUser);
-                            }
-                          });
-                        },
+                        onPressed: _addAttendees,
                         child: Icon(Icons.add),
                       ),
                     ),
                   ],
                 ),
                 SizedBox(height: 16),
-                // Expanded(
-                //   child: ListView.builder(
-                //     itemCount: _attendees.length,
-                //     itemBuilder: (context, index) {
-                //       return Card(
-                //         color: Colors.blue[50],
-                //         child: ListTile(
-                //           leading: Icon(Icons.circle, color: Colors.orange),
-                //           title: Text(_attendees[index]),
-                //           trailing: IconButton(
-                //             icon: Icon(Icons.close),
-                //             onPressed: () {
-                //               setState(() {
-                //                 _attendees.removeAt(index);
-                //               });
-                //             },
-                //           ),
-                //         ),
-                //       );
-                //     },
-                //   ),
-                // ),
+                ..._attendees.map((e) => Card(
+                      color: Colors.blue[50],
+                      child: ListTile(
+                        leading: Icon(Icons.circle, color: e.status.color),
+                        title: Text(e.email),
+                        trailing: IconButton(
+                          icon: Icon(Icons.close),
+                          onPressed: () {
+                            setState(() {
+                              _attendees.remove(e);
+                            });
+                          },
+                        ),
+                      ),
+                    ))
               ],
             ),
           ),
@@ -318,10 +299,47 @@ class _AttendeesPageState extends State<AttendeesPage> {
     );
   }
 
+  void _addAttendees() {
+    final attendees = emails.map((e) => Attendee(
+        access: 0,
+        email: MailUtils.emailFromFriendly(e),
+        name: MailUtils.displayNameFromFriendly(e),
+        status: InviteStatus.pending));
+    _attendees.addAll(attendees);
+    emails.clear();
+    _attendeesFocusNode.unfocus();
+    setState(() {});
+  }
+
   void _deleteEmail(String email) {
     setState(() => emails.remove(email));
     _composeTypeAheadFieldKey.currentState?.reopen();
-    // widget.onChange();
+  }
+
+  onSubmitFromKeyboard() {
+    if (lastSuggestions.isEmpty) {
+      if (isEmailValid(_emailController.text.replaceAll(" ", ""))) {
+        _addEmail(_emailController.text.replaceAll(" ", ""));
+        _composeTypeAheadFieldKey.currentState?.clear();
+      }
+    } else {
+      _addEmail(MailUtils.getFriendlyName(lastSuggestions.first));
+      _composeTypeAheadFieldKey.currentState?.clear();
+    }
+    _attendeesFocusNode.unfocus();
+  }
+
+  Future _addEmail(String _email) async {
+    final email = _email.startsWith(" ") ? _email.substring(1) : _email;
+    _emailController.text = " ";
+    _emailController.selection = TextSelection.collapsed(offset: 1);
+    lastSuggestions = [];
+    final String? error = validateInput(
+        context, email, [ValidationType.email, ValidationType.empty]);
+    if (error == null) {
+      setState(() => emails.add(email));
+    }
+    _composeTypeAheadFieldKey.currentState?.reopen();
   }
 
   Future<Map<String, Contact>> getContacts() async {
@@ -337,7 +355,7 @@ class _AttendeesPageState extends State<AttendeesPage> {
       } else {
         email = emailWithName;
       }
-      if(email == null) continue;
+      if (email == null) continue;
       final emailContacts = await _contactsBloc.getContactsByEmail(email);
       if (emailContacts.isNotEmpty) {
         final contact = emailContacts.firstWhere(
@@ -474,4 +492,19 @@ TextSpan _searchMatch(
       )
     ],
   );
+}
+
+extension InviteStatusColor on InviteStatus {
+  Color get color {
+    switch (this) {
+      case InviteStatus.accepted:
+        return Colors.green;
+      case InviteStatus.denied:
+        return Colors.red;
+      case InviteStatus.pending:
+        return Color(0xFFEF954F);
+      case InviteStatus.unknown:
+        return Colors.grey;
+    }
+  }
 }
