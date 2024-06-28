@@ -4,7 +4,6 @@ import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/calendar/blocs/events/events_bloc.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/event.dart';
-import 'package:aurora_mail/modules/calendar/ui/models/event.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/attendee_card.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
@@ -15,7 +14,6 @@ import 'package:aurora_mail/utils/mail_utils.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 
 class AttendeesRouteArg {
   final Set<Attendee> initAttendees;
@@ -43,8 +41,6 @@ class _AttendeesPageState extends State<AttendeesPage> {
   String _search = "";
   String? _emailToShowDelete;
 
-  String organizer = 'user@domain.com';
-  String selectedUser = 'user1@domain.com';
 
   @override
   void initState() {
@@ -67,9 +63,11 @@ class _AttendeesPageState extends State<AttendeesPage> {
       appBar: AMAppBar(
         title: Text('Add attendee'),
         actions: [
-          TextButton(onPressed: () {
-            Navigator.of(context).pop(_attendees);
-          }, child: Text(S.of(context).btn_save))
+          TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(_attendees);
+              },
+              child: Text(S.of(context).btn_save))
         ],
       ),
       body: SingleChildScrollView(
@@ -81,9 +79,22 @@ class _AttendeesPageState extends State<AttendeesPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Organizer: $organizer',
-                    style: TextStyle(color: Colors.grey)),
-                SizedBox(height: 8),
+                BlocBuilder<EventsBloc, EventsState>(
+                  builder: (context, state) {
+                    if (state.selectedEvent?.owner?.isNotEmpty ?? false) {
+                      return Column(
+                        children: [
+                          const SizedBox(height: 8),
+                          Text('Organizer: ${state.selectedEvent!.owner!}',
+                              style: TextStyle(color: Colors.grey)),
+                        ],
+                      );
+                    } else {
+                      return SizedBox.shrink();
+                    }
+                  },
+                ),
+                const SizedBox(height: 8),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
