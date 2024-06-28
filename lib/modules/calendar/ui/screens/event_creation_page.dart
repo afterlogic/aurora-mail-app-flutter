@@ -102,8 +102,8 @@ class _EventCreationPageState extends State<EventCreationPage> {
     _locationController.text = e.location ?? '';
     _selectedStartDate = e.startDate;
     _selectedEndDate = e.endDate;
-    _selectedCalendar = _calendarsBloc.state.availableCalendars
-        .firstWhereOrNull((c) => c.id == e.calendarId);
+    _selectedCalendar = _calendarsBloc.state.calendars
+        ?.firstWhereOrNull((c) => c.id == e.calendarId);
     _isAllDay = e.allDay ?? false;
     _selectedReminders = e.reminders ?? {};
     _selectedWeeklyFrequency = e.recurrenceWeeklyFrequency;
@@ -476,7 +476,7 @@ class _EventCreationPageState extends State<EventCreationPage> {
                             onTap: () => Navigator.of(context)
                                     .pushNamed(AttendeesPage.name,
                                         arguments: AttendeesRouteArg(
-                                            initAttendees:Set.of(_attendees)))
+                                            initAttendees: Set.of(_attendees)))
                                     .then((value) {
                                   if (value == null) return;
                                   _attendees = Set.of(value as Set<Attendee>);
