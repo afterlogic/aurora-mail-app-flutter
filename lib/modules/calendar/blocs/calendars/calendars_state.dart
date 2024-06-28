@@ -14,10 +14,10 @@ class CalendarsState extends Equatable {
       ? <ViewCalendar>[]
       : calendars!
           .where((e) =>
-              !e.shared ||
-              !e.sharedToAll ||
+              (!e.shared &&
+              !e.sharedToAll )||
               (e.shared && e.access == 1 && !e.sharedToAll) ||
-              (e.sharedToAll && e.sharedToAllAccess == 1))
+              (e.sharedToAll && e.sharedToAllAccess == 1 ))
           .toList();
 
   const CalendarsState({
