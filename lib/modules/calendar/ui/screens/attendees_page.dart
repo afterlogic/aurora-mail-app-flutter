@@ -4,6 +4,8 @@ import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/calendar/blocs/events/events_bloc.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/event.dart';
+import 'package:aurora_mail/modules/calendar/ui/models/event.dart';
+import 'package:aurora_mail/modules/calendar/ui/widgets/attendee_card.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/components/compose_type_ahead.dart';
@@ -15,9 +17,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
+class AttendeesRouteArg {
+  final Set<Attendee> initAttendees;
+  AttendeesRouteArg({required this.initAttendees});
+}
+
 class AttendeesPage extends StatefulWidget {
   static const name = "attendees_page";
-  const AttendeesPage({super.key});
+  const AttendeesPage({super.key, required this.initAttendees});
+
+  final Set<Attendee> initAttendees;
 
   @override
   State<AttendeesPage> createState() => _AttendeesPageState();
@@ -30,8 +39,6 @@ class _AttendeesPageState extends State<AttendeesPage> {
   final Set<String> emails = {};
   late final Set<Attendee> _attendees;
   late final ContactsBloc _contactsBloc;
-  late final StreamSubscription _eventsSubscription;
-  late final EventsBloc _eventsBloc;
   List<Contact> lastSuggestions = [];
   String _search = "";
   String? _emailToShowDelete;
@@ -43,23 +50,11 @@ class _AttendeesPageState extends State<AttendeesPage> {
   void initState() {
     super.initState();
     _contactsBloc = BlocProvider.of<ContactsBloc>(context);
-    _eventsBloc = BlocProvider.of<EventsBloc>(context);
-    _attendees = {};
-    onEventsStateChange(_eventsBloc.state);
-    _eventsSubscription = _eventsBloc.stream.listen(onEventsStateChange);
-  }
-
-  void onEventsStateChange(EventsState state) {
-    final e = state.selectedEvent;
-    _attendees.clear();
-    _attendees.addAll(e?.attendees ?? []);
-    setState(() {});
-    // _descriptionController
+    _attendees = Set.of(widget.initAttendees);
   }
 
   @override
   void dispose() {
-    _eventsSubscription.cancel();
     super.dispose();
   }
 
@@ -72,7 +67,9 @@ class _AttendeesPageState extends State<AttendeesPage> {
       appBar: AMAppBar(
         title: Text('Add attendee'),
         actions: [
-          TextButton(onPressed: () {}, child: Text(S.of(context).btn_save))
+          TextButton(onPressed: () {
+            Navigator.of(context).pop(_attendees);
+          }, child: Text(S.of(context).btn_save))
         ],
       ),
       body: SingleChildScrollView(
@@ -88,6 +85,7 @@ class _AttendeesPageState extends State<AttendeesPage> {
                     style: TextStyle(color: Colors.grey)),
                 SizedBox(height: 8),
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Expanded(
                       child: Container(
@@ -276,21 +274,17 @@ class _AttendeesPageState extends State<AttendeesPage> {
                   ],
                 ),
                 SizedBox(height: 16),
-                ..._attendees.map((e) => Card(
-                      color: Colors.blue[50],
-                      child: ListTile(
-                        leading: Icon(Icons.circle, color: e.status.color),
-                        title: Text(e.email),
-                        trailing: IconButton(
-                          icon: Icon(Icons.close),
-                          onPressed: () {
-                            setState(() {
-                              _attendees.remove(e);
-                            });
-                          },
-                        ),
-                      ),
-                    ))
+                ..._attendees.map(
+                  (e) => Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: AttendeeCard(
+                      attendee: e,
+                      onDelete: () => setState(() {
+                        _attendees.remove(e);
+                      }),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
@@ -492,19 +486,4 @@ TextSpan _searchMatch(
       )
     ],
   );
-}
-
-extension InviteStatusColor on InviteStatus {
-  Color get color {
-    switch (this) {
-      case InviteStatus.accepted:
-        return Colors.green;
-      case InviteStatus.denied:
-        return Colors.red;
-      case InviteStatus.pending:
-        return Color(0xFFEF954F);
-      case InviteStatus.unknown:
-        return Colors.grey;
-    }
-  }
 }

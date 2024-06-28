@@ -184,7 +184,8 @@ class CalendarRepositoryImpl implements CalendarRepository {
         recurrenceMode: data.recurrenceMode,
         recurrenceUntilDate: data.recurrenceUntilDate,
         recurrenceWeeklyFrequency: data.recurrenceWeeklyFrequency,
-        recurrenceWeekDays: data.recurrenceWeekDays);
+        recurrenceWeekDays: data.recurrenceWeekDays,
+        attendees: data.attendees);
   }
 
   @override

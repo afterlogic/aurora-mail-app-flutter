@@ -181,9 +181,13 @@ class RouteGenerator {
         break;
 
       case AttendeesPage.name:
+        final args = settings.arguments as AttendeesRouteArg;
         return FadeRoute(
-            settings: RouteSettings(name: settings.name),
-            builder: (_) => AttendeesPage());
+          settings: RouteSettings(name: settings.name),
+          builder: (_) => AttendeesPage(
+            initAttendees: args.initAttendees,
+          ),
+        );
         break;
 
       // ================= MAIL =================

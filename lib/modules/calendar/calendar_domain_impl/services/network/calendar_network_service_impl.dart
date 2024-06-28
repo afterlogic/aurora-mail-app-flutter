@@ -152,6 +152,7 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
     required DateTime? recurrenceUntilDate,
     required EveryWeekFrequency? recurrenceWeeklyFrequency,
     required Set<DaysOfWeek>? recurrenceWeekDays,
+    required Set<Attendee>? attendees,
   }) async {
     // {
     //   "id": null,
@@ -181,6 +182,7 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
     //   "selectStart": 1714262400,
     //   "selectEnd": 1717891200
     // };
+        
     final rruleParameters = recurrenceMode == RecurrenceMode.never
         ? null
         : {
@@ -229,6 +231,10 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
       // "selectStart": 1714262400,
       // "selectEnd": 1717891200
     };
+
+    if(attendees != null){
+      parameters.addAll({"attendees": jsonEncode(attendees.map((e) => e.toMap()).toList())});
+    }
     
     if(rruleParameters != null){
       parameters.addAll({"rrule": jsonEncode(rruleParameters)});
@@ -240,6 +246,7 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
     );
 
     final result = await calendarModule.post(body) as Map<String, dynamic>;
+    print(result);
   }
 
   @override
@@ -290,6 +297,7 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
       "status": false,
       "withDate": true,
       "isPrivate": false,
+      "attendees": jsonEncode(event.attendees.map((e) => e.toMap()).toList())
       // "selectStart": 1714262400,
       // "selectEnd": 1717891200
     };

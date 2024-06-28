@@ -31,6 +31,7 @@ abstract class CalendarNetworkService {
     required DateTime? recurrenceUntilDate,
     required EveryWeekFrequency? recurrenceWeeklyFrequency,
     required Set<DaysOfWeek>? recurrenceWeekDays,
+    required Set<Attendee>? attendees,
 });
 
   Future<Event> updateEvent(Event event);

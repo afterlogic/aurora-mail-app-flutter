@@ -4,6 +4,7 @@ import 'package:aurora_mail/modules/calendar/blocs/events/events_bloc.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/event.dart';
 import 'package:aurora_mail/modules/calendar/ui/dialogs/deletion_confirm_dialog.dart';
 import 'package:aurora_mail/modules/calendar/ui/screens/event_creation_page.dart';
+import 'package:aurora_mail/modules/calendar/ui/widgets/attendee_card.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/calendar_tile.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/date_time_tile.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/section_with_icon.dart';
@@ -85,9 +86,8 @@ class EventViewPage extends StatelessWidget {
       body: SingleChildScrollView(
         child: BlocBuilder<EventsBloc, EventsState>(
           builder: (context, eventsState) {
-            final areRemindersEmpty = (eventsState
-                .selectedEvent?.reminders?.isNotEmpty ??
-                false);
+            final areRemindersEmpty =
+                (eventsState.selectedEvent?.reminders?.isNotEmpty ?? false);
             return Column(
               children: [
                 Padding(
@@ -163,35 +163,35 @@ class EventViewPage extends StatelessWidget {
                   color: const Color(0xFFB6B5B5),
                   height: 1,
                 ),
-                  Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 24, vertical: 24),
-                      child: SectionWithIcon(
-                        children: [
-                          Row(
-                            children: [
+                Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24, vertical: 24),
+                    child: SectionWithIcon(
+                      children: [
+                        Row(
+                          children: [
+                            Text(
+                              eventsState.selectedEvent!.recurrenceMode!
+                                  .buildString(context),
+                            ),
+                            Spacer(),
+                            if (eventsState.selectedEvent!.recurrenceMode !=
+                                RecurrenceMode.never)
                               Text(
-                                eventsState.selectedEvent!.recurrenceMode!
-                                    .buildString(context),
+                                eventsState.selectedEvent!
+                                            .recurrenceUntilDate ==
+                                        null
+                                    ? 'Always'
+                                    : 'until ${DateFormat('yyyy/MM/dd').format(eventsState.selectedEvent!.recurrenceUntilDate!)}',
                               ),
-                              Spacer(),
-                              if (eventsState.selectedEvent!.recurrenceMode !=
-                                  RecurrenceMode.never)
-                                Text(
-                                  eventsState.selectedEvent!
-                                              .recurrenceUntilDate ==
-                                          null
-                                      ? 'Always'
-                                      : 'until ${DateFormat('yyyy/MM/dd').format(eventsState.selectedEvent!.recurrenceUntilDate!)}',
-                                ),
-                            ],
-                          ),
-                        ],
-                        icon: Icon(
-                          Icons.sync,
-                          size: 15,
+                          ],
                         ),
-                      )),
+                      ],
+                      icon: Icon(
+                        Icons.sync,
+                        size: 15,
+                      ),
+                    )),
                 if (areRemindersEmpty)
                   const Divider(
                     color: const Color(0xFFB6B5B5),
@@ -253,32 +253,53 @@ class EventViewPage extends StatelessWidget {
                       ),
                     ),
                   ),
-                const Divider(
-                  color: const Color(0xFFB6B5B5),
-                  height: 1,
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                  child: SectionWithIcon(
-                    children: [
-                      Row(
-                        children: [
-                          Text(
-                            'Attendees',
+                if (eventsState.selectedEvent?.attendees.isNotEmpty == true)
+                  const Divider(
+                    color: const Color(0xFFB6B5B5),
+                    height: 1,
+                  ),
+                if (eventsState.selectedEvent?.attendees.isNotEmpty == true)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24, vertical: 16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.group,
+                              size: 15,
+                            ),
+                            const SizedBox(
+                              width: 8,
+                            ),
+                            Text(
+                              'Attendees',
+                            ),
+                            const Spacer(),
+                          ],
+                        ),
+                        const SizedBox(height: 4,),
+                        Wrap(runSpacing: 4, spacing: 4, children: [
+                          ...eventsState.selectedEvent!.attendees.map(
+                            (e) =>
+                                LayoutBuilder(builder: (context, constraints) {
+                              return ConstrainedBox(
+                                constraints: BoxConstraints(
+                                  maxWidth: (constraints.maxWidth / 2) - 4,
+                                ),
+                                child: AttendeeCard(
+                                  attendee: e,
+                                  onDelete: null,
+                                ),
+                              );
+                            }),
                           ),
-                        ],
-                      ),
-                    ],
-                    icon: Padding(
-                      padding: const EdgeInsets.only(top: 0.0),
-                      child: Icon(
-                        Icons.group,
-                        size: 15,
-                      ),
+                        ]),
+                      ],
                     ),
                   ),
-                ),
               ],
             );
           },

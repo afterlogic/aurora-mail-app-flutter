@@ -5,6 +5,7 @@ import 'package:aurora_mail/modules/calendar/calendar_domain/models/event_base.d
 import 'package:aurora_mail/modules/calendar/ui/dialogs/recurrence_mode_select_dialog.dart';
 import 'package:aurora_mail/modules/calendar/ui/dialogs/weekly_recurrence_select_dialog.dart';
 import 'package:aurora_mail/modules/calendar/utils/date_time_ext.dart';
+import 'package:flutter/material.dart';
 
 class ViewEvent extends Event {
   final DateTime startDate;
@@ -130,7 +131,7 @@ class ViewEvent extends Event {
     DateTime? Function()? recurrenceUntilDate,
     EveryWeekFrequency? Function()? recurrenceWeeklyFrequency,
     Set<DaysOfWeek>? Function()? recurrenceWeekDays,
-    List<Attendee>? attendees,
+    Set<Attendee>? attendees,
   }) =>
       ViewEvent(
         startDate: startDate ?? this.startDate,

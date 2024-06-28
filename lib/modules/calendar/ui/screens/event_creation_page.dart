@@ -12,6 +12,7 @@ import 'package:aurora_mail/modules/calendar/ui/dialogs/reminders_dialog.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/calendar.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/event.dart';
 import 'package:aurora_mail/modules/calendar/ui/screens/attendees_page.dart';
+import 'package:aurora_mail/modules/calendar/ui/widgets/attendee_card.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/calendar_tile.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/date_time_tile.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/section_with_icon.dart';
@@ -48,6 +49,7 @@ class _EventCreationPageState extends State<EventCreationPage> {
   RecurrenceMode _selectedRecurrenceMode = RecurrenceMode.never;
   DateTime? _selectedUntilDate;
   Set<RemindersOption> _selectedReminders = {};
+  Set<Attendee> _attendees = {};
   EveryWeekFrequency? _selectedWeeklyFrequency;
   Set<DaysOfWeek>? _selectedWeekDaysRepeat = {DaysOfWeek.mo};
   bool _isAllDay = false;
@@ -64,7 +66,8 @@ class _EventCreationPageState extends State<EventCreationPage> {
       recurrenceMode: _selectedRecurrenceMode,
       recurrenceUntilDate: _selectedUntilDate,
       recurrenceWeekDays: _selectedWeekDaysRepeat,
-      recurrenceWeeklyFrequency: _selectedWeeklyFrequency);
+      recurrenceWeeklyFrequency: _selectedWeeklyFrequency,
+      attendees: _attendees);
 
   @override
   void initState() {
@@ -107,26 +110,27 @@ class _EventCreationPageState extends State<EventCreationPage> {
     _selectedRecurrenceMode = e.recurrenceMode ?? RecurrenceMode.never;
     _selectedUntilDate = e.recurrenceUntilDate;
     _selectedWeekDaysRepeat = e.recurrenceWeekDays ?? {};
+    _attendees = Set.of(e.attendees);
     setState(() {});
-    // _descriptionController
   }
 
   void _onSaveEditedEvent() {
     final updatedFields = collectCreationData;
     final updatedEvent = _selectedEvent!.copyWith(
-      subject: updatedFields.subject,
-      title: updatedFields.subject,
-      description: updatedFields.description,
-      location: updatedFields.location,
-      startDate: updatedFields.startDate,
-      allDay: updatedFields.allDay,
-      reminders: updatedFields.reminders,
-      endDate: updatedFields.endDate,
-      recurrenceMode: () => updatedFields.recurrenceMode,
-      recurrenceWeeklyFrequency: () => updatedFields.recurrenceWeeklyFrequency,
-      recurrenceWeekDays: () => updatedFields.recurrenceWeekDays,
-      recurrenceUntilDate: () => updatedFields.recurrenceUntilDate,
-    );
+        subject: updatedFields.subject,
+        title: updatedFields.subject,
+        description: updatedFields.description,
+        location: updatedFields.location,
+        startDate: updatedFields.startDate,
+        allDay: updatedFields.allDay,
+        reminders: updatedFields.reminders,
+        endDate: updatedFields.endDate,
+        recurrenceMode: () => updatedFields.recurrenceMode,
+        recurrenceWeeklyFrequency: () =>
+            updatedFields.recurrenceWeeklyFrequency,
+        recurrenceWeekDays: () => updatedFields.recurrenceWeekDays,
+        recurrenceUntilDate: () => updatedFields.recurrenceUntilDate,
+        attendees: _attendees);
     _eventsBloc.add(UpdateEvent(updatedEvent));
   }
 
@@ -261,32 +265,36 @@ class _EventCreationPageState extends State<EventCreationPage> {
                           height: 16,
                         ),
                         DateTimeTile(
-                            dateTime: _selectedStartDate,
-                            onChanged: (DateTime value) {
-                              setState(() {
-                                _selectedStartDate = value;
-                              });
-                            }, isAllDay: _isAllDay,),
+                          dateTime: _selectedStartDate,
+                          onChanged: (DateTime value) {
+                            setState(() {
+                              _selectedStartDate = value;
+                            });
+                          },
+                          isAllDay: _isAllDay,
+                        ),
                         const SizedBox(
                           height: 16,
                         ),
                         Builder(builder: (context) {
                           return DateTimeTile(
-                              dateTime: _selectedEndDate,
-                              onChanged: (DateTime value) {
-                                if (value.isBefore(_selectedStartDate)) {
-                                  showErrorSnack(
-                                    context: context,
-                                    scaffoldState: _scaffoldKey.currentState,
-                                    msg: ErrorToShow.message(
-                                        'End date must be after start date'),
-                                  );
-                                } else {
-                                  setState(() {
-                                    _selectedEndDate = value;
-                                  });
-                                }
-                              }, isAllDay: _isAllDay,);
+                            dateTime: _selectedEndDate,
+                            onChanged: (DateTime value) {
+                              if (value.isBefore(_selectedStartDate)) {
+                                showErrorSnack(
+                                  context: context,
+                                  scaffoldState: _scaffoldKey.currentState,
+                                  msg: ErrorToShow.message(
+                                      'End date must be after start date'),
+                                );
+                              } else {
+                                setState(() {
+                                  _selectedEndDate = value;
+                                });
+                              }
+                            },
+                            isAllDay: _isAllDay,
+                          );
                         })
                       ])),
               const Divider(
@@ -383,8 +391,9 @@ class _EventCreationPageState extends State<EventCreationPage> {
                                 ),
                               ..._selectedReminders
                                   .map((e) => Padding(
-                                    padding: const EdgeInsets.only(bottom: 4.0),
-                                    child: Row(
+                                        padding:
+                                            const EdgeInsets.only(bottom: 4.0),
+                                        child: Row(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.center,
                                           children: [
@@ -406,7 +415,7 @@ class _EventCreationPageState extends State<EventCreationPage> {
                                             )
                                           ],
                                         ),
-                                  ))
+                                      ))
                                   .toList()
                             ],
                           ),
@@ -447,28 +456,55 @@ class _EventCreationPageState extends State<EventCreationPage> {
               Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                child: SectionWithIcon(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
                       children: [
+                        Icon(
+                          Icons.group,
+                          size: 15,
+                        ),
+                        const SizedBox(
+                          width: 8,
+                        ),
                         Text(
                           'Attendees',
                         ),
                         const Spacer(),
                         GestureDetector(
                             onTap: () => Navigator.of(context)
-                                .pushNamed(AttendeesPage.name),
+                                    .pushNamed(AttendeesPage.name,
+                                        arguments: AttendeesRouteArg(
+                                            initAttendees:Set.of(_attendees)))
+                                    .then((value) {
+                                  if (value == null) return;
+                                  _attendees = Set.of(value as Set<Attendee>);
+                                  setState(() {});
+                                }),
                             child: const _AddIcon()),
                       ],
                     ),
+                    Wrap(runSpacing: 4, spacing: 4, children: [
+                      ..._attendees.map(
+                        (e) => LayoutBuilder(builder: (context, constraints) {
+                          return ConstrainedBox(
+                            constraints: BoxConstraints(
+                              maxWidth: (constraints.maxWidth / 2) - 4,
+                            ),
+                            child: AttendeeCard(
+                              attendee: e,
+                              onDelete: () => setState(
+                                () {
+                                  _attendees.remove(e);
+                                },
+                              ),
+                            ),
+                          );
+                        }),
+                      ),
+                    ]),
                   ],
-                  icon: Padding(
-                    padding: const EdgeInsets.only(top: 6.0),
-                    child: Icon(
-                      Icons.group,
-                      size: 15,
-                    ),
-                  ),
                 ),
               ),
             ],

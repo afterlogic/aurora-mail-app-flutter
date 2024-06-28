@@ -21,6 +21,7 @@ class EventCreationData {
   final DateTime? recurrenceUntilDate;
   final EveryWeekFrequency? recurrenceWeeklyFrequency;
   final Set<DaysOfWeek>? recurrenceWeekDays;
+  final Set<Attendee> attendees;
 
   const EventCreationData({
     required this.subject,
@@ -35,6 +36,7 @@ class EventCreationData {
     this.recurrenceUntilDate,
     this.recurrenceWeeklyFrequency,
     this.recurrenceWeekDays,
+    required this.attendees
   });
 }
 
@@ -67,7 +69,7 @@ class Event extends EventBase {
   final DateTime? recurrenceUntilDate;
   final EveryWeekFrequency? recurrenceWeeklyFrequency;
   final Set<DaysOfWeek>? recurrenceWeekDays;
-  final List<Attendee> attendees;
+  final Set<Attendee> attendees;
 
   const Event(
       {this.organizer,
@@ -168,7 +170,7 @@ class Event extends EventBase {
             {},
         attendees: (newData['attendees'] as List)
             .map((e) => Attendee.fromMap(e as Map<String, dynamic>))
-            .toList());
+            .toSet());
   }
 
   factory Event.fromDb(EventDb entity) {
@@ -215,7 +217,7 @@ class Event extends EventBase {
               .whereNotNull()
               .toSet()
           : {},
-      attendees: entity.attendees?.map((e) => Attendee.fromMap(jsonDecode(e) as Map<String, dynamic>)).toList() ?? []
+      attendees: entity.attendees?.map((e) => Attendee.fromMap(jsonDecode(e) as Map<String, dynamic>)).toSet() ?? {}
     );
   }
 
@@ -369,7 +371,7 @@ class Event extends EventBase {
       UpdateStatus? updateStatus,
       bool? synced,
       bool? onceLoaded,
-        List<Attendee>? attendees,
+        Set<Attendee>? attendees,
       RecurrenceMode? Function()? recurrenceMode,
       DateTime? Function()? recurrenceUntilDate,
       EveryWeekFrequency? Function()? recurrenceWeeklyFrequency,
@@ -423,9 +425,9 @@ extension InviteStatusMapper on InviteStatus {
     switch (code) {
       case 1:
         return InviteStatus.accepted;
-      case 2:
+      case 0:
         return InviteStatus.pending;
-      case 3:
+      case 2:
         return InviteStatus.denied;
       default:
         return InviteStatus.unknown;
@@ -439,9 +441,9 @@ extension InviteStatusMapper on InviteStatus {
       case InviteStatus.accepted:
         return 1;
       case InviteStatus.pending:
-        return 2;
+        return 0;
       case InviteStatus.denied:
-        return 3;
+        return 2;
     }
   }
 }
