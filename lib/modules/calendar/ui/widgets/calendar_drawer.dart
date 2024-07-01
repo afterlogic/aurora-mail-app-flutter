@@ -1,6 +1,8 @@
 import 'dart:math';
 
+import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/generated/l10n.dart';
+import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/calendar/blocs/calendars/calendars_bloc.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/calendar.dart';
 import 'package:aurora_mail/modules/calendar/ui/dialogs/calendar_creation.dart';
@@ -30,6 +32,7 @@ class _CalendarDrawerState extends BState<CalendarDrawer> {
 
   @override
   Widget build(BuildContext context) {
+    final User? user = BlocProvider.of<AuthBloc>(context).currentUser;
     return Drawer(
       child: ListTileTheme(
         style: ListTileStyle.drawer,
@@ -38,7 +41,9 @@ class _CalendarDrawerState extends BState<CalendarDrawer> {
           child: BlocBuilder<CalendarsBloc, CalendarsState>(
             builder: (context, state) {
               final myCalendars = state.calendars
-                  ?.where((c) => !c.sharedToAll && !c.shared)
+                  ?.where((c) =>
+                      (!c.sharedToAll && !c.shared) ||
+                      (user?.emailFromLogin == c.owner))
                   .toList();
               final sharedCalendars = state.calendars
                   ?.where((c) => c.shared && !c.sharedToAll)
@@ -86,6 +91,7 @@ class _CalendarDrawerState extends BState<CalendarDrawer> {
                             children: myCalendars
                                 .map<Widget>((e) => CollapsibleCheckboxList(
                                       calendar: e,
+                                      showPermission: false,
                                       onChanged: (bool? value) {
                                         BlocProvider.of<CalendarsBloc>(context)
                                             .add(UpdateCalendarSelection(
@@ -155,7 +161,9 @@ class _CalendarDrawerState extends BState<CalendarDrawer> {
                                 .toList(),
                           )
                         : SizedBox.shrink(),
-                    const SizedBox(height: 24,),
+                    const SizedBox(
+                      height: 24,
+                    ),
                   ],
                 ),
               );
@@ -169,11 +177,13 @@ class _CalendarDrawerState extends BState<CalendarDrawer> {
 
 class CollapsibleCheckboxList extends StatefulWidget {
   final ViewCalendar calendar;
+  final bool showPermission;
   final bool isChecked;
   final Function(bool?) onChanged;
 
   CollapsibleCheckboxList(
-      {required this.calendar,
+      {this.showPermission = true,
+      required this.calendar,
       required this.onChanged,
       required this.isChecked});
 
@@ -422,7 +432,9 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
                       SizedBox(
                         height: 8,
                       ),
-                      if (widget.calendar.name.isNotEmpty && (widget.calendar.shared || widget.calendar.sharedToAll))
+                      if (widget.calendar.name.isNotEmpty &&
+                          (widget.calendar.shared ||
+                              widget.calendar.sharedToAll))
                         Text(
                           '${widget.calendar.name} - ${widget.calendar.owner}',
                           maxLines: 1,
@@ -431,11 +443,12 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
                         )
                       else
                         Text(widget.calendar.name),
-                      if ((widget.calendar.shared &&
-                              widget.calendar.access == 2 &&
-                              !widget.calendar.sharedToAll) ||
-                          (widget.calendar.sharedToAll &&
-                              widget.calendar.sharedToAllAccess == 2))
+                      if (((widget.calendar.shared &&
+                                  widget.calendar.access == 2 &&
+                                  !widget.calendar.sharedToAll) ||
+                              (widget.calendar.sharedToAll &&
+                                  widget.calendar.sharedToAllAccess == 2)) &&
+                          widget.showPermission)
                         Text(
                           'read',
                           style:
@@ -470,18 +483,19 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
           child: Column(
               children: _menuItems
                   .map((e) => Container(
-                color: _isExpanded ? Color(0xFFECF5FF) : null,
-                    child: ListTile(
+                        color: _isExpanded ? Color(0xFFECF5FF) : null,
+                        child: ListTile(
                           title: Text(e.titleBuilder(context)),
                           contentPadding: EdgeInsets.symmetric(
-                              horizontal: _horizontalSectionPadding, vertical: 0),
+                              horizontal: _horizontalSectionPadding,
+                              vertical: 0),
                           dense: true,
                           horizontalTitleGap: 0,
                           leading: e.icon,
                           iconColor: Theme.of(context).primaryColor,
                           onTap: () => e.onTap(context),
                         ),
-                  ))
+                      ))
                   .toList()),
         ),
       ],

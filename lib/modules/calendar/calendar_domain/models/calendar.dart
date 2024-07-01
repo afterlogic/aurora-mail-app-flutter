@@ -1,3 +1,4 @@
+import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/calendar.dart';
 import 'package:flutter/material.dart';
 
@@ -57,6 +58,10 @@ class Calendar {
       isSubscribed: isSubscribed,
       source: source,
     );
+  }
+
+  bool isUserOwner(User user){
+    return user.emailFromLogin == owner;
   }
 
   bool areFieldsChanged(Calendar comparable) {
