@@ -15,6 +15,13 @@ class ViewEvent extends Event {
 
   Duration get duration => endDate.difference(startDate);
 
+  bool isDifference24Hours(DateTime? date1, DateTime? date2) {
+    if (date1 == null || date2 == null) return false;
+    Duration difference =
+        date1.difference(date2).abs(); // abs() to ensure positive duration
+    return difference == Duration(hours: 24);
+  }
+
   bool isStartedToday(DateTime currentDate) =>
       startDate.withoutTime.isAtSameMomentAs(currentDate.withoutTime);
 
@@ -231,8 +238,11 @@ class ExtendedMonthEvent extends ViewEvent {
     ViewEvent e,
   ) =>
       ExtendedMonthEvent(
-          startDate: e.startTS!,
-          endDate: e.endTS!,
+          startDate:
+              (e.allDay == true) ? e.startTS ?? e.startDate : e.startDate,
+          endDate: (e.allDay == true)
+              ? e.endTS?.subtract(Duration(minutes: 1)) ?? e.endDate
+              : e.endDate,
           calendarId: e.calendarId,
           title: e.subject!,
           color: e.color,
@@ -262,7 +272,8 @@ class ExtendedMonthEvent extends ViewEvent {
           recurrenceMode: e.recurrenceMode,
           recurrenceUntilDate: e.recurrenceUntilDate,
           recurrenceWeekDays: e.recurrenceWeekDays,
-          recurrenceWeeklyFrequency: e.recurrenceWeeklyFrequency, attendees: e.attendees);
+          recurrenceWeeklyFrequency: e.recurrenceWeeklyFrequency,
+          attendees: e.attendees);
 
   ExtendedMonthEvent(
       {this.overflow = false,

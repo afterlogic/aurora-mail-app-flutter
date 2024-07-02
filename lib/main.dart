@@ -3,6 +3,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:timezone/data/latest.dart' as tz;
 import 'package:alarm_service/alarm_service.dart';
 import 'package:aurora_logger/aurora_logger.dart';
 import 'package:aurora_mail/bloc_logger.dart';
@@ -80,6 +81,7 @@ void main() async {
   AlarmService.onAlarm(onAlarm, ALARM_ID);
   AlarmService.onNotification(mapMessageHandler);
   Bloc.observer = BlocLogger();
+  tz.initializeTimeZones();
   try {
     if (Platform.isAndroid) FlutterDownloader.initialize();
   } catch (e) {

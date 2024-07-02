@@ -9,20 +9,25 @@ import 'package:aurora_mail/modules/calendar/ui/models/event.dart';
 import 'package:aurora_mail/modules/calendar/utils/events_grid_builder.dart';
 import 'package:collection/collection.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 class CalendarUseCaseImpl implements CalendarUseCase {
   final CalendarRepository repository;
 
-  CalendarUseCaseImpl({required this.repository});
+  CalendarUseCaseImpl({required this.repository, tz.Location? location})
+      : _location = location;
 
   DateTime? _selectedStartEventsInterval;
   DateTime? _selectedEndEventsInterval;
+  tz.Location? _location;
 
   final BehaviorSubject<List<ViewCalendar>> _calendarsSubject =
       BehaviorSubject.seeded([]);
 
   final BehaviorSubject<List<ViewEvent>> _eventsSubject =
       BehaviorSubject.seeded([]);
+
+  set setLocation(tz.Location? location) => _location = location;
 
   List<String> get selectedCalendarIds => _calendarsSubject.value
       .where((e) => e.selected)
@@ -47,7 +52,7 @@ class CalendarUseCaseImpl implements CalendarUseCase {
   Future<void> getCalendars() async {
     final calendars = await repository.getCalendars();
     final calendarViews = calendars.map((e) => e.toViewCalendar()).toList();
-    if(_calendarsSubject.value.isEmpty){
+    if (_calendarsSubject.value.isEmpty) {
       _calendarsSubject.add(calendarViews);
       return;
     }
@@ -124,11 +129,23 @@ class CalendarUseCaseImpl implements CalendarUseCase {
       calendarIds: selectedCalendarIds,
     );
     final eventViews = allEvents
-        .map((e) => ViewEvent.tryFromEvent(e,
-            color: _calendarsSubject.value
-                .firstWhere((c) => c.id == e.calendarId)
-                .color))
+        .map((e) => ViewEvent.tryFromEvent(
+              e,
+              color: _calendarsSubject.value
+                  .firstWhere((c) => c.id == e.calendarId)
+                  .color,
+            ))
         .whereNotNull()
+        .map(
+          (e) => e.copyWith(
+            startDate: _location == null
+                ? e.startDate
+                : tz.TZDateTime.from(e.startDate, _location!),
+            endDate: _location == null
+                ? e.endDate
+                : tz.TZDateTime.from(e.endDate, _location!),
+          ),
+        )
         .toList();
 
     _eventsSubject.add(eventViews);

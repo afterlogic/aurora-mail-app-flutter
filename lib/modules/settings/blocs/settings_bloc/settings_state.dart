@@ -3,8 +3,8 @@ import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/settings/models/language.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:equatable/equatable.dart';
-import 'package:drift_sqflite/drift_sqflite.dart';
 import 'package:drift/drift.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 abstract class SettingsState extends Equatable {
   const SettingsState();
@@ -23,8 +23,9 @@ class SettingsLoaded extends SettingsState {
   final bool is24;
   final Language language;
   final ConnectivityResult connection;
+  final tz.Location location = tz.getLocation('Europe/Moscow');
 
-  const SettingsLoaded({
+  SettingsLoaded({
     this.users,
     this.syncFrequency,
     this.syncPeriod,

@@ -193,7 +193,7 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
                           user: _authBloc.currentUser,
                           appDB: DBInstances.appDB) : null;
                       final calendarUseCase = authState.user != null ?
-                          CalendarUseCase(repository: calendarRepository) : null;
+                          CalendarUseCase(repository: calendarRepository, location: settingsState.location) : null;
 
                       return MultiBlocProvider(
                         providers: [

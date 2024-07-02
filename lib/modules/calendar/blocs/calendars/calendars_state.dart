@@ -10,14 +10,17 @@ class CalendarsState extends Equatable {
   List<Object?> get props =>
       [status, calendars, selectedTabIndex, monthViewMode];
 
-  List<ViewCalendar> get availableCalendars => calendars == null
+  List<ViewCalendar> availableCalendars(String currentUserMail) => calendars == null
       ? <ViewCalendar>[]
       : calendars!
           .where((e) =>
               (!e.shared &&
               !e.sharedToAll )||
               (e.shared && e.access == 1 && !e.sharedToAll) ||
-              (e.sharedToAll && e.sharedToAllAccess == 1 ))
+              (e.sharedToAll && e.sharedToAllAccess == 1 ) ||
+              e.owner == currentUserMail
+  )
+
           .toList();
 
   const CalendarsState({

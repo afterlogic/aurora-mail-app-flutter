@@ -129,11 +129,11 @@ class Event extends EventBase {
         startTS: (newData['startTS'] as int?) == null
             ? null
             : DateTime.fromMillisecondsSinceEpoch(
-                (newData['startTS'] as int) * 1000),
+                (newData['startTS'] as int) * 1000, isUtc: true),
         endTS: (newData['endTS'] as int?) == null
             ? null
             : DateTime.fromMillisecondsSinceEpoch(
-                (newData['endTS'] as int) * 1000),
+                (newData['endTS'] as int) * 1000, isUtc: true),
         allDay: (newData['allDay'] as bool?)!,
         owner: (newData['owner'] as String?)!,
         modified: (newData['modified'] as bool?)!,
@@ -178,7 +178,8 @@ class Event extends EventBase {
       description: entity.description,
       location: entity.location,
       calendarId: entity.calendarId,
-      startTS: entity.startTS,
+      startTS: entity.startTS?.toUtc(),
+      endTS: entity.endTS?.toUtc(),
       organizer: entity.organizer,
       appointment: entity.appointment,
       appointmentAccess: entity.appointmentAccess,
@@ -202,7 +203,6 @@ class Event extends EventBase {
               : {},
       // rrule: null,
       subject: entity.subject,
-      endTS: entity.endTS,
       updateStatus: entity.updateStatus,
       synced: entity.synced,
       onceLoaded: entity.onceLoaded,

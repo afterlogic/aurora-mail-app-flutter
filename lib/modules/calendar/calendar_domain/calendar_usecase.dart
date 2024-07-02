@@ -7,13 +7,16 @@ import 'package:aurora_mail/modules/calendar/calendar_domain_impl/calendar_useca
 import 'package:aurora_mail/modules/calendar/ui/models/calendar.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/event.dart';
 import 'package:rxdart/streams.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 abstract class CalendarUseCase {
   factory CalendarUseCase({
-    required CalendarRepository repository
+    required CalendarRepository repository,
+    tz.Location? location
   }) =>
       CalendarUseCaseImpl(
         repository: repository,
+        location: location
       );
 
 
