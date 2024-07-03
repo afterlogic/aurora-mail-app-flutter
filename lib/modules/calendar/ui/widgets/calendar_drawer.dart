@@ -4,9 +4,9 @@ import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/calendar/blocs/calendars/calendars_bloc.dart';
-import 'package:aurora_mail/modules/calendar/calendar_domain/models/calendar.dart';
 import 'package:aurora_mail/modules/calendar/ui/dialogs/calendar_creation.dart';
 import 'package:aurora_mail/modules/calendar/ui/dialogs/calendar_edit.dart';
+import 'package:aurora_mail/modules/calendar/ui/dialogs/calendar_links_dialog.dart';
 import 'package:aurora_mail/modules/calendar/ui/dialogs/deletion_confirm_dialog.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/calendar.dart';
 import 'package:aurora_mail/shared_ui/colored_checkbox.dart';
@@ -223,7 +223,10 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
       _MenuItem(
         icon: Icon(Icons.link),
         titleBuilder: (ctx) => 'Get a link',
-        onTap: (ctx) {},
+        onTap: (ctx) {
+          CalendarLinksDialog.show(ctx, calendar: widget.calendar);
+
+        },
       )
     ];
   }
@@ -250,7 +253,10 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
       _MenuItem(
         icon: Icon(Icons.link),
         titleBuilder: (ctx) => 'Get a link',
-        onTap: (ctx) {},
+        onTap: (ctx) {
+          CalendarLinksDialog.show(ctx, calendar: widget.calendar);
+
+        },
       ),
     ];
   }
@@ -260,7 +266,10 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
       _MenuItem(
         icon: Icon(Icons.link),
         titleBuilder: (ctx) => 'Get a link',
-        onTap: (ctx) {},
+        onTap: (ctx) {
+          CalendarLinksDialog.show(ctx, calendar: widget.calendar);
+
+        },
       ),
       _MenuItem(
         icon: Icon(Icons.unsubscribe_outlined),
@@ -292,7 +301,10 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
       _MenuItem(
         icon: Icon(Icons.link),
         titleBuilder: (ctx) => 'Get a link',
-        onTap: (ctx) {},
+        onTap: (ctx) {
+          CalendarLinksDialog.show(ctx, calendar: widget.calendar);
+
+        },
       ),
       _MenuItem(
         icon: Icon(Icons.group_add_outlined),
@@ -329,7 +341,9 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
       _MenuItem(
         icon: Icon(Icons.link),
         titleBuilder: (ctx) => 'Get a link',
-        onTap: (ctx) {},
+        onTap: (ctx) {
+          CalendarLinksDialog.show(ctx, calendar: widget.calendar);
+        },
       ),
       _MenuItem(
         icon: Icon(Icons.group_add_outlined),
