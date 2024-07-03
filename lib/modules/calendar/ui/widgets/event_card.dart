@@ -1,6 +1,7 @@
 import 'package:aurora_mail/modules/calendar/blocs/events/events_bloc.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/event.dart';
 import 'package:aurora_mail/modules/calendar/ui/screens/event_view_page.dart';
+import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -14,7 +15,7 @@ class EventCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  GestureDetector(
+    return GestureDetector(
       onTap: () {
         BlocProvider.of<EventsBloc>(context).add(SelectEvent(event));
         Navigator.of(context).pushNamed(
@@ -22,40 +23,46 @@ class EventCard extends StatelessWidget {
         );
       },
       child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(bottom: 4.0),
+            child: Text(
+              '${event.title}',
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+            ),
+          ),
+          Row(
             children: [
-              Padding(
-                padding: const EdgeInsets.only(bottom: 4.0),
-                child: Text(
-                  '${event.title}',
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
-                ),
+              Container(
+                width: 20,
+                height: 20,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(4.0),
+                    ),
+                    color: event.color),
               ),
-              Row(
-                children: [
-                  Container(
-                    width: 20,
-                    height: 20,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(4.0),
-                        ),
-                        color: event.color),
-                  ),
-                  const SizedBox(
-                    width: 4,
-                  ),
-                  Text(
-                    '${DateFormat("hh:mm a").format(event.startDate)} - ${DateFormat("hh:mm a").format(event.endDate)}',
+              const SizedBox(
+                width: 4,
+              ),
+              BlocBuilder<SettingsBloc, SettingsState>(
+                builder: (context, state) {
+                  final dateFormat = (state is SettingsLoaded) && (state.is24 == true) ? DateFormat('HH:mm') : DateFormat("hh:mm a");
+                  return Text(
+                    '${dateFormat.format(
+                        event.startDate)} - ${dateFormat.format(
+                        event.endDate)}',
                     style: TextStyle(
                       color: Color.fromRGBO(150, 148, 148, 1),
                     ),
-                  )
-                ],
+                  );
+                },
               )
             ],
-          ),
+          )
+        ],
+      ),
     );
-       
   }
 }
