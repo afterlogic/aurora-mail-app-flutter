@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:timezone/timezone.dart' as tz;
 import 'package:aurora_mail/generated/l10n.dart';
+import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aurora_mail/modules/calendar/blocs/calendars/calendars_bloc.dart';
 import 'package:aurora_mail/modules/calendar/blocs/events/events_bloc.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/event.dart';
@@ -42,6 +44,7 @@ class _EventCreationPageState extends State<EventCreationPage> {
   late final CalendarsBloc _calendarsBloc;
   late final EventsBloc _eventsBloc;
   late final StreamSubscription _eventsSubscription;
+  late final String _currentUserMail;
   final _formKey = GlobalKey<FormState>();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   ViewCalendar? _selectedCalendar;
@@ -74,9 +77,12 @@ class _EventCreationPageState extends State<EventCreationPage> {
     super.initState();
     _calendarsBloc = BlocProvider.of<CalendarsBloc>(context);
     _eventsBloc = BlocProvider.of<EventsBloc>(context);
-    _selectedCalendar = _calendarsBloc.state.availableCalendars.firstOrNull;
+    _currentUserMail =
+        BlocProvider.of<AuthBloc>(context).currentUser?.emailFromLogin ?? '';
+    _selectedCalendar =
+        _calendarsBloc.state.availableCalendars(_currentUserMail).firstOrNull;
     _titleController = TextEditingController();
-    _selectedStartDate = DateTime.now();
+    _selectedStartDate = DateTime.now().copyWith(second: 0,millisecond: 0, microsecond: 0);
     _selectedEndDate = _selectedStartDate.add(Duration(minutes: 30));
     _descriptionController = TextEditingController();
     _locationController = TextEditingController();
@@ -179,7 +185,8 @@ class _EventCreationPageState extends State<EventCreationPage> {
                           onTap: () {
                             CalendarSelectDialog.show(context,
                                     initialValue: _selectedCalendar,
-                                    options: state.availableCalendars)
+                                    options: state
+                                        .availableCalendars(_currentUserMail))
                                 .then((value) {
                               if (value != null) _selectedCalendar = value;
                               setState(() {});
