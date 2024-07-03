@@ -12,7 +12,7 @@ import 'package:webmail_api_client/webmail_api_client.dart';
 class CalendarNetworkServiceImpl implements CalendarNetworkService {
   final WebMailApi calendarModule;
 
-  CalendarNetworkServiceImpl(this.calendarModule);
+  const CalendarNetworkServiceImpl(this.calendarModule);
 
   @override
   Future<List<Calendar>> getCalendars(int userId) async {

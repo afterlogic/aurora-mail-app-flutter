@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:timezone/timezone.dart' as tz;
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aurora_mail/modules/calendar/blocs/calendars/calendars_bloc.dart';

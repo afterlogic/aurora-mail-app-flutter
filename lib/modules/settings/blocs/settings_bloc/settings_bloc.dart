@@ -1,18 +1,23 @@
 import 'dart:async';
 
 import 'package:alarm_service/alarm_service.dart';
+import 'package:aurora_logger/aurora_logger.dart';
 import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/inject/app_inject.dart';
 import 'package:aurora_mail/main.dart' as main;
 import 'package:aurora_mail/modules/settings/models/language.dart';
 import 'package:aurora_mail/modules/settings/models/sync_freq.dart';
 import 'package:aurora_mail/modules/settings/models/sync_period.dart';
+import 'package:aurora_mail/modules/settings/repository/settings_network.dart';
 import 'package:bloc/bloc.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:drift_sqflite/drift_sqflite.dart';
 import 'package:drift/drift.dart';
+import 'package:webmail_api_client/webmail_api_client.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 import './bloc.dart';
+import 'package:aurora_mail/modules/settings/screens/debug/default_api_interceptor.dart';
 
 class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   final _methods = AppInjector.instance.settingsMethods();
@@ -36,35 +41,53 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   }
 
   Stream<SettingsState> _initSyncSettings(InitSettings event) async* {
-    await AlarmService.setAlarm(
-      main.onAlarm,
-      ALARM_ID,
-      Duration(seconds: event.user.syncFreqInSeconds ?? 300),
-    );
+    final apiModule = WebMailApi(
+        moduleName: WebMailModules.core,
+        hostname: event.user.hostname,
+        token: event.user.token,
+        interceptor: DefaultApiInterceptor.get());
 
-    final appSettings = await _methods.getSettingsSharedPrefs();
-    final language = await _methods.getLanguage();
-    _methods.setUserStorage(event.user);
+    final settingsNetwork = SettingsNetwork(settingsModule: apiModule);
 
-    if (state is SettingsLoaded) {
-      yield (state as SettingsLoaded).copyWith(
-          users: Value(event.users),
-          syncFrequency: Value(event.user.syncFreqInSeconds ?? 300),
-          syncPeriod: Value(event.user.syncPeriod ?? "Period.allTime"),
-          darkThemeEnabled: Value(appSettings.isDarkTheme),
-          is24: Value(appSettings.is24),
-          language: Value(
-            Language.fromJson(language),
-          ));
-    } else {
-      yield SettingsLoaded(
-        users: event.users,
-        syncFrequency: event.user.syncFreqInSeconds,
-        syncPeriod: event.user.syncPeriod,
-        darkThemeEnabled: appSettings.isDarkTheme,
-        is24: appSettings.is24,
-        language: Language.fromJson(language),
+    tz.Location? location;
+
+    try {
+      location = await settingsNetwork.getTimezoneLocation();
+    } catch (e, s) {
+      logger.log("getting timezone location error: $e");
+    } finally {
+      await AlarmService.setAlarm(
+        main.onAlarm,
+        ALARM_ID,
+        Duration(seconds: event.user.syncFreqInSeconds ?? 300),
       );
+
+      final appSettings = await _methods.getSettingsSharedPrefs();
+      final language = await _methods.getLanguage();
+      _methods.setUserStorage(event.user);
+
+      if (state is SettingsLoaded) {
+        yield (state as SettingsLoaded).copyWith(
+            users: Value(event.users),
+            syncFrequency: Value(event.user.syncFreqInSeconds ?? 300),
+            syncPeriod: Value(event.user.syncPeriod ?? "Period.allTime"),
+            darkThemeEnabled: Value(appSettings.isDarkTheme),
+            is24: Value(appSettings.is24),
+            location: () => location,
+            language: Value(
+              Language.fromJson(language),
+            ));
+      } else {
+        yield SettingsLoaded(
+          users: event.users,
+          syncFrequency: event.user.syncFreqInSeconds,
+          syncPeriod: event.user.syncPeriod,
+          darkThemeEnabled: appSettings.isDarkTheme,
+          is24: appSettings.is24,
+          location: location,
+          language: Language.fromJson(language),
+        );
+      }
     }
   }
 

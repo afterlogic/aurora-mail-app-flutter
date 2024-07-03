@@ -23,7 +23,7 @@ class SettingsLoaded extends SettingsState {
   final bool is24;
   final Language language;
   final ConnectivityResult connection;
-  final tz.Location location = tz.getLocation('Europe/Moscow');
+  final tz.Location location;
 
   SettingsLoaded({
     this.users,
@@ -33,6 +33,7 @@ class SettingsLoaded extends SettingsState {
     this.is24,
     this.language,
     this.connection = ConnectivityResult.none,
+    this.location,
   });
 
   SettingsLoaded copyWith({
@@ -43,6 +44,7 @@ class SettingsLoaded extends SettingsState {
     Value<bool> is24,
     Value<Language> language,
     Value<ConnectivityResult> connection,
+    tz.Location Function() location,
   }) {
     return new SettingsLoaded(
       users: users != null ? users.value : this.users,
@@ -55,6 +57,7 @@ class SettingsLoaded extends SettingsState {
       is24: is24 != null ? is24.value : this.is24,
       language: language != null ? language.value : this.language,
       connection: connection != null ? connection.value : this.connection,
+      location: location != null ? location() : this.location
     );
   }
 
