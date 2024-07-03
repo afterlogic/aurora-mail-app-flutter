@@ -23,21 +23,37 @@ class EventCreationData {
   final Set<DaysOfWeek>? recurrenceWeekDays;
   final Set<Attendee> attendees;
 
-  const EventCreationData({
-    required this.subject,
-    this.description,
-    this.location,
-    required this.calendarId,
-    required this.startDate,
-    required this.endDate,
-    required this.reminders,
-    required this.allDay,
-    required this.recurrenceMode,
-    this.recurrenceUntilDate,
-    this.recurrenceWeeklyFrequency,
-    this.recurrenceWeekDays,
-    required this.attendees
-  });
+  const EventCreationData(
+      {required this.subject,
+      this.description,
+      this.location,
+      required this.calendarId,
+      required this.startDate,
+      required this.endDate,
+      required this.reminders,
+      required this.allDay,
+      required this.recurrenceMode,
+      this.recurrenceUntilDate,
+      this.recurrenceWeeklyFrequency,
+      this.recurrenceWeekDays,
+      required this.attendees});
+
+  EventCreationData copyWith({DateTime? startDate, DateTime? endDate}) {
+    return EventCreationData(
+        startDate: startDate ?? this.startDate,
+        endDate: endDate ?? this.endDate,
+        subject: subject,
+        description: description,
+        location: location,
+        recurrenceUntilDate: recurrenceUntilDate,
+        recurrenceWeeklyFrequency: recurrenceWeeklyFrequency,
+        recurrenceWeekDays: recurrenceWeekDays,
+        attendees: attendees,
+        calendarId: calendarId,
+        reminders: reminders,
+        allDay: allDay,
+        recurrenceMode: recurrenceMode);
+  }
 }
 
 class Event extends EventBase {
@@ -128,12 +144,12 @@ class Event extends EventBase {
         location: (newData['location'] as String?) ?? '',
         startTS: (newData['startTS'] as int?) == null
             ? null
-            : DateTime.fromMillisecondsSinceEpoch(
-                (newData['startTS'] as int) * 1000, isUtc: true),
+            : DateTime.fromMillisecondsSinceEpoch((newData['startTS'] as int) * 1000,
+                isUtc: true),
         endTS: (newData['endTS'] as int?) == null
             ? null
-            : DateTime.fromMillisecondsSinceEpoch(
-                (newData['endTS'] as int) * 1000, isUtc: true),
+            : DateTime.fromMillisecondsSinceEpoch((newData['endTS'] as int) * 1000,
+                isUtc: true),
         allDay: (newData['allDay'] as bool?)!,
         owner: (newData['owner'] as String?)!,
         modified: (newData['modified'] as bool?)!,
@@ -142,12 +158,11 @@ class Event extends EventBase {
         recurrenceMode: rawRrule == null
             ? RecurrenceMode.never
             : RecurrenceModeX.fromPeriodCode((rawRrule['period'] as int?)!),
-        recurrenceUntilDate: rawRrule == null ||
-                rawRrule['until'] == null ||
-                rawRrule['until'] == 0
-            ? null
-            : DateTime.fromMillisecondsSinceEpoch(
-                (rawRrule['until'] as int) * 1000),
+        recurrenceUntilDate:
+            rawRrule == null || rawRrule['until'] == null || rawRrule['until'] == 0
+                ? null
+                : DateTime.fromMillisecondsSinceEpoch(
+                    (rawRrule['until'] as int) * 1000),
         recurrenceWeeklyFrequency: rawRrule == null
             ? null
             : EveryWeekFrequencyX.fromIntervalCode(
@@ -168,57 +183,58 @@ class Event extends EventBase {
                 .whereNotNull()
                 .toSet() ??
             {},
-        attendees: (newData['attendees'] as List)
-            .map((e) => Attendee.fromMap(e as Map<String, dynamic>))
-            .toSet());
+        attendees: (newData['attendees'] as List).map((e) => Attendee.fromMap(e as Map<String, dynamic>)).toSet());
   }
 
   factory Event.fromDb(EventDb entity) {
     return Event(
-      description: entity.description,
-      location: entity.location,
-      calendarId: entity.calendarId,
-      startTS: entity.startTS?.toUtc(),
-      endTS: entity.endTS?.toUtc(),
-      organizer: entity.organizer,
-      appointment: entity.appointment,
-      appointmentAccess: entity.appointmentAccess,
-      userLocalId: entity.userLocalId,
-      uid: entity.uid,
-      allDay: entity.allDay,
-      owner: entity.owner,
-      modified: entity.modified,
-      recurrenceId: entity.recurrenceId,
-      lastModified: entity.lastModified,
-      status: entity.status,
-      withDate: entity.withDate,
-      isPrivate: entity.isPrivate,
-      reminders:
-          entity.remindersString != null && entity.remindersString!.isNotEmpty
-              ? entity.remindersString!
-                  .split(',')
-                  .map((e) => RemindersIntMapper.fromInt(int.parse(e)))
-                  .whereNotNull()
-                  .toSet()
-              : {},
-      // rrule: null,
-      subject: entity.subject,
-      updateStatus: entity.updateStatus,
-      synced: entity.synced,
-      onceLoaded: entity.onceLoaded,
-      recurrenceMode: entity.recurrenceMode,
-      recurrenceUntilDate: entity.recurrenceUntilDate,
-      recurrenceWeeklyFrequency: entity.recurrenceWeeklyFrequency,
-      recurrenceWeekDays: entity.recurrenceWeekDaysString != null &&
-              entity.recurrenceWeekDaysString!.isNotEmpty
-          ? entity.recurrenceWeekDaysString!
-              .split(',')
-              .map((e) => DaysOfWeekX.fromDaysCode(e))
-              .whereNotNull()
-              .toSet()
-          : {},
-      attendees: entity.attendees?.map((e) => Attendee.fromMap(jsonDecode(e) as Map<String, dynamic>)).toSet() ?? {}
-    );
+        description: entity.description,
+        location: entity.location,
+        calendarId: entity.calendarId,
+        startTS: entity.startTS?.toUtc(),
+        endTS: entity.endTS?.toUtc(),
+        organizer: entity.organizer,
+        appointment: entity.appointment,
+        appointmentAccess: entity.appointmentAccess,
+        userLocalId: entity.userLocalId,
+        uid: entity.uid,
+        allDay: entity.allDay,
+        owner: entity.owner,
+        modified: entity.modified,
+        recurrenceId: entity.recurrenceId,
+        lastModified: entity.lastModified,
+        status: entity.status,
+        withDate: entity.withDate,
+        isPrivate: entity.isPrivate,
+        reminders:
+            entity.remindersString != null && entity.remindersString!.isNotEmpty
+                ? entity.remindersString!
+                    .split(',')
+                    .map((e) => RemindersIntMapper.fromInt(int.parse(e)))
+                    .whereNotNull()
+                    .toSet()
+                : {},
+        // rrule: null,
+        subject: entity.subject,
+        updateStatus: entity.updateStatus,
+        synced: entity.synced,
+        onceLoaded: entity.onceLoaded,
+        recurrenceMode: entity.recurrenceMode,
+        recurrenceUntilDate: entity.recurrenceUntilDate,
+        recurrenceWeeklyFrequency: entity.recurrenceWeeklyFrequency,
+        recurrenceWeekDays: entity.recurrenceWeekDaysString != null &&
+                entity.recurrenceWeekDaysString!.isNotEmpty
+            ? entity.recurrenceWeekDaysString!
+                .split(',')
+                .map((e) => DaysOfWeekX.fromDaysCode(e))
+                .whereNotNull()
+                .toSet()
+            : {},
+        attendees: entity.attendees
+                ?.map((e) =>
+                    Attendee.fromMap(jsonDecode(e) as Map<String, dynamic>))
+                .toSet() ??
+            {});
   }
 
   @override
@@ -252,9 +268,8 @@ class Event extends EventBase {
             recurrenceWeekDays?.map((e) => e.byDaysCode).join(','),
         recurrenceWeeklyFrequency: recurrenceWeeklyFrequency,
         recurrenceUntilDate: recurrenceUntilDate,
-      recurrenceMode: recurrenceMode,
-      attendees: attendees.map((e) => jsonEncode(e.toMap())).toList()
-    );
+        recurrenceMode: recurrenceMode,
+        attendees: attendees.map((e) => jsonEncode(e.toMap())).toList());
   }
 
   @override
@@ -371,50 +386,49 @@ class Event extends EventBase {
       UpdateStatus? updateStatus,
       bool? synced,
       bool? onceLoaded,
-        Set<Attendee>? attendees,
+      Set<Attendee>? attendees,
       RecurrenceMode? Function()? recurrenceMode,
       DateTime? Function()? recurrenceUntilDate,
       EveryWeekFrequency? Function()? recurrenceWeeklyFrequency,
       Set<DaysOfWeek>? Function()? recurrenceWeekDays,
       Set<RemindersOption>? reminders}) {
     return Event(
-      organizer: organizer ?? this.organizer,
-      appointment: appointment ?? this.appointment,
-      appointmentAccess: appointmentAccess ?? this.appointmentAccess,
-      calendarId: calendarId ?? this.calendarId,
-      userLocalId: userLocalId ?? this.userLocalId,
-      uid: uid ?? this.uid,
-      subject: subject ?? this.subject,
-      description: description ?? this.description,
-      location: location ?? this.location,
-      startTS: startTS ?? this.startTS,
-      endTS: endTS ?? this.endTS,
-      allDay: allDay ?? this.allDay,
-      owner: owner ?? this.owner,
-      modified: modified ?? this.modified,
-      recurrenceId: recurrenceId ?? this.recurrenceId,
-      lastModified: lastModified ?? this.lastModified,
-      rrule: rrule ?? this.rrule,
-      status: status ?? this.status,
-      withDate: withDate ?? this.withDate,
-      isPrivate: isPrivate ?? this.isPrivate,
-      updateStatus: updateStatus ?? this.updateStatus,
-      synced: synced ?? this.synced,
-      onceLoaded: onceLoaded ?? this.onceLoaded,
-      reminders: reminders ?? this.reminders,
-      recurrenceMode:
-          recurrenceMode == null ? this.recurrenceMode : recurrenceMode(),
-      recurrenceUntilDate: recurrenceUntilDate == null
-          ? this.recurrenceUntilDate
-          : recurrenceUntilDate(),
-      recurrenceWeekDays: recurrenceWeekDays == null
-          ? this.recurrenceWeekDays
-          : recurrenceWeekDays(),
-      recurrenceWeeklyFrequency: recurrenceWeeklyFrequency == null
-          ? this.recurrenceWeeklyFrequency
-          : recurrenceWeeklyFrequency(),
-      attendees: attendees ?? this.attendees
-    );
+        organizer: organizer ?? this.organizer,
+        appointment: appointment ?? this.appointment,
+        appointmentAccess: appointmentAccess ?? this.appointmentAccess,
+        calendarId: calendarId ?? this.calendarId,
+        userLocalId: userLocalId ?? this.userLocalId,
+        uid: uid ?? this.uid,
+        subject: subject ?? this.subject,
+        description: description ?? this.description,
+        location: location ?? this.location,
+        startTS: startTS ?? this.startTS,
+        endTS: endTS ?? this.endTS,
+        allDay: allDay ?? this.allDay,
+        owner: owner ?? this.owner,
+        modified: modified ?? this.modified,
+        recurrenceId: recurrenceId ?? this.recurrenceId,
+        lastModified: lastModified ?? this.lastModified,
+        rrule: rrule ?? this.rrule,
+        status: status ?? this.status,
+        withDate: withDate ?? this.withDate,
+        isPrivate: isPrivate ?? this.isPrivate,
+        updateStatus: updateStatus ?? this.updateStatus,
+        synced: synced ?? this.synced,
+        onceLoaded: onceLoaded ?? this.onceLoaded,
+        reminders: reminders ?? this.reminders,
+        recurrenceMode:
+            recurrenceMode == null ? this.recurrenceMode : recurrenceMode(),
+        recurrenceUntilDate: recurrenceUntilDate == null
+            ? this.recurrenceUntilDate
+            : recurrenceUntilDate(),
+        recurrenceWeekDays: recurrenceWeekDays == null
+            ? this.recurrenceWeekDays
+            : recurrenceWeekDays(),
+        recurrenceWeeklyFrequency: recurrenceWeeklyFrequency == null
+            ? this.recurrenceWeeklyFrequency
+            : recurrenceWeeklyFrequency(),
+        attendees: attendees ?? this.attendees);
   }
 }
 

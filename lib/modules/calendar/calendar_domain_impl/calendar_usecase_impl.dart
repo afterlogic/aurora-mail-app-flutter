@@ -153,7 +153,13 @@ class CalendarUseCaseImpl implements CalendarUseCase {
 
   @override
   Future<void> createEvent(EventCreationData data) async {
-    await repository.createEvent(data);
+    await repository.createEvent(data.copyWith(
+        startDate: _location == null
+            ? data.startDate
+            : tz.TZDateTime.from(data.startDate, _location!),
+        endDate: _location == null
+            ? data.endDate
+            : tz.TZDateTime.from(data.endDate, _location!)));
     await syncCalendars();
     if (_selectedEndEventsInterval != null &&
         _selectedStartEventsInterval != null &&
@@ -164,7 +170,14 @@ class CalendarUseCaseImpl implements CalendarUseCase {
 
   @override
   Future<ViewEvent> updateEvent(ViewEvent event) async {
-    final model = await repository.updateEvent(event);
+    final model = await repository.updateEvent(event.copyWith(
+        startDate: _location == null
+            ? event.startDate
+            : tz.TZDateTime.from(event.startDate, _location!),
+        endDate: _location == null
+            ? event.endDate
+            : tz.TZDateTime.from(event.endDate, _location!)
+    ));
     syncCalendars().then((_) => _getLocalEvents());
     return ViewEvent.tryFromEvent(model, color: event.color)!;
   }
