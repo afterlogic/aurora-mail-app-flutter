@@ -1,5 +1,6 @@
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/calendar.dart';
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 class Calendar {
@@ -60,7 +61,7 @@ class Calendar {
     );
   }
 
-  bool isUserOwner(User user){
+  bool isUserOwner(User user) {
     return user.emailFromLogin == owner;
   }
 
@@ -127,3 +128,22 @@ class CalendarCreationData {
       required this.color,
       this.iCalMail});
 }
+
+class Participant extends Equatable{
+  final String email;
+  final String name;
+  final ParticipantPermissions permissions;
+
+  const Participant(
+      {required this.email, required this.permissions, required this.name});
+
+  Participant copyWith({ParticipantPermissions? permissions}) {
+    return Participant(
+        email: email, name: name, permissions: permissions ?? this.permissions);
+  }
+
+  @override
+  List<Object?> get props => [email, name];
+}
+
+enum ParticipantPermissions { read, readWrite }

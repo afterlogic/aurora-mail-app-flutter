@@ -4,9 +4,11 @@ import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/calendar/blocs/calendars/calendars_bloc.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/calendar.dart';
 import 'package:aurora_mail/modules/calendar/ui/dialogs/calendar_creation.dart';
 import 'package:aurora_mail/modules/calendar/ui/dialogs/calendar_edit.dart';
 import 'package:aurora_mail/modules/calendar/ui/dialogs/calendar_links_dialog.dart';
+import 'package:aurora_mail/modules/calendar/ui/dialogs/calendar_sharing_dialog.dart';
 import 'package:aurora_mail/modules/calendar/ui/dialogs/deletion_confirm_dialog.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/calendar.dart';
 import 'package:aurora_mail/shared_ui/colored_checkbox.dart';
@@ -192,16 +194,29 @@ class CollapsibleCheckboxList extends StatefulWidget {
       _CollapsibleCheckboxListState();
 }
 
+enum _CalendarDrawerMenuItems{
+  getLink,
+  edit,
+  download,
+  unsubscribe,
+  share,
+  delete
+}
+
 class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
     with SingleTickerProviderStateMixin {
   bool _isExpanded = false;
 
   late AnimationController _animationController;
   List<_MenuItem> _menuItems = [];
+  late final String _currentUserMail;
+
 
   @override
   void initState() {
     super.initState();
+    _currentUserMail =
+        BlocProvider.of<AuthBloc>(context).currentUser?.emailFromLogin ?? '';
     _animationController = AnimationController(
       duration: const Duration(milliseconds: 200),
       vsync: this,
@@ -218,159 +233,119 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
     }
   }
 
+  _MenuItem _menuItemBuilder(_CalendarDrawerMenuItems item) {
+    switch (item){
+      case _CalendarDrawerMenuItems.getLink:
+       return _MenuItem(
+         icon: Icon(Icons.link),
+         titleBuilder: (ctx) => 'Get a link',
+         onTap: (ctx, ViewCalendar calendar) {
+           CalendarLinksDialog.show(ctx, calendar: calendar);
+         },
+       );
+      case _CalendarDrawerMenuItems.edit:
+       return  _MenuItem(
+          icon: Icon(Icons.edit_outlined),
+          titleBuilder: (ctx) => S.of(ctx).contacts_view_app_bar_edit_contact,
+          onTap: (ctx, ViewCalendar calendar) {
+            CalendarEditDialog.show(ctx, calendar: calendar).then((value) {
+              if (value != null) {
+                BlocProvider.of<CalendarsBloc>(ctx)
+                    .add(UpdateCalendar(value));
+              }
+            });
+          },
+        );
+      case _CalendarDrawerMenuItems.download:
+        return _MenuItem(
+          icon: Icon(Icons.file_download_outlined),
+          titleBuilder: (ctx) => 'Import ICS file',
+          onTap: (ctx, ViewCalendar calendar) {},
+        );
+      case _CalendarDrawerMenuItems.unsubscribe:
+        return _MenuItem(
+          icon: Icon(Icons.unsubscribe_outlined),
+          titleBuilder: (ctx) => 'Unsubscribe from calendar',
+          onTap: (ctx, ViewCalendar calendar) {},
+        );
+      case _CalendarDrawerMenuItems.share:
+        return _MenuItem(
+          icon: Icon(Icons.group_add_outlined),
+          titleBuilder: (ctx) => S.of(ctx).btn_share,
+          onTap: (ctx, ViewCalendar calendar) {
+            CalendarSharingDialog.show(context, calendar: calendar).then((value) {
+              if(value == null) return;
+              //TODO UpdateCalendarShare request
+              print(value);
+            });
+          },
+        );
+      case _CalendarDrawerMenuItems.delete:
+        return _MenuItem(
+          icon: Icon(Icons.delete_outline),
+          titleBuilder: (ctx) => S.of(ctx).btn_delete,
+          onTap: (ctx, ViewCalendar calendar) {
+            CalendarConfirmDialog.show(ctx,
+                title: 'Delete calendar',
+                confirmMessage:
+                "Are you sure you want to delete calendar ${calendar.name}?")
+                .then((value) {
+              if (value != true) return;
+              BlocProvider.of<CalendarsBloc>(ctx)
+                  .add(DeleteCalendar(calendar));
+              Navigator.of(ctx).pop();
+            });
+          },
+        );
+    }
+  }
+
+
+
+
   List<_MenuItem> _buildSharedToAllAccessReadMenuItems() {
     return [
-      _MenuItem(
-        icon: Icon(Icons.link),
-        titleBuilder: (ctx) => 'Get a link',
-        onTap: (ctx) {
-          CalendarLinksDialog.show(ctx, calendar: widget.calendar);
-
-        },
-      )
+      _menuItemBuilder(_CalendarDrawerMenuItems.getLink)
     ];
   }
 
   List<_MenuItem> _buildSharedToAllAccessWriteMenuItems() {
     return [
-      _MenuItem(
-        icon: Icon(Icons.edit_outlined),
-        titleBuilder: (ctx) => S.of(context).contacts_view_app_bar_edit_contact,
-        onTap: (ctx) {
-          CalendarEditDialog.show(ctx, calendar: widget.calendar).then((value) {
-            if (value != null) {
-              BlocProvider.of<CalendarsBloc>(context)
-                  .add(UpdateCalendar(value));
-            }
-          });
-        },
-      ),
-      _MenuItem(
-        icon: Icon(Icons.file_download_outlined),
-        titleBuilder: (ctx) => 'Import ICS file',
-        onTap: (ctx) {},
-      ),
-      _MenuItem(
-        icon: Icon(Icons.link),
-        titleBuilder: (ctx) => 'Get a link',
-        onTap: (ctx) {
-          CalendarLinksDialog.show(ctx, calendar: widget.calendar);
-
-        },
-      ),
+      _menuItemBuilder(_CalendarDrawerMenuItems.edit),
+      _menuItemBuilder(_CalendarDrawerMenuItems.download),
+      _menuItemBuilder(_CalendarDrawerMenuItems.getLink),
     ];
   }
 
   List<_MenuItem> _buildSharedAccessReadMenuItems() {
     return [
-      _MenuItem(
-        icon: Icon(Icons.link),
-        titleBuilder: (ctx) => 'Get a link',
-        onTap: (ctx) {
-          CalendarLinksDialog.show(ctx, calendar: widget.calendar);
-
-        },
-      ),
-      _MenuItem(
-        icon: Icon(Icons.unsubscribe_outlined),
-        titleBuilder: (ctx) => 'Unsubscribe from calendar',
-        onTap: (ctx) {},
-      ),
+      _menuItemBuilder(_CalendarDrawerMenuItems.getLink),
+      _menuItemBuilder(_CalendarDrawerMenuItems.unsubscribe),
     ];
   }
 
   List<_MenuItem> _buildSharedAccessWriteMenuItems() {
     return [
-      _MenuItem(
-        icon: Icon(Icons.edit_outlined),
-        titleBuilder: (ctx) => S.of(context).contacts_view_app_bar_edit_contact,
-        onTap: (ctx) {
-          CalendarEditDialog.show(ctx, calendar: widget.calendar).then((value) {
-            if (value != null) {
-              BlocProvider.of<CalendarsBloc>(context)
-                  .add(UpdateCalendar(value));
-            }
-          });
-        },
-      ),
-      _MenuItem(
-        icon: Icon(Icons.file_download_outlined),
-        titleBuilder: (ctx) => 'Import ICS file',
-        onTap: (ctx) {},
-      ),
-      _MenuItem(
-        icon: Icon(Icons.link),
-        titleBuilder: (ctx) => 'Get a link',
-        onTap: (ctx) {
-          CalendarLinksDialog.show(ctx, calendar: widget.calendar);
-
-        },
-      ),
-      _MenuItem(
-        icon: Icon(Icons.group_add_outlined),
-        titleBuilder: (ctx) => S.of(context).btn_share,
-        onTap: (ctx) {},
-      ),
-      _MenuItem(
-        icon: Icon(Icons.unsubscribe_outlined),
-        titleBuilder: (ctx) => 'Unsubscribe from calendar',
-        onTap: (ctx) {},
-      ),
+      _menuItemBuilder(_CalendarDrawerMenuItems.edit),
+      _menuItemBuilder(_CalendarDrawerMenuItems.download),
+      _menuItemBuilder(_CalendarDrawerMenuItems.getLink),
+      _menuItemBuilder(_CalendarDrawerMenuItems.share),
+      _menuItemBuilder(_CalendarDrawerMenuItems.unsubscribe),
     ];
   }
 
   List<_MenuItem> _buildDefaultMenuItems() {
     return [
-      _MenuItem(
-        icon: Icon(Icons.edit_outlined),
-        titleBuilder: (ctx) => S.of(context).contacts_view_app_bar_edit_contact,
-        onTap: (ctx) {
-          CalendarEditDialog.show(ctx, calendar: widget.calendar).then((value) {
-            if (value != null) {
-              BlocProvider.of<CalendarsBloc>(context)
-                  .add(UpdateCalendar(value));
-            }
-          });
-        },
-      ),
-      _MenuItem(
-        icon: Icon(Icons.file_download_outlined),
-        titleBuilder: (ctx) => 'Import ICS file',
-        onTap: (ctx) {},
-      ),
-      _MenuItem(
-        icon: Icon(Icons.link),
-        titleBuilder: (ctx) => 'Get a link',
-        onTap: (ctx) {
-          CalendarLinksDialog.show(ctx, calendar: widget.calendar);
-        },
-      ),
-      _MenuItem(
-        icon: Icon(Icons.group_add_outlined),
-        titleBuilder: (ctx) => S.of(context).btn_share,
-        onTap: (ctx) {},
-      ),
-      _MenuItem(
-        icon: Icon(Icons.delete_outline),
-        titleBuilder: (ctx) => S.of(context).btn_delete,
-        onTap: (ctx) {
-          CalendarConfirmDialog.show(context,
-                  title: 'Delete calendar',
-                  confirmMessage:
-                      "Are you sure you want to delete calendar ${widget.calendar.name}?")
-              .then((value) {
-            if (value != true) return;
-            BlocProvider.of<CalendarsBloc>(ctx)
-                .add(DeleteCalendar(widget.calendar));
-            Navigator.of(context).pop();
-          });
-        },
-      ),
+      _menuItemBuilder(_CalendarDrawerMenuItems.edit),
+      _menuItemBuilder(_CalendarDrawerMenuItems.download),
+      _menuItemBuilder(_CalendarDrawerMenuItems.getLink),
+      _menuItemBuilder(_CalendarDrawerMenuItems.share),
+      _menuItemBuilder(_CalendarDrawerMenuItems.delete),
     ];
   }
 
   List<_MenuItem> _buildMenuItems() {
-    if (widget.calendar.sharedToAll) {
+    if (widget.calendar.sharedToAll && widget.calendar.owner != _currentUserMail) {
       if (widget.calendar.sharedToAllAccess == 2) {
         return _buildSharedToAllAccessReadMenuItems();
       } else if (widget.calendar.sharedToAllAccess == 1) {
@@ -378,7 +353,7 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
       } else {
         return [];
       }
-    } else if (widget.calendar.shared) {
+    } else if (widget.calendar.shared && widget.calendar.owner != _currentUserMail) {
       if (widget.calendar.access == 2) {
         return _buildSharedAccessReadMenuItems();
       } else if (widget.calendar.access == 1) {
@@ -507,7 +482,7 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
                           horizontalTitleGap: 0,
                           leading: e.icon,
                           iconColor: Theme.of(context).primaryColor,
-                          onTap: () => e.onTap(context),
+                          onTap: () => e.onTap(context, widget.calendar),
                         ),
                       ))
                   .toList()),
@@ -520,7 +495,7 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
 class _MenuItem {
   final Icon icon;
   final String Function(BuildContext ctx) titleBuilder;
-  final void Function(BuildContext ctx) onTap;
+  final void Function(BuildContext ctx, ViewCalendar calendar) onTap;
 
   const _MenuItem({
     required this.icon,
