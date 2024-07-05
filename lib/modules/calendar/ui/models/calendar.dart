@@ -22,25 +22,16 @@ class ViewCalendar extends Calendar implements Equatable {
       required super.isPublic,
       required super.syncToken,
       required super.isSubscribed,
-      required super.source});
+      required super.source,
+      required super.serverUrl,
+      required super.url,
+      required super.exportHash,
+      required super.pubHash,
+      required super.shares});
 
-  ViewCalendar updateSelect(bool selected) => ViewCalendar(
+  ViewCalendar updateSelect(bool selected) => copyWith(
       selected: selected,
-      id: id,
-      userLocalId: userLocalId,
-      color: color,
-      name: name,
-      owner: owner,
-      isDefault: isDefault,
-      shared: shared,
-      sharedToAll: sharedToAll,
-      description: description,
-      sharedToAllAccess: sharedToAllAccess,
-      access: access,
-      isSubscribed: isSubscribed,
-      isPublic: isPublic,
-      source: source,
-      syncToken: syncToken);
+     );
 
   @override
   List<Object?> get props => [
@@ -57,9 +48,14 @@ class ViewCalendar extends Calendar implements Equatable {
         sharedToAllAccess,
         access,
         isPublic,
-    source,
+        source,
         isSubscribed,
-        syncToken
+        syncToken,
+        serverUrl,
+        url,
+        exportHash,
+        pubHash,
+        shares
       ];
 
   @override
@@ -81,8 +77,13 @@ class ViewCalendar extends Calendar implements Equatable {
     bool? isPublic,
     bool? isSubscribed,
     String? source,
-    List? shares,
+    bool? selected,
     String? syncToken,
+    String? serverUrl,
+    String? url,
+    String? exportHash,
+    String? pubHash,
+    Set<Participant>? shares,
   }) {
     return ViewCalendar(
       selected: this.selected,
@@ -100,7 +101,11 @@ class ViewCalendar extends Calendar implements Equatable {
       isPublic: isPublic ?? this.isPublic,
       source: source ?? this.source,
       isSubscribed: isSubscribed ?? this.isSubscribed,
-      // shares: shares ?? this.shares,
+      serverUrl: serverUrl ?? this.serverUrl,
+      url: url ?? this.url,
+      exportHash: exportHash ?? this.exportHash,
+      pubHash: pubHash ?? this.pubHash,
+      shares: shares ?? this.shares,
       syncToken: syncToken ?? this.syncToken,
     );
   }

@@ -2389,6 +2389,10 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
 
 class CalendarDb extends DataClass implements Insertable<CalendarDb> {
   final String id;
+  final String url;
+  final String serverUrl;
+  final String exportHash;
+  final String pubHash;
   final String color;
   final String? description;
   final int userLocalId;
@@ -2399,12 +2403,17 @@ class CalendarDb extends DataClass implements Insertable<CalendarDb> {
   final bool sharedToAll;
   final int sharedToAllAccess;
   final int access;
+  final List<String>? shares;
   final bool isPublic;
   final bool isSubscribed;
   final String source;
   final String syncToken;
   CalendarDb(
       {required this.id,
+      required this.url,
+      required this.serverUrl,
+      required this.exportHash,
+      required this.pubHash,
       required this.color,
       this.description,
       required this.userLocalId,
@@ -2415,6 +2424,7 @@ class CalendarDb extends DataClass implements Insertable<CalendarDb> {
       required this.sharedToAll,
       required this.sharedToAllAccess,
       required this.access,
+      this.shares,
       required this.isPublic,
       required this.isSubscribed,
       required this.source,
@@ -2424,6 +2434,14 @@ class CalendarDb extends DataClass implements Insertable<CalendarDb> {
     return CalendarDb(
       id: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
+      url: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}url'])!,
+      serverUrl: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}server_url'])!,
+      exportHash: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}export_hash'])!,
+      pubHash: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}pub_hash'])!,
       color: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}color'])!,
       description: const StringType()
@@ -2444,6 +2462,8 @@ class CalendarDb extends DataClass implements Insertable<CalendarDb> {
           data['${effectivePrefix}shared_to_all_access'])!,
       access: const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}access'])!,
+      shares: $CalendarTableTable.$converter0.mapToDart(const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}shares'])),
       isPublic: const BoolType()
           .mapFromDatabaseResponse(data['${effectivePrefix}is_public'])!,
       isSubscribed: const BoolType()
@@ -2458,6 +2478,10 @@ class CalendarDb extends DataClass implements Insertable<CalendarDb> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     map['id'] = Variable<String>(id);
+    map['url'] = Variable<String>(url);
+    map['server_url'] = Variable<String>(serverUrl);
+    map['export_hash'] = Variable<String>(exportHash);
+    map['pub_hash'] = Variable<String>(pubHash);
     map['color'] = Variable<String>(color);
     if (!nullToAbsent || description != null) {
       map['description'] = Variable<String?>(description);
@@ -2470,6 +2494,10 @@ class CalendarDb extends DataClass implements Insertable<CalendarDb> {
     map['shared_to_all'] = Variable<bool>(sharedToAll);
     map['shared_to_all_access'] = Variable<int>(sharedToAllAccess);
     map['access'] = Variable<int>(access);
+    if (!nullToAbsent || shares != null) {
+      final converter = $CalendarTableTable.$converter0;
+      map['shares'] = Variable<String?>(converter.mapToSql(shares));
+    }
     map['is_public'] = Variable<bool>(isPublic);
     map['is_subscribed'] = Variable<bool>(isSubscribed);
     map['source'] = Variable<String>(source);
@@ -2480,6 +2508,10 @@ class CalendarDb extends DataClass implements Insertable<CalendarDb> {
   CalendarTableCompanion toCompanion(bool nullToAbsent) {
     return CalendarTableCompanion(
       id: Value(id),
+      url: Value(url),
+      serverUrl: Value(serverUrl),
+      exportHash: Value(exportHash),
+      pubHash: Value(pubHash),
       color: Value(color),
       description: description == null && nullToAbsent
           ? const Value.absent()
@@ -2492,6 +2524,8 @@ class CalendarDb extends DataClass implements Insertable<CalendarDb> {
       sharedToAll: Value(sharedToAll),
       sharedToAllAccess: Value(sharedToAllAccess),
       access: Value(access),
+      shares:
+          shares == null && nullToAbsent ? const Value.absent() : Value(shares),
       isPublic: Value(isPublic),
       isSubscribed: Value(isSubscribed),
       source: Value(source),
@@ -2504,6 +2538,10 @@ class CalendarDb extends DataClass implements Insertable<CalendarDb> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return CalendarDb(
       id: serializer.fromJson<String>(json['id']),
+      url: serializer.fromJson<String>(json['url']),
+      serverUrl: serializer.fromJson<String>(json['serverUrl']),
+      exportHash: serializer.fromJson<String>(json['exportHash']),
+      pubHash: serializer.fromJson<String>(json['pubHash']),
       color: serializer.fromJson<String>(json['color']),
       description: serializer.fromJson<String?>(json['description']),
       userLocalId: serializer.fromJson<int>(json['userLocalId']),
@@ -2514,6 +2552,7 @@ class CalendarDb extends DataClass implements Insertable<CalendarDb> {
       sharedToAll: serializer.fromJson<bool>(json['sharedToAll']),
       sharedToAllAccess: serializer.fromJson<int>(json['sharedToAllAccess']),
       access: serializer.fromJson<int>(json['access']),
+      shares: serializer.fromJson<List<String>?>(json['shares']),
       isPublic: serializer.fromJson<bool>(json['isPublic']),
       isSubscribed: serializer.fromJson<bool>(json['isSubscribed']),
       source: serializer.fromJson<String>(json['source']),
@@ -2525,6 +2564,10 @@ class CalendarDb extends DataClass implements Insertable<CalendarDb> {
     serializer ??= driftRuntimeOptions.defaultSerializer;
     return <String, dynamic>{
       'id': serializer.toJson<String>(id),
+      'url': serializer.toJson<String>(url),
+      'serverUrl': serializer.toJson<String>(serverUrl),
+      'exportHash': serializer.toJson<String>(exportHash),
+      'pubHash': serializer.toJson<String>(pubHash),
       'color': serializer.toJson<String>(color),
       'description': serializer.toJson<String?>(description),
       'userLocalId': serializer.toJson<int>(userLocalId),
@@ -2535,6 +2578,7 @@ class CalendarDb extends DataClass implements Insertable<CalendarDb> {
       'sharedToAll': serializer.toJson<bool>(sharedToAll),
       'sharedToAllAccess': serializer.toJson<int>(sharedToAllAccess),
       'access': serializer.toJson<int>(access),
+      'shares': serializer.toJson<List<String>?>(shares),
       'isPublic': serializer.toJson<bool>(isPublic),
       'isSubscribed': serializer.toJson<bool>(isSubscribed),
       'source': serializer.toJson<String>(source),
@@ -2544,6 +2588,10 @@ class CalendarDb extends DataClass implements Insertable<CalendarDb> {
 
   CalendarDb copyWith(
           {String? id,
+          String? url,
+          String? serverUrl,
+          String? exportHash,
+          String? pubHash,
           String? color,
           String? description,
           int? userLocalId,
@@ -2554,12 +2602,17 @@ class CalendarDb extends DataClass implements Insertable<CalendarDb> {
           bool? sharedToAll,
           int? sharedToAllAccess,
           int? access,
+          List<String>? shares,
           bool? isPublic,
           bool? isSubscribed,
           String? source,
           String? syncToken}) =>
       CalendarDb(
         id: id ?? this.id,
+        url: url ?? this.url,
+        serverUrl: serverUrl ?? this.serverUrl,
+        exportHash: exportHash ?? this.exportHash,
+        pubHash: pubHash ?? this.pubHash,
         color: color ?? this.color,
         description: description ?? this.description,
         userLocalId: userLocalId ?? this.userLocalId,
@@ -2570,6 +2623,7 @@ class CalendarDb extends DataClass implements Insertable<CalendarDb> {
         sharedToAll: sharedToAll ?? this.sharedToAll,
         sharedToAllAccess: sharedToAllAccess ?? this.sharedToAllAccess,
         access: access ?? this.access,
+        shares: shares ?? this.shares,
         isPublic: isPublic ?? this.isPublic,
         isSubscribed: isSubscribed ?? this.isSubscribed,
         source: source ?? this.source,
@@ -2579,6 +2633,10 @@ class CalendarDb extends DataClass implements Insertable<CalendarDb> {
   String toString() {
     return (StringBuffer('CalendarDb(')
           ..write('id: $id, ')
+          ..write('url: $url, ')
+          ..write('serverUrl: $serverUrl, ')
+          ..write('exportHash: $exportHash, ')
+          ..write('pubHash: $pubHash, ')
           ..write('color: $color, ')
           ..write('description: $description, ')
           ..write('userLocalId: $userLocalId, ')
@@ -2589,6 +2647,7 @@ class CalendarDb extends DataClass implements Insertable<CalendarDb> {
           ..write('sharedToAll: $sharedToAll, ')
           ..write('sharedToAllAccess: $sharedToAllAccess, ')
           ..write('access: $access, ')
+          ..write('shares: $shares, ')
           ..write('isPublic: $isPublic, ')
           ..write('isSubscribed: $isSubscribed, ')
           ..write('source: $source, ')
@@ -2600,6 +2659,10 @@ class CalendarDb extends DataClass implements Insertable<CalendarDb> {
   @override
   int get hashCode => Object.hash(
       id,
+      url,
+      serverUrl,
+      exportHash,
+      pubHash,
       color,
       description,
       userLocalId,
@@ -2610,6 +2673,7 @@ class CalendarDb extends DataClass implements Insertable<CalendarDb> {
       sharedToAll,
       sharedToAllAccess,
       access,
+      shares,
       isPublic,
       isSubscribed,
       source,
@@ -2619,6 +2683,10 @@ class CalendarDb extends DataClass implements Insertable<CalendarDb> {
       identical(this, other) ||
       (other is CalendarDb &&
           other.id == this.id &&
+          other.url == this.url &&
+          other.serverUrl == this.serverUrl &&
+          other.exportHash == this.exportHash &&
+          other.pubHash == this.pubHash &&
           other.color == this.color &&
           other.description == this.description &&
           other.userLocalId == this.userLocalId &&
@@ -2629,6 +2697,7 @@ class CalendarDb extends DataClass implements Insertable<CalendarDb> {
           other.sharedToAll == this.sharedToAll &&
           other.sharedToAllAccess == this.sharedToAllAccess &&
           other.access == this.access &&
+          other.shares == this.shares &&
           other.isPublic == this.isPublic &&
           other.isSubscribed == this.isSubscribed &&
           other.source == this.source &&
@@ -2637,6 +2706,10 @@ class CalendarDb extends DataClass implements Insertable<CalendarDb> {
 
 class CalendarTableCompanion extends UpdateCompanion<CalendarDb> {
   final Value<String> id;
+  final Value<String> url;
+  final Value<String> serverUrl;
+  final Value<String> exportHash;
+  final Value<String> pubHash;
   final Value<String> color;
   final Value<String?> description;
   final Value<int> userLocalId;
@@ -2647,12 +2720,17 @@ class CalendarTableCompanion extends UpdateCompanion<CalendarDb> {
   final Value<bool> sharedToAll;
   final Value<int> sharedToAllAccess;
   final Value<int> access;
+  final Value<List<String>?> shares;
   final Value<bool> isPublic;
   final Value<bool> isSubscribed;
   final Value<String> source;
   final Value<String> syncToken;
   const CalendarTableCompanion({
     this.id = const Value.absent(),
+    this.url = const Value.absent(),
+    this.serverUrl = const Value.absent(),
+    this.exportHash = const Value.absent(),
+    this.pubHash = const Value.absent(),
     this.color = const Value.absent(),
     this.description = const Value.absent(),
     this.userLocalId = const Value.absent(),
@@ -2663,6 +2741,7 @@ class CalendarTableCompanion extends UpdateCompanion<CalendarDb> {
     this.sharedToAll = const Value.absent(),
     this.sharedToAllAccess = const Value.absent(),
     this.access = const Value.absent(),
+    this.shares = const Value.absent(),
     this.isPublic = const Value.absent(),
     this.isSubscribed = const Value.absent(),
     this.source = const Value.absent(),
@@ -2670,6 +2749,10 @@ class CalendarTableCompanion extends UpdateCompanion<CalendarDb> {
   });
   CalendarTableCompanion.insert({
     required String id,
+    required String url,
+    required String serverUrl,
+    required String exportHash,
+    required String pubHash,
     required String color,
     this.description = const Value.absent(),
     required int userLocalId,
@@ -2680,11 +2763,16 @@ class CalendarTableCompanion extends UpdateCompanion<CalendarDb> {
     required bool sharedToAll,
     required int sharedToAllAccess,
     required int access,
+    this.shares = const Value.absent(),
     required bool isPublic,
     required bool isSubscribed,
     required String source,
     required String syncToken,
   })  : id = Value(id),
+        url = Value(url),
+        serverUrl = Value(serverUrl),
+        exportHash = Value(exportHash),
+        pubHash = Value(pubHash),
         color = Value(color),
         userLocalId = Value(userLocalId),
         name = Value(name),
@@ -2700,6 +2788,10 @@ class CalendarTableCompanion extends UpdateCompanion<CalendarDb> {
         syncToken = Value(syncToken);
   static Insertable<CalendarDb> custom({
     Expression<String>? id,
+    Expression<String>? url,
+    Expression<String>? serverUrl,
+    Expression<String>? exportHash,
+    Expression<String>? pubHash,
     Expression<String>? color,
     Expression<String?>? description,
     Expression<int>? userLocalId,
@@ -2710,6 +2802,7 @@ class CalendarTableCompanion extends UpdateCompanion<CalendarDb> {
     Expression<bool>? sharedToAll,
     Expression<int>? sharedToAllAccess,
     Expression<int>? access,
+    Expression<List<String>?>? shares,
     Expression<bool>? isPublic,
     Expression<bool>? isSubscribed,
     Expression<String>? source,
@@ -2717,6 +2810,10 @@ class CalendarTableCompanion extends UpdateCompanion<CalendarDb> {
   }) {
     return RawValuesInsertable({
       if (id != null) 'id': id,
+      if (url != null) 'url': url,
+      if (serverUrl != null) 'server_url': serverUrl,
+      if (exportHash != null) 'export_hash': exportHash,
+      if (pubHash != null) 'pub_hash': pubHash,
       if (color != null) 'color': color,
       if (description != null) 'description': description,
       if (userLocalId != null) 'user_local_id': userLocalId,
@@ -2727,6 +2824,7 @@ class CalendarTableCompanion extends UpdateCompanion<CalendarDb> {
       if (sharedToAll != null) 'shared_to_all': sharedToAll,
       if (sharedToAllAccess != null) 'shared_to_all_access': sharedToAllAccess,
       if (access != null) 'access': access,
+      if (shares != null) 'shares': shares,
       if (isPublic != null) 'is_public': isPublic,
       if (isSubscribed != null) 'is_subscribed': isSubscribed,
       if (source != null) 'source': source,
@@ -2736,6 +2834,10 @@ class CalendarTableCompanion extends UpdateCompanion<CalendarDb> {
 
   CalendarTableCompanion copyWith(
       {Value<String>? id,
+      Value<String>? url,
+      Value<String>? serverUrl,
+      Value<String>? exportHash,
+      Value<String>? pubHash,
       Value<String>? color,
       Value<String?>? description,
       Value<int>? userLocalId,
@@ -2746,12 +2848,17 @@ class CalendarTableCompanion extends UpdateCompanion<CalendarDb> {
       Value<bool>? sharedToAll,
       Value<int>? sharedToAllAccess,
       Value<int>? access,
+      Value<List<String>?>? shares,
       Value<bool>? isPublic,
       Value<bool>? isSubscribed,
       Value<String>? source,
       Value<String>? syncToken}) {
     return CalendarTableCompanion(
       id: id ?? this.id,
+      url: url ?? this.url,
+      serverUrl: serverUrl ?? this.serverUrl,
+      exportHash: exportHash ?? this.exportHash,
+      pubHash: pubHash ?? this.pubHash,
       color: color ?? this.color,
       description: description ?? this.description,
       userLocalId: userLocalId ?? this.userLocalId,
@@ -2762,6 +2869,7 @@ class CalendarTableCompanion extends UpdateCompanion<CalendarDb> {
       sharedToAll: sharedToAll ?? this.sharedToAll,
       sharedToAllAccess: sharedToAllAccess ?? this.sharedToAllAccess,
       access: access ?? this.access,
+      shares: shares ?? this.shares,
       isPublic: isPublic ?? this.isPublic,
       isSubscribed: isSubscribed ?? this.isSubscribed,
       source: source ?? this.source,
@@ -2774,6 +2882,18 @@ class CalendarTableCompanion extends UpdateCompanion<CalendarDb> {
     final map = <String, Expression>{};
     if (id.present) {
       map['id'] = Variable<String>(id.value);
+    }
+    if (url.present) {
+      map['url'] = Variable<String>(url.value);
+    }
+    if (serverUrl.present) {
+      map['server_url'] = Variable<String>(serverUrl.value);
+    }
+    if (exportHash.present) {
+      map['export_hash'] = Variable<String>(exportHash.value);
+    }
+    if (pubHash.present) {
+      map['pub_hash'] = Variable<String>(pubHash.value);
     }
     if (color.present) {
       map['color'] = Variable<String>(color.value);
@@ -2805,6 +2925,10 @@ class CalendarTableCompanion extends UpdateCompanion<CalendarDb> {
     if (access.present) {
       map['access'] = Variable<int>(access.value);
     }
+    if (shares.present) {
+      final converter = $CalendarTableTable.$converter0;
+      map['shares'] = Variable<String?>(converter.mapToSql(shares.value));
+    }
     if (isPublic.present) {
       map['is_public'] = Variable<bool>(isPublic.value);
     }
@@ -2824,6 +2948,10 @@ class CalendarTableCompanion extends UpdateCompanion<CalendarDb> {
   String toString() {
     return (StringBuffer('CalendarTableCompanion(')
           ..write('id: $id, ')
+          ..write('url: $url, ')
+          ..write('serverUrl: $serverUrl, ')
+          ..write('exportHash: $exportHash, ')
+          ..write('pubHash: $pubHash, ')
           ..write('color: $color, ')
           ..write('description: $description, ')
           ..write('userLocalId: $userLocalId, ')
@@ -2834,6 +2962,7 @@ class CalendarTableCompanion extends UpdateCompanion<CalendarDb> {
           ..write('sharedToAll: $sharedToAll, ')
           ..write('sharedToAllAccess: $sharedToAllAccess, ')
           ..write('access: $access, ')
+          ..write('shares: $shares, ')
           ..write('isPublic: $isPublic, ')
           ..write('isSubscribed: $isSubscribed, ')
           ..write('source: $source, ')
@@ -2853,6 +2982,26 @@ class $CalendarTableTable extends CalendarTable
   @override
   late final GeneratedColumn<String?> id = GeneratedColumn<String?>(
       'id', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _urlMeta = const VerificationMeta('url');
+  @override
+  late final GeneratedColumn<String?> url = GeneratedColumn<String?>(
+      'url', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _serverUrlMeta = const VerificationMeta('serverUrl');
+  @override
+  late final GeneratedColumn<String?> serverUrl = GeneratedColumn<String?>(
+      'server_url', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _exportHashMeta = const VerificationMeta('exportHash');
+  @override
+  late final GeneratedColumn<String?> exportHash = GeneratedColumn<String?>(
+      'export_hash', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _pubHashMeta = const VerificationMeta('pubHash');
+  @override
+  late final GeneratedColumn<String?> pubHash = GeneratedColumn<String?>(
+      'pub_hash', aliasedName, false,
       type: const StringType(), requiredDuringInsert: true);
   final VerificationMeta _colorMeta = const VerificationMeta('color');
   @override
@@ -2914,6 +3063,12 @@ class $CalendarTableTable extends CalendarTable
   late final GeneratedColumn<int?> access = GeneratedColumn<int?>(
       'access', aliasedName, false,
       type: const IntType(), requiredDuringInsert: true);
+  final VerificationMeta _sharesMeta = const VerificationMeta('shares');
+  @override
+  late final GeneratedColumnWithTypeConverter<List<String>, String?> shares =
+      GeneratedColumn<String?>('shares', aliasedName, true,
+              type: const StringType(), requiredDuringInsert: false)
+          .withConverter<List<String>>($CalendarTableTable.$converter0);
   final VerificationMeta _isPublicMeta = const VerificationMeta('isPublic');
   @override
   late final GeneratedColumn<bool?> isPublic = GeneratedColumn<bool?>(
@@ -2942,6 +3097,10 @@ class $CalendarTableTable extends CalendarTable
   @override
   List<GeneratedColumn> get $columns => [
         id,
+        url,
+        serverUrl,
+        exportHash,
+        pubHash,
         color,
         description,
         userLocalId,
@@ -2952,6 +3111,7 @@ class $CalendarTableTable extends CalendarTable
         sharedToAll,
         sharedToAllAccess,
         access,
+        shares,
         isPublic,
         isSubscribed,
         source,
@@ -2970,6 +3130,32 @@ class $CalendarTableTable extends CalendarTable
       context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
     } else if (isInserting) {
       context.missing(_idMeta);
+    }
+    if (data.containsKey('url')) {
+      context.handle(
+          _urlMeta, url.isAcceptableOrUnknown(data['url']!, _urlMeta));
+    } else if (isInserting) {
+      context.missing(_urlMeta);
+    }
+    if (data.containsKey('server_url')) {
+      context.handle(_serverUrlMeta,
+          serverUrl.isAcceptableOrUnknown(data['server_url']!, _serverUrlMeta));
+    } else if (isInserting) {
+      context.missing(_serverUrlMeta);
+    }
+    if (data.containsKey('export_hash')) {
+      context.handle(
+          _exportHashMeta,
+          exportHash.isAcceptableOrUnknown(
+              data['export_hash']!, _exportHashMeta));
+    } else if (isInserting) {
+      context.missing(_exportHashMeta);
+    }
+    if (data.containsKey('pub_hash')) {
+      context.handle(_pubHashMeta,
+          pubHash.isAcceptableOrUnknown(data['pub_hash']!, _pubHashMeta));
+    } else if (isInserting) {
+      context.missing(_pubHashMeta);
     }
     if (data.containsKey('color')) {
       context.handle(
@@ -3037,6 +3223,7 @@ class $CalendarTableTable extends CalendarTable
     } else if (isInserting) {
       context.missing(_accessMeta);
     }
+    context.handle(_sharesMeta, const VerificationResult.success());
     if (data.containsKey('is_public')) {
       context.handle(_isPublicMeta,
           isPublic.isAcceptableOrUnknown(data['is_public']!, _isPublicMeta));
@@ -3078,6 +3265,9 @@ class $CalendarTableTable extends CalendarTable
   $CalendarTableTable createAlias(String alias) {
     return $CalendarTableTable(attachedDatabase, alias);
   }
+
+  static TypeConverter<List<String>, String> $converter0 =
+      const ListStringConverter();
 }
 
 class EventDb extends DataClass implements Insertable<EventDb> {

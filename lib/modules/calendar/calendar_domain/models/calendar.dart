@@ -17,7 +17,11 @@ class Calendar {
   final int access;
   final bool isPublic;
   final bool isSubscribed;
-  // final List shares;
+  final String serverUrl;
+  final String url;
+  final String exportHash;
+  final String pubHash;
+  final Set<Participant> shares;
   final String syncToken;
   // same with iCal URL
   final String source;
@@ -26,6 +30,11 @@ class Calendar {
     required this.id,
     required this.userLocalId,
     required this.color,
+    required this.serverUrl,
+    required this.url,
+    required this.exportHash,
+    required this.pubHash,
+    required this.shares,
     this.description,
     required this.name,
     required this.owner,
@@ -58,6 +67,11 @@ class Calendar {
       syncToken: syncToken,
       isSubscribed: isSubscribed,
       source: source,
+      serverUrl: serverUrl,
+      url: url,
+      exportHash:exportHash,
+      pubHash: pubHash,
+      shares: shares
     );
   }
 
@@ -71,6 +85,27 @@ class Calendar {
         comparable.access != access ||
         comparable.shared != shared;
   }
+
+  String get DAVUrl {
+    // TODO server url + url
+    return '';
+  }
+
+  String get ICSUrl {
+    // TODO DAV with query param
+    return '';
+  }
+
+  String get downloadUrl {
+    // TODO host + export hash
+    return '';
+  }
+
+  String get publicLink  {
+    // TODO host + pub hash
+    return '';
+  }
+
 
   @override
   String toString() {
@@ -92,8 +127,12 @@ class Calendar {
     bool? isPublic,
     bool? isSubscribed,
     String? source,
-    List? shares,
     String? syncToken,
+    String? serverUrl,
+    String? url,
+    String? exportHash,
+    String? pubHash,
+    Set<Participant>? shares,
   }) {
     return Calendar(
       id: id ?? this.id,
@@ -110,8 +149,12 @@ class Calendar {
       isPublic: isPublic ?? this.isPublic,
       isSubscribed: isSubscribed ?? this.isSubscribed,
       source: source ?? this.source,
-      // shares: shares ?? this.shares,
       syncToken: syncToken ?? this.syncToken,
+      serverUrl: serverUrl ?? this.serverUrl,
+      url: url ?? this.url,
+      exportHash: exportHash ?? this.exportHash,
+      pubHash: pubHash ?? this.pubHash,
+      shares: shares ?? this.shares,
     );
   }
 }
@@ -142,8 +185,46 @@ class Participant extends Equatable{
         email: email, name: name, permissions: permissions ?? this.permissions);
   }
 
+  Map<String, dynamic> toMap() {
+    return {
+      'access': this.permissions.code,
+      'email': this.email,
+      'name': this.name,
+    };
+  }
+
+  factory Participant.fromMap(Map<String, dynamic> map) {
+    return Participant(
+      permissions: ParticipantPermissionsMapper.fromCode(map['access'] as int),
+      email: (map['email'] as String?)!,
+      name: (map['name'] as String?) ?? '',
+    );
+  }
+
   @override
   List<Object?> get props => [email, name];
 }
 
 enum ParticipantPermissions { read, readWrite }
+
+extension ParticipantPermissionsMapper on ParticipantPermissions {
+  static ParticipantPermissions fromCode(int code) {
+    switch (code) {
+      case 1:
+        return ParticipantPermissions.readWrite;
+      case 2:
+        return ParticipantPermissions.read;
+      default:
+        throw Exception('Unknown code: $code');
+    }
+  }
+
+  int get code {
+    switch (this) {
+      case ParticipantPermissions.read:
+        return 2;
+      case ParticipantPermissions.readWrite:
+       return 1;
+    }
+  }
+}

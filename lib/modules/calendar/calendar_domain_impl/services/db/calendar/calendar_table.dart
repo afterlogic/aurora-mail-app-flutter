@@ -1,3 +1,4 @@
+import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/contacts/converters/list_string_converter.dart';
 import 'package:drift/drift.dart';
 
 @DataClassName("CalendarDb")
@@ -7,6 +8,14 @@ class CalendarTable extends Table{
   Set<Column> get primaryKey => {id, userLocalId};
 
   TextColumn get id => text()();
+
+  TextColumn get url => text()();
+
+  TextColumn get serverUrl => text()();
+
+  TextColumn get exportHash => text()();
+
+  TextColumn get pubHash => text()();
 
   TextColumn get color => text()();
 
@@ -28,7 +37,7 @@ class CalendarTable extends Table{
 
   IntColumn get access => integer()();
 
-  // TODO shares one to many
+  TextColumn get shares => text().map(const ListStringConverter()).nullable()();
 
   BoolColumn get isPublic => boolean()();
 

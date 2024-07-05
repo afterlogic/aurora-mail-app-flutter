@@ -24,6 +24,7 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
     final result = await calendarModule.post(body);
     return CalendarMapper.listFromNetwork(
         (result["Calendars"] as Map).values.toList(),
+        serverUrl: (result["ServerUrl"] as String?)!,
         userLocalId: userId);
   }
 
@@ -101,7 +102,8 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
     );
 
     final result = await calendarModule.post(body) as Map<String, dynamic>;
-    return CalendarMapper.fromNetwork(result, userLocalId: userLocalId);
+    //No 100% way to get serverUrl
+    return CalendarMapper.fromNetwork(result, userLocalId: userLocalId, serverUrl: '');
   }
 
   @override
@@ -349,6 +351,20 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
 
     final body = new WebMailApiBody(
       method: "DeleteEvent",
+      parameters: jsonEncode(parameters),
+    );
+
+    await calendarModule.post(body);
+  }
+
+  @override
+  Future<void> updateSharing(List<Participant> participants) async{
+    // {"Id":"636e5bc5-08b8-4855-8c91-c94400414d0a","IsPublic":0,"Shares":"[{\"name\":\"\",\"email\":\"test2@afterlogic.com\",\"access\":1}]","ShareToAll":0,"ShareToAllAccess":2}
+    final parameters = {
+    };
+
+    final body = new WebMailApiBody(
+      method: "UpdateCalendarShare",
       parameters: jsonEncode(parameters),
     );
 

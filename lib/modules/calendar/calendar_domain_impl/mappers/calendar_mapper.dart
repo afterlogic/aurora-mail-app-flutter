@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:aurora_logger/aurora_logger.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/calendar.dart';
@@ -8,22 +10,30 @@ import 'package:flutter/material.dart';
 class CalendarMapper {
   static Calendar fromDB(CalendarDb c) {
     return Calendar(
-      color: HexColor.fromHex(c.color),
-      name: c.name,
-      description: c.description,
-      id: c.id,
-      userLocalId: c.userLocalId,
-      owner: c.owner,
-      isDefault: c.isDefault,
-      shared: c.shared,
-      sharedToAll: c.sharedToAll,
-      sharedToAllAccess: c.sharedToAllAccess,
-      access: c.access,
-      isPublic: c.isPublic,
-      source: c.source,
-      syncToken: c.syncToken,
-      isSubscribed: c.isSubscribed,
-    );
+        color: HexColor.fromHex(c.color),
+        name: c.name,
+        description: c.description,
+        id: c.id,
+        userLocalId: c.userLocalId,
+        owner: c.owner,
+        isDefault: c.isDefault,
+        shared: c.shared,
+        sharedToAll: c.sharedToAll,
+        sharedToAllAccess: c.sharedToAllAccess,
+        access: c.access,
+        isPublic: c.isPublic,
+        source: c.source,
+        syncToken: c.syncToken,
+        isSubscribed: c.isSubscribed,
+        serverUrl: c.serverUrl,
+        url: c.url,
+        exportHash: c.exportHash,
+        pubHash: c.pubHash,
+        shares: c.shares
+                ?.map((e) =>
+                    Participant.fromMap(jsonDecode(e) as Map<String, dynamic>))
+                .toSet() ??
+            {});
   }
 
   static List<Calendar> listFromDB(List<CalendarDb> dbEntries) {
@@ -47,6 +57,11 @@ class CalendarMapper {
       isSubscribed: calendar.isSubscribed,
       source: calendar.source,
       syncToken: calendar.syncToken,
+        shares: calendar.shares.map((e) => jsonEncode(e.toMap())).toList(),
+      url: calendar.url,
+      serverUrl: calendar.serverUrl,
+      exportHash: calendar.exportHash,
+      pubHash: calendar.pubHash,
     );
   }
 
@@ -57,9 +72,9 @@ class CalendarMapper {
   }
 
   static Calendar fromNetwork(Map<String, dynamic> map,
-      {required int userLocalId}) {
+      {required int userLocalId, required String serverUrl}) {
     final syncToken = (map['SyncToken'] as String?)!;
-    if(syncToken.isEmpty) throw Exception('SyncToken is empty');
+    if (syncToken.isEmpty) throw Exception('SyncToken is empty');
     return Calendar(
       id: (map['Id'] as String?)!,
       userLocalId: userLocalId,
@@ -77,17 +92,24 @@ class CalendarMapper {
       syncToken: syncToken,
       isSubscribed: (map['IsPublic'] as bool?) ?? false,
       source: (map['Source'] as String?) ?? "",
+        shares: (map['Shares'] as List).map((e) => Participant.fromMap(e as Map<String, dynamic>)).toSet(),
+        serverUrl: serverUrl,
+      url: (map['Url'] as String?)!,
+      pubHash: (map['PubHash'] as String?)!,
+      exportHash: (map['ExportHash'] as String?)!,
+
     );
   }
 
   static List<Calendar> listFromNetwork(List<dynamic> rawItems,
-      {required int userLocalId}) {
+      {required int userLocalId, required String serverUrl}) {
     final List<Calendar> result = [];
     rawItems.forEach((rawItem) {
-      try{
-        final calendar = fromNetwork(rawItem as Map<String, dynamic>, userLocalId: userLocalId);
+      try {
+        final calendar = fromNetwork(rawItem as Map<String, dynamic>,
+            userLocalId: userLocalId, serverUrl: serverUrl);
         result.add(calendar);
-      }catch(e, st){
+      } catch (e, st) {
         logger.log(e);
       }
     });
