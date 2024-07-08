@@ -32,6 +32,7 @@ class CalendarsBloc extends Bloc<CalendarsEvent, CalendarsState> {
     on<AddCalendars>(_onAddCalendars);
     on<DeleteCalendar>(_onDeleteCalendar);
     on<UpdateCalendar>(_onUpdateCalendar);
+    on<UpdateCalendarPublic>(_onUpdateCalendarPublic);
     on<UpdateCalendarSelection>(_onUpdateCalendarSelection);
   }
 
@@ -79,7 +80,16 @@ class CalendarsBloc extends Bloc<CalendarsEvent, CalendarsState> {
   }
 
   _onUpdateCalendar(UpdateCalendar event, Emitter<CalendarsState> emit) async {
-    _asyncErrorHandler(() async => _useCase.updateCalendar(event.calendar), emit);
+    _asyncErrorHandler(
+        () async => _useCase.updateCalendar(event.calendar), emit);
+  }
+
+  _onUpdateCalendarPublic(
+      UpdateCalendarPublic event, Emitter<CalendarsState> emit) async {
+    _asyncErrorHandler(
+        () async => _useCase.updateCalendarPublic(
+            event.calendar.copyWith(isPublic: !event.calendar.isPublic)),
+        emit);
   }
 
   _errorHandler(void Function() callback, Emitter<CalendarsState> emit) {

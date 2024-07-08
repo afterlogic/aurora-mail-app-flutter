@@ -109,14 +109,27 @@ class CalendarUseCaseImpl implements CalendarUseCase {
     final updatableCalendar = calendars.firstWhere((e) => e.id == calendar.id);
     if (!updatableCalendar.updated(calendar)) {
       return;
-    }
-    ;
+    };
     await repository.updateCalendar(calendar);
 
     int index = calendars.indexWhere((e) => e.id == calendar.id);
     calendars[index] = calendar;
     _calendarsSubject.add(calendars);
     _getLocalEvents();
+  }
+
+  @override
+  Future<void> updateCalendarPublic(ViewCalendar calendar) async {
+    final calendars = [..._calendarsSubject.value];
+    final updatableCalendar = calendars.firstWhere((e) => e.id == calendar.id);
+    if (!updatableCalendar.updated(calendar)) {
+      return;
+    };
+    await repository.updateCalendarPublic(calendar);
+
+    int index = calendars.indexWhere((e) => e.id == calendar.id);
+    calendars[index] = calendar;
+    _calendarsSubject.add(calendars);
   }
 
   Future<void> _getLocalEvents() async {
@@ -176,8 +189,7 @@ class CalendarUseCaseImpl implements CalendarUseCase {
             : tz.TZDateTime.from(event.startDate, _location!),
         endDate: _location == null
             ? event.endDate
-            : tz.TZDateTime.from(event.endDate, _location!)
-    ));
+            : tz.TZDateTime.from(event.endDate, _location!)));
     syncCalendars().then((_) => _getLocalEvents());
     return ViewEvent.tryFromEvent(model, color: event.color)!;
   }

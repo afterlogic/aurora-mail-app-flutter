@@ -90,20 +90,31 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
       String? description,
       required String color,
       required int userLocalId}) async {
-    final parameters = {
+    final createCalendarParameters = {
       "Name": name,
       "Color": color,
       "Description": description ?? ''
     };
 
-    final body = new WebMailApiBody(
+    final createCalendarBody = new WebMailApiBody(
       method: "CreateCalendar",
-      parameters: jsonEncode(parameters),
+      parameters: jsonEncode(createCalendarParameters),
     );
 
-    final result = await calendarModule.post(body) as Map<String, dynamic>;
-    //No 100% way to get serverUrl
-    return CalendarMapper.fromNetwork(result, userLocalId: userLocalId, serverUrl: '');
+    final createCalendarResult =
+        await calendarModule.post(createCalendarBody) as Map<String, dynamic>;
+
+    // another query to get server url
+    final getCalendarsBody = new WebMailApiBody(
+      method: "GetCalendars",
+      parameters: null,
+    );
+
+    final getCalendarsResult = await calendarModule.post(getCalendarsBody);
+
+    return CalendarMapper.fromNetwork(createCalendarResult,
+        userLocalId: userLocalId,
+        serverUrl: (getCalendarsResult["ServerUrl"] as String?)!);
   }
 
   @override
@@ -156,35 +167,6 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
     required Set<DaysOfWeek>? recurrenceWeekDays,
     required Set<Attendee>? attendees,
   }) async {
-    // {
-    //   "id": null,
-    //   "uid": null,
-    //   "calendarId": "a2756e51-bf14-4972-b16b-d0df3f3e5b44",
-    //   "newCalendarId": "a2756e51-bf14-4972-b16b-d0df3f3e5b44",
-    //   "subject": "test creation",
-    //   "allDay": 0,
-    //   "location": "",
-    //   "description": "",
-    //   "alarms": "[]",
-    //   "attendees": "[]",
-    //   "owner": "test@afterlogic.com",
-    //   "recurrenceId": null,
-    //   "excluded": false,
-    //   "allEvents": 2,
-    //   "modified": 1,
-    //   "start": "2024-05-23T00:00:00+02:00",
-    //   "end": "2024-05-24T00:00:00+02:00",
-    //   "startTS": 1716415200,
-    //   "endTS": 1716501600,
-    //   "rrule": null,
-    //   "type": "VEVENT",
-    //   "status": false,
-    //   "withDate": true,
-    //   "isPrivate": false,
-    //   "selectStart": 1714262400,
-    //   "selectEnd": 1717891200
-    // };
-        
     final rruleParameters = recurrenceMode == RecurrenceMode.never
         ? null
         : {
@@ -215,8 +197,6 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
       "location": location,
       "description": description,
       "alarms": "[${reminders.join(',')}]",
-      "attendees": "[]",
-      // "owner": ownerMail,
       "recurrenceId": null,
       "excluded": false,
       "allEvents": 2,
@@ -230,15 +210,14 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
       "status": false,
       "withDate": true,
       "isPrivate": false,
-      // "selectStart": 1714262400,
-      // "selectEnd": 1717891200
     };
 
-    if(attendees != null){
-      parameters.addAll({"attendees": jsonEncode(attendees.map((e) => e.toMap()).toList())});
+    if (attendees != null) {
+      parameters.addAll(
+          {"attendees": jsonEncode(attendees.map((e) => e.toMap()).toList())});
     }
-    
-    if(rruleParameters != null){
+
+    if (rruleParameters != null) {
       parameters.addAll({"rrule": jsonEncode(rruleParameters)});
     }
 
@@ -253,26 +232,26 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
 
   @override
   Future<Event> updateEvent(Event event) async {
-
     final rruleParameters = event.recurrenceMode == RecurrenceMode.never
         ? null
         : {
-      "startBase": event.startTS!.toUtc().millisecondsSinceEpoch ~/ 1000,
-      "endBase": event.endTS!.toUtc().millisecondsSinceEpoch ~/ 1000,
-      "period": event.recurrenceMode!.periodCode,
-      "until": event.recurrenceUntilDate == null
-          ? 0
-          : event.recurrenceUntilDate!.toUtc().millisecondsSinceEpoch ~/ 1000,
-      "interval": event.recurrenceWeeklyFrequency == null
-          ? 1
-          : event.recurrenceWeeklyFrequency!.intervalCode,
-      "end": event.recurrenceUntilDate == null ? 3 : 2,
-      "byDays": event.recurrenceWeekDays == null
-          ? []
-          : event.recurrenceWeekDays!.map((e) => e.byDaysCode).toList(),
-      "weekNum": null,
-      "count": null
-    };
+            "startBase": event.startTS!.toUtc().millisecondsSinceEpoch ~/ 1000,
+            "endBase": event.endTS!.toUtc().millisecondsSinceEpoch ~/ 1000,
+            "period": event.recurrenceMode!.periodCode,
+            "until": event.recurrenceUntilDate == null
+                ? 0
+                : event.recurrenceUntilDate!.toUtc().millisecondsSinceEpoch ~/
+                    1000,
+            "interval": event.recurrenceWeeklyFrequency == null
+                ? 1
+                : event.recurrenceWeeklyFrequency!.intervalCode,
+            "end": event.recurrenceUntilDate == null ? 3 : 2,
+            "byDays": event.recurrenceWeekDays == null
+                ? []
+                : event.recurrenceWeekDays!.map((e) => e.byDaysCode).toList(),
+            "weekNum": null,
+            "count": null
+          };
 
     final parameters = {
       "id": '${event.uid}-${event.recurrenceId}',
@@ -283,9 +262,9 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
       "allDay": event.allDay == true ? 1 : 0,
       "location": event.location ?? '',
       "description": event.description ?? '',
-      "alarms": event.reminders == null ? "[]" : "[${event.reminders!.map((e) => e.toInt).join(',')}]",
-      "attendees": "[]",
-      // "owner": ownerMail,
+      "alarms": event.reminders == null
+          ? "[]"
+          : "[${event.reminders!.map((e) => e.toInt).join(',')}]",
       "recurrenceId": null,
       "excluded": false,
       "allEvents": 2,
@@ -300,11 +279,9 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
       "withDate": true,
       "isPrivate": false,
       "attendees": jsonEncode(event.attendees.map((e) => e.toMap()).toList())
-      // "selectStart": 1714262400,
-      // "selectEnd": 1717891200
     };
 
-    if(rruleParameters != null){
+    if (rruleParameters != null) {
       parameters.addAll({"rrule": jsonEncode(rruleParameters)});
     }
 
@@ -331,7 +308,6 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
       "description": event.description ?? '',
       "alarms": "[]",
       "attendees": "[]",
-      // "owner": ownerMail,
       "recurrenceId": null,
       "excluded": false,
       "allEvents": 2,
@@ -345,8 +321,6 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
       "status": false,
       "withDate": true,
       "isPrivate": false,
-      // "selectStart": 1714262400,
-      // "selectEnd": 1717891200
     };
 
     final body = new WebMailApiBody(
@@ -358,10 +332,9 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
   }
 
   @override
-  Future<void> updateSharing(List<Participant> participants) async{
+  Future<void> updateSharing(List<Participant> participants) async {
     // {"Id":"636e5bc5-08b8-4855-8c91-c94400414d0a","IsPublic":0,"Shares":"[{\"name\":\"\",\"email\":\"test2@afterlogic.com\",\"access\":1}]","ShareToAll":0,"ShareToAllAccess":2}
-    final parameters = {
-    };
+    final parameters = {};
 
     final body = new WebMailApiBody(
       method: "UpdateCalendarShare",
@@ -369,5 +342,21 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
     );
 
     await calendarModule.post(body);
+  }
+
+  @override
+  Future<bool> updateCalendarPublic({required String calendarId, required bool isPublic}) async {
+    final parameters = {
+      "Id": calendarId,
+      "IsPublic": isPublic
+    };
+
+    final body = new WebMailApiBody(
+      method: "UpdateCalendarPublic",
+      parameters: jsonEncode(parameters),
+    );
+
+    final result = await calendarModule.post(body) as bool;
+    return result;
   }
 }

@@ -68,6 +68,13 @@ class UpdateCalendar extends CalendarsEvent {
   List<Object?> get props => [calendar];
 }
 
+class UpdateCalendarPublic extends CalendarsEvent {
+  final ViewCalendar calendar;
+  const UpdateCalendarPublic(this.calendar);
+  @override
+  List<Object?> get props => [calendar];
+}
+
 class UpdateCalendarSelection extends CalendarsEvent {
   final bool selected;
   final String calendarId;

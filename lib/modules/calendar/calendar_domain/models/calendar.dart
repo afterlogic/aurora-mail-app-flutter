@@ -86,26 +86,21 @@ class Calendar {
         comparable.shared != shared;
   }
 
+  String getDownloadUrl(User user) {
+    return '${user.hostname}/?calendar-download/$exportHash';
+  }
+
+  String getPublicLink(User user) {
+    return '${user.hostname}/?calendar-pub=$pubHash';
+  }
+
   String get DAVUrl {
-    // TODO server url + url
-    return '';
+    return serverUrl + url;
   }
 
   String get ICSUrl {
-    // TODO DAV with query param
-    return '';
+    return DAVUrl + '?export';
   }
-
-  String get downloadUrl {
-    // TODO host + export hash
-    return '';
-  }
-
-  String get publicLink  {
-    // TODO host + pub hash
-    return '';
-  }
-
 
   @override
   String toString() {

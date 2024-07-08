@@ -240,7 +240,7 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
          icon: Icon(Icons.link),
          titleBuilder: (ctx) => 'Get a link',
          onTap: (ctx, ViewCalendar calendar) {
-           CalendarLinksDialog.show(ctx, calendar: calendar);
+           CalendarLinksDialog.show(ctx, calendarId: calendar.id);
          },
        );
       case _CalendarDrawerMenuItems.edit:

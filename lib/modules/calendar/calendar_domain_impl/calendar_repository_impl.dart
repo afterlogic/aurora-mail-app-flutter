@@ -159,7 +159,7 @@ class CalendarRepositoryImpl implements CalendarRepository {
   }
 
   @override
-  Future<Calendar> updateCalendar(Calendar calendar) async {
+  Future<void> updateCalendar(Calendar calendar) async {
     final isUpdated = await _network.updateCalendar(
         id: calendar.id,
         name: calendar.name,
@@ -167,7 +167,14 @@ class CalendarRepositoryImpl implements CalendarRepository {
         color: calendar.color.toHex());
     if (!isUpdated) throw Exception('Error while updating calendar');
     await _db.createOrUpdateCalendar(calendar);
-    return calendar;
+  }
+
+  @override
+  Future<void> updateCalendarPublic(Calendar calendar) async {
+    final isUpdated = await _network.updateCalendarPublic(
+        calendarId: calendar.id, isPublic: calendar.isPublic);
+    if(!isUpdated) throw Exception('Error while changing calendar public status');
+    await _db.createOrUpdateCalendar(calendar);
   }
 
   @override

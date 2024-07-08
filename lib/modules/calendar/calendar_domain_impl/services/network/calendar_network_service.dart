@@ -48,4 +48,6 @@ abstract class CalendarNetworkService {
 
   Future<Calendar> createCalendar(
       {required String name, String? description, required String color, required int userLocalId});
+
+  Future<bool> updateCalendarPublic({required String calendarId, required bool isPublic});
 }

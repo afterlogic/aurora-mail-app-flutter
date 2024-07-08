@@ -1,15 +1,22 @@
+import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
+import 'package:aurora_mail/modules/calendar/blocs/calendars/calendars_bloc.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/calendar.dart';
 import 'package:aurora_mail/modules/calendar/ui/dialogs/base_calendar_dialog.dart';
+import 'package:aurora_mail/modules/calendar/ui/models/calendar.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:path_provider/path_provider.dart';
 
 class CalendarLinksDialog extends StatefulWidget {
-  final Calendar calendar;
-  const CalendarLinksDialog(this.calendar);
+  final String calendarId;
+  const CalendarLinksDialog(this.calendarId);
 
-  static Future show(BuildContext context, {required Calendar calendar}) {
+  static Future show(BuildContext context, {required String calendarId}) {
     return showDialog(
-        context: context, builder: (_) => CalendarLinksDialog(calendar));
+        context: context, builder: (_) => CalendarLinksDialog(calendarId));
   }
 
   @override
@@ -17,8 +24,13 @@ class CalendarLinksDialog extends StatefulWidget {
 }
 
 class _CalendarLinksDialogState extends State<CalendarLinksDialog> {
-  bool isPublicLinkEnabled = false;
+  late final CalendarsBloc bloc;
 
+  @override
+  void initState() {
+    super.initState();
+    bloc = BlocProvider.of<CalendarsBloc>(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,73 +39,91 @@ class _CalendarLinksDialogState extends State<CalendarLinksDialog> {
       title: 'Get a link',
       content: Padding(
         padding: const EdgeInsets.only(top: 8.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            _LinkSection(
-              title: 'DAV URL',
-              url:
-                  'https://caldav.afterlogic.com/calendars/502f898e-0321-49b3-9581-efc1585b2405',
-            ),
-            SizedBox(height: 16),
-            _LinkSection(
-              title: 'Ссылка на .ics',
-              url:
-                  'https://caldav.afterlogic.com/calendars/502f898e-0321-49b3-9581-efc1585b2405',
-              titleIcon: IconButton(
-                onPressed: () {},
-                padding: EdgeInsets.zero,
-                constraints: BoxConstraints(),
-                icon: Icon(
-                  Icons.file_download_outlined,
-                  color: Theme.of(context).primaryColor,
+        child: BlocBuilder<CalendarsBloc, CalendarsState>(
+          builder: (context, state) {
+            final selectedCalendar = state.calendars
+                ?.firstWhereOrNull((e) => e.id == widget.calendarId);
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                _LinkSection(
+                  title: 'DAV URL',
+                  url: selectedCalendar?.DAVUrl,
                 ),
-              ),
-            ),
-            SizedBox(height: 16),
-            GestureDetector(
-              onTap: (){
-                setState(() {
-                  isPublicLinkEnabled = !isPublicLinkEnabled;
-                });
-              },
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                child: Row(
-                  children: [
-                    SizedBox(
-                      width: 24,
-                      height: 24,
-                      child: Checkbox(
-                        value: isPublicLinkEnabled,
-                        onChanged: (bool? value) {
-                          setState(() {
-                            isPublicLinkEnabled = value ?? false;
-                          });
-                        },
-                      ),
+                SizedBox(height: 16),
+                _LinkSection(
+                  title: 'Link to .ics',
+                  url: selectedCalendar?.ICSUrl,
+                  titleIcon: IconButton(
+                    onPressed: () async {
+                      if (selectedCalendar == null) return;
+                      final externalStorageDirPath =
+                          (await getApplicationDocumentsDirectory())
+                              .absolute
+                              .path;
+                      FlutterDownloader.enqueue(
+                        url: selectedCalendar.getDownloadUrl(
+                            BlocProvider.of<AuthBloc>(context).currentUser),
+                        savedDir: externalStorageDirPath,
+                        fileName: selectedCalendar.exportHash,
+                        saveInPublicStorage: true,
+                      );
+                    },
+                    padding: EdgeInsets.zero,
+                    constraints: BoxConstraints(),
+                    icon: Icon(
+                      Icons.file_download_outlined,
+                      color: Theme.of(context).primaryColor,
                     ),
-                    const SizedBox(
-                      width: 8,
-                    ),
-                    Text(
-                      'Get a public link to the calendar',
-                      style: TextStyle(fontSize: 14),
-                    ),
-                  ],
+                  ),
                 ),
-              ),
-            ),
-            if (isPublicLinkEnabled) ...[
-              const SizedBox(
-                height: 8,
-              ),
-              _LinkSection(
-                url:
-                    'https://afterlogic.com/calendars/502f898e-0321-49b3-9581-efc1585b2405',
-              ),
-            ]
-          ],
+                SizedBox(height: 16),
+                GestureDetector(
+                  onTap: () {
+                    if (selectedCalendar != null) {
+                      bloc.add(UpdateCalendarPublic(selectedCalendar));
+                    }
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                    child: Row(
+                      children: [
+                        SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: Checkbox(
+                            value: selectedCalendar?.isPublic,
+                            onChanged: (bool? value) {
+                              if (selectedCalendar != null) {
+                                bloc.add(
+                                    UpdateCalendarPublic(selectedCalendar));
+                              }
+                            },
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 8,
+                        ),
+                        Text(
+                          'Get a public link to the calendar',
+                          style: TextStyle(fontSize: 14),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                if (selectedCalendar?.isPublic == true) ...[
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  _LinkSection(
+                    url: selectedCalendar?.getPublicLink(
+                        BlocProvider.of<AuthBloc>(context).currentUser),
+                  ),
+                ]
+              ],
+            );
+          },
         ),
       ),
       actions: [
@@ -110,11 +140,10 @@ class _CalendarLinksDialogState extends State<CalendarLinksDialog> {
 
 class _LinkSection extends StatelessWidget {
   final String? title;
-  final String url;
+  final String? url;
   final Widget? titleIcon;
   const _LinkSection(
       {super.key, this.title, required this.url, this.titleIcon});
-
 
   @override
   Widget build(BuildContext context) {
@@ -149,7 +178,7 @@ class _LinkSection extends StatelessWidget {
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    url,
+                    url ?? '',
                     style: TextStyle(
                         color: Theme.of(context).disabledColor, fontSize: 14),
                   ),
@@ -158,7 +187,10 @@ class _LinkSection extends StatelessWidget {
             ),
           ),
         ),
-        const Divider(color: Color(0xFFCBCBCB), thickness: 1.25,)
+        const Divider(
+          color: Color(0xFFCBCBCB),
+          thickness: 1.25,
+        )
       ],
     );
   }
