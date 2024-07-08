@@ -7,6 +7,15 @@ abstract class CalendarsEvent extends Equatable {
   List<Object?> get props => [];
 }
 
+class AddError extends CalendarsEvent {
+  final ErrorToShow error;
+
+  const AddError(this.error);
+
+  @override
+  List<Object> get props => [error];
+}
+
 class SaveTabIndex extends CalendarsEvent {
   final int index;
   const SaveTabIndex(this.index);

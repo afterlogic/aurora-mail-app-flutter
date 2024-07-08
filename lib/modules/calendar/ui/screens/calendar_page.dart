@@ -9,6 +9,7 @@ import 'package:aurora_mail/modules/calendar/ui/views/week_view.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/calendar_drawer.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/calendar_tab.dart';
 import 'package:aurora_mail/shared_ui/mail_bottom_app_bar.dart';
+import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -30,7 +31,10 @@ class _CalendarPageState extends State<CalendarPage>
   void initState() {
     super.initState();
     _calendarsBloc = BlocProvider.of<CalendarsBloc>(context);
-    _tabController = TabController(length: 3, vsync: this, initialIndex: _calendarsBloc.state.selectedTabIndex ?? 0);
+    _tabController = TabController(
+        length: 3,
+        vsync: this,
+        initialIndex: _calendarsBloc.state.selectedTabIndex ?? 0);
     BlocProvider.of<CalendarsBloc>(context).add(GetCalendars());
   }
 
@@ -49,71 +53,103 @@ class _CalendarPageState extends State<CalendarPage>
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(S.of(context).calendar),
+            Text(S
+                .of(context)
+                .calendar),
             IconButton(
-                onPressed: () => setState(() {
+                onPressed: () =>
+                    setState(() {
                       _showTabs = !_showTabs;
                     }),
                 icon: Icon(Icons.grid_view_outlined))
           ],
         ),
       ),
-      body: Column(
-        children: [
-          AnimatedSwitcher(
-            duration: const Duration(milliseconds: 100),
-            child: _showTabs
-                ? Padding(
-                    padding:
-                        const EdgeInsets.only(top: 18.0, right: 24, left: 24),
-                    child: Row(
-                      children: [
-                        CalendarTab(
-                            title: 'Month',
-                            controller: _tabController,
-                            index: 0),
-                        const SizedBox(
-                          width: 16,
-                        ),
-                        CalendarTab(
-                            title: 'Week',
-                            controller: _tabController,
-                            index: 1),
-                        const SizedBox(
-                          width: 16,
-                        ),
-                        CalendarTab(
-                            title: 'Day', controller: _tabController, index: 2),
-                        const SizedBox(
-                          width: 16,
-                        ),
-                      ],
+      body: _BlocErrorsHandler(
+        child: Column(
+          children: [
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 100),
+              child: _showTabs
+                  ? Padding(
+                padding:
+                const EdgeInsets.only(top: 18.0, right: 24, left: 24),
+                child: Row(
+                  children: [
+                    CalendarTab(
+                        title: 'Month',
+                        controller: _tabController,
+                        index: 0),
+                    const SizedBox(
+                      width: 16,
                     ),
-                  )
-                : SizedBox.shrink(),
-          ),
-          Expanded(
-            child: TabBarView(
-                controller: _tabController,
-                physics: const NeverScrollableScrollPhysics(),
-                children: [
-                  MonthView(),
-                  WeekView(),
-                  DayView(),
-                ]),
-          )
-        ],
+                    CalendarTab(
+                        title: 'Week',
+                        controller: _tabController,
+                        index: 1),
+                    const SizedBox(
+                      width: 16,
+                    ),
+                    CalendarTab(
+                        title: 'Day',
+                        controller: _tabController,
+                        index: 2),
+                    const SizedBox(
+                      width: 16,
+                    ),
+                  ],
+                ),
+              )
+                  : SizedBox.shrink(),
+            ),
+            Expanded(
+              child: TabBarView(
+                  controller: _tabController,
+                  physics: const NeverScrollableScrollPhysics(),
+                  children: [
+                    MonthView(),
+                    WeekView(),
+                    DayView(),
+                  ]),
+            )
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           BlocProvider.of<EventsBloc>(context).add(SelectEvent(null));
-          Navigator.of(context).pushNamed(EventCreationPage.name,
-              );
+          Navigator.of(context).pushNamed(
+            EventCreationPage.name,
+          );
         },
         child: const Icon(Icons.add),
       ),
       bottomNavigationBar:
-          MailBottomAppBar(selectedRoute: MailBottomAppBarRoutes.calendar),
+      MailBottomAppBar(selectedRoute: MailBottomAppBarRoutes.calendar),
+    );
+  }
+}
+
+class _BlocErrorsHandler extends StatelessWidget {
+  const _BlocErrorsHandler({super.key, required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocListener<CalendarsBloc, CalendarsState>(
+      listenWhen: (previous, current) =>
+      previous.error != current.error &&
+          current.error != null &&
+          current.status.isError,
+      listener: (context, state) {
+        showErrorSnack(
+          context: context,
+          scaffoldState: Scaffold.of(context),
+          msg: state.error,
+        );
+      },
+      child: child,
     );
   }
 }

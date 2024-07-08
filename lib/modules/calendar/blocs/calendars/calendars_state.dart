@@ -5,10 +5,11 @@ class CalendarsState extends Equatable {
   final List<ViewCalendar>? calendars;
   final int? selectedTabIndex;
   final MonthViewMode? monthViewMode;
+  final ErrorToShow? error;
 
   @override
   List<Object?> get props =>
-      [status, calendars, selectedTabIndex, monthViewMode];
+      [status, calendars, selectedTabIndex, monthViewMode, error];
 
   List<ViewCalendar> availableCalendars(String currentUserMail) => calendars == null
       ? <ViewCalendar>[]
@@ -26,6 +27,7 @@ class CalendarsState extends Equatable {
   const CalendarsState({
     this.status = CalendarsStatus.idle,
     this.calendars,
+    this.error,
     this.selectedTabIndex,
     this.monthViewMode,
   });
@@ -43,10 +45,12 @@ class CalendarsState extends Equatable {
     List<ViewCalendar>? Function()? calendars,
     int? selectedTabIndex,
     MonthViewMode? monthViewMode,
+    ErrorToShow? Function()? error,
   }) {
     return CalendarsState(
         status: status ?? this.status,
         calendars: calendars == null ? this.calendars : calendars(),
+        error: error == null ? this.error : error(),
         selectedTabIndex: selectedTabIndex ?? this.selectedTabIndex,
         monthViewMode: monthViewMode ?? this.monthViewMode);
   }

@@ -86,7 +86,7 @@ class ViewCalendar extends Calendar implements Equatable {
     Set<Participant>? shares,
   }) {
     return ViewCalendar(
-      selected: this.selected,
+      selected: selected ?? this.selected,
       id: id ?? this.id,
       userLocalId: userLocalId ?? this.userLocalId,
       color: color ?? this.color,
