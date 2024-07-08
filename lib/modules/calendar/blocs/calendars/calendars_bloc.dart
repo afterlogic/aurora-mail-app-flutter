@@ -7,6 +7,7 @@ import 'package:aurora_mail/modules/calendar/ui/views/month_view.dart';
 import 'package:aurora_mail/utils/api_utils.dart';
 import 'package:aurora_mail/utils/error_to_show.dart';
 import 'package:bloc/bloc.dart';
+import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 
 part 'calendars_event.dart';
@@ -33,6 +34,7 @@ class CalendarsBloc extends Bloc<CalendarsEvent, CalendarsState> {
     on<DeleteCalendar>(_onDeleteCalendar);
     on<UpdateCalendar>(_onUpdateCalendar);
     on<UpdateCalendarPublic>(_onUpdateCalendarPublic);
+    on<UpdateCalendarShares>(_onUpdateCalendarShares);
     on<UpdateCalendarSelection>(_onUpdateCalendarSelection);
   }
 
@@ -89,6 +91,17 @@ class CalendarsBloc extends Bloc<CalendarsEvent, CalendarsState> {
     _asyncErrorHandler(
         () async => _useCase.updateCalendarPublic(
             event.calendar.copyWith(isPublic: !event.calendar.isPublic)),
+        emit);
+  }
+
+  _onUpdateCalendarShares(
+      UpdateCalendarShares event, Emitter<CalendarsState> emit) async {
+    final calendarForUpdate =
+        state.calendars?.firstWhereOrNull((e) => e.id == event.calendarId);
+    if (calendarForUpdate == null) return;
+    _asyncErrorHandler(
+        () async => _useCase.updateCalendarSharing(
+            calendarForUpdate.copyWith(shares: event.shares)),
         emit);
   }
 

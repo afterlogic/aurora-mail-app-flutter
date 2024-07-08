@@ -77,8 +77,14 @@ class CalendarUseCaseImpl implements CalendarUseCase {
 
   @override
   Future<void> syncCalendars() async {
-    await repository.syncCalendars();
-    await getCalendars();
+    try{
+      await repository.syncCalendars();
+    } catch(e,st){
+      await _getLocalEvents();
+      rethrow;
+    } finally {
+      await getCalendars();
+    }
   }
 
   @override
@@ -126,6 +132,20 @@ class CalendarUseCaseImpl implements CalendarUseCase {
       return;
     };
     await repository.updateCalendarPublic(calendar);
+
+    int index = calendars.indexWhere((e) => e.id == calendar.id);
+    calendars[index] = calendar;
+    _calendarsSubject.add(calendars);
+  }
+
+  @override
+  Future<void> updateCalendarSharing(ViewCalendar calendar) async {
+    final calendars = [..._calendarsSubject.value];
+    final updatableCalendar = calendars.firstWhere((e) => e.id == calendar.id);
+    if (!updatableCalendar.updated(calendar)) {
+      return;
+    };
+    await repository.updateCalendarSharing(calendar);
 
     int index = calendars.indexWhere((e) => e.id == calendar.id);
     calendars[index] = calendar;

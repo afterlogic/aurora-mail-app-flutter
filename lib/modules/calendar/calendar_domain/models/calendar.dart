@@ -197,7 +197,7 @@ class Participant extends Equatable{
   }
 
   @override
-  List<Object?> get props => [email, name];
+  List<Object?> get props => [email, name, permissions];
 }
 
 enum ParticipantPermissions { read, readWrite }

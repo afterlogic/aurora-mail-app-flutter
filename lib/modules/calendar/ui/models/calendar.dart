@@ -116,6 +116,7 @@ class ViewCalendar extends Calendar implements Equatable {
         isSubscribed != comparable.isSubscribed ||
         isPublic != comparable.isPublic ||
         source != comparable.source ||
+        shares != comparable.shares ||
         color != comparable.color;
   }
 }

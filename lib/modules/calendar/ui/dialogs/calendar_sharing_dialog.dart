@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/calendar.dart';
 import 'package:aurora_mail/modules/calendar/ui/dialogs/base_calendar_dialog.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/participant_card.dart';
@@ -42,7 +44,7 @@ class _CalendarSharingDialogState extends State<CalendarSharingDialog> {
   void initState() {
     super.initState();
     _contactsBloc = BlocProvider.of<ContactsBloc>(context);
-    _participants = {};
+    _participants = widget.calendar.shares;
   }
 
 
@@ -228,7 +230,10 @@ class _CalendarSharingDialogState extends State<CalendarSharingDialog> {
             ),
             SizedBox(height: 16),
             Expanded(child: SingleChildScrollView(
-              child: Column(children: _participants.map(
+              child: Column(children: SplayTreeSet<Participant>.from(
+                _participants,
+                    (a, b) => a.email.compareTo(b.email),
+              ).map(
                     (e) => Padding(
                   padding: const EdgeInsets.only(bottom: 8.0),
                   child: ParticipantCard(
@@ -266,6 +271,7 @@ class _CalendarSharingDialogState extends State<CalendarSharingDialog> {
         email: MailUtils.emailFromFriendly(e),
         name: MailUtils.displayNameFromFriendly(e),
         permissions: ParticipantPermissions.read));
+    _participants.removeWhere((e) => emails.contains(e.email));
     _participants.addAll(participants);
     emails.clear();
     _participantsFocusNode.unfocus();

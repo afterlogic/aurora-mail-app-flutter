@@ -332,16 +332,23 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
   }
 
   @override
-  Future<void> updateSharing(List<Participant> participants) async {
-    // {"Id":"636e5bc5-08b8-4855-8c91-c94400414d0a","IsPublic":0,"Shares":"[{\"name\":\"\",\"email\":\"test2@afterlogic.com\",\"access\":1}]","ShareToAll":0,"ShareToAllAccess":2}
-    final parameters = {};
+  Future<bool> updateSharing({required List<Participant> participants, required String calendarId}) async {
+    // TODO get shareToAll from especial participant with name "all"
+    final parameters = {
+      {"Id":calendarId,
+        "IsPublic":0,
+        "Shares":jsonEncode(participants.map((e) => e.toMap()).toList()),
+        "ShareToAll":0,
+        "ShareToAllAccess":2}
+    };
 
     final body = new WebMailApiBody(
       method: "UpdateCalendarShare",
       parameters: jsonEncode(parameters),
     );
 
-    await calendarModule.post(body);
+    final result = await calendarModule.post(body) as bool;
+    return result;
   }
 
   @override

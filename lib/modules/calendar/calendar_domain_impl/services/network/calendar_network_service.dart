@@ -38,7 +38,7 @@ abstract class CalendarNetworkService {
 
   Future<void> deleteEvent(Event event);
 
-  Future<void> updateSharing(List<Participant> participants);
+  Future<bool> updateSharing({required List<Participant> participants, required String calendarId});
 
   Future<void> deleteCalendar(
       {required String id});

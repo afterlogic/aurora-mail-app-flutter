@@ -75,6 +75,14 @@ class UpdateCalendarPublic extends CalendarsEvent {
   List<Object?> get props => [calendar];
 }
 
+class UpdateCalendarShares extends CalendarsEvent {
+  final String calendarId;
+  final Set<Participant> shares;
+  const UpdateCalendarShares({required this.calendarId, required this.shares});
+  @override
+  List<Object?> get props => [calendarId, shares];
+}
+
 class UpdateCalendarSelection extends CalendarsEvent {
   final bool selected;
   final String calendarId;

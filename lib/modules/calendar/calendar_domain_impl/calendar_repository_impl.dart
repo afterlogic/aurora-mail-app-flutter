@@ -178,6 +178,14 @@ class CalendarRepositoryImpl implements CalendarRepository {
   }
 
   @override
+  Future<void> updateCalendarSharing(Calendar calendar) async {
+    final isUpdated = await _network.updateSharing(
+        calendarId: calendar.id, participants: calendar.shares.toList());
+    if(!isUpdated) throw Exception('Error while changing calendar shares');
+    await _db.createOrUpdateCalendar(calendar);
+  }
+
+  @override
   Future<void> createEvent(EventCreationData data) {
     return _network.createEvent(
         location: data.location ?? '',
