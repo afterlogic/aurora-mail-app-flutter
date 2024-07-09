@@ -29,20 +29,7 @@ class EventsState extends Equatable {
         selectedDate,
         eventsMap
       ];
-  // List<ViewEvent> get eventsByMonth {
-  //   if (splitEvents == null) {
-  //     return [];
-  //   }
-  //   int targetYear = startIntervalDate.year;
-  //   int targetMonth = startIntervalDate.month;
-  //
-  //   return splitEvents!.where((event) {
-  //     return (event.startDate.year <= targetYear &&
-  //             event.startDate.month <= targetMonth) &&
-  //         (event.endDate.year >= targetYear &&
-  //             event.endDate.month >= targetMonth);
-  //   }).toList();
-  // }
+
 
   ///Events from selected date or from period between [startIntervalDate] and [endIntervalDate]
   List<ViewEvent>? get selectedEvents {
@@ -101,15 +88,6 @@ class EventsState extends Equatable {
         .map((e) => _expandEventTime(e: e, currentDate: targetDate))
         .toList();
 
-    //
-    // return splitEvents!.where((event) {
-    //   return (event.startDate.year <= targetYear &&
-    //           event.startDate.month <= targetMonth &&
-    //           event.startDate.day <= targetDay) &&
-    //       (event.endDate.year >= targetYear &&
-    //           event.endDate.month >= targetMonth &&
-    //           event.endDate.day >= targetDay);
-    // }).toList();
   }
 
   ViewEvent _expandEventTime(
@@ -123,29 +101,6 @@ class EventsState extends Equatable {
     return e.copyWith(startDate: updatedStart, endDate: updatedEnd);
   }
 
-  // Map<DateTime, List<ViewEvent>> groupSelectedEventsByDay() {
-  //   final Map<DateTime, List<ViewEvent>> eventMap = {};
-  //   if (splitEvents == null) return eventMap;
-  //
-  //   for (final event in splitEvents!) {
-  //     DateTime current = event.startDate;
-  //
-  //     while (current.isBefore(event.endDate) ||
-  //         current.isAtSameMomentAs(event.endDate)) {
-  //       // date without time
-  //       DateTime dayKey = DateTime(current.year, current.month, current.day);
-  //
-  //       if (eventMap.containsKey(dayKey)) {
-  //         eventMap[dayKey]!.add(event);
-  //       } else {
-  //         eventMap[dayKey] = [event];
-  //       }
-  //       current = current.add(Duration(days: 1));
-  //     }
-  //   }
-  //
-  //   return eventMap;
-  // }
 
   @override
   String toString() {

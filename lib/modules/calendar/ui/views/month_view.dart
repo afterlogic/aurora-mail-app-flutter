@@ -82,10 +82,6 @@ class _MonthViewState extends State<MonthView>
     return _eventListAnimationController.value == 1.0 ? false : true;
   }
 
-  Widget? _extendedModeBuilder(
-          ctx, DateTime currentDate, List<ViewEvent?> events) =>
-      extendedModeBuilder(events, _calendarDayTitleHeight, currentDate);
-
   Widget _disabledDayBuilder(BuildContext context, DateTime currentDate,
           DateTime selectedDate, List<ViewEvent?> events) =>
       disabledDayBuilder(context, currentDate,
@@ -331,11 +327,10 @@ class _EventsInfoSection extends StatelessWidget {
                   overflow: TextOverflow.clip,
                 ),
               ),
-              if (state.selectedEvents != null)
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 24.0),
                   child: Column(
-                    children: state.selectedEvents!
+                    children: state.getEventsFromDay()
                         .map((e) => Padding(
                               padding: const EdgeInsets.only(bottom: 8.0),
                               child: EventCard(
