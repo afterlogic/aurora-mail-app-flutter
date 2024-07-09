@@ -30,8 +30,10 @@ class CalendarDbServiceImpl implements CalendarDbService {
 
   @override
   Future<void> createOrUpdateCalendar(Calendar calendar) {
+    final calendarForSaving = calendar.copyWith(
+        shares: calendar.shares..removeWhere((e) => e is ParticipantAll));
     return _calendarDao
-        .createOrUpdateCalendar(CalendarMapper.toDB(calendar: calendar));
+        .createOrUpdateCalendar(CalendarMapper.toDB(calendar: calendarForSaving));
   }
 
   @override

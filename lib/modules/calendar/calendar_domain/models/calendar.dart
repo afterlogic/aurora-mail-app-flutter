@@ -201,7 +201,7 @@ class Participant extends Equatable{
 
 class ParticipantAll extends Participant{
   static const addAllIdentifier = "add_all_identifier";
-  const ParticipantAll({required super.permissions}) : super(email: addAllIdentifier, name: addAllIdentifier);
+  const ParticipantAll({required super.permissions, super.email = addAllIdentifier, super.name = addAllIdentifier });
 
   @override
   ParticipantAll copyWith({ParticipantPermissions? permissions}) {

@@ -759,12 +759,12 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
 
   Future<void> _onGoBack() async {
     if (await _hasMessageChanged) {
-      final result = await showDialog<DiscardComposeChangesOption>(
+      final result = await showDialog<DiscardChangesOption>(
         context: context,
-        builder: (_) => DiscardComposeChangesDialog(),
+        builder: (_) => DiscardChangesDialog(content: Text(S.of(context).compose_discard_save_dialog_description),),
       );
       switch (result) {
-        case DiscardComposeChangesOption.discard:
+        case DiscardChangesOption.discard:
           // if (_currentDraftUid != null && _currentDraftUid != widget.draftUid) {
           //   BlocProvider.of<MessagesListBloc>(context).add(DeleteMessages(
           //     messages: [_currentDraftUid],
@@ -772,7 +772,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
           // }
           Navigator.pop(context);
           break;
-        case DiscardComposeChangesOption.save:
+        case DiscardChangesOption.save:
           _saveToDrafts(withExit: true);
           break;
       }

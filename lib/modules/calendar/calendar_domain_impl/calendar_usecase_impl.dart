@@ -77,9 +77,9 @@ class CalendarUseCaseImpl implements CalendarUseCase {
 
   @override
   Future<void> syncCalendars() async {
-    try{
+    try {
       await repository.syncCalendars();
-    } catch(e,st){
+    } catch (e, st) {
       await _getLocalEvents();
       rethrow;
     } finally {

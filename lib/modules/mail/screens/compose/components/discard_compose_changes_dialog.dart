@@ -1,14 +1,18 @@
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:flutter/material.dart';
 
-enum DiscardComposeChangesOption { discard, save }
+enum DiscardChangesOption { discard, save }
 
-class DiscardComposeChangesDialog extends StatelessWidget {
+class DiscardChangesDialog extends StatelessWidget {
+  final Widget content;
+
+  const DiscardChangesDialog({required this.content});
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return AlertDialog(
-      content: Text(S.of(context).compose_discard_save_dialog_description),
+      content: content,
       actions: <Widget>[
         TextButton(
           child: Text(
@@ -19,7 +23,7 @@ class DiscardComposeChangesDialog extends StatelessWidget {
                     : null),
           ),
           onPressed: () {
-            Navigator.pop(context, DiscardComposeChangesOption.discard);
+            Navigator.pop(context, DiscardChangesOption.discard);
           },
         ),
         TextButton(
@@ -31,7 +35,7 @@ class DiscardComposeChangesDialog extends StatelessWidget {
                     : null),
           ),
           onPressed: () {
-            Navigator.pop(context, DiscardComposeChangesOption.save);
+            Navigator.pop(context, DiscardChangesOption.save);
           },
         ),
       ],

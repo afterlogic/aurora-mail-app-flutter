@@ -11,8 +11,10 @@ import 'package:aurora_mail/modules/calendar/ui/dialogs/calendar_links_dialog.da
 import 'package:aurora_mail/modules/calendar/ui/dialogs/calendar_sharing_dialog.dart';
 import 'package:aurora_mail/modules/calendar/ui/dialogs/deletion_confirm_dialog.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/calendar.dart';
+import 'package:aurora_mail/modules/mail/screens/compose/components/discard_compose_changes_dialog.dart';
 import 'package:aurora_mail/shared_ui/colored_checkbox.dart';
 import 'package:aurora_mail/utils/base_state.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -48,10 +50,17 @@ class _CalendarDrawerState extends BState<CalendarDrawer> {
                       (user?.emailFromLogin == c.owner))
                   .toList();
               final sharedCalendars = state.calendars
-                  ?.where((c) => c.shared && !c.sharedToAll && user?.emailFromLogin != c.owner)
+                  ?.where((c) =>
+                      c.shared &&
+                      !c.sharedToAll &&
+                      user?.emailFromLogin != c.owner)
                   .toList();
-              final sharedToAllCalendars =
-                  state.calendars?.where((c) => c.shared && c.sharedToAll && user?.emailFromLogin != c.owner).toList();
+              final sharedToAllCalendars = state.calendars
+                  ?.where((c) =>
+                      c.shared &&
+                      c.sharedToAll &&
+                      user?.emailFromLogin != c.owner)
+                  .toList();
               return SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -194,7 +203,7 @@ class CollapsibleCheckboxList extends StatefulWidget {
       _CollapsibleCheckboxListState();
 }
 
-enum _CalendarDrawerMenuItems{
+enum _CalendarDrawerMenuItems {
   getLink,
   edit,
   download,
@@ -210,7 +219,6 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
   late AnimationController _animationController;
   List<_MenuItem> _menuItems = [];
   late final String _currentUserMail;
-
 
   @override
   void initState() {
@@ -234,24 +242,23 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
   }
 
   _MenuItem _menuItemBuilder(_CalendarDrawerMenuItems item) {
-    switch (item){
+    switch (item) {
       case _CalendarDrawerMenuItems.getLink:
-       return _MenuItem(
-         icon: Icon(Icons.link),
-         titleBuilder: (ctx) => 'Get a link',
-         onTap: (ctx, ViewCalendar calendar) {
-           CalendarLinksDialog.show(ctx, calendarId: calendar.id);
-         },
-       );
+        return _MenuItem(
+          icon: Icon(Icons.link),
+          titleBuilder: (ctx) => 'Get a link',
+          onTap: (ctx, ViewCalendar calendar) {
+            CalendarLinksDialog.show(ctx, calendarId: calendar.id);
+          },
+        );
       case _CalendarDrawerMenuItems.edit:
-       return  _MenuItem(
+        return _MenuItem(
           icon: Icon(Icons.edit_outlined),
           titleBuilder: (ctx) => S.of(ctx).contacts_view_app_bar_edit_contact,
           onTap: (ctx, ViewCalendar calendar) {
             CalendarEditDialog.show(ctx, calendar: calendar).then((value) {
               if (value != null) {
-                BlocProvider.of<CalendarsBloc>(ctx)
-                    .add(UpdateCalendar(value));
+                BlocProvider.of<CalendarsBloc>(ctx).add(UpdateCalendar(value));
               }
             });
           },
@@ -273,10 +280,46 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
           icon: Icon(Icons.group_add_outlined),
           titleBuilder: (ctx) => S.of(ctx).btn_share,
           onTap: (ctx, ViewCalendar calendar) {
-            CalendarSharingDialog.show(context, calendar: calendar).then((value) {
-              if(value == null) return;
-              BlocProvider.of<CalendarsBloc>(ctx)
-                  .add(UpdateCalendarShares(calendarId: calendar.id ,shares: value));
+            final initialParticipants = Set.of(calendar.shares);
+            final sharesToAllParticipant = calendar.sharedToAll
+                ? ParticipantAll(
+                    permissions: ParticipantPermissionsMapper.fromCode(
+                        calendar.sharedToAllAccess))
+                : null;
+            if (sharesToAllParticipant != null) {
+              initialParticipants.add(sharesToAllParticipant);
+            }
+
+            final participantsToRedact = Set.of(initialParticipants);
+
+            CalendarSharingDialog.show(context,
+                    participants: participantsToRedact)
+                .then((value) async {
+              if (value == null) {
+                if (!setEquals(participantsToRedact, initialParticipants)) {
+                  final result = await showDialog<DiscardChangesOption>(
+                    context: context,
+                    builder: (_) => DiscardChangesDialog(
+                      content: Text('Save changes?'),
+                    ),
+                  );
+                  if (result == null) return;
+                  switch (result) {
+                    case DiscardChangesOption.discard:
+                      break;
+                    case DiscardChangesOption.save:
+                      BlocProvider.of<CalendarsBloc>(ctx).add(
+                          UpdateCalendarShares(
+                              calendarId: calendar.id,
+                              shares: participantsToRedact));
+                      break;
+                  }
+                  return;
+                }
+                ;
+                BlocProvider.of<CalendarsBloc>(ctx).add(UpdateCalendarShares(
+                    calendarId: calendar.id, shares: participantsToRedact));
+              }
             });
           },
         );
@@ -286,13 +329,12 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
           titleBuilder: (ctx) => S.of(ctx).btn_delete,
           onTap: (ctx, ViewCalendar calendar) {
             CalendarConfirmDialog.show(ctx,
-                title: 'Delete calendar',
-                confirmMessage:
-                "Are you sure you want to delete calendar ${calendar.name}?")
+                    title: 'Delete calendar',
+                    confirmMessage:
+                        "Are you sure you want to delete calendar ${calendar.name}?")
                 .then((value) {
               if (value != true) return;
-              BlocProvider.of<CalendarsBloc>(ctx)
-                  .add(DeleteCalendar(calendar));
+              BlocProvider.of<CalendarsBloc>(ctx).add(DeleteCalendar(calendar));
               Navigator.of(ctx).pop();
             });
           },
@@ -300,13 +342,8 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
     }
   }
 
-
-
-
   List<_MenuItem> _buildSharedToAllAccessReadMenuItems() {
-    return [
-      _menuItemBuilder(_CalendarDrawerMenuItems.getLink)
-    ];
+    return [_menuItemBuilder(_CalendarDrawerMenuItems.getLink)];
   }
 
   List<_MenuItem> _buildSharedToAllAccessWriteMenuItems() {
@@ -345,7 +382,8 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
   }
 
   List<_MenuItem> _buildMenuItems() {
-    if (widget.calendar.sharedToAll && widget.calendar.owner != _currentUserMail) {
+    if (widget.calendar.sharedToAll &&
+        widget.calendar.owner != _currentUserMail) {
       if (widget.calendar.sharedToAllAccess == 2) {
         return _buildSharedToAllAccessReadMenuItems();
       } else if (widget.calendar.sharedToAllAccess == 1) {
@@ -353,7 +391,8 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
       } else {
         return [];
       }
-    } else if (widget.calendar.shared && widget.calendar.owner != _currentUserMail) {
+    } else if (widget.calendar.shared &&
+        widget.calendar.owner != _currentUserMail) {
       if (widget.calendar.access == 2) {
         return _buildSharedAccessReadMenuItems();
       } else if (widget.calendar.access == 1) {

@@ -14,13 +14,13 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CalendarSharingDialog extends StatefulWidget {
-  final Calendar calendar;
-  const CalendarSharingDialog(this.calendar);
+  final Set<Participant> participants;
+  const CalendarSharingDialog(this.participants);
 
   static Future<Set<Participant>?> show(BuildContext context,
-      {required Calendar calendar}) {
+      {required Set<Participant> participants}) {
     return showDialog<Set<Participant>?>(
-        context: context, builder: (_) => CalendarSharingDialog(calendar));
+        context: context, builder: (_) => CalendarSharingDialog(participants));
   }
 
   @override
@@ -45,15 +45,7 @@ class _CalendarSharingDialogState extends State<CalendarSharingDialog> {
   void initState() {
     super.initState();
     _contactsBloc = BlocProvider.of<ContactsBloc>(context);
-    _participants = Set.of(widget.calendar.shares);
-    final _sharesToAllParticipant = widget.calendar.sharedToAll
-        ? ParticipantAll(
-            permissions: ParticipantPermissionsMapper.fromCode(
-                widget.calendar.sharedToAllAccess))
-        : null;
-    if(_sharesToAllParticipant != null){
-      _participants.add(_sharesToAllParticipant);
-    }
+    _participants = widget.participants;
   }
 
   @override
@@ -73,157 +65,158 @@ class _CalendarSharingDialogState extends State<CalendarSharingDialog> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Color(0xFFB6B5B5)),
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    padding: EdgeInsets.symmetric(horizontal: 8),
-                    child: InkWell(
-                      // onLongPress: true ? _paste : null,
-                      onTap: () {
-                        if (_participantsFocusNode.hasFocus) {
-                          _participantsFocusNode.unfocus();
-                        } else {
-                          _participantsFocusNode.requestFocus();
-                        }
-                      },
-                      child: ComposeTypeAheadField<Contact>(
-                        key: _composeTypeAheadFieldKey,
-                        textFieldConfiguration: TextFieldConfiguration(
-                          focusNode: _participantsFocusNode,
-                          enabled: true,
-                          controller: _emailController,
+                  child: LayoutBuilder(
+                    builder: (context, constraints) {
+                      return Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Color(0xFFB6B5B5)),
+                          borderRadius: BorderRadius.circular(4),
                         ),
-                        animationDuration: Duration.zero,
-                        suggestionsBoxDecoration: SuggestionsBoxDecoration(
-                          color: Theme.of(context).cardColor,
-                          constraints: BoxConstraints(
-                            minWidth: dropDownWidth,
-                            maxWidth: dropDownWidth,
-                          ),
-                        ),
-                        suggestionsBoxVerticalOffset: 0.0,
-                        suggestionsBoxHorizontalOffset:
-                            screenWidth - dropDownWidth - 16 * 2,
-                        autoFlipDirection: true,
-                        hideOnLoading: true,
-                        keepSuggestionsOnLoading: true,
-                        getImmediateSuggestions: true,
-                        noItemsFoundBuilder: (_) => SizedBox(),
-                        suggestionsCallback: (pattern) async =>
-                            lastSuggestions = await _buildSuggestions(pattern),
-                        itemBuilder: (_, c) {
-                          return Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: _SearchContact(
-                              contact: c,
-                              search: _search,
+                        padding: EdgeInsets.symmetric(horizontal: 8),
+                        child: InkWell(
+                          onTap: emails.isNotEmpty ? null : () {
+                            if (_participantsFocusNode.hasFocus) {
+                              _participantsFocusNode.unfocus();
+                            } else {
+                              _participantsFocusNode.requestFocus();
+                            }
+                          },
+                          child: ComposeTypeAheadField<Contact>(
+                            key: _composeTypeAheadFieldKey,
+                            textFieldConfiguration: TextFieldConfiguration(
+                              focusNode: _participantsFocusNode,
+                              enabled: true,
+                              controller: _emailController,
                             ),
-                          );
-                        },
-                        onSuggestionSelected: (c) {
-                          _participantsFocusNode.requestFocus();
-                          if (c == addAllContact) {
-                            _addEmail(ParticipantAll.addAllIdentifier);
-                          } else {
-                            _addEmail(MailUtils.getFriendlyName(c));
-                          }
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4.0),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Flexible(
-                                flex: 1,
-                                child: FutureBuilder<Map<String, Contact>>(
-                                  future: getContacts(),
-                                  builder: (context, result) {
-                                    return Wrap(spacing: 8.0, children: [
-                                      ...emails.map((e) {
-                                        final displayName = e ==
-                                                ParticipantAll.addAllIdentifier
-                                            ? 'All'
-                                            : MailUtils.displayNameFromFriendly(
-                                                e);
+                            animationDuration: Duration.zero,
+                            suggestionsBoxDecoration: SuggestionsBoxDecoration(
+                              color: Theme.of(context).cardColor,
+                              constraints: constraints,
+                            ),
+                            suggestionsBoxVerticalOffset: 0.0,
+                            suggestionsBoxHorizontalOffset: -8 ,
+                            autoFlipDirection: true,
+                            hideOnLoading: true,
+                            keepSuggestionsOnLoading: true,
+                            getImmediateSuggestions: true,
+                            noItemsFoundBuilder: (_) => SizedBox(),
+                            suggestionsCallback: (pattern) async =>
+                                lastSuggestions = await _buildSuggestions(pattern),
+                            itemBuilder: (_, c) {
+                              return Padding(
+                                padding: const EdgeInsets.all(16.0),
+                                child: _SearchContact(
+                                  contact: c,
+                                  search: _search,
+                                ),
+                              );
+                            },
+                            onSuggestionSelected: (c) {
+                              if(_participantsFocusNode.hasFocus){
+                                _participantsFocusNode.unfocus();
+                              }
+                              if (c == addAllContact) {
+                                _addEmail(ParticipantAll.addAllIdentifier);
+                              } else {
+                                _addEmail(MailUtils.getFriendlyName(c));
+                              }
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 4.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  Flexible(
+                                    flex: 1,
+                                    child: FutureBuilder<Map<String, Contact>>(
+                                      future: getContacts(),
+                                      builder: (context, result) {
+                                        return Wrap(children: [
+                                          ...emails.map((e) {
+                                            final displayName = e ==
+                                                    ParticipantAll.addAllIdentifier
+                                                ? 'All'
+                                                : MailUtils.displayNameFromFriendly(
+                                                    e);
 
-                                        return SizedBox(
-                                          height: 43.0,
-                                          child: GestureDetector(
-                                            onTap: () {
-                                              if (_emailToShowDelete == e) {
-                                                setState(() =>
-                                                    _emailToShowDelete = null);
-                                              } else {
-                                                setState(() =>
-                                                    _emailToShowDelete = e);
-                                              }
-                                            },
-                                            child: Chip(
-                                              avatar: CircleAvatar(
-                                                backgroundColor:
-                                                    Theme.of(context)
-                                                        .primaryColor,
-                                                child: Text(
-                                                  displayName[0],
-                                                  style: TextStyle(
-                                                      color: Colors.white),
+                                            return SizedBox(
+                                              height: 43.0,
+                                              child: GestureDetector(
+                                                onTap: () {
+                                                  if (_emailToShowDelete == e) {
+                                                    setState(() =>
+                                                        _emailToShowDelete = null);
+                                                  } else {
+                                                    setState(() =>
+                                                        _emailToShowDelete = e);
+                                                  }
+                                                },
+                                                child: Chip(
+                                                  avatar: CircleAvatar(
+                                                    backgroundColor:
+                                                        Theme.of(context)
+                                                            .primaryColor,
+                                                    child: Text(
+                                                      displayName[0],
+                                                      style: TextStyle(
+                                                          color: Colors.white),
+                                                    ),
+                                                  ),
+                                                  label: Text(displayName),
+                                                  onDeleted: e == _emailToShowDelete
+                                                      ? () => _deleteEmail(e)
+                                                      : null,
                                                 ),
                                               ),
-                                              label: Text(displayName),
-                                              onDeleted: e == _emailToShowDelete
-                                                  ? () => _deleteEmail(e)
-                                                  : null,
+                                            );
+                                          }).toList(),
+                                          Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                vertical: 12),
+                                            child: FitTextField(
+                                              controller: _emailController,
+                                              child: TextField(
+                                                // key: textFieldKey,
+                                                enabled: true,
+                                                focusNode: _participantsFocusNode,
+                                                controller: _emailController,
+                                                autofocus: true,
+                                                keyboardType:
+                                                    TextInputType.emailAddress,
+                                                decoration:
+                                                    InputDecoration.collapsed(
+                                                  hintText: 'Add',
+                                                ),
+                                                onChanged: (value) {
+                                                  if (emails.isNotEmpty &&
+                                                      value.isEmpty) {
+                                                    _emailController.text = " ";
+                                                    _emailController.selection =
+                                                        TextSelection.collapsed(
+                                                            offset: 1);
+                                                    _deleteEmail(emails.last);
+                                                  } else if (value.length > 1 &&
+                                                      value.endsWith(" ")) {
+                                                    onSubmitFromKeyboard();
+                                                  }
+                                                },
+                                                onEditingComplete: () {
+                                                  onSubmitFromKeyboard();
+                                                },
+                                              ),
                                             ),
                                           ),
-                                        );
-                                      }).toList(),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            vertical: 12),
-                                        child: FitTextField(
-                                          controller: _emailController,
-                                          child: TextField(
-                                            // key: textFieldKey,
-                                            enabled: true,
-                                            focusNode: _participantsFocusNode,
-                                            controller: _emailController,
-                                            autofocus: true,
-                                            keyboardType:
-                                                TextInputType.emailAddress,
-                                            decoration:
-                                                InputDecoration.collapsed(
-                                              hintText: 'Add',
-                                            ),
-                                            onChanged: (value) {
-                                              if (emails.isNotEmpty &&
-                                                  value.isEmpty) {
-                                                _emailController.text = " ";
-                                                _emailController.selection =
-                                                    TextSelection.collapsed(
-                                                        offset: 1);
-                                                _deleteEmail(emails.last);
-                                              } else if (value.length > 1 &&
-                                                  value.endsWith(" ")) {
-                                                onSubmitFromKeyboard();
-                                              }
-                                            },
-                                            onEditingComplete: () {
-                                              onSubmitFromKeyboard();
-                                            },
-                                          ),
-                                        ),
-                                      ),
-                                    ]);
-                                  },
-                                ),
+                                        ]);
+                                      },
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ],
+                            ),
                           ),
                         ),
-                      ),
-                    ),
+                      );
+                    }
                   ),
                 ),
                 SizedBox(width: 8),
