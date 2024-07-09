@@ -332,14 +332,16 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
   }
 
   @override
-  Future<bool> updateSharing({required List<Participant> participants, required String calendarId}) async {
-    // TODO get shareToAll from especial participant with name "all"
+  Future<bool> updateSharing(
+      {required List<Participant> participants,
+      required String calendarId}) async {
+    final sharedToAll = participants.whereType<ParticipantAll>().firstOrNull;
     final parameters = {
-      {"Id":calendarId,
-        "IsPublic":0,
-        "Shares":jsonEncode(participants.map((e) => e.toMap()).toList()),
-        "ShareToAll":0,
-        "ShareToAllAccess":2}
+      "Id": calendarId,
+      "IsPublic": 0,
+      "Shares": jsonEncode(participants.map((e) => e.toMap()).toList()),
+      "ShareToAll": sharedToAll == null ? 0 : 1,
+      "ShareToAllAccess": sharedToAll?.permissions.code ?? 2
     };
 
     final body = new WebMailApiBody(
@@ -352,11 +354,9 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
   }
 
   @override
-  Future<bool> updateCalendarPublic({required String calendarId, required bool isPublic}) async {
-    final parameters = {
-      "Id": calendarId,
-      "IsPublic": isPublic
-    };
+  Future<bool> updateCalendarPublic(
+      {required String calendarId, required bool isPublic}) async {
+    final parameters = {"Id": calendarId, "IsPublic": isPublic};
 
     final body = new WebMailApiBody(
       method: "UpdateCalendarPublic",

@@ -13,12 +13,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-
 class CalendarSharingDialog extends StatefulWidget {
   final Calendar calendar;
   const CalendarSharingDialog(this.calendar);
 
-  static Future<Set<Participant>?> show(BuildContext context, {required Calendar calendar}) {
+  static Future<Set<Participant>?> show(BuildContext context,
+      {required Calendar calendar}) {
     return showDialog<Set<Participant>?>(
         context: context, builder: (_) => CalendarSharingDialog(calendar));
   }
@@ -28,7 +28,9 @@ class CalendarSharingDialog extends StatefulWidget {
 }
 
 class _CalendarSharingDialogState extends State<CalendarSharingDialog> {
-
+  final addAllContact = Contact.empty(
+    fullName: 'All',
+  );
   final TextEditingController _emailController = TextEditingController();
   final _composeTypeAheadFieldKey = new GlobalKey<ComposeTypeAheadFieldState>();
   final _participantsFocusNode = FocusNode();
@@ -39,18 +41,23 @@ class _CalendarSharingDialogState extends State<CalendarSharingDialog> {
   String _search = "";
   String? _emailToShowDelete;
 
-
   @override
   void initState() {
     super.initState();
     _contactsBloc = BlocProvider.of<ContactsBloc>(context);
-    _participants = widget.calendar.shares;
+    _participants = Set.of(widget.calendar.shares);
+    final _sharesToAllParticipant = widget.calendar.sharedToAll
+        ? ParticipantAll(
+            permissions: ParticipantPermissionsMapper.fromCode(
+                widget.calendar.sharedToAllAccess))
+        : null;
+    if(_sharesToAllParticipant != null){
+      _participants.add(_sharesToAllParticipant);
+    }
   }
-
 
   @override
   Widget build(BuildContext context) {
-
     final screenWidth = 400.0;
     final dropDownWidth = screenWidth / 1.25;
 
@@ -98,15 +105,14 @@ class _CalendarSharingDialogState extends State<CalendarSharingDialog> {
                         ),
                         suggestionsBoxVerticalOffset: 0.0,
                         suggestionsBoxHorizontalOffset:
-                        screenWidth - dropDownWidth - 16 * 2,
+                            screenWidth - dropDownWidth - 16 * 2,
                         autoFlipDirection: true,
                         hideOnLoading: true,
                         keepSuggestionsOnLoading: true,
                         getImmediateSuggestions: true,
                         noItemsFoundBuilder: (_) => SizedBox(),
                         suggestionsCallback: (pattern) async =>
-                        lastSuggestions =
-                        await _buildSuggestions(pattern),
+                            lastSuggestions = await _buildSuggestions(pattern),
                         itemBuilder: (_, c) {
                           return Padding(
                             padding: const EdgeInsets.all(16.0),
@@ -118,14 +124,16 @@ class _CalendarSharingDialogState extends State<CalendarSharingDialog> {
                         },
                         onSuggestionSelected: (c) {
                           _participantsFocusNode.requestFocus();
-                          _addEmail(MailUtils.getFriendlyName(c));
+                          if (c == addAllContact) {
+                            _addEmail(ParticipantAll.addAllIdentifier);
+                          } else {
+                            _addEmail(MailUtils.getFriendlyName(c));
+                          }
                         },
                         child: Padding(
-                          padding:
-                          const EdgeInsets.symmetric(vertical: 4.0),
+                          padding: const EdgeInsets.symmetric(vertical: 4.0),
                           child: Row(
-                            mainAxisAlignment:
-                            MainAxisAlignment.spaceBetween,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: <Widget>[
                               Flexible(
                                 flex: 1,
@@ -134,8 +142,11 @@ class _CalendarSharingDialogState extends State<CalendarSharingDialog> {
                                   builder: (context, result) {
                                     return Wrap(spacing: 8.0, children: [
                                       ...emails.map((e) {
-                                        final displayName = MailUtils
-                                            .displayNameFromFriendly(e);
+                                        final displayName = e ==
+                                                ParticipantAll.addAllIdentifier
+                                            ? 'All'
+                                            : MailUtils.displayNameFromFriendly(
+                                                e);
 
                                         return SizedBox(
                                           height: 43.0,
@@ -143,18 +154,17 @@ class _CalendarSharingDialogState extends State<CalendarSharingDialog> {
                                             onTap: () {
                                               if (_emailToShowDelete == e) {
                                                 setState(() =>
-                                                _emailToShowDelete =
-                                                null);
+                                                    _emailToShowDelete = null);
                                               } else {
                                                 setState(() =>
-                                                _emailToShowDelete = e);
+                                                    _emailToShowDelete = e);
                                               }
                                             },
                                             child: Chip(
                                               avatar: CircleAvatar(
                                                 backgroundColor:
-                                                Theme.of(context)
-                                                    .primaryColor,
+                                                    Theme.of(context)
+                                                        .primaryColor,
                                                 child: Text(
                                                   displayName[0],
                                                   style: TextStyle(
@@ -162,8 +172,7 @@ class _CalendarSharingDialogState extends State<CalendarSharingDialog> {
                                                 ),
                                               ),
                                               label: Text(displayName),
-                                              onDeleted: e ==
-                                                  _emailToShowDelete
+                                              onDeleted: e == _emailToShowDelete
                                                   ? () => _deleteEmail(e)
                                                   : null,
                                             ),
@@ -182,9 +191,9 @@ class _CalendarSharingDialogState extends State<CalendarSharingDialog> {
                                             controller: _emailController,
                                             autofocus: true,
                                             keyboardType:
-                                            TextInputType.emailAddress,
+                                                TextInputType.emailAddress,
                                             decoration:
-                                            InputDecoration.collapsed(
+                                                InputDecoration.collapsed(
                                               hintText: 'Add',
                                             ),
                                             onChanged: (value) {
@@ -229,29 +238,35 @@ class _CalendarSharingDialogState extends State<CalendarSharingDialog> {
               ],
             ),
             SizedBox(height: 16),
-            Expanded(child: SingleChildScrollView(
-              child: Column(children: SplayTreeSet<Participant>.from(
-                _participants,
-                    (a, b) => a.email.compareTo(b.email),
-              ).map(
-                    (e) => Padding(
-                  padding: const EdgeInsets.only(bottom: 8.0),
-                  child: ParticipantCard(
-                    participant: e,
-                    onDelete: () => setState(() {
-                      _participants.remove(e);
-                    }),
-                    onSelectedPermissionsOption: (ParticipantPermissions? permission) {
-                      if(permission == null) return;
-                      _participants.remove(e);
-                      _participants.add(e.copyWith(permissions: permission));
-                      setState(() { });
-                    },
-                  ),
-                ),
-              ).toList(),),
-            ))
-            ,
+            Expanded(
+                child: SingleChildScrollView(
+              child: Column(
+                children: SplayTreeSet<Participant>.from(
+                  _participants,
+                  (a, b) => a.email.compareTo(b.email),
+                )
+                    .map(
+                      (e) => Padding(
+                        padding: const EdgeInsets.only(bottom: 8.0),
+                        child: ParticipantCard(
+                          participant: e,
+                          onDelete: () => setState(() {
+                            _participants.remove(e);
+                          }),
+                          onSelectedPermissionsOption:
+                              (ParticipantPermissions? permission) {
+                            if (permission == null) return;
+                            _participants.remove(e);
+                            _participants
+                                .add(e.copyWith(permissions: permission));
+                            setState(() {});
+                          },
+                        ),
+                      ),
+                    )
+                    .toList(),
+              ),
+            )),
           ],
         ),
       ),
@@ -267,10 +282,14 @@ class _CalendarSharingDialogState extends State<CalendarSharingDialog> {
   }
 
   void _addParticipants() {
-    final participants = emails.map((e) => Participant(
-        email: MailUtils.emailFromFriendly(e),
-        name: MailUtils.displayNameFromFriendly(e),
-        permissions: ParticipantPermissions.read));
+    final participants = emails.map((e) => e == ParticipantAll.addAllIdentifier
+        ? ParticipantAll(
+            permissions: ParticipantPermissions.read,
+          )
+        : Participant(
+            email: MailUtils.emailFromFriendly(e),
+            name: MailUtils.displayNameFromFriendly(e),
+            permissions: ParticipantPermissions.read));
     _participants.removeWhere((e) => emails.contains(e.email));
     _participants.addAll(participants);
     emails.clear();
@@ -303,7 +322,7 @@ class _CalendarSharingDialogState extends State<CalendarSharingDialog> {
     lastSuggestions = [];
     final String? error = validateInput(
         context, email, [ValidationType.email, ValidationType.empty]);
-    if (error == null) {
+    if (error == null || _email == ParticipantAll.addAllIdentifier) {
       setState(() => emails.add(email));
     }
     _composeTypeAheadFieldKey.currentState?.reopen();
@@ -326,7 +345,7 @@ class _CalendarSharingDialogState extends State<CalendarSharingDialog> {
       final emailContacts = await _contactsBloc.getContactsByEmail(email);
       if (emailContacts.isNotEmpty) {
         final contact = emailContacts.firstWhere(
-              (element) => element.storage == "personal",
+          (element) => element.storage == "personal",
           orElse: () => emailContacts.first,
         );
         final displayName = MailUtils.getFriendlyName(contact);
@@ -348,6 +367,7 @@ class _CalendarSharingDialogState extends State<CalendarSharingDialog> {
       contacts.removeWhere((i) => i.viewEmail.isEmpty);
       contacts
           .removeWhere((i) => emails.contains(MailUtils.getFriendlyName(i)));
+      contacts.add(addAllContact);
       return contacts;
     } catch (e, s) {
       print(s);
@@ -372,7 +392,7 @@ class _SearchContact extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              if (contact.fullName.isNotEmpty)
+              if (contact.fullName?.isNotEmpty == true)
                 RichText(
                   text: _searchMatch(
                       match: contact.fullName,
@@ -380,7 +400,7 @@ class _SearchContact extends StatelessWidget {
                       context: context),
                   maxLines: 1,
                 ),
-              if (contact.viewEmail.isNotEmpty)
+              if (contact.viewEmail?.isNotEmpty == true)
                 RichText(
                   text: _searchMatch(
                       match: contact.viewEmail,
@@ -398,8 +418,8 @@ class _SearchContact extends StatelessWidget {
 
 TextSpan _searchMatch(
     {required String match,
-      required String search,
-      required BuildContext context}) {
+    required String search,
+    required BuildContext context}) {
   final color = Theme.of(context).textTheme.bodyText2?.color;
   final posRes = TextStyle(fontWeight: FontWeight.w700, color: color);
   final negRes = TextStyle(fontWeight: FontWeight.w400, color: color);

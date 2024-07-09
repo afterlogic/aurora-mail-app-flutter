@@ -46,7 +46,6 @@ class Calendar {
     required this.isPublic,
     required this.isSubscribed,
     required this.source,
-    // required this.shares,
     required this.syncToken,
   });
 
@@ -198,6 +197,17 @@ class Participant extends Equatable{
 
   @override
   List<Object?> get props => [email, name, permissions];
+}
+
+class ParticipantAll extends Participant{
+  static const addAllIdentifier = "add_all_identifier";
+  const ParticipantAll({required super.permissions}) : super(email: addAllIdentifier, name: addAllIdentifier);
+
+  @override
+  ParticipantAll copyWith({ParticipantPermissions? permissions}) {
+    return ParticipantAll(
+         permissions: permissions ?? this.permissions);
+  }
 }
 
 enum ParticipantPermissions { read, readWrite }

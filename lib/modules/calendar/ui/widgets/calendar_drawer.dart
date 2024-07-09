@@ -275,8 +275,8 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
           onTap: (ctx, ViewCalendar calendar) {
             CalendarSharingDialog.show(context, calendar: calendar).then((value) {
               if(value == null) return;
-              //TODO UpdateCalendarShare request
-              print(value);
+              BlocProvider.of<CalendarsBloc>(ctx)
+                  .add(UpdateCalendarShares(calendarId: calendar.id ,shares: value));
             });
           },
         );

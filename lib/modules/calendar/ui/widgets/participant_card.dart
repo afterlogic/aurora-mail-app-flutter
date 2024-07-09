@@ -22,7 +22,7 @@ class ParticipantCard extends StatelessWidget {
         child: Row(
           children: [
             Text(
-              participant.email,
+              participant is ParticipantAll ? 'All' : participant.email,
               softWrap: false,
               overflow: TextOverflow.ellipsis,
               style: TextStyle(
