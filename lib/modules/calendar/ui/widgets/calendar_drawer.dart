@@ -48,10 +48,10 @@ class _CalendarDrawerState extends BState<CalendarDrawer> {
                       (user?.emailFromLogin == c.owner))
                   .toList();
               final sharedCalendars = state.calendars
-                  ?.where((c) => c.shared && !c.sharedToAll)
+                  ?.where((c) => c.shared && !c.sharedToAll && user?.emailFromLogin != c.owner)
                   .toList();
               final sharedToAllCalendars =
-                  state.calendars?.where((c) => c.sharedToAll).toList();
+                  state.calendars?.where((c) => c.shared && c.sharedToAll && user?.emailFromLogin != c.owner).toList();
               return SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

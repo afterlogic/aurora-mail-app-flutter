@@ -18,7 +18,7 @@ class CalendarsState extends Equatable {
               (!e.shared &&
               !e.sharedToAll )||
               (e.shared && e.access == 1 && !e.sharedToAll) ||
-              (e.sharedToAll && e.sharedToAllAccess == 1 ) ||
+              (e.shared && e.sharedToAll && e.sharedToAllAccess == 1 ) ||
               e.owner == currentUserMail
   )
 
