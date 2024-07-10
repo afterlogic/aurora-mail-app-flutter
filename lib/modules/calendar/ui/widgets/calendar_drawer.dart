@@ -11,6 +11,7 @@ import 'package:aurora_mail/modules/calendar/ui/dialogs/calendar_links_dialog.da
 import 'package:aurora_mail/modules/calendar/ui/dialogs/calendar_sharing_dialog.dart';
 import 'package:aurora_mail/modules/calendar/ui/dialogs/deletion_confirm_dialog.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/calendar.dart';
+import 'package:aurora_mail/modules/calendar/utils/url_downloader.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/components/discard_compose_changes_dialog.dart';
 import 'package:aurora_mail/shared_ui/colored_checkbox.dart';
 import 'package:aurora_mail/utils/base_state.dart';
@@ -267,7 +268,13 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
         return _MenuItem(
           icon: Icon(Icons.file_download_outlined),
           titleBuilder: (ctx) => 'Import ICS file',
-          onTap: (ctx, ViewCalendar calendar) {},
+          onTap: (ctx, ViewCalendar calendar) async {
+            final user = BlocProvider.of<AuthBloc>(ctx).currentUser;
+            await downloadFromUrl(
+                url: calendar.getDownloadUrl(user),
+                user: user,
+                fileName: calendar.name.replaceAll(' ', '_'));
+          },
         );
       case _CalendarDrawerMenuItems.unsubscribe:
         return _MenuItem(

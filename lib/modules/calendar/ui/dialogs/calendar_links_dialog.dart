@@ -1,14 +1,12 @@
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aurora_mail/modules/calendar/blocs/calendars/calendars_bloc.dart';
-import 'package:aurora_mail/modules/calendar/calendar_domain/models/calendar.dart';
 import 'package:aurora_mail/modules/calendar/ui/dialogs/base_calendar_dialog.dart';
-import 'package:aurora_mail/modules/calendar/ui/models/calendar.dart';
+import 'package:aurora_mail/modules/calendar/utils/url_downloader.dart';
+import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_downloader/flutter_downloader.dart';
-import 'package:path_provider/path_provider.dart';
 
 class CalendarLinksDialog extends StatefulWidget {
   final String calendarId;
@@ -34,106 +32,105 @@ class _CalendarLinksDialogState extends State<CalendarLinksDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return BaseCalendarDialog(
-      removeContentPadding: true,
-      title: 'Get a link',
-      content: Padding(
-        padding: const EdgeInsets.only(top: 8.0),
-        child: BlocBuilder<CalendarsBloc, CalendarsState>(
-          builder: (context, state) {
-            final selectedCalendar = state.calendars
-                ?.firstWhereOrNull((e) => e.id == widget.calendarId);
-            return Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                _LinkSection(
-                  title: 'DAV URL',
-                  url: selectedCalendar?.DAVUrl,
-                ),
-                SizedBox(height: 16),
-                _LinkSection(
-                  title: 'Link to .ics',
-                  url: selectedCalendar?.ICSUrl,
-                  titleIcon: IconButton(
-                    onPressed: () async {
-                      if (selectedCalendar == null) return;
-                      final externalStorageDirPath =
-                          (await getApplicationDocumentsDirectory())
-                              .absolute
-                              .path;
-                      FlutterDownloader.enqueue(
-                        url: selectedCalendar.getDownloadUrl(
-                            BlocProvider.of<AuthBloc>(context).currentUser),
-                        savedDir: externalStorageDirPath,
-                        fileName: selectedCalendar.exportHash,
-                        saveInPublicStorage: true,
-                      );
-                    },
-                    padding: EdgeInsets.zero,
-                    constraints: BoxConstraints(),
-                    icon: Icon(
-                      Icons.file_download_outlined,
-                      color: Theme.of(context).primaryColor,
-                    ),
-                  ),
-                ),
-                SizedBox(height: 16),
-                GestureDetector(
-                  onTap: () {
-                    if (selectedCalendar != null) {
-                      bloc.add(UpdateCalendarPublic(selectedCalendar));
-                    }
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                    child: Row(
-                      children: [
-                        SizedBox(
-                          width: 24,
-                          height: 24,
-                          child: Checkbox(
-                            value: selectedCalendar?.isPublic,
-                            onChanged: (bool? value) {
-                              if (selectedCalendar != null) {
-                                bloc.add(
-                                    UpdateCalendarPublic(selectedCalendar));
-                              }
-                            },
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 8,
-                        ),
-                        Text(
-                          'Get a public link to the calendar',
-                          style: TextStyle(fontSize: 14),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                if (selectedCalendar?.isPublic == true) ...[
-                  const SizedBox(
-                    height: 8,
-                  ),
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: BaseCalendarDialog(
+        removeContentPadding: true,
+        title: 'Get a link',
+        content: Padding(
+          padding: const EdgeInsets.only(top: 8.0),
+          child: BlocBuilder<CalendarsBloc, CalendarsState>(
+            builder: (context, state) {
+              final selectedCalendar = state.calendars
+                  ?.firstWhereOrNull((e) => e.id == widget.calendarId);
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
                   _LinkSection(
-                    url: selectedCalendar?.getPublicLink(
-                        BlocProvider.of<AuthBloc>(context).currentUser),
+                    title: 'DAV URL',
+                    url: selectedCalendar?.DAVUrl,
                   ),
-                ]
-              ],
-            );
-          },
+                  SizedBox(height: 16),
+                  _LinkSection(
+                    title: 'Link to .ics',
+                    url: selectedCalendar?.ICSUrl,
+                    titleIcon: IconButton(
+                      onPressed: () async {
+                        if (selectedCalendar == null) return;
+                        final user =
+                            BlocProvider.of<AuthBloc>(context).currentUser;
+                        await downloadFromUrl(
+                            url: selectedCalendar.getDownloadUrl(user),
+                            user: user,
+                            fileName:
+                                selectedCalendar.name.replaceAll(' ', '_'));
+                      },
+                      padding: EdgeInsets.zero,
+                      constraints: BoxConstraints(),
+                      icon: Icon(
+                        Icons.file_download_outlined,
+                        color: Theme.of(context).primaryColor,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  GestureDetector(
+                    onTap: () {
+                      if (selectedCalendar != null) {
+                        bloc.add(UpdateCalendarPublic(selectedCalendar));
+                      }
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                      child: Row(
+                        children: [
+                          SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: Checkbox(
+                              value: selectedCalendar?.isPublic,
+                              onChanged: (bool? value) {
+                                if (selectedCalendar != null) {
+                                  bloc.add(
+                                      UpdateCalendarPublic(selectedCalendar));
+                                }
+                              },
+                            ),
+                          ),
+                          const SizedBox(
+                            width: 8,
+                          ),
+                          Text(
+                            'Get a public link to the calendar',
+                            style: TextStyle(fontSize: 14),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  if (selectedCalendar?.isPublic == true) ...[
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    _LinkSection(
+                      url: selectedCalendar?.getPublicLink(
+                          BlocProvider.of<AuthBloc>(context).currentUser),
+                    ),
+                  ]
+                ],
+              );
+            },
+          ),
         ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('Save'),
+          ),
+        ],
       ),
-      actions: [
-        TextButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          child: Text('Save'),
-        ),
-      ],
     );
   }
 }
@@ -167,6 +164,12 @@ class _LinkSection extends StatelessWidget {
           child: GestureDetector(
             onTap: () {
               Clipboard.setData(ClipboardData(text: url));
+              showSnack(
+                isError: false,
+                context: context,
+                scaffoldState: Scaffold.of(context),
+                message: "Link copied to clipboard",
+              );
             },
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
