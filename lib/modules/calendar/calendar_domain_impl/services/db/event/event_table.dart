@@ -1,5 +1,8 @@
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/activity.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/every_week_frequency.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/recurrence_mode.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/event.dart';
-import 'package:aurora_mail/modules/calendar/calendar_domain/models/event_base.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/update_status.dart';
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/contacts/converters/list_string_converter.dart';
 import 'package:drift/drift.dart';
 
@@ -8,6 +11,8 @@ class EventTable extends Table {
 
   @override
   Set<Column> get primaryKey => {uid, userLocalId, calendarId};
+
+  IntColumn get type => intEnum<ActivityType>().nullable()();
 
   TextColumn get organizer => text().nullable()();
 

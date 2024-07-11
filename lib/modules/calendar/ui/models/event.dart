@@ -1,13 +1,33 @@
 import 'dart:ui';
 
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/attendee.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/days_of_week.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/every_week_frequency.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/recurrence_mode.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/reminders_option.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/event.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/event_base.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/rrule.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/update_status.dart';
 import 'package:aurora_mail/modules/calendar/ui/dialogs/recurrence_mode_select_dialog.dart';
 import 'package:aurora_mail/modules/calendar/ui/dialogs/weekly_recurrence_select_dialog.dart';
 import 'package:aurora_mail/modules/calendar/utils/date_time_ext.dart';
 import 'package:flutter/material.dart';
 
-class ViewEvent extends Event {
+abstract class DisplayableOnCalendar {
+  DateTime get startDate;
+  DateTime get endDate;
+  Color get color;
+  String get title;
+
+  bool isStartedToday(DateTime currentDate);
+
+  bool isEndedToday(DateTime currentDate);
+
+  DisplayableOnCalendar copyWith({DateTime? startDate, DateTime? endDate, Color? color, String? title});
+}
+
+class ViewEvent extends Event implements DisplayableOnCalendar{
   final DateTime startDate;
   final DateTime endDate;
   final Color color;
@@ -108,6 +128,7 @@ class ViewEvent extends Event {
   @override
   ViewEvent copyWith({
     String? title,
+    Color? color,
     DateTime? startDate,
     DateTime? endDate,
     String? organizer,
@@ -168,7 +189,7 @@ class ViewEvent extends Event {
         synced: synced ?? this.synced,
         onceLoaded: onceLoaded ?? this.onceLoaded,
         title: title ?? this.title,
-        color: color,
+        color: color ?? this.color,
         reminders: reminders ?? this.reminders,
         recurrenceMode:
             recurrenceMode == null ? this.recurrenceMode : recurrenceMode(),

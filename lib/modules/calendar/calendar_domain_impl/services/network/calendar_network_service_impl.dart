@@ -1,5 +1,12 @@
 import 'dart:convert';
 
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/activity.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/activity_base.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/attendee.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/days_of_week.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/every_week_frequency.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/recurrence_mode.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/reminders_option.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/calendar.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/event.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/event_base.dart';
@@ -29,7 +36,7 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
   }
 
   @override
-  Future<List<EventBase>> getChangesForCalendar(
+  Future<List<ActivityBase>> getChangesForCalendar(
       {required String calendarId,
       required int userLocalId,
       required int syncTokenFrom,
@@ -54,10 +61,10 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
   }
 
   @override
-  Future<List<Event>> updateEvents(List<Event> events) async {
+  Future<List<Activity>> updateActivities(List<ActivityBase> activities) async {
     final parameters = {
-      "CalendarId": events.first.calendarId,
-      "EventUids": events.map((e) => e.uid).toList()
+      "CalendarId": activities.first.calendarId,
+      "EventUids": activities.map((e) => e.uid).toList()
     };
 
     final body = new WebMailApiBody(
@@ -66,14 +73,15 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
     );
 
     final queryResult = await calendarModule.post(body) as List;
-    final result = <Event>[];
+    final result = <Activity>[];
     for (final rawEvent in queryResult) {
       try {
         final baseEvent =
-            events.firstWhereOrNull((e) => rawEvent['uid'] == e.uid);
+        activities.firstWhereOrNull((e) => rawEvent['uid'] == e.uid);
         if (baseEvent == null)
           throw Exception('event info not found from Event from server');
-        result.add(Event.fill(baseEvent, rawEvent as Map<String, dynamic>));
+
+        result.add(EventMapper.synchronise(newData: rawEvent as Map<String, dynamic>, base: baseEvent));
       } catch (e, st) {
         print(e);
         print(st);

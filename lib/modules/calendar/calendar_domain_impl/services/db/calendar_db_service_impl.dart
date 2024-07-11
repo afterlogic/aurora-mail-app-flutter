@@ -1,12 +1,16 @@
 import 'package:aurora_logger/aurora_logger.dart';
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/activity.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/activity_base.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/calendar.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/event.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/event_base.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain_impl/mappers/calendar_mapper.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain_impl/mappers/event_mapper.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain_impl/services/db/calendar/calendar_dao.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain_impl/services/db/calendar_db_service.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain_impl/services/db/event/event_dao.dart';
+import 'package:collection/collection.dart';
 
 class CalendarDbServiceImpl implements CalendarDbService {
   CalendarDbServiceImpl(AppDatabase db)
@@ -23,7 +27,7 @@ class CalendarDbServiceImpl implements CalendarDbService {
   }
 
   @override
-  Future<void> emitChanges(List<EventBase> events) async {
+  Future<void> emitChanges(List<ActivityBase> events) async {
     return _eventDao
         .syncEventList(events.map((e) => e.toDb()).toList());
   }
@@ -56,7 +60,7 @@ class CalendarDbServiceImpl implements CalendarDbService {
   }
 
   @override
-  Future<void> updateEventList(List<Event> events) {
+  Future<void> updateEventList(List<Activity> events) {
     return _eventDao.syncEventList(
         events.map((e) => e.toDb()).toList(),
         synced: true);
@@ -69,11 +73,11 @@ class CalendarDbServiceImpl implements CalendarDbService {
   }
 
   @override
-  Future<List<Event>> getNotUpdatedEvents(
+  Future<List<ActivityBase>> getNotUpdatedEvents(
       {required int? limit, required int? offset}) async {
     final result =
         await _eventDao.getEventsWithLimit(limit: limit, offset: offset);
-    return result.map((e) => Event.fromDb(e)).where((e) => !e.synced).toList();
+    return result.map((e) => e.toActivity()).whereNotNull().where((e) => !e.synced).toList();
   }
 
   @override

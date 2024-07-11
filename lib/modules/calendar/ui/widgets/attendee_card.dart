@@ -1,3 +1,5 @@
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/InviteStatus.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/attendee.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/event.dart';
 import 'package:flutter/material.dart';
 

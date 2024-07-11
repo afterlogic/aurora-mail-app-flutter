@@ -1,3 +1,9 @@
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/activity.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/activity_base.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/attendee.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/days_of_week.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/every_week_frequency.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/recurrence_mode.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/calendar.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/event.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/event_base.dart';
@@ -10,13 +16,13 @@ abstract class CalendarNetworkService {
   }
   Future<List<Calendar>> getCalendars(int userId);
 
-  Future<List<EventBase>> getChangesForCalendar(
+  Future<List<ActivityBase>> getChangesForCalendar(
       {required String calendarId,
       required int userLocalId,
       required int syncTokenFrom,
       int? limit});
 
-  Future<List<Event>> updateEvents(List<Event> events);
+  Future<List<Activity>> updateActivities(List<ActivityBase> activities);
 
   Future<void> createEvent({
     required String subject,

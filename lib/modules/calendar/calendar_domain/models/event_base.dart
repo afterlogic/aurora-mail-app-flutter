@@ -1,4 +1,5 @@
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/update_status.dart';
 import 'package:drift/drift.dart';
 
 class EventBase {
@@ -60,35 +61,5 @@ class EventBase {
       userLocalId: userLocalId ?? this.userLocalId,
       updateStatus: updateStatus ?? this.updateStatus,
     );
-  }
-}
-
-enum UpdateStatus { added, modified, deleted }
-
-extension UpdateStatusX on UpdateStatus {
-  String toApiString() {
-    switch (this) {
-      case UpdateStatus.added:
-        return "added";
-      case UpdateStatus.modified:
-        return "modified";
-      case UpdateStatus.deleted:
-        return "deleted";
-    }
-  }
-
-  bool get isDeleted => this == UpdateStatus.deleted;
-
-  static UpdateStatus? fromApiString(String status) {
-    switch (status) {
-      case "Added":
-        return UpdateStatus.added;
-      case "Modified":
-        return UpdateStatus.modified;
-      case "Deleted":
-        return UpdateStatus.deleted;
-      default:
-        return null;
-    }
   }
 }

@@ -3,6 +3,9 @@ import 'dart:async';
 import 'package:aurora_logger/aurora_logger.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/calendar_repository.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/activity.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/activity_base.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/reminders_option.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/calendar.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/event.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain_impl/mappers/calendar_mapper.dart';
@@ -38,7 +41,7 @@ class CalendarRepositoryImpl implements CalendarRepository {
   Future<void> _syncEvents() async {
     final int step = 20;
     int currentOffset = 0;
-    List<Event> notUpdatedEvents =
+    List<ActivityBase> notUpdatedEvents =
         await _db.getNotUpdatedEvents(offset: null, limit: null);
     await _db.deleteMarkedEvents();
     while (notUpdatedEvents.isNotEmpty) {
@@ -48,7 +51,7 @@ class CalendarRepositoryImpl implements CalendarRepository {
           EventMapper.groupEventsByCalendarId(notUpdatedEvents);
       for (final group in groupedEvents) {
         try {
-          final syncedEvents = await _network.updateEvents(group);
+          final syncedEvents = await _network.updateActivities(group);
           logger.log('EVENTS FROM SERVER: $syncedEvents');
           await _db.updateEventList(syncedEvents);
         } catch (e) {
