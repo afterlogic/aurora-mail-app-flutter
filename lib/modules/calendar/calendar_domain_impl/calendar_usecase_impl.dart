@@ -156,7 +156,7 @@ class CalendarUseCaseImpl implements CalendarUseCase {
     if (_selectedStartEventsInterval == null ||
         _selectedEndEventsInterval == null)
       throw Exception('Select date interval');
-    final allEvents = await repository.getForPeriod(
+    final allEvents = await repository.getEventsForPeriod(
       start: _selectedStartEventsInterval!,
       end: _selectedEndEventsInterval!,
       calendarIds: selectedCalendarIds,

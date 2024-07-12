@@ -6,8 +6,8 @@ import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/upd
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/contacts/converters/list_string_converter.dart';
 import 'package:drift/drift.dart';
 
-@DataClassName("EventDb")
-class EventTable extends Table {
+@DataClassName("ActivityDb")
+class ActivityTable extends Table {
 
   @override
   Set<Column> get primaryKey => {uid, userLocalId, calendarId};

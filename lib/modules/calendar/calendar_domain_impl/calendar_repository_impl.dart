@@ -128,15 +128,16 @@ class CalendarRepositoryImpl implements CalendarRepository {
   }
 
   @override
-  Future<List<Event>> getForPeriod(
+  Future<List<Event>> getEventsForPeriod(
       {required DateTime start,
       required DateTime end,
-      required List<String> calendarIds}) {
-    return _db.getEventsForPeriod(
+      required List<String> calendarIds}) async {
+    final activities = await _db.getActivitiesForPeriod(
         start: start,
         end: end,
         userLocalId: user.localId!,
         calendarIds: calendarIds);
+    return activities.whereType<Event>().toList();
   }
 
   @override

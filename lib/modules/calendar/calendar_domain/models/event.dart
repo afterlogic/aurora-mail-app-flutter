@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/activity.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/attendee.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/days_of_week.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/recurrence_mode.dart';
@@ -59,7 +60,7 @@ class EventCreationData {
   }
 }
 
-class Event extends EventBase {
+class Event implements Activity {
   final String? organizer;
   final bool? appointment;
   final int? appointmentAccess;
@@ -119,12 +120,8 @@ class Event extends EventBase {
       this.recurrenceUntilDate,
       this.recurrenceWeeklyFrequency,
       this.recurrenceWeekDays,
-      required this.attendees})
-      : super(
-            uid: uid,
-            updateStatus: updateStatus,
-            userLocalId: userLocalId,
-            calendarId: calendarId);
+      required this.attendees});
+
 
   factory Event.fill(Event base, Map<String, dynamic>? newData) {
     if (newData == null) {
@@ -189,7 +186,7 @@ class Event extends EventBase {
         attendees: (newData['attendees'] as List).map((e) => Attendee.fromMap(e as Map<String, dynamic>)).toSet());
   }
 
-  factory Event.fromDb(EventDb entity) {
+  factory Event.fromDb(ActivityDb entity) {
     return Event(
         description: entity.description,
         location: entity.location,
@@ -241,8 +238,9 @@ class Event extends EventBase {
   }
 
   @override
-  EventDb toDb() {
-    return EventDb(
+  ActivityDb toDb() {
+    return ActivityDb(
+      type: ActivityType.event,
         description: description,
         location: location,
         calendarId: calendarId,

@@ -11,7 +11,7 @@ import 'package:aurora_mail/inject/app_inject.dart';
 import 'package:aurora_mail/modules/auth/repository/auth_api.dart';
 import 'package:aurora_mail/modules/auth/repository/auth_local_storage.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain_impl/services/db/calendar/calendar_dao.dart';
-import 'package:aurora_mail/modules/calendar/calendar_domain_impl/services/db/event/event_dao.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain_impl/services/db/activity/activity_dao.dart';
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/contacts/contacts_dao.dart';
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/groups/contacts_groups_dao.dart';
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/storages/contacts_storages_dao.dart';
@@ -165,7 +165,7 @@ class AuthMethods {
 
     try {
       final calendarDao = new CalendarDao(DBInstances.appDB);
-      final eventDao = new EventDao(DBInstances.appDB);
+      final eventDao = new ActivityDao(DBInstances.appDB);
       await _accountsDao.deleteAccountsOfUser(user.localId);
       await foldersDao.deleteFoldersOfUser(user.localId);
       await mailDao.deleteMessagesOfUser(user.localId);

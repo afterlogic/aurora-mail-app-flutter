@@ -12,12 +12,11 @@ import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/rru
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/update_status.dart';
 
 class Task implements Activity {
-  final ActivityType? activityType;
   final String uid;
   final UpdateStatus updateStatus;
   final int userLocalId;
   final String calendarId;
-  final bool allDay;
+  final bool? allDay;
   final bool? appointment;
   final int? appointmentAccess;
   final Set<Attendee>? attendees;
@@ -44,7 +43,6 @@ class Task implements Activity {
   final bool? withDate;
 
   const Task({
-    this.activityType,
     required this.uid,
     required this.updateStatus,
     required this.userLocalId,
@@ -77,9 +75,9 @@ class Task implements Activity {
   });
 
   @override
-  EventDb toDb() {
-    return EventDb(
-        type: activityType,
+  ActivityDb toDb() {
+    return ActivityDb(
+        type: ActivityType.task,
         description: description,
         location: location,
         calendarId: calendarId,

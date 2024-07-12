@@ -15,8 +15,8 @@ class EventBase {
     required this.calendarId,
   });
 
-  EventDb toDb() {
-    return EventDb(
+  ActivityDb toDb() {
+    return ActivityDb(
         calendarId: calendarId,
         userLocalId: userLocalId,
         uid: uid,

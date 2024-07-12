@@ -9,16 +9,16 @@ import 'package:aurora_mail/modules/calendar/calendar_domain_impl/mappers/calend
 import 'package:aurora_mail/modules/calendar/calendar_domain_impl/mappers/event_mapper.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain_impl/services/db/calendar/calendar_dao.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain_impl/services/db/calendar_db_service.dart';
-import 'package:aurora_mail/modules/calendar/calendar_domain_impl/services/db/event/event_dao.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain_impl/services/db/activity/activity_dao.dart';
 import 'package:collection/collection.dart';
 
 class CalendarDbServiceImpl implements CalendarDbService {
   CalendarDbServiceImpl(AppDatabase db)
       : _calendarDao = CalendarDao(db),
-        _eventDao = EventDao(db);
+        _eventDao = ActivityDao(db);
 
   final CalendarDao _calendarDao;
-  final EventDao _eventDao;
+  final ActivityDao _eventDao;
 
   @override
   Future<List<Calendar>> getCalendars(int userLocalId) async {
@@ -81,7 +81,7 @@ class CalendarDbServiceImpl implements CalendarDbService {
   }
 
   @override
-  Future<List<Event>> getEventsForPeriod(
+  Future<List<Activity>> getActivitiesForPeriod(
       {required DateTime start,
       required DateTime end,
       required List<String> calendarIds,
@@ -89,7 +89,7 @@ class CalendarDbServiceImpl implements CalendarDbService {
     final entities = await _eventDao.getForPeriod(
       calendarIds: calendarIds,
         start: start, end: end, userLocalId: userLocalId);
-    return entities.map((e) => Event.fromDb(e)).toList();
+    return entities.map((e) => e.toActivity()).whereType<Activity>().toList();
   }
 
   @override

@@ -3270,7 +3270,7 @@ class $CalendarTableTable extends CalendarTable
       const ListStringConverter();
 }
 
-class EventDb extends DataClass implements Insertable<EventDb> {
+class ActivityDb extends DataClass implements Insertable<ActivityDb> {
   final ActivityType? type;
   final String? organizer;
   final bool? appointment;
@@ -3300,7 +3300,7 @@ class EventDb extends DataClass implements Insertable<EventDb> {
   final DateTime? recurrenceUntilDate;
   final String? recurrenceWeekDaysString;
   final List<String>? attendees;
-  EventDb(
+  ActivityDb(
       {this.type,
       this.organizer,
       this.appointment,
@@ -3330,10 +3330,10 @@ class EventDb extends DataClass implements Insertable<EventDb> {
       this.recurrenceUntilDate,
       this.recurrenceWeekDaysString,
       this.attendees});
-  factory EventDb.fromData(Map<String, dynamic> data, {String? prefix}) {
+  factory ActivityDb.fromData(Map<String, dynamic> data, {String? prefix}) {
     final effectivePrefix = prefix ?? '';
-    return EventDb(
-      type: $EventTableTable.$converter0.mapToDart(const IntType()
+    return ActivityDb(
+      type: $ActivityTableTable.$converter0.mapToDart(const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}type'])),
       organizer: const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}organizer']),
@@ -3375,22 +3375,22 @@ class EventDb extends DataClass implements Insertable<EventDb> {
           .mapFromDatabaseResponse(data['${effectivePrefix}with_date']),
       isPrivate: const BoolType()
           .mapFromDatabaseResponse(data['${effectivePrefix}is_private']),
-      updateStatus: $EventTableTable.$converter1.mapToDart(const IntType()
+      updateStatus: $ActivityTableTable.$converter1.mapToDart(const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}update_status']))!,
       synced: const BoolType()
           .mapFromDatabaseResponse(data['${effectivePrefix}synced'])!,
       onceLoaded: const BoolType()
           .mapFromDatabaseResponse(data['${effectivePrefix}once_loaded'])!,
-      recurrenceMode: $EventTableTable.$converter2.mapToDart(const IntType()
+      recurrenceMode: $ActivityTableTable.$converter2.mapToDart(const IntType()
           .mapFromDatabaseResponse(data['${effectivePrefix}recurrence_mode'])),
-      recurrenceWeeklyFrequency: $EventTableTable.$converter3.mapToDart(
+      recurrenceWeeklyFrequency: $ActivityTableTable.$converter3.mapToDart(
           const IntType().mapFromDatabaseResponse(
               data['${effectivePrefix}recurrence_weekly_frequency'])),
       recurrenceUntilDate: const DateTimeType().mapFromDatabaseResponse(
           data['${effectivePrefix}recurrence_until_date']),
       recurrenceWeekDaysString: const StringType().mapFromDatabaseResponse(
           data['${effectivePrefix}recurrence_week_days_string']),
-      attendees: $EventTableTable.$converter4.mapToDart(const StringType()
+      attendees: $ActivityTableTable.$converter4.mapToDart(const StringType()
           .mapFromDatabaseResponse(data['${effectivePrefix}attendees'])),
     );
   }
@@ -3398,7 +3398,7 @@ class EventDb extends DataClass implements Insertable<EventDb> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (!nullToAbsent || type != null) {
-      final converter = $EventTableTable.$converter0;
+      final converter = $ActivityTableTable.$converter0;
       map['type'] = Variable<int?>(converter.mapToSql(type));
     }
     if (!nullToAbsent || organizer != null) {
@@ -3456,18 +3456,18 @@ class EventDb extends DataClass implements Insertable<EventDb> {
       map['is_private'] = Variable<bool?>(isPrivate);
     }
     {
-      final converter = $EventTableTable.$converter1;
+      final converter = $ActivityTableTable.$converter1;
       map['update_status'] = Variable<int>(converter.mapToSql(updateStatus)!);
     }
     map['synced'] = Variable<bool>(synced);
     map['once_loaded'] = Variable<bool>(onceLoaded);
     if (!nullToAbsent || recurrenceMode != null) {
-      final converter = $EventTableTable.$converter2;
+      final converter = $ActivityTableTable.$converter2;
       map['recurrence_mode'] =
           Variable<int?>(converter.mapToSql(recurrenceMode));
     }
     if (!nullToAbsent || recurrenceWeeklyFrequency != null) {
-      final converter = $EventTableTable.$converter3;
+      final converter = $ActivityTableTable.$converter3;
       map['recurrence_weekly_frequency'] =
           Variable<int?>(converter.mapToSql(recurrenceWeeklyFrequency));
     }
@@ -3479,14 +3479,14 @@ class EventDb extends DataClass implements Insertable<EventDb> {
           Variable<String?>(recurrenceWeekDaysString);
     }
     if (!nullToAbsent || attendees != null) {
-      final converter = $EventTableTable.$converter4;
+      final converter = $ActivityTableTable.$converter4;
       map['attendees'] = Variable<String?>(converter.mapToSql(attendees));
     }
     return map;
   }
 
-  EventTableCompanion toCompanion(bool nullToAbsent) {
-    return EventTableCompanion(
+  ActivityTableCompanion toCompanion(bool nullToAbsent) {
+    return ActivityTableCompanion(
       type: type == null && nullToAbsent ? const Value.absent() : Value(type),
       organizer: organizer == null && nullToAbsent
           ? const Value.absent()
@@ -3560,10 +3560,10 @@ class EventDb extends DataClass implements Insertable<EventDb> {
     );
   }
 
-  factory EventDb.fromJson(Map<String, dynamic> json,
+  factory ActivityDb.fromJson(Map<String, dynamic> json,
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return EventDb(
+    return ActivityDb(
       type: serializer.fromJson<ActivityType?>(json['type']),
       organizer: serializer.fromJson<String?>(json['organizer']),
       appointment: serializer.fromJson<bool?>(json['appointment']),
@@ -3637,7 +3637,7 @@ class EventDb extends DataClass implements Insertable<EventDb> {
     };
   }
 
-  EventDb copyWith(
+  ActivityDb copyWith(
           {ActivityType? type,
           String? organizer,
           bool? appointment,
@@ -3667,7 +3667,7 @@ class EventDb extends DataClass implements Insertable<EventDb> {
           DateTime? recurrenceUntilDate,
           String? recurrenceWeekDaysString,
           List<String>? attendees}) =>
-      EventDb(
+      ActivityDb(
         type: type ?? this.type,
         organizer: organizer ?? this.organizer,
         appointment: appointment ?? this.appointment,
@@ -3702,7 +3702,7 @@ class EventDb extends DataClass implements Insertable<EventDb> {
       );
   @override
   String toString() {
-    return (StringBuffer('EventDb(')
+    return (StringBuffer('ActivityDb(')
           ..write('type: $type, ')
           ..write('organizer: $organizer, ')
           ..write('appointment: $appointment, ')
@@ -3771,7 +3771,7 @@ class EventDb extends DataClass implements Insertable<EventDb> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is EventDb &&
+      (other is ActivityDb &&
           other.type == this.type &&
           other.organizer == this.organizer &&
           other.appointment == this.appointment &&
@@ -3803,7 +3803,7 @@ class EventDb extends DataClass implements Insertable<EventDb> {
           other.attendees == this.attendees);
 }
 
-class EventTableCompanion extends UpdateCompanion<EventDb> {
+class ActivityTableCompanion extends UpdateCompanion<ActivityDb> {
   final Value<ActivityType?> type;
   final Value<String?> organizer;
   final Value<bool?> appointment;
@@ -3833,7 +3833,7 @@ class EventTableCompanion extends UpdateCompanion<EventDb> {
   final Value<DateTime?> recurrenceUntilDate;
   final Value<String?> recurrenceWeekDaysString;
   final Value<List<String>?> attendees;
-  const EventTableCompanion({
+  const ActivityTableCompanion({
     this.type = const Value.absent(),
     this.organizer = const Value.absent(),
     this.appointment = const Value.absent(),
@@ -3864,7 +3864,7 @@ class EventTableCompanion extends UpdateCompanion<EventDb> {
     this.recurrenceWeekDaysString = const Value.absent(),
     this.attendees = const Value.absent(),
   });
-  EventTableCompanion.insert({
+  ActivityTableCompanion.insert({
     this.type = const Value.absent(),
     this.organizer = const Value.absent(),
     this.appointment = const Value.absent(),
@@ -3900,7 +3900,7 @@ class EventTableCompanion extends UpdateCompanion<EventDb> {
         updateStatus = Value(updateStatus),
         synced = Value(synced),
         onceLoaded = Value(onceLoaded);
-  static Insertable<EventDb> custom({
+  static Insertable<ActivityDb> custom({
     Expression<ActivityType?>? type,
     Expression<String?>? organizer,
     Expression<bool?>? appointment,
@@ -3967,7 +3967,7 @@ class EventTableCompanion extends UpdateCompanion<EventDb> {
     });
   }
 
-  EventTableCompanion copyWith(
+  ActivityTableCompanion copyWith(
       {Value<ActivityType?>? type,
       Value<String?>? organizer,
       Value<bool?>? appointment,
@@ -3997,7 +3997,7 @@ class EventTableCompanion extends UpdateCompanion<EventDb> {
       Value<DateTime?>? recurrenceUntilDate,
       Value<String?>? recurrenceWeekDaysString,
       Value<List<String>?>? attendees}) {
-    return EventTableCompanion(
+    return ActivityTableCompanion(
       type: type ?? this.type,
       organizer: organizer ?? this.organizer,
       appointment: appointment ?? this.appointment,
@@ -4036,7 +4036,7 @@ class EventTableCompanion extends UpdateCompanion<EventDb> {
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
     if (type.present) {
-      final converter = $EventTableTable.$converter0;
+      final converter = $ActivityTableTable.$converter0;
       map['type'] = Variable<int?>(converter.mapToSql(type.value));
     }
     if (organizer.present) {
@@ -4100,7 +4100,7 @@ class EventTableCompanion extends UpdateCompanion<EventDb> {
       map['is_private'] = Variable<bool?>(isPrivate.value);
     }
     if (updateStatus.present) {
-      final converter = $EventTableTable.$converter1;
+      final converter = $ActivityTableTable.$converter1;
       map['update_status'] =
           Variable<int>(converter.mapToSql(updateStatus.value)!);
     }
@@ -4111,12 +4111,12 @@ class EventTableCompanion extends UpdateCompanion<EventDb> {
       map['once_loaded'] = Variable<bool>(onceLoaded.value);
     }
     if (recurrenceMode.present) {
-      final converter = $EventTableTable.$converter2;
+      final converter = $ActivityTableTable.$converter2;
       map['recurrence_mode'] =
           Variable<int?>(converter.mapToSql(recurrenceMode.value));
     }
     if (recurrenceWeeklyFrequency.present) {
-      final converter = $EventTableTable.$converter3;
+      final converter = $ActivityTableTable.$converter3;
       map['recurrence_weekly_frequency'] =
           Variable<int?>(converter.mapToSql(recurrenceWeeklyFrequency.value));
     }
@@ -4129,7 +4129,7 @@ class EventTableCompanion extends UpdateCompanion<EventDb> {
           Variable<String?>(recurrenceWeekDaysString.value);
     }
     if (attendees.present) {
-      final converter = $EventTableTable.$converter4;
+      final converter = $ActivityTableTable.$converter4;
       map['attendees'] = Variable<String?>(converter.mapToSql(attendees.value));
     }
     return map;
@@ -4137,7 +4137,7 @@ class EventTableCompanion extends UpdateCompanion<EventDb> {
 
   @override
   String toString() {
-    return (StringBuffer('EventTableCompanion(')
+    return (StringBuffer('ActivityTableCompanion(')
           ..write('type: $type, ')
           ..write('organizer: $organizer, ')
           ..write('appointment: $appointment, ')
@@ -4172,18 +4172,18 @@ class EventTableCompanion extends UpdateCompanion<EventDb> {
   }
 }
 
-class $EventTableTable extends EventTable
-    with TableInfo<$EventTableTable, EventDb> {
+class $ActivityTableTable extends ActivityTable
+    with TableInfo<$ActivityTableTable, ActivityDb> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
-  $EventTableTable(this.attachedDatabase, [this._alias]);
+  $ActivityTableTable(this.attachedDatabase, [this._alias]);
   final VerificationMeta _typeMeta = const VerificationMeta('type');
   @override
   late final GeneratedColumnWithTypeConverter<ActivityType?, int?> type =
       GeneratedColumn<int?>('type', aliasedName, true,
               type: const IntType(), requiredDuringInsert: false)
-          .withConverter<ActivityType?>($EventTableTable.$converter0);
+          .withConverter<ActivityType?>($ActivityTableTable.$converter0);
   final VerificationMeta _organizerMeta = const VerificationMeta('organizer');
   @override
   late final GeneratedColumn<String?> organizer = GeneratedColumn<String?>(
@@ -4309,7 +4309,7 @@ class $EventTableTable extends EventTable
   late final GeneratedColumnWithTypeConverter<UpdateStatus, int?> updateStatus =
       GeneratedColumn<int?>('update_status', aliasedName, false,
               type: const IntType(), requiredDuringInsert: true)
-          .withConverter<UpdateStatus>($EventTableTable.$converter1);
+          .withConverter<UpdateStatus>($ActivityTableTable.$converter1);
   final VerificationMeta _syncedMeta = const VerificationMeta('synced');
   @override
   late final GeneratedColumn<bool?> synced = GeneratedColumn<bool?>(
@@ -4331,7 +4331,7 @@ class $EventTableTable extends EventTable
       recurrenceMode = GeneratedColumn<int?>(
               'recurrence_mode', aliasedName, true,
               type: const IntType(), requiredDuringInsert: false)
-          .withConverter<RecurrenceMode?>($EventTableTable.$converter2);
+          .withConverter<RecurrenceMode?>($ActivityTableTable.$converter2);
   final VerificationMeta _recurrenceWeeklyFrequencyMeta =
       const VerificationMeta('recurrenceWeeklyFrequency');
   @override
@@ -4339,7 +4339,7 @@ class $EventTableTable extends EventTable
       recurrenceWeeklyFrequency = GeneratedColumn<int?>(
               'recurrence_weekly_frequency', aliasedName, true,
               type: const IntType(), requiredDuringInsert: false)
-          .withConverter<EveryWeekFrequency?>($EventTableTable.$converter3);
+          .withConverter<EveryWeekFrequency?>($ActivityTableTable.$converter3);
   final VerificationMeta _recurrenceUntilDateMeta =
       const VerificationMeta('recurrenceUntilDate');
   @override
@@ -4357,7 +4357,7 @@ class $EventTableTable extends EventTable
   late final GeneratedColumnWithTypeConverter<List<String>, String?> attendees =
       GeneratedColumn<String?>('attendees', aliasedName, true,
               type: const StringType(), requiredDuringInsert: false)
-          .withConverter<List<String>>($EventTableTable.$converter4);
+          .withConverter<List<String>>($ActivityTableTable.$converter4);
   @override
   List<GeneratedColumn> get $columns => [
         type,
@@ -4391,11 +4391,11 @@ class $EventTableTable extends EventTable
         attendees
       ];
   @override
-  String get aliasedName => _alias ?? 'event_table';
+  String get aliasedName => _alias ?? 'activity_table';
   @override
-  String get actualTableName => 'event_table';
+  String get actualTableName => 'activity_table';
   @override
-  VerificationContext validateIntegrity(Insertable<EventDb> instance,
+  VerificationContext validateIntegrity(Insertable<ActivityDb> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
@@ -4540,14 +4540,14 @@ class $EventTableTable extends EventTable
   @override
   Set<GeneratedColumn> get $primaryKey => {uid, userLocalId, calendarId};
   @override
-  EventDb map(Map<String, dynamic> data, {String? tablePrefix}) {
-    return EventDb.fromData(data,
+  ActivityDb map(Map<String, dynamic> data, {String? tablePrefix}) {
+    return ActivityDb.fromData(data,
         prefix: tablePrefix != null ? '$tablePrefix.' : null);
   }
 
   @override
-  $EventTableTable createAlias(String alias) {
-    return $EventTableTable(attachedDatabase, alias);
+  $ActivityTableTable createAlias(String alias) {
+    return $ActivityTableTable(attachedDatabase, alias);
   }
 
   static TypeConverter<ActivityType?, int> $converter0 =
@@ -11865,7 +11865,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(SqlTypeSystem.defaultInstance, e);
   late final $MailTable mail = $MailTable(this);
   late final $CalendarTableTable calendarTable = $CalendarTableTable(this);
-  late final $EventTableTable eventTable = $EventTableTable(this);
+  late final $ActivityTableTable activityTable = $ActivityTableTable(this);
   late final $FoldersTable folders = $FoldersTable(this);
   late final $UsersTable users = $UsersTable(this);
   late final $AccountsTable accounts = $AccountsTable(this);
@@ -11884,7 +11884,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   List<DatabaseSchemaEntity> get allSchemaEntities => [
         mail,
         calendarTable,
-        eventTable,
+        activityTable,
         folders,
         users,
         accounts,

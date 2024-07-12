@@ -16,12 +16,31 @@ enum ActivityType{
 extension ActivityTypeX on ActivityType {
   bool get isEvent => this == ActivityType.event;
   bool get isTask => this == ActivityType.task;
+  String get stringCode{
+    switch (this){
+      case ActivityType.event:
+        return "VEVENT";
+      case ActivityType.task:
+        return "VTODO";
+    }
+  }
+}
+
+extension ActivityTypeMapper on ActivityType {
+  static ActivityType? fromString(String string){
+    switch(string){
+      case "VTODO":
+        return ActivityType.task;
+      case "VEVENT":
+        return ActivityType.event;
+      default: return null;
+    }
+  }
 }
 
 
 abstract class Activity implements ActivityBase{
   bool get onceLoaded;
-  ActivityType? get activityType;
   String? get organizer;
   bool? get appointment;
   int? get appointmentAccess;

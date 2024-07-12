@@ -16,8 +16,8 @@ class ActivityBase {
     required this.synced
   });
 
-  EventDb toDb() {
-    return EventDb(
+  ActivityDb toDb() {
+    return ActivityDb(
         calendarId: calendarId,
         userLocalId: userLocalId,
         uid: uid,

@@ -73,6 +73,10 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
     );
 
     final queryResult = await calendarModule.post(body) as List;
+    queryResult.forEach((element) {
+      print('${element['type']} - ${element['uid']}');
+    });
+
     final result = <Activity>[];
     for (final rawEvent in queryResult) {
       try {
@@ -80,8 +84,11 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
         activities.firstWhereOrNull((e) => rawEvent['uid'] == e.uid);
         if (baseEvent == null)
           throw Exception('event info not found from Event from server');
-
-        result.add(EventMapper.synchronise(newData: rawEvent as Map<String, dynamic>, base: baseEvent));
+        final synchronisedActivity = EventMapper.synchronise(newData: rawEvent as Map<String, dynamic>, base: baseEvent);
+        if(synchronisedActivity == null) {
+          throw Exception('Unknown activity type');
+        }
+        result.add(synchronisedActivity);
       } catch (e, st) {
         print(e);
         print(st);
