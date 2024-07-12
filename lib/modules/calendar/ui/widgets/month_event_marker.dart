@@ -16,7 +16,7 @@ class MonthEventMarker extends StatelessWidget {
       required this.currentDate,
       this.eventGap = 2});
 
-  final DisplayableOnCalendar? event;
+  final ViewEvent? event;
   final double eventGap;
   final double height;
   final DateTime currentDate;

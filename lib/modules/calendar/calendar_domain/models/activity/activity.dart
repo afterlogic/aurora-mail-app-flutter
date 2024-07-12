@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/activity_base.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/attendee.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/days_of_week.dart';
@@ -6,7 +8,24 @@ import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/rec
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/reminders_option.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/rrule.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/update_status.dart';
+import 'package:aurora_mail/modules/calendar/ui/models/displayable.dart';
 
+abstract class ActivityCreationData {
+  String get subject;
+   String? get description;
+   String? get location;
+   String get calendarId;
+   DateTime? get startDate;
+   DateTime? get endDate;
+   Set<RemindersOption> get reminders;
+   bool? get allDay;
+   RecurrenceMode get recurrenceMode;
+   DateTime? get recurrenceUntilDate;
+   EveryWeekFrequency? get recurrenceWeeklyFrequency;
+   Set<DaysOfWeek>? get recurrenceWeekDays;
+   Set<Attendee> get attendees;
+  ActivityCreationData copyWith({DateTime? startDate, DateTime? endDate});
+}
 
 enum ActivityType{
   event,
@@ -64,6 +83,8 @@ abstract class Activity implements ActivityBase{
   EveryWeekFrequency? get recurrenceWeeklyFrequency;
   Set<DaysOfWeek>? get recurrenceWeekDays;
   Set<Attendee>? get attendees;
+
+  Displayable? toDisplayable({required Color color});
 
   ActivityBase copyWith({String? organizer,
     bool? appointment,

@@ -73,9 +73,6 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
     );
 
     final queryResult = await calendarModule.post(body) as List;
-    queryResult.forEach((element) {
-      print('${element['type']} - ${element['uid']}');
-    });
 
     final result = <Activity>[];
     for (final rawEvent in queryResult) {

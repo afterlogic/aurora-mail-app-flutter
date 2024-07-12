@@ -25,7 +25,7 @@ class DeleteEvent extends EventBlocEvent{
 }
 
 class SelectEvent extends EventBlocEvent{
-  final DisplayableOnCalendar? event;
+  final ViewEvent? event;
   const SelectEvent(this.event);
   @override
   List<Object?> get props => [event];

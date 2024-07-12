@@ -40,12 +40,7 @@ class EventsBloc extends Bloc<EventBlocEvent, EventsState> {
   }
 
   _onSelectEvent(SelectEvent event, emit) async {
-    print(event.event.runtimeType);
-    print(event.event is DisplayableOnCalendar);
-    print(event.event is ViewEvent);
-    /// Now only two variants: ViewEvent and ViewTask
-    // if()
-    // emit(state.copyWith(selectedEvent: () => event.event));
+    emit(state.copyWith(selectedEvent: () => event.event));
   }
 
   _onUpdateEvent(UpdateEvent event, emit) async {
@@ -61,7 +56,7 @@ class EventsBloc extends Bloc<EventBlocEvent, EventsState> {
 
   _onDeleteEvent(DeleteEvent event, emit) async {
     try {
-      // await _useCase.deleteEvent(state.selectedEvent!);
+      await _useCase.deleteEvent(state.selectedEvent!);
       emit(state.copyWith(selectedEvent: () => null));
     } catch (e, st) {
       emit(state.copyWith(status: EventsStatus.error));

@@ -6,6 +6,7 @@ import 'package:aurora_mail/modules/calendar/calendar_domain/models/calendar.dar
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/event.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/calendar.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/event.dart';
+import 'package:aurora_mail/modules/calendar/ui/models/task.dart';
 import 'package:aurora_mail/modules/calendar/utils/events_grid_builder.dart';
 import 'package:collection/collection.dart';
 import 'package:rxdart/rxdart.dart';
@@ -27,6 +28,9 @@ class CalendarUseCaseImpl implements CalendarUseCase {
   final BehaviorSubject<List<ViewEvent>> _eventsSubject =
       BehaviorSubject.seeded([]);
 
+  final BehaviorSubject<List<ViewTask>> _tasksSubject =
+  BehaviorSubject.seeded([]);
+
   set setLocation(tz.Location? location) => _location = location;
 
   List<String> get selectedCalendarIds => _calendarsSubject.value
@@ -40,6 +44,9 @@ class CalendarUseCaseImpl implements CalendarUseCase {
 
   @override
   ValueStream<List<ViewEvent>> get eventsSubscription => _eventsSubject.stream;
+
+  @override
+  ValueStream<List<ViewTask>> get tasksSubscription => _tasksSubject.stream;
 
   @override
   Future<void> createCalendar(CalendarCreationData data) async {

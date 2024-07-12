@@ -10,9 +10,12 @@ import 'package:aurora_mail/modules/calendar/calendar_domain/models/event_base.d
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/every_week_frequency.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/rrule.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/update_status.dart';
+import 'package:aurora_mail/modules/calendar/ui/models/displayable.dart';
+import 'package:aurora_mail/modules/calendar/ui/models/event.dart';
 import 'package:collection/collection.dart';
+import 'package:flutter/material.dart';
 
-class EventCreationData {
+class EventCreationData implements ActivityCreationData{
   final String subject;
   final String? description;
   final String? location;
@@ -430,5 +433,47 @@ class Event implements Activity {
             ? this.recurrenceWeeklyFrequency
             : recurrenceWeeklyFrequency(),
         attendees: attendees ?? this.attendees);
+  }
+
+  @override
+  Displayable? toDisplayable({required Color color}) {
+    try {
+      return ViewEvent(
+          startDate: this.startTS!,
+          endDate: this.endTS!,
+          calendarId: this.calendarId,
+          title: this.subject!,
+          attendees: this.attendees,
+          color: color,
+          recurrenceId: this.recurrenceId!,
+          uid: this.uid,
+          userLocalId: this.userLocalId,
+          updateStatus: this.updateStatus,
+          synced: this.synced,
+          onceLoaded: this.onceLoaded,
+          organizer: this.organizer,
+          appointment: this.appointment,
+          appointmentAccess: this.appointmentAccess,
+          subject: this.subject,
+          description: this.description,
+          location: this.location,
+          startTS: this.startTS,
+          endTS: this.endTS,
+          allDay: this.allDay,
+          owner: this.owner,
+          modified: this.modified,
+          lastModified: this.lastModified,
+          rrule: this.rrule,
+          status: this.status,
+          withDate: this.withDate,
+          isPrivate: this.isPrivate,
+          reminders: this.reminders,
+          recurrenceMode: this.recurrenceMode,
+          recurrenceUntilDate: this.recurrenceUntilDate,
+          recurrenceWeekDays: this.recurrenceWeekDays,
+          recurrenceWeeklyFrequency: this.recurrenceWeeklyFrequency);
+    } catch (e, s) {
+      return null;
+    }
   }
 }

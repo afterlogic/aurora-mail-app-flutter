@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ui';
 
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/activity.dart';
@@ -10,6 +11,57 @@ import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/rec
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/reminders_option.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/rrule.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/update_status.dart';
+import 'package:aurora_mail/modules/calendar/ui/models/displayable.dart';
+import 'package:aurora_mail/modules/calendar/ui/models/task.dart';
+
+class TaskCreationData implements ActivityCreationData{
+  final String subject;
+  final String? description;
+  final String? location;
+  final String calendarId;
+  final DateTime? startDate;
+  final DateTime? endDate;
+  final Set<RemindersOption> reminders;
+  final bool? allDay;
+  final RecurrenceMode recurrenceMode;
+  final DateTime? recurrenceUntilDate;
+  final EveryWeekFrequency? recurrenceWeeklyFrequency;
+  final Set<DaysOfWeek>? recurrenceWeekDays;
+  final Set<Attendee> attendees;
+
+  const TaskCreationData(
+      {required this.subject,
+        this.description,
+        this.location,
+        required this.calendarId,
+        required this.startDate,
+        required this.endDate,
+        required this.reminders,
+        required this.allDay,
+        required this.recurrenceMode,
+        this.recurrenceUntilDate,
+        this.recurrenceWeeklyFrequency,
+        this.recurrenceWeekDays,
+        required this.attendees});
+
+  TaskCreationData copyWith({DateTime? startDate, DateTime? endDate}) {
+    return TaskCreationData(
+        startDate: startDate ?? this.startDate,
+        endDate: endDate ?? this.endDate,
+        subject: subject,
+        description: description,
+        location: location,
+        recurrenceUntilDate: recurrenceUntilDate,
+        recurrenceWeeklyFrequency: recurrenceWeeklyFrequency,
+        recurrenceWeekDays: recurrenceWeekDays,
+        attendees: attendees,
+        calendarId: calendarId,
+        reminders: reminders,
+        allDay: allDay,
+        recurrenceMode: recurrenceMode);
+  }
+}
+
 
 class Task implements Activity {
   final String uid;
@@ -110,7 +162,36 @@ class Task implements Activity {
   }
 
   @override
-  Task copyWith({String? organizer, bool? appointment, int? appointmentAccess, String? calendarId, int? userLocalId, String? uid, String? subject, String? description, String? location, DateTime? startTS, DateTime? endTS, bool? allDay, String? owner, bool? modified, int? recurrenceId, int? lastModified, Rrule? rrule, bool? status, bool? withDate, bool? isPrivate, UpdateStatus? updateStatus, bool? synced, bool? onceLoaded, Set<Attendee>? attendees, RecurrenceMode? Function()? recurrenceMode, DateTime? Function()? recurrenceUntilDate, EveryWeekFrequency? Function()? recurrenceWeeklyFrequency, Set<DaysOfWeek>? Function()? recurrenceWeekDays, Set<RemindersOption>? reminders}) {
+  Task copyWith(
+      {String? organizer,
+      bool? appointment,
+      int? appointmentAccess,
+      String? calendarId,
+      int? userLocalId,
+      String? uid,
+      String? subject,
+      String? description,
+      String? location,
+      DateTime? startTS,
+      DateTime? endTS,
+      bool? allDay,
+      String? owner,
+      bool? modified,
+      int? recurrenceId,
+      int? lastModified,
+      Rrule? rrule,
+      bool? status,
+      bool? withDate,
+      bool? isPrivate,
+      UpdateStatus? updateStatus,
+      bool? synced,
+      bool? onceLoaded,
+      Set<Attendee>? attendees,
+      RecurrenceMode? Function()? recurrenceMode,
+      DateTime? Function()? recurrenceUntilDate,
+      EveryWeekFrequency? Function()? recurrenceWeeklyFrequency,
+      Set<DaysOfWeek>? Function()? recurrenceWeekDays,
+      Set<RemindersOption>? reminders}) {
     return Task(
         organizer: organizer ?? this.organizer,
         appointment: appointment ?? this.appointment,
@@ -137,7 +218,7 @@ class Task implements Activity {
         onceLoaded: onceLoaded ?? this.onceLoaded,
         reminders: reminders ?? this.reminders,
         recurrenceMode:
-        recurrenceMode == null ? this.recurrenceMode : recurrenceMode(),
+            recurrenceMode == null ? this.recurrenceMode : recurrenceMode(),
         recurrenceUntilDate: recurrenceUntilDate == null
             ? this.recurrenceUntilDate
             : recurrenceUntilDate(),
@@ -148,5 +229,40 @@ class Task implements Activity {
             ? this.recurrenceWeeklyFrequency
             : recurrenceWeeklyFrequency(),
         attendees: attendees ?? this.attendees);
+  }
+
+  @override
+  Displayable toDisplayable({required Color color}) {
+    return ViewTask(
+        calendarId: this.calendarId,
+        attendees: this.attendees,
+        color: color,
+        recurrenceId: this.recurrenceId!,
+        uid: this.uid,
+        userLocalId: this.userLocalId,
+        updateStatus: this.updateStatus,
+        synced: this.synced,
+        onceLoaded: this.onceLoaded,
+        organizer: this.organizer,
+        appointment: this.appointment,
+        appointmentAccess: this.appointmentAccess,
+        subject: this.subject,
+        description: this.description,
+        location: this.location,
+        startTS: this.startTS,
+        endTS: this.endTS,
+        allDay: this.allDay,
+        owner: this.owner,
+        modified: this.modified,
+        lastModified: this.lastModified,
+        rrule: this.rrule,
+        status: this.status,
+        withDate: this.withDate,
+        isPrivate: this.isPrivate,
+        reminders: this.reminders,
+        recurrenceMode: this.recurrenceMode,
+        recurrenceUntilDate: this.recurrenceUntilDate,
+        recurrenceWeekDays: this.recurrenceWeekDays,
+        recurrenceWeeklyFrequency: this.recurrenceWeeklyFrequency);
   }
 }

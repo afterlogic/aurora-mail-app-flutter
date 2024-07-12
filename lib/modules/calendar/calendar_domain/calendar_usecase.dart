@@ -6,6 +6,7 @@ import 'package:aurora_mail/modules/calendar/calendar_domain/models/event.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain_impl/calendar_usecase_impl.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/calendar.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/event.dart';
+import 'package:aurora_mail/modules/calendar/ui/models/task.dart';
 import 'package:rxdart/streams.dart';
 import 'package:timezone/timezone.dart' as tz;
 
@@ -23,6 +24,8 @@ abstract class CalendarUseCase {
   ValueStream<List<ViewCalendar>> get calendarsSubscription;
 
   ValueStream<List<ViewEvent>> get eventsSubscription;
+
+  ValueStream<List<ViewTask>> get tasksSubscription;
 
   Future<void> syncCalendars();
 
