@@ -5,6 +5,7 @@ import 'package:aurora_mail/modules/calendar/ui/screens/event_creation_page.dart
 import 'package:aurora_mail/modules/calendar/ui/views/day_view.dart';
 import 'package:aurora_mail/modules/calendar/ui/views/list_events_view.dart';
 import 'package:aurora_mail/modules/calendar/ui/views/month_view.dart';
+import 'package:aurora_mail/modules/calendar/ui/views/tasks_view.dart';
 import 'package:aurora_mail/modules/calendar/ui/views/week_view.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/calendar_drawer.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/calendar_tab.dart';
@@ -96,7 +97,14 @@ class _CalendarPageState extends State<CalendarPage>
                         index: 2),
                     const SizedBox(
                       width: 16,
-                    ),
+                    )
+                    // ,CalendarTab(
+                    //     title: 'Tasks',
+                    //     controller: _tabController,
+                    //     index: 3),
+                    // const SizedBox(
+                    //   width: 16,
+                    // ),
                   ],
                 ),
               )
@@ -110,6 +118,7 @@ class _CalendarPageState extends State<CalendarPage>
                     MonthView(),
                     WeekView(),
                     DayView(),
+                    // TasksView(),
                   ]),
             )
           ],
