@@ -6,6 +6,8 @@ import 'package:aurora_mail/modules/calendar/ui/screens/calendar_page.dart';
 import 'package:aurora_mail/modules/calendar/ui/screens/calendar_route.dart';
 import 'package:aurora_mail/modules/calendar/ui/screens/event_creation_page.dart';
 import 'package:aurora_mail/modules/calendar/ui/screens/event_view_page.dart';
+import 'package:aurora_mail/modules/calendar/ui/screens/task_view_page.dart';
+import 'package:aurora_mail/modules/calendar/ui/views/tasks_view.dart';
 import 'auth/screens/backup_code_auth/backup_code_auth_route.dart';
 import 'auth/screens/fido_auth/fido_auth.dart';
 import 'auth/screens/fido_auth/fido_auth_route.dart';
@@ -172,6 +174,12 @@ class RouteGenerator {
         return FadeRoute(
             settings: RouteSettings(name: settings.name),
             builder: (_) => EventViewPage());
+        break;
+
+      case TaskViewPage.name:
+        return FadeRoute(
+            settings: RouteSettings(name: settings.name),
+            builder: (_) => TaskViewPage());
         break;
 
       case EventCreationPage.name:
