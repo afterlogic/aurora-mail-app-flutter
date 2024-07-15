@@ -7,6 +7,7 @@ import 'package:aurora_mail/modules/calendar/calendar_domain/models/event.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/calendar.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/event.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/task.dart';
+import 'package:aurora_mail/modules/calendar/utils/date_time_ext.dart';
 import 'package:aurora_mail/modules/calendar/utils/events_grid_builder.dart';
 import 'package:collection/collection.dart';
 import 'package:rxdart/rxdart.dart';
@@ -161,8 +162,10 @@ class CalendarUseCaseImpl implements CalendarUseCase {
 
   Future<void> _getLocalEvents() async {
     if (_selectedStartEventsInterval == null ||
-        _selectedEndEventsInterval == null)
-      throw Exception('Select date interval');
+        _selectedEndEventsInterval == null){
+          _selectedStartEventsInterval = DateTime.now().firstDayOfMonth;
+          _selectedEndEventsInterval = DateTime.now().lastDayOfMonth;
+        }
     final allEvents = await repository.getEventsForPeriod(
       start: _selectedStartEventsInterval!,
       end: _selectedEndEventsInterval!,
