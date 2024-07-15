@@ -18,6 +18,13 @@ import 'package:aurora_mail/modules/calendar/ui/dialogs/reminders_dialog.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/calendar.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/event.dart';
 import 'package:aurora_mail/modules/calendar/ui/screens/attendees_page.dart';
+import 'package:aurora_mail/modules/calendar/ui/widgets/activity/calendar_section.dart';
+import 'package:aurora_mail/modules/calendar/ui/widgets/activity/editable_attendees_section.dart';
+import 'package:aurora_mail/modules/calendar/ui/widgets/activity/editable_date_info.dart';
+import 'package:aurora_mail/modules/calendar/ui/widgets/activity/editable_recurrence_section.dart';
+import 'package:aurora_mail/modules/calendar/ui/widgets/activity/editable_reminders_section.dart';
+import 'package:aurora_mail/modules/calendar/ui/widgets/activity/main_info.dart';
+import 'package:aurora_mail/modules/calendar/ui/widgets/activity/section_divider.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/attendee_card.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/calendar_tile.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/date_time_tile.dart';
@@ -86,7 +93,8 @@ class _EventCreationPageState extends State<EventCreationPage> {
     _selectedCalendar =
         _calendarsBloc.state.availableCalendars(_currentUserMail).firstOrNull;
     _titleController = TextEditingController();
-    _selectedStartDate = DateTime.now().copyWith(second: 0,millisecond: 0, microsecond: 0);
+    _selectedStartDate =
+        DateTime.now().copyWith(second: 0, millisecond: 0, microsecond: 0);
     _selectedEndDate = _selectedStartDate.add(Duration(minutes: 30));
     _descriptionController = TextEditingController();
     _locationController = TextEditingController();
@@ -182,359 +190,123 @@ class _EventCreationPageState extends State<EventCreationPage> {
                 padding: const EdgeInsets.all(24),
                 child: Column(
                   children: [
-                    BlocBuilder<CalendarsBloc, CalendarsState>(
-                      bloc: _calendarsBloc,
-                      builder: (context, state) {
-                        return GestureDetector(
-                          onTap: () {
-                            CalendarSelectDialog.show(context,
-                                    initialValue: _selectedCalendar,
-                                    options: state
-                                        .availableCalendars(_currentUserMail))
-                                .then((value) {
-                              if (value != null) _selectedCalendar = value;
-                              setState(() {});
-                            });
-                          },
-                          child: (_selectedCalendar != null)
-                              ? CalendarTile(
-                                  circleColor: _selectedCalendar!.color,
-                                  text: _selectedCalendar!.name)
-                              : TextButton(
-                                  onPressed: null,
-                                  child: Text('Select calendar')),
-                        );
+                    CalendarSection(
+                      calendarId: _selectedCalendar?.id,
+                      isEditable: true,
+                      selectedCalendar: _selectedCalendar,
+                      currentUserMail: _currentUserMail,
+                      selectCalendarCallback: (value) {
+                        _selectedCalendar = value;
+                        setState(() {});
                       },
                     ),
                     const SizedBox(
                       height: 20,
                     ),
-                    TextInput(
-                      controller: _titleController,
-                      labelText: 'Title',
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter text';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    TextInput(
-                      multiLine: true,
-                      controller: _descriptionController,
-                      labelText: 'Description',
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    TextInput(
-                      multiLine: true,
-                      controller: _locationController,
-                      labelText: 'Location',
+                    MainInfo(
+                      descriptionController: _descriptionController,
+                      locationController: _locationController,
+                      titleController: _titleController,
+                      isEditable: true,
                     ),
                   ],
                 ),
               ),
-              const Divider(
-                color: const Color(0xFFB6B5B5),
-                height: 1,
-              ),
+              const SectionDivider(),
               Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                  child: SectionWithIcon(
-                      icon: Padding(
-                        padding: const EdgeInsets.only(top: 4.0),
-                        child: Icon(
-                          Icons.access_time_rounded,
-                          size: 15,
-                        ),
-                      ),
-                      children: [
-                        Row(
-                          children: [
-                            Text(
-                              'All day',
-                            ),
-                            Spacer(),
-                            Checkbox(
-                                value: _isAllDay,
-                                onChanged: (value) {
-                                  _isAllDay = value ?? false;
-                                  setState(() {});
-                                },
-                                materialTapTargetSize:
-                                    MaterialTapTargetSize.shrinkWrap,
-                                visualDensity:
-                                    VisualDensity(horizontal: -4, vertical: -4))
-                          ],
-                        ),
-                        const SizedBox(
-                          height: 16,
-                        ),
-                        DateTimeTile(
-                          dateTime: _selectedStartDate,
-                          onChanged: (DateTime value) {
-                            setState(() {
-                              _selectedStartDate = value;
-                            });
-                          },
-                          isAllDay: _isAllDay,
-                        ),
-                        const SizedBox(
-                          height: 16,
-                        ),
-                        Builder(builder: (context) {
-                          return DateTimeTile(
-                            dateTime: _selectedEndDate,
-                            onChanged: (DateTime value) {
-                              if (value.isBefore(_selectedStartDate)) {
-                                showErrorSnack(
-                                  context: context,
-                                  scaffoldState: _scaffoldKey.currentState,
-                                  msg: ErrorToShow.message(
-                                      'End date must be after start date'),
-                                );
-                              } else {
-                                setState(() {
-                                  _selectedEndDate = value;
-                                });
-                              }
-                            },
-                            isAllDay: _isAllDay,
-                          );
-                        })
-                      ])),
-              const Divider(
-                color: const Color(0xFFB6B5B5),
-                height: 1,
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                child: EditableDateInfo(
+                  isAllDay: _isAllDay,
+                  selectedStartDate: _selectedStartDate,
+                  selectedEndDate: _selectedEndDate,
+                  isAllDayChangedCallback: (value) {
+                    _isAllDay = value;
+                    setState(() {});
+                  },
+                  selectedStartDateChangedCallback: (value) {
+                    _selectedStartDate = value;
+                    setState(() {});
+                  },
+                  selectedEndDateChangedCallback: (value) {
+                    _selectedEndDate = value;
+                    setState(() {});
+                  },
+                  scaffoldKey: _scaffoldKey,
+                ),
               ),
+              const SectionDivider(),
               Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
-                  child: SectionWithIcon(
-                    children: [
-                      Row(
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              RecurrenceModeSelectDialog.show(context,
-                                      selectedOption: _selectedRecurrenceMode)
-                                  .then((value) {
-                                if (value == null) return;
-                                _selectedRecurrenceMode = value;
-                                setState(() {});
-                              });
-                            },
-                            child: Text(
-                              _selectedRecurrenceMode.buildString(context),
-                              style: TextStyle(),
-                            ),
-                          ),
-                          Spacer(),
-                          if (_selectedRecurrenceMode.isUntilOptionAvailable)
-                            GestureDetector(
-                              onTap: () {
-                                if (_selectedRecurrenceMode ==
-                                    RecurrenceMode.daily) {
-                                  DailyRecurrenceSelectDialog.show(context,
-                                      untilDate: _selectedUntilDate,
-                                      onSaveCallback: (DateTime? untilDate) {
-                                    _selectedUntilDate = untilDate;
-                                    setState(() {});
-                                  });
-                                }
-                                if (_selectedRecurrenceMode ==
-                                    RecurrenceMode.weekly) {
-                                  WeeklyRecurrenceSelectDialog.show(context,
-                                      frequency: _selectedWeeklyFrequency,
-                                      selectedDays: _selectedWeekDaysRepeat,
-                                      untilDate: _selectedUntilDate,
-                                      onSaveCallback: (DateTime? untilDate,
-                                          EveryWeekFrequency? frequency,
-                                          Set<DaysOfWeek>? selectedDays) {
-                                    _selectedUntilDate = untilDate;
-                                    _selectedWeeklyFrequency = frequency;
-                                    _selectedWeekDaysRepeat = selectedDays;
-                                    setState(() {});
-                                  });
-                                }
-                              },
-                              child: _selectedUntilDate == null
-                                  ? Text(
-                                      'Always',
-                                    )
-                                  : Text(
-                                      'until ${DateFormat('yyyy/MM/dd').format(_selectedUntilDate!)}'),
-                            ),
-                        ],
-                      ),
-                    ],
-                    icon: Icon(
-                      Icons.sync,
-                      size: 15,
-                    ),
+                  child: EditableRecurrenceSection(
+                    selectedUntilDate: _selectedUntilDate,
+                    selectedWeekDaysRepeat: _selectedWeekDaysRepeat,
+                    recurrencySaveCallback: (DateTime? untilDate,
+                        EveryWeekFrequency? frequency,
+                        Set<DaysOfWeek>? selectedDays) {
+                      _selectedUntilDate = untilDate;
+                      _selectedWeeklyFrequency = frequency;
+                      _selectedWeekDaysRepeat = selectedDays;
+                      setState(() {});
+                    },
+                    selectedDateSaveCallback: (DateTime? untilDate) {
+                      _selectedUntilDate = untilDate;
+                      setState(() {});
+                    },
+                    selectedRecurrenceMode: _selectedRecurrenceMode,
+                    selectedRecurrenceModeCallback: (RecurrenceMode mode) {
+                      _selectedRecurrenceMode = mode;
+                      setState(() {});
+                    },
+                    selectedWeeklyFrequency: _selectedWeeklyFrequency,
                   )),
-              const Divider(
-                color: const Color(0xFFB6B5B5),
-                height: 1,
-              ),
+              const SectionDivider(),
+              Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                  child: EditableRemindersSection(
+                    onAddCallback: (RemindersOption option) {
+                      if (_selectedReminders.contains(option)) {
+                        _selectedReminders.remove(option);
+                      } else {
+                        _selectedReminders.add(option);
+                      }
+                      setState(() {});
+                    },
+                    onDeleteCallback: (RemindersOption option) {
+                      _selectedReminders.remove(option);
+                      setState(() {});
+                    },
+                    selectedReminders: _selectedReminders,
+                  )),
+              const SectionDivider(),
               Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                child: SectionWithIcon(
-                  children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(
-                              top: _selectedReminders.length > 1 ? 0.0 : 6.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              if (_selectedReminders.isEmpty)
-                                Text(
-                                  'Reminders',
-                                ),
-                              ..._selectedReminders
-                                  .map((e) => Padding(
-                                        padding:
-                                            const EdgeInsets.only(bottom: 4.0),
-                                        child: Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Text('${e.buildString} before'),
-                                            GestureDetector(
-                                              onTap: () {
-                                                _selectedReminders.remove(e);
-                                                setState(() {});
-                                              },
-                                              child: Padding(
-                                                padding: const EdgeInsets.only(
-                                                    left: 4.0),
-                                                child: Icon(
-                                                  Icons.close,
-                                                  size: 12,
-                                                  color: Colors.grey,
-                                                ),
-                                              ),
-                                            )
-                                          ],
-                                        ),
-                                      ))
-                                  .toList()
-                            ],
-                          ),
-                        ),
-                        const Spacer(),
-                        GestureDetector(
-                            onTap: () {
-                              RemindersDialog.show(context,
-                                      selectedOptions: _selectedReminders)
-                                  .then((value) {
-                                if (value == null) return;
-                                if (_selectedReminders.contains(value)) {
-                                  _selectedReminders.remove(value);
-                                } else {
-                                  _selectedReminders.add(value);
-                                }
-                                setState(() {});
-                              });
-                            },
-                            child: const _AddIcon()),
-                      ],
-                    ),
-                  ],
-                  icon: Padding(
-                    padding: EdgeInsets.only(
-                        top: _selectedReminders.length > 1 ? 0.0 : 6.0),
-                    child: Icon(
-                      Icons.notifications_none,
-                      size: 15,
-                    ),
-                  ),
-                ),
-              ),
-              const Divider(
-                color: const Color(0xFFB6B5B5),
-                height: 1,
-              ),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.group,
-                          size: 15,
-                        ),
-                        const SizedBox(
-                          width: 8,
-                        ),
-                        Text(
-                          'Attendees',
-                        ),
-                        const Spacer(),
-                        GestureDetector(
-                            onTap: () => Navigator.of(context)
-                                    .pushNamed(AttendeesPage.name,
-                                        arguments: AttendeesRouteArg(
-                                            initAttendees: Set.of(_attendees)))
-                                    .then((value) {
-                                  if (value == null) return;
-                                  _attendees = Set.of(value as Set<Attendee>);
-                                  setState(() {});
-                                }),
-                            child: const _AddIcon()),
-                      ],
-                    ),
-                    Wrap(runSpacing: 4, spacing: 4, children: [
-                      ..._attendees.map(
-                        (e) => LayoutBuilder(builder: (context, constraints) {
-                          return ConstrainedBox(
-                            constraints: BoxConstraints(
-                              maxWidth: (constraints.maxWidth / 2) - 4,
-                            ),
-                            child: AttendeeCard(
-                              attendee: e,
-                              onDelete: () => setState(
-                                () {
-                                  _attendees.remove(e);
-                                },
-                              ),
-                            ),
-                          );
-                        }),
-                      ),
-                    ]),
-                  ],
+                child: EditableAttendeesSection(
+                  attendees: _attendees,
+                  onAddPressed: () {
+                    Navigator.of(context)
+                        .pushNamed(AttendeesPage.name,
+                            arguments: AttendeesRouteArg(
+                                initAttendees: Set.of(_attendees)))
+                        .then((value) {
+                      if (value == null) return;
+                      _attendees = Set.of(value as Set<Attendee>);
+                      setState(() {});
+                    });
+                  },
+                  onDeletedCallback: (Attendee attendee) {
+                    _attendees.remove(attendee);
+                    setState(() {});
+                  },
                 ),
               ),
             ],
           ),
         ),
       ),
-    );
-  }
-}
-
-class _AddIcon extends StatelessWidget {
-  const _AddIcon({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Icon(
-      Icons.add,
-      color: Theme.of(context).primaryColor,
-      size: 26,
     );
   }
 }
