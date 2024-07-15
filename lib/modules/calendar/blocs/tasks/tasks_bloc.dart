@@ -57,7 +57,7 @@ class TasksBloc extends Bloc<TasksEvent, TasksState> {
   _onLoadTasks(LoadTasks event, emit) async {
     emit(state.copyWith(status: TasksStatus.loading));
     try {
-      // TODO usecase get all tasks
+      _useCase.getTasks();
      } catch (e, st) {
       emit(state.copyWith(status: TasksStatus.error));
     } finally {

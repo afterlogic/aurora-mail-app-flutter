@@ -8,6 +8,7 @@ import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/calendar/blocs/calendars/calendars_bloc.dart';
 import 'package:aurora_mail/modules/calendar/blocs/events/events_bloc.dart';
+import 'package:aurora_mail/modules/calendar/blocs/tasks/tasks_bloc.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/calendar_repository.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/calendar_usecase.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain_impl/calendar_usecase_impl.dart';
@@ -189,87 +190,103 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
                   builder: (_, settingsState) {
                     if (settingsState is SettingsLoaded) {
                       final theme = _getTheme(settingsState.darkThemeEnabled);
-                      final calendarRepository = authState.user != null ?  CalendarRepository(
-                          user: _authBloc.currentUser,
-                          appDB: DBInstances.appDB) : null;
-                      final calendarUseCase = authState.user != null ?
-                          CalendarUseCase(repository: calendarRepository, location: settingsState.location) : null;
+                      final calendarRepository = authState.user != null
+                          ? CalendarRepository(
+                              user: _authBloc.currentUser,
+                              appDB: DBInstances.appDB)
+                          : null;
+                      final calendarUseCase = authState.user != null
+                          ? CalendarUseCase(
+                              repository: calendarRepository,
+                              location: settingsState.location)
+                          : null;
 
-                      return MultiBlocProvider(
-                        providers: [
-                          BlocProvider.value(value: _authBloc),
-                          BlocProvider.value(value: _settingsBloc),
-                          BlocProvider(
-                            create: (_) => MailBloc(
-                              user: _authBloc.currentUser,
-                              account: _authBloc.currentAccount,
+                      return RepositoryProvider.value(
+                        value: calendarUseCase,
+                        child: MultiBlocProvider(
+                          providers: [
+                            BlocProvider.value(value: _authBloc),
+                            BlocProvider.value(value: _settingsBloc),
+                            BlocProvider(
+                              create: (_) => MailBloc(
+                                user: _authBloc.currentUser,
+                                account: _authBloc.currentAccount,
+                              ),
                             ),
-                          ),
-                          if(authState.user != null)BlocProvider(
-                            create: (_) => EventsBloc(useCase: calendarUseCase),
-                          ),
-                          if(authState.user != null)BlocProvider(
-                            create: (_) =>
-                                CalendarsBloc(useCase: calendarUseCase),
-                          ),
-                          BlocProvider(
-                            create: (_) => MessagesListBloc(
-                              user: _authBloc.currentUser,
-                              account: _authBloc.currentAccount,
+                            if (authState.user != null)
+                              BlocProvider(
+                                create: (_) =>
+                                    EventsBloc(useCase: calendarUseCase),
+                              ),
+                            if (authState.user != null)
+                              BlocProvider(
+                                create: (_) =>
+                                    CalendarsBloc(useCase: calendarUseCase),
+                              ),
+                            if (authState.user != null)
+                              BlocProvider(
+                                create: (_) =>
+                                    TasksBloc(useCase: calendarUseCase),
+                              ),
+                            BlocProvider(
+                              create: (_) => MessagesListBloc(
+                                user: _authBloc.currentUser,
+                                account: _authBloc.currentAccount,
+                              ),
                             ),
-                          ),
-                          BlocProvider(
-                            create: (_) => ContactsBloc(
-                              user: _authBloc.currentUser,
-                              appDatabase: DBInstances.appDB,
-                            )..add(GetContacts()),
-                          ),
-                        ],
-                        child: MaterialApp(
-                          debugShowCheckedModeBanner: false,
-                          navigatorKey: _navKey,
-                          onGenerateTitle: (context) {
-                            final is24 =
-                                MediaQuery.of(context).alwaysUse24HourFormat;
-                            if (settingsState.is24 == null) {
-                              _settingsBloc.add(SetTimeFormat(is24));
-                            }
-                            return BuildProperty.appName;
-                          },
-                          onGenerateRoute: RouteGenerator.onGenerateRoute,
-                          theme: theme ?? AppTheme.light,
-                          darkTheme: theme ?? AppTheme.dark,
-                          localizationsDelegates: [
-                            GlobalMaterialLocalizations.delegate,
-                            GlobalWidgetsLocalizations.delegate,
-                            GlobalCupertinoLocalizations.delegate,
-                            S.delegate,
-                            // LocalizationI18nDelegate(
-                            //   forcedLocale: supportedLocales.contains(
-                            //           settingsState.language?.toLocale())
-                            //       ? settingsState.language?.toLocale()
-                            //       : null,
-                            // ),
+                            BlocProvider(
+                              create: (_) => ContactsBloc(
+                                user: _authBloc.currentUser,
+                                appDatabase: DBInstances.appDB,
+                              )..add(GetContacts()),
+                            ),
                           ],
-                          supportedLocales: BuildProperty.supportLanguage
-                              .split(",")
-                              .map((item) => Locale(item))
-                              .toList(),
-                          localeResolutionCallback: (locale, locales) {
-                            final supportedLocale = locales.firstWhere((l) {
-                              return locale != null &&
-                                  l.languageCode == locale.languageCode;
-                            }, orElse: () => null);
+                          child: MaterialApp(
+                            debugShowCheckedModeBanner: false,
+                            navigatorKey: _navKey,
+                            onGenerateTitle: (context) {
+                              final is24 =
+                                  MediaQuery.of(context).alwaysUse24HourFormat;
+                              if (settingsState.is24 == null) {
+                                _settingsBloc.add(SetTimeFormat(is24));
+                              }
+                              return BuildProperty.appName;
+                            },
+                            onGenerateRoute: RouteGenerator.onGenerateRoute,
+                            theme: theme ?? AppTheme.light,
+                            darkTheme: theme ?? AppTheme.dark,
+                            localizationsDelegates: [
+                              GlobalMaterialLocalizations.delegate,
+                              GlobalWidgetsLocalizations.delegate,
+                              GlobalCupertinoLocalizations.delegate,
+                              S.delegate,
+                              // LocalizationI18nDelegate(
+                              //   forcedLocale: supportedLocales.contains(
+                              //           settingsState.language?.toLocale())
+                              //       ? settingsState.language?.toLocale()
+                              //       : null,
+                              // ),
+                            ],
+                            supportedLocales: BuildProperty.supportLanguage
+                                .split(",")
+                                .map((item) => Locale(item))
+                                .toList(),
+                            localeResolutionCallback: (locale, locales) {
+                              final supportedLocale = locales.firstWhere((l) {
+                                return locale != null &&
+                                    l.languageCode == locale.languageCode;
+                              }, orElse: () => null);
 
-                            return supportedLocale ??
-                                locales.first ??
-                                Locale("en", "");
-                          },
-                          locale: settingsState.language?.toLocale(),
-                          initialRoute: authState.needsLogin
-                              ? LoginRoute.name
-                              : MessagesListRoute.name,
-                          navigatorObservers: [routeObserver],
+                              return supportedLocale ??
+                                  locales.first ??
+                                  Locale("en", "");
+                            },
+                            locale: settingsState.language?.toLocale(),
+                            initialRoute: authState.needsLogin
+                                ? LoginRoute.name
+                                : MessagesListRoute.name,
+                            navigatorObservers: [routeObserver],
+                          ),
                         ),
                       );
                     } else {

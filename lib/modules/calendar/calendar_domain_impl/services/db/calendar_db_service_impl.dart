@@ -15,10 +15,10 @@ import 'package:collection/collection.dart';
 class CalendarDbServiceImpl implements CalendarDbService {
   CalendarDbServiceImpl(AppDatabase db)
       : _calendarDao = CalendarDao(db),
-        _eventDao = ActivityDao(db);
+        _activityDao = ActivityDao(db);
 
   final CalendarDao _calendarDao;
-  final ActivityDao _eventDao;
+  final ActivityDao _activityDao;
 
   @override
   Future<List<Calendar>> getCalendars(int userLocalId) async {
@@ -28,16 +28,15 @@ class CalendarDbServiceImpl implements CalendarDbService {
 
   @override
   Future<void> emitChanges(List<ActivityBase> events) async {
-    return _eventDao
-        .syncEventList(events.map((e) => e.toDb()).toList());
+    return _activityDao.syncEventList(events.map((e) => e.toDb()).toList());
   }
 
   @override
   Future<void> createOrUpdateCalendar(Calendar calendar) {
     final calendarForSaving = calendar.copyWith(
         shares: calendar.shares..removeWhere((e) => e is ParticipantAll));
-    return _calendarDao
-        .createOrUpdateCalendar(CalendarMapper.toDB(calendar: calendarForSaving));
+    return _calendarDao.createOrUpdateCalendar(
+        CalendarMapper.toDB(calendar: calendarForSaving));
   }
 
   @override
@@ -45,7 +44,7 @@ class CalendarDbServiceImpl implements CalendarDbService {
     await _calendarDao.deleteCalendars(calendars.map((e) => e.id).toList());
     for (final c in calendars) {
       logger.log('DELETING CALENDAR: ${c.id}');
-      await _eventDao.deleteAllEventsFromCalendar(c.id, c.userLocalId);
+      await _activityDao.deleteAllEventsFromCalendar(c.id, c.userLocalId);
     }
   }
 
@@ -55,20 +54,19 @@ class CalendarDbServiceImpl implements CalendarDbService {
     final calendarIds = calendars.map((e) => e.id).toList();
     final userIds = calendars.map((e) => e.userLocalId).toList();
     final affectedRowsCount =
-        await _eventDao.deleteAllUnusedEvents(calendarIds, userIds);
+        await _activityDao.deleteAllUnusedEvents(calendarIds, userIds);
     logger.log('DELETED UNUSED EVENTS COUNT: $affectedRowsCount');
   }
 
   @override
   Future<void> updateEventList(List<Activity> events) {
-    return _eventDao.syncEventList(
-        events.map((e) => e.toDb()).toList(),
+    return _activityDao.syncEventList(events.map((e) => e.toDb()).toList(),
         synced: true);
   }
 
   @override
   Future<void> deleteMarkedEvents() async {
-    final deletedCount = await _eventDao.deleteMarkedEvents();
+    final deletedCount = await _activityDao.deleteMarkedEvents();
     logger.log('DELETED $deletedCount EVENTS MARKED AS DELETED: ');
   }
 
@@ -76,25 +74,42 @@ class CalendarDbServiceImpl implements CalendarDbService {
   Future<List<ActivityBase>> getNotUpdatedEvents(
       {required int? limit, required int? offset}) async {
     final result =
-        await _eventDao.getEventsWithLimit(limit: limit, offset: offset);
-    return result.map((e) => e.toActivity()).whereNotNull().where((e) => !e.synced).toList();
+        await _activityDao.getEventsWithLimit(limit: limit, offset: offset);
+    return result
+        .map((e) => e.toActivity())
+        .whereNotNull()
+        .where((e) => !e.synced)
+        .toList();
   }
 
   @override
   Future<List<Activity>> getActivitiesForPeriod(
       {required DateTime start,
       required DateTime end,
+      ActivityType? type,
       required List<String> calendarIds,
       required int userLocalId}) async {
-    final entities = await _eventDao.getForPeriod(
-      calendarIds: calendarIds,
-        start: start, end: end, userLocalId: userLocalId);
+    final entities = await _activityDao.getForPeriod(
+        calendarIds: calendarIds,
+        start: start,
+        end: end,
+        userLocalId: userLocalId);
     return entities.map((e) => e.toActivity()).whereType<Activity>().toList();
   }
 
   @override
-  Future<void> clearData() async{
+  Future<List<Activity>> getActivities(
+      {required List<String> calendarIds, ActivityType? type, required int userLocalId}) async {
+    final entities = await _activityDao.getAll(
+        calendarIds: calendarIds,
+        type: type,
+        userLocalId: userLocalId);
+    return entities.map((e) => e.toActivity()).whereType<Activity>().toList();
+  }
+
+  @override
+  Future<void> clearData() async {
     await _calendarDao.deleteAllCalendars();
-    await _eventDao.deleteAllEvents();
+    await _activityDao.deleteAllEvents();
   }
 }

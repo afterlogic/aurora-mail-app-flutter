@@ -34,6 +34,12 @@ abstract class CalendarDbService {
       required List<String> calendarIds,
       required int userLocalId});
 
+  Future<List<Activity>> getActivities(
+      {
+        required List<String> calendarIds,
+        ActivityType? type,
+        required int userLocalId});
+
   //TODO get tasks for period
 
   //TODO get all tasks 

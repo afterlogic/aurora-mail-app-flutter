@@ -33,7 +33,7 @@ class _CalendarPageState extends State<CalendarPage>
     super.initState();
     _calendarsBloc = BlocProvider.of<CalendarsBloc>(context);
     _tabController = TabController(
-        length: 3,
+        length: 4,
         vsync: this,
         initialIndex: _calendarsBloc.state.selectedTabIndex ?? 0);
     BlocProvider.of<CalendarsBloc>(context).add(GetCalendars());
@@ -98,13 +98,13 @@ class _CalendarPageState extends State<CalendarPage>
                     const SizedBox(
                       width: 16,
                     )
-                    // ,CalendarTab(
-                    //     title: 'Tasks',
-                    //     controller: _tabController,
-                    //     index: 3),
-                    // const SizedBox(
-                    //   width: 16,
-                    // ),
+                    ,CalendarTab(
+                        title: 'Tasks',
+                        controller: _tabController,
+                        index: 3),
+                    const SizedBox(
+                      width: 16,
+                    ),
                   ],
                 ),
               )
@@ -115,10 +115,10 @@ class _CalendarPageState extends State<CalendarPage>
                   controller: _tabController,
                   physics: const NeverScrollableScrollPhysics(),
                   children: [
-                    MonthView(),
-                    WeekView(),
-                    DayView(),
-                    // TasksView(),
+                    const MonthView(),
+                    const WeekView(),
+                    const DayView(),
+                    const TasksView(),
                   ]),
             )
           ],

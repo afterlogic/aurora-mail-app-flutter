@@ -10,6 +10,8 @@ import 'package:flutter/material.dart';
 
 abstract class Displayable extends Activity{
   Color get color;
+  DateTime? get startDate;
+  DateTime? get endDate;
   Displayable copyWith({ Color? color, String? organizer,
     bool? appointment,
     int? appointmentAccess,

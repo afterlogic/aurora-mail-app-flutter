@@ -1,4 +1,5 @@
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/activity.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/update_status.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain_impl/services/db/activity/activity_table.dart';
 import 'package:drift/drift.dart';
@@ -6,7 +7,8 @@ import 'package:drift/drift.dart';
 part 'activity_dao.g.dart';
 
 @DriftAccessor(tables: [ActivityTable])
-class ActivityDao extends DatabaseAccessor<AppDatabase> with _$ActivityDaoMixin {
+class ActivityDao extends DatabaseAccessor<AppDatabase>
+    with _$ActivityDaoMixin {
   ActivityDao(AppDatabase db) : super(db);
 
   Future<List<ActivityDb>> getAllEventsFromCalendar(
@@ -54,7 +56,8 @@ class ActivityDao extends DatabaseAccessor<AppDatabase> with _$ActivityDaoMixin 
                   tbl.calendarId.equals(event.calendarId) &
                   tbl.userLocalId.equals(event.userLocalId)))
             .write(companion.copyWith(
-                synced: Value(synced),));
+          synced: Value(synced),
+        ));
       } finally {
         if (event.updateStatus.isDeleted) {
           await (deleteEvent(
@@ -93,19 +96,41 @@ class ActivityDao extends DatabaseAccessor<AppDatabase> with _$ActivityDaoMixin 
   Future<List<ActivityDb>> getForPeriod(
       {required DateTime start,
       required DateTime end,
+      ActivityType? type,
       required List<String> calendarIds,
       required int userLocalId}) {
-    return (select(activityTable)
-          ..where((t) =>
-              t.userLocalId.equals(userLocalId) &
-              t.calendarId.isIn(calendarIds) &
-              t.onceLoaded.equals(true) &
-              t.startTS.isBiggerOrEqualValue(start) &
-              t.endTS.isSmallerThanValue(end))
-          ..orderBy([
-            (t) => OrderingTerm(expression: t.startTS),
-          ]))
-        .get();
+    final activitySelect = select(activityTable);
+    if (type != null) {
+      activitySelect.where((t) => t.type.equals(type.index));
+    }
+    activitySelect.where((t) =>
+        t.userLocalId.equals(userLocalId) &
+        t.calendarId.isIn(calendarIds) &
+        t.onceLoaded.equals(true) &
+        t.startTS.isBiggerOrEqualValue(start) &
+        t.endTS.isSmallerThanValue(end));
+    activitySelect.orderBy([
+      (t) => OrderingTerm(expression: t.startTS),
+    ]);
+    return activitySelect.get();
+  }
+
+  Future<List<ActivityDb>> getAll(
+      {ActivityType? type,
+      required List<String> calendarIds,
+      required int userLocalId}) {
+    final activitySelect = select(activityTable);
+    if (type != null) {
+      activitySelect.where((t) => t.type.equals(type.index));
+    }
+    activitySelect.where((t) =>
+        t.userLocalId.equals(userLocalId) &
+        t.calendarId.isIn(calendarIds) &
+        t.onceLoaded.equals(true));
+    activitySelect.orderBy([
+      (t) => OrderingTerm(expression: t.startTS),
+    ]);
+    return activitySelect.get();
   }
 
   Future<void> deleteAllEvents([int? userLocalId]) async {

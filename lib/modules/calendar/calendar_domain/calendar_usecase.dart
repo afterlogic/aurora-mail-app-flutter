@@ -29,6 +29,8 @@ abstract class CalendarUseCase {
 
   Future<void> syncCalendars();
 
+  Future<void> getTasks();
+
   Future<void> getForPeriod({required DateTime start, required DateTime end});
 
   Future<void> createCalendar(CalendarCreationData data);

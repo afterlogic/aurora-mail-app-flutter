@@ -13,8 +13,8 @@ class TaskWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(
-          width: 24,
-          height: 24,
+          width: 40,
+          height: 40,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             border: Border.all(
@@ -31,7 +31,7 @@ class TaskWidget extends StatelessWidget {
           )
               : null,
         ),
-        SizedBox(width: 8),
+        const SizedBox(width: 16),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -42,6 +42,7 @@ class TaskWidget extends StatelessWidget {
                   decoration:
                   (task.status ?? false) ? TextDecoration.lineThrough : TextDecoration.none,
                   color: Colors.black,
+                  fontSize: 16
                 ),
               ),
               if (task.startTS != null && task.endTS != null)

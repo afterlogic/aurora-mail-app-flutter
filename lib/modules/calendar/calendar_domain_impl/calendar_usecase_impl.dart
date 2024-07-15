@@ -30,7 +30,7 @@ class CalendarUseCaseImpl implements CalendarUseCase {
       BehaviorSubject.seeded([]);
 
   final BehaviorSubject<List<ViewTask>> _tasksSubject =
-  BehaviorSubject.seeded([]);
+      BehaviorSubject.seeded([]);
 
   set setLocation(tz.Location? location) => _location = location;
 
@@ -84,11 +84,17 @@ class CalendarUseCaseImpl implements CalendarUseCase {
   }
 
   @override
+  Future<void> getTasks() async {
+    await _getLocalTasks();
+  }
+
+  @override
   Future<void> syncCalendars() async {
     try {
       await repository.syncCalendars();
     } catch (e, st) {
       await _getLocalEvents();
+      await _getLocalTasks();
       rethrow;
     } finally {
       await getCalendars();
@@ -108,6 +114,7 @@ class CalendarUseCaseImpl implements CalendarUseCase {
 
     _calendarsSubject.add(calendars);
     _getLocalEvents();
+    _getLocalTasks();
   }
 
   @override
@@ -123,13 +130,15 @@ class CalendarUseCaseImpl implements CalendarUseCase {
     final updatableCalendar = calendars.firstWhere((e) => e.id == calendar.id);
     if (!updatableCalendar.updated(calendar)) {
       return;
-    };
+    }
+    ;
     await repository.updateCalendar(calendar);
 
     int index = calendars.indexWhere((e) => e.id == calendar.id);
     calendars[index] = calendar;
     _calendarsSubject.add(calendars);
     _getLocalEvents();
+    _getLocalTasks();
   }
 
   @override
@@ -138,7 +147,8 @@ class CalendarUseCaseImpl implements CalendarUseCase {
     final updatableCalendar = calendars.firstWhere((e) => e.id == calendar.id);
     if (!updatableCalendar.updated(calendar)) {
       return;
-    };
+    }
+    ;
     await repository.updateCalendarPublic(calendar);
 
     int index = calendars.indexWhere((e) => e.id == calendar.id);
@@ -152,7 +162,8 @@ class CalendarUseCaseImpl implements CalendarUseCase {
     final updatableCalendar = calendars.firstWhere((e) => e.id == calendar.id);
     if (!updatableCalendar.updated(calendar)) {
       return;
-    };
+    }
+    ;
     await repository.updateCalendarSharing(calendar);
 
     int index = calendars.indexWhere((e) => e.id == calendar.id);
@@ -192,6 +203,31 @@ class CalendarUseCaseImpl implements CalendarUseCase {
         .toList();
 
     _eventsSubject.add(eventViews);
+  }
+
+  Future<void> _getLocalTasks() async {
+    final allTasks = await repository.getTasks(
+      calendarIds: selectedCalendarIds,
+    );
+    final taskViews = allTasks
+        .map((e) => e.toDisplayable(
+              color: _calendarsSubject.value
+                  .firstWhere((c) => c.id == e.calendarId)
+                  .color,
+            ))
+        .whereNotNull()
+        .map(
+          (e) => e.copyWith(
+            startDate: _location == null || e.startDate == null
+                ? () => e.startDate
+                : () => tz.TZDateTime.from(e.startDate!, _location!),
+            endDate: _location == null || e.endDate == null
+                ? () => e.endDate
+                : () => tz.TZDateTime.from(e.endDate!, _location!),
+          ),
+        )
+        .toList();
+    _tasksSubject.add(taskViews);
   }
 
   @override

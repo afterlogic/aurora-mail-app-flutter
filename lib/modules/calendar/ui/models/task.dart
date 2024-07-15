@@ -11,12 +11,15 @@ import 'package:flutter/material.dart';
 
 import 'displayable.dart';
 
-
-class ViewTask extends Task implements Displayable{
+class ViewTask extends Task implements Displayable {
   final Color color;
+  final DateTime? startDate;
+  final DateTime? endDate;
 
   const ViewTask({
     required this.color,
+    required this.startDate,
+    required this.endDate,
     required super.organizer,
     required super.appointment,
     required super.appointmentAccess,
@@ -52,8 +55,8 @@ class ViewTask extends Task implements Displayable{
   ViewTask copyWith({
     String? title,
     Color? color,
-    DateTime? startDate,
-    DateTime? endDate,
+    DateTime? Function()? startDate,
+    DateTime? Function()? endDate,
     String? organizer,
     bool? appointment,
     int? appointmentAccess,
@@ -112,7 +115,7 @@ class ViewTask extends Task implements Displayable{
         color: color ?? this.color,
         reminders: reminders ?? this.reminders,
         recurrenceMode:
-        recurrenceMode == null ? this.recurrenceMode : recurrenceMode(),
+            recurrenceMode == null ? this.recurrenceMode : recurrenceMode(),
         recurrenceUntilDate: recurrenceUntilDate == null
             ? this.recurrenceUntilDate
             : recurrenceUntilDate(),
@@ -122,5 +125,7 @@ class ViewTask extends Task implements Displayable{
         recurrenceWeeklyFrequency: recurrenceWeeklyFrequency == null
             ? this.recurrenceWeeklyFrequency
             : recurrenceWeeklyFrequency(),
+        startDate: startDate == null ? this.startDate : startDate(),
+        endDate: endDate == null ? this.endDate : endDate(),
       );
 }

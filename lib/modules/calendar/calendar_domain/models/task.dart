@@ -232,7 +232,7 @@ class Task implements Activity {
   }
 
   @override
-  Displayable toDisplayable({required Color color}) {
+  ViewTask toDisplayable({required Color color}) {
     return ViewTask(
         calendarId: this.calendarId,
         attendees: this.attendees,
@@ -263,6 +263,8 @@ class Task implements Activity {
         recurrenceMode: this.recurrenceMode,
         recurrenceUntilDate: this.recurrenceUntilDate,
         recurrenceWeekDays: this.recurrenceWeekDays,
-        recurrenceWeeklyFrequency: this.recurrenceWeeklyFrequency);
+        recurrenceWeeklyFrequency: this.recurrenceWeeklyFrequency,
+        endDate: this.endTS,
+        startDate: this.startTS);
   }
 }

@@ -8,6 +8,7 @@ import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/act
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/reminders_option.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/calendar.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/event.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/task.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain_impl/mappers/calendar_mapper.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain_impl/mappers/event_mapper.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain_impl/services/db/calendar_db_service.dart';
@@ -138,6 +139,15 @@ class CalendarRepositoryImpl implements CalendarRepository {
         userLocalId: user.localId!,
         calendarIds: calendarIds);
     return activities.whereType<Event>().toList();
+  }
+
+  @override
+  Future<List<Task>> getTasks({required List<String> calendarIds}) async {
+    final activities = await _db.getActivities(
+        userLocalId: user.localId!,
+        type: ActivityType.task,
+        calendarIds: calendarIds);
+    return activities.whereType<Task>().toList();
   }
 
   @override
