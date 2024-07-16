@@ -1,4 +1,5 @@
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/activity.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/calendar.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/event.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/task.dart';
@@ -23,13 +24,13 @@ abstract class CalendarRepository {
       required List<String> calendarIds});
 
   Future<List<Task>> getTasks(
-      {required List<String> calendarIds});
+      );
 
   Future<void> deleteCalendar(Calendar calendar);
 
   Future<Calendar> createCalendar(CalendarCreationData data);
 
-  Future<void> createEvent(EventCreationData data);
+  Future<void> createActivity(ActivityCreationData data);
 
   Future<void> updateCalendar(Calendar calendar);
 
@@ -39,7 +40,7 @@ abstract class CalendarRepository {
 
   Future<void> deleteEvent(Event event);
 
-  Future<Event> updateEvent(Event event);
+  Future<Activity> updateActivity(Activity activity);
 
   Future<List<Calendar>> getCalendars();
 

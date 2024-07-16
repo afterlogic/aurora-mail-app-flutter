@@ -114,8 +114,8 @@ class ViewEvent extends Event implements Displayable{
   ViewEvent copyWith({
     String? title,
     Color? color,
-    DateTime? startDate,
-    DateTime? endDate,
+    DateTime? Function()? startDate,
+    DateTime? Function()? endDate,
     String? organizer,
     bool? appointment,
     int? appointmentAccess,
@@ -147,9 +147,9 @@ class ViewEvent extends Event implements Displayable{
     Set<Attendee>? attendees,
   }) =>
       ViewEvent(
-        startDate: startDate ?? this.startDate,
+        startDate: startDate == null ? this.startDate : startDate()!,
+        endDate: endDate == null ? this.endDate : endDate()!,
         attendees: attendees ?? this.attendees,
-        endDate: endDate ?? this.endDate,
         organizer: organizer ?? this.organizer,
         appointment: appointment ?? this.appointment,
         appointmentAccess: appointmentAccess ?? this.appointmentAccess,
@@ -220,7 +220,7 @@ class ViewEvent extends Event implements Displayable{
         currentEnd = event.endDate;
       }
 
-      dailyEvents.add(copyWith(startDate: currentStart, endDate: currentEnd));
+      dailyEvents.add(copyWith(startDate: () => currentStart, endDate: () => currentEnd));
       // next day iteration
       currentStart = currentEnd.startOfNextDay;
     }
@@ -232,7 +232,7 @@ class ViewEvent extends Event implements Displayable{
     if (!startDate.startOfNextDay.isAtSameMomentAs(endDate)) {
       return this;
     }
-    return copyWith(endDate: endDate.subtract(Duration(seconds: 1)));
+    return copyWith(endDate: () => endDate.subtract(Duration(seconds: 1)));
   }
 }
 

@@ -34,8 +34,8 @@ class TasksBloc extends Bloc<TasksEvent, TasksState> {
 
   _onUpdateTask(UpdateTask event, emit) async {
     try {
-      // final updatedTask = await _useCase.updateEvent(event.event);
-      // emit(state.copyWith(selectedTask: () => updatedTask));
+      final updatedTask = await _useCase.updateActivity(event.task);
+      emit(state.copyWith(selectedTask: () => updatedTask as ViewTask));
     } catch (e, st) {
       emit(state.copyWith(status: TasksStatus.error));
     } finally {
@@ -67,7 +67,7 @@ class TasksBloc extends Bloc<TasksEvent, TasksState> {
 
   _onCreateTask(CreateTask event, emit) async {
     try {
-      // await _useCase.createEvent(event.creationData);
+      await _useCase.createActivity(event.creationData);
     } catch (e, st) {
       emit(state.copyWith(status: TasksStatus.error));
     } finally {

@@ -48,7 +48,6 @@ class ViewTask extends Task implements Displayable {
     required super.recurrenceUntilDate,
     required super.recurrenceWeekDays,
     required super.recurrenceWeeklyFrequency,
-    required super.attendees,
   });
 
   @override
@@ -85,10 +84,8 @@ class ViewTask extends Task implements Displayable {
     DateTime? Function()? recurrenceUntilDate,
     EveryWeekFrequency? Function()? recurrenceWeeklyFrequency,
     Set<DaysOfWeek>? Function()? recurrenceWeekDays,
-    Set<Attendee>? attendees,
   }) =>
       ViewTask(
-        attendees: attendees ?? this.attendees,
         organizer: organizer ?? this.organizer,
         appointment: appointment ?? this.appointment,
         appointmentAccess: appointmentAccess ?? this.appointmentAccess,

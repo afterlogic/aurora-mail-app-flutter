@@ -1,7 +1,9 @@
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/calendar/blocs/calendars/calendars_bloc.dart';
 import 'package:aurora_mail/modules/calendar/blocs/events/events_bloc.dart';
+import 'package:aurora_mail/modules/calendar/blocs/tasks/tasks_bloc.dart';
 import 'package:aurora_mail/modules/calendar/ui/screens/event_creation_page.dart';
+import 'package:aurora_mail/modules/calendar/ui/screens/task_creation_page.dart';
 import 'package:aurora_mail/modules/calendar/ui/views/day_view.dart';
 import 'package:aurora_mail/modules/calendar/ui/views/list_events_view.dart';
 import 'package:aurora_mail/modules/calendar/ui/views/month_view.dart';
@@ -26,11 +28,13 @@ class _CalendarPageState extends State<CalendarPage>
     with TickerProviderStateMixin {
   late final TabController _tabController;
   late final CalendarsBloc _calendarsBloc;
+  bool _overlay = false;
   bool _showTabs = false;
 
   @override
   void initState() {
     super.initState();
+    _overlay = false;
     _calendarsBloc = BlocProvider.of<CalendarsBloc>(context);
     _tabController = TabController(
         length: 4,
@@ -41,6 +45,7 @@ class _CalendarPageState extends State<CalendarPage>
 
   @override
   void dispose() {
+    _overlay = false;
     _calendarsBloc.add(SaveTabIndex(_tabController.index));
     _tabController.dispose();
     super.dispose();
@@ -54,87 +59,134 @@ class _CalendarPageState extends State<CalendarPage>
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(S
-                .of(context)
-                .calendar),
+            Text(S.of(context).calendar),
             IconButton(
-                onPressed: () =>
-                    setState(() {
+                onPressed: () => setState(() {
                       _showTabs = !_showTabs;
                     }),
                 icon: Icon(Icons.grid_view_outlined))
           ],
         ),
       ),
-      body: _BlocErrorsHandler(
-        child: Column(
-          children: [
-            AnimatedSwitcher(
-              duration: const Duration(milliseconds: 100),
-              child: _showTabs
-                  ? Padding(
-                padding:
-                const EdgeInsets.only(top: 18.0, right: 24, left: 24),
-                child: Row(
-                  children: [
-                    CalendarTab(
-                        title: 'Month',
-                        controller: _tabController,
-                        index: 0),
-                    const SizedBox(
-                      width: 16,
-                    ),
-                    CalendarTab(
-                        title: 'Week',
-                        controller: _tabController,
-                        index: 1),
-                    const SizedBox(
-                      width: 16,
-                    ),
-                    CalendarTab(
-                        title: 'Day',
-                        controller: _tabController,
-                        index: 2),
-                    const SizedBox(
-                      width: 16,
-                    )
-                    ,CalendarTab(
-                        title: 'Tasks',
-                        controller: _tabController,
-                        index: 3),
-                    const SizedBox(
-                      width: 16,
-                    ),
-                  ],
+      body: Stack(
+        children: [
+          _BlocErrorsHandler(
+            child: Column(
+              children: [
+                AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 100),
+                  child: _showTabs
+                      ? Padding(
+                          padding: const EdgeInsets.only(
+                              top: 18.0, right: 24, left: 24),
+                          child: Row(
+                            children: [
+                              CalendarTab(
+                                  title: 'Month',
+                                  controller: _tabController,
+                                  index: 0),
+                              const SizedBox(
+                                width: 16,
+                              ),
+                              CalendarTab(
+                                  title: 'Week',
+                                  controller: _tabController,
+                                  index: 1),
+                              const SizedBox(
+                                width: 16,
+                              ),
+                              CalendarTab(
+                                  title: 'Day',
+                                  controller: _tabController,
+                                  index: 2),
+                              const SizedBox(
+                                width: 16,
+                              ),
+                              CalendarTab(
+                                  title: 'Tasks',
+                                  controller: _tabController,
+                                  index: 3),
+                              const SizedBox(
+                                width: 16,
+                              ),
+                            ],
+                          ),
+                        )
+                      : SizedBox.shrink(),
                 ),
-              )
-                  : SizedBox.shrink(),
+                Expanded(
+                  child: TabBarView(
+                      controller: _tabController,
+                      physics: const NeverScrollableScrollPhysics(),
+                      children: [
+                        const MonthView(),
+                        const WeekView(),
+                        const DayView(),
+                        const TasksView(),
+                      ]),
+                )
+              ],
             ),
-            Expanded(
-              child: TabBarView(
-                  controller: _tabController,
-                  physics: const NeverScrollableScrollPhysics(),
-                  children: [
-                    const MonthView(),
-                    const WeekView(),
-                    const DayView(),
-                    const TasksView(),
-                  ]),
+          ),
+          if (_overlay)
+            Positioned.fill(
+              child: GestureDetector(
+                  onTap: () {
+                    _overlay = false;
+                    setState(() {});
+                  },
+                  child: Container(
+                    color: Colors.black.withOpacity(0.5),
+                  )),
+            ),
+        ],
+      ),
+      floatingActionButton: _overlay
+          ? Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                FloatingActionButton(
+                  heroTag: 'task',
+                  mini: true,
+                  backgroundColor: Colors.white,
+                  foregroundColor: Theme.of(context).primaryColor,
+                  onPressed: () {
+                    BlocProvider.of<TasksBloc>(context).add(SelectTask(null));
+                    _overlay = false;
+                    setState(() {});
+                    Navigator.of(context).pushNamed(
+                      TaskCreationPage.name,
+                    );
+                  },
+                  child: const Icon(Icons.check_circle_outline),
+                ),
+                const SizedBox(
+                  height: 16,
+                ),
+                FloatingActionButton(
+                  heroTag: 'event',
+                  onPressed: () {
+                    BlocProvider.of<EventsBloc>(context).add(SelectEvent(null));
+                    _overlay = false;
+                    setState(() {});
+                    Navigator.of(context).pushNamed(
+                      EventCreationPage.name,
+                    );
+                  },
+                  child: const Icon(Icons.calendar_today_outlined),
+                )
+              ],
             )
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          BlocProvider.of<EventsBloc>(context).add(SelectEvent(null));
-          Navigator.of(context).pushNamed(
-            EventCreationPage.name,
-          );
-        },
-        child: const Icon(Icons.add),
-      ),
+          : FloatingActionButton(
+              heroTag: 'add',
+              onPressed: () {
+                _overlay = true;
+                setState(() {});
+              },
+              child: const Icon(Icons.add),
+            ),
       bottomNavigationBar:
-      MailBottomAppBar(selectedRoute: MailBottomAppBarRoutes.calendar),
+          MailBottomAppBar(selectedRoute: MailBottomAppBarRoutes.calendar),
     );
   }
 }
@@ -148,7 +200,7 @@ class _BlocErrorsHandler extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocListener<CalendarsBloc, CalendarsState>(
       listenWhen: (previous, current) =>
-      previous.error != current.error &&
+          previous.error != current.error &&
           current.error != null &&
           current.status.isError,
       listener: (context, state) {

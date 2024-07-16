@@ -45,8 +45,8 @@ class EventsBloc extends Bloc<EventBlocEvent, EventsState> {
 
   _onUpdateEvent(UpdateEvent event, emit) async {
     try {
-      final updatedEvent = await _useCase.updateEvent(event.event);
-      emit(state.copyWith(selectedEvent: () => updatedEvent));
+      final updatedEvent = await _useCase.updateActivity(event.event);
+      emit(state.copyWith(selectedEvent: () => updatedEvent as ViewEvent));
     } catch (e, st) {
       emit(state.copyWith(status: EventsStatus.error));
     } finally {
@@ -80,7 +80,7 @@ class EventsBloc extends Bloc<EventBlocEvent, EventsState> {
 
   _onCreateEvent(CreateEvent event, emit) async {
     try {
-      await _useCase.createEvent(event.creationData);
+      await _useCase.createActivity(event.creationData);
     } catch (e, st) {
       emit(state.copyWith(status: EventsStatus.error));
     } finally {

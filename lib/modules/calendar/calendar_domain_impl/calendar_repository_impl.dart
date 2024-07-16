@@ -142,11 +142,11 @@ class CalendarRepositoryImpl implements CalendarRepository {
   }
 
   @override
-  Future<List<Task>> getTasks({required List<String> calendarIds}) async {
+  Future<List<Task>> getTasks() async {
     final activities = await _db.getActivities(
         userLocalId: user.localId!,
         type: ActivityType.task,
-        calendarIds: calendarIds);
+        calendarIds: null);
     return activities.whereType<Task>().toList();
   }
 
@@ -200,26 +200,14 @@ class CalendarRepositoryImpl implements CalendarRepository {
   }
 
   @override
-  Future<void> createEvent(EventCreationData data) {
-    return _network.createEvent(
-        location: data.location ?? '',
-        subject: data.subject,
-        calendarId: data.calendarId,
-        startDate: data.startDate,
-        endDate: data.endDate,
-        allDay: data.allDay,
-        description: data.description ?? '',
-        reminders: data.reminders.map((e) => e.toInt).toList(),
-        recurrenceMode: data.recurrenceMode,
-        recurrenceUntilDate: data.recurrenceUntilDate,
-        recurrenceWeeklyFrequency: data.recurrenceWeeklyFrequency,
-        recurrenceWeekDays: data.recurrenceWeekDays,
-        attendees: data.attendees);
+  Future<void> createActivity(ActivityCreationData data) {
+    return _network.createActivity(creationData: data
+       );
   }
 
   @override
-  Future<Event> updateEvent(Event event) {
-    return _network.updateEvent(event);
+  Future<Activity> updateActivity(Activity activity) {
+    return _network.updateActivity(activity);
   }
 
   @override

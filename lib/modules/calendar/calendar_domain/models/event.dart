@@ -20,8 +20,8 @@ class EventCreationData implements ActivityCreationData{
   final String? description;
   final String? location;
   final String calendarId;
-  final DateTime startDate;
-  final DateTime endDate;
+  final DateTime? startDate;
+  final DateTime? endDate;
   final Set<RemindersOption> reminders;
   final bool? allDay;
   final RecurrenceMode recurrenceMode;
@@ -45,10 +45,10 @@ class EventCreationData implements ActivityCreationData{
       this.recurrenceWeekDays,
       required this.attendees});
 
-  EventCreationData copyWith({DateTime? startDate, DateTime? endDate}) {
+  EventCreationData copyWith({DateTime? Function()? startDate, DateTime? Function()? endDate}) {
     return EventCreationData(
-        startDate: startDate ?? this.startDate,
-        endDate: endDate ?? this.endDate,
+        startDate: startDate == null ? this.startDate : startDate(),
+        endDate: endDate == null ? this.endDate : endDate(),
         subject: subject,
         description: description,
         location: location,

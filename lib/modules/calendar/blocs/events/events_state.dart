@@ -98,7 +98,7 @@ class EventsState extends Equatable {
         ? e.endDate
         : e.endDate.withoutTime.add(Duration(hours: 23, minutes: 59));
 
-    return e.copyWith(startDate: updatedStart, endDate: updatedEnd);
+    return e.copyWith(startDate: () => updatedStart, endDate: () => updatedEnd);
   }
 
 

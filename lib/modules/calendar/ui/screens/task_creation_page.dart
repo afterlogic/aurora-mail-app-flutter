@@ -3,18 +3,15 @@ import 'dart:async';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aurora_mail/modules/calendar/blocs/calendars/calendars_bloc.dart';
-import 'package:aurora_mail/modules/calendar/blocs/events/events_bloc.dart';
-import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/attendee.dart';
+import 'package:aurora_mail/modules/calendar/blocs/tasks/tasks_bloc.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/days_of_week.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/every_week_frequency.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/recurrence_mode.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/reminders_option.dart';
-import 'package:aurora_mail/modules/calendar/calendar_domain/models/event.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/task.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/calendar.dart';
-import 'package:aurora_mail/modules/calendar/ui/models/event.dart';
-import 'package:aurora_mail/modules/calendar/ui/screens/attendees_page.dart';
+import 'package:aurora_mail/modules/calendar/ui/models/task.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/activity/calendar_section.dart';
-import 'package:aurora_mail/modules/calendar/ui/widgets/activity/editable_attendees_section.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/activity/editable_date_info.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/activity/editable_recurrence_section.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/activity/editable_reminders_section.dart';
@@ -27,37 +24,36 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class EventCreationPage extends StatefulWidget {
-  static const name = "event_creation_page";
-  const EventCreationPage({super.key});
+class TaskCreationPage extends StatefulWidget {
+  static const name = "task_creation_page";
+  const TaskCreationPage({super.key});
 
   @override
-  State<EventCreationPage> createState() => _EventCreationPageState();
+  State<TaskCreationPage> createState() => _TaskCreationPageState();
 }
 
-class _EventCreationPageState extends State<EventCreationPage> {
-  late DateTime _selectedStartDate;
-  late DateTime _selectedEndDate;
+class _TaskCreationPageState extends State<TaskCreationPage> {
+  DateTime? _selectedStartDate;
+  DateTime? _selectedEndDate;
   late final TextEditingController _titleController;
   late final TextEditingController _descriptionController;
   late final TextEditingController _locationController;
   late final CalendarsBloc _calendarsBloc;
-  late final EventsBloc _eventsBloc;
-  late final StreamSubscription _eventsSubscription;
+  late final TasksBloc _tasksBloc;
+  late final StreamSubscription _tasksSubscription;
   late final String _currentUserMail;
   final _formKey = GlobalKey<FormState>();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   ViewCalendar? _selectedCalendar;
-  ViewEvent? _selectedEvent;
+  ViewTask? _selectedTask;
   RecurrenceMode _selectedRecurrenceMode = RecurrenceMode.never;
   DateTime? _selectedUntilDate;
   Set<RemindersOption> _selectedReminders = {};
-  Set<Attendee> _attendees = {};
   EveryWeekFrequency? _selectedWeeklyFrequency;
   Set<DaysOfWeek>? _selectedWeekDaysRepeat = {DaysOfWeek.mo};
   bool _isAllDay = false;
 
-  EventCreationData get collectCreationData => EventCreationData(
+  TaskCreationData get collectCreationData => TaskCreationData(
       subject: _titleController.text,
       calendarId: _selectedCalendar!.id,
       description: _descriptionController.text,
@@ -70,25 +66,22 @@ class _EventCreationPageState extends State<EventCreationPage> {
       recurrenceUntilDate: _selectedUntilDate,
       recurrenceWeekDays: _selectedWeekDaysRepeat,
       recurrenceWeeklyFrequency: _selectedWeeklyFrequency,
-      attendees: _attendees);
+     );
 
   @override
   void initState() {
     super.initState();
     _calendarsBloc = BlocProvider.of<CalendarsBloc>(context);
-    _eventsBloc = BlocProvider.of<EventsBloc>(context);
+    _tasksBloc = BlocProvider.of<TasksBloc>(context);
     _currentUserMail =
         BlocProvider.of<AuthBloc>(context).currentUser?.emailFromLogin ?? '';
     _selectedCalendar =
         _calendarsBloc.state.availableCalendars(_currentUserMail).firstOrNull;
     _titleController = TextEditingController();
-    _selectedStartDate =
-        DateTime.now().copyWith(second: 0, millisecond: 0, microsecond: 0);
-    _selectedEndDate = _selectedStartDate.add(Duration(minutes: 30));
     _descriptionController = TextEditingController();
     _locationController = TextEditingController();
-    onEventsStateChange(_eventsBloc.state);
-    _eventsSubscription = _eventsBloc.stream.listen(onEventsStateChange);
+    onTasksStateChange(_tasksBloc.state);
+    _tasksSubscription = _tasksBloc.stream.listen(onTasksStateChange);
   }
 
   @override
@@ -96,15 +89,15 @@ class _EventCreationPageState extends State<EventCreationPage> {
     _titleController.dispose();
     _descriptionController.dispose();
     _locationController.dispose();
-    _eventsSubscription.cancel();
+    _tasksSubscription.cancel();
     super.dispose();
   }
 
-  void onEventsStateChange(EventsState state) {
-    final e = state.selectedEvent;
-    _selectedEvent = e;
+  void onTasksStateChange(TasksState state) {
+    final e = state.selectedTask;
+    _selectedTask = e;
     if (e == null) return;
-    _titleController.text = e.title;
+    _titleController.text = e.subject ?? '';
     _descriptionController.text = e.description ?? '';
     _locationController.text = e.location ?? '';
     _selectedStartDate = e.startDate;
@@ -117,13 +110,12 @@ class _EventCreationPageState extends State<EventCreationPage> {
     _selectedRecurrenceMode = e.recurrenceMode ?? RecurrenceMode.never;
     _selectedUntilDate = e.recurrenceUntilDate;
     _selectedWeekDaysRepeat = e.recurrenceWeekDays ?? {};
-    _attendees = Set.of(e.attendees);
     setState(() {});
   }
 
-  void _onSaveEditedEvent() {
+  void _onSaveEditedTask() {
     final updatedFields = collectCreationData;
-    final updatedEvent = _selectedEvent!.copyWith(
+    final updatedTask = _selectedTask!.copyWith(
         subject: updatedFields.subject,
         title: updatedFields.subject,
         description: updatedFields.description,
@@ -134,11 +126,11 @@ class _EventCreationPageState extends State<EventCreationPage> {
         endDate: () => updatedFields.endDate,
         recurrenceMode: () => updatedFields.recurrenceMode,
         recurrenceWeeklyFrequency: () =>
-            updatedFields.recurrenceWeeklyFrequency,
+        updatedFields.recurrenceWeeklyFrequency,
         recurrenceWeekDays: () => updatedFields.recurrenceWeekDays,
         recurrenceUntilDate: () => updatedFields.recurrenceUntilDate,
-        attendees: _attendees);
-    _eventsBloc.add(UpdateEvent(updatedEvent));
+       );
+    _tasksBloc.add(UpdateTask(updatedTask));
   }
 
   @override
@@ -146,7 +138,7 @@ class _EventCreationPageState extends State<EventCreationPage> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AMAppBar(
-        title: Text(_selectedEvent == null ? 'Create Event' : 'Edit Event'),
+        title: Text(_selectedTask == null ? 'Create Task' : 'Edit Task'),
         actions: [
           TextButton(
               onPressed: () {
@@ -160,10 +152,10 @@ class _EventCreationPageState extends State<EventCreationPage> {
                       msg: ErrorToShow.message('Please select calendar'));
                   return;
                 }
-                if (_selectedEvent == null) {
-                  _eventsBloc.add(CreateEvent(collectCreationData));
+                if (_selectedTask == null) {
+                  _tasksBloc.add(CreateTask(collectCreationData));
                 } else {
-                  _onSaveEditedEvent();
+                  _onSaveEditedTask();
                 }
                 Navigator.of(context).pop();
               },
@@ -204,7 +196,7 @@ class _EventCreationPageState extends State<EventCreationPage> {
               const SectionDivider(),
               Padding(
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                 child: EditableDateInfo(
                   isAllDay: _isAllDay,
                   selectedStartDate: _selectedStartDate,
@@ -227,7 +219,7 @@ class _EventCreationPageState extends State<EventCreationPage> {
               const SectionDivider(),
               Padding(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+                  const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
                   child: EditableRecurrenceSection(
                     selectedUntilDate: _selectedUntilDate,
                     selectedWeekDaysRepeat: _selectedWeekDaysRepeat,
@@ -253,7 +245,7 @@ class _EventCreationPageState extends State<EventCreationPage> {
               const SectionDivider(),
               Padding(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                  const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                   child: EditableRemindersSection(
                     onAddCallback: (RemindersOption option) {
                       if (_selectedReminders.contains(option)) {
@@ -269,29 +261,6 @@ class _EventCreationPageState extends State<EventCreationPage> {
                     },
                     selectedReminders: _selectedReminders,
                   )),
-              const SectionDivider(),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                child: EditableAttendeesSection(
-                  attendees: _attendees,
-                  onAddPressed: () {
-                    Navigator.of(context)
-                        .pushNamed(AttendeesPage.name,
-                            arguments: AttendeesRouteArg(
-                                initAttendees: Set.of(_attendees)))
-                        .then((value) {
-                      if (value == null) return;
-                      _attendees = Set.of(value as Set<Attendee>);
-                      setState(() {});
-                    });
-                  },
-                  onDeletedCallback: (Attendee attendee) {
-                    _attendees.remove(attendee);
-                    setState(() {});
-                  },
-                ),
-              ),
             ],
           ),
         ),

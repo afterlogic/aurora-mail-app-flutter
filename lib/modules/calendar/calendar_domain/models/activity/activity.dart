@@ -23,8 +23,7 @@ abstract class ActivityCreationData {
    DateTime? get recurrenceUntilDate;
    EveryWeekFrequency? get recurrenceWeeklyFrequency;
    Set<DaysOfWeek>? get recurrenceWeekDays;
-   Set<Attendee> get attendees;
-  ActivityCreationData copyWith({DateTime? startDate, DateTime? endDate});
+  ActivityCreationData copyWith({DateTime? Function() startDate, DateTime? Function() endDate});
 }
 
 enum ActivityType{
@@ -82,7 +81,6 @@ abstract class Activity implements ActivityBase{
   DateTime? get recurrenceUntilDate;
   EveryWeekFrequency? get recurrenceWeeklyFrequency;
   Set<DaysOfWeek>? get recurrenceWeekDays;
-  Set<Attendee>? get attendees;
 
   Displayable? toDisplayable({required Color color});
 
@@ -109,7 +107,6 @@ abstract class Activity implements ActivityBase{
     UpdateStatus? updateStatus,
     bool? synced,
     bool? onceLoaded,
-    Set<Attendee>? attendees,
     RecurrenceMode? Function()? recurrenceMode,
     DateTime? Function()? recurrenceUntilDate,
     EveryWeekFrequency? Function()? recurrenceWeeklyFrequency,

@@ -67,11 +67,7 @@ extension ActivityMapper on ActivityDb {
                   .whereNotNull()
                   .toSet()
               : {},
-          attendees: attendees
-                  ?.map((e) =>
-                      Attendee.fromMap(jsonDecode(e) as Map<String, dynamic>))
-                  .toSet() ??
-              {});
+);
     }
 
     if (this.type?.isEvent ?? false) {
@@ -196,7 +192,7 @@ class EventMapper {
                 .whereNotNull()
                 .toSet() ??
             {},
-        attendees: (newData['attendees'] as List).map((e) => Attendee.fromMap(e as Map<String, dynamic>)).toSet());
+);
   }
 
   static Event eventFromJson(

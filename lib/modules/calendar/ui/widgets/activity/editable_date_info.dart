@@ -61,7 +61,7 @@ class EditableDateInfo extends StatelessWidget {
             height: 16,
           ),
           DateTimeTile(
-            dateTime: selectedStartDate!,
+            dateTime: selectedStartDate,
             onChanged: (DateTime value) {
               if (selectedEndDate != null && selectedEndDate!.isBefore(value)) {
                 datesError(context);
@@ -75,7 +75,7 @@ class EditableDateInfo extends StatelessWidget {
             height: 16,
           ),
           DateTimeTile(
-            dateTime: selectedEndDate!,
+            dateTime: selectedEndDate,
             onChanged: (DateTime value) {
               if (selectedStartDate != null &&
                   value.isBefore(selectedStartDate!)) {

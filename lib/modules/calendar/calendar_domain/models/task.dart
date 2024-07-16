@@ -27,7 +27,6 @@ class TaskCreationData implements ActivityCreationData{
   final DateTime? recurrenceUntilDate;
   final EveryWeekFrequency? recurrenceWeeklyFrequency;
   final Set<DaysOfWeek>? recurrenceWeekDays;
-  final Set<Attendee> attendees;
 
   const TaskCreationData(
       {required this.subject,
@@ -42,19 +41,18 @@ class TaskCreationData implements ActivityCreationData{
         this.recurrenceUntilDate,
         this.recurrenceWeeklyFrequency,
         this.recurrenceWeekDays,
-        required this.attendees});
+        });
 
-  TaskCreationData copyWith({DateTime? startDate, DateTime? endDate}) {
+  TaskCreationData copyWith({DateTime? Function()? startDate, DateTime? Function()? endDate}) {
     return TaskCreationData(
-        startDate: startDate ?? this.startDate,
-        endDate: endDate ?? this.endDate,
+        startDate: startDate == null ? this.startDate : startDate(),
+        endDate: endDate == null ? this.endDate : endDate(),
         subject: subject,
         description: description,
         location: location,
         recurrenceUntilDate: recurrenceUntilDate,
         recurrenceWeeklyFrequency: recurrenceWeeklyFrequency,
         recurrenceWeekDays: recurrenceWeekDays,
-        attendees: attendees,
         calendarId: calendarId,
         reminders: reminders,
         allDay: allDay,
@@ -71,7 +69,6 @@ class Task implements Activity {
   final bool? allDay;
   final bool? appointment;
   final int? appointmentAccess;
-  final Set<Attendee>? attendees;
   final String? description;
   final DateTime? endTS;
   final bool? isPrivate;
@@ -102,7 +99,6 @@ class Task implements Activity {
     required this.allDay,
     this.appointment,
     this.appointmentAccess,
-    this.attendees,
     this.description,
     this.endTS,
     this.isPrivate,
@@ -158,7 +154,7 @@ class Task implements Activity {
         recurrenceWeeklyFrequency: recurrenceWeeklyFrequency,
         recurrenceUntilDate: recurrenceUntilDate,
         recurrenceMode: recurrenceMode,
-        attendees: attendees?.map((e) => jsonEncode(e.toMap())).toList());
+    );
   }
 
   @override
@@ -186,7 +182,6 @@ class Task implements Activity {
       UpdateStatus? updateStatus,
       bool? synced,
       bool? onceLoaded,
-      Set<Attendee>? attendees,
       RecurrenceMode? Function()? recurrenceMode,
       DateTime? Function()? recurrenceUntilDate,
       EveryWeekFrequency? Function()? recurrenceWeeklyFrequency,
@@ -228,14 +223,13 @@ class Task implements Activity {
         recurrenceWeeklyFrequency: recurrenceWeeklyFrequency == null
             ? this.recurrenceWeeklyFrequency
             : recurrenceWeeklyFrequency(),
-        attendees: attendees ?? this.attendees);
+        );
   }
 
   @override
   ViewTask toDisplayable({required Color color}) {
     return ViewTask(
         calendarId: this.calendarId,
-        attendees: this.attendees,
         color: color,
         recurrenceId: this.recurrenceId!,
         uid: this.uid,

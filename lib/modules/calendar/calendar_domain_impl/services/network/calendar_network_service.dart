@@ -24,23 +24,11 @@ abstract class CalendarNetworkService {
 
   Future<List<Activity>> updateActivities(List<ActivityBase> activities);
 
-  Future<void> createEvent({
-    required String subject,
-    required String calendarId,
-    required String description,
-    required String location,
-    required DateTime startDate,
-    required DateTime endDate,
-    required bool? allDay,
-    required List<int> reminders,
-    required RecurrenceMode recurrenceMode,
-    required DateTime? recurrenceUntilDate,
-    required EveryWeekFrequency? recurrenceWeeklyFrequency,
-    required Set<DaysOfWeek>? recurrenceWeekDays,
-    required Set<Attendee>? attendees,
+  Future<void> createActivity({
+    required ActivityCreationData creationData,
 });
 
-  Future<Event> updateEvent(Event event);
+  Future<Activity> updateActivity(Activity activity);
 
   Future<void> deleteEvent(Event event);
 

@@ -99,7 +99,7 @@ class CalendarDbServiceImpl implements CalendarDbService {
 
   @override
   Future<List<Activity>> getActivities(
-      {required List<String> calendarIds, ActivityType? type, required int userLocalId}) async {
+      {required List<String>? calendarIds, ActivityType? type, required int userLocalId}) async {
     final entities = await _activityDao.getAll(
         calendarIds: calendarIds,
         type: type,

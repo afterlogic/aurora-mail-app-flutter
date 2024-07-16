@@ -11,7 +11,7 @@ class DateTimeTile extends StatelessWidget {
       required this.isAllDay});
 
   final Function(DateTime)? onChanged;
-  final DateTime dateTime;
+  final DateTime? dateTime;
   final bool isAllDay;
 
   @override
@@ -22,16 +22,16 @@ class DateTimeTile extends StatelessWidget {
           : () {
               showDatePicker(
                       context: context,
-                      initialDate: dateTime,
+                      initialDate: dateTime ?? DateTime.now(),
                       firstDate: DateTime(1980),
                       lastDate: DateTime(2040))
                   .then((value) {
                 if (value != null && !isAllDay) {
-                  final DateTime result = dateTime.copyWith(
+                  final DateTime result = dateTime == null ? value : dateTime!.copyWith(
                       year: value.year, month: value.month, day: value.day);
                   showTimePicker(
                           context: context,
-                          initialTime: TimeOfDay.fromDateTime(dateTime))
+                          initialTime: TimeOfDay.fromDateTime(result))
                       .then((value) {
                     if (value != null) {
                       onChanged!(result.copyWith(
@@ -43,16 +43,16 @@ class DateTimeTile extends StatelessWidget {
                 }
               });
             },
-      child: Row(
+      child: dateTime == null ? Text('No date selected') : Row(
         children: [
-          Text(DateFormat('E, MMM d, y').format(dateTime)),
+          Text(DateFormat('E, MMM d, y').format(dateTime!)),
           Spacer(),
           if (!isAllDay)
             BlocBuilder<SettingsBloc, SettingsState>(
               builder: (context, state) {
                 return (state is SettingsLoaded) && (state.is24 == true)
-                    ? Text(DateFormat('HH:mm').format(dateTime))
-                    : Text(DateFormat.jm().format(dateTime));
+                    ? Text(DateFormat('HH:mm').format(dateTime!))
+                    : Text(DateFormat.jm().format(dateTime!));
               },
             ),
         ],

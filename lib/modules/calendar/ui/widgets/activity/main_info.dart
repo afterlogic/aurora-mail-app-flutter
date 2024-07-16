@@ -55,27 +55,33 @@ class MainInfo extends StatelessWidget {
               ),
             ]
           : [
-              Text('Title', style: TextStyle(color: Colors.grey)),
-              const SizedBox(
-                height: 4,
-              ),
-              Text(title ?? ''),
-              const SizedBox(
-                height: 20,
-              ),
-              Text('Description', style: TextStyle(color: Colors.grey)),
-              const SizedBox(
-                height: 4,
-              ),
-              Text(description ?? ''),
-              const SizedBox(
-                height: 20,
-              ),
-              Text('Location', style: TextStyle(color: Colors.grey)),
-              const SizedBox(
-                height: 4,
-              ),
-              Text(location ?? ''),
+              if (title?.isNotEmpty ?? false) ...[
+                Text('Title', style: TextStyle(color: Colors.grey)),
+                const SizedBox(
+                  height: 4,
+                ),
+                Text(title!),
+                const SizedBox(
+                  height: 20,
+                ),
+              ],
+              if (description?.isNotEmpty ?? false) ...[
+                Text('Description', style: TextStyle(color: Colors.grey)),
+                const SizedBox(
+                  height: 4,
+                ),
+                Text(description!),
+                const SizedBox(
+                  height: 20,
+                ),
+              ],
+              if (description?.isNotEmpty ?? false) ...[
+                Text('Location', style: TextStyle(color: Colors.grey)),
+                const SizedBox(
+                  height: 4,
+                ),
+                Text(location!),
+              ],
             ],
     );
   }

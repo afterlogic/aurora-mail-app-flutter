@@ -117,16 +117,17 @@ class ActivityDao extends DatabaseAccessor<AppDatabase>
 
   Future<List<ActivityDb>> getAll(
       {ActivityType? type,
-      required List<String> calendarIds,
+      required List<String>? calendarIds,
       required int userLocalId}) {
     final activitySelect = select(activityTable);
     if (type != null) {
       activitySelect.where((t) => t.type.equals(type.index));
     }
-    activitySelect.where((t) =>
-        t.userLocalId.equals(userLocalId) &
-        t.calendarId.isIn(calendarIds) &
-        t.onceLoaded.equals(true));
+    if (calendarIds != null) {
+      activitySelect.where((t) => t.calendarId.isIn(calendarIds));
+    }
+    activitySelect.where(
+        (t) => t.userLocalId.equals(userLocalId) & t.onceLoaded.equals(true));
     activitySelect.orderBy([
       (t) => OrderingTerm(expression: t.startTS),
     ]);

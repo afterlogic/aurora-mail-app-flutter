@@ -1,10 +1,12 @@
 import 'dart:async';
 
 import 'package:aurora_mail/modules/calendar/calendar_domain/calendar_repository.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/activity.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/calendar.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/event.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain_impl/calendar_usecase_impl.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/calendar.dart';
+import 'package:aurora_mail/modules/calendar/ui/models/displayable.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/event.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/task.dart';
 import 'package:rxdart/streams.dart';
@@ -35,7 +37,7 @@ abstract class CalendarUseCase {
 
   Future<void> createCalendar(CalendarCreationData data);
 
-  Future<void> createEvent(EventCreationData data);
+  Future<void> createActivity(ActivityCreationData data);
 
   Future<void> updateCalendar(ViewCalendar calendar);
 
@@ -43,7 +45,7 @@ abstract class CalendarUseCase {
 
   Future<void> updateCalendarSharing(ViewCalendar calendar);
 
-  Future<ViewEvent> updateEvent(ViewEvent event);
+  Future<Displayable> updateActivity(Displayable activity);
 
   Future<void> deleteEvent(ViewEvent event);
 

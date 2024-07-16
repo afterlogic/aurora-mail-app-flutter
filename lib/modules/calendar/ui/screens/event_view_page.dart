@@ -111,7 +111,7 @@ class EventViewPage extends StatelessWidget {
                   Padding(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 24, vertical: 16),
-                      child: DateInfo(activity: eventsState.selectedEvent!)),
+                      child: DateInfo(displayable: eventsState.selectedEvent!)),
                 if (eventsState.selectedEvent != null) const SectionDivider(),
                 if (eventsState.selectedEvent != null)
                   Padding(

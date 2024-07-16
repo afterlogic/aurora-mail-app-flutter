@@ -2,9 +2,12 @@ import 'dart:async';
 
 import 'package:aurora_mail/modules/calendar/calendar_domain/calendar_repository.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/calendar_usecase.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/activity.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/calendar.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/event.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/task.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/calendar.dart';
+import 'package:aurora_mail/modules/calendar/ui/models/displayable.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/event.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/task.dart';
 import 'package:aurora_mail/modules/calendar/utils/date_time_ext.dart';
@@ -114,7 +117,6 @@ class CalendarUseCaseImpl implements CalendarUseCase {
 
     _calendarsSubject.add(calendars);
     _getLocalEvents();
-    _getLocalTasks();
   }
 
   @override
@@ -173,10 +175,10 @@ class CalendarUseCaseImpl implements CalendarUseCase {
 
   Future<void> _getLocalEvents() async {
     if (_selectedStartEventsInterval == null ||
-        _selectedEndEventsInterval == null){
-          _selectedStartEventsInterval = DateTime.now().firstDayOfMonth;
-          _selectedEndEventsInterval = DateTime.now().lastDayOfMonth;
-        }
+        _selectedEndEventsInterval == null) {
+      _selectedStartEventsInterval = DateTime.now().firstDayOfMonth;
+      _selectedEndEventsInterval = DateTime.now().lastDayOfMonth;
+    }
     final allEvents = await repository.getEventsForPeriod(
       start: _selectedStartEventsInterval!,
       end: _selectedEndEventsInterval!,
@@ -192,10 +194,10 @@ class CalendarUseCaseImpl implements CalendarUseCase {
         .whereNotNull()
         .map(
           (e) => e.copyWith(
-            startDate: _location == null
+            startDate: () => _location == null
                 ? e.startDate
                 : tz.TZDateTime.from(e.startDate, _location!),
-            endDate: _location == null
+            endDate: () => _location == null
                 ? e.endDate
                 : tz.TZDateTime.from(e.endDate, _location!),
           ),
@@ -206,9 +208,7 @@ class CalendarUseCaseImpl implements CalendarUseCase {
   }
 
   Future<void> _getLocalTasks() async {
-    final allTasks = await repository.getTasks(
-      calendarIds: selectedCalendarIds,
-    );
+    final allTasks = await repository.getTasks();
     final taskViews = allTasks
         .map((e) => e.toDisplayable(
               color: _calendarsSubject.value
@@ -231,33 +231,47 @@ class CalendarUseCaseImpl implements CalendarUseCase {
   }
 
   @override
-  Future<void> createEvent(EventCreationData data) async {
-    await repository.createEvent(data.copyWith(
-        startDate: _location == null
-            ? data.startDate
-            : tz.TZDateTime.from(data.startDate, _location!),
-        endDate: _location == null
-            ? data.endDate
-            : tz.TZDateTime.from(data.endDate, _location!)));
+  Future<void> createActivity(ActivityCreationData data) async {
+    await repository.createActivity(data.copyWith(
+        startDate: _location == null || data.startDate == null
+            ? () => data.startDate
+            : () => tz.TZDateTime.from(data.startDate!, _location!),
+        endDate: _location == null || data.endDate == null
+            ? () => data.endDate
+            : () => tz.TZDateTime.from(data.endDate!, _location!)));
     await syncCalendars();
     if (_selectedEndEventsInterval != null &&
         _selectedStartEventsInterval != null &&
+        data is EventCreationData &&
         selectedCalendarIds.contains(data.calendarId)) {
       await _getLocalEvents();
+    }
+    if (data is TaskCreationData) {
+      await _getLocalTasks();
     }
   }
 
   @override
-  Future<ViewEvent> updateEvent(ViewEvent event) async {
-    final model = await repository.updateEvent(event.copyWith(
-        startDate: _location == null
-            ? event.startDate
-            : tz.TZDateTime.from(event.startDate, _location!),
-        endDate: _location == null
-            ? event.endDate
-            : tz.TZDateTime.from(event.endDate, _location!)));
-    syncCalendars().then((_) => _getLocalEvents());
-    return ViewEvent.tryFromEvent(model, color: event.color)!;
+  Future<Displayable> updateActivity(Displayable activity) async {
+    final model = await repository.updateActivity(activity.copyWith(
+        startDate: _location == null || activity.startDate == null
+            ? () => activity.startDate
+            : () => tz.TZDateTime.from(activity.startDate!, _location!),
+        endDate: _location == null || activity.endDate == null
+            ? () => activity.endDate
+            : () => tz.TZDateTime.from(activity.endDate!, _location!)));
+    syncCalendars().then((_){
+      if(activity is Event){
+        _getLocalEvents();
+      }
+      if(activity is Task){
+        _getLocalTasks();
+      }
+    } );
+    final result = model.toDisplayable(color: activity.color);
+    if (result == null)
+      throw Exception('error .toDisplayable while updating activity');
+    return result;
   }
 
   @override

@@ -36,7 +36,7 @@ abstract class CalendarDbService {
 
   Future<List<Activity>> getActivities(
       {
-        required List<String> calendarIds,
+        required List<String>? calendarIds,
         ActivityType? type,
         required int userLocalId});
 

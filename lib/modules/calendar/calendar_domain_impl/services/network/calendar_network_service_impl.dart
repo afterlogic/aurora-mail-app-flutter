@@ -10,6 +10,7 @@ import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/rem
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/calendar.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/event.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/event_base.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/task.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain_impl/mappers/calendar_mapper.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain_impl/mappers/event_mapper.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain_impl/services/network/calendar_network_service.dart';
@@ -78,11 +79,12 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
     for (final rawEvent in queryResult) {
       try {
         final baseEvent =
-        activities.firstWhereOrNull((e) => rawEvent['uid'] == e.uid);
+            activities.firstWhereOrNull((e) => rawEvent['uid'] == e.uid);
         if (baseEvent == null)
           throw Exception('event info not found from Event from server');
-        final synchronisedActivity = EventMapper.synchronise(newData: rawEvent as Map<String, dynamic>, base: baseEvent);
-        if(synchronisedActivity == null) {
+        final synchronisedActivity = EventMapper.synchronise(
+            newData: rawEvent as Map<String, dynamic>, base: baseEvent);
+        if (synchronisedActivity == null) {
           throw Exception('Unknown activity type');
         }
         result.add(synchronisedActivity);
@@ -164,37 +166,57 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
   }
 
   @override
-  Future<void> createEvent({
-    required String subject,
-    required String calendarId,
-    required String description,
-    required DateTime startDate,
-    required DateTime endDate,
-    required List<int> reminders,
-    required bool? allDay,
-    required String location,
-    required RecurrenceMode recurrenceMode,
-    required DateTime? recurrenceUntilDate,
-    required EveryWeekFrequency? recurrenceWeeklyFrequency,
-    required Set<DaysOfWeek>? recurrenceWeekDays,
-    required Set<Attendee>? attendees,
+  Future<void> createActivity({
+    required ActivityCreationData creationData,
   }) async {
-    final rruleParameters = recurrenceMode == RecurrenceMode.never
+    // location: data.location ?? '',
+    // subject: data.subject,
+    // calendarId: data.calendarId,
+    // startDate: data.startDate,
+    // endDate: data.endDate,
+    // allDay: data.allDay,
+    // description: data.description ?? '',
+    // reminders: data.reminders.map((e) => e.toInt).toList(),
+    // recurrenceMode: data.recurrenceMode,
+    // recurrenceUntilDate: data.recurrenceUntilDate,
+    // recurrenceWeeklyFrequency: data.recurrenceWeeklyFrequency,
+    // recurrenceWeekDays: data.recurrenceWeekDays,
+    // attendees: data.attendees
+    late final ActivityType type;
+    if (creationData is EventCreationData) {
+      type = ActivityType.event;
+    } else if (creationData is TaskCreationData) {
+      type = ActivityType.task;
+    } else {
+      throw Exception('unknown ActivityCreationData subtype');
+    }
+
+    final rruleParameters = creationData.recurrenceMode == RecurrenceMode.never
         ? null
         : {
-            "startBase": startDate.toUtc().millisecondsSinceEpoch ~/ 1000,
-            "endBase": endDate.toUtc().millisecondsSinceEpoch ~/ 1000,
-            "period": recurrenceMode.periodCode,
-            "until": recurrenceUntilDate == null
+            "startBase": creationData.startDate == null
+                ? null
+                : creationData.startDate!.toUtc().millisecondsSinceEpoch ~/
+                    1000,
+            "endBase": creationData.endDate == null
+                ? null
+                : creationData.endDate!.toUtc().millisecondsSinceEpoch ~/ 1000,
+            "period": creationData.recurrenceMode.periodCode,
+            "until": creationData.recurrenceUntilDate == null
                 ? 0
-                : recurrenceUntilDate.toUtc().millisecondsSinceEpoch ~/ 1000,
-            "interval": recurrenceWeeklyFrequency == null
+                : creationData.recurrenceUntilDate!
+                        .toUtc()
+                        .millisecondsSinceEpoch ~/
+                    1000,
+            "interval": creationData.recurrenceWeeklyFrequency == null
                 ? 1
-                : recurrenceWeeklyFrequency.intervalCode,
-            "end": recurrenceUntilDate == null ? 3 : 2,
-            "byDays": recurrenceWeekDays == null
+                : creationData.recurrenceWeeklyFrequency!.intervalCode,
+            "end": creationData.recurrenceUntilDate == null ? 3 : 2,
+            "byDays": creationData.recurrenceWeekDays == null
                 ? []
-                : recurrenceWeekDays.map((e) => e.byDaysCode).toList(),
+                : creationData.recurrenceWeekDays!
+                    .map((e) => e.byDaysCode)
+                    .toList(),
             "weekNum": null,
             "count": null
           };
@@ -202,31 +224,43 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
     final parameters = {
       "id": null,
       "uid": null,
-      "calendarId": calendarId,
-      "newCalendarId": calendarId,
-      "subject": subject,
-      "allDay": allDay == true ? 1 : 0,
-      "location": location,
-      "description": description,
-      "alarms": "[${reminders.join(',')}]",
+      "calendarId": creationData.calendarId,
+      "newCalendarId": creationData.calendarId,
+      "subject": creationData.subject,
+      "allDay": creationData.allDay == true ? 1 : 0,
+      "location": creationData.location ?? '',
+      "description": creationData.description ?? '',
+      "alarms":
+          "[${creationData.reminders.map((e) => e.toInt).toList().join(',')}]",
       "recurrenceId": null,
       "excluded": false,
       "allEvents": 2,
       "modified": 1,
-      "start": startDate.toIso8601String(),
-      "end": endDate.toIso8601String(),
-      "startTS": startDate.toUtc().millisecondsSinceEpoch ~/ 1000,
-      "endTS": endDate.toUtc().millisecondsSinceEpoch ~/ 1000,
+      "start": creationData.startDate == null
+          ? null
+          : creationData.startDate!.toIso8601String(),
+      "end": creationData.endDate == null
+          ? null
+          : creationData.endDate!.toIso8601String(),
+      "startTS": creationData.startDate == null
+          ? null
+          : creationData.startDate!.toUtc().millisecondsSinceEpoch ~/ 1000,
+      "endTS": creationData.endDate == null
+          ? null
+          : creationData.endDate!.toUtc().millisecondsSinceEpoch ~/ 1000,
       "rrule": null,
-      "type": "VEVENT",
+      "type": type.stringCode,
       "status": false,
       "withDate": true,
       "isPrivate": false,
     };
 
-    if (attendees != null) {
-      parameters.addAll(
-          {"attendees": jsonEncode(attendees.map((e) => e.toMap()).toList())});
+    if (creationData is EventCreationData &&
+        creationData.attendees.isNotEmpty) {
+      parameters.addAll({
+        "attendees":
+            jsonEncode(creationData.attendees.map((e) => e.toMap()).toList())
+      });
     }
 
     if (rruleParameters != null) {
@@ -243,55 +277,82 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
   }
 
   @override
-  Future<Event> updateEvent(Event event) async {
-    final rruleParameters = event.recurrenceMode == RecurrenceMode.never
+  Future<Activity> updateActivity(Activity activity) async {
+    late final ActivityType type;
+    if (activity is Event) {
+      type = ActivityType.event;
+    } else if (activity is Task) {
+      type = ActivityType.task;
+    } else {
+      throw Exception('unknown Activity subtype');
+    }
+
+    final rruleParameters = activity.recurrenceMode == RecurrenceMode.never
         ? null
         : {
-            "startBase": event.startTS!.toUtc().millisecondsSinceEpoch ~/ 1000,
-            "endBase": event.endTS!.toUtc().millisecondsSinceEpoch ~/ 1000,
-            "period": event.recurrenceMode!.periodCode,
-            "until": event.recurrenceUntilDate == null
+            "startBase": activity.startTS == null
+                ? null
+                : activity.startTS!.toUtc().millisecondsSinceEpoch ~/ 1000,
+            "endBase": activity.endTS == null
+                ? null
+                : activity.endTS!.toUtc().millisecondsSinceEpoch ~/ 1000,
+            "period": activity.recurrenceMode!.periodCode,
+            "until": activity.recurrenceUntilDate == null
                 ? 0
-                : event.recurrenceUntilDate!.toUtc().millisecondsSinceEpoch ~/
+                : activity.recurrenceUntilDate!
+                        .toUtc()
+                        .millisecondsSinceEpoch ~/
                     1000,
-            "interval": event.recurrenceWeeklyFrequency == null
+            "interval": activity.recurrenceWeeklyFrequency == null
                 ? 1
-                : event.recurrenceWeeklyFrequency!.intervalCode,
-            "end": event.recurrenceUntilDate == null ? 3 : 2,
-            "byDays": event.recurrenceWeekDays == null
+                : activity.recurrenceWeeklyFrequency!.intervalCode,
+            "end": activity.recurrenceUntilDate == null ? 3 : 2,
+            "byDays": activity.recurrenceWeekDays == null
                 ? []
-                : event.recurrenceWeekDays!.map((e) => e.byDaysCode).toList(),
+                : activity.recurrenceWeekDays!
+                    .map((e) => e.byDaysCode)
+                    .toList(),
             "weekNum": null,
             "count": null
           };
-
     final parameters = {
-      "id": '${event.uid}-${event.recurrenceId}',
-      "uid": event.uid,
-      "calendarId": event.calendarId,
-      "newCalendarId": event.calendarId,
-      "subject": event.subject!,
-      "allDay": event.allDay == true ? 1 : 0,
-      "location": event.location ?? '',
-      "description": event.description ?? '',
-      "alarms": event.reminders == null
+      "id": '${activity.uid}-${activity.recurrenceId}',
+      "uid": activity.uid,
+      "calendarId": activity.calendarId,
+      "newCalendarId": activity.calendarId,
+      "subject": activity.subject!,
+      "allDay": activity.allDay == true ? 1 : 0,
+      "location": activity.location ?? '',
+      "description": activity.description ?? '',
+      "alarms": activity.reminders == null
           ? "[]"
-          : "[${event.reminders!.map((e) => e.toInt).join(',')}]",
+          : "[${activity.reminders!.map((e) => e.toInt).join(',')}]",
       "recurrenceId": null,
       "excluded": false,
       "allEvents": 2,
       "modified": 1,
-      "start": event.startTS!.toIso8601String(),
-      "end": event.endTS!.toIso8601String(),
-      "startTS": event.startTS!.toUtc().millisecondsSinceEpoch ~/ 1000,
-      "endTS": event.endTS!.toUtc().millisecondsSinceEpoch ~/ 1000,
+      "start":
+          activity.startTS == null ? null : activity.startTS!.toIso8601String(),
+      "end": activity.endTS == null ? null : activity.endTS!.toIso8601String(),
+      "startTS": activity.startTS == null
+          ? null
+          : activity.startTS!.toUtc().millisecondsSinceEpoch ~/ 1000,
+      "endTS": activity.endTS == null
+          ? null
+          : activity.endTS!.toUtc().millisecondsSinceEpoch ~/ 1000,
       "rrule": null,
-      "type": "VEVENT",
-      "status": false,
+      "type": type.stringCode,
+      "status": activity.status ?? false,
       "withDate": true,
       "isPrivate": false,
-      "attendees": jsonEncode(event.attendees.map((e) => e.toMap()).toList())
     };
+
+    if (activity is Event) {
+      parameters.addAll({
+        "attendees":
+            jsonEncode(activity.attendees.map((e) => e.toMap()).toList())
+      });
+    }
 
     if (rruleParameters != null) {
       parameters.addAll({"rrule": jsonEncode(rruleParameters)});
@@ -303,8 +364,13 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
     );
 
     final result = await calendarModule.post(body) as Map<String, dynamic>;
-    return Event.fill(
-        event, (result["Events"] as List).first as Map<String, dynamic>);
+    final syncResult = EventMapper.synchronise(
+        newData: (result["Events"] as List).first as Map<String, dynamic>,
+        base: activity);
+    if (syncResult == null)
+      throw Exception('synchronise error while updating activity');
+
+    return syncResult;
   }
 
   @override
