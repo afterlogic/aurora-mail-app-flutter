@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:aurora_mail/modules/calendar/blocs/events/events_bloc.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/event.dart';
 import 'package:aurora_mail/modules/calendar/ui/screens/event_view_page.dart';
+import 'package:aurora_mail/modules/calendar/ui/widgets/month_event_marker.dart';
 import 'package:calendar_view/calendar_view.dart' as CV;
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -18,8 +19,8 @@ class WeekView extends StatefulWidget {
 
 class _WeekViewState extends State<WeekView> {
   final List<String> weekTitles = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
-  final CV.EventController<ViewEvent> _controller =
-      CV.EventController<ViewEvent>();
+  final CV.EventController<ViewEvent?> _controller =
+      CV.EventController<ViewEvent?>();
   late final EventsBloc _bloc;
   late final StreamSubscription _subscription;
 
@@ -42,18 +43,20 @@ class _WeekViewState extends State<WeekView> {
     final events = state.getEventsFromWeek();
     final oldEvents = [..._controller.allEvents];
     _controller.removeAll(oldEvents);
-    events.forEach((e) {
-      _controller.add(
-        CV.CalendarEventData<ViewEvent>(
-          event: e,
-          title: e.title,
-          date: e.startDate.withoutTime,
-          endDate: e.endDate.withoutTime,
-          startTime: e.allDay != false ? null : e.startDate,
-          endTime: e.allDay != false ? null : e.endDate,
-          color: e.color,
-        ),
-      );
+    events.forEach((key, value) {
+      value.forEach((e) {
+        _controller.add(
+          CV.CalendarEventData<ViewEvent?>(
+            event: e,
+            title: e == null ? '' : e.title,
+            date: e?.allDay != false ? key.withoutTime : e!.startDate.withoutTime,
+            endDate: e?.allDay != false ? key.withoutTime : e!.endDate.withoutTime,
+            startTime: e?.allDay != false ? null : e!.startDate,
+            endTime: e?.allDay != false ? null : e!.endDate,
+            color: e == null ? Colors.transparent : e.color,
+          ),
+        );
+      });
     });
   }
 
@@ -68,7 +71,6 @@ class _WeekViewState extends State<WeekView> {
           liveTimeIndicatorSettings: CV.LiveTimeIndicatorSettings(
               color: Theme.of(context).primaryColor, height: 3),
           initialDay: state.selectedDate,
-
           headerStyle: CV.HeaderStyle(
             leftIcon: Icon(
               Icons.chevron_left,
@@ -118,18 +120,17 @@ class _WeekViewState extends State<WeekView> {
               ),
             );
           },
-          // fullDayEventBuilder: (events, date) {
-          //   return Column(
-          //     children: events
-          //         .map((e) => Container(
-          //               color: Colors.red,
-          //               height: 20,
-          //               width: double.infinity,
-          //               child: Text(e.title),
-          //             ))
-          //         .toList(),
-          //   );
-          // },
+          fullDayEventBuilder:
+              (List<CV.CalendarEventData<Object?>> events, DateTime date) {
+            return Column(
+              children: events
+                  .map((e) => MonthEventMarker(
+                        event: (e as CV.CalendarEventData<ViewEvent?>).event,
+                        currentDate: date,
+                      ))
+                  .toList(),
+            );
+          },
           controller: _controller,
           onPageChange: (date, pageIndex) => _bloc.add(SelectDate(date)),
           onEventTap:

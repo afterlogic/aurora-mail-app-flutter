@@ -41,23 +41,50 @@ class EventsState extends Equatable {
     return filteredEvents;
   }
 
-  List<ViewEvent> getEventsFromWeek({DateTime? date}) {
-    if (originalEvents == null) {
-      return [];
+  List<DateTime> _daysFromInterval(DateTime start, DateTime end) {
+    List<DateTime> dates = [];
+
+    if (start.isAfter(end)) {
+      return dates;
     }
+
+    DateTime current = start;
+    while (current.isBefore(end) || current.isAtSameMomentAs(end)) {
+      dates.add(current);
+      current = current.add(Duration(days: 1));
+    }
+
+    return dates;
+  }
+
+  Map<DateTime, List<ViewEvent?>> getEventsFromWeek({DateTime? date}) {
+    if (originalEvents == null) {
+      return {};
+    }
+
+
 
     DateTime startOfWeek =
         selectedDate.subtract(Duration(days: selectedDate.weekday - 1));
     DateTime endOfWeek = startOfWeek.add(Duration(days: 6));
 
-    final selectedEvents = originalEvents!.where((event) {
-      return !(event.endDate.isBefore(startOfWeek) ||
-          event.startDate.isAfter(endOfWeek));
-    }).toList();
-    return selectedEvents
-        .expand<ViewEvent>(
-            (e) => e.allDay != false ? [e] : e.splitIntoDailyEvents)
-        .toList();
+    final dates = _daysFromInterval(startOfWeek, endOfWeek);
+    final Map<DateTime, List<ViewEvent?>> result = {};
+
+    for(final date in dates){
+      result.addAll({date: getEventsForDayFromMap(date: date)});
+    }
+
+    return result;
+
+    // final selectedEvents = originalEvents!.where((event) {
+    //   return !(event.endDate.isBefore(startOfWeek) ||
+    //       event.startDate.isAfter(endOfWeek));
+    // }).toList();
+    // return selectedEvents
+    //     .expand<ViewEvent>(
+    //         (e) => e.allDay != false ? [e] : e.splitIntoDailyEvents)
+    //     .toList();
   }
 
   List<ViewEvent?> getEventsForDayFromMap({required DateTime date}) {
