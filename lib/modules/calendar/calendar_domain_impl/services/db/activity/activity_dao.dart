@@ -1,5 +1,6 @@
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/activity.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/filters.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/update_status.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain_impl/services/db/activity/activity_table.dart';
 import 'package:drift/drift.dart';
@@ -118,6 +119,7 @@ class ActivityDao extends DatabaseAccessor<AppDatabase>
   Future<List<ActivityDb>> getAll(
       {ActivityType? type,
       required List<String>? calendarIds,
+      required ActivityFilter filter,
       required int userLocalId}) {
     final activitySelect = select(activityTable);
     if (type != null) {
@@ -125,6 +127,24 @@ class ActivityDao extends DatabaseAccessor<AppDatabase>
     }
     if (calendarIds != null) {
       activitySelect.where((t) => t.calendarId.isIn(calendarIds));
+    }
+    switch (filter.date) {
+      case ActivityDateFilter.hasDate:
+        activitySelect
+            .where((t) => t.startTS.isNotNull() & t.endTS.isNotNull());
+        break;
+      case ActivityDateFilter.withoutDate:
+        activitySelect.where((t) => t.startTS.isNull() & t.endTS.isNull());
+        break;
+      case ActivityDateFilter.all:
+        break;
+    }
+    switch (filter.status) {
+      case ActivityStatusFilter.completedOnly:
+        activitySelect.where((t) => t.status.equals(true));
+        break;
+      case ActivityStatusFilter.all:
+        break;
     }
     activitySelect.where(
         (t) => t.userLocalId.equals(userLocalId) & t.onceLoaded.equals(true));

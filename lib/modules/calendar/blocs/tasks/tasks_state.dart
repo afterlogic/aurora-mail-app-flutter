@@ -4,12 +4,14 @@ class TasksState extends Equatable {
   final TasksStatus status;
   final List<ViewTask>? tasks;
   final ViewTask? selectedTask;
+  final ActivityFilter filter;
 
 
   const TasksState({
     this.status = TasksStatus.idle,
     this.tasks,
     this.selectedTask,
+    this.filter = const ActivityFilter()
   });
 
   @override
@@ -17,6 +19,7 @@ class TasksState extends Equatable {
         status,
         tasks,
         selectedTask,
+    filter
       ];
 
 
@@ -24,14 +27,15 @@ class TasksState extends Equatable {
     TasksStatus? status,
     List<ViewTask>? Function()? tasks,
     ViewTask? Function()? selectedTask,
+    ActivityFilter ? filter,
   }) {
     return TasksState(
+      filter: filter ?? this.filter,
       status: status ?? this.status,
       tasks:
       tasks == null ? this.tasks : tasks(),
       selectedTask:
       selectedTask == null ? this.selectedTask : selectedTask(),
-
     );
   }
 }

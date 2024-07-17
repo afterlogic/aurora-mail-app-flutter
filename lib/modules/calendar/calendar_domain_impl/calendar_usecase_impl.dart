@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:aurora_mail/modules/calendar/calendar_domain/calendar_repository.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/calendar_usecase.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/activity.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/filters.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/calendar.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/event.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/task.dart';
@@ -25,6 +26,7 @@ class CalendarUseCaseImpl implements CalendarUseCase {
   DateTime? _selectedStartEventsInterval;
   DateTime? _selectedEndEventsInterval;
   tz.Location? _location;
+  ActivityFilter _tasksFilter = ActivityFilter();
 
   final BehaviorSubject<List<ViewCalendar>> _calendarsSubject =
       BehaviorSubject.seeded([]);
@@ -120,6 +122,12 @@ class CalendarUseCaseImpl implements CalendarUseCase {
   }
 
   @override
+  void updateTasksFilter(ActivityFilter filter) {
+    _tasksFilter = filter;
+    _getLocalTasks();
+  }
+
+  @override
   Future<void> deleteCalendar(ViewCalendar calendar) async {
     await repository.deleteCalendar(calendar);
     _calendarsSubject
@@ -208,7 +216,7 @@ class CalendarUseCaseImpl implements CalendarUseCase {
   }
 
   Future<void> _getLocalTasks() async {
-    final allTasks = await repository.getTasks();
+    final allTasks = await repository.getTasks(_tasksFilter);
     final taskViews = allTasks
         .map((e) => e.toDisplayable(
               color: _calendarsSubject.value
@@ -260,14 +268,14 @@ class CalendarUseCaseImpl implements CalendarUseCase {
         endDate: _location == null || activity.endDate == null
             ? () => activity.endDate
             : () => tz.TZDateTime.from(activity.endDate!, _location!)));
-    syncCalendars().then((_){
-      if(activity is Event){
+    syncCalendars().then((_) {
+      if (activity is Event) {
         _getLocalEvents();
       }
-      if(activity is Task){
+      if (activity is Task) {
         _getLocalTasks();
       }
-    } );
+    });
     final result = model.toDisplayable(color: activity.color);
     if (result == null)
       throw Exception('error .toDisplayable while updating activity');

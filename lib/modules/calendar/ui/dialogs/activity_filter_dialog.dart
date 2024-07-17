@@ -13,7 +13,7 @@ class ActivityFilterDialog extends StatefulWidget {
         context: context,
         builder: (_) => ActivityFilterDialog(
               selectedFilter: selectedFilter,
-            )).then((value) => value);
+            ));
   }
 
   @override
@@ -34,13 +34,22 @@ class _ActivityFilterDialogState extends State<ActivityFilterDialog> {
   @override
   Widget build(BuildContext context) {
     return BaseCalendarDialog(
-      removeContentPadding: true,
+      title: 'Filter',
       content: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text('Data'),
+          Padding(
+            padding: const EdgeInsets.only(left: 8.0, bottom: 4.0),
+            child: Text(
+              'Data',
+              style: TextStyle(color: Colors.grey),
+            ),
+          ),
           ...ActivityDateFilter.values.map(
             (e) => RadioListTile<ActivityDateFilter>(
+              contentPadding: EdgeInsets.zero,
+              visualDensity: VisualDensity.compact,
               title: Text(e.buildString),
               value: e,
               groupValue: _selectedDateFilter,
@@ -52,9 +61,17 @@ class _ActivityFilterDialogState extends State<ActivityFilterDialog> {
             ),
           ),
           const SizedBox(height: 20),
-          Text('Task status'),
+          Padding(
+            padding: const EdgeInsets.only(left: 8.0, bottom: 4.0),
+            child: Text(
+              'Task status',
+              style: TextStyle(color: Colors.grey),
+            ),
+          ),
           ...ActivityStatusFilter.values.map(
             (e) => RadioListTile<ActivityStatusFilter>(
+              contentPadding: EdgeInsets.zero,
+              visualDensity: VisualDensity.compact,
               title: Text(e.buildString),
               value: e,
               groupValue: _selectedStatusFilter,

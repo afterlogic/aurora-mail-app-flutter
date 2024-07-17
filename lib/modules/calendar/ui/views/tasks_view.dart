@@ -1,5 +1,6 @@
 import 'package:aurora_mail/modules/calendar/blocs/tasks/tasks_bloc.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/calendar_usecase.dart';
+import 'package:aurora_mail/modules/calendar/ui/dialogs/activity_filter_dialog.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/task.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/task_widget.dart';
 import 'package:flutter/material.dart';
@@ -37,11 +38,22 @@ class _TasksViewState extends State<TasksView> {
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
                 ),
                 const Spacer(),
-                IconButton(
-                  padding: EdgeInsets.zero,
-                  constraints: BoxConstraints(),
-                  icon: Icon(Icons.filter_alt_outlined),
-                  onPressed: () {},
+                BlocBuilder<TasksBloc, TasksState>(
+                  bloc: _bloc,
+                  builder: (context, state) {
+                    return IconButton(
+                      padding: EdgeInsets.zero,
+                      constraints: BoxConstraints(),
+                      icon: Icon(Icons.filter_alt_outlined),
+                      onPressed: () {
+                        ActivityFilterDialog.show(context,
+                            selectedFilter: state.filter).then((value) {
+                              if(value == null) return;
+                              _bloc.add(UpdateFilter(value));
+                        });
+                      },
+                    );
+                  },
                 )
               ],
             ),

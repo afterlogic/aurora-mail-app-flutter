@@ -2,6 +2,7 @@ import 'package:aurora_logger/aurora_logger.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/activity.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/activity_base.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/filters.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/calendar.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/event.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/event_base.dart';
@@ -99,8 +100,12 @@ class CalendarDbServiceImpl implements CalendarDbService {
 
   @override
   Future<List<Activity>> getActivities(
-      {required List<String>? calendarIds, ActivityType? type, required int userLocalId}) async {
+      {required List<String>? calendarIds,
+      required ActivityFilter filter,
+      ActivityType? type,
+      required int userLocalId}) async {
     final entities = await _activityDao.getAll(
+        filter: filter,
         calendarIds: calendarIds,
         type: type,
         userLocalId: userLocalId);

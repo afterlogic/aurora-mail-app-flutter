@@ -1,4 +1,5 @@
 import 'package:aurora_mail/modules/calendar/calendar_domain/calendar_usecase.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/filters.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/task.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/task.dart';
 import 'package:bloc/bloc.dart';
@@ -25,6 +26,7 @@ class TasksBloc extends Bloc<TasksEvent, TasksState> {
     on<AddTasks>(_onAddTasks);
     on<SelectTask>(_onSelectTask);
     on<UpdateTask>(_onUpdateTask);
+    on<UpdateFilter>(_onUpdateFilter);
     on<DeleteTask>(_onDeleteTask);
   }
 
@@ -41,6 +43,12 @@ class TasksBloc extends Bloc<TasksEvent, TasksState> {
     } finally {
       emit(state.copyWith(status: TasksStatus.idle));
     }
+  }
+
+  _onUpdateFilter(UpdateFilter event, emit) async {
+    if(state.filter == event.filter) return;
+    emit(state.copyWith(filter: event.filter));
+    _useCase.updateTasksFilter(event.filter);
   }
 
   _onDeleteTask(DeleteTask event, emit) async {

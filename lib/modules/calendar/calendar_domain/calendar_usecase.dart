@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:aurora_mail/modules/calendar/calendar_domain/calendar_repository.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/activity.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/filters.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/calendar.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/event.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain_impl/calendar_usecase_impl.dart';
@@ -13,15 +14,9 @@ import 'package:rxdart/streams.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 abstract class CalendarUseCase {
-  factory CalendarUseCase({
-    required CalendarRepository repository,
-    tz.Location? location
-  }) =>
-      CalendarUseCaseImpl(
-        repository: repository,
-        location: location
-      );
-
+  factory CalendarUseCase(
+          {required CalendarRepository repository, tz.Location? location}) =>
+      CalendarUseCaseImpl(repository: repository, location: location);
 
   ValueStream<List<ViewCalendar>> get calendarsSubscription;
 
@@ -55,5 +50,8 @@ abstract class CalendarUseCase {
 
   Future<void> clearData();
 
-  void updateSelectedCalendarIds({required String selectedId, bool isAdded = true});
+  void updateSelectedCalendarIds(
+      {required String selectedId, bool isAdded = true});
+
+  void updateTasksFilter(ActivityFilter filter);
 }

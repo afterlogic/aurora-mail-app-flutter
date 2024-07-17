@@ -3,7 +3,7 @@ import 'package:equatable/equatable.dart';
 class ActivityFilter extends Equatable {
   final ActivityDateFilter date;
   final ActivityStatusFilter status;
-  const ActivityFilter({required this.date, required this.status});
+  const ActivityFilter({this.date = ActivityDateFilter.all, this.status = ActivityStatusFilter.all});
 
   ActivityFilter copyWith(
       {ActivityDateFilter? date, ActivityStatusFilter? status}) {

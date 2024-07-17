@@ -13,6 +13,13 @@ class UpdateTask extends TasksEvent{
   List<Object?> get props => [task];
 }
 
+class UpdateFilter extends TasksEvent{
+  final ActivityFilter filter;
+  const UpdateFilter(this.filter);
+  @override
+  List<Object?> get props => [filter];
+}
+
 class DeleteTask extends TasksEvent{
   const DeleteTask();
 }

@@ -1,6 +1,7 @@
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/activity.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/activity_base.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/filters.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/calendar.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/event.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/event_base.dart';
@@ -35,14 +36,14 @@ abstract class CalendarDbService {
       required int userLocalId});
 
   Future<List<Activity>> getActivities(
-      {
-        required List<String>? calendarIds,
-        ActivityType? type,
-        required int userLocalId});
+      {required ActivityFilter filter,
+      required List<String>? calendarIds,
+      ActivityType? type,
+      required int userLocalId});
 
   //TODO get tasks for period
 
-  //TODO get all tasks 
+  //TODO get all tasks
 
   Future<void> clearData();
 }

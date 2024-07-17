@@ -5,6 +5,7 @@ import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/calendar_repository.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/activity.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/activity_base.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/filters.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/reminders_option.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/calendar.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/event.dart';
@@ -142,8 +143,9 @@ class CalendarRepositoryImpl implements CalendarRepository {
   }
 
   @override
-  Future<List<Task>> getTasks() async {
+  Future<List<Task>> getTasks(ActivityFilter filter) async {
     final activities = await _db.getActivities(
+        filter: filter,
         userLocalId: user.localId!,
         type: ActivityType.task,
         calendarIds: null);
@@ -187,7 +189,8 @@ class CalendarRepositoryImpl implements CalendarRepository {
   Future<void> updateCalendarPublic(Calendar calendar) async {
     final isUpdated = await _network.updateCalendarPublic(
         calendarId: calendar.id, isPublic: calendar.isPublic);
-    if(!isUpdated) throw Exception('Error while changing calendar public status');
+    if (!isUpdated)
+      throw Exception('Error while changing calendar public status');
     await _db.createOrUpdateCalendar(calendar);
   }
 
@@ -195,14 +198,13 @@ class CalendarRepositoryImpl implements CalendarRepository {
   Future<void> updateCalendarSharing(Calendar calendar) async {
     final isUpdated = await _network.updateSharing(
         calendarId: calendar.id, participants: calendar.shares.toList());
-    if(!isUpdated) throw Exception('Error while changing calendar shares');
+    if (!isUpdated) throw Exception('Error while changing calendar shares');
     await _db.createOrUpdateCalendar(calendar);
   }
 
   @override
   Future<void> createActivity(ActivityCreationData data) {
-    return _network.createActivity(creationData: data
-       );
+    return _network.createActivity(creationData: data);
   }
 
   @override
