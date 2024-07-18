@@ -67,6 +67,7 @@ class _WeekViewState extends State<WeekView> {
     return BlocBuilder<EventsBloc, EventsState>(
       builder: (context, state) {
         return CV.WeekView<ViewEvent?>(
+          fullDayHeaderTitle: 'ALL DAY',
           showLiveTimeLineInAllDays: true,
           liveTimeIndicatorSettings: CV.LiveTimeIndicatorSettings(
               color: Theme.of(context).primaryColor, height: 3),
