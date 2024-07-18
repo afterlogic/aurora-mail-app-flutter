@@ -10,6 +10,8 @@ class MonthEventMarker extends StatelessWidget {
       required this.event,
       this.height = 15,
       this.fontSize = 10,
+      this.implementLeftBorder = false,
+      this.implementBorder = false,
       this.forceTitleRender = false,
       this.radius = 4.0,
       this.innerPaddingValue = 4.0,
@@ -17,6 +19,8 @@ class MonthEventMarker extends StatelessWidget {
       this.eventGap = 2});
 
   final ViewEvent? event;
+  final bool implementLeftBorder;
+  final bool implementBorder;
   final double eventGap;
   final double height;
   final DateTime currentDate;
@@ -37,51 +41,57 @@ class MonthEventMarker extends StatelessWidget {
                 EventViewPage.name,
               );
             },
-            child: Padding(
-              padding: EdgeInsets.only(
-                  left: event?.isStartedToday(currentDate) == true
-                      ? innerPaddingValue
-                      : 0,
-                  right: event?.isEndedToday(currentDate) == true
-                      ? innerPaddingValue
-                      : 0),
-              child: Container(
-                  margin: EdgeInsets.only(bottom: eventGap),
-                  padding: EdgeInsets.only(left: 4),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                        topLeft: event?.isStartedToday(currentDate) == true
-                            ? Radius.circular(radius)
-                            : Radius.zero,
-                        bottomLeft: event?.isStartedToday(currentDate) == true
-                            ? Radius.circular(radius)
-                            : Radius.zero,
-                        topRight: event?.isEndedToday(currentDate) == true
-                            ? Radius.circular(radius)
-                            : Radius.zero,
-                        bottomRight: event?.isEndedToday(currentDate) == true
-                            ? Radius.circular(radius)
-                            : Radius.zero,
+            child: Container(
+              decoration: BoxDecoration(
+                  border: Border(
+                      right: implementBorder && event?.isEndedToday(currentDate) == true ? BorderSide(color: Color(0xffdddddd)) : BorderSide.none,
+                      left: implementLeftBorder && implementBorder && event?.isStartedToday(currentDate) == true
+                          ? BorderSide(color: Color(0xffdddddd))
+                          : BorderSide.none)),
+              child: Padding(
+                padding: EdgeInsets.only(
+                    left: event?.isStartedToday(currentDate) == true
+                        ? innerPaddingValue
+                        : 0,
+                    right: event?.isEndedToday(currentDate) == true
+                        ? innerPaddingValue
+                        : 0),
+                child: Container(
+                    margin: EdgeInsets.only(bottom: eventGap),
+                    padding: EdgeInsets.only(left: 4),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.only(
+                          topLeft: event?.isStartedToday(currentDate) == true
+                              ? Radius.circular(radius)
+                              : Radius.zero,
+                          bottomLeft: event?.isStartedToday(currentDate) == true
+                              ? Radius.circular(radius)
+                              : Radius.zero,
+                          topRight: event?.isEndedToday(currentDate) == true
+                              ? Radius.circular(radius)
+                              : Radius.zero,
+                          bottomRight: event?.isEndedToday(currentDate) == true
+                              ? Radius.circular(radius)
+                              : Radius.zero,
+                        ),
+                        color: event!.color),
+                    width: 60,
+                    height: height,
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        forceTitleRender ||
+                                event?.isStartedToday(currentDate) == true
+                            ? event!.title
+                            : '',
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(fontSize: fontSize, color: Colors.white),
                       ),
-                      color: event!.color),
-                  width: 60,
-                  height: height,
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      forceTitleRender ||
-                              event?.isStartedToday(currentDate) == true
-                          ? event!.title
-                          : '',
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(fontSize: fontSize, color: Colors.white),
-                    ),
-                  )),
+                    )),
+              ),
             ),
           )
-        : SizedBox(
-            height: emptyHeight,
-          );
+        : EmptyMarker(h: emptyHeight, w: 60, implementLeftBorder: implementLeftBorder, implementBorder: implementBorder,);
   }
 
   BorderRadius? _calculateBorderRadius(Edge edge) {
@@ -100,6 +110,37 @@ class MonthEventMarker extends StatelessWidget {
       case Edge.part:
         return null;
     }
+  }
+}
+
+class EmptyMarker extends StatelessWidget {
+  final bool implementLeftBorder;
+  final bool implementBorder;
+  final double h;
+  final double w;
+  const EmptyMarker(
+      {super.key,
+      required this.implementLeftBorder,
+      required this.implementBorder,
+      required this.h,
+      required this.w});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+          border: Border(
+              right: implementBorder
+                  ? BorderSide(color: Color(0xffdddddd))
+                  : BorderSide.none,
+              left: implementLeftBorder && implementBorder
+                  ? BorderSide(color: Color(0xffdddddd))
+                  : BorderSide.none)),
+      child: SizedBox(
+        height: h,
+        width: w,
+      ),
+    );
   }
 }
 

@@ -8,11 +8,19 @@ import 'package:aurora_mail/modules/calendar/calendar_domain/models/event.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/rrule.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/update_status.dart';
 import 'package:aurora_mail/modules/calendar/utils/date_time_ext.dart';
+import 'package:aurora_mail/utils/always_non_equal_object.dart';
 import 'package:flutter/material.dart';
 
 import 'displayable.dart';
 
-class ViewEvent extends Event implements Displayable{
+abstract class WeekViewVisible{
+}
+
+class EmptyViewEvent with AlwaysNonEqualObject implements WeekViewVisible{
+  const EmptyViewEvent();
+}
+
+class ViewEvent extends Event implements Displayable, WeekViewVisible{
   final DateTime startDate;
   final DateTime endDate;
   final Color color;

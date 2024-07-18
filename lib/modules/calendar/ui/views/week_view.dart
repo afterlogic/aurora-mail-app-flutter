@@ -19,8 +19,8 @@ class WeekView extends StatefulWidget {
 
 class _WeekViewState extends State<WeekView> {
   final List<String> weekTitles = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
-  final CV.EventController<ViewEvent?> _controller =
-      CV.EventController<ViewEvent?>();
+  final CV.EventController<WeekViewVisible> _controller =
+      CV.EventController<WeekViewVisible>();
   late final EventsBloc _bloc;
   late final StreamSubscription _subscription;
 
@@ -46,11 +46,13 @@ class _WeekViewState extends State<WeekView> {
     events.forEach((key, value) {
       value.forEach((e) {
         _controller.add(
-          CV.CalendarEventData<ViewEvent?>(
-            event: e,
+          CV.CalendarEventData<WeekViewVisible>(
+            event: e == null ? EmptyViewEvent() : e,
             title: e == null ? '' : e.title,
-            date: e?.allDay != false ? key.withoutTime : e!.startDate.withoutTime,
-            endDate: e?.allDay != false ? key.withoutTime : e!.endDate.withoutTime,
+            date:
+                e?.allDay != false ? key.withoutTime : e!.startDate.withoutTime,
+            endDate:
+                e?.allDay != false ? key.withoutTime : e!.endDate.withoutTime,
             startTime: e?.allDay != false ? null : e!.startDate,
             endTime: e?.allDay != false ? null : e!.endDate,
             color: e == null ? Colors.transparent : e.color,
@@ -66,8 +68,8 @@ class _WeekViewState extends State<WeekView> {
 
     return BlocBuilder<EventsBloc, EventsState>(
       builder: (context, state) {
-        return CV.WeekView<ViewEvent?>(
-          fullDayHeaderTitle: 'ALL DAY',
+        return CV.WeekView<WeekViewVisible>(
+          fullDayHeaderTitle: 'All\nday',
           showLiveTimeLineInAllDays: true,
           liveTimeIndicatorSettings: CV.LiveTimeIndicatorSettings(
               color: Theme.of(context).primaryColor, height: 3),
@@ -124,9 +126,13 @@ class _WeekViewState extends State<WeekView> {
           fullDayEventBuilder:
               (List<CV.CalendarEventData<Object?>> events, DateTime date) {
             return Column(
-              children: events
+              children: events.reversed
                   .map((e) => MonthEventMarker(
-                        event: (e as CV.CalendarEventData<ViewEvent?>).event,
+                        event: (e as CV.CalendarEventData<WeekViewVisible>)
+                                .event is ViewEvent
+                            ? e.event as ViewEvent
+                            : null,
+                        implementBorder: true,
                         currentDate: date,
                       ))
                   .toList(),
