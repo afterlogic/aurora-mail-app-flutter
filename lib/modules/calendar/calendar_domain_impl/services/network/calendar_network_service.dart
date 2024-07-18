@@ -30,7 +30,7 @@ abstract class CalendarNetworkService {
 
   Future<Activity> updateActivity(Activity activity);
 
-  Future<void> deleteEvent(Event event);
+  Future<void> deleteActivity(Activity activity);
 
   Future<bool> updateSharing({required List<Participant> participants, required String calendarId});
 

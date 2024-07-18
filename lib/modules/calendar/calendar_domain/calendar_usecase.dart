@@ -42,9 +42,11 @@ abstract class CalendarUseCase {
 
   Future<Displayable> updateActivity(Displayable activity);
 
-  Future<void> deleteEvent(ViewEvent event);
+  Future<void> deleteActivity(Activity activity);
 
   Future<void> deleteCalendar(ViewCalendar calendar);
+
+  Future<void> unsubscribeFromCalendar(ViewCalendar calendar);
 
   Future<void> getCalendars();
 

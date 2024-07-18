@@ -75,6 +75,13 @@ class UpdateCalendarPublic extends CalendarsEvent {
   List<Object?> get props => [calendar];
 }
 
+class UnsubscribeFromCalendar extends CalendarsEvent {
+  final ViewCalendar calendar;
+  const UnsubscribeFromCalendar(this.calendar);
+  @override
+  List<Object?> get props => [calendar];
+}
+
 class UpdateCalendarShares extends CalendarsEvent {
   final String calendarId;
   final Set<Participant> shares;

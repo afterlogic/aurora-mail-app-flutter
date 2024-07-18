@@ -4,6 +4,8 @@ import 'package:aurora_mail/modules/calendar/calendar_domain/models/event.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/event.dart';
 import 'package:aurora_mail/modules/calendar/utils/date_time_ext.dart';
 import 'package:aurora_mail/modules/calendar/utils/events_grid_builder.dart';
+import 'package:aurora_mail/utils/api_utils.dart';
+import 'package:aurora_mail/utils/error_to_show.dart';
 import 'package:bloc/bloc.dart';
 import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
@@ -39,57 +41,39 @@ class EventsBloc extends Bloc<EventBlocEvent, EventsState> {
     on<SelectDate>(_onSelectDate);
   }
 
-  _onSelectEvent(SelectEvent event, emit) async {
+  _onSelectEvent(SelectEvent event, Emitter<EventsState> emit) async {
     emit(state.copyWith(selectedEvent: () => event.event));
   }
 
-  _onUpdateEvent(UpdateEvent event, emit) async {
-    try {
+  _onUpdateEvent(UpdateEvent event, Emitter<EventsState> emit) async {
+    await _asyncErrorHandler(() async {
       final updatedEvent = await _useCase.updateActivity(event.event);
       emit(state.copyWith(selectedEvent: () => updatedEvent as ViewEvent));
-    } catch (e, st) {
-      emit(state.copyWith(status: EventsStatus.error));
-    } finally {
-      emit(state.copyWith(status: EventsStatus.idle));
-    }
+    }, emit);
   }
 
-  _onDeleteEvent(DeleteEvent event, emit) async {
-    try {
-      await _useCase.deleteEvent(state.selectedEvent!);
-      emit(state.copyWith(selectedEvent: () => null));
-    } catch (e, st) {
-      emit(state.copyWith(status: EventsStatus.error));
-    } finally {
-      emit(state.copyWith(status: EventsStatus.idle));
-    }
+  _onDeleteEvent(DeleteEvent event, Emitter<EventsState> emit) async {
+    await _asyncErrorHandler(() async {
+      await _useCase.deleteActivity(state.selectedEvent!);
+    }, emit);
   }
 
-  _onLoadEvents(LoadEvents event, emit) async {
-    emit(state.copyWith(status: EventsStatus.loading));
-    try {
+  _onLoadEvents(LoadEvents event, Emitter<EventsState> emit) async {
+    await _asyncErrorHandler(() async {
       await _useCase.getForPeriod(
           start: state.startIntervalDate.withoutTime.subtract(extraDuration),
           end: state.endIntervalDate.startOfNextDay.add(extraDuration));
-    } catch (e, st) {
-      emit(state.copyWith(status: EventsStatus.error));
-    } finally {
-      emit(state.copyWith(status: EventsStatus.idle));
-    }
+    }, emit);
   }
 
-  _onCreateEvent(CreateEvent event, emit) async {
-    try {
+  _onCreateEvent(CreateEvent event, Emitter<EventsState> emit) async {
+    await _asyncErrorHandler(() async {
       await _useCase.createActivity(event.creationData);
-    } catch (e, st) {
-      emit(state.copyWith(status: EventsStatus.error));
-    } finally {
-      emit(state.copyWith(status: EventsStatus.idle));
-    }
+    }, emit);
   }
 
-  _onAddEvents(AddEvents event, emit) async {
-    try {
+  _onAddEvents(AddEvents event, Emitter<EventsState> emit) async {
+    _errorHandler(() {
       final weeks = generateWeeks(
           state.startIntervalDate.subtract(extraDuration),
           state.endIntervalDate.add(extraDuration));
@@ -104,24 +88,17 @@ class EventsBloc extends Bloc<EventBlocEvent, EventsState> {
           status: EventsStatus.success,
           eventsMap: () => viewEvents,
           originalEvents: () => event.events));
-    } catch (e, st) {
-      emit(state.copyWith(status: EventsStatus.error));
-    } finally {
-      emit(state.copyWith(status: EventsStatus.idle));
-    }
+    }, emit);
   }
 
-  _onStartSync(StartSync event, emit) async {
-    try {
+  _onStartSync(StartSync event, Emitter<EventsState> emit) async {
+    await _asyncErrorHandler(() async {
       await _useCase.syncCalendars();
-      add(LoadEvents());
-    } catch (e, st) {
-      print(e);
-      print(st);
-    }
+    }, emit);
+    add(LoadEvents());
   }
 
-  _onSelectDate(SelectDate event, emit) async {
+  _onSelectDate(SelectDate event, Emitter<EventsState> emit) async {
     if (event.date.isAtSameMomentAs(state.selectedDate)) {
       emit(state.copyWith(selectedDate: DateTime.now()));
       return;
@@ -134,5 +111,28 @@ class EventsBloc extends Bloc<EventBlocEvent, EventsState> {
       add(LoadEvents());
     }
     emit(state.copyWith(selectedDate: event.date));
+  }
+
+  _errorHandler(void Function() callback, Emitter<EventsState> emit) {
+    try {
+      callback();
+    } catch (e, s) {
+      emit(state.copyWith(
+          status: EventsStatus.error, error: () => formatError(e, s)));
+    } finally {
+      emit(state.copyWith(status: EventsStatus.idle, error: () => null));
+    }
+  }
+
+  _asyncErrorHandler(
+      Future Function() callback, Emitter<EventsState> emit) async {
+    try {
+      await callback();
+    } catch (e, s) {
+      emit(state.copyWith(
+          status: EventsStatus.error, error: () => formatError(e, s)));
+    } finally {
+      emit(state.copyWith(status: EventsStatus.idle, error: () => null));
+    }
   }
 }

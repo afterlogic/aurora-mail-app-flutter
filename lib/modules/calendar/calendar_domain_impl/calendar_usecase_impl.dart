@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:aurora_mail/modules/calendar/calendar_domain/calendar_repository.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/calendar_usecase.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/activity.dart';
@@ -12,7 +11,6 @@ import 'package:aurora_mail/modules/calendar/ui/models/displayable.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/event.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/task.dart';
 import 'package:aurora_mail/modules/calendar/utils/date_time_ext.dart';
-import 'package:aurora_mail/modules/calendar/utils/events_grid_builder.dart';
 import 'package:collection/collection.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -130,6 +128,13 @@ class CalendarUseCaseImpl implements CalendarUseCase {
   @override
   Future<void> deleteCalendar(ViewCalendar calendar) async {
     await repository.deleteCalendar(calendar);
+    _calendarsSubject
+        .add([..._calendarsSubject.value.where((e) => e != calendar)]);
+  }
+
+  @override
+  Future<void> unsubscribeFromCalendar(ViewCalendar calendar) async {
+
     _calendarsSubject
         .add([..._calendarsSubject.value.where((e) => e != calendar)]);
   }
@@ -283,8 +288,8 @@ class CalendarUseCaseImpl implements CalendarUseCase {
   }
 
   @override
-  Future<void> deleteEvent(ViewEvent event) async {
-    await repository.deleteEvent(event);
+  Future<void> deleteActivity(Activity activity) async {
+    await repository.deleteActivity(activity);
     await syncCalendars();
     await _getLocalEvents();
   }

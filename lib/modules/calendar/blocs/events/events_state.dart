@@ -8,12 +8,14 @@ class EventsState extends Equatable {
   final DateTime startIntervalDate;
   final DateTime endIntervalDate;
   final DateTime selectedDate;
+  final ErrorToShow? error;
 
   const EventsState({
     this.status = EventsStatus.idle,
     this.originalEvents,
     this.selectedEvent,
     this.eventsMap,
+    this.error,
     required this.startIntervalDate,
     required this.endIntervalDate,
     required this.selectedDate,
@@ -27,7 +29,8 @@ class EventsState extends Equatable {
         startIntervalDate,
         endIntervalDate,
         selectedDate,
-        eventsMap
+        eventsMap,
+        error
       ];
 
 
@@ -143,6 +146,7 @@ class EventsState extends Equatable {
   EventsState copyWith({
     EventsStatus? status,
     Map<DateTime, List<ViewEvent?>>? Function()? eventsMap,
+    ErrorToShow? Function()? error,
     List<ViewEvent>? Function()? originalEvents,
     ViewEvent? Function()? selectedEvent,
     List<Calendar>? Function()? calendars,
@@ -152,6 +156,7 @@ class EventsState extends Equatable {
   }) {
     return EventsState(
       status: status ?? this.status,
+      error: error == null ? this.error : error(),
       eventsMap: eventsMap == null ? this.eventsMap : eventsMap(),
       originalEvents:
           originalEvents == null ? this.originalEvents : originalEvents(),

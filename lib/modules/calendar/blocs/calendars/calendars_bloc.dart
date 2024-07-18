@@ -26,6 +26,7 @@ class CalendarsBloc extends Bloc<CalendarsEvent, CalendarsState> {
       add(AddCalendars(value));
     });
     on<CreateCalendar>(_onCreateCalendar);
+    on<UnsubscribeFromCalendar>(_onUnsubscribeFromCalendar);
     on<SaveTabIndex>(_onSaveTabIndex);
     on<SaveMonthViewMode>(_onSaveMonthViewMode);
     on<GetCalendars>(_onGetCalendars);
@@ -49,7 +50,9 @@ class CalendarsBloc extends Bloc<CalendarsEvent, CalendarsState> {
   }
 
   _onClearData(ClearData event, Emitter<CalendarsState> emit) async {
-    _asyncErrorHandler(_useCase.clearData, emit);
+    await _asyncErrorHandler(() async{
+      await _useCase.clearData();
+    }, emit);
   }
 
   _onSaveTabIndex(SaveTabIndex event, Emitter<CalendarsState> emit) async {
@@ -62,15 +65,27 @@ class CalendarsBloc extends Bloc<CalendarsEvent, CalendarsState> {
   }
 
   _onCreateCalendar(CreateCalendar event, Emitter<CalendarsState> emit) async {
-    _asyncErrorHandler(() => _useCase.createCalendar(event.creationData), emit);
+    await _asyncErrorHandler(() async{
+      await _useCase.createCalendar(event.creationData);
+    }, emit);
+  }
+
+  _onUnsubscribeFromCalendar(UnsubscribeFromCalendar event, Emitter<CalendarsState> emit) async {
+    await _asyncErrorHandler(() async{
+      await _useCase.unsubscribeFromCalendar(event.calendar);
+    }, emit);
   }
 
   _onGetCalendars(GetCalendars event, Emitter<CalendarsState> emit) async {
-    _asyncErrorHandler(_useCase.getCalendars, emit);
+    await _asyncErrorHandler(() async{
+      await _useCase.getCalendars();
+    }, emit);
   }
 
   _onDeleteCalendar(DeleteCalendar event, Emitter<CalendarsState> emit) async {
-    _asyncErrorHandler(() => _useCase.deleteCalendar(event.calendar), emit);
+    await _asyncErrorHandler(() async{
+      await _useCase.deleteCalendar(event.calendar);
+    }, emit);
   }
 
   _onUpdateCalendarSelection(

@@ -175,6 +175,12 @@ class CalendarRepositoryImpl implements CalendarRepository {
   }
 
   @override
+  Future<void> unsubscribeFromCalendar(Calendar calendar) async {
+    await _network.deleteCalendar(id: calendar.id);
+    await _db.deleteCalendars([calendar]);
+  }
+
+  @override
   Future<void> updateCalendar(Calendar calendar) async {
     final isUpdated = await _network.updateCalendar(
         id: calendar.id,
@@ -213,8 +219,8 @@ class CalendarRepositoryImpl implements CalendarRepository {
   }
 
   @override
-  Future<void> deleteEvent(Event event) {
-    return _network.deleteEvent(event);
+  Future<void> deleteActivity(Activity activity) {
+    return _network.deleteActivity(activity);
   }
 
   @override

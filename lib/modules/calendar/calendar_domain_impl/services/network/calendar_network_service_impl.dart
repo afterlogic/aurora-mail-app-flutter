@@ -278,15 +278,8 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
 
   @override
   Future<Activity> updateActivity(Activity activity) async {
-    late final ActivityType type;
-    if (activity is Event) {
-      type = ActivityType.event;
-    } else if (activity is Task) {
-      type = ActivityType.task;
-    } else {
-      throw Exception('unknown Activity subtype');
-    }
-
+    final type = _getActivityType(activity);
+    final dateInfo = _getDateInfo(activity);
     final rruleParameters = activity.recurrenceMode == RecurrenceMode.never
         ? null
         : {
@@ -331,21 +324,13 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
       "excluded": false,
       "allEvents": 2,
       "modified": 1,
-      "start":
-          activity.startTS == null ? null : activity.startTS!.toIso8601String(),
-      "end": activity.endTS == null ? null : activity.endTS!.toIso8601String(),
-      "startTS": activity.startTS == null
-          ? null
-          : activity.startTS!.toUtc().millisecondsSinceEpoch ~/ 1000,
-      "endTS": activity.endTS == null
-          ? null
-          : activity.endTS!.toUtc().millisecondsSinceEpoch ~/ 1000,
-      "rrule": null,
       "type": type.stringCode,
       "status": activity.status ?? false,
       "withDate": true,
       "isPrivate": false,
     };
+
+    parameters.addAll(dateInfo);
 
     if (activity is Event) {
       parameters.addAll({
@@ -374,32 +359,33 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
   }
 
   @override
-  Future<void> deleteEvent(Event event) async {
+  Future<void> deleteActivity(Activity activity) async {
+    final type = _getActivityType(activity);
+    final dateInfo = _getDateInfo(activity);
+
     final parameters = {
-      "id": '${event.uid}-${event.recurrenceId}',
-      "uid": event.uid,
-      "calendarId": event.calendarId,
-      "newCalendarId": event.calendarId,
-      "subject": event.subject!,
-      "allDay": 0,
-      "location": "",
-      "description": event.description ?? '',
+      "id": '${activity.uid}-${activity.recurrenceId}',
+      "uid": activity.uid,
+      "calendarId": activity.calendarId,
+      "newCalendarId": activity.calendarId,
+      "subject": activity.subject!,
+      "allDay": activity.allDay == true ? 1 : 0,
+      "location": activity.location ?? '',
+      "description": activity.description ?? '',
       "alarms": "[]",
       "attendees": "[]",
       "recurrenceId": null,
       "excluded": false,
       "allEvents": 2,
       "modified": 1,
-      "start": event.startTS!.toIso8601String(),
-      "end": event.endTS!.toIso8601String(),
-      "startTS": event.startTS!.toUtc().millisecondsSinceEpoch ~/ 1000,
-      "endTS": event.endTS!.toUtc().millisecondsSinceEpoch ~/ 1000,
       "rrule": null,
-      "type": "VEVENT",
-      "status": false,
+      "type": type.stringCode,
+      "status": activity.status ?? false,
       "withDate": true,
       "isPrivate": false,
     };
+
+    parameters.addAll(dateInfo);
 
     final body = new WebMailApiBody(
       method: "DeleteEvent",
@@ -443,5 +429,29 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
 
     final result = await calendarModule.post(body) as bool;
     return result;
+  }
+
+  ActivityType _getActivityType(Activity activity) {
+    if (activity is Event) {
+      return ActivityType.event;
+    } else if (activity is Task) {
+      return ActivityType.task;
+    } else {
+      throw Exception('unknown Activity subtype');
+    }
+  }
+
+  Map<String, dynamic> _getDateInfo(Activity activity) {
+    return {
+      "start":
+          activity.startTS == null ? null : activity.startTS!.toIso8601String(),
+      "end": activity.endTS == null ? null : activity.endTS!.toIso8601String(),
+      "startTS": activity.startTS == null
+          ? null
+          : activity.startTS!.toUtc().millisecondsSinceEpoch ~/ 1000,
+      "endTS": activity.endTS == null
+          ? null
+          : activity.endTS!.toUtc().millisecondsSinceEpoch ~/ 1000,
+    };
   }
 }

@@ -198,19 +198,43 @@ class _BlocErrorsHandler extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<CalendarsBloc, CalendarsState>(
-      listenWhen: (previous, current) =>
+    return MultiBlocListener(listeners: [
+      BlocListener<TasksBloc, TasksState>(
+          listenWhen: (previous, current) =>
+              previous.error != current.error &&
+              current.error != null &&
+              current.status.isError,
+          listener: (context, state) {
+            showErrorSnack(
+              context: context,
+              scaffoldState: Scaffold.of(context),
+              msg: state.error,
+            );
+          }),
+      BlocListener<EventsBloc, EventsState>(
+          listenWhen: (previous, current) =>
           previous.error != current.error &&
-          current.error != null &&
-          current.status.isError,
-      listener: (context, state) {
-        showErrorSnack(
-          context: context,
-          scaffoldState: Scaffold.of(context),
-          msg: state.error,
-        );
-      },
-      child: child,
-    );
+              current.error != null &&
+              current.status.isError,
+          listener: (context, state) {
+            showErrorSnack(
+              context: context,
+              scaffoldState: Scaffold.of(context),
+              msg: state.error,
+            );
+          }),
+      BlocListener<CalendarsBloc, CalendarsState>(
+          listenWhen: (previous, current) =>
+          previous.error != current.error &&
+              current.error != null &&
+              current.status.isError,
+          listener: (context, state) {
+            showErrorSnack(
+              context: context,
+              scaffoldState: Scaffold.of(context),
+              msg: state.error,
+            );
+          }),
+    ], child: child);
   }
 }

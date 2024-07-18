@@ -29,7 +29,7 @@ class TaskViewPage extends StatelessWidget {
         Navigator.of(context).pushNamed(TaskCreationPage.name);
         break;
       case EventViewAppBarAction.delete:
-        CalendarConfirmDialog.show(context, title: 'Delete event')
+        CalendarConfirmDialog.show(context, title: 'Delete task')
             .then((value) {
           if (value != true) return;
           BlocProvider.of<TasksBloc>(context).add(DeleteTask());

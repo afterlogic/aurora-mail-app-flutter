@@ -5,37 +5,31 @@ class TasksState extends Equatable {
   final List<ViewTask>? tasks;
   final ViewTask? selectedTask;
   final ActivityFilter filter;
+  final ErrorToShow? error;
 
-
-  const TasksState({
-    this.status = TasksStatus.idle,
-    this.tasks,
-    this.selectedTask,
-    this.filter = const ActivityFilter()
-  });
+  const TasksState(
+      {this.status = TasksStatus.idle,
+      this.tasks,
+      this.error,
+      this.selectedTask,
+      this.filter = const ActivityFilter()});
 
   @override
-  List<Object?> get props => [
-        status,
-        tasks,
-        selectedTask,
-    filter
-      ];
-
+  List<Object?> get props => [status, tasks, selectedTask, error, filter];
 
   TasksState copyWith({
     TasksStatus? status,
     List<ViewTask>? Function()? tasks,
     ViewTask? Function()? selectedTask,
-    ActivityFilter ? filter,
+    ActivityFilter? filter,
+    ErrorToShow? Function()? error
   }) {
     return TasksState(
       filter: filter ?? this.filter,
       status: status ?? this.status,
-      tasks:
-      tasks == null ? this.tasks : tasks(),
-      selectedTask:
-      selectedTask == null ? this.selectedTask : selectedTask(),
+      tasks: tasks == null ? this.tasks : tasks(),
+      error: error == null ? this.error : error(),
+      selectedTask: selectedTask == null ? this.selectedTask : selectedTask(),
     );
   }
 }

@@ -280,7 +280,28 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
         return _MenuItem(
           icon: Icon(Icons.unsubscribe_outlined),
           titleBuilder: (ctx) => 'Unsubscribe from calendar',
-          onTap: (ctx, ViewCalendar calendar) {},
+          onTap: (ctx, ViewCalendar calendar) {
+            CalendarConfirmDialog.show(ctx,
+                    title: 'Unsubscribe',
+                    actions: [
+                      TextButton(
+                        child: Text(S.of(context).btn_cancel),
+                        onPressed: () => Navigator.pop(context, false),
+                      ),
+                      TextButton(
+                        child: Text("Unsubscribe"),
+                        onPressed: () => Navigator.pop(context, true),
+                      ),
+                    ],
+                    confirmMessage:
+                        "Are you sure you want to unsubscribe from calendar ${calendar.name}?")
+                .then((value) {
+              if (value != true) return;
+              BlocProvider.of<CalendarsBloc>(ctx)
+                  .add(UnsubscribeFromCalendar(calendar));
+              Navigator.of(ctx).pop();
+            });
+          },
         );
       case _CalendarDrawerMenuItems.share:
         return _MenuItem(

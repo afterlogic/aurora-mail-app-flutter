@@ -28,6 +28,8 @@ abstract class CalendarRepository {
 
   Future<void> deleteCalendar(Calendar calendar);
 
+  Future<void> unsubscribeFromCalendar(Calendar calendar);
+
   Future<Calendar> createCalendar(CalendarCreationData data);
 
   Future<void> createActivity(ActivityCreationData data);
@@ -38,7 +40,7 @@ abstract class CalendarRepository {
 
   Future<void> updateCalendarPublic(Calendar calendar);
 
-  Future<void> deleteEvent(Event event);
+  Future<void> deleteActivity(Activity activity);
 
   Future<Activity> updateActivity(Activity activity);
 
