@@ -1,7 +1,7 @@
 name: aurora_mail
 description: Mail client for Aurora Mail.
 
-version: "2.3.5+277"
+version: "2.3.5+278"
 
 environment:
   sdk: ">=2.17.0 <3.0.0"
@@ -177,5 +177,3 @@ flutter:
   #       - asset: fonts/TrajanPro.ttf
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
-#flutter_intl:
-#  enabled: true
