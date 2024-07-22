@@ -46,4 +46,8 @@ extension DateTimeExtension on DateTime {
   bool isAfterOrEqual(DateTime other) {
     return this.isAfter(other) || this.isAtSameMomentAs(other);
   }
+
+  bool isBeforeOrEqual(DateTime other) {
+    return this.isBefore(other) || this.isAtSameMomentAs(other);
+  }
 }

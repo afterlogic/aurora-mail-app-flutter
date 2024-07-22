@@ -1,8 +1,10 @@
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/activity.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/filters.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/recurrence_mode.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/update_status.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain_impl/services/db/activity/activity_table.dart';
+import 'package:aurora_mail/modules/calendar/utils/recurrence_handlers.dart';
 import 'package:drift/drift.dart';
 
 part 'activity_dao.g.dart';
@@ -99,21 +101,44 @@ class ActivityDao extends DatabaseAccessor<AppDatabase>
       required DateTime end,
       ActivityType? type,
       required List<String> calendarIds,
-      required int userLocalId}) {
-    final activitySelect = select(activityTable);
+      required int userLocalId}) async {
+    final notRecurrenceActivitySelect = select(activityTable);
     if (type != null) {
-      activitySelect.where((t) => t.type.equals(type.index));
+      notRecurrenceActivitySelect.where((t) => t.type.equals(type.index));
     }
-    activitySelect.where((t) =>
+    notRecurrenceActivitySelect.where((t) =>
         t.userLocalId.equals(userLocalId) &
         t.calendarId.isIn(calendarIds) &
         t.onceLoaded.equals(true) &
         t.startTS.isBiggerOrEqualValue(start) &
+        t.recurrenceMode.equals(RecurrenceMode.never.index) &
         t.endTS.isSmallerThanValue(end));
-    activitySelect.orderBy([
+    notRecurrenceActivitySelect.orderBy([
       (t) => OrderingTerm(expression: t.startTS),
     ]);
-    return activitySelect.get();
+
+    final notRecurrenceActivities = await notRecurrenceActivitySelect.get();
+
+    final recurrenceActivitySelect = select(activityTable);
+
+    if (type != null) {
+      recurrenceActivitySelect.where((t) => t.type.equals(type.index));
+    }
+
+    recurrenceActivitySelect.where((t) =>
+        t.userLocalId.equals(userLocalId) &
+        t.calendarId.isIn(calendarIds) &
+        t.onceLoaded.equals(true) &
+        t.recurrenceMode.equals(RecurrenceMode.never.index).not() &
+        t.endTS.isSmallerThanValue(end));
+    recurrenceActivitySelect.orderBy([
+      (t) => OrderingTerm(expression: t.startTS),
+    ]);
+
+    final notProcessedRecurrenceActivities = await recurrenceActivitySelect.get();
+    final recurrenceActivities = handleRecurrence(start, end, notProcessedRecurrenceActivities);
+
+    return [...notRecurrenceActivities, ...recurrenceActivities];
   }
 
   Future<List<ActivityDb>> getAll(

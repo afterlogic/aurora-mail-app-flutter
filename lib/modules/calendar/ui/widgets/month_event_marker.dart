@@ -79,13 +79,20 @@ class MonthEventMarker extends StatelessWidget {
                     height: height,
                     child: Align(
                       alignment: Alignment.centerLeft,
-                      child: Text(
-                        forceTitleRender ||
-                                event?.isStartedToday(currentDate) == true
-                            ? event!.title
-                            : '',
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(fontSize: fontSize, color: Colors.white),
+                      child: Row(
+                        children: [
+                          if(event?.isStartedToday(currentDate) == true)Icon(Icons.repeat,size: 8,),
+                          Expanded(
+                            child: Text(
+                              forceTitleRender ||
+                                      event?.isStartedToday(currentDate) == true
+                                  ? event!.title
+                                  : '',
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(fontSize: fontSize, color: Colors.white),
+                            ),
+                          ),
+                        ],
                       ),
                     )),
               ),

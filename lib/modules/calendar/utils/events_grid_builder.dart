@@ -2,10 +2,10 @@ import 'dart:math';
 
 import 'package:aurora_mail/modules/calendar/ui/models/event.dart';
 import 'package:aurora_mail/modules/calendar/utils/date_time_ext.dart';
+
 const int slotsNumber = 3;
 
 void spreadWeekEvents(Week week) {
-
   for (var event in week.events) {
     // reset slot solution 1: event slot in different weeks is independent
     // event.slot = null;
@@ -14,7 +14,9 @@ void spreadWeekEvents(Week week) {
       var day = week.days[dayIndex];
 
       // if event was marked earlier as overflow then skipping this day
-      if ((event.startDate.withoutTime.isBefore(day.date) || event.startDate.withoutTime.isAtSameMomentAs(day.date)) && (event.endDate.withoutTime.isAfterOrEqual(day.date))) {
+      if ((event.startDate.withoutTime.isBefore(day.date) ||
+              event.startDate.withoutTime.isAtSameMomentAs(day.date)) &&
+          (event.endDate.withoutTime.isAfterOrEqual(day.date))) {
         if (event.overflow == true) {
           day.moreNumber++;
         } else {
@@ -43,7 +45,8 @@ void spreadWeekEvents(Week week) {
             }
 
             if (foundedFreeSlot != null) {
-              event.slotIndex = foundedFreeSlot; // remembering the free slot number
+              event.slotIndex =
+                  foundedFreeSlot; // remembering the free slot number
               day.events[foundedFreeSlot] =
                   event; // saving event to the free slot
             } else {
@@ -57,22 +60,21 @@ void spreadWeekEvents(Week week) {
   }
 }
 
-List<Week> processEvents(List<Week> weeks, List<ExtendedMonthEvent> eventsSource) {
+List<Week> processEvents(
+    List<Week> weeks, List<ExtendedMonthEvent> eventsSource) {
   // sort events by duration
   eventsSource.sort((a, b) => b.duration.compareTo(a.duration));
 
   for (var week in weeks) {
-    week.events = eventsSource
-        .where((item) =>
-            (item.startDate.isBefore(week.days.last.date) ||
-                    item.startDate.isAtSameMomentAs(week.days.last.date)) &&
-                (item.startDate.isAfter(week.days.first.date) ||
-                    item.startDate.isAtSameMomentAs(week.days.first.date)) ||
-            (item.endDate.isBefore(week.days.last.date) ||
-                    item.endDate.isAtSameMomentAs(week.days.last.date)) &&
-                (item.endDate.isAfter(week.days.first.date) ||
-                    item.endDate.isAtSameMomentAs(week.days.first.date)))
-        .toList();
+    week.events = eventsSource.where((item) {
+      final result = (item.startDate.withoutTime
+                  .isBeforeOrEqual(week.days.last.date.withoutTime) &&
+              item.startDate
+                  .isAfterOrEqual(week.days.first.date.withoutTime)) ||
+          (item.endDate.isBeforeOrEqual(week.days.last.date.withoutTime) &&
+              item.endDate.isAfterOrEqual(week.days.first.date.withoutTime));
+      return result;
+    }).toList();
 
     // populating days with empty events
     for (var day in week.days) {
@@ -81,7 +83,8 @@ List<Week> processEvents(List<Week> weeks, List<ExtendedMonthEvent> eventsSource
 
     // reset slot solution 2: event slot in different weeks remain the same
     var withSlot = week.events.where((item) => item.slotIndex != null).toList();
-    var withoutSlot = week.events.where((item) => item.slotIndex == null).toList();
+    var withoutSlot =
+        week.events.where((item) => item.slotIndex == null).toList();
     week.events = [...withSlot, ...withoutSlot];
 
     spreadWeekEvents(week);
@@ -106,7 +109,7 @@ List<Week> generateWeeks(DateTime startDate, DateTime endDate) {
 
   DateTime currentDay = startDate;
 
-  while (currentDay.isBefore(endDate) || currentDay.isAtSameMomentAs(endDate)) {
+  while (currentDay.isBeforeOrEqual(endDate)) {
     List<Day> days = [];
 
     for (int i = 0; i < 7; i++) {
@@ -128,18 +131,18 @@ Map<DateTime, List<ExtendedMonthEvent?>> convertWeeksToMap(List<Week> weeks) {
   for (final Week week in weeks) {
     for (final Day day in week.days) {
       if (!resultMap.containsKey(day.date)) {
-        resultMap[DateTime(day.date.year, day.date.month, day.date.day)] = day.events;
+        resultMap[DateTime(day.date.year, day.date.month, day.date.day)] =
+            day.events;
       }
     }
   }
   return resultMap;
 }
 
-
 class Week {
   List<ExtendedMonthEvent> events;
   List<Day> days;
-  Week({required this.events, required this.days });
+  Week({required this.events, required this.days});
 }
 
 class Day {
@@ -147,5 +150,4 @@ class Day {
   List<ExtendedMonthEvent?> events;
   int moreNumber;
   Day({required this.events, required this.date, this.moreNumber = 0});
-
 }
