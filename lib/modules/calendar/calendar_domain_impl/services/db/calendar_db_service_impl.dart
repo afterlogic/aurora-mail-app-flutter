@@ -3,6 +3,7 @@ import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/activity.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/activity_base.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/filters.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/recurrence_mode.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/calendar.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/event.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/event_base.dart';
@@ -11,6 +12,7 @@ import 'package:aurora_mail/modules/calendar/calendar_domain_impl/mappers/event_
 import 'package:aurora_mail/modules/calendar/calendar_domain_impl/services/db/calendar/calendar_dao.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain_impl/services/db/calendar_db_service.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain_impl/services/db/activity/activity_dao.dart';
+import 'package:aurora_mail/modules/calendar/utils/recurrence_handlers.dart';
 import 'package:collection/collection.dart';
 
 class CalendarDbServiceImpl implements CalendarDbService {
@@ -95,7 +97,12 @@ class CalendarDbServiceImpl implements CalendarDbService {
         start: start,
         end: end,
         userLocalId: userLocalId);
-    return entities.map((e) => e.toActivity()).whereType<Activity>().toList();
+    final models = entities.map((e) => e.toActivity()).whereType<Activity>().toList();
+    final recurrenceModels = models.where((e) => e.recurrenceMode != RecurrenceMode.never).toList();
+    final withoutRecurrenceModels = models.where((e) => e.recurrenceMode == RecurrenceMode.never).toList();
+    final recurrenceHandledModels = handleRecurrence(start, end, recurrenceModels);
+
+    return [...withoutRecurrenceModels, ...recurrenceHandledModels];
   }
 
   @override

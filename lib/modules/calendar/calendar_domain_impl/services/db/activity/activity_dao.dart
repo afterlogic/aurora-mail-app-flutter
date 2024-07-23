@@ -135,8 +135,7 @@ class ActivityDao extends DatabaseAccessor<AppDatabase>
       (t) => OrderingTerm(expression: t.startTS),
     ]);
 
-    final notProcessedRecurrenceActivities = await recurrenceActivitySelect.get();
-    final recurrenceActivities = handleRecurrence(start, end, notProcessedRecurrenceActivities);
+    final recurrenceActivities = await recurrenceActivitySelect.get();
 
     return [...notRecurrenceActivities, ...recurrenceActivities];
   }

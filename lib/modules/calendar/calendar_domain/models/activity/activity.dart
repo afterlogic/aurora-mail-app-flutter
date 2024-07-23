@@ -84,7 +84,7 @@ abstract class Activity implements ActivityBase{
 
   Displayable? toDisplayable({required Color color});
 
-  ActivityBase copyWith({String? organizer,
+  Activity copyWith({String? organizer,
     bool? appointment,
     int? appointmentAccess,
     String? calendarId,
