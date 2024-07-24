@@ -134,7 +134,6 @@ class CalendarUseCaseImpl implements CalendarUseCase {
 
   @override
   Future<void> unsubscribeFromCalendar(ViewCalendar calendar) async {
-
     _calendarsSubject
         .add([..._calendarsSubject.value.where((e) => e != calendar)]);
   }
@@ -267,12 +266,24 @@ class CalendarUseCaseImpl implements CalendarUseCase {
   @override
   Future<Displayable> updateActivity(Displayable activity) async {
     final model = await repository.updateActivity(activity.copyWith(
-        startDate: _location == null || activity.startDate == null
+        startTS: _location == null || activity.startDate == null
             ? () => activity.startDate
-            : () => tz.TZDateTime.from(activity.startDate!, _location!),
-        endDate: _location == null || activity.endDate == null
+            : () => tz.TZDateTime(
+                _location!,
+                activity.startDate!.year,
+                activity.startDate!.month,
+                activity.startDate!.day,
+                activity.startDate!.hour,
+                activity.startDate!.minute),
+        endTS: _location == null || activity.endDate == null
             ? () => activity.endDate
-            : () => tz.TZDateTime.from(activity.endDate!, _location!)));
+            : () => tz.TZDateTime(
+                _location!,
+                activity.endDate!.year,
+                activity.endDate!.month,
+                activity.endDate!.day,
+                activity.endDate!.hour,
+                activity.endDate!.minute)));
     syncCalendars().then((_) {
       if (activity is Event) {
         _getLocalEvents();

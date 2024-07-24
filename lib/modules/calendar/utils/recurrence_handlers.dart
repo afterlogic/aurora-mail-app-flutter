@@ -51,8 +51,8 @@ List<Activity> _handleDayRecurrence(DateTime intervalStartDate,
 
       generatedActivities.add(
         activity.copyWith(
-          startTS: currentStart,
-          endTS: currentEnd,
+          startTS: () => currentStart,
+          endTS: () => currentEnd,
         ),
       );
 
@@ -91,7 +91,7 @@ List<Activity> _handleWeekRecurrence(DateTime intervalStartDate,
 
         if (newStartTS != activity.startTS) {
           generatedActivities
-              .add(activity.copyWith(startTS: newStartTS, endTS: newEndTS));
+              .add(activity.copyWith(startTS: () => newStartTS, endTS: () => newEndTS));
         }
       }
       currentStartDate = currentStartDate.add(Duration(days: 1));
@@ -138,7 +138,7 @@ List<Activity> _handleMonthRecurrence(DateTime intervalStartDate,
 
         if (newStartTS != activity.startTS!) {
           generatedActivities
-              .add(activity.copyWith(startTS: newStartTS, endTS: newEndTS));
+              .add(activity.copyWith(startTS: () => newStartTS, endTS: () => newEndTS));
         }
       }
 
@@ -181,7 +181,7 @@ List<Activity> _handleYearRecurrence(DateTime intervalStartDate,
 
         if (newStartTS != activity.startTS) {
           generatedActivities
-              .add(activity.copyWith(startTS: newStartTS, endTS: newEndTS));
+              .add(activity.copyWith(startTS: () => newStartTS, endTS: () => newEndTS));
         }
       }
 
