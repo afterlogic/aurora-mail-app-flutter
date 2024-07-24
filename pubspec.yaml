@@ -127,6 +127,7 @@ dependencies:
       ref: master
   calendar_view: ^1.2.0
   collection: ^1.17.0
+  flutter_keyboard_visibility: ^6.0.0
 
 dev_dependencies:
   flutter_test:

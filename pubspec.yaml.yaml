@@ -94,7 +94,7 @@ dependencies:
   ios_notification_handler:
     path: core/ios_notification_handler
   keyboard_actions: ^4.2.0
-#  flutter_keyboard_visibility: 0.7.0
+  flutter_keyboard_visibility: ^6.0.0
 
   theme:
     path: {{_theme_module}}
