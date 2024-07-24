@@ -37,6 +37,7 @@ class _CalendarSharingDialogState extends State<CalendarSharingDialog> {
   final Set<String> emails = {};
   late final Set<Participant> _participants;
   late final ContactsBloc _contactsBloc;
+  late final ScrollController _scrollController;
   List<Contact> lastSuggestions = [];
   String _search = "";
   String? _emailToShowDelete;
@@ -46,6 +47,13 @@ class _CalendarSharingDialogState extends State<CalendarSharingDialog> {
     super.initState();
     _contactsBloc = BlocProvider.of<ContactsBloc>(context);
     _participants = widget.participants;
+    _scrollController = ScrollController();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -237,8 +245,10 @@ class _CalendarSharingDialogState extends State<CalendarSharingDialog> {
             SizedBox(height: 16),
             Expanded(
               child: Scrollbar(
+                controller: _scrollController,
                 thumbVisibility: true,
                 child: SingleChildScrollView(
+                  controller: _scrollController,
                   child: Column(
                     children: SplayTreeSet<Participant>.from(
                       _participants,

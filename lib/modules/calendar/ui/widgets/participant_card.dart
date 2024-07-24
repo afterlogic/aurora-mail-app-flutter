@@ -34,7 +34,6 @@ class ParticipantCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   PopupMenuButton<ParticipantPermissions>(
-                    initialValue: participant.permissions,
                     onSelected: onSelectedPermissionsOption,
                     itemBuilder: (context) {
                       return ParticipantPermissions.values
