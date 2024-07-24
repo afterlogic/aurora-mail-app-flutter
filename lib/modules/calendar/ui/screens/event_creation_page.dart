@@ -26,6 +26,7 @@ import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 
 class EventCreationPage extends StatefulWidget {
   static const name = "event_creation_page";
@@ -36,11 +37,15 @@ class EventCreationPage extends StatefulWidget {
 }
 
 class _EventCreationPageState extends State<EventCreationPage> {
+  late StreamSubscription<bool> _keyboardSubscription;
   late DateTime _selectedStartDate;
   late DateTime _selectedEndDate;
   late final TextEditingController _titleController;
+  late final FocusNode _titleFocus;
   late final TextEditingController _descriptionController;
+  late final FocusNode _descriptionFocus;
   late final TextEditingController _locationController;
+  late final FocusNode _locationFocus;
   late final CalendarsBloc _calendarsBloc;
   late final EventsBloc _eventsBloc;
   late final StreamSubscription _eventsSubscription;
@@ -75,27 +80,40 @@ class _EventCreationPageState extends State<EventCreationPage> {
   @override
   void initState() {
     super.initState();
+    final _keyboardVisibilityController = KeyboardVisibilityController();
+    _keyboardSubscription =
+        _keyboardVisibilityController.onChange.listen((bool visible) {
+      if (visible) return;
+      unfocusNodes();
+    });
     _calendarsBloc = BlocProvider.of<CalendarsBloc>(context);
     _eventsBloc = BlocProvider.of<EventsBloc>(context);
     _currentUserMail =
         BlocProvider.of<AuthBloc>(context).currentUser?.emailFromLogin ?? '';
     _selectedCalendar =
         _calendarsBloc.state.availableCalendars(_currentUserMail).firstOrNull;
-    _titleController = TextEditingController();
     _selectedStartDate =
         DateTime.now().copyWith(second: 0, millisecond: 0, microsecond: 0);
     _selectedEndDate = _selectedStartDate.add(Duration(minutes: 30));
+    _titleController = TextEditingController();
+    _titleFocus = FocusNode();
     _descriptionController = TextEditingController();
+    _descriptionFocus = FocusNode();
     _locationController = TextEditingController();
+    _locationFocus = FocusNode();
     onEventsStateChange(_eventsBloc.state);
     _eventsSubscription = _eventsBloc.stream.listen(onEventsStateChange);
   }
 
   @override
   void dispose() {
+    _keyboardSubscription.cancel();
     _titleController.dispose();
+    _titleFocus.dispose();
     _descriptionController.dispose();
+    _descriptionFocus.dispose();
     _locationController.dispose();
+    _locationFocus.dispose();
     _eventsSubscription.cancel();
     super.dispose();
   }
@@ -141,6 +159,15 @@ class _EventCreationPageState extends State<EventCreationPage> {
     _eventsBloc.add(UpdateEvent(updatedEvent));
   }
 
+  void unfocusNodes() {
+    final focusNodes = [_titleFocus, _locationFocus, _descriptionFocus];
+    for (final node in focusNodes) {
+      if (node.hasFocus) {
+        node.unfocus();
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -170,129 +197,135 @@ class _EventCreationPageState extends State<EventCreationPage> {
               child: Text(S.of(context).btn_save))
         ],
       ),
-      body: SingleChildScrollView(
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(24),
-                child: Column(
-                  children: [
-                    CalendarSection(
-                      calendarId: _selectedCalendar?.id,
-                      isEditable: true,
-                      selectedCalendar: _selectedCalendar,
-                      currentUserMail: _currentUserMail,
-                      selectCalendarCallback: (value) {
-                        _selectedCalendar = value;
-                        setState(() {});
-                      },
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    MainInfo(
-                      descriptionController: _descriptionController,
-                      locationController: _locationController,
-                      titleController: _titleController,
-                      isEditable: true,
-                    ),
-                  ],
+      body: KeyboardDismissOnTap(
+        dismissOnCapturedTaps: true,
+        child: SingleChildScrollView(
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(24),
+                  child: Column(
+                    children: [
+                      CalendarSection(
+                        calendarId: _selectedCalendar?.id,
+                        isEditable: true,
+                        selectedCalendar: _selectedCalendar,
+                        currentUserMail: _currentUserMail,
+                        selectCalendarCallback: (value) {
+                          _selectedCalendar = value;
+                          setState(() {});
+                        },
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      MainInfo(
+                        descriptionController: _descriptionController,
+                        locationController: _locationController,
+                        titleController: _titleController,
+                        descriptionFocus: _descriptionFocus,
+                        titleFocus: _titleFocus,
+                        locationFocus: _locationFocus,
+                        isEditable: true,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              const SectionDivider(),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                child: EditableDateInfo(
-                  isAllDay: _isAllDay,
-                  selectedStartDate: _selectedStartDate,
-                  selectedEndDate: _selectedEndDate,
-                  isAllDayChangedCallback: (value) {
-                    _isAllDay = value;
-                    setState(() {});
-                  },
-                  selectedStartDateChangedCallback: (value) {
-                    _selectedStartDate = value;
-                    setState(() {});
-                  },
-                  selectedEndDateChangedCallback: (value) {
-                    _selectedEndDate = value;
-                    setState(() {});
-                  },
-                  scaffoldKey: _scaffoldKey,
-                ),
-              ),
-              const SectionDivider(),
-              Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
-                  child: EditableRecurrenceSection(
-                    selectedUntilDate: _selectedUntilDate,
-                    selectedWeekDaysRepeat: _selectedWeekDaysRepeat,
-                    recurrencySaveCallback: (DateTime? untilDate,
-                        EveryWeekFrequency? frequency,
-                        Set<DaysOfWeek>? selectedDays) {
-                      _selectedUntilDate = untilDate;
-                      _selectedWeeklyFrequency = frequency;
-                      _selectedWeekDaysRepeat = selectedDays;
-                      setState(() {});
-                    },
-                    selectedDateSaveCallback: (DateTime? untilDate) {
-                      _selectedUntilDate = untilDate;
-                      setState(() {});
-                    },
-                    selectedRecurrenceMode: _selectedRecurrenceMode,
-                    selectedRecurrenceModeCallback: (RecurrenceMode mode) {
-                      _selectedRecurrenceMode = mode;
-                      setState(() {});
-                    },
-                    selectedWeeklyFrequency: _selectedWeeklyFrequency,
-                  )),
-              const SectionDivider(),
-              Padding(
+                const SectionDivider(),
+                Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                  child: EditableRemindersSection(
-                    onAddCallback: (RemindersOption option) {
-                      if (_selectedReminders.contains(option)) {
-                        _selectedReminders.remove(option);
-                      } else {
-                        _selectedReminders.add(option);
-                      }
+                  child: EditableDateInfo(
+                    isAllDay: _isAllDay,
+                    selectedStartDate: _selectedStartDate,
+                    selectedEndDate: _selectedEndDate,
+                    isAllDayChangedCallback: (value) {
+                      _isAllDay = value;
                       setState(() {});
                     },
-                    onDeleteCallback: (RemindersOption option) {
-                      _selectedReminders.remove(option);
+                    selectedStartDateChangedCallback: (value) {
+                      _selectedStartDate = value;
                       setState(() {});
                     },
-                    selectedReminders: _selectedReminders,
-                  )),
-              const SectionDivider(),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                child: EditableAttendeesSection(
-                  attendees: _attendees,
-                  onAddPressed: () {
-                    Navigator.of(context)
-                        .pushNamed(AttendeesPage.name,
-                            arguments: AttendeesRouteArg(
-                                initAttendees: Set.of(_attendees)))
-                        .then((value) {
-                      if (value == null) return;
-                      _attendees = Set.of(value as Set<Attendee>);
+                    selectedEndDateChangedCallback: (value) {
+                      _selectedEndDate = value;
                       setState(() {});
-                    });
-                  },
-                  onDeletedCallback: (Attendee attendee) {
-                    _attendees.remove(attendee);
-                    setState(() {});
-                  },
+                    },
+                    scaffoldKey: _scaffoldKey,
+                  ),
                 ),
-              ),
-            ],
+                const SectionDivider(),
+                Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24, vertical: 24),
+                    child: EditableRecurrenceSection(
+                      selectedUntilDate: _selectedUntilDate,
+                      selectedWeekDaysRepeat: _selectedWeekDaysRepeat,
+                      recurrencySaveCallback: (DateTime? untilDate,
+                          EveryWeekFrequency? frequency,
+                          Set<DaysOfWeek>? selectedDays) {
+                        _selectedUntilDate = untilDate;
+                        _selectedWeeklyFrequency = frequency;
+                        _selectedWeekDaysRepeat = selectedDays;
+                        setState(() {});
+                      },
+                      selectedDateSaveCallback: (DateTime? untilDate) {
+                        _selectedUntilDate = untilDate;
+                        setState(() {});
+                      },
+                      selectedRecurrenceMode: _selectedRecurrenceMode,
+                      selectedRecurrenceModeCallback: (RecurrenceMode mode) {
+                        _selectedRecurrenceMode = mode;
+                        setState(() {});
+                      },
+                      selectedWeeklyFrequency: _selectedWeeklyFrequency,
+                    )),
+                const SectionDivider(),
+                Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24, vertical: 16),
+                    child: EditableRemindersSection(
+                      onAddCallback: (RemindersOption option) {
+                        if (_selectedReminders.contains(option)) {
+                          _selectedReminders.remove(option);
+                        } else {
+                          _selectedReminders.add(option);
+                        }
+                        setState(() {});
+                      },
+                      onDeleteCallback: (RemindersOption option) {
+                        _selectedReminders.remove(option);
+                        setState(() {});
+                      },
+                      selectedReminders: _selectedReminders,
+                    )),
+                const SectionDivider(),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                  child: EditableAttendeesSection(
+                    attendees: _attendees,
+                    onAddPressed: () {
+                      Navigator.of(context)
+                          .pushNamed(AttendeesPage.name,
+                              arguments: AttendeesRouteArg(
+                                  initAttendees: Set.of(_attendees)))
+                          .then((value) {
+                        if (value == null) return;
+                        _attendees = Set.of(value as Set<Attendee>);
+                        setState(() {});
+                      });
+                    },
+                    onDeletedCallback: (Attendee attendee) {
+                      _attendees.remove(attendee);
+                      setState(() {});
+                    },
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

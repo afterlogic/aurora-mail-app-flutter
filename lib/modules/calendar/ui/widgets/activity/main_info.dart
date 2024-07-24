@@ -8,6 +8,9 @@ class MainInfo extends StatelessWidget {
   final TextEditingController? titleController;
   final TextEditingController? descriptionController;
   final TextEditingController? locationController;
+  final FocusNode? titleFocus;
+  final FocusNode? descriptionFocus;
+  final FocusNode? locationFocus;
   final bool isEditable;
 
   /// if [isEditable] is true, controllers must be provided
@@ -19,7 +22,10 @@ class MainInfo extends StatelessWidget {
       this.locationController,
       this.description,
       this.location,
-      this.title});
+      this.title,
+      this.titleFocus,
+      this.descriptionFocus,
+      this.locationFocus});
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +35,7 @@ class MainInfo extends StatelessWidget {
           ? [
               TextInput(
                 controller: titleController!,
+                focusNode: titleFocus!,
                 labelText: 'Title',
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -43,6 +50,7 @@ class MainInfo extends StatelessWidget {
               TextInput(
                 multiLine: true,
                 controller: descriptionController!,
+                focusNode: descriptionFocus!,
                 labelText: 'Description',
               ),
               const SizedBox(
@@ -51,6 +59,7 @@ class MainInfo extends StatelessWidget {
               TextInput(
                 multiLine: true,
                 controller: locationController!,
+                focusNode: locationFocus!,
                 labelText: 'Location',
               ),
             ]
