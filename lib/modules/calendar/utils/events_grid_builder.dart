@@ -28,7 +28,7 @@ void spreadWeekEvents(Week week) {
               if (day.events[slotIndex] == null) {
                 bool isSloIsFree = true;
                 for (int i = dayIndex;
-                    i < min(week.days.length, dayIndex + event.duration.inDays);
+                    i < week.days.length;
                     i++) {
                   if (week.days[i].events[slotIndex] != null) {
                     // found non-empty slot
