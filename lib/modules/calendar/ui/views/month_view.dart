@@ -8,11 +8,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-enum MonthViewMode{
-  week,
-  short,
-  full
-}
+enum MonthViewMode { week, short, full }
 
 class MonthView extends StatefulWidget {
   const MonthView({super.key});
@@ -51,22 +47,27 @@ class _MonthViewState extends State<MonthView>
     _calendarAnimation.addListener(() {
       setState(() {});
     });
-    if(_calendarsBloc.state.monthViewMode == MonthViewMode.week){
+    if (_calendarsBloc.state.monthViewMode == MonthViewMode.week) {
       _calendarAnimationController.value = 1.0;
       _calendarFormat = CalendarFormat.week;
     }
-    if(_calendarsBloc.state.monthViewMode == MonthViewMode.full){
+    if (_calendarsBloc.state.monthViewMode == MonthViewMode.full) {
       _eventListAnimationController.value = 1.0;
     }
   }
 
   @override
   dispose() {
-    if(_calendarAnimationController.value == 1.0 && _eventListAnimationController.value == 0.0){
+    if (_calendarAnimationController.value == 1.0 &&
+        _eventListAnimationController.value == 0.0) {
       _calendarsBloc.add(SaveMonthViewMode(MonthViewMode.week));
-    }if(_calendarAnimationController.value == 0.0 && _eventListAnimationController.value == 0.0){
+    }
+    if (_calendarAnimationController.value == 0.0 &&
+        _eventListAnimationController.value == 0.0) {
       _calendarsBloc.add(SaveMonthViewMode(MonthViewMode.short));
-    }if(_calendarAnimationController.value == 0.0 && _eventListAnimationController.value == 1.0){
+    }
+    if (_calendarAnimationController.value == 0.0 &&
+        _eventListAnimationController.value == 1.0) {
       _calendarsBloc.add(SaveMonthViewMode(MonthViewMode.full));
     }
     _eventListAnimationController.dispose();
@@ -208,7 +209,8 @@ class _MonthViewState extends State<MonthView>
                                   context,
                                   currentDate,
                                   selectedDate,
-                                  state.getEventsForDayFromMap(date: currentDate)),
+                                  state.getEventsForDayFromMap(
+                                      date: currentDate)),
                           todayBuilder: (BuildContext context,
                                   DateTime currentDate,
                                   DateTime selectedDate) =>
@@ -216,7 +218,8 @@ class _MonthViewState extends State<MonthView>
                                   context,
                                   currentDate,
                                   selectedDate,
-                                  state.getEventsForDayFromMap(date: currentDate)),
+                                  state.getEventsForDayFromMap(
+                                      date: currentDate)),
                           selectedBuilder: (BuildContext context,
                                   DateTime currentDate,
                                   DateTime selectedDate) =>
@@ -224,7 +227,8 @@ class _MonthViewState extends State<MonthView>
                                   context,
                                   currentDate,
                                   selectedDate,
-                                  state.getEventsForDayFromMap(date: currentDate)),
+                                  state.getEventsForDayFromMap(
+                                      date: currentDate)),
                           outsideBuilder: (BuildContext context,
                                   DateTime currentDate,
                                   DateTime selectedDate) =>
@@ -232,7 +236,8 @@ class _MonthViewState extends State<MonthView>
                                   context,
                                   currentDate,
                                   selectedDate,
-                                  state.getEventsForDayFromMap(date: currentDate)),
+                                  state.getEventsForDayFromMap(
+                                      date: currentDate)),
                           disabledBuilder: (BuildContext context,
                                   DateTime currentDate,
                                   DateTime selectedDate) =>
@@ -240,7 +245,8 @@ class _MonthViewState extends State<MonthView>
                                   context,
                                   currentDate,
                                   selectedDate,
-                                  state.getEventsForDayFromMap(date: currentDate)),
+                                  state.getEventsForDayFromMap(
+                                      date: currentDate)),
                           markerBuilder: (_, __, ___) => SizedBox.shrink(),
                         ),
                         startingDayOfWeek: StartingDayOfWeek.monday,
@@ -327,19 +333,21 @@ class _EventsInfoSection extends StatelessWidget {
                   overflow: TextOverflow.clip,
                 ),
               ),
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 24.0),
-                  child: Column(
-                    children: state.getEventsFromDay()
-                        .map((e) => Padding(
-                              padding: const EdgeInsets.only(bottom: 8.0),
-                              child: EventCard(
-                                event: e,
-                              ),
-                            ))
-                        .toList(),
-                  ),
-                )
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 24.0),
+                child: Column(
+                  children: state.selectedEvents != null
+                      ? state.selectedEvents!
+                          .map((e) => Padding(
+                                padding: const EdgeInsets.only(bottom: 8.0),
+                                child: EventCard(
+                                  event: e,
+                                ),
+                              ))
+                          .toList()
+                      : [const SizedBox()],
+                ),
+              )
             ],
           ),
         );

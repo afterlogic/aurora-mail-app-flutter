@@ -48,15 +48,21 @@ class EventCard extends StatelessWidget {
               ),
               BlocBuilder<SettingsBloc, SettingsState>(
                 builder: (context, state) {
-                  final dateFormat = (state is SettingsLoaded) && (state.is24 == true) ? DateFormat('HH:mm') : DateFormat("hh:mm a");
-                  return Text(
-                    '${dateFormat.format(
-                        event.startDate)} - ${dateFormat.format(
-                        event.endDate)}',
-                    style: TextStyle(
-                      color: Color.fromRGBO(150, 148, 148, 1),
-                    ),
-                  );
+                  final dateFormat =
+                      (state is SettingsLoaded) && (state.is24 == true)
+                          ? DateFormat('HH:mm')
+                          : DateFormat("hh:mm a");
+                  return event.allDay == true
+                      ? Text('All day',
+                          style: TextStyle(
+                            color: Color.fromRGBO(150, 148, 148, 1),
+                          ))
+                      : Text(
+                          '${dateFormat.format(event.startDate)} - ${dateFormat.format(event.endDate)}',
+                          style: TextStyle(
+                            color: Color.fromRGBO(150, 148, 148, 1),
+                          ),
+                        );
                 },
               )
             ],

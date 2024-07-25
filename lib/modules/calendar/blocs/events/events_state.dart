@@ -65,8 +65,6 @@ class EventsState extends Equatable {
       return {};
     }
 
-
-
     DateTime startOfWeek =
         selectedDate.subtract(Duration(days: selectedDate.weekday - 1));
     DateTime endOfWeek = startOfWeek.add(Duration(days: 6));
