@@ -77,11 +77,9 @@ class EventsBloc extends Bloc<EventBlocEvent, EventsState> {
       final weeks = generateWeeks(
           state.startIntervalDate.subtract(extraDuration),
           state.endIntervalDate.add(extraDuration));
-      final processedEvents = processEvents(
-          weeks,
-          event.events
-              .map((e) => ExtendedMonthEvent.fromViewEvent(e))
-              .toList());
+      final extendedMonthEvents =
+          event.events.map((e) => ExtendedMonthEvent.fromViewEvent(e)).toList();
+      final processedEvents = processEvents(weeks, extendedMonthEvents);
       final viewEvents = convertWeeksToMap(processedEvents);
 
       emit(state.copyWith(

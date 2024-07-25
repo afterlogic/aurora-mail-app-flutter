@@ -132,10 +132,6 @@ List<Activity> _handleMonthRecurrence(DateTime intervalStartDate,
         DateTime newEndTS =
             newStartTS.add(activity.endTS!.difference(activity.startTS!));
 
-        print(newStartTS);
-        print(activity.startTS);
-        print(newStartTS != activity.startTS!);
-
         if (newStartTS != activity.startTS!) {
           generatedActivities
               .add(activity.copyWith(startTS: () => newStartTS, endTS: () => newEndTS));

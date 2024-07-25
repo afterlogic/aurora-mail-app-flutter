@@ -13,14 +13,13 @@ import 'package:flutter/material.dart';
 
 import 'displayable.dart';
 
-abstract class WeekViewVisible{
-}
+abstract class WeekViewVisible {}
 
-class EmptyViewEvent with AlwaysNonEqualObject implements WeekViewVisible{
+class EmptyViewEvent with AlwaysNonEqualObject implements WeekViewVisible {
   const EmptyViewEvent();
 }
 
-class ViewEvent extends Event implements Displayable, WeekViewVisible{
+class ViewEvent extends Event implements Displayable, WeekViewVisible {
   final DateTime startDate;
   final DateTime endDate;
   final Color color;
@@ -228,7 +227,8 @@ class ViewEvent extends Event implements Displayable, WeekViewVisible{
         currentEnd = event.endDate;
       }
 
-      dailyEvents.add(copyWith(startDate: () => currentStart, endDate: () => currentEnd));
+      dailyEvents.add(
+          copyWith(startDate: () => currentStart, endDate: () => currentEnd));
       // next day iteration
       currentStart = currentEnd.startOfNextDay;
     }
@@ -250,44 +250,50 @@ class ExtendedMonthEvent extends ViewEvent {
 
   factory ExtendedMonthEvent.fromViewEvent(
     ViewEvent e,
-  ) =>
-      ExtendedMonthEvent(
-          startDate:
-              (e.allDay == true) ? e.startTS ?? e.startDate : e.startDate,
-          endDate: (e.allDay == true)
-              ? e.endTS?.subtract(Duration(minutes: 1)) ?? e.endDate
-              : e.endDate,
-          calendarId: e.calendarId,
-          title: e.subject!,
-          color: e.color,
-          recurrenceId: e.recurrenceId!,
-          uid: e.uid,
-          userLocalId: e.userLocalId,
-          updateStatus: e.updateStatus,
-          synced: e.synced,
-          onceLoaded: e.onceLoaded,
-          organizer: e.organizer,
-          appointment: e.appointment,
-          appointmentAccess: e.appointmentAccess,
-          subject: e.subject,
-          description: e.description,
-          location: e.location,
-          startTS: e.startTS,
-          endTS: e.endTS,
-          allDay: e.allDay,
-          owner: e.owner,
-          modified: e.modified,
-          lastModified: e.lastModified,
-          rrule: e.rrule,
-          status: e.status,
-          withDate: e.withDate,
-          isPrivate: e.isPrivate,
-          reminders: e.reminders,
-          recurrenceMode: e.recurrenceMode,
-          recurrenceUntilDate: e.recurrenceUntilDate,
-          recurrenceWeekDays: e.recurrenceWeekDays,
-          recurrenceWeeklyFrequency: e.recurrenceWeeklyFrequency,
-          attendees: e.attendees);
+  ) {
+    final startDate =
+        (e.allDay == true) ? e.startTS ?? e.startDate : e.startDate;
+    final endDate = (e.allDay == true)
+        ? e.endTS?.subtract(Duration(minutes: 1)) ?? e.endDate
+        : e.endDate;
+
+    return ExtendedMonthEvent(
+        startDate: startDate,
+        endDate: endDate.isBefore(startDate)
+            ? startDate.add(Duration(hours: 23, minutes: 59))
+            : endDate,
+        calendarId: e.calendarId,
+        title: e.subject!,
+        color: e.color,
+        recurrenceId: e.recurrenceId!,
+        uid: e.uid,
+        userLocalId: e.userLocalId,
+        updateStatus: e.updateStatus,
+        synced: e.synced,
+        onceLoaded: e.onceLoaded,
+        organizer: e.organizer,
+        appointment: e.appointment,
+        appointmentAccess: e.appointmentAccess,
+        subject: e.subject,
+        description: e.description,
+        location: e.location,
+        startTS: e.startTS,
+        endTS: e.endTS,
+        allDay: e.allDay,
+        owner: e.owner,
+        modified: e.modified,
+        lastModified: e.lastModified,
+        rrule: e.rrule,
+        status: e.status,
+        withDate: e.withDate,
+        isPrivate: e.isPrivate,
+        reminders: e.reminders,
+        recurrenceMode: e.recurrenceMode,
+        recurrenceUntilDate: e.recurrenceUntilDate,
+        recurrenceWeekDays: e.recurrenceWeekDays,
+        recurrenceWeeklyFrequency: e.recurrenceWeeklyFrequency,
+        attendees: e.attendees);
+  }
 
   ExtendedMonthEvent(
       {this.overflow = false,
