@@ -345,8 +345,11 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
                   return;
                 }
                 ;
-                BlocProvider.of<CalendarsBloc>(ctx).add(UpdateCalendarShares(
-                    calendarId: calendar.id, shares: participantsToRedact));
+              } else {
+                if (!setEquals(participantsToRedact, initialParticipants)) {
+                  BlocProvider.of<CalendarsBloc>(ctx).add(UpdateCalendarShares(
+                      calendarId: calendar.id, shares: participantsToRedact));
+                }
               }
             });
           },
