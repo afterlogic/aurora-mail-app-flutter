@@ -247,10 +247,10 @@ class CalendarUseCaseImpl implements CalendarUseCase {
     await repository.createActivity(data.copyWith(
         startDate: _location == null || data.startDate == null
             ? () => data.startDate
-            : () => tz.TZDateTime.from(data.startDate!, _location!),
+            : () => convertToTZDateTime(data.startDate!, _location!),
         endDate: _location == null || data.endDate == null
             ? () => data.endDate
-            : () => tz.TZDateTime.from(data.endDate!, _location!)));
+            : () => convertToTZDateTime(data.endDate!, _location!)));
     await syncCalendars();
     if (_selectedEndEventsInterval != null &&
         _selectedStartEventsInterval != null &&
@@ -268,22 +268,10 @@ class CalendarUseCaseImpl implements CalendarUseCase {
     final model = await repository.updateActivity(activity.copyWith(
         startTS: _location == null || activity.startDate == null
             ? () => activity.startDate
-            : () => tz.TZDateTime(
-                _location!,
-                activity.startDate!.year,
-                activity.startDate!.month,
-                activity.startDate!.day,
-                activity.startDate!.hour,
-                activity.startDate!.minute),
+            : () => convertToTZDateTime(activity.startDate!, _location!),
         endTS: _location == null || activity.endDate == null
             ? () => activity.endDate
-            : () => tz.TZDateTime(
-                _location!,
-                activity.endDate!.year,
-                activity.endDate!.month,
-                activity.endDate!.day,
-                activity.endDate!.hour,
-                activity.endDate!.minute)));
+            : () => convertToTZDateTime(activity.endDate!, _location!)));
     syncCalendars().then((_) {
       if (activity is Event) {
         _getLocalEvents();
@@ -295,7 +283,14 @@ class CalendarUseCaseImpl implements CalendarUseCase {
     final result = model.toDisplayable(color: activity.color);
     if (result == null)
       throw Exception('error .toDisplayable while updating activity');
-    return result;
+    return result.copyWith(
+      startDate: _location == null || result.startDate == null
+          ? () => result.startDate
+          : () => tz.TZDateTime.from(result.startDate!, _location!),
+      endDate: _location == null || result.endDate == null
+          ? () => result.endDate
+          : () => tz.TZDateTime.from(result.endDate!, _location!),
+    );
   }
 
   @override
@@ -311,4 +306,8 @@ class CalendarUseCaseImpl implements CalendarUseCase {
     _eventsSubject.add([]);
     _calendarsSubject.add([]);
   }
+
+  tz.TZDateTime convertToTZDateTime(DateTime date, tz.Location location) =>
+      tz.TZDateTime(
+          location, date.year, date.month, date.day, date.hour, date.minute);
 }
