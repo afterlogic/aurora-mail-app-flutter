@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
 class BaseCalendarDialog extends StatelessWidget {
-  const BaseCalendarDialog({super.key, this.title, this.removeContentPadding = false, required this.content, this.actions });
+  const BaseCalendarDialog({super.key, this.title, this.scrollable = true, this.removeContentPadding = false, required this.content, this.actions });
 
   final String? title;
   final bool removeContentPadding;
   final Widget content;
+  final bool scrollable;
   final List<Widget>? actions;
 
   @override
@@ -13,7 +14,7 @@ class BaseCalendarDialog extends StatelessWidget {
     return AlertDialog(
       contentPadding: removeContentPadding ? EdgeInsets.zero : null,
       insetPadding: EdgeInsets.symmetric(vertical: 24, horizontal: 24),
-      scrollable: true,
+      scrollable: scrollable,
       titlePadding:
       EdgeInsets.symmetric(horizontal: 24).copyWith(bottom: 0, top: 6),
       actions: actions,

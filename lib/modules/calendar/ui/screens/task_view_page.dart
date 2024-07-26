@@ -148,6 +148,7 @@ class TaskViewPage extends StatelessWidget {
                       onPressed: () {
                         final updatedTask = tasksState.selectedTask!.copyWith(status: !(tasksState.selectedTask!.status ?? false));
                         BlocProvider.of<TasksBloc>(context).add(UpdateTask(updatedTask));
+                        Navigator.of(context).pop();
                       },
                       style: ButtonStyle(
                           padding: MaterialStateProperty.all<EdgeInsets>(

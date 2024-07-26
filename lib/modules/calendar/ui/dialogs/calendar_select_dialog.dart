@@ -6,16 +6,17 @@ import 'package:flutter/material.dart';
 class CalendarSelectDialog extends StatefulWidget {
   final ViewCalendar? initialValue;
   final List<ViewCalendar> options;
-  const CalendarSelectDialog({required this.initialValue, required this.options});
+  const CalendarSelectDialog(
+      {required this.initialValue, required this.options});
 
   static Future<ViewCalendar?> show(BuildContext context,
       {ViewCalendar? initialValue, required List<ViewCalendar> options}) {
     return showDialog<ViewCalendar?>(
         context: context,
         builder: (_) => CalendarSelectDialog(
-          initialValue: initialValue,
-          options: options,
-        )).then((value) => value);
+              initialValue: initialValue,
+              options: options,
+            )).then((value) => value);
   }
 
   @override
@@ -35,6 +36,7 @@ class _CalendarSelectDialogState extends State<CalendarSelectDialog> {
   Widget build(BuildContext context) {
     return BaseCalendarDialog(
       removeContentPadding: true,
+      scrollable: false,
       content: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -46,27 +48,38 @@ class _CalendarSelectDialogState extends State<CalendarSelectDialog> {
               )
             ],
           ),
-          ...widget.options.map((option) {
-            return Theme(
+          Expanded(
+            child: Theme(
               data: Theme.of(context).copyWith(
                 listTileTheme: ListTileThemeData(
                   horizontalTitleGap: 0,
                 ),
               ),
-              child: RadioListTile<ViewCalendar>(
-                dense: true,
-                title: CalendarTile(circleColor: option.color, text: option.name, backgroundColor: null,),
-                value: option,
-                groupValue: _selectedOption,
-                onChanged: (ViewCalendar? value) {
-                  setState(() {
-                    _selectedOption = value;
-                  });
-                  Navigator.pop(context, _selectedOption);
-                },
-              ),
-            );
-          }).toList(),
+              child: SingleChildScrollView(
+                  child: Column(
+                children: [
+                  ...widget.options.map((option) {
+                    return RadioListTile<ViewCalendar>(
+                      dense: true,
+                      title: CalendarTile(
+                        circleColor: option.color,
+                        text: option.name,
+                        backgroundColor: null,
+                      ),
+                      value: option,
+                      groupValue: _selectedOption,
+                      onChanged: (ViewCalendar? value) {
+                        setState(() {
+                          _selectedOption = value;
+                        });
+                        Navigator.pop(context, _selectedOption);
+                      },
+                    );
+                  })
+                ],
+              )),
+            ),
+          ),
           const SizedBox(
             height: 4,
           )
@@ -75,4 +88,3 @@ class _CalendarSelectDialogState extends State<CalendarSelectDialog> {
     );
   }
 }
-
