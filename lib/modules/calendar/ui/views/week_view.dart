@@ -42,24 +42,50 @@ class _WeekViewState extends State<WeekView> {
   _onStateChange(EventsState state) {
     final events = state.getEventsFromWeek();
     final oldEvents = [..._controller.allEvents];
+    print(events);
     _controller.removeAll(oldEvents);
-    events.forEach((key, value) {
-      value.forEach((e) {
-        _controller.add(
-          CV.CalendarEventData<WeekViewVisible>(
-            event: e == null ? EmptyViewEvent() : e,
-            title: e == null ? '' : e.title,
-            date:
-                e?.allDay != false ? key.withoutTime : e!.startDate.withoutTime,
-            endDate:
-                e?.allDay != false ? key.withoutTime : e!.endDate.withoutTime,
-            startTime: e?.allDay != false ? null : e!.startDate,
-            endTime: e?.allDay != false ? null : e!.endDate,
-            color: e == null ? Colors.transparent : e.color,
-          ),
-        );
-      });
-    });
+    for (final date in events.keys) {
+      final currentList = events[date]!;
+      for (final e in currentList) {
+        final isAllDay = e?.allDay != false;
+        if (!isAllDay) {
+          _controller.add(
+            CV.CalendarEventData<WeekViewVisible>(
+              event: e,
+              title: e!.title,
+              date: e.startDate.withoutTime,
+              endDate: e.endDate.withoutTime,
+              startTime: e.startDate,
+              endTime: e.endDate,
+              color: e.color,
+            ),
+          );
+          _controller.add(
+            CV.CalendarEventData<WeekViewVisible>(
+              event: EmptyViewEvent(),
+              title: '',
+              date: date.withoutTime,
+              endDate: date.withoutTime,
+              startTime: null,
+              endTime: null,
+              color: Colors.transparent,
+            ),
+          );
+        } else {
+          _controller.add(
+            CV.CalendarEventData<WeekViewVisible>(
+              event: e == null ? EmptyViewEvent() : e,
+              title: e == null ? '' : e.title,
+              date: date.withoutTime,
+              endDate: date.withoutTime,
+              startTime: null,
+              endTime: null,
+              color: e == null ? Colors.transparent : e.color,
+            ),
+          );
+        }
+      }
+    }
   }
 
   @override
@@ -69,6 +95,7 @@ class _WeekViewState extends State<WeekView> {
     return BlocBuilder<EventsBloc, EventsState>(
       builder: (context, state) {
         return CV.WeekView<WeekViewVisible>(
+
           fullDayHeaderTitle: 'All\nday',
           showLiveTimeLineInAllDays: true,
           liveTimeIndicatorSettings: CV.LiveTimeIndicatorSettings(
@@ -143,9 +170,9 @@ class _WeekViewState extends State<WeekView> {
           onEventTap:
               (List<CV.CalendarEventData<Object?>> events, DateTime date) {
             final event =
-                (events as List<CV.CalendarEventData<ViewEvent?>>).firstOrNull;
-            if (event == null) return;
-            BlocProvider.of<EventsBloc>(context).add(SelectEvent(event.event));
+                (events as List<CV.CalendarEventData<WeekViewVisible>>).firstOrNull;
+            if (event == null || event.event is EmptyViewEvent) return;
+            BlocProvider.of<EventsBloc>(context).add(SelectEvent(event.event as ViewEvent));
             Navigator.of(context).pushNamed(
               EventViewPage.name,
             );

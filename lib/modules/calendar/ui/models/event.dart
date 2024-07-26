@@ -15,7 +15,7 @@ import 'displayable.dart';
 
 abstract class WeekViewVisible {}
 
-class EmptyViewEvent with AlwaysNonEqualObject implements WeekViewVisible {
+class EmptyViewEvent implements WeekViewVisible {
   const EmptyViewEvent();
 }
 
