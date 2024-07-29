@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:aurora_mail/modules/calendar/ui/models/event.dart';
 import 'package:aurora_mail/modules/calendar/utils/date_time_ext.dart';
+import 'package:calendar_view/calendar_view.dart';
 
 const int slotsNumber = 3;
 

@@ -1,5 +1,3 @@
-import 'package:calendar_view/calendar_view.dart';
-
 extension DateTimeExtension on DateTime {
   DateTime get lastDayOfMonth {
     final int nextMonth = month == 12 ? 1 : month + 1;
@@ -14,7 +12,7 @@ extension DateTimeExtension on DateTime {
     return DateTime(year, month);
   }
 
-  DateTime get withoutTime => DateTime(year, month, day);
+  // DateTime get withoutTime => DateTime(year, month, day);
 
   DateTime get firstDayOfPreviousMonth {
     int previousMonth = month - 1;
@@ -35,12 +33,19 @@ extension DateTimeExtension on DateTime {
       nextMonth = 1;
       nextYear++;
     }
-    return DateTime(nextYear, nextMonth , 1);
+    return DateTime(nextYear, nextMonth, 1);
   }
 
   DateTime get startOfNextDay {
     DateTime nextDay = this.add(Duration(days: 1));
     return DateTime(nextDay.year, nextDay.month, nextDay.day);
+  }
+
+  bool isAtSameDay(DateTime other) {
+    final utcCurrent = DateTime.utc(this.year, this.month, this.day);
+    final utcOther = DateTime.utc(other.year, other.month, other.day);
+    
+    return utcCurrent.isAtSameMomentAs(utcOther);
   }
 
   bool isAfterOrEqual(DateTime other) {

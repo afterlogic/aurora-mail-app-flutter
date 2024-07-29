@@ -4,6 +4,7 @@ import 'package:aurora_mail/modules/calendar/blocs/events/events_bloc.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/event.dart';
 import 'package:aurora_mail/modules/calendar/ui/screens/event_view_page.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/month_event_marker.dart';
+import 'package:aurora_mail/modules/calendar/utils/date_time_ext.dart';
 import 'package:calendar_view/calendar_view.dart' as CV;
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -53,13 +54,14 @@ class _WeekViewState extends State<WeekView> {
             CV.CalendarEventData<WeekViewVisible>(
               event: e,
               title: e!.title,
-              date: e.startDate.withoutTime,
-              endDate: e.endDate.withoutTime,
-              startTime: e.startDate,
-              endTime: e.endDate,
+              date: date,
+              endDate: date,
+              startTime: e.startDate.isAtSameDay(date) ? e.startDate : date.copyWith(hour: 0, minute: 1),
+              endTime: e.endDate.isAtSameDay(date) ? e.endDate : date.copyWith(hour: 23, minute: 59),
               color: e.color,
             ),
           );
+          /// necessary copy for all day section
           _controller.add(
             CV.CalendarEventData<WeekViewVisible>(
               event: EmptyViewEvent(),
@@ -72,6 +74,7 @@ class _WeekViewState extends State<WeekView> {
             ),
           );
         } else {
+          /// all day section
           _controller.add(
             CV.CalendarEventData<WeekViewVisible>(
               event: e == null ? EmptyViewEvent() : e,
@@ -101,6 +104,7 @@ class _WeekViewState extends State<WeekView> {
           liveTimeIndicatorSettings: CV.LiveTimeIndicatorSettings(
               color: Theme.of(context).primaryColor, height: 3),
           initialDay: state.selectedDate,
+
           headerStyle: CV.HeaderStyle(
             leftIcon: Icon(
               Icons.chevron_left,

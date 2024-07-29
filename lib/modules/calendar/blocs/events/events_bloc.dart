@@ -7,6 +7,7 @@ import 'package:aurora_mail/modules/calendar/utils/events_grid_builder.dart';
 import 'package:aurora_mail/utils/api_utils.dart';
 import 'package:aurora_mail/utils/error_to_show.dart';
 import 'package:bloc/bloc.dart';
+import 'package:calendar_view/calendar_view.dart';
 import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 
