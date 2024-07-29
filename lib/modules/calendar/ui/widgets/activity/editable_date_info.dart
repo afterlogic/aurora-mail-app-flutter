@@ -24,12 +24,6 @@ class EditableDateInfo extends StatelessWidget {
     required this.scaffoldKey,
   });
 
-  datesError(BuildContext context) => showErrorSnack(
-        context: context,
-        scaffoldState: scaffoldKey.currentState,
-        msg: ErrorToShow.message('End date must be after start date'),
-      );
-
   @override
   Widget build(BuildContext context) {
     return SectionWithIcon(
@@ -62,13 +56,7 @@ class EditableDateInfo extends StatelessWidget {
           ),
           DateTimeTile(
             dateTime: selectedStartDate,
-            onChanged: (DateTime value) {
-              if (selectedEndDate != null && selectedEndDate!.isBefore(value)) {
-                datesError(context);
-              } else {
-                selectedStartDateChangedCallback(value);
-              }
-            },
+            onChanged: selectedStartDateChangedCallback,
             isAllDay: isAllDay,
           ),
           const SizedBox(
@@ -76,14 +64,7 @@ class EditableDateInfo extends StatelessWidget {
           ),
           DateTimeTile(
             dateTime: selectedEndDate,
-            onChanged: (DateTime value) {
-              if (selectedStartDate != null &&
-                  value.isBefore(selectedStartDate!)) {
-                datesError(context);
-              } else {
-                selectedEndDateChangedCallback(value);
-              }
-            },
+            onChanged: selectedEndDateChangedCallback,
             isAllDay: isAllDay,
           ),
         ]);

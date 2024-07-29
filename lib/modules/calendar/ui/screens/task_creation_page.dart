@@ -234,14 +234,36 @@ class _TaskCreationPageState extends State<TaskCreationPage> {
                     selectedEndDate: _selectedEndDate,
                     isAllDayChangedCallback: (value) {
                       _isAllDay = value;
+                      if (_selectedStartDate != null &&
+                          _selectedEndDate != null) {
+                        if (_isAllDay) {
+                          _selectedEndDate = _selectedStartDate;
+                        } else {
+                          _selectedEndDate =
+                              _selectedStartDate!.add(Duration(minutes: 30));
+                        }
+                      }
+
                       setState(() {});
                     },
                     selectedStartDateChangedCallback: (value) {
                       _selectedStartDate = value;
+                      if (_selectedStartDate != null &&
+                          _selectedEndDate != null &&
+                          _selectedStartDate!.isAfter(_selectedEndDate!)) {
+                        _selectedEndDate =
+                            _selectedStartDate!.add(Duration(minutes: 30));
+                      }
                       setState(() {});
                     },
                     selectedEndDateChangedCallback: (value) {
                       _selectedEndDate = value;
+                      if (_selectedStartDate != null &&
+                          _selectedEndDate != null &&
+                          _selectedStartDate!.isAfter(_selectedEndDate!)) {
+                        _selectedEndDate =
+                            _selectedStartDate!.subtract(Duration(minutes: 30));
+                      }
                       setState(() {});
                     },
                     scaffoldKey: _scaffoldKey,
