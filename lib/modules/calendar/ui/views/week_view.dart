@@ -43,7 +43,6 @@ class _WeekViewState extends State<WeekView> {
   _onStateChange(EventsState state) {
     final events = state.getEventsFromWeek();
     final oldEvents = [..._controller.allEvents];
-    print(events);
     _controller.removeAll(oldEvents);
     for (final date in events.keys) {
       final currentList = events[date]!;
@@ -56,11 +55,16 @@ class _WeekViewState extends State<WeekView> {
               title: e!.title,
               date: date,
               endDate: date,
-              startTime: e.startDate.isAtSameDay(date) ? e.startDate : date.copyWith(hour: 0, minute: 1),
-              endTime: e.endDate.isAtSameDay(date) ? e.endDate : date.copyWith(hour: 23, minute: 59),
+              startTime: e.startDate.isAtSameDay(date)
+                  ? e.startDate
+                  : date.copyWith(hour: 0, minute: 1),
+              endTime: e.endDate.isAtSameDay(date)
+                  ? e.endDate
+                  : date.copyWith(hour: 23, minute: 59),
               color: e.color,
             ),
           );
+
           /// necessary copy for all day section
           _controller.add(
             CV.CalendarEventData<WeekViewVisible>(
@@ -98,13 +102,11 @@ class _WeekViewState extends State<WeekView> {
     return BlocBuilder<EventsBloc, EventsState>(
       builder: (context, state) {
         return CV.WeekView<WeekViewVisible>(
-
           fullDayHeaderTitle: 'All\nday',
           showLiveTimeLineInAllDays: true,
           liveTimeIndicatorSettings: CV.LiveTimeIndicatorSettings(
               color: Theme.of(context).primaryColor, height: 3),
           initialDay: state.selectedDate,
-
           headerStyle: CV.HeaderStyle(
             leftIcon: Icon(
               Icons.chevron_left,
@@ -174,9 +176,11 @@ class _WeekViewState extends State<WeekView> {
           onEventTap:
               (List<CV.CalendarEventData<Object?>> events, DateTime date) {
             final event =
-                (events as List<CV.CalendarEventData<WeekViewVisible>>).firstOrNull;
+                (events as List<CV.CalendarEventData<WeekViewVisible>>)
+                    .firstOrNull;
             if (event == null || event.event is EmptyViewEvent) return;
-            BlocProvider.of<EventsBloc>(context).add(SelectEvent(event.event as ViewEvent));
+            BlocProvider.of<EventsBloc>(context)
+                .add(SelectEvent(event.event as ViewEvent));
             Navigator.of(context).pushNamed(
               EventViewPage.name,
             );
