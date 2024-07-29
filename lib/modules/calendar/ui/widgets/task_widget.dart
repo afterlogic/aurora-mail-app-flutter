@@ -13,6 +13,7 @@ class TaskWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      behavior: HitTestBehavior.opaque,
       onTap: (){
         BlocProvider.of<TasksBloc>(context).add(SelectTask(task));
         Navigator.of(context).pushNamed(

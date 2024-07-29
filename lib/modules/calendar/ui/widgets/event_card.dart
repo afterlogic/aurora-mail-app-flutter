@@ -16,6 +16,7 @@ class EventCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      behavior: HitTestBehavior.opaque,
       onTap: () {
         BlocProvider.of<EventsBloc>(context).add(SelectEvent(event));
         Navigator.of(context).pushNamed(
