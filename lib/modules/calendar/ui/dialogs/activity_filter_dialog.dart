@@ -115,8 +115,11 @@ extension _ActivityStatusFilterStringBuilder on ActivityStatusFilter {
     switch (this) {
       case ActivityStatusFilter.all:
         return 'All';
-      case ActivityStatusFilter.completedOnly:
-        return 'Completed only';
+      case ActivityStatusFilter.completed:
+        return 'Completed';
+      case ActivityStatusFilter.uncompleted:
+        return 'Uncompleted';
+
     }
   }
 }

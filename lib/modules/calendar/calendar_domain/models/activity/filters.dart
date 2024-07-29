@@ -17,4 +17,4 @@ class ActivityFilter extends Equatable {
 
 enum ActivityDateFilter { hasDate, withoutDate, all }
 
-enum ActivityStatusFilter { completedOnly, all }
+enum ActivityStatusFilter { completed, uncompleted, all }

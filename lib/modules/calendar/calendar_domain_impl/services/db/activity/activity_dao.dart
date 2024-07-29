@@ -164,10 +164,13 @@ class ActivityDao extends DatabaseAccessor<AppDatabase>
         break;
     }
     switch (filter.status) {
-      case ActivityStatusFilter.completedOnly:
+      case ActivityStatusFilter.all:
+        break;
+      case ActivityStatusFilter.completed:
         activitySelect.where((t) => t.status.equals(true));
         break;
-      case ActivityStatusFilter.all:
+      case ActivityStatusFilter.uncompleted:
+        activitySelect.where((t) => t.status.equals(false));
         break;
     }
     activitySelect.where(
