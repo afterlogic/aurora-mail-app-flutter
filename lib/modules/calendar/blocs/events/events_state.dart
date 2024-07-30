@@ -41,8 +41,12 @@ class EventsState extends Equatable {
       final todayWithoutTime = selectedDate.withoutTime;
       final todayWithoutTimeUtc = DateTime.utc(
           todayWithoutTime.year, todayWithoutTime.month, todayWithoutTime.day);
-      return e.startDate.toUtc().isBefore(nextDayUtc) &&
-          e.endDate.toUtc().isAfter(todayWithoutTimeUtc);
+      return (e.startDate.toUtc().isBefore(nextDayUtc) &&
+              e.endDate.toUtc().isAfter(todayWithoutTimeUtc)) ||
+          ///handle events where startDate equals endDate
+          (e.startDate.toUtc().isAtSameMomentAs(e.endDate.toUtc()) &&
+              (e.startDate.toUtc().isBefore(nextDayUtc) &&
+                  e.endDate.toUtc().isAfterOrEqual(todayWithoutTimeUtc)));
     }).toList();
     return filteredEvents;
   }

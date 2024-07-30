@@ -79,7 +79,7 @@ class ShortMonthDay extends StatelessWidget {
                     .toList(),
                 if (hiddenEvents.isNotEmpty && availableEvents.where((e) => e != null).isNotEmpty)
                   Transform.translate(
-                    offset: Offset(0, -5),
+                    offset: Offset(0, -3),
                     child: Icon(
                       Icons.more_horiz,
                       size: 14,
