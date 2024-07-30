@@ -1,3 +1,4 @@
+import 'package:aurora_mail/modules/calendar/utils/date_time_ext.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,9 +18,8 @@ class DateTimeTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onChanged == null || isAllDay
-          ? null
-          : () {
+      onTap: onChanged != null
+          ? () {
               showDatePicker(
                       context: context,
                       initialDate: dateTime ?? DateTime.now(),
@@ -27,8 +27,10 @@ class DateTimeTile extends StatelessWidget {
                       lastDate: DateTime(2040))
                   .then((value) {
                 if (value != null && !isAllDay) {
-                  final DateTime result = dateTime == null ? value : dateTime!.copyWith(
-                      year: value.year, month: value.month, day: value.day);
+                  final DateTime result = dateTime == null
+                      ? value
+                      : dateTime!.copyWith(
+                          year: value.year, month: value.month, day: value.day);
                   showTimePicker(
                           context: context,
                           initialTime: TimeOfDay.fromDateTime(result))
@@ -40,23 +42,34 @@ class DateTimeTile extends StatelessWidget {
                       onChanged!(result);
                     }
                   });
+                } else if (value != null && isAllDay) {
+                  final DateTime result = value.copyWith(
+                      hour: 12,
+                      minute: 0,
+                      second: 0,
+                      millisecond: 0,
+                      microsecond: 0);
+                  onChanged!(result);
                 }
               });
-            },
-      child: dateTime == null ? Text('No date selected') : Row(
-        children: [
-          Text(DateFormat('E, MMM d, y').format(dateTime!)),
-          Spacer(),
-          if (!isAllDay)
-            BlocBuilder<SettingsBloc, SettingsState>(
-              builder: (context, state) {
-                return (state is SettingsLoaded) && (state.is24 == true)
-                    ? Text(DateFormat('HH:mm').format(dateTime!))
-                    : Text(DateFormat.jm().format(dateTime!));
-              },
+            }
+          : null,
+      child: dateTime == null
+          ? Text('No date selected')
+          : Row(
+              children: [
+                Text(DateFormat('E, MMM d, y').format(dateTime!)),
+                Spacer(),
+                if (!isAllDay)
+                  BlocBuilder<SettingsBloc, SettingsState>(
+                    builder: (context, state) {
+                      return (state is SettingsLoaded) && (state.is24 == true)
+                          ? Text(DateFormat('HH:mm').format(dateTime!))
+                          : Text(DateFormat.jm().format(dateTime!));
+                    },
+                  ),
+              ],
             ),
-        ],
-      ),
     );
   }
 }
