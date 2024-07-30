@@ -6,55 +6,48 @@ import 'package:calendar_view/calendar_view.dart';
 
 const int slotsNumber = 3;
 
+List<T?> ensureCapacity<T>(int index, List<T?> events) {
+  if (index > events.length - 1) {
+    while (events.length <= index) {
+      events.add(null);
+    }
+  }
+  return events;
+}
+
 void spreadWeekEvents(Week week) {
   for (var event in week.events) {
-    // reset slot solution 1: event slot in different weeks is independent
-    // event.slot = null;
-
     for (int dayIndex = 0; dayIndex < week.days.length; dayIndex++) {
       var day = week.days[dayIndex];
 
-      // if event was marked earlier as overflow then skipping this day
-      if ((event.startDate.withoutTime.isBefore(day.date) ||
-              event.startDate.withoutTime.isAtSameMomentAs(day.date)) &&
+      if ((event.startDate.withoutTime.isBeforeOrEqual(day.date)) &&
           (event.endDate.withoutTime.isAfterOrEqual(day.date))) {
-        if (event.overflow == true) {
-          day.moreNumber++;
+        if (event.slotIndex != null) {
+          day.events = ensureCapacity(event.slotIndex!, day.events);
+          day.events[event.slotIndex!] = event;
         } else {
-          if (event.slotIndex != null) {
-            day.events[event.slotIndex!] = event;
-          } else {
-            int? foundedFreeSlot;
-            for (int slotIndex = 0; slotIndex < slotsNumber; slotIndex++) {
-              if (day.events[slotIndex] == null) {
-                bool isSloIsFree = true;
-                for (int i = dayIndex;
-                    i < week.days.length;
-                    i++) {
-                  if (week.days[i].events[slotIndex] != null) {
-                    // found non-empty slot
-                    isSloIsFree = false;
-                    break;
-                  }
-                }
-
-                if (isSloIsFree) {
-                  foundedFreeSlot = slotIndex;
-                  break;
-                }
+          int? foundedFreeSlot;
+          for (int slotIndex = 0;; slotIndex++) {
+            if (slotIndex > day.events.length - 1) {
+              day.events.add(null);
+            }
+            bool isSloIsFree = true;
+            for (int i = dayIndex; i < week.days.length; i++) {
+              week.days[i].events =
+                  ensureCapacity(slotIndex, week.days[i].events);
+              if (week.days[i].events[slotIndex] != null) {
+                isSloIsFree = false;
+                break;
               }
             }
-
-            if (foundedFreeSlot != null) {
-              event.slotIndex =
-                  foundedFreeSlot; // remembering the free slot number
-              day.events[foundedFreeSlot] =
-                  event; // saving event to the free slot
-            } else {
-              event.overflow = true;
-              day.moreNumber++;
+            if (isSloIsFree) {
+              foundedFreeSlot = slotIndex;
+              break;
             }
           }
+
+          event.slotIndex = foundedFreeSlot; // remembering the free slot number
+          day.events[foundedFreeSlot] = event; // saving event to the free slot
         }
       }
     }
@@ -79,7 +72,7 @@ List<Week> processEvents(
 
     // populating days with empty events
     for (var day in week.days) {
-      day.events = List.filled(slotsNumber, null);
+      day.events = [];
     }
 
     // reset slot solution 2: event slot in different weeks remain the same
@@ -89,7 +82,7 @@ List<Week> processEvents(
     week.events = [...withSlot, ...withoutSlot];
 
     spreadWeekEvents(week);
-
+    _normalizeEventsLength(week);
     // removing unnecessary empty events
     // for (var day in week.days) {
     //   int maxIndexPerDay = -1;
@@ -103,6 +96,21 @@ List<Week> processEvents(
   }
 
   return weeks;
+}
+
+void _normalizeEventsLength(Week week) {
+  int maxLength = 0;
+  for (var day in week.days) {
+    if (day.events.length > maxLength) {
+      maxLength = day.events.length;
+    }
+  }
+
+  for (var day in week.days) {
+    while (day.events.length < maxLength) {
+      day.events.add(null);
+    }
+  }
 }
 
 List<Week> generateWeeks(DateTime startDate, DateTime endDate) {
