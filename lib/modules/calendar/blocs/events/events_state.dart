@@ -33,14 +33,17 @@ class EventsState extends Equatable {
         error
       ];
 
-
   ///Events from selected date or from period between [startIntervalDate] and [endIntervalDate]
   List<ViewEvent>? get selectedEvents {
-    final filteredEvents = originalEvents
-        ?.where((e) =>
-            e.startDate.isBefore(selectedDate.startOfNextDay) &&
-            e.endDate.isAfterOrEqual(selectedDate.withoutTime))
-        .toList();
+    final filteredEvents = originalEvents?.where((e) {
+      final nextDay = selectedDate.startOfNextDay;
+      final nextDayUtc = DateTime.utc(nextDay.year, nextDay.month, nextDay.day);
+      final todayWithoutTime = selectedDate.withoutTime;
+      final todayWithoutTimeUtc = DateTime.utc(
+          todayWithoutTime.year, todayWithoutTime.month, todayWithoutTime.day);
+      return e.startDate.toUtc().isBefore(nextDayUtc) &&
+          e.endDate.toUtc().isAfter(todayWithoutTimeUtc);
+    }).toList();
     return filteredEvents;
   }
 
@@ -72,7 +75,7 @@ class EventsState extends Equatable {
     final dates = _daysFromInterval(startOfWeek, endOfWeek);
     final Map<DateTime, List<ViewEvent?>> result = {};
 
-    for(final date in dates){
+    for (final date in dates) {
       result.addAll({date: getEventsForDayFromMap(date: date)});
     }
 
@@ -115,7 +118,6 @@ class EventsState extends Equatable {
     return events
         .map((e) => _expandEventTime(e: e, currentDate: targetDate))
         .toList();
-
   }
 
   ViewEvent _expandEventTime(
@@ -128,7 +130,6 @@ class EventsState extends Equatable {
 
     return e.copyWith(startDate: () => updatedStart, endDate: () => updatedEnd);
   }
-
 
   @override
   String toString() {

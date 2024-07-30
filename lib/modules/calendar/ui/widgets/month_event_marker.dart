@@ -1,4 +1,5 @@
 import 'package:aurora_mail/modules/calendar/blocs/events/events_bloc.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/recurrence_mode.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/event.dart';
 import 'package:aurora_mail/modules/calendar/ui/screens/event_view_page.dart';
 import 'package:flutter/material.dart';
@@ -44,8 +45,13 @@ class MonthEventMarker extends StatelessWidget {
             child: Container(
               decoration: BoxDecoration(
                   border: Border(
-                      right: implementBorder && event?.isEndedToday(currentDate) == true ? BorderSide(color: Color(0xffdddddd)) : BorderSide.none,
-                      left: implementLeftBorder && implementBorder && event?.isStartedToday(currentDate) == true
+                      right: implementBorder &&
+                              event?.isEndedToday(currentDate) == true
+                          ? BorderSide(color: Color(0xffdddddd))
+                          : BorderSide.none,
+                      left: implementLeftBorder &&
+                              implementBorder &&
+                              event?.isStartedToday(currentDate) == true
                           ? BorderSide(color: Color(0xffdddddd))
                           : BorderSide.none)),
               child: Padding(
@@ -81,7 +87,17 @@ class MonthEventMarker extends StatelessWidget {
                       alignment: Alignment.centerLeft,
                       child: Row(
                         children: [
-                          if(event?.isStartedToday(currentDate) == true)Icon(Icons.repeat,size: 8,),
+                          if (event?.isStartedToday(currentDate) == true &&
+                              event?.recurrenceMode != null &&
+                              event?.recurrenceMode != RecurrenceMode.never)
+                            Padding(
+                              padding: const EdgeInsets.only(right: 4.0),
+                              child: Icon(
+                                Icons.repeat,
+                                size: 8,
+                                color: Colors.white,
+                              ),
+                            ),
                           Expanded(
                             child: Text(
                               forceTitleRender ||
@@ -89,7 +105,8 @@ class MonthEventMarker extends StatelessWidget {
                                   ? event!.title
                                   : '',
                               overflow: TextOverflow.ellipsis,
-                              style: TextStyle(fontSize: fontSize, color: Colors.white),
+                              style: TextStyle(
+                                  fontSize: fontSize, color: Colors.white),
                             ),
                           ),
                         ],
@@ -98,7 +115,12 @@ class MonthEventMarker extends StatelessWidget {
               ),
             ),
           )
-        : EmptyMarker(h: emptyHeight, w: 60, implementLeftBorder: implementLeftBorder, implementBorder: implementBorder,);
+        : EmptyMarker(
+            h: emptyHeight,
+            w: 60,
+            implementLeftBorder: implementLeftBorder,
+            implementBorder: implementBorder,
+          );
   }
 
   BorderRadius? _calculateBorderRadius(Edge edge) {

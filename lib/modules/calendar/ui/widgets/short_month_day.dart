@@ -8,8 +8,9 @@ class ShortMonthDay extends StatelessWidget {
       {super.key,
       required this.height,
       required this.dayNumber,
-      required this.showEventMarker, this.events = const [],
-        required this.currentDate,
+      required this.showEventMarker,
+      this.events = const [],
+      required this.currentDate,
       required this.boxColor,
       required this.eventsMarkerColor,
       required this.dayNumberColor});
@@ -26,6 +27,10 @@ class ShortMonthDay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final availableEvents = events.length >= 3 ? events.getRange(0, 3) : events;
+    final hiddenEvents = events.length <= 3
+        ? []
+        : events.skip(3).where((e) => e != null).toList();
     return Align(
       alignment: Alignment.topCenter,
       child: Wrap(
@@ -34,7 +39,9 @@ class ShortMonthDay extends StatelessWidget {
         children: [
           Container(
             padding: EdgeInsets.all(4.0),
-            height: showEventMarker && events.whereNotNull().isNotEmpty ? height : height - _markerDiameter,
+            height: showEventMarker && events.whereNotNull().isNotEmpty
+                ? height
+                : height - _markerDiameter,
             width: height,
             decoration: BoxDecoration(
                 color: boxColor, borderRadius: BorderRadius.circular(4)),
@@ -58,19 +65,25 @@ class ShortMonthDay extends StatelessWidget {
               ],
             ),
           ),
-          if(!showEventMarker)Padding(
-            padding: EdgeInsets.only(top: 4),
-            child: Column(
-              children: events
-                  .map<Widget>(
-                    (e) => MonthEventMarker(
-                  event: e,
-                  currentDate: currentDate,
-                ),
-              )
-                  .toList(),
-            ),
-          )
+          if (!showEventMarker)
+            Padding(
+              padding: EdgeInsets.only(top: 4),
+              child: Column(children: [
+                ...availableEvents
+                    .map<Widget>(
+                      (e) => MonthEventMarker(
+                        event: e,
+                        currentDate: currentDate,
+                      ),
+                    )
+                    .toList(),
+                if (hiddenEvents.isNotEmpty && availableEvents.where((e) => e != null).isNotEmpty)
+                  Icon(
+                    Icons.more_horiz,
+                    size: 14,
+                  ),
+              ]),
+            )
         ],
       ),
     );
