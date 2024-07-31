@@ -135,6 +135,7 @@ class _TaskCreationPageState extends State<TaskCreationPage> {
     final updatedFields = collectCreationData;
     final updatedTask = _selectedTask!.copyWith(
       subject: updatedFields.subject,
+      calendarId: updatedFields.calendarId,
       title: updatedFields.subject,
       description: updatedFields.description,
       location: updatedFields.location,
@@ -234,16 +235,6 @@ class _TaskCreationPageState extends State<TaskCreationPage> {
                     selectedEndDate: _selectedEndDate,
                     isAllDayChangedCallback: (value) {
                       _isAllDay = value;
-                      if (_selectedStartDate != null &&
-                          _selectedEndDate != null) {
-                        if (_isAllDay) {
-                          _selectedEndDate = _selectedStartDate;
-                        } else {
-                          _selectedEndDate =
-                              _selectedStartDate!.add(Duration(minutes: 30));
-                        }
-                      }
-
                       setState(() {});
                     },
                     selectedStartDateChangedCallback: (value) {
@@ -261,8 +252,8 @@ class _TaskCreationPageState extends State<TaskCreationPage> {
                       if (_selectedStartDate != null &&
                           _selectedEndDate != null &&
                           _selectedStartDate!.isAfter(_selectedEndDate!)) {
-                        _selectedEndDate =
-                            _selectedStartDate!.subtract(Duration(minutes: 30));
+                        _selectedStartDate =
+                            _selectedEndDate!.subtract(Duration(minutes: 30));
                       }
                       setState(() {});
                     },

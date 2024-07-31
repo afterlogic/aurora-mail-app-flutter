@@ -144,6 +144,7 @@ class _EventCreationPageState extends State<EventCreationPage> {
     final updatedEvent = _selectedEvent!.copyWith(
         subject: updatedFields.subject,
         title: updatedFields.subject,
+        calendarId: updatedFields.calendarId,
         description: updatedFields.description,
         location: updatedFields.location,
         startDate: () => updatedFields.startDate,
@@ -243,12 +244,6 @@ class _EventCreationPageState extends State<EventCreationPage> {
                     selectedEndDate: _selectedEndDate,
                     isAllDayChangedCallback: (value) {
                       _isAllDay = value;
-                      if (_isAllDay) {
-                        _selectedEndDate = _selectedStartDate;
-                      } else {
-                        _selectedEndDate =
-                            _selectedStartDate.add(Duration(minutes: 30));
-                      }
                       setState(() {});
                     },
                     selectedStartDateChangedCallback: (value) {
@@ -262,8 +257,8 @@ class _EventCreationPageState extends State<EventCreationPage> {
                     selectedEndDateChangedCallback: (value) {
                       _selectedEndDate = value;
                       if (_selectedStartDate.isAfter(_selectedEndDate)) {
-                        _selectedEndDate =
-                            _selectedStartDate.subtract(Duration(minutes: 30));
+                        _selectedStartDate =
+                            _selectedEndDate.subtract(Duration(minutes: 30));
                       }
                       setState(() {});
                     },

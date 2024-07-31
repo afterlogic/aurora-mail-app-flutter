@@ -56,8 +56,8 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
       parameters: jsonEncode(parameters),
     );
 
-    final result = await calendarModule.post(body) as Map<String, dynamic>;
-    return EventMapper.listOfBaseFromNetworkMap(result,
+    final result = await calendarModule.post(body);
+    return EventMapper.listOfBaseFromNetworkMap(result as Map<String, dynamic>,
         userLocalId: userLocalId, calendarId: calendarId);
   }
 

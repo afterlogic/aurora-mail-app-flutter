@@ -244,13 +244,16 @@ class CalendarUseCaseImpl implements CalendarUseCase {
 
   @override
   Future<void> createActivity(ActivityCreationData data) async {
+    final endDate = data.allDay == true && data.endDate != null
+        ? data.endDate!.add(Duration(days: 1))
+        : data.endDate;
     await repository.createActivity(data.copyWith(
         startDate: _location == null || data.startDate == null
             ? () => data.startDate
             : () => convertToTZDateTime(data.startDate!, _location!),
-        endDate: _location == null || data.endDate == null
-            ? () => data.endDate
-            : () => convertToTZDateTime(data.endDate!, _location!)));
+        endDate: _location == null || endDate == null
+            ? () => endDate
+            : () => convertToTZDateTime(endDate, _location!)));
     await syncCalendars();
     if (_selectedEndEventsInterval != null &&
         _selectedStartEventsInterval != null &&
@@ -265,13 +268,16 @@ class CalendarUseCaseImpl implements CalendarUseCase {
 
   @override
   Future<Displayable> updateActivity(Displayable activity) async {
+    final endDate = activity.allDay == true && activity.endDate != null
+        ? activity.endDate!.add(Duration(days: 1))
+        : activity.endDate;
     final model = await repository.updateActivity(activity.copyWith(
         startTS: _location == null || activity.startDate == null
             ? () => activity.startDate
             : () => convertToTZDateTime(activity.startDate!, _location!),
-        endTS: _location == null || activity.endDate == null
-            ? () => activity.endDate
-            : () => convertToTZDateTime(activity.endDate!, _location!)));
+        endTS: _location == null || endDate == null
+            ? () => endDate
+            : () => convertToTZDateTime(endDate, _location!)));
     syncCalendars().then((_) {
       if (activity is Event) {
         _getLocalEvents();
@@ -283,13 +289,16 @@ class CalendarUseCaseImpl implements CalendarUseCase {
     final result = model.toDisplayable(color: activity.color);
     if (result == null)
       throw Exception('error .toDisplayable while updating activity');
+    final resultEndDate = result.allDay == true && result.endDate != null
+        ? result.endDate!.subtract(Duration(days: 1))
+        : result.endDate;
     return result.copyWith(
       startDate: _location == null || result.startDate == null
           ? () => result.startDate
           : () => tz.TZDateTime.from(result.startDate!, _location!),
-      endDate: _location == null || result.endDate == null
-          ? () => result.endDate
-          : () => tz.TZDateTime.from(result.endDate!, _location!),
+      endDate: _location == null || resultEndDate == null
+          ? () => resultEndDate
+          : () => tz.TZDateTime.from(resultEndDate, _location!),
     );
   }
 

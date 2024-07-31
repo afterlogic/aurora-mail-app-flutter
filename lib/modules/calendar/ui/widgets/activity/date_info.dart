@@ -17,8 +17,9 @@ class DateInfo extends StatelessWidget {
           DateTimeTile(
             dateTime: displayable.startDate!,
             isAllDay: displayable.allDay ?? true,
-          )else
-            Text('No start date selected'),
+          )
+        else
+          Text('No start date selected'),
         const SizedBox(
           height: 16,
         ),
@@ -26,7 +27,8 @@ class DateInfo extends StatelessWidget {
           DateTimeTile(
             dateTime: displayable.endDate!,
             isAllDay: displayable.allDay ?? true,
-          )else
+          )
+        else
           Text('No end date selected'),
       ],
     );
