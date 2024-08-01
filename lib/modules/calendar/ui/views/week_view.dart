@@ -40,8 +40,24 @@ class _WeekViewState extends State<WeekView> {
     super.dispose();
   }
 
+  void _normalizeEventsLength(Map<DateTime, List> week) {
+    int maxLength = 2;
+    for (var day in week.values) {
+      if (day.length > maxLength) {
+        maxLength = day.length;
+      }
+    }
+
+    for (var day in week.values) {
+      while (day.length < maxLength) {
+        day.add(null);
+      }
+    }
+  }
+
   _onStateChange(EventsState state) {
-    final events = state.getEventsFromWeek();
+    final events = Map.of(state.getEventsFromWeek());
+    _normalizeEventsLength(events);
     final oldEvents = [..._controller.allEvents];
     _controller.removeAll(oldEvents);
     for (final date in events.keys) {

@@ -6,7 +6,7 @@ import 'package:calendar_view/calendar_view.dart';
 
 const int slotsNumber = 3;
 
-List<T?> ensureCapacity<T>(int index, List<T?> events) {
+List<T?> _ensureCapacity<T>(int index, List<T?> events) {
   if (index > events.length - 1) {
     while (events.length <= index) {
       events.add(null);
@@ -23,7 +23,7 @@ void spreadWeekEvents(Week week) {
       if ((event.startDate.withoutTime.isBeforeOrEqual(day.date)) &&
           (event.endDate.withoutTime.isAfterOrEqual(day.date))) {
         if (event.slotIndex != null) {
-          day.events = ensureCapacity(event.slotIndex!, day.events);
+          day.events = _ensureCapacity(event.slotIndex!, day.events);
           day.events[event.slotIndex!] = event;
         } else {
           int? foundedFreeSlot;
@@ -34,7 +34,7 @@ void spreadWeekEvents(Week week) {
             bool isSloIsFree = true;
             for (int i = dayIndex; i < week.days.length; i++) {
               week.days[i].events =
-                  ensureCapacity(slotIndex, week.days[i].events);
+                  _ensureCapacity(slotIndex, week.days[i].events);
               if (week.days[i].events[slotIndex] != null) {
                 isSloIsFree = false;
                 break;
