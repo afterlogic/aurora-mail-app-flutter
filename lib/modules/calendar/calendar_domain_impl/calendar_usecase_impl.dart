@@ -26,49 +26,49 @@ class CalendarUseCaseImpl implements CalendarUseCase {
   tz.Location? _location;
   ActivityFilter _tasksFilter = ActivityFilter();
 
-  final BehaviorSubject<List<ViewCalendar>> _calendarsSubject =
-      BehaviorSubject.seeded([]);
+  final BehaviorSubject<List<ViewCalendar>?> _calendarsSubject =
+      BehaviorSubject.seeded(null);
 
-  final BehaviorSubject<List<ViewEvent>> _eventsSubject =
-      BehaviorSubject.seeded([]);
+  final BehaviorSubject<List<ViewEvent>?> _eventsSubject =
+      BehaviorSubject.seeded(null);
 
-  final BehaviorSubject<List<ViewTask>> _tasksSubject =
-      BehaviorSubject.seeded([]);
+  final BehaviorSubject<List<ViewTask>?> _tasksSubject =
+      BehaviorSubject.seeded(null);
 
   set setLocation(tz.Location? location) => _location = location;
 
-  List<String> get selectedCalendarIds => _calendarsSubject.value
-      .where((e) => e.selected)
+  List<String> get selectedCalendarIds => _calendarsSubject.value == null ? [] :
+  _calendarsSubject.value!.where((e) => e.selected)
       .map((e) => e.id)
       .toList();
 
   @override
-  ValueStream<List<ViewCalendar>> get calendarsSubscription =>
+  ValueStream<List<ViewCalendar>?> get calendarsSubscription =>
       _calendarsSubject.stream;
 
   @override
-  ValueStream<List<ViewEvent>> get eventsSubscription => _eventsSubject.stream;
+  ValueStream<List<ViewEvent>?> get eventsSubscription => _eventsSubject.stream;
 
   @override
-  ValueStream<List<ViewTask>> get tasksSubscription => _tasksSubject.stream;
+  ValueStream<List<ViewTask>?> get tasksSubscription => _tasksSubject.stream;
 
   @override
   Future<void> createCalendar(CalendarCreationData data) async {
     final addedCalendar = await repository.createCalendar(data);
     _calendarsSubject
-        .add([..._calendarsSubject.value, addedCalendar.toViewCalendar()]);
+        .add([...?_calendarsSubject.value, addedCalendar.toViewCalendar()]);
   }
 
   @override
   Future<void> getCalendars() async {
     final calendars = await repository.getCalendars();
     final calendarViews = calendars.map((e) => e.toViewCalendar()).toList();
-    if (_calendarsSubject.value.isEmpty) {
+    if (_calendarsSubject.value?.isEmpty ?? true) {
       _calendarsSubject.add(calendarViews);
       return;
     }
-    final lastSelectedIds = _calendarsSubject.value
-        .where((e) => e.selected)
+    final lastSelectedIds = _calendarsSubject.value == null ? <String>{} :
+    _calendarsSubject.value!.where((e) => e.selected)
         .map((e) => e.id)
         .toSet();
     _calendarsSubject.add(calendarViews
@@ -96,18 +96,18 @@ class CalendarUseCaseImpl implements CalendarUseCase {
     try {
       await repository.syncCalendars();
     } catch (e, st) {
-      await _getLocalEvents();
-      await _getLocalTasks();
       rethrow;
     } finally {
       await getCalendars();
+      await _getLocalEvents();
+      await _getLocalTasks();
     }
   }
 
   @override
   void updateSelectedCalendarIds(
       {required String selectedId, bool isAdded = true}) {
-    final calendars = [..._calendarsSubject.value];
+    final calendars = [...?_calendarsSubject.value];
     int index = calendars.indexWhere((e) => e.id == selectedId);
 
     if (index != -1) {
@@ -129,18 +129,18 @@ class CalendarUseCaseImpl implements CalendarUseCase {
   Future<void> deleteCalendar(ViewCalendar calendar) async {
     await repository.deleteCalendar(calendar);
     _calendarsSubject
-        .add([..._calendarsSubject.value.where((e) => e != calendar)]);
+        .add([...?_calendarsSubject.value?.where((e) => e != calendar)]);
   }
 
   @override
   Future<void> unsubscribeFromCalendar(ViewCalendar calendar) async {
     _calendarsSubject
-        .add([..._calendarsSubject.value.where((e) => e != calendar)]);
+        .add([...?_calendarsSubject.value?.where((e) => e != calendar)]);
   }
 
   @override
   Future<void> updateCalendar(ViewCalendar calendar) async {
-    final calendars = [..._calendarsSubject.value];
+    final calendars = [...?_calendarsSubject.value];
     final updatableCalendar = calendars.firstWhere((e) => e.id == calendar.id);
     if (!updatableCalendar.updated(calendar)) {
       return;
@@ -157,7 +157,7 @@ class CalendarUseCaseImpl implements CalendarUseCase {
 
   @override
   Future<void> updateCalendarPublic(ViewCalendar calendar) async {
-    final calendars = [..._calendarsSubject.value];
+    final calendars = [...?_calendarsSubject.value];
     final updatableCalendar = calendars.firstWhere((e) => e.id == calendar.id);
     if (!updatableCalendar.updated(calendar)) {
       return;
@@ -172,7 +172,7 @@ class CalendarUseCaseImpl implements CalendarUseCase {
 
   @override
   Future<void> updateCalendarSharing(ViewCalendar calendar) async {
-    final calendars = [..._calendarsSubject.value];
+    final calendars = [...?_calendarsSubject.value];
     final updatableCalendar = calendars.firstWhere((e) => e.id == calendar.id);
     if (!updatableCalendar.updated(calendar)) {
       return;
@@ -200,7 +200,7 @@ class CalendarUseCaseImpl implements CalendarUseCase {
         .map((e) => ViewEvent.tryFromEvent(
               e,
               color: _calendarsSubject.value
-                  .firstWhere((c) => c.id == e.calendarId)
+                  !.firstWhere((c) => c.id == e.calendarId)
                   .color,
             ))
         .whereNotNull()
@@ -224,7 +224,7 @@ class CalendarUseCaseImpl implements CalendarUseCase {
     final taskViews = allTasks
         .map((e) => e.toDisplayable(
               color: _calendarsSubject.value
-                  .firstWhere((c) => c.id == e.calendarId)
+                 !.firstWhere((c) => c.id == e.calendarId)
                   .color,
             ))
         .whereNotNull()
@@ -312,8 +312,9 @@ class CalendarUseCaseImpl implements CalendarUseCase {
   @override
   Future<void> clearData() async {
     await repository.clearData();
-    _eventsSubject.add([]);
-    _calendarsSubject.add([]);
+    _eventsSubject.add(null);
+    _tasksSubject.add(null);
+    _calendarsSubject.add(null);
   }
 
   tz.TZDateTime convertToTZDateTime(DateTime date, tz.Location location) =>

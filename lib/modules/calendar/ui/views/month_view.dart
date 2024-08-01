@@ -118,190 +118,197 @@ class _MonthViewState extends State<MonthView>
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Expanded(
-          flex: _calendarAnimation.value as int,
-          child: GestureDetector(
-            onVerticalDragUpdate: (details) {
-              /// details.delta.dy > 1 - scroll up (finger from top to bottom)
-              /// _animationController.value == 1.0 - ListView collapsed
-              /// _calendarAnimationController.value == 1.0 - calendar shows 1 week
-              if (details.delta.dy > 1 &&
-                  _calendarAnimationController.value == 1.0 &&
-                  _eventListAnimationController.value == 0.0) {
-                _calendarAnimationController.reverse().then((_) {
-                  _calendarFormat = CalendarFormat.month;
-                  setState(() {});
-                });
-              }
-              if (details.delta.dy < -1 &&
-                  _calendarAnimationController.value == 0.0 &&
-                  _eventListAnimationController.value == 0.0) {
-                _calendarAnimationController.forward().then((_) {
-                  _calendarFormat = CalendarFormat.week;
-                  setState(() {});
-                });
-              }
+    return BlocBuilder<EventsBloc, EventsState>(
+      buildWhen: (previous, current) => previous.status != current.status,
+      builder: (context, state) {
+        return state.status.isLoading ? Center(child: CircularProgressIndicator(),) : Column(
+          children: [
+            Expanded(
+              flex: _calendarAnimation.value as int,
+              child: GestureDetector(
+                onVerticalDragUpdate: (details) {
+                  /// details.delta.dy > 1 - scroll up (finger from top to bottom)
+                  /// _animationController.value == 1.0 - ListView collapsed
+                  /// _calendarAnimationController.value == 1.0 - calendar shows 1 week
+                  if (details.delta.dy > 1 &&
+                      _calendarAnimationController.value == 1.0 &&
+                      _eventListAnimationController.value == 0.0) {
+                    _calendarAnimationController.reverse().then((_) {
+                      _calendarFormat = CalendarFormat.month;
+                      setState(() {});
+                    });
+                  }
+                  if (details.delta.dy < -1 &&
+                      _calendarAnimationController.value == 0.0 &&
+                      _eventListAnimationController.value == 0.0) {
+                    _calendarAnimationController.forward().then((_) {
+                      _calendarFormat = CalendarFormat.week;
+                      setState(() {});
+                    });
+                  }
 
-              if (details.delta.dy > 1 &&
-                  _eventListAnimationController.value == 0.0 &&
-                  _calendarAnimationController.value == 0.0) {
-                _eventListAnimationController.forward();
-              }
-              if (details.delta.dy < -1 &&
-                  _eventListAnimationController.value == 1.0 &&
-                  _calendarAnimationController.value == 0.0) {
-                _eventListAnimationController.reverse();
-              }
-            },
-            child: Column(
-              children: [
-                Expanded(
-                  child: BlocBuilder<EventsBloc, EventsState>(
-                    buildWhen: (prev, current) => prev != current,
-                    builder: (context, state) {
-                      return TableCalendar<ViewEvent?>(
-                        firstDay: DateTime(2010),
-                        rowHeight: 10,
-                        formatAnimationDuration:
-                            const Duration(milliseconds: 200),
-                        lastDay: DateTime(2040),
-                        shouldFillViewport: true,
-                        focusedDay: state.selectedDate,
-                        selectedDayPredicate: (day) =>
-                            isSameDay(state.selectedDate, day),
-                        calendarFormat: _calendarFormat,
-                        rangeSelectionMode: _rangeSelectionMode,
-                        eventLoader: (date) {
-                          return state.getEventsForDayFromMap(
-                              date: DateTime(date.year, date.month, date.day));
+                  if (details.delta.dy > 1 &&
+                      _eventListAnimationController.value == 0.0 &&
+                      _calendarAnimationController.value == 0.0) {
+                    _eventListAnimationController.forward();
+                  }
+                  if (details.delta.dy < -1 &&
+                      _eventListAnimationController.value == 1.0 &&
+                      _calendarAnimationController.value == 0.0) {
+                    _eventListAnimationController.reverse();
+                  }
+                },
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: BlocBuilder<EventsBloc, EventsState>(
+                        buildWhen: (prev, current) => prev != current,
+                        builder: (context, state) {
+                          return TableCalendar<ViewEvent?>(
+                            firstDay: DateTime(2010),
+                            rowHeight: 10,
+                            formatAnimationDuration:
+                                const Duration(milliseconds: 200),
+                            lastDay: DateTime(2040),
+                            shouldFillViewport: true,
+                            focusedDay: state.selectedDate,
+                            selectedDayPredicate: (day) =>
+                                isSameDay(state.selectedDate, day),
+                            calendarFormat: _calendarFormat,
+                            rangeSelectionMode: _rangeSelectionMode,
+                            eventLoader: (date) {
+                              return state.getEventsForDayFromMap(
+                                  date: DateTime(
+                                      date.year, date.month, date.day));
+                            },
+                            availableGestures:
+                                AvailableGestures.horizontalSwipe,
+                            headerStyle: HeaderStyle(
+                              formatButtonVisible: false,
+                              titleCentered: true,
+                              titleTextStyle: TextStyle(
+                                  fontWeight: FontWeight.w700, fontSize: 20),
+                              leftChevronIcon: Icon(
+                                Icons.chevron_left,
+                                size: 30,
+                              ),
+                              rightChevronIcon: Icon(
+                                Icons.chevron_right,
+                                size: 30,
+                              ),
+                            ),
+                            daysOfWeekStyle: DaysOfWeekStyle(
+                                weekdayStyle: TextStyle(
+                                    color: Theme.of(context).primaryColor,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w700),
+                                weekendStyle: TextStyle(
+                                    color: Theme.of(context).primaryColor,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w700)),
+                            calendarBuilders: CalendarBuilders(
+                              defaultBuilder: (BuildContext context,
+                                      DateTime currentDate,
+                                      DateTime selectedDate) =>
+                                  _defaultDayBuilder(
+                                      context,
+                                      currentDate,
+                                      selectedDate,
+                                      state.getEventsForDayFromMap(
+                                          date: currentDate)),
+                              todayBuilder: (BuildContext context,
+                                      DateTime currentDate,
+                                      DateTime selectedDate) =>
+                                  _todayDayBuilder(
+                                      context,
+                                      currentDate,
+                                      selectedDate,
+                                      state.getEventsForDayFromMap(
+                                          date: currentDate)),
+                              selectedBuilder: (BuildContext context,
+                                      DateTime currentDate,
+                                      DateTime selectedDate) =>
+                                  _selectedDayBuilder(
+                                      context,
+                                      currentDate,
+                                      selectedDate,
+                                      state.getEventsForDayFromMap(
+                                          date: currentDate)),
+                              outsideBuilder: (BuildContext context,
+                                      DateTime currentDate,
+                                      DateTime selectedDate) =>
+                                  _outsideDayBuilder(
+                                      context,
+                                      currentDate,
+                                      selectedDate,
+                                      state.getEventsForDayFromMap(
+                                          date: currentDate)),
+                              disabledBuilder: (BuildContext context,
+                                      DateTime currentDate,
+                                      DateTime selectedDate) =>
+                                  _disabledDayBuilder(
+                                      context,
+                                      currentDate,
+                                      selectedDate,
+                                      state.getEventsForDayFromMap(
+                                          date: currentDate)),
+                              markerBuilder: (_, __, ___) => SizedBox.shrink(),
+                            ),
+                            startingDayOfWeek: StartingDayOfWeek.monday,
+                            calendarStyle: const CalendarStyle(),
+                            onDaySelected: _onDaySelected,
+                            daysOfWeekHeight: 40,
+                            onFormatChanged: (format) {
+                              if (_calendarFormat != format) {
+                                setState(() {
+                                  _calendarFormat = format;
+                                });
+                              }
+                            },
+                            onPageChanged: (focusedDay) {
+                              BlocProvider.of<EventsBloc>(context)
+                                  .add(SelectDate(focusedDay));
+                            },
+                          );
                         },
-                        availableGestures: AvailableGestures.horizontalSwipe,
-                        headerStyle: HeaderStyle(
-                          formatButtonVisible: false,
-                          titleCentered: true,
-                          titleTextStyle: TextStyle(
-                              fontWeight: FontWeight.w700, fontSize: 20),
-                          leftChevronIcon: Icon(
-                            Icons.chevron_left,
-                            size: 30,
-                          ),
-                          rightChevronIcon: Icon(
-                            Icons.chevron_right,
-                            size: 30,
-                          ),
-                        ),
-                        daysOfWeekStyle: DaysOfWeekStyle(
-                            weekdayStyle: TextStyle(
-                                color: Theme.of(context).primaryColor,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w700),
-                            weekendStyle: TextStyle(
-                                color: Theme.of(context).primaryColor,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w700)),
-                        calendarBuilders: CalendarBuilders(
-                          defaultBuilder: (BuildContext context,
-                                  DateTime currentDate,
-                                  DateTime selectedDate) =>
-                              _defaultDayBuilder(
-                                  context,
-                                  currentDate,
-                                  selectedDate,
-                                  state.getEventsForDayFromMap(
-                                      date: currentDate)),
-                          todayBuilder: (BuildContext context,
-                                  DateTime currentDate,
-                                  DateTime selectedDate) =>
-                              _todayDayBuilder(
-                                  context,
-                                  currentDate,
-                                  selectedDate,
-                                  state.getEventsForDayFromMap(
-                                      date: currentDate)),
-                          selectedBuilder: (BuildContext context,
-                                  DateTime currentDate,
-                                  DateTime selectedDate) =>
-                              _selectedDayBuilder(
-                                  context,
-                                  currentDate,
-                                  selectedDate,
-                                  state.getEventsForDayFromMap(
-                                      date: currentDate)),
-                          outsideBuilder: (BuildContext context,
-                                  DateTime currentDate,
-                                  DateTime selectedDate) =>
-                              _outsideDayBuilder(
-                                  context,
-                                  currentDate,
-                                  selectedDate,
-                                  state.getEventsForDayFromMap(
-                                      date: currentDate)),
-                          disabledBuilder: (BuildContext context,
-                                  DateTime currentDate,
-                                  DateTime selectedDate) =>
-                              _disabledDayBuilder(
-                                  context,
-                                  currentDate,
-                                  selectedDate,
-                                  state.getEventsForDayFromMap(
-                                      date: currentDate)),
-                          markerBuilder: (_, __, ___) => SizedBox.shrink(),
-                        ),
-                        startingDayOfWeek: StartingDayOfWeek.monday,
-                        calendarStyle: const CalendarStyle(),
-                        onDaySelected: _onDaySelected,
-                        daysOfWeekHeight: 40,
-                        onFormatChanged: (format) {
-                          if (_calendarFormat != format) {
-                            setState(() {
-                              _calendarFormat = format;
-                            });
-                          }
-                        },
-                        onPageChanged: (focusedDay) {
-                          BlocProvider.of<EventsBloc>(context)
-                              .add(SelectDate(focusedDay));
-                        },
-                      );
-                    },
-                  ),
+                      ),
+                    ),
+                    AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 200),
+                      child: _eventListAnimationController.value == 1.0
+                          ? const RotatedBox(
+                              quarterTurns: 1,
+                              child: Icon(
+                                Icons.arrow_back_ios_outlined,
+                                color: Color.fromRGBO(217, 217, 217, 1),
+                                size: 18,
+                              ),
+                            )
+                          : const Icon(
+                              Icons.minimize_outlined,
+                              color: Color.fromRGBO(217, 217, 217, 1),
+                            ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    )
+                  ],
                 ),
-                AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 200),
-                  child: _eventListAnimationController.value == 1.0
-                      ? const RotatedBox(
-                          quarterTurns: 1,
-                          child: Icon(
-                            Icons.arrow_back_ios_outlined,
-                            color: Color.fromRGBO(217, 217, 217, 1),
-                            size: 18,
-                          ),
-                        )
-                      : const Icon(
-                          Icons.minimize_outlined,
-                          color: Color.fromRGBO(217, 217, 217, 1),
-                        ),
-                ),
-                const SizedBox(
-                  height: 10,
-                )
-              ],
+              ),
             ),
-          ),
-        ),
-        Expanded(
-          flex: _eventListAnimation.value as int,
-          child: AnimatedSwitcher(
-              duration: const Duration(milliseconds: 100),
-              child: _eventListAnimation.value == 0.0
-                  ? const SizedBox.shrink()
-                  : Align(
-                      alignment: Alignment.topCenter,
-                      child: _EventsInfoSection())),
-        ),
-      ],
+            Expanded(
+              flex: _eventListAnimation.value as int,
+              child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 100),
+                  child: _eventListAnimation.value == 0.0
+                      ? const SizedBox.shrink()
+                      : Align(
+                          alignment: Alignment.topCenter,
+                          child: _EventsInfoSection())),
+            ),
+          ],
+        );
+      },
     );
   }
 }

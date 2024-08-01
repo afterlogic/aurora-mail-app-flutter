@@ -1,3 +1,4 @@
+import 'package:aurora_logger/aurora_logger.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/calendar_usecase.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/calendar.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/event.dart';
@@ -16,6 +17,17 @@ part 'events_state.dart';
 
 class EventsBloc extends Bloc<EventBlocEvent, EventsState> {
   final CalendarUseCase _useCase;
+
+  // @override
+  // void onEvent(event) {
+  //   logger.log("EventsBloc event ${event.runtimeType}");
+  //   super.onEvent(event);
+  // }
+  // @override
+  // void onChange(Change<EventsState> change) {
+  //   logger.log("EventsBloc change ${change}");
+  //   super.onChange(change);
+  // }
 
   ///used for handling events from "out of month" days
   final extraDuration = Duration(days: 7);
@@ -74,12 +86,15 @@ class EventsBloc extends Bloc<EventBlocEvent, EventsState> {
   }
 
   _onAddEvents(AddEvents event, Emitter<EventsState> emit) async {
+    if(event.events == null && state.status.isLoading){
+      return;
+    }
     _errorHandler(() {
       final weeks = generateWeeks(
           state.startIntervalDate.subtract(extraDuration),
           state.endIntervalDate.add(extraDuration));
-      final extendedMonthEvents =
-          event.events.map((e) => ExtendedMonthEvent.fromViewEvent(e)).toList();
+      final List<ExtendedMonthEvent> extendedMonthEvents = event.events == null ? [] :
+          event.events!.map((e) => ExtendedMonthEvent.fromViewEvent(e)).toList();
       final processedEvents = processEvents(weeks, extendedMonthEvents);
       final viewEvents = convertWeeksToMap(processedEvents);
 
@@ -91,10 +106,12 @@ class EventsBloc extends Bloc<EventBlocEvent, EventsState> {
   }
 
   _onStartSync(StartSync event, Emitter<EventsState> emit) async {
+    if(state.originalEvents == null || state.eventsMap == null){
+      emit(state.copyWith(status: EventsStatus.loading));
+    }
     await _asyncErrorHandler(() async {
       await _useCase.syncCalendars();
     }, emit);
-    add(LoadEvents());
   }
 
   _onSelectDate(SelectDate event, Emitter<EventsState> emit) async {

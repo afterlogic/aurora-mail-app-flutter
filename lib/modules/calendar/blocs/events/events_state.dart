@@ -139,10 +139,8 @@ class EventsState extends Equatable {
   String toString() {
     return 'EventsState{' +
         ' status: ${status.name}' +
-        ' originalEvents: $originalEvents,' +
-        ' startIntervalDate: $startIntervalDate,' +
-        ' endIntervalDate: $endIntervalDate,' +
-        ' selectedDate: $selectedDate,' +
+        ' originalEventsLength: ${originalEvents?.length},' +
+        ' eventsMapLength: ${eventsMap?.length},' +
         '}';
   }
 

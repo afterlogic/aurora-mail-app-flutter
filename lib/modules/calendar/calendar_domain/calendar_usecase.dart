@@ -18,11 +18,11 @@ abstract class CalendarUseCase {
           {required CalendarRepository repository, tz.Location? location}) =>
       CalendarUseCaseImpl(repository: repository, location: location);
 
-  ValueStream<List<ViewCalendar>> get calendarsSubscription;
+  ValueStream<List<ViewCalendar>?> get calendarsSubscription;
 
-  ValueStream<List<ViewEvent>> get eventsSubscription;
+  ValueStream<List<ViewEvent>?> get eventsSubscription;
 
-  ValueStream<List<ViewTask>> get tasksSubscription;
+  ValueStream<List<ViewTask>?> get tasksSubscription;
 
   Future<void> syncCalendars();
 

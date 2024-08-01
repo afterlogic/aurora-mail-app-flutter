@@ -32,7 +32,7 @@ class SelectTask extends TasksEvent{
 }
 
 class AddTasks extends TasksEvent {
-  final List<ViewTask> tasks;
+  final List<ViewTask>? tasks;
   const AddTasks(this.tasks);
   @override
   List<Object?> get props => [tasks];

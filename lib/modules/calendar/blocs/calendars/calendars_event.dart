@@ -47,7 +47,7 @@ class ClearData extends CalendarsEvent {
 }
 
 class AddCalendars extends CalendarsEvent {
-  final List<ViewCalendar> calendars;
+  final List<ViewCalendar>? calendars;
   const AddCalendars(this.calendars);
   @override
   List<Object?> get props => [calendars];
