@@ -3,6 +3,7 @@ import 'package:aurora_mail/modules/calendar/blocs/events/events_bloc.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/event.dart';
 import 'package:aurora_mail/modules/calendar/utils/calendar_month_builders_mixin.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/event_card.dart';
+import 'package:calendar_view/calendar_view.dart' as CV;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
@@ -266,8 +267,10 @@ class _MonthViewState extends State<MonthView>
                               }
                             },
                             onPageChanged: (focusedDay) {
-                              BlocProvider.of<EventsBloc>(context)
-                                  .add(SelectDate(focusedDay));
+                              if(!focusedDay.withoutTime.isAtSameMomentAs(state.selectedDate.withoutTime)){
+                                BlocProvider.of<EventsBloc>(context)
+                                    .add(SelectDate(focusedDay));
+                              }
                             },
                           );
                         },

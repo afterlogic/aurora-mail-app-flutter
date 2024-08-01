@@ -21,7 +21,7 @@ class TaskWidget extends StatelessWidget {
         );
       },
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
             width: 40,

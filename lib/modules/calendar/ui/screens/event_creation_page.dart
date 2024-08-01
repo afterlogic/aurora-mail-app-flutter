@@ -92,9 +92,6 @@ class _EventCreationPageState extends State<EventCreationPage> {
         BlocProvider.of<AuthBloc>(context).currentUser?.emailFromLogin ?? '';
     _selectedCalendar =
         _calendarsBloc.state.availableCalendars(_currentUserMail).firstOrNull;
-    _selectedStartDate =
-        DateTime.now().copyWith(second: 0, millisecond: 0, microsecond: 0);
-    _selectedEndDate = _selectedStartDate.add(Duration(minutes: 30));
     _titleController = TextEditingController();
     _titleFocus = FocusNode();
     _descriptionController = TextEditingController();
@@ -119,6 +116,9 @@ class _EventCreationPageState extends State<EventCreationPage> {
   }
 
   void onEventsStateChange(EventsState state) {
+    final currentDate = DateTime.now().copyWith(second: 0, millisecond: 0, microsecond: 0);
+    _selectedStartDate = state.selectedDate.copyWith(hour: currentDate.hour, minute: currentDate.minute);
+    _selectedEndDate = _selectedStartDate.add(Duration(minutes: 30));
     final e = state.selectedEvent;
     _selectedEvent = e;
     if (e == null) return;
