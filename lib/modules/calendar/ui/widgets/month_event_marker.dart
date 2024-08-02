@@ -43,6 +43,7 @@ class MonthEventMarker extends StatelessWidget {
               );
             },
             child: Container(
+              height: height,
               decoration: BoxDecoration(
                   border: Border(
                       right: implementBorder &&
@@ -62,61 +63,67 @@ class MonthEventMarker extends StatelessWidget {
                     right: event?.isEndedToday(currentDate) == true
                         ? innerPaddingValue
                         : 0),
-                child: Container(
-                    margin: EdgeInsets.only(bottom: eventGap),
-                    padding: EdgeInsets.only(left: 4),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.only(
-                          topLeft: event?.isStartedToday(currentDate) == true
-                              ? Radius.circular(radius)
-                              : Radius.zero,
-                          bottomLeft: event?.isStartedToday(currentDate) == true
-                              ? Radius.circular(radius)
-                              : Radius.zero,
-                          topRight: event?.isEndedToday(currentDate) == true
-                              ? Radius.circular(radius)
-                              : Radius.zero,
-                          bottomRight: event?.isEndedToday(currentDate) == true
-                              ? Radius.circular(radius)
-                              : Radius.zero,
-                        ),
-                        color: event!.color),
-                    width: 60,
-                    height: height,
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Row(
-                        children: [
-                          if (event?.isStartedToday(currentDate) == true &&
-                              event?.recurrenceMode != null &&
-                              event?.recurrenceMode != RecurrenceMode.never)
-                            Padding(
-                              padding: const EdgeInsets.only(right: 4.0),
-                              child: Icon(
-                                Icons.repeat,
-                                size: 8,
-                                color: Colors.white,
+                child: Stack(
+                  children: [
+                    Positioned(
+                      left: -0.5,
+                      right: -0.5,
+                      child: Container(
+                          margin: EdgeInsets.only(bottom: eventGap),
+                          padding: EdgeInsets.only(left: 4),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                topLeft: event?.isStartedToday(currentDate) == true
+                                    ? Radius.circular(radius)
+                                    : Radius.zero,
+                                bottomLeft: event?.isStartedToday(currentDate) == true
+                                    ? Radius.circular(radius)
+                                    : Radius.zero,
+                                topRight: event?.isEndedToday(currentDate) == true
+                                    ? Radius.circular(radius)
+                                    : Radius.zero,
+                                bottomRight: event?.isEndedToday(currentDate) == true
+                                    ? Radius.circular(radius)
+                                    : Radius.zero,
                               ),
+                              color: event!.color),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Row(
+                              children: [
+                                if (event?.isStartedToday(currentDate) == true &&
+                                    event?.recurrenceMode != null &&
+                                    event?.recurrenceMode != RecurrenceMode.never)
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 4.0),
+                                    child: Icon(
+                                      Icons.repeat,
+                                      size: 8,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                Expanded(
+                                  child: Text(
+                                    forceTitleRender ||
+                                            event?.isStartedToday(currentDate) == true
+                                        ? event!.title
+                                        : '',
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                        fontSize: fontSize, color: Colors.white),
+                                  ),
+                                ),
+                              ],
                             ),
-                          Expanded(
-                            child: Text(
-                              forceTitleRender ||
-                                      event?.isStartedToday(currentDate) == true
-                                  ? event!.title
-                                  : '',
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                  fontSize: fontSize, color: Colors.white),
-                            ),
-                          ),
-                        ],
-                      ),
-                    )),
+                          )),
+                    ),
+                  ],
+                ),
               ),
             ),
           )
         : EmptyMarker(
-            h: emptyHeight,
+            h: height,
             w: 60,
             implementLeftBorder: implementLeftBorder,
             implementBorder: implementBorder,
