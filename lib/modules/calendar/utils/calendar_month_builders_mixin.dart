@@ -68,6 +68,9 @@ mixin CalendarMonthBuilders {
     required List<ViewEvent?> events,
     required double cellHeight,
   }) {
+    var brightness = Theme.of(context).brightness;
+    bool isDarkMode = brightness == Brightness.dark;
+
     return ShortMonthDay(
       height: cellHeight,
       dayNumber: currentDate.day.toString(),
@@ -76,7 +79,7 @@ mixin CalendarMonthBuilders {
       events: events,
       boxColor: Colors.transparent,
       eventsMarkerColor: Theme.of(context).primaryColor,
-      dayNumberColor: Colors.black,
+      dayNumberColor: isDarkMode? Colors.white :Colors.black,
     );
   }
 

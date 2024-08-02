@@ -72,6 +72,9 @@ class _DayViewState extends State<DayView> {
               )
             : CV.DayView<ViewEvent>(
                 showLiveTimeLineInAllDays: true,
+          backgroundColor: Theme.of(context).brightness == Brightness.dark
+              ? Theme.of(context).scaffoldBackgroundColor
+              : Colors.white,
                 liveTimeIndicatorSettings: CV.LiveTimeIndicatorSettings(
                     color: Theme.of(context).primaryColor, height: 3),
                 initialDay: state.selectedDate,

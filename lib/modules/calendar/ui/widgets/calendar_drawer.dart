@@ -542,7 +542,7 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
           child: Column(
               children: _menuItems
                   .map((e) => Container(
-                        color: _isExpanded ? Color(0xFFECF5FF) : null,
+                        color: _isExpanded ?  Theme.of(context).brightness == Brightness.dark ? Colors.black45 : Color(0xFFECF5FF) : null,
                         child: ListTile(
                           title: Text(e.titleBuilder(context)),
                           contentPadding: EdgeInsets.symmetric(

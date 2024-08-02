@@ -14,7 +14,7 @@ class AttendeeCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       margin: EdgeInsets.zero,
-      color: Colors.blue[50],
+      color:  Theme.of(context).brightness == Brightness.dark ? Colors.black : Colors.blue[50],
       child: ListTile(
         contentPadding: EdgeInsets.symmetric(horizontal: 8),
         horizontalTitleGap: 0,

@@ -124,6 +124,9 @@ class _WeekViewState extends State<WeekView> {
               )
             : CV.WeekView<WeekViewVisible>(
                 fullDayHeaderTitle: 'All\nday',
+                backgroundColor: Theme.of(context).brightness == Brightness.dark
+                    ? Theme.of(context).scaffoldBackgroundColor
+                    : Colors.white,
                 showLiveTimeLineInAllDays: true,
                 liveTimeIndicatorSettings: CV.LiveTimeIndicatorSettings(
                     color: Theme.of(context).primaryColor, height: 3),

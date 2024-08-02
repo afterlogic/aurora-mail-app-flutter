@@ -52,7 +52,9 @@ class TaskWidget extends StatelessWidget {
                   style: TextStyle(
                     decoration:
                     (task.status ?? false) ? TextDecoration.lineThrough : TextDecoration.none,
-                    color: Colors.black,
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? Colors.white
+                          : Colors.black,
                     fontSize: 16
                   ),
                 ),

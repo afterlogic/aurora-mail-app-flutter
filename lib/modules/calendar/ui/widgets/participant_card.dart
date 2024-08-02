@@ -16,7 +16,7 @@ class ParticipantCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       margin: EdgeInsets.zero,
-      color: Colors.blue[50],
+      color: Theme.of(context).brightness == Brightness.dark ? Colors.black45 : Colors.blue[50],
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 12),
         child: Row(

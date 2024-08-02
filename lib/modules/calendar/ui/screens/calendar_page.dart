@@ -149,7 +149,9 @@ class _CalendarPageState extends State<CalendarPage>
                   heroTag: 'task',
                   mini: true,
                   backgroundColor: Colors.white,
-                  foregroundColor: Theme.of(context).primaryColor,
+                  foregroundColor: Theme.of(context).brightness == Brightness.dark
+                      ? Colors.black
+                      : Theme.of(context).primaryColor,
                   onPressed: () {
                     BlocProvider.of<TasksBloc>(context).add(SelectTask(null));
                     _overlay = false;
@@ -213,7 +215,7 @@ class _BlocErrorsHandler extends StatelessWidget {
           }),
       BlocListener<EventsBloc, EventsState>(
           listenWhen: (previous, current) =>
-          previous.error != current.error &&
+              previous.error != current.error &&
               current.error != null &&
               current.status.isError,
           listener: (context, state) {
@@ -225,7 +227,7 @@ class _BlocErrorsHandler extends StatelessWidget {
           }),
       BlocListener<CalendarsBloc, CalendarsState>(
           listenWhen: (previous, current) =>
-          previous.error != current.error &&
+              previous.error != current.error &&
               current.error != null &&
               current.status.isError,
           listener: (context, state) {

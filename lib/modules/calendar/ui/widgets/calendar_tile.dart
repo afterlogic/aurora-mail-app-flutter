@@ -10,7 +10,9 @@ class CalendarTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-          color: backgroundColor,
+          color: backgroundColor == null ? null : Theme.of(context).brightness == Brightness.dark
+              ? Colors.black45
+              : Colors.white,
           borderRadius: BorderRadius.all(Radius.circular(4))),
       padding: EdgeInsets.symmetric(horizontal: 8, vertical: 12),
       child: Row(
