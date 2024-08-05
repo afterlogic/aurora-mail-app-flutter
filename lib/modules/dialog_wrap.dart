@@ -3,6 +3,8 @@ import 'dart:async';
 
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_event.dart';
+import 'package:aurora_mail/modules/calendar/ui/screens/calendar_route.dart';
+import 'package:aurora_mail/modules/calendar/ui/screens/event_view_page.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_android.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
@@ -71,6 +73,23 @@ class RouteWrapState extends State<RouteWrap> {
       final accountLocalId = json["account"] as int;
       return showMessage(userLocalId, messageLocalId, accountLocalId);
     }
+  }
+
+  onCalendar(Map<String, dynamic> json) async {
+    final email = json["To"] as String;
+    final completer = Completer();
+
+    if (widget.authBloc.currentAccount?.email != email) {
+      widget.authBloc.add(SelectUserByEmail(email, completer));
+      await completer.future;
+    }
+
+    widget.navKey.currentState.pushNamed(
+      CalendarRoute.name,
+    );
+    widget.navKey.currentState.pushNamed(
+      EventViewPage.name,
+    );
   }
 
   Future<bool> discardNotSavedChanges() async {

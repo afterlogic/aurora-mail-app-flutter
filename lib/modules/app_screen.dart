@@ -12,12 +12,14 @@ import 'package:aurora_mail/modules/calendar/blocs/tasks/tasks_bloc.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/calendar_repository.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/calendar_usecase.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain_impl/calendar_usecase_impl.dart';
+import 'package:aurora_mail/modules/calendar/ui/screens/calendar_route.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/messages_list_bloc.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_android.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
+import 'package:aurora_mail/notification/push_notifications_manager.dart';
 import 'package:aurora_mail/shared_ui/restart_widget.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:connectivity/connectivity.dart';
@@ -284,7 +286,10 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
                             locale: settingsState.language?.toLocale(),
                             initialRoute: authState.needsLogin
                                 ? LoginRoute.name
-                                : MessagesListRoute.name,
+                                : PushNotificationsManager.instance.initRoute !=
+                                        null
+                                    ? CalendarRoute.name
+                                    : MessagesListRoute.name,
                             navigatorObservers: [routeObserver],
                           ),
                         ),

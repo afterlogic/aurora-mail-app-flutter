@@ -10,6 +10,7 @@ import 'package:aurora_mail/database/users/users_dao.dart';
 import 'package:aurora_mail/main.dart';
 import 'package:aurora_mail/modules/auth/repository/auth_local_storage.dart';
 import 'package:aurora_mail/modules/auth/repository/device_id_storage.dart';
+import 'package:aurora_mail/modules/calendar/ui/screens/calendar_route.dart';
 import 'package:aurora_mail/modules/dialog_wrap.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/widgets.dart';
@@ -22,6 +23,8 @@ class PushNotificationsManager {
   PushNotificationsManager._();
 
   String deviceId;
+  String token;
+  String initRoute;
   static final PushNotificationsManager instance = PushNotificationsManager._();
 
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
@@ -35,6 +38,11 @@ class PushNotificationsManager {
         }
         deviceId = await DeviceIdStorage.getDeviceId();
         await _firebaseMessaging.requestPermission();
+        ///terminated click handler
+        final initialMessage = await _firebaseMessaging.getInitialMessage();
+        if(initialMessage != null){
+          initRoute = CalendarRoute.name;
+        }
         FirebaseMessaging.onBackgroundMessage(voidMessageHandler);
         FirebaseMessaging.onMessage.listen(messageHandler);
         FirebaseMessaging.onMessageOpenedApp.listen((v) => onResume(v));
@@ -44,7 +52,7 @@ class PushNotificationsManager {
   }
 
   Future<String> getToken() async {
-    final token = await _firebaseMessaging.getToken();
+    token = await _firebaseMessaging.getToken();
     print(token);
     return token;
   }
@@ -63,12 +71,23 @@ class PushNotificationsManager {
 Future onResume(RemoteMessage message) async {
   final notification = NotificationData.fromMap(message);
   final payload = notification.toJson();
+  ///app minimized
   if (RouteWrap.staticState != null) {
-    RouteWrap.staticState.onMessage(payload);
+    switch (notification.type){
+      case 'email':
+        RouteWrap.staticState.onMessage(payload);
+        break;
+      case 'calendar':
+        RouteWrap.staticState.onCalendar(payload);
+        break;
+    }
   } else {
+    ///terminate state
     RouteWrap.notification = payload;
   }
 }
+
+///foreground
 
 Future<bool> mapMessageHandler(Map<String, dynamic> message) async {
   return messageHandler(RemoteMessage.fromMap(message));
@@ -100,7 +119,7 @@ Future<bool> messageHandler(RemoteMessage message) async {
               final manager = NotificationManager.instance;
               manager.showNotification(
                 notification.from,
-                notification.subject,
+                'notificationsubject',
                 account,
                 user,
                 null,
@@ -127,7 +146,33 @@ Future<bool> messageHandler(RemoteMessage message) async {
 
 final notificationFromPush = true;
 
+enum NotificationType { email, calendar }
+
+extension NotificationTypeMapper on NotificationType {
+  static NotificationType fromString(String s) {
+    switch (s) {
+      case 'calendar':
+        return NotificationType.calendar;
+      case 'email':
+      default:
+        return NotificationType.email;
+    }
+  }
+
+  String toStringCode() {
+    switch (this) {
+      case NotificationType.email:
+        return 'email';
+      case NotificationType.calendar:
+        return 'calendar';
+      default:
+        throw Exception('Unknown NotificationType');
+    }
+  }
+}
+
 class NotificationData {
+  final String type;
   final String subject;
   final String to;
   final String from;
@@ -135,7 +180,8 @@ class NotificationData {
   final String folder;
 
   NotificationData(
-      this.subject, this.to, this.from, this.messageID, this.folder);
+      this.subject, this.to, this.from, this.messageID, this.folder,
+      this.type);
 
   static NotificationData fromMap(RemoteMessage message) {
     final notification = message.data;
@@ -146,6 +192,7 @@ class NotificationData {
       notification["From"] as String,
       notification["MessageId"] as String,
       notification["Folder"] as String,
+      notification["Type"] as String,
     );
   }
 
@@ -155,5 +202,6 @@ class NotificationData {
         "From": from,
         "MessageId": messageID,
         "Folder": folder,
+        "Type": type
       };
 }
