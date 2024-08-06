@@ -12,6 +12,7 @@ import 'package:aurora_mail/modules/calendar/blocs/tasks/tasks_bloc.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/calendar_repository.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/calendar_usecase.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain_impl/calendar_usecase_impl.dart';
+import 'package:aurora_mail/modules/calendar/ui/screens/calendar_page.dart';
 import 'package:aurora_mail/modules/calendar/ui/screens/calendar_route.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
@@ -50,10 +51,17 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
   final _settingsBloc = new SettingsBloc();
   StreamSubscription sub;
   final _navKey = GlobalKey<NavigatorState>();
+  NotificationData _notification;
+
 
   @override
   void initState() {
     super.initState();
+    _notification = PushNotificationsManager.instance.initNotification;
+    if(_notification != null && _notification.type == "calendar"){
+      CalendarPage.selectedActivityId = _notification.activityId;
+      CalendarPage.selectedCalendarId = _notification.calendarId;
+    }
     WidgetsBinding.instance.addObserver(this);
     BackgroundHelper.current = WidgetsBinding.instance.lifecycleState;
     sub = WebMailApi.authErrorStream.listen((_) {
@@ -286,7 +294,7 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
                             locale: settingsState.language?.toLocale(),
                             initialRoute: authState.needsLogin
                                 ? LoginRoute.name
-                                : PushNotificationsManager.instance.initRoute !=
+                                : _notification !=
                                         null
                                     ? CalendarRoute.name
                                     : MessagesListRoute.name,

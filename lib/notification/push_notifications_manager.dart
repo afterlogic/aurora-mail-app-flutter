@@ -24,8 +24,14 @@ class PushNotificationsManager {
 
   String deviceId;
   String token;
-  String initRoute;
+  NotificationData _initNotification = null;
   static final PushNotificationsManager instance = PushNotificationsManager._();
+
+  NotificationData get initNotification{
+    final res = _initNotification;
+    _initNotification = null;
+    return res;
+  }
 
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   bool _initialized = false;
@@ -39,9 +45,9 @@ class PushNotificationsManager {
         deviceId = await DeviceIdStorage.getDeviceId();
         await _firebaseMessaging.requestPermission();
         ///terminated click handler
-        final initialMessage = await _firebaseMessaging.getInitialMessage();
-        if(initialMessage != null){
-          initRoute = CalendarRoute.name;
+        final initMessage = await _firebaseMessaging.getInitialMessage();
+        if(initMessage != null){
+          _initNotification = NotificationData.fromMap(initMessage);
         }
         FirebaseMessaging.onBackgroundMessage(voidMessageHandler);
         FirebaseMessaging.onMessage.listen(messageHandler);
@@ -178,10 +184,12 @@ class NotificationData {
   final String from;
   final String messageID;
   final String folder;
+  final String calendarId;
+  final String activityId;
 
   NotificationData(
       this.subject, this.to, this.from, this.messageID, this.folder,
-      this.type);
+      this.type, this.calendarId, this.activityId);
 
   static NotificationData fromMap(RemoteMessage message) {
     final notification = message.data;
@@ -193,6 +201,8 @@ class NotificationData {
       notification["MessageId"] as String,
       notification["Folder"] as String,
       notification["Type"] as String,
+      notification["Calendar_id"] as String,
+      notification["Event_uid"] as String,
     );
   }
 
@@ -202,6 +212,8 @@ class NotificationData {
         "From": from,
         "MessageId": messageID,
         "Folder": folder,
-        "Type": type
+        "Type": type,
+        "Calendar_id": calendarId,
+        "Event_uid": activityId
       };
 }

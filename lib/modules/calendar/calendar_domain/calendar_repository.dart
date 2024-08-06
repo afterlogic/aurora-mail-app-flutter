@@ -44,6 +44,8 @@ abstract class CalendarRepository {
 
   Future<Activity> updateActivity(Activity activity);
 
+  Future<Activity> getActivityByUid({required String calendarId, required String activityUid});
+
   Future<List<Calendar>> getCalendars();
 
   Future<void> clearData();

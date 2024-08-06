@@ -6,25 +6,25 @@ abstract class EventBlocEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-class SelectDate extends EventBlocEvent{
- final DateTime date;
- const SelectDate(this.date);
- @override
- List<Object?> get props => [date];
+class SelectDate extends EventBlocEvent {
+  final DateTime date;
+  const SelectDate(this.date);
+  @override
+  List<Object?> get props => [date];
 }
 
-class UpdateEvent extends EventBlocEvent{
+class UpdateEvent extends EventBlocEvent {
   final ViewEvent event;
   const UpdateEvent(this.event);
   @override
   List<Object?> get props => [event];
 }
 
-class DeleteEvent extends EventBlocEvent{
+class DeleteEvent extends EventBlocEvent {
   const DeleteEvent();
 }
 
-class SelectEvent extends EventBlocEvent{
+class SelectEvent extends EventBlocEvent {
   final ViewEvent? event;
   const SelectEvent(this.event);
   @override
@@ -32,24 +32,33 @@ class SelectEvent extends EventBlocEvent{
 }
 
 class AddEvents extends EventBlocEvent {
-
   final List<ViewEvent>? events;
   const AddEvents(this.events);
   @override
   List<Object?> get props => [events];
 }
 
-class CreateEvent extends EventBlocEvent{
+class CreateEvent extends EventBlocEvent {
   final EventCreationData creationData;
   const CreateEvent(this.creationData);
   @override
   List<Object?> get props => [creationData];
 }
 
-class LoadEvents extends EventBlocEvent{
+class LoadEvents extends EventBlocEvent {
   const LoadEvents();
 }
 
-class StartSync extends EventBlocEvent{
+class StartSync extends EventBlocEvent {
   const StartSync();
+}
+
+class StartSyncFromNotification extends EventBlocEvent {
+  final String calendarId;
+  final String activityId;
+  const StartSyncFromNotification(
+      {required this.calendarId, required this.activityId});
+
+  @override
+  List<Object?> get props => [calendarId, activityId];
 }

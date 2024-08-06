@@ -12,6 +12,7 @@ import 'package:aurora_mail/modules/calendar/ui/models/event.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/task.dart';
 import 'package:aurora_mail/modules/calendar/utils/date_time_ext.dart';
 import 'package:collection/collection.dart';
+import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:timezone/timezone.dart' as tz;
 
@@ -264,6 +265,15 @@ class CalendarUseCaseImpl implements CalendarUseCase {
     if (data is TaskCreationData) {
       await _getLocalTasks();
     }
+  }
+
+  @override
+  Future<Displayable> getActivityByUid({required String calendarId, required String activityId}) async {
+    final activity = await repository.getActivityByUid(calendarId: calendarId, activityUid: activityId);
+    final displayable = activity.toDisplayable(color: Colors.red);
+    //TODO add right color
+    //TODO add right time
+    return displayable!;
   }
 
   @override

@@ -227,4 +227,9 @@ class CalendarRepositoryImpl implements CalendarRepository {
   Future<void> clearData() async {
     await _db.clearData();
   }
+
+  @override
+  Future<Activity> getActivityByUid({required String calendarId, required String activityUid}) {
+    return _db.getActivityByUid(userLocalId: user.localId!, calendarId: calendarId, activityUid: activityUid);
+  }
 }

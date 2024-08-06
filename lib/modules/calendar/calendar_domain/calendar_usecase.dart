@@ -34,6 +34,8 @@ abstract class CalendarUseCase {
 
   Future<void> createActivity(ActivityCreationData data);
 
+  Future<Displayable> getActivityByUid({required String calendarId, required String activityId});
+
   Future<void> updateCalendar(ViewCalendar calendar);
 
   Future<void> updateCalendarPublic(ViewCalendar calendar);

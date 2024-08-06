@@ -3,9 +3,9 @@ import 'package:aurora_mail/modules/calendar/blocs/calendars/calendars_bloc.dart
 import 'package:aurora_mail/modules/calendar/blocs/events/events_bloc.dart';
 import 'package:aurora_mail/modules/calendar/blocs/tasks/tasks_bloc.dart';
 import 'package:aurora_mail/modules/calendar/ui/screens/event_creation_page.dart';
+import 'package:aurora_mail/modules/calendar/ui/screens/event_view_page.dart';
 import 'package:aurora_mail/modules/calendar/ui/screens/task_creation_page.dart';
 import 'package:aurora_mail/modules/calendar/ui/views/day_view.dart';
-import 'package:aurora_mail/modules/calendar/ui/views/list_events_view.dart';
 import 'package:aurora_mail/modules/calendar/ui/views/month_view.dart';
 import 'package:aurora_mail/modules/calendar/ui/views/tasks_view.dart';
 import 'package:aurora_mail/modules/calendar/ui/views/week_view.dart';
@@ -15,9 +15,12 @@ import 'package:aurora_mail/shared_ui/mail_bottom_app_bar.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CalendarPage extends StatefulWidget {
+  static String? selectedCalendarId = null;
+  static String? selectedActivityId = null;
   const CalendarPage({super.key});
 
   @override
@@ -41,6 +44,17 @@ class _CalendarPageState extends State<CalendarPage>
         vsync: this,
         initialIndex: _calendarsBloc.state.selectedTabIndex ?? 0);
     BlocProvider.of<CalendarsBloc>(context).add(GetCalendars());
+    if (CalendarPage.selectedCalendarId != null &&
+        CalendarPage.selectedActivityId != null) {
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        Navigator.of(context).pushNamed(EventViewPage.name);
+        BlocProvider.of<EventsBloc>(context).add(StartSyncFromNotification(
+            calendarId: CalendarPage.selectedCalendarId!,
+            activityId: CalendarPage.selectedActivityId!));
+      });
+    } else {
+      BlocProvider.of<EventsBloc>(context).add(const StartSync());
+    }
   }
 
   @override
@@ -149,9 +163,10 @@ class _CalendarPageState extends State<CalendarPage>
                   heroTag: 'task',
                   mini: true,
                   backgroundColor: Colors.white,
-                  foregroundColor: Theme.of(context).brightness == Brightness.dark
-                      ? Colors.black
-                      : Theme.of(context).primaryColor,
+                  foregroundColor:
+                      Theme.of(context).brightness == Brightness.dark
+                          ? Colors.black
+                          : Theme.of(context).primaryColor,
                   onPressed: () {
                     BlocProvider.of<TasksBloc>(context).add(SelectTask(null));
                     _overlay = false;

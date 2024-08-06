@@ -140,6 +140,15 @@ class ActivityDao extends DatabaseAccessor<AppDatabase>
     return [...notRecurrenceActivities, ...recurrenceActivities];
   }
 
+  Future<ActivityDb> getByUid(
+      {required String calendarId, required String uid, required int userLocalId}) {
+    return (select(activityTable)..where((t) =>
+        t.userLocalId.equals(userLocalId) &
+        t.calendarId.equals(calendarId) &
+        t.onceLoaded.equals(true) &
+        t.uid.equals(uid))).getSingle();
+  }
+
   Future<List<ActivityDb>> getAll(
       {ActivityType? type,
       required List<String>? calendarIds,

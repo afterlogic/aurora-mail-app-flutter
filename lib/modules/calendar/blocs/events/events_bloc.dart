@@ -51,6 +51,7 @@ class EventsBloc extends Bloc<EventBlocEvent, EventsState> {
     on<UpdateEvent>(_onUpdateEvent);
     on<DeleteEvent>(_onDeleteEvent);
     on<StartSync>(_onStartSync);
+    on<StartSyncFromNotification>(_onStartSyncFromNotification);
     on<SelectDate>(_onSelectDate);
   }
 
@@ -111,6 +112,17 @@ class EventsBloc extends Bloc<EventBlocEvent, EventsState> {
     }
     await _asyncErrorHandler(() async {
       await _useCase.syncCalendars();
+    }, emit);
+  }
+
+  _onStartSyncFromNotification(StartSyncFromNotification event, Emitter<EventsState> emit) async {
+    if(state.originalEvents == null || state.eventsMap == null){
+      emit(state.copyWith(status: EventsStatus.loading));
+    }
+    await _asyncErrorHandler(() async {
+      await _useCase.syncCalendars();
+      final selectedEvent = await _useCase.getActivityByUid(calendarId: event.calendarId, activityId: event.activityId);
+      emit(state.copyWith(selectedEvent: () => selectedEvent as ViewEvent));
     }, emit);
   }
 

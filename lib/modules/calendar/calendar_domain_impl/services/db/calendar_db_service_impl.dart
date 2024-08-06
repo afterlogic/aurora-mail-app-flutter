@@ -124,4 +124,12 @@ class CalendarDbServiceImpl implements CalendarDbService {
     await _calendarDao.deleteAllCalendars();
     await _activityDao.deleteAllEvents();
   }
+
+  @override
+  Future<Activity> getActivityByUid({required String calendarId, required String activityUid, required int userLocalId}) async {
+    final entity = await _activityDao.getByUid(calendarId: calendarId, userLocalId: userLocalId, uid: activityUid, );
+    final model  = entity.toActivity();
+    if ((model is! Activity)) throw Exception('Activity not synced');
+    return model;
+  }
 }
