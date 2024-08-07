@@ -215,8 +215,8 @@ class NotificationData {
       typeString == null
           ? NotificationType.email
           : NotificationTypeMapper.fromString(typeString),
-      json["Calendar_id"] as String,
-      json["Activity_uid"] as String,
+      json["CalendarId"] as String,
+      json["EventUid"] as String,
     );
   }
 
@@ -227,7 +227,7 @@ class NotificationData {
         "MessageId": messageID,
         "Folder": folder,
         "Type": type == null ? null : type.toStringCode(),
-        "Calendar_id": calendarId,
-        "Activity_uid": activityId
+        "CalendarId": calendarId,
+        "EventUid": activityId
       };
 }
