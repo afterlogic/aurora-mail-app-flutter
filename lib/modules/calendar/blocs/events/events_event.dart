@@ -52,13 +52,3 @@ class LoadEvents extends EventBlocEvent {
 class StartSync extends EventBlocEvent {
   const StartSync();
 }
-
-class StartSyncFromNotification extends EventBlocEvent {
-  final String calendarId;
-  final String activityId;
-  const StartSyncFromNotification(
-      {required this.calendarId, required this.activityId});
-
-  @override
-  List<Object?> get props => [calendarId, activityId];
-}

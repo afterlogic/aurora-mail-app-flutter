@@ -1,10 +1,15 @@
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/calendar/blocs/calendars/calendars_bloc.dart';
 import 'package:aurora_mail/modules/calendar/blocs/events/events_bloc.dart';
+import 'package:aurora_mail/modules/calendar/blocs/notification/calendar_notification_bloc.dart';
 import 'package:aurora_mail/modules/calendar/blocs/tasks/tasks_bloc.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/activity.dart';
+import 'package:aurora_mail/modules/calendar/ui/models/event.dart';
+import 'package:aurora_mail/modules/calendar/ui/models/task.dart';
 import 'package:aurora_mail/modules/calendar/ui/screens/event_creation_page.dart';
 import 'package:aurora_mail/modules/calendar/ui/screens/event_view_page.dart';
 import 'package:aurora_mail/modules/calendar/ui/screens/task_creation_page.dart';
+import 'package:aurora_mail/modules/calendar/ui/screens/task_view_page.dart';
 import 'package:aurora_mail/modules/calendar/ui/views/day_view.dart';
 import 'package:aurora_mail/modules/calendar/ui/views/month_view.dart';
 import 'package:aurora_mail/modules/calendar/ui/views/tasks_view.dart';
@@ -18,10 +23,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+class CalendarPageArg {
+  final String selectedCalendarId;
+  final String selectedActivityId;
+  final ActivityType type;
+  CalendarPageArg(
+      {required this.selectedCalendarId,
+      required this.selectedActivityId,
+      required this.type});
+}
+
 class CalendarPage extends StatefulWidget {
   static String? selectedCalendarId = null;
   static String? selectedActivityId = null;
-  const CalendarPage({super.key});
+  static ActivityType? activityType = null;
+  final CalendarPageArg? args;
+  const CalendarPage({super.key, this.args});
 
   @override
   State<CalendarPage> createState() => _CalendarPageState();
@@ -44,13 +61,39 @@ class _CalendarPageState extends State<CalendarPage>
         vsync: this,
         initialIndex: _calendarsBloc.state.selectedTabIndex ?? 0);
     BlocProvider.of<CalendarsBloc>(context).add(GetCalendars());
-    if (CalendarPage.selectedCalendarId != null &&
+    if (widget.args != null) {
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        BlocProvider.of<CalendarNotificationBloc>(context).add(
+            StartSyncFromNotification(
+                activityType: widget.args!.type,
+                calendarId: widget.args!.selectedCalendarId,
+                activityId: widget.args!.selectedActivityId));
+        switch (widget.args!.type) {
+          case ActivityType.event:
+            Navigator.of(context).pushNamed(EventViewPage.name);
+            break;
+          case ActivityType.task:
+            Navigator.of(context).pushNamed(TaskViewPage.name);
+            break;
+        }
+      });
+    } else if (CalendarPage.selectedCalendarId != null &&
+        CalendarPage.activityType != null &&
         CalendarPage.selectedActivityId != null) {
       SchedulerBinding.instance.addPostFrameCallback((_) {
-        Navigator.of(context).pushNamed(EventViewPage.name);
-        BlocProvider.of<EventsBloc>(context).add(StartSyncFromNotification(
-            calendarId: CalendarPage.selectedCalendarId!,
-            activityId: CalendarPage.selectedActivityId!));
+        BlocProvider.of<CalendarNotificationBloc>(context).add(
+            StartSyncFromNotification(
+                activityType: CalendarPage.activityType!,
+                calendarId: CalendarPage.selectedCalendarId!,
+                activityId: CalendarPage.selectedActivityId!));
+        switch (CalendarPage.activityType!) {
+          case ActivityType.event:
+            Navigator.of(context).pushNamed(EventViewPage.name);
+            break;
+          case ActivityType.task:
+            Navigator.of(context).pushNamed(TaskViewPage.name);
+            break;
+        }
       });
     } else {
       BlocProvider.of<EventsBloc>(context).add(const StartSync());
@@ -227,6 +270,30 @@ class _BlocErrorsHandler extends StatelessWidget {
               scaffoldState: Scaffold.of(context),
               msg: state.error,
             );
+          }),
+      BlocListener<CalendarNotificationBloc, CalendarNotificationState>(
+          listenWhen: (previous, current) => previous != current,
+          listener: (context, state) {
+            if (state.error != null) {
+              showErrorSnack(
+                context: context,
+                scaffoldState: Scaffold.of(context),
+                msg: state.error,
+              );
+            }
+            if (state.activityFromNotification != null &&
+                state.activityType != null) {
+              switch (state.activityType!) {
+                case ActivityType.event:
+                  BlocProvider.of<EventsBloc>(context).add(
+                      SelectEvent(state.activityFromNotification as ViewEvent));
+                  break;
+                case ActivityType.task:
+                  BlocProvider.of<TasksBloc>(context).add(
+                      SelectTask(state.activityFromNotification as ViewTask));
+                  break;
+              }
+            }
           }),
       BlocListener<EventsBloc, EventsState>(
           listenWhen: (previous, current) =>

@@ -166,9 +166,10 @@ class RouteGenerator {
       // ================= CALENDAR =================
 
       case CalendarRoute.name:
+        final args = settings.arguments as CalendarPageArg;
         return FadeRoute(
             settings: RouteSettings(name: settings.name),
-            builder: (_) => CalendarPage());
+            builder: (_) => CalendarPage(args: args,));
         break;
 
       case EventViewPage.name:

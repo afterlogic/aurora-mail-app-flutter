@@ -8,9 +8,11 @@ import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/calendar/blocs/calendars/calendars_bloc.dart';
 import 'package:aurora_mail/modules/calendar/blocs/events/events_bloc.dart';
+import 'package:aurora_mail/modules/calendar/blocs/notification/calendar_notification_bloc.dart';
 import 'package:aurora_mail/modules/calendar/blocs/tasks/tasks_bloc.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/calendar_repository.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/calendar_usecase.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/activity.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain_impl/calendar_usecase_impl.dart';
 import 'package:aurora_mail/modules/calendar/ui/screens/calendar_page.dart';
 import 'package:aurora_mail/modules/calendar/ui/screens/calendar_route.dart';
@@ -53,14 +55,25 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
   final _navKey = GlobalKey<NavigatorState>();
   NotificationData _notification;
 
-
   @override
   void initState() {
     super.initState();
     _notification = PushNotificationsManager.instance.initNotification;
-    if(_notification != null && _notification.type == "calendar"){
+    if (_notification != null &&
+        (_notification.type == NotificationType.event ||
+            _notification.type == NotificationType.task)) {
       CalendarPage.selectedActivityId = _notification.activityId;
       CalendarPage.selectedCalendarId = _notification.calendarId;
+      switch (_notification.type) {
+        case NotificationType.email:
+          break;
+        case NotificationType.event:
+          CalendarPage.activityType = ActivityType.event;
+          break;
+        case NotificationType.task:
+          CalendarPage.activityType = ActivityType.task;
+          break;
+      }
     }
     WidgetsBinding.instance.addObserver(this);
     BackgroundHelper.current = WidgetsBinding.instance.lifecycleState;
@@ -238,6 +251,11 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
                                 create: (_) =>
                                     TasksBloc(useCase: calendarUseCase),
                               ),
+                            if (authState.user != null)
+                              BlocProvider(
+                                create: (_) => CalendarNotificationBloc(
+                                    useCase: calendarUseCase),
+                              ),
                             BlocProvider(
                               create: (_) => MessagesListBloc(
                                 user: _authBloc.currentUser,
@@ -294,8 +312,7 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
                             locale: settingsState.language?.toLocale(),
                             initialRoute: authState.needsLogin
                                 ? LoginRoute.name
-                                : _notification !=
-                                        null
+                                : _notification != null
                                     ? CalendarRoute.name
                                     : MessagesListRoute.name,
                             navigatorObservers: [routeObserver],

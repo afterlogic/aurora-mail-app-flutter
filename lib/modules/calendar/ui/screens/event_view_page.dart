@@ -1,5 +1,6 @@
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/calendar/blocs/events/events_bloc.dart';
+import 'package:aurora_mail/modules/calendar/blocs/notification/calendar_notification_bloc.dart';
 import 'package:aurora_mail/modules/calendar/ui/dialogs/deletion_confirm_dialog.dart';
 import 'package:aurora_mail/modules/calendar/ui/screens/event_creation_page.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/activity/attendees_section.dart';
@@ -77,69 +78,89 @@ class EventViewPage extends StatelessWidget {
         ],
       ),
     ];
-    return Scaffold(
-      appBar: AMAppBar(
-        title: Text('Event'),
-        actions: actions,
-      ),
-      body: SingleChildScrollView(
-        child: BlocBuilder<EventsBloc, EventsState>(
-          builder: (context, eventsState) {
-            final areRemindersNotEmpty =
-                (eventsState.selectedEvent?.reminders?.isNotEmpty ?? false);
-            return Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(24),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      CalendarSection(
-                          calendarId: eventsState.selectedEvent?.calendarId),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      MainInfo(
-                          description: eventsState.selectedEvent?.description,
-                          location: eventsState.selectedEvent?.location,
-                          title: eventsState.selectedEvent?.title),
-                    ],
+    return BlocBuilder<CalendarNotificationBloc, CalendarNotificationState>(
+      buildWhen: (prev, curr) =>
+          prev.notificationSyncStatus != curr.notificationSyncStatus,
+      builder: (context, state) {
+        return Scaffold(
+          appBar: AMAppBar(
+            title: Text('Event'),
+            actions: state.notificationSyncStatus.isLoading ? null : actions,
+          ),
+          body: state.notificationSyncStatus.isLoading
+              ? Center(
+                  child: CircularProgressIndicator(),
+                )
+              : SingleChildScrollView(
+                  child: BlocBuilder<EventsBloc, EventsState>(
+                    builder: (context, eventsState) {
+                      final areRemindersNotEmpty =
+                          (eventsState.selectedEvent?.reminders?.isNotEmpty ??
+                              false);
+                      return Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(24),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                CalendarSection(
+                                    calendarId:
+                                        eventsState.selectedEvent?.calendarId),
+                                const SizedBox(
+                                  height: 20,
+                                ),
+                                MainInfo(
+                                    description:
+                                        eventsState.selectedEvent?.description,
+                                    location:
+                                        eventsState.selectedEvent?.location,
+                                    title: eventsState.selectedEvent?.title),
+                              ],
+                            ),
+                          ),
+                          const SectionDivider(),
+                          if (eventsState.selectedEvent != null)
+                            Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 24, vertical: 16),
+                                child: DateInfo(
+                                    displayable: eventsState.selectedEvent!)),
+                          if (eventsState.selectedEvent != null)
+                            const SectionDivider(),
+                          if (eventsState.selectedEvent != null)
+                            Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 24, vertical: 24),
+                                child: RecurrenceSection(
+                                    activity: eventsState.selectedEvent!)),
+                          if (areRemindersNotEmpty) const SectionDivider(),
+                          if (areRemindersNotEmpty)
+                            Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 24, vertical: 16),
+                                child: RemindersSection(
+                                    reminders:
+                                        eventsState.selectedEvent!.reminders)),
+                          if (eventsState.selectedEvent?.attendees.isNotEmpty ==
+                              true)
+                            const SectionDivider(),
+                          if (eventsState.selectedEvent?.attendees.isNotEmpty ==
+                              true)
+                            Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 24, vertical: 16),
+                                child: AttendeesSection(
+                                  attendees:
+                                      eventsState.selectedEvent!.attendees,
+                                )),
+                        ],
+                      );
+                    },
                   ),
                 ),
-                const SectionDivider(),
-                if (eventsState.selectedEvent != null)
-                  Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 24, vertical: 16),
-                      child: DateInfo(displayable: eventsState.selectedEvent!)),
-                if (eventsState.selectedEvent != null) const SectionDivider(),
-                if (eventsState.selectedEvent != null)
-                  Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 24, vertical: 24),
-                      child: RecurrenceSection(
-                          activity: eventsState.selectedEvent!)),
-                if (areRemindersNotEmpty) const SectionDivider(),
-                if (areRemindersNotEmpty)
-                  Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 24, vertical: 16),
-                      child: RemindersSection(
-                          reminders: eventsState.selectedEvent!.reminders)),
-                if (eventsState.selectedEvent?.attendees.isNotEmpty == true)
-                  const SectionDivider(),
-                if (eventsState.selectedEvent?.attendees.isNotEmpty == true)
-                  Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 24, vertical: 16),
-                      child: AttendeesSection(
-                        attendees: eventsState.selectedEvent!.attendees,
-                      )),
-              ],
-            );
-          },
-        ),
-      ),
+        );
+      },
     );
   }
 }

@@ -27,7 +27,7 @@ class PushNotificationsManager {
   NotificationData _initNotification = null;
   static final PushNotificationsManager instance = PushNotificationsManager._();
 
-  NotificationData get initNotification{
+  NotificationData get initNotification {
     final res = _initNotification;
     _initNotification = null;
     return res;
@@ -44,9 +44,10 @@ class PushNotificationsManager {
         }
         deviceId = await DeviceIdStorage.getDeviceId();
         await _firebaseMessaging.requestPermission();
+
         ///terminated click handler
         final initMessage = await _firebaseMessaging.getInitialMessage();
-        if(initMessage != null){
+        if (initMessage != null) {
           _initNotification = NotificationData.fromMap(initMessage);
         }
         FirebaseMessaging.onBackgroundMessage(voidMessageHandler);
@@ -77,13 +78,17 @@ class PushNotificationsManager {
 Future onResume(RemoteMessage message) async {
   final notification = NotificationData.fromMap(message);
   final payload = notification.toJson();
+
   ///app minimized
   if (RouteWrap.staticState != null) {
-    switch (notification.type){
-      case 'email':
+    switch (notification.type) {
+      case NotificationType.email:
         RouteWrap.staticState.onMessage(payload);
         break;
-      case 'calendar':
+      case NotificationType.event:
+        RouteWrap.staticState.onCalendar(payload);
+        break;
+      case NotificationType.task:
         RouteWrap.staticState.onCalendar(payload);
         break;
     }
@@ -125,7 +130,7 @@ Future<bool> messageHandler(RemoteMessage message) async {
               final manager = NotificationManager.instance;
               manager.showNotification(
                 notification.from,
-                'notificationsubject',
+                notification.subject,
                 account,
                 user,
                 null,
@@ -152,13 +157,15 @@ Future<bool> messageHandler(RemoteMessage message) async {
 
 final notificationFromPush = true;
 
-enum NotificationType { email, calendar }
+enum NotificationType { email, event, task }
 
 extension NotificationTypeMapper on NotificationType {
   static NotificationType fromString(String s) {
     switch (s) {
-      case 'calendar':
-        return NotificationType.calendar;
+      case 'event':
+        return NotificationType.event;
+      case 'task':
+        return NotificationType.task;
       case 'email':
       default:
         return NotificationType.email;
@@ -167,10 +174,12 @@ extension NotificationTypeMapper on NotificationType {
 
   String toStringCode() {
     switch (this) {
+      case NotificationType.event:
+        return 'event';
+      case NotificationType.task:
+        return 'task';
       case NotificationType.email:
         return 'email';
-      case NotificationType.calendar:
-        return 'calendar';
       default:
         throw Exception('Unknown NotificationType');
     }
@@ -178,7 +187,7 @@ extension NotificationTypeMapper on NotificationType {
 }
 
 class NotificationData {
-  final String type;
+  final NotificationType type;
   final String subject;
   final String to;
   final String from;
@@ -187,22 +196,27 @@ class NotificationData {
   final String calendarId;
   final String activityId;
 
-  NotificationData(
-      this.subject, this.to, this.from, this.messageID, this.folder,
-      this.type, this.calendarId, this.activityId);
+  NotificationData(this.subject, this.to, this.from, this.messageID,
+      this.folder, this.type, this.calendarId, this.activityId);
 
   static NotificationData fromMap(RemoteMessage message) {
     final notification = message.data;
+    return fromJson(notification);
+  }
 
+  static NotificationData fromJson(Map<String, dynamic> json) {
+    final typeString = json["Type"] as String;
     return NotificationData(
-      notification["Subject"] as String,
-      notification["To"] as String,
-      notification["From"] as String,
-      notification["MessageId"] as String,
-      notification["Folder"] as String,
-      notification["Type"] as String,
-      notification["Calendar_id"] as String,
-      notification["Event_uid"] as String,
+      json["Subject"] as String,
+      json["To"] as String,
+      json["From"] as String,
+      json["MessageId"] as String,
+      json["Folder"] as String,
+      typeString == null
+          ? NotificationType.email
+          : NotificationTypeMapper.fromString(typeString),
+      json["Calendar_id"] as String,
+      json["Activity_uid"] as String,
     );
   }
 
@@ -212,8 +226,8 @@ class NotificationData {
         "From": from,
         "MessageId": messageID,
         "Folder": folder,
-        "Type": type,
+        "Type": type == null ? null : type.toStringCode(),
         "Calendar_id": calendarId,
-        "Event_uid": activityId
+        "Activity_uid": activityId
       };
 }
