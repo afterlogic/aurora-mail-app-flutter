@@ -116,6 +116,7 @@ class EventsBloc extends Bloc<EventBlocEvent, EventsState> {
 
 
   _onSelectDate(SelectDate event, Emitter<EventsState> emit) async {
+    final today = DateTime.now();
     if (event.date.isAtSameMomentAs(state.selectedDate)) {
       emit(state.copyWith(selectedDate: DateTime.now()));
       return;
@@ -124,10 +125,18 @@ class EventsBloc extends Bloc<EventBlocEvent, EventsState> {
       final newStartDate = event.date.firstDayOfMonth;
       final newEndDate = event.date.lastDayOfMonth;
       emit(state.copyWith(
+         selectedDate: today.isBefore(newEndDate) &&
+              today.isAfter(newStartDate)
+          ? today
+          : event.date,
           startIntervalDate: newStartDate, endIntervalDate: newEndDate));
       add(LoadEvents());
+      return;
     }
-    emit(state.copyWith(selectedDate: event.date));
+    final weekEnd = event.isWeekChanged ? event.date.add(Duration(days: 6)) : null; 
+
+    emit(state.copyWith(selectedDate: weekEnd != null && today.isBefore(weekEnd) &&
+              today.isAfter(event.date) ? today : event.date));
   }
 
   _errorHandler(void Function() callback, Emitter<EventsState> emit) {

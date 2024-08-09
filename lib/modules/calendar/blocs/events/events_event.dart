@@ -7,10 +7,11 @@ abstract class EventBlocEvent extends Equatable {
 }
 
 class SelectDate extends EventBlocEvent {
+  final bool isWeekChanged;
   final DateTime date;
-  const SelectDate(this.date);
+  const SelectDate(this.date, {this.isWeekChanged = false});
   @override
-  List<Object?> get props => [date];
+  List<Object?> get props => [date, isWeekChanged];
 }
 
 class UpdateEvent extends EventBlocEvent {
