@@ -33,7 +33,7 @@ _iosAppId: "{{_appId}}"
 _appleGroupId: ""
 packageName: "{{_appId}}"
 version: ""
-build: 279
+build: 280
 
 icon: "{{image_dir}}/icon.png"
 main_logo: "{{image_dir}}/main_logo.png"
@@ -67,7 +67,7 @@ selfDestructingEmail: false
 expandMessageThread: false
 legacyPgpKey: false
 logger: true
-pushNotification: false
+pushNotification: true
 backgroundSync: false
 supportAllowAccess: true
 

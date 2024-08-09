@@ -58,6 +58,40 @@ class _NotificationsSettingsState extends BState<NotificationsSettings> {
                     child: Row(
                       children: <Widget>[
                         Text(
+                          'FB token',
+                          style: theme.textTheme.subtitle1,
+                        ),
+                        Expanded(
+                            child: Text(
+                              PushNotificationsManager.instance.token,
+                              textAlign: TextAlign.right,
+                            )),
+                        IconButton(
+                          icon: Icon(Icons.content_copy),
+                          onPressed: () {
+                            Clipboard.setData(ClipboardData(
+                                text: PushNotificationsManager
+                                    .instance.token));
+                            showSnack(
+                              isError: false,
+                              context: context,
+                              scaffoldState: Scaffold.of(context),
+                              message: S
+                                  .of(context)
+                                  .label_device_id_copied_to_clip_board,
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16.0, vertical: 8),
+                    child: Row(
+                      children: <Widget>[
+                        Text(
                           S.of(context).label_device_identifier,
                           style: theme.textTheme.subtitle1,
                         ),
