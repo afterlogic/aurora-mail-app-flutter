@@ -40,31 +40,11 @@ class _WeekViewState extends State<WeekView> {
     super.dispose();
   }
 
-  void _cleanUpEvents(Map<DateTime, List<ViewEvent?>> week) {
+  void _normalizeAndCleanUpEvents(Map<DateTime, List<ViewEvent?>> week) {
     if (week.isEmpty) return;
 
-    int maxLength = week.values.elementAt(0).length;
+    int maxLength = 0;
 
-    for (int i = maxLength - 1; i >= 0; i--) {
-      bool allNull = true;
-      for (var day in week.values) {
-        if (day.length > i && day[i] != null && day[i]?.allDay == true) {
-          allNull = false;
-          break;
-        }
-      }
-      if (allNull) {
-        for (var day in week.values) {
-          if (day.length > i) {
-            day.removeAt(i);
-          }
-        }
-      }
-    }
-  }
-
-  void _normalizeEventsLength(Map<DateTime, List> week) {
-    int maxLength = 2;
     for (var day in week.values) {
       if (day.length > maxLength) {
         maxLength = day.length;
@@ -76,12 +56,28 @@ class _WeekViewState extends State<WeekView> {
         day.add(null);
       }
     }
+
+    for (int i = maxLength - 1; i >= 0; i--) {
+      bool allRowIsNull = true;
+      for (var day in week.values) {
+        if (day.length > i && day[i] != null && day[i]?.allDay == true) {
+          allRowIsNull = false;
+          break;
+        }
+      }
+      if (allRowIsNull) {
+        for (var day in week.values) {
+          if (day.length > i) {
+            day.removeAt(i);
+          }
+        }
+      }
+    }
   }
 
   _onStateChange(EventsState state) {
     final events = Map.of(state.getEventsFromWeek());
-    _normalizeEventsLength(events);
-    _cleanUpEvents(events);
+    _normalizeAndCleanUpEvents(events);
     final oldEvents = [..._controller.allEvents];
     _controller.removeAll(oldEvents);
     for (final date in events.keys) {
@@ -224,7 +220,8 @@ class _WeekViewState extends State<WeekView> {
                   );
                 },
                 controller: _controller,
-                onPageChange: (date, pageIndex) => _bloc.add(SelectDate(date, isWeekChanged: true)),
+                onPageChange: (date, pageIndex) =>
+                    _bloc.add(SelectDate(date, isWeekChanged: true)),
                 onEventTap: (List<CV.CalendarEventData<Object?>> events,
                     DateTime date) {
                   final event =
