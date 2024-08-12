@@ -14,6 +14,7 @@ class MonthEventMarker extends StatelessWidget {
       this.implementLeftBorder = false,
       this.implementBorder = false,
       this.forceTitleRender = false,
+      this.isWeekAllDay = false,
       this.radius = 4.0,
       this.innerPaddingValue = 4.0,
       required this.currentDate,
@@ -22,6 +23,7 @@ class MonthEventMarker extends StatelessWidget {
   final ViewEvent? event;
   final bool implementLeftBorder;
   final bool implementBorder;
+  final bool isWeekAllDay;
   final double eventGap;
   final double height;
   final DateTime currentDate;
@@ -68,32 +70,42 @@ class MonthEventMarker extends StatelessWidget {
                     Positioned(
                       left: -0.5,
                       right: -0.5,
+                      top: 0,
+                      bottom: 0,
                       child: Container(
-                          margin: EdgeInsets.only(bottom: eventGap),
+                          margin: isWeekAllDay
+                              ? EdgeInsets.symmetric(vertical: eventGap / 2)
+                              : EdgeInsets.only(bottom: eventGap),
                           padding: EdgeInsets.only(left: 4),
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.only(
-                                topLeft: event?.isStartedToday(currentDate) == true
-                                    ? Radius.circular(radius)
-                                    : Radius.zero,
-                                bottomLeft: event?.isStartedToday(currentDate) == true
-                                    ? Radius.circular(radius)
-                                    : Radius.zero,
-                                topRight: event?.isEndedToday(currentDate) == true
-                                    ? Radius.circular(radius)
-                                    : Radius.zero,
-                                bottomRight: event?.isEndedToday(currentDate) == true
-                                    ? Radius.circular(radius)
-                                    : Radius.zero,
+                                topLeft:
+                                    event?.isStartedToday(currentDate) == true
+                                        ? Radius.circular(radius)
+                                        : Radius.zero,
+                                bottomLeft:
+                                    event?.isStartedToday(currentDate) == true
+                                        ? Radius.circular(radius)
+                                        : Radius.zero,
+                                topRight:
+                                    event?.isEndedToday(currentDate) == true
+                                        ? Radius.circular(radius)
+                                        : Radius.zero,
+                                bottomRight:
+                                    event?.isEndedToday(currentDate) == true
+                                        ? Radius.circular(radius)
+                                        : Radius.zero,
                               ),
                               color: event!.color),
                           child: Align(
                             alignment: Alignment.centerLeft,
                             child: Row(
                               children: [
-                                if (event?.isStartedToday(currentDate) == true &&
+                                if (event?.isStartedToday(currentDate) ==
+                                        true &&
                                     event?.recurrenceMode != null &&
-                                    event?.recurrenceMode != RecurrenceMode.never)
+                                    event?.recurrenceMode !=
+                                        RecurrenceMode.never)
                                   Padding(
                                     padding: const EdgeInsets.only(right: 4.0),
                                     child: Icon(
@@ -105,12 +117,15 @@ class MonthEventMarker extends StatelessWidget {
                                 Expanded(
                                   child: Text(
                                     forceTitleRender ||
-                                            event?.isStartedToday(currentDate) == true
+                                            event?.isStartedToday(
+                                                    currentDate) ==
+                                                true
                                         ? event!.title
                                         : '',
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
-                                        fontSize: fontSize, color: Colors.white),
+                                        fontSize: fontSize,
+                                        color: Colors.white),
                                   ),
                                 ),
                               ],
@@ -174,7 +189,7 @@ class EmptyMarker extends StatelessWidget {
                   : BorderSide.none)),
       child: SizedBox(
         height: h,
-        width: w,
+        width: double.maxFinite,
       ),
     );
   }

@@ -123,7 +123,7 @@ class _WeekViewState extends State<WeekView> {
                 child: CircularProgressIndicator(),
               )
             : CV.WeekView<WeekViewVisible>(
-                fullDayHeaderTitle: 'All\nday',
+                fullDayHeaderTitle: 'All day',
                 backgroundColor: Theme.of(context).brightness == Brightness.dark
                     ? Theme.of(context).scaffoldBackgroundColor
                     : Colors.white,
@@ -192,6 +192,7 @@ class _WeekViewState extends State<WeekView> {
                                       ? e.event as ViewEvent
                                       : null,
                               implementBorder: true,
+                              isWeekAllDay: true,
                               currentDate: date,
                             ))
                         .toList(),
