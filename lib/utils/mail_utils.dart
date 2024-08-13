@@ -10,6 +10,7 @@ import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:aurora_mail/modules/mail/screens/message_view/components/message_webview.dart';
 import 'package:aurora_mail/utils/date_formatting.dart';
 import 'package:aurora_mail/utils/extensions/colors_extensions.dart';
+import 'package:collection/collection.dart';
 import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -18,6 +19,18 @@ import 'package:html/parser.dart';
 
 class MailUtils {
   MailUtils._();
+
+  static Map<String, dynamic> getExtendFromMessageByType(String type, Message m) {
+    if (m.extendInJson == null) return null;
+    try {
+      final decodedList =
+      jsonDecode(m.extendInJson) as List;
+      final extended = decodedList.firstWhereOrNull((e) => e["Type"] == type);
+      return extended as Map<String, dynamic>;
+    } catch (e, s) {
+      return null;
+    }
+  }
 
   static String getFriendlyName(Contact contact) {
     if (contact.fullName != null && contact.fullName.isNotEmpty) {
@@ -384,6 +397,9 @@ class MailUtils {
     @required bool showLightEmail,
     bool isStarred,
   }) {
+
+    final extendedEvent = getExtendFromMessageByType("REPLY", message);
+
     final theme = Theme.of(context);
 
     final subject = message.subject.isNotEmpty
@@ -564,6 +580,18 @@ class MailUtils {
             }, false);
         });
         
+       function acceptEvent(){
+        return window.${ExpandedEventWebViewActions.CHANNEL}.postMessage('${ExpandedEventWebViewActions.ACCEPT}');
+       }
+       
+       function declineEvent(){
+        return window.${ExpandedEventWebViewActions.CHANNEL}.postMessage('${ExpandedEventWebViewActions.DECLINE}');
+       }
+       
+       function tentativeEvent(){
+        return window.${ExpandedEventWebViewActions.CHANNEL}.postMessage('${ExpandedEventWebViewActions.TENTATIVE}');
+       }
+        
        function downloadAttachment(str){
         return window.${MessageWebViewActions.WEB_VIEW_JS_CHANNEL}.postMessage('${MessageWebViewActions.DOWNLOAD_ATTACHMENT}'+str);
        }
@@ -588,6 +616,7 @@ class MailUtils {
               ${cc.isNotEmpty ? "<div class='row'><a class='details-description'>Cc</a><a class='selectable details-value'>$cc</a></div>" : ""}
         <div class='row'><a class='details-description'>Date</a><a class='selectable details-value'>$date</a></div>
           </div>
+          ${extendedEvent == null ? "" : "<div> <button onclick='acceptEvent()'>Accept </button> <button onclick='declineEvent()'>Decline</button> <button onclick='tentativeEvent()'>Tentative</button> </div>"}
         <div class='email-head' style='padding-top: 0px;'>
         <div style="display: flex; flex-direction: row;justify-content: space-between; padding-top: 24px;">
           <h1 style="font-size: 24px; font-weight: 500; margin-top: 0px;">

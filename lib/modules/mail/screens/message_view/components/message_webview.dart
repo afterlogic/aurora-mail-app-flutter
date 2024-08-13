@@ -33,6 +33,41 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 import 'attachments_dialog.dart';
 
+class _Attendee {
+  const _Attendee({this.email, this.displayName});
+  final String email;
+  final String displayName;
+
+  factory _Attendee.fromJson(Map<String, dynamic> json) {
+    return _Attendee(
+        email: json["Email"] as String,
+        displayName: json["DisplayName"] as String);
+  }
+}
+
+// class _ExtendedForEvent{
+//   // Attendee: null
+//   // [{DisplayName: "vasil@afterlogic.com", Email: "vasil@afterlogic.com"}]
+//   final List<_Attendee> attendeeList;
+//   CalendarId: ""
+//   Description: "111"
+//   File: "ef3618d2c03cfd5c132d55de84e9c871.ics"
+//   Location: "222"
+//   Organizer: {DisplayName: "", Email: "test@afterlogic.com"}
+//   Sequence: 1
+//   Summary: "test"
+//   Type: "REQUEST"
+//   Uid: "0d39c75b-d6dd-42d3-ab32-595c08857b46"
+//   When: "Tue, Aug 20, 2024"
+// }
+
+class ExpandedEventWebViewActions {
+  static const ACCEPT = "ExpandedEventWebViewActions.ACCEPT";
+  static const DECLINE = "ExpandedEventWebViewActions.DECLINE";
+  static const TENTATIVE = "ExpandedEventWebViewActions.TENTATIVE";
+  static const CHANNEL = "EXPANDED_EVENT_WEB_VIEW_JS_CHANNEL";
+}
+
 class MessageWebViewActions {
   static const ACTION = "action:";
   static const SET_STARRED = "MessageWebViewActions.STARRED";
@@ -96,6 +131,18 @@ class MessageWebViewState extends BState<MessageWebView> {
             onWebResourceError: (WebResourceError error) {},
             onNavigationRequest: _onWebViewNavigateRequestIos),
       );
+    _controller.addJavaScriptChannel(ExpandedEventWebViewActions.CHANNEL,
+        onMessageReceived: (message) {
+      if (message.message.startsWith(ExpandedEventWebViewActions.ACCEPT)) {
+        print('accept');
+      } else if (message.message
+          .startsWith(ExpandedEventWebViewActions.DECLINE)) {
+        print('decline');
+      } else if (message.message
+          .startsWith(ExpandedEventWebViewActions.TENTATIVE)) {
+        print('tentative');
+      }
+    });
     _controller.addJavaScriptChannel("WEB_VIEW_JS_CHANNEL",
         onMessageReceived: (message) {
       if (message.message

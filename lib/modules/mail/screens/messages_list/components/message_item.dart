@@ -1,4 +1,6 @@
 //@dart=2.9
+import 'dart:convert';
+
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/mail/mail_table.dart';
@@ -8,6 +10,8 @@ import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/date_formatting.dart';
+import 'package:aurora_mail/utils/mail_utils.dart';
+import 'package:collection/collection.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -46,6 +50,7 @@ class MessageItem extends StatefulWidget {
 
 class _MessageItemState extends BState<MessageItem> {
   bool _showThreads = false;
+  var extendFromMessage;
 
   @override
   void initState() {
@@ -86,6 +91,7 @@ class _MessageItemState extends BState<MessageItem> {
   @override
   Widget build(BuildContext context) {
     final m = widget.message;
+    final eventInfoFromMessage = MailUtils.getExtendFromMessageByType('REPLY', m);
     final hasUnreadChildren = widget.children
         .where((i) => !i.flagsInJson.contains("\\seen"))
         .isNotEmpty;
@@ -106,7 +112,8 @@ class _MessageItemState extends BState<MessageItem> {
         ),
         child: Text(
           widget.children.length.toString(),
-          style: TextStyle(color: hasUnread ? Colors.white : theme.primaryColor),
+          style:
+              TextStyle(color: hasUnread ? Colors.white : theme.primaryColor),
         ),
       );
     }
@@ -150,7 +157,9 @@ class _MessageItemState extends BState<MessageItem> {
                       children: <Widget>[
                         Icon(Icons.mail, color: Colors.white, size: 36.0),
                         Text(
-                          isUnread ? S.of(context).btn_read : S.of(context).btn_unread,
+                          isUnread
+                              ? S.of(context).btn_read
+                              : S.of(context).btn_unread,
                           style: TextStyle(
                             color: Colors.white,
                           ),
@@ -263,7 +272,11 @@ class _MessageItemState extends BState<MessageItem> {
                       mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
-                        if (m.hasAttachments) Icon(Icons.attachment),
+                        if (m.hasAttachments)
+                          if (eventInfoFromMessage != null)
+                            Icon(Icons.calendar_month, size: 20,)
+                          else
+                            Icon(Icons.attachment),
                         SizedBox(width: 6.0),
                         BlocBuilder<SettingsBloc, SettingsState>(
                           builder: (_, state) => Text(
