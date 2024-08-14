@@ -5,6 +5,7 @@ import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/models/alias_or_identity.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
+import 'package:aurora_mail/modules/calendar/ui/models/calendar.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:aurora_mail/modules/mail/screens/message_view/components/message_webview.dart';
@@ -20,12 +21,12 @@ import 'package:html/parser.dart';
 class MailUtils {
   MailUtils._();
 
-  static Map<String, dynamic> getExtendFromMessageByType(String type, Message m) {
+  static Map<String, dynamic> getExtendFromMessageByType(
+      List<String> types, Message m) {
     if (m.extendInJson == null) return null;
     try {
-      final decodedList =
-      jsonDecode(m.extendInJson) as List;
-      final extended = decodedList.firstWhereOrNull((e) => e["Type"] == type);
+      final decodedList = jsonDecode(m.extendInJson) as List;
+      final extended = decodedList.firstWhereOrNull((e) => types.contains(e["Type"]));
       return extended as Map<String, dynamic>;
     } catch (e, s) {
       return null;
@@ -395,10 +396,10 @@ class MailUtils {
     @required String body,
     @required List<MailAttachment> attachments,
     @required bool showLightEmail,
+    List<ViewCalendar> calendars,
+    Map<String, dynamic>  extendedEvent,
     bool isStarred,
   }) {
-
-    final extendedEvent = getExtendFromMessageByType("REPLY", message);
 
     final theme = Theme.of(context);
 
@@ -552,6 +553,24 @@ class MailUtils {
       .selectable {
         user-select: text;
       }
+      .appointment {
+        background: #dff6eb;
+        border-bottom: 1px solid #b7ebd2;
+        padding: 15px;
+      }
+      
+      .appointment button {
+        margin-right: 5px;
+        border-radius: 4px;
+        display: inline-block;
+        padding: 5px 12px;
+        text-align: center;
+        background: #43d0bf;
+        border: 1px solid #2db3a3;
+        color: #ffffff;
+        text-shadow: 0px 1px 0px rgba(0, 0, 0, 0.3);
+      }
+      
     </style>
     <script>      
         document.addEventListener('DOMContentLoaded', function () {
@@ -580,16 +599,18 @@ class MailUtils {
             }, false);
         });
         
+       const getSelectedCalendarId = () => document.querySelector('#calendars_select').value;
+      
        function acceptEvent(){
-        return window.${ExpandedEventWebViewActions.CHANNEL}.postMessage('${ExpandedEventWebViewActions.ACCEPT}');
+        return window.${ExpandedEventWebViewActions.CHANNEL}.postMessage('${ExpandedEventWebViewActions.ACCEPT}' + " " + getSelectedCalendarId());
        }
        
        function declineEvent(){
-        return window.${ExpandedEventWebViewActions.CHANNEL}.postMessage('${ExpandedEventWebViewActions.DECLINE}');
+        return window.${ExpandedEventWebViewActions.CHANNEL}.postMessage('${ExpandedEventWebViewActions.DECLINE}' + " " + getSelectedCalendarId());
        }
        
        function tentativeEvent(){
-        return window.${ExpandedEventWebViewActions.CHANNEL}.postMessage('${ExpandedEventWebViewActions.TENTATIVE}');
+        return window.${ExpandedEventWebViewActions.CHANNEL}.postMessage('${ExpandedEventWebViewActions.TENTATIVE}' + " " + getSelectedCalendarId());
        }
         
        function downloadAttachment(str){
@@ -616,7 +637,20 @@ class MailUtils {
               ${cc.isNotEmpty ? "<div class='row'><a class='details-description'>Cc</a><a class='selectable details-value'>$cc</a></div>" : ""}
         <div class='row'><a class='details-description'>Date</a><a class='selectable details-value'>$date</a></div>
           </div>
-          ${extendedEvent == null ? "" : "<div> <button onclick='acceptEvent()'>Accept </button> <button onclick='declineEvent()'>Decline</button> <button onclick='tentativeEvent()'>Tentative</button> </div>"}
+          ${extendedEvent == null ? "" : """
+        <div class='appointment'> 
+          <div class = 'row'>
+            <button onclick='acceptEvent()'>Accept </button> 
+            <button onclick='declineEvent()'>Decline</button> 
+            <button onclick='tentativeEvent()'>Tentative</button> 
+          </div>
+          <div class = 'row'>
+            ${_getCalendars(calendars)} 
+          </div>
+
+            </div>
+            """}
+          
         <div class='email-head' style='padding-top: 0px;'>
         <div style="display: flex; flex-direction: row;justify-content: space-between; padding-top: 24px;">
           <h1 style="font-size: 24px; font-weight: 500; margin-top: 0px;">
@@ -697,6 +731,20 @@ class='selectable'>${attachment.fileName}</span>
       </div>
       <a class='icon-btn' onclick="downloadAttachment('${attachment.downloadUrl}')">${_getDownloadIcon(iconColor)}</a>
     </div>
+    """;
+  }
+
+  static String _getCalendars(List<ViewCalendar> calendars) {
+    String result = "";
+
+    if (calendars == null || calendars.isEmpty) return result;
+    for (final calendar in calendars) {
+      result += """<option value='${calendar.id}'>${calendar.name}</option>""";
+    }
+    return """ 
+        <select id="calendars_select">
+          ${result}
+        </select>
     """;
   }
 

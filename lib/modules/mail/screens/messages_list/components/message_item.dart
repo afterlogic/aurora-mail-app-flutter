@@ -91,7 +91,8 @@ class _MessageItemState extends BState<MessageItem> {
   @override
   Widget build(BuildContext context) {
     final m = widget.message;
-    final eventInfoFromMessage = MailUtils.getExtendFromMessageByType('REPLY', m);
+    final eventInfoFromMessage =
+        MailUtils.getExtendFromMessageByType(['REQUEST', 'REPLY'], m);
     final hasUnreadChildren = widget.children
         .where((i) => !i.flagsInJson.contains("\\seen"))
         .isNotEmpty;
@@ -274,7 +275,10 @@ class _MessageItemState extends BState<MessageItem> {
                       children: <Widget>[
                         if (m.hasAttachments)
                           if (eventInfoFromMessage != null)
-                            Icon(Icons.calendar_month, size: 20,)
+                            Icon(
+                              Icons.calendar_month,
+                              size: 20,
+                            )
                           else
                             Icon(Icons.attachment),
                         SizedBox(width: 6.0),

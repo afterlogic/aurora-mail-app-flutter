@@ -7,6 +7,8 @@ import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/mail/mail_table.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
+import 'package:aurora_mail/modules/calendar/blocs/calendars/calendars_bloc.dart';
+import 'package:aurora_mail/modules/calendar/ui/models/calendar.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/contacts_bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
@@ -109,6 +111,9 @@ class MessageWebViewState extends BState<MessageWebView> {
   bool _isStarred;
   ThemeData theme;
   MailBloc _mailBloc;
+  List<ViewCalendar> _calendars;
+  String _currentUserMail;
+  Map<String, dynamic> _eventFromExpandedMail;
 
   @override
   void initState() {
@@ -116,6 +121,20 @@ class MessageWebViewState extends BState<MessageWebView> {
     onLoad();
     // On Android, hybrid composition (SurfaceAndroidWebView) is now the default (webview_flutter 3.0.0)
     // if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
+    //                 "Location": "",
+    //                 "Description": "",
+    //                 "Summary": "test",
+    //                 "When": "Fri, Aug 30, 2024",
+    //                 "Organiser"
+    // TODO request - show buttons and select only when field appears in Type
+    // TODO  check by "@Object": "Object\/Aurora\\Modules\\Calendar\\Classes\\Ics", not by Type
+    _eventFromExpandedMail = MailUtils.getExtendFromMessageByType(
+        ['REQUEST', 'REPLY'], widget.message);
+    _currentUserMail =
+        BlocProvider.of<AuthBloc>(context).currentUser?.emailFromLogin ?? '';
+    _calendars = BlocProvider.of<CalendarsBloc>(context)
+        .state
+        .availableCalendars(_currentUserMail);
     _isStarred = widget.message.flagsInJson.contains("\\flagged");
     _controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
@@ -134,13 +153,26 @@ class MessageWebViewState extends BState<MessageWebView> {
     _controller.addJavaScriptChannel(ExpandedEventWebViewActions.CHANNEL,
         onMessageReceived: (message) {
       if (message.message.startsWith(ExpandedEventWebViewActions.ACCEPT)) {
-        print('accept');
+        print(message.message);
+        final calendarId = message.message.split(' ')[1];
+        BlocProvider.of<MessageViewBloc>(context).add(ChangeEventInviteStatus(
+            status: 'ACCEPT',
+            calendarId: calendarId,
+            fileName: _eventFromExpandedMail['File'] as String));
       } else if (message.message
           .startsWith(ExpandedEventWebViewActions.DECLINE)) {
-        print('decline');
+        final calendarId = message.message.split(' ')[1];
+        BlocProvider.of<MessageViewBloc>(context).add(ChangeEventInviteStatus(
+            status: 'DECLINE',
+            calendarId: calendarId,
+            fileName: _eventFromExpandedMail['File'] as String));
       } else if (message.message
           .startsWith(ExpandedEventWebViewActions.TENTATIVE)) {
-        print('tentative');
+        final calendarId = message.message.split(' ')[1];
+        BlocProvider.of<MessageViewBloc>(context).add(ChangeEventInviteStatus(
+            status: 'TENTATIVE',
+            calendarId: calendarId,
+            fileName: _eventFromExpandedMail['File'] as String));
       }
     });
     _controller.addJavaScriptChannel("WEB_VIEW_JS_CHANNEL",
@@ -268,6 +300,8 @@ class MessageWebViewState extends BState<MessageWebView> {
       to: _formatTo(message),
       date: date,
       body: html,
+      extendedEvent: _eventFromExpandedMail,
+      calendars: _calendars,
       attachments: widget.attachments.toList(),
       showLightEmail: false,
       isStarred: _isStarred,
