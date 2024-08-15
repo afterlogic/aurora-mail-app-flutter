@@ -26,7 +26,8 @@ class MailUtils {
     if (m.extendInJson == null) return null;
     try {
       final decodedList = jsonDecode(m.extendInJson) as List;
-      final extended = decodedList.firstWhereOrNull((e) => types.contains(e["@Object"]));
+      final extended =
+          decodedList.firstWhereOrNull((e) => types.contains(e["@Object"]));
       return extended as Map<String, dynamic>;
     } catch (e, s) {
       return null;
@@ -397,10 +398,9 @@ class MailUtils {
     @required List<MailAttachment> attachments,
     @required bool showLightEmail,
     List<ViewCalendar> calendars,
-    Map<String, dynamic>  extendedEvent,
+    Map<String, dynamic> extendedEvent,
     bool isStarred,
   }) {
-
     final theme = Theme.of(context);
 
     final subject = message.subject.isNotEmpty
@@ -475,6 +475,12 @@ class MailUtils {
         display: flex;
         flex-direction: row;
         padding: 5px 0px;
+      }
+      .row.fluid {
+          padding-left: 100px;
+      }
+      .row.fluid .label {
+          margin-left: -100px;
       }
       .disabled-text {
         opacity: 0.3;
@@ -571,6 +577,15 @@ class MailUtils {
         text-shadow: 0px 1px 0px rgba(0, 0, 0, 0.3);
       }
       
+      .appointment .label {
+        vertical-align: top;
+        width: 100px;
+      }
+      
+      .row.fluid .value {
+          width: 99%;
+      }
+      
     </style>
     <script>      
         document.addEventListener('DOMContentLoaded', function () {
@@ -638,18 +653,46 @@ class MailUtils {
         <div class='row'><a class='details-description'>Date</a><a class='selectable details-value'>$date</a></div>
           </div>
           ${extendedEvent == null ? "" : """
-        <div class='appointment'> 
-          <div class = 'row'>
+        <div class='appointment'>
+          ${_showButtons(extendedEvent["Type"] as String) ? """
+           <div class = 'row'>
             <button onclick='acceptEvent()'>Accept </button> 
             <button onclick='declineEvent()'>Decline</button> 
             <button onclick='tentativeEvent()'>Tentative</button> 
           </div>
           <div class = 'row'>
             ${_getCalendars(calendars)} 
+          </div> 
+            """ : ''}
+          ${_getCurrentCalendarName(id: extendedEvent["CalendarId"] as String, calendars: calendars) != null ? """ 
+          <div class="row fluid"> 
+            <span class="label">Calendar</span><span class="value">${_getCurrentCalendarName(id: extendedEvent["CalendarId"] as String, calendars: calendars)}</span>  
           </div>
-
-            </div>
-            """}
+          """ : ''}
+          <div class="row fluid"> 
+            <span class="label">When</span><span class="value">${extendedEvent["When"]}</span>  
+          </div>
+          <div class="row fluid"> 
+            <span class="label">Organizer</span><span class="value">${extendedEvent["Organizer"]["Email"]}</span>  
+          </div>
+          <div class="row fluid"> 
+            <span class="label">Attendees</span><span class="value">${_getAttendees(extendedEvent["AttendeeList"] as List)}</span>  
+          </div>
+          <div class="row fluid"> 
+            <span class="label">Title</span><span class="value">${extendedEvent["Summary"]}</span>  
+          </div>
+          ${extendedEvent["Description"] != null && (extendedEvent["Description"] as String).isNotEmpty ? """ 
+          <div class="row fluid"> 
+            <span class="label">Description</span><span class="value">${extendedEvent["Description"]}</span>  
+          </div>
+          """ : ''}
+          ${extendedEvent["Location"] != null && (extendedEvent["Location"] as String).isNotEmpty ? """ 
+          <div class="row fluid"> 
+            <span class="label">Location</span><span class="value">${extendedEvent["Location"]}</span>  
+          </div>
+          """ : ''}
+        </div>
+        """}
           
         <div class='email-head' style='padding-top: 0px;'>
         <div style="display: flex; flex-direction: row;justify-content: space-between; padding-top: 24px;">
@@ -732,6 +775,37 @@ class='selectable'>${attachment.fileName}</span>
       <a class='icon-btn' onclick="downloadAttachment('${attachment.downloadUrl}')">${_getDownloadIcon(iconColor)}</a>
     </div>
     """;
+  }
+
+  static bool _showButtons(String type) {
+    final targetString = "REQUEST";
+    if (type == null || type.isEmpty) return false;
+    if (type == targetString) return true;
+    final components = type.split('-');
+    if (components.contains(targetString)) return true;
+    return false;
+  }
+
+  static String _getAttendees(List attendees) {
+    if (attendees == null || attendees.isEmpty) return '';
+    String result = "";
+    for (final e in attendees) {
+      result += " ${(e["DisplayName"] as String)}" +
+          " &lt;${e["Email"] as String}&gt;" +
+          ",";
+    }
+    result = result.substring(1, result.length - 1);
+    return result;
+  }
+
+  static String _getCurrentCalendarName(
+      {String id, List<ViewCalendar> calendars}) {
+    if (id == null || id.isEmpty) return null;
+    if (calendars == null || calendars.isEmpty) return null;
+    final selectedCalendar =
+        calendars.firstWhereOrNull((element) => element.id == id);
+    if (selectedCalendar == null) return null;
+    return selectedCalendar.name;
   }
 
   static String _getCalendars(List<ViewCalendar> calendars) {

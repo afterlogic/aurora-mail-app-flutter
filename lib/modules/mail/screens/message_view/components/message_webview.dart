@@ -127,13 +127,6 @@ class MessageWebViewState extends BState<MessageWebView> {
     onLoad();
     // On Android, hybrid composition (SurfaceAndroidWebView) is now the default (webview_flutter 3.0.0)
     // if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
-    //                 "Location": "",
-    //                 "Description": "",
-    //                 "Summary": "test",
-    //                 "When": "Fri, Aug 30, 2024",
-    //                 "Organiser"
-    // TODO request - show buttons and select only when field appears in Type
-    // TODO  check by "@Object": "Object\/Aurora\\Modules\\Calendar\\Classes\\Ics", not by Type
     _eventFromExpandedMail = MailUtils.getExtendFromMessageByObjectTypeName(
         ['Object/Aurora\\Modules\\Calendar\\Classes\\Ics'], widget.message);
     _currentUserMail =

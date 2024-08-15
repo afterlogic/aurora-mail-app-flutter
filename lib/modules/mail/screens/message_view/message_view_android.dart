@@ -303,6 +303,12 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
                       context,
                     );
                   }
+                  if(state is SuccessChangedInviteStatus) {
+                    _showSnack(
+                     'Event status changes successfully',
+                      context,
+                    );
+                  }
                   if (state is MessagesViewError) {
                     _showError(
                       state.errorMsg,
