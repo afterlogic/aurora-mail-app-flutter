@@ -25,7 +25,7 @@ class CalendarNotificationBloc
       Emitter<CalendarNotificationState> emit) async {
     emit(state.copyWith(notificationSyncStatus: NotificationStatus.loading));
     try {
-      await _useCase.syncCalendars();
+      await _useCase.syncCalendarsWithActivities();
       final selectedEvent = await _useCase.getActivityByUid(
           calendarId: event.calendarId, activityId: event.activityId);
       emit(state.copyWith(

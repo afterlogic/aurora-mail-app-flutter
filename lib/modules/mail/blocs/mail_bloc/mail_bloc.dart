@@ -5,21 +5,27 @@ import 'package:aurora_logger/aurora_logger.dart';
 import 'package:aurora_mail/background/background_helper.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/models/folder.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/calendar_usecase.dart';
 import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/bloc.dart';
 import 'package:aurora_mail/utils/api_utils.dart';
 import 'package:bloc/bloc.dart';
+import 'package:flutter/cupertino.dart';
 
 import './bloc.dart';
 import 'mail_methods.dart';
 
 class MailBloc extends Bloc<MailEvent, MailState> {
   MailMethods _methods;
+  CalendarUseCase _calendarUseCase;
   User _user;
   Account _account;
   final updateMessageCounter = UpdateMessageCounter();
   static String selectedFolderGuid;
 
-  MailBloc({User user, Account account}) : super(FoldersEmpty()) {
+  MailBloc(
+      {User user, Account account, @required CalendarUseCase calendarUseCase})
+      : _calendarUseCase = calendarUseCase,
+        super(FoldersEmpty()) {
     assert(user != null);
     init(user, account);
     BackgroundHelper.addOnEndAlarmObserver(true, onEndAlarm);
@@ -79,6 +85,7 @@ class MailBloc extends Bloc<MailEvent, MailState> {
     if (state is! FoldersLoaded) yield FoldersLoading();
 
     try {
+      await _calendarUseCase.fetchCalendars();
       final List<Folder> folders = await _methods.getFolders();
 
       if (folders.isNotEmpty) {

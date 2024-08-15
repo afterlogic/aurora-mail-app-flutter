@@ -72,6 +72,44 @@ class CalendarRepositoryImpl implements CalendarRepository {
     logger.log(
         'LOCAL CALENDARS: ${localCalendars.map((e) => e.toString()).toList()}');
     final localCalendarsMap =
+    CalendarMapper.convertListToMapById(localCalendars);
+
+    final List<Calendar> calendarsForDownload = [];
+    try {
+      final calendarsFromServer = await _network.getCalendars(user.localId!);
+      logger.log(
+          'CALENDARS FROM SERVER: ${calendarsFromServer.map((e) => e.toString()).toList()}');
+      final serverCalendarsMap =
+      CalendarMapper.convertListToMapById(calendarsFromServer);
+      for (final serverEntry in serverCalendarsMap.entries) {
+        if (localCalendarsMap.containsKey(serverEntry.key)) continue;
+        calendarsForDownload.add(serverEntry.value.copyWith(syncToken: '1'));
+      }
+      logger.log(
+          'CALENDARS FOR DOWNLOAD: ${calendarsForDownload.map((e) => e.toString()).toList()}');
+      final localCalendarsForDeleting = localCalendarsMap.values
+          .where((e) => !serverCalendarsMap.containsKey(e.id))
+          .toList();
+      logger.log(
+          'CALENDARS FOR DELETING: ${localCalendarsForDeleting.map((e) => e.toString()).toList()}');
+
+      await _db.deleteCalendars(localCalendarsForDeleting);
+
+      for (final calendar in calendarsForDownload) {
+        await _db.createOrUpdateCalendar(calendar);
+      }
+    } catch (e, st) {
+      logger.log('CALENDARS SYNC ERROR: $e');
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> syncCalendarsWithActivities() async {
+    final localCalendars = await _db.getCalendars(user.localId!);
+    logger.log(
+        'LOCAL CALENDARS: ${localCalendars.map((e) => e.toString()).toList()}');
+    final localCalendarsMap =
         CalendarMapper.convertListToMapById(localCalendars);
 
     await _db.clearEvents(localCalendars);

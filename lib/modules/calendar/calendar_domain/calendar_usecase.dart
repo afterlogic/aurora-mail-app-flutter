@@ -24,7 +24,9 @@ abstract class CalendarUseCase {
 
   ValueStream<List<ViewTask>?> get tasksSubscription;
 
-  Future<void> syncCalendars();
+  Future<void> syncCalendarsWithActivities();
+
+  Future<void> fetchCalendars();
 
   Future<void> getTasks();
 

@@ -111,6 +111,7 @@ class MessageWebViewState extends BState<MessageWebView> {
   bool _isStarred;
   ThemeData theme;
   MailBloc _mailBloc;
+  CalendarsBloc _calendarsBloc;
   List<ViewCalendar> _calendars;
   String _currentUserMail;
   Map<String, dynamic> _eventFromExpandedMail;
@@ -118,6 +119,11 @@ class MessageWebViewState extends BState<MessageWebView> {
   @override
   void initState() {
     super.initState();
+    _calendarsBloc = BlocProvider.of<CalendarsBloc>(context);
+    _calendars = _calendarsBloc
+        .state
+        .availableCalendars(_currentUserMail);
+
     onLoad();
     // On Android, hybrid composition (SurfaceAndroidWebView) is now the default (webview_flutter 3.0.0)
     // if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
@@ -128,13 +134,10 @@ class MessageWebViewState extends BState<MessageWebView> {
     //                 "Organiser"
     // TODO request - show buttons and select only when field appears in Type
     // TODO  check by "@Object": "Object\/Aurora\\Modules\\Calendar\\Classes\\Ics", not by Type
-    _eventFromExpandedMail = MailUtils.getExtendFromMessageByType(
-        ['REQUEST', 'REPLY'], widget.message);
+    _eventFromExpandedMail = MailUtils.getExtendFromMessageByObjectTypeName(
+        ['Object/Aurora\\Modules\\Calendar\\Classes\\Ics'], widget.message);
     _currentUserMail =
         BlocProvider.of<AuthBloc>(context).currentUser?.emailFromLogin ?? '';
-    _calendars = BlocProvider.of<CalendarsBloc>(context)
-        .state
-        .availableCalendars(_currentUserMail);
     _isStarred = widget.message.flagsInJson.contains("\\flagged");
     _controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)

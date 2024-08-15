@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:aurora_logger/aurora_logger.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/calendar_repository.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/calendar_usecase.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/activity.dart';
@@ -93,9 +94,20 @@ class CalendarUseCaseImpl implements CalendarUseCase {
   }
 
   @override
-  Future<void> syncCalendars() async {
+  Future<void> fetchCalendars() async {
     try {
       await repository.syncCalendars();
+    } catch (e, st) {
+      logger.log('sync calendars error: ${e}');
+    } finally {
+      await getCalendars();
+    }
+  }
+
+  @override
+  Future<void> syncCalendarsWithActivities() async {
+    try {
+      await repository.syncCalendarsWithActivities();
     } catch (e, st) {
       rethrow;
     } finally {
@@ -255,7 +267,7 @@ class CalendarUseCaseImpl implements CalendarUseCase {
         endDate: _location == null || endDate == null
             ? () => endDate
             : () => convertToTZDateTime(endDate, _location!)));
-    await syncCalendars();
+    await syncCalendarsWithActivities();
     if (_selectedEndEventsInterval != null &&
         _selectedStartEventsInterval != null &&
         data is EventCreationData &&
@@ -288,7 +300,7 @@ class CalendarUseCaseImpl implements CalendarUseCase {
         endTS: _location == null || endDate == null
             ? () => endDate
             : () => convertToTZDateTime(endDate, _location!)));
-    syncCalendars().then((_) {
+    syncCalendarsWithActivities().then((_) {
       if (activity is Event) {
         _getLocalEvents();
       }
@@ -315,7 +327,7 @@ class CalendarUseCaseImpl implements CalendarUseCase {
   @override
   Future<void> deleteActivity(Activity activity) async {
     await repository.deleteActivity(activity);
-    await syncCalendars();
+    await syncCalendarsWithActivities();
     await _getLocalEvents();
   }
 

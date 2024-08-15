@@ -92,7 +92,7 @@ class _MessageItemState extends BState<MessageItem> {
   Widget build(BuildContext context) {
     final m = widget.message;
     final eventInfoFromMessage =
-        MailUtils.getExtendFromMessageByType(['REQUEST', 'REPLY'], m);
+        MailUtils.getExtendFromMessageByObjectTypeName(['Object/Aurora\\Modules\\Calendar\\Classes\\Ics'], m);
     final hasUnreadChildren = widget.children
         .where((i) => !i.flagsInJson.contains("\\seen"))
         .isNotEmpty;

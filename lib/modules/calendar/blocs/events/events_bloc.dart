@@ -110,7 +110,7 @@ class EventsBloc extends Bloc<EventBlocEvent, EventsState> {
       emit(state.copyWith(status: EventsStatus.loading));
     }
     await _asyncErrorHandler(() async {
-      await _useCase.syncCalendars();
+      await _useCase.syncCalendarsWithActivities();
     }, emit);
   }
 

@@ -21,12 +21,12 @@ import 'package:html/parser.dart';
 class MailUtils {
   MailUtils._();
 
-  static Map<String, dynamic> getExtendFromMessageByType(
+  static Map<String, dynamic> getExtendFromMessageByObjectTypeName(
       List<String> types, Message m) {
     if (m.extendInJson == null) return null;
     try {
       final decodedList = jsonDecode(m.extendInJson) as List;
-      final extended = decodedList.firstWhereOrNull((e) => types.contains(e["Type"]));
+      final extended = decodedList.firstWhereOrNull((e) => types.contains(e["@Object"]));
       return extended as Map<String, dynamic>;
     } catch (e, s) {
       return null;

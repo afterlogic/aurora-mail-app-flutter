@@ -16,6 +16,8 @@ abstract class CalendarRepository {
         user: user,
       );
 
+  Future<void> syncCalendarsWithActivities();
+
   Future<void> syncCalendars();
 
   /// [end] - not included

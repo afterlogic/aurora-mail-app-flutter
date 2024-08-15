@@ -230,12 +230,6 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
                           providers: [
                             BlocProvider.value(value: _authBloc),
                             BlocProvider.value(value: _settingsBloc),
-                            BlocProvider(
-                              create: (_) => MailBloc(
-                                user: _authBloc.currentUser,
-                                account: _authBloc.currentAccount,
-                              ),
-                            ),
                             if (authState.user != null)
                               BlocProvider(
                                 create: (_) =>
@@ -243,6 +237,7 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
                               ),
                             if (authState.user != null)
                               BlocProvider(
+                                lazy: false,
                                 create: (_) =>
                                     CalendarsBloc(useCase: calendarUseCase),
                               ),
@@ -256,6 +251,13 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
                                 create: (_) => CalendarNotificationBloc(
                                     useCase: calendarUseCase),
                               ),
+                            BlocProvider(
+                              create: (_) => MailBloc(
+                                calendarUseCase: calendarUseCase,
+                                user: _authBloc.currentUser,
+                                account: _authBloc.currentAccount,
+                              ),
+                            ),
                             BlocProvider(
                               create: (_) => MessagesListBloc(
                                 user: _authBloc.currentUser,
