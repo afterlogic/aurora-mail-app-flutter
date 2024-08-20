@@ -76,16 +76,10 @@ class _DayViewState extends State<DayView> {
                   child: Center(
                       child: Text(
                     'All day',
-                    style: TextStyle(color: Color.fromRGBO(182, 181, 181, 1)),
-                  )),
+                    ),
+                  ),
                   constraints: BoxConstraints(minHeight: 60, maxHeight: 100),
                   height: 60,
-                  color: Color.fromRGBO(
-                    211,
-                    211,
-                    211,
-                    1,
-                  ),
                 ),
                 backgroundColor: Theme.of(context).brightness == Brightness.dark
                     ? Theme.of(context).scaffoldBackgroundColor
