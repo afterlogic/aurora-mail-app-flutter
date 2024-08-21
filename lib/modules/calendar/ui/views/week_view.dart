@@ -82,6 +82,19 @@ class _WeekViewState extends State<WeekView> {
     _controller.removeAll(oldEvents);
     for (final date in events.keys) {
       final currentList = events[date]!;
+      if(currentList.isEmpty){
+        _controller.add(
+          CV.CalendarEventData<WeekViewVisible>(
+            event: EmptyViewEvent(),
+            title: '',
+            date: date.withoutTime,
+            endDate: date.withoutTime,
+            startTime: null,
+            endTime: null,
+            color: Colors.transparent,
+          ),
+        );
+      }
       for (final e in currentList) {
         final isAllDay = e?.allDay != false;
         if (!isAllDay) {
