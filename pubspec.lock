@@ -182,10 +182,11 @@ packages:
   calendar_view:
     dependency: "direct main"
     description:
-      name: calendar_view
-      sha256: "0268c53439f6348f11a35e8a87493843473ab7c28190fe9f38c9ee05a9621564"
-      url: "https://pub.dev"
-    source: hosted
+      path: "."
+      ref: all_day_section
+      resolved-ref: "1fbf866edba1c66b7dea39f6f82bbdb5c228b285"
+      url: "https://github.com/HtonicSava/flutter_calendar_view.git"
+    source: git
     version: "1.2.0"
   characters:
     dependency: transitive

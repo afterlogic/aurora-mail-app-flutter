@@ -212,6 +212,7 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
                   bloc: _settingsBloc,
                   builder: (_, settingsState) {
                     if (settingsState is SettingsLoaded) {
+                      print(settingsState.settings?.availableModules.runtimeType);
                       final theme = _getTheme(settingsState.darkThemeEnabled);
                       final calendarRepository = authState.user != null
                           ? CalendarRepository(
@@ -221,7 +222,7 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
                       final calendarUseCase = authState.user != null
                           ? CalendarUseCase(
                               repository: calendarRepository,
-                              location: settingsState.location)
+                              location: settingsState.settings?.location)
                           : null;
 
                       return RepositoryProvider.value(
@@ -230,23 +231,23 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
                           providers: [
                             BlocProvider.value(value: _authBloc),
                             BlocProvider.value(value: _settingsBloc),
-                            if (authState.user != null)
+                            if (calendarUseCase != null)
                               BlocProvider(
                                 create: (_) =>
                                     EventsBloc(useCase: calendarUseCase),
                               ),
-                            if (authState.user != null)
+                            if (calendarUseCase != null)
                               BlocProvider(
                                 lazy: false,
                                 create: (_) =>
                                     CalendarsBloc(useCase: calendarUseCase),
                               ),
-                            if (authState.user != null)
+                            if (calendarUseCase != null)
                               BlocProvider(
                                 create: (_) =>
                                     TasksBloc(useCase: calendarUseCase),
                               ),
-                            if (authState.user != null)
+                            if (calendarUseCase != null)
                               BlocProvider(
                                 create: (_) => CalendarNotificationBloc(
                                     useCase: calendarUseCase),

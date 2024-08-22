@@ -5,6 +5,7 @@ import 'package:aurora_logger/aurora_logger.dart';
 import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/inject/app_inject.dart';
 import 'package:aurora_mail/main.dart' as main;
+import 'package:aurora_mail/models/app_data.dart';
 import 'package:aurora_mail/modules/settings/models/language.dart';
 import 'package:aurora_mail/modules/settings/models/sync_freq.dart';
 import 'package:aurora_mail/modules/settings/models/sync_period.dart';
@@ -49,12 +50,12 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
 
     final settingsNetwork = SettingsNetwork(settingsModule: apiModule);
 
-    tz.Location? location;
+    AppData? settings;
 
     try {
-      location = await settingsNetwork.getTimezoneLocation();
+      settings = await settingsNetwork.getSettings();
     } catch (e, s) {
-      logger.log("getting timezone location error: $e");
+      logger.log("getting appData error: $e");
     } finally {
       await AlarmService.setAlarm(
         main.onAlarm,
@@ -73,7 +74,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
             syncPeriod: Value(event.user.syncPeriod ?? "Period.allTime"),
             darkThemeEnabled: Value(appSettings.isDarkTheme),
             is24: Value(appSettings.is24),
-            location: () => location,
+            settings: () => settings,
             language: Value(
               Language.fromJson(language),
             ));
@@ -84,7 +85,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
           syncPeriod: event.user.syncPeriod,
           darkThemeEnabled: appSettings.isDarkTheme,
           is24: appSettings.is24,
-          location: location,
+          settings: settings,
           language: Language.fromJson(language),
         );
       }

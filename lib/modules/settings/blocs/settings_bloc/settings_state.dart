@@ -1,5 +1,6 @@
 //@dart=2.9
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/models/app_data.dart';
 import 'package:aurora_mail/modules/settings/models/language.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:equatable/equatable.dart';
@@ -23,7 +24,7 @@ class SettingsLoaded extends SettingsState {
   final bool is24;
   final Language language;
   final ConnectivityResult connection;
-  final tz.Location location;
+  final AppData settings;
 
   SettingsLoaded({
     this.users,
@@ -33,7 +34,7 @@ class SettingsLoaded extends SettingsState {
     this.is24,
     this.language,
     this.connection = ConnectivityResult.none,
-    this.location,
+    this.settings,
   });
 
   SettingsLoaded copyWith({
@@ -44,21 +45,20 @@ class SettingsLoaded extends SettingsState {
     Value<bool> is24,
     Value<Language> language,
     Value<ConnectivityResult> connection,
-    tz.Location Function() location,
+    AppData Function() settings,
   }) {
     return new SettingsLoaded(
-      users: users != null ? users.value : this.users,
-      syncFrequency:
-          syncFrequency != null ? syncFrequency.value : this.syncFrequency,
-      syncPeriod: syncPeriod != null ? syncPeriod.value : this.syncPeriod,
-      darkThemeEnabled: darkThemeEnabled != null
-          ? darkThemeEnabled.value
-          : this.darkThemeEnabled,
-      is24: is24 != null ? is24.value : this.is24,
-      language: language != null ? language.value : this.language,
-      connection: connection != null ? connection.value : this.connection,
-      location: location != null ? location() : this.location
-    );
+        users: users != null ? users.value : this.users,
+        syncFrequency:
+            syncFrequency != null ? syncFrequency.value : this.syncFrequency,
+        syncPeriod: syncPeriod != null ? syncPeriod.value : this.syncPeriod,
+        darkThemeEnabled: darkThemeEnabled != null
+            ? darkThemeEnabled.value
+            : this.darkThemeEnabled,
+        is24: is24 != null ? is24.value : this.is24,
+        language: language != null ? language.value : this.language,
+        connection: connection != null ? connection.value : this.connection,
+        settings: settings != null ? settings() : this.settings);
   }
 
   @override
@@ -69,5 +69,6 @@ class SettingsLoaded extends SettingsState {
         is24,
         language,
         connection,
+        settings
       ];
 }
