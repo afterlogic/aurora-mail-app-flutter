@@ -4,7 +4,11 @@ import 'package:aurora_mail/modules/calendar/ui/dialogs/base_calendar_dialog.dar
 import 'package:aurora_mail/modules/calendar/ui/widgets/color_selection_field.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/text_input.dart';
 import 'package:aurora_mail/modules/calendar/utils/calendar_colors.dart';
+import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
+import 'package:aurora_mail/modules/settings/blocs/settings_bloc/settings_bloc.dart';
+import 'package:aurora_mail/utils/extensions/colors_extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CalendarCreationDialog extends StatefulWidget {
   const CalendarCreationDialog();
@@ -35,12 +39,23 @@ class _CalendarCreationDialogState extends State<CalendarCreationDialog> {
   }
 
   bool _subscribeToIcalFeed = false;
-  Color _selectedColor = calendarColors[0];
-  final List<Color> _colors = calendarColors;
+  late Color _selectedColor;
+  late final List<Color> _colors;
 
   @override
   void initState() {
     super.initState();
+    final settingsBloc = BlocProvider.of<SettingsBloc>(context);
+    final calendarSettings = settingsBloc.state is SettingsLoaded
+        ? (settingsBloc.state as SettingsLoaded).settings?.calendarSettings
+        : null;
+    final serverColors = calendarSettings != null
+        ? (calendarSettings["CalendarColors"] as List).cast<String>()
+        : null;
+    _colors = serverColors != null && serverColors.isNotEmpty
+        ? serverColors.map((e) => HexColor.fromHex(e)).toList()
+        : calendarColors;
+    _selectedColor = _colors[0];
     _descriptionController = TextEditingController();
     _nameController = TextEditingController();
     _iCalController = TextEditingController();
@@ -90,7 +105,7 @@ class _CalendarCreationDialogState extends State<CalendarCreationDialog> {
             ),
             SizedBox(height: 16),
             GestureDetector(
-              onTap: (){
+              onTap: () {
                 setState(() {
                   _subscribeToIcalFeed = !_subscribeToIcalFeed;
                 });
