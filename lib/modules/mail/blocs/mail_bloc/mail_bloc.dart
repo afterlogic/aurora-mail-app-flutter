@@ -85,7 +85,7 @@ class MailBloc extends Bloc<MailEvent, MailState> {
     if (state is! FoldersLoaded) yield FoldersLoading();
 
     try {
-      await _calendarUseCase.fetchCalendars();
+      await _calendarUseCase?.fetchCalendars();
       final List<Folder> folders = await _methods.getFolders();
 
       if (folders.isNotEmpty) {

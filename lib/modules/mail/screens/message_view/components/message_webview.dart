@@ -120,9 +120,9 @@ class MessageWebViewState extends BState<MessageWebView> {
   void initState() {
     super.initState();
     _calendarsBloc = BlocProvider.of<CalendarsBloc>(context);
-    _calendars = _calendarsBloc
-        .state
-        .availableCalendars(_currentUserMail);
+    _calendars = _calendarsBloc != null
+        ? _calendarsBloc.state.availableCalendars(_currentUserMail)
+        : null;
 
     onLoad();
     // On Android, hybrid composition (SurfaceAndroidWebView) is now the default (webview_flutter 3.0.0)

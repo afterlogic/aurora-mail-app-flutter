@@ -25,7 +25,7 @@ class AppData {
   factory AppData.fromMap(Map<String, dynamic> map) {
     return AppData(
       location: tz.getLocation(map['Timezone'] as String),
-      availableModules: (map['AvailableClientModules'] as List).cast<String>(),
+      availableModules: (map['AvailableBackendModules'] as List).cast<String>(),
     );
   }
 }

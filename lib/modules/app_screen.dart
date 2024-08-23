@@ -6,6 +6,7 @@ import 'package:aurora_mail/background/background_helper.dart';
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/generated/l10n.dart';
+import 'package:aurora_mail/models/server_modules.dart';
 import 'package:aurora_mail/modules/calendar/blocs/calendars/calendars_bloc.dart';
 import 'package:aurora_mail/modules/calendar/blocs/events/events_bloc.dart';
 import 'package:aurora_mail/modules/calendar/blocs/notification/calendar_notification_bloc.dart';
@@ -212,14 +213,17 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
                   bloc: _settingsBloc,
                   builder: (_, settingsState) {
                     if (settingsState is SettingsLoaded) {
-                      print(settingsState.settings?.availableModules.runtimeType);
                       final theme = _getTheme(settingsState.darkThemeEnabled);
-                      final calendarRepository = authState.user != null
+                      final calendarRepository = authState.user != null &&
+                              BuildProperty.calendarModule &&
+                              (settingsState.settings?.availableModules
+                                      ?.contains(ServerModules.calendar) ??
+                                  false)
                           ? CalendarRepository(
                               user: _authBloc.currentUser,
                               appDB: DBInstances.appDB)
                           : null;
-                      final calendarUseCase = authState.user != null
+                      final calendarUseCase = calendarRepository != null
                           ? CalendarUseCase(
                               repository: calendarRepository,
                               location: settingsState.settings?.location)
