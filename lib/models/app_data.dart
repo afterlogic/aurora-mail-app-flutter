@@ -3,8 +3,10 @@ import 'package:timezone/timezone.dart' as tz;
 class AppData {
   final List<String> availableModules;
   final tz.Location? location;
+  final Map<String, dynamic>? calendarSettings;
 
-  const AppData({required this.availableModules, this.location});
+  const AppData(
+      {required this.availableModules, this.calendarSettings, this.location});
 
   AppData copyWith({
     List<String>? availableModules,
@@ -17,15 +19,20 @@ class AppData {
 
   Map<String, dynamic> toMap() {
     return {
-      'AvailableClientModules': this.availableModules,
-      'Timezone': this.location.toString()
+      'Core': {
+        'AvailableClientModules': this.availableModules,
+        'Timezone': this.location.toString()
+      },
+      'Calendar': calendarSettings
     };
   }
 
   factory AppData.fromMap(Map<String, dynamic> map) {
     return AppData(
-      location: tz.getLocation(map['Timezone'] as String),
-      availableModules: (map['AvailableBackendModules'] as List).cast<String>(),
+      calendarSettings: map['Calendar'] as Map<String, dynamic>,
+      location: tz.getLocation(map['Core']['Timezone'] as String),
+      availableModules:
+          (map['Core']['AvailableBackendModules'] as List).cast<String>(),
     );
   }
 }

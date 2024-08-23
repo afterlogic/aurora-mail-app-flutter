@@ -1,6 +1,7 @@
 //@dart=2.9
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/users/users_dao.dart';
+import 'package:aurora_mail/models/app_data.dart';
 import 'package:aurora_mail/modules/auth/repository/auth_local_storage.dart';
 import 'package:aurora_mail/modules/settings/models/language.dart';
 import 'package:aurora_mail/modules/settings/models/sync_freq.dart';
@@ -52,6 +53,14 @@ class SettingsMethods {
 
   Future<void> setDarkTheme(bool darkThemeEnabled) {
     return _local.setIsDarkTheme(darkThemeEnabled);
+  }
+
+  Future<bool> setAppData(AppData data) {
+    return _local.setAppData(data);
+  }
+
+  Future<AppData> getAppData() {
+    return _local.getAppData();
   }
 
   Future<void> setTimeFormat(bool is24) {

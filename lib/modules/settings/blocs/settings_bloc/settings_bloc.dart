@@ -54,6 +54,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
 
     try {
       settings = await settingsNetwork.getSettings();
+      _methods.setAppData(settings);
     } catch (e, s) {
       logger.log("getting appData error: $e");
     } finally {
@@ -170,7 +171,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
 //    return _methods.clearNotification();
   }
 
-  Future<String> getLanguage() {
+  Future<String?> getLanguage() {
     return _methods.getLanguage();
   }
 }

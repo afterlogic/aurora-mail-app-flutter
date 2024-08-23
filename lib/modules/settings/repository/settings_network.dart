@@ -13,7 +13,7 @@ class SettingsNetwork{
     );
 
     final response = await settingsModule.post(body);
-    final result = AppData.fromMap(response["Core"] as Map<String, dynamic>);
+    final result = AppData.fromMap(response as Map<String, dynamic>);
     return result;
   }
 }
