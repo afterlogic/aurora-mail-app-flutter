@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/calendar.dart';
 import 'package:equatable/equatable.dart';
 
-class ViewCalendar extends Calendar implements Equatable {
+class ViewCalendar extends Calendar implements Equatable, Comparable<ViewCalendar> {
   final bool selected;
 
   ViewCalendar(
@@ -118,5 +118,10 @@ class ViewCalendar extends Calendar implements Equatable {
         source != comparable.source ||
         shares != comparable.shares ||
         color != comparable.color;
+  }
+
+  @override
+  int compareTo(ViewCalendar other) {
+    return name.toLowerCase().compareTo(other.name.toLowerCase());
   }
 }

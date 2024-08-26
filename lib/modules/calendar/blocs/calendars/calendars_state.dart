@@ -11,18 +11,14 @@ class CalendarsState extends Equatable {
   List<Object?> get props =>
       [status, calendars, selectedTabIndex, monthViewMode, error];
 
-  List<ViewCalendar> availableCalendars(String currentUserMail) => calendars == null
-      ? <ViewCalendar>[]
-      : calendars!
-          .where((e) =>
-              (!e.shared &&
-              !e.sharedToAll )||
-              (e.shared && e.access == 1 && !e.sharedToAll) ||
-              (e.shared && e.sharedToAll && e.sharedToAllAccess == 1 ) ||
-              e.owner == currentUserMail
-  )
+  List<ViewCalendar> availableCalendars(String currentUserMail) {
+    if(calendars == null) return <ViewCalendar>[];
+    final ownCalendars = calendars!.where((e) => (!e.shared && !e.sharedToAll) || (e.owner == currentUserMail)).toList()..sort();
+    final sharedCalendars = calendars!.where((e) => (e.shared && e.access == 1 && !e.sharedToAll)).toList()..sort();
+    final sharedToAllCalendars = calendars!.where((e) => (e.shared && e.sharedToAll && e.sharedToAllAccess == 1)).toList()..sort();
 
-          .toList();
+    return [...ownCalendars, ...sharedCalendars, ...sharedToAllCalendars];
+  }
 
   const CalendarsState({
     this.status = CalendarsStatus.idle,
