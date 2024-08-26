@@ -397,7 +397,7 @@ class MailUtils {
     @required String body,
     @required List<MailAttachment> attachments,
     @required bool showLightEmail,
-    List<ViewCalendar> calendars,
+    ViewCalendar initCalendar,
     Map<String, dynamic> extendedEvent,
     bool isStarred,
   }) {
@@ -586,6 +586,32 @@ class MailUtils {
           width: 99%;
       }
       
+      #custom-dropdown {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          width: 300px;
+          padding: 8px;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          font-family: Arial, sans-serif;
+          font-size: 14px;
+          background-color: #f8f8f8;
+          cursor: pointer;
+      }
+
+      #selected-text {
+          margin-right: 10px;
+      }
+
+      #arrow {
+          width: 0;
+          height: 0;
+          border-left: 5px solid transparent;
+          border-right: 5px solid transparent;
+          border-top: 5px solid #000;
+      }
+      
     </style>
     <script>      
         document.addEventListener('DOMContentLoaded', function () {
@@ -615,6 +641,14 @@ class MailUtils {
         });
         
        const getSelectedCalendarId = () => document.querySelector('#calendars_select').value;
+       
+       function setSelectedCalendar(data) {
+         document.getElementById('selected-text').innerText = data;
+       }
+       
+       function handleDropdownClick() {
+         return window.${ExpandedEventWebViewActions.CHANNEL}.postMessage('${ExpandedEventWebViewActions.DROPDOWN_CLICKED}');
+       }
       
        function acceptEvent(){
         return window.${ExpandedEventWebViewActions.CHANNEL}.postMessage('${ExpandedEventWebViewActions.ACCEPT}' + " " + getSelectedCalendarId());
@@ -661,14 +695,9 @@ class MailUtils {
             <button onclick='tentativeEvent()'>Tentative</button> 
           </div>
           <div class = 'row'>
-            ${_getCalendars(calendars)} 
+            ${_getCalendarsSelectButton(initCalendar)} 
           </div> 
             """ : ''}
-          ${_getCurrentCalendarName(id: extendedEvent["CalendarId"] as String, calendars: calendars) != null ? """ 
-          <div class="row fluid"> 
-            <span class="label">Calendar</span><span class="value">${_getCurrentCalendarName(id: extendedEvent["CalendarId"] as String, calendars: calendars)}</span>  
-          </div>
-          """ : ''}
           <div class="row fluid"> 
             <span class="label">When</span><span class="value">${extendedEvent["When"]}</span>  
           </div>
@@ -808,17 +837,14 @@ class='selectable'>${attachment.fileName}</span>
     return selectedCalendar.name;
   }
 
-  static String _getCalendars(List<ViewCalendar> calendars) {
-    String result = "";
+  static String _getCalendarsSelectButton(ViewCalendar calendar) {
 
-    if (calendars == null || calendars.isEmpty) return result;
-    for (final calendar in calendars) {
-      result += """<option value='${calendar.id}'>${calendar.name}</option>""";
-    }
+    if (calendar == null ) return "";
     return """ 
-        <select id="calendars_select">
-          ${result}
-        </select>
+        <div id="custom-dropdown" onclick="handleDropdownClick()">
+            <span id="selected-text">${calendar.name}</span>
+            <div id="arrow"></div>
+        </div>
     """;
   }
 

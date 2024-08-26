@@ -8,6 +8,7 @@ import 'package:aurora_mail/database/mail/mail_table.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/calendar/blocs/calendars/calendars_bloc.dart';
+import 'package:aurora_mail/modules/calendar/ui/dialogs/calendar_select_dialog.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/calendar.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/contacts_bloc.dart';
@@ -64,6 +65,7 @@ class _Attendee {
 // }
 
 class ExpandedEventWebViewActions {
+  static const DROPDOWN_CLICKED = "ExpandedEventWebViewActions.DROPDOWN_CLICKED";
   static const ACCEPT = "ExpandedEventWebViewActions.ACCEPT";
   static const DECLINE = "ExpandedEventWebViewActions.DECLINE";
   static const TENTATIVE = "ExpandedEventWebViewActions.TENTATIVE";
@@ -113,6 +115,7 @@ class MessageWebViewState extends BState<MessageWebView> {
   MailBloc _mailBloc;
   CalendarsBloc _calendarsBloc;
   List<ViewCalendar> _calendars;
+  ViewCalendar _selectedCalendar;
   String _currentUserMail;
   Map<String, dynamic> _eventFromExpandedMail;
 
@@ -123,7 +126,7 @@ class MessageWebViewState extends BState<MessageWebView> {
     _calendars = _calendarsBloc != null
         ? _calendarsBloc.state.availableCalendars(_currentUserMail)
         : null;
-
+    _selectedCalendar = (_calendars?.isEmpty ?? true) ? null : _calendars[0];
     onLoad();
     // On Android, hybrid composition (SurfaceAndroidWebView) is now the default (webview_flutter 3.0.0)
     // if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
@@ -150,25 +153,24 @@ class MessageWebViewState extends BState<MessageWebView> {
         onMessageReceived: (message) {
       if (message.message.startsWith(ExpandedEventWebViewActions.ACCEPT)) {
         print(message.message);
-        final calendarId = message.message.split(' ')[1];
         BlocProvider.of<MessageViewBloc>(context).add(ChangeEventInviteStatus(
             status: 'ACCEPT',
-            calendarId: calendarId,
+            calendarId: _selectedCalendar.id,
             fileName: _eventFromExpandedMail['File'] as String));
       } else if (message.message
           .startsWith(ExpandedEventWebViewActions.DECLINE)) {
-        final calendarId = message.message.split(' ')[1];
         BlocProvider.of<MessageViewBloc>(context).add(ChangeEventInviteStatus(
             status: 'DECLINE',
-            calendarId: calendarId,
+            calendarId: _selectedCalendar.id,
             fileName: _eventFromExpandedMail['File'] as String));
       } else if (message.message
           .startsWith(ExpandedEventWebViewActions.TENTATIVE)) {
-        final calendarId = message.message.split(' ')[1];
         BlocProvider.of<MessageViewBloc>(context).add(ChangeEventInviteStatus(
             status: 'TENTATIVE',
-            calendarId: calendarId,
+            calendarId: _selectedCalendar.id,
             fileName: _eventFromExpandedMail['File'] as String));
+      } else if (message.message.startsWith(ExpandedEventWebViewActions.DROPDOWN_CLICKED)){
+        _invokeSelectCalendarDialog();
       }
     });
     _controller.addJavaScriptChannel("WEB_VIEW_JS_CHANNEL",
@@ -201,6 +203,18 @@ class MessageWebViewState extends BState<MessageWebView> {
       _getHtmlWithImages();
       setState(() {});
     }
+  }
+
+  void _invokeSelectCalendarDialog(){
+    CalendarSelectDialog.show(context,
+        initialValue: _selectedCalendar,
+        options: _calendars)
+        .then((value) {
+      if (value != null) {
+        _selectedCalendar = value;
+        _controller.runJavaScript("setSelectedCalendar('${value.name}')");
+      };
+    });
   }
 
   void _getHtmlWithImages() async {
@@ -297,7 +311,7 @@ class MessageWebViewState extends BState<MessageWebView> {
       date: date,
       body: html,
       extendedEvent: _eventFromExpandedMail,
-      calendars: _calendars,
+      initCalendar: _selectedCalendar,
       attachments: widget.attachments.toList(),
       showLightEmail: false,
       isStarred: _isStarred,

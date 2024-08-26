@@ -305,7 +305,7 @@ class _MessageViewAndroidState extends BState<MessageViewAndroid>
                   }
                   if(state is SuccessChangedInviteStatus) {
                     _showSnack(
-                     'Event status changes successfully',
+                     'Invitation status was updated successfully',
                       context,
                     );
                   }
