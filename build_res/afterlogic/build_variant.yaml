@@ -21,6 +21,6 @@ cryptoEnable: true
 calendarModule: true
 multiAccountEnable: true
 multiUserEnable: false
-pushNotification: false
+pushNotification: true
 selfDestructingEmail: false
 supportAllowAccess: true
