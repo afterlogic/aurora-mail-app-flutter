@@ -475,12 +475,16 @@ class MailUtils {
         display: flex;
         flex-direction: row;
         padding: 5px 0px;
+        align-items: center;
       }
       .row.fluid {
           padding-left: 100px;
       }
       .row.fluid .label {
           margin-left: -100px;
+      }
+      .row.fluid .value {
+          width: 99%;
       }
       .disabled-text {
         opacity: 0.3;
@@ -560,11 +564,10 @@ class MailUtils {
         user-select: text;
       }
       .appointment {
-        background: #dff6eb;
-        border-bottom: 1px solid #b7ebd2;
+        background: ${(theme.brightness == Brightness.dark ? '#05697a' : '#dff6eb')};
+        border-bottom: 1px solid ${(theme.brightness == Brightness.dark ? '#084853' : '#b7ebd2')};
         padding: 15px;
       }
-      
       .appointment button {
         margin-right: 5px;
         border-radius: 4px;
@@ -574,19 +577,19 @@ class MailUtils {
         background: #43d0bf;
         border: 1px solid #2db3a3;
         color: #ffffff;
+        font-size: 16px;
         text-shadow: 0px 1px 0px rgba(0, 0, 0, 0.3);
       }
-      
       .appointment .label {
-        vertical-align: top;
+        vertical-align: bottom;
+        display: inline-block;
         width: 100px;
+        color: ${(theme.brightness == Brightness.dark ? '#bbb' : '#888')};
       }
-      
-      .row.fluid .value {
-          width: 99%;
+      .appointment .value {
+        color: ${(theme.brightness == Brightness.dark ? Colors.white : Colors.black).toHex()};
       }
-      
-      #custom-dropdown {
+      .appointment .custom-dropdown {
           display: flex;
           align-items: center;
           justify-content: space-between;
@@ -600,19 +603,17 @@ class MailUtils {
           background-color: #f8f8f8;
           cursor: pointer;
       }
-
-      #selected-text {
+      .appointment .custom-dropdown .dropdown-label {
           margin-right: 10px;
+          color: #000;
       }
-
-      #arrow {
+      .appointment .custom-dropdown .dropdown-arrow {
           width: 0;
           height: 0;
           border-left: 5px solid transparent;
           border-right: 5px solid transparent;
           border-top: 5px solid #000;
       }
-      
     </style>
     <script>      
         document.addEventListener('DOMContentLoaded', function () {
@@ -838,9 +839,9 @@ class MailUtils {
     return """ 
       <span class="label">Calendar</span>
       <span class="value">
-        <div id="custom-dropdown" onclick="handleDropdownClick()">
-          <span id="selected-text">${calendar.name}</span>
-          <div id="arrow"></div>
+        <div class="custom-dropdown" onclick="handleDropdownClick()">
+          <span class="dropdown-label" id="custom-dropdown-value">${calendar.name}</span>
+          <div class="dropdown-arrow"></div>
         </div>
       </span>  
     """;
