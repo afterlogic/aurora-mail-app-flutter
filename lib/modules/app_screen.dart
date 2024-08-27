@@ -167,7 +167,7 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
     }
   }
 
-  ThemeData _getTheme(bool isDarkTheme) {
+  ThemeData _getTheme(bool isDarkTheme) {  
     if (isDarkTheme == false)
       return AppTheme.light;
     else if (isDarkTheme == true)

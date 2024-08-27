@@ -590,7 +590,8 @@ class MailUtils {
           display: flex;
           align-items: center;
           justify-content: space-between;
-          width: 300px;
+          width: auto;
+          max-width: 200px;
           padding: 8px;
           border: 1px solid #ccc;
           border-radius: 4px;
@@ -651,15 +652,15 @@ class MailUtils {
        }
       
        function acceptEvent(){
-        return window.${ExpandedEventWebViewActions.CHANNEL}.postMessage('${ExpandedEventWebViewActions.ACCEPT}' + " " + getSelectedCalendarId());
+        return window.${ExpandedEventWebViewActions.CHANNEL}.postMessage('${ExpandedEventWebViewActions.ACCEPT}');
        }
        
        function declineEvent(){
-        return window.${ExpandedEventWebViewActions.CHANNEL}.postMessage('${ExpandedEventWebViewActions.DECLINE}' + " " + getSelectedCalendarId());
+        return window.${ExpandedEventWebViewActions.CHANNEL}.postMessage('${ExpandedEventWebViewActions.DECLINE}');
        }
        
        function tentativeEvent(){
-        return window.${ExpandedEventWebViewActions.CHANNEL}.postMessage('${ExpandedEventWebViewActions.TENTATIVE}' + " " + getSelectedCalendarId());
+        return window.${ExpandedEventWebViewActions.CHANNEL}.postMessage('${ExpandedEventWebViewActions.TENTATIVE}');
        }
         
        function downloadAttachment(str){
@@ -694,7 +695,7 @@ class MailUtils {
             <button onclick='declineEvent()'>Decline</button> 
             <button onclick='tentativeEvent()'>Tentative</button> 
           </div>
-          <div class = 'row'>
+          <div class = 'row fluid'>
             ${_getCalendarsSelectButton(initCalendar)} 
           </div> 
             """ : ''}
@@ -838,13 +839,15 @@ class='selectable'>${attachment.fileName}</span>
   }
 
   static String _getCalendarsSelectButton(ViewCalendar calendar) {
-
-    if (calendar == null ) return "";
+    if (calendar == null) return "";
     return """ 
+      <span class="label">Calendar</span>
+      <span class="value">
         <div id="custom-dropdown" onclick="handleDropdownClick()">
-            <span id="selected-text">${calendar.name}</span>
-            <div id="arrow"></div>
+          <span id="selected-text">${calendar.name}</span>
+          <div id="arrow"></div>
         </div>
+      </span>  
     """;
   }
 
