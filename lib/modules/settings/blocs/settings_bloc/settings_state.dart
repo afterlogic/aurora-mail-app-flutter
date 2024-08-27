@@ -7,6 +7,15 @@ import 'package:equatable/equatable.dart';
 import 'package:drift/drift.dart';
 import 'package:timezone/timezone.dart' as tz;
 
+enum InitialSettingsLoadingStatus {
+  loading,
+  loaded,
+}
+
+extension InitialSettingsLoadingStatusX on InitialSettingsLoadingStatus {
+  bool get isLoaded => this == InitialSettingsLoadingStatus.loaded;
+}
+
 abstract class SettingsState extends Equatable {
   const SettingsState();
 
@@ -17,6 +26,7 @@ abstract class SettingsState extends Equatable {
 class SettingsEmpty extends SettingsState {}
 
 class SettingsLoaded extends SettingsState {
+  final InitialSettingsLoadingStatus initialSettingsLoadingStatus;
   final List<User> users;
   final int syncFrequency;
   final String syncPeriod;
@@ -27,6 +37,7 @@ class SettingsLoaded extends SettingsState {
   final AppData settings;
 
   SettingsLoaded({
+    this.initialSettingsLoadingStatus = InitialSettingsLoadingStatus.loading,
     this.users,
     this.syncFrequency,
     this.syncPeriod,
@@ -38,6 +49,7 @@ class SettingsLoaded extends SettingsState {
   });
 
   SettingsLoaded copyWith({
+    InitialSettingsLoadingStatus initialSettingsLoadingStatus,
     Value<List<User>> users,
     Value<int> syncFrequency,
     Value<String> syncPeriod,
@@ -48,6 +60,8 @@ class SettingsLoaded extends SettingsState {
     AppData Function() settings,
   }) {
     return new SettingsLoaded(
+        initialSettingsLoadingStatus:
+            initialSettingsLoadingStatus ?? this.initialSettingsLoadingStatus,
         users: users != null ? users.value : this.users,
         syncFrequency:
             syncFrequency != null ? syncFrequency.value : this.syncFrequency,
@@ -63,6 +77,7 @@ class SettingsLoaded extends SettingsState {
 
   @override
   List<Object> get props => [
+        initialSettingsLoadingStatus,
         syncFrequency,
         syncPeriod,
         darkThemeEnabled,

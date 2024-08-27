@@ -167,7 +167,7 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
     }
   }
 
-  ThemeData _getTheme(bool isDarkTheme) {  
+  ThemeData _getTheme(bool isDarkTheme) {
     if (isDarkTheme == false)
       return AppTheme.light;
     else if (isDarkTheme == true)
@@ -228,102 +228,97 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
                               repository: calendarRepository,
                               location: settingsState.settings?.location)
                           : null;
-
-                      return RepositoryProvider.value(
-                        value: calendarUseCase,
-                        child: MultiBlocProvider(
-                          providers: [
-                            BlocProvider.value(value: _authBloc),
-                            BlocProvider.value(value: _settingsBloc),
-                            if (calendarUseCase != null)
-                              BlocProvider(
-                                create: (_) =>
-                                    EventsBloc(useCase: calendarUseCase),
-                              ),
-                            if (calendarUseCase != null)
-                              BlocProvider(
-                                lazy: false,
-                                create: (_) =>
-                                    CalendarsBloc(useCase: calendarUseCase),
-                              ),
-                            if (calendarUseCase != null)
-                              BlocProvider(
-                                create: (_) =>
-                                    TasksBloc(useCase: calendarUseCase),
-                              ),
-                            if (calendarUseCase != null)
-                              BlocProvider(
-                                create: (_) => CalendarNotificationBloc(
-                                    useCase: calendarUseCase),
-                              ),
+                      return MultiBlocProvider(
+                        providers: [
+                          BlocProvider.value(value: _authBloc),
+                          BlocProvider.value(value: _settingsBloc),
+                          if (calendarUseCase != null)
                             BlocProvider(
-                              create: (_) => MailBloc(
-                                calendarUseCase: calendarUseCase,
-                                user: _authBloc.currentUser,
-                                account: _authBloc.currentAccount,
-                              ),
+                              create: (_) =>
+                                  EventsBloc(useCase: calendarUseCase),
                             ),
+                          if (calendarUseCase != null)
                             BlocProvider(
-                              create: (_) => MessagesListBloc(
-                                user: _authBloc.currentUser,
-                                account: _authBloc.currentAccount,
-                              ),
+                              lazy: false,
+                              create: (_) =>
+                                  CalendarsBloc(useCase: calendarUseCase)..add(FetchCalendars()),
                             ),
+                          if (calendarUseCase != null)
                             BlocProvider(
-                              create: (_) => ContactsBloc(
-                                user: _authBloc.currentUser,
-                                appDatabase: DBInstances.appDB,
-                              )..add(GetContacts()),
+                              create: (_) =>
+                                  TasksBloc(useCase: calendarUseCase),
                             ),
-                          ],
-                          child: MaterialApp(
-                            debugShowCheckedModeBanner: false,
-                            navigatorKey: _navKey,
-                            onGenerateTitle: (context) {
-                              final is24 =
-                                  MediaQuery.of(context).alwaysUse24HourFormat;
-                              if (settingsState.is24 == null) {
-                                _settingsBloc.add(SetTimeFormat(is24));
-                              }
-                              return BuildProperty.appName;
-                            },
-                            onGenerateRoute: RouteGenerator.onGenerateRoute,
-                            theme: theme ?? AppTheme.light,
-                            darkTheme: theme ?? AppTheme.dark,
-                            localizationsDelegates: [
-                              GlobalMaterialLocalizations.delegate,
-                              GlobalWidgetsLocalizations.delegate,
-                              GlobalCupertinoLocalizations.delegate,
-                              S.delegate,
-                              // LocalizationI18nDelegate(
-                              //   forcedLocale: supportedLocales.contains(
-                              //           settingsState.language?.toLocale())
-                              //       ? settingsState.language?.toLocale()
-                              //       : null,
-                              // ),
-                            ],
-                            supportedLocales: BuildProperty.supportLanguage
-                                .split(",")
-                                .map((item) => Locale(item))
-                                .toList(),
-                            localeResolutionCallback: (locale, locales) {
-                              final supportedLocale = locales.firstWhere((l) {
-                                return locale != null &&
-                                    l.languageCode == locale.languageCode;
-                              }, orElse: () => null);
-
-                              return supportedLocale ??
-                                  locales.first ??
-                                  Locale("en", "");
-                            },
-                            locale: settingsState.language?.toLocale(),
-                            initialRoute: authState.needsLogin
-                                ? LoginRoute.name
-                                : _notification != null
-                                    ? CalendarRoute.name
-                                    : MessagesListRoute.name,
-                            navigatorObservers: [routeObserver],
+                          if (calendarUseCase != null)
+                            BlocProvider(
+                              create: (_) => CalendarNotificationBloc(
+                                  useCase: calendarUseCase),
+                            ),
+                          BlocProvider(
+                            create: (_) => MailBloc(
+                              user: _authBloc.currentUser,
+                              account: _authBloc.currentAccount,
+                            ),
                           ),
+                          BlocProvider(
+                            create: (_) => MessagesListBloc(
+                              user: _authBloc.currentUser,
+                              account: _authBloc.currentAccount,
+                            ),
+                          ),
+                          BlocProvider(
+                            create: (_) => ContactsBloc(
+                              user: _authBloc.currentUser,
+                              appDatabase: DBInstances.appDB,
+                            )..add(GetContacts()),
+                          ),
+                        ],
+                        child: MaterialApp(
+                          debugShowCheckedModeBanner: false,
+                          navigatorKey: _navKey,
+                          onGenerateTitle: (context) {
+                            final is24 =
+                                MediaQuery.of(context).alwaysUse24HourFormat;
+                            if (settingsState.is24 == null) {
+                              _settingsBloc.add(SetTimeFormat(is24));
+                            }
+                            return BuildProperty.appName;
+                          },
+                          onGenerateRoute: RouteGenerator.onGenerateRoute,
+                          theme: theme ?? AppTheme.light,
+                          darkTheme: theme ?? AppTheme.dark,
+                          localizationsDelegates: [
+                            GlobalMaterialLocalizations.delegate,
+                            GlobalWidgetsLocalizations.delegate,
+                            GlobalCupertinoLocalizations.delegate,
+                            S.delegate,
+                            // LocalizationI18nDelegate(
+                            //   forcedLocale: supportedLocales.contains(
+                            //           settingsState.language?.toLocale())
+                            //       ? settingsState.language?.toLocale()
+                            //       : null,
+                            // ),
+                          ],
+                          supportedLocales: BuildProperty.supportLanguage
+                              .split(",")
+                              .map((item) => Locale(item))
+                              .toList(),
+                          localeResolutionCallback: (locale, locales) {
+                            final supportedLocale = locales.firstWhere((l) {
+                              return locale != null &&
+                                  l.languageCode == locale.languageCode;
+                            }, orElse: () => null);
+
+                            return supportedLocale ??
+                                locales.first ??
+                                Locale("en", "");
+                          },
+                          locale: settingsState.language?.toLocale(),
+                          initialRoute: authState.needsLogin
+                              ? LoginRoute.name
+                              : _notification != null
+                                  ? CalendarRoute.name
+                                  : MessagesListRoute.name,
+                          navigatorObservers: [routeObserver],
                         ),
                       );
                     } else {

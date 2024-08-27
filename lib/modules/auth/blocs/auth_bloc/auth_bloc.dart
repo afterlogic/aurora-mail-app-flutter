@@ -56,6 +56,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         currentUser = result.user;
         currentAccount = result.account;
 
+
+
+
         final identities =
             await _methods.getAccountIdentities(currentUser, currentAccount);
         _methods.setFbToken(users);

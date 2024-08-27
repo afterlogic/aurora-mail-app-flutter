@@ -30,6 +30,7 @@ class CalendarsBloc extends Bloc<CalendarsEvent, CalendarsState> {
     on<SaveTabIndex>(_onSaveTabIndex);
     on<SaveMonthViewMode>(_onSaveMonthViewMode);
     on<GetCalendars>(_onGetCalendars);
+    on<FetchCalendars>(_onFetchCalendars);
     on<ClearData>(_onClearData);
     on<AddCalendars>(_onAddCalendars);
     on<DeleteCalendar>(_onDeleteCalendar);
@@ -73,6 +74,12 @@ class CalendarsBloc extends Bloc<CalendarsEvent, CalendarsState> {
   _onUnsubscribeFromCalendar(UnsubscribeFromCalendar event, Emitter<CalendarsState> emit) async {
     await _asyncErrorHandler(() async{
       await _useCase.unsubscribeFromCalendar(event.calendar);
+    }, emit);
+  }
+
+  _onFetchCalendars(FetchCalendars event, Emitter<CalendarsState> emit) async {
+    await _asyncErrorHandler(() async{
+      await _useCase.fetchCalendars();
     }, emit);
   }
 

@@ -71,6 +71,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       if (state is SettingsLoaded) {
         yield (state as SettingsLoaded).copyWith(
             users: Value(event.users),
+            initialSettingsLoadingStatus: InitialSettingsLoadingStatus.loaded,
             syncFrequency: Value(event.user.syncFreqInSeconds ?? 300),
             syncPeriod: Value(event.user.syncPeriod ?? "Period.allTime"),
             darkThemeEnabled: Value(appSettings.isDarkTheme),
@@ -82,6 +83,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       } else {
         yield SettingsLoaded(
           users: event.users,
+          initialSettingsLoadingStatus: InitialSettingsLoadingStatus.loaded,
           syncFrequency: event.user.syncFreqInSeconds,
           syncPeriod: event.user.syncPeriod,
           darkThemeEnabled: appSettings.isDarkTheme,

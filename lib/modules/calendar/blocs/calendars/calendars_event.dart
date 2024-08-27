@@ -42,6 +42,10 @@ class GetCalendars extends CalendarsEvent {
   const GetCalendars();
 }
 
+class FetchCalendars extends CalendarsEvent {
+  const FetchCalendars();
+}
+
 class ClearData extends CalendarsEvent {
   const ClearData();
 }

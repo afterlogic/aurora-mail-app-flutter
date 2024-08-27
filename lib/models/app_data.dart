@@ -1,6 +1,7 @@
+import 'package:equatable/equatable.dart';
 import 'package:timezone/timezone.dart' as tz;
 
-class AppData {
+class AppData extends Equatable{
   final List<String> availableModules;
   final tz.Location? location;
   final Map<String, dynamic>? calendarSettings;
@@ -35,4 +36,7 @@ class AppData {
           (map['Core']['AvailableBackendModules'] as List).cast<String>(),
     );
   }
+
+  @override
+  List<Object?> get props => [availableModules, location, calendarSettings];
 }

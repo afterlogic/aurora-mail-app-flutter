@@ -16,15 +16,14 @@ import 'mail_methods.dart';
 
 class MailBloc extends Bloc<MailEvent, MailState> {
   MailMethods _methods;
-  CalendarUseCase _calendarUseCase;
   User _user;
   Account _account;
   final updateMessageCounter = UpdateMessageCounter();
   static String selectedFolderGuid;
 
   MailBloc(
-      {User user, Account account, @required CalendarUseCase calendarUseCase})
-      : _calendarUseCase = calendarUseCase,
+      {User user, Account account,})
+      :
         super(FoldersEmpty()) {
     assert(user != null);
     init(user, account);
@@ -85,7 +84,6 @@ class MailBloc extends Bloc<MailEvent, MailState> {
     if (state is! FoldersLoaded) yield FoldersLoading();
 
     try {
-      await _calendarUseCase?.fetchCalendars();
       final List<Folder> folders = await _methods.getFolders();
 
       if (folders.isNotEmpty) {
