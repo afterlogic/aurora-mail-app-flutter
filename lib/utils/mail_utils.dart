@@ -616,7 +616,7 @@ class MailUtils {
     </style>
     <script>      
         document.addEventListener('DOMContentLoaded', function () {
-            document.getElementById('stared-btn').addEventListener('click', function (event) {
+          document.getElementById('stared-btn').addEventListener('click', function (event) {
                 let elem=event.target
                 if (elem.classList.contains("is-starred")) {
                     elem.innerHTML = "&#9734;"
@@ -636,66 +636,66 @@ class MailUtils {
                 } else {
                     elem.innerHTML ="${S.of(context).btn_hide_details}";
                 }
-                document.getElementById("info").classList.toggle('is-visible');                
+                document.getElementById('info').classList.toggle('is-visible');                
                 elem.classList.toggle('is-visible');
             }, false);
         });
         
-       const getSelectedCalendarId = () => document.querySelector('#calendars_select').value;
+        const getSelectedCalendarId = () => document.querySelector('#calendars_select').value;
        
-       function setSelectedCalendar(data) {
-         document.getElementById('selected-text').innerText = data;
-       }
+        function setSelectedCalendar(data) {
+            document.getElementById('custom-dropdown-value').innerText = data;
+        }
        
-       function handleDropdownClick() {
-         return window.${ExpandedEventWebViewActions.CHANNEL}.postMessage('${ExpandedEventWebViewActions.DROPDOWN_CLICKED}');
-       }
+        function handleDropdownClick() {
+            return window.${ExpandedEventWebViewActions.CHANNEL}.postMessage('${ExpandedEventWebViewActions.DROPDOWN_CLICKED}');
+        }
       
-       function acceptEvent(){
-        return window.${ExpandedEventWebViewActions.CHANNEL}.postMessage('${ExpandedEventWebViewActions.ACCEPT}');
-       }
+        function acceptEvent(){
+          return window.${ExpandedEventWebViewActions.CHANNEL}.postMessage('${ExpandedEventWebViewActions.ACCEPT}');
+        }
        
-       function declineEvent(){
-        return window.${ExpandedEventWebViewActions.CHANNEL}.postMessage('${ExpandedEventWebViewActions.DECLINE}');
-       }
+        function declineEvent(){
+          return window.${ExpandedEventWebViewActions.CHANNEL}.postMessage('${ExpandedEventWebViewActions.DECLINE}');
+        }
        
-       function tentativeEvent(){
-        return window.${ExpandedEventWebViewActions.CHANNEL}.postMessage('${ExpandedEventWebViewActions.TENTATIVE}');
-       }
+        function tentativeEvent(){
+          return window.${ExpandedEventWebViewActions.CHANNEL}.postMessage('${ExpandedEventWebViewActions.TENTATIVE}');
+        }
         
-       function downloadAttachment(str){
-        return window.${MessageWebViewActions.WEB_VIEW_JS_CHANNEL}.postMessage('${MessageWebViewActions.DOWNLOAD_ATTACHMENT}'+str);
-       }
+        function downloadAttachment(str){
+          return window.${MessageWebViewActions.WEB_VIEW_JS_CHANNEL}.postMessage('${MessageWebViewActions.DOWNLOAD_ATTACHMENT}'+str);
+        }
     </script>
   </head>
-  <body class='unselectable'>
-    <div class='container'>
-      <div class='email-head'>
+  <body class="unselectable">
+    <div class="container">
+      <div class="email-head">
         <div class="flex" style="width: calc(100vw - 12px * 2)">
           <div class="flex" style="flex: 1">
-            <div style="font-size: 18px" class='selectable'>${message.fromToDisplay}</div>
+            <div style="font-size: 18px" class="selectable">${message.fromToDisplay}</div>
             <div class="selectable disabled-text">$toPrimary</div>
              <div class="selectable disabled-text">$shortDate</div>
-            <a style='margin-top: 7px;' class="toggle primary-color" href="#info" id="info-btn">${S.of(context).btn_show_details}</a>
+            <a style="margin-top: 7px;" class="toggle primary-color" href="#info" id="info-btn">${S.of(context).btn_show_details}</a>
           </div>
           <div class="flex" style="flex: 0"></div>
         </div>
         </div>
           <div class="toggle-content flex" id="info">
-              <div class='row'><a class='details-description'>From</a><a class='selectable details-value'>$from</a></div>
-              <div class='row'><a class='details-description'>To</a><a class='selectable details-value'>$to</a></div>        
-              ${cc.isNotEmpty ? "<div class='row'><a class='details-description'>Cc</a><a class='selectable details-value'>$cc</a></div>" : ""}
-        <div class='row'><a class='details-description'>Date</a><a class='selectable details-value'>$date</a></div>
+              <div class="row"><a class="details-description">From</a><a class="selectable details-value">$from</a></div>
+              <div class="row"><a class="details-description">To</a><a class="selectable details-value">$to</a></div>        
+              ${cc.isNotEmpty ? '<div class="row"><a class="details-description">Cc</a><a class="selectable details-value">$cc</a></div>' : ''}
+              <div class="row"><a class="details-description">Date</a><a class="selectable details-value">$date</a></div>
           </div>
           ${extendedEvent == null ? "" : """
-        <div class='appointment'>
+        <div class="appointment">
           ${_showButtons(extendedEvent["Type"] as String) ? """
-           <div class = 'row'>
-            <button onclick='acceptEvent()'>Accept </button> 
-            <button onclick='declineEvent()'>Decline</button> 
-            <button onclick='tentativeEvent()'>Tentative</button> 
+           <div class="row">
+            <button onclick="acceptEvent()">Accept</button> 
+            <button onclick="declineEvent()">Decline</button> 
+            <button onclick="tentativeEvent()">Tentative</button> 
           </div>
-          <div class = 'row fluid'>
+          <div class="row fluid">
             ${_getCalendarsSelectButton(initCalendar)} 
           </div> 
             """ : ''}
@@ -724,19 +724,19 @@ class MailUtils {
         </div>
         """}
           
-        <div class='email-head' style='padding-top: 0px;'>
+        <div class="email-head" style="padding-top: 0px;">
         <div style="display: flex; flex-direction: row;justify-content: space-between; padding-top: 24px;">
           <h1 style="font-size: 24px; font-weight: 500; margin-top: 0px;">
-            <span style="margin-right: 10px;" class='selectable'>${subject}</span>
+            <span style="margin-right: 10px;" class="selectable">${subject}</span>
             <span style="display: inline-block; font-size: 14px; background: #B6B5B5; ${theme.brightness == Brightness.dark ? 'color: black;' : 'color: white;'} padding: 3px 8px; border-radius: 10px; margin-top: -2px; vertical-align: middle;">${message.folder}</span>
           </h1>
           <a id="stared-btn" class="stared${isStarred ? " is-starred" : ""}" href='${MessageWebViewActions.ACTION + (isStarred ? MessageWebViewActions.SET_NOT_STARRED : MessageWebViewActions.SET_STARRED)}' style='text-decoration: none; font-size: 24px; line-height: 1.2; color: orange'>${isStarred ? "&#9733;" : "&#9734;"}</a>
         </div>
         <div style="clear: both;height: 1px; background-color: black; opacity: 0.05; margin: 24px 0 0"></div>
       </div>
-      <div class='selectable email-content' >$body</div>
+      <div class="selectable email-content">$body</div>
       ${attachments.isNotEmpty ? '<div style="height: 1px; background-color: black; opacity: 0.05; margin: 24px 0 0"></div>' : ""}
-      <div class='attachments'>
+      <div class="attachments">
         ${attachments.where((element) => !element.isInline).map((a) => _getAttachment(context, a)).toList().join()}
       </div>
     </div>
@@ -790,19 +790,14 @@ class MailUtils {
           "<div class='leading'><img src='${"${authBloc.currentUser.hostname}$thumbUrl&AuthToken=${authBloc.currentUser.token}"}' alt=''></div>";
     }
     return """
-    <div class='attachment'>
+    <div class="attachment">
       $leading
-      <div class='flex' style="flex: 1;white-space: nowrap;overflow: hidden;/* text-overflow: ellipsis; */">
-        <span style="
-    display: inline-block;
-    max-width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-"
-class='selectable'>${attachment.fileName}</span>
-        <span class='disabled-text'>${filesize(attachment.size)}</span>
+      <div class="flex" style="flex: 1;white-space: nowrap;overflow: hidden;/* text-overflow: ellipsis; */">
+        <span style="display: inline-block; max-width: 100%; overflow: hidden; text-overflow: ellipsis;"
+          class="selectable">${attachment.fileName}</span>
+        <span class="disabled-text">${filesize(attachment.size)}</span>
       </div>
-      <a class='icon-btn' onclick="downloadAttachment('${attachment.downloadUrl}')">${_getDownloadIcon(iconColor)}</a>
+      <a class="icon-btn" onclick="downloadAttachment('${attachment.downloadUrl}')">${_getDownloadIcon(iconColor)}</a>
     </div>
     """;
   }
