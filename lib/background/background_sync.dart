@@ -12,6 +12,11 @@ import 'package:aurora_logger/aurora_logger.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/models/message_info.dart';
 import 'package:aurora_mail/modules/auth/repository/auth_local_storage.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/calendar.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain_impl/mappers/calendar_mapper.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain_impl/services/db/calendar/calendar_dao.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain_impl/services/network/calendar_network_service.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain_impl/services/network/calendar_network_service_impl.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/mail_methods.dart';
 import 'package:aurora_mail/modules/mail/repository/folders_api.dart';
@@ -31,6 +36,7 @@ class BackgroundSync {
   final _usersDao = UsersDao(DBInstances.appDB);
   final _accountsDao = AccountsDao(DBInstances.appDB);
   final _authLocal = AuthLocalStorage();
+  final _calendarsDao = CalendarDao(DBInstances.appDB);
 
 //  final _notificationStorage = NotificationLocalStorage();
 
@@ -55,6 +61,8 @@ class BackgroundSync {
       final users = await _usersDao.getUsers();
 
       for (final user in users) {
+          await _backgroundCalendarsSync(
+              interceptor: interceptor, user: user, logger: isolatedLogger);
         var accounts = await _accountsDao.getAccounts(user.localId);
         if (notification != null) {
           accounts =
@@ -95,6 +103,63 @@ class BackgroundSync {
       );
     }
     return hasUpdate;
+  }
+
+  Future<void> _backgroundCalendarsSync(
+      {@required ApiInterceptor interceptor,
+      @required User user,
+      @required Logger logger}) async {
+    try {
+      logger.log("Calendars background sync started");
+      final CalendarNetworkService networkService =
+          CalendarNetworkServiceImpl(WebMailApi(
+        moduleName: WebMailModules.calendar,
+        hostname: user.hostname,
+        token: user.token,
+        interceptor: interceptor,
+      ));
+
+      final localCalendarsEntities =
+          await _calendarsDao.getAllCalendars(user.localId);
+      final localCalendars = CalendarMapper.listFromDB(localCalendarsEntities);
+
+      logger.log(
+          'LOCAL CALENDARS: ${localCalendars.map((e) => e.toString()).toList()}');
+      final localCalendarsMap =
+          CalendarMapper.convertListToMapById(localCalendars);
+
+      final List<Calendar> calendarsForDownload = [];
+
+      final calendarsFromServer =
+          await networkService.getCalendars(user.localId);
+      logger.log(
+          'CALENDARS FROM SERVER: ${calendarsFromServer.map((e) => e.toString()).toList()}');
+      final serverCalendarsMap =
+          CalendarMapper.convertListToMapById(calendarsFromServer);
+      for (final serverEntry in serverCalendarsMap.entries) {
+        if (localCalendarsMap.containsKey(serverEntry.key)) continue;
+        calendarsForDownload.add(serverEntry.value.copyWith(syncToken: '1'));
+      }
+      logger.log(
+          'CALENDARS FOR DOWNLOAD: ${calendarsForDownload.map((e) => e.toString()).toList()}');
+      final localCalendarsForDeleting = localCalendarsMap.values
+          .where((e) => !serverCalendarsMap.containsKey(e.id))
+          .toList();
+      logger.log(
+          'CALENDARS FOR DELETING: ${localCalendarsForDeleting.map((e) => e.toString()).toList()}');
+
+      await _calendarsDao
+          .deleteCalendars(localCalendarsForDeleting.map((e) => e.id).toList());
+
+      for (final calendar in calendarsForDownload) {
+        final calendarForSaving = calendar.copyWith(
+            shares: calendar.shares..removeWhere((e) => e is ParticipantAll));
+        await _calendarsDao.createOrUpdateCalendar(
+            CalendarMapper.toDB(calendar: calendarForSaving));
+      }
+    } catch (e, s) {
+      logger.log("Calendars background sync error: ${e}");
+    }
   }
 
   Future<Map<Account, List<Message>>> _updateAccountMessages(
