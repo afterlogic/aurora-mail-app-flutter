@@ -3,7 +3,7 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:alarm_service/alarm_service.dart';
 import 'package:aurora_logger/aurora_logger.dart';
 import 'package:aurora_mail/bloc_logger.dart';
