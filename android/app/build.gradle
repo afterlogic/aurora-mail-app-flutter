@@ -42,7 +42,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    compileSdkVersion 33
+    compileSdkVersion 34
     ndkVersion "24.0.8215888"
 
     sourceSets {
@@ -57,7 +57,7 @@ android {
         manifestPlaceholders = [deepLink:buildVariableProperties["deepLink"]]
         applicationId buildVariableProperties["packageName"]
         minSdkVersion 23
-        targetSdkVersion 33
+        targetSdkVersion 34
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
