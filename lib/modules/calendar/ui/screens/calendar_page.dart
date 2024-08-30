@@ -1,3 +1,4 @@
+import 'package:aurora_mail/background/background_helper.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/calendar/blocs/calendars/calendars_bloc.dart';
 import 'package:aurora_mail/modules/calendar/blocs/events/events_bloc.dart';
@@ -45,7 +46,7 @@ class CalendarPage extends StatefulWidget {
 }
 
 class _CalendarPageState extends State<CalendarPage>
-    with TickerProviderStateMixin {
+    with TickerProviderStateMixin, WidgetsBindingObserver {
   late final TabController _tabController;
   late final CalendarsBloc _calendarsBloc;
   bool _overlay = false;
@@ -54,6 +55,7 @@ class _CalendarPageState extends State<CalendarPage>
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _overlay = false;
     _calendarsBloc = BlocProvider.of<CalendarsBloc>(context);
     _tabController = TabController(
@@ -98,6 +100,14 @@ class _CalendarPageState extends State<CalendarPage>
     } else {
       BlocProvider.of<EventsBloc>(context).add(const StartSync());
     }
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      BlocProvider.of<EventsBloc>(context).add(const StartSync());
+    }
+    super.didChangeAppLifecycleState(state);
   }
 
   @override

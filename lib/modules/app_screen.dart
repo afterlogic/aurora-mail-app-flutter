@@ -235,13 +235,13 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
                           if (calendarUseCase != null)
                             BlocProvider(
                               create: (_) =>
-                                  EventsBloc(useCase: calendarUseCase),
+                                  EventsBloc(useCase: calendarUseCase)..add(const StartSync()),
                             ),
                           if (calendarUseCase != null)
                             BlocProvider(
                               lazy: false,
                               create: (_) =>
-                                  CalendarsBloc(useCase: calendarUseCase)..add(FetchCalendars()),
+                                  CalendarsBloc(useCase: calendarUseCase)..add(const FetchCalendars()),
                             ),
                           if (calendarUseCase != null)
                             BlocProvider(
