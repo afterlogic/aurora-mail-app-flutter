@@ -110,6 +110,7 @@ class BackgroundSync {
       @required User user,
       @required Logger logger}) async {
     try {
+      final start = DateTime.now().millisecondsSinceEpoch;
       logger.log("Calendars background sync started");
       final CalendarNetworkService networkService =
           CalendarNetworkServiceImpl(WebMailApi(
@@ -157,6 +158,10 @@ class BackgroundSync {
         await _calendarsDao.createOrUpdateCalendar(
             CalendarMapper.toDB(calendar: calendarForSaving));
       }
+      final now = DateTime.now().millisecondsSinceEpoch;
+      final delay = (now - start) / 1000;
+      logger.log(
+          'CALENDARS SYNC OVER IN: ${delay.toStringAsFixed(1)} s');
     } catch (e, s) {
       logger.log("Calendars background sync error: ${e}");
     }
