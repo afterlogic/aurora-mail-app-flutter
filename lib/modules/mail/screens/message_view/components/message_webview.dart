@@ -153,6 +153,7 @@ class MessageWebViewState extends BState<MessageWebView> {
       );
     _controller.addJavaScriptChannel(ExpandedEventWebViewActions.CHANNEL,
         onMessageReceived: (message) {
+      if(_selectedCalendar == null) return;
       if (message.message.startsWith(ExpandedEventWebViewActions.ACCEPT)) {
         print(message.message);
         BlocProvider.of<MessageViewBloc>(context).add(ChangeEventInviteStatus(
