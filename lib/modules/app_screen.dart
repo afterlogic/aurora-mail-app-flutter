@@ -2,6 +2,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:aurora_logger/aurora_logger.dart';
 import 'package:aurora_mail/background/background_helper.dart';
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/database/app_database.dart';
@@ -83,50 +84,59 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
       }
     });
     _initApp();
-    ReceiveSharing.getInitialMedia().then((shared) {
-      if (shared == null) return;
-      final texts = <String>[];
-      final files = <File>[];
-      for (var value in shared) {
-        if (value.isText) {
-          texts.add(value.text);
-        } else {
-          files.add(File(value.path));
+    try {
+      ReceiveSharing.getInitialMedia().then((shared) {
+        if (shared == null) return;
+        final texts = <String>[];
+        final files = <File>[];
+        for (var value in shared) {
+          if (value.isText) {
+            texts.add(value.text);
+          } else {
+            files.add(File(value.path));
+          }
         }
-      }
-      if (texts.isNotEmpty || files.isNotEmpty) {
-        MessagesListAndroid.shareHolder = [files, texts];
-        _navKey.currentState.pushNamedAndRemoveUntil(
-          MessagesListRoute.name,
-          (value) => false,
-        );
-      }
-    });
-    ReceiveSharing.getMediaStream().listen((shared) {
-      final texts = <String>[];
-      final files = <File>[];
-      for (var value in shared) {
-        if (value.isText) {
-          texts.add(value.text);
-        } else {
-          files.add(File(value.path));
-        }
-      }
-      if (texts.isNotEmpty || files.isNotEmpty) {
-        if (MessagesListAndroid.onShare != null) {
-          _navKey.currentState.popUntil(
-            (value) => value.settings.name == MessagesListRoute.name,
-          );
-          MessagesListAndroid.onShare(files, texts);
-        } else {
+        if (texts.isNotEmpty || files.isNotEmpty) {
           MessagesListAndroid.shareHolder = [files, texts];
           _navKey.currentState.pushNamedAndRemoveUntil(
             MessagesListRoute.name,
             (value) => false,
           );
         }
-      }
-    });
+      });
+    } catch (e, st) {
+      Logger.errorLog(e, st);
+    }
+
+    try {
+      ReceiveSharing.getMediaStream().listen((shared) {
+        final texts = <String>[];
+        final files = <File>[];
+        for (var value in shared) {
+          if (value.isText) {
+            texts.add(value.text);
+          } else {
+            files.add(File(value.path));
+          }
+        }
+        if (texts.isNotEmpty || files.isNotEmpty) {
+          if (MessagesListAndroid.onShare != null) {
+            _navKey.currentState.popUntil(
+              (value) => value.settings.name == MessagesListRoute.name,
+            );
+            MessagesListAndroid.onShare(files, texts);
+          } else {
+            MessagesListAndroid.shareHolder = [files, texts];
+            _navKey.currentState.pushNamedAndRemoveUntil(
+              MessagesListRoute.name,
+              (value) => false,
+            );
+          }
+        }
+      });
+    } catch (e, st) {
+      Logger.errorLog(e, st);
+    }
   }
 
   @override
