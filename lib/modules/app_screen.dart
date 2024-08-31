@@ -14,9 +14,9 @@ import 'package:aurora_mail/modules/calendar/blocs/tasks/tasks_bloc.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/calendar_repository.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/calendar_usecase.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/activity.dart';
-import 'package:aurora_mail/modules/calendar/calendar_domain_impl/calendar_usecase_impl.dart';
 import 'package:aurora_mail/modules/calendar/ui/screens/calendar_page.dart';
 import 'package:aurora_mail/modules/calendar/ui/screens/calendar_route.dart';
+import 'package:aurora_mail/modules/calendar/utils/week_start_converter.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/messages_list_bloc.dart';
@@ -31,7 +31,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:drift_sqflite/drift_sqflite.dart';
 import 'package:drift/drift.dart';
 import 'package:receive_sharing/recive_sharing.dart';
 import 'package:theme/app_theme.dart';
@@ -234,14 +233,18 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
                           BlocProvider.value(value: _settingsBloc),
                           if (calendarUseCase != null)
                             BlocProvider(
-                              create: (_) =>
-                                  EventsBloc(useCase: calendarUseCase)..add(const StartSync()),
+                              create: (_) => EventsBloc(
+                                  useCase: calendarUseCase,
+                                  firstDayInWeek: convert(settingsState.settings
+                                      .calendarSettings["WeekStartsOn"]))
+                                ..add(const StartSync()),
                             ),
                           if (calendarUseCase != null)
                             BlocProvider(
                               lazy: false,
                               create: (_) =>
-                                  CalendarsBloc(useCase: calendarUseCase)..add(const FetchCalendars()),
+                                  CalendarsBloc(useCase: calendarUseCase)
+                                    ..add(const FetchCalendars()),
                             ),
                           if (calendarUseCase != null)
                             BlocProvider(

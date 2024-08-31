@@ -9,6 +9,8 @@ class EventsState extends Equatable {
   final DateTime endIntervalDate;
   final DateTime selectedDate;
   final ErrorToShow? error;
+  ///where 1 - monday, 7 - sunday
+  final int firstDayInWeek;
 
   const EventsState({
     this.status = EventsStatus.idle,
@@ -16,6 +18,7 @@ class EventsState extends Equatable {
     this.selectedEvent,
     this.eventsMap,
     this.error,
+    required this.firstDayInWeek,
     required this.startIntervalDate,
     required this.endIntervalDate,
     required this.selectedDate,
@@ -30,7 +33,8 @@ class EventsState extends Equatable {
         endIntervalDate,
         selectedDate,
         eventsMap,
-        error
+        error,
+        firstDayInWeek
       ];
 
   ///Events from selected date or from period between [startIntervalDate] and [endIntervalDate]
@@ -43,6 +47,7 @@ class EventsState extends Equatable {
           todayWithoutTime.year, todayWithoutTime.month, todayWithoutTime.day);
       return (e.startDate.toUtc().isBefore(nextDayUtc) &&
               e.endDate.toUtc().isAfter(todayWithoutTimeUtc)) ||
+
           ///handle events where startDate equals endDate
           (e.startDate.toUtc().isAtSameMomentAs(e.endDate.toUtc()) &&
               (e.startDate.toUtc().isBefore(nextDayUtc) &&
@@ -67,14 +72,29 @@ class EventsState extends Equatable {
     return dates;
   }
 
+  DateTime _getStartOfWeek(DateTime currentDate, int startDay) {
+    // monday - 1
+    // sunday - 7
+    int normalizedStartDay = (startDay - 1) % 7;
+
+    int currentDayOfWeek = (currentDate.weekday - 1) % 7;
+
+    int daysToSubtract = (currentDayOfWeek - normalizedStartDay) % 7;
+
+    if (daysToSubtract < 0) {
+      daysToSubtract += 7;
+    }
+
+    return currentDate.subtract(Duration(days: daysToSubtract));
+  }
+
   Map<DateTime, List<ViewEvent?>> getEventsFromWeek({DateTime? date}) {
     if (originalEvents == null) {
       return {};
     }
 
-    DateTime startOfWeek =
-        selectedDate.subtract(Duration(days: selectedDate.weekday - 1));
-    DateTime endOfWeek = startOfWeek.add(Duration(days: 6));
+    final DateTime startOfWeek = _getStartOfWeek(selectedDate, firstDayInWeek);
+    final DateTime endOfWeek = startOfWeek.add(Duration(days: 6));
 
     final dates = _daysFromInterval(startOfWeek, endOfWeek);
     final Map<DateTime, List<ViewEvent?>> result = {};
@@ -144,17 +164,17 @@ class EventsState extends Equatable {
         '}';
   }
 
-  EventsState copyWith({
-    EventsStatus? status,
-    Map<DateTime, List<ViewEvent?>>? Function()? eventsMap,
-    ErrorToShow? Function()? error,
-    List<ViewEvent>? Function()? originalEvents,
-    ViewEvent? Function()? selectedEvent,
-    List<Calendar>? Function()? calendars,
-    DateTime? startIntervalDate,
-    DateTime? endIntervalDate,
-    DateTime? selectedDate,
-  }) {
+  EventsState copyWith(
+      {EventsStatus? status,
+      Map<DateTime, List<ViewEvent?>>? Function()? eventsMap,
+      ErrorToShow? Function()? error,
+      List<ViewEvent>? Function()? originalEvents,
+      ViewEvent? Function()? selectedEvent,
+      List<Calendar>? Function()? calendars,
+      DateTime? startIntervalDate,
+      DateTime? endIntervalDate,
+      DateTime? selectedDate,
+      int? firstDayInWeek}) {
     return EventsState(
       status: status ?? this.status,
       error: error == null ? this.error : error(),
@@ -166,6 +186,7 @@ class EventsState extends Equatable {
       startIntervalDate: startIntervalDate ?? this.startIntervalDate,
       endIntervalDate: endIntervalDate ?? this.endIntervalDate,
       selectedDate: selectedDate ?? this.selectedDate,
+      firstDayInWeek: firstDayInWeek ?? this.firstDayInWeek,
     );
   }
 }

@@ -32,13 +32,14 @@ class EventsBloc extends Bloc<EventBlocEvent, EventsState> {
   ///used for handling events from "out of month" days
   final extraDuration = Duration(days: 7);
 
-  EventsBloc({required CalendarUseCase useCase})
+  EventsBloc({required CalendarUseCase useCase, required int firstDayInWeek})
       : _useCase = useCase,
         super(
           EventsState(
             startIntervalDate: DateTime.now().firstDayOfMonth,
             endIntervalDate: DateTime.now().lastDayOfMonth,
             selectedDate: DateTime.now().withoutTime,
+            firstDayInWeek: firstDayInWeek
           ),
         ) {
     _useCase.eventsSubscription.listen((events) {
