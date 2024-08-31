@@ -22,6 +22,7 @@ import 'package:aurora_mail/modules/settings/screens/pgp_settings/dialogs/import
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/date_formatting.dart';
 import 'package:aurora_mail/utils/error_to_show.dart';
+import 'package:aurora_mail/utils/extensions/bloc_provider_extensions.dart';
 import 'package:aurora_mail/utils/mail_utils.dart';
 import 'package:aurora_mail/utils/show_dialog.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
@@ -65,7 +66,8 @@ class _Attendee {
 // }
 
 class ExpandedEventWebViewActions {
-  static const DROPDOWN_CLICKED = "ExpandedEventWebViewActions.DROPDOWN_CLICKED";
+  static const DROPDOWN_CLICKED =
+      "ExpandedEventWebViewActions.DROPDOWN_CLICKED";
   static const ACCEPT = "ExpandedEventWebViewActions.ACCEPT";
   static const DECLINE = "ExpandedEventWebViewActions.DECLINE";
   static const TENTATIVE = "ExpandedEventWebViewActions.TENTATIVE";
@@ -122,7 +124,7 @@ class MessageWebViewState extends BState<MessageWebView> {
   @override
   void initState() {
     super.initState();
-    _calendarsBloc = BlocProvider.of<CalendarsBloc>(context);
+    _calendarsBloc = BlocProviderExtensions.tryOf<CalendarsBloc>(context);
     _calendars = _calendarsBloc != null
         ? _calendarsBloc.state.availableCalendars(_currentUserMail)
         : null;
@@ -169,7 +171,8 @@ class MessageWebViewState extends BState<MessageWebView> {
             status: 'TENTATIVE',
             calendarId: _selectedCalendar.id,
             fileName: _eventFromExpandedMail['File'] as String));
-      } else if (message.message.startsWith(ExpandedEventWebViewActions.DROPDOWN_CLICKED)){
+      } else if (message.message
+          .startsWith(ExpandedEventWebViewActions.DROPDOWN_CLICKED)) {
         _invokeSelectCalendarDialog();
       }
     });
@@ -205,15 +208,15 @@ class MessageWebViewState extends BState<MessageWebView> {
     }
   }
 
-  void _invokeSelectCalendarDialog(){
+  void _invokeSelectCalendarDialog() {
     CalendarSelectDialog.show(context,
-        initialValue: _selectedCalendar,
-        options: _calendars)
+            initialValue: _selectedCalendar, options: _calendars)
         .then((value) {
       if (value != null) {
         _selectedCalendar = value;
         _controller.runJavaScript("setSelectedCalendar('${value.name}')");
-      };
+      }
+      ;
     });
   }
 
