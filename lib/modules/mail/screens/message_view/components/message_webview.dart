@@ -108,7 +108,7 @@ class MessageWebView extends StatefulWidget {
 }
 
 class MessageWebViewState extends BState<MessageWebView> {
-  WebViewController _controller;
+  WebViewController _controller = WebViewController();
   String _htmlData;
   bool _pageLoaded = false;
   bool showImages = false;
@@ -137,7 +137,7 @@ class MessageWebViewState extends BState<MessageWebView> {
     _currentUserMail =
         BlocProvider.of<AuthBloc>(context).currentUser?.emailFromLogin ?? '';
     _isStarred = widget.message.flagsInJson.contains("\\flagged");
-    _controller = WebViewController()
+    _controller
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setNavigationDelegate(
         NavigationDelegate(
