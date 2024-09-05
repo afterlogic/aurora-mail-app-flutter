@@ -37,6 +37,7 @@ class EditableAttendeesSection extends StatelessWidget {
             GestureDetector(onTap: onAddPressed, child: const AddIcon()),
           ],
         ),
+        const SizedBox(height: 16,),
         Wrap(runSpacing: 4, spacing: 4, children: [
           ...attendees.map(
             (e) => LayoutBuilder(builder: (context, constraints) {

@@ -116,8 +116,10 @@ class _EventCreationPageState extends State<EventCreationPage> {
   }
 
   void onEventsStateChange(EventsState state) {
-    final currentDate = DateTime.now().copyWith(second: 0, millisecond: 0, microsecond: 0);
-    _selectedStartDate = state.selectedDate.copyWith(hour: currentDate.hour, minute: currentDate.minute);
+    final currentDate =
+        DateTime.now().copyWith(second: 0, millisecond: 0, microsecond: 0);
+    _selectedStartDate = state.selectedDate
+        .copyWith(hour: currentDate.hour, minute: currentDate.minute);
     _selectedEndDate = _selectedStartDate.add(Duration(minutes: 30));
     final e = state.selectedEvent;
     _selectedEvent = e;
@@ -317,15 +319,13 @@ class _EventCreationPageState extends State<EventCreationPage> {
                   child: EditableAttendeesSection(
                     attendees: _attendees,
                     onAddPressed: () {
-                      Navigator.of(context)
-                          .pushNamed(AttendeesPage.name,
-                              arguments: AttendeesRouteArg(
-                                  initAttendees: Set.of(_attendees)))
-                          .then((value) {
-                        if (value == null) return;
-                        _attendees = Set.of(value as Set<Attendee>);
-                        setState(() {});
-                      });
+                      Navigator.of(context).pushNamed(AttendeesPage.name,
+                          arguments: AttendeesRouteArg(
+                              initAttendees: Set.of(_attendees),
+                              onChange: (Set<Attendee> attendees) {
+                                _attendees = Set.of(attendees);
+                                setState(() {});
+                              }));
                     },
                     onDeletedCallback: (Attendee attendee) {
                       _attendees.remove(attendee);

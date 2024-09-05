@@ -28,7 +28,7 @@ class AttendeesSection extends StatelessWidget {
           ],
         ),
         const SizedBox(
-          height: 4,
+          height: 16,
         ),
         Wrap(runSpacing: 4, spacing: 4, children: [
           ...attendees.map(

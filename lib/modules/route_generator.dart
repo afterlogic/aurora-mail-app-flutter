@@ -169,7 +169,9 @@ class RouteGenerator {
         final args = settings.arguments as CalendarPageArg;
         return FadeRoute(
             settings: RouteSettings(name: settings.name),
-            builder: (_) => CalendarPage(args: args,));
+            builder: (_) => CalendarPage(
+                  args: args,
+                ));
         break;
 
       case EventViewPage.name:
@@ -201,6 +203,7 @@ class RouteGenerator {
           settings: RouteSettings(name: settings.name),
           builder: (_) => AttendeesPage(
             initAttendees: args.initAttendees,
+            onChange: args.onChange,
           ),
         );
         break;
