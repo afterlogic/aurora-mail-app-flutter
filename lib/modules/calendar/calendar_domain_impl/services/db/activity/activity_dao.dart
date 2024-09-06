@@ -78,10 +78,23 @@ class ActivityDao extends DatabaseAccessor<AppDatabase>
         .go();
   }
 
+  Future<int> getCountOfActivities() async {
+    final countExp = activityTable.uid.count();
+    final query = selectOnly(activityTable)
+      ..where(activityTable.synced.equals(false))
+      ..addColumns([countExp]);
+    final result = await query.map((row) => row.read(countExp)).getSingle();
+    return result;
+  }
+
   Future<List<ActivityDb>> getEventsWithLimit(
       {required int? limit, required int? offset}) async {
-    if (limit == null || offset == null) return select(activityTable).get();
-    return (select(activityTable)..limit(limit, offset: offset)).get();
+    final eventsSelect = select(activityTable);
+    eventsSelect.where((t) => t.synced.equals(false));
+    if(limit != null){
+      eventsSelect.limit(limit, offset: offset);
+    }
+    return eventsSelect.get();
   }
 
   Future<void> deleteEvent(
@@ -141,12 +154,16 @@ class ActivityDao extends DatabaseAccessor<AppDatabase>
   }
 
   Future<ActivityDb> getByUid(
-      {required String calendarId, required String uid, required int userLocalId}) {
-    return (select(activityTable)..where((t) =>
-        t.userLocalId.equals(userLocalId) &
-        t.calendarId.equals(calendarId) &
-        t.onceLoaded.equals(true) &
-        t.uid.equals(uid))).getSingle();
+      {required String calendarId,
+      required String uid,
+      required int userLocalId}) {
+    return (select(activityTable)
+          ..where((t) =>
+              t.userLocalId.equals(userLocalId) &
+              t.calendarId.equals(calendarId) &
+              t.onceLoaded.equals(true) &
+              t.uid.equals(uid)))
+        .getSingle();
   }
 
   Future<List<ActivityDb>> getAll(

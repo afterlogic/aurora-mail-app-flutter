@@ -81,7 +81,6 @@ class CalendarDbServiceImpl implements CalendarDbService {
     return result
         .map((e) => e.toActivity())
         .whereNotNull()
-        .where((e) => !e.synced)
         .toList();
   }
 
@@ -131,5 +130,10 @@ class CalendarDbServiceImpl implements CalendarDbService {
     final model  = entity.toActivity();
     if ((model is! Activity)) throw Exception('Activity not synced');
     return model;
+  }
+
+  @override
+  Future<int> getCountOfNotSyncActivities() {
+    return _activityDao.getCountOfActivities();
   }
 }

@@ -41,11 +41,12 @@ class CalendarRepositoryImpl implements CalendarRepository {
   }
 
   Future<void> _syncEvents() async {
-    final int step = 20;
-    int currentOffset = 0;
-    List<ActivityBase> notUpdatedEvents =
-        await _db.getNotUpdatedEvents(offset: null, limit: null);
+    final int limit = 20;
+    int iterationsCount = 0;
+    logger.log('EVENTS SYNC PROCESS IS STARTED');
     await _db.deleteMarkedEvents();
+    List<ActivityBase> notUpdatedEvents =
+        await _db.getNotUpdatedEvents(offset: null, limit: limit);
     while (notUpdatedEvents.isNotEmpty) {
       logger.log(
           'CURRENT EVENTS INFO FOR SYNC: ${notUpdatedEvents.map((e) => '${e.uid} : ${e.updateStatus.name}').toList()}');
@@ -60,36 +61,38 @@ class CalendarRepositoryImpl implements CalendarRepository {
           rethrow;
         }
       }
-      currentOffset += step;
+      iterationsCount++;
       notUpdatedEvents =
-          await _db.getNotUpdatedEvents(offset: currentOffset, limit: step);
+          await _db.getNotUpdatedEvents(offset: null, limit: limit);
     }
+    logger.log('EVENTS SYNC PROCESS IS OVER, ITERATIONS COUNT: $iterationsCount WITH LIMIT: $limit');
   }
 
   @override
   Future<void> syncCalendars() async {
     final localCalendars = await _db.getCalendars(user.localId!);
+    final localCalendarsMap =
+        CalendarMapper.convertListToMapById(localCalendars);
+    final List<Calendar> calendarsForDownload = [];
+
     logger.log(
         'LOCAL CALENDARS: ${localCalendars.map((e) => e.toString()).toList()}');
-    final localCalendarsMap =
-    CalendarMapper.convertListToMapById(localCalendars);
 
-    final List<Calendar> calendarsForDownload = [];
     try {
       final calendarsFromServer = await _network.getCalendars(user.localId!);
+      final serverCalendarsMap =
+          CalendarMapper.convertListToMapById(calendarsFromServer);
       logger.log(
           'CALENDARS FROM SERVER: ${calendarsFromServer.map((e) => e.toString()).toList()}');
-      final serverCalendarsMap =
-      CalendarMapper.convertListToMapById(calendarsFromServer);
       for (final serverEntry in serverCalendarsMap.entries) {
         if (localCalendarsMap.containsKey(serverEntry.key)) continue;
         calendarsForDownload.add(serverEntry.value.copyWith(syncToken: '1'));
       }
-      logger.log(
-          'CALENDARS FOR DOWNLOAD: ${calendarsForDownload.map((e) => e.toString()).toList()}');
       final localCalendarsForDeleting = localCalendarsMap.values
           .where((e) => !serverCalendarsMap.containsKey(e.id))
           .toList();
+      logger.log(
+          'CALENDARS FOR DOWNLOAD: ${calendarsForDownload.map((e) => e.toString()).toList()}');
       logger.log(
           'CALENDARS FOR DELETING: ${localCalendarsForDeleting.map((e) => e.toString()).toList()}');
 
@@ -267,7 +270,11 @@ class CalendarRepositoryImpl implements CalendarRepository {
   }
 
   @override
-  Future<Activity> getActivityByUid({required String calendarId, required String activityUid}) {
-    return _db.getActivityByUid(userLocalId: user.localId!, calendarId: calendarId, activityUid: activityUid);
+  Future<Activity> getActivityByUid(
+      {required String calendarId, required String activityUid}) {
+    return _db.getActivityByUid(
+        userLocalId: user.localId!,
+        calendarId: calendarId,
+        activityUid: activityUid);
   }
 }
