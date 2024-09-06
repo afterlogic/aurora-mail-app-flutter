@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:aurora_logger/aurora_logger.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/activity.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/activity_base.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/attendee.dart';
@@ -14,6 +15,7 @@ import 'package:aurora_mail/modules/calendar/calendar_domain/models/task.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain_impl/mappers/calendar_mapper.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain_impl/mappers/event_mapper.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain_impl/services/network/calendar_network_service.dart';
+import 'package:aurora_mail/utils/error_to_show.dart';
 import 'package:collection/collection.dart';
 import 'package:webmail_api_client/webmail_api_client.dart';
 
@@ -277,7 +279,7 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
   }
 
   @override
-  Future<Activity> updateActivity(Activity activity) async {
+  Future<Activity> updateActivity(Activity activity, String originalCalendarId) async {
     final type = _getActivityType(activity);
     final dateInfo = _getDateInfo(activity);
     final rruleParameters = activity.recurrenceMode == RecurrenceMode.never
@@ -311,7 +313,7 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
     final parameters = {
       "id": '${activity.uid}-${activity.recurrenceId}',
       "uid": activity.uid,
-      "calendarId": activity.calendarId,
+      "calendarId": originalCalendarId,
       "newCalendarId": activity.calendarId,
       "subject": activity.subject!,
       "allDay": activity.allDay == true ? 1 : 0,
@@ -347,8 +349,13 @@ class CalendarNetworkServiceImpl implements CalendarNetworkService {
       method: "UpdateEvent",
       parameters: jsonEncode(parameters),
     );
-
-    final result = await calendarModule.post(body) as Map<String, dynamic>;
+    late final Map<String, dynamic> result;
+    try{
+      result = await calendarModule.post(body) as Map<String, dynamic>;
+    }catch(e, s){
+      Logger.errorLog(e, s);
+      throw ErrorToShow('${type.isEvent ? "Event" : "Task"} update failed');
+    }
     final syncResult = EventMapper.synchronise(
         newData: (result["Events"] as List).first as Map<String, dynamic>,
         base: activity);

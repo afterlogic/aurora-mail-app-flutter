@@ -36,7 +36,8 @@ class TasksBloc extends Bloc<TasksEvent, TasksState> {
 
   _onUpdateTask(UpdateTask event, Emitter<TasksState> emit) async {
     _asyncErrorHandler(() async {
-      final updatedTask = await _useCase.updateActivity(event.task);
+      final updatedTask = await _useCase.updateActivity(
+          event.task, state.selectedTask?.calendarId ?? event.task.calendarId);
       emit(state.copyWith(selectedTask: () => updatedTask as ViewTask));
     }, emit);
   }

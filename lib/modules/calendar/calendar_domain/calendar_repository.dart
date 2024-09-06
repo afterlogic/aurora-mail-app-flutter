@@ -44,7 +44,7 @@ abstract class CalendarRepository {
 
   Future<void> deleteActivity(Activity activity);
 
-  Future<Activity> updateActivity(Activity activity);
+  Future<Activity> updateActivity(Activity activity, String originalCalendarId);
 
   Future<Activity> getActivityByUid({required String calendarId, required String activityUid});
 

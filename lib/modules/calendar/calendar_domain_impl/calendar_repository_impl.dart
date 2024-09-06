@@ -255,8 +255,8 @@ class CalendarRepositoryImpl implements CalendarRepository {
   }
 
   @override
-  Future<Activity> updateActivity(Activity activity) {
-    return _network.updateActivity(activity);
+  Future<Activity> updateActivity(Activity activity, String originalCalendarId) {
+    return _network.updateActivity(activity, originalCalendarId);
   }
 
   @override

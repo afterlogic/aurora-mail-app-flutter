@@ -44,7 +44,7 @@ abstract class CalendarUseCase {
 
   Future<void> updateCalendarSharing(ViewCalendar calendar);
 
-  Future<Displayable> updateActivity(Displayable activity);
+  Future<Displayable> updateActivity(Displayable activity, String originalCalendarId);
 
   Future<void> deleteActivity(Activity activity);
 

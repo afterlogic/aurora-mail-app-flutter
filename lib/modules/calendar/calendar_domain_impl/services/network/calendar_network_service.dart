@@ -28,7 +28,7 @@ abstract class CalendarNetworkService {
     required ActivityCreationData creationData,
 });
 
-  Future<Activity> updateActivity(Activity activity);
+  Future<Activity> updateActivity(Activity activity, String originalCalendarId);
 
   Future<void> deleteActivity(Activity activity);
 

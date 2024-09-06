@@ -289,7 +289,7 @@ class CalendarUseCaseImpl implements CalendarUseCase {
   }
 
   @override
-  Future<Displayable> updateActivity(Displayable activity) async {
+  Future<Displayable> updateActivity(Displayable activity, String originalCalendarId) async {
     final endDate = activity.allDay == true && activity.endDate != null
         ? activity.endDate!.add(Duration(days: 1))
         : activity.endDate;
@@ -299,7 +299,7 @@ class CalendarUseCaseImpl implements CalendarUseCase {
             : () => convertToTZDateTime(activity.startDate!, _location!),
         endTS: _location == null || endDate == null
             ? () => endDate
-            : () => convertToTZDateTime(endDate, _location!)));
+            : () => convertToTZDateTime(endDate, _location!)), originalCalendarId);
     syncCalendarsWithActivities().then((_) {
       if (activity is Event) {
         _getLocalEvents();

@@ -36,11 +36,10 @@ class EventsBloc extends Bloc<EventBlocEvent, EventsState> {
       : _useCase = useCase,
         super(
           EventsState(
-            startIntervalDate: DateTime.now().firstDayOfMonth,
-            endIntervalDate: DateTime.now().lastDayOfMonth,
-            selectedDate: DateTime.now().withoutTime,
-            firstDayInWeek: firstDayInWeek
-          ),
+              startIntervalDate: DateTime.now().firstDayOfMonth,
+              endIntervalDate: DateTime.now().lastDayOfMonth,
+              selectedDate: DateTime.now().withoutTime,
+              firstDayInWeek: firstDayInWeek),
         ) {
     _useCase.eventsSubscription.listen((events) {
       add(AddEvents(events));
@@ -61,7 +60,8 @@ class EventsBloc extends Bloc<EventBlocEvent, EventsState> {
 
   _onUpdateEvent(UpdateEvent event, Emitter<EventsState> emit) async {
     await _asyncErrorHandler(() async {
-      final updatedEvent = await _useCase.updateActivity(event.event);
+      final updatedEvent = await _useCase.updateActivity(event.event,
+          state.selectedEvent?.calendarId ?? event.event.calendarId);
       emit(state.copyWith(selectedEvent: () => updatedEvent as ViewEvent));
     }, emit);
   }
@@ -87,15 +87,18 @@ class EventsBloc extends Bloc<EventBlocEvent, EventsState> {
   }
 
   _onAddEvents(AddEvents event, Emitter<EventsState> emit) async {
-    if(event.events == null && state.status.isLoading){
+    if (event.events == null && state.status.isLoading) {
       return;
     }
     _errorHandler(() {
       final weeks = generateWeeks(
           state.startIntervalDate.subtract(extraDuration),
           state.endIntervalDate.add(extraDuration));
-      final List<ExtendedMonthEvent> extendedMonthEvents = event.events == null ? [] :
-          event.events!.map((e) => ExtendedMonthEvent.fromViewEvent(e)).toList();
+      final List<ExtendedMonthEvent> extendedMonthEvents = event.events == null
+          ? []
+          : event.events!
+              .map((e) => ExtendedMonthEvent.fromViewEvent(e))
+              .toList();
       final processedEvents = processEvents(weeks, extendedMonthEvents);
       final viewEvents = convertWeeksToMap(processedEvents);
 
@@ -107,14 +110,13 @@ class EventsBloc extends Bloc<EventBlocEvent, EventsState> {
   }
 
   _onStartSync(StartSync event, Emitter<EventsState> emit) async {
-    if(state.originalEvents == null || state.eventsMap == null){
+    if (state.originalEvents == null || state.eventsMap == null) {
       emit(state.copyWith(status: EventsStatus.loading));
     }
     await _asyncErrorHandler(() async {
       await _useCase.syncCalendarsWithActivities();
     }, emit);
   }
-
 
   _onSelectDate(SelectDate event, Emitter<EventsState> emit) async {
     final today = DateTime.now();
@@ -126,18 +128,24 @@ class EventsBloc extends Bloc<EventBlocEvent, EventsState> {
       final newStartDate = event.date.firstDayOfMonth;
       final newEndDate = event.date.lastDayOfMonth;
       emit(state.copyWith(
-         selectedDate: today.isBefore(newEndDate) &&
-              today.isAfter(newStartDate)
-          ? today
-          : event.date,
-          startIntervalDate: newStartDate, endIntervalDate: newEndDate));
+          selectedDate:
+              today.isBefore(newEndDate) && today.isAfter(newStartDate)
+                  ? today
+                  : event.date,
+          startIntervalDate: newStartDate,
+          endIntervalDate: newEndDate));
       add(LoadEvents());
       return;
     }
-    final weekEnd = event.isWeekChanged ? event.date.add(Duration(days: 6)) : null; 
+    final weekEnd =
+        event.isWeekChanged ? event.date.add(Duration(days: 6)) : null;
 
-    emit(state.copyWith(selectedDate: weekEnd != null && today.isBefore(weekEnd) &&
-              today.isAfter(event.date) ? today : event.date));
+    emit(state.copyWith(
+        selectedDate: weekEnd != null &&
+                today.isBefore(weekEnd) &&
+                today.isAfter(event.date)
+            ? today
+            : event.date));
   }
 
   _errorHandler(void Function() callback, Emitter<EventsState> emit) {
