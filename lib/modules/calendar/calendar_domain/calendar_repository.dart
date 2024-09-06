@@ -1,3 +1,4 @@
+import 'package:aurora_logger/aurora_logger.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/activity.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/filters.dart';
@@ -7,14 +8,10 @@ import 'package:aurora_mail/modules/calendar/calendar_domain/models/task.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain_impl/calendar_repository_impl.dart';
 
 abstract class CalendarRepository {
-  factory CalendarRepository({
-    required User user,
-    required AppDatabase appDB,
-  }) =>
+  factory CalendarRepository(
+          {required User user, required AppDatabase appDB, Logger? logger}) =>
       CalendarRepositoryImpl(
-        appDB: appDB,
-        user: user,
-      );
+          appDB: appDB, user: user, repositoryLogger: logger);
 
   Future<void> syncCalendarsWithActivities();
 
@@ -46,7 +43,8 @@ abstract class CalendarRepository {
 
   Future<Activity> updateActivity(Activity activity, String originalCalendarId);
 
-  Future<Activity> getActivityByUid({required String calendarId, required String activityUid});
+  Future<Activity> getActivityByUid(
+      {required String calendarId, required String activityUid});
 
   Future<List<Calendar>> getCalendars();
 
