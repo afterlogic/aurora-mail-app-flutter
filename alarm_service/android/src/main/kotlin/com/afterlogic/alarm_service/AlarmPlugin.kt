@@ -25,10 +25,12 @@ class AlarmPlugin : MethodCallHandler, FlutterPlugin{
     }
 
     override fun onAttachedToEngine(binding: FlutterPluginBinding) {
+        if(instance == null){
+            instance = this
+        }
         this.applicationContext = binding.applicationContext
         methodChannel = MethodChannel(binding.binaryMessenger, "alarm_service")
         methodChannel!!.setMethodCallHandler(this)
-        instance = this
     }
 
     override fun onDetachedFromEngine(binding: FlutterPluginBinding) {
@@ -42,6 +44,9 @@ class AlarmPlugin : MethodCallHandler, FlutterPlugin{
     private var doOnAlarm: Result? = null
 
     override fun onMethodCall(call: MethodCall, result: Result) {
+        if(instance == null){
+            instance = this
+        }
         val arg = call.arguments as List<*>?
         try {
             when {
