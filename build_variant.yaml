@@ -33,7 +33,7 @@ _iosAppId: "{{_appId}}"
 _appleGroupId: ""
 packageName: "{{_appId}}"
 version: ""
-build: 288
+build: 289
 
 icon: "{{image_dir}}/icon.png"
 main_logo: "{{image_dir}}/main_logo.png"
