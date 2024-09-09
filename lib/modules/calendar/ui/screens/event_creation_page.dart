@@ -90,7 +90,10 @@ class _EventCreationPageState extends State<EventCreationPage> {
     _eventsBloc = BlocProvider.of<EventsBloc>(context);
     _currentUserMail =
         BlocProvider.of<AuthBloc>(context).currentUser?.emailFromLogin ?? '';
-    _selectedCalendar =
+    _selectedCalendar = _calendarsBloc.state
+            .availableCalendars(_currentUserMail)
+            .where((e) => e.selected)
+            .firstOrNull ??
         _calendarsBloc.state.availableCalendars(_currentUserMail).firstOrNull;
     _titleController = TextEditingController();
     _titleFocus = FocusNode();

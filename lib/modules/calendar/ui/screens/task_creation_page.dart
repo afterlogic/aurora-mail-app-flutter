@@ -86,7 +86,10 @@ class _TaskCreationPageState extends State<TaskCreationPage> {
     _tasksBloc = BlocProvider.of<TasksBloc>(context);
     _currentUserMail =
         BlocProvider.of<AuthBloc>(context).currentUser?.emailFromLogin ?? '';
-    _selectedCalendar =
+    _selectedCalendar = _calendarsBloc.state
+            .availableCalendars(_currentUserMail)
+            .where((e) => e.selected)
+            .firstOrNull ??
         _calendarsBloc.state.availableCalendars(_currentUserMail).firstOrNull;
     _titleController = TextEditingController();
     _titleFocus = FocusNode();
