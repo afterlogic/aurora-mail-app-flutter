@@ -14,6 +14,11 @@ enum FolderType {
   system,
   user,
   unknown,
+  notes,
+}
+
+extension FolderTypeX on FolderType {
+  bool get isNotes => this == FolderType.notes;
 }
 
 class FolderNode {
@@ -24,6 +29,8 @@ class FolderNode {
 }
 
 class Folder {
+  static const String notesFolderName = "Notes";
+
   final String guid;
 
   final String? parentGuid;
@@ -65,6 +72,7 @@ class Folder {
   final int? count;
 
   final int? unread;
+
   final String nameSpace;
 
   Folder({
@@ -141,6 +149,8 @@ class Folder {
         return FolderType.system;
       case 10:
         return FolderType.user;
+      case 11:
+        return FolderType.notes;
       default:
         return FolderType.unknown;
     }
@@ -171,6 +181,8 @@ class Folder {
         return 9;
       case FolderType.user:
         return 10;
+      case FolderType.notes:
+        return 11;
       default:
         return -1;
     }

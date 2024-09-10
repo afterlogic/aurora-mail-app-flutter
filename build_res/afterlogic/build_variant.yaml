@@ -19,6 +19,7 @@ supportLanguage: "en"
 backgroundSync: true
 cryptoEnable: true
 calendarModule: true
+notesModule: true
 multiAccountEnable: true
 multiUserEnable: false
 pushNotification: true
