@@ -202,14 +202,14 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
     final draftsFolder = await _mailBloc.getFolderByType(FolderType.drafts);
     final isDraftMessage =
         draftsFolder != null && message.folder == draftsFolder.fullNameRaw;
-    if (isDraftMessage) {
+    if (isDraftMessage || _selectedFolder.folderType.isNotes) {
       Navigator.pushNamed(
         context,
         ComposeRoute.name,
         arguments: ComposeScreenArgs(
           mailBloc: _mailBloc,
           contactsBloc: _contactsBloc,
-          composeAction: OpenFromDrafts(message, message.uid),
+          composeAction: _selectedFolder.folderType.isNotes ? OpenFromNotes(message) : OpenFromDrafts(message, message.uid),
         ),
       );
     } else {
@@ -609,6 +609,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
                 onStarMessage: _setStarred,
                 onDeleteMessage: _deleteMessage,
                 onUnreadMessage: _unreadMessage,
+                isNote: _selectedFolder.folderType.isNotes,
               );
             },
             progressWidget: Padding(
