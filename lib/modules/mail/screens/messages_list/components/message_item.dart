@@ -26,6 +26,7 @@ class MessageItem extends StatefulWidget {
   final Message message;
   final Key key;
   final bool isSent;
+  final bool isNote;
   final Function(Message) onItemSelected;
   final Function(Message, bool) onStarMessage;
   final Function(Message) onDeleteMessage;
@@ -38,6 +39,7 @@ class MessageItem extends StatefulWidget {
     this.children, {
     this.key,
     @required this.onItemSelected,
+    @required this.isNote,
     @required this.onDeleteMessage,
     @required this.onStarMessage,
     this.selectionController,
@@ -91,8 +93,8 @@ class _MessageItemState extends BState<MessageItem> {
   @override
   Widget build(BuildContext context) {
     final m = widget.message;
-    final eventInfoFromMessage =
-        MailUtils.getExtendFromMessageByObjectTypeName(['Object/Aurora\\Modules\\Calendar\\Classes\\Ics'], m);
+    final eventInfoFromMessage = MailUtils.getExtendFromMessageByObjectTypeName(
+        ['Object/Aurora\\Modules\\Calendar\\Classes\\Ics'], m);
     final hasUnreadChildren = widget.children
         .where((i) => !i.flagsInJson.contains("\\seen"))
         .isNotEmpty;
@@ -225,134 +227,211 @@ class _MessageItemState extends BState<MessageItem> {
                     ? _toggleThreads
                     : () => widget.onItemSelected(m),
             child: dismissibleWrap(
-              ListTile(
-                key: Key(m.uid.toString()),
-                title: Text(_getEmailTitle(),
-                    style: TextStyle(
-                      fontWeight: fontWeight,
-                      fontSize: 14.0,
-                      color: theme.disabledColor,
-                    )),
-                subtitle: Padding(
-                  padding: const EdgeInsets.only(top: 6.0),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      if (widget.children.isNotEmpty)
-                        InkResponse(
-                          child:
-                              _buildThreadCounter(context, hasUnreadChildren),
-                          onTap: _toggleThreads,
-                        ),
-                      if (widget.children.isNotEmpty) SizedBox(width: 6.0),
-                      Flexible(
-                        child: Opacity(
-                          opacity: m.subject.isEmpty ? 0.44 : 1.0,
-                          child: Text(
-                            m.subject.isNotEmpty
-                                ? m.subject
-                                : S.of(context).messages_no_subject,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              fontWeight: fontWeight,
-                              fontSize: 16.0,
-                              color: theme.textTheme.headline6.color,
-                            ),
-                          ),
+              widget.isNote
+                  ? ListTile(
+                      key: Key(m.uid.toString()),
+                      title: Text(
+                        m.subject.isNotEmpty
+                            ? m.subject
+                            : S.of(context).messages_no_subject,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontWeight: fontWeight,
+                          fontSize: 16.0,
+                          color: theme.textTheme.headline6.color,
                         ),
                       ),
-                    ],
-                  ),
-                ),
-                trailing: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: <Widget>[
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: <Widget>[
-                        if (m.hasAttachments)
-                          if (eventInfoFromMessage != null)
-                            Icon(
-                              Icons.calendar_month,
-                              size: 20,
-                            )
-                          else
-                            Icon(Icons.attachment),
-                        SizedBox(width: 6.0),
-                        BlocBuilder<SettingsBloc, SettingsState>(
-                          builder: (_, state) => Text(
-                            DateFormatting.getShortMessageDate(
-                              timestamp: m.timeStampInUTC,
-                              locale:
-                                  Localizations.localeOf(context).languageCode,
-                              yesterdayWord:
-                                  S.of(context).label_message_yesterday,
-                              is24: (state as SettingsLoaded).is24 ?? true,
-                            ),
-                            style: TextStyle(
-                              fontSize: 14.0,
-                              color: theme.disabledColor
-                                  .withAlpha(theme.disabledColor.alpha ~/ 2),
-                            ),
+                      trailing: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: <Widget>[
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: <Widget>[
+                              BlocBuilder<SettingsBloc, SettingsState>(
+                                builder: (_, state) => Text(
+                                  DateFormatting.getShortMessageDate(
+                                    timestamp: m.timeStampInUTC,
+                                    locale: Localizations.localeOf(context)
+                                        .languageCode,
+                                    yesterdayWord:
+                                        S.of(context).label_message_yesterday,
+                                    is24:
+                                        (state as SettingsLoaded).is24 ?? true,
+                                  ),
+                                  style: TextStyle(
+                                    fontSize: 14.0,
+                                    color: theme.disabledColor.withAlpha(
+                                        theme.disabledColor.alpha ~/ 2),
+                                  ),
+                                ),
+                              ),
+                              if (widget.selectionController.enable)
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0),
+                                  child: Center(
+                                    child: DecoratedBox(
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        border: selected
+                                            ? null
+                                            : Border.all(
+                                                color: theme.primaryColor,
+                                                width: 2),
+                                        color: selected
+                                            ? theme.primaryColor
+                                            : null,
+                                      ),
+                                      child: SizedBox(
+                                        height: 10,
+                                        width: 10,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                            ],
                           ),
+                        ],
+                      ),
+                    )
+                  : ListTile(
+                      key: Key(m.uid.toString()),
+                      title: Text(_getEmailTitle(),
+                          style: TextStyle(
+                            fontWeight: fontWeight,
+                            fontSize: 14.0,
+                            color: theme.disabledColor,
+                          )),
+                      subtitle: Padding(
+                        padding: const EdgeInsets.only(top: 6.0),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            if (widget.children.isNotEmpty)
+                              InkResponse(
+                                child: _buildThreadCounter(
+                                    context, hasUnreadChildren),
+                                onTap: _toggleThreads,
+                              ),
+                            if (widget.children.isNotEmpty)
+                              SizedBox(width: 6.0),
+                            Flexible(
+                              child: Opacity(
+                                opacity: m.subject.isEmpty ? 0.44 : 1.0,
+                                child: Text(
+                                  m.subject.isNotEmpty
+                                      ? m.subject
+                                      : S.of(context).messages_no_subject,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                    fontWeight: fontWeight,
+                                    fontSize: 16.0,
+                                    color: theme.textTheme.headline6.color,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: <Widget>[
-                        if (flags.contains(MessageFlags.answered))
-                          Padding(
-                            padding: const EdgeInsets.only(left: .0),
-                            child: Icon(Icons.reply),
-                          ),
-                        if (flags.contains(MessageFlags.forwarded))
-                          Padding(
-                            padding: const EdgeInsets.only(left: .0),
-                            child: Icon(MdiIcons.share),
-                          ),
-                        if (widget.selectionController.enable)
-                          Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: Center(
-                              child: DecoratedBox(
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  border: selected
-                                      ? null
-                                      : Border.all(
-                                          color: theme.primaryColor, width: 2),
-                                  color: selected ? theme.primaryColor : null,
-                                ),
-                                child: SizedBox(
-                                  height: 10,
-                                  width: 10,
+                      ),
+                      trailing: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: <Widget>[
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: <Widget>[
+                              if (m.hasAttachments)
+                                if (eventInfoFromMessage != null)
+                                  Icon(
+                                    Icons.calendar_month,
+                                    size: 20,
+                                  )
+                                else
+                                  Icon(Icons.attachment),
+                              SizedBox(width: 6.0),
+                              BlocBuilder<SettingsBloc, SettingsState>(
+                                builder: (_, state) => Text(
+                                  DateFormatting.getShortMessageDate(
+                                    timestamp: m.timeStampInUTC,
+                                    locale: Localizations.localeOf(context)
+                                        .languageCode,
+                                    yesterdayWord:
+                                        S.of(context).label_message_yesterday,
+                                    is24:
+                                        (state as SettingsLoaded).is24 ?? true,
+                                  ),
+                                  style: TextStyle(
+                                    fontSize: 14.0,
+                                    color: theme.disabledColor.withAlpha(
+                                        theme.disabledColor.alpha ~/ 2),
+                                  ),
                                 ),
                               ),
-                            ),
+                            ],
                           ),
-                        SizedBox(
-                            width: 24.0,
-                            height: 24.0,
-                            child: BlocBuilder<SettingsBloc, SettingsState>(
-                              builder: (_, state) => Star(
-                                value: m.flagsInJson.contains("\\flagged"),
-                                enabled: !(state is SettingsLoaded &&
-                                    state.connection ==
-                                        ConnectivityResult.none),
-                                onPressed: _setStarred,
-                              ),
-                            )),
-                      ],
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: <Widget>[
+                              if (flags.contains(MessageFlags.answered))
+                                Padding(
+                                  padding: const EdgeInsets.only(left: .0),
+                                  child: Icon(Icons.reply),
+                                ),
+                              if (flags.contains(MessageFlags.forwarded))
+                                Padding(
+                                  padding: const EdgeInsets.only(left: .0),
+                                  child: Icon(MdiIcons.share),
+                                ),
+                              if (widget.selectionController.enable)
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0),
+                                  child: Center(
+                                    child: DecoratedBox(
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        border: selected
+                                            ? null
+                                            : Border.all(
+                                                color: theme.primaryColor,
+                                                width: 2),
+                                        color: selected
+                                            ? theme.primaryColor
+                                            : null,
+                                      ),
+                                      child: SizedBox(
+                                        height: 10,
+                                        width: 10,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              SizedBox(
+                                  width: 24.0,
+                                  height: 24.0,
+                                  child:
+                                      BlocBuilder<SettingsBloc, SettingsState>(
+                                    builder: (_, state) => Star(
+                                      value:
+                                          m.flagsInJson.contains("\\flagged"),
+                                      enabled: !(state is SettingsLoaded &&
+                                          state.connection ==
+                                              ConnectivityResult.none),
+                                      onPressed: _setStarred,
+                                    ),
+                                  )),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                  ],
-                ),
-              ),
             ),
           ),
           Divider(
@@ -378,6 +457,7 @@ class _MessageItemState extends BState<MessageItem> {
                           widget.isSent,
                           t,
                           [],
+                          isNote: widget.isNote,
                           key: Key(t.localId.toString()),
                           selectionController: widget.selectionController,
                           onItemSelected: widget.onItemSelected,

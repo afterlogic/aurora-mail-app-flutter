@@ -42,22 +42,6 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   }
 
   Stream<SettingsState> _initSyncSettings(InitSettings event) async* {
-    final apiModule = WebMailApi(
-        moduleName: WebMailModules.core,
-        hostname: event.user.hostname,
-        token: event.user.token,
-        interceptor: DefaultApiInterceptor.get());
-
-    final settingsNetwork = SettingsNetwork(settingsModule: apiModule);
-
-    AppData? settings;
-
-    try {
-      settings = await settingsNetwork.getSettings();
-      _methods.setAppData(settings);
-    } catch (e, s) {
-      logger.log("getting appData error: $e");
-    } finally {
       await AlarmService.setAlarm(
         main.onAlarm,
         ALARM_ID,
@@ -71,28 +55,23 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       if (state is SettingsLoaded) {
         yield (state as SettingsLoaded).copyWith(
             users: Value(event.users),
-            initialSettingsLoadingStatus: InitialSettingsLoadingStatus.loaded,
             syncFrequency: Value(event.user.syncFreqInSeconds ?? 300),
             syncPeriod: Value(event.user.syncPeriod ?? "Period.allTime"),
             darkThemeEnabled: Value(appSettings.isDarkTheme),
             is24: Value(appSettings.is24),
-            settings: () => settings,
             language: Value(
               Language.fromJson(language),
             ));
       } else {
         yield SettingsLoaded(
           users: event.users,
-          initialSettingsLoadingStatus: InitialSettingsLoadingStatus.loaded,
           syncFrequency: event.user.syncFreqInSeconds,
           syncPeriod: event.user.syncPeriod,
           darkThemeEnabled: appSettings.isDarkTheme,
           is24: appSettings.is24,
-          settings: settings,
           language: Language.fromJson(language),
         );
       }
-    }
   }
 
   Stream<SettingsState> _updateConnectivity(UpdateConnectivity event) async* {

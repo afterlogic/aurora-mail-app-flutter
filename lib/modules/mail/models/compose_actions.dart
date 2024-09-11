@@ -14,6 +14,12 @@ class OpenFromDrafts implements ComposeAction {
   const OpenFromDrafts(this.message, this.draftUid);
 }
 
+class OpenFromNotes implements ComposeAction {
+  final Message message;
+
+  const OpenFromNotes(this.message);
+}
+
 class Forward implements ComposeAction {
   final Message message;
 

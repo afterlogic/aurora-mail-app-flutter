@@ -5,11 +5,9 @@ import 'package:aurora_logger/aurora_logger.dart';
 import 'package:aurora_mail/background/background_helper.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/models/folder.dart';
-import 'package:aurora_mail/modules/calendar/calendar_domain/calendar_usecase.dart';
 import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/bloc.dart';
 import 'package:aurora_mail/utils/api_utils.dart';
 import 'package:bloc/bloc.dart';
-import 'package:flutter/cupertino.dart';
 
 import './bloc.dart';
 import 'mail_methods.dart';
@@ -21,10 +19,10 @@ class MailBloc extends Bloc<MailEvent, MailState> {
   final updateMessageCounter = UpdateMessageCounter();
   static String selectedFolderGuid;
 
-  MailBloc(
-      {User user, Account account,})
-      :
-        super(FoldersEmpty()) {
+  MailBloc({
+    User user,
+    Account account,
+  }) : super(FoldersEmpty()) {
     assert(user != null);
     init(user, account);
     BackgroundHelper.addOnEndAlarmObserver(true, onEndAlarm);

@@ -7,6 +7,7 @@ import 'package:aurora_mail/modules/calendar/utils/calendar_colors.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/settings_bloc.dart';
 import 'package:aurora_mail/utils/extensions/colors_extensions.dart';
+import 'package:aurora_mail/utils/user_app_data_singleton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -45,10 +46,7 @@ class _CalendarCreationDialogState extends State<CalendarCreationDialog> {
   @override
   void initState() {
     super.initState();
-    final settingsBloc = BlocProvider.of<SettingsBloc>(context);
-    final calendarSettings = settingsBloc.state is SettingsLoaded
-        ? (settingsBloc.state as SettingsLoaded).settings?.calendarSettings
-        : null;
+    final calendarSettings = UserAppDataSingleton().getAppData?.calendarSettings;
     final serverColors = calendarSettings != null
         ? (calendarSettings["CalendarColors"] as List).cast<String>()
         : null;

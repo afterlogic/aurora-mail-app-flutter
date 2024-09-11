@@ -1,5 +1,7 @@
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/generated/l10n.dart';
+import 'package:aurora_mail/models/server_modules.dart';
+import 'package:aurora_mail/utils/user_app_data_singleton.dart';
 import 'package:flutter/cupertino.dart';
 
 enum FolderType {
@@ -124,6 +126,32 @@ class Folder {
     }
   }
 
+  Folder copyWith({FolderType? folderType, int? type}) {
+    return Folder(
+        guid: guid,
+        extended: extended,
+        count: count,
+        unread: unread,
+        parentGuid: parentGuid,
+        type: type ?? this.type,
+        folderType: folderType ?? this.folderType,
+        order: order,
+        name: name,
+        fullName: fullName,
+        fullNameRaw: fullNameRaw,
+        fullNameHash: fullNameHash,
+        folderHash: folderHash,
+        delimiter: delimiter,
+        needsInfoUpdate: needsInfoUpdate,
+        isSystemFolder: isSystemFolder,
+        isSubscribed: isSubscribed,
+        isSelectable: isSelectable,
+        exists: exists,
+        alwaysRefresh: alwaysRefresh,
+        nameSpace: nameSpace,
+        accountLocalId: accountLocalId);
+  }
+
   static FolderType? getFolderTypeFromNumber(int? num) {
     if (num == null) {
       return null;
@@ -190,8 +218,13 @@ class Folder {
 
   static List<Folder>? getFoldersObjectsFromDb(List<LocalFolder> localFolders) {
     try {
+      final availableModules =
+          UserAppDataSingleton().getAppData?.availableModules;
+
       return localFolders.map((localFolder) {
-        return getFolderObjectsFromDb(localFolder);
+        return getFolderObjectsFromDb(localFolder,
+            notesAvailable:
+                availableModules?.contains(ServerModules.notes) ?? false);
       }).toList();
     } catch (err, s) {
       print("getFolderObjectsFromDb err: $err");
@@ -200,14 +233,19 @@ class Folder {
     }
   }
 
-  static Folder getFolderObjectsFromDb(LocalFolder localFolder) {
+  static Folder getFolderObjectsFromDb(LocalFolder localFolder,
+      {bool notesAvailable = false}) {
     return Folder(
       accountLocalId: localFolder.accountLocalId,
       nameSpace: localFolder.namespace,
       guid: localFolder.guid,
       parentGuid: localFolder.parentGuid,
-      type: localFolder.type,
-      folderType: getFolderTypeFromNumber(localFolder.type),
+      type: !notesAvailable && localFolder.type == FolderType.notes.index
+          ? FolderType.user.index
+          : localFolder.type,
+      folderType: !notesAvailable && localFolder.type == FolderType.notes.index
+          ? FolderType.user
+          : getFolderTypeFromNumber(localFolder.type),
       order: localFolder.folderOrder,
       name: localFolder.name,
       fullName: localFolder.fullName,

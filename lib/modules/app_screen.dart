@@ -27,6 +27,7 @@ import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/notification/push_notifications_manager.dart';
 import 'package:aurora_mail/shared_ui/restart_widget.dart';
 import 'package:aurora_mail/utils/base_state.dart';
+import 'package:aurora_mail/utils/user_app_data_singleton.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -225,7 +226,9 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
                       final theme = _getTheme(settingsState.darkThemeEnabled);
                       final calendarRepository = authState.user != null &&
                               BuildProperty.calendarModule &&
-                              (settingsState.settings?.availableModules
+                              (UserAppDataSingleton()
+                                      .getAppData
+                                      ?.availableModules
                                       ?.contains(ServerModules.calendar) ??
                                   false)
                           ? CalendarRepository(
@@ -235,7 +238,8 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
                       final calendarUseCase = calendarRepository != null
                           ? CalendarUseCase(
                               repository: calendarRepository,
-                              location: settingsState.settings?.location)
+                              location:
+                                  UserAppDataSingleton().getAppData?.location)
                           : null;
                       return MultiBlocProvider(
                         providers: [
@@ -245,8 +249,9 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
                             BlocProvider(
                               create: (_) => EventsBloc(
                                   useCase: calendarUseCase,
-                                  firstDayInWeek: convert(settingsState.settings
-                                      .calendarSettings["WeekStartsOn"]))
+                                  firstDayInWeek: convert(UserAppDataSingleton()
+                                      .getAppData
+                                      ?.calendarSettings["WeekStartsOn"]))
                                 ..add(const StartSync()),
                             ),
                           if (calendarUseCase != null)

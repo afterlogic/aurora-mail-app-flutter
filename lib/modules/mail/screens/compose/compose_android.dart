@@ -142,6 +142,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
     print('ComposeAndroid, _prepareMessage(), action is ${action.runtimeType}');
 
     if (action is OpenFromDrafts) await _initFromDrafts(action);
+    if (action is OpenFromNotes) await _initFromNotes(action);
     if (action is Forward) await _initForward(action);
     if (action is Reply) await _initReply(action);
     if (action is ReplyToAll) await _initReplyAll(action);
@@ -183,6 +184,12 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
         _bccEmails.addAll(MailUtils.getEmails(_message.bccInJson));
       });
     }
+    _subjectTextCtrl.text = _message.subject;
+    initBodyFromMessage(null, _message);
+  }
+
+  void _initFromNotes(OpenFromNotes action) async {
+    _message = action.message;
     _subjectTextCtrl.text = _message.subject;
     initBodyFromMessage(null, _message);
   }
