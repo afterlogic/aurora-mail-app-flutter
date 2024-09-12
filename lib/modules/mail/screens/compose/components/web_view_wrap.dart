@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class WebViewWrap extends StatefulWidget {
+  final bool simplified;
   final Widget webView;
   final Widget Function(VoidCallback) closeWebView;
   final Widget topWidget;
@@ -11,6 +12,7 @@ class WebViewWrap extends StatefulWidget {
   const WebViewWrap({
     Key key,
     this.webView,
+    this.simplified = false,
     this.closeWebView,
     this.topWidget,
   }) : super(key: key);
@@ -77,24 +79,26 @@ class _WebViewWrapState extends State<WebViewWrap> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              widget.topWidget,
+              if (!widget.simplified) widget.topWidget,
               Stack(
                 children: [
                   Container(
                     width: double.infinity,
                     height: size.maxHeight,
-                    child: GestureDetector(
-                      behavior: HitTestBehavior.opaque,
-                      onTapDown: focused
-                          ? null
-                          : (_) {
-                              setFocus(true);
-                            },
-                      child: IgnorePointer(
-                        ignoring: !focused,
-                        child: widget.webView,
-                      ),
-                    ),
+                    child: widget.simplified
+                        ? widget.webView
+                        : GestureDetector(
+                            behavior: HitTestBehavior.opaque,
+                            onTapDown: focused
+                                ? null
+                                : (_) {
+                                    setFocus(true);
+                                  },
+                            child: IgnorePointer(
+                              ignoring: !focused,
+                              child: widget.webView,
+                            ),
+                          ),
                   ),
                   Positioned(
                     bottom: bottom + 15,

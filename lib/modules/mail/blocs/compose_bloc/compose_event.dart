@@ -2,6 +2,7 @@
 import 'dart:io';
 
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 import 'package:aurora_mail/modules/mail/models/compose_attachment.dart';
 import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
@@ -23,6 +24,24 @@ class SendMessages extends ComposeEvent with AlwaysNonEqualObject {
   final List<SendMessage> messages;
 
   SendMessages(this.messages);
+}
+
+class SendNote extends ComposeEvent with AlwaysNonEqualObject {
+  final String subject;
+  final String text;
+  final Folder notesFolder;
+  final String messageUid;
+
+  const SendNote({
+    @required this.notesFolder,
+    @required this.subject,
+    @required this.text,
+    this.messageUid
+  });
+
+  @override
+  List<Object> get props =>
+      [subject, text, notesFolder, messageUid];
 }
 
 class SendMessage extends ComposeEvent with AlwaysNonEqualObject {

@@ -209,7 +209,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
         arguments: ComposeScreenArgs(
           mailBloc: _mailBloc,
           contactsBloc: _contactsBloc,
-          composeAction: _selectedFolder.folderType.isNotes ? OpenFromNotes(message) : OpenFromDrafts(message, message.uid),
+          composeAction: _selectedFolder.folderType.isNotes ? OpenFromNotes(message, _selectedFolder) : OpenFromDrafts(message, message.uid),
         ),
       );
     } else {

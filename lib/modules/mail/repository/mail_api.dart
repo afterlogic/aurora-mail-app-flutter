@@ -110,6 +110,33 @@ class MailApi {
     }
   }
 
+
+  Future<void> sendNote({
+    @required String folderFullName,
+    @required String subject,
+    @required String text,
+    String uid,
+  }) async {
+    final parameters = {
+      "AccountID": _accountId,
+      "FolderFullName": folderFullName,
+      "Subject": subject,
+      // with html tags
+      "Text": text,
+    };
+
+    if(uid != null){
+      parameters.addAll({"MessageUid":uid});
+    }
+
+    final body = new WebMailApiBody(
+        method: "SaveNote",
+        module: WebMailModules.notes,
+        parameters: json.encode(parameters));
+
+    await _mailModule.post(body);
+  }
+
   Future<void> sendMessage({
     @required String to,
     String cc = "",

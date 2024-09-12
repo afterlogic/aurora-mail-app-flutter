@@ -290,6 +290,10 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
         _onGoBack();
         break;
       case ComposeAppBarAction.send:
+        if (widget.composeAction is OpenFromNotes) {
+          _sendNote();
+          break;
+        }
         _sendMessage();
         break;
     }
@@ -331,6 +335,17 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
 
   void initBody(String text) async {
     _bodyTextCtrl.setText(await _bodyTextCtrl.getText() + "<br>" + text);
+  }
+
+  void _sendNote() async {
+    //TODO take subject from text first line,
+    final subj = _subjectTextCtrl.text;
+    final text = await _bodyTextCtrl.getText();
+    _bloc.add(SendNote(
+        notesFolder: (widget.composeAction as OpenFromNotes).notesFolder,
+        subject: subj,
+        messageUid: _message == null ? null : "${_message?.uid}",
+        text: text));
   }
 
   void _sendMessage() async {
@@ -735,7 +750,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
       }
       final sender = AliasOrIdentity(alias, identity);
       String password;
-      if(result.sign) {
+      if (result.sign) {
         final key = await AppInjector.instance
             .cryptoStorage()
             .getPgpKey(sender.mail, true, false);
@@ -768,7 +783,9 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
     if (await _hasMessageChanged) {
       final result = await showDialog<DiscardChangesOption>(
         context: context,
-        builder: (_) => DiscardChangesDialog(content: Text(S.of(context).compose_discard_save_dialog_description),),
+        builder: (_) => DiscardChangesDialog(
+          content: Text(S.of(context).compose_discard_save_dialog_description),
+        ),
       );
       switch (result) {
         case DiscardChangesOption.discard:
@@ -857,7 +874,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
     Widget _done(FocusNode node) {
       return TextButton(
         child: Text(
-         S.of(context).btn_done,
+          S.of(context).btn_done,
           style: theme.textTheme.bodyText2.copyWith(color: Colors.black),
         ),
         onPressed: node.unfocus,
@@ -865,6 +882,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
     }
 
     Widget body = WebViewWrap(
+      simplified: widget.composeAction is OpenFromNotes,
       topWidget: Container(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -958,7 +976,8 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
                       ccNode.unfocus();
                       subjectNode.unfocus();
                       bodyNode.unfocus();
-                      _bloc.add(UploadAttachment(type));},
+                      _bloc.add(UploadAttachment(type));
+                    },
                     onNext: () {
                       bodyNode.requestFocus();
                     },
@@ -1180,7 +1199,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
       decryptBody = await _bodyTextCtrl.getText();
 
       _subjectTextCtrl.text =
-           S.of(context).template_self_destructing_message_title;
+          S.of(context).template_self_destructing_message_title;
       _bodyTextCtrl.setText(result.body);
       _attachments.clear();
       _ccEmails.clear();
