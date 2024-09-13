@@ -137,6 +137,7 @@
   "contacts_edit": "Редактировать контакт",
   "contacts_edit_cancel": "Отменить редактирование контакта",
   "contacts_edit_save": "Сохранить",
+  "save_changes_question": "Сохранить изменения?",
   "contacts_add": "Добавить контакт",
   "contacts_group_add": "Добавить группу",
   "contacts_group_add_to_group": "Добавить в группу",

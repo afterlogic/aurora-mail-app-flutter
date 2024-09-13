@@ -137,6 +137,7 @@
   "contacts_edit": "Edit contact",
   "contacts_edit_cancel": "Cancel editing contact",
   "contacts_edit_save": "Save changes",
+  "save_changes_question": "Save changes?",
   "contacts_add": "Add contact",
   "contacts_group_add": "Add group",
   "contacts_group_add_to_group": "Add to group",

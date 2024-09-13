@@ -1,6 +1,7 @@
 //@dart=2.9
 import 'dart:convert';
 
+import 'package:aurora_logger/aurora_logger.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/models/alias_or_identity.dart';
@@ -16,6 +17,7 @@ import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:html/dom.dart';
 import 'package:html/parser.dart';
 
 class MailUtils {
@@ -139,6 +141,34 @@ class MailUtils {
         .replaceAll("<br />", "\r\n");
     final document = parse(html);
     return parse(document.body.text).documentElement.text;
+  }
+
+  static String extractFirstContent(String htmlString) {
+    if (htmlString == null || htmlString.isEmpty) return '';
+    try {
+      Document document = parse(htmlString);
+      String findFirstText(Node node) {
+        if (node == null) return null;
+        if (node.nodeType == Node.TEXT_NODE && node.text.trim().isNotEmpty) {
+          return node.text.trim();
+        }
+
+        for (final child in node.nodes) {
+          var result = findFirstText(child);
+          if (result != null) {
+            return result;
+          }
+        }
+        return null;
+      }
+
+      return findFirstText(document.body) ?? '';
+    } catch (e, st) {
+      logger.log(
+        'extractFirstContent for note error: $e',
+      );
+      return '';
+    }
   }
 
   static String getReplySubject(Message message) {

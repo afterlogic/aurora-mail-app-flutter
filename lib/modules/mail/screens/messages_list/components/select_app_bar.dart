@@ -58,7 +58,7 @@ class _SelectAppBarState extends BState<SelectAppBar> {
         final actions = folderType == null
             ? null
             : <Widget>[
-                if (![FolderType.sent, FolderType.drafts, FolderType.spam]
+                if (![FolderType.sent, FolderType.notes, FolderType.drafts, FolderType.spam]
                     .contains(folderType))
                   IconButton(
                     icon: SvgIcon(

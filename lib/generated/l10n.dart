@@ -1430,6 +1430,16 @@ class S {
     );
   }
 
+  /// `Save changes?`
+  String get save_changes_question {
+    return Intl.message(
+      'Save changes?',
+      name: 'save_changes_question',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Add contact`
   String get contacts_add {
     return Intl.message(

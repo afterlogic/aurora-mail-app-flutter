@@ -1,5 +1,6 @@
 //@dart=2.9
 import 'package:aurora_mail/generated/l10n.dart';
+import 'package:aurora_mail/modules/mail/models/compose_actions.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
@@ -12,8 +13,9 @@ enum ComposeAppBarAction {
 
 class ComposeAppBar extends StatefulWidget implements PreferredSizeWidget {
   final Function(ComposeAppBarAction action) onAppBarActionSelected;
+  final ComposeAction action;
 
-  const ComposeAppBar(this.onAppBarActionSelected);
+  const ComposeAppBar(this.onAppBarActionSelected, this.action);
 
   @override
   _ComposeAppBarState createState() => _ComposeAppBarState();
@@ -40,7 +42,7 @@ class _ComposeAppBarState extends BState<ComposeAppBar> {
           onPressed: () =>
               widget.onAppBarActionSelected(ComposeAppBarAction.send),
         ),
-        PopupMenuButton<ComposeAppBarAction>(
+        if(widget.action is! OpenFromNotes)PopupMenuButton<ComposeAppBarAction>(
           onSelected: widget.onAppBarActionSelected,
           itemBuilder: (BuildContext context) => [
             PopupMenuItem(

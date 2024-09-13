@@ -764,6 +764,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "no_permission_to_local_storage": MessageLookupByLibrary.simpleMessage(
             "No permission to access the local storage. Check your device settings."),
         "remove": MessageLookupByLibrary.simpleMessage("Remove"),
+        "save_changes_question":
+            MessageLookupByLibrary.simpleMessage("Save changes?"),
         "self_destructing_life_time_day":
             MessageLookupByLibrary.simpleMessage("24 hours"),
         "self_destructing_life_time_days_3":

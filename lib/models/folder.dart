@@ -219,7 +219,7 @@ class Folder {
   static List<Folder>? getFoldersObjectsFromDb(List<LocalFolder> localFolders) {
     try {
       final availableModules =
-          UserAppDataSingleton().getAppData?.availableModules;
+          UserAppDataSingleton().getAppData?.availableClientModules;
 
       return localFolders.map((localFolder) {
         return getFolderObjectsFromDb(localFolder,

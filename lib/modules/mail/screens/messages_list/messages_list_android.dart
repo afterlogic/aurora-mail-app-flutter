@@ -209,7 +209,9 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
         arguments: ComposeScreenArgs(
           mailBloc: _mailBloc,
           contactsBloc: _contactsBloc,
-          composeAction: _selectedFolder.folderType.isNotes ? OpenFromNotes(message, _selectedFolder) : OpenFromDrafts(message, message.uid),
+          composeAction: _selectedFolder.folderType.isNotes
+              ? OpenFromNotes(message, _selectedFolder)
+              : OpenFromDrafts(message, message.uid),
         ),
       );
     } else {
@@ -291,20 +293,25 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
       bottomNavigationBar:
           MailBottomAppBar(selectedRoute: MailBottomAppBarRoutes.mail),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: selectionController.enable ? null : AMFloatingActionButton(
-        child: IconTheme(
-          data: AppTheme.floatIconTheme,
-          child: Icon(MdiIcons.pen),
-        ),
-        onPressed: () => Navigator.pushNamed(
-          context,
-          ComposeRoute.name,
-          arguments: ComposeScreenArgs(
-            mailBloc: _mailBloc,
-            contactsBloc: _contactsBloc,
-          ),
-        ),
-      ),
+      floatingActionButton: selectionController.enable
+          ? null
+          : AMFloatingActionButton(
+              child: IconTheme(
+                data: AppTheme.floatIconTheme,
+                child: Icon(MdiIcons.pen),
+              ),
+              onPressed: () => Navigator.pushNamed(
+                context,
+                ComposeRoute.name,
+                arguments: ComposeScreenArgs(
+                  composeAction: _selectedFolder.folderType.isNotes
+                      ? OpenFromNotes(null, _selectedFolder)
+                      : null,
+                  mailBloc: _mailBloc,
+                  contactsBloc: _contactsBloc,
+                ),
+              ),
+            ),
       body: Row(
         children: [
           ClipRRect(
@@ -524,20 +531,25 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
       bottomNavigationBar:
           MailBottomAppBar(selectedRoute: MailBottomAppBarRoutes.mail),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: selectionController.enable ? null : AMFloatingActionButton(
-        child: IconTheme(
-          data: AppTheme.floatIconTheme,
-          child: Icon(MdiIcons.pen),
-        ),
-        onPressed: () => Navigator.pushNamed(
-          context,
-          ComposeRoute.name,
-          arguments: ComposeScreenArgs(
-            mailBloc: _mailBloc,
-            contactsBloc: _contactsBloc,
-          ),
-        ),
-      ),
+      floatingActionButton: selectionController.enable
+          ? null
+          : AMFloatingActionButton(
+              child: IconTheme(
+                data: AppTheme.floatIconTheme,
+                child: Icon(MdiIcons.pen),
+              ),
+              onPressed: () => Navigator.pushNamed(
+                context,
+                ComposeRoute.name,
+                arguments: ComposeScreenArgs(
+                  composeAction: _selectedFolder.folderType.isNotes
+                      ? OpenFromNotes(null, _selectedFolder)
+                      : null,
+                  mailBloc: _mailBloc,
+                  contactsBloc: _contactsBloc,
+                ),
+              ),
+            ),
     );
   }
 
@@ -547,8 +559,8 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
 
   void selectionCallback() {
     //rebuild only if selection mode changes
-    if(selectionController.selected.length < 2);
-    setState(() { });
+    if (selectionController.selected.length < 2) ;
+    setState(() {});
   }
 
   Widget _buildMessagesStream(
@@ -560,7 +572,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
   ) {
     return Column(
       children: <Widget>[
-        if (isSearch)
+        if (isSearch && !_selectedFolder.folderType.isNotes)
           TextButton(
             onPressed: () async {
               final result = await dialog(

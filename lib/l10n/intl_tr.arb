@@ -137,6 +137,7 @@
   "contacts_edit": "Kişiyi düzenle",
   "contacts_edit_cancel": "Kişiyi düzenlemekten vazgeç",
   "contacts_edit_save": "Değişiklikleri kaydet",
+  "save_changes_question": "Save changes?",
   "contacts_add": "Kişi ekle",
   "contacts_group_add": "Grup ekle",
   "contacts_group_add_to_group": "Add to group",

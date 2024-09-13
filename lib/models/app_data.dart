@@ -1,27 +1,36 @@
 import 'package:equatable/equatable.dart';
 import 'package:timezone/timezone.dart' as tz;
 
-class AppData extends Equatable{
-  final List<String> availableModules;
+class AppData extends Equatable {
+  final List<String> availableBackendModules;
+  final List<String> availableClientModules;
   final tz.Location? location;
   final Map<String, dynamic>? calendarSettings;
 
   const AppData(
-      {required this.availableModules, this.calendarSettings, this.location});
+      {required this.availableBackendModules,
+      required this.availableClientModules,
+      this.calendarSettings,
+      this.location});
 
   AppData copyWith({
-    List<String>? availableModules,
+    List<String>? availableBackendModules,
+    List<String>? availableClientModules,
     tz.Location? Function()? location,
   }) {
     return AppData(
-        availableModules: availableModules ?? this.availableModules,
+        availableBackendModules:
+            availableBackendModules ?? this.availableBackendModules,
+        availableClientModules:
+            availableClientModules ?? this.availableClientModules,
         location: location != null ? location() : this.location);
   }
 
   Map<String, dynamic> toMap() {
     return {
       'Core': {
-        'AvailableClientModules': this.availableModules,
+        'AvailableClientModules': this.availableClientModules,
+        'AvailableBackendModules': this.availableBackendModules,
         'Timezone': this.location.toString()
       },
       'Calendar': calendarSettings
@@ -32,11 +41,18 @@ class AppData extends Equatable{
     return AppData(
       calendarSettings: map['Calendar'] as Map<String, dynamic>,
       location: tz.getLocation(map['Core']['Timezone'] as String),
-      availableModules:
+      availableClientModules:
+          (map['Core']['AvailableClientModules'] as List).cast<String>(),
+      availableBackendModules:
           (map['Core']['AvailableBackendModules'] as List).cast<String>(),
     );
   }
 
   @override
-  List<Object?> get props => [availableModules, location, calendarSettings];
+  List<Object?> get props => [
+        availableBackendModules,
+        availableClientModules,
+        location,
+        calendarSettings
+      ];
 }

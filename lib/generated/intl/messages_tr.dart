@@ -772,6 +772,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "no_permission_to_local_storage": MessageLookupByLibrary.simpleMessage(
             "Yerel depolamaya erişim izni yok. Cihazınızın ayarlarını kontrol edin."),
         "remove": MessageLookupByLibrary.simpleMessage("Remove"),
+        "save_changes_question":
+            MessageLookupByLibrary.simpleMessage("Save changes?"),
         "self_destructing_life_time_day":
             MessageLookupByLibrary.simpleMessage("24 saat"),
         "self_destructing_life_time_days_3":

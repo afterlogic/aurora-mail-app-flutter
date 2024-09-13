@@ -264,6 +264,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
   }
 
   void _initSaveToDraftsTimer() async {
+    if (widget.composeAction is OpenFromNotes) return;
     _timer = Timer.periodic(
       SAVE_TO_DRAFTS_PERIOD,
       (Timer timer) => _saveToDrafts(),
@@ -338,9 +339,12 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
   }
 
   void _sendNote() async {
-    //TODO take subject from text first line,
-    final subj = _subjectTextCtrl.text;
     final text = await _bodyTextCtrl.getText();
+    final subj = MailUtils.extractFirstContent(text);
+    if (subj.trim().isEmpty) {
+      return;
+    }
+
     _bloc.add(SendNote(
         notesFolder: (widget.composeAction as OpenFromNotes).notesFolder,
         subject: subj,
@@ -608,6 +612,12 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
 
   Future<bool> get _hasMessageChanged async {
     if (_message != null) {
+      if (widget.composeAction is OpenFromNotes) {
+        return MailUtils.htmlToPlain(await _bodyTextCtrl.getText()) !=
+            _message.rawBody;
+        ;
+      }
+
       final changedSubject = _subjectTextCtrl.text != _message.subject;
       final changedBody =
           MailUtils.htmlToPlain(await _bodyTextCtrl.getText()) !=
@@ -631,6 +641,10 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
           changedBccEmails ||
           changedAttachments;
     } else {
+      if (widget.composeAction is OpenFromNotes) {
+        return (await _bodyTextCtrl.getText()).isNotEmpty;
+      }
+
       return (await _bodyTextCtrl.getText()).isNotEmpty ||
           _subjectTextCtrl.text.isNotEmpty ||
           _toEmails.isNotEmpty ||
@@ -784,7 +798,9 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
       final result = await showDialog<DiscardChangesOption>(
         context: context,
         builder: (_) => DiscardChangesDialog(
-          content: Text(S.of(context).compose_discard_save_dialog_description),
+          content: widget.composeAction is! OpenFromNotes
+              ? Text(S.of(context).compose_discard_save_dialog_description)
+              : Text(S.of(context).save_changes_question),
         ),
       );
       switch (result) {
@@ -797,6 +813,10 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
           Navigator.pop(context);
           break;
         case DiscardChangesOption.save:
+          if (widget.composeAction is OpenFromNotes) {
+            _sendNote();
+            break;
+          }
           _saveToDrafts(withExit: true);
           break;
       }
@@ -1113,7 +1133,9 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
     body = Column(
       children: [
         Expanded(child: body),
-        if (!keyboardIsOpened && BuildProperty.cryptoEnable)
+        if (!keyboardIsOpened &&
+            BuildProperty.cryptoEnable &&
+            widget.composeAction is! OpenFromNotes)
           ComposeBottomBar(
             _encryptDialog,
             _decrypt,
@@ -1127,11 +1149,10 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
       value: _bloc,
       child: Scaffold(
         key: _scaffoldKey,
-        appBar: ComposeAppBar(_onAppBarActionSelected),
+        appBar: ComposeAppBar(_onAppBarActionSelected, widget.composeAction),
         body: BlocListener<ComposeBloc, ComposeState>(
           listener: (context, state) {
             if (state is EncryptComplete) _encryptLock(state);
-
             if (state is MessageSending) _showSending(context);
             if (state is MessageSent) _onMessageSent(context);
             if (state is MessageSavedInDrafts)
