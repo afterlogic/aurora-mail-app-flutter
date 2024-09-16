@@ -18,6 +18,7 @@ import 'package:aurora_mail/modules/calendar/ui/views/week_view.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/calendar_drawer.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/calendar_tab.dart';
 import 'package:aurora_mail/shared_ui/mail_bottom_app_bar.dart';
+import 'package:aurora_mail/utils/extensions/bloc_provider_extensions.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
@@ -105,7 +106,7 @@ class _CalendarPageState extends State<CalendarPage>
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      BlocProvider.of<EventsBloc>(context).add(const StartSync());
+      BlocProviderExtensions.tryOf<EventsBloc>(context)?.add(const StartSync());
     }
     super.didChangeAppLifecycleState(state);
   }
