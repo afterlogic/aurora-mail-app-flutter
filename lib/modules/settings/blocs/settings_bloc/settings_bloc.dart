@@ -1,24 +1,17 @@
 import 'dart:async';
 
 import 'package:alarm_service/alarm_service.dart';
-import 'package:aurora_logger/aurora_logger.dart';
 import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/inject/app_inject.dart';
 import 'package:aurora_mail/main.dart' as main;
-import 'package:aurora_mail/models/app_data.dart';
 import 'package:aurora_mail/modules/settings/models/language.dart';
 import 'package:aurora_mail/modules/settings/models/sync_freq.dart';
 import 'package:aurora_mail/modules/settings/models/sync_period.dart';
-import 'package:aurora_mail/modules/settings/repository/settings_network.dart';
 import 'package:bloc/bloc.dart';
 import 'package:connectivity/connectivity.dart';
-import 'package:drift_sqflite/drift_sqflite.dart';
 import 'package:drift/drift.dart';
-import 'package:webmail_api_client/webmail_api_client.dart';
-import 'package:timezone/timezone.dart' as tz;
 
 import './bloc.dart';
-import 'package:aurora_mail/modules/settings/screens/debug/default_api_interceptor.dart';
 
 class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   final _methods = AppInjector.instance.settingsMethods();
