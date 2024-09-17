@@ -85,29 +85,29 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
       }
     });
     _initApp();
-    try {
-      ReceiveSharing.getInitialMedia().then((shared) {
-        if (shared == null) return;
-        final texts = <String>[];
-        final files = <File>[];
-        for (var value in shared) {
-          if (value.isText) {
-            texts.add(value.text);
-          } else {
-            files.add(File(value.path));
-          }
+    ReceiveSharing.getInitialMedia().then((shared) {
+      if (shared == null) return;
+      final texts = <String>[];
+      final files = <File>[];
+      for (var value in shared) {
+        if (value.isText) {
+          texts.add(value.text);
+        } else {
+          files.add(File(value.path));
         }
-        if (texts.isNotEmpty || files.isNotEmpty) {
-          MessagesListAndroid.shareHolder = [files, texts];
-          _navKey.currentState.pushNamedAndRemoveUntil(
-            MessagesListRoute.name,
-            (value) => false,
-          );
-        }
-      });
-    } catch (e, st) {
-      Logger.errorLog(e, st);
-    }
+      }
+      if (texts.isNotEmpty || files.isNotEmpty) {
+        MessagesListAndroid.shareHolder = [files, texts];
+        _navKey.currentState.pushNamedAndRemoveUntil(
+          MessagesListRoute.name,
+          (value) => false,
+        );
+      }
+    }, onError: (e, st) {
+      Logger.errorLog(e, st as StackTrace);
+    }).catchError((e, st) {
+      Logger.errorLog(e, st as StackTrace);
+    });
 
     try {
       ReceiveSharing.getMediaStream().listen((shared) {
