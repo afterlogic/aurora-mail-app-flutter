@@ -117,7 +117,9 @@ class ContactsBloc extends Bloc<ContactsEvent, ContactsState> {
       final future2 = _repo.refreshGroups();
       await Future.wait([future1, future2]);
     } catch (err) {
-      add(AddError(formatError(err, null)));
+      if(!isClosed){
+        add(AddError(formatError(err, null)));
+      }
     }
     event.completer?.complete();
     add(StopActivity('GetContacts'));
