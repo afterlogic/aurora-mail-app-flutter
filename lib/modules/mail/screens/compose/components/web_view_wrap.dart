@@ -100,7 +100,7 @@ class _WebViewWrapState extends State<WebViewWrap> {
                             ),
                           ),
                   ),
-                  Positioned(
+                  if (!widget.simplified) Positioned(
                     bottom: bottom + 15,
                     right: 15,
                     child: closeWebView,

@@ -37,23 +37,40 @@ class _ComposeAppBarState extends BState<ComposeAppBar> {
             widget.onAppBarActionSelected(ComposeAppBarAction.cancel),
       ),
       actions: <Widget>[
-        IconButton(
-          icon: Icon(Icons.send),
-          onPressed: () =>
-              widget.onAppBarActionSelected(ComposeAppBarAction.send),
-        ),
-        if(widget.action is! OpenFromNotes)PopupMenuButton<ComposeAppBarAction>(
-          onSelected: widget.onAppBarActionSelected,
-          itemBuilder: (BuildContext context) => [
-            PopupMenuItem(
-              value: ComposeAppBarAction.saveToDrafts,
-              child: ListTile(
-                leading: Icon(Icons.drafts, color: Theme.of(context).brightness == Brightness.light ? Colors.black : null,),
-                title: Text(S.of(context).btn_save),
-              ),
+        if (widget.action is OpenFromNotes)
+          TextButton(
+            child: Text(
+              S.of(context).btn_save,
+              style: TextStyle(
+                  color: Theme.of(context)?.appBarTheme?.iconTheme?.color),
             ),
-          ],
-        ),
+            onPressed: () =>
+                widget.onAppBarActionSelected(ComposeAppBarAction.send),
+          )
+        else
+          IconButton(
+            icon: Icon(Icons.send),
+            onPressed: () =>
+                widget.onAppBarActionSelected(ComposeAppBarAction.send),
+          ),
+        if (widget.action is! OpenFromNotes)
+          PopupMenuButton<ComposeAppBarAction>(
+            onSelected: widget.onAppBarActionSelected,
+            itemBuilder: (BuildContext context) => [
+              PopupMenuItem(
+                value: ComposeAppBarAction.saveToDrafts,
+                child: ListTile(
+                  leading: Icon(
+                    Icons.drafts,
+                    color: Theme.of(context).brightness == Brightness.light
+                        ? Colors.black
+                        : null,
+                  ),
+                  title: Text(S.of(context).btn_save),
+                ),
+              ),
+            ],
+          ),
       ],
     );
   }

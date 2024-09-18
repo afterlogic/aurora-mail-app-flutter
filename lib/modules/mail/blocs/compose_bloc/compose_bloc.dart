@@ -64,7 +64,7 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
         subject: event.subject, folderFullName: event.notesFolder.fullName, text: event.text, uid: event.messageUid
       );
 
-      yield MessageSent();
+      yield MessageSent(messageToShow: "Note saved");
     } catch (err, s) {
       yield ComposeError(formatError(err, s));
     }

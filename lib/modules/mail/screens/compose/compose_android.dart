@@ -698,7 +698,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
   }
 
   // to provide mail bloc
-  void _onMessageSent(BuildContext context) {
+  void _onMessageSent(BuildContext context, {String messageToShow}) {
     BlocProvider.of<MailBloc>(context).add(CheckFoldersMessagesChanges());
     // to update frequency
     BlocProvider.of<ContactsBloc>(context).add(GetContacts());
@@ -709,6 +709,13 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
       Navigator.pop(context);
       Navigator.pop(context);
     }
+    if (messageToShow != null)
+      showSnack(
+        isError: false,
+        context: context,
+        scaffoldState: Scaffold.of(context),
+        message: messageToShow,
+      );
   }
 
   // to provide mail bloc
@@ -1154,7 +1161,8 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
           listener: (context, state) {
             if (state is EncryptComplete) _encryptLock(state);
             if (state is MessageSending) _showSending(context);
-            if (state is MessageSent) _onMessageSent(context);
+            if (state is MessageSent)
+              _onMessageSent(context, messageToShow: state.messageToShow);
             if (state is MessageSavedInDrafts)
               _onMessageSavedInDrafts(context, state.draftUid);
             if (state is ComposeError) _showError(state.errorMsg, state.arg);

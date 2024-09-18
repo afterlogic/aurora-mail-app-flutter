@@ -35,7 +35,13 @@ class AttachmentUploaded extends ComposeState {
 
 class MessageSending extends ComposeState with AlwaysNonEqualObject {}
 
-class MessageSent extends ComposeState with AlwaysNonEqualObject {}
+class MessageSent extends ComposeState with AlwaysNonEqualObject {
+  final String messageToShow;
+  MessageSent({this.messageToShow});
+
+  @override
+  List<Object> get props => [messageToShow];
+}
 
 class MessageSavedInDrafts extends ComposeState {
   final int draftUid;
