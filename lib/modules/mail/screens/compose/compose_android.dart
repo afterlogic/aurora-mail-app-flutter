@@ -190,7 +190,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
 
   void _initFromNotes(OpenFromNotes action) async {
     _message = action.message;
-    _subjectTextCtrl.text = _message.subject;
+    _subjectTextCtrl.text = _message?.subject ?? '';
     initBodyFromMessage(null, _message);
   }
 
