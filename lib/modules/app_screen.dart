@@ -86,7 +86,7 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
     });
     _initApp();
     ReceiveSharing.getInitialMedia().then((shared) {
-      if (shared == null) return;
+      if (shared == null || shared.isEmpty) return;
       final texts = <String>[];
       final files = <File>[];
       for (var value in shared) {
