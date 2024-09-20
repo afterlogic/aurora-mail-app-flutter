@@ -3,6 +3,7 @@ import 'dart:async';
 
 import 'package:alarm_service/alarm_service.dart';
 import 'package:aurora_logger/aurora_logger.dart';
+import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/generated/l10n.dart';
@@ -61,7 +62,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         accounts = result.accounts;
         currentUser = result.user;
         currentAccount = result.account;
-        
+        if (!BuildProperty.multiUserEnable) {
+          await _methods.deleteUnusedUsersWithData(
+              users.where((e) => e.localId != currentUser.localId).toList());
+          users = [currentUser];
+        }
         await _updateAppData(currentUser);
 
         final identities =
@@ -209,6 +214,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final user = await _methods.setUser(event.user);
       users = await _methods.users;
       currentUser = user;
+      if (!BuildProperty.multiUserEnable) {
+        await _methods.deleteUnusedUsersWithData(
+            users.where((e) => e.localId != currentUser.localId).toList());
+        users = [currentUser];
+      }
       final accounts = await _methods.getAccounts(user);
       _methods.setFbToken(users);
       if (accounts.isNotEmpty) {
@@ -232,8 +242,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         );
         event.completer?.complete();
       } else {
-        event.completer
-            ?.completeError(ErrorToShow.message(S.current.error_login_no_accounts));
+        event.completer?.completeError(
+            ErrorToShow.message(S.current.error_login_no_accounts));
         yield AuthError(ErrorToShow.message(S.current.error_login_no_accounts));
       }
     } catch (e, s) {
@@ -282,6 +292,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       }
       await _methods.logout(currentUser.localId, event.user);
       users = await _methods.users;
+      if (!BuildProperty.multiUserEnable) {
+        await _methods.deleteUnusedUsersWithData(
+            users.where((e) => e.localId != currentUser.localId).toList());
+        users = [];
+      }
       if (users.isNotEmpty) {
         if (currentUser.localId != event.user.localId) {
           add(InitUserAndAccounts());
@@ -301,6 +316,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       InvalidateCurrentUserToken event) async* {
     if (currentUser != null) {
       currentUser = await _methods.invalidateToken(currentUser.localId);
+      if (!BuildProperty.multiUserEnable) {
+        users = await _methods.users;
+        await _methods.deleteUnusedUsersWithData(
+            users.where((e) => e.localId != currentUser.localId).toList());
+      }
       add(InitUserAndAccounts());
     } else {
       print("cannot invalidate token, no currentUser selected");
@@ -326,14 +346,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     );
   }
 
-  Future<List<AliasOrAccount>> getAliasesAndAccounts() async{
+  Future<List<AliasOrAccount>> getAliasesAndAccounts() async {
     final items = <AliasOrAccount>[];
 
     final aliases = await getAliases(true);
     for (final value in aliases) {
       items.add(AliasOrAccount(null, value));
     }
-    for (final value in accounts){
+    for (final value in accounts) {
       items.add(AliasOrAccount(value, null));
     }
 
@@ -370,9 +390,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       settings = await settingsNetwork.getSettings();
     } catch (e, s) {
       logger.log("getting appData error: $e");
-    } finally{
+    } finally {
       userAppData.setAppData = settings;
     }
-
   }
 }

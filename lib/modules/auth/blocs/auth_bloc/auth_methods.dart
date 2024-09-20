@@ -156,6 +156,19 @@ class AuthMethods {
     await Future.wait(futures);
   }
 
+  Future<void> deleteUnusedUsersWithData(List<User> users) async {
+    for(final user in users){
+      try{
+        await _usersDao.deleteUser(user.localId);
+        await _accountsDao.deleteAccountsOfUser(user.localId);
+        await deleteUserRelatedData(user);
+      }catch(e){
+        print(e);
+        continue;
+      }
+    }
+  }
+
   Future<void> deleteUserRelatedData(User user) async {
     final mailDao = new MailDao(DBInstances.appDB);
     final foldersDao = new FoldersDao(DBInstances.appDB);
