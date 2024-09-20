@@ -1,15 +1,15 @@
-#variables
+#Variables
 appName: ""
 version: 1.0.0
 
-# android App ID
+#Android App ID
 _appId: ""
-# ios Team ID
+#iOS Team ID
 _iosDeveloperId: ""
-# ios App Group ID
+#iOS App Group ID
 _appleGroupId: ""
 
-#android splash screen
+#Android splash screen
 background_color: "#FFFFFF"
 splashGradientTop: "#FFFFFF"
 splashGradientBottom: "#FFFFFF"
@@ -19,20 +19,24 @@ splashGradientBottomDark: "#000000"
 autodiscover_url: "https://{domain}/aurora-autodiscover.json?email={email}"
 privacyPolicy: ""
 termsOfService: ""
-supportLanguage: "ru,en,tr"
+supportLanguage: "en,tr,ru"
 
+#App features list
 backgroundSync: true
 cryptoEnable: false
 expandMessageThread: false
+calendarModule: false
 logger: false
+notesModule: false
 multiAccountEnable: false
 multiUserEnable: false
 pushNotification: false
 selfDestructingEmail: false
 useMainLogo: false
+supportAllowAccess: false
 
-# fido
-useYubiKit: false
-yubico_flutter_lib: "path: module/mocks/yubico_flutter"
+#FIDO Security key settings
+#useYubiKit: false
+#yubico_flutter_lib: "path: module/mocks/yubico_flutter"
 #useYubiKit: true
 #yubico_flutter_lib: "git: https://github.com/afterlogic/yubico_flutter"

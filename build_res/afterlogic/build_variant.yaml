@@ -1,11 +1,15 @@
-#variables
+#Variables
 appName: "Aurora Mail"
 version: 2.4.0
 
+#Android App ID
 _appId: "com.afterlogic.aurora.mail"
+#iOS Team ID
 _iosDeveloperId: "J7AW6VHJK4"
+#iOS App Group ID
 _appleGroupId: "group.com.afterlogic.aurora"
 
+#Android splash screen
 background_color: "#FFFFFF"
 splashGradientTop: "#FFFFFF"
 splashGradientBottom: "#FFFFFF"
@@ -14,14 +18,23 @@ splashGradientBottomDark: "#000000"
 
 autodiscover_url: "https://{domain}/aurora-autodiscover.json?email={email}"
 privacyPolicy: "https://afterlogic.com/privacy-policy"
+termsOfService: ""
 supportLanguage: "en"
 
+#App features list
 backgroundSync: true
 cryptoEnable: true
+expandMessageThread: false
 calendarModule: true
+logger: false
 notesModule: true
 multiAccountEnable: true
 multiUserEnable: false
 pushNotification: true
 selfDestructingEmail: false
+useMainLogo: false
 supportAllowAccess: true
+
+#FIDO Security key settings
+#useYubiKit: true
+#yubico_flutter_lib: "git: https://github.com/afterlogic/yubico_flutter"
