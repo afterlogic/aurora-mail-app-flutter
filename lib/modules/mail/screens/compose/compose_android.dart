@@ -683,7 +683,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
     }
   }
 
-  void _showSending(BuildContext context) {
+  void _showSending(BuildContext context, String msg) {
     dialog(
         context: context,
         builder: (_) => AlertDialog(
@@ -691,7 +691,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
                 children: <Widget>[
                   CircularProgressIndicator(),
                   SizedBox(width: 16.0),
-                  Text(S.of(context).messages_sending),
+                  Text(msg ?? S.of(context).messages_sending),
                 ],
               ),
             ));
@@ -1160,7 +1160,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
         body: BlocListener<ComposeBloc, ComposeState>(
           listener: (context, state) {
             if (state is EncryptComplete) _encryptLock(state);
-            if (state is MessageSending) _showSending(context);
+            if (state is MessageSending) _showSending(context, state.messageToShow);
             if (state is MessageSent)
               _onMessageSent(context, messageToShow: state.messageToShow);
             if (state is MessageSavedInDrafts)

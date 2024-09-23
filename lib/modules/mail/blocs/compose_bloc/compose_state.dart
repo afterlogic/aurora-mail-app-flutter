@@ -33,7 +33,13 @@ class AttachmentUploaded extends ComposeState {
   List<Object> get props => [composeAttachment];
 }
 
-class MessageSending extends ComposeState with AlwaysNonEqualObject {}
+class MessageSending extends ComposeState with AlwaysNonEqualObject {
+  final String messageToShow;
+  const MessageSending({this.messageToShow});
+
+  @override
+  List<Object> get props => [messageToShow];
+}
 
 class MessageSent extends ComposeState with AlwaysNonEqualObject {
   final String messageToShow;

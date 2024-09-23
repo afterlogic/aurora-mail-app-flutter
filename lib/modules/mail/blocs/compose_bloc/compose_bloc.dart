@@ -58,7 +58,7 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
 
   Stream<ComposeState> _sendNote(SendNote event) async* {
     try {
-      yield MessageSending();
+      yield MessageSending(messageToShow: "Saving note");
 
       await _methods.sendNote(
         subject: event.subject, folderFullName: event.notesFolder.fullName, text: event.text, uid: event.messageUid
