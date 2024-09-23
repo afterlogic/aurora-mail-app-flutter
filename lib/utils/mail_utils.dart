@@ -286,10 +286,7 @@ class MailUtils {
   }
 
   static String wrapInHtmlEditor(
-    BuildContext context,
-    String text,
-    bool isHtml,
-  ) {
+      BuildContext context, String text, bool isHtml, bool removeForcedHeight) {
     final theme = Theme.of(context);
     return "<!doctype html>" +
         """
@@ -310,10 +307,10 @@ class MailUtils {
       }
       body {
         font-family: sans-serif;
-        min-height: 100vh;
+        ${removeForcedHeight ? '' : 'min-height: 100vh;'}
       }
       .container {
-        min-height: 100vh;
+        ${removeForcedHeight ? '' : 'min-height: 100vh;'}
         display: flex;
         flex-direction: column;
       }

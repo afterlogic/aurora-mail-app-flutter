@@ -1061,6 +1061,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
         ].contains(_encryptType),
         textCtrl: _bodyTextCtrl,
         init: () {},
+        removeForcedHeight: widget.composeAction is OpenFromNotes,
       ),
     );
 //    body = _keyboardActions(body);
