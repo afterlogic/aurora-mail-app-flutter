@@ -212,6 +212,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   Stream<AuthState> _userLogInFinish(UserLogInFinish event) async* {
     try {
       final user = await _methods.setUser(event.user);
+      await _updateAppData(user);
       users = await _methods.users;
       currentUser = user;
       if (!BuildProperty.multiUserEnable) {
@@ -379,8 +380,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     final apiModule = WebMailApi(
         moduleName: WebMailModules.core,
-        hostname: currentUser.hostname,
-        token: currentUser.token,
+        hostname: user.hostname,
+        token: user.token,
         interceptor: DefaultApiInterceptor.get());
 
     final settingsNetwork = SettingsNetwork(settingsModule: apiModule);
@@ -388,10 +389,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     try {
       settings = await settingsNetwork.getSettings();
+      logger.log("appData: $settings");
+      userAppData.setAppData = settings;
     } catch (e, s) {
       logger.log("getting appData error: $e");
-    } finally {
-      userAppData.setAppData = settings;
+      rethrow;
     }
   }
 }

@@ -49,6 +49,14 @@ class AppData extends Equatable {
   }
 
   @override
+  String toString() {
+    return ''' availableBackendModules: $availableBackendModules
+    availableClientModules: $availableClientModules
+    location: $location
+    calendarSettings: $calendarSettings''';
+  }
+
+  @override
   List<Object?> get props => [
         availableBackendModules,
         availableClientModules,
