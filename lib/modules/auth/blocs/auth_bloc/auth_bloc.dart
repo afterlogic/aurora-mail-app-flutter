@@ -54,6 +54,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   Stream<AuthState> _initUserAndAccounts(InitUserAndAccounts event) async* {
+    logger.log('user and accounts initialising');
     final result = await _methods.getUserAndAccountsFromDB();
     users = await _methods.users;
 
@@ -62,9 +63,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         accounts = result.accounts;
         currentUser = result.user;
         currentAccount = result.account;
-        if (!BuildProperty.multiUserEnable) {
-          await _methods.deleteUnusedUsersWithData(
-              users.where((e) => e.localId != currentUser.localId).toList());
+        final notRelatedUsers =
+            users.where((e) => e.localId != currentUser.localId).toList();
+        if (!BuildProperty.multiUserEnable && notRelatedUsers.isNotEmpty) {
+          logger.log(
+              'because multiUserEnable flag is false and not related users detected, deleting these users');
+          await _methods.deleteUnusedUsersWithData(notRelatedUsers);
           users = [currentUser];
         }
         await _updateAppData(currentUser);
@@ -210,14 +214,18 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   Stream<AuthState> _userLogInFinish(UserLogInFinish event) async* {
+    logger.log('user log in process is finishing');
     try {
       final user = await _methods.setUser(event.user);
       await _updateAppData(user);
       users = await _methods.users;
       currentUser = user;
-      if (!BuildProperty.multiUserEnable) {
-        await _methods.deleteUnusedUsersWithData(
-            users.where((e) => e.localId != currentUser.localId).toList());
+      final notRelatedUsers =
+          users.where((e) => e.localId != currentUser.localId).toList();
+      if (!BuildProperty.multiUserEnable && notRelatedUsers.isNotEmpty) {
+        logger.log(
+            'because multiUserEnable flag is false and not related users detected, deleting these users');
+        await _methods.deleteUnusedUsersWithData(notRelatedUsers);
         users = [currentUser];
       }
       final accounts = await _methods.getAccounts(user);
@@ -315,12 +323,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   Stream<AuthState> _invalidateCurrentUserToken(
       InvalidateCurrentUserToken event) async* {
+    logger.log('user token invalidating');
+
     if (currentUser != null) {
       currentUser = await _methods.invalidateToken(currentUser.localId);
-      if (!BuildProperty.multiUserEnable) {
+      final notRelatedUsers =
+          users.where((e) => e.localId != currentUser.localId).toList();
+      if (!BuildProperty.multiUserEnable && notRelatedUsers.isNotEmpty) {
+        logger.log(
+            'because multiUserEnable flag is false and not related users detected, deleting these users');
         users = await _methods.users;
-        await _methods.deleteUnusedUsersWithData(
-            users.where((e) => e.localId != currentUser.localId).toList());
+        await _methods.deleteUnusedUsersWithData(notRelatedUsers);
       }
       add(InitUserAndAccounts());
     } else {
