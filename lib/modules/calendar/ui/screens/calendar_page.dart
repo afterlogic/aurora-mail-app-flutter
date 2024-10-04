@@ -51,7 +51,6 @@ class _CalendarPageState extends State<CalendarPage>
   late final TabController _tabController;
   late final CalendarsBloc _calendarsBloc;
   bool _overlay = false;
-  bool _showTabs = false;
 
   @override
   void initState() {
@@ -128,11 +127,6 @@ class _CalendarPageState extends State<CalendarPage>
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(S.of(context).calendar),
-            IconButton(
-                onPressed: () => setState(() {
-                      _showTabs = !_showTabs;
-                    }),
-                icon: Icon(Icons.grid_view_outlined))
           ],
         ),
       ),
@@ -143,8 +137,8 @@ class _CalendarPageState extends State<CalendarPage>
               children: [
                 AnimatedSwitcher(
                   duration: const Duration(milliseconds: 100),
-                  child: _showTabs
-                      ? Padding(
+                  child:
+                       Padding(
                           padding: const EdgeInsets.only(
                               top: 18.0, right: 24, left: 24),
                           child: Row(
@@ -180,7 +174,7 @@ class _CalendarPageState extends State<CalendarPage>
                             ],
                           ),
                         )
-                      : SizedBox.shrink(),
+
                 ),
                 Expanded(
                   child: TabBarView(

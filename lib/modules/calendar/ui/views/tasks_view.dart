@@ -26,65 +26,80 @@ class _TasksViewState extends State<TasksView> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<EventsBloc, EventsState>(
-      buildWhen: (previous, current) => previous.status != current.status,
-      builder: (context, state) {
-        return state.status.isLoading
-            ? Center(
-                child: CircularProgressIndicator(),
-              )
-            : Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                child: Column(
+    return Stack(
+      children: [
+        BlocBuilder<EventsBloc, EventsState>(
+          buildWhen: (previous, current) => previous.status != current.status,
+          builder: (context, state) {
+            return state.status.isLoading
+                ? Positioned(
+                    top: -15,
+                    left: 0,
+                    right: 0,
+                    child: IgnorePointer(
+                      child: Center(
+                        child: RefreshProgressIndicator(
+                          backgroundColor: Colors.white,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                  )
+                : SizedBox.shrink();
+          },
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24.0),
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                child: Row(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 16.0),
-                      child: Row(
-                        children: [
-                          const Text(
-                            'Tasks',
-                            style: TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.w700),
-                          ),
-                          const Spacer(),
-                          BlocBuilder<TasksBloc, TasksState>(
-                            bloc: _bloc,
-                            builder: (context, state) {
-                              return IconButton(
-                                padding: EdgeInsets.zero,
-                                constraints: BoxConstraints(),
-                                icon: Icon(Icons.filter_alt_outlined),
-                                onPressed: () {
-                                  ActivityFilterDialog.show(context,
-                                          selectedFilter: state.filter)
-                                      .then((value) {
-                                    if (value == null) return;
-                                    _bloc.add(UpdateFilter(value));
-                                  });
-                                },
-                              );
-                            },
-                          )
-                        ],
-                      ),
+                    const Text(
+                      'Tasks',
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
                     ),
-                    Expanded(
-                      child: BlocBuilder<TasksBloc, TasksState>(
-                        bloc: _bloc,
-                        builder: (context, state) {
-                          if (state.tasks == null) {
-                            return const SizedBox.shrink();
-                          }
-                          return _TaskList(
-                            tasks: state.tasks!,
-                          );
-                        },
-                      ),
-                    ),
+                    const Spacer(),
+                    BlocBuilder<TasksBloc, TasksState>(
+                      bloc: _bloc,
+                      builder: (context, state) {
+                        return IconButton(
+                          padding: EdgeInsets.zero,
+                          constraints: BoxConstraints(),
+                          icon: Icon(Icons.filter_alt_outlined),
+                          onPressed: () {
+                            ActivityFilterDialog.show(context,
+                                    selectedFilter: state.filter)
+                                .then((value) {
+                              if (value == null) return;
+                              _bloc.add(UpdateFilter(value));
+                            });
+                          },
+                        );
+                      },
+                    )
                   ],
                 ),
-              );
-      },
+              ),
+              Expanded(
+                child: BlocBuilder<TasksBloc, TasksState>(
+                  bloc: _bloc,
+                  builder: (context, state) {
+                    if (state.tasks == null) {
+                      return const SizedBox.shrink();
+                    }
+                    return _TaskList(
+                      tasks: state.tasks!,
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
