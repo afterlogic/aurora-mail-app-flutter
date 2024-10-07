@@ -172,124 +172,105 @@ class _WeekViewState extends State<WeekView> {
     return BlocBuilder<EventsBloc, EventsState>(
       buildWhen: (previous, current) => previous.status != current.status,
       builder: (context, state) {
-        return Stack(
-          children: [
-            state.status.isLoading
-                ? Positioned(
-                    top: -15,
-                    left: 0,
-                    right: 0,
-                    child: IgnorePointer(
-                      child: Center(
-                        child: RefreshProgressIndicator(
-                          backgroundColor: Colors.white,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                  )
-                : SizedBox.shrink(),
-            CV.WeekView<WeekViewVisible>(
-              startDay: _parseStartDay(state.firstDayInWeek),
-              weekNumberBuilder: (_) => DecoratedBox(
-                decoration: BoxDecoration(
-                  border: Border(
-                    right: BorderSide(color: Colors.grey.shade300, width: 2),
-                  ),
-                ),
+        return CV.WeekView<WeekViewVisible>(
+          startDay: _parseStartDay(state.firstDayInWeek),
+          weekNumberBuilder: (_) => DecoratedBox(
+            decoration: BoxDecoration(
+              border: Border(
+                right: BorderSide(color: Colors.grey.shade300, width: 2),
               ),
-              fullDayHeaderTitle: 'All day',
-              backgroundColor: Theme.of(context).brightness == Brightness.dark
-                  ? Theme.of(context).scaffoldBackgroundColor
-                  : Colors.white,
-              showLiveTimeLineInAllDays: true,
-              liveTimeIndicatorSettings: CV.LiveTimeIndicatorSettings(
-                  color: Theme.of(context).primaryColor, height: 3),
-              initialDay: state.selectedDate,
-              headerStyle: CV.HeaderStyle(
-                leftIcon: Icon(
-                  Icons.chevron_left,
-                  size: 30,
-                ),
-                rightIcon: Icon(
-                  Icons.chevron_right,
-                  size: 30,
-                ),
-                headerPadding: EdgeInsets.only(top: 12, bottom: 16),
-                headerTextStyle:
-                    TextStyle(fontWeight: FontWeight.w700, fontSize: 20),
-                decoration:
-                    BoxDecoration(color: null, border: Border(bottom: border)),
-              ),
-              headerStringBuilder: (date, {secondaryDate}) =>
-                  DateFormat('yMMM').format(date),
-              weekDayBuilder: (date) {
-                return Container(
-                  decoration: BoxDecoration(
-                    border: Border(
-                        left: date.weekday == DateTime.monday
-                            ? border
-                            : border.copyWith(color: Colors.transparent),
-                        right: border),
-                  ),
-                  child: Center(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          weekTitles[date.weekday - 1],
-                          style: TextStyle(
-                              fontSize: 16,
-                              color: Theme.of(context).primaryColor,
-                              fontWeight: FontWeight.w700),
-                        ),
-                        const SizedBox(
-                          height: 2,
-                        ),
-                        Text(date.day.toString(),
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.w400)),
-                      ],
-                    ),
-                  ),
-                );
-              },
-              fullDayEventBuilder:
-                  (List<CV.CalendarEventData<Object?>> events, DateTime date) {
-                return Column(
-                  children: events.reversed
-                      .map((e) => MonthEventMarker(
-                            event: (e as CV.CalendarEventData<WeekViewVisible>)
-                                    .event is ViewEvent
-                                ? e.event as ViewEvent
-                                : null,
-                            implementBorder: true,
-                            height: 19,
-                            isWeekAllDay: true,
-                            currentDate: date,
-                          ))
-                      .toList(),
-                );
-              },
-              controller: _controller,
-              onPageChange: (date, pageIndex) =>
-                  _bloc.add(SelectDate(date, isWeekChanged: true)),
-              onEventTap:
-                  (List<CV.CalendarEventData<Object?>> events, DateTime date) {
-                final event =
-                    (events as List<CV.CalendarEventData<WeekViewVisible>>)
-                        .firstOrNull;
-                if (event == null || event.event is EmptyViewEvent) return;
-                BlocProvider.of<EventsBloc>(context)
-                    .add(SelectEvent(event.event as ViewEvent));
-                Navigator.of(context).pushNamed(
-                  EventViewPage.name,
-                );
-              },
-              onDateLongPress: (date) => print(date),
             ),
-          ],
+          ),
+          fullDayHeaderTitle: 'All day',
+          backgroundColor: Theme.of(context).brightness == Brightness.dark
+              ? Theme.of(context).scaffoldBackgroundColor
+              : Colors.white,
+          showLiveTimeLineInAllDays: true,
+          liveTimeIndicatorSettings: CV.LiveTimeIndicatorSettings(
+              color: Theme.of(context).primaryColor, height: 3),
+          initialDay: state.selectedDate,
+          headerStyle: CV.HeaderStyle(
+            leftIcon: Icon(
+              Icons.chevron_left,
+              size: 30,
+            ),
+            rightIcon: Icon(
+              Icons.chevron_right,
+              size: 30,
+            ),
+            headerPadding: EdgeInsets.only(top: 12, bottom: 16),
+            headerTextStyle:
+                TextStyle(fontWeight: FontWeight.w700, fontSize: 20),
+            decoration:
+                BoxDecoration(color: null, border: Border(bottom: border)),
+          ),
+          headerStringBuilder: (date, {secondaryDate}) =>
+              DateFormat('yMMM').format(date),
+          weekDayBuilder: (date) {
+            return Container(
+              decoration: BoxDecoration(
+                border: Border(
+                    left: date.weekday == DateTime.monday
+                        ? border
+                        : border.copyWith(color: Colors.transparent),
+                    right: border),
+              ),
+              child: Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      weekTitles[date.weekday - 1],
+                      style: TextStyle(
+                          fontSize: 16,
+                          color: Theme.of(context).primaryColor,
+                          fontWeight: FontWeight.w700),
+                    ),
+                    const SizedBox(
+                      height: 2,
+                    ),
+                    Text(date.day.toString(),
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.w400)),
+                  ],
+                ),
+              ),
+            );
+          },
+          fullDayEventBuilder:
+              (List<CV.CalendarEventData<Object?>> events, DateTime date) {
+            return Column(
+              children: events.reversed
+                  .map((e) => MonthEventMarker(
+                        event: (e as CV.CalendarEventData<WeekViewVisible>)
+                                .event is ViewEvent
+                            ? e.event as ViewEvent
+                            : null,
+                        implementBorder: true,
+                        height: 19,
+                        isWeekAllDay: true,
+                        currentDate: date,
+                      ))
+                  .toList(),
+            );
+          },
+          controller: _controller,
+          onPageChange: (date, pageIndex) =>
+              _bloc.add(SelectDate(date, isWeekChanged: true)),
+          onEventTap:
+              (List<CV.CalendarEventData<Object?>> events, DateTime date) {
+            final event =
+                (events as List<CV.CalendarEventData<WeekViewVisible>>)
+                    .firstOrNull;
+            if (event == null || event.event is EmptyViewEvent) return;
+            BlocProvider.of<EventsBloc>(context)
+                .add(SelectEvent(event.event as ViewEvent));
+            Navigator.of(context).pushNamed(
+              EventViewPage.name,
+            );
+          },
+          onDateLongPress: (date) => print(date),
         );
       },
     );

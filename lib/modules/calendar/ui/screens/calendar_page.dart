@@ -133,60 +133,77 @@ class _CalendarPageState extends State<CalendarPage>
       body: Stack(
         children: [
           _BlocErrorsHandler(
-            child: Column(
+            child: Stack(
               children: [
-                AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 100),
-                  child:
-                       Padding(
-                          padding: const EdgeInsets.only(
-                              top: 18.0, right: 24, left: 24),
-                          child: Row(
-                            children: [
-                              CalendarTab(
-                                  title: 'Month',
-                                  controller: _tabController,
-                                  index: 0),
-                              const SizedBox(
-                                width: 16,
-                              ),
-                              CalendarTab(
-                                  title: 'Week',
-                                  controller: _tabController,
-                                  index: 1),
-                              const SizedBox(
-                                width: 16,
-                              ),
-                              CalendarTab(
-                                  title: 'Day',
-                                  controller: _tabController,
-                                  index: 2),
-                              const SizedBox(
-                                width: 16,
-                              ),
-                              CalendarTab(
-                                  title: 'Tasks',
-                                  controller: _tabController,
-                                  index: 3),
-                              const SizedBox(
-                                width: 16,
-                              ),
-                            ],
-                          ),
-                        )
-
+                Column(
+                  children: [
+                    Padding(
+                       padding: const EdgeInsets.only(
+                           top: 18.0, right: 24, left: 24),
+                       child: Row(
+                         children: [
+                           CalendarTab(
+                               title: 'Month',
+                               controller: _tabController,
+                               index: 0),
+                           const SizedBox(
+                             width: 16,
+                           ),
+                           CalendarTab(
+                               title: 'Week',
+                               controller: _tabController,
+                               index: 1),
+                           const SizedBox(
+                             width: 16,
+                           ),
+                           CalendarTab(
+                               title: 'Day',
+                               controller: _tabController,
+                               index: 2),
+                           const SizedBox(
+                             width: 16,
+                           ),
+                           CalendarTab(
+                               title: 'Tasks',
+                               controller: _tabController,
+                               index: 3),
+                           const SizedBox(
+                             width: 16,
+                           ),
+                         ],
+                       ),
+                     ),
+                    Expanded(
+                      child: TabBarView(
+                          controller: _tabController,
+                          physics: const NeverScrollableScrollPhysics(),
+                          children: [
+                            const MonthView(),
+                            const WeekView(),
+                            const DayView(),
+                            const TasksView(),
+                          ]),
+                    )
+                  ],
                 ),
-                Expanded(
-                  child: TabBarView(
-                      controller: _tabController,
-                      physics: const NeverScrollableScrollPhysics(),
-                      children: [
-                        const MonthView(),
-                        const WeekView(),
-                        const DayView(),
-                        const TasksView(),
-                      ]),
-                )
+                Positioned(
+                  top: 25,
+                  left: 0,
+                  right: 0,
+                  child: BlocBuilder<EventsBloc, EventsState>(
+                    buildWhen: (previous, current) => previous.status != current.status,
+                    builder: (context, state) {
+                      return state.status.isLoading ? IgnorePointer(
+                        child: Center(
+                          child: RefreshProgressIndicator(
+                            backgroundColor: Colors.white,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ) : SizedBox.shrink();
+                    },
+                  ),
+                ),
               ],
             ),
           ),

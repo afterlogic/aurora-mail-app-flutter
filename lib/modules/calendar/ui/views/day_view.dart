@@ -66,108 +66,89 @@ class _DayViewState extends State<DayView> {
       bloc: _bloc,
       buildWhen: (previous, current) => previous.status != current.status,
       builder: (context, state) {
-        return Stack(
-          children: [
-            state.status.isLoading
-                ? Positioned(
-                    top: -15,
-                    left: 0,
-                    right: 0,
-                    child: IgnorePointer(
-                      child: Center(
-                        child: RefreshProgressIndicator(
-                          backgroundColor: Colors.white,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                  )
-                : SizedBox.shrink(),
-            CV.DayView<ViewEvent>(
-              showLiveTimeLineInAllDays: true,
-              fullDayTitle: Container(
-                child: Center(
-                  child: Text(
-                    'All day',
-                  ),
-                ),
-                constraints: BoxConstraints(minHeight: 60, maxHeight: 100),
-                height: 60,
+        return CV.DayView<ViewEvent>(
+          showLiveTimeLineInAllDays: true,
+          fullDayTitle: Container(
+            child: Center(
+              child: Text(
+                'All day',
               ),
-              backgroundColor: Theme.of(context).brightness == Brightness.dark
-                  ? Theme.of(context).scaffoldBackgroundColor
-                  : Colors.white,
-              liveTimeIndicatorSettings: CV.LiveTimeIndicatorSettings(
-                  color: Theme.of(context).primaryColor, height: 3),
-              initialDay: state.selectedDate,
-              heightPerMinute: 1.5,
-              headerStyle: CV.HeaderStyle(
-                leftIcon: Icon(
-                  Icons.chevron_left,
-                  size: 30,
-                ),
-                rightIcon: Icon(
-                  Icons.chevron_right,
-                  size: 30,
-                ),
-                headerPadding: EdgeInsets.only(top: 12, bottom: 16),
-                headerTextStyle:
-                    TextStyle(fontWeight: FontWeight.w700, fontSize: 20),
-                decoration:
-                    BoxDecoration(color: null, border: Border(bottom: border)),
-              ),
-              dateStringBuilder: (date, {secondaryDate}) =>
-                  DateFormat('y MMM d').format(date),
-              fullDayEventBuilder:
-                  (List<CV.CalendarEventData<Object?>> events, DateTime date) {
-                return ConstrainedBox(
-                  constraints: const BoxConstraints(maxHeight: 100),
-                  child: ListView.builder(
-                    itemCount: events.length,
-                    padding: EdgeInsets.zero,
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) => InkWell(
-                      onTap: () {
-                        final event = (events
-                            as List<CV.CalendarEventData<ViewEvent?>>)[index];
-                        BlocProvider.of<EventsBloc>(context)
-                            .add(SelectEvent(event.event));
-                        Navigator.of(context).pushNamed(
-                          EventViewPage.name,
-                        );
-                      },
-                      child: MonthEventMarker(
-                        event: (events as List<
-                                CV.CalendarEventData<ViewEvent?>>)[index]
-                            .event,
-                        currentDate: date,
-                        forceTitleRender: true,
-                        eventGap: 2,
-                        radius: 8,
-                        height: 48,
-                        fontSize: 18,
-                        innerPaddingValue: 8,
-                      ),
-                    ),
-                  ),
-                );
-              },
-              controller: _controller,
-              onPageChange: (date, pageIndex) => _bloc.add(SelectDate(date)),
-              onEventTap:
-                  (List<CV.CalendarEventData<Object?>> events, DateTime date) {
-                final event = (events as List<CV.CalendarEventData<ViewEvent?>>)
-                    .firstOrNull;
-                if (event == null) return;
-                BlocProvider.of<EventsBloc>(context)
-                    .add(SelectEvent(event.event));
-                Navigator.of(context).pushNamed(
-                  EventViewPage.name,
-                );
-              },
-              onDateLongPress: (date) => print(date),
             ),
-          ],
+            constraints: BoxConstraints(minHeight: 60, maxHeight: 100),
+            height: 60,
+          ),
+          backgroundColor: Theme.of(context).brightness == Brightness.dark
+              ? Theme.of(context).scaffoldBackgroundColor
+              : Colors.white,
+          liveTimeIndicatorSettings: CV.LiveTimeIndicatorSettings(
+              color: Theme.of(context).primaryColor, height: 3),
+          initialDay: state.selectedDate,
+          heightPerMinute: 1.5,
+          headerStyle: CV.HeaderStyle(
+            leftIcon: Icon(
+              Icons.chevron_left,
+              size: 30,
+            ),
+            rightIcon: Icon(
+              Icons.chevron_right,
+              size: 30,
+            ),
+            headerPadding: EdgeInsets.only(top: 12, bottom: 16),
+            headerTextStyle:
+                TextStyle(fontWeight: FontWeight.w700, fontSize: 20),
+            decoration:
+                BoxDecoration(color: null, border: Border(bottom: border)),
+          ),
+          dateStringBuilder: (date, {secondaryDate}) =>
+              DateFormat('y MMM d').format(date),
+          fullDayEventBuilder:
+              (List<CV.CalendarEventData<Object?>> events, DateTime date) {
+            return ConstrainedBox(
+              constraints: const BoxConstraints(maxHeight: 100),
+              child: ListView.builder(
+                itemCount: events.length,
+                padding: EdgeInsets.zero,
+                shrinkWrap: true,
+                itemBuilder: (context, index) => InkWell(
+                  onTap: () {
+                    final event = (events
+                        as List<CV.CalendarEventData<ViewEvent?>>)[index];
+                    BlocProvider.of<EventsBloc>(context)
+                        .add(SelectEvent(event.event));
+                    Navigator.of(context).pushNamed(
+                      EventViewPage.name,
+                    );
+                  },
+                  child: MonthEventMarker(
+                    event: (events as List<
+                            CV.CalendarEventData<ViewEvent?>>)[index]
+                        .event,
+                    currentDate: date,
+                    forceTitleRender: true,
+                    eventGap: 2,
+                    radius: 8,
+                    height: 48,
+                    fontSize: 18,
+                    innerPaddingValue: 8,
+                  ),
+                ),
+              ),
+            );
+          },
+          controller: _controller,
+          onPageChange: (date, pageIndex) => _bloc.add(SelectDate(date)),
+          onEventTap:
+              (List<CV.CalendarEventData<Object?>> events, DateTime date) {
+            final event = (events as List<CV.CalendarEventData<ViewEvent?>>)
+                .firstOrNull;
+            if (event == null) return;
+            BlocProvider.of<EventsBloc>(context)
+                .add(SelectEvent(event.event));
+            Navigator.of(context).pushNamed(
+              EventViewPage.name,
+            );
+          },
+          onDateLongPress: (date) => print(date),
         );
       },
     );

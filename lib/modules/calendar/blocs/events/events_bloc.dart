@@ -103,7 +103,7 @@ class EventsBloc extends Bloc<EventBlocEvent, EventsState> {
       final viewEvents = convertWeeksToMap(processedEvents);
 
       emit(state.copyWith(
-          status: EventsStatus.success,
+          // status: EventsStatus.success,
           eventsMap: () => viewEvents,
           originalEvents: () => event.events));
     }, emit);
@@ -155,7 +155,7 @@ class EventsBloc extends Bloc<EventBlocEvent, EventsState> {
       emit(state.copyWith(
           status: EventsStatus.error, error: () => formatError(e, s)));
     } finally {
-      emit(state.copyWith(status: EventsStatus.idle, error: () => null));
+      // emit(state.copyWith(status: EventsStatus.idle, error: () => null));
     }
   }
 
@@ -167,7 +167,7 @@ class EventsBloc extends Bloc<EventBlocEvent, EventsState> {
       emit(state.copyWith(
           status: EventsStatus.error, error: () => formatError(e, s)));
     } finally {
-      emit(state.copyWith(status: EventsStatus.idle, error: () => null));
+      // emit(state.copyWith(status: EventsStatus.idle, error: () => null));
     }
   }
 }
