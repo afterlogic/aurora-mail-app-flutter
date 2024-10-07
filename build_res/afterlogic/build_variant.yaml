@@ -26,7 +26,7 @@ backgroundSync: true
 cryptoEnable: true
 expandMessageThread: false
 calendarModule: true
-logger: false
+enableDebugScreen: true
 notesModule: true
 multiAccountEnable: true
 multiUserEnable: false
