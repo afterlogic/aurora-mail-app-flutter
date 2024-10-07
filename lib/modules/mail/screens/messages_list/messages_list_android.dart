@@ -553,7 +553,11 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
     );
   }
 
-  Widget _buildMessagesLoading() => Center(child: CircularProgressIndicator());
+  Widget _buildMessagesLoading() => Center(
+          child: RefreshProgressIndicator(
+        backgroundColor: Colors.white,
+        color: Colors.black,
+      ));
 
   final selectionController = SelectionController<int, Message>();
 
