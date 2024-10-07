@@ -114,7 +114,7 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
             color: theme.primaryColor,
             background: iconBG,),
           title: Text(S.of(context).settings_about),
-          onLongPress: BuildProperty.logger
+          onLongPress: BuildProperty.enableDebugScreen
               ? () {
                   storage.setDebugEnable(true);
                   setState(() => showDebug = true);
