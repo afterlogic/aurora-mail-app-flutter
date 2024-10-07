@@ -1,5 +1,6 @@
 import 'package:aurora_mail/modules/calendar/ui/widgets/text_input.dart';
 import 'package:flutter/material.dart';
+import 'package:linkwell/linkwell.dart';
 
 class MainInfo extends StatelessWidget {
   final String? title;
@@ -79,7 +80,7 @@ class MainInfo extends StatelessWidget {
                 const SizedBox(
                   height: 4,
                 ),
-                Text(description!),
+                LinkWell(description!),
                 const SizedBox(
                   height: 20,
                 ),
@@ -89,7 +90,7 @@ class MainInfo extends StatelessWidget {
                 const SizedBox(
                   height: 4,
                 ),
-                Text(location!),
+                LinkWell(location!),
               ],
             ],
     );
