@@ -130,6 +130,7 @@ dependencies:
       url: https://github.com/HtonicSava/flutter_calendar_view.git
       ref: all_day_section
   collection: ^1.17.0
+  linkwell: ^2.0.6
 
 dev_dependencies:
   flutter_test:
