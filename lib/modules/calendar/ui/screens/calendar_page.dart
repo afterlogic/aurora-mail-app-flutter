@@ -123,12 +123,7 @@ class _CalendarPageState extends State<CalendarPage>
     return Scaffold(
       drawer: CalendarDrawer(),
       appBar: AMAppBar(
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(S.of(context).calendar),
-          ],
-        ),
+        title: Text(S.of(context).calendar),
       ),
       body: Stack(
         children: [
