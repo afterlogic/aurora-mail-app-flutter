@@ -843,6 +843,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.2.0"
+  linkwell:
+    dependency: "direct main"
+    description:
+      name: linkwell
+      sha256: "10b8453666a9b2f7a112af4b4cc832b3f82788a7867e114469402aa8614bf159"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.6"
   logging:
     dependency: transitive
     description:
