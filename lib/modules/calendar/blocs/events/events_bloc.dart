@@ -103,7 +103,7 @@ class EventsBloc extends Bloc<EventBlocEvent, EventsState> {
       final viewEvents = convertWeeksToMap(processedEvents);
 
       emit(state.copyWith(
-          // status: EventsStatus.success,
+          status: EventsStatus.success,
           eventsMap: () => viewEvents,
           originalEvents: () => event.events));
     }, emit);
