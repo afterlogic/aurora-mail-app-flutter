@@ -13,6 +13,7 @@ import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_ui_kit/components/am_button.dart';
 import 'package:theme/app_theme.dart';
+import 'package:theme/app_color.dart';
 
 class SelectTwoFactorWidget extends StatefulWidget {
   final SelectTwoFactorRouteArgs args;
@@ -40,6 +41,7 @@ class _SelectTwoFactorWidgetState extends BState<SelectTwoFactorWidget> {
             width: double.infinity,
             child: AMButton(
               color: Theme.of(context).primaryColor,
+              shadow: AppColor.enableShadow ? null : BoxShadow(),
               child: Text(
                 S.of(context).tfa_btn_use_security_key,
                 style: TextStyle(color: AppTheme.loginTextColor),

@@ -9,6 +9,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'package:theme/app_color.dart';
+import 'package:theme/app_theme.dart';
+
 class NotificationsSettings extends StatefulWidget {
   @override
   _NotificationsSettingsState createState() => _NotificationsSettingsState();
@@ -35,6 +38,7 @@ class _NotificationsSettingsState extends BState<NotificationsSettings> {
             final tokenStatus = state is InitState ? state.state : null;
             Widget button = AMButton(
               color: Theme.of(context).primaryColor,
+              shadow: AppColor.enableShadow ? null : BoxShadow(),
               isLoading: isProgress,
               child: Text(S.of(context).btn_resend_push_token,
                   style: TextStyle(color: Colors.white)),
