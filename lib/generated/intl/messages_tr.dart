@@ -574,7 +574,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Şifre panoya kopyalandı"),
         "hint_self_destructing_sent_password_using_different_channel":
             MessageLookupByLibrary.simpleMessage(
-                "Şifre farklı bir kanal üzerinden gönderilmelidir. \n  Şifreyi bir yerde saklayın. Aksi takdirde şifreyi kurtaramazsınız."),
+                "Şifre farklı bir kanal üzerinden gönderilmelidir. \nŞifreyi bir yerde saklayın. Aksi takdirde şifreyi kurtaramazsınız."),
         "hint_self_destructing_supports_plain_text_only":
             MessageLookupByLibrary.simpleMessage(
                 "Kendini yok eden güvenli iletiler yalnızca düz metni destekler. Tüm biçimlendirme kaldırılacaktır. Ayrıca, ekler şifrelenemez ve iletiden kaldırılır."),

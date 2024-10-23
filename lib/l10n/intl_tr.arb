@@ -340,7 +340,7 @@
   "template_self_destructing_message_password": "Bu ileti şifre korumalıdır. \nŞifre: {password}",
   "template_self_destructing_message_title": "Güvenli ileti sizinle paylaşıldı",
   "hint_self_destructing_supports_plain_text_only": "Kendini yok eden güvenli iletiler yalnızca düz metni destekler. Tüm biçimlendirme kaldırılacaktır. Ayrıca, ekler şifrelenemez ve iletiden kaldırılır.",
-  "hint_self_destructing_sent_password_using_different_channel": "Şifre farklı bir kanal üzerinden gönderilmelidir. \n  Şifreyi bir yerde saklayın. Aksi takdirde şifreyi kurtaramazsınız.",
+  "hint_self_destructing_sent_password_using_different_channel": "Şifre farklı bir kanal üzerinden gönderilmelidir. \nŞifreyi bir yerde saklayın. Aksi takdirde şifreyi kurtaramazsınız.",
   "btn_self_destructing": "Kendini yok etme",
   "hint_self_destructing_password_coppied_to_clipboard": "Şifre panoya kopyalandı",
   "hint_login_upgrade_your_plan": "Faturalandırma planınızda mobil uygulamalara izin verilmiyor.",

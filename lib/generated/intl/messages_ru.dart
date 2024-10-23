@@ -578,7 +578,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Пароль скопирован"),
         "hint_self_destructing_sent_password_using_different_channel":
             MessageLookupByLibrary.simpleMessage(
-                "The password must be sent using a different channel.\n  Store the password somewhere. You will not be able to recover it otherwise."),
+                "The password must be sent using a different channel.\nStore the password somewhere. You will not be able to recover it otherwise."),
         "hint_self_destructing_supports_plain_text_only":
             MessageLookupByLibrary.simpleMessage(
                 "The self-descructing secure emails support plain text only. All the formatting will be removed. Also, attachments cannot be encrypted and will be removed from the message."),
