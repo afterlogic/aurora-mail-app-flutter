@@ -256,7 +256,7 @@ class MailUtils {
   }
 
   static String getForwardBody(BuildContext context, Message message) {
-    final baseMessage = htmlToPlain(message.htmlBody ?? "");
+    final baseMessage = message.htmlBody ?? "";
 
     String forwardMessage =
         "<br><br>${S.of(context).compose_forward_body_original_message}<br>";
