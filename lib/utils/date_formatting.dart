@@ -66,4 +66,32 @@ class DateFormatting {
     if (year == 0 && month == 0 && year == 0) return "";
     return DateFormat(format, locale).format(DateTime(year, month, day));
   }
+
+  static String formatEventDates({
+    // @required int timestamp,
+    @required DateTime startDate,
+    @required DateTime endDate,
+    String locale,
+    @required bool is24,
+  }) {
+    final now = DateTime.now();
+    String sStartDate = '';
+    String sEndDate = '';
+    bool isSameDay(DateTime dateA, DateTime dateB) {
+      return dateA.year == dateB.year && dateA.month == dateB.month && dateA.day == dateB.day;
+    }
+
+    String sDateFormat = now.year != startDate.year ? 'y/MM/dd,' : 'EEE, MMM d,';
+    String sTimeFormat = (is24 ? 'HH:mm' : 'h:mm a');
+
+    sStartDate = '${DateFormat(sDateFormat, locale).format(startDate)} ${DateFormat(sTimeFormat, locale).format(startDate)}';
+
+    if (isSameDay(startDate, endDate)) {
+      sEndDate = '${DateFormat(sTimeFormat, locale).format(endDate)}';
+    } else {
+      sEndDate = '${DateFormat(sDateFormat, locale).format(endDate)} ${DateFormat(sTimeFormat, locale).format(endDate)}';
+    }
+
+    return sStartDate + ' - ' + sEndDate;
+  }
 }

@@ -1,9 +1,13 @@
 import 'package:aurora_mail/modules/calendar/blocs/tasks/tasks_bloc.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/task.dart';
 import 'package:aurora_mail/modules/calendar/ui/screens/task_view_page.dart';
+import 'package:aurora_mail/utils/date_formatting.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+
+import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class TaskWidget extends StatelessWidget {
   final ViewTask task;
@@ -12,9 +16,11 @@ class TaskWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final state = BlocProvider.of<SettingsBloc>(context).state;
+
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
-      onTap: (){
+      onTap: () {
         BlocProvider.of<TasksBloc>(context).add(SelectTask(task));
         Navigator.of(context).pushNamed(
           TaskViewPage.name,
@@ -36,13 +42,13 @@ class TaskWidget extends StatelessWidget {
             ),
             child: (task.status ?? false)
                 ? Icon(
-              Icons.check,
-              color: Colors.white,
-              size: 16,
-            )
+                    Icons.check,
+                    color: Colors.white,
+                    size: 16,
+                  )
                 : null,
           ),
-          const SizedBox(width: 16),
+          SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -50,17 +56,21 @@ class TaskWidget extends StatelessWidget {
                 Text(
                   task.subject ?? '',
                   style: TextStyle(
-                    decoration:
-                    (task.status ?? false) ? TextDecoration.lineThrough : TextDecoration.none,
+                      decoration: (task.status ?? false)
+                          ? TextDecoration.lineThrough
+                          : TextDecoration.none,
                       color: Theme.of(context).brightness == Brightness.dark
                           ? Colors.white
                           : Colors.black,
-                    fontSize: 16
-                  ),
+                      fontSize: 16),
                 ),
                 if (task.startTS != null && task.endTS != null)
                   Text(
-                    '${DateFormat('h:mm a').format(task.startTS!)} - ${DateFormat('h:mm a').format(task.endTS!)}',
+                    '${DateFormatting.formatEventDates(
+                      startDate: task.startTS!,
+                      endDate: task.endTS!,
+                      is24: (state as SettingsLoaded).is24 ?? true,
+                    )}',
                     style: TextStyle(color: Colors.grey),
                   ),
               ],
