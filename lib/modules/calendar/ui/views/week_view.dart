@@ -144,7 +144,7 @@ class _WeekViewState extends State<WeekView> {
     }
   }
 
-  CV.WeekDays _parseStartDay(int dayCode) {
+  CV.WeekDays _getWeekStartDay(int dayCode) {
     switch (dayCode) {
       case 1:
         return CV.WeekDays.monday;
@@ -173,7 +173,7 @@ class _WeekViewState extends State<WeekView> {
       buildWhen: (previous, current) => previous.status != current.status,
       builder: (context, state) {
         return CV.WeekView<WeekViewVisible>(
-          startDay: _parseStartDay(state.firstDayInWeek),
+          startDay: _getWeekStartDay(state.firstDayInWeek),
           weekNumberBuilder: (_) => DecoratedBox(
             decoration: BoxDecoration(
               border: Border(
@@ -188,7 +188,7 @@ class _WeekViewState extends State<WeekView> {
           showLiveTimeLineInAllDays: true,
           liveTimeIndicatorSettings: CV.LiveTimeIndicatorSettings(
               color: Theme.of(context).primaryColor, height: 3),
-          initialDay: state.selectedDate,
+          // initialDay: state.selectedDate,
           headerStyle: CV.HeaderStyle(
             leftIcon: Icon(
               Icons.chevron_left,
@@ -207,6 +207,7 @@ class _WeekViewState extends State<WeekView> {
           headerStringBuilder: (date, {secondaryDate}) =>
               DateFormat('yMMM').format(date),
           weekDayBuilder: (date) {
+            print(date.weekday);
             return Container(
               decoration: BoxDecoration(
                 border: Border(

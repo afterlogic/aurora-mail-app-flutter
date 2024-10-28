@@ -85,6 +85,27 @@ class _MonthViewState extends State<MonthView>
     return _eventListAnimationController.value == 1.0 ? false : true;
   }
 
+ StartingDayOfWeek _getWeekStartDay(int dayCode) {
+    switch (dayCode) {
+      case 1:
+        return StartingDayOfWeek.monday;
+      case 2:
+        return StartingDayOfWeek.tuesday;
+      case 3:
+        return StartingDayOfWeek.wednesday;
+      case 4:
+        return StartingDayOfWeek.thursday;
+      case 5:
+        return StartingDayOfWeek.friday;
+      case 6:
+        return StartingDayOfWeek.saturday;
+      case 7:
+        return StartingDayOfWeek.sunday;
+      default:
+        return StartingDayOfWeek.monday;
+    }
+  }
+
   Widget _disabledDayBuilder(BuildContext context, DateTime currentDate,
           DateTime selectedDate, List<ViewEvent?> events) =>
       disabledDayBuilder(context, currentDate,
@@ -253,7 +274,7 @@ class _MonthViewState extends State<MonthView>
                                       date: currentDate)),
                           markerBuilder: (_, __, ___) => SizedBox.shrink(),
                         ),
-                        startingDayOfWeek: StartingDayOfWeek.monday,
+                        startingDayOfWeek: _getWeekStartDay(state.firstDayInWeek),
                         calendarStyle: const CalendarStyle(),
                         onDaySelected: _onDaySelected,
                         daysOfWeekHeight: 40,
