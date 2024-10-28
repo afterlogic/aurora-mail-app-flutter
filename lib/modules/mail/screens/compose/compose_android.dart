@@ -322,7 +322,7 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
     final user = BlocProvider.of<AuthBloc>(context).currentUser;
     try {
       final bodyText = text == null
-          ? message.htmlBody
+          ? message?.htmlBody ?? ''
           : await _bodyTextCtrl.getText() + "<br>" + text;
       _bodyTextCtrl.setMessage(
         bodyText,
