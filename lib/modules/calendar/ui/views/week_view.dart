@@ -167,12 +167,13 @@ class _WeekViewState extends State<WeekView> {
 
   @override
   Widget build(BuildContext context) {
-    final border = BorderSide(color: Color(0xffdddddd), width: 1);
+    final border = BorderSide(color: Theme.of(context).dividerColor, width: 1);
 
     return BlocBuilder<EventsBloc, EventsState>(
       buildWhen: (previous, current) => previous.status != current.status,
       builder: (context, state) {
         return CV.WeekView<WeekViewVisible>(
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,       
           startDay: _getWeekStartDay(state.firstDayInWeek),
           weekNumberBuilder: (date) => Container(
             decoration: BoxDecoration(
@@ -188,14 +189,11 @@ class _WeekViewState extends State<WeekView> {
             ),
           ),
           fullDayHeaderTitle: 'All day',
-          backgroundColor: Theme.of(context).brightness == Brightness.dark
-              ? Theme.of(context).scaffoldBackgroundColor
-              : Colors.white,
           showLiveTimeLineInAllDays: true,
           liveTimeIndicatorSettings: CV.LiveTimeIndicatorSettings(
-              color: Theme.of(context).primaryColor, height: 3),
-          // initialDay: state.selectedDate,
-          headerStyle: CV.HeaderStyle(
+              color: Theme.of(context).primaryColor, height: 2),
+          initialDay: state.selectedDate,
+          headerStyle: CV.HeaderStyle( // current week switcher
             leftIcon: Icon(
               Icons.chevron_left,
               size: 30,
@@ -205,22 +203,17 @@ class _WeekViewState extends State<WeekView> {
               size: 30,
             ),
             headerPadding: EdgeInsets.only(top: 12, bottom: 16),
-            headerTextStyle:
-                TextStyle(fontWeight: FontWeight.w700, fontSize: 20),
-            decoration:
-                BoxDecoration(color: null, border: Border(bottom: border)),
+            headerTextStyle: TextStyle(fontWeight: FontWeight.w700, fontSize: 20),
+            decoration: BoxDecoration(color: null, border: Border(bottom: border)),
           ),
           headerStringBuilder: (date, {secondaryDate}) =>
               DateFormat('yMMM').format(date),
-          weekDayBuilder: (date) {
-            print(date.weekday);
+          weekDayBuilder: (date) { // week days header
             return Container(
               decoration: BoxDecoration(
                 border: Border(
-                    left: date.weekday == DateTime.monday
-                        ? border
-                        : border.copyWith(color: Colors.transparent),
-                    right: border),
+                    right: border,
+                  ),
               ),
               child: Center(
                 child: Column(
