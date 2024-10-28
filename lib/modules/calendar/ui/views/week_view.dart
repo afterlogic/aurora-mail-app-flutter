@@ -174,10 +174,16 @@ class _WeekViewState extends State<WeekView> {
       builder: (context, state) {
         return CV.WeekView<WeekViewVisible>(
           startDay: _getWeekStartDay(state.firstDayInWeek),
-          weekNumberBuilder: (_) => DecoratedBox(
+          weekNumberBuilder: (date) => Container(
             decoration: BoxDecoration(
               border: Border(
-                right: BorderSide(color: Colors.grey.shade300, width: 2),
+                right: border,
+              ),
+            ),
+            child: Center(
+              child: Text(
+                date.weekOfYear.toString(),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400)
               ),
             ),
           ),

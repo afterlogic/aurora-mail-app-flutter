@@ -41,6 +41,28 @@ extension DateTimeExtension on DateTime {
     return DateTime(nextDay.year, nextDay.month, nextDay.day);
   }
 
+  int get weekOfYear {
+    DateTime startOfYear = DateTime(this.year, 1, 1);
+    final dayNumber = this.difference(startOfYear).inDays + 1;;
+    // Reference https://en.wikipedia.org/wiki/ISO_week_date#Algorithms
+    final weekNumber = ((dayNumber - weekday + 10) ~/ 7);
+
+    // zero week means that date date belongs to preveous year
+    if (weekNumber == 0) {
+      // Changing date to December 28 of the previous year, because it always belongs to last weel of a year
+      return DateTime(this.year - 1, 12, 28).weekOfYear;
+    }
+
+    // checking if date is not belongs to next year
+    if (weekNumber == 53 &&
+        DateTime(this.year, 1, 1).weekday != DateTime.thursday &&
+        DateTime(this.year, 12, 31).weekday != DateTime.thursday) {
+      return 1;
+    }
+
+    return weekNumber;
+  }  
+
   bool isAtSameDay(DateTime other) {
     final utcCurrent = DateTime.utc(this.year, this.month, this.day);
     final utcOther = DateTime.utc(other.year, other.month, other.day);
