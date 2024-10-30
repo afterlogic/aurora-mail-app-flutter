@@ -40,108 +40,75 @@ class _WeekViewState extends State<WeekView> {
     super.dispose();
   }
 
-  void _normalizeAndCleanUpEvents(Map<DateTime, List<ViewEvent?>> week) {
-    if (week.isEmpty) return;
+  /**
+   * This function adds an null values to an events collection to fill gaps in all-day mode.
+   * ! Do not pass non-all-day events to the function !
+   */
+  void _normalizeAndCleanUpEvents(Map<DateTime, List<ViewEvent?>> weekEvents) {
+    if (weekEvents.isEmpty) return;
 
-    int maxLength = 0;
+    int maxEventsInDay = 0;
 
-    for (var day in week.values) {
-      if (day.length > maxLength) {
-        maxLength = day.length;
+    for (var day in weekEvents.values) {
+      if (day.length > maxEventsInDay) {
+        maxEventsInDay = day.length;
       }
     }
 
-    for (var day in week.values) {
-      while (day.length < maxLength) {
+    for (var day in weekEvents.values) {
+      while (day.length < maxEventsInDay) {
         day.add(null);
       }
     }
 
-    for (int i = maxLength - 1; i >= 0; i--) {
-      bool allRowIsNull = true;
-      for (var day in week.values) {
-        if (day.length > i && day[i] != null && day[i]?.allDay == true) {
-          allRowIsNull = false;
+    for (int rowIndex = maxEventsInDay - 1; rowIndex >= 0; rowIndex--) {
+      bool rowIsNull = true;
+      for (var day in weekEvents.values) {
+        if (day.length > rowIndex && day[rowIndex] != null) {
+          rowIsNull = false;
           break;
         }
       }
-      if (allRowIsNull) {
-        for (var day in week.values) {
-          if (day.length > i) {
-            day.removeAt(i);
+      if (rowIsNull) {
+        for (var day in weekEvents.values) {
+          if (day.length > rowIndex) {
+            day.removeAt(rowIndex);
           }
         }
       }
     }
   }
 
-  _onStateChange(EventsState state) {
-    final events = Map.of(state.getEventsFromWeek());
-    _normalizeAndCleanUpEvents(events);
-    final oldEvents = [..._controller.allEvents];
-    _controller.removeAll(oldEvents);
-    for (final date in events.keys) {
-      final currentList = events[date]!;
-      if (currentList.isEmpty) {
-        _controller.add(
-          CV.CalendarEventData<WeekViewVisible>(
-            event: EmptyViewEvent(),
-            title: '',
-            date: date.withoutTime,
-            endDate: date.withoutTime,
-            startTime: null,
-            endTime: null,
-            color: Colors.transparent,
-          ),
-        );
-      }
-      for (final e in currentList) {
-        final isAllDay = e?.allDay != false;
-        if (!isAllDay) {
-          _controller.add(
-            CV.CalendarEventData<WeekViewVisible>(
-              event: e,
-              title: e!.title,
-              date: date,
-              endDate: date,
-              startTime: e.startDate.isAtSameDay(date)
-                  ? e.startDate
-                  : date.copyWith(hour: 0, minute: 1),
-              endTime: e.endDate.isAtSameDay(date)
-                  ? e.endDate
-                  : date.copyWith(hour: 23, minute: 59),
-              color: e.color,
-            ),
-          );
+  /**
+   * This function returns a deep copy of two event collection: all day events and regular events.
+   * The null events added by the Month mode are skipped.
+   * TODO: Null events shouldn't be added at all in the Month mode!
+   */
+  Map<String, Map<DateTime, List<ViewEvent?>> > deepCloneAndSeparateEvents(Map<DateTime, List<ViewEvent?>> eventsSource) {
+    Map<DateTime, List<ViewEvent?>> eventsCopy = {};
+    Map<DateTime, List<ViewEvent?>> allDayEventsCopy = {};
 
-          /// necessary copy for all day section
-          _controller.add(
-            CV.CalendarEventData<WeekViewVisible>(
-              event: EmptyViewEvent(),
-              title: '',
-              date: date.withoutTime,
-              endDate: date.withoutTime,
-              startTime: null,
-              endTime: null,
-              color: Colors.transparent,
-            ),
-          );
-        } else {
-          /// all day section
-          _controller.add(
-            CV.CalendarEventData<WeekViewVisible>(
-              event: e == null ? EmptyViewEvent() : e,
-              title: e == null ? '' : e.title,
-              date: date.withoutTime,
-              endDate: date.withoutTime,
-              startTime: null,
-              endTime: null,
-              color: e == null ? Colors.transparent : e.color,
-            ),
-          );
+    eventsSource.forEach((key, dayEvents) {
+      List<ViewEvent?> allDayEvents = [];
+      List<ViewEvent?> events = [];
+      dayEvents.forEach((event) {
+        if (event != null) {
+          if (event.allDay == true) {
+            allDayEvents.add(event);
+          } else {
+            events.add(event);
+          }
         }
-      }
-    }
+      });
+      eventsCopy[key] = events;
+      allDayEventsCopy[key] = allDayEvents;
+    });
+
+    final result = <String, Map <DateTime, List<ViewEvent?>>>{};
+    result['allDayEvents'] = allDayEventsCopy;
+    result['events'] = eventsCopy;
+
+    return result;
   }
 
   CV.WeekDays _getWeekStartDay(int dayCode) {
@@ -173,7 +140,7 @@ class _WeekViewState extends State<WeekView> {
       buildWhen: (previous, current) => previous.status != current.status,
       builder: (context, state) {
         return CV.WeekView<WeekViewVisible>(
-          backgroundColor: Theme.of(context).scaffoldBackgroundColor,       
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           startDay: _getWeekStartDay(state.firstDayInWeek),
           weekNumberBuilder: (date) => Container(
             decoration: BoxDecoration(
@@ -274,5 +241,58 @@ class _WeekViewState extends State<WeekView> {
         );
       },
     );
+  }
+
+  _onStateChange(EventsState state) {
+    final sourceEvents = Map.of(state.getEventsFromWeek());
+    // TODO: remove this step after fixing problem with adding unnecessary null values to collection.
+    final events = deepCloneAndSeparateEvents(sourceEvents);
+
+    // we need to pad days with en empty values to stretch the cells in all-day area
+    final allDayEvents = events['allDayEvents'];
+    if (allDayEvents != null) {
+      _normalizeAndCleanUpEvents(allDayEvents);
+    }
+
+    final oldEvents = [..._controller.allEvents];
+    _controller.removeAll(oldEvents);
+
+    // adding all day events to the grid
+    events['allDayEvents']?.forEach((date, dayEvents) {
+      dayEvents.forEach((event) {
+        _controller.add(
+          CV.CalendarEventData<WeekViewVisible>(
+            event: event == null ? EmptyViewEvent() : event,
+            title: event == null ? '' : event.title,
+            date: date.withoutTime,
+            endDate: date.withoutTime,
+            startTime: null,
+            endTime: null,
+            color: event == null ? Colors.transparent : event.color,
+          ),
+        );
+      });
+    });
+
+    // adding non-all-day events to the grid
+    events['events']?.forEach((date, dayEvents) {
+      dayEvents.forEach((event) {
+        _controller.add(
+          CV.CalendarEventData<WeekViewVisible>(
+            event: event,
+            title: event!.title,
+            date: date,
+            endDate: date,
+            startTime: event.startDate.isAtSameDay(date)
+              ? event.startDate
+              : date.copyWith(hour: 0, minute: 1),
+            endTime: event.endDate.isAtSameDay(date)
+              ? event.endDate
+              : date.copyWith(hour: 23, minute: 59),
+            color: event.color,
+          ),
+        );
+      });
+    });
   }
 }
