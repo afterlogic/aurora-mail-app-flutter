@@ -4,6 +4,7 @@ import 'package:aurora_mail/modules/calendar/blocs/events/events_bloc.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/event.dart';
 import 'package:aurora_mail/modules/calendar/ui/screens/event_view_page.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/month_event_marker.dart';
+import 'package:aurora_mail/modules/calendar/ui/widgets/week_event_marker.dart';
 import 'package:calendar_view/calendar_view.dart' as CV;
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -106,6 +107,23 @@ class _DayViewState extends State<DayView> {
           timeStringBuilder: (date, {secondaryDate}) {
             String sTimeFormat = ((settingsState as SettingsLoaded).is24 ? 'HH:mm' : 'h a');
             return DateFormat(sTimeFormat).format(date);
+          },
+          eventTileBuilder: (
+              DateTime date,
+              List<CV.CalendarEventData<Object?>> events,
+              Rect boundary,
+              DateTime startDuration,
+              DateTime endDuration) {
+
+            return WeekEventMarker(
+              event: (events as List<CV.CalendarEventData<ViewEvent?>>)[0].event,
+              currentDate: date,
+              forceTitleRender: true,
+              eventGap: 8,
+              radius: 10,
+              fontSize: 16,
+              innerPaddingValue: 0,
+            );
           },
           fullDayEventBuilder:
               (List<CV.CalendarEventData<Object?>> events, DateTime date) {
