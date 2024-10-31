@@ -60,13 +60,14 @@ class _DayViewState extends State<DayView> {
 
   @override
   Widget build(BuildContext context) {
-    final border = BorderSide(color: Color(0xffdddddd), width: 1);
+    final border = BorderSide(color: Theme.of(context).dividerColor, width: 1);
 
     return BlocBuilder<EventsBloc, EventsState>(
       bloc: _bloc,
       buildWhen: (previous, current) => previous.status != current.status,
       builder: (context, state) {
         return CV.DayView<ViewEvent>(
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           showLiveTimeLineInAllDays: true,
           fullDayTitle: Container(
             child: Center(
@@ -77,14 +78,14 @@ class _DayViewState extends State<DayView> {
             constraints: BoxConstraints(minHeight: 60, maxHeight: 100),
             height: 60,
           ),
-          backgroundColor: Theme.of(context).brightness == Brightness.dark
-              ? Theme.of(context).scaffoldBackgroundColor
-              : Colors.white,
           liveTimeIndicatorSettings: CV.LiveTimeIndicatorSettings(
-              color: Theme.of(context).primaryColor, height: 3),
+              color: Theme.of(context).primaryColor, height: 2),
           initialDay: state.selectedDate,
-          heightPerMinute: 1.5,
-          headerStyle: CV.HeaderStyle(
+          keepScrollOffset: true,
+          scrollOffset: 480.0,
+          heightPerMinute: 1,
+          showHalfHours: false,
+          headerStyle: CV.HeaderStyle( // current day switcher
             leftIcon: Icon(
               Icons.chevron_left,
               size: 30,
@@ -94,10 +95,8 @@ class _DayViewState extends State<DayView> {
               size: 30,
             ),
             headerPadding: EdgeInsets.only(top: 12, bottom: 16),
-            headerTextStyle:
-                TextStyle(fontWeight: FontWeight.w700, fontSize: 20),
-            decoration:
-                BoxDecoration(color: null, border: Border(bottom: border)),
+            headerTextStyle: TextStyle(fontWeight: FontWeight.w700, fontSize: 20),
+            decoration: BoxDecoration(color: null, border: Border(bottom: border)),
           ),
           dateStringBuilder: (date, {secondaryDate}) =>
               DateFormat('y MMM d').format(date),
@@ -111,8 +110,7 @@ class _DayViewState extends State<DayView> {
                 shrinkWrap: true,
                 itemBuilder: (context, index) => InkWell(
                   onTap: () {
-                    final event = (events
-                        as List<CV.CalendarEventData<ViewEvent?>>)[index];
+                    final event = (events as List<CV.CalendarEventData<ViewEvent?>>)[index];
                     BlocProvider.of<EventsBloc>(context)
                         .add(SelectEvent(event.event));
                     Navigator.of(context).pushNamed(
@@ -120,16 +118,14 @@ class _DayViewState extends State<DayView> {
                     );
                   },
                   child: MonthEventMarker(
-                    event: (events as List<
-                            CV.CalendarEventData<ViewEvent?>>)[index]
-                        .event,
+                    event: (events as List<CV.CalendarEventData<ViewEvent?>>)[index].event,
                     currentDate: date,
                     forceTitleRender: true,
                     eventGap: 2,
-                    radius: 8,
-                    height: 48,
-                    fontSize: 18,
-                    innerPaddingValue: 8,
+                    radius: 4,
+                    height: 32,
+                    fontSize: 12,
+                    innerPaddingValue: 2,
                   ),
                 ),
               ),

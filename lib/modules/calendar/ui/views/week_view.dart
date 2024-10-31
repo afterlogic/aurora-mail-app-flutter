@@ -90,6 +90,11 @@ class _WeekViewState extends State<WeekView> {
           liveTimeIndicatorSettings: CV.LiveTimeIndicatorSettings(
               color: Theme.of(context).primaryColor, height: 2),
           initialDay: state.selectedDate,
+          keepScrollOffset: true,
+          showVerticalLines: true,
+          scrollOffset: 480.0,
+          heightPerMinute: 1,
+          showHalfHours: false,
           headerStyle: CV.HeaderStyle( // current week switcher
             leftIcon: Icon(
               Icons.chevron_left,
