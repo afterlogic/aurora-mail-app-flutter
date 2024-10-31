@@ -12,6 +12,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
+import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
+
 class WeekView extends StatefulWidget {
   const WeekView({super.key});
 
@@ -65,6 +67,7 @@ class _WeekViewState extends State<WeekView> {
   @override
   Widget build(BuildContext context) {
     final border = BorderSide(color: Theme.of(context).dividerColor, width: 1);
+    final settingsState = BlocProvider.of<SettingsBloc>(context).state;
 
     return BlocBuilder<EventsBloc, EventsState>(
       buildWhen: (previous, current) => previous.status != current.status,
@@ -110,6 +113,10 @@ class _WeekViewState extends State<WeekView> {
           ),
           headerStringBuilder: (date, {secondaryDate}) =>
               DateFormat('yMMM').format(date),
+          timeLineStringBuilder: (date, {secondaryDate}) {
+            String sTimeFormat = ((settingsState as SettingsLoaded).is24 ? 'HH:mm' : 'h a');
+            return DateFormat(sTimeFormat).format(date);
+          },
           weekDayBuilder: (date) { // week days header
             return Container(
               decoration: BoxDecoration(

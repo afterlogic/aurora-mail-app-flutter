@@ -10,6 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
+import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
+
 class DayView extends StatefulWidget {
   const DayView({super.key});
 
@@ -61,6 +63,7 @@ class _DayViewState extends State<DayView> {
   @override
   Widget build(BuildContext context) {
     final border = BorderSide(color: Theme.of(context).dividerColor, width: 1);
+    final settingsState = BlocProvider.of<SettingsBloc>(context).state;
 
     return BlocBuilder<EventsBloc, EventsState>(
       bloc: _bloc,
@@ -100,6 +103,10 @@ class _DayViewState extends State<DayView> {
           ),
           dateStringBuilder: (date, {secondaryDate}) =>
               DateFormat('y MMM d').format(date),
+          timeStringBuilder: (date, {secondaryDate}) {
+            String sTimeFormat = ((settingsState as SettingsLoaded).is24 ? 'HH:mm' : 'h a');
+            return DateFormat(sTimeFormat).format(date);
+          },
           fullDayEventBuilder:
               (List<CV.CalendarEventData<Object?>> events, DateTime date) {
             return ConstrainedBox(
