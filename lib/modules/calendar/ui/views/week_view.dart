@@ -4,6 +4,7 @@ import 'package:aurora_mail/modules/calendar/blocs/events/events_bloc.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/event.dart';
 import 'package:aurora_mail/modules/calendar/ui/screens/event_view_page.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/month_event_marker.dart';
+import 'package:aurora_mail/modules/calendar/ui/widgets/week_event_marker.dart';
 import 'package:aurora_mail/modules/calendar/utils/date_time_ext.dart';
 import 'package:aurora_mail/modules/calendar/utils/week_mode_utils.dart';
 import 'package:calendar_view/calendar_view.dart' as CV;
@@ -161,6 +162,22 @@ class _WeekViewState extends State<WeekView> {
                       currentDate: date,
                     ))
                   .toList(),
+            );
+          },
+          eventTileBuilder: (
+              DateTime date,
+              List<CV.CalendarEventData<Object?>> events,
+              Rect boundary,
+              DateTime startDuration,
+              DateTime endDuration) {
+            return WeekEventMarker(
+              event: (events as List<CV.CalendarEventData<WeekViewVisible>>)[0].event as ViewEvent,
+              currentDate: date,
+              forceTitleRender: true,
+              eventGap: 8,
+              radius: 10,
+              fontSize: 16,
+              innerPaddingValue: 0,
             );
           },
           controller: _controller,

@@ -1,9 +1,6 @@
-import 'package:aurora_mail/modules/calendar/blocs/events/events_bloc.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/recurrence_mode.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/event.dart';
-import 'package:aurora_mail/modules/calendar/ui/screens/event_view_page.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class WeekEventMarker extends StatelessWidget {
   const WeekEventMarker({
