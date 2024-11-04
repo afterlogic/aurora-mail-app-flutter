@@ -89,6 +89,10 @@ class _WeekViewState extends State<WeekView> {
               ),
             ),
           ),
+          hourIndicatorSettings: CV.HourIndicatorSettings( // Grid lines color
+            color: Theme.of(context).dividerColor,
+            offset: 5, // offset between hour labels and the grid
+          ),
           fullDayHeaderTitle: 'All day',
           showLiveTimeLineInAllDays: true,
           liveTimeIndicatorSettings: CV.LiveTimeIndicatorSettings(
@@ -96,7 +100,7 @@ class _WeekViewState extends State<WeekView> {
           initialDay: state.selectedDate,
           keepScrollOffset: true,
           showVerticalLines: true,
-          scrollOffset: 480.0,
+          scrollOffset: 480.0, // 8h * 60min * heightPerMinute
           heightPerMinute: 1,
           showHalfHours: false,
           headerStyle: CV.HeaderStyle( // current week switcher
@@ -156,10 +160,14 @@ class _WeekViewState extends State<WeekView> {
                       event: (e as CV.CalendarEventData<WeekViewVisible>).event is ViewEvent
                           ? e.event as ViewEvent
                           : null,
-                      implementBorder: true,
-                      height: 19,
-                      isWeekAllDay: true,
                       currentDate: date,
+                      addLeftBorder: true,
+                      eventGap: 2,
+                      height: 18,
+                      isWeekAllDay: true,
+                      innerPaddingValue: 1
+
+
                     ))
                   .toList(),
             );
@@ -173,11 +181,6 @@ class _WeekViewState extends State<WeekView> {
             return WeekEventMarker(
               event: (events as List<CV.CalendarEventData<WeekViewVisible>>)[0].event as ViewEvent,
               currentDate: date,
-              forceTitleRender: true,
-              eventGap: 8,
-              radius: 10,
-              fontSize: 16,
-              innerPaddingValue: 0,
             );
           },
           controller: _controller,

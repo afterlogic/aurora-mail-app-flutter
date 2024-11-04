@@ -74,19 +74,20 @@ class _DayViewState extends State<DayView> {
           backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           showLiveTimeLineInAllDays: true,
           fullDayTitle: Container(
+            decoration: BoxDecoration( border: Border(bottom: border)),
             child: Center(
               child: Text(
                 'All day',
               ),
             ),
-            constraints: BoxConstraints(minHeight: 60, maxHeight: 100),
-            height: 60,
+            // constraints: BoxConstraints(minHeight: 60, maxHeight: 100),
+            height: 40,
           ),
           liveTimeIndicatorSettings: CV.LiveTimeIndicatorSettings(
               color: Theme.of(context).primaryColor, height: 2),
           initialDay: state.selectedDate,
           keepScrollOffset: true,
-          scrollOffset: 480.0,
+          scrollOffset: 480.0, // 8h * 60min * heightPerMinute
           heightPerMinute: 1,
           showHalfHours: false,
           headerStyle: CV.HeaderStyle( // current day switcher
@@ -102,6 +103,10 @@ class _DayViewState extends State<DayView> {
             headerTextStyle: TextStyle(fontWeight: FontWeight.w700, fontSize: 20),
             decoration: BoxDecoration(color: null, border: Border(bottom: border)),
           ),
+          hourIndicatorSettings: CV.HourIndicatorSettings( // Grid lines color
+              color: Theme.of(context).dividerColor,
+            offset: 5, // offset between hour labels and the grid
+          ),
           dateStringBuilder: (date, {secondaryDate}) =>
               DateFormat('y MMM d').format(date),
           timeStringBuilder: (date, {secondaryDate}) {
@@ -114,43 +119,46 @@ class _DayViewState extends State<DayView> {
               Rect boundary,
               DateTime startDuration,
               DateTime endDuration) {
-
             return WeekEventMarker(
               event: (events as List<CV.CalendarEventData<ViewEvent?>>)[0].event,
               currentDate: date,
-              forceTitleRender: true,
-              eventGap: 8,
-              radius: 10,
-              fontSize: 16,
-              innerPaddingValue: 0,
             );
           },
           fullDayEventBuilder:
               (List<CV.CalendarEventData<Object?>> events, DateTime date) {
             return ConstrainedBox(
-              constraints: const BoxConstraints(maxHeight: 100),
-              child: ListView.builder(
-                itemCount: events.length,
-                padding: EdgeInsets.zero,
-                shrinkWrap: true,
-                itemBuilder: (context, index) => InkWell(
-                  onTap: () {
-                    final event = (events as List<CV.CalendarEventData<ViewEvent?>>)[index];
-                    BlocProvider.of<EventsBloc>(context)
-                        .add(SelectEvent(event.event));
-                    Navigator.of(context).pushNamed(
-                      EventViewPage.name,
-                    );
-                  },
-                  child: MonthEventMarker(
-                    event: (events as List<CV.CalendarEventData<ViewEvent?>>)[index].event,
-                    currentDate: date,
-                    forceTitleRender: true,
-                    eventGap: 2,
-                    radius: 4,
-                    height: 32,
-                    fontSize: 12,
-                    innerPaddingValue: 2,
+              constraints: const BoxConstraints(
+                  minHeight: 40,
+                  maxHeight: 100
+              ),
+              child: Container(
+                padding:  EdgeInsets.only(top: 1),
+                transform: Matrix4.translationValues(-0.5, 0, 0),
+                decoration: BoxDecoration( border: Border(left: border, bottom: border)),
+                child: ListView.builder(
+                  itemCount: events.length,
+                  padding: EdgeInsets.zero,
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) => InkWell(
+                    onTap: () {
+                      final event = (events as List<CV.CalendarEventData<ViewEvent?>>)[index];
+                      BlocProvider.of<EventsBloc>(context)
+                          .add(SelectEvent(event.event));
+                      Navigator.of(context).pushNamed(
+                        EventViewPage.name,
+                      );
+                    },
+                    child: MonthEventMarker(
+                      event: (events as List<CV.CalendarEventData<ViewEvent?>>)[index].event,
+                      currentDate: date,
+                      addLeftBorder: false,
+                      forceTitleRender: true,
+                      eventGap: 2,
+                      radius: 4,
+                      height: 18,
+                      fontSize: 12,
+                      innerPaddingValue: 2,
+                    ),
                   ),
                 ),
               ),

@@ -11,8 +11,7 @@ class MonthEventMarker extends StatelessWidget {
       required this.event,
       this.height = 15,
       this.fontSize = 10,
-      this.implementLeftBorder = false,
-      this.implementBorder = false,
+      this.addLeftBorder = false,
       this.forceTitleRender = false,
       this.isWeekAllDay = false,
       this.radius = 4.0,
@@ -21,8 +20,7 @@ class MonthEventMarker extends StatelessWidget {
       this.eventGap = 2});
 
   final ViewEvent? event;
-  final bool implementLeftBorder;
-  final bool implementBorder;
+  final bool addLeftBorder;
   final bool isWeekAllDay;
   final double eventGap;
   final double height;
@@ -32,7 +30,7 @@ class MonthEventMarker extends StatelessWidget {
   final double radius;
   final double innerPaddingValue;
 
-  double get emptyHeight => eventGap + height;
+  // double get emptyHeight => eventGap + height;
 
   @override
   Widget build(BuildContext context) {
@@ -46,149 +44,124 @@ class MonthEventMarker extends StatelessWidget {
             },
             child: Container(
               height: height,
+              // It's needed to move left border one pixel left in all-day section
+              transform: Matrix4.translationValues(-1, 0, 0),
               decoration: BoxDecoration(
-                  border: Border(
-                      right: implementBorder &&
-                              event?.isEndedToday(currentDate) == true
-                          ? BorderSide(color: Color(0xffdddddd))
-                          : BorderSide.none,
-                      left: implementLeftBorder &&
-                              implementBorder &&
-                              event?.isStartedToday(currentDate) == true
-                          ? BorderSide(color: Color(0xffdddddd))
-                          : BorderSide.none)),
-              child: Padding(
-                padding: EdgeInsets.only(
-                    left: event?.isStartedToday(currentDate) == true
-                        ? innerPaddingValue
-                        : 0,
-                    right: event?.isEndedToday(currentDate) == true
-                        ? innerPaddingValue
-                        : 0),
-                child: Stack(
-                  children: [
-                    Positioned(
-                      left: -0.5,
-                      right: -0.5,
-                      top: 0,
-                      bottom: 0,
-                      child: Container(
-                          margin: isWeekAllDay
-                              ? EdgeInsets.symmetric(vertical: eventGap / 2)
-                              : EdgeInsets.only(bottom: eventGap),
-                          padding: EdgeInsets.only(left: 4),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.only(
-                                topLeft:
-                                    event?.isStartedToday(currentDate) == true
-                                        ? Radius.circular(radius)
-                                        : Radius.zero,
-                                bottomLeft:
-                                    event?.isStartedToday(currentDate) == true
-                                        ? Radius.circular(radius)
-                                        : Radius.zero,
-                                topRight:
-                                    event?.isEndedToday(currentDate) == true
-                                        ? Radius.circular(radius)
-                                        : Radius.zero,
-                                bottomRight:
-                                    event?.isEndedToday(currentDate) == true
-                                        ? Radius.circular(radius)
-                                        : Radius.zero,
-                              ),
-                              color: event!.color),
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Row(
-                              children: [
-                                if (event?.isStartedToday(currentDate) ==
-                                        true &&
-                                    event?.recurrenceMode != null &&
-                                    event?.recurrenceMode !=
-                                        RecurrenceMode.never)
-                                  Padding(
-                                    padding: const EdgeInsets.only(right: 4.0),
-                                    child: Icon(
-                                      Icons.repeat,
-                                      size: 8,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                Expanded(
-                                  child: Text(
-                                    forceTitleRender ||
-                                            event?.isStartedToday(
-                                                    currentDate) ==
-                                                true
-                                        ? event!.title
-                                        : '',
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                        fontSize: fontSize,
-                                        color: Colors.white),
+                border: Border(
+                  left: addLeftBorder && event?.isStartedToday(currentDate) == true
+                      ? BorderSide(color: Theme.of(context).dividerColor)
+                      : BorderSide.none
+                )
+              ),
+              // child: Padding(
+              padding: EdgeInsets.only(
+                left: event?.isStartedToday(currentDate) == true
+                    ? innerPaddingValue
+                    : 0,
+                right: event?.isEndedToday(currentDate) == true
+                    ? innerPaddingValue
+                    : 0
+              ),
+              child: Stack(
+                children: [
+                  Positioned(
+                    left: -0.5,
+                    right: -0.5,
+                    top: 0,
+                    bottom: 0,
+                    child: Container(
+                        margin: isWeekAllDay
+                            ? EdgeInsets.symmetric(vertical: eventGap / 2)
+                            : EdgeInsets.only(bottom: eventGap),
+                        padding: EdgeInsets.only(left: 4),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                              topLeft:
+                                  event?.isStartedToday(currentDate) == true
+                                      ? Radius.circular(radius)
+                                      : Radius.zero,
+                              bottomLeft:
+                                  event?.isStartedToday(currentDate) == true
+                                      ? Radius.circular(radius)
+                                      : Radius.zero,
+                              topRight:
+                                  event?.isEndedToday(currentDate) == true
+                                      ? Radius.circular(radius)
+                                      : Radius.zero,
+                              bottomRight:
+                                  event?.isEndedToday(currentDate) == true
+                                      ? Radius.circular(radius)
+                                      : Radius.zero,
+                            ),
+                            color: event!.color),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Row(
+                            children: [
+                              if (event?.isStartedToday(currentDate) ==
+                                      true &&
+                                  event?.recurrenceMode != null &&
+                                  event?.recurrenceMode !=
+                                      RecurrenceMode.never)
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 4.0),
+                                  child: Icon(
+                                    Icons.repeat,
+                                    size: 8,
+                                    color: Colors.white,
                                   ),
                                 ),
-                              ],
-                            ),
-                          )),
-                    ),
-                  ],
-                ),
+                              Expanded(
+                                child: Text(
+                                  forceTitleRender ||
+                                          event?.isStartedToday(
+                                                  currentDate) ==
+                                              true
+                                      ? event!.title
+                                      : '',
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      fontSize: fontSize,
+                                      color: Colors.white),
+                                ),
+                              ),
+                            ],
+                          ),
+                        )),
+                  ),
+                ],
               ),
+              // ),
             ),
           )
         : EmptyMarker(
-            h: height,
-            w: 60,
-            implementLeftBorder: implementLeftBorder,
-            implementBorder: implementBorder,
-          );
-  }
-
-  BorderRadius? _calculateBorderRadius(Edge edge) {
-    final radius = 4.0;
-    switch (edge) {
-      case Edge.start:
-        return BorderRadius.only(
-            topLeft: Radius.circular(radius),
-            bottomLeft: Radius.circular(radius));
-      case Edge.single:
-        return BorderRadius.all(Radius.circular(radius));
-      case Edge.end:
-        return BorderRadius.only(
-            topRight: Radius.circular(radius),
-            bottomRight: Radius.circular(radius));
-      case Edge.part:
-        return null;
-    }
+          height: height,
+          addLeftBorder: addLeftBorder,
+        );
   }
 }
 
 class EmptyMarker extends StatelessWidget {
-  final bool implementLeftBorder;
-  final bool implementBorder;
-  final double h;
-  final double w;
-  const EmptyMarker(
-      {super.key,
-      required this.implementLeftBorder,
-      required this.implementBorder,
-      required this.h,
-      required this.w});
+  final bool addLeftBorder;
+  final double height;
+  const EmptyMarker({
+    super.key,
+    required this.addLeftBorder,
+    required this.height,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      // It's needed to move left border one pixel left in all-day section
+      transform: Matrix4.translationValues(-1, 0, 0),
       decoration: BoxDecoration(
           border: Border(
-              right: implementBorder
-                  ? BorderSide(color: Color(0xffdddddd))
-                  : BorderSide.none,
-              left: implementLeftBorder && implementBorder
-                  ? BorderSide(color: Color(0xffdddddd))
+              left: addLeftBorder
+                  ? BorderSide(color: Theme.of(context).dividerColor)
                   : BorderSide.none)),
       child: SizedBox(
-        height: h,
+        height: height,
         width: double.maxFinite,
       ),
     );

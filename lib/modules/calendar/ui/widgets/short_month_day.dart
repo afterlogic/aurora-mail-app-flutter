@@ -74,6 +74,7 @@ class ShortMonthDay extends StatelessWidget {
                       (e) => MonthEventMarker(
                         event: e,
                         currentDate: currentDate,
+                        innerPaddingValue: 1,
                       ),
                     )
                     .toList(),

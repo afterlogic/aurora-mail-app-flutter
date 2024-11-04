@@ -6,109 +6,80 @@ class WeekEventMarker extends StatelessWidget {
   const WeekEventMarker({
     super.key,
     required this.event,
-    this.height = 15,
-    this.fontSize = 10,
-    this.implementLeftBorder = false,
-    this.implementBorder = false,
-    this.forceTitleRender = false,
-    this.radius = 4.0,
+    this.fontSize = 12,
+    this.radius = 6.0,
     this.innerPaddingValue = 4.0,
     required this.currentDate,
-    this.eventGap = 2
   });
 
   final ViewEvent? event;
-  final bool implementLeftBorder;
-  final bool implementBorder;
-  final double eventGap;
-  final double height;
   final DateTime currentDate;
-  final bool forceTitleRender;
   final double fontSize;
   final double radius;
   final double innerPaddingValue;
 
-  double get emptyHeight => eventGap + height;
-
   @override
   Widget build(BuildContext context) {
+    // TODO: implement contrast color detection
+    final textColor = Colors.white;
+
     return Container(
-      height: height,
-      decoration: BoxDecoration(
-        border: Border(
-          right: implementBorder && event?.isEndedToday(currentDate) == true
-            ? BorderSide(color: Color(0xffdddddd))
-            : BorderSide.none,
-          left: implementLeftBorder && implementBorder && event?.isStartedToday(currentDate) == true
-            ? BorderSide(color: Color(0xffdddddd))
-            : BorderSide.none
-        )
+      margin: EdgeInsets.only(
+        left: 1,
+        right: 1,
+        top: event?.isStartedToday(currentDate) == true ? 1 : 0,
+        bottom: event?.isEndedToday(currentDate) == true ? 1 : 0,
       ),
-      child: Padding(
-        padding: EdgeInsets.only(
-          left: event?.isStartedToday(currentDate) == true
-            ? innerPaddingValue
-            : 0,
-          right: event?.isEndedToday(currentDate) == true
-            ? innerPaddingValue
-            : 0,
-          top: innerPaddingValue,
+      padding: EdgeInsets.only(left: innerPaddingValue, top: innerPaddingValue),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.only(
+          topLeft:
+            event?.isStartedToday(currentDate) == true
+                ? Radius.circular(radius)
+                : Radius.zero,
+          topRight:
+            event?.isStartedToday(currentDate) == true
+                ? Radius.circular(radius)
+                : Radius.zero,
+          bottomLeft:
+            event?.isEndedToday(currentDate) == true
+                ? Radius.circular(radius)
+                : Radius.zero,
+          bottomRight:
+            event?.isEndedToday(currentDate) == true
+                ? Radius.circular(radius)
+                : Radius.zero,
         ),
-        child: Container(
-          margin: EdgeInsets.symmetric(vertical: 2, horizontal: 2),
-          padding: EdgeInsets.only(left: 6, top: 4),
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.only(
-                topLeft:
-                    event?.isStartedToday(currentDate) == true
-                        ? Radius.circular(radius)
-                        : Radius.zero,
-                topRight:
-                    event?.isStartedToday(currentDate) == true
-                        ? Radius.circular(radius)
-                        : Radius.zero,
-                bottomLeft:
-                    event?.isEndedToday(currentDate) == true
-                        ? Radius.circular(radius)
-                        : Radius.zero,
-                bottomRight:
-                    event?.isEndedToday(currentDate) == true
-                        ? Radius.circular(radius)
-                        : Radius.zero,
+        color: event!.color
+      ),
+      child: Align(
+        alignment: Alignment.topLeft,
+        child: Row(
+          children: [
+            if (event?.isStartedToday(currentDate) == true &&
+                event?.recurrenceMode != null &&
+                event?.recurrenceMode != RecurrenceMode.never)
+              Padding(
+                padding: const EdgeInsets.only(right: 4.0),
+                child: Icon(
+                  Icons.repeat,
+                  size: 8,
+                  color: textColor,
+                ),
+            ),
+            Expanded(
+              child: Text(
+                event!.title,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: fontSize,
+                  color: textColor,
+                ),
               ),
-              color: event!.color),
-          child: Align(
-              alignment: Alignment.topLeft,
-              child: Row(
-                children: [
-                  if (event?.isStartedToday(currentDate) == true &&
-                      event?.recurrenceMode != null &&
-                      event?.recurrenceMode != RecurrenceMode.never)
-                    Padding(
-                      padding: const EdgeInsets.only(right: 4.0),
-                      child: Icon(
-                        Icons.repeat,
-                        size: 8,
-                        color: Colors.white,
-                      ),
-                    ),
-                  Expanded(
-                    child: Text(
-                      forceTitleRender || event?.isStartedToday(currentDate) == true
-                        ? event!.title
-                        : '',
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                          fontSize: fontSize,
-                          color: Colors.white
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            )
-          ),
+            ),
+          ],
         ),
+      )
     );
   }
 }
