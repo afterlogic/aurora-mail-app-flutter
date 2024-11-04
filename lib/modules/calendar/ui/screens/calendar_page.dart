@@ -25,6 +25,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:theme/app_theme.dart';
+
 class CalendarPageArg {
   final String selectedCalendarId;
   final String selectedActivityId;
@@ -205,63 +208,71 @@ class _CalendarPageState extends State<CalendarPage>
           if (_overlay)
             Positioned.fill(
               child: GestureDetector(
-                  onTap: () {
-                    _overlay = false;
-                    setState(() {});
-                  },
-                  child: Container(
-                    color: Colors.black.withOpacity(0.5),
-                  )),
+                onTap: () {
+                  _overlay = false;
+                  setState(() {});
+                },
+                child: Container(
+                  color: Colors.black.withOpacity(0.2),
+                )),
             ),
         ],
       ),
       floatingActionButton: _overlay
           ? Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                FloatingActionButton(
-                  heroTag: 'task',
-                  mini: true,
-                  backgroundColor: Colors.white,
-                  foregroundColor:
-                      Theme.of(context).brightness == Brightness.dark
-                          ? Colors.black
-                          : Theme.of(context).primaryColor,
-                  onPressed: () {
-                    BlocProvider.of<TasksBloc>(context).add(SelectTask(null));
-                    _overlay = false;
-                    setState(() {});
-                    Navigator.of(context).pushNamed(
-                      TaskCreationPage.name,
-                    );
-                  },
-                  child: const Icon(Icons.check_circle_outline),
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              AMFloatingActionButton(
+                heroTag: 'task',
+                backgroundColor: Colors.white,
+                mini: true,
+                shadow: BoxShadow(
+                  color: Theme.of(context).primaryColor.withOpacity(0.3) ,
+                  blurRadius: 4.0,
+                  offset: Offset(0.0, 3.0),
                 ),
-                const SizedBox(
-                  height: 16,
+                child: IconTheme(
+                  data: AppTheme.floatIconTheme,
+                  child: Icon(Icons.add_task, color: Theme.of(context).primaryColor),
                 ),
-                FloatingActionButton(
-                  heroTag: 'event',
-                  onPressed: () {
-                    BlocProvider.of<EventsBloc>(context).add(SelectEvent(null));
-                    _overlay = false;
-                    setState(() {});
-                    Navigator.of(context).pushNamed(
-                      EventCreationPage.name,
-                    );
-                  },
-                  child: const Icon(Icons.calendar_today_outlined),
-                )
-              ],
-            )
-          : FloatingActionButton(
-              heroTag: 'add',
-              onPressed: () {
-                _overlay = true;
-                setState(() {});
-              },
-              child: const Icon(Icons.add),
+                onPressed: () {
+                  BlocProvider.of<TasksBloc>(context).add(SelectTask(null));
+                  _overlay = false;
+                  setState(() {});
+                  Navigator.of(context).pushNamed(
+                    TaskCreationPage.name,
+                  );
+                },
+              ),
+              const SizedBox(
+                height: 16,
+              ),
+              AMFloatingActionButton(
+                child: IconTheme(
+                  data: AppTheme.floatIconTheme,
+                  child: Icon(Icons.event, size: 32),
+                ),
+                onPressed: () {
+                  BlocProvider.of<EventsBloc>(context).add(SelectEvent(null));
+                  _overlay = false;
+                  setState(() {});
+                  Navigator.of(context).pushNamed(
+                    EventCreationPage.name,
+                  );
+                },
+              ),
+            ],
+          )
+          : AMFloatingActionButton(
+            child: IconTheme(
+              data: AppTheme.floatIconTheme,
+              child: Icon(MdiIcons.plus),
             ),
+            onPressed: () {
+              _overlay = true;
+              setState(() {});
+            },
+          ),
       bottomNavigationBar:
           MailBottomAppBar(selectedRoute: MailBottomAppBarRoutes.calendar),
     );
