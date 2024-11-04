@@ -157,7 +157,7 @@ class _DayViewState extends State<DayView> {
             );
           },
           controller: _controller,
-          onPageChange: (date, pageIndex) => _bloc.add(SelectDate(date)),
+          onPageChange: (date, pageIndex) => _bloc.add(SelectDate(date, isDayMode: true)),
           onEventTap:
               (List<CV.CalendarEventData<Object?>> events, DateTime date) {
             final event = (events as List<CV.CalendarEventData<ViewEvent?>>)

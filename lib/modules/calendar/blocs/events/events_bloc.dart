@@ -1,4 +1,4 @@
-import 'package:aurora_logger/aurora_logger.dart';
+// import 'package:aurora_logger/aurora_logger.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/calendar_usecase.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/calendar.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/event.dart';
@@ -119,33 +119,37 @@ class EventsBloc extends Bloc<EventBlocEvent, EventsState> {
   }
 
   _onSelectDate(SelectDate event, Emitter<EventsState> emit) async {
-    final today = DateTime.now();
-    if (event.date.isAtSameMomentAs(state.selectedDate)) {
+    final today = DateTime.now().withoutTime;
+    // TODO: review this correction of the selected date in month mode.
+    final dateSelected = event.isMonthMode ?
+        event.date.toLocal().subtract(event.date.toLocal().timeZoneOffset)
+        : event.date;
+    if (dateSelected.isAtSameMomentAs(state.selectedDate)) {
       emit(state.copyWith(selectedDate: DateTime.now()));
       return;
-    } else if (event.date.isBefore(state.startIntervalDate) ||
-        event.date.isAfter(state.endIntervalDate)) {
-      final newStartDate = event.date.firstDayOfMonth;
-      final newEndDate = event.date.lastDayOfMonth;
+    } else if (dateSelected.isBefore(state.startIntervalDate) ||
+        dateSelected.isAfter(state.endIntervalDate)) {
+      final newStartDate = dateSelected.firstDayOfMonth;
+      final newEndDate = dateSelected.lastDayOfMonth;
       emit(state.copyWith(
           selectedDate:
               today.isBefore(newEndDate) && today.isAfter(newStartDate)
                   ? today
-                  : event.date,
+                  : dateSelected,
           startIntervalDate: newStartDate,
           endIntervalDate: newEndDate));
       add(LoadEvents());
       return;
     }
     final weekEnd =
-        event.isWeekChanged ? event.date.add(Duration(days: 6)) : null;
+        event.isWeekMode ? dateSelected.add(Duration(days: 6)) : null;
 
     emit(state.copyWith(
         selectedDate: weekEnd != null &&
                 today.isBefore(weekEnd) &&
-                today.isAfter(event.date)
+                today.isAfter(dateSelected)
             ? today
-            : event.date));
+            : dateSelected));
   }
 
   _errorHandler(void Function() callback, Emitter<EventsState> emit) {

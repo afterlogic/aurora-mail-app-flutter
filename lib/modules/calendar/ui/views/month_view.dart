@@ -78,7 +78,7 @@ class _MonthViewState extends State<MonthView>
   }
 
   void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
-    BlocProvider.of<EventsBloc>(context).add(SelectDate(selectedDay));
+    BlocProvider.of<EventsBloc>(context).add(SelectDate(selectedDay, isMonthMode: true));
   }
 
   bool get _showEventMarkerInShortMode {
@@ -289,7 +289,7 @@ class _MonthViewState extends State<MonthView>
                           if (!focusedDay.withoutTime.isAtSameMomentAs(
                               state.selectedDate.withoutTime)) {
                             BlocProvider.of<EventsBloc>(context)
-                                .add(SelectDate(focusedDay));
+                                .add(SelectDate(focusedDay, isMonthMode: true));
                           }
                         },
                       );

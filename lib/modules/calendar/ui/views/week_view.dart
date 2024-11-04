@@ -182,7 +182,7 @@ class _WeekViewState extends State<WeekView> {
           },
           controller: _controller,
           onPageChange: (date, pageIndex) =>
-              _bloc.add(SelectDate(date, isWeekChanged: true)),
+              _bloc.add(SelectDate(date, isWeekMode: true)),
           onEventTap:
               (List<CV.CalendarEventData<Object?>> events, DateTime date) {
             final event =

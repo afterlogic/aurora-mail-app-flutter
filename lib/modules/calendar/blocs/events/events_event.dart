@@ -7,11 +7,18 @@ abstract class EventBlocEvent extends Equatable {
 }
 
 class SelectDate extends EventBlocEvent {
-  final bool isWeekChanged;
   final DateTime date;
-  const SelectDate(this.date, {this.isWeekChanged = false});
+  final bool isMonthMode;
+  final bool isWeekMode;
+  final bool isDayMode;
+  const SelectDate(this.date, {
+    this.isMonthMode = false,
+    this.isWeekMode = false,
+    this.isDayMode = false,
+  });
+
   @override
-  List<Object?> get props => [date, isWeekChanged];
+  List<Object?> get props => [date, isMonthMode, isWeekMode, isDayMode];
 }
 
 class UpdateEvent extends EventBlocEvent {
