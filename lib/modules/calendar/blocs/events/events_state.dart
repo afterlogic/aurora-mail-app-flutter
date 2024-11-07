@@ -39,19 +39,38 @@ class EventsState extends Equatable {
 
   ///Events from selected date or from period between [startIntervalDate] and [endIntervalDate]
   List<ViewEvent>? get selectedEvents {
-    final filteredEvents = originalEvents?.where((e) {
-      final nextDay = selectedDate.startOfNextDay;
-      final nextDayUtc = DateTime.utc(nextDay.year, nextDay.month, nextDay.day);
-      final todayWithoutTime = selectedDate.withoutTime;
-      final todayWithoutTimeUtc = DateTime.utc(
-          todayWithoutTime.year, todayWithoutTime.month, todayWithoutTime.day);
-      return (e.startDate.toUtc().isBefore(nextDayUtc) &&
-              e.endDate.toUtc().isAfter(todayWithoutTimeUtc)) ||
+    final filteredEvents = originalEvents?.where((event) {
+      final tomorrowStart = selectedDate.startOfNextDay.toUtc();
+      final todayStart = selectedDate.withoutTime.toUtc();
+      final todayLocal = selectedDate.withoutTime.toLocal();
 
-          ///handle events where startDate equals endDate
-          (e.startDate.toUtc().isAtSameMomentAs(e.endDate.toUtc()) &&
-              (e.startDate.toUtc().isBefore(nextDayUtc) &&
-                  e.endDate.toUtc().isAfterOrEqual(todayWithoutTimeUtc)));
+      /// final title = event.title;
+      final isAllDay = event.allDay == true;
+      final eventStart = isAllDay
+          ? DateTime(event.endDate.year, event.startDate.month, event.startDate.day)
+          : event.startDate.toUtc();
+      final eventEnd = isAllDay
+          ? DateTime(event.endDate.year, event.endDate.month, event.endDate.day)
+          : event.endDate.toUtc();
+
+      /// Compare all day events which has no time (shouldn't have, actually the time is 00:00:00)
+      final compareAllDayEvents = isAllDay
+          && eventStart.isBefore(tomorrowStart)
+          && eventEnd.isAfter(todayStart)
+          && !eventEnd.isAtSameMomentAs(todayLocal); /// all-day event ends at 00:00:00 of the next day
+
+      /// Compare events that has date and time
+      final compareRegularEvents = !isAllDay
+          && eventStart.isBefore(tomorrowStart)
+          && eventEnd.isAfter(todayStart);
+
+      /// handle events where startDate equals endDate
+      final compareRegularEventsAlt = !isAllDay
+          && eventStart.isAtSameMomentAs(eventEnd)
+          && eventStart.isBefore(tomorrowStart)
+          && eventEnd.isAfterOrEqual(todayStart);
+
+      return compareAllDayEvents || compareRegularEvents || compareRegularEventsAlt;
     }).toList();
     return filteredEvents;
   }
