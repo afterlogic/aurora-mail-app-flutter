@@ -8,7 +8,7 @@ import 'package:aurora_mail/modules/calendar/calendar_domain/models/event.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/rrule.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/update_status.dart';
 import 'package:aurora_mail/modules/calendar/utils/date_time_ext.dart';
-import 'package:aurora_mail/utils/always_non_equal_object.dart';
+// import 'package:aurora_mail/utils/always_non_equal_object.dart';
 import 'package:calendar_view/calendar_view.dart';
 import 'package:flutter/material.dart';
 

@@ -1,10 +1,10 @@
-import 'dart:math';
+// import 'dart:math';
 
 import 'package:aurora_mail/modules/calendar/ui/models/event.dart';
 import 'package:aurora_mail/modules/calendar/utils/date_time_ext.dart';
 import 'package:calendar_view/calendar_view.dart';
 
-const int slotsNumber = 3;
+// const int slotsNumber = 3;
 
 List<T?> _ensureCapacity<T>(int index, List<T?> events) {
   if (index > events.length - 1) {
@@ -55,7 +55,7 @@ void spreadWeekEvents(Week week) {
             }
           }
 
-          event.slotIndex = foundedFreeSlot; // remembering the free slot number
+          event.slotIndex = foundedFreeSlot; // storing free slot number
           day.events[foundedFreeSlot] = event; // saving event to the free slot
         }
       }
@@ -63,19 +63,18 @@ void spreadWeekEvents(Week week) {
   }
 }
 
-List<Week> processEvents(
-    List<Week> weeks, List<ExtendedMonthEvent> eventsSource) {
+List<Week> processEvents(List<Week> weeks, List<ExtendedMonthEvent> eventsSource) {
   // sort events by duration
   eventsSource.sort((a, b) => b.duration.compareTo(a.duration));
 
   for (var week in weeks) {
-    week.events = eventsSource.where((item) {
-      final result = (item.startDate.withoutTime
-                  .isBeforeOrEqual(week.days.last.date.withoutTime) &&
-              item.startDate
-                  .isAfterOrEqual(week.days.first.date.withoutTime)) ||
-          (item.endDate.isBeforeOrEqual(week.days.last.date.withoutTime) &&
-              item.endDate.isAfterOrEqual(week.days.first.date.withoutTime));
+    week.events = eventsSource.where((event) {
+      final result = (
+          event.startDate.withoutTime.isBeforeOrEqual(week.days.last.date.withoutTime)
+          && event.startDate.isAfterOrEqual(week.days.first.date.withoutTime)
+        ) ||
+          (event.endDate.isBeforeOrEqual(week.days.last.date.withoutTime)
+            && event.endDate.isAfterOrEqual(week.days.first.date.withoutTime));
       return result;
     }).toList();
 
@@ -92,6 +91,7 @@ List<Week> processEvents(
 
     spreadWeekEvents(week);
     _normalizeEventsLength(week);
+
     // removing unnecessary empty events
     // for (var day in week.days) {
     //   int maxIndexPerDay = -1;
@@ -144,7 +144,7 @@ List<Week> generateWeeks(DateTime startDate, DateTime endDate) {
 }
 
 Map<DateTime, List<ExtendedMonthEvent?>> convertWeeksToMap(List<Week> weeks) {
-  Map<DateTime, List<ExtendedMonthEvent?>> resultMap = {};
+  final Map<DateTime, List<ExtendedMonthEvent?>> resultMap = {};
 
   for (final Week week in weeks) {
     for (final Day day in week.days) {

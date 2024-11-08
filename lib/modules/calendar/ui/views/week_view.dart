@@ -205,7 +205,7 @@ class _WeekViewState extends State<WeekView> {
   }
 
   _onStateChange(EventsState state) {
-    final sourceEvents = Map.of(state.getEventsFromWeek());
+    final sourceEvents = Map.of(state.getEventsForWeek());
     // TODO: remove this step after fixing problem with adding unnecessary null values to collection.
     final events = deepCloneAndSeparateEvents(sourceEvents);
 

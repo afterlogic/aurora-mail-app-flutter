@@ -43,7 +43,7 @@ class _DayViewState extends State<DayView> {
   }
 
   _onStateChange(EventsState state) {
-    final events = state.getEventsFromDay();
+    final events = state.getEventsForDay();
     final oldEvents = [..._controller.allEvents];
     _controller.removeAll(oldEvents);
     events.forEach((e) {

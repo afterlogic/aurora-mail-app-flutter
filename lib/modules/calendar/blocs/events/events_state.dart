@@ -75,7 +75,7 @@ class EventsState extends Equatable {
     return filteredEvents;
   }
 
-  List<DateTime> _daysFromInterval(DateTime start, DateTime end) {
+  List<DateTime> _datesFromInterval(DateTime start, DateTime end) {
     List<DateTime> dates = [];
 
     if (start.isAfter(end)) {
@@ -107,7 +107,7 @@ class EventsState extends Equatable {
     return currentDate.subtract(Duration(days: daysToSubtract));
   }
 
-  Map<DateTime, List<ViewEvent?>> getEventsFromWeek({DateTime? date}) {
+  Map<DateTime, List<ViewEvent?>> getEventsForWeek({DateTime? date}) {
     if (originalEvents == null) {
       return {};
     }
@@ -115,7 +115,7 @@ class EventsState extends Equatable {
     final DateTime startOfWeek = _getStartOfWeek(selectedDate, firstDayInWeek);
     final DateTime endOfWeek = startOfWeek.add(Duration(days: 6));
 
-    final dates = _daysFromInterval(startOfWeek, endOfWeek);
+    final dates = _datesFromInterval(startOfWeek, endOfWeek);
     final Map<DateTime, List<ViewEvent?>> result = {};
 
     for (final date in dates) {
@@ -123,55 +123,39 @@ class EventsState extends Equatable {
     }
 
     return result;
-
-    // final selectedEvents = originalEvents!.where((event) {
-    //   return !(event.endDate.isBefore(startOfWeek) ||
-    //       event.startDate.isAfter(endOfWeek));
-    // }).toList();
-    // return selectedEvents
-    //     .expand<ViewEvent>(
-    //         (e) => e.allDay != false ? [e] : e.splitIntoDailyEvents)
-    //     .toList();
   }
 
   List<ViewEvent?> getEventsForDayFromMap({required DateTime date}) {
     return eventsMap?[DateTime(date.year, date.month, date.day)] ?? [];
   }
 
-  List<ViewEvent> getEventsFromDay({DateTime? date}) {
-    late int targetYear;
-    late int targetMonth;
-    late int targetDay;
-
-    if (date != null) {
-      targetYear = date.year;
-      targetMonth = date.month;
-      targetDay = date.day;
-    } else {
-      targetYear = selectedDate.year;
-      targetMonth = selectedDate.month;
-      targetDay = selectedDate.day;
-    }
-
-    final targetDate = DateTime(targetYear, targetMonth, targetDay);
-
-    final events =
-        getEventsForDayFromMap(date: targetDate).whereNotNull().toList();
+  List<ViewEvent> getEventsForDay({DateTime? date}) {
+    final events = date == null
+        /// Getting events for the selected date
+        ? (selectedEvents ?? [])
+        /// This case is actually isn't used, kept it just for backward compatibility,
+        : getEventsForDayFromMap(date: DateTime(date.year, date.month, date.day))
+          .whereNotNull()
+          .toList();
 
     return events
-        .map((e) => _expandEventTime(e: e, currentDate: targetDate))
+        .map((event) => _expandEventTime(event: event, currentDate: selectedDate))
         .toList();
   }
 
-  ViewEvent _expandEventTime(
-      {required ViewEvent e, required DateTime currentDate}) {
-    final updatedStart =
-        e.isStartedToday(currentDate) ? e.startDate : e.startDate.withoutTime;
-    final updatedEnd = e.isEndedToday(currentDate)
-        ? e.endDate
-        : e.endDate.withoutTime.add(Duration(hours: 23, minutes: 59));
+  ViewEvent _expandEventTime({
+    required ViewEvent event,
+    required DateTime currentDate
+  }) {
+    final updatedStart = event.isStartedToday(currentDate)
+        ? event.startDate
+        : event.startDate.withoutTime;
 
-    return e.copyWith(startDate: () => updatedStart, endDate: () => updatedEnd);
+    final updatedEnd = event.isEndedToday(currentDate)
+        ? event.endDate
+        : event.endDate.withoutTime.add(Duration(hours: 23, minutes: 59));
+
+    return event.copyWith(startDate: () => updatedStart, endDate: () => updatedEnd);
   }
 
   @override
@@ -183,25 +167,24 @@ class EventsState extends Equatable {
         '}';
   }
 
-  EventsState copyWith(
-      {EventsStatus? status,
-      Map<DateTime, List<ViewEvent?>>? Function()? eventsMap,
-      ErrorToShow? Function()? error,
-      List<ViewEvent>? Function()? originalEvents,
-      ViewEvent? Function()? selectedEvent,
-      List<Calendar>? Function()? calendars,
-      DateTime? startIntervalDate,
-      DateTime? endIntervalDate,
-      DateTime? selectedDate,
-      int? firstDayInWeek}) {
+  EventsState copyWith({
+    EventsStatus? status,
+    Map<DateTime, List<ViewEvent?>>? Function()? eventsMap,
+    ErrorToShow? Function()? error,
+    List<ViewEvent>? Function()? originalEvents,
+    ViewEvent? Function()? selectedEvent,
+    List<Calendar>? Function()? calendars,
+    DateTime? startIntervalDate,
+    DateTime? endIntervalDate,
+    DateTime? selectedDate,
+    int? firstDayInWeek
+  }) {
     return EventsState(
       status: status ?? this.status,
       error: error == null ? this.error : error(),
       eventsMap: eventsMap == null ? this.eventsMap : eventsMap(),
-      originalEvents:
-          originalEvents == null ? this.originalEvents : originalEvents(),
-      selectedEvent:
-          selectedEvent == null ? this.selectedEvent : selectedEvent(),
+      originalEvents: originalEvents == null ? this.originalEvents : originalEvents(),
+      selectedEvent: selectedEvent == null ? this.selectedEvent : selectedEvent(),
       startIntervalDate: startIntervalDate ?? this.startIntervalDate,
       endIntervalDate: endIntervalDate ?? this.endIntervalDate,
       selectedDate: selectedDate ?? this.selectedDate,
