@@ -38,8 +38,14 @@ class ViewEvent extends Event implements Displayable, WeekViewVisible {
   bool isStartedToday(DateTime currentDate) =>
       startDate.withoutTime.isAtSameMomentAs(currentDate.withoutTime);
 
-  bool isEndedToday(DateTime currentDate) =>
-      endDate.withoutTime.isAtSameMomentAs(currentDate.withoutTime);
+  bool isEndedToday(DateTime currentDate) {
+    /// If end date equals 00:00:00 of the next day, this means that it ends at 24:00 of the previous day.
+    /// So, it's necessary to correct the end date
+    final endDate = this.endDate.isAtSameMomentAs(currentDate.startOfNextDay)
+        ? this.endDate.subtract(Duration(seconds: 1)).withoutTime
+        : this.endDate.withoutTime;
+    return endDate.isAtSameMomentAs(currentDate.withoutTime);
+  }
 
   static ViewEvent? tryFromEvent(Event e, {required Color color}) {
     try {

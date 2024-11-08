@@ -18,10 +18,19 @@ List<T?> _ensureCapacity<T>(int index, List<T?> events) {
 void spreadWeekEvents(Week week) {
   for (var event in week.events) {
     for (int dayIndex = 0; dayIndex < week.days.length; dayIndex++) {
-      var day = week.days[dayIndex];
+      final day = week.days[dayIndex];
+      final eventStartDate = event.startDate.withoutTime;
 
-      if ((event.startDate.withoutTime.isBeforeOrEqual(day.date)) &&
-          (event.endDate.withoutTime.isAfterOrEqual(day.date))) {
+      /// If end date equals 00:00:00 this means that it ands at 24:00 of the previous day.
+      /// So, it's necessary to correct the end date
+      final eventEndDate = event.endDate.isAtSameMomentAs(day.date)
+        ? event.endDate.subtract(Duration(seconds: 1)).withoutTime
+        : event.endDate.withoutTime;
+
+      final startsBefore = eventStartDate.isBeforeOrEqual(day.date);
+      final endsAfter = eventEndDate.isAfterOrEqual(day.date);
+
+      if (startsBefore && endsAfter) {
         if (event.slotIndex != null) {
           day.events = _ensureCapacity(event.slotIndex!, day.events);
           day.events[event.slotIndex!] = event;
