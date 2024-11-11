@@ -650,6 +650,16 @@ class S {
     );
   }
 
+  /// `Calendar`
+  String get calendar {
+    return Intl.message(
+      'Calendar',
+      name: 'calendar',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Message text...`
   String get compose_body_placeholder {
     return Intl.message(
@@ -1420,6 +1430,16 @@ class S {
     );
   }
 
+  /// `Save changes?`
+  String get save_changes_question {
+    return Intl.message(
+      'Save changes?',
+      name: 'save_changes_question',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Add contact`
   String get contacts_add {
     return Intl.message(
@@ -1730,11 +1750,31 @@ class S {
     );
   }
 
+  /// `weekly`
+  String get settings_sync_frequency_weekly {
+    return Intl.message(
+      'weekly',
+      name: 'settings_sync_frequency_weekly',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `monthly`
   String get settings_sync_frequency_monthly {
     return Intl.message(
       'monthly',
       name: 'settings_sync_frequency_monthly',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `yearly`
+  String get settings_sync_frequency_yearly {
+    return Intl.message(
+      'yearly',
+      name: 'settings_sync_frequency_yearly',
       desc: '',
       args: [],
     );

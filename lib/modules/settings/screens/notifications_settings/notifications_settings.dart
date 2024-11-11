@@ -9,6 +9,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'package:theme/app_color.dart';
+import 'package:theme/app_theme.dart';
+
 class NotificationsSettings extends StatefulWidget {
   @override
   _NotificationsSettingsState createState() => _NotificationsSettingsState();
@@ -35,6 +38,7 @@ class _NotificationsSettingsState extends BState<NotificationsSettings> {
             final tokenStatus = state is InitState ? state.state : null;
             Widget button = AMButton(
               color: Theme.of(context).primaryColor,
+              shadow: AppColor.enableShadow ? null : BoxShadow(),
               isLoading: isProgress,
               child: Text(S.of(context).btn_resend_push_token,
                   style: TextStyle(color: Colors.white)),
@@ -52,6 +56,40 @@ class _NotificationsSettingsState extends BState<NotificationsSettings> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16.0, vertical: 8),
+                    child: Row(
+                      children: <Widget>[
+                        Text(
+                          'FB token',
+                          style: theme.textTheme.subtitle1,
+                        ),
+                        Expanded(
+                            child: Text(
+                              PushNotificationsManager.instance.token,
+                              textAlign: TextAlign.right,
+                            )),
+                        IconButton(
+                          icon: Icon(Icons.content_copy),
+                          onPressed: () {
+                            Clipboard.setData(ClipboardData(
+                                text: PushNotificationsManager
+                                    .instance.token));
+                            showSnack(
+                              isError: false,
+                              context: context,
+                              scaffoldState: Scaffold.of(context),
+                              message: S
+                                  .of(context)
+                                  .label_device_id_copied_to_clip_board,
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+
                   Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 16.0, vertical: 8),

@@ -77,6 +77,8 @@ abstract class ContactsRepository {
 
   Future<Contact> getContactByEmail(String mail);
 
+  Future<List<Contact>> getContactsByEmail(String mail);
+
   Future<Contact> getContactById(int entityId);
 
   Future deleteContactKey(String mail);

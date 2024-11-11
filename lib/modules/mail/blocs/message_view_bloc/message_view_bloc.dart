@@ -8,6 +8,7 @@ import 'package:aurora_mail/inject/app_inject.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/mail/blocs/message_view_bloc/message_view_methods.dart';
 import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
+import 'package:aurora_mail/utils/api_utils.dart';
 import 'package:aurora_mail/utils/error_to_show.dart';
 import 'package:bloc/bloc.dart';
 import 'package:crypto_worker/crypto_worker.dart';
@@ -30,6 +31,7 @@ class MessageViewBloc extends Bloc<MessageViewEvent, MessageViewState> {
   Stream<MessageViewState> mapEventToState(
     MessageViewEvent event,
   ) async* {
+    if (event is ChangeEventInviteStatus) yield* _changeEventInviteStatus(event);
     if (event is DownloadAttachment) yield* _downloadAttachment(event);
     if (event is StartDownload) yield DownloadStarted(event.fileName);
     if (event is EndDownload) yield DownloadFinished(event.path);
@@ -82,6 +84,17 @@ class MessageViewBloc extends Bloc<MessageViewEvent, MessageViewState> {
   Stream<MessageViewState> _checkEncrypt(CheckEncrypt event) async* {
     EncryptType encryptedType = _methods.checkEncrypt(event.message);
     yield MessageIsEncrypt(encryptedType);
+  }
+
+  Stream<MessageViewState> _changeEventInviteStatus(ChangeEventInviteStatus event) async* {
+    try{
+      final changeResult = await _methods.changeEventInviteStatus(status: event.status, calendarId: event.calendarId, fileName: event.fileName);
+      yield SuccessChangedInviteStatus();
+    } catch (e, st) {
+      yield MessagesViewError(
+        formatError(e, st)
+      );
+    }
   }
 
   Stream<MessageViewState> _decryptBody(DecryptBody event) async* {

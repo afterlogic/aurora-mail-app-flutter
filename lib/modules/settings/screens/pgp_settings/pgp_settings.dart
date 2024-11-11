@@ -21,6 +21,9 @@ import 'package:crypto_model/crypto_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'package:theme/app_color.dart';
+import 'package:theme/app_theme.dart';
+
 class PgpSettings extends StatefulWidget {
   final PgpSettingsBloc pgpSettingsBloc;
 
@@ -321,6 +324,7 @@ class _PgpSettingsState extends BState<PgpSettings> {
       if (state.contactPublic.isNotEmpty)
         AMButton(
           color: Theme.of(context).primaryColor,
+          shadow: AppColor.enableShadow ? null : BoxShadow(),
           child: Text(
             S.of(context).btn_pgp_export_all_public_keys,
             style: TextStyle(color: Colors.white),
@@ -330,6 +334,7 @@ class _PgpSettingsState extends BState<PgpSettings> {
       space,
       AMButton(
         color: Theme.of(context).primaryColor,
+        shadow: AppColor.enableShadow ? null : BoxShadow(),
         child: Text(
           S.of(context).btn_pgp_import_keys_from_text,
           style: TextStyle(color: Colors.white),
@@ -339,6 +344,7 @@ class _PgpSettingsState extends BState<PgpSettings> {
       space,
       AMButton(
         color: Theme.of(context).primaryColor,
+        shadow: AppColor.enableShadow ? null : BoxShadow(),
         child: Text(
           S.of(context).btn_pgp_import_keys_from_file,
           style: TextStyle(color: Colors.white),
@@ -348,6 +354,7 @@ class _PgpSettingsState extends BState<PgpSettings> {
       space,
       AMButton(
         color: Theme.of(context).primaryColor,
+        shadow: AppColor.enableShadow ? null : BoxShadow(),
         child: Text(
           S.of(context).btn_pgp_generate_keys,
           style: TextStyle(color: Colors.white),

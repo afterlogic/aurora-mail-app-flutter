@@ -202,14 +202,16 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
     final draftsFolder = await _mailBloc.getFolderByType(FolderType.drafts);
     final isDraftMessage =
         draftsFolder != null && message.folder == draftsFolder.fullNameRaw;
-    if (isDraftMessage) {
+    if (isDraftMessage || _selectedFolder.folderType.isNotes) {
       Navigator.pushNamed(
         context,
         ComposeRoute.name,
         arguments: ComposeScreenArgs(
           mailBloc: _mailBloc,
           contactsBloc: _contactsBloc,
-          composeAction: OpenFromDrafts(message, message.uid),
+          composeAction: _selectedFolder.folderType.isNotes
+              ? OpenFromNotes(message, _selectedFolder)
+              : OpenFromDrafts(message, message.uid),
         ),
       );
     } else {
@@ -291,20 +293,25 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
       bottomNavigationBar:
           MailBottomAppBar(selectedRoute: MailBottomAppBarRoutes.mail),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: selectionController.enable ? null : AMFloatingActionButton(
-        child: IconTheme(
-          data: AppTheme.floatIconTheme,
-          child: Icon(MdiIcons.pen),
-        ),
-        onPressed: () => Navigator.pushNamed(
-          context,
-          ComposeRoute.name,
-          arguments: ComposeScreenArgs(
-            mailBloc: _mailBloc,
-            contactsBloc: _contactsBloc,
-          ),
-        ),
-      ),
+      floatingActionButton: selectionController.enable
+          ? null
+          : AMFloatingActionButton(
+              child: IconTheme(
+                data: AppTheme.floatIconTheme,
+                child: Icon(MdiIcons.pen),
+              ),
+              onPressed: () => Navigator.pushNamed(
+                context,
+                ComposeRoute.name,
+                arguments: ComposeScreenArgs(
+                  composeAction: _selectedFolder.folderType.isNotes
+                      ? OpenFromNotes(null, _selectedFolder)
+                      : null,
+                  mailBloc: _mailBloc,
+                  contactsBloc: _contactsBloc,
+                ),
+              ),
+            ),
       body: Row(
         children: [
           ClipRRect(
@@ -524,31 +531,40 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
       bottomNavigationBar:
           MailBottomAppBar(selectedRoute: MailBottomAppBarRoutes.mail),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: selectionController.enable ? null : AMFloatingActionButton(
-        child: IconTheme(
-          data: AppTheme.floatIconTheme,
-          child: Icon(MdiIcons.pen),
-        ),
-        onPressed: () => Navigator.pushNamed(
-          context,
-          ComposeRoute.name,
-          arguments: ComposeScreenArgs(
-            mailBloc: _mailBloc,
-            contactsBloc: _contactsBloc,
-          ),
-        ),
-      ),
+      floatingActionButton: selectionController.enable
+          ? null
+          : AMFloatingActionButton(
+              child: IconTheme(
+                data: AppTheme.floatIconTheme,
+                child: Icon(MdiIcons.pen),
+              ),
+              onPressed: () => Navigator.pushNamed(
+                context,
+                ComposeRoute.name,
+                arguments: ComposeScreenArgs(
+                  composeAction: _selectedFolder.folderType.isNotes
+                      ? OpenFromNotes(null, _selectedFolder)
+                      : null,
+                  mailBloc: _mailBloc,
+                  contactsBloc: _contactsBloc,
+                ),
+              ),
+            ),
     );
   }
 
-  Widget _buildMessagesLoading() => Center(child: CircularProgressIndicator());
+  Widget _buildMessagesLoading() => Center(
+          child: RefreshProgressIndicator(
+        backgroundColor: Colors.white,
+        color: Colors.black,
+      ));
 
   final selectionController = SelectionController<int, Message>();
 
   void selectionCallback() {
     //rebuild only if selection mode changes
-    if(selectionController.selected.length < 2);
-    setState(() { });
+    if (selectionController.selected.length < 2) ;
+    setState(() {});
   }
 
   Widget _buildMessagesStream(
@@ -560,7 +576,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
   ) {
     return Column(
       children: <Widget>[
-        if (isSearch)
+        if (isSearch && !_selectedFolder.folderType.isNotes)
           TextButton(
             onPressed: () async {
               final result = await dialog(
@@ -609,6 +625,7 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
                 onStarMessage: _setStarred,
                 onDeleteMessage: _deleteMessage,
                 onUnreadMessage: _unreadMessage,
+                isNote: _selectedFolder.folderType.isNotes,
               );
             },
             progressWidget: Padding(

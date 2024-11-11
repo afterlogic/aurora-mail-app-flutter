@@ -33,6 +33,16 @@ class MessageViewMethods {
     );
   }
 
+  Future<bool> changeEventInviteStatus(
+      {@required String status,
+      @required String calendarId,
+      @required String fileName}) {
+    return _mailApi.changeEventInviteStatus(
+        status: status,
+        calendarId: calendarId,
+        fileName: fileName);
+  }
+
   void downloadAttachment(
     MailAttachment attachment, {
     @required Function(String) onDownloadEnd,

@@ -162,6 +162,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("PIN\'i doğrula"),
         "button_pgp_verify_sign":
             MessageLookupByLibrary.simpleMessage("Doğrula"),
+        "calendar": MessageLookupByLibrary.simpleMessage("Calendar"),
         "clear_cache_during_logout": MessageLookupByLibrary.simpleMessage(
             "Yerel önbelleği ve kayıtlı anahtarları Temizle"),
         "compose_body_placeholder":
@@ -573,7 +574,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Şifre panoya kopyalandı"),
         "hint_self_destructing_sent_password_using_different_channel":
             MessageLookupByLibrary.simpleMessage(
-                "Şifre farklı bir kanal üzerinden gönderilmelidir. \n  Şifreyi bir yerde saklayın. Aksi takdirde şifreyi kurtaramazsınız."),
+                "Şifre farklı bir kanal üzerinden gönderilmelidir. \nŞifreyi bir yerde saklayın. Aksi takdirde şifreyi kurtaramazsınız."),
         "hint_self_destructing_supports_plain_text_only":
             MessageLookupByLibrary.simpleMessage(
                 "Kendini yok eden güvenli iletiler yalnızca düz metni destekler. Tüm biçimlendirme kaldırılacaktır. Ayrıca, ekler şifrelenemez ve iletiden kaldırılır."),
@@ -771,6 +772,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "no_permission_to_local_storage": MessageLookupByLibrary.simpleMessage(
             "Yerel depolamaya erişim izni yok. Cihazınızın ayarlarını kontrol edin."),
         "remove": MessageLookupByLibrary.simpleMessage("Remove"),
+        "save_changes_question":
+            MessageLookupByLibrary.simpleMessage("Save changes?"),
         "self_destructing_life_time_day":
             MessageLookupByLibrary.simpleMessage("24 saat"),
         "self_destructing_life_time_days_3":
@@ -823,6 +826,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("aylık"),
         "settings_sync_frequency_never":
             MessageLookupByLibrary.simpleMessage("hiçbir zaman"),
+        "settings_sync_frequency_weekly":
+            MessageLookupByLibrary.simpleMessage("weekly"),
+        "settings_sync_frequency_yearly":
+            MessageLookupByLibrary.simpleMessage("yearly"),
         "settings_sync_period":
             MessageLookupByLibrary.simpleMessage("Senkronizasyon periyodu"),
         "settings_sync_period_all_time":

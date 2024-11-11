@@ -76,6 +76,8 @@ class Folders extends Table {
       "accountLocalId": accountLocalId,
       "folders": rawFolders["Folders"]["@Collection"],
       "namespace": rawFolders["Namespace"],
+      "delimiter": (rawFolders["Folders"]?["@Collection"] as Iterable?)
+          ?.firstOrNull?["Delimiter"]
     };
 
     return compute(getFolderObjectsFromServer, args);
@@ -86,16 +88,32 @@ class Folders extends Table {
     final accountId = args["id"] as int;
     final userLocalId = args["userLocalId"] as int;
     final accountLocalId = args["accountLocalId"] as int;
-    final namespace = (args["namespace"] as String) ?? "";
+    final namespace = (args["namespace"] as String?) ?? "";
+    final delimiter = (args["delimiter"] as String?) ?? "";
     final rawFolders =
         new List<Map<String, dynamic>>.from(args["folders"] as Iterable);
 
     final flattenedFolders = <LocalFolder>[];
 
+    ///for purpose detecting notes folder from server there are should be
+    ///another one [FolderType], but now this method is using
+    bool isNotesFolder(
+        {required String delimiter,
+        required String namespace,
+        required String fullNameRaw}) {
+      ///[delimiter] and [namespace] should be taken from first folder in server group
+      /// list. Usually its [FolderType.inbox] folder
+      final name = namespace.isEmpty || delimiter.isEmpty
+          ? Folder.notesFolderName
+          : "$namespace$delimiter${Folder.notesFolderName}";
+      return fullNameRaw == name;
+    }
+
     void getObj(List<Map<String, dynamic>> rawFolders, String? parentGuid) {
       rawFolders.forEach((rawFolder) {
         final guid =
             "$userLocalId $accountLocalId ${rawFolder["FullNameHash"]}}";
+        final String fullNameRaw = rawFolder["FullNameRaw"] as String;
         final t = rawFolder["Type"];
         flattenedFolders.add(LocalFolder(
           namespace: namespace,
@@ -104,11 +122,16 @@ class Folders extends Table {
           guid: guid,
           parentGuid: parentGuid,
           accountId: accountId,
-          type: rawFolder["Type"] as int,
+          type: isNotesFolder(
+                  delimiter: delimiter,
+                  namespace: namespace,
+                  fullNameRaw: fullNameRaw)
+              ? FolderType.notes.index
+              : t as int,
           folderOrder: rawFolders.indexOf(rawFolder),
           name: rawFolder["Name"] as String,
           fullName: rawFolder["FullName"] as String,
-          fullNameRaw: rawFolder["FullNameRaw"] as String,
+          fullNameRaw: fullNameRaw,
           fullNameHash: rawFolder["FullNameHash"] as String,
           folderHash: "",
           delimiter: rawFolder["Delimiter"] as String,
@@ -363,7 +386,6 @@ class Folders extends Table {
       List<LocalFolder> folders, FolderType type) {
     return folders.firstWhereOrNull(
       (f) => Folder.getFolderTypeFromNumber(f.type) == type,
-
     );
   }
 }

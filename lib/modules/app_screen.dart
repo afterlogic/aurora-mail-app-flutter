@@ -2,24 +2,37 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:aurora_logger/aurora_logger.dart';
 import 'package:aurora_mail/background/background_helper.dart';
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/generated/l10n.dart';
+import 'package:aurora_mail/models/server_modules.dart';
+import 'package:aurora_mail/modules/calendar/blocs/calendars/calendars_bloc.dart';
+import 'package:aurora_mail/modules/calendar/blocs/events/events_bloc.dart';
+import 'package:aurora_mail/modules/calendar/blocs/notification/calendar_notification_bloc.dart';
+import 'package:aurora_mail/modules/calendar/blocs/tasks/tasks_bloc.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/calendar_repository.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/calendar_usecase.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/activity.dart';
+import 'package:aurora_mail/modules/calendar/ui/screens/calendar_page.dart';
+import 'package:aurora_mail/modules/calendar/ui/screens/calendar_route.dart';
+import 'package:aurora_mail/modules/calendar/utils/week_start_converter.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/messages_list_bloc.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_android.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
+import 'package:aurora_mail/notification/push_notifications_manager.dart';
 import 'package:aurora_mail/shared_ui/restart_widget.dart';
 import 'package:aurora_mail/utils/base_state.dart';
+import 'package:aurora_mail/utils/user_app_data_singleton.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:drift_sqflite/drift_sqflite.dart';
 import 'package:drift/drift.dart';
 import 'package:receive_sharing/recive_sharing.dart';
 import 'package:theme/app_theme.dart';
@@ -42,10 +55,28 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
   final _settingsBloc = new SettingsBloc();
   StreamSubscription sub;
   final _navKey = GlobalKey<NavigatorState>();
+  NotificationData _notification;
 
   @override
   void initState() {
     super.initState();
+    _notification = PushNotificationsManager.instance.initNotification;
+    if (_notification != null &&
+        (_notification.type == NotificationType.event ||
+            _notification.type == NotificationType.task)) {
+      CalendarPage.selectedActivityId = _notification.activityId;
+      CalendarPage.selectedCalendarId = _notification.calendarId;
+      switch (_notification.type) {
+        case NotificationType.email:
+          break;
+        case NotificationType.event:
+          CalendarPage.activityType = ActivityType.event;
+          break;
+        case NotificationType.task:
+          CalendarPage.activityType = ActivityType.task;
+          break;
+      }
+    }
     WidgetsBinding.instance.addObserver(this);
     BackgroundHelper.current = WidgetsBinding.instance.lifecycleState;
     sub = WebMailApi.authErrorStream.listen((_) {
@@ -55,7 +86,7 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
     });
     _initApp();
     ReceiveSharing.getInitialMedia().then((shared) {
-      if (shared == null) return;
+      if (shared == null || shared.isEmpty) return;
       final texts = <String>[];
       final files = <File>[];
       for (var value in shared) {
@@ -72,32 +103,41 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
           (value) => false,
         );
       }
+    }, onError: (e, st) {
+      Logger.errorLog(e, st as StackTrace);
+    }).catchError((e, st) {
+      Logger.errorLog(e, st as StackTrace);
     });
-    ReceiveSharing.getMediaStream().listen((shared) {
-      final texts = <String>[];
-      final files = <File>[];
-      for (var value in shared) {
-        if (value.isText) {
-          texts.add(value.text);
-        } else {
-          files.add(File(value.path));
+
+    try {
+      ReceiveSharing.getMediaStream().listen((shared) {
+        final texts = <String>[];
+        final files = <File>[];
+        for (var value in shared) {
+          if (value.isText) {
+            texts.add(value.text);
+          } else {
+            files.add(File(value.path));
+          }
         }
-      }
-      if (texts.isNotEmpty || files.isNotEmpty) {
-        if (MessagesListAndroid.onShare != null) {
-          _navKey.currentState.popUntil(
-            (value) => value.settings.name == MessagesListRoute.name,
-          );
-          MessagesListAndroid.onShare(files, texts);
-        } else {
-          MessagesListAndroid.shareHolder = [files, texts];
-          _navKey.currentState.pushNamedAndRemoveUntil(
-            MessagesListRoute.name,
-            (value) => false,
-          );
+        if (texts.isNotEmpty || files.isNotEmpty) {
+          if (MessagesListAndroid.onShare != null) {
+            _navKey.currentState.popUntil(
+              (value) => value.settings.name == MessagesListRoute.name,
+            );
+            MessagesListAndroid.onShare(files, texts);
+          } else {
+            MessagesListAndroid.shareHolder = [files, texts];
+            _navKey.currentState.pushNamedAndRemoveUntil(
+              MessagesListRoute.name,
+              (value) => false,
+            );
+          }
         }
-      }
-    });
+      });
+    } catch (e, st) {
+      Logger.errorLog(e, st);
+    }
   }
 
   @override
@@ -134,7 +174,6 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
       RestartWidget.restartApp(context);
     } catch (e, st) {
       print(e);
-      print(st);
     }
   }
 
@@ -185,11 +224,53 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
                   builder: (_, settingsState) {
                     if (settingsState is SettingsLoaded) {
                       final theme = _getTheme(settingsState.darkThemeEnabled);
-
+                      final calendarRepository = authState.user != null &&
+                              BuildProperty.calendarModule &&
+                              (UserAppDataSingleton()
+                                      .getAppData
+                                      ?.availableBackendModules
+                                      ?.contains(ServerModules.calendar) ??
+                                  false)
+                          ? CalendarRepository(
+                              user: _authBloc.currentUser,
+                              appDB: DBInstances.appDB)
+                          : null;
+                      final calendarUseCase = calendarRepository != null
+                          ? CalendarUseCase(
+                              repository: calendarRepository,
+                              location:
+                                  UserAppDataSingleton().getAppData?.location)
+                          : null;
                       return MultiBlocProvider(
                         providers: [
                           BlocProvider.value(value: _authBloc),
                           BlocProvider.value(value: _settingsBloc),
+                          if (calendarUseCase != null)
+                            BlocProvider(
+                              create: (_) => EventsBloc(
+                                  useCase: calendarUseCase,
+                                  firstDayInWeek: convert(UserAppDataSingleton()
+                                      .getAppData
+                                      ?.calendarSettings["WeekStartsOn"]))
+                                ..add(const StartSync()),
+                            ),
+                          if (calendarUseCase != null)
+                            BlocProvider(
+                              lazy: false,
+                              create: (_) =>
+                                  CalendarsBloc(useCase: calendarUseCase)
+                                    ..add(const FetchCalendars()),
+                            ),
+                          if (calendarUseCase != null)
+                            BlocProvider(
+                              create: (_) =>
+                                  TasksBloc(useCase: calendarUseCase),
+                            ),
+                          if (calendarUseCase != null)
+                            BlocProvider(
+                              create: (_) => CalendarNotificationBloc(
+                                  useCase: calendarUseCase),
+                            ),
                           BlocProvider(
                             create: (_) => MailBloc(
                               user: _authBloc.currentUser,
@@ -252,7 +333,9 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
                           locale: settingsState.language?.toLocale(),
                           initialRoute: authState.needsLogin
                               ? LoginRoute.name
-                              : MessagesListRoute.name,
+                              : _notification != null
+                                  ? CalendarRoute.name
+                                  : MessagesListRoute.name,
                           navigatorObservers: [routeObserver],
                         ),
                       );

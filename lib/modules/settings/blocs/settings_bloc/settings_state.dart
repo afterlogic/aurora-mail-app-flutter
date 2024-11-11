@@ -1,10 +1,11 @@
 //@dart=2.9
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/models/app_data.dart';
 import 'package:aurora_mail/modules/settings/models/language.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:equatable/equatable.dart';
-import 'package:drift_sqflite/drift_sqflite.dart';
 import 'package:drift/drift.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 abstract class SettingsState extends Equatable {
   const SettingsState();
@@ -24,7 +25,7 @@ class SettingsLoaded extends SettingsState {
   final Language language;
   final ConnectivityResult connection;
 
-  const SettingsLoaded({
+  SettingsLoaded({
     this.users,
     this.syncFrequency,
     this.syncPeriod,
@@ -42,6 +43,7 @@ class SettingsLoaded extends SettingsState {
     Value<bool> is24,
     Value<Language> language,
     Value<ConnectivityResult> connection,
+    AppData Function() settings,
   }) {
     return new SettingsLoaded(
       users: users != null ? users.value : this.users,

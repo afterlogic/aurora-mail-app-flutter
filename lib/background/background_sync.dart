@@ -12,6 +12,7 @@ import 'package:aurora_logger/aurora_logger.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/models/message_info.dart';
 import 'package:aurora_mail/modules/auth/repository/auth_local_storage.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/calendar_repository.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/mail_methods.dart';
 import 'package:aurora_mail/modules/mail/repository/folders_api.dart';
@@ -21,7 +22,6 @@ import 'package:aurora_mail/notification/notification_manager.dart';
 import 'package:aurora_mail/notification/push_notifications_manager.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
-import 'package:drift_sqflite/drift_sqflite.dart';
 import 'package:drift/drift.dart';
 import 'package:webmail_api_client/webmail_api_client.dart';
 
@@ -55,6 +55,8 @@ class BackgroundSync {
       final users = await _usersDao.getUsers();
 
       for (final user in users) {
+          await _backgroundCalendarsSync(
+              interceptor: interceptor, user: user, logger: isolatedLogger);
         var accounts = await _accountsDao.getAccounts(user.localId);
         if (notification != null) {
           accounts =
@@ -95,6 +97,19 @@ class BackgroundSync {
       );
     }
     return hasUpdate;
+  }
+
+  Future<void> _backgroundCalendarsSync(
+      {@required ApiInterceptor interceptor,
+      @required User user,
+      @required Logger logger}) async {
+    try {
+      logger.log("Calendars background sync started");
+      final calendarRepository = CalendarRepository(user: user, appDB: DBInstances.appDB, logger: logger);
+      await calendarRepository.syncCalendarsWithActivities();
+    } catch (e, s) {
+      logger.log("Calendars background sync error: ${e}");
+    }
   }
 
   Future<Map<Account, List<Message>>> _updateAccountMessages(

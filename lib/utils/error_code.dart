@@ -7,7 +7,7 @@ extension WebMailApiErrorUtil on WebMailApiError {
     if (code != null) {
       return ErrorToShow.message(getErrMsgFromCode(code!));
     } else if (message != null) {
-      return ErrorToShow.message(message);
+      return ErrorToShow.message(message!);
     } else {
       return ErrorToShow.message(S.current.error_unknown);
     }

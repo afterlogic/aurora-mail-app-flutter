@@ -2387,6 +2387,2181 @@ class $MailTable extends Mail with TableInfo<$MailTable, Message> {
   }
 }
 
+class CalendarDb extends DataClass implements Insertable<CalendarDb> {
+  final String id;
+  final String url;
+  final String serverUrl;
+  final String exportHash;
+  final String pubHash;
+  final String color;
+  final String? description;
+  final int userLocalId;
+  final String name;
+  final String owner;
+  final bool isDefault;
+  final bool shared;
+  final bool sharedToAll;
+  final int sharedToAllAccess;
+  final int access;
+  final List<String>? shares;
+  final bool isPublic;
+  final bool isSubscribed;
+  final String source;
+  final String syncToken;
+  CalendarDb(
+      {required this.id,
+      required this.url,
+      required this.serverUrl,
+      required this.exportHash,
+      required this.pubHash,
+      required this.color,
+      this.description,
+      required this.userLocalId,
+      required this.name,
+      required this.owner,
+      required this.isDefault,
+      required this.shared,
+      required this.sharedToAll,
+      required this.sharedToAllAccess,
+      required this.access,
+      this.shares,
+      required this.isPublic,
+      required this.isSubscribed,
+      required this.source,
+      required this.syncToken});
+  factory CalendarDb.fromData(Map<String, dynamic> data, {String? prefix}) {
+    final effectivePrefix = prefix ?? '';
+    return CalendarDb(
+      id: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}id'])!,
+      url: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}url'])!,
+      serverUrl: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}server_url'])!,
+      exportHash: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}export_hash'])!,
+      pubHash: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}pub_hash'])!,
+      color: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}color'])!,
+      description: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}description']),
+      userLocalId: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}user_local_id'])!,
+      name: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}name'])!,
+      owner: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}owner'])!,
+      isDefault: const BoolType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}is_default'])!,
+      shared: const BoolType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}shared'])!,
+      sharedToAll: const BoolType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}shared_to_all'])!,
+      sharedToAllAccess: const IntType().mapFromDatabaseResponse(
+          data['${effectivePrefix}shared_to_all_access'])!,
+      access: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}access'])!,
+      shares: $CalendarTableTable.$converter0.mapToDart(const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}shares'])),
+      isPublic: const BoolType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}is_public'])!,
+      isSubscribed: const BoolType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}is_subscribed'])!,
+      source: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}source'])!,
+      syncToken: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}sync_token'])!,
+    );
+  }
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['url'] = Variable<String>(url);
+    map['server_url'] = Variable<String>(serverUrl);
+    map['export_hash'] = Variable<String>(exportHash);
+    map['pub_hash'] = Variable<String>(pubHash);
+    map['color'] = Variable<String>(color);
+    if (!nullToAbsent || description != null) {
+      map['description'] = Variable<String?>(description);
+    }
+    map['user_local_id'] = Variable<int>(userLocalId);
+    map['name'] = Variable<String>(name);
+    map['owner'] = Variable<String>(owner);
+    map['is_default'] = Variable<bool>(isDefault);
+    map['shared'] = Variable<bool>(shared);
+    map['shared_to_all'] = Variable<bool>(sharedToAll);
+    map['shared_to_all_access'] = Variable<int>(sharedToAllAccess);
+    map['access'] = Variable<int>(access);
+    if (!nullToAbsent || shares != null) {
+      final converter = $CalendarTableTable.$converter0;
+      map['shares'] = Variable<String?>(converter.mapToSql(shares));
+    }
+    map['is_public'] = Variable<bool>(isPublic);
+    map['is_subscribed'] = Variable<bool>(isSubscribed);
+    map['source'] = Variable<String>(source);
+    map['sync_token'] = Variable<String>(syncToken);
+    return map;
+  }
+
+  CalendarTableCompanion toCompanion(bool nullToAbsent) {
+    return CalendarTableCompanion(
+      id: Value(id),
+      url: Value(url),
+      serverUrl: Value(serverUrl),
+      exportHash: Value(exportHash),
+      pubHash: Value(pubHash),
+      color: Value(color),
+      description: description == null && nullToAbsent
+          ? const Value.absent()
+          : Value(description),
+      userLocalId: Value(userLocalId),
+      name: Value(name),
+      owner: Value(owner),
+      isDefault: Value(isDefault),
+      shared: Value(shared),
+      sharedToAll: Value(sharedToAll),
+      sharedToAllAccess: Value(sharedToAllAccess),
+      access: Value(access),
+      shares:
+          shares == null && nullToAbsent ? const Value.absent() : Value(shares),
+      isPublic: Value(isPublic),
+      isSubscribed: Value(isSubscribed),
+      source: Value(source),
+      syncToken: Value(syncToken),
+    );
+  }
+
+  factory CalendarDb.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return CalendarDb(
+      id: serializer.fromJson<String>(json['id']),
+      url: serializer.fromJson<String>(json['url']),
+      serverUrl: serializer.fromJson<String>(json['serverUrl']),
+      exportHash: serializer.fromJson<String>(json['exportHash']),
+      pubHash: serializer.fromJson<String>(json['pubHash']),
+      color: serializer.fromJson<String>(json['color']),
+      description: serializer.fromJson<String?>(json['description']),
+      userLocalId: serializer.fromJson<int>(json['userLocalId']),
+      name: serializer.fromJson<String>(json['name']),
+      owner: serializer.fromJson<String>(json['owner']),
+      isDefault: serializer.fromJson<bool>(json['isDefault']),
+      shared: serializer.fromJson<bool>(json['shared']),
+      sharedToAll: serializer.fromJson<bool>(json['sharedToAll']),
+      sharedToAllAccess: serializer.fromJson<int>(json['sharedToAllAccess']),
+      access: serializer.fromJson<int>(json['access']),
+      shares: serializer.fromJson<List<String>?>(json['shares']),
+      isPublic: serializer.fromJson<bool>(json['isPublic']),
+      isSubscribed: serializer.fromJson<bool>(json['isSubscribed']),
+      source: serializer.fromJson<String>(json['source']),
+      syncToken: serializer.fromJson<String>(json['syncToken']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'url': serializer.toJson<String>(url),
+      'serverUrl': serializer.toJson<String>(serverUrl),
+      'exportHash': serializer.toJson<String>(exportHash),
+      'pubHash': serializer.toJson<String>(pubHash),
+      'color': serializer.toJson<String>(color),
+      'description': serializer.toJson<String?>(description),
+      'userLocalId': serializer.toJson<int>(userLocalId),
+      'name': serializer.toJson<String>(name),
+      'owner': serializer.toJson<String>(owner),
+      'isDefault': serializer.toJson<bool>(isDefault),
+      'shared': serializer.toJson<bool>(shared),
+      'sharedToAll': serializer.toJson<bool>(sharedToAll),
+      'sharedToAllAccess': serializer.toJson<int>(sharedToAllAccess),
+      'access': serializer.toJson<int>(access),
+      'shares': serializer.toJson<List<String>?>(shares),
+      'isPublic': serializer.toJson<bool>(isPublic),
+      'isSubscribed': serializer.toJson<bool>(isSubscribed),
+      'source': serializer.toJson<String>(source),
+      'syncToken': serializer.toJson<String>(syncToken),
+    };
+  }
+
+  CalendarDb copyWith(
+          {String? id,
+          String? url,
+          String? serverUrl,
+          String? exportHash,
+          String? pubHash,
+          String? color,
+          String? description,
+          int? userLocalId,
+          String? name,
+          String? owner,
+          bool? isDefault,
+          bool? shared,
+          bool? sharedToAll,
+          int? sharedToAllAccess,
+          int? access,
+          List<String>? shares,
+          bool? isPublic,
+          bool? isSubscribed,
+          String? source,
+          String? syncToken}) =>
+      CalendarDb(
+        id: id ?? this.id,
+        url: url ?? this.url,
+        serverUrl: serverUrl ?? this.serverUrl,
+        exportHash: exportHash ?? this.exportHash,
+        pubHash: pubHash ?? this.pubHash,
+        color: color ?? this.color,
+        description: description ?? this.description,
+        userLocalId: userLocalId ?? this.userLocalId,
+        name: name ?? this.name,
+        owner: owner ?? this.owner,
+        isDefault: isDefault ?? this.isDefault,
+        shared: shared ?? this.shared,
+        sharedToAll: sharedToAll ?? this.sharedToAll,
+        sharedToAllAccess: sharedToAllAccess ?? this.sharedToAllAccess,
+        access: access ?? this.access,
+        shares: shares ?? this.shares,
+        isPublic: isPublic ?? this.isPublic,
+        isSubscribed: isSubscribed ?? this.isSubscribed,
+        source: source ?? this.source,
+        syncToken: syncToken ?? this.syncToken,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('CalendarDb(')
+          ..write('id: $id, ')
+          ..write('url: $url, ')
+          ..write('serverUrl: $serverUrl, ')
+          ..write('exportHash: $exportHash, ')
+          ..write('pubHash: $pubHash, ')
+          ..write('color: $color, ')
+          ..write('description: $description, ')
+          ..write('userLocalId: $userLocalId, ')
+          ..write('name: $name, ')
+          ..write('owner: $owner, ')
+          ..write('isDefault: $isDefault, ')
+          ..write('shared: $shared, ')
+          ..write('sharedToAll: $sharedToAll, ')
+          ..write('sharedToAllAccess: $sharedToAllAccess, ')
+          ..write('access: $access, ')
+          ..write('shares: $shares, ')
+          ..write('isPublic: $isPublic, ')
+          ..write('isSubscribed: $isSubscribed, ')
+          ..write('source: $source, ')
+          ..write('syncToken: $syncToken')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+      id,
+      url,
+      serverUrl,
+      exportHash,
+      pubHash,
+      color,
+      description,
+      userLocalId,
+      name,
+      owner,
+      isDefault,
+      shared,
+      sharedToAll,
+      sharedToAllAccess,
+      access,
+      shares,
+      isPublic,
+      isSubscribed,
+      source,
+      syncToken);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is CalendarDb &&
+          other.id == this.id &&
+          other.url == this.url &&
+          other.serverUrl == this.serverUrl &&
+          other.exportHash == this.exportHash &&
+          other.pubHash == this.pubHash &&
+          other.color == this.color &&
+          other.description == this.description &&
+          other.userLocalId == this.userLocalId &&
+          other.name == this.name &&
+          other.owner == this.owner &&
+          other.isDefault == this.isDefault &&
+          other.shared == this.shared &&
+          other.sharedToAll == this.sharedToAll &&
+          other.sharedToAllAccess == this.sharedToAllAccess &&
+          other.access == this.access &&
+          other.shares == this.shares &&
+          other.isPublic == this.isPublic &&
+          other.isSubscribed == this.isSubscribed &&
+          other.source == this.source &&
+          other.syncToken == this.syncToken);
+}
+
+class CalendarTableCompanion extends UpdateCompanion<CalendarDb> {
+  final Value<String> id;
+  final Value<String> url;
+  final Value<String> serverUrl;
+  final Value<String> exportHash;
+  final Value<String> pubHash;
+  final Value<String> color;
+  final Value<String?> description;
+  final Value<int> userLocalId;
+  final Value<String> name;
+  final Value<String> owner;
+  final Value<bool> isDefault;
+  final Value<bool> shared;
+  final Value<bool> sharedToAll;
+  final Value<int> sharedToAllAccess;
+  final Value<int> access;
+  final Value<List<String>?> shares;
+  final Value<bool> isPublic;
+  final Value<bool> isSubscribed;
+  final Value<String> source;
+  final Value<String> syncToken;
+  const CalendarTableCompanion({
+    this.id = const Value.absent(),
+    this.url = const Value.absent(),
+    this.serverUrl = const Value.absent(),
+    this.exportHash = const Value.absent(),
+    this.pubHash = const Value.absent(),
+    this.color = const Value.absent(),
+    this.description = const Value.absent(),
+    this.userLocalId = const Value.absent(),
+    this.name = const Value.absent(),
+    this.owner = const Value.absent(),
+    this.isDefault = const Value.absent(),
+    this.shared = const Value.absent(),
+    this.sharedToAll = const Value.absent(),
+    this.sharedToAllAccess = const Value.absent(),
+    this.access = const Value.absent(),
+    this.shares = const Value.absent(),
+    this.isPublic = const Value.absent(),
+    this.isSubscribed = const Value.absent(),
+    this.source = const Value.absent(),
+    this.syncToken = const Value.absent(),
+  });
+  CalendarTableCompanion.insert({
+    required String id,
+    required String url,
+    required String serverUrl,
+    required String exportHash,
+    required String pubHash,
+    required String color,
+    this.description = const Value.absent(),
+    required int userLocalId,
+    required String name,
+    required String owner,
+    required bool isDefault,
+    required bool shared,
+    required bool sharedToAll,
+    required int sharedToAllAccess,
+    required int access,
+    this.shares = const Value.absent(),
+    required bool isPublic,
+    required bool isSubscribed,
+    required String source,
+    required String syncToken,
+  })  : id = Value(id),
+        url = Value(url),
+        serverUrl = Value(serverUrl),
+        exportHash = Value(exportHash),
+        pubHash = Value(pubHash),
+        color = Value(color),
+        userLocalId = Value(userLocalId),
+        name = Value(name),
+        owner = Value(owner),
+        isDefault = Value(isDefault),
+        shared = Value(shared),
+        sharedToAll = Value(sharedToAll),
+        sharedToAllAccess = Value(sharedToAllAccess),
+        access = Value(access),
+        isPublic = Value(isPublic),
+        isSubscribed = Value(isSubscribed),
+        source = Value(source),
+        syncToken = Value(syncToken);
+  static Insertable<CalendarDb> custom({
+    Expression<String>? id,
+    Expression<String>? url,
+    Expression<String>? serverUrl,
+    Expression<String>? exportHash,
+    Expression<String>? pubHash,
+    Expression<String>? color,
+    Expression<String?>? description,
+    Expression<int>? userLocalId,
+    Expression<String>? name,
+    Expression<String>? owner,
+    Expression<bool>? isDefault,
+    Expression<bool>? shared,
+    Expression<bool>? sharedToAll,
+    Expression<int>? sharedToAllAccess,
+    Expression<int>? access,
+    Expression<List<String>?>? shares,
+    Expression<bool>? isPublic,
+    Expression<bool>? isSubscribed,
+    Expression<String>? source,
+    Expression<String>? syncToken,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (url != null) 'url': url,
+      if (serverUrl != null) 'server_url': serverUrl,
+      if (exportHash != null) 'export_hash': exportHash,
+      if (pubHash != null) 'pub_hash': pubHash,
+      if (color != null) 'color': color,
+      if (description != null) 'description': description,
+      if (userLocalId != null) 'user_local_id': userLocalId,
+      if (name != null) 'name': name,
+      if (owner != null) 'owner': owner,
+      if (isDefault != null) 'is_default': isDefault,
+      if (shared != null) 'shared': shared,
+      if (sharedToAll != null) 'shared_to_all': sharedToAll,
+      if (sharedToAllAccess != null) 'shared_to_all_access': sharedToAllAccess,
+      if (access != null) 'access': access,
+      if (shares != null) 'shares': shares,
+      if (isPublic != null) 'is_public': isPublic,
+      if (isSubscribed != null) 'is_subscribed': isSubscribed,
+      if (source != null) 'source': source,
+      if (syncToken != null) 'sync_token': syncToken,
+    });
+  }
+
+  CalendarTableCompanion copyWith(
+      {Value<String>? id,
+      Value<String>? url,
+      Value<String>? serverUrl,
+      Value<String>? exportHash,
+      Value<String>? pubHash,
+      Value<String>? color,
+      Value<String?>? description,
+      Value<int>? userLocalId,
+      Value<String>? name,
+      Value<String>? owner,
+      Value<bool>? isDefault,
+      Value<bool>? shared,
+      Value<bool>? sharedToAll,
+      Value<int>? sharedToAllAccess,
+      Value<int>? access,
+      Value<List<String>?>? shares,
+      Value<bool>? isPublic,
+      Value<bool>? isSubscribed,
+      Value<String>? source,
+      Value<String>? syncToken}) {
+    return CalendarTableCompanion(
+      id: id ?? this.id,
+      url: url ?? this.url,
+      serverUrl: serverUrl ?? this.serverUrl,
+      exportHash: exportHash ?? this.exportHash,
+      pubHash: pubHash ?? this.pubHash,
+      color: color ?? this.color,
+      description: description ?? this.description,
+      userLocalId: userLocalId ?? this.userLocalId,
+      name: name ?? this.name,
+      owner: owner ?? this.owner,
+      isDefault: isDefault ?? this.isDefault,
+      shared: shared ?? this.shared,
+      sharedToAll: sharedToAll ?? this.sharedToAll,
+      sharedToAllAccess: sharedToAllAccess ?? this.sharedToAllAccess,
+      access: access ?? this.access,
+      shares: shares ?? this.shares,
+      isPublic: isPublic ?? this.isPublic,
+      isSubscribed: isSubscribed ?? this.isSubscribed,
+      source: source ?? this.source,
+      syncToken: syncToken ?? this.syncToken,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (url.present) {
+      map['url'] = Variable<String>(url.value);
+    }
+    if (serverUrl.present) {
+      map['server_url'] = Variable<String>(serverUrl.value);
+    }
+    if (exportHash.present) {
+      map['export_hash'] = Variable<String>(exportHash.value);
+    }
+    if (pubHash.present) {
+      map['pub_hash'] = Variable<String>(pubHash.value);
+    }
+    if (color.present) {
+      map['color'] = Variable<String>(color.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String?>(description.value);
+    }
+    if (userLocalId.present) {
+      map['user_local_id'] = Variable<int>(userLocalId.value);
+    }
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (owner.present) {
+      map['owner'] = Variable<String>(owner.value);
+    }
+    if (isDefault.present) {
+      map['is_default'] = Variable<bool>(isDefault.value);
+    }
+    if (shared.present) {
+      map['shared'] = Variable<bool>(shared.value);
+    }
+    if (sharedToAll.present) {
+      map['shared_to_all'] = Variable<bool>(sharedToAll.value);
+    }
+    if (sharedToAllAccess.present) {
+      map['shared_to_all_access'] = Variable<int>(sharedToAllAccess.value);
+    }
+    if (access.present) {
+      map['access'] = Variable<int>(access.value);
+    }
+    if (shares.present) {
+      final converter = $CalendarTableTable.$converter0;
+      map['shares'] = Variable<String?>(converter.mapToSql(shares.value));
+    }
+    if (isPublic.present) {
+      map['is_public'] = Variable<bool>(isPublic.value);
+    }
+    if (isSubscribed.present) {
+      map['is_subscribed'] = Variable<bool>(isSubscribed.value);
+    }
+    if (source.present) {
+      map['source'] = Variable<String>(source.value);
+    }
+    if (syncToken.present) {
+      map['sync_token'] = Variable<String>(syncToken.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CalendarTableCompanion(')
+          ..write('id: $id, ')
+          ..write('url: $url, ')
+          ..write('serverUrl: $serverUrl, ')
+          ..write('exportHash: $exportHash, ')
+          ..write('pubHash: $pubHash, ')
+          ..write('color: $color, ')
+          ..write('description: $description, ')
+          ..write('userLocalId: $userLocalId, ')
+          ..write('name: $name, ')
+          ..write('owner: $owner, ')
+          ..write('isDefault: $isDefault, ')
+          ..write('shared: $shared, ')
+          ..write('sharedToAll: $sharedToAll, ')
+          ..write('sharedToAllAccess: $sharedToAllAccess, ')
+          ..write('access: $access, ')
+          ..write('shares: $shares, ')
+          ..write('isPublic: $isPublic, ')
+          ..write('isSubscribed: $isSubscribed, ')
+          ..write('source: $source, ')
+          ..write('syncToken: $syncToken')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $CalendarTableTable extends CalendarTable
+    with TableInfo<$CalendarTableTable, CalendarDb> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $CalendarTableTable(this.attachedDatabase, [this._alias]);
+  final VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String?> id = GeneratedColumn<String?>(
+      'id', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _urlMeta = const VerificationMeta('url');
+  @override
+  late final GeneratedColumn<String?> url = GeneratedColumn<String?>(
+      'url', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _serverUrlMeta = const VerificationMeta('serverUrl');
+  @override
+  late final GeneratedColumn<String?> serverUrl = GeneratedColumn<String?>(
+      'server_url', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _exportHashMeta = const VerificationMeta('exportHash');
+  @override
+  late final GeneratedColumn<String?> exportHash = GeneratedColumn<String?>(
+      'export_hash', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _pubHashMeta = const VerificationMeta('pubHash');
+  @override
+  late final GeneratedColumn<String?> pubHash = GeneratedColumn<String?>(
+      'pub_hash', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _colorMeta = const VerificationMeta('color');
+  @override
+  late final GeneratedColumn<String?> color = GeneratedColumn<String?>(
+      'color', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _descriptionMeta =
+      const VerificationMeta('description');
+  @override
+  late final GeneratedColumn<String?> description = GeneratedColumn<String?>(
+      'description', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _userLocalIdMeta =
+      const VerificationMeta('userLocalId');
+  @override
+  late final GeneratedColumn<int?> userLocalId = GeneratedColumn<int?>(
+      'user_local_id', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
+  final VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String?> name = GeneratedColumn<String?>(
+      'name', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _ownerMeta = const VerificationMeta('owner');
+  @override
+  late final GeneratedColumn<String?> owner = GeneratedColumn<String?>(
+      'owner', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _isDefaultMeta = const VerificationMeta('isDefault');
+  @override
+  late final GeneratedColumn<bool?> isDefault = GeneratedColumn<bool?>(
+      'is_default', aliasedName, false,
+      type: const BoolType(),
+      requiredDuringInsert: true,
+      defaultConstraints: 'CHECK (is_default IN (0, 1))');
+  final VerificationMeta _sharedMeta = const VerificationMeta('shared');
+  @override
+  late final GeneratedColumn<bool?> shared = GeneratedColumn<bool?>(
+      'shared', aliasedName, false,
+      type: const BoolType(),
+      requiredDuringInsert: true,
+      defaultConstraints: 'CHECK (shared IN (0, 1))');
+  final VerificationMeta _sharedToAllMeta =
+      const VerificationMeta('sharedToAll');
+  @override
+  late final GeneratedColumn<bool?> sharedToAll = GeneratedColumn<bool?>(
+      'shared_to_all', aliasedName, false,
+      type: const BoolType(),
+      requiredDuringInsert: true,
+      defaultConstraints: 'CHECK (shared_to_all IN (0, 1))');
+  final VerificationMeta _sharedToAllAccessMeta =
+      const VerificationMeta('sharedToAllAccess');
+  @override
+  late final GeneratedColumn<int?> sharedToAllAccess = GeneratedColumn<int?>(
+      'shared_to_all_access', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
+  final VerificationMeta _accessMeta = const VerificationMeta('access');
+  @override
+  late final GeneratedColumn<int?> access = GeneratedColumn<int?>(
+      'access', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
+  final VerificationMeta _sharesMeta = const VerificationMeta('shares');
+  @override
+  late final GeneratedColumnWithTypeConverter<List<String>, String?> shares =
+      GeneratedColumn<String?>('shares', aliasedName, true,
+              type: const StringType(), requiredDuringInsert: false)
+          .withConverter<List<String>>($CalendarTableTable.$converter0);
+  final VerificationMeta _isPublicMeta = const VerificationMeta('isPublic');
+  @override
+  late final GeneratedColumn<bool?> isPublic = GeneratedColumn<bool?>(
+      'is_public', aliasedName, false,
+      type: const BoolType(),
+      requiredDuringInsert: true,
+      defaultConstraints: 'CHECK (is_public IN (0, 1))');
+  final VerificationMeta _isSubscribedMeta =
+      const VerificationMeta('isSubscribed');
+  @override
+  late final GeneratedColumn<bool?> isSubscribed = GeneratedColumn<bool?>(
+      'is_subscribed', aliasedName, false,
+      type: const BoolType(),
+      requiredDuringInsert: true,
+      defaultConstraints: 'CHECK (is_subscribed IN (0, 1))');
+  final VerificationMeta _sourceMeta = const VerificationMeta('source');
+  @override
+  late final GeneratedColumn<String?> source = GeneratedColumn<String?>(
+      'source', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _syncTokenMeta = const VerificationMeta('syncToken');
+  @override
+  late final GeneratedColumn<String?> syncToken = GeneratedColumn<String?>(
+      'sync_token', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns => [
+        id,
+        url,
+        serverUrl,
+        exportHash,
+        pubHash,
+        color,
+        description,
+        userLocalId,
+        name,
+        owner,
+        isDefault,
+        shared,
+        sharedToAll,
+        sharedToAllAccess,
+        access,
+        shares,
+        isPublic,
+        isSubscribed,
+        source,
+        syncToken
+      ];
+  @override
+  String get aliasedName => _alias ?? 'calendar_table';
+  @override
+  String get actualTableName => 'calendar_table';
+  @override
+  VerificationContext validateIntegrity(Insertable<CalendarDb> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('url')) {
+      context.handle(
+          _urlMeta, url.isAcceptableOrUnknown(data['url']!, _urlMeta));
+    } else if (isInserting) {
+      context.missing(_urlMeta);
+    }
+    if (data.containsKey('server_url')) {
+      context.handle(_serverUrlMeta,
+          serverUrl.isAcceptableOrUnknown(data['server_url']!, _serverUrlMeta));
+    } else if (isInserting) {
+      context.missing(_serverUrlMeta);
+    }
+    if (data.containsKey('export_hash')) {
+      context.handle(
+          _exportHashMeta,
+          exportHash.isAcceptableOrUnknown(
+              data['export_hash']!, _exportHashMeta));
+    } else if (isInserting) {
+      context.missing(_exportHashMeta);
+    }
+    if (data.containsKey('pub_hash')) {
+      context.handle(_pubHashMeta,
+          pubHash.isAcceptableOrUnknown(data['pub_hash']!, _pubHashMeta));
+    } else if (isInserting) {
+      context.missing(_pubHashMeta);
+    }
+    if (data.containsKey('color')) {
+      context.handle(
+          _colorMeta, color.isAcceptableOrUnknown(data['color']!, _colorMeta));
+    } else if (isInserting) {
+      context.missing(_colorMeta);
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+          _descriptionMeta,
+          description.isAcceptableOrUnknown(
+              data['description']!, _descriptionMeta));
+    }
+    if (data.containsKey('user_local_id')) {
+      context.handle(
+          _userLocalIdMeta,
+          userLocalId.isAcceptableOrUnknown(
+              data['user_local_id']!, _userLocalIdMeta));
+    } else if (isInserting) {
+      context.missing(_userLocalIdMeta);
+    }
+    if (data.containsKey('name')) {
+      context.handle(
+          _nameMeta, name.isAcceptableOrUnknown(data['name']!, _nameMeta));
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('owner')) {
+      context.handle(
+          _ownerMeta, owner.isAcceptableOrUnknown(data['owner']!, _ownerMeta));
+    } else if (isInserting) {
+      context.missing(_ownerMeta);
+    }
+    if (data.containsKey('is_default')) {
+      context.handle(_isDefaultMeta,
+          isDefault.isAcceptableOrUnknown(data['is_default']!, _isDefaultMeta));
+    } else if (isInserting) {
+      context.missing(_isDefaultMeta);
+    }
+    if (data.containsKey('shared')) {
+      context.handle(_sharedMeta,
+          shared.isAcceptableOrUnknown(data['shared']!, _sharedMeta));
+    } else if (isInserting) {
+      context.missing(_sharedMeta);
+    }
+    if (data.containsKey('shared_to_all')) {
+      context.handle(
+          _sharedToAllMeta,
+          sharedToAll.isAcceptableOrUnknown(
+              data['shared_to_all']!, _sharedToAllMeta));
+    } else if (isInserting) {
+      context.missing(_sharedToAllMeta);
+    }
+    if (data.containsKey('shared_to_all_access')) {
+      context.handle(
+          _sharedToAllAccessMeta,
+          sharedToAllAccess.isAcceptableOrUnknown(
+              data['shared_to_all_access']!, _sharedToAllAccessMeta));
+    } else if (isInserting) {
+      context.missing(_sharedToAllAccessMeta);
+    }
+    if (data.containsKey('access')) {
+      context.handle(_accessMeta,
+          access.isAcceptableOrUnknown(data['access']!, _accessMeta));
+    } else if (isInserting) {
+      context.missing(_accessMeta);
+    }
+    context.handle(_sharesMeta, const VerificationResult.success());
+    if (data.containsKey('is_public')) {
+      context.handle(_isPublicMeta,
+          isPublic.isAcceptableOrUnknown(data['is_public']!, _isPublicMeta));
+    } else if (isInserting) {
+      context.missing(_isPublicMeta);
+    }
+    if (data.containsKey('is_subscribed')) {
+      context.handle(
+          _isSubscribedMeta,
+          isSubscribed.isAcceptableOrUnknown(
+              data['is_subscribed']!, _isSubscribedMeta));
+    } else if (isInserting) {
+      context.missing(_isSubscribedMeta);
+    }
+    if (data.containsKey('source')) {
+      context.handle(_sourceMeta,
+          source.isAcceptableOrUnknown(data['source']!, _sourceMeta));
+    } else if (isInserting) {
+      context.missing(_sourceMeta);
+    }
+    if (data.containsKey('sync_token')) {
+      context.handle(_syncTokenMeta,
+          syncToken.isAcceptableOrUnknown(data['sync_token']!, _syncTokenMeta));
+    } else if (isInserting) {
+      context.missing(_syncTokenMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id, userLocalId};
+  @override
+  CalendarDb map(Map<String, dynamic> data, {String? tablePrefix}) {
+    return CalendarDb.fromData(data,
+        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+  }
+
+  @override
+  $CalendarTableTable createAlias(String alias) {
+    return $CalendarTableTable(attachedDatabase, alias);
+  }
+
+  static TypeConverter<List<String>, String> $converter0 =
+      const ListStringConverter();
+}
+
+class ActivityDb extends DataClass implements Insertable<ActivityDb> {
+  final ActivityType? type;
+  final String? organizer;
+  final bool? appointment;
+  final int? appointmentAccess;
+  final String calendarId;
+  final int userLocalId;
+  final String uid;
+  final String? subject;
+  final String? description;
+  final String? location;
+  final DateTime? startTS;
+  final DateTime? endTS;
+  final bool? allDay;
+  final String? owner;
+  final bool? modified;
+  final int? recurrenceId;
+  final int? lastModified;
+  final String? remindersString;
+  final bool? status;
+  final bool? withDate;
+  final bool? isPrivate;
+  final UpdateStatus updateStatus;
+  final bool synced;
+  final bool onceLoaded;
+  final RecurrenceMode? recurrenceMode;
+  final EveryWeekFrequency? recurrenceWeeklyFrequency;
+  final DateTime? recurrenceUntilDate;
+  final String? recurrenceWeekDaysString;
+  final List<String>? attendees;
+  ActivityDb(
+      {this.type,
+      this.organizer,
+      this.appointment,
+      this.appointmentAccess,
+      required this.calendarId,
+      required this.userLocalId,
+      required this.uid,
+      this.subject,
+      this.description,
+      this.location,
+      this.startTS,
+      this.endTS,
+      this.allDay,
+      this.owner,
+      this.modified,
+      this.recurrenceId,
+      this.lastModified,
+      this.remindersString,
+      this.status,
+      this.withDate,
+      this.isPrivate,
+      required this.updateStatus,
+      required this.synced,
+      required this.onceLoaded,
+      this.recurrenceMode,
+      this.recurrenceWeeklyFrequency,
+      this.recurrenceUntilDate,
+      this.recurrenceWeekDaysString,
+      this.attendees});
+  factory ActivityDb.fromData(Map<String, dynamic> data, {String? prefix}) {
+    final effectivePrefix = prefix ?? '';
+    return ActivityDb(
+      type: $ActivityTableTable.$converter0.mapToDart(const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}type'])),
+      organizer: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}organizer']),
+      appointment: const BoolType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}appointment']),
+      appointmentAccess: const IntType().mapFromDatabaseResponse(
+          data['${effectivePrefix}appointment_access']),
+      calendarId: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}calendar_id'])!,
+      userLocalId: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}user_local_id'])!,
+      uid: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}uid'])!,
+      subject: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}subject']),
+      description: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}description']),
+      location: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}location']),
+      startTS: const DateTimeType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}start_t_s']),
+      endTS: const DateTimeType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}end_t_s']),
+      allDay: const BoolType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}all_day']),
+      owner: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}owner']),
+      modified: const BoolType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}modified']),
+      recurrenceId: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}recurrence_id']),
+      lastModified: const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}last_modified']),
+      remindersString: const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}reminders_string']),
+      status: const BoolType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}status']),
+      withDate: const BoolType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}with_date']),
+      isPrivate: const BoolType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}is_private']),
+      updateStatus: $ActivityTableTable.$converter1.mapToDart(const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}update_status']))!,
+      synced: const BoolType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}synced'])!,
+      onceLoaded: const BoolType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}once_loaded'])!,
+      recurrenceMode: $ActivityTableTable.$converter2.mapToDart(const IntType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}recurrence_mode'])),
+      recurrenceWeeklyFrequency: $ActivityTableTable.$converter3.mapToDart(
+          const IntType().mapFromDatabaseResponse(
+              data['${effectivePrefix}recurrence_weekly_frequency'])),
+      recurrenceUntilDate: const DateTimeType().mapFromDatabaseResponse(
+          data['${effectivePrefix}recurrence_until_date']),
+      recurrenceWeekDaysString: const StringType().mapFromDatabaseResponse(
+          data['${effectivePrefix}recurrence_week_days_string']),
+      attendees: $ActivityTableTable.$converter4.mapToDart(const StringType()
+          .mapFromDatabaseResponse(data['${effectivePrefix}attendees'])),
+    );
+  }
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (!nullToAbsent || type != null) {
+      final converter = $ActivityTableTable.$converter0;
+      map['type'] = Variable<int?>(converter.mapToSql(type));
+    }
+    if (!nullToAbsent || organizer != null) {
+      map['organizer'] = Variable<String?>(organizer);
+    }
+    if (!nullToAbsent || appointment != null) {
+      map['appointment'] = Variable<bool?>(appointment);
+    }
+    if (!nullToAbsent || appointmentAccess != null) {
+      map['appointment_access'] = Variable<int?>(appointmentAccess);
+    }
+    map['calendar_id'] = Variable<String>(calendarId);
+    map['user_local_id'] = Variable<int>(userLocalId);
+    map['uid'] = Variable<String>(uid);
+    if (!nullToAbsent || subject != null) {
+      map['subject'] = Variable<String?>(subject);
+    }
+    if (!nullToAbsent || description != null) {
+      map['description'] = Variable<String?>(description);
+    }
+    if (!nullToAbsent || location != null) {
+      map['location'] = Variable<String?>(location);
+    }
+    if (!nullToAbsent || startTS != null) {
+      map['start_t_s'] = Variable<DateTime?>(startTS);
+    }
+    if (!nullToAbsent || endTS != null) {
+      map['end_t_s'] = Variable<DateTime?>(endTS);
+    }
+    if (!nullToAbsent || allDay != null) {
+      map['all_day'] = Variable<bool?>(allDay);
+    }
+    if (!nullToAbsent || owner != null) {
+      map['owner'] = Variable<String?>(owner);
+    }
+    if (!nullToAbsent || modified != null) {
+      map['modified'] = Variable<bool?>(modified);
+    }
+    if (!nullToAbsent || recurrenceId != null) {
+      map['recurrence_id'] = Variable<int?>(recurrenceId);
+    }
+    if (!nullToAbsent || lastModified != null) {
+      map['last_modified'] = Variable<int?>(lastModified);
+    }
+    if (!nullToAbsent || remindersString != null) {
+      map['reminders_string'] = Variable<String?>(remindersString);
+    }
+    if (!nullToAbsent || status != null) {
+      map['status'] = Variable<bool?>(status);
+    }
+    if (!nullToAbsent || withDate != null) {
+      map['with_date'] = Variable<bool?>(withDate);
+    }
+    if (!nullToAbsent || isPrivate != null) {
+      map['is_private'] = Variable<bool?>(isPrivate);
+    }
+    {
+      final converter = $ActivityTableTable.$converter1;
+      map['update_status'] = Variable<int>(converter.mapToSql(updateStatus)!);
+    }
+    map['synced'] = Variable<bool>(synced);
+    map['once_loaded'] = Variable<bool>(onceLoaded);
+    if (!nullToAbsent || recurrenceMode != null) {
+      final converter = $ActivityTableTable.$converter2;
+      map['recurrence_mode'] =
+          Variable<int?>(converter.mapToSql(recurrenceMode));
+    }
+    if (!nullToAbsent || recurrenceWeeklyFrequency != null) {
+      final converter = $ActivityTableTable.$converter3;
+      map['recurrence_weekly_frequency'] =
+          Variable<int?>(converter.mapToSql(recurrenceWeeklyFrequency));
+    }
+    if (!nullToAbsent || recurrenceUntilDate != null) {
+      map['recurrence_until_date'] = Variable<DateTime?>(recurrenceUntilDate);
+    }
+    if (!nullToAbsent || recurrenceWeekDaysString != null) {
+      map['recurrence_week_days_string'] =
+          Variable<String?>(recurrenceWeekDaysString);
+    }
+    if (!nullToAbsent || attendees != null) {
+      final converter = $ActivityTableTable.$converter4;
+      map['attendees'] = Variable<String?>(converter.mapToSql(attendees));
+    }
+    return map;
+  }
+
+  ActivityTableCompanion toCompanion(bool nullToAbsent) {
+    return ActivityTableCompanion(
+      type: type == null && nullToAbsent ? const Value.absent() : Value(type),
+      organizer: organizer == null && nullToAbsent
+          ? const Value.absent()
+          : Value(organizer),
+      appointment: appointment == null && nullToAbsent
+          ? const Value.absent()
+          : Value(appointment),
+      appointmentAccess: appointmentAccess == null && nullToAbsent
+          ? const Value.absent()
+          : Value(appointmentAccess),
+      calendarId: Value(calendarId),
+      userLocalId: Value(userLocalId),
+      uid: Value(uid),
+      subject: subject == null && nullToAbsent
+          ? const Value.absent()
+          : Value(subject),
+      description: description == null && nullToAbsent
+          ? const Value.absent()
+          : Value(description),
+      location: location == null && nullToAbsent
+          ? const Value.absent()
+          : Value(location),
+      startTS: startTS == null && nullToAbsent
+          ? const Value.absent()
+          : Value(startTS),
+      endTS:
+          endTS == null && nullToAbsent ? const Value.absent() : Value(endTS),
+      allDay:
+          allDay == null && nullToAbsent ? const Value.absent() : Value(allDay),
+      owner:
+          owner == null && nullToAbsent ? const Value.absent() : Value(owner),
+      modified: modified == null && nullToAbsent
+          ? const Value.absent()
+          : Value(modified),
+      recurrenceId: recurrenceId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(recurrenceId),
+      lastModified: lastModified == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastModified),
+      remindersString: remindersString == null && nullToAbsent
+          ? const Value.absent()
+          : Value(remindersString),
+      status:
+          status == null && nullToAbsent ? const Value.absent() : Value(status),
+      withDate: withDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(withDate),
+      isPrivate: isPrivate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(isPrivate),
+      updateStatus: Value(updateStatus),
+      synced: Value(synced),
+      onceLoaded: Value(onceLoaded),
+      recurrenceMode: recurrenceMode == null && nullToAbsent
+          ? const Value.absent()
+          : Value(recurrenceMode),
+      recurrenceWeeklyFrequency:
+          recurrenceWeeklyFrequency == null && nullToAbsent
+              ? const Value.absent()
+              : Value(recurrenceWeeklyFrequency),
+      recurrenceUntilDate: recurrenceUntilDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(recurrenceUntilDate),
+      recurrenceWeekDaysString: recurrenceWeekDaysString == null && nullToAbsent
+          ? const Value.absent()
+          : Value(recurrenceWeekDaysString),
+      attendees: attendees == null && nullToAbsent
+          ? const Value.absent()
+          : Value(attendees),
+    );
+  }
+
+  factory ActivityDb.fromJson(Map<String, dynamic> json,
+      {ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return ActivityDb(
+      type: serializer.fromJson<ActivityType?>(json['type']),
+      organizer: serializer.fromJson<String?>(json['organizer']),
+      appointment: serializer.fromJson<bool?>(json['appointment']),
+      appointmentAccess: serializer.fromJson<int?>(json['appointmentAccess']),
+      calendarId: serializer.fromJson<String>(json['calendarId']),
+      userLocalId: serializer.fromJson<int>(json['userLocalId']),
+      uid: serializer.fromJson<String>(json['uid']),
+      subject: serializer.fromJson<String?>(json['subject']),
+      description: serializer.fromJson<String?>(json['description']),
+      location: serializer.fromJson<String?>(json['location']),
+      startTS: serializer.fromJson<DateTime?>(json['startTS']),
+      endTS: serializer.fromJson<DateTime?>(json['endTS']),
+      allDay: serializer.fromJson<bool?>(json['allDay']),
+      owner: serializer.fromJson<String?>(json['owner']),
+      modified: serializer.fromJson<bool?>(json['modified']),
+      recurrenceId: serializer.fromJson<int?>(json['recurrenceId']),
+      lastModified: serializer.fromJson<int?>(json['lastModified']),
+      remindersString: serializer.fromJson<String?>(json['remindersString']),
+      status: serializer.fromJson<bool?>(json['status']),
+      withDate: serializer.fromJson<bool?>(json['withDate']),
+      isPrivate: serializer.fromJson<bool?>(json['isPrivate']),
+      updateStatus: serializer.fromJson<UpdateStatus>(json['updateStatus']),
+      synced: serializer.fromJson<bool>(json['synced']),
+      onceLoaded: serializer.fromJson<bool>(json['onceLoaded']),
+      recurrenceMode:
+          serializer.fromJson<RecurrenceMode?>(json['recurrenceMode']),
+      recurrenceWeeklyFrequency: serializer
+          .fromJson<EveryWeekFrequency?>(json['recurrenceWeeklyFrequency']),
+      recurrenceUntilDate:
+          serializer.fromJson<DateTime?>(json['recurrenceUntilDate']),
+      recurrenceWeekDaysString:
+          serializer.fromJson<String?>(json['recurrenceWeekDaysString']),
+      attendees: serializer.fromJson<List<String>?>(json['attendees']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'type': serializer.toJson<ActivityType?>(type),
+      'organizer': serializer.toJson<String?>(organizer),
+      'appointment': serializer.toJson<bool?>(appointment),
+      'appointmentAccess': serializer.toJson<int?>(appointmentAccess),
+      'calendarId': serializer.toJson<String>(calendarId),
+      'userLocalId': serializer.toJson<int>(userLocalId),
+      'uid': serializer.toJson<String>(uid),
+      'subject': serializer.toJson<String?>(subject),
+      'description': serializer.toJson<String?>(description),
+      'location': serializer.toJson<String?>(location),
+      'startTS': serializer.toJson<DateTime?>(startTS),
+      'endTS': serializer.toJson<DateTime?>(endTS),
+      'allDay': serializer.toJson<bool?>(allDay),
+      'owner': serializer.toJson<String?>(owner),
+      'modified': serializer.toJson<bool?>(modified),
+      'recurrenceId': serializer.toJson<int?>(recurrenceId),
+      'lastModified': serializer.toJson<int?>(lastModified),
+      'remindersString': serializer.toJson<String?>(remindersString),
+      'status': serializer.toJson<bool?>(status),
+      'withDate': serializer.toJson<bool?>(withDate),
+      'isPrivate': serializer.toJson<bool?>(isPrivate),
+      'updateStatus': serializer.toJson<UpdateStatus>(updateStatus),
+      'synced': serializer.toJson<bool>(synced),
+      'onceLoaded': serializer.toJson<bool>(onceLoaded),
+      'recurrenceMode': serializer.toJson<RecurrenceMode?>(recurrenceMode),
+      'recurrenceWeeklyFrequency':
+          serializer.toJson<EveryWeekFrequency?>(recurrenceWeeklyFrequency),
+      'recurrenceUntilDate': serializer.toJson<DateTime?>(recurrenceUntilDate),
+      'recurrenceWeekDaysString':
+          serializer.toJson<String?>(recurrenceWeekDaysString),
+      'attendees': serializer.toJson<List<String>?>(attendees),
+    };
+  }
+
+  ActivityDb copyWith(
+          {ActivityType? type,
+          String? organizer,
+          bool? appointment,
+          int? appointmentAccess,
+          String? calendarId,
+          int? userLocalId,
+          String? uid,
+          String? subject,
+          String? description,
+          String? location,
+          DateTime? startTS,
+          DateTime? endTS,
+          bool? allDay,
+          String? owner,
+          bool? modified,
+          int? recurrenceId,
+          int? lastModified,
+          String? remindersString,
+          bool? status,
+          bool? withDate,
+          bool? isPrivate,
+          UpdateStatus? updateStatus,
+          bool? synced,
+          bool? onceLoaded,
+          RecurrenceMode? recurrenceMode,
+          EveryWeekFrequency? recurrenceWeeklyFrequency,
+          DateTime? recurrenceUntilDate,
+          String? recurrenceWeekDaysString,
+          List<String>? attendees}) =>
+      ActivityDb(
+        type: type ?? this.type,
+        organizer: organizer ?? this.organizer,
+        appointment: appointment ?? this.appointment,
+        appointmentAccess: appointmentAccess ?? this.appointmentAccess,
+        calendarId: calendarId ?? this.calendarId,
+        userLocalId: userLocalId ?? this.userLocalId,
+        uid: uid ?? this.uid,
+        subject: subject ?? this.subject,
+        description: description ?? this.description,
+        location: location ?? this.location,
+        startTS: startTS ?? this.startTS,
+        endTS: endTS ?? this.endTS,
+        allDay: allDay ?? this.allDay,
+        owner: owner ?? this.owner,
+        modified: modified ?? this.modified,
+        recurrenceId: recurrenceId ?? this.recurrenceId,
+        lastModified: lastModified ?? this.lastModified,
+        remindersString: remindersString ?? this.remindersString,
+        status: status ?? this.status,
+        withDate: withDate ?? this.withDate,
+        isPrivate: isPrivate ?? this.isPrivate,
+        updateStatus: updateStatus ?? this.updateStatus,
+        synced: synced ?? this.synced,
+        onceLoaded: onceLoaded ?? this.onceLoaded,
+        recurrenceMode: recurrenceMode ?? this.recurrenceMode,
+        recurrenceWeeklyFrequency:
+            recurrenceWeeklyFrequency ?? this.recurrenceWeeklyFrequency,
+        recurrenceUntilDate: recurrenceUntilDate ?? this.recurrenceUntilDate,
+        recurrenceWeekDaysString:
+            recurrenceWeekDaysString ?? this.recurrenceWeekDaysString,
+        attendees: attendees ?? this.attendees,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('ActivityDb(')
+          ..write('type: $type, ')
+          ..write('organizer: $organizer, ')
+          ..write('appointment: $appointment, ')
+          ..write('appointmentAccess: $appointmentAccess, ')
+          ..write('calendarId: $calendarId, ')
+          ..write('userLocalId: $userLocalId, ')
+          ..write('uid: $uid, ')
+          ..write('subject: $subject, ')
+          ..write('description: $description, ')
+          ..write('location: $location, ')
+          ..write('startTS: $startTS, ')
+          ..write('endTS: $endTS, ')
+          ..write('allDay: $allDay, ')
+          ..write('owner: $owner, ')
+          ..write('modified: $modified, ')
+          ..write('recurrenceId: $recurrenceId, ')
+          ..write('lastModified: $lastModified, ')
+          ..write('remindersString: $remindersString, ')
+          ..write('status: $status, ')
+          ..write('withDate: $withDate, ')
+          ..write('isPrivate: $isPrivate, ')
+          ..write('updateStatus: $updateStatus, ')
+          ..write('synced: $synced, ')
+          ..write('onceLoaded: $onceLoaded, ')
+          ..write('recurrenceMode: $recurrenceMode, ')
+          ..write('recurrenceWeeklyFrequency: $recurrenceWeeklyFrequency, ')
+          ..write('recurrenceUntilDate: $recurrenceUntilDate, ')
+          ..write('recurrenceWeekDaysString: $recurrenceWeekDaysString, ')
+          ..write('attendees: $attendees')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hashAll([
+        type,
+        organizer,
+        appointment,
+        appointmentAccess,
+        calendarId,
+        userLocalId,
+        uid,
+        subject,
+        description,
+        location,
+        startTS,
+        endTS,
+        allDay,
+        owner,
+        modified,
+        recurrenceId,
+        lastModified,
+        remindersString,
+        status,
+        withDate,
+        isPrivate,
+        updateStatus,
+        synced,
+        onceLoaded,
+        recurrenceMode,
+        recurrenceWeeklyFrequency,
+        recurrenceUntilDate,
+        recurrenceWeekDaysString,
+        attendees
+      ]);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is ActivityDb &&
+          other.type == this.type &&
+          other.organizer == this.organizer &&
+          other.appointment == this.appointment &&
+          other.appointmentAccess == this.appointmentAccess &&
+          other.calendarId == this.calendarId &&
+          other.userLocalId == this.userLocalId &&
+          other.uid == this.uid &&
+          other.subject == this.subject &&
+          other.description == this.description &&
+          other.location == this.location &&
+          other.startTS == this.startTS &&
+          other.endTS == this.endTS &&
+          other.allDay == this.allDay &&
+          other.owner == this.owner &&
+          other.modified == this.modified &&
+          other.recurrenceId == this.recurrenceId &&
+          other.lastModified == this.lastModified &&
+          other.remindersString == this.remindersString &&
+          other.status == this.status &&
+          other.withDate == this.withDate &&
+          other.isPrivate == this.isPrivate &&
+          other.updateStatus == this.updateStatus &&
+          other.synced == this.synced &&
+          other.onceLoaded == this.onceLoaded &&
+          other.recurrenceMode == this.recurrenceMode &&
+          other.recurrenceWeeklyFrequency == this.recurrenceWeeklyFrequency &&
+          other.recurrenceUntilDate == this.recurrenceUntilDate &&
+          other.recurrenceWeekDaysString == this.recurrenceWeekDaysString &&
+          other.attendees == this.attendees);
+}
+
+class ActivityTableCompanion extends UpdateCompanion<ActivityDb> {
+  final Value<ActivityType?> type;
+  final Value<String?> organizer;
+  final Value<bool?> appointment;
+  final Value<int?> appointmentAccess;
+  final Value<String> calendarId;
+  final Value<int> userLocalId;
+  final Value<String> uid;
+  final Value<String?> subject;
+  final Value<String?> description;
+  final Value<String?> location;
+  final Value<DateTime?> startTS;
+  final Value<DateTime?> endTS;
+  final Value<bool?> allDay;
+  final Value<String?> owner;
+  final Value<bool?> modified;
+  final Value<int?> recurrenceId;
+  final Value<int?> lastModified;
+  final Value<String?> remindersString;
+  final Value<bool?> status;
+  final Value<bool?> withDate;
+  final Value<bool?> isPrivate;
+  final Value<UpdateStatus> updateStatus;
+  final Value<bool> synced;
+  final Value<bool> onceLoaded;
+  final Value<RecurrenceMode?> recurrenceMode;
+  final Value<EveryWeekFrequency?> recurrenceWeeklyFrequency;
+  final Value<DateTime?> recurrenceUntilDate;
+  final Value<String?> recurrenceWeekDaysString;
+  final Value<List<String>?> attendees;
+  const ActivityTableCompanion({
+    this.type = const Value.absent(),
+    this.organizer = const Value.absent(),
+    this.appointment = const Value.absent(),
+    this.appointmentAccess = const Value.absent(),
+    this.calendarId = const Value.absent(),
+    this.userLocalId = const Value.absent(),
+    this.uid = const Value.absent(),
+    this.subject = const Value.absent(),
+    this.description = const Value.absent(),
+    this.location = const Value.absent(),
+    this.startTS = const Value.absent(),
+    this.endTS = const Value.absent(),
+    this.allDay = const Value.absent(),
+    this.owner = const Value.absent(),
+    this.modified = const Value.absent(),
+    this.recurrenceId = const Value.absent(),
+    this.lastModified = const Value.absent(),
+    this.remindersString = const Value.absent(),
+    this.status = const Value.absent(),
+    this.withDate = const Value.absent(),
+    this.isPrivate = const Value.absent(),
+    this.updateStatus = const Value.absent(),
+    this.synced = const Value.absent(),
+    this.onceLoaded = const Value.absent(),
+    this.recurrenceMode = const Value.absent(),
+    this.recurrenceWeeklyFrequency = const Value.absent(),
+    this.recurrenceUntilDate = const Value.absent(),
+    this.recurrenceWeekDaysString = const Value.absent(),
+    this.attendees = const Value.absent(),
+  });
+  ActivityTableCompanion.insert({
+    this.type = const Value.absent(),
+    this.organizer = const Value.absent(),
+    this.appointment = const Value.absent(),
+    this.appointmentAccess = const Value.absent(),
+    required String calendarId,
+    required int userLocalId,
+    required String uid,
+    this.subject = const Value.absent(),
+    this.description = const Value.absent(),
+    this.location = const Value.absent(),
+    this.startTS = const Value.absent(),
+    this.endTS = const Value.absent(),
+    this.allDay = const Value.absent(),
+    this.owner = const Value.absent(),
+    this.modified = const Value.absent(),
+    this.recurrenceId = const Value.absent(),
+    this.lastModified = const Value.absent(),
+    this.remindersString = const Value.absent(),
+    this.status = const Value.absent(),
+    this.withDate = const Value.absent(),
+    this.isPrivate = const Value.absent(),
+    required UpdateStatus updateStatus,
+    required bool synced,
+    required bool onceLoaded,
+    this.recurrenceMode = const Value.absent(),
+    this.recurrenceWeeklyFrequency = const Value.absent(),
+    this.recurrenceUntilDate = const Value.absent(),
+    this.recurrenceWeekDaysString = const Value.absent(),
+    this.attendees = const Value.absent(),
+  })  : calendarId = Value(calendarId),
+        userLocalId = Value(userLocalId),
+        uid = Value(uid),
+        updateStatus = Value(updateStatus),
+        synced = Value(synced),
+        onceLoaded = Value(onceLoaded);
+  static Insertable<ActivityDb> custom({
+    Expression<ActivityType?>? type,
+    Expression<String?>? organizer,
+    Expression<bool?>? appointment,
+    Expression<int?>? appointmentAccess,
+    Expression<String>? calendarId,
+    Expression<int>? userLocalId,
+    Expression<String>? uid,
+    Expression<String?>? subject,
+    Expression<String?>? description,
+    Expression<String?>? location,
+    Expression<DateTime?>? startTS,
+    Expression<DateTime?>? endTS,
+    Expression<bool?>? allDay,
+    Expression<String?>? owner,
+    Expression<bool?>? modified,
+    Expression<int?>? recurrenceId,
+    Expression<int?>? lastModified,
+    Expression<String?>? remindersString,
+    Expression<bool?>? status,
+    Expression<bool?>? withDate,
+    Expression<bool?>? isPrivate,
+    Expression<UpdateStatus>? updateStatus,
+    Expression<bool>? synced,
+    Expression<bool>? onceLoaded,
+    Expression<RecurrenceMode?>? recurrenceMode,
+    Expression<EveryWeekFrequency?>? recurrenceWeeklyFrequency,
+    Expression<DateTime?>? recurrenceUntilDate,
+    Expression<String?>? recurrenceWeekDaysString,
+    Expression<List<String>?>? attendees,
+  }) {
+    return RawValuesInsertable({
+      if (type != null) 'type': type,
+      if (organizer != null) 'organizer': organizer,
+      if (appointment != null) 'appointment': appointment,
+      if (appointmentAccess != null) 'appointment_access': appointmentAccess,
+      if (calendarId != null) 'calendar_id': calendarId,
+      if (userLocalId != null) 'user_local_id': userLocalId,
+      if (uid != null) 'uid': uid,
+      if (subject != null) 'subject': subject,
+      if (description != null) 'description': description,
+      if (location != null) 'location': location,
+      if (startTS != null) 'start_t_s': startTS,
+      if (endTS != null) 'end_t_s': endTS,
+      if (allDay != null) 'all_day': allDay,
+      if (owner != null) 'owner': owner,
+      if (modified != null) 'modified': modified,
+      if (recurrenceId != null) 'recurrence_id': recurrenceId,
+      if (lastModified != null) 'last_modified': lastModified,
+      if (remindersString != null) 'reminders_string': remindersString,
+      if (status != null) 'status': status,
+      if (withDate != null) 'with_date': withDate,
+      if (isPrivate != null) 'is_private': isPrivate,
+      if (updateStatus != null) 'update_status': updateStatus,
+      if (synced != null) 'synced': synced,
+      if (onceLoaded != null) 'once_loaded': onceLoaded,
+      if (recurrenceMode != null) 'recurrence_mode': recurrenceMode,
+      if (recurrenceWeeklyFrequency != null)
+        'recurrence_weekly_frequency': recurrenceWeeklyFrequency,
+      if (recurrenceUntilDate != null)
+        'recurrence_until_date': recurrenceUntilDate,
+      if (recurrenceWeekDaysString != null)
+        'recurrence_week_days_string': recurrenceWeekDaysString,
+      if (attendees != null) 'attendees': attendees,
+    });
+  }
+
+  ActivityTableCompanion copyWith(
+      {Value<ActivityType?>? type,
+      Value<String?>? organizer,
+      Value<bool?>? appointment,
+      Value<int?>? appointmentAccess,
+      Value<String>? calendarId,
+      Value<int>? userLocalId,
+      Value<String>? uid,
+      Value<String?>? subject,
+      Value<String?>? description,
+      Value<String?>? location,
+      Value<DateTime?>? startTS,
+      Value<DateTime?>? endTS,
+      Value<bool?>? allDay,
+      Value<String?>? owner,
+      Value<bool?>? modified,
+      Value<int?>? recurrenceId,
+      Value<int?>? lastModified,
+      Value<String?>? remindersString,
+      Value<bool?>? status,
+      Value<bool?>? withDate,
+      Value<bool?>? isPrivate,
+      Value<UpdateStatus>? updateStatus,
+      Value<bool>? synced,
+      Value<bool>? onceLoaded,
+      Value<RecurrenceMode?>? recurrenceMode,
+      Value<EveryWeekFrequency?>? recurrenceWeeklyFrequency,
+      Value<DateTime?>? recurrenceUntilDate,
+      Value<String?>? recurrenceWeekDaysString,
+      Value<List<String>?>? attendees}) {
+    return ActivityTableCompanion(
+      type: type ?? this.type,
+      organizer: organizer ?? this.organizer,
+      appointment: appointment ?? this.appointment,
+      appointmentAccess: appointmentAccess ?? this.appointmentAccess,
+      calendarId: calendarId ?? this.calendarId,
+      userLocalId: userLocalId ?? this.userLocalId,
+      uid: uid ?? this.uid,
+      subject: subject ?? this.subject,
+      description: description ?? this.description,
+      location: location ?? this.location,
+      startTS: startTS ?? this.startTS,
+      endTS: endTS ?? this.endTS,
+      allDay: allDay ?? this.allDay,
+      owner: owner ?? this.owner,
+      modified: modified ?? this.modified,
+      recurrenceId: recurrenceId ?? this.recurrenceId,
+      lastModified: lastModified ?? this.lastModified,
+      remindersString: remindersString ?? this.remindersString,
+      status: status ?? this.status,
+      withDate: withDate ?? this.withDate,
+      isPrivate: isPrivate ?? this.isPrivate,
+      updateStatus: updateStatus ?? this.updateStatus,
+      synced: synced ?? this.synced,
+      onceLoaded: onceLoaded ?? this.onceLoaded,
+      recurrenceMode: recurrenceMode ?? this.recurrenceMode,
+      recurrenceWeeklyFrequency:
+          recurrenceWeeklyFrequency ?? this.recurrenceWeeklyFrequency,
+      recurrenceUntilDate: recurrenceUntilDate ?? this.recurrenceUntilDate,
+      recurrenceWeekDaysString:
+          recurrenceWeekDaysString ?? this.recurrenceWeekDaysString,
+      attendees: attendees ?? this.attendees,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (type.present) {
+      final converter = $ActivityTableTable.$converter0;
+      map['type'] = Variable<int?>(converter.mapToSql(type.value));
+    }
+    if (organizer.present) {
+      map['organizer'] = Variable<String?>(organizer.value);
+    }
+    if (appointment.present) {
+      map['appointment'] = Variable<bool?>(appointment.value);
+    }
+    if (appointmentAccess.present) {
+      map['appointment_access'] = Variable<int?>(appointmentAccess.value);
+    }
+    if (calendarId.present) {
+      map['calendar_id'] = Variable<String>(calendarId.value);
+    }
+    if (userLocalId.present) {
+      map['user_local_id'] = Variable<int>(userLocalId.value);
+    }
+    if (uid.present) {
+      map['uid'] = Variable<String>(uid.value);
+    }
+    if (subject.present) {
+      map['subject'] = Variable<String?>(subject.value);
+    }
+    if (description.present) {
+      map['description'] = Variable<String?>(description.value);
+    }
+    if (location.present) {
+      map['location'] = Variable<String?>(location.value);
+    }
+    if (startTS.present) {
+      map['start_t_s'] = Variable<DateTime?>(startTS.value);
+    }
+    if (endTS.present) {
+      map['end_t_s'] = Variable<DateTime?>(endTS.value);
+    }
+    if (allDay.present) {
+      map['all_day'] = Variable<bool?>(allDay.value);
+    }
+    if (owner.present) {
+      map['owner'] = Variable<String?>(owner.value);
+    }
+    if (modified.present) {
+      map['modified'] = Variable<bool?>(modified.value);
+    }
+    if (recurrenceId.present) {
+      map['recurrence_id'] = Variable<int?>(recurrenceId.value);
+    }
+    if (lastModified.present) {
+      map['last_modified'] = Variable<int?>(lastModified.value);
+    }
+    if (remindersString.present) {
+      map['reminders_string'] = Variable<String?>(remindersString.value);
+    }
+    if (status.present) {
+      map['status'] = Variable<bool?>(status.value);
+    }
+    if (withDate.present) {
+      map['with_date'] = Variable<bool?>(withDate.value);
+    }
+    if (isPrivate.present) {
+      map['is_private'] = Variable<bool?>(isPrivate.value);
+    }
+    if (updateStatus.present) {
+      final converter = $ActivityTableTable.$converter1;
+      map['update_status'] =
+          Variable<int>(converter.mapToSql(updateStatus.value)!);
+    }
+    if (synced.present) {
+      map['synced'] = Variable<bool>(synced.value);
+    }
+    if (onceLoaded.present) {
+      map['once_loaded'] = Variable<bool>(onceLoaded.value);
+    }
+    if (recurrenceMode.present) {
+      final converter = $ActivityTableTable.$converter2;
+      map['recurrence_mode'] =
+          Variable<int?>(converter.mapToSql(recurrenceMode.value));
+    }
+    if (recurrenceWeeklyFrequency.present) {
+      final converter = $ActivityTableTable.$converter3;
+      map['recurrence_weekly_frequency'] =
+          Variable<int?>(converter.mapToSql(recurrenceWeeklyFrequency.value));
+    }
+    if (recurrenceUntilDate.present) {
+      map['recurrence_until_date'] =
+          Variable<DateTime?>(recurrenceUntilDate.value);
+    }
+    if (recurrenceWeekDaysString.present) {
+      map['recurrence_week_days_string'] =
+          Variable<String?>(recurrenceWeekDaysString.value);
+    }
+    if (attendees.present) {
+      final converter = $ActivityTableTable.$converter4;
+      map['attendees'] = Variable<String?>(converter.mapToSql(attendees.value));
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('ActivityTableCompanion(')
+          ..write('type: $type, ')
+          ..write('organizer: $organizer, ')
+          ..write('appointment: $appointment, ')
+          ..write('appointmentAccess: $appointmentAccess, ')
+          ..write('calendarId: $calendarId, ')
+          ..write('userLocalId: $userLocalId, ')
+          ..write('uid: $uid, ')
+          ..write('subject: $subject, ')
+          ..write('description: $description, ')
+          ..write('location: $location, ')
+          ..write('startTS: $startTS, ')
+          ..write('endTS: $endTS, ')
+          ..write('allDay: $allDay, ')
+          ..write('owner: $owner, ')
+          ..write('modified: $modified, ')
+          ..write('recurrenceId: $recurrenceId, ')
+          ..write('lastModified: $lastModified, ')
+          ..write('remindersString: $remindersString, ')
+          ..write('status: $status, ')
+          ..write('withDate: $withDate, ')
+          ..write('isPrivate: $isPrivate, ')
+          ..write('updateStatus: $updateStatus, ')
+          ..write('synced: $synced, ')
+          ..write('onceLoaded: $onceLoaded, ')
+          ..write('recurrenceMode: $recurrenceMode, ')
+          ..write('recurrenceWeeklyFrequency: $recurrenceWeeklyFrequency, ')
+          ..write('recurrenceUntilDate: $recurrenceUntilDate, ')
+          ..write('recurrenceWeekDaysString: $recurrenceWeekDaysString, ')
+          ..write('attendees: $attendees')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $ActivityTableTable extends ActivityTable
+    with TableInfo<$ActivityTableTable, ActivityDb> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $ActivityTableTable(this.attachedDatabase, [this._alias]);
+  final VerificationMeta _typeMeta = const VerificationMeta('type');
+  @override
+  late final GeneratedColumnWithTypeConverter<ActivityType?, int?> type =
+      GeneratedColumn<int?>('type', aliasedName, true,
+              type: const IntType(), requiredDuringInsert: false)
+          .withConverter<ActivityType?>($ActivityTableTable.$converter0);
+  final VerificationMeta _organizerMeta = const VerificationMeta('organizer');
+  @override
+  late final GeneratedColumn<String?> organizer = GeneratedColumn<String?>(
+      'organizer', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _appointmentMeta =
+      const VerificationMeta('appointment');
+  @override
+  late final GeneratedColumn<bool?> appointment = GeneratedColumn<bool?>(
+      'appointment', aliasedName, true,
+      type: const BoolType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'CHECK (appointment IN (0, 1))');
+  final VerificationMeta _appointmentAccessMeta =
+      const VerificationMeta('appointmentAccess');
+  @override
+  late final GeneratedColumn<int?> appointmentAccess = GeneratedColumn<int?>(
+      'appointment_access', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _calendarIdMeta = const VerificationMeta('calendarId');
+  @override
+  late final GeneratedColumn<String?> calendarId = GeneratedColumn<String?>(
+      'calendar_id', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _userLocalIdMeta =
+      const VerificationMeta('userLocalId');
+  @override
+  late final GeneratedColumn<int?> userLocalId = GeneratedColumn<int?>(
+      'user_local_id', aliasedName, false,
+      type: const IntType(), requiredDuringInsert: true);
+  final VerificationMeta _uidMeta = const VerificationMeta('uid');
+  @override
+  late final GeneratedColumn<String?> uid = GeneratedColumn<String?>(
+      'uid', aliasedName, false,
+      type: const StringType(), requiredDuringInsert: true);
+  final VerificationMeta _subjectMeta = const VerificationMeta('subject');
+  @override
+  late final GeneratedColumn<String?> subject = GeneratedColumn<String?>(
+      'subject', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _descriptionMeta =
+      const VerificationMeta('description');
+  @override
+  late final GeneratedColumn<String?> description = GeneratedColumn<String?>(
+      'description', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _locationMeta = const VerificationMeta('location');
+  @override
+  late final GeneratedColumn<String?> location = GeneratedColumn<String?>(
+      'location', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _startTSMeta = const VerificationMeta('startTS');
+  @override
+  late final GeneratedColumn<DateTime?> startTS = GeneratedColumn<DateTime?>(
+      'start_t_s', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _endTSMeta = const VerificationMeta('endTS');
+  @override
+  late final GeneratedColumn<DateTime?> endTS = GeneratedColumn<DateTime?>(
+      'end_t_s', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _allDayMeta = const VerificationMeta('allDay');
+  @override
+  late final GeneratedColumn<bool?> allDay = GeneratedColumn<bool?>(
+      'all_day', aliasedName, true,
+      type: const BoolType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'CHECK (all_day IN (0, 1))');
+  final VerificationMeta _ownerMeta = const VerificationMeta('owner');
+  @override
+  late final GeneratedColumn<String?> owner = GeneratedColumn<String?>(
+      'owner', aliasedName, true,
+      type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _modifiedMeta = const VerificationMeta('modified');
+  @override
+  late final GeneratedColumn<bool?> modified = GeneratedColumn<bool?>(
+      'modified', aliasedName, true,
+      type: const BoolType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'CHECK (modified IN (0, 1))');
+  final VerificationMeta _recurrenceIdMeta =
+      const VerificationMeta('recurrenceId');
+  @override
+  late final GeneratedColumn<int?> recurrenceId = GeneratedColumn<int?>(
+      'recurrence_id', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _lastModifiedMeta =
+      const VerificationMeta('lastModified');
+  @override
+  late final GeneratedColumn<int?> lastModified = GeneratedColumn<int?>(
+      'last_modified', aliasedName, true,
+      type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _remindersStringMeta =
+      const VerificationMeta('remindersString');
+  @override
+  late final GeneratedColumn<String?> remindersString =
+      GeneratedColumn<String?>('reminders_string', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _statusMeta = const VerificationMeta('status');
+  @override
+  late final GeneratedColumn<bool?> status = GeneratedColumn<bool?>(
+      'status', aliasedName, true,
+      type: const BoolType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'CHECK (status IN (0, 1))');
+  final VerificationMeta _withDateMeta = const VerificationMeta('withDate');
+  @override
+  late final GeneratedColumn<bool?> withDate = GeneratedColumn<bool?>(
+      'with_date', aliasedName, true,
+      type: const BoolType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'CHECK (with_date IN (0, 1))');
+  final VerificationMeta _isPrivateMeta = const VerificationMeta('isPrivate');
+  @override
+  late final GeneratedColumn<bool?> isPrivate = GeneratedColumn<bool?>(
+      'is_private', aliasedName, true,
+      type: const BoolType(),
+      requiredDuringInsert: false,
+      defaultConstraints: 'CHECK (is_private IN (0, 1))');
+  final VerificationMeta _updateStatusMeta =
+      const VerificationMeta('updateStatus');
+  @override
+  late final GeneratedColumnWithTypeConverter<UpdateStatus, int?> updateStatus =
+      GeneratedColumn<int?>('update_status', aliasedName, false,
+              type: const IntType(), requiredDuringInsert: true)
+          .withConverter<UpdateStatus>($ActivityTableTable.$converter1);
+  final VerificationMeta _syncedMeta = const VerificationMeta('synced');
+  @override
+  late final GeneratedColumn<bool?> synced = GeneratedColumn<bool?>(
+      'synced', aliasedName, false,
+      type: const BoolType(),
+      requiredDuringInsert: true,
+      defaultConstraints: 'CHECK (synced IN (0, 1))');
+  final VerificationMeta _onceLoadedMeta = const VerificationMeta('onceLoaded');
+  @override
+  late final GeneratedColumn<bool?> onceLoaded = GeneratedColumn<bool?>(
+      'once_loaded', aliasedName, false,
+      type: const BoolType(),
+      requiredDuringInsert: true,
+      defaultConstraints: 'CHECK (once_loaded IN (0, 1))');
+  final VerificationMeta _recurrenceModeMeta =
+      const VerificationMeta('recurrenceMode');
+  @override
+  late final GeneratedColumnWithTypeConverter<RecurrenceMode?, int?>
+      recurrenceMode = GeneratedColumn<int?>(
+              'recurrence_mode', aliasedName, true,
+              type: const IntType(), requiredDuringInsert: false)
+          .withConverter<RecurrenceMode?>($ActivityTableTable.$converter2);
+  final VerificationMeta _recurrenceWeeklyFrequencyMeta =
+      const VerificationMeta('recurrenceWeeklyFrequency');
+  @override
+  late final GeneratedColumnWithTypeConverter<EveryWeekFrequency?, int?>
+      recurrenceWeeklyFrequency = GeneratedColumn<int?>(
+              'recurrence_weekly_frequency', aliasedName, true,
+              type: const IntType(), requiredDuringInsert: false)
+          .withConverter<EveryWeekFrequency?>($ActivityTableTable.$converter3);
+  final VerificationMeta _recurrenceUntilDateMeta =
+      const VerificationMeta('recurrenceUntilDate');
+  @override
+  late final GeneratedColumn<DateTime?> recurrenceUntilDate =
+      GeneratedColumn<DateTime?>('recurrence_until_date', aliasedName, true,
+          type: const IntType(), requiredDuringInsert: false);
+  final VerificationMeta _recurrenceWeekDaysStringMeta =
+      const VerificationMeta('recurrenceWeekDaysString');
+  @override
+  late final GeneratedColumn<String?> recurrenceWeekDaysString =
+      GeneratedColumn<String?>('recurrence_week_days_string', aliasedName, true,
+          type: const StringType(), requiredDuringInsert: false);
+  final VerificationMeta _attendeesMeta = const VerificationMeta('attendees');
+  @override
+  late final GeneratedColumnWithTypeConverter<List<String>, String?> attendees =
+      GeneratedColumn<String?>('attendees', aliasedName, true,
+              type: const StringType(), requiredDuringInsert: false)
+          .withConverter<List<String>>($ActivityTableTable.$converter4);
+  @override
+  List<GeneratedColumn> get $columns => [
+        type,
+        organizer,
+        appointment,
+        appointmentAccess,
+        calendarId,
+        userLocalId,
+        uid,
+        subject,
+        description,
+        location,
+        startTS,
+        endTS,
+        allDay,
+        owner,
+        modified,
+        recurrenceId,
+        lastModified,
+        remindersString,
+        status,
+        withDate,
+        isPrivate,
+        updateStatus,
+        synced,
+        onceLoaded,
+        recurrenceMode,
+        recurrenceWeeklyFrequency,
+        recurrenceUntilDate,
+        recurrenceWeekDaysString,
+        attendees
+      ];
+  @override
+  String get aliasedName => _alias ?? 'activity_table';
+  @override
+  String get actualTableName => 'activity_table';
+  @override
+  VerificationContext validateIntegrity(Insertable<ActivityDb> instance,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    context.handle(_typeMeta, const VerificationResult.success());
+    if (data.containsKey('organizer')) {
+      context.handle(_organizerMeta,
+          organizer.isAcceptableOrUnknown(data['organizer']!, _organizerMeta));
+    }
+    if (data.containsKey('appointment')) {
+      context.handle(
+          _appointmentMeta,
+          appointment.isAcceptableOrUnknown(
+              data['appointment']!, _appointmentMeta));
+    }
+    if (data.containsKey('appointment_access')) {
+      context.handle(
+          _appointmentAccessMeta,
+          appointmentAccess.isAcceptableOrUnknown(
+              data['appointment_access']!, _appointmentAccessMeta));
+    }
+    if (data.containsKey('calendar_id')) {
+      context.handle(
+          _calendarIdMeta,
+          calendarId.isAcceptableOrUnknown(
+              data['calendar_id']!, _calendarIdMeta));
+    } else if (isInserting) {
+      context.missing(_calendarIdMeta);
+    }
+    if (data.containsKey('user_local_id')) {
+      context.handle(
+          _userLocalIdMeta,
+          userLocalId.isAcceptableOrUnknown(
+              data['user_local_id']!, _userLocalIdMeta));
+    } else if (isInserting) {
+      context.missing(_userLocalIdMeta);
+    }
+    if (data.containsKey('uid')) {
+      context.handle(
+          _uidMeta, uid.isAcceptableOrUnknown(data['uid']!, _uidMeta));
+    } else if (isInserting) {
+      context.missing(_uidMeta);
+    }
+    if (data.containsKey('subject')) {
+      context.handle(_subjectMeta,
+          subject.isAcceptableOrUnknown(data['subject']!, _subjectMeta));
+    }
+    if (data.containsKey('description')) {
+      context.handle(
+          _descriptionMeta,
+          description.isAcceptableOrUnknown(
+              data['description']!, _descriptionMeta));
+    }
+    if (data.containsKey('location')) {
+      context.handle(_locationMeta,
+          location.isAcceptableOrUnknown(data['location']!, _locationMeta));
+    }
+    if (data.containsKey('start_t_s')) {
+      context.handle(_startTSMeta,
+          startTS.isAcceptableOrUnknown(data['start_t_s']!, _startTSMeta));
+    }
+    if (data.containsKey('end_t_s')) {
+      context.handle(_endTSMeta,
+          endTS.isAcceptableOrUnknown(data['end_t_s']!, _endTSMeta));
+    }
+    if (data.containsKey('all_day')) {
+      context.handle(_allDayMeta,
+          allDay.isAcceptableOrUnknown(data['all_day']!, _allDayMeta));
+    }
+    if (data.containsKey('owner')) {
+      context.handle(
+          _ownerMeta, owner.isAcceptableOrUnknown(data['owner']!, _ownerMeta));
+    }
+    if (data.containsKey('modified')) {
+      context.handle(_modifiedMeta,
+          modified.isAcceptableOrUnknown(data['modified']!, _modifiedMeta));
+    }
+    if (data.containsKey('recurrence_id')) {
+      context.handle(
+          _recurrenceIdMeta,
+          recurrenceId.isAcceptableOrUnknown(
+              data['recurrence_id']!, _recurrenceIdMeta));
+    }
+    if (data.containsKey('last_modified')) {
+      context.handle(
+          _lastModifiedMeta,
+          lastModified.isAcceptableOrUnknown(
+              data['last_modified']!, _lastModifiedMeta));
+    }
+    if (data.containsKey('reminders_string')) {
+      context.handle(
+          _remindersStringMeta,
+          remindersString.isAcceptableOrUnknown(
+              data['reminders_string']!, _remindersStringMeta));
+    }
+    if (data.containsKey('status')) {
+      context.handle(_statusMeta,
+          status.isAcceptableOrUnknown(data['status']!, _statusMeta));
+    }
+    if (data.containsKey('with_date')) {
+      context.handle(_withDateMeta,
+          withDate.isAcceptableOrUnknown(data['with_date']!, _withDateMeta));
+    }
+    if (data.containsKey('is_private')) {
+      context.handle(_isPrivateMeta,
+          isPrivate.isAcceptableOrUnknown(data['is_private']!, _isPrivateMeta));
+    }
+    context.handle(_updateStatusMeta, const VerificationResult.success());
+    if (data.containsKey('synced')) {
+      context.handle(_syncedMeta,
+          synced.isAcceptableOrUnknown(data['synced']!, _syncedMeta));
+    } else if (isInserting) {
+      context.missing(_syncedMeta);
+    }
+    if (data.containsKey('once_loaded')) {
+      context.handle(
+          _onceLoadedMeta,
+          onceLoaded.isAcceptableOrUnknown(
+              data['once_loaded']!, _onceLoadedMeta));
+    } else if (isInserting) {
+      context.missing(_onceLoadedMeta);
+    }
+    context.handle(_recurrenceModeMeta, const VerificationResult.success());
+    context.handle(
+        _recurrenceWeeklyFrequencyMeta, const VerificationResult.success());
+    if (data.containsKey('recurrence_until_date')) {
+      context.handle(
+          _recurrenceUntilDateMeta,
+          recurrenceUntilDate.isAcceptableOrUnknown(
+              data['recurrence_until_date']!, _recurrenceUntilDateMeta));
+    }
+    if (data.containsKey('recurrence_week_days_string')) {
+      context.handle(
+          _recurrenceWeekDaysStringMeta,
+          recurrenceWeekDaysString.isAcceptableOrUnknown(
+              data['recurrence_week_days_string']!,
+              _recurrenceWeekDaysStringMeta));
+    }
+    context.handle(_attendeesMeta, const VerificationResult.success());
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {uid, userLocalId, calendarId};
+  @override
+  ActivityDb map(Map<String, dynamic> data, {String? tablePrefix}) {
+    return ActivityDb.fromData(data,
+        prefix: tablePrefix != null ? '$tablePrefix.' : null);
+  }
+
+  @override
+  $ActivityTableTable createAlias(String alias) {
+    return $ActivityTableTable(attachedDatabase, alias);
+  }
+
+  static TypeConverter<ActivityType?, int> $converter0 =
+      const EnumIndexConverter<ActivityType>(ActivityType.values);
+  static TypeConverter<UpdateStatus, int> $converter1 =
+      const EnumIndexConverter<UpdateStatus>(UpdateStatus.values);
+  static TypeConverter<RecurrenceMode?, int> $converter2 =
+      const EnumIndexConverter<RecurrenceMode>(RecurrenceMode.values);
+  static TypeConverter<EveryWeekFrequency?, int> $converter3 =
+      const EnumIndexConverter<EveryWeekFrequency>(EveryWeekFrequency.values);
+  static TypeConverter<List<String>, String> $converter4 =
+      const ListStringConverter();
+}
+
 class LocalFolder extends DataClass implements Insertable<LocalFolder> {
   final String fullName;
   final int accountLocalId;
@@ -9689,6 +11864,8 @@ class $WhiteMailTableTable extends WhiteMailTable
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(SqlTypeSystem.defaultInstance, e);
   late final $MailTable mail = $MailTable(this);
+  late final $CalendarTableTable calendarTable = $CalendarTableTable(this);
+  late final $ActivityTableTable activityTable = $ActivityTableTable(this);
   late final $FoldersTable folders = $FoldersTable(this);
   late final $UsersTable users = $UsersTable(this);
   late final $AccountsTable accounts = $AccountsTable(this);
@@ -9706,6 +11883,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities => [
         mail,
+        calendarTable,
+        activityTable,
         folders,
         users,
         accounts,

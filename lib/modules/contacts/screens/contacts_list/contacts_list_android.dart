@@ -154,7 +154,12 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
                 state.contacts?.isNotEmpty == true
                     ? _buildContacts(context, state)
                     : _buildContactsEmpty(state),
-                state.progress ? _buildLoading(state) : SizedBox.shrink(),
+                state.progress
+                    ? RefreshProgressIndicator(
+                        backgroundColor: Colors.white,
+                        color: Colors.black,
+                      )
+                    : SizedBox.shrink(),
               ],
             );
           }),
@@ -291,10 +296,6 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
 
   void _deleteContact(Contact contact) {
     contactsBloc.add(DeleteContacts([contact]));
-  }
-
-  Widget _buildLoading(ContactsState state) {
-    return Center(child: CircularProgressIndicator());
   }
 
   Widget _buildContactsEmpty(ContactsState state) {

@@ -161,6 +161,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Подтвердите PIN"),
         "button_pgp_verify_sign":
             MessageLookupByLibrary.simpleMessage("Проверить"),
+        "calendar": MessageLookupByLibrary.simpleMessage("Календарь"),
         "clear_cache_during_logout": MessageLookupByLibrary.simpleMessage(
             "Очистить локальный кэш и сохранённые ключи"),
         "compose_body_placeholder":
@@ -577,7 +578,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Пароль скопирован"),
         "hint_self_destructing_sent_password_using_different_channel":
             MessageLookupByLibrary.simpleMessage(
-                "The password must be sent using a different channel.\n  Store the password somewhere. You will not be able to recover it otherwise."),
+                "The password must be sent using a different channel.\nStore the password somewhere. You will not be able to recover it otherwise."),
         "hint_self_destructing_supports_plain_text_only":
             MessageLookupByLibrary.simpleMessage(
                 "The self-descructing secure emails support plain text only. All the formatting will be removed. Also, attachments cannot be encrypted and will be removed from the message."),
@@ -776,6 +777,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "no_permission_to_local_storage": MessageLookupByLibrary.simpleMessage(
             "Нет разрешения для доступа к файлам. Проверьте настройки на вашем устройстве."),
         "remove": MessageLookupByLibrary.simpleMessage("Удалить"),
+        "save_changes_question":
+            MessageLookupByLibrary.simpleMessage("Сохранить изменения?"),
         "self_destructing_life_time_day":
             MessageLookupByLibrary.simpleMessage("24 hours"),
         "self_destructing_life_time_days_3":
@@ -828,6 +831,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("ежемесячно"),
         "settings_sync_frequency_never":
             MessageLookupByLibrary.simpleMessage("отключено"),
+        "settings_sync_frequency_weekly":
+            MessageLookupByLibrary.simpleMessage("еженедельно"),
+        "settings_sync_frequency_yearly":
+            MessageLookupByLibrary.simpleMessage("ежегодно"),
         "settings_sync_period":
             MessageLookupByLibrary.simpleMessage("Синхронизировать письма за"),
         "settings_sync_period_all_time":

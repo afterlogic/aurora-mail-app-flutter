@@ -5,6 +5,7 @@ import 'dart:math';
 
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/modules/dialog_wrap.dart';
+import 'package:aurora_mail/notification/push_notifications_manager.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart'
     hide Message;
 import 'package:notifications_utils/notifications_utils.dart';
@@ -88,8 +89,21 @@ Future onSelectNotification(String payload) async {
   }
 
   final json = jsonDecode(payload) as Map<String, dynamic>;
+  final type = json["Type"] as String;
+
   if (RouteWrap.staticState != null) {
-    RouteWrap.staticState.onMessage(json);
+    switch (type) {
+      case 'event':
+      case 'task':
+        RouteWrap.staticState.onCalendar(json);
+        break;
+      case 'email':
+        RouteWrap.staticState.onMessage(json);
+        break;
+      default:
+        RouteWrap.staticState.onMessage(json);
+        break;
+    }
   } else {
     RouteWrap.notification = json;
   }

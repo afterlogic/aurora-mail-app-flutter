@@ -10,6 +10,8 @@ import 'package:aurora_mail/database/users/users_dao.dart';
 import 'package:aurora_mail/inject/app_inject.dart';
 import 'package:aurora_mail/modules/auth/repository/auth_api.dart';
 import 'package:aurora_mail/modules/auth/repository/auth_local_storage.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain_impl/services/db/calendar/calendar_dao.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain_impl/services/db/activity/activity_dao.dart';
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/contacts/contacts_dao.dart';
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/groups/contacts_groups_dao.dart';
 import 'package:aurora_mail/modules/contacts/contacts_impl_domain/services/db/storages/contacts_storages_dao.dart';
@@ -154,6 +156,19 @@ class AuthMethods {
     await Future.wait(futures);
   }
 
+  Future<void> deleteUnusedUsersWithData(List<User> users) async {
+    for(final user in users){
+      try{
+        await _usersDao.deleteUser(user.localId);
+        await _accountsDao.deleteAccountsOfUser(user.localId);
+        await deleteUserRelatedData(user);
+      }catch(e){
+        print(e);
+        continue;
+      }
+    }
+  }
+
   Future<void> deleteUserRelatedData(User user) async {
     final mailDao = new MailDao(DBInstances.appDB);
     final foldersDao = new FoldersDao(DBInstances.appDB);
@@ -161,16 +176,33 @@ class AuthMethods {
     final contactsStoragesDao = new ContactsStoragesDao(DBInstances.appDB);
     final contactsGroupsDao = new ContactsGroupsDao(DBInstances.appDB);
 
-    final futures = [
-      _accountsDao.deleteAccountsOfUser(user.localId),
-      foldersDao.deleteFoldersOfUser(user.localId),
-      mailDao.deleteMessagesOfUser(user.localId),
-      contactsDao.deleteContactsOfUser(user.localId),
-      contactsStoragesDao.deleteStoragesOfUser(user.localId),
-      contactsGroupsDao.deleteGroupsOfUser(user.localId),
-    ];
+    try {
+      final calendarDao = new CalendarDao(DBInstances.appDB);
+      final eventDao = new ActivityDao(DBInstances.appDB);
+      await _accountsDao.deleteAccountsOfUser(user.localId);
+      await foldersDao.deleteFoldersOfUser(user.localId);
+      await mailDao.deleteMessagesOfUser(user.localId);
+      await contactsDao.deleteContactsOfUser(user.localId);
+      await contactsStoragesDao.deleteStoragesOfUser(user.localId);
+      await contactsGroupsDao.deleteGroupsOfUser(user.localId);
+      await calendarDao.deleteAllCalendars(user.localId);
+      await eventDao.deleteAllEvents(user.localId);
+    } catch (e, st) {
+      print(e);
+    }
 
-    await Future.wait(futures);
+    // final futures = [
+    //   _accountsDao.deleteAccountsOfUser(user.localId),
+    //   foldersDao.deleteFoldersOfUser(user.localId),
+    //   mailDao.deleteMessagesOfUser(user.localId),
+    //   contactsDao.deleteContactsOfUser(user.localId),
+    //   contactsStoragesDao.deleteStoragesOfUser(user.localId),
+    //   contactsGroupsDao.deleteGroupsOfUser(user.localId),
+    //   calendarDao.deleteAllCalendars(user.localId),
+    //   eventDao.deleteAllEvents(user.localId),
+    // ];
+    //
+    // await Future.wait(futures);
   }
 
   Future<User> invalidateToken(int userLocalId) async {

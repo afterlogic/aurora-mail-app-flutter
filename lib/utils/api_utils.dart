@@ -1,4 +1,3 @@
-//@dart=2.9
 import 'dart:io';
 
 import 'package:aurora_mail/generated/l10n.dart';
@@ -11,7 +10,7 @@ ErrorToShow formatError(dynamic err, StackTrace stack) {
     return err.toShow();
   } else if (err is SocketException) {
     if (err.osError?.errorCode == 7 ||
-        err.message?.contains('connection timed out') == true) {
+        err.message.contains('connection timed out') == true) {
       return ErrorToShow.message(S.current.error_connection);
     } else {
       return ErrorToShow.message(

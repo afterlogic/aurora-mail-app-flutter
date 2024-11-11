@@ -1,22 +1,40 @@
 //@dart=2.9
 import 'dart:convert';
 
+import 'package:aurora_logger/aurora_logger.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/models/alias_or_identity.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
+import 'package:aurora_mail/modules/calendar/ui/models/calendar.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 import 'package:aurora_mail/modules/mail/models/mail_attachment.dart';
 import 'package:aurora_mail/modules/mail/screens/message_view/components/message_webview.dart';
 import 'package:aurora_mail/utils/date_formatting.dart';
+import 'package:aurora_mail/utils/extensions/colors_extensions.dart';
+import 'package:collection/collection.dart';
 import 'package:filesize/filesize.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:html/dom.dart';
 import 'package:html/parser.dart';
 
 class MailUtils {
   MailUtils._();
+
+  static Map<String, dynamic> getExtendFromMessageByObjectTypeName(
+      List<String> types, Message m) {
+    if (m.extendInJson == null) return null;
+    try {
+      final decodedList = jsonDecode(m.extendInJson) as List;
+      final extended =
+          decodedList.firstWhereOrNull((e) => types.contains(e["@Object"]));
+      return extended as Map<String, dynamic>;
+    } catch (e, s) {
+      return null;
+    }
+  }
 
   static String getFriendlyName(Contact contact) {
     if (contact.fullName != null && contact.fullName.isNotEmpty) {
@@ -125,6 +143,34 @@ class MailUtils {
     return parse(document.body.text).documentElement.text;
   }
 
+  static String extractFirstContent(String htmlString) {
+    if (htmlString == null || htmlString.isEmpty) return '';
+    try {
+      Document document = parse(htmlString);
+      String findFirstText(Node node) {
+        if (node == null) return null;
+        if (node.nodeType == Node.TEXT_NODE && node.text.trim().isNotEmpty) {
+          return node.text.trim();
+        }
+
+        for (final child in node.nodes) {
+          var result = findFirstText(child);
+          if (result != null) {
+            return result;
+          }
+        }
+        return null;
+      }
+
+      return findFirstText(document.body) ?? '';
+    } catch (e, st) {
+      logger.log(
+        'extractFirstContent for note error: $e',
+      );
+      return '';
+    }
+  }
+
   static String getReplySubject(Message message) {
     final rePrefix = "Re";
     final fwdPrefix = "Fwd";
@@ -210,7 +256,7 @@ class MailUtils {
   }
 
   static String getForwardBody(BuildContext context, Message message) {
-    final baseMessage = htmlToPlain(message.htmlBody ?? "");
+    final baseMessage = message.htmlBody ?? "";
 
     String forwardMessage =
         "<br><br>${S.of(context).compose_forward_body_original_message}<br>";
@@ -240,10 +286,7 @@ class MailUtils {
   }
 
   static String wrapInHtmlEditor(
-    BuildContext context,
-    String text,
-    bool isHtml,
-  ) {
+      BuildContext context, String text, bool isHtml, bool removeForcedHeight) {
     final theme = Theme.of(context);
     return "<!doctype html>" +
         """
@@ -264,10 +307,10 @@ class MailUtils {
       }
       body {
         font-family: sans-serif;
-        min-height: 100vh;
+        ${removeForcedHeight ? '' : 'min-height: 100vh;'}
       }
       .container {
-        min-height: 100vh;
+        ${removeForcedHeight ? '' : 'min-height: 100vh;'}
         display: flex;
         flex-direction: column;
       }
@@ -381,6 +424,8 @@ class MailUtils {
     @required String body,
     @required List<MailAttachment> attachments,
     @required bool showLightEmail,
+    ViewCalendar initCalendar,
+    Map<String, dynamic> extendedEvent,
     bool isStarred,
   }) {
     final theme = Theme.of(context);
@@ -457,6 +502,16 @@ class MailUtils {
         display: flex;
         flex-direction: row;
         padding: 5px 0px;
+        align-items: center;
+      }
+      .row.fluid {
+          padding-left: 100px;
+      }
+      .row.fluid .label {
+          margin-left: -100px;
+      }
+      .row.fluid .value {
+          width: 99%;
       }
       .disabled-text {
         opacity: 0.3;
@@ -535,10 +590,61 @@ class MailUtils {
       .selectable {
         user-select: text;
       }
+      .appointment {
+        background: ${(theme.brightness == Brightness.dark ? '#05697a' : '#dff6eb')};
+        border-bottom: 1px solid ${(theme.brightness == Brightness.dark ? '#084853' : '#b7ebd2')};
+        padding: 15px;
+      }
+      .appointment button {
+        margin-right: 5px;
+        border-radius: 4px;
+        display: inline-block;
+        padding: 5px 12px;
+        text-align: center;
+        background: #43d0bf;
+        border: 1px solid #2db3a3;
+        color: #ffffff;
+        font-size: 16px;
+        text-shadow: 0px 1px 0px rgba(0, 0, 0, 0.3);
+      }
+      .appointment .label {
+        vertical-align: bottom;
+        display: inline-block;
+        width: 100px;
+        color: ${(theme.brightness == Brightness.dark ? '#bbb' : '#888')};
+      }
+      .appointment .value {
+        color: ${(theme.brightness == Brightness.dark ? Colors.white : Colors.black).toHex()};
+      }
+      .appointment .custom-dropdown {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          width: auto;
+          max-width: 200px;
+          padding: 8px;
+          border: 1px solid #ccc;
+          border-radius: 4px;
+          font-family: Arial, sans-serif;
+          font-size: 14px;
+          background-color: #f8f8f8;
+          cursor: pointer;
+      }
+      .appointment .custom-dropdown .dropdown-label {
+          margin-right: 10px;
+          color: #000;
+      }
+      .appointment .custom-dropdown .dropdown-arrow {
+          width: 0;
+          height: 0;
+          border-left: 5px solid transparent;
+          border-right: 5px solid transparent;
+          border-top: 5px solid #000;
+      }
     </style>
     <script>      
         document.addEventListener('DOMContentLoaded', function () {
-            document.getElementById('stared-btn').addEventListener('click', function (event) {
+          document.getElementById('stared-btn').addEventListener('click', function (event) {
                 let elem=event.target
                 if (elem.classList.contains("is-starred")) {
                     elem.innerHTML = "&#9734;"
@@ -558,48 +664,107 @@ class MailUtils {
                 } else {
                     elem.innerHTML ="${S.of(context).btn_hide_details}";
                 }
-                document.getElementById("info").classList.toggle('is-visible');                
+                document.getElementById('info').classList.toggle('is-visible');                
                 elem.classList.toggle('is-visible');
             }, false);
         });
         
-       function downloadAttachment(str){
-        return window.${MessageWebViewActions.WEB_VIEW_JS_CHANNEL}.postMessage('${MessageWebViewActions.DOWNLOAD_ATTACHMENT}'+str);
-       }
+        const getSelectedCalendarId = () => document.querySelector('#calendars_select').value;
+       
+        function setSelectedCalendar(data) {
+            document.getElementById('custom-dropdown-value').innerText = data;
+        }
+       
+        function handleDropdownClick() {
+            return window.${ExpandedEventWebViewActions.CHANNEL}.postMessage('${ExpandedEventWebViewActions.DROPDOWN_CLICKED}');
+        }
+      
+        function acceptEvent(){
+          return window.${ExpandedEventWebViewActions.CHANNEL}.postMessage('${ExpandedEventWebViewActions.ACCEPT}');
+        }
+       
+        function declineEvent(){
+          return window.${ExpandedEventWebViewActions.CHANNEL}.postMessage('${ExpandedEventWebViewActions.DECLINE}');
+        }
+       
+        function tentativeEvent(){
+          return window.${ExpandedEventWebViewActions.CHANNEL}.postMessage('${ExpandedEventWebViewActions.TENTATIVE}');
+        }
+        
+        function downloadAttachment(str){
+          return window.${MessageWebViewActions.WEB_VIEW_JS_CHANNEL}.postMessage('${MessageWebViewActions.DOWNLOAD_ATTACHMENT}'+str);
+        }
     </script>
   </head>
-  <body class='unselectable'>
-    <div class='container'>
-      <div class='email-head'>
+  <body class="unselectable">
+    <div class="container">
+      <div class="email-head">
         <div class="flex" style="width: calc(100vw - 12px * 2)">
           <div class="flex" style="flex: 1">
-            <div style="font-size: 18px" class='selectable'>${message.fromToDisplay}</div>
+            <div style="font-size: 18px" class="selectable">${message.fromToDisplay}</div>
             <div class="selectable disabled-text">$toPrimary</div>
              <div class="selectable disabled-text">$shortDate</div>
-            <a style='margin-top: 7px;' class="toggle primary-color" href="#info" id="info-btn">${S.of(context).btn_show_details}</a>
+            <a style="margin-top: 7px;" class="toggle primary-color" href="#info" id="info-btn">${S.of(context).btn_show_details}</a>
           </div>
           <div class="flex" style="flex: 0"></div>
         </div>
         </div>
           <div class="toggle-content flex" id="info">
-              <div class='row'><a class='details-description'>From</a><a class='selectable details-value'>$from</a></div>
-              <div class='row'><a class='details-description'>To</a><a class='selectable details-value'>$to</a></div>        
-              ${cc.isNotEmpty ? "<div class='row'><a class='details-description'>Cc</a><a class='selectable details-value'>$cc</a></div>" : ""}
-        <div class='row'><a class='details-description'>Date</a><a class='selectable details-value'>$date</a></div>
+              <div class="row"><a class="details-description">From</a><a class="selectable details-value">$from</a></div>
+              <div class="row"><a class="details-description">To</a><a class="selectable details-value">$to</a></div>        
+              ${cc.isNotEmpty ? '<div class="row"><a class="details-description">Cc</a><a class="selectable details-value">$cc</a></div>' : ''}
+              <div class="row"><a class="details-description">Date</a><a class="selectable details-value">$date</a></div>
           </div>
-        <div class='email-head' style='padding-top: 0px;'>
+          ${extendedEvent == null ? "" : """
+        <div class="appointment">
+          ${_showButtons(extendedEvent["Type"] as String) ? """
+           <div class="row">
+            <button onclick="acceptEvent()">Accept</button> 
+            <button onclick="declineEvent()">Decline</button> 
+            <button onclick="tentativeEvent()">Tentative</button> 
+          </div>
+          <div class="row fluid">
+            ${_getCalendarsSelectButton(initCalendar)} 
+          </div> 
+            """ : ''}
+          <div class="row fluid"> 
+            <span class="label">When</span><span class="value">${extendedEvent["When"]}</span>  
+          </div>
+          <div class="row fluid"> 
+            <span class="label">Organizer</span><span class="value">${extendedEvent["Organizer"]["Email"]}</span>  
+          </div>
+          <div class="row fluid"> 
+            <span class="label">Attendees</span><span class="value">${_getAttendees(extendedEvent["AttendeeList"] as List)}</span>  
+          </div>
+          <div class="row fluid"> 
+            <span class="label">Title</span><span class="value">${extendedEvent["Summary"]}</span>  
+          </div>
+          ${extendedEvent["Description"] != null && (extendedEvent["Description"] as String).isNotEmpty ? """ 
+          <div class="row fluid"> 
+            <span class="label">Description</span><span class="value">${extendedEvent["Description"]}</span>  
+          </div>
+          """ : ''}
+          ${extendedEvent["Location"] != null && (extendedEvent["Location"] as String).isNotEmpty ? """ 
+          <div class="row fluid"> 
+            <span class="label">Location</span><span class="value">${extendedEvent["Location"]}</span>  
+          </div>
+          """ : ''}
+        </div>
+        """}
+          
+        <div class="email-head" style="padding-top: 0px;">
         <div style="display: flex; flex-direction: row;justify-content: space-between; padding-top: 24px;">
           <h1 style="font-size: 24px; font-weight: 500; margin-top: 0px;">
-            <span style="margin-right: 10px;" class='selectable'>${subject}</span>
+            <span style="margin-right: 10px;" class="selectable">${subject}</span>
             <span style="display: inline-block; font-size: 14px; background: #B6B5B5; ${theme.brightness == Brightness.dark ? 'color: black;' : 'color: white;'} padding: 3px 8px; border-radius: 10px; margin-top: -2px; vertical-align: middle;">${message.folder}</span>
           </h1>
           <a id="stared-btn" class="stared${isStarred ? " is-starred" : ""}" href='${MessageWebViewActions.ACTION + (isStarred ? MessageWebViewActions.SET_NOT_STARRED : MessageWebViewActions.SET_STARRED)}' style='text-decoration: none; font-size: 24px; line-height: 1.2; color: orange'>${isStarred ? "&#9733;" : "&#9734;"}</a>
         </div>
         <div style="clear: both;height: 1px; background-color: black; opacity: 0.05; margin: 24px 0 0"></div>
       </div>
-      <div class='selectable email-content' >$body</div>
+      <div class="selectable email-content">$body</div>
       ${attachments.isNotEmpty ? '<div style="height: 1px; background-color: black; opacity: 0.05; margin: 24px 0 0"></div>' : ""}
-      <div class='attachments'>
+      <div class="attachments">
         ${attachments.where((element) => !element.isInline).map((a) => _getAttachment(context, a)).toList().join()}
       </div>
     </div>
@@ -653,20 +818,59 @@ class MailUtils {
           "<div class='leading'><img src='${"${authBloc.currentUser.hostname}$thumbUrl&AuthToken=${authBloc.currentUser.token}"}' alt=''></div>";
     }
     return """
-    <div class='attachment'>
+    <div class="attachment">
       $leading
-      <div class='flex' style="flex: 1;white-space: nowrap;overflow: hidden;/* text-overflow: ellipsis; */">
-        <span style="
-    display: inline-block;
-    max-width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-"
-class='selectable'>${attachment.fileName}</span>
-        <span class='disabled-text'>${filesize(attachment.size)}</span>
+      <div class="flex" style="flex: 1;white-space: nowrap;overflow: hidden;/* text-overflow: ellipsis; */">
+        <span style="display: inline-block; max-width: 100%; overflow: hidden; text-overflow: ellipsis;"
+          class="selectable">${attachment.fileName}</span>
+        <span class="disabled-text">${filesize(attachment.size)}</span>
       </div>
-      <a class='icon-btn' onclick="downloadAttachment('${attachment.downloadUrl}')">${_getDownloadIcon(iconColor)}</a>
+      <a class="icon-btn" onclick="downloadAttachment('${attachment.downloadUrl}')">${_getDownloadIcon(iconColor)}</a>
     </div>
+    """;
+  }
+
+  static bool _showButtons(String type) {
+    final targetString = "REQUEST";
+    if (type == null || type.isEmpty) return false;
+    if (type == targetString) return true;
+    final components = type.split('-');
+    if (components.contains(targetString)) return true;
+    return false;
+  }
+
+  static String _getAttendees(List attendees) {
+    if (attendees == null || attendees.isEmpty) return '';
+    String result = "";
+    for (final e in attendees) {
+      result += " ${(e["DisplayName"] as String)}" +
+          " &lt;${e["Email"] as String}&gt;" +
+          ",";
+    }
+    result = result.substring(1, result.length - 1);
+    return result;
+  }
+
+  static String _getCurrentCalendarName(
+      {String id, List<ViewCalendar> calendars}) {
+    if (id == null || id.isEmpty) return null;
+    if (calendars == null || calendars.isEmpty) return null;
+    final selectedCalendar =
+        calendars.firstWhereOrNull((element) => element.id == id);
+    if (selectedCalendar == null) return null;
+    return selectedCalendar.name;
+  }
+
+  static String _getCalendarsSelectButton(ViewCalendar calendar) {
+    if (calendar == null) return "";
+    return """ 
+      <span class="label">Calendar</span>
+      <span class="value">
+        <div class="custom-dropdown" onclick="handleDropdownClick()">
+          <span class="dropdown-label" id="custom-dropdown-value">${calendar.name}</span>
+          <div class="dropdown-arrow"></div>
+        </div>
+      </span>  
     """;
   }
 
@@ -695,19 +899,4 @@ class='selectable'>${attachment.fileName}</span>
       """<svg style="width:24px;height:24px" viewBox="0 0 24 24">
     <path fill="$color" d="M5,20H19V18H5M19,9H15V3H9V9H5L12,16L19,9Z" />
 </svg>""";
-}
-
-extension HexColor on Color {
-  static Color fromHex(String hexString) {
-    final buffer = StringBuffer();
-    if (hexString.length == 6 || hexString.length == 7) buffer.write('ff');
-    buffer.write(hexString.replaceFirst('#', ''));
-    return Color(int.parse(buffer.toString(), radix: 16));
-  }
-
-  /// Prefixes a hash sign if [leadingHashSign] is set to `true` (default is `true`).
-  String toHex({bool leadingHashSign = true}) => '${leadingHashSign ? '#' : ''}'
-      '${red.toRadixString(16)}'
-      '${green.toRadixString(16)}'
-      '${blue.toRadixString(16)}';
 }

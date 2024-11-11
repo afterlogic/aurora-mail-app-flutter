@@ -1,6 +1,7 @@
 //@dart=2.9
 import 'dart:convert';
 
+import 'package:aurora_logger/aurora_logger.dart';
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/database/account_identity/account_identity_table.dart';
 import 'package:aurora_mail/database/accounts/accounts_table.dart';
@@ -26,10 +27,13 @@ class AuthApi {
           .replaceFirst("{domain}", domain)
           .replaceFirst("{email}", email);
 
+      logger.log('autoDiscoverHostname request: ${url}');
       final res = await http.get(Uri.parse(url));
       final resBody = json.decode(res.body);
+      logger.log('autoDiscoverHostname response: ${resBody}');
       return resBody["url"] as String;
     } catch (err) {
+      logger.log('autoDiscoverHostname error: ${err}');
       return null;
     }
   }

@@ -1,5 +1,6 @@
 //@dart=2.9
 import 'package:aurora_mail/generated/l10n.dart';
+import 'package:aurora_mail/modules/mail/models/compose_actions.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
@@ -12,8 +13,9 @@ enum ComposeAppBarAction {
 
 class ComposeAppBar extends StatefulWidget implements PreferredSizeWidget {
   final Function(ComposeAppBarAction action) onAppBarActionSelected;
+  final ComposeAction action;
 
-  const ComposeAppBar(this.onAppBarActionSelected);
+  const ComposeAppBar(this.onAppBarActionSelected, this.action);
 
   @override
   _ComposeAppBarState createState() => _ComposeAppBarState();
@@ -35,23 +37,40 @@ class _ComposeAppBarState extends BState<ComposeAppBar> {
             widget.onAppBarActionSelected(ComposeAppBarAction.cancel),
       ),
       actions: <Widget>[
-        IconButton(
-          icon: Icon(Icons.send),
-          onPressed: () =>
-              widget.onAppBarActionSelected(ComposeAppBarAction.send),
-        ),
-        PopupMenuButton<ComposeAppBarAction>(
-          onSelected: widget.onAppBarActionSelected,
-          itemBuilder: (BuildContext context) => [
-            PopupMenuItem(
-              value: ComposeAppBarAction.saveToDrafts,
-              child: ListTile(
-                leading: Icon(Icons.drafts, color: Theme.of(context).brightness == Brightness.light ? Colors.black : null,),
-                title: Text(S.of(context).btn_save),
-              ),
+        if (widget.action is OpenFromNotes)
+          TextButton(
+            child: Text(
+              S.of(context).btn_save,
+              style: TextStyle(
+                  color: Theme.of(context)?.appBarTheme?.iconTheme?.color),
             ),
-          ],
-        ),
+            onPressed: () =>
+                widget.onAppBarActionSelected(ComposeAppBarAction.send),
+          )
+        else
+          IconButton(
+            icon: Icon(Icons.send),
+            onPressed: () =>
+                widget.onAppBarActionSelected(ComposeAppBarAction.send),
+          ),
+        if (widget.action is! OpenFromNotes)
+          PopupMenuButton<ComposeAppBarAction>(
+            onSelected: widget.onAppBarActionSelected,
+            itemBuilder: (BuildContext context) => [
+              PopupMenuItem(
+                value: ComposeAppBarAction.saveToDrafts,
+                child: ListTile(
+                  leading: Icon(
+                    Icons.drafts,
+                    color: Theme.of(context).brightness == Brightness.light
+                        ? Colors.black
+                        : null,
+                  ),
+                  title: Text(S.of(context).btn_save),
+                ),
+              ),
+            ],
+          ),
       ],
     );
   }

@@ -40,6 +40,7 @@ class MailDao extends DatabaseAccessor<AppDatabase> with _$MailDaoMixin {
     final fields = <GeneratedColumn>{};
     fields.add(mail.uid);
     fields.add(mail.localId);
+    fields.add(mail.extendInJson);
     fields.add(mail.parentUid);
     fields.add(mail.flagsInJson);
     fields.add(mail.subject);

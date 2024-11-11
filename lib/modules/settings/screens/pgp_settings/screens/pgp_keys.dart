@@ -9,6 +9,9 @@ import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:crypto_model/crypto_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+  
+import 'package:theme/app_color.dart';
+import 'package:theme/app_theme.dart';
 
 class PgpKeysScreen extends StatefulWidget {
   final List<PgpKey> pgpKeys;
@@ -102,6 +105,7 @@ class _PgpKeysScreenState extends State<PgpKeysScreen> {
     final children = <Widget>[
       AMButton(
         color: Theme.of(context).primaryColor,
+        shadow: AppColor.enableShadow ? null : BoxShadow(),
         child: Text(S.of(context).btn_php_send_all,
             style: TextStyle(color: Colors.white)),
         onPressed: () {
@@ -119,6 +123,7 @@ class _PgpKeysScreenState extends State<PgpKeysScreen> {
       if (isAndroid9orLow)
         AMButton(
           color: Theme.of(context).primaryColor,
+          shadow: AppColor.enableShadow ? null : BoxShadow(),
           child: Text(
             S.of(context).btn_pgp_download_all,
             style: TextStyle(color: Colors.white),

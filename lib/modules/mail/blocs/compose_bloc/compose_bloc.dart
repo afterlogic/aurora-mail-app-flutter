@@ -37,6 +37,7 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
   Stream<ComposeState> mapEventToState(
     ComposeEvent event,
   ) async* {
+    if (event is SendNote) yield* _sendNote(event);
     if (event is SendMessage) yield* _sendMessage(event);
     if (event is SendMessages) yield* _sendMessages(event);
     if (event is SaveToDrafts) yield* _saveToDrafts(event);
@@ -53,6 +54,20 @@ class ComposeBloc extends Bloc<ComposeEvent, ComposeState> {
       yield ComposeError(formatError(event.error, null));
     if (event is EncryptBody) yield* _encryptBody(event);
     if (event is DecryptEvent) yield DecryptedState();
+  }
+
+  Stream<ComposeState> _sendNote(SendNote event) async* {
+    try {
+      yield MessageSending(messageToShow: "Saving note");
+
+      await _methods.sendNote(
+        subject: event.subject, folderFullName: event.notesFolder.fullName, text: event.text, uid: event.messageUid
+      );
+
+      yield MessageSent(messageToShow: "Note saved");
+    } catch (err, s) {
+      yield ComposeError(formatError(err, s));
+    }
   }
 
   Stream<ComposeState> _sendMessage(SendMessage event) async* {

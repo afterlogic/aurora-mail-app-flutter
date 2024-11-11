@@ -10,8 +10,6 @@ Future getStoragePermissions() async {
 
   final androidInfo = await deviceInfo.androidInfo;
 
-  print('SDK');
-  print(androidInfo.version.sdkInt);
   if (androidInfo.version.sdkInt >= 33) {
     PermissionStatus status = await Permission.photos.status;
 
@@ -27,9 +25,6 @@ Future getStoragePermissions() async {
 
     if (status != PermissionStatus.granted) {
       status = await Permission.storage.request();
-      // status = await (Platform.isAndroid
-      //     ? _requestStoragePermission()
-      //     : Permission.storage.request());
       if (status != PermissionStatus.granted) {
         throw "No permission to access the local storage. Check your device settings."; //S.no_permission_to_local_storage;
       }

@@ -19,6 +19,17 @@ class DownloadAttachment extends MessageViewEvent {
   List<Object> get props => [attachment];
 }
 
+class ChangeEventInviteStatus extends MessageViewEvent {
+  final String status;
+  final String calendarId;
+  final String fileName;
+  const ChangeEventInviteStatus(
+      {required this.status, required this.calendarId, required this.fileName});
+
+  @override
+  List<Object> get props => [status, calendarId, fileName];
+}
+
 class StartDownload extends MessageViewEvent {
   final String fileName;
 

@@ -1,7 +1,7 @@
 name: aurora_mail
 description: Mail client for Aurora Mail.
 
-version: "2.3.5+275"
+version: "2.4.0+296"
 
 environment:
   sdk: ">=2.17.0 <3.0.0"
@@ -14,6 +14,7 @@ dependencies:
     sdk: flutter
   firebase_core_platform_interface: ^4.5.3
 #  flutter_cupertino_localizations: 1.0.1
+  table_calendar: ^3.0.8
 
   # state management
   provider: ^5.0.0
@@ -93,7 +94,7 @@ dependencies:
   ios_notification_handler:
     path: core/ios_notification_handler
   keyboard_actions: ^4.2.0
-#  flutter_keyboard_visibility: 0.7.0
+  flutter_keyboard_visibility: ^6.0.0
 
   theme:
     path: build_res/afterlogic/theme
@@ -124,7 +125,12 @@ dependencies:
     git:
       url: https://github.com/afterlogic/aurora_logger_flutter
       ref: master
+  calendar_view:
+    git:
+      url: https://github.com/HtonicSava/flutter_calendar_view.git
+      ref: all_day_section
   collection: ^1.17.0
+  linkwell: ^2.0.6
 
 dev_dependencies:
   flutter_test:

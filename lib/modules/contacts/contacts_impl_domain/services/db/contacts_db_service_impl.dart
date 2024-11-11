@@ -174,4 +174,10 @@ class ContactsDbServiceImpl implements ContactsDbService {
         .getContactById(entityId)
         .then((item) => ContactMapper.fromDB(item));
   }
+
+  @override
+  Future<List<Contact>> getContactsByEmail(String mail) async {
+    return ContactMapper.listFromDB(
+        await _contactsDao.getContactsByEmail(mail));
+  }
 }

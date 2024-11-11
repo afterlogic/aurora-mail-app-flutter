@@ -1,7 +1,14 @@
 //@dart=2.9
 import 'package:aurora_mail/modules/auth/screens/backup_code_auth/backup_code_auth_widget.dart';
 import 'package:aurora_mail/modules/auth/screens/trust_device/trust_device_widget.dart';
-
+import 'package:aurora_mail/modules/calendar/ui/screens/attendees_page.dart';
+import 'package:aurora_mail/modules/calendar/ui/screens/calendar_page.dart';
+import 'package:aurora_mail/modules/calendar/ui/screens/calendar_route.dart';
+import 'package:aurora_mail/modules/calendar/ui/screens/event_creation_page.dart';
+import 'package:aurora_mail/modules/calendar/ui/screens/event_view_page.dart';
+import 'package:aurora_mail/modules/calendar/ui/screens/task_creation_page.dart';
+import 'package:aurora_mail/modules/calendar/ui/screens/task_view_page.dart';
+import 'package:aurora_mail/modules/calendar/ui/views/tasks_view.dart';
 import 'auth/screens/backup_code_auth/backup_code_auth_route.dart';
 import 'auth/screens/fido_auth/fido_auth.dart';
 import 'auth/screens/fido_auth/fido_auth_route.dart';
@@ -155,6 +162,52 @@ class RouteGenerator {
         );
 
         break;
+
+      // ================= CALENDAR =================
+
+      case CalendarRoute.name:
+        final args = settings.arguments as CalendarPageArg;
+        return FadeRoute(
+            settings: RouteSettings(name: settings.name),
+            builder: (_) => CalendarPage(
+                  args: args,
+                ));
+        break;
+
+      case EventViewPage.name:
+        return FadeRoute(
+            settings: RouteSettings(name: settings.name),
+            builder: (_) => EventViewPage());
+        break;
+
+      case TaskViewPage.name:
+        return FadeRoute(
+            settings: RouteSettings(name: settings.name),
+            builder: (_) => TaskViewPage());
+        break;
+
+      case EventCreationPage.name:
+        return FadeRoute(
+            settings: RouteSettings(name: settings.name),
+            builder: (_) => EventCreationPage());
+        break;
+      case TaskCreationPage.name:
+        return FadeRoute(
+            settings: RouteSettings(name: settings.name),
+            builder: (_) => TaskCreationPage());
+        break;
+
+      case AttendeesPage.name:
+        final args = settings.arguments as AttendeesRouteArg;
+        return FadeRoute(
+          settings: RouteSettings(name: settings.name),
+          builder: (_) => AttendeesPage(
+            initAttendees: args.initAttendees,
+            onChange: args.onChange,
+          ),
+        );
+        break;
+
       // ================= MAIL =================
 
       case MessagesListRoute.name:
@@ -285,9 +338,8 @@ class RouteGenerator {
 
       case GroupEditRoute.name:
         final args = settings.arguments as GroupEditScreenArgs;
-        return MaterialPageRoute(
+        return CupertinoPageRoute(
             settings: RouteSettings(name: settings.name),
-            fullscreenDialog: true,
             builder: (_) => BlocProvider<ContactsBloc>.value(
                 value: args.bloc, child: GroupEditAndroid(group: args.group)));
         break;

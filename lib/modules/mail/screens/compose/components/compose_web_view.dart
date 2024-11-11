@@ -20,7 +20,9 @@ class ComposeWebViewController {
 
   Future setMessage(String text, Message message, User user) async {
     if (showImage) {
-      text = text.replaceAll("data-x-src=", "src=").replaceAll("src=\"http:", "src=\"https:");
+      text = text
+          .replaceAll("data-x-src=", "src=")
+          .replaceAll("src=\"http:", "src=\"https:");
 
       final document = html.parse(text);
 
@@ -28,8 +30,10 @@ class ComposeWebViewController {
         nodes.forEach((c) {
           c.nodes.forEach((node) {
             if (node.attributes.containsKey("data-x-style-url") as bool) {
-              var backgroundImageUrl = node.attributes["data-x-style-url"] as String;
-              backgroundImageUrl = backgroundImageUrl.replaceAll("http://", "https://");
+              var backgroundImageUrl =
+                  node.attributes["data-x-style-url"] as String;
+              backgroundImageUrl =
+                  backgroundImageUrl.replaceAll("http://", "https://");
               node.attributes.remove("data-x-style-url");
 
               String style = node.attributes["style"] as String;
@@ -63,7 +67,8 @@ class ComposeWebViewController {
   Future setText(String text) async {
     _text = text;
     if (_webViewController != null) {
-      await _webViewController.runJavaScript("setBodyContent(${json.encode(_text)})");
+      await _webViewController
+          .runJavaScript("setBodyContent(${json.encode(_text)})");
     }
   }
 
@@ -71,7 +76,8 @@ class ComposeWebViewController {
     if (_webViewController == null) {
       return _text;
     } else {
-      final text = await _webViewController.runJavaScriptReturningResult("getBodyContent()");
+      final text = await _webViewController
+          .runJavaScriptReturningResult("getBodyContent()");
       try {
         final decoded = json.decode(text.toString()) as String;
         return decoded;
@@ -106,9 +112,16 @@ class ComposeWebViewController {
 class ComposeWebView extends StatefulWidget {
   final ComposeWebViewController textCtrl;
   final bool enable;
+  final bool removeForcedHeight;
   final Function init;
 
-  const ComposeWebView({Key key, this.textCtrl, this.enable, this.init}) : super(key: key);
+  const ComposeWebView(
+      {Key key,
+      this.textCtrl,
+      this.enable,
+      this.init,
+      this.removeForcedHeight = false})
+      : super(key: key);
 
   @override
   _ComposeWebViewState createState() => _ComposeWebViewState();
@@ -132,8 +145,7 @@ class _ComposeWebViewState extends State<ComposeWebView> {
             onPageFinished: (String url) => {init()},
             onWebResourceError: (WebResourceError error) {},
             onNavigationRequest: navigationDelegate),
-      )
-      ;
+      );
   }
 
   @override
@@ -147,17 +159,22 @@ class _ComposeWebViewState extends State<ComposeWebView> {
       context,
       "",
       true,
+      widget.removeForcedHeight
     );
 
     if (true) {
-      htmlData = htmlData.replaceAll("data-x-src=", "src=").replaceAll("src=\"http:", "src=\"https:");
+      htmlData = htmlData
+          .replaceAll("data-x-src=", "src=")
+          .replaceAll("src=\"http:", "src=\"https:");
       final document = html.parse(htmlData);
       void getAllChildren(nodes) {
         nodes.forEach((c) {
           c.nodes.forEach((node) {
             if (node.attributes.containsKey("data-x-style-url") as bool) {
-              var backgroundImageUrl = node.attributes["data-x-style-url"] as String;
-              backgroundImageUrl = backgroundImageUrl.replaceAll("http://", "https://");
+              var backgroundImageUrl =
+                  node.attributes["data-x-style-url"] as String;
+              backgroundImageUrl =
+                  backgroundImageUrl.replaceAll("http://", "https://");
               node.attributes.remove("data-x-style-url");
 
               String style = node.attributes["style"] as String;
@@ -187,7 +204,8 @@ class _ComposeWebViewState extends State<ComposeWebView> {
     widget.textCtrl.dispose();
   }
 
-  Future<NavigationDecision> navigationDelegate(NavigationRequest navigation) async {
+  Future<NavigationDecision> navigationDelegate(
+      NavigationRequest navigation) async {
     if (initUrl == navigation.url) {
       return NavigationDecision.navigate;
     }

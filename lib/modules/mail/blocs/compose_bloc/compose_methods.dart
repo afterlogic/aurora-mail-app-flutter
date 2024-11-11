@@ -38,6 +38,17 @@ class ComposeMethods {
     );
   }
 
+  Future<void> sendNote({
+    @required String folderFullName,
+    @required String subject,
+    @required String text,
+    String uid,
+
+  }) async {
+    return _mailApi.sendNote(
+        folderFullName: folderFullName, subject: subject, text: text, uid: uid);
+  }
+
   Future<void> sendMessage({
     @required String to,
     @required String cc,

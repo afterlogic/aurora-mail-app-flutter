@@ -3,8 +3,13 @@ import 'dart:async';
 
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_event.dart';
+import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/activity.dart';
+import 'package:aurora_mail/modules/calendar/ui/screens/calendar_page.dart';
+import 'package:aurora_mail/modules/calendar/ui/screens/calendar_route.dart';
+import 'package:aurora_mail/modules/calendar/ui/screens/event_view_page.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_android.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
+import 'package:aurora_mail/notification/push_notifications_manager.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
 import 'package:flutter/material.dart';
 
@@ -36,7 +41,19 @@ class RouteWrapState extends State<RouteWrap> {
     super.initState();
     RouteWrap.staticState = this;
     if (RouteWrap.notification != null) {
-      onMessage(RouteWrap.notification);
+      final type = RouteWrap.notification["Type"] as String;
+      switch (type) {
+        case 'event':
+        case 'task':
+          onCalendar(RouteWrap.notification);
+          break;
+        case 'email':
+          onMessage(RouteWrap.notification);
+          break;
+        default:
+          onMessage(RouteWrap.notification);
+          break;
+      }
       RouteWrap.notification = null;
     }
   }
@@ -71,6 +88,38 @@ class RouteWrapState extends State<RouteWrap> {
       final accountLocalId = json["account"] as int;
       return showMessage(userLocalId, messageLocalId, accountLocalId);
     }
+  }
+
+  onCalendar(Map<String, dynamic> json) async {
+    final email = json["To"] as String;
+    final completer = Completer();
+    final notificationData = NotificationData.fromJson(json);
+
+    if (widget.authBloc.currentAccount?.email != email) {
+      widget.authBloc.add(SelectUserByEmail(email, completer));
+      await completer.future;
+    }
+
+    ActivityType activityType;
+
+    switch (notificationData.type) {
+      case NotificationType.email:
+        throw Exception('Unsupported activity type');
+        break;
+      case NotificationType.event:
+        activityType = ActivityType.event;
+        break;
+      case NotificationType.task:
+        activityType = ActivityType.task;
+        break;
+    }
+
+    widget.navKey.currentState.pushNamedAndRemoveUntil(
+        CalendarRoute.name, (_) => false,
+        arguments: CalendarPageArg(
+            selectedCalendarId: notificationData.calendarId,
+            selectedActivityId: notificationData.activityId,
+            type: activityType));
   }
 
   Future<bool> discardNotSavedChanges() async {

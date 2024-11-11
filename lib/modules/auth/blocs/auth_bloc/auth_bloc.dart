@@ -2,17 +2,24 @@
 import 'dart:async';
 
 import 'package:alarm_service/alarm_service.dart';
+import 'package:aurora_logger/aurora_logger.dart';
+import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/models/alias_or_account.dart';
 import 'package:aurora_mail/models/alias_or_identity.dart';
+import 'package:aurora_mail/models/app_data.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_methods.dart';
 import 'package:aurora_mail/modules/auth/repository/auth_api.dart';
+import 'package:aurora_mail/modules/settings/screens/debug/default_api_interceptor.dart';
 import 'package:aurora_mail/utils/api_utils.dart';
 import 'package:aurora_mail/utils/error_to_show.dart';
+import 'package:aurora_mail/utils/user_app_data_singleton.dart';
 import 'package:bloc/bloc.dart';
+import 'package:webmail_api_client/webmail_api_client.dart';
 
+import '../../../settings/repository/settings_network.dart';
 import './bloc.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
@@ -47,6 +54,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   Stream<AuthState> _initUserAndAccounts(InitUserAndAccounts event) async* {
+    logger.log('user and accounts initialising');
     final result = await _methods.getUserAndAccountsFromDB();
     users = await _methods.users;
 
@@ -55,6 +63,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         accounts = result.accounts;
         currentUser = result.user;
         currentAccount = result.account;
+        final notRelatedUsers =
+            users.where((e) => e.localId != currentUser.localId).toList();
+        if (!BuildProperty.multiUserEnable && notRelatedUsers.isNotEmpty) {
+          logger.log(
+              'because multiUserEnable flag is false and not related users detected, deleting these users');
+          await _methods.deleteUnusedUsersWithData(notRelatedUsers);
+          users = [currentUser];
+        }
+        await _updateAppData(currentUser);
 
         final identities =
             await _methods.getAccountIdentities(currentUser, currentAccount);
@@ -197,10 +214,20 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   Stream<AuthState> _userLogInFinish(UserLogInFinish event) async* {
+    logger.log('user log in process is finishing');
     try {
       final user = await _methods.setUser(event.user);
+      await _updateAppData(user);
       users = await _methods.users;
       currentUser = user;
+      final notRelatedUsers =
+          users.where((e) => e.localId != currentUser.localId).toList();
+      if (!BuildProperty.multiUserEnable && notRelatedUsers.isNotEmpty) {
+        logger.log(
+            'because multiUserEnable flag is false and not related users detected, deleting these users');
+        await _methods.deleteUnusedUsersWithData(notRelatedUsers);
+        users = [currentUser];
+      }
       final accounts = await _methods.getAccounts(user);
       _methods.setFbToken(users);
       if (accounts.isNotEmpty) {
@@ -224,8 +251,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         );
         event.completer?.complete();
       } else {
-        event.completer
-            ?.completeError(ErrorToShow.message(S.current.error_login_no_accounts));
+        event.completer?.completeError(
+            ErrorToShow.message(S.current.error_login_no_accounts));
         yield AuthError(ErrorToShow.message(S.current.error_login_no_accounts));
       }
     } catch (e, s) {
@@ -274,6 +301,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       }
       await _methods.logout(currentUser.localId, event.user);
       users = await _methods.users;
+      if (!BuildProperty.multiUserEnable) {
+        await _methods.deleteUnusedUsersWithData(
+            users.where((e) => e.localId != currentUser.localId).toList());
+        users = [];
+      }
       if (users.isNotEmpty) {
         if (currentUser.localId != event.user.localId) {
           add(InitUserAndAccounts());
@@ -291,8 +323,18 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   Stream<AuthState> _invalidateCurrentUserToken(
       InvalidateCurrentUserToken event) async* {
+    logger.log('user token invalidating');
+
     if (currentUser != null) {
       currentUser = await _methods.invalidateToken(currentUser.localId);
+      final notRelatedUsers =
+          users.where((e) => e.localId != currentUser.localId).toList();
+      if (!BuildProperty.multiUserEnable && notRelatedUsers.isNotEmpty) {
+        logger.log(
+            'because multiUserEnable flag is false and not related users detected, deleting these users');
+        users = await _methods.users;
+        await _methods.deleteUnusedUsersWithData(notRelatedUsers);
+      }
       add(InitUserAndAccounts());
     } else {
       print("cannot invalidate token, no currentUser selected");
@@ -318,14 +360,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     );
   }
 
-  Future<List<AliasOrAccount>> getAliasesAndAccounts() async{
+  Future<List<AliasOrAccount>> getAliasesAndAccounts() async {
     final items = <AliasOrAccount>[];
 
     final aliases = await getAliases(true);
     for (final value in aliases) {
       items.add(AliasOrAccount(null, value));
     }
-    for (final value in accounts){
+    for (final value in accounts) {
       items.add(AliasOrAccount(value, null));
     }
 
@@ -344,5 +386,27 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       items.add(AliasOrIdentity(value, null));
     }
     return items;
+  }
+
+  Future<void> _updateAppData(User user) async {
+    UserAppDataSingleton userAppData = UserAppDataSingleton();
+
+    final apiModule = WebMailApi(
+        moduleName: WebMailModules.core,
+        hostname: user.hostname,
+        token: user.token,
+        interceptor: DefaultApiInterceptor.get());
+
+    final settingsNetwork = SettingsNetwork(settingsModule: apiModule);
+    AppData settings;
+
+    try {
+      settings = await settingsNetwork.getSettings();
+      logger.log("appData: $settings");
+      userAppData.setAppData = settings;
+    } catch (e, s) {
+      logger.log("getting appData error: $e");
+      rethrow;
+    }
   }
 }

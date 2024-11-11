@@ -40,6 +40,31 @@ class MailApi {
 
   int get _accountId => account.accountId;
 
+  Future<bool> changeEventInviteStatus(
+      {@required String status,
+      @required String calendarId,
+      @required String fileName}) async {
+    final module = WebMailApi(
+      moduleName: WebMailModules.calendarMeetingsPlugin,
+      hostname: _mailModule.hostname,
+      token: _mailModule.token,
+      interceptor: _mailModule.interceptor,
+    );
+
+    final parameters = json.encode({
+      "AppointmentAction": status,
+      "CalendarId": calendarId,
+      "File": fileName,
+      "Attendee": account.email
+    });
+
+    final body = new WebMailApiBody(
+        method: "SetAppointmentAction", parameters: parameters);
+
+    final res = await module.post(body);
+    return true;
+  }
+
   Future<String> getMessagesInfo(
       {@required String folderName,
       String search,
@@ -83,6 +108,33 @@ class MailApi {
     } else {
       throw WebMailApiError(res);
     }
+  }
+
+
+  Future<void> sendNote({
+    @required String folderFullName,
+    @required String subject,
+    @required String text,
+    String uid,
+  }) async {
+    final parameters = {
+      "AccountID": _accountId,
+      "FolderFullName": folderFullName,
+      "Subject": subject,
+      // with html tags
+      "Text": text,
+    };
+
+    if(uid != null){
+      parameters.addAll({"MessageUid":uid});
+    }
+
+    final body = new WebMailApiBody(
+        method: "SaveNote",
+        module: WebMailModules.notes,
+        parameters: json.encode(parameters));
+
+    await _mailModule.post(body);
   }
 
   Future<void> sendMessage({
@@ -253,9 +305,8 @@ class MailApi {
         }
       }
     }, onError: (err) {
-      if (
-          err?.status == UploadTaskStatus.canceled ||
-              err?.code == "flutter_upload_cancelled") {
+      if (err?.status == UploadTaskStatus.canceled ||
+          err?.code == "flutter_upload_cancelled") {
         return;
       }
       onError(WebMailApiError(err));

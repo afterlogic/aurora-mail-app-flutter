@@ -56,5 +56,7 @@ abstract class ContactsDbService {
 
   Future<Contact> getContactByEmail(String mail);
 
+  Future<List<Contact>> getContactsByEmail(String mail);
+
   Future<Contact> getContactById(int entityId);
 }

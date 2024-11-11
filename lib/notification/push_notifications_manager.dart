@@ -10,6 +10,7 @@ import 'package:aurora_mail/database/users/users_dao.dart';
 import 'package:aurora_mail/main.dart';
 import 'package:aurora_mail/modules/auth/repository/auth_local_storage.dart';
 import 'package:aurora_mail/modules/auth/repository/device_id_storage.dart';
+import 'package:aurora_mail/modules/calendar/ui/screens/calendar_route.dart';
 import 'package:aurora_mail/modules/dialog_wrap.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/widgets.dart';
@@ -22,7 +23,15 @@ class PushNotificationsManager {
   PushNotificationsManager._();
 
   String deviceId;
+  String token;
+  NotificationData _initNotification = null;
   static final PushNotificationsManager instance = PushNotificationsManager._();
+
+  NotificationData get initNotification {
+    final res = _initNotification;
+    _initNotification = null;
+    return res;
+  }
 
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   bool _initialized = false;
@@ -35,6 +44,12 @@ class PushNotificationsManager {
         }
         deviceId = await DeviceIdStorage.getDeviceId();
         await _firebaseMessaging.requestPermission();
+
+        ///terminated click handler
+        final initMessage = await _firebaseMessaging.getInitialMessage();
+        if (initMessage != null) {
+          _initNotification = NotificationData.fromMap(initMessage);
+        }
         FirebaseMessaging.onBackgroundMessage(voidMessageHandler);
         FirebaseMessaging.onMessage.listen(messageHandler);
         FirebaseMessaging.onMessageOpenedApp.listen((v) => onResume(v));
@@ -44,7 +59,7 @@ class PushNotificationsManager {
   }
 
   Future<String> getToken() async {
-    final token = await _firebaseMessaging.getToken();
+    token = await _firebaseMessaging.getToken();
     print(token);
     return token;
   }
@@ -63,12 +78,27 @@ class PushNotificationsManager {
 Future onResume(RemoteMessage message) async {
   final notification = NotificationData.fromMap(message);
   final payload = notification.toJson();
+
+  ///app minimized
   if (RouteWrap.staticState != null) {
-    RouteWrap.staticState.onMessage(payload);
+    switch (notification.type) {
+      case NotificationType.email:
+        RouteWrap.staticState.onMessage(payload);
+        break;
+      case NotificationType.event:
+        RouteWrap.staticState.onCalendar(payload);
+        break;
+      case NotificationType.task:
+        RouteWrap.staticState.onCalendar(payload);
+        break;
+    }
   } else {
+    ///terminate state
     RouteWrap.notification = payload;
   }
 }
+
+///foreground
 
 Future<bool> mapMessageHandler(Map<String, dynamic> message) async {
   return messageHandler(RemoteMessage.fromMap(message));
@@ -127,25 +157,66 @@ Future<bool> messageHandler(RemoteMessage message) async {
 
 final notificationFromPush = true;
 
+enum NotificationType { email, event, task }
+
+extension NotificationTypeMapper on NotificationType {
+  static NotificationType fromString(String s) {
+    switch (s) {
+      case 'event':
+        return NotificationType.event;
+      case 'task':
+        return NotificationType.task;
+      case 'email':
+      default:
+        return NotificationType.email;
+    }
+  }
+
+  String toStringCode() {
+    switch (this) {
+      case NotificationType.event:
+        return 'event';
+      case NotificationType.task:
+        return 'task';
+      case NotificationType.email:
+        return 'email';
+      default:
+        throw Exception('Unknown NotificationType');
+    }
+  }
+}
+
 class NotificationData {
+  final NotificationType type;
   final String subject;
   final String to;
   final String from;
   final String messageID;
   final String folder;
+  final String calendarId;
+  final String activityId;
 
-  NotificationData(
-      this.subject, this.to, this.from, this.messageID, this.folder);
+  NotificationData(this.subject, this.to, this.from, this.messageID,
+      this.folder, this.type, this.calendarId, this.activityId);
 
   static NotificationData fromMap(RemoteMessage message) {
     final notification = message.data;
+    return fromJson(notification);
+  }
 
+  static NotificationData fromJson(Map<String, dynamic> json) {
+    final typeString = json["Type"] as String;
     return NotificationData(
-      notification["Subject"] as String,
-      notification["To"] as String,
-      notification["From"] as String,
-      notification["MessageId"] as String,
-      notification["Folder"] as String,
+      json["Subject"] as String,
+      json["To"] as String,
+      json["From"] as String,
+      json["MessageId"] as String,
+      json["Folder"] as String,
+      typeString == null
+          ? NotificationType.email
+          : NotificationTypeMapper.fromString(typeString),
+      json["CalendarId"] as String,
+      json["EventUid"] as String,
     );
   }
 
@@ -155,5 +226,8 @@ class NotificationData {
         "From": from,
         "MessageId": messageID,
         "Folder": folder,
+        "Type": type == null ? null : type.toStringCode(),
+        "CalendarId": calendarId,
+        "EventUid": activityId
       };
 }

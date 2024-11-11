@@ -233,6 +233,7 @@ import 'dart:math';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 
 typedef FutureOr<List<T>> SuggestionsCallback<T>(String pattern);
 typedef Widget ItemBuilder<T>(BuildContext context, T itemData);
@@ -738,9 +739,8 @@ class ComposeTypeAheadFieldState<T> extends BState<ComposeTypeAheadField<T>>
   ScrollPosition _scrollPosition;
 
   // Keyboard detection
-  // KeyboardVisibilityNotification _keyboardVisibility =
-  //     new KeyboardVisibilityNotification();
-  // int _keyboardVisibilityId;
+  final keyboardVisibilityController = KeyboardVisibilityController();
+  StreamSubscription<bool> keyboardSubscription;
 
   @override
   void didChangeMetrics() {
@@ -753,7 +753,7 @@ class ComposeTypeAheadFieldState<T> extends BState<ComposeTypeAheadField<T>>
     this._suggestionsBox.close();
     this._suggestionsBox.widgetMounted = false;
     WidgetsBinding.instance.removeObserver(this);
-    // _keyboardVisibility.removeListener(_keyboardVisibilityId);
+    keyboardSubscription?.cancel();
     _effectiveFocusNode.removeListener(_focusNodeListener);
     _focusNode?.dispose();
     _resizeOnScrollTimer?.cancel();
@@ -779,13 +779,12 @@ class ComposeTypeAheadFieldState<T> extends BState<ComposeTypeAheadField<T>>
     widget.suggestionsBoxController?._suggestionsBox = this._suggestionsBox;
 
     // hide suggestions box on keyboard closed
-    // this._keyboardVisibilityId = _keyboardVisibility.addNewListener(
-    //   onChange: (bool visible) {
-    //     if (widget.hideSuggestionsOnKeyboardHide && !visible) {
-    //       _effectiveFocusNode.unfocus();
-    //     }
-    //   },
-    // );
+    keyboardSubscription =
+        keyboardVisibilityController.onChange.listen((bool visible) {
+      if (widget.hideSuggestionsOnKeyboardHide && !visible) {
+        _effectiveFocusNode.unfocus();
+      }
+    });
 
     this._focusNodeListener = () {
       if (_effectiveFocusNode.hasFocus) {

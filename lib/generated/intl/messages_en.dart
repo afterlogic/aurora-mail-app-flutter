@@ -157,6 +157,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "btn_verify_pin": MessageLookupByLibrary.simpleMessage("Verify"),
         "button_pgp_verify_sign":
             MessageLookupByLibrary.simpleMessage("Verify"),
+        "calendar": MessageLookupByLibrary.simpleMessage("Calendar"),
         "clear_cache_during_logout":
             MessageLookupByLibrary.simpleMessage("Delete cached data and keys"),
         "compose_body_placeholder":
@@ -560,7 +561,7 @@ class MessageLookup extends MessageLookupByLibrary {
                 "Password coppied to clipboard"),
         "hint_self_destructing_sent_password_using_different_channel":
             MessageLookupByLibrary.simpleMessage(
-                "The password must be sent using a different channel.\n  Store the password somewhere. You will not be able to recover it otherwise."),
+                "The password must be sent using a different channel.\nStore the password somewhere. You will not be able to recover it otherwise."),
         "hint_self_destructing_supports_plain_text_only":
             MessageLookupByLibrary.simpleMessage(
                 "The self-descructing secure emails support plain text only. All the formatting will be removed. Also, attachments cannot be encrypted and will be removed from the message."),
@@ -763,6 +764,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "no_permission_to_local_storage": MessageLookupByLibrary.simpleMessage(
             "No permission to access the local storage. Check your device settings."),
         "remove": MessageLookupByLibrary.simpleMessage("Remove"),
+        "save_changes_question":
+            MessageLookupByLibrary.simpleMessage("Save changes?"),
         "self_destructing_life_time_day":
             MessageLookupByLibrary.simpleMessage("24 hours"),
         "self_destructing_life_time_days_3":
@@ -816,6 +819,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("monthly"),
         "settings_sync_frequency_never":
             MessageLookupByLibrary.simpleMessage("never"),
+        "settings_sync_frequency_weekly":
+            MessageLookupByLibrary.simpleMessage("weekly"),
+        "settings_sync_frequency_yearly":
+            MessageLookupByLibrary.simpleMessage("yearly"),
         "settings_sync_period":
             MessageLookupByLibrary.simpleMessage("Sync period"),
         "settings_sync_period_all_time":

@@ -7,6 +7,9 @@ import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/mail/mail_table.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
+import 'package:aurora_mail/modules/calendar/blocs/calendars/calendars_bloc.dart';
+import 'package:aurora_mail/modules/calendar/ui/dialogs/calendar_select_dialog.dart';
+import 'package:aurora_mail/modules/calendar/ui/models/calendar.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/contacts_bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
@@ -19,6 +22,7 @@ import 'package:aurora_mail/modules/settings/screens/pgp_settings/dialogs/import
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/date_formatting.dart';
 import 'package:aurora_mail/utils/error_to_show.dart';
+import 'package:aurora_mail/utils/extensions/bloc_provider_extensions.dart';
 import 'package:aurora_mail/utils/mail_utils.dart';
 import 'package:aurora_mail/utils/show_dialog.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
@@ -32,6 +36,43 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 import 'attachments_dialog.dart';
+
+class _Attendee {
+  const _Attendee({this.email, this.displayName});
+  final String email;
+  final String displayName;
+
+  factory _Attendee.fromJson(Map<String, dynamic> json) {
+    return _Attendee(
+        email: json["Email"] as String,
+        displayName: json["DisplayName"] as String);
+  }
+}
+
+// class _ExtendedForEvent{
+//   // Attendee: null
+//   // [{DisplayName: "vasil@afterlogic.com", Email: "vasil@afterlogic.com"}]
+//   final List<_Attendee> attendeeList;
+//   CalendarId: ""
+//   Description: "111"
+//   File: "ef3618d2c03cfd5c132d55de84e9c871.ics"
+//   Location: "222"
+//   Organizer: {DisplayName: "", Email: "test@afterlogic.com"}
+//   Sequence: 1
+//   Summary: "test"
+//   Type: "REQUEST"
+//   Uid: "0d39c75b-d6dd-42d3-ab32-595c08857b46"
+//   When: "Tue, Aug 20, 2024"
+// }
+
+class ExpandedEventWebViewActions {
+  static const DROPDOWN_CLICKED =
+      "ExpandedEventWebViewActions.DROPDOWN_CLICKED";
+  static const ACCEPT = "ExpandedEventWebViewActions.ACCEPT";
+  static const DECLINE = "ExpandedEventWebViewActions.DECLINE";
+  static const TENTATIVE = "ExpandedEventWebViewActions.TENTATIVE";
+  static const CHANNEL = "EXPANDED_EVENT_WEB_VIEW_JS_CHANNEL";
+}
 
 class MessageWebViewActions {
   static const ACTION = "action:";
@@ -67,22 +108,36 @@ class MessageWebView extends StatefulWidget {
 }
 
 class MessageWebViewState extends BState<MessageWebView> {
-  WebViewController _controller;
+  WebViewController _controller = WebViewController();
   String _htmlData;
   bool _pageLoaded = false;
   bool showImages = false;
   bool _isStarred;
   ThemeData theme;
   MailBloc _mailBloc;
+  CalendarsBloc _calendarsBloc;
+  List<ViewCalendar> _calendars;
+  ViewCalendar _selectedCalendar;
+  String _currentUserMail;
+  Map<String, dynamic> _eventFromExpandedMail;
 
   @override
   void initState() {
     super.initState();
+    _calendarsBloc = BlocProviderExtensions.tryOf<CalendarsBloc>(context);
+    _calendars = _calendarsBloc != null
+        ? _calendarsBloc.state.availableCalendars(_currentUserMail)
+        : null;
+    _selectedCalendar = (_calendars?.isEmpty ?? true) ? null : _calendars[0];
     onLoad();
     // On Android, hybrid composition (SurfaceAndroidWebView) is now the default (webview_flutter 3.0.0)
     // if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
+    _eventFromExpandedMail = MailUtils.getExtendFromMessageByObjectTypeName(
+        ['Object/Aurora\\Modules\\Calendar\\Classes\\Ics'], widget.message);
+    _currentUserMail =
+        BlocProvider.of<AuthBloc>(context).currentUser?.emailFromLogin ?? '';
     _isStarred = widget.message.flagsInJson.contains("\\flagged");
-    _controller = WebViewController()
+    _controller
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setNavigationDelegate(
         NavigationDelegate(
@@ -96,6 +151,32 @@ class MessageWebViewState extends BState<MessageWebView> {
             onWebResourceError: (WebResourceError error) {},
             onNavigationRequest: _onWebViewNavigateRequestIos),
       );
+    _controller.addJavaScriptChannel(ExpandedEventWebViewActions.CHANNEL,
+        onMessageReceived: (message) {
+      if(_selectedCalendar == null) return;
+      if (message.message.startsWith(ExpandedEventWebViewActions.ACCEPT)) {
+        print(message.message);
+        BlocProvider.of<MessageViewBloc>(context).add(ChangeEventInviteStatus(
+            status: 'ACCEPT',
+            calendarId: _selectedCalendar.id,
+            fileName: _eventFromExpandedMail['File'] as String));
+      } else if (message.message
+          .startsWith(ExpandedEventWebViewActions.DECLINE)) {
+        BlocProvider.of<MessageViewBloc>(context).add(ChangeEventInviteStatus(
+            status: 'DECLINE',
+            calendarId: _selectedCalendar.id,
+            fileName: _eventFromExpandedMail['File'] as String));
+      } else if (message.message
+          .startsWith(ExpandedEventWebViewActions.TENTATIVE)) {
+        BlocProvider.of<MessageViewBloc>(context).add(ChangeEventInviteStatus(
+            status: 'TENTATIVE',
+            calendarId: _selectedCalendar.id,
+            fileName: _eventFromExpandedMail['File'] as String));
+      } else if (message.message
+          .startsWith(ExpandedEventWebViewActions.DROPDOWN_CLICKED)) {
+        _invokeSelectCalendarDialog();
+      }
+    });
     _controller.addJavaScriptChannel("WEB_VIEW_JS_CHANNEL",
         onMessageReceived: (message) {
       if (message.message
@@ -126,6 +207,18 @@ class MessageWebViewState extends BState<MessageWebView> {
       _getHtmlWithImages();
       setState(() {});
     }
+  }
+
+  void _invokeSelectCalendarDialog() {
+    CalendarSelectDialog.show(context,
+            initialValue: _selectedCalendar, options: _calendars)
+        .then((value) {
+      if (value != null) {
+        _selectedCalendar = value;
+        _controller.runJavaScript("setSelectedCalendar('${value.name}')");
+      }
+      ;
+    });
   }
 
   void _getHtmlWithImages() async {
@@ -221,6 +314,8 @@ class MessageWebViewState extends BState<MessageWebView> {
       to: _formatTo(message),
       date: date,
       body: html,
+      extendedEvent: _eventFromExpandedMail,
+      initCalendar: _selectedCalendar,
       attachments: widget.attachments.toList(),
       showLightEmail: false,
       isStarred: _isStarred,

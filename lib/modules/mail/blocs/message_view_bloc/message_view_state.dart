@@ -14,6 +14,11 @@ class InitialMessageViewState extends MessageViewState {
   List<Object> get props => [];
 }
 
+class SuccessChangedInviteStatus extends MessageViewState {
+  @override
+  List<Object> get props => [];
+}
+
 class DownloadStarted extends MessageViewState {
   final String fileName;
 

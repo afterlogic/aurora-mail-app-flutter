@@ -19,7 +19,10 @@ class MailBloc extends Bloc<MailEvent, MailState> {
   final updateMessageCounter = UpdateMessageCounter();
   static String selectedFolderGuid;
 
-  MailBloc({User user, Account account}) : super(FoldersEmpty()) {
+  MailBloc({
+    User user,
+    Account account,
+  }) : super(FoldersEmpty()) {
     assert(user != null);
     init(user, account);
     BackgroundHelper.addOnEndAlarmObserver(true, onEndAlarm);

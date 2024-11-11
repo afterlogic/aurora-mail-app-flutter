@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:aurora_mail/database/app_database.dart';
+import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 
 //enum ComposeType { none, fromDrafts, reply, replyAll, forward, emailToContacts }
@@ -12,6 +13,13 @@ class OpenFromDrafts implements ComposeAction {
   final Message message;
 
   const OpenFromDrafts(this.message, this.draftUid);
+}
+
+class OpenFromNotes implements ComposeAction {
+  final Message message;
+  final Folder notesFolder;
+
+  const OpenFromNotes(this.message, this.notesFolder);
 }
 
 class Forward implements ComposeAction {
