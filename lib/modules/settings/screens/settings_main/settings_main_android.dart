@@ -78,7 +78,7 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
           title: Text(S.of(context).settings_sync),
           onTap: () => navigator().setRoot(SyncSettingsRoute.name),
         ),
-        if (BuildProperty.pushNotification)
+        if (BuildProperty.enablePushNotification && BuildProperty.showPushNotificatonsSettings)
           ListTile(
             selected: current == NotificationsSettingsRoute.name,
             leading: AMCircleIcon(Icons.notifications,

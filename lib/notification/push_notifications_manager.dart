@@ -37,7 +37,7 @@ class PushNotificationsManager {
   bool _initialized = false;
 
   init() async {
-    if (BuildProperty.pushNotification) {
+    if (BuildProperty.enablePushNotification) {
       if (!_initialized) {
         if (Platform.isIOS) {
           IosNotificationHandler.onMessage(mapMessageHandler);

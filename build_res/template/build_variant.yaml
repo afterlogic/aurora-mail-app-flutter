@@ -33,7 +33,8 @@ enableDebugScreen: false
 notesModule: false
 multiAccountEnable: false
 multiUserEnable: false
-pushNotification: false
+enablePushNotification: false
+showPushNotificatonsSettings: true
 selfDestructingEmail: false
 useMainLogo: false
 supportAllowAccess: false

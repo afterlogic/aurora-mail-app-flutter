@@ -297,7 +297,7 @@ class AuthMethods {
   }
 
   Future setFbToken(List<User> users, [bool setNullToken = false]) async {
-    if (!BuildProperty.pushNotification) return;
+    if (!BuildProperty.enablePushNotification) return;
     try {
       final uid = await PushNotificationsManager.instance.deviceId;
       final fbToken = setNullToken
