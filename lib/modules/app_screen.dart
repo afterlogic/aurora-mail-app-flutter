@@ -55,6 +55,7 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
   final _settingsBloc = new SettingsBloc();
   StreamSubscription sub;
   final _navKey = GlobalKey<NavigatorState>();
+  final _scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
   NotificationData _notification;
 
   @override
@@ -206,7 +207,44 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
           if (state is UserSelected) RestartWidget.restartApp(context);
           if (state is InitializedUserAndAccounts) {
             if (state.user == null) {
-              _navigateToLogin();
+              /// SnackBar doesn't work in here because it disappear after some time
+              
+              // _scaffoldMessengerKey.currentState?.showSnackBar(SnackBar(
+              //   content: Text(
+              //     'Authentication error! Please login to continue.',
+              //     style: TextStyle(color: Colors.white),
+              //   ),
+              //   duration: Duration(seconds: 10),
+              //   backgroundColor: theme.colorScheme.error,
+              //   action: SnackBarAction(
+              //     label: 'Relogin',
+              //     onPressed: () {
+              //       _navigateToLogin();
+              //     },
+              //   ),
+              // ));
+
+              /// Display a banner about the authentication problem and a button to re-login
+              _scaffoldMessengerKey.currentState?.showMaterialBanner(
+                MaterialBanner(
+                  content: Text(
+                    'An authentication problem has occurred! Please re-login to continue.',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  backgroundColor: Theme.of(context).colorScheme.error,
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        _navigateToLogin();
+                      },
+                      child: Text(
+                        'Re-login',
+                        style: TextStyle(color: Colors.white)
+                      ),
+                    ),
+                  ],
+                ),
+              );
             }
           }
         },
@@ -293,6 +331,7 @@ class _AppState extends BState<App> with WidgetsBindingObserver {
                         child: MaterialApp(
                           debugShowCheckedModeBanner: false,
                           navigatorKey: _navKey,
+                          scaffoldMessengerKey: _scaffoldMessengerKey,
                           onGenerateTitle: (context) {
                             final is24 =
                                 MediaQuery.of(context).alwaysUse24HourFormat;
