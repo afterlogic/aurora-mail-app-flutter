@@ -23,6 +23,9 @@ class CalendarUseCaseImpl implements CalendarUseCase {
   CalendarUseCaseImpl({required this.repository, tz.Location? location})
       : _location = location;
 
+  /// The duration must be added to event selection interval to obtain events for "out of month" days
+  /// The same duration is added in events_bloc
+  Duration _extraIntervalDuration = Duration(days: 7);
   DateTime? _selectedStartEventsInterval;
   DateTime? _selectedEndEventsInterval;
   tz.Location? _location;
@@ -81,8 +84,10 @@ class CalendarUseCaseImpl implements CalendarUseCase {
   }
 
   @override
-  Future<void> getForPeriod(
-      {required DateTime start, required DateTime end}) async {
+  Future<void> getForPeriod({
+    required DateTime start,
+    required DateTime end,
+  }) async {
     _selectedEndEventsInterval = end;
     _selectedStartEventsInterval = start;
     await _getLocalEvents();
@@ -201,8 +206,8 @@ class CalendarUseCaseImpl implements CalendarUseCase {
   Future<void> _getLocalEvents() async {
     if (_selectedStartEventsInterval == null ||
         _selectedEndEventsInterval == null) {
-      _selectedStartEventsInterval = DateTime.now().firstDayOfMonth;
-      _selectedEndEventsInterval = DateTime.now().lastDayOfMonth;
+      _selectedStartEventsInterval = DateTime.now().firstDayOfMonth.subtract(_extraIntervalDuration);
+      _selectedEndEventsInterval = DateTime.now().lastDayOfMonth.add(_extraIntervalDuration);
     }
     final allEvents = await repository.getEventsForPeriod(
       start: _selectedStartEventsInterval!,

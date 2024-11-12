@@ -29,7 +29,8 @@ class EventsBloc extends Bloc<EventBlocEvent, EventsState> {
   //   super.onChange(change);
   // }
 
-  ///used for handling events from "out of month" days
+  /// The duration must be added to event selection interval to obtain events for "out of month" days
+  /// The same duration is added in calendar useCase implementation
   final extraDuration = Duration(days: 7);
 
   EventsBloc({required CalendarUseCase useCase, required int firstDayInWeek})
