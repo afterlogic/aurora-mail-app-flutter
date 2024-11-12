@@ -26,15 +26,15 @@ class _WeekViewState extends State<WeekView> {
   final List<String> weekTitles = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
   final CV.EventController<WeekViewVisible> _controller =
       CV.EventController<WeekViewVisible>();
-  late final EventsBloc _bloc;
+  late final EventsBloc _eventsBloc;
   late final StreamSubscription _subscription;
 
   @override
   void initState() {
     super.initState();
-    _bloc = BlocProvider.of<EventsBloc>(context);
-    _onStateChange(_bloc.state);
-    _subscription = _bloc.stream.listen(_onStateChange);
+    _eventsBloc = BlocProvider.of<EventsBloc>(context);
+    _onStateChange(_eventsBloc.state);
+    _subscription = _eventsBloc.stream.listen(_onStateChange);
   }
 
   @override
@@ -185,15 +185,14 @@ class _WeekViewState extends State<WeekView> {
           },
           controller: _controller,
           onPageChange: (date, pageIndex) =>
-              _bloc.add(SelectDate(date, isWeekMode: true)),
+              _eventsBloc.add(SelectDate(date, isWeekMode: true)),
           onEventTap:
               (List<CV.CalendarEventData<Object?>> events, DateTime date) {
             final event =
                 (events as List<CV.CalendarEventData<WeekViewVisible>>)
                     .firstOrNull;
             if (event == null || event.event is EmptyViewEvent) return;
-            BlocProvider.of<EventsBloc>(context)
-                .add(SelectEvent(event.event as ViewEvent));
+            _eventsBloc.add(SelectEvent(event.event as ViewEvent));
             Navigator.of(context).pushNamed(
               EventViewPage.name,
             );

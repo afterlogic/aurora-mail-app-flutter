@@ -111,10 +111,11 @@ class WebMailApi {
   }
 
   // getRawResponse in case AuthenticatedUserId is required, which is outside Result objects
-  Future post(WebMailApiBody body,
-      {bool useToken = true,
-      bool getRawResponse = false,
-      Map<String, String>? addedHeaders}) async {
+  Future post(WebMailApiBody body, {
+    bool useToken = true,
+    bool getRawResponse = false,
+    Map<String, String>? addedHeaders
+  }) async {
     Map<String, String> headers;
     final id = "MODULE: ${moduleName ?? body.module}\nMETHOD: ${body.method}";
     if (useToken == false || token == null) {
@@ -134,12 +135,7 @@ class WebMailApi {
         Uri.parse(apiUrl),
         headers: headers,
         body: body.toMap(moduleName),
-      )
-          // .timeout(
-          //   _connectionTimeout,
-          //   onTimeout: _onConnectionTimeout,
-          // )
-          ;
+      );
       final res = json.decode(rawResponse.body);
 
       if (res["Result"] != null && (res["Result"] != false || getRawResponse)) {
@@ -175,7 +171,6 @@ class WebMailApi {
       onRequest?.call("$id\nURL:$apiUrl\nPARAMETERS:${body.parameters}");
 
     final request = MultipartRequest("POST", Uri.parse(apiUrl));
-
 
     if(headers != null){
       request.headers.addAll(headers);

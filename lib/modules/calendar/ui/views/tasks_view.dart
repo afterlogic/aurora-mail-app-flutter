@@ -1,6 +1,6 @@
-import 'package:aurora_mail/modules/calendar/blocs/events/events_bloc.dart';
+// import 'package:aurora_mail/modules/calendar/blocs/events/events_bloc.dart';
 import 'package:aurora_mail/modules/calendar/blocs/tasks/tasks_bloc.dart';
-import 'package:aurora_mail/modules/calendar/calendar_domain/calendar_usecase.dart';
+// import 'package:aurora_mail/modules/calendar/calendar_domain/calendar_usecase.dart';
 import 'package:aurora_mail/modules/calendar/ui/dialogs/activity_filter_dialog.dart';
 import 'package:aurora_mail/modules/calendar/ui/models/task.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/task_widget.dart';
@@ -15,13 +15,13 @@ class TasksView extends StatefulWidget {
 }
 
 class _TasksViewState extends State<TasksView> {
-  late final TasksBloc _bloc;
+  late final TasksBloc _tasksBloc;
 
   @override
   void initState() {
     super.initState();
-    _bloc = BlocProvider.of<TasksBloc>(context);
-    _bloc.add(LoadTasks());
+    _tasksBloc = BlocProvider.of<TasksBloc>(context);
+    _tasksBloc.add(LoadTasks());
   }
 
   @override
@@ -39,7 +39,7 @@ class _TasksViewState extends State<TasksView> {
               ),
               const Spacer(),
               BlocBuilder<TasksBloc, TasksState>(
-                bloc: _bloc,
+                bloc: _tasksBloc,
                 builder: (context, state) {
                   return IconButton(
                     padding: EdgeInsets.zero,
@@ -50,7 +50,7 @@ class _TasksViewState extends State<TasksView> {
                               selectedFilter: state.filter)
                           .then((value) {
                         if (value == null) return;
-                        _bloc.add(UpdateFilter(value));
+                        _tasksBloc.add(UpdateFilter(value));
                       });
                     },
                   );
@@ -61,7 +61,7 @@ class _TasksViewState extends State<TasksView> {
         ),
         Expanded(
           child: BlocBuilder<TasksBloc, TasksState>(
-            bloc: _bloc,
+            bloc: _tasksBloc,
             builder: (context, state) {
               if (state.tasks == null) {
                 return const SizedBox.shrink();
