@@ -33,25 +33,15 @@ void showSnack({
   if (Theme.of(context) == null || scaffoldState == null) return;
   final theme = Theme.of(context);
 
-  final snack = theme.brightness == Brightness.light
-      ? SnackBar(
+  final snack = SnackBar(
           duration: duration,
           content: Text(
             message,
             style: TextStyle(
-                color: !isError ? theme.scaffoldBackgroundColor : Colors.white),
+              color: isError ? Colors.white : theme.scaffoldBackgroundColor
+            ),
           ),
-          backgroundColor: isError ? theme.errorColor : null,
-          action: action,
-        )
-      : SnackBar(
-          duration: duration,
-          content: Text(
-            message,
-            style: TextStyle(
-                color: !isError ? theme.scaffoldBackgroundColor : Colors.white),
-          ),
-          backgroundColor: isError ? theme.errorColor : theme.iconTheme.color,
+          backgroundColor: isError ? theme.colorScheme.error : theme.snackBarTheme.backgroundColor,
           action: action,
         );
 
