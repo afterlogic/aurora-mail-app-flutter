@@ -22,7 +22,8 @@ termsOfService: ""
 supportLanguage: "en,tr,ru"
 
 #App settings
-syncPeriod: "Period.allTime"
+syncPeriod: "Period.months6"
+mailMessagesChunkSize: 50
 
 #App features list
 backgroundSync: true

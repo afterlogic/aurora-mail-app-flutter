@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:aurora_logger/aurora_logger.dart';
-import 'package:aurora_mail/config.dart';
+// import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/folders/folders_dao.dart';
 import 'package:aurora_mail/database/folders/folders_table.dart';
@@ -21,6 +21,8 @@ import 'package:aurora_mail/modules/settings/models/sync_period.dart';
 import 'package:aurora_mail/modules/settings/screens/debug/default_api_interceptor.dart';
 import 'package:aurora_mail/utils/error_to_show.dart';
 import 'package:drift/drift.dart';
+
+import 'package:aurora_mail/build_property.dart';
 
 class MailMethods {
   final _foldersDao = new FoldersDao(DBInstances.appDB);
@@ -438,7 +440,7 @@ class MailMethods {
       return _setMessagesInfoToFolder();
     }
     final uids = messagesForUpdate
-        .getRange(0, min(MESSAGES_PER_CHUNK, messagesForUpdate.length))
+        .getRange(0, min(BuildProperty.mailMessagesChunkSize, messagesForUpdate.length))
         .toList();
 
     logger.log("${messagesForUpdate.length} messages in queue");
@@ -479,7 +481,7 @@ class MailMethods {
       _syncMessagesChunk(
         syncPeriod,
         messagesForUpdate
-            .sublist(min(MESSAGES_PER_CHUNK, messagesForUpdate.length)),
+            .sublist(min(BuildProperty.mailMessagesChunkSize, messagesForUpdate.length)),
         folderMessageCount,
         currentFolder,
       );

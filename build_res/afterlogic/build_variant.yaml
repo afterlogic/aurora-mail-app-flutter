@@ -21,6 +21,10 @@ privacyPolicy: "https://afterlogic.com/privacy-policy"
 termsOfService: ""
 supportLanguage: "en"
 
+#App settings
+syncPeriod: "Period.months6"
+mailMessagesChunkSize: 50
+
 #App features list
 backgroundSync: true
 cryptoEnable: true
