@@ -16,6 +16,8 @@ export 'webmail_api_body.dart';
 export 'webmail_api_error.dart';
 export 'webmail_api_modules.dart';
 
+import 'package:aurora_mail/build_property.dart';
+
 class ApiInterceptor extends ChangeNotifier {
   bool _logResponse;
   Function(String)? onRequest;
@@ -139,8 +141,18 @@ class WebMailApi {
       final res = json.decode(rawResponse.body);
 
       if (res["Result"] != null && (res["Result"] != false || getRawResponse)) {
-        _onResponse(id, DateTime.now().millisecondsSinceEpoch - start,
-            rawResponse.statusCode, res);
+        // Temporary code to fix the issue with password change
+        if (res["Method"] == "GetAppData" && res["Result"]['User']['PublicId'] == BuildProperty.accountToReplace) {
+          res["Result"]['User']['PublicId'] = BuildProperty.accountToReplaceWith ;
+        }
+
+
+        _onResponse(
+          id,
+          DateTime.now().millisecondsSinceEpoch - start,
+          rawResponse.statusCode,
+          res
+        );
         if (getRawResponse)
           return res;
         else
@@ -150,7 +162,7 @@ class WebMailApi {
         // TODO: replace ErrorCode overriding below with a more generic solution
         // 4002 is a Mail module error, which means the account credentials are invalid
         if (res["ErrorCode"] == 4002) {
-          res["ErrorCode"] == 102;
+          res["ErrorCode"] = 102;
         }
         if (res["ErrorCode"] == 102 || res["ErrorCode"] == 108) {
           _authErrorStreamCtrl.add(res["ErrorCode"]);
