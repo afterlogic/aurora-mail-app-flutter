@@ -150,7 +150,7 @@ class WebMailApi {
         // TODO: replace ErrorCode overriding below with a more generic solution
         // 4002 is a Mail module error, which means the account credentials are invalid
         if (res["ErrorCode"] == 4002) {
-          res["ErrorCode"] == 102;
+          res["ErrorCode"] = 102;
         }
         if (res["ErrorCode"] == 102 || res["ErrorCode"] == 108) {
           _authErrorStreamCtrl.add(res["ErrorCode"]);
