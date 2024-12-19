@@ -44,10 +44,10 @@ class EventsState extends Equatable {
       final todayStart = selectedDate.withoutTime.toUtc();
       final todayLocal = selectedDate.withoutTime.toLocal();
 
-      /// final title = event.title;
+      // final title = event.title;
       final isAllDay = event.allDay == true;
       final eventStart = isAllDay
-          ? DateTime(event.endDate.year, event.startDate.month, event.startDate.day)
+          ? DateTime(event.startDate.year, event.startDate.month, event.startDate.day)
           : event.startDate.toUtc();
       final eventEnd = isAllDay
           ? DateTime(event.endDate.year, event.endDate.month, event.endDate.day)
