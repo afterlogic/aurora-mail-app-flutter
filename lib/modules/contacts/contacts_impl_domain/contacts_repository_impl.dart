@@ -139,7 +139,6 @@ class ContactsRepositoryImpl implements ContactsRepository {
 
     for(final entry in contactUuidsFromNewGroups.entries) {
       final contacts = await _network.getContactsByUids(
-        storageId: entry.key,
         uuids: entry.value.map((e) => e.toString()).toList(),
         userLocalId: _userLocalId
       );
@@ -261,9 +260,8 @@ class ContactsRepositoryImpl implements ContactsRepository {
   Future<void> addKeyToContacts(List<Contact> contacts) async {
     final uuids = await _network.addKeyToContacts(contacts);
     final newContacts = await _network.getContactsByUids(
-      userLocalId: _userLocalId,
-      storageId: StorageNames.personal,
       uuids: uuids,
+      userLocalId: _userLocalId,
     );
     await _db.updateContacts(newContacts);
   }
@@ -279,9 +277,8 @@ class ContactsRepositoryImpl implements ContactsRepository {
         pgpSignMessages: pgpSignMessages);
     if (!isUpdateSuccess) throw Exception('Error while changing key flags');
     final newContacts = await _network.getContactsByUids(
-      userLocalId: _userLocalId,
-      storageId: StorageNames.personal,
       uuids: [contact.uuid],
+      userLocalId: _userLocalId,
     );
     await _db.updateContacts(newContacts);
   }
@@ -497,7 +494,6 @@ class ContactsRepositoryImpl implements ContactsRepository {
           while (uuidsToFetch.isNotEmpty) {
             final chunk = getChunk(uuidsToFetch);
             final newContacts = await _network.getContactsByUids(
-              storageId: storageToSync.id,
               uuids: chunk,
               userLocalId: _userLocalId,
             );
@@ -514,7 +510,6 @@ class ContactsRepositoryImpl implements ContactsRepository {
           while (uuidsToUpdate.isNotEmpty) {
             final chunk = getChunk(uuidsToUpdate);
             final updatedContacts = await _network.getContactsByUids(
-              storageId: storageToSync.id,
               uuids: chunk,
               userLocalId: _userLocalId,
             );

@@ -22,7 +22,6 @@ abstract class ContactsNetworkService {
 
   /// Get contacts by their uuids
   Future<List<Contact>> getContactsByUids({
-    String storageId,
     List<String> uuids,
     int userLocalId,
   });

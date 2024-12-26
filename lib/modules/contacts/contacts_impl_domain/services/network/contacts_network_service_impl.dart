@@ -31,7 +31,6 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
 
   @override
   Future<List<Contact>> getContactsByUids({
-    String storageId,
     List<String> uuids,
     int userLocalId,
   }) async {
@@ -40,7 +39,6 @@ class ContactsNetworkServiceImpl implements ContactsNetworkService {
     }
 
     final params = {
-      "Storage": storageId,
       "Uids": uuids,
     };
 
