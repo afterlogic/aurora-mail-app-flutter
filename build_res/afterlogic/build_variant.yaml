@@ -34,8 +34,8 @@ enableDebugScreen: true
 notesModule: true
 multiAccountEnable: true
 multiUserEnable: false
-enablePushNotification: true
-showPushNotificatonsSettings: true
+enablePushNotification: false
+showPushNotificatonsSettings: false
 selfDestructingEmail: false
 useMainLogo: false
 supportAllowAccess: true
