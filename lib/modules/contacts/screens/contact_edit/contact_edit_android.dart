@@ -410,6 +410,12 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
                             keyboardType: TextInputType.emailAddress),
                         ContactInput(S.of(context).contacts_view_company,
                             _businessCompany),
+                        ContactInput(S.of(context).contacts_view_department,
+                            _businessDepartment),
+                        ContactInput(S.of(context).contacts_view_job_title,
+                            _businessJobTitle),
+                        ContactInput(S.of(context).contacts_view_office,
+                            _businessOffice),
                         ContactInput(
                             S.of(context).contacts_view_personal_address,
                             _businessAddress),
@@ -421,12 +427,6 @@ class _ContactEditAndroidState extends BState<ContactEditAndroid>
                             S.of(context).contacts_view_zip, _businessZip),
                         ContactInput(S.of(context).contacts_view_country,
                             _businessCountry),
-                        ContactInput(S.of(context).contacts_view_job_title,
-                            _businessJobTitle),
-                        ContactInput(S.of(context).contacts_view_department,
-                            _businessDepartment),
-                        ContactInput(S.of(context).contacts_view_office,
-                            _businessOffice),
                         ContactInput(
                             S.of(context).contacts_view_web_page, _businessWeb),
                         ContactInput(

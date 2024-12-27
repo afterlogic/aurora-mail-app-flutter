@@ -336,6 +336,26 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
           action: InfoAction.email,
           cb: () => _emailToContacts(c.businessEmail),
         ),
+      _buildInfoItem(
+        icon: MdiIcons.officeBuildingOutline,
+        label: S.of(context).contacts_view_company,
+        v: c.businessCompany,
+      ),
+      _buildInfoItem(
+        icon: MdiIcons.officeBuildingOutline,
+        label: S.of(context).contacts_view_department,
+        v: c.businessDepartment,
+      ),
+      _buildInfoItem(
+        icon: MdiIcons.officeBuildingOutline,
+        label: S.of(context).contacts_view_job_title,
+        v: c.businessJobTitle,
+      ),
+      _buildInfoItem(
+        icon: MdiIcons.officeBuildingOutline,
+        label: S.of(context).contacts_view_office,
+        v: c.businessOffice,
+      ),
       if (_contactInfo.viewAddress != c.businessAddress)
         _buildInfoItem(
           icon: MdiIcons.mapMarkerOutline,
