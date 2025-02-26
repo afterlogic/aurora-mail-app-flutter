@@ -23,16 +23,18 @@ class ContactsDiffCalculator {
         .where((i) =>
             oldContacts.firstWhere(
                 (j) => j.uuidPlusStorage == i.uuidPlusStorage,
-                orElse: () => null) ==
-            null)
+                orElse: () => null
+            ) == null
+        )
         .toList();
 
     final deletedContacts = oldContacts
         .where((i) =>
             newContacts.firstWhere(
                 (j) => j.uuidPlusStorage == i.uuidPlusStorage,
-                orElse: () => null) ==
-            null)
+                orElse: () => null
+            ) == null
+        )
         .map((c) => c.uuid)
         .toList();
 
@@ -42,7 +44,8 @@ class ContactsDiffCalculator {
           (oldContact) =>
               oldContact.uuidPlusStorage == newContact.uuidPlusStorage &&
               oldContact.eTag != newContact.eTag,
-          orElse: () => null);
+          orElse: () => null
+      );
       if (changedContact != null) {
         final updatedContact = newContact.copyWith(
           hasBody: changedContact.hasBody,
@@ -53,7 +56,7 @@ class ContactsDiffCalculator {
     });
 
     logger.log("""
-Contacts diff calcultaion finished:
+Contacts diff calculation finished:
   added: ${addedContacts.length}
   removed: ${deletedContacts.length}
   updated: ${updatedContacts.length}
@@ -119,7 +122,7 @@ Contacts diff calcultaion finished:
         deletedStorages.isNotEmpty ||
         updatedStorages.isNotEmpty) {
       logger.log("""
-Storages diff calcultaion finished:
+Storages diff calculation finished:
   added: ${addedStorages.length}
   removed: ${deletedStorages.length}
   updated: ${updatedStorages.length}
