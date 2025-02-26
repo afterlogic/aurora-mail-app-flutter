@@ -62,10 +62,14 @@ class Contact {
   final bool autoEncrypt;
 
   int get ageScore {
-    final tomorrow = DateTime.now().add(Duration(days: 1));
-    final modified = DateTime.parse(dateModified);
-    final difference = tomorrow.difference(modified).inDays;
-    return (frequency / (difference / 30)).ceil();
+    if (DateTime.tryParse(dateModified) != null) {
+      final modified = DateTime.parse(dateModified);
+      final tomorrow = DateTime.now().add(Duration(days: 1));
+      final difference = tomorrow.difference(modified).inDays;
+      return (frequency / (difference / 30)).ceil();
+    } else {
+      return frequency;
+    }
   }
 
   const Contact.empty({

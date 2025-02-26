@@ -104,10 +104,11 @@ class ComposeEmailsState extends BState<ComposeEmails> {
 
       final bloc = BlocProvider.of<ContactsBloc>(context);
       final contacts = await bloc.getTypeAheadContacts(pattern);
-
+      
+      //filtering out contacts without email
       contacts.removeWhere((i) => i.viewEmail.isEmpty);
-      contacts.removeWhere(
-          (i) => widget.emails.contains(MailUtils.getFriendlyName(i)));
+      //TODO: figure out what this filter does
+      contacts.removeWhere((i) => widget.emails.contains(MailUtils.getFriendlyName(i)));
       return contacts;
     } catch (e, s) {
       print(s);
