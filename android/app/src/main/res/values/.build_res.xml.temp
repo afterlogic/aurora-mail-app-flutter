@@ -2,5 +2,6 @@
 <resources>
     <string name="app_name">{{appName}}</string>
     <color name="splashGradientTop">{{splashGradientTop}}</color>
+    <color name="splashGradientCenter">{{splashGradientCenter}}</color>
     <color name="splashGradientBottom">{{splashGradientBottom}}</color>
 </resources>
