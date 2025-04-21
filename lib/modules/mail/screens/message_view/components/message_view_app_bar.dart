@@ -34,7 +34,10 @@ class MailViewAppBarMock extends StatelessWidget
   Widget build(BuildContext context) {
     return PreferredSize(
       preferredSize: preferredSize,
-      child: AMAppBar(),
+      child: AMAppBar(
+        backgroundColor: Color(0xFFF4F1FD),
+        textStyle:TextStyle(color: Color(0xFF2D2D2D), fontSize: 18, fontWeight: FontWeight.w600),
+      ),
     );
   }
 }
@@ -59,6 +62,9 @@ class MailViewAppBar extends StatelessWidget implements PreferredSizeWidget {
             final folderType = state is FolderTypeState ? state.type : null;
             final theme = Theme.of(context);
             return AMAppBar(
+              backgroundColor: Color(0xFFF4F1FD),
+              textStyle:TextStyle(color: Color(0xFF2D2D2D), fontSize: 18, fontWeight: FontWeight.w600),
+              shadow: BoxShadow(color: Colors.transparent),
               actions: folderType == null
                   ? []
                   : [

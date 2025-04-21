@@ -15,11 +15,14 @@ class LoginGradient extends StatelessWidget {
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          stops: [0, 0.5, 1],
+          stops: [0, 0.2, 0.4, 0.6, 0.8, 1],
           colors: [
-            _fromHex(isDark ? BuildProperty.splashGradientTopDark : BuildProperty.splashGradientTop),
-            _fromHex(isDark ? BuildProperty.splashGradientCenterDark : BuildProperty.splashGradientCenter),
-            _fromHex(isDark ? BuildProperty.splashGradientBottomDark : BuildProperty.splashGradientBottom),
+            _fromHex(isDark ? BuildProperty.splashGradientTopDark : BuildProperty.splashGradient1),
+            _fromHex(isDark ? BuildProperty.splashGradientTopDark : BuildProperty.splashGradient2),
+            _fromHex(isDark ? BuildProperty.splashGradientTopDark : BuildProperty.splashGradient3),
+            _fromHex(isDark ? BuildProperty.splashGradientTopDark : BuildProperty.splashGradient4),
+            _fromHex(isDark ? BuildProperty.splashGradientCenterDark : BuildProperty.splashGradient5),
+            _fromHex(isDark ? BuildProperty.splashGradientBottomDark : BuildProperty.splashGradient6),
           ],
         ),
       ),

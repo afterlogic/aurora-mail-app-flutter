@@ -180,6 +180,9 @@ class _EventCreationPageState extends State<EventCreationPage> {
       key: _scaffoldKey,
       appBar: AMAppBar(
         title: Text(_selectedEvent == null ? 'Create Event' : 'Edit Event'),
+        backgroundColor: Color(0xFFF4F1FD),
+        textStyle:TextStyle(color: Color(0xFF2D2D2D), fontSize: 18, fontWeight: FontWeight.w600),
+        shadow: BoxShadow(color: Colors.transparent),
         actions: [
           TextButton(
               onPressed: () {

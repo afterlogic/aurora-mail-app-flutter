@@ -54,9 +54,15 @@ class MailBottomAppBar extends StatelessWidget {
     final isTablet = LayoutConfig.of(context).isTablet;
     final iconSize = 28.0;
     final isCalendarExist = BlocProviderExtensions.tryOf<CalendarsBloc>(context) != null;
-    Widget row = Row(
+    Widget row = Container(
+      color: Color(0xFFF4F1FD),
+      // padding: EdgeInsets.all(16),
+      padding: EdgeInsets.symmetric(horizontal:0, vertical: 6),
+      child:
+    Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: <Widget>[
+        
         IconButton(
           icon: Icon(
             MdiIcons.email,
@@ -104,7 +110,7 @@ class MailBottomAppBar extends StatelessWidget {
           onPressed: () => _openSettings(context),
         ),
       ],
-    );
+    ));
     if (isTablet) {
       row = Row(
         children: [

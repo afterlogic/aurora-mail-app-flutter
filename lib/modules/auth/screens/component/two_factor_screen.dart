@@ -60,6 +60,9 @@ class _SelectTwoFactorWidgetState extends BState<TwoFactorScene> {
       appBar: widget.isDialog
           ? AMAppBar(
               title: Text(S.of(context).settings_accounts_add),
+              backgroundColor: Color(0xFFF4F1FD),
+              textStyle:TextStyle(color: Color(0xFF2D2D2D), fontSize: 18, fontWeight: FontWeight.w600),
+              shadow: BoxShadow(color: Colors.transparent),
             )
           : null,
       body: _gradientWrap(

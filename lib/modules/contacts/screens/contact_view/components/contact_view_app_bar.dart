@@ -114,6 +114,9 @@ class ContactViewAppBar extends StatelessWidget implements PreferredSizeWidget {
           name,
           style: TextStyle(fontWeight: FontWeight.w700),
         ),
+        backgroundColor: Color(0xFFF4F1FD),
+        textStyle:TextStyle(color: Color(0xFF2D2D2D), fontSize: 18, fontWeight: FontWeight.w600),
+        shadow: BoxShadow(color: Colors.transparent),
         actions: actions,
       );
     } else {

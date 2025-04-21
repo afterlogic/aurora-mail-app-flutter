@@ -67,7 +67,12 @@ class _AboutAndroidState extends BState<AboutAndroid> {
     return Scaffold(
       appBar: isTablet
           ? null
-          : AMAppBar(title: Text(S.of(context).settings_about)),
+          : AMAppBar(
+            title: Text(S.of(context).settings_about),
+            backgroundColor: Color(0xFFF4F1FD),
+            textStyle:TextStyle(color: Color(0xFF2D2D2D), fontSize: 18, fontWeight: FontWeight.w600),
+            shadow: BoxShadow(color: Colors.transparent),
+          ),
       body: loading
           ? Center(child: CircularProgressIndicator())
           : Column(

@@ -145,6 +145,8 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
       body = Scaffold(
         appBar: AMAppBar(
           title: Text(S.of(context).settings),
+          backgroundColor: Color(0xFFF4F1FD),
+        textStyle:TextStyle(color: Color(0xFF2D2D2D), fontSize: 18, fontWeight: FontWeight.w600),
         ),
         body: Row(
           children: [
@@ -191,6 +193,9 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
           ? null
           : AMAppBar(
               title: Text(S.of(context).settings),
+              backgroundColor: Color(0xFFF4F1FD),
+              textStyle:TextStyle(color: Color(0xFF2D2D2D), fontSize: 18, fontWeight: FontWeight.w600),
+              shadow: BoxShadow(color: Colors.transparent),
             ),
       body: body,
       bottomNavigationBar:

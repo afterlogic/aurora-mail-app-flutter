@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">{{appName}}</string>
-    <color name="splashGradientTop">{{splashGradientTop}}</color>
+    <!-- <color name="splashGradientTop">{{splashGradientTop}}</color>
     <color name="splashGradientCenter">{{splashGradientCenter}}</color>
-    <color name="splashGradientBottom">{{splashGradientBottom}}</color>
+    <color name="splashGradientBottom">{{splashGradientBottom}}</color> -->
+    <color name="splashGradient1">{{splashGradient1}}</color>
+    <color name="splashGradient2">{{splashGradient2}}</color>
+    <color name="splashGradient3">{{splashGradient3}}</color>
+    <color name="splashGradient4">{{splashGradient4}}</color>
+    <color name="splashGradient5">{{splashGradient5}}</color>
+    <color name="splashGradient6">{{splashGradient6}}</color>
 </resources>

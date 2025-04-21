@@ -70,6 +70,9 @@ class _PgpKeyScreenState extends State<PgpKeyScreen> {
                     ? S.of(context).label_pgp_private_key
                     : S.of(context).label_pgp_public_key,
               ),
+              backgroundColor: Color(0xFFF4F1FD),
+              textStyle:TextStyle(color: Color(0xFF2D2D2D), fontSize: 18, fontWeight: FontWeight.w600),
+              shadow: BoxShadow(color: Colors.transparent),
             ),
       body: Flex(
         crossAxisAlignment: CrossAxisAlignment.start,

@@ -127,6 +127,9 @@ class _CalendarPageState extends State<CalendarPage>
       drawer: CalendarDrawer(),
       appBar: AMAppBar(
         title: Text(S.of(context).calendar),
+        backgroundColor: Color(0xFFF4F1FD),
+        textStyle:TextStyle(color: Color(0xFF2D2D2D), fontSize: 18, fontWeight: FontWeight.w600),
+        shadow: BoxShadow(color: Colors.transparent),
       ),
       body: Stack(
         children: [

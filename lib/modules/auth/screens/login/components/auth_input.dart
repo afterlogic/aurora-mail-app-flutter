@@ -51,13 +51,26 @@ class _AuthInputState extends BState<AuthInput> {
       validator: widget.validator,
       obscureText: widget.isPassword && _obscureText,
       decoration: InputDecoration(
+        filled: true, // Включаем заливку
+        fillColor: Colors.white.withOpacity(0.5), 
+        // enabledBorder: UnderlineInputBorder(
+        //     borderSide:
+        //         BorderSide(color: theme.disabledColor.withOpacity(0.1))),
+        // focusedBorder: UnderlineInputBorder(
+        //     borderSide: BorderSide(color: theme.primaryColor)),
+        contentPadding: EdgeInsets.symmetric(
+          horizontal: 14,  // 12px по горизонтали
+          vertical: 10,    // 10px по вертикали
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.white.withOpacity(0.3)),
+          borderRadius: BorderRadius.circular(10.0)),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.white),
+          borderRadius: BorderRadius.circular(10.0)),
+
         // floatingLabelBehavior: BuildProperty.hasFloatingPlaceholder,
         floatingLabelBehavior: FloatingLabelBehavior.never,
-        enabledBorder: UnderlineInputBorder(
-            borderSide:
-                BorderSide(color: theme.disabledColor.withOpacity(0.1))),
-        focusedBorder: UnderlineInputBorder(
-            borderSide: BorderSide(color: theme.primaryColor)),
         // hintText: BuildProperty.hasFloatingPlaceholder ? null : widget.label,
         // labelText: BuildProperty.hasFloatingPlaceholder ? widget.label : null,
         hintText: false ? null : widget.label,

@@ -328,7 +328,9 @@ class _LoginAndroidState extends BState<LoginAndroid> {
                       width: double.infinity,
                       child: _debugRouteToTwoFactor(
                         AMButton(
-                          color: Theme.of(context).primaryColor,
+                          // color: Theme.of(context).primaryColor,
+                          color: Color(0xFF8C19FF),
+                          radius: BorderRadius.circular(10.0),
                           shadow: AppColor.enableShadow ? null : BoxShadow(),
                           child: Text(
                               widget.isDialog

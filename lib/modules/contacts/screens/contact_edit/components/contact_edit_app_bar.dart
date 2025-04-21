@@ -18,6 +18,9 @@ class ContactEditAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AMAppBar(
       title: Text(isEdit ? S.of(context).contacts_edit : S.of(context).contacts_add),
+      backgroundColor: Color(0xFFF4F1FD),
+      textStyle:TextStyle(color: Color(0xFF2D2D2D), fontSize: 18, fontWeight: FontWeight.w600),
+      shadow: BoxShadow(color: Colors.transparent),
       actions: <Widget>[
         Builder(
           builder: (context) => TextButton(

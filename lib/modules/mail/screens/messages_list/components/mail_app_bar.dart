@@ -162,6 +162,11 @@ class MailAppBarState extends BState<MailAppBar> {
     }
     return AMAppBar(
       key: Key("default_mail_app_bar"),
+      // backgroundColor: Color(0xFFE5D6F6),
+      // backgroundColor: Color(0xFFC989EB),
+      backgroundColor: Color(0xFFF4F1FD),
+      textStyle:TextStyle(color: Color(0xFF2D2D2D), fontSize: 18, fontWeight: FontWeight.w600),
+      shadow: BoxShadow(color: Colors.transparent),
       title: BlocBuilder<MailBloc, MailState>(
         bloc: _mailBloc,
         buildWhen: (_, state) =>

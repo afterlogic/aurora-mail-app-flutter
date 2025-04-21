@@ -86,7 +86,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: bd5e2d264b18e195a7817e20fa0c8e1664634ead
+      resolved-ref: "79d7cc72f9cff15b04c49132bb0f6f05672a88aa"
       url: "https://github.com/afterlogic/aurora_ui_kit_flutter.git"
     source: git
     version: "0.0.5"
@@ -1395,7 +1395,7 @@ packages:
   theme:
     dependency: "direct main"
     description:
-      path: "build_res/afterlogic/theme"
+      path: "build_res/unlyme/theme"
       relative: true
     source: path
     version: "0.0.1"

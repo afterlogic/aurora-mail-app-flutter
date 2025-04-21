@@ -42,6 +42,9 @@ class _SyncSettingsAndroidState extends BState<SyncSettingsAndroid> {
           ? null
           : AMAppBar(
               title: Text(S.of(context).settings_sync),
+              backgroundColor: Color(0xFFF4F1FD),
+              textStyle:TextStyle(color: Color(0xFF2D2D2D), fontSize: 18, fontWeight: FontWeight.w600),
+              shadow: BoxShadow(color: Colors.transparent),
             ),
       body: BlocBuilder<SettingsBloc, SettingsState>(
         bloc: BlocProvider.of<SettingsBloc>(context),
