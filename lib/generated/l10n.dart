@@ -3493,10 +3493,10 @@ class S {
     );
   }
 
-  /// `The password must be sent using a different channel.\n  Store the password somewhere. You will not be able to recover it otherwise.`
+  /// `The password must be sent using a different channel.\nStore the password somewhere. You will not be able to recover it otherwise.`
   String get hint_self_destructing_sent_password_using_different_channel {
     return Intl.message(
-      'The password must be sent using a different channel.\n  Store the password somewhere. You will not be able to recover it otherwise.',
+      'The password must be sent using a different channel.\nStore the password somewhere. You will not be able to recover it otherwise.',
       name: 'hint_self_destructing_sent_password_using_different_channel',
       desc: '',
       args: [],
