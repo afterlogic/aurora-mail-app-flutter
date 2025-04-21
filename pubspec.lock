@@ -714,10 +714,9 @@ packages:
   flutter_uploader:
     dependency: "direct main"
     description:
-      name: flutter_uploader
-      sha256: "0a43333376c93575e04eeafa12881249f5d42794e25aa7f5ab64b8ceb235a0b7"
-      url: "https://pub.dev"
-    source: hosted
+      path: "ios/_PackageOverrides/flutter_uploader-3.0.0-beta.4"
+      relative: true
+    source: path
     version: "3.0.0-beta.4"
   flutter_web_plugins:
     dependency: transitive

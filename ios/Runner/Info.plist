@@ -68,6 +68,8 @@
 	<string>Upload photos and videos</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>Used statically by permission_handler library for Flutter, unused in the app</string>
+	<key>NSPrivacyPrivacyManifestFile</key>
+	<string>PrivacyInfo.xcprivacy</string>
 	<key>ShareGroup</key>
 	<string>${SHARED_GROUP_ID}</string>
 	<key>UIBackgroundModes</key>

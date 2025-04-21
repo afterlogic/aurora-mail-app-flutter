@@ -1,5 +1,5 @@
 PODS:
-  - Alamofire (5.2.2)
+  - Alamofire (5.9.1)
   - alarm_service (0.0.1):
     - Flutter
   - connectivity (0.0.1):
@@ -114,7 +114,7 @@ PODS:
   - flutter_secure_storage (3.3.1):
     - Flutter
   - flutter_uploader (1.2.0):
-    - Alamofire (= 5.2.2)
+    - Alamofire (= 5.9.1)
     - Flutter
   - fluttertoast (0.0.2):
     - Flutter
@@ -335,61 +335,61 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/webview_flutter_wkwebview/ios"
 
 SPEC CHECKSUMS:
-  Alamofire: 814429acc853c6c54ff123fc3d2ef66803823ce0
+  Alamofire: f36a35757af4587d8e4f4bfa223ad10be2422b8c
   alarm_service: 7d51197a36d70731596573cc452427e5893ac80d
   connectivity: c4130b2985d4ef6fd26f9702e886bd5260681467
   crypto_stream: 2a2fdbfdec937d8779e8e6b14afb3a5e093a61e4
-  device_info_plus: e5c5da33f982a436e103237c0c85f9031142abed
+  device_info_plus: 12b1e8155df65f2111c62159390c405a582c32d5
   DKImagePickerController: b512c28220a2b8ac7419f21c491fc8534b7601ac
   DKPhotoGallery: fdfad5125a9fdda9cc57df834d49df790dbb4179
-  file_picker: ce3938a0df3cc1ef404671531facef740d03f920
+  file_picker: c2a125fd13fb7513e11db81dc0c7c11a1859af4a
   Firebase: 66043bd4579e5b73811f96829c694c7af8d67435
   firebase_core: 28e84c2a4fcf6a50ef83f47b145ded8c1fa331e4
   firebase_crashlytics: 36b8a72e23437dbb69bd97102661ce31b6721be5
   firebase_messaging: 91ec967913a5d144f951b3c3ac17a57796d38735
-  FirebaseCore: 2cec518b43635f96afe7ac3a9c513e47558abd2e
+  FirebaseCore: deeec52908bd7abd8bcaf8fdf441064ae74ebd96
   FirebaseCoreExtension: cb88851781a24e031d1b58e0bd01eb1f46b044b5
   FirebaseCoreInternal: 6a292e6f0bece1243a737e81556e56e5e19282e3
-  FirebaseCrashlytics: a83f26fb922a3fe181eb738fb4dcf0c92bba6455
+  FirebaseCrashlytics: 20714689d5f2b6b5753e9caf7c0a8dfaaea5d1ea
   FirebaseInstallations: 42d6ead4605d6eafb3b6683674e80e18eb6f2c35
-  FirebaseMessaging: 0c0ae1eb722ef0c07f7801e5ded8dccd1357d6d4
+  FirebaseMessaging: 4f0295f9673d2aa75d595c45b007557be760f07b
   FirebaseSessions: f06853e30f99fe42aa511014d7ee6c8c319f08a3
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   flutter_custom_tabs: 7a10a08686955cb748e5d26e0ae586d30689bf89
   flutter_downloader: b7301ae057deadd4b1650dc7c05375f10ff12c39
   flutter_keyboard_visibility: 0339d06371254c3eb25eeb90ba8d17dca8f9c069
-  flutter_local_notifications: 0c0b1ae97e741e1521e4c1629a459d04b9aec743
+  flutter_local_notifications: 28ac76cd6f0733b69e8a2df1855196ade5229c18
   flutter_secure_storage: 7953c38a04c3fdbb00571bcd87d8e3b5ceb9daec
-  flutter_uploader: 2b07c4d41cf1218f25e6d5b8bcfa2d913838e27c
-  fluttertoast: 31b00dabfa7fb7bacd9e7dbee580d7a2ff4bf265
+  flutter_uploader: e62e381e103c054f3afe299575f6677df6959872
+  fluttertoast: 12038f554e7b39e5f745ea432171139f752ac35e
   FMDB: aa44149f6fb634b1ac54f64f47064bb0d0c5a032
   GoogleDataTransport: 6c09b596d841063d76d4288cc2d2f42cc36e1e2a
   GoogleUtilities: d053d902a8edaa9904e1bd00c37535385b8ed152
   ios_notification_handler: bde313fe464522df59730e1233fbef90c1bd22b7
   libwebp: 1786c9f4ff8a279e4dac1e8f385004d5fc253009
-  nanopb: d4d75c12cd1316f4a64e3c6963f879ecd4b5e0d5
+  nanopb: 3d3fbdb023e737622d07f3212c9c8f7f3077d2f2
   notifications_utils: 2689b5cbda5be923ddc3868f5c86c4ab2dc98d5c
   OpenSSL-Universal: ff34003318d5e1163e9529b08470708e389ffcdd
-  package_info: 873975fc26034f0b863a300ad47e7f1ac6c7ec62
-  path_provider: abfe2b5c733d04e238b0d8691db0cfd63a27a93c
+  package_info: e0a56100964b80bb2f6fd83187c8f4383b53b297
+  path_provider: c29742de6922ae43ca5214df79b1cd9fd603695f
   permission_handler_apple: e76247795d700c14ea09e3a2d8855d41ee80a2e6
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   PromisesSwift: 9d77319bbe72ebf6d872900551f7eeba9bce2851
-  Reachability: 33e18b67625424e47b6cde6d202dce689ad7af96
+  Reachability: 7258f44f01b48f53349d2e03da8880538b222455
   receive_sharing: d6db01a09636ce060b2bd1a5ca8a41eea4437a3d
-  RxSwift: 915abbdfb62214aa89ccd0b194d44fb478019b27
+  RxSwift: b895f83ea3e7138ae08be6757e4bf20784f31636
   SDWebImage: 40b0b4053e36c660a764958bff99eed16610acbb
   share: 0b2c3e82132f5888bccca3351c504d0003b3b410
-  share_plus: 056a1e8ac890df3e33cb503afffaf1e9b4fbae68
+  share_plus: 8f8d15d6cd71150858948216e9fd492661b1cbc2
   shared_preferences_foundation: 5b919d13b803cadd15ed2dc053125c68730e5126
-  sqflite: 31f7eba61e3074736dff8807a9b41581e4f7f15a
+  sqflite: 541ddea8a999df332e4d22988a22a1c34abe32f2
   SwiftyGif: 706c60cf65fa2bc5ee0313beece843c8eb8194d4
-  Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
+  Toast: 6e6b398387759f74c77e472d83ee3110a4ff81c0
   uni_links: d97da20c7701486ba192624d99bffaaffcfc298a
-  url_launcher_ios: 68d46cc9766d0c41dbdc884310529557e3cd7a86
+  url_launcher_ios: 5560e3765b4dd2de78d4c8608dad6fc98f2d2652
   video_thumbnail: c4e2a3c539e247d4de13cd545344fd2d26ffafd1
   webview_flutter_wkwebview: 2e2d318f21a5e036e2c3f26171342e95908bd60a
 
-PODFILE CHECKSUM: 3373893adeeedc0b839d14c6a74cf3ea77db0474
+PODFILE CHECKSUM: 03e48188f84697c6f97cc81ec8724fb6a69fdafb
 
 COCOAPODS: 1.15.2
