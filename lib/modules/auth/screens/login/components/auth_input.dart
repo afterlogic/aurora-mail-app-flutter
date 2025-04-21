@@ -62,8 +62,12 @@ class _AuthInputState extends BState<AuthInput> {
           horizontal: 14,  // 12px по горизонтали
           vertical: 10,    // 10px по вертикали
         ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: BorderSide(color: Colors.white.withOpacity(0.1)),
+        ),
         enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.white.withOpacity(0.3)),
+          borderSide: BorderSide(color: Colors.white.withOpacity(0.7)),
           borderRadius: BorderRadius.circular(10.0)),
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(color: Colors.white),

@@ -14,7 +14,12 @@ class MailLogo extends StatelessWidget {
     if (BuildProperty.useMainLogo) {
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 32.0),
-        child: Image.asset(BuildProperty.main_logo),
+        child: Align(
+          alignment: Alignment.center,
+          widthFactor: 1.0,
+          heightFactor: 0.4,
+          child: Image.asset(BuildProperty.main_logo),
+        ),
       );
     } else {
       return Opacity(

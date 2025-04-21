@@ -26,6 +26,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:theme/app_color.dart';
 import 'package:theme/app_theme.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'components/mail_logo.dart';
 
@@ -267,7 +268,7 @@ class _LoginAndroidState extends BState<LoginAndroid> {
               maxWidth: LayoutConfig.formWidth,
             ),
             child: Container(
-              margin: EdgeInsets.symmetric(horizontal: 22.0),
+              margin: EdgeInsets.symmetric(horizontal: 10.0),
               child: Form(
                 key: LoginAndroid._authFormKey,
                 child: Column(
@@ -277,73 +278,163 @@ class _LoginAndroidState extends BState<LoginAndroid> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     if (!widget.isDialog) PresentationHeader(),
-                    Column(
-                      children: <Widget>[
-                        if (widget.isDialog &&
-                            LayoutConfig.of(context).isTablet)
-                          Padding(
-                            padding: const EdgeInsets.all(16),
+                    // Padding(
+                    //   padding: const EdgeInsets.only(left: 16),
+                    //   child: Text(
+                    //     "Unlyme encrypted e-mail\nYour data is safely stored in Switzerland",
+                    //     textAlign: TextAlign.left,
+                    //     style: theme.textTheme.titleMedium.copyWith(
+                    //     color: Colors.white,
+                    //       // fontSize: 24.0,
+                    //       // fontWeight: FontWeight.w600,
+                    //     ),
+                    //   ),
+                    // ),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.7),
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(
+                          color: Colors.white.withOpacity(0.3),
+                          width: 1.0,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            blurRadius: 4.0,
+                            offset: Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 20.0,
+                        vertical: 40.0,
+                      ),
+                      child: Column(
+                        children: <Widget>[
+                          Align(
+                            alignment: Alignment.centerLeft,
                             child: Text(
-                              widget.email == null
-                                  ? S.of(context).settings_accounts_add
-                                  : S.of(context).settings_accounts_relogin,
-                              style: theme.textTheme.headline6,
+                              'Sign in',
+                              textAlign: TextAlign.left,
+                              style: theme.textTheme.titleLarge.copyWith(
+                                fontSize: 24.0,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                           ),
-                        if (_showHostField)
-                          AuthInput(
-                            controller: hostCtrl,
-                            inputFormatters: [HostInputFormatter()],
-                            label: S.of(context).login_input_host,
-                            keyboardType: TextInputType.url,
-                            isEnabled: !loading,
+                          SizedBox(height: 10),
+                          Column(
+                            children: <Widget>[
+                              if (widget.isDialog && LayoutConfig.of(context).isTablet)
+                                Padding(
+                                  padding: const EdgeInsets.all(16),
+                                  child: Text(
+                                    widget.email == null
+                                        ? S.of(context).settings_accounts_add
+                                        : S.of(context).settings_accounts_relogin,
+                                    style: theme.textTheme.headline6,
+                                  ),
+                                ),
+                              if (_showHostField)
+                                AuthInput(
+                                  controller: hostCtrl,
+                                  inputFormatters: [HostInputFormatter()],
+                                  label: S.of(context).login_input_host,
+                                  keyboardType: TextInputType.url,
+                                  isEnabled: !loading,
+                                ),
+                              SizedBox(height: 10),
+                              AuthInput(
+                                enableSuggestions: false,
+                                autocorrect: false,
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.deny(" ")
+                                ],
+                                controller: emailCtrl,
+                                label: S.of(context).login_input_email,
+                                keyboardType: TextInputType.emailAddress,
+                                validator: (value) => validateInput(context, value,
+                                    [ValidationType.empty, ValidationType.email]),
+                                isEnabled: !loading,
+                              ),
+                              SizedBox(height: 10),
+                              AuthInput(
+                                controller: passwordCtrl,
+                                label: S.of(context).login_input_password,
+                                validator: (value) => validateInput(
+                                    context, value, [ValidationType.empty]),
+                                isPassword: true,
+                                isEnabled: !loading,
+                              ),
+                            ],
                           ),
-                        SizedBox(height: 10),
-                        AuthInput(
-                          enableSuggestions: false,
-                          autocorrect: false,
-                          inputFormatters: [
-                            FilteringTextInputFormatter.deny(" ")
-                          ],
-                          controller: emailCtrl,
-                          label: S.of(context).login_input_email,
-                          keyboardType: TextInputType.emailAddress,
-                          validator: (value) => validateInput(context, value,
-                              [ValidationType.empty, ValidationType.email]),
-                          isEnabled: !loading,
-                        ),
-                        SizedBox(height: 10),
-                        AuthInput(
-                          controller: passwordCtrl,
-                          label: S.of(context).login_input_password,
-                          validator: (value) => validateInput(
-                              context, value, [ValidationType.empty]),
-                          isPassword: true,
-                          isEnabled: !loading,
-                        ),
-                      ],
-                    ),
-                    if (widget.isDialog) SizedBox(height: 40.0),
-                    SizedBox(
-                      width: double.infinity,
-                      child: _debugRouteToTwoFactor(
-                        AMButton(
-                          // color: Theme.of(context).primaryColor,
-                          color: Color(0xFF8C19FF),
-                          radius: BorderRadius.circular(10.0),
-                          shadow: AppColor.enableShadow ? null : BoxShadow(),
-                          child: Text(
-                              widget.isDialog
-                                  ? S.of(context).btn_add_account
-                                  : S.of(context).btn_login,
-                              style: TextStyle(color: Colors.white)),
-                          isLoading: loading,
-                          onPressed: () => _login(context),
-                        ),
+                          if (widget.isDialog) SizedBox(height: 40.0),
+                          SizedBox(height: 20),
+                          SizedBox(
+                            width: double.infinity,
+                            child: _debugRouteToTwoFactor(
+                              AMButton(
+                                // color: Theme.of(context).primaryColor,
+                                color: Color(0xFF18CFF4),
+                                radius: BorderRadius.circular(10.0),
+                                shadow: AppColor.enableShadow ? null : BoxShadow(),
+                                child: Text(
+                                    widget.isDialog
+                                        ? S.of(context).btn_add_account
+                                        : 'Continue',//S.of(context).btn_login,
+                                    style: TextStyle(color: Colors.white)),
+                                isLoading: loading,
+                                onPressed: () => _login(context),
+                              ),
+                            ),
+                          ),
+                        ]
                       ),
                     ),
+
+                    // Column(
+                    //   children:  <Widget>[
+                    //     Row(
+                    //       mainAxisAlignment: MainAxisAlignment.center,
+                    //       children: <Widget>[
+                    //         Text(
+                    //           'Not account yet? ',
+                    //           style: TextStyle(
+                    //             color: Colors.white,
+                    //             fontSize: 18.0,
+                    //           ),
+                    //         ),
+                    //         GestureDetector(
+                    //           child: Text(
+                    //             'Register now',
+                    //             style: TextStyle(
+                    //               color: Color(0xFF9E1186),
+                    //               fontSize: 18.0,
+                    //             ),
+                    //           ),
+                    //           onTap: () => launch(BuildProperty.registrationLink),
+                    //         ),
+                    //       ],
+                    //     ),
+                    //     SizedBox(height: 10),
+                    //     SizedBox(
+                    //       width: double.infinity,
+                    //       child: Text(
+                    //         'Unlyme SA',
+                    //         textAlign: TextAlign.center,
+                    //         style: TextStyle(
+                    //           color: Colors.white,
+                    //           fontSize: 18.0,
+                    //         ),
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
+                    
                   ],
                 ),
+                
               ),
             ),
           ),
