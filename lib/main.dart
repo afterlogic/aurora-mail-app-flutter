@@ -3,7 +3,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:alarm_service/alarm_service.dart';
 import 'package:aurora_logger/aurora_logger.dart';
 import 'package:aurora_mail/bloc_logger.dart';
@@ -13,12 +12,13 @@ import 'package:aurora_mail/inject/app_inject.dart';
 import 'package:aurora_mail/modules/settings/screens/debug/default_api_interceptor.dart';
 import 'package:aurora_mail/notification/push_notifications_manager.dart';
 import 'package:aurora_mail/shared_ui/restart_widget.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+// import 'package:firebase_core/firebase_core.dart';
+// import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:timezone/data/latest_all.dart' as tz;
 
 import 'background/background_helper.dart';
 import 'background/background_sync.dart';
@@ -36,12 +36,12 @@ void main() async {
     defaultInterceptor: DefaultLoggerInterceptorAdapter(),
   ));
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  // await Firebase.initializeApp();
   AppInjector.create();
 
   if (!kDebugMode) {
-    FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
-    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
+    // FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
+    // FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterError;
   }
   // ignore: invalid_use_of_protected_member
   DBInstances.appDB.connection.executor.ensureOpen(DBInstances.appDB);
@@ -71,7 +71,7 @@ void main() async {
     ),
     (error, stack) {
       if (!kDebugMode) {
-        FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+        // FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
       }
     },
   );

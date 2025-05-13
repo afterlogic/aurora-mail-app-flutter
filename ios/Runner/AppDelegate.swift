@@ -6,10 +6,10 @@ import NotificationCenter
 import BackgroundTasks
 import UserNotifications
 import alarm_service
-import Firebase
+// import Firebase
 import receive_sharing
 import ios_notification_handler
-import FirebaseMessaging
+// import FirebaseMessaging
 
 @UIApplicationMain
 class AppDelegate: FlutterAppDelegate{

@@ -9,14 +9,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "47.0.0"
-  _flutterfire_internals:
-    dependency: transitive
-    description:
-      name: _flutterfire_internals
-      sha256: d84d98f1992976775f83083523a34c5d22fea191eec3abb2bd09537fb623c2e0
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.3.7"
   alarm_service:
     dependency: "direct main"
     description:
@@ -86,7 +78,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: bd5e2d264b18e195a7817e20fa0c8e1664634ead
+      resolved-ref: "79d7cc72f9cff15b04c49132bb0f6f05672a88aa"
       url: "https://github.com/afterlogic/aurora_ui_kit_flutter.git"
     source: git
     version: "0.0.5"
@@ -184,7 +176,7 @@ packages:
     description:
       path: "."
       ref: all_day_section
-      resolved-ref: "1fbf866edba1c66b7dea39f6f82bbdb5c228b285"
+      resolved-ref: ea2e234a4b35210623e9511265cbf7b00a9f3d76
       url: "https://github.com/HtonicSava/flutter_calendar_view.git"
     source: git
     version: "1.2.0"
@@ -364,10 +356,10 @@ packages:
     dependency: transitive
     description:
       name: dbus
-      sha256: "365c771ac3b0e58845f39ec6deebc76e3276aa9922b0cc60840712094d9047ac"
+      sha256: "79e0c23480ff85dc68de79e2cd6334add97e48f7f4865d17686dd6ea81a47e8c"
       url: "https://pub.dev"
     source: hosted
-    version: "0.7.10"
+    version: "0.7.11"
   device_info_plus:
     dependency: "direct main"
     description:
@@ -380,10 +372,10 @@ packages:
     dependency: transitive
     description:
       name: device_info_plus_platform_interface
-      sha256: d3b01d5868b50ae571cd1dc6e502fc94d956b665756180f7b16ead09e836fd64
+      sha256: "0b04e02b30791224b31969eb1b50d723498f402971bff3630bca2ba839bd1ed2"
       url: "https://pub.dev"
     source: hosted
-    version: "7.0.0"
+    version: "7.0.2"
   dm:
     dependency: "direct main"
     description:
@@ -428,10 +420,10 @@ packages:
     dependency: "direct main"
     description:
       name: equatable
-      sha256: c2b87cb7756efdf69892005af546c56c0b5037f54d2a88269b4f347a505e3ca2
+      sha256: "567c64b3cb4cf82397aac55f4f0cbd3ca20d77c6c03bedbc4ceaddc08904aef7"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.5"
+    version: "2.0.7"
   fake_async:
     dependency: transitive
     description:
@@ -472,70 +464,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.1"
-  firebase_core:
-    dependency: "direct main"
-    description:
-      name: firebase_core
-      sha256: "95580fa07c8ca3072a2bb1fecd792616a33f8683477d25b7d29d3a6a399e6ece"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.17.0"
-  firebase_core_platform_interface:
-    dependency: "direct main"
-    description:
-      name: firebase_core_platform_interface
-      sha256: b63e3be6c96ef5c33bdec1aab23c91eb00696f6452f0519401d640938c94cba2
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.8.0"
-  firebase_core_web:
-    dependency: transitive
-    description:
-      name: firebase_core_web
-      sha256: e8c408923cd3a25bd342c576a114f2126769cd1a57106a4edeaa67ea4a84e962
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.8.0"
-  firebase_crashlytics:
-    dependency: "direct main"
-    description:
-      name: firebase_crashlytics
-      sha256: "833cf891d10e5e819a2034048ff7e8882bcc0b51055c0e17f5fe3f3c3c177a9d"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.3.7"
-  firebase_crashlytics_platform_interface:
-    dependency: transitive
-    description:
-      name: firebase_crashlytics_platform_interface
-      sha256: dfdf1172f35fc0b0132bc5ec815aed52c07643ee56732e6807ca7dc12f7fce86
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.6.7"
-  firebase_messaging:
-    dependency: "direct main"
-    description:
-      name: firebase_messaging
-      sha256: "67f9d7c87457e71ad78ee81e332f232b8a24f7d5e338f8c958fa7d6e9e0e3636"
-      url: "https://pub.dev"
-    source: hosted
-    version: "14.6.9"
-  firebase_messaging_platform_interface:
-    dependency: transitive
-    description:
-      name: firebase_messaging_platform_interface
-      sha256: "8c7ced3201886ad7ba37f344c1468ccfc08abb3023922e0e5a016eaf38abb96c"
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.5.8"
-  firebase_messaging_web:
-    dependency: transitive
-    description:
-      name: firebase_messaging_web
-      sha256: b601322bdb44e2fefe4cc7b85ef0dbb7a2479d4a7653a51340821cf8d60696b5
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.5.8"
   fixnum:
     dependency: transitive
     description:
@@ -714,9 +642,10 @@ packages:
   flutter_uploader:
     dependency: "direct main"
     description:
-      path: "ios/_PackageOverrides/flutter_uploader-3.0.0-beta.4"
-      relative: true
-    source: path
+      name: flutter_uploader
+      sha256: "0a43333376c93575e04eeafa12881249f5d42794e25aa7f5ab64b8ceb235a0b7"
+      url: "https://pub.dev"
+    source: hosted
     version: "3.0.0-beta.4"
   flutter_web_plugins:
     dependency: transitive
@@ -1142,7 +1071,7 @@ packages:
     description:
       path: "."
       ref: flutter_3
-      resolved-ref: "31f31c3f0f21711eff61ce6a5d31992c6fde8ab1"
+      resolved-ref: "25e5c227af7dd3e781852857b3f052da01b63a7c"
       url: "https://github.com/afterlogic/receive_sharing.git"
     source: git
     version: "0.0.1"
