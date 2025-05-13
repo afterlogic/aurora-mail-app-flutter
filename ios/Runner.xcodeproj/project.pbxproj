@@ -14,7 +14,7 @@
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
 		BBEB8C162DA6E6040017642F /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = BBEB8C152DA6E6040017642F /* PrivacyInfo.xcprivacy */; };
-		C4359F1DC62F6BE76C3D1D6C /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 01211B390A46C917AB7BA329 /* Pods_Runner.framework */; };
+		BC9086645D50CDBC68D9921E /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 739236DDCB272B2A17C9AA28 /* Pods_Runner.framework */; };
 		DB54FA3F24E43F30005149D6 /* ExtensionRelease.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = DB54FA3E24E43F30005149D6 /* ExtensionRelease.xcconfig */; };
 		DB72CAFA2510C5EC00FA8A53 /* ExportOptions.plist in Resources */ = {isa = PBXBuildFile; fileRef = DB72CAF92510C5EC00FA8A53 /* ExportOptions.plist */; };
 		DB8E5D522440825400D721A7 /* ShareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB8E5D512440825400D721A7 /* ShareViewController.swift */; };
@@ -47,10 +47,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		01211B390A46C917AB7BA329 /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeneratedPluginRegistrant.h; sourceTree = "<group>"; };
 		1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratedPluginRegistrant.m; sourceTree = "<group>"; };
+		2B1BCFD54CC19D0D6517D368 /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
+		2FFABF05832C8F43FB067138 /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
 		3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AppFrameworkInfo.plist; path = Flutter/AppFrameworkInfo.plist; sourceTree = "<group>"; };
+		739236DDCB272B2A17C9AA28 /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
 		74858FAE1ED2DC5600515810 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Release.xcconfig; path = Flutter/Release.xcconfig; sourceTree = "<group>"; };
@@ -61,8 +63,8 @@
 		97C146FD1CF9000F007C117D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		97C147001CF9000F007C117D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		97C147021CF9000F007C117D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B3E206CF020CB5DDC04A6EDB /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
 		BBEB8C152DA6E6040017642F /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
-		C052C373E556A6091CCADD0E /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
 		DB09008123AA4C3F007A8A73 /* Runner.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Runner.entitlements; sourceTree = "<group>"; };
 		DB54FA3E24E43F30005149D6 /* ExtensionRelease.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = ExtensionRelease.xcconfig; sourceTree = "<group>"; };
 		DB54FA4024E43FFE005149D6 /* ExtensionDebug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = ExtensionDebug.xcconfig; sourceTree = "<group>"; };
@@ -80,8 +82,6 @@
 		DD09E58B23CF3CF500CDC2B2 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		DD3F65C023EADD930073C15B /* BuildVariable.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = BuildVariable.xcconfig; sourceTree = "<group>"; };
 		DD93E1422371A5C60032C96D /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
-		E4159B8B46FAB190BBCF1901 /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
-		ED92CDDFCA7F915CFE7AB8EA /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,7 +89,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C4359F1DC62F6BE76C3D1D6C /* Pods_Runner.framework in Frameworks */,
+				BC9086645D50CDBC68D9921E /* Pods_Runner.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -107,7 +107,7 @@
 			isa = PBXGroup;
 			children = (
 				DD93E1422371A5C60032C96D /* libsqlite3.tbd */,
-				01211B390A46C917AB7BA329 /* Pods_Runner.framework */,
+				739236DDCB272B2A17C9AA28 /* Pods_Runner.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -115,9 +115,9 @@
 		82C2BA55B5EEFFD0D1364E89 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				ED92CDDFCA7F915CFE7AB8EA /* Pods-Runner.debug.xcconfig */,
-				E4159B8B46FAB190BBCF1901 /* Pods-Runner.release.xcconfig */,
-				C052C373E556A6091CCADD0E /* Pods-Runner.profile.xcconfig */,
+				B3E206CF020CB5DDC04A6EDB /* Pods-Runner.debug.xcconfig */,
+				2B1BCFD54CC19D0D6517D368 /* Pods-Runner.release.xcconfig */,
+				2FFABF05832C8F43FB067138 /* Pods-Runner.profile.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -211,7 +211,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 97C147051CF9000F007C117D /* Build configuration list for PBXNativeTarget "Runner" */;
 			buildPhases = (
-				1954639518B4582986B0C0FF /* [CP] Check Pods Manifest.lock */,
+				1B789297856BA417E3600108 /* [CP] Check Pods Manifest.lock */,
 				9740EEB61CF901F6004384FC /* Run Script */,
 				97C146EA1CF9000F007C117D /* Sources */,
 				97C146EB1CF9000F007C117D /* Frameworks */,
@@ -219,7 +219,7 @@
 				9705A1C41CF9048500538489 /* Embed Frameworks */,
 				3B06AD1E1E4923F5004D2608 /* Thin Binary */,
 				DB09007C23AA32AF007A8A73 /* Embed App Extensions */,
-				F43E204657D771F7302582A5 /* [CP] Embed Pods Frameworks */,
+				A580976F8E33433E025E64B8 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -320,7 +320,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		1954639518B4582986B0C0FF /* [CP] Check Pods Manifest.lock */ = {
+		1B789297856BA417E3600108 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -372,112 +372,36 @@
 			shellPath = /bin/sh;
 			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" build\n";
 		};
-		F43E204657D771F7302582A5 /* [CP] Embed Pods Frameworks */ = {
+		A580976F8E33433E025E64B8 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/Alamofire/Alamofire.framework",
-				"${BUILT_PRODUCTS_DIR}/DKImagePickerController/DKImagePickerController.framework",
-				"${BUILT_PRODUCTS_DIR}/DKPhotoGallery/DKPhotoGallery.framework",
-				"${BUILT_PRODUCTS_DIR}/FMDB/FMDB.framework",
-				"${BUILT_PRODUCTS_DIR}/FirebaseCore/FirebaseCore.framework",
-				"${BUILT_PRODUCTS_DIR}/FirebaseCoreExtension/FirebaseCoreExtension.framework",
-				"${BUILT_PRODUCTS_DIR}/FirebaseCoreInternal/FirebaseCoreInternal.framework",
-				"${BUILT_PRODUCTS_DIR}/FirebaseCrashlytics/FirebaseCrashlytics.framework",
-				"${BUILT_PRODUCTS_DIR}/FirebaseInstallations/FirebaseInstallations.framework",
-				"${BUILT_PRODUCTS_DIR}/FirebaseMessaging/FirebaseMessaging.framework",
-				"${BUILT_PRODUCTS_DIR}/FirebaseSessions/FirebaseSessions.framework",
-				"${BUILT_PRODUCTS_DIR}/GoogleDataTransport/GoogleDataTransport.framework",
-				"${BUILT_PRODUCTS_DIR}/GoogleUtilities/GoogleUtilities.framework",
-				"${BUILT_PRODUCTS_DIR}/PromisesObjC/FBLPromises.framework",
-				"${BUILT_PRODUCTS_DIR}/PromisesSwift/Promises.framework",
-				"${BUILT_PRODUCTS_DIR}/Reachability/Reachability.framework",
-				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
-				"${BUILT_PRODUCTS_DIR}/SDWebImage/SDWebImage.framework",
-				"${BUILT_PRODUCTS_DIR}/SwiftyGif/SwiftyGif.framework",
-				"${BUILT_PRODUCTS_DIR}/Toast/Toast.framework",
-				"${BUILT_PRODUCTS_DIR}/alarm_service/alarm_service.framework",
-				"${BUILT_PRODUCTS_DIR}/connectivity/connectivity.framework",
-				"${BUILT_PRODUCTS_DIR}/device_info_plus/device_info_plus.framework",
-				"${BUILT_PRODUCTS_DIR}/file_picker/file_picker.framework",
-				"${BUILT_PRODUCTS_DIR}/flutter_custom_tabs/flutter_custom_tabs.framework",
-				"${BUILT_PRODUCTS_DIR}/flutter_downloader/flutter_downloader.framework",
-				"${BUILT_PRODUCTS_DIR}/flutter_keyboard_visibility/flutter_keyboard_visibility.framework",
-				"${BUILT_PRODUCTS_DIR}/flutter_local_notifications/flutter_local_notifications.framework",
-				"${BUILT_PRODUCTS_DIR}/flutter_secure_storage/flutter_secure_storage.framework",
-				"${BUILT_PRODUCTS_DIR}/flutter_uploader/flutter_uploader.framework",
-				"${BUILT_PRODUCTS_DIR}/fluttertoast/fluttertoast.framework",
-				"${BUILT_PRODUCTS_DIR}/ios_notification_handler/ios_notification_handler.framework",
-				"${BUILT_PRODUCTS_DIR}/libwebp/libwebp.framework",
-				"${BUILT_PRODUCTS_DIR}/nanopb/nanopb.framework",
-				"${BUILT_PRODUCTS_DIR}/notifications_utils/notifications_utils.framework",
-				"${BUILT_PRODUCTS_DIR}/package_info/package_info.framework",
-				"${BUILT_PRODUCTS_DIR}/path_provider/path_provider.framework",
-				"${BUILT_PRODUCTS_DIR}/receive_sharing/receive_sharing.framework",
-				"${BUILT_PRODUCTS_DIR}/share/share.framework",
-				"${BUILT_PRODUCTS_DIR}/share_plus/share_plus.framework",
-				"${BUILT_PRODUCTS_DIR}/shared_preferences_foundation/shared_preferences_foundation.framework",
-				"${BUILT_PRODUCTS_DIR}/sqflite/sqflite.framework",
-				"${BUILT_PRODUCTS_DIR}/uni_links/uni_links.framework",
-				"${BUILT_PRODUCTS_DIR}/url_launcher_ios/url_launcher_ios.framework",
-				"${BUILT_PRODUCTS_DIR}/video_thumbnail/video_thumbnail.framework",
-				"${BUILT_PRODUCTS_DIR}/webview_flutter_wkwebview/webview_flutter_wkwebview.framework",
+				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources.sh",
+				"${PODS_CONFIGURATION_BUILD_DIR}/DKImagePickerController/DKImagePickerController.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/DKPhotoGallery/DKPhotoGallery.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/FMDB/FMDB_Privacy.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/Reachability/Reachability_Privacy.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/SDWebImage/SDWebImage.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/SwiftyGif/SwiftyGif.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/Toast/Toast.bundle",
+				"${PODS_CONFIGURATION_BUILD_DIR}/flutter_downloader/FlutterDownloaderDatabase.bundle",
 			);
-			name = "[CP] Embed Pods Frameworks";
+			name = "[CP] Copy Pods Resources";
 			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Alamofire.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DKImagePickerController.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DKPhotoGallery.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FMDB.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseCore.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseCoreExtension.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseCoreInternal.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseCrashlytics.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseInstallations.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseMessaging.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FirebaseSessions.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleDataTransport.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GoogleUtilities.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBLPromises.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Promises.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Reachability.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SDWebImage.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SwiftyGif.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Toast.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/alarm_service.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/connectivity.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/device_info_plus.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/file_picker.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/flutter_custom_tabs.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/flutter_downloader.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/flutter_keyboard_visibility.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/flutter_local_notifications.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/flutter_secure_storage.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/flutter_uploader.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/fluttertoast.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ios_notification_handler.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/libwebp.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/nanopb.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/notifications_utils.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/package_info.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/path_provider.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/receive_sharing.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/share.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/share_plus.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/shared_preferences_foundation.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/sqflite.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/uni_links.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/url_launcher_ios.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/video_thumbnail.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/webview_flutter_wkwebview.framework",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/DKImagePickerController.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/DKPhotoGallery.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FMDB_Privacy.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Reachability_Privacy.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/SDWebImage.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/SwiftyGif.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/Toast.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/FlutterDownloaderDatabase.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -650,7 +574,7 @@
 					dist/frameworks/JRE.framework/Headers,
 				);
 				INFOPLIST_FILE = Runner/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -848,7 +772,7 @@
 					dist/frameworks/JRE.framework/Headers,
 				);
 				INFOPLIST_FILE = Runner/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -935,7 +859,7 @@
 					dist/frameworks/JRE.framework/Headers,
 				);
 				INFOPLIST_FILE = Runner/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

@@ -1,6 +1,7 @@
 //@dart=2.9
 import 'dart:math';
 
+import 'package:aurora_logger/aurora_logger.dart';
 import 'package:aurora_mail/database/accounts/accounts_dao.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/database/folders/folders_dao.dart';
@@ -8,7 +9,6 @@ import 'package:aurora_mail/database/folders/folders_table.dart';
 import 'package:aurora_mail/database/mail/mail_dao.dart';
 import 'package:aurora_mail/database/mail/mail_table.dart';
 import 'package:aurora_mail/database/users/users_dao.dart';
-import 'package:aurora_logger/aurora_logger.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/models/message_info.dart';
 import 'package:aurora_mail/modules/auth/repository/auth_local_storage.dart';
@@ -20,8 +20,6 @@ import 'package:aurora_mail/modules/mail/repository/mail_api.dart';
 import 'package:aurora_mail/modules/settings/models/sync_period.dart';
 import 'package:aurora_mail/notification/notification_manager.dart';
 import 'package:aurora_mail/notification/push_notifications_manager.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:flutter/foundation.dart';
 import 'package:drift/drift.dart';
 import 'package:webmail_api_client/webmail_api_client.dart';
 
@@ -55,8 +53,8 @@ class BackgroundSync {
       final users = await _usersDao.getUsers();
 
       for (final user in users) {
-          await _backgroundCalendarsSync(
-              interceptor: interceptor, user: user, logger: isolatedLogger);
+        await _backgroundCalendarsSync(
+            interceptor: interceptor, user: user, logger: isolatedLogger);
         var accounts = await _accountsDao.getAccounts(user.localId);
         if (notification != null) {
           accounts =
@@ -92,9 +90,9 @@ class BackgroundSync {
       isolatedLogger.log("MailSync: sync end in ${delay.toStringAsFixed(1)} s");
     } catch (e, s) {
       isolatedLogger.error(e, s);
-      FirebaseCrashlytics.instance.recordFlutterError(
-        FlutterErrorDetails(exception: e, stack: s),
-      );
+      // FirebaseCrashlytics.instance.recordFlutterError(
+      //   FlutterErrorDetails(exception: e, stack: s),
+      // );
     }
     return hasUpdate;
   }
@@ -105,7 +103,8 @@ class BackgroundSync {
       @required Logger logger}) async {
     try {
       logger.log("Calendars background sync started");
-      final calendarRepository = CalendarRepository(user: user, appDB: DBInstances.appDB, logger: logger);
+      final calendarRepository = CalendarRepository(
+          user: user, appDB: DBInstances.appDB, logger: logger);
       await calendarRepository.syncCalendarsWithActivities();
     } catch (e, s) {
       logger.log("Calendars background sync error: ${e}");
