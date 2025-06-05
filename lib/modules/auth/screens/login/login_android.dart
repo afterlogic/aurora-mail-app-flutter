@@ -274,164 +274,144 @@ class _LoginAndroidState extends BState<LoginAndroid> {
                 child: Column(
                   mainAxisAlignment: widget.isDialog
                       ? MainAxisAlignment.start
-                      : MainAxisAlignment.spaceEvenly,
+                      : MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    if (!widget.isDialog) PresentationHeader(),
-                    // Padding(
-                    //   padding: const EdgeInsets.only(left: 16),
-                    //   child: Text(
-                    //     "Unlyme encrypted e-mail\nYour data is safely stored in Switzerland",
-                    //     textAlign: TextAlign.left,
-                    //     style: theme.textTheme.titleMedium.copyWith(
-                    //     color: Colors.white,
-                    //       // fontSize: 24.0,
-                    //       // fontWeight: FontWeight.w600,
-                    //     ),
-                    //   ),
-                    // ),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.7),
-                        borderRadius: BorderRadius.circular(20),
-                        border: Border.all(
-                          color: Colors.white.withOpacity(0.3),
-                          width: 1.0,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.1),
-                            blurRadius: 4.0,
-                            offset: Offset(0, 2),
-                          ),
-                        ],
-                      ),
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 20.0,
-                        vertical: 40.0,
-                      ),
-                      child: Column(
-                        children: <Widget>[
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              'Sign in',
-                              textAlign: TextAlign.left,
-                              style: theme.textTheme.titleLarge.copyWith(
-                                fontSize: 24.0,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 10),
-                          Column(
-                            children: <Widget>[
-                              if (widget.isDialog && LayoutConfig.of(context).isTablet)
-                                Padding(
-                                  padding: const EdgeInsets.all(16),
-                                  child: Text(
-                                    widget.email == null
-                                        ? S.of(context).settings_accounts_add
-                                        : S.of(context).settings_accounts_relogin,
-                                    style: theme.textTheme.headline6,
-                                  ),
-                                ),
-                              if (_showHostField)
-                                AuthInput(
-                                  controller: hostCtrl,
-                                  inputFormatters: [HostInputFormatter()],
-                                  label: S.of(context).login_input_host,
-                                  keyboardType: TextInputType.url,
-                                  isEnabled: !loading,
-                                ),
-                              SizedBox(height: 10),
-                              AuthInput(
-                                enableSuggestions: false,
-                                autocorrect: false,
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.deny(" ")
-                                ],
-                                controller: emailCtrl,
-                                label: S.of(context).login_input_email,
-                                keyboardType: TextInputType.emailAddress,
-                                validator: (value) => validateInput(context, value,
-                                    [ValidationType.empty, ValidationType.email]),
-                                isEnabled: !loading,
-                              ),
-                              SizedBox(height: 10),
-                              AuthInput(
-                                controller: passwordCtrl,
-                                label: S.of(context).login_input_password,
-                                validator: (value) => validateInput(
-                                    context, value, [ValidationType.empty]),
-                                isPassword: true,
-                                isEnabled: !loading,
+                    if (!widget.isDialog) ...[
+                      Spacer(),
+                      PresentationHeader(),
+                      Spacer(),
+                    ],
+                    Column(
+                      children: <Widget>[
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.7),
+                            borderRadius: BorderRadius.circular(8),
+                            // border: Border.all(
+                            //   color: Colors.white.withOpacity(0.3),
+                            //   width: 1.0,
+                            // ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.15),
+                                blurRadius: 30.0,
+                                offset: Offset(0, 4),
                               ),
                             ],
                           ),
-                          if (widget.isDialog) SizedBox(height: 40.0),
-                          SizedBox(height: 20),
-                          SizedBox(
-                            width: double.infinity,
-                            child: _debugRouteToTwoFactor(
-                              AMButton(
-                                // color: Theme.of(context).primaryColor,
-                                color: Color(0xFF18CFF4),
-                                radius: BorderRadius.circular(10.0),
-                                shadow: AppColor.enableShadow ? null : BoxShadow(),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 20.0,
+                            vertical: 36.0,
+                          ),
+                          child: Column(
+                            children: <Widget>[
+                              Align(
+                                alignment: Alignment.centerLeft,
                                 child: Text(
-                                    widget.isDialog
-                                        ? S.of(context).btn_add_account
-                                        : 'Continue',//S.of(context).btn_login,
-                                    style: TextStyle(color: Colors.white)),
-                                isLoading: loading,
-                                onPressed: () => _login(context),
+                                  'Sign in',
+                                  textAlign: TextAlign.left,
+                                  style: theme.textTheme.titleLarge.copyWith(
+                                    fontSize: 24.0,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: 10),
+                              Column(
+                                children: <Widget>[
+                                  if (widget.isDialog && LayoutConfig.of(context).isTablet)
+                                    Padding(
+                                      padding: const EdgeInsets.all(16),
+                                      child: Text(
+                                        widget.email == null
+                                            ? S.of(context).settings_accounts_add
+                                            : S.of(context).settings_accounts_relogin,
+                                        style: theme.textTheme.titleLarge,
+                                      ),
+                                    ),
+                                  if (_showHostField)
+                                    AuthInput(
+                                      controller: hostCtrl,
+                                      inputFormatters: [HostInputFormatter()],
+                                      label: S.of(context).login_input_host,
+                                      keyboardType: TextInputType.url,
+                                      isEnabled: !loading,
+                                    ),
+                                  SizedBox(height: 10),
+                                  AuthInput(
+                                    enableSuggestions: false,
+                                    autocorrect: false,
+                                    inputFormatters: [
+                                      FilteringTextInputFormatter.deny(" ")
+                                    ],
+                                    controller: emailCtrl,
+                                    label: S.of(context).login_input_email,
+                                    keyboardType: TextInputType.emailAddress,
+                                    validator: (value) => validateInput(context, value,
+                                        [ValidationType.empty, ValidationType.email]),
+                                    isEnabled: !loading,
+                                  ),
+                                  SizedBox(height: 10),
+                                  AuthInput(
+                                    controller: passwordCtrl,
+                                    label: S.of(context).login_input_password,
+                                    validator: (value) => validateInput(
+                                        context, value, [ValidationType.empty]),
+                                    isPassword: true,
+                                    isEnabled: !loading,
+                                  ),                             
+                                ],
+                              ),
+                              if (widget.isDialog) SizedBox(height: 40.0),
+                              SizedBox(height: 20),
+                              SizedBox(
+                                width: double.infinity,
+                                child: _debugRouteToTwoFactor(
+                                  AMButton(
+                                    // color: Theme.of(context).primaryColor,
+                                    color: Color(0xFF3975B5),
+                                    radius: BorderRadius.circular(10.0),
+                                    shadow: AppColor.enableShadow ? null : BoxShadow(),
+                                    child: Text(
+                                        widget.isDialog
+                                            ? S.of(context).btn_add_account
+                                            : 'Continue',//S.of(context).btn_login,
+                                        style: TextStyle(color: Colors.white)),
+                                    isLoading: loading,
+                                    onPressed: () => _login(context),
+                                  ),
+                                ),
+                              ),
+                            ]
+                          ),
+                        ),
+                        SizedBox(height: 30),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text(
+                              'Not account yet? ',
+                              style: TextStyle(
+                                color: Color(0xFF041844),
+                                fontSize: 18.0,
                               ),
                             ),
-                          ),
-                        ]
-                      ),
-                    ),
-
-                    // Column(
-                    //   children:  <Widget>[
-                    //     Row(
-                    //       mainAxisAlignment: MainAxisAlignment.center,
-                    //       children: <Widget>[
-                    //         Text(
-                    //           'Not account yet? ',
-                    //           style: TextStyle(
-                    //             color: Colors.white,
-                    //             fontSize: 18.0,
-                    //           ),
-                    //         ),
-                    //         GestureDetector(
-                    //           child: Text(
-                    //             'Register now',
-                    //             style: TextStyle(
-                    //               color: Color(0xFF9E1186),
-                    //               fontSize: 18.0,
-                    //             ),
-                    //           ),
-                    //           onTap: () => launch(BuildProperty.registrationLink),
-                    //         ),
-                    //       ],
-                    //     ),
-                    //     SizedBox(height: 10),
-                    //     SizedBox(
-                    //       width: double.infinity,
-                    //       child: Text(
-                    //         'Unlyme SA',
-                    //         textAlign: TextAlign.center,
-                    //         style: TextStyle(
-                    //           color: Colors.white,
-                    //           fontSize: 18.0,
-                    //         ),
-                    //       ),
-                    //     ),
-                    //   ],
-                    // ),
-                    
+                            GestureDetector(
+                              child: Text(
+                                'Register now',
+                                style: TextStyle(
+                                  color: Color(0xFF3975B5),
+                                  fontSize: 18.0,
+                                ),
+                              ),
+                              onTap: () => launchUrl(Uri.parse(BuildProperty.registrationLink)),
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 50),
+                      ]
+                    )
                   ],
                 ),
                 

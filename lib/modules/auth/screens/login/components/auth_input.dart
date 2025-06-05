@@ -51,7 +51,7 @@ class _AuthInputState extends BState<AuthInput> {
       validator: widget.validator,
       obscureText: widget.isPassword && _obscureText,
       decoration: InputDecoration(
-        filled: true, // Включаем заливку
+        filled: true,
         fillColor: Colors.white.withOpacity(0.5), 
         // enabledBorder: UnderlineInputBorder(
         //     borderSide:
@@ -59,26 +59,29 @@ class _AuthInputState extends BState<AuthInput> {
         // focusedBorder: UnderlineInputBorder(
         //     borderSide: BorderSide(color: theme.primaryColor)),
         contentPadding: EdgeInsets.symmetric(
-          horizontal: 14,  // 12px по горизонтали
-          vertical: 10,    // 10px по вертикали
+          horizontal: 14,
+          vertical: 10,
         ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
-          borderSide: BorderSide(color: Colors.white.withOpacity(0.1)),
+          borderSide: BorderSide(color: Color(0xFFEBEBEB)),
         ),
         enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.white.withOpacity(0.7)),
+          borderSide: BorderSide(color: Color(0xFFEBEBEB)),
           borderRadius: BorderRadius.circular(10.0)),
         focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.white),
+          borderSide: BorderSide(color: Color(0xFF1D67CD)),
           borderRadius: BorderRadius.circular(10.0)),
 
         // floatingLabelBehavior: BuildProperty.hasFloatingPlaceholder,
         floatingLabelBehavior: FloatingLabelBehavior.never,
         // hintText: BuildProperty.hasFloatingPlaceholder ? null : widget.label,
         // labelText: BuildProperty.hasFloatingPlaceholder ? widget.label : null,
-        hintText: false ? null : widget.label,
-        labelText: false ? widget.label : null,
+        hintText: widget.label,
+        hintStyle: TextStyle(
+          color: Color(0xFFA6ACB8),
+        ),
+        // labelText: widget.label,
         suffixIcon: widget.isPassword
             ? SizedBox(
                 height: 50.0,
