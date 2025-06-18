@@ -11,16 +11,17 @@ _appleGroupId: "group.com.afterlogic.aurora"
 
 #Android splash screen
 background_color: "#FFFFFF"
+useBackgroundImage: false
 splashGradientTop: "#FFFFFF"
-splashGradientCenter: "#eeeeee"
 splashGradientBottom: "#FFFFFF"
 splashGradientTopDark: "#000000"
-splashGradientCenterDark: "#999999"
 splashGradientBottomDark: "#000000"
 
 autodiscover_url: "https://{domain}/aurora-autodiscover.json?email={email}"
 privacyPolicy: "https://afterlogic.com/privacy-policy"
 termsOfService: ""
+registrationLink: ""
+
 supportLanguage: "en"
 
 #App settings

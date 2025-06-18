@@ -11,6 +11,7 @@ _appleGroupId: ""
 
 #Android splash screen
 background_color: "#FFFFFF"
+useBackgroundImage: false
 splashGradientTop: "#FFFFFF"
 splashGradientBottom: "#FFFFFF"
 splashGradientTopDark: "#000000"
@@ -19,6 +20,8 @@ splashGradientBottomDark: "#000000"
 autodiscover_url: "https://{domain}/aurora-autodiscover.json?email={email}"
 privacyPolicy: ""
 termsOfService: ""
+registrationLink: ""
+
 supportLanguage: "en,tr,ru"
 
 #App settings

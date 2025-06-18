@@ -386,29 +386,11 @@ class _LoginAndroidState extends BState<LoginAndroid> {
                             ]
                           ),
                         ),
-                        SizedBox(height: 30),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Text(
-                              'Not account yet? ',
-                              style: TextStyle(
-                                color: Color(0xFF041844),
-                                fontSize: 18.0,
-                              ),
-                            ),
-                            GestureDetector(
-                              child: Text(
-                                'Register now',
-                                style: TextStyle(
-                                  color: Color(0xFF3975B5),
-                                  fontSize: 18.0,
-                                ),
-                              ),
-                              onTap: () => launchUrl(Uri.parse(BuildProperty.registrationLink)),
-                            ),
-                          ],
-                        ),
+
+                        if (BuildProperty.registrationLink.isNotEmpty)
+                          const SizedBox(height: 30.0),
+                          _buildRegisterLink(),
+
                         SizedBox(height: 50),
                       ]
                     )
@@ -418,6 +400,31 @@ class _LoginAndroidState extends BState<LoginAndroid> {
               ),
             ),
           ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildRegisterLink() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Text(
+          'Not account yet? ',
+          style: TextStyle(
+            color: Color(0xFF041844),
+            fontSize: 18.0,
+          ),
+        ),
+        GestureDetector(
+          child: Text(
+            'Register now',
+            style: TextStyle(
+              color: Color(0xFF3975B5),
+              fontSize: 18.0,
+            ),
+          ),
+          onTap: () => launchUrl(Uri.parse(BuildProperty.registrationLink)),
         ),
       ],
     );

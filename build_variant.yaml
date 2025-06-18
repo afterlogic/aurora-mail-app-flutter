@@ -16,7 +16,6 @@ _files:
 # List of files that will be copied. The Key is a source path, Value is a destination path.
 _copy:
   "{{main_logo}}": "android/app/src/main/res/drawable/main_logo.png"
-  "{{image_dir}}/login_background.png": "assets/images/login_background.png"
   "{{_google_services}}": "android/app/google-services.json"
   "{{_google_services_ios}}": "ios/Runner/GoogleService-Info.plist"
   "{{_sign_dir}}/key.properties": "android/key.properties"
@@ -34,7 +33,7 @@ _iosAppId: "{{_appId}}"
 _appleGroupId: ""
 packageName: "{{_appId}}"
 version: ""
-build: 313
+build: 326
 
 icon: "{{image_dir}}/icon.png"
 main_logo: "{{image_dir}}/main_logo.png"
