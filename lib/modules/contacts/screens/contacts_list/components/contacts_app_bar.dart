@@ -13,6 +13,7 @@ import 'package:aurora_mail/utils/storage_util.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:theme/app_color.dart';
 
 class ContactsAppBar extends StatefulWidget implements PreferredSizeWidget {
   final bool isAppBar;
@@ -186,8 +187,11 @@ class _ContactsAppBarState extends State<ContactsAppBar> {
 
       return AMAppBar(
         title: _buildTitle(context, state),
-        backgroundColor: Color(0xFFF4F1FD),
-        textStyle:TextStyle(color: Color(0xFF2D2D2D), fontSize: 18, fontWeight: FontWeight.w600),
+        backgroundColor: AppColor.appBarBackground,
+        textStyle: TextStyle(
+            color: Color(0xFF2D2D2D),
+            fontSize: 18,
+            fontWeight: FontWeight.w600),
         shadow: BoxShadow(color: Colors.transparent),
         actions: widget.enable
             ? <Widget>[

@@ -3,9 +3,9 @@ import 'package:aurora_logger/aurora_logger.dart';
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/inject/app_inject.dart';
-import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_event.dart';
+import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/route_generator.dart';
 import 'package:aurora_mail/modules/settings/blocs/pgp_settings/pgp_settings_bloc.dart';
 import 'package:aurora_mail/modules/settings/screens/about/about_route.dart';
@@ -22,6 +22,7 @@ import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:theme/app_color.dart';
 
 class SettingsMainAndroid extends StatefulWidget {
   @override
@@ -72,27 +73,34 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
         ),
         ListTile(
           selected: current == SyncSettingsRoute.name,
-          leading: AMCircleIcon(Icons.sync,
+          leading: AMCircleIcon(
+            Icons.sync,
             color: theme.primaryColor,
-            background: iconBG,),
+            background: iconBG,
+          ),
           title: Text(S.of(context).settings_sync),
           onTap: () => navigator().setRoot(SyncSettingsRoute.name),
         ),
-        if (BuildProperty.enablePushNotification && BuildProperty.showPushNotificatonsSettings)
+        if (BuildProperty.enablePushNotification &&
+            BuildProperty.showPushNotificatonsSettings)
           ListTile(
             selected: current == NotificationsSettingsRoute.name,
-            leading: AMCircleIcon(Icons.notifications,
+            leading: AMCircleIcon(
+              Icons.notifications,
               color: theme.primaryColor,
-              background: iconBG,),
+              background: iconBG,
+            ),
             title: Text(S.of(context).label_notifications_settings),
             onTap: () => navigator().setRoot(NotificationsSettingsRoute.name),
           ),
         if (BuildProperty.cryptoEnable)
           ListTile(
             selected: current == PgpSettingsRoute.name,
-            leading: AMCircleIcon(Icons.vpn_key,
+            leading: AMCircleIcon(
+              Icons.vpn_key,
               color: theme.primaryColor,
-              background: iconBG,),
+              background: iconBG,
+            ),
             title: Text(S.of(context).label_pgp_settings),
             onTap: () => navigator().setRoot(
               PgpSettingsRoute.name,
@@ -102,17 +110,21 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
         if (BuildProperty.multiUserEnable)
           ListTile(
             selected: current == ManageUsersRoute.name,
-            leading: AMCircleIcon(Icons.account_circle,
+            leading: AMCircleIcon(
+              Icons.account_circle,
               color: theme.primaryColor,
-              background: iconBG,),
+              background: iconBG,
+            ),
             title: Text(S.of(context).settings_accounts_manage),
             onTap: () => navigator().setRoot(ManageUsersRoute.name),
           ),
         ListTile(
           selected: current == AboutRoute.name,
-          leading: AMCircleIcon(Icons.info_outline,
+          leading: AMCircleIcon(
+            Icons.info_outline,
             color: theme.primaryColor,
-            background: iconBG,),
+            background: iconBG,
+          ),
           title: Text(S.of(context).settings_about),
           onLongPress: BuildProperty.enableDebugScreen
               ? () {
@@ -125,17 +137,21 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
         if (showDebug)
           ListTile(
             selected: current == DebugRoute.name,
-            leading: AMCircleIcon(Icons.perm_device_information,
+            leading: AMCircleIcon(
+              Icons.perm_device_information,
               color: theme.primaryColor,
-              background: iconBG,),
+              background: iconBG,
+            ),
             title: Text("Debug"),
             onTap: () => navigator().setRoot(DebugRoute.name),
           ),
         if (!BuildProperty.multiUserEnable)
           ListTile(
-            leading: AMCircleIcon(Icons.exit_to_app,
+            leading: AMCircleIcon(
+              Icons.exit_to_app,
               color: theme.primaryColor,
-              background: iconBG,),
+              background: iconBG,
+            ),
             title: Text(S.of(context).messages_list_app_bar_logout),
             onTap: _exit,
           ),
@@ -145,8 +161,11 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
       body = Scaffold(
         appBar: AMAppBar(
           title: Text(S.of(context).settings),
-          backgroundColor: Color(0xFFF4F1FD),
-        textStyle:TextStyle(color: Color(0xFF2D2D2D), fontSize: 18, fontWeight: FontWeight.w600),
+          backgroundColor: AppColor.appBarBackground,
+          textStyle: TextStyle(
+              color: Color(0xFF2D2D2D),
+              fontSize: 18,
+              fontWeight: FontWeight.w600),
         ),
         body: Row(
           children: [
@@ -193,8 +212,11 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
           ? null
           : AMAppBar(
               title: Text(S.of(context).settings),
-              backgroundColor: Color(0xFFF4F1FD),
-              textStyle:TextStyle(color: Color(0xFF2D2D2D), fontSize: 18, fontWeight: FontWeight.w600),
+              backgroundColor: AppColor.appBarBackground,
+              textStyle: TextStyle(
+                  color: Color(0xFF2D2D2D),
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600),
               shadow: BoxShadow(color: Colors.transparent),
             ),
       body: body,

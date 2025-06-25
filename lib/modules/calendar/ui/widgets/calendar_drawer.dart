@@ -14,6 +14,7 @@ import 'package:aurora_mail/modules/calendar/ui/models/calendar.dart';
 import 'package:aurora_mail/modules/calendar/utils/url_downloader.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/components/discard_compose_changes_dialog.dart';
 import 'package:aurora_mail/shared_ui/colored_checkbox.dart';
+import 'package:aurora_mail/shared_ui/gradient_drawer.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -38,7 +39,7 @@ class _CalendarDrawerState extends BState<CalendarDrawer> {
   @override
   Widget build(BuildContext context) {
     final User? user = BlocProvider.of<AuthBloc>(context).currentUser;
-    return Drawer(
+    return GradientDrawer(
       child: ListTileTheme(
         style: ListTileStyle.drawer,
         selectedColor: theme.primaryColor,
@@ -49,19 +50,22 @@ class _CalendarDrawerState extends BState<CalendarDrawer> {
                   ?.where((c) =>
                       (!c.sharedToAll && !c.shared) ||
                       (user?.emailFromLogin == c.owner))
-                  .toList()?..sort();
+                  .toList()
+                ?..sort();
               final sharedCalendars = state.calendars
                   ?.where((c) =>
                       c.shared &&
                       !c.sharedToAll &&
                       user?.emailFromLogin != c.owner)
-                  .toList()?..sort();
+                  .toList()
+                ?..sort();
               final sharedToAllCalendars = state.calendars
                   ?.where((c) =>
                       c.shared &&
                       c.sharedToAll &&
                       user?.emailFromLogin != c.owner)
-                  .toList()?..sort();
+                  .toList()
+                ?..sort();
               return SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -542,7 +546,11 @@ class _CollapsibleCheckboxListState extends State<CollapsibleCheckboxList>
           child: Column(
               children: _menuItems
                   .map((e) => Container(
-                        color: _isExpanded ?  Theme.of(context).brightness == Brightness.dark ? Colors.black45 : Color(0xFFECF5FF) : null,
+                        color: _isExpanded
+                            ? Theme.of(context).brightness == Brightness.dark
+                                ? Colors.black45
+                                : Color(0xFFECF5FF)
+                            : null,
                         child: ListTile(
                           title: Text(e.titleBuilder(context)),
                           contentPadding: EdgeInsets.symmetric(

@@ -8,9 +8,7 @@ import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:theme/app_color.dart';
-import 'package:theme/app_theme.dart';
 
 class NotificationsSettings extends StatefulWidget {
   @override
@@ -30,8 +28,11 @@ class _NotificationsSettingsState extends BState<NotificationsSettings> {
               title: Text(
                 S.of(context).label_notifications_settings,
               ),
-              backgroundColor: Color(0xFFF4F1FD),
-              textStyle:TextStyle(color: Color(0xFF2D2D2D), fontSize: 18, fontWeight: FontWeight.w600),
+              backgroundColor: AppColor.appBarBackground,
+              textStyle: TextStyle(
+                  color: Color(0xFF2D2D2D),
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600),
               shadow: BoxShadow(color: Colors.transparent),
             ),
       body: BlocBuilder(
@@ -70,15 +71,14 @@ class _NotificationsSettingsState extends BState<NotificationsSettings> {
                         ),
                         Expanded(
                             child: Text(
-                              PushNotificationsManager.instance.token,
-                              textAlign: TextAlign.right,
-                            )),
+                          PushNotificationsManager.instance.token,
+                          textAlign: TextAlign.right,
+                        )),
                         IconButton(
                           icon: Icon(Icons.content_copy),
                           onPressed: () {
                             Clipboard.setData(ClipboardData(
-                                text: PushNotificationsManager
-                                    .instance.token));
+                                text: PushNotificationsManager.instance.token));
                             showSnack(
                               isError: false,
                               context: context,
@@ -92,7 +92,6 @@ class _NotificationsSettingsState extends BState<NotificationsSettings> {
                       ],
                     ),
                   ),
-
                   Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 16.0, vertical: 8),

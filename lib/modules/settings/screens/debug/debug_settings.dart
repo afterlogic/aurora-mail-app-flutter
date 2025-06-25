@@ -1,14 +1,15 @@
 //@dart=2.9
 import 'package:aurora_logger/aurora_logger.dart';
 import 'package:aurora_mail/generated/l10n.dart';
+import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/calendar/blocs/calendars/calendars_bloc.dart';
 import 'package:aurora_mail/modules/layout_config/layout_config.dart';
-import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/settings/screens/debug/debug_local_storage.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:theme/app_color.dart';
 
 class DebugSetting extends StatefulWidget {
   @override
@@ -49,8 +50,11 @@ class _DebugSettingState extends BState<DebugSetting> {
           ? null
           : AMAppBar(
               title: Text("Debug"),
-              backgroundColor: Color(0xFFF4F1FD),
-              textStyle:TextStyle(color: Color(0xFF2D2D2D), fontSize: 18, fontWeight: FontWeight.w600),
+              backgroundColor: AppColor.appBarBackground,
+              textStyle: TextStyle(
+                  color: Color(0xFF2D2D2D),
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600),
               shadow: BoxShadow(color: Colors.transparent),
             ),
       body: _backgroundRecord == null
@@ -68,8 +72,8 @@ class _DebugSettingState extends BState<DebugSetting> {
                 ),
                 CheckboxListTile(
                   value: _messageCounter,
-                  title: Text(
-                      S.of(context).label_enable_uploaded_message_counter),
+                  title:
+                      Text(S.of(context).label_enable_uploaded_message_counter),
                   onChanged: (bool value) {
                     _messageCounter = value;
                     _storage.setEnableCounter(value);
@@ -86,9 +90,11 @@ class _DebugSettingState extends BState<DebugSetting> {
                     });
                   },
                 ),
-                TextButton(onPressed: (){
-                  BlocProvider.of<CalendarsBloc>(context).add(ClearData());
-                }, child: Text('Delete calendars data')),
+                TextButton(
+                    onPressed: () {
+                      BlocProvider.of<CalendarsBloc>(context).add(ClearData());
+                    },
+                    child: Text('Delete calendars data')),
                 Expanded(
                   child: LoggerSettingWidget(
                     LoggerSettingArg(

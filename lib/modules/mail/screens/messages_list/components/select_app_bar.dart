@@ -3,9 +3,7 @@ import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
-import 'package:aurora_mail/modules/mail/blocs/mail_bloc/mail_state.dart';
 import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/bloc.dart';
-import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/messages_list_bloc.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/selection_controller.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/dialog/move_message.dart';
 import 'package:aurora_mail/res/icons/app_assets.dart';
@@ -58,8 +56,12 @@ class _SelectAppBarState extends BState<SelectAppBar> {
         final actions = folderType == null
             ? null
             : <Widget>[
-                if (![FolderType.sent, FolderType.notes, FolderType.drafts, FolderType.spam]
-                    .contains(folderType))
+                if (![
+                  FolderType.sent,
+                  FolderType.notes,
+                  FolderType.drafts,
+                  FolderType.spam
+                ].contains(folderType))
                   IconButton(
                     icon: SvgIcon(
                       AppAssets.spam,

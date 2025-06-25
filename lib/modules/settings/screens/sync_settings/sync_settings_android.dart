@@ -10,6 +10,7 @@ import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:theme/app_color.dart';
 
 import 'components/period_selection_dialog.dart';
 
@@ -42,8 +43,11 @@ class _SyncSettingsAndroidState extends BState<SyncSettingsAndroid> {
           ? null
           : AMAppBar(
               title: Text(S.of(context).settings_sync),
-              backgroundColor: Color(0xFFF4F1FD),
-              textStyle:TextStyle(color: Color(0xFF2D2D2D), fontSize: 18, fontWeight: FontWeight.w600),
+              backgroundColor: AppColor.appBarBackground,
+              textStyle: TextStyle(
+                  color: Color(0xFF2D2D2D),
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600),
               shadow: BoxShadow(color: Colors.transparent),
             ),
       body: BlocBuilder<SettingsBloc, SettingsState>(

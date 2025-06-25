@@ -7,6 +7,7 @@ import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_storage_model.dart';
 import 'package:aurora_mail/modules/contacts/screens/group_edit/group_edit_route.dart';
 import 'package:aurora_mail/res/icons/webmail_icons.dart';
+import 'package:aurora_mail/shared_ui/gradient_drawer.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/storage_util.dart';
 import 'package:flutter/material.dart';
@@ -43,7 +44,7 @@ class _ContactsDrawerState extends BState<ContactsDrawer> {
 
   @override
   Widget build(BuildContext context) {
-    return Drawer(
+    return GradientDrawer(
       child: RefreshIndicator(
         onRefresh: _onRefresh,
         backgroundColor: Colors.white,

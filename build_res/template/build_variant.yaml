@@ -48,3 +48,5 @@ supportAllowAccess: false
 #yubico_flutter_lib: "path: module/mocks/yubico_flutter"
 #useYubiKit: true
 #yubico_flutter_lib: "git: https://github.com/afterlogic/yubico_flutter"
+
+useDrawerGradient: false # true for gradient drawer, false for white drawer

@@ -9,6 +9,7 @@ import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/starred_folder.dart';
+import 'package:aurora_mail/shared_ui/gradient_drawer.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +37,7 @@ class _MainDrawerState extends BState<MainDrawer> {
 
     final multiAccountEnable = BuildProperty.multiAccountEnable;
 
-    return Drawer(
+    return GradientDrawer(
       child: ListTileTheme(
         style: ListTileStyle.drawer,
         selectedColor: theme.primaryColor,

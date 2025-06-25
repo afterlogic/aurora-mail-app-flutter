@@ -1,31 +1,31 @@
 #Variables
-appName: "Aurora Mail"
+appName: 'Aurora Mail'
 version: 2.4.0
 
 #Android App ID
-_appId: "com.afterlogic.aurora.mail"
+_appId: 'com.afterlogic.aurora.mail'
 #iOS Team ID
-_iosDeveloperId: "J7AW6VHJK4"
+_iosDeveloperId: 'J7AW6VHJK4'
 #iOS App Group ID
-_appleGroupId: "group.com.afterlogic.aurora"
+_appleGroupId: 'group.com.afterlogic.aurora'
 
 #Android splash screen
-background_color: "#FFFFFF"
+background_color: '#FFFFFF'
 useBackgroundImage: false
-splashGradientTop: "#FFFFFF"
-splashGradientBottom: "#FFFFFF"
-splashGradientTopDark: "#000000"
-splashGradientBottomDark: "#000000"
+splashGradientTop: '#FFFFFF'
+splashGradientBottom: '#FFFFFF'
+splashGradientTopDark: '#000000'
+splashGradientBottomDark: '#000000'
 
-autodiscover_url: "https://{domain}/aurora-autodiscover.json?email={email}"
-privacyPolicy: "https://afterlogic.com/privacy-policy"
-termsOfService: ""
-registrationLink: ""
+autodiscover_url: 'https://{domain}/aurora-autodiscover.json?email={email}'
+privacyPolicy: 'https://afterlogic.com/privacy-policy'
+termsOfService: ''
+registrationLink: ''
 
-supportLanguage: "en"
+supportLanguage: 'en'
 
 #App settings
-syncPeriod: "Period.months6"
+syncPeriod: 'Period.months6'
 mailMessagesChunkSize: 50
 
 #App features list
@@ -46,3 +46,5 @@ supportAllowAccess: true
 #FIDO Security key settings
 #useYubiKit: true
 #yubico_flutter_lib: "git: https://github.com/afterlogic/yubico_flutter"
+
+useDrawerGradient: false

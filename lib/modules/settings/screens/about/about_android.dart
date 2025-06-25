@@ -7,6 +7,7 @@ import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:package_info/package_info.dart';
+import 'package:theme/app_color.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AboutAndroid extends StatefulWidget {
@@ -68,11 +69,14 @@ class _AboutAndroidState extends BState<AboutAndroid> {
       appBar: isTablet
           ? null
           : AMAppBar(
-            title: Text(S.of(context).settings_about),
-            backgroundColor: Color(0xFFF4F1FD),
-            textStyle:TextStyle(color: Color(0xFF2D2D2D), fontSize: 18, fontWeight: FontWeight.w600),
-            shadow: BoxShadow(color: Colors.transparent),
-          ),
+              title: Text(S.of(context).settings_about),
+              backgroundColor: AppColor.appBarBackground,
+              textStyle: TextStyle(
+                  color: Color(0xFF2D2D2D),
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600),
+              shadow: BoxShadow(color: Colors.transparent),
+            ),
       body: loading
           ? Center(child: CircularProgressIndicator())
           : Column(

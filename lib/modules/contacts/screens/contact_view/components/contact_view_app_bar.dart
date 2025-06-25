@@ -4,6 +4,7 @@ import 'package:aurora_mail/res/icons/webmail_icons.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:theme/app_color.dart';
 
 enum ContactViewAppBarAction {
   attach,
@@ -49,7 +50,12 @@ class ContactViewAppBar extends StatelessWidget implements PreferredSizeWidget {
     }) {
       return PopupMenuItem(
         child: ListTile(
-          leading: Icon(icon, color: Theme.of(context).brightness == Brightness.light ? Colors.black : null,),
+          leading: Icon(
+            icon,
+            color: Theme.of(context).brightness == Brightness.light
+                ? Colors.black
+                : null,
+          ),
           title: Text(text),
         ),
         value: value,
@@ -114,8 +120,11 @@ class ContactViewAppBar extends StatelessWidget implements PreferredSizeWidget {
           name,
           style: TextStyle(fontWeight: FontWeight.w700),
         ),
-        backgroundColor: Color(0xFFF4F1FD),
-        textStyle:TextStyle(color: Color(0xFF2D2D2D), fontSize: 18, fontWeight: FontWeight.w600),
+        backgroundColor: AppColor.appBarBackground,
+        textStyle: TextStyle(
+            color: Color(0xFF2D2D2D),
+            fontSize: 18,
+            fontWeight: FontWeight.w600),
         shadow: BoxShadow(color: Colors.transparent),
         actions: actions,
       );
