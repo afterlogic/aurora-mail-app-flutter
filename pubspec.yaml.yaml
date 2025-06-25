@@ -177,6 +177,7 @@ flutter:
     - {{icon}}
     - {{main_logo}}
     - {{image_dir}}/
+    - {{image_dir}}/bottom-app-bar/
 
   fonts:
     - family: WebMailIcons

@@ -51,3 +51,6 @@ supportAllowAccess: false
 
 useDrawerGradient: false # true for gradient drawer, false for white drawer
 useCustomInputStyles: false # true for custom input styles, false for default styles
+useCustomBottomBarIcons: false # true for custom PNG icons, false for MDI icons
+showBottomBarLabels: false # true to show text labels under icons, false for icons only
+useCustomBottomBarColors: false # true for custom icon colors, false for theme colors

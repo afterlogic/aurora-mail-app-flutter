@@ -1,4 +1,5 @@
 //@dart=2.9
+import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/calendar/blocs/calendars/calendars_bloc.dart';
 import 'package:aurora_mail/modules/calendar/ui/screens/calendar_route.dart';
@@ -8,6 +9,7 @@ import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/messages_list_route.dart';
 import 'package:aurora_mail/modules/settings/screens/settings_main/settings_main_route.dart';
+import 'package:aurora_mail/shared_ui/adaptive_bottom_bar_button.dart';
 import 'package:aurora_mail/utils/extensions/bloc_provider_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -54,59 +56,76 @@ class MailBottomAppBar extends StatelessWidget {
     final iconSize = 28.0;
     final isCalendarExist =
         BlocProviderExtensions.tryOf<CalendarsBloc>(context) != null;
+
+    // Определяем цвета для иконок
+    Color activeColor, inactiveColor;
+    if (BuildProperty.useCustomBottomBarColors) {
+      // Используем кастомные цвета в зависимости от темы
+      final isDarkTheme = theme.brightness == Brightness.dark;
+      if (isDarkTheme) {
+        activeColor = AppColor.bottomBarIconActiveDark;
+        inactiveColor = AppColor.bottomBarIconDark;
+      } else {
+        activeColor = AppColor.bottomBarIconActiveLight;
+        inactiveColor = AppColor.bottomBarIconLight;
+      }
+    } else {
+      // Используем стандартные цвета темы
+      activeColor = theme.primaryColor;
+      inactiveColor = theme.disabledColor;
+    }
+
+    // Определяем отступы в зависимости от того, показываются ли подписи
+    final padding = BuildProperty.showBottomBarLabels
+        ? EdgeInsets.symmetric(horizontal: 0, vertical: 8)
+        : EdgeInsets.symmetric(horizontal: 0, vertical: 6);
+
     Widget row = Container(
         color: AppColor.bottomNavigationBackground,
-        // padding: EdgeInsets.all(16),
-        padding: EdgeInsets.symmetric(horizontal: 0, vertical: 6),
+        padding: padding,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            IconButton(
-              icon: Icon(
-                MdiIcons.email,
-                color: selectedRoute == MailBottomAppBarRoutes.mail
-                    ? theme.primaryColor
-                    : theme.disabledColor,
-              ),
-              tooltip: S.of(context).messages_list_app_bar_mail,
-              iconSize: iconSize,
+            AdaptiveBottomBarButton(
+              mdiIcon: MdiIcons.email,
+              iconName: 'mail',
+              label: S.of(context).messages_list_app_bar_mail,
+              isActive: selectedRoute == MailBottomAppBarRoutes.mail,
+              activeColor: activeColor,
+              inactiveColor: inactiveColor,
               onPressed: () => _openMail(context),
-            ),
-            IconButton(
-              icon: Icon(
-                MdiIcons.cardAccountMail,
-                color: selectedRoute == MailBottomAppBarRoutes.contacts
-                    ? theme.primaryColor
-                    : theme.disabledColor,
-              ),
-              tooltip: S.of(context).messages_list_app_bar_contacts,
               iconSize: iconSize,
+            ),
+            AdaptiveBottomBarButton(
+              mdiIcon: MdiIcons.cardAccountMail,
+              iconName: 'contacts',
+              label: S.of(context).messages_list_app_bar_contacts,
+              isActive: selectedRoute == MailBottomAppBarRoutes.contacts,
+              activeColor: activeColor,
+              inactiveColor: inactiveColor,
               onPressed: () => _openContacts(context),
+              iconSize: iconSize,
             ),
             if (isCalendarExist)
-              IconButton(
-                icon: Icon(
-                  MdiIcons.calendar,
-                  color: selectedRoute == MailBottomAppBarRoutes.calendar
-                      ? theme.primaryColor
-                      : theme.disabledColor,
-                ),
-                tooltip: '',
+              AdaptiveBottomBarButton(
+                mdiIcon: MdiIcons.calendar,
+                iconName: 'calendar',
+                label: S.of(context).calendar,
+                isActive: selectedRoute == MailBottomAppBarRoutes.calendar,
+                activeColor: activeColor,
+                inactiveColor: inactiveColor,
+                onPressed: () => _openCalendar(context),
                 iconSize: iconSize,
-                onPressed: () {
-                  _openCalendar(context);
-                },
               ),
-            IconButton(
-              icon: Icon(
-                MdiIcons.cog,
-                color: selectedRoute == MailBottomAppBarRoutes.settings
-                    ? theme.primaryColor
-                    : theme.disabledColor,
-              ),
-              tooltip: S.of(context).messages_list_app_bar_settings,
-              iconSize: iconSize,
+            AdaptiveBottomBarButton(
+              mdiIcon: MdiIcons.cog,
+              iconName: 'settings',
+              label: S.of(context).messages_list_app_bar_settings,
+              isActive: selectedRoute == MailBottomAppBarRoutes.settings,
+              activeColor: activeColor,
+              inactiveColor: inactiveColor,
               onPressed: () => _openSettings(context),
+              iconSize: iconSize,
             ),
           ],
         ));
