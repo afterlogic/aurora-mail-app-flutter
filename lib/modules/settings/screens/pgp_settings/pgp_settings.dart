@@ -2,9 +2,8 @@
 import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/models/alias_or_account.dart';
-import 'package:aurora_mail/models/alias_or_identity.dart';
-import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
+import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/settings/blocs/pgp_settings/bloc.dart';
 import 'package:aurora_mail/modules/settings/screens/pgp_settings/dialogs/generate_key_dialog.dart';
 import 'package:aurora_mail/modules/settings/screens/pgp_settings/dialogs/import_from_text_dialog.dart';
@@ -20,9 +19,7 @@ import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:crypto_model/crypto_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:theme/app_color.dart';
-import 'package:theme/app_theme.dart';
 
 class PgpSettings extends StatefulWidget {
   final PgpSettingsBloc pgpSettingsBloc;
@@ -58,8 +55,11 @@ class _PgpSettingsState extends BState<PgpSettings> {
           ? null
           : AMAppBar(
               title: Text(S.of(context).label_pgp_settings),
-              backgroundColor: Color(0xFFF4F1FD),
-              textStyle:TextStyle(color: Color(0xFF2D2D2D), fontSize: 18, fontWeight: FontWeight.w600),
+              backgroundColor: AppColor.appBarBackground,
+              textStyle: TextStyle(
+                  color: Color(0xFF2D2D2D),
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600),
               shadow: BoxShadow(color: Colors.transparent),
             ),
       body: BlocListener<PgpSettingsBloc, PgpSettingsState>(

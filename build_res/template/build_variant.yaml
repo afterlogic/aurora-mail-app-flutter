@@ -1,31 +1,31 @@
 #Variables
-appName: ""
+appName: ''
 version: 1.0.0
 
 #Android App ID
-_appId: ""
+_appId: ''
 #iOS Team ID
-_iosDeveloperId: ""
+_iosDeveloperId: ''
 #iOS App Group ID
-_appleGroupId: ""
+_appleGroupId: ''
 
 #Android splash screen
-background_color: "#FFFFFF"
+background_color: '#FFFFFF'
 useBackgroundImage: false
-splashGradientTop: "#FFFFFF"
-splashGradientBottom: "#FFFFFF"
-splashGradientTopDark: "#000000"
-splashGradientBottomDark: "#000000"
+splashGradientTop: '#FFFFFF'
+splashGradientBottom: '#FFFFFF'
+splashGradientTopDark: '#000000'
+splashGradientBottomDark: '#000000'
 
-autodiscover_url: "https://{domain}/aurora-autodiscover.json?email={email}"
-privacyPolicy: ""
-termsOfService: ""
-registrationLink: ""
+autodiscover_url: 'https://{domain}/aurora-autodiscover.json?email={email}'
+privacyPolicy: ''
+termsOfService: ''
+registrationLink: ''
 
-supportLanguage: "en,tr,ru"
+supportLanguage: 'en,tr,ru'
 
 #App settings
-syncPeriod: "Period.months6"
+syncPeriod: 'Period.months6'
 mailMessagesChunkSize: 50
 
 #App features list
@@ -50,3 +50,4 @@ supportAllowAccess: false
 #yubico_flutter_lib: "git: https://github.com/afterlogic/yubico_flutter"
 
 useDrawerGradient: false # true for gradient drawer, false for white drawer
+useCustomInputStyles: false # true for custom input styles, false for default styles

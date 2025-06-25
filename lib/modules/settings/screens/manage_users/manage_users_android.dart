@@ -1,15 +1,16 @@
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/generated/l10n.dart';
-import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_state.dart';
 import 'package:aurora_mail/modules/auth/screens/login/login_route.dart';
+import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/settings/screens/settings_main/settings_navigator.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:theme/app_color.dart';
 import 'package:theme/app_theme.dart';
 
 import 'componenets/account_tile.dart';
@@ -33,8 +34,11 @@ class _ManageUsersAndroidState extends BState<ManageUsersAndroid> {
           ? null
           : AMAppBar(
               title: Text(S.of(context).settings_accounts_manage),
-              backgroundColor: Color(0xFFF4F1FD),
-              textStyle:TextStyle(color: Color(0xFF2D2D2D), fontSize: 18, fontWeight: FontWeight.w600),
+              backgroundColor: AppColor.appBarBackground,
+              textStyle: TextStyle(
+                  color: Color(0xFF2D2D2D),
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600),
               shadow: BoxShadow(color: Colors.transparent),
               actions: <Widget>[
                 IconButton(

@@ -11,9 +11,7 @@ import 'package:aurora_mail/utils/identity_util.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:crypto_model/crypto_model.dart';
 import 'package:flutter/material.dart';
-
 import 'package:theme/app_color.dart';
-import 'package:theme/app_theme.dart';
 
 class PgpKeyScreen extends StatefulWidget {
   final PgpSettingsBloc bloc;
@@ -70,8 +68,11 @@ class _PgpKeyScreenState extends State<PgpKeyScreen> {
                     ? S.of(context).label_pgp_private_key
                     : S.of(context).label_pgp_public_key,
               ),
-              backgroundColor: Color(0xFFF4F1FD),
-              textStyle:TextStyle(color: Color(0xFF2D2D2D), fontSize: 18, fontWeight: FontWeight.w600),
+              backgroundColor: AppColor.appBarBackground,
+              textStyle: TextStyle(
+                  color: Color(0xFF2D2D2D),
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600),
               shadow: BoxShadow(color: Colors.transparent),
             ),
       body: Flex(

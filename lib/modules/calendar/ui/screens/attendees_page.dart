@@ -5,7 +5,6 @@ import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/calendar/blocs/events/events_bloc.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/InviteStatus.dart';
 import 'package:aurora_mail/modules/calendar/calendar_domain/models/activity/attendee.dart';
-import 'package:aurora_mail/modules/calendar/calendar_domain/models/event.dart';
 import 'package:aurora_mail/modules/calendar/ui/widgets/attendee_card.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
@@ -16,6 +15,7 @@ import 'package:aurora_mail/utils/mail_utils.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:theme/app_color.dart';
 
 class AttendeesRouteArg {
   final Set<Attendee> initAttendees;
@@ -63,8 +63,11 @@ class _AttendeesPageState extends State<AttendeesPage> {
     return Scaffold(
       appBar: AMAppBar(
         title: Text('Add attendee'),
-        backgroundColor: Color(0xFFF4F1FD),
-        textStyle:TextStyle(color: Color(0xFF2D2D2D), fontSize: 18, fontWeight: FontWeight.w600),
+        backgroundColor: AppColor.appBarBackground,
+        textStyle: TextStyle(
+            color: Color(0xFF2D2D2D),
+            fontSize: 18,
+            fontWeight: FontWeight.w600),
         shadow: BoxShadow(color: Colors.transparent),
         actions: [
           TextButton(

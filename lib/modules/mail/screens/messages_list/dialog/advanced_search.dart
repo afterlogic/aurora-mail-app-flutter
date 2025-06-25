@@ -1,4 +1,5 @@
 //@dart=2.9
+import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/mail/repository/search_util.dart';
 import 'package:flutter/material.dart';
@@ -78,29 +79,161 @@ class AdvancedSearchState extends State<AdvancedSearch> {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             TextField(
-              decoration: InputDecoration(
-                labelText: S.of(context).messages_from,
-              ),
+              decoration: BuildProperty.useCustomInputStyles
+                  ? InputDecoration(
+                      labelText: S.of(context).messages_from,
+                      filled: true,
+                      fillColor: Color(0x80F5F5F5),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                        borderSide: BorderSide(
+                          color: Color(0xFFEBEBEB),
+                          width: 1.0,
+                        ),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                        borderSide: BorderSide(
+                          color: Color(0xFFEBEBEB),
+                          width: 1.0,
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                        borderSide: BorderSide(
+                          color: Color(0xFFEBEBEB),
+                          width: 1.0,
+                        ),
+                      ),
+                      labelStyle: TextStyle(
+                        color: Color(0xFF6F788D),
+                      ),
+                      contentPadding: EdgeInsets.symmetric(
+                          horizontal: 16.0, vertical: 12.0),
+                    )
+                  : InputDecoration(
+                      labelText: S.of(context).messages_from,
+                    ),
               controller: fromCtrl,
             ),
+            SizedBox(height: BuildProperty.useCustomInputStyles ? 8.0 : 0.0),
             TextField(
-              decoration: InputDecoration(
-                labelText: S.of(context).messages_to,
-              ),
+              decoration: BuildProperty.useCustomInputStyles
+                  ? InputDecoration(
+                      labelText: S.of(context).messages_to,
+                      filled: true,
+                      fillColor: Color(0x80F5F5F5),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                        borderSide: BorderSide(
+                          color: Color(0xFFEBEBEB),
+                          width: 1.0,
+                        ),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                        borderSide: BorderSide(
+                          color: Color(0xFFEBEBEB),
+                          width: 1.0,
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                        borderSide: BorderSide(
+                          color: Color(0xFFEBEBEB),
+                          width: 1.0,
+                        ),
+                      ),
+                      labelStyle: TextStyle(
+                        color: Color(0xFF6F788D),
+                      ),
+                      contentPadding: EdgeInsets.symmetric(
+                          horizontal: 16.0, vertical: 12.0),
+                    )
+                  : InputDecoration(
+                      labelText: S.of(context).messages_to,
+                    ),
               controller: toCtrl,
             ),
+            SizedBox(height: BuildProperty.useCustomInputStyles ? 8.0 : 0.0),
             TextField(
-              decoration: InputDecoration(
-                labelText: S.of(context).messages_subject,
-              ),
+              decoration: BuildProperty.useCustomInputStyles
+                  ? InputDecoration(
+                      labelText: S.of(context).messages_subject,
+                      filled: true,
+                      fillColor: Color(0x80F5F5F5),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                        borderSide: BorderSide(
+                          color: Color(0xFFEBEBEB),
+                          width: 1.0,
+                        ),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                        borderSide: BorderSide(
+                          color: Color(0xFFEBEBEB),
+                          width: 1.0,
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                        borderSide: BorderSide(
+                          color: Color(0xFFEBEBEB),
+                          width: 1.0,
+                        ),
+                      ),
+                      labelStyle: TextStyle(
+                        color: Color(0xFF6F788D),
+                      ),
+                      contentPadding: EdgeInsets.symmetric(
+                          horizontal: 16.0, vertical: 12.0),
+                    )
+                  : InputDecoration(
+                      labelText: S.of(context).messages_subject,
+                    ),
               controller: subjectCtrl,
             ),
+            SizedBox(height: BuildProperty.useCustomInputStyles ? 8.0 : 0.0),
             TextField(
-              decoration: InputDecoration(
-                labelText: S.of(context).input_message_search_text,
-              ),
+              decoration: BuildProperty.useCustomInputStyles
+                  ? InputDecoration(
+                      labelText: S.of(context).input_message_search_text,
+                      filled: true,
+                      fillColor: Color(0x80F5F5F5),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                        borderSide: BorderSide(
+                          color: Color(0xFFEBEBEB),
+                          width: 1.0,
+                        ),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                        borderSide: BorderSide(
+                          color: Color(0xFFEBEBEB),
+                          width: 1.0,
+                        ),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                        borderSide: BorderSide(
+                          color: Color(0xFFEBEBEB),
+                          width: 1.0,
+                        ),
+                      ),
+                      labelStyle: TextStyle(
+                        color: Color(0xFF6F788D),
+                      ),
+                      contentPadding: EdgeInsets.symmetric(
+                          horizontal: 16.0, vertical: 12.0),
+                    )
+                  : InputDecoration(
+                      labelText: S.of(context).input_message_search_text,
+                    ),
               controller: textCtrl,
             ),
+            SizedBox(height: BuildProperty.useCustomInputStyles ? 8.0 : 0.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
@@ -162,9 +295,43 @@ class AdvancedSearchState extends State<AdvancedSearch> {
               alignment: Alignment.centerRight,
               children: <Widget>[
                 TextField(
-                  decoration: InputDecoration(
-                    labelText: S.of(context).messages_view_tab_attachments,
-                  ),
+                  decoration: BuildProperty.useCustomInputStyles
+                      ? InputDecoration(
+                          labelText:
+                              S.of(context).messages_view_tab_attachments,
+                          filled: true,
+                          fillColor: Color(0x80F5F5F5),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                            borderSide: BorderSide(
+                              color: Color(0xFFEBEBEB),
+                              width: 1.0,
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                            borderSide: BorderSide(
+                              color: Color(0xFFEBEBEB),
+                              width: 1.0,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                            borderSide: BorderSide(
+                              color: Color(0xFFEBEBEB),
+                              width: 1.0,
+                            ),
+                          ),
+                          labelStyle: TextStyle(
+                            color: Color(0xFF6F788D),
+                          ),
+                          contentPadding: EdgeInsets.symmetric(
+                              horizontal: 16.0, vertical: 12.0),
+                        )
+                      : InputDecoration(
+                          labelText:
+                              S.of(context).messages_view_tab_attachments,
+                        ),
                   onChanged: (v) {
                     if (previousText.isEmpty != v.isEmpty) {
                       setState(() {});

@@ -7,11 +7,8 @@ import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/settings/blocs/pgp_settings/bloc.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:crypto_model/crypto_model.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-  
 import 'package:theme/app_color.dart';
-import 'package:theme/app_theme.dart';
 
 class PgpKeysScreen extends StatefulWidget {
   final List<PgpKey> pgpKeys;
@@ -58,8 +55,11 @@ class _PgpKeysScreenState extends State<PgpKeysScreen> {
               title: Text(
                 S.of(context).label_pgp_all_public_key,
               ),
-              backgroundColor: Color(0xFFF4F1FD),
-              textStyle:TextStyle(color: Color(0xFF2D2D2D), fontSize: 18, fontWeight: FontWeight.w600),
+              backgroundColor: AppColor.appBarBackground,
+              textStyle: TextStyle(
+                  color: Color(0xFF2D2D2D),
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600),
               shadow: BoxShadow(color: Colors.transparent),
             ),
       body: Flex(

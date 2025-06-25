@@ -2,7 +2,7 @@
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:theme/app_color.dart';
 
 class ComposeBody extends StatefulWidget {
   final TextEditingController textCtrl;
@@ -34,12 +34,34 @@ class _ComposeBodyState extends BState<ComposeBody> {
       focusNode: widget.focusNode,
       decoration: InputDecoration(
         contentPadding:
-            const EdgeInsets.symmetric(vertical: 26.0, horizontal: 16),
-        border: OutlineInputBorder(borderSide: BorderSide.none),
+            const EdgeInsets.symmetric(vertical: 16.0, horizontal: 16.0),
         filled: true,
-        fillColor:
-            widget.enable ? theme.cardColor : theme.disabledColor.withAlpha(20),
+        fillColor: AppColor.inputBackground,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8.0),
+          borderSide: BorderSide(
+            color: AppColor.inputBorder,
+            width: 1.0,
+          ),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8.0),
+          borderSide: BorderSide(
+            color: AppColor.inputBorder,
+            width: 1.0,
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8.0),
+          borderSide: BorderSide(
+            color: AppColor.inputBorder,
+            width: 1.0,
+          ),
+        ),
         hintText: S.of(context).compose_body_placeholder,
+        hintStyle: TextStyle(
+          color: AppColor.inputPlaceholder,
+        ),
       ),
     );
   }

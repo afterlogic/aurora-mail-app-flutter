@@ -27,6 +27,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:theme/app_color.dart';
 
 class EventCreationPage extends StatefulWidget {
   static const name = "event_creation_page";
@@ -180,8 +181,11 @@ class _EventCreationPageState extends State<EventCreationPage> {
       key: _scaffoldKey,
       appBar: AMAppBar(
         title: Text(_selectedEvent == null ? 'Create Event' : 'Edit Event'),
-        backgroundColor: Color(0xFFF4F1FD),
-        textStyle:TextStyle(color: Color(0xFF2D2D2D), fontSize: 18, fontWeight: FontWeight.w600),
+        backgroundColor: AppColor.appBarBackground,
+        textStyle: TextStyle(
+            color: Color(0xFF2D2D2D),
+            fontSize: 18,
+            fontWeight: FontWeight.w600),
         shadow: BoxShadow(color: Colors.transparent),
         actions: [
           TextButton(
@@ -249,8 +253,8 @@ class _EventCreationPageState extends State<EventCreationPage> {
                 child: Column(
                   children: [
                     Padding(
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 24, vertical: 16),
                       child: EditableDateInfo(
                         isAllDay: _isAllDay,
                         selectedStartDate: _selectedStartDate,
@@ -270,8 +274,8 @@ class _EventCreationPageState extends State<EventCreationPage> {
                         selectedEndDateChangedCallback: (value) {
                           _selectedEndDate = value;
                           if (_selectedStartDate.isAfter(_selectedEndDate)) {
-                            _selectedStartDate =
-                                _selectedEndDate.subtract(Duration(minutes: 30));
+                            _selectedStartDate = _selectedEndDate
+                                .subtract(Duration(minutes: 30));
                           }
                           setState(() {});
                         },
@@ -280,8 +284,8 @@ class _EventCreationPageState extends State<EventCreationPage> {
                     ),
                     const SectionDivider(),
                     Padding(
-                        padding:
-                            const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 24, vertical: 24),
                         child: EditableRecurrenceSection(
                           selectedUntilDate: _selectedUntilDate,
                           selectedWeekDaysRepeat: _selectedWeekDaysRepeat,
@@ -298,7 +302,8 @@ class _EventCreationPageState extends State<EventCreationPage> {
                             setState(() {});
                           },
                           selectedRecurrenceMode: _selectedRecurrenceMode,
-                          selectedRecurrenceModeCallback: (RecurrenceMode mode) {
+                          selectedRecurrenceModeCallback:
+                              (RecurrenceMode mode) {
                             _selectedRecurrenceMode = mode;
                             setState(() {});
                           },
@@ -306,8 +311,8 @@ class _EventCreationPageState extends State<EventCreationPage> {
                         )),
                     const SectionDivider(),
                     Padding(
-                        padding:
-                            const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 24, vertical: 16),
                         child: EditableRemindersSection(
                           onAddCallback: (RemindersOption option) {
                             if (_selectedReminders.contains(option)) {
@@ -325,8 +330,8 @@ class _EventCreationPageState extends State<EventCreationPage> {
                         )),
                     const SectionDivider(),
                     Padding(
-                      padding:
-                          const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 24, vertical: 16),
                       child: EditableAttendeesSection(
                         attendees: _attendees,
                         onAddPressed: () {

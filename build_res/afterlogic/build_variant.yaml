@@ -48,3 +48,4 @@ supportAllowAccess: true
 #yubico_flutter_lib: "git: https://github.com/afterlogic/yubico_flutter"
 
 useDrawerGradient: false
+useCustomInputStyles: false

@@ -24,6 +24,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
+import 'package:theme/app_color.dart';
 
 class TaskCreationPage extends StatefulWidget {
   static const name = "task_creation_page";
@@ -169,8 +170,11 @@ class _TaskCreationPageState extends State<TaskCreationPage> {
       key: _scaffoldKey,
       appBar: AMAppBar(
         title: Text(_selectedTask == null ? 'Create Task' : 'Edit Task'),
-        backgroundColor: Color(0xFFF4F1FD),
-        textStyle:TextStyle(color: Color(0xFF2D2D2D), fontSize: 18, fontWeight: FontWeight.w600),
+        backgroundColor: AppColor.appBarBackground,
+        textStyle: TextStyle(
+            color: Color(0xFF2D2D2D),
+            fontSize: 18,
+            fontWeight: FontWeight.w600),
         shadow: BoxShadow(color: Colors.transparent),
         actions: [
           TextButton(
