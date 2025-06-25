@@ -13,6 +13,10 @@ class AppColor {
 
   static const surface = Color(0xFFFFFFFF);
 
+  static const appBarBackground = Color(0xFFF4F1FD);
+  static const bottomNavigationBackground =
+      Color(0xFFF4F1FD); // color for bottom navigation
+
   static const warning = Color(0xFFF44336);
   static const enableShadow = true;
 }

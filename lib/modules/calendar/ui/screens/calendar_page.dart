@@ -1,4 +1,3 @@
-import 'package:aurora_mail/background/background_helper.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/calendar/blocs/calendars/calendars_bloc.dart';
 import 'package:aurora_mail/modules/calendar/blocs/events/events_bloc.dart';
@@ -24,8 +23,8 @@ import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:theme/app_color.dart';
 import 'package:theme/app_theme.dart';
 
 class CalendarPageArg {
@@ -127,8 +126,11 @@ class _CalendarPageState extends State<CalendarPage>
       drawer: CalendarDrawer(),
       appBar: AMAppBar(
         title: Text(S.of(context).calendar),
-        backgroundColor: Color(0xFFF4F1FD),
-        textStyle:TextStyle(color: Color(0xFF2D2D2D), fontSize: 18, fontWeight: FontWeight.w600),
+        backgroundColor: AppColor.appBarBackground,
+        textStyle: TextStyle(
+            color: Color(0xFF2D2D2D),
+            fontSize: 18,
+            fontWeight: FontWeight.w600),
         shadow: BoxShadow(color: Colors.transparent),
       ),
       body: Stack(
@@ -139,41 +141,41 @@ class _CalendarPageState extends State<CalendarPage>
                 Column(
                   children: [
                     Padding(
-                       padding: const EdgeInsets.only(
-                           top: 18.0, right: 24, left: 24),
-                       child: Row(
-                         children: [
-                           CalendarTab(
-                               title: 'Month',
-                               controller: _tabController,
-                               index: 0),
-                           const SizedBox(
-                             width: 16,
-                           ),
-                           CalendarTab(
-                               title: 'Week',
-                               controller: _tabController,
-                               index: 1),
-                           const SizedBox(
-                             width: 16,
-                           ),
-                           CalendarTab(
-                               title: 'Day',
-                               controller: _tabController,
-                               index: 2),
-                           const SizedBox(
-                             width: 16,
-                           ),
-                           CalendarTab(
-                               title: 'Tasks',
-                               controller: _tabController,
-                               index: 3),
-                           const SizedBox(
-                             width: 16,
-                           ),
-                         ],
-                       ),
-                     ),
+                      padding:
+                          const EdgeInsets.only(top: 18.0, right: 24, left: 24),
+                      child: Row(
+                        children: [
+                          CalendarTab(
+                              title: 'Month',
+                              controller: _tabController,
+                              index: 0),
+                          const SizedBox(
+                            width: 16,
+                          ),
+                          CalendarTab(
+                              title: 'Week',
+                              controller: _tabController,
+                              index: 1),
+                          const SizedBox(
+                            width: 16,
+                          ),
+                          CalendarTab(
+                              title: 'Day',
+                              controller: _tabController,
+                              index: 2),
+                          const SizedBox(
+                            width: 16,
+                          ),
+                          CalendarTab(
+                              title: 'Tasks',
+                              controller: _tabController,
+                              index: 3),
+                          const SizedBox(
+                            width: 16,
+                          ),
+                        ],
+                      ),
+                    ),
                     Expanded(
                       child: TabBarView(
                           controller: _tabController,
@@ -192,16 +194,19 @@ class _CalendarPageState extends State<CalendarPage>
                   left: 0,
                   right: 0,
                   child: BlocBuilder<EventsBloc, EventsState>(
-                    buildWhen: (previous, current) => previous.status != current.status,
+                    buildWhen: (previous, current) =>
+                        previous.status != current.status,
                     builder: (context, state) {
-                      return state.status.isLoading ? IgnorePointer(
-                        child: Center(
-                          child: RefreshProgressIndicator(
-                            backgroundColor: Colors.white,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ) : SizedBox.shrink();
+                      return state.status.isLoading
+                          ? IgnorePointer(
+                              child: Center(
+                                child: RefreshProgressIndicator(
+                                  backgroundColor: Colors.white,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            )
+                          : SizedBox.shrink();
                     },
                   ),
                 ),
@@ -211,71 +216,72 @@ class _CalendarPageState extends State<CalendarPage>
           if (_overlay)
             Positioned.fill(
               child: GestureDetector(
-                onTap: () {
-                  _overlay = false;
-                  setState(() {});
-                },
-                child: Container(
-                  color: Colors.black.withOpacity(0.2),
-                )),
+                  onTap: () {
+                    _overlay = false;
+                    setState(() {});
+                  },
+                  child: Container(
+                    color: Colors.black.withOpacity(0.2),
+                  )),
             ),
         ],
       ),
       floatingActionButton: _overlay
           ? Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              AMFloatingActionButton(
-                heroTag: 'task',
-                backgroundColor: Colors.white,
-                mini: true,
-                shadow: BoxShadow(
-                  color: Theme.of(context).primaryColor.withOpacity(0.3) ,
-                  blurRadius: 4.0,
-                  offset: Offset(0.0, 3.0),
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                AMFloatingActionButton(
+                  heroTag: 'task',
+                  backgroundColor: Colors.white,
+                  mini: true,
+                  shadow: BoxShadow(
+                    color: Theme.of(context).primaryColor.withOpacity(0.3),
+                    blurRadius: 4.0,
+                    offset: Offset(0.0, 3.0),
+                  ),
+                  child: IconTheme(
+                    data: AppTheme.floatIconTheme,
+                    child: Icon(Icons.add_task,
+                        color: Theme.of(context).primaryColor),
+                  ),
+                  onPressed: () {
+                    BlocProvider.of<TasksBloc>(context).add(SelectTask(null));
+                    _overlay = false;
+                    setState(() {});
+                    Navigator.of(context).pushNamed(
+                      TaskCreationPage.name,
+                    );
+                  },
                 ),
-                child: IconTheme(
-                  data: AppTheme.floatIconTheme,
-                  child: Icon(Icons.add_task, color: Theme.of(context).primaryColor),
+                const SizedBox(
+                  height: 16,
                 ),
-                onPressed: () {
-                  BlocProvider.of<TasksBloc>(context).add(SelectTask(null));
-                  _overlay = false;
-                  setState(() {});
-                  Navigator.of(context).pushNamed(
-                    TaskCreationPage.name,
-                  );
-                },
-              ),
-              const SizedBox(
-                height: 16,
-              ),
-              AMFloatingActionButton(
-                child: IconTheme(
-                  data: AppTheme.floatIconTheme,
-                  child: Icon(Icons.event, size: 32),
+                AMFloatingActionButton(
+                  child: IconTheme(
+                    data: AppTheme.floatIconTheme,
+                    child: Icon(Icons.event, size: 32),
+                  ),
+                  onPressed: () {
+                    BlocProvider.of<EventsBloc>(context).add(SelectEvent(null));
+                    _overlay = false;
+                    setState(() {});
+                    Navigator.of(context).pushNamed(
+                      EventCreationPage.name,
+                    );
+                  },
                 ),
-                onPressed: () {
-                  BlocProvider.of<EventsBloc>(context).add(SelectEvent(null));
-                  _overlay = false;
-                  setState(() {});
-                  Navigator.of(context).pushNamed(
-                    EventCreationPage.name,
-                  );
-                },
-              ),
-            ],
-          )
+              ],
+            )
           : AMFloatingActionButton(
-            child: IconTheme(
-              data: AppTheme.floatIconTheme,
-              child: Icon(MdiIcons.plus),
+              child: IconTheme(
+                data: AppTheme.floatIconTheme,
+                child: Icon(MdiIcons.plus),
+              ),
+              onPressed: () {
+                _overlay = true;
+                setState(() {});
+              },
             ),
-            onPressed: () {
-              _overlay = true;
-              setState(() {});
-            },
-          ),
       bottomNavigationBar:
           MailBottomAppBar(selectedRoute: MailBottomAppBarRoutes.calendar),
     );
