@@ -182,6 +182,8 @@ flutter:
     - {{image_dir}}/settings/menu/
     - {{image_dir}}/settings/common/
     - {{image_dir}}/settings/sync/
+    - {{image_dir}}/drawer/
+    - {{image_dir}}/drawer/inbox/
 
   fonts:
     - family: WebMailIcons

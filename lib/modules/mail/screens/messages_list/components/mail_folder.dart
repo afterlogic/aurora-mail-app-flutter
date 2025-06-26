@@ -5,8 +5,7 @@ import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/messages_list_state.dart';
-import 'package:aurora_mail/res/icons/app_assets.dart';
-import 'package:aurora_mail/shared_ui/svg_icon.dart';
+import 'package:aurora_mail/shared_ui/adaptive_drawer_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -112,25 +111,46 @@ class FolderHelper {
       case FolderType.notes:
         return Icon(Icons.push_pin_outlined);
       case FolderType.inbox:
-        return Icon(Icons.inbox);
+        return AdaptiveDrawerIcon(
+          defaultIcon: Icons.inbox,
+          iconName: 'inbox',
+        );
       case FolderType.sent:
-        return Icon(Icons.send);
+        return AdaptiveDrawerIcon(
+          defaultIcon: Icons.send,
+          iconName: 'sent',
+        );
       case FolderType.drafts:
-        return Icon(Icons.drafts);
+        return AdaptiveDrawerIcon(
+          defaultIcon: Icons.drafts,
+          iconName: 'drafts',
+        );
       case FolderType.spam:
-        return SvgIcon(AppAssets.spam);
+        return AdaptiveDrawerIcon(
+          defaultIcon: Icons.report,
+          iconName: 'spam',
+        );
       case FolderType.trash:
-        return Icon(MdiIcons.trashCanOutline);
+        return AdaptiveDrawerIcon(
+          defaultIcon: MdiIcons.trashCanOutline,
+          iconName: 'trash',
+        );
       case FolderType.virus:
         return Icon(Icons.bug_report);
       case FolderType.starred:
-        return Icon(Icons.star);
+        return AdaptiveDrawerIcon(
+          defaultIcon: Icons.star,
+          iconName: 'starred',
+        );
       case FolderType.template:
         return Icon(MdiIcons.fileDocumentEditOutline);
       case FolderType.system:
         return Icon(Icons.devices);
       case FolderType.user:
-        return Icon(Icons.folder);
+        return AdaptiveDrawerIcon(
+          defaultIcon: Icons.folder,
+          iconName: 'folder',
+        );
       case FolderType.unknown:
         return Icon(Icons.device_unknown);
       default:

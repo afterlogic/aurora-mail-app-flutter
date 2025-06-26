@@ -49,6 +49,7 @@ supportAllowAccess: true
 
 #Custom Drawer
 useDrawerGradient: false # use gradient for drawer
+useCustomDrawerIcons: false # use custom drawer folder icons
 
 #Custom input styles
 useCustomInputStyles: false # use custom input styles

@@ -12,52 +12,52 @@ _files:
   - ios/Runner/Runner.entitlements.temp
   - ios/AppShareExtension/AppShareExtension.entitlements.temp
   - ios/ExportOptions.plist.temp
-  
+
 # List of files that will be copied. The Key is a source path, Value is a destination path.
 _copy:
-  "{{main_logo}}": "android/app/src/main/res/drawable/main_logo.png"
-  "{{_google_services}}": "android/app/google-services.json"
-  "{{_google_services_ios}}": "ios/Runner/GoogleService-Info.plist"
-  "{{_sign_dir}}/key.properties": "android/key.properties"
-  "{{_sign_dir}}/key.jks": "android/app/key.jks"
-  
+  '{{main_logo}}': 'android/app/src/main/res/drawable/main_logo.png'
+  '{{_google_services}}': 'android/app/google-services.json'
+  '{{_google_services_ios}}': 'ios/Runner/GoogleService-Info.plist'
+  '{{_sign_dir}}/key.properties': 'android/key.properties'
+  '{{_sign_dir}}/key.jks': 'android/app/key.jks'
+
 # variables that are used in templates and are added to paths _buildPropertyPath
 _buildPropertyPath: lib/build_property.dart
 #default config
-_buildVariant: "build_res/afterlogic/build_variant.yaml"
+_buildVariant: 'build_res/afterlogic/build_variant.yaml'
 #variables
-appName: ""
-_iosAppName: "{{appName}}"
-_appId: ""
-_iosAppId: "{{_appId}}"
-_appleGroupId: ""
-packageName: "{{_appId}}"
-version: ""
+appName: ''
+_iosAppName: '{{appName}}'
+_appId: ''
+_iosAppId: '{{_appId}}'
+_appleGroupId: ''
+packageName: '{{_appId}}'
+version: ''
 build: 326
 
-icon: "{{image_dir}}/icon.png"
-main_logo: "{{image_dir}}/main_logo.png"
-image_dir: "{{_dir}}/image"
+icon: '{{image_dir}}/icon.png'
+main_logo: '{{image_dir}}/main_logo.png'
+image_dir: '{{_dir}}/image'
 
-_sign_dir: "{{_dir}}/sign"
-_google_services_dir: "{{_dir}}/crashlytics"
-_google_services: "{{_google_services_dir}}/google-services.json"
-_google_services_ios: "{{_google_services_dir}}/GoogleService-Info.plist"
+_sign_dir: '{{_dir}}/sign'
+_google_services_dir: '{{_dir}}/crashlytics'
+_google_services: '{{_google_services_dir}}/google-services.json'
+_google_services_ios: '{{_google_services_dir}}/GoogleService-Info.plist'
 
-autodiscover_url: ""
+autodiscover_url: ''
 
-deepLink: "{{packageName}}"
+deepLink: '{{packageName}}'
 
-foreground_icon: "{{image_dir}}/icon_foreground.png"
-background_color: "#3b3b3b"
-_theme_module: "{{_dir}}/theme"
+foreground_icon: '{{image_dir}}/icon_foreground.png'
+background_color: '#3b3b3b'
+_theme_module: '{{_dir}}/theme'
 
-privacyPolicy: ""
-termsOfService: ""
+privacyPolicy: ''
+termsOfService: ''
 # enum from package:aurora_mail/modules/settings/models/sync_period.dart
-syncPeriod: "Period.allTime"
-supportLanguage: "ru,en,tr"
-hasFloatingPlaceholder: "never" # auto or never
+syncPeriod: 'Period.allTime'
+supportLanguage: 'ru,en,tr'
+hasFloatingPlaceholder: 'never' # auto or never
 
 multiUserEnable: false
 cryptoEnable: false
@@ -70,9 +70,10 @@ logger: true
 pushNotification: true
 backgroundSync: false
 supportAllowAccess: true
+useCustomDrawerIcons: false
 
 # fido
 useYubiKit: false
-yubico_flutter_lib: "path: module/mocks/yubico_flutter"
+yubico_flutter_lib: 'path: module/mocks/yubico_flutter'
 #useYubiKit: true
 #yubico_flutter_lib: "git: https://github.com/afterlogic/yubico_flutter"

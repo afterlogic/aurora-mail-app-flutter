@@ -3,6 +3,7 @@ import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/models/folder.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/blocs/messages_list_bloc/bloc.dart';
+import 'package:aurora_mail/shared_ui/adaptive_drawer_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -30,7 +31,10 @@ class StarredFolder extends StatelessWidget {
 
     return ListTile(
       selected: isSelected,
-      leading: Icon(Icons.star_border),
+      leading: AdaptiveDrawerIcon(
+        defaultIcon: Icons.star_border,
+        iconName: 'starred',
+      ),
       title: Text(S.of(context).folders_starred),
       onTap: () => _selectFolder(context),
     );
