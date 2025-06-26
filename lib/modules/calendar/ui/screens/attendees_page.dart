@@ -83,6 +83,11 @@ class _AttendeesPageState extends State<AttendeesPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              if (BuildProperty.useAppBarDivider)
+                Container(
+                  height: 1,
+                  color: AppColor.appBarDivider,
+                ),
               BlocBuilder<EventsBloc, EventsState>(
                 builder: (context, state) {
                   if (state.selectedEvent?.owner?.isNotEmpty ?? false) {

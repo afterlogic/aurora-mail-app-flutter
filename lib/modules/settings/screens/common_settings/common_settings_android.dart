@@ -1,12 +1,16 @@
+//@dart=2.9
+import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/settings/blocs/settings_bloc/bloc.dart';
 import 'package:aurora_mail/modules/settings/models/language.dart';
 import 'package:aurora_mail/modules/settings/screens/common_settings/components/theme_selection_dialog.dart';
+import 'package:aurora_mail/shared_ui/adaptive_settings_menu_icon.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:theme/app_color.dart';
 
 import 'components/language_selection_dialog.dart';
@@ -17,13 +21,33 @@ class CommonSettingsAndroid extends StatefulWidget {
 }
 
 class _CommonSettingsAndroidState extends BState<CommonSettingsAndroid> {
-  String _getThemeName(bool isDarkTheme) {
-    if (isDarkTheme == false)
-      return S.of(context).settings_dark_theme_light;
-    else if (isDarkTheme == true)
-      return S.of(context).settings_dark_theme_dark;
-    else
-      return S.of(context).settings_dark_theme_system;
+  // Custom divider for common settings
+  Widget _buildDivider() {
+    if (BuildProperty.useSettingsMenuDivider) {
+      return Divider(height: 1, thickness: 0.5, color: Colors.grey[300]);
+    }
+    return SizedBox.shrink();
+  }
+
+  // Custom trailing arrow for common settings
+  Widget _buildTrailingArrow() {
+    if (BuildProperty.useSettingsMenuTrailingArrow) {
+      Color arrowColor = theme.primaryColor;
+      if (BuildProperty.useCustomSettingsColors) {
+        final isDarkTheme = theme.brightness == Brightness.dark;
+        arrowColor = isDarkTheme
+            ? AppColor.settingsArrowDark
+            : AppColor.settingsArrowLight;
+      }
+
+      return SvgPicture.asset(
+        '${BuildProperty.image_dir}/settings/vector.svg',
+        width: 8,
+        height: 16,
+        color: arrowColor,
+      );
+    }
+    return SizedBox.shrink();
   }
 
   @override
@@ -46,7 +70,15 @@ class _CommonSettingsAndroidState extends BState<CommonSettingsAndroid> {
                   fontWeight: FontWeight.w600),
               shadow: BoxShadow(color: Colors.transparent),
             ),
-      body: BlocBuilder<SettingsBloc, SettingsState>(
+      body: Column(
+        children: [
+          if (BuildProperty.useAppBarDivider && !isTablet)
+            Container(
+              height: 1,
+              color: AppColor.appBarDivider,
+            ),
+          Expanded(
+            child: BlocBuilder<SettingsBloc, SettingsState>(
         builder: (_, state) {
           if (state is SettingsLoaded) {
             return ListView(
@@ -54,14 +86,17 @@ class _CommonSettingsAndroidState extends BState<CommonSettingsAndroid> {
                 SwitchListTile.adaptive(
                     title: Row(
                       children: <Widget>[
-                        AMCircleIcon(
-                          Icons.access_time,
+                              AdaptiveSettingsMenuIcon(
+                                defaultIcon: Icons.access_time,
+                                iconName: '24-hour-format',
+                                iconFolder: 'common',
                           color: theme.primaryColor,
                           background: iconBG,
                         ),
                         SizedBox(width: 16.0),
                         Expanded(
-                          child: Text(S.of(context).settings_24_time_format,
+                                child: Text(
+                                    S.of(context).settings_24_time_format,
                               overflow: TextOverflow.ellipsis),
                         ),
                       ],
@@ -69,41 +104,50 @@ class _CommonSettingsAndroidState extends BState<CommonSettingsAndroid> {
                     activeColor: theme.primaryColor,
                     value: state.is24,
                     onChanged: (val) => bloc.add(SetTimeFormat(val))),
+                      _buildDivider(),
                 ListTile(
-                  leading: AMCircleIcon(
-                    Icons.color_lens,
+                        leading: AdaptiveSettingsMenuIcon(
+                          defaultIcon: Icons.color_lens,
+                          iconName: 'app-theme',
+                          iconFolder: 'common',
                     color: theme.primaryColor,
                     background: iconBG,
                   ),
                   title: Text(S.of(context).settings_dark_theme),
+                        trailing: _buildTrailingArrow(),
                   onTap: () => ThemeSelectionDialog.show(
                       context,
                       state.darkThemeEnabled,
                       (val) => bloc.add(SetDarkTheme(val))),
-                  trailing: Text(
-                    _getThemeName(state.darkThemeEnabled),
-                    style: theme.textTheme.caption,
                   ),
-                ),
+                      _buildDivider(),
                 if (Language.availableLanguages.length > 2)
                   ListTile(
-                    leading: AMCircleIcon(Icons.translate),
+                          leading: AdaptiveSettingsMenuIcon(
+                            defaultIcon: Icons.translate,
+                            iconName: 'language',
+                            iconFolder: 'common',
+                            color: theme.primaryColor,
+                            background: iconBG,
+                          ),
                     title: Text(S.of(context).settings_language),
-                    onTap: () => LanguageSelectionDialog.show(context,
-                        state.language, (lang) => bloc.add(SetLanguage(lang))),
-                    trailing: Text(
-                      state.language == null
-                          ? S.of(context).settings_language_system
-                          : state.language.name,
-                      style: theme.textTheme.caption,
-                    ),
-                  ),
+                          trailing: _buildTrailingArrow(),
+                          onTap: () => LanguageSelectionDialog.show(
+                              context,
+                              state.language,
+                              (lang) => bloc.add(SetLanguage(lang))),
+                        ),
+                      if (Language.availableLanguages.length > 2)
+                        _buildDivider(),
               ],
             );
           } else {
             return SizedBox();
           }
         },
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -43,6 +43,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:theme/app_color.dart';
 import 'package:theme/app_theme.dart';
 
 import 'components/compose_app_bar.dart';
@@ -1140,6 +1141,11 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
     final keyboardIsOpened = MediaQuery.of(context).viewInsets.bottom > 100;
     body = Column(
       children: [
+        if (BuildProperty.useAppBarDivider)
+          Container(
+            height: 1,
+            color: AppColor.appBarDivider,
+          ),
         Expanded(child: body),
         if (!keyboardIsOpened &&
             BuildProperty.cryptoEnable &&
@@ -1161,7 +1167,8 @@ class _ComposeAndroidState extends BState<ComposeAndroid>
         body: BlocListener<ComposeBloc, ComposeState>(
           listener: (context, state) {
             if (state is EncryptComplete) _encryptLock(state);
-            if (state is MessageSending) _showSending(context, state.messageToShow);
+            if (state is MessageSending)
+              _showSending(context, state.messageToShow);
             if (state is MessageSent)
               _onMessageSent(context, messageToShow: state.messageToShow);
             if (state is MessageSavedInDrafts)

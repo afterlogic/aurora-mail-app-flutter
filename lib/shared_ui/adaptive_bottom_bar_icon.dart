@@ -26,7 +26,7 @@ class AdaptiveBottomBarIcon extends StatelessWidget {
     // Если включены кастомные иконки, используем SVG
     if (BuildProperty.useCustomBottomBarIcons) {
       final iconPath = isActive
-          ? 'build_res/unlyme/image/bottom-app-bar/${iconName}__active.svg'
+          ? 'build_res/unlyme/image/bottom-app-bar/${iconName}.active.svg'
           : 'build_res/unlyme/image/bottom-app-bar/${iconName}.svg';
 
       return SizedBox(

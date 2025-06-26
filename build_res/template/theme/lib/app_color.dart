@@ -19,4 +19,7 @@ class AppColor {
 
   static const warning = Color(0xFFF44336);
   static const enableShadow = true;
+
+  // AppBar divider color (only used when useAppBarDivider is enabled)
+  static const appBarDivider = Color(0xFFEBEBEB);
 }

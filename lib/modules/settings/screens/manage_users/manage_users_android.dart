@@ -1,3 +1,5 @@
+//@dart=2.9
+import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
@@ -59,11 +61,22 @@ class _ManageUsersAndroidState extends BState<ManageUsersAndroid> {
               onPressed: () => _addAccount(context),
             )
           : null,
-      body: BlocBuilder<AuthBloc, AuthState>(
-        builder: (_, state) => _buildUsers(
-          context,
-          BlocProvider.of<AuthBloc>(context).users,
-        ),
+      body: Column(
+        children: [
+          if (BuildProperty.useAppBarDivider && !isTablet)
+            Container(
+              height: 1,
+              color: AppColor.appBarDivider,
+            ),
+          Expanded(
+            child: BlocBuilder<AuthBloc, AuthState>(
+              builder: (_, state) => _buildUsers(
+                context,
+                BlocProvider.of<AuthBloc>(context).users,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

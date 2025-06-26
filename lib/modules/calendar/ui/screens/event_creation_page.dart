@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aurora_mail/modules/calendar/blocs/calendars/calendars_bloc.dart';
@@ -215,6 +216,11 @@ class _EventCreationPageState extends State<EventCreationPage> {
           key: _formKey,
           child: Column(
             children: [
+              if (BuildProperty.useAppBarDivider)
+                Container(
+                  height: 1,
+                  color: AppColor.appBarDivider,
+                ),
               Padding(
                 padding: const EdgeInsets.all(24),
                 child: Column(

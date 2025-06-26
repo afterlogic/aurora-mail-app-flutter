@@ -1,17 +1,17 @@
 //@dart=2.9
 import 'dart:async';
 
+import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/inject/app_inject.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
-import 'package:aurora_mail/modules/contacts/screens/contacts_list/components/select_app_bar.dart';
-import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contact_model.dart';
 import 'package:aurora_mail/modules/contacts/screens/contact_edit/contact_edit_route.dart';
 import 'package:aurora_mail/modules/contacts/screens/contact_view/contact_view_android.dart';
 import 'package:aurora_mail/modules/contacts/screens/contact_view/contact_view_route.dart';
 import 'package:aurora_mail/modules/contacts/screens/contacts_list/components/contacts_app_bar.dart';
+import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/mail_bloc.dart';
 import 'package:aurora_mail/modules/mail/screens/messages_list/components/selection_controller.dart';
 import 'package:aurora_mail/modules/settings/blocs/pgp_settings/bloc.dart';
@@ -22,9 +22,9 @@ import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:crypto_model/crypto_model.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:theme/app_color.dart';
 import 'package:theme/app_theme.dart';
 
 import 'components/contacts_drawer.dart';
@@ -252,7 +252,18 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
               controller: selectionController,
             ),
       drawer: isTablet ? null : ContactsDrawer(),
-      body: body,
+      body: isTablet
+          ? body
+          : Column(
+              children: [
+                if (BuildProperty.useAppBarDivider)
+                  Container(
+                    height: 1,
+                    color: AppColor.appBarDivider,
+                  ),
+                Expanded(child: body),
+              ],
+            ),
       bottomNavigationBar:
           MailBottomAppBar(selectedRoute: MailBottomAppBarRoutes.contacts),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
@@ -261,7 +272,8 @@ class _ContactsListAndroidState extends BState<ContactsListAndroid> {
             (prev.selectedStorage != current.selectedStorage) ||
             (prev.selectedGroup != current.selectedGroup),
         builder: (context, state) {
-          return _checkIfContactCanBeAdded(state) && !(isTablet || selectionController.enable)
+          return _checkIfContactCanBeAdded(state) &&
+                  !(isTablet || selectionController.enable)
               ? AMFloatingActionButton(
                   child: IconTheme(
                     data: AppTheme.floatIconTheme,

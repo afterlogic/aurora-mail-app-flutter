@@ -1,6 +1,7 @@
 //@dart=2.9
 import 'dart:io';
 
+import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/auth/repository/device_id_storage.dart';
 import 'package:aurora_mail/modules/layout_config/layout_config.dart';
@@ -8,6 +9,7 @@ import 'package:aurora_mail/modules/settings/blocs/pgp_settings/bloc.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:crypto_model/crypto_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:theme/app_color.dart';
 
 class PgpKeysScreen extends StatefulWidget {
@@ -62,33 +64,40 @@ class _PgpKeysScreenState extends State<PgpKeysScreen> {
                   fontWeight: FontWeight.w600),
               shadow: BoxShadow(color: Colors.transparent),
             ),
-      body: Flex(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        direction: Axis.vertical,
-        children: <Widget>[
+      body: Column(
+        children: [
+          if (BuildProperty.useAppBarDivider && !isTablet)
+            Container(
+              height: 1,
+              color: AppColor.appBarDivider,
+            ),
           Expanded(
-            child: ListView(
-              padding: const EdgeInsets.all(8.0),
-              children: <Widget>[
-                if (isTablet)
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: SizedBox(
-                      width: double.infinity,
-                      child: Center(
-                        child: Text(
-                          S.of(context).label_pgp_all_public_key,
-                          style: theme.textTheme.headline6,
+            child: BlocBuilder<PgpSettingsBloc, PgpSettingsState>(
+              builder: (context, state) {
+                return ListView(
+                  padding: const EdgeInsets.all(8.0),
+                  children: <Widget>[
+                    if (isTablet)
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: Center(
+                            child: Text(
+                              S.of(context).label_pgp_all_public_key,
+                              style: theme.textTheme.headline6,
+                            ),
+                          ),
                         ),
                       ),
+                    SizedBox(
+                      height: 20,
                     ),
-                  ),
-                SizedBox(
-                  height: 20,
-                ),
-                SelectableText(
-                    widget.pgpKeys.map((key) => key.key).join("\n\n")),
-              ],
+                    SelectableText(
+                        widget.pgpKeys.map((key) => key.key).join("\n\n")),
+                  ],
+                );
+              },
             ),
           ),
           _button(context),

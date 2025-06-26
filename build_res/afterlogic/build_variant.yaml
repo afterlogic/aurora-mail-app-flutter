@@ -47,5 +47,22 @@ supportAllowAccess: true
 #useYubiKit: true
 #yubico_flutter_lib: "git: https://github.com/afterlogic/yubico_flutter"
 
-useDrawerGradient: false
-useCustomInputStyles: false
+#Custom Drawer
+useDrawerGradient: false # use gradient for drawer
+
+#Custom input styles
+useCustomInputStyles: false # use custom input styles
+
+#Custom bottom bar
+useCustomBottomBarIcons: false # use custom bottom bar icons
+showBottomBarLabels: false # show bottom bar labels
+useCustomBottomBarColors: false # use custom bottom bar colors (only for dark theme)
+
+#Custom settings
+useCustomSettingsIcons: false # use custom settings menu icons
+useSettingsMenuDivider: false # use dividers between settings menu items
+useSettingsMenuTrailingArrow: false # use trailing arrows in settings menu
+useCustomSettingsColors: false # use custom colors for settings menu
+
+#AppBar customization
+useAppBarDivider: false # add divider line under AppBar

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:aurora_mail/background/background_helper.dart';
+import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/database/app_database.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/models/folder.dart';
@@ -29,7 +30,9 @@ import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:theme/app_color.dart';
 import 'package:theme/app_theme.dart';
+
 import 'components/mail_app_bar.dart';
 import 'components/mail_folder.dart';
 import 'components/message_item.dart';
@@ -449,81 +452,95 @@ class _MessagesListAndroidState extends BState<MessagesListAndroid>
         onSearch: _onSearch,
       ),
       drawer: MainDrawer(),
-      body: Stack(
-        children: <Widget>[
-          BlocBuilder<MailBloc, MailState>(
-              bloc: _mailBloc,
-              buildWhen: (_, s) {
-                return s is FoldersLoaded;
-              },
-              builder: (context, state) {
-                if (state is FoldersLoaded) {
-                  return Positioned(
-                    right: 0,
-                    top: 0,
-                    child: MessageCounterWidget(
-                      _mailBloc.updateMessageCounter,
-                      state.selectedFolder,
+      body: Column(
+        children: [
+          if (BuildProperty.useAppBarDivider)
+            Container(
+              height: 1,
+              color: AppColor.appBarDivider,
+            ),
+          Expanded(
+            child: Stack(
+              children: <Widget>[
+                BlocBuilder<MailBloc, MailState>(
+                    bloc: _mailBloc,
+                    buildWhen: (_, s) {
+                      return s is FoldersLoaded;
+                    },
+                    builder: (context, state) {
+                      if (state is FoldersLoaded) {
+                        return Positioned(
+                          right: 0,
+                          top: 0,
+                          child: MessageCounterWidget(
+                            _mailBloc.updateMessageCounter,
+                            state.selectedFolder,
+                          ),
+                        );
+                      }
+                      return SizedBox.shrink();
+                    }),
+                MultiBlocListener(
+                  listeners: [
+                    BlocListener<MessagesListBloc, MessagesListState>(
+                      bloc: _messagesListBloc,
+                      listener: (context, state) {
+                        if (state is MailError)
+                          _showError(context, state.errorMsg);
+                        if (state is MessagesDeleted) _startRefresh();
+                        if (state is SubscribedToMessages)
+                          setState(() {
+                            _subscribedToMessagesState = state;
+                          });
+                      },
                     ),
-                  );
-                }
-                return SizedBox.shrink();
-              }),
-          MultiBlocListener(
-            listeners: [
-              BlocListener<MessagesListBloc, MessagesListState>(
-                bloc: _messagesListBloc,
-                listener: (context, state) {
-                  if (state is MailError) _showError(context, state.errorMsg);
-                  if (state is MessagesDeleted) _startRefresh();
-                  if (state is SubscribedToMessages)
-                    setState(() {
-                      _subscribedToMessagesState = state;
-                    });
-                },
-              ),
-              BlocListener<MailBloc, MailState>(
-                bloc: _mailBloc,
-                listener: (context, state) {
-                  final loading = state is FoldersLoading ||
-                      (state is FoldersLoaded && state.isProgress == true);
-                  _setIsLoading(loading);
+                    BlocListener<MailBloc, MailState>(
+                      bloc: _mailBloc,
+                      listener: (context, state) {
+                        final loading = state is FoldersLoading ||
+                            (state is FoldersLoaded &&
+                                state.isProgress == true);
+                        _setIsLoading(loading);
 
-                  if (state is FoldersLoaded) {
-                    setState(() => _selectedFolder = state.selectedFolder);
-                    if (state.postAction != null) {
-                      _dispatchPostFoldersLoadedAction(state);
-                    }
-                  }
-                },
-              ),
-            ],
-            child: RefreshIndicator(
-              key: _refreshKey,
-              onRefresh: () {
-                if (_isBackgroundRefresh) {
-                  _isBackgroundRefresh = false;
-                } else {
-                  _startRefresh();
-                  _mailBloc.add(RefreshMessages(_refreshCompleter));
-                  _mailBloc.add(RefreshFolders());
-                }
-                return _refreshCompleter.future;
-              },
-              backgroundColor: Colors.white,
-              color: Colors.black,
-              child: AnimatedSwitcher(
-                duration: Duration(milliseconds: 300),
-                child: _subscribedToMessagesState != null && !isLoading
-                    ? _buildMessagesStream(
-                        _subscribedToMessagesState.stream,
-                        _subscribedToMessagesState.filter,
-                        _subscribedToMessagesState.isSent,
-                        _subscribedToMessagesState.key,
-                        _subscribedToMessagesState.folder,
-                      )
-                    : _buildMessagesLoading(),
-              ),
+                        if (state is FoldersLoaded) {
+                          setState(
+                              () => _selectedFolder = state.selectedFolder);
+                          if (state.postAction != null) {
+                            _dispatchPostFoldersLoadedAction(state);
+                          }
+                        }
+                      },
+                    ),
+                  ],
+                  child: RefreshIndicator(
+                    key: _refreshKey,
+                    onRefresh: () {
+                      if (_isBackgroundRefresh) {
+                        _isBackgroundRefresh = false;
+                      } else {
+                        _startRefresh();
+                        _mailBloc.add(RefreshMessages(_refreshCompleter));
+                        _mailBloc.add(RefreshFolders());
+                      }
+                      return _refreshCompleter.future;
+                    },
+                    backgroundColor: Colors.white,
+                    color: Colors.black,
+                    child: AnimatedSwitcher(
+                      duration: Duration(milliseconds: 300),
+                      child: _subscribedToMessagesState != null && !isLoading
+                          ? _buildMessagesStream(
+                              _subscribedToMessagesState.stream,
+                              _subscribedToMessagesState.filter,
+                              _subscribedToMessagesState.isSent,
+                              _subscribedToMessagesState.key,
+                              _subscribedToMessagesState.folder,
+                            )
+                          : _buildMessagesLoading(),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ],

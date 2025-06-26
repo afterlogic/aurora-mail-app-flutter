@@ -1,3 +1,4 @@
+import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
@@ -20,9 +21,20 @@ class MessageHeaders extends StatelessWidget {
             fontWeight: FontWeight.w600),
         shadow: BoxShadow(color: Colors.transparent),
       ),
-      body: Padding(
-        child: SelectableText(text),
-        padding: EdgeInsets.all(16),
+      body: Column(
+        children: [
+          if (BuildProperty.useAppBarDivider)
+            Container(
+              height: 1,
+              color: AppColor.appBarDivider,
+            ),
+          Expanded(
+            child: Padding(
+              child: SelectableText(text),
+              padding: EdgeInsets.all(16),
+            ),
+          ),
+        ],
       ),
     );
   }

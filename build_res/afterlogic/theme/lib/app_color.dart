@@ -17,6 +17,27 @@ class AppColor {
   static const bottomNavigationBackground =
       Color(0xFFF4F1FD); // color for bottom navigation
 
+  // Цвета для bottom bar иконок
+  // Светлая тема
+  static const bottomBarIconLight = Color(0xFF6F788D); // неактивные иконки
+  static const bottomBarIconActiveLight = Color(0xFF041844); // активные иконки
+
+  // Темная тема
+  static const bottomBarIconDark = Color(0xFF698AD0); // неактивные иконки
+  static const bottomBarIconActiveDark = Color(0xFFFFFFFF); // активные иконки
+
+  // Цвета для settings menu иконок и стрелок
+  // Светлая тема
+  static const settingsIconLight = Color(0xFF6F788D); // иконки в светлой теме
+  static const settingsArrowLight = Color(0xFF6F788D); // стрелки в светлой теме
+
+  // Темная тема
+  static const settingsIconDark = Color(0xFF698AD0); // иконки в темной теме
+  static const settingsArrowDark = Color(0xFFFFFFFF); // стрелки в темной теме
+
   static const warning = Color(0xFFF44336);
   static const enableShadow = true;
+
+  // AppBar divider color (only used when useAppBarDivider is enabled)
+  static const appBarDivider = Color(0xFFEBEBEB);
 }

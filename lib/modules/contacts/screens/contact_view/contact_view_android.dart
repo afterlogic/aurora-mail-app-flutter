@@ -22,7 +22,6 @@ import 'package:aurora_mail/modules/settings/blocs/pgp_settings/bloc.dart';
 import 'package:aurora_mail/modules/settings/screens/pgp_settings/dialogs/import_key_dialog.dart';
 import 'package:aurora_mail/modules/settings/screens/pgp_settings/screens/pgp_key_route.dart';
 import 'package:aurora_mail/shared_ui/confirmation_dialog.dart';
-import 'package:aurora_mail/shared_ui/optional_dialog.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/date_formatting.dart';
 import 'package:aurora_mail/utils/identity_util.dart';
@@ -32,6 +31,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:theme/app_color.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ContactViewAndroid extends StatefulWidget {
@@ -172,8 +172,11 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
         }
         break;
       case ContactViewAppBarAction.add_to_group:
-        final result = await GroupsSelectDialog.show(context, bloc.state.groups,);
-        if(result == null){
+        final result = await GroupsSelectDialog.show(
+          context,
+          bloc.state.groups,
+        );
+        if (result == null) {
           break;
         }
         bloc.add(AddContactsToGroup([result], [contact]));
@@ -512,8 +515,9 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
         bloc: contactsBloc,
         listener: (context, state) async {
           final newContact = state.contacts.firstWhere((e) => e.uuid == c.uuid);
-          final isGroupsUpdated = !listEquals(newContact.groupUUIDs, c.groupUUIDs);
-          if(isGroupsUpdated){
+          final isGroupsUpdated =
+              !listEquals(newContact.groupUUIDs, c.groupUUIDs);
+          if (isGroupsUpdated) {
             final result = await contactsBloc.getContact(contact.entityId);
             init(result);
           }
@@ -628,13 +632,25 @@ class _ContactViewAndroidState extends BState<ContactViewAndroid> {
                 ],
               );
             } else {
-              return Center(
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    maxWidth: LayoutConfig.formWidth,
+              final isTablet = LayoutConfig.of(context).isTablet;
+              return Column(
+                children: [
+                  if (BuildProperty.useAppBarDivider && !isTablet)
+                    Container(
+                      height: 1,
+                      color: AppColor.appBarDivider,
+                    ),
+                  Expanded(
+                    child: Center(
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                          maxWidth: LayoutConfig.formWidth,
+                        ),
+                        child: child,
+                      ),
+                    ),
                   ),
-                  child: child,
-                ),
+                ],
               );
             }
           }),

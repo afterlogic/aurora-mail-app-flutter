@@ -1,6 +1,7 @@
 //@dart=2.9
 import 'dart:io';
 
+import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/auth/repository/device_id_storage.dart';
 import 'package:aurora_mail/modules/layout_config/layout_config.dart';
@@ -75,10 +76,13 @@ class _PgpKeyScreenState extends State<PgpKeyScreen> {
                   fontWeight: FontWeight.w600),
               shadow: BoxShadow(color: Colors.transparent),
             ),
-      body: Flex(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        direction: Axis.vertical,
-        children: <Widget>[
+      body: Column(
+        children: [
+          if (BuildProperty.useAppBarDivider && !isTablet)
+            Container(
+              height: 1,
+              color: AppColor.appBarDivider,
+            ),
           Expanded(
             child: ListView(
               padding: const EdgeInsets.all(8.0),

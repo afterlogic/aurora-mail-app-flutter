@@ -1,15 +1,17 @@
 //@dart=2.9
+import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/generated/l10n.dart';
-import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_group_model.dart';
 import 'package:aurora_mail/modules/contacts/screens/contacts_list/contacts_list_route.dart';
 import 'package:aurora_mail/modules/dialog_wrap.dart';
+import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_mail/utils/show_snack.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:theme/app_color.dart';
 
 import 'components/group_edit_app_bar.dart';
 
@@ -105,48 +107,65 @@ class _GroupEditAndroidState extends BState<GroupEditAndroid>
 
   @override
   Widget build(BuildContext context) {
+    final isTablet = LayoutConfig.of(context).isTablet;
     return Scaffold(
       appBar: GroupEditAppBar(_onAppBarActionSelected, widget.group != null),
-      body: Center(
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-            maxWidth: LayoutConfig.formWidth,
-          ),
-          child: ListView(
-            children: <Widget>[
-              _buildInput(
-                  S.of(context).contacts_view_section_group_name, _nameCtrl),
-              SwitchListTile.adaptive(
-                title: Text(S.of(context).contacts_group_edit_is_organization),
-                value: _isOrg,
-                activeColor: theme.primaryColor,
-                onChanged: (v) => setState(() => _isOrg = v),
-              ),
-              if (_isOrg)
-                Column(
+      body: Column(
+        children: [
+          if (BuildProperty.useAppBarDivider && !isTablet)
+            Container(
+              height: 1,
+              color: AppColor.appBarDivider,
+            ),
+          Expanded(
+            child: Center(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: LayoutConfig.formWidth,
+                ),
+                child: ListView(
                   children: <Widget>[
-                    _buildInput(S.of(context).contacts_view_email, _emailCtrl,
-                        TextInputType.emailAddress),
-                    _buildInput(
-                        S.of(context).contacts_view_company, _companyCtrl),
-                    _buildInput(
-                        S.of(context).contacts_view_country, _countryCtrl),
-                    _buildInput(
-                        S.of(context).contacts_view_province, _stateCtrl),
-                    _buildInput(S.of(context).contacts_view_city, _cityCtrl),
-                    _buildInput(S.of(context).contacts_view_street_address,
-                        _streetCtrl),
-                    _buildInput(S.of(context).contacts_view_zip, _zipCtrl),
-                    _buildInput(S.of(context).contacts_view_phone, _phoneCtrl,
-                        TextInputType.phone),
-                    _buildInput(S.of(context).contacts_view_fax, _faxCtrl),
-                    _buildInput(S.of(context).contacts_view_web_page, _webCtrl,
-                        TextInputType.url),
+                    _buildInput(S.of(context).contacts_view_section_group_name,
+                        _nameCtrl),
+                    SwitchListTile.adaptive(
+                      title: Text(
+                          S.of(context).contacts_group_edit_is_organization),
+                      value: _isOrg,
+                      activeColor: theme.primaryColor,
+                      onChanged: (v) => setState(() => _isOrg = v),
+                    ),
+                    if (_isOrg)
+                      Column(
+                        children: <Widget>[
+                          _buildInput(S.of(context).contacts_view_email,
+                              _emailCtrl, TextInputType.emailAddress),
+                          _buildInput(S.of(context).contacts_view_company,
+                              _companyCtrl),
+                          _buildInput(S.of(context).contacts_view_country,
+                              _countryCtrl),
+                          _buildInput(
+                              S.of(context).contacts_view_province, _stateCtrl),
+                          _buildInput(
+                              S.of(context).contacts_view_city, _cityCtrl),
+                          _buildInput(
+                              S.of(context).contacts_view_street_address,
+                              _streetCtrl),
+                          _buildInput(
+                              S.of(context).contacts_view_zip, _zipCtrl),
+                          _buildInput(S.of(context).contacts_view_phone,
+                              _phoneCtrl, TextInputType.phone),
+                          _buildInput(
+                              S.of(context).contacts_view_fax, _faxCtrl),
+                          _buildInput(S.of(context).contacts_view_web_page,
+                              _webCtrl, TextInputType.url),
+                        ],
+                      ),
                   ],
                 ),
-            ],
+              ),
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

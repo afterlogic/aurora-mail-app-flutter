@@ -1,10 +1,11 @@
 //@dart=2.9
+import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/generated/l10n.dart';
-import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/contacts/blocs/contacts_bloc/bloc.dart';
 import 'package:aurora_mail/modules/contacts/contacts_domain/models/contacts_group_model.dart';
 import 'package:aurora_mail/modules/contacts/screens/contact_view/components/contacts_info_item.dart';
 import 'package:aurora_mail/modules/contacts/screens/group_edit/group_edit_route.dart';
+import 'package:aurora_mail/modules/layout_config/layout_config.dart';
 import 'package:aurora_mail/modules/mail/blocs/mail_bloc/bloc.dart';
 import 'package:aurora_mail/modules/mail/models/compose_actions.dart';
 import 'package:aurora_mail/modules/mail/screens/compose/compose_route.dart';
@@ -13,6 +14,7 @@ import 'package:aurora_mail/utils/base_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:theme/app_color.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'components/group_view_app_bar.dart';
@@ -139,17 +141,29 @@ class _GroupViewAndroidState extends BState<GroupViewAndroid> {
         cb: () => _visitWebsite(g.web),
       ),
     ]);
+    final isTablet = LayoutConfig.of(context).isTablet;
     return Scaffold(
       appBar: GroupViewAppBar(onActionSelected: _onAppBarActionSelected),
-      body: Center(
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-            maxWidth: LayoutConfig.formWidth,
+      body: Column(
+        children: [
+          if (BuildProperty.useAppBarDivider && !isTablet)
+            Container(
+              height: 1,
+              color: AppColor.appBarDivider,
+            ),
+          Expanded(
+            child: Center(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: LayoutConfig.formWidth,
+                ),
+                child: ListView(
+                  children: _mainInfo,
+                ),
+              ),
+            ),
           ),
-          child: ListView(
-            children: _mainInfo,
-          ),
-        ),
+        ],
       ),
     );
   }

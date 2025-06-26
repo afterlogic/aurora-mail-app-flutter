@@ -1,5 +1,6 @@
 //@dart=2.9
 import 'package:aurora_logger/aurora_logger.dart';
+import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/bloc.dart';
 import 'package:aurora_mail/modules/calendar/blocs/calendars/calendars_bloc.dart';
@@ -57,70 +58,86 @@ class _DebugSettingState extends BState<DebugSetting> {
                   fontWeight: FontWeight.w600),
               shadow: BoxShadow(color: Colors.transparent),
             ),
-      body: _backgroundRecord == null
-          ? SizedBox.shrink()
-          : Column(
-              children: <Widget>[
-                CheckboxListTile(
-                  value: _backgroundRecord,
-                  title: Text(S.of(context).label_record_log_in_background),
-                  onChanged: (bool value) {
-                    _backgroundRecord = value;
-                    _storage.setBackgroundRecord(value);
-                    setState(() {});
-                  },
-                ),
-                CheckboxListTile(
-                  value: _messageCounter,
-                  title:
-                      Text(S.of(context).label_enable_uploaded_message_counter),
-                  onChanged: (bool value) {
-                    _messageCounter = value;
-                    _storage.setEnableCounter(value);
-                    setState(() {});
-                  },
-                ),
-                CheckboxListTile(
-                  value: _showResponseBody,
-                  title: Text('Show response body'),
-                  onChanged: (bool value) {
-                    setState(() {
-                      _showResponseBody = value;
-                      _storage.setShowResponseBody(value);
-                    });
-                  },
-                ),
-                TextButton(
-                    onPressed: () {
-                      BlocProvider.of<CalendarsBloc>(context).add(ClearData());
-                    },
-                    child: Text('Delete calendars data')),
-                Expanded(
-                  child: LoggerSettingWidget(
-                    LoggerSettingArg(
-                        BlocProvider.of<AuthBloc>(context).currentUser.hostname,
-                        S.of(context).label_show_debug_view,
-                        S.of(context).btn_log_delete_all,
-                        S.of(context).hint_log_delete_all,
-                        S.of(context).debug_hint_log_delete_record,
-                        (hint) async {
-                      final result = await AMConfirmationDialog.show(
-                        context,
-                        "",
-                        hint,
-                        S.of(context).btn_delete,
-                        S.of(context).btn_cancel,
-                      );
-                      if (result == true) {
-                        return true;
-                      } else {
-                        return false;
-                      }
-                    }),
-                  ),
-                ),
-              ],
+      body: Column(
+        children: [
+          if (BuildProperty.useAppBarDivider && !isTablet)
+            Container(
+              height: 1,
+              color: AppColor.appBarDivider,
             ),
+          Expanded(
+            child: _backgroundRecord == null
+                ? SizedBox.shrink()
+                : Column(
+                    children: <Widget>[
+                      CheckboxListTile(
+                        value: _backgroundRecord,
+                        title:
+                            Text(S.of(context).label_record_log_in_background),
+                        onChanged: (bool value) {
+                          _backgroundRecord = value;
+                          _storage.setBackgroundRecord(value);
+                          setState(() {});
+                        },
+                      ),
+                      CheckboxListTile(
+                        value: _messageCounter,
+                        title: Text(S
+                            .of(context)
+                            .label_enable_uploaded_message_counter),
+                        onChanged: (bool value) {
+                          _messageCounter = value;
+                          _storage.setEnableCounter(value);
+                          setState(() {});
+                        },
+                      ),
+                      CheckboxListTile(
+                        value: _showResponseBody,
+                        title: Text('Show response body'),
+                        onChanged: (bool value) {
+                          setState(() {
+                            _showResponseBody = value;
+                            _storage.setShowResponseBody(value);
+                          });
+                        },
+                      ),
+                      TextButton(
+                          onPressed: () {
+                            BlocProvider.of<CalendarsBloc>(context)
+                                .add(ClearData());
+                          },
+                          child: Text('Delete calendars data')),
+                      Expanded(
+                        child: LoggerSettingWidget(
+                          LoggerSettingArg(
+                              BlocProvider.of<AuthBloc>(context)
+                                  .currentUser
+                                  .hostname,
+                              S.of(context).label_show_debug_view,
+                              S.of(context).btn_log_delete_all,
+                              S.of(context).hint_log_delete_all,
+                              S.of(context).debug_hint_log_delete_record,
+                              (hint) async {
+                            final result = await AMConfirmationDialog.show(
+                              context,
+                              "",
+                              hint,
+                              S.of(context).btn_delete,
+                              S.of(context).btn_cancel,
+                            );
+                            if (result == true) {
+                              return true;
+                            } else {
+                              return false;
+                            }
+                          }),
+                        ),
+                      ),
+                    ],
+                  ),
+          ),
+        ],
+      ),
     );
   }
 }

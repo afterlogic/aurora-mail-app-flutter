@@ -84,8 +84,8 @@ class MailBottomAppBar extends StatelessWidget {
         color: AppColor.bottomNavigationBackground,
         padding: padding,
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: <Widget>[
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: <Widget>[
             AdaptiveBottomBarButton(
               mdiIcon: MdiIcons.email,
               iconName: 'mail',
@@ -94,7 +94,7 @@ class MailBottomAppBar extends StatelessWidget {
               activeColor: activeColor,
               inactiveColor: inactiveColor,
               onPressed: () => _openMail(context),
-              iconSize: iconSize,
+          iconSize: iconSize,
             ),
             AdaptiveBottomBarButton(
               mdiIcon: MdiIcons.cardAccountMail,
@@ -104,8 +104,8 @@ class MailBottomAppBar extends StatelessWidget {
               activeColor: activeColor,
               inactiveColor: inactiveColor,
               onPressed: () => _openContacts(context),
-              iconSize: iconSize,
-            ),
+          iconSize: iconSize,
+        ),
             if (isCalendarExist)
               AdaptiveBottomBarButton(
                 mdiIcon: MdiIcons.calendar,
@@ -115,7 +115,7 @@ class MailBottomAppBar extends StatelessWidget {
                 activeColor: activeColor,
                 inactiveColor: inactiveColor,
                 onPressed: () => _openCalendar(context),
-                iconSize: iconSize,
+          iconSize: iconSize,
               ),
             AdaptiveBottomBarButton(
               mdiIcon: MdiIcons.cog,
@@ -125,10 +125,10 @@ class MailBottomAppBar extends StatelessWidget {
               activeColor: activeColor,
               inactiveColor: inactiveColor,
               onPressed: () => _openSettings(context),
-              iconSize: iconSize,
-            ),
-          ],
-        ));
+          iconSize: iconSize,
+        ),
+      ],
+    ));
     if (isTablet) {
       row = Row(
         children: [

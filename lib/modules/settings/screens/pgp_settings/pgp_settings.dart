@@ -62,59 +62,71 @@ class _PgpSettingsState extends BState<PgpSettings> {
                   fontWeight: FontWeight.w600),
               shadow: BoxShadow(color: Colors.transparent),
             ),
-      body: BlocListener<PgpSettingsBloc, PgpSettingsState>(
-        bloc: bloc,
-        listener: (context, state) {
-          if (state is SelectKeyForImport) {
-            _importKey(state.userKeys, state.contactKeys);
-            return;
-          }
-          if (state is ErrorState) {
-            showErrorSnack(
-              context: context,
-              scaffoldState: Scaffold.of(context),
-              msg: state.message,
-            );
-            return;
-          }
-          if (state is CompleteDownload) {
-            showSnack(
-              isError: false,
-              context: context,
-              scaffoldState: Scaffold.of(context),
-              message: S.of(context).label_pgp_downloading_to(state.filePath),
-            );
-            return;
-          }
-        },
-        child: BlocBuilder<PgpSettingsBloc, PgpSettingsState>(
-          bloc: bloc,
-          buildWhen: (current, next) {
-            return next is ProgressState || next is LoadedState;
-          },
-          builder: (BuildContext context, PgpSettingsState state) {
-            if (state is ProgressState) {
-              return _progress();
-            }
-            final loadedState = state as LoadedState;
+      body: Column(
+        children: [
+          if (BuildProperty.useAppBarDivider && !isTablet)
+            Container(
+              height: 1,
+              color: AppColor.appBarDivider,
+            ),
+          Expanded(
+            child: BlocListener<PgpSettingsBloc, PgpSettingsState>(
+              bloc: bloc,
+              listener: (context, state) {
+                if (state is SelectKeyForImport) {
+                  _importKey(state.userKeys, state.contactKeys);
+                  return;
+                }
+                if (state is ErrorState) {
+                  showErrorSnack(
+                    context: context,
+                    scaffoldState: Scaffold.of(context),
+                    msg: state.message,
+                  );
+                  return;
+                }
+                if (state is CompleteDownload) {
+                  showSnack(
+                    isError: false,
+                    context: context,
+                    scaffoldState: Scaffold.of(context),
+                    message:
+                        S.of(context).label_pgp_downloading_to(state.filePath),
+                  );
+                  return;
+                }
+              },
+              child: BlocBuilder<PgpSettingsBloc, PgpSettingsState>(
+                bloc: bloc,
+                buildWhen: (current, next) {
+                  return next is ProgressState || next is LoadedState;
+                },
+                builder: (BuildContext context, PgpSettingsState state) {
+                  if (state is ProgressState) {
+                    return _progress();
+                  }
+                  final loadedState = state as LoadedState;
 
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Expanded(
-                  child: _keys(
-                    context,
-                    loadedState.myPublic,
-                    loadedState.myPrivate,
-                    loadedState.contactPublic,
-                    loadedState.keyProgress,
-                  ),
-                ),
-                _buttons(context, loadedState),
-              ],
-            );
-          },
-        ),
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Expanded(
+                        child: _keys(
+                          context,
+                          loadedState.myPublic,
+                          loadedState.myPrivate,
+                          loadedState.contactPublic,
+                          loadedState.keyProgress,
+                        ),
+                      ),
+                      _buttons(context, loadedState),
+                    ],
+                  );
+                },
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

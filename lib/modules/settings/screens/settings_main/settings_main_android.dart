@@ -16,12 +16,14 @@ import 'package:aurora_mail/modules/settings/screens/notifications_settings/noti
 import 'package:aurora_mail/modules/settings/screens/pgp_settings/pgp_settings_route.dart';
 import 'package:aurora_mail/modules/settings/screens/settings_main/settings_navigator.dart';
 import 'package:aurora_mail/modules/settings/screens/sync_settings/sync_settings_route.dart';
+import 'package:aurora_mail/shared_ui/adaptive_settings_menu_icon.dart';
 import 'package:aurora_mail/shared_ui/mail_bottom_app_bar.dart';
 import 'package:aurora_mail/shared_ui/optional_dialog.dart';
 import 'package:aurora_mail/utils/base_state.dart';
 import 'package:aurora_ui_kit/aurora_ui_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:theme/app_color.dart';
 
 class SettingsMainAndroid extends StatefulWidget {
@@ -49,6 +51,38 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
     super.dispose();
   }
 
+  // Custom divider for settings menu
+  Widget _buildDivider() {
+    // Показываем разделитель только если используются кастомные иконки
+    if (BuildProperty.useSettingsMenuDivider) {
+      return Divider(height: 1, thickness: 0.5, color: Colors.grey[300]);
+    }
+    return SizedBox.shrink();
+  }
+
+  // Custom trailing arrow for settings menu
+  Widget _buildTrailingArrow() {
+    // Показываем стрелку только если используются кастомные иконки
+    if (BuildProperty.useSettingsMenuTrailingArrow) {
+      // Определяем цвет стрелки
+      Color arrowColor = theme.primaryColor;
+      if (BuildProperty.useCustomSettingsColors) {
+        final isDarkTheme = theme.brightness == Brightness.dark;
+        arrowColor = isDarkTheme
+            ? AppColor.settingsArrowDark
+            : AppColor.settingsArrowLight;
+      }
+
+      return SvgPicture.asset(
+        '${BuildProperty.image_dir}/settings/vector.svg',
+        width: 8,
+        height: 16,
+        color: arrowColor,
+      );
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     final iconBG = theme.brightness == Brightness.dark
@@ -63,69 +97,88 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
       children: <Widget>[
         ListTile(
           selected: current == CommonSettingsRoute.name,
-          leading: AMCircleIcon(
-            Icons.tune,
+          leading: AdaptiveSettingsMenuIcon(
+            defaultIcon: Icons.tune,
+            iconName: 'common',
             color: theme.primaryColor,
             background: iconBG,
           ),
           title: Text(S.of(context).settings_common),
+          trailing: _buildTrailingArrow(),
           onTap: () => navigator().setRoot(CommonSettingsRoute.name),
         ),
+        _buildDivider(),
         ListTile(
           selected: current == SyncSettingsRoute.name,
-          leading: AMCircleIcon(
-            Icons.sync,
+          leading: AdaptiveSettingsMenuIcon(
+            defaultIcon: Icons.sync,
+            iconName: 'sync',
             color: theme.primaryColor,
             background: iconBG,
           ),
           title: Text(S.of(context).settings_sync),
+          trailing: _buildTrailingArrow(),
           onTap: () => navigator().setRoot(SyncSettingsRoute.name),
         ),
+        _buildDivider(),
         if (BuildProperty.enablePushNotification &&
             BuildProperty.showPushNotificatonsSettings)
           ListTile(
             selected: current == NotificationsSettingsRoute.name,
-            leading: AMCircleIcon(
-              Icons.notifications,
+            leading: AdaptiveSettingsMenuIcon(
+              defaultIcon: Icons.notifications,
+              iconName: 'notifications',
               color: theme.primaryColor,
               background: iconBG,
             ),
             title: Text(S.of(context).label_notifications_settings),
+            trailing: _buildTrailingArrow(),
             onTap: () => navigator().setRoot(NotificationsSettingsRoute.name),
           ),
+        if (BuildProperty.enablePushNotification &&
+            BuildProperty.showPushNotificatonsSettings)
+          _buildDivider(),
         if (BuildProperty.cryptoEnable)
           ListTile(
             selected: current == PgpSettingsRoute.name,
-            leading: AMCircleIcon(
-              Icons.vpn_key,
+            leading: AdaptiveSettingsMenuIcon(
+              defaultIcon: Icons.vpn_key,
+              iconName: 'openPGP',
               color: theme.primaryColor,
               background: iconBG,
             ),
             title: Text(S.of(context).label_pgp_settings),
+            trailing: _buildTrailingArrow(),
             onTap: () => navigator().setRoot(
               PgpSettingsRoute.name,
               arguments: PgpSettingsRouteArg(pgpSettingsBloc),
             ),
           ),
+        if (BuildProperty.cryptoEnable) _buildDivider(),
         if (BuildProperty.multiUserEnable)
           ListTile(
             selected: current == ManageUsersRoute.name,
-            leading: AMCircleIcon(
-              Icons.account_circle,
+            leading: AdaptiveSettingsMenuIcon(
+              defaultIcon: Icons.account_circle,
+              iconName: 'account',
               color: theme.primaryColor,
               background: iconBG,
             ),
             title: Text(S.of(context).settings_accounts_manage),
+            trailing: _buildTrailingArrow(),
             onTap: () => navigator().setRoot(ManageUsersRoute.name),
           ),
+        if (BuildProperty.multiUserEnable) _buildDivider(),
         ListTile(
           selected: current == AboutRoute.name,
-          leading: AMCircleIcon(
-            Icons.info_outline,
+          leading: AdaptiveSettingsMenuIcon(
+            defaultIcon: Icons.info_outline,
+            iconName: 'about',
             color: theme.primaryColor,
             background: iconBG,
           ),
           title: Text(S.of(context).settings_about),
+          trailing: _buildTrailingArrow(),
           onLongPress: BuildProperty.enableDebugScreen
               ? () {
                   storage.setDebugEnable(true);
@@ -134,25 +187,31 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
               : null,
           onTap: () => navigator().setRoot(AboutRoute.name),
         ),
+        _buildDivider(),
         if (showDebug)
           ListTile(
             selected: current == DebugRoute.name,
-            leading: AMCircleIcon(
-              Icons.perm_device_information,
+            leading: AdaptiveSettingsMenuIcon(
+              defaultIcon: Icons.perm_device_information,
+              iconName: 'debug',
               color: theme.primaryColor,
               background: iconBG,
             ),
             title: Text("Debug"),
+            trailing: _buildTrailingArrow(),
             onTap: () => navigator().setRoot(DebugRoute.name),
           ),
+        if (showDebug) _buildDivider(),
         if (!BuildProperty.multiUserEnable)
           ListTile(
-            leading: AMCircleIcon(
-              Icons.exit_to_app,
+            leading: AdaptiveSettingsMenuIcon(
+              defaultIcon: Icons.exit_to_app,
+              iconName: 'exit',
               color: theme.primaryColor,
               background: iconBG,
             ),
             title: Text(S.of(context).messages_list_app_bar_logout),
+            trailing: _buildTrailingArrow(),
             onTap: _exit,
           ),
       ],
@@ -219,7 +278,18 @@ class _SettingsMainAndroidState extends BState<SettingsMainAndroid> {
                   fontWeight: FontWeight.w600),
               shadow: BoxShadow(color: Colors.transparent),
             ),
-      body: body,
+      body: isTablet
+          ? body
+          : Column(
+              children: [
+                if (BuildProperty.useAppBarDivider)
+                  Container(
+                    height: 1,
+                    color: AppColor.appBarDivider,
+                  ),
+                Expanded(child: body),
+              ],
+            ),
       bottomNavigationBar:
           MailBottomAppBar(selectedRoute: MailBottomAppBarRoutes.settings),
     );
