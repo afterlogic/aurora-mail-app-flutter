@@ -1,4 +1,5 @@
 //@dart=2.9
+import 'package:aurora_mail/build_property.dart';
 import 'package:aurora_mail/config.dart';
 import 'package:aurora_mail/generated/l10n.dart';
 import 'package:aurora_mail/modules/auth/blocs/auth_bloc/auth_bloc.dart';
@@ -17,21 +18,18 @@ class ContactsListTile extends StatefulWidget {
   final void Function(Contact) onDeleteContact;
   final SelectionController selectionController;
 
-
-  ContactsListTile(
-      {@required this.contact,
-      @required this.onPressed,
-      @required this.onDeleteContact,
-      this.selectionController,
-      })
-      : super(key: Key(contact.uuid));
+  ContactsListTile({
+    @required this.contact,
+    @required this.onPressed,
+    @required this.onDeleteContact,
+    this.selectionController,
+  }) : super(key: Key(contact.uuid));
 
   @override
   State<ContactsListTile> createState() => _ContactsListTileState();
 }
 
 class _ContactsListTileState extends State<ContactsListTile> {
-
   void initState() {
     super.initState();
     widget.selectionController.addListener(onSelect);
@@ -44,7 +42,7 @@ class _ContactsListTileState extends State<ContactsListTile> {
   }
 
   onSelect() {
-      setState(() {});
+    setState(() {});
   }
 
   Widget _getStorageIcon(BuildContext context) {
@@ -73,7 +71,7 @@ class _ContactsListTileState extends State<ContactsListTile> {
     final authBloc = BlocProvider.of<AuthBloc>(context);
     final contactsBloc = BlocProvider.of<ContactsBloc>(context);
     final currentStorage = contactsBloc.state.storages.firstWhere(
-            (s) => s.id == contactsBloc.state.selectedStorage,
+        (s) => s.id == contactsBloc.state.selectedStorage,
         orElse: () => null);
 
     return ListTile(
@@ -87,7 +85,9 @@ class _ContactsListTileState extends State<ContactsListTile> {
               color: theme.brightness == Brightness.dark
                   ? theme.primaryColor.withOpacity(0.2)
                   : theme.primaryColor.withOpacity(0.06),
-              borderRadius: BorderRadius.circular(10.0),
+              borderRadius: BorderRadius.circular(
+                BuildProperty.useContactsRoundIcons ? 18.0 : 10.0,
+              ),
             ),
             child: Center(
               child: Text(
@@ -127,7 +127,9 @@ class _ContactsListTileState extends State<ContactsListTile> {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
-          if (widget.contact.pgpPublicKey != null && widget.contact.pgpPublicKey.isNotEmpty) Icon(MdiIcons.key),
+          if (widget.contact.pgpPublicKey != null &&
+              widget.contact.pgpPublicKey.isNotEmpty)
+            Icon(MdiIcons.key),
           if (currentStorage != null &&
               currentStorage.name == StorageNames.team &&
               widget.contact.viewEmail == authBloc.currentAccount.email)
@@ -146,16 +148,14 @@ class _ContactsListTileState extends State<ContactsListTile> {
           _getStorageIcon(context),
           if (widget.selectionController.enable)
             Padding(
-              padding:
-              const EdgeInsets.symmetric(horizontal: 8.0),
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: Center(
                 child: DecoratedBox(
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     border: selected
                         ? null
-                        : Border.all(
-                        color: theme.primaryColor, width: 2),
+                        : Border.all(color: theme.primaryColor, width: 2),
                     color: selected ? theme.primaryColor : null,
                   ),
                   child: SizedBox(
@@ -174,46 +174,68 @@ class _ContactsListTileState extends State<ContactsListTile> {
   Widget build(BuildContext context) {
     final selected = widget.selectionController.isSelected(widget.contact.uuid);
 
-    return DecoratedBox(
+    Widget contactTile = DecoratedBox(
       decoration: BoxDecoration(
         color: selected
             ? Theme.of(context).brightness == Brightness.light
-            ? const Color.fromRGBO(0, 0, 0, 0.05)
-            : const Color.fromRGBO(255, 255, 255, 0.05)
+                ? const Color.fromRGBO(0, 0, 0, 0.05)
+                : const Color.fromRGBO(255, 255, 255, 0.05)
             : null,
       ),
       child: InkWell(
         onLongPress: changeEnable,
-        onTap: widget.selectionController.enable ? changeEnable : () => widget.onPressed(widget.contact),
-        child: allowDeleting && !widget.selectionController.enable ? Dismissible(
-          key: Key(widget.contact.uuid),
-          direction: DismissDirection.endToStart,
-          child: _buildTile(context),
-          onDismissed: (_) => widget.onDeleteContact(widget.contact),
-          confirmDismiss: (_) => ConfirmationDialog.show(
-            context,
-            S.of(context).contacts_delete_title,
-            S.of(context).contacts_delete_desc_with_name(widget.contact.fullName),
-            S.of(context).btn_delete,
-            destructibleAction: true,
-          ),
-          background: Container(
-            color: Theme.of(context).errorColor,
-            child: Stack(
-              children: <Widget>[
-                Positioned(
-                  right: 16.0,
-                  top: 0.0,
-                  bottom: 0.0,
-                  child:
-                  Icon(Icons.delete_outline, color: Colors.white, size: 36.0),
+        onTap: widget.selectionController.enable
+            ? changeEnable
+            : () => widget.onPressed(widget.contact),
+        child: allowDeleting && !widget.selectionController.enable
+            ? Dismissible(
+                key: Key(widget.contact.uuid),
+                direction: DismissDirection.endToStart,
+                child: _buildTile(context),
+                onDismissed: (_) => widget.onDeleteContact(widget.contact),
+                confirmDismiss: (_) => ConfirmationDialog.show(
+                  context,
+                  S.of(context).contacts_delete_title,
+                  S
+                      .of(context)
+                      .contacts_delete_desc_with_name(widget.contact.fullName),
+                  S.of(context).btn_delete,
+                  destructibleAction: true,
                 ),
-              ],
-            ),
-          ),
-        ) : _buildTile(context),
+                background: Container(
+                  color: Theme.of(context).errorColor,
+                  child: Stack(
+                    children: <Widget>[
+                      Positioned(
+                        right: 16.0,
+                        top: 0.0,
+                        bottom: 0.0,
+                        child: Icon(Icons.delete_outline,
+                            color: Colors.white, size: 36.0),
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            : _buildTile(context),
       ),
     );
+
+    // Добавляем divider если включён
+    if (BuildProperty.useContactsDivider) {
+      return Column(
+        children: [
+          contactTile,
+          Divider(
+            height: 1,
+            thickness: 0.5,
+            color: Colors.grey[300],
+          ),
+        ],
+      );
+    }
+
+    return contactTile;
   }
 
   changeEnable() {

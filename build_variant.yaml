@@ -70,10 +70,39 @@ logger: true
 pushNotification: true
 backgroundSync: false
 supportAllowAccess: true
-useCustomDrawerIcons: false
 
 # fido
 useYubiKit: false
 yubico_flutter_lib: 'path: module/mocks/yubico_flutter'
 #useYubiKit: true
 #yubico_flutter_lib: "git: https://github.com/afterlogic/yubico_flutter"
+
+#Custom floating action button
+#true and false values are inverted
+disableShadowFloatingActionButton: false # disable shadow for floating action button
+disableScreenShadowFloatingActionButton: false # disable shadow for floating action button on screen
+
+#Custom Drawer
+useDrawerGradient: true # use gradient for drawer
+useCustomDrawerIcons: true # use custom drawer folder icons
+
+#Custom contacts
+useContactsRoundIcons: true # use round contact icons
+useContactsDivider: true # use dividers between contacts
+
+#Custom input styles
+useCustomInputStyles: true # use custom input styles
+
+#Custom bottom bar
+useCustomBottomBarIcons: true # use custom bottom bar icons
+showBottomBarLabels: true # show bottom bar labels
+useCustomBottomBarColors: true # use custom bottom bar colors (only for dark theme)
+
+#Custom settings
+useCustomSettingsIcons: true # use custom settings menu icons
+useSettingsMenuDivider: true # use dividers between settings menu items
+useSettingsMenuTrailingArrow: true # use trailing arrows in settings menu
+useCustomSettingsColors: true # use custom colors for settings menu items
+
+#AppBar customization
+useAppBarDivider: true # add divider line under AppBar
